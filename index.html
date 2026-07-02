@@ -45,11 +45,6 @@
         <button class="mode-btn" id="btn-guides" data-mode="guides" aria-pressed="false">Guides</button>
       </nav>
 
-      <nav class="header-utils" aria-label="Support">
-        <a href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">Donate</a>
-        <a href="https://stephenvdavis-jpg.github.io/t-shirts/index.html" target="_blank" rel="noopener">Merch</a>
-        <a href="https://forms.gle/6tfcmd1DZWRKh8yv8" target="_blank" rel="noopener">Submit a photo</a>
-      </nav>
     </div>
   </header>
 
@@ -114,10 +109,45 @@
       <!-- Main List Content -->
       <main class="list-main" id="list-main">
 
+        <!-- Guides carousel (Top 100 is the first card) -->
+        <div class="guides-rail-wrap" id="guides-rail-wrap" hidden>
+          <div class="guides-rail-head">
+            <span class="guides-rail-label">Swipe for the best Burlington guides</span>
+            <span class="guides-rail-arrow" aria-hidden="true">→</span>
+          </div>
+          <div class="guides-rail" id="guides-rail" role="list"></div>
+        </div>
+
         <!-- Intro / what this is -->
         <div class="list-intro">
           <h1 class="list-intro-title">A curated list of <span id="intro-count">204</span> things to do in Burlington</h1>
           <p class="list-intro-sub">Every place here is tagged, so hit <strong>Filter</strong> to narrow it down by neighborhood, vibe, price, and more. New here? <button class="intro-link" id="intro-top100" type="button">The&nbsp;Top&nbsp;100</button> is the perfect place to start.</p>
+        </div>
+
+        <!-- Connect row: equal-width trio (About Me on the right) -->
+        <div class="connect-row">
+          <a class="connect-btn connect-meetup" href="https://www.meetup.com/burlington-social-activites-group/events/" target="_blank" rel="noopener">
+            <span class="connect-btn-main">Meetup Events</span>
+            <span class="connect-btn-note">Hang out with us IRL</span>
+          </a>
+          <a class="connect-btn connect-telegram" href="https://t.me/+pULrkkS4vjBiZjEx" target="_blank" rel="noopener">
+            <span class="connect-btn-main">Join Group Chat</span>
+            <span class="connect-btn-note">Requires Telegram app</span>
+          </a>
+          <a class="connect-btn connect-about" href="https://www.btownbrief.com/about-me" target="_blank" rel="noopener">
+            <span class="connect-btn-main">About Me</span>
+            <span class="connect-btn-note">Who's behind this</span>
+          </a>
+        </div>
+
+        <!-- Support links line -->
+        <div class="support-line">
+          <span class="support-line-label">Support the Brief</span>
+          <span class="support-line-links">
+            <a href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">Donate ❤️</a>
+            <a href="https://stephenvdavis-jpg.github.io/t-shirts/index.html" target="_blank" rel="noopener">Merch</a>
+            <a href="https://forms.gle/6tfcmd1DZWRKh8yv8" target="_blank" rel="noopener">Submit a photo</a>
+          </span>
         </div>
 
         <!-- Toolbar: Search + Filter Toggle + Sort -->
@@ -151,22 +181,6 @@
           </div>
         </div>
 
-        <!-- Connect row: equal-width trio (About Me on the right) -->
-        <div class="connect-row">
-          <a class="connect-btn connect-meetup" href="https://www.meetup.com/burlington-social-activites-group/events/" target="_blank" rel="noopener">
-            <span class="connect-btn-main">Meetup Events</span>
-            <span class="connect-btn-note">Hang out with us IRL</span>
-          </a>
-          <a class="connect-btn connect-telegram" href="https://t.me/+pULrkkS4vjBiZjEx" target="_blank" rel="noopener">
-            <span class="connect-btn-main">Join Group Chat</span>
-            <span class="connect-btn-note">Requires Telegram app</span>
-          </a>
-          <a class="connect-btn connect-about" href="https://www.btownbrief.com/about-me" target="_blank" rel="noopener">
-            <span class="connect-btn-main">About Me</span>
-            <span class="connect-btn-note">Who's behind this</span>
-          </a>
-        </div>
-
         <!-- Quick actions -->
         <div class="quick-actions">
           <label class="quick-chip">
@@ -191,15 +205,6 @@
           <button class="surprise-btn" id="surprise-btn" type="button">
             ✦ Surprise me
           </button>
-        </div>
-
-        <!-- Guides carousel (Top 100 is the first card) -->
-        <div class="guides-rail-wrap" id="guides-rail-wrap" hidden>
-          <div class="guides-rail-head">
-            <span class="guides-rail-label">Swipe for the best Burlington guides</span>
-            <span class="guides-rail-arrow" aria-hidden="true">→</span>
-          </div>
-          <div class="guides-rail" id="guides-rail" role="list"></div>
         </div>
 
         <!-- Result Count -->
