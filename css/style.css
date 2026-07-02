@@ -2623,20 +2623,28 @@ img {
   flex-wrap: wrap;
 }
 
+/* Equal-width, equal-height trio — symmetric at every screen size */
+.connect-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  max-width: 640px;
+  margin-bottom: var(--space-4);
+}
+
 .connect-btn {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 5px 16px;
-  border-radius: var(--radius-full);
-  font-size: var(--text-sm);
-  font-weight: 700;
+  gap: 2px;
+  min-height: 52px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
   color: #fff;
   text-decoration: none;
-  line-height: 1.15;
   text-align: center;
+  line-height: 1.15;
   transition: filter var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease);
 }
 .connect-btn:hover { filter: brightness(1.08); transform: translateY(-1px); text-decoration: none; color: #fff; }
@@ -2645,9 +2653,22 @@ img {
 .connect-meetup   { background: #F65858; }  /* Meetup red */
 .connect-telegram { background: #229ED9; }  /* Telegram blue */
 
+.connect-btn-main {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .connect-btn-note {
   font-size: 10px;
   font-weight: 500;
   opacity: 0.85;
   letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .connect-row { gap: var(--space-2); }
+  .connect-btn-main { font-size: var(--text-xs); }
+  .connect-btn-note { font-size: 9px; }
 }
