@@ -577,7 +577,7 @@
       const total = state.things.length;
       if (sorted.length === total) {
         countEl.innerHTML = `${total} entries and counting…`
-          + `<button type="button" class="result-hint" title="Reshuffle the list">Hit refresh (or this line) for a new order</button>`;
+          + `<button type="button" class="result-hint" title="Reshuffle the list">Hit refresh for a new order</button>`;
         countEl.querySelector('.result-hint')
           ?.addEventListener('click', () => location.reload());
       } else {
