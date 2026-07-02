@@ -783,9 +783,11 @@ img {
 /* Result Count */
 .result-count {
   font-size: var(--text-sm);
+  font-weight: 600;
   color: var(--ink-3);
   margin-bottom: var(--space-5);
   min-height: 1.5em;
+  letter-spacing: 0.01em;
 }
 
 /* ============================================================
@@ -2637,14 +2639,14 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  min-height: 52px;
-  padding: 8px 10px;
+  gap: 0;
+  min-height: 42px;
+  padding: 5px 8px;
   border-radius: var(--radius-md);
   color: #fff;
   text-decoration: none;
   text-align: center;
-  line-height: 1.15;
+  line-height: 1.1;
   transition: filter var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease);
 }
 .connect-btn:hover { filter: brightness(1.08); transform: translateY(-1px); text-decoration: none; color: #fff; }
@@ -2671,4 +2673,31 @@ img {
   .connect-row { gap: var(--space-2); }
   .connect-btn-main { font-size: var(--text-xs); }
   .connect-btn-note { font-size: 9px; }
+}
+
+/* ============================================================
+   HEADER UTILITY LINKS (top-right: Donate · Merch · Photo)
+============================================================ */
+.header-utils {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+}
+.header-utils a {
+  color: var(--ink-3);
+  text-decoration: none;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.header-utils a:hover { color: var(--coral); text-decoration: underline; }
+
+@media (max-width: 600px) {
+  .header-utils { gap: var(--space-2); font-size: 11px; }
+  /* keep the header from overflowing on small phones */
+  .header-inner { gap: var(--space-2); }
+}
+@media (max-width: 430px) {
+  .header-utils { gap: 8px; font-size: 10px; }
 }

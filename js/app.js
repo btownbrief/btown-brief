@@ -105,12 +105,9 @@
     // Hide loading, show content
     hide('loading-state');
 
-    // Intro: rounded count ("200+") + default the sort control to Random
+    // Intro headline count ("202+") + default the sort control to Random
     const introCount = document.getElementById('intro-count');
-    if (introCount) {
-      const rounded = Math.floor(state.things.length / 100) * 100;
-      introCount.textContent = `${rounded}+`;
-    }
+    if (introCount) introCount.textContent = '202+';
     const sortSelect = document.getElementById('sort-select');
     if (sortSelect) sortSelect.value = state.sort;
 
@@ -578,10 +575,8 @@
     if (emptyEl) emptyEl.hidden = true;
     if (countEl) {
       const total = state.things.length;
-      // The intro already states the full count, so only show a count line
-      // once the results are actually narrowed by a filter or search.
       countEl.textContent = sorted.length === total
-        ? ''
+        ? `${total} entries and counting…`
         : `Showing ${sorted.length} of ${total}`;
     }
 
