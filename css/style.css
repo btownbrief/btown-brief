@@ -559,7 +559,9 @@ img {
     z-index: 60;
     transform: translateX(-100%);
     transition: transform var(--duration-slow) var(--ease);
-    border-right-color: var(--line);
+    /* No right border off-canvas: when translated -100% it would otherwise
+       sit at the left screen edge as a full-height 1px line. */
+    border-right: none;
     width: min(var(--filter-w), 85vw);
     box-shadow: var(--shadow-lg);
   }
@@ -2456,3 +2458,39 @@ img {
 /* Events This Week reuses the Upcoming strip design, with a coral label */
 .week-strip { background: var(--coral-light); }
 .week-strip .events-label { color: var(--coral); }
+
+/* ============================================================
+   EVENTS THIS WEEK — whole card is a link
+============================================================ */
+.week-event-card {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease);
+}
+.week-event-card:hover {
+  border-color: var(--coral);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.week-event-card .event-arrow {
+  font-size: var(--text-xs);
+  color: var(--coral);
+  margin-left: var(--space-1);
+}
+
+/* ============================================================
+   TOP 100 as the first guides-rail card (emphasized)
+============================================================ */
+.rail-card-top100 {
+  flex-basis: 256px;
+  background: var(--ink);
+  box-shadow: 0 0 0 2px var(--coral);
+}
+[data-theme="dark"] .rail-card-top100 {
+  background: var(--bg-raised);
+}
+.rail-card-top100::after { display: none; }
+.rail-card-top100 .rail-card-type { color: var(--coral); opacity: 1; font-weight: 600; }
+.rail-card-top100 .rail-card-title { color: var(--bg); }
+[data-theme="dark"] .rail-card-top100 .rail-card-title { color: var(--ink); }

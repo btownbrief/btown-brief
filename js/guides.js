@@ -27,15 +27,18 @@
   function renderGuidesRail() {
     const wrap = document.getElementById('guides-rail-wrap');
     const rail = document.getElementById('guides-rail');
-    const guides = (window.BTV.guides || []).filter(g => g.id !== 'top-100');
+    const guides = window.BTV.guides || [];
     if (!wrap || !rail || guides.length === 0) return;
 
-    rail.innerHTML = guides.map(g => `
-      <button class="rail-card ${getCoverClass(g)}" data-guide-id="${esc(g.id)}" role="listitem" aria-label="${esc(g.title)}">
-        <span class="rail-card-type">${typeBadge(g)}</span>
+    rail.innerHTML = guides.map(g => {
+      const isTop100 = g.id === 'top-100';
+      return `
+      <button class="rail-card ${getCoverClass(g)}${isTop100 ? ' rail-card-top100' : ''}" data-guide-id="${esc(g.id)}" role="listitem" aria-label="${esc(g.title)}">
+        <span class="rail-card-type">${isTop100 ? 'The definitive ranking' : typeBadge(g)}</span>
         <span class="rail-card-title">${esc(g.title)}</span>
       </button>
-    `).join('');
+      `;
+    }).join('');
 
     rail.querySelectorAll('.rail-card').forEach(card => {
       card.addEventListener('click', () => {

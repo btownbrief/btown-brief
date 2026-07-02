@@ -160,11 +160,11 @@
       const isToday = d.date === todayIso;
       const dateLabel = isToday ? 'Today' : (d.label || '');
       return `
-        <div class="event-card" role="listitem">
+        <a class="event-card week-event-card" href="${esc(url)}" target="_blank" rel="noopener" role="listitem" aria-label="${esc(dateLabel)} in the Brief">
           <span class="event-date">${esc(dateLabel)}</span>
           <span class="event-name">${esc(shorten(d.text, d.label || ''))}</span>
-          <a class="event-link" href="${esc(url)}" target="_blank" rel="noopener" aria-label="Read the full picks in the Brief">→</a>
-        </div>
+          <span class="event-arrow" aria-hidden="true">→</span>
+        </a>
       `;
     }).join('');
 
@@ -908,21 +908,6 @@
 
     // Surprise me
     document.getElementById('surprise-btn')?.addEventListener('click', surpriseMe);
-
-    // Top 100 banner → Guides mode, Top 100 guide
-    document.getElementById('top100-btn')?.addEventListener('click', () => {
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const go = () => {
-        switchMode('guides');
-        if (typeof window.BTV.showGuide === 'function') window.BTV.showGuide('top-100');
-      };
-      if (reduced) { go(); return; }
-      document.body.classList.add('mode-transition');
-      setTimeout(() => {
-        go();
-        document.body.classList.remove('mode-transition');
-      }, 180);
-    });
 
     // Clear filters
     document.getElementById('clear-all-filters')?.addEventListener('click', clearAllFilters);
