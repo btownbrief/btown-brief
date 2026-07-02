@@ -789,6 +789,14 @@ img {
   min-height: 1.5em;
   letter-spacing: 0.01em;
 }
+.result-hint {
+  margin-left: var(--space-4);
+  font-weight: 500;
+  color: var(--ink-4);
+}
+@media (max-width: 480px) {
+  .result-hint { margin-left: var(--space-3); }
+}
 
 /* ============================================================
    CARDS GRID

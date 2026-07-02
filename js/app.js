@@ -575,9 +575,12 @@
     if (emptyEl) emptyEl.hidden = true;
     if (countEl) {
       const total = state.things.length;
-      countEl.textContent = sorted.length === total
-        ? `${total} entries and counting…`
-        : `Showing ${sorted.length} of ${total}`;
+      if (sorted.length === total) {
+        countEl.innerHTML = `${total} entries and counting…`
+          + `<span class="result-hint">Hit refresh for a new order</span>`;
+      } else {
+        countEl.textContent = `Showing ${sorted.length} of ${total}`;
+      }
     }
 
     // Inject in-list sponsor cards (placement "list") every 12 entries
