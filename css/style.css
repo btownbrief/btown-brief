@@ -238,10 +238,10 @@ img {
 
 .mode-btn {
   font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 500;
+  font-size: var(--text-md);
+  font-weight: 600;
   color: var(--ink-3);
-  padding: 5px 16px;
+  padding: 9px 26px;
   border-radius: var(--radius-full);
   transition: background var(--duration-fast) var(--ease),
               color var(--duration-fast) var(--ease);
@@ -1609,3 +1609,850 @@ img {
   color: var(--ink);
   margin: 10px 14px;
 }
+
+/* ============================================================
+   WEATHER INDICATOR (header)
+============================================================ */
+.weather-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-md);
+  color: var(--ink);
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  background: var(--teal-light);
+  white-space: nowrap;
+  cursor: default;
+}
+
+.weather-icon { font-size: 1.15em; line-height: 1; }
+.weather-temp { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 1.1em; }
+.weather-label { color: var(--teal); font-weight: 600; font-size: var(--text-sm); }
+
+@media (max-width: 640px) {
+  .weather-indicator { padding: 6px 12px; gap: 6px; }
+  .weather-label { display: none; }
+}
+
+/* --- Ambient weather layer (rain / snow / sun glow) --- */
+#weather-ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40; /* above content, below header (100) and drawers (200+) */
+}
+
+/* ============================================================
+   NEWSLETTER TEASER BAR
+============================================================ */
+.newsletter-bar {
+  display: block;
+  background: var(--teal-light);
+  border-bottom: 1px solid var(--line-soft);
+  text-decoration: none;
+  transition: filter var(--duration-fast) var(--ease);
+}
+.newsletter-bar:hover { filter: brightness(0.98); text-decoration: none; }
+
+.newsletter-bar-inner {
+  max-width: var(--max-content);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "head cta"
+    "preview cta";
+  align-items: center;
+  column-gap: var(--space-5);
+  row-gap: 3px;
+}
+
+.newsletter-head {
+  grid-area: head;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.newsletter-label {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--teal);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.newsletter-issue {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60ch;
+}
+
+.newsletter-preview {
+  grid-area: preview;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  line-height: 1.55;
+  max-width: 96ch;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.newsletter-cta {
+  grid-area: cta;
+  color: var(--teal);
+  font-weight: 700;
+  font-size: var(--text-md);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.newsletter-bar:hover .newsletter-cta { text-decoration: underline; }
+
+@media (max-width: 560px) {
+  .newsletter-bar-inner {
+    grid-template-columns: 1fr;
+    grid-template-areas: "head" "preview" "cta";
+    row-gap: var(--space-2);
+  }
+  .newsletter-cta { justify-self: start; }
+}
+
+/* ============================================================
+   TOP 100 BANNER
+============================================================ */
+/* Quick actions row: Free only · Top 100 (big, center) · Surprise me */
+.quick-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.top100-banner {
+  flex: 1 1 360px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  flex-wrap: wrap;
+  padding: var(--space-4) var(--space-5);
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  transition: transform var(--duration-base) var(--ease), box-shadow var(--duration-base) var(--ease);
+}
+
+[data-theme="dark"] .top100-banner {
+  background: var(--bg-raised);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.top100-banner:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.top100-banner:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
+.top100-kicker {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--coral);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.top100-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.top100-arrow {
+  margin-left: auto;
+  font-size: var(--text-lg);
+  color: var(--coral);
+  transition: transform var(--duration-base) var(--ease);
+}
+
+.top100-banner:hover .top100-arrow { transform: translateX(4px); }
+
+@media (max-width: 640px) {
+  .top100-banner { flex-wrap: wrap; gap: var(--space-1) var(--space-3); }
+  .top100-title { font-size: var(--text-md); }
+}
+
+/* Brief fade when jumping List → Top 100 */
+.mode-transition .mode-panel { opacity: 0; transition: opacity 180ms var(--ease); }
+
+@media (prefers-reduced-motion: reduce) {
+  .top100-banner, .top100-arrow, .mode-transition .mode-panel { transition: none; }
+}
+
+/* ============================================================
+   RANKED LIST (Top 100 guide)
+============================================================ */
+.ranked-item { position: relative; }
+
+.ranked-num {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  min-width: 2.4rem;
+  padding: var(--space-4) 0 0 var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.ranked-item:nth-child(-n+10) .ranked-num { color: var(--coral); }
+
+/* ============================================================
+   COMMUNITY SECTION (photos, reddit, FAQ, sponsors)
+============================================================ */
+.community-section {
+  max-width: var(--max-content);
+  margin: var(--space-12) auto var(--space-8);
+  padding: 0 var(--space-5);
+  display: grid;
+  gap: var(--space-10);
+}
+
+.community-block-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-6);
+}
+
+.community-block-header h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.community-block-link {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--teal);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.community-block-link:hover { text-decoration: underline; }
+
+.community-empty-note {
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  font-style: italic;
+}
+
+/* --- Photo strip --- */
+.photo-strip {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+  scroll-snap-type: x proximity;
+}
+
+.photo-card {
+  flex: 0 0 260px;
+  scroll-snap-align: start;
+}
+
+.photo-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.photo-card figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.photo-caption { color: var(--ink-2); }
+.photo-credit  { color: var(--ink-3); }
+
+/* --- Reddit module --- */
+.reddit-list {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.reddit-post {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-raised);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: border-color var(--duration-fast) var(--ease);
+}
+
+.reddit-post:hover { border-color: var(--teal); }
+
+.reddit-score {
+  flex: 0 0 auto;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--coral);
+  font-variant-numeric: tabular-nums;
+}
+
+.reddit-title {
+  font-size: var(--text-sm);
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+/* --- FAQ --- */
+.faq-list { display: grid; gap: var(--space-2); max-width: 760px; }
+
+.faq-item {
+  background: var(--bg-raised);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-4);
+}
+
+.faq-item summary {
+  cursor: pointer;
+  padding: var(--space-3) 0;
+  font-weight: 600;
+  font-size: var(--text-base);
+  color: var(--ink);
+  list-style-position: inside;
+}
+
+.faq-item summary:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.faq-answer {
+  padding: 0 0 var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+
+.faq-reddit-link {
+  display: inline-block;
+  margin-top: var(--space-2);
+  margin-right: var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--teal);
+  text-decoration: none;
+}
+
+.faq-reddit-link:hover { text-decoration: underline; }
+
+/* --- Sponsors --- */
+.sponsor-label {
+  display: block;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
+  margin-bottom: var(--space-2);
+}
+
+.sponsor-footer {
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-6);
+}
+
+.sponsor-row {
+  display: flex;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.sponsor-item { color: var(--ink-2); text-decoration: none; font-weight: 600; }
+.sponsor-item img { max-height: 48px; width: auto; }
+
+.card-sponsor {
+  border-style: dashed;
+  cursor: default;
+}
+
+/* --- Card footer links --- */
+.card-footer-links {
+  display: inline-flex;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.card-website-link {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--teal);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.card-website-link:hover { text-decoration: underline; }
+
+/* --- Footer attribution --- */
+.footer-attribution a { color: inherit; }
+
+/* ============================================================
+   RANKED EXPERIENCES (Top 100 rebuilt as things-to-do)
+============================================================ */
+.ranked-exp-list {
+  display: grid;
+  max-width: 760px;
+}
+
+.ranked-exp {
+  display: flex;
+  gap: var(--space-5);
+  padding: var(--space-8) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.ranked-exp:last-child { border-bottom: none; }
+
+.ranked-exp .ranked-num {
+  flex: 0 0 3.2rem;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--ink-4);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ranked-exp:nth-child(-n+10) .ranked-num { color: var(--coral); }
+
+.ranked-exp-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: var(--space-3);
+}
+
+.ranked-exp-text {
+  font-size: var(--text-base);
+  color: var(--ink-2);
+  line-height: 1.75;
+  max-width: 62ch;
+}
+
+.ranked-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.ranked-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 6px 12px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-body);
+  text-align: left;
+  transition: border-color var(--duration-fast) var(--ease),
+              transform var(--duration-fast) var(--ease);
+}
+
+.ranked-chip:hover {
+  border-color: var(--teal);
+  transform: translateY(-1px);
+}
+
+.ranked-chip:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+}
+
+.ranked-chip-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ranked-chip-meta {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+@media (max-width: 640px) {
+  .ranked-exp { gap: var(--space-4); padding: var(--space-6) 0; }
+  .ranked-exp .ranked-num { flex-basis: 2.2rem; font-size: var(--text-xl); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ranked-chip { transition: none; }
+}
+
+/* ============================================================
+   DAYLIGHT ARC (sunrise → sunset countdown)
+============================================================ */
+.sun-arc {
+  background: linear-gradient(180deg, var(--bg-raised), var(--bg-subtle));
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.sun-arc-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5) var(--space-3);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "rise graphic set"
+    "count count count";
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+.sun-arc-graphic { grid-area: graphic; min-width: 0; }
+
+.sun-arc-svg {
+  width: 100%;
+  height: auto;
+  max-height: 104px;
+  display: block;
+  overflow: visible;
+}
+
+.sun-horizon {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+.sun-arc-track {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  opacity: 0.6;
+}
+
+.sun-arc-elapsed {
+  fill: none;
+  stroke: url(#sunArcGrad);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.sun-marker-core {
+  fill: #FDBE5E;
+  stroke: #F2683C;
+  stroke-width: 1.5;
+}
+
+.sun-arc.is-night .sun-marker-core {
+  fill: var(--ink-4);
+  stroke: var(--ink-3);
+}
+.sun-arc.is-night .sun-marker-glow { opacity: 0; }
+
+.sun-end {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.sun-end-rise { grid-area: rise; text-align: left; }
+.sun-end-set  { grid-area: set;  text-align: right; }
+
+.sun-end-time {
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.sun-end-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.sun-countdown {
+  grid-area: count;
+  text-align: center;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.sun-count-num {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--coral);
+  font-variant-numeric: tabular-nums;
+}
+.sun-arc.is-night .sun-count-num { color: var(--teal); }
+
+.sun-count-label {
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+@media (max-width: 560px) {
+  .sun-arc-inner { padding: var(--space-3) var(--space-4); gap: var(--space-1) var(--space-3); }
+  .sun-end-time { font-size: var(--text-base); }
+}
+
+/* Top 100 banner subhead */
+.top100-sub {
+  font-size: var(--text-sm);
+  color: rgba(251, 248, 242, 0.72);
+  margin-left: var(--space-2);
+}
+[data-theme="dark"] .top100-sub { color: var(--ink-3); }
+
+@media (max-width: 640px) {
+  .top100-sub { display: none; }
+}
+
+/* ============================================================
+   ITINERARY — experience format (time · title · body · chips)
+============================================================ */
+.itin-list {
+  max-width: 760px;
+  position: relative;
+}
+
+.itin-exp {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: var(--space-4);
+  padding-bottom: var(--space-8);
+  position: relative;
+}
+
+/* Connecting spine down the left rail */
+.itin-exp::before {
+  content: "";
+  position: absolute;
+  left: 37px;
+  top: 26px;
+  bottom: -6px;
+  width: 2px;
+  background: var(--line);
+}
+.itin-exp:last-child::before { display: none; }
+
+.itin-rail {
+  position: relative;
+  text-align: right;
+  padding-top: 2px;
+}
+
+.itin-time {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--teal);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.itin-dot {
+  position: absolute;
+  right: -8px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--coral);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--coral);
+}
+
+.itin-exp-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: var(--space-2);
+}
+
+.itin-exp-text {
+  font-size: var(--text-base);
+  color: var(--ink-2);
+  line-height: 1.7;
+  max-width: 60ch;
+}
+
+@media (max-width: 560px) {
+  .itin-exp { grid-template-columns: 58px 1fr; gap: var(--space-3); }
+  .itin-exp::before { left: 28px; }
+  .itin-dot { right: -7px; }
+}
+
+/* ============================================================
+   GUIDES CAROUSEL (List view)
+============================================================ */
+.guides-rail-wrap { margin-bottom: var(--space-6); }
+
+.guides-rail-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.guides-rail-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.guides-rail-arrow { color: var(--coral); font-weight: 700; }
+
+.guides-rail {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+
+.rail-card {
+  flex: 0 0 224px;
+  height: 122px;
+  scroll-snap-align: start;
+  position: relative;
+  border: none;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--space-3);
+  color: #fff;
+  transition: transform var(--duration-fast) var(--ease), box-shadow var(--duration-fast) var(--ease);
+}
+
+.rail-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 28%, rgba(0,0,0,0.58) 100%);
+  z-index: 0;
+}
+
+.rail-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.rail-card:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+
+.rail-card-type,
+.rail-card-title { position: relative; z-index: 1; }
+
+.rail-card-type {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.9;
+  margin-bottom: 3px;
+}
+
+.rail-card-title {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* ============================================================
+   WEATHER MENU (header popover)
+============================================================ */
+.weather-wrap { position: relative; }
+
+.weather-indicator { cursor: pointer; }
+.weather-indicator:hover { filter: brightness(0.98); }
+
+.weather-caret { font-size: 0.65em; color: var(--ink-3); margin-left: 1px; }
+
+.weather-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  min-width: 232px;
+  z-index: 120;
+}
+.weather-menu[hidden] { display: none; }
+
+.weather-menu-item {
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.weather-menu-item:hover { background: var(--bg-subtle); text-decoration: none; }
+
+
+}
+
+/* Events This Week reuses the Upcoming strip design, with a coral label */
+.week-strip { background: var(--coral-light); }
+.week-strip .events-label { color: var(--coral); }

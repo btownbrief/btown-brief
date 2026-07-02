@@ -1,129 +1,113 @@
 # Content Coverage Report
 
-Last updated: June 2026 · v1.0
+Last updated: 2026-07-02 (ingestion +125; then −6 closed / +4 new = **204 entries**)
 
----
+## Totals
 
-## Summary
+**204 entries** · ~114 with websites · 46 free things to do
 
-| Metric | Count |
+**Closed & removed (2026-07):** Penny Cluse Cafe, The Cafe HOT, Pizzeria Ida, Istanbul Kebab House, BKK in the Alley, El Cortijo. **Added to replace:** Handy's Lunch, The Friendly Toast, Sneakers Bistro, The Grey Jay. The Top 100 entries that referenced closed spots were rewritten (breakfast → Handy's/Friendly Toast/Sneakers; the Pizzeria Ida slot → grown-up brunch at The Grey Jay; the Istanbul/BKK slot → ramen at Gaku). The Switchback place-guide was retired (too single-brewery); the Brewing Scene roundup now sorts local breweries first.
+
+### By group
+| Group | Count |
 |---|---|
-| Total entries | 72 |
-| Entries with guides | 3 |
-| Entries with website | 39 |
-| Entries with coordinates | 67 |
+| Food & Drink | 89 |
+| Live & Events | 29 |
+| Outdoors | 27 |
+| Do & Play | 27 |
+| Culture | 20 |
+| Shopping | 14 |
 
----
-
-## By Group
-
-| Group | Count | Notes |
-|---|---|---|
-| Food & Drink | 18 | Good brewery coverage; thin on coffee shops, ethnic food, and wine bars |
-| Outdoors | 15 | Good beach and park coverage; missing Winooski River paddling, Mallett's Bay |
-| Culture | 12 | Missing Flynn Steeple Project, Main Street Landing gallery, Phish exhibition |
-| Live & Events | 14 | Good festival coverage; thin on weekly recurring events |
-| Do & Play | 9 | Thin — missing disc golf (Schifilliti), escape rooms, axe throwing, Spare Time |
-| Shopping | 4 | Very thin — needs book stores, clothing boutiques, Winooski shops |
-
----
-
-## By Neighborhood
-
-| Neighborhood | Count | Notes |
-|---|---|---|
-| Downtown / Church St | 15 | Good |
-| South End | 12 | Good |
-| Waterfront | 12 | Good |
-| New North End | 5 | Adequate |
-| Shelburne | 7 | Good for a suburb |
-| Winooski | 3 | Thin — only Waking Windows, Mill Museum, Autumn Records |
-| UVM / University | 3 | Adequate |
-| Old North End | 1 | Very thin — Radio Bean only |
-| Hill Section | 1 | Very thin — Lake Monsters only |
-| Colchester | 2 | Adequate for out-of-town |
-| Greater Burlington | 2 | Adequate for out-of-town |
-| South Burlington | 3 | Adequate |
-| Essex / Essex Jct | 1 | Only Champlain Valley Fair |
-| Williston | 0 | **Gap** |
-
----
-
-## By Cost Tier
-
-| Tier | Count |
+### By neighborhood
+| Neighborhood | Count |
 |---|---|
-| Free | 16 |
-| $ | 32 |
-| $$ | 20 |
-| $$$ | 4 |
+| Downtown / Church St | 53 |
+| South End | 29 |
+| Greater Burlington | 28 |
+| Waterfront | 25 |
+| Old North End | 16 |
+| New North End | 11 |
+| Winooski | 10 |
+| Shelburne | 9 |
+| Colchester | 7 |
+| South Burlington | 6 |
+| UVM / University | 5 |
+| Essex / Essex Jct | 4 |
+| Williston | 2 |
+| Hill Section | 1 |
+
+### By cost
+Free: 46 · $: 88 · $$: 63 · $$$: 9
 
 ---
 
-## By Season
+## TODOs
 
-| Season | Count |
-|---|---|
-| Year-Round | 28 |
-| Summer | 35 |
-| Spring | 30 |
-| Fall | 30 |
-| Winter | 0 |
+### Websites to verify (32 entries)
+These entries are live but have `website: null` with a TODO in their `source` field — find and add the official site (or confirm there isn't one):
 
-**Winter gap is significant** — the site currently has no winter-specific content. Should add: ice skating at Leddy/Civic Center, cross-country skiing (Catamount), snowshoeing, ice fishing on the lake, winter farmers market (indoor), Vermont ski areas (Stowe/Mad River), winter cocktail hours at South End taprooms.
+catamount-outdoor-center, soda-plant, onyx-tonics, palmer-lane-maple, four-quarters-brewing, savu-sauna, pinball-coop, barge-canal-market, beverage-warehouse, festival-of-fools, cafe-dim-sum, willows-bagels, wise-fool, may-day, pizzeria-ida, revolution-kitchen, deep-city, sam-mazzas, brio-coffeeworks, ms-weinerz, boxcar-bakery, poor-house-pies, venetian-soda-lounge, monkey-house, stone-corral, snow-farm-vineyard, camp-meade, st-marks-bowling, champlain-valley-dinner-train, vermont-city-marathon, crow-books, flora-and-fauna
 
----
+### Coordinates
+All 125 newly ingested entries have `coords: null` (never faked). Adding coords enables the detail-view map — grab them from Google Maps (right-click → copy coordinates) as you verify each place.
 
-## Content Quality Gaps
+### Suggested but NOT added — needs location/details verified first
+From Stephen's list; each sounded worthwhile but I couldn't confirm even the basics, so they were held back rather than mis-tagged:
+- **Poco, Frankie's, Santiago's** — "celebrated intimate dining," locations unverified
+- **Sotto Enoteca, Majestic, Kismet** (Battery St?) — wine bar / upscale spots
+- **La di da Pizza** — location unverified
+- **Vivid, Jitters, Kestrel, Cosmic Grind, Nomad, Uncommon** — more coffee; Kestrel & Cosmic Grind ("best lattes") first
+- **Haymaker Buns, Morning Light Bakery** — locations unverified (Haymaker may be Middlebury-based)
+- **Mr. Cremee (Pine St), Ice Cream Evan's, The Sweet Spot, The Scoop (Shelburne)** — more creemee stands
+- **Devil Takes a Holiday, Doma, The Gryphon, Drink, Wallflower Collective** — cocktail bars
+- **Queen City Cat Lounge** — drinks + rescue cats; location unverified
+- **Burly Axe / The Break Room** — axe throwing / rage room; locations unverified
+- **Creative Insight Pottery, Expressive Arts Burlington, paint & sip** — classes
+- **Green Mountain Cabaret** — burlesque; venue unverified
+- **Catamount Pickleball** — indoor facility; location unverified
+- **Partizan Film** — unverified
+- **St. Mark's Bowling detail check** — added, but hours/format need confirming
+- **Sweet G's Smoke Shop / Green Leaf dispensary** — Stephen's call whether cannabis retail fits the brand
+- **Thirty Odd, Anjou, Vintage Inspired, Dirt Chic, ReSource, Rack & Ruin, Golden Hour, Kish, Common Deer, Pure Pop** — more shops/vintage
+- **Donahue Sea Caves** — added with strong ice-safety caution; consider whether to keep
 
-### Entries missing coordinates (`coords: null`)
-- City Brew Tours Burlington (pickup varies by tour — acceptable)
-- Burlington Records (address TBD — needs verification)
+### Deliberately skipped
+- **UVM Williams Hall fire escape** — described as "slightly illicit" (trespassing); not publishing it
+- **Chains / big-box** (McDonald's, Insomnia Cookies, Friendly Toast, U-Mall, Taft Corners)
+- **Organizations & clubs** (Odd Fellows, historical societies, VAST, Sierra Club, 4-H, genealogy library, rowing club, etc.) — memberships, not "things to do"; could become a future "Get Involved" page
+- **Secondary libraries** (Howe, Dana, Durick, Special Collections) — directory territory; Fletcher Free carries the category
+- **Most satellite farmers markets** (Jericho, Richmond, Milton, Shelburne, Champlain Islands) — kept Burlington, ONE, and the Winooski mention
 
-### Entries needing `why_special` improvement
-- Burlington Records — placeholder text; needs a specific distinguishing detail
+### Guides built
+- **Top 100 Things to Do** — rebuilt as 100 hand-ranked *experiences* (editorial title + narrative + tappable place chips), drawing on 174 of the 206 places. Authored in `guides.json` under id `top-100`.
+- **The Perfect Burlington Saturday** — rewritten as a rich, timed itinerary.
+- **A Perfect Day on the Water** (new) — summer lake-day itinerary.
+- **Burlington in the Snow** (new) — winter-day itinerary.
+- Roundups (Free, Cheap Eats, Rainy Day, Date Night, Outdoors, Family, Breweries, Waterfront, Live Music) remain **filter-driven** so they auto-update from the master list — the original "never goes stale" design intent. They could be converted to hand-authored experience guides later if desired.
 
-### Blurbs that need a verifiable specific added
-- Archives Bar — needs year established, number of machines, or other specific
-- Main Street Film House — needs specific day/time detail confirmed
-
-### Entries with no website
-Many entries intentionally have no website (parks, public art, events) which is correct. The following **should** have website links but don't:
-- Andy A-Dog Williams Skatepark (no official page — acceptable)
-- Texaco Beach / Dog Beach (public park — acceptable)
-- Leddy Beach Bites (find current URL)
-- South End Get Down (find current URL)
-
----
-
-## Priority Gaps to Fill (v1.1)
-
-### High priority
-1. **Old North End** — 10+ more entries needed: shops, restaurants, Radio Bean neighborhood context
-2. **Winooski** — needs 5+ entries: Misery Loves Co., Sneakers Bistro, craft shops
-3. **Winter content** — 8+ winter-specific entries
-4. **Shopping** — needs 6+ entries: Phoenix Books, Scout & Co, The Outdoor Gear Exchange, Outdoor Gear Exchange, Good Clothing Co.
-
-### Medium priority
-5. **Ethnic & international food** — Burlington has a notable refugee and immigrant restaurant scene (Halvorson's, Tandem/Farmhouse, New World Tortilla, The Farmhouse Group, Asian restaurants in Winooski)
-6. **Coffee shops** — Zero mentions of Onyx Tonics, Penny Cluse (breakfast only), Uncommon Grounds, Muddy Waters
-7. **Wellness** — nothing in the Wellness category at all
-8. **Do & Play expansion** — disc golf at Schifilliti, Burly Axe, Escape Room 60, Spare Time Bowling
-
-### Lower priority
-9. **Place guides** — detailed single-place guides for Shelburne Museum, Shelburne Farms, Foam Brewers, and ECHO are the best candidates
-10. **Libraries & bookstores** — Phoenix Books is a Burlington institution, currently unrepresented
+### Future guide ideas
+1. **Day Trips (1–2 hrs)** — Montreal, Woodstock/Quechee, Middlebury, Montpelier, Stowe deep-dive, Fairbanks Museum + Dog Chapel, Lake Willoughby, Saratoga. These exceed the site's ~45-min radius; a dedicated day-trips guide (itinerary or roundup) is the right home.
+2. **Swimming Holes** — Bolton Potholes + Bristol Falls are in; Warren Falls, Triple Buckets, Bingham Falls, Barre Quarry would complete a killer summer roundup.
+3. **The Pine Street Crawl** — a brewery-by-brewery itinerary; all stops now exist as entries.
+4. **Late Night Burlington** — Ahli Baba's, KKD, Mr. Mikes, Insomnia (3 AM crowd); partial data exists.
 
 ---
 
-## Source Coverage
+## Content gaps (updated after ingestion)
+
+Formerly-flagged gaps now closed: coffee shops ✓, ethnic/international food ✓, Winooski ✓, Old North End ✓, winter content ✓ (partially), Wellness ✓ (Savu, Essex Spa), shopping ✓, Phoenix Books ✓.
+
+Remaining:
+1. **Hill Section** — 1 entry (Lake Monsters at Centennial). Thin but honestly there isn't much there; low priority.
+2. **Williston** — 2 entries; Catamount + Get Air. Fine for now.
+3. **Place guides** — 3 exist (Switchback, ECHO, Shelburne Museum); next best candidates: Shelburne Farms, Foam Brewers, Hen of the Wood, the Intervale.
+4. **Events strip** — needs weekly refresh by hand; consider wiring it to the newsletter workflow.
+
+## Source coverage
 
 | Source | Count |
 |---|---|
-| btownbrief.com (primary) | 65 |
-| helloburlingtonvt.com | 8 |
-| sevendaysvt.com | 2 |
-| vermontexplored.com | 1 |
-| verified direct | 45 |
+| btownbrief.com / verified (original 81) | 81 |
+| user-provided community list (2026-07) | 125 |
 
-All entries marked `last_verified: 2026-06` have been cross-referenced against at least two sources. Entries should be re-verified annually, or when a closure/change is reported.
+Original 81 entries: verified 2026-06 against two+ sources. The 125 new entries are tagged `last_verified: 2026-07` with `source: user-provided`; treat their details (hours, prices) as unverified until spot-checked. Never fake coords, hours, or prices — `null` + TODO beats a guess.

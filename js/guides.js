@@ -13,6 +13,37 @@
     window.BTV.initGuides   = initGuides;
     window.BTV.showGuide    = showGuide;
     window.BTV.showGuideIndex = showGuideIndex;
+    window.BTV.renderGuidesRail = renderGuidesRail;
+  }
+
+  function typeBadge(g) {
+    return g.type === 'place' ? 'Place guide'
+      : g.type === 'itinerary' ? 'Itinerary'
+      : g.type === 'ranked' ? 'Ranked list'
+      : 'Roundup';
+  }
+
+  /* Horizontal guides carousel shown on the List view */
+  function renderGuidesRail() {
+    const wrap = document.getElementById('guides-rail-wrap');
+    const rail = document.getElementById('guides-rail');
+    const guides = (window.BTV.guides || []).filter(g => g.id !== 'top-100');
+    if (!wrap || !rail || guides.length === 0) return;
+
+    rail.innerHTML = guides.map(g => `
+      <button class="rail-card ${getCoverClass(g)}" data-guide-id="${esc(g.id)}" role="listitem" aria-label="${esc(g.title)}">
+        <span class="rail-card-type">${typeBadge(g)}</span>
+        <span class="rail-card-title">${esc(g.title)}</span>
+      </button>
+    `).join('');
+
+    rail.querySelectorAll('.rail-card').forEach(card => {
+      card.addEventListener('click', () => {
+        if (typeof window.BTV.switchMode === 'function') window.BTV.switchMode('guides');
+        showGuide(card.dataset.guideId);
+      });
+    });
+    wrap.hidden = false;
   }
 
   function initGuides() {
@@ -51,12 +82,11 @@
 
   function renderGuideCard(g) {
     const coverClass = getCoverClass(g);
-    const typeBadge  = g.type === 'place' ? 'Place guide' : g.type === 'itinerary' ? 'Itinerary' : 'Roundup';
 
     return `
       <div class="guide-card" data-guide-id="${esc(g.id)}" role="button" tabindex="0" aria-label="${esc(g.title)}">
         <div class="guide-card-cover ${coverClass}">
-          <span class="guide-card-type-badge">${typeBadge}</span>
+          <span class="guide-card-type-badge">${typeBadge(g)}</span>
         </div>
         <div class="guide-card-body">
           <h3 class="guide-card-title">${esc(g.title)}</h3>
@@ -94,6 +124,7 @@
 
     if (guide.type === 'roundup') renderRoundup(guide);
     else if (guide.type === 'itinerary') renderItinerary(guide);
+    else if (guide.type === 'ranked') renderRanked(guide);
     else if (guide.type === 'place') renderPlaceGuide(guide);
     else renderRoundup(guide);
 
@@ -114,7 +145,17 @@
     let results = filterFn(things, baseFilters, '');
 
     // Sort
-    if (guide.sort === 'neighborhood') {
+    if (guide.sort === 'local-first') {
+      // Burlington-proper neighborhoods first, out-of-town last.
+      const RANK = {
+        'Downtown / Church St': 0, 'Old North End': 1, 'New North End': 2,
+        'South End': 3, 'Waterfront': 4, 'Hill Section': 5, 'UVM / University': 6,
+        'Winooski': 7, 'South Burlington': 8, 'Shelburne': 9, 'Colchester': 10,
+        'Essex / Essex Jct': 11, 'Williston': 12, 'Greater Burlington': 13
+      };
+      const rank = t => (t.neighborhood in RANK ? RANK[t.neighborhood] : 99);
+      results = [...results].sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
+    } else if (guide.sort === 'neighborhood') {
       results = [...results].sort((a, b) =>
         (a.neighborhood || '').localeCompare(b.neighborhood || '') || a.name.localeCompare(b.name)
       );
@@ -189,10 +230,20 @@
     `;
   }
 
-  /* --- Itinerary --- */
+  /* --- Itinerary ---
+     Rich items: { time, title, body, things: [ids] }.
+     Plain string ids still supported (legacy). --- */
   function renderItinerary(guide) {
     const things = window.BTV.things || [];
-    const stops = (guide.items || []).map(id => things.find(t => t.id === id)).filter(Boolean);
+    const byId = id => things.find(t => t.id === id);
+
+    const items = (guide.items || []).map((item, i) => {
+      if (typeof item === 'string') {
+        const t = byId(item);
+        return t ? { time: 'Stop ' + (i + 1), title: t.name, body: t.blurb || '', things: [t.id] } : null;
+      }
+      return item;
+    }).filter(Boolean);
 
     const view = document.getElementById('guides-view');
     if (!view) return;
@@ -205,28 +256,98 @@
           <h1 class="guide-page-title">${esc(guide.title)}</h1>
           <div class="guide-page-intro">${formatIntro(guide.intro || '')}</div>
         </div>
-        <div class="itinerary-list">
-          ${stops.map((t, i) => `
-            <div class="itinerary-stop" data-id="${esc(t.id)}">
-              <div class="itinerary-stop-num" aria-hidden="true">${i + 1}</div>
-              <div class="itinerary-stop-body">
-                <div class="itinerary-stop-name">${esc(t.name)}</div>
-                <p class="itinerary-stop-blurb">${esc(t.blurb || '')}</p>
-              </div>
-            </div>
-          `).join('')}
+        <div class="itin-list">
+          ${items.map(item => {
+            const places = (item.things || []).map(byId).filter(Boolean);
+            const chips = places.map(placeChip).join('');
+            return `
+              <article class="itin-exp">
+                <div class="itin-rail">
+                  <span class="itin-time">${esc(item.time || '')}</span>
+                  <span class="itin-dot" aria-hidden="true"></span>
+                </div>
+                <div class="itin-exp-body">
+                  <h3 class="itin-exp-title">${esc(item.title)}</h3>
+                  <p class="itin-exp-text">${esc(item.body || '')}</p>
+                  ${chips ? `<div class="ranked-chips" aria-label="Places for this stop">${chips}</div>` : ''}
+                </div>
+              </article>
+            `;
+          }).join('')}
         </div>
       </div>
     `;
 
-    view.querySelectorAll('.itinerary-stop').forEach(stop => {
-      stop.addEventListener('click', () => {
+    bindChips(view);
+    view.querySelector('.guide-back-btn')?.addEventListener('click', showGuideIndex);
+  }
+
+  /* Shared place-chip helpers (itinerary + ranked) */
+  function placeChip(p) {
+    return `<button class="ranked-chip" data-id="${esc(p.id)}">
+        <span class="ranked-chip-name">${esc(p.name)}</span>
+        <span class="ranked-chip-meta">${esc(p.neighborhood || '')}${p.cost_tier ? ' · ' + esc(p.cost_tier) : ''}</span>
+      </button>`;
+  }
+
+  function bindChips(scope) {
+    scope.querySelectorAll('.ranked-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
         if (typeof window.BTV.openDetail === 'function') {
-          window.BTV.openDetail(stop.dataset.id);
+          window.BTV.openDetail(chip.dataset.id);
         }
       });
     });
+  }
 
+  /* --- Ranked list (Top 100) ---
+     Items are experiences: { title, body, things: [ids] }.
+     Plain string ids are still supported for backward compat. --- */
+  function renderRanked(guide) {
+    const things = window.BTV.things || [];
+    const byId = id => things.find(t => t.id === id);
+
+    // Normalize: string id → minimal experience object
+    const items = (guide.items || []).map(item => {
+      if (typeof item === 'string') {
+        const t = byId(item);
+        return t ? { title: t.name, body: t.blurb || '', things: [t.id] } : null;
+      }
+      return item;
+    }).filter(Boolean);
+
+    const view = document.getElementById('guides-view');
+    if (!view) return;
+
+    view.innerHTML = `
+      <div class="guides-view">
+        ${backBtn()}
+        <div class="guide-page-header">
+          <p class="guide-page-type">Ranked list</p>
+          <h1 class="guide-page-title">${esc(guide.title)}</h1>
+          <div class="guide-page-intro">${formatIntro(guide.intro || '')}</div>
+          <span class="guide-auto-note">${items.length} experiences · drawn from ${things.length} places on the living list</span>
+        </div>
+        <div class="ranked-exp-list">
+          ${items.map((item, i) => {
+            const places = (item.things || []).map(byId).filter(Boolean);
+            const chips = places.map(placeChip).join('');
+            return `
+              <article class="ranked-exp">
+                <div class="ranked-num" aria-hidden="true">${i + 1}</div>
+                <div class="ranked-exp-body">
+                  <h3 class="ranked-exp-title">${esc(item.title)}</h3>
+                  <p class="ranked-exp-text">${esc(item.body || '')}</p>
+                  ${chips ? `<div class="ranked-chips" aria-label="Places for this entry">${chips}</div>` : ''}
+                </div>
+              </article>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+
+    bindChips(view);
     view.querySelector('.guide-back-btn')?.addEventListener('click', showGuideIndex);
   }
 
