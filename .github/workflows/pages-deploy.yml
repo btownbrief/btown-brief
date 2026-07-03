@@ -1,11 +1,20 @@
 name: Deploy static site to GitHub Pages
 
 # Publishes the repo root as-is (no Jekyll, no build step) using the
-# modern GitHub Actions Pages pipeline. Runs on every push to main.
+# modern GitHub Actions Pages pipeline.
+#
+# Triggers:
+#  - push to main (human commits / PR merges)
+#  - after the hourly "Refresh community data" run, because commits it makes
+#    with the built-in GITHUB_TOKEN do NOT trigger `push` events. Without
+#    this, auto-refreshed data (newsletter, events, reddit) never deploys.
 
 on:
   push:
     branches: ["main"]
+  workflow_run:
+    workflows: ["Refresh community data"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
