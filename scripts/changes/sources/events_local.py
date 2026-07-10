@@ -91,6 +91,10 @@ def diff(prev, cur, bootstrap):
             stamp = added
         else:
             stamp = parse_when(item.get("ts")) or run_now
+            # clamp to a credible window: an event first seen NOW with a stale
+            # or future "added" stamp still changed the world at this run
+            if stamp > run_now or stamp < run_now - timedelta(hours=24):
+                stamp = run_now
         when = _when_phrase(item.get("start"))
         bits = [b for b in (when, item.get("venue")) if b]
         out.append(event(

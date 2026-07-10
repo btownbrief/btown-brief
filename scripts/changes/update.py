@@ -49,11 +49,16 @@ KEEP_SNAPSHOTS = 30    # raw snapshot archive depth
 
 
 def load_json(path, default):
+    """Missing file -> default (true first run). Corrupt file -> hard stop:
+    silently substituting a default would trigger a destructive re-bootstrap
+    (state.json) or wipe the visible history (changes.json)."""
     try:
         with open(path) as f:
             return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError:
         return default
+    except json.JSONDecodeError as e:
+        sys.exit(f"FATAL: {path} is corrupt ({e}); fix or delete it deliberately")
 
 
 def save_json(path, data):
@@ -71,9 +76,14 @@ def prune_log(events, now):
     return [e for e in events if e["ts"] >= cutoff]
 
 
-def dedupe(events, existing):
-    """Drop events already in the log (same source + headline + url)."""
-    seen = {(e["source"], e["headline"], e["url"]) for e in existing}
+def dedupe(events, existing, now):
+    """Drop events already in the log (same source + headline + url) — but only
+    look back 48h: a same-headline event within 48h is a true duplicate (state
+    was lost and re-emitted); beyond that it's a legitimate recurrence (a second
+    thunderstorm warning this week is real news, not a dup)."""
+    from datetime import timedelta
+    lookback = iso(now - timedelta(hours=48))
+    seen = {(e["source"], e["headline"], e["url"]) for e in existing if e["ts"] >= lookback}
     fresh = []
     for e in events:
         key = (e["source"], e["headline"], e["url"])
@@ -172,8 +182,9 @@ def main():
         new_events.extend(events)
         print(f"[{name}] ok — {len(events)} change(s){' (bootstrap)' if bootstrap else ''}")
 
-    fresh = dedupe(new_events, log["events"])
-    log["events"] = prune_log(sorted(log["events"] + fresh, key=lambda e: e["ts"]), now)
+    log["events"] = prune_log(log["events"], now)  # prune BEFORE dedupe
+    fresh = dedupe(new_events, log["events"], now)
+    log["events"] = sorted(log["events"] + fresh, key=lambda e: e["ts"])
     log["generated"] = iso(now)
 
     print(f"\n{len(fresh)} new event(s), {len(log['events'])} in the {KEEP_DAYS}-day log, "
@@ -184,8 +195,10 @@ def main():
             print(f"  [{e['category']}] {e['headline']}")
         return
 
-    save_json(STATE_PATH, state)
+    # Log first, state second: a crash in between re-emits events next run
+    # (the 48h dedupe absorbs them) instead of losing them forever.
     save_json(LOG_PATH, log)
+    save_json(STATE_PATH, state)
 
     os.makedirs(SNAP_DIR, exist_ok=True)
     snap_name = now.strftime("%Y-%m-%dT%H%M%SZ") + ".json"

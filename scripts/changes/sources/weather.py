@@ -18,7 +18,7 @@ Diff semantics (state-shaped, not feed-shaped):
 import re
 from datetime import datetime, timedelta
 
-from ..common import get_json, event, iso, now_utc, parse_when, BOOTSTRAP_HOURS
+from ..common import get_json, event, iso, now_utc, parse_when, BOOTSTRAP_HOURS, BTV_TZ
 
 ID = "nws-weather"
 NAME = "NWS Burlington"
@@ -62,7 +62,7 @@ def snapshot():
                 for sent in re.split(r"(?<=\.)\s+", text):
                     if HEADS_UP.search(sent):
                         state["forecast_flag"] = {
-                            "day": now_utc().astimezone().strftime("%Y-%m-%d"),
+                            "day": now_utc().astimezone(BTV_TZ).strftime("%Y-%m-%d"),
                             "text": f"{p.get('name', 'Today')}: {sent.rstrip('.')}",
                         }
                         break
@@ -87,6 +87,12 @@ def _alert_event(a, ts, verb, priority):
 def diff(prev, cur, bootstrap):
     now = now_utc()
     out = []
+
+    # forecast fetch is best-effort: if it failed this run, carry the previous
+    # flag forward (cur is stored as the new state) so recovery on the next
+    # run doesn't re-announce unchanged forecast wording.
+    if cur.get("forecast_flag") is None and prev is not None:
+        cur["forecast_flag"] = prev.get("forecast_flag")
 
     prev_alerts = {} if prev is None else {a["id"]: a for a in prev.get("alerts", [])}
     cur_alerts = {a["id"]: a for a in cur.get("alerts", [])}

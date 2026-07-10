@@ -77,16 +77,26 @@
   }
 
   function esc(s) {
-    var d = document.createElement("div");
-    d.textContent = s == null ? "" : String(s);
-    return d.innerHTML;
+    // attribute-safe: quotes must be encoded too, textContent alone isn't enough
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  /* Feed content is untrusted: only link out to http(s) or same-site pages. */
+  function safeUrl(u) {
+    if (!u) return "";
+    if (/^https?:\/\//i.test(u)) return u;
+    if (/^[\w./-]+\.html$/.test(u)) return u; // relative page like events.html
+    return "";
   }
 
   // ---- rendering ---------------------------------------------------------
 
   function lineHtml(ev, now) {
-    var head = ev.url
-      ? '<a href="' + esc(ev.url) + '" target="_blank" rel="noopener">' + esc(ev.headline) + "</a>"
+    var url = safeUrl(ev.url);
+    var head = url
+      ? '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(ev.headline) + "</a>"
       : esc(ev.headline);
     var html = '<li class="syc-line' + (ev.priority >= 3 ? " is-big" : "") + '">' +
       '<div class="syc-line-headline">' + head + "</div>";

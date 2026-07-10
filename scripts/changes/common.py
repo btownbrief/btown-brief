@@ -202,6 +202,8 @@ def diff_feed_items(prev, cur, bootstrap, make_event, window_hours=BOOTSTRAP_HOU
         if item["id"] in prev_ids:
             continue
         its = parse_when(item.get("ts")) if isinstance(item.get("ts"), str) else item.get("ts")
+        if its and its > run_now:
+            its = run_now  # clamp future-dated pubDates; never show "in 3 hours"
         if bootstrap:
             if its is None or its < cutoff:
                 continue

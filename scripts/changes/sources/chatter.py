@@ -7,6 +7,7 @@ State shape:  {"posts": [{"id", "title", "url", "score", "comments", "created"}]
 Diff:         new posts over 25 points, plus posts gaining 150 points per run
 """
 
+import re
 from datetime import datetime, timedelta, timezone
 
 from ..common import get, get_json, parse_feed, event, parse_when, now_utc, iso, strip_tags
@@ -28,6 +29,17 @@ def _full_url(value):
     return value if value.startswith("http") else BASE_URL + value
 
 
+_POST_ID = re.compile(r"/comments/([a-z0-9]+)")
+
+
+def _post_id(url, fallback):
+    """Normalize to the base-36 reddit post id from the permalink, so the JSON
+    and RSS fetch paths agree on identity — a path flip between runs must not
+    make every post look new."""
+    m = _POST_ID.search(url or "")
+    return m.group(1) if m else fallback
+
+
 def snapshot():
     posts = []
     try:
@@ -40,10 +52,11 @@ def snapshot():
             if not title:
                 continue
             created = datetime.fromtimestamp(post["created_utc"], timezone.utc)
+            url = _full_url(post.get("permalink"))
             posts.append({
-                "id": post.get("name") or post.get("id") or _full_url(post.get("permalink")),
+                "id": _post_id(url, post.get("id") or url),
                 "title": title,
-                "url": _full_url(post.get("permalink")),
+                "url": url,
                 "score": post.get("score"),
                 "comments": post.get("num_comments"),
                 "created": iso(created),
@@ -52,10 +65,11 @@ def snapshot():
         for item in parse_feed(get(RSS_URL)):
             if not item.get("title"):
                 continue
+            url = _full_url(item.get("link"))
             posts.append({
-                "id": item["id"],
+                "id": _post_id(url, item["id"]),
                 "title": item["title"],
-                "url": _full_url(item.get("link")),
+                "url": url,
                 "score": None,
                 "comments": None,
                 "created": iso(item["ts"]) if item.get("ts") else None,
