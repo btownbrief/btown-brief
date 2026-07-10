@@ -1,41 +1,32 @@
 {
- "updated": "2026-07-10T21:56:50+00:00",
+ "updated": "2026-07-10T22:04:34+00:00",
  "sections_updated": {
-  "now": "2026-07-10T21:56:50+00:00",
-  "forecast": "2026-07-10T21:56:50+00:00",
-  "hourly": "2026-07-10T21:56:50+00:00",
-  "alerts": "2026-07-10T21:56:50+00:00",
-  "afd": "2026-07-10T21:56:50+00:00",
-  "lake_forecast": "2026-07-10T21:56:50+00:00",
-  "lake_gage": "2026-07-10T21:56:50+00:00",
-  "air": "2026-07-10T21:56:50+00:00",
-  "sun": "2026-07-10T21:56:50+00:00",
-  "models": "2026-07-10T21:56:50+00:00"
+  "now": "2026-07-10T22:04:34+00:00",
+  "forecast": "2026-07-10T22:04:34+00:00",
+  "hourly": "2026-07-10T22:04:34+00:00",
+  "alerts": "2026-07-10T22:04:34+00:00",
+  "afd": "2026-07-10T22:04:34+00:00",
+  "lake_forecast": "2026-07-10T22:04:34+00:00",
+  "lake_gage": "2026-07-10T22:04:34+00:00",
+  "air": "2026-07-10T22:04:34+00:00",
+  "sun": "2026-07-10T22:04:34+00:00",
+  "models": "2026-07-10T22:04:34+00:00"
  },
  "now": {
-  "observed_at": "2026-07-10T21:35:00+00:00",
+  "observed_at": "2026-07-10T21:40:00+00:00",
   "station": "KBTV",
   "description": "Partly Cloudy",
-  "temp_f": 81,
-  "feels_like_f": 81,
-  "humidity": 42,
-  "dewpoint_f": 55,
-  "wind_mph": 7,
+  "temp_f": 82,
+  "feels_like_f": 82,
+  "humidity": null,
+  "dewpoint_f": null,
+  "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": "NE"
+  "wind_dir": "N"
  },
  "forecast": {
   "updated": "2026-07-10T18:22:22+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "is_day": true,
-    "temp_f": 81,
-    "pop": 12,
-    "wind": "N 9 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 81. North wind around 9 mph."
-   },
    {
     "name": "Tonight",
     "is_day": false,
@@ -80,23 +71,21 @@
     "wind": "E 5 mph",
     "short": "Mostly Clear",
     "detailed": "Mostly clear, with a low around 63. East wind around 5 mph."
+   },
+   {
+    "name": "Monday",
+    "is_day": true,
+    "temp_f": 89,
+    "pop": 5,
+    "wind": "SW 8 mph",
+    "short": "Sunny",
+    "detailed": "Sunny, with a high near 89. Southwest wind around 8 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-07-10T18:22:22+00:00",
   "hours": [
-   {
-    "t": "2026-07-10T17:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 81,
-    "pop": 12,
-    "humidity": 49,
-    "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 30,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-07-10T18:00:00-04:00",
     "temp_f": 79,
@@ -481,6 +470,17 @@
     "wind_dir": "SE",
     "sky": 8,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-07-12T05:00:00-04:00",
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 0,
+    "humidity": 84,
+    "wind_mph": 1,
+    "wind_dir": "E",
+    "sky": 2,
+    "short": "Clear"
    }
   ]
  },
