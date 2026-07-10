@@ -1,0 +1,184 @@
+/* ============================================================
+   SINCE YOU CHECKED — page styles
+   Leans on the design system in style.css (custom properties,
+   header, footer strip). Mobile-first, single column.
+============================================================ */
+
+.syc-page { min-height: 60vh; }
+
+/* --- Hero (echoes .rn-hero) --- */
+.syc-hero {
+  background: linear-gradient(180deg, var(--bg-raised), var(--bg-subtle));
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.syc-hero-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5) var(--space-6);
+  text-align: center;
+}
+
+.syc-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: var(--space-3);
+}
+
+.syc-stats {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.syc-stats .syc-big {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--coral);
+}
+
+.syc-sub {
+  margin-top: var(--space-3);
+  font-size: var(--text-base);
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.syc-updated {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--ink-4);
+}
+
+/* --- Change groups --- */
+.syc-main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-8);
+}
+
+.syc-group {
+  background: var(--bg-raised);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-5);
+  overflow: hidden;
+}
+
+.syc-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5) var(--space-3);
+  border-bottom: 1px dashed var(--line-soft);
+}
+
+.syc-group-icon { font-size: var(--text-lg); line-height: 1; }
+
+.syc-group-label {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.syc-group-count {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--ink-3);
+  background: var(--bg-subtle);
+  border-radius: var(--radius-full);
+  padding: 2px 10px;
+  white-space: nowrap;
+}
+
+.syc-lines { list-style: none; margin: 0; padding: 0; }
+
+.syc-line {
+  padding: var(--space-3) var(--space-5);
+  border-left: 3px solid transparent;
+}
+.syc-line + .syc-line { border-top: 1px solid var(--line-soft); }
+.syc-line.is-big { border-left-color: var(--coral); }
+
+.syc-line-headline {
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.syc-line-headline a { color: inherit; text-decoration: none; }
+.syc-line-headline a:hover { color: var(--teal); text-decoration: underline; }
+
+.syc-line-detail {
+  margin-top: 2px;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+
+.syc-line-meta {
+  margin-top: 3px;
+  font-size: var(--text-xs);
+  color: var(--ink-4);
+}
+.syc-line-meta a { color: var(--ink-3); }
+
+/* --- Quiet / empty state --- */
+.syc-quiet {
+  text-align: center;
+  padding: var(--space-6) var(--space-4) var(--space-5);
+}
+
+.syc-quiet-big {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--ink);
+}
+
+.syc-quiet-sub {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+}
+
+.syc-window-note {
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--ink-4);
+  margin-top: var(--space-2);
+}
+.syc-window-note button {
+  font: inherit;
+  color: var(--teal);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* --- Error --- */
+.syc-error {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-5);
+  text-align: center;
+  color: var(--ink-2);
+}
+
+@media (max-width: 560px) {
+  .syc-hero-inner { padding: var(--space-6) var(--space-4) var(--space-5); }
+  .syc-stats { font-size: var(--text-md); }
+  .syc-stats .syc-big { font-size: var(--text-xl); }
+  .syc-main { padding: var(--space-5) var(--space-3) var(--space-6); }
+  .syc-group-head { padding: var(--space-3) var(--space-4) var(--space-3); }
+  .syc-line { padding: var(--space-3) var(--space-4); }
+}

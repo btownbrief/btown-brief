@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Since You Checked — what changed in Burlington — Burlington Brief</title>
+  <meta name="description" content="What changed in Burlington, Vermont since you last looked: beach statuses, road and transit changes, city agendas, new events, breaking local news, and what's blowing up on Reddit.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/changes.css">
+</head>
+<body>
+
+  <!-- SITE HEADER (same chrome as the list page) -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <span class="logo-sep"></span>
+        <span class="logo-title">Since You Checked</span>
+      </div>
+
+      <nav class="mode-nav" aria-label="Site pages">
+        <a class="mode-btn" href="weather.html">Right Now</a>
+        <a class="mode-btn" href="index.html">← Things To Do</a>
+      </nav>
+    </div>
+  </header>
+
+  <div id="syc-page" class="syc-page" hidden>
+
+    <!-- ============ HERO ============ -->
+    <section class="syc-hero" aria-label="Since you checked">
+      <div class="syc-hero-inner">
+        <h1 class="syc-title">What changed in Burlington?</h1>
+        <p class="syc-stats" id="syc-stats"></p>
+        <p class="syc-sub" id="syc-sub"></p>
+        <p class="syc-updated" id="syc-updated"></p>
+      </div>
+    </section>
+
+    <!-- ============ CHANGES ============ -->
+    <main class="syc-main">
+      <div id="syc-quiet" class="syc-quiet" hidden>
+        <p class="syc-quiet-big">All quiet since you checked. 🌙</p>
+        <p class="syc-quiet-sub">Nothing we track has changed. The most recent changes, from before your last visit:</p>
+      </div>
+      <div id="syc-groups"></div>
+      <p class="syc-window-note" id="syc-window-note"></p>
+    </main>
+
+  </div>
+
+  <!-- data failed to load -->
+  <div class="syc-error" id="syc-error" hidden>
+    <p>Couldn't load the change log. Burlington is still changing, promise — try a refresh.</p>
+  </div>
+
+  <!-- standard footer strip -->
+  <div class="rn-footer-strip">
+    <a class="connect-btn connect-kofi" href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">
+      <span class="connect-btn-main">Donate ❤️</span>
+      <span class="connect-btn-note">Keep this running</span>
+    </a>
+    <a class="connect-btn connect-news" href="https://btownbrief.com" target="_blank" rel="noopener">
+      <span class="connect-btn-main">The Newsletter</span>
+      <span class="connect-btn-note">The biggest changes, every morning — skip the checking</span>
+    </a>
+    <a class="connect-btn connect-about" href="https://www.btownbrief.com/about-me" target="_blank" rel="noopener">
+      <span class="connect-btn-main">About Me</span>
+      <span class="connect-btn-note">Who's behind this</span>
+    </a>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
+      <span class="footer-sep">·</span>
+      <span>Burlington, Vermont</span>
+      <span class="footer-sep">·</span>
+      <span class="footer-attribution">Watching: local newsrooms, City Hall, <a href="https://ridegmt.com" target="_blank" rel="noopener">GMT</a>, the <a href="https://www.burlingtonvt.gov/1219/Beach-Closure-Tracker" target="_blank" rel="noopener">beach tracker</a>, <a href="https://www.weather.gov/btv/" target="_blank" rel="noopener">NWS Burlington</a>, <a href="https://burlingtonvt.portal.civicclerk.com" target="_blank" rel="noopener">meeting agendas</a>, and r/burlington</span>
+    </div>
+  </footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/changes.js"></script>
+</body>
+</html>

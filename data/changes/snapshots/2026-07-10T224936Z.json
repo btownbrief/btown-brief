@@ -1,0 +1,1714 @@
+{
+ "taken": "2026-07-10T22:49:36+00:00",
+ "sources": {
+  "nws-weather": {
+   "ok": true,
+   "state": {
+    "alerts": [],
+    "forecast_flag": null
+   }
+  },
+  "beach-status": {
+   "ok": true,
+   "state": {
+    "beaches": {
+     "Blanchard Beach North": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-10T17:13:00+00:00"
+     },
+     "Blanchard Beach South": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-10T17:12:00+00:00"
+     },
+     "Blodgett Water Access Point": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-10T17:18:00+00:00"
+     },
+     "Leddy Beach North": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-10T18:09:00+00:00"
+     },
+     "Leddy Beach South": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-10T18:08:00+00:00"
+     },
+     "North Beach North": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-10T17:41:00+00:00"
+     },
+     "North Beach South": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-10T17:41:00+00:00"
+     },
+     "North Shore Natural Area": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-09T18:38:00+00:00"
+     },
+     "Oakledge Cove": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-10T18:34:00+00:00"
+     },
+     "Texaco Beach": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-07-10T17:34:00+00:00"
+     }
+    }
+   }
+  },
+  "roads": {
+   "ok": true,
+   "state": {
+    "construction": {
+     "items": [
+      {
+       "id": "81944f26-b0db-42bb-9202-8edb8e4575f4",
+       "name": "Main St — CY25 Paving CO#1",
+       "ts": "2026-06-29T17:24:31+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "9cf9f2c9-13ef-4e35-a3e7-34fbd083b4f6",
+       "name": "College St — CY25 Paving CO#1",
+       "ts": "2026-06-29T17:24:16+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "e12c4f75-ef1b-4de5-ae02-5ae6a23be387",
+       "name": "Scarff Ave — CY26 Paving",
+       "ts": "2026-06-29T13:47:52+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "de656aab-a13f-410e-89e6-89d9829d8b1c",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:47:25+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "61077c48-f85a-41b1-8dc9-d1386af58306",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:46:56+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "3c0bd0e6-eea1-4f5e-8543-cb5df2b283b5",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:46:34+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "6c42faf3-c33e-4c19-803c-dd2358adacc2",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:46:07+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "21f6ff5a-137a-4def-ba0d-67eb3acb8b48",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:40:38+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "f3dee153-f082-419d-969d-45f15caa1be9",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:40:12+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "49bdf6b3-8707-4d6e-beae-5394ed3ce11e",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:38:51+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "e4c6b983-1862-4b56-b77e-5a140f794826",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:35:27+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "b6eba79a-f50b-4f6e-ab00-ab52aefce0e8",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:34:28+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "2ee70ff7-fc98-43a9-b264-96efdfc7ba91",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:33:32+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "44cd3ad9-c173-455f-9f62-0d79fada2858",
+       "name": "CY26 Paving",
+       "ts": "2026-06-29T13:32:41+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "2d60627b-7a75-444c-af08-dee725ad6c0b",
+       "name": "CY 26 Paving",
+       "ts": "2026-06-29T13:32:02+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "149c5717-c652-4258-b48d-57d873f1e531",
+       "name": "College St — CY25 Paving",
+       "ts": "2026-06-29T13:28:00+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "ce4fbdbc-8f67-4bf2-9f3c-e586f69dcb23",
+       "name": "College St — CY25 Paving",
+       "ts": "2026-06-29T13:27:31+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "8d06b389-949e-44c1-b637-b4024ecaa954",
+       "name": "S Union St — CY25 Paving CO #1",
+       "ts": "2026-06-29T13:26:20+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "e85387af-fea4-4233-a8a0-5110a53d181a",
+       "name": "Cliff St — CY 25 Paving",
+       "ts": "2026-06-29T13:22:14+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "4383d539-1a97-4bcc-89e4-63098f401aac",
+       "name": "Pine — Pine Street Water Main Replacement",
+       "ts": "2026-06-25T19:30:23+00:00",
+       "url": "https://burlingtonvt.gov/681/Water-Main-Rehabilitation-Projects"
+      },
+      {
+       "id": "4a5328b0-61df-4bcd-a44e-33b37f7cae88",
+       "name": "Summit — Summit Street Water Main Replacement",
+       "ts": "2026-06-25T19:29:29+00:00",
+       "url": "https://burlingtonvt.gov/681/Water-Main-Rehabilitation-Projects"
+      },
+      {
+       "id": "dcbfe4df-4b38-4b0c-9146-60b6a7be6fa3",
+       "name": "Bennington Court — Bennington Court Water Main Replacement",
+       "ts": "2026-06-25T19:28:30+00:00",
+       "url": "https://burlingtonvt.gov/681/Water-Main-Rehabilitation-Projects"
+      },
+      {
+       "id": "f4c7e45f-72d3-4697-8f5d-7287453f5b17",
+       "name": "INTERVALE RD — Intervale Rd Path",
+       "ts": "2026-06-08T14:31:26+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "7d5e334a-e027-41e1-9086-2ba3d21e0a66",
+       "name": "S Champlain — Replace drainage infrastructure",
+       "ts": "2026-06-04T14:58:10+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "2d65256c-7153-4747-b686-371afbf61962",
+       "name": "Construction project 2d65256c-7153-4747-b686-371afbf61962",
+       "ts": "2026-06-03T19:15:35+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "d6ea47ea-ce4b-420e-8a17-8c457625bd8b",
+       "name": "Construction project d6ea47ea-ce4b-420e-8a17-8c457625bd8b",
+       "ts": "2026-06-03T19:09:32+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "90f81628-876f-4230-8dd0-a4e32b9808f9",
+       "name": "Construction project 90f81628-876f-4230-8dd0-a4e32b9808f9",
+       "ts": "2026-06-03T19:09:14+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "e618622d-7307-4c80-80ce-f4915c4110db",
+       "name": "Construction project e618622d-7307-4c80-80ce-f4915c4110db",
+       "ts": "2026-06-03T19:08:55+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "ed755014-71c8-4064-bdbf-fcfca677a463",
+       "name": "Construction project ed755014-71c8-4064-bdbf-fcfca677a463",
+       "ts": "2026-06-03T19:08:36+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "8fe488ca-8151-4bfe-922e-506ec52032c6",
+       "name": "Construction project 8fe488ca-8151-4bfe-922e-506ec52032c6",
+       "ts": "2026-06-03T19:08:19+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "f264bdb5-48fa-43df-a97a-ce2b053e1e5c",
+       "name": "Construction project f264bdb5-48fa-43df-a97a-ce2b053e1e5c",
+       "ts": "2026-06-03T19:07:55+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "d7ffa121-619c-4772-9ee7-72f8c8db8378",
+       "name": "Construction project d7ffa121-619c-4772-9ee7-72f8c8db8378",
+       "ts": "2026-06-03T19:07:46+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "fa04e6f4-0a26-4740-9d2e-5980f8fe5507",
+       "name": "Construction project fa04e6f4-0a26-4740-9d2e-5980f8fe5507",
+       "ts": "2026-06-03T19:07:36+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "a72ff8c1-a399-4555-8fed-06f3d1d7a1f9",
+       "name": "Construction project a72ff8c1-a399-4555-8fed-06f3d1d7a1f9",
+       "ts": "2026-06-03T19:07:28+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "62c89ee9-d4d1-42d1-8f7c-f653fe0cfd0f",
+       "name": "Construction project 62c89ee9-d4d1-42d1-8f7c-f653fe0cfd0f",
+       "ts": "2026-06-03T19:07:19+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "83f0b692-3a00-48dc-a17a-cb61d35bfa16",
+       "name": "Construction project 83f0b692-3a00-48dc-a17a-cb61d35bfa16",
+       "ts": "2026-06-03T19:07:00+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "497c9aaa-1ef3-4f8a-a7ef-0bcd1a5e62f3",
+       "name": "Construction project 497c9aaa-1ef3-4f8a-a7ef-0bcd1a5e62f3",
+       "ts": "2026-06-03T19:04:03+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "3a9e402d-3157-48ee-b8f2-e5e542d8e2b5",
+       "name": "Construction project 3a9e402d-3157-48ee-b8f2-e5e542d8e2b5",
+       "ts": "2026-06-03T19:03:15+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "18617d3d-9164-497b-b41c-40b4d73ec24d",
+       "name": "Construction project 18617d3d-9164-497b-b41c-40b4d73ec24d",
+       "ts": "2026-06-03T19:03:02+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "be8bb787-058d-43e3-aff4-8140230591f6",
+       "name": "Construction project be8bb787-058d-43e3-aff4-8140230591f6",
+       "ts": "2026-06-03T19:02:47+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "23e6a368-dd88-4395-91bc-1fbb31f3d16b",
+       "name": "Grove St — Grove St Rubber Speed Humps",
+       "ts": "2026-05-28T20:17:05+00:00",
+       "url": "https://www.burlingtonvt.gov/716/Rubber-Speed-Humps"
+      },
+      {
+       "id": "e83ccd78-c52b-4395-a2fb-89ae0c6cb91d",
+       "name": "Flynn Ave — Flynn Ave Rubber Speed Humps",
+       "ts": "2026-05-28T20:07:02+00:00",
+       "url": "https://www.burlingtonvt.gov/716/Rubber-Speed-Humps"
+      },
+      {
+       "id": "f5bb76bf-25b1-4efd-bdda-716e1200fa0e",
+       "name": "CY26 Paving",
+       "ts": "2026-05-27T19:37:05+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "c57d23cd-a307-4901-b64c-830a853fa9bb",
+       "name": "Home Ave — Home Ave Bike Lanes",
+       "ts": "2026-05-21T18:50:34+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "95237959-2f1b-4eab-9023-6c9b6e49b1c9",
+       "name": "East Ave — East Ave Traffic Calming",
+       "ts": "2026-05-21T18:48:57+00:00",
+       "url": "https://www.burlingtonvt.gov/dpw/transportation/eastave"
+      },
+      {
+       "id": "fbfc0e78-73c3-4a8d-bbe5-67e6d3e15af0",
+       "name": "Construction project fbfc0e78-73c3-4a8d-bbe5-67e6d3e15af0",
+       "ts": "2026-05-11T16:17:07+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "e539479a-5831-48d6-adbe-cafa351f6450",
+       "name": "Construction project e539479a-5831-48d6-adbe-cafa351f6450",
+       "ts": "2026-05-11T16:16:59+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "b1549cc9-753d-4332-bf6e-ed2881b77045",
+       "name": "North Beach Campground Pull-Through Sites",
+       "ts": "2026-05-08T14:15:59+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "c757aee8-aae1-408a-87a1-e2c0c5b0b7c9",
+       "name": "NORTH AVE — Kieslich Park Trail",
+       "ts": "2026-05-08T14:13:56+00:00",
+       "url": "https://www.burlingtonvt.gov/DPW"
+      },
+      {
+       "id": "c6579f20-1dfe-48b2-a0e7-10073d845aed",
+       "name": "Appletree Tennis Court Resurfacing",
+       "ts": "2026-05-08T14:12:02+00:00",
+       "url": "https://burlingtonvt.gov/1190/Asphalt-Sport-Court-Resurfacing"
+      }
+     ]
+    },
+    "vt511": {
+     "items": []
+    }
+   }
+  },
+  "gmt-alerts": {
+   "ok": true,
+   "state": {
+    "items": [
+     {
+      "id": "https://ridegmt.com/?p=24687",
+      "title": "Service Alert :: Essex Junction",
+      "link": "https://ridegmt.com/service-alert-essex-junction-2/",
+      "ts": "2026-07-10T14:19:14+00:00",
+      "summary": "The July 10 10:15 AM trip on Route 2 toward Burlington is experiencing significant delays of approximately 15 minutes due to maintenance. We apologize for the inconvenience."
+     },
+     {
+      "id": "https://ridegmt.com/?p=24075",
+      "title": "Downtown Transit Center Hours Changing",
+      "link": "https://ridegmt.com/downtown-transit-center-hours-changing/",
+      "ts": "2026-05-20T11:00:00+00:00",
+      "summary": "Due to staffing challenges, hours at the Downtown Transit Center will change beginning Tuesday, May 26, 2026. The lobby will be open: Monday–Friday: 8:00 AM–7:00 PMSaturday–Sunday: Closed Ticket kiosk/window hours [ ]"
+     },
+     {
+      "id": "https://ridegmt.com/?p=23771",
+      "title": "Medicaid Program Change",
+      "link": "https://ridegmt.com/medicaid-program-change/",
+      "ts": "2026-05-12T22:50:00+00:00",
+      "summary": "Effective July 1st, Tri-Valley Transit (TVT), a trusted and experienced transportation serviceprovider, will take over Medicaid Transportation for Washington and parts of Orange Countywhere Green Mountain Transit (GMT) was the [ ]"
+     },
+     {
+      "id": "https://ridegmt.com/?p=22252",
+      "title": "Service Alert :: Essex Junction",
+      "link": "https://ridegmt.com/service-alert-essex/",
+      "ts": "2026-05-07T19:29:12+00:00",
+      "summary": "Buses on Route 2 will be on detour due to construction. Toward Essex Junction, stops Winooski Falls/Champlain Mill and Abenaki Way at CCV will not be served. Toward Burlington, stops [ ]"
+     },
+     {
+      "id": "https://ridegmt.com/?p=21520",
+      "title": "Service Alert :: Franklin County Commuter",
+      "link": "https://ridegmt.com/service-alert-milton-commuter-main-street-revitalization-project/",
+      "ts": "2025-11-28T13:59:21+00:00",
+      "summary": "Due to the construction, buses cannot access stops on Winooski Falls Way. Outbound riders should use the temporary stop at Spinner Place at Champlain Mill. Inbound riders can request the [ ]"
+     },
+     {
+      "id": "https://ridegmt.com/?p=22255",
+      "title": "Service Alert :: Winooski",
+      "link": "https://ridegmt.com/service-alert-winooski/",
+      "ts": "2025-09-26T01:59:42+00:00",
+      "summary": "Due to the closure of Abenaki Way, buses cannot access stops on Winooski Falls Way and Abenaki Way. Outbound riders should utilize the temporary stop at the VSAC building on [ ]"
+     }
+    ]
+   }
+  },
+  "civicclerk": {
+   "ok": true,
+   "state": {
+    "meetings": {
+     "7752": {
+      "name": "Burlington Electric Commission",
+      "start": "2026-07-08T17:00:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "07.08.2026 Agenda",
+       "07.08.2026 Meeting Packet"
+      ]
+     },
+     "10021": {
+      "name": "Burlington Electric Commission",
+      "start": "2026-07-08T17:30:00+00:00",
+      "hasAgenda": false,
+      "files": []
+     },
+     "8622": {
+      "name": "Board of Finance Meeting",
+      "start": "2026-07-13T17:00:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Board of Finance Meeting",
+       "Board of Finance Meeting"
+      ]
+     },
+     "8640": {
+      "name": "City Council Meeting",
+      "start": "2026-07-13T18:00:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "City Council Meeting V5",
+       "City Council Meeting V5"
+      ]
+     },
+     "10077": {
+      "name": "Local Control Commission Meeting",
+      "start": "2026-07-13T18:55:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Local Control Commission Meeting",
+       "Local Control Commission Meeting"
+      ]
+     },
+     "10075": {
+      "name": "City Council With Mayor Presiding Meeting",
+      "start": "2026-07-13T19:00:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "City Council With Mayor Presiding Meeting",
+       "City Council With Mayor Presiding Meeting"
+      ]
+     },
+     "10067": {
+      "name": "Design Advisory Board Meeting",
+      "start": "2026-07-14T15:00:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Agenda V1",
+       "Packet V1"
+      ]
+     },
+     "10071": {
+      "name": "Rose St & Cedar St Improvements Project Public Information Meeting",
+      "start": "2026-07-14T17:30:00+00:00",
+      "hasAgenda": true,
+      "files": []
+     },
+     "10072": {
+      "name": "Rose St & Cedar St Improvements Project Public Information Meeting",
+      "start": "2026-07-14T17:30:00+00:00",
+      "hasAgenda": false,
+      "files": []
+     },
+     "9957": {
+      "name": "Planning Commission Meeting - Collaborative Working Group on Inclusionary Zoning",
+      "start": "2026-07-14T18:00:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Agenda"
+      ]
+     },
+     "10073": {
+      "name": "Fletcher Free Library Commission",
+      "start": "2026-07-15T07:45:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Library Commission Agenda"
+      ]
+     },
+     "10078": {
+      "name": "Church Street Marketplace Commission Meeting",
+      "start": "2026-07-15T09:00:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Agenda V4",
+       "Agenda Packet V4"
+      ]
+     },
+     "10064": {
+      "name": "Public Works Commission Meeting",
+      "start": "2026-07-15T18:30:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Agenda"
+      ]
+     },
+     "10076": {
+      "name": "Conservation Board",
+      "start": "2026-07-16T17:30:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Agenda V1",
+       "Packet V1"
+      ]
+     },
+     "8682": {
+      "name": "Retirement Board Meeting",
+      "start": "2026-07-20T09:30:00+00:00",
+      "hasAgenda": false,
+      "files": []
+     }
+    }
+   }
+  },
+  "news": {
+   "ok": true,
+   "state": {
+    "feeds": {
+     "sevendays-news": {
+      "items": [
+       {
+        "id": "https://www.sevendaysvt.com/?p=211777",
+        "title": "State Of Vermont Superior Court, Civil Division, Chittenden Unit, Case No. 25-Sc 02830",
+        "link": "https://www.sevendaysvt.com/legal-notices/generalnotices/state-of-vermont-superior-court-civil-division-chittenden-unit-case-no-25-sc-02830/",
+        "ts": "2026-07-10T20:04:16+00:00",
+        "summary": "Daniel Turner, Plaintiff v. Robert St Francis, Jr., Defendant SUMMONS AND ORDER FOR PUBLICATION THIS SUMMONS IS DIRECTED TO: Robert St Francis, Jr. 1. YOU ARE BEING SUED. The plaintiff has started a small claims lawsuit against you. A copy of the Plaintiff’s Complaint against you is on file and may be obtained from the [ ] The post State Of Vermont Superior Court, Civil Division, Chittenden Unit, "
+       },
+       {
+        "id": "https://www.sevendaysvt.com/news/news-quiz-what-did-the-owner-landlord-of-dozens-of-neon-colored-houses-in-burlingtons-old-north-end-announce-he-would-do-36539606/",
+        "title": "News Quiz: How many applicants is Burlington considering to be its next police chief?",
+        "link": "https://www.sevendaysvt.com/news/newsquiz/news-quiz/",
+        "ts": "2026-07-10T11:00:00+00:00",
+        "summary": "Answer this question and seven others in our new weekly news quiz about Vermont news. It's quick, fun and informative. The post News Quiz: How many applicants is Burlington considering to be its next police chief? appeared first on Seven Days ."
+       },
+       {
+        "id": "https://www.sevendaysvt.com/?p=211769",
+        "title": "Obituary: Michael Marceau, 1960-2026",
+        "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-michael-marceau-1960-2024/",
+        "ts": "2026-07-10T10:00:00+00:00",
+        "summary": "Engineer and teacher loved John Deere tractors, model trains, and making cider from his apple and pear orchard The post Obituary: Michael Marceau, 1960-2026 appeared first on Seven Days . (Image: Courtesy)"
+       },
+       {
+        "id": "https://www.sevendaysvt.com/?p=211764",
+        "title": "In Memoriam: Robert Fuller, 1946-2026",
+        "link": "https://www.sevendaysvt.com/life-lines/inmemoriam/in-memoriam-robert-fuller-1946-2026/",
+        "ts": "2026-07-10T10:00:00+00:00",
+        "summary": "Friends, neighbors, former colleagues and coworkers celebrate chef, restaurateur, adventurer and vintage-motorcycle enthusiast The post In Memoriam: Robert Fuller, 1946-2026 appeared first on Seven Days . (Image: Courtesy)"
+       },
+       {
+        "id": "https://www.sevendaysvt.com/?p=211760",
+        "title": "Obituary: Arthur Charles Hessler, 1941-2026",
+        "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-arthur-charles-hessler-1941-2026/",
+        "ts": "2026-07-10T10:00:00+00:00",
+        "summary": "Teacher, researcher and administrator at Saint Michael’s College for 27 years was a dedicated member of his church and community The post Obituary: Arthur Charles Hessler, 1941-2026 appeared first on Seven Days . (Image: Courtesy)"
+       },
+       {
+        "id": "https://www.sevendaysvt.com/?p=211754",
+        "title": "In Memoriam: Allen Samuel Daniels, 1934-2026",
+        "link": "https://www.sevendaysvt.com/life-lines/in-memoriam-allen-samuel-daniels-1934-2026/",
+        "ts": "2026-07-10T10:00:00+00:00",
+        "summary": "Lover of life and family charmed every room with his smile, jokes and dapper style The post In Memoriam: Allen Samuel Daniels, 1934-2026 appeared first on Seven Days . (Image: Courtesy)"
+       },
+       {
+        "id": "https://www.sevendaysvt.com/?p=211745",
+        "title": "Obituary: Tristram Gray Chase Jensvold, 1978-2026",
+        "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-tristram-gray-chase-jensvold-1978-2026/",
+        "ts": "2026-07-10T10:00:00+00:00",
+        "summary": "Former Danville resident had a huge heart and loved outdoor activities, exploring the world and all animals The post Obituary: Tristram Gray Chase Jensvold, 1978-2026 appeared first on Seven Days . (Image: Courtesy)"
+       },
+       {
+        "id": "https://www.sevendaysvt.com/?p=211730",
+        "title": "A Minnesota Reader Forges a Bond With a Hyde Park Book Group",
+        "link": "https://www.sevendaysvt.com/arts-culture/a-minnesota-reader-forges-a-bond-with-a-hyde-park-book-group/",
+        "ts": "2026-07-09T18:12:35+00:00",
+        "summary": "Fran Megarry joined Lanpher Memorial Library’s discussion group remotely during the pandemic. Three and a half years later, she went to her first meeting in person. The post A Minnesota Reader Forges a Bond With a Hyde Park Book Group appeared first on Seven Days . (Image: courtesy of Heather Traeger)"
+       },
+       {
+        "id": "https://www.sevendaysvt.com/?p=210853",
+        "title": "Stuck in Vermont: Revisiting Plainfield, Two Years After a Devastating Flood",
+        "link": "https://www.sevendaysvt.com/arts-culture/stuckinvermont/stuck-in-vermont-revisiting-plainfield-two-years-after-a-devastating-flood/",
+        "ts": "2026-07-09T11:30:00+00:00",
+        "summary": "Episode 771: In Plainfield, the owners of 28 properties are awaiting FEMA buyouts, and one group of locals plans to build on higher ground. The post Stuck in Vermont: Revisiting Plainfield, Two Years After a Devastating Flood appeared first on Seven Days . (Image: Eva Sollberger © Seven Days)"
+       },
+       {
+        "id": "https://www.sevendaysvt.com/?p=211723",
+        "title": "Obituary: William Henry “Bill” Valiquette, 1950-2026",
+        "link": "https://www.sevendaysvt.com/life-lines/obituary-william-henry-bill-valiquette-1950-2026/",
+        "ts": "2026-07-09T10:00:00+00:00",
+        "summary": "Enthusiastic sports fan and driver for Benways Taxi for nearly 40 years touched lives with his kindness and generosity The post Obituary: William Henry \"Bill\" Valiquette, 1950-2026 appeared first on Seven Days . (Image: Courtesy)"
+       }
+      ]
+     },
+     "vtdigger": {
+      "items": [
+       {
+        "id": "https://vtdigger.org/?p=651194",
+        "title": "‘I still worry’: Vermonters recount floods’ impacts at anniversary climate panel",
+        "link": "https://vtdigger.org/2026/07/10/i-still-worry-vermonters-recount-floods-impacts-at-anniversary-climate-panel/",
+        "ts": "2026-07-10T22:31:41+00:00",
+        "summary": "“Disasters don't end when the water recedes,” one person who lost her mobile home said. “They reshape lives for years.” Read the story on VTDigger here: ‘I still worry’: Vermonters recount floods’ impacts at anniversary climate panel ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651185",
+        "title": "A choice ‘on a scale from environmental to spiritual’",
+        "link": "https://vtdigger.org/2026/07/10/a-choice-on-a-scale-from-environmental-to-spiritual/",
+        "ts": "2026-07-10T20:33:00+00:00",
+        "summary": "Higher Ground Conservation Burial launches at the Manitou Project in Williamsville, marking the milestone with a tour and music. Read the story on VTDigger here: A choice ‘on a scale from environmental to spiritual’ ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651170",
+        "title": "Benjamin “Ben” Huffman",
+        "link": "https://vtdigger.org/2026/07/10/obituary-benjamin-ben-huffman/",
+        "ts": "2026-07-10T19:46:27+00:00",
+        "summary": "Ben was a worker, and a thinker, sustained by his marriage of 50 years to Kristin Glaser, and by the pleasure of his children. Read the story on VTDigger here: Benjamin \"Ben\" Huffman ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650627",
+        "title": "Vermont’s public schools could benefit from a new federal school choice tax credit program, but skeptics abound",
+        "link": "https://vtdigger.org/2026/07/10/vermonts-public-schools-could-benefit-from-a-new-federal-school-choice-tax-credit-program-but-skeptics-abound/",
+        "ts": "2026-07-10T19:23:12+00:00",
+        "summary": "Lawmakers and Gov. Phil Scott adopted a framework to enter into the federal school choice tax credit program, albeit with some limits. Read the story on VTDigger here: Vermont’s public schools could benefit from a new federal school choice tax credit program, but skeptics abound ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651166",
+        "title": "When did school boards stop answering to the public?",
+        "link": "https://vtdigger.org/2026/07/10/opinion-when-did-school-boards-stop-answering-to-the-public/",
+        "ts": "2026-07-10T18:59:55+00:00",
+        "summary": "The school board failed to answer questions from the public about its artificial turf proposal, then approved the project without releasing the agreement or explaining its decision. Read the story on VTDigger here: When did school boards stop answering to the public? ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651124",
+        "title": "July 10 is synonymous with flooding in Vermont. Here’s a look back at VTDigger’s coverage.",
+        "link": "https://vtdigger.org/2026/07/10/july-10-is-synonymous-with-flooding-in-vermont-heres-a-look-back-at-vtdiggers-coverage/",
+        "ts": "2026-07-10T10:45:00+00:00",
+        "summary": "For the three previous years, the day has brought flash flooding. Our coverage has tracked what happened, what’s changed — and what hasn’t. Read the story on VTDigger here: July 10 is synonymous with flooding in Vermont. Here’s a look back at VTDigger’s coverage. ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651121",
+        "title": "Content creator ‘Planet Hank’ sues Vermont attorney general over AI video probe",
+        "link": "https://vtdigger.org/2026/07/09/content-creator-planet-hank-sues-vermont-attorney-general-over-ai-video-probe/",
+        "ts": "2026-07-09T21:32:18+00:00",
+        "summary": "Attorney General Charity Clark’s office said the Brattleboro resident may have violated a new state law when he posted a video depicting U.S. Rep. Becca Balint, D-Vt., being thrown into a dumpster by a political opponent. Read the story on VTDigger here: Content creator ‘Planet Hank’ sues Vermont attorney general over AI video probe ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651117",
+        "title": "Gov. Scott names new secretary of commerce and community development as Kurrle exits for Vermont Gas",
+        "link": "https://vtdigger.org/2026/07/09/gov-scott-names-new-secretary-of-commerce-and-community-development-as-kurrle-exits-for-vermont-gas/",
+        "ts": "2026-07-09T20:24:19+00:00",
+        "summary": "Lindsay Kurrle, who has led the agency for seven years, will leave her position July 24 to become the energy company’s president and CEO. Read the story on VTDigger here: Gov. Scott names new secretary of commerce and community development as Kurrle exits for Vermont Gas ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651098",
+        "title": "‘Substantial concerns’: New filing in border patrol agent’s killing challenges law enforcement version of events",
+        "link": "https://vtdigger.org/2026/07/09/substantial-concerns-new-filing-in-border-patrol-agents-killing-challenges-law-enforcement-version-of-events/",
+        "ts": "2026-07-09T19:48:23+00:00",
+        "summary": "“Defense investigation into the veracity and consistency of these accounts is ongoing, but there are reasons to question the accuracy and forthrightness of these law enforcement accounts,” the murder suspect’s attorney wrote. Read the story on VTDigger here: ‘Substantial concerns’: New filing in border patrol agent’s killing challenges law enforcement version of events ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651092",
+        "title": "Vermont’s low-barrier shelters are failing the people they were created to serve",
+        "link": "https://vtdigger.org/2026/07/09/opinion-vermonts-low-barrier-shelters-are-failing-the-people-they-were-created-to-serve/",
+        "ts": "2026-07-09T19:04:06+00:00",
+        "summary": "A year inside one of Burlington's low-barrier shelters raised hard questions about whether the system is built to end homelessness — or just manage it. Read the story on VTDigger here: Vermont’s low-barrier shelters are failing the people they were created to serve ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651037",
+        "title": "‘Broken’ trust: Energy site redevelopment company seeks input from Vernon community on uses for former Vermont Yankee plant",
+        "link": "https://vtdigger.org/2026/07/09/broken-trust-energy-site-redevelopment-company-seeks-input-from-vernon-community-on-uses-for-former-vermont-yankee-plant/",
+        "ts": "2026-07-09T10:53:00+00:00",
+        "summary": "“Communities have more say in outcomes, and I think it's important to figure out how we can work together,” said PowerTransitions spokesperson at a Tuesday night meeting. Read the story on VTDigger here: ‘Broken’ trust: Energy site redevelopment company seeks input from Vernon community on uses for former Vermont Yankee plant ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651042",
+        "title": "Poll: Most young Vermonters say they’re likely to leave state amid affordability concerns",
+        "link": "https://vtdigger.org/2026/07/08/poll-most-young-vermonters-say-theyre-likely-to-leave-state-amid-affordability-concerns/",
+        "ts": "2026-07-08T22:47:17+00:00",
+        "summary": "“I think there's a lot of frustration out there,” said Gov. Phil Scott in response to the poll. “We have a lot of work to do to make Vermont the affordable state that these folks need.” Read the story on VTDigger here: Poll: Most young Vermonters say they’re likely to leave state amid affordability concerns ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651039",
+        "title": "Phil Scott issues executive order that would allow age-based health insurance premiums",
+        "link": "https://vtdigger.org/2026/07/08/phill-scott-issues-executive-order-that-would-allow-age-based-health-insurance-premiums/",
+        "ts": "2026-07-08T21:43:08+00:00",
+        "summary": "The order directs the Department of Financial Regulation to explore alternative insurance options for small businesses, beyond the Affordable Care Act. Read the story on VTDigger here: Phil Scott issues executive order that would allow age-based health insurance premiums ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651034",
+        "title": "Vermont gets $1.3 million to settle allegations Cash App did not shield users from fraud",
+        "link": "https://vtdigger.org/2026/07/08/vermont-gets-1-3-million-to-settle-allegations-cash-app-did-not-shield-users-from-fraud/",
+        "ts": "2026-07-08T21:01:54+00:00",
+        "summary": "The currency transfer platform knew its app was prone to scams but failed to shut them down, even running promotions that exposed more users to fraud, Attorney General Charity Clark said. Read the story on VTDigger here: Vermont gets $1.3 million to settle allegations Cash App did not shield users from fraud ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651031",
+        "title": "Report: Norwich woman died of asphyxia",
+        "link": "https://vtdigger.org/2026/07/08/report-norwich-woman-died-of-asphyxia/",
+        "ts": "2026-07-08T20:12:49+00:00",
+        "summary": "The state police investigation into the death of former Vermont House member Noel A. Neely “remains active and ongoing.” Read the story on VTDigger here: Report: Norwich woman died of asphyxia ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651028",
+        "title": "Vermont doesn’t have a housing shortage. It has a hoarding problem.",
+        "link": "https://vtdigger.org/2026/07/08/opinion-vermont-doesnt-have-a-housing-shortage-it-has-a-hoarding-problem/",
+        "ts": "2026-07-08T20:05:13+00:00",
+        "summary": "Vacant second homes and short-term rentals are the real driver of Vermont's housing crisis, not a lack of supply. Read the story on VTDigger here: Vermont doesn’t have a housing shortage. It has a hoarding problem. ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=651026",
+        "title": "Vermont Judge Dickson Corbett remembered for kindness and dedication to the law",
+        "link": "https://vtdigger.org/2026/07/08/vermont-judge-dickson-corbett-remembered-for-kindness-and-dedication-to-the-law/",
+        "ts": "2026-07-08T19:54:53+00:00",
+        "summary": "“He was a true scholar of the law, so it was natural for him to be a judge,” said Orange County State’s Attorney Colin Seaman. Corbett died last week in his mid-40s. Read the story on VTDigger here: Vermont Judge Dickson Corbett remembered for kindness and dedication to the law ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650984",
+        "title": "Tristram Gray Chase Jensvold",
+        "link": "https://vtdigger.org/2026/07/08/obituary-tristram-gray-chase-jensvold/",
+        "ts": "2026-07-08T19:20:32+00:00",
+        "summary": "Tristram lived life to the fullest, had few boundaries and took many risks. He was intense, funny and tough with a huge heart. He loved deeply and was a good, loyal friend. He adored all animals, particularly horses and dogs. Read the story on VTDigger here: Tristram Gray Chase Jensvold ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650717",
+        "title": "Vermont Conversation: ‘How the Democrats Screwed Bernie.’ Former Sanders chief campaign strategist Tad Devine on the 2016 presidential race",
+        "link": "https://vtdigger.org/2026/07/08/vermont-conversation-how-the-democrats-screwed-bernie-former-sanders-chief-campaign-strategist-tad-devine-on-the-2016-presidential-race/",
+        "ts": "2026-07-08T17:13:00+00:00",
+        "summary": "The veteran Democratic political consultant was chief strategist for Bernie Sanders’ 2016 presidential campaign and has a new book on the mistakes the Democratic Party “seems determined to forget” from its 2016 primary. Read the story on VTDigger here: Vermont Conversation: ‘How the Democrats Screwed Bernie.’ Former Sanders chief campaign strategist Tad Devine on the 2016 presidential race ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650978",
+        "title": "New Chittenden County recycling facility to remain on track after waste district recovers $2.27 million stolen in scam",
+        "link": "https://vtdigger.org/2026/07/07/new-chittenden-county-recycling-facility-to-remain-on-track-after-waste-district-recovers-2-27-million-stolen-in-scam/",
+        "ts": "2026-07-07T22:46:11+00:00",
+        "summary": "The money was stolen early this year by scammers appearing as a construction company that the district had been working with for the project. Read the story on VTDigger here: New Chittenden County recycling facility to remain on track after waste district recovers $2.27 million stolen in scam ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650971",
+        "title": "Platner’s last pillar of support falls as Sanders says: Drop out",
+        "link": "https://vtdigger.org/2026/07/07/platners-last-pillar-of-support-falls-as-sanders-says-drop-out/",
+        "ts": "2026-07-07T21:19:59+00:00",
+        "summary": "Vermont’s congressional delegation called on the Maine Democratic U.S. Senate nominee to leave the race following the sexual assault allegation against him made public Monday. Read the story on VTDigger here: Platner’s last pillar of support falls as Sanders says: Drop out ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650965",
+        "title": "Why do Vermont roots matter in a story about economic power?",
+        "link": "https://vtdigger.org/2026/07/07/opinion-why-do-vermont-roots-matter-in-a-story-about-economic-power/",
+        "ts": "2026-07-07T20:11:57+00:00",
+        "summary": "Measuring Vermonters by the depth of their roots is a distinction that serves no one — and divides everyone. Read the story on VTDigger here: Why do Vermont roots matter in a story about economic power? ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650959",
+        "title": "Grand Isle prosecutor’s DUI case heading to court diversion, court records state",
+        "link": "https://vtdigger.org/2026/07/07/grand-isle-prosecutors-dui-case-heading-to-court-diversion-court-records-state/",
+        "ts": "2026-07-07T19:28:47+00:00",
+        "summary": "The program permits participants to avoid a criminal conviction provided they complete the requirements, which can include counseling and community service. Read the story on VTDigger here: Grand Isle prosecutor’s DUI case heading to court diversion, court records state ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650953",
+        "title": "Judge H. Dickson Corbett",
+        "link": "https://vtdigger.org/2026/07/07/obituary-judge-h-dickson-corbett/",
+        "ts": "2026-07-07T18:53:56+00:00",
+        "summary": "Dickson changed many lives through his professional work, but he gave the most to his family. He was the type of father who was the first to his children when they were hurt and the fastest out of bed when he heard their nightmares. Read the story on VTDigger here: Judge H. Dickson Corbett ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650912",
+        "title": "Burlington’s mayor says the city is ‘back.’ Is it just a blip?",
+        "link": "https://vtdigger.org/2026/07/07/burlingtons-mayor-says-the-city-is-back-is-it-just-a-blip/",
+        "ts": "2026-07-07T11:03:00+00:00",
+        "summary": "Mayor Emma Mulvaney-Stanak said that Burlington is turning a corner. Business leaders say that sales are up — but they aren’t sure about an upward trend. Read the story on VTDigger here: Burlington’s mayor says the city is ‘back.’ Is it just a blip? ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650942",
+        "title": "VTrans receives over $19 million in federal funds for Route 7 reconstruction",
+        "link": "https://vtdigger.org/2026/07/06/vtrans-receives-over-19-million-in-federal-funds-for-route-7-reconstruction/",
+        "ts": "2026-07-06T22:18:16+00:00",
+        "summary": "The U.S. BUILD grant to help fund the reconstruction project was announced Monday by the Vermont Congressional Delegation. Read the story on VTDigger here: VTrans receives over $19 million in federal funds for Route 7 reconstruction ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650937",
+        "title": "Michel “Mich” Daniel Allen",
+        "link": "https://vtdigger.org/2026/07/06/obituary-michel-mich-daniel-allen/",
+        "ts": "2026-07-06T22:07:24+00:00",
+        "summary": "Mich’s generosity was never more evident than when he cooked for family and friends. His culinary creations were second only to the love he felt for the time spent sharing his meals with those who meant the most to him. Read the story on VTDigger here: Michel \"Mich\" Daniel Allen ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650927",
+        "title": "In inaugural season, Vermont Green FC women win conference title",
+        "link": "https://vtdigger.org/2026/07/06/in-inaugural-season-vermont-green-fc-women-win-conference-title/",
+        "ts": "2026-07-06T21:05:06+00:00",
+        "summary": "The club is set to host a national semifinal at the University of Vermont’s Virtue Field in Burlington on Saturday. Read the story on VTDigger here: In inaugural season, Vermont Green FC women win conference title ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650925",
+        "title": "Foresters adapt as insects become driving force in tree mortality",
+        "link": "https://vtdigger.org/2026/07/06/foresters-adapt-as-insects-become-driving-force-in-tree-mortality/",
+        "ts": "2026-07-06T20:40:58+00:00",
+        "summary": "A recent University of Vermont study found that natural causes, including invasive insects, are killing more trees than logging in the Northeast. Read the story on VTDigger here: Foresters adapt as insects become driving force in tree mortality ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=650917",
+        "title": "US Supreme Court ruling on deportation protections leaves Vermont Haitians out of work and scrambling for options",
+        "link": "https://vtdigger.org/2026/07/06/us-supreme-court-ruling-on-deportation-protections-leaves-vermont-hatians-out-of-work-and-scrambling-for-options/",
+        "ts": "2026-07-06T20:10:06+00:00",
+        "summary": "The June 25 court decision will likely impact the local economy, with dozens no longer employed in several industries throughout the state, advocates say. Read the story on VTDigger here: US Supreme Court ruling on deportation protections leaves Vermont Haitians out of work and scrambling for options ."
+       }
+      ]
+     },
+     "vermont-public": {
+      "items": [
+       {
+        "id": "https://www.vermontpublic.org/show/vermont-this-week/2026-07-10/in-review-scott-healthcare-order-brattleboro-birthing-center",
+        "title": "In review: Gov. Scott's health system prescription, Brattleboro birthing center, affordability poll",
+        "link": "https://www.vermontpublic.org/show/vermont-this-week/2026-07-10/in-review-scott-healthcare-order-brattleboro-birthing-center",
+        "ts": "2026-07-10T21:20:33+00:00",
+        "summary": "Vermont's top journalists join moderator Mitch Wertlieb to delve into the most important news stories of the week."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-07-10/garden-tours-around-vermont",
+        "title": "Garden tours around Vermont offer an exclusive peek at exceptional landscapes",
+        "link": "https://www.vermontpublic.org/local-news/2026-07-10/garden-tours-around-vermont",
+        "ts": "2026-07-10T18:36:24+00:00",
+        "summary": "Every summer, towns around the state give visitors a chance to walk through private gardens and meet the people who grew them."
+       },
+       {
+        "id": "https://www.vermontpublic.org/show/vermont-edition/2026-07-10/revolutionary-war-reenactors-bring-vermont-history-to-life",
+        "title": "Revolutionary War reenactors bring Vermont history to life",
+        "link": "https://www.vermontpublic.org/show/vermont-edition/2026-07-10/revolutionary-war-reenactors-bring-vermont-history-to-life",
+        "ts": "2026-07-10T15:34:52+00:00",
+        "summary": "Members of the Whitcomb’s Rangers portray a Continental Army Ranger unit from the late 1770s and early 1780s."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-07-10/musician-pandajakey-pens-a-track-for-overthinkers",
+        "title": "Musician Pandajakey pens a track for overthinkers",
+        "link": "https://www.vermontpublic.org/local-news/2026-07-10/musician-pandajakey-pens-a-track-for-overthinkers",
+        "ts": "2026-07-10T09:00:00+00:00",
+        "summary": "This week’s Friday Song is “I Think I Know What's Up” by the Champlain College grad and multimedia artist."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-07-09/vermont-primary-election-2026-candidates-voting-districts",
+        "title": "Vermont primary election 2026: Look up who's on your ballot",
+        "link": "https://www.vermontpublic.org/local-news/2026-07-09/vermont-primary-election-2026-candidates-voting-districts",
+        "ts": "2026-07-09T22:22:55+00:00",
+        "summary": "Vermont's 2026 primary election is Tuesday, Aug. 11. Use our interactive guide to learn about your local candidates."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-07-09/dug-north-vermont-upbringing-prepared-him-grueling-survival-show-alone",
+        "title": "How Dug North’s Vermont upbringing prepared him for the grueling survival show 'Alone'",
+        "link": "https://www.vermontpublic.org/local-news/2026-07-09/dug-north-vermont-upbringing-prepared-him-grueling-survival-show-alone",
+        "ts": "2026-07-09T21:13:29+00:00",
+        "summary": "North put skills learned in his youth to the test on the History Channel series. Now he’s passing them along."
+       },
+       {
+        "id": "https://www.vermontpublic.org/2026-07-08/graham-platner-drops-out-of-u-s-senate-race-opening-narrow-path-to-replace-him",
+        "title": "Graham Platner suspends U.S. Senate campaign, opening narrow path to replace him",
+        "link": "https://www.vermontpublic.org/2026-07-08/graham-platner-drops-out-of-u-s-senate-race-opening-narrow-path-to-replace-him",
+        "ts": "2026-07-09T00:24:13+00:00",
+        "summary": "Graham Platner's exit from the race comes just days before a statutory deadline allowing the Maine Democratic Party to replace him by July 27. So far, party leaders aren't saying how that process is going to work."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-07-08/after-vetoing-lawmakers-plans-scott-pitches-his-healthcare-ideas-again",
+        "title": "After vetoing lawmakers’ plans, Phil Scott pitches his healthcare ideas — again",
+        "link": "https://www.vermontpublic.org/local-news/2026-07-08/after-vetoing-lawmakers-plans-scott-pitches-his-healthcare-ideas-again",
+        "ts": "2026-07-08T21:51:05+00:00",
+        "summary": "The Republican governor’s order mostly touches on ideas he unsuccessfully put before lawmakers in the last legislative session, and much of what he’s proposing would require their eventual approval."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-07-08/grand-isle-states-attorneys-dui-case-diversion",
+        "title": "Grand Isle state’s attorney’s DUI case sent to diversion",
+        "link": "https://www.vermontpublic.org/local-news/2026-07-08/grand-isle-states-attorneys-dui-case-diversion",
+        "ts": "2026-07-08T19:01:29+00:00",
+        "summary": "Court diversion, an alternative to traditional criminal proceedings, could lead to the case being dismissed and the records sealed."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-07-08/kaiden-mccarthy-vermonts-highest-mlb-draft-selection",
+        "title": "Chester's Kaiden McCarthy could be Vermont's highest-ever MLB Draft selection",
+        "link": "https://www.vermontpublic.org/local-news/2026-07-08/kaiden-mccarthy-vermonts-highest-mlb-draft-selection",
+        "ts": "2026-07-08T18:55:06+00:00",
+        "summary": "Vermont high school baseball star Kaiden McCarthy could make history at this year's MLB Draft if he's selected within the first three rounds. Only two players from Vermont schools have ever been drafted as high as the fourth round."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-07-08/vermont-bodyworker-built-bustling-practice-despite-mounting-allegations",
+        "title": "Vermont bodyworker built a bustling practice despite mounting allegations",
+        "link": "https://www.vermontpublic.org/local-news/2026-07-08/vermont-bodyworker-built-bustling-practice-despite-mounting-allegations",
+        "ts": "2026-07-08T09:00:00+00:00",
+        "summary": "Gregory Garcia, who owns Bodywork Architectures in Burlington, operated for years without registering his practice with the state. During that time, he offered “internal work” to female clients."
+       },
+       {
+        "id": "https://www.vermontpublic.org/show/vermont-edition/2026-07-07/filling-the-gaps-in-rural-maternity-care",
+        "title": "Filling the gaps in rural maternity care",
+        "link": "https://www.vermontpublic.org/show/vermont-edition/2026-07-07/filling-the-gaps-in-rural-maternity-care",
+        "ts": "2026-07-07T20:49:35+00:00",
+        "summary": "As rural hospitals like Brattleboro Memorial Hospital scale back on obstectrics, what will fill in the gap?"
+       }
+      ]
+     },
+     "wcax": {
+      "items": [
+       {
+        "id": "3HXRRMLJQNHHFBJC5SSIVMNMQQ",
+        "title": "Scott defends decision not to give Brattleboro Memorial Hospital more money",
+        "link": "https://www.wcax.com/2026/07/10/scott-defends-decision-not-give-brattleboro-memorial-hospital-more-money/",
+        "ts": "2026-07-10T22:21:28+00:00",
+        "summary": "Vermont's governor defends the decision not to give more funding to Brattleboro Memorial Hospital after it announced it would close its birthing center."
+       },
+       {
+        "id": "SNFG4IVRTJAPFGEVDHMQ5C4GIE",
+        "title": "Vermont marks fourth straight year of July flooding as recovery drags on",
+        "link": "https://www.wcax.com/2026/07/10/vermont-marks-fourth-straight-year-july-flooding-recovery-drags/",
+        "ts": "2026-07-10T22:21:13+00:00",
+        "summary": "Vermont communities are marking four straight years of damaging July floods as the state's long-term recovery effort continues."
+       },
+       {
+        "id": "DRICP3M6GVHDJJ2A2LI23Q62M4",
+        "title": "Transgender girls who challenged Trump sports order drop lawsuit after Supreme Court ruling",
+        "link": "https://www.wcax.com/2026/07/10/transgender-girls-who-challenged-trump-sports-order-drop-lawsuit-after-supreme-court-ruling/",
+        "ts": "2026-07-10T22:16:29+00:00",
+        "summary": "Two transgender girls who were the first to challenge President Donald Trump's executive order, “Keeping Men Out of Women's Sports,” have withdrawn their lawsuit in New Hampshire based on a recent U.S. Supreme Court ruling in related cases and their own personal hardships."
+       },
+       {
+        "id": "IIQ5A3ZUINDWVL6227JPLEROPA",
+        "title": "Friday Night Live summer series kicks off in downtown Rutland",
+        "link": "https://www.wcax.com/2026/07/10/friday-night-live-summer-series-kicks-off-downtown-rutland/",
+        "ts": "2026-07-10T21:53:30+00:00",
+        "summary": "Downtown Rutland is turning into a street party on Friday as the city kicks off its first Friday Night Live of the season."
+       },
+       {
+        "id": "5V4667ENDFGLDC7P32BUUHVCJY",
+        "title": "Vt. man receives kidney from co-worker after sharing diagnosis at work",
+        "link": "https://www.wcax.com/2026/07/10/vermont-kidney-donor-recipient-reunite-dartmouth-hitchcock-medical-center/",
+        "ts": "2026-07-10T21:43:02+00:00",
+        "summary": "A workplace conversation at a Vermont nonprofit led to a lifesaving gift between two co-workers."
+       },
+       {
+        "id": "XILNHZZ2JZG7THNHQLACODCVNQ",
+        "title": "Stuck in Vermont: Revisiting Plainfield 2 years after devastating floods",
+        "link": "https://www.wcax.com/2026/07/10/stuck-vermont-revisiting-plainfield-2-years-after-devastating-floods/",
+        "ts": "2026-07-10T21:38:22+00:00",
+        "summary": "Families are still waiting for federal help two years after floods tore through Plainfield. Seven Days' Eva Sollberger has more in this \"Stuck in Vermont.\""
+       },
+       {
+        "id": "JR6S5TBEWRHMLFELTQKDJA7HQM",
+        "title": "A bike riding tradition brings in the funds to fight cancer",
+        "link": "https://www.wcax.com/2026/07/10/bike-riding-tradition-brings-funds-fight-cancer/",
+        "ts": "2026-07-10T21:36:10+00:00",
+        "summary": "The Prouty is by far the Dartmouth Cancer Center’s largest fundraiser of the year, and this weekend organizers are looking to set a new record"
+       },
+       {
+        "id": "7QJ6I7NTKBBKLC4J3K3PWW2BLE",
+        "title": "Adirondack Land Trust adds 2,000 acres to holdings",
+        "link": "https://www.wcax.com/2026/07/10/adirondack-land-trust-adds-2000-acres-holdings/",
+        "ts": "2026-07-10T21:35:10+00:00",
+        "summary": "More than 2,000 acres of wilderness in Chesterfield, New York, are now part of the Adirondack Land Trust."
+       },
+       {
+        "id": "2CSNYXWP5REMJPYTKIFV2PLXKQ",
+        "title": "Okemo Mountain upgrades snowmaking equipment ahead of next ski season",
+        "link": "https://www.wcax.com/2026/07/10/okemo-mountain-upgrades-snowmaking-equipment-ahead-next-ski-season/",
+        "ts": "2026-07-10T21:34:39+00:00",
+        "summary": "Okemo Mountain Resort is investing in new snowmaking improvements that officials say will increase efficiency and reliability."
+       },
+       {
+        "id": "D5HVIPD72BCCNCKSHBSGCHYDXY",
+        "title": "Pets with Potential: Siobhan, Katinka, Starfish and Pacific",
+        "link": "https://www.wcax.com/2026/07/10/pets-with-potential-siobhan-katinka-starfish-pacific/",
+        "ts": "2026-07-10T21:30:49+00:00",
+        "summary": "Are you looking to add a new feline friend to your family? Meet these cats waiting for their forever homes!"
+       },
+       {
+        "id": "K4SKR43GD5FCXLPNEQBAXGNFSI",
+        "title": "Vermont sheriffs lack oversight, state auditor finds",
+        "link": "https://www.wcax.com/2026/07/10/vermont-sheriffs-lack-oversight-state-auditor-finds/",
+        "ts": "2026-07-10T21:30:33+00:00",
+        "summary": "A new report from the state auditor finds that the way sheriffs operate in Vermont is fundamentally flawed, with no meaningful oversight."
+       },
+       {
+        "id": "3RMM5NQRNRGVHCRYNM7QG7HQ44",
+        "title": "Special Report: Remembering 3 years of July 10 flooding in Vermont",
+        "link": "https://www.wcax.com/2026/07/10/special-report-remembering-3-years-july-10-flooding-vermont/",
+        "ts": "2026-07-10T21:03:07+00:00",
+        "summary": "Today marks the anniversary of devastating floods across parts of Vermont on July 10 in 2023, 2024, and 2025. To mark the occasion, we’re taking a look back at the before, during, and after of each year’s flooding events. In our WCAX Weather Extra Retrospective, we resurface weather graphics from the day, review the highest rainfall totals, recall all the flood warnings issued, and reflect on the "
+       },
+       {
+        "id": "QPAPZVEI4ZEWBB5B5N5YD26CYI",
+        "title": "I-89 southbound Exit 8 ramp closures in Montpelier start Sunday night",
+        "link": "https://www.wcax.com/2026/07/10/i-89-southbound-exit-8-ramp-closures-montpelier-start-sunday-night/",
+        "ts": "2026-07-10T19:28:50+00:00",
+        "summary": "The closures run from 7 p.m. to 6 a.m., starting Sunday and running through July 17."
+       },
+       {
+        "id": "Y76YYM4W5NGLBKTRNDZ3EGCQU4",
+        "title": "Do Good Fest returns to Central Vermont this weekend",
+        "link": "https://www.wcax.com/2026/07/10/do-good-fest-returns-central-vermont-this-weekend/",
+        "ts": "2026-07-10T18:37:05+00:00",
+        "summary": "Montpelier is the place to be this weekend as crowds converge on Saturday for the Do Good Fest."
+       },
+       {
+        "id": "3WFLT6635RF5HBQWAG6UAZRDBU",
+        "title": "Storms cause damage in the Northeast Kingdom, street flooding in Barre City",
+        "link": "https://www.wcax.com/2026/07/10/storms-cause-damage-northeast-kingdom-street-flooding-barre-city/",
+        "ts": "2026-07-10T16:14:00+00:00",
+        "summary": "A strong storm that rolled through Lyndon and East Burke damaged trees and powerlines, meanwhile torrential rain caused street flooding in Barre City."
+       },
+       {
+        "id": "5NDVMZO6ANGBXAZBVB5MJUSCHQ",
+        "title": "Brattleboro ‘citizen journalist’ sues attorney general",
+        "link": "https://www.wcax.com/2026/07/10/brattleboro-citizen-journalist-sues-attorney-general/",
+        "ts": "2026-07-10T16:01:09+00:00",
+        "summary": "A provocative social media content creator is suing Vermont’s Attorneys General over a crackdown on artificial intelligence ads"
+       },
+       {
+        "id": "7C3AD6K4XND2ZF5AUX3JLWRTEE",
+        "title": "Amazon launches new delivery station in the North Country",
+        "link": "https://www.wcax.com/2026/07/10/amazon-launches-new-delivery-station-north-country/",
+        "ts": "2026-07-10T15:37:24+00:00",
+        "summary": "Amazon’s new delivery station is now open at the Champlain Industrial Park in Champlain NY"
+       },
+       {
+        "id": "4XUJYI7WANG4BDIBDGW4776HBM",
+        "title": "Vermont Green FC women to host national semifinal on Saturday",
+        "link": "https://www.wcax.com/2026/07/10/vermont-green-fc-women-host-national-semifinal-saturday/",
+        "ts": "2026-07-10T13:29:21+00:00",
+        "summary": "Vermont Green FC women will host the USL W League semifinals Saturday night at Virtue Field. Here's how you can watch."
+       },
+       {
+        "id": "UOYEJU22HNHOLMOUUP7E7JDEAU",
+        "title": "Vermont marks 3-year anniversary of devastating flooding",
+        "link": "https://www.wcax.com/2026/07/09/vermont-marks-3-year-anniversary-devastating-flooding/",
+        "ts": "2026-07-10T12:50:43+00:00",
+        "summary": "The WCAX First Alert Weather Team takes a look back at 3 years of Vermont flooding in a special streaming on our website and apps."
+       },
+       {
+        "id": "D5V32S6U4VFCRAOMFQBE4CHH5A",
+        "title": "Lake Champlain Community Sailing Center receives $500,000 endowment",
+        "link": "https://www.wcax.com/2026/07/10/lake-champlain-community-sailing-center-receives-500000-endowment/",
+        "ts": "2026-07-10T02:44:08+00:00",
+        "summary": "The Lake Champlain Community Sailing Center has received a $500,000 endowment fund that will help expand its reach into new communities."
+       },
+       {
+        "id": "MX2I33NVINGGHMOYORTAXZHWYU",
+        "title": "Vermont man dies after accident at Coventry landfill",
+        "link": "https://www.wcax.com/2026/07/09/vermont-man-dies-after-accident-coventry-landfill/",
+        "ts": "2026-07-09T22:46:34+00:00",
+        "summary": "Police say a Fairfax man died after an accident with an aerial lift at the Casella landfill in Coventry."
+       },
+       {
+        "id": "UIXQA4FM2BAZ5J5WO32NMGPXKE",
+        "title": "Brattleboro Memorial Hospital plans to close birthing center, citing financial losses",
+        "link": "https://www.wcax.com/2026/07/09/brattleboro-memorial-hospital-plans-close-birthing-center-citing-financial-losses/",
+        "ts": "2026-07-09T22:10:34+00:00",
+        "summary": "The birthing center delivers more than 200 babies every single year, and closure of the facility would force families to travel further."
+       },
+       {
+        "id": "7RY4NRHAAZFBRMJRV2SPBNKYKY",
+        "title": "Randolph’s longtime family doctor trades his stethoscope for a paintbrush",
+        "link": "https://www.wcax.com/2026/07/09/randolphs-longtime-family-doctor-trades-his-stethoscope-paintbrush/",
+        "ts": "2026-07-09T21:51:56+00:00",
+        "summary": "At Gifford Medical Center in Randolph, Super Senior Dr. Ken Borie is a man who cares deeply about his work."
+       },
+       {
+        "id": "TT57A6XGG5EHFLOLAJSFFJ5AGI",
+        "title": "Sanders-style progressives rack up primary wins, raising questions for Democrats",
+        "link": "https://www.wcax.com/2026/07/09/sanders-style-progressives-rack-up-primary-wins-raising-questions-democrats/",
+        "ts": "2026-07-09T21:48:38+00:00",
+        "summary": "A political movement that caught fire in Vermont is spreading to Democratic primaries across the U.S."
+       },
+       {
+        "id": "KBEXKBQUCFGRTNHOH2NDL4IVNE",
+        "title": "Clinton County DA says more arrests possible in Plattsburgh YMCA child abuse probe",
+        "link": "https://www.wcax.com/2026/07/09/clinton-county-da-says-more-arrests-possible-plattsburgh-ymca-child-abuse-probe/",
+        "ts": "2026-07-09T21:46:50+00:00",
+        "summary": "Authorities say more arrests are possible in the expanding child abuse probe of the Bright Beginnings child care center in Plattsburgh."
+       },
+       {
+        "id": "I6ERTNXWNRCCLPDZEKQ6FI3PME",
+        "title": "South Burlington woman pleads not guilty to charges tied to March 11 ICE protest",
+        "link": "https://www.wcax.com/2026/07/09/south-burlington-woman-pleads-not-guilty-charges-tied-march-11-ice-protest/",
+        "ts": "2026-07-09T21:43:45+00:00",
+        "summary": "Connie Anania is one of two remaining people facing charges as a result of the protest."
+       },
+       {
+        "id": "B6TKF474JVG53BAVL2QHENU6I4",
+        "title": "Essex police search for dog, owner after fatal dog-on-dog attack",
+        "link": "https://www.wcax.com/2026/07/09/essex-police-search-dog-owner-after-fatal-dog-on-dog-attack/",
+        "ts": "2026-07-09T21:39:42+00:00",
+        "summary": "Essex police are investigating a dog attack at the Overlook Park walking trail that left one dog dead."
+       },
+       {
+        "id": "LLHZNBTQR5F33NCB3MWUW43754",
+        "title": "Kurrle leaving Scott cabinet to lead Vermont Gas Systems",
+        "link": "https://www.wcax.com/2026/07/09/kurrle-leaving-scott-cabinet-lead-vermont-gas-systems/",
+        "ts": "2026-07-09T21:33:17+00:00",
+        "summary": "A key member of Gov. Phil Scott's cabinet is leaving state government to lead Vermont Gas Systems."
+       },
+       {
+        "id": "ZE3Y7RLUGBC4BAJWMAISOYJN5I",
+        "title": "Beer, bait and summer memories: Forest Country Store returns to Groton State Forest",
+        "link": "https://www.wcax.com/2026/07/09/beer-bait-summer-memories-forest-country-store-returns-groton-state-forest/",
+        "ts": "2026-07-09T21:15:17+00:00",
+        "summary": "After a years-long closure, the Forest Country Store is back open in Groton State Forest."
+       },
+       {
+        "id": "NBDFQPSVUZHX3MPMJ4GWSEIPDQ",
+        "title": "Gov. Scott reacts to affordability poll: Vermonters are ‘really suffering’",
+        "link": "https://www.wcax.com/2026/07/09/gov-scott-reacts-affordability-poll-vermonters-are-really-suffering/",
+        "ts": "2026-07-09T21:11:29+00:00",
+        "summary": "His comments come as a new poll this week showed most residents don’t consider Vermont an affordable place to live."
+       },
+       {
+        "id": "Y3EJPRBJQRE2BAMYPSKMBTFOSI",
+        "title": "Catholics told to stay away from St. Lawrence Co. church",
+        "link": "https://www.wcax.com/2026/07/09/catholics-told-stay-away-st-lawrence-co-church/",
+        "ts": "2026-07-09T21:01:57+00:00",
+        "summary": "The Diocese of Ogdensburg is telling members of a St. Lawrence County church not to go there after the Catholic sect it belongs to was excommunicated."
+       },
+       {
+        "id": "XH7BACEPWBA2XAPU6V2ZUFR44Q",
+        "title": "Severely injured Vt. trooper won’t face charges in I-89 crash",
+        "link": "https://www.wcax.com/2026/07/09/severely-injured-vt-trooper-wont-face-charges-i-89-crash/",
+        "ts": "2026-07-09T21:00:02+00:00",
+        "summary": "Prosecutors will not file any charges against a Vermont trooper who was severely injured in a 2024 highway crash when he slammed into a fire truck."
+       },
+       {
+        "id": "3GXYZ3VOUZHJPJWDGXLYMHXL6Q",
+        "title": "Two North Country hospitals warned over price transparency violations",
+        "link": "https://www.wcax.com/2026/07/09/two-north-country-hospitals-warned-over-price-transparency-violations/",
+        "ts": "2026-07-09T20:44:50+00:00",
+        "summary": "More than 500 hospitals across the country have received warnings from the federal government for failing to comply with price transparency requirements. Two are in the North Country."
+       },
+       {
+        "id": "QNDHVP5EGZDYTCW5CJP7A5XOBY",
+        "title": "2 escape unharmed as Reading home collapses",
+        "link": "https://www.wcax.com/2026/07/09/2-escape-unharmed-reading-home-collapses/",
+        "ts": "2026-07-09T19:44:14+00:00",
+        "summary": "Two people sleeping inside a home in Reading escaped without injury when the house collapsed early Thursday morning."
+       },
+       {
+        "id": "ELI26J5EPJCG3O3BLLRLU7M6WQ",
+        "title": "Police: Gouverneur woman slaps man for taking too long in McDonald’s drive-thru",
+        "link": "https://www.wcax.com/2026/07/09/police-gouverneur-woman-slaps-man-taking-too-long-mcdonalds-drive-thru/",
+        "ts": "2026-07-09T18:24:26+00:00",
+        "summary": "A Gouverneur woman is accused of slapping a man in front of her at the McDonald’s drive-thru for taking too long to get his food."
+       },
+       {
+        "id": "R4AMZ6GCG5GTZLI5G636CQZEZU",
+        "title": "State police add to trove of body cam footage from South Burlington ICE operation",
+        "link": "https://www.wcax.com/2026/04/17/state-police-add-trove-body-cam-footage-south-burlington-ice-operation/",
+        "ts": "2026-07-09T17:23:54+00:00",
+        "summary": "Public Safety Commissioner says VSP did not violate use of force policies."
+       },
+       {
+        "id": "XIL74THTHZFSJJEMQX6QYKH7XY",
+        "title": "New York sues 3M, DuPont and other companies over so-called forever chemicals",
+        "link": "https://www.wcax.com/2026/07/09/new-york-sues-3m-dupont-other-companies-over-so-called-forever-chemicals/",
+        "ts": "2026-07-09T17:04:25+00:00",
+        "summary": "The lawsuit is the latest legal action over PFAS, which have been linked to an increased risk of certain cancers and developmental delays in children."
+       },
+       {
+        "id": "2XSVKIDK2RA5BE2YLCXVC7SOCQ",
+        "title": "WCAX First Alert Weather App: How to get severe weather notifications",
+        "link": "https://www.wcax.com/2026/06/18/wcax-first-alert-weather-app-how-get-severe-weather-notifications/",
+        "ts": "2026-07-09T16:22:53+00:00",
+        "summary": "Our free WCAX First Alert Weather App is one way to receive weather alerts for your location directly to your phone. Here’s how to guarantee that you receive severe weather warnings using our weather app!"
+       },
+       {
+        "id": "G6KHB5RTEBB2VLZOCW3GUM33JY",
+        "title": "Massena crash: Head-on collision on Route 37 sends driver to hospital",
+        "link": "https://www.wcax.com/2026/07/09/massena-crash-head-on-collision-route-37-sends-driver-hospital/",
+        "ts": "2026-07-09T15:33:52+00:00",
+        "summary": "New York State Police responded to a two-vehicle personal injury crash on State Route 37 in the town of Massena on Wednesday morning."
+       },
+       {
+        "id": "BOT2AKK6KJEJRDPFUB42536YAA",
+        "title": "Good Citizen Challenge weekly winner",
+        "link": "https://www.wcax.com/2026/07/09/good-citizen-challenge-weekly-winner/",
+        "ts": "2026-07-09T14:13:28+00:00",
+        "summary": "Congratulations to this week’s winner of the Good Citizen Challenge"
+       },
+       {
+        "id": "KFLN4UR3RREYVFU3NIZYWYSZN4",
+        "title": "Vermont farm lets cows give birth on pasture, skip the barn",
+        "link": "https://www.wcax.com/2026/07/09/vermont-farm-lets-cows-give-birth-pasture-skip-barn/",
+        "ts": "2026-07-09T11:51:48+00:00",
+        "summary": "One farm is taking a different approach toward how its cows give birth. Philo Ridge Farm is letting nature lead the way to improve both animal welfare and land health"
+       },
+       {
+        "id": "3YFHADEONZDRJN4YEHQD3PEHKE",
+        "title": "New workshops underway to shape Vermont’s housing future",
+        "link": "https://www.wcax.com/2026/07/09/new-workshops-underway-shape-vermonts-housing-future/",
+        "ts": "2026-07-09T11:18:46+00:00",
+        "summary": "The Vermont Department of Housing and Community Development is partnering with AARP Vermont and Utile Architects on what is being called the “802 Homes” catalog."
+       },
+       {
+        "id": "BCHDFJ6BB5CMDICUA6W5RUU5HM",
+        "title": "Vermont farm’s Winnimere cuts the competition at national cheese contest",
+        "link": "https://www.wcax.com/2026/07/09/vermont-farms-winnimere-cuts-competition-national-cheese-contest/",
+        "ts": "2026-07-09T10:46:53+00:00",
+        "summary": "Jasper Hill Farm has won a national title for one of its craft cheeses, Winnimere."
+       },
+       {
+        "id": "I5IFGWR5JBFWNNQ7ZXMSJ37VEE",
+        "title": "Vermont flood victims share stories for Welch, Balint in Barre",
+        "link": "https://www.wcax.com/2026/07/09/vermont-flood-victims-testify-before-welch-balint-barre/",
+        "ts": "2026-07-09T02:54:54+00:00",
+        "summary": "Sen. Peter Welch and Rep. Becca Balint heard testimony on Wednesday from victims of the 2023 and 2024 floods."
+       },
+       {
+        "id": "KPKJPRAVEBDGHIRV2C5IHQRCCI",
+        "title": "Rutland to make Center Street one-way as part of long-discussed downtown overhaul",
+        "link": "https://www.wcax.com/2026/07/08/rutland-make-center-street-one-way-part-long-discussed-downtown-overhaul/",
+        "ts": "2026-07-09T00:59:04+00:00",
+        "summary": "The Rutland Board of Aldermen this week decided that after redevelopment, the street will be one-way."
+       },
+       {
+        "id": "JRUGF5E6V5DJLDKDONBCVNLWHM",
+        "title": "802 News: Speaker Krowinski passing the gavel",
+        "link": "https://www.wcax.com/2026/07/08/speaker-krowinski-passing-gavel/",
+        "ts": "2026-07-09T00:22:46+00:00",
+        "summary": "In the latest episode of 802 News, Mark Johnson spoke with the 46-year-old Burlington Democrat about the highs and lows during her time at this Statehouse."
+       },
+       {
+        "id": "UREZUSDZIJCLBA6FQFN5IY3WKI",
+        "title": "Gov. Scott signs executive order aimed at lowering health insurance costs",
+        "link": "https://www.wcax.com/2026/07/08/gov-scott-signs-executive-order-aimed-lowering-health-insurance-costs/",
+        "ts": "2026-07-09T00:17:16+00:00",
+        "summary": "The Scott administration is pitching a plan to make Vermont a more friendly marketplace for insurance companies to operate."
+       },
+       {
+        "id": "7BITOQ7U3NDQTPSGYDKKMWC6AE",
+        "title": "Newport’s Wednesdays on the Waterfront brings music and food trucks to Lake Memphremagog",
+        "link": "https://www.wcax.com/2026/07/08/newports-wednesdays-waterfront-brings-music-food-trucks-lake-memphremagog/",
+        "ts": "2026-07-08T23:10:01+00:00",
+        "summary": "Darren Perron visits the Orleans County city where hundreds of folks gather each Wednesday on the waterfront for fun and music."
+       },
+       {
+        "id": "ESIVA7O2QJBHLHQA2ET2HI74HE",
+        "title": "Access to evolving estrogen therapy remains uneven in Vermont",
+        "link": "https://www.wcax.com/2026/07/08/access-evolving-estrogen-therapy-remains-uneven-vermont/",
+        "ts": "2026-07-08T22:17:38+00:00",
+        "summary": "The health care system — including medical providers and drug manufacturers — has struggled to keep pace with recent changes in guidance for hormone treatment of menopause."
+       },
+       {
+        "id": "MHWMN3G3IFBMBD7IQDJCT5LCFQ",
+        "title": "Welcome to the average most humid time of the year across Vt., NY and NH",
+        "link": "https://www.wcax.com/2026/07/08/welcome-average-most-humid-time-year-across-vt-ny-nh/",
+        "ts": "2026-07-08T22:08:41+00:00",
+        "summary": "As the climatological peak of summer heat approaches in the coming weeks, you’ve likely also noticed the humidity being a bit more persist and muggy. That’s because in early-to-mid July is our average most humid time of the year."
+       }
+      ]
+     },
+     "mynbc5": {
+      "items": [
+       {
+        "id": "71900503",
+        "title": "Holding law enforcement accountable: New report from Vermont auditor looks at sheriff's departments",
+        "link": "https://www.mynbc5.com/article/vermont-auditor-report-sheriffs-departments/71900503",
+        "ts": "2026-07-10T22:35:00+00:00",
+        "summary": "A new report from the Vermont auditor's office is taking a close look at the state's sheriff's departments and how accountability might be improved."
+       },
+       {
+        "id": "71896273",
+        "title": "Jet fuel costs have plunged. Here's why Delta says cheaper flights aren't on the way",
+        "link": "https://www.mynbc5.com/article/jet-fuel-costs-flight-prices/71896273",
+        "ts": "2026-07-10T22:31:00+00:00",
+        "summary": "Air fares aren’t coming down, Delta Air Lines said Friday, even though the cost of jet fuel has fallen sharply."
+       },
+       {
+        "id": "71900737",
+        "title": "Sunshine and low humidity expected all weekend",
+        "link": "https://www.mynbc5.com/article/sunshine-and-low-humidity-expected-all-weekend-7-10-26/71900737",
+        "ts": "2026-07-10T22:28:00+00:00",
+        "summary": "Turning hotter early next week"
+       },
+       {
+        "id": "71900520",
+        "title": "Vermont tourism officials optimistic as Canadian visits increase",
+        "link": "https://www.mynbc5.com/article/canadian-visitors-return/71900520",
+        "ts": "2026-07-10T22:09:00+00:00",
+        "summary": "From cruising across Lake Champlain, to taking in Vermont's scenery, summer tourism is picking up across the state."
+       },
+       {
+        "id": "71901020",
+        "title": "Rabid beaver confirmed near Turtle Island after July 4 attack, swimming advisory extended",
+        "link": "https://www.mynbc5.com/article/rabid-beaver-confirmed-near-turtle-island-after-july-4-attack/71901020",
+        "ts": "2026-07-10T22:09:00+00:00",
+        "summary": "A beaver found dead near Turtle Island on Lake George has tested positive for rabies, prompting New York officials to extend a swimming advisory through at least July 14."
+       },
+       {
+        "id": "71899277",
+        "title": "Here's how to stop Meta's new AI model from using your Instagram pics",
+        "link": "https://www.mynbc5.com/article/meta-muse-image-ai-tool-instagram-pictures/71899277",
+        "ts": "2026-07-10T21:45:00+00:00",
+        "summary": "Meta is facing criticism over its new AI tool, Muse Image, which can create images using other people’s public profile photos without notifying them. Here's how to opt out."
+       },
+       {
+        "id": "71900108",
+        "title": "Gift of Life: Vermont kidney donor, recipient reunite after successful transplant at DMHC",
+        "link": "https://www.mynbc5.com/article/vermonter-donates-kidney-to-coworker/71900108",
+        "ts": "2026-07-10T21:33:00+00:00",
+        "summary": "8 months ago, a Vermont man confided in his coworker about needing a kidney. Turns out, she was a perfect match. The two reunited today, after a successful transplant."
+       },
+       {
+        "id": "71900476",
+        "title": "QUIZ: Did you keep up with the news this week?",
+        "link": "https://www.mynbc5.com/article/news-quiz-july-10-2026/71900476",
+        "ts": "2026-07-10T21:25:00+00:00",
+        "summary": "Test your knowledge! Take this quick quiz to see if you kept up with the top news stories this week, including sports, entertainment and politics."
+       },
+       {
+        "id": "71900723",
+        "title": "Graham Platner withdraws from U.S. Senate race",
+        "link": "https://www.mynbc5.com/article/graham-platner-withdraws-maine-us-senate-race/71900723",
+        "ts": "2026-07-10T21:22:00+00:00",
+        "summary": "Graham Platner has officially withdrawn from Maine's U.S. Senate race, rescinding his nomination in a letter to the Secretary of State's Office Friday afternoon."
+       },
+       {
+        "id": "71900464",
+        "title": "Towns in the NEK clean up after powerful wind storm",
+        "link": "https://www.mynbc5.com/article/east-burke-vermont-wind-storm-damage/71900464",
+        "ts": "2026-07-10T21:20:00+00:00",
+        "summary": "Clean up continued into Friday after towns in Northeastern Vermont were hit with powerful winds on Thursday night."
+       },
+       {
+        "id": "71899100",
+        "title": "Median home sale price hits record high in June",
+        "link": "https://www.mynbc5.com/article/housing-affordability-data/71899100",
+        "ts": "2026-07-10T21:17:00+00:00",
+        "summary": "​See how housing prices, inventory and more have changed over the past few decades."
+       },
+       {
+        "id": "71900603",
+        "title": "Kia renews recall of more than 400,000 SUVs over fire risk, urges owners to park outside",
+        "link": "https://www.mynbc5.com/article/kia-telluride-suv-recall-fire-risk-park-outside/71900603",
+        "ts": "2026-07-10T21:15:00+00:00",
+        "summary": "Nearly 463,000 Kia Tellurides are under a new recall after seat motor issues sparked reports of fires under the passenger seat."
+       },
+       {
+        "id": "71900313",
+        "title": "Berry Bonanza: Local families celebrate summer by picking berries at area farmstands",
+        "link": "https://www.mynbc5.com/article/berry-picking-vermont-essex-junction/71900313",
+        "ts": "2026-07-10T21:04:00+00:00",
+        "summary": "Local farm stands across Vermont state are bursting with berries, and on Friday, those who opted to pick their own had a lot of options to choose from at area farmstands."
+       },
+       {
+        "id": "71900497",
+        "title": "Apple files lawsuit accusing ChatGPT maker OpenAI of stealing trade secrets",
+        "link": "https://www.mynbc5.com/article/apple-files-lawsuit-chatgpt-maker-openai/71900497",
+        "ts": "2026-07-10T21:03:00+00:00",
+        "summary": "Apple files lawsuit accusing ChatGPT maker OpenAI of stealing trade secrets"
+       },
+       {
+        "id": "71900180",
+        "title": "Trump leaves federal election agency without any commissioners",
+        "link": "https://www.mynbc5.com/article/key-election-agency-left-without-commissioners-after-president-trump-removals-resignation/71900180",
+        "ts": "2026-07-10T20:46:00+00:00",
+        "summary": "No commissioners, no clear replacements: the Election Assistance Commission is vacant, raising questions about grants and voting-system certification."
+       },
+       {
+        "id": "71900064",
+        "title": "Cuisinart grills sold at Lowe's, Walmart recalled for injury risk",
+        "link": "https://www.mynbc5.com/article/cuisinart-gas-grill-recall-laceration-risk/71900064",
+        "ts": "2026-07-10T20:38:00+00:00",
+        "summary": "If you bought a Cuisinart Propel+ 3-in-1 grill at Lowe's, Walmart or online, check the model number — it may be part of a recall. Here are the details."
+       },
+       {
+        "id": "71899976",
+        "title": "10-year-old who left home while sleepwalking found deceased, police say",
+        "link": "https://www.mynbc5.com/article/kansas-city-boy-sleepwalking-dies/71899976",
+        "ts": "2026-07-10T20:13:00+00:00",
+        "summary": "A fifth-grader who went missing after leaving his home while sleepwalking was found dead, according to police in Missouri."
+       },
+       {
+        "id": "71899368",
+        "title": "Royal reunion: King Charles III hosts Prince Harry and family for first time in years",
+        "link": "https://www.mynbc5.com/article/king-charles-iii-hosts-prince-harry-and-family/71899368",
+        "ts": "2026-07-10T19:38:00+00:00",
+        "summary": "A rare family meeting: King Charles III welcomed Prince Harry, Meghan and their children at Highgrove House on Friday."
+       },
+       {
+        "id": "71899333",
+        "title": "A bridge and an airport were renamed after President Donald Trump on the same day",
+        "link": "https://www.mynbc5.com/article/donald-trump-international-airport-florida-tennessee-bridge/71899333",
+        "ts": "2026-07-10T19:06:00+00:00",
+        "summary": "Palm Beach International Airport in West Palm, Florida, officially became President Donald J. Trump International Airport on Thursday. Meanwhile, on the same day in Dandridge, Tennessee, the Donald J. Trump Bridge was also renamed after the president."
+       },
+       {
+        "id": "71899492",
+        "title": "Video shows possible microburst hitting northern New Hampshire on Thursday night",
+        "link": "https://www.mynbc5.com/article/video-shows-possible-microburst-hitting-northern-new-hampshire-thursday-night/71899492",
+        "ts": "2026-07-10T18:42:04+00:00",
+        "summary": "A possible microburst touched northern Vermont and Lancaster, New Hampshire, Thursday night."
+       }
+      ]
+     },
+     "btv-news-releases": {
+      "items": [
+       {
+        "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3851/639189245400000000",
+        "title": "07/05/2026 Aggravated Assault | 26BU014857 and 26BU014859",
+        "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3851",
+        "ts": "2026-07-06T13:49:00+00:00",
+        "summary": ""
+       },
+       {
+        "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3848/639183268370000000",
+        "title": "06/25/2026 Motor Vehicle Crash | 26BU013852",
+        "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3848",
+        "ts": "2026-06-29T15:47:17+00:00",
+        "summary": ""
+       },
+       {
+        "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3847/639182448150000000",
+        "title": "Champlain Parkway to Open Monday June 29th",
+        "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3847",
+        "ts": "2026-06-28T17:00:15+00:00",
+        "summary": ""
+       }
+      ]
+     },
+     "bpd-updates": {
+      "items": [
+       {
+        "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3851/639189245400000000",
+        "title": "07/05/2026 Aggravated Assault | 26BU014857 and 26BU014859",
+        "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3851",
+        "ts": "2026-07-06T13:49:00+00:00",
+        "summary": ""
+       },
+       {
+        "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3848/639183268370000000",
+        "title": "06/25/2026 Motor Vehicle Crash | 26BU013852",
+        "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3848",
+        "ts": "2026-06-29T15:47:17+00:00",
+        "summary": ""
+       }
+      ]
+     },
+     "mayor-office": {
+      "items": []
+     }
+    }
+   }
+  },
+  "reddit-burlington": {
+   "ok": true,
+   "state": {
+    "posts": [
+     {
+      "id": "1usr0zz",
+      "title": "Who makes the best pina colada in Burlington?",
+      "url": "https://www.reddit.com/r/burlington/comments/1usr0zz/who_makes_the_best_pina_colada_in_burlington/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T17:00:04+00:00"
+     },
+     {
+      "id": "1usqrwq",
+      "title": "Anywhere in the area to buy a nice fedora hat?",
+      "url": "https://www.reddit.com/r/burlington/comments/1usqrwq/anywhere_in_the_area_to_buy_a_nice_fedora_hat/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T17:00:04+00:00"
+     },
+     {
+      "id": "1uspwmf",
+      "title": "Savatree paper mail",
+      "url": "https://www.reddit.com/r/burlington/comments/1uspwmf/savatree_paper_mail/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T17:00:04+00:00"
+     },
+     {
+      "id": "1uspeaz",
+      "title": "chicken update…",
+      "url": "https://www.reddit.com/r/burlington/comments/1uspeaz/chicken_update/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T17:00:04+00:00"
+     },
+     {
+      "id": "1usocls",
+      "title": "Crazy old man",
+      "url": "https://www.reddit.com/r/burlington/comments/1usocls/crazy_old_man/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1usmda8",
+      "title": "Dunkin",
+      "url": "https://www.reddit.com/r/burlington/comments/1usmda8/dunkin/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1ushsq3",
+      "title": "Illustrator Recommendations?",
+      "url": "https://www.reddit.com/r/burlington/comments/1ushsq3/illustrator_recommendations/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1us9lfo",
+      "title": "Can We Bike from Intervail Road through the Intervail to Ethan Allen Homestead?",
+      "url": "https://www.reddit.com/r/burlington/comments/1us9lfo/can_we_bike_from_intervail_road_through_the/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1us7taj",
+      "title": "lost chicken!",
+      "url": "https://www.reddit.com/r/burlington/comments/1us7taj/lost_chicken/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1us6sgo",
+      "title": "A young Spanish speaking mom I’m friends with is looking for a restaurant job around downtown. Anyone got any leads?",
+      "url": "https://www.reddit.com/r/burlington/comments/1us6sgo/a_young_spanish_speaking_mom_im_friends_with_is/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1us5ut4",
+      "title": "Downtown smoothie fix",
+      "url": "https://www.reddit.com/r/burlington/comments/1us5ut4/downtown_smoothie_fix/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1us3mmm",
+      "title": "T-Mobile??",
+      "url": "https://www.reddit.com/r/burlington/comments/1us3mmm/tmobile/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1us1i40",
+      "title": "Raining at Fifa fanfest?",
+      "url": "https://www.reddit.com/r/burlington/comments/1us1i40/raining_at_fifa_fanfest/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1us0eln",
+      "title": "Burlington library",
+      "url": "https://www.reddit.com/r/burlington/comments/1us0eln/burlington_library/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1us09lk",
+      "title": "Japanese Aiko Fruit Ice Cream",
+      "url": "https://www.reddit.com/r/burlington/comments/1us09lk/japanese_aiko_fruit_ice_cream/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1urxod6",
+      "title": "Uvmmc",
+      "url": "https://www.reddit.com/r/burlington/comments/1urxod6/uvmmc/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1urv0q4",
+      "title": "Cheap E-Bikes to Get Up That Damn Hill",
+      "url": "https://www.reddit.com/r/burlington/comments/1urv0q4/cheap_ebikes_to_get_up_that_damn_hill/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1uruyys",
+      "title": "Where to get magazines for free?",
+      "url": "https://www.reddit.com/r/burlington/comments/1uruyys/where_to_get_magazines_for_free/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1urslm0",
+      "title": "Structural engineer/contractor recommendation",
+      "url": "https://www.reddit.com/r/burlington/comments/1urslm0/structural_engineercontractor_recommendation/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     },
+     {
+      "id": "1ursigc",
+      "title": "July Live Music @ the Odd Fellows Lodge!",
+      "url": "https://www.reddit.com/r/burlington/comments/1ursigc/july_live_music_the_odd_fellows_lodge/",
+      "score": null,
+      "comments": null,
+      "created": "2026-07-10T14:00:07+00:00"
+     }
+    ]
+   }
+  },
+  "events-local": {
+   "ok": true,
+   "state": {
+    "items": [
+     {
+      "id": "evt-get-down-jun27",
+      "title": "South End Get Down",
+      "link": "events.html",
+      "ts": null,
+      "start": "2026-06-27",
+      "venue": ""
+     },
+     {
+      "id": "evt-btv-market-jun28",
+      "title": "BTV Market",
+      "link": "events.html",
+      "ts": null,
+      "start": "2026-06-28",
+      "venue": ""
+     },
+     {
+      "id": "evt-farmers-market-jun28",
+      "title": "Burlington Farmers Market",
+      "link": "events.html",
+      "ts": null,
+      "start": "2026-06-28",
+      "venue": ""
+     },
+     {
+      "id": "evt-leddy-bites-jul2",
+      "title": "Leddy Beach Bites",
+      "link": "events.html",
+      "ts": null,
+      "start": "2026-07-02",
+      "venue": ""
+     },
+     {
+      "id": "evt-brewers-fest",
+      "title": "Vermont Brewers Festival",
+      "link": "events.html",
+      "ts": null,
+      "start": "2026-07-17",
+      "venue": ""
+     },
+     {
+      "id": "evt-art-hop",
+      "title": "South End Art Hop",
+      "link": "events.html",
+      "ts": null,
+      "start": "2026-09-11",
+      "venue": ""
+     },
+     {
+      "id": "evt-grand-point-north",
+      "title": "Grand Point North",
+      "link": "events.html",
+      "ts": null,
+      "start": "2026-09-18",
+      "venue": ""
+     }
+    ]
+   }
+  }
+ }
+}
