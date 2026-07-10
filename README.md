@@ -330,3 +330,21 @@ The dark mode toggle in the header switches themes in-memory. It resets on page 
 ## Questions / Bugs
 
 File an issue at the Burlington Brief or reach out to the site editor. To add yourself as an editor: push access to the GitHub repository.
+
+
+---
+
+## Food & Drink pages (feat/restaurants)
+
+- **restaurants.html** — live "what's open now" views over `data/restaurants.json`;
+  all logic is client-side in `js/restaurants.js` + `js/food-lib.js` (shared hours engine).
+- **deals.html** — deals by day from `data/deals.json`; each deal has `last_verified`
+  and a one-tap expired report (mailto queue).
+- **data/call-list.md** — prioritized hours/deal verification list.
+- **tools/refresh-hours.py** — re-verify hours via Google Places:
+  `set -a; source ~/btown-brief-prompts/secrets.env; set +a; python3 tools/refresh-hours.py`
+  (the API key lives only in the environment — never commit it).
+
+Hours format in `restaurants.json`: `hours.mon = [["11:30","22:00"]]`; a close time
+earlier than its open means past midnight (`[["22:00","02:00"]]`). `kitchen_close`
+is keyed by the day the evening starts.

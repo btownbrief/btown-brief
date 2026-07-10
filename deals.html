@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food &amp; Drink Deals in Burlington, VT — Burlington Brief</title>
+  <meta name="description" content="Every food and drink deal in Burlington, Vermont — happy hours, daily specials, and cheap-night standbys, verified by the Burlington Brief.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/food.css">
+</head>
+<body class="food-page">
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
+      <nav class="mode-nav" aria-label="Site pages">
+        <a class="mode-btn mode-btn-link" href="index.html">The List</a>
+        <a class="mode-btn mode-btn-link" href="restaurants.html">Food &amp; Drink</a>
+        <span class="mode-btn mode-btn-active" aria-current="page">Deals</span>
+      </nav>
+    </div>
+  </header>
+
+  <div class="food-layout">
+    <section class="deals-hero">
+      <h1 class="deals-hero-title">Eat &amp; drink for less</h1>
+      <p class="deals-hero-sub">Every happy hour and food deal we know about in Burlington, sorted by day. Spot one that’s dead? Tap “this expired” and we’ll fix it.</p>
+      <p class="food-hero-clock" id="deals-clock" aria-live="polite"></p>
+    </section>
+
+    <nav class="deals-day-nav" id="deals-day-nav" aria-label="Day of week"></nav>
+
+    <div id="deals-live-wrap" hidden>
+      <h2 class="deals-section-label">🍹 Happening right now</h2>
+      <div class="cards-grid" id="deals-live"></div>
+    </div>
+
+    <div id="deals-hh-wrap" hidden>
+      <h2 class="deals-section-label" id="deals-hh-label">Happy hours</h2>
+      <div class="cards-grid" id="deals-hh"></div>
+    </div>
+
+    <div id="deals-other-wrap" hidden>
+      <h2 class="deals-section-label" id="deals-other-label">Deals &amp; specials</h2>
+      <div class="cards-grid" id="deals-other"></div>
+    </div>
+
+    <div class="empty-state" id="deals-empty" hidden role="status">
+      <div class="empty-icon">◎</div>
+      <p class="empty-heading">No deals on file for this day</p>
+      <p class="empty-sub">Know one? <a href="mailto:stephenvdavis@gmail.com?subject=New%20deal%20tip">Send it in.</a></p>
+    </div>
+
+    <div class="loading-state" id="deals-loading" role="status"><p>Loading…</p></div>
+
+    <div class="support-line food-support">
+      <span class="support-line-label">Support the Brief</span>
+      <span class="support-line-links">
+        <a href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">Donate ❤️</a>
+        <a href="https://btownbrief.com" target="_blank" rel="noopener">The Newsletter</a>
+        <a href="https://www.btownbrief.com/about-me" target="_blank" rel="noopener">About Me</a>
+      </span>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
+      <span class="footer-sep">·</span>
+      <span>Burlington, Vermont</span>
+      <span class="footer-sep">·</span>
+      <span class="footer-attribution">Deals change — <a href="mailto:stephenvdavis@gmail.com?subject=Deal%20tip">send corrections</a></span>
+    </div>
+  </footer>
+
+  <script src="js/food-lib.js"></script>
+  <script src="js/deals.js"></script>
+</body>
+</html>

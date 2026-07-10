@@ -269,6 +269,12 @@ img {
   background: var(--line-soft);
 }
 
+.mode-btn-link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
 /* Dark Mode Toggle */
 .dark-toggle {
   width: 36px;

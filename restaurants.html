@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurants Open Now in Burlington, VT — Burlington Brief</title>
+  <meta name="description" content="What's open right now in Burlington, Vermont — live restaurant hours, patios, happy hours, deals today, late-night kitchens, and a dinner randomizer.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/food.css">
+</head>
+<body class="food-page">
+
+  <!-- SITE HEADER -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="mode-nav" aria-label="Site pages">
+        <a class="mode-btn mode-btn-link" href="index.html">The List</a>
+        <span class="mode-btn mode-btn-active" aria-current="page">Food &amp; Drink</span>
+        <a class="mode-btn mode-btn-link" href="deals.html">Deals</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="food-layout">
+
+    <!-- Hero: the question this page answers -->
+    <section class="food-hero">
+      <h1 class="food-hero-title">What’s open right now?</h1>
+      <p class="food-hero-clock" id="food-clock" aria-live="polite"></p>
+      <p class="food-hero-sub">Live hours for every restaurant, bar, and café in and around Burlington — one tap per question.</p>
+    </section>
+
+    <!-- THE VIEWS: one-tap answer chips, computed against the current time -->
+    <nav class="view-rail-wrap" aria-label="Quick views">
+      <div class="view-rail" id="view-rail" role="tablist"></div>
+    </nav>
+
+    <!-- Toolbar: search + light filters -->
+    <div class="food-toolbar">
+      <div class="search-wrap">
+        <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="search" id="food-search" class="search-input" placeholder="Search restaurants, cuisines…" autocomplete="off" spellcheck="false">
+      </div>
+      <select class="sort-select" id="food-hood" aria-label="Neighborhood"></select>
+      <select class="sort-select" id="food-cat" aria-label="Category"></select>
+    </div>
+
+    <p class="result-count" id="food-count" aria-live="polite"></p>
+    <p class="view-explainer" id="view-explainer" hidden></p>
+
+    <div class="cards-grid food-grid" id="food-grid" role="list"></div>
+
+    <div class="empty-state" id="food-empty" hidden role="status">
+      <div class="empty-icon">◎</div>
+      <p class="empty-heading" id="food-empty-heading">Nothing matches right now</p>
+      <p class="empty-sub" id="food-empty-sub">Try another view, or clear the search.</p>
+      <button class="btn-outline" id="food-clear">Show everything</button>
+    </div>
+
+    <div class="loading-state" id="food-loading" role="status"><p>Loading…</p></div>
+
+    <!-- Standard support strip -->
+    <div class="support-line food-support">
+      <span class="support-line-label">Support the Brief</span>
+      <span class="support-line-links">
+        <a href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">Donate ❤️</a>
+        <a href="https://btownbrief.com" target="_blank" rel="noopener">The Newsletter</a>
+        <a href="https://www.btownbrief.com/about-me" target="_blank" rel="noopener">About Me</a>
+      </span>
+    </div>
+  </div>
+
+  <!-- DETAIL DRAWER -->
+  <div class="detail-overlay" id="detail-overlay" aria-hidden="true"></div>
+  <div class="detail-drawer" id="detail-drawer" role="dialog" aria-modal="true" aria-label="Restaurant details" hidden>
+    <div class="detail-drawer-inner">
+      <div class="detail-drawer-header">
+        <button class="detail-close-btn" id="detail-close" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="detail-content" id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- RANDOMIZE DINNER overlay -->
+  <div class="shuffle-overlay" id="shuffle-overlay" hidden role="dialog" aria-modal="true" aria-label="Randomize dinner">
+    <button class="shuffle-close" id="shuffle-close" aria-label="Close">✕</button>
+    <div class="shuffle-stage">
+      <p class="shuffle-kicker" id="shuffle-kicker">Tonight you’re eating at…</p>
+      <div class="shuffle-name" id="shuffle-name">&nbsp;</div>
+      <p class="shuffle-meta" id="shuffle-meta"></p>
+      <div class="shuffle-actions" id="shuffle-actions" hidden>
+        <button class="shuffle-btn shuffle-again" id="shuffle-again">↻ Spin again</button>
+        <a class="shuffle-btn shuffle-go" id="shuffle-go" target="_blank" rel="noopener">Take me there →</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
+      <span class="footer-sep">·</span>
+      <span>Burlington, Vermont</span>
+      <span class="footer-sep">·</span>
+      <span class="footer-attribution">Hours shift — <a href="mailto:stephenvdavis@gmail.com?subject=Hours%20correction">tell us if something’s wrong</a></span>
+    </div>
+  </footer>
+
+  <script src="js/food-lib.js"></script>
+  <script src="js/restaurants.js"></script>
+</body>
+</html>
