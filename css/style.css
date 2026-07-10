@@ -3103,3 +3103,417 @@ a.mode-btn:hover { text-decoration: none; }
 /* Playlist winners wall */
 .pl-track-winner { background: linear-gradient(135deg, var(--coral-light), var(--bg-raised) 55%); }
 .pl-winner-trophy { font-size: var(--text-lg); }
+   BURLINGTON RIGHT NOW (weather.html)
+============================================================ */
+
+a.mode-btn { text-decoration: none; display: inline-block; }
+a.mode-btn:hover { text-decoration: none; }
+
+.rn-page { min-height: 60vh; }
+
+/* --- Hero: current conditions --- */
+.rn-hero {
+  background: linear-gradient(180deg, var(--bg-raised), var(--bg-subtle));
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.rn-hero-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5) var(--space-6);
+  text-align: center;
+}
+
+.rn-alerts {
+  background: var(--coral-light);
+  border: 1px solid var(--coral);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5);
+  font-weight: 600;
+  font-size: var(--text-base);
+}
+.rn-alerts a { color: var(--coral); }
+
+.rn-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: var(--space-3);
+}
+
+.rn-stats {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--ink);
+  line-height: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  column-gap: var(--space-2);
+}
+
+.rn-big {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--coral);
+  line-height: 1;
+}
+
+.rn-dot { color: var(--ink-4); padding: 0 var(--space-1); }
+
+.rn-sub {
+  margin-top: var(--space-4);
+  font-size: var(--text-base);
+  color: var(--ink-2);
+  max-width: 64ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rn-updated {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--ink-4);
+}
+
+.rn-sun-arc {
+  background: none;
+  border-bottom: none;
+  margin-top: var(--space-4);
+}
+
+.rn-sources {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px dashed var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.rn-sources-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+
+/* --- My Read --- */
+.read-section {
+  background: var(--teal-light);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.read-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5);
+}
+
+.read-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.read-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.read-stamp {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.read-text p {
+  font-size: var(--text-md);
+  line-height: 1.75;
+  color: var(--ink);
+  margin-bottom: var(--space-3);
+}
+
+.read-byline {
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  margin-top: var(--space-2);
+}
+
+/* --- Life scores --- */
+.life-section { background: var(--bg); }
+
+.life-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5);
+}
+
+.life-title, .swim-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--space-2);
+}
+
+.life-sub {
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  max-width: 70ch;
+  margin-bottom: var(--space-6);
+}
+
+.life-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.life-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--ink-4);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+
+.life-card.life-great { border-top-color: #2E8A5F; }
+.life-card.life-good  { border-top-color: var(--teal); }
+.life-card.life-fair  { border-top-color: #D9A43A; }
+.life-card.life-skip  { border-top-color: var(--coral); }
+
+.life-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.life-icon { font-size: var(--text-lg); }
+
+.life-name {
+  font-weight: 600;
+  font-size: var(--text-base);
+  color: var(--ink);
+  flex: 1;
+}
+
+.life-why-btn {
+  font-size: var(--text-xs);
+  color: var(--teal);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--line);
+}
+.life-why-btn:hover { background: var(--teal-light); }
+
+.life-score {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.life-num {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.life-outof { font-size: var(--text-sm); color: var(--ink-4); }
+
+.life-verdict {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.life-great .life-verdict { color: #2E8A5F; }
+.life-good  .life-verdict { color: var(--teal); }
+.life-fair  .life-verdict { color: #B8860B; }
+.life-skip  .life-verdict { color: var(--coral); }
+
+.life-window {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  font-style: italic;
+}
+
+.life-why {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--line);
+}
+
+.life-why-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  padding: 2px 0;
+}
+
+.life-why-delta {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.life-why-note {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--ink-4);
+  line-height: 1.5;
+}
+
+.life-stub {
+  border-top-color: var(--ink-4);
+  opacity: 0.75;
+}
+
+.life-stub-note {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+/* --- Can I swim --- */
+.swim-section {
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--line-soft);
+}
+
+.swim-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5);
+}
+
+.swim-sentence {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  color: var(--ink);
+  margin-bottom: var(--space-1);
+}
+
+.swim-conditions {
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  margin-bottom: var(--space-4);
+}
+
+.swim-board {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.swim-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line-soft);
+  font-size: var(--text-base);
+}
+.swim-row:last-child { border-bottom: none; }
+
+.swim-name { font-weight: 600; color: var(--ink); min-width: 9em; }
+
+.swim-status { color: var(--ink-2); flex: 1; font-size: var(--text-sm); }
+
+.swim-when {
+  font-size: var(--text-xs);
+  color: var(--ink-4);
+  white-space: nowrap;
+}
+
+.swim-empty { padding: var(--space-4); color: var(--ink-3); font-size: var(--text-sm); }
+
+.swim-note, .swim-source {
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--ink-4);
+  line-height: 1.6;
+}
+
+/* --- error + footer strip --- */
+.rn-error {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-5);
+  text-align: center;
+  color: var(--ink-2);
+}
+
+.rn-footer-strip {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5);
+  display: flex;
+  gap: var(--space-3);
+}
+
+.rn-footer-strip .connect-btn { flex: 1; }
+.connect-kofi { background: var(--coral); }
+.connect-news { background: var(--teal); }
+
+@media (max-width: 560px) {
+  .rn-hero-inner { padding: var(--space-6) var(--space-4) var(--space-5); }
+  .rn-stats { font-size: var(--text-md); }
+  .rn-big { font-size: var(--text-2xl); }
+  .rn-sources { gap: var(--space-2) var(--space-3); }
+  .life-grid { grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+  .life-card { padding: var(--space-3) var(--space-4); }
+  .life-num { font-size: var(--text-xl); }
+  .swim-name { min-width: 7em; }
+  .swim-row { flex-wrap: wrap; row-gap: 2px; }
+  .rn-footer-strip { flex-direction: column; }
+}
+
+/* Burlington Right Now teaser (list page, under the daylight arc) */
+.rn-teaser {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2) var(--space-5);
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--line-soft);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+.rn-teaser:hover { text-decoration: none; filter: brightness(0.98); }
+
+.rn-teaser-main {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--teal);
+}
+.rn-teaser-note { color: var(--ink-3); }
+.rn-teaser-arrow { color: var(--teal); font-weight: 700; }
+.rn-teaser:hover .rn-teaser-arrow { text-decoration: none; }
+
+@media (max-width: 560px) {
+  .rn-teaser-note { font-size: var(--text-xs); }
+}

@@ -34,6 +34,7 @@
         <div class="weather-wrap" id="weather-wrap" hidden>
           <button class="weather-indicator" id="weather-indicator" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Weather details"></button>
           <div class="weather-menu" id="weather-menu" role="menu" hidden>
+            <a class="weather-menu-item" role="menuitem" href="weather.html">Burlington Right Now — scores, lake &amp; beaches →</a>
             <a class="weather-menu-item" role="menuitem" href="https://weather.com/weather/today/l/USVT0033:1:US" target="_blank" rel="noopener">Full forecast on weather.com ↗</a>
             <a class="weather-menu-item" id="weather-brief-link" role="menuitem" href="https://www.btownbrief.com" target="_blank" rel="noopener">Read the weather in the Brief ↗</a>
           </div>
@@ -67,6 +68,13 @@
 
     <!-- Daylight arc: sunrise → sunset with live countdown -->
     <div class="sun-arc" id="sun-arc" hidden aria-label="Daylight remaining today"></div>
+
+    <!-- Burlington Right Now teaser -->
+    <a class="rn-teaser" href="weather.html">
+      <span class="rn-teaser-main">Burlington Right Now</span>
+      <span class="rn-teaser-note">life scores · lake conditions · can I swim? · the daily read</span>
+      <span class="rn-teaser-arrow" aria-hidden="true">→</span>
+    </a>
 
     <!-- Events This Week — curated picks auto-pulled from the newsletter -->
     <div class="events-strip week-strip" id="week-strip" hidden>

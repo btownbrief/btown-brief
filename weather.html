@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burlington Right Now — weather, lake, and life scores — Burlington Brief</title>
+  <meta name="description" content="Burlington, Vermont right now: live weather, Lake Champlain conditions, can-I-swim beach statuses, and life scores for patios, sunsets, running, and more.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- SITE HEADER (same chrome as the list page) -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <span class="logo-sep"></span>
+        <span class="logo-title">Burlington Right Now</span>
+      </div>
+
+      <nav class="mode-nav" aria-label="Site pages">
+        <a class="mode-btn" href="index.html">← Things To Do</a>
+      </nav>
+    </div>
+  </header>
+
+  <div id="rn-page" class="rn-page" hidden>
+
+    <!-- ============ BURLINGTON RIGHT NOW ============ -->
+    <section class="rn-hero" aria-label="Current conditions">
+      <div class="rn-hero-inner">
+        <div class="rn-alerts" id="rn-alerts" hidden></div>
+        <h1 class="rn-title">Burlington right now</h1>
+        <p class="rn-stats" id="rn-stats"></p>
+        <p class="rn-sub" id="rn-sub"></p>
+        <p class="rn-updated" id="rn-updated"></p>
+
+        <!-- Daylight arc — same live arc as the list page -->
+        <div class="sun-arc rn-sun-arc" id="sun-arc" hidden aria-label="Daylight remaining today"></div>
+
+        <!-- The sources: hand-holding people to the real tools -->
+        <div class="rn-sources">
+          <span class="rn-sources-label">The sources</span>
+          <a href="https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121" target="_blank" rel="noopener">NWS forecast</a>
+          <a href="https://forecast.weather.gov/product.php?site=BTV&issuedby=BTV&product=AFD" target="_blank" rel="noopener">Forecast discussion</a>
+          <a href="https://forecast.weather.gov/product.php?site=BTV&issuedby=BTV&product=REC" target="_blank" rel="noopener">Lake forecast</a>
+          <a href="https://radar.weather.gov/station/kcxx/standard" target="_blank" rel="noopener">Radar</a>
+          <a href="https://www.windy.com/44.476/-73.212" target="_blank" rel="noopener">Windy</a>
+          <a href="https://www.wunderground.com/forecast/us/vt/burlington" target="_blank" rel="noopener">Wunderground</a>
+          <a href="https://www.airnow.gov/?city=Burlington&state=VT&country=USA" target="_blank" rel="noopener">AirNow</a>
+          <a href="https://waterdata.usgs.gov/monitoring-location/04294500/" target="_blank" rel="noopener">Lake gauge</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MY READ ============ -->
+    <section class="read-section" id="read-section" hidden aria-label="Stephen's weather read">
+      <div class="read-inner">
+        <div class="read-head">
+          <h2 class="read-title">My read</h2>
+          <span class="read-stamp" id="read-stamp"></span>
+        </div>
+        <div class="read-text" id="read-text"></div>
+        <p class="read-byline">— Stephen, the <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Btown Brief</a>. More data than any one outlet: the NWS forecast and the forecaster's own discussion, the lake forecast, the model spread, and what the TV folks are calling.</p>
+      </div>
+    </section>
+
+    <!-- ============ LIFE SCORES ============ -->
+    <section class="life-section" aria-label="Life scores">
+      <div class="life-inner">
+        <h2 class="life-title">Should I…?</h2>
+        <p class="life-sub">Six Burlington questions, scored 0–10 from the live data above — temperature, rain chance, wind, humidity, air quality, water, and the hour of the day. Tap <strong>why?</strong> on any card to see exactly what moved the number.</p>
+        <div class="life-grid" id="life-grid"></div>
+      </div>
+    </section>
+
+    <!-- ============ CAN I SWIM ============ -->
+    <section class="swim-section" id="swim-section" aria-label="Can I swim?">
+      <div class="swim-inner">
+        <h2 class="swim-title">Can I swim?</h2>
+        <p class="swim-sentence" id="swim-sentence"></p>
+        <p class="swim-conditions" id="swim-conditions"></p>
+        <div class="swim-board" id="swim-board"></div>
+        <p class="swim-note" id="swim-note"></p>
+        <p class="swim-source">Statuses from the <a href="https://www.burlingtonvt.gov/1219/Beach-Closure-Tracker" target="_blank" rel="noopener">city's beach tracker</a> — E. coli results post by 11 AM Tuesdays and Fridays; cyanobacteria checks are daily in season. When in doubt, believe the sign at the beach.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- data failed to load -->
+  <div class="rn-error" id="rn-error" hidden>
+    <p>Couldn't load the live data. The lake is still there, promise — try a refresh, or hit the <a href="https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121">NWS forecast</a> directly.</p>
+  </div>
+
+  <!-- standard footer strip -->
+  <div class="rn-footer-strip">
+    <a class="connect-btn connect-kofi" href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">
+      <span class="connect-btn-main">Donate ❤️</span>
+      <span class="connect-btn-note">Keep this running</span>
+    </a>
+    <a class="connect-btn connect-news" href="https://btownbrief.com" target="_blank" rel="noopener">
+      <span class="connect-btn-main">The Newsletter</span>
+      <span class="connect-btn-note">Mondays &amp; Fridays</span>
+    </a>
+    <a class="connect-btn connect-about" href="https://www.btownbrief.com/about-me" target="_blank" rel="noopener">
+      <span class="connect-btn-main">About Me</span>
+      <span class="connect-btn-note">Who's behind this</span>
+    </a>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
+      <span class="footer-sep">·</span>
+      <span>Burlington, Vermont</span>
+      <span class="footer-sep">·</span>
+      <span class="footer-attribution">Data: <a href="https://www.weather.gov/btv/" target="_blank" rel="noopener">NWS Burlington</a>, <a href="https://waterdata.usgs.gov/monitoring-location/04294500/" target="_blank" rel="noopener">USGS</a>, <a href="https://www.airnow.gov/" target="_blank" rel="noopener">AirNow</a>, <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0), City of Burlington</span>
+    </div>
+  </footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/life.js"></script>
+  <script src="js/sun.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+name: Refresh weather data
+
+# Keeps data/weather/latest.json fresh for the Burlington Right Now page,
+# and drafts the morning "My Read" report into the review queue.
+# Same contract as refresh-data.yml: the site stays 100% static, failed
+# fetches keep the last good data, and nothing broken is ever committed.
+
+on:
+  schedule:
+    - cron: '45 * * * *'        # hourly at :45 (offset from refresh-data at :15)
+    - cron: '40 9 * * *'        # 5:40 AM EDT / 4:40 EST — morning draft window
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# The 9:40 draft run can overlap the :45 hourly run — queue them instead.
+concurrency:
+  group: refresh-weather
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Refresh weather data
+        run: python3 scripts/refresh_weather.py
+
+      - name: Draft the morning read (queue for review)
+        # Runs on the 9:40 UTC schedule or a manual dispatch. Writes
+        # data/weather/read-draft.json; Stephen approves with
+        # scripts/approve_read.py before anything shows publicly.
+        if: github.event.schedule == '40 9 * * *' || github.event_name == 'workflow_dispatch'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python3 scripts/draft_read.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/weather/
+          if git diff --cached --quiet; then
+            echo "No weather changes."
+          else
+            git commit -m "Auto-refresh weather data"
+            git push || (git pull --rebase && git push)
+          fi

@@ -287,6 +287,25 @@ btown-brief/
 
 ---
 
+## Burlington Right Now (weather.html)
+
+A full weather-as-Burlington-life dashboard at `weather.html`: current conditions, six 0–10
+life scores (patio, sunset, swimming, running, open-window, dog-walk — each with a "why?"
+breakdown), the Can-I-Swim beach board, and "My Read" — Stephen's daily weather report.
+
+- **Data**: `scripts/refresh_weather.py` writes `data/weather/latest.json` + `beaches.json`
+  hourly via `.github/workflows/refresh-weather.yml` (NWS, USGS, AirNow, Open-Meteo, city
+  beach tracker — all keyless; failures keep the last good section).
+- **Scores** compute client-side in `js/life.js`; formulas are documented in that file and
+  surfaced to readers through the why-drawers.
+- **My Read**: `scripts/draft_read.py` drafts each morning into `data/weather/read-draft.json`
+  (queue) using `prompts/weather-read.md` — the shared weather brain the newsletter also uses.
+  Nothing shows publicly until `python3 scripts/approve_read.py` promotes it to
+  `data/weather/read.json` (add `--push` to publish in one step). Set the `ANTHROPIC_API_KEY`
+  repo secret to get generated drafts in the Action; without it you get the source packet
+  to write from.
+- Full build notes, formula rationale, and open questions: `SUMMARY.md`.
+
 ## Live Weather & the Ambient Weather Layer
 
 The header shows current Burlington conditions (Open-Meteo, no API key). The site also draws a subtle full-screen effect matching the weather — falling snow, rain streaks (lighter for drizzle), or a soft sun glow. It's automatically disabled for visitors whose systems request reduced motion.
