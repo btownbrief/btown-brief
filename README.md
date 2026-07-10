@@ -202,21 +202,22 @@ Open `data/sponsors.json` (starts empty) and add:
 
 `placement` is `"footer"` (block above the site footer) or `"list"` (a labeled card inserted every 12 entries in the list). Set `"active": false` to pause a sponsor without deleting it. When no sponsors are active, the slots disappear entirely.
 
-### Adding a community photo (photos.json)
+### Community photos (photos.html + photo-admin.html)
 
-1. Save the submitted photo into `assets/img/community/` (create the folder the first time).
-2. Add an object to `data/photos.json`:
+Readers submit at `photos.html` (or by email / Telegram); everything lands in
+a moderation queue you work from `photo-admin.html` on your phone. Backend is
+the shared Supabase project — one-time setup in `db/PHOTOS-SETUP.md`. Other
+pages and the newsletter read approved photos through `js/photos-lib.js` or
+`data/photos/manifest.json` (`python3 scripts/export_photos.py`). Full build
+notes: `SUMMARY-photos-telegram.md`.
 
-```json
-{
-  "image": "assets/img/community/june-sunset.jpg",
-  "credit": "Photographer Name",
-  "caption": "Sunset from the breakwater",
-  "date": "2026-06-28"
-}
-```
+The old manual flow (`data/photos.json` + Google Form) is superseded.
 
-Newest `date` shows first. Photos come in through the "Submit a photo" Google Form linked on the site.
+### The Telegram launch page (telegram.html)
+
+Share `telegram.html` instead of the raw t.me invite link — it warms up
+people who don't have Telegram (download steps, mute instructions, house
+rules) and offers the newsletter as the email fallback.
 
 ### Adding an FAQ (faq.json)
 
