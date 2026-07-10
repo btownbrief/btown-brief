@@ -2746,8 +2746,9 @@ img {
     var(--ink);
 }
 
-/* ============================================================
-   COMMUNITY PAGES + BTOWN STRIP (feat/quick-wins)
+/* =====================================================
+
+COMMUNITY PAGES + BTOWN STRIP (feat/quick-wins)
    Shared by index.html, volunteer.html, clubs.html,
    projects.html, playlist.html
 ============================================================ */
@@ -3523,3 +3524,7 @@ a.mode-btn:hover { text-decoration: none; }
 @media (max-width: 560px) {
   .rn-teaser-note { font-size: var(--text-xs); }
 }
+=======
+/* Events page nav link (header) */
+a.mode-btn-link,
+a.mode-btn-link:hover { text-decoration: none; }

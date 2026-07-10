@@ -1,0 +1,51 @@
+name: Refresh events calendar
+
+# Runs the events ingestion pipeline (scripts/events/update.py) daily and
+# commits the refreshed data/events/ files. The site stays 100% static.
+#
+# - update.py exits 0 as long as at least one source succeeded, and a failed
+#   source keeps its previous events alive via the lastSeen grace window —
+#   one flaky site never nukes the calendar.
+# - SCRAPE_CREATORS_API_KEY (repo secret, optional) activates the Instagram
+#   adapter; without it that source just skips itself.
+#
+# Manual run: Actions tab -> "Refresh events calendar" -> Run workflow.
+# Local run:  python3 scripts/events/update.py
+
+on:
+  schedule:
+    - cron: '40 9 * * *'    # daily 9:40 UTC = 5:40am Burlington (EDT)
+    - cron: '40 20 * * *'   # and 20:40 UTC = 4:40pm — catch same-day additions
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-events
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run events pipeline
+        env:
+          SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
+        run: |
+          python3 scripts/events/update.py --window 60
+
+      - name: Commit if changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/events/
+          if git diff --cached --quiet; then
+            echo "No event changes."
+          else
+            git commit -m "Auto-refresh events calendar"
+            git pull --rebase origin ${GITHUB_REF_NAME}
+            git push
+          fi

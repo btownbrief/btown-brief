@@ -236,6 +236,37 @@ The FAQ section only appears once this file has at least one entry.
 
 ---
 
+## The Events Calendar (events.html)
+
+`events.html` is the standalone events page — time-aware buckets ("Tonight",
+"Free tonight", "Live music", ...) on top, the full filterable calendar (list +
+map) below. It reads `data/events/events.json`, which is produced by the
+ingestion pipeline in `scripts/events/`:
+
+```bash
+python3 scripts/events/update.py                # all sources, 60-day window
+python3 scripts/events/update.py --only flynn --window 14 --dry-run --sample 3
+```
+
+- `scripts/events/common.py` — shared fetching/parsing/normalizing toolkit
+- `scripts/events/sources/*.py` — one module per source (see its README.md
+  for the contract; adding a source = adding one file)
+- `scripts/events/venues.json` — venue → address/town registry; coordinates
+  are pulled from `things.json` automatically when names match
+- `data/events/events.json` — deduped events (site reads this)
+- `data/events/events.jsonl` — newsletter-pipeline-compatible export
+- `data/events/report.json` — per-source counts, errors, merges, changes
+- `data/events/imports/facebook/` — drop Easy Scraper CSVs here; the
+  `facebook` source imports them (Facebook is login-walled, never scraped)
+
+The same fuzzy dedup (title + date + venue) that powers the site makes
+`events.jsonl` usable as a pre-gathered base for the newsletter pipeline.
+
+`.github/workflows/refresh-events.yml` reruns the pipeline twice daily and
+commits the refreshed data. A failing source keeps its last-known events for
+a 3-day grace window (then they drop out as possibly cancelled), and the run
+only fails outright if *every* source fails.
+
 ## Auto-Updating Data (GitHub Actions)
 
 The workflow in `.github/workflows/refresh-data.yml` runs hourly and refreshes two files — you never edit these by hand:
