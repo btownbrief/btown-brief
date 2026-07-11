@@ -1,31 +1,31 @@
 {
- "updated": "2026-07-11T19:53:50+00:00",
+ "updated": "2026-07-11T21:34:20+00:00",
  "sections_updated": {
-  "now": "2026-07-11T19:53:50+00:00",
-  "forecast": "2026-07-11T19:53:50+00:00",
-  "hourly": "2026-07-11T19:53:50+00:00",
-  "alerts": "2026-07-11T19:53:50+00:00",
-  "afd": "2026-07-11T19:53:50+00:00",
-  "lake_forecast": "2026-07-11T19:53:50+00:00",
-  "lake_gage": "2026-07-11T19:53:50+00:00",
-  "air": "2026-07-11T19:53:50+00:00",
-  "sun": "2026-07-11T19:53:50+00:00",
-  "models": "2026-07-11T19:53:50+00:00"
+  "now": "2026-07-11T21:34:20+00:00",
+  "forecast": "2026-07-11T21:34:20+00:00",
+  "hourly": "2026-07-11T21:34:20+00:00",
+  "alerts": "2026-07-11T21:34:20+00:00",
+  "afd": "2026-07-11T21:34:20+00:00",
+  "lake_forecast": "2026-07-11T21:34:20+00:00",
+  "lake_gage": "2026-07-11T21:34:20+00:00",
+  "air": "2026-07-11T21:34:20+00:00",
+  "sun": "2026-07-11T21:34:20+00:00",
+  "models": "2026-07-11T21:34:20+00:00"
  },
  "now": {
-  "observed_at": "2026-07-11T19:35:00+00:00",
+  "observed_at": "2026-07-11T21:15:00+00:00",
   "station": "KBTV",
   "description": "Mostly Clear",
   "temp_f": 81,
-  "feels_like_f": 81,
-  "humidity": null,
-  "dewpoint_f": null,
-  "wind_mph": null,
+  "feels_like_f": 80,
+  "humidity": 32,
+  "dewpoint_f": 48,
+  "wind_mph": 11,
   "wind_gust_mph": null,
-  "wind_dir": null
+  "wind_dir": "N"
  },
  "forecast": {
-  "updated": "2026-07-11T18:24:39+00:00",
+  "updated": "2026-07-11T21:28:36+00:00",
   "periods": [
    {
     "name": "This Afternoon",
@@ -39,11 +39,11 @@
    {
     "name": "Tonight",
     "is_day": false,
-    "temp_f": 60,
+    "temp_f": 59,
     "pop": 0,
     "wind": "NE 0 to 10 mph",
     "short": "Clear",
-    "detailed": "Clear, with a low around 60. Northeast wind 0 to 10 mph."
+    "detailed": "Clear, with a low around 59. Northeast wind 0 to 10 mph."
    },
    {
     "name": "Sunday",
@@ -84,36 +84,14 @@
   ]
  },
  "hourly": {
-  "updated": "2026-07-11T18:24:39+00:00",
+  "updated": "2026-07-11T21:28:36+00:00",
   "hours": [
-   {
-    "t": "2026-07-11T15:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 80,
-    "pop": 0,
-    "humidity": 38,
-    "wind_mph": 12,
-    "wind_dir": "N",
-    "sky": 4,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-07-11T16:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 80,
-    "pop": 0,
-    "humidity": 39,
-    "wind_mph": 12,
-    "wind_dir": "N",
-    "sky": 6,
-    "short": "Sunny"
-   },
    {
     "t": "2026-07-11T17:00:00-04:00",
     "temp_f": 80,
     "feels_f": 80,
     "pop": 0,
-    "humidity": 39,
+    "humidity": 36,
     "wind_mph": 12,
     "wind_dir": "N",
     "sky": 3,
@@ -124,7 +102,7 @@
     "temp_f": 80,
     "feels_f": 80,
     "pop": 0,
-    "humidity": 42,
+    "humidity": 38,
     "wind_mph": 10,
     "wind_dir": "N",
     "sky": 1,
@@ -135,7 +113,7 @@
     "temp_f": 77,
     "feels_f": 77,
     "pop": 0,
-    "humidity": 48,
+    "humidity": 43,
     "wind_mph": 9,
     "wind_dir": "N",
     "sky": 3,
@@ -143,10 +121,10 @@
    },
    {
     "t": "2026-07-11T20:00:00-04:00",
-    "temp_f": 75,
-    "feels_f": 75,
+    "temp_f": 73,
+    "feels_f": 73,
     "pop": 0,
-    "humidity": 54,
+    "humidity": 51,
     "wind_mph": 5,
     "wind_dir": "N",
     "sky": 9,
@@ -154,10 +132,10 @@
    },
    {
     "t": "2026-07-11T21:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
+    "temp_f": 71,
+    "feels_f": 71,
     "pop": 0,
-    "humidity": 61,
+    "humidity": 57,
     "wind_mph": 3,
     "wind_dir": "NE",
     "sky": 5,
@@ -165,10 +143,10 @@
    },
    {
     "t": "2026-07-11T22:00:00-04:00",
-    "temp_f": 69,
-    "feels_f": 69,
+    "temp_f": 68,
+    "feels_f": 68,
     "pop": 0,
-    "humidity": 68,
+    "humidity": 65,
     "wind_mph": 2,
     "wind_dir": "NE",
     "sky": 4,
@@ -176,10 +154,10 @@
    },
    {
     "t": "2026-07-11T23:00:00-04:00",
-    "temp_f": 67,
-    "feels_f": 67,
+    "temp_f": 66,
+    "feels_f": 66,
     "pop": 0,
-    "humidity": 73,
+    "humidity": 70,
     "wind_mph": 2,
     "wind_dir": "E",
     "sky": 3,
@@ -187,8 +165,8 @@
    },
    {
     "t": "2026-07-12T00:00:00-04:00",
-    "temp_f": 66,
-    "feels_f": 66,
+    "temp_f": 65,
+    "feels_f": 65,
     "pop": 0,
     "humidity": 73,
     "wind_mph": 2,
@@ -231,10 +209,10 @@
    },
    {
     "t": "2026-07-12T04:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
+    "temp_f": 61,
+    "feels_f": 61,
     "pop": 0,
-    "humidity": 81,
+    "humidity": 84,
     "wind_mph": 1,
     "wind_dir": "E",
     "sky": 6,
@@ -242,10 +220,10 @@
    },
    {
     "t": "2026-07-12T05:00:00-04:00",
-    "temp_f": 61,
-    "feels_f": 61,
+    "temp_f": 60,
+    "feels_f": 60,
     "pop": 0,
-    "humidity": 84,
+    "humidity": 87,
     "wind_mph": 1,
     "wind_dir": "E",
     "sky": 3,
@@ -253,10 +231,10 @@
    },
    {
     "t": "2026-07-12T06:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
+    "temp_f": 59,
+    "feels_f": 59,
     "pop": 0,
-    "humidity": 81,
+    "humidity": 90,
     "wind_mph": 1,
     "wind_dir": "E",
     "sky": 4,
@@ -264,10 +242,10 @@
    },
    {
     "t": "2026-07-12T07:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
+    "temp_f": 63,
+    "feels_f": 63,
     "pop": 0,
-    "humidity": 81,
+    "humidity": 84,
     "wind_mph": 1,
     "wind_dir": "NE",
     "sky": 2,
@@ -481,6 +459,28 @@
     "wind_dir": "S",
     "sky": 7,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-07-13T03:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 0,
+    "humidity": 73,
+    "wind_mph": 5,
+    "wind_dir": "S",
+    "sky": 21,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-07-13T04:00:00-04:00",
+    "temp_f": 65,
+    "feels_f": 65,
+    "pop": 0,
+    "humidity": 75,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 29,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -766,17 +766,17 @@
  },
  "lake_gage": {
   "water_temp_f": 75,
-  "water_temp_at": "2026-07-11T15:00:00.000-04:00",
+  "water_temp_at": "2026-07-11T17:00:00.000-04:00",
   "level_ft": 96.6,
-  "level_at": "2026-07-11T15:00:00.000-04:00",
+  "level_at": "2026-07-11T17:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 37,
+  "aqi": 38,
   "category": "Good",
-  "pollutant": "PM2.5",
-  "observed": "07/11/26 15:00",
+  "pollutant": "OZONE",
+  "observed": "07/11/26 17:00",
   "discussion": "On Saturday, July 11th, expect moderate air quality in southern Vermont and generally good air quality in the north."
  },
  "sun": {
@@ -791,9 +791,9 @@
    {
     "date": "2026-07-11",
     "high_f": {
-     "GFS": 80,
+     "GFS": 81,
      "Euro": 77,
-     "ICON": 79
+     "ICON": 78
     },
     "pop_max": {
      "GFS": 0,
@@ -805,14 +805,14 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
    },
    {
     "date": "2026-07-12",
     "high_f": {
-     "GFS": 82,
+     "GFS": 84,
      "Euro": 82,
-     "ICON": 84
+     "ICON": 82
     },
     "pop_max": {
      "GFS": 0,
@@ -831,10 +831,10 @@
     "high_f": {
      "GFS": 84,
      "Euro": 88,
-     "ICON": 90
+     "ICON": 89
     },
     "pop_max": {
-     "GFS": 5,
+     "GFS": 4,
      "Euro": 4,
      "ICON": 3
     },
@@ -843,7 +843,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 6
+    "high_spread_f": 5
    }
   ]
  }
