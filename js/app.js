@@ -59,6 +59,11 @@
         fetchJSON('data/calendar.json').catch(() => []),
       ]);
       const eventsWeek = await fetchJSON('data/events-week.json').catch(() => ({ days: [] }));
+      // The REAL calendar — 3,000+ events from 26 sources. data/events.json (above)
+      // is a stale 7-item legacy file kept only as a fallback; the Upcoming strip
+      // was living off the hand-curated tentpoles alone, which is why it read thin.
+      const bigCal = await fetchJSON('data/events/events.json').catch(() => ({ events: [] }));
+      state.bigEvents = (bigCal && bigCal.events) || [];
       state.things = things || [];
       // Assign a per-load random key so "Random" sort gives a fresh order on
       // every refresh, but stays stable while filtering within a session.
@@ -180,30 +185,86 @@
     strip.hidden = false;
   }
 
-  // Upcoming events — reads data/calendar.json (the 6-month calendar),
-  // hides anything already past, sorts soonest-first, shows the next dozen.
-  function renderEvents() {
-    const source = (state.calendar && state.calendar.length) ? state.calendar : state.events;
-    if (!source || source.length === 0) return;
+  /* Upcoming — the curated tentpoles (data/calendar.json), then filled out with
+     the genuinely marquee stuff the scrapers found: festivals, fairs, block
+     parties, parades. It used to show ONLY the ~11 hand-curated entries, which
+     is why it read thin next to 26 sources' worth of data.
 
+     Deliberately excludes 'ongoing' and 'series' — a standing museum exhibit and
+     the weekly trivia night are not "upcoming", they're just Tuesday. */
+  /* What earns a place in Upcoming.
+
+     The rail can only show a dozen, so the old filter had to be a bouncer.
+     Now that clicking the label opens the FULL list, the rail is just the
+     glance and the list is the substance — so this can afford to be generous.
+     Two ways in: a marquee-sounding title, or a marquee VENUE (a night at the
+     Flynn or Waterfront Park is a big deal whatever it's called). */
+  const MARQUEE = /festival|fair\b|fest\b|parade|marathon|block party|art hop|expo\b|fireworks|gala|carnival|regatta|tournament|opening night|premiere/i;
+
+  const MARQUEE_VENUE = /waterfront park|the flynn|flynn (theat|center)|higher ground|champlain valley exp|shelburne museum|memorial auditorium|church st(reet)? marketplace|centennial field|midway lawn/i;
+
+  /* "fair\b" and "fest\b" are hungrier than they look — the greedy version
+     dragged in a UVM JOBS fair, a psychic EXPO and a HAMfest in Ontario. */
+  const NOT_MARQUEE = /jobs? fair|career fair|health fair|vendor fair|job expo|hamfest|psychic|craft fair|blood drive/i;
+  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function shortDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso + 'T12:00:00');
+    return isNaN(d) ? iso : `${MON[d.getMonth()]} ${d.getDate()}`;
+  }
+
+  function renderEvents() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const notPast = (dateStr) => {
+      if (!dateStr) return true;
+      const d = new Date(dateStr + 'T12:00:00');
+      return isNaN(d) || d >= today;
+    };
 
-    const upcoming = source
-      .filter(e => !e.hidden)
+    const tentpoles = (state.calendar || [])
+      .filter(e => !e.hidden && notPast(e.date));
+
+    const seen = new Set(tentpoles.map(e => String(e.name || '').toLowerCase().slice(0, 24)));
+
+    const marquee = (state.bigEvents || [])
+      .filter(e => e.status === 'active')
+      .filter(e => !(e.tags || []).some(t => t === 'ongoing' || t === 'series'))
       .filter(e => {
-        if (!e.date) return true;
-        const d = new Date(e.date);
-        return isNaN(d) || d >= today;
+        const t = e.title || '';
+        if (NOT_MARQUEE.test(t)) return false;
+        return MARQUEE.test(t) || MARQUEE_VENUE.test(e.venue || '');
       })
-      .sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')))
-      .slice(0, 12);
+      .filter(e => notPast(e.date))
+      .filter(e => {                                  // one card per event, not per occurrence
+        const k = String(e.title || '').toLowerCase().slice(0, 24);
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      })
+      .map(e => ({
+        name: e.title,
+        date: e.date,
+        // Tentpoles carry a human date_display ("Mid-September"). Scraped events
+        // don't, and a raw 2026-07-15 sitting next to those looks like a bug.
+        date_display: shortDate(e.date),
+        note: [e.venue, e.town].filter(Boolean).join(' · '),
+        link: e.url,
+      }));
+
+    // Everything, sorted. The rail shows the front of it; the panel shows all.
+    const all = tentpoles.concat(marquee)
+      .sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+    const upcoming = all.slice(0, 16);
 
     if (upcoming.length === 0) return;
 
     const strip = document.getElementById('events-strip');
     const list  = document.getElementById('events-list');
     if (!strip || !list) return;
+
+    renderEventsAll(all);
 
     list.innerHTML = upcoming.map(e => `
       <div class="event-card" role="listitem">
@@ -215,6 +276,60 @@
     `).join('');
 
     strip.hidden = false;
+  }
+
+  /* The whole Upcoming list, grouped by month. The rail is a glance and always
+     will be — sideways scrolling is a lousy way to read twenty things. This is
+     where the list actually earns its keep, so the label advertises itself. */
+  const MONTH_FULL = ['January','February','March','April','May','June','July',
+                      'August','September','October','November','December'];
+
+  function renderEventsAll(all) {
+    const panel = document.getElementById('events-all');
+    const toggle = document.getElementById('events-all-toggle');
+    const nEl = document.getElementById('events-all-n');
+    if (!panel || !toggle) return;
+
+    if (nEl) nEl.textContent = String(all.length);
+
+    const byMonth = new Map();
+    all.forEach(e => {
+      const d = e.date ? new Date(e.date + 'T12:00:00') : null;
+      const k = d && !isNaN(d) ? `${d.getFullYear()}-${d.getMonth()}` : 'later';
+      if (!byMonth.has(k)) byMonth.set(k, []);
+      byMonth.get(k).push(e);
+    });
+
+    let html = '';
+    byMonth.forEach((list, k) => {
+      const label = k === 'later' ? 'Later'
+        : `${MONTH_FULL[Number(k.split('-')[1])]} ${k.split('-')[0]}`;
+      html += `<div class="events-all-month">`;
+      html += `<h4 class="events-all-month-name">${esc(label)}</h4>`;
+      html += `<ul class="events-all-list">`;
+      list.forEach(e => {
+        const inner =
+          `<span class="events-all-date">${esc(e.date_display || e.date || '')}</span>` +
+          `<span class="events-all-name">${esc(e.name)}</span>` +
+          (e.note ? `<span class="events-all-note">${esc(e.note)}</span>` : '');
+        html += `<li class="events-all-item">` +
+          (e.link
+            ? `<a class="events-all-link" href="${esc(e.link)}" target="_blank" rel="noopener">${inner}<span class="events-all-go" aria-hidden="true">↗</span></a>`
+            : `<span class="events-all-link is-flat">${inner}</span>`) +
+          `</li>`;
+      });
+      html += `</ul></div>`;
+    });
+    panel.innerHTML = html;
+
+    if (!toggle._wired) {
+      toggle._wired = true;
+      toggle.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!open));
+        panel.hidden = open;
+      });
+    }
   }
 
   /* ----------------------------------------------------------

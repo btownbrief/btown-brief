@@ -3932,3 +3932,99 @@ a.mode-btn-link:hover { text-decoration: none; }
 }
 .pulse-badge-unverified { background: var(--coral-light); color: var(--coral); border: 1px solid var(--coral); }
 .pulse-legend, .pulse-source-meta, .pulse-hl-meta { color: var(--ink-3); }
+
+/* ---------------- Upcoming: the rail, and the list behind it ----------------
+   The rail is a glance. Sideways-scrolling is a lousy way to read twenty
+   things, and this is a genuinely good curated list — so the label is a button
+   that opens the whole thing, and it has to LOOK like one or nobody will ever
+   find out. */
+
+.events-label-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--teal);
+  background: transparent;
+  border-radius: var(--radius-full);
+  padding: 5px 11px;
+  cursor: pointer;
+  font: inherit;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: background var(--duration-fast) var(--ease),
+              color var(--duration-fast) var(--ease);
+}
+.events-label-btn:hover,
+.events-label-btn:focus-visible {
+  background: var(--teal);
+  color: var(--bg-raised);
+  outline: none;
+}
+
+.events-label-n {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+.events-label-chev {
+  font-size: 0.7em;
+  transition: transform var(--duration-fast) var(--ease);
+}
+.events-label-btn[aria-expanded="true"] .events-label-chev { transform: rotate(180deg); }
+
+.events-all {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+.events-all[hidden] { display: none; }
+
+.events-all-month + .events-all-month { margin-top: var(--space-5); }
+
+.events-all-month-name {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+.events-all-list { list-style: none; margin: 0; padding: 0; }
+
+.events-all-link {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr auto;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: 9px 8px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: inherit;
+}
+a.events-all-link:hover,
+a.events-all-link:focus-visible { background: var(--bg-subtle); outline: none; }
+
+.events-all-date {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--teal);
+  white-space: nowrap;
+}
+.events-all-name { font-size: var(--text-sm); font-weight: 500; }
+.events-all-note {
+  grid-column: 2 / -1;
+  font-size: var(--text-xs);
+  color: var(--ink-4);
+}
+.events-all-go { color: var(--ink-4); font-size: var(--text-xs); }
+
+@media (max-width: 560px) {
+  .events-all-link {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .events-all-note { grid-column: 1; }
+  .events-all-go { display: none; }
+}

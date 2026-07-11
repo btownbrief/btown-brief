@@ -195,32 +195,63 @@ def dedupe(events: list[dict]) -> tuple[list[dict], list[dict]]:
     return merged, merge_log
 
 
-def collapse_ongoing(events: list[dict], min_days: int = 10):
-    """An all-day listing that repeats on many dates (exhibits, 'on view
-    through…' shows) becomes ONE entry with ongoingUntil + an 'ongoing' tag,
-    instead of flooding every day group. One-offs and short runs untouched."""
+def collapse_ongoing(events: list[dict], min_days: int = 6, min_density: float = 0.5):
+    """A listing that runs on MOST days of its span — a museum exhibit, a daily
+    cruise, a standing tour — becomes ONE entry with ongoingUntil + an 'ongoing'
+    tag, instead of printing itself into all sixty day groups.
+
+    Two things this gets right that the old rule did not:
+
+    1. TIMED EVENTS COUNT. The old rule only looked at all-day listings, and
+       almost nothing here is all-day (61 of 3,163). So ECHO's Champ exhibit
+       (60 dates), the Spirit of Ethan Allen cruises (55), the trolley tours
+       (55) — every genuine standing attraction in town — were invisible to it,
+       and each one stamped itself onto every single day of the calendar. Only
+       five things were ever tagged ongoing.
+
+    2. DENSITY, NOT COUNT. "Runs on many dates" is the wrong test: Karaoke
+       Friday hits 24 dates and is emphatically NOT ongoing — it's a real night
+       out that belongs in Friday's group. What separates a standing attraction
+       from a weekly night is what fraction of its span it actually runs:
+       an exhibit is open ~every day (density ~1.0); a weekly night is ~1/7
+       (density ~0.15). Collapse the dense ones, leave the weekly ones alone.
+    """
     from collections import defaultdict
+    from datetime import date as _date
+
     groups = defaultdict(list)
-    out: list[dict] = []
     for ev in events:
-        if ev["allDay"]:
-            groups[(norm_title(ev["title"]), _norm_venue(ev.get("venue") or ""))].append(ev)
-        else:
-            out.append(ev)
+        groups[(norm_title(ev["title"]), _norm_venue(ev.get("venue") or ""))].append(ev)
+
+    out: list[dict] = []
     collapsed = 0
     for evs in groups.values():
         dates = sorted({e["date"] for e in evs})
         if len(dates) >= min_days:
-            keep = dict(min(evs, key=lambda e: e["date"]))
-            keep["ongoingUntil"] = dates[-1]
-            if "ongoing" not in keep["tags"]:
-                keep["tags"] = keep["tags"] + ["ongoing"]
-            if not keep.get("recurring"):
-                keep["recurring"] = f"Ongoing through {dates[-1]}"
-            out.append(keep)
-            collapsed += len(evs) - 1
-        else:
-            out.extend(evs)
+            span = (_date.fromisoformat(dates[-1]) - _date.fromisoformat(dates[0])).days + 1
+            density = len(dates) / span if span else 0
+            if density >= min_density:
+                keep = dict(min(evs, key=lambda e: e["date"]))
+                keep["ongoingUntil"] = dates[-1]
+                if "ongoing" not in keep["tags"]:
+                    keep["tags"] = keep["tags"] + ["ongoing"]
+                if not keep.get("recurring"):
+                    keep["recurring"] = f"Ongoing through {dates[-1]}"
+                out.append(keep)
+                collapsed += len(evs) - 1
+                continue
+
+            # Repeats, but sparsely — a weekly night, not a standing attraction.
+            # It STAYS in its day groups (nobody wants Friday karaoke buried in a
+            # drawer), but gets tagged so a reader can filter it out and see only
+            # the one-off, special stuff. Or keep only the regulars, if that's
+            # what they came for.
+            for ev in evs:
+                if "series" not in ev["tags"]:
+                    ev["tags"] = ev["tags"] + ["series"]
+                if not ev.get("recurring"):
+                    ev["recurring"] = f"{len(dates)} dates through {dates[-1]}"
+        out.extend(evs)
     return out, collapsed
 
 

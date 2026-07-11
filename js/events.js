@@ -23,7 +23,7 @@
     map: null,
     mapLayer: null,
     activeBucket: null,
-    filters: { when: 'month', day: null, q: '', cat: '', town: '', price: '', age: '' },
+    filters: { when: 'month', day: null, q: '', cat: '', town: '', price: '', age: '', repeat: '' },
   };
 
   /* ---------------- utilities ---------------- */
@@ -232,6 +232,11 @@
       (e.minPrice != null && e.minPrice < 15))) return false;
     if (f.age === 'allages' && /\b(18|21)\s*\+/.test(e.age || '')) return false;
     if (f.age === '21' && !/\b(18|21)\s*\+/.test(e.age || '')) return false;
+    // 'series' = a weekly regular (trivia, karaoke). Readers can ask for only
+    // the one-off special stuff, or only the reliable regulars.
+    const isSeries = (e.tags || []).includes('series');
+    if (f.repeat === 'oneoff' && isSeries) return false;
+    if (f.repeat === 'series' && !isSeries) return false;
     if (f.q && !e._search.includes(f.q)) return false;
     return true;
   }
@@ -350,7 +355,7 @@
       : '';
 
     const f = state.filters;
-    $('ev-clear').hidden = !(f.q || f.cat || f.town || f.price || f.age);
+    $('ev-clear').hidden = !(f.q || f.cat || f.town || f.price || f.age || f.repeat);
 
     if (state.view === 'map') renderMap(evs);
   }
@@ -554,7 +559,7 @@
       }, 180);
     });
 
-    [['ev-f-category', 'cat'], ['ev-f-town', 'town'], ['ev-f-price', 'price'], ['ev-f-age', 'age']]
+    [['ev-f-category', 'cat'], ['ev-f-town', 'town'], ['ev-f-price', 'price'], ['ev-f-age', 'age'], ['ev-f-repeat', 'repeat']]
       .forEach(([id, key]) => {
         $(id).addEventListener('change', (ev) => {
           state.filters[key] = ev.target.value;
@@ -563,10 +568,12 @@
       });
 
     $('ev-clear').addEventListener('click', () => {
-      state.filters = { ...state.filters, q: '', cat: '', town: '', price: '', age: '' };
+      state.filters = { ...state.filters, q: '', cat: '', town: '', price: '', age: '', repeat: '' };
       $('ev-search').value = '';
-      ['ev-f-category', 'ev-f-town', 'ev-f-price', 'ev-f-age'].forEach((id) => { $(id).value = ''; });
+      ['ev-f-category', 'ev-f-town', 'ev-f-price', 'ev-f-age', 'ev-f-repeat']
+        .forEach((id) => { $(id).value = ''; });
       renderCalendar();
+      if (state.view === 'month') renderMonths();
     });
 
     $('ev-more').addEventListener('click', () => {

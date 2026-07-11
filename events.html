@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="css/style.css?v=20260711i">
-  <link rel="stylesheet" href="css/events.css?v=20260711i">
+  <link rel="stylesheet" href="css/style.css?v=20260711j">
+  <link rel="stylesheet" href="css/events.css?v=20260711j">
   <script>
     /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
        refreshes the cache; this only avoids the white flash after dark. */
@@ -107,6 +107,11 @@
             <option value="allages">All-ages only</option>
             <option value="21">21+ only</option>
           </select>
+          <select id="ev-f-repeat" aria-label="One-offs or regulars">
+            <option value="">One-offs &amp; regulars</option>
+            <option value="oneoff">One-offs only</option>
+            <option value="series">Regulars only</option>
+          </select>
           <button class="ev-clear" id="ev-clear" hidden>Clear ✕</button>
         </div>
       </div>
@@ -179,8 +184,8 @@
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/events.js?v=20260711i"></script>
-  <script src="js/auto-theme.js?v=20260711i"></script>
+  <script src="js/events.js?v=20260711j"></script>
+  <script src="js/auto-theme.js?v=20260711j"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
 </html>
