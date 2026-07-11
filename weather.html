@@ -10,6 +10,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Deep-link on the Sunset life-score card → the dedicated Sunset page.
+       Scoped inline (not style.css) so feat/sunset stays a clean merge —
+       fold into style.css after this branch lands if you like. */
+    .life-deep-link {
+      display: inline-block;
+      margin-top: var(--space-2);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--coral);
+      text-decoration: none;
+    }
+    .life-deep-link:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
 
@@ -34,6 +48,7 @@
       </div>
 
       <nav class="mode-nav" aria-label="Site pages">
+        <a class="mode-btn" href="sunset.html">Sunset</a>
         <a class="mode-btn" href="index.html">← Things To Do</a>
       </nav>
     </div>

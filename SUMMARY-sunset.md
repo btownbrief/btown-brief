@@ -5,6 +5,22 @@ forecast: the sky gradient, glow, and cloud bands are painted from tonight's
 computed score and cloud mix, so a 9 looks molten and a 2 looks like dishwater
 before you read a single number.
 
+> **Build provenance.** The page, scoring engine, and first review-fix pass
+> were built by **Claude Fable 5**. The final pass — nav wiring, merge-safety
+> audit, and the photo-system check below — was done by **Claude Opus 4.8**
+> (Stephen's Fable weekly limit reset; Opus is the driver from here). Stephen
+> may have Fable 5 review the Opus-authored portions after his Sunday reset;
+> those portions are the nav edits (`weather.html` header + inline style,
+> `js/life.js` sunset-card link) and this section.
+>
+> **Merge is provably clean.** Verified against the true merge-base
+> (`git merge-base main HEAD`): feat/sunset adds/edits **only** files that
+> `main` did not touch since the fork — zero overlapping files, so no
+> conflicts. (A plain `git diff main..HEAD` looks alarming because the branch
+> forked *before* main merged the events pipeline; those deletions are
+> phantom — the events files persist through the merge. Always diff against
+> the merge-base, not raw `main`.)
+
 ## What's on the page
 
 - **Tonight's score (0–10) + confidence chip + verdict** ("GO OUTSIDE NOW" /
@@ -71,6 +87,14 @@ no-ops silently** — the page is fully functional without it.
 Moderation ritual: approved photos are added by hand to
 `data/sunset-gallery.json` + `assets/img/sunset/`; the queue is just intake.
 
+**Photo-system check (resolves the earlier "fold into photos.sql?" flag):**
+`main` has **no** database photo system — community photos there are a Google
+Form → manual `data/photos.json` (via `js/community.js`/`js/app.js`), no table,
+no RPC. So the sunset queue (`btb_sunset_photo_queue`) duplicates nothing on
+the current merge target. If the unmerged photos+telegram branch later lands a
+generic `db/photos.sql`, decide then whether to unify intake; the sunset table
+is namespaced and self-contained, so nothing breaks either way.
+
 ## Preview overrides (for testing/screenshots)
 
 - `?ssmin=38` — pretend it's 38 min before sunset (negative = after)
@@ -129,9 +153,17 @@ Moderation ritual: approved photos are added by hand to
    `data/sunset-gallery.json`; dates are null until you fill them in.
 3. OG image is a 1200×630 crop of the willow-silhouette shot — confirm you're
    happy with that as "the" share image.
-4. Where should the page live in the nav? It's linked from nowhere yet;
-   obvious candidates: header of weather.html, the sunset life-score card, and
-   the index header. Left unlinked on purpose pending your call.
+4. Nav — now wired from two conflict-free spots: a **"Sunset" button in the
+   weather.html header**, and **"The full sunset forecast →" on the Sunset
+   life-score card** (the most contextual entry — you're already looking at
+   the sunset score). The one place still NOT linked is the **index.html
+   header**: `main` inserted its Events nav button at the exact lines I'd have
+   to edit, so touching it would create a merge conflict. Add it in one line
+   after this branch merges (a `<a class="mode-btn mode-btn-link"
+   href="sunset.html">Sunset</a>` next to the Food & Drink button), or say the
+   word once merged and I'll do it. The `.life-deep-link` style lives in an
+   inline `<style>` in weather.html for the same merge-safety reason; fold it
+   into `css/style.css` post-merge if you prefer.
 5. The rating emojis (🌫️🌥️🌇🌅🌋) — keep or swap for plain 1–5?
 6. Newsletter tie-in: the score could be quoted in the weather section the
    same way the life scores are — say the word and I'll wire it into the

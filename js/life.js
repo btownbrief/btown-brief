@@ -261,7 +261,8 @@
 
   var SCORE_META = [
     { key: 'patio',       icon: '🍺', name: 'Patio' },
-    { key: 'sunset',      icon: '🌇', name: 'Sunset' },
+    { key: 'sunset',      icon: '🌇', name: 'Sunset',
+      link: 'sunset.html', linkText: 'The full sunset forecast →' },
     { key: 'swimming',    icon: '🏊', name: 'Swimming' },
     { key: 'running',     icon: '🏃', name: 'Running' },
     { key: 'open_window', icon: '🪟', name: 'Open window' },
@@ -435,6 +436,7 @@
         '<div class="life-score"><span class="life-num">' + scoreTxt + '</span><span class="life-outof">/10</span>' +
         '<span class="life-verdict">' + v.word + '</span></div>' +
         (res.window ? '<div class="life-window">' + esc(res.window) + '</div>' : '') +
+        (meta.link ? '<a class="life-deep-link" href="' + esc(meta.link) + '">' + esc(meta.linkText || 'More →') + '</a>' : '') +
         '<div class="life-why" hidden>' + whyRows +
         '<p class="life-why-note">Started from the feels-like comfort curve, then adjusted for what actually ruins ' +
         meta.name.toLowerCase() + '. Recomputed every hour.</p></div>' +
