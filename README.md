@@ -202,21 +202,22 @@ Open `data/sponsors.json` (starts empty) and add:
 
 `placement` is `"footer"` (block above the site footer) or `"list"` (a labeled card inserted every 12 entries in the list). Set `"active": false` to pause a sponsor without deleting it. When no sponsors are active, the slots disappear entirely.
 
-### Adding a community photo (photos.json)
+### Community photos (photos.html + photo-admin.html)
 
-1. Save the submitted photo into `assets/img/community/` (create the folder the first time).
-2. Add an object to `data/photos.json`:
+Readers submit at `photos.html` (or by email / Telegram); everything lands in
+a moderation queue you work from `photo-admin.html` on your phone. Backend is
+the shared Supabase project — one-time setup in `db/PHOTOS-SETUP.md`. Other
+pages and the newsletter read approved photos through `js/photos-lib.js` or
+`data/photos/manifest.json` (`python3 scripts/export_photos.py`). Full build
+notes: `SUMMARY-photos-telegram.md`.
 
-```json
-{
-  "image": "assets/img/community/june-sunset.jpg",
-  "credit": "Photographer Name",
-  "caption": "Sunset from the breakwater",
-  "date": "2026-06-28"
-}
-```
+The old manual flow (`data/photos.json` + Google Form) is superseded.
 
-Newest `date` shows first. Photos come in through the "Submit a photo" Google Form linked on the site.
+### The Telegram launch page (telegram.html)
+
+Share `telegram.html` instead of the raw t.me invite link — it warms up
+people who don't have Telegram (download steps, mute instructions, house
+rules) and offers the newsletter as the email fallback.
 
 ### Adding an FAQ (faq.json)
 
@@ -235,6 +236,37 @@ Open `data/faq.json` (starts empty) and add:
 The FAQ section only appears once this file has at least one entry.
 
 ---
+
+## The Events Calendar (events.html)
+
+`events.html` is the standalone events page — time-aware buckets ("Tonight",
+"Free tonight", "Live music", ...) on top, the full filterable calendar (list +
+map) below. It reads `data/events/events.json`, which is produced by the
+ingestion pipeline in `scripts/events/`:
+
+```bash
+python3 scripts/events/update.py                # all sources, 60-day window
+python3 scripts/events/update.py --only flynn --window 14 --dry-run --sample 3
+```
+
+- `scripts/events/common.py` — shared fetching/parsing/normalizing toolkit
+- `scripts/events/sources/*.py` — one module per source (see its README.md
+  for the contract; adding a source = adding one file)
+- `scripts/events/venues.json` — venue → address/town registry; coordinates
+  are pulled from `things.json` automatically when names match
+- `data/events/events.json` — deduped events (site reads this)
+- `data/events/events.jsonl` — newsletter-pipeline-compatible export
+- `data/events/report.json` — per-source counts, errors, merges, changes
+- `data/events/imports/facebook/` — drop Easy Scraper CSVs here; the
+  `facebook` source imports them (Facebook is login-walled, never scraped)
+
+The same fuzzy dedup (title + date + venue) that powers the site makes
+`events.jsonl` usable as a pre-gathered base for the newsletter pipeline.
+
+`.github/workflows/refresh-events.yml` reruns the pipeline twice daily and
+commits the refreshed data. A failing source keeps its last-known events for
+a 3-day grace window (then they drop out as possibly cancelled), and the run
+only fails outright if *every* source fails.
 
 ## Auto-Updating Data (GitHub Actions)
 

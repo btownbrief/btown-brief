@@ -1,0 +1,47 @@
+name: Refresh change log
+
+# Runs the "Since You Checked" snapshot pipeline (scripts/changes/update.py)
+# and commits the refreshed data/changes/ files. Same contract as the other
+# refresh workflows: the site stays 100% static, a failed source keeps its
+# last good state, and nothing broken is ever committed.
+#
+# Every run diffs the live sources against data/changes/state.json and
+# appends human-readable change events to data/changes/changes.json — the
+# page filters those client-side by the visitor's stored last-visit time.
+# data/changes/daily-changes.md is the newsletter's raw material.
+#
+# Manual run: Actions tab -> "Refresh change log" -> Run workflow.
+# Local run:  python3 -m scripts.changes.update   (from the repo root)
+
+on:
+  schedule:
+    - cron: '25 * * * *'   # hourly at :25 (offset from refresh-data :15 and weather :45)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-changes
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run change pipeline
+        run: python3 -m scripts.changes.update
+
+      - name: Commit if changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/changes/
+          if git diff --cached --quiet; then
+            echo "No tracked changes this run."
+          else
+            git commit -m "Auto-refresh change log"
+            git push || (git pull --rebase && git push)
+          fi

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burlington Community Photos — Burlington Brief</title>
+  <meta name="description" content="Burlington through your lens — sunsets, pets, gardens, street scenes, and everything else neighbors are photographing. Share yours; no account needed.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/photos.css">
+</head>
+<body data-standalone>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <span class="logo-sep"></span>
+        <span class="logo-title">Burlington Brief</span>
+      </div>
+      <nav class="mode-nav" aria-label="Community pages">
+        <a class="mode-btn" href="index.html">Things To Do</a>
+        <a class="mode-btn" href="volunteer.html">Volunteer</a>
+        <a class="mode-btn" href="clubs.html">Clubs</a>
+        <a class="mode-btn" href="projects.html">Projects</a>
+      </nav>
+    </div>
+  </header>
+
+  <a class="newsletter-bar" href="https://btownbrief.com" target="_blank" rel="noopener">
+    <div class="newsletter-bar-inner">
+      <div class="newsletter-head">
+        <span class="newsletter-label">The Burlington Brief</span>
+        <span class="newsletter-issue">Free Burlington news &amp; events in your inbox</span>
+      </div>
+      <span class="newsletter-cta">Sign up free →</span>
+    </div>
+  </a>
+
+  <main class="page-wrap">
+    <div class="page-hero">
+      <span class="page-hero-kicker">Community Photos</span>
+      <h1>Burlington, through your lens</h1>
+      <p class="page-hero-sub">The sunsets, the dogs, the garden that finally came in, the weird thing on Church Street. Photos by neighbors, picked weekly for the newsletter. No account, no algorithm, no expiring stories — just the town, as we see it.</p>
+    </div>
+
+    <!-- Photo of the week: fills automatically from the hearts below -->
+    <section class="potw" id="potw" hidden aria-label="Photo of the week">
+      <div class="potw-badge">🏆 Photo of the week</div>
+      <figure class="potw-figure">
+        <img id="potw-img" alt="" loading="lazy">
+        <figcaption>
+          <span id="potw-caption"></span>
+          <span class="potw-credit" id="potw-credit"></span>
+        </figcaption>
+      </figure>
+      <p class="potw-note">Most-hearted photo of the last week. It runs in the newsletter — heart your favorites below to pick the next one.</p>
+    </section>
+
+    <!-- Filters -->
+    <div class="chip-row" id="cat-chips" role="group" aria-label="Filter by subject"></div>
+    <div class="ph-area-row">
+      <label class="ph-area-label" for="area-filter">Where
+        <select id="area-filter">
+          <option value="">Everywhere</option>
+        </select>
+      </label>
+      <label class="ph-area-label" for="sort-select">Sort
+        <select id="sort-select">
+          <option value="new">Newest first</option>
+          <option value="votes">Most hearted</option>
+        </select>
+      </label>
+    </div>
+
+    <p class="result-count" id="ph-count" aria-live="polite"></p>
+    <div class="ph-grid" id="ph-grid">
+      <p class="page-empty">Loading photos…</p>
+    </div>
+
+    <!-- Submit -->
+    <h2 class="section-label" id="submit">Share a photo</h2>
+    <p class="ph-submit-intro">Anything you shot around greater Burlington. Phone photos are the whole point. I review everything before it goes up, usually within a day.</p>
+    <form class="pl-form ph-form" id="ph-form">
+      <label>Photo *
+        <input type="file" name="photo" id="ph-file" accept="image/*" required>
+        <span class="ph-file-hint" id="ph-file-hint">JPEG, PNG, HEIC — it gets resized before upload, so full-size is fine.</span>
+      </label>
+      <label>Caption <span class="ph-optional">(optional, but the good ones make the newsletter)</span>
+        <textarea name="caption" maxlength="280" placeholder="What are we looking at?"></textarea>
+      </label>
+      <div class="ph-form-grid">
+        <label>Subject *
+          <select name="category" id="ph-category" required></select>
+        </label>
+        <label>Rough location *
+          <select name="area" id="ph-area" required></select>
+        </label>
+      </div>
+      <div class="ph-form-grid">
+        <label>Exact spot <span class="ph-optional">(optional)</span>
+          <input type="text" name="spot" maxlength="120" placeholder="e.g. North Beach, end of the dog park">
+        </label>
+        <label>When was it taken? <span class="ph-optional">(roughly is fine)</span>
+          <input type="text" name="taken_on" maxlength="40" placeholder="e.g. last Tuesday, early June">
+        </label>
+      </div>
+      <label>Your name <span class="ph-optional">(optional — leave blank to stay anonymous)</span>
+        <input type="text" name="credit" maxlength="60" placeholder="How you'd like to be credited">
+      </label>
+      <label class="pl-form-check ph-permission">
+        <input type="checkbox" name="permission" required>
+        <span>The photo is mine and the <strong>Burlington Brief can publish it</strong> here and in the newsletter. I keep ownership; I can ask for it to come down anytime.</span>
+      </label>
+      <label class="pl-form-check">
+        <input type="checkbox" name="ai">
+        <span>This image is AI-generated or heavily edited <span class="ph-optional">(it'll be labeled, not rejected)</span></span>
+      </label>
+      <button class="pl-submit-btn" type="submit" id="ph-submit-btn">Submit photo</button>
+      <p class="pl-form-status" id="ph-status" hidden></p>
+      <p class="page-empty ph-form-fineprint">A quick word on other people's privacy: skip photos of strangers' kids, into windows or backyards, or of someone having the worst day of their year. When in doubt, I'll err on the side of not publishing.</p>
+    </form>
+
+    <!-- Other ways in -->
+    <h2 class="section-label">Not a forms person?</h2>
+    <div class="ph-ways">
+      <div class="ph-way-card">
+        <h3>📧 Email it</h3>
+        <p>Attach the photo, tell me the caption and where it was taken, and say "OK to publish." That's it.</p>
+        <a class="btb-strip-link" id="ph-mailto" href="mailto:BtownBrief@gmail.com?subject=Community%20photo&body=Caption%3A%20%0AWhere%3A%20%0AWhen%20(roughly)%3A%20%0ACredit%20me%20as%20(or%20say%20anonymous)%3A%20%0A%0AOK%20to%20publish%20in%20the%20Btown%20Brief%3A%20YES%0A%0A(Attach%20the%20photo%20before%20sending!)">Email a photo →</a>
+      </div>
+      <div class="ph-way-card">
+        <h3>💬 Post it in the group chat</h3>
+        <p>Drop it in the Btown Brief Telegram group with a line saying it's OK to publish, and I'll take it from there.</p>
+        <a class="btb-strip-link" href="telegram.html">Join the community chat →</a>
+      </div>
+      <div class="ph-way-card">
+        <h3>😂 Feeling funny instead?</h3>
+        <p>Caption This is the weekly contest built on photos like these — one photo, everyone writes captions, the town votes.</p>
+        <a class="btb-strip-link" href="https://btownbrief.github.io/caption-this/" target="_blank" rel="noopener">Play Caption This →</a>
+      </div>
+    </div>
+
+    <p class="ph-removal">See a photo you'd rather not have up — you, your kid, your backyard? <a href="mailto:BtownBrief@gmail.com?subject=Please%20take%20a%20photo%20down">Email me</a> and it comes down, no questions asked.</p>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="ph-lightbox" id="ph-lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button class="ph-lightbox-close" id="ph-lightbox-close" aria-label="Close">✕</button>
+    <figure>
+      <img id="ph-lightbox-img" alt="">
+      <figcaption id="ph-lightbox-caption"></figcaption>
+    </figure>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
+      <span class="footer-sep">·</span>
+      <span>Burlington, Vermont</span>
+    </div>
+  </footer>
+
+  <script src="js/community.js"></script>
+  <script src="js/photos-lib.js"></script>
+  <script src="js/photos.js"></script>
+</body>
+</html>

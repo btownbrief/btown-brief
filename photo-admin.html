@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Desk — Burlington Brief</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/photos.css">
+</head>
+<body data-standalone>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-title">Burlington Brief · Photo Desk</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+
+    <!-- Passphrase gate -->
+    <section class="pa-gate" id="pa-gate">
+      <div class="page-hero" style="text-align:center">
+        <span class="page-hero-kicker">Editor's Desk</span>
+        <h1>Photo moderation</h1>
+        <p class="page-hero-sub">Nothing publishes without you. Enter the passphrase from db/photos.sql.</p>
+      </div>
+      <form id="pa-gate-form">
+        <input type="password" id="pa-pass" placeholder="Passphrase" autocomplete="current-password" required>
+        <button class="pl-submit-btn" type="submit" style="width:100%">Open the queue</button>
+      </form>
+      <p class="pa-status" id="pa-gate-status"></p>
+    </section>
+
+    <!-- Desk -->
+    <section id="pa-desk" hidden>
+
+      <div class="pa-rules">
+        <h2>Before you tap approve — the five checks</h2>
+        <ul>
+          <li><strong>Kids:</strong> identifiable children need a parent behind the submission. A stranger's photo of someone else's kid: reject.</li>
+          <li><strong>Private property:</strong> shot from the street is fine; into a window, over a fence, or in someone's yard is not.</li>
+          <li><strong>Bad days:</strong> no crashes, fires, arrests, medical emergencies, or people visibly in crisis. That's news; this is a gallery.</li>
+          <li><strong>Would they expect it?</strong> People as scenery is fine. A close-up of a stranger who didn't know: reject, or crop-worthy at best.</li>
+          <li><strong>AI or heavy edits:</strong> not a reason to reject — but label it so readers know.</li>
+        </ul>
+        <p style="margin-top:8px">When in doubt, reject. Removal requests (email) always win: find the photo under Recent and hit Remove.</p>
+      </div>
+
+      <h2 class="section-label">Waiting for review <span class="pa-count-badge" id="pa-pending-count">0</span></h2>
+      <div id="pa-queue"><p class="page-empty">Loading…</p></div>
+
+      <h2 class="section-label">Add a photo I was sent <span class="ph-optional" style="font-weight:400">(email / Telegram submissions)</span></h2>
+      <p class="ph-submit-intro">Only add it if the sender said it's OK to publish — that yes is the permission record. Note who and where in the note field.</p>
+      <form class="pl-form ph-form" id="pa-add-form">
+        <label>Photo *
+          <input type="file" id="pa-add-file" accept="image/*" required>
+        </label>
+        <label>Caption
+          <textarea id="pa-add-caption" maxlength="280" placeholder="Their caption, or write one"></textarea>
+        </label>
+        <div class="ph-form-grid">
+          <label>Subject *
+            <select id="pa-add-category" required></select>
+          </label>
+          <label>Rough location *
+            <select id="pa-add-area" required></select>
+          </label>
+        </div>
+        <div class="ph-form-grid">
+          <label>Exact spot
+            <input type="text" id="pa-add-spot" maxlength="120">
+          </label>
+          <label>When taken (roughly)
+            <input type="text" id="pa-add-taken" maxlength="40">
+          </label>
+        </div>
+        <div class="ph-form-grid">
+          <label>Credit
+            <input type="text" id="pa-add-credit" maxlength="60" placeholder="Blank = Anonymous">
+          </label>
+          <label>Came in via *
+            <select id="pa-add-via" required>
+              <option value="email">Email</option>
+              <option value="telegram">Telegram</option>
+              <option value="editor">Me / other</option>
+            </select>
+          </label>
+        </div>
+        <label>Permission note <span class="ph-optional">(who said yes, and where — e.g. "Jane R., email 7/10")</span>
+          <input type="text" id="pa-add-note" maxlength="500">
+        </label>
+        <label class="pl-form-check">
+          <input type="checkbox" id="pa-add-ai">
+          <span>Label as AI-generated / heavily edited</span>
+        </label>
+        <button class="pl-submit-btn" type="submit" id="pa-add-btn">Add as approved</button>
+        <p class="pa-status" id="pa-add-status"></p>
+      </form>
+
+      <h2 class="section-label">Recent decisions <span class="ph-optional" style="font-weight:400">(tap Undo to change your mind; Remove honors a takedown request)</span></h2>
+      <div id="pa-recent"><p class="page-empty">Loading…</p></div>
+
+      <p class="ph-removal" style="margin-top:var(--space-6)">Storage cleanup: rejected and removed photos stay in the bucket (unguessable filenames, linked nowhere). To purge one for good: Supabase dashboard → Storage → btb-photos.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>Editor's desk — not linked from the public site</span>
+    </div>
+  </footer>
+
+  <script src="js/photos-lib.js"></script>
+  <script src="js/photo-admin.js"></script>
+</body>
+</html>

@@ -1,41 +1,32 @@
 {
- "updated": "2026-07-10T22:07:24+00:00",
+ "updated": "2026-07-11T01:11:22+00:00",
  "sections_updated": {
-  "now": "2026-07-10T22:07:24+00:00",
-  "forecast": "2026-07-10T22:07:24+00:00",
-  "hourly": "2026-07-10T22:07:24+00:00",
-  "alerts": "2026-07-10T22:07:24+00:00",
-  "afd": "2026-07-10T22:07:24+00:00",
-  "lake_forecast": "2026-07-10T22:07:24+00:00",
-  "lake_gage": "2026-07-10T22:07:24+00:00",
-  "air": "2026-07-10T22:07:24+00:00",
-  "sun": "2026-07-10T22:07:24+00:00",
-  "models": "2026-07-10T22:07:24+00:00"
+  "now": "2026-07-11T01:11:22+00:00",
+  "forecast": "2026-07-11T01:11:22+00:00",
+  "hourly": "2026-07-11T01:11:22+00:00",
+  "alerts": "2026-07-11T01:11:22+00:00",
+  "afd": "2026-07-11T01:11:22+00:00",
+  "lake_forecast": "2026-07-11T01:11:22+00:00",
+  "lake_gage": "2026-07-11T01:11:22+00:00",
+  "air": "2026-07-11T01:11:22+00:00",
+  "sun": "2026-07-11T01:11:22+00:00",
+  "models": "2026-07-11T01:11:22+00:00"
  },
  "now": {
-  "observed_at": "2026-07-10T21:50:00+00:00",
+  "observed_at": "2026-07-11T00:50:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
-  "temp_f": 82,
-  "feels_like_f": 82,
-  "humidity": 40,
+  "description": "Mostly Clear",
+  "temp_f": 75,
+  "feels_like_f": 75,
+  "humidity": 50,
   "dewpoint_f": 55,
-  "wind_mph": 9,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "NNE"
+  "wind_dir": "N"
  },
  "forecast": {
   "updated": "2026-07-10T18:22:22+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "is_day": true,
-    "temp_f": 81,
-    "pop": 12,
-    "wind": "N 9 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 81. North wind around 9 mph."
-   },
    {
     "name": "Tonight",
     "is_day": false,
@@ -80,56 +71,21 @@
     "wind": "E 5 mph",
     "short": "Mostly Clear",
     "detailed": "Mostly clear, with a low around 63. East wind around 5 mph."
+   },
+   {
+    "name": "Monday",
+    "is_day": true,
+    "temp_f": 89,
+    "pop": 5,
+    "wind": "SW 8 mph",
+    "short": "Sunny",
+    "detailed": "Sunny, with a high near 89. Southwest wind around 8 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-07-10T18:22:22+00:00",
   "hours": [
-   {
-    "t": "2026-07-10T17:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 81,
-    "pop": 12,
-    "humidity": 49,
-    "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 30,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-07-10T18:00:00-04:00",
-    "temp_f": 79,
-    "feels_f": 79,
-    "pop": 5,
-    "humidity": 50,
-    "wind_mph": 7,
-    "wind_dir": "N",
-    "sky": 12,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-07-10T19:00:00-04:00",
-    "temp_f": 76,
-    "feels_f": 76,
-    "pop": 0,
-    "humidity": 58,
-    "wind_mph": 6,
-    "wind_dir": "NE",
-    "sky": 17,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-07-10T20:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
-    "pop": 0,
-    "humidity": 66,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 26,
-    "short": "Partly Cloudy"
-   },
    {
     "t": "2026-07-10T21:00:00-04:00",
     "temp_f": 71,
@@ -481,6 +437,50 @@
     "wind_dir": "SE",
     "sky": 8,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-07-12T05:00:00-04:00",
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 0,
+    "humidity": 84,
+    "wind_mph": 1,
+    "wind_dir": "E",
+    "sky": 2,
+    "short": "Clear"
+   },
+   {
+    "t": "2026-07-12T06:00:00-04:00",
+    "temp_f": 60,
+    "feels_f": 60,
+    "pop": 0,
+    "humidity": 87,
+    "wind_mph": 1,
+    "wind_dir": "SE",
+    "sky": 1,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-12T07:00:00-04:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 0,
+    "humidity": 81,
+    "wind_mph": 2,
+    "wind_dir": "N",
+    "sky": 1,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-12T08:00:00-04:00",
+    "temp_f": 67,
+    "feels_f": 67,
+    "pop": 0,
+    "humidity": 73,
+    "wind_mph": 2,
+    "wind_dir": "N",
+    "sky": 0,
+    "short": "Sunny"
    }
   ]
  },
@@ -488,13 +488,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-07-10T18:27:00+00:00",
+  "issued": "2026-07-10T23:52:00+00:00",
   "key_messages": [
    "Seasonable and dry weather this weekend before temperatures and humidity increase early next week.",
    "A brief burst of heat will give way to a steadier period of more seasonable weather following a risk of nocturnal severe thunderstorms."
   ],
   "what_changed": "As of 227 PM EDT Friday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 101827\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n227 PM EDT Fri Jul 10 2026\n\n.WHAT HAS CHANGED...\nAs of 227 PM EDT Friday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 227 PM EDT Friday...\n\n1. Seasonable and dry weather this weekend before temperatures \nand humidity increase early next week. \n\n2. A brief burst of heat will give way to a steadier period of \nmore seasonable weather following a risk of nocturnal severe \nthunderstorms.\n\n&&\n\n.DISCUSSION...\nAs of 227 PM EDT Friday...\n\nKEY MESSAGE 1: A cold front passed through this morning, causing a \ncooler and significantly drier airmass to enter the region straight \ndown from Quebec. Dew points have been gradually falling during the \nday and that trend will accelerate this afternoon as the core of the \ndrier air makes its way south, aided by diurnal mixing. By evening, \ndew points should be in the 50s throughout the region, with some \nupper 40s in the higher terrain and Northeast Kingdom. Canaan has \nalready has seen its dew point drop to 49! Highs in the upper 70s \nand 80s will be in store for this weekend, with lows in the 50s away \nfrom the immediate shore of Lake Champlain. The colder hollows \nshould see lows drop into the 40s. Increased heat and humidity will \nenter the region to start next week, with highs rising into the 80s \nand low 90s and dew points rising into the 60s. The first chance of \nshowers does not appear to be until Tuesday at the earliest.\n\nKEY MESSAGE 2: Signals for a brief, \"jailbreak\" style extreme heat \nevent on Tuesday have only increased with the latest ensemble data. \nBased on the full 00Z suite and much of the 12Z data today, there is \nexcellent multi-model support for either low level temperatures near \nthe 98-99 percentile, or slightly less extreme temperatures near the \n95th percentile, by Tuesday afternoon. Therefore, there is high \ncertainty that anomalous warmth associated with the eastward \nexpansion of a prominent deep layer ridge, or heat dome, centered \nover the Midwest makes its way into the area on Tuesday. As \npreviously noted, this heat will should not be particularly humid as \nit will be displaced from the typical sources (eg. southern Pacific \nor Gulf moisture). That being said, low level flow out of the \nsouthwest should still advect in higher dew points with \nuncomfortable heat lingering past sunset. The latest thinking is \nthat marginal Heat Advisory criteria will be reached; maximum heat \nindex values could be in the middle 90s in the Champlain Valley and \nLower Connecticut Valley with lower 90s in most other valley \nlocations. Also it appears higher dewpoints will be favored towards \nthe northwest such that the St. Lawrence Valley may be on the humid \nside. Will note the current NBM temperatures peaking as high as the \nupper 90s are running a little hot compared to the consensus, so \nanticipate forecast temperatures and resulting heat index values to \ntrend closer to those mentioned. Since this is a single hot day, \nheat-health impacts aren't anticipated to be as significant as a \nlonger duration event but will be meaningful for vulnerable \npopulations.\n\nMuch cooler and dry air will return on Wednesday behind a strong \ncold front. Said front will act as a trigger for thunderstorms late \nTuesday in southern Canada as moisture pools ahead of this boundary, \nproducing a highly unstable environment favorable for supercells or \neven derecho-like linear storms given very high deep layer shear (60-\n70 knots favored). Impacts for our area, with expected timing \ncentered around the overnight hours and long lead time with \nformation of storms favored much to our north, are questionable (15% \nrisk of severe thunderstorms currently noted by the Storm Prediction \nCenter), but will be worth keeping an eye on as we get closer, \nespecially in northern and northeastern Vermont. Largely seasonably \nand comfortable weather will follow, with perhaps a weaker cold \nfront coming through to reinforce cooler air by the end of the week.\n\n&&\n\n.AVIATION /18Z FRIDAY THROUGH WEDNESDAY/...\nThrough 18Z Saturday...Seasonable Canadian high pressure will be\nsettling into the airspace during the next 24 hours, leading to\ndecreasing cloudiness and lightening winds. The only hazardous\nflight conditions will be around the formation of fog overnight.\nIt's a somewhat tricky forecast given advection of drier air\nongoing, making crossover temperatures uncertain. Current thinking\nis that some fog will develop at MPV, SLK, and EFK. Duration of fog\nat MPV, between fog climatology, the recent heavy rainfall and\nrelatively high probabilities of visibilities under 1 mile through\nlocal aviation model products, will be prolonged. Have cut back a\nlittle bit from the previous forecast but this can be fine tuned;\ngenerally anywhere in the 06Z to 12Z period LIFR conditions are\npossible with IFR conditions generally likely. Based on climatology\nSLK should also see at least intermittent dense fog through this\nperiod, but noted probabilities are lower for a given hour compared\nto MPV. This site missed out on significant rain yesterday, limiting\nthe available moisture for fog formation. Finally, expectations for\nfog duration at EFK falls somewhere in the middle of the MPV and\nSLK. Elsewhere, sites like MSS may have enough low level\nnortheasterly flow to point towards little fog, but cannot rule it\nout.\n\nOutlook...\n\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. Chance SHRA, Slight chance TSRA.\nWednesday: VFR. Slight chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Kutikoff/Myskowski\nAVIATION...Kutikoff\n"
+  "raw": "\n000\nFXUS61 KBTV 102352\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n752 PM EDT Fri Jul 10 2026\n\n.WHAT HAS CHANGED...\nAs of 227 PM EDT Friday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 227 PM EDT Friday...\n\n1. Seasonable and dry weather this weekend before temperatures \nand humidity increase early next week. \n\n2. A brief burst of heat will give way to a steadier period of \nmore seasonable weather following a risk of nocturnal severe \nthunderstorms.\n\n&&\n\n.DISCUSSION...\nAs of 227 PM EDT Friday...\n\nKEY MESSAGE 1: A cold front passed through this morning, causing a \ncooler and significantly drier airmass to enter the region straight \ndown from Quebec. Dew points have been gradually falling during the \nday and that trend will accelerate this afternoon as the core of the \ndrier air makes its way south, aided by diurnal mixing. By evening, \ndew points should be in the 50s throughout the region, with some \nupper 40s in the higher terrain and Northeast Kingdom. Canaan has \nalready has seen its dew point drop to 49! Highs in the upper 70s \nand 80s will be in store for this weekend, with lows in the 50s away \nfrom the immediate shore of Lake Champlain. The colder hollows \nshould see lows drop into the 40s. Increased heat and humidity will \nenter the region to start next week, with highs rising into the 80s \nand low 90s and dew points rising into the 60s. The first chance of \nshowers does not appear to be until Tuesday at the earliest.\n\nKEY MESSAGE 2: Signals for a brief, \"jailbreak\" style extreme heat \nevent on Tuesday have only increased with the latest ensemble data. \nBased on the full 00Z suite and much of the 12Z data today, there is \nexcellent multi-model support for either low level temperatures near \nthe 98-99 percentile, or slightly less extreme temperatures near the \n95th percentile, by Tuesday afternoon. Therefore, there is high \ncertainty that anomalous warmth associated with the eastward \nexpansion of a prominent deep layer ridge, or heat dome, centered \nover the Midwest makes its way into the area on Tuesday. As \npreviously noted, this heat will should not be particularly humid as \nit will be displaced from the typical sources (eg. southern Pacific \nor Gulf moisture). That being said, low level flow out of the \nsouthwest should still advect in higher dew points with \nuncomfortable heat lingering past sunset. The latest thinking is \nthat marginal Heat Advisory criteria will be reached; maximum heat \nindex values could be in the middle 90s in the Champlain Valley and \nLower Connecticut Valley with lower 90s in most other valley \nlocations. Also it appears higher dewpoints will be favored towards \nthe northwest such that the St. Lawrence Valley may be on the humid \nside. Will note the current NBM temperatures peaking as high as the \nupper 90s are running a little hot compared to the consensus, so \nanticipate forecast temperatures and resulting heat index values to \ntrend closer to those mentioned. Since this is a single hot day, \nheat-health impacts aren't anticipated to be as significant as a \nlonger duration event but will be meaningful for vulnerable \npopulations.\n\nMuch cooler and dry air will return on Wednesday behind a strong \ncold front. Said front will act as a trigger for thunderstorms late \nTuesday in southern Canada as moisture pools ahead of this boundary, \nproducing a highly unstable environment favorable for supercells or \neven derecho-like linear storms given very high deep layer shear (60-\n70 knots favored). Impacts for our area, with expected timing \ncentered around the overnight hours and long lead time with \nformation of storms favored much to our north, are questionable (15% \nrisk of severe thunderstorms currently noted by the Storm Prediction \nCenter), but will be worth keeping an eye on as we get closer, \nespecially in northern and northeastern Vermont. Largely seasonably \nand comfortable weather will follow, with perhaps a weaker cold \nfront coming through to reinforce cooler air by the end of the week.\n\n&&\n\n.AVIATION /00Z SATURDAY THROUGH WEDNESDAY/...\nThrough 00Z Sunday...Dry weather is expected this weekend\nfollowing this evening's cold front, which continues to cross\nfrom north to south through northern New York and Vermont. As a\nresult, wind directions are mainly northerly to northwesterly\n3-10 knots. We do anticipate winds to decrease into the evening\nand overnight hours, becoming calm or light, generally 5 knots \nor less as high pressure exerts its control over the region.\nFrom the hours 05Z through 12Z Saturday, there is the potential\nfor some patchy mist or fog and ceilings below 1000 feet above \nground level. Highest confidence of this occurring is at MPV \nfrom 09Z to 11Z, based on the fact that the area has received\nnearly a half an inch of rainfall in the past 24 hours.\nClimatologically, this 09Z-11Z time frame is the most favored,\nbut fog may develop before and/or linger later. Other\npotentially foggy spots will be SLK and EFK, though confidence\nat EFK has decreased as climatology indicates there is a lower\nchance there, especially as drier air flows into the region from\nthe north. Climatology at SLK is in turn more favorable for fog,\nbut it has not received very much rain in the last 24 hours or\neven the last few days. One thing SLK has going for it is the\npotential for its temperature to drop dramatically tonight and\npass its crossover temperature. BTV may have some fog approach\nthe runway if the fog develops across the Winooski Valley and\nflows towards this site, but again drier air may limit the\nextent of this. Elsewhere, winds should remain elevated enough\nto keep fog away, but it's not completely out of the question\nwith high pressure nosing in. Friday, we'll see winds pick up\nagain out of the north, 5-15 knots. \n\n\nOutlook...\n\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. Chance TSRA, Slight chance SHRA.\nWednesday: VFR. Slight chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Kutikoff/Myskowski\nAVIATION...Storm\n"
  },
  "lake_forecast": {
   "issued": "2026-07-10T18:26:00+00:00",
@@ -766,18 +766,18 @@
  },
  "lake_gage": {
   "water_temp_f": 74,
-  "water_temp_at": "2026-07-10T17:00:00.000-04:00",
+  "water_temp_at": "2026-07-10T21:00:00.000-04:00",
   "level_ft": 96.66,
-  "level_at": "2026-07-10T17:00:00.000-04:00",
+  "level_at": "2026-07-10T21:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 61,
+  "aqi": 59,
   "category": "Moderate",
   "pollutant": "PM2.5",
-  "observed": "07/10/26 17:00",
-  "discussion": "On Friday, July 10th, expect moderate air quality across Vermont as smoke from Canadian wildfires continues to impact the region."
+  "observed": "07/10/26 20:00",
+  "discussion": "On Saturday, July 11th, expect moderate air quality in southern Vermont and generally good air quality in the north."
  },
  "sun": {
   "sunrise": "2026-07-10T05:18-04:00",
@@ -791,7 +791,7 @@
    {
     "date": "2026-07-10",
     "high_f": {
-     "GFS": 82,
+     "GFS": 81,
      "Euro": 78,
      "ICON": 81
     },
@@ -805,7 +805,7 @@
      "Euro": 0.08,
      "ICON": 0.22
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    },
    {
     "date": "2026-07-11",
@@ -816,7 +816,7 @@
     },
     "pop_max": {
      "GFS": 0,
-     "Euro": 2,
+     "Euro": 0,
      "ICON": 0
     },
     "precip_in": {

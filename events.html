@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events in Burlington, VT — Burlington Brief</title>
+  <meta name="description" content="Every event in and around Burlington, Vermont — tonight, this weekend, and beyond. Live music, free stuff, markets, comedy, and more, gathered from every local calendar.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/events.css">
+</head>
+<body class="events-body">
+
+  <!-- SITE HEADER (matches index.html) -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
+      <nav class="mode-nav" aria-label="Site section">
+        <a class="mode-btn" href="index.html">The List</a>
+        <a class="mode-btn" href="index.html">Guides</a>
+        <span class="mode-btn" aria-current="page" data-active="true">Events</span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="ev-main">
+
+    <!-- HERO / RIGHT NOW -->
+    <section class="ev-hero" aria-labelledby="ev-hero-title">
+      <h1 class="ev-hero-title" id="ev-hero-title">What's happening</h1>
+      <p class="ev-hero-sub" id="ev-hero-sub"><!-- filled by JS: “Friday evening in Burlington · 23 things tonight” --></p>
+      <div class="ev-buckets" id="ev-buckets" role="list"><!-- bucket cards --></div>
+      <div class="ev-bucket-panel" id="ev-bucket-panel" hidden>
+        <div class="ev-bucket-panel-head">
+          <h2 class="ev-bucket-panel-title" id="ev-bucket-panel-title"></h2>
+          <button class="ev-bucket-close" id="ev-bucket-close" aria-label="Close">✕</button>
+        </div>
+        <div class="ev-bucket-panel-list" id="ev-bucket-panel-list"></div>
+      </div>
+    </section>
+
+    <!-- FULL CALENDAR -->
+    <section class="ev-cal" aria-labelledby="ev-cal-title">
+      <div class="ev-cal-head">
+        <h2 class="ev-cal-title" id="ev-cal-title">The full calendar</h2>
+        <div class="ev-view-toggle" role="tablist" aria-label="View">
+          <button class="ev-view-btn" id="ev-view-list" role="tab" aria-selected="true">List</button>
+          <button class="ev-view-btn" id="ev-view-map" role="tab" aria-selected="false">Map</button>
+        </div>
+      </div>
+
+      <div class="ev-filters" id="ev-filters">
+        <input class="ev-search" id="ev-search" type="search" placeholder="Search events, venues…" aria-label="Search events">
+        <div class="ev-when-pills" id="ev-when-pills" role="group" aria-label="When">
+          <button data-when="today" class="ev-pill">Today</button>
+          <button data-when="tomorrow" class="ev-pill">Tomorrow</button>
+          <button data-when="weekend" class="ev-pill">This weekend</button>
+          <button data-when="week" class="ev-pill" aria-pressed="true">Next 7 days</button>
+          <button data-when="all" class="ev-pill">Everything</button>
+        </div>
+        <div class="ev-selects">
+          <select id="ev-f-category" aria-label="Category"><option value="">All categories</option></select>
+          <select id="ev-f-town" aria-label="Town"><option value="">All towns</option></select>
+          <select id="ev-f-price" aria-label="Price">
+            <option value="">Any price</option>
+            <option value="free">Free</option>
+            <option value="under15">Under $15</option>
+          </select>
+          <select id="ev-f-age" aria-label="Age">
+            <option value="">Any age</option>
+            <option value="allages">All-ages only</option>
+            <option value="21">21+ only</option>
+          </select>
+          <button class="ev-clear" id="ev-clear" hidden>Clear ✕</button>
+        </div>
+      </div>
+
+      <p class="ev-count" id="ev-count" role="status"></p>
+
+      <details class="ev-ongoing" id="ev-ongoing" hidden>
+        <summary>Ongoing — exhibits &amp; long-runners <span class="ev-ongoing-n" id="ev-ongoing-count"></span></summary>
+        <div class="ev-ongoing-list" id="ev-ongoing-list"></div>
+      </details>
+
+      <div id="ev-list" class="ev-list"><!-- day groups --></div>
+      <div class="ev-more-wrap"><button class="ev-more" id="ev-more" hidden>Show more days</button></div>
+
+      <div id="ev-map-wrap" class="ev-map-wrap" hidden>
+        <div id="ev-map" class="ev-map" aria-label="Map of events"></div>
+        <p class="ev-map-note" id="ev-map-note"></p>
+      </div>
+
+      <div class="ev-empty" id="ev-empty" hidden>
+        <p class="ev-empty-title">Nothing matches.</p>
+        <p>Try widening the date range or clearing a filter.</p>
+      </div>
+
+      <div class="ev-loading" id="ev-loading">Loading the calendar…</div>
+    </section>
+
+    <!-- LIST-YOUR-EVENT NOTE -->
+    <section class="ev-submit-note">
+      <h2>Want your event listed here?</h2>
+      <p>This calendar gathers itself automatically from the places Burlington already posts events.
+         Post yours on <a href="https://www.sevendaysvt.com/vermont/EventSubmission" target="_blank" rel="noopener">Seven Days</a>,
+         <a href="https://www.eventbrite.com" target="_blank" rel="noopener">Eventbrite</a>, or
+         <a href="https://www.meetup.com" target="_blank" rel="noopener">Meetup</a> — or on your venue's own site —
+         and I'll catch it on the next sweep.</p>
+    </section>
+
+    <!-- SUPPORT STRIP -->
+    <section class="ev-support">
+      <a class="ev-support-card" href="https://btownbrief.com" target="_blank" rel="noopener">
+        <span class="ev-support-emoji">📬</span>
+        <span><strong>The Burlington Brief</strong><br>The twice-a-week local newsletter behind this page. Free — sign up.</span>
+      </a>
+      <a class="ev-support-card" href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">
+        <span class="ev-support-emoji">❤️</span>
+        <span><strong>Chip in on Ko-fi</strong><br>Keeps the calendar sweeping every local source, every day.</span>
+      </a>
+      <a class="ev-support-card" href="https://www.btownbrief.com/about-me" target="_blank" rel="noopener">
+        <span class="ev-support-emoji">👋</span>
+        <span><strong>It's just me making all this</strong><br>Meet Stephen.</span>
+      </a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
+      <span class="footer-sep">·</span>
+      <span>Burlington, Vermont</span>
+      <span class="footer-sep">·</span>
+      <span class="footer-attribution" id="ev-generated"></span>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WPuE=" crossorigin=""></script>
+  <script src="js/events.js"></script>
+</body>
+</html>
