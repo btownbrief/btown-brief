@@ -82,10 +82,14 @@ correctly NOT free. Interest counts live in `signals`, never reader-facing.
 
 ## Known gaps
 
-- **Facebook** — login-walled, never scraped headlessly. Drop Easy Scraper
-  CSVs (or the Chrome-agent JSONL) into `data/events/imports/facebook/`
-  (formats documented in its README). **A fresh Facebook pass is needed now**
-  — the calendar currently has zero FB-only events.
+- **Facebook** — login-walled, never scraped headlessly, but now WIRED UP end
+  to end. `scripts/events/fb_links.py` opens the 7 city discover pages in your
+  logged-in Chrome; you run Easy Scraper; `scripts/events/fb_import.py` turns
+  the export into a clean dated JSONL in `data/events/imports/facebook/`,
+  resolving relative dates ("Tomorrow"/"Happening now"/"This Sunday") to
+  absolute so the daily Action never misreads them. First pass (Jul 10):
+  306 events imported, ~200 FB-exclusive, ~95 merged into other sources.
+  Redo the pass whenever you want fresher FB coverage (weekly is plenty).
 - **Instagram** — adapter built, dormant until `SCRAPE_CREATORS_API_KEY`
   lands in `~/btown-brief-prompts/secrets.env` (locally) and as a GitHub
   repo secret (for the Action). The endpoint shape is an educated guess

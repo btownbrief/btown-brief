@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import importlib
 import json
+import re
 import sys
 import time
 import traceback
@@ -80,6 +81,37 @@ def _venue_compatible(a: str | None, b: str | None) -> bool:
     return SequenceMatcher(None, na, nb).ratio() >= 0.8
 
 
+# Titles too generic to merge across different venues — the same night can
+# have "Trivia Night" at three bars, and those are genuinely different events.
+_GENERIC_TITLE_RE = re.compile(
+    r"trivia|open mic|karaoke|bingo|happy hour|live music|story ?time|"
+    r"yoga|book club|farmers.? market|game night|run club|drag (?:brunch|bingo)|"
+    r"\bquiz|line danc|salsa|dance party|open studio|figure drawing|"
+    r"drop.?in|story ?hour|\bclass\b|\bworkshop\b|\bservice\b|\bmass\b|"
+    r"worship|\btour\b|tasting|meeting|paint ?night|pub quiz|"
+    r"pickup|pick.?up|jam session|sound bath|meditation|networking|"
+    r"reception|opening|concert|festival|matinee|brunch|rehearsal|ceremony|"
+    r"social|mixer|gathering|showcase|screening|market|\bfair\b|"
+    r"celebration|fundraiser|storytime|playgroup|practice", re.I)
+
+
+def _distinctive(title: str) -> bool:
+    """A title specific enough that same-title + same-date almost certainly
+    means the same event even if the venue strings differ across sources
+    (e.g. 'Thundercat', 'Sylvan Esso', 'Party on the Bricks'). Excludes
+    generic recurring names — the same night really can have 'Trivia Night'
+    at three different bars."""
+    if _GENERIC_TITLE_RE.search(title):
+        return False
+    words = title.split()
+    return len(words) >= 2 or (len(words) == 1 and len(words[0]) >= 6)
+
+
+def _towns_compatible(a: dict, b: dict) -> bool:
+    ta, tb = a.get("town"), b.get("town")
+    return not ta or not tb or ta == tb
+
+
 def _same_source_other_showtime(ev: dict, cluster: list[dict]) -> bool:
     """A source that lists the same title twice on one date means two real
     showtimes (VCC 7pm & 9pm) — never merge those. Cross-source duplicates
@@ -110,9 +142,19 @@ def dedupe(events: list[dict]) -> tuple[list[dict], list[dict]]:
             placed = False
             for cluster in clusters:
                 head = cluster[0]
-                if (_title_sim(nt, norm_title(head["title"])) >= 0.87
-                        and _venue_compatible(ev.get("venue"), head.get("venue"))
-                        and not _same_source_other_showtime(ev, cluster)):
+                sim = _title_sim(nt, norm_title(head["title"]))
+                if _same_source_other_showtime(ev, cluster):
+                    continue
+                # normal path: similar title + compatible venue
+                compatible = (sim >= 0.87
+                              and _venue_compatible(ev.get("venue"), head.get("venue")))
+                # cross-venue path: a near-identical DISTINCTIVE title on the same
+                # date in the same town is the same event even if venues differ
+                # (promoter vs venue name, or an unresolved FB address)
+                if not compatible and sim >= 0.93 and _distinctive(nt) \
+                        and _towns_compatible(ev, head):
+                    compatible = True
+                if compatible:
                     cluster.append(ev)
                     placed = True
                     break

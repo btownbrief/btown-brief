@@ -1,12 +1,43 @@
 # Facebook event drops
 
 Facebook is login-walled, so the events pipeline never scrapes it. Instead,
-drop export files into THIS directory and `scripts/events/sources/facebook.py`
-imports them on every run:
+you export the discover pages yourself and the files here get imported on
+every pipeline run.
+
+## Easiest path (recommended)
+
+```bash
+# 1. open the 7 city discover pages in a new Chrome window (your login)
+python3 scripts/events/fb_links.py
+
+# 2. run Easy Scraper on each tab; save/paste the results into one file
+#    (a .md / .txt / .tsv table, or a .csv — column order url, when, title, location)
+
+# 3. convert it — this resolves "Tomorrow" / "Happening now" / "This Sunday"
+#    to ABSOLUTE dates against today, so the daily Action never misreads them:
+python3 scripts/events/fb_import.py ~/Downloads/your-export.md
+
+# 4. rebuild the calendar (or just --only facebook to preview)
+python3 scripts/events/update.py
+```
+
+`fb_import.py` writes a dated `fb-YYYY-MM-DD.jsonl` here. Re-running it for a
+new scrape day makes a new file; delete old ones whenever you like (past
+events are skipped at import time regardless).
+
+## Or drop a raw file and let the importer parse it
+
+`scripts/events/sources/facebook.py` reads any `*.csv` / `*.jsonl` here
+directly:
 
 ```bash
 python3 scripts/events/update.py --only facebook --window 30 --dry-run --sample 3
 ```
+
+⚠️ If a raw drop still contains relative dates ("Tomorrow", "Happening now"),
+the importer resolves them against the day the pipeline RUNS, not the day you
+scraped — so for anything with relative dates, prefer `fb_import.py` above,
+which freezes them correctly.
 
 Files persist between runs — update.py's `lastSeen` mechanism keeps imported
 events alive, and stale files whose events are all in the past are harmless
