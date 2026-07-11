@@ -406,3 +406,34 @@ is keyed by the day the evening starts.
   `.github/workflows/refresh-jobs.yml` with the standard keep-last-good
   contract. Craigslist and Indeed are link-only by their terms — never
   scraped.
+
+---
+
+## Burlington Pulse (feat/chatter)
+
+**chatter.html** — "What Burlington Is Talking About": the neighborhood-chatter page
+(the community talking, distinct from the newsletter's journalism). Client logic is in
+`js/chatter.js`, styled in `css/style.css`, rendering `data/chatter.json`.
+
+- **Sections**: "Today" trending topics with direction arrows (🔥 hot · ↗ rising ·
+  ↘ fading) that expand to their source threads; positive-first highlight slots
+  (useful question, funniest, most debated, someone needs help, keep recommending, and
+  an always-labeled **Unverified** rumor); Facebook-group + Craigslist link-out cards
+  (nothing scraped from either); and a "rougher stuff" `<details>` collapsed by default.
+- **Data**: `scripts/refresh_chatter.py` writes `data/chatter.json` + `data/chatter-seen.json`
+  (a small, public-safe activity history that drives the arrows) a few times a day via
+  `.github/workflows/refresh-chatter.yml`. Primary source is Stephen's public Inoreader
+  streams for r/burlington + r/vermont (direct Reddit JSON 403s from GitHub + most IPs);
+  it re-enriches with Reddit scores/comments whenever Reddit is reachable. All logic is
+  keyless and stdlib-only; any fetch failure keeps the last good file. Set the
+  `ANTHROPIC_API_KEY` repo secret to enable an optional label/slot polish pass (same
+  pattern as the weather reads) — without it the deterministic heuristics run alone.
+- **Private tip line (never published)**: crime/controversy/newsworthy items and anything
+  naming a private individual are routed to `data/tips-inbox.md` as newsletter leads, and
+  Front Porch Forum material is ingested by `scripts/ingest_fpf.py` from
+  `data/fpf-digests/` (digest emails) and `data/fpf-dropbox/` (session-read notes) into
+  that same file. These paths are **gitignored** — the repo is public and FPF never
+  appears on any public page. A workflow tripwire fails the build if they ever get tracked.
+- Local dev: `python3 scripts/refresh_chatter.py --fixtures .chatter-dev/fixtures`
+  (offline), `--selftest`, or `--dry-run`. Full build notes and open questions:
+  `SUMMARY-chatter.md`.
