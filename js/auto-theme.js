@@ -87,10 +87,17 @@
   var rail = document.querySelector('.mode-nav');
   if (!rail) return;
 
+  /* The nav lives inside a flex ROW, so a bare sibling would land beside the
+     chips and steal their width. Wrap rail + dots in a column instead. */
+  var wrap = document.createElement('div');
+  wrap.className = 'mode-rail-wrap';
+  rail.parentNode.insertBefore(wrap, rail);
+  wrap.appendChild(rail);
+
   var dots = document.createElement('div');
   dots.className = 'mode-rail-dots';
   dots.setAttribute('aria-hidden', 'true');
-  rail.insertAdjacentElement('afterend', dots);
+  wrap.appendChild(dots);
 
   var pages = 0;
 

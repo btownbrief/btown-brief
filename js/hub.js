@@ -402,3 +402,46 @@
     init();
   }
 })();
+
+/* Tile blurbs — one line per tile, redrawn on every load so the page never
+   reads the same way twice. Keep them one sentence and roughly one line long;
+   they sit under the number and are meant to be skimmed, not studied. */
+(function tileLines() {
+  var LINES = {
+    open: [
+      'Who still has the lights on and the fryer going, right this minute.',
+      'Every kitchen in town, ranked by whether you can walk in tonight.',
+      'Hungry now? These are the doors that are actually still open.',
+      'Bars, cafés and kitchens, filtered down to the ones serving.',
+      'Live hours for the whole city, so you never drive to a dark window.',
+    ],
+    things: [
+      'Swims, hikes, dive bars, bookshops and the best sunset benches.',
+      'Two hundred-odd ways to spend an afternoon without leaving town.',
+      'Everything worth doing here, in one long and fairly honest list.',
+      'The beaches, the breweries, the back roads and the quiet corners.',
+      'The full list — famous, obscure, free, and occasionally strange.',
+    ],
+    events: [
+      'Shows, markets and meetups happening between now and midnight.',
+      'What is actually on tonight, gathered from twenty-six sources.',
+      'Gigs, games and gatherings, all of today in one scrollable place.',
+      'Tonight in Burlington, hour by hour, nothing padded out.',
+      'Everything on today — and the next thirty days, if you keep going.',
+    ],
+    lake: [
+      'How warm Champlain is, and whether it is worth getting in.',
+      'Water temp, wind, waves, and whether tonight&rsquo;s sunset delivers.',
+      'The lake and the sky, and a straight answer about going outside.',
+      'Beach reports, swim conditions, and the state of the water.',
+      'Champlain right now, plus whether you should be on it or near it.',
+    ],
+  };
+
+  var nodes = document.querySelectorAll('.tile-line[data-line]');
+  for (var i = 0; i < nodes.length; i++) {
+    var pool = LINES[nodes[i].getAttribute('data-line')];
+    if (!pool || !pool.length) continue;
+    nodes[i].innerHTML = pool[Math.floor(Math.random() * pool.length)];
+  }
+})();
