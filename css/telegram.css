@@ -1,55 +1,48 @@
-/* telegram.html — the two group chats. Deliberately plain: two cards,
-   two buttons, a few lines of housekeeping. Everything else comes from
-   style.css. */
+/* telegram.html — one main chat (the Meetup group), one side chat, a few
+   lines of housekeeping. Deliberately plain: everything else is style.css. */
 
 .tg { max-width: 720px; }
 
-/* ---------- the two chat cards ---------- */
-.tg-cards {
-  display: grid;
-  gap: var(--space-4);
-  margin-bottom: var(--space-8);
-}
-@media (min-width: 640px) {
-  .tg-cards { grid-template-columns: 1fr 1fr; }
-}
-
-.tg-card {
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-5);
+/* ---------- the main event: the Meetup group chat ---------- */
+.tg-main {
+  padding: var(--space-6) var(--space-5);
   background: var(--bg-raised);
   border: 1px solid var(--line);
+  border-top: 4px solid var(--coral);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
+  text-align: center;
 }
 
-.tg-card-emoji { font-size: 1.75rem; line-height: 1; }
+.tg-card-emoji { font-size: 2rem; line-height: 1; }
 
-.tg-card h2 {
-  margin: var(--space-3) 0 var(--space-2);
+.tg-main h2 {
+  margin: var(--space-3) 0 var(--space-3);
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
+  line-height: 1.2;
   color: var(--ink);
 }
 
-.tg-card p {
+.tg-main > p {
+  margin: 0 auto;
+  max-width: 46ch;
   color: var(--ink-2);
-  font-size: var(--text-base);
+  font-size: var(--text-md);
   line-height: 1.6;
 }
 
-.tg-card-note {
-  margin-top: var(--space-2);
+.tg-main-note {
+  margin-top: var(--space-3) !important;
   color: var(--ink-3) !important;
   font-size: var(--text-sm) !important;
 }
+.tg-main-note a { color: var(--teal); font-weight: 600; }
 
-/* button sits flush at the bottom so both cards line up */
+/* ---------- buttons ---------- */
 .tg-btn {
-  margin-top: auto;
-  display: block;
-  padding: 14px var(--space-4);
+  display: inline-block;
+  padding: 14px var(--space-6);
   border-radius: var(--radius-full);
   background: var(--coral);
   color: #fff;
@@ -59,14 +52,61 @@
   text-decoration: none;
   transition: filter var(--duration-fast) var(--ease);
 }
-.tg-card .tg-btn { margin-top: var(--space-5); }
 .tg-btn:hover { color: #fff; filter: brightness(1.08); text-decoration: none; }
-.tg-btn-alt { background: var(--teal); }
+
+.tg-btn-big {
+  margin-top: var(--space-5);
+  width: 100%;
+  max-width: 380px;
+  padding: 16px var(--space-6);
+  font-size: var(--text-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- the side chat: present, but clearly secondary ---------- */
+.tg-side {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  background: var(--bg-subtle);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+}
+
+.tg-side-text { flex: 1 1 260px; }
+
+.tg-side h2 {
+  margin-bottom: var(--space-1);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.tg-side p {
+  color: var(--ink-3);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+.tg-btn-side {
+  flex: none;
+  padding: 11px var(--space-5);
+  background: none;
+  border: 1px solid var(--teal);
+  color: var(--teal);
+  font-size: var(--text-sm);
+}
+.tg-btn-side:hover { background: var(--teal-light); color: var(--teal); filter: none; }
 
 /* ---------- housekeeping lines ---------- */
 .tg-notes {
   display: grid;
   gap: var(--space-3);
+  margin-top: var(--space-8);
   padding-top: var(--space-5);
   border-top: 1px solid var(--line-soft);
   color: var(--ink-3);
@@ -96,8 +136,4 @@
   color: var(--ink-2);
   font-size: var(--text-base);
 }
-.tg-btn-email {
-  display: inline-block;
-  background: var(--ink);
-  padding: 12px var(--space-6);
-}
+.tg-btn-email { background: var(--ink); padding: 12px var(--space-6); }

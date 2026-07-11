@@ -17,22 +17,24 @@ one-time Supabase setup, then merge when you're happy.
 
 ## Part A — Telegram launch page (`telegram.html`)
 
-Deliberately plain (Stephen's call — the first build was too cluttered): a
-hero, two chat cards side by side, four housekeeping lines, and the
-newsletter fallback. Nothing else.
+Deliberately plain (Stephen's call: the first build was too cluttered). One
+hero, one big card, one quiet strip, a few one-liners, newsletter fallback.
 
-- **General Chat** (`https://t.me/+Z-R5GRtZWuo2NjQx`) — everyday life in
-  Burlington: random thoughts, cool links, funny pics. Says out loud that
-  your phone will blow up, and to mute it and tune in when you want.
-- **Btown Brief Chat** (`https://t.me/+pULrkkS4vjBiZjEx`) — what's happening
-  around town; the quieter one.
-- Housekeeping lines: no-Telegram-yet (iPhone / Android / Desktop links),
-  how to mute, three-word house rules, one Meetup group link.
+- **The Meetup group chat** (`https://t.me/+pULrkkS4vjBiZjEx`) — THE focus of
+  the page. Big bordered card, big coral button, framed around planning real
+  hangouts (trivia, a sunset walk, brunch). Links out to the Meetup page for
+  people who want to browse events before joining a chat.
+- **The General Life chat** (`https://t.me/+Z-R5GRtZWuo2NjQx`) — deliberately
+  secondary: a muted strip below with an outline button. Niche room for
+  everyday life (random thoughts, links, funny pics), and it says out loud
+  that your phone will blow up so mute it and tune in when you want.
+- Three housekeeping lines: get Telegram (iPhone / Android / Desktop), how to
+  mute, house rules (be kind, keep it Burlington, no spam).
 - Email fallback: a button to `https://www.btownbrief.com/subscribe`. The
   beehiiv iframe embed does NOT work for this publication (renders their
   "Not found" page) and `?email=` doesn't prefill — don't retry it.
-- Join clicks track as `telegram-join-general` / `telegram-join-brief` in
-  `btb_events`, so you can see which chat people actually pick.
+- Join clicks track as `telegram-join-meetup` / `telegram-join-general` in
+  `btb_events`, so you can see which room people actually pick.
 
 **To launch:** share the telegram.html URL instead of a raw t.me invite.
 
