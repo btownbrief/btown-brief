@@ -1,6 +1,6 @@
-# The Weather Brain — how a Btown Brief weather read gets written
+# The Weather Brain — how a BTown Brief weather read gets written
 
-This is the single source of truth for weather prose in the Btown Brief
+This is the single source of truth for weather prose in the BTown Brief
 ecosystem. Two consumers:
 
 1. **The dashboard "My Read"** — `scripts/draft_read.py` feeds this prompt plus

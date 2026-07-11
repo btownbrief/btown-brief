@@ -687,15 +687,26 @@ html[data-art="photo"] .sky-photo {
    promoting it. Shorten the sky on phones and tighten the tiles so tiles one
    and two both land above the fold. */
 @media (max-width: 640px) {
-  /* The photograph is the page. Do NOT shrink it to win layout — an earlier
-     pass took it to 38vh and gutted it.
-     Desktop is clamp(460px, 70vh, 680px). On phones we give back the smallest
-     slice that lets the SECOND tile peek above the fold, and nothing more.
-     Everything else (tile padding, type sizes) stays exactly as designed. */
+  /* The photograph is the page. Do NOT shrink it to win the fold — an earlier
+     pass took it to 38vh and gutted it. It keeps 65vh here.
+     Instead, tiles go TWO ACROSS on phones. Open Now and Things To Do then sit
+     side by side on the same row, so the second tile is visible without
+     scrolling no matter how tall the hero is — and the hero keeps its height.
+     (Real Safari eats ~120px of the viewport in chrome, so stacking them one
+     per row could never have won this without wrecking the photo.) */
   .sky {
     min-height: clamp(440px, 65vh, 620px);
   }
   .tiles {
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
+  }
+  /* Narrower tiles, so the copy tightens to match. */
+  .tile {
+    padding: 0.75rem 0.85rem 0.7rem;
+  }
+  .tile-line {
+    font-size: 0.72rem;
+    line-height: 1.35;
   }
 }

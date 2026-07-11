@@ -233,7 +233,7 @@
         '\nWhen (roughly): ' + fields.taken_on +
         '\nCredit me as: ' + (fields.credit || 'Anonymous') +
         '\nAI or heavily edited: ' + (fields.ai ? 'yes' : 'no') +
-        '\n\nOK to publish in the Btown Brief: YES' +
+        '\n\nOK to publish in the BTown Brief: YES' +
         '\n\n(Attach the photo before sending!)';
       status.className = 'pl-form-status err';
       status.innerHTML = esc(err && err.message ? err.message : 'The upload service isn’t reachable') +

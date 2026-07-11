@@ -232,7 +232,7 @@
       '<a class="conditions-link" href="weather.html" ' +
         'title="Burlington Right Now — lake, beaches, life scores">' +
         bits.join('<span class="sep">·</span>') +
-        '<span class="conditions-go">Btown Brief Forecast →</span>' +
+        '<span class="conditions-go">BTown Brief Forecast →</span>' +
       '</a>' +
       '<a class="conditions-nws" href="' + NWS_FORECAST + '" target="_blank" rel="noopener" ' +
         'title="Raw forecast from the National Weather Service">NWS ↗</a>';

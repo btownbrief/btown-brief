@@ -105,7 +105,7 @@
         '<div class="btb-strip-card">' +
           '<h2 class="btb-strip-heading">The free newsletter</h2>' +
           '<p class="btb-strip-body">Burlington news, events, and weather in your inbox — the project that started all of this.</p>' +
-          '<a class="btb-strip-link" href="https://btownbrief.com" target="_blank" rel="noopener" data-track="newsletter">Get the Btown Brief →</a>' +
+          '<a class="btb-strip-link" href="https://btownbrief.com" target="_blank" rel="noopener" data-track="newsletter">Get the BTown Brief →</a>' +
         '</div>' +
         '<div class="btb-strip-card">' +
           '<h2 class="btb-strip-heading">Who’s behind this?</h2>' +
