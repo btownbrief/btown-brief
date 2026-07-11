@@ -1,25 +1,25 @@
 {
- "generated": "2026-07-10T23:32:55-04:00",
+ "generated": "2026-07-11T06:44:31-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 37,
+   "count": 36,
    "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 60,
-   "seconds": 1.7
+   "count": 55,
+   "seconds": 1.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 165,
-   "seconds": 2.1
+   "count": 159,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 84,
-   "seconds": 1.7
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -29,27 +29,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-10&end_date=2026-09-08&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-11&end_date=2026-09-09&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 306,
+   "count": 281,
    "seconds": 0.2
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.6
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 257,
-   "seconds": 77.1
+   "count": 253,
+   "seconds": 67.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 14,
-   "seconds": 3.1
+   "seconds": 2.1
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,7 +64,7 @@
   "higherground": {
    "label": "Higher Ground",
    "count": 56,
-   "seconds": 87.8
+   "seconds": 81.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -73,28 +73,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 487,
-   "seconds": 68.2
+   "count": 485,
+   "seconds": 74.3
   },
   "meetup": {
    "label": "Meetup",
    "count": 75,
-   "seconds": 119.3
+   "seconds": 142.6
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 12,
-   "seconds": 9.6
+   "count": 13,
+   "seconds": 9.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 88,
-   "seconds": 4.6
+   "count": 87,
+   "seconds": 3.6
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 54,
-   "seconds": 27.2
+   "count": 52,
+   "seconds": 25.9
   },
   "sevendays": {
    "label": "Seven Days",
@@ -108,109 +108,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 158,
-   "seconds": 7.7
+   "count": 153,
+   "seconds": 9.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 131,
+   "count": 129,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 54,
-   "seconds": 75.9
+   "count": 53,
+   "seconds": 66.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 35,
-   "seconds": 0.2
+   "seconds": 0.4
   }
  },
- "gathered": 2082,
- "afterDedup": 1511,
- "duplicatesMerged": 571,
- "final": 3432,
+ "gathered": 2029,
+ "afterDedup": 1472,
+ "duplicatesMerged": 557,
+ "final": 3311,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Data Design Lab: Academic Posters",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-21"
-  },
-  {
-   "kept": {
-    "title": "Farms to Plates: Vermont's Local Food System",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-21"
-  },
-  {
-   "kept": {
-    "title": "L'Eclair w/ Two Sev & DJ Rice Pilaf",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "champlainvalley",
-    "facebook"
-   ],
-   "date": "2026-07-21"
-  },
-  {
-   "kept": {
-    "title": "YSO Leddy Beach Bites",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "parksrec"
-   ],
-   "date": "2026-07-22"
-  },
-  {
-   "kept": {
-    "title": "Trombone Shorty",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "facebook",
-    "higherground"
-   ],
-   "date": "2026-07-22"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-07-22"
-  },
-  {
-   "kept": {
-    "title": "GROW Preschool Yoga",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-07-23"
-  },
   {
    "kept": {
     "title": "Italian Conversation Group",
@@ -2457,71 +2378,94 @@
     "loveburlington"
    ],
    "date": "2026-09-08"
+  },
+  {
+   "kept": {
+    "title": "Farms to Plates: Vermont's Local Food System",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-08"
+  },
+  {
+   "kept": {
+    "title": "Opening Day Fall 2026",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-08"
+  },
+  {
+   "kept": {
+    "title": "ActivitiesFest 2026",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-08"
+  },
+  {
+   "kept": {
+    "title": "Art Amplified featuring Paper Castles and Roost.World",
+    "source": "bca"
+   },
+   "merged_sources": [
+    "bca",
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-09"
+  },
+  {
+   "kept": {
+    "title": "WAX + DJ Hoppa",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-09-09"
+  },
+  {
+   "kept": {
+    "title": "Halvorson's Courtyard Music Series: Phantom Airwave",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-09"
+  },
+  {
+   "kept": {
+    "title": "TRIVIA NIGHT",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-09"
   }
  ],
  "changes": [
   {
-   "id": "c9b4368336d1",
-   "title": "Coffee Ride",
-   "date": "2026-07-10",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
-  },
-  {
-   "id": "a7d2e2fb95d8",
-   "title": "Dinosaur Safari",
-   "date": "2026-07-10",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
-  },
-  {
-   "id": "d1af4138dc09",
-   "title": "Shane Murley Band",
-   "date": "2026-07-10",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
-  },
-  {
-   "id": "80a6f6ef4941",
-   "title": "Green Mountain Swing",
-   "date": "2026-07-10",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
-  },
-  {
-   "id": "76eaa52eeb78",
-   "title": "Sunset & Sip @ Leddy Park Beach",
-   "date": "2026-07-10",
-   "change": "missing",
-   "lastSeen": "2026-07-10T18:47:39-04:00"
-  },
-  {
-   "id": "4a59a6fc4b81",
-   "title": "Phil Abair Band",
-   "date": "2026-07-10",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
-  },
-  {
-   "id": "2e2d297c147d",
-   "title": "Consumables, Polkarobics, Mooncusser",
-   "date": "2026-07-10",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
-  },
-  {
-   "id": "08fe3dde06d9-2100",
-   "title": "Adam Cayton-Holland & Ben Roy",
-   "date": "2026-07-10",
-   "change": "missing",
-   "lastSeen": "2026-07-10T18:47:39-04:00"
-  },
-  {
-   "id": "8cf4eabb5902",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-11",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "id": "5945d359dfe7",
+   "title": "\"Weird Al\" Yankovic",
+   "date": "2026-07-24",
+   "change": "time",
+   "was": "2026-07-24T18:00:00-04:00",
+   "now": "2026-07-24T19:30:00-04:00"
   },
   {
    "id": "c1ef415c1213",
