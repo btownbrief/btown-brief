@@ -311,18 +311,18 @@ html[data-art="photo"] .glint { display: none; }
   z-index: 4;
 }
 
-/* One rotating sentence per tile, redrawn every load (see hub.js). Sits under
-   the number, separated by a hairline so it reads as description, not data. */
+/* One rotating sentence per tile, redrawn every load (see hub.js). No rule
+   above it — the hairline cost ~18px of height per tile and pushed the second
+   tile below the fold. The sentences are written short enough to land on one
+   line at phone width. */
 .tile-line {
-  margin-top: 0.6rem;
-  padding-top: 0.55rem;
-  border-top: 1px solid var(--edge-soft);
+  margin-top: 0.35rem;
   font-size: 0.78rem;
-  line-height: 1.45;
+  line-height: 1.4;
   color: var(--ink-soft);
   text-wrap: pretty;
 }
-.tile:empty + .tile-line, .tile-line:empty { display: none; }
+.tile-line:empty { display: none; }
 .tile {
   background: var(--panel);
   border: 1px solid var(--edge-soft);
@@ -636,4 +636,26 @@ html[data-art="photo"] .sky-photo {
   /* Stacked, the second heading needs air or it collides with the
      card above it. */
   .split-col + .split-col .split-head { margin-top: 1.9rem; }
+}
+
+/* ---------------------------------------------------------------- mobile fold
+   The hero was min-height: clamp(460px, 70vh, 680px) — about 590px on a phone,
+   which used the whole screen before the tiles even began. The second tile
+   (Things To Do) sat entirely below the fold, which defeats the point of
+   promoting it. Shorten the sky on phones and tighten the tiles so tiles one
+   and two both land above the fold. */
+@media (max-width: 640px) {
+  .sky {
+    min-height: clamp(340px, 46vh, 460px);
+  }
+  .tiles {
+    gap: 8px;
+  }
+  .tile {
+    padding: 0.75rem 0.9rem 0.7rem;
+  }
+  .tiles-hint {
+    margin: -40px 0 0.45rem;
+    font-size: 0.78rem;
+  }
 }
