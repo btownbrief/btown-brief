@@ -27,8 +27,27 @@
       .map(function (el) { return el.value; });
   }
 
+  // Only http(s) links are ever rendered — esc() stops markup injection but
+  // not a scraped "javascript:" URL, which would still run on click.
+  function safeUrl(url) {
+    return /^https?:\/\//i.test(url || '') ? url : '#';
+  }
+
+  // Calendar-day math, not elapsed-milliseconds: "posted" is a Burlington
+  // date (YYYY-MM-DD), so age is the difference in whole days between that
+  // date and today in Burlington — independent of the viewer's clock/timezone.
+  function dayNumber(ymd) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ymd || '');
+    return m ? Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / DAY_MS) : NaN;
+  }
+
+  function todayNumber() {
+    // en-CA formats as YYYY-MM-DD; the timeZone pins it to Burlington's date.
+    return dayNumber(new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }));
+  }
+
   function daysAgo(iso) {
-    return Math.floor((Date.now() - new Date(iso + 'T12:00:00').getTime()) / DAY_MS);
+    return todayNumber() - dayNumber(iso);
   }
 
   function agoLabel(iso) {
@@ -40,7 +59,7 @@
 
   function jobHTML(job) {
     return (
-      '<a class="job-row" href="' + esc(job.url) + '" target="_blank" rel="noopener">' +
+      '<a class="job-row" href="' + esc(safeUrl(job.url)) + '" target="_blank" rel="noopener">' +
         '<div class="job-main">' +
           '<span class="job-title">' + esc(job.title) + '</span>' +
           '<span class="job-employer">' + esc(job.employer) + '</span>' +
@@ -93,7 +112,7 @@
   function renderEmployers() {
     document.getElementById('employer-row').innerHTML = EMPLOYERS.map(function (e) {
       return (
-        '<a class="dir-card" href="' + esc(e.url) + '" target="_blank" rel="noopener">' +
+        '<a class="dir-card" href="' + esc(safeUrl(e.url)) + '" target="_blank" rel="noopener">' +
           '<div class="dir-card-head"><span class="dir-card-name">' + esc(e.name) + '</span></div>' +
           '<p class="dir-card-what">' + esc(e.note) + '</p>' +
           '<span class="dir-card-arrow" aria-hidden="true">↗</span>' +
@@ -103,14 +122,20 @@
   }
 
   window.BTBC.fetchJSON('data/jobs.json').then(function (data) {
-    jobs = (data.jobs || [])
-      .filter(function (job) { return daysAgo(job.posted) <= MAX_AGE_DAYS; })
-      .sort(function (a, b) { return a.posted < b.posted ? 1 : -1; });
+    jobs = (Array.isArray(data.jobs) ? data.jobs : [])
+      .filter(function (job) {
+        return job && typeof job.posted === 'string' &&
+          job.url && daysAgo(job.posted) <= MAX_AGE_DAYS;
+      })
+      .sort(function (a, b) {
+        return b.posted.localeCompare(a.posted) || String(b.id).localeCompare(String(a.id));
+      });
 
     var updated = document.getElementById('jobs-updated');
-    if (data.updated) {
+    var when = data.updated ? new Date(data.updated) : null;
+    if (when && !isNaN(when.getTime())) {
       updated.textContent = 'Last checked ' +
-        new Date(data.updated).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) +
+        when.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) +
         ' · refreshes automatically';
     }
 

@@ -26,7 +26,17 @@
   }
 
   function telHref(phone) {
-    return 'tel:+1' + phone.replace(/\D/g, '');
+    return 'tel:+1' + String(phone).replace(/\D/g, '');
+  }
+
+  // esc() stops markup injection but not an unsafe URL scheme (e.g. a
+  // "javascript:" href would still run on click). Allow only real link
+  // schemes: http(s) for listing/source pages, plus mailto for contacts.
+  function safeHttp(url) {
+    return /^https?:\/\//i.test(url || '') ? url : '#';
+  }
+  function safeContact(url) {
+    return /^(https?:|mailto:)/i.test(url || '') ? url : '#';
   }
 
   function managerCardHTML(pm) {
@@ -36,12 +46,12 @@
 
     var actions = '';
     if (pm.listings_url) {
-      actions += '<a class="pm-action pm-action-listings" href="' + esc(pm.listings_url) +
+      actions += '<a class="pm-action pm-action-listings" href="' + esc(safeHttp(pm.listings_url)) +
         '" target="_blank" rel="noopener">See open units ↗</a>';
     }
     if (pm.contact_url) {
       var isMail = pm.contact_url.indexOf('mailto:') === 0;
-      actions += '<a class="pm-action" href="' + esc(pm.contact_url) + '"' +
+      actions += '<a class="pm-action" href="' + esc(safeContact(pm.contact_url)) + '"' +
         (isMail ? '' : ' target="_blank" rel="noopener"') + '>' +
         (isMail ? '✉️ Email them' : 'Contact ↗') + '</a>';
     }
@@ -62,7 +72,7 @@
 
   function sourceCardHTML(src) {
     return (
-      '<a class="dir-card" href="' + esc(src.url) + '" target="_blank" rel="noopener">' +
+      '<a class="dir-card" href="' + esc(safeHttp(src.url)) + '" target="_blank" rel="noopener">' +
         '<div class="dir-card-head"><span class="dir-card-name">' + esc(src.name) + '</span></div>' +
         '<p class="dir-card-what">' + esc(src.good_for) + '</p>' +
         (src.gotcha ? '<p class="pm-gotcha">⚠︎ ' + esc(src.gotcha) + '</p>' : '') +
@@ -97,8 +107,9 @@
   // terms prohibit automated access.
   function renderRent(rent) {
     var strip = document.getElementById('rent-strip');
-    if (!rent || !(rent.stats || []).length) { strip.hidden = true; return; }
-    strip.innerHTML = rent.stats.map(function (s) {
+    var stats = rent && Array.isArray(rent.stats) ? rent.stats : [];
+    if (!stats.length) { strip.hidden = true; return; }
+    strip.innerHTML = stats.map(function (s) {
       return (
         '<div class="rent-tile">' +
           '<span class="rent-tile-value">' + esc(s.value) + '</span>' +
@@ -110,14 +121,19 @@
   }
 
   window.BTBC.fetchJSON('data/housing.json').then(function (data) {
-    managers = data.managers || [];
+    managers = Array.isArray(data.managers) ? data.managers.filter(Boolean) : [];
     renderManagers();
     renderRent(data.rent);
-    document.getElementById('source-list').innerHTML =
-      (data.sources || []).map(sourceCardHTML).join('');
+    var sources = Array.isArray(data.sources) ? data.sources.filter(Boolean) : [];
+    document.getElementById('source-list').innerHTML = sources.map(sourceCardHTML).join('');
   }).catch(function () {
-    document.getElementById('pm-list').innerHTML =
-      '<p class="page-empty">Could not load the directory. Run a local server (<code>python3 -m http.server 8000</code>) if you’re previewing from disk.</p>';
+    // Clear every loading region, not just the directory, so nothing is
+    // left stuck on "Loading…".
+    var msg = '<p class="page-empty">Could not load the directory. Run a local server (<code>python3 -m http.server 8000</code>) if you’re previewing from disk.</p>';
+    document.getElementById('pm-list').innerHTML = msg;
+    document.getElementById('source-list').innerHTML = '';
+    var strip = document.getElementById('rent-strip');
+    if (strip) strip.hidden = true;
   });
 
   document.getElementById('pm-filters').addEventListener('change', renderManagers);

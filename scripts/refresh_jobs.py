@@ -27,7 +27,7 @@ import time
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 
@@ -81,15 +81,22 @@ def attr(tag, name):
     return html.unescape(match.group(2)) if match else None
 
 
+def local_date(dt):
+    """The Burlington calendar date of a datetime (tz-aware or naive)."""
+    if dt.tzinfo is not None:
+        dt = dt.astimezone(BTV_TZ)
+    return dt.date().isoformat()
+
+
 def iso_date(value):
     """Read the ISO timestamps used by the Atom and JSON-LD sources."""
-    return datetime.fromisoformat(value.strip().replace("Z", "+00:00")).date().isoformat()
+    return local_date(datetime.fromisoformat(value.strip().replace("Z", "+00:00")))
 
 
 def rfc822_date(value):
     for fmt in ("%a, %d %b %Y %H:%M:%S %z", "%d %b %Y %H:%M:%S %z"):
         try:
-            return datetime.strptime(value.strip(), fmt).date().isoformat()
+            return local_date(datetime.strptime(value.strip(), fmt))
         except ValueError:
             pass
     raise ValueError(f"unrecognized RSS date: {value!r}")
@@ -206,13 +213,15 @@ def relative_city_date(text):
     today = datetime.now(BTV_TZ).date()
     if re.search(r"Posted\s+today", text, re.I):
         days = 0
+    elif re.search(r"Posted\s+yesterday", text, re.I):
+        days = 1
     else:
         match = re.search(r"Posted\s+(\d+)\s+(day|week|hour|minute)s?\s+ago", text, re.I)
         if not match:
             raise ValueError(f"unrecognized City posted date: {text!r}")
         amount, unit = int(match.group(1)), match.group(2).lower()
         days = amount * 7 if unit == "week" else amount if unit == "day" else 0
-    return datetime.fromordinal(today.toordinal() - days).date().isoformat()
+    return (today - timedelta(days=days)).isoformat()
 
 
 def fetch_city(_previous):
@@ -229,7 +238,12 @@ def fetch_city(_previous):
             r"(.*?)</div>", block, re.I | re.S)
         if not anchor or not published:
             continue
-        posted = relative_city_date(published.group(1))
+        # One unparseable date skips its own item, not the whole source.
+        try:
+            posted = relative_city_date(published.group(1))
+        except ValueError as exc:
+            print(f"City of Burlington: skipped item ({exc})", file=sys.stderr)
+            continue
         if not posted:
             continue
         href = attr(anchor.group(0), "href")
@@ -334,13 +348,12 @@ def fetch_med_center(previous):
             "https://uvmhealthcareers.org", html.unescape(match.group(2)))
         cards.append((int(ref_number.group()) if ref_number else 0, match, block, url))
     # The page is alphabetical, while Job Ref values rise over time. Checking
-    # higher refs first makes the eight-detail allowance find the newest jobs.
+    # higher refs first spends the eight-detail budget on the newest jobs;
+    # any not reached this run get their turn once the current newest are
+    # cached (below) and no longer consume detail fetches.
     cards.sort(key=lambda card: card[0], reverse=True)
     old_by_url = {job["url"]: job for job in previous
                   if job.get("source") == "UVM Med Center" and job.get("url")}
-    old_refs = [reference for reference, _match, _block, url in cards
-                if url in old_by_url]
-    checked_through = min(old_refs) if old_refs else None
     jobs = []
     detail_fetches = 0
     for reference, match, block, url in cards:
@@ -352,11 +365,6 @@ def fetch_med_center(previous):
                 old.get("pay"), first_span(block, "employment_type"))
             known["tags"] = old.get("tags", [])
             jobs.append(known)
-            continue
-        # Higher Job Ref values are newer. Once retained rows establish the
-        # prior run's floor, lower unknown refs were already checked and aged
-        # out, so they do not need another detail request.
-        if checked_through is not None and reference <= checked_through:
             continue
         if detail_fetches >= 8:
             continue
@@ -388,15 +396,19 @@ def normalized(value):
 
 
 def dedupe(jobs):
-    """Prefer pay, then the source order, for normalized employer/title twins."""
-    chosen = {}
+    """For normalized employer/title twins, keep the newest posting; break
+    ties by pay availability, then source order."""
     rank = {source: index for index, source in enumerate(SOURCE_ORDER)}
+
+    def preference(job):
+        # Higher is better: newest date, then has-pay, then earlier source.
+        return (job["posted"], bool(job["pay"]), -rank[job["source"]])
+
+    chosen = {}
     for job in jobs:
         key = (normalized(job["title"]), normalized(job["employer"]))
         current = chosen.get(key)
-        if (current is None or (job["pay"] and not current["pay"]) or
-                (bool(job["pay"]) == bool(current["pay"]) and
-                 rank[job["source"]] < rank[current["source"]])):
+        if current is None or preference(job) > preference(current):
             chosen[key] = job
     return list(chosen.values())
 
@@ -432,19 +444,20 @@ def main():
         print("all five sources failed; data/jobs.json left untouched", file=sys.stderr)
         return 1
 
-    cutoff = datetime.fromtimestamp(
-        datetime.now(timezone.utc).timestamp() - 21 * 24 * 60 * 60,
-        timezone.utc).date().isoformat()
+    cutoff = (datetime.now(BTV_TZ).date() - timedelta(days=21)).isoformat()
     jobs = [job for job in dedupe(collected) if job.get("posted", "") >= cutoff]
     jobs.sort(key=lambda job: (job["posted"], job["id"]), reverse=True)
-    # UVMMC rows are also its detail-fetch cache. Retain its fresh rows when
-    # applying the cap so an alphabetized list does not trigger repeat fetches.
-    med_jobs = [job for job in jobs if job["source"] == "UVM Med Center"]
-    if len(jobs) > 30 and med_jobs:
-        jobs = med_jobs + [job for job in jobs if job["source"] != "UVM Med Center"][:30 - len(med_jobs)]
+    if len(jobs) > 30:
+        # The 30-row cap must never evict rows the contract promises to keep:
+        # carried-forward rows from a source that FAILED this run (keep-last-
+        # good — they age out over 21 days, not the instant other sources
+        # supply 30 fresh ones), and UVMMC rows (whose presence doubles as the
+        # detail-fetch cache). Cap only the unprotected remainder.
+        protected_sources = set(failures) | {"UVM Med Center"}
+        protected = [job for job in jobs if job["source"] in protected_sources]
+        capped = [job for job in jobs if job["source"] not in protected_sources]
+        jobs = protected + capped[:max(0, 30 - len(protected))]
         jobs.sort(key=lambda job: (job["posted"], job["id"]), reverse=True)
-    else:
-        jobs = jobs[:30]
 
     out = {
         "updated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
