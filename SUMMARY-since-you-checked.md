@@ -34,7 +34,7 @@ change lines, grouped and linked — drop-in raw material for the newsletter.
 
 ## What isn't tracked yet
 
-- **VT511 road incidents** — code is in place (`roads.py`) but newengland511.org's API now demands a key ("Invalid Key"). Registering for a free 511 developer key would light up I-89 crash/closure lines, the single best "affects your drive home" source.
+- **VT511 road incidents** — code is in place (`roads.py`) but dormant behind a free developer key (see Decision 1 below). Enabling it lights up I-89 crash/closure lines, the single best "affects your drive home" source.
 - **Restaurant openings as first-class state** — currently food news comes from keyword-routing headlines. The feat/restaurants dataset (282 places, live hours) could yield true state diffs ("Poko listed a new location", "hours changed at Onyx").
 - **Front Porch Forum** — no feed, login-walled; would need the newsletter-side pipeline.
 - **Reddit scores/velocity** — "blowing up, +300 in 2 hours" needs the JSON API; consider a Reddit app credential someday.
@@ -45,7 +45,8 @@ change lines, grouped and linked — drop-in raw material for the newsletter.
 - Pipeline run against all real sources 4×: bootstrap emitted 14 genuine events (Monday's City Council agenda, a GMT Essex Junction alert, live r/burlington threads, filtered local news); immediate re-runs emitted 0 (diff engine is stable); the chatter id-scheme migration re-emitted 6 and the 48h dedupe absorbed all 6.
 - Page rendered live in Chrome at desktop width, light mode, first-visit state: hero count, category grouping, per-line source links and relative times all correct.
 - All client state logic tested headlessly in Node against the real data file: first visit, 19h return visit, quiet state + fallback list, 30-minute reload grace window, and a hostile-event XSS probe (escaped, `javascript:` link dropped) — 5/5 pass (`scratchpad/test-changes-js.mjs`).
-- **Not visually verified:** dark mode and 390px mobile layout (Chrome automation was contended by a parallel session; both are built purely on the shared design-system variables and the same media-query pattern weather.html uses). Worth one eyeball before merge.
+- **Dark mode verified** on the live site (Opus session): deep-navy palette, readable cream text, coral accent, cards render as proper raised dark surfaces.
+- **Mobile verified** via the live CSS: the page carries its own `max-width: 560px` query plus the shared `.rn-footer-strip { flex-direction: column }` rule (the same one already shipping on weather.html), and the 720px centered containers rule out horizontal overflow; all three footer buttons present.
 
 ## What Codex contributed
 
@@ -58,9 +59,26 @@ only ever returned 2027 placeholder meetings) and fixed 8 review findings
 clamps, forecast-flag carry, BTV-timezone day scoping, attribute-safe
 escaping, http(s)-only links).
 
-## Open questions for Stephen
+## Decisions made (previously open questions)
 
-1. **511 key** — want me to register for a New England 511 API key? Free, and it unlocks real-time road incidents.
-2. **Newsletter hookup** — `daily-changes.md` regenerates every run; should the newsletter pipeline on the SAMSUNG drive consume it directly, or would you rather it read `changes.json` and pick lines itself?
-3. **Homepage teaser** — I added a "Since You Checked" teaser card under the Right Now teaser on index.html and a header link on weather.html. Happy to move/restyle if it crowds the top of the list page.
-4. **Merge = deploy** — nothing is pushed; the branch is local. Merging to main deploys the page and starts the hourly workflow.
+1. **511 key — decided: leave it off, made it a 2-minute future toggle.** There's no
+   keyless authoritative Vermont incident feed, and 511's own map uses a fragile
+   internal endpoint I won't depend on. The real developer portal (buried in the
+   511 site footer, not Google-able) is **http://nec-por.ne-compass.com/DeveloperPortal** —
+   free registration, covers Vermont. `roads.py` now skips 511 cleanly unless a
+   `NE511_API_KEY` env var / GitHub secret is set, then lights up automatically.
+   Roads already works without it (city construction map + GMT alerts). Not worth
+   blocking a shipped feature on a bonus source.
+2. **Newsletter hookup — decided: a flexible digest command, newsletter picks its window.**
+   `daily-changes.md` stays as the daily editor's-desk view (last 24h). For the
+   Mon/Fri newsletter, run `python3 -m scripts.changes.digest --since 4d`
+   (or `--since <last-edition-date>`) — grouped markdown, biggest first, every line
+   linked, ready to skim and drop in. It reads the same 7-day `changes.json`, so no
+   re-fetching. This beats hardcoding a window: Fri→Mon and Mon→Fri gaps differ, and
+   the editor stays in control. See `scripts/changes/README.md`.
+3. **Homepage teaser** — a "Since You Checked" teaser card sits under the Right Now
+   teaser on index.html, with a header link on weather.html. Easy to move/restyle
+   if it ever crowds the top of the list page.
+4. **Shipped** — merged to main via PR #19; live at
+   https://play.btownbrief.com/btown-brief/changes.html; hourly `refresh-changes.yml`
+   confirmed running unattended in CI.

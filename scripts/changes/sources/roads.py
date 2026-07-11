@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
-"""City construction-map changes plus nearby New England 511 events.
+"""City construction-map changes, plus optional New England 511 road events.
 
 Construction labels prefer ``StreetName — PROJNAME`` because the live layer's
 project name is often shared by many features (for example, one paving program
 on several streets). A lone street or project name is used when only one exists.
+
+New England 511 requires a free developer key — register at
+http://nec-por.ne-compass.com/DeveloperPortal and set the NE511_API_KEY env var
+(a GitHub Actions secret in CI). Without it, the 511 sub-fetch is skipped
+cleanly; the construction map (keyless) and GMT alerts still cover roads.
 
 Each upstream is optional. A failed sub-fetch is represented temporarily by
 ``None``; diff() replaces it with the previous sub-state before the orchestrator
 stores the snapshot, preventing recovery from looking like a batch of new items.
 """
 
+import os
 from datetime import datetime, timedelta, timezone
 
 from ..common import event, get_json, iso, now_utc, parse_when
@@ -22,10 +28,8 @@ CONSTRUCTION_URL = ("https://services1.arcgis.com/1bO0c7PxQdsGidPK/arcgis/rest/s
                     "Construction_and_Planning_Datasets_Public_View_v2/FeatureServer/2/"
                     "query?where=1%3D1&outFields=*&f=json&orderByFields="
                     "last_edited_date+DESC&resultRecordCount=50&returnGeometry=false")
-VT511_URLS = (
-    "https://newengland511.org/api/v2/get/event",
-    "https://newengland511.org/api/v2/get/events",
-)
+NE511_API_KEY = os.environ.get("NE511_API_KEY", "").strip()
+VT511_BASE = "https://newengland511.org/api/v2/get/event"
 DPW_URL = "https://www.burlingtonvt.gov/DPW"
 AREA_WORDS = ("burlington", "south burlington", "winooski", "colchester",
               "i-89", "interstate 89", "us-7", "us 7", "vt-127", "vt 127")
@@ -71,15 +75,11 @@ def _pick(obj, *names):
 
 
 def _vt511_snapshot():
-    last_error = None
-    for url in VT511_URLS:
-        try:
-            data = get_json(url, headers={"Accept": "application/json"})
-            break
-        except RuntimeError as exc:
-            last_error = exc
-    else:
-        raise last_error
+    # The exact key parameter name may need a tweak once a real key is in hand
+    # (the endpoint answers "Invalid Key" to a bare call); ?key= is the common
+    # convention. Field access below is already defensive across shapes.
+    url = f"{VT511_BASE}?key={NE511_API_KEY}&format=json"
+    data = get_json(url, headers={"Accept": "application/json"})
     rows = data if isinstance(data, list) else _pick(data, "events", "Events", "items", "Items") or []
     items = []
     for row in rows:
@@ -117,12 +117,17 @@ def snapshot():
         state["construction"] = _construction_snapshot()
     except (RuntimeError, ValueError, TypeError):
         pass
-    try:
-        state["vt511"] = _vt511_snapshot()
-    except (RuntimeError, ValueError, TypeError):
-        pass
-    if state["construction"] is None and state["vt511"] is None:
+    # 511 is opt-in: only reach for it when a key is configured, so we don't
+    # hammer an endpoint that always rejects us and log noise every run.
+    if NE511_API_KEY:
+        try:
+            state["vt511"] = _vt511_snapshot()
+        except (RuntimeError, ValueError, TypeError):
+            pass
+    if state["construction"] is None and state["vt511"] is None and NE511_API_KEY:
         raise RuntimeError("both roads sources failed")
+    if state["construction"] is None and not NE511_API_KEY:
+        raise RuntimeError("construction map fetch failed")
     return state
 
 
