@@ -129,5 +129,17 @@
 
   rail.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
+
+  /* The first measurement used to run before layout settled — scrollWidth still
+     equalled clientWidth, so the dots hid themselves and only appeared once a
+     scroll forced a re-measure. Re-measure whenever the rail's box actually
+     changes, and again after webfonts land (they change the chips' width). */
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(update);
+    ro.observe(rail);
+    for (var k = 0; k < rail.children.length; k++) ro.observe(rail.children[k]);
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
+  window.addEventListener('load', update);
   update();
 })();
