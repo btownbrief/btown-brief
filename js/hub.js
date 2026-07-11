@@ -226,10 +226,16 @@
     /* The whole line — time, sunset, temp, sky — is a link to the NWS forecast
        for Burlington. People read the conditions and immediately want the real
        forecast; making them hunt for it was a dead end. */
-    bits.push('<span class="conditions-go" aria-hidden="true">forecast ↗</span>');
-    el.innerHTML = '<a class="conditions-link" href="' + NWS_FORECAST +
-      '" target="_blank" rel="noopener" title="Full forecast from the National Weather Service">' +
-      bits.join('<span class="sep">·</span>') + '</a>';
+    /* The line itself goes to OUR forecast — Burlington Right Now. The raw NWS
+       sits alongside it for anyone who wants the source. */
+    el.innerHTML =
+      '<a class="conditions-link" href="weather.html" ' +
+        'title="Burlington Right Now — lake, beaches, life scores">' +
+        bits.join('<span class="sep">·</span>') +
+        '<span class="conditions-go">Btown Brief Forecast →</span>' +
+      '</a>' +
+      '<a class="conditions-nws" href="' + NWS_FORECAST + '" target="_blank" rel="noopener" ' +
+        'title="Raw forecast from the National Weather Service">NWS ↗</a>';
   }
 
   /* ---------- the live tiles ---------- */
