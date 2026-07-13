@@ -1,40 +1,40 @@
 {
- "updated": "2026-07-13T13:51:14+00:00",
+ "updated": "2026-07-13T17:00:40+00:00",
  "sections_updated": {
-  "now": "2026-07-13T13:51:14+00:00",
-  "forecast": "2026-07-13T13:51:14+00:00",
-  "hourly": "2026-07-13T13:51:14+00:00",
-  "alerts": "2026-07-13T13:51:14+00:00",
-  "afd": "2026-07-13T13:51:14+00:00",
-  "lake_forecast": "2026-07-13T13:51:14+00:00",
+  "now": "2026-07-13T17:00:40+00:00",
+  "forecast": "2026-07-13T17:00:40+00:00",
+  "hourly": "2026-07-13T17:00:40+00:00",
+  "alerts": "2026-07-13T17:00:40+00:00",
+  "afd": "2026-07-13T17:00:40+00:00",
+  "lake_forecast": "2026-07-13T17:00:40+00:00",
   "lake_gage": "2026-07-13T13:51:14+00:00",
-  "air": "2026-07-13T13:51:14+00:00",
-  "sun": "2026-07-13T13:51:14+00:00",
-  "models": "2026-07-13T13:51:14+00:00"
+  "air": "2026-07-13T17:00:40+00:00",
+  "sun": "2026-07-13T17:00:40+00:00",
+  "models": "2026-07-13T17:00:40+00:00"
  },
  "now": {
-  "observed_at": "2026-07-13T13:25:00+00:00",
+  "observed_at": "2026-07-13T16:35:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 77,
-  "feels_like_f": 77,
-  "humidity": 50,
-  "dewpoint_f": 57,
-  "wind_mph": 9,
+  "temp_f": 84,
+  "feels_like_f": 84,
+  "humidity": null,
+  "dewpoint_f": null,
+  "wind_mph": 11,
   "wind_gust_mph": null,
-  "wind_dir": "S"
+  "wind_dir": "SSW"
  },
  "forecast": {
   "updated": "2026-07-13T06:23:04+00:00",
   "periods": [
    {
-    "name": "Today",
+    "name": "This Afternoon",
     "is_day": true,
     "temp_f": 87,
     "pop": 14,
-    "wind": "S 6 to 10 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 87. South wind 6 to 10 mph."
+    "wind": "SW 8 mph",
+    "short": "Partly Sunny",
+    "detailed": "Partly sunny, with a high near 87. Southwest wind around 8 mph."
    },
    {
     "name": "Tonight",
@@ -86,50 +86,6 @@
  "hourly": {
   "updated": "2026-07-13T06:23:04+00:00",
   "hours": [
-   {
-    "t": "2026-07-13T09:00:00-04:00",
-    "temp_f": 74,
-    "feels_f": 74,
-    "pop": 2,
-    "humidity": 62,
-    "wind_mph": 9,
-    "wind_dir": "S",
-    "sky": 32,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-07-13T10:00:00-04:00",
-    "temp_f": 78,
-    "feels_f": 78,
-    "pop": 2,
-    "humidity": 54,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 32,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-07-13T11:00:00-04:00",
-    "temp_f": 81,
-    "feels_f": 82,
-    "pop": 4,
-    "humidity": 51,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 39,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-07-13T12:00:00-04:00",
-    "temp_f": 84,
-    "feels_f": 84,
-    "pop": 5,
-    "humidity": 44,
-    "wind_mph": 9,
-    "wind_dir": "S",
-    "sky": 51,
-    "short": "Partly Sunny"
-   },
    {
     "t": "2026-07-13T13:00:00-04:00",
     "temp_f": 86,
@@ -481,6 +437,50 @@
     "wind_dir": "SW",
     "sky": 56,
     "short": "Chance Showers And Thunderstorms"
+   },
+   {
+    "t": "2026-07-14T21:00:00-04:00",
+    "temp_f": 87,
+    "feels_f": 92,
+    "pop": 32,
+    "humidity": 57,
+    "wind_mph": 9,
+    "wind_dir": "SW",
+    "sky": 66,
+    "short": "Chance Showers And Thunderstorms"
+   },
+   {
+    "t": "2026-07-14T22:00:00-04:00",
+    "temp_f": 85,
+    "feels_f": 90,
+    "pop": 47,
+    "humidity": 61,
+    "wind_mph": 9,
+    "wind_dir": "W",
+    "sky": 65,
+    "short": "Chance Showers And Thunderstorms"
+   },
+   {
+    "t": "2026-07-14T23:00:00-04:00",
+    "temp_f": 83,
+    "feels_f": 87,
+    "pop": 60,
+    "humidity": 65,
+    "wind_mph": 9,
+    "wind_dir": "W",
+    "sky": 73,
+    "short": "Showers And Thunderstorms Likely"
+   },
+   {
+    "t": "2026-07-15T00:00:00-04:00",
+    "temp_f": 81,
+    "feels_f": 85,
+    "pop": 67,
+    "humidity": 69,
+    "wind_mph": 9,
+    "wind_dir": "W",
+    "sky": 78,
+    "short": "Showers And Thunderstorms Likely"
    }
   ]
  },
@@ -754,10 +754,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 36,
+  "aqi": 49,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/13/26 9:00",
+  "observed": "07/13/26 12:00",
   "discussion": "On Monday, July 13th,  expect moderate air quality in Vermont, as smoke from Canadian wildfires continues to circulate around the New England region."
  },
  "sun": {
@@ -772,13 +772,13 @@
    {
     "date": "2026-07-13",
     "high_f": {
-     "GFS": 88,
+     "GFS": 90,
      "Euro": 88,
      "ICON": 89
     },
     "pop_max": {
-     "GFS": 10,
-     "Euro": 12,
+     "GFS": 9,
+     "Euro": 29,
      "ICON": 5
     },
     "precip_in": {
@@ -786,45 +786,45 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    },
    {
     "date": "2026-07-14",
     "high_f": {
-     "GFS": 96,
+     "GFS": 97,
      "Euro": 96,
-     "ICON": 99
+     "ICON": 100
     },
     "pop_max": {
-     "GFS": 60,
-     "Euro": 12,
-     "ICON": 33
+     "GFS": 17,
+     "Euro": 26,
+     "ICON": 23
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.03,
-     "ICON": 0.27
+     "ICON": 0.3
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
    },
    {
     "date": "2026-07-15",
     "high_f": {
-     "GFS": 82,
+     "GFS": 83,
      "Euro": 84,
      "ICON": 84
     },
     "pop_max": {
-     "GFS": 60,
-     "Euro": 75,
-     "ICON": 48
+     "GFS": 75,
+     "Euro": 69,
+     "ICON": 30
     },
     "precip_in": {
-     "GFS": 0.24,
+     "GFS": 0.07,
      "Euro": 0.29,
-     "ICON": 0.74
+     "ICON": 0.12
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    }
   ]
  }
