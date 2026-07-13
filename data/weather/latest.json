@@ -1,28 +1,28 @@
 {
- "updated": "2026-07-13T22:39:46+00:00",
+ "updated": "2026-07-13T23:37:32+00:00",
  "sections_updated": {
-  "now": "2026-07-13T22:39:46+00:00",
-  "forecast": "2026-07-13T22:39:46+00:00",
-  "hourly": "2026-07-13T22:39:46+00:00",
-  "alerts": "2026-07-13T22:39:46+00:00",
-  "afd": "2026-07-13T22:39:46+00:00",
-  "lake_forecast": "2026-07-13T22:39:46+00:00",
-  "lake_gage": "2026-07-13T22:39:46+00:00",
-  "air": "2026-07-13T22:39:46+00:00",
-  "sun": "2026-07-13T22:39:46+00:00",
-  "models": "2026-07-13T22:39:46+00:00"
+  "now": "2026-07-13T23:37:32+00:00",
+  "forecast": "2026-07-13T23:37:32+00:00",
+  "hourly": "2026-07-13T23:37:32+00:00",
+  "alerts": "2026-07-13T23:37:32+00:00",
+  "afd": "2026-07-13T23:37:32+00:00",
+  "lake_forecast": "2026-07-13T23:37:32+00:00",
+  "lake_gage": "2026-07-13T23:37:32+00:00",
+  "air": "2026-07-13T23:37:32+00:00",
+  "sun": "2026-07-13T23:37:32+00:00",
+  "models": "2026-07-13T23:37:32+00:00"
  },
  "now": {
-  "observed_at": "2026-07-13T22:20:00+00:00",
+  "observed_at": "2026-07-13T23:20:00+00:00",
   "station": "KBTV",
-  "description": "Light Rain",
-  "temp_f": 84,
-  "feels_like_f": 84,
+  "description": "Cloudy",
+  "temp_f": 82,
+  "feels_like_f": 82,
   "humidity": null,
   "dewpoint_f": null,
-  "wind_mph": 7,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "WNW"
+  "wind_dir": "N"
  },
  "forecast": {
   "updated": "2026-07-13T18:18:31+00:00",
@@ -31,10 +31,10 @@
     "name": "Tonight",
     "is_day": false,
     "temp_f": 69,
-    "pop": 18,
+    "pop": 13,
     "wind": "S 5 to 8 mph",
-    "short": "Slight Chance Rain Showers then Mostly Cloudy",
-    "detailed": "A slight chance of rain showers before 7pm. Mostly cloudy, with a low around 69. South wind 5 to 8 mph. Chance of precipitation is 20%."
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a low around 69. South wind 5 to 8 mph."
    },
    {
     "name": "Tuesday",
@@ -86,17 +86,6 @@
  "hourly": {
   "updated": "2026-07-13T18:18:31+00:00",
   "hours": [
-   {
-    "t": "2026-07-13T18:00:00-04:00",
-    "temp_f": 86,
-    "feels_f": 86,
-    "pop": 18,
-    "humidity": 43,
-    "wind_mph": 8,
-    "wind_dir": "SW",
-    "sky": 57,
-    "short": "Slight Chance Rain Showers"
-   },
    {
     "t": "2026-07-13T19:00:00-04:00",
     "temp_f": 84,
@@ -481,6 +470,17 @@
     "wind_dir": "W",
     "sky": 62,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-15T06:00:00-04:00",
+    "temp_f": 72,
+    "feels_f": 72,
+    "pop": 39,
+    "humidity": 84,
+    "wind_mph": 8,
+    "wind_dir": "W",
+    "sky": 67,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -774,17 +774,17 @@
  },
  "lake_gage": {
   "water_temp_f": 77,
-  "water_temp_at": "2026-07-13T18:00:00.000-04:00",
+  "water_temp_at": "2026-07-13T19:00:00.000-04:00",
   "level_ft": 96.4,
-  "level_at": "2026-07-13T18:00:00.000-04:00",
+  "level_at": "2026-07-13T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 44,
+  "aqi": 45,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/13/26 18:00",
+  "observed": "07/13/26 19:00",
   "discussion": "On Monday, July 13th,  expect moderate air quality in Vermont, as smoke from Canadian wildfires continues to circulate around the New England region."
  },
  "sun": {
@@ -804,7 +804,7 @@
      "ICON": 86
     },
     "pop_max": {
-     "GFS": 16,
+     "GFS": 19,
      "Euro": 29,
      "ICON": 5
     },
@@ -823,7 +823,7 @@
      "ICON": 99
     },
     "pop_max": {
-     "GFS": 25,
+     "GFS": 24,
      "Euro": 26,
      "ICON": 23
     },
