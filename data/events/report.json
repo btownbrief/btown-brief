@@ -1,15 +1,15 @@
 {
- "generated": "2026-07-13T08:21:43-04:00",
+ "generated": "2026-07-13T17:34:21-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 34,
-   "seconds": 5.9
+   "seconds": 6.3
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 50,
-   "seconds": 3.3
+   "seconds": 3.6
   },
   "brownell": {
    "label": "Brownell Library",
@@ -18,8 +18,8 @@
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 154,
-   "seconds": 2.4
+   "count": 158,
+   "seconds": 2.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 249,
-   "seconds": 76.2
+   "count": 250,
+   "seconds": 74.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 15,
-   "seconds": 2.7
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -69,7 +69,7 @@
   "higherground": {
    "label": "Higher Ground",
    "count": 56,
-   "seconds": 90.2
+   "seconds": 88.7
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -83,23 +83,23 @@
   },
   "meetup": {
    "label": "Meetup",
-   "count": 73,
-   "seconds": 145.6
+   "count": 75,
+   "seconds": 149.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 15,
-   "seconds": 14.6
+   "seconds": 14.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 85,
-   "seconds": 59.4
+   "seconds": 1.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 49,
-   "seconds": 25.7
+   "seconds": 26.9
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,52 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 154,
-   "seconds": 9.5
+   "count": 162,
+   "seconds": 8.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 130,
+   "count": 132,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 52,
-   "seconds": 68.7
+   "seconds": 72.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 34,
-   "seconds": 0.5
+   "seconds": 0.2
   }
  },
- "gathered": 2011,
- "afterDedup": 1337,
- "duplicatesMerged": 674,
- "final": 3238,
+ "gathered": 2028,
+ "afterDedup": 1352,
+ "duplicatesMerged": 676,
+ "final": 3257,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Queer/LGBTQ+ Horror Book Club",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-07-24"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-07-24"
-  },
   {
    "kept": {
     "title": "South Burlington Farmers Market",
@@ -184,6 +162,17 @@
   {
    "kept": {
     "title": "Food Truck Fridays",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-07-24"
+  },
+  {
+   "kept": {
+    "title": "Contra Dance in Burlington, VT",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1766,6 +1755,17 @@
   },
   {
    "kept": {
+    "title": "Zotero Drop-in Hour",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-08-25"
+  },
+  {
+   "kept": {
     "title": "Halvorson's Courtyard Music Series: Northern Ramble",
     "source": "churchst"
    },
@@ -2465,27 +2465,6 @@
  ],
  "changes": [
   {
-   "id": "9ad0160746b1",
-   "title": "Smart Cycling Workshops with E-Bikes",
-   "date": "2026-07-18",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
-  },
-  {
-   "id": "f9f456ddea34",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-19",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
-  },
-  {
-   "id": "a31c87c05a7d",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-19",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
-  },
-  {
    "id": "52a6a476d23d",
    "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
    "date": "2026-07-19",
@@ -2983,6 +2962,13 @@
    "lastSeen": "2026-07-11T06:44:31-04:00"
   },
   {
+   "id": "de0b0ce9eab3",
+   "title": "Family PechaKucha",
+   "date": "2026-08-01",
+   "change": "missing",
+   "lastSeen": "2026-07-13T08:21:43-04:00"
+  },
+  {
    "id": "c40c503e532c",
    "title": "Rik Palier",
    "date": "2026-08-01",
@@ -3023,6 +3009,13 @@
    "date": "2026-08-02",
    "change": "missing",
    "lastSeen": "2026-07-10T23:21:33-04:00"
+  },
+  {
+   "id": "0ec42b35c76f",
+   "title": "Dungeons & Dinos",
+   "date": "2026-08-02",
+   "change": "missing",
+   "lastSeen": "2026-07-13T08:21:43-04:00"
   },
   {
    "id": "2acf90fe4106",
@@ -3170,6 +3163,13 @@
    "date": "2026-08-08",
    "change": "missing",
    "lastSeen": "2026-07-10T23:21:33-04:00"
+  },
+  {
+   "id": "b9279f1d8683",
+   "title": "Kites in the Park 2026",
+   "date": "2026-08-08",
+   "change": "missing",
+   "lastSeen": "2026-07-13T08:21:43-04:00"
   },
   {
    "id": "d2c01d575393",
