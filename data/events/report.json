@@ -1,30 +1,30 @@
 {
- "generated": "2026-07-14T07:11:12-04:00",
+ "generated": "2026-07-14T17:36:01-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 34,
-   "seconds": 5.9
+   "seconds": 6.4
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 51,
-   "seconds": 3.3
+   "count": 52,
+   "seconds": 3.6
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 54,
-   "seconds": 2.8
+   "seconds": 2.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 159,
-   "seconds": 2.7
+   "seconds": 2.8
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 85,
-   "seconds": 1.6
+   "count": 86,
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -39,22 +39,22 @@
   "facebook": {
    "label": "Facebook (manual drops)",
    "count": 229,
-   "seconds": 0.2
+   "seconds": 0.1
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 249,
-   "seconds": 70.7
+   "seconds": 71.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 16,
-   "seconds": 2.2
+   "seconds": 2.8
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,13 +63,13 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden"
+   "count": 750,
+   "seconds": 38.5
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 57,
-   "seconds": 85.5
+   "count": 58,
+   "seconds": 86.9
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 476,
-   "seconds": 73.3
+   "count": 488,
+   "seconds": 74.3
   },
   "meetup": {
    "label": "Meetup",
-   "count": 73,
-   "seconds": 140.5
+   "count": 72,
+   "seconds": 148.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 14,
-   "seconds": 13.5
+   "count": 15,
+   "seconds": 14.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 82,
-   "seconds": 1.5
+   "count": 81,
+   "seconds": 10.3
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 48,
-   "seconds": 25.8
+   "seconds": 26.0
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,1095 +113,60 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 164,
-   "seconds": 14.5
+   "count": 166,
+   "seconds": 9.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 134,
+   "count": 136,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 53,
-   "seconds": 71.0
+   "seconds": 72.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 34,
-   "seconds": 0.2
+   "count": 35,
+   "seconds": 0.3
   }
  },
- "gathered": 2021,
- "afterDedup": 1342,
- "duplicatesMerged": 679,
- "final": 3011,
+ "gathered": 2790,
+ "afterDedup": 1507,
+ "duplicatesMerged": 1283,
+ "final": 2741,
  "mergeLog": [
   {
    "kept": {
-    "title": "Splash Dance: DJ CRWD CNTL",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-25"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-07-25"
-  },
-  {
-   "kept": {
-    "title": "Burlington Farmers Market",
-    "source": "farmersmarket"
-   },
-   "merged_sources": [
-    "facebook",
-    "farmersmarket",
-    "loveburlington"
-   ],
-   "date": "2026-07-25"
-  },
-  {
-   "kept": {
-    "title": "Free Family Skate",
-    "source": "sbrec"
-   },
-   "merged_sources": [
-    "facebook",
-    "sbrec"
-   ],
-   "date": "2026-07-25"
-  },
-  {
-   "kept": {
-    "title": "BTV Market",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "facebook",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-25"
-  },
-  {
-   "kept": {
-    "title": "ONE World Market",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "facebook",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-25"
-  },
-  {
-   "kept": {
-    "title": "Film Screening: Forestera",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-25"
-  },
-  {
-   "kept": {
-    "title": "Downtown Boys",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "champlainvalley",
-    "facebook"
-   ],
-   "date": "2026-07-25"
-  },
-  {
-   "kept": {
-    "title": "Live Music: Ryan Sweezey",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "loveburlington"
-   ],
-   "date": "2026-07-25"
-  },
-  {
-   "kept": {
-    "title": "Sunday Classical: Skylark",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "facebook",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-26"
-  },
-  {
-   "kept": {
-    "title": "Shakey Graves, Dope Lemon",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-26"
-  },
-  {
-   "kept": {
-    "title": "Film Screening: Playtime",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-26"
-  },
-  {
-   "kept": {
-    "title": "Kaleo",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "facebook",
-    "higherground"
-   ],
-   "date": "2026-07-27"
-  },
-  {
-   "kept": {
-    "title": "Vermont Lake Monsters Hot Dog Hysteria",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-27"
-  },
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-07-28"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-07-28"
-  },
-  {
-   "kept": {
-    "title": "Farms to Plates: Vermont's Local Food System",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-28"
-  },
-  {
-   "kept": {
-    "title": "Vermont Lake Monsters Youth Sports Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-28"
-  },
-  {
-   "kept": {
-    "title": "Halvorson's Courtyard Music Series: Starkweather Superjams",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-07-29"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-07-29"
-  },
-  {
-   "kept": {
-    "title": "Leddy Beach Bites",
-    "source": "parksrec"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "parksrec"
-   ],
-   "date": "2026-07-29"
-  },
-  {
-   "kept": {
-    "title": "Vermont Lake Monsters Military Appreciation Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-29"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-07-30"
-  },
-  {
-   "kept": {
-    "title": "Thundercat",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "facebook",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-30"
-  },
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-07-30"
-  },
-  {
-   "kept": {
-    "title": "SB Nite Out: Cirque de Fuego",
-    "source": "sbrec"
-   },
-   "merged_sources": [
-    "facebook",
-    "sbrec"
-   ],
-   "date": "2026-07-30"
-  },
-  {
-   "kept": {
-    "title": "Party on the Bricks",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-30"
-  },
-  {
-   "kept": {
-    "title": "Vermont Lake Monsters CHAMP! Toothbrush Holder Giveaway",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-30"
-  },
-  {
-   "kept": {
-    "title": "GameOnVT - Women's Pickup Flag Football",
+    "title": "Dinosaur Safari Exhibit",
     "source": "loveburlington"
    },
    "merged_sources": [
-    "champlainvalley",
+    "helloburlington",
     "loveburlington"
    ],
-   "date": "2026-07-30"
+   "date": "2026-08-12"
   },
   {
    "kept": {
-    "title": "Summer Concert Series: Mélissandre T-B & François-Félix Roy",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-31"
-  },
-  {
-   "kept": {
-    "title": "Twilight Series: The Big Takeover with Lilly Golden",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "facebook",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-31"
-  },
-  {
-   "kept": {
-    "title": "Sylvan Esso",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "facebook",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-31"
-  },
-  {
-   "kept": {
-    "title": "Rosebud Baker",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "facebook",
-    "vcc"
-   ],
-   "date": "2026-07-31"
-  },
-  {
-   "kept": {
-    "title": "Festival of Fools",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-31"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-07-31"
-  },
-  {
-   "kept": {
-    "title": "Food Truck Fridays",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-31"
-  },
-  {
-   "kept": {
-    "title": "Live Music: Radio Cowboy",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "loveburlington"
-   ],
-   "date": "2026-07-31"
-  },
-  {
-   "kept": {
-    "title": "Splash Dance: DJ Rich Conte",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "facebook",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-01"
-  },
-  {
-   "kept": {
-    "title": "Twilight Series: The Wolff Sisters with Milton Busker and the Grimm Work",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-01"
-  },
-  {
-   "kept": {
-    "title": "The Head And The Heart",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "facebook",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-01"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-01"
-  },
-  {
-   "kept": {
-    "title": "Burlington Farmers Market",
-    "source": "farmersmarket"
-   },
-   "merged_sources": [
-    "farmersmarket",
-    "loveburlington"
-   ],
-   "date": "2026-08-01"
-  },
-  {
-   "kept": {
-    "title": "Festival of Fools",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-01"
-  },
-  {
-   "kept": {
-    "title": "SI-MBA Inauguration Ceremony",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-01"
-  },
-  {
-   "kept": {
-    "title": "COTS Back to School Bonanza",
-    "source": "champlainvalley"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "facebook"
-   ],
-   "date": "2026-08-01"
-  },
-  {
-   "kept": {
-    "title": "Vermont Psychic Expo",
-    "source": "champlainvalley"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "facebook"
-   ],
-   "date": "2026-08-01"
-  },
-  {
-   "kept": {
-    "title": "Sunday Classical: Trio Nuovo",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "facebook",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-02"
-  },
-  {
-   "kept": {
-    "title": "Vermont Lake Monsters CHAMP!'s Birthday Bash",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-02"
-  },
-  {
-   "kept": {
-    "title": "Ali T",
+    "title": "Pub Hour",
     "source": "loveburlington"
    },
    "merged_sources": [
-    "facebook",
+    "helloburlington",
     "loveburlington"
    ],
-   "date": "2026-08-02"
+   "date": "2026-08-12"
   },
   {
    "kept": {
-    "title": "Vermont Lake Monsters The Busyhead Project Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-03"
-  },
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-08-04"
-  },
-  {
-   "kept": {
-    "title": "Oliver Hazard",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-04"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-04"
-  },
-  {
-   "kept": {
-    "title": "Farms to Plates: Vermont's Local Food System",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-04"
-  },
-  {
-   "kept": {
-    "title": "Discover UVM’s Campus Gardens — Guided Tour",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-04"
-  },
-  {
-   "kept": {
-    "title": "Vermont Lake Monsters Summer of Love Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-04"
-  },
-  {
-   "kept": {
-    "title": "Sidewalk Sale",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "facebook",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-05"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-05"
-  },
-  {
-   "kept": {
-    "title": "GROW Preschool Yoga",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-08-06"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-08-06"
-  },
-  {
-   "kept": {
-    "title": "Fruition",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground"
-   ],
-   "date": "2026-08-06"
-  },
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-06"
-  },
-  {
-   "kept": {
-    "title": "Sidewalk Sale",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-06"
-  },
-  {
-   "kept": {
-    "title": "Party on the Bricks",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-06"
-  },
-  {
-   "kept": {
-    "title": "Vermont Lake Monsters Creemees Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-06"
-  },
-  {
-   "kept": {
-    "title": "GameOnVT - Women's Pickup Flag Football",
+    "title": "The Ultimate Chocolate Tasting",
     "source": "loveburlington"
    },
    "merged_sources": [
-    "champlainvalley",
+    "helloburlington",
     "loveburlington"
-   ],
-   "date": "2026-08-06"
-  },
-  {
-   "kept": {
-    "title": "Michael Freed-Thall | The Queen of New York",
-    "source": "champlainvalley"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "facebook"
-   ],
-   "date": "2026-08-06"
-  },
-  {
-   "kept": {
-    "title": "Summer Concert Series: Joshua Glass Trio",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-07"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-07"
-  },
-  {
-   "kept": {
-    "title": "Sidewalk Sale",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-07"
-  },
-  {
-   "kept": {
-    "title": "Food Truck Fridays",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "facebook",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-07"
-  },
-  {
-   "kept": {
-    "title": "Vermont Lake Monsters Local Legends Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-07"
-  },
-  {
-   "kept": {
-    "title": "Splash Dance: DJ Love",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-08"
-  },
-  {
-   "kept": {
-    "title": "Bop To The Top",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "facebook",
-    "higherground"
-   ],
-   "date": "2026-08-08"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-08"
-  },
-  {
-   "kept": {
-    "title": "Burlington Farmers Market",
-    "source": "farmersmarket"
-   },
-   "merged_sources": [
-    "farmersmarket",
-    "loveburlington"
-   ],
-   "date": "2026-08-08"
-  },
-  {
-   "kept": {
-    "title": "Sidewalk Sale",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-08"
-  },
-  {
-   "kept": {
-    "title": "Mind Magic: A Night of Laughter and Astonishment",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "facebook",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-08"
-  },
-  {
-   "kept": {
-    "title": "Sunday Classical: Vermont Brass Trio",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-09"
-  },
-  {
-   "kept": {
-    "title": "Save Ferris",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground"
-   ],
-   "date": "2026-08-09"
-  },
-  {
-   "kept": {
-    "title": "Sidewalk Sale",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-09"
-  },
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-08-11"
-  },
-  {
-   "kept": {
-    "title": "Lake Street Dive",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground"
-   ],
-   "date": "2026-08-11"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-11"
-  },
-  {
-   "kept": {
-    "title": "Farms to Plates: Vermont's Local Food System",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-11"
-  },
-  {
-   "kept": {
-    "title": "Art Amplified featuring Troy Millette and the Fire Below with Collin Hagood",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-12"
-  },
-  {
-   "kept": {
-    "title": "Lake Street Dive",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground"
-   ],
-   "date": "2026-08-12"
-  },
-  {
-   "kept": {
-    "title": "Halvorson's Courtyard Music Series: Campfire Jack",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-12"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-12"
-  },
-  {
-   "kept": {
-    "title": "LSO Lab Safety Notebook Workshop",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
    ],
    "date": "2026-08-12"
   },
@@ -1255,9 +220,54 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-08-13"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-13"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-13"
+  },
+  {
+   "kept": {
+    "title": "Hot Dog & A Can Thursdays",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-13"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-08-13"
   },
@@ -1269,6 +279,7 @@
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
@@ -1282,6 +293,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -1312,12 +324,46 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-14"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-14"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-14"
+  },
+  {
+   "kept": {
     "title": "Splash Dance: Skipipop",
     "source": "bca"
    },
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
@@ -1353,6 +399,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-08-15"
@@ -1381,15 +428,71 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-15"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-15"
+  },
+  {
+   "kept": {
     "title": "Sunday Classical: Equinox Wind Quintet",
     "source": "bca"
    },
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-08-16"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-16"
+  },
+  {
+   "kept": {
+    "title": "Soda Plant Sundays",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-16"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-08-16"
   },
@@ -1403,6 +506,39 @@
     "loveburlington"
    ],
    "date": "2026-08-16"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-17"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-17"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-17"
   },
   {
    "kept": {
@@ -1439,11 +575,45 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-18"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-18"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-18"
+  },
+  {
+   "kept": {
     "title": "The Mountain Goats",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -1457,6 +627,39 @@
    },
    "merged_sources": [
     "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-08-19"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-19"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-19"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-08-19"
@@ -1489,6 +692,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -1508,12 +712,68 @@
   },
   {
    "kept": {
+    "title": "5K Fun Run/Walk: Bubble Run 5K",
+    "source": "sbrec"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sbrec"
+   ],
+   "date": "2026-08-20"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-20"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-20"
+  },
+  {
+   "kept": {
+    "title": "Hot Dog & A Can Thursdays",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-20"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-20"
+  },
+  {
+   "kept": {
     "title": "Summer Concert Series: Baby Fearn",
     "source": "bca"
    },
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
@@ -1539,6 +799,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-08-21"
@@ -1567,12 +828,46 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-21"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-21"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-21"
+  },
+  {
+   "kept": {
     "title": "Splash Dance: DJ GAYBAR",
     "source": "bca"
    },
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
@@ -1587,9 +882,21 @@
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-08-22"
+  },
+  {
+   "kept": {
+    "title": "PINEO & LOEB",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
    ],
    "date": "2026-08-22"
   },
@@ -1628,15 +935,49 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-22"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-22"
+  },
+  {
+   "kept": {
     "title": "Sunday Classical: Duo Dolce",
     "source": "bca"
    },
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-08-23"
+  },
+  {
+   "kept": {
+    "title": "Mad Caddies",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
    ],
    "date": "2026-08-23"
   },
@@ -1647,11 +988,45 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
    ],
    "date": "2026-08-23"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-23"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-23"
+  },
+  {
+   "kept": {
+    "title": "Gregory Alan Isakov with Vermont Symphony Orchestra",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-08-24"
   },
   {
    "kept": {
@@ -1666,10 +1041,44 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-24"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-24"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-24"
+  },
+  {
+   "kept": {
     "title": "Gregory Alan Isakov with Vermont Symphony Orchestra",
     "source": "higherground"
    },
    "merged_sources": [
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -1711,11 +1120,45 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-25"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-25"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-25"
+  },
+  {
+   "kept": {
     "title": "Halvorson's Courtyard Music Series: Northern Ramble",
     "source": "churchst"
    },
    "merged_sources": [
     "churchst",
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-08-26"
@@ -1727,6 +1170,39 @@
    },
    "merged_sources": [
     "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-08-26"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-26"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-26"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-08-26"
@@ -1752,6 +1228,61 @@
     "loveburlington"
    ],
    "date": "2026-08-27"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-27"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-27"
+  },
+  {
+   "kept": {
+    "title": "Hot Dog & A Can Thursdays",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-27"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-27"
+  },
+  {
+   "kept": {
+    "title": "Better Off Alone",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-08-28"
   },
   {
    "kept": {
@@ -1781,9 +1312,54 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-08-28"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-28"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-28"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-28"
+  },
+  {
+   "kept": {
+    "title": "Warren Zeiders Live In Concert",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
    ],
    "date": "2026-08-28"
   },
@@ -1795,6 +1371,7 @@
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
@@ -1808,6 +1385,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-08-29"
@@ -1840,11 +1418,56 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
    ],
    "date": "2026-08-29"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-29"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-29"
+  },
+  {
+   "kept": {
+    "title": "Jordan Davis Live In Concert",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-08-29"
+  },
+  {
+   "kept": {
+    "title": "D.R.I.",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-08-30"
   },
   {
    "kept": {
@@ -1854,6 +1477,28 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-08-30"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-30"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-08-30"
   },
@@ -1881,6 +1526,39 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-31"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-31"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-31"
+  },
+  {
+   "kept": {
     "title": "Sing-Along with Linda Bassick",
     "source": "fletcherfree"
    },
@@ -1896,6 +1574,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -1937,6 +1616,39 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-01"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-01"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-01"
+  },
+  {
+   "kept": {
     "title": "TRIVIA NIGHT",
     "source": "churchst"
    },
@@ -1965,6 +1677,39 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-09-02"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-02"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-02"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-09-02"
   },
@@ -2025,6 +1770,50 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-03"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-03"
+  },
+  {
+   "kept": {
+    "title": "Hot Dog & A Can Thursdays",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-03"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-03"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2058,10 +1847,44 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-04"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-04"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-04"
+  },
+  {
+   "kept": {
     "title": "Bermuda Search Party",
     "source": "higherground"
    },
    "merged_sources": [
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -2114,6 +1937,39 @@
   },
   {
    "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-05"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-05"
+  },
+  {
+   "kept": {
+    "title": "Bow Wow, Soulja Boy & Fat Joe",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-09-05"
+  },
+  {
+   "kept": {
     "title": "Alabama Shakes",
     "source": "higherground"
    },
@@ -2130,6 +1986,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-06"
@@ -2142,6 +1999,39 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-09-06"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-06"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-06"
+  },
+  {
+   "kept": {
+    "title": "Bret Michaels & Night Ranger",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
    ],
    "date": "2026-09-06"
   },
@@ -2162,6 +2052,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -2176,6 +2067,39 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-09-07"
+  },
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-07"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-07"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-09-07"
   },
@@ -2236,12 +2160,35 @@
   },
   {
    "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-08"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-08"
+  },
+  {
+   "kept": {
     "title": "Art Amplified featuring Paper Castles and Roost.World",
     "source": "bca"
    },
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
@@ -2255,6 +2202,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -2268,6 +2216,7 @@
    },
    "merged_sources": [
     "churchst",
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-09-09"
@@ -2465,393 +2414,15 @@
  ],
  "changes": [
   {
-   "id": "67735b38f8fe",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-20",
-   "change": "dropped"
-  },
-  {
-   "id": "62f87ac529b2",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-20",
-   "change": "dropped"
-  },
-  {
-   "id": "178e86b6a64d",
-   "title": "Reduce, Reuse, Recyclosaurus!",
-   "date": "2026-07-20",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "032b22fc7241",
-   "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
-   "date": "2026-07-20",
-   "change": "dropped"
-  },
-  {
-   "id": "ca75c5736e12",
-   "title": "Smart Cycling Workshops with E-Bikes",
-   "date": "2026-07-20",
-   "change": "dropped"
-  },
-  {
-   "id": "b71a09407c23",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-07-21",
-   "change": "dropped"
-  },
-  {
-   "id": "ee93a44c92fd",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-21",
-   "change": "dropped"
-  },
-  {
-   "id": "9d74fb3a46b7",
-   "title": "'Quartet Conversations'",
-   "date": "2026-07-21",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "5c857590e724",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-21",
-   "change": "dropped"
-  },
-  {
-   "id": "4b45fb371db9",
-   "title": "Hieroglyphs: Create a Cartouche",
-   "date": "2026-07-21",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "98de5881c3cb",
-   "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
-   "date": "2026-07-21",
-   "change": "dropped"
-  },
-  {
-   "id": "bfbddc44e71e",
-   "title": "Gillian Welch",
-   "date": "2026-07-21",
-   "change": "dropped"
-  },
-  {
-   "id": "ec2ebcb65a2f",
-   "title": "Outdoor Play Time",
-   "date": "2026-07-22",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "ef8b9be22770",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-22",
-   "change": "dropped"
-  },
-  {
-   "id": "de580b809c93",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-07-22",
-   "change": "dropped"
-  },
-  {
-   "id": "e388e9de7eb6",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-22",
-   "change": "dropped"
-  },
-  {
-   "id": "681564efcd41",
-   "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
-   "date": "2026-07-22",
-   "change": "dropped"
-  },
-  {
-   "id": "dd25667d19f2",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-07-23",
-   "change": "dropped"
-  },
-  {
-   "id": "d6b78389b9d0",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-23",
-   "change": "dropped"
-  },
-  {
-   "id": "c0d3bee74895",
-   "title": "Networking Lunch at Hula with the Network of Women--July Lunch",
-   "date": "2026-07-23",
-   "change": "missing",
-   "lastSeen": "2026-07-12T17:31:33-04:00"
-  },
-  {
-   "id": "bfab97cf1a2f",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-23",
-   "change": "dropped"
-  },
-  {
-   "id": "b0ae5987298c",
-   "title": "Summer Concert Series on the Patio",
-   "date": "2026-07-23",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "f80a264dce5c",
-   "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
-   "date": "2026-07-23",
-   "change": "dropped"
-  },
-  {
-   "id": "25516ac42702",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-07-24",
-   "change": "dropped"
-  },
-  {
-   "id": "e3de31f53aa0",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-24",
-   "change": "dropped"
-  },
-  {
-   "id": "d373bb321d3b",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-24",
-   "change": "dropped"
-  },
-  {
-   "id": "21fa08831a98",
-   "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
-   "date": "2026-07-24",
-   "change": "dropped"
-  },
-  {
-   "id": "4222c62069b9",
-   "title": "Jeffery Foucault",
-   "date": "2026-07-24",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "b9149122679f",
-   "title": "Weird Al Yankovic – Essex Junction",
-   "date": "2026-07-24",
-   "change": "dropped"
-  },
-  {
-   "id": "cef9f2e54e72",
-   "title": "No Exit",
-   "date": "2026-07-24",
-   "change": "dropped"
-  },
-  {
-   "id": "c01e9ac61cfc",
-   "title": "Weird Al Yankovic Tickets",
-   "date": "2026-07-24",
-   "change": "dropped"
-  },
-  {
-   "id": "c81604f44c4f",
-   "title": "Dancing In The Streets: Zach Nugent Duo",
-   "date": "2026-07-24",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "3068857f3f73",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-07-25",
-   "change": "dropped"
-  },
-  {
-   "id": "6fea5889227b",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-25",
-   "change": "dropped"
-  },
-  {
-   "id": "91052dfd5057",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-25",
-   "change": "dropped"
-  },
-  {
-   "id": "5f158f3bb417",
-   "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
-   "date": "2026-07-25",
-   "change": "dropped"
-  },
-  {
-   "id": "11c22ad2dd5c",
-   "title": "No Exit",
-   "date": "2026-07-25",
-   "change": "dropped"
-  },
-  {
-   "id": "b2ac09223b21",
-   "title": "Best Pooch in the Noosk",
-   "date": "2026-07-26",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "ac0bd223de07",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-26",
-   "change": "dropped"
-  },
-  {
-   "id": "90fe6ea4d34d",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-26",
-   "change": "dropped"
-  },
-  {
-   "id": "3f7760b33189",
-   "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
-   "date": "2026-07-26",
-   "change": "dropped"
-  },
-  {
-   "id": "6859d8fbe99a",
-   "title": "No Exit",
-   "date": "2026-07-26",
-   "change": "dropped"
-  },
-  {
-   "id": "d11c734a855a",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-27",
-   "change": "dropped"
-  },
-  {
-   "id": "3198bcd30759",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-27",
-   "change": "dropped"
-  },
-  {
-   "id": "65f34cca7ab4",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-07-28",
-   "change": "dropped"
-  },
-  {
-   "id": "2f18f3f7cbfa",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-28",
-   "change": "dropped"
-  },
-  {
-   "id": "896f1b5d1643",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-28",
-   "change": "dropped"
-  },
-  {
-   "id": "42dc0627e441",
-   "title": "Outdoor Play Time",
-   "date": "2026-07-29",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "1ba0db459aed",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-29",
-   "change": "dropped"
-  },
-  {
-   "id": "502fc03de6aa",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-07-29",
-   "change": "dropped"
-  },
-  {
-   "id": "cdc0e5063d2a",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-29",
-   "change": "dropped"
-  },
-  {
-   "id": "f3132218fdbb",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-07-30",
-   "change": "dropped"
-  },
-  {
-   "id": "e4b6ae7e1864",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-30",
-   "change": "dropped"
-  },
-  {
-   "id": "ca56973fdd03",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-30",
-   "change": "dropped"
-  },
-  {
-   "id": "9d7348a067a9",
-   "title": "The Brick Pit",
-   "date": "2026-07-30",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "376944cc71b4",
-   "title": "Book Club: Turning Pages with Mary (July)",
-   "date": "2026-07-30",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "e1e6db0574fe",
-   "title": "Thundercat",
-   "date": "2026-07-30",
-   "change": "dropped"
-  },
-  {
-   "id": "2d1aad26463f",
-   "title": "No Exit",
-   "date": "2026-07-30",
-   "change": "dropped"
-  },
-  {
-   "id": "b830a8e5df54",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "4bf6680497b5",
+   "title": "'No Exit'",
    "date": "2026-07-31",
    "change": "dropped"
   },
   {
-   "id": "52b71b839fcf",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-07-31",
-   "change": "dropped"
-  },
-  {
-   "id": "ad6a3865ef1c",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-07-31",
-   "change": "dropped"
-  },
-  {
-   "id": "fb87f8d6f663",
-   "title": "Sylvan Esso",
-   "date": "2026-07-31",
-   "change": "dropped"
-  },
-  {
-   "id": "df03950ee346",
-   "title": "No Exit",
-   "date": "2026-07-31",
+   "id": "2eec4ac1470e",
+   "title": "Trolley tours",
+   "date": "2026-08-01",
    "change": "dropped"
   },
   {
@@ -2872,18 +2443,11 @@
    "id": "b5cdd886da6d",
    "title": "Vermont Public Kids Day with Daniel Tiger",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "c99d09684fe5",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-08-01",
    "change": "dropped"
   },
   {
-   "id": "caa7aac54140",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "ee6a0efaf208",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-01",
    "change": "dropped"
   },
@@ -2891,12 +2455,23 @@
    "id": "cb06cc5aff3d",
    "title": "COTS Back to School Bonanza",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
+   "change": "dropped"
   },
   {
-   "id": "d5d531aa8bcb",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "f2dd3195376c",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
+   "date": "2026-08-01",
+   "change": "dropped"
+  },
+  {
+   "id": "a82775b3096f",
+   "title": "Guided Tours",
+   "date": "2026-08-01",
+   "change": "dropped"
+  },
+  {
+   "id": "96683bed85bb",
+   "title": "'No Exit'",
    "date": "2026-08-01",
    "change": "dropped"
   },
@@ -2908,38 +2483,32 @@
    "lastSeen": "2026-07-13T08:21:43-04:00"
   },
   {
-   "id": "c40c503e532c",
-   "title": "Rik Palier",
+   "id": "e5c07f7e86e1",
+   "title": "Half Priced Oysters at La Reprise",
    "date": "2026-08-01",
    "change": "dropped"
   },
   {
-   "id": "1f2d03a25590",
-   "title": "The Head And The Heart",
+   "id": "7d172959d3f0",
+   "title": "Skiff Oyster Hour",
    "date": "2026-08-01",
    "change": "dropped"
   },
   {
-   "id": "e5b7163baac5",
-   "title": "The Head and The Heart Tickets",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
-   "id": "5e7bf9adfca3",
-   "title": "No Exit",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
-   "id": "13f7734af8f0",
-   "title": "Vermont Psychic Expo Readings",
+   "id": "099df182c98b",
+   "title": "Trolley tours",
    "date": "2026-08-02",
    "change": "dropped"
   },
   {
-   "id": "f556ea84be74",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "b25ba3f11ec6",
+   "title": "Sunday Classical: Trio Nuovo",
+   "date": "2026-08-02",
+   "change": "dropped"
+  },
+  {
+   "id": "da498ad88996",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-02",
    "change": "dropped"
   },
@@ -2951,86 +2520,159 @@
    "lastSeen": "2026-07-13T08:21:43-04:00"
   },
   {
-   "id": "2acf90fe4106",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "d54460df9279",
+   "title": "'No Exit'",
    "date": "2026-08-02",
    "change": "dropped"
   },
   {
-   "id": "88a4728181c6",
-   "title": "No Exit",
+   "id": "9628a6e9e98a",
+   "title": "Half Priced Oysters at La Reprise",
    "date": "2026-08-02",
    "change": "dropped"
   },
   {
-   "id": "c401e337ca6f",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "163bddc8490a",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-02",
+   "change": "dropped"
+  },
+  {
+   "id": "d9fbfeea8526",
+   "title": "Trolley tours",
    "date": "2026-08-03",
    "change": "dropped"
   },
   {
-   "id": "4852523d9103",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "6825640e9fbb",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-03",
    "change": "dropped"
   },
   {
-   "id": "97447d3b7d4c",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "4863e13fe712",
+   "title": "Putts for Paws Charity Golf Tournament",
+   "date": "2026-08-03",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "b27083966076",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
+   "date": "2026-08-03",
+   "change": "dropped"
+  },
+  {
+   "id": "fc986ec11702",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-03",
+   "change": "dropped"
+  },
+  {
+   "id": "3e389764e308",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-03",
+   "change": "dropped"
+  },
+  {
+   "id": "631246f9a8de",
+   "title": "Trolley tours",
    "date": "2026-08-04",
    "change": "dropped"
   },
   {
-   "id": "f479e6ebe718",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "953a1d7c54bf",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-04",
    "change": "dropped"
   },
   {
-   "id": "e40e8618b75e",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "395c145a5c72",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-04",
    "change": "dropped"
   },
   {
-   "id": "6a4c610ee53a",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "04842501538f",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-04",
+   "change": "dropped"
+  },
+  {
+   "id": "15e8255ee7ac",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-04",
+   "change": "dropped"
+  },
+  {
+   "id": "8cbfb35474a1",
+   "title": "Trolley tours",
    "date": "2026-08-05",
    "change": "dropped"
   },
   {
-   "id": "aa569b63d259",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "dcaae5e4c429",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-05",
    "change": "dropped"
   },
   {
-   "id": "340fad3a36ad",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "148ffef1d7ad",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-05",
    "change": "dropped"
   },
   {
-   "id": "3c8cf50f89bc",
-   "title": "Sidewalk Sale",
+   "id": "f393448840ca",
+   "title": "Guided Tours",
    "date": "2026-08-05",
    "change": "dropped"
   },
   {
-   "id": "43a96234cc8d",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "3622fa1dab46",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-05",
+   "change": "dropped"
+  },
+  {
+   "id": "a732c5c2c046",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-05",
+   "change": "dropped"
+  },
+  {
+   "id": "8fd7a5122dca",
+   "title": "Trolley tours",
    "date": "2026-08-06",
    "change": "dropped"
   },
   {
-   "id": "26121739f8a3",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "d4d7ca23d753",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-06",
    "change": "dropped"
   },
   {
-   "id": "af2863b2f3bf",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "1b3e802e3aac",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
+   "date": "2026-08-06",
+   "change": "dropped"
+  },
+  {
+   "id": "8dc43b366200",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-06",
+   "change": "dropped"
+  },
+  {
+   "id": "613b79a29354",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-06",
+   "change": "dropped"
+  },
+  {
+   "id": "b8cb3a1f5a0b",
+   "title": "Trivia",
    "date": "2026-08-06",
    "change": "dropped"
   },
@@ -3038,32 +2680,49 @@
    "id": "2626b55e32a9",
    "title": "Michael Freed-Thall",
    "date": "2026-08-06",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
+   "change": "dropped"
   },
   {
-   "id": "088a0294172c",
-   "title": "Compa & Friends Summer Residency! - ft. Rob Compa, Cotter Ellis, & Chuck Jones",
+   "id": "74daa45ec2e6",
+   "title": "Compa & Friends Summer Residency! - Rob Compa, Cotter Ellis, & Chuck Jones",
    "date": "2026-08-06",
    "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
+   "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
-   "id": "1f52450143ce",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "c4dbb253628b",
+   "title": "Trolley tours",
    "date": "2026-08-07",
    "change": "dropped"
   },
   {
-   "id": "db4111cdf411",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "5438561224f3",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-07",
    "change": "dropped"
   },
   {
-   "id": "a6ec09304ef4",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "2237fd26ec8e",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-07",
+   "change": "dropped"
+  },
+  {
+   "id": "1a57677d13c2",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-07",
+   "change": "dropped"
+  },
+  {
+   "id": "549905d56d83",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-07",
+   "change": "dropped"
+  },
+  {
+   "id": "795b5e7aa6cc",
+   "title": "Trolley tours",
+   "date": "2026-08-08",
    "change": "dropped"
   },
   {
@@ -3074,14 +2733,14 @@
    "lastSeen": "2026-07-13T17:34:21-04:00"
   },
   {
-   "id": "07858d503443",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "726b65def8f9",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-08",
    "change": "dropped"
   },
   {
-   "id": "757195b20ef7",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "3b1be3157a1b",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-08",
    "change": "dropped"
   },
@@ -3093,8 +2752,20 @@
    "lastSeen": "2026-07-13T08:21:43-04:00"
   },
   {
-   "id": "d2c01d575393",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "c75b9d82d80c",
+   "title": "Guided Tours",
+   "date": "2026-08-08",
+   "change": "dropped"
+  },
+  {
+   "id": "9f49d53b4e7f",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-08",
+   "change": "dropped"
+  },
+  {
+   "id": "2f60b47125ff",
+   "title": "Skiff Oyster Hour",
    "date": "2026-08-08",
    "change": "dropped"
   },
@@ -3102,593 +2773,857 @@
    "id": "61487bedf7ae",
    "title": "Vermont Lake Monsters",
    "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
-  },
-  {
-   "id": "1049644584e5",
-   "title": "Mind Magic: A Night of Laughter and Astonishment",
-   "date": "2026-08-08",
    "change": "dropped"
   },
   {
-   "id": "8676bfd00357",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "3c3713ed0c92",
+   "title": "Sensory Friendly Sunday",
    "date": "2026-08-09",
    "change": "dropped"
   },
   {
-   "id": "9bd7a70b4403",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "de3a76d19a93",
+   "title": "Trolley tours",
    "date": "2026-08-09",
    "change": "dropped"
   },
   {
-   "id": "b80b076ba0a2",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "07e8f451717f",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
+   "date": "2026-08-09",
+   "change": "dropped"
+  },
+  {
+   "id": "d724f890a83d",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-09",
+   "change": "dropped"
+  },
+  {
+   "id": "db68d08ec4f9",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-09",
+   "change": "dropped"
+  },
+  {
+   "id": "0a98d21ec518",
+   "title": "Trolley tours",
    "date": "2026-08-10",
    "change": "dropped"
   },
   {
-   "id": "13adc001c1ed",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "64177c5608de",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-10",
    "change": "dropped"
   },
   {
-   "id": "732a6d1a95aa",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "1a7205501acd",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
+   "date": "2026-08-10",
+   "change": "dropped"
+  },
+  {
+   "id": "4196a1e70a09",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-10",
+   "change": "dropped"
+  },
+  {
+   "id": "4c4baf1967ef",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-10",
+   "change": "dropped"
+  },
+  {
+   "id": "e95a90a40756",
+   "title": "Trolley tours",
    "date": "2026-08-11",
    "change": "dropped"
   },
   {
-   "id": "4e5161396b88",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "38d7a41a4c22",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-11",
    "change": "dropped"
   },
   {
-   "id": "22a284fadee4",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "7ea5c42dd68a",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-11",
    "change": "dropped"
   },
   {
-   "id": "2ac11d137b15",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "ceb11f176078",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-11",
+   "change": "dropped"
+  },
+  {
+   "id": "cdccd12c1eb8",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-11",
+   "change": "dropped"
+  },
+  {
+   "id": "31b695009f5a",
+   "title": "Trolley tours",
    "date": "2026-08-12",
    "change": "dropped"
   },
   {
-   "id": "bae93ab38a38",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "197250cf2c5e",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-12",
    "change": "dropped"
   },
   {
-   "id": "15eea1f4207b",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "be6ff537a46b",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-12",
    "change": "dropped"
   },
   {
-   "id": "57233bc9fe80",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "ac2620b9fd98",
+   "title": "Guided Tours",
+   "date": "2026-08-12",
+   "change": "dropped"
+  },
+  {
+   "id": "76af5a3f32f2",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-12",
+   "change": "dropped"
+  },
+  {
+   "id": "efe3a46b0ad1",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-12",
+   "change": "dropped"
+  },
+  {
+   "id": "d7ec8fd071d2",
+   "title": "Trolley tours",
    "date": "2026-08-13",
    "change": "dropped"
   },
   {
-   "id": "f4e56f7ac2ee",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "78477030e8a9",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-13",
    "change": "dropped"
   },
   {
-   "id": "e7cec5309abd",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "7e9b20c12bc3",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-13",
    "change": "dropped"
   },
   {
-   "id": "82d2f79a2954",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "79cf05e4e058",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-13",
+   "change": "dropped"
+  },
+  {
+   "id": "97a75f7f6550",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-13",
+   "change": "dropped"
+  },
+  {
+   "id": "87908128d443",
+   "title": "Trivia",
+   "date": "2026-08-13",
+   "change": "dropped"
+  },
+  {
+   "id": "7877d32627ef",
+   "title": "Trolley tours",
    "date": "2026-08-14",
    "change": "dropped"
   },
   {
-   "id": "c21405571b15",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "54e611126573",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-14",
    "change": "dropped"
   },
   {
-   "id": "c06b710f20b1",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "56a8604aabff",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-14",
    "change": "dropped"
   },
   {
-   "id": "e13af884ec28",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "3babb69893f2",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-14",
+   "change": "dropped"
+  },
+  {
+   "id": "0811178863de",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-14",
+   "change": "dropped"
+  },
+  {
+   "id": "cc909efcce3d",
+   "title": "Trolley tours",
    "date": "2026-08-15",
    "change": "dropped"
   },
   {
-   "id": "1042bd4df7c9",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "e7eb5abceeb1",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-15",
    "change": "dropped"
   },
   {
-   "id": "b5e2332a2dba",
-   "title": "Sing Along with Linda at the NNE Branch In-Person",
+   "id": "19cc9a90dbc8",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-15",
    "change": "dropped"
   },
   {
-   "id": "e2a292268f26",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "9a6d36d807c3",
+   "title": "Guided Tours",
    "date": "2026-08-15",
    "change": "dropped"
   },
   {
-   "id": "10f7606219ed",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "ce5e07857671",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-15",
+   "change": "dropped"
+  },
+  {
+   "id": "db141ceb799a",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-15",
+   "change": "dropped"
+  },
+  {
+   "id": "1bc0ac46ab19",
+   "title": "Trolley tours",
    "date": "2026-08-16",
    "change": "dropped"
   },
   {
-   "id": "9e8ed340e2bf",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "557e69ff1a3a",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-16",
    "change": "dropped"
   },
   {
-   "id": "f7aa8f10c662",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "a866980a763c",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-16",
+   "change": "dropped"
+  },
+  {
+   "id": "5814ae88a498",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-16",
+   "change": "dropped"
+  },
+  {
+   "id": "c1cbf6b6005f",
+   "title": "Trolley tours",
    "date": "2026-08-17",
    "change": "dropped"
   },
   {
-   "id": "98feef8d012a",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "e063e8c887ac",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-17",
    "change": "dropped"
   },
   {
-   "id": "22f9fb0a3904",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "8343b631d3e5",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
+   "date": "2026-08-17",
+   "change": "dropped"
+  },
+  {
+   "id": "766297a1da0d",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-17",
+   "change": "dropped"
+  },
+  {
+   "id": "db360d9f13f4",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-17",
+   "change": "dropped"
+  },
+  {
+   "id": "23e319d5ac96",
+   "title": "Trolley tours",
    "date": "2026-08-18",
    "change": "dropped"
   },
   {
-   "id": "d0655ca93e42",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "e1bcca59e8c0",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-18",
    "change": "dropped"
   },
   {
-   "id": "0529b1dfe66c",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "407b5b9c4db4",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-18",
    "change": "dropped"
   },
   {
-   "id": "2ae70482be54",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "cae8a74941ae",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-18",
+   "change": "dropped"
+  },
+  {
+   "id": "e9c76674e900",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-18",
+   "change": "dropped"
+  },
+  {
+   "id": "a3abc4c7f38c",
+   "title": "Trolley tours",
    "date": "2026-08-19",
    "change": "dropped"
   },
   {
-   "id": "8a83b0d1d1eb",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "abf5d085b8a9",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-19",
    "change": "dropped"
   },
   {
-   "id": "a7eff825af9b",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "fd9b10821881",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-19",
    "change": "dropped"
   },
   {
-   "id": "604c3113808f",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "e4a662b819ff",
+   "title": "Guided Tours",
+   "date": "2026-08-19",
+   "change": "dropped"
+  },
+  {
+   "id": "0c56dc494166",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-19",
+   "change": "dropped"
+  },
+  {
+   "id": "3f3d41dca330",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-19",
+   "change": "dropped"
+  },
+  {
+   "id": "cfa9b58919ee",
+   "title": "Trolley tours",
    "date": "2026-08-20",
    "change": "dropped"
   },
   {
-   "id": "3dff912c002d",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "5644c832a26d",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-20",
    "change": "dropped"
   },
   {
-   "id": "b500eca3a380",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "17beeee1cb9e",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-20",
    "change": "dropped"
   },
   {
-   "id": "7e167b70d8a2",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "9b95ca0daf15",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-20",
+   "change": "dropped"
+  },
+  {
+   "id": "ad975aa97b1d",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-20",
+   "change": "dropped"
+  },
+  {
+   "id": "407041fb80ea",
+   "title": "Trivia",
+   "date": "2026-08-20",
+   "change": "dropped"
+  },
+  {
+   "id": "392c7cc2b435",
+   "title": "Bubble Run 5K",
+   "date": "2026-08-20",
+   "change": "dropped"
+  },
+  {
+   "id": "f0c182255f2d",
+   "title": "Trolley tours",
    "date": "2026-08-21",
    "change": "dropped"
   },
   {
-   "id": "9cf51efb299d",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "ba8a67ebe9e6",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-21",
    "change": "dropped"
   },
   {
-   "id": "b317b862918f",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "3056d971f2eb",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-21",
    "change": "dropped"
   },
   {
-   "id": "123fabf4dceb",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "1ed9bbaed897",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-21",
+   "change": "dropped"
+  },
+  {
+   "id": "18717f900a48",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-21",
+   "change": "dropped"
+  },
+  {
+   "id": "9de1e6d8959c",
+   "title": "Trolley tours",
    "date": "2026-08-22",
    "change": "dropped"
   },
   {
-   "id": "4ae46351a350",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "41be790aac0d",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-22",
    "change": "dropped"
   },
   {
-   "id": "7606335e6364",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "31604c750ceb",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-22",
    "change": "dropped"
   },
   {
-   "id": "6824e4f96738",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "253dc95fc258",
+   "title": "Guided Tours",
+   "date": "2026-08-22",
+   "change": "dropped"
+  },
+  {
+   "id": "9cca03c2a8ee",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-22",
+   "change": "dropped"
+  },
+  {
+   "id": "baf610f92aa9",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-22",
+   "change": "dropped"
+  },
+  {
+   "id": "d7b4afe337b6",
+   "title": "Trolley tours",
    "date": "2026-08-23",
    "change": "dropped"
   },
   {
-   "id": "0a4597c5d593",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "a538c1983908",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-23",
    "change": "dropped"
   },
   {
-   "id": "f4976722d33b",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "f584159fcef3",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-23",
+   "change": "dropped"
+  },
+  {
+   "id": "a41dc48b2aa3",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-23",
+   "change": "dropped"
+  },
+  {
+   "id": "cff682f6d313",
+   "title": "Trolley tours",
    "date": "2026-08-24",
    "change": "dropped"
   },
   {
-   "id": "c9f83d9d18e2",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "7a7e76286029",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-24",
    "change": "dropped"
   },
   {
-   "id": "b1b1550e14f8",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "b178cf10c643",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
+   "date": "2026-08-24",
+   "change": "dropped"
+  },
+  {
+   "id": "2876213fa9cb",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-24",
+   "change": "dropped"
+  },
+  {
+   "id": "1da16733886d",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-24",
+   "change": "dropped"
+  },
+  {
+   "id": "1a2b50eeef9e",
+   "title": "Trolley tours",
    "date": "2026-08-25",
    "change": "dropped"
   },
   {
-   "id": "a1e65fb3bb3e",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "fbbe9d330794",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-25",
    "change": "dropped"
   },
   {
-   "id": "eb970f9e8536",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "2c70548491a6",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-25",
    "change": "dropped"
   },
   {
-   "id": "0a99c8bc83c6",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "2c58dc1f78f9",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-25",
+   "change": "dropped"
+  },
+  {
+   "id": "7a0f5b38d967",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-25",
+   "change": "dropped"
+  },
+  {
+   "id": "7e684bff5324",
+   "title": "Trolley tours",
    "date": "2026-08-26",
    "change": "dropped"
   },
   {
-   "id": "33f0b29f8653",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "0eb3614275cb",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-26",
    "change": "dropped"
   },
   {
-   "id": "4f9c304e178e",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "9aa09b9719f8",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-26",
    "change": "dropped"
   },
   {
-   "id": "3c693b48e8a6",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "8c839c81783c",
+   "title": "Guided Tours",
+   "date": "2026-08-26",
+   "change": "dropped"
+  },
+  {
+   "id": "2724556218cc",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-26",
+   "change": "dropped"
+  },
+  {
+   "id": "53419766ea20",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-26",
+   "change": "dropped"
+  },
+  {
+   "id": "10fb16bcdcbc",
+   "title": "Trolley tours",
    "date": "2026-08-27",
    "change": "dropped"
   },
   {
-   "id": "7736b5fefd4f",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "fc06a5f58179",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-27",
    "change": "dropped"
   },
   {
-   "id": "3fc2ce366aaa",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "ac910c81a8fc",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-27",
    "change": "dropped"
   },
   {
-   "id": "1998f74fabe6",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "5adb245731c3",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-27",
+   "change": "dropped"
+  },
+  {
+   "id": "39331cc14481",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-27",
+   "change": "dropped"
+  },
+  {
+   "id": "8060e2f81bcd",
+   "title": "Trivia",
+   "date": "2026-08-27",
+   "change": "dropped"
+  },
+  {
+   "id": "c34cfa5f89db",
+   "title": "Trolley tours",
    "date": "2026-08-28",
    "change": "dropped"
   },
   {
-   "id": "e974552815e1",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "07512f8b7d18",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-28",
    "change": "dropped"
   },
   {
-   "id": "8531f8f6ffa5",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "eab9085818c2",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-28",
    "change": "dropped"
   },
   {
-   "id": "fefa90ff9983",
-   "title": "Warren Zeiders Live In Concert",
+   "id": "bc968222e6a2",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-28",
+   "change": "dropped"
+  },
+  {
+   "id": "b602962d26b6",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-28",
+   "change": "dropped"
+  },
+  {
+   "id": "5766b8ee536f",
+   "title": "Warren Zeiders",
    "date": "2026-08-28",
    "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
+   "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
-   "id": "6d21993c1cdc",
-   "title": "Alex Clark | Jokes From The Brink | Stand Up Comedy",
-   "date": "2026-08-28",
-   "change": "dropped"
-  },
-  {
-   "id": "8e07623547e0",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "dfdf5a99850b",
+   "title": "Trolley tours",
    "date": "2026-08-29",
    "change": "dropped"
   },
   {
-   "id": "abd113377b14",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "4a19593e0f79",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-29",
    "change": "dropped"
   },
   {
-   "id": "9fb04eb868ca",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "06ace3a1d0df",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-29",
    "change": "dropped"
   },
   {
-   "id": "c4b5e5394e1b",
-   "title": "Jordan Davis Live In Concert",
+   "id": "4678990f3bd4",
+   "title": "Guided Tours",
+   "date": "2026-08-29",
+   "change": "dropped"
+  },
+  {
+   "id": "a902538ea9fb",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-29",
+   "change": "dropped"
+  },
+  {
+   "id": "d8d1b13d2e33",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-29",
+   "change": "dropped"
+  },
+  {
+   "id": "4a0f9b1b225c",
+   "title": "Jordan Davis",
    "date": "2026-08-29",
    "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
+   "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
-   "id": "1249d9bbad02",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "59e1975c1148",
+   "title": "Trolley tours",
    "date": "2026-08-30",
    "change": "dropped"
   },
   {
-   "id": "1a1044e3e74d",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "83abe779c60a",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-08-30",
    "change": "dropped"
   },
   {
-   "id": "eff5ed947264",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "7d9dd4a4ae2d",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-30",
+   "change": "dropped"
+  },
+  {
+   "id": "616832cbb4c5",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-30",
+   "change": "dropped"
+  },
+  {
+   "id": "09a897bae75a",
+   "title": "Trolley tours",
    "date": "2026-08-31",
    "change": "dropped"
   },
   {
-   "id": "bd2b01c70fcc",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "ab856301f0c8",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-08-31",
    "change": "dropped"
   },
   {
-   "id": "7508281882b5",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "a7960de41447",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
+   "date": "2026-08-31",
+   "change": "dropped"
+  },
+  {
+   "id": "2b1cb812e3bc",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-08-31",
+   "change": "dropped"
+  },
+  {
+   "id": "dc391459f41f",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-08-31",
+   "change": "dropped"
+  },
+  {
+   "id": "464ec185d239",
+   "title": "Trolley tours",
    "date": "2026-09-01",
    "change": "dropped"
   },
   {
-   "id": "f240fd5e788a",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "5a1bf84632e0",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-09-01",
    "change": "dropped"
   },
   {
-   "id": "86ecc51b6e04",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "e0b933b0d2ef",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-09-01",
    "change": "dropped"
   },
   {
-   "id": "77761b557348",
-   "title": "Week of Welcome",
+   "id": "b71981a4de2b",
+   "title": "Half Priced Oysters at La Reprise",
    "date": "2026-09-01",
    "change": "dropped"
   },
   {
-   "id": "1ba173841c59",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "0bf032a03337",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-09-01",
+   "change": "dropped"
+  },
+  {
+   "id": "00bd22d6861c",
+   "title": "Trolley tours",
    "date": "2026-09-02",
    "change": "dropped"
   },
   {
-   "id": "d874c06b20b6",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "910811d1d55a",
+   "title": "Glass Factory and Storefront Open !!",
    "date": "2026-09-02",
    "change": "dropped"
   },
   {
-   "id": "87164dfd4f05",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "021c1a69de6c",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-09-02",
    "change": "dropped"
   },
   {
-   "id": "0fab15933d0d",
-   "title": "Week of Welcome",
+   "id": "f88f07b9ef67",
+   "title": "Guided Tours",
    "date": "2026-09-02",
    "change": "dropped"
   },
   {
-   "id": "3854c5a20f8e",
-   "title": "Library Outreach Specialist Office Hours",
+   "id": "4dc8d8ebd6d7",
+   "title": "Half Priced Oysters at La Reprise",
+   "date": "2026-09-02",
+   "change": "dropped"
+  },
+  {
+   "id": "e624b1313bd3",
+   "title": "Skiff Oyster Hour",
+   "date": "2026-09-02",
+   "change": "dropped"
+  },
+  {
+   "id": "7f2bc007c3e6",
+   "title": "Trolley tours",
    "date": "2026-09-03",
    "change": "dropped"
   },
   {
-   "id": "74c3eb77a00b",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "7ace0e6f8f37",
+   "title": "Cruise aboard the Spirit of Ethan Allen III",
    "date": "2026-09-03",
    "change": "dropped"
   },
   {
-   "id": "d5405551c217",
-   "title": "The Ultimate Chocolate Tasting",
+   "id": "4803d9cb63f5",
+   "title": "Half Priced Oysters at La Reprise",
    "date": "2026-09-03",
    "change": "dropped"
   },
   {
-   "id": "de171fbca419",
-   "title": "Week of Welcome",
+   "id": "cac07e00e6bb",
+   "title": "Trivia",
    "date": "2026-09-03",
    "change": "dropped"
   },
   {
-   "id": "77728c60715a",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-09-04",
-   "change": "dropped"
-  },
-  {
-   "id": "aae1f21e2410",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-09-04",
-   "change": "dropped"
-  },
-  {
-   "id": "bcd627c740fa",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-09-04",
-   "change": "dropped"
-  },
-  {
-   "id": "35be686a6cd7",
-   "title": "Week of Welcome",
-   "date": "2026-09-04",
-   "change": "dropped"
-  },
-  {
-   "id": "1465694af4ba",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-09-05",
-   "change": "dropped"
-  },
-  {
-   "id": "e6cab7027a7e",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-09-05",
-   "change": "dropped"
-  },
-  {
-   "id": "1ba26b17b4d7",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-09-05",
-   "change": "dropped"
-  },
-  {
-   "id": "f45f11a587c0",
-   "title": "Bow Wow, Soulja Boy & Fat Joe",
+   "id": "5454ce0c3d94",
+   "title": "Soulja Boy & Bow Wow & Fat Joe",
    "date": "2026-09-05",
    "change": "missing",
-   "lastSeen": "2026-07-11T17:24:06-04:00"
+   "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
-   "id": "d8c24ca2be8c",
-   "title": "Week of Welcome",
-   "date": "2026-09-05",
-   "change": "dropped"
-  },
-  {
-   "id": "97ebdd64fbe7",
-   "title": "Dinosaur Safari Exhibit",
+   "id": "0923004e5880",
+   "title": "Bret Michaels",
    "date": "2026-09-06",
-   "change": "dropped"
-  },
-  {
-   "id": "b091a7cb4c2e",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-09-06",
-   "change": "dropped"
-  },
-  {
-   "id": "07cc315cae7d",
-   "title": "Week of Welcome",
-   "date": "2026-09-06",
-   "change": "dropped"
-  },
-  {
-   "id": "9488fb48a64f",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-09-07",
-   "change": "dropped"
-  },
-  {
-   "id": "49691e5ac89f",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-09-07",
-   "change": "dropped"
-  },
-  {
-   "id": "ddb21af2cfba",
-   "title": "Week of Welcome",
-   "date": "2026-09-07",
-   "change": "dropped"
-  },
-  {
-   "id": "4d8135825688",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-09-08",
-   "change": "dropped"
-  },
-  {
-   "id": "098191a76fc1",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-09-08",
-   "change": "dropped"
-  },
-  {
-   "id": "19cf8d4112ef",
-   "title": "Library Outreach Specialist Office Hours",
-   "date": "2026-09-09",
-   "change": "dropped"
-  },
-  {
-   "id": "dab3ebd80f24",
-   "title": "The Ultimate Chocolate Tasting",
-   "date": "2026-09-09",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
   }
  ]
 }
