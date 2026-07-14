@@ -1,28 +1,28 @@
 {
- "updated": "2026-07-14T21:41:18+00:00",
+ "updated": "2026-07-14T22:41:17+00:00",
  "sections_updated": {
-  "now": "2026-07-14T21:41:18+00:00",
-  "forecast": "2026-07-14T21:41:18+00:00",
-  "hourly": "2026-07-14T21:41:18+00:00",
-  "alerts": "2026-07-14T21:41:18+00:00",
-  "afd": "2026-07-14T21:41:18+00:00",
-  "lake_forecast": "2026-07-14T21:41:18+00:00",
-  "lake_gage": "2026-07-14T21:41:18+00:00",
-  "air": "2026-07-14T21:41:18+00:00",
-  "sun": "2026-07-14T21:41:18+00:00",
-  "models": "2026-07-14T21:41:18+00:00"
+  "now": "2026-07-14T22:41:17+00:00",
+  "forecast": "2026-07-14T22:41:17+00:00",
+  "hourly": "2026-07-14T22:41:17+00:00",
+  "alerts": "2026-07-14T22:41:17+00:00",
+  "afd": "2026-07-14T22:41:17+00:00",
+  "lake_forecast": "2026-07-14T22:41:17+00:00",
+  "lake_gage": "2026-07-14T22:41:17+00:00",
+  "air": "2026-07-14T22:41:17+00:00",
+  "sun": "2026-07-14T22:41:17+00:00",
+  "models": "2026-07-14T22:41:17+00:00"
  },
  "now": {
-  "observed_at": "2026-07-14T21:25:00+00:00",
+  "observed_at": "2026-07-14T22:20:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 88,
-  "feels_like_f": 94,
-  "humidity": 59,
-  "dewpoint_f": 72,
-  "wind_mph": 6,
+  "description": "Mostly Cloudy",
+  "temp_f": 90,
+  "feels_like_f": 95,
+  "humidity": 52,
+  "dewpoint_f": 70,
+  "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": "SSW"
+  "wind_dir": "WSW"
  },
  "forecast": {
   "updated": "2026-07-14T20:40:48+00:00",
@@ -779,9 +779,9 @@
  },
  "lake_gage": {
   "water_temp_f": 76,
-  "water_temp_at": "2026-07-14T17:00:00.000-04:00",
-  "level_ft": 96.32,
-  "level_at": "2026-07-14T17:00:00.000-04:00",
+  "water_temp_at": "2026-07-14T18:00:00.000-04:00",
+  "level_ft": 96.3,
+  "level_at": "2026-07-14T18:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -789,8 +789,8 @@
   "aqi": 54,
   "category": "Moderate",
   "pollutant": "PM2.5",
-  "observed": "07/14/26 17:00",
-  "discussion": "On Tuesday, July 14th,  expect moderate air quality in Vermont, as smoke from Canadian wildfires continues to circulate around the New England region."
+  "observed": "07/14/26 18:00",
+  "discussion": "On Wednesday, July 15th, expect moderate air quality in Vermont, as smoke from Midwest and Canadian wildfires impacts the region."
  },
  "sun": {
   "sunrise": "2026-07-14T05:21-04:00",
@@ -804,7 +804,7 @@
    {
     "date": "2026-07-14",
     "high_f": {
-     "GFS": 93,
+     "GFS": 91,
      "Euro": 95,
      "ICON": 94
     },
@@ -818,7 +818,7 @@
      "Euro": 0.0,
      "ICON": 0.18
     },
-    "high_spread_f": 2
+    "high_spread_f": 4
    },
    {
     "date": "2026-07-15",
@@ -833,7 +833,7 @@
      "ICON": 63
     },
     "precip_in": {
-     "GFS": 1.28,
+     "GFS": 0.17,
      "Euro": 0.08,
      "ICON": 0.39
     },
