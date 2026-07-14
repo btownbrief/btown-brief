@@ -1,119 +1,97 @@
 {
- "updated": "2026-07-14T18:48:40+00:00",
+ "updated": "2026-07-14T20:44:17+00:00",
  "sections_updated": {
-  "now": "2026-07-14T18:48:40+00:00",
-  "forecast": "2026-07-14T18:48:40+00:00",
-  "hourly": "2026-07-14T18:48:40+00:00",
-  "alerts": "2026-07-14T18:48:40+00:00",
-  "afd": "2026-07-14T18:48:40+00:00",
-  "lake_forecast": "2026-07-14T18:48:40+00:00",
-  "lake_gage": "2026-07-14T18:48:40+00:00",
-  "air": "2026-07-14T18:48:40+00:00",
-  "sun": "2026-07-14T18:48:40+00:00",
-  "models": "2026-07-14T18:48:40+00:00"
+  "now": "2026-07-14T20:44:17+00:00",
+  "forecast": "2026-07-14T20:44:17+00:00",
+  "hourly": "2026-07-14T20:44:17+00:00",
+  "alerts": "2026-07-14T20:44:17+00:00",
+  "afd": "2026-07-14T20:44:17+00:00",
+  "lake_forecast": "2026-07-14T20:44:17+00:00",
+  "lake_gage": "2026-07-14T20:44:17+00:00",
+  "air": "2026-07-14T20:44:17+00:00",
+  "sun": "2026-07-14T20:44:17+00:00",
+  "models": "2026-07-14T20:44:17+00:00"
  },
  "now": {
-  "observed_at": "2026-07-14T18:35:00+00:00",
+  "observed_at": "2026-07-14T20:30:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 86,
-  "feels_like_f": 91,
-  "humidity": 59,
-  "dewpoint_f": 70,
-  "wind_mph": 14,
-  "wind_gust_mph": 20,
+  "description": "Mostly Clear",
+  "temp_f": 90,
+  "feels_like_f": 96,
+  "humidity": 56,
+  "dewpoint_f": 72,
+  "wind_mph": 5,
+  "wind_gust_mph": null,
   "wind_dir": "S"
  },
  "forecast": {
-  "updated": "2026-07-14T13:35:51+00:00",
+  "updated": "2026-07-14T20:40:48+00:00",
   "periods": [
    {
-    "name": "Today",
+    "name": "This Afternoon",
     "is_day": true,
-    "temp_f": 93,
+    "temp_f": 91,
     "pop": 7,
-    "wind": "SW 13 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 93. Heat index values as high as 99. Southwest wind around 13 mph, with gusts as high as 24 mph."
+    "wind": "W 12 mph",
+    "short": "Sunny",
+    "detailed": "Sunny, with a high near 91. Heat index values as high as 96. West wind around 12 mph, with gusts as high as 23 mph."
    },
    {
     "name": "Tonight",
     "is_day": false,
     "temp_f": 72,
-    "pop": 85,
-    "wind": "W 5 to 12 mph",
-    "short": "Chance Showers And Thunderstorms then Patchy Smoke",
-    "detailed": "A slight chance of rain showers between 7pm and 8pm, then a chance of showers and thunderstorms between 8pm and 11pm, then patchy smoke and showers and thunderstorms between 11pm and 2am, then showers and thunderstorms likely. Some of the storms could be severe. Mostly cloudy, with a low around 72. Heat index values as high as 102. West wind 5 to 12 mph, with gusts as high as 24 mph. Chance of precipitation is 90%. New rainfall amounts between a quarter and half of an inch possible."
+    "pop": 90,
+    "wind": "W 6 to 12 mph",
+    "short": "Patchy Smoke",
+    "detailed": "Patchy smoke before 7pm, then patchy smoke and a slight chance of showers and thunderstorms between 7pm and 8pm, then patchy smoke and showers and thunderstorms. Mostly cloudy, with a low around 72. Heat index values as high as 94. West wind 6 to 12 mph, with gusts as high as 24 mph. Chance of precipitation is 90%. New rainfall amounts between a quarter and half of an inch possible."
    },
    {
     "name": "Wednesday",
     "is_day": true,
-    "temp_f": 85,
-    "pop": 28,
-    "wind": "NW 5 to 15 mph",
-    "short": "Chance Rain Showers then Sunny",
-    "detailed": "A chance of rain showers before 8am. Sunny, with a high near 85. Northwest wind 5 to 15 mph. Chance of precipitation is 30%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "temp_f": 83,
+    "pop": 19,
+    "wind": "NW 6 to 15 mph",
+    "short": "Slight Chance Rain Showers then Slight Chance Showers And Thunderstorms",
+    "detailed": "A slight chance of rain showers before 4pm, then a slight chance of showers and thunderstorms. Mostly sunny, with a high near 83. Northwest wind 6 to 15 mph. Chance of precipitation is 20%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Wednesday Night",
     "is_day": false,
     "temp_f": 66,
-    "pop": 3,
-    "wind": "W 5 to 12 mph",
-    "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 66. West wind 5 to 12 mph."
+    "pop": 19,
+    "wind": "W 3 to 12 mph",
+    "short": "Slight Chance Showers And Thunderstorms then Mostly Clear",
+    "detailed": "A slight chance of showers and thunderstorms before 8pm. Mostly clear, with a low around 66. West wind 3 to 12 mph."
    },
    {
     "name": "Thursday",
     "is_day": true,
     "temp_f": 84,
-    "pop": 28,
-    "wind": "W 5 to 14 mph",
-    "short": "Sunny then Chance Showers And Thunderstorms",
-    "detailed": "A chance of showers and thunderstorms after 2pm. Sunny, with a high near 84. West wind 5 to 14 mph, with gusts as high as 24 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "pop": 54,
+    "wind": "W 5 to 15 mph",
+    "short": "Mostly Sunny then Chance Showers And Thunderstorms",
+    "detailed": "A chance of showers and thunderstorms after 2pm. Mostly sunny, with a high near 84. West wind 5 to 15 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Thursday Night",
     "is_day": false,
     "temp_f": 60,
-    "pop": 28,
-    "wind": "NW 6 to 12 mph",
-    "short": "Chance Showers And Thunderstorms then Mostly Clear",
-    "detailed": "A chance of showers and thunderstorms before 8pm. Mostly clear, with a low around 60. Northwest wind 6 to 12 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "pop": 54,
+    "wind": "NW 7 to 13 mph",
+    "short": "Chance Showers And Thunderstorms then Partly Cloudy",
+    "detailed": "A chance of showers and thunderstorms before 8pm. Partly cloudy, with a low around 60. Northwest wind 7 to 13 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-07-14T13:35:51+00:00",
+  "updated": "2026-07-14T20:40:48+00:00",
   "hours": [
    {
-    "t": "2026-07-14T14:00:00-04:00",
-    "temp_f": 93,
-    "feels_f": 99,
-    "pop": 2,
-    "humidity": 47,
-    "wind_mph": 10,
-    "wind_dir": "SW",
-    "sky": 41,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-07-14T15:00:00-04:00",
-    "temp_f": 93,
-    "feels_f": 99,
-    "pop": 2,
-    "humidity": 47,
-    "wind_mph": 10,
-    "wind_dir": "W",
-    "sky": 20,
-    "short": "Sunny"
-   },
-   {
     "t": "2026-07-14T16:00:00-04:00",
-    "temp_f": 93,
-    "feels_f": 99,
+    "temp_f": 90,
+    "feels_f": 96,
     "pop": 1,
-    "humidity": 47,
+    "humidity": 52,
     "wind_mph": 10,
     "wind_dir": "W",
     "sky": 16,
@@ -121,10 +99,10 @@
    },
    {
     "t": "2026-07-14T17:00:00-04:00",
-    "temp_f": 93,
-    "feels_f": 99,
+    "temp_f": 90,
+    "feels_f": 96,
     "pop": 7,
-    "humidity": 47,
+    "humidity": 52,
     "wind_mph": 12,
     "wind_dir": "W",
     "sky": 15,
@@ -132,299 +110,299 @@
    },
    {
     "t": "2026-07-14T18:00:00-04:00",
-    "temp_f": 95,
-    "feels_f": 102,
+    "temp_f": 89,
+    "feels_f": 94,
     "pop": 8,
-    "humidity": 45,
+    "humidity": 54,
     "wind_mph": 12,
     "wind_dir": "W",
     "sky": 23,
-    "short": "Mostly Clear"
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-14T19:00:00-04:00",
-    "temp_f": 92,
-    "feels_f": 99,
-    "pop": 17,
-    "humidity": 51,
+    "temp_f": 88,
+    "feels_f": 94,
+    "pop": 18,
+    "humidity": 57,
     "wind_mph": 12,
     "wind_dir": "W",
-    "sky": 30,
-    "short": "Slight Chance Rain Showers"
+    "sky": 33,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-14T20:00:00-04:00",
-    "temp_f": 90,
-    "feels_f": 96,
-    "pop": 26,
-    "humidity": 54,
+    "temp_f": 88,
+    "feels_f": 94,
+    "pop": 47,
+    "humidity": 57,
     "wind_mph": 10,
     "wind_dir": "SW",
-    "sky": 69,
-    "short": "Chance Showers And Thunderstorms"
+    "sky": 65,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-14T21:00:00-04:00",
     "temp_f": 86,
     "feels_f": 91,
-    "pop": 36,
+    "pop": 53,
     "humidity": 61,
-    "wind_mph": 10,
+    "wind_mph": 9,
     "wind_dir": "W",
-    "sky": 62,
-    "short": "Chance Showers And Thunderstorms"
+    "sky": 69,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-14T22:00:00-04:00",
     "temp_f": 84,
     "feels_f": 89,
-    "pop": 43,
+    "pop": 58,
     "humidity": 65,
     "wind_mph": 9,
     "wind_dir": "W",
-    "sky": 62,
-    "short": "Chance Showers And Thunderstorms"
+    "sky": 72,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-14T23:00:00-04:00",
     "temp_f": 83,
     "feels_f": 87,
-    "pop": 61,
+    "pop": 83,
     "humidity": 65,
     "wind_mph": 9,
     "wind_dir": "W",
-    "sky": 74,
+    "sky": 89,
     "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-15T00:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 83,
-    "pop": 85,
-    "humidity": 74,
+    "temp_f": 81,
+    "feels_f": 85,
+    "pop": 90,
+    "humidity": 72,
     "wind_mph": 8,
     "wind_dir": "W",
-    "sky": 90,
-    "short": "Showers And Thunderstorms"
+    "sky": 94,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-15T01:00:00-04:00",
     "temp_f": 79,
     "feels_f": 79,
-    "pop": 72,
+    "pop": 81,
     "humidity": 74,
     "wind_mph": 7,
     "wind_dir": "W",
-    "sky": 84,
-    "short": "Showers And Thunderstorms Likely"
+    "sky": 88,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-15T02:00:00-04:00",
     "temp_f": 78,
     "feels_f": 78,
-    "pop": 67,
+    "pop": 76,
     "humidity": 76,
-    "wind_mph": 5,
+    "wind_mph": 6,
     "wind_dir": "W",
-    "sky": 82,
-    "short": "Showers And Thunderstorms Likely"
+    "sky": 84,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-15T03:00:00-04:00",
     "temp_f": 76,
     "feels_f": 76,
-    "pop": 68,
+    "pop": 77,
     "humidity": 82,
-    "wind_mph": 5,
+    "wind_mph": 6,
     "wind_dir": "W",
-    "sky": 87,
-    "short": "Showers And Thunderstorms Likely"
+    "sky": 85,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-15T04:00:00-04:00",
     "temp_f": 75,
     "feels_f": 75,
-    "pop": 58,
-    "humidity": 84,
+    "pop": 70,
+    "humidity": 82,
     "wind_mph": 7,
     "wind_dir": "NW",
-    "sky": 90,
+    "sky": 80,
     "short": "Showers And Thunderstorms Likely"
    },
    {
     "t": "2026-07-15T05:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
-    "pop": 44,
-    "humidity": 81,
-    "wind_mph": 5,
-    "wind_dir": "NW",
-    "sky": 68,
-    "short": "Chance Rain Showers"
+    "temp_f": 74,
+    "feels_f": 74,
+    "pop": 32,
+    "humidity": 79,
+    "wind_mph": 6,
+    "wind_dir": "W",
+    "sky": 59,
+    "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-07-15T06:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
-    "pop": 28,
-    "humidity": 84,
-    "wind_mph": 5,
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 15,
+    "humidity": 81,
+    "wind_mph": 6,
     "wind_dir": "W",
-    "sky": 55,
-    "short": "Chance Rain Showers"
+    "sky": 36,
+    "short": "Slight Chance Rain Showers"
    },
    {
     "t": "2026-07-15T07:00:00-04:00",
     "temp_f": 74,
     "feels_f": 74,
-    "pop": 18,
+    "pop": 5,
     "humidity": 76,
     "wind_mph": 6,
-    "wind_dir": "NW",
-    "sky": 33,
-    "short": "Slight Chance Rain Showers"
-   },
-   {
-    "t": "2026-07-15T08:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
-    "pop": 8,
-    "humidity": 79,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 14,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-07-15T09:00:00-04:00",
-    "temp_f": 75,
-    "feels_f": 75,
-    "pop": 0,
-    "humidity": 71,
-    "wind_mph": 8,
-    "wind_dir": "NW",
-    "sky": 20,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-07-15T10:00:00-04:00",
-    "temp_f": 78,
-    "feels_f": 78,
-    "pop": 0,
-    "humidity": 60,
-    "wind_mph": 9,
-    "wind_dir": "NW",
-    "sky": 18,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-07-15T11:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 81,
-    "pop": 0,
-    "humidity": 52,
-    "wind_mph": 10,
-    "wind_dir": "NW",
-    "sky": 20,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-07-15T12:00:00-04:00",
-    "temp_f": 82,
-    "feels_f": 82,
-    "pop": 0,
-    "humidity": 47,
-    "wind_mph": 12,
-    "wind_dir": "NW",
-    "sky": 20,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-07-15T13:00:00-04:00",
-    "temp_f": 83,
-    "feels_f": 83,
-    "pop": 0,
-    "humidity": 44,
-    "wind_mph": 13,
-    "wind_dir": "NW",
-    "sky": 20,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-07-15T14:00:00-04:00",
-    "temp_f": 84,
-    "feels_f": 84,
-    "pop": 0,
-    "humidity": 41,
-    "wind_mph": 14,
-    "wind_dir": "NW",
-    "sky": 16,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-07-15T15:00:00-04:00",
-    "temp_f": 85,
-    "feels_f": 84,
-    "pop": 0,
-    "humidity": 40,
-    "wind_mph": 14,
     "wind_dir": "NW",
     "sky": 22,
     "short": "Sunny"
    },
    {
-    "t": "2026-07-15T16:00:00-04:00",
-    "temp_f": 85,
-    "feels_f": 84,
+    "t": "2026-07-15T08:00:00-04:00",
+    "temp_f": 75,
+    "feels_f": 75,
     "pop": 0,
-    "humidity": 40,
+    "humidity": 74,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 11,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-15T09:00:00-04:00",
+    "temp_f": 77,
+    "feels_f": 77,
+    "pop": 1,
+    "humidity": 67,
+    "wind_mph": 8,
+    "wind_dir": "NW",
+    "sky": 13,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-15T10:00:00-04:00",
+    "temp_f": 79,
+    "feels_f": 79,
+    "pop": 2,
+    "humidity": 58,
+    "wind_mph": 9,
+    "wind_dir": "NW",
+    "sky": 28,
+    "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-07-15T11:00:00-04:00",
+    "temp_f": 81,
+    "feels_f": 82,
+    "pop": 3,
+    "humidity": 51,
+    "wind_mph": 10,
+    "wind_dir": "NW",
+    "sky": 53,
+    "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-07-15T12:00:00-04:00",
+    "temp_f": 83,
+    "feels_f": 83,
+    "pop": 3,
+    "humidity": 46,
+    "wind_mph": 12,
+    "wind_dir": "NW",
+    "sky": 55,
+    "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-07-15T13:00:00-04:00",
+    "temp_f": 83,
+    "feels_f": 83,
+    "pop": 2,
+    "humidity": 44,
+    "wind_mph": 13,
+    "wind_dir": "NW",
+    "sky": 51,
+    "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-07-15T14:00:00-04:00",
+    "temp_f": 83,
+    "feels_f": 83,
+    "pop": 17,
+    "humidity": 43,
+    "wind_mph": 14,
+    "wind_dir": "NW",
+    "sky": 51,
+    "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-15T15:00:00-04:00",
+    "temp_f": 83,
+    "feels_f": 83,
+    "pop": 17,
+    "humidity": 43,
+    "wind_mph": 14,
+    "wind_dir": "NW",
+    "sky": 30,
+    "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-15T16:00:00-04:00",
+    "temp_f": 83,
+    "feels_f": 83,
+    "pop": 17,
+    "humidity": 43,
     "wind_mph": 15,
     "wind_dir": "NW",
-    "sky": 21,
-    "short": "Sunny"
+    "sky": 30,
+    "short": "Slight Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-07-15T17:00:00-04:00",
-    "temp_f": 85,
-    "feels_f": 84,
-    "pop": 1,
-    "humidity": 39,
+    "temp_f": 83,
+    "feels_f": 82,
+    "pop": 19,
+    "humidity": 41,
     "wind_mph": 14,
     "wind_dir": "NW",
-    "sky": 4,
-    "short": "Sunny"
+    "sky": 35,
+    "short": "Slight Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-07-15T18:00:00-04:00",
-    "temp_f": 84,
-    "feels_f": 83,
-    "pop": 2,
-    "humidity": 40,
+    "temp_f": 83,
+    "feels_f": 82,
+    "pop": 19,
+    "humidity": 41,
     "wind_mph": 12,
     "wind_dir": "NW",
-    "sky": 3,
-    "short": "Clear"
+    "sky": 35,
+    "short": "Slight Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-07-15T19:00:00-04:00",
     "temp_f": 83,
     "feels_f": 83,
-    "pop": 3,
+    "pop": 19,
     "humidity": 43,
     "wind_mph": 9,
     "wind_dir": "NW",
-    "sky": 12,
-    "short": "Mostly Clear"
+    "sky": 35,
+    "short": "Slight Chance Rain Showers"
    },
    {
     "t": "2026-07-15T20:00:00-04:00",
-    "temp_f": 81,
+    "temp_f": 80,
     "feels_f": 81,
     "pop": 1,
-    "humidity": 47,
-    "wind_mph": 8,
-    "wind_dir": "NW",
-    "sky": 23,
+    "humidity": 49,
+    "wind_mph": 7,
+    "wind_dir": "W",
+    "sky": 13,
     "short": "Mostly Clear"
    },
    {
@@ -435,74 +413,89 @@
     "humidity": 54,
     "wind_mph": 7,
     "wind_dir": "NW",
-    "sky": 12,
-    "short": "Mostly Clear"
+    "sky": 5,
+    "short": "Clear"
    },
    {
     "t": "2026-07-15T22:00:00-04:00",
     "temp_f": 74,
     "feels_f": 74,
-    "pop": 1,
+    "pop": 5,
     "humidity": 59,
     "wind_mph": 6,
-    "wind_dir": "W",
-    "sky": 11,
+    "wind_dir": "NW",
+    "sky": 12,
     "short": "Mostly Clear"
    },
    {
     "t": "2026-07-15T23:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
-    "pop": 1,
-    "humidity": 64,
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 0,
+    "humidity": 62,
     "wind_mph": 6,
-    "wind_dir": "W",
+    "wind_dir": "NW",
     "sky": 10,
     "short": "Mostly Clear"
    },
    {
     "t": "2026-07-16T00:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 1,
-    "humidity": 68,
-    "wind_mph": 6,
+    "temp_f": 71,
+    "feels_f": 71,
+    "pop": 0,
+    "humidity": 66,
+    "wind_mph": 5,
     "wind_dir": "W",
-    "sky": 12,
+    "sky": 10,
     "short": "Mostly Clear"
    },
    {
     "t": "2026-07-16T01:00:00-04:00",
+    "temp_f": 70,
+    "feels_f": 70,
+    "pop": 0,
+    "humidity": 66,
+    "wind_mph": 3,
+    "wind_dir": "W",
+    "sky": 6,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-07-16T02:00:00-04:00",
     "temp_f": 69,
     "feels_f": 69,
-    "pop": 1,
+    "pop": 0,
     "humidity": 68,
-    "wind_mph": 5,
+    "wind_mph": 3,
     "wind_dir": "W",
-    "sky": 13,
+    "sky": 7,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-07-16T03:00:00-04:00",
+    "temp_f": 68,
+    "feels_f": 68,
+    "pop": 0,
+    "humidity": 70,
+    "wind_mph": 3,
+    "wind_dir": "W",
+    "sky": 5,
+    "short": "Clear"
    }
   ]
  },
  "alerts": {
-  "active": [
-   {
-    "event": "Heat Advisory",
-    "headline": "Heat Advisory issued July 14 at 2:24AM EDT until July 14 at 8:00PM EDT by NWS Burlington VT",
-    "severity": "Moderate",
-    "expires": "2026-07-14T17:00:00-04:00"
-   }
-  ]
+  "active": []
  },
  "afd": {
-  "issued": "2026-07-14T11:31:00+00:00",
+  "issued": "2026-07-14T19:08:00+00:00",
   "key_messages": [
-   "A Heat Advisory is in effect for Vermont and much of northern New York today, along with some wildfire smoke moving into the region. Some localized fire weather concerns are possible",
-   "An Enhanced risk of severe thunderstorms remains for northeastern New York and northern Vermont tonight when significant severe weather and isolated flash flooding is possible. A more typical potential for showers and perhaps some thunderstorms returns for Thursday.",
-   "Relatively seasonable weekend and start to next week with shower chances."
+   "Strong to severe thunderstorms are expected this evening into the overnight hours increasing the risk of damaging winds, hail, and localized flash flooding. Another front moving through Thursday will bring more chances of thunderstorms, but storm intensity will be lower.",
+   "A Heat Advisory remains in effect for much of the region despite wildfire smoke reducing temperature and limiting heat impacts to more of a marginal risk.",
+   "Seasonable temperatures and showers likely this weekend with possible thunderstorms, then another round of showers and potential storms early next week."
   ],
-  "what_changed": "As of 228 AM EDT Tuesday... Smoke has been added to parts of northern New York and Vermont based on wildfire smoke developing across Canada. The potential for high heat and widespread strong to severe thunderstorms, especially along the international border, remains on track.",
-  "raw": "\n000\nFXUS61 KBTV 141131\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n731 AM EDT Tue Jul 14 2026\n\n.WHAT HAS CHANGED...\nAs of 228 AM EDT Tuesday...\n\nSmoke has been added to parts of northern New York and Vermont based \non wildfire smoke developing across Canada. The potential for\nhigh heat and widespread strong to severe thunderstorms,\nespecially along the international border, remains on track.\n\n&&\n\n.KEY MESSAGES...\nAs of 228 AM EDT Tuesday...\n\n1. A Heat Advisory is in effect for Vermont and much of \nnorthern New York today, along with some wildfire smoke moving into \nthe region. Some localized fire weather concerns are possible\n \n2. An Enhanced risk of severe thunderstorms remains for \nnortheastern New York and northern Vermont tonight when significant \nsevere weather and isolated flash flooding is possible. A more \ntypical potential for showers and perhaps some thunderstorms returns \nfor Thursday. \n\n3. Relatively seasonable weekend and start to next week with \nshower chances.\n\n&&\n\n.DISCUSSION...\nAs of 228 AM EDT Tuesday...\n\nKEY MESSAGE 1: Hot weather is expected today as a brief surge of heat \nbreaking out of the expansive upper high in the Central US will \nbring 90s across the region. A humid air mass will build, but not \nreaching the heights of the heat at the end of June into early July. \nHeat indices of 93-103 will be common through the region. There are \na few caveats to make note of. One will be gusty winds. That can be \na double-edged sword, allowing downslope regions to warm, but also \nresulting in turbulent mixing that can allow some of the cooler air \naloft to filter to the ground not completely washed out by adiabatic \ncompression. There's also cloud cover associated with the convective \nmass in northern Quebec Province, and some of the wildfire smoke due \nto fires initiated as a result of thunderstorms rounding the ring of \nfire across central Canada. HRRR and Canadian smoke forecasts depict \nincreasing smoke aloft, and even some near the surface as well \npropagating east this morning and afternoon. On one hand, this might \nslightly reduce temperatures at the surface, but wildfire smoke can \nexacerbate heat-health hazards. Regardless if this causes us to come \nup short on the heat index forecast, the impacts will be the same. \nAvoid prolonged exposure outdoors and drink plenty of water. Seek \nshade often and take frequent breaks. Finally, the combination of \nbreezy conditions with gusts 20-35 mph and relative humidity values \nof 35-45 percent in south-central Vermont could produce localized \nfire weather concerns where less precipitation has been observed.\n\nKEY MESSAGE 2: There has been little change regarding the severe threat \nalong the international border. Some variations in the coverage of \nstorms remains, but the intensity will not be in question as 2000-\n3000 J/kg of CAPE will be present along northern Vermont and \nnorthern New York as a sharp frontal boundary initiates \nthunderstorms north of the international border. Ample shear will \nprovide the potential for organization of storms into bowing \nsegments and significant downburst winds. One potential \nconsideration will be the smoke aloft and how that will effect the \nremoval of the capping inversion in place. Mid-level smoke can \nabsorb solar radiation that can stabilize conditions in the low-\nlevel, but on the other hand, this could maintain mid-level \nlapse rates until the height falls and precipitation begin to \nerode the cap. Based on soundings, it still seems to be about \n6PM or 7PM that the cap erodes, and then the convection already \nongoing across Canada, and the sharp boundary they are \nassociated with allows the development of strong updrafts in our\nregion. Storms will be in a bit of a race against the clock. \nDecreasing CAPE, storm-relative helicity, and \neroding/translating EML are expected after 8-9 PM. So storms \nhave a 2-3 hour window to become intense, and then gradually \nweaken as they pass south. If initial convection heads east \nearly, this could also stabilize our area, and smoke is always a\nwild card with these features. Some isolated flash flooding \nwill be possible if thunderstorms redevelop on the western \nperiphery of any bowing segments, with the greatest chances for \nsuch a feature across the northern half of Vermont. Guidance \nremains more stayed with the hydro potential, but we will \nmonitor closely.\n\nThus, risk timing is greatest between 7 PM and midnight. All hazards \nare possible, including low probabilities of wind gusts greater than \n70 MPH and a tornado risk, although we emphasize straight line winds \nare much more likely to be the hazard in this environment given \nfairly straight hodographs in the low levels. The risk dwindles \nheading south and west due; however, a long tracked, well-developed \nline or supercell poses some risk across our region, consistent with \nthe Slight (Level 2 of 5) risk of severe thunderstorms south of the \nEnhanced area (Level 3 of 5).\n\nFollowing any additional showers ahead of the cold front early \nWednesday morning, the next chance for showers and thunderstorms\ncomes on Thursday ahead of a weaker variety cold front. Gradual\ncooling will take place as an upper low spirals to our\nnortheast. The Thursday evening/Thursday night front will also \ncome from the north, but with much less heat and humidity to \nwork with and more limited wind shear, expect much less impact \nwith perhaps a couple of afternoon/evening thunderstorms \ndepending on the timing of convection.\n\nKEY MESSAGE 3: A somewhat strong area of low pressure for the time of \nyear will make a run at the region for the latter part of the \nweekend and the beginning of next week, and it will likely bring \nmultiple rounds of showers. Ensemble consensus brings the pressure \njust under 1000 MB. GEFS/EPS/CMCE combined ensemble probabilities of \nthe region receiving more than 0.5 inches of rain are between 30-60 \npercent and they fall to below 15 percent for receiving more than an \ninch. Temperatures will stay around seasonable normals, with highs \ngenerally in the 70s to mid 80s, and lows generally in the 50s and \nlow 60s. Depending on the storm track and timing of any associated \nfrontal passages, the threat of strong to severe storms will be \nwatched, but the threat should remain on the lower side due to a \ncooler and less humid airmass.\n\n&&\n\n.AVIATION /12Z TUESDAY THROUGH SATURDAY/...\nThrough 12Z Wednesday...Conditions are currently all VFR and that\nwill be the case through the afternoon. A broken line of showers and\nstorms will move down from the north this evening and overnight. It\nwill cause frequent lightning, a period of MVFR to IFR \nvisibility and gusty/erratic winds at any terminal it reaches. \nThe storms should exit northern areas by 6Z. Winds will be \nrelatively light and variable for the rest of the night, except \nat PBG and MSS where gusts out of the west to southwest up to 15\nKT are possible. Winds become stronger and southwesterly at the\nrest of the terminal today, with gusts in the 15-25 KT range. \nWinds slowly diminish this evening. A round of LLWS is possible \nthis evening at all terminals.\n\nOutlook...\n\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Chance SHRA, Chance TSRA.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: Mainly VFR, with local MVFR possible. Chance SHRA.\n\n&&\n\n.CLIMATE...\nHigh temperatures on Tuesday will be hot, but we are at the \nclimatological warmest part of the year. Therefore, it is far \nfrom a certainty that any records will occur. \n\nMSS looks most likely to set a new record. PBG also is \ncurrently forecast to set a new record. MPV, and especially BTV \nand SLK, are unlikely to do so. See below for current records:\n\nMax Temp Records\nDate     BTV      MPV       MSS      PBG      SLK\n07-14  100|1995  94|1952   92|2012  95|1952  95|1934\n\nHigh Min Temp Records\nDatePBG\n07-14   70|1974\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Heat Advisory from 11 AM this morning to 8 PM EDT this evening \n     for VTZ001>011-016>021.\nNY...Heat Advisory from 11 AM this morning to 8 PM EDT this evening \n     for NYZ026>029-031-035-087.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Haynes\nDISCUSSION...Haynes/Myskowski\nAVIATION...Myskowski\nCLIMATE...NWS BTV\n"
+  "what_changed": "As of 306 PM EDT Tuesday... The risk of excessive heat has decreased and may lead to a shortening of the Heat Advisory this evening. No changes have been made to the risk of widespread strong to severe thunderstorms. A lake wind advisory has been issued.",
+  "raw": "\n000\nFXUS61 KBTV 141908\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n308 PM EDT Tue Jul 14 2026\n\n.WHAT HAS CHANGED...\nAs of 306 PM EDT Tuesday...\n\nThe risk of excessive heat has decreased and may lead to a \nshortening of the Heat Advisory this evening. No changes have been \nmade to the risk of widespread strong to severe thunderstorms. A\nlake wind advisory has been issued. \n\n&&\n\n.KEY MESSAGES...\nAs of 306 PM EDT Tuesday...\n\n1. Strong to severe thunderstorms are expected this evening \ninto the overnight hours increasing the risk of damaging winds, \nhail, and localized flash flooding. Another front moving through \nThursday will bring more chances of thunderstorms, but storm \nintensity will be lower. \n\n2. A Heat Advisory remains in effect for much of the region \ndespite wildfire smoke reducing temperature and limiting heat \nimpacts to more of a marginal risk. \n\n3. Seasonable temperatures and showers likely this weekend with \npossible thunderstorms, then another round of showers and potential \nstorms early next week.\n\n&&\n\n.DISCUSSION...\nAs of 306 PM EDT Tuesday...\n\nKEY MESSAGE 1: Strong forcing is evident along a front slowly dropping \nsouth out of Canada where 2000-3000j/kg of CAPE is present. These \nCAPE values are also present over northern New York and Vermont \nwaiting for a trigger to kick off convection. Fortunately, wildfire \nsmoke has delayed heating while related particle physics has limited \nthe pre-frontal risk of thunderstorms. This tamping effect will go \naway once the boundary approaches, but may delay more into the \nevening. We remain under an Enhanced Risk for severe thunderstorms \nwhich is at level 3 out of 5 - more uncommon for northern New York \nand Vermont. Current timing of storms remains 7pm to 4am with \nstrongest storms more likely between 8pm and 2am as an EML drops \nsouthward. Given strong deep-layer shear and steep lapse rates \naloft, supercell structures will be favored initially before a \ntransition to bowing structures. Both modes could produce a tornado \ngiven the juiced environment that will persist into the evening \nwith temperatures in the upper 80s to around 90 degrees and dew \npoints around 70. Precipitation tonight may bring wildfire smoke \ndown to the surface limiting air quality. \n\nA weak wave has become evident in CAMs and could produce a few \nshowers or a rumble of thunder in northern Vermont Wednesday. Then, \nanother front will drop south on Thursday on a similar track, but \nthe preceding environment and stability parameters will be much less \nsupportive of strong storms. Still some thunderstorms should be \nexpected and those with outdoor plans should take precautions.\n\nKEY MESSAGE 2: Heat and humidity remain unusually high combining to \npush heat indices into the mid and upper 90s for some locations. As \nsuch, opted to keep the Advisory out, but may truncate the timing if \ntemperatures flatline late this afternoon. Wildfire smoke is the \nculprit for limiting temperatures, but may still exacerbate impacts \nwith some evidence of near surface smoke being reported. AQIs are \nstill no unhealthy, but the combination of heat and increased \nparticulates may result in issues for those unusually sensitive to \nthese conditions. More smoke is expected to belch off the wildfires \ntomorrow and may result in continued moderate AQI with tempering of \ntemperatures. However, conditions remain warm Wednesday before more \nseasonal conditions return for the end of the week.\n\nKEY MESSAGE 3: Longwave troughing will cross the region this weekend as \ntwo surface low pressures, one in the Great Lakes and one along the \nmid-Atlantic coast, will interact while tracking through the \nNortheast. Global deterministic models are fairly aligned in this \nidea at the moment, providing increased confidence of showers and \nthunderstorms Saturday afternoon into early Sunday morning. The \nprobability of an inch of rainfall within 24 hours from this system \nis around 15-30%. More likely 24 hour amounts will fall somewhere \nbetween 0.05 and 0.25 inches. Depending on the storm track and \ntiming of any associated frontal passages, the threat of strong to \nsevere storms will be watched, but the threat should remain on the \nlower side due to a cooler and less humid airmass. Temperatures will \nremain around seasonal normals in the mid 70s to lower 80s both \nSaturday and Sunday with nighttime lows in the upper 40s to lower \n60s. Next week should start briefly dry on Monday with temperatures \nincreasing into the upper 70s and 80s, then another trough and \nnorthern stream low pressure swing through to increase chance of \nprecipitation again on Tuesday.\n\n&&\n\n.AVIATION /19Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...Wildfire smoke aloft is spread across the\nregion this afternoon. Conditions are currently all VFR and that\nwill likely be the case through the afternoon. Winds are out of the\nsouthwest 10-20 knots with gusts 15-25 knots, except at PBG where\nthey have a southeasterly lake breeze and at MPV, which remains\nlight and variable. Both of these sites should see increasing\nwesterly winds over the next few hours, and other sites are expected\nto have winds turn slightly more westerly throughout the afternoon\nand evening. An Enhanced risk of severe thunderstorms remains for\nnortheastern New York and northern Vermont (this includes sites MSS,\nBTV, and EFK) tonight when significant severe weather and isolated\nflash flooding is possible. A broken line of showers and storms will\nmove down from the north this evening and overnight. It will cause\nfrequent lightning, a period of MVFR to IFR visibility, and\ngusty/erratic winds at any terminal it reaches as it treks from\nnorth to south. PROB30s were again utilized to show the potential of\nthese storms hitting a given terminal. The showers and storms should\nexit northern areas by 09Z-12Z Wednesday. Surface winds are forecast\nto decrease as precipitation comes to an end across northern New\nYork and Vermont, becoming westerly to northwesterly 5-10 knots or\nless. Lingering moisture under a shallow, low level temperature\ninversion could lead to patches of mist and low clouds for a brief\nperiod following the storms and showers, more likely seen at sites\nthat receive sufficient rainfall. Elevated winds aloft will likely\nlimit this and keep it from being lower than MVFR levels, resulting\nin periods of LLWS on and off from 00Z-04Z Wednesday onwards.\n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Chance SHRA, Chance TSRA.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. Chance SHRA.\nSaturday Night: VFR/MVFR conditions possible. Chance SHRA.\nSunday: Mainly VFR, with local MVFR possible. Chance SHRA.\n\n&&\n\n.MARINE...\nA lake wind advisory has been issued for this afternoon through\nthe overnight hours as southerly flow increases. Gusts up to\n30kts are possible this evening outside of thunderstorms with\nwaves generally 1-3 feet and a few possibly up to 4 feet. Winds\nare likely to decrease behind the front tonight after 4 AM. \n\n&&\n\n.CLIMATE...\nHigh temperatures on Tuesday will be hot, but we are at the \nclimatological warmest part of the year. Therefore, it is far \nfrom a certainty that any records will occur. \n\nMSS looks most likely to set a new record. PBG also is \ncurrently forecast to set a new record. MPV, and especially BTV \nand SLK, are unlikely to do so. See below for current records:\n\nMax Temp Records\nDate     BTV      MPV       MSS      PBG      SLK\n07-14  100|1995  94|1952   92|2012  95|1952  95|1934\n\nHigh Min Temp Records\nDatePBG\n07-14   70|1974\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Heat Advisory until 8 PM EDT this evening for VTZ001>011-\n     016>021.\nNY...Heat Advisory until 8 PM EDT this evening for NYZ026>029-031-\n     035-087.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Boyd\nDISCUSSION...Boyd/Storm\nAVIATION...Storm\nMARINE...NWS BTV\nCLIMATE...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-07-14T18:10:00+00:00",
@@ -771,9 +764,9 @@
  },
  "lake_gage": {
   "water_temp_f": 76,
-  "water_temp_at": "2026-07-14T14:00:00.000-04:00",
-  "level_ft": 96.34,
-  "level_at": "2026-07-14T14:00:00.000-04:00",
+  "water_temp_at": "2026-07-14T16:00:00.000-04:00",
+  "level_ft": 96.32,
+  "level_at": "2026-07-14T16:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -781,7 +774,7 @@
   "aqi": 54,
   "category": "Moderate",
   "pollutant": "PM2.5",
-  "observed": "07/14/26 14:00",
+  "observed": "07/14/26 16:00",
   "discussion": "On Tuesday, July 14th,  expect moderate air quality in Vermont, as smoke from Canadian wildfires continues to circulate around the New England region."
  },
  "sun": {
@@ -796,12 +789,12 @@
    {
     "date": "2026-07-14",
     "high_f": {
-     "GFS": 94,
+     "GFS": 93,
      "Euro": 95,
      "ICON": 98
     },
     "pop_max": {
-     "GFS": 13,
+     "GFS": 14,
      "Euro": 18,
      "ICON": 33
     },
@@ -810,23 +803,23 @@
      "Euro": 0.0,
      "ICON": 0.17
     },
-    "high_spread_f": 4
+    "high_spread_f": 5
    },
    {
     "date": "2026-07-15",
     "high_f": {
-     "GFS": 85,
+     "GFS": 83,
      "Euro": 83,
      "ICON": 85
     },
     "pop_max": {
-     "GFS": 44,
+     "GFS": 56,
      "Euro": 75,
      "ICON": 63
     },
     "precip_in": {
-     "GFS": 0.58,
-     "Euro": 0.11,
+     "GFS": 0.61,
+     "Euro": 0.08,
      "ICON": 0.3
     },
     "high_spread_f": 2
@@ -834,7 +827,7 @@
    {
     "date": "2026-07-16",
     "high_f": {
-     "GFS": 81,
+     "GFS": 82,
      "Euro": 84,
      "ICON": 84
     },
@@ -848,7 +841,7 @@
      "Euro": 0.02,
      "ICON": 0.02
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    }
   ]
  }
