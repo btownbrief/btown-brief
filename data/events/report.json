@@ -1,30 +1,30 @@
 {
- "generated": "2026-07-13T17:34:21-04:00",
+ "generated": "2026-07-14T07:11:12-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 34,
-   "seconds": 6.3
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 50,
-   "seconds": 3.6
+   "count": 51,
+   "seconds": 3.3
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 57,
-   "seconds": 2.7
+   "count": 54,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 158,
-   "seconds": 2.5
+   "count": 159,
+   "seconds": 2.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 84,
-   "seconds": 1.5
+   "count": 85,
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-13&end_date=2026-09-11&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-14&end_date=2026-09-12&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 234,
-   "seconds": 0.1
+   "count": 229,
+   "seconds": 0.2
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 8,
-   "seconds": 0.4
+   "count": 9,
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 250,
-   "seconds": 74.9
+   "count": 249,
+   "seconds": 70.7
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 15,
-   "seconds": 2.5
+   "count": 16,
+   "seconds": 2.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -68,8 +68,8 @@
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 56,
-   "seconds": 88.7
+   "count": 57,
+   "seconds": 85.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 478,
-   "seconds": 71.3
+   "count": 476,
+   "seconds": 73.3
   },
   "meetup": {
    "label": "Meetup",
-   "count": 75,
-   "seconds": 149.8
+   "count": 73,
+   "seconds": 140.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 15,
-   "seconds": 14.9
+   "count": 14,
+   "seconds": 13.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 85,
-   "seconds": 1.8
+   "count": 82,
+   "seconds": 1.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 49,
-   "seconds": 26.9
+   "count": 48,
+   "seconds": 25.8
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,18 +113,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 162,
-   "seconds": 8.8
+   "count": 164,
+   "seconds": 14.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 132,
+   "count": 134,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 52,
-   "seconds": 72.1
+   "count": 53,
+   "seconds": 71.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,66 +132,11 @@
    "seconds": 0.2
   }
  },
- "gathered": 2028,
- "afterDedup": 1352,
- "duplicatesMerged": 676,
- "final": 3257,
+ "gathered": 2021,
+ "afterDedup": 1342,
+ "duplicatesMerged": 679,
+ "final": 3011,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "South Burlington Farmers Market",
-    "source": "sbrec"
-   },
-   "merged_sources": [
-    "facebook",
-    "sbrec"
-   ],
-   "date": "2026-07-24"
-  },
-  {
-   "kept": {
-    "title": "Film Screening: Honeyjoon",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-24"
-  },
-  {
-   "kept": {
-    "title": "Food Truck Fridays",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-24"
-  },
-  {
-   "kept": {
-    "title": "Contra Dance in Burlington, VT",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-07-24"
-  },
-  {
-   "kept": {
-    "title": "\"Weird Al\" Yankovic",
-    "source": "champlainvalley"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "facebook"
-   ],
-   "date": "2026-07-24"
-  },
   {
    "kept": {
     "title": "Splash Dance: DJ CRWD CNTL",
@@ -2461,36 +2406,75 @@
     "loveburlington"
    ],
    "date": "2026-09-11"
+  },
+  {
+   "kept": {
+    "title": "2026 Menopause Café and Clinical Update",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-11"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-11"
+  },
+  {
+   "kept": {
+    "title": "Rainbow Kitten Surprise",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "breweries",
+    "higherground"
+   ],
+   "date": "2026-09-12"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-12"
+  },
+  {
+   "kept": {
+    "title": "Burlington Farmers Market",
+    "source": "farmersmarket"
+   },
+   "merged_sources": [
+    "farmersmarket",
+    "loveburlington"
+   ],
+   "date": "2026-09-12"
   }
  ],
  "changes": [
   {
-   "id": "52a6a476d23d",
-   "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
-   "date": "2026-07-19",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
-  },
-  {
-   "id": "8cb61e82a4e2",
-   "title": "Smart Cycling Workshops with E-Bikes",
-   "date": "2026-07-19",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
-  },
-  {
    "id": "67735b38f8fe",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-20",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "62f87ac529b2",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-20",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "178e86b6a64d",
@@ -2503,29 +2487,25 @@
    "id": "032b22fc7241",
    "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
    "date": "2026-07-20",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "ca75c5736e12",
    "title": "Smart Cycling Workshops with E-Bikes",
    "date": "2026-07-20",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "b71a09407c23",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-07-21",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "ee93a44c92fd",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-21",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "9d74fb3a46b7",
@@ -2538,8 +2518,7 @@
    "id": "5c857590e724",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-21",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "4b45fb371db9",
@@ -2552,15 +2531,13 @@
    "id": "98de5881c3cb",
    "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
    "date": "2026-07-21",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "bfbddc44e71e",
    "title": "Gillian Welch",
    "date": "2026-07-21",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "ec2ebcb65a2f",
@@ -2573,43 +2550,37 @@
    "id": "ef8b9be22770",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-22",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "de580b809c93",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-07-22",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "e388e9de7eb6",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-22",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "681564efcd41",
    "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
    "date": "2026-07-22",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "dd25667d19f2",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-07-23",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "d6b78389b9d0",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-23",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "c0d3bee74895",
@@ -2622,8 +2593,7 @@
    "id": "bfab97cf1a2f",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-23",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "b0ae5987298c",
@@ -2636,36 +2606,31 @@
    "id": "f80a264dce5c",
    "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
    "date": "2026-07-23",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "25516ac42702",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-07-24",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "e3de31f53aa0",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-24",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "d373bb321d3b",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-24",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "21fa08831a98",
    "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
    "date": "2026-07-24",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "4222c62069b9",
@@ -2678,22 +2643,19 @@
    "id": "b9149122679f",
    "title": "Weird Al Yankovic – Essex Junction",
    "date": "2026-07-24",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "cef9f2e54e72",
    "title": "No Exit",
    "date": "2026-07-24",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "c01e9ac61cfc",
    "title": "Weird Al Yankovic Tickets",
    "date": "2026-07-24",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "c81604f44c4f",
@@ -2706,36 +2668,31 @@
    "id": "3068857f3f73",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-07-25",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "6fea5889227b",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-25",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "91052dfd5057",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-25",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "5f158f3bb417",
    "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
    "date": "2026-07-25",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "11c22ad2dd5c",
    "title": "No Exit",
    "date": "2026-07-25",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "b2ac09223b21",
@@ -2748,64 +2705,55 @@
    "id": "ac0bd223de07",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-26",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "90fe6ea4d34d",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-26",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "3f7760b33189",
    "title": "Green Mountain Swing Benefit for Youth Music Scholarships!",
    "date": "2026-07-26",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "6859d8fbe99a",
    "title": "No Exit",
    "date": "2026-07-26",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "d11c734a855a",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-27",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "3198bcd30759",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-27",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "65f34cca7ab4",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-07-28",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "2f18f3f7cbfa",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-28",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "896f1b5d1643",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-28",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "42dc0627e441",
@@ -2818,43 +2766,37 @@
    "id": "1ba0db459aed",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-29",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "502fc03de6aa",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-07-29",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "cdc0e5063d2a",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-29",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "f3132218fdbb",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-07-30",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "e4b6ae7e1864",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-30",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "ca56973fdd03",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-30",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "9d7348a067a9",
@@ -2874,50 +2816,50 @@
    "id": "e1e6db0574fe",
    "title": "Thundercat",
    "date": "2026-07-30",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "2d1aad26463f",
    "title": "No Exit",
    "date": "2026-07-30",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "b830a8e5df54",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-07-31",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "52b71b839fcf",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-07-31",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "ad6a3865ef1c",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-07-31",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "fb87f8d6f663",
    "title": "Sylvan Esso",
    "date": "2026-07-31",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "df03950ee346",
    "title": "No Exit",
    "date": "2026-07-31",
+   "change": "dropped"
+  },
+  {
+   "id": "467911ed2caa",
+   "title": "BTown Coffee Club",
+   "date": "2026-08-01",
    "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "lastSeen": "2026-07-13T17:34:21-04:00"
   },
   {
    "id": "385ad73604d0",
@@ -2937,15 +2879,13 @@
    "id": "c99d09684fe5",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "caa7aac54140",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "cb06cc5aff3d",
@@ -2958,8 +2898,7 @@
    "id": "d5d531aa8bcb",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "de0b0ce9eab3",
@@ -2972,43 +2911,37 @@
    "id": "c40c503e532c",
    "title": "Rik Palier",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "1f2d03a25590",
    "title": "The Head And The Heart",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "e5b7163baac5",
    "title": "The Head and The Heart Tickets",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "5e7bf9adfca3",
    "title": "No Exit",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "13f7734af8f0",
    "title": "Vermont Psychic Expo Readings",
    "date": "2026-08-02",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "f556ea84be74",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-02",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "0ec42b35c76f",
@@ -3021,99 +2954,85 @@
    "id": "2acf90fe4106",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-02",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "88a4728181c6",
    "title": "No Exit",
    "date": "2026-08-02",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "c401e337ca6f",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-03",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "4852523d9103",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-03",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "97447d3b7d4c",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-04",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "f479e6ebe718",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-04",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "e40e8618b75e",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-04",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "6a4c610ee53a",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-05",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "aa569b63d259",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-05",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "340fad3a36ad",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-05",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "3c8cf50f89bc",
    "title": "Sidewalk Sale",
    "date": "2026-08-05",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "43a96234cc8d",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-06",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "26121739f8a3",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-06",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "af2863b2f3bf",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-06",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "2626b55e32a9",
@@ -3133,36 +3052,38 @@
    "id": "1f52450143ce",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-07",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "db4111cdf411",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-07",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "a6ec09304ef4",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-07",
+   "change": "dropped"
+  },
+  {
+   "id": "1a3ebc4a3d1d",
+   "title": "BTown Coffee Club",
+   "date": "2026-08-08",
    "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "lastSeen": "2026-07-13T17:34:21-04:00"
   },
   {
    "id": "07858d503443",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "757195b20ef7",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "b9279f1d8683",
@@ -3175,8 +3096,7 @@
    "id": "d2c01d575393",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "61487bedf7ae",
@@ -3189,393 +3109,337 @@
    "id": "1049644584e5",
    "title": "Mind Magic: A Night of Laughter and Astonishment",
    "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "8676bfd00357",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-09",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "9bd7a70b4403",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-09",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "b80b076ba0a2",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-10",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "13adc001c1ed",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-10",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "732a6d1a95aa",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-11",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "4e5161396b88",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-11",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "22a284fadee4",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-11",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "2ac11d137b15",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-12",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "bae93ab38a38",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-12",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "15eea1f4207b",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-12",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "57233bc9fe80",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-13",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "f4e56f7ac2ee",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-13",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "e7cec5309abd",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-13",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "82d2f79a2954",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-14",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "c21405571b15",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-14",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "c06b710f20b1",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-14",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "e13af884ec28",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "1042bd4df7c9",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "b5e2332a2dba",
    "title": "Sing Along with Linda at the NNE Branch In-Person",
    "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "e2a292268f26",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "10f7606219ed",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-16",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "9e8ed340e2bf",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-16",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "f7aa8f10c662",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-17",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "98feef8d012a",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-17",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "22f9fb0a3904",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-18",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "d0655ca93e42",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-18",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "0529b1dfe66c",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-18",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "2ae70482be54",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-19",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "8a83b0d1d1eb",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-19",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "a7eff825af9b",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-19",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "604c3113808f",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-20",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "3dff912c002d",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-20",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "b500eca3a380",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-20",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "7e167b70d8a2",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-21",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "9cf51efb299d",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-21",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "b317b862918f",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-21",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "123fabf4dceb",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "4ae46351a350",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "7606335e6364",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "6824e4f96738",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-23",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "0a4597c5d593",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-23",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "f4976722d33b",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-24",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "c9f83d9d18e2",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-24",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "b1b1550e14f8",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-25",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "a1e65fb3bb3e",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-25",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "eb970f9e8536",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-25",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "0a99c8bc83c6",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-26",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "33f0b29f8653",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-26",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "4f9c304e178e",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-26",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "3c693b48e8a6",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-27",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "7736b5fefd4f",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-27",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "3fc2ce366aaa",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-27",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "1998f74fabe6",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-28",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "e974552815e1",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-28",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "8531f8f6ffa5",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-28",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "fefa90ff9983",
@@ -3588,29 +3452,25 @@
    "id": "6d21993c1cdc",
    "title": "Alex Clark | Jokes From The Brink | Stand Up Comedy",
    "date": "2026-08-28",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:07:48-04:00"
+   "change": "dropped"
   },
   {
    "id": "8e07623547e0",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-08-29",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "abd113377b14",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-29",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "9fb04eb868ca",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-29",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "c4b5e5394e1b",
@@ -3623,162 +3483,139 @@
    "id": "1249d9bbad02",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-30",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "1a1044e3e74d",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-30",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "eff5ed947264",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-08-31",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "bd2b01c70fcc",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-08-31",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "7508281882b5",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "f240fd5e788a",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "86ecc51b6e04",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "77761b557348",
    "title": "Week of Welcome",
    "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "1ba173841c59",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-09-02",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "d874c06b20b6",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-09-02",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "87164dfd4f05",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-09-02",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "0fab15933d0d",
    "title": "Week of Welcome",
    "date": "2026-09-02",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "3854c5a20f8e",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-09-03",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "74c3eb77a00b",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-09-03",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "d5405551c217",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-09-03",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "de171fbca419",
    "title": "Week of Welcome",
    "date": "2026-09-03",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "77728c60715a",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-09-04",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "aae1f21e2410",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-09-04",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "bcd627c740fa",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-09-04",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "35be686a6cd7",
    "title": "Week of Welcome",
    "date": "2026-09-04",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "1465694af4ba",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "e6cab7027a7e",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "1ba26b17b4d7",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "f45f11a587c0",
@@ -3791,78 +3628,67 @@
    "id": "d8c24ca2be8c",
    "title": "Week of Welcome",
    "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "97ebdd64fbe7",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "b091a7cb4c2e",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "07cc315cae7d",
    "title": "Week of Welcome",
    "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "9488fb48a64f",
    "title": "Dinosaur Safari Exhibit",
    "date": "2026-09-07",
-   "change": "missing",
-   "lastSeen": "2026-07-10T23:21:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "49691e5ac89f",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-09-07",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "ddb21af2cfba",
    "title": "Week of Welcome",
    "date": "2026-09-07",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "4d8135825688",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-09-08",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "098191a76fc1",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-09-08",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "19cf8d4112ef",
    "title": "Library Outreach Specialist Office Hours",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "dab3ebd80f24",
    "title": "The Ultimate Chocolate Tasting",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-07-11T06:44:31-04:00"
+   "change": "dropped"
   }
  ]
 }
