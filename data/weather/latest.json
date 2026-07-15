@@ -1,28 +1,28 @@
 {
- "updated": "2026-07-15T11:16:00+00:00",
+ "updated": "2026-07-15T12:58:37+00:00",
  "sections_updated": {
-  "now": "2026-07-15T11:16:00+00:00",
-  "forecast": "2026-07-15T11:16:00+00:00",
-  "hourly": "2026-07-15T11:16:00+00:00",
-  "alerts": "2026-07-15T11:16:00+00:00",
-  "afd": "2026-07-15T11:16:00+00:00",
-  "lake_forecast": "2026-07-15T11:16:00+00:00",
-  "lake_gage": "2026-07-15T11:16:00+00:00",
-  "air": "2026-07-15T11:16:00+00:00",
-  "sun": "2026-07-15T11:16:00+00:00",
-  "models": "2026-07-15T11:16:00+00:00"
+  "now": "2026-07-15T12:58:37+00:00",
+  "forecast": "2026-07-15T12:58:37+00:00",
+  "hourly": "2026-07-15T12:58:37+00:00",
+  "alerts": "2026-07-15T12:58:37+00:00",
+  "afd": "2026-07-15T12:58:37+00:00",
+  "lake_forecast": "2026-07-15T12:58:37+00:00",
+  "lake_gage": "2026-07-15T12:58:37+00:00",
+  "air": "2026-07-15T12:58:37+00:00",
+  "sun": "2026-07-15T12:58:37+00:00",
+  "models": "2026-07-15T12:58:37+00:00"
  },
  "now": {
-  "observed_at": "2026-07-15T11:00:00+00:00",
+  "observed_at": "2026-07-15T12:35:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
-  "temp_f": 75,
-  "feels_like_f": 76,
-  "humidity": 74,
-  "dewpoint_f": 66,
-  "wind_mph": 8,
+  "description": "Clear",
+  "temp_f": 79,
+  "feels_like_f": 79,
+  "humidity": 61,
+  "dewpoint_f": 64,
+  "wind_mph": 11,
   "wind_gust_mph": null,
-  "wind_dir": "W"
+  "wind_dir": "NNW"
  },
  "forecast": {
   "updated": "2026-07-15T10:40:06+00:00",
@@ -32,9 +32,9 @@
     "is_day": true,
     "temp_f": 87,
     "pop": 18,
-    "wind": "NW 5 to 14 mph",
+    "wind": "NW 6 to 14 mph",
     "short": "Mostly Sunny then Slight Chance Rain Showers",
-    "detailed": "A slight chance of rain showers between 3pm and 5pm. Mostly sunny, with a high near 87. Northwest wind 5 to 14 mph, with gusts as high as 29 mph. Chance of precipitation is 20%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "A slight chance of rain showers between 3pm and 5pm. Mostly sunny, with a high near 87. Northwest wind 6 to 14 mph, with gusts as high as 29 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -86,17 +86,6 @@
  "hourly": {
   "updated": "2026-07-15T10:40:06+00:00",
   "hours": [
-   {
-    "t": "2026-07-15T07:00:00-04:00",
-    "temp_f": 76,
-    "feels_f": 76,
-    "pop": 6,
-    "humidity": 76,
-    "wind_mph": 5,
-    "wind_dir": "NW",
-    "sky": 26,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-07-15T08:00:00-04:00",
     "temp_f": 75,
@@ -481,6 +470,17 @@
     "wind_dir": "NW",
     "sky": 12,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-07-16T19:00:00-04:00",
+    "temp_f": 77,
+    "feels_f": 77,
+    "pop": 0,
+    "humidity": 45,
+    "wind_mph": 12,
+    "wind_dir": "NW",
+    "sky": 21,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -488,14 +488,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-07-15T09:21:00+00:00",
+  "issued": "2026-07-15T11:31:00+00:00",
   "key_messages": [
    "Storms moving away today. A few showers will linger.",
    "Smoky conditions through Thursday until a reinforcing frontal boundary brings rain and pushes it south.",
    "Seasonable temperatures and showers likely this weekend with possible thunderstorms, then another round of showers and potential storms early next week."
   ],
   "what_changed": "As of 514 AM EDT Wednesday... The Severe Thunderstorm Watch has ended. A few showers will linger early. Smoke has been added to parts of northern New York and Vermont Wednesday evening into Thursday ahead of a cold front.",
-  "raw": "\n000\nFXUS61 KBTV 150921\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n521 AM EDT Wed Jul 15 2026\n\n.WHAT HAS CHANGED...\nAs of 514 AM EDT Wednesday...\n\nThe Severe Thunderstorm Watch has ended. A few showers will\nlinger early. Smoke has been added to parts of northern New \nYork and Vermont Wednesday evening into Thursday ahead of a cold\nfront.\n\n&&\n\n.KEY MESSAGES...\nAs of 150 AM EDT Wednesday...\n\n1. Storms moving away today. A few showers will linger.\n\n2. Smoky conditions through Thursday until a reinforcing \nfrontal boundary brings rain and pushes it south.\n\n3. Seasonable temperatures and showers likely this weekend with \npossible thunderstorms, then another round of showers and potential \nstorms early next week.\n\n&&\n\n.DISCUSSION...\nAs of 514 AM EDT Wednesday...\n\nKEY MESSAGE 1: Strong to severe thunderstorms have cleared the\nregion. We conclude a night that featured a dangerous storm in\nSt. Lawrence County that dropped baseball-sized hail and a few\nstorms that managed to produce wind damage within bowing\nsegments, particularly across south-central Vermont. Things are\nquieter now, especially on account of the large amount of\nlightning on display with the overnight convection. A few\nshowers are lingering as they approach the Adirondacks with a\nfew spots in eastern Vermont without lightning. As always, we\nappreciate reports, as they help us get a scope on the impacts\nof the event.\n\nKEY MESSAGE 2: Wildfire smoke will move back into the region late \nWednesday afternoon and overnight, spreading across Vermont and \nnorthern New York into Thursday. Poor air quality will be possible, \nbut temperatures will be in the upper 70s to mid 80s for the most \npart. With diurnal heating, some showers and storms will develop \nalong the cold front shifting south, but it will not have nearly as \nmuch instability as this evening's activity. Cooler conditions ensue.\n\nKEY MESSAGE 3: Longwave troughing will cross the region this weekend as \ntwo surface low pressures, one in the Great Lakes and one along the \nmid-Atlantic coast, will interact while tracking through the \nNortheast. Global deterministic models are fairly aligned in this \nidea at the moment, providing increased confidence of showers and \nthunderstorms Saturday afternoon into early Sunday morning. The \nprobability of an inch of rainfall within 24 hours from this system \nis around 5-20%. More likely 24 hour amounts will fall somewhere \nbetween 0.33 and 0.66 inches. Depending on the storm track and \ntiming of any associated frontal passages, the threat of strong to \nsevere storms will be watched, but the threat should remain on the \nlower side due to a cooler and less humid airmass. Temperatures will \nremain around seasonal normals in the mid 70s to lower 80s both \nSaturday and Sunday with nighttime lows in the upper 40s to lower \n60s. Next week should start briefly dry on Monday with temperatures \nincreasing into the upper 70s and 80s, then another trough and \nnorthern stream low pressure swing through to increase chance of \nprecipitation again on Tuesday.\n\n&&\n\n.AVIATION /06Z WEDNESDAY THROUGH SUNDAY/...\nThrough 06Z Thursday...Scattered storms will move through the region\nduring the next few hours, bringing localized IFR visibility and\nfrequent lightning. There will also be some gusty erratic winds.\nThis is expected at BTV and PBG between 6-7Z and RUT before 9Z.\nThese storms exit by around daybreak. VFR conditions are expected to\nprevail through tonight. Winds will increase into the 15-25 KT range\nout of the northwest today, before generally going light and\nvariable tonight. A few pockets of LLWS will exist for the rest of\nthe night, before going away this morning.\n\nOutlook...\n\nThursday: VFR. Chance SHRA, Chance TSRA.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: Mainly VFR, with local MVFR possible. Chance SHRA,\nChance TSRA.\nSaturday Night: Mainly IFR, with areas MVFR possible. Chance\nSHRA, Slight chance TSRA.\nSunday: Mainly VFR, with local MVFR possible. Slight chance SHRA,\nSlight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Haynes\nDISCUSSION...Myskowski/Haynes\nAVIATION...Myskowski\n"
+  "raw": "\n000\nFXUS61 KBTV 151131\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n731 AM EDT Wed Jul 15 2026\n\n.WHAT HAS CHANGED...\nAs of 514 AM EDT Wednesday...\n\nThe Severe Thunderstorm Watch has ended. A few showers will\nlinger early. Smoke has been added to parts of northern New \nYork and Vermont Wednesday evening into Thursday ahead of a cold\nfront.\n\n&&\n\n.KEY MESSAGES...\nAs of 150 AM EDT Wednesday...\n\n1. Storms moving away today. A few showers will linger.\n\n2. Smoky conditions through Thursday until a reinforcing \nfrontal boundary brings rain and pushes it south.\n\n3. Seasonable temperatures and showers likely this weekend with \npossible thunderstorms, then another round of showers and potential \nstorms early next week.\n\n&&\n\n.DISCUSSION...\nAs of 514 AM EDT Wednesday...\n\nKEY MESSAGE 1: Strong to severe thunderstorms have cleared the\nregion. We conclude a night that featured a dangerous storm in\nSt. Lawrence County that dropped baseball-sized hail and a few\nstorms that managed to produce wind damage within bowing\nsegments, particularly across south-central Vermont. Things are\nquieter now, especially on account of the large amount of\nlightning on display with the overnight convection. A few\nshowers are lingering as they approach the Adirondacks with a\nfew spots in eastern Vermont without lightning. As always, we\nappreciate reports, as they help us get a scope on the impacts\nof the event.\n\nKEY MESSAGE 2: Wildfire smoke will move back into the region late \nWednesday afternoon and overnight, spreading across Vermont and \nnorthern New York into Thursday. Poor air quality will be possible, \nbut temperatures will be in the upper 70s to mid 80s for the most \npart. With diurnal heating, some showers and storms will develop \nalong the cold front shifting south, but it will not have nearly as \nmuch instability as this evening's activity. Cooler conditions ensue.\n\nKEY MESSAGE 3: Longwave troughing will cross the region this weekend as \ntwo surface low pressures, one in the Great Lakes and one along the \nmid-Atlantic coast, will interact while tracking through the \nNortheast. Global deterministic models are fairly aligned in this \nidea at the moment, providing increased confidence of showers and \nthunderstorms Saturday afternoon into early Sunday morning. The \nprobability of an inch of rainfall within 24 hours from this system \nis around 5-20%. More likely 24 hour amounts will fall somewhere \nbetween 0.33 and 0.66 inches. Depending on the storm track and \ntiming of any associated frontal passages, the threat of strong to \nsevere storms will be watched, but the threat should remain on the \nlower side due to a cooler and less humid airmass. Temperatures will \nremain around seasonal normals in the mid 70s to lower 80s both \nSaturday and Sunday with nighttime lows in the upper 40s to lower \n60s. Next week should start briefly dry on Monday with temperatures \nincreasing into the upper 70s and 80s, then another trough and \nnorthern stream low pressure swing through to increase chance of \nprecipitation again on Tuesday.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...A few showers are traveling near KRUT,\nbut otherwise, drying is expecting. Northwest winds will\nincrease up to 8 to 13 knots sustained with gusts 19 to 23 knots\nfrom 14z-23z. Winds will become light and variable afterwards.\nSmoky conditions are expected, mostly aloft today. After about\n21z, smoke will move from west to east through the area. For\nnow, held off adding reduced visibility and will monitor\nupstream obs. Winds remain elevated aloft after 00z, and this\nshould prevent fog, but with the addition of smoke, it's\npossible that could still allow for more fog formation.\n\nOutlook...\n\nThursday: VFR. Chance SHRA, Chance TSRA.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: VFR. Chance SHRA, Chance TSRA.\nSaturday Night: Mainly IFR, with areas MVFR possible. Chance\nSHRA, Slight chance TSRA.\nSunday: Mainly VFR, with areas IFR possible. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Haynes\nDISCUSSION...Myskowski/Haynes\nAVIATION...Haynes/Myskowski\n"
  },
  "lake_forecast": {
   "issued": "2026-07-15T09:14:00+00:00",
@@ -736,17 +736,17 @@
  },
  "lake_gage": {
   "water_temp_f": 76,
-  "water_temp_at": "2026-07-15T07:00:00.000-04:00",
-  "level_ft": 96.32,
-  "level_at": "2026-07-15T07:00:00.000-04:00",
+  "water_temp_at": "2026-07-15T08:00:00.000-04:00",
+  "level_ft": 96.33,
+  "level_at": "2026-07-15T08:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 94,
+  "aqi": 86,
   "category": "Moderate",
   "pollutant": "PM2.5",
-  "observed": "07/15/26 7:00",
+  "observed": "07/15/26 8:00",
   "discussion": "On Wednesday, July 15th, expect moderate air quality in Vermont, as smoke from Midwest and Canadian wildfires impacts the region."
  },
  "sun": {
@@ -754,7 +754,7 @@
   "sunset": "2026-07-15T20:34-04:00",
   "sunrise_tomorrow": "2026-07-16T05:23-04:00",
   "sunset_tomorrow": "2026-07-16T20:34-04:00",
-  "uv_max": 6.0
+  "uv_max": 6.45
  },
  "models": {
   "days": [
