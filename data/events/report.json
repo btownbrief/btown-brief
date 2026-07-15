@@ -1,30 +1,30 @@
 {
- "generated": "2026-07-14T17:36:01-04:00",
+ "generated": "2026-07-15T07:13:29-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 34,
-   "seconds": 6.4
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 52,
-   "seconds": 3.6
+   "count": 49,
+   "seconds": 2.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 54,
-   "seconds": 2.7
+   "count": 51,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 159,
-   "seconds": 2.8
+   "count": 158,
+   "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 86,
-   "seconds": 1.8
+   "count": 84,
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,22 +34,22 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-14&end_date=2026-09-12&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-15&end_date=2026-09-13&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 229,
+   "count": 216,
    "seconds": 0.1
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 249,
-   "seconds": 71.2
+   "count": 243,
+   "seconds": 77.3
   },
   "flynn": {
    "label": "The Flynn",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 38.5
+   "seconds": 39.2
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 58,
-   "seconds": 86.9
+   "count": 60,
+   "seconds": 92.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 488,
-   "seconds": 74.3
+   "count": 481,
+   "seconds": 67.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 72,
-   "seconds": 148.3
+   "count": 70,
+   "seconds": 137.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 15,
-   "seconds": 14.7
+   "count": 16,
+   "seconds": 15.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 81,
-   "seconds": 10.3
+   "count": 80,
+   "seconds": 3.9
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 48,
-   "seconds": 26.0
+   "count": 47,
+   "seconds": 26.1
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,52 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 166,
-   "seconds": 9.8
+   "count": 164,
+   "seconds": 10.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 136,
+   "count": 135,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 53,
-   "seconds": 72.6
+   "seconds": 71.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 35,
+   "count": 33,
    "seconds": 0.3
   }
  },
- "gathered": 2790,
- "afterDedup": 1507,
- "duplicatesMerged": 1283,
- "final": 2741,
+ "gathered": 2749,
+ "afterDedup": 1476,
+ "duplicatesMerged": 1273,
+ "final": 2672,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Dinosaur Safari Exhibit",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-12"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-12"
-  },
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
@@ -2245,6 +2223,28 @@
   },
   {
    "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-09"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-09"
+  },
+  {
+   "kept": {
     "title": "Italian Conversation Group",
     "source": "fletcherfree"
    },
@@ -2385,7 +2385,9 @@
    },
    "merged_sources": [
     "breweries",
-    "higherground"
+    "higherground",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-09-12"
   },
@@ -2414,16 +2416,102 @@
  ],
  "changes": [
   {
-   "id": "4bf6680497b5",
-   "title": "'No Exit'",
-   "date": "2026-07-31",
-   "change": "dropped"
+   "id": "dd4e85c2c90f",
+   "title": "Downtown Block Party",
+   "date": "2026-07-15",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
-   "id": "2eec4ac1470e",
-   "title": "Trolley tours",
-   "date": "2026-08-01",
-   "change": "dropped"
+   "id": "aa89e5864c46",
+   "title": "Paddle at Delta Park",
+   "date": "2026-07-15",
+   "change": "missing",
+   "lastSeen": "2026-07-14T17:36:01-04:00"
+  },
+  {
+   "id": "3726ababc682",
+   "title": "Bay & Brisket Trivia Thursday",
+   "date": "2026-07-16",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "ea05008356ee",
+   "title": "Trivia at Four Quarters",
+   "date": "2026-07-16",
+   "change": "missing",
+   "lastSeen": "2026-07-14T17:36:01-04:00"
+  },
+  {
+   "id": "5cfde42e21df",
+   "title": "Compa & Friends Summer Residency! - Rob Compa, Cotter Ellis, & Chuck Jones",
+   "date": "2026-07-16",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "9927f635e6bb",
+   "title": "DD Island & The Wormdogs",
+   "date": "2026-07-17",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "db03c2ed4e71",
+   "title": "Rose Asteroid",
+   "date": "2026-07-17",
+   "change": "missing",
+   "lastSeen": "2026-07-13T08:21:43-04:00"
+  },
+  {
+   "id": "5b64cd247290",
+   "title": "Nepenthes 101 - Tropical Pitcher Plant Workshop",
+   "date": "2026-07-18",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "0857721012f7",
+   "title": "Old vs New Tech",
+   "date": "2026-07-19",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "c0d3bee74895",
+   "title": "Networking Lunch at Hula with the Network of Women--July Lunch",
+   "date": "2026-07-23",
+   "change": "missing",
+   "lastSeen": "2026-07-12T17:31:33-04:00"
+  },
+  {
+   "id": "6c8617e97379",
+   "title": "Summer Concert Series",
+   "date": "2026-07-23",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "4573d10a06a8",
+   "title": "Jeffrey Foucault",
+   "date": "2026-07-24",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "6d6dad97fa27",
+   "title": "Downtown Boys",
+   "date": "2026-07-25",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "adc77f31c5a5",
+   "title": "Best Pooch in the Noosk",
+   "date": "2026-07-26",
+   "change": "missing",
+   "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
    "id": "467911ed2caa",
@@ -2440,77 +2528,11 @@
    "lastSeen": "2026-07-12T17:31:33-04:00"
   },
   {
-   "id": "b5cdd886da6d",
-   "title": "Vermont Public Kids Day with Daniel Tiger",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
-   "id": "ee6a0efaf208",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
-   "id": "cb06cc5aff3d",
-   "title": "COTS Back to School Bonanza",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
-   "id": "f2dd3195376c",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
-   "id": "a82775b3096f",
-   "title": "Guided Tours",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
-   "id": "96683bed85bb",
-   "title": "'No Exit'",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
    "id": "de0b0ce9eab3",
    "title": "Family PechaKucha",
    "date": "2026-08-01",
    "change": "missing",
    "lastSeen": "2026-07-13T08:21:43-04:00"
-  },
-  {
-   "id": "e5c07f7e86e1",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
-   "id": "7d172959d3f0",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-01",
-   "change": "dropped"
-  },
-  {
-   "id": "099df182c98b",
-   "title": "Trolley tours",
-   "date": "2026-08-02",
-   "change": "dropped"
-  },
-  {
-   "id": "b25ba3f11ec6",
-   "title": "Sunday Classical: Trio Nuovo",
-   "date": "2026-08-02",
-   "change": "dropped"
-  },
-  {
-   "id": "da498ad88996",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-02",
-   "change": "dropped"
   },
   {
    "id": "0ec42b35c76f",
@@ -2520,167 +2542,11 @@
    "lastSeen": "2026-07-13T08:21:43-04:00"
   },
   {
-   "id": "d54460df9279",
-   "title": "'No Exit'",
-   "date": "2026-08-02",
-   "change": "dropped"
-  },
-  {
-   "id": "9628a6e9e98a",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-02",
-   "change": "dropped"
-  },
-  {
-   "id": "163bddc8490a",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-02",
-   "change": "dropped"
-  },
-  {
-   "id": "d9fbfeea8526",
-   "title": "Trolley tours",
-   "date": "2026-08-03",
-   "change": "dropped"
-  },
-  {
-   "id": "6825640e9fbb",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-03",
-   "change": "dropped"
-  },
-  {
    "id": "4863e13fe712",
    "title": "Putts for Paws Charity Golf Tournament",
    "date": "2026-08-03",
    "change": "missing",
    "lastSeen": "2026-07-14T07:11:12-04:00"
-  },
-  {
-   "id": "b27083966076",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-03",
-   "change": "dropped"
-  },
-  {
-   "id": "fc986ec11702",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-03",
-   "change": "dropped"
-  },
-  {
-   "id": "3e389764e308",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-03",
-   "change": "dropped"
-  },
-  {
-   "id": "631246f9a8de",
-   "title": "Trolley tours",
-   "date": "2026-08-04",
-   "change": "dropped"
-  },
-  {
-   "id": "953a1d7c54bf",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-04",
-   "change": "dropped"
-  },
-  {
-   "id": "395c145a5c72",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-04",
-   "change": "dropped"
-  },
-  {
-   "id": "04842501538f",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-04",
-   "change": "dropped"
-  },
-  {
-   "id": "15e8255ee7ac",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-04",
-   "change": "dropped"
-  },
-  {
-   "id": "8cbfb35474a1",
-   "title": "Trolley tours",
-   "date": "2026-08-05",
-   "change": "dropped"
-  },
-  {
-   "id": "dcaae5e4c429",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-05",
-   "change": "dropped"
-  },
-  {
-   "id": "148ffef1d7ad",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-05",
-   "change": "dropped"
-  },
-  {
-   "id": "f393448840ca",
-   "title": "Guided Tours",
-   "date": "2026-08-05",
-   "change": "dropped"
-  },
-  {
-   "id": "3622fa1dab46",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-05",
-   "change": "dropped"
-  },
-  {
-   "id": "a732c5c2c046",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-05",
-   "change": "dropped"
-  },
-  {
-   "id": "8fd7a5122dca",
-   "title": "Trolley tours",
-   "date": "2026-08-06",
-   "change": "dropped"
-  },
-  {
-   "id": "d4d7ca23d753",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-06",
-   "change": "dropped"
-  },
-  {
-   "id": "1b3e802e3aac",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-06",
-   "change": "dropped"
-  },
-  {
-   "id": "8dc43b366200",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-06",
-   "change": "dropped"
-  },
-  {
-   "id": "613b79a29354",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-06",
-   "change": "dropped"
-  },
-  {
-   "id": "b8cb3a1f5a0b",
-   "title": "Trivia",
-   "date": "2026-08-06",
-   "change": "dropped"
-  },
-  {
-   "id": "2626b55e32a9",
-   "title": "Michael Freed-Thall",
-   "date": "2026-08-06",
-   "change": "dropped"
   },
   {
    "id": "74daa45ec2e6",
@@ -2690,59 +2556,11 @@
    "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
-   "id": "c4dbb253628b",
-   "title": "Trolley tours",
-   "date": "2026-08-07",
-   "change": "dropped"
-  },
-  {
-   "id": "5438561224f3",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-07",
-   "change": "dropped"
-  },
-  {
-   "id": "2237fd26ec8e",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-07",
-   "change": "dropped"
-  },
-  {
-   "id": "1a57677d13c2",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-07",
-   "change": "dropped"
-  },
-  {
-   "id": "549905d56d83",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-07",
-   "change": "dropped"
-  },
-  {
-   "id": "795b5e7aa6cc",
-   "title": "Trolley tours",
-   "date": "2026-08-08",
-   "change": "dropped"
-  },
-  {
    "id": "1a3ebc4a3d1d",
    "title": "BTown Coffee Club",
    "date": "2026-08-08",
    "change": "missing",
    "lastSeen": "2026-07-13T17:34:21-04:00"
-  },
-  {
-   "id": "726b65def8f9",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-08",
-   "change": "dropped"
-  },
-  {
-   "id": "3b1be3157a1b",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-08",
-   "change": "dropped"
   },
   {
    "id": "b9279f1d8683",
@@ -2752,672 +2570,6 @@
    "lastSeen": "2026-07-13T08:21:43-04:00"
   },
   {
-   "id": "c75b9d82d80c",
-   "title": "Guided Tours",
-   "date": "2026-08-08",
-   "change": "dropped"
-  },
-  {
-   "id": "9f49d53b4e7f",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-08",
-   "change": "dropped"
-  },
-  {
-   "id": "2f60b47125ff",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-08",
-   "change": "dropped"
-  },
-  {
-   "id": "61487bedf7ae",
-   "title": "Vermont Lake Monsters",
-   "date": "2026-08-08",
-   "change": "dropped"
-  },
-  {
-   "id": "3c3713ed0c92",
-   "title": "Sensory Friendly Sunday",
-   "date": "2026-08-09",
-   "change": "dropped"
-  },
-  {
-   "id": "de3a76d19a93",
-   "title": "Trolley tours",
-   "date": "2026-08-09",
-   "change": "dropped"
-  },
-  {
-   "id": "07e8f451717f",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-09",
-   "change": "dropped"
-  },
-  {
-   "id": "d724f890a83d",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-09",
-   "change": "dropped"
-  },
-  {
-   "id": "db68d08ec4f9",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-09",
-   "change": "dropped"
-  },
-  {
-   "id": "0a98d21ec518",
-   "title": "Trolley tours",
-   "date": "2026-08-10",
-   "change": "dropped"
-  },
-  {
-   "id": "64177c5608de",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-10",
-   "change": "dropped"
-  },
-  {
-   "id": "1a7205501acd",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-10",
-   "change": "dropped"
-  },
-  {
-   "id": "4196a1e70a09",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-10",
-   "change": "dropped"
-  },
-  {
-   "id": "4c4baf1967ef",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-10",
-   "change": "dropped"
-  },
-  {
-   "id": "e95a90a40756",
-   "title": "Trolley tours",
-   "date": "2026-08-11",
-   "change": "dropped"
-  },
-  {
-   "id": "38d7a41a4c22",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-11",
-   "change": "dropped"
-  },
-  {
-   "id": "7ea5c42dd68a",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-11",
-   "change": "dropped"
-  },
-  {
-   "id": "ceb11f176078",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-11",
-   "change": "dropped"
-  },
-  {
-   "id": "cdccd12c1eb8",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-11",
-   "change": "dropped"
-  },
-  {
-   "id": "31b695009f5a",
-   "title": "Trolley tours",
-   "date": "2026-08-12",
-   "change": "dropped"
-  },
-  {
-   "id": "197250cf2c5e",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-12",
-   "change": "dropped"
-  },
-  {
-   "id": "be6ff537a46b",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-12",
-   "change": "dropped"
-  },
-  {
-   "id": "ac2620b9fd98",
-   "title": "Guided Tours",
-   "date": "2026-08-12",
-   "change": "dropped"
-  },
-  {
-   "id": "76af5a3f32f2",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-12",
-   "change": "dropped"
-  },
-  {
-   "id": "efe3a46b0ad1",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-12",
-   "change": "dropped"
-  },
-  {
-   "id": "d7ec8fd071d2",
-   "title": "Trolley tours",
-   "date": "2026-08-13",
-   "change": "dropped"
-  },
-  {
-   "id": "78477030e8a9",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-13",
-   "change": "dropped"
-  },
-  {
-   "id": "7e9b20c12bc3",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-13",
-   "change": "dropped"
-  },
-  {
-   "id": "79cf05e4e058",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-13",
-   "change": "dropped"
-  },
-  {
-   "id": "97a75f7f6550",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-13",
-   "change": "dropped"
-  },
-  {
-   "id": "87908128d443",
-   "title": "Trivia",
-   "date": "2026-08-13",
-   "change": "dropped"
-  },
-  {
-   "id": "7877d32627ef",
-   "title": "Trolley tours",
-   "date": "2026-08-14",
-   "change": "dropped"
-  },
-  {
-   "id": "54e611126573",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-14",
-   "change": "dropped"
-  },
-  {
-   "id": "56a8604aabff",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-14",
-   "change": "dropped"
-  },
-  {
-   "id": "3babb69893f2",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-14",
-   "change": "dropped"
-  },
-  {
-   "id": "0811178863de",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-14",
-   "change": "dropped"
-  },
-  {
-   "id": "cc909efcce3d",
-   "title": "Trolley tours",
-   "date": "2026-08-15",
-   "change": "dropped"
-  },
-  {
-   "id": "e7eb5abceeb1",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-15",
-   "change": "dropped"
-  },
-  {
-   "id": "19cc9a90dbc8",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-15",
-   "change": "dropped"
-  },
-  {
-   "id": "9a6d36d807c3",
-   "title": "Guided Tours",
-   "date": "2026-08-15",
-   "change": "dropped"
-  },
-  {
-   "id": "ce5e07857671",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-15",
-   "change": "dropped"
-  },
-  {
-   "id": "db141ceb799a",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-15",
-   "change": "dropped"
-  },
-  {
-   "id": "1bc0ac46ab19",
-   "title": "Trolley tours",
-   "date": "2026-08-16",
-   "change": "dropped"
-  },
-  {
-   "id": "557e69ff1a3a",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-16",
-   "change": "dropped"
-  },
-  {
-   "id": "a866980a763c",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-16",
-   "change": "dropped"
-  },
-  {
-   "id": "5814ae88a498",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-16",
-   "change": "dropped"
-  },
-  {
-   "id": "c1cbf6b6005f",
-   "title": "Trolley tours",
-   "date": "2026-08-17",
-   "change": "dropped"
-  },
-  {
-   "id": "e063e8c887ac",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-17",
-   "change": "dropped"
-  },
-  {
-   "id": "8343b631d3e5",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-17",
-   "change": "dropped"
-  },
-  {
-   "id": "766297a1da0d",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-17",
-   "change": "dropped"
-  },
-  {
-   "id": "db360d9f13f4",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-17",
-   "change": "dropped"
-  },
-  {
-   "id": "23e319d5ac96",
-   "title": "Trolley tours",
-   "date": "2026-08-18",
-   "change": "dropped"
-  },
-  {
-   "id": "e1bcca59e8c0",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-18",
-   "change": "dropped"
-  },
-  {
-   "id": "407b5b9c4db4",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-18",
-   "change": "dropped"
-  },
-  {
-   "id": "cae8a74941ae",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-18",
-   "change": "dropped"
-  },
-  {
-   "id": "e9c76674e900",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-18",
-   "change": "dropped"
-  },
-  {
-   "id": "a3abc4c7f38c",
-   "title": "Trolley tours",
-   "date": "2026-08-19",
-   "change": "dropped"
-  },
-  {
-   "id": "abf5d085b8a9",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-19",
-   "change": "dropped"
-  },
-  {
-   "id": "fd9b10821881",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-19",
-   "change": "dropped"
-  },
-  {
-   "id": "e4a662b819ff",
-   "title": "Guided Tours",
-   "date": "2026-08-19",
-   "change": "dropped"
-  },
-  {
-   "id": "0c56dc494166",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-19",
-   "change": "dropped"
-  },
-  {
-   "id": "3f3d41dca330",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-19",
-   "change": "dropped"
-  },
-  {
-   "id": "cfa9b58919ee",
-   "title": "Trolley tours",
-   "date": "2026-08-20",
-   "change": "dropped"
-  },
-  {
-   "id": "5644c832a26d",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-20",
-   "change": "dropped"
-  },
-  {
-   "id": "17beeee1cb9e",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-20",
-   "change": "dropped"
-  },
-  {
-   "id": "9b95ca0daf15",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-20",
-   "change": "dropped"
-  },
-  {
-   "id": "ad975aa97b1d",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-20",
-   "change": "dropped"
-  },
-  {
-   "id": "407041fb80ea",
-   "title": "Trivia",
-   "date": "2026-08-20",
-   "change": "dropped"
-  },
-  {
-   "id": "392c7cc2b435",
-   "title": "Bubble Run 5K",
-   "date": "2026-08-20",
-   "change": "dropped"
-  },
-  {
-   "id": "f0c182255f2d",
-   "title": "Trolley tours",
-   "date": "2026-08-21",
-   "change": "dropped"
-  },
-  {
-   "id": "ba8a67ebe9e6",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-21",
-   "change": "dropped"
-  },
-  {
-   "id": "3056d971f2eb",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-21",
-   "change": "dropped"
-  },
-  {
-   "id": "1ed9bbaed897",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-21",
-   "change": "dropped"
-  },
-  {
-   "id": "18717f900a48",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-21",
-   "change": "dropped"
-  },
-  {
-   "id": "9de1e6d8959c",
-   "title": "Trolley tours",
-   "date": "2026-08-22",
-   "change": "dropped"
-  },
-  {
-   "id": "41be790aac0d",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-22",
-   "change": "dropped"
-  },
-  {
-   "id": "31604c750ceb",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-22",
-   "change": "dropped"
-  },
-  {
-   "id": "253dc95fc258",
-   "title": "Guided Tours",
-   "date": "2026-08-22",
-   "change": "dropped"
-  },
-  {
-   "id": "9cca03c2a8ee",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-22",
-   "change": "dropped"
-  },
-  {
-   "id": "baf610f92aa9",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-22",
-   "change": "dropped"
-  },
-  {
-   "id": "d7b4afe337b6",
-   "title": "Trolley tours",
-   "date": "2026-08-23",
-   "change": "dropped"
-  },
-  {
-   "id": "a538c1983908",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-23",
-   "change": "dropped"
-  },
-  {
-   "id": "f584159fcef3",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-23",
-   "change": "dropped"
-  },
-  {
-   "id": "a41dc48b2aa3",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-23",
-   "change": "dropped"
-  },
-  {
-   "id": "cff682f6d313",
-   "title": "Trolley tours",
-   "date": "2026-08-24",
-   "change": "dropped"
-  },
-  {
-   "id": "7a7e76286029",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-24",
-   "change": "dropped"
-  },
-  {
-   "id": "b178cf10c643",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-24",
-   "change": "dropped"
-  },
-  {
-   "id": "2876213fa9cb",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-24",
-   "change": "dropped"
-  },
-  {
-   "id": "1da16733886d",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-24",
-   "change": "dropped"
-  },
-  {
-   "id": "1a2b50eeef9e",
-   "title": "Trolley tours",
-   "date": "2026-08-25",
-   "change": "dropped"
-  },
-  {
-   "id": "fbbe9d330794",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-25",
-   "change": "dropped"
-  },
-  {
-   "id": "2c70548491a6",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-25",
-   "change": "dropped"
-  },
-  {
-   "id": "2c58dc1f78f9",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-25",
-   "change": "dropped"
-  },
-  {
-   "id": "7a0f5b38d967",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-25",
-   "change": "dropped"
-  },
-  {
-   "id": "7e684bff5324",
-   "title": "Trolley tours",
-   "date": "2026-08-26",
-   "change": "dropped"
-  },
-  {
-   "id": "0eb3614275cb",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-26",
-   "change": "dropped"
-  },
-  {
-   "id": "9aa09b9719f8",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-26",
-   "change": "dropped"
-  },
-  {
-   "id": "8c839c81783c",
-   "title": "Guided Tours",
-   "date": "2026-08-26",
-   "change": "dropped"
-  },
-  {
-   "id": "2724556218cc",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-26",
-   "change": "dropped"
-  },
-  {
-   "id": "53419766ea20",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-26",
-   "change": "dropped"
-  },
-  {
-   "id": "10fb16bcdcbc",
-   "title": "Trolley tours",
-   "date": "2026-08-27",
-   "change": "dropped"
-  },
-  {
-   "id": "fc06a5f58179",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-27",
-   "change": "dropped"
-  },
-  {
-   "id": "ac910c81a8fc",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-27",
-   "change": "dropped"
-  },
-  {
-   "id": "5adb245731c3",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-27",
-   "change": "dropped"
-  },
-  {
-   "id": "39331cc14481",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-27",
-   "change": "dropped"
-  },
-  {
-   "id": "8060e2f81bcd",
-   "title": "Trivia",
-   "date": "2026-08-27",
-   "change": "dropped"
-  },
-  {
-   "id": "c34cfa5f89db",
-   "title": "Trolley tours",
-   "date": "2026-08-28",
-   "change": "dropped"
-  },
-  {
-   "id": "07512f8b7d18",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-28",
-   "change": "dropped"
-  },
-  {
-   "id": "eab9085818c2",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-28",
-   "change": "dropped"
-  },
-  {
-   "id": "bc968222e6a2",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-28",
-   "change": "dropped"
-  },
-  {
-   "id": "b602962d26b6",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-28",
-   "change": "dropped"
-  },
-  {
    "id": "5766b8ee536f",
    "title": "Warren Zeiders",
    "date": "2026-08-28",
@@ -3425,191 +2577,11 @@
    "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
-   "id": "dfdf5a99850b",
-   "title": "Trolley tours",
-   "date": "2026-08-29",
-   "change": "dropped"
-  },
-  {
-   "id": "4a19593e0f79",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-29",
-   "change": "dropped"
-  },
-  {
-   "id": "06ace3a1d0df",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-29",
-   "change": "dropped"
-  },
-  {
-   "id": "4678990f3bd4",
-   "title": "Guided Tours",
-   "date": "2026-08-29",
-   "change": "dropped"
-  },
-  {
-   "id": "a902538ea9fb",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-29",
-   "change": "dropped"
-  },
-  {
-   "id": "d8d1b13d2e33",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-29",
-   "change": "dropped"
-  },
-  {
    "id": "4a0f9b1b225c",
    "title": "Jordan Davis",
    "date": "2026-08-29",
    "change": "missing",
    "lastSeen": "2026-07-14T07:11:12-04:00"
-  },
-  {
-   "id": "59e1975c1148",
-   "title": "Trolley tours",
-   "date": "2026-08-30",
-   "change": "dropped"
-  },
-  {
-   "id": "83abe779c60a",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-30",
-   "change": "dropped"
-  },
-  {
-   "id": "7d9dd4a4ae2d",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-30",
-   "change": "dropped"
-  },
-  {
-   "id": "616832cbb4c5",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-30",
-   "change": "dropped"
-  },
-  {
-   "id": "09a897bae75a",
-   "title": "Trolley tours",
-   "date": "2026-08-31",
-   "change": "dropped"
-  },
-  {
-   "id": "ab856301f0c8",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-08-31",
-   "change": "dropped"
-  },
-  {
-   "id": "a7960de41447",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-08-31",
-   "change": "dropped"
-  },
-  {
-   "id": "2b1cb812e3bc",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-08-31",
-   "change": "dropped"
-  },
-  {
-   "id": "dc391459f41f",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-08-31",
-   "change": "dropped"
-  },
-  {
-   "id": "464ec185d239",
-   "title": "Trolley tours",
-   "date": "2026-09-01",
-   "change": "dropped"
-  },
-  {
-   "id": "5a1bf84632e0",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-09-01",
-   "change": "dropped"
-  },
-  {
-   "id": "e0b933b0d2ef",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-09-01",
-   "change": "dropped"
-  },
-  {
-   "id": "b71981a4de2b",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-09-01",
-   "change": "dropped"
-  },
-  {
-   "id": "0bf032a03337",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-09-01",
-   "change": "dropped"
-  },
-  {
-   "id": "00bd22d6861c",
-   "title": "Trolley tours",
-   "date": "2026-09-02",
-   "change": "dropped"
-  },
-  {
-   "id": "910811d1d55a",
-   "title": "Glass Factory and Storefront Open !!",
-   "date": "2026-09-02",
-   "change": "dropped"
-  },
-  {
-   "id": "021c1a69de6c",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-09-02",
-   "change": "dropped"
-  },
-  {
-   "id": "f88f07b9ef67",
-   "title": "Guided Tours",
-   "date": "2026-09-02",
-   "change": "dropped"
-  },
-  {
-   "id": "4dc8d8ebd6d7",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-09-02",
-   "change": "dropped"
-  },
-  {
-   "id": "e624b1313bd3",
-   "title": "Skiff Oyster Hour",
-   "date": "2026-09-02",
-   "change": "dropped"
-  },
-  {
-   "id": "7f2bc007c3e6",
-   "title": "Trolley tours",
-   "date": "2026-09-03",
-   "change": "dropped"
-  },
-  {
-   "id": "7ace0e6f8f37",
-   "title": "Cruise aboard the Spirit of Ethan Allen III",
-   "date": "2026-09-03",
-   "change": "dropped"
-  },
-  {
-   "id": "4803d9cb63f5",
-   "title": "Half Priced Oysters at La Reprise",
-   "date": "2026-09-03",
-   "change": "dropped"
-  },
-  {
-   "id": "cac07e00e6bb",
-   "title": "Trivia",
-   "date": "2026-09-03",
-   "change": "dropped"
   },
   {
    "id": "5454ce0c3d94",
