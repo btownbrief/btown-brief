@@ -1,26 +1,26 @@
 {
- "updated": "2026-07-15T23:43:53+00:00",
+ "updated": "2026-07-16T01:11:10+00:00",
  "sections_updated": {
-  "now": "2026-07-15T23:43:53+00:00",
-  "forecast": "2026-07-15T23:43:53+00:00",
-  "hourly": "2026-07-15T23:43:53+00:00",
-  "alerts": "2026-07-15T23:43:53+00:00",
-  "afd": "2026-07-15T23:43:53+00:00",
-  "lake_forecast": "2026-07-15T23:43:53+00:00",
-  "lake_gage": "2026-07-15T23:43:53+00:00",
-  "air": "2026-07-15T23:43:53+00:00",
-  "sun": "2026-07-15T23:43:53+00:00",
-  "models": "2026-07-15T23:43:53+00:00"
+  "now": "2026-07-16T01:11:10+00:00",
+  "forecast": "2026-07-16T01:11:10+00:00",
+  "hourly": "2026-07-16T01:11:10+00:00",
+  "alerts": "2026-07-16T01:11:10+00:00",
+  "afd": "2026-07-16T01:11:10+00:00",
+  "lake_forecast": "2026-07-16T01:11:10+00:00",
+  "lake_gage": "2026-07-16T01:11:10+00:00",
+  "air": "2026-07-16T01:11:10+00:00",
+  "sun": "2026-07-16T01:11:10+00:00",
+  "models": "2026-07-16T01:11:10+00:00"
  },
  "now": {
-  "observed_at": "2026-07-15T23:20:00+00:00",
+  "observed_at": "2026-07-16T00:45:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 81,
-  "feels_like_f": 81,
-  "humidity": 45,
+  "temp_f": 75,
+  "feels_like_f": 75,
+  "humidity": 54,
   "dewpoint_f": 57,
-  "wind_mph": 10,
+  "wind_mph": 3,
   "wind_gust_mph": null,
   "wind_dir": "WNW"
  },
@@ -31,10 +31,10 @@
     "name": "Tonight",
     "is_day": false,
     "temp_f": 65,
-    "pop": 4,
-    "wind": "W 3 to 9 mph",
+    "pop": 1,
+    "wind": "W 3 to 7 mph",
     "short": "Mostly Clear then Patchy Smoke",
-    "detailed": "Patchy smoke after 2am. Mostly clear, with a low around 65. West wind 3 to 9 mph. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Patchy smoke after 2am. Mostly clear, with a low around 65. West wind 3 to 7 mph."
    },
    {
     "name": "Thursday",
@@ -86,28 +86,6 @@
  "hourly": {
   "updated": "2026-07-15T22:41:29+00:00",
   "hours": [
-   {
-    "t": "2026-07-15T19:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 81,
-    "pop": 4,
-    "humidity": 54,
-    "wind_mph": 9,
-    "wind_dir": "W",
-    "sky": 20,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-07-15T20:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 81,
-    "pop": 1,
-    "humidity": 52,
-    "wind_mph": 8,
-    "wind_dir": "NW",
-    "sky": 11,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-07-15T21:00:00-04:00",
     "temp_f": 77,
@@ -481,6 +459,28 @@
     "wind_dir": "NW",
     "sky": 3,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-07-17T07:00:00-04:00",
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 0,
+    "humidity": 67,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 14,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-17T08:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 0,
+    "humidity": 65,
+    "wind_mph": 8,
+    "wind_dir": "NW",
+    "sky": 0,
+    "short": "Sunny"
    }
   ]
  },
@@ -488,14 +488,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-07-15T19:07:00+00:00",
+  "issued": "2026-07-15T23:41:00+00:00",
   "key_messages": [
    "Wildfire smoke will continue to impact portions of northern New York and Vermont with degraded air quality at least through Thursday. An Air Quality Alert is in effect for northern New York.",
    "There will be several chances for showers and thunderstorms today through this weekend with Friday being dry and temperatures generally around seasonal averages.",
    "Seasonably warm temperatures and a brief dry period are expected early next week, then another round of showers and potential storms towards midweek."
   ],
-  "what_changed": "As of 243 PM EDT Wednesday... Continue to modify smoke placement based on latest guidance.",
-  "raw": "\n000\nFXUS61 KBTV 151907\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n307 PM EDT Wed Jul 15 2026\n\n.WHAT HAS CHANGED...\nAs of 243 PM EDT Wednesday...\n\nContinue to modify smoke placement based on latest guidance. \n\n&&\n\n.KEY MESSAGES...\nAs of 243 PM EDT Wednesday...\n\n1. Wildfire smoke will continue to impact portions of northern\nNew York and Vermont with degraded air quality at least through\nThursday. An Air Quality Alert is in effect for northern New\nYork. \n\n2. There will be several chances for showers and thunderstorms\ntoday through this weekend with Friday being dry and\ntemperatures generally around seasonal averages. \n\n3. Seasonably warm temperatures and a brief dry period are \nexpected early next week, then another round of showers and \npotential storms towards midweek.\n\n&&\n\n.DISCUSSION...\nAs of 243 PM EDT Wednesday...\n\nKEY MESSAGE 1: An Air Quality Alert is in effect for northern\nNew York with much of the region experiencing moderate to\nhazardous for sensitive groups air quality levels. Those\nunusually sensitive to smoke may wish to limit exposure.\nPrevailing winds will continue to advect swaths of wildfire\nsmoke into the region through at least Thursday. Tomorrow\nevenings cold front will likely shunt smoke southward giving\nnorthern New York and Vermont a reprieve from smokiest\nconditions. \n\nKEY MESSAGE 2: As for precipitation chances, some showers are\npopping up in southern Canada and will drop through Vermont and\nportions of northern New York this afternoon and early evening.\nNo significant impacts are anticipated, but these showers may\ndrag some smoke aloft to the surface which could then settle in\nvalleys overnight resulting in localized further degradation of\nair quality. \n\nThe next thunderstorm chances will be Thursday along a front\ndropping out of Canada. There will be enough forcing to allow\nfor a few thunderstorms with high temperatures in the 80s.\nHowever, these storms will not be as intense as last night's.\nThe associated wave is shallower and farther east and \ntemperatures/dewpoints will be much lower than what occurred \nyesterday. Still, those outdoors should have a lightning plan, \nespecially if hiking or camping. \n\nAfter a dry day on Friday, RH likely ranging 20-40% with lighter\nbreezes, a system moving through southern Canada will bring\nrenewed widespread shower/thunderstorm chances for most of the\nregion. Initial QPF estimates are 0.25-0.75\", but showers will\nlinger into Sunday. Temperatures, as mentioned above, will be\nmore pleasant heading into the weekend with highs in the\nmid/upper 70s to low 80s.  \n\nKEY MESSAGE 3: Precipitation chances will be decreasing on Sunday as \ndrier air flows into northern New York and Vermont. High pressure \nand weak ridging will command the weather pattern Sunday night into \nMonday, allowing temperatures to climb back towards or slightly \nabove seasonal averages in the 70s to mid 80s each afternoon. \nNighttime temperatures will fall into the upper 40s to mid 60s. \nAnother trough is expected to come through sometime toward midweek. \nModels diverge in their solutions for this Tuesday-Wednesday system, \nparticularly in terms of timing, but most project a surface low \ncrossing through Canada dragging a a slew of frontal boundaries \nthrough our area and returning highs to the 70s and lower 80s.\n\n&&\n\n.AVIATION /18Z WEDNESDAY THROUGH MONDAY/...\nThrough 18Z Thursday...A few showers linger this afternoon, but\nthere's less than 30% chance of any precipitation at a given site.\nSmoky conditions continue through Thursday until a reinforcing\nfrontal boundary brings rain and pushes it south. Winds are\ncurrently (as of Wednesday afternoon) out of the west and northwest\n10-15 knots with gusts 15-25 knots and will continue through around\n00Z-05Z Thursday before decreasing tonight. Overnight, winds will be\nlight and variable with westerly being the most common direction,\nexcept at RUT, which should see its typical drainage wind. As winds\ndecrease this evening, elevated winds aloft will support a brief\nperiod of LLWS at SLK and MPV from 01Z through 05Z Thursday. Patchy\nhaze may also occur at SLK at the surface around 03Z-06Z Thursday as\nwinds aloft abate. Haze at other sites is not out of the question,\nbut confidence is low on visibility restrictions from wildfire\nsmoke. Smoke, last night's rain, and winds aloft could also affect\nfog formation tonight one way or the other. At the moment,\nconfidence is too low to include fog, but it is possible at the\nfavored locations. Thursday during the day, winds increase again out\nof the west 10-20 knots anticipated with gusts 20-30 knots likely.\n\nOutlook...\n\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: Mainly VFR, with local MVFR possible. Chance SHRA,\nChance TSRA.\nSaturday Night: MVFR/IFR conditions possible. Chance SHRA, Slight\nchance TSRA.\nSunday: MVFR/IFR conditions possible. Slight chance SHRA.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. Slight chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...Air Quality Alert until midnight EDT tonight for NYZ026>031-\n     034-035-087.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Boyd\nDISCUSSION...Storm/Boyd\nAVIATION...Storm\n"
+  "what_changed": "As of 728 PM EDT Wednesday... Air Quality Alerts have been issued for northern New York and southern Vermont for tomorrow.",
+  "raw": "\n000\nFXUS61 KBTV 152341\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n741 PM EDT Wed Jul 15 2026\n\n.WHAT HAS CHANGED...\nAs of 728 PM EDT Wednesday...\n\nAir Quality Alerts have been issued for northern New York and\nsouthern Vermont for tomorrow.\n\n&&\n\n.KEY MESSAGES...\nAs of 243 PM EDT Wednesday...\n\n1. Wildfire smoke will continue to impact portions of northern\nNew York and Vermont with degraded air quality at least through\nThursday. An Air Quality Alert is in effect for northern New\nYork. \n\n2. There will be several chances for showers and thunderstorms\ntoday through this weekend with Friday being dry and\ntemperatures generally around seasonal averages. \n\n3. Seasonably warm temperatures and a brief dry period are \nexpected early next week, then another round of showers and \npotential storms towards midweek.\n\n&&\n\n.DISCUSSION...\nAs of 243 PM EDT Wednesday...\n\nKEY MESSAGE 1: An Air Quality Alert is in effect for northern\nNew York with much of the region experiencing moderate to\nhazardous for sensitive groups air quality levels. Those\nunusually sensitive to smoke may wish to limit exposure.\nPrevailing winds will continue to advect swaths of wildfire\nsmoke into the region through at least Thursday. Tomorrow\nevenings cold front will likely shunt smoke southward giving\nnorthern New York and Vermont a reprieve from smokiest\nconditions. \n\nKEY MESSAGE 2: As for precipitation chances, some showers are\npopping up in southern Canada and will drop through Vermont and\nportions of northern New York this afternoon and early evening.\nNo significant impacts are anticipated, but these showers may\ndrag some smoke aloft to the surface which could then settle in\nvalleys overnight resulting in localized further degradation of\nair quality. \n\nThe next thunderstorm chances will be Thursday along a front\ndropping out of Canada. There will be enough forcing to allow\nfor a few thunderstorms with high temperatures in the 80s.\nHowever, these storms will not be as intense as last night's.\nThe associated wave is shallower and farther east and \ntemperatures/dewpoints will be much lower than what occurred \nyesterday. Still, those outdoors should have a lightning plan, \nespecially if hiking or camping. \n\nAfter a dry day on Friday, RH likely ranging 20-40% with lighter\nbreezes, a system moving through southern Canada will bring\nrenewed widespread shower/thunderstorm chances for most of the\nregion. Initial QPF estimates are 0.25-0.75\", but showers will\nlinger into Sunday. Temperatures, as mentioned above, will be\nmore pleasant heading into the weekend with highs in the\nmid/upper 70s to low 80s.  \n\nKEY MESSAGE 3: Precipitation chances will be decreasing on Sunday as \ndrier air flows into northern New York and Vermont. High pressure \nand weak ridging will command the weather pattern Sunday night into \nMonday, allowing temperatures to climb back towards or slightly \nabove seasonal averages in the 70s to mid 80s each afternoon. \nNighttime temperatures will fall into the upper 40s to mid 60s. \nAnother trough is expected to come through sometime toward midweek. \nModels diverge in their solutions for this Tuesday-Wednesday system, \nparticularly in terms of timing, but most project a surface low \ncrossing through Canada dragging a a slew of frontal boundaries \nthrough our area and returning highs to the 70s and lower 80s.\n\n&&\n\n.AVIATION /00Z THURSDAY THROUGH MONDAY/...\nThrough 00Z Friday...VFR conditions currently prevail across all\nterminals this evening. A few stray showers continue to linger \nthis evening, primarily over northeastern Vermont but little to \nno impact is expected. Wildfire smoke continues to impact the \nregion, with some reductions in visibility possible, however \ngiven low confidence and uncertainty haze has been left out of \nthe forecast for now. Smoke, last night's rain, and winds aloft \ncould also affect fog formation tonight one way or the other. At\nthe moment, confidence is too low to include fog, but it is \npossible at the favored locations. Breezy west/northwest winds \nwill trend light and variable overnight, with KRUT developing \nit's typical drainage wind. Winds will once again increasing \nduring the tomorrow, with gusts between 20 to 30 knots expected \nat all terminals. \n\nOutlook...\n\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. Chance SHRA.\nSaturday: Mainly VFR, with local MVFR possible. Definite SHRA,\nChance TSRA.\nSaturday Night: Mainly MVFR, with local IFR possible. Definite\nSHRA, Chance TSRA.\nSunday: MVFR/IFR conditions possible. Chance SHRA, Slight chance\nTSRA.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Air Quality Alert from 6 AM to 11 PM EDT Thursday for VTZ011-\n     019>021.\nNY...Air Quality Alert until midnight EDT Thursday night for \n     NYZ026>031-034-035-087.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Boyd/Kremer\nDISCUSSION...Storm/Boyd\nAVIATION...Kremer\n"
  },
  "lake_forecast": {
   "issued": "2026-07-15T18:42:00+00:00",
@@ -762,10 +762,10 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 77,
-  "water_temp_at": "2026-07-15T19:00:00.000-04:00",
-  "level_ft": 96.26,
-  "level_at": "2026-07-15T19:00:00.000-04:00",
+  "water_temp_f": 76,
+  "water_temp_at": "2026-07-15T21:00:00.000-04:00",
+  "level_ft": 96.24,
+  "level_at": "2026-07-15T21:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -773,7 +773,7 @@
   "aqi": 49,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/15/26 19:00",
+  "observed": "07/15/26 20:00",
   "discussion": "On Thursday, July 16th, smoke from Canadian wildfires is expected to impact Vermont.  Southern Vermont is expected to be Unhealthy for Sensitive Groups and an air quality alert is in place for that area.  Moderate particulate matter from smoke may be present in the remainder of Vermont."
  },
  "sun": {
@@ -808,17 +808,17 @@
     "date": "2026-07-16",
     "high_f": {
      "GFS": 84,
-     "Euro": 81,
+     "Euro": 79,
      "ICON": 78
     },
     "pop_max": {
-     "GFS": 20,
+     "GFS": 21,
      "Euro": 69,
      "ICON": 8
     },
     "precip_in": {
-     "GFS": 0.02,
-     "Euro": 0.06,
+     "GFS": 0.04,
+     "Euro": 0.02,
      "ICON": 0.03
     },
     "high_spread_f": 6
