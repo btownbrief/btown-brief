@@ -1,37 +1,13 @@
 {
-  "updated": "2026-07-16T16:00:39+00:00",
+  "updated": "2026-07-16T19:43:45+00:00",
   "window_hours": 72,
   "mode": "inoreader-only",
   "llm": null,
   "topics": [
     {
-      "id": "foundation-ben-jerry",
-      "label": "Ben & Jerry's Foundation warns of shutdown in 2026",
-      "direction": "hot",
-      "posts": 2,
-      "comments": null,
-      "last_activity": "2026-07-15T19:03:13+00:00",
-      "sources": [
-        {
-          "title": "Ben & Jerry's Foundation warns of shutdown in 2026",
-          "url": "https://www.reddit.com/r/vermont/comments/1uxel96/ben_jerrys_foundation_warns_of_shutdown_in_2026/",
-          "sub": "r/vermont",
-          "when": "2026-07-15T19:03:13+00:00",
-          "comments": null
-        },
-        {
-          "title": "Today, Magnum ordered the Ben & Jerry's Foundation out of its own corporate office.",
-          "url": "https://www.reddit.com/r/vermont/comments/1uxd2wx/today_magnum_ordered_the_ben_jerrys_foundation/",
-          "sub": "r/vermont",
-          "when": "2026-07-15T19:03:13+00:00",
-          "comments": null
-        }
-      ]
-    },
-    {
       "id": "smoke-wildfire-breathe",
       "label": "US Wildfire Smoke Map",
-      "direction": "hot",
+      "direction": "rising",
       "posts": 2,
       "comments": null,
       "last_activity": "2026-07-16T01:02:50+00:00",
@@ -48,30 +24,6 @@
           "url": "https://www.reddit.com/r/burlington/comments/1ux9ust/is_there_expected_to_still_be_wildfire_smoke_in/",
           "sub": "r/burlington",
           "when": "2026-07-15T17:02:19+00:00",
-          "comments": null
-        }
-      ]
-    },
-    {
-      "id": "comments-link-submitted",
-      "label": "soundscapes of our city 🥰",
-      "direction": "rising",
-      "posts": 2,
-      "comments": null,
-      "last_activity": "2026-07-15T17:02:19+00:00",
-      "sources": [
-        {
-          "title": "soundscapes of our city 🥰",
-          "url": "https://www.reddit.com/r/burlington/comments/1ux7ndg/soundscapes_of_our_city/",
-          "sub": "r/burlington",
-          "when": "2026-07-15T17:02:19+00:00",
-          "comments": null
-        },
-        {
-          "title": "Just the tip.",
-          "url": "https://www.reddit.com/r/vermont/comments/1uwjrio/just_the_tip/",
-          "sub": "r/vermont",
-          "when": "2026-07-14T22:02:51+00:00",
           "comments": null
         }
       ]
@@ -111,18 +63,18 @@
       ]
     },
     {
-      "id": "like-something-50cc",
-      "label": "Anybody have like a 50cc scooter they are looking to get rid of?",
+      "id": "cheap-food-engagement",
+      "label": "Best cheap food in Burlington",
       "direction": "rising",
       "posts": 1,
       "comments": null,
-      "last_activity": "2026-07-15T19:03:13+00:00",
+      "last_activity": "2026-07-16T17:01:44+00:00",
       "sources": [
         {
-          "title": "Anybody have like a 50cc scooter they are looking to get rid of?",
-          "url": "https://www.reddit.com/r/vermont/comments/1uxb07m/anybody_have_like_a_50cc_scooter_they_are_looking/",
-          "sub": "r/vermont",
-          "when": "2026-07-15T19:03:13+00:00",
+          "title": "Best cheap food in Burlington",
+          "url": "https://www.reddit.com/r/burlington/comments/1uy7isk/best_cheap_food_in_burlington/",
+          "sub": "r/burlington",
+          "when": "2026-07-16T17:01:44+00:00",
           "comments": null
         }
       ]
@@ -157,6 +109,40 @@
           "url": "https://www.reddit.com/r/burlington/comments/1uxjcx7/cross_country_moving_pod/",
           "sub": "r/burlington",
           "when": "2026-07-15T23:02:14+00:00",
+          "comments": null
+        }
+      ]
+    },
+    {
+      "id": "gondola-ride-also",
+      "label": "Gondola ride",
+      "direction": "rising",
+      "posts": 1,
+      "comments": null,
+      "last_activity": "2026-07-16T01:02:50+00:00",
+      "sources": [
+        {
+          "title": "Gondola ride",
+          "url": "https://www.reddit.com/r/vermont/comments/1uxnb0z/gondola_ride/",
+          "sub": "r/vermont",
+          "when": "2026-07-16T01:02:50+00:00",
+          "comments": null
+        }
+      ]
+    },
+    {
+      "id": "hotel-champlain-front",
+      "label": "Hotel Champlain",
+      "direction": "rising",
+      "posts": 1,
+      "comments": null,
+      "last_activity": "2026-07-16T14:02:42+00:00",
+      "sources": [
+        {
+          "title": "Hotel Champlain",
+          "url": "https://www.reddit.com/r/burlington/comments/1uy1bnv/hotel_champlain/",
+          "sub": "r/burlington",
+          "when": "2026-07-16T14:02:42+00:00",
           "comments": null
         }
       ]
@@ -268,9 +254,9 @@
     }
   ],
   "stats": {
-    "posts_scanned": 131,
+    "posts_scanned": 128,
     "per_source": {
-      "r/burlington": 62,
+      "r/burlington": 59,
       "r/vermont": 69
     }
   }
