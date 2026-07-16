@@ -1,20 +1,20 @@
 {
- "generated": "2026-07-16T07:20:49-04:00",
+ "generated": "2026-07-16T17:44:24-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 33,
-   "seconds": 5.9
+   "seconds": 6.4
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 46,
-   "seconds": 2.7
+   "count": 48,
+   "seconds": 3.2
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 48,
-   "seconds": 2.5
+   "count": 56,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 230,
-   "seconds": 76.8
+   "seconds": 77.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 16,
-   "seconds": 2.8
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,13 +63,13 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 750,
-   "seconds": 38.7
+   "count": 749,
+   "seconds": 40.8
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 59,
-   "seconds": 92.0
+   "seconds": 167.2
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 660,
-   "seconds": 68.4
+   "count": 614,
+   "seconds": 68.5
   },
   "meetup": {
    "label": "Meetup",
    "count": 69,
-   "seconds": 136.9
+   "seconds": 147.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 16,
-   "seconds": 16.7
+   "seconds": 16.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 77,
-   "seconds": 4.0
+   "count": 78,
+   "seconds": 7.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 48,
-   "seconds": 27.1
+   "seconds": 27.3
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,30 +113,52 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 164,
-   "seconds": 12.4
+   "count": 165,
+   "seconds": 8.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 133,
+   "count": 134,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 51,
-   "seconds": 71.8
+   "seconds": 68.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 32,
-   "seconds": 0.2
+   "seconds": 0.1
   }
  },
- "gathered": 2881,
- "afterDedup": 1432,
- "duplicatesMerged": 1449,
- "final": 2612,
+ "gathered": 2847,
+ "afterDedup": 1406,
+ "duplicatesMerged": 1441,
+ "final": 2622,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-13"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-08-13"
+  },
   {
    "kept": {
     "title": "Hot Dog & A Can Thursdays",
@@ -427,17 +449,6 @@
     "loveburlington"
    ],
    "date": "2026-08-17"
-  },
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-08-18"
   },
   {
    "kept": {
@@ -1404,6 +1415,17 @@
   },
   {
    "kept": {
+    "title": "First Day of Classes",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-08-31"
+  },
+  {
+   "kept": {
     "title": "Week of Welcome",
     "source": "uvm"
    },
@@ -1456,17 +1478,6 @@
     "loveburlington"
    ],
    "date": "2026-08-31"
-  },
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-09-01"
   },
   {
    "kept": {
@@ -1659,7 +1670,7 @@
   },
   {
    "kept": {
-    "title": "2026 UVM Part-Time Jobs Fair",
+    "title": "Part-Time Jobs Fair",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2002,17 +2013,6 @@
     "loveburlington"
    ],
    "date": "2026-09-07"
-  },
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-09-08"
   },
   {
    "kept": {
@@ -2419,6 +2419,14 @@
  ],
  "changes": [
   {
+   "id": "5945d359dfe7",
+   "title": "\"Weird Al\" Yankovic",
+   "date": "2026-07-24",
+   "change": "time",
+   "was": "2026-07-24T19:30:00-04:00",
+   "now": "2026-07-24T18:00:00-04:00"
+  },
+  {
    "id": "3726ababc682",
    "title": "Bay & Brisket Trivia Thursday",
    "date": "2026-07-16",
@@ -2464,8 +2472,7 @@
    "id": "db03c2ed4e71",
    "title": "Rose Asteroid",
    "date": "2026-07-17",
-   "change": "missing",
-   "lastSeen": "2026-07-13T08:21:43-04:00"
+   "change": "dropped"
   },
   {
    "id": "5b64cd247290",
@@ -2480,6 +2487,41 @@
    "date": "2026-07-19",
    "change": "missing",
    "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "a375333818cf",
+   "title": "Venetian Karaoke",
+   "date": "2026-07-19",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "c8ede9d02bd9",
+   "title": "Burlington Electric Department Office Hours",
+   "date": "2026-07-20",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "fe4bdba09609",
+   "title": "Sing Along with Linda Bassick at FFL",
+   "date": "2026-07-21",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "1204acf77e0d",
+   "title": "ELL Classes: English for Beginners and Intermediate Students",
+   "date": "2026-07-22",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "0513caf76bb8-1900",
+   "title": "TRIVIA NIGHT",
+   "date": "2026-07-22",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
   },
   {
    "id": "c0d3bee74895",
@@ -2517,18 +2559,58 @@
    "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
+   "id": "75166e78a793",
+   "title": "Open Studio",
+   "date": "2026-07-26",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "d018d09d4f1f",
+   "title": "Venetian Karaoke",
+   "date": "2026-07-26",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "d1534f66e638",
+   "title": "Burlington Electric Department Office Hours",
+   "date": "2026-07-27",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "f842e3ec3aff",
+   "title": "ELL Classes: English for Beginners and Intermediate Students",
+   "date": "2026-07-29",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "54dd172f512d-1900",
+   "title": "TRIVIA NIGHT",
+   "date": "2026-07-29",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
    "id": "de0b0ce9eab3",
    "title": "Family PechaKucha",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-13T08:21:43-04:00"
+   "change": "dropped"
   },
   {
    "id": "0ec42b35c76f",
    "title": "Dungeons & Dinos",
    "date": "2026-08-02",
+   "change": "dropped"
+  },
+  {
+   "id": "5c1436a17307",
+   "title": "Venetian Karaoke",
+   "date": "2026-08-02",
    "change": "missing",
-   "lastSeen": "2026-07-13T08:21:43-04:00"
+   "lastSeen": "2026-07-16T07:20:49-04:00"
   },
   {
    "id": "4863e13fe712",
@@ -2536,6 +2618,34 @@
    "date": "2026-08-03",
    "change": "missing",
    "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "f01da97388a1",
+   "title": "Burlington Electric Department Office Hours",
+   "date": "2026-08-03",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "c19d2ef3853d",
+   "title": "ELL Classes: English for Beginners and Intermediate Students",
+   "date": "2026-08-05",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "f717a0667568-1900",
+   "title": "TRIVIA NIGHT",
+   "date": "2026-08-05",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "f71f68be3fa5",
+   "title": "live laugh lava: a comedy open mic",
+   "date": "2026-08-06",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
   },
   {
    "id": "74daa45ec2e6",
@@ -2548,15 +2658,111 @@
    "id": "1a3ebc4a3d1d",
    "title": "BTown Coffee Club",
    "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-07-13T17:34:21-04:00"
+   "change": "dropped"
   },
   {
    "id": "b9279f1d8683",
    "title": "Kites in the Park 2026",
    "date": "2026-08-08",
+   "change": "dropped"
+  },
+  {
+   "id": "12817856e815",
+   "title": "Venetian Karaoke",
+   "date": "2026-08-09",
    "change": "missing",
-   "lastSeen": "2026-07-13T08:21:43-04:00"
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "932d27f94b44",
+   "title": "Burlington Electric Department Office Hours",
+   "date": "2026-08-10",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "2d20ad60a923",
+   "title": "ELL Classes: English for Beginners and Intermediate Students",
+   "date": "2026-08-12",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "6ee3982f2afe-1900",
+   "title": "TRIVIA NIGHT",
+   "date": "2026-08-12",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "5b11ab9e88c9",
+   "title": "Venetian Karaoke",
+   "date": "2026-08-16",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "c5607ba4433f",
+   "title": "Burlington Electric Department Office Hours",
+   "date": "2026-08-17",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "c915df9917f0",
+   "title": "ELL Classes: English for Beginners and Intermediate Students",
+   "date": "2026-08-19",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "cbc595f36c13-1900",
+   "title": "TRIVIA NIGHT",
+   "date": "2026-08-19",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "e93481c5a2ff",
+   "title": "Venetian Karaoke",
+   "date": "2026-08-23",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "f7e5cca1fde6",
+   "title": "Burlington Electric Department Office Hours",
+   "date": "2026-08-24",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "d6b1d6f3b15a",
+   "title": "Sing Along with Linda Bassick at FFL",
+   "date": "2026-08-25",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "f6b9ceb748e2",
+   "title": "Open Studio",
+   "date": "2026-08-26",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "7b89a2bb5148",
+   "title": "ELL Classes: English for Beginners and Intermediate Students",
+   "date": "2026-08-26",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "b3bdd2dfbbc2-1900",
+   "title": "TRIVIA NIGHT",
+   "date": "2026-08-26",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
   },
   {
    "id": "5766b8ee536f",
@@ -2573,6 +2779,48 @@
    "lastSeen": "2026-07-14T07:11:12-04:00"
   },
   {
+   "id": "7517d91c9f99",
+   "title": "Venetian Karaoke",
+   "date": "2026-08-30",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "13b10e153164",
+   "title": "Burlington Electric Department Office Hours",
+   "date": "2026-08-31",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "325ec952fcb6",
+   "title": "ELL Classes: English for Beginners and Intermediate Students",
+   "date": "2026-09-02",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "9799cae39b5e-1900",
+   "title": "TRIVIA NIGHT",
+   "date": "2026-09-02",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "b28e450f2cfb",
+   "title": "2026 UVM Part-Time Jobs Fair",
+   "date": "2026-09-03",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "277554821582",
+   "title": "live laugh lava: a comedy open mic",
+   "date": "2026-09-03",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
    "id": "5454ce0c3d94",
    "title": "Soulja Boy & Bow Wow & Fat Joe",
    "date": "2026-09-05",
@@ -2585,6 +2833,48 @@
    "date": "2026-09-06",
    "change": "missing",
    "lastSeen": "2026-07-14T07:11:12-04:00"
+  },
+  {
+   "id": "37405bc69bd5",
+   "title": "Venetian Karaoke",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "375bd86e590d",
+   "title": "Burlington Electric Department Office Hours",
+   "date": "2026-09-07",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "daf52a979f2a",
+   "title": "ELL Classes: English for Beginners and Intermediate Students",
+   "date": "2026-09-09",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "b2083969c57a-1900",
+   "title": "TRIVIA NIGHT",
+   "date": "2026-09-09",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "440f93adddb3",
+   "title": "Venetian Karaoke",
+   "date": "2026-09-13",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
+  },
+  {
+   "id": "3460e17593df",
+   "title": "Burlington Electric Department Office Hours",
+   "date": "2026-09-14",
+   "change": "missing",
+   "lastSeen": "2026-07-16T07:20:49-04:00"
   }
  ]
 }
