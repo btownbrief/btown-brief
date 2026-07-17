@@ -1,0 +1,28 @@
+{
+  "generated": "2026-07-17",
+  "status": "skeleton",
+  "note": "SAMPLE DATA ONLY. The real list merges the 2023 + 2025 'Best of r/burlington' community lists plus ongoing collection (via Inoreader streams — never direct Reddit scraping) and r/GoodBurlington posts. Replace when the Lane 3 research brief and merged dataset land.",
+  "categories": [
+    {
+      "id": "eats",
+      "title": "Food & drink the subreddit swears by",
+      "items": [
+        { "name": "Sample entry — best creemee", "note": "This is placeholder shape, not a real result. Fields: name, note, mentions (how often it comes up), reddit_url (a representative thread).", "mentions": 0, "reddit_url": "https://www.reddit.com/r/burlington/", "sample": true }
+      ]
+    },
+    {
+      "id": "questions",
+      "title": "The questions Burlington keeps asking",
+      "items": [
+        { "name": "Sample entry — 'just moved here, what do I need to know?'", "note": "Placeholder. The real version links the canonical answer threads.", "mentions": 0, "reddit_url": "https://www.reddit.com/r/burlington/", "sample": true }
+      ]
+    },
+    {
+      "id": "good",
+      "title": "From r/GoodBurlington",
+      "items": [
+        { "name": "Sample entry — a good deed that made the front page", "note": "Placeholder. Fed from the r/GoodBurlington Inoreader stream once wired.", "mentions": 0, "reddit_url": "https://www.reddit.com/r/GoodBurlington/", "sample": true }
+      ]
+    }
+  ]
+}
