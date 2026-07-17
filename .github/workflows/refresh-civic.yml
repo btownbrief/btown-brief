@@ -1,0 +1,34 @@
+name: Refresh civic meetings
+
+on:
+  schedule:
+    - cron: '10 11 * * *'   # Daily; agendas typically post 24–48 hours ahead
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-civic
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Refresh civic meetings
+        run: python3 scripts/refresh_civic.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/civic.json
+          if git diff --cached --quiet; then
+            echo "No civic meeting changes."
+          else
+            git commit -m "Auto-refresh civic meetings"
+            git push || (git pull --rebase && git push)
+          fi
