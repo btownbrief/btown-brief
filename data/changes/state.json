@@ -1,16 +1,6 @@
 {
  "nws-weather": {
-  "alerts": [
-   {
-    "id": "urn:oid:2.49.0.1.840.0.c267c7d9f3f542159e834303d4ec1da796c37a8d.002.1",
-    "event": "Air Quality Alert",
-    "headline": "Air Quality Alert issued July 16 at 8:29AM EDT by NWS Burlington VT",
-    "severity": "Unknown",
-    "onset": "2026-07-16T08:29:00-04:00",
-    "ends": "2026-07-17T08:30:00-04:00",
-    "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
-   }
-  ],
+  "alerts": [],
   "forecast_flag": {
    "day": "2026-07-16",
    "text": "This Afternoon: A chance of showers and thunderstorms before 5pm"
@@ -21,12 +11,12 @@
    "Blanchard Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-07-16T18:29:00+00:00"
+    "resultTime": "2026-07-17T12:01:00+00:00"
    },
    "Blanchard Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-07-16T18:29:00+00:00"
+    "resultTime": "2026-07-17T12:02:00+00:00"
    },
    "Blodgett Water Access Point": {
     "status": "open",
@@ -36,22 +26,22 @@
    "Leddy Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-07-16T19:15:00+00:00"
+    "resultTime": "2026-07-17T11:59:00+00:00"
    },
    "Leddy Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-07-16T19:14:00+00:00"
+    "resultTime": "2026-07-17T12:00:00+00:00"
    },
    "North Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-07-16T18:55:00+00:00"
+    "resultTime": "2026-07-17T12:00:00+00:00"
    },
    "North Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-07-16T18:54:00+00:00"
+    "resultTime": "2026-07-17T12:01:00+00:00"
    },
    "North Shore Natural Area": {
     "status": "open",
@@ -61,12 +51,12 @@
    "Oakledge Cove": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-07-16T13:39:00+00:00"
+    "resultTime": "2026-07-17T12:02:00+00:00"
    },
    "Texaco Beach": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-07-16T18:51:00+00:00"
+    "resultTime": "2026-07-17T12:01:00+00:00"
    }
   }
  },
@@ -876,6 +866,13 @@
    "vermont-public": {
     "items": [
      {
+      "id": "https://www.vermontpublic.org/show/vermont-edition/2026-07-17/vermonts-prisons-not-as-staffed-as-we-want-to-be-says-corrections-commissioner",
+      "title": "Prisons not 'as staffed as we want to be,' says Vermont corrections commissioner",
+      "link": "https://www.vermontpublic.org/show/vermont-edition/2026-07-17/vermonts-prisons-not-as-staffed-as-we-want-to-be-says-corrections-commissioner",
+      "ts": "2026-07-17T12:24:04+00:00",
+      "summary": "The average vacancy rate for security staff hovers around 20 percent."
+     },
+     {
       "id": "https://www.vermontpublic.org/local-news/2026-07-17/musician-mikahely-shares-traditional-malagasy-rhythms",
       "title": "Musician Mikahely shares traditional Malagasy rhythms",
       "link": "https://www.vermontpublic.org/local-news/2026-07-17/musician-mikahely-shares-traditional-malagasy-rhythms",
@@ -951,18 +948,32 @@
       "link": "https://www.vermontpublic.org/local-news/2026-07-14/law-fire-chiefs-forest-fire-wardens",
       "ts": "2026-07-14T20:56:32+00:00",
       "summary": "A new law aimed at modernizing Vermont's wildland fire response is inspiring varied reactions from rural fire chiefs."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-07-14/downtown-rutlands-center-street-makeover",
-      "title": "Downtown Rutland's Center Street is set to get a makeover",
-      "link": "https://www.vermontpublic.org/local-news/2026-07-14/downtown-rutlands-center-street-makeover",
-      "ts": "2026-07-14T20:10:37+00:00",
-      "summary": "The city plans to redesign downtown Rutland’s Center Street. Plans include a curved one-way traffic pattern, larger pedestrian areas and curbless streetscaping."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "544HNKHZKJAGTHUBBCDMGQZ4HI",
+      "title": "Beer here! Starting Friday night in Burlington",
+      "link": "https://www.wcax.com/2026/07/17/beer-here-starting-friday-night-burlington/",
+      "ts": "2026-07-17T12:48:09+00:00",
+      "summary": "The Vermont Brewers Festival returns Friday night for its 33rd year"
+     },
+     {
+      "id": "MBAA2MTDWRHVHLF7L7BTCJTAZI",
+      "title": "Teen missing from Salisbury area found safe",
+      "link": "https://www.wcax.com/2026/07/17/teen-missing-salisbury-area-found-safe/",
+      "ts": "2026-07-17T11:59:36+00:00",
+      "summary": "A 16-year-old had been reported missing in Salisbury"
+     },
+     {
+      "id": "HX5TG66ZSJEPHA3FANHTT5ZCCQ",
+      "title": "Vermont man accused of assault with hammer, threatening baby during fight",
+      "link": "https://www.wcax.com/2026/07/17/vermont-man-accused-assault-with-hammer-threatening-baby-during-fight/",
+      "ts": "2026-07-17T11:42:24+00:00",
+      "summary": "A fight at the St. Johnsbury welcome center Thursday night resulted in two arrests including one accused of threatening a baby with a hammer and hitting someone in the head"
+     },
      {
       "id": "2ADRO3V4OBB55GKSC26MTEPXZA",
       "title": "Flood safety signs posted at NH recreation sites",
@@ -976,13 +987,6 @@
       "link": "https://www.wcax.com/2026/07/17/tanker-truck-catches-fire-interstate-89/",
       "ts": "2026-07-17T10:39:50+00:00",
       "summary": "A small tanker truck fire closed off a portion of Interstate 89 South in Colchester Friday morning"
-     },
-     {
-      "id": "MBAA2MTDWRHVHLF7L7BTCJTAZI",
-      "title": "Teen missing from Salisbury area",
-      "link": "https://www.wcax.com/2026/07/17/teen-missing-salisbury-area/",
-      "ts": "2026-07-17T10:07:51+00:00",
-      "summary": "A 16-year-old has been reported missing in Salisbury"
      },
      {
       "id": "GGSZHXPAZJHN5F7VRZI6EVUDDA",
@@ -1298,25 +1302,60 @@
       "link": "https://www.wcax.com/2026/07/14/3-killed-small-plane-crash-northern-new-york/",
       "ts": "2026-07-15T16:17:05+00:00",
       "summary": "Questions remain over what caused a fatal plane crash in the Adirondacks late Monday night."
-     },
-     {
-      "id": "6IXXORJACRAFZFLRVOJEBLUQAY",
-      "title": "You Can Quote Me: July 12, 2026",
-      "link": "https://www.wcax.com/2026/07/15/you-can-quote-me-july-12-2026/",
-      "ts": "2026-07-15T15:57:28+00:00",
-      "summary": "On this \"You Can Quote Me,\" Vermont's commerce secretary steps down, a divide in the Democratic Party and the Olympics gets rid of the Nordic combined."
-     },
-     {
-      "id": "WZUT6UXPBREA7B37MAWNQF272U",
-      "title": "Storm damage reports from across the region",
-      "link": "https://www.wcax.com/2026/07/15/tuesday-nights-storm-damage-reports/",
-      "ts": "2026-07-15T11:30:00+00:00",
-      "summary": "Some of us may be waking up to downed or uprooted trees and downed power lines early Wednesday morning."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73169319",
+      "title": "Oscar winner Brenda Fricker, known for ‘My Left Foot’ and ‘Home Alone 2,’ dead at 81",
+      "link": "https://www.mynbc5.com/article/brenda-fricker-pigeon-lady-home-alone-dead-81/73169319",
+      "ts": "2026-07-17T13:57:00+00:00",
+      "summary": "Oscar-winning actress Brenda Fricker, known for her roles in \"My Left Foot\" and \"Home Alone 2,\" has died."
+     },
+     {
+      "id": "72795149",
+      "title": "GlobalFoundries and ECHO announce new partnership",
+      "link": "https://www.mynbc5.com/article/globalfoundries-echo-stem-partnership/72795149",
+      "ts": "2026-07-17T13:50:00+00:00",
+      "summary": "The two companies are collaborating to strengthen STEM outreach programs and extend STEM education to rural communities across the state."
+     },
+     {
+      "id": "73165847",
+      "title": "Tanker fire closes portion of Interstate in Chittenden County",
+      "link": "https://www.mynbc5.com/article/tanker-fire-closes-interstate-colchester/73165847",
+      "ts": "2026-07-17T13:48:00+00:00",
+      "summary": "Both southbound lanes of Interstate 89 were obstructed early Friday morning after an oil tanker caught fire between Milton and Colchester."
+     },
+     {
+      "id": "72830001",
+      "title": "Family rallies behind local Vermont Green soccer standout",
+      "link": "https://www.mynbc5.com/article/waterbury-louisa-thomsen-uslw-national-championship/72830001",
+      "ts": "2026-07-17T13:42:00+00:00",
+      "summary": "Local star's family shares journey as Thomsen prepares for USL W National Championship."
+     },
+     {
+      "id": "72969712",
+      "title": "Vermonters say they won't 'sit back' after latest ICE agent killings",
+      "link": "https://www.mynbc5.com/article/vermonters-protest-shooting-deaths/72969712",
+      "ts": "2026-07-17T13:39:00+00:00",
+      "summary": "Vermonters marched from Burlington City Hall to the federal building on Elmwood Ave. on Thursday to stand up against ICE agents killing immigrants across U.S."
+     },
+     {
+      "id": "71935074",
+      "title": "Body of man recovered following drowning in North Hero",
+      "link": "https://www.mynbc5.com/article/fatal-drowning-north-hero/71935074",
+      "ts": "2026-07-17T13:01:00+00:00",
+      "summary": "The body of a missing swimmer has been recovered in North Hero, according to police."
+     },
+     {
+      "id": "73168864",
+      "title": "Woman gets sick from cyclospora parasite while on honeymoon",
+      "link": "https://www.mynbc5.com/article/woman-gets-sick-from-cyclospora-parasite-while-on-honeymoon/73168864",
+      "ts": "2026-07-17T12:51:00+00:00",
+      "summary": "Woman suffers symptoms of diarrhea-causing parasite cyclospora while on honeymoon: \"Our vows said in sickness and in health, so we're just getting an early start on that\""
+     },
      {
       "id": "73168445",
       "title": "US shortens foreign journalist visas, China warns of reciprocal countermeasures",
@@ -1351,13 +1390,6 @@
       "link": "https://www.mynbc5.com/article/trump-media-truth-psi-high-speed-access/73167705",
       "ts": "2026-07-17T10:26:00+00:00",
       "summary": "President Trump's media company is planning to charge for special high-speed access to Truth Social posts, including possibly his own, affecting national security and financial markets."
-     },
-     {
-      "id": "73165847",
-      "title": "Tanker fire closes portion of Interstate in Chittenden County",
-      "link": "https://www.mynbc5.com/article/tanker-fire-closes-interstate-colchester/73165847",
-      "ts": "2026-07-17T10:12:00+00:00",
-      "summary": "Both southbound lanes of Interstate 89 were obstructed early Friday morning after an oil tanker caught fire between Milton and Colchester."
      },
      {
       "id": "73165800",
@@ -1414,48 +1446,6 @@
       "link": "https://www.mynbc5.com/article/mlb-partnered-league-pitching-prospect-shines-in-saranac-lake-surge-victory/72964770",
       "ts": "2026-07-17T03:40:00+00:00",
       "summary": "Dominic Pucetti strikes out five batters in just over four innings leading to 10-9 Surge win over North Country Thunderbirds"
-     },
-     {
-      "id": "72969712",
-      "title": "Vermonters say they won't 'sit back' after latest ICE agent killings",
-      "link": "https://www.mynbc5.com/article/vermonters-protest-shooting-deaths/72969712",
-      "ts": "2026-07-17T03:15:00+00:00",
-      "summary": "Vermonters marched from Burlington City Hall to the federal building on Elmwood Ave. on Thursday to stand up against ICE agents killing immigrants across U.S."
-     },
-     {
-      "id": "72571535",
-      "title": "Fact check: Trump delivers speech on election security, foreign influence",
-      "link": "https://www.mynbc5.com/article/trump-address-nation-july-16-2026/72571535",
-      "ts": "2026-07-17T02:54:00+00:00",
-      "summary": "President Donald Trump addressed the nation on Thursday night, focusing on election security and foreign influence."
-     },
-     {
-      "id": "72879787",
-      "title": "SpaceX Starship launch aborted on the pad at the last moment",
-      "link": "https://www.mynbc5.com/article/spacex-starship-launch-aborted-on-pad-last-moment/72879787",
-      "ts": "2026-07-17T02:20:00+00:00",
-      "summary": "SpaceX's next Starship test flight is off until at least next week after a last-second abort on the pad. The mega rocket was preparing to blast off Thursday from Texas when some of its engines failed to ignite."
-     },
-     {
-      "id": "72841282",
-      "title": "Iceberg lettuce sold at Taco Bell locations linked to Cyclospora outbreak, sources say",
-      "link": "https://www.mynbc5.com/article/cyclospora-outbreak-taco-bell-taylor-farms-lettuce/72841282",
-      "ts": "2026-07-17T02:19:00+00:00",
-      "summary": "Sources say shredded iceberg lettuce supplied by Taylor Farms and sold at some Taco Bell restaurants has been linked to a multistate outbreak of cyclosporiasis, according to reports."
-     },
-     {
-      "id": "70726831",
-      "title": "What’s in the 'SAVE America Act' and why is it so important to President Trump?",
-      "link": "https://www.mynbc5.com/article/whats-in-the-save-america-act/70726831",
-      "ts": "2026-07-17T02:11:00+00:00",
-      "summary": "The \"SAVE America Act\" was a talking point in President Donald Trump's Thursday primetime address. Here's what it is, what's in it, what Trump wants to add to it and how likely it is to pass."
-     },
-     {
-      "id": "72551882",
-      "title": "Flash floods in Texas leave at least 2 dead in region devastated a year ago",
-      "link": "https://www.mynbc5.com/article/texas-flooding-rainstorms-rescues/72551882",
-      "ts": "2026-07-17T01:49:00+00:00",
-      "summary": "Authorities in Texas have rescued hundreds of stranded drivers and people trapped in homes, and at least two people have died due to catastrophic flooding."
      }
     ]
    },
@@ -1537,6 +1527,38 @@
  },
  "reddit-burlington": {
   "posts": [
+   {
+    "id": "1uz0bxv",
+    "title": "Boycott Ben & Jerry's!",
+    "url": "https://www.reddit.com/r/burlington/comments/1uz0bxv/boycott_ben_jerrys/",
+    "score": null,
+    "comments": null,
+    "created": "2026-07-17T14:04:02+00:00"
+   },
+   {
+    "id": "1uyzlsd",
+    "title": "Music mixing",
+    "url": "https://www.reddit.com/r/burlington/comments/1uyzlsd/music_mixing/",
+    "score": null,
+    "comments": null,
+    "created": "2026-07-17T14:04:02+00:00"
+   },
+   {
+    "id": "1uyz525",
+    "title": "Conress passes to make daylight saving time. Calling it \"Sunshine Protection Act\"",
+    "url": "https://www.reddit.com/r/burlington/comments/1uyz525/conress_passes_to_make_daylight_saving_time/",
+    "score": null,
+    "comments": null,
+    "created": "2026-07-17T14:04:02+00:00"
+   },
+   {
+    "id": "1uyobie",
+    "title": "Honda Odyssey Owners",
+    "url": "https://www.reddit.com/r/burlington/comments/1uyobie/honda_odyssey_owners/",
+    "score": null,
+    "comments": null,
+    "created": "2026-07-17T14:04:02+00:00"
+   },
    {
     "id": "1uymbcb",
     "title": "Ben & Jerry’s Foundation Plans to Shut Down by End of Year",
@@ -1664,38 +1686,6 @@
     "score": null,
     "comments": null,
     "created": "2026-07-16T14:02:42+00:00"
-   },
-   {
-    "id": "1uy08tm",
-    "title": "Jack White - No Phones",
-    "url": "https://www.reddit.com/r/burlington/comments/1uy08tm/jack_white_no_phones/",
-    "score": null,
-    "comments": null,
-    "created": "2026-07-16T14:02:42+00:00"
-   },
-   {
-    "id": "1uxod0p",
-    "title": "How’s that’s stadium deal working out",
-    "url": "https://www.reddit.com/r/burlington/comments/1uxod0p/hows_thats_stadium_deal_working_out/",
-    "score": null,
-    "comments": null,
-    "created": "2026-07-16T02:02:59+00:00"
-   },
-   {
-    "id": "1uxm3nf",
-    "title": "Sheriff Gamelin Transphobia?",
-    "url": "https://www.reddit.com/r/burlington/comments/1uxm3nf/sheriff_gamelin_transphobia/",
-    "score": null,
-    "comments": null,
-    "created": "2026-07-16T02:02:59+00:00"
-   },
-   {
-    "id": "1uxjcx7",
-    "title": "Cross Country Moving Pod",
-    "url": "https://www.reddit.com/r/burlington/comments/1uxjcx7/cross_country_moving_pod/",
-    "score": null,
-    "comments": null,
-    "created": "2026-07-15T23:02:14+00:00"
    }
   ]
  },
