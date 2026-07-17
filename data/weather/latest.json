@@ -1,40 +1,40 @@
 {
- "updated": "2026-07-17T14:17:49+00:00",
+ "updated": "2026-07-17T16:03:18+00:00",
  "sections_updated": {
-  "now": "2026-07-17T14:17:49+00:00",
-  "forecast": "2026-07-17T14:17:49+00:00",
-  "hourly": "2026-07-17T14:17:49+00:00",
-  "alerts": "2026-07-17T14:17:49+00:00",
-  "afd": "2026-07-17T14:17:49+00:00",
-  "lake_forecast": "2026-07-17T14:17:49+00:00",
-  "lake_gage": "2026-07-17T11:58:41+00:00",
-  "air": "2026-07-17T14:17:49+00:00",
-  "sun": "2026-07-17T14:17:49+00:00",
-  "models": "2026-07-17T14:17:49+00:00"
+  "now": "2026-07-17T16:03:18+00:00",
+  "forecast": "2026-07-17T16:03:18+00:00",
+  "hourly": "2026-07-17T16:03:18+00:00",
+  "alerts": "2026-07-17T16:03:18+00:00",
+  "afd": "2026-07-17T16:03:18+00:00",
+  "lake_forecast": "2026-07-17T16:03:18+00:00",
+  "lake_gage": "2026-07-17T16:03:18+00:00",
+  "air": "2026-07-17T16:03:18+00:00",
+  "sun": "2026-07-17T16:03:18+00:00",
+  "models": "2026-07-17T16:03:18+00:00"
  },
  "now": {
-  "observed_at": "2026-07-17T14:00:00+00:00",
+  "observed_at": "2026-07-17T15:35:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 70,
-  "feels_like_f": 70,
-  "humidity": 43,
-  "dewpoint_f": 46,
-  "wind_mph": 9,
+  "temp_f": 73,
+  "feels_like_f": 73,
+  "humidity": null,
+  "dewpoint_f": null,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "NNW"
+  "wind_dir": "NW"
  },
  "forecast": {
   "updated": "2026-07-17T06:15:55+00:00",
   "periods": [
    {
-    "name": "Today",
+    "name": "This Afternoon",
     "is_day": true,
     "temp_f": 81,
     "pop": 0,
-    "wind": "NW 8 mph",
+    "wind": "NW 7 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 81. Northwest wind around 8 mph."
+    "detailed": "Sunny, with a high near 81. Northwest wind around 7 mph."
    },
    {
     "name": "Tonight",
@@ -86,28 +86,6 @@
  "hourly": {
   "updated": "2026-07-17T06:15:55+00:00",
   "hours": [
-   {
-    "t": "2026-07-17T10:00:00-04:00",
-    "temp_f": 67,
-    "feels_f": 67,
-    "pop": 0,
-    "humidity": 54,
-    "wind_mph": 8,
-    "wind_dir": "NW",
-    "sky": 17,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-07-17T11:00:00-04:00",
-    "temp_f": 69,
-    "feels_f": 69,
-    "pop": 0,
-    "humidity": 51,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 13,
-    "short": "Sunny"
-   },
    {
     "t": "2026-07-17T12:00:00-04:00",
     "temp_f": 73,
@@ -481,6 +459,28 @@
     "wind_dir": "SW",
     "sky": 100,
     "short": "Showers And Thunderstorms Likely"
+   },
+   {
+    "t": "2026-07-18T22:00:00-04:00",
+    "temp_f": 72,
+    "feels_f": 72,
+    "pop": 72,
+    "humidity": 87,
+    "wind_mph": 10,
+    "wind_dir": "SW",
+    "sky": 94,
+    "short": "Showers And Thunderstorms Likely"
+   },
+   {
+    "t": "2026-07-18T23:00:00-04:00",
+    "temp_f": 71,
+    "feels_f": 71,
+    "pop": 75,
+    "humidity": 87,
+    "wind_mph": 9,
+    "wind_dir": "SW",
+    "sky": 88,
+    "short": "Rain Showers"
    }
   ]
  },
@@ -736,17 +736,17 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-07-17T07:00:00.000-04:00",
-  "level_ft": 96.17,
-  "level_at": "2026-07-17T07:00:00.000-04:00",
+  "water_temp_at": "2026-07-17T11:00:00.000-04:00",
+  "level_ft": 96.15,
+  "level_at": "2026-07-17T11:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 32,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/17/26 10:00",
+  "observed": "07/17/26 11:00",
   "discussion": "On Friday, July 17th, expect generally good air quality across Vermont, as smoke from wildfires is expected to be blown southward of the state by a cold frontal passage."
  },
  "sun": {
@@ -761,9 +761,9 @@
    {
     "date": "2026-07-17",
     "high_f": {
-     "GFS": 80,
+     "GFS": 79,
      "Euro": 74,
-     "ICON": 77
+     "ICON": 78
     },
     "pop_max": {
      "GFS": 0,
@@ -775,24 +775,24 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 6
+    "high_spread_f": 5
    },
    {
     "date": "2026-07-18",
     "high_f": {
      "GFS": 77,
      "Euro": 81,
-     "ICON": 79
+     "ICON": 80
     },
     "pop_max": {
-     "GFS": 73,
-     "Euro": 80,
-     "ICON": 88
+     "GFS": 49,
+     "Euro": 88,
+     "ICON": 70
     },
     "precip_in": {
      "GFS": 0.44,
      "Euro": 0.24,
-     "ICON": 0.49
+     "ICON": 0.5
     },
     "high_spread_f": 4
    },
@@ -801,19 +801,19 @@
     "high_f": {
      "GFS": 72,
      "Euro": 74,
-     "ICON": 74
+     "ICON": 75
     },
     "pop_max": {
-     "GFS": 73,
-     "Euro": 50,
-     "ICON": 75
+     "GFS": 77,
+     "Euro": 47,
+     "ICON": 13
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.07,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    }
   ]
  }
