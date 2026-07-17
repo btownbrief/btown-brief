@@ -2191,8 +2191,11 @@ img {
    DAYLIGHT ARC (sunrise → sunset countdown)
 ============================================================ */
 .sun-arc {
+  display: block;
   background: linear-gradient(180deg, var(--bg-raised), var(--bg-subtle));
   border-bottom: 1px solid var(--line-soft);
+  text-decoration: none;
+  color: inherit;
 }
 
 .sun-arc-inner {
@@ -2203,53 +2206,57 @@ img {
   grid-template-columns: auto 1fr auto;
   grid-template-areas:
     "rise graphic set"
-    "count count count";
+    "count count count"
+    "cta cta cta";
   align-items: center;
   gap: var(--space-2) var(--space-4);
 }
 
-.sun-arc-graphic { grid-area: graphic; min-width: 0; }
+/* ---- engraved medallion (drawn by js/sun.js) ----
+   Each state class sets the two ink tones + the warm accent;
+   every stroke inside the SVG only ever uses these variables,
+   so themes and states stay in one place. */
+.sunart-medallion { grid-area: graphic; min-width: 0; text-align: center; }
 
-.sun-arc-svg {
-  width: 100%;
-  height: auto;
-  max-height: 104px;
-  display: block;
+.sunart-svg {
+  width: auto;
+  height: 118px;
+  max-width: 100%;
+  display: inline-block;
   overflow: visible;
 }
 
-.sun-horizon {
-  stroke: var(--line);
-  stroke-width: 1;
-  stroke-dasharray: 3 4;
-}
+.sunart-day     { --sunart-ink: #8A4A21; --sunart-ink2: #B06A33; --sunart-warm: #F5B44A; }
+.sunart-sunrise { --sunart-ink: #94502A; --sunart-ink2: #C06B35; --sunart-warm: #FDBE5E; }
+.sunart-sunset  { --sunart-ink: #7C3A45; --sunart-ink2: #A85560; --sunart-warm: #F5876B; }
+.sunart-night   { --sunart-ink: #2E5560; --sunart-ink2: #48727E; --sunart-warm: #9FC5CE; }
 
-.sun-arc-track {
-  fill: none;
-  stroke: var(--line);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  opacity: 0.6;
-}
+[data-theme="dark"] .sunart-day     { --sunart-ink: #F0B96B; --sunart-ink2: #C98F4A; }
+[data-theme="dark"] .sunart-sunrise { --sunart-ink: #F5C27A; --sunart-ink2: #D19353; }
+[data-theme="dark"] .sunart-sunset  { --sunart-ink: #EE9A88; --sunart-ink2: #C77565; }
+[data-theme="dark"] .sunart-night   { --sunart-ink: #A7CBD4; --sunart-ink2: #7FA9B4; --sunart-warm: #C8E2E8; }
 
-.sun-arc-elapsed {
-  fill: none;
-  stroke: url(#sunArcGrad);
-  stroke-width: 3.5;
-  stroke-linecap: round;
-}
+.sunart-disc { fill: var(--sunart-warm); fill-opacity: 0.2; stroke: var(--sunart-ink); stroke-width: 1.6; }
+.sunart-ring { fill: none; stroke: var(--sunart-ink2); stroke-width: 0.7; stroke-dasharray: 2.5 3.5; opacity: 0.9; }
+.sunart-ray  { fill: var(--sunart-warm); fill-opacity: 0.25; stroke: var(--sunart-ink); stroke-width: 1.25; stroke-linejoin: round; }
+.sunart-rayw { fill: none; stroke: var(--sunart-ink2); stroke-width: 1.15; stroke-linecap: round; }
+.sunart-ln   { fill: none; stroke: var(--sunart-ink); stroke-width: 1.5; stroke-linecap: round; }
+.sunart-lnf  { fill: none; stroke: var(--sunart-ink2); stroke-width: 0.95; stroke-linecap: round; }
+.sunart-hor  { fill: none; stroke: var(--sunart-ink2); stroke-width: 1.1; stroke-dasharray: 5 4; }
+.sunart-dot  { fill: var(--sunart-ink2); }
+.sunart-star { fill: var(--sunart-warm); fill-opacity: 0.4; stroke: var(--sunart-ink2); stroke-width: 0.9; stroke-linejoin: round; }
 
-.sun-marker-core {
-  fill: #FDBE5E;
-  stroke: #F2683C;
-  stroke-width: 1.5;
+.sun-tracker-cta {
+  grid-area: cta;
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--teal);
+  padding-bottom: var(--space-1);
 }
-
-.sun-arc.is-night .sun-marker-core {
-  fill: var(--ink-4);
-  stroke: var(--ink-3);
-}
-.sun-arc.is-night .sun-marker-glow { opacity: 0; }
+.sun-arc:hover .sun-tracker-cta,
+.sun-arc:focus-visible .sun-tracker-cta { text-decoration: underline; }
+.sun-arc:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
 
 .sun-end {
   display: flex;
