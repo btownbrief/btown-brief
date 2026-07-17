@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burlington Contractors &amp; Trades — Burlington Brief</title>
+  <meta name="description" content="Licensed electricians, plumbers, and gas installers around Burlington, VT — straight from the state's licensing rolls, with a vetted directory on the way.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Btown Brief">
+  <meta property="og:title" content="Burlington Contractors &amp; Trades">
+  <meta property="og:description" content="Licensed electricians, plumbers, and gas installers around Burlington, VT — straight from the state's licensing rolls.">
+  <meta property="og:url" content="https://guide.btownbrief.com/contractors.html">
+  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* page-local: compact license rows under the shared dir-card look */
+    .con-search-wrap { margin: 0 0 var(--space-5); }
+    .con-search {
+      width: 100%; max-width: 420px; padding: 10px 14px;
+      border: 1px solid var(--line); border-radius: 10px;
+      background: var(--bg-raised); color: var(--ink);
+      font: inherit; font-size: var(--text-base);
+    }
+    .con-search:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
+    .con-trade { margin-bottom: var(--space-6); }
+    .con-count { color: var(--ink-3); font-weight: 400; font-size: var(--text-sm); }
+    .con-rows { border: 1px solid var(--line-soft); border-radius: 12px; overflow: hidden; }
+    .con-row {
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: var(--space-3);
+      padding: 9px 14px; font-size: var(--text-sm);
+      border-bottom: 1px solid var(--line-soft); background: var(--bg-raised);
+    }
+    .con-row:last-child { border-bottom: none; }
+    .con-row-name { font-weight: 600; color: var(--ink); }
+    .con-row-city { color: var(--ink-2); }
+    .con-row-lic { color: var(--ink-3); text-align: right; font-variant-numeric: tabular-nums; }
+    .con-more {
+      margin-top: var(--space-2); padding: 8px 16px; border: 1px solid var(--line);
+      border-radius: 99px; background: var(--bg-raised); color: var(--teal);
+      font: 600 var(--text-sm) var(--font-body); cursor: pointer;
+    }
+    .con-updated { color: var(--ink-3); font-size: var(--text-xs); margin-top: var(--space-5); }
+    @media (max-width: 560px) {
+      .con-row { grid-template-columns: 1.4fr 1fr; }
+      .con-row-lic { display: none; }
+    }
+  </style>
+  <script>
+    /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
+       refreshes the cache; this only avoids the white flash after dark. */
+    (function () {
+      try {
+        var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
+        if (!c) return;
+        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
+          year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+        if (c.day !== today) return;
+        var n = Date.now();
+        document.documentElement.setAttribute('data-theme',
+          (n >= c.rise && n < c.set) ? 'light' : 'dark');
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body data-standalone>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <span class="logo-sep"></span>
+        <span class="logo-title">Burlington Brief</span>
+      </div>
+      <nav class="mode-nav" aria-label="Community pages">
+        <a class="mode-btn" href="things-to-do.html">Things To Do</a>
+        <a class="mode-btn" href="housing.html">Housing</a>
+        <a class="mode-btn" href="jobs.html">Jobs</a>
+      </nav>
+    </div>
+  </header>
+
+  <a class="newsletter-bar" href="https://btownbrief.com" target="_blank" rel="noopener">
+    <div class="newsletter-bar-inner">
+      <div class="newsletter-head">
+        <span class="newsletter-label">The Burlington Brief</span>
+        <span class="newsletter-issue">Free Burlington news &amp; events in your inbox</span>
+      </div>
+      <span class="newsletter-cta">Sign up free →</span>
+    </div>
+  </a>
+
+  <main class="page-wrap">
+    <div class="page-hero">
+      <span class="page-hero-kicker">Contractors &amp; Trades</span>
+      <h1>Who's actually licensed around Burlington</h1>
+      <p class="page-hero-sub">The hardest part of hiring a tradesperson is the first filter: are they real, licensed, and current? This list is that filter — master electricians, master plumbers, and licensed gas installers in the core Chittenden County towns, pulled straight from the State of Vermont's licensing rolls.</p>
+    </div>
+
+    <div class="note-card">
+      <strong>This is the backbone, not the finished directory.</strong>
+      A curated layer — businesses grouped by trade, contact links, and review
+      links you can actually check — is being assembled and will land on top of
+      this list. Until then: a name here means a current state license, nothing
+      more. Get quotes, ask for references, and trust your gut.
+    </div>
+
+    <div class="con-search-wrap">
+      <input class="con-search" id="con-search" type="search"
+             placeholder="Search by name or town…" aria-label="Search contractors">
+    </div>
+
+    <div id="con-list">
+      <p class="page-empty">Loading the licensing rolls…</p>
+    </div>
+
+    <p class="con-updated" id="con-updated"></p>
+
+    <div class="note-card">
+      <strong>Are you one of these people?</strong>
+      Email <a href="mailto:BtownBrief@gmail.com?subject=Contractor%20directory%20listing">BtownBrief@gmail.com</a>
+      with your business name, trade, and a link — the curated directory will
+      list businesses, not just license numbers.
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
+      <span class="footer-sep">·</span>
+      <span>License data: State of Vermont DFS (ODbL)</span>
+    </div>
+  </footer>
+
+  <script src="js/community.js"></script>
+  <script src="js/contractors.js"></script>
+  <script src="js/auto-theme.js"></script>
+  <script src="https://play.btownbrief.com/nav.js" defer></script>
+</body>
+</html>
