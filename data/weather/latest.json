@@ -1,58 +1,49 @@
 {
- "updated": "2026-07-18T08:27:42+00:00",
+ "updated": "2026-07-18T10:04:24+00:00",
  "sections_updated": {
-  "now": "2026-07-18T08:27:42+00:00",
-  "forecast": "2026-07-18T08:27:42+00:00",
-  "hourly": "2026-07-18T08:27:42+00:00",
-  "alerts": "2026-07-18T08:27:42+00:00",
-  "afd": "2026-07-18T08:27:42+00:00",
-  "lake_forecast": "2026-07-18T08:27:42+00:00",
-  "lake_gage": "2026-07-18T08:27:42+00:00",
-  "air": "2026-07-18T08:27:42+00:00",
-  "sun": "2026-07-18T08:27:42+00:00",
-  "models": "2026-07-18T08:27:42+00:00"
+  "now": "2026-07-18T10:04:24+00:00",
+  "forecast": "2026-07-18T10:04:24+00:00",
+  "hourly": "2026-07-18T10:04:24+00:00",
+  "alerts": "2026-07-18T10:04:24+00:00",
+  "afd": "2026-07-18T10:04:24+00:00",
+  "lake_forecast": "2026-07-18T10:04:24+00:00",
+  "lake_gage": "2026-07-18T10:04:24+00:00",
+  "air": "2026-07-18T10:04:24+00:00",
+  "sun": "2026-07-18T10:04:24+00:00",
+  "models": "2026-07-18T10:04:24+00:00"
  },
  "now": {
-  "observed_at": "2026-07-18T08:10:00+00:00",
+  "observed_at": "2026-07-18T09:35:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 63,
   "feels_like_f": 63,
   "humidity": 68,
   "dewpoint_f": 52,
-  "wind_mph": 0,
+  "wind_mph": 6,
   "wind_gust_mph": null,
-  "wind_dir": "N"
+  "wind_dir": "SSE"
  },
  "forecast": {
-  "updated": "2026-07-18T06:19:24+00:00",
+  "updated": "2026-07-18T08:40:59+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 58,
-    "pop": 40,
-    "wind": "S 7 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 58. South wind around 7 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
-   },
-   {
-    "name": "Saturday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 81,
     "pop": 63,
     "wind": "S 8 to 17 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely before 1pm, then a chance of showers and thunderstorms between 1pm and 2pm, then smoke and a chance of showers and thunderstorms between 2pm and 5pm, then patchy smoke and showers and thunderstorms likely. Mostly cloudy, with a high near 81. South wind 8 to 17 mph, with gusts as high as 32 mph. Chance of precipitation is 60%. New rainfall amounts between a quarter and half of an inch possible."
+    "detailed": "Rain showers likely before 1pm, then rain showers likely and patchy smoke between 1pm and 2pm, then patchy smoke and showers and thunderstorms likely between 2pm and 4pm, then areas of smoke and a chance of showers and thunderstorms between 4pm and 5pm, then patchy smoke and showers and thunderstorms likely. Mostly cloudy, with a high near 81. South wind 8 to 17 mph, with gusts as high as 32 mph. Chance of precipitation is 60%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
-    "name": "Saturday Night",
+    "name": "Tonight",
     "is_day": false,
     "temp_f": 60,
-    "pop": 68,
+    "pop": 61,
     "wind": "W 9 to 16 mph",
-    "short": "Showers And Thunderstorms Likely",
-    "detailed": "Showers and thunderstorms likely before 7pm, then a chance of showers and thunderstorms between 7pm and 8pm, then showers and thunderstorms likely between 8pm and 2am. Mostly cloudy, with a low around 60. West wind 9 to 16 mph, with gusts as high as 33 mph. Chance of precipitation is 70%. New rainfall amounts between a quarter and half of an inch possible."
+    "short": "Patchy Smoke",
+    "detailed": "Patchy smoke and showers and thunderstorms likely before 7pm, then a chance of showers and thunderstorms between 7pm and 8pm, then showers and thunderstorms likely between 8pm and 2am. Mostly cloudy, with a low around 60. West wind 9 to 16 mph, with gusts as high as 33 mph. Chance of precipitation is 60%. New rainfall amounts between a quarter and half of an inch possible."
    },
    {
     "name": "Sunday",
@@ -80,34 +71,21 @@
     "wind": "S 6 mph",
     "short": "Mostly Sunny",
     "detailed": "Mostly sunny, with a high near 83. South wind around 6 mph."
+   },
+   {
+    "name": "Monday Night",
+    "is_day": false,
+    "temp_f": 63,
+    "pop": 5,
+    "wind": "S 6 to 14 mph",
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a low around 63. South wind 6 to 14 mph."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-07-18T06:19:24+00:00",
+  "updated": "2026-07-18T08:40:59+00:00",
   "hours": [
-   {
-    "t": "2026-07-18T04:00:00-04:00",
-    "temp_f": 61,
-    "feels_f": 61,
-    "pop": 28,
-    "humidity": 67,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 70,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-07-18T05:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 40,
-    "humidity": 69,
-    "wind_mph": 7,
-    "wind_dir": "S",
-    "sky": 60,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-07-18T06:00:00-04:00",
     "temp_f": 62,
@@ -123,12 +101,12 @@
     "t": "2026-07-18T07:00:00-04:00",
     "temp_f": 63,
     "feels_f": 63,
-    "pop": 63,
+    "pop": 46,
     "humidity": 70,
     "wind_mph": 9,
     "wind_dir": "S",
     "sky": 76,
-    "short": "Rain Showers Likely"
+    "short": "Chance Rain Showers"
    },
    {
     "t": "2026-07-18T08:00:00-04:00",
@@ -145,7 +123,7 @@
     "t": "2026-07-18T09:00:00-04:00",
     "temp_f": 69,
     "feels_f": 69,
-    "pop": 25,
+    "pop": 37,
     "humidity": 63,
     "wind_mph": 12,
     "wind_dir": "S",
@@ -156,110 +134,110 @@
     "t": "2026-07-18T10:00:00-04:00",
     "temp_f": 72,
     "feels_f": 72,
-    "pop": 16,
+    "pop": 25,
     "humidity": 59,
     "wind_mph": 13,
     "wind_dir": "S",
     "sky": 53,
-    "short": "Slight Chance Rain Showers"
+    "short": "Chance Rain Showers"
    },
    {
     "t": "2026-07-18T11:00:00-04:00",
     "temp_f": 75,
     "feels_f": 75,
-    "pop": 19,
-    "humidity": 56,
+    "pop": 32,
+    "humidity": 58,
     "wind_mph": 14,
     "wind_dir": "S",
     "sky": 79,
-    "short": "Slight Chance Rain Showers"
+    "short": "Chance Rain Showers"
    },
    {
     "t": "2026-07-18T12:00:00-04:00",
     "temp_f": 77,
     "feels_f": 77,
-    "pop": 31,
+    "pop": 56,
     "humidity": 58,
     "wind_mph": 15,
     "wind_dir": "S",
     "sky": 73,
-    "short": "Chance Rain Showers"
+    "short": "Rain Showers Likely"
    },
    {
     "t": "2026-07-18T13:00:00-04:00",
     "temp_f": 78,
     "feels_f": 78,
-    "pop": 31,
+    "pop": 61,
     "humidity": 60,
     "wind_mph": 15,
     "wind_dir": "S",
     "sky": 73,
-    "short": "Chance Showers And Thunderstorms"
+    "short": "Rain Showers Likely"
    },
    {
     "t": "2026-07-18T14:00:00-04:00",
     "temp_f": 79,
     "feels_f": 79,
-    "pop": 54,
+    "pop": 60,
     "humidity": 60,
     "wind_mph": 16,
     "wind_dir": "S",
-    "sky": 89,
-    "short": "Areas Of Smoke"
+    "sky": 84,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-18T15:00:00-04:00",
     "temp_f": 81,
     "feels_f": 83,
-    "pop": 48,
+    "pop": 46,
     "humidity": 60,
     "wind_mph": 16,
     "wind_dir": "S",
-    "sky": 93,
-    "short": "Smoke"
+    "sky": 83,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-18T16:00:00-04:00",
     "temp_f": 80,
     "feels_f": 83,
-    "pop": 42,
+    "pop": 51,
     "humidity": 67,
     "wind_mph": 17,
     "wind_dir": "S",
-    "sky": 82,
+    "sky": 85,
     "short": "Areas Of Smoke"
    },
    {
     "t": "2026-07-18T17:00:00-04:00",
     "temp_f": 79,
     "feels_f": 79,
-    "pop": 62,
+    "pop": 63,
     "humidity": 72,
     "wind_mph": 16,
     "wind_dir": "S",
-    "sky": 88,
+    "sky": 87,
     "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-18T18:00:00-04:00",
     "temp_f": 79,
     "feels_f": 79,
-    "pop": 68,
+    "pop": 59,
     "humidity": 74,
     "wind_mph": 16,
     "wind_dir": "S",
-    "sky": 89,
-    "short": "Showers And Thunderstorms Likely"
+    "sky": 84,
+    "short": "Patchy Smoke"
    },
    {
     "t": "2026-07-18T19:00:00-04:00",
     "temp_f": 78,
     "feels_f": 78,
-    "pop": 49,
+    "pop": 37,
     "humidity": 76,
     "wind_mph": 14,
     "wind_dir": "S",
-    "sky": 88,
+    "sky": 89,
     "short": "Chance Showers And Thunderstorms"
    },
    {
@@ -480,6 +458,28 @@
     "wind_mph": 14,
     "wind_dir": "NW",
     "sky": 11,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-19T16:00:00-04:00",
+    "temp_f": 75,
+    "feels_f": 75,
+    "pop": 0,
+    "humidity": 45,
+    "wind_mph": 15,
+    "wind_dir": "NW",
+    "sky": 12,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-19T17:00:00-04:00",
+    "temp_f": 77,
+    "feels_f": 77,
+    "pop": 0,
+    "humidity": 40,
+    "wind_mph": 14,
+    "wind_dir": "NW",
+    "sky": 12,
     "short": "Sunny"
    }
   ]
@@ -767,17 +767,17 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-07-18T04:00:00.000-04:00",
+  "water_temp_at": "2026-07-18T05:00:00.000-04:00",
   "level_ft": 96.11,
-  "level_at": "2026-07-18T04:00:00.000-04:00",
+  "level_at": "2026-07-18T05:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 32,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "07/18/26 4:00",
+  "observed": "07/18/26 5:00",
   "discussion": "On Saturday, July 18th, a health alert has been issued statewide across Vermont for Unhealthy for Sensitive Groups (USG) concentrations of fine particulate matter (PM25). Please note that PM25 concentrations may occur in the unhealthy range on an hourly basis for many locations in the state, especially in the late morning through afternoon hours.  Smoke from wildfires is expected to return to the New England region from the smoke plume currently stretching from the Ohio Valley to the mid atlantic region."
  },
  "sun": {
@@ -792,31 +792,31 @@
    {
     "date": "2026-07-18",
     "high_f": {
-     "GFS": 76,
+     "GFS": 77,
      "Euro": 82,
-     "ICON": 76
+     "ICON": 82
     },
     "pop_max": {
-     "GFS": 36,
+     "GFS": 48,
      "Euro": 98,
      "ICON": 90
     },
     "precip_in": {
-     "GFS": 0.14,
+     "GFS": 0.19,
      "Euro": 0.24,
-     "ICON": 0.27
+     "ICON": 0.33
     },
-    "high_spread_f": 6
+    "high_spread_f": 5
    },
    {
     "date": "2026-07-19",
     "high_f": {
      "GFS": 76,
      "Euro": 75,
-     "ICON": 75
+     "ICON": 76
     },
     "pop_max": {
-     "GFS": 29,
+     "GFS": 28,
      "Euro": 62,
      "ICON": 10
     },
