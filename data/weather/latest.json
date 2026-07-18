@@ -1,28 +1,28 @@
 {
- "updated": "2026-07-17T23:36:48+00:00",
+ "updated": "2026-07-18T01:07:05+00:00",
  "sections_updated": {
-  "now": "2026-07-17T23:36:48+00:00",
-  "forecast": "2026-07-17T23:36:48+00:00",
-  "hourly": "2026-07-17T23:36:48+00:00",
-  "alerts": "2026-07-17T23:36:48+00:00",
-  "afd": "2026-07-17T23:36:48+00:00",
-  "lake_forecast": "2026-07-17T23:36:48+00:00",
+  "now": "2026-07-18T01:07:05+00:00",
+  "forecast": "2026-07-18T01:07:05+00:00",
+  "hourly": "2026-07-18T01:07:05+00:00",
+  "alerts": "2026-07-18T01:07:05+00:00",
+  "afd": "2026-07-18T01:07:05+00:00",
+  "lake_forecast": "2026-07-18T01:07:05+00:00",
   "lake_gage": "2026-07-17T23:36:48+00:00",
-  "air": "2026-07-17T23:36:48+00:00",
-  "sun": "2026-07-17T23:36:48+00:00",
-  "models": "2026-07-17T23:36:48+00:00"
+  "air": "2026-07-18T01:07:05+00:00",
+  "sun": "2026-07-18T01:07:05+00:00",
+  "models": "2026-07-18T01:07:05+00:00"
  },
  "now": {
-  "observed_at": "2026-07-17T23:20:00+00:00",
+  "observed_at": "2026-07-18T00:50:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 75,
-  "feels_like_f": 74,
-  "humidity": 34,
-  "dewpoint_f": 45,
-  "wind_mph": 6,
+  "description": null,
+  "temp_f": 70,
+  "feels_like_f": 70,
+  "humidity": 46,
+  "dewpoint_f": 48,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "NNE"
+  "wind_dir": "ESE"
  },
  "forecast": {
   "updated": "2026-07-17T18:26:21+00:00",
@@ -86,28 +86,6 @@
  "hourly": {
   "updated": "2026-07-17T18:26:21+00:00",
   "hours": [
-   {
-    "t": "2026-07-17T19:00:00-04:00",
-    "temp_f": 74,
-    "feels_f": 74,
-    "pop": 0,
-    "humidity": 37,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 49,
-    "short": "Partly Cloudy"
-   },
-   {
-    "t": "2026-07-17T20:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
-    "pop": 0,
-    "humidity": 42,
-    "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 56,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-07-17T21:00:00-04:00",
     "temp_f": 69,
@@ -481,6 +459,28 @@
     "wind_dir": "NW",
     "sky": 42,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-07-19T07:00:00-04:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 4,
+    "humidity": 75,
+    "wind_mph": 13,
+    "wind_dir": "NW",
+    "sky": 49,
+    "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-07-19T08:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 2,
+    "humidity": 70,
+    "wind_mph": 14,
+    "wind_dir": "NW",
+    "sky": 40,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -495,14 +495,14 @@
   ]
  },
  "afd": {
-  "issued": "2026-07-17T18:29:00+00:00",
+  "issued": "2026-07-18T00:09:00+00:00",
   "key_messages": [
    "Smoke, showers, and thunderstorms, some strong to severe, expected Saturday afternoon and evening.",
    "Drier weather expected Sunday and Monday.",
    "Frontal passages bring chances for showers and thunderstorms on both Tuesday and Wednesday before high pressure dominates our weather on Thursday and Friday."
   ],
   "what_changed": "As of 228 PM EDT Friday... The potential for severe weather remains in place but is largely conditional as wildfire smoke may limit daytime heating in some locations. Should we have severe weather, gusty winds looks the primary and likely only mode of severe weather given tall/skinny CAPE profiles and strong deep layer shear.",
-  "raw": "\n000\nFXUS61 KBTV 171829\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n229 PM EDT Fri Jul 17 2026\n\n.WHAT HAS CHANGED...\nAs of 228 PM EDT Friday...\n\nThe potential for severe weather remains in place but is largely \nconditional as wildfire smoke may limit daytime heating in some \nlocations. Should we have severe weather, gusty winds looks the \nprimary and likely only mode of severe weather given tall/skinny \nCAPE profiles and strong deep layer shear.\n\n&&\n\n.KEY MESSAGES...\nAs of 228 PM EDT Friday...\n\n1. Smoke, showers, and thunderstorms, some strong to severe, \nexpected Saturday afternoon and evening.\n\n2. Drier weather expected Sunday and Monday.\n\n3. Frontal passages bring chances for showers and thunderstorms \non both Tuesday and Wednesday before high pressure dominates our \nweather on Thursday and Friday.\n\n&&\n\n.DISCUSSION...\nAs of 228 PM EDT Friday...\n\nKEY MESSAGE 1: As winds shift from the north to south Saturday morning, \nwe will see wildfire smoke once again lift north into the North \nCountry. The HRRR and RAP smoke analysis continue to show 50-100 \nmicrograms per cubic meter by Saturday afternoon which will likely \nbegin to degrade air quality. Should this trend continue, the \nissuance of an air quality alert is possible. This smoke will \nbe the wild card in a potential severe weather event across \nnorthern New York and Vermont as the thick smoke cover could \nhave an impact in insolation and limit diurnal heating (as with \nthe previous event on Tuesday/Wednesday). However, models are \nhandling this smoke much better than last time so we can say \nwith decent confidence that multiple strong to severe \nthunderstorms will be possible.\n\nThe environment will be highlight by Strong deep layer shear of 40-\n45 knots and CAPE values in the 500-1000 J/kg range. High PWAT \nvalues of 1.7-1.8 inches will keep thermodynamic profiles moist-\nadiabatic with modest lapse rates which is the key limitation \nto instability Saturday afternoon. Still with deep moisture and \nstrong shear profiles, some storms could contain severe wind \ngusts and have the potential to produce a wet microburst. Hail \nlooks rather unlikely given high freezing levels and limited \nCAPE in the hail growth layer. A tornado can't be ruled out but \nthe low level lapse rates and low level helicity should severely\nlimit that potential. These showers and thunderstorms will exit\nto the east Saturday night.\n\nKEY MESSAGE 2: We will likely see a few lingering showers across \neastern Vermont during daybreak on Sunday but drier air filtering in \nthrough the morning hours should put an end to those quickly. \nClearing skies will accompany these drier conditions which will lead \nto a beautiful Sunday. Dry conditions will persist Sunday and Monday \nwith seasonal temperatures, plenty of sunshine, and light winds.\n\nKEY MESSAGE 3: Upper level low pressure will swing through Ontario on \nMonday night, though models continue to show timing discrepancies, \nand there remains disagreement on how close the surface low pressure \nwill get to the US-Canadian border. We anticipate cloud coverage \nwill increase Monday night, with precipitation likely beginning in \nnorthern New York Tuesday morning and spreading eastward throughout \nthe day as low pressure edges into Quebec and a warm front treks \nacross northern New York and Vermont. Tuesday afternoon, \nthunderstorms are possible as highs reach into the seasonable upper \n70s to mid 80s, with highest instability in the St. Lawrence Valley \nand western Adirondacks paired with widespread modest shear. \nNighttime lows in the 50s to mid 60s are anticipated for the early \nweek. A cold frontal boundary is expected to cross the forecast area \nTuesday night, bringing another round of showers with embedded \nthunderstorms, then deterministic models diverge sharply in \ntheir solutions. Some projections show another frontal boundary \nor an area of low pressure moving through the Northeast on \nWednesday, while other suggest the upper trough becomes \nnegatively tilted. General consensus suggests precipitation is \nlikely outside of shadowed areas on Wednesday with thunderstorms\nagain possible, then precip chances drop Wednesday night into \nThursday under high pressure. We will be monitoring the midweek \nperiod for potential of strong or severe storms and also for \nheavy rainfall. Chances of a half an inch of rainfall within 24 \nhours runs around 50-80%, most likely Tuesday through Wednesday \nas modeled precipitable water values max out 1.50- 2.00 inches \non Tuesday afternoon and evening. Highs for the mid and late \nweek are expected to be around the 70s and lower 80s with lows \nin the upper 40s to lower 60s, though this may depend on how \nexactly the atmospheric pattern shapes up during this period.\n\n&&\n\n.AVIATION /18Z FRIDAY THROUGH WEDNESDAY/...\nThrough 18Z Saturday...VFR conditions are expected to prevail over\nthe next 24 hours. Winds out of the northwest 5-10 knots with\nisolated gusts 15- 20 knots this afternoon are expected to decrease\nthis evening and tonight, becoming light and variable, at times calm\nby 00Z Saturday. Some sites could even see a light south-\nsouthwesterly wind, mostly below 5-10 knots. We anticipate winds\nincrease Saturday morning into the early afternoon out of the south\nand southwest with sustained 5- 15 knots likely, and higher gusts in\nthe afternoon. A low level jet will cross the region starting around\n12Z-14Z, so LLWS is forecast at MSS and SLK for a few hours before\nwinds fully pick up at the surface. Vis restrictions from smoke was\nnot included in the TAF, however, there is the potential for smoke\nto return to the surface early Saturday morning and last through the\nday. At this time, uncertainty on how that will impact visibilities\nis too high to include, but certainly something to monitor.\nThunderstorms and heavy rain are likely Saturday afternoon and\nevening, but this is primarily after 18Z Saturday so was not\nincluded either.\n\nOutlook...\n\nSaturday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nSunday: Mainly VFR, with local MVFR possible. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: Mainly VFR, with areas MVFR possible. Likely SHRA,\nChance TSRA.\nTuesday Night: Mainly MVFR, with areas IFR possible. Definite\nSHRA, Slight chance TSRA.\nWednesday: MVFR/IFR conditions possible. Likely SHRA, Slight\nchance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Clay\nDISCUSSION...Storm/Clay\nAVIATION...Storm\n"
+  "raw": "\n000\nFXUS61 KBTV 180009\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n809 PM EDT Fri Jul 17 2026\n\n.WHAT HAS CHANGED...\nAs of 228 PM EDT Friday...\n\nThe potential for severe weather remains in place but is largely \nconditional as wildfire smoke may limit daytime heating in some \nlocations. Should we have severe weather, gusty winds looks the \nprimary and likely only mode of severe weather given tall/skinny \nCAPE profiles and strong deep layer shear.\n\n&&\n\n.KEY MESSAGES...\nAs of 228 PM EDT Friday...\n\n1. Smoke, showers, and thunderstorms, some strong to severe, \nexpected Saturday afternoon and evening.\n\n2. Drier weather expected Sunday and Monday.\n\n3. Frontal passages bring chances for showers and thunderstorms \non both Tuesday and Wednesday before high pressure dominates our \nweather on Thursday and Friday.\n\n&&\n\n.DISCUSSION...\nAs of 228 PM EDT Friday...\n\nKEY MESSAGE 1: As winds shift from the north to south Saturday morning, \nwe will see wildfire smoke once again lift north into the North \nCountry. The HRRR and RAP smoke analysis continue to show 50-100 \nmicrograms per cubic meter by Saturday afternoon which will likely \nbegin to degrade air quality. Should this trend continue, the \nissuance of an air quality alert is possible. This smoke will \nbe the wild card in a potential severe weather event across \nnorthern New York and Vermont as the thick smoke cover could \nhave an impact in insolation and limit diurnal heating (as with \nthe previous event on Tuesday/Wednesday). However, models are \nhandling this smoke much better than last time so we can say \nwith decent confidence that multiple strong to severe \nthunderstorms will be possible.\n\nThe environment will be highlight by Strong deep layer shear of 40-\n45 knots and CAPE values in the 500-1000 J/kg range. High PWAT \nvalues of 1.7-1.8 inches will keep thermodynamic profiles moist-\nadiabatic with modest lapse rates which is the key limitation \nto instability Saturday afternoon. Still with deep moisture and \nstrong shear profiles, some storms could contain severe wind \ngusts and have the potential to produce a wet microburst. Hail \nlooks rather unlikely given high freezing levels and limited \nCAPE in the hail growth layer. A tornado can't be ruled out but \nthe low level lapse rates and low level helicity should severely\nlimit that potential. These showers and thunderstorms will exit\nto the east Saturday night.\n\nKEY MESSAGE 2: We will likely see a few lingering showers across \neastern Vermont during daybreak on Sunday but drier air filtering in \nthrough the morning hours should put an end to those quickly. \nClearing skies will accompany these drier conditions which will lead \nto a beautiful Sunday. Dry conditions will persist Sunday and Monday \nwith seasonal temperatures, plenty of sunshine, and light winds.\n\nKEY MESSAGE 3: Upper level low pressure will swing through Ontario on \nMonday night, though models continue to show timing discrepancies, \nand there remains disagreement on how close the surface low pressure \nwill get to the US-Canadian border. We anticipate cloud coverage \nwill increase Monday night, with precipitation likely beginning in \nnorthern New York Tuesday morning and spreading eastward throughout \nthe day as low pressure edges into Quebec and a warm front treks \nacross northern New York and Vermont. Tuesday afternoon, \nthunderstorms are possible as highs reach into the seasonable upper \n70s to mid 80s, with highest instability in the St. Lawrence Valley \nand western Adirondacks paired with widespread modest shear. \nNighttime lows in the 50s to mid 60s are anticipated for the early \nweek. A cold frontal boundary is expected to cross the forecast area \nTuesday night, bringing another round of showers with embedded \nthunderstorms, then deterministic models diverge sharply in \ntheir solutions. Some projections show another frontal boundary \nor an area of low pressure moving through the Northeast on \nWednesday, while other suggest the upper trough becomes \nnegatively tilted. General consensus suggests precipitation is \nlikely outside of shadowed areas on Wednesday with thunderstorms\nagain possible, then precip chances drop Wednesday night into \nThursday under high pressure. We will be monitoring the midweek \nperiod for potential of strong or severe storms and also for \nheavy rainfall. Chances of a half an inch of rainfall within 24 \nhours runs around 50-80%, most likely Tuesday through Wednesday \nas modeled precipitable water values max out 1.50- 2.00 inches \non Tuesday afternoon and evening. Highs for the mid and late \nweek are expected to be around the 70s and lower 80s with lows \nin the upper 40s to lower 60s, though this may depend on how \nexactly the atmospheric pattern shapes up during this period.\n\n&&\n\n.AVIATION /00Z SATURDAY THROUGH WEDNESDAY/...\nThrough 00Z Sunday...Quiet/VFR aviation weather conditions are \nexpected to prevail through 12Z Saturday. Thereafter, \nconditions become more active. Light and variable winds overnight\nwill become southerly after sunrise with increasing gustiness; \ngusts to 25kts are expected at BTV, especially during Saturday \nafternoon. A low level jet will also cross the region from SW-NE \nstarting around 12Z-15Z, so LLWS is forecast at most of the TAF\nlocations except RUT. Included some vsby restrictions during the\ndaylight hours Saturday in haze and wildfire smoke. In terms of\nprecipitation, may see a leading band of -SHRA during the mid-\nday hours, followed by a stronger line of showers and possibly\nembedded tstms during the late afternoon into the early evening\nhours. A few storms could be strong to severe late in the day,\nbut are not currently mentioned in the TAFs due to uncertainties\nrelated to timing and spatial coverage of activity. Brief heavy\nrainfall and gusty winds will be possible. \n\nOutlook...\n\nSaturday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA, Slight chance TSRA.\nSunday: Mainly VFR, with local MVFR possible. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: Mainly VFR, with areas MVFR possible. Likely SHRA,\nChance TSRA.\nTuesday Night: Mainly MVFR, with areas IFR possible. Definite\nSHRA, Chance TSRA.\nWednesday: MVFR/IFR conditions possible. Likely SHRA, Chance\nTSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Air Quality Alert from 6 AM to 11 PM EDT Saturday for \n     VTZ001>011-016>021.\nNY...Air Quality Alert from midnight tonight to midnight EDT \n     Saturday night for NYZ026>031-034-035-087.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Clay\nDISCUSSION...Storm/Clay\nAVIATION...Banacos\n"
  },
  "lake_forecast": {
   "issued": "2026-07-17T18:29:00+00:00",
@@ -777,10 +777,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 36,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "07/17/26 19:00",
+  "observed": "07/17/26 20:00",
   "discussion": "On Saturday, July 18th, a health alert has been issued statewide across Vermont for Unhealthy for Sensitive Groups (USG) concentrations of fine particulate matter (PM25). Please note that PM25 concentrations may occur in the unhealthy range on an hourly basis for many locations in the state, especially in the late morning through afternoon hours.  Smoke from wildfires is expected to return to the New England region from the smoke plume currently stretching from the Ohio Valley to the mid atlantic region."
  },
  "sun": {
@@ -819,12 +819,12 @@
      "ICON": 82
     },
     "pop_max": {
-     "GFS": 43,
+     "GFS": 41,
      "Euro": 96,
      "ICON": 70
     },
     "precip_in": {
-     "GFS": 0.43,
+     "GFS": 0.53,
      "Euro": 0.58,
      "ICON": 0.32
     },
@@ -838,7 +838,7 @@
      "ICON": 74
     },
     "pop_max": {
-     "GFS": 21,
+     "GFS": 22,
      "Euro": 57,
      "ICON": 13
     },
