@@ -1,7 +1,7 @@
 {
  "generated": "2026-07-19",
- "source": "data/contractors/source/05-contractor-dataset.json",
- "count": 10,
+ "source": "data/contractors/source/05-contractor-dataset.json (VBRA) + data/contractors/source/05-dfs-full-columns-pull.json (DFS pass 2)",
+ "count": 11,
  "listings": [
   {
    "business_name": "Hegeman Electric Inc",
@@ -121,6 +121,41 @@
     "Google Places phone matches VBRA-listed phone"
    ],
    "business_id": "high-performance-modular-homes-williston",
+   "service_area": "Chittenden County"
+  },
+  {
+   "business_name": "Fisher's Heating & Gas",
+   "category": "HVAC & Heat Pumps",
+   "town": "Jericho",
+   "phone": "(802) 899-4099",
+   "website": "http://fischersheatingvt.com/",
+   "licenses": [
+    {
+     "type": "Gas Installer",
+     "number": "GN-04927 (H)",
+     "status": "active",
+     "expiry": "2027-05-31",
+     "holder_name": "Adam A Fischer"
+    },
+    {
+     "type": "Gas Installer",
+     "number": "GN-05096 (H)",
+     "status": "active",
+     "expiry": "2028-10-31",
+     "holder_name": "Justin Mw Fischer"
+    }
+   ],
+   "vbra_member": false,
+   "een_member": false,
+   "last_verified": "2026-07-19",
+   "google_place_id": "ChIJXd2pwQOJtUwRq59U7RqVx-k",
+   "google_maps_url": "https://www.google.com/maps/search/?api=1&query=Fischer%20Heating%2C%20Jericho%2C%20VT&query_place_id=ChIJXd2pwQOJtUwRq59U7RqVx-k",
+   "places_status": "verified",
+   "other_signals": [
+    "2 DFS-licensed gas installers share this address (Adam A Fischer, Justin Mw Fischer)",
+    "Google Places confirmed a named business at this address via a surname+trade search"
+   ],
+   "business_id": "fisher-s-heating-gas-jericho",
    "service_area": "Chittenden County"
   },
   {
