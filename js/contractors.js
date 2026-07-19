@@ -1,10 +1,35 @@
-/* Contractors directory — renders data/contractors.json.
-   Today this is the licensed-trades backbone (Vermont DFS licensing
-   rolls): master electricians and plumbers plus licensed gas
-   installers, filterable by name or town. The curated, review-linked
-   layer (data.curated) renders on top when Steve fills it in. */
+/* Contractors directory — renders data/contractors.json (the licensed-
+   trades backbone: master electricians/plumbers + licensed gas installers,
+   from Vermont DFS licensing rolls, filterable by name or town) with a
+   curated, business-level "Vetted picks" layer on top, sourced from
+   data/contractors/directory.json — the business-level directory built
+   from VBRA Remodelers Directory membership + Google Places verification
+   (see SUMMARY-contractors-data.md for the full build method). Each
+   published business there has a license/registration OR a verified
+   trade-association membership; DFS individual license holders with no
+   identifiable business stay in the plain licensing-rolls list below. */
 (function () {
   'use strict';
+
+  function curatedFromDirectory(dir) {
+    // Adapts data/contractors/directory.json's business-listing shape into
+    // the {name, trade, notes, review_links} shape curatedCard() expects.
+    return (dir.listings || []).map(function (b) {
+      var notes = [];
+      if (b.town) notes.push(b.town);
+      if (b.phone) notes.push(b.phone);
+      notes.push('VBRA Remodelers Directory member');
+      var links = [];
+      if (b.google_maps_url) links.push({ url: b.google_maps_url, label: 'Google Maps' });
+      if (b.website) links.push({ url: b.website, label: 'Website' });
+      return {
+        name: b.business_name,
+        trade: b.category,
+        notes: notes.join(' · '),
+        review_links: links,
+      };
+    });
+  }
 
   var esc = window.BTBC.esc;
   var SHOW = 30; // rows shown per trade before "show all"
@@ -70,7 +95,14 @@
     out.innerHTML = html || '<p class="page-empty">No one matches that search.</p>';
   }
 
-  window.BTBC.fetchJSON('data/contractors.json').then(function (data) {
+  Promise.all([
+    window.BTBC.fetchJSON('data/contractors.json'),
+    window.BTBC.fetchJSON('data/contractors/directory.json').catch(function () { return null; }),
+  ]).then(function (results) {
+    var data = results[0];
+    var dir = results[1];
+    if (dir) data.curated = curatedFromDirectory(dir);
+
     var input = document.getElementById('con-search');
     render(data, '');
 
@@ -84,7 +116,8 @@
     var stamp = document.getElementById('con-updated');
     if (stamp && data.generated) {
       stamp.textContent = 'Licensing data refreshed ' + data.generated.slice(0, 10) +
-        ' from the State of Vermont (DFS Licensing MasterList, ODbL).';
+        ' from the State of Vermont (DFS Licensing MasterList, ODbL).' +
+        (dir ? ' Vetted business picks last verified ' + dir.generated + '.' : '');
     }
   }).catch(function () {
     document.getElementById('con-list').innerHTML =
