@@ -64,7 +64,10 @@
       // was living off the hand-curated tentpoles alone, which is why it read thin.
       const bigCal = await fetchJSON('data/events/events.json').catch(() => ({ events: [] }));
       state.bigEvents = (bigCal && bigCal.events) || [];
-      state.things = things || [];
+      // Annual one-off events (extra: true) live in their own section at the
+      // foot of the page, so the evergreen List never carries a stale festival.
+      state.extras = (things || []).filter(t => t.extra);
+      state.things = (things || []).filter(t => !t.extra);
       // Assign a per-load random key so "Random" sort gives a fresh order on
       // every refresh, but stays stable while filtering within a session.
       state.things.forEach(t => { t._rand = Math.random(); });
@@ -121,6 +124,7 @@
     renderNewsletterBar();
     renderFilters();
     renderList();
+    renderExtras();
     renderCommunity();
     setupEventListeners();
 
@@ -752,6 +756,37 @@
     });
   }
 
+  function renderExtras() {
+    const section = document.getElementById('extras-section');
+    const grid = document.getElementById('extras-grid');
+    if (!section || !grid) return;
+    const extras = state.extras || [];
+    if (extras.length === 0) { section.hidden = true; return; }
+
+    // Season order starting from the current one, so what's next comes first.
+    const wheel = ['Winter','Spring','Summer','Fall'];
+    const m = new Date().getMonth();
+    const now = (m < 2 || m === 11) ? 'Winter' : m < 5 ? 'Spring' : m < 8 ? 'Summer' : 'Fall';
+    const fromNow = wheel.slice(wheel.indexOf(now)).concat(wheel.slice(0, wheel.indexOf(now)));
+    const rank = t => Math.min(...(t.season || []).map(sn => {
+      const i = fromNow.indexOf(sn);
+      return i === -1 ? 9 : i;
+    }));
+    const sorted = extras.slice().sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
+
+    grid.innerHTML = sorted.map(renderCard).join('');
+    grid.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => openDetail(card.dataset.id));
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDetail(card.dataset.id); }
+      });
+    });
+    grid.querySelectorAll('.card-website-link').forEach(link => {
+      link.addEventListener('click', e => e.stopPropagation());
+    });
+    section.hidden = false;
+  }
+
   function renderCard(t) {
     const costClass = costTierClass(t.cost_tier);
     const vibes = (t.vibe || []).slice(0, 3).map(v => `<span class="vibe-tag">${esc(v)}</span>`).join('');
@@ -794,7 +829,8 @@
      DETAIL DRAWER
   ---------------------------------------------------------- */
   function openDetail(id) {
-    const thing = state.things.find(t => t.id === id);
+    const thing = state.things.find(t => t.id === id)
+      || (state.extras || []).find(t => t.id === id);
     if (!thing) return;
 
     state.openDetailId = id;

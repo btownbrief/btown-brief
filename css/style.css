@@ -4179,3 +4179,16 @@ a.events-all-link:focus-visible { background: var(--bg-subtle); outline: none; }
   .events-label-btn[data-nudge="true"],
   .events-label-btn[data-nudge="true"] .events-label-chev { animation: none; }
 }
+
+/* ============================================================
+   EXTRAS — the annual one-offs at the foot of the List
+============================================================ */
+.extras-section { margin-top: var(--space-8); }
+.extras-section .section-label { margin-bottom: var(--space-2); }
+.extras-sub {
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+  max-width: 62ch;
+  margin: 0 0 var(--space-4);
+}
+.extras-sub a { color: var(--teal); font-weight: 600; }
