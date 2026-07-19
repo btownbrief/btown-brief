@@ -1926,6 +1926,49 @@ img {
   font-style: italic;
 }
 
+/* ============================================================
+   SUBSCRIBE EMBED — "Get the Brief" beehiiv signup block.
+   Shared pattern, used near the bottom of main content on
+   several pages (things-to-do.html, events.html). Reuses the
+   standard raised-card tokens rather than inventing new ones.
+============================================================ */
+.subscribe-embed {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+.subscribe-embed h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 var(--space-2);
+}
+.subscribe-embed .subscribe-line {
+  font-size: var(--text-base);
+  color: var(--ink-2);
+  margin: 0 0 var(--space-5);
+}
+.subscribe-embed iframe {
+  width: 100%;
+  max-width: 480px;
+  border: none;
+  min-height: 210px;
+  margin: 0 auto;
+  display: block;
+  border-radius: var(--radius-md);
+}
+.subscribe-embed .subscribe-proof {
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  margin: var(--space-4) 0 0;
+}
+
 /* --- Photo strip --- */
 .photo-strip {
   display: flex;
