@@ -1,28 +1,28 @@
 {
- "updated": "2026-07-19T10:59:24+00:00",
+ "updated": "2026-07-19T11:43:42+00:00",
  "sections_updated": {
-  "now": "2026-07-19T10:59:24+00:00",
-  "forecast": "2026-07-19T10:59:24+00:00",
-  "hourly": "2026-07-19T10:59:24+00:00",
-  "alerts": "2026-07-19T10:59:24+00:00",
-  "afd": "2026-07-19T10:59:24+00:00",
-  "lake_forecast": "2026-07-19T10:59:24+00:00",
-  "lake_gage": "2026-07-19T10:59:24+00:00",
-  "air": "2026-07-19T10:59:24+00:00",
-  "sun": "2026-07-19T10:59:24+00:00",
-  "models": "2026-07-19T10:59:24+00:00"
+  "now": "2026-07-19T11:43:42+00:00",
+  "forecast": "2026-07-19T11:43:42+00:00",
+  "hourly": "2026-07-19T11:43:42+00:00",
+  "alerts": "2026-07-19T11:43:42+00:00",
+  "afd": "2026-07-19T11:43:42+00:00",
+  "lake_forecast": "2026-07-19T11:43:42+00:00",
+  "lake_gage": "2026-07-19T11:43:42+00:00",
+  "air": "2026-07-19T11:43:42+00:00",
+  "sun": "2026-07-19T11:43:42+00:00",
+  "models": "2026-07-19T11:43:42+00:00"
  },
  "now": {
-  "observed_at": "2026-07-19T10:35:00+00:00",
+  "observed_at": "2026-07-19T11:25:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Mostly Clear",
   "temp_f": 63,
   "feels_like_f": 63,
   "humidity": 68,
   "dewpoint_f": 52,
-  "wind_mph": 8,
+  "wind_mph": null,
   "wind_gust_mph": null,
-  "wind_dir": "WNW"
+  "wind_dir": null
  },
  "forecast": {
   "updated": "2026-07-19T06:18:36+00:00",
@@ -488,13 +488,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-07-19T07:01:00+00:00",
+  "issued": "2026-07-19T11:26:00+00:00",
   "key_messages": [
    "Dry through Monday then showers Tuesday into Wednesday.",
    "Near normal temperatures expected for the second half of the week into the weekend. No significant weather anticipated at this time."
   ],
   "what_changed": "As of 255 AM EDT Sunday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 190701\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n301 AM EDT Sun Jul 19 2026\n\n.WHAT HAS CHANGED...\nAs of 255 AM EDT Sunday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 255 AM EDT Sunday...\n\n1. Dry through Monday then showers Tuesday into Wednesday. \n\n2. Near normal temperatures expected for the second half of the \nweek into the weekend. No significant weather anticipated at this \ntime. \n\n&&\n\n.DISCUSSION...\nAs of 255 AM EDT Sunday...\n\nKEY MESSAGE 1: A dry and seasonably cool stretch is in store for the \nnext couple days. Highs will be in the 70s to low 80s and lows will \nbe in the upper 40s and 50s for most places. An occluding low will \ntrack well to the north Tuesday into Wednesday, bringing several \nrounds of showers. The showers look to begin sometime Tuesday and \ncontinue into the day on Wednesday. Right now, the severe threat is \nlow. There does not look to be a well-defined boundary, instead \nseveral rounds of showers with plenty of clouds look to move \nthrough. There is very little time for solar heating and instability \nto form, and the airmass will be relatively cool to start. With the \nlow tracking well to the north, the best synoptic forcing will be \nwell to the north, though there should be adequate wind shear. The \nsystem does not look to provide much of a flooding threat either. \nGEFS/EPS/CMCE combined ensemble probabilities of receiving more than \nan inch of rain are only up to 30 percent. While there will be areas \nof convective enhancement, the storms will be quick-moving and there \nwill be gaps between the showers. PWATs should rise into the 1.5-\n1.75 inch range but with the expected setup, that should not pose \ntoo much of a problem.\n\nKEY MESSAGE 2: Wednesday night through Sunday will feature quieter \nweather as we close out the week. Upper level trough will pull away \nfrom the region with precipitation coming to an end Wednesday night. \nSurface high pressure will ridge over our region Thursday and \nThursday night. A low pressure system passes well to our north \nFriday into Friday night, and a weak front will bring our next \nchance for showers probably Friday night. The weekend looks mainly \ndry at this point with near normal temperatures.\n\n&&\n\n.AVIATION /06Z SUNDAY THROUGH THURSDAY/...\nThrough 06Z Monday...Cold front still working it's way across \nthe region and some showers are present at RUT at time of TAF \nissuance. All showers should exit our area in the next hour or \nso. Have seen some MVFR ceilings in and behind these showers. \nWill see occasional MVFR conditions, from wildfire smoke \nproducing 3-5SM vsby. Surface winds shift NW overnight at \n10-15kt with some gusts 20-25kt, likely highest at BTV. Shallow \nfrontal inversion may lead to some trapped smoke 09-13Z before \nbetter daytime mixing on Sunday allows any associated vsby \nrestrictions to end. Can't rule out some ceilings 1-2kft around \nsunrise, especially at KSLK. Drying north winds will allow these\nlow clouds to dissipate by 12-13Z with VFR for the balance of \nthe TAF period on Sunday. \n\nOutlook...\n\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Likely SHRA, Chance TSRA.\nTuesday Night: Mainly VFR, with local IFR possible. Definite\nSHRA, Chance TSRA.\nWednesday: Mainly MVFR, with local VFR possible. Definite SHRA,\nChance TSRA.\nWednesday Night: Mainly MVFR, with local VFR possible. Slight\nchance SHRA.\nThursday: Mainly MVFR, with local IFR possible. Slight chance\nSHRA, Slight chance TSRA.\n\n&&\n\n.MARINE...\nGusty northwest winds will continue for the rest of the night\nand into the day today. They look to be sustained in the 15-30 \nKT range for the rest of the night, before decreasing into the \n15-25 KT range during the day. Waves will range in the 1-3 FT \nrange for the rest of the night, before dropping into the 1-2 \nfoot range for the day. Winds and waves come down significantly \nthis evening. Winds will drop below 10 KTs and waves will drop \nbelow 1 foot. \n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Neiles/Myskowski\nAVIATION...Neiles\nMARINE...NWS BTV\n"
+  "raw": "\n000\nFXUS61 KBTV 191126\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n726 AM EDT Sun Jul 19 2026\n\n.WHAT HAS CHANGED...\nAs of 255 AM EDT Sunday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 255 AM EDT Sunday...\n\n1. Dry through Monday then showers Tuesday into Wednesday. \n\n2. Near normal temperatures expected for the second half of the\nweek into the weekend. No significant weather anticipated at \nthis time.\n\n&&\n\n.DISCUSSION...\nAs of 255 AM EDT Sunday...\n\nKEY MESSAGE 1: A dry and seasonably cool stretch is in store \nfor the next couple days. Highs will be in the 70s to low 80s \nand lows will be in the upper 40s and 50s for most places. An \noccluding low will track well to the north Tuesday into \nWednesday, bringing several rounds of showers. The showers look \nto begin sometime Tuesday and continue into the day on \nWednesday. Right now, the severe threat is low. There does not \nlook to be a well-defined boundary, instead several rounds of \nshowers with plenty of clouds look to move through. There is \nvery little time for solar heating and instability to form, and \nthe airmass will be relatively cool to start. With the low \ntracking well to the north, the best synoptic forcing will be \nwell to the north, though there should be adequate wind shear. \nThe system does not look to provide much of a flooding threat \neither. GEFS/EPS/CMCE combined ensemble probabilities of \nreceiving more than an inch of rain are only up to 30 percent. \nWhile there will be areas of convective enhancement, the storms \nwill be quick-moving and there will be gaps between the showers.\nPWATs should rise into the 1.5- 1.75 inch range but with the \nexpected setup, that should not pose too much of a problem.\n\nKEY MESSAGE 2: Wednesday night through Sunday will feature \nquieter weather as we close out the week. Upper level trough \nwill pull away from the region with precipitation coming to an \nend Wednesday night. Surface high pressure will ridge over our \nregion Thursday and Thursday night. A low pressure system passes\nwell to our north Friday into Friday night, and a weak front \nwill bring our next chance for showers probably Friday night. \nThe weekend looks mainly dry at this point with near normal \ntemperatures.\n\n&&\n\n.AVIATION /12Z SUNDAY THROUGH THURSDAY/...\nThrough 12Z Monday...Surface winds shift NW today at 10-15kt \nwith some gusts 20-25kt, likely highest at BTV. Shallow frontal \ninversion may lead to some trapped MVFR ceilings before better \ndaytime mixing allows to end. Drying north winds will allow \nthese low clouds to dissipate by 12-13Z with VFR for the balance\nof the TAF period on Sunday. \n\nOutlook...\n\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Likely SHRA, Slight chance TSRA.\nTuesday Night: Mainly MVFR, with local IFR possible. Definite\nSHRA, Chance TSRA.\nWednesday: Mainly MVFR, with local IFR possible. Definite SHRA,\nChance TSRA.\nWednesday Night: Mainly MVFR, with local IFR possible. Slight\nchance SHRA.\nThursday: Mainly VFR, with local MVFR possible. NO SIG WX.\n\n&&\n\n.MARINE...\nGusty northwest winds will continue for the rest of the night\nand into the day today. They look to be sustained in the 15-30 \nKT range for the rest of the night, before decreasing into the \n15-25 KT range during the day. Waves will range in the 1-3 FT \nrange for the rest of the night, before dropping into the 1-2 \nfoot range for the day. Winds and waves come down significantly \nthis evening. Winds will drop below 10 KTs and waves will drop \nbelow 1 foot.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Neiles/Myskowski\nAVIATION...Neiles\nMARINE...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-07-19T06:21:00+00:00",
@@ -759,17 +759,17 @@
  },
  "lake_gage": {
   "water_temp_f": 71,
-  "water_temp_at": "2026-07-19T06:00:00.000-04:00",
-  "level_ft": 96.01,
-  "level_at": "2026-07-19T06:00:00.000-04:00",
+  "water_temp_at": "2026-07-19T07:00:00.000-04:00",
+  "level_ft": 96.04,
+  "level_at": "2026-07-19T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 52,
+  "aqi": 56,
   "category": "Moderate",
   "pollutant": "PM2.5",
-  "observed": "07/19/26 6:00",
+  "observed": "07/19/26 7:00",
   "discussion": "On Sunday, July 19th, expect moderate air quality across Vermont as some remnant wildfire smoke remains in the area.  Levels will tend to drop over the course of the day."
  },
  "sun": {
@@ -822,7 +822,7 @@
    {
     "date": "2026-07-21",
     "high_f": {
-     "GFS": 76,
+     "GFS": 77,
      "Euro": 76,
      "ICON": 75
     },
@@ -832,11 +832,11 @@
      "ICON": 38
     },
     "precip_in": {
-     "GFS": 0.1,
+     "GFS": 0.52,
      "Euro": 0.21,
      "ICON": 0.04
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    }
   ]
  }
