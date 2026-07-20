@@ -1,43 +1,34 @@
 {
- "updated": "2026-07-20T08:28:52+00:00",
+ "updated": "2026-07-20T11:28:56+00:00",
  "sections_updated": {
-  "now": "2026-07-20T08:28:52+00:00",
-  "forecast": "2026-07-20T08:28:52+00:00",
-  "hourly": "2026-07-20T08:28:52+00:00",
-  "alerts": "2026-07-20T08:28:52+00:00",
-  "afd": "2026-07-20T08:28:52+00:00",
-  "lake_forecast": "2026-07-20T08:28:52+00:00",
-  "lake_gage": "2026-07-20T08:28:52+00:00",
-  "air": "2026-07-20T08:28:52+00:00",
-  "sun": "2026-07-20T08:28:52+00:00",
-  "models": "2026-07-20T08:28:52+00:00"
+  "now": "2026-07-20T11:28:56+00:00",
+  "forecast": "2026-07-20T11:28:56+00:00",
+  "hourly": "2026-07-20T11:28:56+00:00",
+  "alerts": "2026-07-20T11:28:56+00:00",
+  "afd": "2026-07-20T11:28:56+00:00",
+  "lake_forecast": "2026-07-20T11:28:56+00:00",
+  "lake_gage": "2026-07-20T11:28:56+00:00",
+  "air": "2026-07-20T11:28:56+00:00",
+  "sun": "2026-07-20T11:28:56+00:00",
+  "models": "2026-07-20T11:28:56+00:00"
  },
  "now": {
-  "observed_at": "2026-07-20T08:05:00+00:00",
+  "observed_at": "2026-07-20T11:15:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 57,
-  "feels_like_f": 57,
-  "humidity": 82,
+  "temp_f": 61,
+  "feels_like_f": 61,
+  "humidity": 72,
   "dewpoint_f": 52,
   "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "E"
+  "wind_dir": "SSE"
  },
  "forecast": {
   "updated": "2026-07-20T06:16:32+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "is_day": false,
-    "temp_f": 57,
-    "pop": 1,
-    "wind": "SW 5 mph",
-    "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 57. Southwest wind around 5 mph."
-   },
-   {
-    "name": "Monday",
+    "name": "Today",
     "is_day": true,
     "temp_f": 83,
     "pop": 0,
@@ -46,7 +37,7 @@
     "detailed": "Sunny, with a high near 83. Southwest wind around 6 mph."
    },
    {
-    "name": "Monday Night",
+    "name": "Tonight",
     "is_day": false,
     "temp_f": 65,
     "pop": 1,
@@ -80,45 +71,21 @@
     "wind": "SW 13 mph",
     "short": "Chance Showers And Thunderstorms",
     "detailed": "Rain showers likely before 11am, then a chance of showers and thunderstorms between 11am and 5pm, then a slight chance of showers and thunderstorms. Mostly cloudy, with a high near 81. Southwest wind around 13 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+   },
+   {
+    "name": "Wednesday Night",
+    "is_day": false,
+    "temp_f": 57,
+    "pop": 24,
+    "wind": "W 6 to 12 mph",
+    "short": "Slight Chance Showers And Thunderstorms then Partly Cloudy",
+    "detailed": "A slight chance of showers and thunderstorms before 8pm. Partly cloudy, with a low around 57. West wind 6 to 12 mph. New rainfall amounts less than a tenth of an inch possible."
    }
   ]
  },
  "hourly": {
   "updated": "2026-07-20T06:16:32+00:00",
   "hours": [
-   {
-    "t": "2026-07-20T04:00:00-04:00",
-    "temp_f": 59,
-    "feels_f": 59,
-    "pop": 1,
-    "humidity": 80,
-    "wind_mph": 5,
-    "wind_dir": "W",
-    "sky": 11,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-07-20T05:00:00-04:00",
-    "temp_f": 58,
-    "feels_f": 58,
-    "pop": 0,
-    "humidity": 80,
-    "wind_mph": 5,
-    "wind_dir": "S",
-    "sky": 14,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-07-20T06:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 0,
-    "humidity": 86,
-    "wind_mph": 3,
-    "wind_dir": "S",
-    "sky": 21,
-    "short": "Sunny"
-   },
    {
     "t": "2026-07-20T07:00:00-04:00",
     "temp_f": 60,
@@ -481,6 +448,39 @@
     "wind_dir": "S",
     "sky": 90,
     "short": "Showers And Thunderstorms Likely"
+   },
+   {
+    "t": "2026-07-21T16:00:00-04:00",
+    "temp_f": 81,
+    "feels_f": 83,
+    "pop": 48,
+    "humidity": 56,
+    "wind_mph": 17,
+    "wind_dir": "S",
+    "sky": 86,
+    "short": "Chance Showers And Thunderstorms"
+   },
+   {
+    "t": "2026-07-21T17:00:00-04:00",
+    "temp_f": 79,
+    "feels_f": 79,
+    "pop": 22,
+    "humidity": 60,
+    "wind_mph": 16,
+    "wind_dir": "S",
+    "sky": 79,
+    "short": "Slight Chance Showers And Thunderstorms"
+   },
+   {
+    "t": "2026-07-21T18:00:00-04:00",
+    "temp_f": 78,
+    "feels_f": 78,
+    "pop": 31,
+    "humidity": 62,
+    "wind_mph": 16,
+    "wind_dir": "S",
+    "sky": 69,
+    "short": "Chance Showers And Thunderstorms"
    }
   ]
  },
@@ -488,13 +488,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-07-20T06:58:00+00:00",
+  "issued": "2026-07-20T11:12:00+00:00",
   "key_messages": [
    "Dry through today then showers and some thunderstorms Tuesday into Wednesday.",
    "Near normal temperatures expected for the second half of the week into the weekend. No significant weather anticipated at this time."
   ],
   "what_changed": "As of 257 AM EDT Monday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 200658\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n258 AM EDT Mon Jul 20 2026\n\n.WHAT HAS CHANGED...\nAs of 257 AM EDT Monday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 257 AM EDT Monday...\n\n1. Dry through today then showers and some thunderstorms \nTuesday into Wednesday. \n\n2. Near normal temperatures expected for the second half of the \nweek into the weekend. No significant weather anticipated at this \ntime. \n\n&&\n\n.DISCUSSION...\nAs of 257 AM EDT Monday...\n\nKEY MESSAGE 1: The dry and seasonable stretch continues through \ntonight. Highs will be in the 70s to low 80s and lows will be in the \n50s and low 60s. An occluding low will track well to the north \nTuesday into Wednesday, bringing several rounds of showers. The \nshowers look to begin during the day Tuesday and continue into \nWednesday afternoon. Right now, the severe threat is relatively low. \nThere does not look to be a well-defined boundary, instead several \nrounds of showers with plenty of clouds look to move through. There \nis very little time for solar heating and instability to form, and \nthe airmass will be relatively cool to start with. With the low \ntracking well to the north, the best synoptic forcing will be well \nto the north, though there will be adequate wind shear. Overall, the \nregion is in an SPC marginal risk which seems representative. While \nan isolated strong to severe storm is possible, that looks to be the \nextent of it. The system does not look to provide much of a flooding \nthreat either. GEFS/EPS/CMCE combined ensemble probabilities of \nreceiving more than an inch of rain are between 10-30 percent. While \nthere will be areas of convective enhancement, the storms will be \nquick-moving and there will be gaps between the showers. PWATs \nshould rise into the 1.5-1.75 inch range but with the expected \nsetup, that should not pose too much of a problem.  While limited \nwildfire smoke may return for Tuesday, its concentration will be \nsignificantly less than on Saturday and it will likely not have much \nof an effect on the convection.\n\nKEY MESSAGE 2: Thursday night through Sunday will feature quieter \nweather as we close out the week. Upper level trough will pull away \nfrom the region and then surface high pressure will ridge over our \nregion Thursday night. A low pressure system passes well to our \nnorth Friday into Friday night, our region should not have any \nprecipitation associated with this system. The weekend looks mainly \ndry with near normal temperatures. Next chance for precipitation \nwill be Sunday night into Monday night as a frontal system and upper \nlevel trough crosses the region.\n\n&&\n\n.AVIATION /06Z MONDAY THROUGH FRIDAY/...\nThrough 06Z Tuesday...VFR conditions and light winds are expected\nto prevail through the forecast period. Mainly clear skies are\nalso expected.  \n\nOutlook...\n\nTuesday: VFR. Slight chance SHRA, Slight chance TSRA.\nTuesday Night: MVFR/IFR conditions possible. Definite SHRA,\nSlight chance TSRA.\nWednesday: Mainly VFR, with local IFR possible. Definite SHRA,\nChance TSRA.\nWednesday Night: Mainly VFR, with local MVFR possible. Slight\nchance SHRA.\nThursday: Mainly VFR, with local MVFR possible. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Myskowski/Neiles\nAVIATION...Neiles\n"
+  "raw": "\n000\nFXUS61 KBTV 201112\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n712 AM EDT Mon Jul 20 2026\n\n.WHAT HAS CHANGED...\nAs of 257 AM EDT Monday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 257 AM EDT Monday...\n\n1. Dry through today then showers and some thunderstorms \nTuesday into Wednesday. \n\n2. Near normal temperatures expected for the second half of the\nweek into the weekend. No significant weather anticipated at \nthis time.\n\n&&\n\n.DISCUSSION...\nAs of 257 AM EDT Monday...\n\nKEY MESSAGE 1: The dry and seasonable stretch continues through\ntonight. Highs will be in the 70s to low 80s and lows will be \nin the 50s and low 60s. An occluding low will track well to the \nnorth Tuesday into Wednesday, bringing several rounds of \nshowers. The showers look to begin during the day Tuesday and \ncontinue into Wednesday afternoon. Right now, the severe threat \nis relatively low. There does not look to be a well-defined \nboundary, instead several rounds of showers with plenty of \nclouds look to move through. There is very little time for solar\nheating and instability to form, and the airmass will be \nrelatively cool to start with. With the low tracking well to the\nnorth, the best synoptic forcing will be well to the north, \nthough there will be adequate wind shear. Overall, the region is\nin an SPC marginal risk which seems representative. While an \nisolated strong to severe storm is possible, that looks to be \nthe extent of it. The system does not look to provide much of a \nflooding threat either. GEFS/EPS/CMCE combined ensemble \nprobabilities of receiving more than an inch of rain are between\n10-30 percent. While there will be areas of convective \nenhancement, the storms will be quick-moving and there will be \ngaps between the showers. PWATs should rise into the 1.5-1.75 \ninch range but with the expected setup, that should not pose too\nmuch of a problem. While limited wildfire smoke may return for \nTuesday, its concentration will be significantly less than on \nSaturday and it will likely not have much of an effect on the \nconvection.\n\nKEY MESSAGE 2: Thursday night through Sunday will feature \nquieter weather as we close out the week. Upper level trough \nwill pull away from the region and then surface high pressure \nwill ridge over our region Thursday night. A low pressure system\npasses well to our north Friday into Friday night, our region \nshould not have any precipitation associated with this system. \nThe weekend looks mainly dry with near normal temperatures. Next\nchance for precipitation will be Sunday night into Monday night\nas a frontal system and upper level trough crosses the region.\n\n&&\n\n.AVIATION /12Z MONDAY THROUGH FRIDAY/...\nThrough 12Z Tuesday...VFR conditions and light winds are \nexpected to prevail through the forecast period. Mainly clear \nskies are also expected. \n\nOutlook...\n\nTuesday: VFR. Windy with gusts to 30 kt. Chance SHRA, Chance\nTSRA.\nTuesday Night: Mainly MVFR, with local IFR possible. Definite\nSHRA, Chance TSRA.\nWednesday: Mainly VFR, with areas MVFR possible. Chance SHRA,\nSlight chance TSRA.\nWednesday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Myskowski/Neiles\nAVIATION...Neiles\n"
  },
  "lake_forecast": {
   "issued": "2026-07-20T06:27:00+00:00",
@@ -735,17 +735,17 @@
  },
  "lake_gage": {
   "water_temp_f": 70,
-  "water_temp_at": "2026-07-20T04:00:00.000-04:00",
-  "level_ft": 95.97,
-  "level_at": "2026-07-20T04:00:00.000-04:00",
+  "water_temp_at": "2026-07-20T07:00:00.000-04:00",
+  "level_ft": 95.95,
+  "level_at": "2026-07-20T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 23,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/20/26 4:00",
+  "observed": "07/20/26 7:00",
   "discussion": "On Monday, July 20th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -765,8 +765,8 @@
      "ICON": 80
     },
     "pop_max": {
-     "GFS": 2,
-     "Euro": 10,
+     "GFS": 1,
+     "Euro": 6,
      "ICON": 0
     },
     "precip_in": {
@@ -781,38 +781,38 @@
     "high_f": {
      "GFS": 80,
      "Euro": 77,
-     "ICON": 76
+     "ICON": 78
     },
     "pop_max": {
-     "GFS": 61,
-     "Euro": 83,
+     "GFS": 80,
+     "Euro": 80,
      "ICON": 64
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.17,
-     "ICON": 0.2
+     "ICON": 0.23
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    },
    {
     "date": "2026-07-22",
     "high_f": {
      "GFS": 76,
      "Euro": 82,
-     "ICON": 74
+     "ICON": 76
     },
     "pop_max": {
-     "GFS": 70,
-     "Euro": 79,
+     "GFS": 80,
+     "Euro": 77,
      "ICON": 60
     },
     "precip_in": {
      "GFS": 0.16,
      "Euro": 0.2,
-     "ICON": 0.31
+     "ICON": 0.37
     },
-    "high_spread_f": 8
+    "high_spread_f": 6
    }
   ]
  }
