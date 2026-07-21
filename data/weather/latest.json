@@ -1,25 +1,25 @@
 {
- "updated": "2026-07-21T01:12:07+00:00",
+ "updated": "2026-07-21T04:52:42+00:00",
  "sections_updated": {
-  "now": "2026-07-21T01:12:07+00:00",
-  "forecast": "2026-07-21T01:12:07+00:00",
-  "hourly": "2026-07-21T01:12:07+00:00",
-  "alerts": "2026-07-21T01:12:07+00:00",
-  "afd": "2026-07-21T01:12:07+00:00",
-  "lake_forecast": "2026-07-21T01:12:07+00:00",
-  "lake_gage": "2026-07-21T01:12:07+00:00",
-  "air": "2026-07-21T01:12:07+00:00",
-  "sun": "2026-07-21T01:12:07+00:00",
-  "models": "2026-07-21T01:12:07+00:00"
+  "now": "2026-07-21T04:52:42+00:00",
+  "forecast": "2026-07-21T04:52:42+00:00",
+  "hourly": "2026-07-21T04:52:42+00:00",
+  "alerts": "2026-07-21T04:52:42+00:00",
+  "afd": "2026-07-21T04:52:42+00:00",
+  "lake_forecast": "2026-07-21T04:52:42+00:00",
+  "lake_gage": "2026-07-21T04:52:42+00:00",
+  "air": "2026-07-21T04:52:42+00:00",
+  "sun": "2026-07-21T04:52:42+00:00",
+  "models": "2026-07-21T04:52:42+00:00"
  },
  "now": {
-  "observed_at": "2026-07-21T00:54:00+00:00",
+  "observed_at": "2026-07-21T04:30:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 75,
-  "feels_like_f": 74,
-  "humidity": 48,
-  "dewpoint_f": 54,
+  "description": "Clear",
+  "temp_f": 72,
+  "feels_like_f": 72,
+  "humidity": null,
+  "dewpoint_f": null,
   "wind_mph": 8,
   "wind_gust_mph": null,
   "wind_dir": "S"
@@ -32,9 +32,9 @@
     "is_day": false,
     "temp_f": 66,
     "pop": 1,
-    "wind": "S 6 to 14 mph",
+    "wind": "S 5 to 14 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 66. South wind 6 to 14 mph."
+    "detailed": "Mostly cloudy, with a low around 66. South wind 5 to 14 mph."
    },
    {
     "name": "Tuesday",
@@ -86,39 +86,6 @@
  "hourly": {
   "updated": "2026-07-20T18:28:54+00:00",
   "hours": [
-   {
-    "t": "2026-07-20T21:00:00-04:00",
-    "temp_f": 74,
-    "feels_f": 74,
-    "pop": 1,
-    "humidity": 59,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 45,
-    "short": "Partly Cloudy"
-   },
-   {
-    "t": "2026-07-20T22:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
-    "pop": 1,
-    "humidity": 61,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 51,
-    "short": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-07-20T23:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 0,
-    "humidity": 66,
-    "wind_mph": 7,
-    "wind_dir": "S",
-    "sky": 72,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-07-21T00:00:00-04:00",
     "temp_f": 69,
@@ -481,6 +448,39 @@
     "wind_dir": "S",
     "sky": 64,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-22T09:00:00-04:00",
+    "temp_f": 72,
+    "feels_f": 72,
+    "pop": 40,
+    "humidity": 84,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 71,
+    "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-22T10:00:00-04:00",
+    "temp_f": 74,
+    "feels_f": 74,
+    "pop": 47,
+    "humidity": 82,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 77,
+    "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-22T11:00:00-04:00",
+    "temp_f": 75,
+    "feels_f": 75,
+    "pop": 55,
+    "humidity": 79,
+    "wind_mph": 10,
+    "wind_dir": "SW",
+    "sky": 77,
+    "short": "Rain Showers Likely"
    }
   ]
  },
@@ -762,39 +762,77 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 72,
-  "water_temp_at": "2026-07-20T21:00:00.000-04:00",
+  "water_temp_f": 71,
+  "water_temp_at": "2026-07-21T00:00:00.000-04:00",
   "level_ft": 95.93,
-  "level_at": "2026-07-20T21:00:00.000-04:00",
+  "level_at": "2026-07-21T00:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 36,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/20/26 20:00",
+  "observed": "07/21/26 0:00",
   "discussion": "On Tuesday, July 21st, expect a chance for some low-moderate fine particulate matter pollution if a trace of wildfire smoke mixes into the area from the south."
  },
  "sun": {
-  "sunrise": "2026-07-20T05:27-04:00",
-  "sunset": "2026-07-20T20:31-04:00",
-  "sunrise_tomorrow": "2026-07-21T05:28-04:00",
-  "sunset_tomorrow": "2026-07-21T20:30-04:00",
-  "uv_max": 7.4
+  "sunrise": "2026-07-21T05:28-04:00",
+  "sunset": "2026-07-21T20:30-04:00",
+  "sunrise_tomorrow": "2026-07-22T05:29-04:00",
+  "sunset_tomorrow": "2026-07-22T20:29-04:00",
+  "uv_max": 5.7
  },
  "models": {
   "days": [
    {
-    "date": "2026-07-20",
+    "date": "2026-07-21",
     "high_f": {
      "GFS": 82,
-     "Euro": 78,
-     "ICON": 80
+     "Euro": 76,
+     "ICON": 76
     },
     "pop_max": {
-     "GFS": 0,
-     "Euro": 0,
+     "GFS": 53,
+     "Euro": 95,
+     "ICON": 83
+    },
+    "precip_in": {
+     "GFS": 0.07,
+     "Euro": 0.17,
+     "ICON": 0.41
+    },
+    "high_spread_f": 6
+   },
+   {
+    "date": "2026-07-22",
+    "high_f": {
+     "GFS": 80,
+     "Euro": 77,
+     "ICON": 74
+    },
+    "pop_max": {
+     "GFS": 53,
+     "Euro": 91,
+     "ICON": 48
+    },
+    "precip_in": {
+     "GFS": 0.03,
+     "Euro": 0.28,
+     "ICON": 0.22
+    },
+    "high_spread_f": 6
+   },
+   {
+    "date": "2026-07-23",
+    "high_f": {
+     "GFS": 74,
+     "Euro": 76,
+     "ICON": 77
+    },
+    "pop_max": {
+     "GFS": 4,
+     "Euro": 14,
      "ICON": 0
     },
     "precip_in": {
@@ -802,45 +840,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 4
-   },
-   {
-    "date": "2026-07-21",
-    "high_f": {
-     "GFS": 78,
-     "Euro": 76,
-     "ICON": 75
-    },
-    "pop_max": {
-     "GFS": 55,
-     "Euro": 93,
-     "ICON": 83
-    },
-    "precip_in": {
-     "GFS": 0.0,
-     "Euro": 0.17,
-     "ICON": 0.22
-    },
     "high_spread_f": 3
-   },
-   {
-    "date": "2026-07-22",
-    "high_f": {
-     "GFS": 80,
-     "Euro": 77,
-     "ICON": 75
-    },
-    "pop_max": {
-     "GFS": 43,
-     "Euro": 81,
-     "ICON": 58
-    },
-    "precip_in": {
-     "GFS": 0.01,
-     "Euro": 0.28,
-     "ICON": 0.57
-    },
-    "high_spread_f": 5
    }
   ]
  }
