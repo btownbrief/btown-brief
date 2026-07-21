@@ -1,28 +1,28 @@
 {
- "updated": "2026-07-21T22:38:07+00:00",
+ "updated": "2026-07-21T23:42:28+00:00",
  "sections_updated": {
-  "now": "2026-07-21T22:38:07+00:00",
-  "forecast": "2026-07-21T22:38:07+00:00",
-  "hourly": "2026-07-21T22:38:07+00:00",
-  "alerts": "2026-07-21T22:38:07+00:00",
-  "afd": "2026-07-21T22:38:07+00:00",
-  "lake_forecast": "2026-07-21T22:38:07+00:00",
-  "lake_gage": "2026-07-21T22:38:07+00:00",
-  "air": "2026-07-21T22:38:07+00:00",
-  "sun": "2026-07-21T22:38:07+00:00",
-  "models": "2026-07-21T22:38:07+00:00"
+  "now": "2026-07-21T23:42:28+00:00",
+  "forecast": "2026-07-21T23:42:28+00:00",
+  "hourly": "2026-07-21T23:42:28+00:00",
+  "alerts": "2026-07-21T23:42:28+00:00",
+  "afd": "2026-07-21T23:42:28+00:00",
+  "lake_forecast": "2026-07-21T23:42:28+00:00",
+  "lake_gage": "2026-07-21T23:42:28+00:00",
+  "air": "2026-07-21T23:42:28+00:00",
+  "sun": "2026-07-21T23:42:28+00:00",
+  "models": "2026-07-21T23:42:28+00:00"
  },
  "now": {
-  "observed_at": "2026-07-21T22:25:00+00:00",
+  "observed_at": "2026-07-21T23:25:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
-  "temp_f": 77,
-  "feels_like_f": 77,
-  "humidity": 61,
-  "dewpoint_f": 63,
-  "wind_mph": null,
+  "description": "Mostly Cloudy",
+  "temp_f": 75,
+  "feels_like_f": 76,
+  "humidity": 69,
+  "dewpoint_f": 64,
+  "wind_mph": 13,
   "wind_gust_mph": null,
-  "wind_dir": null
+  "wind_dir": "SSE"
  },
  "forecast": {
   "updated": "2026-07-21T18:39:59+00:00",
@@ -32,9 +32,9 @@
     "is_day": false,
     "temp_f": 67,
     "pop": 90,
-    "wind": "S 12 to 16 mph",
-    "short": "Chance Showers And Thunderstorms then Showers And Thunderstorms",
-    "detailed": "A chance of showers and thunderstorms before 7pm, then showers and thunderstorms between 7pm and 2am, then a slight chance of showers and thunderstorms between 2am and 5am. Mostly cloudy, with a low around 67. South wind 12 to 16 mph, with gusts as high as 30 mph. Chance of precipitation is 90%. New rainfall amounts between a quarter and half of an inch possible."
+    "wind": "S 12 to 15 mph",
+    "short": "Showers And Thunderstorms",
+    "detailed": "Showers and thunderstorms before 2am, then a slight chance of showers and thunderstorms between 2am and 5am. Mostly cloudy, with a low around 67. South wind 12 to 15 mph, with gusts as high as 29 mph. Chance of precipitation is 90%. New rainfall amounts between a quarter and half of an inch possible."
    },
    {
     "name": "Wednesday",
@@ -86,17 +86,6 @@
  "hourly": {
   "updated": "2026-07-21T18:39:59+00:00",
   "hours": [
-   {
-    "t": "2026-07-21T18:00:00-04:00",
-    "temp_f": 77,
-    "feels_f": 77,
-    "pop": 54,
-    "humidity": 74,
-    "wind_mph": 16,
-    "wind_dir": "S",
-    "sky": 90,
-    "short": "Chance Showers And Thunderstorms"
-   },
    {
     "t": "2026-07-21T19:00:00-04:00",
     "temp_f": 77,
@@ -481,6 +470,17 @@
     "wind_dir": "W",
     "sky": 40,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-07-23T06:00:00-04:00",
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 0,
+    "humidity": 83,
+    "wind_mph": 6,
+    "wind_dir": "W",
+    "sky": 53,
+    "short": "Partly Sunny"
    }
   ]
  },
@@ -791,18 +791,18 @@
  },
  "lake_gage": {
   "water_temp_f": 71,
-  "water_temp_at": "2026-07-21T18:00:00.000-04:00",
-  "level_ft": 95.82,
-  "level_at": "2026-07-21T18:00:00.000-04:00",
+  "water_temp_at": "2026-07-21T19:00:00.000-04:00",
+  "level_ft": 95.85,
+  "level_at": "2026-07-21T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 53,
+  "aqi": 56,
   "category": "Moderate",
   "pollutant": "PM2.5",
-  "observed": "07/21/26 18:00",
-  "discussion": "On Wednesday, July 22nd, expect a chance for some low-moderate fine particulate matter pollution in Vermont as residual wildfire smoke continues to circulate in the northeast US and Canada."
+  "observed": "07/21/26 19:00",
+  "discussion": "On Tuesday, July 21st, expect a chance for some low-moderate fine particulate matter pollution if a trace of wildfire smoke mixes into the area from the south."
  },
  "sun": {
   "sunrise": "2026-07-21T05:28-04:00",
@@ -821,12 +821,12 @@
      "ICON": 79
     },
     "pop_max": {
-     "GFS": 37,
-     "Euro": 98,
+     "GFS": 34,
+     "Euro": 90,
      "ICON": 73
     },
     "precip_in": {
-     "GFS": 0.19,
+     "GFS": 0.0,
      "Euro": 0.26,
      "ICON": 0.17
     },
@@ -840,12 +840,12 @@
      "ICON": 73
     },
     "pop_max": {
-     "GFS": 32,
-     "Euro": 89,
+     "GFS": 48,
+     "Euro": 90,
      "ICON": 70
     },
     "precip_in": {
-     "GFS": 0.13,
+     "GFS": 0.76,
      "Euro": 0.28,
      "ICON": 0.41
     },
@@ -859,8 +859,8 @@
      "ICON": 78
     },
     "pop_max": {
-     "GFS": 3,
-     "Euro": 6,
+     "GFS": 1,
+     "Euro": 14,
      "ICON": 0
     },
     "precip_in": {
