@@ -1,30 +1,30 @@
 {
- "generated": "2026-07-20T17:47:52-04:00",
+ "generated": "2026-07-21T07:27:02-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 27,
-   "seconds": 6.1
+   "count": 28,
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 36,
-   "seconds": 5.3
+   "seconds": 4.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 62,
-   "seconds": 3.7
+   "count": 60,
+   "seconds": 2.6
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 143,
-   "seconds": 2.5
+   "count": 158,
+   "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 86,
-   "seconds": 2.5
+   "count": 88,
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-20&end_date=2026-09-18&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-21&end_date=2026-09-19&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 129,
+   "count": 125,
    "seconds": 0.1
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 8,
+   "count": 9,
    "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 219,
-   "seconds": 73.9
+   "seconds": 76.6
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 16,
-   "seconds": 2.9
+   "count": 17,
+   "seconds": 3.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 38.5
+   "seconds": 37.8
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 62,
-   "seconds": 95.6
+   "count": 63,
+   "seconds": 112.1
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 579,
-   "seconds": 79.1
+   "count": 576,
+   "seconds": 67.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 62,
-   "seconds": 129.4
+   "count": 63,
+   "seconds": 124.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 21,
-   "seconds": 15.4
+   "count": 20,
+   "seconds": 16.4
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "events listing markup not found (page layout changed?)"
+   "count": 68,
+   "seconds": 3.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 45,
-   "seconds": 29.3
+   "seconds": 28.4
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,126 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 178,
-   "seconds": 9.9
+   "count": 179,
+   "seconds": 11.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 143,
+   "count": 145,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 52,
-   "seconds": 71.2
+   "count": 55,
+   "seconds": 73.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 32,
-   "seconds": 0.3
+   "seconds": 0.2
   }
  },
- "gathered": 2650,
- "afterDedup": 1279,
- "duplicatesMerged": 1371,
- "final": 2367,
+ "gathered": 2736,
+ "afterDedup": 1352,
+ "duplicatesMerged": 1384,
+ "final": 2353,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Dinosaur Safari Exhibit",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-21"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-21"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-21"
-  },
-  {
-   "kept": {
-    "title": "Splash Dance: DJ GAYBAR",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-22"
-  },
-  {
-   "kept": {
-    "title": "Twilight Series: Night Protocol with April Patterson Clemens & Cobalt Tobert",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-08-22"
-  },
-  {
-   "kept": {
-    "title": "PINEO & LOEB",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-08-22"
-  },
-  {
-   "kept": {
-    "title": "DEBÍ TIRAR MÁS FIESTAS",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground"
-   ],
-   "date": "2026-08-22"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-22"
-  },
   {
    "kept": {
     "title": "Burlington Farmers Market",
@@ -298,6 +202,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
     "higherground"
    ],
@@ -475,6 +380,17 @@
   },
   {
    "kept": {
+    "title": "Luke Borchelt",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-08-26"
+  },
+  {
+   "kept": {
     "title": "Halvorson's Courtyard Music Series: Northern Ramble",
     "source": "churchst"
    },
@@ -601,7 +517,19 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-08-28"
+  },
+  {
+   "kept": {
+    "title": "The Strictly Hip",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
     "higherground"
    ],
    "date": "2026-08-28"
@@ -918,6 +846,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
     "higherground",
     "uvm",
@@ -1338,6 +1267,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
     "higherground",
     "uvm",
@@ -2043,6 +1973,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
     "higherground"
    ],
@@ -2054,6 +1985,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
     "higherground",
     "uvm"
@@ -2279,6 +2211,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
     "higherground",
     "uvm",
@@ -2359,7 +2292,9 @@
    },
    "merged_sources": [
     "helloburlington",
-    "higherground"
+    "higherground",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-09-18"
   },
@@ -2371,6 +2306,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-09-18"
   },
@@ -2395,22 +2341,73 @@
     "loveburlington"
    ],
    "date": "2026-09-18"
+  },
+  {
+   "kept": {
+    "title": "Latin-American Connection Celebration",
+    "source": "bca"
+   },
+   "merged_sources": [
+    "bca",
+    "churchst",
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-19"
+  },
+  {
+   "kept": {
+    "title": "Swan Lake",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "flynn"
+   ],
+   "date": "2026-09-19"
+  },
+  {
+   "kept": {
+    "title": "Scoochie Boochie",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-09-19"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-19"
+  },
+  {
+   "kept": {
+    "title": "Burlington Farmers Market",
+    "source": "farmersmarket"
+   },
+   "merged_sources": [
+    "farmersmarket",
+    "loveburlington"
+   ],
+   "date": "2026-09-19"
   }
  ],
  "changes": [
   {
-   "id": "8e987930c7c4",
-   "title": "The Odyssey at Essex Cinemas!",
-   "date": "2026-07-20",
-   "change": "missing",
-   "lastSeen": "2026-07-19T17:32:51-04:00"
-  },
-  {
-   "id": "3e4024e8030b",
+   "id": "bff9578e6e1a",
    "title": "Dream / Mộng : Veronica Pham",
-   "date": "2026-07-20",
+   "date": "2026-07-21",
    "change": "missing",
-   "lastSeen": "2026-07-19T17:32:51-04:00"
+   "lastSeen": "2026-07-20T17:47:52-04:00"
   },
   {
    "id": "9fa226f8d8f7",
