@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-21T04:39:06+00:00",
+ "generated": "2026-07-21T07:44:11+00:00",
  "events": [
   {
    "ts": "2026-07-14T11:01:08+00:00",
@@ -3278,6 +3278,17 @@
    "sourceName": "NBC5",
    "priority": 1,
    "kind": "added"
+  },
+  {
+   "ts": "2026-07-21T07:44:11+00:00",
+   "category": "weather",
+   "headline": "Tuesday: A chance of rain showers between 11am and 1pm, then a slight chance of showers and thunderstorms between 4pm and 5pm, then a chance of showers and thunderstorms",
+   "detail": "",
+   "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121",
+   "source": "nws-weather",
+   "sourceName": "NWS Burlington",
+   "priority": 2,
+   "kind": "changed"
   }
  ]
 }
