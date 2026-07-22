@@ -1,40 +1,40 @@
 {
- "updated": "2026-07-22T15:23:25+00:00",
+ "updated": "2026-07-22T17:02:15+00:00",
  "sections_updated": {
-  "now": "2026-07-22T15:23:25+00:00",
-  "forecast": "2026-07-22T15:23:25+00:00",
-  "hourly": "2026-07-22T15:23:25+00:00",
-  "alerts": "2026-07-22T15:23:25+00:00",
-  "afd": "2026-07-22T15:23:25+00:00",
-  "lake_forecast": "2026-07-22T15:23:25+00:00",
-  "lake_gage": "2026-07-22T15:23:25+00:00",
-  "air": "2026-07-22T15:23:25+00:00",
-  "sun": "2026-07-22T15:23:25+00:00",
-  "models": "2026-07-22T15:23:25+00:00"
+  "now": "2026-07-22T17:02:15+00:00",
+  "forecast": "2026-07-22T17:02:15+00:00",
+  "hourly": "2026-07-22T17:02:15+00:00",
+  "alerts": "2026-07-22T17:02:15+00:00",
+  "afd": "2026-07-22T17:02:15+00:00",
+  "lake_forecast": "2026-07-22T17:02:15+00:00",
+  "lake_gage": "2026-07-22T17:02:15+00:00",
+  "air": "2026-07-22T17:02:15+00:00",
+  "sun": "2026-07-22T17:02:15+00:00",
+  "models": "2026-07-22T17:02:15+00:00"
  },
  "now": {
-  "observed_at": "2026-07-22T15:00:00+00:00",
+  "observed_at": "2026-07-22T16:40:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 73,
-  "feels_like_f": 74,
-  "humidity": 69,
-  "dewpoint_f": 63,
-  "wind_mph": 7,
-  "wind_gust_mph": null,
-  "wind_dir": "WNW"
+  "description": "Mostly Clear",
+  "temp_f": 77,
+  "feels_like_f": 77,
+  "humidity": 47,
+  "dewpoint_f": 55,
+  "wind_mph": null,
+  "wind_gust_mph": 25,
+  "wind_dir": null
  },
  "forecast": {
   "updated": "2026-07-22T09:28:10+00:00",
   "periods": [
    {
-    "name": "Today",
+    "name": "This Afternoon",
     "is_day": true,
     "temp_f": 75,
-    "pop": 32,
+    "pop": 18,
     "wind": "W 14 mph",
-    "short": "Chance Showers And Thunderstorms then Slight Chance Showers And Thunderstorms",
-    "detailed": "A chance of showers and thunderstorms before noon, then a slight chance of showers and thunderstorms between noon and 2pm. Mostly sunny, with a high near 75. West wind around 14 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "short": "Slight Chance Rain Showers",
+    "detailed": "A slight chance of rain showers before 2pm. Mostly sunny, with a high near 75. West wind around 14 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -86,28 +86,6 @@
  "hourly": {
   "updated": "2026-07-22T09:28:10+00:00",
   "hours": [
-   {
-    "t": "2026-07-22T11:00:00-04:00",
-    "temp_f": 75,
-    "feels_f": 75,
-    "pop": 32,
-    "humidity": 69,
-    "wind_mph": 12,
-    "wind_dir": "SW",
-    "sky": 59,
-    "short": "Chance Showers And Thunderstorms"
-   },
-   {
-    "t": "2026-07-22T12:00:00-04:00",
-    "temp_f": 75,
-    "feels_f": 75,
-    "pop": 25,
-    "humidity": 64,
-    "wind_mph": 12,
-    "wind_dir": "W",
-    "sky": 70,
-    "short": "Slight Chance Showers And Thunderstorms"
-   },
    {
     "t": "2026-07-22T13:00:00-04:00",
     "temp_f": 75,
@@ -481,6 +459,28 @@
     "wind_dir": "S",
     "sky": 18,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-07-23T23:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 0,
+    "humidity": 68,
+    "wind_mph": 3,
+    "wind_dir": "S",
+    "sky": 6,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-07-24T00:00:00-04:00",
+    "temp_f": 65,
+    "feels_f": 65,
+    "pop": 0,
+    "humidity": 70,
+    "wind_mph": 3,
+    "wind_dir": "S",
+    "sky": 5,
+    "short": "Clear"
    }
   ]
  },
@@ -488,24 +488,32 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-07-22T11:06:00+00:00",
+  "issued": "2026-07-22T16:53:00+00:00",
   "key_messages": [
    "Lingering showers are expected today with isolated thunderstorms possible as a cold front moves through, then the weather pattern becomes drier for the latter half of the week.",
    "Quiet weather and increasing temperatures are expected this upcoming weekend before another system bring showers and thunderstorms to the region early next week."
   ],
   "what_changed": "As of 527 AM EDT Wednesday... Have sent out an early morning update to adjust probability of precipitation and weather over the next few hours based on high resolution models that are performing well in comparison with the radar imagery and automated reports across the region. Today, we're thinking about 15-25% chance of precip in the St. Lawrence Valley, 50-80% chance of precip on the northern and western slopes of the Adirondacks and northern Greens, 5-30% chance of precip in the southern Champlain and Connecticut River valleys, and 30-50% elsewhere. Will be a mix of showers and embedded thunderstorms, drying out by the end of the day.",
-  "raw": "\n000\nFXUS61 KBTV 221106\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n706 AM EDT Wed Jul 22 2026\n\n.WHAT HAS CHANGED...\nAs of 527 AM EDT Wednesday...\n\nHave sent out an early morning update to adjust probability of\nprecipitation and weather over the next few hours based on high\nresolution models that are performing well in comparison with\nthe radar imagery and automated reports across the region.\nToday, we're thinking about 15-25% chance of precip in the St. \nLawrence Valley, 50-80% chance of precip on the northern and \nwestern slopes of the Adirondacks and northern Greens, 5-30% \nchance of precip in the southern Champlain and Connecticut River\nvalleys, and 30-50% elsewhere. Will be a mix of showers and\nembedded thunderstorms, drying out by the end of the day.\n\n&&\n\n.KEY MESSAGES...\nAs of 225 AM EDT Wednesday...\n\n1. Lingering showers are expected today with isolated \nthunderstorms possible as a cold front moves through, then the \nweather pattern becomes drier for the latter half of the week. \n\n2. Quiet weather and increasing temperatures are expected this \nupcoming weekend before another system bring showers and \nthunderstorms to the region early next week.\n\n&&\n\n.DISCUSSION...\nAs of 225 AM EDT Wednesday...\n\nKEY MESSAGE 1: A warm front is crossing northern New York and Vermont \nearly this morning, bringing a few additional showers to the area. \nSo far about 0.50-1.00 inches of rainfall has fallen in a swath from \nthe St. Lawrence River to the northern Adirondacks and northern Lake \nChamplain. A cold front is expected to cross the region this \nmorning, bringing additional showers and thunderstorms. Probability \nof precipitation in a given location is around 50-80% in the western \nAdirondacks, St. Lawrence Valley, and far northern Vermont. \nProbability of precipitation is lowest in the souther Champlain and \nConnecticut River valleys, around 5-30%. Additional anticipated \nrainfall amounts range around 0.10-0.30 inches through the end of \ntoday, though higher precip amounts and gusty winds could occur in \nany thunderstorms. Outside of storms, southwesterly winds are also \nanticipated throughout the day today with gusts as high as 20-30 \nknots likely. The cold front should keep temperatures from reaching \ntoo high today, particularly in northern New York, where highs will \nbe in the 60s west of the Champlain Valley. In the Champlain Valley \nand remainder of Vermont, temperatures are forecast in the mid and \nupper 70s, warmest in the Connecticut River Valley where the cold \nfront will visit last. Depending on the speed of the cold front, \ntemperatures could end up being a degree or two warmer or colder.\nWednesday night through Friday night will be dry with high pressure \nin control. Humidity levels will be comfortable with highs in the \n70s to lower 80s Thursday and upper 70s to mid 80s Friday. Lows will \nfall into the 40s and 50s each night, with radiational fog potential \nin the typical valley locations.\n\nKEY MESSAGE 2: High pressure starts to shift to the east by the second \nhalf of the weekend, leading to increasing S/SW flow. The result \nwill be warming temperatures, with highs to be mainly in the \nmid/upper 80s both Saturday and Sunday. Humidity doesn't look too \nbad  as dewpoints are expected to remain the upper 50s to mid 60s. \nOur next chance of precipitation arrives late Sunday into Monday and \nlikely persists into mid week as upper troughiness sets up across \neastern Canada and the northeastern CONUS. Shortwaves rotating \naround the upper trough will bring periods of showers and \nthunderstorms. These sorts of features are typically difficult to \nnail down in timing and strength this far out, and indeed, model \nsolutions differ quite a bit from Sunday night onward. Have stayed \nwith the NBM/WPC forecast for now given the uncertainty, which \nresults in chances of showers/thunderstorms each day. Temperatures \nlook to remain seasonable through the period.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...Variable conditions expected through at least\nthe first 6-8 hours of the TAF period with isolated to scattered\nshowers to push eastward ahead of a weak frontal boundary.\nCeilings generally to remain VFR/MVFR, though brief periods of\nIFR will be possible at KSLK early in the period. Visibility to\nremain AOA 6SM in showers. A few thunderstorms cannot be ruled \nout, but uncertainty in timing and coverage precludes mention in\nthe TAFs at this time. Visibility 2-4SM possible in any\nthunderstorms. Precipitation threat wanes from west to east\nafter 18z, with all terminals VFR by 21z, and skies clearing\novernight. S/SW winds 5-10 kt becoming gusty 17-22 kt by 14z and\nturning more toward the W/SW after the frontal passage. Gusts\nsubside after 02z Thu, with sustained winds to gradually lessen\nthereafter. There are some indications that patchy fog could \ndevelop, but anticipate enough wind to keep it from becoming \nwidespread.\n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Storm/Hastings\nAVIATION...Hastings\n"
+  "raw": "\n000\nFXUS61 KBTV 221653\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n1253 PM EDT Wed Jul 22 2026\n\n.WHAT HAS CHANGED...\nAs of 527 AM EDT Wednesday...\n\nHave sent out an early morning update to adjust probability of\nprecipitation and weather over the next few hours based on high\nresolution models that are performing well in comparison with\nthe radar imagery and automated reports across the region.\nToday, we're thinking about 15-25% chance of precip in the St. \nLawrence Valley, 50-80% chance of precip on the northern and \nwestern slopes of the Adirondacks and northern Greens, 5-30% \nchance of precip in the southern Champlain and Connecticut River\nvalleys, and 30-50% elsewhere. Will be a mix of showers and\nembedded thunderstorms, drying out by the end of the day.\n\n&&\n\n.KEY MESSAGES...\nAs of 225 AM EDT Wednesday...\n\n1. Lingering showers are expected today with isolated \nthunderstorms possible as a cold front moves through, then the \nweather pattern becomes drier for the latter half of the week. \n\n2. Quiet weather and increasing temperatures are expected this \nupcoming weekend before another system bring showers and \nthunderstorms to the region early next week.\n\n&&\n\n.DISCUSSION...\nAs of 225 AM EDT Wednesday...\n\nKEY MESSAGE 1: A warm front is crossing northern New York and Vermont \nearly this morning, bringing a few additional showers to the area. \nSo far about 0.50-1.00 inches of rainfall has fallen in a swath from \nthe St. Lawrence River to the northern Adirondacks and northern Lake \nChamplain. A cold front is expected to cross the region this \nmorning, bringing additional showers and thunderstorms. Probability \nof precipitation in a given location is around 50-80% in the western \nAdirondacks, St. Lawrence Valley, and far northern Vermont. \nProbability of precipitation is lowest in the souther Champlain and \nConnecticut River valleys, around 5-30%. Additional anticipated \nrainfall amounts range around 0.10-0.30 inches through the end of \ntoday, though higher precip amounts and gusty winds could occur in \nany thunderstorms. Outside of storms, southwesterly winds are also \nanticipated throughout the day today with gusts as high as 20-30 \nknots likely. The cold front should keep temperatures from reaching \ntoo high today, particularly in northern New York, where highs will \nbe in the 60s west of the Champlain Valley. In the Champlain Valley \nand remainder of Vermont, temperatures are forecast in the mid and \nupper 70s, warmest in the Connecticut River Valley where the cold \nfront will visit last. Depending on the speed of the cold front, \ntemperatures could end up being a degree or two warmer or colder.\nWednesday night through Friday night will be dry with high pressure \nin control. Humidity levels will be comfortable with highs in the \n70s to lower 80s Thursday and upper 70s to mid 80s Friday. Lows will \nfall into the 40s and 50s each night, with radiational fog potential \nin the typical valley locations.\n\nKEY MESSAGE 2: High pressure starts to shift to the east by the second \nhalf of the weekend, leading to increasing S/SW flow. The result \nwill be warming temperatures, with highs to be mainly in the \nmid/upper 80s both Saturday and Sunday. Humidity doesn't look too \nbad  as dewpoints are expected to remain the upper 50s to mid 60s. \nOur next chance of precipitation arrives late Sunday into Monday and \nlikely persists into mid week as upper troughiness sets up across \neastern Canada and the northeastern CONUS. Shortwaves rotating \naround the upper trough will bring periods of showers and \nthunderstorms. These sorts of features are typically difficult to \nnail down in timing and strength this far out, and indeed, model \nsolutions differ quite a bit from Sunday night onward. Have stayed \nwith the NBM/WPC forecast for now given the uncertainty, which \nresults in chances of showers/thunderstorms each day. Temperatures \nlook to remain seasonable through the period.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...Variable conditions expected through at least\nthe first 6-8 hours of the TAF period with isolated to scattered\nshowers to push eastward ahead of a weak frontal boundary.\nCeilings generally to remain VFR/MVFR, though brief periods of\nIFR will be possible at KSLK early in the period. Visibility to\nremain AOA 6SM in showers. A few thunderstorms cannot be ruled \nout, but uncertainty in timing and coverage precludes mention in\nthe TAFs at this time. Visibility 2-4SM possible in any\nthunderstorms. Precipitation threat wanes from west to east\nafter 18z, with all terminals VFR by 21z, and skies clearing\novernight. S/SW winds 5-10 kt becoming gusty 17-22 kt by 14z and\nturning more toward the W/SW after the frontal passage. Gusts\nsubside after 02z Thu, with sustained winds to gradually lessen\nthereafter. There are some indications that patchy fog could \ndevelop, but anticipate enough wind to keep it from becoming \nwidespread.\n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Slight chance SHRA, Slight chance TSRA.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory is in effect for Lake Champlain through the\nremainder of this afternoon. Westerly winds of 20-30 kts,\nfollowing a cold front, will persist through late afternoon,\nwith waves on the broad lake building to 2-4 feet. Some gusts to\n35 kts are possible, mainly across the broad portion of Lake\nChamplain. Should see winds gradually diminish this evening and\ninto the overnight hours. \n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Storm/Hastings\nAVIATION...Hastings\nMARINE...Banacos/NWS BTV\n"
  },
  "lake_forecast": {
-  "issued": "2026-07-22T06:21:00+00:00",
+  "issued": "2026-07-22T16:46:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "Today",
-    "text": "South winds 15 to 20 knots, becoming west. Partly sunny. Scattered showers and thunderstorms in the morning, then scattered showers in the afternoon. Waves 1 to 2 feet.",
-    "wind_knots_max": 20,
+    "period": "..A Lake Wind Advisory Is In Effect",
+    "text": "",
+    "wind_knots_max": null,
     "gust_knots": null,
-    "waves_ft_max": 2,
+    "waves_ft_max": null,
+    "calm": false
+   },
+   {
+    "period": "Today",
+    "text": "West winds 20 to 30 knots. Partly sunny. Scattered showers this afternoon. Waves 2 to 4 feet.",
+    "wind_knots_max": 30,
+    "gust_knots": null,
+    "waves_ft_max": 4,
     "calm": false
    },
    {
@@ -575,11 +583,19 @@
   ],
   "northern": [
    {
-    "period": "Today",
-    "text": "South winds 10 to 15 knots, becoming west 15 to 20 knots. Partly sunny. Scattered showers and thunderstorms in the morning, then scattered showers in the afternoon. Waves 1 to 2 feet.",
-    "wind_knots_max": 15,
+    "period": "..A Lake Wind Advisory Is In Effect",
+    "text": "",
+    "wind_knots_max": null,
     "gust_knots": null,
-    "waves_ft_max": 2,
+    "waves_ft_max": null,
+    "calm": false
+   },
+   {
+    "period": "Today",
+    "text": "West winds 20 to 30 knots. Partly sunny. Scattered showers this afternoon. Waves 2 to 4 feet.",
+    "wind_knots_max": 30,
+    "gust_knots": null,
+    "waves_ft_max": 4,
     "calm": false
    },
    {
@@ -649,11 +665,19 @@
   ],
   "southern": [
    {
-    "period": "Today",
-    "text": "South winds 15 to 20 knots, becoming west. Partly sunny. Scattered showers and thunderstorms in the morning, then isolated showers in the afternoon. Waves 1 to 2 feet.",
-    "wind_knots_max": 20,
+    "period": "..A Lake Wind Advisory Is In Effect",
+    "text": "",
+    "wind_knots_max": null,
     "gust_knots": null,
-    "waves_ft_max": 2,
+    "waves_ft_max": null,
+    "calm": false
+   },
+   {
+    "period": "Today",
+    "text": "West winds 20 to 30 knots. Partly sunny. Scattered showers this afternoon. Waves 2 to 4 feet.",
+    "wind_knots_max": 30,
+    "gust_knots": null,
+    "waves_ft_max": 4,
     "calm": false
    },
    {
@@ -714,7 +738,7 @@
    },
    {
     "period": "Sunday",
-    "text": "South winds 5 to 10 knots. Partly sunny. A chance of showers in the afternoon. Waves 1 foot or less. Winds and waves higher in and near thunderstorms. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 95.35 feet 70 degrees USGS gage at Burlington VT 95.27 feet 71 degrees USGS gage at Port Henry NY 95.20 feet 67 degrees",
+    "text": "South winds 5 to 10 knots. Partly sunny. A chance of showers in the afternoon. Waves 1 foot or less. Winds and waves higher in and near thunderstorms. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 95.76 feet 71 degrees USGS gage at Burlington VT 95.30 feet 70 degrees USGS gage at Port Henry NY 95.19 feet 61 degrees",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -724,32 +748,32 @@
   "uv": null,
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 95.35,
-    "temp_f": 70
-   },
-   "Burlington VT": {
-    "level_ft": 95.27,
+    "level_ft": 95.76,
     "temp_f": 71
    },
+   "Burlington VT": {
+    "level_ft": 95.3,
+    "temp_f": 70
+   },
    "Port Henry NY": {
-    "level_ft": 95.2,
-    "temp_f": 67
+    "level_ft": 95.19,
+    "temp_f": 61
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 71,
-  "water_temp_at": "2026-07-22T11:00:00.000-04:00",
-  "level_ft": 95.81,
-  "level_at": "2026-07-22T11:00:00.000-04:00",
+  "water_temp_at": "2026-07-22T12:00:00.000-04:00",
+  "level_ft": 95.78,
+  "level_at": "2026-07-22T12:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 32,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/22/26 11:00",
+  "observed": "07/22/26 12:00",
   "discussion": "On Wednesday, July 22nd, expect a chance for some low-moderate fine particulate matter pollution in Vermont as residual wildfire smoke continues to circulate in the northeast US and Canada."
  },
  "sun": {
@@ -764,19 +788,19 @@
    {
     "date": "2026-07-22",
     "high_f": {
-     "GFS": 77,
+     "GFS": 76,
      "Euro": 77,
      "ICON": 74
     },
     "pop_max": {
      "GFS": 36,
      "Euro": 100,
-     "ICON": 40
+     "ICON": 45
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.31,
-     "ICON": 0.16
+     "ICON": 0.2
     },
     "high_spread_f": 3
    },
