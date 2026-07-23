@@ -105,6 +105,11 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
     <h2 class="section-label" id="pulse-today-label">Today</h2>
     <p class="pulse-legend" aria-hidden="true">🔥 hot &nbsp;·&nbsp; ↗ rising &nbsp;·&nbsp; ↘ fading</p>
+    <div class="pulse-sub-chips" role="group" aria-label="Filter Reddit chatter by subreddit">
+      <button class="filter-chip pulse-sub-chip active" data-sub="all" type="button" aria-pressed="true">All</button>
+      <button class="filter-chip pulse-sub-chip" data-sub="r/burlington" type="button" aria-pressed="false">r/burlington</button>
+      <button class="filter-chip pulse-sub-chip" data-sub="r/vermont" type="button" aria-pressed="false">r/vermont</button>
+    </div>
     <p class="result-count" id="pulse-updated" aria-live="polite"></p>
     <div id="pulse-topics">
       <p class="page-empty">Taking the pulse…</p>
@@ -115,13 +120,19 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <div class="pulse-highlights" id="pulse-highlights"></div>
     </div>
 
+    <section id="pulse-feed-wrap" hidden aria-labelledby="pulse-feed-label">
+      <h2 class="section-label" id="pulse-feed-label">All the chatter</h2>
+      <p class="pulse-wire-note" id="pulse-feed-note">Every post from the last three days, newest first.</p>
+      <div class="pulse-wire" id="pulse-feed"></div>
+      <button class="pulse-wire-more" id="pulse-feed-more" type="button" hidden>Show more</button>
+    </section>
+
     <section id="pulse-wire-wrap" hidden aria-labelledby="pulse-wire-label">
       <div class="pulse-wire-head">
         <div>
           <h2 class="section-label" id="pulse-wire-label">The Wire</h2>
           <p class="pulse-wire-note">Fresh reporting from local outlets, newest first.</p>
         </div>
-        <button class="pulse-wire-filter" id="pulse-wire-filter" type="button" aria-pressed="false">Hide Vermont Biz</button>
       </div>
       <div class="pulse-wire" id="pulse-wire"></div>
       <button class="pulse-wire-more" id="pulse-wire-more" type="button" hidden>Show more</button>

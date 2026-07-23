@@ -68,11 +68,13 @@
     );
   }
 
-  function topicHTML(t) {
+  /* sources arrives pre-filtered by the subreddit chips; the cluster-wide
+     comment total only stays truthful when nothing was filtered out. */
+  function topicHTML(t, sources, unfiltered) {
     var dir = DIRECTIONS[t.direction] || DIRECTIONS.steady;
     var meta = [];
-    if (t.posts) meta.push(t.posts + (t.posts === 1 ? ' post' : ' posts'));
-    if (typeof t.comments === 'number' && t.comments > 0) meta.push(t.comments + ' comments');
+    meta.push(sources.length + (sources.length === 1 ? ' post' : ' posts'));
+    if (unfiltered && typeof t.comments === 'number' && t.comments > 0) meta.push(t.comments + ' comments');
     return (
       '<details class="pulse-topic pulse-topic-' + esc(t.direction || 'steady') + '">' +
         '<summary>' +
@@ -81,7 +83,7 @@
             '<span class="visually-hidden"> (' + dir.word + ')</span></span>' +
           '<span class="pulse-topic-meta">' + esc(meta.join(' · ')) + '</span>' +
         '</summary>' +
-        '<div class="pulse-topic-sources">' + (t.sources || []).map(sourceRowHTML).join('') + '</div>' +
+        '<div class="pulse-topic-sources">' + sources.map(sourceRowHTML).join('') + '</div>' +
       '</details>'
     );
   }
@@ -110,10 +112,9 @@
   }
 
   function newsHTML(item) {
-    var quiet = item.domain === 'vermontbiz.com' ? ' pulse-wire-item-quiet' : '';
     var ago = fmtWireAgo(item.published);
     return (
-      '<a class="pulse-wire-item' + quiet + '" href="' + esc(safeNewsUrl(item.url)) + '" target="_blank" rel="noopener">' +
+      '<a class="pulse-wire-item" href="' + esc(safeNewsUrl(item.url)) + '" target="_blank" rel="noopener">' +
         '<span class="pulse-wire-title">' + esc(item.title) + '</span>' +
         '<span class="pulse-wire-meta">' + esc(item.outlet) + (ago ? ' · ' + esc(ago) : '') + ' ↗</span>' +
       '</a>'
@@ -123,34 +124,16 @@
   function wire(news) {
     var wrap = document.getElementById('pulse-wire-wrap');
     var list = document.getElementById('pulse-wire');
-    var filter = document.getElementById('pulse-wire-filter');
     var more = document.getElementById('pulse-wire-more');
-    var hideVermontBiz = false;
     var showAll = false;
 
-    try {
-      hideVermontBiz = localStorage.getItem('btown-pulse-hide-vermont-biz') === '1';
-    } catch (e) {}
-
     function render() {
-      var visible = news.filter(function (item) {
-        return !hideVermontBiz || item.domain !== 'vermontbiz.com';
-      });
-      var shown = showAll ? visible : visible.slice(0, 60);
+      var shown = showAll ? news : news.slice(0, 60);
       list.innerHTML = shown.map(newsHTML).join('');
-      filter.setAttribute('aria-pressed', hideVermontBiz ? 'true' : 'false');
-      filter.textContent = hideVermontBiz ? 'Show Vermont Biz' : 'Hide Vermont Biz';
-      more.hidden = visible.length <= 60 || showAll;
-      if (!more.hidden) more.textContent = 'Show ' + (visible.length - 60) + ' more';
+      more.hidden = news.length <= 60 || showAll;
+      if (!more.hidden) more.textContent = 'Show ' + (news.length - 60) + ' more';
     }
 
-    filter.addEventListener('click', function () {
-      hideVermontBiz = !hideVermontBiz;
-      try {
-        localStorage.setItem('btown-pulse-hide-vermont-biz', hideVermontBiz ? '1' : '0');
-      } catch (e) {}
-      render();
-    });
     more.addEventListener('click', function () {
       showAll = true;
       render();
@@ -159,30 +142,110 @@
     render();
   }
 
+  function feedItemHTML(p) {
+    return (
+      '<a class="pulse-wire-item" href="' + esc(safeUrl(p.url)) + '" target="_blank" rel="noopener">' +
+        '<span class="pulse-wire-title">' + esc(p.title) + '</span>' +
+        '<span class="pulse-wire-meta">' + metaBits(p) + ' ↗</span>' +
+      '</a>'
+    );
+  }
+
+  /* Older chatter.json files predate the "feed" key — rebuild an
+     approximation from the topic sources so the section still works. */
+  function fallbackFeed(topics) {
+    var seen = {};
+    var posts = [];
+    topics.forEach(function (t) {
+      (t.sources || []).forEach(function (s) {
+        if (s.url && !seen[s.url]) { seen[s.url] = true; posts.push(s); }
+      });
+    });
+    return posts.sort(function (a, b) {
+      return new Date(b.when || 0) - new Date(a.when || 0);
+    });
+  }
+
   window.BTBC.fetchJSON('data/chatter.json').then(function (data) {
     var topics = data.topics || [];
     var highlights = data.highlights || [];
     var rough = data.rough || [];
     var news = data.news || [];
+    var feed = (data.feed && data.feed.length) ? data.feed : fallbackFeed(topics);
 
-    var updated = document.getElementById('pulse-updated');
-    var ago = fmtAgo(data.updated);
-    updated.textContent = topics.length
-      ? topics.length + ' topics from the last ' + (data.window_hours || 72) + ' hours' + (ago ? ' · updated ' + ago : '')
-      : '';
+    var sub = 'all';
+    var feedExpanded = false;
+    var FEED_PREVIEW = 15;
 
-    document.getElementById('pulse-topics').innerHTML = topics.length
-      ? topics.map(topicHTML).join('')
-      : '<p class="page-empty">Quiet out there right now — check back after the next refresh.</p>';
+    function matchesSub(item) { return sub === 'all' || item.sub === sub; }
+
+    function renderTopics() {
+      var updated = document.getElementById('pulse-updated');
+      var shown = topics.map(function (t) {
+        var sources = (t.sources || []).filter(matchesSub);
+        return sources.length ? topicHTML(t, sources, sub === 'all') : null;
+      }).filter(Boolean);
+      var ago = fmtAgo(data.updated);
+      updated.textContent = shown.length
+        ? shown.length + ' topics from the last ' + (data.window_hours || 72) + ' hours' + (ago ? ' · updated ' + ago : '')
+        : '';
+      document.getElementById('pulse-topics').innerHTML = shown.length
+        ? shown.join('')
+        : '<p class="page-empty">' + (sub === 'all'
+            ? 'Quiet out there right now — check back after the next refresh.'
+            : 'Nothing from ' + esc(sub) + ' in the current window.') + '</p>';
+    }
+
+    function renderFeed() {
+      var wrap = document.getElementById('pulse-feed-wrap');
+      var list = document.getElementById('pulse-feed');
+      var more = document.getElementById('pulse-feed-more');
+      if (!feed.length) { wrap.hidden = true; return; }
+      var visible = feed.filter(matchesSub);
+      var shown = feedExpanded ? visible : visible.slice(0, FEED_PREVIEW);
+      list.innerHTML = shown.length
+        ? shown.map(feedItemHTML).join('')
+        : '<p class="page-empty">Nothing from ' + esc(sub) + ' in this window.</p>';
+      more.hidden = visible.length <= FEED_PREVIEW || feedExpanded;
+      if (!more.hidden) more.textContent = 'Show ' + (visible.length - FEED_PREVIEW) + ' more';
+      wrap.hidden = false;
+    }
+
+    function renderRough() {
+      var visible = rough.filter(matchesSub);
+      document.getElementById('pulse-rough').innerHTML = visible.map(roughHTML).join('');
+      document.getElementById('pulse-rough-wrap').hidden = !visible.length;
+    }
+
+    function renderAll() {
+      renderTopics();
+      renderFeed();
+      renderRough();
+    }
+
+    var chips = document.querySelectorAll('.pulse-sub-chip');
+    Array.prototype.forEach.call(chips, function (chip) {
+      chip.addEventListener('click', function () {
+        sub = chip.getAttribute('data-sub') || 'all';
+        Array.prototype.forEach.call(chips, function (c) {
+          var on = c === chip;
+          c.classList.toggle('active', on);
+          c.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        renderAll();
+      });
+    });
+
+    document.getElementById('pulse-feed-more').addEventListener('click', function () {
+      feedExpanded = true;
+      renderFeed();
+    });
+
+    renderAll();
 
     if (highlights.length) {
       document.getElementById('pulse-highlights').innerHTML = highlights.map(highlightHTML).join('');
       document.getElementById('pulse-highlights-wrap').hidden = false;
-    }
-
-    if (rough.length) {
-      document.getElementById('pulse-rough').innerHTML = rough.map(roughHTML).join('');
-      document.getElementById('pulse-rough-wrap').hidden = false;
     }
 
     if (news.length) wire(news);

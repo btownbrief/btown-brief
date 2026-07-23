@@ -73,60 +73,6 @@
 
   var GREY = /(cloud|overcast|rain|shower|snow|fog|mist|storm|drizzle|haze)/i;
 
-  /* ---------- the hero photograph ----------
-     Drop images into assets/sky/ named for the phase they belong to:
-
-       assets/sky/dawn.jpg  morning.jpg  day.jpg
-                  golden.jpg  dusk.jpg   night.jpg
-
-     Optionally add assets/sky/credits.json — { "golden": "North Beach, July" }
-     — and the caption appears bottom-right.
-
-     Any phase without a photo simply keeps the drawn sky, so this is safe to
-     ship half-finished and fill in as the shots come back.
-  */
-  var photoTried = {};
-
-  function loadPhaseImage(phase) {
-    if (photoTried[phase]) return;
-    photoTried[phase] = true;
-
-    // Only ever show the photograph that belongs to THIS hour. An hour we haven't
-    // shot yet keeps the drawn sky — a sunset at noon would be a lie, and the
-    // whole point of the page is that it tells the truth about the time of day.
-    tryImage('assets/sky/' + phase + '.jpg', phase, null);
-  }
-
-  function tryImage(src, phase, onFail) {
-    var img = new Image();
-    img.onload = function () {
-      // Don't dress the page for an hour we've since moved out of.
-      if (document.documentElement.getAttribute('data-phase') !== phase) return;
-      // A relative url() inside a custom property resolves against the STYLESHEET
-      // (css/hub.css), not this page — so hand CSS an absolute URL.
-      var abs = new URL(src, document.baseURI).href;
-      document.documentElement.style.setProperty('--sky-img', 'url("' + abs + '")');
-      document.documentElement.setAttribute('data-art', 'photo');
-      showCredit(phase);
-    };
-    img.onerror = function () { if (onFail) onFail(); };
-    img.src = src;
-  }
-
-  var credits = null;
-  function showCredit(phase) {
-    var el = $('credit');
-    if (!el) return;
-    function put() {
-      var c = credits && credits[phase];
-      el.textContent = c ? c : '';
-    }
-    if (credits) return put();
-    getJSON('assets/sky/credits.json')
-      .then(function (d) { credits = d || {}; put(); })
-      .catch(function () { credits = {}; });
-  }
-
   function paintSky(weather) {
     var root = document.documentElement;
     var now = Date.now();
@@ -136,13 +82,15 @@
     var set = sun.sunset ? new Date(sun.sunset).getTime() : null;
 
     // No sun data? Fall back to a plausible clock-based guess rather
-    // than leaving the page in its default blue.
+    // than leaving the page in its default blue. Without a real sun arc
+    // the orb has nowhere honest to sit, so it stays hidden.
     if (!rise || !set) {
       var hr = parseInt(btParts(new Date(now)).hour, 10);
       var guess = hr < 5 || hr >= 21 ? 'night' : hr < 7 ? 'dawn' : hr < 9 ? 'morning' :
                   hr < 19 ? 'day' : hr < 20 ? 'golden' : 'dusk';
       root.setAttribute('data-phase', guess);
-      loadPhaseImage(guess);
+      var orb = $('orb');
+      if (orb) orb.style.display = 'none';
       return;
     }
 
@@ -150,7 +98,6 @@
     // "sunrise in ..." line stays truthful through the night.
     var phase = skyPhase(now, rise, set);
     root.setAttribute('data-phase', phase);
-    loadPhaseImage(phase);
 
     var cond = (weather.now && weather.now.description) || '';
     if (GREY.test(cond)) root.setAttribute('data-sky', 'grey');

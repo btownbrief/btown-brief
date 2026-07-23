@@ -3978,6 +3978,15 @@ a.mode-btn-link:hover { text-decoration: none; }
   padding: 1px 8px;
 }
 
+/* --- Subreddit filter chips --- */
+.pulse-sub-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+}
+.pulse-sub-chip { min-height: 32px; }
+
 /* --- Local news wire --- */
 .pulse-wire-head {
   display: flex;
@@ -3990,7 +3999,6 @@ a.mode-btn-link:hover { text-decoration: none; }
   color: var(--ink-3);
   font-size: var(--text-sm);
 }
-.pulse-wire-filter,
 .pulse-wire-more {
   min-height: 44px;
   border: 1px solid var(--line);
@@ -4001,8 +4009,6 @@ a.mode-btn-link:hover { text-decoration: none; }
   font: 600 var(--text-sm) var(--font-body);
   cursor: pointer;
 }
-.pulse-wire-filter { margin-bottom: var(--space-3); flex: 0 0 auto; }
-.pulse-wire-filter[aria-pressed="true"] { border-color: var(--teal); color: var(--teal); }
 .pulse-wire {
   overflow: hidden;
   background: var(--bg-raised);
@@ -4031,12 +4037,8 @@ a.mode-btn-link:hover { text-decoration: none; }
   overflow-wrap: anywhere;
 }
 .pulse-wire-meta { color: var(--ink-3); font-size: var(--text-xs); }
-.pulse-wire-item-quiet { min-height: 48px; padding-top: var(--space-2); padding-bottom: var(--space-2); }
-.pulse-wire-item-quiet .pulse-wire-title { color: var(--ink-3); font-family: var(--font-body); font-size: var(--text-sm); font-weight: 500; }
-.pulse-wire-item-quiet .pulse-wire-meta { color: var(--ink-4); }
 .pulse-wire-more { display: block; margin: var(--space-4) auto 0; }
 .pulse-wire-more[hidden] { display: none; }
-.pulse-wire-filter:focus-visible,
 .pulse-wire-more:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
 
 /* --- Around the groups --- */

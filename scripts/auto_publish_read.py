@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-Auto-publish the morning weather read if Stephen hasn't approved it yet.
+Auto-publish the latest weather read draft if it isn't live yet.
 
-Runs from a scheduled Action just before 9 AM Burlington time. The manual
-flow (scripts/approve_read.py) still works and still wins: if today's draft
-is already approved, or read.json already carries today's date, this script
-does nothing. It only promotes a draft that would otherwise miss the morning.
+Runs from scheduled Actions so the page carries a fresh read by 7 AM, and
+updated ones by noon and 5 PM Burlington time. The manual flow
+(scripts/approve_read.py) still works and still wins: if the current draft
+is already approved, or read.json already carries this draft's date AND
+edition, this script does nothing.
 
 Unlike approve_read.py this never edits and never prompts — it publishes the
-drafted text verbatim, so the site always has a same-day read by 9.
+drafted text verbatim.
 """
 
 import json
@@ -39,12 +40,15 @@ def main():
     if os.path.exists(READ):
         with open(READ) as f:
             current = json.load(f)
-        if current.get("date") == draft.get("date"):
-            print(f"read.json already carries {draft['date']} — nothing to do.")
+        if (current.get("date") == draft.get("date")
+                and current.get("edition", "morning") == draft.get("edition", "morning")):
+            print(f"read.json already carries the {draft.get('edition', 'morning')} "
+                  f"edition for {draft['date']} — nothing to do.")
             return
 
     read = {
         "date": draft["date"],
+        "edition": draft.get("edition", "morning"),
         "text": text,
         "approved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "edited": False,

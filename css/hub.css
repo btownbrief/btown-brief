@@ -1,23 +1,11 @@
 /* ============================================================
    THE LAKE HOUR — guide hub (index.html)
 
-   Two ideas, held together:
-
-   1. The page knows what time it is. js/hub.js reads the real
-      sunrise/sunset out of data/weather and stamps data-phase on
-      <html>. The hero photograph is chosen by that phase, so at
-      8:40pm you get an actual Burlington sunset — because it is.
-
-   2. Photographs are graded, not scrimmed into submission. Every
-      hero image goes through the same matte treatment (.sky-photo)
-      — saturation down, contrast down, blacks lifted, grain on top
-      — so ANY photo dropped into assets/sky/ stays readable and
-      they all read as one family. Transparency alone never fixes
-      white-text-on-photo; grading does.
-
-   Photos are optional. With none present the drawn sky below is a
-   complete fallback, so the page is never broken while art is
-   being shot.
+   The page knows what time it is. js/hub.js reads the real
+   sunrise/sunset out of data/weather and stamps data-phase on
+   <html>; the drawn sky below — gradient, ridge, lake, and the
+   sun/moon orb tracking its real arc — is dressed by that phase,
+   so the hero moves from light to dark exactly as the day does.
 ============================================================ */
 
 :root {
@@ -37,7 +25,7 @@
   --hot: #F0996A;
   --shadow: none;
 
-  /* Drawn-sky stops — the fallback when a phase has no photograph. */
+  /* Drawn-sky stops — one set per phase of the day. */
   --sky-top: #1B3A5C; --sky-mid: #3E6E96; --sky-low: #9CC5DC;
   --sun: #FFD98A; --sun-glow: rgba(255, 217, 138, 0.55);
   --ridge: #16283C; --ridge-far: #2C4460;
@@ -122,28 +110,6 @@ body.hub {
   transition: background 1.6s ease;
 }
 
-/* ---- The photograph, and the grade that makes it usable ---- */
-.sky-photo {
-  position: absolute;
-  inset: 0;
-  background-image: var(--sky-img, none);
-  background-size: cover;
-  background-position: center 55%;
-  /* THE grade: matte it out so white type can simply sit on top. */
-  filter: saturate(0.72) contrast(0.88) brightness(0.86);
-  opacity: 0;
-  transition: opacity 1.2s ease;
-}
-html[data-art="photo"] .sky-photo { opacity: 1; }
-/* Lift the blacks — the faded-film move that keeps shadows from going muddy. */
-html[data-art="photo"] .sky-photo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(126, 134, 140, 0.14);
-  mix-blend-mode: lighten;
-}
-
 /* Grain. Ties any two photos into the same family. */
 .grain {
   position: absolute;
@@ -153,12 +119,6 @@ html[data-art="photo"] .sky-photo::after {
   z-index: 2;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 }
-
-/* Drawn sky furniture — hidden the moment a real photograph loads. */
-html[data-art="photo"] .ridge,
-html[data-art="photo"] .lake,
-html[data-art="photo"] .orb,
-html[data-art="photo"] .glint { display: none; }
 
 .orb {
   position: absolute;
@@ -302,26 +262,6 @@ html[data-art="photo"] .glint { display: none; }
 }
 .conditions .sep { opacity: 0.4; }
 .conditions strong { font-weight: 600; }
-
-/* Photo credit, park.photos-style: quiet, bottom corner. */
-/* The photo credit used to sit at bottom:7.2rem — INSIDE the band where the
-   conditions line lives, clearing it by about 3px on desktop and colliding
-   outright on a phone the moment the conditions wrapped to two lines. It read
-   as two texts printed on top of each other. Pinned to the top-right of the
-   photograph instead: out of the text's way at every width, and where a photo
-   credit conventionally belongs. */
-.credit {
-  position: absolute;
-  right: clamp(1.1rem, 4vw, 2.25rem);
-  top: 1rem;
-  z-index: 3;
-  font-size: 0.66rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
-}
-.credit:empty { display: none; }
 
 /* ============================================================
    CONTENT — dense, but soft-edged
@@ -653,17 +593,9 @@ section { margin-top: 2.4rem; }
   will-change: transform;
 }
 
-/* A slow bloom on the hero as the page opens. */
-.sky-photo { transform: scale(1.045); }
-html[data-art="photo"] .sky-photo {
-  transform: scale(1);
-  transition: opacity 1.2s ease, transform 14s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .reveal, .reveal.seen { opacity: 1; transform: none; transition: none; }
   .band-img { top: 0; bottom: 0; transform: none !important; }
-  .sky-photo, html[data-art="photo"] .sky-photo { transform: none; transition: none; }
 }
 
 /* ============================================================

@@ -529,7 +529,8 @@
     el('read-text').innerHTML = read.text.split(/\n\n+/).map(function (p) {
       return '<p>' + esc(p) + '</p>';
     }).join('');
-    var stamp = 'Approved ' + fmtAgo(read.approved_at);
+    var editions = { morning: 'Morning read', midday: 'Midday update', evening: 'Evening update' };
+    var stamp = (editions[read.edition] || 'Updated') + ' · ' + fmtAgo(read.approved_at);
     if (read.date) {
       var d = new Date(read.date + 'T12:00:00');
       stamp = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ' · ' + stamp;

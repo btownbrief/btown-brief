@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 """
-Draft the morning "My Read" weather report into the review queue.
+Draft the "My Read" weather report into the review queue.
 
 Reads data/weather/latest.json (run refresh_weather.py first — the GitHub
 Action does), builds a compact source packet, and drafts the report with
 Claude using prompts/weather-read.md (the shared weather brain).
 
-Output: data/weather/read-draft.json  — status "draft", NEVER shown on the
-site. Stephen reviews with scripts/approve_read.py, which promotes it to
-data/weather/read.json (the only file the dashboard displays).
+Three editions a day (--edition morning|midday|evening) so the page has a
+fresh read by 7 AM, noon, and 5 PM Burlington time. Each edition writes
+data/weather/read-draft.json — status "draft", NEVER shown on the site
+directly. scripts/auto_publish_read.py (or Stephen, via
+scripts/approve_read.py) promotes it to data/weather/read.json, the only
+file the dashboard displays.
 
 Without ANTHROPIC_API_KEY the script still writes the draft entry with the
 full packet and an empty text, so the review queue and packet are always
 there to write from by hand (or from a Claude Code session).
 """
 
+import argparse
 import json
 import os
 import sys
@@ -108,7 +112,18 @@ def build_packet(d):
     return "\n".join(lines)
 
 
-def call_claude(brain, packet, today):
+# What each edition asks for. Morning is the full read; the later two are
+# updates — what changed since the last one, what the rest of the day holds.
+EDITIONS = {
+    "morning": "Draft this morning's read from the packet below.",
+    "midday": ("Draft a short midday update from the packet below: how the day is "
+               "actually playing out so far, and what the afternoon and evening hold."),
+    "evening": ("Draft a short early-evening update from the packet below: tonight, "
+                "sunset conditions, and a first look at tomorrow."),
+}
+
+
+def call_claude(brain, packet, today, edition):
     key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
     if not key:
         return None, "no ANTHROPIC_API_KEY — packet-only draft"
@@ -123,8 +138,8 @@ def call_claude(brain, packet, today):
         "system": brain,
         "messages": [{
             "role": "user",
-            "content": (f"Today is {today} in Burlington VT. Draft this morning's read "
-                        f"from the packet below. Output the read only.\n\n{packet}"),
+            "content": (f"Today is {today} in Burlington VT. {EDITIONS[edition]} "
+                        f"Output the read only.\n\n{packet}"),
         }],
     }).encode()
     req = urllib.request.Request(
@@ -140,6 +155,10 @@ def call_claude(brain, packet, today):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--edition", choices=sorted(EDITIONS), default="morning")
+    args = parser.parse_args()
+
     with open(LATEST) as f:
         data = json.load(f)
     with open(BRAIN) as f:
@@ -152,13 +171,14 @@ def main():
     packet = build_packet(data)
     text, note = None, None
     try:
-        text, note = call_claude(brain, packet, today)
+        text, note = call_claude(brain, packet, today, args.edition)
     except Exception as e:  # noqa: BLE001 — a failed draft still queues the packet
         note = f"draft generation failed: {e}"
         print(note, file=sys.stderr)
 
     draft = {
         "date": local.date().isoformat(),
+        "edition": args.edition,
         "drafted_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "status": "draft",
         "model": MODEL if text else None,
@@ -168,7 +188,7 @@ def main():
     }
     with open(DRAFT, "w") as f:
         json.dump(draft, f, indent=1, ensure_ascii=False)
-    print(f"wrote read-draft.json for {draft['date']}"
+    print(f"wrote read-draft.json ({draft['edition']}) for {draft['date']}"
           + (" (with generated text)" if text else " (packet only — write by hand)"))
 
 

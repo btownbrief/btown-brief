@@ -1,17 +1,15 @@
-name: Publish morning read by 9 AM
+name: Publish morning read by 7 AM
 
 # Safety net for the "My Read" weather blurb. The 9:40 UTC draft run
 # (refresh-weather.yml) queues a draft; Stephen can approve or edit it any
-# morning with scripts/approve_read.py. If he hasn't by ~8:50 AM Burlington
-# time, this publishes the draft as-is so the site never shows a stale read.
-#
-# Two crons because GitHub cron is UTC and Vermont flips EDT/EST. The script
-# is idempotent, so the extra off-season run is a harmless no-op.
+# morning with scripts/approve_read.py. If he hasn't by ~6:35 AM Burlington
+# time (5:35 in winter), this publishes the draft as-is so readers always
+# have a same-day read by 7 AM. The midday and evening updates publish from
+# refresh-weather.yml directly.
 
 on:
   schedule:
-    - cron: '50 12 * * *'   # 8:50 AM EDT (summer)
-    - cron: '50 13 * * *'   # 8:50 AM EST (winter; 9:50 in summer, no-op then)
+    - cron: '35 10 * * *'   # 6:35 AM EDT / 5:35 AM EST — live before 7 year-round
   workflow_dispatch:
 
 permissions:

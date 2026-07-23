@@ -645,10 +645,15 @@ def run(fixtures=None, dry_run=False):
               "comments": p["comments"]} for p in sorted(public_posts, key=lambda p: p["created"], reverse=True)
              if p["id"] in rough_ids][:10]
     highlights = [highlight(slot, picks[slot]) for slot in SLOT_LABELS if slot in picks]
+    # The full firehose: every public, non-rough post in the window, newest
+    # first — the page's "all the chatter" section renders this uncapped.
+    feed = [{"title": p["title"], "url": p["url"], "sub": p["sub"], "when": iso(p["created"]),
+             "comments": p["comments"]} for p in sorted(public_posts, key=lambda p: p["created"], reverse=True)
+            if not p["rough"]]
     counts = Counter(post["sub"] for post in posts)
     news = load_news(load_json(OUT, {}).get("news", []), fixtures)
     output = {"updated": iso(now), "window_hours": 72, "mode": mode, "llm": MODEL if llm_result else None,
-              "news": news, "topics": topics[:8], "highlights": highlights, "rough": rough,
+              "news": news, "topics": topics[:8], "highlights": highlights, "rough": rough, "feed": feed,
               "stats": {"posts_scanned": len(posts), "per_source": {"r/burlington": counts["r/burlington"],
                                                                        "r/vermont": counts["r/vermont"]}}}
 

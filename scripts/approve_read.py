@@ -71,6 +71,7 @@ def main():
 
     read = {
         "date": draft["date"],
+        "edition": draft.get("edition", "morning"),
         "text": text.strip(),
         "approved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "edited": text.strip() != (draft.get("text") or "").strip(),

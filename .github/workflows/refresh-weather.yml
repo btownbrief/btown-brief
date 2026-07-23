@@ -1,7 +1,10 @@
 name: Refresh weather data
 
 # Keeps data/weather/latest.json fresh for the Burlington Right Now page,
-# and drafts the morning "My Read" report into the review queue.
+# and drafts the "My Read" report three times a day so the page carries a
+# fresh read by 7 AM, noon, and 5 PM Burlington time. The morning draft
+# queues for optional review (publish-read.yml is its safety net); the
+# midday and evening updates publish straight away.
 # Same contract as refresh-data.yml: the site stays 100% static, failed
 # fetches keep the last good data, and nothing broken is ever committed.
 
@@ -9,6 +12,8 @@ on:
   schedule:
     - cron: '45 * * * *'        # hourly at :45 (offset from refresh-data at :15)
     - cron: '40 9 * * *'        # 5:40 AM EDT / 4:40 EST — morning draft window
+    - cron: '30 15 * * *'       # 11:30 AM EDT / 10:30 EST — midday update
+    - cron: '30 20 * * *'       # 4:30 PM EDT / 3:30 EST — evening update
   workflow_dispatch:
 
 permissions:
@@ -28,14 +33,25 @@ jobs:
       - name: Refresh weather data
         run: python3 scripts/refresh_weather.py
 
-      - name: Draft the morning read (queue for review)
-        # Runs on the 9:40 UTC schedule or a manual dispatch. Writes
-        # data/weather/read-draft.json; Stephen approves with
-        # scripts/approve_read.py before anything shows publicly.
-        if: github.event.schedule == '40 9 * * *' || github.event_name == 'workflow_dispatch'
+      - name: Draft the read
+        # Morning (9:40 UTC) queues for optional review — publish-read.yml
+        # promotes it in time for 7 AM. Midday and evening draft here and
+        # publish in the next step. A manual dispatch drafts the morning
+        # edition.
+        if: github.event.schedule == '40 9 * * *' || github.event.schedule == '30 15 * * *' || github.event.schedule == '30 20 * * *' || github.event_name == 'workflow_dispatch'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python3 scripts/draft_read.py
+        run: |
+          case "${{ github.event.schedule }}" in
+            '30 15 * * *') EDITION=midday ;;
+            '30 20 * * *') EDITION=evening ;;
+            *) EDITION=morning ;;
+          esac
+          python3 scripts/draft_read.py --edition "$EDITION"
+
+      - name: Publish the midday/evening update
+        if: github.event.schedule == '30 15 * * *' || github.event.schedule == '30 20 * * *'
+        run: python3 scripts/auto_publish_read.py
 
       - name: Commit if changed
         run: |
