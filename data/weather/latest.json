@@ -1,28 +1,28 @@
 {
- "updated": "2026-07-22T23:45:24+00:00",
+ "updated": "2026-07-23T03:59:24+00:00",
  "sections_updated": {
-  "now": "2026-07-22T23:45:24+00:00",
-  "forecast": "2026-07-22T23:45:24+00:00",
-  "hourly": "2026-07-22T23:45:24+00:00",
-  "alerts": "2026-07-22T23:45:24+00:00",
-  "afd": "2026-07-22T23:45:24+00:00",
-  "lake_forecast": "2026-07-22T23:45:24+00:00",
-  "lake_gage": "2026-07-22T23:45:24+00:00",
-  "air": "2026-07-22T23:45:24+00:00",
-  "sun": "2026-07-22T23:45:24+00:00",
-  "models": "2026-07-22T23:45:24+00:00"
+  "now": "2026-07-23T03:59:24+00:00",
+  "forecast": "2026-07-23T03:59:24+00:00",
+  "hourly": "2026-07-23T03:59:24+00:00",
+  "alerts": "2026-07-23T03:59:24+00:00",
+  "afd": "2026-07-23T03:59:24+00:00",
+  "lake_forecast": "2026-07-23T03:59:24+00:00",
+  "lake_gage": "2026-07-23T03:59:24+00:00",
+  "air": "2026-07-23T03:59:24+00:00",
+  "sun": "2026-07-23T03:59:24+00:00",
+  "models": "2026-07-23T03:59:24+00:00"
  },
  "now": {
-  "observed_at": "2026-07-22T23:20:00+00:00",
+  "observed_at": "2026-07-23T03:40:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 70,
-  "feels_like_f": 70,
-  "humidity": 53,
-  "dewpoint_f": 52,
-  "wind_mph": 13,
+  "description": "Partly Cloudy",
+  "temp_f": 63,
+  "feels_like_f": 63,
+  "humidity": 59,
+  "dewpoint_f": 48,
+  "wind_mph": 7,
   "wind_gust_mph": null,
-  "wind_dir": "WSW"
+  "wind_dir": "NW"
  },
  "forecast": {
   "updated": "2026-07-22T19:42:10+00:00",
@@ -31,10 +31,10 @@
     "name": "Tonight",
     "is_day": false,
     "temp_f": 56,
-    "pop": 7,
-    "wind": "W 6 to 13 mph",
-    "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 56. West wind 6 to 13 mph."
+    "pop": 4,
+    "wind": "W 8 mph",
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a low around 56. West wind around 8 mph."
    },
    {
     "name": "Thursday",
@@ -86,50 +86,6 @@
  "hourly": {
   "updated": "2026-07-22T19:42:10+00:00",
   "hours": [
-   {
-    "t": "2026-07-22T19:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
-    "pop": 4,
-    "humidity": null,
-    "wind_mph": 13,
-    "wind_dir": "W",
-    "sky": 26,
-    "short": "Partly Cloudy"
-   },
-   {
-    "t": "2026-07-22T20:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 4,
-    "humidity": null,
-    "wind_mph": 10,
-    "wind_dir": "W",
-    "sky": 43,
-    "short": "Partly Cloudy"
-   },
-   {
-    "t": "2026-07-22T21:00:00-04:00",
-    "temp_f": 66,
-    "feels_f": 66,
-    "pop": 7,
-    "humidity": null,
-    "wind_mph": 9,
-    "wind_dir": "W",
-    "sky": 41,
-    "short": "Partly Cloudy"
-   },
-   {
-    "t": "2026-07-22T22:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 7,
-    "humidity": null,
-    "wind_mph": 8,
-    "wind_dir": "W",
-    "sky": 52,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-07-22T23:00:00-04:00",
     "temp_f": 63,
@@ -481,6 +437,50 @@
     "wind_dir": "S",
     "sky": 4,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-07-24T07:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 0,
+    "humidity": null,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 5,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-24T08:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 0,
+    "humidity": null,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 5,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-24T09:00:00-04:00",
+    "temp_f": 69,
+    "feels_f": 69,
+    "pop": 0,
+    "humidity": null,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 7,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-24T10:00:00-04:00",
+    "temp_f": 72,
+    "feels_f": 72,
+    "pop": 0,
+    "humidity": null,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 10,
+    "short": "Sunny"
    }
   ]
  },
@@ -488,37 +488,29 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-07-22T19:46:00+00:00",
+  "issued": "2026-07-22T23:46:00+00:00",
   "key_messages": [
    "High pressure building through the end of the week will bring dry weather with a gradual increasing trend in temperatures.",
    "Quiet weather and increasing temperatures are expected this upcoming weekend before another system bring showers and thunderstorms to the region early next week."
   ],
   "what_changed": "Forecast is on track.",
-  "raw": "\n000\nFXUS61 KBTV 221946\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n1253 PM EDT Wed Jul 22 2026\n\n.WHAT HAS CHANGED...\nForecast is on track. \n\n&&\n\n.KEY MESSAGES...\nAs of 225 AM EDT Wednesday...\n\n1. High pressure building through the end of the week will \nbring dry weather with a gradual increasing trend in temperatures. \n\n2. Quiet weather and increasing temperatures are expected this \nupcoming weekend before another system bring showers and \nthunderstorms to the region early next week.\n\n&&\n\n.DISCUSSION...\nAs of 225 AM EDT Wednesday...\n\nKEY MESSAGE 1: This afternoon marks the beginning of a period of \nquiet weather as a drier post-frontal air mass moves in and high \npressure builds.  Any residual showers this afternoon will depart to \nthe east by this evening, and the remainder of the day will be dry. \nWest/northwest winds will continue to gust in the 15 to 30 mph range \nthis afternoon before weakening after sunrise.  Temperatures over \nthe next few days will undergo a gradual warming trend.  Highs \nThursday and Friday will be in the 70s to low 80s, with highs \nwarming to the low to mid 80s areawide by Saturday.  Dewpoints will \nbe noticeably lower for the second half of the week compared to the \nlast few days, making for a comfortable end of the week.  No \nprecipitation is expected through Saturday. KEY MESSAGE 2: High \npressure starts to shift to the east by the second half of the \nweekend, leading to increasing S/SW flow. The result will be warming \ntemperatures, with highs to be mainly in the mid/upper 80s both \nSaturday and Sunday. Humidity doesn't look too bad  as dewpoints are \nexpected to remain the upper 50s to mid 60s. Our next chance of \nprecipitation arrives late Sunday into Monday and likely persists \ninto mid week as upper troughiness sets up across eastern Canada and \nthe northeastern CONUS. Shortwaves rotating around the upper trough \nwill bring periods of showers and thunderstorms. These sorts of \nfeatures are typically difficult to nail down in timing and strength \nthis far out, and indeed, model solutions differ quite a bit from \nSunday night onward. Have stayed with the NBM/WPC forecast for now \ngiven the uncertainty, which results in chances of \nshowers/thunderstorms each day. Temperatures look to remain \nseasonable through the period.\n\nKEY MESSAGE 2: High pressure will begin to drift east this weekend \nwith more southerly to southwesterly flow, helping to advect warmer \nair into the region. Temperatures will warm into the low to mid 80s \nin general, with perhaps a few spot upper 80s in the Champlain \nValley. Given an unfavorable moisture advection pattern, dewpoints \nshould remain on the drier side for the weekend, remaining in the \n50s. Warm air advection will keep overnight temperatures on the mild \nside in the low to mid 60s. Subsidence under the high should keep \nany precipitation at bay through most of the weekend with mainly \nclear skies. Our next system is expected to swing through the area \nlate Sunday into early next week. A cyclonic gyre over northern \nQuebec will bring troughiness to the East Coast, with a few \nshortwaves riding along the southern periphery of the gyre through \nthe Great Lakes into our region. There is still quite the spread in \nthe timing and phasing of any of these shortwaves, but trends have \ndenoted best chances for precipitation to be Monday and Tuesday \nafternoons, which is in line with the current WPC forecast. As these \nwaves pass through they will take with them small chunks of heat and \nmoisture, gradually knocking our temperatures and humidity levels \ndown into mid next week.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nA few light showers associated with a cold front are continuing to \npass through the region, but little to no terminal impacts are \nexpected. Ceilings will bounce between scattered and broken 3000-\n7000ft agl through the rest of the afternoon, before generally \nbecoming more scattered into the evening. Winds from the west \nsouthwest will continue to be breezy between15 and 25 knots, with \npockets of 25-30 knots at MSS/BTV/PBG from channeled flow and \nbriefly for MPV/EFK/RUT potentially as the front moves through. \nWinds will weaken slowly after sunset, but some flow at the surface \nwill help scour most of the low level moisture away from most \nterminals. Winds may briefly trend towards variable to calm near \nsunrise at SLK/MPV/EFK which may be enough time for a thin layer of \nfog to develop with clearing skies. While confidence is low, have \ntrended this time frame towards potential fog with a SCT008 and 3SM \nBR line around 09Z.\n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Slight chance SHRA, Slight chance TSRA.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory is in effect for Lake Champlain through the\nremainder of this afternoon. Westerly winds of 20-30 kts,\nfollowing a cold front, will persist through late afternoon,\nwith waves on the broad lake building to 2-4 feet. Some gusts to\n35 kts are possible, mainly across the broad portion of Lake\nChamplain. Should see winds gradually diminish this evening and\ninto the overnight hours. \n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...NWS BTV\nDISCUSSION...NWS BTV\nAVIATION...Danzig\nMARINE...Banacos/NWS BTV\n"
+  "raw": "\n000\nFXUS61 KBTV 222346\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\nIssued by National Weather Service Albany NY\n746 PM EDT Wed Jul 22 2026\n\n.WHAT HAS CHANGED...\nForecast is on track.\n\n&&\n\n.KEY MESSAGES...\nAs of 225 AM EDT Wednesday...\n\n1. High pressure building through the end of the week will \nbring dry weather with a gradual increasing trend in temperatures. \n\n2. Quiet weather and increasing temperatures are expected this \nupcoming weekend before another system bring showers and \nthunderstorms to the region early next week.\n\n&&\n\n.DISCUSSION...\nAs of 225 AM EDT Wednesday...\n\nKEY MESSAGE 1: This afternoon marks the beginning of a period of \nquiet weather as a drier post-frontal air mass moves in and high \npressure builds.  Any residual showers this afternoon will depart to \nthe east by this evening, and the remainder of the day will be dry. \nWest/northwest winds will continue to gust in the 15 to 30 mph range \nthis afternoon before weakening after sunrise.  Temperatures over \nthe next few days will undergo a gradual warming trend.  Highs \nThursday and Friday will be in the 70s to low 80s, with highs \nwarming to the low to mid 80s areawide by Saturday.  Dewpoints will \nbe noticeably lower for the second half of the week compared to the \nlast few days, making for a comfortable end of the week.  No \nprecipitation is expected through Saturday. KEY MESSAGE 2: High \npressure starts to shift to the east by the second half of the \nweekend, leading to increasing S/SW flow. The result will be warming \ntemperatures, with highs to be mainly in the mid/upper 80s both \nSaturday and Sunday. Humidity doesn't look too bad  as dewpoints are \nexpected to remain the upper 50s to mid 60s. Our next chance of \nprecipitation arrives late Sunday into Monday and likely persists \ninto mid week as upper troughiness sets up across eastern Canada and \nthe northeastern CONUS. Shortwaves rotating around the upper trough \nwill bring periods of showers and thunderstorms. These sorts of \nfeatures are typically difficult to nail down in timing and strength \nthis far out, and indeed, model solutions differ quite a bit from \nSunday night onward. Have stayed with the NBM/WPC forecast for now \ngiven the uncertainty, which results in chances of \nshowers/thunderstorms each day. Temperatures look to remain \nseasonable through the period.\n\nKEY MESSAGE 2: High pressure will begin to drift east this weekend \nwith more southerly to southwesterly flow, helping to advect warmer \nair into the region. Temperatures will warm into the low to mid 80s \nin general, with perhaps a few spot upper 80s in the Champlain \nValley. Given an unfavorable moisture advection pattern, dewpoints \nshould remain on the drier side for the weekend, remaining in the \n50s. Warm air advection will keep overnight temperatures on the mild \nside in the low to mid 60s. Subsidence under the high should keep \nany precipitation at bay through most of the weekend with mainly \nclear skies. Our next system is expected to swing through the area \nlate Sunday into early next week. A cyclonic gyre over northern \nQuebec will bring troughiness to the East Coast, with a few \nshortwaves riding along the southern periphery of the gyre through \nthe Great Lakes into our region. There is still quite the spread in \nthe timing and phasing of any of these shortwaves, but trends have \ndenoted best chances for precipitation to be Monday and Tuesday \nafternoons, which is in line with the current WPC forecast. As these \nwaves pass through they will take with them small chunks of heat and \nmoisture, gradually knocking our temperatures and humidity levels \ndown into mid next week.\n\n&&\n\n.AVIATION /00Z THURSDAY THROUGH MONDAY/...\nThrough 00Z Friday...VFR conditions will prevail at all our TAF\nsites this evening with breezy west to northwest winds\ndecreasing after sunset. A broken line of showers will move thru\nthe Champlain Valley in the next 1 to 2 hours before weakening\nover northern/central VT by 02z. No flight restrictions are\nexpected with these showers. Given recent rainfall, thinking a\nfew hours of IFR/LIFR conditions are possible at SLK between\n07-11z, so have tempo this into their taf for the potential of\nbouncing IFR conditions. Probability is of IFR or lower \nconditions is 30 to 40%, given clouds/wind fields. Otherwise,\nwinds become 4 to 8 knots from the northwest tonight and\nincrease a little with VFR conditions prevailing on Thursday.\n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Slight chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...NWS BTV\nDISCUSSION...NWS BTV\nAVIATION...Taber\n"
  },
  "lake_forecast": {
-  "issued": "2026-07-22T20:10:00+00:00",
+  "issued": "2026-07-22T23:54:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
-    "text": "",
-    "wind_knots_max": null,
+    "period": "Rest Of Tonight",
+    "text": "West winds 10 to 20 knots, becoming southwest. Partly cloudy. Waves 1 to 2 feet.",
+    "wind_knots_max": 20,
     "gust_knots": null,
-    "waves_ft_max": null,
-    "calm": false
-   },
-   {
-    "period": "Tonight",
-    "text": "West winds 20 to 30 knots, diminishing to 5 to 15 knots. Partly cloudy. Waves 2 to 4 feet subsiding to 1 to 3 feet after Midnight.",
-    "wind_knots_max": 30,
-    "gust_knots": null,
-    "waves_ft_max": 4,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Thursday",
-    "text": "Southwest winds 5 to 10 knots, becoming west. Sunny. Waves 1 foot or less.",
+    "text": "South winds 5 to 10 knots, becoming west. Sunny. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -591,24 +583,16 @@
   ],
   "northern": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
-    "text": "",
-    "wind_knots_max": null,
+    "period": "Rest Of Tonight",
+    "text": "West winds 5 to 15 knots, becoming southwest. Partly cloudy. Waves 1 foot or less.",
+    "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": null,
-    "calm": false
-   },
-   {
-    "period": "Tonight",
-    "text": "West winds 20 to 30 knots, diminishing to 10 to 15 knots. Partly cloudy. Waves 2 to 4 feet subsiding to 1 to 3 feet after Midnight.",
-    "wind_knots_max": 30,
-    "gust_knots": null,
-    "waves_ft_max": 4,
+    "waves_ft_max": 1,
     "calm": false
    },
    {
     "period": "Thursday",
-    "text": "Southwest winds 10 knots or less, becoming west. Mostly sunny. Waves 1 foot or less.",
+    "text": "Southwest winds 5 to 10 knots, becoming west. Mostly sunny. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -656,10 +640,10 @@
    },
    {
     "period": "Sunday",
-    "text": "South winds 10 knots or less. Partly sunny. A chance of showers in the afternoon. Waves 1 to 2 feet.",
+    "text": "South winds 10 knots or less. Partly sunny. A chance of showers in the afternoon. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 2,
+    "waves_ft_max": 1,
     "calm": false
    },
    {
@@ -672,33 +656,25 @@
    },
    {
     "period": "Monday",
-    "text": "South winds less than 10 knots, becoming southwest. Partly sunny. A chance of showers. Waves 1 to 2 feet.",
+    "text": "South winds less than 10 knots, becoming southwest. Partly sunny. A chance of showers. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 2,
+    "waves_ft_max": 1,
     "calm": false
    }
   ],
   "southern": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
-    "text": "",
-    "wind_knots_max": null,
+    "period": "Rest Of Tonight",
+    "text": "West winds 10 knots or less, becoming south. Partly cloudy. Waves 1 foot or less.",
+    "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": null,
-    "calm": false
-   },
-   {
-    "period": "Tonight",
-    "text": "West winds 20 to 30 knots, diminishing to 5 to 15 knots. Partly cloudy. Waves 2 to 4 feet subsiding to 1 to 3 feet after Midnight.",
-    "wind_knots_max": 30,
-    "gust_knots": null,
-    "waves_ft_max": 4,
+    "waves_ft_max": 1,
     "calm": false
    },
    {
     "period": "Thursday",
-    "text": "Southwest winds 5 to 10 knots, becoming northwest. Sunny. Waves 1 foot or less.",
+    "text": "South winds 5 to 10 knots, becoming northwest. Sunny. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -777,18 +753,18 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-07-22T19:00:00.000-04:00",
-  "level_ft": 95.79,
-  "level_at": "2026-07-22T19:00:00.000-04:00",
+  "water_temp_at": "2026-07-22T23:00:00.000-04:00",
+  "level_ft": 95.72,
+  "level_at": "2026-07-22T23:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 25,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "07/22/26 19:00",
-  "discussion": "On Wednesday, July 22nd, expect a chance for some low-moderate fine particulate matter pollution in Vermont as residual wildfire smoke continues to circulate in the northeast US and Canada."
+  "observed": "07/22/26 23:00",
+  "discussion": "Expect generally good air quality across Vermont for Thursday, July 23rd."
  },
  "sun": {
   "sunrise": "2026-07-22T05:29-04:00",
@@ -827,12 +803,12 @@
     },
     "pop_max": {
      "GFS": 2,
-     "Euro": 16,
+     "Euro": 20,
      "ICON": 0
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.01,
+     "Euro": 0.02,
      "ICON": 0.0
     },
     "high_spread_f": 1
@@ -840,9 +816,9 @@
    {
     "date": "2026-07-24",
     "high_f": {
-     "GFS": 81,
-     "Euro": 79,
-     "ICON": 82
+     "GFS": 84,
+     "Euro": 80,
+     "ICON": 81
     },
     "pop_max": {
      "GFS": 0,
@@ -854,7 +830,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
    }
   ]
  }
