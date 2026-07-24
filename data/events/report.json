@@ -1,25 +1,25 @@
 {
- "generated": "2026-07-24T07:20:51-04:00",
+ "generated": "2026-07-24T17:44:08-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 28,
-   "seconds": 6.0
+   "seconds": 6.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 65,
-   "seconds": 3.7
+   "count": 78,
+   "seconds": 5.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 58,
-   "seconds": 3.6
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 162,
-   "seconds": 2.8
+   "count": 163,
+   "seconds": 2.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
@@ -49,12 +49,12 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 200,
-   "seconds": 71.5
+   "seconds": 77.4
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 18,
-   "seconds": 2.5
+   "count": 20,
+   "seconds": 2.7
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 38.2
+   "seconds": 41.7
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 66,
-   "seconds": 101.2
+   "seconds": 106.2
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 547,
-   "seconds": 75.3
+   "count": 554,
+   "seconds": 67.9
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 127.9
+   "count": 64,
+   "seconds": 132.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 22,
-   "seconds": 14.6
+   "seconds": 16.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 70,
-   "seconds": 6.7
+   "seconds": 6.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 44,
-   "seconds": 29.1
+   "seconds": 30.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,8 +113,8 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 185,
-   "seconds": 12.0
+   "count": 186,
+   "seconds": 8.7
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -124,7 +124,7 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 54,
-   "seconds": 72.0
+   "seconds": 74.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,22 +132,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 2701,
- "afterDedup": 1316,
- "duplicatesMerged": 1385,
- "final": 2245,
+ "gathered": 2724,
+ "afterDedup": 1332,
+ "duplicatesMerged": 1392,
+ "final": 2231,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
   {
    "kept": {
     "title": "Thirsty Thursday",
@@ -302,6 +291,17 @@
     "loveburlington",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-08-28"
+  },
+  {
+   "kept": {
+    "title": "Live Music: Moonbird",
+    "source": "breweries"
+   },
+   "merged_sources": [
+    "breweries",
+    "loveburlington"
    ],
    "date": "2026-08-28"
   },
@@ -2388,19 +2388,24 @@
  ],
  "changes": [
   {
-   "id": "df50cdb4d827",
-   "title": "802sDay",
-   "date": "2026-09-08",
-   "change": "time",
-   "was": "2026-09-08",
-   "now": "2026-09-08T11:30:00-04:00"
+   "id": "6d9d21c143e3",
+   "title": "Lunch with the Poets",
+   "date": "2026-07-24",
+   "change": "missing",
+   "lastSeen": "2026-07-24T07:20:51-04:00"
+  },
+  {
+   "id": "3bc824fb25f0",
+   "title": "Mayor Meet-Up - East District",
+   "date": "2026-07-24",
+   "change": "missing",
+   "lastSeen": "2026-07-24T07:20:51-04:00"
   },
   {
    "id": "7c86e21e8510",
    "title": "Slippers",
    "date": "2026-07-26",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "01bde8c90f8e",
@@ -2413,8 +2418,7 @@
    "id": "9e642dbf528c",
    "title": "Grief Group",
    "date": "2026-08-05",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "a3d0c19075db",
@@ -2462,211 +2466,181 @@
    "id": "c26c448e0258",
    "title": "Tours",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "6ee2135802b5",
    "title": "Wednesday $10.00 Burger Night",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "22b0dadd9cb2",
    "title": "Venetian Trivia Night!",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "aeaf525c3bd9-1900",
    "title": "WAX, DJ Hoppa",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "573a4cfff572",
    "title": "DisruptHR Burlington",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "d103272f3df5",
    "title": "Trivia",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "5d523f88641e",
    "title": "Trivia Night",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "fced825cacef",
    "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!)",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "63715a732d73",
    "title": "SB Color Run",
    "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "11ad21819b81",
    "title": "Tours",
    "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "1316505a24d6",
    "title": "JOHNNY FRANCO and his REAL BROTHER DOM + their SIX PACK of BUDS",
    "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "ee168b945cde",
    "title": "Sensory-Friendly Sunday at ECHO",
    "date": "2026-09-13",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "c753cc2d08e1",
    "title": "Acoustic Brunch",
    "date": "2026-09-13",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "1b9bf70ad5f5",
    "title": "Karaoke Sundays!",
    "date": "2026-09-13",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "3ec046abebed",
    "title": "Collage Collective",
    "date": "2026-09-14",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "79f0aa35b67c",
    "title": "Traditional Tuesday",
    "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "7dbfaac221e8",
    "title": "Local Dork at Foam Brewers on a Tuesday",
    "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "3a62879349e6",
    "title": "Vermont Figure Drawing Collective",
    "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "f26308f3e4e5",
    "title": "The Marcus King Band - The Darling Blue Tour",
    "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "831f00dbf59b",
    "title": "Honky Tonk Tuesday",
    "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "c042d06fca7c",
    "title": "Tours",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "3ce516931a52",
    "title": "Wednesday $10.00 Burger Night",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "68faf4787c33",
    "title": "Winooski Pride",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "608285b2185a",
    "title": "Venetian Trivia Night!",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "a1327f043ddb",
    "title": "Trivia",
    "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "3d1c73bb1a80",
    "title": "Trivia Night",
    "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "67f43606fd7b",
    "title": "South Burlington Farmers Market",
    "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "d64fe59cf2e2",
    "title": "Gareth Reynolds Live!",
    "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "2ca321c8deb7",
    "title": "Joe Kaplow",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   },
   {
    "id": "2338b2188c61",
    "title": "Gareth Reynolds Live!",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-07-21T07:27:02-04:00"
+   "change": "dropped"
   }
  ]
 }
