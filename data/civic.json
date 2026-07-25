@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-24T12:25:01+00:00",
+  "generated": "2026-07-25T12:07:10+00:00",
   "upcoming": [
     {
       "body": "Public Safety Committee",
@@ -38,6 +38,20 @@
       "venue": "645 Pine St, Burlington, VT, 05401",
       "agenda_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/41f1de03-009a-43db-a1ff-74a92a28aca5.pdf",
       "packet_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/743f0721-8fb5-4ff2-945c-a4589e434347.pdf",
+      "minutes_url": null,
+      "video_url": null,
+      "summary_text": null,
+      "summary_status": "pending"
+    },
+    {
+      "body": "Police Commission",
+      "body_id": "police-commission",
+      "title": "Police Commission Meeting",
+      "start": "2026-07-28T14:00:00-04:00",
+      "time_uncertain": false,
+      "venue": null,
+      "agenda_url": "https://burlingtonvt.portal.civicclerk.com/event/10087/files",
+      "packet_url": null,
       "minutes_url": null,
       "video_url": null,
       "summary_text": null,
@@ -280,6 +294,20 @@
       "video_url": null,
       "summary_text": null,
       "summary_status": "pending"
+    },
+    {
+      "body": "Burlington Planning Commission",
+      "body_id": "planning-commission",
+      "title": "Planning Commission Meeting - Collaborative Working Group on Inclusionary Zoning",
+      "start": "2026-09-22T14:30:00-04:00",
+      "time_uncertain": false,
+      "venue": "Sharon Bushor Conference Room, 149 Church Street, Burlington, Vermont, 05401",
+      "agenda_url": null,
+      "packet_url": null,
+      "minutes_url": null,
+      "video_url": null,
+      "summary_text": null,
+      "summary_status": "pending"
     }
   ],
   "past": [
@@ -362,7 +390,7 @@
       "venue": "645 Pine Street, Burlington, VT 05401",
       "agenda_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/66bac6c8-9882-4e24-bb39-1984aeca955b.pdf",
       "packet_url": null,
-      "minutes_url": null,
+      "minutes_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/e37147ca-d500-49a3-8be7-4e3866610334.pdf",
       "video_url": null,
       "summary_text": null,
       "summary_status": "pending"
@@ -800,34 +828,6 @@
       "video_url": null,
       "summary_text": null,
       "summary_status": "pending"
-    },
-    {
-      "body": "Board of Health",
-      "body_id": "board-of-health",
-      "title": "Board of Health Meeting",
-      "start": "2026-06-24T13:45:00-04:00",
-      "time_uncertain": false,
-      "venue": "645 Pine Street, Main Conference Room, Burlington, Vermont, 05401-4920",
-      "agenda_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/7973e43f-6728-4593-95f3-3e68dfc0fc28.pdf",
-      "packet_url": null,
-      "minutes_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/c456aefd-fb1c-4f87-afa3-aa40f6a957cb.pdf",
-      "video_url": null,
-      "summary_text": null,
-      "summary_status": "pending"
-    },
-    {
-      "body": "Wards 4 & 7 NPA",
-      "body_id": "wards-4-7-npa",
-      "title": "NPA - Wards 4 & 7 Meeting",
-      "start": "2026-06-24T13:30:00-04:00",
-      "time_uncertain": false,
-      "venue": "Robert Miller Center, 130 Gosse Court, Burlington, VT",
-      "agenda_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/4af35769-3932-4674-b8e5-caf9ec109dc4.pdf",
-      "packet_url": null,
-      "minutes_url": "https://burlingtonvt.api.civicclerk.com/stream/BURLINGTONVT/e0a398a8-cb70-4c7a-b487-c22cefaf806a.pdf",
-      "video_url": "https://www.youtube.com/watch?v=512iflIMW5Q",
-      "summary_text": null,
-      "summary_status": "pending"
     }
   ],
   "bodies": [
@@ -858,14 +858,6 @@
     {
       "id": "board-of-finance",
       "name": "Board of Finance",
-      "typical_schedule": "Schedule varies; see posted meetings",
-      "source_url": "https://www.burlingtonvt.gov/412/Public-Boards-Commissions-Committees",
-      "video_url": null,
-      "in_feed": true
-    },
-    {
-      "id": "board-of-health",
-      "name": "Board of Health",
       "typical_schedule": "Schedule varies; see posted meetings",
       "source_url": "https://www.burlingtonvt.gov/412/Public-Boards-Commissions-Committees",
       "video_url": null,
@@ -1053,14 +1045,6 @@
       "typical_schedule": "Schedule varies; see posted meetings",
       "source_url": "https://www.burlingtonvt.gov/494/Standing-Committees",
       "video_url": "https://www.cctv.org/watch-tv/series/burlington-city-council",
-      "in_feed": true
-    },
-    {
-      "id": "wards-4-7-npa",
-      "name": "Wards 4 & 7 NPA",
-      "typical_schedule": "Schedule varies; see posted meetings",
-      "source_url": "https://www.burlingtonvt.gov/412/Public-Boards-Commissions-Committees",
-      "video_url": null,
       "in_feed": true
     },
     {
