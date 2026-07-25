@@ -1,26 +1,26 @@
 {
- "updated": "2026-07-25T21:26:01+00:00",
+ "updated": "2026-07-25T21:38:20+00:00",
  "sections_updated": {
-  "now": "2026-07-25T21:26:01+00:00",
-  "forecast": "2026-07-25T21:26:01+00:00",
-  "hourly": "2026-07-25T21:26:01+00:00",
-  "alerts": "2026-07-25T21:26:01+00:00",
-  "afd": "2026-07-25T21:26:01+00:00",
-  "lake_forecast": "2026-07-25T21:26:01+00:00",
-  "lake_gage": "2026-07-25T21:26:01+00:00",
-  "air": "2026-07-25T21:26:01+00:00",
-  "sun": "2026-07-25T21:26:01+00:00",
-  "models": "2026-07-25T21:26:01+00:00"
+  "now": "2026-07-25T21:38:20+00:00",
+  "forecast": "2026-07-25T21:38:20+00:00",
+  "hourly": "2026-07-25T21:38:20+00:00",
+  "alerts": "2026-07-25T21:38:20+00:00",
+  "afd": "2026-07-25T21:38:20+00:00",
+  "lake_forecast": "2026-07-25T21:38:20+00:00",
+  "lake_gage": "2026-07-25T21:38:20+00:00",
+  "air": "2026-07-25T21:38:20+00:00",
+  "sun": "2026-07-25T21:38:20+00:00",
+  "models": "2026-07-25T21:38:20+00:00"
  },
  "now": {
-  "observed_at": "2026-07-25T21:05:00+00:00",
+  "observed_at": "2026-07-25T21:25:00+00:00",
   "station": "KBTV",
   "description": "Mostly Clear",
   "temp_f": 84,
   "feels_like_f": 83,
   "humidity": 35,
   "dewpoint_f": 54,
-  "wind_mph": 8,
+  "wind_mph": 9,
   "wind_gust_mph": null,
   "wind_dir": "S"
  },
@@ -775,9 +775,9 @@
   "source": "AirNow (Burlington monitor)",
   "aqi": 35,
   "category": "Good",
-  "pollutant": "OZONE",
+  "pollutant": "PM2.5",
   "observed": "07/25/26 17:00",
-  "discussion": "Expect generally good air quality across Vermont for Sunday, July 26th."
+  "discussion": "Expect generally good air quality across Vermont for Saturday, July 25th."
  },
  "sun": {
   "sunrise": "2026-07-25T05:32-04:00",
@@ -812,7 +812,7 @@
     "high_f": {
      "GFS": 87,
      "Euro": 83,
-     "ICON": 86
+     "ICON": 84
     },
     "pop_max": {
      "GFS": 5,
@@ -831,7 +831,7 @@
     "high_f": {
      "GFS": 87,
      "Euro": 87,
-     "ICON": 84
+     "ICON": 85
     },
     "pop_max": {
      "GFS": 19,
@@ -841,9 +841,9 @@
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.03,
-     "ICON": 0.02
+     "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    }
   ]
  }
