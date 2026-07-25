@@ -1,25 +1,25 @@
 {
- "updated": "2026-07-25T07:04:33+00:00",
+ "updated": "2026-07-25T09:21:48+00:00",
  "sections_updated": {
-  "now": "2026-07-25T07:04:33+00:00",
-  "forecast": "2026-07-25T07:04:33+00:00",
-  "hourly": "2026-07-25T07:04:33+00:00",
-  "alerts": "2026-07-25T07:04:33+00:00",
-  "afd": "2026-07-25T07:04:33+00:00",
-  "lake_forecast": "2026-07-25T07:04:33+00:00",
-  "lake_gage": "2026-07-25T07:04:33+00:00",
-  "air": "2026-07-25T07:04:33+00:00",
-  "sun": "2026-07-25T07:04:33+00:00",
-  "models": "2026-07-25T07:04:33+00:00"
+  "now": "2026-07-25T09:21:48+00:00",
+  "forecast": "2026-07-25T09:21:48+00:00",
+  "hourly": "2026-07-25T09:21:48+00:00",
+  "alerts": "2026-07-25T09:21:48+00:00",
+  "afd": "2026-07-25T09:21:48+00:00",
+  "lake_forecast": "2026-07-25T09:21:48+00:00",
+  "lake_gage": "2026-07-25T09:21:48+00:00",
+  "air": "2026-07-25T09:21:48+00:00",
+  "sun": "2026-07-25T09:21:48+00:00",
+  "models": "2026-07-25T09:21:48+00:00"
  },
  "now": {
-  "observed_at": "2026-07-25T06:45:00+00:00",
+  "observed_at": "2026-07-25T09:00:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 61,
-  "feels_like_f": 61,
-  "humidity": 77,
-  "dewpoint_f": 54,
+  "temp_f": 57,
+  "feels_like_f": 57,
+  "humidity": 82,
+  "dewpoint_f": 52,
   "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N"
@@ -31,10 +31,10 @@
     "name": "Overnight",
     "is_day": false,
     "temp_f": 60,
-    "pop": 1,
-    "wind": "SE 5 mph",
+    "pop": 0,
+    "wind": "S 5 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 60. Southeast wind around 5 mph."
+    "detailed": "Mostly clear, with a low around 60. South wind around 5 mph."
    },
    {
     "name": "Saturday",
@@ -86,28 +86,6 @@
  "hourly": {
   "updated": "2026-07-25T06:24:39+00:00",
   "hours": [
-   {
-    "t": "2026-07-25T03:00:00-04:00",
-    "temp_f": 63,
-    "feels_f": 63,
-    "pop": 1,
-    "humidity": 75,
-    "wind_mph": 3,
-    "wind_dir": "SE",
-    "sky": 4,
-    "short": "Clear"
-   },
-   {
-    "t": "2026-07-25T04:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
-    "pop": 1,
-    "humidity": 75,
-    "wind_mph": 3,
-    "wind_dir": "S",
-    "sky": 13,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-07-25T05:00:00-04:00",
     "temp_f": 62,
@@ -481,6 +459,28 @@
     "wind_dir": "S",
     "sky": 51,
     "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-07-26T15:00:00-04:00",
+    "temp_f": 86,
+    "feels_f": 85,
+    "pop": 2,
+    "humidity": 39,
+    "wind_mph": 5,
+    "wind_dir": "S",
+    "sky": 54,
+    "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-07-26T16:00:00-04:00",
+    "temp_f": 86,
+    "feels_f": 85,
+    "pop": 2,
+    "humidity": 39,
+    "wind_mph": 5,
+    "wind_dir": "S",
+    "sky": 56,
+    "short": "Partly Sunny"
    }
   ]
  },
@@ -488,13 +488,12 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-07-25T06:39:00+00:00",
+  "issued": "2026-07-25T07:18:00+00:00",
   "key_messages": [
-   "Mainly dry and warm weather will continue through the weekend as high pressure remains over the region.",
-   "A pattern change and upper troughing will bring increased chances of showers and thunderstorms on Monday and Monday night."
+   "An unsettled weather pattern is anticipated this upcoming week with several rounds of showers and embedded thunderstorms expected."
   ],
   "what_changed": "As of 238 AM EDT Saturday... Chances for showers and thunderstorms have increased slightly Monday as confidence increases for enough moisture and upper level troughing to produce scattered to numerous showers.",
-  "raw": "\n000\nFXUS61 KBTV 250639\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n239 AM EDT Sat Jul 25 2026\n\n.WHAT HAS CHANGED...\nAs of 238 AM EDT Saturday...\n\nChances for showers and thunderstorms have increased slightly Monday \nas confidence increases for enough moisture and upper level \ntroughing to produce scattered to numerous showers.\n\n&&\n\n.KEY MESSAGES...\nAs of 238 AM EDT Saturday...\n\n1. Mainly dry and warm weather will continue through the \nweekend as high pressure remains over the region.\n\n2. A pattern change and upper troughing will bring increased \nchances of showers and thunderstorms on Monday and Monday night.\n\n&&\n\n.DISCUSSION...\nAs of 238 AM EDT Saturday...\n\nKEY MESSAGE 1: High pressure is currently anchored over central New \nYork early this morning and will keep our region dry and warm \nthrough at least Sunday. This will also mean light winds and cooler \nnights with valley fog possible. Temperatures are on their way down \ntowards the mid 40s to near 60 F early this morning. After near-\nnormal warmth yesterday, we're anticipating above-average highs of \nwidespread lower and mid 80s to arrive this afternoon under light \nsoutherly flow aloft as high pressure shifts east and northeast. \nTonight (Saturday night), high pressure will continue to drift away \nfrom our area as a weak upper shortwave approaches. This will keep \ntemperatures a little milder tonight with lows only falling into the \n50s and lower 60s, around seasonable for this time of year. There \ncould be some brief patchy fog in the typical spots of the \nAdirondacks, but generally we're heading into a pattern change \ntowards the end of the weekend. Sunday will be our last day of \nmainly dry conditions with widespread 80s again. The odd shower or \nthunderstorm in the Adirondacks is not out of the question on \nSunday, but overall low likelihood.\n\nKEY MESSAGE 2: Chances for showers and thunderstorms increase for the \nstart of the work week under upper troughing. Diurnally driven \nterrain scattered showers and thunderstorms will be possible during \nthe day Monday, primarily in northern New York. Daytime \nprecipitation chances run around 50-80% in northern New York, but \nonly 10-45% across Vermont, lowest in the Connecticut River Valley. \nExact high temperatures may depend on where and when precipitation \noccurs, but looking like highs in the upper 70s and 80s are likely.\nThe ECMWF continues to depict the arrival of surface low pressure \nover the Great Lakes during this period, which if it occurs, could \nhave some impact on Monday night precipitation, but the GFS \ncontinues to exclude it. At the moment, precipitation again looks \nmost likely in northern New York, mainly St. Lawrence County, with \n40-75% chance, then 20-40% elsewhere other than the Northeast \nKingdom, which looks most likely to remain dry, only 5-20% chance \nprecip. Total precipitation Monday and Monday night expected around \n0.05-0.30 inches in the Champlain Valley and west, with only 0.00-\n0.05\" anticipated east of the Champlain Valley. As is typical when \nwe have convective showers and storms, these amounts will vary \ndepending on location and shower intensity, likely higher in any \npotential t-storm. Because of the showers and moisture around Monday \nnight, lows will be mild in the mid 50s to mid 60s.\n\n&&\n\n.AVIATION /06Z SATURDAY THROUGH WEDNESDAY/...\nThrough 06Z Sunday...High pressure anchored across our TAF sites\nis resulting in VFR conditions with light winds early this\nmorning. TAF challenging is the potential for fog/br at MPV/SLK\nthis morning. SLK is approaching their cross over temp with some\n5-6SM BR already, so given lighter wind profiles than previous\ncouple of nights, intervals of IFR vis/cigs in fog/br is\npossible between 07-11z this morning. MPV has a little large\ntemp/dwpt spread and feel just a brief period of fog/br is\npossible near sunrise this morning. Otherwise, VFR prevails at\nall sites today with south/southwest winds 4 to 8 knots. \n\nOutlook...\n\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. Chance SHRA, Slight chance TSRA.\nMonday Night: VFR. Chance SHRA, Slight chance TSRA.\nTuesday: Mainly VFR, with local MVFR possible. Definite SHRA,\nChance TSRA.\nTuesday Night: Mainly VFR, with local MVFR possible. Likely SHRA,\nChance TSRA.\nWednesday: MVFR/IFR conditions possible. Likely SHRA, Chance\nTSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Storm\nAVIATION...Taber\n"
+  "raw": "\n000\nFXUS61 KBTV 250718\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n318 AM EDT Sat Jul 25 2026\n\n.WHAT HAS CHANGED...\nAs of 238 AM EDT Saturday...\n\nChances for showers and thunderstorms have increased slightly Monday \nas confidence increases for enough moisture and upper level \ntroughing to produce scattered to numerous showers.\n\n&&\n\n.KEY MESSAGES...\nAs of 318 AM EDT Saturday...\n\n3. An unsettled weather pattern is anticipated this upcoming \nweek with several rounds of showers and embedded \nthunderstorms expected.\n\n&&\n\n.DISCUSSION...\nAs of 318 AM EDT Saturday...\n\nKEY MESSAGE 3: Global guidance shows a large spread in potential \nsolutions associated with development/magnitude of mid/upper lvl \ntrof acrs the NE CONUS for this upcoming week. ECMWF/UKMET and ICON \nshow a deepening and closing off 700-500mb circulation acrs the NE \nCONUS/Mid Atlantic States Tues/Weds time frame, while GFS/CMC are \nless robust with closing system off and more progressive with \nmid/upper lvl trof lifting acrs the NE CONUS. The ECMWF/UKMET and \nICON solution would need to be watched closely for potential \nflooding, especially with slow moving showers/embedded thunder \nassociated with being directly under the closed low pres. Given the \nlarge ridge/trof amplification expected acrs the CONUS this upcoming \nweek, this solution has the potential to happen, as does a faster \nwith minimal impact scenario advertised by the GFS/CMC. A couple \nfactors could limit heavy rain potential, such as better instability \nis located to our south and closing mid/upper lvl circulation is \nassociated with northern stream energy with pw values only around 1 \nSTD above normal. We will continue to monitor later guidance \npackages and look for a trend in the potential outcomes. For now WPC \nhas 60 to 90% Tues/Weds with values tapering off to 30-40% by late \nweek. Highs generally at or slightly below normal, due to \nclouds/precip, but lows at or slightly above normal. Highs mainly \n70s to near 80 and lows upper 50s to mid 60s for Tues thru Fri.\n\n&&\n\n.AVIATION /06Z SATURDAY THROUGH WEDNESDAY/...\nThrough 06Z Sunday...High pressure anchored across our TAF sites\nis resulting in VFR conditions with light winds early this\nmorning. TAF challenging is the potential for fog/br at MPV/SLK\nthis morning. SLK is approaching their cross over temp with some\n5-6SM BR already, so given lighter wind profiles than previous\ncouple of nights, intervals of IFR vis/cigs in fog/br is\npossible between 07-11z this morning. MPV has a little large\ntemp/dwpt spread and feel just a brief period of fog/br is\npossible near sunrise this morning. Otherwise, VFR prevails at\nall sites today with south/southwest winds 4 to 8 knots. \n\nOutlook...\n\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. Chance SHRA, Slight chance TSRA.\nMonday Night: VFR. Chance SHRA, Slight chance TSRA.\nTuesday: Mainly VFR, with local MVFR possible. Definite SHRA,\nChance TSRA.\nTuesday Night: Mainly VFR, with local MVFR possible. Likely SHRA,\nChance TSRA.\nWednesday: MVFR/IFR conditions possible. Likely SHRA, Chance\nTSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Taber/Storm\nAVIATION...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-07-25T06:29:00+00:00",
@@ -739,17 +738,17 @@
  },
  "lake_gage": {
   "water_temp_f": 71,
-  "water_temp_at": "2026-07-25T02:00:00.000-04:00",
-  "level_ft": 95.67,
-  "level_at": "2026-07-25T02:00:00.000-04:00",
+  "water_temp_at": "2026-07-25T05:00:00.000-04:00",
+  "level_ft": 95.65,
+  "level_at": "2026-07-25T05:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 36,
+  "aqi": 34,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/25/26 2:00",
+  "observed": "07/25/26 5:00",
   "discussion": "Expect generally good air quality across Vermont for Saturday, July 25th."
  },
  "sun": {
@@ -765,7 +764,7 @@
     "date": "2026-07-25",
     "high_f": {
      "GFS": 87,
-     "Euro": 85,
+     "Euro": 86,
      "ICON": 85
     },
     "pop_max": {
@@ -783,8 +782,8 @@
    {
     "date": "2026-07-26",
     "high_f": {
-     "GFS": 87,
-     "Euro": 87,
+     "GFS": 86,
+     "Euro": 86,
      "ICON": 87
     },
     "pop_max": {
@@ -793,30 +792,30 @@
      "ICON": 3
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.07,
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 0
+    "high_spread_f": 1
    },
    {
     "date": "2026-07-27",
     "high_f": {
      "GFS": 86,
-     "Euro": 88,
+     "Euro": 85,
      "ICON": 79
     },
     "pop_max": {
-     "GFS": 27,
+     "GFS": 22,
      "Euro": 41,
      "ICON": 20
     },
     "precip_in": {
      "GFS": 0.07,
-     "Euro": 0.01,
+     "Euro": 0.02,
      "ICON": 0.07
     },
-    "high_spread_f": 9
+    "high_spread_f": 7
    }
   ]
  }
