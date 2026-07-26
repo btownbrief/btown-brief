@@ -1,30 +1,30 @@
 {
- "generated": "2026-07-26T07:06:28-04:00",
+ "generated": "2026-07-26T17:36:58-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 25,
-   "seconds": 5.4
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 76,
-   "seconds": 2.1
+   "count": 75,
+   "seconds": 3.0
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 59,
-   "seconds": 2.8
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 159,
-   "seconds": 3.2
+   "seconds": 2.8
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 82,
-   "seconds": 2.0
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 195,
-   "seconds": 65.6
+   "count": 197,
+   "seconds": 71.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 20,
-   "seconds": 2.4
+   "seconds": 2.7
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 35.1
+   "seconds": 39.3
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 67,
-   "seconds": 101.2
+   "seconds": 98.2
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,27 +79,27 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 540,
-   "seconds": 72.9
+   "seconds": 75.3
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 122.9
+   "count": 64,
+   "seconds": 126.9
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 25,
-   "seconds": 14.3
+   "seconds": 14.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 67,
-   "seconds": 6.9
+   "count": 68,
+   "seconds": 1.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 39,
-   "seconds": 27.7
+   "seconds": 29.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,18 +124,18 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 54,
-   "seconds": 68.3
+   "seconds": 71.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 27,
-   "seconds": 0.5
+   "seconds": 0.7
   }
  },
- "gathered": 2336,
- "afterDedup": 1204,
+ "gathered": 2337,
+ "afterDedup": 1205,
  "duplicatesMerged": 1132,
- "final": 2158,
+ "final": 2163,
  "mergeLog": [
   {
    "kept": {
@@ -2358,6 +2358,20 @@
  ],
  "changes": [
   {
+   "id": "226b9ca57c83",
+   "title": "Centennial Hills Hike and Winooski Circle",
+   "date": "2026-07-26",
+   "change": "missing",
+   "lastSeen": "2026-07-26T07:06:28-04:00"
+  },
+  {
+   "id": "27ef92570ff0",
+   "title": "French Day with Déjà-Nous",
+   "date": "2026-07-26",
+   "change": "missing",
+   "lastSeen": "2026-07-26T07:06:28-04:00"
+  },
+  {
    "id": "1f1e141a2fb0",
    "title": "Film Screening: Playtime",
    "date": "2026-07-26",
@@ -2365,11 +2379,17 @@
    "lastSeen": "2026-07-25T17:34:35-04:00"
   },
   {
+   "id": "16d636efe3cb",
+   "title": "Womxn's Pick-up Soccer - Outdoors at Starr Farm Park",
+   "date": "2026-07-26",
+   "change": "missing",
+   "lastSeen": "2026-07-26T07:06:28-04:00"
+  },
+  {
    "id": "01bde8c90f8e",
    "title": "Twilight Series: The Wolff Sisters with Milton Busker and the Grimm Work",
    "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-07-23T07:28:55-04:00"
+   "change": "dropped"
   },
   {
    "id": "e885b8f5384b",
@@ -2400,22 +2420,18 @@
    "lastSeen": "2026-07-25T17:34:35-04:00"
   },
   {
-   "id": "97ebdd64fbe7",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-09-06",
-   "change": "dropped"
+   "id": "bf10cd32dce0",
+   "title": "BTown Coffee Club",
+   "date": "2026-08-29",
+   "change": "missing",
+   "lastSeen": "2026-07-26T07:06:28-04:00"
   },
   {
-   "id": "9430acfecd78",
-   "title": "Dream / Mộng : Veronica Pham",
-   "date": "2026-09-06",
-   "change": "dropped"
-  },
-  {
-   "id": "9488fb48a64f",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-09-07",
-   "change": "dropped"
+   "id": "b55082d095d3",
+   "title": "BTown Coffee Club",
+   "date": "2026-09-05",
+   "change": "missing",
+   "lastSeen": "2026-07-26T07:06:28-04:00"
   },
   {
    "id": "9e4f367f6003",
