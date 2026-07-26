@@ -4384,6 +4384,7 @@ a.events-all-link:focus-visible { background: var(--bg-subtle); outline: none; }
   text-decoration: none;
 }
 .bor-sevendays-link:hover { text-decoration: underline; }
+.bor-compare { margin-top: var(--space-1); }
 .bor-entry-note {
   font-size: var(--text-xs);
   color: var(--ink-4);
@@ -4435,6 +4436,14 @@ a.events-all-link:focus-visible { background: var(--bg-subtle); outline: none; }
 
 .bor-empty { color: var(--ink-3); font-size: var(--text-sm); padding: var(--space-3) 0; }
 .bor-hidden { display: none !important; }
+
+/* This page has its own clear button — hide WebKit's built-in one so the
+   search box doesn't show two ×s. */
+#bor-search::-webkit-search-cancel-button,
+#bor-search::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
 
 @media (max-width: 560px) {
   .bor-category > summary { flex-wrap: wrap; row-gap: 2px; }

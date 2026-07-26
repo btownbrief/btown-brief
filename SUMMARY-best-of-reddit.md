@@ -134,3 +134,45 @@ in the new script — sort order stays roughly chronological, just not to the mi
    session. If GitHub's own IPs get 403'd on direct Reddit (likely, matching the rest of
    this codebase's experience) it'll fall through to Inoreader automatically — no secret/
    credential setup needed, same as the two existing Reddit streams.
+
+---
+
+## 2026-07-26 revision (feat/bestof-fixes)
+
+Fixes from a page audit (research → data → render → live page):
+
+1. **Same-question merge.** The source lists number repeat questions ("Best
+   Burger 1"…"Best Burger 6") and list some questions several times; the
+   original seed passed that through, so the page showed three cards all
+   titled "Best Burger" plus "Best Burger 4/5/6" as separate cards. The seed
+   now merges on (category, question-minus-trailing-number): 310 raw entries
+   → 232 question cards, each showing all of its threads newest-first. A
+   question with any 2025 ask counts as active; its 2023 thread joins the
+   card with a 2023 badge (12 former "2023-only" cards folded in this way).
+2. **Link labels from thread slugs.** Labels like "Best Burger 2" (bluepied's
+   numbering) are replaced by the humanized Reddit slug ("Best burgers in
+   town"), which mirrors the real thread title. Truncated slugs get an
+   ellipsis; two different threads with identical slugs get "(asked again)".
+3. **Reader-facing copy.** All 102 maintainer-facing notes from the raw data
+   are dropped at transform time (raw stays frozen); the Rasputins
+   comment-suggestion note is rewritten for readers. Hero no longer claims
+   the subreddit "voted" (they're link indexes, not ballots) and no longer
+   hardcodes the 310 count.
+4. **Search box.** #bor-search is type="search" and has a custom clear
+   button; WebKit's native cancel button is now hidden so there's one ×.
+5. **Seven Days comparison actually shipped.** data/sevendays.json holds
+   researched Seven Daysies readers' choice winners; the seed matches them to
+   questions/categories and the page renders a "🏆 Seven Daysies YEAR:
+   Winner" row under the Reddit threads — crowd's take vs ballot-box take.
+   The category-level link moved out of <summary> (a link there both
+   navigates and toggles).
+
+Honest counts: 317 rendered thread links = 318 raw sources (317 list links +
+1 comment-mined source) minus the one exact duplicate (the 2025 list linked
+"Best Place for a Date" twice at the same URL — bluepied's own dupe,
+verified against the Wayback snapshot).
+
+Still deliberately not built: Tier 2 named answers, and the brief's
+"Recently asked, not yet confirmed" auto-detection section (the
+r/GoodBurlington strip remains a separate block rather than per-entry
+corroboration — revisit if the page earns traffic).

@@ -1,7 +1,9 @@
-/* Best of r/burlington — renders data/best-of-reddit.json (18 categories,
-   310 merged 2023+2025 "best X" questions — Tier 1: a link directory, no
-   named-winner extraction, see SUMMARY-best-of-reddit.md) plus a "Recently
-   on r/GoodBurlington" strip from data/reddit.json. */
+/* Best of r/burlington — renders data/best-of-reddit.json (18 categories of
+   merged 2023+2025 "best X" questions, repeat asks collapsed into one card
+   with all their threads — Tier 1: a link directory, no named-winner
+   extraction, see SUMMARY-best-of-reddit.md), with Seven Daysies picks shown
+   alongside for comparison where one exists, plus a "Recently on
+   r/GoodBurlington" strip from data/reddit.json. */
 (function () {
   'use strict';
 
@@ -46,16 +48,21 @@
     var links = groupSources(entry.sources).map(sourceLinkHTML).join('');
     var tip = entry.status === 'comment-suggestion'
       ? '<span class="bor-badge-tip">💬 comment tip</span>' : '';
+    // The Seven Daysies pick renders on its own row under the Reddit
+    // threads: crowd's take above, ballot-box take below.
     var sevendays = entry.sevendays_url
-      ? '<a class="bor-sevendays-link" href="' + esc(entry.sevendays_url) + '" target="_blank" rel="noopener">' +
-        esc(entry.sevendays_note || "Seven Days' take") + ' →</a>' : '';
+      ? '<div class="bor-entry-links bor-compare">' +
+          '<a class="bor-sevendays-link" href="' + esc(entry.sevendays_url) + '" target="_blank" rel="noopener">' +
+          '🏆 ' + esc(entry.sevendays_note || "Seven Days' take") + ' ↗</a>' +
+        '</div>' : '';
     var note = entry.notes ? '<p class="bor-entry-note">' + esc(entry.notes) + '</p>' : '';
     return (
       '<div class="bor-entry" data-q="' + esc(entry.question.toLowerCase()) + '">' +
         '<div class="bor-entry-head">' +
           '<span class="bor-entry-q">' + esc(entry.question) + '</span>' + tip +
         '</div>' +
-        '<div class="bor-entry-links">' + links + sevendays + '</div>' +
+        '<div class="bor-entry-links">' + links + '</div>' +
+        sevendays +
         note +
       '</div>'
     );
@@ -64,9 +71,11 @@
   function categoryHTML(cat) {
     var primary = cat.entries.filter(function (e) { return e.status !== '2023-only'; });
     var legacy = cat.entries.filter(function (e) { return e.status === '2023-only'; });
+    // Rendered inside the category body, not the <summary> — a link in a
+    // summary both navigates and toggles the details on one click.
     var sevendays = cat.sevendays_url
-      ? '<a class="bor-category-sevendays" href="' + esc(cat.sevendays_url) + '" target="_blank" rel="noopener">' +
-        esc(cat.sevendays_note || "Seven Days' take") + ' →</a>' : '';
+      ? '<div class="bor-entry-links bor-compare"><a class="bor-sevendays-link" href="' + esc(cat.sevendays_url) + '" target="_blank" rel="noopener">' +
+        '🏆 ' + esc(cat.sevendays_note || "Seven Days' take") + ' ↗</a></div>' : '';
     var legacyHTML = legacy.length ? (
       '<details class="bor-legacy">' +
         '<summary>From the 2023 edition (' + fmtCount(legacy.length, 'question') + ', not reconfirmed in 2025)</summary>' +
@@ -78,9 +87,9 @@
         '<summary>' +
           '<span class="bor-category-title">' + esc(cat.title) + '</span>' +
           '<span class="bor-category-count">' + fmtCount(cat.counts.total, 'question') + '</span>' +
-          sevendays +
         '</summary>' +
         '<div class="bor-category-body">' +
+          sevendays +
           '<div class="bor-entries">' + (primary.map(entryHTML).join('') || '<p class="bor-empty">Nothing current — see the 2023 edition below.</p>') + '</div>' +
           legacyHTML +
         '</div>' +
