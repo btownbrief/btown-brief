@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-27T04:59:05+00:00",
+ "generated": "2026-07-27T08:50:28+00:00",
  "events": [
   {
    "ts": "2026-07-20T12:02:35+00:00",
@@ -1903,6 +1903,17 @@
    "sourceName": "NBC5",
    "priority": 1,
    "kind": "added"
+  },
+  {
+   "ts": "2026-07-27T08:50:28+00:00",
+   "category": "weather",
+   "headline": "Monday: Isolated showers and thunderstorms after 5pm",
+   "detail": "",
+   "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121",
+   "source": "nws-weather",
+   "sourceName": "NWS Burlington",
+   "priority": 2,
+   "kind": "changed"
   }
  ]
 }
