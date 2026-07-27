@@ -1,35 +1,35 @@
 {
- "updated": "2026-07-27T20:09:05+00:00",
+ "updated": "2026-07-27T21:39:47+00:00",
  "sections_updated": {
-  "now": "2026-07-27T20:09:05+00:00",
-  "forecast": "2026-07-27T20:09:05+00:00",
-  "hourly": "2026-07-27T20:09:05+00:00",
-  "alerts": "2026-07-27T20:09:05+00:00",
-  "afd": "2026-07-27T20:09:05+00:00",
-  "lake_forecast": "2026-07-27T20:09:05+00:00",
-  "lake_gage": "2026-07-27T20:09:05+00:00",
-  "air": "2026-07-27T20:09:05+00:00",
-  "sun": "2026-07-27T20:09:05+00:00",
-  "models": "2026-07-27T20:09:05+00:00"
+  "now": "2026-07-27T21:39:47+00:00",
+  "forecast": "2026-07-27T21:39:47+00:00",
+  "hourly": "2026-07-27T21:39:47+00:00",
+  "alerts": "2026-07-27T21:39:47+00:00",
+  "afd": "2026-07-27T21:39:47+00:00",
+  "lake_forecast": "2026-07-27T21:39:47+00:00",
+  "lake_gage": "2026-07-27T21:39:47+00:00",
+  "air": "2026-07-27T21:39:47+00:00",
+  "sun": "2026-07-27T21:39:47+00:00",
+  "models": "2026-07-27T21:39:47+00:00"
  },
  "now": {
-  "observed_at": "2026-07-27T19:50:00+00:00",
+  "observed_at": "2026-07-27T21:20:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
-  "temp_f": 88,
-  "feels_like_f": 87,
+  "description": "Clear",
+  "temp_f": 86,
+  "feels_like_f": 85,
   "humidity": 38,
-  "dewpoint_f": 59,
-  "wind_mph": 8,
+  "dewpoint_f": 57,
+  "wind_mph": 9,
   "wind_gust_mph": null,
-  "wind_dir": "W"
+  "wind_dir": "SW"
  },
  "forecast": {
   "updated": "2026-07-27T18:25:33+00:00",
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-07-27T16:00:00-04:00",
+    "start": "2026-07-27T17:00:00-04:00",
     "is_day": true,
     "temp_f": 86,
     "pop": 19,
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-07-27T18:25:33+00:00",
   "hours": [
-   {
-    "t": "2026-07-27T16:00:00-04:00",
-    "temp_f": 85,
-    "feels_f": 86,
-    "pop": 16,
-    "humidity": 50,
-    "wind_mph": 5,
-    "wind_dir": "SW",
-    "sky": 42,
-    "short": "Isolated Showers And Thunderstorms"
-   },
    {
     "t": "2026-07-27T17:00:00-04:00",
     "temp_f": 82,
@@ -567,6 +556,17 @@
     "wind_dir": "SE",
     "sky": 88,
     "short": "Rain Showers Likely"
+   },
+   {
+    "t": "2026-07-29T04:00:00-04:00",
+    "temp_f": 68,
+    "feels_f": 68,
+    "pop": 56,
+    "humidity": 90,
+    "wind_mph": 7,
+    "wind_dir": "SE",
+    "sky": 89,
+    "short": "Rain Showers Likely"
    }
   ]
  },
@@ -852,17 +852,17 @@
  },
  "lake_gage": {
   "water_temp_f": 74,
-  "water_temp_at": "2026-07-27T16:00:00.000-04:00",
-  "level_ft": 95.5,
-  "level_at": "2026-07-27T16:00:00.000-04:00",
+  "water_temp_at": "2026-07-27T17:00:00.000-04:00",
+  "level_ft": 95.51,
+  "level_at": "2026-07-27T17:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 45,
+  "aqi": 47,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "07/27/26 15:00",
+  "observed": "07/27/26 17:00",
   "discussion": "Expect moderate levels of fine particulate matter (PM2.5) in Vermont on Tuesday, July 28th."
  },
  "sun": {
@@ -879,10 +879,10 @@
     "high_f": {
      "GFS": 88,
      "Euro": 84,
-     "ICON": 83
+     "ICON": 84
     },
     "pop_max": {
-     "GFS": 14,
+     "GFS": 26,
      "Euro": 73,
      "ICON": 45
     },
@@ -891,43 +891,43 @@
      "Euro": 0.04,
      "ICON": 0.26
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-07-28",
     "high_f": {
-     "GFS": 84,
+     "GFS": 87,
      "Euro": 82,
-     "ICON": 80
+     "ICON": 82
     },
     "pop_max": {
-     "GFS": 59,
+     "GFS": 55,
      "Euro": 94,
      "ICON": 68
     },
     "precip_in": {
-     "GFS": 1.06,
+     "GFS": 0.0,
      "Euro": 0.15,
-     "ICON": 0.06
+     "ICON": 0.05
     },
-    "high_spread_f": 4
+    "high_spread_f": 5
    },
    {
     "date": "2026-07-29",
     "high_f": {
-     "GFS": 70,
+     "GFS": 74,
      "Euro": 72,
-     "ICON": 70
+     "ICON": 72
     },
     "pop_max": {
-     "GFS": 66,
+     "GFS": 76,
      "Euro": 86,
      "ICON": 65
     },
     "precip_in": {
-     "GFS": 0.77,
+     "GFS": 0.69,
      "Euro": 2.5,
-     "ICON": 0.62
+     "ICON": 0.73
     },
     "high_spread_f": 2
    }
