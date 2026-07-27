@@ -1,29 +1,29 @@
 {
- "generated": "2026-07-27T08:43:55-04:00",
+ "generated": "2026-07-27T17:46:46-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 24,
-   "seconds": 5.9
+   "seconds": 6.3
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 72,
-   "seconds": 2.8
+   "seconds": 4.8
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 59,
-   "seconds": 2.9
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 159,
-   "seconds": 2.1
+   "seconds": 2.4
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 82,
+   "count": 83,
    "seconds": 1.5
   },
   "echo": {
@@ -39,22 +39,22 @@
   "facebook": {
    "label": "Facebook (manual drops)",
    "count": 70,
-   "seconds": 0.1
+   "seconds": 0.0
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 197,
-   "seconds": 77.0
+   "seconds": 75.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 20,
-   "seconds": 2.6
+   "seconds": 2.8
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 40.3
+   "seconds": 42.4
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 68,
-   "seconds": 113.8
+   "seconds": 112.8
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 535,
-   "seconds": 67.2
+   "count": 542,
+   "seconds": 70.5
   },
   "meetup": {
    "label": "Meetup",
    "count": 65,
-   "seconds": 123.2
+   "seconds": 130.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 25,
-   "seconds": 16.0
+   "seconds": 15.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 67,
-   "seconds": 4.5
+   "count": 66,
+   "seconds": 4.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 39,
-   "seconds": 29.4
+   "count": 40,
+   "seconds": 31.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,30 +124,19 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 56,
-   "seconds": 74.3
+   "seconds": 75.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 27,
-   "seconds": 0.2
+   "seconds": 0.3
   }
  },
- "gathered": 2323,
- "afterDedup": 1191,
- "duplicatesMerged": 1132,
- "final": 2130,
+ "gathered": 2331,
+ "afterDedup": 1198,
+ "duplicatesMerged": 1133,
+ "final": 2138,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Gregory Alan Isakov with Vermont Symphony Orchestra",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-08-24"
-  },
   {
    "kept": {
     "title": "Queer/LGBTQ+ Horror Book Club",
@@ -2137,6 +2126,17 @@
   },
   {
    "kept": {
+    "title": "A Celebration of Vermont Cheese",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2387,6 +2387,20 @@
    "lastSeen": "2026-07-25T17:34:35-04:00"
   },
   {
+   "id": "7939e5103bbf",
+   "title": "Art Wall - Vibrant Lives: Discovering Our Roots of Black Vermont",
+   "date": "2026-08-17",
+   "change": "missing",
+   "lastSeen": "2026-07-27T08:43:55-04:00"
+  },
+  {
+   "id": "5fe41f2d87aa",
+   "title": "Adult Drop- In Table Tennis",
+   "date": "2026-08-17",
+   "change": "missing",
+   "lastSeen": "2026-07-27T08:43:55-04:00"
+  },
+  {
    "id": "4b0f5a6f4646",
    "title": "BTown Coffee Club",
    "date": "2026-08-22",
@@ -2429,17 +2443,10 @@
    "lastSeen": "2026-07-26T07:06:28-04:00"
   },
   {
-   "id": "9e4f367f6003",
-   "title": "Dream / Mộng : Veronica Pham",
-   "date": "2026-09-08",
-   "change": "dropped"
-  },
-  {
    "id": "d0aec80f5ccd",
    "title": "Dream / Mộng : Veronica Pham",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-07-24T17:44:08-04:00"
+   "change": "dropped"
   },
   {
    "id": "812b01e9ca25",
