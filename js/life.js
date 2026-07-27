@@ -393,6 +393,152 @@
     }
   }
 
+  /* ---------- The week ahead ----------
+     NWS ships the 7-day forecast as 14 half-day periods (day/night
+     alternating). We fold each pair back into one calendar day so the
+     strip reads the way a person thinks about a week: high, low, and
+     what the sky is doing. The forecaster's full wording for both
+     halves lives in the panel underneath, one day at a time — putting
+     it inside each card would squeeze seven columns into unreadable
+     slivers. */
+
+  function btvDayKey(iso) {
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone: BTV_TZ, year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(new Date(iso));
+  }
+
+  // One glyph per sky. Order matters: the nastiest condition mentioned
+  // in the short forecast wins, because "Mostly Sunny then Thunderstorms"
+  // is a thunderstorm day to anyone making plans — unless the odds say
+  // otherwise. NWS says "isolated" and "slight chance" for a reason, and
+  // stamping a thunderhead on a 20% day that's mostly sun is a lie.
+  function skyGlyph(short, pop) {
+    var s = (short || '').toLowerCase();
+    if (pop != null && pop < 30 && /sunny|clear/.test(s)) return '⛅';
+    if (/thunder/.test(s)) return '⛈️';
+    if (/snow|flurr|sleet|wintry|ice/.test(s)) return '🌨️';
+    if (/rain|shower|drizzle/.test(s)) return '🌧️';
+    if (/fog|haze|smoke/.test(s)) return '🌫️';
+    if (/mostly cloudy|cloudy|overcast/.test(s)) return '☁️';
+    if (/partly sunny|partly cloudy|mostly sunny/.test(s)) return '⛅';
+    if (/sunny|clear/.test(s)) return '☀️';
+    return '🌤️';
+  }
+
+  function groupForecastDays(periods) {
+    var days = [], byKey = {};
+    periods.forEach(function (p) {
+      var key = p.start ? btvDayKey(p.start) : null;
+      var day;
+      if (key && byKey[key]) {
+        day = byKey[key];
+      } else if (!key && !p.is_day && days.length && days[days.length - 1].low == null) {
+        // Data written before `start` existed: a night period belongs to
+        // the day just before it.
+        day = days[days.length - 1];
+      } else {
+        day = { key: key, start: p.start || null, high: null, low: null,
+                dayShort: null, nightShort: null, dayPop: null, nightPop: null,
+                wind: null, dayName: null, nightName: null,
+                dayDetail: null, nightDetail: null };
+        days.push(day);
+        if (key) byKey[key] = day;
+      }
+      if (!day.start && p.start) day.start = p.start;
+      if (p.is_day) {
+        day.high = p.temp_f; day.dayShort = p.short; day.dayDetail = p.detailed;
+        day.dayName = p.name; day.dayPop = p.pop; day.wind = p.wind;
+      } else {
+        day.low = p.temp_f; day.nightShort = p.short; day.nightDetail = p.detailed;
+        day.nightName = p.name; day.nightPop = p.pop;
+        if (!day.wind) day.wind = p.wind;
+      }
+    });
+    return days;
+  }
+
+  function renderWeek(d) {
+    var sec = el('week-section'), grid = el('week-grid');
+    if (!sec || !grid) return;
+
+    var periods = ((d.forecast || {}).periods) || [];
+    var days = groupForecastDays(periods);
+    if (days.length < 2) { sec.hidden = true; return; }
+
+    var todayKey = new Intl.DateTimeFormat('en-CA', {
+      timeZone: BTV_TZ, year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(new Date());
+
+    grid.innerHTML = days.map(function (day, i) {
+      var label, sub = '';
+      if (day.start) {
+        var dt = new Date(day.start);
+        label = day.key === todayKey ? 'Today'
+          : dt.toLocaleDateString('en-US', { weekday: 'short', timeZone: BTV_TZ });
+        sub = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: BTV_TZ });
+      } else {
+        label = (day.dayName || day.nightName || '').replace(/ Night$/, '');
+      }
+      // Daytime drives the card — it's what people plan around. A
+      // night-only entry (the page loaded after dark) falls back to it.
+      var short = day.dayShort || day.nightShort || '';
+      var pop = day.dayPop != null ? day.dayPop : day.nightPop;
+      return '<button class="week-card' + (i === 0 ? ' is-selected' : '') +
+        '" type="button" data-day="' + i + '" aria-pressed="' + (i === 0) + '">' +
+        '<span class="week-day">' + esc(label) + '</span>' +
+        (sub ? '<span class="week-date">' + esc(sub) + '</span>' : '') +
+        '<span class="week-glyph" aria-hidden="true">' + skyGlyph(short, pop) + '</span>' +
+        '<span class="week-temps">' +
+          '<span class="week-high">' + (day.high != null ? day.high + '°' : '—') + '</span>' +
+          '<span class="week-low">' + (day.low != null ? day.low + '°' : '—') + '</span>' +
+        '</span>' +
+        // Under ~15% is forecaster noise, not a reason to carry an umbrella.
+        (pop != null && pop >= 15
+          ? '<span class="week-pop">' + pop + '%</span>'
+          : '<span class="week-pop week-pop-dry">—</span>') +
+        '<span class="week-short">' + esc(short) + '</span>' +
+        '</button>';
+    }).join('');
+
+    function showDetail(i) {
+      var day = days[i];
+      if (!day) return;
+      var parts = [];
+      if (day.dayDetail) {
+        parts.push('<p><span class="week-detail-when">' + esc(day.dayName || 'Day') +
+          '</span> ' + esc(day.dayDetail) + '</p>');
+      }
+      if (day.nightDetail) {
+        parts.push('<p><span class="week-detail-when">' + esc(day.nightName || 'Night') +
+          '</span> ' + esc(day.nightDetail) + '</p>');
+      }
+      el('week-detail').innerHTML = parts.join('');
+    }
+
+    grid.addEventListener('click', function (e) {
+      var btn = e.target.closest('.week-card');
+      if (!btn) return;
+      Array.prototype.forEach.call(grid.querySelectorAll('.week-card'), function (c) {
+        var on = c === btn;
+        c.classList.toggle('is-selected', on);
+        c.setAttribute('aria-pressed', String(on));
+      });
+      showDetail(Number(btn.getAttribute('data-day')));
+    });
+
+    showDetail(0);
+
+    var issued = (d.forecast || {}).updated || (d.sections_updated || {}).forecast;
+    var note = el('week-note');
+    if (note && issued) {
+      note.innerHTML = 'Forecast issued ' + esc(fmtAgo(issued)) +
+        ' by <a href="https://www.weather.gov/btv/" target="_blank" rel="noopener">NWS Burlington</a>. ' +
+        'Confidence drops fast past day three — treat the back half as a lean, not a plan.';
+    }
+    sec.hidden = false;
+  }
+
   function renderScores(d) {
     var grid = el('life-grid');
     if (!grid || !d.hourly || !d.hourly.hours) return;
@@ -551,6 +697,7 @@
   function init() {
     getJSON(DATA_URL).then(function (d) {
       renderNow(d);
+      renderWeek(d);
       renderScores(d);
       getJSON(BEACH_URL).then(function (b) { renderBeaches(d, b); })
         .catch(function () { renderBeaches(d, null); });

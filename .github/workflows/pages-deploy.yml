@@ -5,15 +5,28 @@ name: Deploy static site to GitHub Pages
 #
 # Triggers:
 #  - push to main (human commits / PR merges)
-#  - after the hourly "Refresh community data" run, because commits it makes
-#    with the built-in GITHUB_TOKEN do NOT trigger `push` events. Without
-#    this, auto-refreshed data (newsletter, events, reddit) never deploys.
+#  - after EVERY data-refresh workflow, because commits they make with the
+#    built-in GITHUB_TOKEN do NOT trigger `push` events. Listing only one
+#    refresh workflow here meant weather, the read, events, jobs, etc. sat
+#    on main undeployed until the next community-data run happened to fire
+#    — the live page routinely ran hours behind the committed data.
+#    Every workflow that commits to main belongs in this list.
 
 on:
   push:
     branches: ["main"]
   workflow_run:
-    workflows: ["Refresh community data"]
+    workflows:
+      - "Refresh community data"
+      - "Refresh weather data"
+      - "Publish morning read by 7 AM"
+      - "Refresh change log"
+      - "Refresh Burlington Pulse"
+      - "Refresh civic meetings"
+      - "Refresh events calendar"
+      - "Refresh jobs data"
+      - "Refresh rent snapshot"
+      - "Community photos housekeeping"
     types: [completed]
   workflow_dispatch:
 
@@ -28,6 +41,9 @@ concurrency:
 
 jobs:
   deploy:
+    # A refresh that failed committed nothing (each script keeps last-good
+    # data), so there is nothing new to publish — skip the deploy.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

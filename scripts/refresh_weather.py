@@ -111,12 +111,18 @@ def fetch_now():
 
 
 def fetch_forecast():
-    """7-day forecast periods (half-day granularity) — first 6 for the page."""
+    """The full 7-day forecast at NWS's half-day granularity (14 periods,
+    day/night alternating). The hero line uses period 0; the week-ahead strip
+    on the page pairs each day with its night, so keep them all — trimming to
+    6 here is what used to cap the page at three days."""
     data = fetch_json_retry(f"https://api.weather.gov/gridpoints/{NWS_GRID}/forecast")
     periods = []
-    for per in data["properties"]["periods"][:6]:
+    for per in data["properties"]["periods"][:14]:
         periods.append({
             "name": per["name"],
+            # start lets the page group day+night into one calendar day
+            # without re-deriving it from the period names.
+            "start": per.get("startTime"),
             "is_day": per["isDaytime"],
             "temp_f": per["temperature"],
             "pop": (per.get("probabilityOfPrecipitation") or {}).get("value") or 0,
