@@ -1,30 +1,30 @@
 {
- "generated": "2026-07-26T17:36:58-04:00",
+ "generated": "2026-07-27T08:43:55-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 25,
+   "count": 24,
    "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 75,
-   "seconds": 3.0
+   "count": 72,
+   "seconds": 2.8
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 59,
-   "seconds": 3.1
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 159,
-   "seconds": 2.8
+   "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 82,
-   "seconds": 1.8
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-26&end_date=2026-09-24&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-27&end_date=2026-09-25&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 78,
+   "count": 70,
    "seconds": 0.1
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 197,
-   "seconds": 71.2
+   "seconds": 77.0
   },
   "flynn": {
    "label": "The Flynn",
    "count": 20,
-   "seconds": 2.7
+   "seconds": 2.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.3
+   "seconds": 40.3
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 67,
-   "seconds": 98.2
+   "count": 68,
+   "seconds": 113.8
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 540,
-   "seconds": 75.3
+   "count": 535,
+   "seconds": 67.2
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 126.9
+   "count": 65,
+   "seconds": 123.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 25,
-   "seconds": 14.7
+   "seconds": 16.0
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 68,
-   "seconds": 1.4
+   "count": 67,
+   "seconds": 4.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 39,
-   "seconds": 29.2
+   "seconds": 29.4
   },
   "sevendays": {
    "label": "Seven Days",
@@ -123,121 +123,20 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 54,
-   "seconds": 71.6
+   "count": 56,
+   "seconds": 74.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 27,
-   "seconds": 0.7
+   "seconds": 0.2
   }
  },
- "gathered": 2337,
- "afterDedup": 1205,
+ "gathered": 2323,
+ "afterDedup": 1191,
  "duplicatesMerged": 1132,
- "final": 2163,
+ "final": 2130,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "HIDDEN BRAIN",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "flynn"
-   ],
-   "date": "2026-08-23"
-  },
-  {
-   "kept": {
-    "title": "Mad Caddies",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-08-23"
-  },
-  {
-   "kept": {
-    "title": "Morgan Wade",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-08-23"
-  },
-  {
-   "kept": {
-    "title": "Switchback Sessions",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "loveburlington"
-   ],
-   "date": "2026-08-23"
-  },
-  {
-   "kept": {
-    "title": "Dinosaur Safari Exhibit",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-23"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-23"
-  },
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-23"
-  },
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-23"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-23"
-  },
   {
    "kept": {
     "title": "Gregory Alan Isakov with Vermont Symphony Orchestra",
@@ -2020,6 +1919,7 @@
    },
    "merged_sources": [
     "breweries",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-12"
@@ -2048,11 +1948,78 @@
   },
   {
    "kept": {
+    "title": "21st Annual Kelly Brush Ride - Middlebury College Alumni Stadium - Can join remote!",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-12"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-12"
+  },
+  {
+   "kept": {
+    "title": "Everything is Everything: Will Kasso Condry",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-12"
+  },
+  {
+   "kept": {
+    "title": "Dream / Mộng : Veronica Pham",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-12"
+  },
+  {
+   "kept": {
+    "title": "Color & Scale: Leah Barranco",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-12"
+  },
+  {
+   "kept": {
+    "title": "Brain Freezer 5K",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-12"
+  },
+  {
+   "kept": {
     "title": "Sicard Hollow",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-13"
@@ -2064,6 +2031,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-13"
@@ -2354,42 +2322,48 @@
     "loveburlington"
    ],
    "date": "2026-09-24"
+  },
+  {
+   "kept": {
+    "title": "A Band of Brothers",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-09-25"
+  },
+  {
+   "kept": {
+    "title": "Tophouse",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-09-25"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-25"
   }
  ],
  "changes": [
   {
-   "id": "226b9ca57c83",
-   "title": "Centennial Hills Hike and Winooski Circle",
-   "date": "2026-07-26",
+   "id": "60d9bf32fe57",
+   "title": "Therapy Dog Mick Visit",
+   "date": "2026-07-29",
    "change": "missing",
-   "lastSeen": "2026-07-26T07:06:28-04:00"
-  },
-  {
-   "id": "27ef92570ff0",
-   "title": "French Day with Déjà-Nous",
-   "date": "2026-07-26",
-   "change": "missing",
-   "lastSeen": "2026-07-26T07:06:28-04:00"
-  },
-  {
-   "id": "1f1e141a2fb0",
-   "title": "Film Screening: Playtime",
-   "date": "2026-07-26",
-   "change": "missing",
-   "lastSeen": "2026-07-25T17:34:35-04:00"
-  },
-  {
-   "id": "16d636efe3cb",
-   "title": "Womxn's Pick-up Soccer - Outdoors at Starr Farm Park",
-   "date": "2026-07-26",
-   "change": "missing",
-   "lastSeen": "2026-07-26T07:06:28-04:00"
-  },
-  {
-   "id": "01bde8c90f8e",
-   "title": "Twilight Series: The Wolff Sisters with Milton Busker and the Grimm Work",
-   "date": "2026-08-01",
-   "change": "dropped"
+   "lastSeen": "2026-07-26T17:36:58-04:00"
   },
   {
    "id": "e885b8f5384b",
@@ -2411,6 +2385,27 @@
    "date": "2026-08-08",
    "change": "missing",
    "lastSeen": "2026-07-25T17:34:35-04:00"
+  },
+  {
+   "id": "4b0f5a6f4646",
+   "title": "BTown Coffee Club",
+   "date": "2026-08-22",
+   "change": "missing",
+   "lastSeen": "2026-07-26T17:36:58-04:00"
+  },
+  {
+   "id": "27513e965cf4",
+   "title": "Live Music @ Maquam Winery",
+   "date": "2026-08-27",
+   "change": "missing",
+   "lastSeen": "2026-07-26T17:36:58-04:00"
+  },
+  {
+   "id": "4b803ba3457f",
+   "title": "Trivia at Four Quarters",
+   "date": "2026-08-27",
+   "change": "missing",
+   "lastSeen": "2026-07-26T17:36:58-04:00"
   },
   {
    "id": "88e8ca120f68",
@@ -2437,8 +2432,7 @@
    "id": "9e4f367f6003",
    "title": "Dream / Mộng : Veronica Pham",
    "date": "2026-09-08",
-   "change": "missing",
-   "lastSeen": "2026-07-23T17:40:53-04:00"
+   "change": "dropped"
   },
   {
    "id": "d0aec80f5ccd",
@@ -2460,6 +2454,13 @@
    "date": "2026-09-11",
    "change": "missing",
    "lastSeen": "2026-07-25T17:34:35-04:00"
+  },
+  {
+   "id": "ada1509c3a9f",
+   "title": "Dream / Mộng : Veronica Pham",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-07-26T17:36:58-04:00"
   }
  ]
 }
