@@ -3,35 +3,35 @@
   "alerts": [],
   "forecast_flag": {
    "day": "2026-07-28",
-   "text": "This Afternoon: A chance of showers and thunderstorms between 1pm and 4pm, then showers and thunderstorms"
+   "text": "Today: A chance of showers and thunderstorms between 1pm and 4pm, then showers and thunderstorms"
   }
  },
  "beach-status": {
   "beaches": {
    "Blanchard Beach North": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-07-28T15:16:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-07-28T18:39:00+00:00"
    },
    "Blanchard Beach South": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-07-28T15:16:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-07-28T18:39:00+00:00"
    },
    "Blodgett Water Access Point": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-07-28T15:11:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-07-28T18:34:00+00:00"
    },
    "Leddy Beach North": {
     "status": "open",
     "reason": "Choppy",
-    "resultTime": "2026-07-28T14:39:00+00:00"
+    "resultTime": "2026-07-28T18:19:00+00:00"
    },
    "Leddy Beach South": {
     "status": "open",
     "reason": "Choppy",
-    "resultTime": "2026-07-28T14:40:00+00:00"
+    "resultTime": "2026-07-28T18:19:00+00:00"
    },
    "North Beach North": {
     "status": "open",
@@ -41,7 +41,7 @@
    "North Beach South": {
     "status": "open",
     "reason": "Choppy",
-    "resultTime": "2026-07-28T14:52:00+00:00"
+    "resultTime": "2026-07-28T17:43:00+00:00"
    },
    "North Shore Natural Area": {
     "status": "open",
@@ -51,12 +51,12 @@
    "Oakledge Cove": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-07-28T16:42:00+00:00"
+    "resultTime": "2026-07-28T18:42:00+00:00"
    },
    "Texaco Beach": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-07-28T14:52:00+00:00"
+    "reason": "choppy",
+    "resultTime": "2026-07-28T17:41:00+00:00"
    }
   }
  },
@@ -431,7 +431,8 @@
     "start": "2026-07-28T15:00:00+00:00",
     "hasAgenda": true,
     "files": [
-     "Agenda V1"
+     "Agenda V1",
+     "Packet V1"
     ]
    },
    "10080": {
@@ -449,7 +450,7 @@
     "hasAgenda": true,
     "files": [
      "Police Commission Meeting 7.28",
-     "Police Commission Meeting"
+     "Police Commission Meeting 07.28.2026"
     ]
    },
    "9960": {
@@ -538,18 +539,46 @@
    "sevendays-news": {
     "items": [
      {
+      "id": "https://www.sevendaysvt.com/?p=213321",
+      "title": "First Bite: With Burl’s Downtown Kitchenette, a Diner Is a Diner Again",
+      "link": "https://www.sevendaysvt.com/food-drink/firstbite/first-bite-with-burls-downtown-kitchenette-a-diner-is-a-diner-again/",
+      "ts": "2026-07-28T17:57:56+00:00",
+      "summary": "The Oasis was a Burlington diner staple for 50 years, but its sleek car was most recently a taqueria. Now the Farmhouse Group returns it to its roots. The post First Bite: With Burl’s Downtown Kitchenette, a Diner Is a Diner Again appeared first on Seven Days . (Image: Bear Cieri)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=213307",
+      "title": "Feeding Champlain Valley Now in Charge of Gleaning in Chittenden County",
+      "link": "https://www.sevendaysvt.com/food-drink/agriculture/feeding-champlain-valley-now-in-charge-of-gleaning-in-chittenden-county/",
+      "ts": "2026-07-28T17:26:33+00:00",
+      "summary": "Volunteers harvest the excess produce that farmers can’t sell, and food shelves and other local anti-hunger organizations get it to people in need. The post Feeding Champlain Valley Now in Charge of Gleaning in Chittenden County appeared first on Seven Days . (Image: Cecilia Luce)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=213303",
+      "title": "Jamaican Taste Cuisine Cooks Home-Style Dishes in Burlington",
+      "link": "https://www.sevendaysvt.com/food-drink/foodnews/jamaican-taste-cuisine-cooks-home-style-dishes-in-burlington/",
+      "ts": "2026-07-28T17:05:20+00:00",
+      "summary": "Natalie Bailey is simmering up the classics of her native Caribbean island, such as oxtail stew and curry goat, in her small restaurant on lower Church Street. The post Jamaican Taste Cuisine Cooks Home-Style Dishes in Burlington appeared first on Seven Days . (Image: Melissa Pasanen)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=213300",
+      "title": "Twisted Halo Returns to Chittenden County With Essex Spot",
+      "link": "https://www.sevendaysvt.com/food-drink/foodnews/twisted-halo-returns-to-chittenden-county-with-essex-spot/",
+      "ts": "2026-07-28T17:00:35+00:00",
+      "summary": "With a second location, Emma Slater brings her signature crisp, custardy churro-style doughnuts made with fresh-milled local flour back to the Burlington area. The post Twisted Halo Returns to Chittenden County With Essex Spot appeared first on Seven Days . (Image: File: James Buck)"
+     },
+     {
       "id": "https://www.sevendaysvt.com/?p=213295",
       "title": "Entrées & Exits: Kiss the Cook Is for Sale; Cork Market on Moscow to Close",
       "link": "https://www.sevendaysvt.com/food-drink/foodnews/entrees-exits-kiss-the-cook-is-for-sale-cork-market-on-moscow-to-close/",
       "ts": "2026-07-28T16:54:08+00:00",
-      "summary": "In food retail news: A longtime kitchen shop on the Church Street Marketplace is looking for new owners, and one of Cork’s market locations in Stowe is done. The post Entrées & Exits: Kiss the Cook Is for Sale; Cork Market on Moscow to Close appeared first on Seven Days . (Image: File: JEB WALLACE-BRODEUR)"
+      "summary": "In food retail news: A longtime kitchen shop on the Church Street Marketplace is looking for new owners, and one of Cork’s market locations in Stowe is done. The post Entrées & Exits: Kiss the Cook Is for Sale; Cork Market on Moscow to Close appeared first on Seven Days . (Image: Melissa Pasanen)"
      },
      {
       "id": "https://www.sevendaysvt.com/?p=213229",
       "title": "Preacher Holds Open House for Faith-Based School on Green Mountain College Campus",
       "link": "https://www.sevendaysvt.com/news/preacher-holds-open-house-for-faith-based-school-on-green-mountain-college-campus/",
       "ts": "2026-07-28T15:40:46+00:00",
-      "summary": "Tommie Zito opened the Poultney campus to the public this week. But attendees were required to agree that they would not speak with the media. The post Preacher Holds Open House for Faith-Based School on Green Mountain College Campus appeared first on Seven Days . (Image: File: Caleb McKenna)"
+      "summary": "Tommie Zito opened the Poultney campus to the public this week. But visitors were required to agree that they would not speak with the media. The post Preacher Holds Open House for Faith-Based School on Green Mountain College Campus appeared first on Seven Days . (Image: File: Caleb Kenna)"
      },
      {
       "id": "https://www.sevendaysvt.com/?p=212992",
@@ -578,34 +607,6 @@
       "link": "https://www.sevendaysvt.com/guides/primaryvoterguide/vermonts-town-clerks-keep-a-watchful-eye-on-election-ballots/",
       "ts": "2026-07-28T13:50:00+00:00",
       "summary": "Per Vermont law, local election ballots must be kept in the town vault for 90 days, while state and federal primary and general election ballots are kept for 22 months. The post Vermont’s Town Clerks Keep a Watchful Eye on Election Ballots appeared first on Seven Days . (Image: Ian Curry)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=213102",
-      "title": "Q&A: 2026 Democratic Candidates for Vermont Governor",
-      "link": "https://www.sevendaysvt.com/guides/primaryvoterguide/qa-democratic-candidates-for-governor/",
-      "ts": "2026-07-28T13:45:00+00:00",
-      "summary": "Meet Amanda Janoo and Aly Richards, two Dems vying for the chance to challenge incumbent Republican Gov. Phil Scott in November The post Q&A: 2026 Democratic Candidates for Vermont Governor appeared first on Seven Days . (Image: Courtesy Photos)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=213110",
-      "title": "Q&A: 2026 Democratic Candidates for Lieutenant Governor",
-      "link": "https://www.sevendaysvt.com/guides/primaryvoterguide/qa-democratic-candidates-for-lieutenant-governor/",
-      "ts": "2026-07-28T13:40:00+00:00",
-      "summary": "Meet Esther Charlestin, Molly Gray and Ryan McLaren, democratic candidates seeking the chance to defeat Republican Lieutenant Governor John Rodgers The post Q&A: 2026 Democratic Candidates for Lieutenant Governor appeared first on Seven Days . (Image: Courtesy Photos)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=213115",
-      "title": "Q&A: 2026 Democratic Candidates for State Auditor",
-      "link": "https://www.sevendaysvt.com/guides/primaryvoterguide/qa-democratic-candidates-for-state-auditor/",
-      "ts": "2026-07-28T13:35:00+00:00",
-      "summary": "Democrats Tim Ashe and Nicholas Graeter seek their party's nomination in the Vermont State Auditor's race this November The post Q&A: 2026 Democratic Candidates for State Auditor appeared first on Seven Days . (Image: Courtesy Photos)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=213121",
-      "title": "Q&A: 2026 GOP Candidates for U.S. House",
-      "link": "https://www.sevendaysvt.com/guides/primaryvoterguide/qa-gop-candidates-for-u-s-house/",
-      "ts": "2026-07-28T13:30:00+00:00",
-      "summary": "Republicans Gerald Malloy and Mark Coester are seeking their party's nomination to serve Vermont in the U.S. House of Representatives The post Q&A: 2026 GOP Candidates for U.S. House appeared first on Seven Days . (Image: Courtesy)"
      }
     ]
    },
@@ -826,18 +827,18 @@
    "vermont-public": {
     "items": [
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-07-28/divers-raise-lost-revolutionary-war-artifact-from-lake-champlain",
-      "title": "Divers raise lost Revolutionary War artifact from Lake Champlain",
-      "link": "https://www.vermontpublic.org/local-news/2026-07-28/divers-raise-lost-revolutionary-war-artifact-from-lake-champlain",
-      "ts": "2026-07-28T09:00:00+00:00",
-      "summary": "The plan is for the fragment to reunite with its fellow cannon pieces at the Lake Champlain Maritime Museum in Vergennes."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
       "title": "In race for Chittenden County state’s attorney, progressive prosecution is on trial",
       "link": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
       "ts": "2026-07-28T09:00:00+00:00",
       "summary": "Incumbent State’s Attorney Sarah George has sought to use her office to address racial and economic disparities in the criminal justice system and reduce mass incarceration. Her challenger, Bram Kranichfeld, says those efforts are making the county less safe."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-07-28/divers-raise-lost-revolutionary-war-artifact-from-lake-champlain",
+      "title": "Divers raise lost Revolutionary War artifact from Lake Champlain",
+      "link": "https://www.vermontpublic.org/local-news/2026-07-28/divers-raise-lost-revolutionary-war-artifact-from-lake-champlain",
+      "ts": "2026-07-28T09:00:00+00:00",
+      "summary": "The plan is for the fragment to reunite with its fellow cannon pieces at the Lake Champlain Maritime Museum in Vergennes."
      },
      {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-07-27/vermont-business-leaders-call-for-the-abundance-agenda",
@@ -903,16 +904,30 @@
       "summary": "If a judge approves the sale, a nonprofit holding company would pay $4.3 million for the campus, securing its future as a parochial school."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-07-24/wanted-large-space-for-100-bed-emergency-shelter-in-chittenden-county",
-      "title": "Wanted: Large space for 100-bed emergency shelter in Chittenden County",
-      "link": "https://www.vermontpublic.org/local-news/2026-07-24/wanted-large-space-for-100-bed-emergency-shelter-in-chittenden-county",
+      "id": "https://www.vermontpublic.org/local-news/2026-07-24/cricket-blue-weaves-intricate-storylines-into-compact-and-complex-tunes",
+      "title": "Cricket Blue weaves intricate storylines into compact and complex tunes",
+      "link": "https://www.vermontpublic.org/local-news/2026-07-24/cricket-blue-weaves-intricate-storylines-into-compact-and-complex-tunes",
       "ts": "2026-07-24T09:00:00+00:00",
-      "summary": "If a suitable location is found, the year-round shelter would be the largest in the state, and could help stem the high number of people sleeping outdoors."
+      "summary": "This week's Friday Song is \"Ella 1\" from the Vermont-based chamber folk duo."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "TDXA6OZIHNHCBDSGER3O3I4K4M",
+      "title": "Vermont Green FC will defend its national championship live on WCAX",
+      "link": "https://www.wcax.com/2026/07/28/vermont-green-fc-will-defend-its-national-championship-live-wcax/",
+      "ts": "2026-07-28T17:12:31+00:00",
+      "summary": "WCAX will broadcast the USL2 National Final on Saturday between Vermont Green FC and the Flint City Bucks Saturday Aug. 1, at 7:30 p.m."
+     },
+     {
+      "id": "NXUJQ5XDBJG57CPQQZEVSIDLQU",
+      "title": "WATCH LIVE: Democrats for Vermont governor debate",
+      "link": "https://www.wcax.com/2026/07/28/watch-live-democrats-vermont-governor-debate/",
+      "ts": "2026-07-28T16:58:17+00:00",
+      "summary": "Watch live at 6:30 tonight on Channel 3 and WCAX.com."
+     },
      {
       "id": "6ZHT2XB5AND4TL2EX5MFGOHYIU",
       "title": "Northwest Medical Center makes Billings permanent CEO",
@@ -926,13 +941,6 @@
       "link": "https://www.wcax.com/2026/07/28/grocery-chain-price-choppers-fuel-partnership-with-sunoco-is-ending/",
       "ts": "2026-07-28T15:30:38+00:00",
       "summary": "Price Chopper and Market 32 shoppers who are enrolled in the AdvantEdge Rewards program will no longer receive a discount at Sunoco gas stations"
-     },
-     {
-      "id": "TDXA6OZIHNHCBDSGER3O3I4K4M",
-      "title": "Vermont Green FC will defend its national championship live on WCAX",
-      "link": "https://www.wcax.com/2026/07/28/vermont-green-fc-will-defend-its-national-championship-live-wcax/",
-      "ts": "2026-07-28T15:29:58+00:00",
-      "summary": "WCAX will broadcast the USL2 National Final on Saturday between Vermont Green FC and the Flint City Bucks Saturday Aug. 1, at 7:30 p.m."
      },
      {
       "id": "QQ2QXSWACRFXJAZCM5TG7LMKEA",
@@ -1255,18 +1263,81 @@
       "link": "https://www.wcax.com/2026/07/24/stuck-vt-touring-todd-hanleys-daylily-garden/",
       "ts": "2026-07-24T23:44:12+00:00",
       "summary": "Seven Days' Eva Sollberger visited Todd Hanley, who grows about 300 colorful varieties of daylilies in his hilltop Richmond garden."
-     },
-     {
-      "id": "FAZHFUSQZVDPZEGI6XC3ALGSAQ",
-      "title": "Pets with Potential: Meet Nyla, Cedar, Gardenia and Millie",
-      "link": "https://www.wcax.com/2026/07/24/pets-with-potential-meet-nyla-cedar-gardenia-millie/",
-      "ts": "2026-07-24T23:41:58+00:00",
-      "summary": "This week’s Pets with Potential come from the Pope Memorial Frontier Animal Society in Orleans."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73284029",
+      "title": "Trump and Netanyahu meet for first time since launching Iran War",
+      "link": "https://www.mynbc5.com/article/netanyahu-trump-meeting-iran-war/73284029",
+      "ts": "2026-07-28T18:47:00+00:00",
+      "summary": "Israeli Prime Minister Netanyahu and President Trump met at the White House for the first time since they launched a joint war against Iran."
+     },
+     {
+      "id": "73282932",
+      "title": "Zelenskyy has 'good meeting' with Trump as he seeks more cooperation with US",
+      "link": "https://www.mynbc5.com/article/trump-zelenskyy-white-house-ukraine/73282932",
+      "ts": "2026-07-28T18:42:00+00:00",
+      "summary": "President Trump and Ukrainian President Zelenskyy met to discuss Ukraine producing its own weapons amid its ongoing war with Russia."
+     },
+     {
+      "id": "73284715",
+      "title": "Aircraft lands safely following Phase 5 call at Leahy Burlington International Airport",
+      "link": "https://www.mynbc5.com/article/phase-5-call-leahy-burlington-international-airport/73284715",
+      "ts": "2026-07-28T18:33:00+00:00",
+      "summary": "Everyone on board a plane that issued a Phase 5 call for aid landed safely at Leahy Burlington International Airport on Tuesday, according to airport officials."
+     },
+     {
+      "id": "73282711",
+      "title": "LIVE: Lindsey Graham being honored in Capitol memorial services",
+      "link": "https://www.mynbc5.com/article/lindsey-graham-funeral-services/73282711",
+      "ts": "2026-07-28T18:21:00+00:00",
+      "summary": "Sen. Lindsey Graham will be eulogized Tuesday during memorial services across Washington."
+     },
+     {
+      "id": "73282550",
+      "title": "Isolated flooding possible in parts of Vermont, New York Tuesday night into Wednesday",
+      "link": "https://www.mynbc5.com/article/flooding-possible-vt-ny/73282550",
+      "ts": "2026-07-28T17:55:00+00:00",
+      "summary": "A few towns may pick up 4–6\"+ of rain in southern Vermont by late week"
+     },
+     {
+      "id": "73286598",
+      "title": "New Hampshire woman hits bear on Interstate 89 in Vermont",
+      "link": "https://www.mynbc5.com/article/berlin-vermont-bear-crash-i89/73286598",
+      "ts": "2026-07-28T17:49:00+00:00",
+      "summary": "A New Hampshire woman was luckily unhurt after she crashed into a bear while driving on Interstate 89 in Berlin on Monday."
+     },
+     {
+      "id": "73286382",
+      "title": "Scattered storms Tuesday afternoon, rain becomes steadier tonight",
+      "link": "https://www.mynbc5.com/article/scattered-storms-tuesday-afternoon-rain-becomes-steadier-tonight-07-28-26/73286382",
+      "ts": "2026-07-28T17:37:00+00:00",
+      "summary": "Widespread rain, with embedded downpours Wednesday; isolated flash flooding possible"
+     },
+     {
+      "id": "73276450",
+      "title": "Using payment apps? Here's how to protect your money from scammers",
+      "link": "https://www.mynbc5.com/article/payment-app-scams-how-to-get-money-back/73276450",
+      "ts": "2026-07-28T17:20:00+00:00",
+      "summary": "More people are losing money through payment apps. Here's why it's often difficult to recover your money and what you can do to protect yourself."
+     },
+     {
+      "id": "73286120",
+      "title": "Apple will now let you lease your next iPhone or Mac instead of buying it",
+      "link": "https://www.mynbc5.com/article/apple-launches-leasing-program-iphone-mac-ipad/73286120",
+      "ts": "2026-07-28T17:01:00+00:00",
+      "summary": "There are plenty of things you can lease: a car, an apartment or an office space, for example. Now you can add your next iPhone to that list."
+     },
+     {
+      "id": "73282028",
+      "title": "Japan earthquake: People missing in collapsed shopping mall",
+      "link": "https://www.mynbc5.com/article/earthquake-japan-july-28/73282028",
+      "ts": "2026-07-28T16:55:00+00:00",
+      "summary": "The second floor of a shopping mall in Japan collapsed after a 7.1-magnitude earthquake, trapping several people."
+     },
      {
       "id": "73285601",
       "title": "6 refugees share their stories on the 75th anniversary of the Refugee Convention",
@@ -1296,13 +1367,6 @@
       "summary": "A locomotive used for the Champlain Valley Dinner Train has a vivid new paint job featuring the Statue of Liberty, Liberty Bell, and the stars and stripes"
      },
      {
-      "id": "73284715",
-      "title": "Aircraft lands safely following Phase 5 call at Leahy Burlington International Airport",
-      "link": "https://www.mynbc5.com/article/phase-5-call-leahy-burlington-international-airport/73284715",
-      "ts": "2026-07-28T16:12:00+00:00",
-      "summary": "Everyone on board a plane that issued a Phase 5 call for aid landed safely at Leahy Burlington International Airport on Tuesday, according to airport officials."
-     },
-     {
       "id": "73281658",
       "title": "NTSB releases preliminary report from triple-fatal plane crash in the Adirondacks",
       "link": "https://www.mynbc5.com/article/saranac-lake-fatal-plane-crash-report-released/73281658",
@@ -1315,13 +1379,6 @@
       "link": "https://www.mynbc5.com/article/nancy-guthrie-sheriff-update-missing/73283888",
       "ts": "2026-07-28T15:55:00+00:00",
       "summary": "Nearly six months after Nancy Guthrie's mysterious disappearance, authorities emphasized that the case is \"still active\" and has not become a cold case."
-     },
-     {
-      "id": "73282711",
-      "title": "Lindsey Graham being honored in Capitol memorial services",
-      "link": "https://www.mynbc5.com/article/lindsey-graham-funeral-services/73282711",
-      "ts": "2026-07-28T15:45:00+00:00",
-      "summary": "Sen. Lindsey Graham will be eulogized Tuesday during memorial services across Washington."
      },
      {
       "id": "73284726",
@@ -1350,62 +1407,6 @@
       "link": "https://www.mynbc5.com/article/mechanicville-children-murdered-suicide/73284313",
       "ts": "2026-07-28T14:41:00+00:00",
       "summary": "Police in Mechanicville, New York, have revealed new information about the deaths of six family members, including four children, in a home last month."
-     },
-     {
-      "id": "73283329",
-      "title": "One month out: Preparations underway for 2026 Champlain Valley Fair",
-      "link": "https://www.mynbc5.com/article/preparations-underway-2026-champlain-valley-fair/73283329",
-      "ts": "2026-07-28T14:34:00+00:00",
-      "summary": "There is just one month until the annual Champlain Valley Fair. In preparation, staff is working with vendors and local partners to make sure everything is ready for the thousands of visitors expected to attend."
-     },
-     {
-      "id": "73284029",
-      "title": "Netanyahu's first meeting with Trump since the Iran war began is a chance to smooth over strains",
-      "link": "https://www.mynbc5.com/article/netanyahu-trump-meeting-iran-war/73284029",
-      "ts": "2026-07-28T14:32:00+00:00",
-      "summary": "Israeli Prime Minister Netanyahu’s meeting with President Trump is the first since the two leaders launched a joint war against Iran."
-     },
-     {
-      "id": "73282028",
-      "title": "Japan earthquake: Several feared trapped in collapsed shopping mall",
-      "link": "https://www.mynbc5.com/article/earthquake-japan-july-28/73282028",
-      "ts": "2026-07-28T14:32:00+00:00",
-      "summary": "An earthquake registering a magnitude of 7.1 shook part of southern Japan late Tuesday."
-     },
-     {
-      "id": "73284068",
-      "title": "Two people charged after gun pulled during McDonald's parking lot argument in Derby",
-      "link": "https://www.mynbc5.com/article/derby-vermont-mcdonalds-confrontation/73284068",
-      "ts": "2026-07-28T14:17:00+00:00",
-      "summary": "Vermont State Police are investigating a confrontation involving a gun in the parking lot of a McDonald’s in Derby and are asking witnesses to come forward."
-     },
-     {
-      "id": "73283484",
-      "title": "South Korean officials order evacuation after reported white phosphorus leak at US base",
-      "link": "https://www.mynbc5.com/article/white-phosphorus-leak-osan-air-base-pyeongtaek-south-korea/73283484",
-      "ts": "2026-07-28T12:59:00+00:00",
-      "summary": "A white phosphorus leak at a U.S. military base near Seoul, South Korea, led authorities to briefly order civilians to evacuate."
-     },
-     {
-      "id": "73283166",
-      "title": "Biden audio recordings include references to 'classified' material, struggles with memory",
-      "link": "https://www.mynbc5.com/article/biden-audio-tapes-classified-docs-hur-report/73283166",
-      "ts": "2026-07-28T12:40:00+00:00",
-      "summary": "Newly released audio clips of Joe Biden’s conversations with his biographer appear to show the former president disclosed classified material and displayed poor memory."
-     },
-     {
-      "id": "73282932",
-      "title": "Zelenskyy will visit Trump at the White House before Sen. Graham's funeral",
-      "link": "https://www.mynbc5.com/article/trump-zelenskyy-white-house-ukraine/73282932",
-      "ts": "2026-07-28T11:56:00+00:00",
-      "summary": "President Trump and Ukrainian President Zelenskyy are set to meet at the White House ahead of Sen. Lindsey Graham's funeral."
-     },
-     {
-      "id": "73282325",
-      "title": "Iran War: 5 months in and an end to the conflict remains uncertain",
-      "link": "https://www.mynbc5.com/article/iran-war-marks-5-months-end-to-conflict-uncertain/73282325",
-      "ts": "2026-07-28T11:43:00+00:00",
-      "summary": "The U.S.-Iran conflict continues after five months, with mixed signals from President Donald Trump on diplomacy and ongoing fighting despite an interim deal."
      }
     ]
    },
@@ -1479,13 +1480,6 @@
       "title": "06/25/2026 Motor Vehicle Crash | 26BU013852",
       "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3848",
       "ts": "2026-06-29T15:47:17+00:00",
-      "summary": ""
-     },
-     {
-      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3847/639182448150000000",
-      "title": "Champlain Parkway to Open Monday June 29th",
-      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3847",
-      "ts": "2026-06-28T17:00:15+00:00",
       "summary": ""
      }
     ]
