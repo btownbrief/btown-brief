@@ -3,7 +3,7 @@
   "alerts": [],
   "forecast_flag": {
    "day": "2026-07-28",
-   "text": "Today: A chance of showers and thunderstorms between 1pm and 4pm, then showers and thunderstorms"
+   "text": "This Afternoon: Showers and thunderstorms"
   }
  },
  "beach-status": {
@@ -485,6 +485,12 @@
     "hasAgenda": false,
     "files": []
    },
+   "10113": {
+    "name": "Conservation Board",
+    "start": "2026-08-03T17:30:00+00:00",
+    "hasAgenda": true,
+    "files": []
+   },
    "8641": {
     "name": "City Council Meeting",
     "start": "2026-08-03T18:00:00+00:00",
@@ -508,6 +514,12 @@
      "Agenda V2"
     ]
    },
+   "10112": {
+    "name": "Board for Registration of Voters Meeting",
+    "start": "2026-08-04T18:00:00+00:00",
+    "hasAgenda": true,
+    "files": []
+   },
    "10088": {
     "name": "Airport Commission",
     "start": "2026-08-05T16:00:00+00:00",
@@ -517,18 +529,6 @@
    "9961": {
     "name": "Planning Commission Meeting - Collaborative Working Group on Inclusionary Zoning",
     "start": "2026-08-11T18:30:00+00:00",
-    "hasAgenda": false,
-    "files": []
-   },
-   "7753": {
-    "name": "Burlington Electric Commission",
-    "start": "2026-08-12T17:00:00+00:00",
-    "hasAgenda": false,
-    "files": []
-   },
-   "10022": {
-    "name": "Burlington Electric Commission",
-    "start": "2026-08-12T17:30:00+00:00",
     "hasAgenda": false,
     "files": []
    }
@@ -612,6 +612,13 @@
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=652374",
+      "title": "Judge finds Vermont’s federal grants can’t be rescinded if political priorities shift",
+      "link": "https://vtdigger.org/2026/07/28/judge-finds-vermonts-federal-grants-cant-be-rescinded-if-political-priorities-shift/",
+      "ts": "2026-07-28T19:37:18+00:00",
+      "summary": "“This ruling is an important step toward protecting Vermont’s federal funding, now and in the future, from arbitrary termination based on the shifting priorities of the Trump Administration,” Vermont Attorney General Charity Clark wrote. Read the story on VTDigger here: Judge finds Vermont’s federal grants can’t be rescinded if political priorities shift ."
+     },
      {
       "id": "https://vtdigger.org/?p=652294",
       "title": "VTDigger launches 2026 Vermont primary election guide",
@@ -814,24 +821,17 @@
       "link": "https://vtdigger.org/2026/07/23/opinion-vermont-schools-should-invest-in-student-journalism/",
       "ts": "2026-07-23T18:56:53+00:00",
       "summary": "High school newsrooms teach students to report, think critically and engage with civic life. Read the story on VTDigger here: Vermont schools should invest in student journalism ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=651990",
-      "title": "Vermont-born Broadway musical ‘Hadestown’ returns home — as a movie",
-      "link": "https://vtdigger.org/2026/07/23/vermont-born-broadway-musical-hadestown-returns-home-as-a-movie/",
-      "ts": "2026-07-23T18:38:46+00:00",
-      "summary": "Singer-songwriter Anaïs Mitchell’s modern take on ancient myths has traveled from a shoestring debut at Barre’s Old Labor Hall 20 years ago to a five-night state and national cinema run starting Friday. Read the story on VTDigger here: Vermont-born Broadway musical Hadestown’ returns home — as a movie ."
      }
     ]
    },
    "vermont-public": {
     "items": [
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
-      "title": "In race for Chittenden County state’s attorney, progressive prosecution is on trial",
-      "link": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
-      "ts": "2026-07-28T09:00:00+00:00",
-      "summary": "Incumbent State’s Attorney Sarah George has sought to use her office to address racial and economic disparities in the criminal justice system and reduce mass incarceration. Her challenger, Bram Kranichfeld, says those efforts are making the county less safe."
+      "id": "https://www.vermontpublic.org/local-news/2026-07-28/vermont-state-revenues-holding-steady-but-economic-clouds-loom",
+      "title": "Vermont state revenues holding steady, but economic clouds loom",
+      "link": "https://www.vermontpublic.org/local-news/2026-07-28/vermont-state-revenues-holding-steady-but-economic-clouds-loom",
+      "ts": "2026-07-28T20:14:11+00:00",
+      "summary": "Key lawmakers had been bracing for a revenue downgrade this week, but the outlook is largely unchanged from estimates that elected officials got in January."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-07-28/divers-raise-lost-revolutionary-war-artifact-from-lake-champlain",
@@ -839,6 +839,13 @@
       "link": "https://www.vermontpublic.org/local-news/2026-07-28/divers-raise-lost-revolutionary-war-artifact-from-lake-champlain",
       "ts": "2026-07-28T09:00:00+00:00",
       "summary": "The plan is for the fragment to reunite with its fellow cannon pieces at the Lake Champlain Maritime Museum in Vergennes."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
+      "title": "In race for Chittenden County state’s attorney, progressive prosecution is on trial",
+      "link": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
+      "ts": "2026-07-28T09:00:00+00:00",
+      "summary": "Incumbent State’s Attorney Sarah George has sought to use her office to address racial and economic disparities in the criminal justice system and reduce mass incarceration. Her challenger, Bram Kranichfeld, says those efforts are making the county less safe."
      },
      {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-07-27/vermont-business-leaders-call-for-the-abundance-agenda",
@@ -902,18 +909,39 @@
       "link": "https://www.vermontpublic.org/local-news/2026-07-24/catholic-diocese-pitches-donor-funded-sale-rice-memorial-high-school",
       "ts": "2026-07-24T17:19:11+00:00",
       "summary": "If a judge approves the sale, a nonprofit holding company would pay $4.3 million for the campus, securing its future as a parochial school."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-07-24/cricket-blue-weaves-intricate-storylines-into-compact-and-complex-tunes",
-      "title": "Cricket Blue weaves intricate storylines into compact and complex tunes",
-      "link": "https://www.vermontpublic.org/local-news/2026-07-24/cricket-blue-weaves-intricate-storylines-into-compact-and-complex-tunes",
-      "ts": "2026-07-24T09:00:00+00:00",
-      "summary": "This week's Friday Song is \"Ella 1\" from the Vermont-based chamber folk duo."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "MYWX6SDZGBENNNVXPONCNBQWAY",
+      "title": "Red Cross declares national blood supply crisis, urges donations",
+      "link": "https://www.wcax.com/2026/07/28/red-cross-declares-national-blood-supply-crisis-urges-donations/",
+      "ts": "2026-07-28T20:32:37+00:00",
+      "summary": "The summer is typically a time of need for blood products, but local officials say they are at a four-year low this summer."
+     },
+     {
+      "id": "PD5CRKCZTFDU7K2CHACQLMR6P4",
+      "title": "Longtime Vermont radio host Nanci Gordon dies",
+      "link": "https://www.wcax.com/2026/07/28/longtime-vermont-radio-host-nanci-gordon-dies/",
+      "ts": "2026-07-28T20:14:55+00:00",
+      "summary": "A Vermont radio host whose voice was heard on the air for decades has died."
+     },
+     {
+      "id": "35HCKHFDQ5CIRBE6N7HVPGSNCM",
+      "title": "Downed utility pole takes out South Burlington power lines",
+      "link": "https://www.wcax.com/2026/07/28/downed-utility-pole-takes-out-south-burlington-power-lines/",
+      "ts": "2026-07-28T20:02:18+00:00",
+      "summary": "Kennedy Drive in South Burlington is back open after a utility pole brought down wires and a traffic signal on Tuesday afternoon."
+     },
+     {
+      "id": "DUSO3EEFVRBKVGYP5L3I5C7YN4",
+      "title": "Heavy rain floods Bennington street",
+      "link": "https://www.wcax.com/2026/07/28/heavy-rain-floods-bennington-street/",
+      "ts": "2026-07-28T19:45:17+00:00",
+      "summary": "Heavy rain is making its way into the region, and South Street in Bennington is underwater."
+     },
      {
       "id": "TDXA6OZIHNHCBDSGER3O3I4K4M",
       "title": "Vermont Green FC will defend its national championship live on WCAX",
@@ -1235,39 +1263,88 @@
       "link": "https://www.wcax.com/2026/07/25/boil-water-order-issued-areas-plattsburgh/",
       "ts": "2026-07-25T11:43:04+00:00",
       "summary": "Some Plattsburgh residents will need to boil their water today."
-     },
-     {
-      "id": "BP53OMVQU5GQ3H3NICAJON2MSA",
-      "title": "Mosquitoes collected in Montpelier test positive for West Nile virus",
-      "link": "https://www.wcax.com/2026/07/25/mosquitoes-collected-montpelier-test-positive-west-nile-virus/",
-      "ts": "2026-07-25T02:50:37+00:00",
-      "summary": "The Barre Office of Local Health says mosquitoes collected in Montpelier tested positive for West Nile virus."
-     },
-     {
-      "id": "RFCR7UK6MVHG5NMIBWKL5A2MWE",
-      "title": "Proposed turf field at Champlain Valley Union High School sparks debate",
-      "link": "https://www.wcax.com/2026/07/25/proposed-turf-field-champlain-valley-union-high-school-draws-pfas-concerns/",
-      "ts": "2026-07-25T02:29:34+00:00",
-      "summary": "A proposed turf field at Champlain Valley Union High School is drawing concerns from some Hinesburg residents."
-     },
-     {
-      "id": "ITFDNBQYYFFQJFG67Q3C5DFPDU",
-      "title": "At Grandpa’s Snack Shack, Super Senior serves sarcasm on the side",
-      "link": "https://www.wcax.com/2026/07/23/grandpas-snack-shack-super-senior-serves-sarcasm-side/",
-      "ts": "2026-07-24T23:51:09+00:00",
-      "summary": "At Grandpa’s Snack Shack in South Strafford, the sarcasm is part of the menu, and owner Earl Silloway wouldn’t have it any other way."
-     },
-     {
-      "id": "S4J3TFTGAFBGPENU5JENDQQO3M",
-      "title": "Stuck in Vt: Touring Todd Hanley’s daylily garden",
-      "link": "https://www.wcax.com/2026/07/24/stuck-vt-touring-todd-hanleys-daylily-garden/",
-      "ts": "2026-07-24T23:44:12+00:00",
-      "summary": "Seven Days' Eva Sollberger visited Todd Hanley, who grows about 300 colorful varieties of daylilies in his hilltop Richmond garden."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73287504",
+      "title": "eBay agreed to pay nearly $50 million to couple sent cockroaches, bloody pig mask",
+      "link": "https://www.mynbc5.com/article/ebays-bizarre-deliveries-harassment-pig-mask-settlement/73287504",
+      "ts": "2026-07-28T20:33:00+00:00",
+      "summary": "A couple subjected to threats and bizarre deliveries — including live insects and a bloody pig mask — by former eBay Inc. employees has agreed to a settlement."
+     },
+     {
+      "id": "73282711",
+      "title": "Lindsey Graham honored in Capitol services, eulogized as an 'American original' with global reach",
+      "link": "https://www.mynbc5.com/article/lindsey-graham-funeral-services/73282711",
+      "ts": "2026-07-28T20:31:00+00:00",
+      "summary": "Sen. Lindsey Graham was eulogized Tuesday during memorial services across Washington."
+     },
+     {
+      "id": "73287687",
+      "title": "Teen gets life without parole for Georgia high school shooting that killed 4",
+      "link": "https://www.mynbc5.com/article/colt-gray-life-in-prison-georgia-shooting-apalachee-high-school/73287687",
+      "ts": "2026-07-28T20:30:00+00:00",
+      "summary": "A judge sentenced Colt Gray to life without parole after the 2024 Apalachee High School shooting that killed two students and two teachers."
+     },
+     {
+      "id": "73285177",
+      "title": "Why are kids are turning to AI chatbots instead of adults? What new research says",
+      "link": "https://www.mynbc5.com/article/kids-turning-to-ai-chatbots-for-help/73285177",
+      "ts": "2026-07-28T20:24:00+00:00",
+      "summary": "A new national survey found some children are turning to AI chatbots for guidance after troubling online experiences. Child safety experts say parents should understand how kids are using AI—and why trusted adults still matter."
+     },
+     {
+      "id": "73287125",
+      "title": "Man facing charges in connection to Dorset Street ICE protest enters plea in court",
+      "link": "https://www.mynbc5.com/article/dorset-street-ice-protest-charge-colin-palmer/73287125",
+      "ts": "2026-07-28T20:17:00+00:00",
+      "summary": "A man who is facing misdemeanor charges connected to the March 11 protests at the site of a Dorset Street ICE operation was in court on Tuesday as the case against him continues."
+     },
+     {
+      "id": "73287475",
+      "title": "Photos: Several parts of Bennington experience mild flooding, town officials say",
+      "link": "https://www.mynbc5.com/article/bennington-vermont-flooding-photos/73287475",
+      "ts": "2026-07-28T20:12:00+00:00",
+      "summary": "Parts of Bennington experienced some mild flooding on Tuesday following brief but severe downpours, according to town officials."
+     },
+     {
+      "id": "73278995",
+      "title": "Officials hope new bike infrastructure can reshape travel in Chittenden County",
+      "link": "https://www.mynbc5.com/article/bike-infrastructure-chittenden-county/73278995",
+      "ts": "2026-07-28T20:02:00+00:00",
+      "summary": "Major bike projects are transforming travel across Chittenden County"
+     },
+     {
+      "id": "73287501",
+      "title": "Chargers quarterback Justin Herbert and singer Madison Beer announce engagement",
+      "link": "https://www.mynbc5.com/article/justin-herbert-madison-beer-engagement/73287501",
+      "ts": "2026-07-28T20:00:00+00:00",
+      "summary": "Los Angeles Chargers quarterback Justin Herbert and Grammy-nominated singer-songwriter Madison Beer are engaged!"
+     },
+     {
+      "id": "73280782",
+      "title": "One person seriously hurt after logging accident in Fort Ann",
+      "link": "https://www.mynbc5.com/article/patient-airlifted-after-logging-accident-new-york/73280782",
+      "ts": "2026-07-28T19:39:00+00:00",
+      "summary": "LifeNet helicopter lands in Washington County after patient suffers serious injuries from logging accident."
+     },
+     {
+      "id": "73287037",
+      "title": "Johnson & Johnson offers up to $5.5 billion to settle baby powder cancer lawsuits",
+      "link": "https://www.mynbc5.com/article/johnson-johnson-baby-powder-cancer-lawsuit-settlement/73287037",
+      "ts": "2026-07-28T19:20:00+00:00",
+      "summary": "Johnson & Johnson has set aside $5.5 billion to resolve tens of thousands of U.S. lawsuits alleging that its talcum powder-based products caused ovarian cancer."
+     },
+     {
+      "id": "73287095",
+      "title": "Trump invites teen lifeguard to White House for 'heroic' rescue at California beach",
+      "link": "https://www.mynbc5.com/article/trump-invite-beach-lifeguard-rescue-boy/73287095",
+      "ts": "2026-07-28T19:17:00+00:00",
+      "summary": "Trump says he’ll invite a teen lifeguard to the White House after dramatic video showed him rescuing a boy from massive waves at a beach in California."
+     },
      {
       "id": "73284029",
       "title": "Trump and Netanyahu meet for first time since launching Iran War",
@@ -1288,13 +1365,6 @@
       "link": "https://www.mynbc5.com/article/phase-5-call-leahy-burlington-international-airport/73284715",
       "ts": "2026-07-28T18:33:00+00:00",
       "summary": "Everyone on board a plane that issued a Phase 5 call for aid landed safely at Leahy Burlington International Airport on Tuesday, according to airport officials."
-     },
-     {
-      "id": "73282711",
-      "title": "LIVE: Lindsey Graham being honored in Capitol memorial services",
-      "link": "https://www.mynbc5.com/article/lindsey-graham-funeral-services/73282711",
-      "ts": "2026-07-28T18:21:00+00:00",
-      "summary": "Sen. Lindsey Graham will be eulogized Tuesday during memorial services across Washington."
      },
      {
       "id": "73282550",
@@ -1337,76 +1407,6 @@
       "link": "https://www.mynbc5.com/article/earthquake-japan-july-28/73282028",
       "ts": "2026-07-28T16:55:00+00:00",
       "summary": "The second floor of a shopping mall in Japan collapsed after a 7.1-magnitude earthquake, trapping several people."
-     },
-     {
-      "id": "73285601",
-      "title": "6 refugees share their stories on the 75th anniversary of the Refugee Convention",
-      "link": "https://www.mynbc5.com/article/refugee-convention-75th-anniversary/73285601",
-      "ts": "2026-07-28T16:41:00+00:00",
-      "summary": "Tuesday marks the 75th anniversary of the Refugee Convention, which was born after World War II to help people fleeing war, violence and persecution. Here are six refugees' stories."
-     },
-     {
-      "id": "73283474",
-      "title": "Middlebury presents housing development project",
-      "link": "https://www.mynbc5.com/article/middlebury-presents-housing-project/73283474",
-      "ts": "2026-07-28T16:25:00+00:00",
-      "summary": "Middlebury could soon benefit from a new state program that would allow the town to borrow money and develop more than 70 units of new housing. It’s part of a policy that was written specifically with smaller Vermont communities in mind."
-     },
-     {
-      "id": "73285483",
-      "title": "New study shows 80% of foods marketed for toddlers are ultraprocessed",
-      "link": "https://www.mynbc5.com/article/most-toddler-foods-are-ultraprocessed-study/73285483",
-      "ts": "2026-07-28T16:24:00+00:00",
-      "summary": "4 out of 5 foods sold for toddlers in the U.S. are ultraprocessed, according to a new study. Nearly half of the foods also failed to meet WHO nutrition standards."
-     },
-     {
-      "id": "73276839",
-      "title": "Champlain Valley Dinner Train turning heads with patriotic locomotive",
-      "link": "https://www.mynbc5.com/article/champlain-valley-dinner-train-patriotic-locomotive-america-250/73276839",
-      "ts": "2026-07-28T16:20:00+00:00",
-      "summary": "A locomotive used for the Champlain Valley Dinner Train has a vivid new paint job featuring the Statue of Liberty, Liberty Bell, and the stars and stripes"
-     },
-     {
-      "id": "73281658",
-      "title": "NTSB releases preliminary report from triple-fatal plane crash in the Adirondacks",
-      "link": "https://www.mynbc5.com/article/saranac-lake-fatal-plane-crash-report-released/73281658",
-      "ts": "2026-07-28T16:09:00+00:00",
-      "summary": "The pilot and two passengers died during the crash on July 13 near the Adirondack Regional Airport."
-     },
-     {
-      "id": "73283888",
-      "title": "Sheriff shares update in Nancy Guthrie case after emotional video plea",
-      "link": "https://www.mynbc5.com/article/nancy-guthrie-sheriff-update-missing/73283888",
-      "ts": "2026-07-28T15:55:00+00:00",
-      "summary": "Nearly six months after Nancy Guthrie's mysterious disappearance, authorities emphasized that the case is \"still active\" and has not become a cold case."
-     },
-     {
-      "id": "73284726",
-      "title": "WATCH: Plane made emergency landing on California beach after mechanical issue",
-      "link": "https://www.mynbc5.com/article/video-california-plane-emergency-beach-landing/73284726",
-      "ts": "2026-07-28T15:33:00+00:00",
-      "summary": "Video shows a pilot landing a small plane on a beach in California after experiencing a mechanical issue moments after takeoff."
-     },
-     {
-      "id": "73284537",
-      "title": "'No matter what you do, you can’t put it out': Spanish firefighters describe record blaze",
-      "link": "https://www.mynbc5.com/article/spain-wildfires-firefighters-record/73284537",
-      "ts": "2026-07-28T15:10:00+00:00",
-      "summary": "\"No matter what you do, you can’t put it out\" | What do you do when a fire is too big to attack head-on? Spanish firefighters describe blazes forcing 25,000 people to flee."
-     },
-     {
-      "id": "73284455",
-      "title": "New York State Police looking for stolen bulldozer in St. Regis Falls",
-      "link": "https://www.mynbc5.com/article/st-regis-falls-stolen-bulldozer/73284455",
-      "ts": "2026-07-28T14:52:00+00:00",
-      "summary": "New York State Police are asking the public to help them track down a bulldozer that was stolen in Franklin County."
-     },
-     {
-      "id": "73284313",
-      "title": "4 children murdered, mom and grandma died by suicide in Mechanicville incident, police chief says",
-      "link": "https://www.mynbc5.com/article/mechanicville-children-murdered-suicide/73284313",
-      "ts": "2026-07-28T14:41:00+00:00",
-      "summary": "Police in Mechanicville, New York, have revealed new information about the deaths of six family members, including four children, in a home last month."
      }
     ]
    },
@@ -1566,164 +1566,164 @@
  "reddit-burlington": {
   "posts": [
    {
-    "id": "1uzjv0w",
-    "title": "White Mazda with hazards on and Indiana plates",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzjv0w/white_mazda_with_hazards_on_and_indiana_plates/",
+    "id": "1v97v45",
+    "title": "Does anyone know where to buy Pokemon bulk cards?",
+    "url": "https://www.reddit.com/r/burlington/comments/1v97v45/does_anyone_know_where_to_buy_pokemon_bulk_cards/",
     "score": null,
     "comments": null,
-    "created": "2026-07-18T05:04:20+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzjmxa",
-    "title": "Twisted Halo",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzjmxa/twisted_halo/",
+    "id": "1v97cf7",
+    "title": "Switchback Brewing Company and Green Mountain Wrestling bring THE SLAMS back to Burlington on Saturday, August 15!",
+    "url": "https://www.reddit.com/r/burlington/comments/1v97cf7/switchback_brewing_company_and_green_mountain/",
     "score": null,
     "comments": null,
-    "created": "2026-07-18T05:04:20+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzjb3a",
-    "title": "Question for former staff about Mirabelle's from Main Street Era",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzjb3a/question_for_former_staff_about_mirabelles_from/",
+    "id": "1v95snp",
+    "title": "Jam band fans!",
+    "url": "https://www.reddit.com/r/burlington/comments/1v95snp/jam_band_fans/",
     "score": null,
     "comments": null,
-    "created": "2026-07-18T05:04:20+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzj0d8",
-    "title": "Tattoo Removal Recommendations",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzj0d8/tattoo_removal_recommendations/",
+    "id": "1v95n68",
+    "title": "Missing wallet/purse",
+    "url": "https://www.reddit.com/r/burlington/comments/1v95n68/missing_walletpurse/",
     "score": null,
     "comments": null,
-    "created": "2026-07-18T05:04:20+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzizyz",
-    "title": "NLRB dismisses Healthy Living’s bid to overturn union election",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzizyz/nlrb_dismisses_healthy_livings_bid_to_overturn/",
+    "id": "1v95bqs",
+    "title": "Artist Showcase: Altered Leaves & Eternal Love Triangle by Jennifer Koch - Friday, August 7th",
+    "url": "https://www.reddit.com/r/burlington/comments/1v95bqs/artist_showcase_altered_leaves_eternal_love/",
     "score": null,
     "comments": null,
-    "created": "2026-07-18T02:03:21+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzhfso",
-    "title": "Shiloh Skalka",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzhfso/shiloh_skalka/",
+    "id": "1v957pc",
+    "title": "Metal Show at 14th Star!",
+    "url": "https://www.reddit.com/r/burlington/comments/1v957pc/metal_show_at_14th_star/",
     "score": null,
     "comments": null,
-    "created": "2026-07-18T02:03:21+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzfgjm",
-    "title": "Burlington businesses push back as needle exchange moves to Bank Street",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzfgjm/burlington_businesses_push_back_as_needle/",
+    "id": "1v957ec",
+    "title": "Metal Show at 14th Star!",
+    "url": "https://www.reddit.com/r/burlington/comments/1v957ec/metal_show_at_14th_star/",
     "score": null,
     "comments": null,
-    "created": "2026-07-18T02:03:21+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzc2ql",
-    "title": "North of Star Farm Beach",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzc2ql/north_of_star_farm_beach/",
+    "id": "1v954nk",
+    "title": "Charles Wesley Godwin 8/21 for 8/20 trade?",
+    "url": "https://www.reddit.com/r/burlington/comments/1v954nk/charles_wesley_godwin_821_for_820_trade/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T23:04:21+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzc1km",
-    "title": "Is this your brat?",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzc1km/is_this_your_brat/",
+    "id": "1v943pv",
+    "title": "so what do yall want done for the homeless population?",
+    "url": "https://www.reddit.com/r/burlington/comments/1v943pv/so_what_do_yall_want_done_for_the_homeless/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T23:04:21+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzc07g",
-    "title": "State of Vermont Vs Tina Comstock",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzc07g/state_of_vermont_vs_tina_comstock/",
+    "id": "1v93aqr",
+    "title": "ISO Modest Mouse ticket",
+    "url": "https://www.reddit.com/r/burlington/comments/1v93aqr/iso_modest_mouse_ticket/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T23:04:21+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzbfl0",
-    "title": "26BU016028 - UPDATED Media Release - Motor Vehicle Crash",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzbfl0/26bu016028_updated_media_release_motor_vehicle/",
+    "id": "1v90zq4",
+    "title": "Most charming neighborhood?",
+    "url": "https://www.reddit.com/r/burlington/comments/1v90zq4/most_charming_neighborhood/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T23:04:21+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzb3ue",
-    "title": "Live Music Tonight and Tomorrow! 7-10pm @ Odd Fellows",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzb3ue/live_music_tonight_and_tomorrow_710pm_odd_fellows/",
+    "id": "1v8rfhh",
+    "title": "Missing cat",
+    "url": "https://www.reddit.com/r/burlington/comments/1v8rfhh/missing_cat/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T23:04:21+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uzakyr",
-    "title": "Social distortion tickets x3",
-    "url": "https://www.reddit.com/r/burlington/comments/1uzakyr/social_distortion_tickets_x3/",
+    "id": "1v8l4e8",
+    "title": "Hydrotherapy for a dog?",
+    "url": "https://www.reddit.com/r/burlington/comments/1v8l4e8/hydrotherapy_for_a_dog/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T23:04:21+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uz7i95",
-    "title": "Best Newer Vegetarian Friendly Restaurant",
-    "url": "https://www.reddit.com/r/burlington/comments/1uz7i95/best_newer_vegetarian_friendly_restaurant/",
+    "id": "1v8fdc6",
+    "title": "Burlington loses 0.9% of downtown parking and all we get is safer more pleasant streets?",
+    "url": "https://www.reddit.com/r/burlington/comments/1v8fdc6/burlington_loses_09_of_downtown_parking_and_all/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T20:04:01+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uz6f8h",
-    "title": "Yesterday’s march for Lorenzo & Joan",
-    "url": "https://www.reddit.com/r/burlington/comments/1uz6f8h/yesterdays_march_for_lorenzo_joan/",
+    "id": "1v8exy6",
+    "title": "Unions warn of dire consequences of understaffing at UVMMC",
+    "url": "https://www.reddit.com/r/burlington/comments/1v8exy6/unions_warn_of_dire_consequences_of_understaffing/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T20:04:01+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uz5xek",
-    "title": "Social Distortion Ticket",
-    "url": "https://www.reddit.com/r/burlington/comments/1uz5xek/social_distortion_ticket/",
+    "id": "1v8d6q9",
+    "title": "Lost Dog on Manhattan",
+    "url": "https://www.reddit.com/r/burlington/comments/1v8d6q9/lost_dog_on_manhattan/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T20:04:01+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uz5phv",
-    "title": "Best BBQ takeout",
-    "url": "https://www.reddit.com/r/burlington/comments/1uz5phv/best_bbq_takeout/",
+    "id": "1v8chrz",
+    "title": "Looking for dog owner info!",
+    "url": "https://www.reddit.com/r/burlington/comments/1v8chrz/looking_for_dog_owner_info/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T20:04:01+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uz4622",
-    "title": "A sunny smoke free Friday for the Main Street Block Party, Brewers Fest, and Brownell Library's 100th birthday, a stacked Saturday with steamroller printmaking, a gem and fossil show, and a sold out playoff match, and a Sunday built around Argentina vs Spain, this weekend has tons to explore",
-    "url": "https://www.reddit.com/r/burlington/comments/1uz4622/a_sunny_smoke_free_friday_for_the_main_street/",
+    "id": "1v89p4z",
+    "title": "What is the most romantic restaurant for my vegetarian spouse and I tomorrow night for dinner?",
+    "url": "https://www.reddit.com/r/burlington/comments/1v89p4z/what_is_the_most_romantic_restaurant_for_my/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T17:04:49+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uz3wxt",
-    "title": "Photograph, Share, Shame Dog Owners Who Don't Leash Their Dogs in Leashed Areas",
-    "url": "https://www.reddit.com/r/burlington/comments/1uz3wxt/photograph_share_shame_dog_owners_who_dont_leash/",
+    "id": "1v83bjo",
+    "title": "And another Assault and Robbery",
+    "url": "https://www.reddit.com/r/burlington/comments/1v83bjo/and_another_assault_and_robbery/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T17:04:49+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    },
    {
-    "id": "1uz3pjv",
-    "title": "ESA counted against limit",
-    "url": "https://www.reddit.com/r/burlington/comments/1uz3pjv/esa_counted_against_limit/",
+    "id": "1v82r2b",
+    "title": "Burlington this week has a Grammy winning bassist on the waterfront, a fire circus in South Burlington, and Beach Bites closing out its summer at Leddy, plus Howard Center's new designation and Vermont's first PFAS free turf field, all wrapped around the first real rain we've seen in weeks",
+    "url": "https://www.reddit.com/r/burlington/comments/1v82r2b/burlington_this_week_has_a_grammy_winning_bassist/",
     "score": null,
     "comments": null,
-    "created": "2026-07-17T17:04:49+00:00"
+    "created": "2026-07-28T19:04:50+00:00"
    }
   ]
  },
