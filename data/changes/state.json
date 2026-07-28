@@ -3,25 +3,25 @@
   "alerts": [],
   "forecast_flag": {
    "day": "2026-07-28",
-   "text": "Today: A chance of showers and thunderstorms between 1pm and 4pm, then showers and thunderstorms"
+   "text": "This Afternoon: A chance of showers and thunderstorms between 1pm and 4pm, then showers and thunderstorms"
   }
  },
  "beach-status": {
   "beaches": {
    "Blanchard Beach North": {
     "status": "open",
-    "reason": "Open",
-    "resultTime": "2026-07-28T12:04:00+00:00"
+    "reason": "Choppy",
+    "resultTime": "2026-07-28T15:16:00+00:00"
    },
    "Blanchard Beach South": {
     "status": "open",
-    "reason": "Open",
-    "resultTime": "2026-07-28T12:04:00+00:00"
+    "reason": "Choppy",
+    "resultTime": "2026-07-28T15:16:00+00:00"
    },
    "Blodgett Water Access Point": {
     "status": "open",
-    "reason": "Open",
-    "resultTime": "2026-07-27T18:11:00+00:00"
+    "reason": "Choppy",
+    "resultTime": "2026-07-28T15:11:00+00:00"
    },
    "Leddy Beach North": {
     "status": "open",
@@ -48,15 +48,15 @@
     "reason": "Open",
     "resultTime": "2026-07-28T14:26:00+00:00"
    },
+   "Oakledge Cove": {
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-07-28T16:42:00+00:00"
+   },
    "Texaco Beach": {
     "status": "open",
     "reason": "Choppy",
     "resultTime": "2026-07-28T14:52:00+00:00"
-   },
-   "Oakledge Cove": {
-    "status": "open",
-    "reason": "Alert",
-    "resultTime": "2026-07-28T12:03:00+00:00"
    }
   }
  },
@@ -457,7 +457,8 @@
     "start": "2026-07-28T18:30:00+00:00",
     "hasAgenda": true,
     "files": [
-     "Agenda"
+     "Updated Agenda",
+     "Agenda Packet"
     ]
    },
    "10070": {
@@ -466,6 +467,15 @@
     "hasAgenda": true,
     "files": [
      "Public Hearing Notice"
+    ]
+   },
+   "10089": {
+    "name": "Vicious Dog Hearing",
+    "start": "2026-07-29T18:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Animal Control Committee Vicious Dog Hearing",
+     "Animal Control Committee Vicious Dog Hearing"
     ]
    },
    "8623": {
@@ -520,12 +530,6 @@
     "start": "2026-08-12T17:30:00+00:00",
     "hasAgenda": false,
     "files": []
-   },
-   "8683": {
-    "name": "Retirement Board Meeting",
-    "start": "2026-08-24T09:30:00+00:00",
-    "hasAgenda": false,
-    "files": []
    }
   }
  },
@@ -533,6 +537,20 @@
   "feeds": {
    "sevendays-news": {
     "items": [
+     {
+      "id": "https://www.sevendaysvt.com/?p=213295",
+      "title": "Entrées & Exits: Kiss the Cook Is for Sale; Cork Market on Moscow to Close",
+      "link": "https://www.sevendaysvt.com/food-drink/foodnews/entrees-exits-kiss-the-cook-is-for-sale-cork-market-on-moscow-to-close/",
+      "ts": "2026-07-28T16:54:08+00:00",
+      "summary": "In food retail news: A longtime kitchen shop on the Church Street Marketplace is looking for new owners, and one of Cork’s market locations in Stowe is done. The post Entrées & Exits: Kiss the Cook Is for Sale; Cork Market on Moscow to Close appeared first on Seven Days . (Image: File: JEB WALLACE-BRODEUR)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=213229",
+      "title": "Preacher Holds Open House for Faith-Based School on Green Mountain College Campus",
+      "link": "https://www.sevendaysvt.com/news/preacher-holds-open-house-for-faith-based-school-on-green-mountain-college-campus/",
+      "ts": "2026-07-28T15:40:46+00:00",
+      "summary": "Tommie Zito opened the Poultney campus to the public this week. But attendees were required to agree that they would not speak with the media. The post Preacher Holds Open House for Faith-Based School on Green Mountain College Campus appeared first on Seven Days . (Image: File: Caleb McKenna)"
+     },
      {
       "id": "https://www.sevendaysvt.com/?p=212992",
       "title": "Have You Voted Yet? Our 2026 Vermont Primary Guide Can Help.",
@@ -588,20 +606,6 @@
       "link": "https://www.sevendaysvt.com/guides/primaryvoterguide/qa-gop-candidates-for-u-s-house/",
       "ts": "2026-07-28T13:30:00+00:00",
       "summary": "Republicans Gerald Malloy and Mark Coester are seeking their party's nomination to serve Vermont in the U.S. House of Representatives The post Q&A: 2026 GOP Candidates for U.S. House appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=213252",
-      "title": "Obituary: Joseph Oppenlander, 1931-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-joseph-oppenlander-1931-2026/",
-      "ts": "2026-07-28T10:00:00+00:00",
-      "summary": "U.S. Army veteran and civil engineering professor at UVM enjoyed boating on Lake Champlain and traveling The post Obituary: Joseph Oppenlander, 1931-2026 appeared first on Seven Days ."
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=213136",
-      "title": "Woodstock School District, AOE Spar Over School Construction",
-      "link": "https://www.sevendaysvt.com/news/education-news/woodstock-school-district-aoe-spar-over-school-construction/",
-      "ts": "2026-07-27T20:34:14+00:00",
-      "summary": "The district wants to begin building a new school. But state education officials say they must first create new rules around construction aid. The post Woodstock School District, AOE Spar Over School Construction appeared first on Seven Days . (Image: Courtesy)"
      }
     ]
    },
@@ -822,18 +826,18 @@
    "vermont-public": {
     "items": [
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
-      "title": "In race for Chittenden County state’s attorney, progressive prosecution is on trial",
-      "link": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
-      "ts": "2026-07-28T09:00:00+00:00",
-      "summary": "Incumbent State’s Attorney Sarah George has sought to use her office to address racial and economic disparities in the criminal justice system and reduce mass incarceration. Her challenger, Bram Kranichfeld, says those efforts are making the county less safe."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-07-28/divers-raise-lost-revolutionary-war-artifact-from-lake-champlain",
       "title": "Divers raise lost Revolutionary War artifact from Lake Champlain",
       "link": "https://www.vermontpublic.org/local-news/2026-07-28/divers-raise-lost-revolutionary-war-artifact-from-lake-champlain",
       "ts": "2026-07-28T09:00:00+00:00",
       "summary": "The plan is for the fragment to reunite with its fellow cannon pieces at the Lake Champlain Maritime Museum in Vergennes."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
+      "title": "In race for Chittenden County state’s attorney, progressive prosecution is on trial",
+      "link": "https://www.vermontpublic.org/local-news/2026-07-28/race-chittenden-county-states-attorney-progressive-prosecution-on-trial",
+      "ts": "2026-07-28T09:00:00+00:00",
+      "summary": "Incumbent State’s Attorney Sarah George has sought to use her office to address racial and economic disparities in the criminal justice system and reduce mass incarceration. Her challenger, Bram Kranichfeld, says those efforts are making the county less safe."
      },
      {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-07-27/vermont-business-leaders-call-for-the-abundance-agenda",
@@ -899,16 +903,44 @@
       "summary": "If a judge approves the sale, a nonprofit holding company would pay $4.3 million for the campus, securing its future as a parochial school."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-07-24/cricket-blue-weaves-intricate-storylines-into-compact-and-complex-tunes",
-      "title": "Cricket Blue weaves intricate storylines into compact and complex tunes",
-      "link": "https://www.vermontpublic.org/local-news/2026-07-24/cricket-blue-weaves-intricate-storylines-into-compact-and-complex-tunes",
+      "id": "https://www.vermontpublic.org/local-news/2026-07-24/wanted-large-space-for-100-bed-emergency-shelter-in-chittenden-county",
+      "title": "Wanted: Large space for 100-bed emergency shelter in Chittenden County",
+      "link": "https://www.vermontpublic.org/local-news/2026-07-24/wanted-large-space-for-100-bed-emergency-shelter-in-chittenden-county",
       "ts": "2026-07-24T09:00:00+00:00",
-      "summary": "This week's Friday Song is \"Ella 1\" from the Vermont-based chamber folk duo."
+      "summary": "If a suitable location is found, the year-round shelter would be the largest in the state, and could help stem the high number of people sleeping outdoors."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "6ZHT2XB5AND4TL2EX5MFGOHYIU",
+      "title": "Northwest Medical Center makes Billings permanent CEO",
+      "link": "https://www.wcax.com/2026/07/28/northwest-medical-center-makes-billings-permanent-ceo/",
+      "ts": "2026-07-28T15:35:24+00:00",
+      "summary": "Northwest Medical Center has named Jonathan Billings as its permanent chief executive officer effective immediately"
+     },
+     {
+      "id": "6I73IEHNKRCRZHRUH67UGBCLEA",
+      "title": "Grocery chain Price Chopper’s fuel partnership with Sunoco is ending",
+      "link": "https://www.wcax.com/2026/07/28/grocery-chain-price-choppers-fuel-partnership-with-sunoco-is-ending/",
+      "ts": "2026-07-28T15:30:38+00:00",
+      "summary": "Price Chopper and Market 32 shoppers who are enrolled in the AdvantEdge Rewards program will no longer receive a discount at Sunoco gas stations"
+     },
+     {
+      "id": "TDXA6OZIHNHCBDSGER3O3I4K4M",
+      "title": "Vermont Green FC will defend its national championship live on WCAX",
+      "link": "https://www.wcax.com/2026/07/28/vermont-green-fc-will-defend-its-national-championship-live-wcax/",
+      "ts": "2026-07-28T15:29:58+00:00",
+      "summary": "WCAX will broadcast the USL2 National Final on Saturday between Vermont Green FC and the Flint City Bucks Saturday Aug. 1, at 7:30 p.m."
+     },
+     {
+      "id": "QQ2QXSWACRFXJAZCM5TG7LMKEA",
+      "title": "Driver escapes serious injury after hitting bear on Interstate 89",
+      "link": "https://www.wcax.com/2026/07/28/driver-escapes-serious-injury-after-hitting-bear-interstate-89/",
+      "ts": "2026-07-28T15:15:43+00:00",
+      "summary": "Police say a woman was unable to avoid hitting a bear that ran into the roadway on Interstate 89 in Berlin Monday night."
+     },
      {
       "id": "M7QMJZEU35E4VDIN7PZCZAEUI4",
       "title": "2 face charges after gun drawn in McDonald’s parking lot",
@@ -1230,39 +1262,81 @@
       "link": "https://www.wcax.com/2026/07/24/pets-with-potential-meet-nyla-cedar-gardenia-millie/",
       "ts": "2026-07-24T23:41:58+00:00",
       "summary": "This week’s Pets with Potential come from the Pope Memorial Frontier Animal Society in Orleans."
-     },
-     {
-      "id": "2SCNZ5XHIZEH5C45AGZ7ISB5LA",
-      "title": "12 protesters arrested on trespassing charges in Williston",
-      "link": "https://www.wcax.com/2026/07/24/mug-shots-12-protesters-arrested-trespassing-charges-williston/",
-      "ts": "2026-07-24T23:23:55+00:00",
-      "summary": "Police say the group entered the building to protest federal agencies, including ICE, that occupy the space."
-     },
-     {
-      "id": "M7I3XT2455A5FAD24MQDWYVYM4",
-      "title": "Vermont towns try different ways to regulate short-term rentals",
-      "link": "https://www.wcax.com/2026/07/24/vermont-towns-try-different-ways-regulate-short-term-rentals/",
-      "ts": "2026-07-24T21:45:13+00:00",
-      "summary": "Darren Perron spoke with Seven Days’ Hannah Bassett, who wrote about the housing crunch in this week’s issue."
-     },
-     {
-      "id": "SUYYBVLFBFE3DIH5BFO46E5MFM",
-      "title": "Burlington Democrats draft resolution aimed at overhauling downtown public safety",
-      "link": "https://www.wcax.com/2026/07/24/burlington-democrats-draft-resolution-aimed-overhauling-downtown-public-safety/",
-      "ts": "2026-07-24T21:43:09+00:00",
-      "summary": "Democratic councilors say the city's current public safety approach isn't working, and their resolution lays out a new direction."
-     },
-     {
-      "id": "Q427ZRPRBJDONMZUZ4CAQKOTYQ",
-      "title": "South Burlington Farmers Market draws vendors and shoppers in its first summer",
-      "link": "https://www.wcax.com/2026/07/24/south-burlington-farmers-market-draws-vendors-shoppers-its-first-summer/",
-      "ts": "2026-07-24T21:28:52+00:00",
-      "summary": "A new farmers market in South Burlington is in its first summer, running every Friday from 5 to 7 p.m."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73285601",
+      "title": "6 refugees share their stories on the 75th anniversary of the Refugee Convention",
+      "link": "https://www.mynbc5.com/article/refugee-convention-75th-anniversary/73285601",
+      "ts": "2026-07-28T16:41:00+00:00",
+      "summary": "Tuesday marks the 75th anniversary of the Refugee Convention, which was born after World War II to help people fleeing war, violence and persecution. Here are six refugees' stories."
+     },
+     {
+      "id": "73283474",
+      "title": "Middlebury presents housing development project",
+      "link": "https://www.mynbc5.com/article/middlebury-presents-housing-project/73283474",
+      "ts": "2026-07-28T16:25:00+00:00",
+      "summary": "Middlebury could soon benefit from a new state program that would allow the town to borrow money and develop more than 70 units of new housing. It’s part of a policy that was written specifically with smaller Vermont communities in mind."
+     },
+     {
+      "id": "73285483",
+      "title": "New study shows 80% of foods marketed for toddlers are ultraprocessed",
+      "link": "https://www.mynbc5.com/article/most-toddler-foods-are-ultraprocessed-study/73285483",
+      "ts": "2026-07-28T16:24:00+00:00",
+      "summary": "4 out of 5 foods sold for toddlers in the U.S. are ultraprocessed, according to a new study. Nearly half of the foods also failed to meet WHO nutrition standards."
+     },
+     {
+      "id": "73276839",
+      "title": "Champlain Valley Dinner Train turning heads with patriotic locomotive",
+      "link": "https://www.mynbc5.com/article/champlain-valley-dinner-train-patriotic-locomotive-america-250/73276839",
+      "ts": "2026-07-28T16:20:00+00:00",
+      "summary": "A locomotive used for the Champlain Valley Dinner Train has a vivid new paint job featuring the Statue of Liberty, Liberty Bell, and the stars and stripes"
+     },
+     {
+      "id": "73284715",
+      "title": "Aircraft lands safely following Phase 5 call at Leahy Burlington International Airport",
+      "link": "https://www.mynbc5.com/article/phase-5-call-leahy-burlington-international-airport/73284715",
+      "ts": "2026-07-28T16:12:00+00:00",
+      "summary": "Everyone on board a plane that issued a Phase 5 call for aid landed safely at Leahy Burlington International Airport on Tuesday, according to airport officials."
+     },
+     {
+      "id": "73281658",
+      "title": "NTSB releases preliminary report from triple-fatal plane crash in the Adirondacks",
+      "link": "https://www.mynbc5.com/article/saranac-lake-fatal-plane-crash-report-released/73281658",
+      "ts": "2026-07-28T16:09:00+00:00",
+      "summary": "The pilot and two passengers died during the crash on July 13 near the Adirondack Regional Airport."
+     },
+     {
+      "id": "73283888",
+      "title": "Sheriff shares update in Nancy Guthrie case after emotional video plea",
+      "link": "https://www.mynbc5.com/article/nancy-guthrie-sheriff-update-missing/73283888",
+      "ts": "2026-07-28T15:55:00+00:00",
+      "summary": "Nearly six months after Nancy Guthrie's mysterious disappearance, authorities emphasized that the case is \"still active\" and has not become a cold case."
+     },
+     {
+      "id": "73282711",
+      "title": "Lindsey Graham being honored in Capitol memorial services",
+      "link": "https://www.mynbc5.com/article/lindsey-graham-funeral-services/73282711",
+      "ts": "2026-07-28T15:45:00+00:00",
+      "summary": "Sen. Lindsey Graham will be eulogized Tuesday during memorial services across Washington."
+     },
+     {
+      "id": "73284726",
+      "title": "WATCH: Plane made emergency landing on California beach after mechanical issue",
+      "link": "https://www.mynbc5.com/article/video-california-plane-emergency-beach-landing/73284726",
+      "ts": "2026-07-28T15:33:00+00:00",
+      "summary": "Video shows a pilot landing a small plane on a beach in California after experiencing a mechanical issue moments after takeoff."
+     },
+     {
+      "id": "73284537",
+      "title": "'No matter what you do, you can’t put it out': Spanish firefighters describe record blaze",
+      "link": "https://www.mynbc5.com/article/spain-wildfires-firefighters-record/73284537",
+      "ts": "2026-07-28T15:10:00+00:00",
+      "summary": "\"No matter what you do, you can’t put it out\" | What do you do when a fire is too big to attack head-on? Spanish firefighters describe blazes forcing 25,000 people to flee."
+     },
      {
       "id": "73284455",
       "title": "New York State Police looking for stolen bulldozer in St. Regis Falls",
@@ -1271,25 +1345,11 @@
       "summary": "New York State Police are asking the public to help them track down a bulldozer that was stolen in Franklin County."
      },
      {
-      "id": "73282711",
-      "title": "LIVE: Lindsey Graham being honored in Capitol memorial services",
-      "link": "https://www.mynbc5.com/article/lindsey-graham-funeral-services/73282711",
-      "ts": "2026-07-28T14:49:00+00:00",
-      "summary": "Sen. Lindsey Graham will be eulogized Tuesday during memorial services across Washington."
-     },
-     {
       "id": "73284313",
       "title": "4 children murdered, mom and grandma died by suicide in Mechanicville incident, police chief says",
       "link": "https://www.mynbc5.com/article/mechanicville-children-murdered-suicide/73284313",
       "ts": "2026-07-28T14:41:00+00:00",
       "summary": "Police in Mechanicville, New York, have revealed new information about the deaths of six family members, including four children, in a home last month."
-     },
-     {
-      "id": "73283474",
-      "title": "Middlebury presents housing development project",
-      "link": "https://www.mynbc5.com/article/middlebury-presents-housing-project/73283474",
-      "ts": "2026-07-28T14:35:00+00:00",
-      "summary": "Middlebury could soon benefit from a new state program that would allow the town to borrow money and develop more than 70 units of new housing. It’s part of a policy that was written specifically with smaller Vermont communities in mind."
      },
      {
       "id": "73283329",
@@ -1346,62 +1406,6 @@
       "link": "https://www.mynbc5.com/article/iran-war-marks-5-months-end-to-conflict-uncertain/73282325",
       "ts": "2026-07-28T11:43:00+00:00",
       "summary": "The U.S.-Iran conflict continues after five months, with mixed signals from President Donald Trump on diplomacy and ongoing fighting despite an interim deal."
-     },
-     {
-      "id": "73281658",
-      "title": "NTSB releases preliminary report from triple-fatal plane crash in the Adirondacks",
-      "link": "https://www.mynbc5.com/article/saranac-lake-fatal-plane-crash-report-released/73281658",
-      "ts": "2026-07-28T11:36:00+00:00",
-      "summary": "The pilot and two passengers died during the crash on July 13 near the Adirondack Regional Airport."
-     },
-     {
-      "id": "73282836",
-      "title": "Video: See when heavy rain arrives in Vermont, New York with this hourly timeline",
-      "link": "https://www.mynbc5.com/article/storm-timeline-vermont-new-york-7-28-26/73282836",
-      "ts": "2026-07-28T11:31:00+00:00",
-      "summary": "Pockets of flash flooding possible through Wednesday"
-     },
-     {
-      "id": "73282152",
-      "title": "Plane hit trees before fatal crash in Hamilton County, NTSB says",
-      "link": "https://www.mynbc5.com/article/plane-hit-tree-before-fatal-crash-hamilton-county/73282152",
-      "ts": "2026-07-28T11:30:00+00:00",
-      "summary": "The NTSB has released a preliminary report from an investigation into a fatal plane crash in the Adirondack Park earlier this month. It was one of three plane crashes in the Adirondacks in a single week."
-     },
-     {
-      "id": "73274688",
-      "title": "Trump defends his sweeping tariffs and watches 'America First' drag races during Michigan stop",
-      "link": "https://www.mynbc5.com/article/trump-tariffs-economy-manufacturing-michigan-visit/73274688",
-      "ts": "2026-07-28T11:29:00+00:00",
-      "summary": "President Trump says his economic policies have revived the auto industry and American manufacturing."
-     },
-     {
-      "id": "73282550",
-      "title": "Flooding possible in parts of Vermont, New York as torrential rain arrives late Tuesday night",
-      "link": "https://www.mynbc5.com/article/flooding-possible-vt-ny/73282550",
-      "ts": "2026-07-28T11:01:15+00:00",
-      "summary": "Over 4 inches of rain possible in parts of southern Vermont through Thursday morning"
-     },
-     {
-      "id": "73280815",
-      "title": "Seattle Space Needle shootout may have been gang-related",
-      "link": "https://www.mynbc5.com/article/seattle-space-needle-shooting-suspects/73280815",
-      "ts": "2026-07-28T10:59:00+00:00",
-      "summary": "Investigators now say the shootout that killed 3 at a food festival near Seattle's Space Needle may have been gang-related."
-     },
-     {
-      "id": "73278108",
-      "title": "Scattered storms Tuesday, heavy rain arrives tonight",
-      "link": "https://www.mynbc5.com/article/humid-with-more-clouds-and-scattered-afternoon-storms-tuesday-07-27-26/73278108",
-      "ts": "2026-07-28T10:58:00+00:00",
-      "summary": "Rain becomes more widespread Wednesday, isolated flooding possible"
-     },
-     {
-      "id": "73279473",
-      "title": "Judge orders immigration officials to release key witness in Texas ICE shooting",
-      "link": "https://www.mynbc5.com/article/judge-key-witness-texas-ice-shooting/73279473",
-      "ts": "2026-07-28T10:18:00+00:00",
-      "summary": "A federal judge has ordered immigration authorities to release a key witness in the fatal shooting of a Mexican homebuilder by an ICE officer in Houston."
      }
     ]
    },
