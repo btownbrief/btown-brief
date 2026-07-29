@@ -1,41 +1,41 @@
 {
- "updated": "2026-07-29T11:48:26+00:00",
+ "updated": "2026-07-29T13:25:36+00:00",
  "sections_updated": {
-  "now": "2026-07-29T11:48:26+00:00",
-  "forecast": "2026-07-29T11:48:26+00:00",
-  "hourly": "2026-07-29T11:48:26+00:00",
-  "alerts": "2026-07-29T11:48:26+00:00",
-  "afd": "2026-07-29T11:48:26+00:00",
-  "lake_forecast": "2026-07-29T11:48:26+00:00",
-  "lake_gage": "2026-07-29T11:48:26+00:00",
-  "air": "2026-07-29T11:48:26+00:00",
-  "sun": "2026-07-29T11:48:26+00:00",
-  "models": "2026-07-29T11:48:26+00:00"
+  "now": "2026-07-29T13:25:36+00:00",
+  "forecast": "2026-07-29T13:25:36+00:00",
+  "hourly": "2026-07-29T13:25:36+00:00",
+  "alerts": "2026-07-29T13:25:36+00:00",
+  "afd": "2026-07-29T13:25:36+00:00",
+  "lake_forecast": "2026-07-29T13:25:36+00:00",
+  "lake_gage": "2026-07-29T13:25:36+00:00",
+  "air": "2026-07-29T13:25:36+00:00",
+  "sun": "2026-07-29T13:25:36+00:00",
+  "models": "2026-07-29T13:25:36+00:00"
  },
  "now": {
-  "observed_at": "2026-07-29T11:35:00+00:00",
+  "observed_at": "2026-07-29T13:00:00+00:00",
   "station": "KBTV",
-  "description": "Rain and Fog/Mist",
-  "temp_f": 66,
-  "feels_like_f": 66,
-  "humidity": 100,
+  "description": "Light Rain",
+  "temp_f": 70,
+  "feels_like_f": 70,
+  "humidity": 88,
   "dewpoint_f": 66,
-  "wind_mph": 0,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "N"
+  "wind_dir": "S"
  },
  "forecast": {
   "updated": "2026-07-29T06:43:42+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-07-29T07:00:00-04:00",
+    "start": "2026-07-29T09:00:00-04:00",
     "is_day": true,
     "temp_f": 75,
     "pop": 82,
     "wind": "SE 7 mph",
     "short": "Rain Showers",
-    "detailed": "Rain showers. Cloudy, with a high near 75. Southeast wind around 7 mph. Chance of precipitation is 80%. New rainfall amounts between three quarters and one inch possible."
+    "detailed": "Rain showers. Cloudy, with a high near 75. Southeast wind around 7 mph. Chance of precipitation is 80%. New rainfall amounts between a quarter and half of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,28 +172,6 @@
  "hourly": {
   "updated": "2026-07-29T06:43:42+00:00",
   "hours": [
-   {
-    "t": "2026-07-29T07:00:00-04:00",
-    "temp_f": 66,
-    "feels_f": 66,
-    "pop": 80,
-    "humidity": 100,
-    "wind_mph": 6,
-    "wind_dir": "SE",
-    "sky": 94,
-    "short": "Rain Showers"
-   },
-   {
-    "t": "2026-07-29T08:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 77,
-    "humidity": 93,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 88,
-    "short": "Rain Showers"
-   },
    {
     "t": "2026-07-29T09:00:00-04:00",
     "temp_f": 69,
@@ -567,6 +545,28 @@
     "wind_dir": "N",
     "sky": 82,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-30T19:00:00-04:00",
+    "temp_f": 74,
+    "feels_f": 74,
+    "pop": 13,
+    "humidity": 74,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 84,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-07-30T20:00:00-04:00",
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 14,
+    "humidity": 76,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 88,
+    "short": "Cloudy"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-07-29T07:30:00+00:00",
+  "issued": "2026-07-29T11:54:00+00:00",
   "key_messages": [
    "Waves of locally heavy rain will continue to move through the forecast area through tonight. Isolated to scattered flash flooding is possible and a Flood Watch remains in effect for portions of the area through tonight.",
    "Briefly dry conditions are expected on Saturday, and then chances for showers and thunderstorms will increase again."
   ],
   "what_changed": "As of 300 AM EDT Wednesday... Forecast rainfall totals have been increased slightly. The isolated to scattered flash flooding risk remains on track, and a Flood Watch remains in effect for portions of the area through this evening.",
-  "raw": "\n000\nFXUS61 KBTV 290730\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n330 AM EDT Wed Jul 29 2026\n\n.WHAT HAS CHANGED...\nAs of 300 AM EDT Wednesday...\n\nForecast rainfall totals have been increased slightly. The\nisolated to scattered flash flooding risk remains on track, and\na Flood Watch remains in effect for portions of the area through\nthis evening. \n\n&&\n\n.KEY MESSAGES...\nAs of 300 AM EDT Wednesday...\n\n1.  Waves of locally heavy rain will continue to move through \nthe forecast area through tonight.  Isolated to scattered flash \nflooding is possible and a Flood Watch remains in effect for \nportions of the area through tonight.\n\n2. Briefly dry conditions are expected on Saturday, and then \nchances for showers and thunderstorms will increase again.\n\n&&\n\n.DISCUSSION...\nAs of 300 AM EDT Wednesday...\n\nKEY MESSAGE 1: A slow-moving low pressure system to our south \nwith continue to send waves of rain through our forecast area \nthrough tonight. A Flood Watch remains in effect for portions \nof southern and central Vermont, as well as Essex County New \nYork, where isolated to scattered flash flooding is possible. \n\nObserved rainfall amounts so far have been highly variable across \nthe CWA as expected, with localized areas that have multiple heavy \nshowers and thunderstorms move through having picked up 1-2 inches \nso far. These areas include higher elevations of the southern \nGreens in eastern Rutland County, a narrow swath of northern \nChittenden County to southern Franklin County near Milton \ntowards St. Albans, and an area between Hammond and Gouverner in\nSouthern St. Lawrence County. Outside of these areas, reported \nstorm total rainfall amounts as of early Wednesday highly \nvariable but generally under an inch. Overall, the area has been\nable to absorb these precip amounts with no reported issues \nthus far in our CWA. \n\nAfter a brief break in precipitation overnight, the next wave of\nlight to moderate rainfall is moving northward over western VT\nand eastern NY early this morning. Rainfall rates within this \nwave are expected to generally stay between a tenth and a \nquarter inch per hour, but some isolated higher rates are\npossible. \n\nThe heavier rainfall threat increases later this morning, when \nthe center of the low will shift closer to our forecast area. \nAs the low moves north, southerly flow will become easterly. \nThis will direct moisture upslope over the eastern slopes of the\nsouthern and central Greens. As this happens, expect a window of\nsteady precipitation over these upslope areas with rainfall \nrates between 0.25 to 0.5 inch per hour, with the potential for \nbriefly higher rates. While the heaviest precipitation of the \nevent is forecast to stay to the south of our CWA boundary, \nthere will be a window this morning through mid- afternoon where\nthe low will pivot to our south and we have the potential to \nsee some impressive rainfall accumulations in portions of our \narea. More specifically, an additional 1-3 inches of rain \nthrough tonight is forecast over portions of southern and \ncentral Vermont, along with the eastern slopes of the northern \nAdirondacks. Higher additional amounts, with localized 3-4 \ninches of additional precipitation today, cannot be ruled out \nover the higher elevations of the southern Green Mountains. \n\nCurrent one hour Flash Flood Guidance from the NERFC ranges from 1.5 \nto 2.5 inch/hour across most of our CWA...lowest in the previously \nmentioned areas that have received the most rain out of the event so \nfar.  Six hour flash flood guidance is 2-3.5 inch/6 hour.  The \nanticipated additional QPF in comparison with the flash flood \nguidance does suggest that some isolated to scattered flash flooding \nis possible today, but flash flooding is not expected to be \nwidespread. The area of highest concern in our CWA remains \nhigher elevations of southern Rutland and Windsor counties. Much\nof the area included in our Flood Watch is included within the \nSlight (at least 15% risk) of flash flooding today as per the \nlatest Excessive Rainfall Outlook issued by the Weather \nPrediction Center. Given antecedent dry conditions leading up to\nthe event, rivers are generally forecast to remain within \nbanks, though some flashier streams will run high. \n\nThe threat for flash flooding will decrease tonight as the low\nbegins to exit to the east. Showers will wane in intensity and\ncoverage through the day Thursday, eventually fully coming to \nan end by Thursday night.\n\nKEY MESSAGE 2: An upper ridge will settle over the area Friday night \ninto Saturday. Could be a foggy Saturday morning, especially after \nour recent wet period. A digging trough along the Corn Belt will \nallow warm, humid air to return. Temperatures will climb into the \n80s across the forecast area. A few afternoon showers may try to \ndevelop. A range of forecast soundings suggest a mid-level warm \nlayer around 600mb should prevent convection, but that it erodes \nSaturday evening. So a late showing of afternoon convection seems \npossible Saturday, mainly along the mountain spines with limited \nforcing and light flow in place.\n\nOn Sunday, a northern stream trough will provide some focus for \nprecipitation Sunday afternoon-Monday while the trough over the Corn \nBelt gets dragged farther south. The northern stream system will \nusher in somewhat dry and stable air into the region. As the \nsouthern trough lingers across the southern US and a Bermuda high \ndevelops, we'll be just north of the tropical plume of moisture this \ncombo will produce. So Tuesday appears to be somewhat drier, but \nthen that plume appears likely to shift north some on Wednesday. \nWith this regime, we'll likely be somewhat warmer than average, with \nupper 70s to mid 80s for daytime highs and mid 50s to mid 60s for \nnighttime lows.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...The initial portion of the forecast has been \nfaring well enough, but did make some modest changes based on \nshifts to the south and east. The first six hours are of \nrelatively good confidence, with periods of moderate rain \nproducing 2-6SM visibility. Ceilings are gradually falling \ntowards 2500-5000 ft agl, albeit somewhat slower than expected. \nThe worst surface conditions around 09z-15z with most terminals \nMVFR or IFR at that time frame. This will be timed with heavy \nrain associated with a surface low expected to pass north. Winds\nwill go calm or variable on its approach. Southeast winds will \ntransition to northeast, and then north approaching 06z. Wind \nspeeds will be strongest about 12z-22z at 6-11 knots, and a few \ngusts up to 20 knots is possible at KRUT. Eventually, secondary \nlow pressure will develop more strongly off the New England \nCoast. Surface winds will begin to diminish, but the flow aloft \nwill remain easterly to southeasterly at 30-40 knots at 2000 ft \nagl across much of Vermont. Some LLWS is noted. As the surface \nlow decays, conditions are expected to improve some, and then \ntrend towards steady state. There will likely be some \nredeveloping convection 18z Wed to about 03z Thurs, which could \nproduce locally heavy rain reducing visibilities, and it is \npossible another swath of precipitation arcs northwest, but \nconfidence is lower at this time. \n\nOutlook...\n\nThursday: Mainly VFR, with areas MVFR possible. Chance SHRA,\nSlight chance TSRA.\nThursday Night: Mainly VFR, with areas MVFR possible. NO SIG WX.\nFriday: Mainly VFR, with local MVFR possible. Slight chance SHRA.\nFriday Night: VFR. NO SIG WX.\nSaturday: Mainly VFR, with local MVFR possible. NO SIG WX.\nSaturday Night: VFR. Slight chance SHRA.\nSunday: MVFR/IFR conditions possible. Chance SHRA, Chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Flood Watch through this evening for VTZ009>011-018>021.\nNY...Flood Watch through this evening for NYZ034-035.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Duell\nDISCUSSION...Haynes/Duell\nAVIATION...Haynes\n"
+  "raw": "\n000\nFXUS61 KBTV 291154\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n754 AM EDT Wed Jul 29 2026\n\n.WHAT HAS CHANGED...\nAs of 300 AM EDT Wednesday...\n\nForecast rainfall totals have been increased slightly. The\nisolated to scattered flash flooding risk remains on track, and\na Flood Watch remains in effect for portions of the area through\nthis evening.\n\n&&\n\n.KEY MESSAGES...\nAs of 300 AM EDT Wednesday...\n\n1.  Waves of locally heavy rain will continue to move through \nthe forecast area through tonight.  Isolated to scattered flash \nflooding is possible and a Flood Watch remains in effect for \nportions of the area through tonight.\n\n2. Briefly dry conditions are expected on Saturday, and then \nchances for showers and thunderstorms will increase again.\n\n&&\n\n.DISCUSSION...\nAs of 300 AM EDT Wednesday...\n\nKEY MESSAGE 1: A slow-moving low pressure system to our south \nwith continue to send waves of rain through our forecast area \nthrough tonight. A Flood Watch remains in effect for portions \nof southern and central Vermont, as well as Essex County New \nYork, where isolated to scattered flash flooding is possible. \n\nObserved rainfall amounts so far have been highly variable across \nthe CWA as expected, with localized areas that have multiple heavy \nshowers and thunderstorms move through having picked up 1-2 inches \nso far. These areas include higher elevations of the southern \nGreens in eastern Rutland County, a narrow swath of northern \nChittenden County to southern Franklin County near Milton \ntowards St. Albans, and an area between Hammond and Gouverneur \nin Southern St. Lawrence County. Outside of these areas, \nreported storm total rainfall amounts as of early Wednesday \nhighly variable but generally under an inch. Overall, the area \nhas been able to absorb these precip amounts with no reported \nissues thus far in our CWA. \n\nAfter a brief break in precipitation overnight, the next wave of\nlight to moderate rainfall is moving northward over western VT\nand eastern NY early this morning. Rainfall rates within this \nwave are expected to generally stay between a tenth and a \nquarter inch per hour, but some isolated higher rates are\npossible. \n\nThe heavier rainfall threat increases later this morning, when \nthe center of the low will shift closer to our forecast area. \nAs the low moves north, southerly flow will become easterly. \nThis will direct moisture upslope over the eastern slopes of the\nsouthern and central Greens. As this happens, expect a window of\nsteady precipitation over these upslope areas with rainfall \nrates between 0.25 to 0.5 inch per hour, with the potential for \nbriefly higher rates. While the heaviest precipitation of the \nevent is forecast to stay to the south of our CWA boundary, \nthere will be a window this morning through mid- afternoon where\nthe low will pivot to our south and we have the potential to \nsee some impressive rainfall accumulations in portions of our \narea. More specifically, an additional 1-3 inches of rain \nthrough tonight is forecast over portions of southern and \ncentral Vermont, along with the eastern slopes of the northern \nAdirondacks. Higher additional amounts, with localized 3-4 \ninches of additional precipitation today, cannot be ruled out \nover the higher elevations of the southern Green Mountains. \n\nCurrent one hour Flash Flood Guidance from the NERFC ranges from 1.5 \nto 2.5 inch/hour across most of our CWA...lowest in the previously \nmentioned areas that have received the most rain out of the event so \nfar.  Six hour flash flood guidance is 2-3.5 inch/6 hour.  The \nanticipated additional QPF in comparison with the flash flood \nguidance does suggest that some isolated to scattered flash flooding \nis possible today, but flash flooding is not expected to be \nwidespread. The area of highest concern in our CWA remains \nhigher elevations of southern Rutland and Windsor counties. Much\nof the area included in our Flood Watch is included within the \nSlight (at least 15% risk) of flash flooding today as per the \nlatest Excessive Rainfall Outlook issued by the Weather \nPrediction Center. Given antecedent dry conditions leading up to\nthe event, rivers are generally forecast to remain within \nbanks, though some flashier streams will run high. \n\nThe threat for flash flooding will decrease tonight as the low\nbegins to exit to the east. Showers will wane in intensity and\ncoverage through the day Thursday, eventually fully coming to \nan end by Thursday night.\n\nKEY MESSAGE 2: An upper ridge will settle over the area Friday night \ninto Saturday. Could be a foggy Saturday morning, especially after \nour recent wet period. A digging trough along the Corn Belt will \nallow warm, humid air to return. Temperatures will climb into the \n80s across the forecast area. A few afternoon showers may try to \ndevelop. A range of forecast soundings suggest a mid-level warm \nlayer around 600mb should prevent convection, but that it erodes \nSaturday evening. So a late showing of afternoon convection seems \npossible Saturday, mainly along the mountain spines with limited \nforcing and light flow in place.\n\nOn Sunday, a northern stream trough will provide some focus for \nprecipitation Sunday afternoon-Monday while the trough over the Corn \nBelt gets dragged farther south. The northern stream system will \nusher in somewhat dry and stable air into the region. As the \nsouthern trough lingers across the southern US and a Bermuda high \ndevelops, we'll be just north of the tropical plume of moisture this \ncombo will produce. So Tuesday appears to be somewhat drier, but \nthen that plume appears likely to shift north some on Wednesday. \nWith this regime, we'll likely be somewhat warmer than average, with \nupper 70s to mid 80s for daytime highs and mid 50s to mid 60s for \nnighttime lows.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...Variable flight conditions are expected\nover the next several hours as waves of precipitation continue\nto move through the region. Generally most terminals are\nexperiencing VFR and MVFR conditions, although a few brief\nperiods of IFR have been observed with some lower ceilings and\nvisibility. Most terminals are expected to trend towards MVFR \ntowards the afternoon given the ongoing precipitation and \nabundant moisture. Some reductions in visibilities will be \npossible within the rain as well, although there is lower \nconfidence on how low and long-lived these reductions will be at\neach terminal. Winds continue to be south to southeasterly this\nmorning, and are expected to become more variable as the day \nprogresses. Wind speeds will be strongest this morning into the \nearly afternoon at 6-11 knots, and a few gusts up to 20 knots is\npossible at KRUT. Shower activity will continue to be possible \nthrough a majority of the forecast period, with potential for \nreduced conditions within any showers. Guidance shows lower \nceilings and possible fog/mist development overnight tonight \nwhich would bring some IFR conditions, but given the uncertainty\njust hinted at this potential in the forecast for now. \n\nOutlook...\n\nThursday: Mainly VFR, with local MVFR possible. Chance SHRA,\nSlight chance TSRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Slight\nchance SHRA.\nFriday: Mainly VFR, with areas MVFR possible. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. Slight chance SHRA, Slight chance TSRA.\nSunday: Mainly MVFR, with local IFR possible. Likely SHRA, Slight\nchance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Flood Watch through this evening for VTZ009>011-018>021.\nNY...Flood Watch through this evening for NYZ034-035.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Duell\nDISCUSSION...Duell/Haynes\nAVIATION...Kremer\n"
  },
  "lake_forecast": {
   "issued": "2026-07-29T06:50:00+00:00",
@@ -825,17 +825,17 @@
  },
  "lake_gage": {
   "water_temp_f": 74,
-  "water_temp_at": "2026-07-29T07:00:00.000-04:00",
-  "level_ft": 95.48,
-  "level_at": "2026-07-29T07:00:00.000-04:00",
+  "water_temp_at": "2026-07-29T09:00:00.000-04:00",
+  "level_ft": 95.5,
+  "level_at": "2026-07-29T09:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 35,
+  "aqi": 37,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "07/29/26 7:00",
+  "observed": "07/29/26 8:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, July 29th."
  },
  "sun": {
@@ -850,8 +850,8 @@
    {
     "date": "2026-07-29",
     "high_f": {
-     "GFS": 79,
-     "Euro": 71,
+     "GFS": 80,
+     "Euro": 72,
      "ICON": 74
     },
     "pop_max": {
@@ -860,8 +860,8 @@
      "ICON": 98
     },
     "precip_in": {
-     "GFS": 1.8,
-     "Euro": 1.04,
+     "GFS": 1.5,
+     "Euro": 1.37,
      "ICON": 0.42
     },
     "high_spread_f": 8
@@ -870,7 +870,7 @@
     "date": "2026-07-30",
     "high_f": {
      "GFS": 74,
-     "Euro": 70,
+     "Euro": 75,
      "ICON": 78
     },
     "pop_max": {
@@ -879,17 +879,17 @@
      "ICON": 40
     },
     "precip_in": {
-     "GFS": 0.3,
-     "Euro": 0.3,
+     "GFS": 0.44,
+     "Euro": 0.39,
      "ICON": 0.0
     },
-    "high_spread_f": 8
+    "high_spread_f": 4
    },
    {
     "date": "2026-07-31",
     "high_f": {
      "GFS": 76,
-     "Euro": 78,
+     "Euro": 77,
      "ICON": 81
     },
     "pop_max": {
@@ -899,7 +899,7 @@
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.02,
+     "Euro": 0.09,
      "ICON": 0.02
     },
     "high_spread_f": 5
