@@ -1,30 +1,30 @@
 {
- "generated": "2026-07-28T17:45:07-04:00",
+ "generated": "2026-07-29T07:48:18-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 25,
-   "seconds": 6.5
+   "seconds": 5.6
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 72,
-   "seconds": 6.2
+   "count": 74,
+   "seconds": 3.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 55,
-   "seconds": 3.3
+   "count": 53,
+   "seconds": 2.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 165,
-   "seconds": 2.8
+   "count": 169,
+   "seconds": 3.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 86,
-   "seconds": 1.9
+   "count": 85,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,11 +34,11 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-28&end_date=2026-09-26&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-29&end_date=2026-09-27&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 67,
+   "count": 64,
    "seconds": 0.0
   },
   "farmersmarket": {
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 194,
-   "seconds": 72.4
+   "count": 189,
+   "seconds": 65.8
   },
   "flynn": {
    "label": "The Flynn",
    "count": 20,
-   "seconds": 2.4
+   "seconds": 2.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.1
+   "seconds": 37.4
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 69,
-   "seconds": 99.7
+   "count": 70,
+   "seconds": 116.3
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 540,
-   "seconds": 75.3
+   "count": 532,
+   "seconds": 72.2
   },
   "meetup": {
    "label": "Meetup",
-   "count": 61,
-   "seconds": 126.5
+   "count": 62,
+   "seconds": 118.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 25,
-   "seconds": 16.6
+   "count": 26,
+   "seconds": 14.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 62,
-   "seconds": 8.2
+   "count": 59,
+   "seconds": 1.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 39,
-   "seconds": 32.9
+   "count": 38,
+   "seconds": 29.9
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,63 +124,19 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 58,
-   "seconds": 81.1
+   "seconds": 73.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 27,
-   "seconds": 0.3
+   "count": 23,
+   "seconds": 0.2
   }
  },
- "gathered": 2324,
- "afterDedup": 1199,
- "duplicatesMerged": 1125,
- "final": 2127,
+ "gathered": 2306,
+ "afterDedup": 1186,
+ "duplicatesMerged": 1120,
+ "final": 2069,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-24"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-24"
-  },
-  {
-   "kept": {
-    "title": "Gregory Alan Isakov with Vermont Symphony Orchestra",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-08-25"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-25"
-  },
   {
    "kept": {
     "title": "Dinosaur Safari Exhibit",
@@ -1954,6 +1910,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-13"
@@ -1965,9 +1922,43 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-13"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-13"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-14"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-14"
   },
   {
    "kept": {
@@ -2355,22 +2346,27 @@
     "loveburlington"
    ],
    "date": "2026-09-26"
+  },
+  {
+   "kept": {
+    "title": "Hana Stretton & Helena Deland",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-09-27"
   }
  ],
  "changes": [
   {
-   "id": "fe889dd276a8",
-   "title": "Tech Tuesdays - Breakfast",
-   "date": "2026-07-28",
-   "change": "missing",
-   "lastSeen": "2026-07-28T07:37:25-04:00"
-  },
-  {
-   "id": "bb7f2c749a1e",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-07-28",
-   "change": "missing",
-   "lastSeen": "2026-07-28T07:37:25-04:00"
+   "id": "774edc5c0b40",
+   "title": "Industry Day",
+   "date": "2026-09-14",
+   "change": "time",
+   "was": "2026-09-14",
+   "now": "2026-09-14T11:30:00-04:00"
   },
   {
    "id": "60d9bf32fe57",
@@ -2387,23 +2383,18 @@
    "lastSeen": "2026-07-28T07:37:25-04:00"
   },
   {
+   "id": "e081ac26e148",
+   "title": "9-mile Bike Ride @ Switchback",
+   "date": "2026-07-29",
+   "change": "missing",
+   "lastSeen": "2026-07-28T17:45:07-04:00"
+  },
+  {
    "id": "148d6a2f9344",
    "title": "Maple Tree Place Summer Concert Series The Doors",
    "date": "2026-07-30",
    "change": "missing",
    "lastSeen": "2026-07-28T07:37:25-04:00"
-  },
-  {
-   "id": "e885b8f5384b",
-   "title": "Food Truck Fridays",
-   "date": "2026-08-07",
-   "change": "dropped"
-  },
-  {
-   "id": "c554c70adb40",
-   "title": "Mind Magic: A Night of Laughter and Astonishment",
-   "date": "2026-08-08",
-   "change": "dropped"
   },
   {
    "id": "7939e5103bbf",
@@ -2441,43 +2432,16 @@
    "lastSeen": "2026-07-26T17:36:58-04:00"
   },
   {
-   "id": "88e8ca120f68",
-   "title": "Alex Clark | Jokes From The Brink | Stand-Up",
-   "date": "2026-08-28",
-   "change": "dropped"
-  },
-  {
    "id": "bf10cd32dce0",
    "title": "BTown Coffee Club",
    "date": "2026-08-29",
-   "change": "missing",
-   "lastSeen": "2026-07-26T07:06:28-04:00"
+   "change": "dropped"
   },
   {
    "id": "b55082d095d3",
    "title": "BTown Coffee Club",
    "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-07-26T07:06:28-04:00"
-  },
-  {
-   "id": "812b01e9ca25",
-   "title": "Dream / Mộng : Veronica Pham",
-   "date": "2026-09-10",
    "change": "dropped"
-  },
-  {
-   "id": "20ba5c868f46",
-   "title": "Dream / Mộng : Veronica Pham",
-   "date": "2026-09-11",
-   "change": "dropped"
-  },
-  {
-   "id": "11ad21819b81",
-   "title": "Tours",
-   "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-07-28T07:37:25-04:00"
   },
   {
    "id": "ada1509c3a9f",
@@ -2485,27 +2449,6 @@
    "date": "2026-09-12",
    "change": "missing",
    "lastSeen": "2026-07-26T17:36:58-04:00"
-  },
-  {
-   "id": "ee168b945cde",
-   "title": "Sensory-Friendly Sunday at ECHO",
-   "date": "2026-09-13",
-   "change": "missing",
-   "lastSeen": "2026-07-28T07:37:25-04:00"
-  },
-  {
-   "id": "c753cc2d08e1",
-   "title": "Acoustic Brunch",
-   "date": "2026-09-13",
-   "change": "missing",
-   "lastSeen": "2026-07-28T07:37:25-04:00"
-  },
-  {
-   "id": "1b9bf70ad5f5",
-   "title": "Karaoke Sundays!",
-   "date": "2026-09-13",
-   "change": "missing",
-   "lastSeen": "2026-07-28T07:37:25-04:00"
   },
   {
    "id": "3ec046abebed",
