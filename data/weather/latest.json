@@ -1,41 +1,41 @@
 {
- "updated": "2026-07-29T01:12:43+00:00",
+ "updated": "2026-07-29T04:53:24+00:00",
  "sections_updated": {
-  "now": "2026-07-29T01:12:43+00:00",
-  "forecast": "2026-07-29T01:12:43+00:00",
-  "hourly": "2026-07-29T01:12:43+00:00",
-  "alerts": "2026-07-29T01:12:43+00:00",
-  "afd": "2026-07-29T01:12:43+00:00",
-  "lake_forecast": "2026-07-29T01:12:43+00:00",
+  "now": "2026-07-29T04:53:24+00:00",
+  "forecast": "2026-07-29T04:53:24+00:00",
+  "hourly": "2026-07-29T04:53:24+00:00",
+  "alerts": "2026-07-29T04:53:24+00:00",
+  "afd": "2026-07-29T04:53:24+00:00",
+  "lake_forecast": "2026-07-29T04:53:24+00:00",
   "lake_gage": "2026-07-29T01:12:43+00:00",
-  "air": "2026-07-29T01:12:43+00:00",
-  "sun": "2026-07-29T01:12:43+00:00",
-  "models": "2026-07-29T01:12:43+00:00"
+  "air": "2026-07-29T04:53:24+00:00",
+  "sun": "2026-07-29T04:53:24+00:00",
+  "models": "2026-07-29T04:53:24+00:00"
  },
  "now": {
-  "observed_at": "2026-07-29T00:50:00+00:00",
+  "observed_at": "2026-07-29T04:35:00+00:00",
   "station": "KBTV",
-  "description": "Light Rain",
-  "temp_f": 70,
-  "feels_like_f": 70,
-  "humidity": 88,
+  "description": "Rain and Fog/Mist",
+  "temp_f": 66,
+  "feels_like_f": 66,
+  "humidity": 100,
   "dewpoint_f": 66,
-  "wind_mph": 9,
+  "wind_mph": 6,
   "wind_gust_mph": null,
-  "wind_dir": "SSE"
+  "wind_dir": "S"
  },
  "forecast": {
   "updated": "2026-07-28T22:01:27+00:00",
   "periods": [
    {
-    "name": "Tonight",
-    "start": "2026-07-28T21:00:00-04:00",
+    "name": "Overnight",
+    "start": "2026-07-29T00:00:00-04:00",
     "is_day": false,
     "temp_f": 66,
     "pop": 87,
     "wind": "SE 7 mph",
-    "short": "Showers And Thunderstorms",
-    "detailed": "Showers and thunderstorms. Some of the storms could produce heavy rain. Cloudy, with a low around 66. Southeast wind around 7 mph. Chance of precipitation is 90%. New rainfall amounts between a quarter and half of an inch possible."
+    "short": "Rain Showers",
+    "detailed": "Rain showers. Cloudy, with a low around 66. Southeast wind around 7 mph. Chance of precipitation is 90%. New rainfall amounts between a quarter and half of an inch possible."
    },
    {
     "name": "Wednesday",
@@ -172,39 +172,6 @@
  "hourly": {
   "updated": "2026-07-28T22:01:27+00:00",
   "hours": [
-   {
-    "t": "2026-07-28T21:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
-    "pop": 73,
-    "humidity": 90,
-    "wind_mph": 7,
-    "wind_dir": "SE",
-    "sky": 99,
-    "short": "Showers And Thunderstorms Likely"
-   },
-   {
-    "t": "2026-07-28T22:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 75,
-    "humidity": 90,
-    "wind_mph": 7,
-    "wind_dir": "SE",
-    "sky": 96,
-    "short": "Showers And Thunderstorms"
-   },
-   {
-    "t": "2026-07-28T23:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 85,
-    "humidity": 90,
-    "wind_mph": 6,
-    "wind_dir": "SE",
-    "sky": 99,
-    "short": "Rain Showers"
-   },
    {
     "t": "2026-07-29T00:00:00-04:00",
     "temp_f": 69,
@@ -567,6 +534,39 @@
     "wind_dir": "N",
     "sky": 83,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-30T09:00:00-04:00",
+    "temp_f": 69,
+    "feels_f": 69,
+    "pop": 51,
+    "humidity": 84,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 74,
+    "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-30T10:00:00-04:00",
+    "temp_f": 71,
+    "feels_f": 71,
+    "pop": 51,
+    "humidity": 79,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 75,
+    "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-07-30T11:00:00-04:00",
+    "temp_f": 72,
+    "feels_f": 72,
+    "pop": 51,
+    "humidity": 79,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 75,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -859,77 +859,77 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 57,
+  "aqi": 53,
   "category": "Moderate",
   "pollutant": "PM2.5",
-  "observed": "07/28/26 20:00",
+  "observed": "07/29/26 0:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, July 29th."
  },
  "sun": {
-  "sunrise": "2026-07-28T05:35-04:00",
-  "sunset": "2026-07-28T20:22-04:00",
-  "sunrise_tomorrow": "2026-07-29T05:36-04:00",
-  "sunset_tomorrow": "2026-07-29T20:21-04:00",
-  "uv_max": 6.85
+  "sunrise": "2026-07-29T05:36-04:00",
+  "sunset": "2026-07-29T20:21-04:00",
+  "sunrise_tomorrow": "2026-07-30T05:37-04:00",
+  "sunset_tomorrow": "2026-07-30T20:20-04:00",
+  "uv_max": 1.3
  },
  "models": {
   "days": [
    {
-    "date": "2026-07-28",
-    "high_f": {
-     "GFS": 81,
-     "Euro": 79,
-     "ICON": 83
-    },
-    "pop_max": {
-     "GFS": 59,
-     "Euro": 100,
-     "ICON": 93
-    },
-    "precip_in": {
-     "GFS": 0.17,
-     "Euro": 0.43,
-     "ICON": 0.35
-    },
-    "high_spread_f": 4
-   },
-   {
     "date": "2026-07-29",
     "high_f": {
-     "GFS": 73,
-     "Euro": 72,
-     "ICON": 71
+     "GFS": 77,
+     "Euro": 71,
+     "ICON": 72
     },
     "pop_max": {
-     "GFS": 83,
-     "Euro": 99,
-     "ICON": 90
+     "GFS": 68,
+     "Euro": 100,
+     "ICON": 98
     },
     "precip_in": {
-     "GFS": 0.94,
-     "Euro": 0.69,
-     "ICON": 1.84
+     "GFS": 0.15,
+     "Euro": 1.2,
+     "ICON": 0.87
     },
-    "high_spread_f": 2
+    "high_spread_f": 6
    },
    {
     "date": "2026-07-30",
     "high_f": {
      "GFS": 72,
      "Euro": 75,
-     "ICON": 72
+     "ICON": 76
     },
     "pop_max": {
-     "GFS": 51,
-     "Euro": 53,
-     "ICON": 53
+     "GFS": 43,
+     "Euro": 54,
+     "ICON": 40
     },
     "precip_in": {
-     "GFS": 0.05,
-     "Euro": 0.05,
-     "ICON": 0.19
+     "GFS": 0.85,
+     "Euro": 0.07,
+     "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
+   },
+   {
+    "date": "2026-07-31",
+    "high_f": {
+     "GFS": 78,
+     "Euro": 79,
+     "ICON": 80
+    },
+    "pop_max": {
+     "GFS": 8,
+     "Euro": 20,
+     "ICON": 12
+    },
+    "precip_in": {
+     "GFS": 0.0,
+     "Euro": 0.03,
+     "ICON": 0.0
+    },
+    "high_spread_f": 2
    }
   ]
  }
