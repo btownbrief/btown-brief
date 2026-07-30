@@ -1,41 +1,41 @@
 {
- "updated": "2026-07-30T12:15:57+00:00",
+ "updated": "2026-07-30T14:55:38+00:00",
  "sections_updated": {
-  "now": "2026-07-30T12:15:57+00:00",
-  "forecast": "2026-07-30T12:15:57+00:00",
-  "hourly": "2026-07-30T12:15:57+00:00",
-  "alerts": "2026-07-30T12:15:57+00:00",
-  "afd": "2026-07-30T12:15:57+00:00",
-  "lake_forecast": "2026-07-30T12:15:57+00:00",
-  "lake_gage": "2026-07-30T12:15:57+00:00",
-  "air": "2026-07-30T12:15:57+00:00",
-  "sun": "2026-07-30T12:15:57+00:00",
-  "models": "2026-07-30T12:15:57+00:00"
+  "now": "2026-07-30T14:55:38+00:00",
+  "forecast": "2026-07-30T14:55:38+00:00",
+  "hourly": "2026-07-30T14:55:38+00:00",
+  "alerts": "2026-07-30T14:55:38+00:00",
+  "afd": "2026-07-30T14:55:38+00:00",
+  "lake_forecast": "2026-07-30T14:55:38+00:00",
+  "lake_gage": "2026-07-30T14:55:38+00:00",
+  "air": "2026-07-30T14:55:38+00:00",
+  "sun": "2026-07-30T14:55:38+00:00",
+  "models": "2026-07-30T14:55:38+00:00"
  },
  "now": {
-  "observed_at": "2026-07-30T11:54:00+00:00",
+  "observed_at": "2026-07-30T14:35:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 65,
-  "feels_like_f": 65,
-  "humidity": 93,
-  "dewpoint_f": 63,
-  "wind_mph": 0,
+  "temp_f": 70,
+  "feels_like_f": 70,
+  "humidity": 83,
+  "dewpoint_f": 64,
+  "wind_mph": 6,
   "wind_gust_mph": null,
-  "wind_dir": "N"
+  "wind_dir": "WNW"
  },
  "forecast": {
-  "updated": "2026-07-30T06:32:34+00:00",
+  "updated": "2026-07-30T14:32:35+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-07-30T07:00:00-04:00",
+    "start": "2026-07-30T10:00:00-04:00",
     "is_day": true,
     "temp_f": 77,
-    "pop": 45,
-    "wind": "N 5 to 9 mph",
+    "pop": 38,
+    "wind": "N 9 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly cloudy, with a high near 77. North wind 5 to 9 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "A chance of rain showers. Mostly cloudy, with a high near 77. North wind around 9 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -170,41 +170,8 @@
   ]
  },
  "hourly": {
-  "updated": "2026-07-30T06:32:34+00:00",
+  "updated": "2026-07-30T14:32:35+00:00",
   "hours": [
-   {
-    "t": "2026-07-30T07:00:00-04:00",
-    "temp_f": 65,
-    "feels_f": 65,
-    "pop": 45,
-    "humidity": 93,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 88,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-07-30T08:00:00-04:00",
-    "temp_f": 67,
-    "feels_f": 67,
-    "pop": 41,
-    "humidity": 87,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 78,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-07-30T09:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 36,
-    "humidity": 87,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 70,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-07-30T10:00:00-04:00",
     "temp_f": 70,
@@ -567,6 +534,39 @@
     "wind_dir": "NW",
     "sky": 45,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-07-31T19:00:00-04:00",
+    "temp_f": 80,
+    "feels_f": 82,
+    "pop": 5,
+    "humidity": 62,
+    "wind_mph": 2,
+    "wind_dir": "NW",
+    "sky": 50,
+    "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-07-31T20:00:00-04:00",
+    "temp_f": 78,
+    "feels_f": 78,
+    "pop": 0,
+    "humidity": 67,
+    "wind_mph": 2,
+    "wind_dir": "SW",
+    "sky": 53,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-07-31T21:00:00-04:00",
+    "temp_f": 74,
+    "feels_f": 74,
+    "pop": 0,
+    "humidity": 76,
+    "wind_mph": 1,
+    "wind_dir": "S",
+    "sky": 45,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 73,
-  "water_temp_at": "2026-07-30T08:00:00.000-04:00",
+  "water_temp_at": "2026-07-30T10:00:00.000-04:00",
   "level_ft": 95.5,
-  "level_at": "2026-07-30T08:00:00.000-04:00",
+  "level_at": "2026-07-30T10:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 34,
+  "aqi": 32,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/30/26 8:00",
+  "observed": "07/30/26 10:00",
   "discussion": "Expect generally good air quality across Vermont on Thursday, July 30th."
  },
  "sun": {
@@ -851,13 +851,13 @@
    {
     "date": "2026-07-30",
     "high_f": {
-     "GFS": 79,
-     "Euro": 74,
+     "GFS": 77,
+     "Euro": 77,
      "ICON": 76
     },
     "pop_max": {
      "GFS": 33,
-     "Euro": 77,
+     "Euro": 93,
      "ICON": 93
     },
     "precip_in": {
@@ -865,37 +865,37 @@
      "Euro": 0.5,
      "ICON": 0.24
     },
-    "high_spread_f": 5
+    "high_spread_f": 1
    },
    {
     "date": "2026-07-31",
     "high_f": {
-     "GFS": 83,
+     "GFS": 80,
      "Euro": 77,
      "ICON": 79
     },
     "pop_max": {
-     "GFS": 10,
-     "Euro": 25,
+     "GFS": 11,
+     "Euro": 43,
      "ICON": 13
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.06,
+     "Euro": 0.13,
      "ICON": 0.11
     },
-    "high_spread_f": 6
+    "high_spread_f": 3
    },
    {
     "date": "2026-08-01",
     "high_f": {
      "GFS": 84,
-     "Euro": 82,
+     "Euro": 80,
      "ICON": 84
     },
     "pop_max": {
      "GFS": 40,
-     "Euro": 31,
+     "Euro": 8,
      "ICON": 5
     },
     "precip_in": {
@@ -903,7 +903,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 4
    }
   ]
  }
