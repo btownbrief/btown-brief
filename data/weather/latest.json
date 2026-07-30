@@ -1,26 +1,26 @@
 {
- "updated": "2026-07-30T01:05:29+00:00",
+ "updated": "2026-07-30T04:41:01+00:00",
  "sections_updated": {
-  "now": "2026-07-30T01:05:29+00:00",
-  "forecast": "2026-07-30T01:05:29+00:00",
-  "hourly": "2026-07-30T01:05:29+00:00",
-  "alerts": "2026-07-30T01:05:29+00:00",
-  "afd": "2026-07-30T01:05:29+00:00",
-  "lake_forecast": "2026-07-30T01:05:29+00:00",
-  "lake_gage": "2026-07-30T01:05:29+00:00",
-  "air": "2026-07-30T01:05:29+00:00",
-  "sun": "2026-07-30T01:05:29+00:00",
-  "models": "2026-07-30T01:05:29+00:00"
+  "now": "2026-07-30T04:41:01+00:00",
+  "forecast": "2026-07-30T04:41:01+00:00",
+  "hourly": "2026-07-30T04:41:01+00:00",
+  "alerts": "2026-07-30T04:41:01+00:00",
+  "afd": "2026-07-30T04:41:01+00:00",
+  "lake_forecast": "2026-07-30T04:41:01+00:00",
+  "lake_gage": "2026-07-30T04:41:01+00:00",
+  "air": "2026-07-30T04:41:01+00:00",
+  "sun": "2026-07-30T04:41:01+00:00",
+  "models": "2026-07-30T04:41:01+00:00"
  },
  "now": {
-  "observed_at": "2026-07-30T00:45:00+00:00",
+  "observed_at": "2026-07-30T04:25:00+00:00",
   "station": "KBTV",
   "description": "Light Rain",
   "temp_f": 64,
   "feels_like_f": 64,
-  "humidity": 88,
-  "dewpoint_f": 61,
-  "wind_mph": 3,
+  "humidity": 94,
+  "dewpoint_f": 63,
+  "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N"
  },
@@ -28,14 +28,14 @@
   "updated": "2026-07-29T23:51:58+00:00",
   "periods": [
    {
-    "name": "Tonight",
-    "start": "2026-07-29T21:00:00-04:00",
+    "name": "Overnight",
+    "start": "2026-07-30T00:00:00-04:00",
     "is_day": false,
     "temp_f": 63,
-    "pop": 70,
+    "pop": 53,
     "wind": "N 6 mph",
-    "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Cloudy, with a low around 63. North wind around 6 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Cloudy, with a low around 63. North wind around 6 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Thursday",
@@ -172,39 +172,6 @@
  "hourly": {
   "updated": "2026-07-29T23:51:58+00:00",
   "hours": [
-   {
-    "t": "2026-07-29T21:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 70,
-    "humidity": 81,
-    "wind_mph": 5,
-    "wind_dir": "NE",
-    "sky": 93,
-    "short": "Rain Showers Likely"
-   },
-   {
-    "t": "2026-07-29T22:00:00-04:00",
-    "temp_f": 69,
-    "feels_f": 69,
-    "pop": 64,
-    "humidity": 84,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 91,
-    "short": "Rain Showers Likely"
-   },
-   {
-    "t": "2026-07-29T23:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 58,
-    "humidity": 87,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 90,
-    "short": "Rain Showers Likely"
-   },
    {
     "t": "2026-07-30T00:00:00-04:00",
     "temp_f": 66,
@@ -567,6 +534,39 @@
     "wind_dir": "N",
     "sky": 47,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-07-31T09:00:00-04:00",
+    "temp_f": 68,
+    "feels_f": 68,
+    "pop": 4,
+    "humidity": 90,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 20,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-31T10:00:00-04:00",
+    "temp_f": 70,
+    "feels_f": 70,
+    "pop": 4,
+    "humidity": 87,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 24,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-07-31T11:00:00-04:00",
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 4,
+    "humidity": 79,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 28,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -853,84 +853,84 @@
  },
  "lake_gage": {
   "water_temp_f": 74,
-  "water_temp_at": "2026-07-29T20:00:00.000-04:00",
-  "level_ft": 95.48,
-  "level_at": "2026-07-29T20:00:00.000-04:00",
+  "water_temp_at": "2026-07-30T00:00:00.000-04:00",
+  "level_ft": 95.5,
+  "level_at": "2026-07-30T00:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 41,
+  "aqi": 38,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "07/29/26 20:00",
+  "observed": "07/30/26 0:00",
   "discussion": "Expect generally good air quality across Vermont on Thursday, July 30th."
  },
  "sun": {
-  "sunrise": "2026-07-29T05:36-04:00",
-  "sunset": "2026-07-29T20:21-04:00",
-  "sunrise_tomorrow": "2026-07-30T05:37-04:00",
-  "sunset_tomorrow": "2026-07-30T20:20-04:00",
-  "uv_max": 5.65
+  "sunrise": "2026-07-30T05:37-04:00",
+  "sunset": "2026-07-30T20:20-04:00",
+  "sunrise_tomorrow": "2026-07-31T05:38-04:00",
+  "sunset_tomorrow": "2026-07-31T20:19-04:00",
+  "uv_max": 6.45
  },
  "models": {
   "days": [
    {
-    "date": "2026-07-29",
-    "high_f": {
-     "GFS": 75,
-     "Euro": 75,
-     "ICON": 74
-    },
-    "pop_max": {
-     "GFS": 84,
-     "Euro": 100,
-     "ICON": 98
-    },
-    "precip_in": {
-     "GFS": 1.56,
-     "Euro": 1.15,
-     "ICON": 0.51
-    },
-    "high_spread_f": 1
-   },
-   {
     "date": "2026-07-30",
     "high_f": {
-     "GFS": 79,
-     "Euro": 75,
-     "ICON": 69
+     "GFS": 78,
+     "Euro": 74,
+     "ICON": 75
     },
     "pop_max": {
      "GFS": 26,
-     "Euro": 66,
-     "ICON": 78
+     "Euro": 77,
+     "ICON": 93
     },
     "precip_in": {
-     "GFS": 0.02,
-     "Euro": 0.29,
-     "ICON": 0.62
+     "GFS": 0.1,
+     "Euro": 0.23,
+     "ICON": 0.21
     },
-    "high_spread_f": 10
+    "high_spread_f": 4
    },
    {
     "date": "2026-07-31",
     "high_f": {
-     "GFS": 78,
+     "GFS": 82,
      "Euro": 77,
-     "ICON": 79
+     "ICON": 78
     },
     "pop_max": {
-     "GFS": 7,
-     "Euro": 37,
-     "ICON": 8
+     "GFS": 8,
+     "Euro": 25,
+     "ICON": 13
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.02,
-     "ICON": 0.02
+     "Euro": 0.04,
+     "ICON": 0.08
     },
-    "high_spread_f": 2
+    "high_spread_f": 5
+   },
+   {
+    "date": "2026-08-01",
+    "high_f": {
+     "GFS": 82,
+     "Euro": 81,
+     "ICON": 84
+    },
+    "pop_max": {
+     "GFS": 29,
+     "Euro": 31,
+     "ICON": 5
+    },
+    "precip_in": {
+     "GFS": 0.07,
+     "Euro": 0.0,
+     "ICON": 0.0
+    },
+    "high_spread_f": 3
    }
   ]
  }
