@@ -1,29 +1,29 @@
 {
- "generated": "2026-07-29T17:34:49-04:00",
+ "generated": "2026-07-30T07:31:16-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 25,
-   "seconds": 6.5
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 75,
-   "seconds": 4.1
+   "count": 73,
+   "seconds": 3.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 57,
-   "seconds": 4.2
+   "count": 56,
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 169,
-   "seconds": 2.5
+   "seconds": 2.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 85,
+   "count": 82,
    "seconds": 1.6
   },
   "echo": {
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-29&end_date=2026-09-27&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-30&end_date=2026-09-28&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 64,
+   "count": 60,
    "seconds": 0.0
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 188,
-   "seconds": 76.9
+   "count": 181,
+   "seconds": 76.5
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 20,
-   "seconds": 3.1
+   "count": 21,
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 40.7
+   "seconds": 39.6
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 70,
-   "seconds": 111.2
+   "count": 72,
+   "seconds": 111.9
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,18 +78,18 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 532,
-   "seconds": 67.3
+   "count": 520,
+   "seconds": 67.1
   },
   "meetup": {
    "label": "Meetup",
-   "count": 62,
-   "seconds": 129.0
+   "count": 65,
+   "seconds": 122.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 26,
-   "seconds": 16.9
+   "seconds": 16.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -98,8 +98,8 @@
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 37,
-   "seconds": 31.3
+   "count": 35,
+   "seconds": 30.6
   },
   "sevendays": {
    "label": "Seven Days",
@@ -123,64 +123,20 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 58,
-   "seconds": 78.7
+   "count": 56,
+   "seconds": 74.5
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 23,
+   "count": 22,
    "seconds": 0.2
   }
  },
- "gathered": 2250,
- "afterDedup": 1132,
- "duplicatesMerged": 1118,
- "final": 2076,
+ "gathered": 2222,
+ "afterDedup": 1112,
+ "duplicatesMerged": 1110,
+ "final": 2024,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Dinosaur Safari Exhibit",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-25"
-  },
-  {
-   "kept": {
-    "title": "802sDay",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-25"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-25"
-  },
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-25"
-  },
   {
    "kept": {
     "title": "Dream / Mộng : Veronica Pham",
@@ -1967,6 +1923,7 @@
    },
    "merged_sources": [
     "flynn",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-15"
@@ -1995,11 +1952,34 @@
   },
   {
    "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-15"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-15"
+  },
+  {
+   "kept": {
     "title": "Alela Diane",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-16"
@@ -2357,51 +2337,38 @@
     "higherground"
    ],
    "date": "2026-09-27"
+  },
+  {
+   "kept": {
+    "title": "Chandler",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-09-28"
+  },
+  {
+   "kept": {
+    "title": "Cate Le Bon",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-09-28"
   }
  ],
  "changes": [
   {
-   "id": "2a1258663533",
-   "title": "Morrisvile brew hop",
-   "date": "2026-08-15",
+   "id": "b9916ad0dce4",
+   "title": "802sDay",
+   "date": "2026-09-15",
    "change": "time",
-   "was": "2026-08-15T14:00:00-04:00",
-   "now": "2026-08-15T13:00:00-04:00"
-  },
-  {
-   "id": "a40d06c50d58",
-   "title": "YSO Ethan Allen Park",
-   "date": "2026-07-29",
-   "change": "missing",
-   "lastSeen": "2026-07-29T07:48:18-04:00"
-  },
-  {
-   "id": "60d9bf32fe57",
-   "title": "Therapy Dog Mick Visit",
-   "date": "2026-07-29",
-   "change": "missing",
-   "lastSeen": "2026-07-26T17:36:58-04:00"
-  },
-  {
-   "id": "1d61c050983f",
-   "title": "DREAM lunch",
-   "date": "2026-07-29",
-   "change": "missing",
-   "lastSeen": "2026-07-29T07:48:18-04:00"
-  },
-  {
-   "id": "f027a0ca0878",
-   "title": "Leddy Beach Bites",
-   "date": "2026-07-29",
-   "change": "missing",
-   "lastSeen": "2026-07-28T07:37:25-04:00"
-  },
-  {
-   "id": "e081ac26e148",
-   "title": "9-mile Bike Ride @ Switchback",
-   "date": "2026-07-29",
-   "change": "missing",
-   "lastSeen": "2026-07-28T17:45:07-04:00"
+   "was": "2026-09-15",
+   "now": "2026-09-15T11:30:00-04:00"
   },
   {
    "id": "148d6a2f9344",
@@ -2428,22 +2395,19 @@
    "id": "4b0f5a6f4646",
    "title": "BTown Coffee Club",
    "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-07-26T17:36:58-04:00"
+   "change": "dropped"
   },
   {
    "id": "27513e965cf4",
    "title": "Live Music @ Maquam Winery",
    "date": "2026-08-27",
-   "change": "missing",
-   "lastSeen": "2026-07-26T17:36:58-04:00"
+   "change": "dropped"
   },
   {
    "id": "4b803ba3457f",
    "title": "Trivia at Four Quarters",
    "date": "2026-08-27",
-   "change": "missing",
-   "lastSeen": "2026-07-26T17:36:58-04:00"
+   "change": "dropped"
   },
   {
    "id": "97a8919273c7",
@@ -2456,15 +2420,7 @@
    "id": "ada1509c3a9f",
    "title": "Dream / Mộng : Veronica Pham",
    "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-07-26T17:36:58-04:00"
-  },
-  {
-   "id": "3ec046abebed",
-   "title": "Collage Collective",
-   "date": "2026-09-14",
-   "change": "missing",
-   "lastSeen": "2026-07-28T07:37:25-04:00"
+   "change": "dropped"
   }
  ]
 }
