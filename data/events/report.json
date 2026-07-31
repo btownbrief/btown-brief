@@ -1,20 +1,20 @@
 {
- "generated": "2026-07-31T07:45:12-04:00",
+ "generated": "2026-07-31T17:45:04-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 25,
-   "seconds": 5.6
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 72,
-   "seconds": 2.5
+   "seconds": 4.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 61,
-   "seconds": 2.7
+   "seconds": 3.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
@@ -24,7 +24,7 @@
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 82,
-   "seconds": 1.8
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 174,
-   "seconds": 66.8
+   "seconds": 66.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 2.4
+   "seconds": 2.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,13 +63,13 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 750,
-   "seconds": 37.2
+   "count": 749,
+   "seconds": 39.4
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 72,
-   "seconds": 98.1
+   "seconds": 102.0
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,17 +79,17 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 510,
-   "seconds": 74.6
+   "seconds": 73.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 65,
-   "seconds": 125.3
+   "seconds": 121.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 28,
-   "seconds": 14.4
+   "count": 34,
+   "seconds": 14.2
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -99,7 +99,7 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 33,
-   "seconds": 28.0
+   "seconds": 27.9
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,7 +124,7 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 55,
-   "seconds": 72.9
+   "seconds": 72.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,11 +132,22 @@
    "seconds": 0.3
   }
  },
- "gathered": 2222,
- "afterDedup": 1121,
- "duplicatesMerged": 1101,
- "final": 2010,
+ "gathered": 2227,
+ "afterDedup": 1127,
+ "duplicatesMerged": 1100,
+ "final": 2018,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Luke Borchelt",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-08-26"
+  },
   {
    "kept": {
     "title": "Halvorson's Courtyard Music Series: Northern Ramble",
@@ -1270,17 +1281,6 @@
   },
   {
    "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-06"
-  },
-  {
-   "kept": {
     "title": "Bret Michaels & Night Ranger",
     "source": "helloburlington"
    },
@@ -2362,20 +2362,11 @@
  ],
  "changes": [
   {
-   "id": "774edc5c0b40",
-   "title": "Industry Day",
-   "date": "2026-09-14",
-   "change": "time",
-   "was": "2026-09-14",
-   "now": "2026-09-14T11:30:00-04:00"
-  },
-  {
-   "id": "b9916ad0dce4",
-   "title": "802sDay",
-   "date": "2026-09-15",
-   "change": "time",
-   "was": "2026-09-15",
-   "now": "2026-09-15T11:30:00-04:00"
+   "id": "6131eb1b1aeb",
+   "title": "Lunch with the Poets",
+   "date": "2026-07-31",
+   "change": "missing",
+   "lastSeen": "2026-07-31T07:45:12-04:00"
   },
   {
    "id": "397ecfa82ecd",
@@ -2411,6 +2402,13 @@
    "date": "2026-08-10",
    "change": "missing",
    "lastSeen": "2026-07-30T07:31:16-04:00"
+  },
+  {
+   "id": "dd8c52fc5391",
+   "title": "Scrabble Night @ The Boardroom",
+   "date": "2026-08-19",
+   "change": "missing",
+   "lastSeen": "2026-07-31T07:45:12-04:00"
   },
   {
    "id": "97a8919273c7",
