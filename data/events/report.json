@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-01T07:04:09-04:00",
+ "generated": "2026-08-01T17:35:25-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 22,
-   "seconds": 5.8
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 71,
-   "seconds": 5.1
+   "seconds": 5.0
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 62,
-   "seconds": 3.0
+   "seconds": 2.6
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 180,
-   "seconds": 2.2
+   "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 80,
-   "seconds": 1.9
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 171,
-   "seconds": 76.8
+   "seconds": 76.7
   },
   "flynn": {
    "label": "The Flynn",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.8
+   "seconds": 42.6
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 73,
-   "seconds": 113.8
+   "seconds": 116.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,17 +79,17 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 505,
-   "seconds": 67.1
+   "seconds": 67.6
   },
   "meetup": {
    "label": "Meetup",
    "count": 66,
-   "seconds": 124.1
+   "seconds": 121.0
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 35,
-   "seconds": 16.4
+   "seconds": 16.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -99,7 +99,7 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 32,
-   "seconds": 29.5
+   "seconds": 29.6
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,18 +124,18 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 54,
-   "seconds": 71.9
+   "seconds": 74.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 23,
-   "seconds": 0.3
+   "count": 36,
+   "seconds": 0.2
   }
  },
- "gathered": 2197,
- "afterDedup": 1115,
+ "gathered": 2210,
+ "afterDedup": 1128,
  "duplicatesMerged": 1082,
- "final": 1979,
+ "final": 1992,
  "mergeLog": [
   {
    "kept": {
@@ -2363,11 +2363,32 @@
  ],
  "changes": [
   {
+   "id": "bef8cca943e6",
+   "title": "The Head And The Heart",
+   "date": "2026-08-01",
+   "change": "time",
+   "was": "2026-08-01T19:00:00-04:00",
+   "now": "2026-08-01T18:30:00-04:00"
+  },
+  {
+   "id": "24003d3e2fde",
+   "title": "Board Game Brunch",
+   "date": "2026-08-01",
+   "change": "missing",
+   "lastSeen": "2026-08-01T07:04:09-04:00"
+  },
+  {
+   "id": "467911ed2caa",
+   "title": "BTown Coffee Club",
+   "date": "2026-08-01",
+   "change": "missing",
+   "lastSeen": "2026-08-01T07:04:09-04:00"
+  },
+  {
    "id": "aab19170a2bc",
    "title": "Outdoor Play Time",
    "date": "2026-08-05",
-   "change": "missing",
-   "lastSeen": "2026-07-29T07:48:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "99e705a85d03",
@@ -2408,8 +2429,7 @@
    "id": "97a8919273c7",
    "title": "Community Dinner: September 2026",
    "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-07-29T07:48:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "518398c5c87e",
