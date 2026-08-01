@@ -1,28 +1,28 @@
 {
- "updated": "2026-08-01T16:41:09+00:00",
+ "updated": "2026-08-01T17:44:53+00:00",
  "sections_updated": {
-  "now": "2026-08-01T16:41:09+00:00",
-  "forecast": "2026-08-01T16:41:09+00:00",
-  "hourly": "2026-08-01T16:41:09+00:00",
-  "alerts": "2026-08-01T16:41:09+00:00",
-  "afd": "2026-08-01T16:41:09+00:00",
-  "lake_forecast": "2026-08-01T16:41:09+00:00",
-  "lake_gage": "2026-08-01T16:27:06+00:00",
-  "air": "2026-08-01T16:41:09+00:00",
-  "sun": "2026-08-01T16:41:09+00:00",
-  "models": "2026-08-01T16:41:09+00:00"
+  "now": "2026-08-01T17:44:53+00:00",
+  "forecast": "2026-08-01T17:44:53+00:00",
+  "hourly": "2026-08-01T17:44:53+00:00",
+  "alerts": "2026-08-01T17:44:53+00:00",
+  "afd": "2026-08-01T17:44:53+00:00",
+  "lake_forecast": "2026-08-01T17:44:53+00:00",
+  "lake_gage": "2026-08-01T17:44:53+00:00",
+  "air": "2026-08-01T17:44:53+00:00",
+  "sun": "2026-08-01T17:44:53+00:00",
+  "models": "2026-08-01T17:44:53+00:00"
  },
  "now": {
-  "observed_at": "2026-08-01T16:20:00+00:00",
+  "observed_at": "2026-08-01T17:25:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
-  "temp_f": 82,
-  "feels_like_f": 84,
-  "humidity": 55,
-  "dewpoint_f": 64,
-  "wind_mph": 9,
+  "description": "Mostly Cloudy",
+  "temp_f": 84,
+  "feels_like_f": 85,
+  "humidity": 48,
+  "dewpoint_f": 63,
+  "wind_mph": 10,
   "wind_gust_mph": null,
-  "wind_dir": "WSW"
+  "wind_dir": "S"
  },
  "forecast": {
   "updated": "2026-08-01T06:41:37+00:00",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-01T06:41:37+00:00",
   "hours": [
-   {
-    "t": "2026-08-01T12:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 83,
-    "pop": 1,
-    "humidity": 67,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 32,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-08-01T13:00:00-04:00",
     "temp_f": 81,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 92,
     "short": "Showers And Thunderstorms Likely"
+   },
+   {
+    "t": "2026-08-03T00:00:00-04:00",
+    "temp_f": 72,
+    "feels_f": 72,
+    "pop": 72,
+    "humidity": 87,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 100,
+    "short": "Showers And Thunderstorms Likely"
    }
   ]
  },
@@ -574,14 +574,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-01T10:49:00+00:00",
+  "issued": "2026-08-01T17:03:00+00:00",
   "key_messages": [
    "Very Warm Temperatures and Dry Conditions Saturday",
    "Increasing chances for showers and embedded thunderstorms Sunday afternoon into Sunday night. Locally heavy rainfall possible.",
    "Daily chances for showers and thunderstorms with temperature at or above seasonal normals."
   ],
   "what_changed": "As of 218 AM EDT Saturday... Isolated flash flood threat remains for late Sunday into early Monday with slow-moving showers and thunderstorms possible.",
-  "raw": "\n000\nFXUS61 KBTV 011049\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n649 AM EDT Sat Aug 1 2026\n\n.WHAT HAS CHANGED...\nAs of 218 AM EDT Saturday...\n\nIsolated flash flood threat remains for late Sunday into early \nMonday with slow-moving showers and thunderstorms possible.\n\n&&\n\n.KEY MESSAGES...\nAs of 218 AM EDT Saturday...\n\n1. Very Warm Temperatures and Dry Conditions Saturday \n\n2. Increasing chances for showers and embedded thunderstorms \nSunday afternoon into Sunday night. Locally heavy rainfall possible. \n\n3. Daily chances for showers and thunderstorms with temperature \nat or above seasonal normals.\n\n&&\n\n.DISCUSSION...\nAs of 218 AM EDT Saturday...\n\nKEY MESSAGE 1: No significant weather expected today or tonight. Patchy \nearly AM fog may be locally dense in a few of the deeper river \nvalleys, but will generally dissipate with PBL mixing between 12-\n13Z. A narrow ridge of high pressure will bring mostly sunny and \nvery warm conditions to the North Country today. Will see an \nincrease in high cloud cover this afternoon associated with an \nupstream upper trough extending from northern Ontario southwestward \nto a closed 500mb low across Iowa. Even with filtered sunshine, \n850mb temperatures of +15C to +16C will support valley highs in the \nmid to upper 80s. Surface winds will become southerly at 5-10 mph \nsupported by weak southerly gradient flow. Modest low-level moisture \nadvection will generally keep 2-m dewpoints in the mid-60s, \nresulting in humid conditions areawide. \n\nFor tonight...generally quiet and muggy conditions. Inverted sfc \ntrough shifts ewd from the Ottawa Valley toward the St. Lawrence \nValley during the pre-dawn hours on Sunday. This will bring a low \nchance (20-30%) of some rain showers into the St. Lawrence Valley \nbefore daybreak. Otherwise, looking for overnight lows in the mid-\nupper 60s, except locally in the lower 60s east of the Green \nMountains.\n\nKEY MESSAGE 2: We'll be monitoring the slow-moving upper flow pattern \nSunday into Monday. Generally looking at a positive tilt mid-level \ntrough across sern Ontario, which extends back southwestward to a \nclosed low in the Ohio Valley region. Prevailing mid and upper level \nridge over Eastern New England will result in very slow movement to \nthis upstream system, but it appears that forcing will be sufficient \nfor isolated to scattered showers by Sunday afternoon, especially \nacross nrn NY. Weak mid-level lapse rates support limited \ninstability, with narrow CAPE profiles. However, increasing PW \nvalues, approaching 1.7-1.9\" and WBZ heights near 13kft will support \nlocally heavy rain with any convective activity that does develop. \n\nSupport for showers and thunderstorms evolves ewd across the \nChamplain Valley and across central/nrn VT during Sunday night into \nMonday. Have indicated high PoPs (80-90%) with widespread showers \nand a few embedded thunderstorms with weak CAPE through the \novernight hours. Again, thermodynamic conditions don't support a \nsevere threat, but locally heavy rainfall is possible. Sfc boundary \neventually settles south and east of our forecast area late Monday \nafternoon with generally drying conditions from NW-SE. At the \ncurrent time, have indicated 0.5 to 1.0\" rainfall with this system \nacross most of the North Country, and some amounts locally exceeding \n1.0\" in the St. Lawrence Valley. Can't rule out a localized flash \nflood threat, especially given slow movement of inverted trough and \nvery high PW values. However, not a strong consensus for heavy rain \noutside the St. Lawrence Valley at the present time, and amounts \nthere are currently not expected to be significant enough to produce \nflooding over the prevailing flatter terrain of the St. Lawrence \nValley. We will continue to monitor, but most sections of the North \nCountry will see a period of wetting rainfall late Sunday into \nSunday night and into the first half of Monday. Drier conditions \ngenerally return for Tuesday with highs in the low-mid 80s.\n\nKEY MESSAGE 3: A typical late summer pattern looks to set up across the \nregion for the second half of the upcoming week. Daily chances for \nshowers, with some thunderstorms possible, seem likely as we see 250-\n500 J/kg of CAPE each afternoon with weak shear. This should result \nin pulse like showers and thunderstorms that try to develop across \nthe higher terrain and lake breezes. There is the potential for a \nround of organized convection towards the end of next week as a cut \noff low over the southeastern US phases with northern stream energy \nand ejects northward quickly ahead of a cold front. However, \ndeterministic guidance is all over the place with trying to resolve \nhow the southern stream and northern stream energy interact with one \nanother. Temperatures each afternoon should easily warm into the \nlower to mid 80s but given persistent cloud cover and shower \nactivity, it seems rather unlikely any location will hit 90 degrees \nthis week.\n\n&&\n\n.AVIATION /12Z SATURDAY THROUGH WEDNESDAY/...\nThrough 12Z Sunday...VFR conditions and light southerly winds\nare expected through the forecast period. However, a brief\nperiod of IFR to VLIFR fog will continue to KMPV and KSLK\nthrough 1230Z to 1300Z. Otherwise, high level clouds will stream\noverhead and gradually lower to around 8000 ft by 12Z on Sunday.\n\nOutlook...\n\nSunday: VFR. Chance SHRA, Slight chance TSRA.\nSunday Night: Mainly VFR, with local IFR possible. Likely SHRA,\nSlight chance TSRA.\nMonday: Mainly MVFR, with local IFR possible. Likely SHRA, Chance\nTSRA.\nMonday Night: VFR. Chance SHRA, Slight chance TSRA.\nTuesday: VFR. Slight chance SHRA.\nTuesday Night: VFR. Slight chance SHRA.\nWednesday: VFR. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Banacos\nDISCUSSION...Banacos/Clay\nAVIATION...Clay\n"
+  "raw": "\n000\nFXUS61 KBTV 011703\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n103 PM EDT Sat Aug 1 2026\n\n.WHAT HAS CHANGED...\nAs of 218 AM EDT Saturday...\n\nIsolated flash flood threat remains for late Sunday into early \nMonday with slow-moving showers and thunderstorms possible.\n\n&&\n\n.KEY MESSAGES...\nAs of 218 AM EDT Saturday...\n\n1. Very Warm Temperatures and Dry Conditions Saturday \n\n2. Increasing chances for showers and embedded thunderstorms \nSunday afternoon into Sunday night. Locally heavy rainfall possible. \n\n3. Daily chances for showers and thunderstorms with temperature \nat or above seasonal normals.\n\n&&\n\n.DISCUSSION...\nAs of 218 AM EDT Saturday...\n\nKEY MESSAGE 1: No significant weather expected today or tonight. Patchy \nearly AM fog may be locally dense in a few of the deeper river \nvalleys, but will generally dissipate with PBL mixing between 12-\n13Z. A narrow ridge of high pressure will bring mostly sunny and \nvery warm conditions to the North Country today. Will see an \nincrease in high cloud cover this afternoon associated with an \nupstream upper trough extending from northern Ontario southwestward \nto a closed 500mb low across Iowa. Even with filtered sunshine, \n850mb temperatures of +15C to +16C will support valley highs in the \nmid to upper 80s. Surface winds will become southerly at 5-10 mph \nsupported by weak southerly gradient flow. Modest low-level moisture \nadvection will generally keep 2-m dewpoints in the mid-60s, \nresulting in humid conditions areawide. \n\nFor tonight...generally quiet and muggy conditions. Inverted sfc \ntrough shifts ewd from the Ottawa Valley toward the St. Lawrence \nValley during the pre-dawn hours on Sunday. This will bring a low \nchance (20-30%) of some rain showers into the St. Lawrence Valley \nbefore daybreak. Otherwise, looking for overnight lows in the mid-\nupper 60s, except locally in the lower 60s east of the Green \nMountains.\n\nKEY MESSAGE 2: We'll be monitoring the slow-moving upper flow pattern \nSunday into Monday. Generally looking at a positive tilt mid-level \ntrough across sern Ontario, which extends back southwestward to a \nclosed low in the Ohio Valley region. Prevailing mid and upper level \nridge over Eastern New England will result in very slow movement to \nthis upstream system, but it appears that forcing will be sufficient \nfor isolated to scattered showers by Sunday afternoon, especially \nacross nrn NY. Weak mid-level lapse rates support limited \ninstability, with narrow CAPE profiles. However, increasing PW \nvalues, approaching 1.7-1.9\" and WBZ heights near 13kft will support \nlocally heavy rain with any convective activity that does develop. \n\nSupport for showers and thunderstorms evolves ewd across the \nChamplain Valley and across central/nrn VT during Sunday night into \nMonday. Have indicated high PoPs (80-90%) with widespread showers \nand a few embedded thunderstorms with weak CAPE through the \novernight hours. Again, thermodynamic conditions don't support a \nsevere threat, but locally heavy rainfall is possible. Sfc boundary \neventually settles south and east of our forecast area late Monday \nafternoon with generally drying conditions from NW-SE. At the \ncurrent time, have indicated 0.5 to 1.0\" rainfall with this system \nacross most of the North Country, and some amounts locally exceeding \n1.0\" in the St. Lawrence Valley. Can't rule out a localized flash \nflood threat, especially given slow movement of inverted trough and \nvery high PW values. However, not a strong consensus for heavy rain \noutside the St. Lawrence Valley at the present time, and amounts \nthere are currently not expected to be significant enough to produce \nflooding over the prevailing flatter terrain of the St. Lawrence \nValley. We will continue to monitor, but most sections of the North \nCountry will see a period of wetting rainfall late Sunday into \nSunday night and into the first half of Monday. Drier conditions \ngenerally return for Tuesday with highs in the low-mid 80s.\n\nKEY MESSAGE 3: A typical late summer pattern looks to set up across the \nregion for the second half of the upcoming week. Daily chances for \nshowers, with some thunderstorms possible, seem likely as we see 250-\n500 J/kg of CAPE each afternoon with weak shear. This should result \nin pulse like showers and thunderstorms that try to develop across \nthe higher terrain and lake breezes. There is the potential for a \nround of organized convection towards the end of next week as a cut \noff low over the southeastern US phases with northern stream energy \nand ejects northward quickly ahead of a cold front. However, \ndeterministic guidance is all over the place with trying to resolve \nhow the southern stream and northern stream energy interact with one \nanother. Temperatures each afternoon should easily warm into the \nlower to mid 80s but given persistent cloud cover and shower \nactivity, it seems rather unlikely any location will hit 90 degrees \nthis week.\n\n&&\n\n.AVIATION /18Z SATURDAY THROUGH THURSDAY/...\nThrough 18Z Sunday...VFR conditions will persist through the day\ntoday. A scattered to broken deck of fair weather Cu will continue\nto develop into the afternoon hours with a cirrus deck above. Last\nnight saw the development of fog in many of our favored locations,\nand the low level moisture remains available. However, the low\npressure to our west will bring increased winds and clouds overnight\ninhibiting pure radiational effects. For now, I'm including some\nshallow fog development at MPV and SLK near sunrise but don't\nanticipate widespread formation like we had last night.\n\nOutlook...\n\nSunday Night: Mainly VFR, with local MVFR possible. Likely SHRA,\nSlight chance TSRA.\nMonday: Mainly MVFR, with local IFR possible. Definite SHRA,\nSlight chance TSRA.\nMonday Night: Mainly VFR, with local MVFR possible. Slight chance\nSHRA.\nTuesday: VFR. Slight chance SHRA.\nTuesday Night: VFR. Slight chance SHRA, Slight chance TSRA.\nWednesday: VFR. Chance SHRA, Chance TSRA.\nWednesday Night: VFR. Chance SHRA, Slight chance TSRA.\nThursday: Mainly VFR, with areas MVFR possible. Chance SHRA,\nSlight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Banacos\nDISCUSSION...Clay/Banacos\nAVIATION...Langbauer\n"
  },
  "lake_forecast": {
   "issued": "2026-08-01T06:34:00+00:00",
@@ -826,9 +826,9 @@
  },
  "lake_gage": {
   "water_temp_f": 76,
-  "water_temp_at": "2026-08-01T12:00:00.000-04:00",
+  "water_temp_at": "2026-08-01T13:00:00.000-04:00",
   "level_ft": 95.45,
-  "level_at": "2026-08-01T12:00:00.000-04:00",
+  "level_at": "2026-08-01T13:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -836,7 +836,7 @@
   "aqi": 37,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/01/26 12:00",
+  "observed": "08/01/26 13:00",
   "discussion": "Expect generally good air quality across Vermont on Sunday, August 2nd."
  },
  "sun": {
@@ -844,7 +844,7 @@
   "sunset": "2026-08-01T20:18-04:00",
   "sunrise_tomorrow": "2026-08-02T05:41-04:00",
   "sunset_tomorrow": "2026-08-02T20:16-04:00",
-  "uv_max": 6.35
+  "uv_max": 6.25
  },
  "models": {
   "days": [
@@ -856,7 +856,7 @@
      "ICON": 84
     },
     "pop_max": {
-     "GFS": 3,
+     "GFS": 4,
      "Euro": 6,
      "ICON": 8
     },
@@ -889,7 +889,7 @@
    {
     "date": "2026-08-03",
     "high_f": {
-     "GFS": 75,
+     "GFS": 76,
      "Euro": 80,
      "ICON": 77
     },
@@ -899,11 +899,11 @@
      "ICON": 85
     },
     "precip_in": {
-     "GFS": 0.21,
+     "GFS": 0.37,
      "Euro": 0.96,
      "ICON": 1.31
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    }
   ]
  }
