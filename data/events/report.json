@@ -1,29 +1,29 @@
 {
- "generated": "2026-07-31T17:45:04-04:00",
+ "generated": "2026-08-01T07:04:09-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 25,
+   "count": 22,
    "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 72,
-   "seconds": 4.5
+   "count": 71,
+   "seconds": 5.1
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 61,
-   "seconds": 3.3
+   "count": 62,
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 190,
-   "seconds": 3.2
+   "count": 180,
+   "seconds": 2.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 82,
+   "count": 80,
    "seconds": 1.9
   },
   "echo": {
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-07-31&end_date=2026-09-29&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-01&end_date=2026-09-30&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 52,
+   "count": 43,
    "seconds": 0.0
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 174,
-   "seconds": 66.3
+   "count": 171,
+   "seconds": 76.8
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 2.2
+   "seconds": 2.9
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,13 +63,13 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 749,
-   "seconds": 39.4
+   "count": 750,
+   "seconds": 39.8
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 72,
-   "seconds": 102.0
+   "count": 73,
+   "seconds": 113.8
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,18 +78,18 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 510,
-   "seconds": 73.7
+   "count": 505,
+   "seconds": 67.1
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 121.4
+   "count": 66,
+   "seconds": 124.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 34,
-   "seconds": 14.2
+   "count": 35,
+   "seconds": 16.4
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -98,8 +98,8 @@
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 33,
-   "seconds": 27.9
+   "count": 32,
+   "seconds": 29.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -123,8 +123,8 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 55,
-   "seconds": 72.2
+   "count": 54,
+   "seconds": 71.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,78 +132,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 2227,
- "afterDedup": 1127,
- "duplicatesMerged": 1100,
- "final": 2018,
+ "gathered": 2197,
+ "afterDedup": 1115,
+ "duplicatesMerged": 1082,
+ "final": 1979,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Luke Borchelt",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground"
-   ],
-   "date": "2026-08-26"
-  },
-  {
-   "kept": {
-    "title": "Halvorson's Courtyard Music Series: Northern Ramble",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-26"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-26"
-  },
-  {
-   "kept": {
-    "title": "Dinosaur Safari Exhibit",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-26"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-26"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-26"
-  },
   {
    "kept": {
     "title": "Everything is Everything: Will Kasso Condry",
@@ -1281,6 +1214,17 @@
   },
   {
    "kept": {
+    "title": "Color & Scale: Leah Barranco",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-06"
+  },
+  {
+   "kept": {
     "title": "Bret Michaels & Night Ranger",
     "source": "helloburlington"
    },
@@ -1968,6 +1912,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-16"
@@ -1990,6 +1935,28 @@
    },
    "merged_sources": [
     "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-16"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-16"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-09-16"
@@ -2358,23 +2325,43 @@
     "loveburlington"
    ],
    "date": "2026-09-29"
+  },
+  {
+   "kept": {
+    "title": "Samara Joy",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "flynn",
+    "loveburlington"
+   ],
+   "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "Halvorson's Courtyard Music Series: Arty & Friends",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "TRIVIA NIGHT",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-30"
   }
  ],
  "changes": [
-  {
-   "id": "6131eb1b1aeb",
-   "title": "Lunch with the Poets",
-   "date": "2026-07-31",
-   "change": "missing",
-   "lastSeen": "2026-07-31T07:45:12-04:00"
-  },
-  {
-   "id": "397ecfa82ecd",
-   "title": "DANCING IN THE STREETS: GRIFTFUL DEAD 🎶",
-   "date": "2026-07-31",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
-  },
   {
    "id": "aab19170a2bc",
    "title": "Outdoor Play Time",
@@ -2404,6 +2391,13 @@
    "lastSeen": "2026-07-30T07:31:16-04:00"
   },
   {
+   "id": "6ef58c1fa113",
+   "title": "Board Game Brunch",
+   "date": "2026-08-15",
+   "change": "missing",
+   "lastSeen": "2026-07-31T17:45:04-04:00"
+  },
+  {
    "id": "dd8c52fc5391",
    "title": "Scrabble Night @ The Boardroom",
    "date": "2026-08-19",
@@ -2421,27 +2415,6 @@
    "id": "518398c5c87e",
    "title": "Hold for Youth Program",
    "date": "2026-09-14",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
-  },
-  {
-   "id": "79f0aa35b67c",
-   "title": "Traditional Tuesday",
-   "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
-  },
-  {
-   "id": "3a62879349e6",
-   "title": "Vermont Figure Drawing Collective",
-   "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
-  },
-  {
-   "id": "831f00dbf59b",
-   "title": "Honky Tonk Tuesday",
-   "date": "2026-09-15",
    "change": "missing",
    "lastSeen": "2026-07-30T07:31:16-04:00"
   },
