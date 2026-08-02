@@ -50,6 +50,7 @@ def main():
         "date": draft["date"],
         "edition": draft.get("edition", "morning"),
         "text": text,
+        "week": draft.get("week"),
         "approved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "edited": False,
         "auto_published": True,

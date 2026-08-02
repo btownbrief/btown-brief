@@ -458,7 +458,7 @@
     return days;
   }
 
-  function renderWeek(d) {
+  function renderWeek(d, read) {
     var sec = el('week-section'), grid = el('week-grid');
     if (!sec || !grid) return;
 
@@ -469,6 +469,21 @@
     var todayKey = new Intl.DateTimeFormat('en-CA', {
       timeZone: BTV_TZ, year: 'numeric', month: '2-digit', day: '2-digit'
     }).format(new Date());
+    var yesterdayKey = new Intl.DateTimeFormat('en-CA', {
+      timeZone: BTV_TZ, year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(new Date(Date.now() - 86400000));
+
+    // Steve's one-line call per day, from the same approved read the "My
+    // read" section shows. Keyed by Burlington date so blurbs always land
+    // on the right card. If the read is more than a day old (the pipeline
+    // hiccuped), the fresh NWS wording is the honest fallback.
+    var blurbs = {};
+    if (read && read.week &&
+        (read.date === todayKey || read.date === yesterdayKey)) {
+      read.week.forEach(function (w) {
+        if (w && w.date && w.blurb) blurbs[w.date] = w.blurb;
+      });
+    }
 
     grid.innerHTML = days.map(function (day, i) {
       var label, sub = '';
@@ -484,6 +499,20 @@
       // night-only entry (the page loaded after dark) falls back to it.
       var short = day.dayShort || day.nightShort || '';
       var pop = day.dayPop != null ? day.dayPop : day.nightPop;
+      // NWS rounds its prose to the nearest 10 ("Chance of precipitation
+      // is 30%"); showing the raw API value (28%) next to that reads as a
+      // contradiction, so the card rounds the same way.
+      var popShown = pop != null ? Math.round(pop / 10) * 10 : null;
+      var nightPop = day.nightPop != null ? Math.round(day.nightPop / 10) * 10 : null;
+      // A night much wetter than the day (30% day, 90% tonight) is its own
+      // story — say it on the card instead of letting the panel below
+      // appear to argue with the number above it.
+      var nightLine = '';
+      if (day.dayPop != null && nightPop != null && popShown != null &&
+          nightPop - popShown >= 30) {
+        nightLine = '<span class="week-pop-night">' + nightPop + '% ' +
+          (day.key === todayKey ? 'tonight' : 'overnight') + '</span>';
+      }
       return '<button class="week-card' + (i === 0 ? ' is-selected' : '') +
         '" type="button" data-day="' + i + '" aria-pressed="' + (i === 0) + '">' +
         '<span class="week-day">' + esc(label) + '</span>' +
@@ -495,8 +524,9 @@
         '</span>' +
         // Under ~15% is forecaster noise, not a reason to carry an umbrella.
         (pop != null && pop >= 15
-          ? '<span class="week-pop">' + pop + '%</span>'
+          ? '<span class="week-pop">' + popShown + '%</span>'
           : '<span class="week-pop week-pop-dry">—</span>') +
+        nightLine +
         '<span class="week-short">' + esc(short) + '</span>' +
         '</button>';
     }).join('');
@@ -504,14 +534,27 @@
     function showDetail(i) {
       var day = days[i];
       if (!day) return;
-      var parts = [];
+      var nws = [];
       if (day.dayDetail) {
-        parts.push('<p><span class="week-detail-when">' + esc(day.dayName || 'Day') +
+        nws.push('<p><span class="week-detail-when">' + esc(day.dayName || 'Day') +
           '</span> ' + esc(day.dayDetail) + '</p>');
       }
       if (day.nightDetail) {
-        parts.push('<p><span class="week-detail-when">' + esc(day.nightName || 'Night') +
+        nws.push('<p><span class="week-detail-when">' + esc(day.nightName || 'Night') +
           '</span> ' + esc(day.nightDetail) + '</p>');
+      }
+      var blurb = day.key && blurbs[day.key];
+      var parts;
+      if (blurb) {
+        // Steve's call leads; the forecaster's full two-paragraph wording
+        // stays one tap deeper for anyone who wants the raw feed.
+        parts = ['<p class="week-detail-take">' + esc(blurb) + '</p>'];
+        if (nws.length) {
+          parts.push('<details class="week-detail-nws"><summary>The forecaster’s full wording</summary>' +
+            nws.join('') + '</details>');
+        }
+      } else {
+        parts = nws;
       }
       el('week-detail').innerHTML = parts.join('');
     }
@@ -695,9 +738,13 @@
   }
 
   function init() {
+    // The week strip wants the read too (per-day blurbs), so fetch it once
+    // and share the promise. A failed read is null — every consumer copes.
+    var readP = getJSON(READ_URL).catch(function () { return null; });
+
     getJSON(DATA_URL).then(function (d) {
       renderNow(d);
-      renderWeek(d);
+      readP.then(function (read) { renderWeek(d, read); });
       renderScores(d);
       getJSON(BEACH_URL).then(function (b) { renderBeaches(d, b); })
         .catch(function () { renderBeaches(d, null); });
@@ -709,7 +756,7 @@
       console.error('weather data failed to load', e);
     });
 
-    getJSON(READ_URL).then(renderRead).catch(function () { renderRead(null); });
+    readP.then(renderRead);
   }
 
   if (document.readyState === 'loading') {

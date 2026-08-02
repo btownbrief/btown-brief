@@ -21,6 +21,7 @@ there to write from by hand (or from a Claude Code session).
 import argparse
 import json
 import os
+import re
 import sys
 import urllib.request
 from datetime import datetime, timezone
@@ -36,7 +37,7 @@ BRAIN = os.path.join(ROOT, "prompts", "weather-read.md")
 MODEL = os.environ.get("WEATHER_READ_MODEL", "claude-sonnet-5")
 
 
-def build_packet(d):
+def build_packet(d, outlets):
     """A compact, human-readable packet — small enough to read at review
     time, complete enough to write from."""
     lines = []
@@ -92,10 +93,6 @@ def build_packet(d):
         lines.append(f"SUN: rise {sun.get('sunrise')}, set {sun.get('sunset')}, UV max {sun.get('uv_max')}")
 
     # What the other outlets are telling readers (never load-bearing)
-    try:
-        outlets = outlets_mod.fetch_all()
-    except Exception:  # noqa: BLE001
-        outlets = {}
     wu = outlets.get("wu")
     if wu and wu.get("days"):
         lines.append("WEATHER UNDERGROUND / WEATHER.COM:")
@@ -112,6 +109,55 @@ def build_packet(d):
     return "\n".join(lines)
 
 
+def group_week_days(periods):
+    """Fold NWS's 14 half-day periods into calendar days keyed by Burlington
+    date — the same grouping js/life.js does, so blurb dates always line up
+    with the week strip's cards."""
+    days, by_key = [], {}
+    for p in periods:
+        if not p.get("start"):
+            continue
+        key = (datetime.fromisoformat(p["start"])
+               .astimezone(ZoneInfo("America/New_York")).date().isoformat())
+        day = by_key.get(key)
+        if day is None:
+            day = {"date": key, "parts": []}
+            by_key[key] = day
+            days.append(day)
+        day["parts"].append(f"{p['name']}: {p['detailed']}")
+    return days
+
+
+def build_week_packet(d, outlets):
+    """Everything the week blurbs draw on: the full 7-day NWS wording plus
+    the same divergence signals the daily read gets."""
+    lines = []
+    days = group_week_days((d.get("forecast") or {}).get("periods") or [])
+    for day in days:
+        lines.append(f"DATE {day['date']}:")
+        for part in day["parts"]:
+            lines.append(f"  {part}")
+
+    models = (d.get("models") or {}).get("days") or []
+    if models:
+        lines.append("MODEL SPREAD (where forecasts diverge):")
+        for day in models:
+            hi = ", ".join(f"{k} {v}" for k, v in day["high_f"].items())
+            pop = ", ".join(f"{k} {v}%" for k, v in day["pop_max"].items())
+            lines.append(f"  {day['date']}: highs [{hi}] spread {day['high_spread_f']}F; precip chance [{pop}]")
+
+    wu = outlets.get("wu")
+    if wu and wu.get("days"):
+        lines.append("WEATHER UNDERGROUND / WEATHER.COM:")
+        for day in wu["days"]:
+            lines.append(f"  {day.get('date') or '?'}: high {day['high_f']}, low {day['low_f']}: {day['narrative']}")
+    wcax = outlets.get("wcax")
+    if wcax and wcax.get("discussion"):
+        lines.append(f"WCAX METEOROLOGIST: {wcax['discussion']}")
+
+    return "\n".join(lines), [day["date"] for day in days]
+
+
 # What each edition asks for. Morning is the full read; the later two are
 # updates — what changed since the last one, what the rest of the day holds.
 EDITIONS = {
@@ -123,7 +169,7 @@ EDITIONS = {
 }
 
 
-def call_claude(brain, packet, today, edition):
+def get_api_key():
     key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
     if not key:
         return None, "no ANTHROPIC_API_KEY — packet-only draft"
@@ -132,15 +178,15 @@ def call_claude(brain, packet, today, edition):
         # ("sk-ant-…") instead of using the console's Copy button
         return None, ("ANTHROPIC_API_KEY contains invalid characters (a '…'?) — "
                       "re-copy the full key with the Copy button and update the secret")
+    return key, None
+
+
+def api_call(key, brain, prompt, max_tokens=700):
     body = json.dumps({
         "model": MODEL,
-        "max_tokens": 700,
+        "max_tokens": max_tokens,
         "system": brain,
-        "messages": [{
-            "role": "user",
-            "content": (f"Today is {today} in Burlington VT. {EDITIONS[edition]} "
-                        f"Output the read only.\n\n{packet}"),
-        }],
+        "messages": [{"role": "user", "content": prompt}],
     }).encode()
     req = urllib.request.Request(
         "https://api.anthropic.com/v1/messages",
@@ -150,8 +196,35 @@ def call_claude(brain, packet, today, edition):
     )
     with urllib.request.urlopen(req, timeout=120) as res:
         out = json.loads(res.read())
-    text = "".join(b.get("text", "") for b in out.get("content", [])).strip()
-    return text or None, None
+    return "".join(b.get("text", "") for b in out.get("content", [])).strip()
+
+
+def call_claude(key, brain, packet, today, edition):
+    text = api_call(key, brain,
+                    f"Today is {today} in Burlington VT. {EDITIONS[edition]} "
+                    f"Output the read only.\n\n{packet}")
+    return text or None
+
+
+def call_claude_week(key, brain, week_packet, dates, today):
+    """One blurb per forecast day, returned as {date: blurb}. Any parse or
+    shape problem returns None — the page falls back to the NWS wording."""
+    prompt = (
+        f"Today is {today} in Burlington VT. Write the week blurbs from the "
+        "packet below, per the week-blurbs section of your instructions. "
+        "Output ONLY a JSON array, no code fences, one object per date in "
+        "this exact order: "
+        + ", ".join(dates)
+        + '. Each object: {"date": "YYYY-MM-DD", "blurb": "..."}.'
+        f"\n\n{week_packet}")
+    raw = api_call(key, brain, prompt, max_tokens=1200)
+    raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip())
+    entries = json.loads(raw)
+    week = [{"date": e["date"], "blurb": e["blurb"].strip()}
+            for e in entries
+            if isinstance(e, dict) and e.get("date") in dates
+            and isinstance(e.get("blurb"), str) and e["blurb"].strip()]
+    return week or None
 
 
 def main():
@@ -168,13 +241,29 @@ def main():
     local = datetime.now(ZoneInfo("America/New_York"))
     today = local.strftime("%A, %B %-d")
 
-    packet = build_packet(data)
-    text, note = None, None
+    # What the other outlets are telling readers (never load-bearing)
     try:
-        text, note = call_claude(brain, packet, today, args.edition)
-    except Exception as e:  # noqa: BLE001 — a failed draft still queues the packet
-        note = f"draft generation failed: {e}"
-        print(note, file=sys.stderr)
+        outlets = outlets_mod.fetch_all()
+    except Exception:  # noqa: BLE001
+        outlets = {}
+
+    packet = build_packet(data, outlets)
+    week_packet, week_dates = build_week_packet(data, outlets)
+
+    key, note = get_api_key()
+    text, week = None, None
+    if key:
+        try:
+            text = call_claude(key, brain, packet, today, args.edition)
+        except Exception as e:  # noqa: BLE001 — a failed draft still queues the packet
+            note = f"draft generation failed: {e}"
+            print(note, file=sys.stderr)
+        # The week blurbs are a bonus, never a blocker: if this call fails
+        # the page simply shows the NWS wording in the week panel.
+        try:
+            week = call_claude_week(key, brain, week_packet, week_dates, today)
+        except Exception as e:  # noqa: BLE001
+            print(f"week blurbs failed: {e}", file=sys.stderr)
 
     draft = {
         "date": local.date().isoformat(),
@@ -184,6 +273,7 @@ def main():
         "model": MODEL if text else None,
         "note": note,
         "text": text or "",
+        "week": week,
         "packet": packet,
     }
     with open(DRAFT, "w") as f:

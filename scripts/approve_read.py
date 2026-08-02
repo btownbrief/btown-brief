@@ -73,6 +73,7 @@ def main():
         "date": draft["date"],
         "edition": draft.get("edition", "morning"),
         "text": text.strip(),
+        "week": draft.get("week"),
         "approved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "edited": text.strip() != (draft.get("text") or "").strip(),
     }
