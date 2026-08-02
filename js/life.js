@@ -132,32 +132,6 @@
       return { score: clamp(base - rain - wind - air - dark, 0, 10), parts: parts };
     },
 
-    /* SUNSET — is tonight's sunset worth walking to the water for?
-       Scored against conditions at the sunset hour, not "now".
-       Sky cover 25–60% is the sweet spot — clouds are the canvas;
-       clear skies score decently (8-ish), overcast kills it.
-       Rain at sunset kills it. Heavy wildfire smoke (AQI 100+)
-       mutes color more than it adds drama, so it costs points.
-       Comfort at the waterfront is a minor term — people bring
-       layers for a great sky. */
-    sunset: function (h, ctx) {
-      var parts = [];
-      var sky = h.sky;
-      var skyScore;
-      if (sky == null) skyScore = 6;
-      else if (sky <= 10) skyScore = 7.5;                       // bare blue — fine, not epic
-      else if (sky <= 65) skyScore = 10 - Math.abs(sky - 40) / 12; // clouds to light up
-      else skyScore = clamp(10 - (sky - 65) * 0.22, 0, 7);      // filling in fast
-      parts.push({ label: sky == null ? 'Sky cover unknown' : sky + '% sky cover at sunset', delta: skyScore });
-      var rain = rainPenalty(h.pop, 8);
-      if (rain >= 0.5) parts.push({ label: h.pop + '% chance of rain at sunset', delta: -rain });
-      var smoke = ctx.aqi != null && ctx.aqi > 100 ? 2 : 0;
-      if (smoke) parts.push({ label: 'Heavy smoke/haze (AQI ' + ctx.aqi + ')', delta: -smoke });
-      var chill = (1 - comfort(h.feels_f, 55, 85, 25, 15)) * 1.5;
-      if (chill >= 0.5) parts.push({ label: 'Feels like ' + h.feels_f + '° at the water', delta: -chill });
-      return { score: clamp(skyScore - rain - smoke - chill, 0, 10), parts: parts };
-    },
-
     /* SWIMMING — actually getting in the lake.
        Water temperature dominates: 72+ is easy swimming, the
        mid-60s are a gasp, under 60 caps the score at 3 no matter
@@ -281,24 +255,19 @@
      the current score and a best-window hint. `sunset` is special:
      it's always evaluated at the sunset hour. */
   function scoreActivity(key, hours, ctx) {
-    var scorer = SCORERS[key];
     var now = Date.now();
 
     if (key === 'sunset') {
-      // decide today vs tomorrow FIRST, then find that hour — otherwise a
-      // just-past sunset still present in the hourly array gets scored but
-      // labeled with tomorrow's time
-      var sunsetIso = now > new Date(ctx.sunset).getTime() ? ctx.sunsetTomorrow : ctx.sunset;
-      var setT = new Date(sunsetIso).getTime();
-      var target = null;
-      for (var i = 0; i < hours.length; i++) {
-        var t = new Date(hours[i].t).getTime();
-        if (t <= setT && setT < t + 3600000) { target = hours[i]; break; }
-      }
-      if (!target) target = hours[0];
-      var r = scorer(target, ctx);
-      return { score: r.score, parts: r.parts, window: 'sunset at ' + fmtClock(sunsetIso) };
+      var target = window.BtownSunsetScore.selectTarget(ctx.latest, now);
+      var result = window.BtownSunsetScore.computeScore(
+        target.sunsetMs, ctx.openMeteo, ctx.latest);
+      return {
+        score: result.score,
+        parts: result.parts,
+        window: 'sunset at ' + fmtClock(target.sunsetMs)
+      };
     }
+    var scorer = SCORERS[key];
 
     // hours still ahead of us in the Burlington day (open-window looks
     // 20h out so a morning visitor still sees tonight's overnight window)
@@ -590,7 +559,7 @@
     sec.hidden = false;
   }
 
-  function renderScores(d) {
+  function renderScores(d, openMeteo) {
     var grid = el('life-grid');
     if (!grid || !d.hourly || !d.hourly.hours) return;
 
@@ -614,7 +583,8 @@
       uvMax: (d.sun || {}).uv_max,
       sunrise: (d.sun || {}).sunrise,
       sunset: (d.sun || {}).sunset,
-      sunsetTomorrow: (d.sun || {}).sunset_tomorrow || (d.sun || {}).sunset
+      latest: d,
+      openMeteo: openMeteo
     };
 
     var html = SCORE_META.map(function (meta) {
@@ -635,8 +605,10 @@
         (res.window ? '<div class="life-window">' + esc(res.window) + '</div>' : '') +
         (meta.link ? '<a class="life-deep-link" href="' + esc(meta.link) + '">' + esc(meta.linkText || 'More →') + '</a>' : '') +
         '<div class="life-why" hidden>' + whyRows +
-        '<p class="life-why-note">Started from the feels-like comfort curve, then adjusted for what actually ruins ' +
-        meta.name.toLowerCase() + '. Recomputed every hour.</p></div>' +
+        '<p class="life-why-note">' + (meta.key === 'sunset'
+          ? 'Uses the exact cloud-layer formula and data feed from the full Sunset Tracker.'
+          : 'Started from the feels-like comfort curve, then adjusted for what actually ruins ' +
+            meta.name.toLowerCase() + '. Recomputed every hour.') + '</p></div>' +
         '</div>';
     }).join('');
 
@@ -749,11 +721,15 @@
     // The week strip wants the read too (per-day blurbs), so fetch it once
     // and share the promise. A failed read is null — every consumer copes.
     var readP = getJSON(READ_URL).catch(function () { return null; });
+    var sunsetP = getJSON(window.BtownSunsetScore.OPEN_METEO_URL)
+      .catch(function () { return null; });
 
     getJSON(DATA_URL).then(function (d) {
+      window.btownWeatherData = d;
+      window.dispatchEvent(new CustomEvent('btown:weather-data', { detail: d }));
       renderNow(d);
       readP.then(function (read) { renderWeek(d, read); });
-      renderScores(d);
+      sunsetP.then(function (om) { renderScores(d, om); });
       getJSON(BEACH_URL).then(function (b) { renderBeaches(d, b); })
         .catch(function () { renderBeaches(d, null); });
       var page = el('rn-page');

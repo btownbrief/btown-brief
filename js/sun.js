@@ -1,8 +1,8 @@
 /* ============================================================
    THINGS TO DO IN BURLINGTON — sun.js
    The daylight widget: sunrise on the left, sunset on the right,
-   a hand-etched almanac medallion in the middle (sun-with-face by
-   day, crescent moon by night, horizon suns at dawn and dusk), and
+   a hand-etched almanac scene in the middle, with sun, moon, sky,
+   and lighting following the day's actual progress, and
    a countdown of the daylight left. The whole strip links to the
    sunset tracker page. Data from Open-Meteo (no key). Absolute UTC
    timestamps are used for all math, so it's correct from any
@@ -14,7 +14,7 @@
 
    Test hooks: ?sunf=0.7 forces a daytime fraction (0=sunrise,
    1=sunset); ?sunf=night forces night; ?sunart=sunrise|day|sunset|night
-   forces a specific medallion.
+   forces a specific scene state.
 ============================================================ */
 
 (function () {
@@ -22,12 +22,13 @@
 
   var LAT = 44.4759, LON = -73.2121;
   var DAY_SECONDS = 14 * 3600; // synthetic day length for the test hook
-  var EDGE = 40 * 60;          // ± window (sec) that counts as sunrise/sunset
 
-  var sun = null;   // { offset, riseToday, setToday, riseTomorrow }
+  var sun = null;   // { riseToday, setToday, riseTomorrow }
   var els = {};     // cached DOM refs updated on each tick
   var timer = null;
-  var artState = ''; // which medallion is currently drawn
+  var sceneSeed = null;
+
+  function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
 
   /* ---------- tiny seeded rng so each load pulls a fresh print ---------- */
   function rng(seed) {
@@ -137,53 +138,6 @@
       faceArt(0);
   }
 
-  /* sun on the horizon — rising (warm, eager) or setting (deeper, softer) */
-  function horizonSunArt(seed, setting) {
-    var R = rng(seed);
-    var HY = 76;
-    var cy = HY + (setting ? 13 : 8);
-    var rays = '';
-    var nRays = setting ? 5 : 7;
-    var spread = setting ? 96 : 128;
-    for (var i = 0; i < nRays; i++) {
-      var a = -spread / 2 + spread * (i / (nRays - 1)) + (R() - 0.5) * 6;
-      var alt = i % 2 === 0;
-      var tipR = alt ? (50 + R() * 4) : (41 + R() * 3);
-      if (setting) tipR -= 5;
-      var tip = polar(60, cy, tipR, a);
-      if (tip[1] > HY - 2) continue; // rays stay above the waterline
-      rays += alt
-        ? '<path class="sunart-ray" d="' + spikeRay(60, cy, a, 30, tipR, 4.2) + '"/>'
-        : '<path class="sunart-rayw" d="' + flameRay(60, cy, a, 30, tipR, 3, (R() - 0.5) * 5) + '"/>';
-    }
-    /* engraved lake: rows of horizontal strokes below the horizon */
-    var water = '';
-    for (var r2 = 0; r2 < 5; r2++) {
-      var y = HY + 5 + r2 * 7 + R() * 2;
-      var n = 4 - (r2 > 2 ? 1 : 0);
-      for (var k = 0; k < n; k++) {
-        var x0 = 12 + R() * 88;
-        var len = 9 + R() * 17;
-        if (x0 + len > 110) len = 110 - x0;
-        water += '<path class="sunart-lnf" d="M' + x0.toFixed(0) + ' ' + y.toFixed(1) + ' h ' + len.toFixed(0) + '"/>';
-      }
-    }
-    var extra = setting
-      ? starArt(94, 24, 4) + starArt(26, 32, 2.6)
-      : '<path class="sunart-lnf" d="M22 30 q 3 -3 6 0 q 3 -3 6 0"/>' +
-        '<path class="sunart-lnf" d="M88 22 q 2.4 -2.4 4.8 0 q 2.4 -2.4 4.8 0"/>';
-    var clip = 'sunartHorizon' + (setting ? 'S' : 'R');
-    return '<g>' + rays + '</g>' +
-      '<clipPath id="' + clip + '"><rect x="0" y="0" width="120" height="' + HY + '"/></clipPath>' +
-      '<g clip-path="url(#' + clip + ')">' +
-        '<circle class="sunart-disc" cx="60" cy="' + cy + '" r="26"/>' +
-        '<circle class="sunart-ring" cx="60" cy="' + cy + '" r="22.5"/>' +
-        faceArt(cy - 68) +
-      '</g>' +
-      '<path class="sunart-hor" d="M8 ' + HY + ' H 112"/>' +
-      water + extra;
-  }
-
   /* crescent moon with a sleeping face, for night */
   function moonArt(seed) {
     var R = rng(seed);
@@ -218,31 +172,120 @@
       '<path class="sunart-lnf" d="M36.8 65.8 q 1.2 1.5 2.8 1.7"/>';
   }
 
-  /* which medallion fits this moment */
-  function artFor(now) {
+  /* Continuous scene state. Color and position are interpolated from
+     the real sunrise/sunset instants instead of swapping four drawings. */
+  var SKY = {
+    dawn:  { top: '#68759b', bottom: '#f3ae7d', ink: '#824633', ink2: '#a95f46', warm: '#ffd184' },
+    noon:  { top: '#69afe0', bottom: '#d9eef5', ink: '#79431f', ink2: '#a9612f', warm: '#f7bc4c' },
+    dusk:  { top: '#574e7a', bottom: '#ed876d', ink: '#713748', ink2: '#9f5360', warm: '#ff9a72' },
+    night: { top: '#111a35', bottom: '#3b4968', ink: '#bdd9df', ink2: '#8db6c0', warm: '#d7edf1' }
+  };
+
+  function mixColor(a, b, t) {
+    function rgb(hex) {
+      var n = parseInt(hex.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+    var x = rgb(a), y = rgb(b);
+    var out = x.map(function (v, i) { return Math.round(v + (y[i] - v) * t); });
+    return '#' + out.map(function (v) { return v.toString(16).padStart(2, '0'); }).join('');
+  }
+
+  function mixSky(a, b, t) {
+    var out = {};
+    Object.keys(a).forEach(function (key) { out[key] = mixColor(a[key], b[key], t); });
+    return out;
+  }
+
+  function sceneState(now) {
     var forced = param('sunart');
-    if (forced) return forced;
-    if (Math.abs(now - sun.riseToday) <= EDGE) return 'sunrise';
-    if (Math.abs(now - sun.setToday) <= EDGE) return 'sunset';
-    if (now > sun.riseToday && now < sun.setToday) return 'day';
-    return 'night';
+    var rise = sun.riseToday, set = sun.setToday;
+    var dayP = clamp((now - rise) / (set - rise), 0, 1);
+    var nightStart = now < rise ? set - 86400 : set;
+    var nightEnd = now < rise ? rise : sun.riseTomorrow;
+    var nightP = clamp((now - nightStart) / (nightEnd - nightStart), 0, 1);
+    var twilight = 40 * 60;
+    var sunOpacity = clamp(Math.min(
+      (now - rise + twilight) / (2 * twilight),
+      (set + twilight - now) / (2 * twilight)
+    ), 0, 1);
+    var colors;
+
+    if (forced === 'sunrise') {
+      dayP = 0; nightP = 1; sunOpacity = 0.5; colors = SKY.dawn;
+    } else if (forced === 'day') {
+      dayP = 0.5; sunOpacity = 1; colors = SKY.noon;
+    } else if (forced === 'sunset') {
+      dayP = 1; nightP = 0; sunOpacity = 0.5; colors = SKY.dusk;
+    } else if (forced === 'night') {
+      nightP = 0.5; sunOpacity = 0; colors = SKY.night;
+    } else if (now >= rise && now <= set) {
+      colors = dayP < 0.5
+        ? mixSky(SKY.dawn, SKY.noon, dayP * 2)
+        : mixSky(SKY.noon, SKY.dusk, (dayP - 0.5) * 2);
+    } else {
+      colors = nightP < 0.5
+        ? mixSky(SKY.dusk, SKY.night, nightP * 2)
+        : mixSky(SKY.night, SKY.dawn, (nightP - 0.5) * 2);
+    }
+
+    return {
+      dayP: dayP,
+      nightP: nightP,
+      sunOpacity: sunOpacity,
+      moonOpacity: 1 - sunOpacity,
+      colors: colors
+    };
   }
 
-  function drawArt(state) {
-    if (state === artState || !els.art) return;
-    artState = state;
-    var seed = pickSeed();
-    var inner;
-    if (state === 'sunrise') inner = horizonSunArt(seed, false);
-    else if (state === 'sunset') inner = horizonSunArt(seed, true);
-    else if (state === 'night') inner = moonArt(seed);
-    else inner = daySunArt(seed);
+  function ensureScene() {
+    if (els.scene || !els.art) return;
+    sceneSeed = sceneSeed == null ? pickSeed() : sceneSeed;
     els.art.innerHTML =
-      '<svg class="sunart-svg" viewBox="0 0 120 124" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
-      inner + '</svg>';
-    els.wrap.className = 'sun-arc sunart-' + state + (state === 'night' ? ' is-night' : '');
+      '<svg class="sunart-svg sunart-scene" viewBox="0 0 120 124" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+        '<defs><linearGradient id="sunart-sky" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop id="sunart-sky-top" offset="0"/><stop id="sunart-sky-bottom" offset="1"/>' +
+        '</linearGradient><clipPath id="sunart-scene-clip"><rect x="4" y="4" width="112" height="116" rx="56"/></clipPath></defs>' +
+        '<g clip-path="url(#sunart-scene-clip)">' +
+          '<rect class="sunart-sky" x="4" y="4" width="112" height="116" fill="url(#sunart-sky)"/>' +
+          '<circle class="sunart-glow" id="sunart-glow" cx="60" cy="88" r="43"/>' +
+          '<g class="sunart-body" id="sunart-moon">' + moonArt(sceneSeed + 17) + '</g>' +
+          '<g class="sunart-body" id="sunart-sun">' + daySunArt(sceneSeed) + '</g>' +
+          '<path class="sunart-ridge sunart-ridge-far" d="M0 100 L18 83 31 94 48 77 67 96 84 81 103 94 120 78 120 124 0 124Z"/>' +
+          '<path class="sunart-ridge" d="M0 108 L20 96 35 104 54 89 70 105 91 93 120 106 120 124 0 124Z"/>' +
+        '</g><circle class="sunart-scene-ring" cx="60" cy="62" r="57.5"/>' +
+      '</svg>';
+    els.scene = els.art.querySelector('.sunart-scene');
+    els.sunBody = document.getElementById('sunart-sun');
+    els.moonBody = document.getElementById('sunart-moon');
+    els.skyTop = document.getElementById('sunart-sky-top');
+    els.skyBottom = document.getElementById('sunart-sky-bottom');
+    els.glow = document.getElementById('sunart-glow');
   }
 
+  function drawArt(now) {
+    ensureScene();
+    if (!els.scene) return;
+    var s = sceneState(now);
+    var sunX = 18 + 84 * s.dayP;
+    var sunY = 91 - 58 * Math.sin(Math.PI * s.dayP);
+    var moonX = 18 + 84 * s.nightP;
+    var moonY = 91 - 48 * Math.sin(Math.PI * s.nightP);
+
+    els.sunBody.style.transform = 'translate(' + (sunX - 60).toFixed(2) + 'px,' +
+      (sunY - 62).toFixed(2) + 'px) scale(.42)';
+    els.moonBody.style.transform = 'translate(' + (moonX - 60).toFixed(2) + 'px,' +
+      (moonY - 62).toFixed(2) + 'px) scale(.42)';
+    els.sunBody.style.opacity = s.sunOpacity.toFixed(3);
+    els.moonBody.style.opacity = s.moonOpacity.toFixed(3);
+    els.skyTop.style.stopColor = s.colors.top;
+    els.skyBottom.style.stopColor = s.colors.bottom;
+    els.glow.style.opacity = (0.08 + 0.34 * s.sunOpacity).toFixed(3);
+    els.scene.style.setProperty('--sunart-ink', s.colors.ink);
+    els.scene.style.setProperty('--sunart-ink2', s.colors.ink2);
+    els.scene.style.setProperty('--sunart-warm', s.colors.warm);
+    els.wrap.className = 'sun-arc' + (s.sunOpacity < 0.5 ? ' is-night' : '');
+  }
   /* ================= data + clock plumbing ================= */
 
   function fmtDur(sec) {
@@ -256,12 +299,9 @@
   }
 
   function fmtClock(ts) {
-    // Shift by Burlington's UTC offset, then read UTC fields → local clock.
-    var d = new Date((ts + sun.offset) * 1000);
-    var h = d.getUTCHours(), m = d.getUTCMinutes();
-    var ap = h >= 12 ? 'PM' : 'AM';
-    var h12 = h % 12 || 12;
-    return h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + ap;
+    return new Date(ts * 1000).toLocaleTimeString('en-US', {
+      hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York'
+    });
   }
 
   function param(name) {
@@ -273,23 +313,31 @@
     var d = data && data.daily;
     if (!d || !d.sunrise || !d.sunset) throw new Error('bad payload');
     return {
-      offset: data.utc_offset_seconds || 0,
       riseToday: d.sunrise[0],
       setToday: d.sunset[0],
       riseTomorrow: d.sunrise[1] != null ? d.sunrise[1] : d.sunrise[0] + 86400
     };
   }
 
+  function fromWeather(data) {
+    var d = data && data.sun;
+    if (!d || !d.sunrise || !d.sunset || !d.sunrise_tomorrow) throw new Error('bad payload');
+    return {
+      riseToday: new Date(d.sunrise).getTime() / 1000,
+      setToday: new Date(d.sunset).getTime() / 1000,
+      riseTomorrow: new Date(d.sunrise_tomorrow).getTime() / 1000
+    };
+  }
+
   function synth(sf) {
     var now = Date.now() / 1000;
-    var offset = -4 * 3600; // EDT, for the test hook only
     if (sf === 'night') {
       // Sun already set an hour ago; next sunrise ~9h out.
-      return { offset: offset, riseToday: now - DAY_SECONDS, setToday: now - 3600,
+      return { riseToday: now - DAY_SECONDS, setToday: now - 3600,
                riseTomorrow: now + 9 * 3600 };
     }
     var f = Math.max(0, Math.min(1, parseFloat(sf) || 0.5));
-    return { offset: offset, riseToday: now - f * DAY_SECONDS,
+    return { riseToday: now - f * DAY_SECONDS,
              setToday: now + (1 - f) * DAY_SECONDS, riseTomorrow: now + (1 - f) * DAY_SECONDS + 10 * 3600 };
   }
 
@@ -348,7 +396,7 @@
 
     els.num.textContent = fmtDur(secLeft);
     els.label.textContent = label;
-    drawArt(artFor(now));
+    drawArt(now);
   }
 
   function start(sunObj) {
@@ -364,6 +412,19 @@
   function init() {
     var sf = param('sunf');
     if (sf != null) { start(synth(sf)); return; }
+
+    // weather.html already loaded these exact times with its forecast;
+    // reuse them instead of asking a second feed for the same answer.
+    if (document.getElementById('rn-page')) {
+      if (window.btownWeatherData) {
+        start(fromWeather(window.btownWeatherData));
+      } else {
+        window.addEventListener('btown:weather-data', function (e) {
+          start(fromWeather(e.detail));
+        }, { once: true });
+      }
+      return;
+    }
 
     var url = 'https://api.open-meteo.com/v1/forecast'
       + '?latitude=' + LAT + '&longitude=' + LON
