@@ -212,3 +212,6 @@ standing food deal? Update data/deals.json with what you learn.
 - [ ] Henry Street Deli — https://www.henrystreetdeli.com
 - [ ] Taco Gordo — https://www.tacogordovt.com
 - [ ] Four Corners of the Earth — https://www.fourcornersdeli.com
+
+## Not yet in the roster (found on the Marketplace's own dining directory, 8/2/26)
+Burlington Bagel Bakery (93 Church) · Cappadocia Bistro (92 Church) · E.B. Strong's (10 Church) · Country Roads Jamaican Flair (130 Church) · Jilib Jiblets · Sabah's House — need coords + menus before they can join the zone.

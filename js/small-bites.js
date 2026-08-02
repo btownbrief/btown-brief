@@ -39,6 +39,14 @@
     });
   }
 
+  function numericPrice(item) {
+    if (item.price != null) return item.price;
+    // 223 items carry their price only as printed text ("$8.99 half") —
+    // read the first dollar figure so they filter and sort like the rest.
+    var m = /\$\s*(\d+(?:\.\d{1,2})?)/.exec(item.price_text || '');
+    return m ? parseFloat(m[1]) : null;
+  }
+
   function priceBand(p) {
     if (p == null) return null;
     if (p < 10) return "u10";
@@ -63,7 +71,7 @@
       if (hay.indexOf(state.q) < 0) return false;
     }
     if (state.prices.size) {
-      var band = priceBand(item.price);
+      var band = priceBand(numericPrice(item));
       if (!band || !state.prices.has(band)) return false;
     }
     var ok = true;
@@ -78,7 +86,7 @@
 
   function placeMatches(r) {
     if (state.openNow && isOpen(r) !== true) return false; // unknown hours ≠ open
-    if (state.cuisine && (r.cuisine || []).indexOf(state.cuisine) < 0) return false;
+    if (state.cuisine && (r.cuisine || []).map(function (c) { return String(c).trim().toLowerCase(); }).indexOf(state.cuisine) < 0) return false;
     if (!state.kinds.size) return true;
     var hit = false;
     state.kinds.forEach(function (k) {
@@ -303,9 +311,15 @@
   }
 
   function fillCuisines() {
+    var STOP = ['lunch', 'dinner', 'breakfast', 'outdoor dining', 'group dining',
+                'fine dining', 'casual', 'late night'];
     var counts = {};
     DATA.restaurants.forEach(function (r) {
-      (r.cuisine || []).forEach(function (c) { counts[c] = (counts[c] || 0) + 1; });
+      (r.cuisine || []).forEach(function (raw) {
+        var c = String(raw).trim().toLowerCase();
+        if (!c || c.length > 24 || STOP.indexOf(c) >= 0) return;
+        counts[c] = (counts[c] || 0) + 1;
+      });
     });
     var sel = document.getElementById("cuisine");
     Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a] || a.localeCompare(b); })
