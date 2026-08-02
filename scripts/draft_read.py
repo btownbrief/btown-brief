@@ -207,24 +207,28 @@ def call_claude(key, brain, packet, today, edition):
 
 
 def call_claude_week(key, brain, week_packet, dates, today):
-    """One blurb per forecast day, returned as {date: blurb}. Any parse or
-    shape problem returns None — the page falls back to the NWS wording."""
+    """One blurb per forecast day. Line-based output, not JSON — a model
+    told to write like a weatherman will put quotes and asides inside prose,
+    and JSON breaks on exactly the days worth writing about. Any line that
+    doesn't parse is simply skipped; no blurbs at all returns None and the
+    page falls back to the NWS wording."""
     prompt = (
         f"Today is {today} in Burlington VT. Write the week blurbs from the "
         "packet below, per the week-blurbs section of your instructions. "
-        "Output ONLY a JSON array, no code fences, one object per date in "
-        "this exact order: "
-        + ", ".join(dates)
-        + '. Each object: {"date": "YYYY-MM-DD", "blurb": "..."}.'
-        f"\n\n{week_packet}")
+        "Output one line per date, in this exact order, each formatted as\n"
+        "YYYY-MM-DD | blurb\n"
+        "covering these dates: " + ", ".join(dates) + ". No other text.\n\n"
+        + week_packet)
     raw = api_call(key, brain, prompt, max_tokens=1200)
-    raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip())
-    entries = json.loads(raw)
-    week = [{"date": e["date"], "blurb": e["blurb"].strip()}
-            for e in entries
-            if isinstance(e, dict) and e.get("date") in dates
-            and isinstance(e.get("blurb"), str) and e["blurb"].strip()]
-    return week or None
+    week, seen = [], set()
+    for line in raw.splitlines():
+        m = re.match(r"\s*(\d{4}-\d{2}-\d{2})\s*\|\s*(\S.*)", line)
+        if m and m.group(1) in dates and m.group(1) not in seen:
+            seen.add(m.group(1))
+            week.append({"date": m.group(1), "blurb": m.group(2).strip()})
+    if not week:
+        raise ValueError(f"no parseable blurb lines in week reply: {raw[:200]!r}")
+    return week
 
 
 def main():
