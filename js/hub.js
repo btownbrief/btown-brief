@@ -271,6 +271,13 @@
     });
   }
 
+  function statOpenings() {
+    return getJSON('data/openings.json').then(function (data) {
+      var list = data.entries || [];
+      if (list.length) stat('stat-openings', list.length + ' changes');
+    });
+  }
+
   function statJobs() {
     return getJSON('data/jobs.json').then(function (data) {
       // Same Burlington-calendar-day window js/jobs.js shows (14 days), so
@@ -370,6 +377,7 @@
     tileOpenNow().catch(noop);
     tileTonight().catch(noop);
     statChanges().catch(noop);
+    statOpenings().catch(noop);
     statDeals().catch(noop);
     statJobs().catch(noop);
   }
