@@ -22,6 +22,25 @@
     });
   }
 
+  // Storefront history: entries sharing an address get a thread line, so
+  // "what used to be here?" answers itself (El Cortijo → Burl's, Black Cap
+  // → PopUp Bagels, Riko's → Pascolo…).
+  function threadFor(e) {
+    var key = String(e.area || '').toLowerCase();
+    // Only thread real street addresses — "Church Street Marketplace" is a
+    // district, and two closures there aren't the same storefront.
+    if (!key || !/\d/.test(key)) return '';
+    var others = entries.filter(function (o) {
+      return o !== e && String(o.area || '').toLowerCase() === key;
+    });
+    if (!others.length) return '';
+    var parts = others.map(function (o) {
+      return esc(o.name) + ' (' + esc(STATUS_LABEL[o.status] ?
+        STATUS_LABEL[o.status].toLowerCase() : o.status) + ')';
+    });
+    return '<p class="o-thread">Same storefront: ' + parts.join(' · ') + '</p>';
+  }
+
   function cardHTML(e) {
     var status = STATUS_LABEL[e.status] ? e.status : 'open';
     // Curated data, but still: only ever link http(s).
@@ -40,6 +59,7 @@
         '<h3>' + esc(e.name) + '</h3>' +
         (e.area ? '<p class="o-area">' + esc(e.area) + '</p>' : '') +
         (e.story ? '<p class="o-story">' + esc(e.story) + '</p>' : '') +
+        threadFor(e) +
         (linkable
           ? '<p class="o-source"><a href="' + esc(e.source) + '" target="_blank" rel="noopener">' +
               esc(e.sourceName || host || 'Source') + ' →</a></p>'
@@ -56,13 +76,30 @@
       feed.innerHTML = '<p class="o-empty">Nothing in this column right now — check back soon.</p>';
       return;
     }
-    // A year marker whenever the feed crosses into an older year.
+    // A year marker whenever the feed crosses into an older year — with the
+    // year's tally on the unfiltered view, so the churn is legible at a
+    // glance ("2026 · 10 opened · 8 closed · 3 coming").
+    var thisYear = new Date().getFullYear();
+    function tally(y) {
+      if (active !== 'all') return '';
+      var n = { 'open': 0, 'opening-soon': 0, 'closed': 0 };
+      entries.forEach(function (e) {
+        if (String(e.date || '').slice(0, 4) === y) n[e.status]++;
+      });
+      var bits = [];
+      if (n['open']) bits.push(n['open'] + ' opened');
+      if (n['closed']) bits.push(n['closed'] + ' closed');
+      if (n['opening-soon']) bits.push(n['opening-soon'] + ' coming');
+      if (!bits.length) return '';
+      return ' <span class="o-year-tally">· ' + bits.join(' · ') +
+        (String(thisYear) === y ? ' so far' : '') + '</span>';
+    }
     var html = '', year = '';
     shown.forEach(function (e) {
       var y = String(e.date || '').slice(0, 4);
       if (y && y !== year) {
         year = y;
-        html += '<h2 class="o-year">' + esc(y) + '</h2>';
+        html += '<h2 class="o-year">' + esc(y) + tally(y) + '</h2>';
       }
       html += cardHTML(e);
     });

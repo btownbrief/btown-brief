@@ -7,7 +7,18 @@ pool, and the Since You Checked change log — for headlines that smell like
 a business opening or closing, drops anything already on the page, and
 writes the survivors to data/openings-suggestions.md for review.
 
-    python3 scripts/suggest_openings.py
+    python3 scripts/suggest_openings.py                 # full local checklist
+    python3 scripts/suggest_openings.py --new-only      # only never-surfaced ones
+    python3 scripts/suggest_openings.py --new-only --mark-seen
+                                                        # …and remember them
+
+--new-only filters against data/openings-seen.json (candidates already
+surfaced once); --mark-seen records this run's candidates there. The weekly
+openings-radar workflow uses both so its GitHub issue only pings about
+genuinely new candidates. Local runs without flags always show everything.
+
+Set BTB_ARCHIVE_STORIES to point at the archive repo's stories.json when
+the sibling checkout isn't at ../archive (the workflow downloads it).
 
 This script only SUGGESTS. Nothing it writes is published: entries reach
 data/openings.json by hand, after the story checks out. The suggestions
@@ -17,11 +28,13 @@ file is local-only (gitignored), like the other working docs.
 import json
 import os
 import re
+import sys
 from datetime import datetime, timezone
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 OPENINGS = os.path.join(ROOT, "data", "openings.json")
 OUT = os.path.join(ROOT, "data", "openings-suggestions.md")
+SEEN = os.path.join(ROOT, "data", "openings-seen.json")
 
 FEEDS = [
     ("ticker", os.path.join(ROOT, "data", "ticker.json")),
@@ -31,8 +44,11 @@ FEEDS = [
 
 # The Brief's own archive (sibling repo, ~/btownbrief/archive) tags stories
 # with openClose — the single best source. Optional: skipped silently when
-# the checkout isn't there.
-ARCHIVE = os.path.join(ROOT, "..", "archive", "data", "stories.json")
+# the checkout isn't there. BTB_ARCHIVE_STORIES overrides the path (the
+# radar workflow downloads the raw file and points here).
+ARCHIVE = os.environ.get(
+    "BTB_ARCHIVE_STORIES",
+    os.path.join(ROOT, "..", "archive", "data", "stories.json"))
 
 # Business-change language. Word-boundary anchored so "reopens" still hits
 # ("re" + open) but "chopin" doesn't.
@@ -136,6 +152,10 @@ def harvest(feed_name, data):
 
 
 def main():
+    new_only = "--new-only" in sys.argv
+    mark_seen = "--mark-seen" in sys.argv
+    already = set(load(SEEN) or []) if (new_only or mark_seen) else set()
+
     urls, names = known_keys()
     suggestions, seen, failed = [], set(), []
 
@@ -153,6 +173,8 @@ def main():
             key = (url or text).strip().lower()
             if key in seen or (url and url.strip() in urls):
                 continue
+            if new_only and key in already:
+                continue
             closing = bool(CLOSING_SIGNAL.search(text))
             if any(name in plain(text) and closing == was_closing
                    for name, was_closing in names):
@@ -160,7 +182,7 @@ def main():
             seen.add(key)
             suggestions.append({
                 "text": text.strip(), "url": url, "outlet": outlet,
-                "feed": feed_name,
+                "feed": feed_name, "key": key,
             })
 
     stamp = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M %Z")
@@ -186,6 +208,10 @@ def main():
 
     with open(OUT, "w") as f:
         f.write("\n".join(lines))
+    if mark_seen and suggestions:
+        with open(SEEN, "w") as f:
+            json.dump(sorted(already | {s["key"] for s in suggestions}),
+                      f, indent=1)
     print("Wrote %d candidate(s) to %s" % (len(suggestions), OUT))
     if failed:
         print("WARNING: unreadable feed(s): %s" % ", ".join(failed))
