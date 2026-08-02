@@ -4669,3 +4669,80 @@ a.events-all-link:focus-visible { background: var(--bg-subtle); outline: none; }
   margin: 0 0 var(--space-4);
 }
 .extras-sub a { color: var(--teal); font-weight: 600; }
+
+/* ============================================================
+   VERMONT HOBBIES (hobbies.html)
+   Two-tier directory: the only-really-works-here list, then the
+   do-anywhere hobbies with their local on-ramps.
+============================================================ */
+.hob-tier-sub { font-size: var(--text-sm); color: var(--ink-2); max-width: 68ch; margin: 0 0 var(--space-3); }
+
+.hob-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+.hob-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--group-outdoors);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+.hob-tier-anywhere .hob-card { border-left-color: var(--teal); }
+.hob-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  flex-wrap: wrap;
+}
+.hob-card-emoji { font-size: var(--text-lg); line-height: 1; }
+.hob-card-name {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--ink);
+}
+.hob-card-season {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--coral);
+  white-space: nowrap;
+}
+.hob-card-what { font-size: var(--text-sm); color: var(--ink-2); line-height: 1.5; margin-top: var(--space-2); }
+.hob-card-start {
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  line-height: 1.5;
+  margin-top: var(--space-2);
+}
+.hob-card-start strong { color: var(--ink); font-weight: 600; }
+.hob-card-links { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.hob-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--bg-subtle);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-full);
+  padding: 3px 12px;
+  text-decoration: none;
+  transition: border-color var(--duration-fast) var(--ease), background var(--duration-fast) var(--ease);
+}
+.hob-link:hover { border-color: var(--teal); background: var(--teal-light); text-decoration: none; }
+.hob-link-type {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.625rem;
+  color: var(--ink-3);
+}
+.hob-link-guide { border-style: dashed; }
+@media (max-width: 560px) {
+  .hob-card-season { margin-left: 0; white-space: normal; }
+}

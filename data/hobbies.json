@@ -1,0 +1,286 @@
+{
+  "_comment": "Vermont Hobbies page. To add a hobby: copy any entry, append to the list — the page renders the two tiers automatically. tier: 'vermont' = only-really-works-here (top section), 'anywhere' = do-anywhere hobby with local hooks. Link types: shop | club | spot | guide (guide = internal page, relative URL). Every shop/club must be a real, currently operating Burlington-area business — verify before adding.",
+  "hobbies": [
+    {
+      "id": "skiing",
+      "name": "Skiing & riding",
+      "emoji": "⛷️",
+      "tier": "vermont",
+      "season": "December–March",
+      "what": "The mountain is half an hour away, and \"I ski after work\" is a normal sentence here — Bolton's night lights make a hundred-day season possible on a day-job schedule.",
+      "start": "Get a used setup from OGE's gear basement or Skirack, then start with a Bolton night pass. Cochran's in Richmond is the tiny, cheap community hill where half of Burlington learned.",
+      "links": [
+        { "type": "shop", "name": "Outdoor Gear Exchange", "url": "https://www.gearx.com" },
+        { "type": "shop", "name": "Skirack", "url": "https://www.skirack.com" },
+        { "type": "spot", "name": "Bolton Valley", "url": "https://www.boltonvalley.com" },
+        { "type": "spot", "name": "Cochran's Ski Area", "url": "https://cochranskiarea.com" }
+      ]
+    },
+    {
+      "id": "swimming-holes",
+      "name": "Swimming holes & lake swims",
+      "emoji": "💦",
+      "tier": "vermont",
+      "season": "June–August",
+      "what": "Between the lake beaches and the river holes, half of summer here is just deciding which water to get in after work.",
+      "start": "Check the swim statuses first (the lake occasionally says no), then do the classic: Red Rocks after work, off the ledges. Bolton Potholes is the river-hole field trip when you're ready.",
+      "links": [
+        { "type": "guide", "name": "Can-I-swim statuses", "url": "weather.html" },
+        { "type": "spot", "name": "Red Rocks Park", "url": "https://maps.google.com/?q=Red+Rocks+Park+South+Burlington+VT" },
+        { "type": "spot", "name": "Bolton Potholes", "url": "https://maps.google.com/?q=Bolton+Potholes+Bolton+VT" }
+      ]
+    },
+    {
+      "id": "sugaring",
+      "name": "Backyard sugaring",
+      "emoji": "🍁",
+      "tier": "vermont",
+      "season": "Late February–early April",
+      "what": "Tap the maples in your own yard when the nights still freeze and the days don't, and by Town Meeting Day you're boiling sap in the driveway like a real Vermonter.",
+      "start": "Two or three taps and a starter kit is plenty for a first season — Vermont Evaporator in Montpelier builds kits exactly for this. Watch a boil at Audubon's sugarhouse in March to see the whole arc first.",
+      "links": [
+        { "type": "shop", "name": "Vermont Evaporator Company", "url": "https://vermontevaporator.com" },
+        { "type": "spot", "name": "Green Mountain Audubon Center", "url": "https://vt.audubon.org" }
+      ]
+    },
+    {
+      "id": "foraging",
+      "name": "Foraging",
+      "emoji": "🍄",
+      "tier": "vermont",
+      "season": "May–October",
+      "what": "Ramps in May, chanterelles in July, wild apples nobody picks in September — the woods around here genuinely feed you once you learn what you're looking at.",
+      "start": "Go out with someone who knows first: the Vermont Mycological Society leads walks all season, and The Mushroom Forager runs beginner forays out of Richmond. Then never tell anyone your spots.",
+      "links": [
+        { "type": "club", "name": "Vermont Mycological Society", "url": "https://vermontmyco.org" },
+        { "type": "club", "name": "The Mushroom Forager", "url": "https://www.themushroomforager.com" }
+      ]
+    },
+    {
+      "id": "ice-fishing",
+      "name": "Ice fishing",
+      "emoji": "🎣",
+      "tier": "vermont",
+      "season": "January–March",
+      "what": "When Malletts Bay freezes, a small village of shanties appears on it — and the people out there are having a much better time than it looks from shore.",
+      "start": "Fish & Wildlife runs free intro clinics every winter with all the gear provided, and the last Saturday of January is Free Ice Fishing Day, no license needed. The Tackle Box in Colchester has the bait and the straight answer on ice conditions.",
+      "links": [
+        { "type": "club", "name": "Free F&W winter clinics", "url": "https://vtfishandwildlife.com/fish/fishing-events-and-programs/fishing-clinics-and-events/free-winter-fishing-clinics" },
+        { "type": "shop", "name": "The Tackle Box", "url": "https://www.tackbox.com" },
+        { "type": "spot", "name": "Malletts Bay", "url": "https://maps.google.com/?q=Malletts+Bay+Colchester+VT" }
+      ]
+    },
+    {
+      "id": "disc-golf",
+      "name": "Disc golf",
+      "emoji": "🥏",
+      "tier": "vermont",
+      "season": "April–November",
+      "what": "Vermont is quietly one of the best disc golf states in the country, and Burlington keeps a free nine-hole course in the New North End to prove it.",
+      "start": "A starter set costs about what lunch does. Throw a round at Schifilliti Park after work; when you're hooked, the destination courses at Smugglers' Notch are an hour away.",
+      "links": [
+        { "type": "spot", "name": "Schifilliti Park course", "url": "https://udisc.com/courses/schifilliti-park-disc-golf-course-IwBY" },
+        { "type": "shop", "name": "Outdoor Gear Exchange", "url": "https://www.gearx.com" }
+      ]
+    },
+    {
+      "id": "sunset-chasing",
+      "name": "Sunset chasing",
+      "emoji": "🌅",
+      "tier": "vermont",
+      "season": "Year-round",
+      "what": "The sun goes down over the Adirondacks across ten miles of open water, and people here genuinely plan their evenings around it.",
+      "start": "Check tonight's score on the sunset page, then be at Battery Park or the Waterfront Park swings twenty minutes before it drops. Winter ones are the underrated ones.",
+      "links": [
+        { "type": "guide", "name": "Tonight's sunset forecast", "url": "sunset.html" },
+        { "type": "spot", "name": "Battery Park", "url": "https://maps.google.com/?q=Battery+Park+Burlington+VT" },
+        { "type": "spot", "name": "Waterfront Park", "url": "https://maps.google.com/?q=Waterfront+Park+Burlington+VT" }
+      ]
+    },
+    {
+      "id": "paddling",
+      "name": "Paddling the lake",
+      "emoji": "🛶",
+      "tier": "vermont",
+      "season": "May–September",
+      "what": "The lake is right there, and on a calm evening being out on it turns the whole city into a postcard you happen to live in.",
+      "start": "Rent a kayak or board right off the sand at North Beach to try it once, then take a real lesson at the Community Sailing Center — they teach kayak, SUP, and actual sailing on the waterfront.",
+      "links": [
+        { "type": "club", "name": "Community Sailing Center", "url": "https://www.communitysailingcenter.org" },
+        { "type": "shop", "name": "Umiak (North Beach rentals)", "url": "https://www.umiak.com" },
+        { "type": "spot", "name": "North Beach", "url": "https://maps.google.com/?q=North+Beach+Burlington+VT" }
+      ]
+    },
+    {
+      "id": "hiking",
+      "name": "Hiking, mud season included",
+      "emoji": "🥾",
+      "tier": "vermont",
+      "season": "Year-round, with an asterisk in April",
+      "what": "Camel's Hump and Mansfield are day trips, Philo is barely more than a lunch break — and the unwritten rule is you stay off the high trails in mud season so they're still there in June.",
+      "start": "Join a Green Mountain Club Burlington Section outing — they run hikes all year and you don't have to be a member. April belongs to the low stuff: Mt. Philo and Niquette Bay.",
+      "links": [
+        { "type": "club", "name": "GMC Burlington Section", "url": "https://gmcburlington.org" },
+        { "type": "spot", "name": "Mt. Philo State Park", "url": "https://vtstateparks.com/philo.html" },
+        { "type": "spot", "name": "Niquette Bay State Park", "url": "https://vtstateparks.com/niquette.html" }
+      ]
+    },
+    {
+      "id": "causeway-biking",
+      "name": "Riding the causeway",
+      "emoji": "🚲",
+      "tier": "vermont",
+      "season": "May–October",
+      "what": "A rail causeway runs three miles into the middle of the lake, water on both sides, mountains on both horizons — the single best \"why I live here\" bike ride there is.",
+      "start": "Rent from Local Motion on the waterfront, ride the Island Line north through the New North End, and in summer catch the bike ferry across the cut to the Islands.",
+      "links": [
+        { "type": "shop", "name": "Local Motion (rentals + ferry)", "url": "https://www.localmotion.org" },
+        { "type": "spot", "name": "Island Line Trail", "url": "https://maps.google.com/?q=Colchester+Causeway+Park+Colchester+VT" }
+      ]
+    },
+
+    {
+      "id": "board-games",
+      "name": "Board games",
+      "emoji": "🎲",
+      "tier": "anywhere",
+      "season": "Peak season: winter",
+      "what": "This town supports a proper game shop and a board-game café within a few blocks of each other, which tells you everything about what winter is like.",
+      "start": "Quarterstaff on Bank Street will match a game to your exact group; The Boardroom lets you play from a wall of 700 over a beer. Standing game nights live on the clubs page.",
+      "links": [
+        { "type": "shop", "name": "Quarterstaff Games", "url": "https://www.quarterstaffgames.com" },
+        { "type": "spot", "name": "The Boardroom", "url": "https://www.theboardroomvt.com" },
+        { "type": "guide", "name": "Game nights on the clubs page", "url": "clubs.html" }
+      ]
+    },
+    {
+      "id": "reading",
+      "name": "Reading & book clubs",
+      "emoji": "📚",
+      "tier": "anywhere",
+      "season": "Year-round",
+      "what": "Used at Crow, new at Phoenix, free at Fletcher — three good answers to \"where's my next book\" within a five-minute walk of each other.",
+      "start": "A Fletcher Free card costs nothing and takes five minutes. Then pick a book club off the clubs page — there are several, and they actually meet.",
+      "links": [
+        { "type": "shop", "name": "Crow Bookshop", "url": "https://www.crowbooks.com" },
+        { "type": "shop", "name": "Phoenix Books", "url": "https://www.phoenixbooks.biz" },
+        { "type": "spot", "name": "Fletcher Free Library", "url": "https://fletcherfree.org" },
+        { "type": "guide", "name": "Book clubs on the clubs page", "url": "clubs.html" }
+      ]
+    },
+    {
+      "id": "climbing",
+      "name": "Climbing",
+      "emoji": "🧗",
+      "tier": "anywhere",
+      "season": "Gym year-round, rock May–October",
+      "what": "Petra Cliffs has been Burlington's climbing living room for decades — half the gym seems to know each other, and they'll rope you in fast.",
+      "start": "Book an intro class at Petra — belay basics in one evening — then let their guides take you outside when the rock dries out.",
+      "links": [
+        { "type": "spot", "name": "Petra Cliffs", "url": "https://www.petracliffs.com" }
+      ]
+    },
+    {
+      "id": "running",
+      "name": "Running",
+      "emoji": "🏃",
+      "tier": "anywhere",
+      "season": "Year-round if you're honest about layers",
+      "what": "The bike path along the lake means your default easy run comes with a water view, and the run-club scene here is genuinely social — most end at a brewery.",
+      "start": "Get fitted at Skirack, then just show up to a club run — Friday evenings at Foam is the famous one, and nobody cares about your pace.",
+      "links": [
+        { "type": "shop", "name": "Skirack", "url": "https://www.skirack.com" },
+        { "type": "guide", "name": "Run clubs on the clubs page", "url": "clubs.html" },
+        { "type": "spot", "name": "The Greenway", "url": "https://maps.google.com/?q=Burlington+Bike+Path+Burlington+VT" }
+      ]
+    },
+    {
+      "id": "clay-making",
+      "name": "Pottery & making things",
+      "emoji": "🏺",
+      "tier": "anywhere",
+      "season": "Year-round",
+      "what": "Between BCA's clay studio and the Generator makerspace, Pine Street will teach you to make almost anything with your hands.",
+      "start": "BCA's intro wheel classes are the classic first move — twelve wheels, real teachers, your own lopsided mugs. Generator's tool trainings open up wood, metal, laser, and sewing shops.",
+      "links": [
+        { "type": "club", "name": "BCA Clay Studio", "url": "https://www.burlingtoncityarts.org/studios" },
+        { "type": "club", "name": "Generator makerspace", "url": "https://generatorvt.com" }
+      ]
+    },
+    {
+      "id": "fiber",
+      "name": "Knitting & fiber arts",
+      "emoji": "🧶",
+      "tier": "anywhere",
+      "season": "Cast on in October, wear it by February",
+      "what": "A Vermont winter is the reason knitting was invented, and there's a real yarn shop ten minutes down Shelburne Road that treats it that way.",
+      "start": "Must Love Yarn will set a total beginner up with needles, wool, and patience — then come back for their open craft hours on Wednesday evenings and Sunday afternoons.",
+      "links": [
+        { "type": "shop", "name": "Must Love Yarn", "url": "https://mustloveyarn.com" }
+      ]
+    },
+    {
+      "id": "film-photography",
+      "name": "Film photography",
+      "emoji": "📷",
+      "tier": "anywhere",
+      "season": "Year-round; golden hour is over the lake",
+      "what": "A real camera shop survives on Main Street — used bodies, fresh film, in-house developing — and this city hands you a postcard sunset to shoot most weeks.",
+      "start": "LeZot will put a working film camera in your hands for less than you think and develop what you shoot. Best of it ends up on our community photos page — send yours.",
+      "links": [
+        { "type": "shop", "name": "LeZot Camera", "url": "https://www.lezotcameras.com" },
+        { "type": "guide", "name": "Community photos", "url": "photos.html" }
+      ]
+    },
+    {
+      "id": "homebrewing",
+      "name": "Homebrewing",
+      "emoji": "🍺",
+      "tier": "anywhere",
+      "season": "Brew day is a winter Saturday",
+      "what": "You live in the state with the most breweries per capita — brewing your own is practically a civic duty, and the continuing education is a walk down Pine Street.",
+      "start": "1st Republic in Essex Junction is the local homebrew shop — a brewery that also sells the kit, so the advice comes from people who make beer for a living.",
+      "links": [
+        { "type": "shop", "name": "1st Republic Homebrew", "url": "https://www.1strepublic-homebrew.com" }
+      ]
+    },
+    {
+      "id": "gardening",
+      "name": "Gardening",
+      "emoji": "🌱",
+      "tier": "anywhere",
+      "season": "Plan in March, plant after Memorial Day",
+      "what": "Gardener's Supply started here, the Intervale is a whole valley of growing, and the city rents garden plots for the yardless — this is not a town where you garden alone.",
+      "start": "Get on the community garden list early — the city's 14 sites fill up fast every spring — and let the Intervale garden center answer your beginner questions; it's what they're for.",
+      "links": [
+        { "type": "shop", "name": "Gardener's Supply (Intervale)", "url": "https://www.gardeners.com/pages/our-garden-centers-burlington-vt" },
+        { "type": "club", "name": "Burlington community garden plots", "url": "https://enjoyburlington.com/about-our-community-gardens/" }
+      ]
+    },
+    {
+      "id": "live-music",
+      "name": "Playing music",
+      "emoji": "🎤",
+      "tier": "anywhere",
+      "season": "Year-round",
+      "what": "This is a music town out of proportion to its size, and the distance between \"I play a little\" and \"I played out last night\" is unusually short here.",
+      "start": "Radio Bean's long-running open mic is the on-ramp everyone uses. Looking for people to play with? The clubs page keeps a music section.",
+      "links": [
+        { "type": "spot", "name": "Radio Bean", "url": "https://www.radiobean.com" },
+        { "type": "guide", "name": "Music groups on the clubs page", "url": "clubs.html" }
+      ]
+    },
+    {
+      "id": "yoga",
+      "name": "Yoga",
+      "emoji": "🧘",
+      "tier": "anywhere",
+      "season": "Year-round",
+      "what": "Burlington's yoga anchor is a nonprofit — donation-based, scholarship-friendly, and busy — which changes who you meet on the next mat over.",
+      "start": "Drop into any beginner class at Sangha, Pine Street or the Old North End. Suggested donation is ten to fifteen bucks; pay what you can.",
+      "links": [
+        { "type": "club", "name": "Sangha Studio", "url": "https://www.sanghastudio.org" }
+      ]
+    }
+  ]
+}
