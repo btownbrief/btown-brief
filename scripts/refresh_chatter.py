@@ -30,6 +30,16 @@ INOREADER = {
     "r/vermont": "https://www.inoreader.com/stream/user/1003590800/tag/Reddit%20%28r%2FVermont%29?n=100",
 }
 NEWS_INOREADER = "https://www.inoreader.com/stream/user/1003590800/tag/Broader%20Local%20News%20%26%20Podcasts?n=100"
+# Outlets the newsletter quotes constantly but the InoReader tag rarely or
+# never delivers (audit 2026-08-02: Seven Days had 1 item in a 101-item
+# stream, CNS/Local 22 had 0). Fetched directly; all verified live. WVMT
+# was checked and skipped on purpose: its feed is syndicated WCAX stories
+# linking to wcax.com, so URL dedupe already covers it.
+DIRECT_NEWS_FEEDS = [
+    "https://www.sevendaysvt.com/vermont/Rss.xml",
+    "https://vtcommunitynews.org/feed/",
+    "https://www.mychamplainvalley.com/feed/",
+]
 NEWS_OUTLETS = {
     "vtdigger.org": "VTDigger",
     "vermontbiz.com": "Vermont Biz",
@@ -243,9 +253,28 @@ def load_news(existing, fixtures=None):
     except Exception as exc:
         print(f"inoreader local news failed: {exc}", file=sys.stderr)
         fresh = []
+    if not fixtures:
+        for feed in DIRECT_NEWS_FEEDS:
+            try:
+                fresh.extend(parse_news_inoreader(
+                    fetch_bytes(feed, "application/rss+xml, application/xml",
+                                {"User-Agent": BROWSER_UA})))
+            except Exception as exc:
+                print(f"direct feed {feed} failed: {exc}", file=sys.stderr)
     merged = {item.get("url"): item for item in existing if item.get("url")}
     merged.update((item["url"], item) for item in fresh)
-    return sorted(merged.values(), key=lambda item: item.get("published", ""), reverse=True)[:150]
+    ordered = sorted(merged.values(), key=lambda item: item.get("published", ""), reverse=True)
+    # One prolific outlet (NBC5 posts ~30/day) shouldn't drown the wire:
+    # cap each domain so the smaller local outlets keep their seats.
+    per_domain = Counter()
+    capped = []
+    for item in ordered:
+        domain = item.get("domain") or ""
+        if per_domain[domain] >= 30:
+            continue
+        per_domain[domain] += 1
+        capped.append(item)
+    return capped[:150]
 
 
 BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
