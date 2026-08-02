@@ -41,6 +41,8 @@ jobs:
       - name: Refresh chatter data
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
         run: python3 scripts/refresh_chatter.py
 
       - name: Commit if changed
