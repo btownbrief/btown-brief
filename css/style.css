@@ -2269,6 +2269,22 @@ img {
   overflow: visible;
 }
 
+.sunart-scene { --sunart-ink: #79431f; --sunart-ink2: #a9612f; --sunart-warm: #f7bc4c; }
+.sunart-scene stop,
+.sunart-body,
+.sunart-glow { transition: transform 1s linear, opacity 1s linear, stop-color 1s linear; }
+.sunart-body { transform-box: view-box; transform-origin: 60px 62px; }
+.sunart-glow { fill: var(--sunart-warm); }
+.sunart-ridge { fill: var(--sunart-ink); opacity: 0.34; }
+.sunart-ridge-far { fill: var(--sunart-ink2); opacity: 0.22; }
+.sunart-scene-ring { fill: none; stroke: var(--sunart-ink2); stroke-width: 1; opacity: 0.65; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sunart-scene stop,
+  .sunart-body,
+  .sunart-glow { transition: none; }
+}
+
 .sunart-day     { --sunart-ink: #8A4A21; --sunart-ink2: #B06A33; --sunart-warm: #F5B44A; }
 .sunart-sunrise { --sunart-ink: #94502A; --sunart-ink2: #C06B35; --sunart-warm: #FDBE5E; }
 .sunart-sunset  { --sunart-ink: #7C3A45; --sunart-ink2: #A85560; --sunart-warm: #F5876B; }
