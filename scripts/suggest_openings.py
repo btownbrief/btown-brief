@@ -66,7 +66,7 @@ SIGNAL = re.compile(
 # CLOSES still gets suggested (and vice versa) instead of being suppressed
 # by its own name.
 CLOSING_SIGNAL = re.compile(
-    r"\b(close(s|d|ing|ure)?|shutter|going out of business|last (day|call))\b",
+    r"\b(close(s|d|ing|ure)?|shutter(s|ed|ing)?|going out of business|last (day|call))\b",
     re.IGNORECASE,
 )
 

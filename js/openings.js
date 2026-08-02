@@ -8,6 +8,7 @@
     'open': 'Now open',
     'opening-soon': 'Coming soon',
     'closed': 'Closed',
+    'unknown': 'Status unclear',
   };
 
   var feed = document.getElementById('o-feed');
@@ -42,7 +43,7 @@
   }
 
   function cardHTML(e) {
-    var status = STATUS_LABEL[e.status] ? e.status : 'open';
+    var status = STATUS_LABEL[e.status] ? e.status : 'unknown';
     // Curated data, but still: only ever link http(s).
     var host = '', linkable = false;
     try {
