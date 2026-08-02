@@ -156,6 +156,11 @@
      waterfront) simply never gets a chip. */
 
   function chipFor(b) {
+    var known = b.status === 'green' || b.status === 'red' || b.status === 'yellow';
+    if (!known) {
+      return '<span class="swim-chip chip-caution" title="No current test result">' +
+        '<span class="chip-dot"></span>No current data</span>';
+    }
     var cls = b.status === 'green' ? 'chip-open' :
               b.status === 'red' ? 'chip-closed' : 'chip-caution';
     var word = b.status === 'green' ? 'Open' :
@@ -185,15 +190,20 @@
         for (var i = 0; i < slots.length; i++) slots[i].innerHTML = chipFor(b);
       });
 
-      var green = beaches.filter(function (b) { return b.status === 'green'; }).length;
+      var known = beaches.filter(function (b) {
+        return b.status === 'green' || b.status === 'red' || b.status === 'yellow';
+      });
+      var green = known.filter(function (b) { return b.status === 'green'; }).length;
       var el = counter;
       if (el) {
-        if (green === beaches.length) {
+        if (!known.length) {
+          el.textContent = 'No current test results — check back after the city\u2019s next sampling.';
+        } else if (green === known.length) {
           el.innerHTML = '<span class="yes">All ' + green + ' tested beaches are open</span> for swimming today.';
         } else if (green === 0) {
-          el.innerHTML = '<span class="no">No tested beaches are open</span> for swimming today — check the chips below.';
+          el.innerHTML = '<span class="no">No tested beaches are confirmed open</span> right now — check the chips below.';
         } else {
-          el.innerHTML = '<span class="yes">' + green + ' of ' + beaches.length + '</span> tested beaches are open for swimming today.';
+          el.innerHTML = '<span class="yes">' + green + ' of ' + known.length + '</span> tested beaches are open for swimming today.';
         }
       }
     });

@@ -249,14 +249,16 @@
     }
 
     return getJSON('data/weather/beaches.json').then(function (data) {
-      var beaches = data.beaches || [];
+      var beaches = (data.beaches || []).filter(function (b) {
+        return b.status === 'green' || b.status === 'red' || b.status === 'yellow';
+      });
       var green = beaches.filter(function (b) { return b.status === 'green'; }).length;
       var el = $('lake-sub');
       if (!el || !beaches.length) return;
       if (green === beaches.length) {
         el.innerHTML = '<span class="yes">All ' + green + ' beaches open</span>';
       } else if (green === 0) {
-        el.innerHTML = '<span class="no">No beaches open</span>';
+        el.innerHTML = '<span class="no">No beaches confirmed open</span>';
       } else {
         el.innerHTML = '<span class="yes">' + green + '</span> of ' + beaches.length + ' beaches open';
       }
