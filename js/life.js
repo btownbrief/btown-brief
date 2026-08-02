@@ -469,21 +469,37 @@
     var todayKey = new Intl.DateTimeFormat('en-CA', {
       timeZone: BTV_TZ, year: 'numeric', month: '2-digit', day: '2-digit'
     }).format(new Date());
-    var yesterdayKey = new Intl.DateTimeFormat('en-CA', {
-      timeZone: BTV_TZ, year: 'numeric', month: '2-digit', day: '2-digit'
-    }).format(new Date(Date.now() - 86400000));
+    // Yesterday as a calendar day back from todayKey, not 24h of clock
+    // time — the two disagree for an hour after the spring DST change.
+    var tp = todayKey.split('-');
+    var yesterdayKey = new Date(Date.UTC(+tp[0], +tp[1] - 1, +tp[2] - 1))
+      .toISOString().slice(0, 10);
 
     // Steve's one-line call per day, from the same approved read the "My
     // read" section shows. Keyed by Burlington date so blurbs always land
     // on the right card. If the read is more than a day old (the pipeline
     // hiccuped), the fresh NWS wording is the honest fallback.
     var blurbs = {};
-    if (read && read.week &&
+    if (read && Array.isArray(read.week) &&
         (read.date === todayKey || read.date === yesterdayKey)) {
       read.week.forEach(function (w) {
         if (w && w.date && w.blurb) blurbs[w.date] = w.blurb;
       });
     }
+
+    // A night much wetter than the day (30% day, 90% tonight) is its own
+    // story — say it on the card instead of letting the panel below
+    // appear to argue with the number above it. Compared on raw values;
+    // rounding only the display keeps a 14/35 split from sneaking in.
+    var nightLines = days.map(function (day) {
+      if (day.dayPop == null || day.nightPop == null) return '';
+      if (day.nightPop - day.dayPop < 30) return '';
+      return Math.round(day.nightPop / 10) * 10 + '% ' +
+        (day.key === todayKey ? 'tonight' : 'overnight');
+    });
+    // Rendered on every card (blank where quiet) so the rows keep lining
+    // up — but only in weeks where at least one card has something to say.
+    var anyNight = nightLines.some(function (s) { return s; });
 
     grid.innerHTML = days.map(function (day, i) {
       var label, sub = '';
@@ -503,16 +519,6 @@
       // is 30%"); showing the raw API value (28%) next to that reads as a
       // contradiction, so the card rounds the same way.
       var popShown = pop != null ? Math.round(pop / 10) * 10 : null;
-      var nightPop = day.nightPop != null ? Math.round(day.nightPop / 10) * 10 : null;
-      // A night much wetter than the day (30% day, 90% tonight) is its own
-      // story — say it on the card instead of letting the panel below
-      // appear to argue with the number above it.
-      var nightLine = '';
-      if (day.dayPop != null && nightPop != null && popShown != null &&
-          nightPop - popShown >= 30) {
-        nightLine = '<span class="week-pop-night">' + nightPop + '% ' +
-          (day.key === todayKey ? 'tonight' : 'overnight') + '</span>';
-      }
       return '<button class="week-card' + (i === 0 ? ' is-selected' : '') +
         '" type="button" data-day="' + i + '" aria-pressed="' + (i === 0) + '">' +
         '<span class="week-day">' + esc(label) + '</span>' +
@@ -526,7 +532,9 @@
         (pop != null && pop >= 15
           ? '<span class="week-pop">' + popShown + '%</span>'
           : '<span class="week-pop week-pop-dry">—</span>') +
-        nightLine +
+        (anyNight
+          ? '<span class="week-pop-night">' + (nightLines[i] || ' ') + '</span>'
+          : '') +
         '<span class="week-short">' + esc(short) + '</span>' +
         '</button>';
     }).join('');

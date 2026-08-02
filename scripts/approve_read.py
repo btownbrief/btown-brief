@@ -51,6 +51,10 @@ def main():
     print(f"\n=== Draft read for {draft['date']} "
           f"(drafted {draft['drafted_at']}, model {draft.get('model') or '—'}) ===\n")
     print(draft.get("text") or "(no generated text — packet below)")
+    if draft.get("week"):
+        print("\n--- week blurbs (ship with the read; edit the JSON if one's off) ---")
+        for w in draft["week"]:
+            print(f"  {w.get('date')}: {w.get('blurb')}")
     if not draft.get("text"):
         print("\n--- source packet ---\n" + draft.get("packet", ""))
 
