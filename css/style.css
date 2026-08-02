@@ -3495,6 +3495,15 @@ a.mode-btn:hover { text-decoration: none; }
 /* Kept in the flow (not hidden) so every card's rows line up. */
 .week-pop-dry { color: var(--ink-4); font-weight: 400; }
 
+/* A night much wetter than the day gets its own line ("90% tonight"),
+   so the card and the detail panel tell the same story. */
+.week-pop-night {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--teal);
+  opacity: .85;
+}
+
 /* NWS short forecasts run long ("Mostly Sunny then Slight Chance Showers
    And Thunderstorms"). Clamp so seven cards stay the same height — the
    full wording is one tap away in the detail panel. */
@@ -3530,6 +3539,25 @@ a.mode-btn:hover { text-decoration: none; }
   color: var(--teal);
   margin-right: var(--space-1);
 }
+
+/* Steve's one-line call leads the panel; the raw NWS wording folds away
+   underneath for anyone who wants the full feed. */
+.week-detail .week-detail-take {
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  line-height: 1.6;
+}
+
+.week-detail-nws { margin-top: var(--space-3); }
+
+.week-detail-nws summary {
+  cursor: pointer;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.week-detail-nws[open] summary { margin-bottom: var(--space-2); }
 
 .week-note {
   font-size: var(--text-xs);

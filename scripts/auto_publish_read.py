@@ -42,14 +42,22 @@ def main():
             current = json.load(f)
         if (current.get("date") == draft.get("date")
                 and current.get("edition", "morning") == draft.get("edition", "morning")):
-            print(f"read.json already carries the {draft.get('edition', 'morning')} "
-                  f"edition for {draft['date']} — nothing to do.")
-            return
+            # Same edition already live. One exception: a redraft can repair
+            # week blurbs a failed call left out — publish that, but never
+            # over a read Stephen edited by hand.
+            repairs_week = (draft.get("week") and not current.get("week")
+                            and not current.get("edited"))
+            if not repairs_week:
+                print(f"read.json already carries the {draft.get('edition', 'morning')} "
+                      f"edition for {draft['date']} — nothing to do.")
+                return
+            print("Live read is missing week blurbs this draft has — republishing.")
 
     read = {
         "date": draft["date"],
         "edition": draft.get("edition", "morning"),
         "text": text,
+        "week": draft.get("week"),
         "approved_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "edited": False,
         "auto_published": True,
