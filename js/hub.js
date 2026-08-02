@@ -261,6 +261,7 @@
         el.innerHTML = '<span class="yes">' + green + '</span> of ' + beaches.length + ' beaches open';
       }
       stat('stat-weather', green + '/' + beaches.length + ' beaches');
+      stat('stat-beaches', green + '/' + beaches.length + ' open');
     });
   }
 
