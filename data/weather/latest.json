@@ -1,35 +1,35 @@
 {
- "updated": "2026-08-01T23:42:31+00:00",
+ "updated": "2026-08-02T01:17:14+00:00",
  "sections_updated": {
-  "now": "2026-08-01T23:42:31+00:00",
-  "forecast": "2026-08-01T23:42:31+00:00",
-  "hourly": "2026-08-01T23:42:31+00:00",
-  "alerts": "2026-08-01T23:42:31+00:00",
-  "afd": "2026-08-01T23:42:31+00:00",
-  "lake_forecast": "2026-08-01T23:42:31+00:00",
-  "lake_gage": "2026-08-01T23:42:31+00:00",
-  "air": "2026-08-01T23:42:31+00:00",
-  "sun": "2026-08-01T23:42:31+00:00",
-  "models": "2026-08-01T23:42:31+00:00"
+  "now": "2026-08-02T01:17:14+00:00",
+  "forecast": "2026-08-02T01:17:14+00:00",
+  "hourly": "2026-08-02T01:17:14+00:00",
+  "alerts": "2026-08-02T01:17:14+00:00",
+  "afd": "2026-08-02T01:17:14+00:00",
+  "lake_forecast": "2026-08-02T01:17:14+00:00",
+  "lake_gage": "2026-08-02T01:17:14+00:00",
+  "air": "2026-08-02T01:17:14+00:00",
+  "sun": "2026-08-02T01:17:14+00:00",
+  "models": "2026-08-02T01:17:14+00:00"
  },
  "now": {
-  "observed_at": "2026-08-01T23:25:00+00:00",
+  "observed_at": "2026-08-02T00:50:00+00:00",
   "station": "KBTV",
   "description": "Mostly Clear",
-  "temp_f": 81,
-  "feels_like_f": 82,
-  "humidity": 54,
+  "temp_f": 79,
+  "feels_like_f": 79,
+  "humidity": 58,
   "dewpoint_f": 63,
-  "wind_mph": 3,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "S"
+  "wind_dir": "SE"
  },
  "forecast": {
   "updated": "2026-08-01T18:57:03+00:00",
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-08-01T19:00:00-04:00",
+    "start": "2026-08-01T18:00:00-04:00",
     "is_day": false,
     "temp_f": 71,
     "pop": 3,
@@ -172,28 +172,6 @@
  "hourly": {
   "updated": "2026-08-01T18:57:03+00:00",
   "hours": [
-   {
-    "t": "2026-08-01T19:00:00-04:00",
-    "temp_f": 83,
-    "feels_f": 85,
-    "pop": 2,
-    "humidity": 57,
-    "wind_mph": 7,
-    "wind_dir": "S",
-    "sky": 64,
-    "short": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-08-01T20:00:00-04:00",
-    "temp_f": 79,
-    "feels_f": 79,
-    "pop": 1,
-    "humidity": 64,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 82,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-08-01T21:00:00-04:00",
     "temp_f": 77,
@@ -567,6 +545,28 @@
     "wind_dir": "S",
     "sky": 88,
     "short": "Rain Showers Likely"
+   },
+   {
+    "t": "2026-08-03T07:00:00-04:00",
+    "temp_f": 68,
+    "feels_f": 68,
+    "pop": 72,
+    "humidity": 97,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 90,
+    "short": "Rain Showers Likely"
+   },
+   {
+    "t": "2026-08-03T08:00:00-04:00",
+    "temp_f": 70,
+    "feels_f": 70,
+    "pop": 69,
+    "humidity": 93,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 89,
+    "short": "Rain Showers Likely"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-01T18:47:00+00:00",
+  "issued": "2026-08-02T00:58:00+00:00",
   "key_messages": [
    "Showers and embedded thunderstorms will increase across the region Sunday into Monday. Locally heavy rainfall possible, especially in the St. Lawrence Valley.",
    "A chance of showers and thunderstorms persists over the second half of next week."
   ],
   "what_changed": "As of 241 PM EDT Saturday... Have increased the rainfall totals across the St. Lawrence Valley and portions of the Adirondacks to range between 1 to 1.5 inches, with locally higher amounts possible within any convective activity. An isolated flash flood threat across northern New York remains for late Sunday into early Monday with slow-moving showers and thunderstorms possible.",
-  "raw": "\n000\nFXUS61 KBTV 011847\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n247 PM EDT Sat Aug 1 2026\n\n.WHAT HAS CHANGED...\nAs of 241 PM EDT Saturday...\n\nHave increased the rainfall totals across the St. Lawrence Valley \nand portions of the Adirondacks to range between 1 to 1.5 \ninches, with locally higher amounts possible within any \nconvective activity. An isolated flash flood threat across \nnorthern New York remains for late Sunday into early Monday with\nslow-moving showers and thunderstorms possible.\n\n&&\n\n.KEY MESSAGES...\nAs of 241 PM EDT Saturday...\n\n1. Showers and embedded thunderstorms will increase across the \nregion Sunday into Monday. Locally heavy rainfall possible, \nespecially in the St. Lawrence Valley.\n\n2. A chance of showers and thunderstorms persists over the second \nhalf of next week.\n\n&&\n\n.DISCUSSION...\nAs of 241 PM EDT Saturday...\n\nKEY MESSAGE 1: A slow moving upper level trough with associated closed \nsurface low is currently centered across the Ohio Valley and will \ntrack to the east northeast today into tomorrow. A baroclinic zone \nis also set up across the Great Lakes and eastern Ontario bringing \nsome isolated shower chances today across the St. Lawrence Valley. \nAs this system tracks east, cloud cover will increase areawide into \ntonight with south to southwest channeled flow just above the \nsurface, which should help limit, or prevent altogether, the \ncoverage of any potential fog tonight. \n\nInto tomorrow, the system will approach the St. Lawrence Valley and \nthe North Country with shower chances increasing by midday Sunday. \nThermodynamic profiles denote some skinny SBCAPE between 500-\n1000J/kg which will allow for at least some isolated convection and \nthunderstorm activity. This activity will likely be confined to near \nthe St. Lawrence River and along US-11 in St. Lawrence County. \nModest to weak mid level flow between 20-30 knots with Pwats \napproaching 1.8-2\", and deep warm layer cloud depths, locally heavy \nrain within any convection will be possible. WPC has kept the St. \nLawrence Valley in a Slight (Risk level 2 out of 4) for a at least a \n15% chance of exceeding flash flood guidance. The axis of these \nshowers remains somewhat variable from run to run across the Hi Res \nCAMs. The NAM3 keeps much of the convective activity during the day \ntomorrow over the border in Ontario, whereas the HRRR rides the axis \nof instability over western St. Lawrence County. Where this \ndeformation boundary sets up will have a large impact on the total \nrainfall from this system. Right now have kept the convective \nactivity on the US side of the border with a more stable run to run \nconsistent HRRR solution. Should an area see repeated rounds of \nshowers, especially with antecedent rainfall, flash flooding cannot \nbe ruled out. However, the St. Lawrence Valley at the present time \nis not expected to see significant enough rainfall to produce \nflooding over the prevailing flatter terrain. \n\nTowards Sunday evening and Sunday night, the deformation boundary \nwill shift east into the Champlain Valley and Vermont by Monday \nmorning. There is good agreement that overnight Sunday should have \nthe better rainfall coverage and contain the bulk of the rainfall. A \nfew areas of brief 0.25-0.5 inch/hour rates will be possible across \nnorthern New York within the boundary as it shifts east towards \nVermont. Showers will slowly taper off by Monday afternoon across \neastern Vermont with fog development likely in the valleys of the \nregion with brief high pressure nudging in. Currently have increased \nrainfall totals across the St. Lawrence Valley, with new guidance. \nTotal rainfall for most of the region will be around 0.5 inches. \nLocally higher amounts between an inch to an inch an a half will be \npossible from the foothills of the Adirondacks into the St. Lawrence \nValley, especially under any convective activity. Tuesday will be \ndrier and calmer with temperatures in the upper 70s to low 80s and \nclearing skies.\n\nKEY MESSAGE 2: A slow moving to stationary front will be draped across our \nregion for the second half of next week bringing repeated rounds of \nshowers and thunderstorms.  While the showers will linger through \nmultiple days, the thermodynamic profiles don't look to support severe \npotential as we are seeing 250-500 J/kg of CAPE each afternoon with \nweak shear. These values will support air mass/popcorn thunderstorms \nwith a few rumbles of thunder and short lived localized heavy rain. \nConsistent with a stationary front, temperatures will be remarkably \nconsistent over the period. Daytime highs in the warmest valleys will \nbe in the mid-80s daily with overnight lows falling into the mid-60s. \nThe stationary front will finally move off at the end of next week as a \nlow pressure will move in from the southeastern US bring more \norganization to the thunderstorms and the possibility of stronger \nconvection.\n\n&&\n\n.AVIATION /18Z SATURDAY THROUGH THURSDAY/...\nThrough 18Z Sunday...VFR conditions will persist through the day\ntoday. A scattered to broken deck of fair weather Cu will continue\nto develop into the afternoon hours with a cirrus deck above. Last\nnight saw the development of fog in many of our favored locations,\nand the low level moisture remains available. However, the low\npressure to our west will bring increased winds and clouds overnight\ninhibiting pure radiational effects. For now, I'm including some\nshallow fog development at MPV and SLK near sunrise but don't\nanticipate widespread formation like we had last night.\n\nOutlook...\n\nSunday Night: Mainly VFR, with local MVFR possible. Likely SHRA,\nSlight chance TSRA.\nMonday: Mainly MVFR, with local IFR possible. Definite SHRA,\nSlight chance TSRA.\nMonday Night: Mainly VFR, with local MVFR possible. Slight chance\nSHRA.\nTuesday: VFR. Slight chance SHRA.\nTuesday Night: VFR. Slight chance SHRA, Slight chance TSRA.\nWednesday: VFR. Chance SHRA, Chance TSRA.\nWednesday Night: VFR. Chance SHRA, Slight chance TSRA.\nThursday: Mainly VFR, with areas MVFR possible. Chance SHRA,\nSlight chance TSRA.\n\n&&\n\n.CLIMATE...\nPossible heavy rainfall tomorrow into Monday could approach\ndaily rainfall record levels. Below are the current daily\nprecipitation total records that may be broken at our area\nclimate sites.\n\nRecord Precipitation:\n\nAugust 2:\nKMSS: 1.31/2020\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Langbauer/Danzig\nAVIATION...Langbauer\nCLIMATE...NWS BTV\n"
+  "raw": "\n000\nFXUS61 KBTV 020058\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n858 PM EDT Sat Aug 1 2026\n\n.WHAT HAS CHANGED...\nAs of 241 PM EDT Saturday...\n\nHave increased the rainfall totals across the St. Lawrence Valley \nand portions of the Adirondacks to range between 1 to 1.5 \ninches, with locally higher amounts possible within any \nconvective activity. An isolated flash flood threat across \nnorthern New York remains for late Sunday into early Monday with\nslow-moving showers and thunderstorms possible.\n\n&&\n\n.KEY MESSAGES...\nAs of 241 PM EDT Saturday...\n\n1. Showers and embedded thunderstorms will increase across the \nregion Sunday into Monday. Locally heavy rainfall possible, \nespecially in the St. Lawrence Valley.\n\n2. A chance of showers and thunderstorms persists over the second \nhalf of next week.\n\n&&\n\n.DISCUSSION...\nAs of 241 PM EDT Saturday...\n\nKEY MESSAGE 1: A slow moving upper level trough with associated closed \nsurface low is currently centered across the Ohio Valley and will \ntrack to the east northeast today into tomorrow. A baroclinic zone \nis also set up across the Great Lakes and eastern Ontario bringing \nsome isolated shower chances today across the St. Lawrence Valley. \nAs this system tracks east, cloud cover will increase areawide into \ntonight with south to southwest channeled flow just above the \nsurface, which should help limit, or prevent altogether, the \ncoverage of any potential fog tonight. \n\nInto tomorrow, the system will approach the St. Lawrence Valley and \nthe North Country with shower chances increasing by midday Sunday. \nThermodynamic profiles denote some skinny SBCAPE between 500-\n1000J/kg which will allow for at least some isolated convection and \nthunderstorm activity. This activity will likely be confined to near \nthe St. Lawrence River and along US-11 in St. Lawrence County. \nModest to weak mid level flow between 20-30 knots with Pwats \napproaching 1.8-2\", and deep warm layer cloud depths, locally heavy \nrain within any convection will be possible. WPC has kept the St. \nLawrence Valley in a Slight (Risk level 2 out of 4) for a at least a \n15% chance of exceeding flash flood guidance. The axis of these \nshowers remains somewhat variable from run to run across the Hi Res \nCAMs. The NAM3 keeps much of the convective activity during the day \ntomorrow over the border in Ontario, whereas the HRRR rides the axis \nof instability over western St. Lawrence County. Where this \ndeformation boundary sets up will have a large impact on the total \nrainfall from this system. Right now have kept the convective \nactivity on the US side of the border with a more stable run to run \nconsistent HRRR solution. Should an area see repeated rounds of \nshowers, especially with antecedent rainfall, flash flooding cannot \nbe ruled out. However, the St. Lawrence Valley at the present time \nis not expected to see significant enough rainfall to produce \nflooding over the prevailing flatter terrain. \n\nTowards Sunday evening and Sunday night, the deformation boundary \nwill shift east into the Champlain Valley and Vermont by Monday \nmorning. There is good agreement that overnight Sunday should have \nthe better rainfall coverage and contain the bulk of the rainfall. A \nfew areas of brief 0.25-0.5 inch/hour rates will be possible across \nnorthern New York within the boundary as it shifts east towards \nVermont. Showers will slowly taper off by Monday afternoon across \neastern Vermont with fog development likely in the valleys of the \nregion with brief high pressure nudging in. Currently have increased \nrainfall totals across the St. Lawrence Valley, with new guidance. \nTotal rainfall for most of the region will be around 0.5 inches. \nLocally higher amounts between an inch to an inch an a half will be \npossible from the foothills of the Adirondacks into the St. Lawrence \nValley, especially under any convective activity. Tuesday will be \ndrier and calmer with temperatures in the upper 70s to low 80s and \nclearing skies.\n\nKEY MESSAGE 2: A slow moving to stationary front will be draped across our \nregion for the second half of next week bringing repeated rounds of \nshowers and thunderstorms.  While the showers will linger through \nmultiple days, the thermodynamic profiles don't look to support severe \npotential as we are seeing 250-500 J/kg of CAPE each afternoon with \nweak shear. These values will support air mass/popcorn thunderstorms \nwith a few rumbles of thunder and short lived localized heavy rain. \nConsistent with a stationary front, temperatures will be remarkably \nconsistent over the period. Daytime highs in the warmest valleys will \nbe in the mid-80s daily with overnight lows falling into the mid-60s. \nThe stationary front will finally move off at the end of next week as a \nlow pressure will move in from the southeastern US bring more \norganization to the thunderstorms and the possibility of stronger \nconvection.\n\n&&\n\n.AVIATION /00Z SUNDAY THROUGH THURSDAY/...\nThrough 00Z Monday...Increasing cloud cover and difficulty\nmeeting crossover temperatures will limit fog chances tonight \nwith some low potential towards daybreak at MPV/SLK. Some \nsoutherly breezes will pick up after 14Z Sunday, but gusts \nfavored to be less than 20kts. Rain chances increase west to \neast, but mainly stay in northern New York 18-00Z; MSS could see\nMVFR CIG/VIS after 18Z with potential for periods of moderate \nto heavy showers and a few thunderstorms. \n\nOutlook...\n\nSunday Night: Mainly VFR, with local MVFR possible. Likely SHRA,\nIsolated TSRA.\nMonday: Mainly MVFR, with local IFR possible. Likely SHRA.\nMonday Night: VFR. Slight chance SHRA.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. Chance SHRA, Slight chance TSRA.\nWednesday Night: VFR. Chance SHRA, Slight chance TSRA.\nThursday: Mainly VFR, with areas MVFR possible. Chance SHRA,\nChance TSRA.\n\n&&\n\n.CLIMATE...\nPossible heavy rainfall tomorrow into Monday could approach\ndaily rainfall record levels. Below are the current daily\nprecipitation total records that may be broken at our area\nclimate sites.\n\nRecord Precipitation:\n\nAugust 2:\nKMSS: 1.31/2020\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Langbauer/Danzig\nAVIATION...Boyd\nCLIMATE...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-08-01T18:30:00+00:00",
@@ -852,9 +852,9 @@
  },
  "lake_gage": {
   "water_temp_f": 77,
-  "water_temp_at": "2026-08-01T19:00:00.000-04:00",
-  "level_ft": 95.46,
-  "level_at": "2026-08-01T19:00:00.000-04:00",
+  "water_temp_at": "2026-08-01T21:00:00.000-04:00",
+  "level_ft": 95.43,
+  "level_at": "2026-08-01T21:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -862,7 +862,7 @@
   "aqi": 36,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/01/26 19:00",
+  "observed": "08/01/26 21:00",
   "discussion": "Expect generally good air quality across Vermont on Sunday, August 2nd."
  },
  "sun": {
@@ -878,7 +878,7 @@
     "date": "2026-08-01",
     "high_f": {
      "GFS": 86,
-     "Euro": 82,
+     "Euro": 83,
      "ICON": 85
     },
     "pop_max": {
@@ -891,23 +891,23 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    },
    {
     "date": "2026-08-02",
     "high_f": {
-     "GFS": 85,
-     "Euro": 82,
+     "GFS": 84,
+     "Euro": 79,
      "ICON": 80
     },
     "pop_max": {
-     "GFS": 29,
+     "GFS": 28,
      "Euro": 67,
      "ICON": 65
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.02,
+     "Euro": 0.11,
      "ICON": 0.05
     },
     "high_spread_f": 5
@@ -926,7 +926,7 @@
     },
     "precip_in": {
      "GFS": 0.25,
-     "Euro": 0.54,
+     "Euro": 0.5,
      "ICON": 0.34
     },
     "high_spread_f": 5
