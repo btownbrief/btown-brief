@@ -88,7 +88,9 @@
       }
     }
   }).catch(function () {
-    document.getElementById('hobbies-vermont').innerHTML =
-      '<p class="page-empty">Could not load the list. Run a local server (<code>python3 -m http.server 8000</code>) if you’re previewing from disk.</p>';
+    var msg = '<p class="page-empty">The hobby list isn’t loading right now — try a refresh in a minute.</p>';
+    document.getElementById('hobbies-vermont').innerHTML = msg;
+    document.getElementById('hobbies-anywhere').innerHTML = msg;
+    document.getElementById('hobbies-count').textContent = 'The list is unavailable right now.';
   });
 })();

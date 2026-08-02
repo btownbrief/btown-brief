@@ -1,5 +1,5 @@
 {
-  "_comment": "Vermont Hobbies page. To add a hobby: copy any entry, append to the list — the page renders the two tiers automatically. tier: 'vermont' = only-really-works-here (top section), 'anywhere' = do-anywhere hobby with local hooks. Link types: shop | club | spot | guide (guide = internal page, relative URL). Every shop/club must be a real, currently operating Burlington-area business — verify before adding. months: calendar months (1-12) the hobby is in season — in-season hobbies sort to the top of their tier with a badge; all 12 months = year-round (no badge).",
+  "_comment": "Vermont Hobbies page. To add a hobby: copy any entry, append to the list — the page renders the two tiers automatically. tier: 'vermont' = only-really-works-here (top section), 'anywhere' = do-anywhere hobby with local hooks. Link types: shop | club | spot | guide (guide = internal page, relative URL). Every shop/club must be a real, currently operating Vermont (Burlington-area preferred; town named when it isn't) business — verify before adding. months: calendar months (1-12) the hobby is in season — in-season hobbies sort to the top of their tier with a badge; all 12 months = year-round (no badge).",
   "hobbies": [
     {
       "id": "skiing",
@@ -50,7 +50,7 @@
         8
       ],
       "what": "Between the lake beaches and the river holes, half of summer here is just deciding which water to get in after work.",
-      "start": "Check the swim statuses first (the lake occasionally says no), then do the classic: Red Rocks after work, off the ledges. Bolton Potholes is the river-hole field trip when you're ready.",
+      "start": "Check the swim statuses first (the lake occasionally says no), then do the classic: the roped swim beach at Red Rocks after work. The cliff area there is closed to jumping — the park is serious about it. Bolton Potholes is the river-hole field trip when you're ready.",
       "links": [
         {
           "type": "guide",
@@ -66,6 +66,11 @@
           "type": "spot",
           "name": "Bolton Potholes",
           "url": "https://maps.google.com/?q=Bolton+Potholes+Bolton+VT"
+        },
+        {
+          "type": "guide",
+          "name": "Red Rocks water quality (South Burlington)",
+          "url": "https://southburlingtonvt.gov/542/Red-Rocks-Park-Water-Quality"
         }
       ]
     },
@@ -136,7 +141,7 @@
         3
       ],
       "what": "When Malletts Bay freezes, a small village of shanties appears on it — and the people out there are having a much better time than it looks from shore.",
-      "start": "Fish & Wildlife runs free intro clinics every winter with all the gear provided, and the last Saturday of January is Free Ice Fishing Day, no license needed. The Tackle Box in Colchester has the bait and the straight answer on ice conditions.",
+      "start": "Fish & Wildlife runs free intro clinics every winter with all the gear provided, and the last Saturday of January is Free Ice Fishing Day, no license needed. Bibens Ace in Colchester is on the state's bait dealer list when you're ready to fish for real.",
       "links": [
         {
           "type": "club",
@@ -145,8 +150,8 @@
         },
         {
           "type": "shop",
-          "name": "The Tackle Box",
-          "url": "https://www.tackbox.com"
+          "name": "Bibens Ace (Colchester bait dealer)",
+          "url": "https://www.bibens.com"
         },
         {
           "type": "spot",
@@ -249,8 +254,8 @@
         },
         {
           "type": "shop",
-          "name": "Umiak (North Beach rentals)",
-          "url": "https://www.umiak.com"
+          "name": "PaddleSurf Champlain (North Beach rentals)",
+          "url": "https://paddlesurfchamplain.com"
         },
         {
           "type": "spot",
@@ -644,12 +649,12 @@
         3
       ],
       "what": "You live in the state with the most breweries per capita — brewing your own is practically a civic duty, and the continuing education is a walk down Pine Street.",
-      "start": "1st Republic in Essex Junction is the local homebrew shop — a brewery that also sells the kit, so the advice comes from people who make beer for a living.",
+      "start": "Start with a one-gallon kit ordered online, then find the local brewers: Vermont's homebrew clubs trade yeast, recipes, and honest feedback, and the annual homebrew competitions are where you'll meet all of them.",
       "links": [
         {
-          "type": "shop",
-          "name": "1st Republic Homebrew",
-          "url": "https://www.1strepublic-homebrew.com"
+          "type": "spot",
+          "name": "Pine Street breweries",
+          "url": "https://maps.google.com/?q=breweries+Pine+Street+Burlington+VT"
         }
       ]
     },
