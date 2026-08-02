@@ -1,0 +1,89 @@
+name: Openings & Closings radar
+
+# Weekly: scan the site's own feeds (ticker, chatter, change log) plus the
+# archive repo's openClose-tagged stories for NEW opening/closing candidates,
+# and surface them in a GitHub issue (GitHub emails the repo owner — that's
+# the notification; same pattern as the photo queue). A committed seen-file
+# keeps repeat candidates from re-pinging every week.
+#
+# The radar only SUGGESTS. Entries reach data/openings.json by hand, after
+# the story checks out — this workflow never touches the page's data.
+
+on:
+  schedule:
+    - cron: '30 11 * * 1'   # Mondays 11:30 UTC (~6:30/7:30 AM Burlington)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch archive stories (openClose tags)
+        run: |
+          curl -fsS -o /tmp/archive-stories.json \
+            https://raw.githubusercontent.com/btownbrief/archive/main/data/stories.json \
+            || echo "archive fetch failed — scanning local feeds only"
+
+      - name: Scan for new candidates
+        env:
+          BTB_ARCHIVE_STORIES: /tmp/archive-stories.json
+        run: |
+          python3 scripts/suggest_openings.py --new-only --mark-seen \
+            || echo "scanner warned (partial feeds) — continuing"
+          NEW=$(grep -c '^- \[ \]' data/openings-suggestions.md || true)
+          echo "NEW_COUNT=$NEW" >> "$GITHUB_ENV"
+          echo "New candidates: $NEW"
+
+      - name: Surface them in the radar issue
+        if: env.NEW_COUNT != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh label create openings-radar --color C2703D \
+            --description "New opening/closing candidates to curate" 2>/dev/null || true
+          BODY_FILE=/tmp/radar-body.md
+          {
+            echo "New opening/closing candidates from this week's feeds."
+            echo "Verify each story, then add keepers to \`data/openings.json\`"
+            echo "by hand (see the file's \`note\` for the entry shape) — the"
+            echo "page only ever shows what's curated."
+            echo
+            grep '^- \[ \]' data/openings-suggestions.md
+            echo
+            echo "_Close this issue once the batch is curated; next week's new_"
+            echo "_candidates will open it again._"
+          } > "$BODY_FILE"
+          ISSUE=$(gh issue list --label openings-radar --state open \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$ISSUE" ]; then
+            gh issue comment "$ISSUE" --body-file "$BODY_FILE"
+          else
+            gh issue create --label openings-radar \
+              --title "🚪 $NEW_COUNT new opening/closing candidate(s) to curate" \
+              --body-file "$BODY_FILE"
+          fi
+
+      - name: Remember what's been surfaced
+        run: |
+          if git diff --quiet data/openings-seen.json 2>/dev/null \
+             && git ls-files --error-unmatch data/openings-seen.json >/dev/null 2>&1; then
+            echo "Seen file unchanged."
+            exit 0
+          fi
+          if [ ! -f data/openings-seen.json ]; then
+            echo "No seen file this run."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/openings-seen.json
+          git commit -m "Openings radar: record surfaced candidates" || exit 0
+          git push
