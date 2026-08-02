@@ -44,11 +44,30 @@
 .swim-count .yes { color: var(--good); font-weight: 500; }
 .swim-count .no { color: var(--hot); font-weight: 500; }
 
+/* Anchor jumps glide instead of teleporting — unless the OS asked for calm. */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* The lede: prose on the left, the drawn shore on the right. One column on
+   phones, map after the words — you need the pitch before the geography. */
+.lake-lede {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.6rem clamp(1.6rem, 4vw, 3rem);
+  margin-top: 2.2rem;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .lake-lede { grid-template-columns: 1fr; }
+}
+
 /* Intro prose — the only long-form text on the page, so it gets width limits
    and the serif stays in the headings where it belongs. */
 .lake-intro {
   max-width: 62ch;
-  margin: 2.2rem 0 0;
+  margin: 0;
 }
 .lake-intro p {
   margin: 0 0 0.85rem;
@@ -57,6 +76,73 @@
   color: var(--ink-soft);
 }
 .lake-intro strong { color: var(--ink); font-weight: 600; }
+
+/* ============================================================
+   THE SHORE, DRAWN — schematic SVG map in the sky's palette.
+   The water gradient reuses the hero's --water variables, so the
+   map keeps the same hour as the page: grey noon, gold evening.
+============================================================ */
+.shore-map-panel {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  padding: 0.9rem 0.9rem 0.7rem;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .shore-map-panel { background: rgba(18, 22, 26, 0.86); }
+}
+.shore-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  margin: 0 auto;
+}
+.shore-map .map-land {
+  fill: rgba(6, 8, 10, 0.55);
+  stroke: var(--water-lit);
+  stroke-width: 1.5;
+  transition: stroke 1.6s ease;
+}
+.shore-map .map-causeway {
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.shore-map text {
+  font-family: var(--ui);
+  font-size: 11.5px;
+  font-weight: 500;
+  fill: var(--ink-soft);
+}
+.shore-map .map-left { text-anchor: end; }
+.shore-map .map-faint {
+  fill: var(--ink-faint);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+.shore-map .map-lake-name { font-size: 9px; opacity: 0.75; }
+.shore-map circle {
+  fill: var(--accent);
+  stroke: rgba(6, 8, 10, 0.7);
+  stroke-width: 1.5;
+}
+.shore-map .map-minor { fill: var(--ink-faint); }
+.shore-map a { cursor: pointer; }
+.shore-map a:hover text, .shore-map a:focus-visible text { fill: var(--accent); }
+.shore-map a:hover circle, .shore-map a:focus-visible circle { fill: var(--ink); }
+.shore-map a:focus-visible { outline: none; }
+.map-note {
+  margin: 0.55rem 0 0;
+  text-align: center;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
 
 /* ============================================================
    THE SPOTS — one dossier per beach

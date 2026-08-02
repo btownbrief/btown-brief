@@ -168,7 +168,17 @@
   function liveStatuses() {
     return getJSON('data/weather/beaches.json').then(function (data) {
       var beaches = data.beaches || [];
-      if (!beaches.length) return;
+      var counter = $('swim-count');
+
+      /* The tracker runs Memorial Day–Labor Day. If the file has gone quiet
+         for a week, the season is over (or the scraper is) — either way,
+         last summer's green chips must not read as today's truth. */
+      var age = data.updated ? Date.now() - Date.parse(data.updated) : Infinity;
+      if (!beaches.length || !isFinite(age) || age > 7 * 86400000) {
+        if (counter) counter.textContent =
+          'No fresh test results right now — the city tests Memorial Day through Labor Day. The lake is still there.';
+        return;
+      }
 
       beaches.forEach(function (b) {
         var slots = document.querySelectorAll('[data-swim="' + b.name + '"]');
@@ -176,7 +186,7 @@
       });
 
       var green = beaches.filter(function (b) { return b.status === 'green'; }).length;
-      var el = $('swim-count');
+      var el = counter;
       if (el) {
         if (green === beaches.length) {
           el.innerHTML = '<span class="yes">All ' + green + ' tested beaches are open</span> for swimming today.';
@@ -284,7 +294,10 @@
       })
       .catch(function () { paintSky({}); });
 
-    liveStatuses().catch(function () {});
+    liveStatuses().catch(function () {
+      var el = $('swim-count');
+      if (el) el.textContent = 'Couldn\u2019t load live statuses \u2014 the city\u2019s tracker (linked below) has the word.';
+    });
     initHunt();
     motion();
   }

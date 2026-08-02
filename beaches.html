@@ -87,11 +87,61 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <p class="swim-count" id="swim-count">Checking today's beach statuses…</p>
 
+  <div class="lake-lede">
   <div class="lake-intro">
     <p>Lake Champlain is <strong>120 miles long</strong>, up to <strong>400 feet deep</strong> at its deepest point between Charlotte and Essex, and by most counts the <strong>sixth-largest natural freshwater lake in the country</strong> — and Burlington gets to keep it as a western horizon. This page is the shore, spot by spot, south to north.</p>
     <p>The city runs <strong>five official swim beaches</strong> and tests every one of them: E.&nbsp;coli samples on Mondays and Thursdays with results by 11&nbsp;AM Tuesday and Friday, cyanobacteria checks daily in season. The open/closed chips on this page are live from the <a href="https://www.burlingtonvt.gov/1219/Beach-Closure-Tracker" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">city's tracker</a> — the same data as our <a href="weather.html" style="color:var(--accent);text-decoration:none">weather page</a>, where the full swim board lives.</p>
     <p>And because just listing beaches is no fun: every spot below carries a few <strong>challenges</strong> — real, findable things. Tick them off as you go; found something good along the way? <a href="photos.html#submit" style="color:var(--accent);text-decoration:none">Send the photo</a> and it may run in the Brief.</p>
     <p class="hunt-tally" id="hunt-tally"></p>
+  </div>
+
+  <!-- The shore, drawn — same palette as the sky above, so the map wears
+       the same hour as the page. Schematic on purpose: order and shape,
+       not distances. Every dot jumps to its dossier. -->
+  <figure class="shore-map-panel">
+    <svg class="shore-map" viewBox="0 0 320 440" role="img" aria-label="Schematic map of the Burlington shoreline, north at the top: the Causeway, Leddy, Rock Point, North Beach, Texaco, the Waterfront, Oakledge, Blanchard and Red Rocks, in order along Lake Champlain">
+      <defs>
+        <linearGradient id="mapwater" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="var(--water)"/>
+          <stop offset="1" stop-color="var(--water-lit)"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="320" height="440" fill="url(#mapwater)" opacity="0.45" rx="10"/>
+      <path class="map-land"
+        d="M150,0
+           C146,40 142,70 140,90
+           C138,105 100,115 96,127
+           C94,138 130,140 135,152
+           C130,170 126,175 127,188
+           C125,210 126,225 131,247
+           C133,268 130,285 119,315
+           C122,335 127,340 129,350
+           C132,375 138,390 133,404
+           C130,414 140,418 148,424
+           C160,430 175,436 185,440
+           L320,440 L320,0 Z"/>
+      <text class="map-faint" x="298" y="22" text-anchor="middle">N ↑</text>
+      <text class="map-faint map-lake-name" x="24" y="250" transform="rotate(-90 24 250)">L A K E&#160;&#160;C H A M P L A I N</text>
+      <text class="map-faint" x="205" y="251">downtown</text>
+
+      <!-- The causeway runs off the top of the shore; the gap is the Cut. -->
+      <a href="#keep-going">
+        <path class="map-causeway" d="M139,44 C112,34 82,26 58,19"/>
+        <path class="map-causeway" d="M44,15 L31,11"/>
+        <text x="66" y="40">Causeway &amp; bike ferry</text>
+      </a>
+
+      <a href="#leddy"><circle cx="140" cy="90" r="5"/><text x="151" y="94">Leddy</text></a>
+      <a href="#keep-going"><circle class="map-minor" cx="96" cy="127" r="3.5"/><text class="map-left" x="86" y="131">Rock Point</text></a>
+      <a href="#north-beach"><circle cx="135" cy="152" r="5"/><text x="146" y="156">North Beach</text></a>
+      <a href="#texaco"><circle cx="127" cy="188" r="5"/><text x="138" y="192">Texaco</text></a>
+      <a href="#waterfront"><circle cx="131" cy="247" r="5"/><text x="142" y="234">Waterfront</text></a>
+      <a href="#oakledge"><circle cx="119" cy="315" r="5"/><text x="130" y="319">Oakledge</text></a>
+      <a href="#blanchard"><circle cx="129" cy="350" r="5"/><text x="140" y="354">Blanchard</text></a>
+      <a href="#red-rocks"><circle cx="133" cy="404" r="5"/><text x="144" y="408">Red Rocks</text></a>
+    </svg>
+    <figcaption class="map-note">Not to scale — just the shore in order, north at the top. Tap a dot.</figcaption>
+  </figure>
   </div>
 
   <!-- ============================================================
@@ -114,8 +164,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
           <li>South Burlington tests the water Mondays and Wednesdays in season — it's not on Burlington's tracker, so no live chip here.</li>
         </ul>
         <h3>Getting there</h3>
-        <div class="go-row"><span class="go-mode">Bus</span><span><strong>#6 Shelburne Road</strong> to Shelburne Rd at Farrell St, then Farrell St → Queen City Park Rd → Central Ave, about a 15-minute walk. Sundays the <strong>#756 South End Circulator</strong> makes the same stop.</span></div>
+        <div class="go-row"><span class="go-mode">Bus</span><span><strong><a href="https://ridegmt.com/schedules/shelburneroad/" target="_blank" rel="noopener">#6 Shelburne Road</a></strong> to Shelburne Rd at Farrell St, then Farrell St → Queen City Park Rd → Central Ave, about a 15-minute walk. Sundays the <strong>#756 South End Circulator</strong> makes the same stop.</span></div>
         <div class="go-row"><span class="go-mode">Bike</span><span>Not on the Greenway — ride Queen City Park Rd and Central Ave on-street from the Oakledge end.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=Red+Rocks+Park%2C+South+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
         <h3>Best time</h3>
         <p class="best-time">Morning for the trails before the lot fills; a hot afternoon for the beach.</p>
       </div>
@@ -148,8 +199,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
           <li>The Earth Clock: fourteen granite stones, some over 20 tons, raised in 2006–07 by the nonprofit Circles for Peace.</li>
         </ul>
         <h3>Getting there</h3>
-        <div class="go-row"><span class="go-mode">Bus</span><span>Same as Oakledge — <strong>#5 Pine Street</strong> to Pine St near Flynn Ave, then walk Flynn Ave west to the park, about 10–15 minutes. Sundays: <strong>#756</strong>.</span></div>
+        <div class="go-row"><span class="go-mode">Bus</span><span>Same as Oakledge — <strong><a href="https://ridegmt.com/schedules/pinestreet/" target="_blank" rel="noopener">#5 Pine Street</a></strong> to Pine St near Flynn Ave, then walk Flynn Ave west to the park, about 10–15 minutes. Sundays: <strong>#756</strong>.</span></div>
         <div class="go-row"><span class="go-mode">Bike</span><span>On the Greenway — the Earth Clock sits right beside the path at the park's south side.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=Oakledge+Park%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
         <h3>Best time</h3>
         <p class="best-time">Golden hour. The Earth Clock was placed with sunset in mind, and the beach empties before the light gets good.</p>
       </div>
@@ -184,8 +236,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
           <li>Southern terminus of the 8-mile Burlington Greenway.</li>
         </ul>
         <h3>Getting there</h3>
-        <div class="go-row"><span class="go-mode">Bus</span><span><strong>#5 Pine Street</strong> to Pine St near Flynn Ave, then walk Flynn Ave west to the lake, about 10–15 minutes. Sundays: <strong>#756 South End Circulator</strong>.</span></div>
+        <div class="go-row"><span class="go-mode">Bus</span><span><strong><a href="https://ridegmt.com/schedules/pinestreet/" target="_blank" rel="noopener">#5 Pine Street</a></strong> to Pine St near Flynn Ave, then walk Flynn Ave west to the lake, about 10–15 minutes. Sundays: <strong>#756 South End Circulator</strong>.</span></div>
         <div class="go-row"><span class="go-mode">Bike</span><span>The Greenway starts (or ends) here — Waterfront Park is an easy, flat 15-minute ride north.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=Oakledge+Park%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
         <h3>Best time</h3>
         <p class="best-time">Sunset at the Cove — the official page calls it a quiet-sunset spot, and it's right. Weekday afternoons for the beach itself.</p>
       </div>
@@ -220,6 +273,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
         <h3>Getting there</h3>
         <div class="go-row"><span class="go-mode">Bus</span><span>The easiest of all — nearly every GMT route ends at the <strong>Downtown Transit Center</strong> on St. Paul at Cherry; from there it's three or four blocks down College St to the water.</span></div>
         <div class="go-row"><span class="go-mode">Walk</span><span>Ten minutes downhill from Church Street. The hill on the way back is the price.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=Waterfront+Park%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
         <h3>Best time</h3>
         <p class="best-time">Golden hour, obviously — but a quiet weekday sunrise here is the same view with none of the crowd.</p>
       </div>
@@ -254,7 +308,8 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
         </ul>
         <h3>Getting there</h3>
         <div class="go-row"><span class="go-mode">Bike</span><span>It's a path spot: ride the <strong>Greenway north from Waterfront Park</strong> past the Moran Frame and the Urban Reserve, or south from North Beach.</span></div>
-        <div class="go-row"><span class="go-mode">Bus</span><span>No stop of its own — <strong>#7 North Avenue</strong> to the Burlington High School stop on Institute Rd, walk down to North Beach, then follow the path south. Every GMT bus has a free two-bike front rack, which is the smoothest way to do this.</span></div>
+        <div class="go-row"><span class="go-mode">Bus</span><span>No stop of its own — <strong><a href="https://ridegmt.com/schedules/northavenue/" target="_blank" rel="noopener">#7 North Avenue</a></strong> to the Burlington High School stop on Institute Rd, walk down to North Beach, then follow the path south. Every GMT bus has a free two-bike front rack, which is the smoothest way to do this.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=44.4889%2C-73.2313" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
         <h3>Best time</h3>
         <p class="best-time">Any warm afternoon. The dogs keep no schedule.</p>
       </div>
@@ -288,8 +343,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
           <li>North Beach Campground: 137 sites in the pines, open May 15–October 15 — camping inside city limits.</li>
         </ul>
         <h3>Getting there</h3>
-        <div class="go-row"><span class="go-mode">Bus</span><span><strong>#7 North Avenue</strong>, every half hour or so Monday–Saturday, to the Burlington High School stop — then walk Institute Rd down to the water, about 10 minutes. Sundays the <strong>#778 North End Circulator</strong> covers North Ave.</span></div>
+        <div class="go-row"><span class="go-mode">Bus</span><span><strong><a href="https://ridegmt.com/schedules/northavenue/" target="_blank" rel="noopener">#7 North Avenue</a></strong>, every half hour or so Monday–Saturday, to the Burlington High School stop — then walk Institute Rd down to the water, about 10 minutes. Sundays the <strong>#778 North End Circulator</strong> covers North Ave.</span></div>
         <div class="go-row"><span class="go-mode">Bike</span><span>Right on the Greenway — about 10 minutes north of Waterfront Park.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=North+Beach+Park%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
         <h3>Best time</h3>
         <p class="best-time">Early. On hot weekends the lot fills by 11 AM; a weekday morning swim here, with the guards on and the lake flat, is the full postcard.</p>
       </div>
@@ -324,8 +380,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
           <li>Leddy Beach Bites — the summer Wednesday-evening food-truck series — is the neighborhood's weekly ritual.</li>
         </ul>
         <h3>Getting there</h3>
-        <div class="go-row"><span class="go-mode">Bus</span><span><strong>#7 North Avenue</strong> to North Ave near Leddy Park Rd, then a short walk in — under 10 minutes. Sundays: <strong>#778 North End Circulator</strong>.</span></div>
+        <div class="go-row"><span class="go-mode">Bus</span><span><strong><a href="https://ridegmt.com/schedules/northavenue/" target="_blank" rel="noopener">#7 North Avenue</a></strong> to North Ave near Leddy Park Rd, then a short walk in — under 10 minutes. Sundays: <strong>#778 North End Circulator</strong>.</span></div>
         <div class="go-row"><span class="go-mode">Bike</span><span>The Greenway runs right through Leddy Park — about 20 minutes north of the Waterfront.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=216+Leddy+Park+Rd%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
         <h3>Best time</h3>
         <p class="best-time">Late afternoon into evening — and a summer Wednesday if you want the food trucks with your swim.</p>
       </div>
