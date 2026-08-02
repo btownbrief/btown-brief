@@ -199,7 +199,9 @@ def parse_pay(text):
     def classify(lo, hi, context):
         hourly_ctx = any(w in context for w in ("hour", "/hr", "hr.", "hourly"))
         annual_ctx = any(w in context for w in ("year", "/yr", "annual", "salary"))
-        if hi < 250 and (hourly_ctx or not annual_ctx):
+        # Sub-250 figures count only with explicit hourly context — an
+        # unlabeled "$50" is a guess, and this site doesn't guess pay.
+        if hi < 250 and hourly_ctx:
             got = (lo, hi)  # dollars/hour
         elif hi >= 1000:
             got = (lo / FULL_TIME_HOURS, hi / FULL_TIME_HOURS)  # dollars/year
@@ -211,7 +213,7 @@ def parse_pay(text):
         return got
 
     def fee_nearby(start, end):
-        near = text[max(0, start - 12): end + 10].lower()
+        near = text[max(0, start - 20): end + 30].lower()
         return any(w in near for w in FEE_WORDS)
 
     # Collect candidates and prefer: ranges over single figures, then amounts
@@ -324,8 +326,8 @@ def job_tags(source, title, pay_lo, employment_type=""):
     """Derive only the documented filter tags from listing metadata."""
     tags = []
     combined = f"{title} {employment_type}"
-    if NO_DEGREE.search(title):
-        tags.append("no-degree")
+    # no-degree was inferred from title keywords alone — a guess about
+    # requirements, removed until real qualification data exists.
     if pay_lo is not None and pay_lo >= 25:
         tags.append("pay25")
     if re.search(r"\bweekend\b", combined, re.I):
@@ -336,7 +338,7 @@ def job_tags(source, title, pay_lo, employment_type=""):
 
 
 def make_job(source, title, employer, posted, url, pay=None, employment_type="",
-             pay_text=""):
+             pay_text="", location=None):
     """pay is the source's own display string; pay_text is throwaway text
     (a description or salary line) searched for a figure and never stored."""
     title = clean_text(title)
@@ -344,7 +346,7 @@ def make_job(source, title, employer, posted, url, pay=None, employment_type="",
     url = urllib.parse.urldefrag(url)[0]
     pay = clean_text(pay) if pay else None
     lo, hi, raw = parse_pay(pay or pay_text or "")
-    return {
+    job = {
         "id": stable_id(source, url),
         "title": title,
         "employer": employer,
@@ -356,6 +358,9 @@ def make_job(source, title, employer, posted, url, pay=None, employment_type="",
         "cat": categorize(source, title),
         "tags": job_tags(source, title, lo, employment_type),
     }
+    if location:
+        job["location"] = clean_text(location)
+    return job
 
 
 # ---------------------------------------------------------------------------
@@ -697,10 +702,19 @@ def fetch_howard_center(_previous):
             if not (posted and title and opp_id):
                 continue
             brief = clean_text(item.get("BriefDescription") or "")
+            # Howard Center operates statewide (Rutland included); this is a
+            # Burlington-area board, so filter by the posting's own city.
+            cities = [(((loc.get("Address") or {}).get("City")) or "")
+                      for loc in (item.get("Locations") or [])]
+            cities = [c for c in cities if c]
+            local = {"burlington", "south burlington", "winooski", "essex",
+                     "essex junction", "colchester", "williston", "shelburne"}
+            if cities and not any(c.lower() in local for c in cities):
+                continue
             jobs.append(make_job(
                 "Howard Center", title, "Howard Center", posted,
                 f"{base}/OpportunityDetail?opportunityId={opp_id}",
-                pay_text=brief))
+                pay_text=brief, location=", ".join(cities[:1]) or None))
         skip += len(opportunities)
         if len(opportunities) < 50 or skip >= data.get("totalCount", 0):
             break
@@ -848,6 +862,21 @@ def load_previous():
         return []
 
 
+def load_manual_jobs():
+    """Rows Stephen adds by hand (data/jobs-manual.json) survive every
+    refresh verbatim — the emailed-listing path the page advertises."""
+    path = os.path.join(os.path.dirname(__file__), "..", "data", "jobs-manual.json")
+    if not os.path.exists(path):
+        return []
+    try:
+        with open(path, encoding="utf-8") as src:
+            rows = json.load(src)
+        return [r for r in rows if r.get("title") and r.get("url")]
+    except Exception as exc:
+        print(f"jobs-manual.json unreadable: {exc}", file=sys.stderr)
+        return []
+
+
 def main():
     previous = load_previous()
     collected = []
@@ -869,6 +898,12 @@ def main():
     if len(failures) == len(SOURCES):
         print("all sources failed; data/jobs.json left untouched", file=sys.stderr)
         return 1
+
+    manual = load_manual_jobs()
+    if manual:
+        seen_ids = {job.get("id") for job in collected}
+        collected.extend(job for job in manual if job.get("id") not in seen_ids)
+        print(f"manual: kept {len(manual)} hand-added rows")
 
     cutoff = (datetime.now(BTV_TZ).date() - timedelta(days=21)).isoformat()
     jobs = [job for job in dedupe(collected) if job.get("posted", "") >= cutoff]

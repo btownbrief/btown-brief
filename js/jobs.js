@@ -32,7 +32,6 @@
   var QUALS = [
     ['pay25', '$25+/hr'],
     ['paylisted', 'Pay listed'],
-    ['no-degree', 'No degree needed'],
     ['weekend', 'Weekend'],
     ['seasonal', 'Seasonal'],
   ];
@@ -141,8 +140,9 @@
   function payLabel(job) {
     var hr = job.pay_hr;
     if (hr && hr.length === 2 && hr[0] !== null) {
-      var lo = Math.round(hr[0]), hi = Math.round(hr[1]);
-      return lo === hi ? '≈$' + lo + '/hr' : '≈$' + lo + '–' + hi + '/hr';
+      var fmt = function (n) { return n % 1 === 0 ? String(n) : n.toFixed(2); };
+      var lo = fmt(hr[0]), hi = fmt(hr[1]);
+      return lo === hi ? '$' + lo + '/hr' : '$' + lo + '–' + hi + '/hr';
     }
     return job.pay || '';
   }
@@ -239,7 +239,7 @@
     var filtered = state.cat || state.quals.length || state.q;
     count.textContent = filtered
       ? rows.length + ' of ' + jobs.length + ' postings match'
-      : jobs.length + ' postings, newest first — every link goes to the real application';
+      : jobs.length + ' postings, newest first — every link goes to the original listing';
 
     renderFilters();
   }

@@ -87,16 +87,16 @@ runs; nothing manual.
 **An Indeed clone is both impossible and undesirable.** Full coverage of
 every Burlington opening means hundreds of stale, duplicated listings — which
 is exactly the LinkedIn/Indeed experience people are escaping. The board's
-promise should be narrower and stronger: *everything posted in the Burlington
-area in the last two weeks, from the employers' own boards, every link
-straight to the real application, verified fresh.* That is a bounded product:
+promise should be narrower and stronger: *the Burlington-area postings the local boards list right now, refreshed
+daily, every link to the original listing.* That is a bounded product:
 the 14-day window caps the page at roughly 100–150 postings no matter how
 many sources feed it, and "fresh + direct + well-filtered" is a claim Indeed
 can't make. When a reader says "I only know Seven Days and LinkedIn," the
 answer isn't a bigger haystack — it's a smaller, fresher one.
 
-The one genuinely manual growth path — employers emailing listings in — stays
-manual and stays small on purpose. Everything else is a config line.
+The one genuinely manual growth path — employers emailing listings in — lives
+in data/jobs-manual.json, which every refresh merges and preserves. Sources are
+per-board adapter functions today; a config-driven employer table is future work.
 
 ## 4. The v2 design
 
@@ -111,7 +111,7 @@ manual and stays small on purpose. Everything else is a config line.
   stays **stateless** — no first-seen bookkeeping needed.
 - New fields per job: `cat` (one category) and `pay_hr` (`[lo, hi]`
   normalized hourly, when pay is parseable). `tags` keeps `pay25` /
-  `no-degree` / `weekend` / `seasonal`, with `pay25` now computed from the
+  `weekend` / `seasonal`, with `pay25` now computed from the
   normalized floor.
 - Categories are deterministic, no scoring: each source has a default
   (GlobalFoundries → tech & manufacturing, Howard Center → healthcare & care,
@@ -134,7 +134,7 @@ hub's own jobs department, not a separate site.
   the data. "Last checked …" line under them.
 - **Filters**: one row of category pills (single-select, with live counts;
   categories with nothing this week don't render) plus a second row of
-  quality chips ($25+/hr, pay listed, no degree needed, weekend, seasonal)
+  quality chips ($25+/hr when listed, pay listed, weekend, seasonal)
   that AND together. State lives in the URL hash so filtered views are
   shareable.
 - **The list**: grouped by recency — *Today / Yesterday / Earlier this week /
