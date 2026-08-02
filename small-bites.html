@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Small Bites — every menu near Church Street, Burlington VT</title>
-  <meta name="description" content="One combined menu for the Church Street Marketplace: every dish from every restaurant within a five-minute walk, with real prices — filter by price, cuisine, dietary needs, and patio.">
+  <meta name="description" content="One combined menu for the Church Street Marketplace: every dish from every restaurant within a walk — Marketplace to the waterfront — with real prices — filter by price, cuisine, dietary needs, and patio.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Btown Brief">
   <meta property="og:title" content="Small Bites — every menu near Church Street">
-  <meta property="og:description" content="What can I eat near here, and for how much? Every dish within a five-minute walk of the Marketplace, one filterable list.">
+  <meta property="og:description" content="What can I eat near here, and for how much? Every dish within a walk of the Marketplace, one filterable list.">
   <meta property="og:url" content="https://guide.btownbrief.com/small-bites.html">
   <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Small Bites — every menu near Church Street">
-  <meta name="twitter:description" content="Every dish within a five-minute walk of the Marketplace, one filterable list.">
+  <meta name="twitter:description" content="Every dish within a walk of the Marketplace, one filterable list.">
   <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
 
   <meta name="theme-color" content="#06080A">
@@ -55,8 +55,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <p class="eyebrow">The BTown Brief · City Guide</p>
     <h1 class="wordmark">Small bites</h1>
     <p class="lede">You're standing on the Marketplace and you're hungry. This is
-      <strong>every menu within a five-minute walk of Church Street</strong>, folded
-      into one list — filter it by price, cuisine, or what you can eat, and go.</p>
+      <strong>every menu within a walk of Church Street</strong> — down to the
+      waterfront, along lower Pine, into the near Old North End — folded into one
+      list. Filter it by price, cuisine, or what you can eat, and go.</p>
     <p class="bites-stats" id="stats">Loading the menus…</p>
   </div>
 </header>
@@ -73,6 +74,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
           <option value="name">A to Z</option>
           <option value="cheap">Cheapest dish first</option>
         </select>
+        <button class="pill feed" id="feed-me" title="Pick a dish for me">Feed me</button>
         <span class="match-line" id="match-line"></span>
       </div>
       <div class="rail-row" id="price-row">
@@ -88,6 +90,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
         <button class="pill" data-diet="vegan" aria-pressed="false">Vegan</button>
         <button class="pill" data-diet="gluten-free" aria-pressed="false">Gluten-free</button>
         <span class="rail-label" style="margin-left:0.8rem">Vibe</span>
+        <button class="pill" data-open aria-pressed="false">Open now</button>
         <button class="pill" data-kind="restaurant" aria-pressed="false">Restaurants</button>
         <button class="pill" data-kind="cafe" aria-pressed="false">Cafés</button>
         <button class="pill" data-kind="bar" aria-pressed="false">Bars</button>
@@ -121,6 +124,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   </footer>
 </div>
 
+<script src="js/food-lib.js?v=20260802a"></script>
 <script src="js/small-bites.js?v=20260802a"></script>
 <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>

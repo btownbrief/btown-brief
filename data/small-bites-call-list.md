@@ -19,6 +19,14 @@ standing food deal? Update data/deals.json with what you learn.
 - https://www.honeyroadrestaurant.com
 - [ ] "“Honey Time” — $1 wings & snack prices" (Mon/Tue/Wed/Thu/Fri/Sat) — last verified never
 
+### Burlington Beer Company
+- https://www.burlingtonbeercompany.com
+- [ ] "$5 16oz pours of Elaborate Metaphor (New England Pale Ale)" (Mon, $5) — last verified 2026-03-25
+- [ ] "Crispy chicken sandwich $12, tofu banh mi $18, $3 Lighthouse Lager" (Tue, $12 / $18 / $3) — last verified never
+- [ ] "$10 for 2 tacos + 16oz Kings Canyon Lager" (Tue, $10) — last verified 2026-03-25
+- [ ] "$5 pours of Wizard beers: 16oz Little Wizard (NEIPA), 12oz Wizard (DIPA)" (Wed, $5) — last verified 2026-03-25
+- [ ] "2 slices of pizza + a Lighthouse (Pilsner) for $10" (Thu, $10) — last verified 2026-03-25
+
 ### Kens Pizza
 - http://kenspizzavt.com
 - [ ] "$2 off winter specialty cocktails" (Mon, $2 off) — last verified 2026-03-25
@@ -93,6 +101,23 @@ standing food deal? Update data/deals.json with what you learn.
 - https://www.pizzeriaverita.com
 - [ ] "$5 off Margherita pizzas" (Wed, $5 off) — last verified 2026-03-25
 
+### T. Ruggs
+- https://www.truggstavern.com/
+- [ ] "$4 Zero Gravity cans" (Mon, $4) — last verified 2026-03-25
+- [ ] "Food pop-up" (Mon) — last verified 2026-03-25
+
+### The Skinny Pancake
+- https://www.skinnypancake.com
+- [ ] "Half price burgers" (Mon/Thu, 50% off burgers) — last verified 2026-03-25
+- [ ] "Buy one get one free crepes" (Tue, BOGO) — last verified 2026-03-25
+- [ ] "'Daily Driver' $10 breakfast sammy + drip coffee" (Mon/Tue/Wed/Thu/Fri, $10) — last verified 2026-03-25
+
+### Switchback Brewing Co.
+- https://www.switchbackvt.com
+- [ ] "Burger and Switchback Wednesdays" (Wed, $12 (sheet) / $10 (beehiiv)) — last verified 2026-03-25
+- [ ] "Half price wings" (Thu, 50% off wings) — last verified 2026-03-25
+- [ ] "$5 pints of selected beers (beehiiv: $5 Mansfield IPA pints)" (Thu, $5/pint) — last verified 2026-03-25
+
 ## Likely to have deals — bars & breweries, nothing on file
 
 - [ ] Lincoln's — https://www.facebook.com/LincolnsBurlingtonVt/
@@ -101,6 +126,8 @@ standing food deal? Update data/deals.json with what you learn.
 - [ ] The Other Place (OP) — https://www.facebook.com/other.place/
 - [ ] Mad River Distillers Tasting Room — https://www.madriverdistillers.com/tasting-rooms/burlington-tasting-room/
 - [ ] Juniper Restaurant & Bar at Hotel Vermont — http://www.hotelvt.com
+- [ ] Foam Brewers — https://foambrewers.com
+- [ ] Venetian Soda Lounge — https://www.venetiansodalounge.com/
 
 ## Everyone else — quick ask while confirming the menu
 
@@ -153,3 +180,35 @@ standing food deal? Update data/deals.json with what you learn.
 - [ ] Trattoria Delia — https://www.trattoriadelia.com/
 - [ ] The Armory at the Hilton Garden Inn — https://www.hilton.com/en/hotels/btvdwgi-hilton-garden-inn-burlington-downtown/?SEO_id=GMB-AMER-GI-BTVDWGI&y_source=1_MjIwNTg1My03MTUtbG9jYXRpb24ud2Vic2l0ZQ%3D%3D
 - [ ] Happy Place Cafe — https://www.vermontcomedyclub.com/happyplace
+- [ ] Original Skiff + Oyster — https://www.originalskiffoyster.com/
+- [ ] Vermont Juice Company — https://www.vtjuiceco.com/
+- [ ] Lily May's Coffee & Café — https://www.hotelchamplainvermont.com/dine/lily/
+- [ ] The Harborvale — https://theharborvale.com/dining
+- [ ] Poco — https://www.restaurantpoco.com/
+- [ ] August First Bakery & Café — https://www.augustfirstvt.com
+- [ ] Shy Guy Gelato — https://www.shyguygelato.com
+- [ ] Shanty on the Shore — https://www.shantyontheshore.com
+- [ ] Deep City — http://deepcityvt.com/
+- [ ] Wings at Maple — https://wings-at-maple.square.site/
+- [ ] Santiago's — http://santiagosvt.com/
+- [ ] Burlington Bay Market & Café — https://www.burlingtonbaycafe.com/
+- [ ] Kismet — https://www.kismetburlington.com/
+- [ ] Nu Chocolat — https://nuchocolat.com/
+- [ ] Ice Cream Evan's
+- [ ] Champ's Legendary Creemees — https://www.echovermont.org/
+- [ ] Kestrel Coffee — http://www.kestrelcoffees.com/
+- [ ] The Sweet Spot — https://www.spotonthedock.com/
+- [ ] Haymaker Buns — https://www.haymakerbuns.com/
+- [ ] Mesmer Kava — https://mesmerkava.com/
+- [ ] The Wise Fool — https://wisefoolvt.com/
+- [ ] Brio Coffeeworks — https://www.briocoffeeworks.com/?utm_source=google&utm_medium=organic&utm_campaign=gmb
+- [ ] Beansie's Bus — https://beansies.com
+- [ ] The Shopping Bag — https://www.shoppingbagvt.com/
+- [ ] Spirit of Ethan Allen — http://www.soea.com
+- [ ] Saigon Kitchen — https://saigonkitchenvt.wixsite.com/website
+- [ ] Buttercup Cruises — https://buttercupcruises.com
+- [ ] Spot on the Dock — https://www.spotonthedock.com
+- [ ] Barrio Bakery — http://www.barriobakeryvt.com/
+- [ ] Henry Street Deli — https://www.henrystreetdeli.com
+- [ ] Taco Gordo — https://www.tacogordovt.com
+- [ ] Four Corners of the Earth — https://www.fourcornersdeli.com

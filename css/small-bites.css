@@ -97,6 +97,13 @@
   outline-offset: 1px;
 }
 .rail select option { background: #14181C; color: var(--ink); }
+.pill.feed {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+.pill.feed:hover { background: var(--accent); color: var(--ground); }
 .rail input[type="search"] { flex: 1 1 11rem; min-width: 9rem; max-width: 22rem; }
 .rail select#cuisine { max-width: 15rem; }
 .rail input[type="search"]::placeholder { color: var(--ink-faint); }
@@ -162,6 +169,10 @@
 .chip.deal { color: var(--accent); background: var(--accent-soft); }
 .chip.gap { color: var(--hot); background: rgba(240, 153, 106, 0.13); }
 
+.status { font-size: 0.75rem; white-space: nowrap; }
+.status-open { color: var(--good); }
+.status-closed { color: var(--hot); }
+
 .place-deals {
   margin: 0.45rem 0 0;
   font-size: 0.8rem;
@@ -206,6 +217,16 @@
   margin: 0;
   max-width: 68ch;
 }
+/* Feed Me lands here: a warm pulse that fades back to the page. */
+.item.flash {
+  animation: bite-flash 2.4s ease;
+  border-radius: var(--radius-sm);
+}
+@keyframes bite-flash {
+  0%, 55% { background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
+  100% { background: transparent; box-shadow: none; }
+}
+
 .more-btn {
   font: inherit;
   font-size: 0.78rem;

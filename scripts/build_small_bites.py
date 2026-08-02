@@ -118,7 +118,7 @@ def main():
         restaurants.append({
             **{k: r[k] for k in ("id", "name", "category", "address", "coords",
                                  "dist_m", "walk_min", "price", "patio", "dietary",
-                                 "website", "google_maps")},
+                                 "hours", "website", "google_maps")},
             "cuisine": cuisine,
             "menu": {
                 "status": menu["menu_status"],

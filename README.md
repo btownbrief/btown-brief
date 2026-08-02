@@ -14,10 +14,12 @@ Then open `http://localhost:8000`.
 
 ## Small Bites (small-bites.html)
 
-One combined, filterable menu for every food spot within a 5-minute walk of the
-Church Street Marketplace. Data lives in `data/small-bites.json`; the zone is
-declared in `scripts/small_bites_roster.py` (South Burlington city center and
-the Winooski circle can be added there later).
+One combined, filterable menu for every food spot within a walk of the Church
+Street Marketplace — down to the waterfront, along lower Pine Street, and into
+the near Old North End (a 900m radius from Church & College). Data lives in
+`data/small-bites.json`; the zone is declared in
+`scripts/small_bites_roster.py` (South Burlington city center and the Winooski
+circle can be added there later).
 
 To refresh the menus:
 

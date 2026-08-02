@@ -25,7 +25,10 @@ ZONES = {
         "label": "Church Street Marketplace",
         # Church & College — mid-Marketplace.
         "center": [44.4785, -73.2129],
-        "radius_m": 400,  # ~a 5-minute walk
+        # ~a 10-12 minute walk: Marketplace to the waterfront, lower Pine
+        # Street, and the near Old North End. Splash/the boathouse, May Day,
+        # and Farmers & Foragers sit just outside on purpose.
+        "radius_m": 900,
     },
     # Later: "so-burlington-city-center", "winooski-circle"
 }
@@ -37,6 +40,13 @@ DUPLICATE_IDS = {
     "folino-s-pizza-burlington": "folinos",
     "leunigs-french-bistro": "leunigs-bistro",
     "ruben-james": "rj-s",
+    "the-cuban-kitchen": "santiago-s",
+}
+
+# Listed open in restaurants.json but found closed during the menu scrape.
+# (Flagged in the PR so the main dataset can be corrected too.)
+CLOSED_IDS = {
+    "bleu-northeast-kitchen",  # closed 12/31/2025; space is now The Harborvale
 }
 
 
@@ -54,7 +64,7 @@ def build(zone_id):
     for r in restaurants:
         if r.get("closed") or not r.get("coords"):
             continue
-        if r["id"] in DUPLICATE_IDS:
+        if r["id"] in DUPLICATE_IDS or r["id"] in CLOSED_IDS:
             continue
         m = dist_m(zone["center"], r["coords"])
         if m > zone["radius_m"]:
@@ -71,6 +81,7 @@ def build(zone_id):
             "price": r.get("price"),
             "patio": r.get("patio"),
             "dietary": r.get("dietary") or [],
+            "hours": r.get("hours") or {},
             "website": (r.get("links") or {}).get("website"),
             "google_maps": (r.get("links") or {}).get("google_maps"),
         })

@@ -15,11 +15,15 @@
     prices: new Set(),   // "u10" | "10to15" | "15to25" | "25up"
     diets: new Set(),    // "vegetarian" | "vegan" | "gluten-free"
     kinds: new Set(),    // "restaurant" | "cafe" | "bar" | "sweet" | "patio"
+    openNow: false,
     cuisine: "",
     sort: "near",
     expanded: new Set()  // place ids with all rows shown
   };
   var DATA = null;
+  var lastShown = [];    // [{r, items}] from the latest render, feeds Feed Me
+  // Burlington's clock, via the shared food engine (js/food-lib.js).
+  var T = window.BTFood ? BTFood.now() : null;
 
   var KIND_FROM_CATEGORY = {
     "Restaurant": "restaurant",
@@ -67,7 +71,13 @@
     return ok;
   }
 
+  function isOpen(r) {
+    if (!T || !r.hours || !Object.keys(r.hours).length) return null; // unknown
+    return BTFood.isOpenAt(r.hours, T.day, T.minutes);
+  }
+
   function placeMatches(r) {
+    if (state.openNow && isOpen(r) !== true) return false; // unknown hours ≠ open
     if (state.cuisine && (r.cuisine || []).indexOf(state.cuisine) < 0) return false;
     if (!state.kinds.size) return true;
     var hit = false;
@@ -132,6 +142,7 @@
     else if (state.sort === "cheap") shown.sort(function (a, b) { return a.min - b.min; });
     else shown.sort(function (a, b) { return a.r.dist_m - b.r.dist_m; });
 
+    lastShown = shown;
     var dishCount = shown.reduce(function (n, s) { return n + s.items.length; }, 0);
     document.getElementById("match-line").innerHTML =
       "<b>" + dishCount + "</b> dishes · <b>" + shown.length + "</b> places";
@@ -161,6 +172,14 @@
     }
   }
 
+  function statusSpan(r) {
+    if (!T) return "";
+    var s = BTFood.statusLine(r.hours, T);
+    if (s.open === null) return "";
+    return '<span class="status ' + (s.open ? "status-open" : "status-closed") + '">' +
+      esc(s.text) + "</span>";
+  }
+
   function renderPlace(s) {
     var r = s.r;
     var open = state.expanded.has(r.id);
@@ -175,6 +194,7 @@
       (r.patio === true ? '<span class="chip patio">Patio</span>' : "") +
       (r.deals.length ? '<span class="chip deal">Deal</span>' : "") +
       (r.menu.status === "partial" ? '<span class="chip gap" title="' + esc(r.menu.note || "") + '">Partial menu</span>' : "") +
+      statusSpan(r) +
       "</span></div>";
 
     var deals = "";
@@ -188,8 +208,8 @@
       }).join("<br>") + "</p>";
     }
 
-    var items = '<ul class="items">' + rows.map(function (it) {
-      return '<li class="item"><div class="item-row">' +
+    var items = '<ul class="items">' + rows.map(function (it, idx) {
+      return '<li class="item" data-key="' + esc(r.id) + ":" + idx + '"><div class="item-row">' +
         '<span class="item-name">' + esc(it.name) + dietChips(it) + "</span>" +
         '<span class="item-leader" aria-hidden="true"></span>' +
         '<span class="item-price">' + fmtPrice(it) + "</span></div>" +
@@ -211,6 +231,23 @@
     return '<article class="place">' + head + deals + items + more + foot + "</article>";
   }
 
+  /* Feed Me: one random dish from whatever the filters currently allow. */
+  function feedMe() {
+    var pool = [];
+    lastShown.forEach(function (s) {
+      s.items.forEach(function (it, idx) { pool.push({ rid: s.r.id, idx: idx }); });
+    });
+    if (!pool.length) return;
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    if (pick.idx >= ITEM_CAP) state.expanded.add(pick.rid);
+    render();
+    var el = document.querySelector('.item[data-key="' + pick.rid + ":" + pick.idx + '"]');
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.classList.add("flash");
+    setTimeout(function () { el.classList.remove("flash"); }, 2400);
+  }
+
   function bind() {
     var toggle = document.getElementById("rail-toggle");
     toggle.addEventListener("click", function () {
@@ -219,8 +256,14 @@
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
     });
 
-    document.querySelectorAll(".pill").forEach(function (btn) {
+    document.querySelectorAll(".pill[data-price],.pill[data-diet],.pill[data-kind],.pill[data-open]").forEach(function (btn) {
       btn.addEventListener("click", function () {
+        if ("open" in btn.dataset) {
+          state.openNow = !state.openNow;
+          btn.setAttribute("aria-pressed", state.openNow ? "true" : "false");
+          render();
+          return;
+        }
         var set = btn.dataset.price ? state.prices : btn.dataset.diet ? state.diets : state.kinds;
         var val = btn.dataset.price || btn.dataset.diet || btn.dataset.kind;
         if (set.has(val)) { set.delete(val); btn.setAttribute("aria-pressed", "false"); }
@@ -228,6 +271,8 @@
         render();
       });
     });
+
+    document.getElementById("feed-me").addEventListener("click", feedMe);
 
     var q = document.getElementById("q");
     var t = null;
