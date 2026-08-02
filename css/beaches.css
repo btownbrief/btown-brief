@@ -1,0 +1,373 @@
+/* ============================================================
+   THE LAKE — beaches.html, on top of css/hub.css
+
+   Same material as the hub: glass on black, serif display,
+   the drawn sky up top. What's new here is the spot dossier —
+   one long card per beach — and the hunt checklist inside it.
+============================================================ */
+
+/* The jump row: every spot on the page, south to north, one tap away.
+   It straddles the hero join exactly the way the hub tiles do. */
+.spots-nav {
+  margin: -46px 0 0;
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.spots-nav a {
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--pill);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  padding: 0.42rem 0.9rem;
+  font-size: 0.82rem;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+.spots-nav a:hover, .spots-nav a:focus-visible {
+  border-color: var(--accent);
+  background: var(--panel-hover);
+  outline: none;
+}
+
+/* The one-line live summary under the jump row. */
+.swim-count {
+  margin: 0.9rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.swim-count .yes { color: var(--good); font-weight: 500; }
+.swim-count .no { color: var(--hot); font-weight: 500; }
+
+/* Anchor jumps glide instead of teleporting — unless the OS asked for calm. */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* The lede: prose on the left, the drawn shore on the right. One column on
+   phones, map after the words — you need the pitch before the geography. */
+.lake-lede {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.6rem clamp(1.6rem, 4vw, 3rem);
+  margin-top: 2.2rem;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .lake-lede { grid-template-columns: 1fr; }
+}
+
+/* Intro prose — the only long-form text on the page, so it gets width limits
+   and the serif stays in the headings where it belongs. */
+.lake-intro {
+  max-width: 62ch;
+  margin: 0;
+}
+.lake-intro p {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+.lake-intro strong { color: var(--ink); font-weight: 600; }
+
+/* ============================================================
+   THE SHORE, DRAWN — schematic SVG map in the sky's palette.
+   The water gradient reuses the hero's --water variables, so the
+   map keeps the same hour as the page: grey noon, gold evening.
+============================================================ */
+.shore-map-panel {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  padding: 0.9rem 0.9rem 0.7rem;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .shore-map-panel { background: rgba(18, 22, 26, 0.86); }
+}
+.shore-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  margin: 0 auto;
+}
+.shore-map .map-land {
+  fill: rgba(6, 8, 10, 0.55);
+  stroke: var(--water-lit);
+  stroke-width: 1.5;
+  transition: stroke 1.6s ease;
+}
+.shore-map .map-causeway {
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.shore-map text {
+  font-family: var(--ui);
+  font-size: 11.5px;
+  font-weight: 500;
+  fill: var(--ink-soft);
+}
+.shore-map .map-left { text-anchor: end; }
+.shore-map .map-faint {
+  fill: var(--ink-faint);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+.shore-map .map-lake-name { font-size: 9px; opacity: 0.75; }
+.shore-map circle {
+  fill: var(--accent);
+  stroke: rgba(6, 8, 10, 0.7);
+  stroke-width: 1.5;
+}
+.shore-map .map-minor { fill: var(--ink-faint); }
+.shore-map a { cursor: pointer; }
+.shore-map a:hover text, .shore-map a:focus-visible text { fill: var(--accent); }
+.shore-map a:hover circle, .shore-map a:focus-visible circle { fill: var(--ink); }
+.shore-map a:focus-visible { outline: none; }
+.map-note {
+  margin: 0.55rem 0 0;
+  text-align: center;
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
+
+/* ============================================================
+   THE SPOTS — one dossier per beach
+============================================================ */
+.spot {
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  padding: 1.35rem 1.4rem 1.45rem;
+  margin-top: 1.1rem;
+  scroll-margin-top: 1rem;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .spot { background: rgba(18, 22, 26, 0.86); }
+}
+
+.spot-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem 0.85rem;
+  flex-wrap: wrap;
+}
+.spot-head h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.85rem;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+.spot-tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ink-faint);
+}
+
+/* The live chip. Empty until beaches.json answers; spots the city doesn't
+   test never get one, and the layout doesn't care either way. */
+.spot-live { display: inline-flex; }
+.spot-live:empty { display: none; }
+.swim-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.22rem 0.7rem;
+  border-radius: var(--pill);
+  white-space: nowrap;
+}
+.chip-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.chip-open { color: var(--good); background: rgba(111, 215, 158, 0.14); }
+.chip-caution { color: var(--accent); background: var(--accent-soft); }
+.chip-closed { color: var(--hot); background: rgba(240, 153, 106, 0.15); }
+
+.spot-vibe {
+  margin: 0.7rem 0 0;
+  max-width: 68ch;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* Two columns on wide screens — the practical file on the left, the hunt on
+   the right. One column on phones, hunt last, because the challenges only
+   matter once you know how to get there. */
+.spot-cols {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 1.4rem clamp(1.4rem, 3vw, 2.4rem);
+  margin-top: 1.1rem;
+}
+@media (max-width: 720px) {
+  .spot-cols { grid-template-columns: 1fr; }
+}
+
+.spot h3 {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink-faint);
+  margin: 1.15rem 0 0.45rem;
+}
+.spot h3:first-child { margin-top: 0; }
+
+.spot-facts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.spot-facts li {
+  padding-left: 1.1rem;
+  position: relative;
+  margin-bottom: 0.3rem;
+}
+.spot-facts li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.52em;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+/* Getting there: one row per mode, the mode as a fixed-width label so the
+   rows read as a table without being one. */
+.go-row {
+  display: flex;
+  gap: 0.7rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin-bottom: 0.45rem;
+}
+.go-mode {
+  flex: 0 0 3.2rem;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  padding-top: 0.1em;
+}
+.go-row a { color: var(--accent); text-decoration: none; }
+.go-row a:hover { text-decoration: underline; }
+.go-row strong { color: var(--ink); font-weight: 600; }
+
+.best-time {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* ---------- the hunt ---------- */
+.hunt-item {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  padding: 0.55rem 0.65rem;
+  margin: 0 -0.65rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.hunt-item:hover { background: rgba(255, 255, 255, 0.05); }
+.hunt-item input {
+  flex: 0 0 auto;
+  width: 17px; height: 17px;
+  margin: 0.12rem 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.hunt-item strong { color: var(--ink); font-weight: 600; }
+.hunt-item input:checked + span { color: var(--ink-faint); }
+.hunt-item input:checked + span strong { color: var(--ink-soft); }
+
+/* The standing tally, pinned under the intro. */
+.hunt-tally {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.hunt-tally strong { color: var(--accent); font-weight: 600; }
+
+.best-time a { color: var(--accent); text-decoration: none; }
+.best-time a:hover { text-decoration: underline; }
+
+/* Share-your-tally — only appears where the Web Share API exists and
+   at least one challenge is ticked. */
+.hunt-share {
+  margin-top: 0.7rem;
+  font-family: var(--ui);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+  border-radius: var(--pill);
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.16s ease;
+}
+.hunt-share:hover, .hunt-share:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* The share line at the foot of every spot. */
+.spot-share {
+  margin: 1.2rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--edge-soft);
+  font-size: 0.83rem;
+  color: var(--ink-faint);
+}
+.spot-share a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.spot-share a:hover { text-decoration: underline; }
+
+/* ---------- the fine print ---------- */
+.lake-notes {
+  margin-top: 2.4rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--ink-faint);
+  max-width: 72ch;
+}
+.lake-notes a { color: var(--accent); text-decoration: none; }
+.lake-notes a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .spot { padding: 1.1rem 1rem 1.2rem; }
+  .spot-head h2 { font-size: 1.6rem; }
+  .spots-nav { margin-top: -40px; }
+}
