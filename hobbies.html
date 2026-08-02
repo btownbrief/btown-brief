@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Burlington Clubs &amp; Groups — Burlington Brief</title>
-  <meta name="description" content="A directory of Burlington, VT clubs and recurring groups — run clubs, board games, book clubs, hiking, pickup sports, maker groups, language exchanges, and more.">
+  <title>Vermont Hobbies — Burlington Brief</title>
+  <meta name="description" content="The hobbies that make living in Burlington, VT worth it — sugaring, swimming holes, ice fishing, disc golf, paddling — each with its local on-ramp — the shop that outfits it, the club that does it together, or the spot to go do it that gets you started.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Btown Brief">
-  <meta property="og:title" content="Burlington Clubs &amp; Groups">
-  <meta property="og:description" content="A directory of Burlington, VT clubs and recurring groups — run clubs, board games, book clubs, hiking, pickup sports, maker groups, language exchanges, and more.">
-  <meta property="og:url" content="https://guide.btownbrief.com/clubs.html">
+  <meta property="og:title" content="Vermont Hobbies">
+  <meta property="og:description" content="The hobbies that make living in Burlington, VT worth it — sugaring, swimming holes, ice fishing, disc golf, paddling — each with its local on-ramp — the shop that outfits it, the club that does it together, or the spot to go do it that gets you started.">
+  <meta property="og:url" content="https://guide.btownbrief.com/hobbies.html">
   <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Burlington Clubs &amp; Groups">
-  <meta name="twitter:description" content="A directory of Burlington, VT clubs and recurring groups — run clubs, board games, book clubs, hiking, pickup sports, maker groups, language exchanges, and more.">
+  <meta name="twitter:title" content="Vermont Hobbies">
+  <meta name="twitter:description" content="The hobbies that make living in Burlington, VT worth it — each with its local on-ramp — the shop that outfits it, the club that does it together, or the spot to go do it that gets you started.">
   <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
 
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
@@ -83,10 +83,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       </div>
       <nav class="mode-nav" aria-label="Community pages">
         <a class="mode-btn" href="things-to-do.html">Things To Do</a>
-        <a class="mode-btn" href="hobbies.html">Hobbies</a>
+        <a class="mode-btn" href="clubs.html">Clubs</a>
         <a class="mode-btn" href="volunteer.html">Volunteer</a>
         <a class="mode-btn" href="projects.html">Projects</a>
-        <a class="mode-btn" href="playlist.html">Playlist</a>
       </nav>
     </div>
   </header>
@@ -103,20 +102,30 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <main class="page-wrap">
     <div class="page-hero">
-      <span class="page-hero-kicker">Clubs &amp; Groups</span>
-      <h1>Find your people in Burlington</h1>
-      <p class="page-hero-sub">Recurring groups you can just show up to — run clubs, board games, book clubs, pickup sports, choirs, craft nights. Schedules shift with the seasons, so click through and confirm before you lace up.</p>
+      <span class="page-hero-kicker">Vermont Hobbies</span>
+      <h1>Pick up a hobby this place is built for</h1>
+      <p class="page-hero-sub">The fastest way to feel at home here is to do the things you can only do here. Every hobby below comes with at least one local on-ramp — the shop that outfits it, the club that does it together, or the spot to go do it. Seasons are real in Vermont; lean into whichever one you're in.</p>
     </div>
 
-    <p class="result-count" id="clubs-count" aria-live="polite"></p>
+    <p class="result-count" id="hobbies-count" aria-live="polite"></p>
 
-    <div id="clubs-list">
-      <p class="page-empty">Loading groups…</p>
+    <h2 class="section-label">🌲 The most Vermont hobbies</h2>
+    <p class="hob-tier-sub">These only really work because you live here — the ones that turn the geography, the seasons, and the lake from scenery into your weekend.</p>
+    <div class="hob-grid" id="hobbies-vermont">
+      <p class="page-empty">Loading hobbies…</p>
+    </div>
+
+    <div class="hob-tier-anywhere">
+      <h2 class="section-label">🏙️ Do-anywhere hobbies, done here</h2>
+      <p class="hob-tier-sub">You could do these in any city — but Burlington gives each one a shop that knows you, a group that meets, and a scene small enough to actually join.</p>
+      <div class="hob-grid" id="hobbies-anywhere">
+        <p class="page-empty">Loading hobbies…</p>
+      </div>
     </div>
 
     <div class="note-card">
-      <strong>Run a club or recurring group around Burlington?</strong>
-      Email <a href="mailto:BtownBrief@gmail.com?subject=Add%20our%20club%20to%20the%20directory">BtownBrief@gmail.com</a> with your name, what it is, when you meet, and a link — I'll add you.
+      <strong>Into something we missed?</strong>
+      Email <a href="mailto:BtownBrief@gmail.com?subject=Add%20a%20hobby%20to%20the%20guide">BtownBrief@gmail.com</a> with the hobby, the local shop or group that supports it, and how a beginner starts — I'll add it. And if your hobby needs people, the <a href="clubs.html">clubs page</a> probably has your people.
     </div>
   </main>
 
@@ -129,7 +138,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   </footer>
 
   <script src="js/community.js"></script>
-  <script src="js/clubs.js"></script>
+  <script src="js/hobbies.js"></script>
   <script src="js/auto-theme.js"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
