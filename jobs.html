@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Burlington Jobs Added This Week — Burlington Brief</title>
-  <meta name="description" content="The newest Burlington, VT job postings across the major local boards — city, state, UVM, the hospital, and Seven Days — refreshed automatically, every link direct to the real posting.">
+  <title>The Burlington Job Board — Burlington Brief</title>
+  <meta name="description" content="Every job posted in the Burlington, VT area in the last two weeks — thirteen local boards and employers in one place, sorted by day, filterable by field and pay, every link straight to the real application.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Btown Brief">
-  <meta property="og:title" content="Burlington Jobs Added This Week">
-  <meta property="og:description" content="The newest Burlington, VT job postings across the major local boards — city, state, UVM, the hospital, and Seven Days — refreshed automatically, every link direct to the real posting.">
+  <meta property="og:title" content="The Burlington Job Board">
+  <meta property="og:description" content="Every job posted in the Burlington, VT area in the last two weeks — thirteen local boards and employers in one place, every link straight to the real application.">
   <meta property="og:url" content="https://guide.btownbrief.com/jobs.html">
   <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Burlington Jobs Added This Week">
-  <meta name="twitter:description" content="The newest Burlington, VT job postings across the major local boards — city, state, UVM, the hospital, and Seven Days — refreshed automatically, every link direct to the real posting.">
+  <meta name="twitter:title" content="The Burlington Job Board">
+  <meta name="twitter:description" content="Every job posted in the Burlington, VT area in the last two weeks — thirteen local boards and employers in one place, every link straight to the real application.">
   <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+
+  <meta name="theme-color" content="#06080A">
 
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
@@ -25,24 +27,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <script>
-    /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
-       refreshes the cache; this only avoids the white flash after dark. */
-    (function () {
-      try {
-        var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
-        if (!c) return;
-        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
-          year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-        if (c.day !== today) return;
-        var n = Date.now();
-        document.documentElement.setAttribute('data-theme',
-          (n >= c.rise && n < c.set) ? 'light' : 'dark');
-      } catch (e) {}
-    })();
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/jobs.css">
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -61,58 +47,48 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel -->
 </head>
-<body data-standalone>
+<body class="jobs">
 
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
-          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-        <span class="logo-sep"></span>
-        <span class="logo-title">Burlington Brief</span>
-      </div>
-      <nav class="mode-nav" aria-label="Site pages">
-        <a class="mode-btn mode-btn-link" href="things-to-do.html">Things To Do</a>
-        <a class="mode-btn mode-btn-link" href="housing.html">Housing</a>
-        <span class="mode-btn mode-btn-active" aria-current="page">Jobs</span>
-      </nav>
-    </div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="topbar-home" href="index.html">← Burlington, right now</a>
+    <nav aria-label="Site pages">
+      <a href="things-to-do.html">Things To Do</a>
+      <a href="housing.html">Housing</a>
+      <span class="here" aria-current="page">Jobs</span>
+    </nav>
   </header>
 
-  <a class="newsletter-bar" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture" target="_blank" rel="noopener">
-    <div class="newsletter-bar-inner">
-      <div class="newsletter-head">
-        <span class="newsletter-label">The Burlington Brief</span>
-        <span class="newsletter-issue">Free Burlington news &amp; events in your inbox</span>
+  <main class="wrap">
+    <section class="hero">
+      <p class="eyebrow">The Btown Brief · Job Board</p>
+      <h1>Hiring in Burlington,<br>this week</h1>
+      <p class="hero-sub">Dream jobs get filled by whoever saw them first. This is every posting from the last two weeks across thirteen local boards and employers — the city, the state, UVM, the hospital, Seven Days, GlobalFoundries, Beta, Howard Center and more — sorted by day, every link straight to the real application.</p>
+      <p class="hero-updated" id="jobs-updated" aria-live="polite"></p>
+    </section>
+
+    <div class="tiles" aria-label="Board at a glance">
+      <div class="tile">
+        <span class="label">On the board</span>
+        <span class="big" id="stat-live">—</span>
+        <span class="sub">fresh postings right now</span>
       </div>
-      <span class="newsletter-cta">Sign up free →</span>
+      <div class="tile">
+        <span class="label">New this week</span>
+        <span class="big" id="stat-week">—</span>
+        <span class="sub">posted in the last 7 days</span>
+      </div>
+      <div class="tile">
+        <span class="label">Boards watched</span>
+        <span class="big" id="stat-sources">—</span>
+        <span class="sub">checked Mon · Wed · Fri</span>
+      </div>
     </div>
-  </a>
 
-  <main class="page-wrap">
-    <div class="page-hero">
-      <span class="page-hero-kicker">Jobs</span>
-      <h1>Added This Week in Burlington</h1>
-      <p class="page-hero-sub">Dream jobs get filled by whoever saw them first. This is the newest posting from every major local board — city, state, UVM, the hospital, Seven Days — in one place, every link straight to the real application.</p>
-      <p class="jobs-updated" id="jobs-updated" aria-live="polite"></p>
-    </div>
-
-    <div class="chip-row" id="job-filters" role="group" aria-label="Job filters">
-      <label class="quick-chip"><input type="checkbox" value="city"><span>🏛 City &amp; state</span></label>
-      <label class="quick-chip"><input type="checkbox" value="no-degree"><span>🛠 No degree needed</span></label>
-      <label class="quick-chip"><input type="checkbox" value="pay25"><span>💵 $25+/hr</span></label>
-      <label class="quick-chip"><input type="checkbox" value="weekend"><span>📆 Weekend</span></label>
-      <label class="quick-chip"><input type="checkbox" value="seasonal"><span>☀️ Seasonal</span></label>
+    <div class="filters">
+      <div class="filter-row" id="cat-filters" role="group" aria-label="Filter by field"></div>
+      <div class="filter-row" id="qual-filters" role="group" aria-label="Narrow the list"></div>
     </div>
 
     <p class="result-count" id="jobs-count" aria-live="polite"></p>
@@ -121,9 +97,13 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <p class="page-empty">Loading this week's postings…</p>
     </div>
 
-    <h2 class="section-label">Go Straight To The Big Employers</h2>
-    <p class="housing-sources-intro">The five biggest hirers around Burlington post constantly — worth a direct check even in a slow week.</p>
-    <div class="employer-row" id="employer-row"></div>
+    <section class="dept-block">
+      <div class="dept">
+        <h2>Go straight to the big employers</h2>
+        <p>The busiest hirers around Burlington post constantly — worth a direct check even in a slow week.</p>
+      </div>
+      <div class="grid" id="employer-row"></div>
+    </section>
 
     <div class="note-card" id="post-a-job">
       <strong>Hiring? Send me your listing — it's free.</strong>
@@ -131,6 +111,16 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       with the role, the pay if you can share it, and a link to apply.
       Free while the board grows — I'll run it here and flag the good ones in the newsletter.
     </div>
+
+    <a class="newsletter-bar" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture" target="_blank" rel="noopener">
+      <div class="newsletter-bar-inner">
+        <div>
+          <span class="newsletter-label">The Burlington Brief</span>
+          <span class="newsletter-issue">Free Burlington news &amp; events in your inbox</span>
+        </div>
+        <span class="newsletter-cta">Sign up free →</span>
+      </div>
+    </a>
   </main>
 
   <footer class="site-footer">
@@ -143,7 +133,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <script src="js/community.js"></script>
   <script src="js/jobs.js"></script>
-  <script src="js/auto-theme.js"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
 </html>
