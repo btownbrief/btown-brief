@@ -4746,3 +4746,23 @@ a.events-all-link:focus-visible { background: var(--bg-subtle); outline: none; }
 @media (max-width: 560px) {
   .hob-card-season { margin-left: 0; white-space: normal; }
 }
+
+/* In-season: the page knows what month it is (matches auto-theme's spirit) */
+.hob-badge {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: var(--group-outdoors);
+  border-radius: var(--radius-full);
+  padding: 2px 9px;
+}
+.hob-card-now { box-shadow: var(--shadow-md); }
+
+/* Arriving via a shared card link (hobbies.html#ice-fishing) */
+.hob-card:target {
+  border-color: var(--coral);
+  border-left-color: var(--coral);
+  background: linear-gradient(135deg, var(--coral-light), var(--bg-raised) 55%);
+}
