@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-02T07:05:02-04:00",
+ "generated": "2026-08-02T17:34:38-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 19,
-   "seconds": 5.7
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 69,
-   "seconds": 2.5
+   "count": 68,
+   "seconds": 3.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 61,
-   "seconds": 3.1
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 173,
-   "seconds": 3.3
+   "seconds": 2.8
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 78,
-   "seconds": 1.9
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 169,
-   "seconds": 65.9
+   "seconds": 72.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 2.2
+   "seconds": 2.4
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 35.4
+   "seconds": 39.3
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 73,
-   "seconds": 107.4
+   "seconds": 116.0
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,17 +79,17 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 499,
-   "seconds": 74.1
+   "seconds": 77.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 66,
-   "seconds": 118.4
+   "seconds": 127.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 34,
-   "seconds": 15.4
+   "seconds": 14.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -99,7 +99,7 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 33,
-   "seconds": 27.6
+   "seconds": 29.4
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,18 +124,18 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 54,
-   "seconds": 69.4
+   "seconds": 74.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 36,
-   "seconds": 0.2
+   "seconds": 0.3
   }
  },
- "gathered": 2177,
- "afterDedup": 1113,
+ "gathered": 2176,
+ "afterDedup": 1112,
  "duplicatesMerged": 1064,
- "final": 1959,
+ "final": 1954,
  "mergeLog": [
   {
    "kept": {
@@ -2364,6 +2364,20 @@
  ],
  "changes": [
   {
+   "id": "9d7c315e7771",
+   "title": "Days Between Show with Acid Wash, Dan Weintraub, & Charlie Schramm",
+   "date": "2026-08-02",
+   "change": "missing",
+   "lastSeen": "2026-08-02T07:05:02-04:00"
+  },
+  {
+   "id": "05ae97043916",
+   "title": "Mix & Mingle",
+   "date": "2026-08-02",
+   "change": "missing",
+   "lastSeen": "2026-08-02T07:05:02-04:00"
+  },
+  {
    "id": "cbcaf26c87c8",
    "title": "Friends Book Sale",
    "date": "2026-08-02",
@@ -2371,32 +2385,29 @@
    "lastSeen": "2026-08-01T17:35:25-04:00"
   },
   {
+   "id": "daa0f8558195",
+   "title": "Womxn's Pick-up Soccer - Outdoors at Starr Farm Park",
+   "date": "2026-08-02",
+   "change": "missing",
+   "lastSeen": "2026-08-02T07:05:02-04:00"
+  },
+  {
    "id": "99e705a85d03",
    "title": "DREAM lunch",
    "date": "2026-08-05",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
+   "change": "dropped"
   },
   {
    "id": "7730a72100ba",
    "title": "YSO Franklin Square (DREAM)",
    "date": "2026-08-07",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
+   "change": "dropped"
   },
   {
    "id": "2c1cdbc783f5",
    "title": "YSO Battery Park",
    "date": "2026-08-10",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
-  },
-  {
-   "id": "6ef58c1fa113",
-   "title": "Board Game Brunch",
-   "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-07-31T17:45:04-04:00"
+   "change": "dropped"
   },
   {
    "id": "dd8c52fc5391",
@@ -2409,22 +2420,19 @@
    "id": "518398c5c87e",
    "title": "Hold for Youth Program",
    "date": "2026-09-14",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
+   "change": "dropped"
   },
   {
    "id": "02a8e4540f6d",
    "title": "Hold for Youth Program",
    "date": "2026-09-21",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
+   "change": "dropped"
   },
   {
    "id": "e0464d960c6c",
    "title": "Hold for Youth Program",
    "date": "2026-09-28",
-   "change": "missing",
-   "lastSeen": "2026-07-30T07:31:16-04:00"
+   "change": "dropped"
   }
  ]
 }
