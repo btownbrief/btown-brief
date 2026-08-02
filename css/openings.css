@@ -1,0 +1,153 @@
+/* ============================================================
+   OPENINGS & CLOSINGS — changes of business (openings.html)
+
+   Rides on css/hub.css for the material: black ground, glass
+   panels, Instrument Serif headlines. This file only adds the
+   page head, the status pills, and the feed cards.
+============================================================ */
+
+.openings-page .o-head {
+  padding-top: clamp(2.4rem, 6vw, 4rem);
+  max-width: 720px;
+}
+.o-back {
+  color: inherit;
+  text-decoration: none;
+}
+.o-back:hover { color: var(--accent); }
+.openings-page .wordmark {
+  font-size: clamp(2.5rem, 6.5vw, 4.4rem);
+  text-shadow: none;
+}
+.o-sub {
+  margin: 0.85rem 0 0;
+  max-width: 56ch;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------- filters */
+.o-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 1.6rem 0 1.5rem;
+}
+.o-pill {
+  font-family: var(--ui);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--pill);
+  padding: 0.38rem 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
+}
+.o-pill:hover { border-color: var(--accent); color: var(--ink); }
+.o-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.o-pill.is-active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.o-pill .n {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+  margin-left: 0.3rem;
+}
+
+/* ------------------------------------------------------- feed */
+.o-feed {
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 0;
+}
+.o-loading, .o-empty {
+  color: var(--ink-faint);
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.o-card {
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  padding: 1rem 1.15rem 1.05rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.o-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.7rem;
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+.o-status {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--pill);
+  white-space: nowrap;
+}
+.o-status.open { color: var(--good); background: rgba(111, 215, 158, 0.14); }
+.o-status.opening-soon { color: var(--accent); background: var(--accent-soft); }
+.o-status.closed { color: var(--hot); background: rgba(240, 153, 106, 0.14); }
+
+.o-card h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  margin: 0.1rem 0 0;
+}
+.o-area {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.o-story {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+.o-source {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+}
+.o-source a {
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.o-source a:hover { text-decoration: underline; }
+
+.o-note {
+  max-width: 720px;
+  margin: 1.6rem 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+}
+.o-note a { color: var(--accent); text-decoration: none; }
+.o-note a:hover { text-decoration: underline; }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .o-card { background: rgba(18, 22, 26, 0.86); }
+}

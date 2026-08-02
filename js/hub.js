@@ -271,6 +271,13 @@
     });
   }
 
+  function statOpenings() {
+    return getJSON('data/openings.json').then(function (data) {
+      var list = data.entries || [];
+      if (list.length) stat('stat-openings', list.length + ' changes');
+    });
+  }
+
   function statDeals() {
     return getJSON('data/deals.json').then(function (data) {
       var list = data.deals || [];
@@ -353,6 +360,7 @@
     tileOpenNow().catch(noop);
     tileTonight().catch(noop);
     statChanges().catch(noop);
+    statOpenings().catch(noop);
     statDeals().catch(noop);
   }
 
