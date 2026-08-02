@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lake &amp; Beaches — the five official beaches and the whole shore, live — the Burlington Brief city guide</title>
+  <meta name="description" content="Burlington's five official swim beaches plus the rest of the shore: North Beach, Leddy, Oakledge, Texaco, Blanchard, Red Rocks and the waterfront — live can-I-swim statuses, how to get there by bus or bike, and a shore-long scavenger hunt.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Btown Brief">
+  <meta property="og:title" content="Lake &amp; Beaches — Burlington's shore, spot by spot">
+  <meta property="og:description" content="Burlington's five official beaches plus the rest of the shore: live can-I-swim statuses, how to get there by bus or bike, and a shore-long scavenger hunt.">
+  <meta property="og:url" content="https://guide.btownbrief.com/beaches.html">
+  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-beaches.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lake &amp; Beaches — Burlington's shore, spot by spot">
+  <meta name="twitter:description" content="Burlington's five official beaches plus the rest of the shore: live can-I-swim statuses, how to get there by bus or bike, and a shore-long scavenger hunt.">
+  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-beaches.jpg">
+
+  <meta name="theme-color" content="#1B3A5C">
+
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="City Guide">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/hub.css?v=20260802a">
+  <link rel="stylesheet" href="css/beaches.css?v=20260802a">
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2471867016612559');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel -->
+</head>
+<body class="hub">
+
+<!-- The same honest sky as the hub: js/beaches.js stamps data-phase
+     from the real sunrise/sunset and parks the orb where the sun is. -->
+<header class="sky">
+  <div class="lake"></div>
+  <div class="glint" id="glint"></div>
+
+  <svg class="ridge" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+    <path class="far" d="M0,62 L70,44 L128,56 L196,30 L262,52 L330,38 L404,58 L470,40 L548,60 L610,46 L688,64 L760,42 L836,58 L906,36 L980,56 L1054,44 L1128,60 L1200,48 L1200,90 L0,90 Z"/>
+    <path class="near" d="M0,76 L88,60 L150,72 L232,54 L300,70 L376,58 L448,74 L520,62 L600,78 L668,64 L742,76 L820,58 L892,72 L968,60 L1042,74 L1120,64 L1200,72 L1200,90 L0,90 Z"/>
+  </svg>
+
+  <div class="orb" id="orb"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="sky-copy">
+    <p class="eyebrow">The BTown Brief · City Guide</p>
+    <h1 class="wordmark">Lake &amp;<br>beaches</h1>
+    <p class="conditions" id="conditions">Reading the lake…</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- Every spot on the page, south to north along the shore. -->
+  <nav class="spots-nav" aria-label="Jump to a spot">
+    <a href="#red-rocks">Red Rocks</a>
+    <a href="#blanchard">Blanchard</a>
+    <a href="#oakledge">Oakledge</a>
+    <a href="#waterfront">Waterfront</a>
+    <a href="#texaco">Texaco</a>
+    <a href="#north-beach">North Beach</a>
+    <a href="#leddy">Leddy</a>
+    <a href="#keep-going">Keep going</a>
+  </nav>
+
+  <p class="swim-count" id="swim-count">Checking today's beach statuses…</p>
+
+  <div class="lake-lede">
+  <div class="lake-intro">
+    <p>Lake Champlain is <strong>120 miles long</strong>, up to <strong>400 feet deep</strong> at its deepest point between Charlotte and Essex, and by most counts the <strong>sixth-largest natural freshwater lake in the country</strong> — and Burlington gets to keep it as a western horizon. This page is the shore, spot by spot, south to north.</p>
+    <p>The city runs <strong>five official swim beaches</strong> and tests every one of them: E.&nbsp;coli samples on Mondays and Thursdays with results by 11&nbsp;AM Tuesday and Friday, cyanobacteria checks daily in season. The open/closed chips on this page are live from the <a href="https://www.burlingtonvt.gov/1219/Beach-Closure-Tracker" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">city's tracker</a> — the same data as our <a href="weather.html" style="color:var(--accent);text-decoration:none">weather page</a>, where the full swim board lives.</p>
+    <p>And because just listing beaches is no fun: every spot below carries a few <strong>challenges</strong> — real, findable things. Tick them off as you go; found something good along the way? <a href="photos.html#submit" style="color:var(--accent);text-decoration:none">Send the photo</a> and it may run in the Brief.</p>
+    <p class="hunt-tally" id="hunt-tally"></p>
+    <button class="hunt-share" id="hunt-share" hidden>Share your tally</button>
+  </div>
+
+  <!-- The shore, drawn — same palette as the sky above, so the map wears
+       the same hour as the page. Schematic on purpose: order and shape,
+       not distances. Every dot jumps to its dossier. -->
+  <figure class="shore-map-panel">
+    <svg class="shore-map" viewBox="0 0 320 440" role="img" aria-label="Schematic map of the Burlington shoreline, north at the top: the Causeway, Leddy, Rock Point, North Beach, Texaco, the Waterfront, Oakledge, Blanchard and Red Rocks, in order along Lake Champlain">
+      <defs>
+        <linearGradient id="mapwater" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="var(--water)"/>
+          <stop offset="1" stop-color="var(--water-lit)"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="320" height="440" fill="url(#mapwater)" opacity="0.45" rx="10"/>
+      <path class="map-land"
+        d="M150,0
+           C146,40 142,70 140,90
+           C138,105 100,115 96,127
+           C94,138 130,140 135,152
+           C130,170 126,175 127,188
+           C125,210 126,225 131,247
+           C133,268 130,285 119,315
+           C122,335 127,340 129,350
+           C132,375 138,390 133,404
+           C130,414 140,418 148,424
+           C160,430 175,436 185,440
+           L320,440 L320,0 Z"/>
+      <text class="map-faint" x="298" y="22" text-anchor="middle">N ↑</text>
+      <text class="map-faint map-lake-name" x="24" y="250" transform="rotate(-90 24 250)">L A K E&#160;&#160;C H A M P L A I N</text>
+      <text class="map-faint" x="205" y="251">downtown</text>
+
+      <!-- The causeway runs off the top of the shore; the gap is the Cut. -->
+      <a href="#keep-going">
+        <path class="map-causeway" d="M139,44 C112,34 82,26 58,19"/>
+        <path class="map-causeway" d="M44,15 L31,11"/>
+        <text x="66" y="40">Causeway &amp; bike ferry</text>
+      </a>
+
+      <a href="#leddy"><circle cx="140" cy="90" r="5"/><text x="151" y="94">Leddy</text></a>
+      <a href="#keep-going"><circle class="map-minor" cx="96" cy="127" r="3.5"/><text class="map-left" x="86" y="131">Rock Point</text></a>
+      <a href="#north-beach"><circle cx="135" cy="152" r="5"/><text x="146" y="156">North Beach</text></a>
+      <a href="#texaco"><circle cx="127" cy="188" r="5"/><text x="138" y="192">Texaco</text></a>
+      <a href="#waterfront"><circle cx="131" cy="247" r="5"/><text x="142" y="234">Waterfront</text></a>
+      <a href="#oakledge"><circle cx="119" cy="315" r="5"/><text x="130" y="319">Oakledge</text></a>
+      <a href="#blanchard"><circle cx="129" cy="350" r="5"/><text x="140" y="354">Blanchard</text></a>
+      <a href="#red-rocks"><circle cx="133" cy="404" r="5"/><text x="144" y="408">Red Rocks</text></a>
+    </svg>
+    <figcaption class="map-note">Not to scale — just the shore in order, north at the top. Tap a dot.</figcaption>
+  </figure>
+  </div>
+
+  <!-- ============================================================
+       RED ROCKS — the southern anchor, technically South Burlington
+  ============================================================ -->
+  <article class="spot" id="red-rocks">
+    <header class="spot-head">
+      <h2>Red Rocks Park &amp; Beach</h2>
+      <span class="spot-tag">The dramatic one · South Burlington</span>
+    </header>
+    <p class="spot-vibe">A hundred acres of hemlock and pine that end, suddenly, in red rock cliffs over the water — the one stretch of shoreline here that doesn't look like Vermont. Below the drama sits a small, calm swim beach at the end of Central Avenue.</p>
+    <div class="spot-cols">
+      <div class="spot-info">
+        <h3>The practical part</h3>
+        <ul class="spot-facts">
+          <li>4 Central Ave, South Burlington — enter off Queen City Park Rd. Open dawn to dusk.</li>
+          <li>3.3 miles of forested trails to shoreline overlooks; dogs on leash, no bikes on the foot trails.</li>
+          <li>No lifeguards; seasonal restrooms and portable toilets in season.</li>
+          <li>Small parking fee mid-June through mid-August; limited free parking outside the park otherwise.</li>
+          <li>South Burlington tests the water Mondays and Wednesdays in season — it's not on Burlington's tracker, so no live chip here.</li>
+        </ul>
+        <h3>Getting there</h3>
+        <div class="go-row"><span class="go-mode">Bus</span><span><strong><a href="https://ridegmt.com/schedules/shelburneroad/" target="_blank" rel="noopener">#6 Shelburne Road</a></strong> to Shelburne Rd at Farrell St, then Farrell St → Queen City Park Rd → Central Ave, about a 15-minute walk. Sundays the <strong>#756 South End Circulator</strong> makes the same stop.</span></div>
+        <div class="go-row"><span class="go-mode">Bike</span><span>Not on the Greenway — ride Queen City Park Rd and Central Ave on-street from the Oakledge end.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=Red+Rocks+Park%2C+South+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
+        <h3>Best time</h3>
+        <p class="best-time">Morning for the trails before the lot fills; a hot afternoon for the beach.</p>
+      </div>
+      <div class="spot-hunt">
+        <h3>The hunt</h3>
+        <label class="hunt-item"><input type="checkbox" data-hunt="rr-1"><span>Find the overlook where the trail steps out of the hemlocks onto bare red rock, with <strong>Shelburne Bay and the Adirondacks</strong> laid out below. Photograph it.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="rr-2"><span>Walk the <strong>whole 3.3-mile trail network</strong> in one visit.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="rr-3"><span>Shoot the cliffs <strong>from water level</strong> at the beach — and keep your feet on the ground; jumping is prohibited.</span></label>
+      </div>
+    </div>
+    <p class="spot-share">Found one? <a href="photos.html#submit">Send the photo</a> — say "Red Rocks" in the spot field.</p>
+  </article>
+
+  <!-- ============================================================
+       BLANCHARD — Oakledge's southern beach, with the Earth Clock
+  ============================================================ -->
+  <article class="spot" id="blanchard">
+    <header class="spot-head">
+      <h2>Blanchard Beach</h2>
+      <span class="spot-tag">The tucked-away one</span>
+      <span class="spot-live" data-swim="Blanchard Beach"></span>
+    </header>
+    <p class="spot-vibe">A sandy beach folded into the south side of Oakledge Park, easy to miss and better for it. Its nearest neighbor is a stone circle: the Burlington Earth Clock, a working sundial on the bike path where your own shadow tells the time.</p>
+    <div class="spot-cols">
+      <div class="spot-info">
+        <h3>The practical part</h3>
+        <ul class="spot-facts">
+          <li>Inside Oakledge Park, off Flynn Ave — one of the park's two swim beaches, and one of the city's five tested ones.</li>
+          <li>No lifeguards. Seasonal restrooms, grills, picnic tables and the rest of Oakledge's facilities are shared next door.</li>
+          <li>The Earth Clock: fourteen granite stones, some over 20 tons, raised in 2006–07 by the nonprofit Circles for Peace.</li>
+        </ul>
+        <h3>Getting there</h3>
+        <div class="go-row"><span class="go-mode">Bus</span><span>Same as Oakledge — <strong><a href="https://ridegmt.com/schedules/pinestreet/" target="_blank" rel="noopener">#5 Pine Street</a></strong> to Pine St near Flynn Ave, then walk Flynn Ave west to the park, about 10–15 minutes. Sundays: <strong>#756</strong>.</span></div>
+        <div class="go-row"><span class="go-mode">Bike</span><span>On the Greenway — the Earth Clock sits right beside the path at the park's south side.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=Oakledge+Park%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
+        <h3>Best time</h3>
+        <p class="best-time">Golden hour. The Earth Clock was placed with sunset in mind, and the beach empties before the light gets good. (<a href="sunset.html">Will tonight’s deliver?</a>)</p>
+      </div>
+      <div class="spot-hunt">
+        <h3>The hunt</h3>
+        <label class="hunt-item"><input type="checkbox" data-hunt="bl-1"><span>Stand at the center of the <strong>Earth Clock</strong> and read the time from your own shadow — then check it against your phone.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="bl-2"><span>Count the standing stones. (There are <strong>fourteen</strong> — the biggest weigh around 20 tons.)</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="bl-3"><span>Frame a <strong>sunset photo through the stones</strong>, looking west toward the Adirondacks.</span></label>
+      </div>
+    </div>
+    <p class="spot-share">Found one? <a href="photos.html#submit">Send the photo</a> — say "Blanchard Beach" in the spot field.</p>
+  </article>
+
+  <!-- ============================================================
+       OAKLEDGE — the park, the Cove, the treehouse
+  ============================================================ -->
+  <article class="spot" id="oakledge">
+    <header class="spot-head">
+      <h2>Oakledge Park &amp; the Cove</h2>
+      <span class="spot-tag">The sunset one</span>
+      <span class="spot-live" data-swim="Oakledge Cove"></span>
+    </header>
+    <p class="spot-vibe">A 45-acre South End park that has quietly collected the city's best small wonders: the world's first universally accessible treehouse, a universally accessible playground, and the Cove — the most secluded of the city beaches, rocky outcroppings and all. This land was a private resort and then a country club bought by General Electric workers; the city made it everyone's in 1971.</p>
+    <div class="spot-cols">
+      <div class="spot-info">
+        <h3>The practical part</h3>
+        <ul class="spot-facts">
+          <li>West end of Flynn Ave; gates 6 AM–9:30 PM. Parking $3/hour May–October, free November–May (ParkMobile zone 5818).</li>
+          <li>The Cove is a tested city swim beach — no lifeguards. Seasonal bathrooms at the shelters.</li>
+          <li>Sand volleyball, tennis, bocce, outdoor fitness equipment, charcoal grills, two rentable shelters.</li>
+          <li>Paddleboard rentals and lessons from Paddlesurf Champlain in summer.</li>
+          <li>Southern terminus of the 8-mile Burlington Greenway.</li>
+        </ul>
+        <h3>Getting there</h3>
+        <div class="go-row"><span class="go-mode">Bus</span><span><strong><a href="https://ridegmt.com/schedules/pinestreet/" target="_blank" rel="noopener">#5 Pine Street</a></strong> to Pine St near Flynn Ave, then walk Flynn Ave west to the lake, about 10–15 minutes. Sundays: <strong>#756 South End Circulator</strong>.</span></div>
+        <div class="go-row"><span class="go-mode">Bike</span><span>The Greenway starts (or ends) here — Waterfront Park is an easy, flat 15-minute ride north.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=Oakledge+Park%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
+        <h3>Best time</h3>
+        <p class="best-time">Sunset at the Cove — the official page calls it a quiet-sunset spot, and it's right. Weekday afternoons for the beach itself. (<a href="sunset.html">Check tonight’s sunset score.</a>)</p>
+      </div>
+      <div class="spot-hunt">
+        <h3>The hunt</h3>
+        <label class="hunt-item"><input type="checkbox" data-hunt="ok-1"><span>Find the <strong>Forever Young Treehouse</strong> — the world's first universally accessible treehouse — and walk its ramp into the canopy.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="ok-2"><span>Hunt the estate era: <strong>old foundations and chimneys poking out of the woods</strong> — and see if you can spot the iron fittings in the shoreline rock that locals say are moorings from the resort days.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="ok-3"><span>Watch a sunset from the <strong>Cove's rock outcroppings</strong> start to finish — no phone until the sun is down, then one photo.</span></label>
+      </div>
+    </div>
+    <p class="spot-share">Found one? <a href="photos.html#submit">Send the photo</a> — say "Oakledge" in the spot field.</p>
+  </article>
+
+  <!-- ============================================================
+       THE WATERFRONT — promenade, not a beach; still the icon
+  ============================================================ -->
+  <article class="spot" id="waterfront">
+    <header class="spot-head">
+      <h2>The Waterfront</h2>
+      <span class="spot-tag">The famous one</span>
+    </header>
+    <p class="spot-vibe">The lawn, the porch swings, the boathouse, ECHO, and the sunset everyone photographs — this is the postcard, and it earns it. One honest note: the harbor is not a designated swimming area and isn't on the city's test list, so save the actual swim for the beaches on either side.</p>
+    <div class="spot-cols">
+      <div class="spot-info">
+        <h3>The practical part</h3>
+        <ul class="spot-facts">
+          <li>Waterfront Park, 10 College St — open sunrise to sunset, festival venue all summer.</li>
+          <li>Restrooms seasonally at the info booth and Community Boathouse; year-round inside ECHO.</li>
+          <li>Perkins Pier, at the foot of Maple St: seasonal marina, playground, picnic tables, and a free kayak/canoe launch on the Lake Champlain Paddlers' Trail.</li>
+          <li>Parking at the Lake St and Pease lots, $3/hour.</li>
+        </ul>
+        <h3>Getting there</h3>
+        <div class="go-row"><span class="go-mode">Bus</span><span>The easiest of all — nearly every GMT route ends at the <strong>Downtown Transit Center</strong> on St. Paul at Cherry; from there it's three or four blocks down College St to the water.</span></div>
+        <div class="go-row"><span class="go-mode">Walk</span><span>Ten minutes downhill from Church Street. The hill on the way back is the price.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=Waterfront+Park%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
+        <h3>Best time</h3>
+        <p class="best-time">Golden hour, obviously — but a quiet weekday sunrise here is the same view with none of the crowd.</p>
+      </div>
+      <div class="spot-hunt">
+        <h3>The hunt</h3>
+        <label class="hunt-item"><input type="checkbox" data-hunt="wf-1"><span>Frame tonight's sunset inside the <strong>Moran Frame</strong> — the skeleton of the 1950s coal plant at the park's north end, kept as a building-sized picture frame.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="wf-2"><span>Claim a <strong>porch swing facing the lake</strong> and stay through at least one full boat arrival.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="wf-3"><span>Find the <strong>free paddle launch at Perkins Pier</strong> — a stop on the Lake Champlain Paddlers' Trail — even if you're only scouting it for later.</span></label>
+      </div>
+    </div>
+    <p class="spot-share">Found one? <a href="photos.html#submit">Send the photo</a> — say "Waterfront" in the spot field.</p>
+  </article>
+
+  <!-- ============================================================
+       TEXACO — the dog beach, and proud of it
+  ============================================================ -->
+  <article class="spot" id="texaco">
+    <header class="spot-head">
+      <h2>Texaco Beach</h2>
+      <span class="spot-tag">The dog one</span>
+      <span class="spot-live" data-swim="Texaco Beach"></span>
+    </header>
+    <p class="spot-vibe">The city's one dedicated dog beach — year-round water access for dogs, off the Greenway at the Urban Reserve, and on a warm afternoon it is the happiest place in Burlington. The name is real history: for most of the twentieth century, lake barges landed here to pump gasoline and oil into shoreline tanks.</p>
+    <div class="spot-cols">
+      <div class="spot-info">
+        <h3>The practical part</h3>
+        <ul class="spot-facts">
+          <li>Greenway access only — no parking, no restrooms, no lifeguards, no facilities at all. That's the charm.</li>
+          <li>Still one of the city's five tested beaches, so the chip above is live.</li>
+          <li>Nearest restrooms and parking: North Beach (seasonal) or the Waterfront lots.</li>
+          <li>The parcel became city land in 2016, with help from the Vermont Land Trust and conservation funds.</li>
+        </ul>
+        <h3>Getting there</h3>
+        <div class="go-row"><span class="go-mode">Bike</span><span>It's a path spot: ride the <strong>Greenway north from Waterfront Park</strong> past the Moran Frame and the Urban Reserve, or south from North Beach.</span></div>
+        <div class="go-row"><span class="go-mode">Bus</span><span>No stop of its own — <strong><a href="https://ridegmt.com/schedules/northavenue/" target="_blank" rel="noopener">#7 North Avenue</a></strong> to the Burlington High School stop on Institute Rd, walk down to North Beach, then follow the path south. Every GMT bus has a free two-bike front rack, which is the smoothest way to do this.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=44.4889%2C-73.2313" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
+        <h3>Best time</h3>
+        <p class="best-time">Any warm afternoon. The dogs keep no schedule.</p>
+      </div>
+      <div class="spot-hunt">
+        <h3>The hunt</h3>
+        <label class="hunt-item"><input type="checkbox" data-hunt="tx-1"><span><strong>Count the swimming dogs.</strong> On a warm day the number will not be zero; your count is your score.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="tx-2"><span>Stand on the sand and picture the <strong>barges that gave the beach its name</strong> — for decades, fuel barges landed here — the tank farm above the shore is what gave the beach its name.</span></label>
+      </div>
+    </div>
+    <p class="spot-share">Found one? <a href="photos.html#submit">Send the photo</a> — dogs mid-swim especially welcome.</p>
+  </article>
+
+  <!-- ============================================================
+       NORTH BEACH — the big one
+  ============================================================ -->
+  <article class="spot" id="north-beach">
+    <header class="spot-head">
+      <h2>North Beach</h2>
+      <span class="spot-tag">The big one</span>
+      <span class="spot-live" data-swim="North Beach"></span>
+    </header>
+    <p class="spot-vibe">Burlington's largest beach and its most social: the only one with lifeguards, a campground in the pines behind it, and the Adirondacks stacked across the water. On a hot August weekend it hits capacity before lunch, and it earns that too.</p>
+    <div class="spot-cols">
+      <div class="spot-info">
+        <h3>The practical part</h3>
+        <ul class="spot-facts">
+          <li>Off North Ave via Institute Rd; gates 9 AM–9 PM in season. Beach access is free; parking is $3/hour May–mid-October (ParkMobile zone 5828), free the rest of the year.</li>
+          <li>The only lifeguarded beach in the city — guards on duty daily in summer, roughly early June through late August, 11 AM–6 PM.</li>
+          <li>Restrooms with showers, playground, grills, picnic tables; in recent summers, the Beach House bar-and-grill and a snack bar with creemees, both on the sand.</li>
+          <li>Kayak, canoe and paddleboard rentals from Paddlesurf Champlain in summer.</li>
+          <li>North Beach Campground: 137 sites in the pines, open May 15–October 15 — camping inside city limits.</li>
+        </ul>
+        <h3>Getting there</h3>
+        <div class="go-row"><span class="go-mode">Bus</span><span><strong><a href="https://ridegmt.com/schedules/northavenue/" target="_blank" rel="noopener">#7 North Avenue</a></strong>, every half hour or so Monday–Saturday, to the Burlington High School stop — then walk Institute Rd down to the water, about 10 minutes. Sundays the <strong>#778 North End Circulator</strong> covers North Ave.</span></div>
+        <div class="go-row"><span class="go-mode">Bike</span><span>Right on the Greenway — about 10 minutes north of Waterfront Park.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=North+Beach+Park%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
+        <h3>Best time</h3>
+        <p class="best-time">Early. On hot weekends the lot fills by 11 AM; a weekday morning swim here, with the guards on and the lake flat, is the full postcard.</p>
+      </div>
+      <div class="spot-hunt">
+        <h3>The hunt</h3>
+        <label class="hunt-item"><input type="checkbox" data-hunt="nb-1"><span>If the snack bar's open, eat a <strong>creemee standing in the lake</strong> — counter to shoreline before it melts.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="nb-2"><span><strong>Swim at the only guarded beach in the city</strong> while the lifeguards are on duty.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="nb-3"><span>Look north from the sand and find the grey cliffs of <strong>Lone Rock Point</strong> closing off the bay.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="nb-4"><span><strong>Sleep a night at the campground</strong> without leaving Burlington — 137 sites in the pines behind the beach.</span></label>
+      </div>
+    </div>
+    <p class="spot-share">Found one? <a href="photos.html#submit">Send the photo</a> — say "North Beach" in the spot field.</p>
+  </article>
+
+  <!-- ============================================================
+       LEDDY — the local one
+  ============================================================ -->
+  <article class="spot" id="leddy">
+    <header class="spot-head">
+      <h2>Leddy Park Beach</h2>
+      <span class="spot-tag">The local one</span>
+      <span class="spot-live" data-swim="Leddy Park"></span>
+    </header>
+    <p class="spot-vibe">The New North End's beach: a long ribbon of sand below a grassy picnic bluff, free parking, and a calmer crowd than North Beach on the same water. It's also the only beach in town with an ice arena in the parking lot, which is a very Vermont sentence.</p>
+    <div class="spot-cols">
+      <div class="spot-info">
+        <h3>The practical part</h3>
+        <ul class="spot-facts">
+          <li>216 Leddy Park Rd, off North Ave. Parking is free; the main gate runs 4:30 AM–12:30 AM.</li>
+          <li>No lifeguards. Restrooms are inside the Leddy Arena building.</li>
+          <li>Grills and picnic tables on the bluff above the sand; athletic fields, tennis and basketball in the park behind.</li>
+          <li>Leddy Beach Bites — the summer Wednesday-evening food-truck series — is the neighborhood's weekly ritual.</li>
+        </ul>
+        <h3>Getting there</h3>
+        <div class="go-row"><span class="go-mode">Bus</span><span><strong><a href="https://ridegmt.com/schedules/northavenue/" target="_blank" rel="noopener">#7 North Avenue</a></strong> to North Ave near Leddy Park Rd, then a short walk in — under 10 minutes. Sundays: <strong>#778 North End Circulator</strong>.</span></div>
+        <div class="go-row"><span class="go-mode">Bike</span><span>The Greenway runs right through Leddy Park — about 20 minutes north of the Waterfront.</span></div>
+<div class="go-row"><span class="go-mode">Pin</span><span><a href="https://www.google.com/maps/dir/?api=1&destination=216+Leddy+Park+Rd%2C+Burlington%2C+VT" target="_blank" rel="noopener">Open in Google Maps →</a></span></div>
+        <h3>Best time</h3>
+        <p class="best-time">Late afternoon into evening — and a summer Wednesday if you want the food trucks with your swim.</p>
+      </div>
+      <div class="spot-hunt">
+        <h3>The hunt</h3>
+        <label class="hunt-item"><input type="checkbox" data-hunt="ld-1"><span>Walk <strong>Leddy's sand end to end</strong>, feet in the water as far as the shore lets you.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="ld-2"><span>Photograph the <strong>ice arena from the beach</strong> — swim trunks in the foreground, hockey barn in the back.</span></label>
+        <label class="hunt-item"><input type="checkbox" data-hunt="ld-3"><span>Make a summer Wednesday of <strong>Leddy Beach Bites</strong>: food truck dinner on the bluff, swim for dessert.</span></label>
+      </div>
+    </div>
+    <p class="spot-share">Found one? <a href="photos.html#submit">Send the photo</a> — say "Leddy" in the spot field.</p>
+  </article>
+
+  <!-- ============================================================
+       KEEP GOING — past the beaches
+  ============================================================ -->
+  <section id="keep-going">
+    <div class="dept">
+      <h2>Keep going</h2>
+      <p>Two more finds for when the beaches are ticked off — one on foot, one on two wheels.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h3>Rock Point</h3>
+        <p>Quiet, cedar-shaded church land next to North Beach, open to the public with a free trail pass reserved ahead at rockpointvt.org. It holds the Champlain Thrust — a fault where rock hundreds of millions of years older sits directly on top of younger stone, visible at the waterline.</p>
+        <label class="hunt-item"><input type="checkbox" data-hunt="rp-1"><span>Reserve the free pass, then <strong>find the thrust fault</strong> — old rock resting on young, one of New England's most-visited geology sites.</span></label>
+      </div>
+      <div class="card">
+        <h3>The Causeway &amp; the Bike Ferry</h3>
+        <p>North of Leddy the Greenway becomes the Island Line Trail and runs out onto the Colchester Causeway — miles of old railroad bed with the lake on both sides of you, ending at "the Cut," where Local Motion's seasonal bike ferry carries you across to South Hero.</p>
+        <label class="hunt-item"><input type="checkbox" data-hunt="cw-1"><span>Ride until the <strong>lake surrounds you</strong>, then cross the Cut on the <strong>bike ferry</strong> in season.</span></label>
+      </div>
+    </div>
+  </section>
+
+  <p class="lake-notes">Statuses come from the <a href="https://www.burlingtonvt.gov/1219/Beach-Closure-Tracker" target="_blank" rel="noopener">city's Beach Closure Tracker</a>; when in doubt, believe the sign at the beach. Red Rocks is tested separately by <a href="https://www.southburlingtonvt.gov/542/Red-Rocks-Park-Water-Quality" target="_blank" rel="noopener">South Burlington</a>. Parking rates and lifeguard seasons are the cities' published ones and can change; bus times live at <a href="https://ridegmt.com/schedules/" target="_blank" rel="noopener">ridegmt.com</a>, and every GMT bus carries a free two-bike rack up front. Facilities listed here are from the official park pages — if we got something wrong, <a href="mailto:BtownBrief@gmail.com?subject=Beaches%20page%20correction">tell us</a> and we'll fix it.</p>
+
+  <footer class="foot">
+    <span>Made in Burlington, Vermont · <a href="https://www.btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture">get the Brief, free</a></span>
+    <span><a href="index.html">← Back to the guide</a></span>
+  </footer>
+
+</div>
+
+<script src="js/beaches.js?v=20260802a"></script>
+<script src="https://play.btownbrief.com/nav.js" defer></script>
+</body>
+</html>
