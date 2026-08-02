@@ -196,7 +196,13 @@ def api_call(key, brain, prompt, max_tokens=700):
     )
     with urllib.request.urlopen(req, timeout=120) as res:
         out = json.loads(res.read())
-    return "".join(b.get("text", "") for b in out.get("content", [])).strip()
+    text = "".join(b.get("text", "") for b in out.get("content", [])).strip()
+    if not text:
+        # Surface WHY in the Action log: stop reason and what blocks came back.
+        blocks = [b.get("type") for b in out.get("content", [])]
+        print(f"api_call returned no text: stop_reason={out.get('stop_reason')!r} "
+              f"blocks={blocks} usage={out.get('usage')}", file=sys.stderr)
+    return text
 
 
 def call_claude(key, brain, packet, today, edition):
@@ -219,7 +225,7 @@ def call_claude_week(key, brain, week_packet, dates, today):
         "YYYY-MM-DD | blurb\n"
         "covering these dates: " + ", ".join(dates) + ". No other text.\n\n"
         + week_packet)
-    raw = api_call(key, brain, prompt, max_tokens=1200)
+    raw = api_call(key, brain, prompt, max_tokens=2000)
     week, seen = [], set()
     for line in raw.splitlines():
         m = re.match(r"\s*(\d{4}-\d{2}-\d{2})\s*\|\s*(\S.*)", line)
