@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Small Bites — every menu near Church Street, Burlington VT</title>
+  <meta name="description" content="One combined menu for the Church Street Marketplace: every dish from every restaurant within a five-minute walk, with real prices — filter by price, cuisine, dietary needs, and patio.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Btown Brief">
+  <meta property="og:title" content="Small Bites — every menu near Church Street">
+  <meta property="og:description" content="What can I eat near here, and for how much? Every dish within a five-minute walk of the Marketplace, one filterable list.">
+  <meta property="og:url" content="https://guide.btownbrief.com/small-bites.html">
+  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Small Bites — every menu near Church Street">
+  <meta name="twitter:description" content="Every dish within a five-minute walk of the Marketplace, one filterable list.">
+  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+
+  <meta name="theme-color" content="#06080A">
+
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="City Guide">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/hub.css?v=20260802a">
+  <link rel="stylesheet" href="css/small-bites.css?v=20260802a">
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2471867016612559');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel -->
+</head>
+<body class="hub">
+
+<header class="bites-hero">
+  <div class="wrap">
+    <p class="eyebrow">The BTown Brief · City Guide</p>
+    <h1 class="wordmark">Small bites</h1>
+    <p class="lede">You're standing on the Marketplace and you're hungry. This is
+      <strong>every menu within a five-minute walk of Church Street</strong>, folded
+      into one list — filter it by price, cuisine, or what you can eat, and go.</p>
+    <p class="bites-stats" id="stats">Loading the menus…</p>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Menu filters">
+  <div class="wrap">
+    <button class="rail-toggle" id="rail-toggle" aria-expanded="false" aria-controls="rail-rows">Filters ▾ <span id="rail-summary"></span></button>
+    <div class="rail-rows" id="rail-rows">
+      <div class="rail-row">
+        <input type="search" id="q" placeholder="Search dishes or places…" aria-label="Search dishes or places">
+        <select id="cuisine" aria-label="Cuisine"><option value="">All cuisines</option></select>
+        <select id="sort" aria-label="Sort">
+          <option value="near">Nearest first</option>
+          <option value="name">A to Z</option>
+          <option value="cheap">Cheapest dish first</option>
+        </select>
+        <span class="match-line" id="match-line"></span>
+      </div>
+      <div class="rail-row" id="price-row">
+        <span class="rail-label">Price</span>
+        <button class="pill" data-price="u10" aria-pressed="false">Under $10</button>
+        <button class="pill" data-price="10to15" aria-pressed="false">$10–15</button>
+        <button class="pill" data-price="15to25" aria-pressed="false">$15–25</button>
+        <button class="pill" data-price="25up" aria-pressed="false">$25+</button>
+      </div>
+      <div class="rail-row">
+        <span class="rail-label">Eats</span>
+        <button class="pill" data-diet="vegetarian" aria-pressed="false">Vegetarian</button>
+        <button class="pill" data-diet="vegan" aria-pressed="false">Vegan</button>
+        <button class="pill" data-diet="gluten-free" aria-pressed="false">Gluten-free</button>
+        <span class="rail-label" style="margin-left:0.8rem">Vibe</span>
+        <button class="pill" data-kind="restaurant" aria-pressed="false">Restaurants</button>
+        <button class="pill" data-kind="cafe" aria-pressed="false">Cafés</button>
+        <button class="pill" data-kind="bar" aria-pressed="false">Bars</button>
+        <button class="pill" data-kind="sweet" aria-pressed="false">Sweet treats</button>
+        <button class="pill" data-kind="patio" aria-pressed="false">Patio</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="menu-list" id="menu-list" aria-live="polite"></div>
+
+  <section class="gap-section" id="gap-section" hidden>
+    <div class="dept">
+      <h2>Menus we couldn't fetch</h2>
+      <p>These places are in the zone but don't publish a usable menu online. No guessing — walk in or call.</p>
+    </div>
+    <ul class="gap-list" id="gap-list"></ul>
+  </section>
+
+  <p class="fine-print">Dietary tags only appear where a menu marks them — an unmarked dish
+    isn't necessarily off-limits, ask. Prices are as printed on each restaurant's own menu on
+    the fetch date shown, and kitchens change them without telling us; anything
+    time-sensitive deserves a quick call. Deals shown are only the ones a menu or site states
+    outright. Know a menu that's changed? <a href="https://www.btownbrief.com" style="color:var(--accent)">Tell the Brief</a>.</p>
+
+  <footer class="foot">
+    <span>Made in Burlington, Vermont · <a href="https://www.btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture">get the Brief, free</a></span>
+    <span><a href="restaurants.html">Who's open right now →</a></span>
+  </footer>
+</div>
+
+<script src="js/small-bites.js?v=20260802a"></script>
+<script src="https://play.btownbrief.com/nav.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+/* ============================================================
+   SMALL BITES — one combined menu for the Church Street
+   walkable zone. Rides on hub.css for the tokens (glass on
+   black, Instrument Serif + DM Sans); this file is only the
+   page's own furniture: hero, filter rail, menu rows.
+============================================================ */
+
+/* ------------------------------------------------ hero */
+.bites-hero {
+  position: relative;
+  padding: clamp(3.2rem, 8vw, 5.5rem) 0 clamp(1.6rem, 4vw, 2.4rem);
+  background:
+    radial-gradient(ellipse 90% 120% at 50% -30%, rgba(232, 163, 61, 0.14), transparent 60%),
+    var(--ground);
+  overflow: hidden;
+}
+.bites-hero .wrap { padding-bottom: 0; }
+.bites-hero .wordmark { font-size: clamp(2.6rem, 6.5vw, 4.6rem); }
+.bites-hero .lede {
+  margin: 0.9rem 0 0;
+  max-width: 56ch;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+.bites-hero .lede strong { color: var(--ink); font-weight: 600; }
+.bites-stats {
+  margin: 1.1rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.bites-stats b { color: var(--accent); font-weight: 600; }
+
+/* ------------------------------------------------ filter rail */
+.rail {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(6, 8, 10, 0.88);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--edge-soft);
+  padding: 0.7rem 0 0.75rem;
+}
+.rail .wrap { padding-bottom: 0; padding-top: 0; }
+.rail-rows { display: flex; flex-direction: column; gap: 0.55rem; }
+.rail-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.45rem;
+}
+.rail-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 600;
+  margin-right: 0.15rem;
+  min-width: 3.4rem;
+}
+.pill {
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--pill);
+  padding: 0.28rem 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.14s ease, color 0.14s ease, background 0.14s ease;
+  white-space: nowrap;
+}
+.pill:hover { border-color: var(--accent); color: var(--ink); }
+.pill[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+.rail select, .rail input[type="search"] {
+  font: inherit;
+  font-size: 0.84rem;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--pill);
+  padding: 0.3rem 0.8rem;
+}
+.rail select:focus-visible, .rail input:focus-visible, .pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.rail select option { background: #14181C; color: var(--ink); }
+.rail input[type="search"] { flex: 1 1 11rem; min-width: 9rem; max-width: 22rem; }
+.rail select#cuisine { max-width: 15rem; }
+.rail input[type="search"]::placeholder { color: var(--ink-faint); }
+.match-line {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.match-line b { color: var(--ink-soft); }
+
+/* ------------------------------------------------ places + menu rows */
+.menu-list {
+  margin: 1.4rem auto 0;
+  max-width: 880px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.place {
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  padding: 1rem 1.15rem 0.9rem;
+}
+.place-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.7rem;
+}
+.place-head h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.45rem;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+.place-head h2 a { color: inherit; text-decoration: none; }
+.place-head h2 a:hover { color: var(--accent); }
+.place-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 0.6rem;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
+.chip {
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.13rem 0.5rem;
+  border-radius: var(--pill);
+  white-space: nowrap;
+}
+.chip.patio { color: var(--good); background: rgba(111, 215, 158, 0.14); }
+.chip.deal { color: var(--accent); background: var(--accent-soft); }
+.chip.gap { color: var(--hot); background: rgba(240, 153, 106, 0.13); }
+
+.place-deals {
+  margin: 0.45rem 0 0;
+  font-size: 0.8rem;
+  color: var(--accent);
+  line-height: 1.45;
+}
+.place-deals .src { color: var(--ink-faint); }
+
+.items { list-style: none; margin: 0.6rem 0 0; padding: 0; }
+.item {
+  padding: 0.42rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.item-row { display: flex; align-items: baseline; gap: 0.6rem; }
+/* The dotted leader every menu uses — ties a dish to its price. */
+.item-leader {
+  flex: 1;
+  min-width: 1.5rem;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.18);
+  transform: translateY(-0.28em);
+}
+.item-name { font-size: 0.9rem; font-weight: 500; color: var(--ink); }
+.item-name .diet {
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--good);
+  margin-left: 0.4rem;
+}
+.item-price {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  text-align: right;
+  white-space: nowrap;
+}
+.item-desc {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--ink-faint);
+  margin: 0;
+  max-width: 68ch;
+}
+.more-btn {
+  font: inherit;
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0.5rem 0 0.1rem;
+  cursor: pointer;
+}
+.more-btn:hover { text-decoration: underline; }
+
+.place-foot {
+  margin-top: 0.55rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+}
+.place-foot a { color: var(--ink-faint); }
+.place-foot a:hover { color: var(--accent); }
+
+/* ------------------------------------------------ gaps + empty state */
+.gap-section { margin-top: 2.6rem; }
+.gap-section .dept p { min-width: 0; }
+.gap-section .dept, .gap-list { max-width: 880px; margin-left: auto; margin-right: auto; }
+.gap-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.gap-list li {
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+}
+.gap-list b { color: var(--ink); font-weight: 600; }
+.gap-list a { color: var(--accent); text-decoration: none; }
+.gap-list a:hover { text-decoration: underline; }
+.gap-note { color: var(--ink-faint); }
+
+.empty {
+  margin: 3rem auto;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 0.9rem;
+}
+.empty b { color: var(--ink-soft); }
+
+.fine-print {
+  margin-top: 2.2rem;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  max-width: 70ch;
+}
+
+/* On phones the full rail would fill the screen, so it folds behind a
+   sticky "Filters" toggle. Desktop never sees the button. */
+.rail-toggle { display: none; }
+
+@media (max-width: 640px) {
+  .rail-label { min-width: 100%; margin: 0; }
+  .match-line { margin-left: 0; width: 100%; }
+  .place { padding: 0.85rem 0.9rem 0.75rem; }
+
+  .rail-toggle {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: none;
+    border: none;
+    padding: 0.15rem 0;
+    cursor: pointer;
+  }
+  .rail-toggle .hits { color: var(--accent); font-weight: 500; }
+  .rail:not(.open) .rail-rows { display: none; }
+}
