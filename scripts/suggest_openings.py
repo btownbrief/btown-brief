@@ -29,6 +29,11 @@ FEEDS = [
     ("changes", os.path.join(ROOT, "data", "changes", "changes.json")),
 ]
 
+# The Brief's own archive (sibling repo, ~/btownbrief/archive) tags stories
+# with openClose — the single best source. Optional: skipped silently when
+# the checkout isn't there.
+ARCHIVE = os.path.join(ROOT, "..", "archive", "data", "stories.json")
+
 # Business-change language. Word-boundary anchored so "reopens" still hits
 # ("re" + open) but "chopin" doesn't.
 SIGNAL = re.compile(
@@ -123,13 +128,21 @@ def harvest(feed_name, data):
             if isinstance(item, dict) and item.get("headline"):
                 yield (item["headline"], item.get("url", ""),
                        item.get("sourceName") or "")
+    elif feed_name == "archive":
+        for item in data if isinstance(data, list) else []:
+            if isinstance(item, dict) and item.get("openClose") and item.get("headline"):
+                yield (item["headline"], item.get("url", ""),
+                       "Brief %s" % (item.get("date") or "archive"))
 
 
 def main():
     urls, names = known_keys()
     suggestions, seen, failed = [], set(), []
 
-    for feed_name, path in FEEDS:
+    feeds = list(FEEDS)
+    if os.path.exists(ARCHIVE):
+        feeds.append(("archive", ARCHIVE))
+    for feed_name, path in feeds:
         data = load(path)
         if data is None:
             failed.append(feed_name)

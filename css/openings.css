@@ -108,7 +108,17 @@
 .o-status.opening-soon { color: var(--accent); background: var(--accent-soft); }
 .o-status.closed { color: var(--hot); background: rgba(240, 153, 106, 0.14); }
 
-.o-card h2 {
+.o-year {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.2rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+  margin: 0.9rem 0 0;
+}
+.o-feed > .o-year:first-child { margin-top: 0; }
+
+.o-card h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 1.5rem;

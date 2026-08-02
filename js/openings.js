@@ -37,7 +37,7 @@
           '<span class="o-status ' + status + '">' + esc(STATUS_LABEL[status]) + '</span>' +
           '<span>' + esc(e.dateLabel || e.date || '') + '</span>' +
         '</div>' +
-        '<h2>' + esc(e.name) + '</h2>' +
+        '<h3>' + esc(e.name) + '</h3>' +
         (e.area ? '<p class="o-area">' + esc(e.area) + '</p>' : '') +
         (e.story ? '<p class="o-story">' + esc(e.story) + '</p>' : '') +
         (linkable
@@ -52,9 +52,21 @@
     var shown = entries.filter(function (e) {
       return active === 'all' || e.status === active;
     });
-    feed.innerHTML = shown.length
-      ? shown.map(cardHTML).join('')
-      : '<p class="o-empty">Nothing in this column right now — check back soon.</p>';
+    if (!shown.length) {
+      feed.innerHTML = '<p class="o-empty">Nothing in this column right now — check back soon.</p>';
+      return;
+    }
+    // A year marker whenever the feed crosses into an older year.
+    var html = '', year = '';
+    shown.forEach(function (e) {
+      var y = String(e.date || '').slice(0, 4);
+      if (y && y !== year) {
+        year = y;
+        html += '<h2 class="o-year">' + esc(y) + '</h2>';
+      }
+      html += cardHTML(e);
+    });
+    feed.innerHTML = html;
   }
 
   pills.forEach(function (pill) {
