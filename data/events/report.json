@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-01T17:35:25-04:00",
+ "generated": "2026-08-02T07:05:02-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 22,
-   "seconds": 6.0
+   "count": 19,
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 71,
-   "seconds": 5.0
+   "count": 69,
+   "seconds": 2.5
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 62,
-   "seconds": 2.6
+   "count": 61,
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 180,
-   "seconds": 2.1
+   "count": 173,
+   "seconds": 3.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 80,
-   "seconds": 1.6
+   "count": 78,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-01&end_date=2026-09-30&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-02&end_date=2026-10-01&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 43,
+   "count": 34,
    "seconds": 0.0
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 9,
-   "seconds": 0.5
+   "count": 8,
+   "seconds": 0.1
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 171,
-   "seconds": 76.7
+   "count": 169,
+   "seconds": 65.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 2.9
+   "seconds": 2.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 42.6
+   "seconds": 35.4
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 73,
-   "seconds": 116.5
+   "seconds": 107.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,18 +78,18 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 505,
-   "seconds": 67.6
+   "count": 499,
+   "seconds": 74.1
   },
   "meetup": {
    "label": "Meetup",
    "count": 66,
-   "seconds": 121.0
+   "seconds": 118.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 35,
-   "seconds": 16.5
+   "count": 34,
+   "seconds": 15.4
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -98,8 +98,8 @@
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 32,
-   "seconds": 29.6
+   "count": 33,
+   "seconds": 27.6
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,7 +124,7 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 54,
-   "seconds": 74.0
+   "seconds": 69.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,110 +132,11 @@
    "seconds": 0.2
   }
  },
- "gathered": 2210,
- "afterDedup": 1128,
- "duplicatesMerged": 1082,
- "final": 1992,
+ "gathered": 2177,
+ "afterDedup": 1113,
+ "duplicatesMerged": 1064,
+ "final": 1959,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-26"
-  },
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-26"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-26"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
-  {
-   "kept": {
-    "title": "Dinosaur Safari Exhibit",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
-  {
-   "kept": {
-    "title": "Hot Dog & A Can Thursdays",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
   {
    "kept": {
     "title": "Everything is Everything: Will Kasso Condry",
@@ -1979,6 +1880,18 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-09-17"
+  },
+  {
+   "kept": {
+    "title": "Gooseberry",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-17"
@@ -1993,6 +1906,50 @@
     "loveburlington"
    ],
    "date": "2026-09-17"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-17"
+  },
+  {
+   "kept": {
+    "title": "Hot Dog & A Can Thursdays",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-17"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-17"
+  },
+  {
+   "kept": {
+    "title": "Old Crow Medicine Show",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-09-18"
   },
   {
    "kept": {
@@ -2359,36 +2316,59 @@
     "loveburlington"
    ],
    "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-10-01"
+  },
+  {
+   "kept": {
+    "title": "Southern Culture On The Skids",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-10-01"
+  },
+  {
+   "kept": {
+    "title": "Joe Dombrowski",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "vcc"
+   ],
+   "date": "2026-10-01"
+  },
+  {
+   "kept": {
+    "title": "Thirsty Thursday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-01"
   }
  ],
  "changes": [
   {
-   "id": "bef8cca943e6",
-   "title": "The Head And The Heart",
-   "date": "2026-08-01",
-   "change": "time",
-   "was": "2026-08-01T19:00:00-04:00",
-   "now": "2026-08-01T18:30:00-04:00"
-  },
-  {
-   "id": "24003d3e2fde",
-   "title": "Board Game Brunch",
-   "date": "2026-08-01",
+   "id": "cbcaf26c87c8",
+   "title": "Friends Book Sale",
+   "date": "2026-08-02",
    "change": "missing",
-   "lastSeen": "2026-08-01T07:04:09-04:00"
-  },
-  {
-   "id": "467911ed2caa",
-   "title": "BTown Coffee Club",
-   "date": "2026-08-01",
-   "change": "missing",
-   "lastSeen": "2026-08-01T07:04:09-04:00"
-  },
-  {
-   "id": "aab19170a2bc",
-   "title": "Outdoor Play Time",
-   "date": "2026-08-05",
-   "change": "dropped"
+   "lastSeen": "2026-08-01T17:35:25-04:00"
   },
   {
    "id": "99e705a85d03",
@@ -2424,12 +2404,6 @@
    "date": "2026-08-19",
    "change": "missing",
    "lastSeen": "2026-07-31T07:45:12-04:00"
-  },
-  {
-   "id": "97a8919273c7",
-   "title": "Community Dinner: September 2026",
-   "date": "2026-09-12",
-   "change": "dropped"
   },
   {
    "id": "518398c5c87e",
