@@ -2,6 +2,7 @@
 """Refresh the public chatter summary and its small, public-safe history."""
 
 import argparse
+import base64
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -11,6 +12,8 @@ import os
 import re
 import sys
 import tempfile
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -162,10 +165,34 @@ def write_json(path, value):
 # Ingestion — every network request is bounded and independently optional
 # ----------------------------------------------------------------------
 
-def fetch_bytes(url, accept):
-    request = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept})
+def fetch_bytes(url, accept, headers=None):
+    merged = {"User-Agent": UA, "Accept": accept}
+    if headers:
+        merged.update(headers)
+    request = urllib.request.Request(url, headers=merged)
     with urllib.request.urlopen(request, timeout=30) as response:
         return response.read()
+
+
+def reddit_oauth_token():
+    """App-only OAuth token, or None when the secrets aren't configured.
+
+    Reddit's public JSON endpoints 403 GitHub Actions egress IPs; the
+    official OAuth flow does not. Set REDDIT_CLIENT_ID/SECRET repo
+    secrets to activate this path — without them behavior is unchanged.
+    """
+    cid = os.environ.get("REDDIT_CLIENT_ID")
+    secret = os.environ.get("REDDIT_CLIENT_SECRET")
+    if not cid or not secret:
+        return None
+    basic = base64.b64encode(f"{cid}:{secret}".encode()).decode()
+    request = urllib.request.Request(
+        "https://www.reddit.com/api/v1/access_token",
+        data=b"grant_type=client_credentials",
+        headers={"User-Agent": UA, "Authorization": "Basic " + basic},
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.loads(response.read()).get("access_token")
 
 
 def parse_inoreader(raw, sub):
@@ -219,6 +246,47 @@ def load_news(existing, fixtures=None):
     merged = {item.get("url"): item for item in existing if item.get("url")}
     merged.update((item["url"], item) for item in fresh)
     return sorted(merged.values(), key=lambda item: item.get("published", ""), reverse=True)[:150]
+
+
+BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+              "(KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36")
+ATOM = "{http://www.w3.org/2005/Atom}"
+
+
+def fetch_reddit_rss(short, _pause=[False]):
+    """Polite unauthenticated fetch: spaced requests, one retry on 429."""
+    if _pause[0]:
+        time.sleep(6)
+    _pause[0] = True
+    url = f"https://www.reddit.com/r/{short}/new/.rss?limit=100"
+    headers = {"User-Agent": BROWSER_UA}
+    try:
+        return fetch_bytes(url, "application/atom+xml, application/xml", headers)
+    except urllib.error.HTTPError as exc:
+        if exc.code != 429:
+            raise
+        time.sleep(30)
+        return fetch_bytes(url, "application/atom+xml, application/xml", headers)
+
+
+def parse_reddit_atom(raw, sub):
+    """Reddit's own .rss (Atom) feed — no registration, no scores/comments.
+
+    Works from residential IPs with a browser User-Agent; 403s from
+    datacenter IPs, so in CI this source simply falls through."""
+    posts = []
+    for entry in ET.fromstring(raw).findall(f"{ATOM}entry")[:100]:
+        link_el = entry.find(f"{ATOM}link")
+        link = reddit_url(link_el.get("href") if link_el is not None else None)
+        post_id = reddit_id(link or "")
+        if not post_id:
+            continue
+        body = strip_html(entry.findtext(f"{ATOM}content") or "")
+        body = re.sub(r"\s+submitted by\s+/u/.*$", "", body, flags=re.I).strip()
+        posts.append({"id": post_id, "title": clean_space(entry.findtext(f"{ATOM}title")), "body": body[:600],
+                      "score": None, "comments": None, "created": parse_time(entry.findtext(f"{ATOM}updated")),
+                      "url": link, "sub": sub, "from_reddit": True, "from_inoreader": False})
+    return posts
 
 
 def parse_reddit(data, sub):
@@ -276,10 +344,35 @@ def load_sources(fixtures=None):
         return merge_posts(groups), "fixtures"
 
     used_reddit = used_inoreader = False
+    oauth_token = None
+    try:
+        oauth_token = reddit_oauth_token()
+    except Exception as exc:
+        print(f"reddit oauth token failed: {exc}", file=sys.stderr)
     for sub in ("r/burlington", "r/vermont"):
         short = sub.split("/", 1)[1]
         loaded = False
-        for host in ("www.reddit.com", "old.reddit.com", "api.reddit.com"):
+        if oauth_token:
+            try:
+                raw = fetch_bytes(
+                    f"https://oauth.reddit.com/r/{short}/new?limit=100",
+                    "application/json",
+                    {"Authorization": f"Bearer {oauth_token}"},
+                )
+                groups.append(parse_reddit(json.loads(raw), sub))
+                used_reddit = loaded = True
+            except Exception as exc:
+                print(f"reddit oauth {short} failed: {exc}", file=sys.stderr)
+        if not loaded:
+            try:
+                raw = fetch_reddit_rss(short)
+                posts = parse_reddit_atom(raw, sub)
+                if posts:
+                    groups.append(posts)
+                    used_reddit = loaded = True
+            except Exception as exc:
+                print(f"reddit rss {short} failed: {exc}", file=sys.stderr)
+        for host in () if loaded else ("www.reddit.com", "old.reddit.com", "api.reddit.com"):
             try:
                 raw = fetch_bytes(f"https://{host}/r/{short}/new.json?limit=100", "application/json")
                 groups.append(parse_reddit(json.loads(raw), sub))
