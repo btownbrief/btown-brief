@@ -243,6 +243,24 @@
       } else {
         el.innerHTML = '<strong>' + done + ' of ' + boxes.length + '</strong> found so far. The lake isn’t going anywhere.';
       }
+
+      /* Bragging is the point of a scavenger hunt. The button only exists
+         where the OS has a share sheet and there's something to brag about. */
+      var share = $('hunt-share');
+      if (share) share.hidden = !(navigator.share && done > 0);
+    }
+
+    var shareBtn = $('hunt-share');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function () {
+        var done = boxes.filter(function (b) { return b.checked; }).length;
+        navigator.share({
+          title: 'Lake & Beaches — the Btown Brief',
+          text: 'I’ve found ' + done + ' of ' + boxes.length +
+                ' on the Burlington lake & beaches hunt. Come catch up:',
+          url: 'https://guide.btownbrief.com/beaches.html'
+        }).catch(function () {});
+      });
     }
 
     tally();

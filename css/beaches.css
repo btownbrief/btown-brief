@@ -320,6 +320,30 @@ html { scroll-behavior: smooth; }
 }
 .hunt-tally strong { color: var(--accent); font-weight: 600; }
 
+.best-time a { color: var(--accent); text-decoration: none; }
+.best-time a:hover { text-decoration: underline; }
+
+/* Share-your-tally — only appears where the Web Share API exists and
+   at least one challenge is ticked. */
+.hunt-share {
+  margin-top: 0.7rem;
+  font-family: var(--ui);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+  border-radius: var(--pill);
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.16s ease;
+}
+.hunt-share:hover, .hunt-share:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+}
+
 /* The share line at the foot of every spot. */
 .spot-share {
   margin: 1.2rem 0 0;
