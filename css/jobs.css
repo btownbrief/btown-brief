@@ -187,6 +187,24 @@ a { color: inherit; }
    quality chips (stack them).
 ============================================================ */
 .filters { margin-top: 1.9rem; }
+.search-input {
+  display: block;
+  width: min(360px, 100%);
+  margin: 0 0 10px;
+  font: inherit;
+  font-size: 0.88rem;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--edge-soft);
+  border-radius: var(--pill);
+  padding: 0.45rem 1rem;
+  outline: none;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: border-color 0.16s ease;
+}
+.search-input::placeholder { color: var(--ink-faint); }
+.search-input:focus { border-color: var(--accent); }
 .filter-row {
   display: flex;
   flex-wrap: wrap;
@@ -524,7 +542,8 @@ section.dept-block { margin-top: 3rem; }
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .tile, .card, .job-row, .note-card, .newsletter-bar, .btb-strip-card {
+  .tile, .card, .job-row, .note-card, .newsletter-bar, .btb-strip-card,
+  .search-input {
     background: rgba(18, 22, 26, 0.86);
   }
 }

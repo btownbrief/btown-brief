@@ -271,6 +271,23 @@
     });
   }
 
+  function statJobs() {
+    return getJSON('data/jobs.json').then(function (data) {
+      // Same Burlington-calendar-day window js/jobs.js shows (14 days), so
+      // the pill never promises more than the page delivers.
+      var DAY = 24 * 60 * 60 * 1000;
+      function dayNum(ymd) {
+        var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ymd || '');
+        return m ? Math.round(Date.UTC(+m[1], +m[2] - 1, +m[3]) / DAY) : NaN;
+      }
+      var today = dayNum(new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }));
+      var fresh = (data.jobs || []).filter(function (job) {
+        return job && today - dayNum(job.posted) <= 14;
+      }).length;
+      if (fresh) stat('stat-jobs', fresh + ' fresh');
+    });
+  }
+
   function statDeals() {
     return getJSON('data/deals.json').then(function (data) {
       var list = data.deals || [];
@@ -354,6 +371,7 @@
     tileTonight().catch(noop);
     statChanges().catch(noop);
     statDeals().catch(noop);
+    statJobs().catch(noop);
   }
 
   function noop() {}

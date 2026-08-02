@@ -49,7 +49,7 @@
   ];
 
   var jobs = [];
-  var state = { cat: null, quals: [] };
+  var state = { cat: null, quals: [], q: '' };
 
   // Only http(s) links are ever rendered — esc() stops markup injection but
   // not a scraped "javascript:" URL, which would still run on click.
@@ -95,12 +95,14 @@
         return QUALS.some(function (item) { return item[0] === q; });
       });
     }
+    if (params.s) state.q = params.s;
   }
 
   function writeHash() {
     var parts = [];
     if (state.cat) parts.push('cat=' + state.cat);
     if (state.quals.length) parts.push('q=' + state.quals.join(','));
+    if (state.q) parts.push('s=' + encodeURIComponent(state.q));
     history.replaceState(null, '', parts.length
       ? '#' + parts.join('&')
       : location.pathname + location.search);
@@ -121,9 +123,16 @@
     return state.quals.every(function (q) { return hasQual(job, q); });
   }
 
+  function matchesSearch(job) {
+    if (!state.q) return true;
+    var needle = state.q.toLowerCase();
+    return (job.title + ' ' + job.employer).toLowerCase().indexOf(needle) !== -1;
+  }
+
   function matching() {
     return jobs.filter(function (job) {
-      return (!state.cat || jobCat(job) === state.cat) && matchesQuals(job);
+      return (!state.cat || jobCat(job) === state.cat) &&
+        matchesQuals(job) && matchesSearch(job);
     });
   }
 
@@ -196,7 +205,9 @@
   }
 
   function renderFilters() {
-    var underQuals = jobs.filter(matchesQuals);
+    var underQuals = jobs.filter(function (job) {
+      return matchesQuals(job) && matchesSearch(job);
+    });
     var catRow = pillHTML('', 'All fields', underQuals.length, !state.cat);
     CATS.forEach(function (c) {
       var count = underQuals.filter(function (job) { return jobCat(job) === c[0]; }).length;
@@ -225,7 +236,7 @@
         ? '<p class="page-empty">Nothing matches that combination this week — try clearing a filter.</p>'
         : '<p class="page-empty">No fresh postings right now — check the big employers below, or come back after the next refresh.</p>');
 
-    var filtered = state.cat || state.quals.length;
+    var filtered = state.cat || state.quals.length || state.q;
     count.textContent = filtered
       ? rows.length + ' of ' + jobs.length + ' postings match'
       : jobs.length + ' postings, newest first — every link goes to the real application';
@@ -273,7 +284,18 @@
     render();
   });
 
+  var searchTimer;
+  document.getElementById('job-search').addEventListener('input', function (e) {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function () {
+      state.q = e.target.value.trim();
+      writeHash();
+      render();
+    }, 120);
+  });
+
   readHash();
+  document.getElementById('job-search').value = state.q;
   renderEmployers();
 
   window.BTBC.fetchJSON('data/jobs.json').then(function (data) {
@@ -286,13 +308,29 @@
         return b.posted.localeCompare(a.posted) || String(b.id).localeCompare(String(a.id));
       });
 
-    var updated = document.getElementById('jobs-updated');
+    var line = '';
     var when = data.updated ? new Date(data.updated) : null;
     if (when && !isNaN(when.getTime())) {
-      updated.textContent = 'Last checked ' +
+      line = 'Last checked ' +
         when.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) +
         ' · refreshes automatically';
     }
+
+    // The digest hook, personalized: how many postings appeared since the
+    // reader last opened the board. Same-day revisits stay quiet.
+    try {
+      var today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+      var prev = localStorage.getItem('btb-jobs-last-visit');
+      localStorage.setItem('btb-jobs-last-visit', today);
+      if (prev && prev < today) {
+        var since = jobs.filter(function (job) { return job.posted > prev; }).length;
+        if (since) {
+          line += (line ? ' · ' : '') + since + ' new since your last visit';
+        }
+      }
+    } catch (e) { /* private browsing — the line just stays shorter */ }
+
+    document.getElementById('jobs-updated').textContent = line;
 
     renderStats();
     render();
