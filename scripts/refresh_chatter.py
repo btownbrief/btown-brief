@@ -2,6 +2,7 @@
 """Refresh the public chatter summary and its small, public-safe history."""
 
 import argparse
+import base64
 from collections import Counter
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -162,10 +163,34 @@ def write_json(path, value):
 # Ingestion — every network request is bounded and independently optional
 # ----------------------------------------------------------------------
 
-def fetch_bytes(url, accept):
-    request = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept})
+def fetch_bytes(url, accept, headers=None):
+    merged = {"User-Agent": UA, "Accept": accept}
+    if headers:
+        merged.update(headers)
+    request = urllib.request.Request(url, headers=merged)
     with urllib.request.urlopen(request, timeout=30) as response:
         return response.read()
+
+
+def reddit_oauth_token():
+    """App-only OAuth token, or None when the secrets aren't configured.
+
+    Reddit's public JSON endpoints 403 GitHub Actions egress IPs; the
+    official OAuth flow does not. Set REDDIT_CLIENT_ID/SECRET repo
+    secrets to activate this path — without them behavior is unchanged.
+    """
+    cid = os.environ.get("REDDIT_CLIENT_ID")
+    secret = os.environ.get("REDDIT_CLIENT_SECRET")
+    if not cid or not secret:
+        return None
+    basic = base64.b64encode(f"{cid}:{secret}".encode()).decode()
+    request = urllib.request.Request(
+        "https://www.reddit.com/api/v1/access_token",
+        data=b"grant_type=client_credentials",
+        headers={"User-Agent": UA, "Authorization": "Basic " + basic},
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.loads(response.read()).get("access_token")
 
 
 def parse_inoreader(raw, sub):
@@ -276,10 +301,26 @@ def load_sources(fixtures=None):
         return merge_posts(groups), "fixtures"
 
     used_reddit = used_inoreader = False
+    oauth_token = None
+    try:
+        oauth_token = reddit_oauth_token()
+    except Exception as exc:
+        print(f"reddit oauth token failed: {exc}", file=sys.stderr)
     for sub in ("r/burlington", "r/vermont"):
         short = sub.split("/", 1)[1]
         loaded = False
-        for host in ("www.reddit.com", "old.reddit.com", "api.reddit.com"):
+        if oauth_token:
+            try:
+                raw = fetch_bytes(
+                    f"https://oauth.reddit.com/r/{short}/new?limit=100",
+                    "application/json",
+                    {"Authorization": f"Bearer {oauth_token}"},
+                )
+                groups.append(parse_reddit(json.loads(raw), sub))
+                used_reddit = loaded = True
+            except Exception as exc:
+                print(f"reddit oauth {short} failed: {exc}", file=sys.stderr)
+        for host in () if loaded else ("www.reddit.com", "old.reddit.com", "api.reddit.com"):
             try:
                 raw = fetch_bytes(f"https://{host}/r/{short}/new.json?limit=100", "application/json")
                 groups.append(parse_reddit(json.loads(raw), sub))
