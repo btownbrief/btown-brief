@@ -17,7 +17,6 @@
   const state = {
     things: [],
     taxonomy: {},
-    events: [],
     calendar: [],
     eventsWeek: { days: [] },
     sponsors: [],
@@ -43,10 +42,9 @@
   ---------------------------------------------------------- */
   async function loadData() {
     try {
-      const [things, taxonomy, events, guides] = await Promise.all([
+      const [things, taxonomy, guides] = await Promise.all([
         fetchJSON('data/things.json'),
         fetchJSON('data/taxonomy.json'),
-        fetchJSON('data/events.json'),
         fetchJSON('data/guides.json'),
       ]);
       // Optional data — the site works fine if any of these are missing.
@@ -59,9 +57,7 @@
         fetchJSON('data/calendar.json').catch(() => []),
       ]);
       const eventsWeek = await fetchJSON('data/events-week.json').catch(() => ({ days: [] }));
-      // The REAL calendar — 3,000+ events from 26 sources. data/events.json (above)
-      // is a stale 7-item legacy file kept only as a fallback; the Upcoming strip
-      // was living off the hand-curated tentpoles alone, which is why it read thin.
+      // The REAL calendar — 3,000+ events from 26 sources.
       const bigCal = await fetchJSON('data/events/events.json').catch(() => ({ events: [] }));
       state.bigEvents = (bigCal && bigCal.events) || [];
       // Annual one-off events (extra: true) live in their own section at the
@@ -72,7 +68,6 @@
       // every refresh, but stays stable while filtering within a session.
       state.things.forEach(t => { t._rand = Math.random(); });
       state.taxonomy = taxonomy || {};
-      state.events = events || [];
       state.calendar = calendar || [];
       state.eventsWeek = eventsWeek || { days: [] };
       state.sponsors = sponsors || [];

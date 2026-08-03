@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Newly added events, read from the repo's own data/events.json (the feat/events
-pipeline refreshes it). No network: the events pipeline already did the
-fetching; we just notice what appeared between runs.
+Newly added events, read from the repo's own data/events/events.json (the
+events pipeline refreshes it). No network: the events pipeline already did
+the fetching; we just notice what appeared between runs.
 
 State shape:  {"items": [{"id", "title", "link", "ts", "start", "venue"}]}
 Diff:         new event ids -> "New event: <title> — <weekday> at <venue>"
@@ -17,11 +17,9 @@ from ..common import event, parse_when, now_utc, iso, BTV_TZ
 ID = "events-local"
 NAME = "BTown Brief events"
 _DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "..", "data")
-# The events pipeline's full dataset (3k+ events, with firstSeen stamps);
-# falls back to the small curated data/events.json if it's absent.
+# The events pipeline's full dataset (3k+ events, with firstSeen stamps).
 EVENTS_PATHS = [
     os.path.join(_DATA_DIR, "events", "events.json"),
-    os.path.join(_DATA_DIR, "events.json"),
 ]
 PAGE_URL = "events.html"
 MAX_LINES = 8
