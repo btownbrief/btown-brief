@@ -1,155 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food &amp; Drink Deals in Burlington, VT — Burlington Brief</title>
-  <meta name="description" content="Every food and drink deal in Burlington, Vermont — happy hours, daily specials, and cheap-night standbys, verified by the Burlington Brief.">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Btown Brief">
-  <meta property="og:title" content="Food &amp; Drink Deals in Burlington, VT">
-  <meta property="og:description" content="Every food and drink deal in Burlington, Vermont — happy hours, daily specials, and cheap-night standbys, verified by the Burlington Brief.">
-  <meta property="og:url" content="https://guide.btownbrief.com/deals.html">
-  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Food &amp; Drink Deals in Burlington, VT">
-  <meta name="twitter:description" content="Every food and drink deal in Burlington, Vermont — happy hours, daily specials, and cheap-night standbys, verified by the Burlington Brief.">
-  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
-
-  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-title" content="City Guide">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260711k">
-  <link rel="stylesheet" href="css/food.css?v=20260711k">
-  <script>
-    /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
-       refreshes the cache; this only avoids the white flash after dark. */
-    (function () {
-      try {
-        var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
-        if (!c) return;
-        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
-          year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-        if (c.day !== today) return;
-        var n = Date.now();
-        document.documentElement.setAttribute('data-theme',
-          (n >= c.rise && n < c.set) ? 'light' : 'dark');
-      } catch (e) {}
-    })();
-  </script>
-<!-- Meta Pixel -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2471867016612559');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel -->
+  <title>Deals moved — Burlington Brief</title>
+  <!-- The deals board lives on the restaurants page now (the 🏷️ Deals view).
+       This stub keeps old bookmarks and shared links working. -->
+  <meta http-equiv="refresh" content="0; url=restaurants.html?view=deals">
+  <link rel="canonical" href="https://guide.btownbrief.com/restaurants.html">
+  <meta name="robots" content="noindex">
 </head>
-<body class="food-page">
-
-  <header class="site-header" id="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
-          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-      </div>
-      <nav class="mode-nav" aria-label="Site pages">
-        <a class="mode-btn mode-btn-link" href="things-to-do.html">The List</a>
-        <a class="mode-btn mode-btn-link" href="restaurants.html">Food &amp; Drink</a>
-        <span class="mode-btn mode-btn-active" aria-current="page">Deals</span>
-      </nav>
-    </div>
-  </header>
-
-  <div class="food-layout">
-    <section class="deals-hero">
-      <h1 class="deals-hero-title">Eat &amp; drink for less</h1>
-      <p class="deals-hero-sub">Every happy hour and food deal we know about in Burlington, sorted by day. Spot one that’s dead? Tap “this expired” and we’ll fix it.</p>
-      <p class="food-hero-clock" id="deals-clock" aria-live="polite"></p>
-    </section>
-
-    <nav class="deals-day-nav" id="deals-day-nav" aria-label="Day of week"></nav>
-
-    <div id="deals-live-wrap" hidden>
-      <h2 class="deals-section-label">🍹 Happening right now</h2>
-      <div class="cards-grid" id="deals-live"></div>
-    </div>
-
-    <div id="deals-hh-wrap" hidden>
-      <h2 class="deals-section-label" id="deals-hh-label">Happy hours</h2>
-      <div class="cards-grid" id="deals-hh"></div>
-    </div>
-
-    <div id="deals-other-wrap" hidden>
-      <h2 class="deals-section-label" id="deals-other-label">Deals &amp; specials</h2>
-      <div class="cards-grid" id="deals-other"></div>
-    </div>
-
-    <div class="empty-state" id="deals-empty" hidden role="status">
-      <div class="empty-icon">◎</div>
-      <p class="empty-heading">No deals on file for this day</p>
-      <p class="empty-sub">Know one? <a href="mailto:stephenvdavis@gmail.com?subject=New%20deal%20tip">Send it in.</a></p>
-    </div>
-
-    <div class="loading-state" id="deals-loading" role="status"><p>Loading…</p></div>
-
-    <div class="note-card" id="list-your-deal">
-      <strong>Run a restaurant or bar? List your deals here — free.</strong>
-      Email <a href="mailto:BtownBrief@gmail.com?subject=Our%20deals%20for%20the%20board&body=Restaurant%3A%20%0ADeal%3A%20%0ADays%20and%20times%3A%20%0AFine%20print%3A%20">BtownBrief@gmail.com</a>
-      with the deal, the days and times, and any fine print. Deals straight from
-      the restaurant get marked that way, and the good ones get a shout in the newsletter.
-    </div>
-
-    <div class="support-line food-support">
-      <span class="support-line-label">Support the Brief</span>
-      <span class="support-line-links">
-        <a href="https://ko-fi.com/btownbrief" target="_blank" rel="noopener">Donate ❤️</a>
-        <a href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture" target="_blank" rel="noopener">The Newsletter</a>
-        <a href="https://www.btownbrief.com/about-me" target="_blank" rel="noopener">About Me</a>
-      </span>
-    </div>
-  </div>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
-      <span class="footer-sep">·</span>
-      <span>Burlington, Vermont</span>
-      <span class="footer-sep">·</span>
-      <span class="footer-attribution">Deals change — <a href="mailto:stephenvdavis@gmail.com?subject=Deal%20tip">send corrections</a></span>
-    </div>
-  </footer>
-
-  <script src="js/food-lib.js?v=20260711k"></script>
-  <script src="js/deals.js?v=20260711k"></script>
-  <script src="js/auto-theme.js?v=20260711k"></script>
-  <script src="https://play.btownbrief.com/nav.js" defer></script>
+<body>
+  <p>The deals board moved to <a href="restaurants.html?view=deals">the restaurants page</a>.</p>
 </body>
 </html>

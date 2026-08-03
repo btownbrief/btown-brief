@@ -85,7 +85,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <nav class="mode-nav" aria-label="Site pages">
         <a class="mode-btn mode-btn-link" href="things-to-do.html">The List</a>
         <span class="mode-btn mode-btn-active" aria-current="page">Food &amp; Drink</span>
-        <a class="mode-btn mode-btn-link" href="deals.html">Deals</a>
       </nav>
     </div>
   </header>
@@ -129,6 +128,40 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     </div>
 
     <div class="loading-state" id="food-loading" role="status"><p>Loading…</p></div>
+
+    <!-- DEALS VIEW: deal-centric browsing behind the 🏷️ Deals chip.
+         Same data restaurants cards already tease; here it's grouped by day. -->
+    <div id="deals-view" hidden>
+      <nav class="deals-day-nav" id="deals-day-nav" aria-label="Day of week"></nav>
+
+      <div id="deals-live-wrap" hidden>
+        <h2 class="deals-section-label">🍹 Happening right now</h2>
+        <div class="cards-grid" id="deals-live"></div>
+      </div>
+
+      <div id="deals-hh-wrap" hidden>
+        <h2 class="deals-section-label" id="deals-hh-label">Happy hours</h2>
+        <div class="cards-grid" id="deals-hh"></div>
+      </div>
+
+      <div id="deals-other-wrap" hidden>
+        <h2 class="deals-section-label" id="deals-other-label">Deals &amp; specials</h2>
+        <div class="cards-grid" id="deals-other"></div>
+      </div>
+
+      <div class="empty-state" id="deals-empty" hidden role="status">
+        <div class="empty-icon">◎</div>
+        <p class="empty-heading">No deals on file for this day</p>
+        <p class="empty-sub">Know one? <a href="mailto:stephenvdavis@gmail.com?subject=New%20deal%20tip">Send it in.</a></p>
+      </div>
+
+      <div class="note-card" id="list-your-deal">
+        <strong>Run a restaurant or bar? List your deals here — free.</strong>
+        Email <a href="mailto:BtownBrief@gmail.com?subject=Our%20deals%20for%20the%20board&body=Restaurant%3A%20%0ADeal%3A%20%0ADays%20and%20times%3A%20%0AFine%20print%3A%20">BtownBrief@gmail.com</a>
+        with the deal, the days and times, and any fine print. Deals straight from
+        the restaurant get marked that way, and the good ones get a shout in the newsletter.
+      </div>
+    </div>
 
     <!-- Standard support strip -->
     <div class="support-line food-support">
