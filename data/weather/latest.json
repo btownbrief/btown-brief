@@ -1,26 +1,26 @@
 {
- "updated": "2026-08-03T17:22:23+00:00",
+ "updated": "2026-08-03T18:27:47+00:00",
  "sections_updated": {
-  "now": "2026-08-03T17:22:23+00:00",
-  "forecast": "2026-08-03T17:22:23+00:00",
-  "hourly": "2026-08-03T17:22:23+00:00",
-  "alerts": "2026-08-03T17:22:23+00:00",
-  "afd": "2026-08-03T17:22:23+00:00",
-  "lake_forecast": "2026-08-03T17:22:23+00:00",
-  "lake_gage": "2026-08-03T17:22:23+00:00",
-  "air": "2026-08-03T17:22:23+00:00",
-  "sun": "2026-08-03T17:22:23+00:00",
-  "models": "2026-08-03T17:22:23+00:00"
+  "now": "2026-08-03T18:27:47+00:00",
+  "forecast": "2026-08-03T18:27:47+00:00",
+  "hourly": "2026-08-03T18:27:47+00:00",
+  "alerts": "2026-08-03T18:27:47+00:00",
+  "afd": "2026-08-03T18:27:47+00:00",
+  "lake_forecast": "2026-08-03T18:27:47+00:00",
+  "lake_gage": "2026-08-03T18:27:47+00:00",
+  "air": "2026-08-03T18:27:47+00:00",
+  "sun": "2026-08-03T18:27:47+00:00",
+  "models": "2026-08-03T18:27:47+00:00"
  },
  "now": {
-  "observed_at": "2026-08-03T17:00:00+00:00",
+  "observed_at": "2026-08-03T18:05:00+00:00",
   "station": "KBTV",
   "description": "Partly Cloudy",
-  "temp_f": 77,
-  "feels_like_f": 78,
-  "humidity": 83,
-  "dewpoint_f": 72,
-  "wind_mph": 9,
+  "temp_f": 81,
+  "feels_like_f": 84,
+  "humidity": 70,
+  "dewpoint_f": 70,
+  "wind_mph": 7,
   "wind_gust_mph": null,
   "wind_dir": "WSW"
  },
@@ -29,13 +29,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-08-03T12:00:00-04:00",
+    "start": "2026-08-03T14:00:00-04:00",
     "is_day": true,
     "temp_f": 81,
     "pop": 67,
     "wind": "SW 16 mph",
     "short": "Showers And Thunderstorms Likely",
-    "detailed": "Showers and thunderstorms likely. Mostly cloudy, with a high near 81. Southwest wind around 16 mph. Chance of precipitation is 70%. New rainfall amounts between a quarter and half of an inch possible."
+    "detailed": "Showers and thunderstorms likely. Mostly cloudy, with a high near 81. Southwest wind around 16 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-03T14:00:12+00:00",
   "hours": [
-   {
-    "t": "2026-08-03T13:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 84,
-    "pop": 67,
-    "humidity": 77,
-    "wind_mph": 15,
-    "wind_dir": "S",
-    "sky": 86,
-    "short": "Showers And Thunderstorms Likely"
-   },
    {
     "t": "2026-08-03T14:00:00-04:00",
     "temp_f": 79,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 7,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-05T01:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 0,
+    "humidity": 81,
+    "wind_mph": 5,
+    "wind_dir": "S",
+    "sky": 7,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 75,
-  "water_temp_at": "2026-08-03T13:00:00.000-04:00",
-  "level_ft": 95.35,
-  "level_at": "2026-08-03T13:00:00.000-04:00",
+  "water_temp_at": "2026-08-03T14:00:00.000-04:00",
+  "level_ft": 95.38,
+  "level_at": "2026-08-03T14:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/03/26 13:00",
+  "observed": "08/03/26 14:00",
   "discussion": null
  },
  "sun": {
@@ -844,14 +844,14 @@
   "sunset": "2026-08-03T20:15-04:00",
   "sunrise_tomorrow": "2026-08-04T05:43-04:00",
   "sunset_tomorrow": "2026-08-04T20:14-04:00",
-  "uv_max": 7.25
+  "uv_max": 6.9
  },
  "models": {
   "days": [
    {
     "date": "2026-08-03",
     "high_f": {
-     "GFS": 79,
+     "GFS": 80,
      "Euro": 77,
      "ICON": 79
     },
@@ -865,7 +865,7 @@
      "Euro": 0.43,
      "ICON": 0.35
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    },
    {
     "date": "2026-08-04",
@@ -889,7 +889,7 @@
    {
     "date": "2026-08-05",
     "high_f": {
-     "GFS": 84,
+     "GFS": 86,
      "Euro": 83,
      "ICON": 86
     },
