@@ -620,6 +620,17 @@ def highlight(slot, post):
 # Optional one-call refinement and private tips inbox
 # ----------------------------------------------------------------------
 
+def llm_json(text):
+    """Parse a reply that was asked for strict JSON but may arrive wrapped
+    in ```json fences anyway — the fences broke every refine() call since
+    7/31 (json.loads died at char 0 and the heuristics silently won)."""
+    text = text.strip()
+    if text.startswith("```"):
+        text = re.sub(r"^```[a-zA-Z]*\s*", "", text)
+        text = re.sub(r"\s*```$", "", text)
+    return json.loads(text)
+
+
 def refine(clusters, picks):
     key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
     if not key:
@@ -639,7 +650,7 @@ def refine(clusters, picks):
         with urllib.request.urlopen(request, timeout=60) as response:
             result = json.loads(response.read())
         text = "".join(block.get("text", "") for block in result.get("content", [])).strip()
-        value = json.loads(text)
+        value = llm_json(text)
         if not isinstance(value.get("labels", {}), dict) or not isinstance(value.get("slots", {}), dict):
             raise ValueError("wrong response shape")
         valid_ids = {post["id"] for cluster in clusters for post in cluster["posts"]}
@@ -847,6 +858,9 @@ def selftest():
     assert not safety_flag(post("fff", "Scam near Main Street", "Watch out"))
     assert not safety_flag(post("ee2", "Thanks to Sarah Chen for the plant sale", ""))
     assert not safety_flag(post("ff2", "Police presence on Church Street today", ""))
+    assert llm_json('{"a": 1}') == {"a": 1}
+    assert llm_json('```json\n{"a": 1}\n```') == {"a": 1}
+    assert llm_json('```\n{"a": 1}\n```') == {"a": 1}
     news_xml = b'''<rss><channel><item><title>Local &amp; useful</title>
       <link>https://www.vermontbiz.com/story</link><pubDate>Fri, 17 Jul 2026 12:00:00 GMT</pubDate>
       <description><![CDATA[<p>A <strong>plain</strong> summary.</p>]]></description></item></channel></rss>'''
