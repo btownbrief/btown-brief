@@ -10,6 +10,8 @@
   let RESTAURANTS = [];
   let DEALS = [];
   let state = { view: 'open-now', search: '', hood: '', cat: '' };
+  let selectedDay = null; // deals view: null = today
+  let lastDateStr = null; // deals day nav rebuilds when the date rolls over
 
   /* --- Views: each is one tap, evaluated at render time --- */
   const VIEWS = [
@@ -25,11 +27,8 @@
     { id: 'patio-now', icon: '☀️', label: 'Patios Right Now',
       explain: 'Outdoor seating at places open at this minute.',
       test: (r, t) => r.patio === true && F.isOpenAt(r.hours, t.day, t.minutes) },
-    { id: 'happy-hour', icon: '🍹', label: 'Happy Hour Now',
-      explain: 'Happy hours running at this minute (tap a card for the deal).',
-      test: (r, t) => dealsFor(r).some(d => d.type === 'happy-hour' && F.dealLiveNow(d, t)) },
-    { id: 'deals-today', icon: '🏷️', label: 'Deals Today',
-      explain: 'Every special that applies today — tap a card for details, or see the full Deals page.',
+    { id: 'deals', icon: '🏷️', label: 'Deals',
+      explain: '',
       test: (r, t) => dealsFor(r).some(d => F.dealAppliesToday(d, t)) },
     { id: 'under-15', icon: '💸', label: 'Under $15',
       explain: 'A real meal for under fifteen bucks.',
@@ -76,13 +75,15 @@
   /* --- Boot --- */
   async function init() {
     initDarkMode();
+    const qv = new URLSearchParams(location.search).get('view');
+    if (qv && VIEWS.some(v => v.id === qv)) state.view = qv;
     try {
       const [rjson, djson] = await Promise.all([
         F.fetchJSON('data/restaurants.json'),
         F.fetchJSON('data/deals.json').catch(() => ({ deals: [] })),
       ]);
       RESTAURANTS = rjson.restaurants.filter(r => !r.closed);
-      DEALS = djson.deals || [];
+      DEALS = (djson.deals || []).filter(d => !d.retired);
       for (const d of DEALS) {
         if (!d.restaurant_id) continue;
         (dealsByRestaurant[d.restaurant_id] = dealsByRestaurant[d.restaurant_id] || []).push(d);
@@ -129,11 +130,18 @@
       btn.setAttribute('role', 'tab');
       btn.setAttribute('aria-selected', state.view === v.id ? 'true' : 'false');
       btn.dataset.view = v.id;
-      const n = RESTAURANTS.filter(r => v.test(r, t)).length;
+      const n = v.id === 'deals'
+        ? DEALS.filter(d => F.dealAppliesToday(d, t)).length
+        : RESTAURANTS.filter(r => v.test(r, t)).length;
       btn.innerHTML = `<span class="view-chip-icon">${v.icon}</span>` +
         `<span class="view-chip-label">${v.label}</span>` +
         (v.id !== 'all' ? `<span class="view-chip-count">${n}</span>` : '');
-      btn.addEventListener('click', () => { state.view = v.id; buildRail(); render(); });
+      btn.addEventListener('click', () => {
+        state.view = v.id;
+        history.replaceState(null, '', v.id === 'open-now'
+          ? location.pathname : `${location.pathname}?view=${v.id}`);
+        buildRail(); render();
+      });
       rail.appendChild(btn);
     }
     // Randomize Dinner: an action, not a filter — pinned at the end
@@ -202,6 +210,17 @@
   }
 
   function render() {
+    const dealsMode = state.view === 'deals';
+    document.getElementById('deals-view').hidden = !dealsMode;
+    document.querySelector('.food-toolbar').hidden = dealsMode;
+    document.getElementById('food-count').hidden = dealsMode;
+    document.getElementById('food-grid').hidden = dealsMode;
+    if (dealsMode) {
+      document.getElementById('view-explainer').hidden = true;
+      document.getElementById('food-empty').hidden = true;
+      renderDeals();
+      return;
+    }
     const { list, t, view } = currentSet();
     const grid = document.getElementById('food-grid');
     const explainer = document.getElementById('view-explainer');
@@ -249,6 +268,94 @@
         : todaysDeals.length ? `<p class="food-card-deal">🏷️ ${esc(todaysDeals[0].title)}${todaysDeals.length > 1 ? ` +${todaysDeals.length - 1} more` : ''}</p>` : ''}
       ${tags.length ? `<p class="food-card-tags">${tags.map(esc).join(' &nbsp; ')}</p>` : ''}
     </article>`;
+  }
+
+  /* --- Deals view: by-day browsing, ported from the old deals page --- */
+  function buildDayNav() {
+    const nav = document.getElementById('deals-day-nav');
+    const t = F.now();
+    nav.innerHTML = '';
+    const mk = (label, day) => {
+      const b = document.createElement('button');
+      b.className = 'deals-day-btn';
+      b.textContent = label;
+      b.dataset.day = day ?? '';
+      b.addEventListener('click', () => { selectedDay = day; buildDayNav(); renderDeals(); });
+      if ((selectedDay ?? null) === (day ?? null)) b.classList.add('deals-day-btn-active');
+      return b;
+    };
+    nav.appendChild(mk('Today', null));
+    for (let i = 1; i <= 6; i++) {
+      const d = F.DAYS[(t.dayIdx + i) % 7];
+      nav.appendChild(mk(F.DAY_LABELS[d], d));
+    }
+  }
+
+  function dealCardHTML(d, live) {
+    const r = d.restaurant_id ? RESTAURANTS.find(x => x.id === d.restaurant_id) : null;
+    const link = F.safeUrl(d.link) || F.safeUrl(r?.links?.website) || null;
+    const reported = !!F.getReports()[d.id];
+    return `
+    <article class="deal-card ${live ? 'deal-card-live' : ''}" data-id="${esc(d.id)}">
+      ${live ? '<span class="deal-live-pill">ON NOW</span>' : ''}
+      <span class="deal-card-business">${link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${esc(d.business)} ↗</a>` : esc(d.business)}</span>
+      <span class="deal-card-title">${esc(d.title)}</span>
+      <span class="deal-card-when">${esc(F.dealDaysLabel(d))}${F.dealTimeLabel(d) ? ' · ' + esc(F.dealTimeLabel(d)) : ''}</span>
+      <div class="deal-card-foot">
+        <span>${d.source === 'restaurant'
+          ? `From the restaurant${d.last_verified ? ` · ${esc(d.last_verified)}` : ''}`
+          : d.last_verified ? `Verified ${esc(d.last_verified)}` : 'Unverified'}</span>
+        <button class="deal-expired-btn ${reported ? 'deal-expired-done' : ''}" data-deal="${esc(d.id)}" ${reported ? 'disabled' : ''}>
+          ${reported ? '✓ reported — thanks' : 'this expired?'}
+        </button>
+      </div>
+    </article>`;
+  }
+
+  function renderDeals() {
+    const t = F.now();
+    if (t.dateStr !== lastDateStr) { lastDateStr = t.dateStr; buildDayNav(); }
+    const day = selectedDay || t.day;
+    const isToday = day === t.day;
+    const todays = DEALS.filter(d => !d.days || d.days.includes(day));
+
+    const live = isToday ? todays.filter(d => F.dealLiveNow(d, t) && d.type === 'happy-hour') : [];
+    const liveIds = new Set(live.map(d => d.id));
+    const hh = todays.filter(d => d.type === 'happy-hour' && !liveIds.has(d.id));
+    const other = todays.filter(d => d.type !== 'happy-hour');
+
+    const dayName = isToday ? 'today' : F.DAY_LABELS[day];
+    setDealSection('deals-live-wrap', 'deals-live', live, true);
+    setDealSection('deals-hh-wrap', 'deals-hh', hh, false, `Happy hours ${dayName === 'today' ? 'today' : 'on ' + dayName}`);
+    setDealSection('deals-other-wrap', 'deals-other', other, false, `Deals & specials ${dayName === 'today' ? 'today' : 'on ' + dayName}`);
+    document.getElementById('deals-empty').hidden = todays.length > 0;
+    bindExpired();
+  }
+
+  function setDealSection(wrapId, gridId, deals, live, label) {
+    const wrap = document.getElementById(wrapId);
+    wrap.hidden = deals.length === 0;
+    if (label) {
+      const el = wrap.querySelector('.deals-section-label');
+      el.innerHTML = `${esc(label)} <small>${deals.length}</small>`;
+    }
+    deals.sort((a, b) => (F.toMin(a.start) ?? 9999) - (F.toMin(b.start) ?? 9999) || a.business.localeCompare(b.business));
+    document.getElementById(gridId).innerHTML = deals.map(d => dealCardHTML(d, live)).join('');
+  }
+
+  function bindExpired() {
+    document.querySelectorAll('.deal-expired-btn:not([disabled])').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const d = DEALS.find(x => x.id === btn.dataset.deal);
+        if (!d) return;
+        const mailto = F.reportExpired(d);
+        btn.textContent = '✓ reported — thanks';
+        btn.classList.add('deal-expired-done');
+        btn.disabled = true;
+        window.location.href = mailto; // opens prefilled email = the review queue
+      });
+    });
   }
 
   /* --- Detail drawer --- */
