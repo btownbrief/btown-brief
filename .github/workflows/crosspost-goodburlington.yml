@@ -1,0 +1,50 @@
+name: Crosspost to r/GoodBurlington
+
+# Curates the day's genuinely good r/burlington + r/vermont posts and
+# crossposts AT MOST ONE per run (<=3/day) to r/GoodBurlington as
+# u/whiteshirtdude1 — the script hard-verifies the account and refuses to
+# post as anyone else, and refuses to post at all without the Claude judge.
+# Needs secrets: REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET,
+# REDDIT_REFRESH_TOKEN (mint with scripts/goodburlington_token.py),
+# ANTHROPIC_API_KEY. Missing secrets = clean no-op, so this is safe to
+# merge before the token exists.
+
+on:
+  schedule:
+    # 3x daily, spread across the Vermont day: ~9:05 / 13:05 / 17:05 ET (EDT)
+    - cron: '5 13,17,21 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: crosspost-goodburlington
+  cancel-in-progress: false
+
+jobs:
+  crosspost:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Curate and crosspost
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_REFRESH_TOKEN: ${{ secrets.REDDIT_REFRESH_TOKEN }}
+        run: python3 scripts/crosspost_goodburlington.py
+
+      - name: Commit state if changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/goodburlington-crossposted.json
+          if git diff --cached --quiet; then
+            echo "No crosspost state changes."
+          else
+            git commit -m "Auto-update GoodBurlington crosspost log"
+            git pull --rebase origin main
+            git push
+          fi
