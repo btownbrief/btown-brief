@@ -34,7 +34,7 @@ SOURCE_MODULES = [
     "civic",          # CivicClerk meeting agendas
     "news",           # local newsroom + city hall RSS (food news routed to 🍽)
     "chatter",        # r/burlington hot posts
-    "events_local",   # newly added events from data/events.json
+    "events_local",   # newly added events from data/events/events.json
 ]
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
