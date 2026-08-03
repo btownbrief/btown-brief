@@ -166,10 +166,20 @@ def screen(post, rejected, taken, now=None):
     return None
 
 
+JUDGE_CHUNK = 20   # 60 first-run candidates truncated one big reply mid-JSON
+
+
 def judge(candidates):
     key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
     if not key:
         return None
+    verdicts = {}
+    for start in range(0, len(candidates), JUDGE_CHUNK):
+        verdicts.update(judge_chunk(candidates[start:start + JUDGE_CHUNK], key))
+    return verdicts
+
+
+def judge_chunk(candidates, key):
     packet = [{"id": p["id"], "sub": p["sub"], "score": p["score"],
                "title": p["title"], "blurb": chatter.trim(p["body"], 300)} for p in candidates]
     prompt = (
@@ -181,7 +191,7 @@ def judge(candidates):
         "(found pets are fine), news that is merely neutral, and anything mean or ambiguous. "
         'Return strict JSON only: {"verdicts": {"post-id": {"ok": true/false, "why": "<=12 words"}}} '
         "with a verdict for every candidate.\n" + json.dumps(packet, ensure_ascii=False))
-    body = json.dumps({"model": MODEL, "max_tokens": 1500,
+    body = json.dumps({"model": MODEL, "max_tokens": 2500,
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     request = urllib.request.Request("https://api.anthropic.com/v1/messages", data=body,
                                      headers={"x-api-key": key, "anthropic-version": "2023-06-01",
