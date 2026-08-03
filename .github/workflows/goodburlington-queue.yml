@@ -1,0 +1,47 @@
+name: Curate GoodBurlington queue
+
+# Builds the tap-to-post crosspost queue for r/GoodBurlington:
+#   scripts/queue_goodburlington.py -> data/goodburlington-queue.json
+# Stephen posts everything himself from goodburlington-queue.html — this
+# job never touches Reddit with credentials and needs no Reddit secrets.
+# Reads use public listing JSON (works from Actions lately) with the
+# Inoreader RSS streams as fallback. Without ANTHROPIC_API_KEY the script
+# keeps the last good queue — nothing unjudged is ever queued.
+
+on:
+  schedule:
+    # 3x daily, ahead of the ~8:45am ET queue-open on Stephen's Mac:
+    # ~5:35 / 11:35 / 16:35 ET (EDT)
+    - cron: '35 9,15,20 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: goodburlington-queue
+  cancel-in-progress: false
+
+jobs:
+  curate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Curate queue
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python3 scripts/queue_goodburlington.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/goodburlington-queue.json data/goodburlington-curated.json
+          if git diff --cached --quiet; then
+            echo "No queue changes."
+          else
+            git commit -m "Auto-refresh GoodBurlington queue"
+            git pull --rebase origin main
+            git push
+          fi

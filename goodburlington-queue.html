@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoodBurlington crosspost queue</title>
+  <!-- Personal curation tool (unlinked). The data is public reddit posts,
+       but there's no reason for this page to be searchable. -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#faf7f2; --card:#fff; --ink:#26221c; --muted:#6f675c; --line:#e7e0d4;
+            --accent:#1a7a4a; --accent-ink:#fff; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#191712; --card:#221f19; --ink:#efe9de; --muted:#a89e8e;
+              --line:#37322a; --accent:#2f9e66; }
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink);
+           font-family:"DM Sans",system-ui,sans-serif; line-height:1.45; }
+    main { max-width:640px; margin:0 auto; padding:32px 16px 64px; }
+    h1 { font-family:Lora,serif; font-size:1.5rem; margin:0 0 4px; }
+    .sub { color:var(--muted); font-size:.9rem; margin:0 0 24px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+            padding:16px; margin-bottom:14px; }
+    .meta { color:var(--muted); font-size:.82rem; margin-bottom:6px; }
+    .title { font-family:Lora,serif; font-size:1.08rem; font-weight:600; margin:0 0 4px; }
+    .why { color:var(--muted); font-size:.88rem; font-style:italic; margin:0 0 12px; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; }
+    a.btn { display:inline-block; padding:9px 14px; border-radius:8px; font-size:.9rem;
+            font-weight:600; text-decoration:none; }
+    a.go { background:var(--accent); color:var(--accent-ink); }
+    a.peek { border:1px solid var(--line); color:var(--ink); }
+    .empty { text-align:center; color:var(--muted); padding:48px 0; }
+    footer { color:var(--muted); font-size:.8rem; text-align:center; margin-top:32px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>r/GoodBurlington queue</h1>
+  <p class="sub">Curated from r/burlington + r/vermont. <strong>Crosspost →</strong> opens
+    reddit's submit page pre-filled — check it, tap Post. Posted items drop off on the
+    next refresh; anything you skip ages out after 48 hours.</p>
+  <div id="list"><p class="empty">Loading…</p></div>
+  <footer id="stamp"></footer>
+</main>
+<script>
+  const esc = s => { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; };
+  fetch('data/goodburlington-queue.json?' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      const items = data.items || [];
+      document.getElementById('stamp').textContent =
+        data.updated ? 'Queue refreshed ' + new Date(data.updated).toLocaleString() : '';
+      if (!items.length) {
+        document.getElementById('list').innerHTML =
+          '<p class="empty">Nothing good queued right now — check back later.</p>';
+        return;
+      }
+      document.getElementById('list').innerHTML = items.map(it => `
+        <div class="card">
+          <div class="meta">${esc(it.sub)}${it.score != null ? ' · ▲ ' + esc(String(it.score)) : ''}</div>
+          <p class="title">${esc(it.title)}</p>
+          <p class="why">${esc(it.why)}</p>
+          <div class="row">
+            <a class="btn go" href="${esc(it.submit_url)}" target="_blank" rel="noopener">Crosspost →</a>
+            <a class="btn peek" href="${esc(it.url)}" target="_blank" rel="noopener">See the post</a>
+          </div>
+        </div>`).join('');
+    })
+    .catch(() => {
+      document.getElementById('list').innerHTML = '<p class="empty">Couldn’t load the queue.</p>';
+    });
+</script>
+</body>
+</html>
