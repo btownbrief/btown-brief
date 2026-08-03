@@ -149,8 +149,9 @@ def judge(candidates):
         "complaints, crime, politics, ads/self-promo, questions or recommendation-seeking, "
         "lost pets (found pets are fine), news that is merely neutral, and anything mean or "
         "ambiguous. Return strict JSON only: "
-        '{"pick": "post-id or null", "notes": {"post-id": "reason, <=12 words"}} '
-        "with a note for every candidate.\n" + json.dumps(packet, ensure_ascii=False))
+        '{"pick": "post-id or null", "verdicts": {"post-id": {"ok": true/false, "why": "<=12 words"}}} '
+        "with a verdict for every candidate — ok means it belongs on the sub even if not "
+        "picked this time.\n" + json.dumps(packet, ensure_ascii=False))
     body = json.dumps({"model": MODEL, "max_tokens": 1000,
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     request = urllib.request.Request("https://api.anthropic.com/v1/messages", data=body,
@@ -165,8 +166,10 @@ def judge(candidates):
     pick = value.get("pick")
     if pick is not None and pick not in valid:
         pick = None
-    notes = {pid: str(reason)[:120] for pid, reason in (value.get("notes") or {}).items() if pid in valid}
-    return {"pick": pick, "notes": notes}
+    verdicts = {pid: {"ok": bool((v or {}).get("ok")), "why": str((v or {}).get("why"))[:120]}
+                for pid, v in (value.get("verdicts") or {}).items()
+                if pid in valid and isinstance(v, dict)}
+    return {"pick": pick, "verdicts": verdicts}
 
 
 # ----------------------------------------------------------------------
@@ -255,9 +258,12 @@ def run(dry_run=False):
         return 0
 
     now = utcnow().isoformat(timespec="seconds")
+    # Only an affirmative "doesn't belong" is permanent; a good post that
+    # simply wasn't THE pick this run stays eligible for the next one.
     for post in candidates:
-        if post["id"] != verdict["pick"]:
-            state["rejected"][post["id"]] = verdict["notes"].get(post["id"], "judge: not picked")
+        v = verdict["verdicts"].get(post["id"])
+        if post["id"] != verdict["pick"] and v and not v["ok"]:
+            state["rejected"][post["id"]] = v["why"] or "judge: no"
 
     pick = next((p for p in candidates if p["id"] == verdict["pick"]), None)
     if not pick:
@@ -268,7 +274,7 @@ def run(dry_run=False):
         mode = crosspost(token, pick)
         state["posted"].append({"id": pick["id"], "title": pick["title"], "sub": pick["sub"],
                                  "ts": now, "mode": mode,
-                                 "why": verdict["notes"].get(pick["id"], "")})
+                                 "why": verdict["verdicts"].get(pick["id"], {}).get("why", "")})
         print(f"posted ({mode}) as u/{account}: [{pick['sub']}] {pick['title']}")
 
     if not dry_run:
@@ -299,7 +305,7 @@ def selftest():
     assert submit_errors({"json": {"errors": [["NO_CROSSPOSTS", "msg", "field"]]}}) == ["NO_CROSSPOSTS"]
     assert submit_errors({"json": {"errors": []}}) == []
 
-    assert chatter.llm_json('```json\n{"pick": null, "notes": {}}\n```') == {"pick": None, "notes": {}}
+    assert chatter.llm_json('```json\n{"pick": null, "verdicts": {}}\n```') == {"pick": None, "verdicts": {}}
     print("crosspost_goodburlington selftest passed")
     return 0
 
