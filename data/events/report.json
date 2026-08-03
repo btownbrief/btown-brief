@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-03T08:43:53-04:00",
+ "generated": "2026-08-03T17:46:48-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 18,
-   "seconds": 5.5
+   "count": 19,
+   "seconds": 6.2
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 64,
-   "seconds": 2.8
+   "seconds": 4.5
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 62,
-   "seconds": 3.1
+   "count": 0,
+   "error": "fetch failed after 3 tries: https://brownelllibrary.org/wp-json/tribe/events/v1/events?start_date=2026-08-03&end_date=2026-10-02&per_page=50&page=1 (<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'brownelllibrary.org'. (_ssl"
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 168,
-   "seconds": 3.2
+   "seconds": 2.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 77,
-   "seconds": 1.9
+   "count": 81,
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 2.2
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 169,
-   "seconds": 67.4
+   "count": 170,
+   "seconds": 77.0
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 4.2
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.9
+   "seconds": 41.2
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 72,
-   "seconds": 103.6
+   "seconds": 119.7
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,18 +78,18 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 493,
-   "seconds": 72.4
+   "count": 497,
+   "seconds": 68.2
   },
   "meetup": {
    "label": "Meetup",
    "count": 67,
-   "seconds": 121.2
+   "seconds": 127.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 34,
-   "seconds": 14.7
+   "seconds": 16.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -98,8 +98,8 @@
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 34,
-   "seconds": 29.5
+   "count": 35,
+   "seconds": 33.4
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,7 +124,7 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 55,
-   "seconds": 69.9
+   "seconds": 76.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,10 +132,10 @@
    "seconds": 0.2
   }
  },
- "gathered": 2159,
- "afterDedup": 1099,
- "duplicatesMerged": 1060,
- "final": 1924,
+ "gathered": 2108,
+ "afterDedup": 1043,
+ "duplicatesMerged": 1065,
+ "final": 1932,
  "mergeLog": [
   {
    "kept": {
@@ -2366,10 +2366,18 @@
  ],
  "changes": [
   {
-   "id": "dd8c52fc5391",
-   "title": "Scrabble Night @ The Boardroom",
-   "date": "2026-08-19",
-   "change": "dropped"
+   "id": "80f6454ea1cd",
+   "title": "Trivia",
+   "date": "2026-08-06",
+   "change": "missing",
+   "lastSeen": "2026-08-03T08:43:53-04:00"
+  },
+  {
+   "id": "304feaf1b5e5",
+   "title": "Burlington Butter Tarts & More Market",
+   "date": "2026-08-08",
+   "change": "missing",
+   "lastSeen": "2026-08-03T08:43:53-04:00"
   },
   {
    "id": "7efb54066c55",
