@@ -1,51 +1,41 @@
 {
- "updated": "2026-08-03T21:49:33+00:00",
+ "updated": "2026-08-03T23:49:30+00:00",
  "sections_updated": {
-  "now": "2026-08-03T21:49:33+00:00",
-  "forecast": "2026-08-03T21:49:33+00:00",
-  "hourly": "2026-08-03T21:49:33+00:00",
-  "alerts": "2026-08-03T21:49:33+00:00",
-  "afd": "2026-08-03T21:49:33+00:00",
-  "lake_forecast": "2026-08-03T21:49:33+00:00",
-  "lake_gage": "2026-08-03T21:49:33+00:00",
-  "air": "2026-08-03T21:49:33+00:00",
-  "sun": "2026-08-03T21:49:33+00:00",
-  "models": "2026-08-03T21:49:33+00:00"
+  "now": "2026-08-03T23:49:30+00:00",
+  "forecast": "2026-08-03T23:49:30+00:00",
+  "hourly": "2026-08-03T23:49:30+00:00",
+  "alerts": "2026-08-03T23:49:30+00:00",
+  "afd": "2026-08-03T23:49:30+00:00",
+  "lake_forecast": "2026-08-03T23:49:30+00:00",
+  "lake_gage": "2026-08-03T23:49:30+00:00",
+  "air": "2026-08-03T23:49:30+00:00",
+  "sun": "2026-08-03T23:49:30+00:00",
+  "models": "2026-08-03T23:49:30+00:00"
  },
  "now": {
-  "observed_at": "2026-08-03T21:30:00+00:00",
+  "observed_at": "2026-08-03T23:35:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 72,
-  "feels_like_f": 72,
-  "humidity": 69,
-  "dewpoint_f": 61,
-  "wind_mph": 14,
-  "wind_gust_mph": 21,
-  "wind_dir": "WNW"
+  "feels_like_f": 71,
+  "humidity": 60,
+  "dewpoint_f": 57,
+  "wind_mph": null,
+  "wind_gust_mph": 26,
+  "wind_dir": null
  },
  "forecast": {
   "updated": "2026-08-03T18:31:48+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-08-03T15:00:00-04:00",
-    "is_day": true,
-    "temp_f": 80,
-    "pop": 58,
-    "wind": "SW 16 mph",
-    "short": "Chance Showers And Thunderstorms",
-    "detailed": "A chance of showers and thunderstorms. Mostly cloudy, with a high near 80. Southwest wind around 16 mph, with gusts as high as 28 mph. Chance of precipitation is 60%. New rainfall amounts between a tenth and quarter of an inch possible."
-   },
-   {
     "name": "Tonight",
-    "start": "2026-08-03T18:00:00-04:00",
+    "start": "2026-08-03T19:00:00-04:00",
     "is_day": false,
     "temp_f": 61,
-    "pop": 51,
+    "pop": 39,
     "wind": "W 6 to 16 mph",
     "short": "Scattered Rain Showers then Partly Cloudy",
-    "detailed": "Scattered rain showers before 10pm. Partly cloudy, with a low around 61. West wind 6 to 16 mph, with gusts as high as 30 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "Scattered rain showers before 10pm. Partly cloudy, with a low around 61. West wind 6 to 16 mph, with gusts as high as 30 mph. Chance of precipitation is 40%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Tuesday",
@@ -95,7 +85,7 @@
     "pop": 55,
     "wind": "S 9 mph",
     "short": "Mostly Sunny then Showers And Thunderstorms Likely",
-    "detailed": "Showers and thunderstorms likely after 2pm. Mostly sunny, with a high near 87. South wind around 9 mph. Chance of precipitation is 60%."
+    "detailed": "Showers and thunderstorms likely after 2pm. Mostly sunny, with a high near 87. South wind around 9 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Thursday Night",
@@ -166,34 +156,22 @@
     "wind": "SW 6 to 9 mph",
     "short": "Slight Chance Showers And Thunderstorms then Chance Showers And Thunderstorms",
     "detailed": "A slight chance of showers and thunderstorms before 8pm, then a chance of showers and thunderstorms. Mostly cloudy, with a low around 68. Southwest wind 6 to 9 mph. Chance of precipitation is 30%."
+   },
+   {
+    "name": "Monday",
+    "start": "2026-08-10T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 87,
+    "pop": 40,
+    "wind": "SW 10 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Partly sunny, with a high near 87. Southwest wind around 10 mph. Chance of precipitation is 40%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-08-03T18:31:48+00:00",
   "hours": [
-   {
-    "t": "2026-08-03T17:00:00-04:00",
-    "temp_f": 75,
-    "feels_f": 75,
-    "pop": 58,
-    "humidity": 79,
-    "wind_mph": 15,
-    "wind_dir": "W",
-    "sky": 72,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-08-03T18:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
-    "pop": 51,
-    "humidity": 81,
-    "wind_mph": 16,
-    "wind_dir": "W",
-    "sky": 67,
-    "short": "Scattered Rain Showers"
-   },
    {
     "t": "2026-08-03T19:00:00-04:00",
     "temp_f": 71,
@@ -567,6 +545,28 @@
     "wind_dir": "S",
     "sky": 39,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-08-05T05:00:00-04:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 0,
+    "humidity": 84,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 37,
+    "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-08-05T06:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 0,
+    "humidity": 87,
+    "wind_mph": 5,
+    "wind_dir": "SE",
+    "sky": 50,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -867,10 +867,10 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 76,
-  "water_temp_at": "2026-08-03T17:00:00.000-04:00",
-  "level_ft": 95.33,
-  "level_at": "2026-08-03T17:00:00.000-04:00",
+  "water_temp_f": 75,
+  "water_temp_at": "2026-08-03T19:00:00.000-04:00",
+  "level_ft": 95.38,
+  "level_at": "2026-08-03T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -878,7 +878,7 @@
   "aqi": 28,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/03/26 17:00",
+  "observed": "08/03/26 19:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 4th."
  },
  "sun": {
@@ -899,7 +899,7 @@
     },
     "pop_max": {
      "GFS": 90,
-     "Euro": 88,
+     "Euro": 90,
      "ICON": 100
     },
     "precip_in": {
@@ -918,7 +918,7 @@
     },
     "pop_max": {
      "GFS": 1,
-     "Euro": 1,
+     "Euro": 0,
      "ICON": 0
     },
     "precip_in": {
@@ -931,7 +931,7 @@
    {
     "date": "2026-08-05",
     "high_f": {
-     "GFS": 86,
+     "GFS": 85,
      "Euro": 82,
      "ICON": 88
     },
