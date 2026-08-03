@@ -208,7 +208,11 @@
   font-variant-numeric: tabular-nums;
   color: var(--ink-soft);
   text-align: right;
-  white-space: nowrap;
+  /* Not nowrap: a few menus price a dish per protein ("Tofu $17.99 / Chicken
+     $17.99 / …") and one long string was dragging the whole page sideways on
+     phones. Wrapping never splits a single price — those have no spaces. */
+  overflow-wrap: anywhere;
+  max-width: 55%;
 }
 .item-desc {
   font-size: 0.78rem;
@@ -284,6 +288,76 @@
   color: var(--ink-faint);
   max-width: 70ch;
 }
+
+/* ------------------------------------------------ data notice
+   Shown once per visitor on load, then reachable from the hero link. */
+.bites-note-link {
+  margin: 0.85rem 0 0;
+  padding: 0;
+  font: inherit;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--edge-soft);
+  cursor: pointer;
+}
+.bites-note-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+.bites-note[hidden] { display: none; }
+.bites-note {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem;
+  background: rgba(4, 6, 8, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.bites-note-card {
+  width: min(30rem, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: clamp(1.4rem, 4vw, 1.9rem);
+  border: 1px solid var(--edge-soft);
+  border-radius: 14px;
+  background: var(--ground);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+.bites-note-card:focus { outline: none; }
+.bites-note-card h2 {
+  margin: 0 0 0.7rem;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.35rem, 4vw, 1.7rem);
+  line-height: 1.2;
+  color: var(--ink);
+}
+.bites-note-card p {
+  margin: 0 0 0.7rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+.bites-note-card p strong { color: var(--ink); font-weight: 600; }
+.bites-note-btn {
+  margin-top: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ground);
+  background: var(--accent);
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+}
+.bites-note-btn:hover { filter: brightness(1.08); }
 
 /* On phones the full rail would fill the screen, so it folds behind a
    sticky "Filters" toggle. Desktop never sees the button. */

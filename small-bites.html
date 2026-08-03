@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/hub.css?v=20260802a">
-  <link rel="stylesheet" href="css/small-bites.css?v=20260802a">
+  <link rel="stylesheet" href="css/small-bites.css?v=20260803a">
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -59,8 +59,26 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       waterfront, along lower Pine, into the near Old North End — folded into one
       list. Filter it by price, cuisine, or what you can eat, and go.</p>
     <p class="bites-stats" id="stats">Loading the menus…</p>
+    <button class="bites-note-link" id="note-open" type="button">Where these menus come from</button>
   </div>
 </header>
+
+<!-- First-visit notice: this list is compiled from what restaurants publish
+     online, so it's an estimate, not a guarantee. Dismissal is remembered in
+     localStorage; the hero link reopens it any time. -->
+<div class="bites-note" id="note" hidden role="dialog" aria-modal="true" aria-labelledby="note-title">
+  <div class="bites-note-card" role="document" id="note-card" tabindex="-1">
+    <h2 id="note-title">A quick heads-up on these menus</h2>
+    <p>Everything here was gathered from what each place publishes online — its own
+      site, a menu PDF, a listing. None of it comes from the restaurants directly.</p>
+    <p>Plenty of kitchens don't keep their own menus current. Prices drift, dishes get
+      pulled, whole menus go stale — and there's no way for us to know from the outside.</p>
+    <p><strong>So take this as a rough idea of what's around and what it costs, not a
+      promise.</strong> Each place shows the date its menu was last fetched. If a specific
+      dish or price is the reason you're walking over, call first.</p>
+    <button class="bites-note-btn" id="note-close" type="button">Got it</button>
+  </div>
+</div>
 
 <nav class="rail" aria-label="Menu filters">
   <div class="wrap">
@@ -125,7 +143,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 </div>
 
 <script src="js/food-lib.js?v=20260802a"></script>
-<script src="js/small-bites.js?v=20260802a"></script>
+<script src="js/small-bites.js?v=20260803a"></script>
 <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
 </html>

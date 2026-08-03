@@ -359,3 +359,47 @@
         '<p class="empty">Couldn\'t load data/small-bites.json (' + esc(err.message) + ").</p>";
     });
 })();
+
+/* Data notice. Deliberately its own IIFE so it still shows if the menu fetch
+   above fails — the caveat matters most when the page is half-working. */
+(function () {
+  "use strict";
+
+  var KEY = "btb-bites-notice-v1";
+  var note = document.getElementById("note");
+  var openBtn = document.getElementById("note-open");
+  var closeBtn = document.getElementById("note-close");
+  if (!note || !openBtn || !closeBtn) return;
+
+  // Private browsing can throw on localStorage; a notice that shows every
+  // visit is a better failure than a page that breaks.
+  function seen() {
+    try { return localStorage.getItem(KEY) === "1"; } catch (e) { return false; }
+  }
+  function remember() {
+    try { localStorage.setItem(KEY, "1"); } catch (e) { /* ignore */ }
+  }
+
+  function open() {
+    note.hidden = false;
+    document.body.style.overflow = "hidden";
+    // Focus the card, not the button: keyboard and screen-reader users land
+    // inside the dialog without everyone else seeing a focus ring on load.
+    var card = document.getElementById("note-card");
+    if (card) card.focus();
+  }
+  function close() {
+    note.hidden = true;
+    document.body.style.overflow = "";
+    remember();
+  }
+
+  closeBtn.addEventListener("click", close);
+  openBtn.addEventListener("click", open);
+  note.addEventListener("click", function (e) { if (e.target === note) close(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !note.hidden) close();
+  });
+
+  if (!seen()) open();
+})();
