@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-02T17:34:38-04:00",
+ "generated": "2026-08-03T08:43:53-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 19,
-   "seconds": 5.9
+   "count": 18,
+   "seconds": 5.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 68,
-   "seconds": 3.5
+   "count": 64,
+   "seconds": 2.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 61,
-   "seconds": 3.0
+   "count": 62,
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 173,
-   "seconds": 2.8
+   "count": 168,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 78,
-   "seconds": 1.8
+   "count": 77,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-02&end_date=2026-10-01&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-03&end_date=2026-10-02&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 34,
+   "count": 31,
    "seconds": 0.0
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.2
+   "seconds": 2.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 169,
-   "seconds": 72.3
+   "seconds": 67.4
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 2.4
+   "seconds": 4.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.3
+   "seconds": 36.9
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 73,
-   "seconds": 116.0
+   "count": 72,
+   "seconds": 103.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,13 +78,13 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 499,
-   "seconds": 77.4
+   "count": 493,
+   "seconds": 72.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 127.3
+   "count": 67,
+   "seconds": 121.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
@@ -98,8 +98,8 @@
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 33,
-   "seconds": 29.4
+   "count": 34,
+   "seconds": 29.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -123,76 +123,20 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 54,
-   "seconds": 74.0
+   "count": 55,
+   "seconds": 69.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 36,
-   "seconds": 0.3
+   "seconds": 0.2
   }
  },
- "gathered": 2176,
- "afterDedup": 1112,
- "duplicatesMerged": 1064,
- "final": 1954,
+ "gathered": 2159,
+ "afterDedup": 1099,
+ "duplicatesMerged": 1060,
+ "final": 1924,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-27"
-  },
-  {
-   "kept": {
-    "title": "Better Off Alone",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "The Strictly Hip",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground"
-   ],
-   "date": "2026-08-28"
-  },
   {
    "kept": {
     "title": "Live DJ at Ri Ra!",
@@ -1975,12 +1919,35 @@
   },
   {
    "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
     "title": "Latin-American Connection Celebration",
     "source": "bca"
    },
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-09-19"
@@ -1992,7 +1959,8 @@
    },
    "merged_sources": [
     "champlainvalley",
-    "flynn"
+    "flynn",
+    "helloburlington"
    ],
    "date": "2026-09-19"
   },
@@ -2003,6 +1971,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-19"
@@ -2025,6 +1994,17 @@
    },
    "merged_sources": [
     "farmersmarket",
+    "loveburlington"
+   ],
+   "date": "2026-09-19"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-09-19"
@@ -2360,79 +2340,64 @@
     "loveburlington"
    ],
    "date": "2026-10-01"
+  },
+  {
+   "kept": {
+    "title": "Joe Dombrowski",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "vcc"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-02"
   }
  ],
  "changes": [
   {
-   "id": "9d7c315e7771",
-   "title": "Days Between Show with Acid Wash, Dan Weintraub, & Charlie Schramm",
-   "date": "2026-08-02",
-   "change": "missing",
-   "lastSeen": "2026-08-02T07:05:02-04:00"
-  },
-  {
-   "id": "05ae97043916",
-   "title": "Mix & Mingle",
-   "date": "2026-08-02",
-   "change": "missing",
-   "lastSeen": "2026-08-02T07:05:02-04:00"
-  },
-  {
-   "id": "cbcaf26c87c8",
-   "title": "Friends Book Sale",
-   "date": "2026-08-02",
-   "change": "missing",
-   "lastSeen": "2026-08-01T17:35:25-04:00"
-  },
-  {
-   "id": "daa0f8558195",
-   "title": "Womxn's Pick-up Soccer - Outdoors at Starr Farm Park",
-   "date": "2026-08-02",
-   "change": "missing",
-   "lastSeen": "2026-08-02T07:05:02-04:00"
-  },
-  {
-   "id": "99e705a85d03",
-   "title": "DREAM lunch",
-   "date": "2026-08-05",
-   "change": "dropped"
-  },
-  {
-   "id": "7730a72100ba",
-   "title": "YSO Franklin Square (DREAM)",
-   "date": "2026-08-07",
-   "change": "dropped"
-  },
-  {
-   "id": "2c1cdbc783f5",
-   "title": "YSO Battery Park",
-   "date": "2026-08-10",
-   "change": "dropped"
-  },
-  {
    "id": "dd8c52fc5391",
    "title": "Scrabble Night @ The Boardroom",
    "date": "2026-08-19",
-   "change": "missing",
-   "lastSeen": "2026-07-31T07:45:12-04:00"
+   "change": "dropped"
   },
   {
-   "id": "518398c5c87e",
-   "title": "Hold for Youth Program",
+   "id": "7efb54066c55",
+   "title": "Vermont Cheese Week 2026",
    "date": "2026-09-14",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-08-02T17:34:38-04:00"
   },
   {
-   "id": "02a8e4540f6d",
-   "title": "Hold for Youth Program",
-   "date": "2026-09-21",
-   "change": "dropped"
+   "id": "f816f6096c36",
+   "title": "Vermont Cheese Week 2026",
+   "date": "2026-09-15",
+   "change": "missing",
+   "lastSeen": "2026-08-02T17:34:38-04:00"
   },
   {
-   "id": "e0464d960c6c",
-   "title": "Hold for Youth Program",
-   "date": "2026-09-28",
-   "change": "dropped"
+   "id": "59575958a694",
+   "title": "Vermont Cheese Week 2026",
+   "date": "2026-09-16",
+   "change": "missing",
+   "lastSeen": "2026-08-02T17:34:38-04:00"
+  },
+  {
+   "id": "95ecaa8a634f",
+   "title": "Vermont Cheese Week 2026",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-08-02T17:34:38-04:00"
   }
  ]
 }
