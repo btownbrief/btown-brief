@@ -1,28 +1,28 @@
 {
- "updated": "2026-08-04T11:48:07+00:00",
+ "updated": "2026-08-04T12:29:47+00:00",
  "sections_updated": {
-  "now": "2026-08-04T11:48:07+00:00",
-  "forecast": "2026-08-04T11:48:07+00:00",
-  "hourly": "2026-08-04T11:48:07+00:00",
-  "alerts": "2026-08-04T11:48:07+00:00",
-  "afd": "2026-08-04T11:48:07+00:00",
-  "lake_forecast": "2026-08-04T11:48:07+00:00",
-  "lake_gage": "2026-08-04T11:48:07+00:00",
-  "air": "2026-08-04T11:48:07+00:00",
-  "sun": "2026-08-04T11:48:07+00:00",
-  "models": "2026-08-04T11:48:07+00:00"
+  "now": "2026-08-04T12:29:47+00:00",
+  "forecast": "2026-08-04T12:29:47+00:00",
+  "hourly": "2026-08-04T12:29:47+00:00",
+  "alerts": "2026-08-04T12:29:47+00:00",
+  "afd": "2026-08-04T12:29:47+00:00",
+  "lake_forecast": "2026-08-04T12:29:47+00:00",
+  "lake_gage": "2026-08-04T12:29:47+00:00",
+  "air": "2026-08-04T12:29:47+00:00",
+  "sun": "2026-08-04T12:29:47+00:00",
+  "models": "2026-08-04T12:29:47+00:00"
  },
  "now": {
-  "observed_at": "2026-08-04T11:25:00+00:00",
+  "observed_at": "2026-08-04T12:15:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 66,
-  "feels_like_f": 66,
-  "humidity": 83,
+  "temp_f": 70,
+  "feels_like_f": 70,
+  "humidity": 73,
   "dewpoint_f": 61,
   "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": "SSW"
+  "wind_dir": "S"
  },
  "forecast": {
   "updated": "2026-08-04T10:36:00+00:00",
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 74,
-  "water_temp_at": "2026-08-04T07:00:00.000-04:00",
-  "level_ft": 95.34,
-  "level_at": "2026-08-04T07:00:00.000-04:00",
+  "water_temp_at": "2026-08-04T08:00:00.000-04:00",
+  "level_ft": 95.35,
+  "level_at": "2026-08-04T08:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 25,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/04/26 7:00",
+  "observed": "08/04/26 8:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 4th."
  },
  "sun": {
@@ -856,7 +856,7 @@
      "ICON": 84
     },
     "pop_max": {
-     "GFS": 1,
+     "GFS": 0,
      "Euro": 3,
      "ICON": 0
     },
