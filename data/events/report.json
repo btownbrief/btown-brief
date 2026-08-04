@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-03T17:46:48-04:00",
+ "generated": "2026-08-04T07:47:40-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 19,
-   "seconds": 6.2
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 64,
-   "seconds": 4.5
+   "seconds": 3.2
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://brownelllibrary.org/wp-json/tribe/events/v1/events?start_date=2026-08-03&end_date=2026-10-02&per_page=50&page=1 (<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'brownelllibrary.org'. (_ssl"
+   "error": "fetch failed after 3 tries: https://brownelllibrary.org/wp-json/tribe/events/v1/events?start_date=2026-08-04&end_date=2026-10-03&per_page=50&page=1 (<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'brownelllibrary.org'. (_ssl"
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 168,
-   "seconds": 2.5
+   "seconds": 2.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 81,
-   "seconds": 1.4
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-03&end_date=2026-10-02&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-04&end_date=2026-10-03&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 31,
+   "count": 28,
    "seconds": 0.0
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 8,
-   "seconds": 0.5
+   "count": 9,
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 170,
-   "seconds": 77.0
+   "count": 169,
+   "seconds": 71.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 2.5
+   "seconds": 2.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 41.2
+   "seconds": 39.1
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 72,
-   "seconds": 119.7
+   "count": 73,
+   "seconds": 115.9
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 497,
-   "seconds": 68.2
+   "count": 492,
+   "seconds": 77.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 67,
-   "seconds": 127.3
+   "count": 66,
+   "seconds": 126.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 34,
-   "seconds": 16.3
+   "count": 33,
+   "seconds": 14.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden"
+   "count": 82,
+   "seconds": 1.3
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 35,
-   "seconds": 33.4
+   "seconds": 31.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -123,98 +123,20 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 55,
-   "seconds": 76.0
+   "count": 57,
+   "seconds": 73.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 36,
-   "seconds": 0.2
+   "count": 37,
+   "seconds": 0.4
   }
  },
- "gathered": 2108,
- "afterDedup": 1043,
- "duplicatesMerged": 1065,
- "final": 1932,
+ "gathered": 2184,
+ "afterDedup": 1121,
+ "duplicatesMerged": 1063,
+ "final": 1946,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "Rhythm and Reels Series: Ursa and the Major Key Concert + Lilo and Stitch",
-    "source": "sbrec"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sbrec"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "Live Music: Moonbird",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "Dinosaur Safari Exhibit",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "Alex Clark | Jokes From The Brink | Stand Up Comedy",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-28"
-  },
   {
    "kept": {
     "title": "Everything is Everything: Will Kasso Condry",
@@ -2022,12 +1944,46 @@
   },
   {
    "kept": {
+    "title": "Of Monsters and Men",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-09-20"
+  },
+  {
+   "kept": {
+    "title": "Jensen McRae",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-09-20"
+  },
+  {
+   "kept": {
     "title": "Alex Cameron",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
+   ],
+   "date": "2026-09-20"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-09-20"
   },
@@ -2362,9 +2318,59 @@
     "loveburlington"
    ],
    "date": "2026-10-02"
+  },
+  {
+   "kept": {
+    "title": "Post Sex Nachos",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-10-03"
+  },
+  {
+   "kept": {
+    "title": "Joe Dombrowski",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "vcc"
+   ],
+   "date": "2026-10-03"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-03"
+  },
+  {
+   "kept": {
+    "title": "Burlington Farmers Market",
+    "source": "farmersmarket"
+   },
+   "merged_sources": [
+    "farmersmarket",
+    "loveburlington"
+   ],
+   "date": "2026-10-03"
   }
  ],
  "changes": [
+  {
+   "id": "ea5f01ab9bf9",
+   "title": "SBPL at Rec-on-the-Go!! Queen City Park",
+   "date": "2026-08-04",
+   "change": "dropped"
+  },
   {
    "id": "80f6454ea1cd",
    "title": "Trivia",
@@ -2380,6 +2386,12 @@
    "lastSeen": "2026-08-03T08:43:53-04:00"
   },
   {
+   "id": "7939e5103bbf",
+   "title": "Art Wall - Vibrant Lives: Discovering Our Roots of Black Vermont",
+   "date": "2026-08-17",
+   "change": "dropped"
+  },
+  {
    "id": "7efb54066c55",
    "title": "Vermont Cheese Week 2026",
    "date": "2026-09-14",
@@ -2392,6 +2404,12 @@
    "date": "2026-09-15",
    "change": "missing",
    "lastSeen": "2026-08-02T17:34:38-04:00"
+  },
+  {
+   "id": "9423428d6a2b",
+   "title": "Puzzle Swap",
+   "date": "2026-09-16",
+   "change": "dropped"
   },
   {
    "id": "59575958a694",
