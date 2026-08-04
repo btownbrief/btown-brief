@@ -1,35 +1,35 @@
 {
- "updated": "2026-08-04T10:19:14+00:00",
+ "updated": "2026-08-04T11:48:07+00:00",
  "sections_updated": {
-  "now": "2026-08-04T10:19:14+00:00",
-  "forecast": "2026-08-04T10:19:14+00:00",
-  "hourly": "2026-08-04T10:19:14+00:00",
-  "alerts": "2026-08-04T10:19:14+00:00",
-  "afd": "2026-08-04T10:19:14+00:00",
-  "lake_forecast": "2026-08-04T10:19:14+00:00",
-  "lake_gage": "2026-08-04T10:19:14+00:00",
-  "air": "2026-08-04T10:19:14+00:00",
-  "sun": "2026-08-04T10:19:14+00:00",
-  "models": "2026-08-04T10:19:14+00:00"
+  "now": "2026-08-04T11:48:07+00:00",
+  "forecast": "2026-08-04T11:48:07+00:00",
+  "hourly": "2026-08-04T11:48:07+00:00",
+  "alerts": "2026-08-04T11:48:07+00:00",
+  "afd": "2026-08-04T11:48:07+00:00",
+  "lake_forecast": "2026-08-04T11:48:07+00:00",
+  "lake_gage": "2026-08-04T11:48:07+00:00",
+  "air": "2026-08-04T11:48:07+00:00",
+  "sun": "2026-08-04T11:48:07+00:00",
+  "models": "2026-08-04T11:48:07+00:00"
  },
  "now": {
-  "observed_at": "2026-08-04T10:00:00+00:00",
+  "observed_at": "2026-08-04T11:25:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 64,
-  "feels_like_f": 64,
+  "temp_f": 66,
+  "feels_like_f": 66,
   "humidity": 83,
-  "dewpoint_f": 59,
-  "wind_mph": 5,
+  "dewpoint_f": 61,
+  "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": "S"
+  "wind_dir": "SSW"
  },
  "forecast": {
-  "updated": "2026-08-04T06:19:29+00:00",
+  "updated": "2026-08-04T10:36:00+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-04T06:00:00-04:00",
+    "start": "2026-08-04T07:00:00-04:00",
     "is_day": true,
     "temp_f": 85,
     "pop": 0,
@@ -170,25 +170,14 @@
   ]
  },
  "hourly": {
-  "updated": "2026-08-04T06:19:29+00:00",
+  "updated": "2026-08-04T10:36:00+00:00",
   "hours": [
    {
-    "t": "2026-08-04T06:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
-    "pop": 0,
-    "humidity": 87,
-    "wind_mph": 6,
-    "wind_dir": "SW",
-    "sky": 7,
-    "short": "Sunny"
-   },
-   {
     "t": "2026-08-04T07:00:00-04:00",
-    "temp_f": 65,
-    "feels_f": 65,
+    "temp_f": 67,
+    "feels_f": 67,
     "pop": 0,
-    "humidity": 78,
+    "humidity": 81,
     "wind_mph": 6,
     "wind_dir": "SW",
     "sky": 9,
@@ -196,10 +185,10 @@
    },
    {
     "t": "2026-08-04T08:00:00-04:00",
-    "temp_f": 67,
-    "feels_f": 67,
+    "temp_f": 69,
+    "feels_f": 69,
     "pop": 0,
-    "humidity": 78,
+    "humidity": 76,
     "wind_mph": 6,
     "wind_dir": "SW",
     "sky": 2,
@@ -207,10 +196,10 @@
    },
    {
     "t": "2026-08-04T09:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
+    "temp_f": 71,
+    "feels_f": 71,
     "pop": 0,
-    "humidity": 73,
+    "humidity": 68,
     "wind_mph": 6,
     "wind_dir": "SW",
     "sky": 0,
@@ -221,7 +210,7 @@
     "temp_f": 75,
     "feels_f": 75,
     "pop": 0,
-    "humidity": 62,
+    "humidity": 60,
     "wind_mph": 7,
     "wind_dir": "W",
     "sky": 1,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 22,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-08-05T18:00:00-04:00",
+    "temp_f": 85,
+    "feels_f": 86,
+    "pop": 0,
+    "humidity": 50,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 40,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -574,14 +574,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-04T05:38:00+00:00",
+  "issued": "2026-08-04T11:21:00+00:00",
   "key_messages": [
    "Tranquil weather is expected today and Wednesday as high pressure builds over the region.",
    "Seasonably warm and unsettled weather returns for the end of the week, with chances for showers and thunderstorms.",
    "Classic northern trough-southern ridge summer weather pattern will bring above normal temperatures and multiple small scale weather systems for the weekend into early next week."
   ],
   "what_changed": "As of 137 AM EDT Tuesday... No significant changes have been made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 040538\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n138 AM EDT Tue Aug 4 2026\n\n.WHAT HAS CHANGED...\nAs of 137 AM EDT Tuesday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 137 AM EDT Tuesday...\n\n1. Tranquil weather is expected today and Wednesday as high \npressure builds over the region. \n\n2. Seasonably warm and unsettled weather returns for the end of \nthe week, with chances for showers and thunderstorms. \n\n3. Classic northern trough-southern ridge summer weather \npattern will bring above normal temperatures and multiple small \nscale weather systems for the weekend into early next week.\n\n&&\n\n.DISCUSSION...\nAs of 137 AM EDT Tuesday...\n\nKEY MESSAGE 1: A pleasant day is expected across the region today as \nhigh pressure continues to nose into the region, bringing a period \nof drier weather. Some valley fog that has developed overnight will \ngradually dissipate through the morning, with mostly clear skies and \nsun expected for this afternoon. High temperatures today will climb \ninto the upper 70s to mid 80s. Another day of tranquil conditions is \nexpected for Wednesday as the region remains under the influence of \nridging, with high temperatures a few degrees warmer under light \nsoutherly flow with daytime highs climbing into the 80s areawide. \nOverall, it looks like a few pleasant summer days are on tap for the \nregion.\n\nKEY MESSAGE 2: Heading into the latter half of the week, warm and \nunsettled weather is expected as the region remains sandwiched \nbetween high pressure to the south and an upper level trough to the \nnorth, with zonal flow bringing several different disturbances to \nthe region. With broad southwesterly flow ushering in plenty of \nmoisture, chances for showers and thunderstorms will be possible. \nLatest guidance shows decent instability across the region Thursday \nafternoon, which combined with ample moisture and decent forcing may \nlead to thunderstorm development in the afternoon, with the \npotential for some stronger thunderstorms possible if all the \ningredients align, although details will become clearer as we get \ncloser. Additional rounds of showers and thunderstorms are also \nexpected for Friday. In addition to the shower chances increase \nlater this week, the increased moisture will allow for dewpoints to \nclimb into the upper 60s to near 70 at times, making it feel \nincreasingly muggy and uncomfortable later this week. High \ntemperatures will climb into the 80s, with heat indices climbing \ninto the upper 80s and near 90.\n\nKEY MESSAGE 3: Over the weekend, an upper low will mature on the \nwestern edge of the Hudson Bay while a large western upper high \nflattens out and settles east. This will produce a channeled flow \npattern that commonly sends small scale features racing east in a \nspeedy jet stream. This usually also means that the forecast \npredictability will be low, as coarse resolution models may not \nalways accurately depict these smaller, convectively-influenced \nsystems within the fast flow pattern.\n\nAssessing different ensemble suites, most indicate largely above \nnormal PWATs, although there is a signal for a brief pocket of dry \nair. Some have that dry air in place on Sunday, some have it on \nMonday, and a minority have it on Saturday. So Saturday appears the \nmost likely to feature scattered (even numerous) showers and \nthunderstorms over the weekend. Between Saturday and next Tuesday, \nthere's at least a trough per day passing east, and so there could \nbe some rain for each day. Towards the middle of next week, the \nlarge scale pattern doesn't change too much, but the northern trough-\nsouthern ridge pair shifts east. This will place us a bit more under \nthe influence of the upper low. So after a period of above normal \ntemperatures, we will start trending back towards normal. The \nquestion will be how amplified that upper low remains. Still showers \ncan't be completely discounted given the upper low nearby.\n\n&&\n\n.AVIATION /06Z TUESDAY THROUGH SATURDAY/...\nThrough 06Z Wednesday...Mostly clear skies are prevalent across the\nregion, though some mid clouds around 4000-8000 ft agl remain in\nportions of the Adirondacks and northern Vermont. This is expected\nto gradually clear. Despite the clear skies and recent rain, winds\nat 400-600 ft agl are expected to be 20 knots. This mixing may\nprevent most locations from decoupling, and even the last few hours\nat KSLK have remained around 7 knots out of the southwest. Satellite\nshows some fog has developed in eastern Vermont, and our cool\nhollows can still briefly decouple. Thus, noted 4SM with a 1SM TEMPO\nfrom 08-12z at KSLK and an early TEMPO to 2SM at KMPV before going\nto 1/2SM prevailing from 09-1230z given fog already nearby.\nAfterwards, any remaining fog will lift. Winds will shift southwest\nto northwest at 5-9 knots, and a few gusts possible at KMPV and KMSS\nto around 15-17 knots. Skies will be clear, and then winds will go\ncalm or terrain driven towards sunset (~00z).\n\nOutlook...\n\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Chance SHRA, Chance TSRA.\nThursday Night: VFR. Chance SHRA, Slight chance TSRA.\nFriday: Mainly VFR, with local MVFR possible. Likely SHRA, Chance\nTSRA.\nFriday Night: VFR. Slight chance SHRA, Slight chance TSRA.\nSaturday: VFR. Slight chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Haynes/Kremer\nAVIATION...Haynes\n"
+  "raw": "\n000\nFXUS61 KBTV 041121\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n721 AM EDT Tue Aug 4 2026\n\n.WHAT HAS CHANGED...\nAs of 137 AM EDT Tuesday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 137 AM EDT Tuesday...\n\n1. Tranquil weather is expected today and Wednesday as high \npressure builds over the region. \n\n2. Seasonably warm and unsettled weather returns for the end of \nthe week, with chances for showers and thunderstorms. \n\n3. Classic northern trough-southern ridge summer weather \npattern will bring above normal temperatures and multiple small \nscale weather systems for the weekend into early next week.\n\n&&\n\n.DISCUSSION...\nAs of 137 AM EDT Tuesday...\n\nKEY MESSAGE 1: A pleasant day is expected across the region today as \nhigh pressure continues to nose into the region, bringing a period \nof drier weather. Some valley fog that has developed overnight will \ngradually dissipate through the morning, with mostly clear skies and \nsun expected for this afternoon. High temperatures today will climb \ninto the upper 70s to mid 80s. Another day of tranquil conditions is \nexpected for Wednesday as the region remains under the influence of \nridging, with high temperatures a few degrees warmer under light \nsoutherly flow with daytime highs climbing into the 80s areawide. \nOverall, it looks like a few pleasant summer days are on tap for the \nregion.\n\nKEY MESSAGE 2: Heading into the latter half of the week, warm and \nunsettled weather is expected as the region remains sandwiched \nbetween high pressure to the south and an upper level trough to the \nnorth, with zonal flow bringing several different disturbances to \nthe region. With broad southwesterly flow ushering in plenty of \nmoisture, chances for showers and thunderstorms will be possible. \nLatest guidance shows decent instability across the region Thursday \nafternoon, which combined with ample moisture and decent forcing may \nlead to thunderstorm development in the afternoon, with the \npotential for some stronger thunderstorms possible if all the \ningredients align, although details will become clearer as we get \ncloser. Additional rounds of showers and thunderstorms are also \nexpected for Friday. In addition to the shower chances increase \nlater this week, the increased moisture will allow for dewpoints to \nclimb into the upper 60s to near 70 at times, making it feel \nincreasingly muggy and uncomfortable later this week. High \ntemperatures will climb into the 80s, with heat indices climbing \ninto the upper 80s and near 90.\n\nKEY MESSAGE 3: Over the weekend, an upper low will mature on the \nwestern edge of the Hudson Bay while a large western upper high \nflattens out and settles east. This will produce a channeled flow \npattern that commonly sends small scale features racing east in a \nspeedy jet stream. This usually also means that the forecast \npredictability will be low, as coarse resolution models may not \nalways accurately depict these smaller, convectively-influenced \nsystems within the fast flow pattern.\n\nAssessing different ensemble suites, most indicate largely above \nnormal PWATs, although there is a signal for a brief pocket of dry \nair. Some have that dry air in place on Sunday, some have it on \nMonday, and a minority have it on Saturday. So Saturday appears the \nmost likely to feature scattered (even numerous) showers and \nthunderstorms over the weekend. Between Saturday and next Tuesday, \nthere's at least a trough per day passing east, and so there could \nbe some rain for each day. Towards the middle of next week, the \nlarge scale pattern doesn't change too much, but the northern trough-\nsouthern ridge pair shifts east. This will place us a bit more under \nthe influence of the upper low. So after a period of above normal \ntemperatures, we will start trending back towards normal. The \nquestion will be how amplified that upper low remains. Still showers \ncan't be completely discounted given the upper low nearby.\n\n&&\n\n.AVIATION /12Z TUESDAY THROUGH SATURDAY/...\nThrough 12Z Wednesday...Fog is in the process of lifting this\nmorning. Skies will trend clear. For the most part, winds will\nbe west to northwest at 5 to 9 knots, though we should warm \nenough that KPBG observes a lake breeze this afternoon, though \nwith some uncertainty on timing. A few gusts 15 to 18 knots are\nlikely at KMPV, KEFK, and KMSS. After 22-00z, winds will trend\nlight or terrain driven. Some thin high clouds could approach\nfrom the south, but did add 2SM from 08z to the end of this TAF\ncycle for KSLK and KMPV.\n\nOutlook...\n\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Chance SHRA, Chance TSRA.\nThursday Night: VFR. Chance SHRA, Slight chance TSRA.\nFriday: Mainly VFR, with local MVFR possible. Likely SHRA, Chance\nTSRA.\nFriday Night: VFR. Slight chance SHRA, Slight chance TSRA.\nSaturday: VFR. Slight chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Haynes\nAVIATION...Haynes\n"
  },
  "lake_forecast": {
   "issued": "2026-08-04T06:25:00+00:00",
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 74,
-  "water_temp_at": "2026-08-04T06:00:00.000-04:00",
-  "level_ft": 95.35,
-  "level_at": "2026-08-04T06:00:00.000-04:00",
+  "water_temp_at": "2026-08-04T07:00:00.000-04:00",
+  "level_ft": 95.34,
+  "level_at": "2026-08-04T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 26,
+  "aqi": 25,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/04/26 6:00",
+  "observed": "08/04/26 7:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 4th."
  },
  "sun": {
@@ -857,7 +857,7 @@
     },
     "pop_max": {
      "GFS": 1,
-     "Euro": 0,
+     "Euro": 3,
      "ICON": 0
     },
     "precip_in": {
@@ -889,17 +889,17 @@
    {
     "date": "2026-08-06",
     "high_f": {
-     "GFS": 88,
+     "GFS": 87,
      "Euro": 84,
      "ICON": 90
     },
     "pop_max": {
      "GFS": 50,
-     "Euro": 64,
+     "Euro": 73,
      "ICON": 34
     },
     "precip_in": {
-     "GFS": 0.01,
+     "GFS": 0.22,
      "Euro": 0.09,
      "ICON": 0.28
     },
