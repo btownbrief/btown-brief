@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-04T07:47:40-04:00",
+ "generated": "2026-08-04T17:54:10-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 19,
-   "seconds": 5.9
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 64,
-   "seconds": 3.2
+   "count": 70,
+   "seconds": 3.4
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 0,
-   "error": "fetch failed after 3 tries: https://brownelllibrary.org/wp-json/tribe/events/v1/events?start_date=2026-08-04&end_date=2026-10-03&per_page=50&page=1 (<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'brownelllibrary.org'. (_ssl"
+   "count": 59,
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 168,
-   "seconds": 2.7
+   "seconds": 3.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 81,
-   "seconds": 1.9
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 169,
-   "seconds": 71.9
+   "count": 171,
+   "seconds": 65.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 2.2
+   "seconds": 2.9
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.1
+   "seconds": 36.5
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 73,
-   "seconds": 115.9
+   "count": 74,
+   "seconds": 116.1
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 492,
-   "seconds": 77.5
+   "count": 494,
+   "seconds": 73.7
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 126.4
+   "count": 64,
+   "seconds": 123.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 33,
-   "seconds": 14.5
+   "seconds": 14.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 82,
-   "seconds": 1.3
+   "count": 84,
+   "seconds": 1.7
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 35,
-   "seconds": 31.5
+   "count": 39,
+   "seconds": 36.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,30 +124,19 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 57,
-   "seconds": 73.7
+   "seconds": 72.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 37,
-   "seconds": 0.4
+   "seconds": 0.3
   }
  },
- "gathered": 2184,
- "afterDedup": 1121,
- "duplicatesMerged": 1063,
- "final": 1946,
+ "gathered": 2258,
+ "afterDedup": 1193,
+ "duplicatesMerged": 1065,
+ "final": 1961,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-28"
-  },
   {
    "kept": {
     "title": "Dream / Mộng : Veronica Pham",
@@ -1808,6 +1797,17 @@
   },
   {
    "kept": {
+    "title": "Charity, Sylvia & Cleopatra",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "flynn",
+    "loveburlington"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
     "title": "Old Crow Medicine Show",
     "source": "higherground"
    },
@@ -2366,10 +2366,26 @@
  ],
  "changes": [
   {
-   "id": "ea5f01ab9bf9",
-   "title": "SBPL at Rec-on-the-Go!! Queen City Park",
+   "id": "658b9e694141",
+   "title": "Switchback Sessions",
+   "date": "2026-08-23",
+   "change": "time",
+   "was": "2026-08-23T12:00:00-04:00",
+   "now": "2026-08-23T13:30:00-04:00"
+  },
+  {
+   "id": "d605a754c142",
+   "title": "Tech Tuesdays - Breakfast",
    "date": "2026-08-04",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-08-04T07:47:40-04:00"
+  },
+  {
+   "id": "2807a06e2b41",
+   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
+   "date": "2026-08-04",
+   "change": "missing",
+   "lastSeen": "2026-08-04T07:47:40-04:00"
   },
   {
    "id": "80f6454ea1cd",
@@ -2386,12 +2402,6 @@
    "lastSeen": "2026-08-03T08:43:53-04:00"
   },
   {
-   "id": "7939e5103bbf",
-   "title": "Art Wall - Vibrant Lives: Discovering Our Roots of Black Vermont",
-   "date": "2026-08-17",
-   "change": "dropped"
-  },
-  {
    "id": "7efb54066c55",
    "title": "Vermont Cheese Week 2026",
    "date": "2026-09-14",
@@ -2404,12 +2414,6 @@
    "date": "2026-09-15",
    "change": "missing",
    "lastSeen": "2026-08-02T17:34:38-04:00"
-  },
-  {
-   "id": "9423428d6a2b",
-   "title": "Puzzle Swap",
-   "date": "2026-09-16",
-   "change": "dropped"
   },
   {
    "id": "59575958a694",
