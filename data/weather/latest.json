@@ -1,45 +1,35 @@
 {
- "updated": "2026-08-04T22:45:41+00:00",
+ "updated": "2026-08-05T01:07:12+00:00",
  "sections_updated": {
-  "now": "2026-08-04T22:45:41+00:00",
-  "forecast": "2026-08-04T22:45:41+00:00",
-  "hourly": "2026-08-04T22:45:41+00:00",
-  "alerts": "2026-08-04T22:45:41+00:00",
-  "afd": "2026-08-04T22:45:41+00:00",
-  "lake_forecast": "2026-08-04T22:45:41+00:00",
-  "lake_gage": "2026-08-04T22:45:41+00:00",
-  "air": "2026-08-04T22:45:41+00:00",
-  "sun": "2026-08-04T22:45:41+00:00",
-  "models": "2026-08-04T22:45:41+00:00"
+  "now": "2026-08-05T01:07:12+00:00",
+  "forecast": "2026-08-05T01:07:12+00:00",
+  "hourly": "2026-08-05T01:07:12+00:00",
+  "alerts": "2026-08-05T01:07:12+00:00",
+  "afd": "2026-08-05T01:07:12+00:00",
+  "lake_forecast": "2026-08-05T01:07:12+00:00",
+  "lake_gage": "2026-08-05T01:07:12+00:00",
+  "air": "2026-08-05T01:07:12+00:00",
+  "sun": "2026-08-05T01:07:12+00:00",
+  "models": "2026-08-05T01:07:12+00:00"
  },
  "now": {
-  "observed_at": "2026-08-04T22:25:00+00:00",
+  "observed_at": "2026-08-05T00:45:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 82,
-  "feels_like_f": 82,
-  "humidity": 42,
-  "dewpoint_f": 57,
-  "wind_mph": 7,
+  "temp_f": 75,
+  "feels_like_f": 75,
+  "humidity": 65,
+  "dewpoint_f": 63,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "SSE"
+  "wind_dir": "S"
  },
  "forecast": {
   "updated": "2026-08-04T18:14:42+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-08-04T17:00:00-04:00",
-    "is_day": true,
-    "temp_f": 85,
-    "pop": 0,
-    "wind": "SW 6 mph",
-    "short": "Sunny",
-    "detailed": "Sunny, with a high near 85. Southwest wind around 6 mph."
-   },
-   {
     "name": "Tonight",
-    "start": "2026-08-04T18:00:00-04:00",
+    "start": "2026-08-04T21:00:00-04:00",
     "is_day": false,
     "temp_f": 64,
     "pop": 0,
@@ -75,7 +65,7 @@
     "pop": 48,
     "wind": "S 8 mph",
     "short": "Mostly Sunny then Scattered Showers And Thunderstorms",
-    "detailed": "Scattered showers and thunderstorms between 2pm and 5pm, then scattered showers and thunderstorms. Mostly sunny, with a high near 87. South wind around 8 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Scattered showers and thunderstorms between 2pm and 5pm, then scattered showers and thunderstorms. Mostly sunny, with a high near 87. Heat index values as high as 93. South wind around 8 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Thursday Night",
@@ -95,7 +85,7 @@
     "pop": 61,
     "wind": "SW 5 mph",
     "short": "Slight Chance Showers And Thunderstorms",
-    "detailed": "Isolated rain showers between 8am and 11am, then a slight chance of showers and thunderstorms between 11am and 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 60%."
+    "detailed": "Isolated rain showers between 8am and 11am, then a slight chance of showers and thunderstorms between 11am and 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Friday Night",
@@ -166,56 +156,22 @@
     "wind": "SW 5 to 8 mph",
     "short": "Chance Showers And Thunderstorms",
     "detailed": "A chance of showers and thunderstorms. Mostly cloudy, with a low around 64. Southwest wind 5 to 8 mph. Chance of precipitation is 50%."
+   },
+   {
+    "name": "Tuesday",
+    "start": "2026-08-11T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 82,
+    "pop": 54,
+    "wind": "SW 8 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers before 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 82. Southwest wind around 8 mph. Chance of precipitation is 50%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-08-04T18:14:42+00:00",
   "hours": [
-   {
-    "t": "2026-08-04T17:00:00-04:00",
-    "temp_f": 85,
-    "feels_f": 85,
-    "pop": 0,
-    "humidity": 41,
-    "wind_mph": 6,
-    "wind_dir": "SW",
-    "sky": 9,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-08-04T18:00:00-04:00",
-    "temp_f": 84,
-    "feels_f": 84,
-    "pop": 0,
-    "humidity": 44,
-    "wind_mph": 5,
-    "wind_dir": "SW",
-    "sky": 10,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-08-04T19:00:00-04:00",
-    "temp_f": 83,
-    "feels_f": 84,
-    "pop": 0,
-    "humidity": 49,
-    "wind_mph": 5,
-    "wind_dir": "S",
-    "sky": 10,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-08-04T20:00:00-04:00",
-    "temp_f": 77,
-    "feels_f": 77,
-    "pop": 0,
-    "humidity": 62,
-    "wind_mph": 5,
-    "wind_dir": "SE",
-    "sky": 9,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-08-04T21:00:00-04:00",
     "temp_f": 75,
@@ -567,6 +523,50 @@
     "wind_dir": "S",
     "sky": 25,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-06T05:00:00-04:00",
+    "temp_f": 71,
+    "feels_f": 71,
+    "pop": 0,
+    "humidity": 81,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 19,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-06T06:00:00-04:00",
+    "temp_f": 69,
+    "feels_f": 69,
+    "pop": 0,
+    "humidity": 87,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 13,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-08-06T07:00:00-04:00",
+    "temp_f": 72,
+    "feels_f": 72,
+    "pop": 4,
+    "humidity": 79,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 6,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-08-06T08:00:00-04:00",
+    "temp_f": 74,
+    "feels_f": 74,
+    "pop": 8,
+    "humidity": 76,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 24,
+    "short": "Sunny"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-04T18:36:00+00:00",
+  "issued": "2026-08-04T23:42:00+00:00",
   "key_messages": [
    "Dry and calm conditions will continue this afternoon into tomorrow with high pressure overhead. Shower and thunderstorm chances return Thursday and Friday with broad troughing approaching the region.",
    "Bermuda high set up will keep our region warm and with chances for showers from Friday night through Tuesday."
   ],
   "what_changed": "As of 234 PM EDT Tuesday... No significant changes we made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 041836\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n236 PM EDT Tue Aug 4 2026\n\n.WHAT HAS CHANGED...\nAs of 234 PM EDT Tuesday...\n\nNo significant changes we made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 234 PM EDT Tuesday...\n\n1. Dry and calm conditions will continue this afternoon into \ntomorrow with high pressure overhead. Shower and thunderstorm \nchances return Thursday and Friday with broad troughing \napproaching the region.\n\n2. Bermuda high set up will keep our region warm and with \nchances for showers from Friday night through Tuesday. \n\n&&\n\n.DISCUSSION...\nAs of 234 PM EDT Tuesday...\n\nKEY MESSAGE 1: Tranquil weather is expected to continue tonight into \ntomorrow with high pressure in place overhead. Skies will remain \nclear and dry this evening into tonight with lows overnight in the \nupper 50s to low 60s. A few more protected valleys in the \nAdirondacks and NEK could see some lower 50s tonight with better \nradiational cooling. Tomorrow will be equally as pleasant as today, \nthough with slightly more terrain driven fair weather cumulus. Our \narea of high pressure will shift a little south and east allowing \nfor better southerly flow and moisture advection. Temperatures will \nbe a degree or two warmer than today in the mid to low to mid 80s. \nDewpoints will also be on the increase around 60. In the decoupled \nvalleys tonight some patchy fog may be possible.\n\nOur calm pattern will erode by Thursday. A Bermuda high responsible \nfor our calm weather today will begin to shift slightly to the \nsouth with the return of troughing. Broad cyclonic flow by the \nend of the week will allow for better moisture advection into \nthe region with a few shortwaves moving through. Temperatures \nThursday will rise into the mid to upper 80s with dewpoints \naround 70 degrees. Heat indices will rise into the upper 80s to \naround 90 as a result. There does not look to be any real \ndefined boundary for shower activity, but shortwaves Thursday \nand Friday look to bring enough energy to support shower and \nthunderstorm chances both afternoons. CAMs denote terrain \ninstability around 1000-1500J/kg with around 20-30 knots of \nshear. CAPE and shear profiles will be supportive of a few \nthunderstorms across the Adirondacks. Should ingredients align \nThursday, there is a chance for some stronger storms, primarily \nin northern New York, given good instability. Weaker shear \nprofiles do lend some uncertainty to the strength of any storms \nin addition to weaker mid level lapse rates. By Friday, \nsouthwesterly flow and shear will increase to 30-40knots with \nsimilar instability levels, expanding into the northern \nChamplain Valley as well. Afternoon scattered showers and \nthunderstorms are anticipated, mainly over the terrain. A few \nstronger storms Friday may also be possible, especially with \nbetter shear and mid level lapse rates. Any storms will wane \nwith the loss of diurnal heating in the evenings.\n\nKEY MESSAGE 2: Bermuda high remains in place through the entirety of \nthe extended portion of our forecast from Friday night through \nTuesday. This will mean warm temperatures and active weather for \nnorthern New York and Vermont. Current model predictions are for \nSaturday to be the wettest day of the period, and Sunday to be the \nwarmest. Tough to time fine scale features this far out without a \nsignificant synoptic feature. But, there are indications that upper \nlevel troughs and shortwave energy passing through will bring \nchances for showers more days than not. Looking further out we could \nhave a pattern change towards the end of next week. Highs in the 80s \nand lows in the 60s for the extended period.\n\n&&\n\n.AVIATION /18Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...Very quiet aviation forecast today with\nmainly clear skies in place across the region as well as light \nwinds. May see some fog formation in the typically fog prone \nspots from 06-13z. For now only included some BR at SLK and MPV.\n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Scattered SHRA, Isolated TSRA.\nThursday Night: VFR. Isolated SHRA, Isolated TSRA.\nFriday: Mainly VFR, with local MVFR possible. Numerous SHRA,\nScattered TSRA.\nFriday Night: VFR. Chance SHRA, Chance TSRA.\nSaturday: Mainly VFR, with local MVFR possible. Likely SHRA,\nChance TSRA.\nSaturday Night: VFR. Slight chance SHRA, Slight chance TSRA.\nSunday: VFR. Chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Neiles/Danzig\nAVIATION...Neiles\n"
+  "raw": "\n000\nFXUS61 KBTV 042342\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n742 PM EDT Tue Aug 4 2026\n\n.WHAT HAS CHANGED...\nAs of 234 PM EDT Tuesday...\n\nNo significant changes we made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 234 PM EDT Tuesday...\n\n1. Dry and calm conditions will continue this afternoon into \ntomorrow with high pressure overhead. Shower and thunderstorm \nchances return Thursday and Friday with broad troughing \napproaching the region.\n\n2. Bermuda high set up will keep our region warm and with \nchances for showers from Friday night through Tuesday.\n\n&&\n\n.DISCUSSION...\nAs of 234 PM EDT Tuesday...\n\nKEY MESSAGE 1: Tranquil weather is expected to continue tonight into \ntomorrow with high pressure in place overhead. Skies will remain \nclear and dry this evening into tonight with lows overnight in the \nupper 50s to low 60s. A few more protected valleys in the \nAdirondacks and NEK could see some lower 50s tonight with better \nradiational cooling. Tomorrow will be equally as pleasant as today, \nthough with slightly more terrain driven fair weather cumulus. Our \narea of high pressure will shift a little south and east allowing \nfor better southerly flow and moisture advection. Temperatures will \nbe a degree or two warmer than today in the mid to low to mid 80s. \nDewpoints will also be on the increase around 60. In the decoupled \nvalleys tonight some patchy fog may be possible.\n\nOur calm pattern will erode by Thursday. A Bermuda high responsible \nfor our calm weather today will begin to shift slightly to the \nsouth with the return of troughing. Broad cyclonic flow by the \nend of the week will allow for better moisture advection into \nthe region with a few shortwaves moving through. Temperatures \nThursday will rise into the mid to upper 80s with dewpoints \naround 70 degrees. Heat indices will rise into the upper 80s to \naround 90 as a result. There does not look to be any real \ndefined boundary for shower activity, but shortwaves Thursday \nand Friday look to bring enough energy to support shower and \nthunderstorm chances both afternoons. CAMs denote terrain \ninstability around 1000-1500J/kg with around 20-30 knots of \nshear. CAPE and shear profiles will be supportive of a few \nthunderstorms across the Adirondacks. Should ingredients align \nThursday, there is a chance for some stronger storms, primarily \nin northern New York, given good instability. Weaker shear \nprofiles do lend some uncertainty to the strength of any storms \nin addition to weaker mid level lapse rates. By Friday, \nsouthwesterly flow and shear will increase to 30-40knots with \nsimilar instability levels, expanding into the northern \nChamplain Valley as well. Afternoon scattered showers and \nthunderstorms are anticipated, mainly over the terrain. A few \nstronger storms Friday may also be possible, especially with \nbetter shear and mid level lapse rates. Any storms will wane \nwith the loss of diurnal heating in the evenings.\n\nKEY MESSAGE 2: Bermuda high remains in place through the entirety of \nthe extended portion of our forecast from Friday night through \nTuesday. This will mean warm temperatures and active weather for \nnorthern New York and Vermont. Current model predictions are for \nSaturday to be the wettest day of the period, and Sunday to be the \nwarmest. Tough to time fine scale features this far out without a \nsignificant synoptic feature. But, there are indications that upper \nlevel troughs and shortwave energy passing through will bring \nchances for showers more days than not. Looking further out we could \nhave a pattern change towards the end of next week. Highs in the 80s \nand lows in the 60s for the extended period.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...Outside of some chances for morning fog\nat SLK/MPV, weather will remain quiet through this forecast\nperiod. Kept fog mainly MVFR 08-12Z since it may be difficult to\nreach crossover temperatures outside the narrow window\nsurrounding tonight's minimum temperature. Winds will generally\nbe light to calm with some southerlies tomorrow after 14Z less\nthan 10kts. \n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Scattered SHRA, Isolated TSRA.\nThursday Night: VFR. Isolated SHRA, Isolated TSRA.\nFriday: VFR. Numerous SHRA, Scattered TSRA.\nFriday Night: VFR. Chance SHRA, Chance TSRA.\nSaturday: Mainly VFR, with areas MVFR possible. Likely SHRA,\nChance TSRA.\nSaturday Night: VFR. Slight chance SHRA, Slight chance TSRA.\nSunday: VFR. Chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Neiles\nAVIATION...Boyd\n"
  },
  "lake_forecast": {
   "issued": "2026-08-04T18:15:00+00:00",
@@ -851,18 +851,18 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 75,
-  "water_temp_at": "2026-08-04T18:00:00.000-04:00",
-  "level_ft": 95.36,
-  "level_at": "2026-08-04T18:00:00.000-04:00",
+  "water_temp_f": 76,
+  "water_temp_at": "2026-08-04T20:00:00.000-04:00",
+  "level_ft": 95.35,
+  "level_at": "2026-08-04T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 29,
+  "aqi": 23,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/04/26 18:00",
+  "observed": "08/04/26 20:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, August 5th."
  },
  "sun": {
@@ -901,8 +901,8 @@
      "ICON": 88
     },
     "pop_max": {
-     "GFS": 1,
-     "Euro": 0,
+     "GFS": 2,
+     "Euro": 2,
      "ICON": 0
     },
     "precip_in": {
@@ -921,11 +921,11 @@
     },
     "pop_max": {
      "GFS": 35,
-     "Euro": 86,
+     "Euro": 90,
      "ICON": 40
     },
     "precip_in": {
-     "GFS": 0.27,
+     "GFS": 0.22,
      "Euro": 0.16,
      "ICON": 0.42
     },
