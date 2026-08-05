@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-04T17:54:10-04:00",
+ "generated": "2026-08-05T07:38:20-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 19,
-   "seconds": 5.8
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 70,
-   "seconds": 3.4
+   "seconds": 3.3
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 59,
-   "seconds": 3.0
+   "count": 58,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 168,
-   "seconds": 3.3
+   "count": 166,
+   "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 81,
-   "seconds": 1.8
+   "count": 80,
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,11 +34,11 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-04&end_date=2026-10-03&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-05&end_date=2026-10-04&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 28,
+   "count": 23,
    "seconds": 0.0
   },
   "farmersmarket": {
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 171,
-   "seconds": 65.7
+   "count": 164,
+   "seconds": 76.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 2.9
+   "seconds": 5.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.5
+   "seconds": 39.5
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 74,
-   "seconds": 116.1
+   "seconds": 117.3
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 494,
-   "seconds": 73.7
+   "count": 486,
+   "seconds": 67.1
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 123.1
+   "count": 65,
+   "seconds": 121.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 33,
-   "seconds": 14.9
+   "count": 34,
+   "seconds": 16.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 84,
-   "seconds": 1.7
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 39,
-   "seconds": 36.5
+   "count": 38,
+   "seconds": 38.8
   },
   "sevendays": {
    "label": "Seven Days",
@@ -124,77 +124,19 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 57,
-   "seconds": 72.1
+   "seconds": 76.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 37,
+   "count": 35,
    "seconds": 0.3
   }
  },
- "gathered": 2258,
- "afterDedup": 1193,
- "duplicatesMerged": 1065,
- "final": 1961,
+ "gathered": 2149,
+ "afterDedup": 1092,
+ "duplicatesMerged": 1057,
+ "final": 1913,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "Warren Zeiders Live In Concert",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-08-28"
-  },
-  {
-   "kept": {
-    "title": "Splash Dance: DJ JP Black",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-08-29"
-  },
-  {
-   "kept": {
-    "title": "Split in Half (Final Show)",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-08-29"
-  },
   {
    "kept": {
     "title": "It’s A 2000’s Party: Burlington",
@@ -1994,7 +1936,30 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
+   ],
+   "date": "2026-09-21"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-21"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-09-21"
   },
@@ -2016,6 +1981,28 @@
    },
    "merged_sources": [
     "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-22"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-22"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-09-22"
@@ -2362,30 +2349,35 @@
     "loveburlington"
    ],
    "date": "2026-10-03"
+  },
+  {
+   "kept": {
+    "title": "76th Street",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-10-04"
   }
  ],
  "changes": [
   {
-   "id": "658b9e694141",
-   "title": "Switchback Sessions",
-   "date": "2026-08-23",
+   "id": "6a16d1a2270e",
+   "title": "Industry Day",
+   "date": "2026-09-21",
    "change": "time",
-   "was": "2026-08-23T12:00:00-04:00",
-   "now": "2026-08-23T13:30:00-04:00"
+   "was": "2026-09-21",
+   "now": "2026-09-21T11:30:00-04:00"
   },
   {
-   "id": "d605a754c142",
-   "title": "Tech Tuesdays - Breakfast",
-   "date": "2026-08-04",
-   "change": "missing",
-   "lastSeen": "2026-08-04T07:47:40-04:00"
-  },
-  {
-   "id": "2807a06e2b41",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-08-04",
-   "change": "missing",
-   "lastSeen": "2026-08-04T07:47:40-04:00"
+   "id": "53dc7da9440f",
+   "title": "802sDay",
+   "date": "2026-09-22",
+   "change": "time",
+   "was": "2026-09-22",
+   "now": "2026-09-22T11:30:00-04:00"
   },
   {
    "id": "80f6454ea1cd",
