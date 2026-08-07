@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-07T06:30:22-04:00",
+ "generated": "2026-08-07T17:21:19-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 20,
-   "seconds": 5.3
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 74,
-   "seconds": 4.7
+   "seconds": 3.6
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 57,
-   "seconds": 2.9
+   "seconds": 3.6
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 165,
-   "seconds": 2.9
+   "seconds": 2.8
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 77,
-   "seconds": 2.0
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.1
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 150,
-   "seconds": 68.0
+   "count": 152,
+   "seconds": 72.0
   },
   "flynn": {
    "label": "The Flynn",
    "count": 20,
-   "seconds": 2.8
+   "seconds": 2.7
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 35.9
+   "seconds": 38.9
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 74,
-   "seconds": 104.4
+   "seconds": 111.7
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,27 +79,27 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 465,
-   "seconds": 72.2
+   "seconds": 73.7
   },
   "meetup": {
    "label": "Meetup",
-   "count": 70,
-   "seconds": 128.5
+   "count": 67,
+   "seconds": 129.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 36,
-   "seconds": 13.9
+   "seconds": 14.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden"
+   "count": 77,
+   "seconds": 1.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 36,
-   "seconds": 37.9
+   "seconds": 40.0
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,18 +113,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 237,
-   "seconds": 13.1
+   "count": 238,
+   "seconds": 11.6
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 186,
+   "count": 187,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 54,
-   "seconds": 69.1
+   "seconds": 71.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,22 +132,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 2528,
- "afterDedup": 1221,
- "duplicatesMerged": 1307,
- "final": 1923,
+ "gathered": 2606,
+ "afterDedup": 1298,
+ "duplicatesMerged": 1308,
+ "final": 1930,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-08"
-  },
   {
    "kept": {
     "title": "Dream / Mộng : Veronica Pham",
@@ -2347,6 +2336,17 @@
   },
   {
    "kept": {
+    "title": "Transmissible Cancer Discovered in Catfish in Vermont’s Lakes",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-05"
+  },
+  {
+   "kept": {
     "title": "CAT ECare Training",
     "source": "uvm"
    },
@@ -2403,20 +2403,11 @@
  ],
  "changes": [
   {
-   "id": "6a16d1a2270e",
-   "title": "Industry Day",
-   "date": "2026-09-21",
-   "change": "time",
-   "was": "2026-09-21",
-   "now": "2026-09-21T11:30:00-04:00"
-  },
-  {
-   "id": "53dc7da9440f",
-   "title": "802sDay",
-   "date": "2026-09-22",
-   "change": "time",
-   "was": "2026-09-22",
-   "now": "2026-09-22T11:30:00-04:00"
+   "id": "1b17a280bb2c",
+   "title": "Lunch with the Poets",
+   "date": "2026-08-07",
+   "change": "missing",
+   "lastSeen": "2026-08-07T06:30:22-04:00"
   },
   {
    "id": "51c28b79e11e",
@@ -2438,6 +2429,20 @@
    "date": "2026-08-07",
    "change": "missing",
    "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "50b34ae71910",
+   "title": "Alpine Plant Hike on Mt. Mansfield",
+   "date": "2026-08-08",
+   "change": "missing",
+   "lastSeen": "2026-08-07T06:30:22-04:00"
+  },
+  {
+   "id": "9484287ed23b",
+   "title": "Summer River Float on The Winooski River",
+   "date": "2026-08-08",
+   "change": "missing",
+   "lastSeen": "2026-08-07T06:30:22-04:00"
   },
   {
    "id": "ada67145954d",
@@ -2550,6 +2555,13 @@
    "date": "2026-09-04",
    "change": "missing",
    "lastSeen": "2026-08-05T07:38:20-04:00"
+  },
+  {
+   "id": "da3bee3da83a",
+   "title": "Lady Moon & The Eclipse w/ Beccs",
+   "date": "2026-09-04",
+   "change": "missing",
+   "lastSeen": "2026-08-07T06:30:22-04:00"
   },
   {
    "id": "ea3895dc6e50",
