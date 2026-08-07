@@ -21,12 +21,12 @@
    "Leddy Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-07T12:56:00+00:00"
+    "resultTime": "2026-08-07T15:21:00+00:00"
    },
    "Leddy Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-07T12:56:00+00:00"
+    "resultTime": "2026-08-07T15:21:00+00:00"
    },
    "North Beach North": {
     "status": "open",
@@ -41,7 +41,7 @@
    "North Shore Natural Area": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-06T19:15:00+00:00"
+    "resultTime": "2026-08-07T15:35:00+00:00"
    },
    "Oakledge Cove": {
     "status": "open",
@@ -49,9 +49,9 @@
     "resultTime": "2026-08-07T12:54:00+00:00"
    },
    "Blodgett Water Access Point": {
-    "status": "closed",
-    "reason": "Closed due to CSO on Thursday",
-    "resultTime": "2026-08-07T14:50:00+00:00"
+    "status": "open",
+    "reason": "CSO Thursday has this beach under an Alert status",
+    "resultTime": "2026-08-07T16:02:00+00:00"
    },
    "Texaco Beach": {
     "status": "closed",
@@ -449,6 +449,12 @@
      "08.11.2026 Agenda"
     ]
    },
+   "10126": {
+    "name": "Parks & Recreation Commission Meeting",
+    "start": "2026-08-11T17:30:00+00:00",
+    "hasAgenda": true,
+    "files": []
+   },
    "9961": {
     "name": "Planning Commission Meeting - Collaborative Working Group on Inclusionary Zoning",
     "start": "2026-08-11T18:00:00+00:00",
@@ -523,12 +529,6 @@
     "name": "Transportation, Energy, and Utilities Committee",
     "start": "2026-08-25T17:30:00+00:00",
     "hasAgenda": true,
-    "files": []
-   },
-   "9962": {
-    "name": "Regular Planning Commission Meeting",
-    "start": "2026-08-25T18:30:00+00:00",
-    "hasAgenda": false,
     "files": []
    }
   }
@@ -914,6 +914,13 @@
    "wcax": {
     "items": [
      {
+      "id": "TUKWWJNDBBAVXJBCNIKMLMLBXA",
+      "title": "Man arrested following seizure of dozens of guns in Northern NY",
+      "link": "https://www.wcax.com/2026/08/07/man-arrested-following-seizure-dozens-guns-northern-ny/",
+      "ts": "2026-08-07T15:55:01+00:00",
+      "summary": "New York troopers say they seized more than 40 guns when they executed a search warrant at a home in Black Brook."
+     },
+     {
       "id": "HK3WY3LOZFEIXGD6KUXFAKHEDQ",
       "title": "Memorial service to be held for teen killed in Burlington crash",
       "link": "https://www.wcax.com/2026/08/07/memorial-service-be-held-teen-killed-burlington-crash/",
@@ -1255,23 +1262,58 @@
       "link": "https://www.wcax.com/2026/08/04/campaign-countdown-gop-candidates-vie-vermonts-us-house-seat/",
       "ts": "2026-08-04T22:30:12+00:00",
       "summary": "Republicans Gerald Malloy and Mark Coester are competing for the chance to challenge Democratic Rep. Becca Balint for Congress this November."
-     },
-     {
-      "id": "OX75L2VI25DVZAB4Q2PUJFNCAE",
-      "title": "How to spot a card skimmer before it costs you",
-      "link": "https://www.wcax.com/2026/08/04/how-spot-card-skimmer-before-it-costs-you/",
-      "ts": "2026-08-04T22:24:30+00:00",
-      "summary": "Card skimming costs financial institutions and consumers more than $1 billion a year, according to the FBI-- and Vermont is not immune."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
+      "id": "73376939",
+      "title": "Walmart-sold pistachio nut butter recalled in 19 states",
+      "link": "https://www.mynbc5.com/article/bettergoods-walmart-pistachio-nut-butter-recall-salmonella/73376939",
+      "ts": "2026-08-07T16:06:00+00:00",
+      "summary": "A Walmart-sold nut butter is being pulled from shelves in 19 states after routine testing found Salmonella. Here's what to know."
+     },
+     {
+      "id": "73346336",
+      "title": "Here's how much your Social Security benefit could rise in 2027",
+      "link": "https://www.mynbc5.com/article/social-security-cola-2027-calculator/73346336",
+      "ts": "2026-08-07T16:03:00+00:00",
+      "summary": "Cost-of-living adjustment, or COLA, is an annual increase in Social Security benefits designed to help recipients keep up with inflation."
+     },
+     {
+      "id": "73376675",
+      "title": "William Orbit, Grammy-winning producer for Madonna and Britney Spears, dies at 69",
+      "link": "https://www.mynbc5.com/article/william-orbit-grammy-winning-producer-for-madonna-and-britney-spears-dies-at-69/73376675",
+      "ts": "2026-08-07T16:03:00+00:00",
+      "summary": "William Orbit, the Grammy-nominated producer behind some of pop music’s most memorable sounds on the ‘90s and 2000s, has died at 69."
+     },
+     {
+      "id": "73377120",
+      "title": "Video shows tractor-trailer plowing into garages after nearby crash in Pennsylvania",
+      "link": "https://www.mynbc5.com/article/pa-lebanon-crash-tractor-trailer-swatata/73377120",
+      "ts": "2026-08-07T15:50:00+00:00",
+      "summary": "\"My husband could have been in that garage. He frequently is in that garage.\" | A tractor-trailer plowed into garages in Pennsylvania after a crash at a nearby intersection. Video shows the moment it happened."
+     },
+     {
+      "id": "73376632",
+      "title": "Vermont State Police bust two on drug trafficking charges in Windham, Orleans counties",
+      "link": "https://www.mynbc5.com/article/vermont-drug-trafficking-arrests-leblanc-pierre/73376632",
+      "ts": "2026-08-07T15:45:00+00:00",
+      "summary": "Vermont State Police arrested two people on drug trafficking charges during separate investigations in Windham and Orleans counties on Thursday."
+     },
+     {
+      "id": "73377074",
+      "title": "Five people detained by ICE in Londonderry, Migrant Justice says",
+      "link": "https://www.mynbc5.com/article/londonderry-vermont-ice-detentions/73377074",
+      "ts": "2026-08-07T15:40:00+00:00",
+      "summary": "Five construction workers were detained by members of Immigration and Customs Enforcement on Friday in Londonderry, according to officials from Migrant Justice."
+     },
+     {
       "id": "73376639",
       "title": "White House ballroom construction ordered to stop, appeals court rules",
       "link": "https://www.mynbc5.com/article/white-house-ballroom-construction-ordered-to-stop/73376639",
-      "ts": "2026-08-07T15:02:00+00:00",
+      "ts": "2026-08-07T15:20:00+00:00",
       "summary": "An appeals court has ruled that President Donald Trump must seek approval from Congress to build his proposed White House ballroom, saying construction must stop."
      },
      {
@@ -1364,48 +1406,6 @@
       "link": "https://www.mynbc5.com/article/school-shooting-thailand/73372667",
       "ts": "2026-08-07T13:12:00+00:00",
       "summary": "A student opened fire at a high school outside Bangkok on Friday, killing at least five people and wounding more than 20, according to authorities."
-     },
-     {
-      "id": "73371533",
-      "title": "Keene mother charged with second-degree assault after infant found with multiple fractures",
-      "link": "https://www.mynbc5.com/article/keene-police-charge-mother-with-assaulting-infant/73370068",
-      "ts": "2026-08-07T13:07:00+00:00",
-      "summary": "A Keene mother is facing a second-degree assault charge after police say her infant child was found with multiple fractures in various stages of healing"
-     },
-     {
-      "id": "73370549",
-      "title": "Rutland inmate accused of spitting on utensils, giving them to correctional officers",
-      "link": "https://www.mynbc5.com/article/vermont-inmate-accused-of-spitting-on-utensils-served-to-correctional-officers/73371582",
-      "ts": "2026-08-07T13:06:00+00:00",
-      "summary": "An inmate who was working in the kitchen at a Vermont correctional facility has been accused of spitting on utensils before giving them to corrections officers."
-     },
-     {
-      "id": "73370594",
-      "title": "ABC Academy to close St. Albans location Aug. 18, citing safety concerns",
-      "link": "https://www.mynbc5.com/article/st-albans-daycare-closing/73370594",
-      "ts": "2026-08-07T13:05:00+00:00",
-      "summary": "\"It was really emotional\": ABC Academy reflects on difficult decision to close its St. Albans daycare."
-     },
-     {
-      "id": "73371683",
-      "title": "64-year-old man went into cardiac arrest in Hannaford, emergency crews who saved him receive award",
-      "link": "https://www.mynbc5.com/article/first-responders-honored-life-saving-award-swanton-saving-life/73371683",
-      "ts": "2026-08-07T13:02:00+00:00",
-      "summary": "Swanton emergency crews receive award for their life saving efforts on a 64-year-old man who went into cardiac arrest at Hannaford."
-     },
-     {
-      "id": "73365278",
-      "title": "UVM Medical Center healthcare workers hold press event as contract deadline nears",
-      "link": "https://www.mynbc5.com/article/uvm-medical-center-healthcare-workers-contract-deadline/73365278",
-      "ts": "2026-08-07T13:00:00+00:00",
-      "summary": "Unionized healthcare workers at UVM Medical Center are hosting a press event today to address contract priorities, including safe staffing and affordability, ahead of their contract expiration next week."
-     },
-     {
-      "id": "73372098",
-      "title": "Sailboat catches fire in Malletts Bay after possible lightning strike",
-      "link": "https://www.mynbc5.com/article/sailboat-catches-fire-in-malletts-bay-after-possible-lightning-strike/73372098",
-      "ts": "2026-08-07T12:59:00+00:00",
-      "summary": "Two people were uninjured after their boat caught fire on Malletts Bay Thursday afternoon."
      }
     ]
    },
