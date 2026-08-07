@@ -3,7 +3,7 @@
   "alerts": [],
   "forecast_flag": {
    "day": "2026-08-06",
-   "text": "Today: A slight chance of rain showers between 11am and noon, then scattered showers and thunderstorms between noon and 3pm, then a chance of showers and thunderstorms"
+   "text": "Tonight: A chance of showers and thunderstorms before 10pm, then a slight chance of showers and thunderstorms between 10pm and 11pm"
   }
  },
  "beach-status": {
@@ -16,47 +16,47 @@
    "Blanchard Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-06T13:49:00+00:00"
+    "resultTime": "2026-08-06T18:34:00+00:00"
    },
    "Blodgett Water Access Point": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-06T13:59:00+00:00"
+    "resultTime": "2026-08-06T18:41:00+00:00"
    },
    "Leddy Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-06T14:42:00+00:00"
+    "resultTime": "2026-08-06T19:07:00+00:00"
    },
    "Leddy Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-06T14:40:00+00:00"
+    "resultTime": "2026-08-06T19:06:00+00:00"
    },
    "North Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-05T18:46:00+00:00"
+    "resultTime": "2026-08-06T19:16:00+00:00"
    },
    "North Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-06T14:51:00+00:00"
+    "resultTime": "2026-08-06T19:16:00+00:00"
    },
    "North Shore Natural Area": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-06T14:31:00+00:00"
+    "resultTime": "2026-08-06T19:15:00+00:00"
    },
    "Oakledge Cove": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-06T13:45:00+00:00"
+    "resultTime": "2026-08-06T18:27:00+00:00"
    },
    "Texaco Beach": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-06T14:13:00+00:00"
+    "resultTime": "2026-08-06T18:56:00+00:00"
    }
   }
  },
@@ -424,25 +424,6 @@
  },
  "civicclerk": {
   "meetings": {
-   "10074": {
-    "name": "Development Review Board",
-    "start": "2026-08-04T17:00:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Agenda V4",
-     "Packet V4"
-    ]
-   },
-   "10112": {
-    "name": "Board for Registration of Voters Meeting",
-    "start": "2026-08-04T18:00:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Board for Registration of Voters Agenda",
-     "Board for Registration of Voters Agenda Packet",
-     "Board for Registration of Voters Minutes 08042026"
-    ]
-   },
    "10088": {
     "name": "Airport Commission",
     "start": "2026-08-05T16:00:00+00:00",
@@ -462,9 +443,11 @@
    },
    "9961": {
     "name": "Planning Commission Meeting - Collaborative Working Group on Inclusionary Zoning",
-    "start": "2026-08-11T18:30:00+00:00",
-    "hasAgenda": false,
-    "files": []
+    "start": "2026-08-11T18:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Agenda"
+    ]
    },
    "7753": {
     "name": "Burlington Electric Commission",
@@ -530,6 +513,20 @@
     "start": "2026-08-25T18:30:00+00:00",
     "hasAgenda": false,
     "files": []
+   },
+   "10122": {
+    "name": "Development Review Board Meeting",
+    "start": "2026-09-01T17:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "PH V1"
+    ]
+   },
+   "10123": {
+    "name": "Development Review Board Meeting",
+    "start": "2026-09-01T17:00:00+00:00",
+    "hasAgenda": true,
+    "files": []
    }
   }
  },
@@ -543,6 +540,13 @@
       "link": "https://www.sevendaysvt.com/arts-culture/stuckinvermont/stuck-in-vermont-attending-the-150th-purinton-family-reunion-in-salisbury/",
       "ts": "2026-08-06T11:30:00+00:00",
       "summary": "Episode 773: The descendants of Chase Purinton have gathered every year since 1876, and about 80 people attended the July 18 reunion. The post Stuck in Vermont: Attending the 150th Purinton Family Reunion in Salisbury appeared first on Seven Days . (Image: Eva Sollberger / Beverly Purinton Brown)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=214262",
+      "title": "Obituary: Benjamin “Ben” Learned, 1982-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-benjamin-ben-learned-1982-2026/",
+      "ts": "2026-08-06T10:00:00+00:00",
+      "summary": "Devoted husband and father had an infectious sense of humor, a generous heart, and a way of making everyone around him feel welcome and cared for The post Obituary: Benjamin \"Ben\" Learned, 1982-2026 appeared first on Seven Days . (Image: Courtesy)"
      },
      {
       "id": "https://www.sevendaysvt.com/?p=214237",
@@ -599,24 +603,59 @@
       "link": "https://www.sevendaysvt.com/news/letters/letters-to-the-editor-8-5-26/",
       "ts": "2026-08-05T13:46:00+00:00",
       "summary": "Readers react to recent articles The post Letters to the Editor (8/5/26) appeared first on Seven Days ."
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=214037",
-      "title": "Choreographer Hannah Dennison Debuts ‘Forest,’ Her New Site-Specific Work",
-      "link": "https://www.sevendaysvt.com/arts-culture/performingarts/choreographer-hannah-dennison-debuts-forest-her-new-site-specific-work/",
-      "ts": "2026-08-05T13:42:00+00:00",
-      "summary": "Vermont viewers will interpret for themselves the dancers’ abstract and partly improvised movements and gestures among the trees in Washington and Bradford. The post Choreographer Hannah Dennison Debuts ‘Forest,’ Her New Site-Specific Work appeared first on Seven Days . (Image: courtesy of Julia Barstow)"
      }
     ]
    },
    "vtdigger": {
     "items": [
      {
+      "id": "https://vtdigger.org/?p=652831",
+      "title": "Vernon wants input on the future of the Vermont Yankee site",
+      "link": "https://vtdigger.org/2026/08/06/vernon-wants-input-on-the-future-of-the-vermont-yankee-site/",
+      "ts": "2026-08-06T21:59:52+00:00",
+      "summary": "Selectboard member Jim Pinkerton said PowerTransitions got off on the wrong foot when it went to state and regional partners first rather than come to the town and explain its plans. Read the story on VTDigger here: Vernon wants input on the future of the Vermont Yankee site ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=652823",
+      "title": "Blaming addicts for Burlington’s problems misses the point",
+      "link": "https://vtdigger.org/2026/08/06/opinion-blaming-addicts-for-burlingtons-problems-misses-the-point/",
+      "ts": "2026-08-06T21:32:16+00:00",
+      "summary": "A national magazine turned Burlington into a symbol of failure, but the numbers tell a different story. Read the story on VTDigger here: Blaming addicts for Burlington’s problems misses the point ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=652820",
+      "title": "A walk through downtown Burlington shows a city in crisis",
+      "link": "https://vtdigger.org/2026/08/06/opinion-a-walk-through-downtown-burlington-shows-a-city-in-crisis/",
+      "ts": "2026-08-06T21:17:39+00:00",
+      "summary": "Despite a new state police presence downtown, a walk from St. Paul Street to Church Street turned up drug use on nearly every block. Read the story on VTDigger here: A walk through downtown Burlington shows a city in crisis ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=652722",
+      "title": "Annual recovery summit aims to explain the unexplainable",
+      "link": "https://vtdigger.org/2026/08/06/annual-recovery-summit-aims-to-explain-the-unexplainable/",
+      "ts": "2026-08-06T19:37:18+00:00",
+      "summary": "Organized by people in recovery from substance use disorder, the event brings together an often stigmatized community to share their stories. Read the story on VTDigger here: Annual recovery summit aims to explain the unexplainable ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=652801",
+      "title": "In Chittenden Southeast Senate primary, incumbents and challengers alike pivot platforms to affordability",
+      "link": "https://vtdigger.org/2026/08/06/in-chittenden-southeast-senate-primary-incumbents-and-challengers-alike-pivot-platforms-to-affordability/",
+      "ts": "2026-08-06T18:08:31+00:00",
+      "summary": "In the wealthy blue district, affordability — for healthcare, education and businesses — have become top issues. Read the story on VTDigger here: In Chittenden Southeast Senate primary, incumbents and challengers alike pivot platforms to affordability ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=652797",
+      "title": "Local development corporation wins bid for former Montpelier post office",
+      "link": "https://vtdigger.org/2026/08/06/local-development-corporation-wins-bid-for-former-montpelier-post-office/",
+      "ts": "2026-08-06T16:55:22+00:00",
+      "summary": "The final auction price of $540,000 was far under the federal government’s initial asking price. Read the story on VTDigger here: Local development corporation wins bid for former Montpelier post office ."
+     },
+     {
       "id": "https://vtdigger.org/?p=652788",
-      "title": "New details about proposed locked youth facility signals more disagreement over landmark ‘Raise the Age’ law",
+      "title": "New details about proposed locked youth facility signal more disagreement over landmark ‘Raise the Age’ law",
       "link": "https://vtdigger.org/2026/08/06/new-details-about-proposed-locked-youth-facility-signals-more-disagreement-over-landmark-raise-the-age-law/",
       "ts": "2026-08-06T10:51:00+00:00",
-      "summary": "Gov. Phil Scott has recently called on lawmakers to repeal part of Vermont’s landmark justice reform law. That push is bubbling up as the state plans its new locked youth facility. Read the story on VTDigger here: New details about proposed locked youth facility signals more disagreement over landmark ‘Raise the Age’ law ."
+      "summary": "Gov. Phil Scott has recently called on lawmakers to repeal part of Vermont’s landmark justice reform law. That push is bubbling up as the state plans its new locked youth facility. Read the story on VTDigger here: New details about proposed locked youth facility signal more disagreement over landmark ‘Raise the Age’ law ."
      },
      {
       "id": "https://vtdigger.org/?p=652773",
@@ -778,53 +817,18 @@
       "link": "https://vtdigger.org/2026/08/02/a-vermont-farmer-has-a-growing-voice-in-trumps-make-america-healthy-again-campaign/",
       "ts": "2026-08-02T12:13:00+00:00",
       "summary": "John Klar of Brookfield was appointed to a national EPA advisory panel even as he and other MAHA advocates see some federal changes they oppose. Read the story on VTDigger here: A Vermont farmer has a growing voice in Trump’s ‘Make America Healthy Again’ campaign ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=652530",
-      "title": "Vermont keeps a list of where large crowds gather. The feds get a copy.",
-      "link": "https://vtdigger.org/2026/08/02/vermont-keeps-a-list-of-where-large-crowds-gather-the-feds-get-a-copy/",
-      "ts": "2026-08-02T11:44:00+00:00",
-      "summary": "For nearly a decade, the state has quietly compiled the list of large public gatherings. Town clerks are just now finding out about it. Read the story on VTDigger here: Vermont keeps a list of where large crowds gather. The feds get a copy. ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=652537",
-      "title": "After years of debate, Stowe caps short-term rentals",
-      "link": "https://vtdigger.org/2026/08/01/after-years-of-debate-stowe-caps-short-term-rentals/",
-      "ts": "2026-08-01T11:28:00+00:00",
-      "summary": "There are currently about 1,450 short-term rentals in Stowe, according to town data, but roughly 600 are considered commercial or are inactive. Read the story on VTDigger here: After years of debate, Stowe caps short-term rentals ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=652541",
-      "title": "‘My thoughts were distorted’: Woman gets at least 10 years in Rutland fatal shooting",
-      "link": "https://vtdigger.org/2026/07/31/my-thoughts-were-distorted-woman-gets-at-least-10-years-in-rutland-fatal-shooting/",
-      "ts": "2026-07-31T22:01:13+00:00",
-      "summary": "Courtney Samplatsky, initially charged with second-degree murder in the June 2022 killing, pleaded guilty Friday to a reduced charge of voluntary manslaughter. Read the story on VTDigger here: ‘My thoughts were distorted’: Woman gets at least 10 years in Rutland fatal shooting ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=652540",
-      "title": "Regulators reject Route 100 quarry in Morristown",
-      "link": "https://vtdigger.org/2026/07/31/regulators-reject-route-100-quarry-in-morristown/",
-      "ts": "2026-07-31T22:00:38+00:00",
-      "summary": "The regional Act 250 commission called the quarry “offensive and shocking.” Read the story on VTDigger here: Regulators reject Route 100 quarry in Morristown ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=652524",
-      "title": "Vermont Green FC men will compete for national championship Saturday",
-      "link": "https://vtdigger.org/2026/07/31/vermont-green-fc-men-will-compete-for-national-championship-saturday/",
-      "ts": "2026-07-31T20:26:46+00:00",
-      "summary": "“It feels surreal,” said club co-founder Patrick Infurna of the team’s back-to-back appearances in the final. “I hope this can be a regular thing.” Read the story on VTDigger here: Vermont Green FC men will compete for national championship Saturday ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=652520",
-      "title": "Vermont is not for sale",
-      "link": "https://vtdigger.org/2026/07/31/opinion-vermont-is-not-for-sale/",
-      "ts": "2026-07-31T19:36:59+00:00",
-      "summary": "Our housing crisis isn't about scarcity. It's about who owns the homes we already have. Read the story on VTDigger here: Vermont is not for sale ."
      }
     ]
    },
    "vermont-public": {
     "items": [
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-08-06/local-development-group-wins-bid-former-montpelier-post-office",
+      "title": "Local development group wins bid for former Montpelier post office",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-06/local-development-group-wins-bid-former-montpelier-post-office",
+      "ts": "2026-08-06T22:06:31+00:00",
+      "summary": "The property at 87 State St. in Montpelier, which was damaged in the July 2023 flood, will be controlled by a local group and could be used for housing and commercial development."
+     },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-08-06/nh-confirms-69-cases-cyclosporiasis-3-hospitalizations",
       "title": "NH confirms 69 cases of cyclosporiasis, 3 hospitalizations",
@@ -901,24 +905,136 @@
       "link": "https://www.vermontpublic.org/local-news/2026-07-31/florida-preachers-pitch-for-poultney-campus-dwarfs-his-earlier-work",
       "ts": "2026-07-31T20:43:03+00:00",
       "summary": "One of Tommie Zito’s ministries went bankrupt, and an earlier effort to start a Bible school sputtered. Now he’s fundraising for grander plans at the former Green Mountain College."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-07-31/vermont-health-officials-confirm-5-cases-of-cyclosporiasis-say-risk-remains-low",
-      "title": "Vermont health officials confirm 5 cases of cyclosporiasis, say risk remains low",
-      "link": "https://www.vermontpublic.org/local-news/2026-07-31/vermont-health-officials-confirm-5-cases-of-cyclosporiasis-say-risk-remains-low",
-      "ts": "2026-07-31T20:36:17+00:00",
-      "summary": "Vermont health officials have confirmed five cases of the foodborne illness cyclosporiasis in the state. They say they believe the cases may be related to international or interstate travel, and stress that risk in Vermont remains low."
      }
     ]
    },
    "wcax": {
     "items": [
      {
+      "id": "CPTGF7NDCRHT5PQNPSWIOYNSYA",
+      "title": "Ahead of peak of hurricane season, NOAA adjusts below-average season prediction",
+      "link": "https://www.wcax.com/2026/08/06/ahead-climatological-peak-hurricane-season-noaa-adjusts-below-average-season-prediction/",
+      "ts": "2026-08-06T22:54:32+00:00",
+      "summary": "Before the start of hurricane season on June 1, NOAA predicted a below-average season because of an anticipated El Niño. On Thursday, Aug. 6, NOAA updated its outlook just ahead of the climatological peak of the season, which occurs in mid-to-late September."
+     },
+     {
+      "id": "SUZWKD763RG25DMCIMX2TMKKGQ",
+      "title": "19 acres, no regrets: A Super Senior’s life on the land",
+      "link": "https://www.wcax.com/2026/08/06/19-acres-no-regrets-super-seniors-life-land/",
+      "ts": "2026-08-06T22:51:45+00:00",
+      "summary": "Nineteen acres of land in Vershire is Suzanne Lupien’s world — no bells and whistles, no regrets, just rich soil, work horses and a hay wagon she calls home."
+     },
+     {
+      "id": "I4ENRVPH4BAGHJW65LN6SDJBKM",
+      "title": "Weed costs twice as much in Vermont as it does in Massachusetts. What gives?",
+      "link": "https://www.wcax.com/2026/08/06/weed-costs-twice-much-vermont-it-does-massachusetts-what-gives/",
+      "ts": "2026-08-06T22:26:13+00:00",
+      "summary": "Vermont’s cannabis market has prioritized artisan growers, while Massachusetts has allowed large-scale operations."
+     },
+     {
+      "id": "ZSBOE75XZ5DTFGR23L2HZIOSVY",
+      "title": "Campaign Countdown: Democrats for Vermont auditor",
+      "link": "https://www.wcax.com/2026/08/06/campaign-countdown-democrats-vermont-auditor/",
+      "ts": "2026-08-06T21:56:32+00:00",
+      "summary": "Tim Ashe and Nick Graeter are seeking the Democratic nomination in next week's primary."
+     },
+     {
+      "id": "7OQXABY7OFDHRMP3RSGBMEKLAU",
+      "title": "New law allows marijuana sales at farmers markets",
+      "link": "https://www.wcax.com/2026/08/06/new-law-allows-marijuana-sales-farmers-markets/",
+      "ts": "2026-08-06T21:55:39+00:00",
+      "summary": "Gov. Kathy Hochul signed a new law on Thursday allowing licensed businesses to sell marijuana at approved pop-ups, farmers markets and public market events."
+     },
+     {
+      "id": "TD5LTNNYXNG5HONQT7JP6X53VQ",
+      "title": "Church Street sidewalk sale draws crowds as Queen City debates downtown safety",
+      "link": "https://www.wcax.com/2026/08/06/church-street-sidewalk-sale-draws-crowds-queen-city-debates-downtown-safety/",
+      "ts": "2026-08-06T21:54:18+00:00",
+      "summary": "The event comes amid ongoing discussions about how to address the city’s struggles with homelessness, open drug use, and crime."
+     },
+     {
+      "id": "ERYP23YSQZGY3CG7DQNYJ5SVJE",
+      "title": "Good Citizen Challenge August 6 winner",
+      "link": "https://www.wcax.com/2026/08/06/good-citizen-challenge-august-6-winner/",
+      "ts": "2026-08-06T21:50:53+00:00",
+      "summary": "Congratulations to Sander Bieber-McFadden, this week's winner in the Good Citizen Challenge."
+     },
+     {
+      "id": "ZTIWPB57VFAGDFWF5AZG25NAIM",
+      "title": "Vt. bear population again exceeds goals, prompting push to expand hunting",
+      "link": "https://www.wcax.com/2026/08/06/vt-bear-population-again-exceeds-goals-prompting-push-expand-hunting/",
+      "ts": "2026-08-06T21:49:32+00:00",
+      "summary": "Vermont wildlife officials are weighing an expanded bear hunting season as the state’s black bear population continues to exceed management goals."
+     },
+     {
+      "id": "CKTRI3A2NVDXRP6W4EA4GU64DQ",
+      "title": "55,000 NYS workers getting raises under new contract",
+      "link": "https://www.wcax.com/2026/08/06/55000-nys-workers-getting-raises-under-new-contract/",
+      "ts": "2026-08-06T21:42:21+00:00",
+      "summary": "Members of the Civil Service Employees Association have ratified a five-year contract that gives them raises and new benefits."
+     },
+     {
+      "id": "OYQ2OS56FJBKDOGZMN5P2C5DQM",
+      "title": "Manhunt underway near state park in Brattleboro",
+      "link": "https://www.wcax.com/2026/08/06/manhunt-underway-near-state-park-brattleboro/",
+      "ts": "2026-08-06T21:29:39+00:00",
+      "summary": "A police pursuit near Fort Dummer State Park ended with a car crashing into a tree and a suspect on the run."
+     },
+     {
+      "id": "NIJZK75XKVBSFK7S6PJUKNDGTE",
+      "title": "Gov. Scott urges Chittenden County voters to turn out for Tuesday’s primary",
+      "link": "https://www.wcax.com/2026/08/06/gov-scott-urges-chittenden-county-voters-turn-out-tuesdays-primary/",
+      "ts": "2026-08-06T21:13:21+00:00",
+      "summary": "Gov. Phil Scott is encouraging Chittenden County voters to participate in Tuesday’s primary."
+     },
+     {
+      "id": "P2GVG6F24VGWJG7YR56CSKVD4I",
+      "title": "Vermont Adaptive expanding summer outdoor recreation access",
+      "link": "https://www.wcax.com/2026/08/06/vermont-adaptive-expanding-summer-outdoor-recreation-access/",
+      "ts": "2026-08-06T21:10:29+00:00",
+      "summary": "A merger between two adaptive sports organizations is opening Vermont’s trails, waterways and mountains to more people with disabilities."
+     },
+     {
+      "id": "FFK7QJKEYFCVNEH3MWS6WDYYTU",
+      "title": "Scott defends DMV enforcement division rebrand as Vermont Highway Patrol",
+      "link": "https://www.wcax.com/2026/08/06/scott-defends-dmv-enforcement-division-rebrand-vermont-highway-patrol/",
+      "ts": "2026-08-06T20:56:55+00:00",
+      "summary": "Gov. Phil Scott says the name change will clarify that DMV police are law enforcement, and it's a limited amount of money to rebrand."
+     },
+     {
+      "id": "UBZRNK5JNVF65I7A3A6HQ327DM",
+      "title": "Bradford police investigate racial slurs, graffiti spray-painted on Oxbow High School shed",
+      "link": "https://www.wcax.com/2026/08/06/bradford-police-investigate-racial-slurs-graffiti-spray-painted-oxbow-high-school-shed/",
+      "ts": "2026-08-06T20:27:45+00:00",
+      "summary": "A shed near the football field was spray-painted with racial slurs and drug-related graffiti."
+     },
+     {
+      "id": "Y4QZGI7U4BAS5EMZZA57ZU44U4",
+      "title": "Gov. Scott calls on Congress to regulate AI",
+      "link": "https://www.wcax.com/2026/08/06/gov-scott-calls-congress-regulate-ai/",
+      "ts": "2026-08-06T20:19:06+00:00",
+      "summary": "Vermont’s AI task force is expected to issue its final report and recommendations in several months."
+     },
+     {
       "id": "33EYUW6VDFBL3B63FQCBMCKXEA",
       "title": "Foodborne illness outbreaks: What you need to know",
       "link": "https://www.wcax.com/2026/08/06/foodborne-illness-outbreaks-what-you-need-know/",
-      "ts": "2026-08-06T14:09:42+00:00",
+      "ts": "2026-08-06T20:07:20+00:00",
       "summary": "Foodborne illnesses are common, but the big difference with recent outbreaks nationwide is the number of people getting sick."
+     },
+     {
+      "id": "Y54XAZPWLFD75JSIXATPH2XR3M",
+      "title": "Local group wins bid for former Montpelier Federal Building",
+      "link": "https://www.wcax.com/2026/08/06/local-group-wins-bid-former-montpelier-federal-building/",
+      "ts": "2026-08-06T18:48:21+00:00",
+      "summary": "A locally-led development group is the winning bidder of the former Federal Building in Montpelier."
+     },
+     {
+      "id": "7HEAQBQVZFF43A45E5ZOINOYOE",
+      "title": "Former NH trooper pleads guilty to lying to police",
+      "link": "https://www.wcax.com/2026/08/06/former-nh-trooper-pleads-guilty-lying-police/",
+      "ts": "2026-08-06T16:11:03+00:00",
+      "summary": "Investigators say James Lamoureaux put GPS tracking devices on his then-girlfriend's car and lied about it to police."
      },
      {
       "id": "F35AYZ63ZNEHBFVUQZZEWQMQMU",
@@ -1143,274 +1259,169 @@
       "link": "https://www.wcax.com/2026/08/04/scott-administration-proposes-indefinite-pause-juvenile-justice-reform/",
       "ts": "2026-08-04T21:17:22+00:00",
       "summary": "The so-called Raise the Age initiative seeks to handle the cases of young adult offenders in family court, where their records are shielded from public view."
-     },
-     {
-      "id": "RJYNVZYUDRBYHITEDE3ID42MEU",
-      "title": "Welch blasts Blanche nomination as Senate committee votes to advance it",
-      "link": "https://www.wcax.com/2026/08/04/welch-blasts-blanche-nomination-senate-committee-votes-advance-it/",
-      "ts": "2026-08-04T19:03:38+00:00",
-      "summary": "Vermont Sen. Peter Welch opposed Todd Blanche's attorney general nomination as the Senate Judiciary Committee voted 12-10 to advance it."
-     },
-     {
-      "id": "KTUPMSILIRFQPK7U5TR3D5Y4AE",
-      "title": "New name, same mission: DMV enforcement division now Vermont Highway Patrol",
-      "link": "https://www.wcax.com/2026/08/04/new-name-same-mission-dmv-enforcement-division-now-vermont-highway-patrol/",
-      "ts": "2026-08-04T18:58:19+00:00",
-      "summary": "The Vermont Department of Motor Vehicles is rebranding its enforcement and safety division as the Vermont Highway Patrol."
-     },
-     {
-      "id": "2F7INPZX3NDOFCUQVQYRK44X4U",
-      "title": "No Kid Hungry provides grants for summer meals, grocery assistance for NY families",
-      "link": "https://www.wcax.com/2026/08/04/no-kid-hungry-provides-grants-summer-meals-grocery-assistance-ny-families/",
-      "ts": "2026-08-04T17:24:51+00:00",
-      "summary": "No Kid Hungry New York reminds families of summer meals and grocery assistance programs across the state."
-     },
-     {
-      "id": "QUNA5XHYORHGFI3KY76O2JWHAY",
-      "title": "Vt. police identify 2 victims in Newbury shooting, assault; seek vehicle",
-      "link": "https://www.wcax.com/2026/08/04/vt-troopers-identify-2-victims-newbury-shooting-assault-seek-vehicle/",
-      "ts": "2026-08-04T16:19:09+00:00",
-      "summary": "Police have released the name of a man shot and injured in Newbury, and now they're asking the public for help finding a vehicle of interest in the case."
-     },
-     {
-      "id": "EKQDVG4QTZDVTPIMA7RPRX2MEA",
-      "title": "Judge rules New York can’t ban federal agents from wearing face coverings",
-      "link": "https://www.wcax.com/2026/08/04/judge-rules-new-york-cant-ban-federal-agents-wearing-face-coverings/",
-      "ts": "2026-08-04T13:43:28+00:00",
-      "summary": "A federal judge has ruled that New York can’t ban federal agents from wearing face coverings or require that they wear visible identification."
-     },
-     {
-      "id": "WBT3OTFMOJAT3A2C4DOEX433IY",
-      "title": "Man accused of faking threatening texts to shut down ‘Rocky Horror’ production",
-      "link": "https://www.wcax.com/2026/08/04/man-accused-faking-threatening-texts-shut-down-rocky-horror-production/",
-      "ts": "2026-08-04T13:06:30+00:00",
-      "summary": "Police said he admitted to faking the threatening texts to himself to create an excuse to leave the production."
-     },
-     {
-      "id": "GPE7BCZCPJFIRJUBKBOFFEMOAM",
-      "title": "Vermont woman faces DUI charges after crashing into pole in Rhode Island",
-      "link": "https://www.wcax.com/2026/08/04/colchester-woman-faces-dui-charges-after-crashing-into-utility-pole-rhode-island/",
-      "ts": "2026-08-04T02:32:03+00:00",
-      "summary": "A Colchester woman faces DUI charges after police say she drove into a utility pole in Rhode Island."
-     },
-     {
-      "id": "FJQD7P4U4JDSHDZNTM7A53MJKI",
-      "title": "Made in Vermont: Mad Jones Guitars tell their owners’ stories",
-      "link": "https://www.wcax.com/2026/08/03/made-vermont-mad-jones-guitars-tell-their-owners-stories/",
-      "ts": "2026-08-03T22:59:25+00:00",
-      "summary": "A Vermont man builds custom guitars that are a true reflection of the person who plays them."
-     },
-     {
-      "id": "66MAKQADBBG2HOKKEA6Z24PQY4",
-      "title": "Richards leads all candidates in fundraising ahead of Vermont primary",
-      "link": "https://www.wcax.com/2026/08/03/richards-leads-all-candidates-fundraising-ahead-primary/",
-      "ts": "2026-08-03T22:53:50+00:00",
-      "summary": "The Democratic governor's race tops the money chase with the primary one week away."
-     },
-     {
-      "id": "T5A2UR2DLJAITMUB2TLVAFXS7I",
-      "title": "Hochul visits Lake Placid in push to bring Olympics back to New York",
-      "link": "https://www.wcax.com/2026/08/03/hochul-visits-lake-placid-push-bring-olympics-back-new-york/",
-      "ts": "2026-08-03T22:38:28+00:00",
-      "summary": "Gov. Kathy Hochul visited Lake Placid on Monday to throw her support behind an effort to bring the Olympic Games back to New York."
-     },
-     {
-      "id": "FBJXGLHGBZDCFE5KL5KINHCW3I",
-      "title": "States sue to block feds from sharing personal data of millions who receive social service benefits",
-      "link": "https://www.wcax.com/2026/08/03/states-sue-block-feds-sharing-personal-data-millions-who-receive-social-service-benefits/",
-      "ts": "2026-08-03T22:33:51+00:00",
-      "summary": "New York and Vermont are among the states that have joined the lawsuit."
-     },
-     {
-      "id": "YLU5SNAKP5BXLFVHZT6DW63INQ",
-      "title": "‘I’m completely shattered’: Dad mourns teen killed in Burlington e-bike crash",
-      "link": "https://www.wcax.com/2026/08/03/im-completely-shattered-dad-mourns-teen-killed-burlington-e-bike-crash/",
-      "ts": "2026-08-03T22:30:26+00:00",
-      "summary": "The father of a teen killed while riding her e-bike on a Burlington street last month spoke exclusively to WCAX following charges in the case."
-     },
-     {
-      "id": "RKQJIURPR5GADHYV32RATZ27OI",
-      "title": "3 years after Vermont nursing audit, little has changed",
-      "link": "https://www.wcax.com/2026/08/03/3-years-after-vermont-nursing-audit-little-has-changed/",
-      "ts": "2026-08-03T22:11:43+00:00",
-      "summary": "Vermont's auditor says the Agency of Human Services has not acted on most of his 2023 roadmap to address the state's nursing shortage."
-     },
-     {
-      "id": "YBLYXVKR2ZDUJC52UAUWLJNBTM",
-      "title": "Attorney general’s office takes over Addison County criminal cases",
-      "link": "https://www.wcax.com/2026/08/03/attorney-generals-office-takes-over-addison-county-criminal-cases/",
-      "ts": "2026-08-03T22:09:34+00:00",
-      "summary": "All criminal cases in Addison County are now being handled by the Vermont Attorney General's Office."
-     },
-     {
-      "id": "5YXKC7LNHBHN3IS5E5WXPZJUAY",
-      "title": "$300K secured for Plattsburgh Battlefield Memorial Gateway",
-      "link": "https://www.wcax.com/2026/08/03/300k-secured-plattsburgh-battlefield-memorial-gateway/",
-      "ts": "2026-08-03T21:41:49+00:00",
-      "summary": "State money is on the way to help build a major veterans memorial in Northern New York."
-     },
-     {
-      "id": "DOGHPP3FQ5A4PJPD5J7OA6LPE4",
-      "title": "New VA outpatient clinics announced for Vermont, New Hampshire",
-      "link": "https://www.wcax.com/2026/08/03/new-va-outpatient-clinics-announced-vermont-new-hampshire/",
-      "ts": "2026-08-03T21:38:42+00:00",
-      "summary": "According to Vermont Sen. Bernie Sanders, one will be added in South Burlington and the other in West Chesterfield, New Hampshire."
-     },
-     {
-      "id": "NEOM4ANXPVCUVJYOD55X4R3RYU",
-      "title": "E-bike battery fire in Winooski injures 2, displaces 12",
-      "link": "https://www.wcax.com/2026/08/03/e-bike-battery-fire-winooski-injures-2-displaces-12/",
-      "ts": "2026-08-03T21:35:53+00:00",
-      "summary": "A charging lithium e-bike battery exploded Saturday, sparking a fire inside a Winooski condo complex and sending two people to the hospital."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
-      "id": "73336709",
-      "title": "VT musical director of planned 'Rocky Horror Show' created fake threats, police say",
-      "link": "https://www.mynbc5.com/article/rocky-horror-picture-show-false-threats-grenier/73336709",
-      "ts": "2026-08-06T13:56:00+00:00",
-      "summary": "The director of a planned production of \"The Rocky Horror Show\" admitted to sending himself threatening texts that eventually got the play canceled out of safety concerns."
+      "id": "73371582",
+      "title": "Vermont inmate accused of spitting on utensils served to correctional officers",
+      "link": "https://www.mynbc5.com/article/vermont-inmate-accused-of-spitting-on-utensils-served-to-correctional-officers/73371582",
+      "ts": "2026-08-07T00:37:00+00:00",
+      "summary": "A Rutland inmate is accused of deliberately contaminating utensils used by correctional officers. Police say surveillance video captured him spitting into a tray of utensils multiple times."
      },
      {
-      "id": "73365518",
-      "title": "Cast of canceled 'Rocky Horror Show' production speaks out after director accused of false threats",
-      "link": "https://www.mynbc5.com/article/essex-vermont-rocky-horror-show-canceled/73365518",
-      "ts": "2026-08-06T13:55:00+00:00",
-      "summary": "The former cast of a planned local production of \"The Rocky Horror Show\" is speaking out after the musical director of the play was cited for allegedly sending threatening messages to himself to get the show canceled."
+      "id": "73371533",
+      "title": "Keene mother charged with second-degree assault after infant found with multiple fractures",
+      "link": "https://www.mynbc5.com/article/keene-mother-charged-with-second-degree-assault-after-infant-found-with-multiple-fractures/73371533",
+      "ts": "2026-08-07T00:32:00+00:00",
+      "summary": "A Keene mother is facing a second-degree assault charge after police say her infant child was found with multiple fractures in various stages of healing"
      },
      {
-      "id": "73365714",
-      "title": "Head Start overhaul: Trump administration moves ahead with deregulation of program",
-      "link": "https://www.mynbc5.com/article/trump-administration-deregulation-head-start/73365714",
-      "ts": "2026-08-06T13:53:00+00:00",
-      "summary": "The White House is moving ahead with its overhaul of Head Start, tossing out many of the regulations that are the hallmark of the early education program for the nation's poorest kids."
+      "id": "73370865",
+      "title": "Vermont governor, officials provide progress update on AI task force",
+      "link": "https://www.mynbc5.com/article/vt-governor-officials-provide-progress-update-on-ai-task-force/73370865",
+      "ts": "2026-08-07T00:13:00+00:00",
+      "summary": "Governor appoints Vermonters from across the state to explore AI"
      },
      {
-      "id": "73364597",
-      "title": "Senate committee votes to hold Fauci in contempt for refusing to answer COVID questions",
-      "link": "https://www.mynbc5.com/article/senate-vote-fauci-contempt-covid/73364597",
-      "ts": "2026-08-06T13:39:00+00:00",
-      "summary": "A Senate committee voted to hold Dr. Anthony Fauci in contempt of Congress over his refusal to answer questions at a hearing about the COVID-19 pandemic."
+      "id": "73357830",
+      "title": "Scientists identify first extinct ice age amphibian found in Los Angeles tar pits",
+      "link": "https://www.mynbc5.com/article/la-brea-tar-pits-extinct-ice-age-toad/73357830",
+      "ts": "2026-08-07T00:11:00+00:00",
+      "summary": "A long-overlooked fossil from the La Brea Tar Pits is now giving scientists a rare look at Los Angeles during the ice age."
      },
      {
-      "id": "73365395",
-      "title": "Middlebury water main repair to disrupt service for homes and businesses",
-      "link": "https://www.mynbc5.com/article/middlebury-water-main-repair/73365395",
-      "ts": "2026-08-06T13:30:00+00:00",
-      "summary": "Water service in parts of Middlebury will be disrupted Thursday due to a water main repair on Cady Road, affecting dozens of homes and businesses."
+      "id": "73371298",
+      "title": "Court orders Meta to pay $567 million to address kids' mental health and safety on its platforms",
+      "link": "https://www.mynbc5.com/article/court-meta-567-million-kids-mental-health/73371298",
+      "ts": "2026-08-06T23:45:00+00:00",
+      "summary": "A New Mexico court ordered Meta to pay $567 million for mental health harm to kids from its platforms"
+     },
+     {
+      "id": "73369822",
+      "title": "Trump again tries to restrict birthright citizenship after Supreme Court ruling",
+      "link": "https://www.mynbc5.com/article/trump-executive-orders-birthright-citizenship/73369822",
+      "ts": "2026-08-06T23:29:00+00:00",
+      "summary": "President Donald Trump is turning his attention to birthright citizenship again, weeks after the Supreme Court struck down his first attempt to undo the constitutional clause."
+     },
+     {
+      "id": "73370314",
+      "title": "Man charged with arson in Spokane, Washington, told police he planned wildfire for weeks",
+      "link": "https://www.mynbc5.com/article/aaron-farinacci-spokane-washington-police-planned-wildfire/73370314",
+      "ts": "2026-08-06T23:26:00+00:00",
+      "summary": "Man charged with arson in Spokane, Washington, told police he planned wildfire for weeks and waited for ideal weather"
+     },
+     {
+      "id": "73370539",
+      "title": "Miss North Carolina USA, Brittany Boltinhouse, stripped of title weeks ahead of Miss USA pageant",
+      "link": "https://www.mynbc5.com/article/miss-north-carolina-usa-2026-brittany-boltinhouse-stripped-title/73370539",
+      "ts": "2026-08-06T22:57:00+00:00",
+      "summary": "Weeks ahead of the 75th annual Miss USA pageant, Miss North Carolina USA 2026, Brittany Boltinhouse, has been stripped of her title, and the runner-up will now assume the new title."
+     },
+     {
+      "id": "73370529",
+      "title": "1.7 million attic ladders recalled over fall hazard",
+      "link": "https://www.mynbc5.com/article/louisville-ladder-attic-stairway-recall-nationwide/73370529",
+      "ts": "2026-08-06T22:49:00+00:00",
+      "summary": "More than 1.7 million attic stairway ladders are being recalled nationwide after reports of bolts breaking and causing falls."
+     },
+     {
+      "id": "73370037",
+      "title": "USA women's hockey camp returns to Lake Placid",
+      "link": "https://www.mynbc5.com/article/usa-womens-hockey-camp-returns-to-olympic-center-in-lake-placid/73370037",
+      "ts": "2026-08-06T22:37:00+00:00",
+      "summary": "USA women's hockey camp returns to Lake Placid"
+     },
+     {
+      "id": "73370077",
+      "title": "Vermont weighs changes to reduce growing black bear population",
+      "link": "https://www.mynbc5.com/article/bear-population-exceeds-state-goal/73370077",
+      "ts": "2026-08-06T22:27:00+00:00",
+      "summary": "Vermont's black bear population has remained above state management goals for the fifth straight year, according to the Vermont Fish and Wildlife Department."
+     },
+     {
+      "id": "73370644",
+      "title": "Rutland welcomes thirty new affordable housing units",
+      "link": "https://www.mynbc5.com/article/rutland-welcomes-thirty-new-affordable-housing-units/73370644",
+      "ts": "2026-08-06T22:25:00+00:00",
+      "summary": "The newly opened Maplewood Commons Apartments are growing affordable housing options in Rutland"
+     },
+     {
+      "id": "73370670",
+      "title": "Trump renews bid to limit birthright citizenship after Supreme Court blocked first attempt",
+      "link": "https://www.mynbc5.com/article/trump-birthright-citizenship-executive-orders/73370670",
+      "ts": "2026-08-06T22:18:00+00:00",
+      "summary": "President Trump issued two executive orders aimed at restricting birthright citizenship for certain groups, citing exceptions to the Fourteenth Amendment."
+     },
+     {
+      "id": "73370594",
+      "title": "ABC Academy to close St. Albans location Aug. 18, citing safety concerns",
+      "link": "https://www.mynbc5.com/article/st-albans-daycare-closing/73370594",
+      "ts": "2026-08-06T22:15:00+00:00",
+      "summary": "\"It was really emotional\": ABC Academy reflects on difficult decision to close its St. Albans daycare."
+     },
+     {
+      "id": "73370463",
+      "title": "Justice Department to review Fauci contempt referral after Fifth Amendment clash",
+      "link": "https://www.mynbc5.com/article/justice-department-fauci-contempt-senate/73370463",
+      "ts": "2026-08-06T22:08:00+00:00",
+      "summary": "The Justice Department is reviewing a contempt referral involving Dr. Anthony Fauci after Republicans on a Senate committee voted to hold him in contempt."
+     },
+     {
+      "id": "73370494",
+      "title": "Phil Scott weighs in on high-profile Chittenden County State’s Attorney’s race",
+      "link": "https://www.mynbc5.com/article/chittenden-county-states-attorneys-race/73370494",
+      "ts": "2026-08-06T21:53:00+00:00",
+      "summary": "Gov Phil Scott has voiced his support for Bram Kranichfeld as Chittenden Co. State's Attorney days before his primary showdown with incumbent Sarah George."
+     },
+     {
+      "id": "73368860",
+      "title": "Vacant Montpelier Federal Building purchased by local group",
+      "link": "https://www.mynbc5.com/article/montpelier-federal-building-purchased-by-local-group/73368860",
+      "ts": "2026-08-06T21:48:00+00:00",
+      "summary": "A local nonprofit has placed the winning bid for the vacant Federal Building in Montpelier, allowing it to be transformed into mixed-use retail and housing in the future."
      },
      {
       "id": "73365278",
       "title": "UVM Medical Center healthcare workers hold press event as contract deadline nears",
       "link": "https://www.mynbc5.com/article/uvm-medical-center-healthcare-workers-contract-deadline/73365278",
-      "ts": "2026-08-06T13:13:00+00:00",
+      "ts": "2026-08-06T21:48:00+00:00",
       "summary": "Unionized healthcare workers at UVM Medical Center are hosting a press event today to address contract priorities, including safe staffing and affordability, ahead of their contract expiration next week."
      },
      {
-      "id": "73359148",
-      "title": "Funding gap at Saranac Lake's Pendragon Theatre closed with $750,000 investment",
-      "link": "https://www.mynbc5.com/article/funding-gap-at-saranac-lakes-pendragon-theatre-closed-with-750000-investment/73359148",
-      "ts": "2026-08-06T13:10:00+00:00",
-      "summary": "Gov. Kathy Hochul visited the Pendragon Theatre's new downtown location Wednesday to announce the last installment of a more than $11 million funding package."
+      "id": "73370549",
+      "title": "Rutland inmate accused of spitting on utensils, giving them to correctional officers",
+      "link": "https://www.mynbc5.com/article/rutland-inmate-accused-of-spitting-on-utensils-giving-them-to-correctional-officers/73370549",
+      "ts": "2026-08-06T21:44:00+00:00",
+      "summary": "An inmate who was working in the kitchen at a Vermont correctional facility has been accused of spitting on utensils before giving them to corrections officers."
      },
      {
-      "id": "73360891",
-      "title": "Burlington residents suggest ways to make biking safer, following teen death in e-bike crash",
-      "link": "https://www.mynbc5.com/article/south-end-residents-biking-safer-teen-death-crash/73360891",
-      "ts": "2026-08-06T13:10:00+00:00",
-      "summary": "South End residents draw on city maps and give ideas to make biking safer, following the death of a 16-year-old girl who was hit by a car while riding an e-bike."
-     },
-     {
-      "id": "73365437",
-      "title": "Pet Connection: This dog absolutely loves her precious toys!",
-      "link": "https://www.mynbc5.com/article/vermont-new-york-pet-adoptions-aug-6/73365437",
-      "ts": "2026-08-06T13:05:00+00:00",
-      "summary": "In this week's Pet Connection, we're featuring two adorable dogs and a loving cat that need new homes."
-     },
-     {
-      "id": "73364300",
-      "title": "FDA approves first mRNA-based flu vaccine",
-      "link": "https://www.mynbc5.com/article/moderna-first-mrna-flu-vaccine-fda-approval/73364300",
-      "ts": "2026-08-06T13:03:00+00:00",
-      "summary": "The FDA approved the United States’ first mRNA-based flu vaccine for adults 50 and older, drugmaker Moderna said."
-     },
-     {
-      "id": "73364887",
-      "title": "Buc-ee's sues small business in Ohio over logo branding",
-      "link": "https://www.mynbc5.com/article/buc-ees-copyright-lawsuit-beavercreek-ohio/73364887",
-      "ts": "2026-08-06T12:50:00+00:00",
-      "summary": "Convenience store and gas station chain Buc-ee's has filed a trademark infringement lawsuit against a small business in Ohio, which has found itself in the national spotlight over the suit."
-     },
-     {
-      "id": "73364244",
-      "title": "US, Iran near potential deal to reopen Strait of Hormuz",
-      "link": "https://www.mynbc5.com/article/us-iran-near-deal-to-reopen-strait-of-hormuz/73364244",
-      "ts": "2026-08-06T11:42:00+00:00",
-      "summary": "A potential agreement between the U.S. and Iran to reopen the Strait of Hormuz is reportedly in its final stages."
-     },
-     {
-      "id": "73359687",
-      "title": "Stormy Thursday afternoon for some as humidity spikes up",
-      "link": "https://www.mynbc5.com/article/stormy-thursday-afternoon-for-some-as-humidity-spikes-up-08-06-26/73359687",
-      "ts": "2026-08-06T11:09:00+00:00",
-      "summary": "Tropical humidity, pop-up showers and storms return late week"
-     },
-     {
-      "id": "73363912",
-      "title": "ESPN analyst Dick Vitale says blood tests are 'very good' after his fifth cancer diagnosis",
-      "link": "https://www.mynbc5.com/article/dick-vitale-cancer-treatment-update/73363912",
-      "ts": "2026-08-06T10:26:00+00:00",
-      "summary": "Longtime college basketball announcer Dick Vitale says he is making positive strides after announcing in April that he had been diagnosed with cancer for the fifth time."
-     },
-     {
-      "id": "73363682",
-      "title": "15 states now linked to iceberg lettuce cyclospora outbreak, CDC says",
-      "link": "https://www.mynbc5.com/article/cyclospora-iceberg-lettuce-outbreak-states/73363682",
-      "ts": "2026-08-06T10:00:00+00:00",
-      "summary": "Cyclospora cases have been reported in at least 47 states this year, and investigators have continued to probe how many could be linked to a common contaminated source."
-     },
-     {
-      "id": "73357290",
-      "title": "Man arrested at Trump's California golf course faces illegal weapons charges",
-      "link": "https://www.mynbc5.com/article/jeanine-john-taele-arrest-trump-golf-course-los-angeles/73357290",
-      "ts": "2026-08-06T09:28:00+00:00",
-      "summary": "A California man who was arrested at Trump’s golf course was pretending to be part of his security detail and had a stash of illegal weapons in his car and home"
-     },
-     {
-      "id": "73363403",
-      "title": "Australian airline Jetstar will charge passengers to use the overhead lockers for their bags",
-      "link": "https://www.mynbc5.com/article/jetstar-charge-overhead-carry-on-bags/73363403",
-      "ts": "2026-08-06T09:24:00+00:00",
-      "summary": "Jetstar plans to charge passengers for using overhead compartments."
-     },
-     {
-      "id": "73334314",
-      "title": "Award-winning snacks kids actually want to eat",
-      "link": "https://www.mynbc5.com/article/back-to-school-lunchbox-hacks-kid-approved-snacks/73334314",
-      "ts": "2026-08-06T09:00:00+00:00",
-      "summary": "Nutrition expert Stefani Sassos shares kid-approved, award-winning snacks and smart lunch-packing tips to make school mornings easier and more budget-friendly."
-     },
-     {
-      "id": "73361872",
-      "title": "2 soldiers killed in Lebanon in the first Israeli deaths since June truce with Hezbollah",
-      "link": "https://www.mynbc5.com/article/soldiers-killed-lebanon-first-israeli-deaths-hezbollah/73361872",
-      "ts": "2026-08-06T05:07:00+00:00",
-      "summary": "The Israeli military said two of its soldiers were killed in combat in southern Lebanon in the first Israeli deaths since the implementation of a shaky truce between Israel and the Iran-backed Lebanese militant group Hezbollah in June."
-     },
-     {
-      "id": "73361892",
-      "title": "Three adults killed in North Carolina home shooting, one hospitalized",
-      "link": "https://www.mynbc5.com/article/north-carolina-mass-shooting/73361892",
-      "ts": "2026-08-06T05:01:00+00:00",
-      "summary": "A mass shooting in North Carolina left three people dead and another injured. Authorities say the shooting was confined to one home."
+      "id": "73370424",
+      "title": "E-bike rentals return to Burlington: How they're different than Bird Bikes",
+      "link": "https://www.mynbc5.com/article/rental-e-bikes-burlington-bird-bikes/73370424",
+      "ts": "2026-08-06T21:42:00+00:00",
+      "summary": "Rental e-bikes return to Burlington, but the owner says these won't be like the Bird Bikes that were left all over the city."
      }
     ]
    },
    "btv-news-releases": {
     "items": [
+     {
+      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3870/639216290640000000",
+      "title": "08/04/2026 Death Investigation | 26BU018006",
+      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3870",
+      "ts": "2026-08-06T21:04:24+00:00",
+      "summary": ""
+     },
+     {
+      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3869/639216272890000000",
+      "title": "CT office will close at 1:00 PM on Monday, August 10th for Election Prep.",
+      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3869",
+      "ts": "2026-08-06T20:34:49+00:00",
+      "summary": "CT office will close at 1:00 PM on Monday, August 10th for Election Prep."
+     },
      {
       "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3868/639211001240000000",
       "title": "Additional Update 07/16/2026 Motor Vehicle Crash - Fatality | 26BU016028",
@@ -1485,6 +1496,13 @@
    },
    "bpd-updates": {
     "items": [
+     {
+      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3870/639216290640000000",
+      "title": "08/04/2026 Death Investigation | 26BU018006",
+      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3870",
+      "ts": "2026-08-06T21:04:24+00:00",
+      "summary": ""
+     },
      {
       "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3868/639211001240000000",
       "title": "Additional Update 07/16/2026 Motor Vehicle Crash - Fatality | 26BU016028",
