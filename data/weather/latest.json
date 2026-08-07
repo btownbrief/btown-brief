@@ -1,51 +1,41 @@
 {
- "updated": "2026-08-07T21:22:31+00:00",
+ "updated": "2026-08-07T22:18:43+00:00",
  "sections_updated": {
-  "now": "2026-08-07T21:22:31+00:00",
-  "forecast": "2026-08-07T21:22:31+00:00",
-  "hourly": "2026-08-07T21:22:31+00:00",
-  "alerts": "2026-08-07T21:22:31+00:00",
-  "afd": "2026-08-07T21:22:31+00:00",
-  "lake_forecast": "2026-08-07T21:22:31+00:00",
-  "lake_gage": "2026-08-07T21:22:31+00:00",
-  "air": "2026-08-07T21:22:31+00:00",
-  "sun": "2026-08-07T21:22:31+00:00",
-  "models": "2026-08-07T21:22:31+00:00"
+  "now": "2026-08-07T22:18:43+00:00",
+  "forecast": "2026-08-07T22:18:43+00:00",
+  "hourly": "2026-08-07T22:18:43+00:00",
+  "alerts": "2026-08-07T22:18:43+00:00",
+  "afd": "2026-08-07T22:18:43+00:00",
+  "lake_forecast": "2026-08-07T22:18:43+00:00",
+  "lake_gage": "2026-08-07T22:18:43+00:00",
+  "air": "2026-08-07T22:18:43+00:00",
+  "sun": "2026-08-07T22:18:43+00:00",
+  "models": "2026-08-07T22:18:43+00:00"
  },
  "now": {
-  "observed_at": "2026-08-07T21:05:00+00:00",
+  "observed_at": "2026-08-07T21:55:00+00:00",
   "station": "KBTV",
   "description": "Mostly Clear",
   "temp_f": 88,
-  "feels_like_f": 91,
-  "humidity": 52,
-  "dewpoint_f": 68,
+  "feels_like_f": 90,
+  "humidity": 49,
+  "dewpoint_f": 66,
   "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "NE"
+  "wind_dir": "NNW"
  },
  "forecast": {
-  "updated": "2026-08-07T18:19:40+00:00",
+  "updated": "2026-08-07T21:39:33+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-08-07T17:00:00-04:00",
-    "is_day": true,
-    "temp_f": 87,
-    "pop": 7,
-    "wind": "N 3 mph",
-    "short": "Partly Sunny",
-    "detailed": "Partly sunny, with a high near 87. North wind around 3 mph."
-   },
    {
     "name": "Tonight",
     "start": "2026-08-07T18:00:00-04:00",
     "is_day": false,
     "temp_f": 70,
-    "pop": 60,
-    "wind": "E 3 mph",
-    "short": "Showers And Thunderstorms Likely",
-    "detailed": "A slight chance of rain showers between 7pm and 8pm, then showers and thunderstorms likely. Mostly cloudy, with a low around 70. East wind around 3 mph. Chance of precipitation is 60%. New rainfall amounts between a quarter and half of an inch possible."
+    "pop": 54,
+    "wind": "S 3 mph",
+    "short": "Isolated Showers And Thunderstorms then Chance Showers And Thunderstorms",
+    "detailed": "Isolated showers and thunderstorms between 7pm and 8pm, then a chance of showers and thunderstorms. Mostly cloudy, with a low around 70. Heat index values as high as 90. South wind around 3 mph. Chance of precipitation is 50%. New rainfall amounts between a quarter and half of an inch possible."
    },
    {
     "name": "Saturday",
@@ -166,143 +156,142 @@
     "wind": "W 5 to 9 mph",
     "short": "Showers And Thunderstorms Likely",
     "detailed": "Showers and thunderstorms likely before 2am. Mostly cloudy, with a low around 59. West wind 5 to 9 mph. Chance of precipitation is 60%."
+   },
+   {
+    "name": "Friday",
+    "start": "2026-08-14T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 77,
+    "pop": 22,
+    "wind": "NW 6 to 12 mph",
+    "short": "Mostly Sunny then Slight Chance Showers And Thunderstorms",
+    "detailed": "A slight chance of showers and thunderstorms after 2pm. Mostly sunny, with a high near 77. Northwest wind 6 to 12 mph."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-08-07T18:19:40+00:00",
+  "updated": "2026-08-07T21:39:33+00:00",
   "hours": [
    {
-    "t": "2026-08-07T17:00:00-04:00",
-    "temp_f": 86,
-    "feels_f": 89,
-    "pop": 7,
-    "humidity": 55,
-    "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 63,
-    "short": "Partly Sunny"
-   },
-   {
     "t": "2026-08-07T18:00:00-04:00",
-    "temp_f": 85,
-    "feels_f": 89,
-    "pop": 14,
-    "humidity": 59,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 68,
+    "temp_f": 84,
+    "feels_f": 90,
+    "pop": 12,
+    "humidity": 67,
+    "wind_mph": 3,
+    "wind_dir": "NW",
+    "sky": 58,
     "short": "Mostly Cloudy"
    },
    {
     "t": "2026-08-07T19:00:00-04:00",
-    "temp_f": 83,
-    "feels_f": 87,
-    "pop": 20,
-    "humidity": 63,
-    "wind_mph": 2,
-    "wind_dir": "SE",
-    "sky": 41,
-    "short": "Slight Chance Rain Showers"
+    "temp_f": 82,
+    "feels_f": 86,
+    "pop": 19,
+    "humidity": 69,
+    "wind_mph": 3,
+    "wind_dir": "NW",
+    "sky": 56,
+    "short": "Isolated Showers And Thunderstorms"
    },
    {
     "t": "2026-08-07T20:00:00-04:00",
     "temp_f": 81,
     "feels_f": 85,
-    "pop": 23,
+    "pop": 25,
     "humidity": 69,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 84,
-    "short": "Chance Showers And Thunderstorms"
+    "wind_mph": 3,
+    "wind_dir": "NW",
+    "sky": 87,
+    "short": "Scattered Showers And Thunderstorms"
    },
    {
     "t": "2026-08-07T21:00:00-04:00",
     "temp_f": 79,
     "feels_f": 79,
-    "pop": 25,
+    "pop": 32,
     "humidity": 74,
-    "wind_mph": 1,
-    "wind_dir": "NE",
-    "sky": 79,
-    "short": "Chance Showers And Thunderstorms"
+    "wind_mph": 2,
+    "wind_dir": "W",
+    "sky": 83,
+    "short": "Scattered Showers And Thunderstorms"
    },
    {
     "t": "2026-08-07T22:00:00-04:00",
     "temp_f": 77,
     "feels_f": 77,
-    "pop": 24,
+    "pop": 33,
     "humidity": 82,
-    "wind_mph": 1,
-    "wind_dir": "E",
-    "sky": 86,
-    "short": "Chance Showers And Thunderstorms"
+    "wind_mph": 2,
+    "wind_dir": "S",
+    "sky": 88,
+    "short": "Scattered Showers And Thunderstorms"
    },
    {
     "t": "2026-08-07T23:00:00-04:00",
     "temp_f": 76,
     "feels_f": 76,
-    "pop": 32,
+    "pop": 38,
     "humidity": 85,
     "wind_mph": 2,
-    "wind_dir": "SW",
-    "sky": 92,
+    "wind_dir": "SE",
+    "sky": 95,
     "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-08-08T00:00:00-04:00",
     "temp_f": 75,
     "feels_f": 75,
-    "pop": 33,
+    "pop": 41,
     "humidity": 84,
     "wind_mph": 2,
-    "wind_dir": "E",
-    "sky": 94,
+    "wind_dir": "SE",
+    "sky": 95,
     "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-08-08T01:00:00-04:00",
     "temp_f": 74,
     "feels_f": 74,
-    "pop": 38,
+    "pop": 44,
     "humidity": 87,
     "wind_mph": 2,
     "wind_dir": "SE",
-    "sky": 89,
+    "sky": 88,
     "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-08-08T02:00:00-04:00",
     "temp_f": 73,
     "feels_f": 73,
-    "pop": 52,
+    "pop": 47,
     "humidity": 90,
     "wind_mph": 2,
-    "wind_dir": "S",
+    "wind_dir": "SE",
     "sky": 89,
-    "short": "Showers And Thunderstorms Likely"
+    "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-08-08T03:00:00-04:00",
     "temp_f": 73,
     "feels_f": 73,
-    "pop": 56,
+    "pop": 49,
     "humidity": 87,
     "wind_mph": 2,
-    "wind_dir": "W",
-    "sky": 87,
-    "short": "Showers And Thunderstorms Likely"
+    "wind_dir": "SE",
+    "sky": 90,
+    "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-08-08T04:00:00-04:00",
     "temp_f": 72,
     "feels_f": 72,
-    "pop": 60,
+    "pop": 52,
     "humidity": 90,
     "wind_mph": 2,
-    "wind_dir": "E",
-    "sky": 88,
-    "short": "Showers And Thunderstorms Likely"
+    "wind_dir": "SE",
+    "sky": 83,
+    "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-08-08T05:00:00-04:00",
@@ -310,10 +299,10 @@
     "feels_f": 72,
     "pop": 54,
     "humidity": 90,
-    "wind_mph": 3,
+    "wind_mph": 2,
     "wind_dir": "SE",
-    "sky": 84,
-    "short": "Showers And Thunderstorms Likely"
+    "sky": 78,
+    "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-08-08T06:00:00-04:00",
@@ -322,8 +311,8 @@
     "pop": 49,
     "humidity": 93,
     "wind_mph": 3,
-    "wind_dir": "S",
-    "sky": 73,
+    "wind_dir": "SE",
+    "sky": 68,
     "short": "Showers And Thunderstorms Likely"
    },
    {
@@ -332,9 +321,9 @@
     "feels_f": 70,
     "pop": 46,
     "humidity": 97,
-    "wind_mph": 3,
+    "wind_mph": 5,
     "wind_dir": "S",
-    "sky": 74,
+    "sky": 71,
     "short": "Chance Showers And Thunderstorms"
    },
    {
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 37,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-08-09T05:00:00-04:00",
+    "temp_f": 71,
+    "feels_f": 71,
+    "pop": 25,
+    "humidity": 93,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 51,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -853,18 +853,18 @@
  },
  "lake_gage": {
   "water_temp_f": 78,
-  "water_temp_at": "2026-08-07T17:00:00.000-04:00",
-  "level_ft": 95.3,
-  "level_at": "2026-08-07T17:00:00.000-04:00",
+  "water_temp_at": "2026-08-07T18:00:00.000-04:00",
+  "level_ft": 95.31,
+  "level_at": "2026-08-07T18:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 42,
+  "aqi": 43,
   "category": "Good",
-  "pollutant": "PM2.5",
-  "observed": "08/07/26 17:00",
-  "discussion": "On Friday, August 7th, expect moderate air quality in northern Vermont, as levels of fine particle matter are expected to rise marginally from today's levels.  Expect generally good air quality in southern Vermont."
+  "pollutant": "OZONE",
+  "observed": "08/07/26 18:00",
+  "discussion": "On Saturday, August 8th, expect generally good air quality across Vermont."
  },
  "sun": {
   "sunrise": "2026-08-07T05:46-04:00",
@@ -878,38 +878,38 @@
    {
     "date": "2026-08-07",
     "high_f": {
-     "GFS": 89,
+     "GFS": 88,
      "Euro": 86,
-     "ICON": 85
+     "ICON": 86
     },
     "pop_max": {
-     "GFS": 17,
+     "GFS": 29,
      "Euro": 20,
      "ICON": 48
     },
     "precip_in": {
      "GFS": 0.07,
      "Euro": 0.04,
-     "ICON": 0.02
+     "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 2
    },
    {
     "date": "2026-08-08",
     "high_f": {
      "GFS": 83,
      "Euro": 79,
-     "ICON": 80
+     "ICON": 79
     },
     "pop_max": {
-     "GFS": 40,
+     "GFS": 42,
      "Euro": 85,
      "ICON": 90
     },
     "precip_in": {
-     "GFS": 0.09,
+     "GFS": 0.07,
      "Euro": 0.73,
-     "ICON": 0.54
+     "ICON": 0.5
     },
     "high_spread_f": 4
    },
@@ -918,7 +918,7 @@
     "high_f": {
      "GFS": 84,
      "Euro": 83,
-     "ICON": 84
+     "ICON": 82
     },
     "pop_max": {
      "GFS": 18,
@@ -928,9 +928,9 @@
     "precip_in": {
      "GFS": 0.03,
      "Euro": 0.06,
-     "ICON": 0.01
+     "ICON": 0.02
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    }
   ]
  }
