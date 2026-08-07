@@ -1,24 +1,24 @@
 {
- "updated": "2026-08-07T15:38:11+00:00",
+ "updated": "2026-08-07T16:13:17+00:00",
  "sections_updated": {
-  "now": "2026-08-07T15:38:11+00:00",
-  "forecast": "2026-08-07T15:38:11+00:00",
-  "hourly": "2026-08-07T15:38:11+00:00",
-  "alerts": "2026-08-07T15:38:11+00:00",
-  "afd": "2026-08-07T15:38:11+00:00",
-  "lake_forecast": "2026-08-07T15:38:11+00:00",
-  "lake_gage": "2026-08-07T15:38:11+00:00",
-  "air": "2026-08-07T15:38:11+00:00",
-  "sun": "2026-08-07T15:38:11+00:00",
-  "models": "2026-08-07T15:38:11+00:00"
+  "now": "2026-08-07T16:13:17+00:00",
+  "forecast": "2026-08-07T16:13:17+00:00",
+  "hourly": "2026-08-07T16:13:17+00:00",
+  "alerts": "2026-08-07T16:13:17+00:00",
+  "afd": "2026-08-07T16:13:17+00:00",
+  "lake_forecast": "2026-08-07T16:13:17+00:00",
+  "lake_gage": "2026-08-07T16:13:17+00:00",
+  "air": "2026-08-07T16:13:17+00:00",
+  "sun": "2026-08-07T16:13:17+00:00",
+  "models": "2026-08-07T16:13:17+00:00"
  },
  "now": {
-  "observed_at": "2026-08-07T15:20:00+00:00",
+  "observed_at": "2026-08-07T15:45:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 79,
-  "feels_like_f": 80,
-  "humidity": 74,
+  "description": "Partly Cloudy",
+  "temp_f": 81,
+  "feels_like_f": 84,
+  "humidity": 70,
   "dewpoint_f": 70,
   "wind_mph": 0,
   "wind_gust_mph": null,
@@ -28,14 +28,14 @@
   "updated": "2026-08-07T06:21:23+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-08-07T10:00:00-04:00",
+    "name": "This Afternoon",
+    "start": "2026-08-07T12:00:00-04:00",
     "is_day": true,
     "temp_f": 88,
     "pop": 9,
-    "wind": "W 3 mph",
+    "wind": "NW 3 mph",
     "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 88. Heat index values as high as 92. West wind around 3 mph."
+    "detailed": "Mostly sunny, with a high near 88. Heat index values as high as 92. Northwest wind around 3 mph."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-07T06:21:23+00:00",
   "hours": [
-   {
-    "t": "2026-08-07T11:00:00-04:00",
-    "temp_f": 82,
-    "feels_f": 86,
-    "pop": 3,
-    "humidity": 69,
-    "wind_mph": 2,
-    "wind_dir": "SW",
-    "sky": 30,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-08-07T12:00:00-04:00",
     "temp_f": 84,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 63,
     "short": "Chance Showers And Thunderstorms"
+   },
+   {
+    "t": "2026-08-08T23:00:00-04:00",
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 44,
+    "humidity": 90,
+    "wind_mph": 7,
+    "wind_dir": "S",
+    "sky": 63,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -826,9 +826,9 @@
  },
  "lake_gage": {
   "water_temp_f": 76,
-  "water_temp_at": "2026-08-07T11:00:00.000-04:00",
+  "water_temp_at": "2026-08-07T12:00:00.000-04:00",
   "level_ft": 95.27,
-  "level_at": "2026-08-07T11:00:00.000-04:00",
+  "level_at": "2026-08-07T12:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -851,40 +851,40 @@
    {
     "date": "2026-08-07",
     "high_f": {
-     "GFS": 90,
+     "GFS": 91,
      "Euro": 86,
-     "ICON": 86
+     "ICON": 85
     },
     "pop_max": {
-     "GFS": 18,
+     "GFS": 15,
      "Euro": 39,
-     "ICON": 15
+     "ICON": 48
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.04,
-     "ICON": 0.0
+     "ICON": 0.02
     },
-    "high_spread_f": 4
+    "high_spread_f": 6
    },
    {
     "date": "2026-08-08",
     "high_f": {
      "GFS": 81,
      "Euro": 82,
-     "ICON": 81
+     "ICON": 80
     },
     "pop_max": {
-     "GFS": 40,
+     "GFS": 42,
      "Euro": 74,
-     "ICON": 75
+     "ICON": 90
     },
     "precip_in": {
-     "GFS": 3.09,
+     "GFS": 2.95,
      "Euro": 0.86,
-     "ICON": 0.31
+     "ICON": 0.54
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    },
    {
     "date": "2026-08-09",
@@ -896,12 +896,12 @@
     "pop_max": {
      "GFS": 22,
      "Euro": 61,
-     "ICON": 50
+     "ICON": 15
     },
     "precip_in": {
      "GFS": 0.02,
      "Euro": 0.02,
-     "ICON": 0.1
+     "ICON": 0.01
     },
     "high_spread_f": 0
    }
