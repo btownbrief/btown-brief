@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-06T07:49:44-04:00",
+ "generated": "2026-08-06T20:58:05-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 20,
-   "seconds": 5.6
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 71,
-   "seconds": 2.6
+   "count": 76,
+   "seconds": 5.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 57,
-   "seconds": 2.7
+   "count": 58,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 167,
-   "seconds": 3.3
+   "seconds": 2.4
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 78,
-   "seconds": 1.7
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -49,12 +49,12 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 156,
-   "seconds": 66.1
+   "seconds": 74.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 20,
-   "seconds": 2.2
+   "seconds": 2.8
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.6
+   "seconds": 43.7
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 75,
-   "seconds": 109.9
+   "seconds": 122.8
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,27 +79,27 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 476,
-   "seconds": 73.1
+   "seconds": 69.8
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 114.0
+   "count": 67,
+   "seconds": 133.9
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 34,
-   "seconds": 14.4
+   "seconds": 16.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 81,
-   "seconds": 1.6
+   "seconds": 1.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 38,
-   "seconds": 37.3
+   "count": 37,
+   "seconds": 40.7
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,30 +113,52 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 235,
-   "seconds": 12.1
+   "count": 237,
+   "seconds": 15.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 184,
+   "count": 186,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 55,
-   "seconds": 73.2
+   "seconds": 72.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 33,
-   "seconds": 0.3
+   "seconds": 0.5
   }
  },
- "gathered": 2621,
- "afterDedup": 1318,
- "duplicatesMerged": 1303,
- "final": 1959,
+ "gathered": 2633,
+ "afterDedup": 1313,
+ "duplicatesMerged": 1320,
+ "final": 1973,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Dinosaur Safari Exhibit",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-07"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-07"
+  },
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
@@ -1225,6 +1247,17 @@
   },
   {
    "kept": {
+    "title": "Charity and Sylvia Author Talk ft. Tillie Walden",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -1483,34 +1516,11 @@
   },
   {
    "kept": {
-    "title": "Industry Day",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-21"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-21"
-  },
-  {
-   "kept": {
     "title": "Violet Grohl",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -1547,28 +1557,6 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
-   ],
-   "date": "2026-09-22"
-  },
-  {
-   "kept": {
-    "title": "802sDay",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-22"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
    ],
    "date": "2026-09-22"
   },
@@ -2143,6 +2131,17 @@
   },
   {
    "kept": {
+    "title": "Monetary Policy Shocks and Financial Stability: Evidence from the Great Depression ft. Matthew Jaremski",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
     "title": "School of World Languages and Cultures Alumni Panel",
     "source": "uvm"
    },
@@ -2401,27 +2400,40 @@
  ],
  "changes": [
   {
-   "id": "6a16d1a2270e",
-   "title": "Industry Day",
-   "date": "2026-09-21",
+   "id": "c0600ead40c6",
+   "title": "Rik Palieri",
+   "date": "2026-08-08",
    "change": "time",
-   "was": "2026-09-21",
-   "now": "2026-09-21T11:30:00-04:00"
+   "was": "2026-08-08T14:00:00-04:00",
+   "now": "2026-08-08T13:00:00-04:00"
   },
   {
-   "id": "53dc7da9440f",
-   "title": "802sDay",
-   "date": "2026-09-22",
+   "id": "338164ecd874",
+   "title": "Cold Engines",
+   "date": "2026-08-28",
    "change": "time",
-   "was": "2026-09-22",
-   "now": "2026-09-22T11:30:00-04:00"
+   "was": "2026-08-28T20:00:00-04:00",
+   "now": "2026-08-28T21:00:00-04:00"
+  },
+  {
+   "id": "e36e692ed756",
+   "title": "Learn & Play Spirit Island",
+   "date": "2026-08-06",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
   },
   {
    "id": "80f6454ea1cd",
    "title": "Trivia",
    "date": "2026-08-06",
+   "change": "dropped"
+  },
+  {
+   "id": "1faed638504f",
+   "title": "Crafting in Community",
+   "date": "2026-08-06",
    "change": "missing",
-   "lastSeen": "2026-08-03T08:43:53-04:00"
+   "lastSeen": "2026-08-06T07:49:44-04:00"
   },
   {
    "id": "d32f9f417f0c",
@@ -2445,11 +2457,24 @@
    "lastSeen": "2026-08-05T07:38:20-04:00"
   },
   {
+   "id": "4e0a674fda38",
+   "title": "Barbacoa Karaoke",
+   "date": "2026-08-07",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
    "id": "304feaf1b5e5",
    "title": "Burlington Butter Tarts & More Market",
    "date": "2026-08-08",
+   "change": "dropped"
+  },
+  {
+   "id": "a76505493197",
+   "title": "Tours",
+   "date": "2026-08-08",
    "change": "missing",
-   "lastSeen": "2026-08-03T08:43:53-04:00"
+   "lastSeen": "2026-08-06T07:49:44-04:00"
   },
   {
    "id": "ada67145954d",
@@ -2466,11 +2491,53 @@
    "lastSeen": "2026-08-05T07:38:20-04:00"
   },
   {
+   "id": "739866014bb3",
+   "title": "Sunset at Red Rocks Park",
+   "date": "2026-08-08",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "d4079159e840",
+   "title": "Tours",
+   "date": "2026-08-12",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
    "id": "a35bf8e96b86",
    "title": "Notorious",
    "date": "2026-08-13",
    "change": "missing",
    "lastSeen": "2026-08-05T07:38:20-04:00"
+  },
+  {
+   "id": "4db03b57ffe5",
+   "title": "Tours",
+   "date": "2026-08-15",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "417d5e59b23a",
+   "title": "Tours",
+   "date": "2026-08-19",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "4f8a5600b5e0",
+   "title": "Spanish Toddler Storytime",
+   "date": "2026-08-21",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "28f5d871c56c",
+   "title": "Tours",
+   "date": "2026-08-22",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
   },
   {
    "id": "79ebf0d2e3b0",
@@ -2480,11 +2547,39 @@
    "lastSeen": "2026-08-05T07:38:20-04:00"
   },
   {
+   "id": "e7978adcd58a",
+   "title": "Tours",
+   "date": "2026-08-26",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
    "id": "6d21993c1cdc",
    "title": "Alex Clark | Jokes From The Brink | Stand Up Comedy",
    "date": "2026-08-28",
    "change": "missing",
    "lastSeen": "2026-08-05T07:38:20-04:00"
+  },
+  {
+   "id": "c9104b247a30",
+   "title": "Street Soccer Tournament: Youth (ages 14-18)",
+   "date": "2026-08-29",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "35a69240d819",
+   "title": "Tours",
+   "date": "2026-08-29",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "b2aae009aee5",
+   "title": "Tours",
+   "date": "2026-09-02",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
   },
   {
    "id": "99c0e5de7caa",
@@ -2494,11 +2589,60 @@
    "lastSeen": "2026-08-05T07:38:20-04:00"
   },
   {
+   "id": "ea3895dc6e50",
+   "title": "Tours",
+   "date": "2026-09-05",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "c26c448e0258",
+   "title": "Tours",
+   "date": "2026-09-09",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "11ad21819b81",
+   "title": "Tours",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
    "id": "b5150e8082d9",
    "title": "Elephant Stone",
    "date": "2026-09-15",
    "change": "missing",
    "lastSeen": "2026-08-05T07:38:20-04:00"
+  },
+  {
+   "id": "c042d06fca7c",
+   "title": "Tours",
+   "date": "2026-09-16",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "24fb9739c114",
+   "title": "Tours",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "a9673115645d",
+   "title": "Local Dork at Foam Brewers on a Tuesday",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
+  },
+  {
+   "id": "b4fbf7ed4f83",
+   "title": "Vermont Figure Drawing Collective",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-08-06T07:49:44-04:00"
   }
  ]
 }
