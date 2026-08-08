@@ -1,25 +1,25 @@
 {
- "updated": "2026-08-08T14:17:59+00:00",
+ "updated": "2026-08-08T15:11:14+00:00",
  "sections_updated": {
-  "now": "2026-08-08T14:17:59+00:00",
-  "forecast": "2026-08-08T14:17:59+00:00",
-  "hourly": "2026-08-08T14:17:59+00:00",
-  "alerts": "2026-08-08T14:17:59+00:00",
-  "afd": "2026-08-08T14:17:59+00:00",
-  "lake_forecast": "2026-08-08T14:17:59+00:00",
-  "lake_gage": "2026-08-08T14:17:59+00:00",
-  "air": "2026-08-08T14:17:59+00:00",
-  "sun": "2026-08-08T14:17:59+00:00",
-  "models": "2026-08-08T14:17:59+00:00"
+  "now": "2026-08-08T15:11:14+00:00",
+  "forecast": "2026-08-08T15:11:14+00:00",
+  "hourly": "2026-08-08T15:11:14+00:00",
+  "alerts": "2026-08-08T15:11:14+00:00",
+  "afd": "2026-08-08T15:11:14+00:00",
+  "lake_forecast": "2026-08-08T15:11:14+00:00",
+  "lake_gage": "2026-08-08T15:11:14+00:00",
+  "air": "2026-08-08T15:11:14+00:00",
+  "sun": "2026-08-08T15:11:14+00:00",
+  "models": "2026-08-08T15:11:14+00:00"
  },
  "now": {
-  "observed_at": "2026-08-08T14:00:00+00:00",
+  "observed_at": "2026-08-08T14:50:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 75,
-  "feels_like_f": 76,
+  "temp_f": 77,
+  "feels_like_f": 78,
   "humidity": 83,
-  "dewpoint_f": 70,
+  "dewpoint_f": 72,
   "wind_mph": 6,
   "wind_gust_mph": null,
   "wind_dir": "S"
@@ -29,13 +29,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-08T10:00:00-04:00",
+    "start": "2026-08-08T11:00:00-04:00",
     "is_day": true,
     "temp_f": 85,
     "pop": 65,
     "wind": "SW 5 mph",
-    "short": "Slight Chance Rain Showers then Slight Chance Showers And Thunderstorms",
-    "detailed": "A slight chance of rain showers before 11am, then a slight chance of showers and thunderstorms between noon and 1pm, then showers and thunderstorms likely between 1pm and 4pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
+    "short": "Partly Sunny then Slight Chance Showers And Thunderstorms",
+    "detailed": "A slight chance of showers and thunderstorms between noon and 1pm, then showers and thunderstorms likely between 1pm and 4pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-08T11:35:52+00:00",
   "hours": [
-   {
-    "t": "2026-08-08T10:00:00-04:00",
-    "temp_f": 77,
-    "feels_f": 77,
-    "pop": 20,
-    "humidity": 82,
-    "wind_mph": 3,
-    "wind_dir": "S",
-    "sky": 71,
-    "short": "Slight Chance Rain Showers"
-   },
    {
     "t": "2026-08-08T11:00:00-04:00",
     "temp_f": 78,
@@ -567,6 +556,17 @@
     "wind_dir": "NW",
     "sky": 21,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-09T22:00:00-04:00",
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 0,
+    "humidity": 71,
+    "wind_mph": 3,
+    "wind_dir": "W",
+    "sky": 18,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -825,10 +825,10 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 77,
-  "water_temp_at": "2026-08-08T10:00:00.000-04:00",
-  "level_ft": 95.3,
-  "level_at": "2026-08-08T10:00:00.000-04:00",
+  "water_temp_f": 78,
+  "water_temp_at": "2026-08-08T11:00:00.000-04:00",
+  "level_ft": 95.27,
+  "level_at": "2026-08-08T11:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -851,7 +851,7 @@
    {
     "date": "2026-08-08",
     "high_f": {
-     "GFS": 83,
+     "GFS": 82,
      "Euro": 78,
      "ICON": 80
     },
@@ -861,11 +861,11 @@
      "ICON": 88
     },
     "precip_in": {
-     "GFS": 0.07,
+     "GFS": 0.05,
      "Euro": 0.96,
      "ICON": 0.55
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-08-09",
@@ -875,7 +875,7 @@
      "ICON": 82
     },
     "pop_max": {
-     "GFS": 10,
+     "GFS": 9,
      "Euro": 35,
      "ICON": 20
     },
@@ -894,7 +894,7 @@
      "ICON": 76
     },
     "pop_max": {
-     "GFS": 47,
+     "GFS": 57,
      "Euro": 63,
      "ICON": 38
     },
