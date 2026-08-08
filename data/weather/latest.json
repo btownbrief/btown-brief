@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-08T20:59:38+00:00",
+ "updated": "2026-08-08T21:11:59+00:00",
  "sections_updated": {
-  "now": "2026-08-08T20:59:38+00:00",
-  "forecast": "2026-08-08T20:59:38+00:00",
-  "hourly": "2026-08-08T20:59:38+00:00",
-  "alerts": "2026-08-08T20:59:38+00:00",
-  "afd": "2026-08-08T20:59:38+00:00",
-  "lake_forecast": "2026-08-08T20:59:38+00:00",
-  "lake_gage": "2026-08-08T20:59:38+00:00",
-  "air": "2026-08-08T20:59:38+00:00",
-  "sun": "2026-08-08T20:59:38+00:00",
-  "models": "2026-08-08T20:59:38+00:00"
+  "now": "2026-08-08T21:11:59+00:00",
+  "forecast": "2026-08-08T21:11:59+00:00",
+  "hourly": "2026-08-08T21:11:59+00:00",
+  "alerts": "2026-08-08T21:11:59+00:00",
+  "afd": "2026-08-08T21:11:59+00:00",
+  "lake_forecast": "2026-08-08T21:11:59+00:00",
+  "lake_gage": "2026-08-08T21:11:59+00:00",
+  "air": "2026-08-08T21:11:59+00:00",
+  "sun": "2026-08-08T21:11:59+00:00",
+  "models": "2026-08-08T21:11:59+00:00"
  },
  "now": {
-  "observed_at": "2026-08-08T20:30:00+00:00",
+  "observed_at": "2026-08-08T20:54:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
-  "temp_f": 84,
-  "feels_like_f": 90,
-  "humidity": 66,
-  "dewpoint_f": 72,
-  "wind_mph": 6,
-  "wind_gust_mph": null,
-  "wind_dir": "SSW"
+  "description": "Thunderstorms and Rain",
+  "temp_f": null,
+  "feels_like_f": null,
+  "humidity": null,
+  "dewpoint_f": null,
+  "wind_mph": null,
+  "wind_gust_mph": 43,
+  "wind_dir": null
  },
  "forecast": {
   "updated": "2026-08-08T18:19:16+00:00",
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-08-08T16:00:00-04:00",
+    "start": "2026-08-08T17:00:00-04:00",
     "is_day": true,
     "temp_f": 83,
     "pop": 47,
-    "wind": "S 5 mph",
+    "wind": "SW 5 mph",
     "short": "Scattered Showers And Thunderstorms",
-    "detailed": "Scattered showers and thunderstorms. Partly sunny, with a high near 83. South wind around 5 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "Scattered showers and thunderstorms. Partly sunny, with a high near 83. Southwest wind around 5 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-08T18:19:16+00:00",
   "hours": [
-   {
-    "t": "2026-08-08T16:00:00-04:00",
-    "temp_f": 83,
-    "feels_f": 88,
-    "pop": 46,
-    "humidity": 67,
-    "wind_mph": 5,
-    "wind_dir": "S",
-    "sky": 64,
-    "short": "Scattered Showers And Thunderstorms"
-   },
    {
     "t": "2026-08-08T17:00:00-04:00",
     "temp_f": 82,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 22,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-10T04:00:00-04:00",
+    "temp_f": 67,
+    "feels_f": 67,
+    "pop": 0,
+    "humidity": 81,
+    "wind_mph": 3,
+    "wind_dir": "S",
+    "sky": 34,
+    "short": "Partly Cloudy"
    }
   ]
  },
