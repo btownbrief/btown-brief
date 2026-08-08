@@ -1,6 +1,16 @@
 {
  "nws-weather": {
-  "alerts": [],
+  "alerts": [
+   {
+    "id": "urn:oid:2.49.0.1.840.0.9be3f3d5c2fe64a2367ca523e0ac8dfe2842828f.001.1",
+    "event": "Special Weather Statement",
+    "headline": "Special Weather Statement issued August 8 at 4:38PM EDT by NWS Burlington VT",
+    "severity": "Moderate",
+    "onset": "2026-08-08T16:38:00-04:00",
+    "ends": "2026-08-08T17:30:00-04:00",
+    "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
+   }
+  ],
   "forecast_flag": {
    "day": "2026-08-08",
    "text": "This Afternoon: Scattered showers and thunderstorms"
@@ -847,18 +857,18 @@
       "summary": "An estimated 20,000 Americans donate their bodies every year for scientific research. The University of Vermont and Dartmouth College each accept close to 30 bodies a year, as part of what are known as anatomical gift programs."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-07/ruminations-pairs-its-post-punk-garage-rock-with-earnest-lyrics",
-      "title": "Ruminations pairs its post-punk, garage rock with earnest lyrics",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-07/ruminations-pairs-its-post-punk-garage-rock-with-earnest-lyrics",
-      "ts": "2026-08-07T09:00:00+00:00",
-      "summary": "This week's Friday Song is the band's latest, titled, \"What Was Last.\""
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-08-07/state-regulators-wont-require-casella-test-pfas-emissions-experimental-facility-coventry",
       "title": "Regulators won’t require Casella test for PFAS emissions at experimental Coventry facility",
       "link": "https://www.vermontpublic.org/local-news/2026-08-07/state-regulators-wont-require-casella-test-pfas-emissions-experimental-facility-coventry",
       "ts": "2026-08-07T09:00:00+00:00",
       "summary": "Casella is testing new technology to remove PFAS from contaminated liquid at its Coventry landfill. State regulators don’t plan to set limits on PFAS in air emissions from the facility."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-08-07/ruminations-pairs-its-post-punk-garage-rock-with-earnest-lyrics",
+      "title": "Ruminations pairs its post-punk, garage rock with earnest lyrics",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-07/ruminations-pairs-its-post-punk-garage-rock-with-earnest-lyrics",
+      "ts": "2026-08-07T09:00:00+00:00",
+      "summary": "This week's Friday Song is the band's latest, titled, \"What Was Last.\""
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-08-06/local-development-group-wins-bid-former-montpelier-post-office",
@@ -1268,6 +1278,20 @@
    "mynbc5": {
     "items": [
      {
+      "id": "73383133",
+      "title": "Gas leak inside building prompts response from Vermont Hazmat, Colchester fire",
+      "link": "https://www.mynbc5.com/article/colchester-fire-vermont-hazmat-gas-leak/73383133",
+      "ts": "2026-08-08T20:13:00+00:00",
+      "summary": "The Colchester Fire Department and Vermont Hazmat responded to a hydrogen gas leak inside a building on Friday morning."
+     },
+     {
+      "id": "73382941",
+      "title": "Ukraine honors its 'collector of souls' killed while recovering the war dead",
+      "link": "https://www.mynbc5.com/article/ukraine-honors-its-collector-of-souls-killed-while-recovering-the-war-dead-russia-ap/73382941",
+      "ts": "2026-08-08T20:04:00+00:00",
+      "summary": "Ukrainians have gathered in Kyiv to honor Oleksiy Yukov, a volunteer who spent more than two decades recovering bodies throughout the war."
+     },
+     {
       "id": "73382756",
       "title": "Jorge Messi, Lionel Messi’s father and longtime agent, dies at 68",
       "link": "https://www.mynbc5.com/article/jorge-messi-lionel-messis-father-and-longtime-agent-dies-at-68-argentina-inter-miami/73382756",
@@ -1392,20 +1416,6 @@
       "link": "https://www.mynbc5.com/article/todd-blanche-gains-pivotal-senate-support-for-attorney-general-nomination/73379980",
       "ts": "2026-08-07T23:01:00+00:00",
       "summary": "Louisiana Sen. Bill Cassidy's backing of Todd Blanche's nomination for attorney general breaks a Senate deadlock, despite opposition from other Republican senators."
-     },
-     {
-      "id": "73379801",
-      "title": "Many gather to remember Burlington teen who was killed while riding e-bike",
-      "link": "https://www.mynbc5.com/article/shiloh-skalka-memorial-burlington-e-bike/73379801",
-      "ts": "2026-08-07T22:24:00+00:00",
-      "summary": "About 200 people met a Burlington church to mourn and remember Shiloh Skalka, who was riding an e-bike last month when she was hit by a driver. Police say she died because of her injuries."
-     },
-     {
-      "id": "73379987",
-      "title": "Bodycam shows Wisconsin officers approaching naked woman in stolen fire truck",
-      "link": "https://www.mynbc5.com/article/naked-woman-stolen-fire-truck-wisconsin/73379987",
-      "ts": "2026-08-07T22:23:00+00:00",
-      "summary": "Police said the woman climbed into a fire station pickup, turned on the lights and drove off — and was later found naked in the truck."
      }
     ]
    },
