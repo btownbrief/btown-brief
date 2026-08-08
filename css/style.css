@@ -2246,6 +2246,8 @@ img {
   margin: 0 auto;
   padding: var(--space-4) var(--space-5) var(--space-3);
   display: grid;
+  color: inherit;
+  text-decoration: none;
   grid-template-columns: auto 1fr auto;
   grid-template-areas:
     "rise graphic set"
@@ -2314,8 +2316,8 @@ img {
   padding-bottom: var(--space-1);
 }
 .sun-arc:hover .sun-tracker-cta,
-.sun-arc:focus-visible .sun-tracker-cta { text-decoration: underline; }
-.sun-arc:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+.sun-arc-inner:focus-visible .sun-tracker-cta { text-decoration: underline; }
+.sun-arc-inner:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
 
 .sun-end {
   display: flex;

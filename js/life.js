@@ -28,8 +28,10 @@
   'use strict';
 
   var DATA_URL = 'data/weather/latest.json';
+  var LIVE_DATA_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/main/data/weather/latest.json';
   var READ_URL = 'data/weather/read.json';
   var BEACH_URL = 'data/weather/beaches.json';
+  var MAX_DATA_AGE_MS = 3 * 60 * 60 * 1000;
 
   /* ---------- tiny helpers ---------- */
 
@@ -717,6 +719,30 @@
     });
   }
 
+  function weatherTimestamp(data) {
+    var ts = Date.parse(data && data.updated);
+    return Number.isFinite(ts) ? ts : 0;
+  }
+
+  function getLatestWeather() {
+    return getJSON(DATA_URL).then(function (local) {
+      if (Date.now() - weatherTimestamp(local) <= MAX_DATA_AGE_MS) return local;
+
+      // A busy repository can leave GitHub Pages on an older deployment even
+      // while main contains fresh weather data. In that case, read the latest
+      // committed payload directly instead of rendering yesterday's forecast.
+      var cacheBucket = Math.floor(Date.now() / (5 * 60 * 1000));
+      return getJSON(LIVE_DATA_URL + '?v=' + cacheBucket)
+        .then(function (live) {
+          return weatherTimestamp(live) > weatherTimestamp(local) ? live : local;
+        })
+        .catch(function () { return local; });
+    }, function () {
+      var cacheBucket = Math.floor(Date.now() / (5 * 60 * 1000));
+      return getJSON(LIVE_DATA_URL + '?v=' + cacheBucket);
+    });
+  }
+
   function init() {
     // The week strip wants the read too (per-day blurbs), so fetch it once
     // and share the promise. A failed read is null — every consumer copes.
@@ -724,7 +750,7 @@
     var sunsetP = getJSON(window.BtownSunsetScore.OPEN_METEO_URL)
       .catch(function () { return null; });
 
-    getJSON(DATA_URL).then(function (d) {
+    getLatestWeather().then(function (d) {
       window.btownWeatherData = d;
       window.dispatchEvent(new CustomEvent('btown:weather-data', { detail: d }));
       renderNow(d);

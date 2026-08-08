@@ -329,6 +329,44 @@
     };
   }
 
+  function btvDateKey(ts) {
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(new Date(ts * 1000));
+  }
+
+  function isCurrentSun(sunObj) {
+    var now = Date.now() / 1000;
+    return sunObj &&
+      Number.isFinite(sunObj.riseToday) &&
+      Number.isFinite(sunObj.setToday) &&
+      Number.isFinite(sunObj.riseTomorrow) &&
+      sunObj.riseToday < sunObj.setToday &&
+      sunObj.setToday < sunObj.riseTomorrow &&
+      sunObj.riseTomorrow > now &&
+      btvDateKey(sunObj.riseToday) === btvDateKey(now);
+  }
+
+  function fetchCurrentSun() {
+    var url = 'https://api.open-meteo.com/v1/forecast'
+      + '?latitude=' + LAT + '&longitude=' + LON
+      + '&daily=sunrise,sunset&timezone=America%2FNew_York&timeformat=unixtime&forecast_days=2';
+    fetch(url)
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (data) { start(fromApi(data)); })
+      .catch(function () { /* stay hidden on failure */ });
+  }
+
+  function startWeatherSun(data) {
+    try {
+      var weatherSun = fromWeather(data);
+      if (!isCurrentSun(weatherSun)) throw new Error('stale payload');
+      start(weatherSun);
+    } catch (e) {
+      fetchCurrentSun();
+    }
+  }
+
   function synth(sf) {
     var now = Date.now() / 1000;
     if (sf === 'night') {
@@ -346,7 +384,7 @@
     if (!c) return;
 
     c.innerHTML =
-      '<div class="sun-arc-inner">' +
+      '<a class="sun-arc-inner" href="sunset.html" aria-label="Open the full sunset tracker">' +
         '<div class="sun-end sun-end-rise">' +
           '<span class="sun-end-time" id="sun-rise-time"></span>' +
           '<span class="sun-end-label">Sunrise</span>' +
@@ -361,7 +399,7 @@
           '<span class="sun-count-label" id="sun-count-label"></span>' +
         '</div>' +
         '<span class="sun-tracker-cta">See the full sunset tracker <span aria-hidden="true">→</span></span>' +
-      '</div>';
+      '</a>';
 
     els = {
       wrap: c,
@@ -413,26 +451,20 @@
     var sf = param('sunf');
     if (sf != null) { start(synth(sf)); return; }
 
-    // weather.html already loaded these exact times with its forecast;
-    // reuse them instead of asking a second feed for the same answer.
+    // weather.html already loaded these exact times with its forecast. Reuse
+    // current data, but bypass a stale Pages deployment with the live API.
     if (document.getElementById('rn-page')) {
       if (window.btownWeatherData) {
-        start(fromWeather(window.btownWeatherData));
+        startWeatherSun(window.btownWeatherData);
       } else {
         window.addEventListener('btown:weather-data', function (e) {
-          start(fromWeather(e.detail));
+          startWeatherSun(e.detail);
         }, { once: true });
       }
       return;
     }
 
-    var url = 'https://api.open-meteo.com/v1/forecast'
-      + '?latitude=' + LAT + '&longitude=' + LON
-      + '&daily=sunrise,sunset&timezone=America%2FNew_York&timeformat=unixtime&forecast_days=2';
-    fetch(url)
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function (data) { start(fromApi(data)); })
-      .catch(function () { /* stay hidden on failure */ });
+    fetchCurrentSun();
   }
 
   if (document.readyState === 'loading') {
