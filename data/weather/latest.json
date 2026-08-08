@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-08T11:11:35+00:00",
+ "updated": "2026-08-08T12:03:48+00:00",
  "sections_updated": {
-  "now": "2026-08-08T11:11:35+00:00",
-  "forecast": "2026-08-08T11:11:35+00:00",
-  "hourly": "2026-08-08T11:11:35+00:00",
-  "alerts": "2026-08-08T11:11:35+00:00",
-  "afd": "2026-08-08T11:11:35+00:00",
-  "lake_forecast": "2026-08-08T11:11:35+00:00",
-  "lake_gage": "2026-08-08T11:11:35+00:00",
-  "air": "2026-08-08T11:11:35+00:00",
-  "sun": "2026-08-08T11:11:35+00:00",
-  "models": "2026-08-08T11:11:35+00:00"
+  "now": "2026-08-08T12:03:48+00:00",
+  "forecast": "2026-08-08T12:03:48+00:00",
+  "hourly": "2026-08-08T12:03:48+00:00",
+  "alerts": "2026-08-08T12:03:48+00:00",
+  "afd": "2026-08-08T12:03:48+00:00",
+  "lake_forecast": "2026-08-08T12:03:48+00:00",
+  "lake_gage": "2026-08-08T12:03:48+00:00",
+  "air": "2026-08-08T12:03:48+00:00",
+  "sun": "2026-08-08T12:03:48+00:00",
+  "models": "2026-08-08T12:03:48+00:00"
  },
  "now": {
-  "observed_at": "2026-08-08T10:45:00+00:00",
+  "observed_at": "2026-08-08T11:40:00+00:00",
   "station": "KBTV",
   "description": "Fog/Mist",
-  "temp_f": 70,
-  "feels_like_f": 70,
-  "humidity": 100,
+  "temp_f": 72,
+  "feels_like_f": 73,
+  "humidity": 94,
   "dewpoint_f": 70,
   "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "SSE"
+  "wind_dir": "S"
  },
  "forecast": {
-  "updated": "2026-08-08T06:18:35+00:00",
+  "updated": "2026-08-08T11:35:52+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-08T07:00:00-04:00",
+    "start": "2026-08-08T08:00:00-04:00",
     "is_day": true,
     "temp_f": 85,
     "pop": 65,
     "wind": "SW 5 mph",
     "short": "Chance Rain Showers then Slight Chance Showers And Thunderstorms",
-    "detailed": "A chance of rain showers before 11am, then a slight chance of showers and thunderstorms between noon and 1pm, then showers and thunderstorms likely between 1pm and 4pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 70%. New rainfall amounts between a quarter and half of an inch possible."
+    "detailed": "A chance of rain showers before 11am, then a slight chance of showers and thunderstorms between noon and 1pm, then showers and thunderstorms likely between 1pm and 4pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -170,19 +170,8 @@
   ]
  },
  "hourly": {
-  "updated": "2026-08-08T06:18:35+00:00",
+  "updated": "2026-08-08T11:35:52+00:00",
   "hours": [
-   {
-    "t": "2026-08-08T07:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 47,
-    "humidity": 97,
-    "wind_mph": 5,
-    "wind_dir": "S",
-    "sky": 69,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-08-08T08:00:00-04:00",
     "temp_f": 72,
@@ -567,6 +556,17 @@
     "wind_dir": "NW",
     "sky": 18,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-09T19:00:00-04:00",
+    "temp_f": 82,
+    "feels_f": 83,
+    "pop": 0,
+    "humidity": 53,
+    "wind_mph": 6,
+    "wind_dir": "NW",
+    "sky": 18,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -574,14 +574,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-08T06:33:00+00:00",
+  "issued": "2026-08-08T11:17:00+00:00",
   "key_messages": [
    "Intervals of showers and thunderstorms will continue throughout the day. Warm and humid conditions will persist through much of the weekend.",
    "Chances for showers and thunderstorms continue to look likely for late Monday into Tuesday as a cold front pushes through the region.",
    "Periodic showers and thunderstorms are expected next week as temperatures cool back to and eventually slightly below seasonal averages."
   ],
   "what_changed": "As of 233 AM EDT Saturday... No significant changes have been made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 080633\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n233 AM EDT Sat Aug 8 2026\n\n.WHAT HAS CHANGED...\nAs of 233 AM EDT Saturday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 233 AM EDT Saturday...\n\n1. Intervals of showers and thunderstorms will continue \nthroughout the day. Warm and humid conditions will persist through \nmuch of the weekend. \n\n2. Chances for showers and thunderstorms continue to look \nlikely for late Monday into Tuesday as a cold front pushes through \nthe region.  \n\n3. Periodic showers and thunderstorms are expected next week as \ntemperatures cool back to and eventually slightly below seasonal \naverages. \n\n&&\n\n.DISCUSSION...\nAs of 233 AM EDT Saturday...\n\nKEY MESSAGE 1: Warm and humid conditions are expected to persist \nthroughout the day today with plenty of moisture streaming into the \nregion as we remain in between a Bermuda High and an upper low \ncentered over Hudson Bay. Shower activity this morning continues \nacross the region, slowly moving northeastward. Heavy rainfall has \nbeen the main concern with these storms, as several locations have \nreceived over 2 inches of rainfall within rather short periods of \ntime, for example Essex County, NY where Flash Flood Warnings were \nissued overnight. Precipitation is expected to wane towards the \nmorning, before additional rounds of convection develop later in the \nday. Model soundings show CAPE values of 1500 J/kg or so, with \nrelatively low wind shear, with the environment favorable for pulse \nthunderstorms. Any thunderstorms that develop will likely be garden-\nvariety, but a stronger storm can't be entirely ruled out. The main \nconcern this afternoon will once again be heavy rainfall and any \npossible hydrological/flooding concerns, especially in locations \nhave already received decent rainfall over the last few days. WPC \ncontinues to have a Marginal ERO across the region for tomorrow. \nAnother round of showers is expected to move through the region \ntonight into Sunday, although with little instability these showers \nshould be rather unimpactful. A brief break in the unsettled pattern \nis expected to develop through the day Sunday as a narrow axis of \nhigh pressure moves over the region.\n\nKEY MESSAGE 2: A brief period of high pressure will bring relatively \ntranquil weather to start the week, but unsettled weather is \nexpected to return Monday evening ahead of an approaching cold \nfront. The threat of showers and thunderstorms will ramp up \nthroughout the evening, with a bulk of the precipitation expected \novernight into early Tuesday.Stronger storms currently look unlikely \nwith only modest instability and shear, but we'll have to monitor \nany trends in the data if they deviate from the current thinking. \nTemperatures on Monday will be a few degrees cooler, with high \ntemperatures in the mid 70s to mid 80s across the region.\n\nKEY MESSAGE 3: The long wave pattern is projected to remain zonal \nacross the Northeast through next week with unblocked flow \ndownstream and largely the result of a massive Omega High centered \nover the Western US and Canada. The result will be for quick moving \nsystems tracking through the long wave pattern bringing periodic \nshowers and thunderstorms. The nature of this pattern will promote \nweaker systems and lean towards a slow cooling trend with \ntemperatures favored to dip below seasonal averages by the end of \nthe work week as the Bermuda High retreats southeastward. As such, \nhighs in the 80s Tuesday will decrease into the mid/upper 70s by \nFriday.\n\n&&\n\n.AVIATION /06Z SATURDAY THROUGH WEDNESDAY/...\nThrough 06Z Sunday...Intermittent showers will continue through 08Z\nfor most terminals keeping MVFR CIGs/VIS potentially impacting\naviators. After 08Z, any clearing will result in rapid stratus/fog\nformation for susceptible locations like SLK/MPV with lower\npotential for more widespread IFR conditions. VFR conditions return\nafter 12Z with showers returning 18-00Z. More fog and MVFR/IFR\nconditions are possible after 00Z tonight, but will be dependent on\nhow quickly clouds can clear.\n\nOutlook...\n\nSunday: VFR. Slight chance SHRA, Slight chance TSRA.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. Chance SHRA, Slight chance TSRA.\nMonday Night: Mainly VFR, with local MVFR possible. Chance SHRA,\nChance TSRA.\nTuesday: Mainly VFR, with areas MVFR possible. Chance SHRA,\nSlight chance TSRA.\nTuesday Night: Mainly VFR, with local MVFR possible. Slight\nchance SHRA.\nWednesday: VFR. Chance SHRA, Slight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Boyd\nAVIATION...Boyd\n"
+  "raw": "\n000\nFXUS61 KBTV 081117\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n717 AM EDT Sat Aug 8 2026\n\n.WHAT HAS CHANGED...\nAs of 233 AM EDT Saturday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 233 AM EDT Saturday...\n\n1. Intervals of showers and thunderstorms will continue \nthroughout the day. Warm and humid conditions will persist through \nmuch of the weekend. \n\n2. Chances for showers and thunderstorms continue to look \nlikely for late Monday into Tuesday as a cold front pushes through \nthe region.  \n\n3. Periodic showers and thunderstorms are expected next week as \ntemperatures cool back to and eventually slightly below seasonal \naverages.\n\n&&\n\n.DISCUSSION...\nAs of 233 AM EDT Saturday...\n\nKEY MESSAGE 1: Warm and humid conditions are expected to persist \nthroughout the day today with plenty of moisture streaming into the \nregion as we remain in between a Bermuda High and an upper low \ncentered over Hudson Bay. Shower activity this morning continues \nacross the region, slowly moving northeastward. Heavy rainfall has \nbeen the main concern with these storms, as several locations have \nreceived over 2 inches of rainfall within rather short periods of \ntime, for example Essex County, NY where Flash Flood Warnings were \nissued overnight. Precipitation is expected to wane towards the \nmorning, before additional rounds of convection develop later in the \nday. Model soundings show CAPE values of 1500 J/kg or so, with \nrelatively low wind shear, with the environment favorable for pulse \nthunderstorms. Any thunderstorms that develop will likely be garden-\nvariety, but a stronger storm can't be entirely ruled out. The main \nconcern this afternoon will once again be heavy rainfall and any \npossible hydrological/flooding concerns, especially in locations \nhave already received decent rainfall over the last few days. WPC \ncontinues to have a Marginal ERO across the region for tomorrow. \nAnother round of showers is expected to move through the region \ntonight into Sunday, although with little instability these showers \nshould be rather unimpactful. A brief break in the unsettled pattern \nis expected to develop through the day Sunday as a narrow axis of \nhigh pressure moves over the region.\n\nKEY MESSAGE 2: A brief period of high pressure will bring relatively \ntranquil weather to start the week, but unsettled weather is \nexpected to return Monday evening ahead of an approaching cold \nfront. The threat of showers and thunderstorms will ramp up \nthroughout the evening, with a bulk of the precipitation expected \novernight into early Tuesday.Stronger storms currently look unlikely \nwith only modest instability and shear, but we'll have to monitor \nany trends in the data if they deviate from the current thinking. \nTemperatures on Monday will be a few degrees cooler, with high \ntemperatures in the mid 70s to mid 80s across the region.\n\nKEY MESSAGE 3: The long wave pattern is projected to remain zonal \nacross the Northeast through next week with unblocked flow \ndownstream and largely the result of a massive Omega High centered \nover the Western US and Canada. The result will be for quick moving \nsystems tracking through the long wave pattern bringing periodic \nshowers and thunderstorms. The nature of this pattern will promote \nweaker systems and lean towards a slow cooling trend with \ntemperatures favored to dip below seasonal averages by the end of \nthe work week as the Bermuda High retreats southeastward. As such, \nhighs in the 80s Tuesday will decrease into the mid/upper 70s by \nFriday.\n\n&&\n\n.AVIATION /12Z SATURDAY THROUGH WEDNESDAY/...\nThrough 12Z Sunday...Widely mixed LIFR to VFR conditions are\nongoing for area terminals. Locations like MPV/SLK are\nexperiencing LIFR conditions with low CIG. Fog/mist has been\nless prevalent, but has occurred at times; sunrise will likely\ndisperse any remaining fog/mist by 14Z. VFR conditions return \nafter 14Z with showers returning 18-00Z. A few thunderstorms are\nalso possible this afternoon as instability increases.  More \nfog and MVFR/IFR conditions are possible after 00Z tonight, but \nwill be dependent on how quickly clouds can clear.\n\nOutlook...\n\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. Slight chance SHRA, Slight chance TSRA.\nMonday Night: Mainly VFR, with local IFR possible. Likely SHRA,\nSlight chance TSRA.\nTuesday: Mainly VFR, with local IFR possible. Slight chance SHRA,\nSlight chance TSRA.\nTuesday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nWednesday: Mainly VFR, with local MVFR possible. Chance SHRA,\nSlight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Boyd\nAVIATION...Boyd\n"
  },
  "lake_forecast": {
   "issued": "2026-08-08T06:20:00+00:00",
@@ -833,10 +833,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 40,
+  "aqi": 41,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/08/26 6:00",
+  "observed": "08/08/26 7:00",
   "discussion": "On Saturday, August 8th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -844,7 +844,7 @@
   "sunset": "2026-08-08T20:08-04:00",
   "sunrise_tomorrow": "2026-08-09T05:49-04:00",
   "sunset_tomorrow": "2026-08-09T20:07-04:00",
-  "uv_max": 6.65
+  "uv_max": 6.45
  },
  "models": {
   "days": [
@@ -875,7 +875,7 @@
      "ICON": 82
     },
     "pop_max": {
-     "GFS": 10,
+     "GFS": 9,
      "Euro": 35,
      "ICON": 20
     },
@@ -889,7 +889,7 @@
    {
     "date": "2026-08-10",
     "high_f": {
-     "GFS": 79,
+     "GFS": 83,
      "Euro": 80,
      "ICON": 76
     },
@@ -899,11 +899,11 @@
      "ICON": 38
     },
     "precip_in": {
-     "GFS": 0.01,
+     "GFS": 0.15,
      "Euro": 0.01,
      "ICON": 0.1
     },
-    "high_spread_f": 4
+    "high_spread_f": 7
    }
   ]
  }
