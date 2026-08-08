@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-08T17:13:51+00:00",
+ "updated": "2026-08-08T18:12:47+00:00",
  "sections_updated": {
-  "now": "2026-08-08T17:13:51+00:00",
-  "forecast": "2026-08-08T17:13:51+00:00",
-  "hourly": "2026-08-08T17:13:51+00:00",
-  "alerts": "2026-08-08T17:13:51+00:00",
-  "afd": "2026-08-08T17:13:51+00:00",
-  "lake_forecast": "2026-08-08T17:13:51+00:00",
+  "now": "2026-08-08T18:12:47+00:00",
+  "forecast": "2026-08-08T18:12:47+00:00",
+  "hourly": "2026-08-08T18:12:47+00:00",
+  "alerts": "2026-08-08T18:12:47+00:00",
+  "afd": "2026-08-08T18:12:47+00:00",
+  "lake_forecast": "2026-08-08T18:12:47+00:00",
   "lake_gage": "2026-08-08T17:13:51+00:00",
-  "air": "2026-08-08T17:13:51+00:00",
-  "sun": "2026-08-08T17:13:51+00:00",
-  "models": "2026-08-08T17:13:51+00:00"
+  "air": "2026-08-08T18:12:47+00:00",
+  "sun": "2026-08-08T18:12:47+00:00",
+  "models": "2026-08-08T18:12:47+00:00"
  },
  "now": {
-  "observed_at": "2026-08-08T16:55:00+00:00",
+  "observed_at": "2026-08-08T17:50:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
+  "description": "Mostly Cloudy",
   "temp_f": 82,
-  "feels_like_f": 87,
-  "humidity": 70,
-  "dewpoint_f": 72,
+  "feels_like_f": 86,
+  "humidity": 66,
+  "dewpoint_f": 70,
   "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": "SW"
+  "wind_dir": "SSW"
  },
  "forecast": {
   "updated": "2026-08-08T11:35:52+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-08-08T13:00:00-04:00",
+    "name": "Today",
+    "start": "2026-08-08T11:00:00-04:00",
     "is_day": true,
     "temp_f": 85,
     "pop": 65,
     "wind": "SW 5 mph",
-    "short": "Showers And Thunderstorms Likely",
-    "detailed": "Showers and thunderstorms likely before 4pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
+    "short": "Partly Sunny then Slight Chance Showers And Thunderstorms",
+    "detailed": "A slight chance of showers and thunderstorms between noon and 1pm, then showers and thunderstorms likely between 1pm and 4pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-08T11:35:52+00:00",
   "hours": [
-   {
-    "t": "2026-08-08T13:00:00-04:00",
-    "temp_f": 81,
-    "feels_f": 85,
-    "pop": 32,
-    "humidity": 74,
-    "wind_mph": 5,
-    "wind_dir": "SW",
-    "sky": 55,
-    "short": "Chance Showers And Thunderstorms"
-   },
    {
     "t": "2026-08-08T14:00:00-04:00",
     "temp_f": 83,
@@ -567,6 +556,17 @@
     "wind_dir": "SW",
     "sky": 18,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-10T01:00:00-04:00",
+    "temp_f": 68,
+    "feels_f": 68,
+    "pop": 0,
+    "humidity": 78,
+    "wind_mph": 3,
+    "wind_dir": "SW",
+    "sky": 22,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -833,10 +833,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 41,
+  "aqi": 42,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/08/26 12:00",
+  "observed": "08/08/26 13:00",
   "discussion": "On Sunday, August 9th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -844,7 +844,7 @@
   "sunset": "2026-08-08T20:08-04:00",
   "sunrise_tomorrow": "2026-08-09T05:49-04:00",
   "sunset_tomorrow": "2026-08-09T20:07-04:00",
-  "uv_max": 6.45
+  "uv_max": 6.7
  },
  "models": {
   "days": [
@@ -856,12 +856,12 @@
      "ICON": 80
     },
     "pop_max": {
-     "GFS": 44,
+     "GFS": 46,
      "Euro": 94,
      "ICON": 88
     },
     "precip_in": {
-     "GFS": 0.09,
+     "GFS": 0.12,
      "Euro": 0.96,
      "ICON": 0.57
     },
@@ -889,7 +889,7 @@
    {
     "date": "2026-08-10",
     "high_f": {
-     "GFS": 83,
+     "GFS": 84,
      "Euro": 78,
      "ICON": 76
     },
@@ -899,11 +899,11 @@
      "ICON": 45
     },
     "precip_in": {
-     "GFS": 0.15,
+     "GFS": 0.61,
      "Euro": 0.08,
      "ICON": 0.2
     },
-    "high_spread_f": 7
+    "high_spread_f": 8
    }
   ]
  }
