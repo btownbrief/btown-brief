@@ -1,26 +1,26 @@
 {
- "updated": "2026-08-08T15:11:14+00:00",
+ "updated": "2026-08-08T15:52:29+00:00",
  "sections_updated": {
-  "now": "2026-08-08T15:11:14+00:00",
-  "forecast": "2026-08-08T15:11:14+00:00",
-  "hourly": "2026-08-08T15:11:14+00:00",
-  "alerts": "2026-08-08T15:11:14+00:00",
-  "afd": "2026-08-08T15:11:14+00:00",
-  "lake_forecast": "2026-08-08T15:11:14+00:00",
-  "lake_gage": "2026-08-08T15:11:14+00:00",
-  "air": "2026-08-08T15:11:14+00:00",
-  "sun": "2026-08-08T15:11:14+00:00",
-  "models": "2026-08-08T15:11:14+00:00"
+  "now": "2026-08-08T15:52:29+00:00",
+  "forecast": "2026-08-08T15:52:29+00:00",
+  "hourly": "2026-08-08T15:52:29+00:00",
+  "alerts": "2026-08-08T15:52:29+00:00",
+  "afd": "2026-08-08T15:52:29+00:00",
+  "lake_forecast": "2026-08-08T15:52:29+00:00",
+  "lake_gage": "2026-08-08T15:52:29+00:00",
+  "air": "2026-08-08T15:52:29+00:00",
+  "sun": "2026-08-08T15:52:29+00:00",
+  "models": "2026-08-08T15:52:29+00:00"
  },
  "now": {
-  "observed_at": "2026-08-08T14:50:00+00:00",
+  "observed_at": "2026-08-08T15:35:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 77,
-  "feels_like_f": 78,
-  "humidity": 83,
+  "description": "Mostly Cloudy",
+  "temp_f": 79,
+  "feels_like_f": 82,
+  "humidity": 79,
   "dewpoint_f": 72,
-  "wind_mph": 6,
+  "wind_mph": 8,
   "wind_gust_mph": null,
   "wind_dir": "S"
  },
@@ -29,13 +29,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-08T11:00:00-04:00",
+    "start": "2026-08-08T09:00:00-04:00",
     "is_day": true,
     "temp_f": 85,
     "pop": 65,
     "wind": "SW 5 mph",
-    "short": "Partly Sunny then Slight Chance Showers And Thunderstorms",
-    "detailed": "A slight chance of showers and thunderstorms between noon and 1pm, then showers and thunderstorms likely between 1pm and 4pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
+    "short": "Chance Rain Showers then Slight Chance Showers And Thunderstorms",
+    "detailed": "A chance of rain showers before 11am, then a slight chance of showers and thunderstorms between noon and 1pm, then showers and thunderstorms likely between 1pm and 4pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 85. Southwest wind around 5 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -836,7 +836,7 @@
   "aqi": 41,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/08/26 10:00",
+  "observed": "08/08/26 11:00",
   "discussion": "On Saturday, August 8th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -857,13 +857,13 @@
     },
     "pop_max": {
      "GFS": 44,
-     "Euro": 97,
+     "Euro": 94,
      "ICON": 88
     },
     "precip_in": {
-     "GFS": 0.05,
+     "GFS": 0.13,
      "Euro": 0.96,
-     "ICON": 0.55
+     "ICON": 0.57
     },
     "high_spread_f": 4
    },
@@ -876,13 +876,13 @@
     },
     "pop_max": {
      "GFS": 9,
-     "Euro": 35,
-     "ICON": 20
+     "Euro": 31,
+     "ICON": 38
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.01,
-     "ICON": 0.01
+     "ICON": 0.04
     },
     "high_spread_f": 3
    },
@@ -895,13 +895,13 @@
     },
     "pop_max": {
      "GFS": 57,
-     "Euro": 63,
-     "ICON": 38
+     "Euro": 64,
+     "ICON": 45
     },
     "precip_in": {
      "GFS": 0.15,
      "Euro": 0.08,
-     "ICON": 0.1
+     "ICON": 0.2
     },
     "high_spread_f": 7
    }
