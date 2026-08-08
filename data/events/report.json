@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-07T17:21:19-04:00",
+ "generated": "2026-08-08T06:05:48-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 20,
-   "seconds": 5.9
+   "count": 19,
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 74,
-   "seconds": 3.6
+   "count": 71,
+   "seconds": 2.7
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 57,
-   "seconds": 3.6
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 165,
-   "seconds": 2.8
+   "count": 161,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 77,
-   "seconds": 1.8
+   "count": 75,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-07&end_date=2026-10-06&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-08&end_date=2026-10-07&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 15,
+   "count": 10,
    "seconds": 0.0
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 152,
-   "seconds": 72.0
+   "count": 153,
+   "seconds": 66.3
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 20,
-   "seconds": 2.7
+   "count": 19,
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 38.9
+   "seconds": 36.2
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 74,
-   "seconds": 111.7
+   "count": 76,
+   "seconds": 117.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 465,
-   "seconds": 73.7
+   "count": 459,
+   "seconds": 76.2
   },
   "meetup": {
    "label": "Meetup",
-   "count": 67,
-   "seconds": 129.8
+   "count": 66,
+   "seconds": 119.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 36,
-   "seconds": 14.7
+   "count": 37,
+   "seconds": 14.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 77,
-   "seconds": 1.2
+   "count": 75,
+   "seconds": 1.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 36,
-   "seconds": 40.0
+   "count": 35,
+   "seconds": 37.8
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,93 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 238,
-   "seconds": 11.6
+   "count": 232,
+   "seconds": 17.7
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 187,
+   "count": 182,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 54,
-   "seconds": 71.3
+   "count": 53,
+   "seconds": 66.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 33,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 2606,
- "afterDedup": 1298,
- "duplicatesMerged": 1308,
- "final": 1930,
+ "gathered": 2572,
+ "afterDedup": 1286,
+ "duplicatesMerged": 1286,
+ "final": 1888,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-08"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-08"
-  },
-  {
-   "kept": {
-    "title": "Art Amplified featuring Paper Castles and Roost.World",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "WAX + DJ Hoppa",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "Trash for the Trope: A Romance Lover's Book Club",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-09"
-  },
   {
    "kept": {
     "title": "Halvorson's Courtyard Music Series: Phantom Airwave",
@@ -1568,6 +1505,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-24"
@@ -1613,6 +1551,39 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-09-24"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-24"
+  },
+  {
+   "kept": {
+    "title": "Hot Dog & A Can Thursdays",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-24"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-09-24"
   },
@@ -2374,7 +2345,9 @@
    },
    "merged_sources": [
     "champlainvalley",
-    "higherground"
+    "higherground",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-10-06"
   },
@@ -2399,37 +2372,31 @@
     "loveburlington"
    ],
    "date": "2026-10-06"
+  },
+  {
+   "kept": {
+    "title": "Briscoe",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "TRIVIA NIGHT",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-07"
   }
  ],
  "changes": [
-  {
-   "id": "1b17a280bb2c",
-   "title": "Lunch with the Poets",
-   "date": "2026-08-07",
-   "change": "missing",
-   "lastSeen": "2026-08-07T06:30:22-04:00"
-  },
-  {
-   "id": "51c28b79e11e",
-   "title": "Mary Oliver: Saved by the Beauty of the World",
-   "date": "2026-08-07",
-   "change": "missing",
-   "lastSeen": "2026-08-05T07:38:20-04:00"
-  },
-  {
-   "id": "7cbb2b8158b0",
-   "title": "Food Truck Fridays with Tournesol & Nameless Tacos",
-   "date": "2026-08-07",
-   "change": "missing",
-   "lastSeen": "2026-08-05T07:38:20-04:00"
-  },
-  {
-   "id": "4e0a674fda38",
-   "title": "Barbacoa Karaoke",
-   "date": "2026-08-07",
-   "change": "missing",
-   "lastSeen": "2026-08-06T07:49:44-04:00"
-  },
   {
    "id": "50b34ae71910",
    "title": "Alpine Plant Hike on Mt. Mansfield",
