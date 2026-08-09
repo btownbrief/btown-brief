@@ -1,29 +1,29 @@
 {
- "generated": "2026-08-08T17:04:21-04:00",
+ "generated": "2026-08-09T06:07:29-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 19,
-   "seconds": 5.6
+   "count": 18,
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 70,
-   "seconds": 5.7
+   "count": 68,
+   "seconds": 2.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 57,
-   "seconds": 2.7
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 161,
-   "seconds": 3.2
+   "count": 155,
+   "seconds": 3.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 75,
+   "count": 74,
    "seconds": 1.8
   },
   "echo": {
@@ -34,27 +34,27 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-08&end_date=2026-10-07&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-09&end_date=2026-10-08&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
-   "count": 10,
+   "count": 4,
    "seconds": 0.0
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 9,
+   "count": 8,
    "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 156,
-   "seconds": 65.8
+   "seconds": 66.2
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 19,
-   "seconds": 2.5
+   "count": 17,
+   "seconds": 2.8
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 37.6
+   "seconds": 35.9
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 76,
-   "seconds": 121.9
+   "seconds": 141.0
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 459,
-   "seconds": 75.8
+   "count": 454,
+   "seconds": 74.6
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 119.1
+   "count": 67,
+   "seconds": 120.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 37,
-   "seconds": 14.9
+   "count": 39,
+   "seconds": 14.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 75,
-   "seconds": 1.4
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 35,
-   "seconds": 37.4
+   "count": 34,
+   "seconds": 37.3
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,130 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 232,
-   "seconds": 10.0
+   "count": 231,
+   "seconds": 13.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 182,
+   "count": 181,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 53,
-   "seconds": 68.9
+   "seconds": 66.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 33,
-   "seconds": 0.4
+   "seconds": 0.2
   }
  },
- "gathered": 2574,
- "afterDedup": 1288,
- "duplicatesMerged": 1286,
- "final": 1886,
+ "gathered": 2475,
+ "afterDedup": 1201,
+ "duplicatesMerged": 1274,
+ "final": 1849,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Halvorson's Courtyard Music Series: Phantom Airwave",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "ActivitiesFest 2026",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "I ❤️ Female Orgasm",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-09"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-09"
-  },
   {
    "kept": {
     "title": "Italian Conversation Group",
@@ -1655,12 +1555,35 @@
   },
   {
    "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-25"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-25"
+  },
+  {
+   "kept": {
     "title": "Splash Dance: DJ Matt Hagen",
     "source": "bca"
    },
    "merged_sources": [
     "bca",
     "churchst",
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
@@ -1674,6 +1597,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-26"
@@ -1685,6 +1609,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-26"
@@ -1739,6 +1664,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "helloburlington",
     "loveburlington",
     "uvm",
     "uvmbored"
@@ -1753,6 +1679,17 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-09-26"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-09-26"
   },
@@ -2380,7 +2317,9 @@
    },
    "merged_sources": [
     "champlainvalley",
-    "higherground"
+    "higherground",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-10-07"
   },
@@ -2394,68 +2333,81 @@
     "loveburlington"
    ],
    "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "AMP UP Your Education: UVM's Accelerated Master's Pathway Grad Fair",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "Fire Extinguisher Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
+    "title": "Margo Cilker & Lilly Hiatt",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
+    "title": "Benjamin Tod & Lost Dog Street Band",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
+    "title": "Thirsty Thursday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-08"
   }
  ],
  "changes": [
-  {
-   "id": "50b34ae71910",
-   "title": "Alpine Plant Hike on Mt. Mansfield",
-   "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-08-07T06:30:22-04:00"
-  },
-  {
-   "id": "1a3ebc4a3d1d",
-   "title": "BTown Coffee Club",
-   "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-08-08T06:05:48-04:00"
-  },
-  {
-   "id": "c0600ead40c6",
-   "title": "Rik Palieri",
-   "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-08-08T06:05:48-04:00"
-  },
-  {
-   "id": "9484287ed23b",
-   "title": "Summer River Float on The Winooski River",
-   "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-08-07T06:30:22-04:00"
-  },
-  {
-   "id": "ada67145954d",
-   "title": "Possession",
-   "date": "2026-08-08",
-   "change": "dropped"
-  },
-  {
-   "id": "1049644584e5",
-   "title": "Mind Magic: A Night of Laughter and Astonishment",
-   "date": "2026-08-08",
-   "change": "dropped"
-  },
-  {
-   "id": "739866014bb3",
-   "title": "Sunset at Red Rocks Park",
-   "date": "2026-08-08",
-   "change": "missing",
-   "lastSeen": "2026-08-06T07:49:44-04:00"
-  },
   {
    "id": "d4079159e840",
    "title": "Tours",
    "date": "2026-08-12",
    "change": "missing",
    "lastSeen": "2026-08-06T07:49:44-04:00"
-  },
-  {
-   "id": "a35bf8e96b86",
-   "title": "Notorious",
-   "date": "2026-08-13",
-   "change": "dropped"
   },
   {
    "id": "4db03b57ffe5",
@@ -2493,23 +2445,11 @@
    "lastSeen": "2026-08-06T07:49:44-04:00"
   },
   {
-   "id": "79ebf0d2e3b0",
-   "title": "Twilight Series: Night Protocol with April Patterson Clemens & Cobalt Tobert",
-   "date": "2026-08-22",
-   "change": "dropped"
-  },
-  {
    "id": "e7978adcd58a",
    "title": "Tours",
    "date": "2026-08-26",
    "change": "missing",
    "lastSeen": "2026-08-06T07:49:44-04:00"
-  },
-  {
-   "id": "6d21993c1cdc",
-   "title": "Alex Clark | Jokes From The Brink | Stand Up Comedy",
-   "date": "2026-08-28",
-   "change": "dropped"
   },
   {
    "id": "c9104b247a30",
@@ -2531,12 +2471,6 @@
    "date": "2026-09-02",
    "change": "missing",
    "lastSeen": "2026-08-06T07:49:44-04:00"
-  },
-  {
-   "id": "99c0e5de7caa",
-   "title": "Lady Moon & The Eclipse",
-   "date": "2026-09-04",
-   "change": "dropped"
   },
   {
    "id": "da3bee3da83a",
@@ -2565,12 +2499,6 @@
    "date": "2026-09-12",
    "change": "missing",
    "lastSeen": "2026-08-06T07:49:44-04:00"
-  },
-  {
-   "id": "b5150e8082d9",
-   "title": "Elephant Stone",
-   "date": "2026-09-15",
-   "change": "dropped"
   },
   {
    "id": "c042d06fca7c",
