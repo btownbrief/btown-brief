@@ -25,6 +25,7 @@
   --c-sports: #ef9448;
   --c-gaming: #7d8de8;
   --c-reddit: #ff4500;   /* reddit's own orangered — the tab Stephen wants red */
+  --c-newsletters: #45c4b0;
   color-scheme: dark;
 }
 :root[data-theme="light"] {
@@ -47,6 +48,7 @@
   --c-sports: #a85a10;
   --c-gaming: #4053b8;
   --c-reddit: #cc3700;
+  --c-newsletters: #12756a;
   color-scheme: light;
 }
 
@@ -59,6 +61,7 @@
 .c-politics { --tc: var(--c-politics); }
 .c-sports { --tc: var(--c-sports); }
 .c-gaming { --tc: var(--c-gaming); }
+.c-newsletters { --tc: var(--c-newsletters); }
 
 * { box-sizing: border-box; }
 
@@ -326,6 +329,15 @@ button {
 }
 .fi.has-thumb:hover .thumb { filter: none; }
 .fi.read .thumb { opacity: .45; }
+
+/* email-only newsletter items: honest, unlinked, marked with ✉ */
+.nolink { cursor: default; }
+.nolink:hover { text-decoration: none; }
+.nolink::after {
+  content: " ✉";
+  color: var(--faint);
+  font-size: .72em;
+}
 
 /* discussion-thread suffixes ([r/tech], [hn·214]) */
 .disc {

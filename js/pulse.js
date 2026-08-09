@@ -17,8 +17,8 @@
   var LOCAL_URL = 'data/pulse.json';
   /* reddit rides shotgun after LOCAL — Burlington Pulse means the town's
      own conversation ranks above the national topic split */
-  var TOPIC_ORDER = ['local', 'reddit', 'news', 'tech', 'business', 'science',
-                     'culture', 'politics', 'sports', 'gaming', 'pods'];
+  var TOPIC_ORDER = ['local', 'reddit', 'newsletters', 'news', 'tech', 'business',
+                     'science', 'culture', 'politics', 'sports', 'gaming', 'pods'];
   var TOPIC_LABEL = { all: 'All topics', local: 'Local', reddit: 'Reddit', pods: 'Podcasts' };
   var FEED_PAGE = 120;      // headlines per MORE click — a page, not a pit
   var READ_CAP = 4000;      // read-marks kept before pruning oldest
@@ -262,11 +262,13 @@
       'referrerpolicy="no-referrer" ' +
       'onerror="this.parentNode.classList.remove(\'has-thumb\');this.remove()">' : '';
     var disc = discHTML(item);
+    var headline = item.x
+      ? '<span class="fi-t nolink">' + esc(item.t) + '</span>'
+      : '<a class="fi-t" data-k="' + keyOf(item.u) + '" href="' + esc(safeUrl(item.u)) +
+        '" target="_blank" rel="noopener">' + esc(item.t) + '</a>';
     return '<article class="fi' + (src.local ? ' local' : '') + (read ? ' read' : '') +
       (thumb ? ' has-thumb' : '') + '">' +
-      '<div class="fi-main">' + metaHTML(src, item) +
-      '<a class="fi-t" data-k="' + keyOf(item.u) + '" href="' + esc(safeUrl(item.u)) +
-      '" target="_blank" rel="noopener">' + esc(item.t) + '</a>' +
+      '<div class="fi-main">' + metaHTML(src, item) + headline +
       (disc ? '<div class="fi-disc">' + disc + '</div>' : '') + '</div>' +
       thumb + '</article>';
   }
@@ -281,7 +283,8 @@
       var items = filteredItems();
       body.innerHTML =
         '<div class="solo-head"><h2 class="solo-name' + '">' + esc(src.short) + '</h2>' +
-        '<a class="mlink" href="' + esc(safeUrl(src.site)) + '" target="_blank" rel="noopener">Visit site ↗</a>' +
+        (src.site ? '<a class="mlink" href="' + esc(safeUrl(src.site)) +
+          '" target="_blank" rel="noopener">Visit site ↗</a>' : '') +
         '<button class="mlink" data-source="">← All sources</button></div>' +
         '<div class="feed">' +
         (items.length ? items.map(feedItemHTML).join('') :
@@ -325,15 +328,19 @@
           '<h3 class="src-head"><button class="src-name c-' + esc(src.topic) +
           '" data-source="' + src.id +
           '" title="See only ' + esc(src.name) + '">' + esc(src.short) + '</button>' +
-          '<a class="src-out" href="' + esc(safeUrl(src.site)) +
-          '" target="_blank" rel="noopener" aria-label="Open ' + esc(src.name) + '">↗</a>' +
+          (src.site ? '<a class="src-out" href="' + esc(safeUrl(src.site)) +
+            '" target="_blank" rel="noopener" aria-label="Open ' + esc(src.name) +
+            '">↗</a>' : '') +
           '<span class="src-tag">' + (src.local ? 'Local' : esc(src.topic)) +
           ' · ' + src.n + '</span></h3><ul>' +
           sec.items.map(function (item) {
             var read = state.read[keyOf(item.u)];
-            return '<li' + (read ? ' class="read"' : '') + '><a class="si-t" data-k="' +
-              keyOf(item.u) + '" href="' + esc(safeUrl(item.u)) +
-              '" target="_blank" rel="noopener">' + esc(item.t) + '</a>' +
+            var headline = item.x
+              ? '<span class="si-t nolink">' + esc(item.t) + '</span>'
+              : '<a class="si-t" data-k="' + keyOf(item.u) + '" href="' +
+                esc(safeUrl(item.u)) + '" target="_blank" rel="noopener">' +
+                esc(item.t) + '</a>';
+            return '<li' + (read ? ' class="read"' : '') + '>' + headline +
               '<span class="age" data-ts="' + item.d + '">' + fmtAge(item.d) + '</span>' +
               discHTML(item) +
               (item.a ? '<button class="play" data-audio="' + esc(safeUrl(item.a)) +
@@ -364,7 +371,8 @@
     if (!state.data) return;
     var groups = [
       { label: 'Local', match: function (s) { return s.local; } },
-      { label: 'National', match: function (s) { return !s.local; } },
+      { label: 'Newsletters', match: function (s) { return s.topic === 'newsletters'; } },
+      { label: 'National', match: function (s) { return !s.local && s.topic !== 'newsletters'; } },
     ];
     $('source-toggles').innerHTML = groups.map(function (g) {
       var rows = state.data.sources.filter(g.match)
