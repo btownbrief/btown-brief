@@ -24,6 +24,7 @@
   --c-politics: #e0645c;
   --c-sports: #ef9448;
   --c-gaming: #7d8de8;
+  --c-reddit: #ff4500;   /* reddit's own orangered — the tab Stephen wants red */
   color-scheme: dark;
 }
 :root[data-theme="light"] {
@@ -45,6 +46,7 @@
   --c-politics: #b0342c;
   --c-sports: #a85a10;
   --c-gaming: #4053b8;
+  --c-reddit: #cc3700;
   color-scheme: light;
 }
 
@@ -229,6 +231,7 @@ button {
 }
 .tab[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
 .tab.t-local[aria-pressed="false"] { color: var(--accent); }
+.tab.t-reddit[aria-pressed="false"] { color: var(--c-reddit); }
 
 .srcchip {
   font-size: 10px;

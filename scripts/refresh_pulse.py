@@ -71,6 +71,16 @@ FOLDERS = [
 STREAM_N = {False: 300, True: 150}
 SEED_STREAM_N = 1000  # --seed casts a wider net once
 
+# The Burlington subs ride along via their public per-tag streams (kept from
+# the chatter era) until they live in the local folder proper. Each entry:
+# (Inoreader tag label, display title, subreddit URL). If the folder ever
+# carries a source with the same subreddit URL, the ride-along is skipped —
+# so moving them into the folder in Inoreader retires this list by itself.
+EXTRA_LOCAL_TAGS = [
+    ("Reddit (r/burlington)", "r/burlington", "https://www.reddit.com/r/burlington/"),
+    ("Reddit (r/Vermont)", "r/Vermont", "https://www.reddit.com/r/vermont/"),
+]
+
 ITEM_CAP = 20          # headlines kept per source
 TITLE_MAX = 200
 MIN_SOURCES = 40       # roster sanity floor (folders hold ~90 today)
@@ -138,6 +148,34 @@ SHORT_NAMES = {
     "wsj-world-news": "WSJ World",
     "802-news-with-mark-johnson": "802 News",
 }
+
+
+# Hand-picked ordering for the source rail. Lower runs first within a group;
+# unlisted sources get 500 and sort alphabetically. The flagship local
+# outlets lead the rail, the Burlington subs lead the reddit set, and
+# r/artificial trails it (Stephen's call, Aug 2026).
+PRIORITY = {
+    "btown-brief": 1,
+    "seven-days": 2,
+    "vtdigger": 3,
+    "wcax": 4,
+    "reddit.com/r/burlington": 10,
+    "reddit.com/r/vermont": 11,
+    "reddit.com/r/artificial": 900,
+}
+
+
+def source_priority(source_id, site):
+    for key in topic_keys(site):
+        if key in PRIORITY:
+            return PRIORITY[key]
+    return PRIORITY.get(source_id)
+
+
+def reddit_short(site):
+    """r/<sub> chip label straight from the site path, any subreddit."""
+    match = re.search(r"reddit\.com/(r/[A-Za-z0-9_]+)", site or "")
+    return match.group(1) if match else None
 
 
 def shorten(name):
@@ -292,12 +330,14 @@ def fetch_bytes(url, tries=3, timeout=30):
 
 def folder_opml_url(label):
     return (f"{INO}/reader/subscriptions/export/user/{USER}/label/"
-            + urllib.parse.quote(label))
+            + urllib.parse.quote(label, safe=""))
 
 
 def folder_stream_url(label, count):
+    # safe="" so a slash inside a tag name ("Reddit (r/burlington)") is
+    # %2F-encoded instead of splitting the URL path
     return (f"{INO}/stream/user/{USER}/tag/"
-            + urllib.parse.quote(label) + f"?n={count}")
+            + urllib.parse.quote(label, safe="") + f"?n={count}")
 
 
 # ----------------------------------------------------------------------
@@ -653,9 +693,14 @@ def build_payload(sources, per_source, generated):
         podcast = source["podcast"] or any(item.get("a") for item in items)
         entry = {
             "id": source["id"], "name": source["name"],
-            "short": SHORT_NAMES.get(source["id"]) or shorten(source["name"]),
+            "short": (SHORT_NAMES.get(source["id"])
+                      or reddit_short(source["site"])
+                      or shorten(source["name"])),
             "site": source["site"], "topic": source["topic"], "n": len(items),
         }
+        rank = source_priority(source["id"], source["site"])
+        if rank is not None:
+            entry["pr"] = rank
         if source["local"]:
             entry["local"] = 1
         if podcast:
@@ -688,6 +733,18 @@ def run(args):
         if not outlines:
             sys.exit(f"OPML for folder {label!r} came back empty")
         folder_outlines.extend((outline, is_local) for outline in outlines)
+
+    folder_sites = {key for outline, _ in folder_outlines
+                    for key in topic_keys(outline["html"] or outline["xml"])}
+    extra_tags = []
+    for tag_label, title, sub_url in EXTRA_LOCAL_TAGS:
+        if topic_keys(sub_url)[0] in folder_sites:
+            continue  # the folder carries it now — the ride-along retires
+        folder_outlines.append((
+            {"title": title, "xml": folder_stream_url(tag_label, 1),
+             "html": sub_url}, True))
+        extra_tags.append(tag_label)
+
     sources = build_roster(folder_outlines, topics)
     if len(sources) < MIN_SOURCES:
         sys.exit(f"roster has only {len(sources)} sources — refusing to run")
@@ -702,7 +759,9 @@ def run(args):
     by_site, by_title = source_index(sources)
     fresh_by_source = {}
     unmatched = 0
-    for label, is_local in FOLDERS:
+    stream_labels = ([(label, is_local) for label, is_local in FOLDERS]
+                     + [(label, True) for label in extra_tags])
+    for label, is_local in stream_labels:
         count = SEED_STREAM_N if args.seed else STREAM_N[is_local]
         for item in parse_stream(fetch_bytes(folder_stream_url(label, count))):
             source_id = attribute(item, by_site, by_title)
