@@ -15,8 +15,10 @@
 
   var LIVE_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-data/data/pulse.json';
   var LOCAL_URL = 'data/pulse.json';
-  var TOPIC_ORDER = ['local', 'news', 'tech', 'business', 'science',
-                     'culture', 'politics', 'sports', 'gaming', 'reddit', 'pods'];
+  /* reddit rides shotgun after LOCAL — Burlington Pulse means the town's
+     own conversation ranks above the national topic split */
+  var TOPIC_ORDER = ['local', 'reddit', 'news', 'tech', 'business', 'science',
+                     'culture', 'politics', 'sports', 'gaming', 'pods'];
   var TOPIC_LABEL = { all: 'All topics', local: 'Local', reddit: 'Reddit', pods: 'Podcasts' };
   var FEED_PAGE = 120;      // headlines per MORE click — a page, not a pit
   var READ_CAP = 4000;      // read-marks kept before pruning oldest
@@ -31,7 +33,7 @@
     view: 'feed',
     q: '',
     shown: FEED_PAGE,
-    set: { theme: 'auto', fs: 17, limit: 10, autohide: false, thumbs: false, hidden: {} },
+    set: { theme: 'auto', fs: 17, limit: 10, autohide: false, thumbs: true, hidden: {} },
     read: {},
   };
   var srcMap = {};
@@ -174,7 +176,8 @@
     var html = ['all'].concat(TOPIC_ORDER).filter(function (t) { return present[t]; })
       .map(function (t) {
         var on = !state.source && state.topic === t;
-        return '<button class="tab' + (t === 'local' ? ' t-local' : '') +
+        var accent = (t === 'local' || t === 'reddit') ? ' t-' + t : '';
+        return '<button class="tab' + accent +
           '" data-topic="' + t + '" aria-pressed="' + on + '">' +
           esc(topicLabel(t)) + '</button>';
       }).join('');
@@ -185,6 +188,8 @@
     var pool = visibleSources(state.topic).filter(function (src) { return src.n > 0; });
     pool.sort(function (a, b) {
       if (!!a.local !== !!b.local) return a.local ? -1 : 1;
+      var pa = a.pr || 500, pb = b.pr || 500;   /* curated leads, then A–Z */
+      if (pa !== pb) return pa - pb;
       return a.short.localeCompare(b.short);
     });
     var html = '<button class="srcchip" data-source="" aria-pressed="' + !state.source +
