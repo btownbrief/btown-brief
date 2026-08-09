@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.btownbrief.pulse-dispatch</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/sh</string>
+    <string>/Users/stephendavis/btownbrief/btown-brief/infrastructure/pulse_dispatch.sh</string>
+  </array>
+  <!-- :x5, offset from the workflow's own :x3 cron so the two interleave. -->
+  <key>StartCalendarInterval</key>
+  <array>
+    <dict><key>Minute</key><integer>5</integer></dict>
+    <dict><key>Minute</key><integer>15</integer></dict>
+    <dict><key>Minute</key><integer>25</integer></dict>
+    <dict><key>Minute</key><integer>35</integer></dict>
+    <dict><key>Minute</key><integer>45</integer></dict>
+    <dict><key>Minute</key><integer>55</integer></dict>
+  </array>
+  <key>StandardOutPath</key><string>/tmp/pulse-dispatch.log</string>
+  <key>StandardErrorPath</key><string>/tmp/pulse-dispatch.log</string>
+</dict>
+</plist>

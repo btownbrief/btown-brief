@@ -14,6 +14,7 @@
   'use strict';
 
   var LIVE_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-data/data/pulse.json';
+  var META_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-data/data/pulse-meta.json';
   var LOCAL_URL = 'data/pulse.json';
   /* reddit rides shotgun after LOCAL — Burlington Pulse means the town's
      own conversation ranks above the national topic split */
@@ -214,6 +215,14 @@
       var label = fmtAge(age / 1000);
       bits.push(label === 'NOW' ? 'updated just now'
                                 : 'updated ' + label.toLowerCase() + ' ago');
+    }
+    if (state.checked) {
+      /* quiet spell honesty: the pipeline looked recently, found nothing new */
+      var checkedAge = Date.now() - Date.parse(state.checked);
+      var genAge = age ? Date.now() - age : 0;
+      if (age && genAge > 20 * 60000 && checkedAge < genAge - 4 * 60000) {
+        bits.push('checked ' + fmtAge(Date.parse(state.checked) / 1000).toLowerCase() + ' ago');
+      }
     }
     if (state.stale) bits.push('cached copy');
     var line = bits.join(' · ');
@@ -524,8 +533,18 @@
 
   var pendingFresh = null;
 
+  function pollMeta() {
+    if (isLocalDev()) return;
+    fetchJSON(META_URL, 6000).then(function (meta) {
+      if (!meta || !meta.checked) return;
+      state.checked = meta.checked;
+      if (state.data && state.lastCount) renderCount(state.lastCount[0], state.lastCount[1]);
+    }).catch(function () {});
+  }
+
   function checkFresh() {
     if (!state.data || document.hidden || isLocalDev()) return;
+    pollMeta();
     fetchJSON(LIVE_URL, 8000).then(function (json) {
       if (!json || json.generated === state.data.generated) return;
       if (window.scrollY < 300) { applyData(json); return; }
@@ -696,4 +715,5 @@
   if (state.q) { $('search-row').hidden = false; $('search-input').value = state.q; }
   bind();
   loadData();
+  pollMeta();
 })();

@@ -63,22 +63,32 @@ jobs:
       - name: Refresh pulse data
         run: |
           python3 scripts/refresh_pulse.py --selftest
-          mkdir -p /tmp/pulse-out
+          mkdir -p /tmp/pulse-out/data
           python3 scripts/refresh_pulse.py \
             --store /tmp/pulse-prev.json \
             --out /tmp/pulse-out/data/pulse.json
 
+      - name: Write the check receipt
+        # Published even when nothing new arrived, so the page can honestly
+        # say "updated 40m ago · checked 2m ago" instead of just looking
+        # stale. `generated` still only advances when content changes.
+        run: |
+          if [ -s /tmp/pulse-out/data/pulse.json ]; then
+            GEN=$(python3 -c "import json;print(json.load(open('/tmp/pulse-out/data/pulse.json'))['generated'])")
+          else
+            GEN=$(python3 -c "import json;print(json.load(open('/tmp/pulse-prev.json'))['generated'])")
+            cp /tmp/pulse-prev.json /tmp/pulse-out/data/pulse.json
+          fi
+          printf '{"checked":"%s","generated":"%s"}\n' \
+            "$(date -u +%FT%TZ)" "$GEN" > /tmp/pulse-out/data/pulse-meta.json
+
       - name: Force-push the single-commit pulse-data branch
         run: |
-          if [ ! -s /tmp/pulse-out/data/pulse.json ]; then
-            echo "No new items this run — branch left as-is."
-            exit 0
-          fi
           cd /tmp/pulse-out
           git init -q -b pulse-data
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/pulse.json
+          git add data/pulse.json data/pulse-meta.json
           git commit -q -m "Pulse data $(date -u +%FT%TZ)"
           git push -q --force \
             "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
