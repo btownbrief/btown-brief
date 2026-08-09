@@ -17,8 +17,12 @@ name: Refresh Pulse headlines
 
 on:
   schedule:
-    # Every 20 minutes, off the crowded :00 marks.
-    - cron: '7,27,47 * * * *'
+    # Every 10 minutes, off the crowded :00/:15/:30 marks. GitHub sheds
+    # scheduled ticks under load (three of the first four 20-minute slots
+    # never fired on day one) — denser slots make the misses not matter,
+    # and the refresh script's no-new-items skip keeps surplus runs from
+    # pushing anything, so the effective publish rate stays content-driven.
+    - cron: '3,13,23,33,43,53 * * * *'
   workflow_dispatch:
 
 permissions:
