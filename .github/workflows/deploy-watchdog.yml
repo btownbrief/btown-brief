@@ -1,0 +1,51 @@
+name: Deploy watchdog
+
+# Unsticks the Pages deploy pipeline when a run wedges in "waiting".
+#
+# On 2026-08-07 a deploy run got stuck at the github-pages environment
+# gate (a GitHub-side glitch — the environment has no reviewers or wait
+# timer, so there was nothing to approve). Because pages-deploy.yml
+# serializes deploys with a concurrency group, that zombie held the lock
+# for two days: every later deploy queued behind it and was cancelled,
+# and the live site silently froze while all refresh workflows stayed
+# green. There is no workflow setting that times out a run stuck in
+# "waiting" (job timeouts only start once a job runs), so this watchdog
+# cancels any deploy run waiting longer than an hour, then dispatches a
+# fresh deploy in case nothing was queued behind the zombie.
+#
+# A legitimate deploy is never in "waiting" for more than seconds, so an
+# hour-old waiting run is always a wedge.
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  unstick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel deploy runs stuck in waiting
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          stuck=$(gh api "repos/$REPO/actions/workflows/pages-deploy.yml/runs?status=waiting&per_page=100" \
+            --jq '.workflow_runs[] | select((now - (.created_at | fromdateiso8601)) > 3600) | .id')
+
+          if [ -z "$stuck" ]; then
+            echo "No wedged deploy runs."
+            exit 0
+          fi
+
+          for id in $stuck; do
+            echo "Cancelling run $id (waiting > 1h)"
+            gh api -X POST "repos/$REPO/actions/runs/$id/cancel" ||
+              gh api -X POST "repos/$REPO/actions/runs/$id/force-cancel"
+          done
+
+          echo "Dispatching a fresh deploy"
+          gh workflow run pages-deploy.yml
