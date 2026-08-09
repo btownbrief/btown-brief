@@ -112,7 +112,7 @@ NEWSLETTER_NOISE_RE = re.compile(
     r"^welcome to\b|confirm your|verify your|set (?:a new )?password|"
     r"subscription (?:confirmed|received)|you'?re on the list|"
     r"^you'?re in\b|you'?ve subscribed|complete your sign ?up|"
-    r"^sign in\b|here'?s your free gift", re.I)
+    r"^sign in\b|here'?s your free gift|login details", re.I)
 
 # The Burlington subs ride along via their public per-tag streams (kept from
 # the chatter era) until they live in the local folder proper. Each entry:
@@ -826,8 +826,15 @@ def run(args):
         sys.exit(f"roster has only {len(sources)} sources — refusing to run")
 
     previous = load_json(args.store or args.out, {})
+    newsletter_ids = {source["id"] for source in sources
+                      if source["topic"] == "newsletters"}
     prev_by_source = {}
     for item in previous.get("items", []):
+        # the noise filter guards ingestion; this guards the rolling store,
+        # so widening the pattern also scrubs junk that already got in
+        if item.get("s") in newsletter_ids and \
+                NEWSLETTER_NOISE_RE.search(item.get("t", "")):
+            continue
         prev_by_source.setdefault(item.get("s"), []).append(
             {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
                                   "r", "h", "hc", "x") if k in item})
