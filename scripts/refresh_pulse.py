@@ -110,9 +110,9 @@ WEBCOPY_URL_RE = re.compile(
 # Subscription plumbing, not editions — skipped outright.
 NEWSLETTER_NOISE_RE = re.compile(
     r"^welcome to\b|confirm your|verify your|set (?:a new )?password|"
-    r"subscription (?:confirmed|received)|you'?re on the list|"
-    r"^you'?re in\b|you'?ve subscribed|complete your sign ?up|"
-    r"^sign in\b|here'?s your free gift|login details", re.I)
+    r"subscription (?:confirmed|received)|you[’']?re on the list|"
+    r"^you[’']?re in\b|you[’']?ve subscribed|complete your sign ?up|"
+    r"^sign in\b|here[’']?s your free gift|login details", re.I)
 
 # The Burlington subs ride along via their public per-tag streams (kept from
 # the chatter era) until they live in the local folder proper. Each entry:
