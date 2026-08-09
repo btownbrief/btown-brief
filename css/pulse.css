@@ -324,6 +324,19 @@ button {
 .fi.has-thumb:hover .thumb { filter: none; }
 .fi.read .thumb { opacity: .45; }
 
+/* discussion-thread suffixes ([r/tech], [hn·214]) */
+.disc {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .05em;
+  color: var(--faint);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.disc:hover { color: var(--accent); }
+.src-sec .disc { margin-left: 6px; }
+.fi-disc { margin-top: 3px; }
+
 /* single-source header */
 .solo-head {
   max-width: 680px;

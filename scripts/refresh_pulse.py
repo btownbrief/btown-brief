@@ -369,6 +369,15 @@ def item_image(node):
     return ""
 
 
+# Discussion feeds describe their threads inside item descriptions:
+# a subreddit item ends with `<a href="…">[link]</a>` naming the submitted
+# article, and hnrss items carry "Comments URL: <a …>" plus "# Comments: N".
+REDDIT_OUT_RE = re.compile(r'href="(https?://[^"]+)"\s*>\s*\[link\]', re.I)
+HN_THREAD_RE = re.compile(
+    r'Comments URL:\s*<a href="(https://news\.ycombinator\.com/item\?id=\d+)"', re.I)
+HN_COUNT_RE = re.compile(r'#\s*Comments:\s*(\d+)', re.I)
+
+
 def parse_stream(raw):
     """Inoreader folder RSS → items tagged with their origin feed.
 
@@ -378,15 +387,37 @@ def parse_stream(raw):
     items = []
     for node in ET.fromstring(raw).iter("item"):
         source = node.find("source")
-        items.append({
+        site = clean_space(source.get("url") if source is not None else "")
+        item = {
             "title": trim(strip_html(first_text(node, "title")), TITLE_MAX),
             "url": canon_url(first_text(node, "link")),
             "when": parse_time(first_text(node, "pubDate")),
             "audio": item_audio(node),
             "image": item_image(node),
             "src_title": clean_space(source.text if source is not None else ""),
-            "src_site": clean_space(source.get("url") if source is not None else ""),
-        })
+            "src_site": site,
+        }
+        if "reddit.com" in site or "ycombinator.com" in site:
+            desc = node.findtext("description") or ""
+            if "reddit.com" in site:
+                # Take the LAST [link] anchor: reddit's own footer link is
+                # always last, while a post body can contain a crafted
+                # "[link]" anchor pointing anywhere (spam-pins a badge).
+                match = None
+                for found in REDDIT_OUT_RE.finditer(desc):
+                    match = found
+                if match:
+                    out = canon_url(html.unescape(match.group(1)))
+                    if out and "reddit.com" not in out:  # text posts link back to reddit
+                        item["out"] = out
+            else:
+                match = HN_THREAD_RE.search(desc)
+                if match:
+                    item["thread"] = html.unescape(match.group(1))
+                match = HN_COUNT_RE.search(desc)
+                if match:
+                    item["thread_n"] = min(int(match.group(1)), 99999)
+        items.append(item)
     return items
 
 
@@ -520,6 +551,12 @@ def merge_source(previous, incoming, now_ts):
             fresh["a"] = item["audio"]
         if item.get("image"):
             fresh["i"] = item["image"]
+        if item.get("out"):
+            fresh["o"] = item["out"]
+        if item.get("thread"):
+            fresh["du"] = item["thread"]
+        if item.get("thread_n") is not None:
+            fresh["dn"] = item["thread_n"]
         key = dedupe_key(item["url"])
         held = by_key.get(key)
         if held is None:
@@ -531,29 +568,88 @@ def merge_source(previous, incoming, now_ts):
             # that re-stamp pubDate on edits would otherwise yo-yo to the top.
             held["t"] = fresh["t"]
             held["d"] = min(held.get("d", ts), ts)
-            for field in ("a", "i"):
-                if fresh.get(field):
-                    held[field] = fresh[field]
+            for field in ("a", "i", "o", "du", "dn"):
+                if fresh.get(field) is not None:
+                    held[field] = fresh[field]  # dn: comment counts move, keep newest
     merged = sorted(by_key.values(), key=lambda entry: entry.get("d", 0),
                     reverse=True)
     return merged[:ITEM_CAP], added
 
 
+DISCUSSION_HOSTS = ("reddit.com", "ycombinator.com")
+
+
+def is_discussion_source(source):
+    site = source.get("site") or ""
+    return any(host in site for host in DISCUSSION_HOSTS)
+
+
+def attach_discussions(sources, per_source):
+    """Pin [r/sub] and [hn] threads onto matching headlines — no API calls.
+
+    The streams already carry the discussions: a subreddit item's description
+    names the article it submitted ("o" — persisted so a match can still be
+    made after the post leaves the sub's RSS window), and the HN feed's items
+    link the article directly with the thread in their description ("du"/
+    "dn"). Match either against every stored headline by normalized URL.
+    Attached keys persist through the rolling store, so a match sticks.
+
+    Discussion sources are excluded from the index: an HN item's URL IS the
+    article URL, and letting it claim the slot would leave the publisher's
+    copy — the one meant to wear the badge — unmatched.
+    """
+    discussion_ids = {src["id"] for src in sources if is_discussion_source(src)}
+    index = {}
+    for source in sources:
+        if source["id"] in discussion_ids:
+            continue
+        for item in per_source.get(source["id"], []):
+            index.setdefault(dedupe_key(item["u"]), item)
+    # roster order, not set order: when two subs submit the same article the
+    # winner must not flip with PYTHONHASHSEED between runs
+    for source in sources:
+        if source["id"] not in discussion_ids or "reddit.com" not in (source["site"] or ""):
+            continue
+        for item in per_source.get(source["id"], []):
+            if not item.get("o"):
+                continue
+            target = index.get(dedupe_key(item["o"]))
+            if target is not None:
+                target["r"] = item["u"]
+    for items in per_source.values():
+        for item in items:
+            if not item.get("du"):
+                continue
+            target = index.get(dedupe_key(item["u"]))
+            if target is not None and target is not item:
+                target["h"] = item["du"]
+                if item.get("dn") is not None:
+                    target["hc"] = item["dn"]
+
+
 def build_payload(sources, per_source, generated):
     out_sources, out_items = [], []
     seen_urls = set()
-    for source in sources:
+    kept = {}
+    # One URL, one headline, site-wide — claimed in two passes: regular
+    # sources first, then the discussion feeds. When Ars and the HN front
+    # page carry the same story, the publisher keeps it (wearing the [hn]
+    # badge attach_discussions pinned) and HN's copy is the duplicate that
+    # drops. Within a pass, folder order decides (ESPN main vs ESPN NFL,
+    # the legacy VPR feed shadowing Vermont Public).
+    ordered = ([source for source in sources if not is_discussion_source(source)]
+               + [source for source in sources if is_discussion_source(source)])
+    for source in ordered:
         items = []
         for item in per_source.get(source["id"], []):
-            # One URL, one headline, site-wide. Duplicate subscriptions and
-            # syndicated wire copies (ESPN main vs ESPN NFL, the legacy VPR
-            # feed shadowing Vermont Public) collapse to whichever source
-            # comes first in folder order.
             key = dedupe_key(item["u"])
             if key in seen_urls:
                 continue
             seen_urls.add(key)
             items.append(item)
+        kept[source["id"]] = items
+    for source in sources:
+        items = kept.get(source["id"], [])
         podcast = source["podcast"] or any(item.get("a") for item in items)
         entry = {
             "id": source["id"], "name": source["name"],
@@ -600,7 +696,8 @@ def run(args):
     prev_by_source = {}
     for item in previous.get("items", []):
         prev_by_source.setdefault(item.get("s"), []).append(
-            {k: item[k] for k in ("t", "u", "d", "a", "i") if k in item})
+            {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
+                                  "r", "h", "hc") if k in item})
 
     by_site, by_title = source_index(sources)
     fresh_by_source = {}
@@ -633,6 +730,8 @@ def run(args):
             fresh_by_source.get(source["id"], []), now_ts)
         per_source[source["id"]] = merged
         added_total += added
+
+    attach_discussions(sources, per_source)
 
     prev_total = len(previous.get("items", []))
     if not args.seed and prev_total and added_total == 0:
@@ -693,6 +792,21 @@ STREAM_FIXTURE = b"""<?xml version="1.0" encoding="utf-8"?>
 <pubDate>Sun, 09 Aug 2026 11:00:00 +0000</pubDate>
 <enclosure type="image/jpeg" url="https://example.com/b.jpg"></enclosure>
 <source url="https://example.com/">Example Wire</source></item>
+<item><title>Big and loud story</title>
+<link>https://example.com/a?id=7</link>
+<pubDate>Sun, 09 Aug 2026 11:30:00 +0000</pubDate>
+<description><![CDATA[<p>Article URL: <a href="https://example.com/a?id=7">x</a></p><p>Comments URL: <a href="https://news.ycombinator.com/item?id=123">x</a></p><p>Points: 5</p><p># Comments: 18</p>]]></description>
+<source url="https://news.ycombinator.com/">Hacker News: Front Page</source></item>
+<item><title>reddit take</title>
+<link>https://www.reddit.com/r/technology/comments/abc/x/</link>
+<pubDate>Sun, 09 Aug 2026 11:20:00 +0000</pubDate>
+<description><![CDATA[<p>body with a crafted <a href="https://evil.example/fake">[link]</a> in it</p> submitted by <a href="https://www.reddit.com/user/u">/u/u</a> <a href="https://example.com/a?utm_source=z&amp;id=7">[link]</a> <a href="https://www.reddit.com/r/technology/comments/abc/x/">[comments]</a>]]></description>
+<source url="https://www.reddit.com/r/technology/">Technology</source></item>
+<item><title>reddit self post</title>
+<link>https://www.reddit.com/r/technology/comments/def/y/</link>
+<pubDate>Sun, 09 Aug 2026 11:10:00 +0000</pubDate>
+<description><![CDATA[<p>just talking</p> submitted by <a href="https://www.reddit.com/user/u">/u/u</a> <a href="https://www.reddit.com/r/technology/comments/def/y/">[link]</a> <a href="https://www.reddit.com/r/technology/comments/def/y/">[comments]</a>]]></description>
+<source url="https://www.reddit.com/r/technology/">Technology</source></item>
 </channel></rss>"""
 
 
@@ -711,13 +825,56 @@ def selftest():
     assert dedupe_key("https://a.com/p?q=1") != dedupe_key("https://a.com/p?q=2")
 
     items = parse_stream(STREAM_FIXTURE)
-    assert len(items) == 2
+    assert len(items) == 5
     assert items[0]["title"] == "Big & loud story"
     assert items[0]["url"] == "https://example.com/a?id=7"
     assert items[0]["audio"].endswith(".mp3")
     assert items[0]["src_title"] == "Example Wire"
     assert items[0]["image"] == ""
     assert items[1]["image"].endswith("b.jpg") and items[1]["audio"] == ""
+    assert items[2]["thread"].endswith("item?id=123") and items[2]["thread_n"] == 18
+    # utm stripped, and the LAST [link] wins so a crafted body anchor can't spoof
+    assert items[3]["out"] == "https://example.com/a?id=7"
+    assert "out" not in items[4]  # self post: footer [link] targets reddit itself
+
+    # deliberately production-like ordering: the HN feed sits BEFORE most
+    # publishers in the roster, and must not steal the publisher's index slot
+    per = {
+        "hn": [{"t": "hn", "u": "https://example.com/a?id=7", "d": 4,
+                "du": "https://news.ycombinator.com/item?id=123", "dn": 18}],
+        "wire": [{"t": "x", "u": "https://example.com/a?id=7", "d": 5}],
+        "r-tech": [{"t": "rt", "u": "https://www.reddit.com/r/technology/comments/abc/x/",
+                    "d": 3, "o": "https://example.com/a?id=7"}],
+    }
+    roster_stub = [
+        {"id": "hn", "site": "https://news.ycombinator.com/"},
+        {"id": "wire", "site": "https://example.com/"},
+        {"id": "r-tech", "site": "https://www.reddit.com/r/technology/"},
+    ]
+    attach_discussions(roster_stub, per)
+    assert per["wire"][0]["r"] == "https://www.reddit.com/r/technology/comments/abc/x/"
+    assert per["wire"][0]["h"].endswith("id=123") and per["wire"][0]["hc"] == 18
+    assert "r" not in per["hn"][0] and "h" not in per["hn"][0]
+
+    # and in the payload the publisher's copy must be the survivor
+    payload = build_payload(
+        [{"id": "hn", "name": "HN", "site": "https://news.ycombinator.com/",
+          "topic": "tech", "local": False, "podcast": False},
+         {"id": "wire", "name": "Wire", "site": "https://example.com/",
+          "topic": "news", "local": False, "podcast": False}],
+        {"hn": list(per["hn"]), "wire": list(per["wire"])}, utcnow())
+    assert [entry["n"] for entry in payload["sources"]] == [0, 1]
+    assert payload["items"][0]["s"] == "wire" and payload["items"][0]["h"]
+
+    # merge carries the discussion keys, including a count falling to zero
+    carried, _ = merge_source(
+        [{"t": "hn", "u": "https://x.com/a", "d": 4,
+          "du": "https://news.ycombinator.com/item?id=9", "dn": 7}],
+        [{"title": "hn", "url": "https://x.com/a", "audio": "", "image": "",
+          "thread": "https://news.ycombinator.com/item?id=9", "thread_n": 0,
+          "when": datetime.fromtimestamp(1_754_000_000, tz=timezone.utc)}],
+        1_754_000_000)
+    assert carried[0]["dn"] == 0 and carried[0]["du"].endswith("id=9")
 
     outlines = parse_opml(
         b'<opml><body><outline text="F"><outline title="A" text="A" type="rss"'

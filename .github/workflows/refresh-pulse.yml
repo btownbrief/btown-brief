@@ -58,6 +58,7 @@ jobs:
 
       - name: Refresh pulse data
         run: |
+          python3 scripts/refresh_pulse.py --selftest
           mkdir -p /tmp/pulse-out
           python3 scripts/refresh_pulse.py \
             --store /tmp/pulse-prev.json \
