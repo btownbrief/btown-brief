@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burlington Pulse — Burlington Brief</title>
+  <meta name="description" content="Every local headline next to the national wire. 80+ curated sources, one dense feed — no algorithm, no infinite scroll, updated every 20 minutes.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Btown Brief">
+  <meta property="og:title" content="Burlington Pulse">
+  <meta property="og:description" content="Every local headline next to the national wire. 80+ curated sources, one dense feed — no algorithm, no infinite scroll.">
+  <meta property="og:url" content="https://guide.btownbrief.com/pulse.html">
+  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Burlington Pulse">
+  <meta name="twitter:description" content="Every local headline next to the national wire. 80+ curated sources, one dense feed — no algorithm, no infinite scroll.">
+  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <script>
+    /* Theme before first paint. Explicit choice wins; AUTO follows the same
+       cached sunrise/sunset the rest of the guide uses (js/auto-theme.js
+       writes it); no cache yet means dark — this page's native mood. */
+    (function () {
+      var theme = 'dark';
+      try {
+        var stored = JSON.parse(localStorage.getItem('pulse2-settings') || 'null');
+        var pick = stored && stored.theme;
+        if (pick === 'light' || pick === 'dark') {
+          theme = pick;
+        } else {
+          var sun = JSON.parse(localStorage.getItem('btown-sun') || 'null');
+          if (sun) {
+            var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
+              year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+            if (sun.day === today) {
+              var now = Date.now();
+              theme = (now >= sun.rise && now < sun.set) ? 'light' : 'dark';
+            }
+          }
+        }
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="css/pulse.css">
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2471867016612559');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel -->
+</head>
+<body>
+
+  <header class="mast" id="mast">
+    <div class="mast-row">
+      <h1 class="mast-title">Burlington&nbsp;Pulse</h1>
+      <div class="mast-icons">
+        <button class="ic" id="theme-btn" aria-label="Toggle light or dark" title="Light / dark">◐</button>
+        <button class="ic" id="settings-btn" aria-label="Open settings" aria-expanded="false" title="Settings">⚙</button>
+        <button class="ic" id="search-btn" aria-label="Search headlines" aria-expanded="false" title="Search ( / )">⌕</button>
+      </div>
+    </div>
+    <p class="mast-tag">Every local headline next to the national wire</p>
+    <div class="mast-row mast-sub">
+      <p class="mast-count" id="count-line" aria-live="polite">Taking the pulse…</p>
+      <div class="viewtog" role="group" aria-label="View">
+        <button class="vt" id="view-feed" data-view="feed" aria-pressed="true">Feed</button>
+        <button class="vt" id="view-sources" data-view="sources" aria-pressed="false">By source</button>
+      </div>
+    </div>
+
+    <div class="search-row" id="search-row" hidden>
+      <input type="search" id="search-input" placeholder="SEARCH ALL HEADLINES"
+             autocomplete="off" aria-label="Search all headlines">
+      <button class="ic" id="search-clear" aria-label="Close search">✕</button>
+    </div>
+
+    <nav class="tabs" id="topic-tabs" aria-label="Topics"></nav>
+    <nav class="srcbar" id="source-bar" aria-label="Sources"></nav>
+  </header>
+
+  <main class="body-wrap">
+    <div id="pulse-body">
+      <p class="empty" id="loading-note">TAKING THE PULSE…</p>
+    </div>
+    <button class="more" id="more-btn" type="button" hidden>MORE HEADLINES ↓</button>
+  </main>
+
+  <div class="player" id="player" hidden>
+    <span class="player-title" id="player-title"></span>
+    <audio id="player-audio" controls preload="none"></audio>
+    <button class="ic" id="player-close" aria-label="Close player">✕</button>
+  </div>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="drawer" id="drawer" hidden aria-label="Settings">
+    <div class="drawer-head">
+      <button class="ic" id="drawer-close" aria-label="Close settings">✕</button>
+      <span class="drawer-title">Settings</span>
+    </div>
+
+    <h2 class="set-label">Theme</h2>
+    <div class="pillrow" id="theme-pills" role="group" aria-label="Theme">
+      <button class="pill" data-theme-pick="auto">Auto</button>
+      <button class="pill" data-theme-pick="light">Light</button>
+      <button class="pill" data-theme-pick="dark">Dark</button>
+    </div>
+    <p class="set-note">Auto follows Burlington's actual sunrise and sunset, like the rest of the guide.</p>
+
+    <h2 class="set-label">Text size</h2>
+    <div class="fsrow">
+      <input type="range" id="fs-range" min="12" max="28" step="1" aria-label="Headline text size">
+      <span class="fs-val" id="fs-val">17</span>
+    </div>
+
+    <h2 class="set-label">Headlines per source</h2>
+    <div class="pillrow" id="limit-pills" role="group" aria-label="Headlines per source">
+      <button class="pill" data-limit="5">5</button>
+      <button class="pill" data-limit="10">10</button>
+      <button class="pill" data-limit="15">15</button>
+      <button class="pill" data-limit="20">20</button>
+    </div>
+    <p class="set-note">Applies to the by-source view.</p>
+
+    <h2 class="set-label">Read articles</h2>
+    <div class="setrow">
+      <span>Auto-hide read<small>Automatically hide articles you've already opened</small></span>
+      <div class="pillrow" id="hide-pills" role="group" aria-label="Auto-hide read">
+        <button class="pill" data-hide="off">Off</button>
+        <button class="pill" data-hide="on">On</button>
+      </div>
+    </div>
+
+    <h2 class="set-label">Thumbnails</h2>
+    <div class="setrow">
+      <span>Show photos<small>Feed view only, grayscale, straight from each outlet — the by-source view stays pure text</small></span>
+      <div class="pillrow" id="thumb-pills" role="group" aria-label="Thumbnails">
+        <button class="pill" data-thumbs="off">Off</button>
+        <button class="pill" data-thumbs="on">On</button>
+      </div>
+    </div>
+
+    <h2 class="set-label">Sources <button class="pill pill-end" id="show-all-btn" type="button">Show all</button></h2>
+    <p class="set-note">Toggle sources on or off — everything else on the page follows.</p>
+    <div id="source-toggles"></div>
+  </aside>
+
+  <footer class="foot">
+    <p class="foot-creed">No algorithm. No infinite scroll. Just the headlines.</p>
+    <p><a class="foot-news" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse" target="_blank" rel="noopener">The daily email for Burlington → sign up free</a></p>
+    <p class="foot-meta">A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project · Burlington, Vermont ·
+       Sources curated in <a href="https://www.inoreader.com" target="_blank" rel="noopener">Inoreader</a> · Refreshed every 20 minutes</p>
+  </footer>
+
+  <noscript><p class="empty">Burlington Pulse needs JavaScript to load the headline feed.</p></noscript>
+  <script src="js/pulse.js"></script>
+  <script src="https://play.btownbrief.com/nav.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+name: Refresh Pulse headlines
+
+# Rebuilds the Burlington Pulse payload (local + national headlines from the
+# two public Inoreader folders) every 20 minutes:
+#   scripts/refresh_pulse.py -> data/pulse.json on the `pulse-data` branch
+#
+# The branch is force-pushed as a single orphan commit each run — history
+# for a headline ticker is pure noise, and 72 commits/day would bury main.
+# pulse.html fetches the file from raw.githubusercontent.com (CORS-open,
+# ~5 minute edge cache), so headline freshness never queues a Pages deploy.
+# That is why this workflow is deliberately NOT in pages-deploy.yml's
+# workflow_run list; data/pulse.json on main is only a first-paint fallback.
+#
+# Failure posture: the script refuses to write a suspiciously small payload
+# and exits non-zero on any hard fetch failure, so a bad run pushes nothing
+# and the page keeps the last good data.
+
+on:
+  schedule:
+    # Every 20 minutes, off the crowded :00 marks.
+    - cron: '7,27,47 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# A manual run and a scheduled run racing at push would strand one of them.
+concurrency:
+  group: refresh-pulse
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pull previous payload from the pulse-data branch
+        run: |
+          if git fetch -q origin pulse-data --depth 1 2>/dev/null; then
+            git show FETCH_HEAD:data/pulse.json > /tmp/pulse-prev.json || true
+          fi
+          # First run (or wiped branch): fall back to the snapshot on main.
+          if [ ! -s /tmp/pulse-prev.json ]; then
+            cp data/pulse.json /tmp/pulse-prev.json 2>/dev/null || true
+          fi
+
+      - name: Refresh pulse data
+        run: |
+          mkdir -p /tmp/pulse-out
+          python3 scripts/refresh_pulse.py \
+            --store /tmp/pulse-prev.json \
+            --out /tmp/pulse-out/data/pulse.json
+
+      - name: Force-push the single-commit pulse-data branch
+        run: |
+          cd /tmp/pulse-out
+          git init -q -b pulse-data
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/pulse.json
+          git commit -q -m "Pulse data $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            pulse-data
