@@ -444,7 +444,7 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 24px;
+  bottom: 70px;   /* clears the podcast player bar when it's open */
   z-index: 40;
   font-family: var(--mono);
   font-size: 10px;

@@ -38,12 +38,14 @@ CLI:
 
 import argparse
 import concurrent.futures
+import hashlib
 import html
 import json
 import os
 import re
 import sys
 import time
+from collections import Counter
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -74,10 +76,10 @@ TITLE_MAX = 200
 MIN_SOURCES = 40       # roster sanity floor (folders hold ~90 today)
 MIN_ITEMS = 150        # payload sanity floor after the folders are warm
 
-# Query params that only track; everything else in a URL is kept (YouTube
-# needs ?v=, Google News needs its blob, etc).
-TRACKING_PARAMS = ("utm_", "fbclid", "gclid", "mc_cid", "mc_eid", "cmpid",
-                   "smid", "ncid", "ftag", "rss")
+# Query params that only track — matched EXACTLY (plus the utm_ prefix);
+# everything else in a URL is kept (YouTube needs ?v=, feeds use ?rssid=…).
+TRACKING_PARAMS = {"utm", "fbclid", "gclid", "mc_cid", "mc_eid", "cmpid",
+                   "smid", "ncid", "ftag", "rss"}
 # Hosts that only ever serve podcast audio — marks the source as a podcast
 # even before an audio enclosure shows up in the window.
 PODCAST_HOSTS = ("buzzsprout.com", "anchor.fm", "spotify.com", "libsyn.com",
@@ -108,8 +110,8 @@ SHORT_NAMES = {
     "jokes-get-your-funny-on": "r/Jokes",
     "latest-science-news-sciencedaily": "ScienceDaily",
     "load-in-through-the-back": "Load-In",
-    "local-news": "Vermont Public",
-    "local-news-2": "VPR Legacy",
+    "local-news-2310": "Vermont Public",
+    "local-news-a7bd": "VPR Legacy",
     "marketwatch-com-top-stories": "MarketWatch",
     "nba": "r/NBA",
     "nbc-news-top-stories": "NBC News",
@@ -196,15 +198,33 @@ def canon_url(url):
     if not url:
         return ""
     parts = urllib.parse.urlsplit(url)
-    query = "&".join(
-        pair for pair in parts.query.split("&")
-        if pair and not any(
-            pair.split("=", 1)[0].lower() == p.rstrip("_") or
-            pair.split("=", 1)[0].lower().startswith(p)
-            for p in TRACKING_PARAMS)
-    )
+
+    def is_tracking(pair):
+        key = pair.split("=", 1)[0].lower()
+        return key in TRACKING_PARAMS or key.startswith("utm_")
+
+    query = "&".join(pair for pair in parts.query.split("&")
+                     if pair and not is_tracking(pair))
     return urllib.parse.urlunsplit(
         (parts.scheme, parts.netloc, parts.path, query, ""))
+
+
+def dedupe_key(url):
+    """URL identity for dedupe ONLY — stored URLs stay exactly as published.
+
+    Collapses the differences publishers reshuffle between fetches: scheme,
+    host case, www., a trailing slash, and percent-escape case (Salon serves
+    %E2 and %e2 for the same story on different days).
+    """
+    parts = urllib.parse.urlsplit(url)
+    host = parts.netloc.lower()
+    if host.startswith("www."):
+        host = host[4:]
+    upper_escapes = lambda text: re.sub(  # noqa: E731 — tiny, local
+        r"%[0-9a-fA-F]{2}", lambda m: m.group(0).upper(), text)
+    path = upper_escapes(parts.path).rstrip("/") or "/"
+    query = upper_escapes(parts.query)
+    return host + path + ("?" + query if query else "")
 
 
 def norm_site(url):
@@ -309,12 +329,17 @@ def first_text(node, *tags):
 
 
 def item_audio(node):
+    candidates = []
     enclosure = node.find("enclosure")
     if enclosure is not None and (enclosure.get("type") or "").startswith("audio"):
-        return clean_space(enclosure.get("url"))
+        candidates.append(enclosure.get("url"))
     for link in node.findall("{http://www.w3.org/2005/Atom}link"):
         if (link.get("type") or "").startswith("audio"):
-            return clean_space(link.get("href"))
+            candidates.append(link.get("href"))
+    for url in candidates:  # a typed element with no URL must not end the search
+        url = clean_space(url)
+        if url:
+            return url
     return ""
 
 
@@ -327,13 +352,20 @@ def item_image(node):
     Never rehosted: the page hotlinks with referrerpolicy=no-referrer and
     collapses the slot on error, so an expired CDN URL costs nothing.
     """
+    candidates = []
     enclosure = node.find("enclosure")
     if enclosure is not None and (enclosure.get("type") or "").startswith("image"):
-        return clean_space(enclosure.get("url"))
+        candidates.append(enclosure.get("url"))
     for media in node.findall(MEDIA + "content") + node.findall(MEDIA + "thumbnail"):
         kind = media.get("type") or ""
-        if kind.startswith("image") or (not kind and media.tag.endswith("thumbnail")):
-            return clean_space(media.get("url"))
+        medium = media.get("medium") or ""
+        if (kind.startswith("image") or medium == "image"
+                or (not kind and media.tag.endswith("thumbnail"))):
+            candidates.append(media.get("url"))
+    for url in candidates:
+        url = clean_space(url)
+        if url:
+            return url
     return ""
 
 
@@ -400,18 +432,30 @@ def build_roster(folder_outlines, topics):
 
     Identity is (title, site): Inoreader folders can hold literal duplicate
     subscriptions (two "The Charlotte News" rows today) — those collapse to
-    one source. Slugs disambiguate the rest ("local-news-2").
+    one source. Distinct sources that SHARE a title (two "Local News" feeds)
+    get a feed-URL hash suffix instead of an ordinal, so the id survives
+    OPML reordering — ordinals would swap ids and silently remap users'
+    hidden-source settings and the SHORT_NAMES table.
     """
-    sources, seen, used_ids = [], {}, set()
+    entries, seen = [], set()
     for outline, is_local in folder_outlines:
         key = (outline["title"].lower(), norm_site(outline["html"] or outline["xml"]))
         if key in seen:
             continue
-        seen[key] = True
+        seen.add(key)
+        entries.append((outline, is_local))
+    title_counts = Counter(slugify(outline["title"]) for outline, _ in entries)
+
+    sources, used_ids = [], set()
+    for outline, is_local in entries:
         base = slugify(outline["title"])
-        source_id = base
+        if title_counts[base] > 1:
+            suffix = hashlib.md5((outline["xml"] or "").encode()).hexdigest()[:4]
+            source_id = f"{base}-{suffix}"
+        else:
+            source_id = base
         bump = 2
-        while source_id in used_ids:
+        while source_id in used_ids:   # freak hash collision backstop
             source_id = f"{base}-{bump}"
             bump += 1
         used_ids.add(source_id)
@@ -459,11 +503,12 @@ def attribute(item, by_site, by_title):
 # ----------------------------------------------------------------------
 
 def merge_source(previous, incoming, now_ts):
-    """Previous payload items + fresh items → capped newest-first list."""
-    by_url = {}
+    """Previous payload items + fresh items → (capped newest-first list,
+    count of genuinely new stories) — the count feeds the staleness guard."""
+    by_key, added = {}, 0
     for item in previous:
         if item.get("u"):
-            by_url[item["u"]] = dict(item)
+            by_key[dedupe_key(item["u"])] = dict(item)
     for item in incoming:
         if not item["url"] or not item["title"] or item["when"] is None:
             continue
@@ -475,21 +520,23 @@ def merge_source(previous, incoming, now_ts):
             fresh["a"] = item["audio"]
         if item.get("image"):
             fresh["i"] = item["image"]
-        held = by_url.get(item["url"])
+        key = dedupe_key(item["url"])
+        held = by_key.get(key)
         if held is None:
-            by_url[item["url"]] = fresh
+            by_key[key] = fresh
+            added += 1
         else:
             # Same story seen again: take the freshest headline text and any
             # media that showed up, but keep the EARLIEST timestamp — feeds
             # that re-stamp pubDate on edits would otherwise yo-yo to the top.
             held["t"] = fresh["t"]
             held["d"] = min(held.get("d", ts), ts)
-            for key in ("a", "i"):
-                if fresh.get(key):
-                    held[key] = fresh[key]
-    merged = sorted(by_url.values(), key=lambda entry: entry.get("d", 0),
+            for field in ("a", "i"):
+                if fresh.get(field):
+                    held[field] = fresh[field]
+    merged = sorted(by_key.values(), key=lambda entry: entry.get("d", 0),
                     reverse=True)
-    return merged[:ITEM_CAP]
+    return merged[:ITEM_CAP], added
 
 
 def build_payload(sources, per_source, generated):
@@ -502,9 +549,10 @@ def build_payload(sources, per_source, generated):
             # syndicated wire copies (ESPN main vs ESPN NFL, the legacy VPR
             # feed shadowing Vermont Public) collapse to whichever source
             # comes first in folder order.
-            if item["u"] in seen_urls:
+            key = dedupe_key(item["u"])
+            if key in seen_urls:
                 continue
-            seen_urls.add(item["u"])
+            seen_urls.add(key)
             items.append(item)
         podcast = source["podcast"] or any(item.get("a") for item in items)
         entry = {
@@ -566,19 +614,36 @@ def run(args):
                 continue
             fresh_by_source.setdefault(source_id, []).append(item)
 
+    matched = sum(len(items) for items in fresh_by_source.values())
+    if unmatched > matched:
+        # If most stream items can't be attributed, Inoreader changed its
+        # output (or the OPML and streams disagree) — publishing would freeze
+        # the feed while stamping it fresh. Fail loudly instead.
+        sys.exit(f"{unmatched} stream items unattributed vs {matched} matched "
+                 "— attribution looks broken, refusing to write")
+
     if args.seed:
         seed_direct(sources, fresh_by_source)
 
     now_ts = int(utcnow().timestamp())
-    per_source = {}
+    per_source, added_total = {}, 0
     for source in sources:
-        per_source[source["id"]] = merge_source(
+        merged, added = merge_source(
             prev_by_source.get(source["id"], []),
             fresh_by_source.get(source["id"], []), now_ts)
+        per_source[source["id"]] = merged
+        added_total += added
+
+    prev_total = len(previous.get("items", []))
+    if not args.seed and prev_total and added_total == 0:
+        # Nothing new anywhere: don't write at all. The workflow then skips
+        # its push, the branch keeps its honest `generated` stamp, and the
+        # page's "updated Xm ago" reflects when content actually changed.
+        print("pulse: no new items this run — leaving the last payload in place")
+        return
 
     payload = build_payload(sources, per_source, utcnow())
     total = len(payload["items"])
-    prev_total = len(previous.get("items", []))
     floor = max(MIN_ITEMS, prev_total // 2)
     if total < floor:
         sys.exit(f"payload shrank to {total} items (was {prev_total}) — refusing to write")
@@ -634,9 +699,16 @@ STREAM_FIXTURE = b"""<?xml version="1.0" encoding="utf-8"?>
 def selftest():
     assert canon_url("https://a.com/x?utm_source=b&v=1&fbclid=2#f") == "https://a.com/x?v=1"
     assert canon_url("https://www.youtube.com/watch?v=abc") == "https://www.youtube.com/watch?v=abc"
+    # exact-match only: params that merely START with a tracking name survive
+    assert canon_url("https://a.com/x?rssid=9&smid_x=1") == "https://a.com/x?rssid=9&smid_x=1"
+    assert canon_url("https://a.com/x?rss=1") == "https://a.com/x"
     assert norm_site("https://www.Example.com/") == "example.com"
     assert topic_keys("https://www.reddit.com/r/science/") == ["reddit.com/r/science", "reddit.com"]
     assert slugify("ESPN.com - NBA") == "espn-com-nba"
+
+    assert dedupe_key("https://airy.so/") == dedupe_key("http://www.airy.so")
+    assert dedupe_key("https://a.com/x%e2%80%91y") == dedupe_key("https://a.com/x%E2%80%91y")
+    assert dedupe_key("https://a.com/p?q=1") != dedupe_key("https://a.com/p?q=2")
 
     items = parse_stream(STREAM_FIXTURE)
     assert len(items) == 2
@@ -656,13 +728,27 @@ def selftest():
                           {"a.com": "tech"})
     assert len(roster) == 1 and roster[0]["topic"] == "tech"
 
+    # distinct sources sharing a title: ids are feed-URL hashes, so they are
+    # identical no matter what order the OPML lists them in
+    twins = parse_opml(
+        b'<opml><body><outline title="Local News" text="Local News" type="rss"'
+        b' xmlUrl="https://a.com/rss" htmlUrl="https://a.com/"/>'
+        b'<outline title="Local News" text="Local News" type="rss"'
+        b' xmlUrl="https://b.com/rss" htmlUrl="https://b.com/"/></body></opml>')
+    ids_fwd = {s["id"] for s in build_roster([(o, True) for o in twins], {})}
+    ids_rev = {s["id"] for s in build_roster([(o, True) for o in reversed(twins)], {})}
+    assert ids_fwd == ids_rev and len(ids_fwd) == 2
+    assert all(len(i) > len("local-news") for i in ids_fwd)
+
     now_ts = 1_754_000_000
     older = [{"t": f"old {n}", "u": f"https://a.com/{n}", "d": 100 + n}
              for n in range(ITEM_CAP)]
     fresh = [{"title": "new", "url": "https://a.com/new", "audio": "",
               "when": datetime.fromtimestamp(now_ts, tz=timezone.utc)}]
-    merged = merge_source(older, fresh, now_ts)
-    assert len(merged) == ITEM_CAP and merged[0]["t"] == "new"
+    merged, added = merge_source(older, fresh, now_ts)
+    assert len(merged) == ITEM_CAP and merged[0]["t"] == "new" and added == 1
+    merged2, added2 = merge_source(merged, fresh, now_ts)
+    assert added2 == 0 and merged2[0]["t"] == "new"
 
     payload = build_payload(
         [{"id": "a", "name": "A", "site": "https://a.com/", "topic": "tech",

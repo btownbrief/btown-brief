@@ -35,14 +35,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Guard private paths (never tracked in this public repo)
+        run: |
+          if git ls-files | grep -E '^(data/tips-inbox\.md|data/fpf-digests/|data/fpf-dropbox/|\.chatter-dev/)'; then
+            echo "::error::private tip-line files are tracked in git — aborting"
+            exit 1
+          fi
+
       - name: Pull previous payload from the pulse-data branch
         run: |
-          if git fetch -q origin pulse-data --depth 1 2>/dev/null; then
-            git show FETCH_HEAD:data/pulse.json > /tmp/pulse-prev.json || true
-          fi
-          # First run (or wiped branch): fall back to the snapshot on main.
-          if [ ! -s /tmp/pulse-prev.json ]; then
-            cp data/pulse.json /tmp/pulse-prev.json 2>/dev/null || true
+          if git ls-remote --exit-code --heads origin pulse-data >/dev/null; then
+            # The branch exists, so a fetch failure must FAIL this run —
+            # falling back to main's frozen snapshot here would force-push
+            # away the rolling store that quiet sources depend on.
+            git fetch -q origin pulse-data --depth 1
+            git show FETCH_HEAD:data/pulse.json > /tmp/pulse-prev.json
+            [ -s /tmp/pulse-prev.json ]
+          else
+            # True first run: seed from the snapshot committed on main.
+            cp data/pulse.json /tmp/pulse-prev.json
           fi
 
       - name: Refresh pulse data
@@ -54,6 +65,10 @@ jobs:
 
       - name: Force-push the single-commit pulse-data branch
         run: |
+          if [ ! -s /tmp/pulse-out/data/pulse.json ]; then
+            echo "No new items this run — branch left as-is."
+            exit 0
+          fi
           cd /tmp/pulse-out
           git init -q -b pulse-data
           git config user.name "btown-brief-bot"

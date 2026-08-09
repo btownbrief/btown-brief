@@ -156,6 +156,7 @@
 
   function render() {
     if (!state.data) return;
+    if (state.source && !srcMap[state.source]) state.source = null;
     renderTabs();
     renderSourceBar();
     renderBody();
@@ -200,13 +201,24 @@
     state.lastCount = [shownItems, sections];
     var bits = ['<strong>' + shownItems.toLocaleString('en-US') + '</strong> headlines'];
     if (state.view === 'sources' && !state.source) bits.unshift(sections + ' sources');
-    if (state.source && srcMap[state.source]) bits.push(srcMap[state.source].short);
-    else if (state.topic !== 'all') bits.push(topicLabel(state.topic));
+    if (state.source && srcMap[state.source]) bits.push(esc(srcMap[state.source].short));
+    else if (state.topic !== 'all') bits.push(esc(topicLabel(state.topic)));
     if (state.q) bits.push('“' + esc(state.q) + '”');
     var age = Date.parse(state.data.generated);
-    if (age) bits.push('updated ' + fmtAge(age / 1000).toLowerCase() + ' ago');
+    if (age) {
+      var label = fmtAge(age / 1000);
+      bits.push(label === 'NOW' ? 'updated just now'
+                                : 'updated ' + label.toLowerCase() + ' ago');
+    }
     if (state.stale) bits.push('cached copy');
-    $('count-line').innerHTML = bits.join(' · ');
+    var line = bits.join(' · ');
+    var el = $('count-line');
+    /* aria-live region: only touch it when the text really changed, or the
+       45-second age timer re-announces the whole line to screen readers */
+    if (el.getAttribute('data-line') !== line) {
+      el.setAttribute('data-line', line);
+      el.innerHTML = line;
+    }
   }
 
   function metaHTML(src, item) {
@@ -405,18 +417,30 @@
     if (state.source) parts.push('s=' + state.source);
     if (state.q) parts.push('q=' + encodeURIComponent(state.q));
     var next = parts.length ? '#' + parts.join('&') : '';
-    if (next !== location.hash) history.replaceState(null, '', location.pathname + next);
+    if (next !== location.hash) {
+      history.replaceState(null, '', location.pathname + location.search + next);
+    }
   }
 
-  function readHash() {
+  function readHash(reset) {
     var h = {};
     location.hash.replace(/^#/, '').split('&').forEach(function (pair) {
       var i = pair.indexOf('=');
       if (i > 0) h[pair.slice(0, i)] = decodeURIComponent(pair.slice(i + 1));
     });
+    if (reset) {
+      /* back/forward navigation: absent keys mean their defaults, otherwise
+         going back from #t=tech to a bare URL would leave the filter stuck */
+      state.topic = 'all';
+      state.source = null;
+      state.q = '';
+      state.view = (h.v === 'sources') ? 'sources' : 'feed';
+    }
+    /* the fragment is attacker-writable (anyone can craft a link) — only
+       known topics and slug-shaped source ids may enter state */
     if (h.v === 'sources') state.view = 'sources';
-    if (h.t) state.topic = h.t;
-    if (h.s) state.source = h.s;
+    if (h.t && (h.t === 'all' || TOPIC_ORDER.indexOf(h.t) !== -1)) state.topic = h.t;
+    if (h.s && /^[a-z0-9-]+$/.test(h.s)) state.source = h.s;
     if (h.q) state.q = h.q;
   }
 
@@ -432,18 +456,24 @@
   }
 
   function applyData(json, stale) {
+    if (!json || !Array.isArray(json.sources) || !Array.isArray(json.items)) return;
+    var map = {};
+    json.sources.forEach(function (src) { map[src.id] = src; });
     state.data = json;
     state.stale = !!stale;
-    srcMap = {};
-    json.sources.forEach(function (src) { srcMap[src.id] = src; });
+    srcMap = map;
     if (state.source && !srcMap[state.source]) state.source = null;
     render();
     renderSettingsPanel();
   }
 
-  function loadData() {
-    var local = location.protocol === 'file:' ||
+  function isLocalDev() {
+    return location.protocol === 'file:' ||
       /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname);
+  }
+
+  function loadData() {
+    var local = isLocalDev();
     var first = local ? LOCAL_URL : LIVE_URL;
     var second = local ? LIVE_URL : LOCAL_URL;
     /* "cached copy" means production had to fall back to main's snapshot;
@@ -458,11 +488,14 @@
       });
   }
 
+  var pendingFresh = null;
+
   function checkFresh() {
-    if (!state.data) return;
+    if (!state.data || document.hidden || isLocalDev()) return;
     fetchJSON(LIVE_URL, 8000).then(function (json) {
-      if (json.generated === state.data.generated) return;
+      if (!json || json.generated === state.data.generated) return;
       if (window.scrollY < 300) { applyData(json); return; }
+      pendingFresh = json;   /* keep the newest, even if the pill already exists */
       if ($('fresh-pill')) return;
       var pill = document.createElement('button');
       pill.className = 'fresh';
@@ -470,7 +503,8 @@
       pill.textContent = '↑ FRESH HEADLINES';
       pill.onclick = function () {
         pill.remove();
-        applyData(json);
+        if (pendingFresh) applyData(pendingFresh);
+        pendingFresh = null;
         window.scrollTo({ top: 0 });
       };
       document.body.appendChild(pill);
@@ -486,11 +520,14 @@
     if (open) renderSettingsPanel();
   }
 
+  var searchTimer;
+
   function openSearch(open) {
     $('search-row').hidden = !open;
     $('search-btn').setAttribute('aria-expanded', open);
-    if (open) { $('search-input').focus(); }
-    else if (state.q) { state.q = ''; $('search-input').value = ''; render(); }
+    if (open) { $('search-input').focus(); return; }
+    clearTimeout(searchTimer);   /* a keystroke in flight must not resurrect the query */
+    if (state.q) { state.q = ''; $('search-input').value = ''; render(); }
   }
 
   function bind() {
@@ -539,11 +576,10 @@
 
     $('search-btn').onclick = function () { openSearch($('search-row').hidden); };
     $('search-clear').onclick = function () { openSearch(false); };
-    var debounce;
     $('search-input').addEventListener('input', function () {
-      clearTimeout(debounce);
+      clearTimeout(searchTimer);
       var value = this.value;
-      debounce = setTimeout(function () {
+      searchTimer = setTimeout(function () {
         state.q = value.trim();
         state.shown = FEED_PAGE;
         render();
@@ -599,7 +635,11 @@
     };
 
     window.addEventListener('hashchange', function () {
-      readHash();
+      readHash(true);
+      $('view-feed').setAttribute('aria-pressed', state.view === 'feed');
+      $('view-sources').setAttribute('aria-pressed', state.view === 'sources');
+      var box = $('search-input');
+      if (box.value !== state.q) box.value = state.q;
       render();
     });
   }
