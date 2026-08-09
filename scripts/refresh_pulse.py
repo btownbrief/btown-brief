@@ -60,16 +60,59 @@ UA = "btown-brief-site/1.0 (burlington pulse refresh)"
 
 INO = "https://www.inoreader.com"
 USER = "1003590800"
-# (folder label, is_local). Folder names are URL-encoded on use.
+# (folder label, kind). Kind decides topic and behavior:
+#   national   → topic from data/pulse-topics.json
+#   local      → topic "local", counts toward the LOCAL tab, green
+#   newsletter → topic "newsletters" (email-to-feed subscriptions; item
+#                links are Inoreader-private, so items link their public
+#                web copy when one can be extracted and render unlinked
+#                otherwise — never the Inoreader sign-in wall)
 FOLDERS = [
-    ("Everything", False),
-    ("Broader Local News & Podcasts", True),
+    ("Everything", "national"),
+    ("Broader Local News & Podcasts", "local"),
+    ("Newsletters", "newsletter"),
 ]
 # Stream depth per run. The rolling store supplies history, so these only
 # need to cover everything published since the last run (~20 minutes) with
 # lots of slack; bigger numbers just re-download full article bodies.
-STREAM_N = {False: 300, True: 150}
+STREAM_N = {"national": 300, "local": 150, "newsletter": 100}
 SEED_STREAM_N = 1000  # --seed casts a wider net once
+
+# Email feeds all report htmlUrl=inoreader.com, which is useless for the
+# VISIT SITE link. Known senders get their real home; unknowns get none
+# (the page then simply omits the arrow).
+NEWSLETTER_SITES = {
+    "1440": "https://join1440.com/",
+    "7days": "https://www.sevendaysvt.com/",
+    "garbage day": "https://www.garbageday.email/",
+    "money stuff 1": "https://www.bloomberg.com/account/newsletters/money-stuff",
+    "morning brew": "https://www.morningbrew.com/",
+    "semafor": "https://www.semafor.com/newsletters",
+    "tangle": "https://www.readtangle.com/",
+    "valley news": "https://www.vnews.com/",
+    "vermont poltical observer": "https://thevpo.org/",
+    "vermont public": "https://www.vermontpublic.org/",
+    "vermont sports": "https://vtsports.com/",
+    "essex reporter": "https://www.essexreporter.com/",
+    "vtdigger": "https://vtdigger.org/",
+}
+
+# "View in browser" shapes actually seen in the folder (probed 2026-08-09):
+# a labeled anchor, or a platform archive URL. Extraction is best-effort —
+# an email without a public copy stays honest and unlinked.
+WEBCOPY_TEXT_RE = re.compile(
+    r'<a[^>]+href="([^"]+)"[^>]*>(?:(?!</a>).){0,120}?'
+    r'(?:view|read|open)[^<]{0,60}?(?:browser|online|web|email)', re.I | re.S)
+WEBCOPY_URL_RE = re.compile(
+    r'href="(https?://[^"]*?(?:campaign-archive\.com[^"]*|mailchi\.mp/[^"]+'
+    r'|substack\.com/p/[^"]+|beehiiv\.com/p/[^"]+|/p_v\.php[^"]*'
+    r'|link\.join1440\.com/view/[^"]+|/web-version[^"]*))"', re.I)
+# Subscription plumbing, not editions — skipped outright.
+NEWSLETTER_NOISE_RE = re.compile(
+    r"^welcome to\b|confirm your|verify your|set (?:a new )?password|"
+    r"subscription (?:confirmed|received)|you'?re on the list|"
+    r"^you'?re in\b|you'?ve subscribed|complete your sign ?up|"
+    r"^sign in\b|here'?s your free gift", re.I)
 
 # The Burlington subs ride along via their public per-tag streams (kept from
 # the chatter era) until they live in the local folder proper. Each entry:
@@ -122,6 +165,9 @@ SHORT_NAMES = {
     "load-in-through-the-back": "Load-In",
     "local-news-2310": "Vermont Public",
     "local-news-a7bd": "VPR Legacy",
+    "burlington-tasting-room": "Tasting Room",
+    "money-stuff-1": "Money Stuff",
+    "vermont-poltical-observer": "The VPO",
     "marketwatch-com-top-stories": "MarketWatch",
     "nba": "r/NBA",
     "nbc-news-top-stories": "NBC News",
@@ -155,10 +201,10 @@ SHORT_NAMES = {
 # outlets lead the rail, the Burlington subs lead the reddit set, and
 # r/artificial trails it (Stephen's call, Aug 2026).
 PRIORITY = {
-    "btown-brief": 1,
-    "seven-days": 2,
-    "vtdigger": 3,
-    "wcax": 4,
+    "btownbrief.com": 1,
+    "sevendaysvt.com": 2,
+    "vtdigger.org": 3,
+    "wcax.com": 4,
     "reddit.com/r/burlington": 10,
     "reddit.com/r/vermont": 11,
     "reddit.com/r/artificial": 900,
@@ -437,7 +483,17 @@ def parse_stream(raw):
             "src_title": clean_space(source.text if source is not None else ""),
             "src_site": site,
         }
-        if "reddit.com" in site or "ycombinator.com" in site:
+        if "inoreader.com" in site:
+            # An email-to-feed item: the <link> is Inoreader-private. Dig the
+            # public web copy out of the email body when the sender offers one.
+            item["email"] = True
+            desc = node.findtext("description") or ""
+            match = WEBCOPY_TEXT_RE.search(desc) or WEBCOPY_URL_RE.search(desc)
+            if match:
+                item["webcopy"] = canon_url(html.unescape(match.group(1)))
+            if NEWSLETTER_NOISE_RE.search(item["title"]):
+                item["noise"] = True
+        elif "reddit.com" in site or "ycombinator.com" in site:
             desc = node.findtext("description") or ""
             if "reddit.com" in site:
                 # Take the LAST [link] anchor: reddit's own footer link is
@@ -509,16 +565,16 @@ def build_roster(folder_outlines, topics):
     hidden-source settings and the SHORT_NAMES table.
     """
     entries, seen = [], set()
-    for outline, is_local in folder_outlines:
+    for outline, kind in folder_outlines:
         key = (outline["title"].lower(), norm_site(outline["html"] or outline["xml"]))
         if key in seen:
             continue
         seen.add(key)
-        entries.append((outline, is_local))
+        entries.append((outline, kind))
     title_counts = Counter(slugify(outline["title"]) for outline, _ in entries)
 
     sources, used_ids = [], set()
-    for outline, is_local in entries:
+    for outline, kind in entries:
         base = slugify(outline["title"])
         if title_counts[base] > 1:
             suffix = hashlib.md5((outline["xml"] or "").encode()).hexdigest()[:4]
@@ -531,41 +587,58 @@ def build_roster(folder_outlines, topics):
             bump += 1
         used_ids.add(source_id)
         site = outline["html"] or outline["xml"]
-        topic = "local"
-        if not is_local:
+        if kind == "newsletter":
+            # email feeds all claim inoreader.com — swap in the sender's real
+            # home when we know it, otherwise carry no site at all
+            site = NEWSLETTER_SITES.get(outline["title"].lower(), "")
+            topic = "newsletters"
+        elif kind == "local":
+            topic = "local"
+        else:
             topic = next((topics[k] for k in topic_keys(site) if k in topics),
                          "news")
         podcast = (
             any(h in (outline["xml"] or "") for h in PODCAST_HOSTS)
             or "podcast" in outline["title"].lower()
-            or (is_local and "youtube.com" in (outline["xml"] or "")))
+            or (kind == "local" and "youtube.com" in (outline["xml"] or "")))
         sources.append({
             "id": source_id,
             "name": outline["title"],
             "site": site,
             "feed": outline["xml"],
             "topic": topic,
-            "local": is_local,
+            "local": kind == "local",
             "podcast": podcast,
         })
     return sources
 
 
 def source_index(sources):
-    """Lookup tables for attributing stream items back to a source."""
-    by_site, by_title = {}, {}
+    """Lookup tables for attributing stream items back to a source.
+
+    Email items all arrive as src_site=inoreader.com, so they get their own
+    title table (the newsletter "Vtdigger" must not collide with the RSS
+    "VTDigger" — the RSS one matches by its unique real site first).
+    """
+    by_site, by_title, by_nl_title = {}, {}, {}
     for source in sources:
+        if source["topic"] == "newsletters":
+            by_nl_title.setdefault(source["name"].lower(), source["id"])
+            continue
         by_site.setdefault(norm_site(source["site"]), source["id"])
         by_site.setdefault(norm_site(source["feed"]), source["id"])
         by_title.setdefault(source["name"].lower(), source["id"])
-    return by_site, by_title
+    by_site.pop("", None)
+    return by_site, by_title, by_nl_title
 
 
-def attribute(item, by_site, by_title):
-    for key in (norm_site(item.get("src_site", "")),):
-        if key and key in by_site:
-            return by_site[key]
+def attribute(item, by_site, by_title, by_nl_title):
+    src_site = norm_site(item.get("src_site", ""))
     title = item.get("src_title", "").lower()
+    if "inoreader.com" in src_site:
+        return by_nl_title.get(title)
+    if src_site in by_site:
+        return by_site[src_site]
     return by_title.get(title)
 
 
@@ -586,7 +659,10 @@ def merge_source(previous, incoming, now_ts):
         ts = int(item["when"].timestamp())
         if ts > now_ts + 3600:  # feeds occasionally post-date; don't sort lies up top
             ts = now_ts
-        fresh = {"t": item["title"], "u": item["url"], "d": ts}
+        fresh = {"t": item["title"], "u": item.get("webcopy") or item["url"],
+                 "d": ts}
+        if item.get("email") and not item.get("webcopy"):
+            fresh["x"] = 1   # no public copy — the page renders it unlinked
         if item.get("audio"):
             fresh["a"] = item["audio"]
         if item.get("image"):
@@ -728,11 +804,11 @@ def run(args):
         sys.exit("data/pulse-topics.json missing or empty — refusing to run")
 
     folder_outlines = []
-    for label, is_local in FOLDERS:
+    for label, kind in FOLDERS:
         outlines = parse_opml(fetch_bytes(folder_opml_url(label)))
         if not outlines:
             sys.exit(f"OPML for folder {label!r} came back empty")
-        folder_outlines.extend((outline, is_local) for outline in outlines)
+        folder_outlines.extend((outline, kind) for outline in outlines)
 
     folder_sites = {key for outline, _ in folder_outlines
                     for key in topic_keys(outline["html"] or outline["xml"])}
@@ -742,7 +818,7 @@ def run(args):
             continue  # the folder carries it now — the ride-along retires
         folder_outlines.append((
             {"title": title, "xml": folder_stream_url(tag_label, 1),
-             "html": sub_url}, True))
+             "html": sub_url}, "local"))
         extra_tags.append(tag_label)
 
     sources = build_roster(folder_outlines, topics)
@@ -754,17 +830,19 @@ def run(args):
     for item in previous.get("items", []):
         prev_by_source.setdefault(item.get("s"), []).append(
             {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
-                                  "r", "h", "hc") if k in item})
+                                  "r", "h", "hc", "x") if k in item})
 
-    by_site, by_title = source_index(sources)
+    by_site, by_title, by_nl_title = source_index(sources)
     fresh_by_source = {}
     unmatched = 0
-    stream_labels = ([(label, is_local) for label, is_local in FOLDERS]
-                     + [(label, True) for label in extra_tags])
-    for label, is_local in stream_labels:
-        count = SEED_STREAM_N if args.seed else STREAM_N[is_local]
+    stream_labels = (list(FOLDERS)
+                     + [(label, "local") for label in extra_tags])
+    for label, kind in stream_labels:
+        count = SEED_STREAM_N if args.seed else STREAM_N[kind]
         for item in parse_stream(fetch_bytes(folder_stream_url(label, count))):
-            source_id = attribute(item, by_site, by_title)
+            if item.get("noise"):
+                continue  # subscription plumbing, not an edition
+            source_id = attribute(item, by_site, by_title, by_nl_title)
             if source_id is None:
                 unmatched += 1
                 continue
@@ -925,6 +1003,18 @@ def selftest():
     assert [entry["n"] for entry in payload["sources"]] == [0, 1]
     assert payload["items"][0]["s"] == "wire" and payload["items"][0]["h"]
 
+    # email items: webcopy becomes the URL; no webcopy renders unlinked
+    emails = [{"title": "Issue 5", "url": "https://www.inoreader.com/article/1",
+               "webcopy": "https://x.beehiiv.com/p/issue-5", "email": True,
+               "audio": "", "image": "",
+               "when": datetime.fromtimestamp(1_754_000_000, tz=timezone.utc)},
+              {"title": "Issue 6", "url": "https://www.inoreader.com/article/2",
+               "email": True, "audio": "", "image": "",
+               "when": datetime.fromtimestamp(1_754_000_100, tz=timezone.utc)}]
+    nl_items, _ = merge_source([], emails, 1_754_000_100)
+    assert nl_items[1]["u"].endswith("/p/issue-5") and "x" not in nl_items[1]
+    assert nl_items[0]["u"].endswith("/article/2") and nl_items[0]["x"] == 1
+
     # merge carries the discussion keys, including a count falling to zero
     carried, _ = merge_source(
         [{"t": "hn", "u": "https://x.com/a", "d": 4,
@@ -940,9 +1030,25 @@ def selftest():
         b' xmlUrl="https://a.com/rss" htmlUrl="https://a.com/"/>'
         b'<outline title="A" text="A" type="rss" xmlUrl="https://a.com/rss2"'
         b' htmlUrl="https://a.com/"/></outline></body></opml>')
-    roster = build_roster([(outline, False) for outline in outlines],
+    roster = build_roster([(outline, "national") for outline in outlines],
                           {"a.com": "tech"})
     assert len(roster) == 1 and roster[0]["topic"] == "tech"
+
+    nl = build_roster([({"title": "Morning Brew", "xml": "https://www.inoreader.com/x1",
+                         "html": "https://www.inoreader.com"}, "newsletter")], {})
+    assert nl[0]["topic"] == "newsletters" and "morningbrew.com" in nl[0]["site"]
+    assert not nl[0]["local"]
+
+    by_site, by_title, by_nl = source_index(
+        roster + nl + [{"id": "vtd", "name": "VTDigger", "site": "https://vtdigger.org/",
+                        "feed": "https://vtdigger.org/feed/", "topic": "local",
+                        "local": True, "podcast": False}])
+    assert attribute({"src_site": "https://www.inoreader.com", "src_title": "Morning Brew"},
+                     by_site, by_title, by_nl) == "morning-brew"
+    assert attribute({"src_site": "https://vtdigger.org/", "src_title": "VTDigger"},
+                     by_site, by_title, by_nl) == "vtd"
+    assert attribute({"src_site": "https://www.inoreader.com", "src_title": "Nope"},
+                     by_site, by_title, by_nl) is None
 
     # distinct sources sharing a title: ids are feed-URL hashes, so they are
     # identical no matter what order the OPML lists them in
@@ -951,8 +1057,8 @@ def selftest():
         b' xmlUrl="https://a.com/rss" htmlUrl="https://a.com/"/>'
         b'<outline title="Local News" text="Local News" type="rss"'
         b' xmlUrl="https://b.com/rss" htmlUrl="https://b.com/"/></body></opml>')
-    ids_fwd = {s["id"] for s in build_roster([(o, True) for o in twins], {})}
-    ids_rev = {s["id"] for s in build_roster([(o, True) for o in reversed(twins)], {})}
+    ids_fwd = {s["id"] for s in build_roster([(o, "local") for o in twins], {})}
+    ids_rev = {s["id"] for s in build_roster([(o, "local") for o in reversed(twins)], {})}
     assert ids_fwd == ids_rev and len(ids_fwd) == 2
     assert all(len(i) > len("local-news") for i in ids_fwd)
 
