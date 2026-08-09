@@ -221,6 +221,24 @@
     }
   }
 
+  /* [r/sub] / [hn·N] thread links, matched server-side from the streams —
+     the brutalist.report [hn] suffix, minus any Reddit/HN API. */
+  function discHTML(item) {
+    var bits = '';
+    if (item.r) {
+      var sub = /reddit\.com\/(r\/[^/]+)/.exec(item.r);
+      bits += ' <a class="disc" href="' + esc(safeUrl(item.r)) +
+        '" target="_blank" rel="noopener">[' + esc(sub ? sub[1].toLowerCase() : 'reddit') + ']</a>';
+    }
+    var thread = item.h || item.du;
+    if (thread) {
+      var n = (item.hc != null) ? item.hc : item.dn;
+      bits += ' <a class="disc" href="' + esc(safeUrl(thread)) +
+        '" target="_blank" rel="noopener">[hn' + (n != null ? '·' + (+n || 0) : '') + ']</a>';
+    }
+    return bits;
+  }
+
   function metaHTML(src, item) {
     return '<div class="fi-meta">' +
       '<button class="chip c-' + esc(src.topic) + '" data-source="' + src.id +
@@ -238,11 +256,13 @@
       '<img class="thumb" src="' + esc(safeUrl(item.i)) + '" alt="" loading="lazy" ' +
       'referrerpolicy="no-referrer" ' +
       'onerror="this.parentNode.classList.remove(\'has-thumb\');this.remove()">' : '';
+    var disc = discHTML(item);
     return '<article class="fi' + (src.local ? ' local' : '') + (read ? ' read' : '') +
       (thumb ? ' has-thumb' : '') + '">' +
       '<div class="fi-main">' + metaHTML(src, item) +
       '<a class="fi-t" data-k="' + keyOf(item.u) + '" href="' + esc(safeUrl(item.u)) +
-      '" target="_blank" rel="noopener">' + esc(item.t) + '</a></div>' +
+      '" target="_blank" rel="noopener">' + esc(item.t) + '</a>' +
+      (disc ? '<div class="fi-disc">' + disc + '</div>' : '') + '</div>' +
       thumb + '</article>';
   }
 
@@ -310,6 +330,7 @@
               keyOf(item.u) + '" href="' + esc(safeUrl(item.u)) +
               '" target="_blank" rel="noopener">' + esc(item.t) + '</a>' +
               '<span class="age" data-ts="' + item.d + '">' + fmtAge(item.d) + '</span>' +
+              discHTML(item) +
               (item.a ? '<button class="play" data-audio="' + esc(safeUrl(item.a)) +
                 '" data-title="' + esc(item.t) + '">▶</button>' : '') +
               '</li>';
