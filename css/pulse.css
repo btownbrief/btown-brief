@@ -709,6 +709,7 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 /* ---------- V2.2: chip-row scroll cues ---------- */
 
 .srow { position: relative; max-width: 1240px; margin: 0 auto; }
+body.src-hidden .srow-src { display: none; }
 .srow-more, .srow-less {
   position: absolute;
   top: 0;
