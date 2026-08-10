@@ -45,7 +45,14 @@ jobs:
         run: |
           python3 scripts/refresh_youtube.py --selftest
           mkdir -p /tmp/yt-out/data
-          python3 scripts/refresh_youtube.py --out /tmp/yt-out/data/pulse-youtube.json
+          # The deep-cut catalog lives on the data branch and carries forward
+          # between runs — fetch the previous copy so we only buy what's new.
+          git fetch -q origin pulse-youtube || true
+          git show origin/pulse-youtube:data/deep-catalog.json \
+            > /tmp/yt-out/data/deep-catalog.json 2>/dev/null || true
+          python3 scripts/refresh_youtube.py \
+            --out /tmp/yt-out/data/pulse-youtube.json \
+            --catalog /tmp/yt-out/data/deep-catalog.json
 
       - name: Force-push the single-commit pulse-youtube branch
         if: steps.key.outputs.ready == 'true'
@@ -59,6 +66,7 @@ jobs:
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/pulse-youtube.json
+          if [ -s data/deep-catalog.json ]; then git add data/deep-catalog.json; fi
           git commit -q -m "Pulse YouTube $(date -u +%FT%TZ)"
           git push -q --force \
             "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
