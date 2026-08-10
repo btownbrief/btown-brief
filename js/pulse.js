@@ -16,12 +16,12 @@
   var LIVE_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-data/data/pulse.json';
   var META_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-data/data/pulse-meta.json';
   var LOCAL_URL = 'data/pulse.json';
-  /* reddit rides shotgun after LOCAL — Burlington Pulse means the town's
-     own conversation ranks above the national topic split */
-  var TOPIC_ORDER = ['local', 'reddit', 'newsletters', 'news', 'tech', 'business',
+  /* reddit rides shotgun after LOCAL — the town's own conversation ranks
+     above the national topic split; NEWS leads the nationals */
+  var TOPIC_ORDER = ['local', 'reddit', 'news', 'newsletters', 'tech', 'business',
                      'science', 'culture', 'politics', 'sports', 'gaming', 'pods'];
   var TOPIC_LABEL = { all: 'All topics', local: 'Local', reddit: 'Reddit', pods: 'Podcasts',
-                      top: 'Top', popular: 'Popular', saved: 'Saved' };
+                      top: 'Top', popular: 'Popular', saved: 'Saved', digs: 'Digs' };
   var FEED_PAGE = 120;      // headlines per MORE click — a page, not a pit
   var READ_CAP = 4000;      // read-marks kept before pruning oldest
   var SET_KEY = 'pulse2-settings';
@@ -31,13 +31,16 @@
   var TOP_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-top/data/pulse-top.json';
   var SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
   var SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon/publishable — safe to ship
-  var INTENT_KEY = 'pulse2-intent';   // url-key -> epoch sec, "read with intent" marks
+  var INTENT_KEY = 'pulse2-intent';   // url-key -> epoch sec, focus-mode marks
   var SAVED_KEY = 'pulse2-saved';     // read-later list
   var DIG_KEY = 'pulse2-dug';         // url-key -> ET day, one dig vote per story per day
+  var DIGS_KEY = 'pulse2-digs';       // the headlines behind those votes, for the DIGS tab
   var RQ_KEY = 'pulse2-rq';           // reactions that failed to send, retried next load
   var PING_KEY = 'pulse2-ping';       // last ET day we pinged the anonymous counter
   var NUDGE_KEY = 'pulse2-nudge';     // take-a-break nudge state
-  var CLIENT_TABS = ['top', 'popular', 'saved'];  // rendered client-side, not payload topics
+  var HINT_KEY = 'pulse2-hints';      // gesture how-to card dismissed / learned
+  var SEEN_KEY = 'pulse2-focus-seen'; // focus mode used once — stop the pulsing arrows
+  var CLIENT_TABS = ['top', 'popular', 'saved', 'digs'];  // rendered client-side
   var SAVED_CAP = 300;
   var SWIPE_COMMIT = 72;    // px of horizontal drag that commits a swipe
 
@@ -49,14 +52,18 @@
     view: 'feed',
     q: '',
     shown: FEED_PAGE,
-    set: { theme: 'auto', fs: 17, limit: 10, autohide: false, thumbs: true, hidden: {}, intent: false },
+    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, intent: false },
     read: {},
-    intent: {},             // passed-with-intent marks
+    intent: {},             // focus-mode passed marks
     saved: [],              // [{k,t,u,s,d,sv}] newest-saved first
+    digs: [],               // [{k,t,u,s,d,dv}] headlines this reader dig-voted
     top: null,              // pulse-top.json payload (AI-picked TOP tab)
     popular: null,          // [{url,title,source,saves}] from Supabase
+    digVotes: null,         // url-key -> today's community vote count (DIGS tab)
   };
   var srcMap = {};
+  var popMap = {};          // url-key -> distinct savers, for the "N saved" badges
+  var gridSeed = {};        // per-visit shuffle of the by-source grid
   var byKey = {};           // url-key -> {t,u,s,d} for gesture + tab lookups
   /* items passed-with-intent before this moment are hidden; marks made during
      this session stay visible (dimmed) so the feed never shifts under you */
@@ -82,6 +89,15 @@
       if (m && typeof m === 'object') state.intent = m;
       var sv = JSON.parse(localStorage.getItem(SAVED_KEY) || 'null');
       if (Array.isArray(sv)) state.saved = sv;
+      var dg = JSON.parse(localStorage.getItem(DIGS_KEY) || 'null');
+      if (Array.isArray(dg)) state.digs = dg;
+    } catch (e) {}
+  }
+
+  function saveDigs() {
+    try {
+      if (state.digs.length > 200) state.digs.length = 200;
+      localStorage.setItem(DIGS_KEY, JSON.stringify(state.digs));
     } catch (e) {}
   }
 
@@ -222,12 +238,53 @@
     renderSourceBar();
     renderBody();
     writeHash();
+    updateScrollRows();
+  }
+
+  /* every chip row gets a "more ›" cue plus a thin thumb showing where you
+     are in the scroll — both vanish when the row fits */
+  function updateScrollRows() {
+    document.querySelectorAll('.srow').forEach(function (row) {
+      if (row.hidden) return;
+      var nav = row.querySelector('.tabs, .srcbar');
+      var more = row.querySelector('.srow-more');
+      var bar = row.querySelector('.srow-bar');
+      var thumb = bar && bar.querySelector('i');
+      if (!nav || !more || !bar) return;
+      var overflow = nav.scrollWidth - nav.clientWidth;
+      if (overflow < 8) {
+        more.hidden = true;
+        bar.hidden = true;
+        return;
+      }
+      bar.hidden = false;
+      more.hidden = nav.scrollLeft >= overflow - 8;
+      if (thumb) {
+        thumb.style.width = Math.max(8, nav.clientWidth / nav.scrollWidth * 100) + '%';
+        thumb.style.marginLeft = (nav.scrollLeft / nav.scrollWidth * 100) + '%';
+      }
+    });
+  }
+
+  function bindScrollRows() {
+    document.querySelectorAll('.srow .tabs, .srow .srcbar').forEach(function (nav) {
+      nav.addEventListener('scroll', updateScrollRows, { passive: true });
+    });
+    window.addEventListener('resize', updateScrollRows);
   }
 
   function topFresh() {
     if (!state.top || !Array.isArray(state.top.picks) || !state.top.picks.length) return false;
     var age = Date.now() - Date.parse(state.top.generated || 0);
     return isFinite(age) && age < 30 * 3600 * 1000;   // 3x/day cadence + slack
+  }
+
+  function tabBtn(t) {
+    var on = !state.source && state.topic === t;
+    var accent = (t === 'local' || t === 'reddit' || t === 'top') ? ' t-' + t : '';
+    return '<button class="tab' + accent +
+      '" data-topic="' + t + '" aria-pressed="' + on + '">' +
+      esc(topicLabel(t)) + '</button>';
   }
 
   function renderTabs() {
@@ -238,42 +295,45 @@
       if (src.pod) present.pods = true;
       if (isReddit(src)) present.reddit = true;
     });
-    /* client tabs appear once they have something to show */
+    $('topic-tabs').innerHTML = ['all'].concat(TOPIC_ORDER)
+      .filter(function (t) { return present[t]; }).map(tabBtn).join('');
+    /* your tabs live on their own line and appear once they have something */
     present.top = topFresh();
     present.popular = !!(state.popular && state.popular.length);
     present.saved = state.saved.length > 0;
-    var html = ['top', 'popular', 'all'].concat(TOPIC_ORDER).concat(['saved'])
-      .filter(function (t) { return present[t]; })
-      .map(function (t) {
-        var on = !state.source && state.topic === t;
-        var accent = (t === 'local' || t === 'reddit' || t === 'top') ? ' t-' + t : '';
-        return '<button class="tab' + accent +
-          '" data-topic="' + t + '" aria-pressed="' + on + '">' +
-          esc(topicLabel(t)) + '</button>';
-      }).join('');
-    $('topic-tabs').innerHTML = html;
+    present.digs = state.digs.length > 0;
+    var client = CLIENT_TABS.filter(function (t) { return present[t]; }).map(tabBtn).join('');
+    $('client-tabs').innerHTML = client;
+    $('client-row').hidden = !client;
+  }
+
+  function srcChip(src) {
+    return '<button class="srcchip' + (src.local ? ' s-local' : '') +
+      '" data-source="' + src.id + '" aria-pressed="' + (state.source === src.id) +
+      '">' + esc(src.short) + '</button>';
   }
 
   function renderSourceBar() {
     if (isClientTab(state.topic) && !state.source) {
-      $('source-bar').innerHTML = '';
+      $('source-bar-local').innerHTML = '';
+      $('source-bar-national').innerHTML = '';
+      $('nat-row').hidden = true;
       return;
     }
     var pool = visibleSources(state.topic).filter(function (src) { return src.n > 0; });
     pool.sort(function (a, b) {
-      if (!!a.local !== !!b.local) return a.local ? -1 : 1;
       var pa = a.pr || 500, pb = b.pr || 500;   /* curated leads, then A–Z */
       if (pa !== pb) return pa - pb;
       return a.short.localeCompare(b.short);
     });
-    var html = '<button class="srcchip" data-source="" aria-pressed="' + !state.source +
-      '">All sources</button>' +
-      pool.map(function (src) {
-        return '<button class="srcchip' + (src.local ? ' s-local' : '') +
-          '" data-source="' + src.id + '" aria-pressed="' + (state.source === src.id) +
-          '">' + esc(src.short) + '</button>';
-      }).join('');
-    $('source-bar').innerHTML = html;
+    /* locals get the top line, the wire gets its own line below */
+    var locals = pool.filter(function (s) { return s.local; });
+    var nationals = pool.filter(function (s) { return !s.local; });
+    $('source-bar-local').innerHTML =
+      '<button class="srcchip" data-source="" aria-pressed="' + !state.source +
+      '">All sources</button>' + locals.map(srcChip).join('');
+    $('source-bar-national').innerHTML = nationals.map(srcChip).join('');
+    $('nat-row').hidden = !nationals.length;
   }
 
   function renderCount(shownItems, sections) {
@@ -351,10 +411,10 @@
       ? '<span class="fi-t nolink">' + esc(item.t) + '</span>'
       : '<a class="fi-t" data-k="' + k + '" href="' + esc(safeUrl(item.u)) +
         '" target="_blank" rel="noopener">' + esc(item.t) + '</a>';
-    var acts = '';
+    var acts = popMap[k] ? '<span class="pop">' + popMap[k] + ' saved</span>' : '';
     if (!item.x) {
       byKey[k] = item;
-      acts = '<div class="fi-acts">' +
+      acts += '<div class="fi-acts">' +
         '<button class="act" data-act="save" data-k="' + k + '" title="Save to read later">+ Save</button>' +
         '<button class="act" data-act="dig" data-k="' + k + '" title="Vote for a deep-dive on this topic">Dig ↓</button></div>';
     }
@@ -379,6 +439,7 @@
     if (!state.source && state.topic === 'top') { renderTop(body); return; }
     if (!state.source && state.topic === 'popular') { renderPopular(body); return; }
     if (!state.source && state.topic === 'saved') { renderSaved(body); return; }
+    if (!state.source && state.topic === 'digs') { renderDigs(body); return; }
 
     if (state.source) {                       /* single source, app-style list */
       var src = srcMap[state.source];
@@ -401,7 +462,7 @@
       /* the earned nudge: ~240 headlines deep (after the 2nd MORE click) */
       var nudge = (state.shown >= 3 * FEED_PAGE && !state.q && slice.length) ? nudgeHTML() : '';
       body.innerHTML = '<div class="feed">' +
-        (slice.length ? slice.map(feedItemHTML).join('') + nudge :
+        (slice.length ? hintHTML() + slice.map(feedItemHTML).join('') + nudge :
           '<p class="empty">No headlines match.</p>') + '</div>';
       if (all.length > slice.length) {
         more.hidden = false;
@@ -411,7 +472,7 @@
       return;
     }
 
-    /* by-source grid — the brutalist.report front page */
+    /* by-source grid — the brutalist.report front page, shuffled per visit */
     var sections = [];
     var count = 0;
     visibleSources(state.topic).forEach(function (src) {
@@ -422,10 +483,11 @@
       }).slice(0, state.set.limit);
       if (!items.length) return;
       count += items.length;
-      sections.push({ src: src, items: items, newest: items[0].d });
+      if (gridSeed[src.id] === undefined) gridSeed[src.id] = Math.random();
+      sections.push({ src: src, items: items });
     });
-    sections.sort(function (a, b) { return b.newest - a.newest; });
-    body.innerHTML = sections.length ? '<div class="grid">' +
+    sections.sort(function (a, b) { return gridSeed[a.src.id] - gridSeed[b.src.id]; });
+    body.innerHTML = sections.length ? hintHTML() + '<div class="grid">' +
       sections.map(function (sec) {
         var src = sec.src;
         return '<section class="src-sec' + (src.local ? ' local' : '') + '">' +
@@ -438,13 +500,16 @@
           '<span class="src-tag">' + (src.local ? 'Local' : esc(src.topic)) +
           ' · ' + src.n + '</span></h3><ul>' +
           sec.items.map(function (item) {
-            var read = state.read[keyOf(item.u)];
+            var ik = keyOf(item.u);
+            var read = state.read[ik];
             var headline = item.x
               ? '<span class="si-t nolink">' + esc(item.t) + '</span>'
-              : '<a class="si-t" data-k="' + keyOf(item.u) + '" href="' +
+              : '<a class="si-t" data-k="' + ik + '" href="' +
                 esc(safeUrl(item.u)) + '" target="_blank" rel="noopener">' +
                 esc(item.t) + '</a>';
-            return '<li' + (read ? ' class="read"' : '') + '>' + headline +
+            if (!item.x) byKey[ik] = item;
+            return '<li' + (read ? ' class="read"' : '') +
+              (item.x ? '' : ' data-k="' + ik + '"') + '>' + headline +
               '<span class="age" data-ts="' + item.d + '">' + fmtAge(item.d) + '</span>' +
               discHTML(item) +
               (item.a ? '<button class="play" data-audio="' + esc(safeUrl(item.a)) +
@@ -506,6 +571,7 @@
     var meta = '<div class="fi-meta">' + chip +
       (o.d ? '<span class="age" data-ts="' + o.d + '">' + fmtAge(o.d) + '</span>' : '') +
       (o.saves ? '<span class="pop">' + (+o.saves || 0) + ' saved</span>' : '') +
+      (o.votes ? '<span class="pop">' + (+o.votes || 0) + ' vote' + (o.votes === 1 ? '' : 's') + ' today</span>' : '') +
       (o.unsave ? '<button class="unsave" data-unsave="' + o.k + '" aria-label="Remove from saved">✕</button>' : '') +
       '</div>';
     return '<article class="fi' + (o.local ? ' local' : '') + (read ? ' read' : '') +
@@ -570,6 +636,34 @@
       ? '<div class="feed">' + rows.join('') + '</div>'
       : '<p class="empty">Nothing saved yet — swipe a headline right to keep it for later.</p>';
     renderCount(rows.length, 0);
+  }
+
+  var digVotesAt = 0;
+
+  function renderDigs(body) {
+    var rows = state.digs.filter(function (o) { return clientQ(o.t); })
+      .map(function (o) {
+        var src = srcMap[o.s];
+        var votes = state.digVotes && state.digVotes[o.k];
+        return liteItemHTML({ k: o.k, t: o.t, u: o.u, s: src ? o.s : '',
+                              short: src ? src.short : (o.s || ''), local: src && src.local,
+                              d: o.d, votes: votes });
+      });
+    body.innerHTML = rows.length
+      ? '<p class="empty" style="margin:18px auto 0">Topics you voted to dig into — 3 readers in a day builds the deep-dive page</p>' +
+        '<div class="feed">' + rows.join('') + '</div>'
+      : '<p class="empty">No votes yet — swipe a headline left when you want the full story.</p>';
+    renderCount(rows.length, 0);
+    /* pull today's community tallies so your votes show their momentum */
+    if (rows.length && Date.now() - digVotesAt > 5 * 60 * 1000) {
+      digVotesAt = Date.now();
+      rpc('pulse_dig_leaders', { p_day: etDay() }).then(function (leaders) {
+        if (!Array.isArray(leaders)) return;
+        state.digVotes = {};
+        leaders.forEach(function (l) { state.digVotes[keyOf(l.url)] = +l.votes || 0; });
+        if (state.topic === 'digs') renderBody();
+      }).catch(function () {});
+    }
   }
 
   /* ---------- confirm dialog + toast ---------- */
@@ -686,6 +780,8 @@
     rpc('pulse_popular', { p_hours: 48, p_min: 2, p_limit: 40 }).then(function (rows) {
       if (Array.isArray(rows) && rows.length) {
         state.popular = rows;
+        popMap = {};
+        rows.forEach(function (r) { popMap[keyOf(r.url)] = +r.saves || 0; });
         if (state.data) render();
       }
     }).catch(function () {});   /* tab simply stays hidden until the SQL exists */
@@ -724,6 +820,7 @@
                           sv: Math.round(Date.now() / 1000) });
     saveSaved();
     renderTabs();
+    learnedGestures();
     outboxAdd('save', item);
     var send = setTimeout(flushReacts, 5200);   /* after the undo window */
     toastUndo('Saved for later', function () {
@@ -744,11 +841,23 @@
     var keys = Object.keys(dug);
     if (keys.length > 500) keys.slice(0, keys.length - 500).forEach(function (x) { delete dug[x]; });
     try { localStorage.setItem(DIG_KEY, JSON.stringify(dug)); } catch (e) {}
+    if (!state.digs.some(function (o) { return o.k === k; })) {
+      state.digs.unshift({ k: k, t: item.t, u: item.u, s: item.s || '',
+                           d: item.d || Math.round(Date.now() / 1000),
+                           dv: Math.round(Date.now() / 1000) });
+      saveDigs();
+      renderTabs();
+    }
+    learnedGestures();
     outboxAdd('dig', item);
     var send = setTimeout(flushReacts, 5200);
     toastUndo('Voted — enough votes builds a deep-dive page', function () {
       clearTimeout(send);
       outboxRemove('dig', item.u);
+      state.digs = state.digs.filter(function (o) { return o.k !== k; });
+      saveDigs();
+      if (state.topic === 'digs' && !state.digs.length) { setTopic('all'); }
+      else renderTabs();
       try {
         delete dug[k];
         localStorage.setItem(DIG_KEY, JSON.stringify(dug));
@@ -765,6 +874,7 @@
       body: 'You won’t see ' + src.short + ' anywhere on the page. Bring it back any time in Settings → Sources.',
       yes: 'Mute',
       onYes: function () {
+        learnedGestures();
         state.set.hidden[src.id] = 1;
         saveSettings(); renderSettingsPanel(); render();
         toastUndo('Muted ' + src.short, function () {
@@ -799,19 +909,19 @@
     /* anchors are natively draggable — a link-drag swallows the pointer
        stream and the swipe never sees another event */
     document.addEventListener('dragstart', function (ev) {
-      if (ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]')) ev.preventDefault();
+      if (ev.target.closest && ev.target.closest('#pulse-body [data-k]')) ev.preventDefault();
     });
 
     /* Android's long-press link menu would beat the 550ms mute hold */
     document.addEventListener('contextmenu', function (ev) {
-      if (G.el && ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]')) {
+      if (G.el && ev.target.closest && ev.target.closest('#pulse-body [data-k]')) {
         ev.preventDefault();
       }
     });
 
     document.addEventListener('pointerdown', function (ev) {
       if (!ev.isPrimary || ev.button) return;
-      var row = ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]');
+      var row = ev.target.closest && ev.target.closest('#pulse-body .fi[data-k], #pulse-body li[data-k]');
       if (!row) return;
       if (ev.target.closest('.fi-acts, .unsave, .play, .chip, .disc')) return;
       clearTimeout(G.hold);
@@ -928,27 +1038,47 @@
 
   function applyIntentUI() {
     $('intent-btn').setAttribute('aria-pressed', state.set.intent);
+    var seen = state.set.intent;
+    try { seen = seen || !!localStorage.getItem(SEEN_KEY); } catch (e) {}
+    /* the pulsing come-hither arrows retire once Focus Mode has been used */
+    $('focus-wrap').classList.toggle('seen', seen);
   }
 
   function toggleIntent() {
     if (!state.set.intent) {
       confirmBox({
-        title: 'Read with intent',
-        body: 'While this is on, headlines you scroll past won’t reappear in your feed — ' +
-          'every visit picks up where you stopped reading. Turning it off brings everything back. ' +
-          'Make sure you’re sure.',
+        title: 'Focus Mode',
+        body: 'Clear as you read: while this is on, headlines you scroll past won’t ' +
+          'reappear in your feed — every visit picks up where you stopped. Turning it ' +
+          'off brings everything back. Make sure you’re sure.',
         yes: 'Turn on',
         onYes: function () {
           state.set.intent = true;
+          try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) {}
           saveSettings(); applyIntentUI(); render();
-          toast('Reading with intent');
+          toast('Focus Mode on — headlines clear as you read');
         },
       });
     } else {
       state.set.intent = false;
       saveSettings(); applyIntentUI(); render();
-      toast('Intent mode off — everything’s back');
+      toast('Focus Mode off — everything’s back');
     }
+  }
+
+  /* ---------- gesture how-to (one-time) ---------- */
+
+  function learnedGestures() {
+    try { localStorage.setItem(HINT_KEY, '1'); } catch (e) {}
+  }
+
+  function hintHTML() {
+    try { if (localStorage.getItem(HINT_KEY)) return ''; } catch (e) {}
+    return '<div class="hintcard">' +
+      '<b>New:</b> swipe a headline <b>right</b> to save it for later · swipe <b>left</b> to ' +
+      'vote for a deep-dive page on that topic · <b>press and hold</b> to mute the source.' +
+      '<span class="hint-desk"> On a computer, hover a headline for the buttons.</span>' +
+      '<button class="nudge-x" data-hint-dismiss aria-label="Got it">✕</button></div>';
   }
 
   /* ---------- the earned nudge ---------- */
@@ -973,12 +1103,15 @@
 
   /* ---------- the rail: Burlington right now ---------- */
 
-  var railBits = { wx: [], civic: '' };
+  var railBits = { wx: [], events: null };
 
   function renderRail() {
-    var bits = railBits.wx.concat(railBits.civic ? [railBits.civic] : []);
+    var bits = railBits.wx.map(esc);
+    if (railBits.events) {
+      bits.push('<a href="/events.html">' + esc(railBits.events) + ' →</a>');
+    }
     if (bits.length < 2) return;
-    $('rail').innerHTML = bits.map(esc).join(' · ') +
+    $('rail').innerHTML = bits.join(' · ') +
       ' · <a href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse-rail" target="_blank" rel="noopener">The Brief →</a>';
     $('rail').hidden = false;
   }
@@ -1001,25 +1134,26 @@
       railBits.wx = bits;
       renderRail();
     }).catch(function () {});
-    fetchJSON('data/civic.json', 8000).then(function (c) {
-      if (!c || !Array.isArray(c.upcoming)) return;
-      var now = Date.now();
-      var next = null;
-      c.upcoming.forEach(function (m) {
-        if (next || !m.start || !m.body) return;
-        var t = Date.parse(m.start);
-        if (t > now && t < now + 7 * 86400000) next = m;
+    /* the fun stuff: today's (or the next day's) events from the events page */
+    fetchJSON('data/events/events.json', 8000).then(function (ev) {
+      if (!ev || !Array.isArray(ev.events)) return;
+      var today = etDay();
+      var byDay = {};
+      ev.events.forEach(function (e) {
+        if (!e || !e.date || !e.title || e.date < today) return;
+        (byDay[e.date] = byDay[e.date] || []).push(e);
       });
-      if (!next) return;
-      var d = new Date(next.start);
-      var label = next.body.length > 22 ? next.body.slice(0, 21) + '…' : next.body;
-      var when = d.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/New_York' });
-      if (!next.time_uncertain) {
-        when += ' ' + d.toLocaleTimeString('en-US',
-          { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })
-          .replace(':00', '').replace(/\s/, '');
-      }
-      railBits.civic = label + ' ' + when;
+      var days = Object.keys(byDay).sort();
+      if (!days.length) return;
+      var day = days[0];
+      var list = byDay[day];
+      var when = day === today ? 'Tonight' :
+        new Date(day + 'T12:00:00-04:00').toLocaleDateString('en-US',
+          { weekday: 'short', timeZone: 'America/New_York' });
+      var first = list[0].title;
+      if (first.length > 32) first = first.slice(0, 31) + '…';
+      railBits.events = when + ': ' + first +
+        (list.length > 1 ? ' +' + (list.length - 1) + ' more' : '');
       renderRail();
     }).catch(function () {});
   }
@@ -1068,6 +1202,7 @@
     state.shown = FEED_PAGE;
     /* client tabs only exist in feed form — fall back to the full grid */
     if (view === 'sources' && isClientTab(state.topic)) state.topic = 'all';
+    if (view === 'sources') gridSeed = {};   /* fresh shuffle every visit */
     $('view-feed').setAttribute('aria-pressed', view === 'feed');
     $('view-sources').setAttribute('aria-pressed', view === 'sources');
     saveSettings();
@@ -1220,7 +1355,7 @@
   function bind() {
     document.addEventListener('click', function (ev) {
       var el = ev.target.closest('[data-topic],[data-source],[data-togsrc],[data-audio],' +
-        '[data-act],[data-unsave],[data-nudge-dismiss],a[data-k]');
+        '[data-act],[data-unsave],[data-nudge-dismiss],[data-hint-dismiss],a[data-k]');
       if (!el) return;
       if (el.dataset.topic) { setTopic(el.dataset.topic); return; }
       if (el.dataset.act) {
@@ -1229,6 +1364,12 @@
         return;
       }
       if (el.dataset.unsave) { unsave(el.dataset.unsave); return; }
+      if (el.hasAttribute('data-hint-dismiss')) {
+        learnedGestures();
+        var card = el.closest('.hintcard');
+        if (card) card.remove();
+        return;
+      }
       if (el.hasAttribute('data-nudge-dismiss')) {
         try {
           var ns = JSON.parse(localStorage.getItem(NUDGE_KEY) || '{}') || {};
@@ -1279,6 +1420,16 @@
     $('scrim').onclick = function () { openDrawer(false); };
 
     $('intent-btn').onclick = toggleIntent;
+    $('refresh-btn').onclick = function () {
+      var btn = $('refresh-btn');
+      btn.classList.add('spin');
+      setTimeout(function () { btn.classList.remove('spin'); }, 1200);
+      window.scrollTo({ top: 0 });
+      loadData();
+      loadTop();
+      loadPopular();
+      pollMeta();
+    };
     $('confirm-yes').onclick = function () {
       var fn = confirmYesFn;
       closeConfirm();
@@ -1381,6 +1532,7 @@
   if (state.q) { $('search-row').hidden = false; $('search-input').value = state.q; }
   bind();
   bindGestures();
+  bindScrollRows();
   loadData();
   pollMeta();
   loadTop();

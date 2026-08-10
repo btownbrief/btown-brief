@@ -426,11 +426,11 @@ button {
 }
 
 .src-sec ul { list-style: none; margin: 0; padding: 0; }
-.src-sec li { padding: 6px 0; border-top: 1px solid var(--line); }
+.src-sec li { padding: 9px 0; border-top: 1px solid var(--line); }
 .src-sec li:first-child { border-top: 0; }
 
 .si-t {
-  font-size: calc(var(--fs) - 2px);
+  font-size: calc(var(--fs) - 1px);
   font-weight: 500;
   line-height: 1.35;
   text-decoration: none;
@@ -654,41 +654,120 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 .foot-meta { font-size: 11px; color: var(--faint); }
 .foot-meta a { color: var(--dim); }
 
-/* ---------- V2.1: read with intent ---------- */
+/* ---------- V2.2: focus mode ---------- */
 
 .intent {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--dim);
-  border: 1px solid var(--chipline);
+  color: var(--c-politics);
+  border: 1px solid var(--c-politics);
   border-radius: 999px;
-  padding: 5px 12px;
+  padding: 8px 16px;
   white-space: nowrap;
 }
-.intent:hover { color: var(--fg); border-color: var(--dim); }
+.intent:hover { background: color-mix(in srgb, var(--c-politics) 14%, var(--bg)); }
 .intent[aria-pressed="true"] {
   color: var(--bg);
-  background: var(--accent);
-  border-color: var(--accent);
-  font-weight: 700;
+  background: var(--c-politics);
+  border-color: var(--c-politics);
 }
 .int-min { display: none; }
 
-/* while intent mode is on, already-passed headlines still visible this
+/* four tiny arrows that pulse toward the button until it's been used once */
+.focus-wrap { position: relative; display: inline-flex; margin: 8px 10px; }
+.fpulse {
+  position: absolute;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--c-politics);
+  pointer-events: none;
+  animation: fpulse 1.1s ease-in-out infinite alternate;
+}
+.fp-l { left: -15px; top: 50%; margin-top: -5px; }
+.fp-r { right: -15px; top: 50%; margin-top: -5px; }
+.fp-t { top: -13px; left: 50%; margin-left: -4px; }
+.fp-b { bottom: -13px; left: 50%; margin-left: -4px; }
+@keyframes fpulse {
+  from { opacity: .25; transform: none; }
+  to { opacity: 1; transform: scale(1.25); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fpulse { animation: none; opacity: .7; }
+}
+.focus-wrap.seen .fpulse { display: none; }
+
+/* while focus mode is on, already-passed headlines still visible this
    session are dimmed — they disappear on the next visit */
 .fi.passed { opacity: .45; }
 
+/* ---------- V2.2: chip-row scroll cues ---------- */
+
+.srow { position: relative; }
+.srow-more {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 2px 0 26px;
+  font-size: 15px;
+  color: var(--dim);
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, var(--bg) 65%);
+}
+.srow-bar {
+  height: 2px;
+  margin-bottom: 3px;
+  background: var(--chipbg);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.srow-bar i {
+  display: block;
+  height: 100%;
+  background: var(--chipline);
+  border-radius: 2px;
+}
+.tabs-client { border-top: 0; padding-top: 2px; }
+
+/* ---------- V2.2: refresh + hint card ---------- */
+
+.ic.spin { animation: icspin .8s linear infinite; }
+@keyframes icspin { to { transform: rotate(360deg); } }
+
+.hintcard {
+  max-width: 680px;
+  margin: 14px auto 4px;
+  padding: 12px 34px 12px 14px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  line-height: 1.8;
+  position: relative;
+}
+.hintcard b { color: var(--accent); }
+@media (hover: none) {
+  .hint-desk { display: none; }
+}
+
 /* ---------- V2.1: swipe gestures + hover actions ---------- */
 
-.fi {
+.fi, .src-sec li[data-k] {
   position: relative;
   touch-action: pan-y;   /* horizontal drags belong to the swipe layer */
 }
-.fi.swiping { transition: none; user-select: none; -webkit-user-select: none; }
-.fi.settling { transition: transform .18s ease; }
-.fi::before, .fi::after {
+.swiping { transition: none; user-select: none; -webkit-user-select: none; }
+.settling { transition: transform .18s ease; }
+.fi::before, .fi::after,
+.src-sec li[data-k]::before, .src-sec li[data-k]::after {
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 700;
@@ -702,10 +781,10 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
   padding: 2px 6px;
   border-radius: 3px;
 }
-.fi::before { content: "+ SAVE"; left: 8px; color: var(--accent); }
-.fi::after { content: "DIG IN ↓"; right: 8px; color: var(--c-science); }
-.fi.sw-r::before { opacity: 1; }
-.fi.sw-l::after { opacity: 1; }
+.fi::before, .src-sec li[data-k]::before { content: "+ SAVE"; left: 8px; color: var(--accent); }
+.fi::after, .src-sec li[data-k]::after { content: "DIG IN ↓"; right: 8px; color: var(--c-science); }
+.sw-r::before { opacity: 1 !important; }
+.sw-l::after { opacity: 1 !important; }
 
 /* hover actions are a desktop affordance — phones swipe instead. display:none
    (not opacity) so there is never an invisible tap target over the row. */
@@ -792,6 +871,7 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
   transform: translateX(-50%);
   bottom: 70px;
   z-index: 40;
+  pointer-events: none;   /* headlines behind it stay tappable/swipeable… */
   display: flex;
   align-items: center;
   gap: 12px;
@@ -812,6 +892,8 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
   font-weight: 700;
   letter-spacing: .1em;
   color: var(--accent);
+  pointer-events: auto;   /* …but UNDO itself still works */
+  padding: 4px 2px;
 }
 
 /* ---------- V2.1: rail + nudge ---------- */
