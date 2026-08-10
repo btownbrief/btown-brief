@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-10T06:45:50-04:00",
+ "generated": "2026-08-10T17:24:41-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 17,
-   "seconds": 5.9
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 66,
-   "seconds": 3.5
+   "seconds": 4.1
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 57,
-   "seconds": 3.2
+   "seconds": 3.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 153,
-   "seconds": 2.5
+   "seconds": 3.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 73,
-   "seconds": 1.5
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.7
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 154,
-   "seconds": 77.1
+   "count": 155,
+   "seconds": 70.4
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 17,
-   "seconds": 2.8
+   "count": 29,
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 42.8
+   "seconds": 37.6
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 77,
-   "seconds": 115.8
+   "seconds": 106.7
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,27 +79,27 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 450,
-   "seconds": 66.9
+   "seconds": 72.3
   },
   "meetup": {
    "label": "Meetup",
    "count": 66,
-   "seconds": 127.5
+   "seconds": 121.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 38,
-   "seconds": 16.9
+   "seconds": 14.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 74,
-   "seconds": 1.4
+   "seconds": 1.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 34,
-   "seconds": 40.5
+   "seconds": 38.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,30 +113,74 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 231,
-   "seconds": 11.6
+   "count": 232,
+   "seconds": 13.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 179,
+   "count": 180,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 55,
-   "seconds": 74.1
+   "seconds": 72.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 33,
-   "seconds": 0.2
+   "seconds": 0.3
   }
  },
- "gathered": 2532,
- "afterDedup": 1265,
- "duplicatesMerged": 1267,
- "final": 1808,
+ "gathered": 2547,
+ "afterDedup": 1277,
+ "duplicatesMerged": 1270,
+ "final": 1826,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Thirsty Thursday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-10"
+  },
+  {
+   "kept": {
+    "title": "Chemistry seminar ft. Carol Manhart",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-10"
+  },
+  {
+   "kept": {
+    "title": "ActivitiesFest 2026",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-10"
+  },
+  {
+   "kept": {
+    "title": "Fire Extinguisher Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-10"
+  },
   {
    "kept": {
     "title": "2026 Menopause Café and Clinical Update",
@@ -1626,34 +1670,11 @@
   },
   {
    "kept": {
-    "title": "Soda Plant Sundays",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-27"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-27"
-  },
-  {
-   "kept": {
     "title": "Chandler",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-28"
@@ -1677,28 +1698,6 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
-   ],
-   "date": "2026-09-28"
-  },
-  {
-   "kept": {
-    "title": "Industry Day",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-28"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
    ],
    "date": "2026-09-28"
   },
@@ -2399,12 +2398,12 @@
  ],
  "changes": [
   {
-   "id": "50945a8fb496",
-   "title": "Industry Day",
-   "date": "2026-09-28",
+   "id": "128ce7995507",
+   "title": "Men's Soccer vs George Mason",
+   "date": "2026-08-20",
    "change": "time",
-   "was": "2026-09-28",
-   "now": "2026-09-28T11:30:00-04:00"
+   "was": "2026-08-20T21:00:00-04:00",
+   "now": "2026-08-20T18:00:00-04:00"
   },
   {
    "id": "ab91a89cf4b8",
@@ -2414,10 +2413,46 @@
    "lastSeen": "2026-08-08T06:05:48-04:00"
   },
   {
-   "id": "da3bee3da83a",
-   "title": "Lady Moon & The Eclipse w/ Beccs",
-   "date": "2026-09-04",
-   "change": "dropped"
+   "id": "3b43acdbd2a9",
+   "title": "Bamboozled",
+   "date": "2026-08-27",
+   "change": "missing",
+   "lastSeen": "2026-08-10T06:45:50-04:00"
+  },
+  {
+   "id": "fced825cacef",
+   "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!)",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-08-10T06:45:50-04:00"
+  },
+  {
+   "id": "618938210733",
+   "title": "Youth Vendor Day",
+   "date": "2026-09-27",
+   "change": "missing",
+   "lastSeen": "2026-08-10T06:45:50-04:00"
+  },
+  {
+   "id": "ce19bdf67831",
+   "title": "Acoustic Brunch",
+   "date": "2026-09-27",
+   "change": "missing",
+   "lastSeen": "2026-08-10T06:45:50-04:00"
+  },
+  {
+   "id": "6beabfe29cb0",
+   "title": "Karaoke Sundays!",
+   "date": "2026-09-27",
+   "change": "missing",
+   "lastSeen": "2026-08-10T06:45:50-04:00"
+  },
+  {
+   "id": "6d88f66cb108",
+   "title": "Ora Cogan",
+   "date": "2026-09-28",
+   "change": "missing",
+   "lastSeen": "2026-08-10T06:45:50-04:00"
   }
  ]
 }
