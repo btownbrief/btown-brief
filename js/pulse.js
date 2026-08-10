@@ -69,9 +69,6 @@
   var popMap = {};          // url-key -> distinct savers, for the "N saved" badges
   var gridSeed = {};        // per-visit shuffle of the by-source grid
   var byKey = {};           // url-key -> {t,u,s,d} for gesture + tab lookups
-  /* items passed-with-intent before this moment are hidden; marks made during
-     this session stay visible (dimmed) so the feed never shifts under you */
-  var intentCutoff = Math.round(Date.now() / 1000);
   var lastGenerated = null;
 
   function $(id) { return document.getElementById(id); }
@@ -226,11 +223,10 @@
       if (state.source ? src.id !== state.source : !inTopic(src, state.topic)) return false;
       var k = keyOf(item.u);
       if (state.set.autohide && state.read[k]) return false;
-      /* read-with-intent: marks from previous visits vanish; marks made this
-         session stay (dimmed) so the list never shifts mid-read. Search is
+      /* focus mode: passed headlines are gone, not dimmed. Search is
          explicit retrieval — it always sees everything. */
       if (state.set.intent && state.view === 'feed' && !state.source && !state.q &&
-          state.intent[k] && state.intent[k] < intentCutoff) return false;
+          state.intent[k]) return false;
       return matchesQuery(item, src);
     });
   }
@@ -505,7 +501,7 @@
     var src = srcMap[item.s];
     var k = keyOf(item.u);
     var read = state.read[k];
-    var passed = state.set.intent && state.intent[k];
+    var passed = state.intent[k];   // scroll-past dim is on for everyone
     var thumb = (state.set.thumbs && item.i) ?
       '<img class="thumb" src="' + esc(safeUrl(item.i)) + '" alt="" loading="lazy" ' +
       'referrerpolicy="no-referrer" ' +
@@ -1321,7 +1317,7 @@
   var intentSeen = {};   // keys that were actually on screen this render
 
   function onIntent(entries) {
-    var marked = false;
+    var marked = false, gone = [];
     entries.forEach(function (e) {
       var k = e.target.dataset.k;
       if (!k) return;
@@ -1332,15 +1328,35 @@
       if (e.boundingClientRect.bottom <= 0 && intentSeen[k]) {
         if (!state.intent[k]) {
           state.intent[k] = Math.round(Date.now() / 1000);
-          e.target.classList.add('passed');
+          if (state.set.intent) gone.push(e.target);
+          else e.target.classList.add('passed');
           marked = true;
         }
         if (io) io.unobserve(e.target);
       }
     });
+    if (gone.length) removePassed(gone);
     if (marked) {
       clearTimeout(intentSaveTimer);
       intentSaveTimer = setTimeout(saveIntent, 800);
+    }
+  }
+
+  /* focus mode's game loop: a passed headline leaves the DOM and the big
+     counter ticks down. The removal happens above the viewport, so measure
+     a visible element and correct whatever shift the browser didn't absorb
+     (same trick as the source-rail toggle). */
+  function removePassed(els) {
+    var probeY = Math.min(window.innerHeight - 40, $('mast').offsetHeight + 80);
+    var anchor = document.elementFromPoint(20, probeY);
+    var before = anchor ? anchor.getBoundingClientRect().top : 0;
+    els.forEach(function (el) { el.remove(); });
+    if (anchor && document.contains(anchor)) {
+      var moved = anchor.getBoundingClientRect().top - before;
+      if (Math.abs(moved) > 4) window.scrollBy(0, moved);
+    }
+    if (state.lastCount) {
+      renderCount(Math.max(0, state.lastCount[0] - els.length), state.lastCount[1]);
     }
   }
 
@@ -1348,7 +1364,8 @@
     if (!('IntersectionObserver' in window)) return;
     if (io) io.disconnect();
     intentSeen = {};
-    if (!state.set.intent || state.view !== 'feed' || state.source || isClientTab(state.topic)) return;
+    /* marking runs for everyone — focus mode only changes what a mark DOES */
+    if (state.view !== 'feed' || state.source || isClientTab(state.topic)) return;
     if (!io) io = new IntersectionObserver(onIntent, { threshold: 0 });
     document.querySelectorAll('#pulse-body .fi[data-k]').forEach(function (el) {
       io.observe(el);
@@ -1367,9 +1384,9 @@
     if (!state.set.intent) {
       confirmBox({
         title: 'Focus Mode',
-        body: 'Clear as you read: while this is on, headlines you scroll past won’t ' +
-          'reappear in your feed — every visit picks up where you stopped. Turning it ' +
-          'off brings everything back. Make sure you’re sure.',
+        body: 'Clear as you read: while this is on, headlines you scroll past ' +
+          'disappear from the feed and the counter counts down — every visit picks ' +
+          'up where you stopped. Turning it off brings everything back, dimmed.',
         yes: 'Turn on',
         onYes: function () {
           state.set.intent = true;
