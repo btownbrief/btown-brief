@@ -280,20 +280,48 @@
   }
 
   /* the two source rails eat a quarter of a phone screen — they collapse
-     once you're reading and come back when you return to the top */
+     while you read downward and come back the moment you scroll up.
+     Toggling them resizes the sticky header, which would shove the line
+     you're reading — so every toggle compensates the scroll position by
+     exactly the height the header gained or lost. */
   var srcRowsHidden = false;
   var srcScrollRaf = 0;
+  var srcLastY = 0;
+  var srcUpRun = 0;         // consecutive upward px — one flick, not jitter
+
+  function setSrcRowsHidden(hide) {
+    srcRowsHidden = hide;
+    /* browsers with scroll anchoring absorb the header resize themselves,
+       ones without it don't — so measure a real content element and correct
+       only by whatever net shift actually happened */
+    var anchor = null, beforeTop = 0;
+    if (window.scrollY > 140) {
+      var probeY = Math.min(window.innerHeight - 40, $('mast').offsetHeight + 80);
+      anchor = document.elementFromPoint(20, probeY);
+      if (anchor) beforeTop = anchor.getBoundingClientRect().top;
+    }
+    document.body.classList.toggle('src-hidden', hide);
+    if (anchor) {
+      var moved = anchor.getBoundingClientRect().top - beforeTop;
+      if (moved) window.scrollBy(0, moved);
+    }
+    srcLastY = window.scrollY;
+    if (!hide) updateScrollRows();
+  }
 
   function srcRowsOnScroll() {
     srcScrollRaf = 0;
     var y = window.scrollY;
-    if (!srcRowsHidden && y > 140) {
-      srcRowsHidden = true;
-      document.body.classList.add('src-hidden');
-    } else if (srcRowsHidden && y < 40) {
-      srcRowsHidden = false;
-      document.body.classList.remove('src-hidden');
-      updateScrollRows();
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    /* rubber-band overscroll reads as a direction flip — ignore it */
+    if (y < 0 || y > max) { srcLastY = Math.min(Math.max(y, 0), max); return; }
+    var dy = y - srcLastY;
+    srcLastY = y;
+    srcUpRun = dy < 0 ? srcUpRun - dy : 0;
+    if (!srcRowsHidden && dy > 0 && y > 140) {
+      setSrcRowsHidden(true);
+    } else if (srcRowsHidden && (y < 40 || srcUpRun > 48)) {
+      setSrcRowsHidden(false);
     }
   }
 
