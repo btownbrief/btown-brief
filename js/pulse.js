@@ -21,7 +21,8 @@
   var TOPIC_ORDER = ['local', 'reddit', 'news', 'newsletters', 'tech', 'business',
                      'science', 'culture', 'politics', 'sports', 'gaming', 'pods'];
   var TOPIC_LABEL = { all: 'All topics', local: 'Local', reddit: 'Reddit', pods: 'Podcasts',
-                      top: 'Top', youtube: 'YouTube', popular: 'Popular', saved: 'Saved', digs: 'Digs' };
+                      top: 'Top', youtube: 'YouTube', popular: 'Popular', saved: 'Saved', digs: 'Digs',
+                      dives: 'Deep Dives' };
   var FEED_PAGE = 120;      // headlines per MORE click — a page, not a pit
   var READ_CAP = 4000;      // read-marks kept before pruning oldest
   var SET_KEY = 'pulse2-settings';
@@ -41,7 +42,7 @@
   var NUDGE_KEY = 'pulse2-nudge';     // take-a-break nudge state
   var HINT_KEY = 'pulse2-hints';      // gesture how-to card dismissed / learned
   var SEEN_KEY = 'pulse2-focus-seen'; // focus mode used once — stop the pulsing arrows
-  var CLIENT_TABS = ['top', 'youtube', 'popular', 'saved', 'digs'];  // rendered client-side
+  var CLIENT_TABS = ['top', 'youtube', 'popular', 'saved', 'digs', 'dives'];  // rendered client-side
   var SAVED_CAP = 300;
   var SWIPE_COMMIT = 72;    // px of horizontal drag that commits a swipe
 
@@ -62,6 +63,7 @@
     youtube: null,          // pulse-youtube.json payload (followed channels + trending)
     popular: null,          // [{url,title,source,saves}] from Supabase
     digVotes: null,         // url-key -> today's community vote count (DIGS tab)
+    dives: null,            // data/topic-pages.json — published deep-dive pages
   };
   var srcMap = {};
   var popMap = {};          // url-key -> distinct savers, for the "N saved" badges
@@ -362,6 +364,7 @@
     present.popular = !!(state.popular && state.popular.length);
     present.saved = state.saved.length > 0;
     present.digs = state.digs.length > 0;
+    present.dives = !!(state.dives && state.dives.length);
     var client = CLIENT_TABS.filter(function (t) { return present[t]; }).map(tabBtn).join('');
     $('client-tabs').innerHTML = client;
     $('client-row').hidden = !client;
@@ -502,6 +505,7 @@
     if (!state.source && state.topic === 'popular') { renderPopular(body); return; }
     if (!state.source && state.topic === 'saved') { renderSaved(body); return; }
     if (!state.source && state.topic === 'digs') { renderDigs(body); return; }
+    if (!state.source && state.topic === 'dives') { renderDives(body); return; }
 
     if (state.source) {                       /* single source, app-style list */
       var src = srcMap[state.source];
@@ -726,6 +730,28 @@
         if (state.topic === 'digs') renderBody();
       }).catch(function () {});
     }
+  }
+
+  /* the swipe-left payoff: published deep-dive pages, newest first */
+  function renderDives(body) {
+    var rows = (state.dives || []).filter(function (p) {
+      return p && p.slug && p.title && clientQ(p.title);
+    }).map(function (p) {
+      return '<article class="fi dive">' +
+        '<div class="fi-main"><div class="fi-meta">' +
+        '<span class="chip c-science">Deep dive</span>' +
+        (p.date ? '<span class="age">' + esc(p.date) + '</span>' : '') +
+        '</div>' +
+        '<a class="fi-t" href="topics/' + esc(p.slug) + '.html">' + esc(p.title) + '</a>' +
+        (p.dek ? '<p class="dive-dek">' + esc(p.dek) + '</p>' : '') +
+        '</div></article>';
+    });
+    body.innerHTML = rows.length
+      ? '<p class="empty" style="margin:18px auto 0">Full pages built because readers swiped left · ' +
+        'drafted from Wikipedia and real coverage, every link checked</p>' +
+        '<div class="feed">' + rows.join('') + '</div>'
+      : '<p class="empty">No deep dives published yet — swipe a headline left to ask for one.</p>';
+    renderCount(rows.length, 0);
   }
 
   /* ---------- confirm dialog + toast ---------- */
@@ -1030,6 +1056,18 @@
     fetchJSON(TOP_URL, 8000).then(function (json) {
       if (json && Array.isArray(json.picks)) {
         state.top = json;
+        if (state.data) render();
+      }
+    }).catch(function () {});
+  }
+
+  /* published deep-dive pages ship with the site itself — the index is a
+     plain relative fetch, and no file simply means no tab yet */
+  function loadDives() {
+    if (location.protocol === 'file:') return;
+    fetchJSON('data/topic-pages.json', 8000).then(function (json) {
+      if (json && Array.isArray(json.pages) && json.pages.length) {
+        state.dives = json.pages;
         if (state.data) render();
       }
     }).catch(function () {});
@@ -1821,6 +1859,7 @@
   loadTop();
   loadYouTube();
   loadPopular();
+  loadDives();
   loadRail();
   flushReacts();
   pingDaily();
