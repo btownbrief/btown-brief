@@ -757,6 +757,7 @@
 
   var G = { el: null, key: null, x0: 0, y0: 0, id: null, mode: '', hold: 0 };
   var suppressUntil = 0;
+  var suppressEl = null;    // the row whose post-gesture click we swallow
 
   function gestureReset() {
     clearTimeout(G.hold);
@@ -773,6 +774,12 @@
   function bindGestures() {
     if (!window.PointerEvent) return;
 
+    /* anchors are natively draggable — a link-drag swallows the pointer
+       stream and the swipe never sees another event */
+    document.addEventListener('dragstart', function (ev) {
+      if (ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]')) ev.preventDefault();
+    });
+
     document.addEventListener('pointerdown', function (ev) {
       if (!ev.isPrimary || ev.button) return;
       var row = ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]');
@@ -785,6 +792,7 @@
         if (G.el && !G.mode) {
           G.mode = 'hold';
           suppressUntil = Date.now() + 600;
+          suppressEl = G.el;
           var key = G.key;
           gestureReset();
           holdMute(key);
@@ -803,6 +811,7 @@
           clearTimeout(G.hold);
           G.el.classList.add('swiping');
           try { G.el.setPointerCapture(ev.pointerId); } catch (e) {}
+          try { getSelection().removeAllRanges(); } catch (e) {}
         }
       }
       if (G.mode === 'swipe') {
@@ -820,6 +829,7 @@
         var dx = ev.clientX - G.x0;
         var key = G.key;
         suppressUntil = Date.now() + 400;
+        suppressEl = G.el;
         gestureReset();
         if (ev.type !== 'pointercancel') {
           if (dx >= SWIPE_COMMIT) commitSave(key);
@@ -832,9 +842,11 @@
     document.addEventListener('pointerup', up);
     document.addEventListener('pointercancel', up);
 
-    /* a committed swipe or hold must not also open the article */
+    /* a committed swipe or hold must not also open the article — but only
+       clicks on that row; the rest of the page stays responsive */
     document.addEventListener('click', function (ev) {
-      if (Date.now() < suppressUntil) {
+      if (Date.now() < suppressUntil && suppressEl &&
+          (suppressEl === ev.target || suppressEl.contains(ev.target))) {
         ev.preventDefault();
         ev.stopPropagation();
       }
