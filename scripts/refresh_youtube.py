@@ -49,9 +49,9 @@ CHANNELS_FILE = os.path.join(ROOT, "data", "youtube-channels.json")
 CHANNEL_RSS = "https://www.youtube.com/feeds/videos.xml?channel_id="
 API = "https://www.googleapis.com/youtube/v3"
 WINDOW_DAYS = 7
-MAX_CHANNEL_VIDEOS = 80
+MAX_CHANNEL_VIDEOS = 160
 MAX_TRENDING = 15
-DEFAULT_CAP = 3          # per-channel per refresh; firehoses set lower in the file
+DEFAULT_CAP = 6          # per-channel per refresh; firehoses set lower in the file
 SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
 MAX_VERMONT = 8
 CATALOG = os.path.join(ROOT, "data", "deep-catalog.json")
@@ -168,7 +168,7 @@ def fetch_channel_videos_api(key, now_ts, channels=None):
         query = urllib.parse.urlencode({
             "part": "snippet,contentDetails",
             "playlistId": uploads_playlist(channel["id"]),
-            "maxResults": 10, "key": key})
+            "maxResults": 25, "key": key})
         try:
             items = http_json(f"{API}/playlistItems?{query}").get("items", [])
         except Exception as exc:  # noqa: BLE001 — one bad channel can't sink the shelf
