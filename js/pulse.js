@@ -41,7 +41,6 @@
   var PING_KEY = 'pulse2-ping';       // last ET day we pinged the anonymous counter
   var NUDGE_KEY = 'pulse2-nudge';     // take-a-break nudge state
   var HINT_KEY = 'pulse2-hints';      // gesture how-to card dismissed / learned
-  var SEEN_KEY = 'pulse2-focus-seen'; // focus mode used once — stop the pulsing arrows
   var CLIENT_TABS = ['top', 'youtube', 'popular', 'saved', 'digs', 'dives'];  // rendered client-side
   var SAVED_CAP = 300;
   var SWIPE_COMMIT = 72;    // px of horizontal drag that commits a swipe
@@ -69,7 +68,6 @@
   var popMap = {};          // url-key -> distinct savers, for the "N saved" badges
   var gridSeed = {};        // per-visit shuffle of the by-source grid
   var byKey = {};           // url-key -> {t,u,s,d} for gesture + tab lookups
-  var lastGenerated = null;
 
   function $(id) { return document.getElementById(id); }
 
@@ -443,21 +441,27 @@
     if (state.source && srcMap[state.source]) bits.push(esc(srcMap[state.source].short));
     else if (state.topic !== 'all') bits.push(esc(topicLabel(state.topic)));
     if (state.q) bits.push('“' + esc(state.q) + '”');
-    var age = Date.parse(state.data.generated);
-    if (age) {
-      var label = fmtAge(age / 1000);
-      bits.push(label === 'NOW' ? 'updated just now'
-                                : 'updated ' + label.toLowerCase() + ' ago');
-    }
-    if (state.checked) {
-      /* quiet spell honesty: the pipeline looked recently, found nothing new */
-      var checkedAge = Date.now() - Date.parse(state.checked);
-      var genAge = age ? Date.now() - age : 0;
-      if (age && genAge > 20 * 60000 && checkedAge < genAge - 4 * 60000) {
-        bits.push('checked ' + fmtAge(Date.parse(state.checked) / 1000).toLowerCase() + ' ago');
+    if (state.stale) {
+      /* the fallback snapshot's age is main's sync cadence, not the site's
+         freshness — while the live fetch retries, say what's happening
+         instead of a scary "updated 19h ago" */
+      bits.push('refreshing…');
+    } else {
+      var age = Date.parse(state.data.generated);
+      if (age) {
+        var label = fmtAge(age / 1000);
+        bits.push(label === 'NOW' ? 'updated just now'
+                                  : 'updated ' + label.toLowerCase() + ' ago');
+      }
+      if (state.checked) {
+        /* quiet spell honesty: the pipeline looked recently, found nothing new */
+        var checkedAge = Date.now() - Date.parse(state.checked);
+        var genAge = age ? Date.now() - age : 0;
+        if (age && genAge > 20 * 60000 && checkedAge < genAge - 4 * 60000) {
+          bits.push('checked ' + fmtAge(Date.parse(state.checked) / 1000).toLowerCase() + ' ago');
+        }
       }
     }
-    if (state.stale) bits.push('cached copy');
     var line = bits.join(' · ');
     var el = $('count-line');
     /* aria-live region: only touch it when the text really changed, or the
@@ -1374,10 +1378,9 @@
 
   function applyIntentUI() {
     $('intent-btn').setAttribute('aria-pressed', state.set.intent);
-    var seen = state.set.intent;
-    try { seen = seen || !!localStorage.getItem(SEEN_KEY); } catch (e) {}
-    /* the pulsing come-hither arrows retire once Focus Mode has been used */
-    $('focus-wrap').classList.toggle('seen', seen);
+    /* arrows beckon whenever Focus is off; the water animation takes over
+       while it's on */
+    $('focus-wrap').classList.toggle('seen', !!state.set.intent);
   }
 
   function toggleIntent() {
@@ -1390,7 +1393,6 @@
         yes: 'Turn on',
         onYes: function () {
           state.set.intent = true;
-          try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) {}
           saveSettings(); applyIntentUI(); render();
           toast('Focus Mode on — headlines clear as you read');
         },
@@ -1629,12 +1631,6 @@
     state.data = json;
     state.stale = !!stale;
     srcMap = map;
-    /* fresh payload = a fresh visit: focus marks made before now take effect.
-       A refresh that returns the same generation changes nothing. */
-    if (json.generated !== lastGenerated) {
-      lastGenerated = json.generated;
-      intentCutoff = Math.round(Date.now() / 1000);
-    }
     if (state.source && !srcMap[state.source]) state.source = null;
     render();
     renderSettingsPanel();
@@ -1645,16 +1641,34 @@
       /^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname);
   }
 
+  /* the fallback snapshot renders instantly but is only as fresh as main's
+     daily sync — so a failed live fetch keeps retrying with backoff until
+     the real feed lands (checkFresh keeps trying every 10 min after that) */
+  var STALE_RETRIES = [8000, 20000, 60000];
+
+  function retryLive(attempt) {
+    if (!state.stale) return;
+    fetchJSON(LIVE_URL, 8000).then(function (json) {
+      if (state.stale && json) showFresh(json);
+    }).catch(function () {
+      if (attempt + 1 < STALE_RETRIES.length) {
+        setTimeout(function () { retryLive(attempt + 1); }, STALE_RETRIES[attempt + 1]);
+      }
+    });
+  }
+
   function loadData() {
     var local = isLocalDev();
     var first = local ? LOCAL_URL : LIVE_URL;
     var second = local ? LIVE_URL : LOCAL_URL;
-    /* "cached copy" means production had to fall back to main's snapshot;
+    /* stale means production had to fall back to main's snapshot;
        local dev reading its own snapshot is just… local dev. */
     fetchJSON(first, 8000).then(function (json) { applyData(json, false); })
       .catch(function () {
-        fetchJSON(second, 8000).then(function (json) { applyData(json, !local); })
-          .catch(function () {
+        fetchJSON(second, 8000).then(function (json) {
+          applyData(json, !local);
+          if (!local) setTimeout(function () { retryLive(0); }, STALE_RETRIES[0]);
+        }).catch(function () {
             $('pulse-body').innerHTML =
               '<p class="empty">Couldn\'t reach the feed. Refresh to try again.</p>';
           });
@@ -1672,26 +1686,30 @@
     }).catch(function () {});
   }
 
+  function showFresh(json) {
+    if (window.scrollY < 300) { applyData(json); return; }
+    pendingFresh = json;   /* keep the newest, even if the pill already exists */
+    if ($('fresh-pill')) return;
+    var pill = document.createElement('button');
+    pill.className = 'fresh';
+    pill.id = 'fresh-pill';
+    pill.textContent = '↑ FRESH HEADLINES';
+    pill.onclick = function () {
+      pill.remove();
+      if (pendingFresh) applyData(pendingFresh);
+      pendingFresh = null;
+      window.scrollTo({ top: 0 });
+    };
+    document.body.appendChild(pill);
+  }
+
   function checkFresh() {
     if (!state.data || document.hidden || isLocalDev()) return;
     pollMeta();
     loadTop();
     fetchJSON(LIVE_URL, 8000).then(function (json) {
-      if (!json || json.generated === state.data.generated) return;
-      if (window.scrollY < 300) { applyData(json); return; }
-      pendingFresh = json;   /* keep the newest, even if the pill already exists */
-      if ($('fresh-pill')) return;
-      var pill = document.createElement('button');
-      pill.className = 'fresh';
-      pill.id = 'fresh-pill';
-      pill.textContent = '↑ FRESH HEADLINES';
-      pill.onclick = function () {
-        pill.remove();
-        if (pendingFresh) applyData(pendingFresh);
-        pendingFresh = null;
-        window.scrollTo({ top: 0 });
-      };
-      document.body.appendChild(pill);
+      if (!json || (json.generated === state.data.generated && !state.stale)) return;
+      showFresh(json);
     }).catch(function () {});
   }
 
