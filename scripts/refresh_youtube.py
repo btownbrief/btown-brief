@@ -3,9 +3,10 @@
 
 Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
 
-  * Followed channels. The public Inoreader folder "YouTube" is the curation
-    surface — subscribe to channels there and the tab follows next run, no
-    code. (Folder absent or empty is fine; the shelf just stays empty.)
+  * Followed channels. data/youtube-channels.json lists them; each channel's
+    own free public RSS feed (youtube.com/feeds/videos.xml) supplies the
+    uploads, so following costs zero API quota. (File empty is fine; the
+    shelf just stays empty.)
   * Trending. The YouTube Data API's mostPopular chart for the US, so the
     tab has something good even before any channels are followed.
 
@@ -20,7 +21,6 @@ CLI:
 """
 
 import argparse
-import email.utils
 import json
 import os
 import re
@@ -34,8 +34,8 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 OUT = os.path.join(ROOT, "data", "pulse-youtube.json")
 UA = "btown-pulse-youtube/1.0"
 
-STREAM_URL = ("https://www.inoreader.com/stream/user/1003590800/tag/"
-              "YouTube?n=100")
+CHANNELS_FILE = os.path.join(ROOT, "data", "youtube-channels.json")
+CHANNEL_RSS = "https://www.youtube.com/feeds/videos.xml?channel_id="
 API = "https://www.googleapis.com/youtube/v3"
 WINDOW_DAYS = 7
 MAX_CHANNEL_VIDEOS = 40
@@ -74,39 +74,65 @@ def fmt_duration(iso):
 
 
 # ----------------------------------------------------------------------
-# Shelf one — the followed-channels folder
+# Shelf one — the followed channels (their own free RSS, zero quota)
 # ----------------------------------------------------------------------
 
-def fetch_channel_videos(now_ts, url=STREAM_URL):
-    """Inoreader folder stream -> [{id,t,ch,d}] newest first, ≤7 days."""
-    request = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        raw = response.read()
-    if not raw.strip():
+ATOM = "{http://www.w3.org/2005/Atom}"
+YT_NS = "{http://www.youtube.com/xml/schemas/2015}"
+
+
+def load_channels(path=CHANNELS_FILE):
+    try:
+        with open(path, encoding="utf-8") as src:
+            data = json.load(src)
+    except (OSError, ValueError):
         return []
+    return [channel for channel in data.get("channels", [])
+            if isinstance(channel, dict) and channel.get("id")]
+
+
+def parse_channel_feed(raw, now_ts, fallback_name=""):
+    """One channel's Atom feed -> [{id,t,ch,d}], ≤7 days."""
     root = ElementTree.fromstring(raw)
-    videos, seen = [], set()
-    for item in root.iter("item"):
-        vid = video_id(item.findtext("link"))
-        title = (item.findtext("title") or "").strip()
-        if not vid or not title or vid in seen:
+    feed_author = root.findtext(f"{ATOM}author/{ATOM}name") or fallback_name
+    videos = []
+    for entry in root.iter(f"{ATOM}entry"):
+        vid = entry.findtext(f"{YT_NS}videoId")
+        title = (entry.findtext(f"{ATOM}title") or "").strip()
+        published = entry.findtext(f"{ATOM}published")
+        if not vid or not title or not published:
             continue
-        source = item.find("source")
-        channel = ((source.text if source is not None else None)
-                   or item.findtext(
-                       "{http://purl.org/dc/elements/1.1/}creator") or "")
-        when = None
-        pub = item.findtext("pubDate")
-        if pub:
-            try:
-                when = int(email.utils.parsedate_to_datetime(pub).timestamp())
-            except Exception:  # noqa: BLE001
-                when = None
-        if when is None or now_ts - when > WINDOW_DAYS * 86400:
+        try:
+            when = int(datetime.fromisoformat(published).timestamp())
+        except ValueError:
             continue
-        seen.add(vid)
-        videos.append({"id": vid, "t": title[:200], "ch": channel.strip()[:60],
+        if now_ts - when > WINDOW_DAYS * 86400:
+            continue
+        name = (entry.findtext(f"{ATOM}author/{ATOM}name") or feed_author)
+        videos.append({"id": vid, "t": title[:200], "ch": name.strip()[:60],
                        "d": when})
+    return videos
+
+
+def fetch_channel_videos(now_ts, channels=None):
+    """All followed channels -> [{id,t,ch,d}] newest first, capped."""
+    videos, seen = [], set()
+    for channel in (channels if channels is not None else load_channels()):
+        try:
+            request = urllib.request.Request(
+                CHANNEL_RSS + urllib.parse.quote(channel["id"]),
+                headers={"User-Agent": UA})
+            with urllib.request.urlopen(request, timeout=15) as response:
+                fetched = parse_channel_feed(
+                    response.read(), now_ts, channel.get("name", ""))
+        except Exception as exc:  # noqa: BLE001 — one bad channel can't sink the shelf
+            print(f"refresh_youtube: channel {channel['id']} failed ({exc})",
+                  file=sys.stderr)
+            continue
+        for video in fetched:
+            if video["id"] not in seen:
+                seen.add(video["id"])
+                videos.append(video)
     videos.sort(key=lambda video: video["d"], reverse=True)
     return videos[:MAX_CHANNEL_VIDEOS]
 
@@ -190,12 +216,7 @@ def run(args):
     key = os.environ.get("YOUTUBE_API_KEY", "").strip()
     now_ts = int(utcnow().timestamp())
 
-    try:
-        own = fetch_channel_videos(now_ts)
-    except Exception as exc:  # noqa: BLE001 — folder may not exist yet
-        print(f"refresh_youtube: channel folder unavailable ({exc})",
-              file=sys.stderr)
-        own = []
+    own = fetch_channel_videos(now_ts)
 
     trending = []
     if key:
@@ -219,22 +240,22 @@ def run(args):
 # Selftest — offline, no network
 # ----------------------------------------------------------------------
 
-RSS_FIXTURE = """<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel>
-<item><title>How Vermont makes maple syrup</title>
-  <link>https://www.youtube.com/watch?v=abcdefghijk</link>
-  <source url="https://youtube.com">Practical Vermont</source>
-  <pubDate>{fresh}</pubDate></item>
-<item><title>Duplicate id is dropped</title>
-  <link>https://youtu.be/abcdefghijk</link>
-  <pubDate>{fresh}</pubDate></item>
-<item><title>Too old to matter</title>
-  <link>https://www.youtube.com/watch?v=stalestale1</link>
-  <pubDate>{stale}</pubDate></item>
-<item><title>Not a video link</title>
-  <link>https://example.com/page</link>
-  <pubDate>{fresh}</pubDate></item>
-</channel></rss>"""
+ATOM_FIXTURE = """<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:yt="http://www.youtube.com/xml/schemas/2015">
+<author><name>Practical Vermont</name></author>
+<entry><yt:videoId>abcdefghijk</yt:videoId>
+  <title>How Vermont makes maple syrup</title>
+  <published>{fresh}</published></entry>
+<entry><yt:videoId>abcdefghijk</yt:videoId>
+  <title>Duplicate id is dropped</title>
+  <published>{fresh}</published></entry>
+<entry><yt:videoId>stalestale1</yt:videoId>
+  <title>Too old to matter</title>
+  <published>{stale}</published></entry>
+<entry><title>No video id, skipped</title>
+  <published>{fresh}</published></entry>
+</feed>"""
 
 
 def selftest():
@@ -249,9 +270,9 @@ def selftest():
     print("refresh_youtube: helpers ok (ids, durations)")
 
     now_ts = int(utcnow().timestamp())
-    fresh = email.utils.formatdate(now_ts - 3600)
-    stale = email.utils.formatdate(now_ts - 30 * 86400)
-    rss = RSS_FIXTURE.format(fresh=fresh, stale=stale)
+    fresh = datetime.fromtimestamp(now_ts - 3600, timezone.utc).isoformat()
+    stale = datetime.fromtimestamp(now_ts - 30 * 86400, timezone.utc).isoformat()
+    atom = ATOM_FIXTURE.format(fresh=fresh, stale=stale)
 
     class FakeResponse:
         def __init__(self, body):
@@ -267,14 +288,15 @@ def selftest():
             return False
 
     original = urllib.request.urlopen
-    urllib.request.urlopen = lambda *a, **k: FakeResponse(rss.encode())
+    urllib.request.urlopen = lambda *a, **k: FakeResponse(atom.encode())
     try:
-        videos = fetch_channel_videos(now_ts)
+        videos = fetch_channel_videos(now_ts, channels=[{"id": "UCtest"}])
     finally:
         urllib.request.urlopen = original
     assert [video["id"] for video in videos] == ["abcdefghijk"]
     assert videos[0]["ch"] == "Practical Vermont"
-    print("refresh_youtube: folder parse ok (dedupe, window, non-video links)")
+    assert load_channels("/nonexistent.json") == []
+    print("refresh_youtube: channel feed ok (dedupe, window, missing ids)")
 
     payload = build_payload(
         videos,
