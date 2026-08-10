@@ -3,7 +3,7 @@
   "alerts": [],
   "forecast_flag": {
    "day": "2026-08-10",
-   "text": "Today: A slight chance of showers and thunderstorms between 3pm and 4pm, then a chance of showers and thunderstorms between 4pm and 5pm, then a chance of showers and thunderstorms"
+   "text": "This Afternoon: A slight chance of showers and thunderstorms between 3pm and 4pm, then a chance of showers and thunderstorms between 4pm and 5pm, then a chance of showers and thunderstorms"
   }
  },
  "beach-status": {
@@ -11,32 +11,32 @@
    "Blanchard Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-09T19:06:00+00:00"
+    "resultTime": "2026-08-10T16:58:00+00:00"
    },
    "Blanchard Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-09T19:06:00+00:00"
+    "resultTime": "2026-08-10T16:58:00+00:00"
    },
    "Leddy Beach North": {
     "status": "open",
-    "reason": "Murky",
-    "resultTime": "2026-08-09T20:06:00+00:00"
+    "reason": "Choppy",
+    "resultTime": "2026-08-10T15:47:00+00:00"
    },
    "Leddy Beach South": {
     "status": "open",
-    "reason": "Murky",
-    "resultTime": "2026-08-09T20:06:00+00:00"
+    "reason": "Choppy",
+    "resultTime": "2026-08-10T15:47:00+00:00"
    },
    "North Beach North": {
     "status": "open",
-    "reason": "Bit murky",
-    "resultTime": "2026-08-09T19:45:00+00:00"
+    "reason": "Choppy",
+    "resultTime": "2026-08-10T16:19:00+00:00"
    },
    "North Beach South": {
     "status": "open",
-    "reason": "Open",
-    "resultTime": "2026-08-09T19:38:00+00:00"
+    "reason": "Choppy",
+    "resultTime": "2026-08-10T16:20:00+00:00"
    },
    "North Shore Natural Area": {
     "status": "open",
@@ -46,12 +46,12 @@
    "Oakledge Cove": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-09T19:07:00+00:00"
+    "resultTime": "2026-08-10T17:04:00+00:00"
    },
    "Texaco Beach": {
     "status": "open",
-    "reason": "Murky",
-    "resultTime": "2026-08-09T19:38:00+00:00"
+    "reason": "Choppy",
+    "resultTime": "2026-08-10T16:20:00+00:00"
    },
    "Blodgett Water Access Point": {
     "status": "open",
@@ -488,6 +488,14 @@
      "Ordinance Committee Meeting Agenda Packet v1"
     ]
    },
+   "10128": {
+    "name": "Ward 5 NPA Meeting",
+    "start": "2026-08-20T18:30:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Ward 5 NPA Agenda 8/20/2026"
+    ]
+   },
    "8683": {
     "name": "Retirement Board Meeting",
     "start": "2026-08-24T09:30:00+00:00",
@@ -517,12 +525,6 @@
     "start": "2026-08-25T17:30:00+00:00",
     "hasAgenda": true,
     "files": []
-   },
-   "9962": {
-    "name": "Regular Planning Commission Meeting",
-    "start": "2026-08-25T18:30:00+00:00",
-    "hasAgenda": false,
-    "files": []
    }
   }
  },
@@ -530,6 +532,27 @@
   "feeds": {
    "sevendays-news": {
     "items": [
+     {
+      "id": "https://www.sevendaysvt.com/?p=214356",
+      "title": "Ray’s Seafood Market in Essex to Close After 75 Years",
+      "link": "https://www.sevendaysvt.com/food-drink/foodnews/rays-seafood-market-in-essex-to-close-after-75-years/",
+      "ts": "2026-08-10T17:07:58+00:00",
+      "summary": "Co-owner Paul Dunkling confirmed that he and his sisters will close the Essex market and restaurant on September 12. The wholesale fish division may continue. The post Ray’s Seafood Market in Essex to Close After 75 Years appeared first on Seven Days . (Image: File: Melissa Pasanen)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=214380",
+      "title": "Obituary: Walter “Gator” Mumford, 1953-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-walter-gator-mumford-1953-2026/",
+      "ts": "2026-08-10T10:00:00+00:00",
+      "summary": "Co-owner of Gator’s convenience store in Bristol supported other laryngectomees in Vermont and was active in the local rotary club The post Obituary: Walter \"Gator\" Mumford, 1953-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=214371",
+      "title": "Obituary: Nancy Noyes Thayer, 1925-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-nancy-noyes-thayer-1925-2026/",
+      "ts": "2026-08-10T10:00:00+00:00",
+      "summary": "Centenarian made friends everywhere she went through her love of entertaining, volunteer work and people and was a passionate supporter of the arts The post Obituary: Nancy Noyes Thayer, 1925-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
      {
       "id": "https://www.sevendaysvt.com/?p=214337",
       "title": "Local Group Wins Auction for Flood-Damaged Federal Building in Montpelier",
@@ -578,32 +601,18 @@
       "link": "https://www.sevendaysvt.com/seven-daysies-awards/best-of-vermont-2026/",
       "ts": "2026-08-05T14:38:49+00:00",
       "summary": "Find out what's great about our state! Thousands of locals chose everything from farmers markets to festivals, brewpubs to bike shops. Meet their worthy winners. The post Who Won the 2026 Seven Daysies Best-of-Vermont Awards? appeared first on Seven Days . (Image: Sean Metcalf | Rev. Diane Sullivan)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=213991",
-      "title": "Washington Central to Vote on Making It Easier to Close Schools",
-      "link": "https://www.sevendaysvt.com/news/education-news/washington-central-to-vote-on-making-it-easier-to-close-schools/",
-      "ts": "2026-08-05T13:59:00+00:00",
-      "summary": "An August 11 vote on changing the district’s articles of agreement is the latest chapter in an uneasy partnership among five central Vermont towns. The post Washington Central to Vote on Making It Easier to Close Schools appeared first on Seven Days . (Image: Alison Novak)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=214141",
-      "title": "Queen City Public Safety Debate Shifts to Needle Exchanges",
-      "link": "https://www.sevendaysvt.com/topic/burlington/queen-city-public-safety-debate-shifts-to-needle-exchanges/",
-      "ts": "2026-08-05T13:55:00+00:00",
-      "summary": "Democratic councilors say Burlington’s downtown is not the place for programs that offer free syringes, reigniting debate about the approach to public safety. The post Queen City Public Safety Debate Shifts to Needle Exchanges appeared first on Seven Days . (Image: Luke Awtry)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=213848",
-      "title": "Athletes at the Vermont Ninja Warrior Training Center Aim for the Big Time",
-      "link": "https://www.sevendaysvt.com/arts-culture/sports/athletes-at-the-vermont-ninja-warrior-training-center-aim-for-the-big-time/",
-      "ts": "2026-08-05T13:54:00+00:00",
-      "summary": "The newly relocated and expanded center in Essex hosts classes for all ages and a team whose members have appeared on “American Ninja Warrior.” The post Athletes at the Vermont Ninja Warrior Training Center Aim for the Big Time appeared first on Seven Days . (Image: Luke Awtry)"
      }
     ]
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=652837",
+      "title": "Vermont Psychiatric Care Hospital cuts staff and beds despite pushback",
+      "link": "https://vtdigger.org/2026/08/10/vermont-psychiatric-care-hospital-cuts-staff-and-beds-despite-pushback/",
+      "ts": "2026-08-10T15:42:58+00:00",
+      "summary": "The Department of Mental Health says the cuts are due to declining census, though demand for psychiatric care is high in Vermont. Read the story on VTDigger here: Vermont Psychiatric Care Hospital cuts staff and beds despite pushback ."
+     },
      {
       "id": "https://vtdigger.org/?p=652914",
       "title": "Congress must vote before the Guard goes to war",
@@ -806,13 +815,6 @@
       "link": "https://vtdigger.org/2026/08/04/democratic-socialists-of-america-wants-to-abolish-the-u-s-senate-bernie-sanders-says-no/",
       "ts": "2026-08-04T21:30:27+00:00",
       "summary": "Democrats across the caucus dismissed the idea of restructuring Congress. Even U.S. Sen. Bernie Sanders, an independent who’s long called himself a democratic socialist, isn’t on board with the proposal. Read the story on VTDigger here: Democratic Socialists of America wants to abolish the U.S. Senate. Bernie Sanders says ‘No.’ ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=652647",
-      "title": "Drawing attention: Vermont gets its first tourism branding",
-      "link": "https://vtdigger.org/2026/08/04/drawing-attention-vermont-gets-its-first-tourism-branding/",
-      "ts": "2026-08-04T19:24:41+00:00",
-      "summary": "State officials hope a new hand-drawn wordmark and a slogan, “State of Inspiration,” will entice more people to book a trip. Read the story on VTDigger here: Drawing attention: Vermont gets its first tourism branding ."
      }
     ]
    },
@@ -847,9 +849,9 @@
       "summary": "Joshua Lake, a candidate in the Democratic primary for Windsor County sheriff, has been named in a Brady-Giglio letter — a legal disclosure prosecutors are required to make if they have evidence that could taint an officer’s credibility."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-07/uvm-dartmouth-medical-schools-body-donation-uptick",
+      "id": "https://www.vermontpublic.org/local-news/2026-08-07/uvm-dartmouth-medical-schools-body-donation",
       "title": "'It's the ultimate gift': Why some people are donating their bodies to UVM and Dartmouth for science",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-07/uvm-dartmouth-medical-schools-body-donation-uptick",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-07/uvm-dartmouth-medical-schools-body-donation",
       "ts": "2026-08-07T14:44:05+00:00",
       "summary": "An estimated 20,000 Americans donate their bodies every year for scientific research. The University of Vermont and Dartmouth College each accept close to 30 bodies a year, as part of what are known as anatomical gift programs."
      },
@@ -906,6 +908,27 @@
    },
    "wcax": {
     "items": [
+     {
+      "id": "O3MKBSQYFREFNJYMRNWC4ZIBRM",
+      "title": "A bike ride to be held in honor of local teen killed in crash",
+      "link": "https://www.wcax.com/2026/08/10/bike-ride-be-held-honor-local-teen-killed-crash/",
+      "ts": "2026-08-10T15:35:16+00:00",
+      "summary": "A bike ride to honor a teenager killed in a collision with a car in Burlington is taking place Wednesday, Aug. 12"
+     },
+     {
+      "id": "R2C4GCE5SBAR3O4HCB3V77WY3I",
+      "title": "Closing arguments underway in Frattolin murder trial",
+      "link": "https://www.wcax.com/2026/08/10/closing-arguments-underway-frattolin-murder-trial/",
+      "ts": "2026-08-10T15:31:49+00:00",
+      "summary": "Closing arguments got underway Monday in an Essex County courtroom without Luciano Frattolin taking the stand in the case involving the murder of his daughter"
+     },
+     {
+      "id": "MNUCBYR2AZGLFDJUZBWHTAKGOM",
+      "title": "Location chosen in South Burlington for new VA outpatient clinic",
+      "link": "https://www.wcax.com/2026/08/10/location-chosen-south-burlington-new-va-outpatient-clinic/",
+      "ts": "2026-08-10T15:30:43+00:00",
+      "summary": "The Department of Veterans Affairs signed a lease for a new outpatient clinic in South Burlington"
+     },
      {
       "id": "OR3XIMPPP5DH5OA7KSGPCVDZEI",
       "title": "Missing Vermont woman found safe",
@@ -1234,32 +1257,53 @@
       "link": "https://www.wcax.com/2026/08/07/fairlee-man-accused-threatening-multiple-people-with-knife/",
       "ts": "2026-08-07T13:34:48+00:00",
       "summary": "A Vermont man faces multiple felony charges after allegedly threatening people with a knife in Fairlee."
-     },
-     {
-      "id": "PP5PJNZJSVHKNBC2RDSWAFSV4A",
-      "title": "Cabot High School enrollment decline raises closure, merger questions",
-      "link": "https://www.wcax.com/2026/08/07/cabot-high-school-enrollment-decline-raises-closure-merger-questions/",
-      "ts": "2026-08-07T11:35:44+00:00",
-      "summary": "Cabot High School will head into spring 2027 with just 23 students-- a record low that has reignited debate over the school’s future."
-     },
-     {
-      "id": "Q2YFVMH7ENBJRC354GN22ABZCY",
-      "title": "Emergency crews respond to boat fire in Colchester",
-      "link": "https://www.wcax.com/2026/08/07/emergency-crews-respond-boat-fire-colchester/",
-      "ts": "2026-08-07T01:20:13+00:00",
-      "summary": "Emergency crews in Colchester responded to a sailboat fire on Malletts Bay Thursday afternoon."
-     },
-     {
-      "id": "5G7PLCRYPJFGTBGRCSHRMAJSRM",
-      "title": "Young filmmaker to show movie at Essex Cinemas",
-      "link": "https://www.wcax.com/2026/08/06/young-filmmaker-show-movie-essex-cinemas/",
-      "ts": "2026-08-06T23:47:25+00:00",
-      "summary": "Austen Hamel, of Vergennes, will show his feature-length film, \"The Wanted Part II,\" at the Essex Cinemas on Aug. 12."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73392705",
+      "title": "Threats from passengers on two planes prompt emergency responses",
+      "link": "https://www.mynbc5.com/article/unruly-passenger-threats-united-alaska-flights-milwaukee-miami/73392705",
+      "ts": "2026-08-10T17:00:00+00:00",
+      "summary": "Threats from passengers on two flights early this week led to the execution of emergency protocols, including a lockdown, according to air traffic control audio."
+     },
+     {
+      "id": "73393511",
+      "title": "Trial of Canadian man accused of killing daughter continues in fourth week",
+      "link": "https://www.mynbc5.com/article/luciano-frattolin-murder-trial-aug-11/73393511",
+      "ts": "2026-08-10T16:58:00+00:00",
+      "summary": "Luciano Frattolin’s trial, where he faces charges of killing his 9-year-old daughter and dumping her body in Ticonderoga, entered its fourth week on Monday as the defense considers whether he will testify."
+     },
+     {
+      "id": "73393487",
+      "title": "Sentencing hearing for New Hampshire man convicted of killing pregnant girlfriend, unborn child",
+      "link": "https://www.mynbc5.com/article/nh-sentencing-ossipee-man-girlfriend-08102026/73393487",
+      "ts": "2026-08-10T16:32:00+00:00",
+      "summary": "An Ossipee, New Hampshire man is set to be sentenced today after he was found guilty of two counts of second-degree murder in the deaths of his pregnant girlfriend and unborn child."
+     },
+     {
+      "id": "73392480",
+      "title": "Hannaford recalls some deli, produce items due to potential salmonella contamination",
+      "link": "https://www.mynbc5.com/article/hannaford-recall-jalapeno-salmonella-contamination/73392480",
+      "ts": "2026-08-10T16:31:00+00:00",
+      "summary": "Check your fridge: Hannaford is recalling several items sold in its deli and produce sections due to potential salmonella contamination."
+     },
+     {
+      "id": "73365518",
+      "title": "Cast members of canceled 'Rocky Horror Show' speak out as musical director accused of fake threats",
+      "link": "https://www.mynbc5.com/article/essex-vermont-rocky-horror-show-canceled/73365518",
+      "ts": "2026-08-10T15:39:00+00:00",
+      "summary": "The former cast members of a planned local production of \"The Rocky Horror Show\" is speaking out after the musical director of the play was cited for allegedly sending threatening messages to himself to get the show canceled."
+     },
+     {
+      "id": "73392892",
+      "title": "20 dead and buildings collapsed after earthquake shakes Colombia",
+      "link": "https://www.mynbc5.com/article/colombia-earthquake-latest/73392892",
+      "ts": "2026-08-10T15:38:00+00:00",
+      "summary": "At least 20 people have been killed and dozens of buildings have collapsed after a powerful 7.4-magnitude earthquake struck western Colombia."
+     },
      {
       "id": "73391303",
       "title": "Murder trial begins for man accused of orchestrating Tupac Shakur's 1996 killing",
@@ -1275,13 +1319,6 @@
       "summary": "Jackie, the bald eagle famous for raising several eaglets in Big Bear with her partner Shadow, is in critical and unstable condition as veterinary teams continue to care for her."
      },
      {
-      "id": "73392480",
-      "title": "Hannaford recalls some deli, produce items due to potential salmonella contamination",
-      "link": "https://www.mynbc5.com/article/hannaford-recall-jalapeno-salmonella-contamination/73392480",
-      "ts": "2026-08-10T14:58:00+00:00",
-      "summary": "Check your fridge: Hannaford is recalling several items sold in its deli and produce sections due to potential salmonella contamination."
-     },
-     {
       "id": "71835350",
       "title": "There could be recalled food in your fridge and you may never know",
       "link": "https://www.mynbc5.com/article/food-recalls-are-easy-to-miss-heres-how-to-protect-your-kitchen/71835350",
@@ -1289,18 +1326,18 @@
       "summary": "Expiration dates aren't enough. Here's how to check your kitchen for recalls."
      },
      {
-      "id": "73391878",
-      "title": "Tedde Moore, teacher in 'A Christmas Story,' dead at 79",
-      "link": "https://www.mynbc5.com/article/tedde-moore-a-christmas-story-dead-at-79/73391878",
-      "ts": "2026-08-10T14:47:00+00:00",
-      "summary": "Tedde Moore, the actress best known for her role as Miss Shields in \"A Christmas Story,\" has died at 79."
-     },
-     {
       "id": "73391890",
       "title": "Taylor Farms recalls jalapeño products, including guacamole and dip, over salmonella concerns",
       "link": "https://www.mynbc5.com/article/taylor-farms-jalapeno-recall-salmonella-concerns/73391890",
       "ts": "2026-08-10T14:47:00+00:00",
       "summary": "More than a dozen Taylor Farms products sold at large retailers across the U.S. are being recalled because they include jalapeño peppers that may be contaminated with salmonella."
+     },
+     {
+      "id": "73391878",
+      "title": "Tedde Moore, teacher in 'A Christmas Story,' dead at 79",
+      "link": "https://www.mynbc5.com/article/tedde-moore-a-christmas-story-dead-at-79/73391878",
+      "ts": "2026-08-10T14:47:00+00:00",
+      "summary": "Tedde Moore, the actress best known for her role as Miss Shields in \"A Christmas Story,\" has died at 79."
      },
      {
       "id": "73392079",
@@ -1364,41 +1401,6 @@
       "link": "https://www.mynbc5.com/article/trump-economic-strategy-pressure-iran/73389726",
       "ts": "2026-08-10T11:14:00+00:00",
       "summary": "The Trump administration said it will lean into economic pressure to get Iran back to the negotiating table."
-     },
-     {
-      "id": "73385236",
-      "title": "American detained in Russia is 'near death,' advocate says",
-      "link": "https://www.mynbc5.com/article/american-detained-russia-robert-gilman-near-death/73385236",
-      "ts": "2026-08-10T11:13:00+00:00",
-      "summary": "Concerns are mounting about the wellbeing of an American detained in Russia since 2022, with an advocate alleging he has been subjected to torture."
-     },
-     {
-      "id": "73389850",
-      "title": "World War II veteran laid to rest 84 years after his death",
-      "link": "https://www.mynbc5.com/article/world-war-ii-veteran-william-keele-laid-to-rest/73389850",
-      "ts": "2026-08-10T10:40:00+00:00",
-      "summary": "A World War II veteran and former prisoner of war was recently laid to rest – 84 years after his death."
-     },
-     {
-      "id": "73389233",
-      "title": "Man crosses railroad tracks with oncoming train to rescue woman stuck at crossing",
-      "link": "https://www.mynbc5.com/article/florida-man-rescues-woman-railroad-crossing/73389233",
-      "ts": "2026-08-10T09:55:00+00:00",
-      "summary": "A man crossed railroad tracks with an oncoming train on Friday to rescue a woman stuck at a Florida crossing, saving her from near disaster."
-     },
-     {
-      "id": "73388902",
-      "title": "Perez Hilton remains hospitalized as his family gives an update",
-      "link": "https://www.mynbc5.com/article/perez-hilton-hospitalized-family-update/73388902",
-      "ts": "2026-08-10T09:06:00+00:00",
-      "summary": "Perez Hilton's family gave an update on the gossip blogger's condition after he was hospitalized last week."
-     },
-     {
-      "id": "73387407",
-      "title": "Western Europe sets new temperature record as heat waves pummel the region",
-      "link": "https://www.mynbc5.com/article/western-europe-heat-wave-temperature-record/73387407",
-      "ts": "2026-08-10T04:00:00+00:00",
-      "summary": "The heat waves roiling Western Europe this summer toppled an average temperature record for the June-July period set in 2022."
      }
     ]
    },
@@ -1579,6 +1581,30 @@
  "reddit-burlington": {
   "posts": [
    {
+    "id": "1vko1p6",
+    "title": "Was I wrong for this?",
+    "url": "https://www.reddit.com/r/burlington/comments/1vko1p6/was_i_wrong_for_this/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-10T15:42:18+00:00"
+   },
+   {
+    "id": "1vknc6m",
+    "title": "Voted 🗳️",
+    "url": "https://www.reddit.com/r/burlington/comments/1vknc6m/voted/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-10T15:42:18+00:00"
+   },
+   {
+    "id": "1vkmd5s",
+    "title": "I built a free page that puts every Burlington headline next to the national news. One screen to open up, updates all day. Something you can keep coming back to.",
+    "url": "https://www.reddit.com/r/burlington/comments/1vkmd5s/i_built_a_free_page_that_puts_every_burlington/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-10T15:42:18+00:00"
+   },
+   {
     "id": "1vkh9wy",
     "title": "Dentist recommendation",
     "url": "https://www.reddit.com/r/burlington/comments/1vkh9wy/dentist_recommendation/",
@@ -1713,30 +1739,6 @@
     "score": null,
     "comments": null,
     "created": "2026-08-09T06:40:23+00:00"
-   },
-   {
-    "id": "1vjfhlh",
-    "title": "What are good jobs for an incoming freshman at UVM?",
-    "url": "https://www.reddit.com/r/burlington/comments/1vjfhlh/what_are_good_jobs_for_an_incoming_freshman_at_uvm/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-09T06:40:23+00:00"
-   },
-   {
-    "id": "1vje77v",
-    "title": "ISO good massage place or specific masseuse somewhere",
-    "url": "https://www.reddit.com/r/burlington/comments/1vje77v/iso_good_massage_place_or_specific_masseuse/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-09T03:41:00+00:00"
-   },
-   {
-    "id": "1vje6s5",
-    "title": "Police Brutality in Vermont",
-    "url": "https://www.reddit.com/r/burlington/comments/1vje6s5/police_brutality_in_vermont/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-09T03:41:00+00:00"
    }
   ]
  },
