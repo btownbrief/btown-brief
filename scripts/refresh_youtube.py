@@ -10,6 +10,9 @@ Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
     only full episodes/talks.
   * Filmed in Vermont. Two API searches surface fresh local footage no
     channel roster would catch, ranked by view velocity.
+  * Deep cuts. Each refresh, a rotating handful of roster channels give up
+    their all-time most-viewed videos — the back catalog is where half the
+    gold lives, and recency feeds never surface it.
   * Trending. The YouTube Data API's mostPopular chart for the US.
 
 Durations and view counts come from the API's videos endpoint. Without a
@@ -45,6 +48,10 @@ MAX_TRENDING = 15
 DEFAULT_CAP = 3          # per-channel per refresh; firehoses set lower in the file
 SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
 MAX_VERMONT = 8
+DEEP_CHANNELS_PER_RUN = 6   # rotating sample; 6 searches ≈ 600 quota units
+DEEP_PER_CHANNEL = 4
+MAX_DEEP = 24
+DEEP_MIN_AGE_DAYS = 180     # a deep cut is old gold, not last month's upload
 VT_QUERIES = ["Burlington Vermont", "Lake Champlain Vermont"]
 VT_RE = re.compile(
     r"vermont|burlington|champlain|montpelier|stowe|winooski|green mountain",
@@ -168,6 +175,8 @@ def fetch_channel_videos(now_ts, channels=None):
                 continue
             if channel.get("min_sec"):
                 video["_min"] = int(channel["min_sec"])
+            if channel.get("g"):
+                video["g"] = channel["g"]
             seen.add(video["id"])
             videos.append(video)
             kept += 1
@@ -291,10 +300,58 @@ def fetch_vermont(key, now_ts, exclude):
     return found[:MAX_VERMONT]
 
 
-def build_payload(own, vermont, trending, generated):
+def fetch_deep_cuts(key, now_ts, channels, exclude):
+    """A rotating sample of channels -> their all-time most-viewed videos."""
+    import html as html_mod
+    import random
+
+    pool = [channel for channel in channels if channel.get("id")]
+    random.shuffle(pool)
+    published_before = datetime.fromtimestamp(
+        now_ts - DEEP_MIN_AGE_DAYS * 86400,
+        timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    found, seen = [], set(exclude)
+    for channel in pool[:DEEP_CHANNELS_PER_RUN]:
+        query = urllib.parse.urlencode({
+            "part": "snippet", "type": "video", "order": "viewCount",
+            "channelId": channel["id"], "publishedBefore": published_before,
+            "maxResults": DEEP_PER_CHANNEL, "key": key})
+        try:
+            items = http_json(f"{API}/search?{query}").get("items", [])
+        except Exception as exc:  # noqa: BLE001 — one channel's miss is fine
+            print(f"refresh_youtube: deep cuts {channel['name']} failed ({exc})",
+                  file=sys.stderr)
+            continue
+        for item in items:
+            vid = (item.get("id") or {}).get("videoId")
+            snippet = item.get("snippet") or {}
+            title = html_mod.unescape(snippet.get("title") or "")
+            if not vid or vid in seen or not title:
+                continue
+            when = None
+            published = snippet.get("publishedAt")
+            if published:
+                try:
+                    when = int(datetime.fromisoformat(
+                        published.replace("Z", "+00:00")).timestamp())
+                except ValueError:
+                    when = None
+            seen.add(vid)
+            found.append({"id": vid, "t": title[:200],
+                          "ch": channel.get("name", "")[:60], "d": when,
+                          "dc": 1, "g": channel.get("g", "sci")})
+    if not found:
+        return []
+    enrich(found, key)
+    found = apply_duration_rules(found)
+    found.sort(key=lambda video: video.get("views") or 0, reverse=True)
+    return found[:MAX_DEEP]
+
+
+def build_payload(own, vermont, deep, trending, generated):
     merged = list(own)
     seen = {video["id"] for video in merged}
-    for shelf in (vermont, trending):
+    for shelf in (vermont, deep, trending):
         for video in shelf:
             if video["id"] not in seen:
                 seen.add(video["id"])
@@ -323,7 +380,7 @@ def run(args):
 
     own = fetch_channel_videos(now_ts)
 
-    vermont, trending = [], []
+    vermont, deep, trending = [], [], []
     if key:
         try:
             if own:
@@ -338,16 +395,23 @@ def run(args):
         except Exception as exc:  # noqa: BLE001
             print(f"refresh_youtube: Vermont search trouble ({exc})",
                   file=sys.stderr)
+        try:
+            deep = fetch_deep_cuts(
+                key, now_ts, load_channels(),
+                {video["id"] for video in own + trending + vermont})
+        except Exception as exc:  # noqa: BLE001
+            print(f"refresh_youtube: deep cuts trouble ({exc})",
+                  file=sys.stderr)
     else:
         own = apply_duration_rules(own)   # strips the internal markers
 
-    if not own and not vermont and not trending:
+    if not own and not vermont and not deep and not trending:
         print("refresh_youtube: nothing to publish this run")
         return
 
-    write_json(args.out, build_payload(own, vermont, trending, utcnow()))
+    write_json(args.out, build_payload(own, vermont, deep, trending, utcnow()))
     print(f"refresh_youtube: {len(own)} followed + {len(vermont)} vermont + "
-          f"{len(trending)} trending -> {args.out}")
+          f"{len(deep)} deep cuts + {len(trending)} trending -> {args.out}")
 
 
 # ----------------------------------------------------------------------
@@ -416,13 +480,17 @@ def selftest():
         videos,
         [{"id": "vermontvid1", "t": "Fall in Stowe", "ch": "Local",
           "d": now_ts, "dur": "3:00", "views": 900, "vt": 1}],
+        [{"id": "deepcutvid1", "t": "The best one ever", "ch": "Classic",
+          "d": now_ts - 400 * 86400, "dur": "12:00", "views": 5000000,
+          "dc": 1, "g": "sci"}],
         [{"id": "abcdefghijk", "t": "dupe", "ch": "x", "d": now_ts,
           "dur": "1:00", "views": 5, "trend": 1},
          {"id": "trendtrend1", "t": "A trending thing", "ch": "Big",
           "d": now_ts, "dur": "10:00", "views": 1000000, "trend": 1}],
         utcnow())
-    assert len(payload["videos"]) == 3      # trending dupe of a followed vid drops
-    assert payload["videos"][1]["vt"] == 1 and payload["videos"][-1]["trend"] == 1
+    assert len(payload["videos"]) == 4      # trending dupe of a followed vid drops
+    assert payload["videos"][1]["vt"] == 1 and payload["videos"][2]["dc"] == 1
+    assert payload["videos"][-1]["trend"] == 1
     assert payload["v"] == 1 and "generated" in payload
     print("refresh_youtube: payload ok (merge, dedupe, shelf order)")
 

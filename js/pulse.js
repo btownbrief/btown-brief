@@ -53,7 +53,7 @@
     view: 'feed',
     q: '',
     shown: FEED_PAGE,
-    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, intent: false },
+    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, intent: false, ytview: 'list' },
     read: {},
     intent: {},             // focus-mode passed marks
     saved: [],              // [{k,t,u,s,d,sv}] newest-saved first
@@ -80,7 +80,7 @@
     try {
       var s = JSON.parse(localStorage.getItem(SET_KEY) || 'null');
       if (s && typeof s === 'object') {
-        ['theme', 'fs', 'limit', 'autohide', 'thumbs', 'intent'].forEach(function (k) {
+        ['theme', 'fs', 'limit', 'autohide', 'thumbs', 'intent', 'ytview'].forEach(function (k) {
           if (s[k] !== undefined) state.set[k] = s[k];
         });
         if (s.hidden && typeof s.hidden === 'object') state.set.hidden = s.hidden;
@@ -110,6 +110,7 @@
         theme: state.set.theme, fs: state.set.fs, limit: state.set.limit,
         autohide: state.set.autohide, thumbs: state.set.thumbs,
         hidden: state.set.hidden, view: state.view, intent: state.set.intent,
+        ytview: state.set.ytview,
       }));
     } catch (e) {}
   }
@@ -831,6 +832,93 @@
     return n ? n + ' views' : '';
   }
 
+  var YT_GROUPS = [
+    ['vt', 'Vermont & local'], ['news', 'News & docs'],
+    ['sci', 'Science & explainers'], ['food', 'Food & cooking'],
+    ['music', 'Music'], ['fun', 'Wholesome & fun'],
+  ];
+  var ytSort = 'new';
+
+  function durSec(fmt) {
+    if (!fmt) return null;
+    var parts = String(fmt).split(':').map(Number);
+    while (parts.length < 3) parts.unshift(0);
+    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  }
+
+  function ytVelocity(v) {
+    var days = Math.max((Date.now() / 1000 - (v.d || 0)) / 86400, 0.05);
+    return (v.views || 0) / (days + 0.5);
+  }
+
+  function ytOrder(list) {
+    var out = list.slice();
+    if (ytSort === 'hot') out.sort(function (a, b) { return ytVelocity(b) - ytVelocity(a); });
+    else if (ytSort === 'short') {
+      out = out.filter(function (v) {
+        var sec = durSec(v.dur);
+        return sec !== null && sec < 300;
+      });
+      out.sort(function (a, b) { return ytVelocity(b) - ytVelocity(a); });
+    } else out.sort(function (a, b) { return (b.d || 0) - (a.d || 0); });
+    return out;
+  }
+
+  function sampleN(list, n) {
+    var pool = list.slice();
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    }
+    return pool.slice(0, n);
+  }
+
+  function ytReg(v) {
+    var u = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
+    var k = keyOf(u);
+    byKey[k] = { t: v.t, u: u, s: '', d: v.d };
+    return { u: u, k: k };
+  }
+
+  function ytRow(v) {
+    var reg = ytReg(v);
+    var read = state.read[reg.k];
+    var meta = '<div class="fi-meta">' +
+      '<span class="chip c-youtube">' + esc(v.ch || 'YouTube') + '</span>' +
+      (v.d ? '<span class="age" data-ts="' + v.d + '">' + fmtAge(v.d) + '</span>' : '') +
+      (v.dur ? '<span class="age">' + esc(v.dur) + '</span>' : '') +
+      (v.views ? '<span class="age">' + esc(fmtViews(v.views)) + '</span>' : '') +
+      '</div>';
+    return '<article class="fi' + (read ? ' read' : '') + '" data-k="' + reg.k + '">' +
+      '<div class="fi-main">' + meta +
+      '<a class="fi-t" data-k="' + reg.k + '" href="' + reg.u +
+      '" target="_blank" rel="noopener">' + esc(v.t) + '</a></div></article>';
+  }
+
+  function ytCard(v) {
+    var reg = ytReg(v);
+    var read = state.read[reg.k];
+    return '<article class="vcard' + (read ? ' read' : '') + '" data-k="' + reg.k + '">' +
+      '<a class="vthumb" data-k="' + reg.k + '" href="' + reg.u +
+      '" target="_blank" rel="noopener" tabindex="-1">' +
+      '<img src="https://i.ytimg.com/vi/' + encodeURIComponent(v.id) +
+      '/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer">' +
+      (v.dur ? '<span class="vdur">' + esc(v.dur) + '</span>' : '') + '</a>' +
+      '<a class="vtitle" data-k="' + reg.k + '" href="' + reg.u +
+      '" target="_blank" rel="noopener">' + esc(v.t) + '</a>' +
+      '<div class="vmeta">' + esc(v.ch || '') +
+      (v.views ? ' · ' + esc(fmtViews(v.views)) : '') +
+      (v.d ? ' · <span class="age" data-ts="' + v.d + '">' + fmtAge(v.d) + '</span>' : '') +
+      '</div></article>';
+  }
+
+  function ytSection(title, list, extra) {
+    if (!list.length) return '';
+    return '<div class="vsec"><p class="vsec-head">' + esc(title) +
+      (extra || '') + '</p><div class="vgrid">' +
+      list.map(ytCard).join('') + '</div></div>';
+  }
+
   function renderYouTube(body) {
     if (!ytFresh()) {
       body.innerHTML = '<p class="empty">The video shelf is loading. Back soon.</p>';
@@ -841,40 +929,59 @@
       return v && v.id && v.t && clientQ(v.t);
     });
     var vt = vids.filter(function (v) { return v.vt; });
-    var own = vids.filter(function (v) { return !v.trend && !v.vt; });
+    var deep = vids.filter(function (v) { return v.dc; });
+    var own = vids.filter(function (v) { return !v.trend && !v.vt && !v.dc; });
     var trend = vids.filter(function (v) { return v.trend; });
-    function row(v) {
-      var u = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
-      var k = keyOf(u);
-      byKey[k] = { t: v.t, u: u, s: '', d: v.d };
-      var read = state.read[k];
-      var meta = '<div class="fi-meta">' +
-        '<span class="chip c-youtube">' + esc(v.ch || 'YouTube') + '</span>' +
-        (v.d ? '<span class="age" data-ts="' + v.d + '">' + fmtAge(v.d) + '</span>' : '') +
-        (v.dur ? '<span class="age">' + esc(v.dur) + '</span>' : '') +
-        (v.views ? '<span class="age">' + esc(fmtViews(v.views)) + '</span>' : '') +
-        '</div>';
-      return '<article class="fi' + (read ? ' read' : '') + '" data-k="' + k + '">' +
-        '<div class="fi-main">' + meta +
-        '<a class="fi-t" data-k="' + k + '" href="' + u +
-        '" target="_blank" rel="noopener">' + esc(v.t) + '</a></div></article>';
+    var shelves = state.set.ytview === 'shelves';
+
+    var bar = '<div class="ytbar">' +
+      '<div class="viewtog"><button class="vt" data-ytview="list" aria-pressed="' + !shelves +
+      '">List</button><button class="vt" data-ytview="shelves" aria-pressed="' + shelves +
+      '">Shelves</button></div>' +
+      (shelves
+        ? '<div class="ytsorts">' +
+          ['new', 'hot', 'short'].map(function (mode) {
+            var label = mode === 'new' ? 'Newest' : mode === 'hot' ? 'Most viewed/day' : 'Under 5 min';
+            return '<button class="pill" data-ytsort="' + mode +
+              '" aria-pressed="' + (ytSort === mode) + '">' + label + '</button>';
+          }).join('') + '</div>'
+        : '') + '</div>';
+
+    var html = bar;
+    var shuffleBtn = ' <button class="pill vshuffle" data-ytshuffle>Shuffle ↻</button>';
+    if (shelves) {
+      html += ytSection('Filmed in Vermont this week', ytOrder(vt));
+      YT_GROUPS.forEach(function (group) {
+        html += ytSection(group[1], ytOrder(own.filter(function (v) {
+          return (v.g || 'sci') === group[0];
+        })).slice(0, 8));
+      });
+      if (deep.length) {
+        html += ytSection('Deep cuts — the back catalog', sampleN(deep, 8), shuffleBtn);
+      }
+      html += ytSection('Trending in the US', ytOrder(trend));
+    } else {
+      if (vt.length) {
+        html += '<p class="empty" style="margin:18px auto 0">Filmed in Vermont this week</p>' +
+          '<div class="feed">' + vt.map(ytRow).join('') + '</div>';
+      }
+      if (own.length) {
+        html += '<p class="empty" style="margin:24px auto 0">New from the channels the Pulse follows</p>' +
+          '<div class="feed">' + own.map(ytRow).join('') + '</div>';
+      }
+      if (deep.length) {
+        html += '<p class="empty" style="margin:24px auto 0">Deep cuts — the back catalog' +
+          shuffleBtn + '</p>' +
+          '<div class="feed">' + sampleN(deep, 6).map(ytRow).join('') + '</div>';
+      }
+      if (trend.length) {
+        html += '<p class="empty" style="margin:24px auto 0">Trending in the US right now</p>' +
+          '<div class="feed">' + trend.map(ytRow).join('') + '</div>';
+      }
     }
-    var html = '';
-    if (vt.length) {
-      html += '<p class="empty" style="margin:18px auto 0">Filmed in Vermont this week</p>' +
-        '<div class="feed">' + vt.map(row).join('') + '</div>';
-    }
-    if (own.length) {
-      html += '<p class="empty" style="margin:' + (vt.length ? '24px' : '18px') +
-        ' auto 0">New from the channels the Pulse follows</p>' +
-        '<div class="feed">' + own.map(row).join('') + '</div>';
-    }
-    if (trend.length) {
-      html += '<p class="empty" style="margin:24px auto 0">Trending in the US right now</p>' +
-        '<div class="feed">' + trend.map(row).join('') + '</div>';
-    }
-    body.innerHTML = html || '<p class="empty">No videos right now.</p>';
-    renderCount(vt.length + own.length + trend.length, 0);
+    body.innerHTML = (vt.length + own.length + deep.length + trend.length)
+      ? html : '<p class="empty">No videos right now.</p>';
+    renderCount(vt.length + own.length + deep.length + trend.length, 0);
   }
 
   function loadYouTube() {
@@ -1024,7 +1131,7 @@
 
     document.addEventListener('pointerdown', function (ev) {
       if (!ev.isPrimary || ev.button) return;
-      var row = ev.target.closest && ev.target.closest('#pulse-body .fi[data-k], #pulse-body li[data-k]');
+      var row = ev.target.closest && ev.target.closest('#pulse-body .fi[data-k], #pulse-body li[data-k], #pulse-body .vcard[data-k]');
       if (!row) return;
       if (ev.target.closest('.fi-acts, .unsave, .play, .chip, .disc')) return;
       clearTimeout(G.hold);
@@ -1484,9 +1591,23 @@
   function bind() {
     document.addEventListener('click', function (ev) {
       var el = ev.target.closest('[data-topic],[data-source],[data-togsrc],[data-audio],' +
-        '[data-act],[data-unsave],[data-nudge-dismiss],[data-hint-dismiss],a[data-k]');
+        '[data-act],[data-unsave],[data-nudge-dismiss],[data-hint-dismiss],[data-ytview],[data-ytsort],[data-ytshuffle],a[data-k]');
       if (!el) return;
       if (el.dataset.topic) { setTopic(el.dataset.topic); return; }
+      if (el.hasAttribute('data-ytview')) {
+        state.set.ytview = el.getAttribute('data-ytview');
+        saveSettings(); renderBody();
+        return;
+      }
+      if (el.hasAttribute('data-ytsort')) {
+        ytSort = el.getAttribute('data-ytsort');
+        renderBody();
+        return;
+      }
+      if (el.hasAttribute('data-ytshuffle')) {
+        renderBody();
+        return;
+      }
       if (el.dataset.act) {
         if (el.dataset.act === 'save') commitSave(el.dataset.k);
         else commitDig(el.dataset.k);
