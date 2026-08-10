@@ -40,7 +40,7 @@ jobs:
 
       - name: Install the Anthropic SDK
         if: steps.key.outputs.ready == 'true'
-        run: python3 -m pip install --quiet anthropic
+        run: python3 -m pip install --quiet 'anthropic>=0.116,<1'
 
       - name: Curate the TOP list
         if: steps.key.outputs.ready == 'true'

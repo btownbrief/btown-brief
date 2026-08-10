@@ -46,12 +46,27 @@ jobs:
             echo "ready=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Install the Anthropic SDK
+      - name: Skip while a topic-pages PR is still open
+        id: gate
         if: steps.key.outputs.ready == 'true'
-        run: python3 -m pip install --quiet anthropic
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          OPEN=$(gh pr list --state open --json headRefName \
+            --jq '[.[].headRefName | select(startswith("topic-pages/"))] | length')
+          if [ "$OPEN" != "0" ]; then
+            echo "an unreviewed topic-pages PR is open — not drafting more"
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install the Anthropic SDK
+        if: steps.key.outputs.ready == 'true' && steps.gate.outputs.go == 'true'
+        run: python3 -m pip install --quiet 'anthropic>=0.116,<1'
 
       - name: Draft any topic pages
-        if: steps.key.outputs.ready == 'true'
+        if: steps.key.outputs.ready == 'true' && steps.gate.outputs.go == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
@@ -67,7 +82,7 @@ jobs:
           fi
 
       - name: Open a review PR for any new pages
-        if: steps.key.outputs.ready == 'true'
+        if: steps.key.outputs.ready == 'true' && steps.gate.outputs.go == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -100,5 +115,8 @@ jobs:
             "" \
             "Please read them before merging — nothing publishes until this PR" \
             "is merged.")
-          gh pr create --title "Topic pages: $SLUGS" --body "$BODY" \
-            || echo "a PR for $BRANCH may already be open"
+          if gh pr list --state open --head "$BRANCH" --json number --jq length | grep -qv '^0$'; then
+            echo "PR for $BRANCH already open — branch updated in place"
+          else
+            gh pr create --title "Topic pages: $SLUGS" --body "$BODY"
+          fi

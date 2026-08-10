@@ -166,12 +166,15 @@ def fetch_json(url, data=None, headers=None, timeout=TIMEOUT):
     return json.loads(fetch(url, data, headers, timeout).decode("utf-8"))
 
 
+LINK_TIMEOUT = 8  # seconds — a slow host must not eat the job's time budget
+
+
 def link_ok(url):
     """Fetch a URL and accept anything under 400. One retry, then give up."""
     for attempt in range(2):
         try:
             request = urllib.request.Request(url, headers={"User-Agent": UA})
-            with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
+            with urllib.request.urlopen(request, timeout=LINK_TIMEOUT) as response:
                 if response.status < 400:
                     return True
         except Exception:  # noqa: BLE001 — any failure means "don't link it"
@@ -217,6 +220,8 @@ def ask_model(prompt, schema, max_tokens):
     )
     if response.stop_reason == "refusal":
         raise RuntimeError("the model declined to answer")
+    if response.stop_reason == "max_tokens":
+        raise RuntimeError("response truncated at max_tokens")
     text = next(block.text for block in response.content if block.type == "text")
     return json.loads(text)
 
@@ -241,7 +246,7 @@ Return:
                 encyclopedia articles on the topic
   search_query  one general search query for finding videos and discussion
 """
-    return ask_model(prompt, TOPIC_SCHEMA, 1000)
+    return ask_model(prompt, TOPIC_SCHEMA, 4000)
 
 
 def draft_page(topic, headline, material):

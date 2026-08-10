@@ -177,12 +177,16 @@ def ask_model(prompt):
     client = anthropic.Anthropic()
     response = client.messages.create(
         model=MODEL,
-        max_tokens=4000,
+        max_tokens=8000,
         output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
         messages=[{"role": "user", "content": prompt}],
     )
     if response.stop_reason == "refusal":
         raise RuntimeError("the model declined to answer")
+    if response.stop_reason == "max_tokens":
+        # adaptive thinking shares the budget with the answer — a truncated
+        # response must fail loudly, not decay into a JSON parse error
+        raise RuntimeError("response truncated at max_tokens")
     text = next(block.text for block in response.content if block.type == "text")
     return json.loads(text)
 
