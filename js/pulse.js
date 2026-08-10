@@ -287,10 +287,17 @@
   var srcRowsHidden = false;
   var srcScrollRaf = 0;
   var srcLastY = 0;
-  var srcUpRun = 0;         // consecutive upward px — one flick, not jitter
+  var srcUpRun = 0;         // accumulated upward px — a deliberate flick
+  var srcDownRun = 0;       // accumulated downward px — deliberate reading
+  var srcToggledAt = 0;     // real fingers jitter; toggles get a cooldown
+  var SRC_DEAD = 3;         // px of per-event tremor ignored outright
+  var SRC_UP = 48;          // upward travel that reveals
+  var SRC_DOWN = 24;        // downward travel that hides
+  var SRC_COOLDOWN = 250;   // ms between toggles — flicker is impossible
 
   function setSrcRowsHidden(hide) {
     srcRowsHidden = hide;
+    srcToggledAt = Date.now();
     /* browsers with scroll anchoring absorb the header resize themselves,
        ones without it don't — so measure a real content element and correct
        only by whatever net shift actually happened */
@@ -303,9 +310,11 @@
     document.body.classList.toggle('src-hidden', hide);
     if (anchor) {
       var moved = anchor.getBoundingClientRect().top - beforeTop;
-      if (moved) window.scrollBy(0, moved);
+      if (Math.abs(moved) > 4) window.scrollBy(0, moved);
     }
     srcLastY = window.scrollY;
+    srcUpRun = 0;
+    srcDownRun = 0;
     if (!hide) updateScrollRows();
   }
 
@@ -317,10 +326,13 @@
     if (y < 0 || y > max) { srcLastY = Math.min(Math.max(y, 0), max); return; }
     var dy = y - srcLastY;
     srcLastY = y;
-    srcUpRun = dy < 0 ? srcUpRun - dy : 0;
-    if (!srcRowsHidden && dy > 0 && y > 140) {
+    if (Math.abs(dy) < SRC_DEAD) return;
+    if (dy > 0) { srcDownRun += dy; srcUpRun = 0; }
+    else { srcUpRun -= dy; srcDownRun = 0; }
+    if (Date.now() - srcToggledAt < SRC_COOLDOWN) return;
+    if (!srcRowsHidden && srcDownRun > SRC_DOWN && y > 140) {
       setSrcRowsHidden(true);
-    } else if (srcRowsHidden && (y < 40 || srcUpRun > 48)) {
+    } else if (srcRowsHidden && (y < 40 || srcUpRun > SRC_UP)) {
       setSrcRowsHidden(false);
     }
   }
