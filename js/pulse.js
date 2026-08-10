@@ -21,7 +21,7 @@
   var TOPIC_ORDER = ['local', 'reddit', 'news', 'newsletters', 'tech', 'business',
                      'science', 'culture', 'politics', 'sports', 'gaming', 'pods'];
   var TOPIC_LABEL = { all: 'All topics', local: 'Local', reddit: 'Reddit', pods: 'Podcasts',
-                      top: 'Top', popular: 'Popular', saved: 'Saved', digs: 'Digs' };
+                      top: 'Top', youtube: 'YouTube', popular: 'Popular', saved: 'Saved', digs: 'Digs' };
   var FEED_PAGE = 120;      // headlines per MORE click — a page, not a pit
   var READ_CAP = 4000;      // read-marks kept before pruning oldest
   var SET_KEY = 'pulse2-settings';
@@ -29,6 +29,7 @@
 
   /* V2.1 — the interaction layer */
   var TOP_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-top/data/pulse-top.json';
+  var YT_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-youtube/data/pulse-youtube.json';
   var SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
   var SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon/publishable — safe to ship
   var INTENT_KEY = 'pulse2-intent';   // url-key -> epoch sec, focus-mode marks
@@ -40,7 +41,7 @@
   var NUDGE_KEY = 'pulse2-nudge';     // take-a-break nudge state
   var HINT_KEY = 'pulse2-hints';      // gesture how-to card dismissed / learned
   var SEEN_KEY = 'pulse2-focus-seen'; // focus mode used once — stop the pulsing arrows
-  var CLIENT_TABS = ['top', 'popular', 'saved', 'digs'];  // rendered client-side
+  var CLIENT_TABS = ['top', 'youtube', 'popular', 'saved', 'digs'];  // rendered client-side
   var SAVED_CAP = 300;
   var SWIPE_COMMIT = 72;    // px of horizontal drag that commits a swipe
 
@@ -58,6 +59,7 @@
     saved: [],              // [{k,t,u,s,d,sv}] newest-saved first
     digs: [],               // [{k,t,u,s,d,dv}] headlines this reader dig-voted
     top: null,              // pulse-top.json payload (AI-picked TOP tab)
+    youtube: null,          // pulse-youtube.json payload (followed channels + trending)
     popular: null,          // [{url,title,source,saves}] from Supabase
     digVotes: null,         // url-key -> today's community vote count (DIGS tab)
   };
@@ -284,9 +286,16 @@
     return isFinite(age) && age < 30 * 3600 * 1000;   // 3x/day cadence + slack
   }
 
+  function ytFresh() {
+    if (!state.youtube || !Array.isArray(state.youtube.videos) ||
+        !state.youtube.videos.length) return false;
+    var age = Date.now() - Date.parse(state.youtube.generated || 0);
+    return isFinite(age) && age < 9 * 3600 * 1000;    // 3-hourly cadence + slack
+  }
+
   function tabBtn(t) {
     var on = !state.source && state.topic === t;
-    var accent = (t === 'local' || t === 'reddit' || t === 'top') ? ' t-' + t : '';
+    var accent = (t === 'local' || t === 'reddit' || t === 'top' || t === 'youtube') ? ' t-' + t : '';
     return '<button class="tab' + accent +
       '" data-topic="' + t + '" aria-pressed="' + on + '">' +
       esc(topicLabel(t)) + '</button>';
@@ -304,6 +313,7 @@
       .filter(function (t) { return present[t]; }).map(tabBtn).join('');
     /* your tabs live on their own line and appear once they have something */
     present.top = topFresh();
+    present.youtube = ytFresh();
     present.popular = !!(state.popular && state.popular.length);
     present.saved = state.saved.length > 0;
     present.digs = state.digs.length > 0;
@@ -443,6 +453,7 @@
     more.hidden = true;
 
     if (!state.source && state.topic === 'top') { renderTop(body); return; }
+    if (!state.source && state.topic === 'youtube') { renderYouTube(body); return; }
     if (!state.source && state.topic === 'popular') { renderPopular(body); return; }
     if (!state.source && state.topic === 'saved') { renderSaved(body); return; }
     if (!state.source && state.topic === 'digs') { renderDigs(body); return; }
@@ -608,8 +619,8 @@
                               local: p.local, d: p.d, why: p.why });
       });
     body.innerHTML =
-      '<p class="empty" style="margin:18px auto 0">Fifteen headlines worth your ten minutes · ' +
-      'picked by an AI editor 3× a day · headlines verbatim, never rewritten</p>' +
+      '<p class="empty" style="margin:18px auto 0">The 25 headlines worth your time · picked by an AI editor 3× a day, ' +
+      'with professional newsletters as scouts · headlines verbatim, never rewritten</p>' +
       '<div class="feed">' + rows.join('') + '</div>';
     renderCount(rows.length, 0);
   }
@@ -791,6 +802,63 @@
         if (state.data) render();
       }
     }).catch(function () {});   /* tab simply stays hidden until the SQL exists */
+  }
+
+  function fmtViews(n) {
+    n = +n || 0;
+    if (n >= 1e6) return (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M views';
+    if (n >= 1e3) return Math.round(n / 1e3) + 'K views';
+    return n ? n + ' views' : '';
+  }
+
+  function renderYouTube(body) {
+    if (!ytFresh()) {
+      body.innerHTML = '<p class="empty">The video shelf is loading. Back soon.</p>';
+      renderCount(0, 0);
+      return;
+    }
+    var vids = state.youtube.videos.filter(function (v) {
+      return v && v.id && v.t && clientQ(v.t);
+    });
+    var own = vids.filter(function (v) { return !v.trend; });
+    var trend = vids.filter(function (v) { return v.trend; });
+    function row(v) {
+      var u = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
+      var k = keyOf(u);
+      byKey[k] = { t: v.t, u: u, s: '', d: v.d };
+      var read = state.read[k];
+      var meta = '<div class="fi-meta">' +
+        '<span class="chip c-youtube">' + esc(v.ch || 'YouTube') + '</span>' +
+        (v.d ? '<span class="age" data-ts="' + v.d + '">' + fmtAge(v.d) + '</span>' : '') +
+        (v.dur ? '<span class="age">' + esc(v.dur) + '</span>' : '') +
+        (v.views ? '<span class="age">' + esc(fmtViews(v.views)) + '</span>' : '') +
+        '</div>';
+      return '<article class="fi' + (read ? ' read' : '') + '" data-k="' + k + '">' +
+        '<div class="fi-main">' + meta +
+        '<a class="fi-t" data-k="' + k + '" href="' + u +
+        '" target="_blank" rel="noopener">' + esc(v.t) + '</a></div></article>';
+    }
+    var html = '';
+    if (own.length) {
+      html += '<p class="empty" style="margin:18px auto 0">New from the channels the Pulse follows</p>' +
+        '<div class="feed">' + own.map(row).join('') + '</div>';
+    }
+    if (trend.length) {
+      html += '<p class="empty" style="margin:24px auto 0">Trending in the US right now</p>' +
+        '<div class="feed">' + trend.map(row).join('') + '</div>';
+    }
+    body.innerHTML = html || '<p class="empty">No videos right now.</p>';
+    renderCount(own.length + trend.length, 0);
+  }
+
+  function loadYouTube() {
+    if (isLocalDev() && location.protocol === 'file:') return;
+    fetchJSON(YT_URL, 8000).then(function (json) {
+      if (json && Array.isArray(json.videos)) {
+        state.youtube = json;
+        if (state.data) render();
+      }
+    }).catch(function () {});
   }
 
   function loadTop() {
@@ -1078,11 +1146,27 @@
   /* ---------- gesture how-to (one-time) ---------- */
 
   function learnedGestures() {
-    try { localStorage.setItem(HINT_KEY, '1'); } catch (e) {}
+    try { localStorage.setItem(HINT_KEY, 'done'); } catch (e) {}
+  }
+
+  function snoozeHints() {
+    try { localStorage.setItem(HINT_KEY, JSON.stringify({ d: etDay() })); } catch (e) {}
+  }
+
+  /* used a gesture → never again; only dismissed → gentle reminder in 10 days */
+  function hintDue() {
+    try {
+      var v = localStorage.getItem(HINT_KEY);
+      if (!v) return true;
+      if (v === 'done') return false;
+      var d = (JSON.parse(v) || {}).d;
+      if (!d) return true;
+      return Date.now() - Date.parse(d) > 10 * 86400000;
+    } catch (e) { return true; }
   }
 
   function hintHTML() {
-    try { if (localStorage.getItem(HINT_KEY)) return ''; } catch (e) {}
+    if (!hintDue()) return '';
     return '<div class="hintcard">' +
       '<b>New:</b> swipe a headline <b>right</b> to save it for later · swipe <b>left</b> to ' +
       'vote for a deep-dive page on that topic · <b>press and hold</b> to mute the source.' +
@@ -1384,7 +1468,7 @@
       }
       if (el.dataset.unsave) { unsave(el.dataset.unsave); return; }
       if (el.hasAttribute('data-hint-dismiss')) {
-        learnedGestures();
+        snoozeHints();
         var card = el.closest('.hintcard');
         if (card) card.remove();
         return;
@@ -1446,6 +1530,7 @@
       window.scrollTo({ top: 0 });
       loadData();
       loadTop();
+      loadYouTube();
       loadPopular();
       pollMeta();
     };
@@ -1555,6 +1640,7 @@
   loadData();
   pollMeta();
   loadTop();
+  loadYouTube();
   loadPopular();
   loadRail();
   flushReacts();

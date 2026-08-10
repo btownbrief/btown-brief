@@ -1,0 +1,65 @@
+# The Pulse — the YOUTUBE tab.
+#
+#   scripts/refresh_youtube.py -> data/pulse-youtube.json on the
+#   `pulse-youtube` branch (orphan single commit, force-pushed, fetched by
+#   the page straight off raw.githubusercontent.com — same pattern as
+#   pulse-data and pulse-top, so it never touches main or Pages).
+#
+# Sources: the public Inoreader folder "YouTube" (followed channels — the
+# curation surface) plus the YouTube Data API's US trending chart. Skips
+# quietly when YOUTUBE_API_KEY is absent.
+
+name: Refresh the Pulse YouTube shelf
+
+on:
+  schedule:
+    - cron: '17 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for an API key
+        id: key
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          if [ -z "$YOUTUBE_API_KEY" ]; then
+            echo "no API key, skipping"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build the video shelf
+        if: steps.key.outputs.ready == 'true'
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          python3 scripts/refresh_youtube.py --selftest
+          mkdir -p /tmp/yt-out/data
+          python3 scripts/refresh_youtube.py --out /tmp/yt-out/data/pulse-youtube.json
+
+      - name: Force-push the single-commit pulse-youtube branch
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          if [ ! -s /tmp/yt-out/data/pulse-youtube.json ]; then
+            echo "nothing written this run — leaving the branch alone"
+            exit 0
+          fi
+          cd /tmp/yt-out
+          git init -q -b pulse-youtube
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/pulse-youtube.json
+          git commit -q -m "Pulse YouTube $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            pulse-youtube

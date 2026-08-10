@@ -26,6 +26,7 @@
   --c-gaming: #7d8de8;
   --c-reddit: #ff4500;   /* reddit's own orangered — the tab Stephen wants red */
   --c-newsletters: #45c4b0;
+  --c-youtube: #ff5b5b;
   color-scheme: dark;
 }
 :root[data-theme="light"] {
@@ -49,6 +50,7 @@
   --c-gaming: #4053b8;
   --c-reddit: #cc3700;
   --c-newsletters: #12756a;
+  --c-youtube: #c00000;
   color-scheme: light;
 }
 
@@ -62,6 +64,7 @@
 .c-sports { --tc: var(--c-sports); }
 .c-gaming { --tc: var(--c-gaming); }
 .c-newsletters { --tc: var(--c-newsletters); }
+.c-youtube { --tc: var(--c-youtube); }
 
 * { box-sizing: border-box; }
 
@@ -832,6 +835,7 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 }
 
 .tab.t-top[aria-pressed="false"] { color: var(--c-news); }
+.tab.t-youtube[aria-pressed="false"] { color: var(--c-youtube); }
 
 /* ---------- V2.1: confirm dialog + toast ---------- */
 
