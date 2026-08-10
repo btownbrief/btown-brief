@@ -391,7 +391,7 @@ button {
 @media (max-width: 980px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 660px) { .grid { grid-template-columns: 1fr; gap: 0; } }
 
-.src-sec { padding: 16px 0 6px; border-bottom: 1px solid var(--line); }
+.src-sec { padding: 16px 0 6px; border-bottom: 1px solid var(--line); overflow: hidden; }
 
 .src-head {
   display: flex;
@@ -705,7 +705,7 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 
 /* ---------- V2.2: chip-row scroll cues ---------- */
 
-.srow { position: relative; }
+.srow { position: relative; max-width: 1240px; margin: 0 auto; }
 .srow-more {
   position: absolute;
   right: 0;
@@ -808,7 +808,7 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 
 /* long-press = mute, so the OS link callout has to stand down on touch */
 @media (hover: none) {
-  .fi, .fi * {
+  .fi, .fi *, .src-sec li[data-k], .src-sec li[data-k] * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;

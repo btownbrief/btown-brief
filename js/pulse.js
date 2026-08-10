@@ -68,6 +68,7 @@
   /* items passed-with-intent before this moment are hidden; marks made during
      this session stay visible (dimmed) so the feed never shifts under you */
   var intentCutoff = Math.round(Date.now() / 1000);
+  var lastGenerated = null;
 
   function $(id) { return document.getElementById(id); }
 
@@ -244,24 +245,28 @@
   /* every chip row gets a "more ›" cue plus a thin thumb showing where you
      are in the scroll — both vanish when the row fits */
   function updateScrollRows() {
+    var jobs = [];
     document.querySelectorAll('.srow').forEach(function (row) {
       if (row.hidden) return;
       var nav = row.querySelector('.tabs, .srcbar');
       var more = row.querySelector('.srow-more');
       var bar = row.querySelector('.srow-bar');
-      var thumb = bar && bar.querySelector('i');
       if (!nav || !more || !bar) return;
-      var overflow = nav.scrollWidth - nav.clientWidth;
+      jobs.push({ more: more, bar: bar, thumb: bar.querySelector('i'),
+                  sw: nav.scrollWidth, cw: nav.clientWidth, sl: nav.scrollLeft });
+    });
+    jobs.forEach(function (j) {   /* all reads above, all writes here */
+      var overflow = j.sw - j.cw;
       if (overflow < 8) {
-        more.hidden = true;
-        bar.hidden = true;
+        j.more.hidden = true;
+        j.bar.hidden = true;
         return;
       }
-      bar.hidden = false;
-      more.hidden = nav.scrollLeft >= overflow - 8;
-      if (thumb) {
-        thumb.style.width = Math.max(8, nav.clientWidth / nav.scrollWidth * 100) + '%';
-        thumb.style.marginLeft = (nav.scrollLeft / nav.scrollWidth * 100) + '%';
+      j.bar.hidden = false;
+      j.more.hidden = j.sl >= overflow - 8;
+      if (j.thumb) {
+        j.thumb.style.width = Math.max(8, j.cw / j.sw * 100) + '%';
+        j.thumb.style.marginLeft = (j.sl / j.sw * 100) + '%';
       }
     });
   }
@@ -305,6 +310,7 @@
     var client = CLIENT_TABS.filter(function (t) { return present[t]; }).map(tabBtn).join('');
     $('client-tabs').innerHTML = client;
     $('client-row').hidden = !client;
+    updateScrollRows();
   }
 
   function srcChip(src) {
@@ -841,7 +847,8 @@
     var keys = Object.keys(dug);
     if (keys.length > 500) keys.slice(0, keys.length - 500).forEach(function (x) { delete dug[x]; });
     try { localStorage.setItem(DIG_KEY, JSON.stringify(dug)); } catch (e) {}
-    if (!state.digs.some(function (o) { return o.k === k; })) {
+    var addedEntry = !state.digs.some(function (o) { return o.k === k; });
+    if (addedEntry) {
       state.digs.unshift({ k: k, t: item.t, u: item.u, s: item.s || '',
                            d: item.d || Math.round(Date.now() / 1000),
                            dv: Math.round(Date.now() / 1000) });
@@ -854,10 +861,12 @@
     toastUndo('Voted — enough votes builds a deep-dive page', function () {
       clearTimeout(send);
       outboxRemove('dig', item.u);
-      state.digs = state.digs.filter(function (o) { return o.k !== k; });
-      saveDigs();
-      if (state.topic === 'digs' && !state.digs.length) { setTopic('all'); }
-      else renderTabs();
+      if (addedEntry) {
+        state.digs = state.digs.filter(function (o) { return o.k !== k; });
+        saveDigs();
+        if (state.topic === 'digs' && !state.digs.length) { setTopic('all'); }
+        else renderTabs();
+      }
       try {
         delete dug[k];
         localStorage.setItem(DIG_KEY, JSON.stringify(dug));
@@ -1134,26 +1143,31 @@
       railBits.wx = bits;
       renderRail();
     }).catch(function () {});
-    /* the fun stuff: today's (or the next day's) events from the events page */
-    fetchJSON('data/events/events.json', 8000).then(function (ev) {
-      if (!ev || !Array.isArray(ev.events)) return;
+    /* the fun stuff: a tiny per-day digest the events pipeline derives —
+       never the full 1.7MB events corpus */
+    fetchJSON('data/events/rail.json', 8000).then(function (ev) {
+      if (!ev || !Array.isArray(ev.days)) return;
       var today = etDay();
-      var byDay = {};
-      ev.events.forEach(function (e) {
-        if (!e || !e.date || !e.title || e.date < today) return;
-        (byDay[e.date] = byDay[e.date] || []).push(e);
-      });
-      var days = Object.keys(byDay).sort();
-      if (!days.length) return;
-      var day = days[0];
-      var list = byDay[day];
-      var when = day === today ? 'Tonight' :
-        new Date(day + 'T12:00:00-04:00').toLocaleDateString('en-US',
+      var now = Date.now();
+      var pick = null;
+      for (var i = 0; i < ev.days.length && !pick; i++) {
+        var d0 = ev.days[i];
+        if (!d0 || !d0.date || !d0.t || d0.date < today) continue;
+        /* today's last event already started a while ago → look to tomorrow */
+        if (d0.date === today && d0.last && Date.parse(d0.last) < now - 60 * 60000) continue;
+        pick = d0;
+      }
+      if (!pick) return;
+      var when;
+      if (pick.date === today) {
+        when = (pick.s && +pick.s.slice(11, 13) >= 16) ? 'Tonight' : 'Today';
+      } else {
+        when = new Date(pick.date + 'T12:00:00-04:00').toLocaleDateString('en-US',
           { weekday: 'short', timeZone: 'America/New_York' });
-      var first = list[0].title;
-      if (first.length > 32) first = first.slice(0, 31) + '…';
+      }
+      var first = pick.t.length > 32 ? pick.t.slice(0, 31) + '…' : pick.t;
       railBits.events = when + ': ' + first +
-        (list.length > 1 ? ' +' + (list.length - 1) + ' more' : '');
+        (pick.n > 1 ? ' +' + (pick.n - 1) + ' more' : '');
       renderRail();
     }).catch(function () {});
   }
@@ -1197,12 +1211,13 @@
   }
 
   function setView(view) {
+    var entering = view === 'sources' && state.view !== 'sources';
     state.view = view;
     state.source = null;
     state.shown = FEED_PAGE;
     /* client tabs only exist in feed form — fall back to the full grid */
     if (view === 'sources' && isClientTab(state.topic)) state.topic = 'all';
-    if (view === 'sources') gridSeed = {};   /* fresh shuffle every visit */
+    if (entering) gridSeed = {};   /* fresh shuffle per visit, not per tap */
     $('view-feed').setAttribute('aria-pressed', view === 'feed');
     $('view-sources').setAttribute('aria-pressed', view === 'sources');
     saveSettings();
@@ -1271,8 +1286,12 @@
     state.data = json;
     state.stale = !!stale;
     srcMap = map;
-    /* fresh payload = a fresh visit: intent marks made before now take effect */
-    intentCutoff = Math.round(Date.now() / 1000);
+    /* fresh payload = a fresh visit: focus marks made before now take effect.
+       A refresh that returns the same generation changes nothing. */
+    if (json.generated !== lastGenerated) {
+      lastGenerated = json.generated;
+      intentCutoff = Math.round(Date.now() / 1000);
+    }
     if (state.source && !srcMap[state.source]) state.source = null;
     render();
     renderSettingsPanel();
