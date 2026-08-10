@@ -959,9 +959,6 @@ body.src-hidden .srow-src { display: none; }
 @media (max-width: 640px) {
   .mast { padding: 10px 12px 0; }
   .mast-title { font-size: 20px; }
-  /* on a phone the tab rows are the banners that eat the screen — once
-     you're reading they ALL tuck away, not just the source rails */
-  body.src-hidden .srow { display: none; }
   .body-wrap { padding: 0 12px 48px; }
   .mast-tag { display: none; }
   #player-audio { flex: 3; }
