@@ -654,6 +654,202 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 .foot-meta { font-size: 11px; color: var(--faint); }
 .foot-meta a { color: var(--dim); }
 
+/* ---------- V2.1: read with intent ---------- */
+
+.intent {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border: 1px solid var(--chipline);
+  border-radius: 999px;
+  padding: 5px 12px;
+  white-space: nowrap;
+}
+.intent:hover { color: var(--fg); border-color: var(--dim); }
+.intent[aria-pressed="true"] {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+.int-min { display: none; }
+
+/* while intent mode is on, already-passed headlines still visible this
+   session are dimmed — they disappear on the next visit */
+.fi.passed { opacity: .45; }
+
+/* ---------- V2.1: swipe gestures + hover actions ---------- */
+
+.fi {
+  position: relative;
+  touch-action: pan-y;   /* horizontal drags belong to the swipe layer */
+}
+.fi.swiping { transition: none; }
+.fi.settling { transition: transform .18s ease; }
+.fi::before, .fi::after {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.fi::before { content: "+ SAVE"; left: -86px; color: var(--accent); }
+.fi::after { content: "DIG IN ↓"; right: -86px; color: var(--c-science); }
+.fi.sw-r::before { opacity: 1; }
+.fi.sw-l::after { opacity: 1; }
+
+.fi-acts {
+  position: absolute;
+  top: 8px;
+  right: 0;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+}
+.fi.has-thumb .fi-acts { right: 70px; }
+@media (hover: hover) {
+  .fi:hover .fi-acts { opacity: 1; }
+}
+.act {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  padding: 3px 8px;
+  border: 1px solid var(--chipline);
+  border-radius: 3px;
+  color: var(--dim);
+  background: var(--bg);
+}
+.act:hover { color: var(--fg); border-color: var(--dim); }
+
+.unsave {
+  font-size: 11px;
+  color: var(--faint);
+  padding: 2px 6px;
+  margin-left: auto;
+}
+.unsave:hover { color: var(--c-politics); }
+
+.pop {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.tab.t-top[aria-pressed="false"] { color: var(--c-news); }
+
+/* ---------- V2.1: confirm dialog + toast ---------- */
+
+.confirm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 60;
+  width: min(340px, 92vw);
+  background: var(--bg);
+  border: 1px solid var(--chipline);
+  border-radius: 6px;
+  padding: 20px 20px 16px;
+}
+.confirm-title {
+  margin: 0 0 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.confirm-body {
+  margin: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+.confirm-btns { display: flex; justify-content: flex-end; gap: 8px; }
+.confirm-go { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+#confirm-scrim { z-index: 55; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 70px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 92vw;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  box-shadow: 0 4px 18px rgba(0,0,0,.35);
+}
+#toast-undo {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--accent);
+}
+
+/* ---------- V2.1: rail + nudge ---------- */
+
+.rail {
+  max-width: 680px;
+  margin: 10px auto 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail a { color: var(--accent); text-decoration: none; }
+.rail a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.nudge {
+  max-width: 680px;
+  margin: 18px auto;
+  padding: 14px 16px;
+  border: 1px solid var(--chipline);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  line-height: 1.7;
+  position: relative;
+}
+.nudge a { color: var(--accent); text-decoration: none; }
+.nudge a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.nudge-x {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  color: var(--faint);
+  font-size: 12px;
+  padding: 4px;
+}
+.nudge-x:hover { color: var(--fg); }
+
 @media (max-width: 640px) {
   .mast { padding: 10px 12px 0; }
   .mast-title { font-size: 20px; }
@@ -664,6 +860,12 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
      for width and the toggle loses off the right edge */
   .mast-sub { flex-wrap: wrap; }
   .mast-count { flex-basis: 100%; }
+  .int-full { display: none; }
+  .int-min { display: inline; }
+  /* swipe labels sit outside the column on desktop; on phones they'd
+     overflow — anchor them inside the row edges instead */
+  .fi::before { left: 8px; }
+  .fi::after { right: 8px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {

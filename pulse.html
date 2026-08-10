@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Burlington Pulse — Burlington Brief</title>
-  <meta name="description" content="Every local headline next to the national wire. 100+ curated sources, one dense feed — no algorithm, no infinite scroll, updated every 10 minutes.">
+  <title>The Pulse — Burlington Brief</title>
+  <meta name="description" content="Local + national headlines, every 10 minutes. Every Burlington headline next to the national wire — 100+ curated sources, one dense feed, no algorithm, no infinite scroll.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Btown Brief">
-  <meta property="og:title" content="Burlington Pulse">
-  <meta property="og:description" content="Every local headline next to the national wire. 100+ curated sources, one dense feed — no algorithm, no infinite scroll.">
+  <meta property="og:title" content="The Pulse">
+  <meta property="og:description" content="Local + national headlines, every 10 minutes. Every Burlington headline next to the national wire — no algorithm, no infinite scroll.">
   <meta property="og:url" content="https://guide.btownbrief.com/pulse.html">
   <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-pulse.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Burlington Pulse">
-  <meta name="twitter:description" content="Every local headline next to the national wire. 100+ curated sources, one dense feed — no algorithm, no infinite scroll.">
+  <meta name="twitter:title" content="The Pulse">
+  <meta name="twitter:description" content="Local + national headlines, every 10 minutes. Every Burlington headline next to the national wire — no algorithm, no infinite scroll.">
   <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-pulse.png">
 
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
@@ -71,14 +71,18 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <header class="mast" id="mast">
     <div class="mast-row">
-      <h1 class="mast-title">Burlington&nbsp;Pulse</h1>
+      <h1 class="mast-title">The&nbsp;Pulse</h1>
+      <button class="intent" id="intent-btn" aria-pressed="false"
+              title="Read with Intent — headlines you scroll past won't reappear">
+        <span class="int-full">Read with intent</span><span class="int-min">Intent</span>
+      </button>
       <div class="mast-icons">
         <button class="ic" id="theme-btn" aria-label="Toggle light or dark" title="Light / dark">◐</button>
         <button class="ic" id="settings-btn" aria-label="Open settings" aria-expanded="false" title="Settings">⚙</button>
         <button class="ic" id="search-btn" aria-label="Search headlines" aria-expanded="false" title="Search ( / )">⌕</button>
       </div>
     </div>
-    <p class="mast-tag">Every local headline next to the national wire</p>
+    <p class="mast-tag">Local + national · every 10 minutes · every Burlington headline next to the wire</p>
     <div class="mast-row mast-sub">
       <p class="mast-count" id="count-line" aria-live="polite">Taking the pulse…</p>
       <div class="viewtog" role="group" aria-label="View">
@@ -98,6 +102,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   </header>
 
   <main class="body-wrap">
+    <p class="rail" id="rail" hidden></p>
     <div id="pulse-body">
       <p class="empty" id="loading-note">TAKING THE PULSE…</p>
     </div>
@@ -108,6 +113,21 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <span class="player-title" id="player-title"></span>
     <audio id="player-audio" controls preload="none"></audio>
     <button class="ic" id="player-close" aria-label="Close player">✕</button>
+  </div>
+
+  <div class="scrim" id="confirm-scrim" hidden></div>
+  <div class="confirm" id="confirm" hidden role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h2 class="confirm-title" id="confirm-title"></h2>
+    <p class="confirm-body" id="confirm-body"></p>
+    <div class="confirm-btns">
+      <button class="pill" id="confirm-no" type="button">Cancel</button>
+      <button class="pill confirm-go" id="confirm-yes" type="button">OK</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden>
+    <span id="toast-msg"></span>
+    <button id="toast-undo" type="button" hidden>UNDO</button>
   </div>
 
   <div class="scrim" id="scrim" hidden></div>
@@ -170,7 +190,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
        Sources curated in <a href="https://www.inoreader.com" target="_blank" rel="noopener">Inoreader</a> · Refreshed every 10 minutes</p>
   </footer>
 
-  <noscript><p class="empty">Burlington Pulse needs JavaScript to load the headline feed.</p></noscript>
+  <noscript><p class="empty">The Pulse needs JavaScript to load the headline feed.</p></noscript>
   <script src="js/pulse.js"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
