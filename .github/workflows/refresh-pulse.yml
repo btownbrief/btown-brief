@@ -93,3 +93,29 @@ jobs:
           git push -q --force \
             "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
             pulse-data
+
+      - name: Keep main's first-paint fallback under a day old
+        # The page renders main's data/pulse.json while the live fetch is in
+        # flight (or failing) — a fallback that drifts for days makes that
+        # first paint read "updated 19h ago". One sync a day is enough; the
+        # push races with human merges at most once daily, and a loss here
+        # just retries next run.
+        run: |
+          AGE=$(python3 - <<'PY'
+          import json, datetime
+          gen = json.load(open("data/pulse.json"))["generated"]
+          dt = datetime.datetime.fromisoformat(gen.replace("Z", "+00:00"))
+          now = datetime.datetime.now(datetime.timezone.utc)
+          print(int((now - dt).total_seconds()))
+          PY
+          )
+          if [ "$AGE" -lt 86400 ]; then
+            echo "fallback is $((AGE / 3600))h old — fine"
+            exit 0
+          fi
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          cp /tmp/pulse-out/data/pulse.json data/pulse.json
+          git add data/pulse.json
+          git commit -q -m "Daily sync of the first-paint pulse.json fallback"
+          git push -q origin HEAD:main || echo "main moved under us — next run will retry"
