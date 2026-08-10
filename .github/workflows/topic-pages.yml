@@ -97,7 +97,7 @@ jobs:
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
           git checkout -q -b "$BRANCH"
-          git add topics/
+          git add topics/ data/topic-pages.json
           git commit -q -m "Topic pages: $SLUGS"
           git push -q --force origin "$BRANCH"
           BODY=$(printf '%s\n' \

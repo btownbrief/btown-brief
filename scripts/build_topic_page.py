@@ -46,6 +46,7 @@ from zoneinfo import ZoneInfo
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 TEMPLATE = os.path.join(os.path.dirname(__file__), "topic_page_template.html")
 TOPICS_DIR = os.path.join(ROOT, "topics")
+INDEX_PATH = os.path.join(ROOT, "data", "topic-pages.json")
 
 UA = "btown-pulse-topics/1.0"
 TIMEOUT = 20
@@ -614,10 +615,31 @@ def build_one(leader, payload):
     os.makedirs(TOPICS_DIR, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as dst:
         dst.write(markup)
+    update_index(slug, page, date)
     print(f"  wrote topics/{slug}.html "
           f"({len(picked_videos)} videos, {len(picked_threads)} threads, "
           f"{len(related)} related)")
     return slug
+
+
+def update_index(slug, page, date):
+    """The DEEP DIVES tab on the Pulse reads data/topic-pages.json — every
+    drafted page rides along in the same PR, newest first."""
+    try:
+        with open(INDEX_PATH, encoding="utf-8") as src:
+            index = json.load(src)
+    except (OSError, ValueError):
+        index = {}
+    pages = [entry for entry in (index.get("pages") or [])
+             if entry.get("slug") != slug]
+    pages.insert(0, {"slug": slug,
+                     "title": clean(page.get("title")),
+                     "dek": clean(page.get("dek")),
+                     "date": date})
+    os.makedirs(os.path.dirname(INDEX_PATH), exist_ok=True)
+    with open(INDEX_PATH, "w", encoding="utf-8") as dst:
+        json.dump({"pages": pages}, dst, ensure_ascii=False, indent=2)
+        dst.write("\n")
 
 
 def run(args):
