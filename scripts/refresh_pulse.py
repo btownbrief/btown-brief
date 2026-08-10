@@ -865,6 +865,8 @@ def run(args):
 
     if args.seed:
         seed_direct(sources, fresh_by_source)
+    else:
+        fast_lane(sources, fresh_by_source)
 
     now_ts = int(utcnow().timestamp())
     per_source, added_total = {}, 0
@@ -899,6 +901,45 @@ def run(args):
     if args.verbose:
         for source in payload["sources"]:
             print(f"  {source['n']:3}  {source['topic']:9} {source['name']}")
+
+
+FAST_LANE_SKIP = ("reddit.com", "inoreader.com", "youtube.com")
+
+
+def pick_fast_lane(sources):
+    """Local-folder sources whose own feed is safe to hit from Actions —
+    Reddit (cloud-hostile) and Inoreader-stream ride-alongs stay stream-only."""
+    lane = []
+    for source in sources:
+        if source.get("topic") != "local" or not source.get("feed"):
+            continue
+        probe = (source.get("feed") or "") + " " + (source.get("site") or "")
+        if any(host in probe for host in FAST_LANE_SKIP):
+            continue
+        lane.append(source)
+    return lane
+
+
+def fast_lane(sources, fresh_by_source):
+    """Every run: fetch the local feeds directly, in parallel, so a fresh
+    local story doesn't wait out Inoreader's crawl schedule on top of the
+    run cadence. Best-effort per feed — a host that refuses GitHub's IPs
+    contributes nothing and the stream still covers it next crawl."""
+    def grab(source):
+        try:
+            return source["id"], parse_feed(fetch_bytes(source["feed"], tries=1,
+                                                        timeout=12))
+        except Exception:  # noqa: BLE001 — the lane is a bonus, never a blocker
+            return source["id"], []
+
+    lane = pick_fast_lane(sources)
+    got = 0
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as pool:
+        for source_id, items in pool.map(grab, lane):
+            if items:
+                got += 1
+                fresh_by_source.setdefault(source_id, []).extend(items)
+    print(f"fast lane: {got}/{len(lane)} local feeds answered directly")
 
 
 def seed_direct(sources, fresh_by_source):
@@ -963,6 +1004,21 @@ def selftest():
     assert norm_site("https://www.Example.com/") == "example.com"
     assert topic_keys("https://www.reddit.com/r/science/") == ["reddit.com/r/science", "reddit.com"]
     assert slugify("ESPN.com - NBA") == "espn-com-nba"
+
+    lane = pick_fast_lane([
+        {"id": "ok", "topic": "local", "feed": "https://sevendaysvt.com/rss",
+         "site": "https://sevendaysvt.com"},
+        {"id": "reddit", "topic": "local",
+         "feed": "https://www.inoreader.com/stream/user/1/tag/x",
+         "site": "https://www.reddit.com/r/burlington/"},
+        {"id": "yt", "topic": "local",
+         "feed": "https://www.youtube.com/feeds/videos.xml?channel_id=1",
+         "site": "https://www.youtube.com/@x"},
+        {"id": "national", "topic": "news", "feed": "https://wire.com/rss",
+         "site": "https://wire.com"},
+        {"id": "nofeed", "topic": "local", "feed": "", "site": "https://x.com"},
+    ])
+    assert [source["id"] for source in lane] == ["ok"]
 
     assert dedupe_key("https://airy.so/") == dedupe_key("http://www.airy.so")
     assert dedupe_key("https://a.com/x%e2%80%91y") == dedupe_key("https://a.com/x%E2%80%91y")
