@@ -63,7 +63,8 @@ PULSE_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
 MAX_LEADERS = 2
 MAX_VIDEOS = 4
 MAX_THREADS = 3
-MAX_RELATED = 6
+MAX_RELATED_CANDIDATES = 18   # offered to the model
+MAX_RELATED_PICKS = 10        # kept on the page
 
 TOPIC_SCHEMA = {
     "type": "object",
@@ -119,10 +120,11 @@ DRAFT_SCHEMA = {
                 "additionalProperties": False,
             },
         },
+        "related_picks": {"type": "array", "items": {"type": "string"}},
         "further": {"type": "string"},
     },
     "required": ["eyebrow", "title", "dek", "sections", "video_picks",
-                 "thread_picks", "further"],
+                 "thread_picks", "related_picks", "further"],
     "additionalProperties": False,
 }
 
@@ -264,7 +266,9 @@ MATERIAL:
 {json.dumps(material, ensure_ascii=False, indent=1)}
 
 Write the page:
-  * 400-600 words total, across 3-4 sections, each with a short heading.
+  * 250-400 words total, across 3 sections, each with a short heading.
+    Shorter is better — this is a fast primer, not an essay. Cut anything
+    a reader could live without.
   * Ground every sentence in the supplied Wikipedia extracts and headlines.
     Invent nothing: no facts, figures, dates, names, quotes or events that are
     not in the material above. Every number you write must appear there.
@@ -274,6 +278,11 @@ Write the page:
     candidate lists above, referenced by their exact id / url. Give each a
     one-line note saying why it is worth the reader's time. If the lists are
     empty or nothing is good, return empty lists.
+  * related_picks: from related_headlines, the urls of ONLY the stories
+    genuinely about this topic, most useful first. Sharing a city name or a
+    stray keyword is NOT relevance — a story about the city's restaurants is
+    not about its basketball team. Keep every story that truly qualifies
+    (often 3-8); return an empty list over a padded one.
   * eyebrow: two or three words placing the topic (e.g. "Infrastructure").
     title: the topic as a page title. dek: one sentence on why it matters.
     further: one sentence pointing the curious reader at what to look into
@@ -405,7 +414,9 @@ def reddit(query):
 
 
 def related_coverage(payload, topic, headline):
-    """Token-overlap match against pulse.json titles, distinct sources only."""
+    """Token-overlap CANDIDATES from pulse.json titles — the drafting model
+    makes the actual relevance call, so this only needs to cast a wide net
+    (at most two per source, so one outlet can't flood the list)."""
     wanted = tokens(topic) | tokens(headline)
     if not wanted or not payload:
         return []
@@ -423,13 +434,28 @@ def related_coverage(payload, topic, headline):
                 "s": item.get("s"),
             }))
     scored.sort(key=lambda row: (row[0], row[1]), reverse=True)
-    seen, out = set(), []
+    per_source, out = {}, []
     for _, _, entry in scored:
-        if entry["s"] in seen:
+        if per_source.get(entry["s"], 0) >= 2:
             continue
-        seen.add(entry["s"])
+        per_source[entry["s"]] = per_source.get(entry["s"], 0) + 1
         out.append(entry)
-        if len(out) == MAX_RELATED:
+        if len(out) == MAX_RELATED_CANDIDATES:
+            break
+    return out
+
+
+def pick_related(candidates, picks):
+    """Only the urls the model vouched for, in the model's order."""
+    by_url = {entry["url"]: entry for entry in candidates}
+    seen, out = set(), []
+    for url in picks or []:
+        entry = by_url.get(clean(url))
+        if entry is None or entry["url"] in seen:
+            continue
+        seen.add(entry["url"])
+        out.append(entry)
+        if len(out) == MAX_RELATED_PICKS:
             break
     return out
 
@@ -566,7 +592,8 @@ def build_one(leader, payload):
         "candidate_videos": videos,
         "candidate_threads": threads,
         "related_headlines": [
-            {"title": entry["title"], "source": entry["source"]}
+            {"title": entry["title"], "source": entry["source"],
+             "url": entry["url"]}
             for entry in related],
     }
     try:
@@ -599,6 +626,7 @@ def build_one(leader, payload):
         print("  every Wikipedia link failed verification — abandoning topic",
               file=sys.stderr)
         return None
+    related = pick_related(related, page.get("related_picks"))
     related = [entry for entry in related if link_ok(entry["url"])]
 
     # The encyclopedia articles the page was written from belong in the
@@ -711,12 +739,20 @@ def selftest():
         "items": [
             {"t": "Shipping container ship aground", "u": "https://a.com/1",
              "d": 5, "s": "a"},
-            {"t": "Unrelated weather story", "u": "https://a.com/2",
+            {"t": "Container shipping rates fall", "u": "https://a.com/2",
+             "d": 4, "s": "a"},
+            {"t": "Container ports jammed by container backlog",
+             "u": "https://a.com/3", "d": 3, "s": "a"},
+            {"t": "Unrelated weather story", "u": "https://b.com/1",
              "d": 4, "s": "b"},
         ],
     }, "The Shipping Container", "Container ship runs aground")
-    assert len(related) == 1 and related[0]["source"] == "Wire"
-    print("build_topic_page: related coverage ok (overlap, distinct sources)")
+    assert len(related) == 2                      # two per source, no flooding
+    assert all(entry["source"] == "Wire" for entry in related)
+    picked = pick_related(related, [related[1]["url"], "https://nope.example/",
+                                    related[1]["url"]])
+    assert picked == [related[1]]                 # model order, deduped, vetted
+    print("build_topic_page: related coverage ok (candidates, model picks)")
 
     markup = render(FIXTURE_PAGE, FIXTURE_VIDEOS, FIXTURE_THREADS,
                     FIXTURE_RELATED, 7, "August 9, 2026")
