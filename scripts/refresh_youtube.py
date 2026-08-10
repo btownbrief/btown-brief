@@ -3,11 +3,12 @@
 
 Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
 
-  * Followed channels. data/youtube-channels.json lists them; each channel's
-    own free public RSS feed (youtube.com/feeds/videos.xml) supplies the
-    uploads, so following costs zero API quota. Firehose channels carry a
-    per-refresh cap; Shorts are filtered out; channels marked min_sec keep
-    only full episodes/talks.
+  * Followed channels. data/youtube-channels.json lists them. In Actions the
+    uploads come from the API's playlistItems endpoint (1 quota unit per
+    channel — YouTube's RSS soft-blocks datacenter IPs, the Reddit problem
+    all over again); without a key the free public RSS still works from
+    residential IPs. Firehose channels carry a per-refresh cap; Shorts are
+    filtered out; channels marked min_sec keep only full episodes/talks.
   * Filmed in Vermont. Two API searches surface fresh local footage no
     channel roster would catch, ranked by view velocity.
   * Deep cuts. Each refresh, a rotating handful of roster channels give up
@@ -48,7 +49,7 @@ MAX_TRENDING = 15
 DEFAULT_CAP = 3          # per-channel per refresh; firehoses set lower in the file
 SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
 MAX_VERMONT = 8
-DEEP_CHANNELS_PER_RUN = 6   # rotating sample; 6 searches ≈ 600 quota units
+DEEP_CHANNELS_PER_RUN = 4   # rotating sample; 4 searches ≈ 400 quota units
 DEEP_PER_CHANNEL = 4
 MAX_DEEP = 24
 DEEP_MIN_AGE_DAYS = 180     # a deep cut is old gold, not last month's upload
@@ -146,6 +147,62 @@ def parse_channel_feed(raw, now_ts, fallback_name=""):
         videos.append({"id": vid, "t": title[:200], "ch": name.strip()[:60],
                        "d": when})
     return videos
+
+
+def uploads_playlist(channel_id):
+    """UCxxxx -> UUxxxx, the channel's auto-generated uploads playlist."""
+    return "UU" + channel_id[2:]
+
+
+def fetch_channel_videos_api(key, now_ts, channels=None):
+    """Followed channels via the Data API — the path GitHub runners use."""
+    videos, seen = [], set()
+    for channel in (channels if channels is not None else load_channels()):
+        query = urllib.parse.urlencode({
+            "part": "snippet,contentDetails",
+            "playlistId": uploads_playlist(channel["id"]),
+            "maxResults": 10, "key": key})
+        try:
+            items = http_json(f"{API}/playlistItems?{query}").get("items", [])
+        except Exception as exc:  # noqa: BLE001 — one bad channel can't sink the shelf
+            print(f"refresh_youtube: channel {channel['id']} failed ({exc})",
+                  file=sys.stderr)
+            continue
+        fetched = []
+        for item in items:
+            vid = (item.get("contentDetails") or {}).get("videoId")
+            snippet = item.get("snippet") or {}
+            title = (snippet.get("title") or "").strip()
+            published = (item.get("contentDetails") or {}).get(
+                "videoPublishedAt") or snippet.get("publishedAt")
+            if not vid or not title or not published:
+                continue
+            try:
+                when = int(datetime.fromisoformat(
+                    published.replace("Z", "+00:00")).timestamp())
+            except ValueError:
+                continue
+            if now_ts - when > WINDOW_DAYS * 86400:
+                continue
+            fetched.append({"id": vid, "t": title[:200],
+                            "ch": channel.get("name", "")[:60], "d": when})
+        fetched.sort(key=lambda video: video["d"], reverse=True)
+        kept = 0
+        cap = int(channel.get("cap", DEFAULT_CAP))
+        for video in fetched:
+            if kept >= cap:
+                break
+            if video["id"] in seen or "#short" in video["t"].lower():
+                continue
+            if channel.get("min_sec"):
+                video["_min"] = int(channel["min_sec"])
+            if channel.get("g"):
+                video["g"] = channel["g"]
+            seen.add(video["id"])
+            videos.append(video)
+            kept += 1
+    videos.sort(key=lambda video: video["d"], reverse=True)
+    return videos[:MAX_CHANNEL_VIDEOS]
 
 
 def fetch_channel_videos(now_ts, channels=None):
@@ -378,7 +435,8 @@ def run(args):
     key = os.environ.get("YOUTUBE_API_KEY", "").strip()
     now_ts = int(utcnow().timestamp())
 
-    own = fetch_channel_videos(now_ts)
+    own = (fetch_channel_videos_api(key, now_ts) if key
+           else fetch_channel_videos(now_ts))
 
     vermont, deep, trending = [], [], []
     if key:
