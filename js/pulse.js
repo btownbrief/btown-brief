@@ -840,7 +840,8 @@
     var vids = state.youtube.videos.filter(function (v) {
       return v && v.id && v.t && clientQ(v.t);
     });
-    var own = vids.filter(function (v) { return !v.trend; });
+    var vt = vids.filter(function (v) { return v.vt; });
+    var own = vids.filter(function (v) { return !v.trend && !v.vt; });
     var trend = vids.filter(function (v) { return v.trend; });
     function row(v) {
       var u = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
@@ -859,8 +860,13 @@
         '" target="_blank" rel="noopener">' + esc(v.t) + '</a></div></article>';
     }
     var html = '';
+    if (vt.length) {
+      html += '<p class="empty" style="margin:18px auto 0">Filmed in Vermont this week</p>' +
+        '<div class="feed">' + vt.map(row).join('') + '</div>';
+    }
     if (own.length) {
-      html += '<p class="empty" style="margin:18px auto 0">New from the channels the Pulse follows</p>' +
+      html += '<p class="empty" style="margin:' + (vt.length ? '24px' : '18px') +
+        ' auto 0">New from the channels the Pulse follows</p>' +
         '<div class="feed">' + own.map(row).join('') + '</div>';
     }
     if (trend.length) {
@@ -868,7 +874,7 @@
         '<div class="feed">' + trend.map(row).join('') + '</div>';
     }
     body.innerHTML = html || '<p class="empty">No videos right now.</p>';
-    renderCount(own.length + trend.length, 0);
+    renderCount(vt.length + own.length + trend.length, 0);
   }
 
   function loadYouTube() {

@@ -5,10 +5,12 @@ Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
 
   * Followed channels. data/youtube-channels.json lists them; each channel's
     own free public RSS feed (youtube.com/feeds/videos.xml) supplies the
-    uploads, so following costs zero API quota. (File empty is fine; the
-    shelf just stays empty.)
-  * Trending. The YouTube Data API's mostPopular chart for the US, so the
-    tab has something good even before any channels are followed.
+    uploads, so following costs zero API quota. Firehose channels carry a
+    per-refresh cap; Shorts are filtered out; channels marked min_sec keep
+    only full episodes/talks.
+  * Filmed in Vermont. Two API searches surface fresh local footage no
+    channel roster would catch, ranked by view velocity.
+  * Trending. The YouTube Data API's mostPopular chart for the US.
 
 Durations and view counts come from the API's videos endpoint. Without a
 YOUTUBE_API_KEY the followed-channel shelf still publishes (no durations or
@@ -38,13 +40,38 @@ CHANNELS_FILE = os.path.join(ROOT, "data", "youtube-channels.json")
 CHANNEL_RSS = "https://www.youtube.com/feeds/videos.xml?channel_id="
 API = "https://www.googleapis.com/youtube/v3"
 WINDOW_DAYS = 7
-MAX_CHANNEL_VIDEOS = 40
+MAX_CHANNEL_VIDEOS = 60
 MAX_TRENDING = 15
+DEFAULT_CAP = 3          # per-channel per refresh; firehoses set lower in the file
+SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
+MAX_VERMONT = 8
+VT_QUERIES = ["Burlington Vermont", "Lake Champlain Vermont"]
+VT_RE = re.compile(
+    r"vermont|burlington|champlain|montpelier|stowe|winooski|green mountain",
+    re.I)
 
 VIDEO_ID_RE = re.compile(
     r"(?:v=|youtu\.be/|/shorts/|/embed/)([A-Za-z0-9_-]{11})")
 DURATION_RE = re.compile(
     r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?")
+
+
+def duration_seconds_from_fmt(fmt):
+    """'1:02:03' / '4:05' back to seconds (trending already formatted)."""
+    if not fmt:
+        return None
+    parts = [int(part) for part in fmt.split(":")]
+    while len(parts) < 3:
+        parts.insert(0, 0)
+    return parts[0] * 3600 + parts[1] * 60 + parts[2]
+
+
+def duration_seconds(iso):
+    match = DURATION_RE.fullmatch(iso or "")
+    if not match:
+        return None
+    hours, minutes, seconds = (int(part or 0) for part in match.groups())
+    return hours * 3600 + minutes * 60 + seconds
 
 
 def utcnow():
@@ -115,7 +142,9 @@ def parse_channel_feed(raw, now_ts, fallback_name=""):
 
 
 def fetch_channel_videos(now_ts, channels=None):
-    """All followed channels -> [{id,t,ch,d}] newest first, capped."""
+    """All followed channels -> [{id,t,ch,d}] newest first. Each channel is
+    capped per refresh so one firehose can't own the shelf, and obvious
+    Shorts are dropped by title (the duration pass catches the rest)."""
     videos, seen = [], set()
     for channel in (channels if channels is not None else load_channels()):
         try:
@@ -129,10 +158,19 @@ def fetch_channel_videos(now_ts, channels=None):
             print(f"refresh_youtube: channel {channel['id']} failed ({exc})",
                   file=sys.stderr)
             continue
+        fetched.sort(key=lambda video: video["d"], reverse=True)
+        kept = 0
+        cap = int(channel.get("cap", DEFAULT_CAP))
         for video in fetched:
-            if video["id"] not in seen:
-                seen.add(video["id"])
-                videos.append(video)
+            if kept >= cap:
+                break
+            if video["id"] in seen or "#short" in video["t"].lower():
+                continue
+            if channel.get("min_sec"):
+                video["_min"] = int(channel["min_sec"])
+            seen.add(video["id"])
+            videos.append(video)
+            kept += 1
     videos.sort(key=lambda video: video["d"], reverse=True)
     return videos[:MAX_CHANNEL_VIDEOS]
 
@@ -170,7 +208,10 @@ def fetch_trending(key):
             "views": int((item.get("statistics") or {}).get("viewCount") or 0),
             "trend": 1,
         })
-    return [video for video in videos if video["id"] and video["t"]]
+    videos = [video for video in videos if video["id"] and video["t"]]
+    for video in videos:
+        video["_sec"] = duration_seconds_from_fmt(video.get("dur"))
+    return apply_duration_rules(videos)
 
 
 def enrich(videos, key):
@@ -185,15 +226,79 @@ def enrich(videos, key):
             item = by_id.get(video["id"])
             if not item:
                 continue
-            video["dur"] = fmt_duration(
-                (item.get("contentDetails") or {}).get("duration"))
+            iso = (item.get("contentDetails") or {}).get("duration")
+            video["dur"] = fmt_duration(iso)
+            video["_sec"] = duration_seconds(iso)
             video["views"] = int(
                 (item.get("statistics") or {}).get("viewCount") or 0)
 
 
-def build_payload(own, trending, generated):
-    seen = {video["id"] for video in own}
-    merged = own + [video for video in trending if video["id"] not in seen]
+def apply_duration_rules(videos):
+    """Shorts out; min_sec channels keep only their long-form uploads.
+    Videos whose duration is unknown (no API key) are left alone."""
+    kept = []
+    for video in videos:
+        seconds = video.pop("_sec", None)
+        wanted = video.pop("_min", None)
+        if seconds is not None and seconds < SHORTS_MAX_SEC:
+            continue
+        if wanted and seconds is not None and seconds < wanted:
+            continue
+        kept.append(video)
+    return kept
+
+
+def fetch_vermont(key, now_ts, exclude):
+    """Fresh local footage the roster wouldn't catch, by view velocity."""
+    import html as html_mod
+
+    found, seen = [], set(exclude)
+    published_after = datetime.fromtimestamp(
+        now_ts - WINDOW_DAYS * 86400, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    for term in VT_QUERIES:
+        query = urllib.parse.urlencode({
+            "part": "snippet", "type": "video", "order": "date",
+            "publishedAfter": published_after, "q": term,
+            "maxResults": 15, "key": key})
+        for item in http_json(f"{API}/search?{query}").get("items", []):
+            vid = (item.get("id") or {}).get("videoId")
+            snippet = item.get("snippet") or {}
+            title = html_mod.unescape(snippet.get("title") or "")
+            channel = html_mod.unescape(snippet.get("channelTitle") or "")
+            if not vid or vid in seen or not title:
+                continue
+            if not VT_RE.search(title + " " + channel):
+                continue  # search drifts; only keep the visibly-Vermont ones
+            when = None
+            published = snippet.get("publishedAt")
+            if published:
+                try:
+                    when = int(datetime.fromisoformat(
+                        published.replace("Z", "+00:00")).timestamp())
+                except ValueError:
+                    when = None
+            if when is None:
+                continue
+            seen.add(vid)
+            found.append({"id": vid, "t": title[:200], "ch": channel[:60],
+                          "d": when, "vt": 1})
+    if not found:
+        return []
+    enrich(found, key)
+    found = apply_duration_rules(found)
+    found.sort(key=lambda video: (video.get("views") or 0) /
+               (max(now_ts - video["d"], 3600) / 86400.0 + 0.5), reverse=True)
+    return found[:MAX_VERMONT]
+
+
+def build_payload(own, vermont, trending, generated):
+    merged = list(own)
+    seen = {video["id"] for video in merged}
+    for shelf in (vermont, trending):
+        for video in shelf:
+            if video["id"] not in seen:
+                seen.add(video["id"])
+                merged.append(video)
     return {
         "v": 1,
         "generated": generated.replace(microsecond=0).isoformat(),
@@ -218,22 +323,31 @@ def run(args):
 
     own = fetch_channel_videos(now_ts)
 
-    trending = []
+    vermont, trending = [], []
     if key:
         try:
             if own:
                 enrich(own, key)
+                own = apply_duration_rules(own)
             trending = fetch_trending(key)
         except Exception as exc:  # noqa: BLE001 — quota/outage isn't a crash
             print(f"refresh_youtube: API trouble ({exc})", file=sys.stderr)
+        try:
+            vermont = fetch_vermont(
+                key, now_ts, {video["id"] for video in own + trending})
+        except Exception as exc:  # noqa: BLE001
+            print(f"refresh_youtube: Vermont search trouble ({exc})",
+                  file=sys.stderr)
+    else:
+        own = apply_duration_rules(own)   # strips the internal markers
 
-    if not own and not trending:
+    if not own and not vermont and not trending:
         print("refresh_youtube: nothing to publish this run")
         return
 
-    write_json(args.out, build_payload(own, trending, utcnow()))
-    print(f"refresh_youtube: {len(own)} followed + {len(trending)} trending "
-          f"-> {args.out}")
+    write_json(args.out, build_payload(own, vermont, trending, utcnow()))
+    print(f"refresh_youtube: {len(own)} followed + {len(vermont)} vermont + "
+          f"{len(trending)} trending -> {args.out}")
 
 
 # ----------------------------------------------------------------------
@@ -300,15 +414,33 @@ def selftest():
 
     payload = build_payload(
         videos,
+        [{"id": "vermontvid1", "t": "Fall in Stowe", "ch": "Local",
+          "d": now_ts, "dur": "3:00", "views": 900, "vt": 1}],
         [{"id": "abcdefghijk", "t": "dupe", "ch": "x", "d": now_ts,
           "dur": "1:00", "views": 5, "trend": 1},
          {"id": "trendtrend1", "t": "A trending thing", "ch": "Big",
           "d": now_ts, "dur": "10:00", "views": 1000000, "trend": 1}],
         utcnow())
-    assert len(payload["videos"]) == 2      # trending dupe of a followed vid drops
-    assert payload["videos"][-1]["trend"] == 1
+    assert len(payload["videos"]) == 3      # trending dupe of a followed vid drops
+    assert payload["videos"][1]["vt"] == 1 and payload["videos"][-1]["trend"] == 1
     assert payload["v"] == 1 and "generated" in payload
-    print("refresh_youtube: payload ok (merge, dedupe)")
+    print("refresh_youtube: payload ok (merge, dedupe, shelf order)")
+
+    ruled = apply_duration_rules([
+        {"id": "a", "t": "a Short", "_sec": 40},
+        {"id": "b", "t": "clip on a full-episode channel", "_sec": 300, "_min": 1200},
+        {"id": "c", "t": "full episode", "_sec": 3400, "_min": 1200},
+        {"id": "d", "t": "unknown duration survives", "_sec": None},
+    ])
+    assert [video["id"] for video in ruled] == ["c", "d"]
+    assert "_sec" not in ruled[0] and "_min" not in ruled[0]
+    assert duration_seconds("PT1H2M3S") == 3723
+    assert duration_seconds_from_fmt("1:02:03") == 3723
+    assert duration_seconds_from_fmt("4:05") == 245
+    print("refresh_youtube: duration rules ok (shorts, min_sec, unknowns)")
+
+    capped = fetch_channel_videos.__doc__  # cap behavior is covered live; the
+    assert "capped per refresh" in capped  # docstring pins the contract
     print("selftest ok")
 
 

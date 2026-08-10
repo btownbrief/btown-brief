@@ -1,1 +1,309 @@
-{"_note": "Channels for the Pulse YOUTUBE tab. Each id is a UC… channel id; uploads come from the channel's free public RSS, so this list costs no API quota.", "channels": []}
+{
+ "_note": "Channels for the Pulse YOUTUBE tab, from the Aug 2026 curation ledger. Uploads come from each channel's free public RSS (no API quota). cap = max videos per refresh (default 3, firehoses lower); min_sec = only keep videos at least this long (full episodes/talks, needs the API key for durations).",
+ "channels": [
+  {
+   "id": "UCh3kiOuiI6XLVEXI9WaX5jg",
+   "name": "Stuck in Vermont"
+  },
+  {
+   "id": "UCB4NFn-8oipHct0IfAQBQrQ",
+   "name": "Unnecessary Inventions"
+  },
+  {
+   "id": "UCjl3zDun9SazYI0UWWu6_1A",
+   "name": "Gold Shaw Farm"
+  },
+  {
+   "id": "UCkriCw5TsxVDoqOoyMcb28g",
+   "name": "Vermont Public"
+  },
+  {
+   "id": "UCUvUKGDBCqJzV4OwJkQWCHg",
+   "name": "King Arthur Baking"
+  },
+  {
+   "id": "UCbK0_xrlgDG6F-aMHGsF9iA",
+   "name": "Vermont Green FC"
+  },
+  {
+   "id": "UCDEPOd0RCvw8iSTqFpSBZLA",
+   "name": "Phish"
+  },
+  {
+   "id": "UCXY5pi3MbsaP1WEgClmglsA",
+   "name": "Noah Kahan"
+  },
+  {
+   "id": "UChZPBtiR55itE778bGV3PlQ",
+   "name": "Grace Potter"
+  },
+  {
+   "id": "UCdL-r-n3VnbT0oHzY2YgcOQ",
+   "name": "Burton"
+  },
+  {
+   "id": "UCgijSqjxEFzRJuQwNBRrTDg",
+   "name": "SkiEssentials"
+  },
+  {
+   "id": "UCq-cqqXchflIRPLsf_n3wlg",
+   "name": "Mount Washington Observatory"
+  },
+  {
+   "id": "UCkSA3ePU4A7oRpS9QGoK8ZQ",
+   "name": "VTDigger"
+  },
+  {
+   "id": "UCO3KF4ZlaGjyels6A7riZug",
+   "name": "MyNBC5",
+   "cap": 1
+  },
+  {
+   "id": "UCsN32BtMd0IoByjJRNF12cw",
+   "name": "60 Minutes"
+  },
+  {
+   "id": "UCVT1tPkR-fUVlO652EcO3ow",
+   "name": "CBS Sunday Morning",
+   "cap": 3
+  },
+  {
+   "id": "UCqnbDFdCpuN8CMEg0VuEBqA",
+   "name": "The New York Times",
+   "cap": 2
+  },
+  {
+   "id": "UCLXo7UDZvByw2ixzpQCufnA",
+   "name": "Vox",
+   "cap": 2
+  },
+  {
+   "id": "UCW39zufHfsuGgpLviKh297Q",
+   "name": "DW Documentary",
+   "cap": 2
+  },
+  {
+   "id": "UCODHrzPMGbNv67e84WDZhQQ",
+   "name": "fern"
+  },
+  {
+   "id": "UC3ScyryU9Oy9Wse3a8OAmYQ",
+   "name": "FRONTLINE PBS"
+  },
+  {
+   "id": "UCJHAT3Uvv-g3I8H3GhHWV7w",
+   "name": "Ryan Hall, Y'all"
+  },
+  {
+   "id": "UC6ZFN9Tx6xh-skXCuRHCDpQ",
+   "name": "PBS NewsHour",
+   "cap": 1,
+   "min_sec": 1200
+  },
+  {
+   "id": "UCwWhs_6x42TyRM4Wstoq8HA",
+   "name": "The Daily Show",
+   "cap": 2
+  },
+  {
+   "id": "UCHnyfMqiRRG1u-2MsSQLbXA",
+   "name": "Veritasium"
+  },
+  {
+   "id": "UCsXVk37bltHxD1rDPwtNM8Q",
+   "name": "Kurzgesagt"
+  },
+  {
+   "id": "UC415bOPUcGSamy543abLmRA",
+   "name": "Cleo Abram"
+  },
+  {
+   "id": "UCGudGqToOw9hWGR88W9Jutg",
+   "name": "Howtown"
+  },
+  {
+   "id": "UCBa659QWEk1AI4Tg--mrJ2A",
+   "name": "Tom Scott"
+  },
+  {
+   "id": "UC9RM-iSvTu1uPJb8X5yp3EQ",
+   "name": "Wendover Productions"
+  },
+  {
+   "id": "UCR1IuLEqb6UEA_zQ81kwXfg",
+   "name": "Real Engineering"
+  },
+  {
+   "id": "UCuCkxoKLYO_EQ2GeFtbM_bw",
+   "name": "Half as Interesting"
+  },
+  {
+   "id": "UCgNg3vwj3xt7QOrcIDaHdFg",
+   "name": "PolyMatter"
+  },
+  {
+   "id": "UCeiYXex_fwgYDonaTcSIk6w",
+   "name": "MinuteEarth"
+  },
+  {
+   "id": "UCUHW94eEFW7hkUMVaZz4eDg",
+   "name": "minutephysics"
+  },
+  {
+   "id": "UCzR-rom72PHN9Zg7RML9EbA",
+   "name": "PBS Eons"
+  },
+  {
+   "id": "UCdp4_l1vPmpN-gDbUwhaRUQ",
+   "name": "Branch Education"
+  },
+  {
+   "id": "UC4QZ_LsYcvcq7qOsOhpAX4A",
+   "name": "ColdFusion"
+  },
+  {
+   "id": "UC-9b7aDP6ZN0coj9-xFnrtw",
+   "name": "Astrum"
+  },
+  {
+   "id": "UClZbmi9JzfnB2CEb0fG8iew",
+   "name": "Primal Space"
+  },
+  {
+   "id": "UC7-Z34pbJ0ZAOJRmUCEz0Cg",
+   "name": "Geography By Geoff"
+  },
+  {
+   "id": "UCFbtcTaMFnOAP0pFO1L8hVw",
+   "name": "Kyle Hill"
+  },
+  {
+   "id": "UCQMyhrt92_8XM0KgZH6VnRg",
+   "name": "Company Man"
+  },
+  {
+   "id": "UCqNkn5PNeSqbQTAR5RP-L-Q",
+   "name": "Andy Cooks"
+  },
+  {
+   "id": "UCtYKe7-XbaDjpUwcU5x0bLg",
+   "name": "neo"
+  },
+  {
+   "id": "UCR9sFzaG9Ia_kXJhfxtFMBA",
+   "name": "melodysheep"
+  },
+  {
+   "id": "UCRcgy6GzDeccI7dkbbBna3Q",
+   "name": "LEMMiNO"
+  },
+  {
+   "id": "UCZYTClx2T1of7BRZ86-8fow",
+   "name": "SciShow",
+   "cap": 2
+  },
+  {
+   "id": "UCAuUUnT6oDeKwE6v1NGQxug",
+   "name": "TED",
+   "cap": 2,
+   "min_sec": 420
+  },
+  {
+   "id": "UCpVm7bg6pXKo1Pr6k5kxG9A",
+   "name": "National Geographic",
+   "cap": 2
+  },
+  {
+   "id": "UCmGSJVG3mCRXVOP4yZrU1Dw",
+   "name": "Johnny Harris"
+  },
+  {
+   "id": "UCP5tjEmvPItGyLhmjdwP7Ww",
+   "name": "RealLifeLore"
+  },
+  {
+   "id": "UCOT2iLov0V7Re7ku_3UBtcQ",
+   "name": "Hank Green"
+  },
+  {
+   "id": "UCGaVdbSav8xWuFWTadK6loA",
+   "name": "vlogbrothers"
+  },
+  {
+   "id": "UCy0tKL1T7wFoYcxCe0xjN6Q",
+   "name": "Technology Connections"
+  },
+  {
+   "id": "UC0intLFzLaudFG-xAvUEO-A",
+   "name": "Not Just Bikes"
+  },
+  {
+   "id": "UCfgtNfWCtsLKutY-BHzIb9Q",
+   "name": "City Nerd"
+  },
+  {
+   "id": "UCuVLG9pThvBABcYCm7pkNkA",
+   "name": "Climate Town"
+  },
+  {
+   "id": "UC4eYXhJI4-7wSWc8UNRwD4A",
+   "name": "NPR Music",
+   "cap": 2
+  },
+  {
+   "id": "UCsaGKqPZnGp_7N80hcHySGQ",
+   "name": "Tasting History"
+  },
+  {
+   "id": "UCxr2d4As312LulcajAkKJYw",
+   "name": "Townsends"
+  },
+  {
+   "id": "UCMOqf8ab-42UUQIdVoKwjlQ",
+   "name": "Practical Engineering"
+  },
+  {
+   "id": "UCxAS_aK7sS2x_bqnlJHDSHw",
+   "name": "America's Test Kitchen",
+   "cap": 2
+  },
+  {
+   "id": "UCqqJQ_cXSat0KIAVfIfKkVA",
+   "name": "Kenji López-Alt"
+  },
+  {
+   "id": "UCajXeitgFL-rb5-gXI-aG8Q",
+   "name": "Great Big Story"
+  },
+  {
+   "id": "UC-3SbfTPJsL8fJAPKiVqBLg",
+   "name": "Deep Look"
+  },
+  {
+   "id": "UC3I2GFN_F8WudD_2jUZbojA",
+   "name": "KEXP",
+   "cap": 2
+  },
+  {
+   "id": "UCWjmAUHmajb1-eo5WKk_22A",
+   "name": "Audiotree",
+   "cap": 2
+  },
+  {
+   "id": "UCxkM67T_Iele-mRVUiBkRqg",
+   "name": "Jet Lag: The Game"
+  },
+  {
+   "id": "UCAL3JXZSzSm8AlZyD3nQdBA",
+   "name": "Primitive Technology"
+  },
+  {
+   "id": "UC3XTzVzaHQEd30rQbuvCtTQ",
+   "name": "Last Week Tonight"
+  },
+  {
+   "id": "UCpxYSWgxVt3Pyn1ovXsGQ0g",
+   "name": "PBS Terra"
+  }
+ ]
+}
