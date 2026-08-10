@@ -421,7 +421,36 @@ def main() -> int:
         "duplicatesMerged": dupes_removed, "final": len(final),
         "mergeLog": merge_log[-200:], "changes": changes[-200:],
     }, ensure_ascii=False, indent=1) + "\n")
-    log(f"wrote {DATA_DIR}/events.json (+.jsonl, report.json)")
+
+    # Tiny per-day digest for the Pulse rail — the full events.json is 1.7MB,
+    # which is far too heavy to fetch for one line of masthead text. Confirmed
+    # events only; "evening" is the first 4pm-or-later start so the rail can
+    # say "Tonight" and mean it.
+    rail_days = []
+    today_et = datetime.now(common.TZ).date().isoformat()
+    by_day: dict = {}
+    for ev in final:
+        if ev.get("status") != "active" or not ev.get("title") or not ev.get("date"):
+            continue
+        if ev["date"] < today_et:
+            continue
+        by_day.setdefault(ev["date"], []).append(ev)
+    for day in sorted(by_day)[:7]:
+        evs = sorted(by_day[day], key=lambda e: e.get("start") or "")
+        evening = next((e for e in evs
+                        if (e.get("start") or "")[11:13] >= "16"), None)
+        pick = evening or evs[-1]
+        rail_days.append({
+            "date": day, "n": len(evs),
+            "t": pick["title"][:80],
+            "s": pick.get("start"),
+            "last": evs[-1].get("start"),
+        })
+    (DATA_DIR / "rail.json").write_text(json.dumps({
+        "generated": now_iso, "days": rail_days,
+    }, ensure_ascii=False, separators=(",", ":")) + "\n")
+
+    log(f"wrote {DATA_DIR}/events.json (+.jsonl, report.json, rail.json)")
     return 0
 
 

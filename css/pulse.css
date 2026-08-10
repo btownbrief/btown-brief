@@ -26,6 +26,7 @@
   --c-gaming: #7d8de8;
   --c-reddit: #ff4500;   /* reddit's own orangered — the tab Stephen wants red */
   --c-newsletters: #45c4b0;
+  --c-youtube: #ff5b5b;
   color-scheme: dark;
 }
 :root[data-theme="light"] {
@@ -49,6 +50,7 @@
   --c-gaming: #4053b8;
   --c-reddit: #cc3700;
   --c-newsletters: #12756a;
+  --c-youtube: #c00000;
   color-scheme: light;
 }
 
@@ -62,6 +64,7 @@
 .c-sports { --tc: var(--c-sports); }
 .c-gaming { --tc: var(--c-gaming); }
 .c-newsletters { --tc: var(--c-newsletters); }
+.c-youtube { --tc: var(--c-youtube); }
 
 * { box-sizing: border-box; }
 
@@ -391,7 +394,7 @@ button {
 @media (max-width: 980px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 660px) { .grid { grid-template-columns: 1fr; gap: 0; } }
 
-.src-sec { padding: 16px 0 6px; border-bottom: 1px solid var(--line); }
+.src-sec { padding: 16px 0 6px; border-bottom: 1px solid var(--line); overflow: hidden; }
 
 .src-head {
   display: flex;
@@ -426,11 +429,11 @@ button {
 }
 
 .src-sec ul { list-style: none; margin: 0; padding: 0; }
-.src-sec li { padding: 6px 0; border-top: 1px solid var(--line); }
+.src-sec li { padding: 9px 0; border-top: 1px solid var(--line); }
 .src-sec li:first-child { border-top: 0; }
 
 .si-t {
-  font-size: calc(var(--fs) - 2px);
+  font-size: calc(var(--fs) - 1px);
   font-weight: 500;
   line-height: 1.35;
   text-decoration: none;
@@ -654,41 +657,128 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 .foot-meta { font-size: 11px; color: var(--faint); }
 .foot-meta a { color: var(--dim); }
 
-/* ---------- V2.1: read with intent ---------- */
+/* ---------- V2.2: focus mode ---------- */
 
 .intent {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--dim);
-  border: 1px solid var(--chipline);
+  color: var(--c-politics);
+  border: 1px solid var(--c-politics);
   border-radius: 999px;
-  padding: 5px 12px;
+  padding: 8px 16px;
   white-space: nowrap;
 }
-.intent:hover { color: var(--fg); border-color: var(--dim); }
+.intent:hover { background: color-mix(in srgb, var(--c-politics) 14%, var(--bg)); }
 .intent[aria-pressed="true"] {
   color: var(--bg);
-  background: var(--accent);
-  border-color: var(--accent);
-  font-weight: 700;
+  background: var(--c-politics);
+  border-color: var(--c-politics);
 }
 .int-min { display: none; }
 
-/* while intent mode is on, already-passed headlines still visible this
+/* four tiny arrows that pulse toward the button until it's been used once */
+.focus-wrap { position: relative; display: inline-flex; margin: 8px 10px; }
+.fpulse {
+  position: absolute;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--c-politics);
+  pointer-events: none;
+  animation: fpulse 1.1s ease-in-out infinite alternate;
+}
+.fp-l { left: -15px; top: 50%; margin-top: -5px; }
+.fp-r { right: -15px; top: 50%; margin-top: -5px; }
+.fp-t { top: -13px; left: 50%; margin-left: -4px; }
+.fp-b { bottom: -13px; left: 50%; margin-left: -4px; }
+@keyframes fpulse {
+  from { opacity: .25; transform: none; }
+  to { opacity: 1; transform: scale(1.25); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fpulse { animation: none; opacity: .7; }
+}
+.focus-wrap.seen .fpulse { display: none; }
+
+/* while focus mode is on, already-passed headlines still visible this
    session are dimmed — they disappear on the next visit */
 .fi.passed { opacity: .45; }
 
+/* ---------- V2.2: chip-row scroll cues ---------- */
+
+.srow { position: relative; max-width: 1240px; margin: 0 auto; }
+.srow-more, .srow-less {
+  position: absolute;
+  top: 0;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: var(--dim);
+  cursor: pointer;
+}
+.srow-more {
+  right: 0;
+  padding: 0 2px 0 26px;
+  background: linear-gradient(to right, transparent, var(--bg) 65%);
+}
+.srow-less {
+  left: 0;
+  padding: 0 26px 0 2px;
+  background: linear-gradient(to left, transparent, var(--bg) 65%);
+}
+.srow-more:hover, .srow-less:hover { color: var(--fg); }
+.srow-bar {
+  height: 2px;
+  margin-bottom: 3px;
+  background: var(--chipbg);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.srow-bar i {
+  display: block;
+  height: 100%;
+  background: var(--chipline);
+  border-radius: 2px;
+}
+.tabs-client { border-top: 0; padding-top: 2px; }
+
+/* ---------- V2.2: refresh + hint card ---------- */
+
+.ic.spin { animation: icspin .8s linear infinite; }
+@keyframes icspin { to { transform: rotate(360deg); } }
+
+.hintcard {
+  max-width: 680px;
+  margin: 14px auto 4px;
+  padding: 12px 34px 12px 14px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  line-height: 1.8;
+  position: relative;
+}
+.hintcard b { color: var(--accent); }
+@media (hover: none) {
+  .hint-desk { display: none; }
+}
+
 /* ---------- V2.1: swipe gestures + hover actions ---------- */
 
-.fi {
+.fi, .src-sec li[data-k] {
   position: relative;
   touch-action: pan-y;   /* horizontal drags belong to the swipe layer */
 }
-.fi.swiping { transition: none; user-select: none; -webkit-user-select: none; }
-.fi.settling { transition: transform .18s ease; }
-.fi::before, .fi::after {
+.swiping { transition: none; user-select: none; -webkit-user-select: none; }
+.settling { transition: transform .18s ease; }
+.fi::before, .fi::after,
+.src-sec li[data-k]::before, .src-sec li[data-k]::after {
   font-family: var(--mono);
   font-size: 10px;
   font-weight: 700;
@@ -702,10 +792,10 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
   padding: 2px 6px;
   border-radius: 3px;
 }
-.fi::before { content: "+ SAVE"; left: 8px; color: var(--accent); }
-.fi::after { content: "DIG IN ↓"; right: 8px; color: var(--c-science); }
-.fi.sw-r::before { opacity: 1; }
-.fi.sw-l::after { opacity: 1; }
+.fi::before, .src-sec li[data-k]::before { content: "+ SAVE"; left: 8px; color: var(--accent); }
+.fi::after, .src-sec li[data-k]::after { content: "DIG IN ↓"; right: 8px; color: var(--c-science); }
+.sw-r::before { opacity: 1 !important; }
+.sw-l::after { opacity: 1 !important; }
 
 /* hover actions are a desktop affordance — phones swipe instead. display:none
    (not opacity) so there is never an invisible tap target over the row. */
@@ -729,7 +819,7 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 
 /* long-press = mute, so the OS link callout has to stand down on touch */
 @media (hover: none) {
-  .fi, .fi * {
+  .fi, .fi *, .src-sec li[data-k], .src-sec li[data-k] * {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
@@ -753,6 +843,7 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 }
 
 .tab.t-top[aria-pressed="false"] { color: var(--c-news); }
+.tab.t-youtube[aria-pressed="false"] { color: var(--c-youtube); }
 
 /* ---------- V2.1: confirm dialog + toast ---------- */
 
@@ -792,6 +883,7 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
   transform: translateX(-50%);
   bottom: 70px;
   z-index: 40;
+  pointer-events: none;   /* headlines behind it stay tappable/swipeable… */
   display: flex;
   align-items: center;
   gap: 12px;
@@ -812,6 +904,8 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
   font-weight: 700;
   letter-spacing: .1em;
   color: var(--accent);
+  pointer-events: auto;   /* …but UNDO itself still works */
+  padding: 4px 2px;
 }
 
 /* ---------- V2.1: rail + nudge ---------- */
@@ -874,4 +968,122 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 
 @media (prefers-reduced-motion: no-preference) {
   .drawer { transition: transform .18s ease; }
+}
+
+/* ---------- V2.2: the video shelves ---------- */
+
+.ytbar {
+  max-width: 1240px;
+  margin: 16px auto 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ytsorts { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.vsec { max-width: 1240px; margin: 0 auto; }
+.vsec-head {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin: 26px 0 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.vshuffle { font-weight: 400; }
+
+.vgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 16px 14px;
+}
+.vcard {
+  position: relative;
+  touch-action: pan-y;
+  min-width: 0;
+}
+.vcard.read { opacity: .55; }
+.vthumb {
+  position: relative;
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--chipbg);
+  aspect-ratio: 16 / 9;
+}
+.vthumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) contrast(1.05);
+}
+.vcard:hover .vthumb img { filter: none; }
+.vdur {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(0,0,0,.78);
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.vtitle {
+  display: block;
+  margin-top: 7px;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.vtitle:hover { text-decoration: underline; text-underline-offset: 3px; }
+.vmeta {
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* swipe labels on cards */
+.vcard::before, .vcard::after {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  position: absolute;
+  top: 30%;
+  opacity: 0;
+  pointer-events: none;
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 3px;
+  z-index: 2;
+}
+.vcard::before { content: "+ SAVE"; left: 6px; color: var(--accent); }
+.vcard::after { content: "DIG IN ↓"; right: 6px; color: var(--c-science); }
+@media (hover: none) {
+  .vcard, .vcard * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
 }

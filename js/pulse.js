@@ -16,12 +16,12 @@
   var LIVE_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-data/data/pulse.json';
   var META_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-data/data/pulse-meta.json';
   var LOCAL_URL = 'data/pulse.json';
-  /* reddit rides shotgun after LOCAL — Burlington Pulse means the town's
-     own conversation ranks above the national topic split */
-  var TOPIC_ORDER = ['local', 'reddit', 'newsletters', 'news', 'tech', 'business',
+  /* reddit rides shotgun after LOCAL — the town's own conversation ranks
+     above the national topic split; NEWS leads the nationals */
+  var TOPIC_ORDER = ['local', 'reddit', 'news', 'newsletters', 'tech', 'business',
                      'science', 'culture', 'politics', 'sports', 'gaming', 'pods'];
   var TOPIC_LABEL = { all: 'All topics', local: 'Local', reddit: 'Reddit', pods: 'Podcasts',
-                      top: 'Top', popular: 'Popular', saved: 'Saved' };
+                      top: 'Top', youtube: 'YouTube', popular: 'Popular', saved: 'Saved', digs: 'Digs' };
   var FEED_PAGE = 120;      // headlines per MORE click — a page, not a pit
   var READ_CAP = 4000;      // read-marks kept before pruning oldest
   var SET_KEY = 'pulse2-settings';
@@ -29,15 +29,19 @@
 
   /* V2.1 — the interaction layer */
   var TOP_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-top/data/pulse-top.json';
+  var YT_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/pulse-youtube/data/pulse-youtube.json';
   var SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
   var SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon/publishable — safe to ship
-  var INTENT_KEY = 'pulse2-intent';   // url-key -> epoch sec, "read with intent" marks
+  var INTENT_KEY = 'pulse2-intent';   // url-key -> epoch sec, focus-mode marks
   var SAVED_KEY = 'pulse2-saved';     // read-later list
   var DIG_KEY = 'pulse2-dug';         // url-key -> ET day, one dig vote per story per day
+  var DIGS_KEY = 'pulse2-digs';       // the headlines behind those votes, for the DIGS tab
   var RQ_KEY = 'pulse2-rq';           // reactions that failed to send, retried next load
   var PING_KEY = 'pulse2-ping';       // last ET day we pinged the anonymous counter
   var NUDGE_KEY = 'pulse2-nudge';     // take-a-break nudge state
-  var CLIENT_TABS = ['top', 'popular', 'saved'];  // rendered client-side, not payload topics
+  var HINT_KEY = 'pulse2-hints';      // gesture how-to card dismissed / learned
+  var SEEN_KEY = 'pulse2-focus-seen'; // focus mode used once — stop the pulsing arrows
+  var CLIENT_TABS = ['top', 'youtube', 'popular', 'saved', 'digs'];  // rendered client-side
   var SAVED_CAP = 300;
   var SWIPE_COMMIT = 72;    // px of horizontal drag that commits a swipe
 
@@ -49,18 +53,24 @@
     view: 'feed',
     q: '',
     shown: FEED_PAGE,
-    set: { theme: 'auto', fs: 17, limit: 10, autohide: false, thumbs: true, hidden: {}, intent: false },
+    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, intent: false, ytview: 'list' },
     read: {},
-    intent: {},             // passed-with-intent marks
+    intent: {},             // focus-mode passed marks
     saved: [],              // [{k,t,u,s,d,sv}] newest-saved first
+    digs: [],               // [{k,t,u,s,d,dv}] headlines this reader dig-voted
     top: null,              // pulse-top.json payload (AI-picked TOP tab)
+    youtube: null,          // pulse-youtube.json payload (followed channels + trending)
     popular: null,          // [{url,title,source,saves}] from Supabase
+    digVotes: null,         // url-key -> today's community vote count (DIGS tab)
   };
   var srcMap = {};
+  var popMap = {};          // url-key -> distinct savers, for the "N saved" badges
+  var gridSeed = {};        // per-visit shuffle of the by-source grid
   var byKey = {};           // url-key -> {t,u,s,d} for gesture + tab lookups
   /* items passed-with-intent before this moment are hidden; marks made during
      this session stay visible (dimmed) so the feed never shifts under you */
   var intentCutoff = Math.round(Date.now() / 1000);
+  var lastGenerated = null;
 
   function $(id) { return document.getElementById(id); }
 
@@ -70,7 +80,7 @@
     try {
       var s = JSON.parse(localStorage.getItem(SET_KEY) || 'null');
       if (s && typeof s === 'object') {
-        ['theme', 'fs', 'limit', 'autohide', 'thumbs', 'intent'].forEach(function (k) {
+        ['theme', 'fs', 'limit', 'autohide', 'thumbs', 'intent', 'ytview'].forEach(function (k) {
           if (s[k] !== undefined) state.set[k] = s[k];
         });
         if (s.hidden && typeof s.hidden === 'object') state.set.hidden = s.hidden;
@@ -82,6 +92,15 @@
       if (m && typeof m === 'object') state.intent = m;
       var sv = JSON.parse(localStorage.getItem(SAVED_KEY) || 'null');
       if (Array.isArray(sv)) state.saved = sv;
+      var dg = JSON.parse(localStorage.getItem(DIGS_KEY) || 'null');
+      if (Array.isArray(dg)) state.digs = dg;
+    } catch (e) {}
+  }
+
+  function saveDigs() {
+    try {
+      if (state.digs.length > 200) state.digs.length = 200;
+      localStorage.setItem(DIGS_KEY, JSON.stringify(state.digs));
     } catch (e) {}
   }
 
@@ -91,6 +110,7 @@
         theme: state.set.theme, fs: state.set.fs, limit: state.set.limit,
         autohide: state.set.autohide, thumbs: state.set.thumbs,
         hidden: state.set.hidden, view: state.view, intent: state.set.intent,
+        ytview: state.set.ytview,
       }));
     } catch (e) {}
   }
@@ -222,12 +242,84 @@
     renderSourceBar();
     renderBody();
     writeHash();
+    updateScrollRows();
+  }
+
+  /* every chip row gets a "more ›" cue plus a thin thumb showing where you
+     are in the scroll — both vanish when the row fits */
+  function updateScrollRows() {
+    var jobs = [];
+    document.querySelectorAll('.srow').forEach(function (row) {
+      if (row.hidden) return;
+      var nav = row.querySelector('.tabs, .srcbar');
+      var more = row.querySelector('.srow-more');
+      var less = row.querySelector('.srow-less');
+      var bar = row.querySelector('.srow-bar');
+      if (!nav || !more || !bar) return;
+      jobs.push({ more: more, less: less, bar: bar, thumb: bar.querySelector('i'),
+                  sw: nav.scrollWidth, cw: nav.clientWidth, sl: nav.scrollLeft });
+    });
+    jobs.forEach(function (j) {   /* all reads above, all writes here */
+      var overflow = j.sw - j.cw;
+      if (overflow < 8) {
+        j.more.hidden = true;
+        if (j.less) j.less.hidden = true;
+        j.bar.hidden = true;
+        return;
+      }
+      j.bar.hidden = false;
+      j.more.hidden = j.sl >= overflow - 8;
+      if (j.less) j.less.hidden = j.sl < 8;
+      if (j.thumb) {
+        j.thumb.style.width = Math.max(8, j.cw / j.sw * 100) + '%';
+        j.thumb.style.marginLeft = (j.sl / j.sw * 100) + '%';
+      }
+    });
+  }
+
+  function bindScrollRows() {
+    document.querySelectorAll('.srow .tabs, .srow .srcbar').forEach(function (nav) {
+      nav.addEventListener('scroll', updateScrollRows, { passive: true });
+      /* a mouse wheel only scrolls vertically — feed it to the row */
+      nav.addEventListener('wheel', function (ev) {
+        if (nav.scrollWidth <= nav.clientWidth) return;
+        var delta = Math.abs(ev.deltaX) > Math.abs(ev.deltaY) ? ev.deltaX : ev.deltaY;
+        if (!delta) return;
+        nav.scrollLeft += delta;
+        ev.preventDefault();
+      }, { passive: false });
+    });
+    document.querySelectorAll('.srow-more, .srow-less').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var nav = btn.parentElement.querySelector('.tabs, .srcbar');
+        if (!nav) return;
+        var step = Math.round(nav.clientWidth * 0.6) *
+          (btn.classList.contains('srow-less') ? -1 : 1);
+        nav.scrollBy({ left: step, behavior: 'smooth' });
+      });
+    });
+    window.addEventListener('resize', updateScrollRows);
   }
 
   function topFresh() {
     if (!state.top || !Array.isArray(state.top.picks) || !state.top.picks.length) return false;
     var age = Date.now() - Date.parse(state.top.generated || 0);
     return isFinite(age) && age < 30 * 3600 * 1000;   // 3x/day cadence + slack
+  }
+
+  function ytFresh() {
+    if (!state.youtube || !Array.isArray(state.youtube.videos) ||
+        !state.youtube.videos.length) return false;
+    var age = Date.now() - Date.parse(state.youtube.generated || 0);
+    return isFinite(age) && age < 9 * 3600 * 1000;    // 3-hourly cadence + slack
+  }
+
+  function tabBtn(t) {
+    var on = !state.source && state.topic === t;
+    var accent = (t === 'local' || t === 'reddit' || t === 'top' || t === 'youtube') ? ' t-' + t : '';
+    return '<button class="tab' + accent +
+      '" data-topic="' + t + '" aria-pressed="' + on + '">' +
+      esc(topicLabel(t)) + '</button>';
   }
 
   function renderTabs() {
@@ -238,42 +330,47 @@
       if (src.pod) present.pods = true;
       if (isReddit(src)) present.reddit = true;
     });
-    /* client tabs appear once they have something to show */
+    $('topic-tabs').innerHTML = ['all'].concat(TOPIC_ORDER)
+      .filter(function (t) { return present[t]; }).map(tabBtn).join('');
+    /* your tabs live on their own line and appear once they have something */
     present.top = topFresh();
+    present.youtube = ytFresh();
     present.popular = !!(state.popular && state.popular.length);
     present.saved = state.saved.length > 0;
-    var html = ['top', 'popular', 'all'].concat(TOPIC_ORDER).concat(['saved'])
-      .filter(function (t) { return present[t]; })
-      .map(function (t) {
-        var on = !state.source && state.topic === t;
-        var accent = (t === 'local' || t === 'reddit' || t === 'top') ? ' t-' + t : '';
-        return '<button class="tab' + accent +
-          '" data-topic="' + t + '" aria-pressed="' + on + '">' +
-          esc(topicLabel(t)) + '</button>';
-      }).join('');
-    $('topic-tabs').innerHTML = html;
+    present.digs = state.digs.length > 0;
+    var client = CLIENT_TABS.filter(function (t) { return present[t]; }).map(tabBtn).join('');
+    $('client-tabs').innerHTML = client;
+    $('client-row').hidden = !client;
+    updateScrollRows();
+  }
+
+  function srcChip(src) {
+    return '<button class="srcchip' + (src.local ? ' s-local' : '') +
+      '" data-source="' + src.id + '" aria-pressed="' + (state.source === src.id) +
+      '">' + esc(src.short) + '</button>';
   }
 
   function renderSourceBar() {
     if (isClientTab(state.topic) && !state.source) {
-      $('source-bar').innerHTML = '';
+      $('source-bar-local').innerHTML = '';
+      $('source-bar-national').innerHTML = '';
+      $('nat-row').hidden = true;
       return;
     }
     var pool = visibleSources(state.topic).filter(function (src) { return src.n > 0; });
     pool.sort(function (a, b) {
-      if (!!a.local !== !!b.local) return a.local ? -1 : 1;
       var pa = a.pr || 500, pb = b.pr || 500;   /* curated leads, then A–Z */
       if (pa !== pb) return pa - pb;
       return a.short.localeCompare(b.short);
     });
-    var html = '<button class="srcchip" data-source="" aria-pressed="' + !state.source +
-      '">All sources</button>' +
-      pool.map(function (src) {
-        return '<button class="srcchip' + (src.local ? ' s-local' : '') +
-          '" data-source="' + src.id + '" aria-pressed="' + (state.source === src.id) +
-          '">' + esc(src.short) + '</button>';
-      }).join('');
-    $('source-bar').innerHTML = html;
+    /* locals get the top line, the wire gets its own line below */
+    var locals = pool.filter(function (s) { return s.local; });
+    var nationals = pool.filter(function (s) { return !s.local; });
+    $('source-bar-local').innerHTML =
+      '<button class="srcchip" data-source="" aria-pressed="' + !state.source +
+      '">All sources</button>' + locals.map(srcChip).join('');
+    $('source-bar-national').innerHTML = nationals.map(srcChip).join('');
+    $('nat-row').hidden = !nationals.length;
   }
 
   function renderCount(shownItems, sections) {
@@ -351,10 +448,10 @@
       ? '<span class="fi-t nolink">' + esc(item.t) + '</span>'
       : '<a class="fi-t" data-k="' + k + '" href="' + esc(safeUrl(item.u)) +
         '" target="_blank" rel="noopener">' + esc(item.t) + '</a>';
-    var acts = '';
+    var acts = popMap[k] ? '<span class="pop">' + popMap[k] + ' saved</span>' : '';
     if (!item.x) {
       byKey[k] = item;
-      acts = '<div class="fi-acts">' +
+      acts += '<div class="fi-acts">' +
         '<button class="act" data-act="save" data-k="' + k + '" title="Save to read later">+ Save</button>' +
         '<button class="act" data-act="dig" data-k="' + k + '" title="Vote for a deep-dive on this topic">Dig ↓</button></div>';
     }
@@ -377,8 +474,10 @@
     more.hidden = true;
 
     if (!state.source && state.topic === 'top') { renderTop(body); return; }
+    if (!state.source && state.topic === 'youtube') { renderYouTube(body); return; }
     if (!state.source && state.topic === 'popular') { renderPopular(body); return; }
     if (!state.source && state.topic === 'saved') { renderSaved(body); return; }
+    if (!state.source && state.topic === 'digs') { renderDigs(body); return; }
 
     if (state.source) {                       /* single source, app-style list */
       var src = srcMap[state.source];
@@ -401,7 +500,7 @@
       /* the earned nudge: ~240 headlines deep (after the 2nd MORE click) */
       var nudge = (state.shown >= 3 * FEED_PAGE && !state.q && slice.length) ? nudgeHTML() : '';
       body.innerHTML = '<div class="feed">' +
-        (slice.length ? slice.map(feedItemHTML).join('') + nudge :
+        (slice.length ? hintHTML() + slice.map(feedItemHTML).join('') + nudge :
           '<p class="empty">No headlines match.</p>') + '</div>';
       if (all.length > slice.length) {
         more.hidden = false;
@@ -411,7 +510,7 @@
       return;
     }
 
-    /* by-source grid — the brutalist.report front page */
+    /* by-source grid — the brutalist.report front page, shuffled per visit */
     var sections = [];
     var count = 0;
     visibleSources(state.topic).forEach(function (src) {
@@ -422,10 +521,11 @@
       }).slice(0, state.set.limit);
       if (!items.length) return;
       count += items.length;
-      sections.push({ src: src, items: items, newest: items[0].d });
+      if (gridSeed[src.id] === undefined) gridSeed[src.id] = Math.random();
+      sections.push({ src: src, items: items });
     });
-    sections.sort(function (a, b) { return b.newest - a.newest; });
-    body.innerHTML = sections.length ? '<div class="grid">' +
+    sections.sort(function (a, b) { return gridSeed[a.src.id] - gridSeed[b.src.id]; });
+    body.innerHTML = sections.length ? hintHTML() + '<div class="grid">' +
       sections.map(function (sec) {
         var src = sec.src;
         return '<section class="src-sec' + (src.local ? ' local' : '') + '">' +
@@ -438,13 +538,16 @@
           '<span class="src-tag">' + (src.local ? 'Local' : esc(src.topic)) +
           ' · ' + src.n + '</span></h3><ul>' +
           sec.items.map(function (item) {
-            var read = state.read[keyOf(item.u)];
+            var ik = keyOf(item.u);
+            var read = state.read[ik];
             var headline = item.x
               ? '<span class="si-t nolink">' + esc(item.t) + '</span>'
-              : '<a class="si-t" data-k="' + keyOf(item.u) + '" href="' +
+              : '<a class="si-t" data-k="' + ik + '" href="' +
                 esc(safeUrl(item.u)) + '" target="_blank" rel="noopener">' +
                 esc(item.t) + '</a>';
-            return '<li' + (read ? ' class="read"' : '') + '>' + headline +
+            if (!item.x) byKey[ik] = item;
+            return '<li' + (read ? ' class="read"' : '') +
+              (item.x ? '' : ' data-k="' + ik + '"') + '>' + headline +
               '<span class="age" data-ts="' + item.d + '">' + fmtAge(item.d) + '</span>' +
               discHTML(item) +
               (item.a ? '<button class="play" data-audio="' + esc(safeUrl(item.a)) +
@@ -506,6 +609,7 @@
     var meta = '<div class="fi-meta">' + chip +
       (o.d ? '<span class="age" data-ts="' + o.d + '">' + fmtAge(o.d) + '</span>' : '') +
       (o.saves ? '<span class="pop">' + (+o.saves || 0) + ' saved</span>' : '') +
+      (o.votes ? '<span class="pop">' + (+o.votes || 0) + ' vote' + (o.votes === 1 ? '' : 's') + ' today</span>' : '') +
       (o.unsave ? '<button class="unsave" data-unsave="' + o.k + '" aria-label="Remove from saved">✕</button>' : '') +
       '</div>';
     return '<article class="fi' + (o.local ? ' local' : '') + (read ? ' read' : '') +
@@ -536,8 +640,8 @@
                               local: p.local, d: p.d, why: p.why });
       });
     body.innerHTML =
-      '<p class="empty" style="margin:18px auto 0">Fifteen headlines worth your ten minutes · ' +
-      'picked by an AI editor 3× a day · headlines verbatim, never rewritten</p>' +
+      '<p class="empty" style="margin:18px auto 0">The 25 headlines worth your time · ' +
+      'refreshed through the day · headlines verbatim, never rewritten</p>' +
       '<div class="feed">' + rows.join('') + '</div>';
     renderCount(rows.length, 0);
   }
@@ -570,6 +674,34 @@
       ? '<div class="feed">' + rows.join('') + '</div>'
       : '<p class="empty">Nothing saved yet — swipe a headline right to keep it for later.</p>';
     renderCount(rows.length, 0);
+  }
+
+  var digVotesAt = 0;
+
+  function renderDigs(body) {
+    var rows = state.digs.filter(function (o) { return clientQ(o.t); })
+      .map(function (o) {
+        var src = srcMap[o.s];
+        var votes = state.digVotes && state.digVotes[o.k];
+        return liteItemHTML({ k: o.k, t: o.t, u: o.u, s: src ? o.s : '',
+                              short: src ? src.short : (o.s || ''), local: src && src.local,
+                              d: o.d, votes: votes });
+      });
+    body.innerHTML = rows.length
+      ? '<p class="empty" style="margin:18px auto 0">Topics you voted to dig into — 3 readers in a day builds the deep-dive page</p>' +
+        '<div class="feed">' + rows.join('') + '</div>'
+      : '<p class="empty">No votes yet — swipe a headline left when you want the full story.</p>';
+    renderCount(rows.length, 0);
+    /* pull today's community tallies so your votes show their momentum */
+    if (rows.length && Date.now() - digVotesAt > 5 * 60 * 1000) {
+      digVotesAt = Date.now();
+      rpc('pulse_dig_leaders', { p_day: etDay() }).then(function (leaders) {
+        if (!Array.isArray(leaders)) return;
+        state.digVotes = {};
+        leaders.forEach(function (l) { state.digVotes[keyOf(l.url)] = +l.votes || 0; });
+        if (state.topic === 'digs') renderBody();
+      }).catch(function () {});
+    }
   }
 
   /* ---------- confirm dialog + toast ---------- */
@@ -686,9 +818,180 @@
     rpc('pulse_popular', { p_hours: 48, p_min: 2, p_limit: 40 }).then(function (rows) {
       if (Array.isArray(rows) && rows.length) {
         state.popular = rows;
+        popMap = {};
+        rows.forEach(function (r) { popMap[keyOf(r.url)] = +r.saves || 0; });
         if (state.data) render();
       }
     }).catch(function () {});   /* tab simply stays hidden until the SQL exists */
+  }
+
+  function fmtViews(n) {
+    n = +n || 0;
+    if (n >= 1e6) return (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M views';
+    if (n >= 1e3) return Math.round(n / 1e3) + 'K views';
+    return n ? n + ' views' : '';
+  }
+
+  var YT_GROUPS = [
+    ['vt', 'Vermont & local'], ['news', 'News & docs'],
+    ['sci', 'Science & explainers'], ['food', 'Food & cooking'],
+    ['music', 'Music'], ['fun', 'Wholesome & fun'],
+  ];
+  var ytSort = 'new';
+
+  function durSec(fmt) {
+    if (!fmt) return null;
+    var parts = String(fmt).split(':').map(Number);
+    while (parts.length < 3) parts.unshift(0);
+    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  }
+
+  function ytVelocity(v) {
+    var days = Math.max((Date.now() / 1000 - (v.d || 0)) / 86400, 0.05);
+    return (v.views || 0) / (days + 0.5);
+  }
+
+  function ytOrder(list) {
+    var out = list.slice();
+    if (ytSort === 'hot') out.sort(function (a, b) { return ytVelocity(b) - ytVelocity(a); });
+    else if (ytSort === 'short') {
+      out = out.filter(function (v) {
+        var sec = durSec(v.dur);
+        return sec !== null && sec < 300;
+      });
+      out.sort(function (a, b) { return ytVelocity(b) - ytVelocity(a); });
+    } else out.sort(function (a, b) { return (b.d || 0) - (a.d || 0); });
+    return out;
+  }
+
+  function sampleN(list, n) {
+    var pool = list.slice();
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    }
+    return pool.slice(0, n);
+  }
+
+  function ytReg(v) {
+    var u = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
+    var k = keyOf(u);
+    byKey[k] = { t: v.t, u: u, s: '', d: v.d };
+    return { u: u, k: k };
+  }
+
+  function ytRow(v) {
+    var reg = ytReg(v);
+    var read = state.read[reg.k];
+    var meta = '<div class="fi-meta">' +
+      '<span class="chip c-youtube">' + esc(v.ch || 'YouTube') + '</span>' +
+      (v.d ? '<span class="age" data-ts="' + v.d + '">' + fmtAge(v.d) + '</span>' : '') +
+      (v.dur ? '<span class="age">' + esc(v.dur) + '</span>' : '') +
+      (v.views ? '<span class="age">' + esc(fmtViews(v.views)) + '</span>' : '') +
+      '</div>';
+    return '<article class="fi' + (read ? ' read' : '') + '" data-k="' + reg.k + '">' +
+      '<div class="fi-main">' + meta +
+      '<a class="fi-t" data-k="' + reg.k + '" href="' + reg.u +
+      '" target="_blank" rel="noopener">' + esc(v.t) + '</a></div></article>';
+  }
+
+  function ytCard(v) {
+    var reg = ytReg(v);
+    var read = state.read[reg.k];
+    return '<article class="vcard' + (read ? ' read' : '') + '" data-k="' + reg.k + '">' +
+      '<a class="vthumb" data-k="' + reg.k + '" href="' + reg.u +
+      '" target="_blank" rel="noopener" tabindex="-1">' +
+      '<img src="https://i.ytimg.com/vi/' + encodeURIComponent(v.id) +
+      '/mqdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer">' +
+      (v.dur ? '<span class="vdur">' + esc(v.dur) + '</span>' : '') + '</a>' +
+      '<a class="vtitle" data-k="' + reg.k + '" href="' + reg.u +
+      '" target="_blank" rel="noopener">' + esc(v.t) + '</a>' +
+      '<div class="vmeta">' + esc(v.ch || '') +
+      (v.views ? ' · ' + esc(fmtViews(v.views)) : '') +
+      (v.d ? ' · <span class="age" data-ts="' + v.d + '">' + fmtAge(v.d) + '</span>' : '') +
+      '</div></article>';
+  }
+
+  function ytSection(title, list, extra) {
+    if (!list.length) return '';
+    return '<div class="vsec"><p class="vsec-head">' + esc(title) +
+      (extra || '') + '</p><div class="vgrid">' +
+      list.map(ytCard).join('') + '</div></div>';
+  }
+
+  function renderYouTube(body) {
+    if (!ytFresh()) {
+      body.innerHTML = '<p class="empty">The video shelf is loading. Back soon.</p>';
+      renderCount(0, 0);
+      return;
+    }
+    var vids = state.youtube.videos.filter(function (v) {
+      return v && v.id && v.t && clientQ(v.t);
+    });
+    var vt = vids.filter(function (v) { return v.vt; });
+    var deep = vids.filter(function (v) { return v.dc; });
+    var own = vids.filter(function (v) { return !v.trend && !v.vt && !v.dc; });
+    var trend = vids.filter(function (v) { return v.trend; });
+    var shelves = state.set.ytview === 'shelves';
+
+    var bar = '<div class="ytbar">' +
+      '<div class="viewtog"><button class="vt" data-ytview="list" aria-pressed="' + !shelves +
+      '">List</button><button class="vt" data-ytview="shelves" aria-pressed="' + shelves +
+      '">Shelves</button></div>' +
+      (shelves
+        ? '<div class="ytsorts">' +
+          ['new', 'hot', 'short'].map(function (mode) {
+            var label = mode === 'new' ? 'Newest' : mode === 'hot' ? 'Most viewed/day' : 'Under 5 min';
+            return '<button class="pill" data-ytsort="' + mode +
+              '" aria-pressed="' + (ytSort === mode) + '">' + label + '</button>';
+          }).join('') + '</div>'
+        : '') + '</div>';
+
+    var html = bar;
+    var shuffleBtn = ' <button class="pill vshuffle" data-ytshuffle>Shuffle ↻</button>';
+    if (shelves) {
+      html += ytSection('Filmed in Vermont this week', ytOrder(vt));
+      YT_GROUPS.forEach(function (group) {
+        html += ytSection(group[1], ytOrder(own.filter(function (v) {
+          return (v.g || 'sci') === group[0];
+        })).slice(0, 8));
+      });
+      if (deep.length) {
+        html += ytSection('Deep cuts — the back catalog', sampleN(deep, 8), shuffleBtn);
+      }
+      html += ytSection('Trending in the US', ytOrder(trend));
+    } else {
+      if (vt.length) {
+        html += '<p class="empty" style="margin:18px auto 0">Filmed in Vermont this week</p>' +
+          '<div class="feed">' + vt.map(ytRow).join('') + '</div>';
+      }
+      if (own.length) {
+        html += '<p class="empty" style="margin:24px auto 0">New from the channels the Pulse follows</p>' +
+          '<div class="feed">' + own.map(ytRow).join('') + '</div>';
+      }
+      if (deep.length) {
+        html += '<p class="empty" style="margin:24px auto 0">Deep cuts — the back catalog' +
+          shuffleBtn + '</p>' +
+          '<div class="feed">' + sampleN(deep, 6).map(ytRow).join('') + '</div>';
+      }
+      if (trend.length) {
+        html += '<p class="empty" style="margin:24px auto 0">Trending in the US right now</p>' +
+          '<div class="feed">' + trend.map(ytRow).join('') + '</div>';
+      }
+    }
+    body.innerHTML = (vt.length + own.length + deep.length + trend.length)
+      ? html : '<p class="empty">No videos right now.</p>';
+    renderCount(vt.length + own.length + deep.length + trend.length, 0);
+  }
+
+  function loadYouTube() {
+    if (isLocalDev() && location.protocol === 'file:') return;
+    fetchJSON(YT_URL, 8000).then(function (json) {
+      if (json && Array.isArray(json.videos)) {
+        state.youtube = json;
+        if (state.data) render();
+      }
+    }).catch(function () {});
   }
 
   function loadTop() {
@@ -724,6 +1027,7 @@
                           sv: Math.round(Date.now() / 1000) });
     saveSaved();
     renderTabs();
+    learnedGestures();
     outboxAdd('save', item);
     var send = setTimeout(flushReacts, 5200);   /* after the undo window */
     toastUndo('Saved for later', function () {
@@ -744,11 +1048,26 @@
     var keys = Object.keys(dug);
     if (keys.length > 500) keys.slice(0, keys.length - 500).forEach(function (x) { delete dug[x]; });
     try { localStorage.setItem(DIG_KEY, JSON.stringify(dug)); } catch (e) {}
+    var addedEntry = !state.digs.some(function (o) { return o.k === k; });
+    if (addedEntry) {
+      state.digs.unshift({ k: k, t: item.t, u: item.u, s: item.s || '',
+                           d: item.d || Math.round(Date.now() / 1000),
+                           dv: Math.round(Date.now() / 1000) });
+      saveDigs();
+      renderTabs();
+    }
+    learnedGestures();
     outboxAdd('dig', item);
     var send = setTimeout(flushReacts, 5200);
     toastUndo('Voted — enough votes builds a deep-dive page', function () {
       clearTimeout(send);
       outboxRemove('dig', item.u);
+      if (addedEntry) {
+        state.digs = state.digs.filter(function (o) { return o.k !== k; });
+        saveDigs();
+        if (state.topic === 'digs' && !state.digs.length) { setTopic('all'); }
+        else renderTabs();
+      }
       try {
         delete dug[k];
         localStorage.setItem(DIG_KEY, JSON.stringify(dug));
@@ -765,6 +1084,7 @@
       body: 'You won’t see ' + src.short + ' anywhere on the page. Bring it back any time in Settings → Sources.',
       yes: 'Mute',
       onYes: function () {
+        learnedGestures();
         state.set.hidden[src.id] = 1;
         saveSettings(); renderSettingsPanel(); render();
         toastUndo('Muted ' + src.short, function () {
@@ -799,19 +1119,19 @@
     /* anchors are natively draggable — a link-drag swallows the pointer
        stream and the swipe never sees another event */
     document.addEventListener('dragstart', function (ev) {
-      if (ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]')) ev.preventDefault();
+      if (ev.target.closest && ev.target.closest('#pulse-body [data-k]')) ev.preventDefault();
     });
 
     /* Android's long-press link menu would beat the 550ms mute hold */
     document.addEventListener('contextmenu', function (ev) {
-      if (G.el && ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]')) {
+      if (G.el && ev.target.closest && ev.target.closest('#pulse-body [data-k]')) {
         ev.preventDefault();
       }
     });
 
     document.addEventListener('pointerdown', function (ev) {
       if (!ev.isPrimary || ev.button) return;
-      var row = ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]');
+      var row = ev.target.closest && ev.target.closest('#pulse-body .fi[data-k], #pulse-body li[data-k], #pulse-body .vcard[data-k]');
       if (!row) return;
       if (ev.target.closest('.fi-acts, .unsave, .play, .chip, .disc')) return;
       clearTimeout(G.hold);
@@ -928,27 +1248,63 @@
 
   function applyIntentUI() {
     $('intent-btn').setAttribute('aria-pressed', state.set.intent);
+    var seen = state.set.intent;
+    try { seen = seen || !!localStorage.getItem(SEEN_KEY); } catch (e) {}
+    /* the pulsing come-hither arrows retire once Focus Mode has been used */
+    $('focus-wrap').classList.toggle('seen', seen);
   }
 
   function toggleIntent() {
     if (!state.set.intent) {
       confirmBox({
-        title: 'Read with intent',
-        body: 'While this is on, headlines you scroll past won’t reappear in your feed — ' +
-          'every visit picks up where you stopped reading. Turning it off brings everything back. ' +
-          'Make sure you’re sure.',
+        title: 'Focus Mode',
+        body: 'Clear as you read: while this is on, headlines you scroll past won’t ' +
+          'reappear in your feed — every visit picks up where you stopped. Turning it ' +
+          'off brings everything back. Make sure you’re sure.',
         yes: 'Turn on',
         onYes: function () {
           state.set.intent = true;
+          try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) {}
           saveSettings(); applyIntentUI(); render();
-          toast('Reading with intent');
+          toast('Focus Mode on — headlines clear as you read');
         },
       });
     } else {
       state.set.intent = false;
       saveSettings(); applyIntentUI(); render();
-      toast('Intent mode off — everything’s back');
+      toast('Focus Mode off — everything’s back');
     }
+  }
+
+  /* ---------- gesture how-to (one-time) ---------- */
+
+  function learnedGestures() {
+    try { localStorage.setItem(HINT_KEY, 'done'); } catch (e) {}
+  }
+
+  function snoozeHints() {
+    try { localStorage.setItem(HINT_KEY, JSON.stringify({ d: etDay() })); } catch (e) {}
+  }
+
+  /* used a gesture → never again; only dismissed → gentle reminder in 10 days */
+  function hintDue() {
+    try {
+      var v = localStorage.getItem(HINT_KEY);
+      if (!v) return true;
+      if (v === 'done') return false;
+      var d = (JSON.parse(v) || {}).d;
+      if (!d) return true;
+      return Date.now() - Date.parse(d) > 10 * 86400000;
+    } catch (e) { return true; }
+  }
+
+  function hintHTML() {
+    if (!hintDue()) return '';
+    return '<div class="hintcard">' +
+      '<b>New:</b> swipe a headline <b>right</b> to save it for later · swipe <b>left</b> to ' +
+      'vote for a deep-dive page on that topic · <b>press and hold</b> to mute the source.' +
+      '<span class="hint-desk"> On a computer, hover a headline for the buttons.</span>' +
+      '<button class="nudge-x" data-hint-dismiss aria-label="Got it">✕</button></div>';
   }
 
   /* ---------- the earned nudge ---------- */
@@ -966,19 +1322,22 @@
       ? 'You’ve been reading a lot. Take a break — ' +
         '<a href="https://play.btownbrief.com?utm_source=pulse&utm_medium=nudge" target="_blank" rel="noopener">go play something at the Btown Digital Arcade →</a>'
       : 'You’ve been reading a lot. How about reading the Btown Brief? ' +
-        '<a href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse-nudge" target="_blank" rel="noopener">The daily email for Burlington — free →</a>';
+        '<a href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse-nudge" target="_blank" rel="noopener">Burlington in your inbox, a few mornings a week — free →</a>';
     return '<div class="nudge">' + inner +
       '<button class="nudge-x" data-nudge-dismiss aria-label="Dismiss for today">✕</button></div>';
   }
 
   /* ---------- the rail: Burlington right now ---------- */
 
-  var railBits = { wx: [], civic: '' };
+  var railBits = { wx: [], events: null };
 
   function renderRail() {
-    var bits = railBits.wx.concat(railBits.civic ? [railBits.civic] : []);
+    var bits = railBits.wx.map(esc);
+    if (railBits.events) {
+      bits.push('<a href="/events.html">' + esc(railBits.events) + ' →</a>');
+    }
     if (bits.length < 2) return;
-    $('rail').innerHTML = bits.map(esc).join(' · ') +
+    $('rail').innerHTML = bits.join(' · ') +
       ' · <a href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse-rail" target="_blank" rel="noopener">The Brief →</a>';
     $('rail').hidden = false;
   }
@@ -1001,25 +1360,31 @@
       railBits.wx = bits;
       renderRail();
     }).catch(function () {});
-    fetchJSON('data/civic.json', 8000).then(function (c) {
-      if (!c || !Array.isArray(c.upcoming)) return;
+    /* the fun stuff: a tiny per-day digest the events pipeline derives —
+       never the full 1.7MB events corpus */
+    fetchJSON('data/events/rail.json', 8000).then(function (ev) {
+      if (!ev || !Array.isArray(ev.days)) return;
+      var today = etDay();
       var now = Date.now();
-      var next = null;
-      c.upcoming.forEach(function (m) {
-        if (next || !m.start || !m.body) return;
-        var t = Date.parse(m.start);
-        if (t > now && t < now + 7 * 86400000) next = m;
-      });
-      if (!next) return;
-      var d = new Date(next.start);
-      var label = next.body.length > 22 ? next.body.slice(0, 21) + '…' : next.body;
-      var when = d.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/New_York' });
-      if (!next.time_uncertain) {
-        when += ' ' + d.toLocaleTimeString('en-US',
-          { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' })
-          .replace(':00', '').replace(/\s/, '');
+      var pick = null;
+      for (var i = 0; i < ev.days.length && !pick; i++) {
+        var d0 = ev.days[i];
+        if (!d0 || !d0.date || !d0.t || d0.date < today) continue;
+        /* today's last event already started a while ago → look to tomorrow */
+        if (d0.date === today && d0.last && Date.parse(d0.last) < now - 60 * 60000) continue;
+        pick = d0;
       }
-      railBits.civic = label + ' ' + when;
+      if (!pick) return;
+      var when;
+      if (pick.date === today) {
+        when = (pick.s && +pick.s.slice(11, 13) >= 16) ? 'Tonight' : 'Today';
+      } else {
+        when = new Date(pick.date + 'T12:00:00-04:00').toLocaleDateString('en-US',
+          { weekday: 'short', timeZone: 'America/New_York' });
+      }
+      var first = pick.t.length > 32 ? pick.t.slice(0, 31) + '…' : pick.t;
+      railBits.events = when + ': ' + first +
+        (pick.n > 1 ? ' +' + (pick.n - 1) + ' more' : '');
       renderRail();
     }).catch(function () {});
   }
@@ -1063,11 +1428,13 @@
   }
 
   function setView(view) {
+    var entering = view === 'sources' && state.view !== 'sources';
     state.view = view;
     state.source = null;
     state.shown = FEED_PAGE;
     /* client tabs only exist in feed form — fall back to the full grid */
     if (view === 'sources' && isClientTab(state.topic)) state.topic = 'all';
+    if (entering) gridSeed = {};   /* fresh shuffle per visit, not per tap */
     $('view-feed').setAttribute('aria-pressed', view === 'feed');
     $('view-sources').setAttribute('aria-pressed', view === 'sources');
     saveSettings();
@@ -1136,8 +1503,12 @@
     state.data = json;
     state.stale = !!stale;
     srcMap = map;
-    /* fresh payload = a fresh visit: intent marks made before now take effect */
-    intentCutoff = Math.round(Date.now() / 1000);
+    /* fresh payload = a fresh visit: focus marks made before now take effect.
+       A refresh that returns the same generation changes nothing. */
+    if (json.generated !== lastGenerated) {
+      lastGenerated = json.generated;
+      intentCutoff = Math.round(Date.now() / 1000);
+    }
     if (state.source && !srcMap[state.source]) state.source = null;
     render();
     renderSettingsPanel();
@@ -1220,15 +1591,35 @@
   function bind() {
     document.addEventListener('click', function (ev) {
       var el = ev.target.closest('[data-topic],[data-source],[data-togsrc],[data-audio],' +
-        '[data-act],[data-unsave],[data-nudge-dismiss],a[data-k]');
+        '[data-act],[data-unsave],[data-nudge-dismiss],[data-hint-dismiss],[data-ytview],[data-ytsort],[data-ytshuffle],a[data-k]');
       if (!el) return;
       if (el.dataset.topic) { setTopic(el.dataset.topic); return; }
+      if (el.hasAttribute('data-ytview')) {
+        state.set.ytview = el.getAttribute('data-ytview');
+        saveSettings(); renderBody();
+        return;
+      }
+      if (el.hasAttribute('data-ytsort')) {
+        ytSort = el.getAttribute('data-ytsort');
+        renderBody();
+        return;
+      }
+      if (el.hasAttribute('data-ytshuffle')) {
+        renderBody();
+        return;
+      }
       if (el.dataset.act) {
         if (el.dataset.act === 'save') commitSave(el.dataset.k);
         else commitDig(el.dataset.k);
         return;
       }
       if (el.dataset.unsave) { unsave(el.dataset.unsave); return; }
+      if (el.hasAttribute('data-hint-dismiss')) {
+        snoozeHints();
+        var card = el.closest('.hintcard');
+        if (card) card.remove();
+        return;
+      }
       if (el.hasAttribute('data-nudge-dismiss')) {
         try {
           var ns = JSON.parse(localStorage.getItem(NUDGE_KEY) || '{}') || {};
@@ -1279,6 +1670,17 @@
     $('scrim').onclick = function () { openDrawer(false); };
 
     $('intent-btn').onclick = toggleIntent;
+    $('refresh-btn').onclick = function () {
+      var btn = $('refresh-btn');
+      btn.classList.add('spin');
+      setTimeout(function () { btn.classList.remove('spin'); }, 1200);
+      window.scrollTo({ top: 0 });
+      loadData();
+      loadTop();
+      loadYouTube();
+      loadPopular();
+      pollMeta();
+    };
     $('confirm-yes').onclick = function () {
       var fn = confirmYesFn;
       closeConfirm();
@@ -1381,9 +1783,11 @@
   if (state.q) { $('search-row').hidden = false; $('search-input').value = state.q; }
   bind();
   bindGestures();
+  bindScrollRows();
   loadData();
   pollMeta();
   loadTop();
+  loadYouTube();
   loadPopular();
   loadRail();
   flushReacts();

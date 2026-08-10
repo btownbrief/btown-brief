@@ -72,11 +72,8 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   <header class="mast" id="mast">
     <div class="mast-row">
       <h1 class="mast-title">The&nbsp;Pulse</h1>
-      <button class="intent" id="intent-btn" aria-pressed="false"
-              title="Read with Intent — headlines you scroll past won't reappear">
-        <span class="int-full">Read with intent</span><span class="int-min">Intent</span>
-      </button>
       <div class="mast-icons">
+        <button class="ic" id="refresh-btn" aria-label="Refresh headlines" title="Refresh">↻</button>
         <button class="ic" id="theme-btn" aria-label="Toggle light or dark" title="Light / dark">◐</button>
         <button class="ic" id="settings-btn" aria-label="Open settings" aria-expanded="false" title="Settings">⚙</button>
         <button class="ic" id="search-btn" aria-label="Search headlines" aria-expanded="false" title="Search ( / )">⌕</button>
@@ -85,6 +82,16 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <p class="mast-tag">Local + national · every 10 minutes · every Burlington headline next to the wire</p>
     <div class="mast-row mast-sub">
       <p class="mast-count" id="count-line" aria-live="polite">Taking the pulse…</p>
+      <span class="focus-wrap" id="focus-wrap">
+        <span class="fpulse fp-l" aria-hidden="true">▸</span>
+        <span class="fpulse fp-r" aria-hidden="true">◂</span>
+        <span class="fpulse fp-t" aria-hidden="true">▾</span>
+        <span class="fpulse fp-b" aria-hidden="true">▴</span>
+        <button class="intent" id="intent-btn" aria-pressed="false"
+                title="Focus Mode — headlines you scroll past won't reappear">
+          <span class="int-full">Focus Mode — clear as you read</span><span class="int-min">Focus</span>
+        </button>
+      </span>
       <div class="viewtog" role="group" aria-label="View">
         <button class="vt" id="view-feed" data-view="feed" aria-pressed="true">Feed</button>
         <button class="vt" id="view-sources" data-view="sources" aria-pressed="false">By source</button>
@@ -97,8 +104,30 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <button class="ic" id="search-clear" aria-label="Close search">✕</button>
     </div>
 
-    <nav class="tabs" id="topic-tabs" aria-label="Topics"></nav>
-    <nav class="srcbar" id="source-bar" aria-label="Sources"></nav>
+    <div class="srow">
+      <nav class="tabs" id="topic-tabs" aria-label="Topics"></nav>
+      <button class="srow-less" type="button" aria-label="Scroll left" hidden>‹</button>
+      <button class="srow-more" type="button" aria-label="Scroll right">›</button>
+      <div class="srow-bar" aria-hidden="true"><i></i></div>
+    </div>
+    <div class="srow" id="client-row" hidden>
+      <nav class="tabs tabs-client" id="client-tabs" aria-label="Your tabs"></nav>
+      <button class="srow-less" type="button" aria-label="Scroll left" hidden>‹</button>
+      <button class="srow-more" type="button" aria-label="Scroll right">›</button>
+      <div class="srow-bar" aria-hidden="true"><i></i></div>
+    </div>
+    <div class="srow">
+      <nav class="srcbar" id="source-bar-local" aria-label="Local sources"></nav>
+      <button class="srow-less" type="button" aria-label="Scroll left" hidden>‹</button>
+      <button class="srow-more" type="button" aria-label="Scroll right">›</button>
+      <div class="srow-bar" aria-hidden="true"><i></i></div>
+    </div>
+    <div class="srow" id="nat-row" hidden>
+      <nav class="srcbar" id="source-bar-national" aria-label="National sources"></nav>
+      <button class="srow-less" type="button" aria-label="Scroll left" hidden>‹</button>
+      <button class="srow-more" type="button" aria-label="Scroll right">›</button>
+      <div class="srow-bar" aria-hidden="true"><i></i></div>
+    </div>
   </header>
 
   <main class="body-wrap">
@@ -178,6 +207,12 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       </div>
     </div>
 
+    <h2 class="set-label">Gestures</h2>
+    <p class="set-note">On a phone: <b>swipe a headline right</b> to save it for later,
+       <b>swipe left</b> to vote for a deep-dive page on that topic, and
+       <b>press and hold</b> to mute the source. On a computer, hover a headline for
+       the + Save and Dig buttons.</p>
+
     <h2 class="set-label">Sources <button class="pill pill-end" id="show-all-btn" type="button">Show all</button></h2>
     <p class="set-note">Toggle sources on or off — everything else on the page follows.</p>
     <div id="source-toggles"></div>
@@ -185,7 +220,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <footer class="foot">
     <p class="foot-creed">No algorithm. No infinite scroll. Just the headlines.</p>
-    <p><a class="foot-news" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse" target="_blank" rel="noopener">The daily email for Burlington → sign up free</a></p>
+    <p><a class="foot-news" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse" target="_blank" rel="noopener">The email brief for Burlington → sign up free</a></p>
     <p class="foot-meta">A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project · Burlington, Vermont ·
        Sources curated in <a href="https://www.inoreader.com" target="_blank" rel="noopener">Inoreader</a> · Refreshed every 10 minutes</p>
   </footer>

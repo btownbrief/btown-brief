@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Burlington Pulse — the TOP tab: fifteen headlines an editor would keep.
+"""The Pulse — the TOP tab: 25 headlines an editor would keep.
 
-data/pulse.json is the whole firehose (~90 sources, thousands of headlines).
-The TOP tab is the opposite: one short list a reader with ten minutes can
-finish. A model reads the last 24 hours of candidates and picks 15 stories —
-roughly five local, ten national — and writes a one-line reason for each.
+data/pulse.json is the whole firehose (~100 sources, thousands of headlines).
+The TOP tab is the opposite: one short list a reader can actually finish. A
+model reads the last 24 hours of candidates and picks 25 stories — roughly a
+third local — and writes a one-line reason for each.
+
+The model also gets scouts: the "Top Signals" Inoreader folder collects
+curation newsletters (Morning Brew, 1440, VTDigger, Seven Days). Headline
+links are extracted from those emails, tracking redirects are decoded or
+resolved, every link is verified live, and the survivors join the candidate
+pool marked CURATED — professional editors' picks the model can adopt.
 
 Two rules hold the thing honest:
 
@@ -38,8 +44,27 @@ UA = "btown-pulse-top/1.0"
 MODEL = "claude-sonnet-5"
 WINDOW_HOURS = 24
 MAX_CANDIDATES = 400
-PICK_COUNT = 15
+PICK_COUNT = 25
 WHY_MAX = 90
+
+SIGNALS_URL = ("https://www.inoreader.com/stream/user/1003590800/tag/"
+               "Top%20Signals?n=30")
+SIGNAL_WINDOW_HOURS = 36     # newsletters are dailies; yesterday's still count
+MAX_SIGNALS = 40
+LINK_TIMEOUT = 8
+LOCAL_NEWSLETTERS = {"vtdigger", "seven days", "7days"}
+# anchor text that is email plumbing, not a headline
+JUNK_TEXT_RE = re.compile(
+    r"read (more|our|the|this)|view (this|in|online)|browser|unsubscribe|"
+    r"sign.?up|sign.?in|log.?in|subscribe|share|advertis|privacy|preferences|"
+    r"refer|shop|follow|download|app store|terms of|contact|feedback|"
+    r"update your|digest|password|confirm|verify|welcome|get started", re.I)
+# link targets that are never articles
+JUNK_URL_RE = re.compile(
+    r"instagram\.com|twitter\.com|x\.com/|facebook\.com|tiktok\.com|"
+    r"linkedin\.com|youtube\.com/(user|channel|@)|mailto:|unsubscribe|"
+    r"aweber|list-manage|/account|/help|/preferences|/advertise|/subscribe|"
+    r"/shop|/careers|/privacy|/terms", re.I)
 
 SCHEMA = {
     "type": "object",
@@ -65,16 +90,22 @@ PROMPT_HEAD = """You are the news editor for "The Pulse", a Burlington, \
 Vermont headline reader that carries both local Vermont news and national \
 news.
 
-From the numbered list below, pick EXACTLY 15 headlines that a smart reader \
-with ten minutes should read right now. Aim for roughly 5 LOCAL and 10 \
-NATIONAL picks — take fewer local ones only if the local list is genuinely \
-thin today.
+From the numbered list below, pick EXACTLY 25 headlines that a smart reader \
+should read right now. Aim for roughly 8 LOCAL and 17 NATIONAL picks — take \
+fewer local ones only if the local list is genuinely thin today.
+
+Some entries are marked CURATED: professional newsletter editors (Morning \
+Brew, 1440, VTDigger, Seven Days) chose those stories for today's editions. \
+That is a strong signal — adopt the best of them freely, some or all — but \
+they compete on the same terms as everything else, and the same-story rule \
+applies across the whole list.
 
 How to choose:
   * Consequence. What actually matters to someone's week, money, safety,
     government, or understanding of the world.
   * Breadth of subject. No two picks about the same story — when several
-    outlets cover one event, choose the single best one and move on.
+    outlets (or a newsletter and an outlet) cover one event, choose the
+    single best one and move on.
   * Substance over noise. Skip outrage bait, celebrity churn, listicles,
     sports scores, and pure aggregation.
 
@@ -152,12 +183,13 @@ def format_candidates(candidates):
     lines = []
     for index, candidate in enumerate(candidates):
         chatter = ""
-        if candidate["reddit"]:
+        if candidate.get("reddit"):
             chatter += " [reddit thread]"
-        if candidate["hn"]:
+        if candidate.get("hn"):
             chatter += f" [hn {candidate['hn']} comments]"
+        curated = f"CURATED by {candidate['curated']} · " if candidate.get("curated") else ""
         lines.append(
-            f"{index}. {'LOCAL' if candidate['local'] else 'NATIONAL'} · "
+            f"{index}. {curated}{'LOCAL' if candidate['local'] else 'NATIONAL'} · "
             f"{candidate['short']} · {candidate['age']:.0f}h ago · "
             f"{candidate['t']}{chatter}")
     return "\n".join(lines)
@@ -165,6 +197,134 @@ def format_candidates(candidates):
 
 def build_prompt(candidates):
     return PROMPT_HEAD + format_candidates(candidates)
+
+
+# ----------------------------------------------------------------------
+# Top Signals — curation newsletters as scouts
+# ----------------------------------------------------------------------
+
+NEWSLETTER_NAMES = {"7days": "Seven Days"}
+
+
+def domain_short(url):
+    """https://www.nytimes.com/2026/... -> 'nytimes.com' — the label a
+    curated pick wears on the page."""
+    host = urllib.parse.urlparse(url).netloc.lower()
+    return re.sub(r"^(www|amp|m)\.", "", host) or "web"
+
+
+def decode_redirect(url):
+    """Tracking links often carry the target base64-encoded in the path
+    (Morning Brew's link.morningbrew.com/click/<id>/<b64>/... style).
+    Return the decoded target when one is found, else the url unchanged."""
+    import base64
+
+    for segment in urllib.parse.urlparse(url).path.split("/"):
+        if len(segment) < 16:
+            continue
+        pad = segment + "=" * (-len(segment) % 4)
+        try:
+            decoded = base64.urlsafe_b64decode(pad).decode("utf-8", "strict")
+        except Exception:  # noqa: BLE001 — not base64, keep walking
+            continue
+        if decoded.startswith("http"):
+            return decoded
+    return url
+
+
+def extract_signal_links(html_body, per_item_cap=12):
+    """Newsletter HTML -> [(headline_text, target_url)]. Only anchors whose
+    text reads like a headline survive; plumbing links never do."""
+    import html as html_mod
+
+    out, seen = [], set()
+    for href, inner in re.findall(
+            r'<a[^>]+href="(https?://[^"]+)"[^>]*>(.*?)</a>',
+            html_body or "", re.S | re.I):
+        text = re.sub(r"\s+", " ", html_mod.unescape(
+            re.sub(r"<[^>]+>", " ", inner))).strip()
+        if len(text) < 25 or text.startswith("http") or JUNK_TEXT_RE.search(text):
+            continue
+        target = decode_redirect(html_mod.unescape(href))
+        parsed = urllib.parse.urlparse(target)
+        if JUNK_URL_RE.search(target) or parsed.path in ("", "/"):
+            continue
+        if target in seen:
+            continue
+        seen.add(target)
+        out.append((text[:200], target))
+        if len(out) >= per_item_cap:
+            break
+    return out
+
+
+def fetch_signals(now_ts, url=SIGNALS_URL):
+    """The Top Signals folder stream -> candidate dicts, unverified."""
+    import email.utils
+    import xml.etree.ElementTree as ElementTree
+
+    request = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(request, timeout=30) as response:
+        root = ElementTree.fromstring(response.read())
+
+    signals, seen = [], set()
+    for item in root.iter("item"):
+        source = item.find("source")
+        name = (source.text if source is not None else None) or item.findtext(
+            "{http://purl.org/dc/elements/1.1/}creator") or "Newsletter"
+        name = NEWSLETTER_NAMES.get(name.strip().lower(), name.strip())
+        when = now_ts
+        pub = item.findtext("pubDate")
+        if pub:
+            try:
+                when = int(email.utils.parsedate_to_datetime(pub).timestamp())
+            except Exception:  # noqa: BLE001
+                pass
+        if (now_ts - when) / 3600.0 > SIGNAL_WINDOW_HOURS:
+            continue
+        for text, target in extract_signal_links(item.findtext("description")):
+            if target in seen:
+                continue
+            seen.add(target)
+            signals.append({
+                "t": text,
+                "u": target,
+                "s": "",
+                # readers see the publisher, never the newsletter that
+                # scouted it — that stays kitchen-side
+                "short": domain_short(target),
+                "local": 1 if name.lower() in LOCAL_NEWSLETTERS else 0,
+                "d": when,
+                "age": max(0.0, (now_ts - when) / 3600.0),
+                "curated": name,
+            })
+            if len(signals) >= MAX_SIGNALS:
+                return signals
+    return signals
+
+
+def verify_signals(signals):
+    """Every curated link is fetched before it may reach the page. The final
+    URL after redirects replaces the tracking link, minus utm noise."""
+    kept = []
+    for signal in signals:
+        try:
+            request = urllib.request.Request(
+                signal["u"], headers={"User-Agent": UA})
+            with urllib.request.urlopen(request, timeout=LINK_TIMEOUT) as resp:
+                if resp.status >= 400:
+                    continue
+                final = resp.geturl()
+        except Exception:  # noqa: BLE001 — a dead curated link just drops out
+            continue
+        parts = urllib.parse.urlparse(final)
+        query = "&".join(
+            piece for piece in parts.query.split("&")
+            if piece and not piece.lower().startswith(("utm_", "rd=", "mc_")))
+        final_url = urllib.parse.urlunparse(parts._replace(query=query))
+        signal = dict(signal, u=final_url, short=domain_short(final_url))
+        kept.append(signal)
+    return kept
 
 
 # ----------------------------------------------------------------------
@@ -177,7 +337,7 @@ def ask_model(prompt):
     client = anthropic.Anthropic()
     response = client.messages.create(
         model=MODEL,
-        max_tokens=8000,
+        max_tokens=12000,
         output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
         messages=[{"role": "user", "content": prompt}],
     )
@@ -220,7 +380,6 @@ def build_payload(picks, generated):
     return {
         "v": 1,
         "generated": generated.replace(microsecond=0).isoformat(),
-        "model": MODEL,
         "picks": picks,
     }
 
@@ -236,11 +395,22 @@ def run(args):
         print(f"curate_top: could not fetch pulse.json ({exc})", file=sys.stderr)
         return
 
-    candidates = build_candidates(payload, int(utcnow().timestamp()))
+    now_ts = int(utcnow().timestamp())
+    candidates = build_candidates(payload, now_ts)
     if len(candidates) < PICK_COUNT:
         print(f"curate_top: only {len(candidates)} candidates in the last "
               f"{WINDOW_HOURS}h — leaving the last list in place")
         return
+
+    try:
+        signals = verify_signals(fetch_signals(now_ts))
+    except Exception as exc:  # noqa: BLE001 — scouts are optional
+        print(f"curate_top: Top Signals unavailable ({exc})", file=sys.stderr)
+        signals = []
+    if signals:
+        print(f"curate_top: {len(signals)} verified curated links from "
+              + ", ".join(sorted({s['curated'] for s in signals})))
+    candidates = candidates + signals
 
     try:
         answer = ask_model(build_prompt(candidates))
@@ -323,7 +493,7 @@ def selftest():
         write_json(out, build_payload(picks, utcnow()))
         with open(out, encoding="utf-8") as src:
             written = json.load(src)
-        assert written["v"] == 1 and written["model"] == MODEL
+        assert written["v"] == 1 and "model" not in written
         assert len(written["picks"]) == 2
         assert set(written["picks"][0]) == {
             "t", "u", "s", "short", "local", "d", "why"}
@@ -331,6 +501,25 @@ def selftest():
         if os.path.exists(out):
             os.remove(out)
     print("curate_top: output ok (shape and keys)")
+
+    import base64
+    encoded = base64.urlsafe_b64encode(
+        b"https://example.com/story").decode().rstrip("=")
+    assert decode_redirect(
+        f"https://link.morningbrew.com/click/abc123def456/{encoded}/h0")\
+        == "https://example.com/story"
+    assert decode_redirect("https://plain.example.com/a/b") \
+        == "https://plain.example.com/a/b"
+    links = extract_signal_links(
+        '<a href="https://t.co/x">Read more</a>'
+        '<a href="https://example.com/">Homepage-length anchor text here ok</a>'
+        '<a href="https://example.com/big-story">'
+        '<b>Senate passes the big infrastructure package</b></a>'
+        '<a href="https://example.com/unsubscribe">'
+        'Unsubscribe from this newsletter right now</a>')
+    assert links == [("Senate passes the big infrastructure package",
+                      "https://example.com/big-story")]
+    print("curate_top: signals ok (redirect decode, junk filters)")
     print("selftest ok")
 
 

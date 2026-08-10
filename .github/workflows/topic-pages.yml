@@ -101,7 +101,7 @@ jobs:
           git commit -q -m "Topic pages: $SLUGS"
           git push -q --force origin "$BRANCH"
           BODY=$(printf '%s\n' \
-            "These are AI-drafted deep-dive pages, one per topic readers asked" \
+            "These are auto-compiled deep-dive pages, one per topic readers asked" \
             "for by swiping left on a headline in the Pulse." \
             "" \
             "Slugs in this PR: $SLUGS" \
