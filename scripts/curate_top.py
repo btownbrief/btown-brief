@@ -206,6 +206,13 @@ def build_prompt(candidates):
 NEWSLETTER_NAMES = {"7days": "Seven Days"}
 
 
+def domain_short(url):
+    """https://www.nytimes.com/2026/... -> 'nytimes.com' — the label a
+    curated pick wears on the page."""
+    host = urllib.parse.urlparse(url).netloc.lower()
+    return re.sub(r"^(www|amp|m)\.", "", host) or "web"
+
+
 def decode_redirect(url):
     """Tracking links often carry the target base64-encoded in the path
     (Morning Brew's link.morningbrew.com/click/<id>/<b64>/... style).
@@ -283,7 +290,9 @@ def fetch_signals(now_ts, url=SIGNALS_URL):
                 "t": text,
                 "u": target,
                 "s": "",
-                "short": name,
+                # readers see the publisher, never the newsletter that
+                # scouted it — that stays kitchen-side
+                "short": domain_short(target),
                 "local": 1 if name.lower() in LOCAL_NEWSLETTERS else 0,
                 "d": when,
                 "age": max(0.0, (now_ts - when) / 3600.0),
@@ -312,7 +321,8 @@ def verify_signals(signals):
         query = "&".join(
             piece for piece in parts.query.split("&")
             if piece and not piece.lower().startswith(("utm_", "rd=", "mc_")))
-        signal = dict(signal, u=urllib.parse.urlunparse(parts._replace(query=query)))
+        final_url = urllib.parse.urlunparse(parts._replace(query=query))
+        signal = dict(signal, u=final_url, short=domain_short(final_url))
         kept.append(signal)
     return kept
 
@@ -370,7 +380,6 @@ def build_payload(picks, generated):
     return {
         "v": 1,
         "generated": generated.replace(microsecond=0).isoformat(),
-        "model": MODEL,
         "picks": picks,
     }
 
@@ -484,7 +493,7 @@ def selftest():
         write_json(out, build_payload(picks, utcnow()))
         with open(out, encoding="utf-8") as src:
             written = json.load(src)
-        assert written["v"] == 1 and written["model"] == MODEL
+        assert written["v"] == 1 and "model" not in written
         assert len(written["picks"]) == 2
         assert set(written["picks"][0]) == {
             "t", "u", "s", "short", "local", "d", "why"}

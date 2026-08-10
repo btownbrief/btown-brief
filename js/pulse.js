@@ -252,20 +252,23 @@
       if (row.hidden) return;
       var nav = row.querySelector('.tabs, .srcbar');
       var more = row.querySelector('.srow-more');
+      var less = row.querySelector('.srow-less');
       var bar = row.querySelector('.srow-bar');
       if (!nav || !more || !bar) return;
-      jobs.push({ more: more, bar: bar, thumb: bar.querySelector('i'),
+      jobs.push({ more: more, less: less, bar: bar, thumb: bar.querySelector('i'),
                   sw: nav.scrollWidth, cw: nav.clientWidth, sl: nav.scrollLeft });
     });
     jobs.forEach(function (j) {   /* all reads above, all writes here */
       var overflow = j.sw - j.cw;
       if (overflow < 8) {
         j.more.hidden = true;
+        if (j.less) j.less.hidden = true;
         j.bar.hidden = true;
         return;
       }
       j.bar.hidden = false;
       j.more.hidden = j.sl >= overflow - 8;
+      if (j.less) j.less.hidden = j.sl < 8;
       if (j.thumb) {
         j.thumb.style.width = Math.max(8, j.cw / j.sw * 100) + '%';
         j.thumb.style.marginLeft = (j.sl / j.sw * 100) + '%';
@@ -276,6 +279,23 @@
   function bindScrollRows() {
     document.querySelectorAll('.srow .tabs, .srow .srcbar').forEach(function (nav) {
       nav.addEventListener('scroll', updateScrollRows, { passive: true });
+      /* a mouse wheel only scrolls vertically — feed it to the row */
+      nav.addEventListener('wheel', function (ev) {
+        if (nav.scrollWidth <= nav.clientWidth) return;
+        var delta = Math.abs(ev.deltaX) > Math.abs(ev.deltaY) ? ev.deltaX : ev.deltaY;
+        if (!delta) return;
+        nav.scrollLeft += delta;
+        ev.preventDefault();
+      }, { passive: false });
+    });
+    document.querySelectorAll('.srow-more, .srow-less').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var nav = btn.parentElement.querySelector('.tabs, .srcbar');
+        if (!nav) return;
+        var step = Math.round(nav.clientWidth * 0.6) *
+          (btn.classList.contains('srow-less') ? -1 : 1);
+        nav.scrollBy({ left: step, behavior: 'smooth' });
+      });
     });
     window.addEventListener('resize', updateScrollRows);
   }
@@ -619,8 +639,8 @@
                               local: p.local, d: p.d, why: p.why });
       });
     body.innerHTML =
-      '<p class="empty" style="margin:18px auto 0">The 25 headlines worth your time · picked by an AI editor 3× a day, ' +
-      'with professional newsletters as scouts · headlines verbatim, never rewritten</p>' +
+      '<p class="empty" style="margin:18px auto 0">The 25 headlines worth your time · ' +
+      'refreshed through the day · headlines verbatim, never rewritten</p>' +
       '<div class="feed">' + rows.join('') + '</div>';
     renderCount(rows.length, 0);
   }
@@ -1189,7 +1209,7 @@
       ? 'You’ve been reading a lot. Take a break — ' +
         '<a href="https://play.btownbrief.com?utm_source=pulse&utm_medium=nudge" target="_blank" rel="noopener">go play something at the Btown Digital Arcade →</a>'
       : 'You’ve been reading a lot. How about reading the Btown Brief? ' +
-        '<a href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse-nudge" target="_blank" rel="noopener">The daily email for Burlington — free →</a>';
+        '<a href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse-nudge" target="_blank" rel="noopener">Burlington in your inbox, a few mornings a week — free →</a>';
     return '<div class="nudge">' + inner +
       '<button class="nudge-x" data-nudge-dismiss aria-label="Dismiss for today">✕</button></div>';
   }
