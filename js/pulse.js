@@ -277,6 +277,30 @@
     });
   }
 
+  /* the two source rails eat a quarter of a phone screen — they collapse
+     once you're reading and come back when you return to the top */
+  var srcRowsHidden = false;
+  var srcScrollRaf = 0;
+
+  function srcRowsOnScroll() {
+    srcScrollRaf = 0;
+    var y = window.scrollY;
+    if (!srcRowsHidden && y > 140) {
+      srcRowsHidden = true;
+      document.body.classList.add('src-hidden');
+    } else if (srcRowsHidden && y < 40) {
+      srcRowsHidden = false;
+      document.body.classList.remove('src-hidden');
+      updateScrollRows();
+    }
+  }
+
+  function bindSrcRowHiding() {
+    window.addEventListener('scroll', function () {
+      if (!srcScrollRaf) srcScrollRaf = requestAnimationFrame(srcRowsOnScroll);
+    }, { passive: true });
+  }
+
   function bindScrollRows() {
     document.querySelectorAll('.srow .tabs, .srow .srcbar').forEach(function (nav) {
       nav.addEventListener('scroll', updateScrollRows, { passive: true });
@@ -936,8 +960,8 @@
 
     var bar = '<div class="ytbar">' +
       '<div class="viewtog"><button class="vt" data-ytview="list" aria-pressed="' + !shelves +
-      '">List</button><button class="vt" data-ytview="shelves" aria-pressed="' + shelves +
-      '">Shelves</button></div>' +
+      '">Feed</button><button class="vt" data-ytview="shelves" aria-pressed="' + shelves +
+      '">Grid</button></div>' +
       (shelves
         ? '<div class="ytsorts">' +
           ['new', 'hot', 'short'].map(function (mode) {
@@ -948,40 +972,47 @@
         : '') + '</div>';
 
     var html = bar;
-    var shuffleBtn = ' <button class="pill vshuffle" data-ytshuffle>Shuffle ↻</button>';
     if (shelves) {
-      html += ytSection('Filmed in Vermont this week', ytOrder(vt));
-      YT_GROUPS.forEach(function (group) {
-        html += ytSection(group[1], ytOrder(own.filter(function (v) {
-          return (v.g || 'sci') === group[0];
-        })).slice(0, 8));
+      /* national leads (the production values), local sits between national
+         blocks, and anything too thin to stand alone pools at the end —
+         a category should never be one lonely video */
+      var g = function (key) { return own.filter(function (v) { return (v.g || 'sci') === key; }); };
+      var culture = g('food').concat(g('music'), g('fun'));
+      var candidates = [
+        ['News & documentary', g('news'), 10],
+        ['Vermont & local', g('vt'), 10],
+        ['Science & explainers', g('sci'), 10],
+        ['Filmed in Vermont this week', vt, 8],
+        ['Food, music & fun', culture, 8],
+      ];
+      var also = [];
+      candidates.forEach(function (section) {
+        if (section[1].length >= 2) {
+          html += ytSection(section[0], ytOrder(section[1]).slice(0, section[2]));
+        } else {
+          also = also.concat(section[1]);
+        }
       });
+      if (also.length) {
+        html += ytSection('Also this week', ytOrder(also));
+      }
       if (deep.length) {
-        html += ytSection('Deep cuts — the back catalog', sampleN(deep, 8), shuffleBtn);
+        html += ytSection('Deep cuts — the back catalog', sampleN(deep, 8),
+          deep.length > 8 ? ' <button class="pill vshuffle" data-ytshuffle>Shuffle ↻</button>' : '');
       }
       html += ytSection('Trending in the US', ytOrder(trend));
     } else {
-      if (vt.length) {
-        html += '<p class="empty" style="margin:18px auto 0">Filmed in Vermont this week</p>' +
-          '<div class="feed">' + vt.map(ytRow).join('') + '</div>';
-      }
-      if (own.length) {
-        html += '<p class="empty" style="margin:24px auto 0">New from the channels the Pulse follows</p>' +
-          '<div class="feed">' + own.map(ytRow).join('') + '</div>';
-      }
-      if (deep.length) {
-        html += '<p class="empty" style="margin:24px auto 0">Deep cuts — the back catalog' +
-          shuffleBtn + '</p>' +
-          '<div class="feed">' + sampleN(deep, 6).map(ytRow).join('') + '</div>';
-      }
-      if (trend.length) {
-        html += '<p class="empty" style="margin:24px auto 0">Trending in the US right now</p>' +
-          '<div class="feed">' + trend.map(ytRow).join('') + '</div>';
-      }
+      /* the Feed is a subscriptions page: every new upload, newest first */
+      var chrono = own.slice().sort(function (a, b) { return (b.d || 0) - (a.d || 0); });
+      html += chrono.length
+        ? '<p class="empty" style="margin:18px auto 0">Every new upload from the channels the Pulse follows · newest first</p>' +
+          '<div class="feed">' + chrono.map(ytRow).join('') + '</div>' +
+          '<p class="empty" style="margin:22px auto 0">Vermont finds, deep cuts and trending live in the Grid view ↑</p>'
+        : '';
     }
     body.innerHTML = (vt.length + own.length + deep.length + trend.length)
       ? html : '<p class="empty">No videos right now.</p>';
-    renderCount(vt.length + own.length + deep.length + trend.length, 0);
+    renderCount(shelves ? vt.length + own.length + deep.length + trend.length : own.length, 0);
   }
 
   function loadYouTube() {
@@ -1784,6 +1815,7 @@
   bind();
   bindGestures();
   bindScrollRows();
+  bindSrcRowHiding();
   loadData();
   pollMeta();
   loadTop();

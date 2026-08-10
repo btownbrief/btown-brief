@@ -44,13 +44,13 @@ CHANNELS_FILE = os.path.join(ROOT, "data", "youtube-channels.json")
 CHANNEL_RSS = "https://www.youtube.com/feeds/videos.xml?channel_id="
 API = "https://www.googleapis.com/youtube/v3"
 WINDOW_DAYS = 7
-MAX_CHANNEL_VIDEOS = 60
+MAX_CHANNEL_VIDEOS = 80
 MAX_TRENDING = 15
 DEFAULT_CAP = 3          # per-channel per refresh; firehoses set lower in the file
 SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
 MAX_VERMONT = 8
-DEEP_CHANNELS_PER_RUN = 4   # rotating sample; 4 searches ≈ 400 quota units
-DEEP_PER_CHANNEL = 4
+DEEP_CHANNELS_PER_RUN = 6   # rotating sample; 6 searches ≈ 600 quota units
+DEEP_PER_CHANNEL = 5
 MAX_DEEP = 24
 DEEP_MIN_AGE_DAYS = 180     # a deep cut is old gold, not last month's upload
 VT_QUERIES = ["Burlington Vermont", "Lake Champlain Vermont"]
