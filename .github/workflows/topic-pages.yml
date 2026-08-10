@@ -1,0 +1,122 @@
+name: Draft Pulse topic pages
+
+# Turns reader swipe-left votes into drafted deep-dive pages:
+#   scripts/build_topic_page.py -> topics/<slug>.html -> a pull request
+#
+# Nothing here publishes. The pages are AI-drafted from Wikipedia, YouTube,
+# Reddit and the Pulse's own feed, every outbound link is fetched at build
+# time, and a human decides whether the PR merges.
+#
+# Failure posture: no API key, no votes past the threshold, or any fetch or
+# model failure all end the run quietly with no PR.
+
+on:
+  schedule:
+    # ~23:55 Eastern — after the day's votes are in.
+    - cron: '55 3 * * *'
+  workflow_dispatch:
+    inputs:
+      force_url:
+        description: 'Headline URL to draft a page for (skips the vote query)'
+        required: false
+      force_title:
+        description: 'Headline text that goes with force_url'
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for an API key
+        id: key
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "no API key, skipping"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip while a topic-pages PR is still open
+        id: gate
+        if: steps.key.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          OPEN=$(gh pr list --state open --json headRefName \
+            --jq '[.[].headRefName | select(startswith("topic-pages/"))] | length')
+          if [ "$OPEN" != "0" ]; then
+            echo "an unreviewed topic-pages PR is open — not drafting more"
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install the Anthropic SDK
+        if: steps.key.outputs.ready == 'true' && steps.gate.outputs.go == 'true'
+        run: python3 -m pip install --quiet 'anthropic>=0.116,<1'
+
+      - name: Draft any topic pages
+        if: steps.key.outputs.ready == 'true' && steps.gate.outputs.go == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          FORCE_URL: ${{ inputs.force_url }}
+          FORCE_TITLE: ${{ inputs.force_title }}
+        run: |
+          python3 scripts/build_topic_page.py --selftest
+          if [ -n "$FORCE_URL" ]; then
+            python3 scripts/build_topic_page.py \
+              --force-url "$FORCE_URL" --force-title "$FORCE_TITLE"
+          else
+            python3 scripts/build_topic_page.py
+          fi
+
+      - name: Open a review PR for any new pages
+        if: steps.key.outputs.ready == 'true' && steps.gate.outputs.go == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain -uall topics/)" ]; then
+            echo "no new topic pages this run"
+            exit 0
+          fi
+          SLUGS=$(git status --porcelain -uall topics/ \
+            | awk '{print $NF}' | xargs -n1 basename | sed 's/\.html$//' \
+            | paste -sd ',' - | sed 's/,/, /g')
+          BRANCH="topic-pages/$(date -u +%F)"
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout -q -b "$BRANCH"
+          git add topics/
+          git commit -q -m "Topic pages: $SLUGS"
+          git push -q --force origin "$BRANCH"
+          BODY=$(printf '%s\n' \
+            "These are AI-drafted deep-dive pages, one per topic readers asked" \
+            "for by swiping left on a headline in the Pulse." \
+            "" \
+            "Slugs in this PR: $SLUGS" \
+            "" \
+            "How they were made: the underlying topic was derived from the" \
+            "voted headline, then the page was written **only** from Wikipedia" \
+            "extracts and real headlines — no invented facts, figures, dates or" \
+            "names. Videos and threads were chosen from candidate lists" \
+            "gathered at build time, and **every outbound link was fetched and" \
+            "verified** during the build." \
+            "" \
+            "Please read them before merging — nothing publishes until this PR" \
+            "is merged.")
+          if gh pr list --state open --head "$BRANCH" --json number --jq length | grep -qv '^0$'; then
+            echo "PR for $BRANCH already open — branch updated in place"
+          else
+            gh pr create --title "Topic pages: $SLUGS" --body "$BODY"
+          fi

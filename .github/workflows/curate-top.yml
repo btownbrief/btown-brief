@@ -1,0 +1,69 @@
+name: Curate the Pulse TOP tab
+
+# Picks the fifteen headlines for the Pulse's TOP tab:
+#   scripts/curate_top.py -> data/pulse-top.json on the `pulse-top` branch
+#
+# Same publishing shape as refresh-pulse.yml: a single orphan commit,
+# force-pushed, fetched by the page straight off raw.githubusercontent.com —
+# so a new TOP list never queues a Pages deploy.
+#
+# Failure posture: no API key, no candidates, or any API trouble all end the
+# run quietly without pushing, and the branch keeps its last good list.
+
+on:
+  schedule:
+    # ~6:35 / 11:35 / 16:35 Eastern in summer — morning, lunch, and commute.
+    - cron: '35 10,15,20 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  curate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for an API key
+        id: key
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "no API key, skipping"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install the Anthropic SDK
+        if: steps.key.outputs.ready == 'true'
+        run: python3 -m pip install --quiet 'anthropic>=0.116,<1'
+
+      - name: Curate the TOP list
+        if: steps.key.outputs.ready == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python3 scripts/curate_top.py --selftest
+          mkdir -p /tmp/top-out/data
+          python3 scripts/curate_top.py --out /tmp/top-out/data/pulse-top.json
+
+      - name: Force-push the single-commit pulse-top branch
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          if [ ! -s /tmp/top-out/data/pulse-top.json ]; then
+            echo "nothing written this run — leaving the branch alone"
+            exit 0
+          fi
+          cd /tmp/top-out
+          git init -q -b pulse-top
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/pulse-top.json
+          git commit -q -m "Pulse TOP $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            pulse-top
