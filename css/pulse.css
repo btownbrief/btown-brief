@@ -698,35 +698,43 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
   transform: translateY(-50%);
   opacity: 0;
   pointer-events: none;
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 3px;
 }
-.fi::before { content: "+ SAVE"; left: -86px; color: var(--accent); }
-.fi::after { content: "DIG IN ↓"; right: -86px; color: var(--c-science); }
+.fi::before { content: "+ SAVE"; left: 8px; color: var(--accent); }
+.fi::after { content: "DIG IN ↓"; right: 8px; color: var(--c-science); }
 .fi.sw-r::before { opacity: 1; }
 .fi.sw-l::after { opacity: 1; }
 
-.fi-acts {
-  position: absolute;
-  top: 8px;
-  right: 0;
-  display: flex;
-  gap: 6px;
-  opacity: 0;
-}
-.fi.has-thumb .fi-acts { right: 70px; }
-@media (hover: hover) {
-  .fi:hover .fi-acts { opacity: 1; }
+/* hover actions are a desktop affordance — phones swipe instead. display:none
+   (not opacity) so there is never an invisible tap target over the row. */
+.fi-acts { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .fi-acts { display: flex; gap: 6px; margin-left: auto; opacity: 0; pointer-events: none; }
+  .fi:hover .fi-acts { opacity: 1; pointer-events: auto; }
+  .fi-meta .fi-acts + .play, .fi-meta .fi-acts ~ .play { margin-left: 0; }
 }
 .act {
   font-family: var(--mono);
   font-size: 9px;
   letter-spacing: .1em;
-  padding: 3px 8px;
+  padding: 2px 8px;
   border: 1px solid var(--chipline);
   border-radius: 3px;
   color: var(--dim);
   background: var(--bg);
 }
 .act:hover { color: var(--fg); border-color: var(--dim); }
+
+/* long-press = mute, so the OS link callout has to stand down on touch */
+@media (hover: none) {
+  .fi, .fi * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
 
 .unsave {
   font-size: 11px;
@@ -862,10 +870,6 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
   .mast-count { flex-basis: 100%; }
   .int-full { display: none; }
   .int-min { display: inline; }
-  /* swipe labels sit outside the column on desktop; on phones they'd
-     overflow — anchor them inside the row edges instead */
-  .fi::before { left: 8px; }
-  .fi::after { right: 8px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {

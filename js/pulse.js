@@ -205,8 +205,9 @@
       var k = keyOf(item.u);
       if (state.set.autohide && state.read[k]) return false;
       /* read-with-intent: marks from previous visits vanish; marks made this
-         session stay (dimmed) so the list never shifts mid-read */
-      if (state.set.intent && state.view === 'feed' && !state.source &&
+         session stay (dimmed) so the list never shifts mid-read. Search is
+         explicit retrieval — it always sees everything. */
+      if (state.set.intent && state.view === 'feed' && !state.source && !state.q &&
           state.intent[k] && state.intent[k] < intentCutoff) return false;
       return matchesQuery(item, src);
     });
@@ -325,11 +326,12 @@
     return bits;
   }
 
-  function metaHTML(src, item) {
+  function metaHTML(src, item, acts) {
     return '<div class="fi-meta">' +
       '<button class="chip c-' + esc(src.topic) + '" data-source="' + src.id +
       '" title="' + esc(src.name) + '">' + esc(src.short) + '</button>' +
       '<span class="age" data-ts="' + item.d + '">' + fmtAge(item.d) + '</span>' +
+      (acts || '') +
       (item.a ? '<button class="play" data-audio="' + esc(safeUrl(item.a)) +
         '" data-title="' + esc(item.t) + '">▶ Play</button>' : '') +
       '</div>';
@@ -359,9 +361,9 @@
     return '<article class="fi' + (src.local ? ' local' : '') + (read ? ' read' : '') +
       (passed ? ' passed' : '') + (thumb ? ' has-thumb' : '') +
       (item.x ? '' : '" data-k="' + k) + '">' +
-      '<div class="fi-main">' + metaHTML(src, item) + headline +
+      '<div class="fi-main">' + metaHTML(src, item, acts) + headline +
       (disc ? '<div class="fi-disc">' + disc + '</div>' : '') + '</div>' +
-      thumb + acts + '</article>';
+      thumb + '</article>';
   }
 
   function renderBody() {
@@ -610,7 +612,7 @@
     var headers = { apikey: SB_KEY, 'Content-Type': 'application/json' };
     if (SB_KEY.indexOf('eyJ') === 0) headers.Authorization = 'Bearer ' + SB_KEY;
     return fetch(SB_URL + '/rest/v1/rpc/' + fn, {
-      method: 'POST', headers: headers, body: JSON.stringify(args),
+      method: 'POST', headers: headers, body: JSON.stringify(args), keepalive: true,
     }).then(function (res) {
       if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.text().then(function (t) { return t ? JSON.parse(t) : null; });
@@ -650,12 +652,24 @@
     });
   }
 
-  function sendReact(kind, item) {
-    var payload = {
+  /* reactions are persist-first: the payload lands in the outbox immediately
+     (so a closed tab can't lose it), undo pulls it back out, and the flush
+     5.2s later — or the next visit — actually sends it */
+  function outboxAdd(kind, item) {
+    queueReact({
       p_player: playerId(), p_kind: kind,
       p_url: item.u, p_title: item.t, p_source: item.s || '',
-    };
-    rpc('pulse_react', payload).catch(function () { queueReact(payload); });
+    });
+  }
+
+  function outboxRemove(kind, url) {
+    try {
+      var q = JSON.parse(localStorage.getItem(RQ_KEY) || '[]');
+      if (!Array.isArray(q)) return;
+      localStorage.setItem(RQ_KEY, JSON.stringify(q.filter(function (x) {
+        return !(x.p_kind === kind && x.p_url === url);
+      })));
+    } catch (e) {}
   }
 
   function pingDaily() {
@@ -696,6 +710,8 @@
   function unsave(k) {
     state.saved = state.saved.filter(function (o) { return o.k !== k; });
     saveSaved();
+    /* the SAVED tab disappears with its last item — don't strand the reader */
+    if (state.topic === 'saved' && !state.saved.length) { setTopic('all'); return; }
     render();
   }
 
@@ -708,9 +724,13 @@
                           sv: Math.round(Date.now() / 1000) });
     saveSaved();
     renderTabs();
-    /* the popularity counter fires after the undo window closes */
-    var send = setTimeout(function () { sendReact('save', item); }, 5200);
-    toastUndo('Saved for later', function () { clearTimeout(send); unsave(k); });
+    outboxAdd('save', item);
+    var send = setTimeout(flushReacts, 5200);   /* after the undo window */
+    toastUndo('Saved for later', function () {
+      clearTimeout(send);
+      outboxRemove('save', item.u);
+      unsave(k);
+    });
   }
 
   function commitDig(k) {
@@ -724,9 +744,11 @@
     var keys = Object.keys(dug);
     if (keys.length > 500) keys.slice(0, keys.length - 500).forEach(function (x) { delete dug[x]; });
     try { localStorage.setItem(DIG_KEY, JSON.stringify(dug)); } catch (e) {}
-    var send = setTimeout(function () { sendReact('dig', item); }, 5200);
+    outboxAdd('dig', item);
+    var send = setTimeout(flushReacts, 5200);
     toastUndo('Voted — enough votes builds a deep-dive page', function () {
       clearTimeout(send);
+      outboxRemove('dig', item.u);
       try {
         delete dug[k];
         localStorage.setItem(DIG_KEY, JSON.stringify(dug));
@@ -780,6 +802,13 @@
       if (ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]')) ev.preventDefault();
     });
 
+    /* Android's long-press link menu would beat the 550ms mute hold */
+    document.addEventListener('contextmenu', function (ev) {
+      if (G.el && ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]')) {
+        ev.preventDefault();
+      }
+    });
+
     document.addEventListener('pointerdown', function (ev) {
       if (!ev.isPrimary || ev.button) return;
       var row = ev.target.closest && ev.target.closest('#pulse-body .fi[data-k]');
@@ -790,18 +819,15 @@
       G.id = ev.pointerId; G.mode = '';
       G.hold = setTimeout(function () {
         if (G.el && !G.mode) {
-          G.mode = 'hold';
-          suppressUntil = Date.now() + 600;
-          suppressEl = G.el;
-          var key = G.key;
-          gestureReset();
-          holdMute(key);
+          G.mode = 'hold';   /* G stays live until release, so the eventual
+                                click lands inside the suppression window */
+          holdMute(G.key);
         }
       }, 550);
     });
 
     document.addEventListener('pointermove', function (ev) {
-      if (!G.el || ev.pointerId !== G.id) return;
+      if (!G.el || ev.pointerId !== G.id || G.mode === 'hold') return;
       var dx = ev.clientX - G.x0;
       var dy = ev.clientY - G.y0;
       if (!G.mode) {
@@ -825,6 +851,12 @@
     function up(ev) {
       if (!G.el || ev.pointerId !== G.id) return;
       clearTimeout(G.hold);
+      if (G.mode === 'hold') {
+        suppressUntil = Date.now() + 400;
+        suppressEl = G.el;
+        gestureReset();
+        return;
+      }
       if (G.mode === 'swipe') {
         var dx = ev.clientX - G.x0;
         var key = G.key;
@@ -857,13 +889,19 @@
 
   var io = null;
   var intentSaveTimer = 0;
+  var intentSeen = {};   // keys that were actually on screen this render
 
   function onIntent(entries) {
     var marked = false;
     entries.forEach(function (e) {
-      if (!e.isIntersecting && e.boundingClientRect.bottom <= 0) {
-        var k = e.target.dataset.k;
-        if (k && !state.intent[k]) {
+      var k = e.target.dataset.k;
+      if (!k) return;
+      if (e.isIntersecting) { intentSeen[k] = 1; return; }
+      /* only mark what the reader actually saw leave the top of the screen —
+         a re-render while scrolled deep reports everything above the viewport
+         as "not intersecting", and none of that was read */
+      if (e.boundingClientRect.bottom <= 0 && intentSeen[k]) {
+        if (!state.intent[k]) {
           state.intent[k] = Math.round(Date.now() / 1000);
           e.target.classList.add('passed');
           marked = true;
@@ -880,6 +918,7 @@
   function observeIntent() {
     if (!('IntersectionObserver' in window)) return;
     if (io) io.disconnect();
+    intentSeen = {};
     if (!state.set.intent || state.view !== 'feed' || state.source || isClientTab(state.topic)) return;
     if (!io) io = new IntersectionObserver(onIntent, { threshold: 0 });
     document.querySelectorAll('#pulse-body .fi[data-k]').forEach(function (el) {
