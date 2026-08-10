@@ -11,9 +11,12 @@ Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
     filtered out; channels marked min_sec keep only full episodes/talks.
   * Filmed in Vermont. Two API searches surface fresh local footage no
     channel roster would catch, ranked by view velocity.
-  * Deep cuts. Each refresh, a rotating handful of roster channels give up
-    their all-time most-viewed videos — the back catalog is where half the
-    gold lives, and recency feeds never surface it.
+  * Deep cuts. Every roster channel's all-time most-viewed videos, kept in
+    a catalog (data/deep-catalog.json on the same branch) — the back catalog
+    is where half the gold lives, and recency feeds never surface it. The
+    search endpoint costs 100 quota units a call and greatest-hits lists
+    barely change, so each channel is bought once (backfill a handful per
+    run) and then only the stalest entries are re-checked.
   * Trending. The YouTube Data API's mostPopular chart for the US.
 
 Durations and view counts come from the API's videos endpoint. Without a
@@ -22,8 +25,10 @@ trending). Any network trouble logs and exits 0 so the workflow stays green
 and the branch keeps its last good list.
 
 CLI:
-  --out PATH   where to write (default data/pulse-youtube.json)
-  --selftest   run the offline checks and exit
+  --out PATH       where to write (default data/pulse-youtube.json)
+  --catalog PATH   the deep-cut catalog, read AND rewritten in place
+                   (default data/deep-catalog.json)
+  --selftest       run the offline checks and exit
 """
 
 import argparse
@@ -49,9 +54,11 @@ MAX_TRENDING = 15
 DEFAULT_CAP = 3          # per-channel per refresh; firehoses set lower in the file
 SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
 MAX_VERMONT = 8
-DEEP_CHANNELS_PER_RUN = 6   # rotating sample; 6 searches ≈ 600 quota units
+CATALOG = os.path.join(ROOT, "data", "deep-catalog.json")
 DEEP_PER_CHANNEL = 5
-MAX_DEEP = 24
+DEEP_BACKFILL_PER_RUN = 8   # 8 searches ≈ 800 units/run while the catalog fills
+DEEP_REFRESH_PER_RUN = 2    # steady state: re-check the two stalest channels
+DEEP_REFRESH_DAYS = 30      # greatest-hits lists barely move
 DEEP_MIN_AGE_DAYS = 180     # a deep cut is old gold, not last month's upload
 VT_QUERIES = ["Burlington Vermont", "Lake Champlain Vermont"]
 VT_RE = re.compile(
@@ -357,52 +364,94 @@ def fetch_vermont(key, now_ts, exclude):
     return found[:MAX_VERMONT]
 
 
-def fetch_deep_cuts(key, now_ts, channels, exclude):
-    """A rotating sample of channels -> their all-time most-viewed videos."""
-    import html as html_mod
-    import random
+def load_deep_catalog(path):
+    """{channel id: {ts, videos}} from disk; empty on anything unreadable."""
+    try:
+        with open(path, encoding="utf-8") as src:
+            data = json.load(src)
+    except (OSError, ValueError):
+        return {}
+    channels = data.get("channels")
+    return channels if isinstance(channels, dict) else {}
 
-    pool = [channel for channel in channels if channel.get("id")]
-    random.shuffle(pool)
+
+def search_channel_top(key, channel, published_before):
+    """One channel's all-time most-viewed uploads, enriched, rules applied."""
+    import html as html_mod
+
+    query = urllib.parse.urlencode({
+        "part": "snippet", "type": "video", "order": "viewCount",
+        "channelId": channel["id"], "publishedBefore": published_before,
+        "maxResults": DEEP_PER_CHANNEL, "key": key})
+    found, seen = [], set()
+    for item in http_json(f"{API}/search?{query}").get("items", []):
+        vid = (item.get("id") or {}).get("videoId")
+        snippet = item.get("snippet") or {}
+        title = html_mod.unescape(snippet.get("title") or "")
+        if not vid or vid in seen or not title:
+            continue
+        when = None
+        published = snippet.get("publishedAt")
+        if published:
+            try:
+                when = int(datetime.fromisoformat(
+                    published.replace("Z", "+00:00")).timestamp())
+            except ValueError:
+                when = None
+        seen.add(vid)
+        found.append({"id": vid, "t": title[:200],
+                      "ch": channel.get("name", "")[:60], "d": when,
+                      "dc": 1, "g": channel.get("g", "sci")})
+    if found:
+        enrich(found, key)
+        found = apply_duration_rules(found)
+    return found
+
+
+def update_deep_catalog(key, now_ts, channels, catalog):
+    """Greatest-hits lists are static gold, so buy each channel once:
+    backfill channels the catalog is missing first, then slowly re-check the
+    stalest entries. A search error leaves the old entry untouched; a
+    genuinely empty result is recorded so the channel isn't re-bought every
+    run. Channels dropped from the roster leave the catalog."""
+    roster = {c["id"]: c for c in channels if c.get("id")}
+    catalog = {cid: entry for cid, entry in catalog.items() if cid in roster}
+    missing = [cid for cid in roster if cid not in catalog]
+    if missing:
+        import random
+
+        random.shuffle(missing)
+        batch = missing[:DEEP_BACKFILL_PER_RUN]
+    else:
+        stale = sorted(catalog, key=lambda cid: catalog[cid].get("ts") or 0)
+        batch = [cid for cid in stale
+                 if now_ts - (catalog[cid].get("ts") or 0)
+                 > DEEP_REFRESH_DAYS * 86400][:DEEP_REFRESH_PER_RUN]
     published_before = datetime.fromtimestamp(
         now_ts - DEEP_MIN_AGE_DAYS * 86400,
         timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    found, seen = [], set(exclude)
-    for channel in pool[:DEEP_CHANNELS_PER_RUN]:
-        query = urllib.parse.urlencode({
-            "part": "snippet", "type": "video", "order": "viewCount",
-            "channelId": channel["id"], "publishedBefore": published_before,
-            "maxResults": DEEP_PER_CHANNEL, "key": key})
+    for cid in batch:
         try:
-            items = http_json(f"{API}/search?{query}").get("items", [])
-        except Exception as exc:  # noqa: BLE001 — one channel's miss is fine
-            print(f"refresh_youtube: deep cuts {channel['name']} failed ({exc})",
+            videos = search_channel_top(key, roster[cid], published_before)
+        except Exception as exc:  # noqa: BLE001 — keep whatever we had
+            print(f"refresh_youtube: deep cuts "
+                  f"{roster[cid].get('name', cid)} failed ({exc})",
                   file=sys.stderr)
             continue
-        for item in items:
-            vid = (item.get("id") or {}).get("videoId")
-            snippet = item.get("snippet") or {}
-            title = html_mod.unescape(snippet.get("title") or "")
-            if not vid or vid in seen or not title:
-                continue
-            when = None
-            published = snippet.get("publishedAt")
-            if published:
-                try:
-                    when = int(datetime.fromisoformat(
-                        published.replace("Z", "+00:00")).timestamp())
-                except ValueError:
-                    when = None
-            seen.add(vid)
-            found.append({"id": vid, "t": title[:200],
-                          "ch": channel.get("name", "")[:60], "d": when,
-                          "dc": 1, "g": channel.get("g", "sci")})
-    if not found:
-        return []
-    enrich(found, key)
-    found = apply_duration_rules(found)
+        catalog[cid] = {"ts": now_ts, "videos": videos}
+    return catalog
+
+
+def catalog_deep_cuts(catalog, exclude):
+    """The whole catalog as one pool — the client samples and shuffles it."""
+    found, seen = [], set(exclude)
+    for entry in catalog.values():
+        for video in entry.get("videos", []):
+            if video.get("id") and video["id"] not in seen:
+                seen.add(video["id"])
+                found.append(video)
     found.sort(key=lambda video: video.get("views") or 0, reverse=True)
-    return found[:MAX_DEEP]
+    return found
 
 
 def build_payload(own, vermont, deep, trending, generated):
@@ -454,9 +503,12 @@ def run(args):
             print(f"refresh_youtube: Vermont search trouble ({exc})",
                   file=sys.stderr)
         try:
-            deep = fetch_deep_cuts(
-                key, now_ts, load_channels(),
-                {video["id"] for video in own + trending + vermont})
+            catalog = update_deep_catalog(
+                key, now_ts, load_channels(), load_deep_catalog(args.catalog))
+            if catalog:
+                write_json(args.catalog, {"v": 1, "channels": catalog})
+            deep = catalog_deep_cuts(
+                catalog, {video["id"] for video in own + trending + vermont})
         except Exception as exc:  # noqa: BLE001
             print(f"refresh_youtube: deep cuts trouble ({exc})",
                   file=sys.stderr)
@@ -567,12 +619,63 @@ def selftest():
 
     capped = fetch_channel_videos.__doc__  # cap behavior is covered live; the
     assert "capped per refresh" in capped  # docstring pins the contract
+
+    # Deep-cut catalog: backfill missing, keep fresh, drop de-rostered,
+    # record empty results, survive per-channel errors.
+    searched = []
+
+    def fake_search(key, channel, published_before):
+        searched.append(channel["id"])
+        if channel["id"] == "UCemptyempty":
+            return []
+        if channel["id"] == "UCboomboombo":
+            raise RuntimeError("quota")
+        return [{"id": "vid_" + channel["id"][-6:], "t": "Classic",
+                 "ch": channel.get("name", ""), "d": now_ts - 400 * 86400,
+                 "dur": "12:00", "views": 1000, "dc": 1,
+                 "g": channel.get("g", "sci")}]
+
+    real_search = globals()["search_channel_top"]
+    globals()["search_channel_top"] = fake_search
+    try:
+        roster = [{"id": "UCaaaaaaaaaa", "name": "A", "g": "news"},
+                  {"id": "UCbbbbbbbbbb", "name": "B"},
+                  {"id": "UCemptyempty", "name": "Empty"}]
+        catalog = update_deep_catalog("k", now_ts, roster, {
+            "UCaaaaaaaaaa": {"ts": now_ts - 3600,
+                             "videos": [{"id": "keptkeptkep", "views": 5,
+                                         "dc": 1}]},
+            "UCgonegonego": {"ts": now_ts, "videos": []},
+        })
+        assert sorted(searched) == ["UCbbbbbbbbbb", "UCemptyempty"]
+        assert "UCgonegonego" not in catalog          # left the roster
+        assert catalog["UCaaaaaaaaaa"]["ts"] == now_ts - 3600  # untouched
+        assert catalog["UCemptyempty"] == {"ts": now_ts, "videos": []}
+        searched.clear()
+        catalog2 = update_deep_catalog("k", now_ts, roster, catalog)
+        assert searched == [] and catalog2 == catalog  # all fresh: no buys
+        stale = dict(catalog,
+                     UCboomboombo={"ts": now_ts - 40 * 86400,
+                                   "videos": [{"id": "oldgoldoldg",
+                                               "views": 9, "dc": 1}]})
+        roster_boom = roster + [{"id": "UCboomboombo", "name": "Boom"}]
+        searched.clear()
+        catalog3 = update_deep_catalog("k", now_ts, roster_boom, stale)
+        assert searched == ["UCboomboombo"]            # only the stale one
+        assert catalog3["UCboomboombo"] == stale["UCboomboombo"]  # error kept it
+    finally:
+        globals()["search_channel_top"] = real_search
+    pool = catalog_deep_cuts(catalog, {"vid_bbbbbb"})
+    assert [video["id"] for video in pool] == ["keptkeptkep"]  # excluded + empty
+    assert load_deep_catalog("/nonexistent.json") == {}
+    print("refresh_youtube: deep catalog ok (backfill, refresh, errors)")
     print("selftest ok")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", default=OUT)
+    parser.add_argument("--catalog", default=CATALOG)
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     if args.selftest:
