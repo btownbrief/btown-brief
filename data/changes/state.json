@@ -10,18 +10,18 @@
   "beaches": {
    "Blanchard Beach North": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-08-11T16:06:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-08-11T18:19:00+00:00"
    },
    "Blanchard Beach South": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-08-11T16:06:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-08-11T18:19:00+00:00"
    },
    "Blodgett Water Access Point": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-08-11T16:00:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-08-11T18:19:00+00:00"
    },
    "Leddy Beach North": {
     "status": "open",
@@ -50,8 +50,8 @@
    },
    "Oakledge Cove": {
     "status": "open",
-    "reason": "Open",
-    "resultTime": "2026-08-10T17:04:00+00:00"
+    "reason": "Murky",
+    "resultTime": "2026-08-11T18:18:00+00:00"
    },
    "Texaco Beach": {
     "status": "open",
@@ -372,13 +372,6 @@
  "gmt-alerts": {
   "items": [
    {
-    "id": "https://ridegmt.com/?p=24832",
-    "title": "Service Alert :: Winooski",
-    "link": "https://ridegmt.com/service-alert-winooski-5/",
-    "ts": "2026-08-11T16:12:54+00:00",
-    "summary": "Buses on Route 9 will be on detour. Toward Riverside/Winooski, stops from E Spring Street at Spring Garden to Main Street at LaFountain Street will not be served."
-   },
-   {
     "id": "https://ridegmt.com/?p=24806",
     "title": "Faster Service to Saint Albans & Back on the #96 Begins August 24",
     "link": "https://ridegmt.com/faster-service-to-saint-albans-back-on-the-96-begins-august-25/",
@@ -550,6 +543,13 @@
    "sevendays-news": {
     "items": [
      {
+      "id": "https://www.sevendaysvt.com/?p=214507",
+      "title": "Montréal Critic Lesley Chesterman Shares Her Restaurant Intel",
+      "link": "https://www.sevendaysvt.com/food-drink/fooddrinkfeatures/montreal-critic-lesley-chesterman-shares-her-restaurant-intel/",
+      "ts": "2026-08-11T17:37:41+00:00",
+      "summary": "The former Gazette writer believes her hometown’s culinary scene is underestimated. She kick-started a museum exhibit and offered recs for a weekend of eats. The post Montréal Critic Lesley Chesterman Shares Her Restaurant Intel appeared first on Seven Days ."
+     },
+     {
       "id": "https://www.sevendaysvt.com/?p=214502",
       "title": "Sneakers Bistro Goes Nighttime With Sneakeasy Cocktail Lounge",
       "link": "https://www.sevendaysvt.com/food-drink/foodnews/sneakers-bistro-goes-nighttime-with-sneakeasy-cocktail-lounge/",
@@ -611,13 +611,6 @@
       "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-anneliese-monika-shor-1943-2026/",
       "ts": "2026-08-10T10:00:00+00:00",
       "summary": "Adventurer was inspired by music, beauty, simplicity and nature The post Obituary: Anneliese Monika Shor, 1943-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=214422",
-      "title": "In Memoriam: Nancy Fitch, 1941-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/inmemoriam/in-memoriam-nancy-fitch-1941-2026-2/",
-      "ts": "2026-08-10T10:00:00+00:00",
-      "summary": "Family and friends celebrate the life of the “keeper of the garden” The post In Memoriam: Nancy Fitch, 1941-2026 appeared first on Seven Days . (Image: Courtesy)"
      }
     ]
    },
@@ -901,18 +894,18 @@
       "summary": "An estimated 20,000 Americans donate their bodies every year for scientific research. The University of Vermont and Dartmouth College each accept close to 30 bodies a year, as part of what are known as anatomical gift programs."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-07/state-regulators-wont-require-casella-test-pfas-emissions-experimental-facility-coventry",
-      "title": "Regulators won’t require Casella test for PFAS emissions at experimental Coventry facility",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-07/state-regulators-wont-require-casella-test-pfas-emissions-experimental-facility-coventry",
-      "ts": "2026-08-07T09:00:00+00:00",
-      "summary": "Casella is testing new technology to remove PFAS from contaminated liquid at its Coventry landfill. State regulators don’t plan to set limits on PFAS in air emissions from the facility."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-08-07/ruminations-pairs-its-post-punk-garage-rock-with-earnest-lyrics",
       "title": "Ruminations pairs its post-punk, garage rock with earnest lyrics",
       "link": "https://www.vermontpublic.org/local-news/2026-08-07/ruminations-pairs-its-post-punk-garage-rock-with-earnest-lyrics",
       "ts": "2026-08-07T09:00:00+00:00",
       "summary": "This week's Friday Song is the band's latest, titled, \"What Was Last.\""
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-08-07/state-regulators-wont-require-casella-test-pfas-emissions-experimental-facility-coventry",
+      "title": "Regulators won’t require Casella test for PFAS emissions at experimental Coventry facility",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-07/state-regulators-wont-require-casella-test-pfas-emissions-experimental-facility-coventry",
+      "ts": "2026-08-07T09:00:00+00:00",
+      "summary": "Casella is testing new technology to remove PFAS from contaminated liquid at its Coventry landfill. State regulators don’t plan to set limits on PFAS in air emissions from the facility."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-08-06/local-development-group-wins-bid-former-montpelier-post-office",
@@ -1280,6 +1273,13 @@
    "mynbc5": {
     "items": [
      {
+      "id": "73404977",
+      "title": "Colombia searches for over 3,000 missing after a powerful earthquake kills more than 100",
+      "link": "https://www.mynbc5.com/article/colombia-earthquake-death-toll/73404977",
+      "ts": "2026-08-11T17:37:00+00:00",
+      "summary": "Colombia searches for over 3,000 missing after a powerful earthquake kills more than 100"
+     },
+     {
       "id": "73404185",
       "title": "Teacher dies rescuing young girl from rip current at popular South Carolina beach",
       "link": "https://www.mynbc5.com/article/dekalb-county-teacher-myrtle-beach-rip-current/73404185",
@@ -1411,13 +1411,6 @@
       "link": "https://www.mynbc5.com/article/trump-vaccine-order-childhood-shots/73402296",
       "ts": "2026-08-11T13:12:00+00:00",
       "summary": "Parents' decisions about vaccination — how many shots to get and when to get them – may be complicated this year because of a new Trump executive order | What to know"
-     },
-     {
-      "id": "73401392",
-      "title": "Primary Tuesday: These are the races with potential national consequences",
-      "link": "https://www.mynbc5.com/article/primary-races-to-watch-potential-national-consequences/73401392",
-      "ts": "2026-08-11T12:49:00+00:00",
-      "summary": "Voters in six states are holding primary elections Tuesday, where moderate and progressive Democrats will face off."
      }
     ]
    },
