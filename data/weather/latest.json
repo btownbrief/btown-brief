@@ -1,472 +1,450 @@
 {
- "updated": "2026-08-11T04:53:42+00:00",
+ "updated": "2026-08-11T06:37:47+00:00",
  "sections_updated": {
-  "now": "2026-08-11T04:53:42+00:00",
-  "forecast": "2026-08-11T04:53:42+00:00",
-  "hourly": "2026-08-11T04:53:42+00:00",
-  "alerts": "2026-08-11T04:53:42+00:00",
-  "afd": "2026-08-11T04:53:42+00:00",
-  "lake_forecast": "2026-08-11T04:53:42+00:00",
-  "lake_gage": "2026-08-11T04:53:42+00:00",
-  "air": "2026-08-11T04:53:42+00:00",
-  "sun": "2026-08-11T04:53:42+00:00",
-  "models": "2026-08-11T04:53:42+00:00"
+  "now": "2026-08-11T06:37:47+00:00",
+  "forecast": "2026-08-11T06:37:47+00:00",
+  "hourly": "2026-08-11T06:37:47+00:00",
+  "alerts": "2026-08-11T06:37:47+00:00",
+  "afd": "2026-08-11T06:37:47+00:00",
+  "lake_forecast": "2026-08-11T06:37:47+00:00",
+  "lake_gage": "2026-08-11T06:37:47+00:00",
+  "air": "2026-08-11T06:37:47+00:00",
+  "sun": "2026-08-11T06:37:47+00:00",
+  "models": "2026-08-11T06:37:47+00:00"
  },
  "now": {
-  "observed_at": "2026-08-11T04:35:00+00:00",
+  "observed_at": "2026-08-11T06:25:00+00:00",
   "station": "KBTV",
-  "description": "Light Rain",
-  "temp_f": 66,
-  "feels_like_f": 66,
-  "humidity": 88,
+  "description": "Clear",
+  "temp_f": 64,
+  "feels_like_f": 64,
+  "humidity": 94,
   "dewpoint_f": 63,
-  "wind_mph": 9,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "SW"
+  "wind_dir": "N"
  },
  "forecast": {
-  "updated": "2026-08-10T23:12:59+00:00",
+  "updated": "2026-08-11T06:27:42+00:00",
   "periods": [
    {
-    "name": "Tonight",
-    "start": "2026-08-10T19:00:00-04:00",
+    "name": "Overnight",
+    "start": "2026-08-11T02:00:00-04:00",
     "is_day": false,
     "temp_f": 64,
-    "pop": 66,
-    "wind": "S 3 to 10 mph",
-    "short": "Showers And Thunderstorms Likely",
-    "detailed": "Showers and thunderstorms likely before 4am. Mostly cloudy, with a low around 64. South wind 3 to 10 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "pop": 5,
+    "wind": "S 5 mph",
+    "short": "Patchy Fog",
+    "detailed": "Patchy fog. Mostly cloudy, with a low around 64. South wind around 5 mph."
    },
    {
     "name": "Tuesday",
     "start": "2026-08-11T06:00:00-04:00",
     "is_day": true,
     "temp_f": 82,
-    "pop": 9,
-    "wind": "NW 5 to 9 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 82. Northwest wind 5 to 9 mph. New rainfall amounts less than a tenth of an inch possible."
+    "pop": 6,
+    "wind": "NW 3 to 9 mph",
+    "short": "Patchy Fog then Sunny",
+    "detailed": "Patchy fog before 8am. Sunny, with a high near 82. Northwest wind 3 to 9 mph."
    },
    {
     "name": "Tuesday Night",
     "start": "2026-08-11T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 61,
-    "pop": 2,
+    "temp_f": 62,
+    "pop": 4,
     "wind": "W 2 to 8 mph",
     "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 61. West wind 2 to 8 mph."
+    "detailed": "Partly cloudy, with a low around 62. West wind 2 to 8 mph."
    },
    {
     "name": "Wednesday",
     "start": "2026-08-12T06:00:00-04:00",
     "is_day": true,
-    "temp_f": 81,
-    "pop": 18,
-    "wind": "W 5 mph",
+    "temp_f": 82,
+    "pop": 21,
+    "wind": "NW 5 mph",
     "short": "Mostly Sunny then Slight Chance Showers And Thunderstorms",
-    "detailed": "A slight chance of showers and thunderstorms after 2pm. Mostly sunny, with a high near 81. West wind around 5 mph."
+    "detailed": "A slight chance of showers and thunderstorms after 4pm. Mostly sunny, with a high near 82. Northwest wind around 5 mph."
    },
    {
     "name": "Wednesday Night",
     "start": "2026-08-12T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 60,
-    "pop": 37,
+    "temp_f": 61,
+    "pop": 48,
     "wind": "SW 5 mph",
     "short": "Slight Chance Showers And Thunderstorms then Chance Showers And Thunderstorms",
-    "detailed": "A slight chance of showers and thunderstorms before 8pm, then a chance of showers and thunderstorms. Mostly cloudy, with a low around 60. Southwest wind around 5 mph. Chance of precipitation is 40%."
+    "detailed": "A slight chance of showers and thunderstorms before 8pm, then a chance of showers and thunderstorms. Mostly cloudy, with a low around 61. Southwest wind around 5 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Thursday",
     "start": "2026-08-13T06:00:00-04:00",
     "is_day": true,
-    "temp_f": 80,
-    "pop": 69,
+    "temp_f": 81,
+    "pop": 73,
     "wind": "SW 6 mph",
     "short": "Showers And Thunderstorms Likely",
-    "detailed": "A chance of rain showers before 2pm, then showers and thunderstorms likely. Partly sunny, with a high near 80. Southwest wind around 6 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A chance of rain showers before 2pm, then showers and thunderstorms likely. Partly sunny, with a high near 81. Southwest wind around 6 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Thursday Night",
     "start": "2026-08-13T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 58,
-    "pop": 69,
+    "temp_f": 59,
+    "pop": 73,
     "wind": "NW 6 mph",
-    "short": "Showers And Thunderstorms Likely then Chance Showers And Thunderstorms",
-    "detailed": "Showers and thunderstorms likely before 8pm, then a chance of showers and thunderstorms. Mostly cloudy, with a low around 58. Northwest wind around 6 mph. Chance of precipitation is 70%."
+    "short": "Showers And Thunderstorms Likely",
+    "detailed": "Showers and thunderstorms likely. Mostly cloudy, with a low around 59. Northwest wind around 6 mph. Chance of precipitation is 70%."
    },
    {
     "name": "Friday",
     "start": "2026-08-14T06:00:00-04:00",
     "is_day": true,
-    "temp_f": 74,
-    "pop": 30,
-    "wind": "NW 7 to 15 mph",
+    "temp_f": 76,
+    "pop": 39,
+    "wind": "NW 7 to 16 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly sunny, with a high near 74. Northwest wind 7 to 15 mph. Chance of precipitation is 30%."
+    "detailed": "A chance of rain showers before 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 76. Northwest wind 7 to 16 mph. Chance of precipitation is 40%."
    },
    {
     "name": "Friday Night",
     "start": "2026-08-14T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 55,
-    "pop": 29,
-    "wind": "NW 6 to 14 mph",
-    "short": "Chance Rain Showers then Partly Cloudy",
-    "detailed": "A chance of rain showers before 8pm. Partly cloudy, with a low around 55. Northwest wind 6 to 14 mph. Chance of precipitation is 30%."
+    "temp_f": 56,
+    "pop": 37,
+    "wind": "NW 7 to 15 mph",
+    "short": "Chance Showers And Thunderstorms then Partly Cloudy",
+    "detailed": "A chance of showers and thunderstorms before 8pm. Partly cloudy, with a low around 56. Northwest wind 7 to 15 mph. Chance of precipitation is 40%."
    },
    {
     "name": "Saturday",
     "start": "2026-08-15T06:00:00-04:00",
     "is_day": true,
     "temp_f": 77,
-    "pop": 2,
-    "wind": "N 6 to 10 mph",
+    "pop": 1,
+    "wind": "N 7 to 12 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 77. North wind 6 to 10 mph."
+    "detailed": "Sunny, with a high near 77. North wind 7 to 12 mph."
    },
    {
     "name": "Saturday Night",
     "start": "2026-08-15T18:00:00-04:00",
     "is_day": false,
     "temp_f": 56,
-    "pop": 3,
-    "wind": "W 2 to 9 mph",
+    "pop": 1,
+    "wind": "W 2 to 10 mph",
     "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 56. West wind 2 to 9 mph."
+    "detailed": "Partly cloudy, with a low around 56. West wind 2 to 10 mph."
    },
    {
     "name": "Sunday",
     "start": "2026-08-16T06:00:00-04:00",
     "is_day": true,
     "temp_f": 79,
-    "pop": 17,
-    "wind": "S 3 to 7 mph",
-    "short": "Mostly Sunny then Slight Chance Rain Showers",
-    "detailed": "A slight chance of rain showers after 2pm. Mostly sunny, with a high near 79. South wind 3 to 7 mph."
+    "pop": 11,
+    "wind": "S 6 mph",
+    "short": "Mostly Sunny",
+    "detailed": "Mostly sunny, with a high near 79. South wind around 6 mph."
    },
    {
     "name": "Sunday Night",
     "start": "2026-08-16T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 59,
-    "pop": 38,
-    "wind": "S 3 to 7 mph",
+    "temp_f": 60,
+    "pop": 28,
+    "wind": "S 6 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 59. South wind 3 to 7 mph. Chance of precipitation is 40%."
+    "detailed": "A chance of rain showers after 8pm. Mostly cloudy, with a low around 60. South wind around 6 mph. Chance of precipitation is 30%."
    },
    {
     "name": "Monday",
     "start": "2026-08-17T06:00:00-04:00",
     "is_day": true,
     "temp_f": 79,
-    "pop": 35,
+    "pop": 25,
     "wind": "NW 5 to 8 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers before 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 79. Northwest wind 5 to 8 mph. Chance of precipitation is 40%."
+    "detailed": "A chance of rain showers. Partly sunny, with a high near 79. Northwest wind 5 to 8 mph. Chance of precipitation is 30%."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-08-10T23:12:59+00:00",
+  "updated": "2026-08-11T06:27:42+00:00",
   "hours": [
    {
-    "t": "2026-08-11T00:00:00-04:00",
-    "temp_f": 69,
-    "feels_f": 69,
-    "pop": 41,
-    "humidity": 90,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 62,
-    "short": "Chance Showers And Thunderstorms"
-   },
-   {
-    "t": "2026-08-11T01:00:00-04:00",
-    "temp_f": 69,
-    "feels_f": 69,
-    "pop": 34,
-    "humidity": 87,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 56,
-    "short": "Chance Showers And Thunderstorms"
-   },
-   {
     "t": "2026-08-11T02:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 27,
-    "humidity": 90,
-    "wind_mph": 6,
+    "temp_f": 67,
+    "feels_f": 67,
+    "pop": 5,
+    "humidity": 97,
+    "wind_mph": 5,
     "wind_dir": "S",
-    "sky": 51,
-    "short": "Chance Rain Showers"
+    "sky": 73,
+    "short": "Patchy Fog"
    },
    {
     "t": "2026-08-11T03:00:00-04:00",
     "temp_f": 67,
     "feels_f": 67,
-    "pop": 20,
+    "pop": 3,
     "humidity": 93,
-    "wind_mph": 5,
+    "wind_mph": 3,
     "wind_dir": "S",
-    "sky": 48,
-    "short": "Slight Chance Rain Showers"
+    "sky": 58,
+    "short": "Patchy Fog"
    },
    {
     "t": "2026-08-11T04:00:00-04:00",
     "temp_f": 66,
     "feels_f": 66,
-    "pop": 10,
+    "pop": 4,
     "humidity": 97,
-    "wind_mph": 5,
+    "wind_mph": 3,
     "wind_dir": "S",
-    "sky": 38,
-    "short": "Partly Cloudy"
+    "sky": 58,
+    "short": "Patchy Fog"
    },
    {
     "t": "2026-08-11T05:00:00-04:00",
-    "temp_f": 66,
-    "feels_f": 66,
-    "pop": 11,
-    "humidity": 93,
+    "temp_f": 65,
+    "feels_f": 65,
+    "pop": 5,
+    "humidity": 97,
     "wind_mph": 3,
     "wind_dir": "SW",
-    "sky": 37,
-    "short": "Partly Cloudy"
+    "sky": 64,
+    "short": "Patchy Fog"
    },
    {
     "t": "2026-08-11T06:00:00-04:00",
     "temp_f": 65,
     "feels_f": 65,
-    "pop": 9,
+    "pop": 5,
     "humidity": 97,
-    "wind_mph": 5,
+    "wind_mph": 3,
     "wind_dir": "SW",
-    "sky": 46,
-    "short": "Mostly Sunny"
+    "sky": 54,
+    "short": "Patchy Fog"
    },
    {
     "t": "2026-08-11T07:00:00-04:00",
     "temp_f": 66,
     "feels_f": 66,
-    "pop": 8,
+    "pop": 4,
     "humidity": 93,
     "wind_mph": 5,
     "wind_dir": "W",
-    "sky": 51,
-    "short": "Partly Sunny"
+    "sky": 54,
+    "short": "Patchy Fog"
    },
    {
     "t": "2026-08-11T08:00:00-04:00",
     "temp_f": 68,
     "feels_f": 68,
-    "pop": 7,
-    "humidity": 90,
+    "pop": 0,
+    "humidity": 93,
     "wind_mph": 6,
     "wind_dir": "W",
-    "sky": 52,
-    "short": "Partly Sunny"
+    "sky": 20,
+    "short": "Sunny"
    },
    {
     "t": "2026-08-11T09:00:00-04:00",
     "temp_f": 71,
     "feels_f": 71,
-    "pop": 5,
+    "pop": 1,
     "humidity": 81,
     "wind_mph": 7,
-    "wind_dir": "W",
-    "sky": 26,
-    "short": "Mostly Sunny"
+    "wind_dir": "NW",
+    "sky": 10,
+    "short": "Sunny"
    },
    {
     "t": "2026-08-11T10:00:00-04:00",
     "temp_f": 74,
     "feels_f": 74,
-    "pop": 3,
-    "humidity": 71,
+    "pop": 2,
+    "humidity": 74,
     "wind_mph": 8,
     "wind_dir": "NW",
-    "sky": 24,
+    "sky": 13,
     "short": "Sunny"
    },
    {
     "t": "2026-08-11T11:00:00-04:00",
-    "temp_f": 75,
-    "feels_f": 75,
-    "pop": 2,
+    "temp_f": 76,
+    "feels_f": 76,
+    "pop": 1,
     "humidity": 66,
     "wind_mph": 9,
     "wind_dir": "NW",
-    "sky": 18,
+    "sky": 23,
     "short": "Sunny"
    },
    {
     "t": "2026-08-11T12:00:00-04:00",
     "temp_f": 77,
     "feels_f": 77,
-    "pop": 3,
+    "pop": 0,
     "humidity": 62,
     "wind_mph": 9,
     "wind_dir": "NW",
-    "sky": 16,
+    "sky": 20,
     "short": "Sunny"
    },
    {
     "t": "2026-08-11T13:00:00-04:00",
-    "temp_f": 79,
-    "feels_f": 79,
-    "pop": 4,
+    "temp_f": 80,
+    "feels_f": 81,
+    "pop": 1,
     "humidity": 56,
-    "wind_mph": 9,
-    "wind_dir": "NW",
-    "sky": 28,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-08-11T14:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 81,
-    "pop": 6,
-    "humidity": 52,
-    "wind_mph": 9,
-    "wind_dir": "NW",
-    "sky": 25,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-08-11T15:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 81,
-    "pop": 6,
-    "humidity": 51,
     "wind_mph": 9,
     "wind_dir": "NW",
     "sky": 22,
     "short": "Sunny"
    },
    {
+    "t": "2026-08-11T14:00:00-04:00",
+    "temp_f": 80,
+    "feels_f": 81,
+    "pop": 2,
+    "humidity": 52,
+    "wind_mph": 9,
+    "wind_dir": "NW",
+    "sky": 22,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-08-11T15:00:00-04:00",
+    "temp_f": 81,
+    "feels_f": 82,
+    "pop": 4,
+    "humidity": 49,
+    "wind_mph": 9,
+    "wind_dir": "NW",
+    "sky": 27,
+    "short": "Mostly Sunny"
+   },
+   {
     "t": "2026-08-11T16:00:00-04:00",
     "temp_f": 82,
     "feels_f": 82,
-    "pop": 5,
-    "humidity": 46,
+    "pop": 2,
+    "humidity": 47,
     "wind_mph": 9,
     "wind_dir": "NW",
-    "sky": 26,
-    "short": "Mostly Sunny"
+    "sky": 17,
+    "short": "Sunny"
    },
    {
     "t": "2026-08-11T17:00:00-04:00",
     "temp_f": 80,
     "feels_f": 81,
-    "pop": 5,
+    "pop": 6,
     "humidity": 49,
     "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 15,
+    "wind_dir": "NW",
+    "sky": 18,
     "short": "Sunny"
    },
    {
     "t": "2026-08-11T18:00:00-04:00",
     "temp_f": 78,
     "feels_f": 78,
-    "pop": 0,
+    "pop": 4,
     "humidity": 52,
     "wind_mph": 8,
-    "wind_dir": "N",
-    "sky": 22,
+    "wind_dir": "NW",
+    "sky": 25,
     "short": "Mostly Clear"
    },
    {
     "t": "2026-08-11T19:00:00-04:00",
     "temp_f": 77,
     "feels_f": 77,
-    "pop": 1,
-    "humidity": 54,
+    "pop": 2,
+    "humidity": 56,
     "wind_mph": 7,
     "wind_dir": "NW",
-    "sky": 31,
-    "short": "Partly Cloudy"
+    "sky": 17,
+    "short": "Mostly Clear"
    },
    {
     "t": "2026-08-11T20:00:00-04:00",
     "temp_f": 74,
     "feels_f": 74,
-    "pop": 0,
-    "humidity": 59,
-    "wind_mph": 6,
+    "pop": 1,
+    "humidity": 62,
+    "wind_mph": 5,
     "wind_dir": "NW",
-    "sky": 25,
-    "short": "Mostly Clear"
+    "sky": 36,
+    "short": "Partly Cloudy"
    },
    {
     "t": "2026-08-11T21:00:00-04:00",
     "temp_f": 72,
     "feels_f": 72,
-    "pop": 2,
-    "humidity": 66,
-    "wind_mph": 5,
+    "pop": 1,
+    "humidity": 68,
+    "wind_mph": 3,
     "wind_dir": "NW",
-    "sky": 39,
-    "short": "Partly Cloudy"
+    "sky": 23,
+    "short": "Mostly Clear"
    },
    {
     "t": "2026-08-11T22:00:00-04:00",
     "temp_f": 70,
     "feels_f": 70,
-    "pop": 0,
+    "pop": 2,
     "humidity": 73,
     "wind_mph": 3,
-    "wind_dir": "NW",
-    "sky": 26,
-    "short": "Partly Cloudy"
+    "wind_dir": "W",
+    "sky": 21,
+    "short": "Mostly Clear"
    },
    {
     "t": "2026-08-11T23:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 0,
+    "temp_f": 69,
+    "feels_f": 69,
+    "pop": 1,
     "humidity": 76,
     "wind_mph": 3,
     "wind_dir": "NW",
-    "sky": 9,
-    "short": "Mostly Clear"
+    "sky": 31,
+    "short": "Partly Cloudy"
    },
    {
     "t": "2026-08-12T00:00:00-04:00",
     "temp_f": 67,
     "feels_f": 67,
     "pop": 1,
-    "humidity": 78,
+    "humidity": 81,
     "wind_mph": 3,
-    "wind_dir": "W",
-    "sky": 40,
-    "short": "Partly Cloudy"
+    "wind_dir": "SW",
+    "sky": 22,
+    "short": "Mostly Clear"
    },
    {
     "t": "2026-08-12T01:00:00-04:00",
     "temp_f": 66,
     "feels_f": 66,
-    "pop": 0,
+    "pop": 1,
     "humidity": 81,
     "wind_mph": 3,
     "wind_dir": "SW",
-    "sky": 24,
-    "short": "Mostly Clear"
+    "sky": 32,
+    "short": "Partly Cloudy"
    },
    {
     "t": "2026-08-12T02:00:00-04:00",
-    "temp_f": 65,
-    "feels_f": 65,
-    "pop": 0,
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 1,
     "humidity": 81,
     "wind_mph": 3,
-    "wind_dir": "SW",
-    "sky": 37,
+    "wind_dir": "S",
+    "sky": 39,
     "short": "Partly Cloudy"
    },
    {
@@ -474,33 +452,33 @@
     "temp_f": 64,
     "feels_f": 64,
     "pop": 1,
-    "humidity": 84,
-    "wind_mph": 2,
-    "wind_dir": "SW",
-    "sky": 19,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-08-12T04:00:00-04:00",
-    "temp_f": 63,
-    "feels_f": 63,
-    "pop": 0,
-    "humidity": 87,
-    "wind_mph": 2,
-    "wind_dir": "SW",
-    "sky": 56,
-    "short": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-08-12T05:00:00-04:00",
-    "temp_f": 63,
-    "feels_f": 63,
-    "pop": 0,
     "humidity": 87,
     "wind_mph": 2,
     "wind_dir": "S",
-    "sky": 28,
+    "sky": 34,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-08-12T04:00:00-04:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 1,
+    "humidity": 87,
+    "wind_mph": 2,
+    "wind_dir": "S",
+    "sky": 25,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-12T05:00:00-04:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 1,
+    "humidity": 84,
+    "wind_mph": 2,
+    "wind_dir": "SE",
+    "sky": 8,
+    "short": "Mostly Clear"
    },
    {
     "t": "2026-08-12T06:00:00-04:00",
@@ -509,64 +487,86 @@
     "pop": 0,
     "humidity": 90,
     "wind_mph": 2,
-    "wind_dir": "S",
-    "sky": 38,
-    "short": "Mostly Sunny"
+    "wind_dir": "SE",
+    "sky": 16,
+    "short": "Sunny"
    },
    {
     "t": "2026-08-12T07:00:00-04:00",
-    "temp_f": 63,
-    "feels_f": 63,
-    "pop": 0,
-    "humidity": 90,
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 1,
+    "humidity": 87,
     "wind_mph": 2,
     "wind_dir": "S",
-    "sky": 23,
-    "short": "Sunny"
+    "sky": 32,
+    "short": "Mostly Sunny"
    },
    {
     "t": "2026-08-12T08:00:00-04:00",
     "temp_f": 67,
     "feels_f": 67,
-    "pop": 5,
+    "pop": 0,
     "humidity": 81,
     "wind_mph": 2,
-    "wind_dir": "SW",
-    "sky": 13,
-    "short": "Sunny"
+    "wind_dir": "S",
+    "sky": 35,
+    "short": "Mostly Sunny"
    },
    {
     "t": "2026-08-12T09:00:00-04:00",
     "temp_f": 69,
     "feels_f": 69,
-    "pop": 5,
-    "humidity": 76,
-    "wind_mph": 3,
-    "wind_dir": "W",
-    "sky": 24,
-    "short": "Sunny"
+    "pop": 1,
+    "humidity": 78,
+    "wind_mph": 2,
+    "wind_dir": "NW",
+    "sky": 31,
+    "short": "Mostly Sunny"
    },
    {
     "t": "2026-08-12T10:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
-    "pop": 5,
+    "temp_f": 74,
+    "feels_f": 74,
+    "pop": 0,
     "humidity": 66,
     "wind_mph": 3,
     "wind_dir": "W",
-    "sky": 18,
-    "short": "Sunny"
+    "sky": 27,
+    "short": "Mostly Sunny"
    },
    {
     "t": "2026-08-12T11:00:00-04:00",
-    "temp_f": 77,
-    "feels_f": 77,
-    "pop": 5,
-    "humidity": 58,
+    "temp_f": 76,
+    "feels_f": 76,
+    "pop": 0,
+    "humidity": 62,
     "wind_mph": 3,
     "wind_dir": "NW",
     "sky": 12,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-08-12T12:00:00-04:00",
+    "temp_f": 77,
+    "feels_f": 77,
+    "pop": 0,
+    "humidity": 58,
+    "wind_mph": 3,
+    "wind_dir": "NW",
+    "sky": 13,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-08-12T13:00:00-04:00",
+    "temp_f": 79,
+    "feels_f": 79,
+    "pop": 2,
+    "humidity": 54,
+    "wind_mph": 5,
+    "wind_dir": "NW",
+    "sky": 26,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -861,17 +861,17 @@
  },
  "lake_gage": {
   "water_temp_f": 77,
-  "water_temp_at": "2026-08-11T00:00:00.000-04:00",
-  "level_ft": 95.27,
-  "level_at": "2026-08-11T00:00:00.000-04:00",
+  "water_temp_at": "2026-08-11T02:00:00.000-04:00",
+  "level_ft": 95.36,
+  "level_at": "2026-08-11T02:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 30,
+  "aqi": 47,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/11/26 0:00",
+  "observed": "08/11/26 2:00",
   "discussion": "On Monday, August 10th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -891,7 +891,7 @@
      "ICON": 78
     },
     "pop_max": {
-     "GFS": 61,
+     "GFS": 65,
      "Euro": 68,
      "ICON": 15
     },
@@ -915,7 +915,7 @@
      "ICON": 38
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.01,
      "Euro": 0.16,
      "ICON": 0.12
     },
@@ -924,7 +924,7 @@
    {
     "date": "2026-08-13",
     "high_f": {
-     "GFS": 78,
+     "GFS": 80,
      "Euro": 72,
      "ICON": 76
     },
@@ -934,11 +934,11 @@
      "ICON": 34
     },
     "precip_in": {
-     "GFS": 0.38,
+     "GFS": 0.6,
      "Euro": 0.79,
      "ICON": 0.18
     },
-    "high_spread_f": 6
+    "high_spread_f": 8
    }
   ]
  }
