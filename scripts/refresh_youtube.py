@@ -36,6 +36,7 @@ CLI:
 
 import argparse
 import email.utils
+import html
 import json
 import os
 import re
@@ -280,7 +281,9 @@ def parse_inoreader_stream(raw, now_ts):
             continue
         if now_ts - when > WINDOW_DAYS * 86400:
             continue
-        entries.append({"id": vid, "t": title[:200], "ch": name[:60],
+        # Inoreader double-escapes <source> text ("Fish &amp; Wildlife")
+        entries.append({"id": vid, "t": html.unescape(title)[:200],
+                        "ch": html.unescape(name)[:60],
                         "d": when, "cid": match.group(1)})
     return entries
 
@@ -315,6 +318,11 @@ def fetch_channel_videos_inoreader(now_ts, channels=None, raw=None):
                 continue
             video = {key: value for key, value in video.items()
                      if key != "cid"}
+            # curated roster name wins over YouTube's channel title, so the
+            # display (and the reader's channel mutes, keyed on it) stays
+            # identical whichever transport fetched the run
+            if channel.get("name"):
+                video["ch"] = channel["name"][:60]
             if channel.get("min_sec"):
                 video["_min"] = int(channel["min_sec"])
             if channel.get("g"):
@@ -586,8 +594,12 @@ def run(args):
         print(f"refresh_youtube: inoreader stream failed ({exc})",
               file=sys.stderr)
     if len(own) < 10:
-        own = (fetch_channel_videos_api(key, now_ts) if key
+        alt = (fetch_channel_videos_api(key, now_ts) if key
                else fetch_channel_videos(now_ts))
+        # keep whichever transport did better — a partial stream still
+        # beats a fallback that returns nothing on datacenter IPs
+        if len(alt) > len(own):
+            own = alt
 
     vermont, deep, trending = [], [], []
     if key:
@@ -653,7 +665,7 @@ INO_FIXTURE = """<?xml version="1.0" encoding="utf-8"?>
 <item><title>Council meeting</title>
 <link>https://www.youtube.com/watch?v=aaaaaaaaaaa</link>
 <pubDate>{fresh}</pubDate>
-<source url="https://www.youtube.com/channel/UCcapchancapchancapchan1">Cap Chan</source></item>
+<source url="https://www.youtube.com/channel/UCcapchancapchancapchan1">Cap Chan Full YouTube Title</source></item>
 <item><title>Second upload blocked by cap</title>
 <link>https://www.youtube.com/watch?v=bbbbbbbbbbb</link>
 <pubDate>{fresh}</pubDate>
@@ -661,7 +673,7 @@ INO_FIXTURE = """<?xml version="1.0" encoding="utf-8"?>
 <item><title>Unknown channel rides along</title>
 <link>https://www.youtube.com/watch?v=ccccccccccc</link>
 <pubDate>{fresh2}</pubDate>
-<source url="https://www.youtube.com/channel/UCunknownunknownunknown2">Mystery</source></item>
+<source url="https://www.youtube.com/channel/UCunknownunknownunknown2">Mystery &amp;amp; Co</source></item>
 <item><title>An obvious #Short</title>
 <link>https://www.youtube.com/watch?v=ddddddddddd</link>
 <pubDate>{fresh2}</pubDate>
@@ -724,9 +736,10 @@ def selftest():
                 now_ts - 9 * 86400, usegmt=True)).encode())
     assert [video["id"] for video in ino] == ["aaaaaaaaaaa", "ccccccccccc"]
     assert ino[0]["g"] == "vt" and ino[0]["_min"] == 300
+    assert ino[0]["ch"] == "Cap Chan"        # roster name beats stream title
     assert "g" not in ino[1] and "cid" not in ino[1]
-    assert ino[1]["ch"] == "Mystery"
-    print("refresh_youtube: inoreader stream ok (regroup, caps, window, shorts)")
+    assert ino[1]["ch"] == "Mystery & Co"    # Inoreader double-escaping undone
+    print("refresh_youtube: inoreader stream ok (regroup, caps, names, window, shorts)")
 
     payload = build_payload(
         videos,

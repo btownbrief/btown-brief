@@ -669,7 +669,9 @@
     if (state.youtube && Array.isArray(state.youtube.videos)) {
       var chans = {};
       state.youtube.videos.forEach(function (v) {
-        if (v && v.ch) chans[ytKey(v.ch)] = v.ch;
+        // trending guests rotate every few hours — a mute on one would
+        // persist forever with no row left to undo it
+        if (v && v.ch && !v.trend) chans[ytKey(v.ch)] = v.ch;
       });
       var ytRows = Object.keys(chans)
         .sort(function (a, b) { return chans[a].localeCompare(chans[b]); })
@@ -1123,6 +1125,9 @@
       if (json && Array.isArray(json.videos)) {
         state.youtube = json;
         if (state.data) render();
+        // the channels group only exists once the payload lands — catch a
+        // drawer that was already open
+        if (!$('drawer').hidden) renderSettingsPanel();
       }
     }).catch(function () {});
   }

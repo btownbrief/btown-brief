@@ -23,7 +23,9 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # the worst fallback path (stream down, no key, 78 direct RSS fetches
+    # at 15s timeout each) can run ~20 minutes before failing safe
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
