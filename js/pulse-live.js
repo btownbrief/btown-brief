@@ -35,6 +35,7 @@
     { id: 'r3', cadence: 10000, offset: 7200, type: 'rail' },
   ];
   var PACE = { slow: 1.45, normal: 1, fast: 0.72 };
+  var PACES = ['slow', 'normal', 'fast'];
 
   var LEAD_COLORS = ['bg-yellow', 'bg-yellow', 'bg-red', 'bg-cream', 'bg-cream'];
   var RAIL_COLORS = ['bg-yellow', 'bg-yellow', 'bg-red', 'bg-red', 'bg-cream',
@@ -56,7 +57,12 @@
     leadsSinceLocal: 0,      // local-heartbeat counter for the lead cell
     set: { pace: 'normal', cells: 'auto', heldOnce: false },
     hiddenSources: {},       // from the main Pulse page's settings
-    timers: {}, endsAt: {}, paused: {}, pausedAt: {},
+    timers: {},              // slot id -> cadence / kickoff timeout
+    swapTimers: {},          // slot id -> pending 320ms exit-animation timeout
+    endsAt: {},
+    pausedBy: {},            // slot id -> {hover:bool, vis:bool}
+    pausedAt: {},
+    needsKick: {},           // slots activated while the tab was hidden
     activeCount: 3,
   };
 
@@ -84,13 +90,22 @@
 
   function topicLabel(t) { return (TOPIC_LABEL[t] || t).toUpperCase(); }
 
+  function isLocalItem(it) { return !!it.tags && it.tags.indexOf('local') !== -1; }
+
+  function inEnabled(it) {
+    if (!it.tags) return false;
+    for (var i = 0; i < it.tags.length; i++)
+      if (state.enabled.has(it.tags[i])) return true;
+    return false;
+  }
+
   /* ---------- settings ---------- */
 
   function loadStored() {
     try {
       var s = JSON.parse(localStorage.getItem(SET_KEY) || 'null');
       if (s && typeof s === 'object') {
-        if (PACE[s.pace]) state.set.pace = s.pace;
+        if (PACES.indexOf(s.pace) !== -1) state.set.pace = s.pace;
         if (['auto', '2', '3', '4'].indexOf(String(s.cells)) !== -1) state.set.cells = String(s.cells);
         state.set.heldOnce = !!s.heldOnce;
         if (Array.isArray(s.topics)) {
@@ -103,7 +118,13 @@
       }
     } catch (e) {}
     if (!state.enabled) state.enabled = new Set(TOPICS);
-    if (state.solo && !state.prevTopics) state.solo = null;
+    // solo invariant: soloed means exactly that one topic runs, with a set to return to
+    if (state.solo) {
+      if (!state.prevTopics) { state.solo = null; }
+      else { state.enabled = new Set([state.solo]); }
+    } else {
+      state.prevTopics = null;
+    }
     try {
       var p = JSON.parse(localStorage.getItem(PULSE_SET_KEY) || 'null');
       if (p && p.hidden && typeof p.hidden === 'object') state.hiddenSources = p.hidden;
@@ -154,10 +175,17 @@
 
   function isReddit(src) { return (src.site || '').indexOf('reddit.com') !== -1; }
 
-  function topicOf(src) {
-    if (src.pod) return 'pods';
-    if (isReddit(src)) return 'reddit';
-    return src.topic || 'news';
+  /* Topics overlap, exactly like the main Pulse tabs: a local podcast lives
+     in LOCAL and PODS both; r/burlington is LOCAL and REDDIT. `tags` drive
+     the filter, the first tag is what the cell displays — local wins. */
+  function tagsOf(src) {
+    var tags = [];
+    if (src.topic === 'local') tags.push('local');
+    if (isReddit(src)) tags.push('reddit');
+    if (src.pod) tags.push('pods');
+    if (src.topic && src.topic !== 'local') tags.push(src.topic);
+    if (!tags.length) tags.push('news');
+    return tags;
   }
 
   function buildPool(data, yt) {
@@ -169,12 +197,14 @@
       if (!src || state.hiddenSources[src.id]) return;
       var t = String(it.t || '').trim();
       if (t.length < 10) return;
+      var tags = tagsOf(src);
       pool.push({
         t: t,
         u: safeUrl(it.u),
         d: it.d || 0,
         src: src.short || src.name || '',
-        topic: topicOf(src),
+        tags: tags,
+        topic: tags[0],
       });
     });
     if (yt && Array.isArray(yt.videos)) {
@@ -186,6 +216,7 @@
           u: 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id),
           d: v.d || 0,
           src: v.ch || 'YouTube',
+          tags: ['video'],
           topic: 'video',
           dur: v.dur || '',
         });
@@ -218,12 +249,24 @@
 
   function pickItem(cfg) {
     var now = Date.now();
-    var base = state.pool.filter(function (it) {
-      return state.enabled.has(it.topic) && !state.used[it.u];
-    });
+    var eligible = state.pool.filter(inEnabled);
+    var base = eligible.filter(function (it) { return !state.used[it.u]; });
+    if (!base.length && eligible.length) {
+      // a small pool ran dry before the periodic reset — start the lap over
+      state.used = {};
+      state.usedCount = 0;
+      base = eligible.slice();
+    }
+
+    // freshness cap, with a relief valve: top up with the NEWEST stale items
+    // only as far as MIN_POOL, so the recency weighting stays meaningful
     var fresh = base.filter(function (it) { return freshEnough(it, now); });
-    if (fresh.length >= MIN_POOL || fresh.length === base.length) base = fresh;
-    else if (fresh.length) base = fresh.concat(base.filter(function (it) { return !freshEnough(it, now); }).slice(0, MIN_POOL));
+    if (fresh.length >= MIN_POOL || fresh.length === base.length) {
+      base = fresh.length ? fresh : base;
+    } else {
+      var stale = base.filter(function (it) { return !freshEnough(it, now); });
+      base = fresh.concat(stale.slice(0, MIN_POOL - fresh.length));
+    }
 
     // the lead cell reads best with headlines that aren't paragraph-length
     var maxLen = cfg.type === 'lead' ? 120 : 160;
@@ -232,7 +275,7 @@
 
     // local heartbeat: every third lead swap comes home if local is on
     if (cfg.type === 'lead' && state.enabled.has('local') && state.leadsSinceLocal >= 2) {
-      var locals = base.filter(function (it) { return it.topic === 'local'; });
+      var locals = base.filter(isLocalItem);
       if (locals.length) base = locals;
     }
 
@@ -241,7 +284,7 @@
         t: state.enabled.size === 0
           ? 'Pick a topic above to start the wire.'
           : 'No fresh stories in those topics. Tap a few more back on.',
-        u: '#', src: 'system', topic: 'system', d: 0, system: true,
+        u: '#', src: 'system', tags: [], topic: 'system', d: 0, system: true,
       };
     }
 
@@ -250,8 +293,7 @@
     var item = base[Math.min(idx, base.length - 1)];
     state.used[item.u] = true;
     state.usedCount++;
-    var eligible = state.pool.filter(function (it) { return state.enabled.has(it.topic); }).length;
-    if (state.usedCount > Math.max(8, Math.floor(eligible * 0.7))) {
+    if (state.usedCount > Math.max(8, Math.floor(eligible.length * 0.7))) {
       state.used = {};
       state.used[item.u] = true;
       state.usedCount = 1;
@@ -327,7 +369,7 @@
      then anything but this cell's current color. LOCAL items pick from a
      green-leaning pool so local reads unmistakably local. */
   function chooseColor(cfg, cell, item) {
-    var pool = item && item.topic === 'local' ? LOCAL_COLORS
+    var pool = item && isLocalItem(item) ? LOCAL_COLORS
              : cfg.type === 'lead' ? LEAD_COLORS : RAIL_COLORS;
     var current = currentColorClass(cell);
     var others = Array.prototype.filter.call(document.querySelectorAll('.cell'), function (c) {
@@ -358,12 +400,15 @@
     bar.style.width = '100%';
   }
 
+  /* freeze as a percentage, not pixels — an orientation flip while paused
+     resizes the cell, and a percentage keeps the bar visually honest */
   function pauseProgressBar(cell) {
     var bar = cell.querySelector('.pbar');
     if (!bar) return;
+    var track = bar.parentElement.getBoundingClientRect().width;
     var px = bar.getBoundingClientRect().width;
     bar.style.transition = 'none';
-    bar.style.width = px + 'px';
+    bar.style.width = track > 0 ? (Math.min(100, px / track * 100)) + '%' : '0%';
   }
 
   function resumeProgressBar(cell, remainingMs) {
@@ -374,33 +419,46 @@
     bar.style.width = '100%';
   }
 
-  /* ---------- scheduling (pause shifts the deadline, never loses time) ---------- */
+  /* ---------- scheduling (pause shifts the deadline, never loses time) ----------
+     A slot can be paused for two independent reasons — the pointer is on it,
+     or the tab is hidden. The clock stops when the first reason appears and
+     restarts only when the last one clears. */
 
   function cadenceOf(cfg) { return Math.round(cfg.cadence * (PACE[state.set.pace] || 1)); }
 
   function cellOf(cfg) { return document.querySelector('[data-slot="' + cfg.id + '"]'); }
 
+  function isPaused(id) {
+    var p = state.pausedBy[id];
+    return !!(p && (p.hover || p.vis));
+  }
+
   function scheduleNext(cfg, delay) {
     clearTimeout(state.timers[cfg.id]);
     state.endsAt[cfg.id] = performance.now() + delay;
     state.timers[cfg.id] = setTimeout(function () {
-      if (state.paused[cfg.id]) return;   // resumeSlot reschedules on unpause
+      if (isPaused(cfg.id)) return;   // resumeSlot reschedules on unpause
       refreshSlot(cfg);
     }, delay);
   }
 
-  function pauseSlot(cfg) {
-    if (state.paused[cfg.id]) return;
-    state.paused[cfg.id] = true;
+  function pauseSlot(cfg, reason) {
+    var p = state.pausedBy[cfg.id] || (state.pausedBy[cfg.id] = {});
+    if (p[reason]) return;
+    var already = isPaused(cfg.id);
+    p[reason] = true;
+    if (already) return;             // clock is stopped for the other reason
     state.pausedAt[cfg.id] = performance.now();
     clearTimeout(state.timers[cfg.id]);
     var cell = cellOf(cfg);
     if (cell) pauseProgressBar(cell);
   }
 
-  function resumeSlot(cfg) {
-    if (!state.paused[cfg.id]) return;
-    state.paused[cfg.id] = false;
+  function resumeSlot(cfg, reason) {
+    var p = state.pausedBy[cfg.id];
+    if (!p || !p[reason]) return;
+    p[reason] = false;
+    if (isPaused(cfg.id)) return;    // still held by the other reason
     var pausedFor = performance.now() - (state.pausedAt[cfg.id] || 0);
     state.endsAt[cfg.id] = (state.endsAt[cfg.id] || performance.now()) + pausedFor;
     var remaining = Math.max(0, state.endsAt[cfg.id] - performance.now());
@@ -414,6 +472,7 @@
 
   function refreshSlot(cfg) {
     clearTimeout(state.timers[cfg.id]);
+    clearTimeout(state.swapTimers[cfg.id]);   // supersede a mid-flight swap
     var cell = cellOf(cfg);
     if (!cell || cell.offsetParent === null) return;
     var head = cell.querySelector('.head');
@@ -426,7 +485,7 @@
     var item = pickItem(cfg);
     state.perSlot[cfg.id] = item;
     if (cfg.type === 'lead' && !item.system) {
-      state.leadsSinceLocal = item.topic === 'local' ? 0 : state.leadsSinceLocal + 1;
+      state.leadsSinceLocal = isLocalItem(item) ? 0 : state.leadsSinceLocal + 1;
     }
 
     cell.setAttribute('href', item.u || '#');
@@ -466,6 +525,14 @@
       startProgressBar(cell, cadence);
       scheduleNext(cfg, cadence);
 
+      /* if a pause landed during the 320ms exit animation, honor it now:
+         stop the clock we just armed and hold the bar at zero */
+      if (isPaused(cfg.id)) {
+        clearTimeout(state.timers[cfg.id]);
+        state.pausedAt[cfg.id] = performance.now();
+        pauseProgressBar(cell);
+      }
+
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
           head.style.transition = 'opacity .55s cubic-bezier(.2,.85,.3,1), transform .6s cubic-bezier(.2,.85,.3,1)';
@@ -488,16 +555,10 @@
     meta.style.opacity = '0';
     top.style.transition = 'opacity .3s ease-out';
     top.style.opacity = '0';
-    setTimeout(swap, 320);
+    state.swapTimers[cfg.id] = setTimeout(swap, 320);
   }
 
   function activeSlots() { return SLOTS.slice(0, state.activeCount); }
-
-  function refreshAllVisible() {
-    activeSlots().forEach(function (cfg, i) {
-      setTimeout(function () { refreshSlot(cfg); }, i * 350);
-    });
-  }
 
   /* ---------- topic chips: tap toggles, hold solos ---------- */
 
@@ -527,7 +588,7 @@
     // force-refresh any visible cell whose story just got filtered out
     activeSlots().forEach(function (cfg) {
       var cur = state.perSlot[cfg.id];
-      if (cur && (cur.system || !state.enabled.has(cur.topic))) refreshSlot(cfg);
+      if (cur && (cur.system || !inEnabled(cur))) refreshSlot(cfg);
     });
   }
 
@@ -560,6 +621,8 @@
     var wrap = $('chips');
     var holdTimer = null;
     var heldTopic = null;
+    var pressed = false;
+    var moved = false;
     var startX = 0, startY = 0;
     var justHeld = false;
 
@@ -569,6 +632,8 @@
       var btn = e.target.closest('.chip');
       if (!btn) return;
       heldTopic = btn.dataset.topic;
+      pressed = true;
+      moved = false;
       startX = e.clientX; startY = e.clientY;
       justHeld = false;
       clearTimeout(holdTimer);
@@ -579,20 +644,25 @@
     });
 
     wrap.addEventListener('pointermove', function (e) {
-      // a drag is a scroll, not a hold
+      // a drag is a scroll, not a hold — and not a tap either
+      if (!pressed) return;
       if (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8) {
+        moved = true;
         clearTimeout(holdTimer);
       }
     });
 
     ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
-      wrap.addEventListener(ev, function () { clearTimeout(holdTimer); });
+      wrap.addEventListener(ev, function () {
+        pressed = false;
+        clearTimeout(holdTimer);
+      });
     });
 
     wrap.addEventListener('click', function (e) {
       var btn = e.target.closest('.chip');
       if (!btn) return;
-      if (justHeld) { justHeld = false; return; }   // the hold already acted
+      if (justHeld || moved) { justHeld = false; moved = false; return; }
       toggleTopic(btn.dataset.topic);
     });
   }
@@ -618,9 +688,12 @@
     SLOTS.forEach(function (cfg, i) {
       if (i >= count) {
         clearTimeout(state.timers[cfg.id]);
-        state.paused[cfg.id] = false;
+        clearTimeout(state.swapTimers[cfg.id]);
+        state.pausedBy[cfg.id] = {};       // a hidden cell can't be hovered
+        delete state.needsKick[cfg.id];
       } else if (i >= prevCount && state.pool.length) {
-        refreshSlot(cfg);
+        if (document.visibilityState === 'visible') refreshSlot(cfg);
+        else state.needsKick[cfg.id] = true;   // wake it when the tab returns
       }
     });
     refitAll();
@@ -694,9 +767,16 @@
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'visible') {
         requestWakeLock();
-        activeSlots().forEach(resumeSlot);
+        activeSlots().forEach(function (cfg) {
+          if (state.needsKick[cfg.id]) {
+            delete state.needsKick[cfg.id];
+            refreshSlot(cfg);
+          } else {
+            resumeSlot(cfg, 'vis');
+          }
+        });
       } else {
-        activeSlots().forEach(pauseSlot);
+        activeSlots().forEach(function (cfg) { pauseSlot(cfg, 'vis'); });
       }
     });
 
@@ -709,8 +789,8 @@
       SLOTS.forEach(function (cfg) {
         var cell = cellOf(cfg);
         if (!cell) return;
-        cell.addEventListener('mouseenter', function () { pauseSlot(cfg); });
-        cell.addEventListener('mouseleave', function () { resumeSlot(cfg); });
+        cell.addEventListener('mouseenter', function () { pauseSlot(cfg, 'hover'); });
+        cell.addEventListener('mouseleave', function () { resumeSlot(cfg, 'hover'); });
       });
     }
 
@@ -739,7 +819,10 @@
         if (!state.pool.length) return;
         computeLayout();
         activeSlots().forEach(function (cfg) {
-          setTimeout(function () { refreshSlot(cfg); }, cfg.offset);
+          // kickoff timers live in state.timers so a layout change can cancel
+          // them; clear first — computeLayout may have already armed a clock
+          clearTimeout(state.timers[cfg.id]);
+          state.timers[cfg.id] = setTimeout(function () { refreshSlot(cfg); }, cfg.offset);
         });
       });
 
