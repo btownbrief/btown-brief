@@ -6,8 +6,9 @@
 #   pulse-data and pulse-top, so it never touches main or Pages).
 #
 # Sources: the public Inoreader folder "YouTube" (followed channels — the
-# curation surface) plus the YouTube Data API's US trending chart. Skips
-# quietly when YOUTUBE_API_KEY is absent.
+# curation surface, no key needed) plus the YouTube Data API for durations,
+# trending, the Vermont radar and deep cuts when YOUTUBE_API_KEY is present.
+# Without a key the followed-channel shelf still publishes.
 
 name: Refresh the Pulse YouTube shelf
 
@@ -22,24 +23,13 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # the worst fallback path (stream down, no key, 78 direct RSS fetches
+    # at 15s timeout each) can run ~20 minutes before failing safe
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for an API key
-        id: key
-        env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-        run: |
-          if [ -z "$YOUTUBE_API_KEY" ]; then
-            echo "no API key, skipping"
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Build the video shelf
-        if: steps.key.outputs.ready == 'true'
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: |
@@ -50,12 +40,14 @@ jobs:
           git fetch -q origin pulse-youtube || true
           git show origin/pulse-youtube:data/deep-catalog.json \
             > /tmp/yt-out/data/deep-catalog.json 2>/dev/null || true
+          # channel-discovery suggestions persist their seen-list the same way
+          git show origin/pulse-youtube:data/channel-suggestions.json \
+            > /tmp/yt-out/data/channel-suggestions.json 2>/dev/null || true
           python3 scripts/refresh_youtube.py \
             --out /tmp/yt-out/data/pulse-youtube.json \
             --catalog /tmp/yt-out/data/deep-catalog.json
 
       - name: Force-push the single-commit pulse-youtube branch
-        if: steps.key.outputs.ready == 'true'
         run: |
           if [ ! -s /tmp/yt-out/data/pulse-youtube.json ]; then
             echo "nothing written this run — leaving the branch alone"
@@ -67,6 +59,8 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add data/pulse-youtube.json
           if [ -s data/deep-catalog.json ]; then git add data/deep-catalog.json; fi
+          if [ -s data/video-digest.json ]; then git add data/video-digest.json; fi
+          if [ -s data/channel-suggestions.json ]; then git add data/channel-suggestions.json; fi
           git commit -q -m "Pulse YouTube $(date -u +%FT%TZ)"
           git push -q --force \
             "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \

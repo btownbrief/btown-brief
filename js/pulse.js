@@ -53,7 +53,7 @@
     view: 'feed',
     q: '',
     shown: FEED_PAGE,
-    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, intent: false, ytview: 'list' },
+    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, ythidden: {}, intent: false, ytview: 'list' },
     read: {},
     intent: {},             // focus-mode passed marks
     saved: [],              // [{k,t,u,s,d,sv}] newest-saved first
@@ -81,6 +81,7 @@
           if (s[k] !== undefined) state.set[k] = s[k];
         });
         if (s.hidden && typeof s.hidden === 'object') state.set.hidden = s.hidden;
+        if (s.ythidden && typeof s.ythidden === 'object') state.set.ythidden = s.ythidden;
         if (s.view === 'sources' || s.view === 'feed') state.view = s.view;
       }
       var r = JSON.parse(localStorage.getItem(READ_KEY) || 'null');
@@ -106,7 +107,8 @@
       localStorage.setItem(SET_KEY, JSON.stringify({
         theme: state.set.theme, fs: state.set.fs, limit: state.set.limit,
         autohide: state.set.autohide, thumbs: state.set.thumbs,
-        hidden: state.set.hidden, view: state.view, intent: state.set.intent,
+        hidden: state.set.hidden, ythidden: state.set.ythidden,
+        view: state.view, intent: state.set.intent,
         ytview: state.set.ytview,
       }));
     } catch (e) {}
@@ -649,7 +651,7 @@
       { label: 'Newsletters', match: function (s) { return s.topic === 'newsletters'; } },
       { label: 'National', match: function (s) { return !s.local && s.topic !== 'newsletters'; } },
     ];
-    $('source-toggles').innerHTML = groups.map(function (g) {
+    var togglesHtml = groups.map(function (g) {
       var rows = state.data.sources.filter(g.match)
         .sort(function (a, b) { return a.short.localeCompare(b.short); })
         .map(function (src) {
@@ -660,6 +662,28 @@
         }).join('');
       return '<p class="srctog-group">' + g.label + '</p>' + rows;
     }).join('');
+
+    /* YouTube channels mute exactly like outlets — keyed by channel name,
+       the only stable id the payload carries; the Live board reads the
+       same map, so a mute here follows the reader there */
+    if (state.youtube && Array.isArray(state.youtube.videos)) {
+      var chans = {};
+      state.youtube.videos.forEach(function (v) {
+        // trending guests rotate every few hours — a mute on one would
+        // persist forever with no row left to undo it
+        if (v && v.ch && !v.trend) chans[ytKey(v.ch)] = v.ch;
+      });
+      var ytRows = Object.keys(chans)
+        .sort(function (a, b) { return chans[a].localeCompare(chans[b]); })
+        .map(function (k) {
+          var off = !!state.set.ythidden[k];
+          return '<button class="srctog' + (off ? ' off' : '') + '" data-togyt="' + esc(k) +
+            '" aria-pressed="' + !off + '"><span class="nm">' + esc(chans[k]) +
+            '</span><span class="eye">' + (off ? '✕' : '👁') + '</span></button>';
+        }).join('');
+      if (ytRows) togglesHtml += '<p class="srctog-group">YouTube channels</p>' + ytRows;
+    }
+    $('source-toggles').innerHTML = togglesHtml;
   }
 
   /* ---------- client tabs: TOP / POPULAR / SAVED ---------- */
@@ -686,6 +710,11 @@
       '<a class="fi-t" data-k="' + o.k + '" href="' + esc(safeUrl(o.u)) +
       '" target="_blank" rel="noopener"' + (o.why ? ' title="' + esc(o.why) + '"' : '') + '>' +
       esc(o.t) + '</a></div></article>';
+  }
+
+  /* channel names are the only stable key the payload carries */
+  function ytKey(ch) {
+    return String(ch || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
   }
 
   function clientQ(title) {
@@ -1015,8 +1044,17 @@
       renderCount(0, 0);
       return;
     }
+    /* belt-and-braces title dedupe: livestream restarts (the Mount
+       Washington cam) share one title across many video ids, and payload
+       order is own → vt → deep → trending, so the first copy wins */
+    var seenTitles = {};
     var vids = state.youtube.videos.filter(function (v) {
-      return v && v.id && v.t && clientQ(v.t);
+      if (!v || !v.id || !v.t || !clientQ(v.t)) return false;
+      if (state.set.ythidden[ytKey(v.ch)]) return false;
+      var k = v.t.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      if (seenTitles[k]) return false;
+      seenTitles[k] = true;
+      return true;
     });
     var vt = vids.filter(function (v) { return v.vt; });
     var deep = vids.filter(function (v) { return v.dc; });
@@ -1087,6 +1125,9 @@
       if (json && Array.isArray(json.videos)) {
         state.youtube = json;
         if (state.data) render();
+        // the channels group only exists once the payload lands — catch a
+        // drawer that was already open
+        if (!$('drawer').hidden) renderSettingsPanel();
       }
     }).catch(function () {});
   }
@@ -1734,7 +1775,7 @@
 
   function bind() {
     document.addEventListener('click', function (ev) {
-      var el = ev.target.closest('[data-topic],[data-source],[data-togsrc],[data-audio],' +
+      var el = ev.target.closest('[data-topic],[data-source],[data-togsrc],[data-togyt],[data-audio],' +
         '[data-act],[data-unsave],[data-nudge-dismiss],[data-hint-dismiss],[data-ytview],[data-ytsort],[data-ytshuffle],a[data-k]');
       if (!el) return;
       if (el.dataset.topic) { setTopic(el.dataset.topic); return; }
@@ -1777,6 +1818,12 @@
       if (el.dataset.togsrc !== undefined) {
         if (state.set.hidden[el.dataset.togsrc]) delete state.set.hidden[el.dataset.togsrc];
         else state.set.hidden[el.dataset.togsrc] = 1;
+        saveSettings(); renderSettingsPanel(); render();
+        return;
+      }
+      if (el.dataset.togyt !== undefined) {
+        if (state.set.ythidden[el.dataset.togyt]) delete state.set.ythidden[el.dataset.togyt];
+        else state.set.ythidden[el.dataset.togyt] = 1;
         saveSettings(); renderSettingsPanel(); render();
         return;
       }
@@ -1883,6 +1930,7 @@
 
     $('show-all-btn').onclick = function () {
       state.set.hidden = {};
+      state.set.ythidden = {};
       saveSettings(); renderSettingsPanel(); render();
     };
 
