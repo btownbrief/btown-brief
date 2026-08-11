@@ -152,6 +152,14 @@
         if (typeof s.solo === 'string' && TOPICS.indexOf(s.solo) !== -1) state.solo = s.solo;
         if (Array.isArray(s.prevTopics)) {
           state.prevTopics = new Set(s.prevTopics.filter(function (t) { return TOPICS.indexOf(t) !== -1; }));
+          // the return-from-solo set gets the new arrivals too, or a reader
+          // soloed at upgrade time would never see them
+          if (Array.isArray(s.topics)) {
+            var known2 = Array.isArray(s.known) ? s.known : s.topics;
+            TOPICS.forEach(function (t) {
+              if (known2.indexOf(t) === -1) state.prevTopics.add(t);
+            });
+          }
         }
       }
     } catch (e) {}
@@ -284,13 +292,15 @@
     var games = extras && extras[2], archive = extras && extras[3];
 
     if (rail && Array.isArray(rail.days)) {
-      var gen = rail.generated ? Date.parse(rail.generated) / 1000 : 0;
+      var gen = (Date.parse(rail.generated) / 1000) || 0;
       rail.days.slice(0, 2).forEach(function (day, i) {
         if (!day.n) return;
         var when = i === 0 ? 'today' : 'tomorrow';
         pool.push({
           t: day.n + ' things to do in Burlington ' + when + (day.t ? ' — like ' + day.t : ''),
-          u: 'events.html',
+          // unique per card — the pool dedupes by url, shared urls would
+          // silently keep only the first card
+          u: 'events.html#' + (day.date || when),
           d: gen,
           src: 'Btown events',
           tags: ['brief', 'local'],
@@ -300,12 +310,20 @@
     }
 
     if (week && Array.isArray(week.days)) {
-      var wd = week.updated ? Date.parse(week.updated) / 1000 : 0;
+      var wd = (Date.parse(week.updated) / 1000) || 0;
       week.days.slice(0, 3).forEach(function (dy) {
         if (!dy.text || !dy.label) return;
+        // his prose runs 700-1250 chars; a board card gets the first
+        // sentence, trimmed to headline length
+        var sentence = String(dy.text).split(/(?<=[.!?])\s/)[0] || '';
+        if (sentence.length > 110) {
+          sentence = sentence.slice(0, 107).replace(/\s+\S*$/, '') + '…';
+        }
+        if (sentence.length < 8) return;
+        var base = safeUrl(week.issue_url) !== '#' ? week.issue_url : 'events.html';
         pool.push({
-          t: dy.label + ': ' + dy.text,
-          u: safeUrl(week.issue_url) !== '#' ? week.issue_url : 'events.html',
+          t: dy.label + ': ' + sentence,
+          u: base + '#' + encodeURIComponent(dy.label),
           d: wd,
           src: 'Btown Brief',
           tags: ['brief', 'local'],
@@ -337,7 +355,7 @@
         pool.push({
           t: t,
           u: safeUrl(st.u),
-          d: st.d ? Date.parse(st.d) / 1000 : 0,
+          d: (Date.parse(st.d) / 1000) || 0,
           src: 'From the Brief',
           tags: ['brief'],
           topic: 'archive',
@@ -680,7 +698,7 @@
       ageTag.textContent = item.d ? fmtAge(item.d) : '';
 
       var dot = '<span class="dot"></span>';
-      var parts = ['<span>' + esc(item.src) + '</span>', '<span>' + topicLabel(item.topic) + '</span>'];
+      var parts = ['<span>' + esc(item.src) + '</span>', '<span>' + esc(topicLabel(item.topic)) + '</span>'];
       if (item.dur) parts.push('<span>' + esc(item.dur) + '</span>');
       parts.push('<span>' + (item.d ? fmtAge(item.d) : '—') + '</span>');
       meta.innerHTML = '<span class="ptrack"></span><span class="pbar"></span>' + parts.join(dot);
@@ -912,6 +930,7 @@
       if (i >= count) {
         clearTimeout(state.timers[cfg.id]);
         clearTimeout(state.swapTimers[cfg.id]);
+        if (state.armed === cfg.id) disarm();   // before the pause state resets
         state.pausedBy[cfg.id] = {};       // a hidden cell can't be hovered
         delete state.needsKick[cfg.id];
       } else if (i >= prevCount && state.pool.length) {
@@ -1134,13 +1153,22 @@
         setInterval(startSurf, SURF_PERIOD_MS);
       });
 
-    // quiet re-fetch; the board just starts drawing from the fresher pool
+    // quiet re-fetch; the board just starts drawing from the fresher pool.
+    // rail/week ride along so a kiosk that crosses midnight gets the right
+    // "today"; games/archive stay cached — they barely change
     setInterval(function () {
       Promise.all([
         fetchJson(LIVE_URL).catch(function () { return null; }),
         fetchJson(YT_URL).catch(function () { return null; }),
+        fetchJson(RAIL_URL).catch(function () { return null; }),
+        fetchJson(WEEK_URL).catch(function () { return null; }),
       ]).then(function (res) {
-        if (res[0]) applyData(res[0], res[1]);
+        if (!res[0]) return;
+        if (state.extras) {
+          if (res[2]) state.extras[0] = res[2];
+          if (res[3]) state.extras[1] = res[3];
+        }
+        applyData(res[0], res[1]);
       });
     }, API_REFRESH_MS);
   }
