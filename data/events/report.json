@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-10T17:24:41-04:00",
+ "generated": "2026-08-11T06:29:24-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 17,
-   "seconds": 5.7
+   "seconds": 5.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 66,
-   "seconds": 4.1
+   "count": 67,
+   "seconds": 4.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 57,
-   "seconds": 3.7
+   "count": 55,
+   "seconds": 3.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 153,
-   "seconds": 3.1
+   "count": 155,
+   "seconds": 3.0
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 73,
-   "seconds": 1.7
+   "count": 74,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-10&end_date=2026-10-09&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-11&end_date=2026-10-10&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -43,18 +43,18 @@
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 8,
-   "seconds": 0.2
+   "count": 9,
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 155,
-   "seconds": 70.4
+   "count": 157,
+   "seconds": 68.2
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 29,
-   "seconds": 2.5
+   "count": 30,
+   "seconds": 2.4
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 37.6
+   "seconds": 36.4
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 77,
-   "seconds": 106.7
+   "seconds": 108.8
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 450,
-   "seconds": 72.3
+   "count": 446,
+   "seconds": 76.2
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 121.3
+   "count": 64,
+   "seconds": 114.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 38,
-   "seconds": 14.9
+   "count": 37,
+   "seconds": 13.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 74,
+   "count": 73,
    "seconds": 1.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 34,
-   "seconds": 38.5
+   "seconds": 37.7
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,118 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 232,
-   "seconds": 13.9
+   "count": 234,
+   "seconds": 12.7
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 180,
+   "count": 183,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 55,
-   "seconds": 72.1
+   "count": 57,
+   "seconds": 72.5
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 33,
-   "seconds": 0.3
+   "count": 34,
+   "seconds": 0.4
   }
  },
- "gathered": 2547,
- "afterDedup": 1277,
- "duplicatesMerged": 1270,
- "final": 1826,
+ "gathered": 2553,
+ "afterDedup": 1282,
+ "duplicatesMerged": 1271,
+ "final": 1815,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-10"
-  },
-  {
-   "kept": {
-    "title": "Chemistry seminar ft. Carol Manhart",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-10"
-  },
-  {
-   "kept": {
-    "title": "ActivitiesFest 2026",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-10"
-  },
-  {
-   "kept": {
-    "title": "Fire Extinguisher Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-10"
-  },
-  {
-   "kept": {
-    "title": "2026 Menopause Café and Clinical Update",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-10"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-10"
-  },
-  {
-   "kept": {
-    "title": "Hot Dog & A Can Thursdays",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-10"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-10"
-  },
   {
    "kept": {
     "title": "Everything is Everything: Will Kasso Condry",
@@ -1670,11 +1582,34 @@
   },
   {
    "kept": {
+    "title": "Soda Plant Sundays",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-27"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-27"
+  },
+  {
+   "kept": {
     "title": "Chandler",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-28"
@@ -2394,23 +2329,87 @@
     "loveburlington"
    ],
    "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "Religion and the American Founding Conference",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "Field Hockey vs UMass Lowell",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "Fraser | San Miguel Fraser",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "Randy Feltface",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "flynn"
+   ],
+   "date": "2026-10-10"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-10"
+  },
+  {
+   "kept": {
+    "title": "Burlington Farmers Market",
+    "source": "farmersmarket"
+   },
+   "merged_sources": [
+    "farmersmarket",
+    "loveburlington"
+   ],
+   "date": "2026-10-10"
   }
  ],
  "changes": [
   {
-   "id": "128ce7995507",
-   "title": "Men's Soccer vs George Mason",
-   "date": "2026-08-20",
-   "change": "time",
-   "was": "2026-08-20T21:00:00-04:00",
-   "now": "2026-08-20T18:00:00-04:00"
-  },
-  {
    "id": "ab91a89cf4b8",
    "title": "Bike Ride from Leddy Park to South Hero!",
    "date": "2026-08-16",
+   "change": "dropped"
+  },
+  {
+   "id": "3a52c70f8535",
+   "title": "Reel Reads Placeholder",
+   "date": "2026-08-24",
    "change": "missing",
-   "lastSeen": "2026-08-08T06:05:48-04:00"
+   "lastSeen": "2026-08-10T17:24:41-04:00"
   },
   {
    "id": "3b43acdbd2a9",
@@ -2427,25 +2426,11 @@
    "lastSeen": "2026-08-10T06:45:50-04:00"
   },
   {
-   "id": "618938210733",
-   "title": "Youth Vendor Day",
-   "date": "2026-09-27",
+   "id": "2ecb99d191e5",
+   "title": "Fletcher Free's Fictional Book Club",
+   "date": "2026-09-15",
    "change": "missing",
-   "lastSeen": "2026-08-10T06:45:50-04:00"
-  },
-  {
-   "id": "ce19bdf67831",
-   "title": "Acoustic Brunch",
-   "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-08-10T06:45:50-04:00"
-  },
-  {
-   "id": "6beabfe29cb0",
-   "title": "Karaoke Sundays!",
-   "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-08-10T06:45:50-04:00"
+   "lastSeen": "2026-08-10T17:24:41-04:00"
   },
   {
    "id": "6d88f66cb108",
