@@ -392,7 +392,7 @@
       }).slice(0, 2).forEach(function (entry) {
         if (!entry.name) return;
         var verb = entry.status === 'closed' ? 'Closing news: '
-          : entry.status === 'coming' ? 'Coming soon: ' : 'Now open: ';
+          : entry.status === 'opening-soon' ? 'Coming soon: ' : 'Now open: ';
         pool.push({
           t: verb + entry.name + (entry.area ? ' — ' + entry.area : ''),
           u: 'openings.html#' + encodeURIComponent(entry.name),
@@ -551,7 +551,13 @@
 
   function pickItem(cfg) {
     var now = Date.now();
-    var eligible = state.pool.filter(inEnabled);
+    // a narrowed window shrinks ELIGIBILITY itself — otherwise stale unused
+    // items mask the moment the fresh pool runs dry and the used-set never
+    // resets, leaving the board on the system card forever
+    var narrow = state.set.window !== '48h';
+    var eligible = state.pool.filter(function (it) {
+      return inEnabled(it) && (!narrow || freshEnough(it, now));
+    });
     var base = eligible.filter(function (it) { return !state.used[it.u]; });
     if (!base.length && eligible.length) {
       // a small pool ran dry before the periodic reset — start the lap over
@@ -569,16 +575,15 @@
     }
 
     // freshness cap, with a relief valve: top up with the NEWEST stale items
-    // only as far as MIN_POOL, so the recency weighting stays meaningful.
-    // A reader who narrowed the window asked for exactly that — no top-up.
-    var fresh = base.filter(function (it) { return freshEnough(it, now); });
-    if (state.set.window !== '48h') {
-      base = fresh;
-    } else if (fresh.length >= MIN_POOL || fresh.length === base.length) {
-      base = fresh.length ? fresh : base;
-    } else {
-      var stale = base.filter(function (it) { return !freshEnough(it, now); });
-      base = fresh.concat(stale.slice(0, MIN_POOL - fresh.length));
+    // only as far as MIN_POOL, so the recency weighting stays meaningful
+    if (!narrow) {
+      var fresh = base.filter(function (it) { return freshEnough(it, now); });
+      if (fresh.length >= MIN_POOL || fresh.length === base.length) {
+        base = fresh.length ? fresh : base;
+      } else {
+        var stale = base.filter(function (it) { return !freshEnough(it, now); });
+        base = fresh.concat(stale.slice(0, MIN_POOL - fresh.length));
+      }
     }
 
     // the first lap after arriving favors what's new since the last visit
@@ -1340,6 +1345,7 @@
           if (state.needsKick[cfg.id]) {
             delete state.needsKick[cfg.id];
             refreshSlot(cfg);
+            if (state.frozen) pauseSlot(cfg, 'freeze');
           } else {
             resumeSlot(cfg, 'vis');
           }
