@@ -29,7 +29,7 @@
   var SET_KEY = 'pulse-live-set';
   var PULSE_SET_KEY = 'pulse2-settings';   // read-only: reuse muted sources
 
-  var TOPICS = ['local', 'brief', 'todo', 'reddit', 'newsletters', 'news', 'video',
+  var TOPICS = ['local', 'brief', 'reddit', 'newsletters', 'news', 'video', 'todo',
                 'tech', 'business', 'science', 'culture', 'politics', 'sports', 'gaming',
                 'pods', 'play'];
   var TOPIC_LABEL = { newsletters: 'letters', todo: 'to do' };
@@ -96,12 +96,13 @@
     solo: null,              // topic key while soloed
     prevTopics: null,        // enabled set saved when a solo began
     surfTopic: null,         // topic a channel-surf is visiting
-    armed: null,             // slot id armed by a first touch-tap
     leadsSinceLocal: 0,      // local-heartbeat counter for the lead cell
     frozen: false,           // global freeze — every cell holds its story
+    armTimers: {},           // slot id -> auto-release timeout; several cells
+                             // can be tap-held at once
     firstLap: 0,             // picks made so far; the first lap favors
                              // stories newer than the last visit
-    set: { pace: 'normal', cells: 'auto', surf: false, window: '48h', heldOnce: false },
+    set: { pace: 'normal', cells: 'auto', surf: false, window: '48h', heldCount: 0 },
     hiddenSources: {},       // from the main Pulse page's settings
     hiddenChannels: {},      // muted YouTube channels, same settings key
     timers: {},              // slot id -> cadence / kickoff timeout
@@ -167,7 +168,7 @@
         if (['auto', '2', '3', '4'].indexOf(String(s.cells)) !== -1) state.set.cells = String(s.cells);
         if (WINDOWS.indexOf(s.window) !== -1) state.set.window = s.window;
         state.set.surf = !!s.surf;
-        state.set.heldOnce = !!s.heldOnce;
+        state.set.heldCount = +s.heldCount || (s.heldOnce ? 2 : 0);
         if (Array.isArray(s.topics)) {
           state.enabled = new Set(s.topics.filter(function (t) { return TOPICS.indexOf(t) !== -1; }));
           // topics added to the board since this reader last saved arrive ON
@@ -213,7 +214,7 @@
         cells: state.set.cells,
         window: state.set.window,
         surf: TV ? false : state.set.surf,
-        heldOnce: state.set.heldOnce,
+        heldCount: state.set.heldCount,
         topics: Array.from(state.enabled),
         known: TOPICS,
         solo: state.solo,
@@ -846,6 +847,13 @@
     });
     var btn = $('freeze-btn');
     if (btn) btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    var badge = $('live-badge');
+    if (badge) {
+      badge.setAttribute('aria-pressed', on ? 'true' : 'false');
+      badge.classList.toggle('frozen', on);
+      var label = $('live-badge-label');
+      if (label) label.textContent = on ? 'FROZEN' : 'LIVE';
+    }
   }
 
   /* ---------- the swap ---------- */
@@ -952,6 +960,17 @@
   function renderChips() {
     var wrap = $('chips');
     wrap.innerHTML = '';
+
+    // one switch for the whole row — all on, or all off
+    var allOn = state.enabled.size === TOPICS.length;
+    var allBtn = document.createElement('button');
+    allBtn.type = 'button';
+    allBtn.className = 'chip chip-all';
+    allBtn.dataset.all = '1';
+    allBtn.textContent = allOn ? 'NONE' : 'ALL';
+    allBtn.title = allOn ? 'Turn every topic off' : 'Turn every topic on';
+    wrap.appendChild(allBtn);
+
     TOPICS.forEach(function (topic) {
       var btn = document.createElement('button');
       btn.type = 'button';
@@ -964,7 +983,17 @@
       if (state.surfTopic === topic) btn.classList.add('surfing');
       wrap.appendChild(btn);
     });
-    $('hint').hidden = state.set.heldOnce || TV;
+
+    // the hold gesture isn't guessable — keep a door to the how-to open
+    var helpBtn = document.createElement('button');
+    helpBtn.type = 'button';
+    helpBtn.className = 'chip chip-help';
+    helpBtn.dataset.help = '1';
+    helpBtn.textContent = '?';
+    helpBtn.title = 'How the board works';
+    wrap.appendChild(helpBtn);
+
+    $('hint').hidden = state.set.heldCount >= 2 || TV;
     updateChipsMore();
   }
 
@@ -1001,8 +1030,16 @@
       state.solo = topic;
       state.enabled = new Set([topic]);
     }
-    if (!state.set.heldOnce) { state.set.heldOnce = true; }
+    state.set.heldCount++;
     if (navigator.vibrate) { try { navigator.vibrate(30); } catch (e) {} }
+    afterTopicChange();
+  }
+
+  function toggleAll() {
+    state.solo = null;
+    state.prevTopics = null;
+    state.enabled = state.enabled.size === TOPICS.length
+      ? new Set() : new Set(TOPICS);
     afterTopicChange();
   }
 
@@ -1019,7 +1056,7 @@
 
     wrap.addEventListener('pointerdown', function (e) {
       var btn = e.target.closest('.chip');
-      if (!btn) return;
+      if (!btn || !btn.dataset.topic) return;   // ALL / ? don't hold
       heldTopic = btn.dataset.topic;
       pressed = true;
       moved = false;
@@ -1052,6 +1089,8 @@
       var btn = e.target.closest('.chip');
       if (!btn) return;
       if (justHeld || moved) { justHeld = false; moved = false; return; }
+      if (btn.dataset.all) { toggleAll(); return; }
+      if (btn.dataset.help) { $('hint').hidden = !$('hint').hidden; return; }
       toggleTopic(btn.dataset.topic);
     });
   }
@@ -1133,7 +1172,7 @@
       if (i >= count) {
         clearTimeout(state.timers[cfg.id]);
         clearTimeout(state.swapTimers[cfg.id]);
-        if (state.armed === cfg.id) disarm();   // before the pause state resets
+        if (state.armTimers[cfg.id]) disarmCell(cfg);   // before the pause state resets
         state.pausedBy[cfg.id] = {};       // a hidden cell can't be hovered
         delete state.needsKick[cfg.id];
       } else if (i >= prevCount && state.pool.length) {
@@ -1160,19 +1199,16 @@
     });
   }
 
-  /* ---------- touch: first tap arms + pauses, second tap opens ---------- */
+  /* ---------- touch: first tap arms + pauses, second tap opens ----------
+     Any number of cells can be held at once — each has its own release
+     timer, and arming one never lets another go. */
 
-  var armTimer = null;
-
-  function disarm() {
-    clearTimeout(armTimer);
-    if (!state.armed) return;
-    var cfg = null;
-    SLOTS.forEach(function (c) { if (c.id === state.armed) cfg = c; });
-    var cell = cfg && cellOf(cfg);
+  function disarmCell(cfg) {
+    clearTimeout(state.armTimers[cfg.id]);
+    delete state.armTimers[cfg.id];
+    var cell = cellOf(cfg);
     if (cell) cell.classList.remove('armed');
-    state.armed = null;
-    if (cfg) resumeSlot(cfg, 'tap');
+    resumeSlot(cfg, 'tap');
   }
 
   function bindTouchArm() {
@@ -1181,18 +1217,18 @@
       var cell = cellOf(cfg);
       if (!cell) return;
       cell.addEventListener('click', function (e) {
-        if (state.armed === cfg.id) {
+        if (cell.classList.contains('armed')) {
           // second tap: let the link open, hand the cell back to the clock
-          disarm();
+          disarmCell(cfg);
           return;
         }
         e.preventDefault();
-        disarm();
-        state.armed = cfg.id;
         cell.classList.add('armed');
         pauseSlot(cfg, 'tap');
-        clearTimeout(armTimer);
-        armTimer = setTimeout(disarm, 10000);
+        clearTimeout(state.armTimers[cfg.id]);
+        state.armTimers[cfg.id] = setTimeout(function () {
+          disarmCell(cfg);
+        }, 15000);
       });
     });
   }
@@ -1259,6 +1295,10 @@
     $('freeze-btn').addEventListener('click', function () {
       setFrozen(!state.frozen);
     });
+    var badge = $('live-badge');
+    if (badge) {
+      badge.addEventListener('click', function () { setFrozen(!state.frozen); });
+    }
     // per-cell release: let one cell rotate again without opening its story
     SLOTS.forEach(function (cfg) {
       var cell = cellOf(cfg);
@@ -1267,7 +1307,7 @@
       go.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if (state.armed === cfg.id) disarm();
+        if (state.armTimers[cfg.id]) disarmCell(cfg);
         resumeSlot(cfg, 'freeze');
       });
     });
@@ -1292,6 +1332,28 @@
     btn.addEventListener('click', function () {
       row.scrollBy({ left: Math.round(row.clientWidth * 0.7), behavior: 'smooth' });
     });
+  }
+
+  /* same treatment for the bottom bar — it scrolls on phones */
+
+  function updateLbarMore() {
+    var wrap = $('lbarwrap');
+    var row = $('lbar');
+    if (!wrap || !row) return;
+    wrap.classList.toggle('more',
+      row.scrollLeft + row.clientWidth < row.scrollWidth - 8);
+  }
+
+  function bindLbarMore() {
+    var row = $('lbar');
+    var btn = $('lbar-more');
+    if (!row || !btn) return;
+    row.addEventListener('scroll', updateLbarMore, { passive: true });
+    window.addEventListener('resize', updateLbarMore);
+    btn.addEventListener('click', function () {
+      row.scrollBy({ left: Math.round(row.clientWidth * 0.7), behavior: 'smooth' });
+    });
+    updateLbarMore();
   }
 
   /* ---------- wake lock: the point is to put the phone down ---------- */
@@ -1331,6 +1393,7 @@
     bindChips();
     bindChipsMore();
     updateChipsMore();
+    bindLbarMore();
     paintOptions();
     bindOptions();
     tickClock();
