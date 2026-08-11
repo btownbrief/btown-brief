@@ -46,14 +46,19 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <header class="bar">
     <a class="brand" href="pulse.html" title="Back to The Pulse">THE&nbsp;PULSE&nbsp;<b>LIVE</b></a>
-    <span class="datetime"><span id="day"></span> · <span id="date"></span></span>
-    <span class="clock" id="clock">--:--:--</span>
-    <span class="wire" id="wire"></span>
-    <a class="live-badge" href="pulse.html" title="Back to The Pulse"><i></i>LIVE</a>
+    <span class="broadcast">
+      <span class="dayrow"><span class="day" id="day"></span><span class="date" id="date"></span></span>
+      <span class="clock" id="clock">--:--:--</span>
+    </span>
+    <span class="status">
+      <span class="wire" id="wire"></span>
+      <a class="live-badge" href="pulse.html" title="Back to The Pulse"><i></i>LIVE</a>
+    </span>
   </header>
 
   <nav class="chips" id="chips" aria-label="Topics"></nav>
   <p class="hint" id="hint" hidden>TAP A TOPIC TO TOGGLE IT · <b>HOLD ONE TO SEE ONLY THAT</b></p>
+  <p class="hint" id="surf-note" hidden></p>
 
   <main class="board" id="board" data-o="p" data-n="3">
     <a class="cell lead bg-yellow" data-slot="lead" target="_blank" rel="noopener" href="#">
@@ -92,8 +97,14 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <button class="lopt" data-cells="3" type="button">3</button>
       <button class="lopt" data-cells="4" type="button">4</button>
     </span>
+    <span class="lgroup" id="surf-group" role="group" aria-label="Channel surf">
+      <span class="llbl" title="Every few minutes, one minute of a single topic">SURF</span>
+      <button class="lopt" data-surf="off" type="button">OFF</button>
+      <button class="lopt" data-surf="on" type="button">ON</button>
+    </span>
     <span class="lright">
       <span id="updated"></span>
+      <a class="lexit" href="live.html?tv=1" title="Chromeless mode for a TV or spare screen">TV ⛶</a>
       <a class="lexit" href="pulse.html">EXIT ✕</a>
     </span>
   </footer>
