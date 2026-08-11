@@ -21,6 +21,13 @@ Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
     barely change, so each channel is bought once (backfill a handful per
     run) and then only the stalest entries are re-checked.
   * Trending. The YouTube Data API's mostPopular chart for the US.
+  * Live now. One eventType=live search per run — Vermont streams ride the
+    Vermont shelf with dur "LIVE" while they're on the air.
+  * video-digest.json. The trailing week's roster uploads ranked by view
+    velocity — the newsletter's Friday "videos worth your weekend" block.
+  * channel-suggestions.json. Friday mornings, three discovery searches
+    surface Vermont-adjacent channels not yet followed; each suggested
+    once. Keepers just get added to the Inoreader folder.
 
 Durations and view counts come from the API's videos endpoint. Without a
 YOUTUBE_API_KEY the followed-channel shelf still publishes (no durations or
@@ -64,16 +71,34 @@ MAX_CHANNEL_VIDEOS = 160
 MAX_TRENDING = 15
 DEFAULT_CAP = 6          # per-channel per refresh; firehoses set lower in the file
 SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
-MAX_VERMONT = 8
+MAX_VERMONT = 10
 CATALOG = os.path.join(ROOT, "data", "deep-catalog.json")
 DEEP_PER_CHANNEL = 5
 DEEP_BACKFILL_PER_RUN = 8   # 8 searches ≈ 800 units/run while the catalog fills
 DEEP_REFRESH_PER_RUN = 2    # steady state: re-check the two stalest channels
 DEEP_REFRESH_DAYS = 30      # greatest-hits lists barely move
 DEEP_MIN_AGE_DAYS = 180     # a deep cut is old gold, not last month's upload
-VT_QUERIES = ["Burlington Vermont", "Lake Champlain Vermont"]
+# The radar runs the anchor plus two rotating slots every run, so the
+# whole pool gets swept roughly daily without raising the per-run cost
+# past 3 searches (300 units).
+VT_QUERY_ANCHOR = "Burlington Vermont"
+VT_QUERY_POOL = [
+    "Lake Champlain Vermont",
+    "Church Street Marketplace Burlington",
+    "Winooski Vermont",
+    "Stowe Vermont",
+    "Montpelier Vermont",
+    "UVM Burlington Vermont",
+    "Green Mountains Vermont hiking",
+    "Vermont skiing",
+    "Vermont maple",
+    "Vermont foliage",
+]
+VT_ROTATE = 2
 VT_RE = re.compile(
-    r"vermont|burlington|champlain|montpelier|stowe|winooski|green mountain",
+    r"vermont|burlington|champlain|montpelier|stowe|winooski|green mountain"
+    r"|church street|queen city|middlebury|brattleboro|rutland|killington"
+    r"|sugarbush|mad river|waterbury|shelburne|\buvm\b|catamount",
     re.I)
 
 VIDEO_ID_RE = re.compile(
@@ -292,7 +317,9 @@ def fetch_channel_videos_inoreader(now_ts, channels=None, raw=None):
     """Followed channels via the public Inoreader folder — one request for
     the whole roster, works from datacenter IPs, zero API quota. Channels
     followed in Inoreader but missing from the metadata file still ride
-    along with defaults, so Inoreader stays the curation surface."""
+    along with defaults, so Inoreader stays the curation surface.
+    Returns (videos, covered_channel_ids) — the second half lets run()
+    top up channels the stream had nothing for."""
     if raw is None:
         request = urllib.request.Request(
             f"{INO_STREAM}?n={INO_STREAM_N}", headers={"User-Agent": UA})
@@ -331,7 +358,7 @@ def fetch_channel_videos_inoreader(now_ts, channels=None, raw=None):
             videos.append(video)
             kept += 1
     videos.sort(key=lambda video: video["d"], reverse=True)
-    return videos[:MAX_CHANNEL_VIDEOS]
+    return videos[:MAX_CHANNEL_VIDEOS], sorted(by_channel.keys())
 
 
 # ----------------------------------------------------------------------
@@ -407,6 +434,15 @@ def apply_duration_rules(videos):
     return kept
 
 
+def vt_queries_for(when):
+    """Anchor + VT_ROTATE rotating slots; the rotation advances one window
+    per 3-hour run, so the whole pool is swept about once a day."""
+    step = (when.timetuple().tm_yday * 8 + when.hour // 3) * VT_ROTATE
+    picks = [VT_QUERY_POOL[(step + i) % len(VT_QUERY_POOL)]
+             for i in range(VT_ROTATE)]
+    return [VT_QUERY_ANCHOR] + picks
+
+
 def fetch_vermont(key, now_ts, exclude):
     """Fresh local footage the roster wouldn't catch, by view velocity."""
     import html as html_mod
@@ -414,7 +450,7 @@ def fetch_vermont(key, now_ts, exclude):
     found, seen = [], set(exclude)
     published_after = datetime.fromtimestamp(
         now_ts - WINDOW_DAYS * 86400, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    for term in VT_QUERIES:
+    for term in vt_queries_for(datetime.fromtimestamp(now_ts, timezone.utc)):
         query = urllib.parse.urlencode({
             "part": "snippet", "type": "video", "order": "date",
             "publishedAfter": published_after, "q": term,
@@ -448,6 +484,90 @@ def fetch_vermont(key, now_ts, exclude):
     found.sort(key=lambda video: (video.get("views") or 0) /
                (max(now_ts - video["d"], 3600) / 86400.0 + 0.5), reverse=True)
     return found[:MAX_VERMONT]
+
+
+def fetch_live_now(key, now_ts, exclude):
+    """One eventType=live search — is anything Vermont streaming right now?
+    Live hits ride the Vermont shelf (vt:1) with dur 'LIVE', which both
+    clients already render as-is. 100 units per run."""
+    query = urllib.parse.urlencode({
+        "part": "snippet", "type": "video", "eventType": "live",
+        "q": "Vermont", "maxResults": 10, "regionCode": "US", "key": key})
+    live = []
+    for item in http_json(f"{API}/search?{query}").get("items", []):
+        vid = (item.get("id") or {}).get("videoId")
+        snippet = item.get("snippet") or {}
+        title = html.unescape((snippet.get("title") or "").strip())
+        channel = html.unescape((snippet.get("channelTitle") or "").strip())
+        if not vid or vid in exclude or not title:
+            continue
+        if not VT_RE.search(f"{title} {channel}"):
+            continue
+        live.append({"id": vid, "t": title[:200], "ch": channel[:60],
+                     "d": now_ts, "dur": "LIVE", "vt": 1, "lv": 1})
+    return live[:4]
+
+
+def build_digest(own, now_ts):
+    """The trailing week's roster uploads ranked by view velocity — a
+    ready-made 'videos worth your weekend' block for the newsletter.
+    Costs nothing: it reuses the already-enriched shelf."""
+    ranked = []
+    for video in own:
+        if video.get("lv"):
+            continue
+        sec = duration_seconds_from_fmt(video.get("dur"))
+        if sec is not None and sec < 120:
+            continue
+        hours = max(1.0, (now_ts - video.get("d", now_ts)) / 3600.0)
+        ranked.append(((video.get("views") or 0) / hours, video))
+    ranked.sort(key=lambda pair: pair[0], reverse=True)
+    return {
+        "v": 1,
+        "generated": utcnow().replace(microsecond=0).isoformat(),
+        "videos": [{"id": v["id"], "t": v["t"], "ch": v["ch"],
+                    "dur": v.get("dur", ""), "views": v.get("views"),
+                    "vph": round(velocity, 1),
+                    "u": "https://www.youtube.com/watch?v=" + v["id"]}
+                   for velocity, v in ranked[:8]],
+    }
+
+
+DISCOVERY_QUERIES = ["Vermont vlog", "Vermont life", "made in Vermont"]
+
+
+def update_channel_suggestions(key, now_ts, roster_ids, prior):
+    """Fridays only: three searches for Vermont-adjacent channels not yet
+    followed. Each channel is suggested once (the seen list persists on
+    the data branch); keepers get added to the Inoreader folder, which is
+    all it takes now. 300 units, once a week."""
+    seen = set(prior.get("seen") or []) if isinstance(prior, dict) else set()
+    when = datetime.fromtimestamp(now_ts, timezone.utc)
+    if when.weekday() != 4 or not (9 <= when.hour < 12):
+        return None
+    fresh = []
+    for term in DISCOVERY_QUERIES:
+        query = urllib.parse.urlencode({
+            "part": "snippet", "type": "video", "order": "relevance",
+            "q": term, "maxResults": 15, "key": key})
+        for item in http_json(f"{API}/search?{query}").get("items", []):
+            snippet = item.get("snippet") or {}
+            cid = snippet.get("channelId")
+            channel = html.unescape((snippet.get("channelTitle") or "").strip())
+            title = html.unescape((snippet.get("title") or "").strip())
+            if not cid or cid in roster_ids or cid in seen:
+                continue
+            if not VT_RE.search(f"{title} {channel}"):
+                continue
+            seen.add(cid)
+            fresh.append({"id": cid, "ch": channel[:60], "t": title[:200],
+                          "u": "https://www.youtube.com/channel/" + cid})
+    return {
+        "v": 1,
+        "generated": utcnow().replace(microsecond=0).isoformat(),
+        "seen": sorted(seen),
+        "fresh": fresh,
+    }
 
 
 def load_deep_catalog(path):
@@ -586,10 +706,11 @@ def run(args):
 
     # uploads transport: Inoreader folder stream first (works everywhere,
     # no quota), then the API, then direct YouTube RSS (residential only)
-    own = []
+    own, covered = [], []
     try:
-        own = fetch_channel_videos_inoreader(now_ts)
-        print(f"refresh_youtube: inoreader stream -> {len(own)} uploads")
+        own, covered = fetch_channel_videos_inoreader(now_ts)
+        print(f"refresh_youtube: inoreader stream -> {len(own)} uploads "
+              f"from {len(covered)} channels")
     except Exception as exc:  # noqa: BLE001 — the fallbacks still publish
         print(f"refresh_youtube: inoreader stream failed ({exc})",
               file=sys.stderr)
@@ -600,6 +721,28 @@ def run(args):
         # beats a fallback that returns nothing on datacenter IPs
         if len(alt) > len(own):
             own = alt
+    elif key:
+        # targeted top-up: a channel absent from the stream is usually just
+        # quiet, but it might be a feed Inoreader silently dropped — one
+        # playlistItems unit each settles it
+        covered_set = set(covered)
+        missing = [channel for channel in load_channels()
+                   if channel["id"] not in covered_set]
+        if missing:
+            try:
+                extra = fetch_channel_videos_api(key, now_ts,
+                                                 channels=missing[:20])
+                have = {video["id"] for video in own}
+                fresh_extra = [v for v in extra if v["id"] not in have]
+                if fresh_extra:
+                    own.extend(fresh_extra)
+                    own.sort(key=lambda video: video["d"], reverse=True)
+                print(f"refresh_youtube: api top-up checked "
+                      f"{len(missing[:20])} quiet channels -> "
+                      f"+{len(fresh_extra)}")
+            except Exception as exc:  # noqa: BLE001
+                print(f"refresh_youtube: top-up trouble ({exc})",
+                      file=sys.stderr)
 
     vermont, deep, trending = [], [], []
     if key:
@@ -617,6 +760,36 @@ def run(args):
             print(f"refresh_youtube: Vermont search trouble ({exc})",
                   file=sys.stderr)
         try:
+            # live streams lead the Vermont shelf; title dedupe in
+            # build_payload keeps cam restarts to one card
+            live = fetch_live_now(
+                key, now_ts,
+                {video["id"] for video in own + trending + vermont})
+            if live:
+                vermont = live + vermont
+                print(f"refresh_youtube: {len(live)} Vermont stream(s) live now")
+        except Exception as exc:  # noqa: BLE001
+            print(f"refresh_youtube: live search trouble ({exc})",
+                  file=sys.stderr)
+        try:
+            out_dir = os.path.dirname(args.out) or "."
+            sugg_path = os.path.join(out_dir, "channel-suggestions.json")
+            try:
+                with open(sugg_path, encoding="utf-8") as src:
+                    prior_sugg = json.load(src)
+            except (OSError, ValueError):
+                prior_sugg = {}
+            roster_ids = {channel["id"] for channel in load_channels()}
+            suggestions = update_channel_suggestions(
+                key, now_ts, roster_ids, prior_sugg)
+            if suggestions:
+                write_json(sugg_path, suggestions)
+                print(f"refresh_youtube: channel discovery -> "
+                      f"{len(suggestions['fresh'])} new suggestion(s)")
+        except Exception as exc:  # noqa: BLE001
+            print(f"refresh_youtube: discovery trouble ({exc})",
+                  file=sys.stderr)
+        try:
             catalog = update_deep_catalog(
                 key, now_ts, load_channels(), load_deep_catalog(args.catalog))
             if catalog:
@@ -632,6 +805,11 @@ def run(args):
     if not own and not vermont and not deep and not trending:
         print("refresh_youtube: nothing to publish this run")
         return
+
+    if own:
+        write_json(os.path.join(os.path.dirname(args.out) or ".",
+                                "video-digest.json"),
+                   build_digest(own, now_ts))
 
     write_json(args.out, build_payload(own, vermont, deep, trending, utcnow()))
     print(f"refresh_youtube: {len(own)} followed + {len(vermont)} vermont + "
@@ -725,7 +903,7 @@ def selftest():
     assert load_channels("/nonexistent.json") == []
     print("refresh_youtube: channel feed ok (dedupe, window, missing ids)")
 
-    ino = fetch_channel_videos_inoreader(
+    ino, covered = fetch_channel_videos_inoreader(
         now_ts,
         channels=[{"id": "UCcapchancapchancapchan1", "name": "Cap Chan",
                    "cap": 1, "g": "vt", "min_sec": 300}],
@@ -739,7 +917,58 @@ def selftest():
     assert ino[0]["ch"] == "Cap Chan"        # roster name beats stream title
     assert "g" not in ino[1] and "cid" not in ino[1]
     assert ino[1]["ch"] == "Mystery & Co"    # Inoreader double-escaping undone
+    assert covered == ["UCcapchancapchancapchan1", "UCunknownunknownunknown2"]
     print("refresh_youtube: inoreader stream ok (regroup, caps, names, window, shorts)")
+
+    # VT radar rotation: anchor always leads, slots advance run to run
+    run_a = vt_queries_for(datetime(2026, 8, 11, 9, 0, tzinfo=timezone.utc))
+    run_b = vt_queries_for(datetime(2026, 8, 11, 12, 0, tzinfo=timezone.utc))
+    assert run_a[0] == VT_QUERY_ANCHOR and run_b[0] == VT_QUERY_ANCHOR
+    assert len(run_a) == 1 + VT_ROTATE and run_a[1:] != run_b[1:]
+    assert all(q in VT_QUERY_POOL for q in run_a[1:] + run_b[1:])
+    print("refresh_youtube: vt radar rotation ok (anchor + rotating slots)")
+
+    digest = build_digest([
+        {"id": "hothothot01", "t": "Fresh and popular", "ch": "A",
+         "d": now_ts - 3600, "dur": "10:00", "views": 50000},
+        {"id": "slowslowsl1", "t": "Old and slow", "ch": "B",
+         "d": now_ts - 6 * 86400, "dur": "10:00", "views": 50000},
+        {"id": "shortshort1", "t": "A quick clip", "ch": "C",
+         "d": now_ts - 3600, "dur": "1:30", "views": 999999},
+        {"id": "livelive123", "t": "Streaming", "ch": "D",
+         "d": now_ts, "dur": "LIVE", "lv": 1, "views": 5},
+    ], now_ts)
+    assert [v["id"] for v in digest["videos"]] == ["hothothot01", "slowslowsl1"]
+    assert digest["videos"][0]["vph"] > digest["videos"][1]["vph"]
+    print("refresh_youtube: digest ok (velocity rank, shorts + live excluded)")
+
+    # discovery runs only in the Friday-morning window and suggests once
+    assert update_channel_suggestions(
+        "k", int(datetime(2026, 8, 12, 10, 0,
+                          tzinfo=timezone.utc).timestamp()), set(), {}) is None
+    friday_ts = int(datetime(2026, 8, 14, 9, 30,
+                             tzinfo=timezone.utc).timestamp())
+    real_http = globals()["http_json"]
+    globals()["http_json"] = lambda url, timeout=20: {"items": [
+        {"snippet": {"channelId": "UCnewvermontchannel0001",
+                     "channelTitle": "Green Mountain Films",
+                     "title": "A Vermont story"}},
+        {"snippet": {"channelId": "UCalreadyseenchannel001",
+                     "channelTitle": "Seen Before VT",
+                     "title": "Stowe again"}},
+        {"snippet": {"channelId": "UCnotvermontatall00001",
+                     "channelTitle": "Desert Vlogs",
+                     "title": "Sand dunes forever"}},
+    ]}
+    try:
+        sugg = update_channel_suggestions(
+            "k", friday_ts, {"UCrosterchannel0000001"},
+            {"seen": ["UCalreadyseenchannel001"]})
+    finally:
+        globals()["http_json"] = real_http
+    assert [c["id"] for c in sugg["fresh"]] == ["UCnewvermontchannel0001"]
+    assert "UCalreadyseenchannel001" in sugg["seen"]
+    print("refresh_youtube: discovery ok (friday gate, seen list, vt filter)")
 
     payload = build_payload(
         videos,

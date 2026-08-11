@@ -40,6 +40,9 @@ jobs:
           git fetch -q origin pulse-youtube || true
           git show origin/pulse-youtube:data/deep-catalog.json \
             > /tmp/yt-out/data/deep-catalog.json 2>/dev/null || true
+          # channel-discovery suggestions persist their seen-list the same way
+          git show origin/pulse-youtube:data/channel-suggestions.json \
+            > /tmp/yt-out/data/channel-suggestions.json 2>/dev/null || true
           python3 scripts/refresh_youtube.py \
             --out /tmp/yt-out/data/pulse-youtube.json \
             --catalog /tmp/yt-out/data/deep-catalog.json
@@ -56,6 +59,8 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add data/pulse-youtube.json
           if [ -s data/deep-catalog.json ]; then git add data/deep-catalog.json; fi
+          if [ -s data/video-digest.json ]; then git add data/video-digest.json; fi
+          if [ -s data/channel-suggestions.json ]; then git add data/channel-suggestions.json; fi
           git commit -q -m "Pulse YouTube $(date -u +%FT%TZ)"
           git push -q --force \
             "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
