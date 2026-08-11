@@ -157,12 +157,16 @@ a.mode:hover { opacity: 1; }
   text-decoration: none;
   padding: 6px 10px 5px;
 }
+.live-badge { cursor: pointer; }
 .live-badge i {
   width: 8px; height: 8px;
   background: var(--ink);
   animation: blink 1.2s steps(2) infinite;
 }
 @keyframes blink { 50% { opacity: .12; } }
+/* clicked: the board holds its breath */
+.live-badge.frozen { background: var(--cream); }
+.live-badge.frozen i { animation: none; }
 
 /* ---------- topic chips: a tab bar, like the reference ---------- */
 
@@ -217,6 +221,15 @@ a.mode:hover { opacity: 1; }
 }
 .chip:first-child { border-left: none; }
 
+/* the whole-row switch and the how-to door — never struck, never soloed */
+.chip-all, .chip-help {
+  flex: 0 0 auto;
+  color: var(--cream);
+  opacity: .85;
+}
+.chip-all:hover, .chip-help:hover { opacity: 1; }
+.chip-help { min-width: 34px; }
+
 /* OFF: dimmed AND struck through — unmistakable at a glance */
 .chip[aria-pressed="false"] {
   opacity: .45;
@@ -252,7 +265,7 @@ a.mode:hover { opacity: 1; }
   letter-spacing: .14em;
   color: #7a6c58;
 }
-.hint b { color: var(--cream); opacity: .75; font-weight: 400; }
+.hint b { color: var(--orange); font-weight: 700; }
 
 /* ---------- the board ---------- */
 
@@ -454,6 +467,25 @@ a.mode:hover { opacity: 1; }
 
 /* ---------- bottom bar ---------- */
 
+.lbarwrap { position: relative; }
+
+.lbar-more {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 36px;
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: linear-gradient(to right, rgba(0,0,0,0), #000 60%);
+  color: var(--orange);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+.lbarwrap.more .lbar-more { display: flex; }
+
 .lbar {
   display: flex;
   align-items: center;
@@ -502,7 +534,7 @@ a.mode:hover { opacity: 1; }
 
 body.tv .chipwrap,
 body.tv .hint,
-body.tv .lbar { display: none; }
+body.tv .lbarwrap { display: none; }
 body.tv.idle, body.tv.idle .cell { cursor: none; }
 
 /* ---------- narrow portrait (phone upright) ---------- */

@@ -45,7 +45,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 <body>
 
   <header class="bar">
-    <a class="brand" href="pulse.html" title="Back to The Pulse">THE&nbsp;PULSE&nbsp;<b>LIVE</b></a>
+    <a class="brand" href="pulse.html" title="Back to The Pulse">BTOWN&nbsp;BRIEF&nbsp;<b>PULSE&nbsp;LIVE</b></a>
     <span class="broadcast">
       <span class="dayrow"><span class="day" id="day"></span><span class="date" id="date"></span></span>
       <span class="clock" id="clock">--:--:--</span>
@@ -56,7 +56,8 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
         <a class="mode" href="pulse.html" title="Back to the full wire — scan and filter everything">READ</a>
         <span class="mode on" title="Headlines rotate hands-free — you're watching">WATCH</span>
       </nav>
-      <a class="live-badge" href="pulse.html" title="Back to The Pulse"><i></i>LIVE</a>
+      <button class="live-badge" id="live-badge" type="button" aria-pressed="false"
+              title="Freeze the whole board — click again to let it run"><i></i><span id="live-badge-label">LIVE</span></button>
     </span>
   </header>
 
@@ -90,19 +91,13 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     </a>
   </main>
 
-  <footer class="lbar">
+  <div class="lbarwrap" id="lbarwrap">
+  <footer class="lbar" id="lbar">
     <span class="lgroup" id="pace-group" role="group" aria-label="Pace">
       <span class="llbl">PACE</span>
       <button class="lopt" data-pace="slow" type="button">SLOW</button>
       <button class="lopt" data-pace="normal" type="button">NORMAL</button>
       <button class="lopt" data-pace="fast" type="button">FAST</button>
-    </span>
-    <span class="lgroup" id="cells-group" role="group" aria-label="Cells on screen">
-      <span class="llbl">CELLS</span>
-      <button class="lopt" data-cells="auto" type="button">AUTO</button>
-      <button class="lopt" data-cells="2" type="button">2</button>
-      <button class="lopt" data-cells="3" type="button">3</button>
-      <button class="lopt" data-cells="4" type="button">4</button>
     </span>
     <span class="lgroup" id="window-group" role="group" aria-label="Time window">
       <span class="llbl" title="How far back the board reaches">WINDOW</span>
@@ -110,6 +105,13 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <button class="lopt" data-window="6h" type="button">6H</button>
       <button class="lopt" data-window="today" type="button">TODAY</button>
       <button class="lopt" data-window="48h" type="button">48H</button>
+    </span>
+    <span class="lgroup" id="cells-group" role="group" aria-label="Cells on screen">
+      <span class="llbl">CELLS</span>
+      <button class="lopt" data-cells="auto" type="button">AUTO</button>
+      <button class="lopt" data-cells="2" type="button">2</button>
+      <button class="lopt" data-cells="3" type="button">3</button>
+      <button class="lopt" data-cells="4" type="button">4</button>
     </span>
     <span class="lgroup" id="surf-group" role="group" aria-label="Channel surf">
       <span class="llbl" title="Every few minutes, one minute of a single topic">SURF</span>
@@ -124,6 +126,8 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <a class="lexit" href="pulse.html" title="Back to the full wire — scan and filter everything">READ ↩</a>
     </span>
   </footer>
+  <button class="lbar-more" id="lbar-more" type="button" aria-label="Scroll for more controls">›</button>
+  </div>
 
   <noscript><p class="noscript">The Pulse Live needs JavaScript to run the board.</p></noscript>
   <script src="js/pulse-live.js"></script>
