@@ -487,11 +487,14 @@
     if (state.source && srcMap[state.source]) bits.push(esc(srcMap[state.source].short));
     else if (state.topic !== 'all') bits.push(esc(topicLabel(state.topic)));
     if (state.q) bits.push('“' + esc(state.q) + '”');
-    if (state.set.window !== 'all') {
+    /* the window and last-visit bits only apply where they're enforced —
+       the wire itself, not the curated client tabs */
+    if (state.set.window !== 'all' && !isClientTab(state.topic)) {
       bits.push(state.set.window === 'today' ? 'today only'
         : 'last ' + state.set.window.toUpperCase());
     }
-    if (state.newCount > 0 && state.view === 'feed' && !state.source && !state.q) {
+    if (state.newCount > 0 && state.view === 'feed' && !state.source &&
+        !state.q && !isClientTab(state.topic)) {
       bits.push('<strong>' + state.newCount.toLocaleString('en-US') +
         '</strong> new since your last visit');
     }
@@ -648,9 +651,11 @@
     /* by-source grid — the brutalist.report front page, shuffled per visit */
     var sections = [];
     var count = 0;
+    var gridCutoff = windowCutoff();
     visibleSources(state.topic).forEach(function (src) {
       var items = state.data.items.filter(function (item) {
         return item.s === src.id &&
+          !(gridCutoff && (!item.d || item.d < gridCutoff)) &&
           !(state.set.autohide && state.read[keyOf(item.u)]) &&
           matchesQuery(item, src);
       }).slice(0, state.set.limit);
@@ -2035,6 +2040,17 @@
       el.textContent = fmtAge(+el.dataset.ts);
     });
     if (state.data && state.lastCount) renderCount(state.lastCount[0], state.lastCount[1]);
+    /* a narrowed window is a promise — when rendered headlines age past
+       the cutoff, refresh the list, but never yank it out from under a
+       reader who has scrolled in */
+    if (state.set.window !== 'all' && !isClientTab(state.topic) &&
+        window.scrollY < 80) {
+      var cut = windowCutoff();
+      var expired = cut && Array.prototype.some.call(
+        document.querySelectorAll('.age[data-ts]'),
+        function (el) { return +el.dataset.ts < cut; });
+      if (expired) render();
+    }
   }, 45000);
   setInterval(checkFresh, 10 * 60 * 1000);
 
