@@ -426,17 +426,29 @@
 
     var item = drawFrom(base);
 
-    /* seasoning: rare topics step back sometimes, and a cell avoids showing
-       the same topic twice in a row. Rarity applies even inside a solo — a
-       BRIEF solo should lead with the fresh editions and let the archive
-       visit — but the repeat-nudge only matters in a mixed pool. */
+    /* seasoning: rare topics step back sometimes, a cell avoids showing the
+       same topic twice in a row, and one outlet shouldn't hold two cells at
+       once or follow itself — no channel gets to flood the board. Rarity
+       applies even inside a solo — a BRIEF solo should lead with the fresh
+       editions and let the archive visit — but the repeat-nudges only
+       matter in a mixed pool. */
     if (!state.surfTopic && base.length > 6) {
+      var onScreen = {};
+      activeSlots().forEach(function (other) {
+        if (other.id === cfg.id) return;
+        var showing = state.perSlot[other.id];
+        if (showing && !showing.system) onScreen[showing.src] = true;
+      });
       for (var tries = 0; tries < 2; tries++) {
         var rar = RARITY[item.topic];
         var prev = state.perSlot[cfg.id];
-        var repeat = prev && !prev.system && prev.topic === item.topic;
+        var mixed = state.enabled.size > 1;
+        var repeatTopic = prev && !prev.system && prev.topic === item.topic;
+        var repeatSrc = prev && !prev.system && prev.src === item.src;
         if ((rar != null && Math.random() > rar) ||
-            (repeat && state.enabled.size > 1 && Math.random() < 0.5)) {
+            (onScreen[item.src] && Math.random() < 0.8) ||
+            (repeatSrc && Math.random() < 0.8) ||
+            (repeatTopic && mixed && Math.random() < 0.5)) {
           item = drawFrom(base);
         } else break;
       }
