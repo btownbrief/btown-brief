@@ -52,32 +52,39 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     </span>
     <span class="status">
       <span class="wire" id="wire"></span>
+      <nav class="modes" aria-label="Read or watch">
+        <a class="mode" href="pulse.html" title="Back to the full wire — scan and filter everything">READ</a>
+        <span class="mode on" title="Headlines rotate hands-free — you're watching">WATCH</span>
+      </nav>
       <a class="live-badge" href="pulse.html" title="Back to The Pulse"><i></i>LIVE</a>
     </span>
   </header>
 
-  <nav class="chips" id="chips" aria-label="Topics"></nav>
-  <p class="hint" id="hint" hidden>TAP A TOPIC TO TOGGLE IT · <b>HOLD ONE TO SEE ONLY THAT</b></p>
+  <div class="chipwrap" id="chipwrap">
+    <nav class="chips" id="chips" aria-label="Topics"></nav>
+    <button class="chips-more" id="chips-more" type="button" aria-label="Scroll for more topics">›</button>
+  </div>
+  <p class="hint" id="hint" hidden>EVERY CELL ROTATES ON ITS OWN CLOCK · <b>TAP A STORY TO HOLD IT, AGAIN TO OPEN</b> · TAP A TOPIC TO TOGGLE · <b>HOLD ONE TO SEE ONLY THAT</b></p>
   <p class="hint" id="surf-note" hidden></p>
 
   <main class="board" id="board" data-o="p" data-n="3">
     <a class="cell lead bg-yellow" data-slot="lead" target="_blank" rel="noopener" href="#">
-      <span class="top"><span class="topic-tag"></span><span class="age-tag"></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span></span>
       <span class="body"><span class="head">TAKING THE PULSE…</span></span>
       <span class="meta"></span>
     </a>
     <a class="cell bg-black" data-slot="r1" target="_blank" rel="noopener" href="#">
-      <span class="top"><span class="topic-tag"></span><span class="age-tag"></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span></span>
       <span class="body"><span class="head"></span></span>
       <span class="meta"></span>
     </a>
     <a class="cell bg-cream" data-slot="r2" target="_blank" rel="noopener" href="#">
-      <span class="top"><span class="topic-tag"></span><span class="age-tag"></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span></span>
       <span class="body"><span class="head"></span></span>
       <span class="meta"></span>
     </a>
     <a class="cell bg-red" data-slot="r3" target="_blank" rel="noopener" href="#">
-      <span class="top"><span class="topic-tag"></span><span class="age-tag"></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span></span>
       <span class="body"><span class="head"></span></span>
       <span class="meta"></span>
     </a>
@@ -97,15 +104,24 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <button class="lopt" data-cells="3" type="button">3</button>
       <button class="lopt" data-cells="4" type="button">4</button>
     </span>
+    <span class="lgroup" id="window-group" role="group" aria-label="Time window">
+      <span class="llbl" title="How far back the board reaches">WINDOW</span>
+      <button class="lopt" data-window="1h" type="button">1H</button>
+      <button class="lopt" data-window="6h" type="button">6H</button>
+      <button class="lopt" data-window="today" type="button">TODAY</button>
+      <button class="lopt" data-window="48h" type="button">48H</button>
+    </span>
     <span class="lgroup" id="surf-group" role="group" aria-label="Channel surf">
       <span class="llbl" title="Every few minutes, one minute of a single topic">SURF</span>
       <button class="lopt" data-surf="off" type="button">OFF</button>
       <button class="lopt" data-surf="on" type="button">ON</button>
     </span>
+    <button class="lopt lfreeze" id="freeze-btn" type="button" aria-pressed="false"
+            title="Hold every cell where it is — ▶ on a cell releases just that one">FREEZE</button>
     <span class="lright">
       <span id="updated"></span>
       <a class="lexit" href="live.html?tv=1" title="Chromeless mode for a TV or spare screen">TV ⛶</a>
-      <a class="lexit" href="pulse.html">EXIT ✕</a>
+      <a class="lexit" href="pulse.html" title="Back to the full wire — scan and filter everything">READ ↩</a>
     </span>
   </footer>
 

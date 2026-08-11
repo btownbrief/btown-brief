@@ -72,6 +72,10 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   <header class="mast" id="mast">
     <div class="mast-row">
       <h1 class="mast-title">The&nbsp;Pulse</h1>
+      <nav class="modes" aria-label="Read or watch">
+        <span class="mode on" title="Scan and filter the full wire — you're reading it">READ</span>
+        <a class="mode" href="live.html" title="Headlines rotate hands-free on their own clock">WATCH</a>
+      </nav>
       <div class="mast-icons">
         <button class="ic" id="refresh-btn" aria-label="Refresh headlines" title="Refresh">↻</button>
         <button class="ic" id="theme-btn" aria-label="Toggle light or dark" title="Light / dark">◐</button>
@@ -95,7 +99,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <div class="viewtog" role="group" aria-label="View">
         <button class="vt" id="view-feed" data-view="feed" aria-pressed="true">Feed</button>
         <button class="vt" id="view-sources" data-view="sources" aria-pressed="false">By source</button>
-        <a class="vt vt-live" href="live.html" title="Live board — put the phone down and watch"><i></i>Live</a>
+        <a class="vt vt-live" href="live.html" title="The live board — headlines rotate hands-free on their own clock"><i></i>Live</a>
       </div>
     </div>
 
@@ -180,6 +184,15 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <input type="range" id="fs-range" min="12" max="28" step="1" aria-label="Headline text size">
       <span class="fs-val" id="fs-val">17</span>
     </div>
+
+    <h2 class="set-label">Time window</h2>
+    <div class="pillrow" id="window-pills" role="group" aria-label="Time window">
+      <button class="pill" data-window="all">All</button>
+      <button class="pill" data-window="1h">1H</button>
+      <button class="pill" data-window="6h">6H</button>
+      <button class="pill" data-window="today">Today</button>
+    </div>
+    <p class="set-note">Only headlines from the last hour, six hours, or since midnight — for storm days and breaking news. Applies everywhere until you set it back.</p>
 
     <h2 class="set-label">Headlines per source</h2>
     <div class="pillrow" id="limit-pills" role="group" aria-label="Headlines per source">
