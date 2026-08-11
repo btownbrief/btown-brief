@@ -77,6 +77,7 @@
     leadsSinceLocal: 0,      // local-heartbeat counter for the lead cell
     set: { pace: 'normal', cells: 'auto', surf: false, heldOnce: false },
     hiddenSources: {},       // from the main Pulse page's settings
+    hiddenChannels: {},      // muted YouTube channels, same settings key
     timers: {},              // slot id -> cadence / kickoff timeout
     swapTimers: {},          // slot id -> pending 320ms exit-animation timeout
     endsAt: {},
@@ -166,6 +167,7 @@
     try {
       var p = JSON.parse(localStorage.getItem(PULSE_SET_KEY) || 'null');
       if (p && p.hidden && typeof p.hidden === 'object') state.hiddenSources = p.hidden;
+      if (p && p.ythidden && typeof p.ythidden === 'object') state.hiddenChannels = p.ythidden;
     } catch (e) {}
   }
 
@@ -262,6 +264,7 @@
       yt.videos.forEach(function (v) {
         var t = String(v.t || '').trim();
         if (!v.id || t.length < 10) return;
+        if (state.hiddenChannels[normTitle(v.ch || '')]) return;
         var nt = normTitle(t);
         if (vseen[nt]) return;
         vseen[nt] = true;
