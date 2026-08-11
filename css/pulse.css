@@ -130,6 +130,29 @@ button {
 
 .mast-icons { display: flex; gap: 4px; }
 
+/* READ | WATCH — the two ways to take the wire */
+.modes {
+  display: flex;
+  border: 1px solid var(--chipline);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: 8px;
+  flex: none;
+}
+.mode {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  padding: 6px 10px;
+  color: var(--dim);
+  text-decoration: none;
+}
+.mode + .mode { border-left: 1px solid var(--chipline); }
+.mode.on { background: var(--fg); color: var(--bg); }
+a.mode:hover { color: #fc560a; }
+
 .ic {
   font-size: 17px;
   line-height: 1;
@@ -267,6 +290,25 @@ button {
 /* ---------- feed view ---------- */
 
 .body-wrap { padding: 0 16px 48px; }
+
+/* the last-visit boundary in the feed */
+.since {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 2px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.since::before, .since::after {
+  content: "";
+  flex: 1;
+  border-top: 1px dashed var(--accent-dim);
+}
+.since span { flex: none; }
 
 .feed { max-width: 680px; margin: 0 auto; }
 

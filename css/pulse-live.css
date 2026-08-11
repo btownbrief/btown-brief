@@ -124,6 +124,26 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
   opacity: .8;
 }
 
+/* READ | WATCH — the same switch the Pulse masthead carries */
+.modes {
+  display: flex;
+  border: 1px solid rgba(252, 86, 10, .4);
+  overflow: hidden;
+}
+.mode {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: .14em;
+  padding: 6px 9px;
+  color: var(--orange);
+  opacity: .75;
+  text-decoration: none;
+}
+.mode + .mode { border-left: 1px solid rgba(252, 86, 10, .4); }
+.mode.on { background: var(--orange); color: var(--ink); opacity: 1; }
+a.mode:hover { opacity: 1; }
+
 .live-badge {
   display: inline-flex;
   align-items: center;
@@ -145,6 +165,25 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
 @keyframes blink { 50% { opacity: .12; } }
 
 /* ---------- topic chips: a tab bar, like the reference ---------- */
+
+.chipwrap { position: relative; }
+
+/* the row scrolls — say so */
+.chips-more {
+  position: absolute;
+  top: 0; right: 0; bottom: 1px;
+  width: 40px;
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  background: linear-gradient(to right, rgba(0,0,0,0), #000 60%);
+  color: var(--orange);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.chipwrap.more .chips-more { display: flex; }
 
 .chips {
   display: flex;
@@ -265,6 +304,32 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
 .bg-black       { background: #0d0d0d;       color: var(--orange); }
 .bg-black-cream { background: #0d0d0d;       color: var(--cream); }
 
+/* video cells wear their thumbnail — dimmed, grayscale, unmistakably a
+   broadcast still — plus a big play watermark */
+.cellbg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(1) contrast(1.05);
+  opacity: 0;
+  transition: opacity .5s ease;
+  pointer-events: none;
+}
+.cell.video-cell .cellbg { opacity: .38; }
+.cell.video-cell::before {
+  content: "▶";
+  position: absolute;
+  right: clamp(14px, 3vw, 40px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(44px, 7vw, 110px);
+  line-height: 1;
+  opacity: .16;
+  pointer-events: none;
+}
+.cell .top, .cell .body, .cell .meta { position: relative; }
+
 .cell .top {
   display: flex;
   align-items: baseline;
@@ -285,6 +350,29 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
   vertical-align: 1px;
 }
 .cell .age-tag { opacity: .65; }
+
+.cell .tr { display: inline-flex; align-items: baseline; gap: 12px; }
+
+/* visible only while this cell is held (touch-armed or frozen): releases
+   the one cell without opening the story */
+.cell .cellgo {
+  display: none;
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 9px;
+  border: 1.5px solid currentColor;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+}
+.cell.held .cellgo { display: inline-block; }
+
+.lfreeze { flex: none; }
+.lfreeze[aria-pressed="true"] {
+  background: var(--cream);
+  color: var(--ink);
+  border-color: var(--cream);
+}
 
 .cell .body {
   min-height: 0;
@@ -412,7 +500,7 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
 
 /* ---------- TV / cast mode (?tv=1): nothing but the board ---------- */
 
-body.tv .chips,
+body.tv .chipwrap,
 body.tv .hint,
 body.tv .lbar { display: none; }
 body.tv.idle, body.tv.idle .cell { cursor: none; }
@@ -421,7 +509,7 @@ body.tv.idle, body.tv.idle .cell { cursor: none; }
 
 @media (max-width: 720px) {
   .bar { grid-template-columns: 1fr auto auto; gap: 12px; }
-  .dayrow { display: none; }
+  .dayrow, .modes { display: none; }
   .clock { font-size: 17px; }
   .brand { font-size: 11px; letter-spacing: .22em; }
 }

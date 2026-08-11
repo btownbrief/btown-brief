@@ -21,20 +21,28 @@
   var WEEK_URL = 'data/events-week.json';
   var GAMES_URL = 'https://play.btownbrief.com/games.json';
   var ARCHIVE_URL = 'https://play.btownbrief.com/archive/data/stories-lite.json';
+  var READ_URL = 'data/weather/read.json';
+  var OPENINGS_URL = 'data/openings.json';
+  var BEACHES_URL = 'data/weather/beaches.json';
+  var HOBBIES_URL = 'data/hobbies.json';
+  var THINGS_URL = 'data/things.json';
   var SET_KEY = 'pulse-live-set';
   var PULSE_SET_KEY = 'pulse2-settings';   // read-only: reuse muted sources
 
-  var TOPICS = ['local', 'brief', 'reddit', 'news', 'newsletters', 'tech', 'business',
-                'science', 'culture', 'politics', 'sports', 'gaming', 'pods', 'video', 'play'];
-  var TOPIC_LABEL = { newsletters: 'letters' };
+  var TOPICS = ['local', 'brief', 'todo', 'reddit', 'newsletters', 'news', 'video',
+                'tech', 'business', 'science', 'culture', 'politics', 'sports', 'gaming',
+                'pods', 'play'];
+  var TOPIC_LABEL = { newsletters: 'letters', todo: 'to do' };
 
   /* How often a topic surfaces relative to its share of the pool.
-     Deep or evergreen content should visit, not move in. */
-  var RARITY = { newsletters: 0.45, pods: 0.5, video: 0.5, play: 0.3, archive: 0.3 };
+     Deep or evergreen content should visit, not move in. Old editions are
+     the rarest guest — headlines and events carry the BRIEF chip. */
+  var RARITY = { newsletters: 0.45, pods: 0.5, video: 0.5, play: 0.3,
+                 archive: 0.45, edition: 0.15, hobby: 0.35, idea: 0.3 };
   var ARCHIVE_SAMPLE = 80;    // per-visit sample of the 1,600-story archive
 
-  var MAX_AGE_S = 48 * 3600;       // headlines older than this stay off the board
   var MAX_VIDEO_AGE_S = 7 * 24 * 3600;
+  var WINDOWS = ['1h', '6h', 'today', '48h'];   // reader-set reach of the board
   var MIN_POOL = 24;               // below this, the age cap relaxes
   var API_REFRESH_MS = 5 * 60 * 1000;
   var SURF_PERIOD_MS = 4 * 60 * 1000;
@@ -62,6 +70,21 @@
   var REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var TV = /(?:^|[?&])tv=1/.test(window.location.search);
 
+  /* last-visit baseline, shared with the Pulse page: a 30+ minute gap
+     starts a new visit; the first lap of the board favors what's new */
+  var visitBaseline = 0;
+  (function () {
+    try {
+      var nowS = Math.floor(Date.now() / 1000);
+      var last = +localStorage.getItem('pulse2-visit-last') || 0;
+      if (last && nowS - last > 30 * 60) {
+        localStorage.setItem('pulse2-visit-base', String(last));
+      }
+      visitBaseline = +localStorage.getItem('pulse2-visit-base') || 0;
+      localStorage.setItem('pulse2-visit-last', String(nowS));
+    } catch (e) {}
+  })();
+
   var state = {
     pool: [],                // every eligible item across topics
     extras: null,            // [rail, week, games, archive] cached from first load
@@ -75,7 +98,10 @@
     surfTopic: null,         // topic a channel-surf is visiting
     armed: null,             // slot id armed by a first touch-tap
     leadsSinceLocal: 0,      // local-heartbeat counter for the lead cell
-    set: { pace: 'normal', cells: 'auto', surf: false, heldOnce: false },
+    frozen: false,           // global freeze — every cell holds its story
+    firstLap: 0,             // picks made so far; the first lap favors
+                             // stories newer than the last visit
+    set: { pace: 'normal', cells: 'auto', surf: false, window: '48h', heldOnce: false },
     hiddenSources: {},       // from the main Pulse page's settings
     hiddenChannels: {},      // muted YouTube channels, same settings key
     timers: {},              // slot id -> cadence / kickoff timeout
@@ -139,6 +165,7 @@
       if (s && typeof s === 'object') {
         if (PACES.indexOf(s.pace) !== -1) state.set.pace = s.pace;
         if (['auto', '2', '3', '4'].indexOf(String(s.cells)) !== -1) state.set.cells = String(s.cells);
+        if (WINDOWS.indexOf(s.window) !== -1) state.set.window = s.window;
         state.set.surf = !!s.surf;
         state.set.heldOnce = !!s.heldOnce;
         if (Array.isArray(s.topics)) {
@@ -184,6 +211,7 @@
       localStorage.setItem(SET_KEY, JSON.stringify({
         pace: state.set.pace,
         cells: state.set.cells,
+        window: state.set.window,
         surf: TV ? false : state.set.surf,
         heldOnce: state.set.heldOnce,
         topics: Array.from(state.enabled),
@@ -254,16 +282,20 @@
       var t = String(it.t || '').trim();
       if (t.length < 10) return;
       var tags = tagsOf(src);
+      // his own paper: the fresh editions read as BRIEF; older ones become
+      // EDITION, the rarest guest on the board — headlines over back issues
+      var isBrief = tags[0] === 'brief';
+      var oldEdition = isBrief && it.d &&
+        (Date.now() / 1000 - it.d > 7 * 86400);
       pool.push({
         t: t,
         u: safeUrl(it.u),
         d: it.d || 0,
         src: src.short || src.name || '',
         tags: tags,
-        topic: tags[0],
-        // his own paper posts 2-3x/week — exempt from the 48h cap so a
-        // BRIEF solo always has the recent editions to draw from
-        evergreen: tags[0] === 'brief',
+        topic: oldEdition ? 'edition' : tags[0],
+        // exempt from the age cap so a BRIEF solo always has editions
+        evergreen: isBrief,
       });
     });
 
@@ -284,6 +316,7 @@
           tags: ['video'],
           topic: 'video',
           dur: v.dur || '',
+          img: 'https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/hqdefault.jpg',
         });
       });
     }
@@ -293,9 +326,11 @@
 
     if (rail && Array.isArray(rail.days)) {
       var gen = (Date.parse(rail.generated) / 1000) || 0;
-      rail.days.slice(0, 2).forEach(function (day, i) {
+      rail.days.forEach(function (day, i) {
         if (!day.n) return;
-        var when = i === 0 ? 'today' : 'tomorrow';
+        var when = i === 0 ? 'today' : i === 1 ? 'tomorrow'
+          : new Date(day.date + 'T12:00:00')
+              .toLocaleDateString('en-US', { weekday: 'long' });
         pool.push({
           t: day.n + ' things to do in Burlington ' + when + (day.t ? ' — like ' + day.t : ''),
           // unique per card — the pool dedupes by url, shared urls would
@@ -303,7 +338,7 @@
           u: 'events.html#' + (day.date || when),
           d: gen,
           src: 'Btown events',
-          tags: ['brief', 'local'],
+          tags: ['todo', 'brief', 'local'],
           topic: 'events',
         });
       });
@@ -325,12 +360,117 @@
           t: dy.label + ': ' + sentence,
           u: base + '#' + encodeURIComponent(dy.label),
           d: wd,
-          src: 'Btown Brief',
-          tags: ['brief', 'local'],
+          src: 'Btown Brief picks',
+          tags: ['todo', 'brief', 'local'],
           topic: 'events',
         });
       });
     }
+
+    var read = extras && extras[4], openings = extras && extras[5];
+    var beaches = extras && extras[6];
+
+    if (read && read.text) {
+      // his daily weather prose — first sentence, linking the full read
+      var rs = String(read.text).split(/(?<=[.!?])\s/)[0] || '';
+      if (rs.length > 110) rs = rs.slice(0, 107).replace(/\s+\S*$/, '') + '…';
+      if (rs.length >= 8) {
+        pool.push({
+          t: 'My weather read: ' + rs,
+          u: 'weather.html',
+          d: (Date.parse(read.approved_at || read.date) / 1000) || 0,
+          src: 'Btown Brief',
+          tags: ['brief', 'local'],
+          topic: 'weather',
+        });
+      }
+    }
+
+    if (openings && Array.isArray(openings.entries)) {
+      openings.entries.slice().sort(function (a, b) {
+        return (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0);
+      }).slice(0, 2).forEach(function (entry) {
+        if (!entry.name) return;
+        var verb = entry.status === 'closed' ? 'Closing news: '
+          : entry.status === 'coming' ? 'Coming soon: ' : 'Now open: ';
+        pool.push({
+          t: verb + entry.name + (entry.area ? ' — ' + entry.area : ''),
+          u: 'openings.html#' + encodeURIComponent(entry.name),
+          d: (Date.parse(entry.date) / 1000) || 0,
+          src: 'Openings radar',
+          tags: ['brief', 'local'],
+          topic: 'openings',
+        });
+      });
+    }
+
+    if (beaches && Array.isArray(beaches.beaches) && beaches.beaches.length) {
+      var total = beaches.beaches.length;
+      var green = beaches.beaches.filter(function (b) {
+        return b.status === 'green';
+      }).length;
+      pool.push({
+        t: green === total
+          ? 'All ' + total + ' beaches green for swimming today'
+          : green + ' of ' + total + ' beaches green for swimming today',
+        u: 'beaches.html',
+        d: (Date.parse(beaches.updated) / 1000) || 0,
+        src: 'Lake report',
+        tags: ['brief', 'local'],
+        topic: 'lake',
+      });
+    }
+
+    /* TO DO beyond events: in-season hobbies, curated spots, and the
+       one-answer app — ideas visit the rotation, events lead it */
+    var hobbies = extras && extras[7], things = extras && extras[8];
+    var month = new Date().getMonth() + 1;
+
+    if (hobbies) {
+      var hobbyList = hobbies.hobbies || hobbies.entries || [];
+      shuffle(hobbyList.filter(function (h) {
+        return h && h.name &&
+          (!Array.isArray(h.months) || h.months.indexOf(month) !== -1);
+      }).slice()).slice(0, 6).forEach(function (h) {
+        var about = String(h.what || '').split(/(?<=[.!?])\s/)[0] || '';
+        if (about.length > 100) about = about.slice(0, 97).replace(/\s+\S*$/, '') + '…';
+        pool.push({
+          t: (h.emoji ? h.emoji + ' ' : '') + h.name + (about ? ' — ' + about : ''),
+          u: 'hobbies.html#' + encodeURIComponent(h.id || h.name),
+          d: 0,
+          src: 'Vermont hobbies',
+          tags: ['todo'],
+          topic: 'hobby',
+          evergreen: true,
+        });
+      });
+    }
+
+    if (Array.isArray(things)) {
+      shuffle(things.slice()).slice(0, 8).forEach(function (th) {
+        if (!th || !th.name) return;
+        var bits = [th.category, th.neighborhood].filter(Boolean).join(', ');
+        pool.push({
+          t: th.name + (bits ? ' — ' + bits : ''),
+          u: 'index.html#' + encodeURIComponent(th.id || th.name),
+          d: 0,
+          src: 'Things to do',
+          tags: ['todo'],
+          topic: 'idea',
+          evergreen: true,
+        });
+      });
+    }
+
+    pool.push({
+      t: "Can't decide? What Now hands you one thing to do right now",
+      u: 'https://play.btownbrief.com/what-now/',
+      d: 0,
+      src: 'What Now',
+      tags: ['todo', 'play'],
+      topic: 'idea',
+      evergreen: true,
+    });
 
     if (games && Array.isArray(games.games)) {
       shuffle(games.games.filter(function (g) {
@@ -375,9 +515,23 @@
     });
   }
 
+  function windowCapS() {
+    var w = state.set.window;
+    if (w === '1h') return 3600;
+    if (w === '6h') return 6 * 3600;
+    if (w === 'today') {
+      var midnight = new Date();
+      midnight.setHours(0, 0, 0, 0);
+      return Math.max(1, Date.now() / 1000 - midnight.getTime() / 1000);
+    }
+    return 48 * 3600;
+  }
+
   function freshEnough(it, now) {
     if (it.evergreen || !it.d) return true;
-    var cap = it.topic === 'video' ? MAX_VIDEO_AGE_S : MAX_AGE_S;
+    var cap = windowCapS();
+    // videos get a wider default reach, but a narrowed window narrows them too
+    if (it.topic === 'video' && state.set.window === '48h') cap = MAX_VIDEO_AGE_S;
     return now / 1000 - it.d <= cap;
   }
 
@@ -415,13 +569,24 @@
     }
 
     // freshness cap, with a relief valve: top up with the NEWEST stale items
-    // only as far as MIN_POOL, so the recency weighting stays meaningful
+    // only as far as MIN_POOL, so the recency weighting stays meaningful.
+    // A reader who narrowed the window asked for exactly that — no top-up.
     var fresh = base.filter(function (it) { return freshEnough(it, now); });
-    if (fresh.length >= MIN_POOL || fresh.length === base.length) {
+    if (state.set.window !== '48h') {
+      base = fresh;
+    } else if (fresh.length >= MIN_POOL || fresh.length === base.length) {
       base = fresh.length ? fresh : base;
     } else {
       var stale = base.filter(function (it) { return !freshEnough(it, now); });
       base = fresh.concat(stale.slice(0, MIN_POOL - fresh.length));
+    }
+
+    // the first lap after arriving favors what's new since the last visit
+    if (visitBaseline && state.firstLap < 8) {
+      var unseen = base.filter(function (it) {
+        return !it.evergreen && it.d > visitBaseline;
+      });
+      if (unseen.length >= 3) base = unseen;
     }
 
     // the lead cell reads best with headlines that aren't paragraph-length
@@ -553,6 +718,8 @@
      then anything but this cell's current color. LOCAL items pick from a
      teal-leaning pool so local reads unmistakably local. */
   function chooseColor(cfg, cell, item) {
+    // video cells wear their thumbnail over near-black — cream text always
+    if (item && item.img) return 'bg-black-cream';
     var pool = item && isLocalItem(item) ? LOCAL_COLORS
              : cfg.type === 'lead' ? LEAD_COLORS : RAIL_COLORS;
     var current = currentColorClass(cell);
@@ -628,11 +795,21 @@
     }, delay);
   }
 
+  /* a deliberate hold (tap-arm or freeze) shows the ▶ release button;
+     a passing hover doesn't */
+  function paintHeld(cfg) {
+    var cell = cellOf(cfg);
+    if (!cell) return;
+    var p = state.pausedBy[cfg.id] || {};
+    cell.classList.toggle('held', !!(p.tap || p.freeze));
+  }
+
   function pauseSlot(cfg, reason) {
     var p = state.pausedBy[cfg.id] || (state.pausedBy[cfg.id] = {});
     if (p[reason]) return;
     var already = isPaused(cfg.id);
     p[reason] = true;
+    paintHeld(cfg);
     if (already) return;             // clock is stopped for another reason
     state.pausedAt[cfg.id] = performance.now();
     clearTimeout(state.timers[cfg.id]);
@@ -644,6 +821,7 @@
     var p = state.pausedBy[cfg.id];
     if (!p || !p[reason]) return;
     p[reason] = false;
+    paintHeld(cfg);
     if (isPaused(cfg.id)) return;    // still held by another reason
     var pausedFor = performance.now() - (state.pausedAt[cfg.id] || 0);
     state.endsAt[cfg.id] = (state.endsAt[cfg.id] || performance.now()) + pausedFor;
@@ -652,6 +830,17 @@
     if (cell) resumeProgressBar(cell, remaining);
     clearTimeout(state.timers[cfg.id]);
     state.timers[cfg.id] = setTimeout(function () { refreshSlot(cfg); }, remaining);
+  }
+
+  /* global freeze: hold every cell where it is; the per-cell ▶ releases one */
+  function setFrozen(on) {
+    state.frozen = on;
+    activeSlots().forEach(function (cfg) {
+      if (on) pauseSlot(cfg, 'freeze');
+      else resumeSlot(cfg, 'freeze');
+    });
+    var btn = $('freeze-btn');
+    if (btn) btn.setAttribute('aria-pressed', on ? 'true' : 'false');
   }
 
   /* ---------- the swap ---------- */
@@ -670,6 +859,7 @@
 
     var item = pickItem(cfg);
     state.perSlot[cfg.id] = item;
+    if (!item.system) state.firstLap++;
     if (cfg.type === 'lead' && !item.system) {
       state.leadsSinceLocal = isLocalItem(item) ? 0 : state.leadsSinceLocal + 1;
     }
@@ -694,8 +884,14 @@
 
       /* auxiliary rows first — autoFit measures the leftover 1fr track,
          so the other grid rows must settle before we measure */
-      topicTag.textContent = topicLabel(item.topic);
+      topicTag.textContent = (item.img ? '▶ ' : '') + topicLabel(item.topic);
       ageTag.textContent = item.d ? fmtAge(item.d) : '';
+
+      var bgLayer = cell.querySelector('.cellbg');
+      if (bgLayer) {
+        bgLayer.style.backgroundImage = item.img ? 'url("' + item.img + '")' : '';
+      }
+      cell.classList.toggle('video-cell', !!item.img);
 
       var dot = '<span class="dot"></span>';
       var parts = ['<span>' + esc(item.src) + '</span>', '<span>' + esc(topicLabel(item.topic)) + '</span>'];
@@ -764,6 +960,7 @@
       wrap.appendChild(btn);
     });
     $('hint').hidden = state.set.heldOnce || TV;
+    updateChipsMore();
   }
 
   function afterTopicChange() {
@@ -885,7 +1082,8 @@
   }
 
   function startSurf() {
-    if (!state.set.surf || state.solo || state.surfTopic || document.hidden) return;
+    if (!state.set.surf || state.solo || state.surfTopic ||
+        state.frozen || document.hidden) return;
     var t = pickSurfTopic();
     if (!t) return;
     state.surfTopic = t;
@@ -934,8 +1132,12 @@
         state.pausedBy[cfg.id] = {};       // a hidden cell can't be hovered
         delete state.needsKick[cfg.id];
       } else if (i >= prevCount && state.pool.length) {
-        if (document.visibilityState === 'visible') refreshSlot(cfg);
-        else state.needsKick[cfg.id] = true;   // wake it when the tab returns
+        if (document.visibilityState === 'visible') {
+          refreshSlot(cfg);
+          if (state.frozen) pauseSlot(cfg, 'freeze');
+        } else {
+          state.needsKick[cfg.id] = true;   // wake it when the tab returns
+        }
       }
     });
     refitAll();
@@ -1003,6 +1205,9 @@
       b.setAttribute('aria-pressed',
         (b.dataset.surf === 'on') === !!state.set.surf ? 'true' : 'false');
     });
+    Array.prototype.forEach.call(document.querySelectorAll('#window-group .lopt'), function (b) {
+      b.setAttribute('aria-pressed', b.dataset.window === state.set.window ? 'true' : 'false');
+    });
   }
 
   function bindOptions() {
@@ -1028,6 +1233,59 @@
       if (!state.set.surf) endSurf();
       saveStored();
       paintOptions();
+    });
+    $('window-group').addEventListener('click', function (e) {
+      var b = e.target.closest('.lopt');
+      if (!b) return;
+      state.set.window = b.dataset.window;
+      saveStored();
+      paintOptions();
+      // stories now outside the window leave immediately
+      state.used = {};
+      state.usedCount = 0;
+      var now = Date.now();
+      activeSlots().forEach(function (cfg) {
+        var cur = state.perSlot[cfg.id];
+        if (cur && (cur.system || !freshEnough(cur, now)) && !isPaused(cfg.id)) {
+          refreshSlot(cfg);
+        }
+      });
+    });
+    $('freeze-btn').addEventListener('click', function () {
+      setFrozen(!state.frozen);
+    });
+    // per-cell release: let one cell rotate again without opening its story
+    SLOTS.forEach(function (cfg) {
+      var cell = cellOf(cfg);
+      var go = cell && cell.querySelector('.cellgo');
+      if (!go) return;
+      go.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (state.armed === cfg.id) disarm();
+        resumeSlot(cfg, 'freeze');
+      });
+    });
+  }
+
+  /* ---------- the chips row scrolls — show an arrow while it can ---------- */
+
+  function updateChipsMore() {
+    var wrap = $('chipwrap');
+    var row = $('chips');
+    if (!wrap || !row) return;
+    wrap.classList.toggle('more',
+      row.scrollLeft + row.clientWidth < row.scrollWidth - 8);
+  }
+
+  function bindChipsMore() {
+    var row = $('chips');
+    var btn = $('chips-more');
+    if (!row || !btn) return;
+    row.addEventListener('scroll', updateChipsMore, { passive: true });
+    window.addEventListener('resize', updateChipsMore);
+    btn.addEventListener('click', function () {
+      row.scrollBy({ left: Math.round(row.clientWidth * 0.7), behavior: 'smooth' });
     });
   }
 
@@ -1066,6 +1324,8 @@
     setupTv();
     renderChips();
     bindChips();
+    bindChipsMore();
+    updateChipsMore();
     paintOptions();
     bindOptions();
     tickClock();
@@ -1124,6 +1384,11 @@
       fetchJson(WEEK_URL).catch(function () { return null; }),
       fetchJson(GAMES_URL).catch(function () { return null; }),
       fetchJson(ARCHIVE_URL).catch(function () { return null; }),
+      fetchJson(READ_URL).catch(function () { return null; }),
+      fetchJson(OPENINGS_URL).catch(function () { return null; }),
+      fetchJson(BEACHES_URL).catch(function () { return null; }),
+      fetchJson(HOBBIES_URL).catch(function () { return null; }),
+      fetchJson(THINGS_URL).catch(function () { return null; }),
     ]);
 
     fetchJson(LIVE_URL)
@@ -1154,22 +1419,30 @@
       });
 
     // quiet re-fetch; the board just starts drawing from the fresher pool.
-    // rail/week ride along so a kiosk that crosses midnight gets the right
-    // "today"; games/archive stay cached — they barely change
+    // rail/week/read/beaches ride along so a kiosk that crosses midnight
+    // stays right; games/archive stay cached — they barely change
     setInterval(function () {
       Promise.all([
         fetchJson(LIVE_URL).catch(function () { return null; }),
         fetchJson(YT_URL).catch(function () { return null; }),
         fetchJson(RAIL_URL).catch(function () { return null; }),
         fetchJson(WEEK_URL).catch(function () { return null; }),
+        fetchJson(READ_URL).catch(function () { return null; }),
+        fetchJson(BEACHES_URL).catch(function () { return null; }),
       ]).then(function (res) {
         if (!res[0]) return;
         if (state.extras) {
           if (res[2]) state.extras[0] = res[2];
           if (res[3]) state.extras[1] = res[3];
+          if (res[4]) state.extras[4] = res[4];
+          if (res[5]) state.extras[6] = res[5];
         }
         applyData(res[0], res[1]);
       });
+      try {
+        localStorage.setItem('pulse2-visit-last',
+          String(Math.floor(Date.now() / 1000)));
+      } catch (e) {}
     }, API_REFRESH_MS);
   }
 

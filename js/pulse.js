@@ -53,7 +53,8 @@
     view: 'feed',
     q: '',
     shown: FEED_PAGE,
-    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, ythidden: {}, intent: false, ytview: 'list' },
+    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, ythidden: {}, intent: false, ytview: 'list', window: 'all' },
+    newCount: 0,            // headlines newer than the last visit, feed view
     read: {},
     intent: {},             // focus-mode passed marks
     saved: [],              // [{k,t,u,s,d,sv}] newest-saved first
@@ -80,6 +81,7 @@
         ['theme', 'fs', 'limit', 'autohide', 'thumbs', 'intent', 'ytview'].forEach(function (k) {
           if (s[k] !== undefined) state.set[k] = s[k];
         });
+        if (['all', '1h', '6h', 'today'].indexOf(s.window) !== -1) state.set.window = s.window;
         if (s.hidden && typeof s.hidden === 'object') state.set.hidden = s.hidden;
         if (s.ythidden && typeof s.ythidden === 'object') state.set.ythidden = s.ythidden;
         if (s.view === 'sources' || s.view === 'feed') state.view = s.view;
@@ -109,7 +111,7 @@
         autohide: state.set.autohide, thumbs: state.set.thumbs,
         hidden: state.set.hidden, ythidden: state.set.ythidden,
         view: state.view, intent: state.set.intent,
-        ytview: state.set.ytview,
+        ytview: state.set.ytview, window: state.set.window,
       }));
     } catch (e) {}
   }
@@ -187,6 +189,46 @@
 
   function isClientTab(t) { return CLIENT_TABS.indexOf(t) !== -1; }
 
+  /* ---------- last visit (shared with the Watch board) ----------
+     VISIT_BASE is where "new since your last visit" starts; VISIT_LAST is
+     touched while reading so a quick reload doesn't reset the baseline —
+     a gap of 30+ minutes starts a new visit. */
+
+  var VISIT_LAST_KEY = 'pulse2-visit-last';
+  var VISIT_BASE_KEY = 'pulse2-visit-base';
+  var visitBaseline = 0;
+
+  function trackVisit() {
+    try {
+      var nowS = Math.floor(Date.now() / 1000);
+      var last = +localStorage.getItem(VISIT_LAST_KEY) || 0;
+      if (last && nowS - last > 30 * 60) {
+        localStorage.setItem(VISIT_BASE_KEY, String(last));
+      }
+      visitBaseline = +localStorage.getItem(VISIT_BASE_KEY) || 0;
+      localStorage.setItem(VISIT_LAST_KEY, String(nowS));
+      setInterval(function () {
+        try {
+          localStorage.setItem(VISIT_LAST_KEY, String(Math.floor(Date.now() / 1000)));
+        } catch (e) {}
+      }, 5 * 60000);
+    } catch (e) {}
+  }
+
+  /* ---------- time window ---------- */
+
+  function windowCutoff() {
+    var w = state.set.window;
+    if (w === '1h') return Date.now() / 1000 - 3600;
+    if (w === '6h') return Date.now() / 1000 - 6 * 3600;
+    if (w === 'today') {
+      var midnight = new Date();
+      midnight.setHours(0, 0, 0, 0);
+      return midnight.getTime() / 1000;
+    }
+    return 0;
+  }
+
   /* ---------- derivations ---------- */
 
   function isReddit(src) {
@@ -217,9 +259,11 @@
 
   function filteredItems() {
     if (!state.data) return [];
+    var cutoff = windowCutoff();
     return state.data.items.filter(function (item) {
       var src = srcMap[item.s];
       if (!src || state.set.hidden[src.id]) return false;
+      if (cutoff && (!item.d || item.d < cutoff)) return false;
       if (state.source ? src.id !== state.source : !inTopic(src, state.topic)) return false;
       var k = keyOf(item.u);
       if (state.set.autohide && state.read[k]) return false;
@@ -443,6 +487,14 @@
     if (state.source && srcMap[state.source]) bits.push(esc(srcMap[state.source].short));
     else if (state.topic !== 'all') bits.push(esc(topicLabel(state.topic)));
     if (state.q) bits.push('“' + esc(state.q) + '”');
+    if (state.set.window !== 'all') {
+      bits.push(state.set.window === 'today' ? 'today only'
+        : 'last ' + state.set.window.toUpperCase());
+    }
+    if (state.newCount > 0 && state.view === 'feed' && !state.source && !state.q) {
+      bits.push('<strong>' + state.newCount.toLocaleString('en-US') +
+        '</strong> new since your last visit');
+    }
     if (state.stale) {
       /* the fallback snapshot's age is main's sync cadence, not the site's
          freshness — while the live fetch retries, say what's happening
@@ -569,8 +621,21 @@
       var slice = all.slice(0, state.shown);
       /* the earned nudge: ~240 headlines deep (after the 2nd MORE click) */
       var nudge = (state.shown >= 3 * FEED_PAGE && !state.q && slice.length) ? nudgeHTML() : '';
+      state.newCount = visitBaseline
+        ? all.filter(function (i) { return i.d > visitBaseline; }).length : 0;
+      /* the divider sits between "since your last visit" and everything
+         older — only when the boundary actually falls inside the slice */
+      var rows = '';
+      var divided = !(state.newCount > 0);
+      slice.forEach(function (item) {
+        if (!divided && item.d && item.d <= visitBaseline) {
+          rows += '<div class="since"><span>new since your last visit ↑</span></div>';
+          divided = true;
+        }
+        rows += feedItemHTML(item);
+      });
       body.innerHTML = '<div class="feed">' +
-        (slice.length ? hintHTML() + slice.map(feedItemHTML).join('') + nudge :
+        (slice.length ? hintHTML() + rows + nudge :
           '<p class="empty">No headlines match.</p>') + '</div>';
       if (all.length > slice.length) {
         more.hidden = false;
@@ -641,6 +706,9 @@
     });
     document.querySelectorAll('[data-thumbs]').forEach(function (b) {
       b.setAttribute('aria-pressed', (b.dataset.thumbs === 'on') === state.set.thumbs);
+    });
+    document.querySelectorAll('[data-window]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.dataset.window === state.set.window);
     });
     $('fs-range').value = state.set.fs;
     $('fs-val').textContent = state.set.fs;
@@ -1916,6 +1984,11 @@
         state.set.limit = +limit.dataset.limit;
         saveSettings(); renderSettingsPanel(); render();
       }
+      var win = ev.target.closest('[data-window]');
+      if (win) {
+        state.set.window = win.dataset.window;
+        saveSettings(); renderSettingsPanel(); render();
+      }
       var hide = ev.target.closest('[data-hide]');
       if (hide) {
         state.set.autohide = hide.dataset.hide === 'on';
@@ -1966,6 +2039,7 @@
   setInterval(checkFresh, 10 * 60 * 1000);
 
   loadStored();
+  trackVisit();
   readHash();
   applyFont();
   applyTheme();
