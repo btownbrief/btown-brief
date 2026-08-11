@@ -6,8 +6,9 @@
 #   pulse-data and pulse-top, so it never touches main or Pages).
 #
 # Sources: the public Inoreader folder "YouTube" (followed channels — the
-# curation surface) plus the YouTube Data API's US trending chart. Skips
-# quietly when YOUTUBE_API_KEY is absent.
+# curation surface, no key needed) plus the YouTube Data API for durations,
+# trending, the Vermont radar and deep cuts when YOUTUBE_API_KEY is present.
+# Without a key the followed-channel shelf still publishes.
 
 name: Refresh the Pulse YouTube shelf
 
@@ -26,20 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for an API key
-        id: key
-        env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-        run: |
-          if [ -z "$YOUTUBE_API_KEY" ]; then
-            echo "no API key, skipping"
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Build the video shelf
-        if: steps.key.outputs.ready == 'true'
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: |
@@ -55,7 +43,6 @@ jobs:
             --catalog /tmp/yt-out/data/deep-catalog.json
 
       - name: Force-push the single-commit pulse-youtube branch
-        if: steps.key.outputs.ready == 'true'
         run: |
           if [ ! -s /tmp/yt-out/data/pulse-youtube.json ]; then
             echo "nothing written this run — leaving the branch alone"

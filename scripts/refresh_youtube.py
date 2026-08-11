@@ -3,12 +3,15 @@
 
 Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
 
-  * Followed channels. data/youtube-channels.json lists them. In Actions the
-    uploads come from the API's playlistItems endpoint (1 quota unit per
-    channel — YouTube's RSS soft-blocks datacenter IPs, the Reddit problem
-    all over again); without a key the free public RSS still works from
-    residential IPs. Firehose channels carry a per-refresh cap; Shorts are
-    filtered out; channels marked min_sec keep only full episodes/talks.
+  * Followed channels. The public Inoreader folder "YouTube" is the primary
+    transport: one stream request covers the whole roster, works from
+    datacenter IPs, and costs zero API quota (YouTube's own RSS soft-blocks
+    Actions IPs — the Reddit problem all over again). data/youtube-channels.json
+    carries the metadata (cap/g/min_sec); channels followed only in Inoreader
+    still ride along with defaults. Fallbacks: the API's playlistItems
+    endpoint (with a key), then direct YouTube RSS (residential IPs only).
+    Firehose channels carry a per-refresh cap; Shorts are filtered out;
+    channels marked min_sec keep only full episodes/talks.
   * Filmed in Vermont. Two API searches surface fresh local footage no
     channel roster would catch, ranked by view velocity.
   * Deep cuts. Every roster channel's all-time most-viewed videos, kept in
@@ -32,6 +35,7 @@ CLI:
 """
 
 import argparse
+import email.utils
 import json
 import os
 import re
@@ -47,6 +51,12 @@ UA = "btown-pulse-youtube/1.0"
 
 CHANNELS_FILE = os.path.join(ROOT, "data", "youtube-channels.json")
 CHANNEL_RSS = "https://www.youtube.com/feeds/videos.xml?channel_id="
+# The public Inoreader folder "YouTube" mirrors the roster (imported from
+# infrastructure/youtube-channels.opml). One stream request covers every
+# channel and works from datacenter IPs — the preferred uploads transport.
+INO_STREAM = "https://www.inoreader.com/stream/user/1003590800/tag/YouTube"
+INO_STREAM_N = 1000
+INO_CHANNEL_RE = re.compile(r"/channel/(UC[A-Za-z0-9_-]{22})")
 API = "https://www.googleapis.com/youtube/v3"
 WINDOW_DAYS = 7
 MAX_CHANNEL_VIDEOS = 160
@@ -237,6 +247,74 @@ def fetch_channel_videos(now_ts, channels=None):
                 break
             if video["id"] in seen or "#short" in video["t"].lower():
                 continue
+            if channel.get("min_sec"):
+                video["_min"] = int(channel["min_sec"])
+            if channel.get("g"):
+                video["g"] = channel["g"]
+            seen.add(video["id"])
+            videos.append(video)
+            kept += 1
+    videos.sort(key=lambda video: video["d"], reverse=True)
+    return videos[:MAX_CHANNEL_VIDEOS]
+
+
+def parse_inoreader_stream(raw, now_ts):
+    """Inoreader folder-stream RSS -> [{id,t,ch,d,cid}], ≤7 days. Each item
+    carries its origin feed in <source url=".../channel/UC...">, which is
+    how one aggregated stream regroups into per-channel lists."""
+    root = ElementTree.fromstring(raw)
+    entries = []
+    for item in root.iter("item"):
+        vid = video_id(item.findtext("link") or "")
+        title = (item.findtext("title") or "").strip()
+        pub = item.findtext("pubDate")
+        source = item.find("source")
+        src_url = source.get("url", "") if source is not None else ""
+        match = INO_CHANNEL_RE.search(src_url)
+        name = ((source.text if source is not None else "") or "").strip()
+        if not vid or not title or not pub or not match:
+            continue
+        try:
+            when = int(email.utils.parsedate_to_datetime(pub).timestamp())
+        except (TypeError, ValueError):
+            continue
+        if now_ts - when > WINDOW_DAYS * 86400:
+            continue
+        entries.append({"id": vid, "t": title[:200], "ch": name[:60],
+                        "d": when, "cid": match.group(1)})
+    return entries
+
+
+def fetch_channel_videos_inoreader(now_ts, channels=None, raw=None):
+    """Followed channels via the public Inoreader folder — one request for
+    the whole roster, works from datacenter IPs, zero API quota. Channels
+    followed in Inoreader but missing from the metadata file still ride
+    along with defaults, so Inoreader stays the curation surface."""
+    if raw is None:
+        request = urllib.request.Request(
+            f"{INO_STREAM}?n={INO_STREAM_N}", headers={"User-Agent": UA})
+        with urllib.request.urlopen(request, timeout=30) as response:
+            raw = response.read()
+    roster = {channel["id"]: channel
+              for channel in (channels if channels is not None
+                              else load_channels())}
+    by_channel = {}
+    for entry in parse_inoreader_stream(raw, now_ts):
+        by_channel.setdefault(entry["cid"], []).append(entry)
+
+    videos, seen = [], set()
+    for cid, fetched in by_channel.items():
+        channel = roster.get(cid, {})
+        fetched.sort(key=lambda video: video["d"], reverse=True)
+        kept = 0
+        cap = int(channel.get("cap", DEFAULT_CAP))
+        for video in fetched:
+            if kept >= cap:
+                break
+            if video["id"] in seen or "#short" in video["t"].lower():
+                continue
+            video = {key: value for key, value in video.items()
+                     if key != "cid"}
             if channel.get("min_sec"):
                 video["_min"] = int(channel["min_sec"])
             if channel.get("g"):
@@ -498,8 +576,18 @@ def run(args):
     key = os.environ.get("YOUTUBE_API_KEY", "").strip()
     now_ts = int(utcnow().timestamp())
 
-    own = (fetch_channel_videos_api(key, now_ts) if key
-           else fetch_channel_videos(now_ts))
+    # uploads transport: Inoreader folder stream first (works everywhere,
+    # no quota), then the API, then direct YouTube RSS (residential only)
+    own = []
+    try:
+        own = fetch_channel_videos_inoreader(now_ts)
+        print(f"refresh_youtube: inoreader stream -> {len(own)} uploads")
+    except Exception as exc:  # noqa: BLE001 — the fallbacks still publish
+        print(f"refresh_youtube: inoreader stream failed ({exc})",
+              file=sys.stderr)
+    if len(own) < 10:
+        own = (fetch_channel_videos_api(key, now_ts) if key
+               else fetch_channel_videos(now_ts))
 
     vermont, deep, trending = [], [], []
     if key:
@@ -559,6 +647,31 @@ ATOM_FIXTURE = """<?xml version="1.0" encoding="utf-8"?>
   <published>{fresh}</published></entry>
 </feed>"""
 
+INO_FIXTURE = """<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel><title>YouTube via test</title>
+<item><title>Council meeting</title>
+<link>https://www.youtube.com/watch?v=aaaaaaaaaaa</link>
+<pubDate>{fresh}</pubDate>
+<source url="https://www.youtube.com/channel/UCcapchancapchancapchan1">Cap Chan</source></item>
+<item><title>Second upload blocked by cap</title>
+<link>https://www.youtube.com/watch?v=bbbbbbbbbbb</link>
+<pubDate>{fresh}</pubDate>
+<source url="https://www.youtube.com/channel/UCcapchancapchancapchan1">Cap Chan</source></item>
+<item><title>Unknown channel rides along</title>
+<link>https://www.youtube.com/watch?v=ccccccccccc</link>
+<pubDate>{fresh2}</pubDate>
+<source url="https://www.youtube.com/channel/UCunknownunknownunknown2">Mystery</source></item>
+<item><title>An obvious #Short</title>
+<link>https://www.youtube.com/watch?v=ddddddddddd</link>
+<pubDate>{fresh2}</pubDate>
+<source url="https://www.youtube.com/channel/UCunknownunknownunknown2">Mystery</source></item>
+<item><title>Too old</title>
+<link>https://www.youtube.com/watch?v=eeeeeeeeeee</link>
+<pubDate>{stale}</pubDate>
+<source url="https://www.youtube.com/channel/UCunknownunknownunknown2">Mystery</source></item>
+</channel></rss>"""
+
 
 def selftest():
     assert video_id("https://www.youtube.com/watch?v=dQw4w9WgXcQ") == "dQw4w9WgXcQ"
@@ -599,6 +712,21 @@ def selftest():
     assert videos[0]["ch"] == "Practical Vermont"
     assert load_channels("/nonexistent.json") == []
     print("refresh_youtube: channel feed ok (dedupe, window, missing ids)")
+
+    ino = fetch_channel_videos_inoreader(
+        now_ts,
+        channels=[{"id": "UCcapchancapchancapchan1", "name": "Cap Chan",
+                   "cap": 1, "g": "vt", "min_sec": 300}],
+        raw=INO_FIXTURE.format(
+            fresh=email.utils.formatdate(now_ts - 3600, usegmt=True),
+            fresh2=email.utils.formatdate(now_ts - 7200, usegmt=True),
+            stale=email.utils.formatdate(
+                now_ts - 9 * 86400, usegmt=True)).encode())
+    assert [video["id"] for video in ino] == ["aaaaaaaaaaa", "ccccccccccc"]
+    assert ino[0]["g"] == "vt" and ino[0]["_min"] == 300
+    assert "g" not in ino[1] and "cid" not in ino[1]
+    assert ino[1]["ch"] == "Mystery"
+    print("refresh_youtube: inoreader stream ok (regroup, caps, window, shorts)")
 
     payload = build_payload(
         videos,
