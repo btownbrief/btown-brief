@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-11T06:29:24-04:00",
+ "generated": "2026-08-11T17:27:28-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 17,
-   "seconds": 5.5
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 67,
-   "seconds": 4.8
+   "count": 70,
+   "seconds": 5.2
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 55,
-   "seconds": 3.3
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 155,
-   "seconds": 3.0
+   "count": 156,
+   "seconds": 2.8
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 74,
-   "seconds": 1.9
+   "count": 75,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -49,12 +49,12 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 157,
-   "seconds": 68.2
+   "seconds": 71.9
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 30,
-   "seconds": 2.4
+   "count": 32,
+   "seconds": 3.1
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.4
+   "seconds": 38.9
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 77,
-   "seconds": 108.8
+   "count": 79,
+   "seconds": 132.7
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 446,
-   "seconds": 76.2
+   "count": 447,
+   "seconds": 76.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 114.7
+   "count": 65,
+   "seconds": 124.9
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 37,
-   "seconds": 13.8
+   "seconds": 15.2
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 73,
-   "seconds": 1.5
+   "seconds": 1.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 34,
-   "seconds": 37.7
+   "seconds": 35.9
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,18 +113,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 234,
-   "seconds": 12.7
+   "count": 237,
+   "seconds": 14.1
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 183,
+   "count": 184,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 57,
-   "seconds": 72.5
+   "count": 62,
+   "seconds": 80.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,22 +132,11 @@
    "seconds": 0.4
   }
  },
- "gathered": 2553,
- "afterDedup": 1282,
- "duplicatesMerged": 1271,
- "final": 1815,
+ "gathered": 2573,
+ "afterDedup": 1299,
+ "duplicatesMerged": 1274,
+ "final": 1836,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-10"
-  },
   {
    "kept": {
     "title": "Dream / Mộng : Veronica Pham",
@@ -1609,7 +1598,6 @@
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-28"
@@ -1718,6 +1706,17 @@
   {
    "kept": {
     "title": "2026 UVM Job & Internship Fair",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "From UVM to Hollywood: A Conversation with Ricky Strauss ’88",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2399,10 +2398,25 @@
  ],
  "changes": [
   {
-   "id": "ab91a89cf4b8",
-   "title": "Bike Ride from Leddy Park to South Hero!",
-   "date": "2026-08-16",
-   "change": "dropped"
+   "id": "6e15840ca34e",
+   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
+   "date": "2026-08-11",
+   "change": "missing",
+   "lastSeen": "2026-08-11T06:29:24-04:00"
+  },
+  {
+   "id": "4e5161396b88",
+   "title": "Dinosaur Safari Exhibit",
+   "date": "2026-08-11",
+   "change": "missing",
+   "lastSeen": "2026-08-11T06:29:24-04:00"
+  },
+  {
+   "id": "c31701b91a29",
+   "title": "Vermont Reggae Fest",
+   "date": "2026-08-22",
+   "change": "missing",
+   "lastSeen": "2026-08-11T06:29:24-04:00"
   },
   {
    "id": "3a52c70f8535",
@@ -2417,6 +2431,13 @@
    "date": "2026-08-27",
    "change": "missing",
    "lastSeen": "2026-08-10T06:45:50-04:00"
+  },
+  {
+   "id": "efd4bd818385",
+   "title": "Truck Violence",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-08-11T06:29:24-04:00"
   },
   {
    "id": "fced825cacef",
@@ -2438,6 +2459,13 @@
    "date": "2026-09-28",
    "change": "missing",
    "lastSeen": "2026-08-10T06:45:50-04:00"
+  },
+  {
+   "id": "210434af379a",
+   "title": "Evening Song: Bet on Hope 25th Anniversary Celebration",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-08-11T06:29:24-04:00"
   }
  ]
 }
