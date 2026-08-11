@@ -1015,8 +1015,16 @@
       renderCount(0, 0);
       return;
     }
+    /* belt-and-braces title dedupe: livestream restarts (the Mount
+       Washington cam) share one title across many video ids, and payload
+       order is own → vt → deep → trending, so the first copy wins */
+    var seenTitles = {};
     var vids = state.youtube.videos.filter(function (v) {
-      return v && v.id && v.t && clientQ(v.t);
+      if (!v || !v.id || !v.t || !clientQ(v.t)) return false;
+      var k = v.t.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      if (seenTitles[k]) return false;
+      seenTitles[k] = true;
+      return true;
     });
     var vt = vids.filter(function (v) { return v.vt; });
     var deep = vids.filter(function (v) { return v.dc; });

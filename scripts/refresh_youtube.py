@@ -454,14 +454,28 @@ def catalog_deep_cuts(catalog, exclude):
     return found
 
 
+def title_key(video):
+    """Normalized title+channel — livestream restarts (the Mount Washington
+    weather cam) publish the same title under a fresh video id every time,
+    so id-level dedupe alone lets the same card repeat across shelves."""
+    raw = (video.get("t", "") + " " + video.get("ch", "")).lower()
+    return re.sub(r"[^a-z0-9]+", " ", raw).strip()
+
+
 def build_payload(own, vermont, deep, trending, generated):
-    merged = list(own)
-    seen = {video["id"] for video in merged}
-    for shelf in (vermont, deep, trending):
+    merged = []
+    seen = set()
+    seen_titles = set()
+    for shelf in (own, vermont, deep, trending):
         for video in shelf:
-            if video["id"] not in seen:
-                seen.add(video["id"])
-                merged.append(video)
+            if video["id"] in seen:
+                continue
+            tkey = title_key(video)
+            if tkey and tkey in seen_titles:
+                continue
+            seen.add(video["id"])
+            seen_titles.add(tkey)
+            merged.append(video)
     return {
         "v": 1,
         "generated": generated.replace(microsecond=0).isoformat(),
@@ -596,13 +610,15 @@ def selftest():
         [{"id": "abcdefghijk", "t": "dupe", "ch": "x", "d": now_ts,
           "dur": "1:00", "views": 5, "trend": 1},
          {"id": "trendtrend1", "t": "A trending thing", "ch": "Big",
-          "d": now_ts, "dur": "10:00", "views": 1000000, "trend": 1}],
+          "d": now_ts, "dur": "10:00", "views": 1000000, "trend": 1},
+         {"id": "restarted01", "t": "Fall in Stowe!", "ch": "Local",
+          "d": now_ts, "dur": "3:00", "views": 12, "trend": 1}],
         utcnow())
-    assert len(payload["videos"]) == 4      # trending dupe of a followed vid drops
+    assert len(payload["videos"]) == 4      # id dupe AND title-restart dupe drop
     assert payload["videos"][1]["vt"] == 1 and payload["videos"][2]["dc"] == 1
-    assert payload["videos"][-1]["trend"] == 1
+    assert payload["videos"][-1]["id"] == "trendtrend1"
     assert payload["v"] == 1 and "generated" in payload
-    print("refresh_youtube: payload ok (merge, dedupe, shelf order)")
+    print("refresh_youtube: payload ok (merge, id+title dedupe, shelf order)")
 
     ruled = apply_duration_rules([
         {"id": "a", "t": "a Short", "_sec": 40},
