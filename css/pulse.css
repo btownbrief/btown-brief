@@ -184,6 +184,23 @@ button {
 .vt + .vt { border-left: 1px solid var(--chipline); }
 .vt[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
 
+/* the Live board is a page, not a view — an anchor dressed as a toggle.
+   Brand orange: the board is the Brief's own broadcast. */
+.vt-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: #fc560a;
+}
+.vt-live i {
+  width: 6px; height: 6px;
+  background: currentColor;
+  animation: vt-blink 1.6s steps(2, start) infinite;
+}
+@keyframes vt-blink { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .vt-live i { animation: none; } }
+
 /* ---------- search ---------- */
 
 .search-row {
