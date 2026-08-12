@@ -1,29 +1,29 @@
 {
- "generated": "2026-08-11T17:27:28-04:00",
+ "generated": "2026-08-12T05:15:35-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 17,
-   "seconds": 5.9
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 70,
-   "seconds": 5.2
+   "count": 71,
+   "seconds": 3.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 55,
-   "seconds": 3.1
+   "count": 53,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 156,
-   "seconds": 2.8
+   "count": 159,
+   "seconds": 2.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 75,
+   "count": 74,
    "seconds": 1.7
   },
   "echo": {
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-11&end_date=2026-10-10&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-12&end_date=2026-10-11&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 157,
-   "seconds": 71.9
+   "count": 156,
+   "seconds": 78.0
   },
   "flynn": {
    "label": "The Flynn",
    "count": 32,
-   "seconds": 3.1
+   "seconds": 3.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 38.9
+   "seconds": 41.5
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 79,
-   "seconds": 132.7
+   "count": 78,
+   "seconds": 118.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 447,
-   "seconds": 76.4
+   "count": 439,
+   "seconds": 68.3
   },
   "meetup": {
    "label": "Meetup",
    "count": 65,
-   "seconds": 124.9
+   "seconds": 126.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 37,
-   "seconds": 15.2
+   "count": 38,
+   "seconds": 16.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 73,
-   "seconds": 1.4
+   "count": 71,
+   "seconds": 5.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 34,
-   "seconds": 35.9
+   "seconds": 37.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -114,7 +114,7 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 237,
-   "seconds": 14.1
+   "seconds": 13.9
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -123,87 +123,20 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 62,
-   "seconds": 80.8
+   "count": 75,
+   "seconds": 102.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 34,
-   "seconds": 0.4
+   "count": 32,
+   "seconds": 0.5
   }
  },
- "gathered": 2573,
- "afterDedup": 1299,
+ "gathered": 2574,
+ "afterDedup": 1300,
  "duplicatesMerged": 1274,
- "final": 1836,
+ "final": 1812,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-10"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-10"
-  },
-  {
-   "kept": {
-    "title": "Matt Mathews",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "flynn",
-    "helloburlington"
-   ],
-   "date": "2026-09-11"
-  },
-  {
-   "kept": {
-    "title": "All Your Friends",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-09-11"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-11"
-  },
-  {
-   "kept": {
-    "title": "2026 Menopause Café and Clinical Update",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-11"
-  },
   {
    "kept": {
     "title": "CAT ECare Training",
@@ -232,6 +165,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "champlainvalley",
     "uvm",
     "uvmbored"
    ],
@@ -997,6 +931,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "champlainvalley",
     "uvm",
     "uvmbored"
    ],
@@ -1411,6 +1346,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "champlainvalley",
     "uvm",
     "uvmbored"
    ],
@@ -1598,6 +1534,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-28"
@@ -1623,6 +1560,39 @@
     "uvmbored"
    ],
    "date": "2026-09-28"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-28"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-28"
+  },
+  {
+   "kept": {
+    "title": "Destroyer",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-09-29"
   },
   {
    "kept": {
@@ -1654,6 +1624,28 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-09-29"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-29"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-09-29"
   },
@@ -1896,6 +1888,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "champlainvalley",
     "uvm",
     "uvmbored"
    ],
@@ -2357,6 +2350,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "champlainvalley",
     "uvm",
     "uvmbored"
    ],
@@ -2394,22 +2388,42 @@
     "loveburlington"
    ],
    "date": "2026-10-10"
+  },
+  {
+   "kept": {
+    "title": "43rd Organic Chemistry Humphrey Symposium",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-10"
   }
  ],
  "changes": [
   {
-   "id": "6e15840ca34e",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-08-11",
-   "change": "missing",
-   "lastSeen": "2026-08-11T06:29:24-04:00"
+   "id": "50945a8fb496",
+   "title": "Industry Day",
+   "date": "2026-09-28",
+   "change": "time",
+   "was": "2026-09-28",
+   "now": "2026-09-28T11:30:00-04:00"
   },
   {
-   "id": "4e5161396b88",
-   "title": "Dinosaur Safari Exhibit",
-   "date": "2026-08-11",
+   "id": "61103f02b1b5",
+   "title": "802sDay",
+   "date": "2026-09-29",
+   "change": "time",
+   "was": "2026-09-29",
+   "now": "2026-09-29T11:30:00-04:00"
+  },
+  {
+   "id": "e1be787321db-2100",
+   "title": "Kurt Braunohler",
+   "date": "2026-08-14",
    "change": "missing",
-   "lastSeen": "2026-08-11T06:29:24-04:00"
+   "lastSeen": "2026-08-11T17:27:28-04:00"
   },
   {
    "id": "c31701b91a29",
@@ -2424,6 +2438,13 @@
    "date": "2026-08-24",
    "change": "missing",
    "lastSeen": "2026-08-10T17:24:41-04:00"
+  },
+  {
+   "id": "4b803ba3457f",
+   "title": "Trivia at Four Quarters",
+   "date": "2026-08-27",
+   "change": "missing",
+   "lastSeen": "2026-08-11T17:27:28-04:00"
   },
   {
    "id": "3b43acdbd2a9",
@@ -2452,13 +2473,6 @@
    "date": "2026-09-15",
    "change": "missing",
    "lastSeen": "2026-08-10T17:24:41-04:00"
-  },
-  {
-   "id": "6d88f66cb108",
-   "title": "Ora Cogan",
-   "date": "2026-09-28",
-   "change": "missing",
-   "lastSeen": "2026-08-10T06:45:50-04:00"
   },
   {
    "id": "210434af379a",
