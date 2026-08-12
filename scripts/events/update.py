@@ -435,17 +435,39 @@ def main() -> int:
         if ev["date"] < today_et:
             continue
         by_day.setdefault(ev["date"], []).append(ev)
-    for day in sorted(by_day)[:7]:
+    for day_i, day in enumerate(sorted(by_day)[:7]):
         evs = sorted(by_day[day], key=lambda e: e.get("start") or "")
         evening = next((e for e in evs
                         if (e.get("start") or "")[11:13] >= "16"), None)
         pick = evening or evs[-1]
-        rail_days.append({
+        row = {
             "date": day, "n": len(evs),
             "t": pick["title"][:80],
             "s": pick.get("start"),
             "last": evs[-1].get("start"),
-        })
+        }
+        # Today and tomorrow also carry NAMED events so the Pulse Live
+        # board can deal specific cards, not just counts. One event per
+        # venue, evenly spaced across the day for variety; ~16 a day keeps
+        # rail.json tiny (each pick is ~150 bytes) while giving the board
+        # a real spread to rotate through.
+        if day_i < 2:
+            seen_venues: set = set()
+            uniq = []
+            for ev in evs:
+                venue = (ev.get("venue") or "").strip().lower()
+                if venue and venue in seen_venues:
+                    continue
+                seen_venues.add(venue)
+                uniq.append(ev)
+            step = max(1, len(uniq) // 16)
+            row["picks"] = [{
+                "t": ev["title"][:80],
+                "v": (ev.get("venue") or "")[:40],
+                "s": ev.get("start"),
+                "u": ev.get("url") or "",
+            } for ev in uniq[::step][:16]]
+        rail_days.append(row)
     (DATA_DIR / "rail.json").write_text(json.dumps({
         "generated": now_iso, "days": rail_days,
     }, ensure_ascii=False, separators=(",", ":")) + "\n")

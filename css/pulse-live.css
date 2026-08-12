@@ -99,6 +99,7 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
   opacity: .55;
   margin-top: 2px;
 }
+.clock-wrap { display: inline-flex; align-items: baseline; gap: 5px; }
 .clock {
   font-family: var(--mono);
   font-weight: 700;
@@ -107,6 +108,14 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
   color: var(--orange);
   font-variant-numeric: tabular-nums;
   line-height: 1;
+}
+.ampm {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--orange);
+  opacity: .75;
 }
 
 .status {
@@ -170,12 +179,12 @@ a.mode:hover { opacity: 1; }
 
 /* ---------- topic chips: a tab bar, like the reference ---------- */
 
-.chipwrap { position: relative; }
+.chipwrap { position: relative; display: flex; align-items: stretch; }
 
 /* the row scrolls — say so */
 .chips-more {
   position: absolute;
-  top: 0; right: 0; bottom: 1px;
+  top: 0; right: 38px; bottom: 1px;
   width: 40px;
   display: none;
   align-items: center;
@@ -189,7 +198,39 @@ a.mode:hover { opacity: 1; }
 }
 .chipwrap.more .chips-more { display: flex; }
 
+/* the how-to door sits OUTSIDE the scrolling row — always visible */
+.chip-help {
+  flex: none;
+  width: 38px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--orange);
+  border-left: 1px solid rgba(252, 86, 10, .35);
+  border-bottom: 1px solid rgba(252, 86, 10, .28);
+  opacity: .9;
+}
+.chip-help:hover { opacity: 1; }
+
+/* how far along the scrolling row you are */
+.chipbar {
+  position: absolute;
+  left: 0; right: 38px; bottom: 0;
+  height: 2px;
+  background: rgba(252, 86, 10, .14);
+  pointer-events: none;
+}
+.chipbar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--orange);
+  opacity: .65;
+}
+
 .chips {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: stretch;
   border-bottom: 1px solid rgba(252, 86, 10, .28);
@@ -202,8 +243,10 @@ a.mode:hover { opacity: 1; }
 .chips::-webkit-scrollbar { display: none; }
 
 .chip {
-  flex: 1 1 0;
-  min-width: 0;
+  /* grow to fill wide screens, but never shrink into a clipped label —
+     the row scrolls (and the chipbar says so) once space runs out */
+  flex: 1 1 auto;
+  min-width: max-content;
   font-family: var(--mono);
   font-weight: 700;
   font-size: 10px;
@@ -221,14 +264,16 @@ a.mode:hover { opacity: 1; }
 }
 .chip:first-child { border-left: none; }
 
-/* the whole-row switch and the how-to door — never struck, never soloed */
-.chip-all, .chip-help {
+/* the whole-row switch — never struck, never soloed; kept small so the
+   first real topics fit on a phone before any scrolling */
+.chip-all {
   flex: 0 0 auto;
   color: var(--cream);
   opacity: .85;
+  font-size: 9px;
+  padding: 0 8px;
 }
-.chip-all:hover, .chip-help:hover { opacity: 1; }
-.chip-help { min-width: 34px; }
+.chip-all:hover { opacity: 1; }
 
 /* OFF: dimmed AND struck through — unmistakable at a glance */
 .chip[aria-pressed="false"] {
@@ -255,6 +300,12 @@ a.mode:hover { opacity: 1; }
 
 @media (max-width: 1100px) {
   .chip { flex: 0 0 auto; }
+}
+
+/* phones: pack the row so LOCAL through NEWS shows before any scrolling */
+@media (max-width: 720px) {
+  .chip { padding: 0 7px; letter-spacing: .1em; font-size: 9.5px; }
+  .chip-all { padding: 0 6px; font-size: 8.5px; }
 }
 
 .hint {
@@ -364,7 +415,13 @@ a.mode:hover { opacity: 1; }
 }
 .cell .age-tag { opacity: .65; }
 
-.cell .tr { display: inline-flex; align-items: baseline; gap: 12px; }
+.cell .tr {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.cell .trrow { display: inline-flex; align-items: baseline; gap: 12px; }
 
 /* visible only while this cell is held (touch-armed or frozen): releases
    the one cell without opening the story */
@@ -379,6 +436,25 @@ a.mode:hover { opacity: 1; }
   cursor: pointer;
 }
 .cell.held .cellgo { display: inline-block; }
+
+/* share rides just under the ▶ — held cells on touch, hover on desktop */
+.cell .cellshare {
+  display: none;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: .14em;
+  line-height: 1;
+  padding: 4px 8px;
+  border: 1.5px solid currentColor;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+}
+.cell.held .cellshare { display: inline-block; }
+@media (hover: hover) {
+  .cell:hover .cellshare { display: inline-block; }
+}
 
 .lfreeze { flex: none; }
 .lfreeze[aria-pressed="true"] {
@@ -447,7 +523,8 @@ a.mode:hover { opacity: 1; }
   pointer-events: none;
 }
 
-/* touch: first tap arms + pauses, second tap opens */
+/* touch: first tap arms + pauses, second tap opens. Solid ink plate with
+   an orange key line so it reads on every cell color. */
 .cell::after {
   content: "TAP AGAIN TO OPEN ↗";
   position: absolute;
@@ -455,15 +532,18 @@ a.mode:hover { opacity: 1; }
   bottom: clamp(44px, 8vh, 72px);
   font-family: var(--mono);
   font-weight: 700;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: .2em;
-  border: 1.5px solid currentColor;
-  padding: 6px 10px;
+  background: #0d0d0d;
+  color: var(--cream);
+  border: 1.5px solid var(--orange);
+  padding: 8px 12px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, .35);
   opacity: 0;
   pointer-events: none;
   transition: opacity .2s ease;
 }
-.cell.armed::after { opacity: .95; }
+.cell.armed::after { opacity: 1; }
 
 /* ---------- bottom bar ---------- */
 
@@ -528,7 +608,110 @@ a.mode:hover { opacity: 1; }
 .lexit { color: #a08a6d; text-decoration: none; letter-spacing: .14em; }
 .lexit:hover { color: var(--cream); }
 
+.lrecap { color: #a08a6d; border-color: rgba(160, 138, 109, .35); }
+.lrecap:hover { color: var(--cream); }
+
+#queue { color: var(--orange); opacity: .8; font-variant-numeric: tabular-nums; }
+
 .noscript { font-family: var(--mono); color: var(--cream); padding: 20px; }
+
+/* ---------- bottom-sheet panels: how-to + recap ---------- */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .65);
+  z-index: 30;
+}
+
+.panel {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  max-height: 74dvh;
+  overflow-y: auto;
+  background: #0d0d0d;
+  border-top: 3px solid var(--orange);
+  z-index: 31;
+  padding: 14px 16px max(16px, env(safe-area-inset-bottom));
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.panel-title {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 13px;
+  letter-spacing: .24em;
+  color: var(--orange);
+}
+.panel-close {
+  font-size: 15px;
+  line-height: 1;
+  padding: 5px 9px;
+  color: var(--cream);
+  border: 1px solid rgba(239, 217, 185, .3);
+}
+.panel-close:hover { border-color: var(--cream); }
+.panel-note {
+  margin: 0 0 12px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  color: #7a6c58;
+}
+
+.help-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 11px;
+}
+.help-list li {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .05em;
+  line-height: 1.6;
+  color: var(--cream);
+}
+.help-list b { color: var(--orange); }
+
+.recap-list { list-style: none; margin: 0; padding: 0; }
+.recap-list li { border-top: 1px solid rgba(239, 217, 185, .12); }
+.recap-list li.recap-empty {
+  border-top: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  color: #7a6c58;
+  padding: 12px 2px;
+}
+.recap-list a {
+  display: grid;
+  grid-template-columns: 64px 76px 1fr auto;
+  gap: 10px;
+  align-items: baseline;
+  padding: 9px 2px;
+  text-decoration: none;
+  color: var(--cream);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.recap-list a:hover .r-title { color: var(--orange); }
+.r-when { color: #7a6c58; font-size: 9px; letter-spacing: .06em; white-space: nowrap; }
+.r-topic { color: var(--orange); font-size: 9px; letter-spacing: .14em; }
+.r-title { line-height: 1.45; }
+.r-src { color: #7a6c58; font-size: 9px; letter-spacing: .08em; }
+
+@media (max-width: 560px) {
+  .recap-list a { grid-template-columns: 56px 1fr; }
+  .r-topic, .r-src { display: none; }
+}
 
 /* ---------- TV / cast mode (?tv=1): nothing but the board ---------- */
 
