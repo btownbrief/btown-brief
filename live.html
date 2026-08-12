@@ -48,7 +48,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <a class="brand" href="pulse.html" title="Back to The Pulse">BTOWN&nbsp;BRIEF&nbsp;<b>PULSE&nbsp;LIVE</b></a>
     <span class="broadcast">
       <span class="dayrow"><span class="day" id="day"></span><span class="date" id="date"></span></span>
-      <span class="clock" id="clock">--:--:--</span>
+      <span class="clock-wrap"><span class="clock" id="clock">--:--:--</span><span class="ampm" id="ampm"></span></span>
     </span>
     <span class="status">
       <span class="wire" id="wire"></span>
@@ -64,28 +64,30 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   <div class="chipwrap" id="chipwrap">
     <nav class="chips" id="chips" aria-label="Topics"></nav>
     <button class="chips-more" id="chips-more" type="button" aria-label="Scroll for more topics">›</button>
+    <button class="chip-help" id="help-btn" type="button" aria-label="How the board works" title="How the board works">?</button>
+    <div class="chipbar" id="chipbar" aria-hidden="true" hidden><i></i></div>
   </div>
-  <p class="hint" id="hint" hidden>EVERY CELL ROTATES ON ITS OWN CLOCK · <b>TAP A STORY TO HOLD IT, AGAIN TO OPEN</b> · TAP A TOPIC TO TOGGLE · <b>HOLD ONE TO SEE ONLY THAT</b></p>
+  <p class="hint" id="hint" hidden>EVERY CELL ROTATES ON ITS OWN CLOCK · <b>TAP A STORY TO HOLD IT, AGAIN TO OPEN</b> · TAP A TOPIC TO TOGGLE · <b>HOLD ONE TO SEE ONLY THAT</b> · <b>?</b> FOR THE FULL HOW-TO</p>
   <p class="hint" id="surf-note" hidden></p>
 
   <main class="board" id="board" data-o="p" data-n="3">
     <a class="cell lead bg-yellow" data-slot="lead" target="_blank" rel="noopener" href="#">
-      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button></span></span>
       <span class="body"><span class="head">TAKING THE PULSE…</span></span>
       <span class="meta"></span>
     </a>
     <a class="cell bg-black" data-slot="r1" target="_blank" rel="noopener" href="#">
-      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button></span></span>
       <span class="body"><span class="head"></span></span>
       <span class="meta"></span>
     </a>
     <a class="cell bg-cream" data-slot="r2" target="_blank" rel="noopener" href="#">
-      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button></span></span>
       <span class="body"><span class="head"></span></span>
       <span class="meta"></span>
     </a>
     <a class="cell bg-red" data-slot="r3" target="_blank" rel="noopener" href="#">
-      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button></span></span>
       <span class="body"><span class="head"></span></span>
       <span class="meta"></span>
     </a>
@@ -105,6 +107,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <button class="lopt" data-window="6h" type="button">6H</button>
       <button class="lopt" data-window="today" type="button">TODAY</button>
       <button class="lopt" data-window="48h" type="button">48H</button>
+      <button class="lopt" data-window="7d" type="button">7D</button>
     </span>
     <span class="lgroup" id="cells-group" role="group" aria-label="Cells on screen">
       <span class="llbl">CELLS</span>
@@ -120,7 +123,10 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     </span>
     <button class="lopt lfreeze" id="freeze-btn" type="button" aria-pressed="false"
             title="Hold every cell where it is — ▶ on a cell releases just that one">FREEZE</button>
+    <button class="lopt lrecap" id="recap-btn" type="button"
+            title="Every card the board has shown you lately — in case you missed one">RECAP ⟲</button>
     <span class="lright">
+      <span id="queue" title="Stories in your current topics and window the board hasn't dealt yet"></span>
       <span id="updated"></span>
       <a class="lexit" href="live.html?tv=1" title="Chromeless mode for a TV or spare screen">TV ⛶</a>
       <a class="lexit" href="pulse.html" title="Back to the full wire — scan and filter everything">READ ↩</a>
@@ -128,6 +134,34 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   </footer>
   <button class="lbar-more" id="lbar-more" type="button" aria-label="Scroll for more controls">›</button>
   </div>
+
+  <div class="scrim" id="panel-scrim" hidden></div>
+
+  <aside class="panel" id="help-panel" hidden aria-label="How the board works">
+    <div class="panel-head">
+      <span class="panel-title">HOW THE BOARD WORKS</span>
+      <button class="panel-close" id="help-close" type="button" aria-label="Close">✕</button>
+    </div>
+    <ul class="help-list">
+      <li><b>EVERY CELL ROTATES ON ITS OWN CLOCK.</b> Put the phone down and watch, or reach in:</li>
+      <li><b>TAP A STORY</b> to hold it in place — <b>TAP IT AGAIN</b> to open it. On a computer, hovering holds it.</li>
+      <li><b>SHARE ⇗</b> appears under the ▶ while a story is held — send it straight to a friend.</li>
+      <li><b>TAP A TOPIC</b> up top to turn it on or off. <b>PRESS AND HOLD ONE</b> to see only that topic — hold it again to bring everything back.</li>
+      <li><b>LIVE / FREEZE</b> stops the whole board where it is. The ▶ on a cell releases just that one.</li>
+      <li><b>SURF ON</b> channel-surfs: every few minutes the board spends one minute on a single topic, then returns to the mix.</li>
+      <li><b>WINDOW</b> is how far back headlines reach. TO DO and HISTORY cards are timeless and ignore it.</li>
+      <li><b>RECAP ⟲</b> in the bottom bar lists every card you've been shown — in case one got away.</li>
+    </ul>
+  </aside>
+
+  <aside class="panel" id="recap-panel" hidden aria-label="Recently shown cards">
+    <div class="panel-head">
+      <span class="panel-title">RECAP — CARDS YOU'VE SEEN</span>
+      <button class="panel-close" id="recap-close" type="button" aria-label="Close">✕</button>
+    </div>
+    <p class="panel-note">EVERY STORY THE BOARD HAS DEALT THIS DEVICE IN THE LAST 48 HOURS · NEWEST FIRST · TAP TO OPEN</p>
+    <ol class="recap-list" id="recap-list"></ol>
+  </aside>
 
   <noscript><p class="noscript">The Pulse Live needs JavaScript to run the board.</p></noscript>
   <script src="js/pulse-live.js"></script>

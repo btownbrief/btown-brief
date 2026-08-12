@@ -26,23 +26,28 @@
   var BEACHES_URL = 'data/weather/beaches.json';
   var HOBBIES_URL = 'data/hobbies.json';
   var THINGS_URL = 'data/things.json';
+  var HISTORY_URL = 'data/history-facts.json';
   var SET_KEY = 'pulse-live-set';
   var PULSE_SET_KEY = 'pulse2-settings';   // read-only: reuse muted sources
+  var RECAP_KEY = 'pulse-live-recap';
+  var RECAP_MAX = 150;                     // cards the recap remembers
+  var RECAP_MAX_AGE_S = 48 * 3600;         // matches the board's default reach
 
-  var TOPICS = ['local', 'brief', 'reddit', 'newsletters', 'news', 'video', 'todo',
-                'tech', 'business', 'science', 'culture', 'politics', 'sports', 'gaming',
-                'pods', 'play'];
+  var TOPICS = ['local', 'brief', 'reddit', 'newsletters', 'video', 'news', 'todo',
+                'history', 'tech', 'business', 'science', 'culture', 'politics',
+                'sports', 'gaming', 'pods', 'play'];
   var TOPIC_LABEL = { newsletters: 'letters', todo: 'to do' };
 
   /* How often a topic surfaces relative to its share of the pool.
      Deep or evergreen content should visit, not move in. Old editions are
      the rarest guest — headlines and events carry the BRIEF chip. */
   var RARITY = { newsletters: 0.45, pods: 0.5, video: 0.5, play: 0.3,
-                 archive: 0.45, edition: 0.15, hobby: 0.35, idea: 0.3 };
+                 archive: 0.45, edition: 0.15, hobby: 0.35, idea: 0.3,
+                 history: 0.4 };
   var ARCHIVE_SAMPLE = 80;    // per-visit sample of the 1,600-story archive
 
   var MAX_VIDEO_AGE_S = 7 * 24 * 3600;
-  var WINDOWS = ['1h', '6h', 'today', '48h'];   // reader-set reach of the board
+  var WINDOWS = ['1h', '6h', 'today', '48h', '7d'];   // reader-set reach of the board
   var MIN_POOL = 24;               // below this, the age cap relaxes
   var API_REFRESH_MS = 5 * 60 * 1000;
   var SURF_PERIOD_MS = 4 * 60 * 1000;
@@ -102,7 +107,9 @@
                              // can be tap-held at once
     firstLap: 0,             // picks made so far; the first lap favors
                              // stories newer than the last visit
-    set: { pace: 'normal', cells: 'auto', surf: false, window: '48h', heldCount: 0 },
+    set: { pace: 'normal', cells: 'auto', surf: false, window: '48h', heldCount: 0,
+           hintAt: 0 },
+    recap: [],               // cards this device has been shown, newest first
     hiddenSources: {},       // from the main Pulse page's settings
     hiddenChannels: {},      // muted YouTube channels, same settings key
     timers: {},              // slot id -> cadence / kickoff timeout
@@ -169,6 +176,7 @@
         if (WINDOWS.indexOf(s.window) !== -1) state.set.window = s.window;
         state.set.surf = !!s.surf;
         state.set.heldCount = +s.heldCount || (s.heldOnce ? 2 : 0);
+        state.set.hintAt = +s.hintAt || 0;
         if (Array.isArray(s.topics)) {
           state.enabled = new Set(s.topics.filter(function (t) { return TOPICS.indexOf(t) !== -1; }));
           // topics added to the board since this reader last saved arrive ON
@@ -215,6 +223,7 @@
         window: state.set.window,
         surf: TV ? false : state.set.surf,
         heldCount: state.set.heldCount,
+        hintAt: state.set.hintAt,
         topics: Array.from(state.enabled),
         known: TOPICS,
         solo: state.solo,
@@ -232,9 +241,17 @@
 
   function tickClock() {
     var d = new Date();
-    $('clock').textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    var h = d.getHours();
+    $('clock').textContent = (h % 12 || 12) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    var ap = $('ampm');
+    if (ap) ap.textContent = h >= 12 ? 'PM' : 'AM';
     $('day').textContent = DAYS[d.getDay()];
     $('date').textContent = MONTHS[d.getMonth()] + ' ' + pad(d.getDate()) + ' · ' + d.getFullYear();
+  }
+
+  function fmt12(d) {
+    var h = d.getHours();
+    return (h % 12 || 12) + ':' + pad(d.getMinutes()) + ' ' + (h >= 12 ? 'PM' : 'AM');
   }
 
   function tickUpdated() {
@@ -343,6 +360,33 @@
           topic: 'events',
         });
       });
+
+      /* named events for today + tomorrow — the specific recs, not just
+         the count. Timeless flag: they leave when the rail refreshes,
+         not when a time window squeezes them out. */
+      rail.days.slice(0, 2).forEach(function (day, i) {
+        if (!Array.isArray(day.picks)) return;
+        day.picks.forEach(function (p, j) {
+          if (!p || !p.t) return;
+          var start = p.s ? new Date(p.s) : null;
+          if (start && isNaN(start)) start = null;
+          // today's card for an event already underway or done gets skipped
+          if (i === 0 && start && Date.now() - start.getTime() > 2 * 3600 * 1000) return;
+          var when = i === 1 ? 'Tomorrow'
+            : (start && start.getHours() >= 17) ? 'Tonight' : 'Today';
+          pool.push({
+            t: when + ': ' + p.t + (p.v ? ' at ' + p.v : '') +
+               (start ? ' — ' + fmt12(start) : ''),
+            u: /^https?:\/\//i.test(p.u || '') ? p.u
+              : 'events.html#' + (day.date || '') + '-' + j,
+            d: 0,
+            src: 'Btown events',
+            tags: ['todo', 'local'],
+            topic: 'events',
+            evergreen: true,
+          });
+        });
+      });
     }
 
     if (week && Array.isArray(week.days)) {
@@ -432,7 +476,7 @@
       shuffle(hobbyList.filter(function (h) {
         return h && h.name &&
           (!Array.isArray(h.months) || h.months.indexOf(month) !== -1);
-      }).slice()).slice(0, 6).forEach(function (h) {
+      }).slice()).slice(0, 12).forEach(function (h) {
         var about = String(h.what || '').split(/(?<=[.!?])\s/)[0] || '';
         if (about.length > 100) about = about.slice(0, 97).replace(/\s+\S*$/, '') + '…';
         pool.push({
@@ -448,16 +492,41 @@
     }
 
     if (Array.isArray(things)) {
-      shuffle(things.slice()).slice(0, 8).forEach(function (th) {
+      shuffle(things.slice()).slice(0, 24).forEach(function (th) {
         if (!th || !th.name) return;
+        // the pitch beats the taxonomy: lead with why it's special
+        var why = String(th.why_special || th.blurb || '').split(/(?<=[.!?])\s/)[0] || '';
+        if (why.length > 100) why = why.slice(0, 97).replace(/\s+\S*$/, '') + '…';
         var bits = [th.category, th.neighborhood].filter(Boolean).join(', ');
+        var tail = why || bits;
         pool.push({
-          t: th.name + (bits ? ' — ' + bits : ''),
+          t: th.name + (tail ? ' — ' + tail : ''),
           u: 'index.html#' + encodeURIComponent(th.id || th.name),
           d: 0,
           src: 'Things to do',
           tags: ['todo'],
           topic: 'idea',
+          evergreen: true,
+        });
+      });
+    }
+
+    /* HISTORY: verified Burlington facts — local color that never expires.
+       A per-visit sample keeps the rotation fresh; urls get a per-fact
+       anchor so the dedupe pass doesn't collapse facts sharing a page. */
+    var hist = extras && extras[9];
+    if (hist && Array.isArray(hist.facts)) {
+      shuffle(hist.facts.slice()).slice(0, 14).forEach(function (f, i) {
+        var t = String((f && f.t) || '').trim();
+        if (t.length < 20) return;
+        var u = (typeof f.u === 'string' && f.u) ? f.u : 'walking-tour.html';
+        pool.push({
+          t: t,
+          u: u.indexOf('#') === -1 ? u + '#fact-' + i : u,
+          d: 0,
+          src: f.src || 'Btown history',
+          tags: ['history', 'local'],
+          topic: 'history',
           evergreen: true,
         });
       });
@@ -525,14 +594,20 @@
       midnight.setHours(0, 0, 0, 0);
       return Math.max(1, Date.now() / 1000 - midnight.getTime() / 1000);
     }
+    if (w === '7d') return 7 * 86400;
     return 48 * 3600;
+  }
+
+  // 1H / 6H / TODAY narrow the board; 48H and 7D are its wide settings
+  function isNarrowWindow() {
+    return state.set.window !== '48h' && state.set.window !== '7d';
   }
 
   function freshEnough(it, now) {
     if (it.evergreen || !it.d) return true;
     var cap = windowCapS();
     // videos get a wider default reach, but a narrowed window narrows them too
-    if (it.topic === 'video' && state.set.window === '48h') cap = MAX_VIDEO_AGE_S;
+    if (it.topic === 'video' && !isNarrowWindow()) cap = MAX_VIDEO_AGE_S;
     return now / 1000 - it.d <= cap;
   }
 
@@ -540,6 +615,112 @@
     var el = $('wire');
     if (!el) return;
     el.textContent = state.pool.length ? state.pool.length.toLocaleString() + ' IN THE WIRE' : '';
+  }
+
+  /* the queue: stories inside the current topics + window this device
+     hasn't been dealt yet — it counts down as the board runs, and refills
+     when the lap resets or fresh headlines arrive */
+  function updateQueue() {
+    var el = $('queue');
+    if (!el) return;
+    var now = Date.now();
+    var left = 0;
+    state.pool.forEach(function (it) {
+      if (inEnabled(it) && freshEnough(it, now) && !state.used[it.u]) left++;
+    });
+    el.textContent = left ? left.toLocaleString() + ' IN THE QUEUE' : '';
+  }
+
+  /* ---------- recap: everything the board has dealt this device ---------- */
+
+  function loadRecap() {
+    try {
+      var r = JSON.parse(localStorage.getItem(RECAP_KEY) || 'null');
+      if (Array.isArray(r)) {
+        state.recap = r.filter(function (e) {
+          return e && typeof e.t === 'string' && typeof e.u === 'string' && +e.at;
+        });
+      }
+    } catch (e) {}
+    pruneRecap();
+  }
+
+  function pruneRecap() {
+    var cut = Date.now() / 1000 - RECAP_MAX_AGE_S;
+    state.recap = state.recap.filter(function (e) { return e.at > cut; })
+      .slice(0, RECAP_MAX);
+  }
+
+  function pushRecap(item) {
+    if (!item || item.system || item.u === '#') return;
+    // a repeat moves to the top rather than appearing twice
+    state.recap = state.recap.filter(function (e) { return e.u !== item.u; });
+    state.recap.unshift({
+      t: item.t, u: item.u, src: item.src, topic: item.topic,
+      at: Math.floor(Date.now() / 1000),
+    });
+    pruneRecap();
+    try { localStorage.setItem(RECAP_KEY, JSON.stringify(state.recap)); } catch (e) {}
+  }
+
+  function renderRecap() {
+    var list = $('recap-list');
+    if (!list) return;
+    list.innerHTML = '';
+    if (!state.recap.length) {
+      var li0 = document.createElement('li');
+      li0.className = 'recap-empty';
+      li0.textContent = 'NOTHING YET — LET THE BOARD RUN FOR A MINUTE.';
+      list.appendChild(li0);
+      return;
+    }
+    state.recap.forEach(function (e) {
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = e.u;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.innerHTML =
+        '<span class="r-when">' + esc(fmt12(new Date(e.at * 1000))) + '</span>' +
+        '<span class="r-topic">' + esc(topicLabel(e.topic || '')) + '</span>' +
+        '<span class="r-title">' + esc(e.t) + '</span>' +
+        '<span class="r-src">' + esc(e.src || '') + '</span>';
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+  }
+
+  /* ---------- bottom-sheet panels: help + recap ---------- */
+
+  function panelOpen() {
+    return !$('help-panel').hidden || !$('recap-panel').hidden;
+  }
+
+  function closePanels() {
+    $('panel-scrim').hidden = true;
+    $('help-panel').hidden = true;
+    $('recap-panel').hidden = true;
+  }
+
+  function openPanel(id) {
+    closePanels();
+    if (id === 'recap-panel') renderRecap();
+    $('panel-scrim').hidden = false;
+    $(id).hidden = false;
+  }
+
+  function bindPanels() {
+    $('help-btn').addEventListener('click', function () {
+      if (!$('help-panel').hidden) closePanels();
+      else openPanel('help-panel');
+    });
+    $('recap-btn').addEventListener('click', function () {
+      if (!$('recap-panel').hidden) closePanels();
+      else openPanel('recap-panel');
+    });
+    $('help-close').addEventListener('click', closePanels);
+    $('recap-close').addEventListener('click', closePanels);
+    $('panel-scrim').addEventListener('click', closePanels);
   }
 
   /* ---------- picking ---------- */
@@ -555,7 +736,7 @@
     // a narrowed window shrinks ELIGIBILITY itself — otherwise stale unused
     // items mask the moment the fresh pool runs dry and the used-set never
     // resets, leaving the board on the system card forever
-    var narrow = state.set.window !== '48h';
+    var narrow = isNarrowWindow();
     var eligible = state.pool.filter(function (it) {
       return inEnabled(it) && (!narrow || freshEnough(it, now));
     });
@@ -872,6 +1053,8 @@
 
     var item = pickItem(cfg);
     state.perSlot[cfg.id] = item;
+    pushRecap(item);
+    updateQueue();
     if (!item.system) state.firstLap++;
     if (cfg.type === 'lead' && !item.system) {
       state.leadsSinceLocal = isLocalItem(item) ? 0 : state.leadsSinceLocal + 1;
@@ -984,17 +1167,23 @@
       wrap.appendChild(btn);
     });
 
-    // the hold gesture isn't guessable — keep a door to the how-to open
-    var helpBtn = document.createElement('button');
-    helpBtn.type = 'button';
-    helpBtn.className = 'chip chip-help';
-    helpBtn.dataset.help = '1';
-    helpBtn.textContent = '?';
-    helpBtn.title = 'How the board works';
-    wrap.appendChild(helpBtn);
-
-    $('hint').hidden = state.set.heldCount >= 2 || TV;
     updateChipsMore();
+  }
+
+  /* The hold gesture isn't guessable, so the how-to line shows itself:
+     every visit until this reader has soloed twice, then a 25-second
+     refresher once a week. The ? by the topic row opens the full panel
+     any time. */
+  function maybeShowHint() {
+    if (TV) return;
+    var hint = $('hint');
+    var nowS = Date.now() / 1000;
+    if (state.set.heldCount < 2 || nowS - state.set.hintAt > 7 * 86400) {
+      hint.hidden = false;
+      state.set.hintAt = nowS;
+      saveStored();
+      setTimeout(function () { hint.hidden = true; }, 25000);
+    }
   }
 
   function afterTopicChange() {
@@ -1008,6 +1197,7 @@
       var cur = state.perSlot[cfg.id];
       if (cur && (cur.system || !inEnabled(cur))) refreshSlot(cfg);
     });
+    updateQueue();
   }
 
   function toggleTopic(topic) {
@@ -1056,7 +1246,7 @@
 
     wrap.addEventListener('pointerdown', function (e) {
       var btn = e.target.closest('.chip');
-      if (!btn || !btn.dataset.topic) return;   // ALL / ? don't hold
+      if (!btn || !btn.dataset.topic) return;   // ALL doesn't hold
       heldTopic = btn.dataset.topic;
       pressed = true;
       moved = false;
@@ -1090,7 +1280,6 @@
       if (!btn) return;
       if (justHeld || moved) { justHeld = false; moved = false; return; }
       if (btn.dataset.all) { toggleAll(); return; }
-      if (btn.dataset.help) { $('hint').hidden = !$('hint').hidden; return; }
       toggleTopic(btn.dataset.topic);
     });
   }
@@ -1233,6 +1422,33 @@
     });
   }
 
+  /* ---------- share: hand a card to a friend ---------- */
+
+  function bindShare() {
+    SLOTS.forEach(function (cfg) {
+      var cell = cellOf(cfg);
+      var btn = cell && cell.querySelector('.cellshare');
+      if (!btn) return;
+      btn.addEventListener('click', function (e) {
+        // never open the story or arm the cell — this button only shares
+        e.preventDefault();
+        e.stopPropagation();
+        var item = state.perSlot[cfg.id];
+        if (!item || item.system || item.u === '#') return;
+        var url;
+        try { url = new URL(item.u, window.location.href).href; } catch (err) { return; }
+        if (navigator.share) {
+          navigator.share({ title: item.t, url: url }).catch(function () {});
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () {
+            btn.textContent = 'COPIED ✓';
+            setTimeout(function () { btn.textContent = 'SHARE ⇗'; }, 1600);
+          }).catch(function () {});
+        }
+      });
+    });
+  }
+
   /* ---------- bottom bar ---------- */
 
   function paintOptions() {
@@ -1291,6 +1507,7 @@
           refreshSlot(cfg);
         }
       });
+      updateQueue();
     });
     $('freeze-btn').addEventListener('click', function () {
       setFrozen(!state.frozen);
@@ -1321,6 +1538,17 @@
     if (!wrap || !row) return;
     wrap.classList.toggle('more',
       row.scrollLeft + row.clientWidth < row.scrollWidth - 8);
+    // the strip under the row shows how much of it you've seen
+    var bar = $('chipbar');
+    if (bar) {
+      var overflow = row.scrollWidth > row.clientWidth + 8;
+      bar.hidden = !overflow;
+      var fill = bar.firstElementChild;
+      if (overflow && fill) {
+        fill.style.width =
+          Math.min(100, (row.scrollLeft + row.clientWidth) / row.scrollWidth * 100) + '%';
+      }
+    }
   }
 
   function bindChipsMore() {
@@ -1388,6 +1616,7 @@
 
   function start() {
     loadStored();
+    loadRecap();
     setupTv();
     renderChips();
     bindChips();
@@ -1396,6 +1625,9 @@
     bindLbarMore();
     paintOptions();
     bindOptions();
+    bindPanels();
+    bindShare();
+    maybeShowHint();
     tickClock();
     setInterval(tickClock, 1000);
     setInterval(tickUpdated, 30000);
@@ -1420,7 +1652,9 @@
     });
 
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') window.location.href = 'pulse.html';
+      if (e.key !== 'Escape') return;
+      if (panelOpen()) { closePanels(); return; }
+      window.location.href = 'pulse.html';
     });
 
     // hover pause — real pointers only; touch gets tap-to-arm instead
@@ -1444,6 +1678,7 @@
       state.pool = buildPool(data, yt, state.extras);
       state.generated = data.generated ? Date.parse(data.generated) / 1000 : 0;
       updateWire();
+      updateQueue();
       tickUpdated();
     }
 
@@ -1458,6 +1693,7 @@
       fetchJson(BEACHES_URL).catch(function () { return null; }),
       fetchJson(HOBBIES_URL).catch(function () { return null; }),
       fetchJson(THINGS_URL).catch(function () { return null; }),
+      fetchJson(HISTORY_URL).catch(function () { return null; }),
     ]);
 
     fetchJson(LIVE_URL)
