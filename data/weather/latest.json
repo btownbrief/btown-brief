@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-11T23:23:40+00:00",
+ "updated": "2026-08-12T00:43:12+00:00",
  "sections_updated": {
-  "now": "2026-08-11T23:23:40+00:00",
-  "forecast": "2026-08-11T23:23:40+00:00",
-  "hourly": "2026-08-11T23:23:40+00:00",
-  "alerts": "2026-08-11T23:23:40+00:00",
-  "afd": "2026-08-11T23:23:40+00:00",
-  "lake_forecast": "2026-08-11T23:23:40+00:00",
-  "lake_gage": "2026-08-11T23:23:40+00:00",
-  "air": "2026-08-11T23:23:40+00:00",
-  "sun": "2026-08-11T23:23:40+00:00",
-  "models": "2026-08-11T23:23:40+00:00"
+  "now": "2026-08-12T00:43:12+00:00",
+  "forecast": "2026-08-12T00:43:12+00:00",
+  "hourly": "2026-08-12T00:43:12+00:00",
+  "alerts": "2026-08-12T00:43:12+00:00",
+  "afd": "2026-08-12T00:43:12+00:00",
+  "lake_forecast": "2026-08-12T00:43:12+00:00",
+  "lake_gage": "2026-08-12T00:43:12+00:00",
+  "air": "2026-08-12T00:43:12+00:00",
+  "sun": "2026-08-12T00:43:12+00:00",
+  "models": "2026-08-12T00:43:12+00:00"
  },
  "now": {
-  "observed_at": "2026-08-11T23:05:00+00:00",
+  "observed_at": "2026-08-12T00:25:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
-  "temp_f": 79,
-  "feels_like_f": 78,
-  "humidity": 45,
+  "description": "Mostly Cloudy",
+  "temp_f": 75,
+  "feels_like_f": 75,
+  "humidity": 50,
   "dewpoint_f": 55,
-  "wind_mph": 7,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "NW"
+  "wind_dir": "NNW"
  },
  "forecast": {
   "updated": "2026-08-11T22:57:48+00:00",
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-08-11T19:00:00-04:00",
+    "start": "2026-08-11T20:00:00-04:00",
     "is_day": false,
     "temp_f": 61,
     "pop": 4,
-    "wind": "SW 2 to 7 mph",
+    "wind": "SW 2 to 6 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 61. Southwest wind 2 to 7 mph."
+    "detailed": "Mostly clear, with a low around 61. Southwest wind 2 to 6 mph."
    },
    {
     "name": "Wednesday",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-11T22:57:48+00:00",
   "hours": [
-   {
-    "t": "2026-08-11T19:00:00-04:00",
-    "temp_f": 77,
-    "feels_f": 77,
-    "pop": 3,
-    "humidity": 62,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 26,
-    "short": "Partly Cloudy"
-   },
    {
     "t": "2026-08-11T20:00:00-04:00",
     "temp_f": 75,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 60,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-08-13T07:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 39,
+    "humidity": 97,
+    "wind_mph": 2,
+    "wind_dir": "S",
+    "sky": 59,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -574,14 +574,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-11T18:53:00+00:00",
+  "issued": "2026-08-11T23:56:00+00:00",
   "key_messages": [
    "Mainly dry conditions expected overnight, with renewed chances for showers and embedded thunderstorms Wednesday afternoon.",
    "More shower chances Thursday into Thursday night",
    "A beautiful weekend is setting up as a dry airmass moves into the region. Chances for precipitation increase again late Sunday afternoon into Monday."
   ],
   "what_changed": "As of 241 PM EDT Tuesday... Have continued to increases chances for showers and embedded thunderstorms on Wednesday afternoon.",
-  "raw": "\n000\nFXUS61 KBTV 111853\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n253 PM EDT Tue Aug 11 2026\n\n.WHAT HAS CHANGED...\nAs of 241 PM EDT Tuesday...\n\nHave continued to increases chances for showers and embedded \nthunderstorms on Wednesday afternoon. \n\n&&\n\n.KEY MESSAGES...\nAs of 245 PM EDT Tuesday...\n\n1. Mainly dry conditions expected overnight, with renewed \nchances for showers and embedded thunderstorms Wednesday \nafternoon. \n\n2. More shower chances Thursday into Thursday night\n\n3. A beautiful weekend is setting up as a dry airmass moves \ninto the region. Chances for precipitation increase again late \nSunday afternoon into Monday.\n\n&&\n\n.DISCUSSION...\nAs of 245 PM EDT Tuesday...\n\nKEY MESSAGE 1: Drier air continues to advect into our region \nthis afternoon with gusty northwesterly winds this afternoon. \nWinds will decrease headed into the evening and overnight, with \nsome fog development possible since we had a soaking rain across\nmuch of the area in the last 24 hours. Some isolated showers \nhave still managed to pop up despite drier air and some may \ntrack into our area from Ontario or Quebec later this afternoon \nand evening. Don't have any surface instability present to \nsupport stronger storms. Our region will remain in northwesterly\nupper level flow through Wednesday, and additional showers with\nembedded thunderstorms are expected Wednesday afternoon with a \nbit better coverage than today due to some upper level support \nwith shortwave energy passing through progressive upper level \nflow. Continues to look like best chances for showers Wednesday \nwill be across the northern half of our forecast area. \n\nKEY MESSAGE 2: A low pressure system will pass near or north of\nthe region later Thursday into Friday. Scattered rain with \nembedded thunderstorms can be expected with this system, with \nconvective weather more uncertain and relatively limited \ncompared to recent events. Still some uncertainty with timing of\nfeatures passing through, and also lacking some model \nconsistency, leading to a low confidence forecast for that \ntimeframe. Looks like things will kind of come through piecemeal\ntoo, so don't think we'll see any organized storms on Thursday.\n\n\nKEY MESSAGE 3: Over the weekend, much drier air moves into the \nregion as high pressure pushes the low along the longwave \npattern. Conditions will likely be quite pleasant Saturday with \ndewpoints in the 40s and 50s with temperatures generally in the \n70s. The ridge axis is projected to shift eastward Sunday and \nsupports slightly warmer highs for the broader valleys with \ncontinued 40s and 50s dew points. Overall, these conditions are \nshaping up to be near ideal weather for outdoor activities. \nHowever, there is the potential (10- 40% chance of precip) for \nsome showers and thunderstorms late Sunday afternoon, increasing\nSunday night and early Monday morning to 30- 60% chance as the \nnext wave moves through quickly in zonal flow with a few showers\nlingering on Monday. Temperatures should warm a degree or \nMonday and Tuesday as low level flow turns southwesterly.\n\n&&\n\n.AVIATION /18Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...Dry today, with next chance of a few \nshowers and perhaps a thunderstorm late in the day Wednesday. \nNorthwesterly winds 5-10 knots with gusts 10-25 knots are \ncurrently being reported across northern New York and Vermont. \nWinds are expected to lower below 10 knots around 20Z Tuesday - \n03Z Wednesday as the sun sets and we lose daytime heating. Most \nsites should see northwesterly winds continue, though MSS can \nexpect a more southwesterly direction through the St. Lawrence \nValley. The sheltered valley sites, SLK, MPV, and EFK, are \nlikely to see winds go calm or light and variable tonight, and \nclearing skies would mean the return of fog potential. Fog is \nnot out of the question at any site. EFK could see a light \nsouthwesterly topographic wind, which may limit persistent fog, \nbut climatology suggests that IFR conditions do tend to occur \nwith this wind direction during this time of year. Most likely \nperiod of MVFR or lower conditions at EFK, MPV, or SLK would be \n07Z-13Z Wednesday, with winds aloft keeping fog at bay before \nthen. IFR is possible during this period at these three sites, \nbut overall confidence is not high enough at the moment to \ninclude it in the TAF. If the surface inversion continues to \nlook favorable for fog and/or low stratus, following TAF \nissuances may include this. Wednesday, winds increase again out \nof the west-northwest throughout the day.\n\nOutlook...\n\nWednesday Night: VFR. Chance SHRA, Slight chance TSRA.\nThursday: VFR. Likely SHRA, Chance TSRA.\nThursday Night: VFR. Chance SHRA, Chance TSRA.\nFriday: VFR. Chance SHRA, Slight chance TSRA.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Storm/Neiles\nAVIATION...Storm\n"
+  "raw": "\n000\nFXUS61 KBTV 112356\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n756 PM EDT Tue Aug 11 2026\n\n.WHAT HAS CHANGED...\nAs of 241 PM EDT Tuesday...\n\nHave continued to increases chances for showers and embedded \nthunderstorms on Wednesday afternoon.\n\n&&\n\n.KEY MESSAGES...\nAs of 245 PM EDT Tuesday...\n\n1. Mainly dry conditions expected overnight, with renewed \nchances for showers and embedded thunderstorms Wednesday \nafternoon. \n\n2. More shower chances Thursday into Thursday night\n\n3. A beautiful weekend is setting up as a dry airmass moves \ninto the region. Chances for precipitation increase again late \nSunday afternoon into Monday.\n\n&&\n\n.DISCUSSION...\nAs of 245 PM EDT Tuesday...\n\nKEY MESSAGE 1: Drier air continues to advect into our region \nthis afternoon with gusty northwesterly winds this afternoon. \nWinds will decrease headed into the evening and overnight, with \nsome fog development possible since we had a soaking rain across\nmuch of the area in the last 24 hours. Some isolated showers \nhave still managed to pop up despite drier air and some may \ntrack into our area from Ontario or Quebec later this afternoon \nand evening. Don't have any surface instability present to \nsupport stronger storms. Our region will remain in northwesterly\nupper level flow through Wednesday, and additional showers with\nembedded thunderstorms are expected Wednesday afternoon with a \nbit better coverage than today due to some upper level support \nwith shortwave energy passing through progressive upper level \nflow. Continues to look like best chances for showers Wednesday \nwill be across the northern half of our forecast area. \n\nKEY MESSAGE 2: A low pressure system will pass near or north of\nthe region later Thursday into Friday. Scattered rain with \nembedded thunderstorms can be expected with this system, with \nconvective weather more uncertain and relatively limited \ncompared to recent events. Still some uncertainty with timing of\nfeatures passing through, and also lacking some model \nconsistency, leading to a low confidence forecast for that \ntimeframe. Looks like things will kind of come through piecemeal\ntoo, so don't think we'll see any organized storms on Thursday.\n\n\nKEY MESSAGE 3: Over the weekend, much drier air moves into the \nregion as high pressure pushes the low along the longwave \npattern. Conditions will likely be quite pleasant Saturday with \ndewpoints in the 40s and 50s with temperatures generally in the \n70s. The ridge axis is projected to shift eastward Sunday and \nsupports slightly warmer highs for the broader valleys with \ncontinued 40s and 50s dew points. Overall, these conditions are \nshaping up to be near ideal weather for outdoor activities. \nHowever, there is the potential (10- 40% chance of precip) for \nsome showers and thunderstorms late Sunday afternoon, increasing\nSunday night and early Monday morning to 30- 60% chance as the \nnext wave moves through quickly in zonal flow with a few showers\nlingering on Monday. Temperatures should warm a degree or \nMonday and Tuesday as low level flow turns southwesterly.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...Northwest winds around 5kts will become\nlight and variable overnight with mostly clear skies as daytime\ncumulus dissipate. Looking for a brief period of LIFR fog at \nMPV, SLK, and possibly EFK between 09-12Z. Otherwise, VFR \nconditions should prevail through 18Z Wednesday. Scattered \nafternoon showers and perhaps a thunderstorm is possible mid-\nlate Wednesday afternoon. With timing and coverage \nuncertainties, will wait for later TAF packages to specify those\ndetails. Daylight hours Wednesday, winds increase again out of \nthe west-northwest, except locally NNE at 5-8kt at KPBG. \n\nOutlook...\n\nWednesday Night: VFR. Chance SHRA, Slight chance TSRA.\nThursday: VFR. Likely SHRA, Chance TSRA.\nThursday Night: VFR. Chance SHRA.\nFriday: VFR. Chance SHRA.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Storm/Neiles\nAVIATION...Banacos\n"
  },
  "lake_forecast": {
   "issued": "2026-08-11T18:31:00+00:00",
@@ -853,9 +853,9 @@
  },
  "lake_gage": {
   "water_temp_f": 77,
-  "water_temp_at": "2026-08-11T19:00:00.000-04:00",
-  "level_ft": 95.27,
-  "level_at": "2026-08-11T19:00:00.000-04:00",
+  "water_temp_at": "2026-08-11T20:00:00.000-04:00",
+  "level_ft": 95.25,
+  "level_at": "2026-08-11T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -863,7 +863,7 @@
   "aqi": 28,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/11/26 19:00",
+  "observed": "08/11/26 20:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, August 12th."
  },
  "sun": {
@@ -903,7 +903,7 @@
     },
     "pop_max": {
      "GFS": 27,
-     "Euro": 71,
+     "Euro": 97,
      "ICON": 25
     },
     "precip_in": {
@@ -916,21 +916,21 @@
    {
     "date": "2026-08-13",
     "high_f": {
-     "GFS": 77,
+     "GFS": 75,
      "Euro": 75,
      "ICON": 76
     },
     "pop_max": {
      "GFS": 54,
-     "Euro": 73,
+     "Euro": 90,
      "ICON": 33
     },
     "precip_in": {
-     "GFS": 0.06,
+     "GFS": 0.09,
      "Euro": 0.3,
      "ICON": 0.22
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    }
   ]
  }
