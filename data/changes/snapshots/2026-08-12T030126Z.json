@@ -1,13 +1,13 @@
 {
- "taken": "2026-08-10T05:00:33+00:00",
+ "taken": "2026-08-12T03:01:26+00:00",
  "sources": {
   "nws-weather": {
    "ok": true,
    "state": {
     "alerts": [],
     "forecast_flag": {
-     "day": "2026-08-10",
-     "text": "Monday: A chance of rain showers between noon and 3pm, then showers and thunderstorms likely"
+     "day": "2026-08-11",
+     "text": "Wednesday: A chance of rain showers between 8am and 4pm, then a chance of showers and thunderstorms"
     }
    }
   },
@@ -18,52 +18,52 @@
      "Blanchard Beach North": {
       "status": "open",
       "reason": "Open",
-      "resultTime": "2026-08-09T19:06:00+00:00"
+      "resultTime": "2026-08-11T18:19:00+00:00"
      },
      "Blanchard Beach South": {
       "status": "open",
       "reason": "Open",
-      "resultTime": "2026-08-09T19:06:00+00:00"
+      "resultTime": "2026-08-11T18:19:00+00:00"
+     },
+     "Blodgett Water Access Point": {
+      "status": "open",
+      "reason": "Open",
+      "resultTime": "2026-08-11T18:19:00+00:00"
      },
      "Leddy Beach North": {
       "status": "open",
-      "reason": "Murky",
-      "resultTime": "2026-08-09T20:06:00+00:00"
+      "reason": "Open",
+      "resultTime": "2026-08-11T18:50:00+00:00"
      },
      "Leddy Beach South": {
       "status": "open",
-      "reason": "Murky",
-      "resultTime": "2026-08-09T20:06:00+00:00"
+      "reason": "Open",
+      "resultTime": "2026-08-11T18:50:00+00:00"
      },
      "North Beach North": {
       "status": "open",
-      "reason": "Bit murky",
-      "resultTime": "2026-08-09T19:45:00+00:00"
+      "reason": "Open",
+      "resultTime": "2026-08-11T19:01:00+00:00"
      },
      "North Beach South": {
       "status": "open",
       "reason": "Open",
-      "resultTime": "2026-08-09T19:38:00+00:00"
+      "resultTime": "2026-08-11T19:01:00+00:00"
      },
      "North Shore Natural Area": {
       "status": "open",
-      "reason": "Open",
-      "resultTime": "2026-08-09T20:07:00+00:00"
+      "reason": "Choppy",
+      "resultTime": "2026-08-11T14:55:00+00:00"
      },
      "Oakledge Cove": {
       "status": "open",
-      "reason": "Open",
-      "resultTime": "2026-08-09T19:07:00+00:00"
+      "reason": "Murky",
+      "resultTime": "2026-08-11T18:18:00+00:00"
      },
      "Texaco Beach": {
       "status": "open",
       "reason": "Murky",
-      "resultTime": "2026-08-09T19:38:00+00:00"
-     },
-     "Blodgett Water Access Point": {
-      "status": "open",
-      "reason": "A Saturday CSO event will keep Blodgett beach on alert stutus until Monday afternoon.",
-      "resultTime": "2026-08-08T22:54:00+00:00"
+      "resultTime": "2026-08-11T18:50:00+00:00"
      }
     }
    }
@@ -385,6 +385,13 @@
    "state": {
     "items": [
      {
+      "id": "https://ridegmt.com/?p=24806",
+      "title": "Faster Service to Saint Albans & Back on the #96 Begins August 24",
+      "link": "https://ridegmt.com/faster-service-to-saint-albans-back-on-the-96-begins-august-25/",
+      "ts": "2026-08-11T15:00:00+00:00",
+      "summary": "Beginning Monday, August 24, the #96 Franklin County Commuter will follow new, more direct routing between Burlington and Saint Albans. The updated route will bypass underutilised stops along Route 7 [ ]"
+     },
+     {
       "id": "https://ridegmt.com/?p=24799",
       "title": "August 2026 Bus Map & Guide Updates",
       "link": "https://ridegmt.com/august2026-schedule-updates/",
@@ -446,7 +453,8 @@
       "start": "2026-08-11T12:00:00+00:00",
       "hasAgenda": true,
       "files": [
-       "PACC 8/11/26"
+       "PACC 8/11/26",
+       "PACC 8/11/26 Packet"
       ]
      },
      "10126": {
@@ -463,7 +471,16 @@
       "start": "2026-08-11T18:00:00+00:00",
       "hasAgenda": true,
       "files": [
-       "Agenda"
+       "Agenda",
+       "Agenda Packet"
+      ]
+     },
+     "10129": {
+      "name": "Tax Fairness Ad Hoc Committee Meeting",
+      "start": "2026-08-12T15:00:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Tax Fairness Ad Hoc Committee Agenda 8/12/2026"
       ]
      },
      "7753": {
@@ -487,6 +504,12 @@
        "08.13.26 HRPC Agenda Packet"
       ]
      },
+     "10130": {
+      "name": "Church Street Marketplace Cart Vendor Committee",
+      "start": "2026-08-14T18:00:00+00:00",
+      "hasAgenda": true,
+      "files": []
+     },
      "10118": {
       "name": "Development Review Board",
       "start": "2026-08-18T17:00:00+00:00",
@@ -502,6 +525,14 @@
       "files": [
        "Ordinance Committee Meeting Agenda v1",
        "Ordinance Committee Meeting Agenda Packet v1"
+      ]
+     },
+     "10128": {
+      "name": "Ward 5 NPA Meeting",
+      "start": "2026-08-20T18:30:00+00:00",
+      "hasAgenda": true,
+      "files": [
+       "Ward 5 NPA Agenda 8/20/2026"
       ]
      },
      "8683": {
@@ -521,24 +552,6 @@
       "start": "2026-08-24T18:00:00+00:00",
       "hasAgenda": false,
       "files": []
-     },
-     "10114": {
-      "name": "Housing Board of Review",
-      "start": "2026-08-24T18:30:00+00:00",
-      "hasAgenda": true,
-      "files": []
-     },
-     "10119": {
-      "name": "Transportation, Energy, and Utilities Committee",
-      "start": "2026-08-25T17:30:00+00:00",
-      "hasAgenda": true,
-      "files": []
-     },
-     "9962": {
-      "name": "Regular Planning Commission Meeting",
-      "start": "2026-08-25T18:30:00+00:00",
-      "hasAgenda": false,
-      "files": []
      }
     }
    }
@@ -550,79 +563,170 @@
      "sevendays-news": {
       "items": [
        {
-        "id": "https://www.sevendaysvt.com/?p=214337",
-        "title": "Local Group Wins Auction for Flood-Damaged Federal Building in Montpelier",
-        "link": "https://www.sevendaysvt.com/news/constructiondevelopment/local-group-wins-auction-for-flood-damaged-federal-building-in-montpelier/",
-        "ts": "2026-08-07T16:53:16+00:00",
-        "summary": "The federal government has 60 days to formally accept the $540,000 bid from the 87 State Street Local Development Corporation. The post Local Group Wins Auction for Flood-Damaged Federal Building in Montpelier appeared first on Seven Days . (Image: File: Kevin McCallum)"
+        "id": "https://www.sevendaysvt.com/?p=214269",
+        "title": "Malloy Wins GOP Primary for Vermont’s U.S. House Seat",
+        "link": "https://www.sevendaysvt.com/news/election-2026/malloy-wins-gop-primary-for-vermonts-u-s-house-seat/",
+        "ts": "2026-08-12T01:06:19+00:00",
+        "summary": "The retired Army officer advances to face Democratic incumbent Becca Balint in November. The post Malloy Wins GOP Primary for Vermont’s U.S. House Seat appeared first on Seven Days . (Image: Courtesy/Kevin McCallum)"
        },
        {
-        "id": "https://www.sevendaysvt.com/news/news-quiz-what-did-the-owner-landlord-of-dozens-of-neon-colored-houses-in-burlingtons-old-north-end-announce-he-would-do-36539606/",
-        "title": "News Quiz: What new slogan did state tourism officials unveil, hoping to entice more people to book a trip to Vermont?",
-        "link": "https://www.sevendaysvt.com/news/newsquiz/news-quiz/",
-        "ts": "2026-08-07T11:00:00+00:00",
-        "summary": "Answer this question and seven others in our new weekly news quiz about Vermont news. It's quick, fun and informative. The post News Quiz: What new slogan did state tourism officials unveil, hoping to entice more people to book a trip to Vermont? appeared first on Seven Days ."
+        "id": "https://www.sevendaysvt.com/?p=214267",
+        "title": "Ashe Wins Democratic Nomination for State Auditor",
+        "link": "https://www.sevendaysvt.com/news/election-2026/ashe-wins-democratic-nomination-for-state-auditor/",
+        "ts": "2026-08-12T00:55:45+00:00",
+        "summary": "The former Senate leader advances to the November general election to succeed Doug Hoffer. The post Ashe Wins Democratic Nomination for State Auditor appeared first on Seven Days . (Image: Courtesy)"
        },
        {
-        "id": "https://www.sevendaysvt.com/?p=214332",
-        "title": "Obituary: Theodore B. Ruszas, 1942-2026",
-        "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-theodore-b-ruszas-1942-2026/",
-        "ts": "2026-08-07T10:00:00+00:00",
-        "summary": "U.S. Air Force veteran served as a Scoutmaster in South Burlington and St. Albans for 24 years The post Obituary: Theodore B. Ruszas, 1942-2026 appeared first on Seven Days . (Image: Courtesy)"
+        "id": "https://www.sevendaysvt.com/?p=214365",
+        "title": "Democrat Molly Gray Bests Two Opponents in Primary for Lieutenant Governor",
+        "link": "https://www.sevendaysvt.com/news/election-2026/democrat-molly-gray-bests-two-opponents-in-primary-for-lieutenant-governor/",
+        "ts": "2026-08-12T00:43:48+00:00",
+        "summary": "She'll square off against John Rodgers in November to try to get her old job back. The post Democrat Molly Gray Bests Two Opponents in Primary for Lieutenant Governor appeared first on Seven Days . (Image: Aaron Calvin)"
        },
        {
-        "id": "https://www.sevendaysvt.com/?p=213759",
-        "title": "Stuck in Vermont: Attending the 150th Purinton Family Reunion in Salisbury",
-        "link": "https://www.sevendaysvt.com/arts-culture/stuckinvermont/stuck-in-vermont-attending-the-150th-purinton-family-reunion-in-salisbury/",
-        "ts": "2026-08-06T11:30:00+00:00",
-        "summary": "Episode 773: The descendants of Chase Purinton have gathered every year since 1876, and about 80 people attended the July 18 reunion. The post Stuck in Vermont: Attending the 150th Purinton Family Reunion in Salisbury appeared first on Seven Days . (Image: Eva Sollberger / Beverly Purinton Brown)"
+        "id": "https://www.sevendaysvt.com/?p=214507",
+        "title": "Montréal Critic Lesley Chesterman Shares Her Restaurant Intel",
+        "link": "https://www.sevendaysvt.com/food-drink/fooddrinkfeatures/montreal-critic-lesley-chesterman-shares-her-restaurant-intel/",
+        "ts": "2026-08-11T17:37:41+00:00",
+        "summary": "The former Gazette writer believes her hometown’s culinary scene is underestimated. She kick-started a museum exhibit and offered recs for a weekend of eats. The post Montréal Critic Lesley Chesterman Shares Her Restaurant Intel appeared first on Seven Days ."
        },
        {
-        "id": "https://www.sevendaysvt.com/?p=214262",
-        "title": "Obituary: Benjamin “Ben” Learned, 1982-2026",
-        "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-benjamin-ben-learned-1982-2026/",
-        "ts": "2026-08-06T10:00:00+00:00",
-        "summary": "Devoted husband and father had an infectious sense of humor, a generous heart, and a way of making everyone around him feel welcome and cared for The post Obituary: Benjamin \"Ben\" Learned, 1982-2026 appeared first on Seven Days . (Image: Courtesy)"
+        "id": "https://www.sevendaysvt.com/?p=214502",
+        "title": "Sneakers Bistro Goes Nighttime With Sneakeasy Cocktail Lounge",
+        "link": "https://www.sevendaysvt.com/food-drink/foodnews/sneakers-bistro-goes-nighttime-with-sneakeasy-cocktail-lounge/",
+        "ts": "2026-08-11T17:23:17+00:00",
+        "summary": "The Winooski breakfast spot has transformed its upstairs space into an eclectic bar, serving drinks and small bites when the restaurant used to be closed. The post Sneakers Bistro Goes Nighttime With Sneakeasy Cocktail Lounge appeared first on Seven Days . (Image: Courtesy)"
        },
        {
-        "id": "https://www.sevendaysvt.com/?p=214237",
-        "title": "Obituary: Timothy A. Sargent, 1949-2026",
-        "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-timothy-a-sargent-1949-2026/",
-        "ts": "2026-08-06T10:00:00+00:00",
-        "summary": "Gifted counselor’s empathetic and pragmatic approach to helping others was a hallmark of his life The post Obituary: Timothy A. Sargent, 1949-2026 appeared first on Seven Days . (Image: Courtesy)"
+        "id": "https://www.sevendaysvt.com/?p=214499",
+        "title": "Three Teens Run the Show at Essex Junction’s Black Ice Premium Ice Cream",
+        "link": "https://www.sevendaysvt.com/food-drink/foodnews/three-teens-run-the-show-at-essex-junctions-black-ice-premium-ice-cream/",
+        "ts": "2026-08-11T17:12:05+00:00",
+        "summary": "On Park Street, the McMillan brothers dish out a customizable menu of ice cream, creemees, açai bowls and more, learning to run a business in the process. The post Three Teens Run the Show at Essex Junction’s Black Ice Premium Ice Cream appeared first on Seven Days . (Image: Cecilia Luce)"
        },
        {
-        "id": "https://www.sevendaysvt.com/?p=214163",
-        "title": "Who Won the 2026 Seven Daysies Best-of-Vermont Awards?",
-        "link": "https://www.sevendaysvt.com/seven-daysies-awards/best-of-vermont-2026/",
-        "ts": "2026-08-05T14:38:49+00:00",
-        "summary": "Find out what's great about our state! Thousands of locals chose everything from farmers markets to festivals, brewpubs to bike shops. Meet their worthy winners. The post Who Won the 2026 Seven Daysies Best-of-Vermont Awards? appeared first on Seven Days . (Image: Sean Metcalf | Rev. Diane Sullivan)"
+        "id": "https://www.sevendaysvt.com/?p=214552",
+        "title": "Obituary: Barbara Oski Beane, 1935-2026",
+        "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-barbara-oski-beane-1935-2026/",
+        "ts": "2026-08-11T10:00:00+00:00",
+        "summary": "Activist, real estate agent, gallery manager, singer and pianist had a zest for life and a passion for protest The post Obituary: Barbara Oski Beane, 1935-2026 appeared first on Seven Days . (Image: Courtesy)"
        },
        {
-        "id": "https://www.sevendaysvt.com/?p=213991",
-        "title": "Washington Central to Vote on Making It Easier to Close Schools",
-        "link": "https://www.sevendaysvt.com/news/education-news/washington-central-to-vote-on-making-it-easier-to-close-schools/",
-        "ts": "2026-08-05T13:59:00+00:00",
-        "summary": "An August 11 vote on changing the district’s articles of agreement is the latest chapter in an uneasy partnership among five central Vermont towns. The post Washington Central to Vote on Making It Easier to Close Schools appeared first on Seven Days . (Image: Alison Novak)"
+        "id": "https://www.sevendaysvt.com/?p=214493",
+        "title": "Obituary: Christopher Edward Klesch, 1971-2026",
+        "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-christopher-edward-klesch-1971-2026/",
+        "ts": "2026-08-11T10:00:00+00:00",
+        "summary": "Engineer enjoyed a long and meaningful career and was well served by his natural tenacity and curiosity The post Obituary: Christopher Edward Klesch, 1971-2026 appeared first on Seven Days . (Image: Courtesy)"
        },
        {
-        "id": "https://www.sevendaysvt.com/?p=214141",
-        "title": "Queen City Public Safety Debate Shifts to Needle Exchanges",
-        "link": "https://www.sevendaysvt.com/topic/burlington/queen-city-public-safety-debate-shifts-to-needle-exchanges/",
-        "ts": "2026-08-05T13:55:00+00:00",
-        "summary": "Democratic councilors say Burlington’s downtown is not the place for programs that offer free syringes, reigniting debate about the approach to public safety. The post Queen City Public Safety Debate Shifts to Needle Exchanges appeared first on Seven Days . (Image: Luke Awtry)"
+        "id": "https://www.sevendaysvt.com/?p=214253",
+        "title": "It’s Primary Day! Don’t Forget to Vote.",
+        "link": "https://www.sevendaysvt.com/news/election-2026/its-primary-day-dont-forget-to-vote/",
+        "ts": "2026-08-11T08:30:00+00:00",
+        "summary": "You've heard the ads, read the stories and watched the lawn signs sprout like mushrooms. Now you can weigh in on Vermont's future. The post It’s Primary Day! Don’t Forget to Vote. appeared first on Seven Days . (Image: File: Matthew Roy)"
        },
        {
-        "id": "https://www.sevendaysvt.com/?p=213848",
-        "title": "Athletes at the Vermont Ninja Warrior Training Center Aim for the Big Time",
-        "link": "https://www.sevendaysvt.com/arts-culture/sports/athletes-at-the-vermont-ninja-warrior-training-center-aim-for-the-big-time/",
-        "ts": "2026-08-05T13:54:00+00:00",
-        "summary": "The newly relocated and expanded center in Essex hosts classes for all ages and a team whose members have appeared on “American Ninja Warrior.” The post Athletes at the Vermont Ninja Warrior Training Center Aim for the Big Time appeared first on Seven Days . (Image: Luke Awtry)"
+        "id": "https://www.sevendaysvt.com/?p=214451",
+        "title": "Chittenden County Deputy Investigated for Calling Border Patrol During Traffic Stop",
+        "link": "https://www.sevendaysvt.com/news/chittenden-county-deputy-investigated-for-calling-border-patrol-during-traffic-stop/",
+        "ts": "2026-08-10T23:52:04+00:00",
+        "summary": "The traffic stop resulted in the deportation of one farmworker. Advocacy group Migrant Justice is calling the incident a clear violation of state policy. The post Chittenden County Deputy Investigated for Calling Border Patrol During Traffic Stop appeared first on Seven Days . (Image: screenshot)"
        }
       ]
      },
      "vtdigger": {
       "items": [
+       {
+        "id": "https://vtdigger.org/?p=653159",
+        "title": "Molly Gray wins Democratic primary for lieutenant governor of Vermont",
+        "link": "https://vtdigger.org/2026/08/11/molly-gray-wins-democratic-primary-for-lieutenant-governor-of-vermont/",
+        "ts": "2026-08-12T00:26:01+00:00",
+        "summary": "The former head of the Vermont Afghan Alliance will seek to regain the role from Lt. Gov. John Rodgers in November’s general election. Read the story on VTDigger here: Molly Gray wins Democratic primary for lieutenant governor of Vermont ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653118",
+        "title": "The latest results from Vermont’s 2026 primary election",
+        "link": "https://vtdigger.org/2026/08/11/the-latest-results-from-vermonts-2026-primary-election/",
+        "ts": "2026-08-11T21:34:07+00:00",
+        "summary": "VTDigger reporters are tracking key races across the state. Read the story on VTDigger here: The latest results from Vermont’s 2026 primary election ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653116",
+        "title": "Vermonters deserve honesty about the failure of the data center bill",
+        "link": "https://vtdigger.org/2026/08/11/opinion-vermonters-deserve-honesty-about-the-failure-of-the-data-center-bill/",
+        "ts": "2026-08-11T21:08:47+00:00",
+        "summary": "The bill's failure was about a Senate add-on that turned a strong bill into one Vermont couldn't support. Read the story on VTDigger here: Vermonters deserve honesty about the failure of the data center bill ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653108",
+        "title": "When disaster strikes Vermont, where is Washington?",
+        "link": "https://vtdigger.org/2026/08/11/opinion-when-disaster-strikes-vermont-where-is-washington/",
+        "ts": "2026-08-11T20:22:16+00:00",
+        "summary": "As floods, wildfires and other disasters devastate communities, Washington's response has been political spectacle rather than action. Read the story on VTDigger here: When disaster strikes Vermont, where is Washington? ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653106",
+        "title": "At the polls, Vermont primary voters seek change",
+        "link": "https://vtdigger.org/2026/08/11/at-the-polls-vermont-primary-voters-seek-change/",
+        "ts": "2026-08-11T20:11:39+00:00",
+        "summary": "Voters are casting their ballots in competitive Democratic governor and lieutenant governor races and several crowded local races. Read the story on VTDigger here: At the polls, Vermont primary voters seek change ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653042",
+        "title": "For female school athletes: No white shorts, no worries",
+        "link": "https://vtdigger.org/2026/08/11/for-female-school-athletes-no-white-shorts-no-worries/",
+        "ts": "2026-08-11T13:38:07+00:00",
+        "summary": "The Vermont Principals Association has been hearing from girls’ teams about the issues they face, ranging from harassment to small crowd sizes. “Then (there’s) this whole thing around period anxiety and being comfortable in their uniforms,” said Lauren Young, the VPA’s executive director of activities and athletics. Read the story on VTDigger here: For female school athletes: No white shorts, no w"
+       },
+       {
+        "id": "https://vtdigger.org/?p=653056",
+        "title": "A traffic stop, a deportation and a test of Vermont’s Fair and Impartial Policing Policy",
+        "link": "https://vtdigger.org/2026/08/10/a-traffic-stop-a-deportation-and-a-test-of-vermonts-fair-and-impartial-policing/",
+        "ts": "2026-08-10T23:10:55+00:00",
+        "summary": "Records show a sheriff’s deputy used his personal phone to summon federal agents — then offered to buy them Subway. Read the story on VTDigger here: A traffic stop, a deportation and a test of Vermont’s Fair and Impartial Policing Policy ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653049",
+        "title": "New England, Canadian leaders tout cross-border ties in face of Trump’s latest tariff threat",
+        "link": "https://vtdigger.org/2026/08/10/new-england-canadian-leaders-tout-cross-border-ties-in-face-of-trumps-latest-tariff-threat/",
+        "ts": "2026-08-10T22:28:47+00:00",
+        "summary": "“What we're living through right now with the tariffs, with the threat of tariffs, with some of the insults and the talking points, they're difficult. There's no way around that,” said Tim Houston, the premier of Nova Scotia. Read the story on VTDigger here: New England, Canadian leaders tout cross-border ties in face of Trump’s latest tariff threat ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653044",
+        "title": "Kinney Drugs pulls back AI tool after customer complaints",
+        "link": "https://vtdigger.org/2026/08/10/kinney-drugs-pulls-back-ai-tool-after-customer-complaints/",
+        "ts": "2026-08-10T22:12:38+00:00",
+        "summary": "The tool was causing medication delays and confusion, several of the pharmacy’s customers previously told VTDigger. Read the story on VTDigger here: Kinney Drugs pulls back AI tool after customer complaints ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653035",
+        "title": "Family farms like ours need a farm bill that respects states",
+        "link": "https://vtdigger.org/2026/08/10/opinion-family-farms-like-ours-need-a-farm-bill-that-respects-states/",
+        "ts": "2026-08-10T21:19:28+00:00",
+        "summary": "A provision buried in the farm bill would strip states of the power to set their own livestock standards. Read the story on VTDigger here: Family farms like ours need a farm bill that respects states ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653022",
+        "title": "Londonderry community convenes in the wake of local ICE raid",
+        "link": "https://vtdigger.org/2026/08/10/londonderry-community-convenes-in-the-wake-of-local-ice-raid/",
+        "ts": "2026-08-10T20:56:03+00:00",
+        "summary": "Several people were detained by U.S. Immigration and Customs Enforcement in Londonderry last week. Read the story on VTDigger here: Londonderry community convenes in the wake of local ICE raid ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=653000",
+        "title": "DOJ sues Vermont, other states to stop in-state tuition for undocumented students",
+        "link": "https://vtdigger.org/2026/08/10/doj-sues-vermont-other-states-to-stop-in-state-tuition-for-undocumented-students/",
+        "ts": "2026-08-10T20:17:56+00:00",
+        "summary": "The Department of Justice filed lawsuits against New York, Connecticut and Vermont in the latest effort to claw back protections and benefits for undocumented students. Read the story on VTDigger here: DOJ sues Vermont, other states to stop in-state tuition for undocumented students ."
+       },
+       {
+        "id": "https://vtdigger.org/?p=652837",
+        "title": "Vermont Psychiatric Care Hospital cuts staff and beds despite pushback",
+        "link": "https://vtdigger.org/2026/08/10/vermont-psychiatric-care-hospital-cuts-staff-and-beds-despite-pushback/",
+        "ts": "2026-08-10T15:42:58+00:00",
+        "summary": "The Department of Mental Health says the cuts are due to declining census, though demand for psychiatric care is high in Vermont. Read the story on VTDigger here: Vermont Psychiatric Care Hospital cuts staff and beds despite pushback ."
+       },
        {
         "id": "https://vtdigger.org/?p=652914",
         "title": "Congress must vote before the Guard goes to war",
@@ -741,102 +845,60 @@
         "link": "https://vtdigger.org/2026/08/06/annual-recovery-summit-aims-to-explain-the-unexplainable/",
         "ts": "2026-08-06T19:37:18+00:00",
         "summary": "Organized by people in recovery from substance use disorder, the event brings together an often stigmatized community to share their stories. Read the story on VTDigger here: Annual recovery summit aims to explain the unexplainable ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652801",
-        "title": "In Chittenden Southeast Senate primary, incumbents and challengers alike pivot platforms to affordability",
-        "link": "https://vtdigger.org/2026/08/06/in-chittenden-southeast-senate-primary-incumbents-and-challengers-alike-pivot-platforms-to-affordability/",
-        "ts": "2026-08-06T18:08:31+00:00",
-        "summary": "In the wealthy blue district, affordability — for healthcare, education and businesses — have become top issues. Read the story on VTDigger here: In Chittenden Southeast Senate primary, incumbents and challengers alike pivot platforms to affordability ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652797",
-        "title": "Local development corporation wins bid for former Montpelier post office",
-        "link": "https://vtdigger.org/2026/08/06/local-development-corporation-wins-bid-for-former-montpelier-post-office/",
-        "ts": "2026-08-06T16:55:22+00:00",
-        "summary": "The final auction price of $540,000 was far under the federal government’s initial asking price. Read the story on VTDigger here: Local development corporation wins bid for former Montpelier post office ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652788",
-        "title": "New details about proposed locked youth facility signal more disagreement over landmark ‘Raise the Age’ law",
-        "link": "https://vtdigger.org/2026/08/06/new-details-about-proposed-locked-youth-facility-signals-more-disagreement-over-landmark-raise-the-age-law/",
-        "ts": "2026-08-06T10:51:00+00:00",
-        "summary": "Gov. Phil Scott has recently called on lawmakers to repeal part of Vermont’s landmark justice reform law. That push is bubbling up as the state plans its new locked youth facility. Read the story on VTDigger here: New details about proposed locked youth facility signal more disagreement over landmark ‘Raise the Age’ law ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652773",
-        "title": "Vermont’s housing crisis isn’t one problem: it’s three",
-        "link": "https://vtdigger.org/2026/08/05/opinion-vermonts-housing-crisis-isnt-one-problem-its-three/",
-        "ts": "2026-08-05T21:16:55+00:00",
-        "summary": "Short-term rentals, an aging workforce and depopulation hit Vermont towns differently, and Montpelier lawmakers aren't tackling any of them head-on. Read the story on VTDigger here: Vermont’s housing crisis isn’t one problem: it’s three ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652775",
-        "title": "Vermont’s GOP primary for U.S. House pits 2 different personalities against each other",
-        "link": "https://vtdigger.org/2026/08/05/vermonts-gop-primary-for-u-s-house-pits-2-different-personalities-against-each-other/",
-        "ts": "2026-08-05T21:15:12+00:00",
-        "summary": "Gerald Malloy and Mark Coester have run for Congress before, but this year they’re squaring off against each other in a bid to unseat U.S. Rep. Becca Balint, D-Vt. Read the story on VTDigger here: Vermont’s GOP primary for U.S. House pits 2 different personalities against each other ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652756",
-        "title": "Vermont Conversation: ‘You have a choice on how you respond.’ Kelly Brush on thriving after a life-altering accident",
-        "link": "https://vtdigger.org/2026/08/05/vermont-conversation-you-have-a-choice-on-how-you-respond-kelly-brush-on-thriving-after-a-life-altering-accident/",
-        "ts": "2026-08-05T20:14:50+00:00",
-        "summary": "Brush is a leader of a national movement to empower people with spinal cord injuries, and her foundation grants about $1 million per year to help people with disabilities purchase adaptive sports equipment and maintain an active lifestyle. Read the story on VTDigger here: Vermont Conversation: ‘You have a choice on how you respond.’ Kelly Brush on thriving after a life-altering accident ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652754",
-        "title": "A shrinking market for low-grade wood threatens Vermont’s forests",
-        "link": "https://vtdigger.org/2026/08/05/opinion-a-shrinking-market-for-low-grade-wood-threatens-vermonts-forests/",
-        "ts": "2026-08-05T17:42:27+00:00",
-        "summary": "With one of the last buyers of hemlock pulpwood gone, good forest management could become too costly to sustain — putting habitat, climate resilience and rural jobs all at risk. Read the story on VTDigger here: A shrinking market for low-grade wood threatens Vermont’s forests ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652747",
-        "title": "Brattleboro hospital projects more deficit spending as it reveals ‘significant deficiencies’",
-        "link": "https://vtdigger.org/2026/08/05/brattleboro-hospital-projects-more-deficit-spending-as-it-reveals-significant-deficiencies/",
-        "ts": "2026-08-05T17:02:19+00:00",
-        "summary": "“We are not financially stable at this time, but we are stabilizing,” Brattleboro Memorial Hospital has told the state in an annual filing delayed by recent administrative and accounting upheaval. Read the story on VTDigger here: Brattleboro hospital projects more deficit spending as it reveals ‘significant deficiencies’ ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652701",
-        "title": "‘I’m the awakener’: Evangelist Tommie Zito plans to transform Poultney’s Green Mountain College campus into a Christian university",
-        "link": "https://vtdigger.org/2026/08/05/im-the-awakener-evangelist-tommie-zito-plans-to-transform-poultneys-green-mountain-college-campus-into-a-christian-university/",
-        "ts": "2026-08-05T10:52:00+00:00",
-        "summary": "Some are skeptical of the preacher’s Z University proposal given his past business ventures, but Zito says he has learned from his mistakes. Read the story on VTDigger here: ‘I’m the awakener’: Evangelist Tommie Zito plans to transform Poultney’s Green Mountain College campus into a Christian university ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652716",
-        "title": "Phil Scott administration pushes through wetlands changes, despite lawmakers’ objections",
-        "link": "https://vtdigger.org/2026/08/04/phil-scott-administration-pushes-through-wetlands-changes-despite-lawmakers-objections/",
-        "ts": "2026-08-04T21:47:22+00:00",
-        "summary": "By paring back its original proposal to loosen wetland protections, the administration won support from an environmental group that had threatened a lawsuit. Read the story on VTDigger here: Phil Scott administration pushes through wetlands changes, despite lawmakers’ objections ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652706",
-        "title": "Vermont’s healthcare crisis needs more than bake sales",
-        "link": "https://vtdigger.org/2026/08/04/opinion-vermonts-healthcare-crisis-needs-more-than-bake-sales/",
-        "ts": "2026-08-04T21:31:40+00:00",
-        "summary": "As Brattleboro rallies to save its birthing center, the real question is why we keep patching a broken system instead of fixing it. Read the story on VTDigger here: Vermont’s healthcare crisis needs more than bake sales ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652705",
-        "title": "Democratic Socialists of America wants to abolish the U.S. Senate. Bernie Sanders says ‘No.’",
-        "link": "https://vtdigger.org/2026/08/04/democratic-socialists-of-america-wants-to-abolish-the-u-s-senate-bernie-sanders-says-no/",
-        "ts": "2026-08-04T21:30:27+00:00",
-        "summary": "Democrats across the caucus dismissed the idea of restructuring Congress. Even U.S. Sen. Bernie Sanders, an independent who’s long called himself a democratic socialist, isn’t on board with the proposal. Read the story on VTDigger here: Democratic Socialists of America wants to abolish the U.S. Senate. Bernie Sanders says ‘No.’ ."
-       },
-       {
-        "id": "https://vtdigger.org/?p=652647",
-        "title": "Drawing attention: Vermont gets its first tourism branding",
-        "link": "https://vtdigger.org/2026/08/04/drawing-attention-vermont-gets-its-first-tourism-branding/",
-        "ts": "2026-08-04T19:24:41+00:00",
-        "summary": "State officials hope a new hand-drawn wordmark and a slogan, “State of Inspiration,” will entice more people to book a trip. Read the story on VTDigger here: Drawing attention: Vermont gets its first tourism branding ."
        }
       ]
      },
      "vermont-public": {
       "items": [
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-08-11/molly-gray-wins-democratic-primary-lieutenant-governor",
+        "title": "Molly Gray wins Democratic primary for lieutenant governor",
+        "link": "https://www.vermontpublic.org/local-news/2026-08-11/molly-gray-wins-democratic-primary-lieutenant-governor",
+        "ts": "2026-08-12T00:27:05+00:00",
+        "summary": "The former lieutenant governor will get a chance to ask voters for her old job back when she faces Republican incumbent Lt. Gov. John Rodgers in the general election."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-08-11/gerald-malloy-wins-gop-u-s-house-primary-will-face-becca-balint-in-the-fall",
+        "title": "Gerald Malloy wins GOP U.S. House primary, will face Becca Balint in the fall",
+        "link": "https://www.vermontpublic.org/local-news/2026-08-11/gerald-malloy-wins-gop-u-s-house-primary-will-face-becca-balint-in-the-fall",
+        "ts": "2026-08-12T00:15:50+00:00",
+        "summary": "Gerald Malloy, an Army veteran and defense contractor, captured the Republican primary for Vermont’s sole seat in the U.S. House of Representatives today."
+       },
+       {
+        "id": "https://www.vermontpublic.org/live-updates/live-updates-voting-underway-for-vermont-primaries",
+        "title": "Live updates: Results rolling in for Vermont primaries",
+        "link": "https://www.vermontpublic.org/live-updates/live-updates-voting-underway-for-vermont-primaries",
+        "ts": "2026-08-11T09:00:00+00:00",
+        "summary": "Vermont voters went to the polls to narrow the field of candidates for Congress, governor, lieutenant governor and more. Check back for the latest updates."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-08-11/vermonts-2026-primary-election-results",
+        "title": "Vermont's 2026 primary election results",
+        "link": "https://www.vermontpublic.org/local-news/2026-08-11/vermonts-2026-primary-election-results",
+        "ts": "2026-08-11T09:00:00+00:00",
+        "summary": "Stay with Vermont Public for live results from Vermont's 2026 primary election on August 11, 2026."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-08-10/loons-doing-well-vermont-removing-rafts-helped-them-nest",
+        "title": "Loons are doing so well, Vermont is removing many of the rafts that once helped them nest",
+        "link": "https://www.vermontpublic.org/local-news/2026-08-10/loons-doing-well-vermont-removing-rafts-helped-them-nest",
+        "ts": "2026-08-10T20:42:19+00:00",
+        "summary": "Forty years ago, there were just a few loons in the state. Now, biologists working with them say it’s time to let them nest without help from humans."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-08-10/justice-department-sues-vermont-in-state-tuition-undocumented-students",
+        "title": "Justice Department sues Vermont over in-state tuition for undocumented students",
+        "link": "https://www.vermontpublic.org/local-news/2026-08-10/justice-department-sues-vermont-in-state-tuition-undocumented-students",
+        "ts": "2026-08-10T20:07:05+00:00",
+        "summary": "The U.S. Department of Justice has filed 17 lawsuits challenging states and the District of Columbia over their in-state tuition programs."
+       },
+       {
+        "id": "https://www.vermontpublic.org/local-news/2026-08-10/killington-largest-public-water-project-decades-not-going-well",
+        "title": "Killington is managing the largest public water project in the state in decades. It’s not going well",
+        "link": "https://www.vermontpublic.org/local-news/2026-08-10/killington-largest-public-water-project-decades-not-going-well",
+        "ts": "2026-08-10T09:00:00+00:00",
+        "summary": "The town of Killington is overseeing a massive water and road project, but work has been partially halted due to turnover in the town government."
+       },
        {
         "id": "https://www.vermontpublic.org/show/all-things-gardening/2026-08-09/fruit-picking-tips-sweeter-harvest",
         "title": "Fruit-picking tips for a sweeter harvest",
@@ -859,18 +921,11 @@
         "summary": "Joshua Lake, a candidate in the Democratic primary for Windsor County sheriff, has been named in a Brady-Giglio letter — a legal disclosure prosecutors are required to make if they have evidence that could taint an officer’s credibility."
        },
        {
-        "id": "https://www.vermontpublic.org/local-news/2026-08-07/uvm-dartmouth-medical-schools-body-donation-uptick",
+        "id": "https://www.vermontpublic.org/local-news/2026-08-07/uvm-dartmouth-medical-schools-body-donation",
         "title": "'It's the ultimate gift': Why some people are donating their bodies to UVM and Dartmouth for science",
-        "link": "https://www.vermontpublic.org/local-news/2026-08-07/uvm-dartmouth-medical-schools-body-donation-uptick",
+        "link": "https://www.vermontpublic.org/local-news/2026-08-07/uvm-dartmouth-medical-schools-body-donation",
         "ts": "2026-08-07T14:44:05+00:00",
         "summary": "An estimated 20,000 Americans donate their bodies every year for scientific research. The University of Vermont and Dartmouth College each accept close to 30 bodies a year, as part of what are known as anatomical gift programs."
-       },
-       {
-        "id": "https://www.vermontpublic.org/local-news/2026-08-07/state-regulators-wont-require-casella-test-pfas-emissions-experimental-facility-coventry",
-        "title": "Regulators won’t require Casella test for PFAS emissions at experimental Coventry facility",
-        "link": "https://www.vermontpublic.org/local-news/2026-08-07/state-regulators-wont-require-casella-test-pfas-emissions-experimental-facility-coventry",
-        "ts": "2026-08-07T09:00:00+00:00",
-        "summary": "Casella is testing new technology to remove PFAS from contaminated liquid at its Coventry landfill. State regulators don’t plan to set limits on PFAS in air emissions from the facility."
        },
        {
         "id": "https://www.vermontpublic.org/local-news/2026-08-07/ruminations-pairs-its-post-punk-garage-rock-with-earnest-lyrics",
@@ -878,98 +933,343 @@
         "link": "https://www.vermontpublic.org/local-news/2026-08-07/ruminations-pairs-its-post-punk-garage-rock-with-earnest-lyrics",
         "ts": "2026-08-07T09:00:00+00:00",
         "summary": "This week's Friday Song is the band's latest, titled, \"What Was Last.\""
-       },
-       {
-        "id": "https://www.vermontpublic.org/local-news/2026-08-06/local-development-group-wins-bid-former-montpelier-post-office",
-        "title": "Local development group wins bid for former Montpelier post office",
-        "link": "https://www.vermontpublic.org/local-news/2026-08-06/local-development-group-wins-bid-former-montpelier-post-office",
-        "ts": "2026-08-06T22:06:31+00:00",
-        "summary": "The property at 87 State St. in Montpelier, which was damaged in the July 2023 flood, will be controlled by a local group and could be used for housing and commercial development."
-       },
-       {
-        "id": "https://www.vermontpublic.org/local-news/2026-08-06/nh-confirms-69-cases-cyclosporiasis-3-hospitalizations",
-        "title": "NH confirms 69 cases of cyclosporiasis, 3 hospitalizations",
-        "link": "https://www.vermontpublic.org/local-news/2026-08-06/nh-confirms-69-cases-cyclosporiasis-3-hospitalizations",
-        "ts": "2026-08-06T10:48:56+00:00",
-        "summary": "Multiple cases are connected to exposure at Cheshire Medical Center earlier this summer."
-       },
-       {
-        "id": "https://www.vermontpublic.org/local-news/2026-08-05/uvm-health-first-budget-season-after-leadership-reset",
-        "title": "A chastened UVM Health embarks on its first budget season after leadership reset",
-        "link": "https://www.vermontpublic.org/local-news/2026-08-05/uvm-health-first-budget-season-after-leadership-reset",
-        "ts": "2026-08-05T21:35:40+00:00",
-        "summary": "In a series of presentations to the Green Mountain Care Board, University of Vermont Health repeatedly emphasized the same message: We’ve changed."
-       },
-       {
-        "id": "https://www.vermontpublic.org/local-news/2026-08-05/southern-vermont-nonprofit-shutters-federal-funding-cuts",
-        "title": "Southern Vermont nonprofit for older volunteers shutters due to federal funding cuts",
-        "link": "https://www.vermontpublic.org/local-news/2026-08-05/southern-vermont-nonprofit-shutters-federal-funding-cuts",
-        "ts": "2026-08-05T10:39:07+00:00",
-        "summary": "A Vermont nonprofit that matched older adults with volunteer opportunities in their local communities had to close suddenly this summer after losing federal funding."
-       },
-       {
-        "id": "https://www.vermontpublic.org/local-news/2026-08-04/phil-scott-administration-wetlands-changes-lawmakers-objections",
-        "title": "Phil Scott administration moves forward with wetlands changes, despite lawmakers’ objections",
-        "link": "https://www.vermontpublic.org/local-news/2026-08-04/phil-scott-administration-wetlands-changes-lawmakers-objections",
-        "ts": "2026-08-04T21:35:21+00:00",
-        "summary": "By paring back its original proposal to loosen wetland protections, the administration won support from an environmental group that had threatened a lawsuit."
-       },
-       {
-        "id": "https://www.vermontpublic.org/local-news/2026-08-04/new-vermont-conservation-projects-protect-access-old-trees-summits-rare-plants",
-        "title": "5 new Vermont conservation projects protect access to old trees, summits and rare plants",
-        "link": "https://www.vermontpublic.org/local-news/2026-08-04/new-vermont-conservation-projects-protect-access-old-trees-summits-rare-plants",
-        "ts": "2026-08-04T19:38:52+00:00",
-        "summary": "These conservation projects expand town forests, protect endangered species and involve new trails."
        }
       ]
      },
      "wcax": {
       "items": [
        {
+        "id": "H5QGACYWSRB5JLN4L4JVBAS2UE",
+        "title": "Gamelin with solid lead in Chittenden County sheriff’s race",
+        "link": "https://www.wcax.com/2026/08/12/gamelin-with-solid-lead-chittenden-county-sheriffs-race/",
+        "ts": "2026-08-12T02:48:59+00:00",
+        "summary": "With the final results still out, it appears Chittenden County Sheriff Dan Gamelin will keep his job."
+       },
+       {
+        "id": "3ANIDBQXRRFFNGNMC2WEITHVHU",
+        "title": "Gray takes Democratic primary for Vt. lieutenant governor",
+        "link": "https://www.wcax.com/2026/08/12/gray-takes-democratic-primary-lieutenant-governor/",
+        "ts": "2026-08-12T01:28:11+00:00",
+        "summary": "The Associated Press declared Molly Gray the winner of the Vermont Democratic primary for lieutenant governor about an hour after the polls closed."
+       },
+       {
+        "id": "HQOGTGDPO5B3XEC57BU4JE3WRA",
+        "title": "Malloy takes Vermont GOP primary for Congress",
+        "link": "https://www.wcax.com/2026/08/11/malloy-takes-vermont-gop-primary-congress/",
+        "ts": "2026-08-12T00:56:16+00:00",
+        "summary": "Gerald Malloy on Tuesday night won the Vermont Republican primary for the U.S. House."
+       },
+       {
+        "id": "HWV2VCIKXJA67LO7CRMIJSMQGQ",
+        "title": "Ashe wins Vermont Democratic nod for auditor job",
+        "link": "https://www.wcax.com/2026/08/12/ashe-wins-vermont-democratic-nod-auditor-job/",
+        "ts": "2026-08-12T00:33:39+00:00",
+        "summary": "Former Vermont Senate President Tim Ashe has won the Democratic primary for auditor."
+       },
+       {
+        "id": "UCREZIR3YVBC5FMJMY7XX576GQ",
+        "title": "South Burlington Police launch bike patrol",
+        "link": "https://www.wcax.com/2026/08/11/south-burlington-police-launch-bike-patrol/",
+        "ts": "2026-08-11T23:33:56+00:00",
+        "summary": "As City Center continues to grow, the South Burlington Police are launching a new bicycle patrol aimed at allowing officers to more easily engage with residents."
+       },
+       {
+        "id": "AKT2TQQ4NVBIHGOBZ6P4EMVG4M",
+        "title": "2026 Vermont Primary Results: Live Data Visualization",
+        "link": "https://www.wcax.com/2026/08/11/2026-vermont-primary-results-data-visualization/",
+        "ts": "2026-08-11T22:50:07+00:00",
+        "summary": "2026 Vermont Primary Election results visualized town-by-town for selected races of statewide interest, based on data from the Vermont Secretary of State’s Office for the primary election conducted on August 11, 2026."
+       },
+       {
+        "id": "YE4TIOAVFBDKBGT4IFQH3WY2JI",
+        "title": "Man shot family members before killing himself, NH police say",
+        "link": "https://www.wcax.com/2026/08/11/man-shot-family-members-before-killing-himself-nh-police-say/",
+        "ts": "2026-08-11T22:33:50+00:00",
+        "summary": "Police believe a New Hampshire man shot three family members before turning the gun on himself."
+       },
+       {
         "id": "EWEMNR4YSJHTBAPAGYVCKAFGFQ",
-        "title": "Vermont State Police investigating a death at Charlotte Town Beach",
-        "link": "https://www.wcax.com/2026/08/10/vermont-state-police-investigating-death-charlotte-town-beach/",
-        "ts": "2026-08-10T02:02:25+00:00",
-        "summary": "State Police say a man was found unresponsive Sunday at Charlotte Town Beach."
+        "title": "Police identify man found dead at Charlotte Town Beach",
+        "link": "https://www.wcax.com/2026/08/11/police-identify-man-found-dead-charlotte-town-beach/",
+        "ts": "2026-08-11T22:20:37+00:00",
+        "summary": "Investigators say Timothy Coleman's death was not suspicious."
+       },
+       {
+        "id": "6LBTB6NGONDNBOSWY74GJF5W6U",
+        "title": "Derway Island Trail reveals thriving floodplain forest in Vermont’s largest city",
+        "link": "https://www.wcax.com/2026/08/11/derway-island-trail-reveals-thriving-floodplain-forest-vermonts-largest-city/",
+        "ts": "2026-08-11T21:27:05+00:00",
+        "summary": "Just steps from downtown Burlington, a floodplain forest has been quietly growing for the past 80 to 90 years along the banks of the Winooski River."
+       },
+       {
+        "id": "GFVYTBJLZNAJVHLGCEUQV4TKQE",
+        "title": "Storm leaves widespread damage across Champlain Islands",
+        "link": "https://www.wcax.com/2026/08/11/storm-leaves-widespread-damage-across-champlain-islands/",
+        "ts": "2026-08-11T21:21:20+00:00",
+        "summary": "Residents in the Champlain Islands are among those cleaning up Tuesday after an overnight storm pounded the region."
+       },
+       {
+        "id": "IBLHYP557RD4VEKAOECPIUDTKY",
+        "title": "Rutland Free Library’s AC is back, but the building’s repair bills keep climbing",
+        "link": "https://www.wcax.com/2026/08/11/rutland-free-librarys-ac-is-back-buildings-repair-bills-keep-climbing/",
+        "ts": "2026-08-11T21:17:59+00:00",
+        "summary": "Library officials say the fix is just the latest in a long list of maintenance issues inside the 1858 building."
+       },
+       {
+        "id": "Z4S3CIIUDBHMFD7GI4XX46W3GY",
+        "title": "New superintendent aims to turn Claremont school district around",
+        "link": "https://www.wcax.com/2026/08/11/new-superintendent-aims-turn-claremont-school-district-around/",
+        "ts": "2026-08-11T21:14:37+00:00",
+        "summary": "The new school superintendent in Claremont, New Hampshire, says the district is stable after a $5 million deficit but faces a long recovery ahead."
+       },
+       {
+        "id": "WO4NVWDIHZERNOKKEBQNAZHTYI",
+        "title": "WATCH LIVE: Lake Monsters to finish playoff Game 1 after rain suspension",
+        "link": "https://www.wcax.com/2026/08/11/watch-live-lake-monsters-finish-playoff-game-1-after-rain-suspension/",
+        "ts": "2026-08-11T20:59:34+00:00",
+        "summary": "You can watch the rest of the game on Tuesday at 6:35 p.m. on WCAX sister station WYCI."
+       },
+       {
+        "id": "6XBXMMNG7NH63CVD47ZT3IYDFE",
+        "title": "Route 100 in Bridgewater to close for more than a month for bridge replacement",
+        "link": "https://www.wcax.com/2026/08/11/route-100-bridgewater-close-more-than-month-bridge-replacement/",
+        "ts": "2026-08-11T19:47:32+00:00",
+        "summary": "Part of Route 100 in Bridgewater will be closed for more than a month starting Wednesday, as crews replace a bridge over Madden Brook."
+       },
+       {
+        "id": "RLWBTBQEOBBWXAAJHE555FH5FE",
+        "title": "Lightning strike blamed for fire at Essex Junction apartment complex",
+        "link": "https://www.wcax.com/2026/08/11/lightning-strike-blamed-fire-essex-junction-apartment-complex/",
+        "ts": "2026-08-11T19:38:27+00:00",
+        "summary": "Dozens of people were evacuated from an apartment building at Evergreen Place Apartments just after midnight Tuesday."
+       },
+       {
+        "id": "SNYIUDLDLZBULNKWKAOCSELQBY",
+        "title": "Chittenden County sheriff’s deputy accused of handing migrant to federal agents in violation of state policy",
+        "link": "https://www.wcax.com/2026/08/11/chittenden-county-sheriffs-deputy-accused-handing-migrant-federal-agents-violation-state-policy/",
+        "ts": "2026-08-11T19:35:33+00:00",
+        "summary": "The group claims the deputy handed a migrant worker over to the Border Patrol, violating the state's fair and impartial policing policy."
+       },
+       {
+        "id": "R4LKKKE6FVGOLP2IFYYALVRAGQ",
+        "title": "Bennington man held in New York on attempted murder charges after July shooting",
+        "link": "https://www.wcax.com/2026/08/11/bennington-man-held-new-york-attempted-murder-charges-after-july-shooting/",
+        "ts": "2026-08-11T19:09:32+00:00",
+        "summary": "A Bennington man charged with attempted murder after a July shooting and crash is now jailed in New York awaiting extradition."
+       },
+       {
+        "id": "TW2TBAHVO5GFJP2LI4FDADG47I",
+        "title": "Vermont primary voters say issues, not names, driving their choices",
+        "link": "https://www.wcax.com/2026/08/11/vermont-primary-voters-say-issues-not-names-driving-their-choices/",
+        "ts": "2026-08-11T16:19:10+00:00",
+        "summary": "Many voters say community representation and civic duty are driving their choices at the polls, not names or parties."
+       },
+       {
+        "id": "BH24KBTGI5B4DJM4KE5UK6EQWA",
+        "title": "Vermont teen passenger killed in single vehicle crash",
+        "link": "https://www.wcax.com/2026/08/11/vermont-teen-passenger-killed-single-vehicle-crash/",
+        "ts": "2026-08-11T14:37:35+00:00",
+        "summary": "A Manchester teen was killed in a crash in Mount Tabor on Monday night when the vehicle he was riding in went off the road and hit a tree."
+       },
+       {
+        "id": "TZ4KMIMRRFFRDMCN42DI3QCZ4M",
+        "title": "Pedaling a long distance from Dartmouth to help lung cancer patients",
+        "link": "https://www.wcax.com/2026/08/11/pedaling-long-distance-dartmouth-help-lung-cancer-patients/",
+        "ts": "2026-08-11T12:50:05+00:00",
+        "summary": "A cyclist with a personal mission is riding from the Dartmouth Cancer Center to New Jersey starting on Tuesday"
+       },
+       {
+        "id": "3NLYWQHCXJCGDHHLNNNVMO6QHU",
+        "title": "Polls open across Vermont as Democrats decide who challenges for governor",
+        "link": "https://www.wcax.com/2026/08/11/polls-open-across-vermont-democrats-decide-who-challenges-governor/",
+        "ts": "2026-08-11T10:53:53+00:00",
+        "summary": "Vermont voters head to the polls Tuesday to see who will face Gov. Phil Scott in November’s general election."
+       },
+       {
+        "id": "US2K2L74KVHQBHOI5E7ZV4R5YI",
+        "title": "Hochul announces $21 million to expand psychiatric emergency programs across New York",
+        "link": "https://www.wcax.com/2026/08/11/hochul-announces-21-million-expand-psychiatric-emergency-programs-across-new-york/",
+        "ts": "2026-08-11T01:23:17+00:00",
+        "summary": "The capital and start-up funds are designed to expand the capacity of these specialized emergency units to treat New Yorkers in crisis."
+       },
+       {
+        "id": "MNUCBYR2AZGLFDJUZBWHTAKGOM",
+        "title": "Location chosen in South Burlington for new VA outpatient clinic",
+        "link": "https://www.wcax.com/2026/08/10/location-chosen-south-burlington-new-va-outpatient-clinic/",
+        "ts": "2026-08-11T00:32:27+00:00",
+        "summary": "The Department of Veterans Affairs signed a lease for a new outpatient clinic in South Burlington"
+       },
+       {
+        "id": "WJREJEMXQVACPJKON32EP4OYHM",
+        "title": "New England governors, eastern Canadian premiers reaffirm cross-border ties at Shelburne Farms",
+        "link": "https://www.wcax.com/2026/08/10/new-england-governors-eastern-canadian-premiers-reaffirm-cross-border-ties-shelburne-farms/",
+        "ts": "2026-08-10T23:14:15+00:00",
+        "summary": "Heads of state gathered in Vermont to discuss pressing issues between the two nations, from energy and manufacturing to alcohol bans and tariffs."
+       },
+       {
+        "id": "TAO7KPNQYNE6VNKPDAQ47M2DJI",
+        "title": "Made in Vermont: Locally made planter boxes ship to gardeners across the country",
+        "link": "https://www.wcax.com/2026/08/10/made-vermont-locally-made-planter-boxes-ship-gardeners-across-country/",
+        "ts": "2026-08-10T23:13:17+00:00",
+        "summary": "Whether it’s a backyard or a balcony, Vermont craftsmen are building planter boxes for plant lovers across the country — one cedar bed at a time."
+       },
+       {
+        "id": "KDEJ7NCVIZEG7NMKHH66HI6AKA",
+        "title": "Plans to demolish old Bove’s restaurant in Burlington put on hold",
+        "link": "https://www.wcax.com/2026/08/10/plans-demolish-old-boves-restaurant-burlington-put-hold/",
+        "ts": "2026-08-10T23:11:29+00:00",
+        "summary": "Plans to knock down the old Bove’s Restaurant in Burlington and replace it with new housing are now on the back burner."
+       },
+       {
+        "id": "R2C4GCE5SBAR3O4HCB3V77WY3I",
+        "title": "Montreal man found guilty of murdering daughter, dumping body in Northern New York",
+        "link": "https://www.wcax.com/2026/08/10/montreal-man-found-guilty-murdering-daughter-dumping-body-northern-new-york/",
+        "ts": "2026-08-10T22:49:30+00:00",
+        "summary": "After a two-week trial, it took the Essex County jury only a little over an hour to find Luciano Frattolin guilty."
+       },
+       {
+        "id": "I72YIA7AKNEPZMMGQAI4LFP5NY",
+        "title": "DOJ sues Vermont, New York over in-state college tuition for noncitizens",
+        "link": "https://www.wcax.com/2026/08/10/doj-sues-vermont-new-york-over-in-state-college-tuition-noncitizens/",
+        "ts": "2026-08-10T22:17:25+00:00",
+        "summary": "The Department of Justice is suing Vermont, New York and Connecticut over policies that allow noncitizen residents to pay in-state tuition at state schools."
+       },
+       {
+        "id": "MJKJ6D7SVNFUBFJHKFQC4TDRV4",
+        "title": "Route 2A construction in Williston leaving commuters at a standstill",
+        "link": "https://www.wcax.com/2026/08/10/route-2a-construction-williston-leaving-commuters-standstill/",
+        "ts": "2026-08-10T21:35:09+00:00",
+        "summary": "The work can leave drivers sitting at a standstill for up to 20 minutes at a time during peak travel times."
+       },
+       {
+        "id": "MHZRV5RBXVGELKNRTZPQ5GA6ZU",
+        "title": "Miss Black Vermont wins national crown",
+        "link": "https://www.wcax.com/2026/08/10/miss-black-vermont-wins-national-crown/",
+        "ts": "2026-08-10T21:14:56+00:00",
+        "summary": "A Winooski business owner was named Miss Black USA over the weekend."
+       },
+       {
+        "id": "D6BSCUKA3NCOLMMPOWV3MKEZIU",
+        "title": "Norwich Farmers Market campaign seeks $5M for permanent home",
+        "link": "https://www.wcax.com/2026/08/10/norwich-farmers-market-campaign-seeks-5m-permanent-home/",
+        "ts": "2026-08-10T21:10:53+00:00",
+        "summary": "A multimillion-dollar fundraising campaign is underway in the Upper Valley to give the Norwich Farmers Market a permanent home."
+       },
+       {
+        "id": "PFLKTUMAYFBTPBYBSN6MR36NGI",
+        "title": "Getting Answers: Why some maple trees are losing leaves early",
+        "link": "https://www.wcax.com/2026/08/10/getting-answers-why-some-maple-trees-are-losing-leaves-early/",
+        "ts": "2026-08-10T20:14:35+00:00",
+        "summary": "A WCAX viewer from Rutland wrote in about leaves turning brown and falling off the maple trees along her street."
+       },
+       {
+        "id": "5P2OJ6UWDFD3VMGPNZPCCQGXWA",
+        "title": "Vermont primary Tuesday: What’s on the ballot and how to vote",
+        "link": "https://www.wcax.com/2026/08/10/vermont-primary-tuesday-whats-ballot-how-vote/",
+        "ts": "2026-08-10T19:50:23+00:00",
+        "summary": "Tuesday is Vermont’s primary election day, when voters choose which candidates will be on the general election ballot in November."
+       },
+       {
+        "id": "IYURNMCDG5HFFEFYYI6DLWHKWY",
+        "title": "Hannaford recalls select items linked to salmonella outbreak",
+        "link": "https://www.wcax.com/2026/08/09/hannaford-recalls-select-items-linked-salmonella-outbreak/",
+        "ts": "2026-08-10T17:45:04+00:00",
+        "summary": "Hannaford is recalling six deli and produce items linked to a broader recall involving jalapeños grown in Mexico, tied to a salmonella outbreak."
+       },
+       {
+        "id": "O3MKBSQYFREFNJYMRNWC4ZIBRM",
+        "title": "A bike ride to be held in honor of local teen killed in crash",
+        "link": "https://www.wcax.com/2026/08/10/bike-ride-be-held-honor-local-teen-killed-crash/",
+        "ts": "2026-08-10T15:35:16+00:00",
+        "summary": "A bike ride to honor a teenager killed in a collision with a car in Burlington is taking place Wednesday, Aug. 12"
+       },
+       {
+        "id": "OR3XIMPPP5DH5OA7KSGPCVDZEI",
+        "title": "Missing Vermont woman found safe",
+        "link": "https://www.wcax.com/2026/08/10/missing-vermont-woman-found-safe/",
+        "ts": "2026-08-10T14:03:50+00:00",
+        "summary": "Police say a missing woman has been found and she is safe."
+       },
+       {
+        "id": "QC6UOGULLRFNFILAE5NW5FQ7A4",
+        "title": "Warnings over, Bradford police say arrests coming for reckless driving in parking lot",
+        "link": "https://www.wcax.com/2026/08/10/bradford-police-target-parking-lot-stunt-drivers/",
+        "ts": "2026-08-10T12:48:22+00:00",
+        "summary": "After months of warnings, police say they plan to start arresting people caught doing doughnuts at the Bradford park-and-ride."
+       },
+       {
+        "id": "2UXC7C27YVHQRPKDFSNY3KSWAQ",
+        "title": "Primary election to have major impact on education in Central Vermont",
+        "link": "https://www.wcax.com/2026/08/10/primary-election-have-major-impact-education-central-vermont/",
+        "ts": "2026-08-10T11:50:29+00:00",
+        "summary": "Voters in the Washington Central School District will decide Tuesday whether everyone in the district has a say in whether a school should close, no matter the school’s location within the district."
+       },
+       {
+        "id": "DDPW3TYLONGOVNWV5JAER6DUQQ",
+        "title": "Balint unopposed in primary, says more political diversity needed",
+        "link": "https://www.wcax.com/2026/08/10/balint-unopposed-primary-says-more-political-diversity-needed/",
+        "ts": "2026-08-10T11:07:19+00:00",
+        "summary": "The Vermont primary elections are Tuesday and Rep. Becca Balint feels more diversity is needed in political positions."
+       },
+       {
+        "id": "YBPC32WTVZGOFOTRYEWCEKE32I",
+        "title": "Police looking for library thief",
+        "link": "https://www.wcax.com/2026/08/10/police-looking-library-thief/",
+        "ts": "2026-08-10T10:44:08+00:00",
+        "summary": "Vermont troopers are looking for someone who stole from the Albany Library overnight on Friday."
        },
        {
         "id": "FOQF437MBVDBTALFR5LG7SXAO4",
         "title": "Vermont antique and classic car meet draws enthusiasts",
         "link": "https://www.wcax.com/2026/08/10/vermont-antique-classic-car-meet-draws-enthusiasts/",
         "ts": "2026-08-10T01:00:06+00:00",
-        "summary": "Event at Farr Field featured antique motorcycles, classic cars and a scholarship fundraiser."
+        "summary": "The event at Farr Field featured antique motorcycles, classic cars and a scholarship fundraiser."
        },
        {
         "id": "EUNIQZTOOVELHKATH6UUTW7H4U",
-        "title": "You Can Quote Me: 2026 Democratic debate for Chittenden County State’s Attorney",
+        "title": "You Can Quote Me: 2026 Democratic debate for Chittenden County state’s attorney",
         "link": "https://www.wcax.com/2026/08/10/you-can-quote-me-august-9-2026/",
         "ts": "2026-08-10T00:53:52+00:00",
-        "summary": "Highlights from our WCAX debate between the democrats running for Chittenden County State’s Attorney."
+        "summary": "Highlights from our WCAX debate between the Democrats running for Chittenden County state’s attorney."
+       },
+       {
+        "id": "QY3BQEN6GFD63GUJESJCXQCYJU",
+        "title": "UVM men’s soccer returns to Jay Peak for training camp",
+        "link": "https://www.wcax.com/2026/08/09/uvm-mens-soccer-returns-jay-peak-training-camp/",
+        "ts": "2026-08-09T23:07:12+00:00",
+        "summary": "The UVM men’s soccer team is set to open its season on August 20th"
        },
        {
         "id": "U6AXVSOSCZH5RK4BETA7367VBM",
         "title": "Vermont, Canadian leaders share dragon boat ahead of summit",
         "link": "https://www.wcax.com/2026/08/09/vermont-canadian-leaders-share-dragon-boat-ahead-summit/",
         "ts": "2026-08-09T22:58:49+00:00",
-        "summary": "Vermont governor and P.E.I. premier share a boat at the 47th annual cross-border meeting in Shelburne."
+        "summary": "Vermont's governor and Prince Edward Island's premier shared a boat before the 47th annual cross-border meeting in Shelburne."
        },
        {
         "id": "25XNEOSZINARDOBCVJWEZMUG2A",
         "title": "Paddlers take Lake Champlain for 20th Annual Dragonboat race",
         "link": "https://www.wcax.com/2026/08/09/paddlers-take-lake-champlain-20th-annual-dragonboat-race/",
         "ts": "2026-08-09T21:15:48+00:00",
-        "summary": "More than 50 teams of paddlers took to Lake Champlain Dragonboat festival. Since it first began, the event has raised more than $3.7 million dollars, all donated to nonprofits supporting cancer patients."
+        "summary": "More than 50 teams of paddlers took part in the 20th annual Lake Champlain Dragon Boat Festival. Since it first began, the event has raised more than $3.7 million for nonprofits supporting cancer patients."
        },
        {
         "id": "QJQFC2ABJVA75O7P4EA56Q2B3Q",
-        "title": "Vermont host to Canada, New England leaders to discuss relations this weekend",
+        "title": "Vermont host to Canada, New England leaders to discuss relations",
         "link": "https://www.wcax.com/2026/08/09/vermont-host-canada-new-england-leaders-discuss-relations-this-weekend/",
         "ts": "2026-08-09T13:19:27+00:00",
         "summary": "Vermont and other New England states are seeking to mend the relationship with our neighbors to the north."
        },
        {
+        "id": "I6POF2LTCFH75NFIBRJMCVRMFA",
+        "title": "In the Garden: Fort Ticonderoga’s historic gardens",
+        "link": "https://www.wcax.com/2026/08/09/garden-fort-ticonderogas-historic-gardens/",
+        "ts": "2026-08-09T12:41:47+00:00",
+        "summary": "Sometimes, you need a little inspiration to get your own creations going. We head to Fort Ticonderoga to see the beautiful gardens there!"
+       },
+       {
         "id": "QD4D74ZRM5GYZDZOXUD7TSHHVM",
-        "title": "NYSP: Homicide suspect now in custody after search",
+        "title": "Homicide suspect now in custody after search, NY police say",
         "link": "https://www.wcax.com/2026/08/09/nysp-homicide-suspect-now-custody-after-search/",
         "ts": "2026-08-09T12:39:34+00:00",
         "summary": "The man wanted in connection with a murder and arson in New York has been taken into custody."
@@ -987,455 +1287,168 @@
         "link": "https://www.wcax.com/2026/08/09/strawberry-jam-music-festival-returns-stowe-third-year/",
         "ts": "2026-08-09T04:26:33+00:00",
         "summary": "Strawberry Hill Farm and ZenBarn hosted the third annual Strawberry Jam music festival Saturday."
-       },
-       {
-        "id": "7H3BD7RH4BGYXASF66CII5AMSE",
-        "title": "WWII soldier from Bennington identified, laid to rest 80 years after death",
-        "link": "https://www.wcax.com/2026/08/09/wwii-soldier-bennington-identified-laid-rest-80-years-after-death/",
-        "ts": "2026-08-09T04:16:15+00:00",
-        "summary": "Army Air Force PFC Bernard Sweet, Bennington's first WWII casualty, was buried Saturday at Park Lawn Cemetery"
-       },
-       {
-        "id": "P4ZUS5JG4REJBIFAHNA43TKPPQ",
-        "title": "Remote Area Medical brings free health clinic to Bennington",
-        "link": "https://www.wcax.com/2026/08/09/remote-area-medical-brings-free-health-clinic-bennington/",
-        "ts": "2026-08-09T04:11:42+00:00",
-        "summary": "Remote Area Medical is holding a free two-day dental and vision clinic at Mount Anthony Union Middle School in Bennington — the organization’s fourth visit to the area."
-       },
-       {
-        "id": "HOMLUUEK2BCRNK3TJVHHZYO5D4",
-        "title": "Cyclosporiasis outbreak may be helping out local farmers",
-        "link": "https://www.wcax.com/2026/08/09/cyclosporiasis-outbreak-may-be-helping-out-local-farmers/",
-        "ts": "2026-08-09T04:04:42+00:00",
-        "summary": "The ongoing cyclosporiasis outbreak may be contributing to increased lettuce sales, according to local farmers."
-       },
-       {
-        "id": "3D6HLVSJ3FCLLELVQ2N2VKUTBI",
-        "title": "Lyndonville police searching for stolen Chevy Suburban",
-        "link": "https://www.wcax.com/2026/08/09/lyndonville-police-searching-stolen-chevy-suburban/",
-        "ts": "2026-08-09T03:53:36+00:00",
-        "summary": "Lyndonville police are searching for a stolen 2015 Chevrolet Suburban, white, bearing Vermont license plate KZV-456."
-       },
-       {
-        "id": "7PIW2EJNAFBCDKLJDQMGWHEYOA",
-        "title": "Poultney man cited for animal cruelty after shooting dog",
-        "link": "https://www.wcax.com/2026/08/09/poultney-man-cited-animal-cruelty-after-shooting-dog/",
-        "ts": "2026-08-09T03:48:31+00:00",
-        "summary": "A Poultney man has been cited for animal cruelty after police say he shot a dog that wandered onto his property Saturday morning."
-       },
-       {
-        "id": "RU3UDRUS3NENHBH34QSMCU3XKQ",
-        "title": "State trooper hydroplanes on I-89, hits another vehicle",
-        "link": "https://www.wcax.com/2026/08/09/state-trooper-hydroplanes-i-89-hits-another-vehicle/",
-        "ts": "2026-08-09T03:47:25+00:00",
-        "summary": "A Vermont State Police trooper crashed into a vehicle on I-89 this afternoon, while responding to a separate crash, according to state police."
-       },
-       {
-        "id": "IYDVH3VOJBFS3M4UQLV3ADBT64",
-        "title": "Rabies vaccination effort targets Vermont’s northern border amid rising cases",
-        "link": "https://www.wcax.com/2026/08/09/rabies-vaccination-effort-targets-northern-border-amid-rising-cases/",
-        "ts": "2026-08-09T03:44:17+00:00",
-        "summary": "The U.S. Department of Agriculture arrived in Vermont Friday to begin vaccinating wildlife against rabies, as the Vermont Department of Health reports a sharp increase in rabies cases in recent years."
-       },
-       {
-        "id": "IYURNMCDG5HFFEFYYI6DLWHKWY",
-        "title": "Hannaford recalls select items linked to salmonella outbreak",
-        "link": "https://www.wcax.com/2026/08/09/hannaford-recalls-select-items-linked-salmonella-outbreak/",
-        "ts": "2026-08-09T03:43:09+00:00",
-        "summary": "Hannaford is recalling six deli and produce items linked to a broader recall involving jalapeños grown in Mexico, tied to a salmonella outbreak."
-       },
-       {
-        "id": "XHUQLKCNYNESLPC3WD45IIZZVY",
-        "title": "Cold Hollow Cider Mill marks 50 years in Waterbury with annual Cider Fest",
-        "link": "https://www.wcax.com/2026/08/09/cold-hollow-cider-mill-marks-50-years-waterbury-with-annual-cider-fest/",
-        "ts": "2026-08-09T01:19:00+00:00",
-        "summary": "Cold Hollow Cider Mill held its annual Cider Fest Saturday, marking 50 years of operation in Waterbury."
-       },
-       {
-        "id": "KTAEIBZZJNAAVP6TAHJSQXO3XI",
-        "title": "Colchester hazmat response triggered by hydrogen gas",
-        "link": "https://www.wcax.com/2026/08/09/colchester-hazmat-response-triggered-by-hydrogen-gas/",
-        "ts": "2026-08-09T01:16:08+00:00",
-        "summary": "The Colchester Fire Department responded Friday morning to a report of a gas odor at 784 Hercules Drive that eventually prompted a state hazmat team response."
-       },
-       {
-        "id": "WAFEI6ZZ25FOVBKZP32RPTWJXE",
-        "title": "Man arrested for allegedly threatening people with machete, assaulting law enforcement",
-        "link": "https://www.wcax.com/2026/08/08/man-arrested-allegedly-threatening-people-with-machete-assaulting-law-enforcement/",
-        "ts": "2026-08-08T11:20:36+00:00",
-        "summary": "A Newport man faces a handful of charges after he allegedly threatened people passing by and later assaulting a law enforcement officer."
-       },
-       {
-        "id": "IEQSD6YTRJBTDG3ZOIMLBOCSOE",
-        "title": "What to Do: Saturday, August 8",
-        "link": "https://www.wcax.com/2026/08/08/what-do-saturday-august-8/",
-        "ts": "2026-08-08T09:33:43+00:00",
-        "summary": "Summer is in full swing, here’s some things to do today."
-       },
-       {
-        "id": "S6G37UMR2FGY7APGLZM4TXYI5U",
-        "title": "Ray’s Seafood Market and Restaurant closing after 74 years",
-        "link": "https://www.wcax.com/2026/08/08/rays-seafood-market-restaurant-closing-after-74-years/",
-        "ts": "2026-08-08T02:24:28+00:00",
-        "summary": "Ray’s Seafood Market and Restaurant, a family-owned business that has operated for 74 years, announced it is closing."
-       },
-       {
-        "id": "OR3XIMPPP5DH5OA7KSGPCVDZEI",
-        "title": "Police seek help locating missing woman in Grand Isle, Franklin County area",
-        "link": "https://www.wcax.com/2026/08/08/police-seek-help-locating-missing-woman-grand-isle-franklin-county-area/",
-        "ts": "2026-08-08T00:07:21+00:00",
-        "summary": "Vermont State Police say Amanda White, 34, has not had contact with her family for several days."
-       },
-       {
-        "id": "4LFROFXPKVGVVDLSU5U2PETT5I",
-        "title": "ICE detains 5 people in Londonderry, Migrant Justice says",
-        "link": "https://www.wcax.com/2026/08/07/ice-detains-5-people-londonderry-migrant-justice-says/",
-        "ts": "2026-08-07T22:43:51+00:00",
-        "summary": "Five people were detained by ICE in Londonderry on Friday, according to Migrant Justice, which shared video of the arrest."
-       },
-       {
-        "id": "Y4TVWCQRQVDZZISN7YFGTOP6AU",
-        "title": "Midwives open prenatal clinic in Morrisville, eye standalone birthing center",
-        "link": "https://www.wcax.com/2026/08/07/midwives-open-prenatal-clinic-morrisville-eye-standalone-birthing-center/",
-        "ts": "2026-08-07T22:33:29+00:00",
-        "summary": "A team of nurse midwives has opened a maternity clinic in Morrisville as they work toward a larger goal: creating Vermont's first standalone birthing center."
-       },
-       {
-        "id": "IUVZS7G2YZET7FTNSLSGFOCIWA",
-        "title": "Vermont sheriff races draw unusual number of contested primaries after high-profile misconduct cases",
-        "link": "https://www.wcax.com/2026/08/07/vermont-sheriff-races-draw-unusual-number-contested-primaries-after-high-profile-misconduct-cases/",
-        "ts": "2026-08-07T22:31:14+00:00",
-        "summary": "In recent years, Vermont sheriffs have made headlines for all the wrong reasons."
-       },
-       {
-        "id": "DGYN7NC27ZCTNEL357Y7NLWPVQ",
-        "title": "Man accused of killing daughter in NY weighs testifying as prosecution rests",
-        "link": "https://www.wcax.com/2026/08/07/man-accused-killing-daughter-ny-weighs-testifying-prosecution-rests/",
-        "ts": "2026-08-07T22:13:46+00:00",
-        "summary": "Prosecutors in the North Country rested their case Friday in Luciano Frattolin's murder trial, with Frattolin saying he might take the stand Monday."
-       },
-       {
-        "id": "RQZLKHCDBJE2PNZ3ZBEWP4TFSQ",
-        "title": "Addison County Fair and Field Days celebrates decades of agricultural tradition",
-        "link": "https://www.wcax.com/2026/08/07/addison-county-fair-field-days-celebrates-decades-agricultural-tradition/",
-        "ts": "2026-08-07T21:47:30+00:00",
-        "summary": "Along with all the fun and games, the Addison County Fair and Field Days showcases Vermont's agricultural heritage."
-       },
-       {
-        "id": "IT2JEQI2IZEFVOZW6WNW67F75E",
-        "title": "George, Kranichfeld spar over cash bail, criminal justice in Chittenden County state’s attorney debate",
-        "link": "https://www.wcax.com/2026/08/07/george-kranichfeld-spar-over-cash-bail-criminal-justice-chittenden-county-states-attorney-debate/",
-        "ts": "2026-08-07T21:01:48+00:00",
-        "summary": "The Democrats running for Chittenden County state’s attorney faced questions from WCAX’s Cat Viglienzoni during an in-studio debate earlier this week."
-       },
-       {
-        "id": "B4FT6ODXRVDD5AGZJ3EO6N47PE",
-        "title": "Police searching for ‘armed and dangerous’ suspect in Plattsburgh area",
-        "link": "https://www.wcax.com/2026/08/07/police-searching-armed-dangerous-suspect-plattsburgh-area/",
-        "ts": "2026-08-07T20:35:19+00:00",
-        "summary": "Northern New York police are warning residents to be on alert for a suspect in a deadly arson who is believed to be armed and dangerous."
-       },
-       {
-        "id": "XH3Z5NNV6BDWLEZ7AAQYFLYUOA",
-        "title": "Kinney Drugs pulls back AI phone assistant after hundreds of customer complaints",
-        "link": "https://www.wcax.com/2026/08/07/kinney-drugs-pulls-back-ai-phone-assistant-after-hundreds-customer-complaints/",
-        "ts": "2026-08-07T20:15:35+00:00",
-        "summary": "Kinney Drugs is scaling back its AI assistant after customers reported incoherent calls, wrong dosages, and missed prescription notifications."
-       },
-       {
-        "id": "HK3WY3LOZFEIXGD6KUXFAKHEDQ",
-        "title": "Memorial service held for teen killed in Burlington crash",
-        "link": "https://www.wcax.com/2026/08/07/memorial-service-held-teen-killed-burlington-crash/",
-        "ts": "2026-08-07T20:13:26+00:00",
-        "summary": "Family, friends and community members gathered on Friday to remember Shiloh Skalka, a 16-year-old killed in a crash while riding her e-bike."
-       },
-       {
-        "id": "ANZ4JT6BWFHQRAA6KJU36HOWYE",
-        "title": "Bikers to hold 40th annual Toy Run to benefit Shriners Hospitals",
-        "link": "https://www.wcax.com/2026/08/07/bikers-hold-40th-annual-toy-run-benefit-shriners-hospitals/",
-        "ts": "2026-08-07T20:10:33+00:00",
-        "summary": "The six-mile ride goes from the Blue Cross Blue Shield headquarters in Berlin to the Statehouse."
-       },
-       {
-        "id": "UOLKZMWFSFA5NGCJVVUBC5O36A",
-        "title": "Balint visits Winooski construction academy to discuss housing, workforce needs",
-        "link": "https://www.wcax.com/2026/08/07/balint-visits-winooski-construction-academy-discuss-housing-workforce-needs/",
-        "ts": "2026-08-07T19:18:46+00:00",
-        "summary": "The academy hosts programs for students getting them into the construction industry."
-       },
-       {
-        "id": "WCQDXHU36ZD6FPGCMCV5MJVTB4",
-        "title": "19-year VSP veteran Shawn Loan takes command of Vermont State Police",
-        "link": "https://www.wcax.com/2026/08/07/19-year-vsp-veteran-shawn-loan-takes-command-vermont-state-police/",
-        "ts": "2026-08-07T19:15:32+00:00",
-        "summary": "Lt. Col. Shawn Loan was officially sworn in Friday morning as the director of the Vermont State Police."
-       },
-       {
-        "id": "OXLT4RLW2VE5PJIZPZVDXDRBDM",
-        "title": "Herd mentality: Retired goats find new employment as therapy animals",
-        "link": "https://www.wcax.com/2026/08/07/herd-mentality-retired-goats-find-new-employment-therapy-animals/",
-        "ts": "2026-08-07T18:47:00+00:00",
-        "summary": "Behind one local farmer’s decision to turn her goat-dairy into a sanctuary offering animal-assisted therapies."
-       },
-       {
-        "id": "YGNIBNM5M5F2ZKOWUFIAVVSRPA",
-        "title": "Wedded to less waste: The eco-friendly swaps being made in the wedding industry",
-        "link": "https://www.wcax.com/2026/08/07/wedded-less-waste-eco-friendly-swaps-being-made-wedding-industry/",
-        "ts": "2026-08-07T18:14:34+00:00",
-        "summary": "How different vendors across the wedding industry are adapting their business practices to embrace sustainability."
-       },
-       {
-        "id": "EIXYBXDYD5CKNGVCHTCNSPZY3U",
-        "title": "Stuck in Vt: Attending the 150th Purinton Family reunion in Salisbury",
-        "link": "https://www.wcax.com/2026/08/07/stuck-vt-attending-150th-purinton-family-reunion-salisbury/",
-        "ts": "2026-08-07T16:36:53+00:00",
-        "summary": "The Purintons have gathered every year since 1876, and family members from across the country made the trip this year."
-       },
-       {
-        "id": "TU5OOOUOWZG5TLW6YPRX3S2JXQ",
-        "title": "Pets with Potential: Meet Ree, Dumpling, and Roan",
-        "link": "https://www.wcax.com/2026/08/07/pets-with-potential-meet-ree-dumpling-roan/",
-        "ts": "2026-08-07T16:26:25+00:00",
-        "summary": "This week’s Pets with Potential come from Homeward Bound in Middlebury."
-       },
-       {
-        "id": "TUKWWJNDBBAVXJBCNIKMLMLBXA",
-        "title": "Man arrested following seizure of dozens of guns in Northern NY",
-        "link": "https://www.wcax.com/2026/08/07/man-arrested-following-seizure-dozens-guns-northern-ny/",
-        "ts": "2026-08-07T16:23:18+00:00",
-        "summary": "New York troopers say they seized more than 40 guns when they executed a search warrant at a home in Black Brook."
-       },
-       {
-        "id": "RE7EOWWXR5BRPDAG7VE54FP6O4",
-        "title": "Fairlee man accused of threatening multiple people with knife",
-        "link": "https://www.wcax.com/2026/08/07/fairlee-man-accused-threatening-multiple-people-with-knife/",
-        "ts": "2026-08-07T13:34:48+00:00",
-        "summary": "A Vermont man faces multiple felony charges after allegedly threatening people with a knife in Fairlee."
-       },
-       {
-        "id": "PP5PJNZJSVHKNBC2RDSWAFSV4A",
-        "title": "Cabot High School enrollment decline raises closure, merger questions",
-        "link": "https://www.wcax.com/2026/08/07/cabot-high-school-enrollment-decline-raises-closure-merger-questions/",
-        "ts": "2026-08-07T11:35:44+00:00",
-        "summary": "Cabot High School will head into spring 2027 with just 23 students-- a record low that has reignited debate over the school’s future."
-       },
-       {
-        "id": "Q2YFVMH7ENBJRC354GN22ABZCY",
-        "title": "Emergency crews respond to boat fire in Colchester",
-        "link": "https://www.wcax.com/2026/08/07/emergency-crews-respond-boat-fire-colchester/",
-        "ts": "2026-08-07T01:20:13+00:00",
-        "summary": "Emergency crews in Colchester responded to a sailboat fire on Malletts Bay Thursday afternoon."
-       },
-       {
-        "id": "5G7PLCRYPJFGTBGRCSHRMAJSRM",
-        "title": "Young filmmaker to show movie at Essex Cinemas",
-        "link": "https://www.wcax.com/2026/08/06/young-filmmaker-show-movie-essex-cinemas/",
-        "ts": "2026-08-06T23:47:25+00:00",
-        "summary": "Austen Hamel, of Vergennes, will show his feature-length film, \"The Wanted Part II,\" at the Essex Cinemas on Aug. 12."
-       },
-       {
-        "id": "CPTGF7NDCRHT5PQNPSWIOYNSYA",
-        "title": "Ahead of peak of hurricane season, NOAA adjusts below-average season prediction",
-        "link": "https://www.wcax.com/2026/08/06/ahead-climatological-peak-hurricane-season-noaa-adjusts-below-average-season-prediction/",
-        "ts": "2026-08-06T22:54:32+00:00",
-        "summary": "Before the start of hurricane season on June 1, NOAA predicted a below-average season because of an anticipated El Niño. On Thursday, Aug. 6, NOAA updated its outlook just ahead of the climatological peak of the season, which occurs in mid-to-late September."
-       },
-       {
-        "id": "SUZWKD763RG25DMCIMX2TMKKGQ",
-        "title": "19 acres, no regrets: A Super Senior’s life on the land",
-        "link": "https://www.wcax.com/2026/08/06/19-acres-no-regrets-super-seniors-life-land/",
-        "ts": "2026-08-06T22:51:45+00:00",
-        "summary": "Nineteen acres of land in Vershire is Suzanne Lupien’s world — no bells and whistles, no regrets, just rich soil, work horses and a hay wagon she calls home."
-       },
-       {
-        "id": "I4ENRVPH4BAGHJW65LN6SDJBKM",
-        "title": "Weed costs twice as much in Vermont as it does in Massachusetts. What gives?",
-        "link": "https://www.wcax.com/2026/08/06/weed-costs-twice-much-vermont-it-does-massachusetts-what-gives/",
-        "ts": "2026-08-06T22:26:13+00:00",
-        "summary": "Vermont’s cannabis market has prioritized artisan growers, while Massachusetts has allowed large-scale operations."
-       },
-       {
-        "id": "ZSBOE75XZ5DTFGR23L2HZIOSVY",
-        "title": "Campaign Countdown: Democrats for Vermont auditor",
-        "link": "https://www.wcax.com/2026/08/06/campaign-countdown-democrats-vermont-auditor/",
-        "ts": "2026-08-06T21:56:32+00:00",
-        "summary": "Tim Ashe and Nick Graeter are seeking the Democratic nomination in next week's primary."
-       },
-       {
-        "id": "7OQXABY7OFDHRMP3RSGBMEKLAU",
-        "title": "New law allows marijuana sales at farmers markets",
-        "link": "https://www.wcax.com/2026/08/06/new-law-allows-marijuana-sales-farmers-markets/",
-        "ts": "2026-08-06T21:55:39+00:00",
-        "summary": "Gov. Kathy Hochul signed a new law on Thursday allowing licensed businesses to sell marijuana at approved pop-ups, farmers markets and public market events."
-       },
-       {
-        "id": "TD5LTNNYXNG5HONQT7JP6X53VQ",
-        "title": "Church Street sidewalk sale draws crowds as Queen City debates downtown safety",
-        "link": "https://www.wcax.com/2026/08/06/church-street-sidewalk-sale-draws-crowds-queen-city-debates-downtown-safety/",
-        "ts": "2026-08-06T21:54:18+00:00",
-        "summary": "The event comes amid ongoing discussions about how to address the city’s struggles with homelessness, open drug use, and crime."
        }
       ]
      },
      "mynbc5": {
       "items": [
        {
-        "id": "73387407",
-        "title": "Western Europe sets new temperature record as heat waves pummel the region",
-        "link": "https://www.mynbc5.com/article/western-europe-heat-wave-temperature-record/73387407",
-        "ts": "2026-08-10T04:00:00+00:00",
-        "summary": "The heat waves roiling Western Europe this summer toppled an average temperature record for the June-July period set in 2022."
+        "id": "73395177",
+        "title": "Chittenden County State's Attorney primary election results",
+        "link": "https://www.mynbc5.com/article/chittenden-county-states-attorney-primary-election-results/73395177",
+        "ts": "2026-08-12T02:55:00+00:00",
+        "summary": "Chittenden County voters headed to the polls on Tuesday to decide which candidate would run to become the next state's attorney."
        },
        {
-        "id": "73386135",
-        "title": "Tennis Twins reach Vermont marking 33rd state in nationwide journey",
-        "link": "https://www.mynbc5.com/article/tennis-twins-reach-vermont-marking-33rd-state-in-nationwide-journey/73386135",
-        "ts": "2026-08-10T02:56:00+00:00",
-        "summary": "11-year-old players Owen and Aiden Finocchietti looking to play one tennis tournament in every state"
+        "id": "73409072",
+        "title": "Chittenden County Sheriff's primary election: See results",
+        "link": "https://www.mynbc5.com/article/chittenden-county-sheriffs-primary-results/73409072",
+        "ts": "2026-08-12T02:54:00+00:00",
+        "summary": "Voters in Chittenden County headed to the polls to decide who will become the next sheriff. See results here."
        },
        {
-        "id": "73350727",
-        "title": "Tupac Shakur was killed in Las Vegas in 1996. Here's who was there that night",
-        "link": "https://www.mynbc5.com/article/tupac-shakur-killing-las-vegas-who-was-there/73350727",
-        "ts": "2026-08-10T02:46:00+00:00",
-        "summary": "Tupac Shakur murder trial: Rap icon Tupac was killed in Las Vegas in 1996. Who was there that night? Here's what to know"
+        "id": "73402821",
+        "title": "Democratic socialist tries to beat the governor's pick in a chaotic Wisconsin primary",
+        "link": "https://www.mynbc5.com/article/francesca-hong-david-crowley-wisconsin-governor/73402821",
+        "ts": "2026-08-12T02:48:00+00:00",
+        "summary": "A democratic socialist is trying to rise above the governor's endorsed candidate in Wisconsin's chaotic primary race for governor."
        },
        {
-        "id": "73386976",
-        "title": "Dragonheart Festival brings out community for 20th anniversary",
-        "link": "https://www.mynbc5.com/article/dragonheart-boat-races-20th-year/73386976",
-        "ts": "2026-08-10T02:36:00+00:00",
-        "summary": "The Dragonheart Festival returned to Waterfront Park for its 20th year on Sunday, supporting breast cancer patients and survivors."
+        "id": "73408361",
+        "title": "Sen. Darline Graham advances to GOP Senate primary runoff to replace late brother",
+        "link": "https://www.mynbc5.com/article/darline-graham-advances-senate-primary-runoff-lindsey-graham/73408361",
+        "ts": "2026-08-12T02:46:00+00:00",
+        "summary": "Sen. Darline Graham has advanced to a runoff in South Carolina's special Republican primary to replace her late brother Lindsey Graham in the U.S. Senate."
        },
        {
-        "id": "73386433",
-        "title": "President Trump announces staff secretary Will Scharf will be his new White House counsel",
-        "link": "https://www.mynbc5.com/article/president-trump-announces-staff-secretary-will-scharf-will-be-his-new-white-house-counsel/73386433",
-        "ts": "2026-08-10T01:56:00+00:00",
-        "summary": "Will Scharf, who helped secure approval for Trump’s $400 million ballroom project, will replace David Warrington as White House counsel Sept. 1."
+        "id": "73401266",
+        "title": "Trump used elaborate ruse to fly out of Turkey amid security concerns, official says",
+        "link": "https://www.mynbc5.com/article/trump-elaborate-ruse-to-fly-out-of-turkey/73401266",
+        "ts": "2026-08-12T02:45:00+00:00",
+        "summary": "President Donald Trump secretly slipped out of Turkey last month using an elaborate ruse prompted by an Iranian threat, according to a U.S. official."
        },
        {
-        "id": "73370703",
-        "title": "US sees a big jump in nausea cases among frequent marijuana users in the hospital",
-        "link": "https://www.mynbc5.com/article/marijuana-users-hospital-nausea-vomiting-rise/73370703",
-        "ts": "2026-08-10T01:10:00+00:00",
-        "summary": "The U.S. has seen a rise in cases of cannabis hyperemesis syndrome, a nausea condition caused by heavy marijuana use"
+        "id": "73408017",
+        "title": "Why did Sir Rod Stewart call off remaining tour dates? Here's what to know.",
+        "link": "https://www.mynbc5.com/article/rod-stewart-cancels-tour-dates-stent-procedure/73408017",
+        "ts": "2026-08-12T02:16:00+00:00",
+        "summary": "Sir Rod Stewart has canceled his upcoming tour dates after undergoing a coronary stent procedure. Here's what we know"
        },
        {
-        "id": "73385083",
-        "title": "Iran demands new U.S. concessions to reopen Strait of Hormuz",
-        "link": "https://www.mynbc5.com/article/iran-demands-new-us-concessions-to-reopen-strait-of-hormuz/73385083",
-        "ts": "2026-08-10T00:58:00+00:00",
-        "summary": "Iran has outlined new conditions for reopening the Strait of Hormuz, while the Pentagon urges defense companies to accelerate weapons production amid concerns over dwindling stockpiles."
+        "id": "71919253",
+        "title": "2026 Vermont primary election results: See winners Republican, Democratic primaries",
+        "link": "https://www.mynbc5.com/article/2026-vermont-primary-election-results/71919253",
+        "ts": "2026-08-12T01:40:00+00:00",
+        "summary": "FULL ELECTION RESULTS: Vermonters headed to the polls to vote in the primaries to determine which political candidates from each party will face off in the general election."
        },
        {
-        "id": "73386741",
-        "title": "Ben Jones, who played Cooter on ‘The Dukes of Hazzard,’ dies at 84",
-        "link": "https://www.mynbc5.com/article/ben-jones-dukes-of-hazzard-actor-dies-84/73386741",
-        "ts": "2026-08-10T00:41:00+00:00",
-        "summary": "Ben Jones, who played Cooter on \"The Dukes of Hazzard\" and later served in Congress, has died at 84."
+        "id": "73408141",
+        "title": "Democratic primary candidates for Vermont Governor make final push to voters",
+        "link": "https://www.mynbc5.com/article/democratic-primary-candidates-for-vt-governor-make-final-push-to-voters/73408141",
+        "ts": "2026-08-12T01:21:00+00:00",
+        "summary": "It's decision day for who Vermonters will nominate as a Democratic challenger to Incumbent Republican Gov. Phil Scott."
        },
        {
-        "id": "73386551",
-        "title": "Diver's air tank shut off underwater during heated lobster spot dispute",
-        "link": "https://www.mynbc5.com/article/man-accused-lobster-divers-oxygen-tank/73386551",
-        "ts": "2026-08-09T23:10:00+00:00",
-        "summary": "A South Florida man is accused of turning off an 18-year-old lobster diver's oxygen tank during a dispute over dive locations, though his lawyers deny the allegations."
+        "id": "73408554",
+        "title": "Keene, New Hampshire schedules public meeting to address ICE activity",
+        "link": "https://www.mynbc5.com/article/keene-new-hampshire-ice-activity/73408554",
+        "ts": "2026-08-12T01:18:00+00:00",
+        "summary": "Keene, New Hampshire, will hold a public meeting next Monday to discuss recent ICE activity in the city."
        },
        {
-        "id": "73386409",
-        "title": "Showers and storms return Monday afternoon",
-        "link": "https://www.mynbc5.com/article/showers-and-storms-return-monday-afternoon-8-9-26/73386409",
-        "ts": "2026-08-09T22:27:00+00:00",
-        "summary": "Most storms will be sub-severe, but a stronger cell can't be ruled out"
+        "id": "73407610",
+        "title": "AP Exclusive: ICE plans to give officers gloves that can deliver painful electric shocks",
+        "link": "https://www.mynbc5.com/article/ice-officers-electric-shock-gloves/73407610",
+        "ts": "2026-08-12T01:03:00+00:00",
+        "summary": "Immigration and Customs Enforcement officers may soon be outfitted with gloves that can deliver painful electric shocks that are intended to gain compliance from combative individuals"
        },
        {
-        "id": "73385994",
-        "title": "Man finds stolen Picasso etching eight years after gallery theft",
-        "link": "https://www.mynbc5.com/article/picasso-etching-found-wisconsin-property/73385994",
-        "ts": "2026-08-09T21:43:00+00:00",
-        "summary": "A man spotted something extraordinary in a Milwaukee property: a Picasso etching signed by the artist himself. It was later traced to a gallery theft from eight years ago. Here's how it was found"
+        "id": "73408220",
+        "title": "FDA recalls dog and horse medication over glass fiber material",
+        "link": "https://www.mynbc5.com/article/dog-medicine-recall/73408220",
+        "ts": "2026-08-12T00:56:00+00:00",
+        "summary": "Two lots of popular medications for dogs and horses have been recalled over potential glass fiber contamination. Here's what pet owners should know."
        },
        {
-        "id": "73384668",
-        "title": "Captain charged after boat capsizes near Statue of Liberty, killing woman and baby",
-        "link": "https://www.mynbc5.com/article/new-york-harbor-boat-overturns-liberty-island/73384668",
-        "ts": "2026-08-09T21:24:00+00:00",
-        "summary": "A 27-year-old woman and a 5-month-old baby girl have died after a boat overturned in New York harbor on Saturday night, police said."
+        "id": "73408226",
+        "title": "What are Flock cameras, and why do some people oppose them?",
+        "link": "https://www.mynbc5.com/article/what-are-flock-cameras/73408226",
+        "ts": "2026-08-12T00:28:00+00:00",
+        "summary": "What are Flock cameras? Some say the nationwide surveillance network helps solve crimes, but opponents say they go too far."
        },
        {
-        "id": "73386101",
-        "title": "VIDEO: NYC chef turns tiny Smart Car into a curbside pizzeria",
-        "link": "https://www.mynbc5.com/article/nyc-chef-smart-car-pizzeria-pizza-pod/73386101",
-        "ts": "2026-08-09T21:19:00+00:00",
-        "summary": "How small can a pizzeria get? One NYC chef is serving stone-fired pies from the trunk of a small car — and it's attacting crowds. Check it out"
+        "id": "73408229",
+        "title": "Veterans and seniors find comfort through mini therapy horses at this ranch",
+        "link": "https://www.mynbc5.com/article/veterans-seniors-mini-therapy-horses-ranch/73408229",
+        "ts": "2026-08-12T00:14:00+00:00",
+        "summary": "Mini therapy horses are helping veterans and seniors heal, and one veteran says it brought him to tears."
        },
        {
-        "id": "73385899",
-        "title": "Don Nelson, second-winningest NBA coach, dies at 86",
-        "link": "https://www.mynbc5.com/article/don-nelson-nba-coach-boston-celtics-dies/73385899",
-        "ts": "2026-08-09T19:03:00+00:00",
-        "summary": "Boston Celtics champion and legendary NBA coach Don Nelson has died at the age of 86, his family announced Sunday."
+        "id": "73397204",
+        "title": "Deputy under investigation after Border Patrol detains Vermont dairy worker",
+        "link": "https://www.mynbc5.com/article/chittenden-county-sheriff-investigates-deputys-role-in-border-patrol-detention-of-vermont-farmworker/73397204",
+        "ts": "2026-08-11T23:53:00+00:00",
+        "summary": "Migrant Justice alleges Sgt. Scott Costella violated Vermont’s Fair and Impartial Policing Policy by summoning federal agents to a traffic stop. Sheriff Dan Gamelin says an outside review is underway."
        },
        {
-        "id": "73384085",
-        "title": "Sewage overflows after storm; Burlington Beach on alert",
-        "link": "https://www.mynbc5.com/article/sewage-overflows-burlington-beach-closed/73384085",
-        "ts": "2026-08-09T19:01:00+00:00",
-        "summary": "A Burlington beach is on alert for the rest of the weekend after storms caused sewage to overflow into Lake Champlain."
+        "id": "73408069",
+        "title": "Dry to start Wednesday, few afternoon showers and storms",
+        "link": "https://www.mynbc5.com/article/dry-to-start-wednesday-few-afternoon-showers-and-storms-08-11-26/73408069",
+        "ts": "2026-08-11T23:32:00+00:00",
+        "summary": "Additional showers Thursday, then bright and less humid heading into the weekend"
        },
        {
-        "id": "73385802",
-        "title": "Deputies lasso 1,500-pound bull on the loose in Alabama neighborhood",
-        "link": "https://www.mynbc5.com/article/bull-chase-alabama-neighborhood/73385802",
-        "ts": "2026-08-09T18:30:00+00:00",
-        "summary": "A 1,500-pound bull led Alabama deputies and police on a roadside chase before being safely lassoed."
+        "id": "73406518",
+        "title": "Noah Kahan to play charity show at Spruce Peak, with ticket requests open now",
+        "link": "https://www.mynbc5.com/article/noah-kahan-spruce-peak-charity-show-tickets/73406518",
+        "ts": "2026-08-11T23:30:00+00:00",
+        "summary": "Noah Kahan is returning to his home state of Vermont for a charity concert later this summer. Find out how you can buy tickets."
        },
        {
-        "id": "73385671",
-        "title": "Louisiana health officials report surge of infections from flesh-eating bacteria",
-        "link": "https://www.mynbc5.com/article/louisiana-deadly-flesh-eating-bacterial-infections/73385671",
-        "ts": "2026-08-09T17:41:00+00:00",
-        "summary": "Health officials in Louisiana are urging beachgoers to take precautions during a summertime surge in infections from a flesh-eating bacteria found in coastal waters."
+        "id": "73407844",
+        "title": "Williston voters say picking the right lieutenant governor benefits the whole state",
+        "link": "https://www.mynbc5.com/article/williston-voters-cast-lieutenant-governor-primary-day/73407844",
+        "ts": "2026-08-11T23:28:00+00:00",
+        "summary": "The Williston Town Clerk said she saw a higher-than-average turnout for a primary this year, drawing more than 2,500 voters to the Williston Armory polling site."
        },
        {
-        "id": "73385360",
-        "title": "Georgia woman says she was wrongly diagnosed with cancer, had hysterectomy due to labeling error",
-        "link": "https://www.mynbc5.com/article/atlanta-woman-wrong-cancer-diagnosis-hysterectomy-lawsuit/73385360",
-        "ts": "2026-08-09T15:55:00+00:00",
-        "summary": "An Atlanta-area woman alleges that she was wrongly diagnosed with cancer and underwent an unneeded hysterectomy because of a labeling error."
+        "id": "73406933",
+        "title": "Local, small blood drives help stabilize blood supply during critical shortage",
+        "link": "https://www.mynbc5.com/article/local-small-blood-drives-help-stabilize-blood-supply-during-critical-shortage-according-to-red-cross/73406933",
+        "ts": "2026-08-11T23:26:00+00:00",
+        "summary": "Tuesday's blood drive in Colchester is one of several hosted by the local Rotary Club and Red Cross."
        },
        {
-        "id": "73385236",
-        "title": "American detained in Russia is 'near death,' advocate says",
-        "link": "https://www.mynbc5.com/article/american-detained-russia-robert-gilman-near-death/73385236",
-        "ts": "2026-08-09T15:17:00+00:00",
-        "summary": "Concerns are mounting about the wellbeing of an American detained in Russia since 2022, with an advocate alleging he has been subjected to torture."
+        "id": "73406839",
+        "title": "President Trump’s vaccine order looks to challenge state exemption laws",
+        "link": "https://www.mynbc5.com/article/trump-vaccine-order-state-exemption-laws/73406839",
+        "ts": "2026-08-11T23:05:00+00:00",
+        "summary": "President Trump’s executive order directs the Justice Department to challenge state vaccine laws, raising questions about federal authority over vaccination requirements."
        },
        {
-        "id": "73384181",
-        "title": "Public health alert issued for meat and poultry products containing recalled jalapeños",
-        "link": "https://www.mynbc5.com/article/health-alert-meat-poultry-recalled-jalapenos/73384181",
-        "ts": "2026-08-09T14:45:00+00:00",
-        "summary": "The U.S. Department of Agriculture’s Food Safety and Inspection Service is issuing a public health alert for meat and poultry products containing Food and Drug Administration-regulated jalapeños that may be contaminated with Salmonella."
+        "id": "73407525",
+        "title": "Cleanup efforts continue after storms damage North Hero",
+        "link": "https://www.mynbc5.com/article/north-hero-storm-cleanup-efforts/73407525",
+        "ts": "2026-08-11T22:58:00+00:00",
+        "summary": "Residents describe intense storm that left behind debris, downed trees, and power outages in North Hero."
        }
       ]
      },
      "btv-news-releases": {
       "items": [
        {
+        "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3871/639220367400000000",
+        "title": "08/10/2026 Assault Robbery - Resisting Arrest | 26BU018571",
+        "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3871",
+        "ts": "2026-08-11T14:19:00+00:00",
+        "summary": ""
+       },
+       {
         "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3870/639216290640000000",
         "title": "08/04/2026 Death Investigation | 26BU018006",
         "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3870",
         "ts": "2026-08-06T21:04:24+00:00",
         "summary": ""
-       },
-       {
-        "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3869/639216272890000000",
-        "title": "CT office will close at 1:00 PM on Monday, August 10th for Election Prep.",
-        "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3869",
-        "ts": "2026-08-06T20:34:49+00:00",
-        "summary": "CT office will close at 1:00 PM on Monday, August 10th for Election Prep."
        },
        {
         "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3868/639211001240000000",
@@ -1511,6 +1524,13 @@
      },
      "bpd-updates": {
       "items": [
+       {
+        "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3871/639220367400000000",
+        "title": "08/10/2026 Assault Robbery - Resisting Arrest | 26BU018571",
+        "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3871",
+        "ts": "2026-08-11T14:19:00+00:00",
+        "summary": ""
+       },
        {
         "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3870/639216290640000000",
         "title": "08/04/2026 Death Investigation | 26BU018006",
@@ -1601,164 +1621,164 @@
    "state": {
     "posts": [
      {
-      "id": "1vk85ug",
-      "title": "Places to donate furniture and clothes?",
-      "url": "https://www.reddit.com/r/burlington/comments/1vk85ug/places_to_donate_furniture_and_clothes/",
+      "id": "1vly8ti",
+      "title": "Eclipse glasses",
+      "url": "https://www.reddit.com/r/burlington/comments/1vly8ti/eclipse_glasses/",
       "score": null,
       "comments": null,
-      "created": "2026-08-10T03:41:52+00:00"
+      "created": "2026-08-12T00:41:22+00:00"
      },
      {
-      "id": "1vjzlpc",
-      "title": "Stylist to help transition to gray hair?",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjzlpc/stylist_to_help_transition_to_gray_hair/",
+      "id": "1vlwrab",
+      "title": "Bobcat in the southend",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlwrab/bobcat_in_the_southend/",
       "score": null,
       "comments": null,
-      "created": "2026-08-10T03:41:52+00:00"
+      "created": "2026-08-12T00:41:22+00:00"
      },
      {
-      "id": "1vk4qpy",
-      "title": "Food Grade Pig Blood",
-      "url": "https://www.reddit.com/r/burlington/comments/1vk4qpy/food_grade_pig_blood/",
+      "id": "1vlv3g3",
+      "title": "Work space downtown",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlv3g3/work_space_downtown/",
       "score": null,
       "comments": null,
-      "created": "2026-08-10T00:42:32+00:00"
+      "created": "2026-08-12T00:41:22+00:00"
      },
      {
-      "id": "1vk40fe",
-      "title": "Hit with a large cup of water on bike path",
-      "url": "https://www.reddit.com/r/burlington/comments/1vk40fe/hit_with_a_large_cup_of_water_on_bike_path/",
+      "id": "1vlq6d6",
+      "title": "Awesome free show tomorrow night at Foam Brewers",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlq6d6/awesome_free_show_tomorrow_night_at_foam_brewers/",
       "score": null,
       "comments": null,
-      "created": "2026-08-10T00:42:32+00:00"
+      "created": "2026-08-11T21:41:58+00:00"
      },
      {
-      "id": "1vk21id",
-      "title": "Thank you for downvoting!!!",
-      "url": "https://www.reddit.com/r/burlington/comments/1vk21id/thank_you_for_downvoting/",
+      "id": "1vlmm5r",
+      "title": "Noah Kahan Benefit Concert",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlmm5r/noah_kahan_benefit_concert/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T21:42:29+00:00"
+      "created": "2026-08-11T18:41:09+00:00"
      },
      {
-      "id": "1vk191m",
-      "title": "I don't understand the graffiti...",
-      "url": "https://www.reddit.com/r/burlington/comments/1vk191m/i_dont_understand_the_graffiti/",
+      "id": "1vll1zw",
+      "title": "Indoor Recreational Sports Leagues/teams",
+      "url": "https://www.reddit.com/r/burlington/comments/1vll1zw/indoor_recreational_sports_leaguesteams/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T21:42:29+00:00"
+      "created": "2026-08-11T18:41:09+00:00"
      },
      {
-      "id": "1vk0ug7",
-      "title": "I am in search of a kitten…",
-      "url": "https://www.reddit.com/r/burlington/comments/1vk0ug7/i_am_in_search_of_a_kitten/",
+      "id": "1vlkea6",
+      "title": "HELP - Pokémon Cards in Burlington Area?",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlkea6/help_pok%C3%A9mon_cards_in_burlington_area/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T21:42:29+00:00"
+      "created": "2026-08-11T15:41:47+00:00"
      },
      {
-      "id": "1vjywh7",
-      "title": "Thoughts on Bliss Bee/Spaghet?",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjywh7/thoughts_on_bliss_beespaghet/",
+      "id": "1vlkd3t",
+      "title": "We need a small business accountant. Help!",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlkd3t/we_need_a_small_business_accountant_help/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T21:42:29+00:00"
+      "created": "2026-08-11T15:41:47+00:00"
      },
      {
-      "id": "1vjxx0d",
-      "title": "Burlington parking?",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjxx0d/burlington_parking/",
+      "id": "1vljzz8",
+      "title": "Goodwill Bins",
+      "url": "https://www.reddit.com/r/burlington/comments/1vljzz8/goodwill_bins/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T21:42:29+00:00"
+      "created": "2026-08-11T15:41:47+00:00"
      },
      {
-      "id": "1vjwg6x",
-      "title": "From the burlington community on Reddit: State's Attorney Election",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjwg6x/from_the_burlington_community_on_reddit_states/",
+      "id": "1vljt1s",
+      "title": "Astronomy",
+      "url": "https://www.reddit.com/r/burlington/comments/1vljt1s/astronomy/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T18:41:59+00:00"
+      "created": "2026-08-11T15:41:47+00:00"
      },
      {
-      "id": "1vjvdao",
-      "title": "SAILING!",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjvdao/sailing/",
+      "id": "1vljkan",
+      "title": "Political/Election Posting, Moderation, and You",
+      "url": "https://www.reddit.com/r/burlington/comments/1vljkan/politicalelection_posting_moderation_and_you/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T18:41:59+00:00"
+      "created": "2026-08-11T15:41:47+00:00"
      },
      {
-      "id": "1vjt0h2",
-      "title": "Reddit Burlington accused of censoring the word “Homeless” - Vermont Daily Chronicle",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjt0h2/reddit_burlington_accused_of_censoring_the_word/",
+      "id": "1vljitp",
+      "title": "Singles Outing Club Survey",
+      "url": "https://www.reddit.com/r/burlington/comments/1vljitp/singles_outing_club_survey/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T15:41:48+00:00"
+      "created": "2026-08-11T15:41:47+00:00"
      },
      {
-      "id": "1vjpbr0",
-      "title": "At home euthanasia",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjpbr0/at_home_euthanasia/",
+      "id": "1vlgqvk",
+      "title": "Assault Robbery at City Market and Resisting Arrest",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlgqvk/assault_robbery_at_city_market_and_resisting/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T15:41:48+00:00"
+      "created": "2026-08-11T15:41:47+00:00"
      },
      {
-      "id": "1vjjlw8",
-      "title": "Tons of cops Main Street downtown",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjjlw8/tons_of_cops_main_street_downtown/",
+      "id": "1vlg9os",
+      "title": "Who carries decent quality sneakers for raquet sports?",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlg9os/who_carries_decent_quality_sneakers_for_raquet/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T09:40:19+00:00"
+      "created": "2026-08-11T12:41:27+00:00"
      },
      {
-      "id": "1vjfzxp",
-      "title": "Wedding dresses…..",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjfzxp/wedding_dresses/",
+      "id": "1vlexdw",
+      "title": "Plans to demolish old Bove’s restaurant in Burlington put on hold",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlexdw/plans_to_demolish_old_boves_restaurant_in/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T06:40:23+00:00"
+      "created": "2026-08-11T12:41:27+00:00"
      },
      {
-      "id": "1vjfhlh",
-      "title": "What are good jobs for an incoming freshman at UVM?",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjfhlh/what_are_good_jobs_for_an_incoming_freshman_at_uvm/",
+      "id": "1vleem4",
+      "title": "You don’t have to have it all figured out to vote today!",
+      "url": "https://www.reddit.com/r/burlington/comments/1vleem4/you_dont_have_to_have_it_all_figured_out_to_vote/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T06:40:23+00:00"
+      "created": "2026-08-11T12:41:27+00:00"
      },
      {
-      "id": "1vje77v",
-      "title": "ISO good massage place or specific masseuse somewhere",
-      "url": "https://www.reddit.com/r/burlington/comments/1vje77v/iso_good_massage_place_or_specific_masseuse/",
+      "id": "1vlb7np",
+      "title": "One year free from cutting…",
+      "url": "https://www.reddit.com/r/burlington/comments/1vlb7np/one_year_free_from_cutting/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T03:41:00+00:00"
+      "created": "2026-08-11T09:42:02+00:00"
      },
      {
-      "id": "1vje6s5",
-      "title": "Police Brutality in Vermont",
-      "url": "https://www.reddit.com/r/burlington/comments/1vje6s5/police_brutality_in_vermont/",
+      "id": "1vl6otx",
+      "title": "Bus Trouble?",
+      "url": "https://www.reddit.com/r/burlington/comments/1vl6otx/bus_trouble/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T03:41:00+00:00"
+      "created": "2026-08-11T06:41:23+00:00"
      },
      {
-      "id": "1vjdqyq",
-      "title": "Looking for iris photography.",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjdqyq/looking_for_iris_photography/",
+      "id": "1vl53a3",
+      "title": "Dan Gamelin posting about himself from a burner account?",
+      "url": "https://www.reddit.com/r/burlington/comments/1vl53a3/dan_gamelin_posting_about_himself_from_a_burner/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T03:41:00+00:00"
+      "created": "2026-08-11T06:41:23+00:00"
      },
      {
-      "id": "1vjdovs",
-      "title": "Physical Media Fair @14th Star",
-      "url": "https://www.reddit.com/r/burlington/comments/1vjdovs/physical_media_fair_14th_star/",
+      "id": "1vl445u",
+      "title": "Thinking about a move to Burlington — any service industry folks here?",
+      "url": "https://www.reddit.com/r/burlington/comments/1vl445u/thinking_about_a_move_to_burlington_any_service/",
       "score": null,
       "comments": null,
-      "created": "2026-08-09T03:41:00+00:00"
+      "created": "2026-08-11T06:41:23+00:00"
      }
     ]
    }
@@ -1767,654 +1787,6 @@
    "ok": true,
    "state": {
     "items": [
-     {
-      "id": "e35ab3abdffa",
-      "title": "20th Anniversary Lake Champlain Dragon Boat Festival",
-      "link": "https://www.facebook.com/events/971372949095709/",
-      "ts": "2026-07-10T23:07:48-04:00",
-      "start": "2026-08-09T08:00:00-04:00",
-      "venue": "Waterfront, Burlington"
-     },
-     {
-      "id": "7e0ed1edc1c3",
-      "title": "Grab-&-Go: Mini Bookshelf",
-      "link": "https://southburlingtonlibrary.org/grab-and-go-mini-bookshelf",
-      "ts": "2026-08-09T17:06:26-04:00",
-      "start": "2026-08-09T09:00:00-04:00",
-      "venue": "South Burlington Public Library"
-     },
-     {
-      "id": "de3a76d19a93",
-      "title": "Trolley tours",
-      "link": "https://www.helloburlingtonvt.com/event/trolley-tours/4244/",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09T09:00:00-04:00",
-      "venue": "Perkins Pier"
-     },
-     {
-      "id": "87eee98b75a3",
-      "title": "Sensory-Friendly Sunday at ECHO",
-      "link": "https://www.helloburlingtonvt.com/event/sensory-friendly-sunday-at-echo/178/",
-      "ts": "2026-07-14T17:36:01-04:00",
-      "start": "2026-08-09T09:00:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "9f11351110e7",
-      "title": "SLAMT1D Summer Classic",
-      "link": "https://community.sevendaysvt.com/event/slamt1d-summer-classic-45303860",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T09:00:00-04:00",
-      "venue": "Little Fenway Park"
-     },
-     {
-      "id": "62068fe6cad5",
-      "title": "Sunday Classical: Vermont Brass Trio",
-      "link": "https://www.burlingtoncityarts.org/event/sunday-classical-vermont-brass-trio",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T10:00:00-04:00",
-      "venue": "BCA Center"
-     },
-     {
-      "id": "e6862718fd9e",
-      "title": "Sidewalk Sale",
-      "link": "https://events.uvm.edu/event/sidewalk-sale",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T10:00:00-04:00",
-      "venue": "Church Street Marketplace"
-     },
-     {
-      "id": "8676bfd00357",
-      "title": "Dinosaur Safari Exhibit",
-      "link": "https://calendar.time.ly/vfaca7kw/event/78234701/20260117100000",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09T10:00:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "966e4d58982c",
-      "title": "Winooski Farmers Market",
-      "link": "https://www.mychamplainvalley.com/calendar/#/details/winooski-farmers-market/19295673/2026-08-09T10",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T10:00:00-04:00",
-      "venue": "Winooski Farmers Market"
-     },
-     {
-      "id": "88e8ac1ac983",
-      "title": "Tree ID and Natural History Tour of Ethan Allen Park",
-      "link": "https://www.eventbrite.com/e/tree-id-and-natural-history-tour-of-ethan-allen-park-tickets-1990565285353",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T10:00:00-04:00",
-      "venue": "Oakledge Park"
-     },
-     {
-      "id": "aab95b240ce8",
-      "title": "Winooski Farmers Market",
-      "link": "https://community.sevendaysvt.com/event/winooski-farmers-market-45023077",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T10:00:00-04:00",
-      "venue": "Winooski Falls"
-     },
-     {
-      "id": "ae1d247667a2",
-      "title": "Sunday Brunch Tunes",
-      "link": "https://community.sevendaysvt.com/event/sunday-brunch-tunes-35242744",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T10:00:00-04:00",
-      "venue": "Hotel Vermont"
-     },
-     {
-      "id": "7ed7050c0028",
-      "title": "'Champ: America’s Lake Monster' Exhibit",
-      "link": "https://community.sevendaysvt.com/event/champ-americas-lake-monster-exhibit-44279688",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T10:00:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "cae9db58dabb",
-      "title": "'Wild Rescue 3D'",
-      "link": "https://community.sevendaysvt.com/event/wild-rescue-3d-45162401",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T10:30:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "9b14bf64df4a",
-      "title": "'Shark Kingdom 3D'",
-      "link": "https://community.sevendaysvt.com/event/shark-kingdom-3d-44971419",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T11:00:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "e638bc7da112",
-      "title": "Sunday Afternoon Tea",
-      "link": "https://www.helloburlingtonvt.com/event/sunday-afternoon-tea/4436/",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T11:30:00-04:00",
-      "venue": "Ferrisburgh Bake Shop & Deli"
-     },
-     {
-      "id": "22822b208626",
-      "title": "'Dinosaurs of Antarctica 3D'",
-      "link": "https://community.sevendaysvt.com/event/dinosaurs-of-antarctica-3d-44804713",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T11:30:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "33c79bb00de6",
-      "title": "Fried Chicken Sundays",
-      "link": "https://www.switchbackvt.com/beer-garden-events/fried-chicken-sundays-2-7m2b4",
-      "ts": "2026-07-22T17:42:48-04:00",
-      "start": "2026-08-09T12:00:00-04:00",
-      "venue": "Switchback Brewing Company"
-     },
-     {
-      "id": "07e8f451717f",
-      "title": "Cruise aboard the Spirit of Ethan Allen III",
-      "link": "https://www.helloburlingtonvt.com/event/cruise-aboard-the-spirit-of-ethan-allen-iii/6292/",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09T12:00:00-04:00",
-      "venue": "Spirit of Ethan Allen"
-     },
-     {
-      "id": "b6d0ffdba1e1",
-      "title": "LGBTQIA+ Mixer",
-      "link": "https://www.meetup.com/friendlytabletopgamers/events/315762453/",
-      "ts": "2026-07-17T07:08:33-04:00",
-      "start": "2026-08-09T12:00:00-04:00",
-      "venue": ""
-     },
-     {
-      "id": "db1deffd8cd9",
-      "title": "Sunday Funday",
-      "link": "https://community.sevendaysvt.com/event/sunday-funday-38405867",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T12:00:00-04:00",
-      "venue": "1st Republic Brewing"
-     },
-     {
-      "id": "16824a1390d1",
-      "title": "'Backyard Wilderness 3D'",
-      "link": "https://community.sevendaysvt.com/event/backyard-wilderness-3d-44810610",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T12:00:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "3a5686a2a218",
-      "title": "Dungeons & Dragons Group A with DM Andrew",
-      "link": "https://fletcherfree.libcal.com/event/15547754",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T12:15:00-04:00",
-      "venue": "Fletcher Free Library"
-     },
-     {
-      "id": "77b50eecf200",
-      "title": "Social Sundays",
-      "link": "https://community.sevendaysvt.com/event/social-sundays-42351166",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T12:30:00-04:00",
-      "venue": "Milton Artists' Guild"
-     },
-     {
-      "id": "c29bee8076fc",
-      "title": "Helen Whybrow | The Salt Stones Book Signing",
-      "link": "https://calendar.time.ly/vfaca7kw/event/78429820/20260809130000",
-      "ts": "2026-07-22T07:27:55-04:00",
-      "start": "2026-08-09T13:00:00-04:00",
-      "venue": "Phoenix Books"
-     },
-     {
-      "id": "020a940da53a",
-      "title": "Reid Parsons & Ivamae",
-      "link": "https://foambrewers.com/events/reid-parsons-ivamae",
-      "ts": "2026-07-21T17:44:33-04:00",
-      "start": "2026-08-09T13:00:00-04:00",
-      "venue": "Foam Brewers"
-     },
-     {
-      "id": "30c12b7f6c75",
-      "title": "Acoustic Brunch",
-      "link": "https://www.helloburlingtonvt.com/event/acoustic-brunch/3027/",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T13:00:00-04:00",
-      "venue": "Foam Brewers"
-     },
-     {
-      "id": "32f89489b986",
-      "title": "Summer Concert Sundays",
-      "link": "https://www.helloburlingtonvt.com/event/summer-concert-sundays/7548/",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T13:00:00-04:00",
-      "venue": "Vermont Pub and Brewery"
-     },
-     {
-      "id": "e61cfde1b7c1",
-      "title": "Robin Gottfried",
-      "link": "https://www.facebook.com/events/1351364383583166/",
-      "ts": "2026-07-10T23:07:48-04:00",
-      "start": "2026-08-09T13:00:00-04:00",
-      "venue": "Vermont Pub and Brewery"
-     },
-     {
-      "id": "4f119fe6df35",
-      "title": "Duplicate Bridge Games",
-      "link": "https://community.sevendaysvt.com/event/duplicate-bridge-games-41579461",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T13:00:00-04:00",
-      "venue": "Burlington Bridge Club"
-     },
-     {
-      "id": "453afe460533",
-      "title": "Social Sunday",
-      "link": "https://community.sevendaysvt.com/event/social-sunday-42357527",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T13:00:00-04:00",
-      "venue": "Milton Artists' Guild"
-     },
-     {
-      "id": "9bd7a70b4403",
-      "title": "The Ultimate Chocolate Tasting",
-      "link": "https://calendar.time.ly/vfaca7kw/event/78391346/20260809140000",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09T14:00:00-04:00",
-      "venue": "Lake Champlain Chocolates"
-     },
-     {
-      "id": "f255052bafd9",
-      "title": "Tours",
-      "link": "https://www.helloburlingtonvt.com/event/tours/7464/",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09T14:00:00-04:00",
-      "venue": "Merrymac Farm Sanctuary"
-     },
-     {
-      "id": "0c207f4bd08f",
-      "title": "Dan Parks at The Spanked Puppy",
-      "link": "https://www.facebook.com/events/968563302897527/",
-      "ts": "2026-07-10T23:07:48-04:00",
-      "start": "2026-08-09T14:00:00-04:00",
-      "venue": "Spanked Puppy"
-     },
-     {
-      "id": "d56261c13623",
-      "title": "Shadowlight",
-      "link": "https://www.mychamplainvalley.com/calendar/#/details/shadowlight/18459147/2026-08-09T14",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T14:30:00-04:00",
-      "venue": "McCarthy Arts Center"
-     },
-     {
-      "id": "5cdd76197e68",
-      "title": "Live Music",
-      "link": "https://community.sevendaysvt.com/event/live-music-45095554",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T14:30:00-04:00",
-      "venue": "Maquam Barn & Winery"
-     },
-     {
-      "id": "515ba729c47b",
-      "title": "Food For Talk Cookbook Club: Portugal",
-      "link": "https://fletcherfree.libcal.com/event/15949065",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T15:00:00-04:00",
-      "venue": "Fletcher Free Library"
-     },
-     {
-      "id": "5613bfee0dc9",
-      "title": "Sunday Polo Match",
-      "link": "https://community.sevendaysvt.com/event/sunday-polo-match-45209250",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T15:00:00-04:00",
-      "venue": "Amdez Polo Club"
-     },
-     {
-      "id": "911086d22fe8",
-      "title": "Dad Guild Playgroup (drop-in)",
-      "link": "https://fletcherfree.libcal.com/event/15855019",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T15:30:00-04:00",
-      "venue": "Fletcher Free Library"
-     },
-     {
-      "id": "d724f890a83d",
-      "title": "Half Priced Oysters at La Reprise",
-      "link": "https://www.helloburlingtonvt.com/event/half-priced-oysters-at-la-reprise/7709/",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09T16:00:00-04:00",
-      "venue": "La Reprise"
-     },
-     {
-      "id": "db68d08ec4f9",
-      "title": "Skiff Oyster Hour",
-      "link": "https://www.helloburlingtonvt.com/event/skiff-oyster-hour/5005/",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09T16:00:00-04:00",
-      "venue": "Hilton Burlington Lake Champlain"
-     },
-     {
-      "id": "540b6ac20672",
-      "title": "Blue Sundays",
-      "link": "https://shelburnevineyard.com/events-list/bluesundays",
-      "ts": "2026-07-24T17:44:08-04:00",
-      "start": "2026-08-09T17:00:00-04:00",
-      "venue": "Shelburne Vineyard"
-     },
-     {
-      "id": "99a09842843a",
-      "title": "Womxn's Pick-up Soccer - Outdoors at Starr Farm Park",
-      "link": "https://www.meetup.com/womens-soccer-vermont/events/316016867/",
-      "ts": "2026-08-07T17:21:19-04:00",
-      "start": "2026-08-09T17:00:00-04:00",
-      "venue": "Starr Farm Park"
-     },
-     {
-      "id": "6e1a80e6f5f6",
-      "title": "Wine & Jazz Sundays",
-      "link": "https://community.sevendaysvt.com/event/wine-and-jazz-sundays-44782762",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T17:00:00-04:00",
-      "venue": "Shelburne Vineyard"
-     },
-     {
-      "id": "a7358b0798d3",
-      "title": "New Mindfulness Meditation Gathering",
-      "link": "https://community.sevendaysvt.com/event/new-mindfulness-meditation-gathering-44983853",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T17:30:00-04:00",
-      "venue": "Hood Plant"
-     },
-     {
-      "id": "c4f05167b565",
-      "title": "New Leaf Sangha Mindfulness Practice",
-      "link": "https://community.sevendaysvt.com/event/new-leaf-sangha-mindfulness-practice-41783747",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T18:00:00-04:00",
-      "venue": "Hot Yoga Burlington"
-     },
-     {
-      "id": "1073c66f4e8d",
-      "title": "Swing Dancing - Dance Nights aboard the Spirit of Ethan Allen",
-      "link": "https://www.facebook.com/events/3297272030479313/",
-      "ts": "2026-07-10T23:07:48-04:00",
-      "start": "2026-08-09T18:30:00-04:00",
-      "venue": "Waterfront, Burlington"
-     },
-     {
-      "id": "b6d7e9a86642",
-      "title": "Sunset at Red Rocks Park",
-      "link": "https://www.meetup.com/green-mountain-club-burlington-section-outdoor-adventures/events/315172866/",
-      "ts": "2026-08-06T20:58:05-04:00",
-      "start": "2026-08-09T19:45:00-04:00",
-      "venue": "Red Rocks Park"
-     },
-     {
-      "id": "6c1752e36876",
-      "title": "Save Ferris",
-      "link": "https://highergroundmusic.com/events/save-ferris/",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T20:00:00-04:00",
-      "venue": "Higher Ground"
-     },
-     {
-      "id": "81d4b116cb3e",
-      "title": "Karaoke Sundays!",
-      "link": "https://www.helloburlingtonvt.com/event/karaoke-sundays!/4512/",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-09T21:00:00-04:00",
-      "venue": "Einstein Tap House"
-     },
-     {
-      "id": "65944c17016e",
-      "title": "Everything is Everything: Will Kasso Condry",
-      "link": "https://www.burlingtoncityarts.org/exhibition/everything-everything-will-kasso-condry",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09",
-      "venue": "BCA Center"
-     },
-     {
-      "id": "2c644bce0c16",
-      "title": "Dream / Mộng : Veronica Pham",
-      "link": "https://www.burlingtoncityarts.org/exhibition/dream-mong-veronica-pham",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09",
-      "venue": "BCA Center"
-     },
-     {
-      "id": "13f9d38443c3",
-      "title": "Color & Scale: Leah Barranco",
-      "link": "https://www.burlingtoncityarts.org/exhibition/color-scale-leah-barranco",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-09",
-      "venue": "BCA Center"
-     },
-     {
-      "id": "9ea8d16b401a",
-      "title": "International Day of the World's Indigenous Peoples",
-      "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4974",
-      "ts": "2026-07-31T17:45:04-04:00",
-      "start": "2026-08-09",
-      "venue": "- Burlington VT 05401"
-     },
-     {
-      "id": "21b5370c48d9",
-      "title": "Sidewalk Sales at April Cornell",
-      "link": "https://calendar.time.ly/vfaca7kw/event/78423670/20260805100000",
-      "ts": "2026-07-27T17:46:46-04:00",
-      "start": "2026-08-09",
-      "venue": "April Cornell"
-     },
-     {
-      "id": "49c466618cf8",
-      "title": "OSHA-10 Construction Industry Outreach Training",
-      "link": "https://events.uvm.edu/event/august-osha-10-hour-construction-industry-outreach-training",
-      "ts": "2026-07-13T17:34:21-04:00",
-      "start": "2026-08-10T07:30:00-04:00",
-      "venue": "321 Ryan St. Essex Jct. VT"
-     },
-     {
-      "id": "ab11c9d0c0b7",
-      "title": "Art Wall - Vibrant Lives: Discovering Our Roots of Black Vermont",
-      "link": "https://southburlingtonlibrary.org/art-wall-vibrant-lives-discovering-our-roots-of-black-vermont",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T09:00:00-04:00",
-      "venue": "South Burlington Public Library"
-     },
-     {
-      "id": "64177c5608de",
-      "title": "Glass Factory and Storefront Open !!",
-      "link": "https://www.helloburlingtonvt.com/event/glass-factory-and-storefront-open-!!/5584/",
-      "ts": "2026-08-09T06:07:29-04:00",
-      "start": "2026-08-10T10:00:00-04:00",
-      "venue": "AO Glass"
-     },
-     {
-      "id": "49c01f65458c",
-      "title": "'Champ: America’s Lake Monster' Exhibit",
-      "link": "https://community.sevendaysvt.com/event/champ-americas-lake-monster-exhibit-44279688",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T10:00:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "3ae823cfc5cf",
-      "title": "Tech Help with Clif",
-      "link": "https://brownelllibrary.org/event/tech-help-with-clif/2026-08-10/",
-      "ts": "2026-07-11T17:24:06-04:00",
-      "start": "2026-08-10T10:30:00-04:00",
-      "venue": "Brownell Library"
-     },
-     {
-      "id": "2edde2851ff7",
-      "title": "'Wild Rescue 3D'",
-      "link": "https://community.sevendaysvt.com/event/wild-rescue-3d-45162401",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T10:30:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "274214f2d95f",
-      "title": "'Shark Kingdom 3D'",
-      "link": "https://community.sevendaysvt.com/event/shark-kingdom-3d-44971419",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T11:00:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "c4da95cd4531",
-      "title": "Industry Day",
-      "link": "https://calendar.time.ly/vfaca7kw/event/78304357/20260810000000",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T11:30:00-04:00",
-      "venue": "Vermont Pub and Brewery"
-     },
-     {
-      "id": "23887eb5897b",
-      "title": "'Dinosaurs of Antarctica 3D'",
-      "link": "https://community.sevendaysvt.com/event/dinosaurs-of-antarctica-3d-44804713",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T11:30:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "db1b43d792e7",
-      "title": "'Backyard Wilderness 3D'",
-      "link": "https://community.sevendaysvt.com/event/backyard-wilderness-3d-44810610",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T12:00:00-04:00",
-      "venue": "ECHO, Leahy Center for Lake Champlain"
-     },
-     {
-      "id": "3ae823cfc5cf-1300",
-      "title": "Tech Help with Clif",
-      "link": "https://brownelllibrary.org/event/tech-help-with-clif-5/2026-08-10/",
-      "ts": "2026-07-16T17:44:24-04:00",
-      "start": "2026-08-10T13:00:00-04:00",
-      "venue": "Brownell Library"
-     },
-     {
-      "id": "92fe136bebbc",
-      "title": "Pokémon Club",
-      "link": "https://community.sevendaysvt.com/event/pokemon-club-40325272",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T16:00:00-04:00",
-      "venue": "Dorothy Alling Memorial Library"
-     },
-     {
-      "id": "9ab962292023",
-      "title": "Crowdsourced VT Shrek with Media Factory",
-      "link": "https://fletcherfree.libcal.com/event/16733650",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T16:30:00-04:00",
-      "venue": "Fletcher Free Library"
-     },
-     {
-      "id": "9c11ada6d2dd",
-      "title": "Half Priced Wine at The Daily Planet",
-      "link": "https://calendar.time.ly/vfaca7kw/event/78067600/20260810170000",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T17:00:00-04:00",
-      "venue": ""
-     },
-     {
-      "id": "50a8446b5609",
-      "title": "Adult Drop- In Table Tennis",
-      "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4634",
-      "ts": "2026-07-27T17:46:46-04:00",
-      "start": "2026-08-10T18:00:00-04:00",
-      "venue": "Robert Miller Community & Recreation Center"
-     },
-     {
-      "id": "5ea02454bedb",
-      "title": "Anime Group",
-      "link": "https://community.sevendaysvt.com/event/anime-group-44975802",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T18:00:00-04:00",
-      "venue": "Pathways Vermont Morgan's Place Peer Support Center"
-     },
-     {
-      "id": "7c39dce5507d",
-      "title": "Monday Night Open Mic",
-      "link": "https://community.sevendaysvt.com/event/monday-night-open-mic-44612935",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T18:00:00-04:00",
-      "venue": "Pearl Street Pub"
-     },
-     {
-      "id": "95d259932097",
-      "title": "Trivia Monday",
-      "link": "https://community.sevendaysvt.com/event/trivia-monday-42603487",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T18:00:00-04:00",
-      "venue": "Essex Experience"
-     },
-     {
-      "id": "1fb2ea33fa9b",
-      "title": "Burlington Elks Bingo",
-      "link": "https://community.sevendaysvt.com/event/burlington-elks-bingo-42890349",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T18:00:00-04:00",
-      "venue": "Burlington Elks Lodge 916"
-     },
-     {
-      "id": "1755c8ea4677",
-      "title": "Collage Collective",
-      "link": "https://www.helloburlingtonvt.com/event/collage-collective/4207/",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T18:30:00-04:00",
-      "venue": "Expressive Arts Burlington"
-     },
-     {
-      "id": "123cc4dfb0cb",
-      "title": "Book Club For Curious Women",
-      "link": "https://www.meetup.com/vtladiessocialgroup/events/315459812/",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T18:30:00-04:00",
-      "venue": "Ladies Social Group"
-     },
-     {
-      "id": "e92611e86e39",
-      "title": "Community of Poets Sharing Circle with Darlene Witte August 10 2026 7 PM",
-      "link": "https://www.meetup.com/community-of-poets-sharing-circle-with-darlene-witte-phd/events/315756684/",
-      "ts": "2026-07-20T08:02:35-04:00",
-      "start": "2026-08-10T19:00:00-04:00",
-      "venue": ""
-     },
-     {
-      "id": "3fb1670ecbde",
-      "title": "Monday Night Live",
-      "link": "https://community.sevendaysvt.com/event/monday-night-live-44684727",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T19:00:00-04:00",
-      "venue": "Outright Vermont"
-     },
-     {
-      "id": "f28f5e6c8a23",
-      "title": "Trivia Monday with Top Hat Entertainment",
-      "link": "https://community.sevendaysvt.com/event/trivia-monday-with-top-hat-entertainment-40925080",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T19:00:00-04:00",
-      "venue": "McKee's Original"
-     },
-     {
-      "id": "490c0546e9ba",
-      "title": "Trivia with Craig Mitchell",
-      "link": "https://community.sevendaysvt.com/event/trivia-with-craig-mitchell-40943661",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T19:00:00-04:00",
-      "venue": "Monkey House"
-     },
-     {
-      "id": "52471fd3bbb2",
-      "title": "Open Mic",
-      "link": "https://community.sevendaysvt.com/event/open-mic-45291396",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-10T19:00:00-04:00",
-      "venue": "Stone Corral Brewery"
-     },
      {
       "id": "9d9dd0e70f51",
       "title": "Ward 8 Polling Location",
@@ -2430,6 +1802,22 @@
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-11T08:30:00-04:00",
       "venue": "Hula"
+     },
+     {
+      "id": "1461520b4681",
+      "title": "Grab-&-Go: Mini Bookshelf",
+      "link": "https://southburlingtonlibrary.org/grab-and-go-mini-bookshelf",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11T09:00:00-04:00",
+      "venue": "South Burlington Public Library"
+     },
+     {
+      "id": "e95a90a40756",
+      "title": "Trolley tours",
+      "link": "https://www.helloburlingtonvt.com/event/trolley-tours/4244/",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11T09:00:00-04:00",
+      "venue": "Perkins Pier"
      },
      {
       "id": "6e15840ca34e",
@@ -2504,12 +1892,36 @@
       "venue": "Billings Library"
      },
      {
+      "id": "f5c28b054a6f",
+      "title": "Dinosaur Safari Exhibit",
+      "link": "https://calendar.time.ly/vfaca7kw/event/78234701/20260117100000",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-08-11T10:00:00-04:00",
+      "venue": "ECHO, Leahy Center for Lake Champlain"
+     },
+     {
+      "id": "38d7a41a4c22",
+      "title": "Glass Factory and Storefront Open !!",
+      "link": "https://www.helloburlingtonvt.com/event/glass-factory-and-storefront-open-!!/5584/",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11T10:00:00-04:00",
+      "venue": "AO Glass"
+     },
+     {
       "id": "1fa1e08aa0fb",
       "title": "Current Events",
       "link": "https://brownelllibrary.org/event/current-events-2/2026-08-11/",
       "ts": "2026-07-11T17:24:06-04:00",
       "start": "2026-08-11T10:00:00-04:00",
       "venue": "Brownell Library"
+     },
+     {
+      "id": "4e5161396b88",
+      "title": "Dinosaur Safari Exhibit",
+      "link": "https://calendar.time.ly/vfaca7kw/event/78234701/20260117100000",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11T10:00:00-04:00",
+      "venue": "ECHO, Leahy Center for Lake Champlain"
      },
      {
       "id": "1b202a6abd38",
@@ -2608,6 +2020,14 @@
       "venue": "ECHO, Leahy Center for Lake Champlain"
      },
      {
+      "id": "7ea5c42dd68a",
+      "title": "Cruise aboard the Spirit of Ethan Allen III",
+      "link": "https://www.helloburlingtonvt.com/event/cruise-aboard-the-spirit-of-ethan-allen-iii/6292/",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11T12:00:00-04:00",
+      "venue": "Spirit of Ethan Allen"
+     },
+     {
       "id": "0cebe381a07d",
       "title": "'Backyard Wilderness 3D'",
       "link": "https://community.sevendaysvt.com/event/backyard-wilderness-3d-44810610",
@@ -2640,12 +2060,36 @@
       "venue": "Winooski Memorial Library"
      },
      {
+      "id": "22a284fadee4",
+      "title": "The Ultimate Chocolate Tasting",
+      "link": "https://calendar.time.ly/vfaca7kw/event/78391346/20260811140000",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11T14:00:00-04:00",
+      "venue": "Lake Champlain Chocolates"
+     },
+     {
+      "id": "ceb11f176078",
+      "title": "Half Priced Oysters at La Reprise",
+      "link": "https://www.helloburlingtonvt.com/event/half-priced-oysters-at-la-reprise/7709/",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11T16:00:00-04:00",
+      "venue": "La Reprise"
+     },
+     {
       "id": "090e3aa1d1a7",
       "title": "Sandbox - Free Sewing Class for beginners",
       "link": "https://www.helloburlingtonvt.com/event/sandbox-free-sewing-class-for-beginners/5596/",
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-11T16:00:00-04:00",
       "venue": "688 pine street. Burlington- VT 05401"
+     },
+     {
+      "id": "cdccd12c1eb8",
+      "title": "Skiff Oyster Hour",
+      "link": "https://www.helloburlingtonvt.com/event/skiff-oyster-hour/5005/",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11T16:00:00-04:00",
+      "venue": "Hilton Burlington Lake Champlain"
      },
      {
       "id": "13723a0afa72",
@@ -2670,6 +2114,14 @@
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-11T16:30:00-04:00",
       "venue": "Maglianero"
+     },
+     {
+      "id": "cff1f219e6a9",
+      "title": "Big Pond Improv Festival: Thu, Sep 10th",
+      "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383545",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-08-11T17:00:00-04:00",
+      "venue": "Vermont Comedy Club"
      },
      {
       "id": "a6f8c04ad23d",
@@ -2822,6 +2274,30 @@
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-11T21:00:00-04:00",
       "venue": "The 126"
+     },
+     {
+      "id": "8059a9b487dc",
+      "title": "Everything is Everything: Will Kasso Condry",
+      "link": "https://www.burlingtoncityarts.org/exhibition/everything-everything-will-kasso-condry",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11",
+      "venue": "BCA Center"
+     },
+     {
+      "id": "445d29532542",
+      "title": "Dream / Mộng : Veronica Pham",
+      "link": "https://www.burlingtoncityarts.org/exhibition/dream-mong-veronica-pham",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11",
+      "venue": "BCA Center"
+     },
+     {
+      "id": "045b1f6b0de0",
+      "title": "Color & Scale: Leah Barranco",
+      "link": "https://www.burlingtoncityarts.org/exhibition/color-scale-leah-barranco",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-11",
+      "venue": "BCA Center"
      },
      {
       "id": "aaea2934e859",
@@ -2982,6 +2458,14 @@
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-12T14:00:00-04:00",
       "venue": "Fletcher Free Library"
+     },
+     {
+      "id": "d4079159e840",
+      "title": "Tours",
+      "link": "https://www.helloburlingtonvt.com/event/tours/7464/",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-08-12T14:00:00-04:00",
+      "venue": "Merrymac Farm Sanctuary"
      },
      {
       "id": "b93928b08d67",
@@ -3246,6 +2730,14 @@
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-12T19:00:00-04:00",
       "venue": "Venetian Soda Lounge"
+     },
+     {
+      "id": "7cc32abdc7ce",
+      "title": "Live Music! Temple Mountain",
+      "link": "https://www.helloburlingtonvt.com/event/live-music!-temple-mountain/7846/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-08-12T19:00:00-04:00",
+      "venue": "4 Quarters Brewing"
      },
      {
       "id": "d9c1d4daf575",
@@ -4048,6 +3540,14 @@
       "venue": "Four Quarters Brewing"
      },
      {
+      "id": "a415326857f9",
+      "title": "Burlington waterfront walk & creemees",
+      "link": "https://www.meetup.com/outdoors-for-everyone-vt/events/316055608/",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-08-14T19:00:00-04:00",
+      "venue": "ECHO, Leahy Center for Lake Champlain"
+     },
+     {
       "id": "12eb6f63b7a8",
       "title": "Friday Night at Specs",
       "link": "https://community.sevendaysvt.com/event/friday-night-at-specs-44521706",
@@ -4448,14 +3948,6 @@
       "venue": "RiRa Irish Pub"
      },
      {
-      "id": "ade95e649ce4",
-      "title": "Winooski Farmers Market",
-      "link": "https://www.mychamplainvalley.com/calendar/#/details/winooski-farmers-market/19295673/2026-08-16T10",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-16T10:00:00-04:00",
-      "venue": "Winooski Farmers Market"
-     },
-     {
       "id": "de5c7abe453b",
       "title": "Sunday Classical: Equinox Wind Quintet",
       "link": "https://www.burlingtoncityarts.org/event/sunday-classical-equinox-wind-quintet",
@@ -4478,6 +3970,14 @@
       "ts": "2026-08-08T17:04:21-04:00",
       "start": "2026-08-16T10:00:00-04:00",
       "venue": "Leddy Park"
+     },
+     {
+      "id": "ade95e649ce4",
+      "title": "Winooski Farmers Market",
+      "link": "https://www.mychamplainvalley.com/calendar/#/details/winooski-farmers-market/19295673/2026-08-16T10",
+      "ts": "2026-07-10T17:56:00-04:00",
+      "start": "2026-08-16T10:00:00-04:00",
+      "venue": "Winooski Farmers Market"
      },
      {
       "id": "39dd5bca151e",
@@ -4512,20 +4012,20 @@
       "venue": "ECHO, Leahy Center for Lake Champlain"
      },
      {
-      "id": "ab91a89cf4b8",
-      "title": "Bike Ride from Leddy Park to South Hero!",
-      "link": "https://www.meetup.com/forever-38/events/315754450/",
-      "ts": "2026-07-21T07:27:02-04:00",
-      "start": "2026-08-16T11:00:00-04:00",
-      "venue": "Leddy Park"
-     },
-     {
       "id": "b1ca4b4c820f",
       "title": "'Shark Kingdom 3D'",
       "link": "https://community.sevendaysvt.com/event/shark-kingdom-3d-44971419",
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-16T11:00:00-04:00",
       "venue": "ECHO, Leahy Center for Lake Champlain"
+     },
+     {
+      "id": "b3ef8261eecb",
+      "title": "Build-Your-Own Bouquet with Burly Blooms",
+      "link": "https://www.helloburlingtonvt.com/event/build-your-own-bouquet-with-burly-blooms/7840/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-08-16T11:30:00-04:00",
+      "venue": "4 Quarters Brewing"
      },
      {
       "id": "ab044b6295aa",
@@ -4584,22 +4084,6 @@
       "venue": "Milton Artists' Guild"
      },
      {
-      "id": "f42c66cf5d17",
-      "title": "Acoustic Brunch",
-      "link": "https://www.helloburlingtonvt.com/event/acoustic-brunch/3027/",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-16T13:00:00-04:00",
-      "venue": "Foam Brewers"
-     },
-     {
-      "id": "f9ff73959409",
-      "title": "Summer Concert Sundays",
-      "link": "https://www.helloburlingtonvt.com/event/summer-concert-sundays/7548/",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-16T13:00:00-04:00",
-      "venue": "Vermont Pub and Brewery"
-     },
-     {
       "id": "6a546d4bcc5f",
       "title": "Women's Soccer vs Sacred Heart",
       "link": "https://events.uvm.edu/event/womens-soccer-vs-sacred-heart",
@@ -4627,6 +4111,22 @@
       "id": "fef047bc2d41",
       "title": "John Lackard Blues Duo",
       "link": "https://calendar.time.ly/vfaca7kw/event/78355224/20260816130000",
+      "ts": "2026-07-10T17:56:00-04:00",
+      "start": "2026-08-16T13:00:00-04:00",
+      "venue": "Vermont Pub and Brewery"
+     },
+     {
+      "id": "f42c66cf5d17",
+      "title": "Acoustic Brunch",
+      "link": "https://www.helloburlingtonvt.com/event/acoustic-brunch/3027/",
+      "ts": "2026-07-10T17:56:00-04:00",
+      "start": "2026-08-16T13:00:00-04:00",
+      "venue": "Foam Brewers"
+     },
+     {
+      "id": "f9ff73959409",
+      "title": "Summer Concert Sundays",
+      "link": "https://www.helloburlingtonvt.com/event/summer-concert-sundays/7548/",
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-16T13:00:00-04:00",
       "venue": "Vermont Pub and Brewery"
@@ -4680,6 +4180,14 @@
       "venue": "Ohavi Zedek"
      },
      {
+      "id": "5738325bbea1",
+      "title": "Bob Wagner Album Release",
+      "link": "https://www.flynnvt.org/Events/2026/8/Bob-Wagner",
+      "ts": "2026-07-10T17:56:00-04:00",
+      "start": "2026-08-16T17:00:00-04:00",
+      "venue": "The Flynn"
+     },
+     {
       "id": "8bef8d699be7",
       "title": "Blue Sundays",
       "link": "https://shelburnevineyard.com/events-list/bluesundays",
@@ -4688,12 +4196,12 @@
       "venue": "Shelburne Vineyard"
      },
      {
-      "id": "5738325bbea1",
-      "title": "Bob Wagner Album Release",
-      "link": "https://www.flynnvt.org/Events/2026/8/Bob-Wagner",
-      "ts": "2026-07-10T17:56:00-04:00",
+      "id": "a35ffd1b320f",
+      "title": "Womxn's Pick-up Soccer - Outdoors at Starr Farm Park",
+      "link": "https://www.meetup.com/womens-soccer-vermont/events/316076336/",
+      "ts": "2026-08-11T17:27:28-04:00",
       "start": "2026-08-16T17:00:00-04:00",
-      "venue": "The Flynn"
+      "venue": "Starr Farm Park"
      },
      {
       "id": "ca4e6e511a02",
@@ -5536,6 +5044,14 @@
       "venue": "The S.P.A.C.E. Gallery"
      },
      {
+      "id": "d843058222d4",
+      "title": "Live Music! Jaded Ravins",
+      "link": "https://www.helloburlingtonvt.com/event/live-music!-jaded-ravins/7848/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-08-19T19:30:00-04:00",
+      "venue": "4 Quarters Brewing"
+     },
+     {
       "id": "a84648afdfde",
       "title": "The Mountain Goats",
       "link": "https://highergroundmusic.com/events/the-mountain-goats/",
@@ -5896,6 +5412,14 @@
       "venue": "Farrell Park"
      },
      {
+      "id": "128ce7995507",
+      "title": "Men's Soccer vs George Mason",
+      "link": "https://events.uvm.edu/event/mens-soccer-vs-george-mason",
+      "ts": "2026-08-05T17:54:10-04:00",
+      "start": "2026-08-20T18:00:00-04:00",
+      "venue": "Virtue Field"
+     },
+     {
       "id": "643ecdb6f6ea",
       "title": "Tad Cautious x Kid Cautious",
       "link": "https://foambrewers.com/events/tad-cautious-x-kid-cautious",
@@ -6038,14 +5562,6 @@
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-20T20:30:00-04:00",
       "venue": "Radio Bean"
-     },
-     {
-      "id": "128ce7995507",
-      "title": "Men's Soccer vs George Mason",
-      "link": "https://events.uvm.edu/event/mens-soccer-vs-george-mason",
-      "ts": "2026-08-05T17:54:10-04:00",
-      "start": "2026-08-20T21:00:00-04:00",
-      "venue": "Virtue Field"
      },
      {
       "id": "35b3fcf2583f",
@@ -6376,6 +5892,14 @@
       "venue": "Park Place Tavern & Grill"
      },
      {
+      "id": "1faa2c015db0",
+      "title": "Sabouyouma (Reggae Fest Pre-Party)",
+      "link": "https://foambrewers.com/events/sabouyouma-reggae-fest-pre-party",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-08-21T21:00:00-04:00",
+      "venue": "Foam Brewers"
+     },
+     {
       "id": "4ca2afca33e6",
       "title": "Live DJ at Ri Ra!",
       "link": "https://calendar.time.ly/vfaca7kw/event/78247926/20260821220000",
@@ -6464,6 +5988,14 @@
       "venue": "South Burlington Public Library"
      },
      {
+      "id": "400719846b6c",
+      "title": "Read To A Therapy Dog! FREE",
+      "link": "https://www.mychamplainvalley.com/calendar/#/details/read-to-a-therapy-dog-free/19614315/2026-08-22T11",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-08-22T11:00:00-04:00",
+      "venue": "Phoenix Books"
+     },
+     {
       "id": "bc0a5eb21057",
       "title": "'Shark Kingdom 3D'",
       "link": "https://community.sevendaysvt.com/event/shark-kingdom-3d-44971419",
@@ -6512,6 +6044,14 @@
       "venue": "South Burlington Senior Center"
      },
      {
+      "id": "29086d4bcfda",
+      "title": "Kid Powered Fun Run",
+      "link": "https://www.helloburlingtonvt.com/event/kid-powered-fun-run/7836/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-08-22T13:00:00-04:00",
+      "venue": "Waterfront Park"
+     },
+     {
       "id": "9418743e5cbf",
       "title": "Helm",
       "link": "https://www.meetup.com/burlington-brewery-book-club/events/315137088/",
@@ -6536,12 +6076,28 @@
       "venue": "The Screening Room @ VTIFF"
      },
      {
+      "id": "570fd62b0fc4",
+      "title": "The 2026 Vermont Reggae Fest",
+      "link": "https://highergroundmusic.com/events/the-2026-vermont-reggae-fest/",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-08-22T16:00:00-04:00",
+      "venue": "Burlington Waterfront (Main Street Landing Meadow)"
+     },
+     {
       "id": "d9c5b97b9600",
       "title": "The 2026 Vermont Reggae Fest",
       "link": "https://www.mychamplainvalley.com/calendar/#/details/the-2026-vermont-reggae-fest/19456674/2026-08-22T16",
       "ts": "2026-07-21T07:27:02-04:00",
       "start": "2026-08-22T16:00:00-04:00",
       "venue": "Higher Ground"
+     },
+     {
+      "id": "c31701b91a29",
+      "title": "Vermont Reggae Fest",
+      "link": "https://www.helloburlingtonvt.com/event/vermont-reggae-fest/7850/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-08-22T16:00:00-04:00",
+      "venue": "Waterfront Park"
      },
      {
       "id": "b56cf29b7139",
@@ -6574,6 +6130,14 @@
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-22T18:00:00-04:00",
       "venue": "Shelburne Vineyard"
+     },
+     {
+      "id": "2a5092271239",
+      "title": "Live Music! Adam McMahon Trio",
+      "link": "https://www.helloburlingtonvt.com/event/live-music!-adam-mcmahon-trio/7841/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-08-22T18:00:00-04:00",
+      "venue": "4 Quarters Brewing"
      },
      {
       "id": "14c0653a05a8",
@@ -6638,6 +6202,14 @@
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-22T22:00:00-04:00",
       "venue": "RiRa Irish Pub"
+     },
+     {
+      "id": "20f448fdc9fc",
+      "title": "Channel Two Dub Band (Reggae Fest After-Party)",
+      "link": "https://foambrewers.com/events/channel-two-dub-band-reggae-fest-after-party",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-08-22T22:00:00-04:00",
+      "venue": "Foam Brewers"
      },
      {
       "id": "e5e14e37a861",
@@ -6926,6 +6498,14 @@
       "ts": "2026-07-11T17:24:06-04:00",
       "start": "2026-08-24T10:30:00-04:00",
       "venue": "Brownell Library"
+     },
+     {
+      "id": "4d463972c4b3",
+      "title": "Developing Your AI Policy",
+      "link": "https://events.uvm.edu/event/developing-your-ai-policy-2431",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-08-24T10:30:00-04:00",
+      "venue": "Howe Library"
      },
      {
       "id": "a6f8aad86d68",
@@ -7344,20 +6924,20 @@
       "venue": ""
      },
      {
+      "id": "5c119ac62f29",
+      "title": "EZ Breezy bike rides",
+      "link": "https://www.helloburlingtonvt.com/event/ez-breezy-bike-rides/7835/",
+      "ts": "2026-07-10T17:56:00-04:00",
+      "start": "2026-08-25T18:00:00-04:00",
+      "venue": "Local Motion"
+     },
+     {
       "id": "d586b5eac945",
       "title": "Bashment Tuesday",
       "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
       "ts": "2026-07-10T17:56:00-04:00",
       "start": "2026-08-25T18:00:00-04:00",
       "venue": "Akes' Place"
-     },
-     {
-      "id": "5c119ac62f29",
-      "title": "EZ Breezy Bike Rides",
-      "link": "https://community.sevendaysvt.com/event/ez-breezy-bike-rides-44758445",
-      "ts": "2026-07-10T17:56:00-04:00",
-      "start": "2026-08-25T18:00:00-04:00",
-      "venue": "Local Motion"
      },
      {
       "id": "7cb72fdf815b",
@@ -7622,6 +7202,14 @@
       "ts": "2026-08-01T17:35:25-04:00",
       "start": "2026-08-26T17:30:00-04:00",
       "venue": "Pomeroy Park"
+     },
+     {
+      "id": "99e4cc249a7b",
+      "title": "Queer Horror Book Club",
+      "link": "https://calendar.time.ly/vfaca7kw/event/78434441/20260826173000",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-08-26T17:30:00-04:00",
+      "venue": "The Hunny Hive at Hunny Musturd"
      },
      {
       "id": "4f36e53a6f25",
@@ -8160,6 +7748,14 @@
       "venue": "Phoenix Books"
      },
      {
+      "id": "01fe32df2572",
+      "title": "Film Screening: Bamboozled",
+      "link": "https://events.uvm.edu/event/bamboozled",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-08-27T19:00:00-04:00",
+      "venue": "The Screening Room @ VTIFF"
+     },
+     {
       "id": "b76dafd05402",
       "title": "Thunderbolt Research",
       "link": "https://foambrewers.com/events/thunderbolt-research",
@@ -8416,6 +8012,14 @@
       "venue": "Virtue Field"
      },
      {
+      "id": "60d58692b7ce",
+      "title": "Beginner Salsa Dancing & Social",
+      "link": "https://www.helloburlingtonvt.com/event/beginner-salsa-dancing-%26-social/7842/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-08-28T18:00:00-04:00",
+      "venue": "4 Quarters Brewing"
+     },
+     {
       "id": "a632d4d32a5b",
       "title": "Burlington FNG",
       "link": "https://community.sevendaysvt.com/event/burlington-fng-45108501",
@@ -8438,6 +8042,14 @@
       "ts": "2026-08-03T17:46:48-04:00",
       "start": "2026-08-28T19:00:00-04:00",
       "venue": "Phoenix Books"
+     },
+     {
+      "id": "7f717b5fd37c",
+      "title": "Runnner w/ Pleasure Systems & Fowl (album release show!)",
+      "link": "https://www.helloburlingtonvt.com/event/runnner-w-pleasure-systems-%26-fowl-(album-release-show!)/7831/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-08-28T19:00:00-04:00",
+      "venue": "Radio Bean"
      },
      {
       "id": "fefa90ff9983",
@@ -9808,6 +9420,14 @@
       "venue": "The S.P.A.C.E. Gallery"
      },
      {
+      "id": "ba08470b51be",
+      "title": "Live Music! Jenny Porter",
+      "link": "https://www.helloburlingtonvt.com/event/live-music!-jenny-porter/7843/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-09-02T19:30:00-04:00",
+      "venue": "4 Quarters Brewing"
+     },
+     {
       "id": "7793a59c4ef3",
       "title": "Pub Quiz",
       "link": "https://events.uvm.edu/event/pub-quiz-6776",
@@ -10440,6 +10060,14 @@
       "venue": "Speaking Volumes"
      },
      {
+      "id": "906c6053965a",
+      "title": "Hat or Tote Burning Workshop",
+      "link": "https://www.helloburlingtonvt.com/event/hat-or-tote-burning-workshop/7844/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-09-04T18:00:00-04:00",
+      "venue": "4 Quarters Brewing"
+     },
+     {
       "id": "f702d456b6f1",
       "title": "Burlington FNG",
       "link": "https://community.sevendaysvt.com/event/burlington-fng-45108501",
@@ -10512,6 +10140,14 @@
       "venue": "UVM Davis Center"
      },
      {
+      "id": "a0b910c4ce4d",
+      "title": "Dead Sessions at Shelburne Vineyard",
+      "link": "https://shelburnevineyard.com/events-list/deadsessions",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-09-04T20:00:00-04:00",
+      "venue": "Shelburne Vineyard"
+     },
+     {
       "id": "16d147b047d0",
       "title": "Karaoke Friday Night",
       "link": "https://community.sevendaysvt.com/event/karaoke-friday-night-44732241",
@@ -10532,14 +10168,6 @@
       "title": "Lady Moon & The Eclipse + Beccs",
       "link": "https://foambrewers.com/events/lady-moon-the-eclipse-w-beccs",
       "ts": "2026-08-07T17:21:19-04:00",
-      "start": "2026-09-04T21:00:00-04:00",
-      "venue": "Foam Brewers"
-     },
-     {
-      "id": "da3bee3da83a",
-      "title": "Lady Moon & The Eclipse w/ Beccs",
-      "link": "https://foambrewers.com/events/lady-moon-the-eclipse-w-beccs",
-      "ts": "2026-08-05T17:54:10-04:00",
       "start": "2026-09-04T21:00:00-04:00",
       "venue": "Foam Brewers"
      },
@@ -11408,6 +11036,14 @@
       "venue": "Maglianero"
      },
      {
+      "id": "1484c381abbd",
+      "title": "Playing Fields",
+      "link": "https://www.flynnvt.org/Events/2026/9/playing-fields",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-09-08T18:00:00-04:00",
+      "venue": ""
+     },
+     {
       "id": "11fc71a1224a",
       "title": "Bashment Tuesday",
       "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
@@ -11608,6 +11244,14 @@
       "venue": "Hilton Burlington Lake Champlain"
      },
      {
+      "id": "92f7728b2eea",
+      "title": "Research Rally!",
+      "link": "https://events.uvm.edu/event/research-rally",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-09-09T16:00:00-04:00",
+      "venue": "Billings Library"
+     },
+     {
       "id": "fd867b3e7f41",
       "title": "Wednesday Wine Down Farmers Market",
       "link": "https://shelburnevineyard.com/events-list/wednesday-wine-down-farmers-market",
@@ -11758,6 +11402,14 @@
       "ts": "2026-07-11T06:44:31-04:00",
       "start": "2026-09-09T19:00:00-04:00",
       "venue": "Venetian Soda Lounge"
+     },
+     {
+      "id": "bdfb2865383c",
+      "title": "Live Music! Temple Mountain",
+      "link": "https://www.helloburlingtonvt.com/event/live-music!-temple-mountain/7845/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-09-09T19:00:00-04:00",
+      "venue": "4 Quarters Brewing"
      },
      {
       "id": "22b0dadd9cb2",
@@ -12016,6 +11668,14 @@
       "venue": ""
      },
      {
+      "id": "11d402a773d8",
+      "title": "Big Pond: Thu, Sep 10th (5pm Show)",
+      "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383544",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-09-10T17:00:00-04:00",
+      "venue": "Vermont Comedy Club"
+     },
+     {
       "id": "da57f4754296",
       "title": "Bark & Brew",
       "link": "https://www.helloburlingtonvt.com/event/bark-%26-brew/7770/",
@@ -12064,6 +11724,14 @@
       "venue": "Four Quarters Brewing"
      },
      {
+      "id": "cc7db5c6d93e",
+      "title": "Big Pond: Thu, Sep 10th (6pm Show)",
+      "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383548",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-09-10T18:00:00-04:00",
+      "venue": "Vermont Comedy Club"
+     },
+     {
       "id": "5652454a77a8",
       "title": "Lukas Nelson & Molly Tuttle",
       "link": "https://highergroundmusic.com/events/lukas-nelson-molly-tuttle/",
@@ -12104,12 +11772,28 @@
       "venue": "Higher Ground"
      },
      {
+      "id": "ddb655f4c47a",
+      "title": "Truck Violence w/ In Lieu of Flowers",
+      "link": "https://foambrewers.com/events/truck-violence",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-09-10T19:30:00-04:00",
+      "venue": "Foam Brewers"
+     },
+     {
       "id": "efd4bd818385",
       "title": "Truck Violence",
       "link": "https://foambrewers.com/events/truck-violence",
       "ts": "2026-07-12T06:59:21-04:00",
       "start": "2026-09-10T19:30:00-04:00",
       "venue": "Foam Brewers"
+     },
+     {
+      "id": "b320bfb8c80a",
+      "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ POLKAROBICS",
+      "link": "https://www.helloburlingtonvt.com/event/david-liebe-hart-(of-the-tim-%26-eric-awesome-show-great-job!)-w-polkarobics/7596/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-09-10T20:00:00-04:00",
+      "venue": "Radio Bean"
      },
      {
       "id": "fced825cacef",
@@ -12214,6 +11898,14 @@
       "ts": "2026-07-13T08:21:43-04:00",
       "start": "2026-09-11T17:00:00-04:00",
       "venue": ""
+     },
+     {
+      "id": "625febaab913",
+      "title": "Big Pond Improv Festival: Fri, Sep 11th",
+      "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383546",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-09-11T17:00:00-04:00",
+      "venue": "Vermont Comedy Club"
      },
      {
       "id": "2834621ce3e2",
@@ -12326,6 +12018,14 @@
       "ts": "2026-07-14T07:11:12-04:00",
       "start": "2026-09-12T11:00:00-04:00",
       "venue": "New North End Branch"
+     },
+     {
+      "id": "e3e530e1db8a",
+      "title": "Big Pond Improv Festival: Sat, Sep 12th",
+      "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383547",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-09-12T12:00:00-04:00",
+      "venue": "Vermont Comedy Club"
      },
      {
       "id": "c18df989ddbf",
@@ -12776,6 +12476,14 @@
       "venue": "South Burlington Public Library"
      },
      {
+      "id": "508ad8f49bf3",
+      "title": "Fletcher Free's Fictional Book Club: Buckeye by Patrick Ryan",
+      "link": "https://fletcherfree.libcal.com/event/16174664",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-09-15T17:30:00-04:00",
+      "venue": "Fletcher Free Library"
+     },
+     {
       "id": "2ecb99d191e5",
       "title": "Fletcher Free's Fictional Book Club",
       "link": "https://fletcherfree.libcal.com/event/16174664",
@@ -13072,6 +12780,14 @@
       "venue": "Venetian Soda Lounge"
      },
      {
+      "id": "fc5707dd41de",
+      "title": "Live Music! Michael Perry",
+      "link": "https://www.helloburlingtonvt.com/event/live-music!-michael-perry/7849/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-09-16T19:00:00-04:00",
+      "venue": "4 Quarters Brewing"
+     },
+     {
       "id": "04f5195fb0f3",
       "title": "Alela Diane",
       "link": "https://highergroundmusic.com/events/alela-diane/",
@@ -13310,6 +13026,14 @@
       "ts": "2026-07-19T06:58:43-04:00",
       "start": "2026-09-17T20:00:00-04:00",
       "venue": "Higher Ground"
+     },
+     {
+      "id": "934bb342fb68",
+      "title": "Jake McKelvie w/ A Box of Stars, riverbed, & Izzy Jones",
+      "link": "https://www.helloburlingtonvt.com/event/jake-mckelvie-w-a-box-of-stars-riverbed-%26-izzy-jones/7847/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-09-17T20:00:00-04:00",
+      "venue": "Radio Bean"
      },
      {
       "id": "511d1108ac1d",
@@ -14360,6 +14084,14 @@
       "venue": "Higher Ground"
      },
      {
+      "id": "210764a691d9",
+      "title": "Live Music! Jim Yeager Duo",
+      "link": "https://www.helloburlingtonvt.com/event/live-music!-jim-yeager-duo/7851/",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-09-23T19:30:00-04:00",
+      "venue": "4 Quarters Brewing"
+     },
+     {
       "id": "12309287cbf1",
       "title": "Madison Cunningham",
       "link": "https://highergroundmusic.com/events/madison-cunningham/",
@@ -14896,20 +14628,20 @@
       "venue": "Mount Mansfield Via SUnset Ridge Trail"
      },
      {
-      "id": "f814c67dd5e8",
-      "title": "Winooski Farmers Market",
-      "link": "https://www.mychamplainvalley.com/calendar/#/details/winooski-farmers-market/19295673/2026-09-27T10",
-      "ts": "2026-07-29T07:48:18-04:00",
-      "start": "2026-09-27T10:00:00-04:00",
-      "venue": "Winooski Farmers Market"
-     },
-     {
       "id": "17e16e9a6e30",
       "title": "Soda Plant Sundays",
       "link": "https://calendar.time.ly/vfaca7kw/event/78386061/20260927100000",
       "ts": "2026-07-29T07:48:18-04:00",
       "start": "2026-09-27T10:00:00-04:00",
       "venue": "The Soda Plant"
+     },
+     {
+      "id": "f814c67dd5e8",
+      "title": "Winooski Farmers Market",
+      "link": "https://www.mychamplainvalley.com/calendar/#/details/winooski-farmers-market/19295673/2026-09-27T10",
+      "ts": "2026-07-29T07:48:18-04:00",
+      "start": "2026-09-27T10:00:00-04:00",
+      "venue": "Winooski Farmers Market"
      },
      {
       "id": "6daf9b5221e4",
@@ -14920,12 +14652,28 @@
       "venue": "City Center Park"
      },
      {
+      "id": "618938210733",
+      "title": "Youth Vendor Day",
+      "link": "https://www.helloburlingtonvt.com/event/youth-vendor-day/7345/",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-09-27T10:00:00-04:00",
+      "venue": "Winooski Farmers Market"
+     },
+     {
       "id": "c89ab88ed584",
       "title": "Fried Chicken Sundays",
       "link": "https://www.switchbackvt.com/beer-garden-events/fried-chicken-sundays-2-7m2b4-h2my6-7gb8p-4t4gf-atxtn-t69xa-f9f45-gsyf6",
       "ts": "2026-07-29T07:48:18-04:00",
       "start": "2026-09-27T12:00:00-04:00",
       "venue": "Switchback Brewing Company"
+     },
+     {
+      "id": "ce19bdf67831",
+      "title": "Acoustic Brunch",
+      "link": "https://www.helloburlingtonvt.com/event/acoustic-brunch/3027/",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-09-27T13:00:00-04:00",
+      "venue": "Foam Brewers"
      },
      {
       "id": "10d79f328573",
@@ -14974,6 +14722,14 @@
       "ts": "2026-07-29T07:48:18-04:00",
       "start": "2026-09-27T19:30:00-04:00",
       "venue": "Higher Ground"
+     },
+     {
+      "id": "6beabfe29cb0",
+      "title": "Karaoke Sundays!",
+      "link": "https://www.helloburlingtonvt.com/event/karaoke-sundays!/4512/",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-09-27T21:00:00-04:00",
+      "venue": "Einstein Tap House"
      },
      {
       "id": "0fb4cb2491aa",
@@ -15054,6 +14810,14 @@
       "ts": "2026-07-30T07:31:16-04:00",
       "start": "2026-09-28T19:30:00-04:00",
       "venue": "Higher Ground"
+     },
+     {
+      "id": "6d88f66cb108",
+      "title": "Ora Cogan",
+      "link": "https://www.helloburlingtonvt.com/event/ora-cogan/7542/",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-09-28T19:30:00-04:00",
+      "venue": "Radio Bean"
      },
      {
       "id": "606da42e8d50",
@@ -15318,6 +15082,14 @@
       "ts": "2026-08-04T07:47:40-04:00",
       "start": "2026-09-30T17:00:00-04:00",
       "venue": "South Burlington Public Library"
+     },
+     {
+      "id": "39aedabdf512",
+      "title": "From UVM to Hollywood: A Conversation with Ricky Strauss ’88",
+      "link": "https://events.uvm.edu/event/from-uvm-to-hollywood-a-conversation-with-ricky-strauss-88",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-09-30T17:00:00-04:00",
+      "venue": "UVM Davis Center"
      },
      {
       "id": "dfa99923fc23",
@@ -15776,6 +15548,14 @@
       "venue": ""
      },
      {
+      "id": "4d13c29fa0e6",
+      "title": "Friends Book Sale",
+      "link": "https://fletcherfree.libcal.com/event/17363260",
+      "ts": "2026-08-10T17:24:41-04:00",
+      "start": "2026-10-03T10:00:00-04:00",
+      "venue": "New North End Branch"
+     },
+     {
       "id": "72269cae410c",
       "title": "STEAM Ahead Saturdays",
       "link": "https://calendar.time.ly/nt0nyapn/event/67879106/20261003103000",
@@ -15824,6 +15604,14 @@
       "venue": "University Green"
      },
      {
+      "id": "699cb14233ba",
+      "title": "Evening Song: Bet on Hope 25th Anniversary Celebration",
+      "link": "https://www.mychamplainvalley.com/calendar/#/details/evening-song-bet-on-hope-25th-anniversary-celebration/19602982/2026-10-03T18",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-10-03T18:00:00-04:00",
+      "venue": "Delta Hotel"
+     },
+     {
       "id": "210434af379a",
       "title": "Evening Song: Bet on Hope 25th Anniversary Celebration",
       "link": "https://www.mychamplainvalley.com/calendar/#/details/evening-song-bet-on-hope-25th-anniversary-celebration/19580403/2026-10-03T18",
@@ -15870,6 +15658,14 @@
       "ts": "2026-08-04T07:47:40-04:00",
       "start": "2026-10-03T20:30:00-04:00",
       "venue": "Vermont Comedy Club"
+     },
+     {
+      "id": "2c048d0aac54",
+      "title": "Can’t Feel My Face: 2010’s Dance Party",
+      "link": "https://highergroundmusic.com/events/cant-feel-my-face-2010s-dance-party/",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-10-03T21:00:00-04:00",
+      "venue": "Higher Ground"
      },
      {
       "id": "de9fa670a28d",
@@ -15958,6 +15754,14 @@
       "ts": "2026-08-05T07:38:20-04:00",
       "start": "2026-10-04T17:00:00-04:00",
       "venue": "Shelburne Vineyard"
+     },
+     {
+      "id": "90f9f5736c97",
+      "title": "BALLETX",
+      "link": "https://www.flynnvt.org/Events/2026/10/BALLETX",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-10-04T19:00:00-04:00",
+      "venue": "The Flynn"
      },
      {
       "id": "20a23c0c6c8c",
@@ -16376,6 +16180,14 @@
       "venue": "Leddy Park"
      },
      {
+      "id": "8d3a43a74d96",
+      "title": "Chemistry seminar ft. Jeffrey Dick",
+      "link": "https://events.uvm.edu/event/chemistry-seminar-ft-jeffrey-dick",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-08T10:05:00-04:00",
+      "venue": "Innovation Hall"
+     },
+     {
       "id": "9103ff64da8f",
       "title": "Storytime",
       "link": "https://calendar.time.ly/nt0nyapn/event/69322057/20261008103000",
@@ -16440,6 +16252,14 @@
       "venue": ""
      },
      {
+      "id": "fde717afcfb3",
+      "title": "Cirque Alfonse \"La Noce\"",
+      "link": "https://www.flynnvt.org/Events/2026/10/Cirque-Alfonse-La-Noce",
+      "ts": "2026-08-11T17:27:28-04:00",
+      "start": "2026-10-08T19:00:00-04:00",
+      "venue": "The Flynn"
+     },
+     {
       "id": "eeeca50c5368",
       "title": "David Drake",
       "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/372778",
@@ -16469,6 +16289,190 @@
       "link": "https://calendar.time.ly/vfaca7kw/event/78187850/20261008220000",
       "ts": "2026-08-09T06:07:29-04:00",
       "start": "2026-10-08T22:00:00-04:00",
+      "venue": "RiRa Irish Pub"
+     },
+     {
+      "id": "820b7fc7f38e",
+      "title": "Bagel Friday",
+      "link": "https://www.champlain.edu/event/bagel-friday-10/2026-10-09/",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T10:00:00-04:00",
+      "venue": "Women’s & Gender Center, Skiff Hall Annex"
+     },
+     {
+      "id": "5f8394579086",
+      "title": "Lunch with the Poets",
+      "link": "https://www.meetup.com/burlington-writers/events/fkbcztyjcnbmb/",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T11:45:00-04:00",
+      "venue": "The Innovation Café"
+     },
+     {
+      "id": "97c4b39a64ae",
+      "title": "Religion and the American Founding Conference",
+      "link": "https://events.uvm.edu/event/religion-and-the-american-founding-conference",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-09T14:00:00-04:00",
+      "venue": "Alumni House and Silver Pavillion"
+     },
+     {
+      "id": "a716a39f088e",
+      "title": "Pub Hour",
+      "link": "https://calendar.time.ly/vfaca7kw/event/78304347/20261009150000",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T15:00:00-04:00",
+      "venue": "Vermont Pub and Brewery"
+     },
+     {
+      "id": "1cb2964b7b74",
+      "title": "Field Hockey vs UMass Lowell",
+      "link": "https://events.uvm.edu/event/field-hockey-vs-umass-lowell-4191",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-09T15:00:00-04:00",
+      "venue": "Virtue Field"
+     },
+     {
+      "id": "ec3d0b0a8566",
+      "title": "Fiddlehead Fridays at The Daily Planet",
+      "link": "https://calendar.time.ly/vfaca7kw/event/78067585/20261009170000",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T17:00:00-04:00",
+      "venue": ""
+     },
+     {
+      "id": "747a3fad7f71",
+      "title": "David Drake",
+      "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/345222",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T19:00:00-04:00",
+      "venue": "Vermont Comedy Club"
+     },
+     {
+      "id": "7259338f97fd",
+      "title": "White Denim",
+      "link": "https://highergroundmusic.com/events/white-denim/",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T19:30:00-04:00",
+      "venue": "Higher Ground"
+     },
+     {
+      "id": "68b18c10af9f",
+      "title": "Fraser | San Miguel Fraser",
+      "link": "https://events.uvm.edu/event/fraser-san-miguel-fraser-2413",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-09T19:30:00-04:00",
+      "venue": "Music Building and Recital Hall"
+     },
+     {
+      "id": "38c958aa862a",
+      "title": "Mad Robin Burlington Contra Dance",
+      "link": "https://calendar.time.ly/vfaca7kw/event/78405443/20261009194000",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T19:40:00-04:00",
+      "venue": "First Congregational Church of Burlington"
+     },
+     {
+      "id": "5729d0ec6e0e",
+      "title": "Benjamin Tod & Lost Dog Street Band",
+      "link": "https://highergroundmusic.com/events/benjamin-tod-lost-dog-street-band-2/",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T20:30:00-04:00",
+      "venue": "Higher Ground"
+     },
+     {
+      "id": "747a3fad7f71-2100",
+      "title": "David Drake",
+      "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/345224",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T21:00:00-04:00",
+      "venue": "Vermont Comedy Club"
+     },
+     {
+      "id": "95b5e082f753",
+      "title": "Live DJ at Ri Ra!",
+      "link": "https://calendar.time.ly/vfaca7kw/event/78247926/20261009220000",
+      "ts": "2026-08-10T06:45:50-04:00",
+      "start": "2026-10-09T22:00:00-04:00",
+      "venue": "RiRa Irish Pub"
+     },
+     {
+      "id": "3a96c143ace9",
+      "title": "Burlington Farmers Market",
+      "link": "https://burlingtonfarmersmarket.org/",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T09:00:00-04:00",
+      "venue": "Burlington Farmers Market"
+     },
+     {
+      "id": "584856dc628c",
+      "title": "STEAM Ahead Saturdays",
+      "link": "https://calendar.time.ly/nt0nyapn/event/67879106/20261010103000",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T10:30:00-04:00",
+      "venue": "Winooski Memorial Library"
+     },
+     {
+      "id": "3db9b67d1212",
+      "title": "Sing Along with Linda at the NNE Branch",
+      "link": "https://fletcherfree.libcal.com/event/16827631",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T11:00:00-04:00",
+      "venue": "New North End Branch"
+     },
+     {
+      "id": "c3691e2dec4e",
+      "title": "The Poetry Experience",
+      "link": "https://fletcherfree.libcal.com/event/15990771",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T13:00:00-04:00",
+      "venue": "Fletcher Free Library"
+     },
+     {
+      "id": "f4dcf578bf70",
+      "title": "Hold for all-ages program",
+      "link": "https://fletcherfree.libcal.com/event/16448082",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T15:00:00-04:00",
+      "venue": "Fletcher Free Library"
+     },
+     {
+      "id": "5999b4af364e",
+      "title": "David Drake",
+      "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/345223",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T19:00:00-04:00",
+      "venue": "Vermont Comedy Club"
+     },
+     {
+      "id": "90a14068d8d1",
+      "title": "Randy Feltface",
+      "link": "https://www.flynnvt.org/Events/2026/10/Randy-Feltface",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T19:00:00-04:00",
+      "venue": "The Flynn"
+     },
+     {
+      "id": "eb97493f2a94",
+      "title": "Dogwood Tales",
+      "link": "https://foambrewers.com/events/dogwood-tales",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T20:00:00-04:00",
+      "venue": "Foam Brewers"
+     },
+     {
+      "id": "5999b4af364e-2100",
+      "title": "David Drake",
+      "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/345225",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T21:00:00-04:00",
+      "venue": "Vermont Comedy Club"
+     },
+     {
+      "id": "0ec9e3744497",
+      "title": "Live DJ at Ri Ra!",
+      "link": "https://calendar.time.ly/vfaca7kw/event/78247926/20261010220000",
+      "ts": "2026-08-11T06:29:24-04:00",
+      "start": "2026-10-10T22:00:00-04:00",
       "venue": "RiRa Irish Pub"
      }
     ]
