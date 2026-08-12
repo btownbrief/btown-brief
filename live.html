@@ -45,13 +45,17 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 <body>
 
   <header class="bar">
-    <a class="brand" href="pulse.html" title="Back to The Pulse">BTOWN&nbsp;BRIEF&nbsp;<b>PULSE&nbsp;LIVE</b></a>
+    <a class="brand" href="pulse.html" title="Back to The Pulse"><span class="brand-pre">BTOWN&nbsp;BRIEF&nbsp;</span><b>PULSE&nbsp;LIVE</b></a>
     <span class="broadcast">
       <span class="dayrow"><span class="day" id="day"></span><span class="date" id="date"></span></span>
       <span class="clock-wrap"><span class="clock" id="clock">--:--:--</span><span class="ampm" id="ampm"></span></span>
     </span>
     <span class="status">
       <span class="wire" id="wire"></span>
+      <button class="ic-bar" id="recap-btn" type="button" aria-label="Recap — cards you've seen"
+              title="Every card the board has shown you lately — in case you missed one">⟲</button>
+      <button class="ic-bar" id="help-btn" type="button" aria-label="How the board works"
+              title="How the board works">?</button>
       <nav class="modes" aria-label="Read or watch">
         <a class="mode" href="pulse.html" title="Back to the full wire — scan and filter everything">READ</a>
         <span class="mode on" title="Headlines rotate hands-free — you're watching">WATCH</span>
@@ -64,10 +68,9 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   <div class="chipwrap" id="chipwrap">
     <nav class="chips" id="chips" aria-label="Topics"></nav>
     <button class="chips-more" id="chips-more" type="button" aria-label="Scroll for more topics">›</button>
-    <button class="chip-help" id="help-btn" type="button" aria-label="How the board works" title="How the board works">?</button>
     <div class="chipbar" id="chipbar" aria-hidden="true" hidden><i></i></div>
   </div>
-  <p class="hint" id="hint" hidden>EVERY CELL ROTATES ON ITS OWN CLOCK · <b>TAP A STORY TO HOLD IT, AGAIN TO OPEN</b> · TAP A TOPIC TO TOGGLE · <b>HOLD ONE TO SEE ONLY THAT</b> · <b>?</b> FOR THE FULL HOW-TO</p>
+  <p class="hint" id="hint" hidden>EVERY CELL ROTATES ON ITS OWN CLOCK · <b>TAP A STORY TO HOLD IT, AGAIN TO OPEN</b> · TAP A TOPIC TO TOGGLE · <b>HOLD ONE TO SEE ONLY THAT</b> · <b>?</b> UP TOP FOR MORE</p>
   <p class="hint" id="surf-note" hidden></p>
 
   <main class="board" id="board" data-o="p" data-n="3">
@@ -123,8 +126,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     </span>
     <button class="lopt lfreeze" id="freeze-btn" type="button" aria-pressed="false"
             title="Hold every cell where it is — ▶ on a cell releases just that one">FREEZE</button>
-    <button class="lopt lrecap" id="recap-btn" type="button"
-            title="Every card the board has shown you lately — in case you missed one">RECAP ⟲</button>
     <span class="lright">
       <span id="queue" title="Stories in your current topics and window the board hasn't dealt yet"></span>
       <span id="updated"></span>
@@ -143,14 +144,11 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <button class="panel-close" id="help-close" type="button" aria-label="Close">✕</button>
     </div>
     <ul class="help-list">
-      <li><b>EVERY CELL ROTATES ON ITS OWN CLOCK.</b> Put the phone down and watch, or reach in:</li>
-      <li><b>TAP A STORY</b> to hold it in place — <b>TAP IT AGAIN</b> to open it. On a computer, hovering holds it.</li>
-      <li><b>SHARE ⇗</b> appears under the ▶ while a story is held — send it straight to a friend.</li>
-      <li><b>TAP A TOPIC</b> up top to turn it on or off. <b>PRESS AND HOLD ONE</b> to see only that topic — hold it again to bring everything back.</li>
-      <li><b>LIVE / FREEZE</b> stops the whole board where it is. The ▶ on a cell releases just that one.</li>
-      <li><b>SURF ON</b> channel-surfs: every few minutes the board spends one minute on a single topic, then returns to the mix.</li>
-      <li><b>WINDOW</b> is how far back headlines reach. TO DO and HISTORY cards are timeless and ignore it.</li>
-      <li><b>RECAP ⟲</b> in the bottom bar lists every card you've been shown — in case one got away.</li>
+      <li><b>TAP A STORY</b> to hold it · <b>TAP AGAIN</b> to open it</li>
+      <li><b>TAP A TOPIC</b> to toggle it · <b>HOLD ONE</b> to see only that</li>
+      <li><b>LIVE / FREEZE</b> stops the whole board</li>
+      <li><b>SURF</b> visits one topic for a minute, every few minutes</li>
+      <li><b>RECAP ⟲</b> — every card you've been shown</li>
     </ul>
   </aside>
 

@@ -133,6 +133,20 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
   opacity: .8;
 }
 
+/* ⟲ recap + ? help — square icons riding the top bar together */
+.ic-bar {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgba(252, 86, 10, .4);
+  color: var(--orange);
+  opacity: .85;
+}
+.ic-bar:hover { opacity: 1; }
+
 /* READ | WATCH — the same switch the Pulse masthead carries */
 .modes {
   display: flex;
@@ -184,7 +198,7 @@ a.mode:hover { opacity: 1; }
 /* the row scrolls — say so */
 .chips-more {
   position: absolute;
-  top: 0; right: 38px; bottom: 1px;
+  top: 0; right: 0; bottom: 1px;
   width: 40px;
   display: none;
   align-items: center;
@@ -198,34 +212,22 @@ a.mode:hover { opacity: 1; }
 }
 .chipwrap.more .chips-more { display: flex; }
 
-/* the how-to door sits OUTSIDE the scrolling row — always visible */
-.chip-help {
-  flex: none;
-  width: 38px;
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 13px;
-  color: var(--orange);
-  border-left: 1px solid rgba(252, 86, 10, .35);
-  border-bottom: 1px solid rgba(252, 86, 10, .28);
-  opacity: .9;
-}
-.chip-help:hover { opacity: 1; }
-
-/* how far along the scrolling row you are */
+/* iPhone-style scroll indicator: a thumb sized to the visible fraction
+   that rides along with the scroll position */
 .chipbar {
   position: absolute;
-  left: 0; right: 38px; bottom: 0;
-  height: 2px;
-  background: rgba(252, 86, 10, .14);
+  left: 0; right: 0; bottom: 0;
+  height: 3px;
+  background: rgba(252, 86, 10, .12);
   pointer-events: none;
 }
 .chipbar i {
   display: block;
   height: 100%;
   width: 0;
+  border-radius: 2px;
   background: var(--orange);
-  opacity: .65;
+  opacity: .6;
 }
 
 .chips {
@@ -304,7 +306,7 @@ a.mode:hover { opacity: 1; }
 
 /* phones: pack the row so LOCAL through NEWS shows before any scrolling */
 @media (max-width: 720px) {
-  .chip { padding: 0 7px; letter-spacing: .1em; font-size: 9.5px; }
+  .chip { padding: 0 8px; letter-spacing: .12em; font-size: 10px; }
   .chip-all { padding: 0 6px; font-size: 8.5px; }
 }
 
@@ -415,43 +417,41 @@ a.mode:hover { opacity: 1; }
 }
 .cell .age-tag { opacity: .65; }
 
-.cell .tr {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
+.cell .tr { display: inline-flex; align-items: baseline; gap: 12px; }
 .cell .trrow { display: inline-flex; align-items: baseline; gap: 12px; }
 
-/* visible only while this cell is held (touch-armed or frozen): releases
-   the one cell without opening the story */
-.cell .cellgo {
-  display: none;
-  font-size: 12px;
-  line-height: 1;
-  padding: 4px 9px;
-  border: 1.5px solid currentColor;
-  color: inherit;
-  background: none;
-  cursor: pointer;
-}
-.cell.held .cellgo { display: inline-block; }
-
-/* share rides just under the ▶ — held cells on touch, hover on desktop */
+/* ▶ release and SHARE float on ink plates OVER the cell (same treatment
+   as the TAP AGAIN chip) — they must never take layout space, or the
+   headline gets refit-clipped the moment a hold makes them appear */
+.cell .cellgo,
 .cell .cellshare {
   display: none;
+  position: absolute;
+  right: clamp(14px, 3vw, 40px);
+  z-index: 3;
   font-family: var(--mono);
   font-weight: 700;
+  line-height: 1;
+  background: #0d0d0d;
+  color: var(--cream);
+  border: 1.5px solid var(--orange);
+  cursor: pointer;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, .35);
+}
+.cell .cellgo {
+  top: calc(clamp(12px, 2.6vw, 32px) + 26px);
+  font-size: 12px;
+  padding: 5px 10px;
+}
+.cell .cellshare {
+  top: calc(clamp(12px, 2.6vw, 32px) + 26px);
   font-size: 9px;
   letter-spacing: .14em;
-  line-height: 1;
-  padding: 4px 8px;
-  border: 1.5px solid currentColor;
-  color: inherit;
-  background: none;
-  cursor: pointer;
+  padding: 6px 9px;
 }
-.cell.held .cellshare { display: inline-block; }
+.cell.held .cellgo { display: inline-block; }
+/* while the ▶ is up, share steps down a row */
+.cell.held .cellshare { display: inline-block; top: calc(clamp(12px, 2.6vw, 32px) + 62px); }
 @media (hover: hover) {
   .cell:hover .cellshare { display: inline-block; }
 }
@@ -608,9 +608,6 @@ a.mode:hover { opacity: 1; }
 .lexit { color: #a08a6d; text-decoration: none; letter-spacing: .14em; }
 .lexit:hover { color: var(--cream); }
 
-.lrecap { color: #a08a6d; border-color: rgba(160, 138, 109, .35); }
-.lrecap:hover { color: var(--cream); }
-
 #queue { color: var(--orange); opacity: .8; font-variant-numeric: tabular-nums; }
 
 .noscript { font-family: var(--mono); color: var(--cream); padding: 20px; }
@@ -723,14 +720,18 @@ body.tv.idle, body.tv.idle .cell { cursor: none; }
 /* ---------- narrow portrait (phone upright) ---------- */
 
 @media (max-width: 720px) {
-  .bar { grid-template-columns: 1fr auto auto; gap: 12px; }
+  .bar { grid-template-columns: 1fr auto auto; gap: 10px; }
   .dayrow, .modes { display: none; }
   .clock { font-size: 17px; }
   .brand { font-size: 11px; letter-spacing: .22em; }
+  .status { gap: 8px; }
 }
 @media (max-width: 460px) {
   .wire { display: none; }
   .lright #updated { display: none; }
+  /* the full wordmark overflows the layout viewport here — the page zooms
+     out and fixed elements drift; the short mark keeps the bar honest */
+  .brand-pre { display: none; }
 }
 
 /* ---------- cramped landscape (phone on its side) ---------- */

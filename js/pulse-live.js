@@ -1574,15 +1574,17 @@
     if (!wrap || !row) return;
     wrap.classList.toggle('more',
       row.scrollLeft + row.clientWidth < row.scrollWidth - 8);
-    // the strip under the row shows how much of it you've seen
+    // scrollbar-style thumb: sized to the visible fraction, riding along
+    // with the scroll position — like a phone's overlay scroll indicator
     var bar = $('chipbar');
     if (bar) {
       var overflow = row.scrollWidth > row.clientWidth + 8;
       bar.hidden = !overflow;
-      var fill = bar.firstElementChild;
-      if (overflow && fill) {
-        fill.style.width =
-          Math.min(100, (row.scrollLeft + row.clientWidth) / row.scrollWidth * 100) + '%';
+      var thumb = bar.firstElementChild;
+      if (overflow && thumb) {
+        thumb.style.width = (row.clientWidth / row.scrollWidth * 100) + '%';
+        thumb.style.marginLeft =
+          Math.max(0, row.scrollLeft / row.scrollWidth * 100) + '%';
       }
     }
   }
