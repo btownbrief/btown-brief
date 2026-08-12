@@ -446,9 +446,11 @@ def main() -> int:
             "s": pick.get("start"),
             "last": evs[-1].get("start"),
         }
-        # Today and tomorrow also carry a handful of NAMED events so the
-        # Pulse Live board can deal specific cards, not just counts. One
-        # event per venue, evenly spaced across the day for variety.
+        # Today and tomorrow also carry NAMED events so the Pulse Live
+        # board can deal specific cards, not just counts. One event per
+        # venue, evenly spaced across the day for variety; ~16 a day keeps
+        # rail.json tiny (each pick is ~150 bytes) while giving the board
+        # a real spread to rotate through.
         if day_i < 2:
             seen_venues: set = set()
             uniq = []
@@ -458,13 +460,13 @@ def main() -> int:
                     continue
                 seen_venues.add(venue)
                 uniq.append(ev)
-            step = max(1, len(uniq) // 6)
+            step = max(1, len(uniq) // 16)
             row["picks"] = [{
                 "t": ev["title"][:80],
                 "v": (ev.get("venue") or "")[:40],
                 "s": ev.get("start"),
                 "u": ev.get("url") or "",
-            } for ev in uniq[::step][:6]]
+            } for ev in uniq[::step][:16]]
         rail_days.append(row)
     (DATA_DIR / "rail.json").write_text(json.dumps({
         "generated": now_iso, "days": rail_days,

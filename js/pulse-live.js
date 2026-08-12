@@ -20,6 +20,7 @@
   var RAIL_URL = 'data/events/rail.json';
   var WEEK_URL = 'data/events-week.json';
   var GAMES_URL = 'https://play.btownbrief.com/games.json';
+  var CHAMPS_URL = 'https://raw.githubusercontent.com/btownbrief/btownbrief.github.io/champions-data/data/champions.json';
   var ARCHIVE_URL = 'https://play.btownbrief.com/archive/data/stories-lite.json';
   var READ_URL = 'data/weather/read.json';
   var OPENINGS_URL = 'data/openings.json';
@@ -391,7 +392,7 @@
 
     if (week && Array.isArray(week.days)) {
       var wd = (Date.parse(week.updated) / 1000) || 0;
-      week.days.slice(0, 3).forEach(function (dy) {
+      week.days.forEach(function (dy) {
         if (!dy.text || !dy.label) return;
         // his prose runs 700-1250 chars; a board card gets the first
         // sentence, trimmed to headline length
@@ -556,6 +557,41 @@
           evergreen: true,
         });
       });
+    }
+
+    /* live leaderboard state: this month's champions, snapshotted every
+       6h by the hub's champions workflow. The #crown fragment keeps these
+       urls distinct from the plain arcade pitch cards above. */
+    var champs = extras && extras[10];
+    if (champs && Array.isArray(champs.games)) {
+      var mLabel = champs.monthLabel || 'month';
+      shuffle(champs.games.filter(function (g) {
+        return g && g.slug && g.name && g.champ;
+      }).slice()).slice(0, 6).forEach(function (g) {
+        pool.push({
+          t: '👑 ' + g.champ + ' rules the ' + g.name + ' board this ' + mLabel +
+             (g.scoreText ? ' at ' + g.scoreText : '') + ' — take the crown',
+          u: 'https://play.btownbrief.com/' + encodeURIComponent(g.slug) + '/#crown',
+          d: 0,
+          src: 'Leaderboards',
+          tags: ['play'],
+          topic: 'play',
+          evergreen: true,
+        });
+      });
+      var royal = Array.isArray(champs.royalty) ? champs.royalty[0] : null;
+      if (royal && royal.name && royal.crowns >= 2) {
+        pool.push({
+          t: '👑 ' + royal.name + ' is Arcade Royalty — topping ' + royal.crowns +
+             ' boards this ' + mLabel + '. Anyone going to stop them?',
+          u: 'https://play.btownbrief.com/leaderboards/',
+          d: 0,
+          src: 'Leaderboards',
+          tags: ['play'],
+          topic: 'play',
+          evergreen: true,
+        });
+      }
     }
 
     if (Array.isArray(archive)) {
@@ -1694,6 +1730,7 @@
       fetchJson(HOBBIES_URL).catch(function () { return null; }),
       fetchJson(THINGS_URL).catch(function () { return null; }),
       fetchJson(HISTORY_URL).catch(function () { return null; }),
+      fetchJson(CHAMPS_URL).catch(function () { return null; }),
     ]);
 
     fetchJson(LIVE_URL)
