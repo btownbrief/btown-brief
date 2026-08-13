@@ -11,17 +11,17 @@
    "Blanchard Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-12T17:51:00+00:00"
+    "resultTime": "2026-08-13T14:03:00+00:00"
    },
    "Blanchard Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-12T17:51:00+00:00"
+    "resultTime": "2026-08-13T14:03:00+00:00"
    },
    "Blodgett Water Access Point": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-12T18:00:00+00:00"
+    "resultTime": "2026-08-13T14:11:00+00:00"
    },
    "Leddy Beach North": {
     "status": "open",
@@ -36,12 +36,12 @@
    "North Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-12T18:23:00+00:00"
+    "resultTime": "2026-08-13T14:27:00+00:00"
    },
    "North Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-12T18:23:00+00:00"
+    "resultTime": "2026-08-13T14:24:00+00:00"
    },
    "North Shore Natural Area": {
     "status": "open",
@@ -51,12 +51,12 @@
    "Oakledge Cove": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-12T17:51:00+00:00"
+    "resultTime": "2026-08-13T14:03:00+00:00"
    },
    "Texaco Beach": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-12T18:13:00+00:00"
+    "resultTime": "2026-08-13T14:22:00+00:00"
    }
   }
  },
@@ -492,7 +492,8 @@
     "hasAgenda": true,
     "files": [
      "08.13.26 HRPC Agenda",
-     "08.13.26 HRPC Agenda Packet"
+     "08.13.26 HRPC Agenda Packet",
+     "08.13.26 HRPC Draft Minutes"
     ]
    },
    "10130": {
@@ -510,6 +511,12 @@
      "Packet V2"
     ]
    },
+   "10132": {
+    "name": "REIB City Council Committee Meeting",
+    "start": "2026-08-18T17:30:00+00:00",
+    "hasAgenda": true,
+    "files": []
+   },
    "10124": {
     "name": "City Council - Ordinance Committee Meeting",
     "start": "2026-08-20T16:30:00+00:00",
@@ -517,6 +524,14 @@
     "files": [
      "Ordinance Committee Meeting Agenda v1",
      "Ordinance Committee Meeting Agenda Packet v1"
+    ]
+   },
+   "10131": {
+    "name": "Cemetery Commission Meeting",
+    "start": "2026-08-20T16:30:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Cemetery Commission Agenda"
     ]
    },
    "10128": {
@@ -530,18 +545,6 @@
    "8683": {
     "name": "Retirement Board Meeting",
     "start": "2026-08-24T09:30:00+00:00",
-    "hasAgenda": false,
-    "files": []
-   },
-   "8624": {
-    "name": "Board of Finance Meeting",
-    "start": "2026-08-24T17:00:00+00:00",
-    "hasAgenda": false,
-    "files": []
-   },
-   "8642": {
-    "name": "City Council Meeting",
-    "start": "2026-08-24T18:00:00+00:00",
     "hasAgenda": false,
     "files": []
    }
@@ -928,25 +931,39 @@
    "wcax": {
     "items": [
      {
+      "id": "XKRDZSQDZ5BAZGC3JJCBZ7QUAA",
+      "title": "Democrats gathering to give final approval to 2028 presidential primary calendar",
+      "link": "https://www.wcax.com/2026/08/13/democrats-gathering-give-final-approval-2028-presidential-primary-calendar/",
+      "ts": "2026-08-13T14:46:51+00:00",
+      "summary": "New Hampshire congressional leaders, including Sens. Jeanne Shaheen and Maggie Hassan, said the planned calendar change is wrong for their state and the country."
+     },
+     {
+      "id": "X2M3BDZXW5CBPCC5VUY6WKS7BI",
+      "title": "WATCH LIVE: Lake Monsters host Worcester in decisive game 3 of semifinal series",
+      "link": "https://www.wcax.com/2026/08/13/watch-live-lake-monsters-host-worcester-decisive-game-3-semifinal-series/",
+      "ts": "2026-08-13T14:06:11+00:00",
+      "summary": "The Vermont Lake Monsters and Worcester Bravehearts will square off in a decisive third game of their FCBL semifinal series on Thursday night"
+     },
+     {
       "id": "SR5AWAR2EBEELIKHCDSBVAWCHA",
-      "title": "The future of St. Michael’s College could be in jeopardy",
+      "title": "St. Michael’s College accreditation at risk amid steep enrollment drop",
       "link": "https://www.wcax.com/2026/08/13/future-st-michaels-college-could-be-jeopardy/",
       "ts": "2026-08-13T11:47:51+00:00",
-      "summary": "A lack of students on the St. Michael’s College campus could have serious implications for the future of the school"
+      "summary": "A lack of students on the St. Michael’s College campus could have serious implications for the future of the school."
      },
      {
       "id": "U3QLOL4X2JDWBEGXPOEJKX3QN4",
       "title": "Good Citizen Challenge August 13 winner",
       "link": "https://www.wcax.com/2026/08/13/good-citizen-challenge-august-13-winner/",
       "ts": "2026-08-13T11:12:06+00:00",
-      "summary": "Congratulations to Ione Post of Londonderry, this week’s winner in the Good Citizen Challenge"
+      "summary": "Congratulations to Ione Post of Londonderry, this week’s winner in the Good Citizen Challenge."
      },
      {
       "id": "BYKE4FLRSZE2XF3QZQ6UXUGUGA",
-      "title": "Traffic Alert: Tractor-trailer crash shuts a northbound lane on I-91",
+      "title": "Traffic Alert: Tractor-trailer crash closes a northbound lane on I-91",
       "link": "https://www.wcax.com/2026/08/13/traffic-alert-tractor-trailer-crash-shuts-northbound-lane-i-91/",
       "ts": "2026-08-13T10:46:12+00:00",
-      "summary": "A tractor-trailer crash has closed one lane on I-91 north in Ryegate"
+      "summary": "A tractor-trailer crash has closed one lane on Interstate 91 northbound in Ryegate."
      },
      {
       "id": "BBYRHBDLVBFYXNZLBTSSG3FTXI",
@@ -967,7 +984,7 @@
       "title": "Police seek suspect in car theft from St. Johnsbury Ford dealership",
       "link": "https://www.wcax.com/2026/08/13/police-seek-suspect-car-theft-st-johnsbury-ford-dealership/",
       "ts": "2026-08-13T03:15:02+00:00",
-      "summary": "State police are asking for the public’s help identifying a man they say stole a car from a St. Johnsbury dealership late Tuesday night."
+      "summary": "State police are asking for the public’s help identifying a man who they say stole a car from a St. Johnsbury dealership late Tuesday night."
      },
      {
       "id": "HL4RHZFOJJA2JBZFJ4IGSLGPBU",
@@ -1054,6 +1071,13 @@
       "summary": "Sarah George said on Wednesday that she plans to help the public better understand her work."
      },
      {
+      "id": "JMCRZPOQCNGJBISW7SCW2T2EGE",
+      "title": "Disability rights group wants Constantino to apologize for slur in 2024 video",
+      "link": "https://www.wcax.com/2026/08/12/disability-rights-group-wants-constantino-apologize-slur-2024-video/",
+      "ts": "2026-08-12T21:37:25+00:00",
+      "summary": "A North Country disability rights group is calling on the Republican candidate for New York’s 21st Congressional District to publicly apologize after he used a slur in a 2024 video."
+     },
+     {
       "id": "K6EFGTMBCVEAHA6C5TVSBDPPEQ",
       "title": "Vermont Democrats unite behind Janoo, but analysts say the harder race is ahead",
       "link": "https://www.wcax.com/2026/08/12/vermont-democrats-unite-behind-janoo-analysts-say-harder-race-is-ahead/",
@@ -1082,11 +1106,25 @@
       "summary": "The district is offering free public tours of the new space ahead of opening day."
      },
      {
+      "id": "VVGUOVMXQFDZNLPCXVF7C7G6FU",
+      "title": "Hochul leads Blakeman by 10 points three months out from election",
+      "link": "https://www.wcax.com/2026/08/12/hochul-leads-blakeman-by-10-points-three-months-out-election/",
+      "ts": "2026-08-12T20:17:11+00:00",
+      "summary": "Kathy Hochul holds a 10-point lead in August over Bruce Blakeman, narrowing after a 20-point lead in June."
+     },
+     {
       "id": "XXD33NFBJFBVFNS2F55OISD2TA",
       "title": "Teen faces DWI charges after NH crash sends 3 to hospital",
       "link": "https://www.wcax.com/2026/08/12/teen-faces-dwi-charges-after-nh-crash-sends-3-hospital/",
       "ts": "2026-08-12T20:11:57+00:00",
       "summary": "Three people were sent to the hospital with serious injuries after a crash on Tuesday in Plainfield, New Hampshire."
+     },
+     {
+      "id": "3A2QPACA5JDN5J7X7CAMYIQXJQ",
+      "title": "Democrat seeks to flip North Country state Senate seat",
+      "link": "https://www.wcax.com/2026/08/12/democrat-seeks-flip-north-country-state-senate-seat/",
+      "ts": "2026-08-12T20:07:01+00:00",
+      "summary": "A Glens Falls woman is running for a state Senate seat in the North Country, hoping to add to Democrats’ majority in Albany."
      },
      {
       "id": "HMOENIOHYVF6DI3AOQ2KDXTAZM",
@@ -1241,46 +1279,39 @@
       "link": "https://www.wcax.com/2026/08/11/lightning-strike-blamed-fire-essex-junction-apartment-complex/",
       "ts": "2026-08-11T19:38:27+00:00",
       "summary": "Dozens of people were evacuated from an apartment building at Evergreen Place Apartments just after midnight Tuesday."
-     },
-     {
-      "id": "SNYIUDLDLZBULNKWKAOCSELQBY",
-      "title": "Chittenden County sheriff’s deputy accused of handing migrant to federal agents in violation of state policy",
-      "link": "https://www.wcax.com/2026/08/11/chittenden-county-sheriffs-deputy-accused-handing-migrant-federal-agents-violation-state-policy/",
-      "ts": "2026-08-11T19:35:33+00:00",
-      "summary": "The group claims the deputy handed a migrant worker over to the Border Patrol, violating the state's fair and impartial policing policy."
-     },
-     {
-      "id": "R4LKKKE6FVGOLP2IFYYALVRAGQ",
-      "title": "Bennington man held in New York on attempted murder charges after July shooting",
-      "link": "https://www.wcax.com/2026/08/11/bennington-man-held-new-york-attempted-murder-charges-after-july-shooting/",
-      "ts": "2026-08-11T19:09:32+00:00",
-      "summary": "A Bennington man charged with attempted murder after a July shooting and crash is now jailed in New York awaiting extradition."
-     },
-     {
-      "id": "TW2TBAHVO5GFJP2LI4FDADG47I",
-      "title": "Vermont primary voters say issues, not names, driving their choices",
-      "link": "https://www.wcax.com/2026/08/11/vermont-primary-voters-say-issues-not-names-driving-their-choices/",
-      "ts": "2026-08-11T16:19:10+00:00",
-      "summary": "Many voters say community representation and civic duty are driving their choices at the polls, not names or parties."
-     },
-     {
-      "id": "BH24KBTGI5B4DJM4KE5UK6EQWA",
-      "title": "Vermont teen passenger killed in single vehicle crash",
-      "link": "https://www.wcax.com/2026/08/11/vermont-teen-passenger-killed-single-vehicle-crash/",
-      "ts": "2026-08-11T14:37:35+00:00",
-      "summary": "A Manchester teen was killed in a crash in Mount Tabor on Monday night when the vehicle he was riding in went off the road and hit a tree."
-     },
-     {
-      "id": "TZ4KMIMRRFFRDMCN42DI3QCZ4M",
-      "title": "Pedaling a long distance from Dartmouth to help lung cancer patients",
-      "link": "https://www.wcax.com/2026/08/11/pedaling-long-distance-dartmouth-help-lung-cancer-patients/",
-      "ts": "2026-08-11T12:50:05+00:00",
-      "summary": "A cyclist with a personal mission is riding from the Dartmouth Cancer Center to New Jersey starting on Tuesday"
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73424534",
+      "title": "Man runs from New York to Boston – 244 miles – in 74 hours to honor a friend",
+      "link": "https://www.mynbc5.com/article/new-york-to-boston-run-tom-hanlon/73424534",
+      "ts": "2026-08-13T15:22:00+00:00",
+      "summary": "A man recently ran nearly 250 miles – from New York City to Boston – in just over three days to honor his friend who died by suicide."
+     },
+     {
+      "id": "73423842",
+      "title": "USS Abraham Lincoln sailors reportedly tried to jump overboard amid extended deployment",
+      "link": "https://www.mynbc5.com/article/uss-abraham-lincoln-deployment-mental-health-concerns/73423842",
+      "ts": "2026-08-13T14:36:00+00:00",
+      "summary": "Lawmakers demand answers as concerns were raised about worsening mental health among sailors aboard USS Abraham Lincoln"
+     },
+     {
+      "id": "73424067",
+      "title": "Pet Connection: All about the cats",
+      "link": "https://www.mynbc5.com/article/pet-connection-aug-13-2026/73424067",
+      "ts": "2026-08-13T14:12:00+00:00",
+      "summary": "In this week's Pet Connection, we're featuring three fuzzy felines in need of new homes."
+     },
+     {
+      "id": "73423997",
+      "title": "Hiker dies on trail in Grafton County, Fish and Game says",
+      "link": "https://www.mynbc5.com/article/bethlehem-new-hampshire-hiker-death/73423997",
+      "ts": "2026-08-13T13:57:00+00:00",
+      "summary": "A hiker has died while on the Mt. Hale Brook Trail in Bethlehem, New Hampshire, Fish and Game officials said."
+     },
      {
       "id": "73422736",
       "title": "Travis Kelce makes first public comments about wedding to Taylor Swift",
@@ -1392,34 +1423,6 @@
       "link": "https://www.mynbc5.com/article/everett-marshburn-journalist-dies-at-78/73419912",
       "ts": "2026-08-13T04:08:00+00:00",
       "summary": "\"He always believed that it wasn't for him to shine. It was to make others look good,\" James Causey said of his late mentor and friend, Everett Marshburn."
-     },
-     {
-      "id": "73419687",
-      "title": "Salmon River school district appoints new superintendent after investigation",
-      "link": "https://www.mynbc5.com/article/srcsd-new-superintendent/73419687",
-      "ts": "2026-08-13T03:40:00+00:00",
-      "summary": "Salmon River Central School District has appointed a new superintendent. It comes after the state investigated the use of \"time-out boxes\" at the Salmon Central School."
-     },
-     {
-      "id": "73419223",
-      "title": "University of Vermont women's soccer opens season with tie against Merrimack",
-      "link": "https://www.mynbc5.com/article/university-of-vermont-womens-soccer-opens-season-with-tie-against-merrimack/73419223",
-      "ts": "2026-08-13T03:39:00+00:00",
-      "summary": "Catamounts' two first-half goals not enough to earn home-opening win, settle for 2-2 draw with the Warriors"
-     },
-     {
-      "id": "73419014",
-      "title": "Hundreds of bikers honor 16-year-old Burlington girl killed in e-bike crash with critical mass ride",
-      "link": "https://www.mynbc5.com/article/hundreds-cyclists-burlington-wednesday-critical-mass-ride-shiloh-skalka/73419014",
-      "ts": "2026-08-13T03:11:00+00:00",
-      "summary": "Bicyclists participate in critical mass ride to honor 16-year-old Burlington girl who was hit and later died while riding her e-bike in July."
-     },
-     {
-      "id": "73419062",
-      "title": "Morrisonville Fire Department honors firefighter for 65-years of service",
-      "link": "https://www.mynbc5.com/article/morrisonville-fire-department-honors-firefighter-for-65-years-of-service/73419062",
-      "ts": "2026-08-13T02:22:00+00:00",
-      "summary": "Morrisonville Fire Department honors firefighter for 65-years of service"
      }
     ]
    },
@@ -1508,13 +1511,6 @@
       "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3853",
       "ts": "2026-07-16T20:34:33+00:00",
       "summary": ""
-     },
-     {
-      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3852/639196181290000000",
-      "title": "07/14/2026 Aggravated Assault | 26BU015794",
-      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3852",
-      "ts": "2026-07-14T14:28:49+00:00",
-      "summary": ""
      }
     ]
    },
@@ -1602,13 +1598,6 @@
       "title": "07/16/2026 Motor Vehicle Crash with E-Bike | 26BU016028",
       "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3853",
       "ts": "2026-07-16T20:34:33+00:00",
-      "summary": ""
-     },
-     {
-      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3852/639196181290000000",
-      "title": "07/14/2026 Aggravated Assault | 26BU015794",
-      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3852",
-      "ts": "2026-07-14T14:28:49+00:00",
       "summary": ""
      }
     ]
