@@ -1,61 +1,51 @@
 {
- "updated": "2026-08-13T08:55:11+00:00",
+ "updated": "2026-08-13T10:41:49+00:00",
  "sections_updated": {
-  "now": "2026-08-13T08:55:11+00:00",
-  "forecast": "2026-08-13T08:55:11+00:00",
-  "hourly": "2026-08-13T08:55:11+00:00",
-  "alerts": "2026-08-13T08:55:11+00:00",
-  "afd": "2026-08-13T08:55:11+00:00",
-  "lake_forecast": "2026-08-13T08:55:11+00:00",
-  "lake_gage": "2026-08-13T08:55:11+00:00",
-  "air": "2026-08-13T08:55:11+00:00",
-  "sun": "2026-08-13T08:55:11+00:00",
-  "models": "2026-08-13T08:55:11+00:00"
+  "now": "2026-08-13T10:41:49+00:00",
+  "forecast": "2026-08-13T10:41:49+00:00",
+  "hourly": "2026-08-13T10:41:49+00:00",
+  "alerts": "2026-08-13T10:41:49+00:00",
+  "afd": "2026-08-13T10:41:49+00:00",
+  "lake_forecast": "2026-08-13T10:41:49+00:00",
+  "lake_gage": "2026-08-13T10:41:49+00:00",
+  "air": "2026-08-13T10:41:49+00:00",
+  "sun": "2026-08-13T10:41:49+00:00",
+  "models": "2026-08-13T10:41:49+00:00"
  },
  "now": {
-  "observed_at": "2026-08-13T08:35:00+00:00",
+  "observed_at": "2026-08-13T10:20:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
-  "temp_f": 63,
-  "feels_like_f": 63,
-  "humidity": 94,
+  "description": "Mostly Cloudy",
+  "temp_f": 61,
+  "feels_like_f": 61,
+  "humidity": 100,
   "dewpoint_f": 61,
   "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "N"
+  "wind_dir": "ESE"
  },
  "forecast": {
-  "updated": "2026-08-13T06:17:31+00:00",
+  "updated": "2026-08-13T10:26:32+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-08-13T04:00:00-04:00",
-    "is_day": false,
-    "temp_f": 62,
-    "pop": 98,
-    "wind": "S 3 mph",
-    "short": "Showers And Thunderstorms",
-    "detailed": "Showers and thunderstorms. Cloudy, with a low around 62. South wind around 3 mph. Chance of precipitation is 100%. New rainfall amounts between a tenth and quarter of an inch possible."
-   },
-   {
-    "name": "Thursday",
+    "name": "Today",
     "start": "2026-08-13T06:00:00-04:00",
     "is_day": true,
     "temp_f": 78,
-    "pop": 59,
+    "pop": 41,
     "wind": "SW 2 to 8 mph",
-    "short": "Chance Showers And Thunderstorms",
-    "detailed": "A chance of showers and thunderstorms. Mostly cloudy, with a high near 78. Southwest wind 2 to 8 mph. Chance of precipitation is 60%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "short": "Scattered Showers And Thunderstorms",
+    "detailed": "Scattered showers and thunderstorms. Mostly cloudy, with a high near 78. Southwest wind 2 to 8 mph. Chance of precipitation is 40%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
-    "name": "Thursday Night",
+    "name": "Tonight",
     "start": "2026-08-13T18:00:00-04:00",
     "is_day": false,
     "temp_f": 59,
-    "pop": 43,
+    "pop": 20,
     "wind": "NW 3 to 8 mph",
-    "short": "Scattered Showers And Thunderstorms then Partly Cloudy",
-    "detailed": "Scattered showers and thunderstorms before 9pm. Partly cloudy, with a low around 59. Northwest wind 3 to 8 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "short": "Isolated Showers And Thunderstorms then Partly Cloudy",
+    "detailed": "Isolated showers and thunderstorms before 7pm. Partly cloudy, with a low around 59. Northwest wind 3 to 8 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Friday",
@@ -166,39 +156,27 @@
     "wind": "S 8 mph",
     "short": "Mostly Sunny then Chance Showers And Thunderstorms",
     "detailed": "A chance of showers and thunderstorms after 2pm. Mostly sunny, with a high near 83. South wind around 8 mph. Chance of precipitation is 30%."
+   },
+   {
+    "name": "Wednesday Night",
+    "start": "2026-08-19T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 63,
+    "pop": 44,
+    "wind": "S 8 mph",
+    "short": "Chance Showers And Thunderstorms",
+    "detailed": "A chance of showers and thunderstorms. Mostly cloudy, with a low around 63. South wind around 8 mph. Chance of precipitation is 40%."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-08-13T06:17:31+00:00",
+  "updated": "2026-08-13T10:26:32+00:00",
   "hours": [
-   {
-    "t": "2026-08-13T04:00:00-04:00",
-    "temp_f": 63,
-    "feels_f": 63,
-    "pop": 98,
-    "humidity": 93,
-    "wind_mph": 3,
-    "wind_dir": "S",
-    "sky": 99,
-    "short": "Showers And Thunderstorms"
-   },
-   {
-    "t": "2026-08-13T05:00:00-04:00",
-    "temp_f": 63,
-    "feels_f": 63,
-    "pop": 57,
-    "humidity": 93,
-    "wind_mph": 3,
-    "wind_dir": "S",
-    "sky": 93,
-    "short": "Chance Showers And Thunderstorms"
-   },
    {
     "t": "2026-08-13T06:00:00-04:00",
     "temp_f": 62,
     "feels_f": 62,
-    "pop": 41,
+    "pop": 27,
     "humidity": 97,
     "wind_mph": 2,
     "wind_dir": "SE",
@@ -209,7 +187,7 @@
     "t": "2026-08-13T07:00:00-04:00",
     "temp_f": 63,
     "feels_f": 63,
-    "pop": 47,
+    "pop": 25,
     "humidity": 93,
     "wind_mph": 3,
     "wind_dir": "S",
@@ -220,40 +198,40 @@
     "t": "2026-08-13T08:00:00-04:00",
     "temp_f": 64,
     "feels_f": 64,
-    "pop": 33,
+    "pop": 22,
     "humidity": 93,
     "wind_mph": 3,
     "wind_dir": "S",
     "sky": 66,
-    "short": "Scattered Showers And Thunderstorms"
+    "short": "Isolated Showers And Thunderstorms"
    },
    {
     "t": "2026-08-13T09:00:00-04:00",
     "temp_f": 67,
     "feels_f": 67,
-    "pop": 35,
+    "pop": 16,
     "humidity": 84,
     "wind_mph": 3,
     "wind_dir": "SW",
     "sky": 57,
-    "short": "Scattered Showers And Thunderstorms"
+    "short": "Isolated Showers And Thunderstorms"
    },
    {
     "t": "2026-08-13T10:00:00-04:00",
     "temp_f": 69,
     "feels_f": 69,
-    "pop": 43,
+    "pop": 24,
     "humidity": 81,
     "wind_mph": 3,
     "wind_dir": "W",
     "sky": 62,
-    "short": "Scattered Showers And Thunderstorms"
+    "short": "Isolated Showers And Thunderstorms"
    },
    {
     "t": "2026-08-13T11:00:00-04:00",
     "temp_f": 72,
     "feels_f": 72,
-    "pop": 43,
+    "pop": 35,
     "humidity": 73,
     "wind_mph": 5,
     "wind_dir": "NW",
@@ -264,7 +242,7 @@
     "t": "2026-08-13T12:00:00-04:00",
     "temp_f": 73,
     "feels_f": 73,
-    "pop": 42,
+    "pop": 37,
     "humidity": 71,
     "wind_mph": 5,
     "wind_dir": "NW",
@@ -275,7 +253,7 @@
     "t": "2026-08-13T13:00:00-04:00",
     "temp_f": 75,
     "feels_f": 75,
-    "pop": 50,
+    "pop": 39,
     "humidity": 66,
     "wind_mph": 5,
     "wind_dir": "NW",
@@ -286,7 +264,7 @@
     "t": "2026-08-13T14:00:00-04:00",
     "temp_f": 75,
     "feels_f": 75,
-    "pop": 50,
+    "pop": 41,
     "humidity": 64,
     "wind_mph": 6,
     "wind_dir": "NW",
@@ -297,7 +275,7 @@
     "t": "2026-08-13T15:00:00-04:00",
     "temp_f": 76,
     "feels_f": 76,
-    "pop": 51,
+    "pop": 40,
     "humidity": 62,
     "wind_mph": 6,
     "wind_dir": "NW",
@@ -308,62 +286,62 @@
     "t": "2026-08-13T16:00:00-04:00",
     "temp_f": 77,
     "feels_f": 77,
-    "pop": 59,
+    "pop": 32,
     "humidity": 58,
     "wind_mph": 7,
     "wind_dir": "NW",
     "sky": 73,
-    "short": "Chance Showers And Thunderstorms"
+    "short": "Scattered Showers And Thunderstorms"
    },
    {
     "t": "2026-08-13T17:00:00-04:00",
     "temp_f": 75,
     "feels_f": 75,
-    "pop": 55,
+    "pop": 27,
     "humidity": 62,
     "wind_mph": 8,
     "wind_dir": "NW",
     "sky": 70,
-    "short": "Chance Showers And Thunderstorms"
+    "short": "Scattered Showers And Thunderstorms"
    },
    {
     "t": "2026-08-13T18:00:00-04:00",
     "temp_f": 74,
     "feels_f": 74,
-    "pop": 43,
+    "pop": 20,
     "humidity": 62,
     "wind_mph": 8,
     "wind_dir": "NW",
     "sky": 62,
-    "short": "Scattered Showers And Thunderstorms"
+    "short": "Isolated Showers And Thunderstorms"
    },
    {
     "t": "2026-08-13T19:00:00-04:00",
     "temp_f": 73,
     "feels_f": 73,
-    "pop": 32,
+    "pop": 13,
     "humidity": 64,
     "wind_mph": 7,
     "wind_dir": "NW",
     "sky": 55,
-    "short": "Scattered Showers And Thunderstorms"
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-08-13T20:00:00-04:00",
     "temp_f": 70,
     "feels_f": 70,
-    "pop": 20,
+    "pop": 6,
     "humidity": 71,
     "wind_mph": 7,
     "wind_dir": "NW",
     "sky": 38,
-    "short": "Slight Chance Showers And Thunderstorms"
+    "short": "Partly Cloudy"
    },
    {
     "t": "2026-08-13T21:00:00-04:00",
     "temp_f": 68,
     "feels_f": 68,
-    "pop": 14,
+    "pop": 4,
     "humidity": 78,
     "wind_mph": 6,
     "wind_dir": "NW",
@@ -374,7 +352,7 @@
     "t": "2026-08-13T22:00:00-04:00",
     "temp_f": 66,
     "feels_f": 66,
-    "pop": 8,
+    "pop": 2,
     "humidity": 84,
     "wind_mph": 5,
     "wind_dir": "N",
@@ -385,7 +363,7 @@
     "t": "2026-08-13T23:00:00-04:00",
     "temp_f": 66,
     "feels_f": 66,
-    "pop": 2,
+    "pop": 1,
     "humidity": 84,
     "wind_mph": 5,
     "wind_dir": "NW",
@@ -396,7 +374,7 @@
     "t": "2026-08-14T00:00:00-04:00",
     "temp_f": 64,
     "feels_f": 64,
-    "pop": 1,
+    "pop": 0,
     "humidity": 87,
     "wind_mph": 5,
     "wind_dir": "NW",
@@ -407,7 +385,7 @@
     "t": "2026-08-14T01:00:00-04:00",
     "temp_f": 64,
     "feels_f": 64,
-    "pop": 1,
+    "pop": 0,
     "humidity": 87,
     "wind_mph": 3,
     "wind_dir": "NW",
@@ -418,7 +396,7 @@
     "t": "2026-08-14T02:00:00-04:00",
     "temp_f": 63,
     "feels_f": 63,
-    "pop": 0,
+    "pop": 1,
     "humidity": 87,
     "wind_mph": 3,
     "wind_dir": "N",
@@ -567,6 +545,28 @@
     "wind_dir": "N",
     "sky": 14,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-08-14T16:00:00-04:00",
+    "temp_f": 77,
+    "feels_f": 77,
+    "pop": 1,
+    "humidity": 47,
+    "wind_mph": 12,
+    "wind_dir": "N",
+    "sky": 18,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-08-14T17:00:00-04:00",
+    "temp_f": 76,
+    "feels_f": 76,
+    "pop": 1,
+    "humidity": 48,
+    "wind_mph": 12,
+    "wind_dir": "N",
+    "sky": 14,
+    "short": "Sunny"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-13T06:59:00+00:00",
+  "issued": "2026-08-13T10:26:00+00:00",
   "key_messages": [
    "Isolated to scattered showers and thunderstorms are expected this afternoon as another shortwave moves through the region. Conditions turn drier and quieter by Friday and Saturday.",
    "Showers with a low chance of thunderstorms are expected late Sunday into Monday. Following a dry Tuesday, the next chance of showers will come in by Wednesday afternoon."
   ],
-  "what_changed": "As of 258 AM EDT Thursday... No significant changes we made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 130659\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n259 AM EDT Thu Aug 13 2026\n\n.WHAT HAS CHANGED...\nAs of 258 AM EDT Thursday...\n\nNo significant changes we made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 258 AM EDT Thursday...\n\n1. Isolated to scattered showers and thunderstorms are expected \nthis afternoon as another shortwave moves through the region. \nConditions turn drier and quieter by Friday and Saturday.\n\n2. Showers with a low chance of thunderstorms are expected late \nSunday into Monday. Following a dry Tuesday, the next chance of \nshowers will come in by Wednesday afternoon. \n\n&&\n\n.DISCUSSION...\nAs of 258 AM EDT Thursday...\n\nKEY MESSAGE 1: Another shortwave is approaching the region early this \nmorning, bringing showers and thunderstorms to parts of northern New \nYork and Vermont. This wave is expected to move through during the \nday today, with better aligned forcing for our region than \nyesterday. Increasing diurnal instability around 1000-1500 J/kg \nfocused around the international border and across the Champlain \nValley with similar shear profiles to yesterday will bring better \nchances for thunderstorms to the region this afternoon, though a few \nshowers may be possible in the mid to late morning with little \ncapping inversion present. Some of the more robust high resolution \nmodels are projecting 2100-2300 J/kg of surface based CAPE, and \nfreezing levels have been lower than typical for this time of year. \nInstability will be highest in northern Vermont and the Champlain \nValley, though showers and thunderstorms anywhere across the \nnorthern portions of the CWA will be possible tomorrow. Brief gusty \nwinds around 40 mph and small hail will be possible. Precipitable \nwater values will slightly increase today to near an inch and a \nquarter, with parallel motion and training cells. However, again, \ndeep warm cloud depths will be thin with a low risk for any flooding \nconcerns. Temperatures today will likely remain on the cooler side \nwith highs in the 70s to around 80 F in northwesterly flow. \n\nTroughing will slide east with surface high pressure building in \nfrom Canada tonight and Friday. More calm and quiet conditions are \nexpected through Saturday night. High temperatures will be slightly \nbelow seasonal normals in the 70s and lower 80s. Nights will be on \nthe cooler side as well with prime radiational cooling conditions \npresent and lows in the mid 40s to mid 50s. Radiational fog looks \nincreasingly likely in the typical valley spots tonight and Friday \nnight, especially in locations that see rainfall today.\n\nKEY MESSAGE 2: Generally no real changes to the expectations for a good \nchance for widespread, beneficial rain late Sunday through Sunday \nnight. Probabilities of at least a half inch of rain have ticked up \nfrom 24 hours ago into the 30 to 50% range, while thunderstorm \nchances remain conditional on a more northward type of low track. \nAmong global models, all of the GEFS and GEPS membership shows CAPE \nremaining under 500 J/kg during this event, but a minority of ENS \nmembers are depicting a wedge of greater instability making \nnorthward progress into at least northern New York, suggesting at \nleast elevated thunderstorms would be possible, enhancing rainfall \nrates at times. Otherwise, we'll have to watch on Monday behind this \nlow pressure system if there is enough moisture to work with to have \nsome thunderstorm development as a cool front and trough follows \nbehind it. For now, greatest potential for thunderstorms Monday is \nin northeastern Vermont, but this portion of the forecast is rather \nuncertain given lack of a strong trigger similar to what we've seen \nin recent days in a fast flow pattern.\n\nTuesday continues to look largely dry associated with broad ridging. \nWednesday may start similarly, then take a turn towards more active \nweather with broadly good large scale support for organized showers \nand thunderstorms as the next trough moves in from the west. Given \nwe're seven days out and only weak signals for severe weather show \nup in the long range guidance, this is not likely to be a \nsignificant event but will bear watching if you have outdoor plans. \nSeasonable weather is anticipated through this period, with daytime \ntemperatures mainly in the 70s with dewpoints in the 50s, trending a \nonly a bit warmer and more humid on Wednesday.\n\n&&\n\n.AVIATION /06Z THURSDAY THROUGH MONDAY/...\nThrough 06Z Friday...Challenging forecast over the next six hours\nwith variable conditions at most sites as a thunderstorm complex\ngradually slides southeastward through the airspace. This activity\nhas passed MSS and will move south of EFK. Elsewhere, a direct hit\nat SLK is occurring at the start of the period with at least VCTS to\nthe northeast at PBG and possibly BTV. Convective trends and limited\ninstability farther east suggest a weakening of thunderstorms as\nthey move towards MPV and RUT, with no mention of thunder given. The\nincoming showers however will limit the otherwise favorable\nconditions for dense fog at MPV which are present at the moment.\nTherefore have indicated only temporary LIFR conditions for \nmost of the period coinciding with the expected rain when \nlowest ceilings should scatter. Following the thunderstorms at \nSLK, would expect a period of low ceilings and mist is possible \nbut confidence is low, hence also a TEMPO group was used there. \nFinally, abundant moisture at MSS following the nocturnal \nthunderstorms will lead to a period of low stratus overnight and\ninto the morning as light winds keep the clouds from mixing out\nquickly after sunrise. \n\nWinds continue to be light and variable through at least 15Z, \nthen trend a bit stronger out of the west or northwest \nthereafter, with a few gusts in the 15 to 20 knot range at most \nterminals possible between 18Z and 23Z. Winds should abate after\nsunset. While widely scattered showers and thunderstorms are \npossible during the remainder of the period, coverage and timing\nare too uncertain to indicate in this set of TAFs beyond the \nfirst 12 hours.\n\nOutlook...\n\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Chance SHRA.\nSunday Night: Mainly VFR, with areas MVFR possible. Chance SHRA,\nSlight chance TSRA.\nMonday: Mainly MVFR, with local IFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Storm/Kutikoff\nAVIATION...Kutikoff\n"
+  "what_changed": "As of 625 AM EDT Thursday... Have updated the probability of precipitation forecast today to reflect the current rain sinking south and southeast across southern Vermont this morning. No major changes were made.",
+  "raw": "\n000\nFXUS61 KBTV 131026\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n626 AM EDT Thu Aug 13 2026\n\n.WHAT HAS CHANGED...\nAs of 625 AM EDT Thursday...\n\nHave updated the probability of precipitation forecast today to\nreflect the current rain sinking south and southeast across\nsouthern Vermont this morning. No major changes were made.\n\n&&\n\n.KEY MESSAGES...\nAs of 258 AM EDT Thursday...\n\n1. Isolated to scattered showers and thunderstorms are expected \nthis afternoon as another shortwave moves through the region. \nConditions turn drier and quieter by Friday and Saturday.\n\n2. Showers with a low chance of thunderstorms are expected late \nSunday into Monday. Following a dry Tuesday, the next chance of \nshowers will come in by Wednesday afternoon.\n\n&&\n\n.DISCUSSION...\nAs of 258 AM EDT Thursday...\n\nKEY MESSAGE 1: Another shortwave is approaching the region early this \nmorning, bringing showers and thunderstorms to parts of northern New \nYork and Vermont. This wave is expected to move through during the \nday today, with better aligned forcing for our region than \nyesterday. Increasing diurnal instability around 1000-1500 J/kg \nfocused around the international border and across the Champlain \nValley with similar shear profiles to yesterday will bring better \nchances for thunderstorms to the region this afternoon, though a few \nshowers may be possible in the mid to late morning with little \ncapping inversion present. Some of the more robust high resolution \nmodels are projecting 2100-2300 J/kg of surface based CAPE, and \nfreezing levels have been lower than typical for this time of year. \nInstability will be highest in northern Vermont and the Champlain \nValley, though showers and thunderstorms anywhere across the \nnorthern portions of the CWA will be possible tomorrow. Brief gusty \nwinds around 40 mph and small hail will be possible. Precipitable \nwater values will slightly increase today to near an inch and a \nquarter, with parallel motion and training cells. However, again, \ndeep warm cloud depths will be thin with a low risk for any flooding \nconcerns. Temperatures today will likely remain on the cooler side \nwith highs in the 70s to around 80 F in northwesterly flow. \n\nTroughing will slide east with surface high pressure building in \nfrom Canada tonight and Friday. More calm and quiet conditions are \nexpected through Saturday night. High temperatures will be slightly \nbelow seasonal normals in the 70s and lower 80s. Nights will be on \nthe cooler side as well with prime radiational cooling conditions \npresent and lows in the mid 40s to mid 50s. Radiational fog looks \nincreasingly likely in the typical valley spots tonight and Friday \nnight, especially in locations that see rainfall today.\n\nKEY MESSAGE 2: Generally no real changes to the expectations for a good \nchance for widespread, beneficial rain late Sunday through Sunday \nnight. Probabilities of at least a half inch of rain have ticked up \nfrom 24 hours ago into the 30 to 50% range, while thunderstorm \nchances remain conditional on a more northward type of low track. \nAmong global models, all of the GEFS and GEPS membership shows CAPE \nremaining under 500 J/kg during this event, but a minority of ENS \nmembers are depicting a wedge of greater instability making \nnorthward progress into at least northern New York, suggesting at \nleast elevated thunderstorms would be possible, enhancing rainfall \nrates at times. Otherwise, we'll have to watch on Monday behind this \nlow pressure system if there is enough moisture to work with to have \nsome thunderstorm development as a cool front and trough follows \nbehind it. For now, greatest potential for thunderstorms Monday is \nin northeastern Vermont, but this portion of the forecast is rather \nuncertain given lack of a strong trigger similar to what we've seen \nin recent days in a fast flow pattern.\n\nTuesday continues to look largely dry associated with broad ridging. \nWednesday may start similarly, then take a turn towards more active \nweather with broadly good large scale support for organized showers \nand thunderstorms as the next trough moves in from the west. Given \nwe're seven days out and only weak signals for severe weather show \nup in the long range guidance, this is not likely to be a \nsignificant event but will bear watching if you have outdoor plans. \nSeasonable weather is anticipated through this period, with daytime \ntemperatures mainly in the 70s with dewpoints in the 50s, trending a \nonly a bit warmer and more humid on Wednesday.\n\n&&\n\n.AVIATION /06Z THURSDAY THROUGH MONDAY/...\nThrough 06Z Friday...Challenging forecast over the next six hours\nwith variable conditions at most sites as a thunderstorm complex\ngradually slides southeastward through the airspace. This activity\nhas passed MSS and will move south of EFK. Elsewhere, a direct hit\nat SLK is occurring at the start of the period with at least VCTS to\nthe northeast at PBG and possibly BTV. Convective trends and limited\ninstability farther east suggest a weakening of thunderstorms as\nthey move towards MPV and RUT, with no mention of thunder given. The\nincoming showers however will limit the otherwise favorable\nconditions for dense fog at MPV which are present at the moment.\nTherefore have indicated only temporary LIFR conditions for \nmost of the period coinciding with the expected rain when \nlowest ceilings should scatter. Following the thunderstorms at \nSLK, would expect a period of low ceilings and mist is possible \nbut confidence is low, hence also a TEMPO group was used there. \nFinally, abundant moisture at MSS following the nocturnal \nthunderstorms will lead to a period of low stratus overnight and\ninto the morning as light winds keep the clouds from mixing out\nquickly after sunrise. \n\nWinds continue to be light and variable through at least 15Z, \nthen trend a bit stronger out of the west or northwest \nthereafter, with a few gusts in the 15 to 20 knot range at most \nterminals possible between 18Z and 23Z. Winds should abate after\nsunset. While widely scattered showers and thunderstorms are \npossible during the remainder of the period, coverage and timing\nare too uncertain to indicate in this set of TAFs beyond the \nfirst 12 hours.\n\nOutlook...\n\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Chance SHRA.\nSunday Night: Mainly VFR, with areas MVFR possible. Chance SHRA,\nSlight chance TSRA.\nMonday: Mainly MVFR, with local IFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Storm/Kutikoff\nAVIATION...Kutikoff\n"
  },
  "lake_forecast": {
   "issued": "2026-08-13T06:28:00+00:00",
@@ -825,17 +825,17 @@
  },
  "lake_gage": {
   "water_temp_f": 76,
-  "water_temp_at": "2026-08-13T04:00:00.000-04:00",
-  "level_ft": 95.28,
-  "level_at": "2026-08-13T04:00:00.000-04:00",
+  "water_temp_at": "2026-08-13T06:00:00.000-04:00",
+  "level_ft": 95.27,
+  "level_at": "2026-08-13T06:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 29,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/13/26 4:00",
+  "observed": "08/13/26 6:00",
   "discussion": "Expect generally good air quality across Vermont on Thursday, August 13th."
  },
  "sun": {
@@ -850,19 +850,19 @@
    {
     "date": "2026-08-13",
     "high_f": {
-     "GFS": 75,
+     "GFS": 74,
      "Euro": 74,
-     "ICON": 74
+     "ICON": 75
     },
     "pop_max": {
-     "GFS": 55,
+     "GFS": 73,
      "Euro": 90,
      "ICON": 53
     },
     "precip_in": {
-     "GFS": 0.11,
+     "GFS": 0.41,
      "Euro": 0.35,
-     "ICON": 0.32
+     "ICON": 0.31
     },
     "high_spread_f": 1
    },
@@ -874,7 +874,7 @@
      "ICON": 74
     },
     "pop_max": {
-     "GFS": 3,
+     "GFS": 2,
      "Euro": 39,
      "ICON": 5
     },
@@ -890,7 +890,7 @@
     "high_f": {
      "GFS": 71,
      "Euro": 69,
-     "ICON": 76
+     "ICON": 75
     },
     "pop_max": {
      "GFS": 1,
@@ -902,7 +902,7 @@
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 7
+    "high_spread_f": 6
    }
   ]
  }
