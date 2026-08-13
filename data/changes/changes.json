@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-13T00:03:56+00:00",
+ "generated": "2026-08-13T03:04:03+00:00",
  "events": [
   {
    "ts": "2026-08-06T03:46:52+00:00",
@@ -3366,6 +3366,17 @@
    "sourceName": "Seven Days",
    "priority": 1,
    "kind": "added"
+  },
+  {
+   "ts": "2026-08-13T03:04:04+00:00",
+   "category": "weather",
+   "headline": "Tonight: Scattered rain showers before 2am, then scattered showers and thunderstorms",
+   "detail": "",
+   "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121",
+   "source": "nws-weather",
+   "sourceName": "NWS Burlington",
+   "priority": 2,
+   "kind": "changed"
   }
  ]
 }
