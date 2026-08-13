@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-12T17:26:55-04:00",
+ "generated": "2026-08-13T06:41:14-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 17,
+   "count": 16,
    "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 72,
-   "seconds": 4.9
+   "count": 70,
+   "seconds": 3.7
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 53,
-   "seconds": 2.5
+   "seconds": 3.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 159,
-   "seconds": 2.5
+   "count": 152,
+   "seconds": 2.4
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 74,
-   "seconds": 1.7
+   "count": 70,
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-12&end_date=2026-10-11&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-13&end_date=2026-10-12&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 158,
-   "seconds": 77.7
+   "count": 155,
+   "seconds": 74.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 34,
-   "seconds": 3.0
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 40.2
+   "seconds": 42.2
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 79,
-   "seconds": 125.1
+   "seconds": 122.8
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 440,
-   "seconds": 67.4
+   "count": 428,
+   "seconds": 71.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 124.0
+   "count": 68,
+   "seconds": 124.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 38,
-   "seconds": 16.5
+   "seconds": 15.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 77,
-   "seconds": 1.4
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 36,
-   "seconds": 39.3
+   "seconds": 38.9
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,64 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 239,
-   "seconds": 12.7
+   "count": 235,
+   "seconds": 15.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 186,
-   "seconds": 0.2
+   "count": 184,
+   "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 75,
-   "seconds": 99.4
+   "count": 73,
+   "seconds": 97.5
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 32,
-   "seconds": 0.1
+   "count": 31,
+   "seconds": 0.2
   }
  },
- "gathered": 2594,
- "afterDedup": 1316,
- "duplicatesMerged": 1278,
- "final": 1830,
+ "gathered": 2481,
+ "afterDedup": 1221,
+ "duplicatesMerged": 1260,
+ "final": 1788,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-11"
-  },
-  {
-   "kept": {
-    "title": "Field Hockey vs LIU",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-11"
-  },
-  {
-   "kept": {
-    "title": "Cyrille Aimée",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-11"
-  },
   {
    "kept": {
     "title": "Pub Hour",
@@ -1657,6 +1623,7 @@
    "merged_sources": [
     "champlainvalley",
     "flynn",
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-09-30"
@@ -1667,6 +1634,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -1680,6 +1648,7 @@
    },
    "merged_sources": [
     "churchst",
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-09-30"
@@ -1725,6 +1694,28 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-09-30"
   },
@@ -2399,23 +2390,40 @@
     "uvmbored"
    ],
    "date": "2026-10-10"
+  },
+  {
+   "kept": {
+    "title": "Field Hockey vs Appalachian State",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-11"
   }
  ],
  "changes": [
-  {
-   "id": "c729a05f3333",
-   "title": "Recreation On The Go: Chamberlin School",
-   "date": "2026-09-22",
-   "change": "time",
-   "was": "2026-09-22T17:30:00-04:00",
-   "now": "2026-09-22T18:00:00-04:00"
-  },
   {
    "id": "e1be787321db-2100",
    "title": "Kurt Braunohler",
    "date": "2026-08-14",
    "change": "missing",
    "lastSeen": "2026-08-11T17:27:28-04:00"
+  },
+  {
+   "id": "2c8558194bd8",
+   "title": "Rik Palieri",
+   "date": "2026-08-15",
+   "change": "missing",
+   "lastSeen": "2026-08-12T17:26:55-04:00"
+  },
+  {
+   "id": "b59c58abcbd9",
+   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
+   "date": "2026-08-17",
+   "change": "missing",
+   "lastSeen": "2026-08-12T17:26:55-04:00"
   },
   {
    "id": "7b1ba83d85ef",
@@ -2439,6 +2447,13 @@
    "lastSeen": "2026-08-10T17:24:41-04:00"
   },
   {
+   "id": "8a53f7fea119",
+   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
+   "date": "2026-08-24",
+   "change": "missing",
+   "lastSeen": "2026-08-12T17:26:55-04:00"
+  },
+  {
    "id": "4b803ba3457f",
    "title": "Trivia at Four Quarters",
    "date": "2026-08-27",
@@ -2451,6 +2466,20 @@
    "date": "2026-08-27",
    "change": "missing",
    "lastSeen": "2026-08-10T06:45:50-04:00"
+  },
+  {
+   "id": "51ae63f990de",
+   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
+   "date": "2026-08-31",
+   "change": "missing",
+   "lastSeen": "2026-08-12T17:26:55-04:00"
+  },
+  {
+   "id": "202f401494a6",
+   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
+   "date": "2026-09-07",
+   "change": "missing",
+   "lastSeen": "2026-08-12T17:26:55-04:00"
   },
   {
    "id": "efd4bd818385",
@@ -2472,13 +2501,6 @@
    "date": "2026-09-15",
    "change": "missing",
    "lastSeen": "2026-08-10T17:24:41-04:00"
-  },
-  {
-   "id": "131083804190",
-   "title": "Vermont Figure Drawing Collective",
-   "date": "2026-09-29",
-   "change": "missing",
-   "lastSeen": "2026-08-12T06:40:22-04:00"
   },
   {
    "id": "210434af379a",
