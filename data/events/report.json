@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-13T06:41:14-04:00",
+ "generated": "2026-08-13T17:27:11-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 16,
-   "seconds": 5.9
+   "seconds": 6.4
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 70,
-   "seconds": 3.7
+   "seconds": 5.1
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 53,
-   "seconds": 3.3
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 152,
-   "seconds": 2.4
+   "seconds": 3.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 70,
-   "seconds": 1.5
+   "seconds": 2.1
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 155,
-   "seconds": 74.9
+   "seconds": 66.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 34,
-   "seconds": 2.5
+   "seconds": 2.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 42.2
+   "seconds": 35.6
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 79,
-   "seconds": 122.8
+   "seconds": 103.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 428,
-   "seconds": 71.4
+   "count": 432,
+   "seconds": 73.8
   },
   "meetup": {
    "label": "Meetup",
    "count": 68,
-   "seconds": 124.8
+   "seconds": 122.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 38,
-   "seconds": 15.9
+   "seconds": 14.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden"
+   "count": 76,
+   "seconds": 1.6
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 36,
-   "seconds": 38.9
+   "count": 35,
+   "seconds": 34.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,63 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 235,
-   "seconds": 15.5
+   "count": 242,
+   "seconds": 9.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 184,
-   "seconds": 0.1
+   "count": 191,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 73,
-   "seconds": 97.5
+   "seconds": 91.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 31,
-   "seconds": 0.2
+   "seconds": 0.3
   }
  },
- "gathered": 2481,
- "afterDedup": 1221,
- "duplicatesMerged": 1260,
- "final": 1788,
+ "gathered": 2574,
+ "afterDedup": 1305,
+ "duplicatesMerged": 1269,
+ "final": 1798,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-11"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-11"
-  },
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-11"
-  },
   {
    "kept": {
     "title": "Dream / Mộng : Veronica Pham",
@@ -507,6 +474,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-09-16"
+  },
+  {
+   "kept": {
+    "title": "Charity and Sylvia Composer Talk: Clarice Assad, Composer of Summerland",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-09-16"
   },
@@ -1298,6 +1276,17 @@
   {
    "kept": {
     "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-25"
+  },
+  {
+   "kept": {
+    "title": "UVM Libraries Research Fair - Fall edition",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2282,6 +2271,17 @@
   },
   {
    "kept": {
+    "title": "Harvest Connections",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
     "title": "Benjamin Tod & Lost Dog Street Band",
     "source": "higherground"
    },
@@ -2443,8 +2443,7 @@
    "id": "3a52c70f8535",
    "title": "Reel Reads Placeholder",
    "date": "2026-08-24",
-   "change": "missing",
-   "lastSeen": "2026-08-10T17:24:41-04:00"
+   "change": "dropped"
   },
   {
    "id": "8a53f7fea119",
@@ -2464,8 +2463,7 @@
    "id": "3b43acdbd2a9",
    "title": "Bamboozled",
    "date": "2026-08-27",
-   "change": "missing",
-   "lastSeen": "2026-08-10T06:45:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "51ae63f990de",
@@ -2475,11 +2473,32 @@
    "lastSeen": "2026-08-12T17:26:55-04:00"
   },
   {
+   "id": "183232429550",
+   "title": "HOW TO DIVORCE DURING THE WAR",
+   "date": "2026-09-03",
+   "change": "missing",
+   "lastSeen": "2026-08-13T06:41:14-04:00"
+  },
+  {
    "id": "202f401494a6",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-09-07",
    "change": "missing",
    "lastSeen": "2026-08-12T17:26:55-04:00"
+  },
+  {
+   "id": "b5e7de003649",
+   "title": "Opening Day Fall 2026",
+   "date": "2026-09-08",
+   "change": "missing",
+   "lastSeen": "2026-08-13T06:41:14-04:00"
+  },
+  {
+   "id": "7bb51d75acbc",
+   "title": "Dinner In The Park: Wheeler Homestead",
+   "date": "2026-09-09",
+   "change": "missing",
+   "lastSeen": "2026-08-13T06:41:14-04:00"
   },
   {
    "id": "efd4bd818385",
@@ -2492,15 +2511,20 @@
    "id": "fced825cacef",
    "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!)",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-08-10T06:45:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "2ecb99d191e5",
    "title": "Fletcher Free's Fictional Book Club",
    "date": "2026-09-15",
+   "change": "dropped"
+  },
+  {
+   "id": "f86bbd1e5e74",
+   "title": "The Dream Eaters",
+   "date": "2026-09-19",
    "change": "missing",
-   "lastSeen": "2026-08-10T17:24:41-04:00"
+   "lastSeen": "2026-08-13T06:41:14-04:00"
   },
   {
    "id": "210434af379a",
