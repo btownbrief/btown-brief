@@ -371,10 +371,19 @@ def slugify(value):
 # was "The Other Paper" showing Texas cartel-drone coverage because the
 # subscribed feed's &sites= filter silently doesn't filter.
 
+# site-wide TownNews paths that are NOT a paper's section — a subscription
+# whose <link> points at /search/ must never grow a guard that filters
+# everything it carries
+VTCNG_NON_PAPER = {"search", "state_and_world", "online_features", "users",
+                   "classifieds", "eedition"}
+
+
 def paper_section(site):
     """https://www.vtcng.com/otherpapersbvt/ -> 'otherpapersbvt' (else None)."""
     match = re.search(r"vtcng\.com/([a-z0-9_-]+)", (site or "").lower())
-    return match.group(1) if match else None
+    if not match or match.group(1) in VTCNG_NON_PAPER:
+        return None
+    return match.group(1)
 
 
 def section_ok(section, url):
@@ -1081,6 +1090,8 @@ def selftest():
     assert paper_section("https://vtdigger.org/") is None
     # the group-wide ride-along sits at the vtcng root — no section, no guard
     assert paper_section("https://www.vtcng.com/") is None
+    # a subscription whose <link> is the search endpoint is NOT a paper
+    assert paper_section("https://www.vtcng.com/search/?f=rss&t=article") is None
     assert section_ok("otherpapersbvt",
                       "https://www.vtcng.com/otherpapersbvt/news/local_news/x.html")
     assert not section_ok("otherpapersbvt",
