@@ -124,13 +124,33 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
   align-items: center;
   gap: 14px;
 }
-.wire {
+/* the queue is the board's score: big, orange, counting down to zero.
+   On a clear it inverts and briefly becomes the widen button. */
+.queue-top {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
   font-family: var(--mono);
   font-weight: 700;
-  font-size: 10px;
-  letter-spacing: .18em;
-  color: var(--cream);
-  opacity: .8;
+  background: none;
+  border: 1.5px solid rgba(252, 86, 10, .4);
+  padding: 5px 10px;
+  color: var(--orange);
+  cursor: default;
+  letter-spacing: .14em;
+}
+.queue-top b {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .02em;
+}
+.queue-top .q-lbl { font-size: 9px; opacity: .85; }
+.queue-top .q-min { display: none; }
+.queue-top.clear {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #000;
+  cursor: pointer;
 }
 
 /* ⟲ recap + ? help — square icons riding the top bar together */
@@ -449,11 +469,32 @@ a.mode:hover { opacity: 1; }
   letter-spacing: .14em;
   padding: 6px 9px;
 }
+.cell .celllisten {
+  display: none;
+  position: absolute;
+  right: clamp(14px, 3vw, 40px);
+  z-index: 3;
+  font-family: var(--mono);
+  font-weight: 700;
+  line-height: 1;
+  background: #0d0d0d;
+  color: var(--cream);
+  border: 1.5px solid var(--orange);
+  cursor: pointer;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, .35);
+  top: calc(clamp(12px, 2.6vw, 32px) + 62px);
+  font-size: 9px;
+  letter-spacing: .14em;
+  padding: 6px 9px;
+}
 .cell.held .cellgo { display: inline-block; }
-/* while the ▶ is up, share steps down a row */
+/* while the ▶ is up, share steps down a row — listen a row further */
 .cell.held .cellshare { display: inline-block; top: calc(clamp(12px, 2.6vw, 32px) + 62px); }
+.cell.has-audio.held .celllisten { display: inline-block; top: calc(clamp(12px, 2.6vw, 32px) + 98px); }
+.cell.playing .celllisten { display: inline-block; }
 @media (hover: hover) {
   .cell:hover .cellshare { display: inline-block; }
+  .cell.has-audio:hover .celllisten { display: inline-block; }
 }
 
 .lfreeze { flex: none; }
@@ -475,9 +516,10 @@ a.mode:hover { opacity: 1; }
   display: block;
   font-family: var(--display);
   font-weight: 900;
-  text-transform: uppercase;
-  line-height: .9;
-  letter-spacing: -.03em;
+  /* headlines run mixed case — easier to read at a glance and narrower,
+     so autoFit buys a bigger size; the chrome stays uppercase */
+  line-height: .95;
+  letter-spacing: -.02em;
   hyphens: manual;
   -webkit-font-smoothing: antialiased;
   will-change: opacity, transform;
@@ -608,8 +650,6 @@ a.mode:hover { opacity: 1; }
 .lexit { color: #a08a6d; text-decoration: none; letter-spacing: .14em; }
 .lexit:hover { color: var(--cream); }
 
-#queue { color: var(--orange); opacity: .8; font-variant-numeric: tabular-nums; }
-
 .noscript { font-family: var(--mono); color: var(--cream); padding: 20px; }
 
 /* ---------- bottom-sheet panels: how-to + recap ---------- */
@@ -727,7 +767,15 @@ body.tv.idle, body.tv.idle .cell { cursor: none; }
   .status { gap: 8px; }
 }
 @media (max-width: 460px) {
-  .wire { display: none; }
+  /* the queue stays on phones — number only, the box says the rest;
+     everything else in the bar tightens to make its room */
+  .queue-top { padding: 4px 7px; gap: 4px; }
+  .queue-top b { font-size: 14px; }
+  .queue-top .q-lbl { display: none; }
+  .queue-top.clear .q-min { display: inline; }
+  .status { gap: 6px; }
+  .bar { gap: 6px; }
+  .ampm { display: none; }
   .lright #updated { display: none; }
   /* the full wordmark overflows the layout viewport here — the page zooms
      out and fixed elements drift; the short mark keeps the bar honest */
@@ -738,7 +786,11 @@ body.tv.idle, body.tv.idle .cell { cursor: none; }
 
 @media (orientation: landscape) and (max-height: 480px) {
   .bar { padding-top: max(4px, env(safe-area-inset-top)); padding-bottom: 4px; border-bottom-width: 2px; }
-  .dayrow, .wire { display: none; }
+  .dayrow { display: none; }
+  .queue-top { padding: 3px 7px; }
+  .queue-top b { font-size: 13px; }
+  .queue-top .q-full { display: none; }
+  .queue-top .q-min { display: inline; }
   .clock { font-size: 16px; }
   .chip { height: 30px; font-size: 9px; padding: 0 10px; }
   .hint { display: none; }

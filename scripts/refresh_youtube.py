@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""The Pulse — the YOUTUBE tab: followed channels + what's trending in the US.
+"""The Pulse — the YOUTUBE tab: followed channels, all curated.
 
-Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
+The shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
 
   * Followed channels. The public Inoreader folder "YouTube" is the primary
     transport: one stream request covers the whole roster, works from
@@ -20,7 +20,6 @@ Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
     search endpoint costs 100 quota units a call and greatest-hits lists
     barely change, so each channel is bought once (backfill a handful per
     run) and then only the stalest entries are re-checked.
-  * Trending. The YouTube Data API's mostPopular chart for the US.
   * Live now. One eventType=live search per run — Vermont streams ride the
     Vermont shelf with dur "LIVE" while they're on the air.
   * video-digest.json. The trailing week's roster uploads ranked by view
@@ -29,10 +28,12 @@ Two shelves, refreshed every ~3 hours to the orphan `pulse-youtube` branch:
     surface Vermont-adjacent channels not yet followed; each suggested
     once. Keepers just get added to the Inoreader folder.
 
-Durations and view counts come from the API's videos endpoint. Without a
-YOUTUBE_API_KEY the followed-channel shelf still publishes (no durations or
-trending). Any network trouble logs and exits 0 so the workflow stays green
-and the branch keeps its last good list.
+Raw US trending was dropped 2026-08 — it clashed with the curated-feeds
+premise; the client now ranks the week's roster uploads by view velocity
+instead ("Popular this week"). Durations and view counts come from the
+API's videos endpoint. Without a YOUTUBE_API_KEY the followed-channel shelf
+still publishes (no durations). Any network trouble logs and exits 0 so the
+workflow stays green and the branch keeps its last good list.
 
 CLI:
   --out PATH       where to write (default data/pulse-youtube.json)
@@ -68,7 +69,6 @@ INO_CHANNEL_RE = re.compile(r"/channel/(UC[A-Za-z0-9_-]{22})")
 API = "https://www.googleapis.com/youtube/v3"
 WINDOW_DAYS = 7
 MAX_CHANNEL_VIDEOS = 160
-MAX_TRENDING = 15
 DEFAULT_CAP = 6          # per-channel per refresh; firehoses set lower in the file
 SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
 MAX_VERMONT = 10
@@ -108,7 +108,7 @@ DURATION_RE = re.compile(
 
 
 def duration_seconds_from_fmt(fmt):
-    """'1:02:03' / '4:05' back to seconds (trending already formatted)."""
+    """'1:02:03' / '4:05' back to seconds (payload durations are formatted)."""
     if not fmt:
         return None
     parts = [int(part) for part in fmt.split(":")]
@@ -362,42 +362,12 @@ def fetch_channel_videos_inoreader(now_ts, channels=None, raw=None):
 
 
 # ----------------------------------------------------------------------
-# Shelf two — the API: trending + durations/views for everything
+# The API: durations/views for everything
 # ----------------------------------------------------------------------
 
 def api_videos(params, key):
     query = urllib.parse.urlencode(dict(params, key=key))
     return http_json(f"{API}/videos?{query}").get("items", [])
-
-
-def fetch_trending(key):
-    videos = []
-    for item in api_videos({"part": "snippet,contentDetails,statistics",
-                            "chart": "mostPopular", "regionCode": "US",
-                            "maxResults": MAX_TRENDING}, key):
-        snippet = item.get("snippet") or {}
-        when = None
-        published = snippet.get("publishedAt")
-        if published:
-            try:
-                when = int(datetime.fromisoformat(
-                    published.replace("Z", "+00:00")).timestamp())
-            except ValueError:
-                when = None
-        videos.append({
-            "id": item.get("id"),
-            "t": (snippet.get("title") or "")[:200],
-            "ch": (snippet.get("channelTitle") or "")[:60],
-            "d": when,
-            "dur": fmt_duration(
-                (item.get("contentDetails") or {}).get("duration")),
-            "views": int((item.get("statistics") or {}).get("viewCount") or 0),
-            "trend": 1,
-        })
-    videos = [video for video in videos if video["id"] and video["t"]]
-    for video in videos:
-        video["_sec"] = duration_seconds_from_fmt(video.get("dur"))
-    return apply_duration_rules(videos)
 
 
 def enrich(videos, key):
@@ -668,11 +638,11 @@ def title_key(video):
     return re.sub(r"[^a-z0-9]+", " ", raw).strip()
 
 
-def build_payload(own, vermont, deep, trending, generated):
+def build_payload(own, vermont, deep, generated):
     merged = []
     seen = set()
     seen_titles = set()
-    for shelf in (own, vermont, deep, trending):
+    for shelf in (own, vermont, deep):
         for video in shelf:
             if video["id"] in seen:
                 continue
@@ -744,18 +714,17 @@ def run(args):
                 print(f"refresh_youtube: top-up trouble ({exc})",
                       file=sys.stderr)
 
-    vermont, deep, trending = [], [], []
+    vermont, deep = [], []
     if key:
         try:
             if own:
                 enrich(own, key)
                 own = apply_duration_rules(own)
-            trending = fetch_trending(key)
         except Exception as exc:  # noqa: BLE001 — quota/outage isn't a crash
             print(f"refresh_youtube: API trouble ({exc})", file=sys.stderr)
         try:
             vermont = fetch_vermont(
-                key, now_ts, {video["id"] for video in own + trending})
+                key, now_ts, {video["id"] for video in own})
         except Exception as exc:  # noqa: BLE001
             print(f"refresh_youtube: Vermont search trouble ({exc})",
                   file=sys.stderr)
@@ -764,7 +733,7 @@ def run(args):
             # build_payload keeps cam restarts to one card
             live = fetch_live_now(
                 key, now_ts,
-                {video["id"] for video in own + trending + vermont})
+                {video["id"] for video in own + vermont})
             if live:
                 vermont = live + vermont
                 print(f"refresh_youtube: {len(live)} Vermont stream(s) live now")
@@ -795,14 +764,14 @@ def run(args):
             if catalog:
                 write_json(args.catalog, {"v": 1, "channels": catalog})
             deep = catalog_deep_cuts(
-                catalog, {video["id"] for video in own + trending + vermont})
+                catalog, {video["id"] for video in own + vermont})
         except Exception as exc:  # noqa: BLE001
             print(f"refresh_youtube: deep cuts trouble ({exc})",
                   file=sys.stderr)
     else:
         own = apply_duration_rules(own)   # strips the internal markers
 
-    if not own and not vermont and not deep and not trending:
+    if not own and not vermont and not deep:
         print("refresh_youtube: nothing to publish this run")
         return
 
@@ -811,9 +780,9 @@ def run(args):
                                 "video-digest.json"),
                    build_digest(own, now_ts))
 
-    write_json(args.out, build_payload(own, vermont, deep, trending, utcnow()))
+    write_json(args.out, build_payload(own, vermont, deep, utcnow()))
     print(f"refresh_youtube: {len(own)} followed + {len(vermont)} vermont + "
-          f"{len(deep)} deep cuts + {len(trending)} trending -> {args.out}")
+          f"{len(deep)} deep cuts -> {args.out}")
 
 
 # ----------------------------------------------------------------------
@@ -976,17 +945,18 @@ def selftest():
           "d": now_ts, "dur": "3:00", "views": 900, "vt": 1}],
         [{"id": "deepcutvid1", "t": "The best one ever", "ch": "Classic",
           "d": now_ts - 400 * 86400, "dur": "12:00", "views": 5000000,
-          "dc": 1, "g": "sci"}],
-        [{"id": "abcdefghijk", "t": "dupe", "ch": "x", "d": now_ts,
-          "dur": "1:00", "views": 5, "trend": 1},
-         {"id": "trendtrend1", "t": "A trending thing", "ch": "Big",
-          "d": now_ts, "dur": "10:00", "views": 1000000, "trend": 1},
+          "dc": 1, "g": "sci"},
+         {"id": "abcdefghijk", "t": "dupe", "ch": "x", "d": now_ts,
+          "dur": "1:00", "views": 5, "dc": 1},
          {"id": "restarted01", "t": "Fall in Stowe!", "ch": "Local",
-          "d": now_ts, "dur": "3:00", "views": 12, "trend": 1}],
+          "d": now_ts, "dur": "3:00", "views": 12, "dc": 1},
+         {"id": "oldgoldvid1", "t": "An old classic", "ch": "Classic",
+          "d": now_ts - 500 * 86400, "dur": "9:00", "views": 900000,
+          "dc": 1, "g": "sci"}],
         utcnow())
     assert len(payload["videos"]) == 4      # id dupe AND title-restart dupe drop
     assert payload["videos"][1]["vt"] == 1 and payload["videos"][2]["dc"] == 1
-    assert payload["videos"][-1]["id"] == "trendtrend1"
+    assert payload["videos"][-1]["id"] == "oldgoldvid1"
     assert payload["v"] == 1 and "generated" in payload
     print("refresh_youtube: payload ok (merge, id+title dedupe, shelf order)")
 

@@ -34,9 +34,9 @@
   var RECAP_MAX = 150;                     // cards the recap remembers
   var RECAP_MAX_AGE_S = 48 * 3600;         // matches the board's default reach
 
-  var TOPICS = ['local', 'brief', 'reddit', 'newsletters', 'video', 'news', 'todo',
-                'history', 'tech', 'business', 'science', 'culture', 'politics',
-                'sports', 'gaming', 'pods', 'play'];
+  var TOPICS = ['local', 'brief', 'reddit', 'newsletters', 'video', 'news', 'pods',
+                'todo', 'history', 'tech', 'business', 'science', 'culture',
+                'politics', 'sports', 'gaming', 'play'];
   var TOPIC_LABEL = { newsletters: 'letters', todo: 'to do' };
 
   /* How often a topic surfaces relative to its share of the pool.
@@ -63,7 +63,9 @@
     { id: 'r2', cadence: 13500, offset: 4800, type: 'rail' },
     { id: 'r3', cadence: 10000, offset: 7200, type: 'rail' },
   ];
-  var PACE = { slow: 1.45, normal: 1, fast: 0.72 };
+  /* the three paces must FEEL different: slow ≈ ambient (37s lead),
+     normal = the calibration, fast ≈ a scan (9s lead) */
+  var PACE = { slow: 2.3, normal: 1, fast: 0.55 };
   var PACES = ['slow', 'normal', 'fast'];
 
   /* Btown Brief brand cells. Teal belongs to LOCAL alone. */
@@ -108,6 +110,8 @@
                              // can be tap-held at once
     firstLap: 0,             // picks made so far; the first lap favors
                              // stories newer than the last visit
+    noticeAt: 0,             // last time a queue-cleared card was dealt
+    clearedFlash: 0,         // the top counter celebrates a clear briefly
     set: { pace: 'normal', cells: 'auto', surf: false, window: '48h', heldCount: 0,
            hintAt: 0 },
     recap: [],               // cards this device has been shown, newest first
@@ -315,6 +319,8 @@
         topic: oldEdition ? 'edition' : tags[0],
         // exempt from the age cap so a BRIEF solo always has editions
         evergreen: isBrief,
+        // podcast enclosure — the cell grows a ▶ LISTEN button
+        a: (typeof it.a === 'string' && /^https?:\/\//i.test(it.a)) ? it.a : '',
       });
     });
 
@@ -345,9 +351,26 @@
 
     if (rail && Array.isArray(rail.days)) {
       var gen = (Date.parse(rail.generated) / 1000) || 0;
-      rail.days.forEach(function (day, i) {
+      /* Day labels are computed against the READER'S clock, never the rail's
+         array order — a stale rail.json, or a board left open past midnight
+         (TV mode), must not keep saying "today" about yesterday. Every
+         day-labeled card also carries `exp` = this device's next local
+         midnight: a relative label dies with the day it was computed on. */
+      var dayStart = new Date();
+      dayStart.setHours(0, 0, 0, 0);
+      var todayMs = dayStart.getTime();
+      var nextMidnightS = Math.floor(todayMs / 1000) + 86400;
+      var dayDiff = function (dateStr) {
+        if (!dateStr) return null;
+        var d = Date.parse(dateStr + 'T12:00:00');
+        if (isNaN(d)) return null;
+        return Math.round((d - (todayMs + 12 * 3600 * 1000)) / 86400000);
+      };
+      rail.days.forEach(function (day) {
         if (!day.n) return;
-        var when = i === 0 ? 'today' : i === 1 ? 'tomorrow'
+        var diff = dayDiff(day.date);
+        if (diff === null || diff < 0 || diff > 6) return;   // past or too far out
+        var when = diff === 0 ? 'today' : diff === 1 ? 'tomorrow'
           : new Date(day.date + 'T12:00:00')
               .toLocaleDateString('en-US', { weekday: 'long' });
         pool.push({
@@ -359,21 +382,23 @@
           src: 'Btown events',
           tags: ['todo', 'brief', 'local'],
           topic: 'events',
+          exp: nextMidnightS,
         });
       });
 
       /* named events for today + tomorrow — the specific recs, not just
-         the count. Timeless flag: they leave when the rail refreshes,
-         not when a time window squeezes them out. */
-      rail.days.slice(0, 2).forEach(function (day, i) {
-        if (!Array.isArray(day.picks)) return;
+         the count. Timeless for the window filter, but they expire with
+         the day their label belongs to. */
+      rail.days.forEach(function (day) {
+        var diff = dayDiff(day.date);
+        if ((diff !== 0 && diff !== 1) || !Array.isArray(day.picks)) return;
         day.picks.forEach(function (p, j) {
           if (!p || !p.t) return;
           var start = p.s ? new Date(p.s) : null;
           if (start && isNaN(start)) start = null;
           // today's card for an event already underway or done gets skipped
-          if (i === 0 && start && Date.now() - start.getTime() > 2 * 3600 * 1000) return;
-          var when = i === 1 ? 'Tomorrow'
+          if (diff === 0 && start && Date.now() - start.getTime() > 2 * 3600 * 1000) return;
+          var when = diff === 1 ? 'Tomorrow'
             : (start && start.getHours() >= 17) ? 'Tonight' : 'Today';
           pool.push({
             t: when + ': ' + p.t + (p.v ? ' at ' + p.v : '') +
@@ -385,6 +410,10 @@
             tags: ['todo', 'local'],
             topic: 'events',
             evergreen: true,
+            // a Today card for a timed event also dies 2h after it starts
+            exp: diff === 0 && start
+              ? Math.min(nextMidnightS, Math.floor(start.getTime() / 1000) + 2 * 3600)
+              : nextMidnightS,
           });
         });
       });
@@ -639,7 +668,11 @@
     return state.set.window !== '48h' && state.set.window !== '7d';
   }
 
+  // day-labeled cards carry `exp` — past it they're wrong, not just old
+  function expired(it, now) { return !!(it.exp && now / 1000 > it.exp); }
+
   function freshEnough(it, now) {
+    if (expired(it, now)) return false;
     if (it.evergreen || !it.d) return true;
     var cap = windowCapS();
     // videos get a wider default reach, but a narrowed window narrows them too
@@ -647,24 +680,67 @@
     return now / 1000 - it.d <= cap;
   }
 
+  /* the wire total is trivia, not a goal — it lives in the help panel now;
+     the queue is the number that matters */
   function updateWire() {
-    var el = $('wire');
+    var el = $('wire-note');
     if (!el) return;
-    el.textContent = state.pool.length ? state.pool.length.toLocaleString() + ' IN THE WIRE' : '';
+    el.hidden = !state.pool.length;
+    el.textContent = state.pool.length
+      ? state.pool.length.toLocaleString() +
+        ' STORIES IN THE WIRE RIGHT NOW — THE QUEUE UP TOP IS YOUR SLICE OF IT: YOUR TOPICS, YOUR WINDOW.'
+      : '';
   }
 
   /* the queue: stories inside the current topics + window this device
-     hasn't been dealt yet — it counts down as the board runs, and refills
-     when the lap resets or fresh headlines arrive */
+     hasn't been dealt yet — it counts down as the board runs, and hitting
+     zero is the point. A clear celebrates briefly; the button then offers
+     the wider window. */
   function updateQueue() {
-    var el = $('queue');
+    var el = $('queue-btn');
     if (!el) return;
     var now = Date.now();
     var left = 0;
     state.pool.forEach(function (it) {
       if (inEnabled(it) && freshEnough(it, now) && !state.used[it.u]) left++;
     });
-    el.textContent = left ? left.toLocaleString() + ' IN THE QUEUE' : '';
+    var flashing = now - (state.clearedFlash || 0) < 8000;
+    el.hidden = !state.pool.length;
+    el.classList.toggle('clear', flashing);
+    if (flashing) {
+      $('queue-n').textContent = '0';
+      $('queue-lbl-full').textContent =
+        state.set.window === '7d' ? 'CLEARED ✓' : 'CLEARED ✓ · TAP FOR 7D';
+      $('queue-lbl-min').textContent = '✓';
+    } else {
+      $('queue-n').textContent = left.toLocaleString();
+      $('queue-lbl-full').textContent = 'IN THE QUEUE';
+      $('queue-lbl-min').textContent = 'LEFT';
+    }
+  }
+
+  /* the lap-restart moment is a card the reader sees, never a silent reset */
+  var WINDOW_SPOKEN = { '1h': 'the last hour', '6h': 'the last six hours',
+                        today: 'today so far', '48h': 'the last 48 hours',
+                        '7d': 'the last week' };
+
+  function noticeOK() {
+    var now = Date.now();
+    if (now - (state.noticeAt || 0) < 90 * 1000) return false;
+    state.noticeAt = now;
+    return true;
+  }
+
+  function clearedCard() {
+    state.clearedFlash = Date.now();
+    setTimeout(updateQueue, 8200);   // end the celebration on time
+    var spoken = WINDOW_SPOKEN[state.set.window] || 'this window';
+    return {
+      t: 'Queue cleared — that was everything from ' + spoken +
+         '. Restarting the mix' +
+         (state.set.window === '7d' ? '.' : ' — widen the window for more.'),
+      u: '#', src: 'The Pulse', tags: [], topic: 'system', d: 0, system: true,
+    };
   }
 
   /* ---------- recap: everything the board has dealt this device ---------- */
@@ -774,14 +850,17 @@
     // resets, leaving the board on the system card forever
     var narrow = isNarrowWindow();
     var eligible = state.pool.filter(function (it) {
-      return inEnabled(it) && (!narrow || freshEnough(it, now));
+      return inEnabled(it) && !expired(it, now) &&
+             (!narrow || freshEnough(it, now));
     });
     var base = eligible.filter(function (it) { return !state.used[it.u]; });
     if (!base.length && eligible.length) {
-      // a small pool ran dry before the periodic reset — start the lap over
+      // the whole lap is dealt — restart it, out loud when the pool was big
+      // enough that clearing it meant something
       state.used = {};
       state.usedCount = 0;
       base = eligible.slice();
+      if (eligible.length >= 10 && noticeOK()) return clearedCard();
     }
 
     // a channel-surf narrows the pool to one topic while it lasts
@@ -796,8 +875,25 @@
     // only as far as MIN_POOL, so the recency weighting stays meaningful
     if (!narrow) {
       var fresh = base.filter(function (it) { return freshEnough(it, now); });
-      if (fresh.length >= MIN_POOL || fresh.length === base.length) {
-        base = fresh.length ? fresh : base;
+      if (!fresh.length && base.length) {
+        /* the queue hit zero: every in-window story has been dealt. When the
+           window held a real lap, restart it out loud rather than quietly
+           padding the board with stale leftovers forever. */
+        var freshOf = function (list) {
+          return list.filter(function (it) { return freshEnough(it, now); });
+        };
+        if (freshOf(eligible).length >= 10) {
+          state.used = {};
+          state.usedCount = 0;
+          base = freshOf(eligible);
+          if (noticeOK()) return clearedCard();
+        } else {
+          // genuinely thin window — pad with the newest stale, as before
+          base = base.filter(function (it) { return !freshEnough(it, now); })
+            .slice(0, MIN_POOL);
+        }
+      } else if (fresh.length >= MIN_POOL || fresh.length === base.length) {
+        base = fresh;
       } else {
         var stale = base.filter(function (it) { return !freshEnough(it, now); });
         base = fresh.concat(stale.slice(0, MIN_POOL - fresh.length));
@@ -848,8 +944,19 @@
         var showing = state.perSlot[other.id];
         if (showing && !showing.system) onScreen[showing.src] = true;
       });
-      for (var tries = 0; tries < 2; tries++) {
+      /* evergreen rarity adapts to how much fresh reporting is actually in
+         the pool: a rich news day pushes the seasoning back, a thin one
+         lets it fill in. A LOCAL solo is a statement of intent for news,
+         so evergreen steps back further there. */
+      var freshCount = 0;
+      base.forEach(function (bit) { if (!bit.evergreen && bit.d) freshCount++; });
+      var everScale = freshCount >= 40 ? 0.5 : freshCount >= 20 ? 0.75
+                    : freshCount >= 10 ? 1 : 1.3;
+      if (state.solo === 'local') everScale *= 0.6;
+      var maxTries = state.solo === 'local' ? 3 : 2;
+      for (var tries = 0; tries < maxTries; tries++) {
         var rar = RARITY[item.topic];
+        if (rar != null && item.evergreen) rar = Math.min(0.9, rar * everScale);
         var prev = state.perSlot[cfg.id];
         var mixed = state.enabled.size > 1;
         var repeatTopic = prev && !prev.system && prev.topic === item.topic;
@@ -863,13 +970,11 @@
       }
     }
 
+    /* no early lap reset here: the lap runs to genuine completion so the
+       queue counter can actually reach zero — the dry branches above
+       restart it (and say so) */
     state.used[item.u] = true;
     state.usedCount++;
-    if (state.usedCount > Math.max(8, Math.floor(eligible.length * 0.7))) {
-      state.used = {};
-      state.used[item.u] = true;
-      state.usedCount = 1;
-    }
     return item;
   }
 
@@ -1024,7 +1129,7 @@
     var cell = cellOf(cfg);
     if (!cell) return;
     var p = state.pausedBy[cfg.id] || {};
-    cell.classList.toggle('held', !!(p.tap || p.freeze));
+    cell.classList.toggle('held', !!(p.tap || p.freeze || p.audio));
   }
 
   function pauseSlot(cfg, reason) {
@@ -1078,6 +1183,8 @@
   function refreshSlot(cfg) {
     clearTimeout(state.timers[cfg.id]);
     clearTimeout(state.swapTimers[cfg.id]);   // supersede a mid-flight swap
+    // a forced refresh (topic/window change) must not orphan playing audio
+    if (audioSlotId === cfg.id) stopAudio();
     var cell = cellOf(cfg);
     if (!cell || cell.offsetParent === null) return;
     var head = cell.querySelector('.head');
@@ -1124,6 +1231,7 @@
         bgLayer.style.backgroundImage = item.img ? 'url("' + item.img + '")' : '';
       }
       cell.classList.toggle('video-cell', !!item.img);
+      cell.classList.toggle('has-audio', !!item.a);
 
       var dot = '<span class="dot"></span>';
       var parts = ['<span>' + esc(item.src) + '</span>', '<span>' + esc(topicLabel(item.topic)) + '</span>'];
@@ -1131,7 +1239,9 @@
       parts.push('<span>' + (item.d ? fmtAge(item.d) : '—') + '</span>');
       meta.innerHTML = '<span class="ptrack"></span><span class="pbar"></span>' + parts.join(dot);
 
-      head.textContent = item.t.toUpperCase();
+      // mixed case reads better at a distance and packs more words per cell;
+      // the chrome (chips, tags, meta) stays uppercase for the identity
+      head.textContent = item.t;
       autoFit(head, body);
       head.dataset.loaded = '1';
 
@@ -1419,7 +1529,7 @@
       var item = state.perSlot[cfg.id];
       if (!item) return;
       var head = cell.querySelector('.head');
-      head.textContent = item.t.toUpperCase();
+      head.textContent = item.t;
       autoFit(head, cell.querySelector('.body'));
     });
   }
@@ -1485,6 +1595,63 @@
     });
   }
 
+  /* ---------- listen: inline podcast audio ----------
+     Playing audio HOLDS its cell — the board never rotates a story away
+     mid-sentence. One episode at a time; ending or switching releases. */
+
+  var audioEl = null;
+  var audioSlotId = null;
+
+  function listenBtn(id) {
+    var cell = document.querySelector('[data-slot="' + id + '"]');
+    return cell && cell.querySelector('.celllisten');
+  }
+
+  function stopAudio() {
+    if (audioEl) audioEl.pause();
+    if (audioSlotId) {
+      var id = audioSlotId;
+      audioSlotId = null;
+      var btn = listenBtn(id);
+      if (btn) btn.textContent = '▶ LISTEN';
+      var cell = document.querySelector('[data-slot="' + id + '"]');
+      if (cell) cell.classList.remove('playing');
+      SLOTS.forEach(function (cfg) {
+        if (cfg.id === id) resumeSlot(cfg, 'audio');
+      });
+    }
+  }
+
+  function bindListen() {
+    SLOTS.forEach(function (cfg) {
+      var cell = cellOf(cfg);
+      var btn = cell && cell.querySelector('.celllisten');
+      if (!btn) return;
+      btn.addEventListener('click', function (e) {
+        // never open the story or arm the cell — this button only plays
+        e.preventDefault();
+        e.stopPropagation();
+        var item = state.perSlot[cfg.id];
+        if (!item || !item.a) return;
+        if (audioSlotId === cfg.id) { stopAudio(); return; }
+        stopAudio();
+        if (!audioEl) {
+          audioEl = new Audio();
+          audioEl.preload = 'none';
+          audioEl.addEventListener('ended', stopAudio);
+          audioEl.addEventListener('error', stopAudio);
+        }
+        audioEl.src = item.a;
+        var played = audioEl.play();
+        if (played && played.catch) played.catch(function () { stopAudio(); });
+        audioSlotId = cfg.id;
+        pauseSlot(cfg, 'audio');
+        cell.classList.add('playing');
+        btn.textContent = '❚❚ PAUSE';
+      });
+    });
+  }
+
   /* ---------- bottom bar ---------- */
 
   function paintOptions() {
@@ -1527,10 +1694,8 @@
       saveStored();
       paintOptions();
     });
-    $('window-group').addEventListener('click', function (e) {
-      var b = e.target.closest('.lopt');
-      if (!b) return;
-      state.set.window = b.dataset.window;
+    function setWindow(w) {
+      state.set.window = w;
       saveStored();
       paintOptions();
       // stories now outside the window leave immediately
@@ -1544,7 +1709,22 @@
         }
       });
       updateQueue();
+    }
+    $('window-group').addEventListener('click', function (e) {
+      var b = e.target.closest('.lopt');
+      if (!b) return;
+      setWindow(b.dataset.window);
     });
+    // a fresh clear turns the counter into the widen button for a few seconds
+    var qbtn = $('queue-btn');
+    if (qbtn) {
+      qbtn.addEventListener('click', function () {
+        var flashing = Date.now() - (state.clearedFlash || 0) < 8000;
+        if (!flashing || state.set.window === '7d') return;
+        state.clearedFlash = 0;
+        setWindow('7d');
+      });
+    }
     $('freeze-btn').addEventListener('click', function () {
       setFrozen(!state.frozen);
     });
@@ -1665,6 +1845,7 @@
     bindOptions();
     bindPanels();
     bindShare();
+    bindListen();
     maybeShowHint();
     tickClock();
     setInterval(tickClock, 1000);
