@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-13T17:27:11-04:00",
+ "generated": "2026-08-14T06:36:31-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 16,
-   "seconds": 6.4
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 70,
-   "seconds": 5.1
+   "count": 68,
+   "seconds": 3.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 53,
-   "seconds": 3.2
+   "count": 54,
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 152,
-   "seconds": 3.3
+   "seconds": 2.4
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 70,
-   "seconds": 2.1
+   "count": 69,
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-13&end_date=2026-10-12&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-14&end_date=2026-10-13&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 155,
-   "seconds": 66.7
+   "count": 153,
+   "seconds": 74.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 34,
-   "seconds": 2.2
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 35.6
+   "seconds": 39.5
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 79,
-   "seconds": 103.4
+   "count": 80,
+   "seconds": 139.1
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 432,
-   "seconds": 73.8
+   "count": 425,
+   "seconds": 68.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 68,
-   "seconds": 122.7
+   "count": 69,
+   "seconds": 126.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 38,
-   "seconds": 14.8
+   "count": 39,
+   "seconds": 15.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 76,
-   "seconds": 1.6
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 35,
-   "seconds": 34.2
+   "count": 34,
+   "seconds": 36.7
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,110 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 242,
-   "seconds": 9.9
+   "count": 286,
+   "seconds": 27.6
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 191,
-   "seconds": 0.2
+   "count": 189,
+   "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 73,
-   "seconds": 91.4
+   "count": 72,
+   "seconds": 95.5
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 31,
-   "seconds": 0.3
+   "count": 29,
+   "seconds": 0.2
   }
  },
- "gathered": 2574,
- "afterDedup": 1305,
- "duplicatesMerged": 1269,
- "final": 1798,
+ "gathered": 2528,
+ "afterDedup": 1269,
+ "duplicatesMerged": 1259,
+ "final": 1807,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-11"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-11"
-  },
-  {
-   "kept": {
-    "title": "Rainbow Kitten Surprise",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "breweries",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-12"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-12"
-  },
-  {
-   "kept": {
-    "title": "Burlington Farmers Market",
-    "source": "farmersmarket"
-   },
-   "merged_sources": [
-    "farmersmarket",
-    "loveburlington"
-   ],
-   "date": "2026-09-12"
-  },
-  {
-   "kept": {
-    "title": "21st Annual Kelly Brush Ride - Middlebury College Alumni Stadium - Can join remote!",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-12"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-12"
-  },
   {
    "kept": {
     "title": "Everything is Everything: Will Kasso Condry",
@@ -1726,6 +1646,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-10-01"
@@ -1737,6 +1658,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "vcc"
    ],
    "date": "2026-10-01"
@@ -1754,11 +1676,45 @@
   },
   {
    "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-01"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-01"
+  },
+  {
+   "kept": {
+    "title": "Tōth",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
     "title": "Joe Dombrowski",
     "source": "vcc"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "vcc"
    ],
    "date": "2026-10-02"
@@ -1871,6 +1827,28 @@
     "champlainvalley",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-02"
   },
@@ -2401,6 +2379,28 @@
     "uvmbored"
    ],
    "date": "2026-10-11"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-12"
+  },
+  {
+   "kept": {
+    "title": "Super Smash Tuesdays",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-13"
   }
  ],
  "changes": [
@@ -2436,13 +2436,6 @@
    "id": "c31701b91a29",
    "title": "Vermont Reggae Fest",
    "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-08-11T06:29:24-04:00"
-  },
-  {
-   "id": "3a52c70f8535",
-   "title": "Reel Reads Placeholder",
-   "date": "2026-08-24",
    "change": "dropped"
   },
   {
@@ -2458,12 +2451,6 @@
    "date": "2026-08-27",
    "change": "missing",
    "lastSeen": "2026-08-11T17:27:28-04:00"
-  },
-  {
-   "id": "3b43acdbd2a9",
-   "title": "Bamboozled",
-   "date": "2026-08-27",
-   "change": "dropped"
   },
   {
    "id": "51ae63f990de",
@@ -2504,19 +2491,6 @@
    "id": "efd4bd818385",
    "title": "Truck Violence",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-08-11T06:29:24-04:00"
-  },
-  {
-   "id": "fced825cacef",
-   "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!)",
-   "date": "2026-09-10",
-   "change": "dropped"
-  },
-  {
-   "id": "2ecb99d191e5",
-   "title": "Fletcher Free's Fictional Book Club",
-   "date": "2026-09-15",
    "change": "dropped"
   },
   {
@@ -2530,8 +2504,7 @@
    "id": "210434af379a",
    "title": "Evening Song: Bet on Hope 25th Anniversary Celebration",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-08-11T06:29:24-04:00"
+   "change": "dropped"
   }
  ]
 }
