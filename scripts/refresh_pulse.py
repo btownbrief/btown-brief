@@ -574,13 +574,24 @@ ATOM = "{http://www.w3.org/2005/Atom}"
 
 
 def parse_feed(raw):
-    """A single feed (RSS2 or Atom) → bare items. Used only by --seed."""
+    """A single feed (RSS2 or Atom) → bare items. Seed + fast lane."""
     root = ET.fromstring(raw)
     items = []
     for node in root.iter("item"):  # RSS 2.0
+        # podcast feeds (Buzzsprout) often publish NO <link> — fall back to
+        # an http guid, then the audio enclosure, so the item still rides
+        # the lane and its real pubDate can correct a crawl-stamped copy
+        url = canon_url(first_text(node, "link"))
+        if not url:
+            guid = first_text(node, "guid").strip()
+            audio = item_audio(node)
+            if guid.startswith("http"):
+                url = canon_url(guid)
+            elif audio:
+                url = canon_url(audio)
         items.append({
             "title": trim(strip_html(first_text(node, "title")), TITLE_MAX),
-            "url": canon_url(first_text(node, "link")),
+            "url": url,
             "when": parse_time(first_text(
                 node, "pubDate", "{http://purl.org/dc/elements/1.1/}date")),
             "audio": item_audio(node),
@@ -740,9 +751,67 @@ def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
             for field in ("a", "i", "o", "du", "dn"):
                 if fresh.get(field) is not None:
                     held[field] = fresh[field]  # dn: comment counts move, keep newest
+    reconcile_backfill(by_key)
     merged = sorted(by_key.values(), key=lambda entry: entry.get("d", 0),
                     reverse=True)
     return merged[:cap], added
+
+
+def norm_title_key(value):
+    return re.sub(r"[^a-z0-9]+", " ", (value or "").lower()).strip()
+
+
+BACKFILL_MIN = 5           # this many items sharing one moment = a backfill
+BACKFILL_BAND_S = 15 * 60
+
+
+def reconcile_backfill(by_key):
+    """Subscribing to a feed makes Inoreader stamp the WHOLE back-catalog
+    with its crawl time — dozens of years-old stories arrive as 'now' and
+    flood every fresh window (The Octagon: 40 episodes, all '1h ago',
+    2026-08-14). The feed's own copy of each story (via the fast lane)
+    carries the real date under a different URL. So: find the suspicious
+    cluster — BACKFILL_MIN+ items of one source sharing a 15-minute moment
+    — and wherever a same-titled copy exists OUTSIDE the cluster, keep that
+    real-dated copy (folding in any richer fields) and drop the stamped
+    one. Clustered items with no twin are left alone; recurring column
+    titles never form a cluster, so normal stories are untouched."""
+    stamps = sorted(e["d"] for e in by_key.values() if e.get("d"))
+    if len(stamps) < BACKFILL_MIN:
+        return
+    lo = best_lo = 0
+    best_n = 0
+    for hi, ts in enumerate(stamps):
+        while ts - stamps[lo] > BACKFILL_BAND_S:
+            lo += 1
+        if hi - lo + 1 > best_n:
+            best_n, best_lo = hi - lo + 1, stamps[lo]
+    if best_n < BACKFILL_MIN:
+        return
+    band_hi = best_lo + BACKFILL_BAND_S
+
+    def in_band(entry):
+        return entry.get("d") and best_lo <= entry["d"] <= band_hi
+
+    real_by_title = {}
+    for key, entry in by_key.items():
+        if in_band(entry) or not entry.get("d"):
+            continue
+        tkey = norm_title_key(entry.get("t"))
+        held = real_by_title.get(tkey)
+        if tkey and (held is None or entry["d"] < by_key[held]["d"]):
+            real_by_title[tkey] = key
+    if not real_by_title:
+        return
+    for key in [k for k, e in by_key.items() if in_band(e)]:
+        real_key = real_by_title.get(norm_title_key(by_key[key].get("t")))
+        if real_key is None or real_key == key:
+            continue
+        keeper = by_key[real_key]
+        for field in ("a", "i", "o"):
+            if keeper.get(field) is None and by_key[key].get(field) is not None:
+                keeper[field] = by_key[key][field]
+        del by_key[key]
 
 
 DISCUSSION_HOSTS = ("reddit.com", "ycombinator.com")
@@ -1092,6 +1161,28 @@ def selftest():
     assert paper_section("https://www.vtcng.com/") is None
     # a subscription whose <link> is the search endpoint is NOT a paper
     assert paper_section("https://www.vtcng.com/search/?f=rss&t=article") is None
+
+    # backfill reconciliation: a new subscription's back-catalog arrives
+    # crawl-stamped "now"; the feed's own real-dated copies (different urls,
+    # same titles) win, and the stamped copies drop
+    bf_now = 1_754_000_000
+    bf_prev = [{"t": f"Episode {n}", "u": f"https://pod.example/stream/{n}",
+                "d": bf_now - n} for n in range(6)]
+    bf_lane = [{"title": f"Episode {n}", "url": f"https://pod.example/feed/{n}.mp3",
+                "audio": f"https://pod.example/feed/{n}.mp3", "image": "",
+                "when": datetime.fromtimestamp(bf_now - (n + 1) * 40 * 86400,
+                                               tz=timezone.utc)}
+               for n in range(6)]
+    bf_items, _ = merge_source(bf_prev, bf_lane, bf_now, cap=40)
+    assert len(bf_items) == 6
+    assert all(bf_now - it["d"] > 30 * 86400 for it in bf_items), \
+        [it["d"] for it in bf_items]
+    assert all(it.get("a") for it in bf_items)
+    # a small source with no cluster is untouched
+    ok_prev = [{"t": "Story A", "u": "https://n.example/a", "d": bf_now - 100},
+               {"t": "Story B", "u": "https://n.example/b", "d": bf_now - 90000}]
+    ok_items, _ = merge_source(ok_prev, [], bf_now)
+    assert len(ok_items) == 2
     assert section_ok("otherpapersbvt",
                       "https://www.vtcng.com/otherpapersbvt/news/local_news/x.html")
     assert not section_ok("otherpapersbvt",
