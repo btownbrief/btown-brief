@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-14T06:36:31-04:00",
+ "generated": "2026-08-14T17:01:22-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 16,
-   "seconds": 5.8
+   "seconds": 6.4
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 68,
-   "seconds": 3.9
+   "count": 71,
+   "seconds": 9.9
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 54,
-   "seconds": 3.0
+   "seconds": 2.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 152,
-   "seconds": 2.4
+   "count": 153,
+   "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 69,
-   "seconds": 1.6
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -49,12 +49,12 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 153,
-   "seconds": 74.3
+   "seconds": 76.3
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 34,
-   "seconds": 2.5
+   "count": 35,
+   "seconds": 2.8
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.5
+   "seconds": 39.3
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 80,
-   "seconds": 139.1
+   "seconds": 120.1
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,27 +79,27 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 425,
-   "seconds": 68.5
+   "seconds": 67.1
   },
   "meetup": {
    "label": "Meetup",
-   "count": 69,
-   "seconds": 126.5
+   "count": 68,
+   "seconds": 121.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 39,
-   "seconds": 15.9
+   "seconds": 17.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden"
+   "count": 75,
+   "seconds": 1.6
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 34,
-   "seconds": 36.7
+   "seconds": 34.1
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,30 +113,41 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 286,
-   "seconds": 27.6
+   "count": 288,
+   "seconds": 12.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 189,
-   "seconds": 0.1
+   "count": 190,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 72,
-   "seconds": 95.5
+   "seconds": 97.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 29,
-   "seconds": 0.2
+   "count": 30,
+   "seconds": 0.1
   }
  },
- "gathered": 2528,
- "afterDedup": 1269,
+ "gathered": 2611,
+ "afterDedup": 1352,
  "duplicatesMerged": 1259,
- "final": 1807,
+ "final": 1820,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-12"
+  },
   {
    "kept": {
     "title": "Everything is Everything: Will Kasso Condry",
@@ -742,6 +753,18 @@
   },
   {
    "kept": {
+    "title": "Alex Cameron",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-09-20"
+  },
+  {
+   "kept": {
     "title": "Of Monsters and Men",
     "source": "higherground"
    },
@@ -763,18 +786,6 @@
     "higherground",
     "uvm",
     "uvmbored"
-   ],
-   "date": "2026-09-20"
-  },
-  {
-   "kept": {
-    "title": "Alex Cameron",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
    ],
    "date": "2026-09-20"
   },
@@ -1698,17 +1709,6 @@
   },
   {
    "kept": {
-    "title": "Tōth",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-10-02"
-  },
-  {
-   "kept": {
     "title": "Joe Dombrowski",
     "source": "vcc"
    },
@@ -2405,6 +2405,21 @@
  ],
  "changes": [
   {
+   "id": "6bb45b0554f9",
+   "title": "FREE Kids Club: Magic Show - Alyx Hilshey @ South Burlington Farmers Market",
+   "date": "2026-08-21",
+   "change": "time",
+   "was": "2026-08-21T18:00:00-04:00",
+   "now": "2026-08-21T17:45:00-04:00"
+  },
+  {
+   "id": "d6aac3da6c7d",
+   "title": "Lunch with the Poets",
+   "date": "2026-08-14",
+   "change": "missing",
+   "lastSeen": "2026-08-14T06:36:31-04:00"
+  },
+  {
    "id": "e1be787321db-2100",
    "title": "Kurt Braunohler",
    "date": "2026-08-14",
@@ -2433,10 +2448,11 @@
    "lastSeen": "2026-08-12T06:40:22-04:00"
   },
   {
-   "id": "c31701b91a29",
-   "title": "Vermont Reggae Fest",
-   "date": "2026-08-22",
-   "change": "dropped"
+   "id": "71404c6864af",
+   "title": "Family Literacy & Health Night",
+   "date": "2026-08-20",
+   "change": "missing",
+   "lastSeen": "2026-08-14T06:36:31-04:00"
   },
   {
    "id": "8a53f7fea119",
@@ -2460,6 +2476,13 @@
    "lastSeen": "2026-08-12T17:26:55-04:00"
   },
   {
+   "id": "8a588990df73",
+   "title": "Catamount Cinema",
+   "date": "2026-08-31",
+   "change": "missing",
+   "lastSeen": "2026-08-14T06:36:31-04:00"
+  },
+  {
    "id": "183232429550",
    "title": "HOW TO DIVORCE DURING THE WAR",
    "date": "2026-09-03",
@@ -2474,13 +2497,6 @@
    "lastSeen": "2026-08-12T17:26:55-04:00"
   },
   {
-   "id": "b5e7de003649",
-   "title": "Opening Day Fall 2026",
-   "date": "2026-09-08",
-   "change": "missing",
-   "lastSeen": "2026-08-13T06:41:14-04:00"
-  },
-  {
    "id": "7bb51d75acbc",
    "title": "Dinner In The Park: Wheeler Homestead",
    "date": "2026-09-09",
@@ -2488,10 +2504,11 @@
    "lastSeen": "2026-08-13T06:41:14-04:00"
   },
   {
-   "id": "efd4bd818385",
-   "title": "Truck Violence",
-   "date": "2026-09-10",
-   "change": "dropped"
+   "id": "44150382f697",
+   "title": "BTown Coffee Club",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-14T06:36:31-04:00"
   },
   {
    "id": "f86bbd1e5e74",
@@ -2499,12 +2516,6 @@
    "date": "2026-09-19",
    "change": "missing",
    "lastSeen": "2026-08-13T06:41:14-04:00"
-  },
-  {
-   "id": "210434af379a",
-   "title": "Evening Song: Bet on Hope 25th Anniversary Celebration",
-   "date": "2026-10-03",
-   "change": "dropped"
   }
  ]
 }
