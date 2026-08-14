@@ -125,6 +125,7 @@ EXTRA_LOCAL_TAGS = [
 ]
 
 ITEM_CAP = 20          # headlines kept per source
+POD_ITEM_CAP = 40      # podcasts publish weekly — keep a deeper back-catalog
 TITLE_MAX = 200
 MIN_SOURCES = 40       # roster sanity floor (folders hold ~90 today)
 MIN_ITEMS = 150        # payload sanity floor after the folders are warm
@@ -646,7 +647,7 @@ def attribute(item, by_site, by_title, by_nl_title):
 # Merge — union per source by URL, newest first, capped
 # ----------------------------------------------------------------------
 
-def merge_source(previous, incoming, now_ts):
+def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
     """Previous payload items + fresh items → (capped newest-first list,
     count of genuinely new stories) — the count feeds the staleness guard."""
     by_key, added = {}, 0
@@ -689,7 +690,7 @@ def merge_source(previous, incoming, now_ts):
                     held[field] = fresh[field]  # dn: comment counts move, keep newest
     merged = sorted(by_key.values(), key=lambda entry: entry.get("d", 0),
                     reverse=True)
-    return merged[:ITEM_CAP], added
+    return merged[:cap], added
 
 
 DISCUSSION_HOSTS = ("reddit.com", "ycombinator.com")
@@ -871,9 +872,13 @@ def run(args):
     now_ts = int(utcnow().timestamp())
     per_source, added_total = {}, 0
     for source in sources:
+        prev_items = prev_by_source.get(source["id"], [])
+        # podcast shows get a deeper store — a weekly show at the news cap
+        # holds five months; the pods tab should read like a back-catalog
+        is_pod = source["podcast"] or any(item.get("a") for item in prev_items)
         merged, added = merge_source(
-            prev_by_source.get(source["id"], []),
-            fresh_by_source.get(source["id"], []), now_ts)
+            prev_items, fresh_by_source.get(source["id"], []), now_ts,
+            cap=POD_ITEM_CAP if is_pod else ITEM_CAP)
         per_source[source["id"]] = merged
         added_total += added
 

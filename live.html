@@ -51,7 +51,8 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <span class="clock-wrap"><span class="clock" id="clock">--:--:--</span><span class="ampm" id="ampm"></span></span>
     </span>
     <span class="status">
-      <span class="wire" id="wire"></span>
+      <button class="queue-top" id="queue-btn" type="button" hidden
+              title="Stories in your topics and window the board hasn't dealt yet — zero means you cleared it"><b id="queue-n"></b><span class="q-lbl q-full" id="queue-lbl-full"></span><span class="q-lbl q-min" id="queue-lbl-min"></span></button>
       <button class="ic-bar" id="recap-btn" type="button" aria-label="Recap — cards you've seen"
               title="Every card the board has shown you lately — in case you missed one">⟲</button>
       <button class="ic-bar" id="help-btn" type="button" aria-label="How the board works"
@@ -75,22 +76,22 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <main class="board" id="board" data-o="p" data-n="3">
     <a class="cell lead bg-yellow" data-slot="lead" target="_blank" rel="noopener" href="#">
-      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button><button class="celllisten" type="button" aria-label="Play this episode" title="Play this episode — the cell holds while it plays">▶ LISTEN</button></span></span>
       <span class="body"><span class="head">TAKING THE PULSE…</span></span>
       <span class="meta"></span>
     </a>
     <a class="cell bg-black" data-slot="r1" target="_blank" rel="noopener" href="#">
-      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button><button class="celllisten" type="button" aria-label="Play this episode" title="Play this episode — the cell holds while it plays">▶ LISTEN</button></span></span>
       <span class="body"><span class="head"></span></span>
       <span class="meta"></span>
     </a>
     <a class="cell bg-cream" data-slot="r2" target="_blank" rel="noopener" href="#">
-      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button><button class="celllisten" type="button" aria-label="Play this episode" title="Play this episode — the cell holds while it plays">▶ LISTEN</button></span></span>
       <span class="body"><span class="head"></span></span>
       <span class="meta"></span>
     </a>
     <a class="cell bg-red" data-slot="r3" target="_blank" rel="noopener" href="#">
-      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button></span></span>
+      <span class="cellbg" aria-hidden="true"></span><span class="top"><span class="topic-tag"></span><span class="tr"><span class="trrow"><span class="age-tag"></span><button class="cellgo" type="button" aria-label="Let this cell rotate again" title="Resume">▶</button></span><button class="cellshare" type="button" aria-label="Share this story" title="Share this story">SHARE ⇗</button><button class="celllisten" type="button" aria-label="Play this episode" title="Play this episode — the cell holds while it plays">▶ LISTEN</button></span></span>
       <span class="body"><span class="head"></span></span>
       <span class="meta"></span>
     </a>
@@ -127,7 +128,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <button class="lopt lfreeze" id="freeze-btn" type="button" aria-pressed="false"
             title="Hold every cell where it is — ▶ on a cell releases just that one">FREEZE</button>
     <span class="lright">
-      <span id="queue" title="Stories in your current topics and window the board hasn't dealt yet"></span>
       <span id="updated"></span>
       <a class="lexit" href="live.html?tv=1" title="Chromeless mode for a TV or spare screen">TV ⛶</a>
       <a class="lexit" href="pulse.html" title="Back to the full wire — scan and filter everything">READ ↩</a>
@@ -146,10 +146,12 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <ul class="help-list">
       <li><b>TAP A STORY</b> to hold it · <b>TAP AGAIN</b> to open it</li>
       <li><b>TAP A TOPIC</b> to toggle it · <b>HOLD ONE</b> to see only that</li>
+      <li><b>THE QUEUE</b> up top counts down as you're dealt stories — zero means you cleared it</li>
       <li><b>LIVE / FREEZE</b> stops the whole board</li>
       <li><b>SURF</b> visits one topic for a minute, every few minutes</li>
       <li><b>RECAP ⟲</b> — every card you've been shown</li>
     </ul>
+    <p class="panel-note" id="wire-note" hidden></p>
   </aside>
 
   <aside class="panel" id="recap-panel" hidden aria-label="Recently shown cards">

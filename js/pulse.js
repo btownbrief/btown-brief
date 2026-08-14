@@ -53,14 +53,14 @@
     view: 'feed',
     q: '',
     shown: FEED_PAGE,
-    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, ythidden: {}, intent: false, ytview: 'list', window: 'all' },
+    set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, ythidden: {}, intent: false, ytview: 'list', ytlocal: false, window: 'all' },
     newCount: 0,            // headlines newer than the last visit, feed view
     read: {},
     intent: {},             // focus-mode passed marks
     saved: [],              // [{k,t,u,s,d,sv}] newest-saved first
     digs: [],               // [{k,t,u,s,d,dv}] headlines this reader dig-voted
     top: null,              // pulse-top.json payload (AI-picked TOP tab)
-    youtube: null,          // pulse-youtube.json payload (followed channels + trending)
+    youtube: null,          // pulse-youtube.json payload (followed channels)
     popular: null,          // [{url,title,source,saves}] from Supabase
     digVotes: null,         // url-key -> today's community vote count (DIGS tab)
     dives: null,            // data/topic-pages.json — published deep-dive pages
@@ -78,7 +78,7 @@
     try {
       var s = JSON.parse(localStorage.getItem(SET_KEY) || 'null');
       if (s && typeof s === 'object') {
-        ['theme', 'fs', 'limit', 'autohide', 'thumbs', 'intent', 'ytview'].forEach(function (k) {
+        ['theme', 'fs', 'limit', 'autohide', 'thumbs', 'intent', 'ytview', 'ytlocal'].forEach(function (k) {
           if (s[k] !== undefined) state.set[k] = s[k];
         });
         if (['all', '1h', '6h', 'today'].indexOf(s.window) !== -1) state.set.window = s.window;
@@ -111,7 +111,8 @@
         autohide: state.set.autohide, thumbs: state.set.thumbs,
         hidden: state.set.hidden, ythidden: state.set.ythidden,
         view: state.view, intent: state.set.intent,
-        ytview: state.set.ytview, window: state.set.window,
+        ytview: state.set.ytview, ytlocal: state.set.ytlocal,
+        window: state.set.window,
       }));
     } catch (e) {}
   }
@@ -1132,13 +1133,25 @@
     var vt = vids.filter(function (v) { return v.vt; });
     var deep = vids.filter(function (v) { return v.dc; });
     var own = vids.filter(function (v) { return !v.trend && !v.vt && !v.dc; });
-    var trend = vids.filter(function (v) { return v.trend; });
     var shelves = state.set.ytview === 'shelves';
+
+    /* LOCAL narrows every shelf to Vermont: the vt group, the Filmed-in-VT
+       finds, and old gold from channels the roster files under vt (deep-cut
+       entries don't carry the group, so it rides in via the channel name) */
+    if (state.set.ytlocal) {
+      var chanG = {};
+      own.forEach(function (v) { if (v.ch) chanG[v.ch] = v.g || 'sci'; });
+      own = own.filter(function (v) { return (v.g || 'sci') === 'vt'; });
+      deep = deep.filter(function (v) { return chanG[v.ch] === 'vt'; });
+    }
 
     var bar = '<div class="ytbar">' +
       '<div class="viewtog"><button class="vt" data-ytview="list" aria-pressed="' + !shelves +
       '">Feed</button><button class="vt" data-ytview="shelves" aria-pressed="' + shelves +
       '">Grid</button></div>' +
+      '<div class="viewtog"><button class="vt" data-ytlocal="0" aria-pressed="' + !state.set.ytlocal +
+      '">All</button><button class="vt" data-ytlocal="1" aria-pressed="' + !!state.set.ytlocal +
+      '">Local</button></div>' +
       (shelves
         ? '<div class="ytsorts">' +
           ['new', 'hot', 'short'].map(function (mode) {
@@ -1174,22 +1187,30 @@
         html += ytSection('Also this week', ytOrder(also));
       }
       if (deep.length) {
-        html += ytSection('Deep cuts — the back catalog', sampleN(deep, 8),
+        html += ytSection('Old gold — the back catalog', sampleN(deep, 8),
           deep.length > 8 ? ' <button class="pill vshuffle" data-ytshuffle>Shuffle ↻</button>' : '');
       }
-      html += ytSection('Trending in the US', ytOrder(trend));
+      /* raw US trending is gone — popularity now comes from the wire
+         itself: the trailing week's roster uploads ranked by views/hour,
+         same math as the newsletter's video digest */
+      var weekAgo = Date.now() / 1000 - 7 * 86400;
+      var popular = own.filter(function (v) {
+        var sec = durSec(v.dur);
+        return (v.d || 0) > weekAgo && v.views && sec >= 120;
+      }).sort(function (a, b) { return ytVelocity(b) - ytVelocity(a); }).slice(0, 8);
+      html += ytSection('Popular this week — from the wire', popular);
     } else {
       /* the Feed is a subscriptions page: every new upload, newest first */
       var chrono = own.slice().sort(function (a, b) { return (b.d || 0) - (a.d || 0); });
       html += chrono.length
         ? '<p class="empty" style="margin:18px auto 0">Every new upload from the channels the Pulse follows · newest first</p>' +
           '<div class="feed">' + chrono.map(ytRow).join('') + '</div>' +
-          '<p class="empty" style="margin:22px auto 0">Vermont finds, deep cuts and trending live in the Grid view ↑</p>'
+          '<p class="empty" style="margin:22px auto 0">Vermont finds, old gold and the week\'s most-watched live in the Grid view ↑</p>'
         : '';
     }
-    body.innerHTML = (vt.length + own.length + deep.length + trend.length)
+    body.innerHTML = (vt.length + own.length + deep.length)
       ? html : '<p class="empty">No videos right now.</p>';
-    renderCount(shelves ? vt.length + own.length + deep.length + trend.length : own.length, 0);
+    renderCount(shelves ? vt.length + own.length + deep.length : own.length, 0);
   }
 
   function loadYouTube() {
@@ -1849,11 +1870,16 @@
   function bind() {
     document.addEventListener('click', function (ev) {
       var el = ev.target.closest('[data-topic],[data-source],[data-togsrc],[data-togyt],[data-audio],' +
-        '[data-act],[data-unsave],[data-nudge-dismiss],[data-hint-dismiss],[data-ytview],[data-ytsort],[data-ytshuffle],a[data-k]');
+        '[data-act],[data-unsave],[data-nudge-dismiss],[data-hint-dismiss],[data-ytview],[data-ytlocal],[data-ytsort],[data-ytshuffle],a[data-k]');
       if (!el) return;
       if (el.dataset.topic) { setTopic(el.dataset.topic); return; }
       if (el.hasAttribute('data-ytview')) {
         state.set.ytview = el.getAttribute('data-ytview');
+        saveSettings(); renderBody();
+        return;
+      }
+      if (el.hasAttribute('data-ytlocal')) {
+        state.set.ytlocal = el.getAttribute('data-ytlocal') === '1';
         saveSettings(); renderBody();
         return;
       }
