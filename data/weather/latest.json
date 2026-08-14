@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-14T05:19:18+00:00",
+ "updated": "2026-08-14T06:59:05+00:00",
  "sections_updated": {
-  "now": "2026-08-14T05:19:18+00:00",
-  "forecast": "2026-08-14T05:19:18+00:00",
-  "hourly": "2026-08-14T05:19:18+00:00",
-  "alerts": "2026-08-14T05:19:18+00:00",
-  "afd": "2026-08-14T05:19:18+00:00",
-  "lake_forecast": "2026-08-14T05:19:18+00:00",
-  "lake_gage": "2026-08-14T05:19:18+00:00",
-  "air": "2026-08-14T05:19:18+00:00",
-  "sun": "2026-08-14T05:19:18+00:00",
-  "models": "2026-08-14T05:19:18+00:00"
+  "now": "2026-08-14T06:59:05+00:00",
+  "forecast": "2026-08-14T06:59:05+00:00",
+  "hourly": "2026-08-14T06:59:05+00:00",
+  "alerts": "2026-08-14T06:59:05+00:00",
+  "afd": "2026-08-14T06:59:05+00:00",
+  "lake_forecast": "2026-08-14T06:59:05+00:00",
+  "lake_gage": "2026-08-14T06:59:05+00:00",
+  "air": "2026-08-14T06:59:05+00:00",
+  "sun": "2026-08-14T06:59:05+00:00",
+  "models": "2026-08-14T06:59:05+00:00"
  },
  "now": {
-  "observed_at": "2026-08-14T04:50:00+00:00",
+  "observed_at": "2026-08-14T06:40:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 61,
-  "feels_like_f": 61,
-  "humidity": 94,
-  "dewpoint_f": 59,
+  "description": "Partly Cloudy",
+  "temp_f": 57,
+  "feels_like_f": 57,
+  "humidity": 100,
+  "dewpoint_f": 57,
   "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "ESE"
+  "wind_dir": "E"
  },
  "forecast": {
   "updated": "2026-08-13T18:12:24+00:00",
   "periods": [
    {
-    "name": "Tonight",
-    "start": "2026-08-13T23:00:00-04:00",
+    "name": "Overnight",
+    "start": "2026-08-14T02:00:00-04:00",
     "is_day": false,
     "temp_f": 60,
     "pop": 2,
-    "wind": "NW 5 mph",
+    "wind": "N 5 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 60. Northwest wind around 5 mph."
+    "detailed": "Mostly clear, with a low around 60. North wind around 5 mph."
    },
    {
     "name": "Friday",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-13T18:12:24+00:00",
   "hours": [
-   {
-    "t": "2026-08-14T01:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 0,
-    "humidity": 87,
-    "wind_mph": 3,
-    "wind_dir": "NW",
-    "sky": 15,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-08-14T02:00:00-04:00",
     "temp_f": 64,
@@ -567,6 +556,17 @@
     "wind_dir": "N",
     "sky": 12,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-08-15T13:00:00-04:00",
+    "temp_f": 74,
+    "feels_f": 74,
+    "pop": 0,
+    "humidity": 51,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 14,
+    "short": "Sunny"
    }
   ]
  },
@@ -574,77 +574,70 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-14T00:06:00+00:00",
+  "issued": "2026-08-14T06:08:00+00:00",
   "key_messages": [
-   "Isolated to scattered showers and an isolated thunderstorm or two is expected this afternoon. Conditions turn drier and quieter by Friday and Saturday.",
-   "Seasonable temperatures next week and a couple shower chances."
+   "A few showers and possibly a thunderstorm will clip southern portions of our region today, while otherwise sunny conditions and low humidity will build in through the first part of the weekend.",
+   "Showers with a low chance of thunderstorms are expected late Sunday into early Monday.",
+   "Near seasonable temperatures with a chance of showers mid to late next week."
   ],
-  "what_changed": "As of 220 PM EDT Thursday... No significant changes we made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 140006\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n806 PM EDT Thu Aug 13 2026\n\n.WHAT HAS CHANGED...\nAs of 220 PM EDT Thursday...\n\nNo significant changes we made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 220 PM EDT Thursday...\n\n1. Isolated to scattered showers and an isolated thunderstorm \nor two is expected this afternoon. Conditions turn drier and quieter \nby Friday and Saturday.\n\n2. Seasonable temperatures next week and a couple shower \nchances.\n\n&&\n\n.DISCUSSION...\nAs of 220 PM EDT Thursday...\n\nKEY MESSAGE 1: Another shortwave is expected to move through this \nafternoon, and is currently centered over the St. Lawrence River. As \nopposed to yesterdays forecast, trends have decreased for any wider \nshower and thunderstorm coverage through this afternoon. Subsidence \nin the wake of convection from last night and seasonably cool \ntemperatures in the low to mid 70s has capped much of the region \nthis morning, despite 1500 J/kg of analyzed SBCAPE. To the \nnortheast, thunderstorms have begun to fire in eastern Quebec where \nthe instability gradient is maximized. This is further evident on \nthe visible satellite where the most agitated cumulus are focused \nover the Northeast Kingdom, with lesser vertical motion evident \nacross northern New York. Closer to home here, GOES-19 satellite \ndepicts some dry air aloft in the 500-300mb layer with little \nimprovement depicted upstream. Models have picked up this weaker \nshower trend quite nicely in the HRRR. Showers will mainly be \nfocused over the Northeast Kingdom through this afternoon, with \nbetter chances closer toward 8 PM. the Storm Prediction Center has \nplaced the NEK in a Marginal Risk for Severe Storms (level 1 out of \n5) for this afternoon and evening. Some small hail to half an inch \nand briefly gusty winds up to 40 MPH may be possible under any \nstronger storms. Though the confidence in any widespread storms is \nlow. Elsewhere an isolated terrain driven shower may be possible, in \naddition to a few isolated showers along the western lake breeze of \nLake Champlain. Most locations today look to remain on the dry side. \nAn isolated rumble of thunder in the Champlain Valley or higher \nterrain cannot be ruled out with decent instability in place, should \na shower grow tall enough to break through the subsidence inversion. \nShower chances will once again decrease after sunset with the loss \nof diurnal heating. \n\nTroughing will slide east with surface high pressure building in by \nFriday. More calm and quieter conditions are expected through \nSaturday. Temperatures will be relatively seasonable in the mid to \nupper 70s. A radiational cooling night is increasingly likely Friday \nnight with lows potentially dipping to the upper 40s to low to mid \n50s. A few pocket low 40s may be possible in the decoupled protected \nvalleys of the Adirondacks and eastern Greens. Saturday looks to be \nthe best of the weekend with temperatures in the low to mid 70s, and \nmountain temperatures in the low to mid 60s. It will be a great day \nfor outdoor activities with plenty of sun and little in the way of \nwind. Shower chances return by Sunday as weak northern and southern \nstream energies interact over the North Country. There is still some \nquestions lingering on how much of an interaction there will be, \nwith some model solutions depicting the southern stream breaking \ndown and remaining south for a potentially drier Sunday. There does \nlook to be a weak cold front associated with the northern stream of \nenergy that has better confidence in at least some shower activity \nby Sunday night.\n\nKEY MESSAGE 2: Large scale troughing will dominate next week, leading \nto seasonable temperatures and a few shower chances. Humidity will \nalso be on the lower side, with dew points generally in the 50s and \nlow 60s. After any lingering showers exit Monday, the next chance of \nrain does not look to be until late Wednesday from a cold front, and \nthen over the weekend from another potential low pressure system. \nHighs look to be in the 70s and low 80s, and lows look to be in the \n50s in most places. The coldest areas should see some temperatures \nin the 40s and the warmest places, notably along Lake Champlain, \nshould see some lows in the 60s. Overall, it looks to be a pleasant \nand relatively uneventful stretch of summer weather.\n\n&&\n\n.AVIATION /00Z FRIDAY THROUGH TUESDAY/...\nThrough 00Z Saturday...A few showers with some isolated embedded\nthunderstorms will move southeastward through the area this\nevening. Thunderstorms are expected to remain sub-severe, but\nbrief visibility reductions to 2-4SM, cloud-to-ground lightning\nstrikes, and wind gusts to 25 knots from variable directions \nare possible in and around thunderstorms. The best chances of a \nthunderstorm going over a terminal will be at KEFK between 00Z \nand 02Z, and have included a -tsra in a tempo for this \ntimeframe. Elsewhere, lower confidence in thunderstorms tracking\ndirectly over a terminal, so have not included mention of TS in\nthe other TAF sites. \n\nOvernight tonight, expect areas of fog and low stratus to\ndevelop in climatologically favored valleys between 06Z and 13Z.\nThis includes KSLK and KMPV. Outside of those TAF sites, cannot\nrule out fog or low stratus developing in sites that picked up\nsome rain today, especially KEFK. Confidence is lower in fog at\nthe remaining TAF sites, and have kept KBTV, KPBG, KRUT, and\nKMSS predominantly VFR overnight.  \n\nFog will lift at sunrise and conditions will improve to \nwidespread VFR after 13Z.\n\nOutlook...\n\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Chance SHRA.\nSunday Night: Mainly MVFR, with local VFR possible. Chance SHRA.\nMonday: MVFR/IFR conditions possible. Chance SHRA, Slight chance\nTSRA.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Myskowski/Danzig\nAVIATION...Duell\n"
+  "what_changed": "As of 208 AM EDT Friday... No notable changes were made to the forecast.",
+  "raw": "\n000\nFXUS61 KBTV 140608\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n208 AM EDT Fri Aug 14 2026\n\n.WHAT HAS CHANGED...\nAs of 208 AM EDT Friday...\n\nNo notable changes were made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 208 AM EDT Friday...\n\n1. A few showers and possibly a thunderstorm will clip southern \nportions of our region today, while otherwise sunny conditions and \nlow humidity will build in through the first part of the weekend.\n\n2. Showers with a low chance of thunderstorms are expected late \nSunday into early Monday. \n\n3. Near seasonable temperatures with a chance of showers mid to \nlate next week.\n\n&&\n\n.DISCUSSION...\nAs of 208 AM EDT Friday...\n\nKEY MESSAGE 1: Over the past few days, the signals for showers \nassociated with a vigorous shortwave trough have been uncertain for \nFriday. There had been a trend for no precipitation with too much \ndry air in place ahead of this wave, but the trend in recent model \nruns has reversed such that it is becoming likely that yet another \ninterval of isolated to scattered showers with perhaps a \nthunderstorm or two will traverse our region. This time, it seems \nlike only our southern areas, primarily the southern half of St. \nLawrence County and perhaps as far north as portions of the northern \nAdirondacks and south central Vermont, are in the crosshairs. \nRepresentative forecast soundings show only about 400 - 600 J/kg \nCAPE ahead of the showers, yielding a lower chance of thunderstorms \nthan in previous days. The associated low hourly probabilities of \nthunder in the HREF-calibrated guidance (barely reaching 10% in a \nsmall swath of the aforementioned area between 4 and 5 PM) look \nreasonable. As in recent days, inverted-V soundings suggest that the \nshowers and thunderstorms will produce gusty winds with perhaps a \nstronger wind gust with an isolated storm. The lower CAPE further \nreduces the chances of any severe weather today where these showers \nand storms track. \n\nFinally surface high pressure builds in enough to bring chances\nof rain down to zero areawide this evening through Sunday \nmorning. As such, through this period seasonally typical valley \nfog each morning will provide the only potential weather hazard.\n\nKEY MESSAGE 2: Confidence continues to increase on a period of \nwidespread showers with a few downpours in the Sunday \nevening/overnight timeframe as an area of low pressure passes near \nor south of our region. The latest blend of guidance shows area \naverage rainfall near 0.5\" to locally 0.75\" for most locations, with \nmost of it occurring during the first part of the night per model \nconsensus. Ensemble support for heavy rainfall continues to focus \nwell to our south, but we will be on the northern fringe of well \nabove normal precipitable water coincident with a surge of \nintegrated water vapor transport out of the west. The most anomalous \nmoisture appears to be at the mid-levels/700 millibars where strong \nwarm air advection will occur, which is consistent with forecast \nsoundings showing elevated instability above that layer. So some \nrumbles of thunder will be possible despite minimal surface-based \ninstability during the event, with a tongue of this instability \ngenerally pushing northeastward with time Sunday evening per \nconsensus of the 00Z guidance.\n\nThe situation for Monday is hard to parse with regards to how the \nweather will evolve. It continues to look like there will be a \ntrough digging slightly across Quebec that will drag a weak cold \nfront through our region in the wake of the low pressure system \ndiscussed previously. Near surface moisture should increase somewhat \nwhile deep moisture decreases relative to Sunday night, and diurnal \nheating should lead to some destabilization as a boundary or \nboundaries pass through. Forecast soundings suggest there may be too \nmuch dry air aloft for parcels of air to rise sufficiently to \nproduce cold cloud tops, so at this point a slight chance of \nthunderstorms looks reasonable. Altogether, there are mixed \nsignals on thunderstorm chances but scattered showers seem \nreasonable with precipitation most favored in higher terrain. \nThe blend of models shows only around 20% chance of thunder \nMonday afternoon in Vermont and closer to 10% in northern New \nYork.\n\nKEY MESSAGE 3: Pretty much remain in a broad cyclonic flow that is \ndominating the Great Lakes-NY-New England. Heat ridge remains mainly \nacross southern-southwest tier of CONUS. Our CWA is far enough from \nthe periphery of the ridge that we stay largely influenced by \nthe northern stream flow with seasonable temperatures and a \nchance of showers now and then. The best chance for showers \nafter Sun-Mon departing system will be late Wed-Thu.\n\n&&\n\n.AVIATION /06Z FRIDAY THROUGH TUESDAY/...\nThrough 06Z Saturday...Mainly SKC with areas of fog and low \nstratus to develop in climatologically favored valleys between \n06Z and 13Z. This includes KSLK and KMPV. Outside of those TAF \nsites, cannot rule out fog or low stratus developing in sites \nthat picked up some rain today, especially KEFK. Although\npredominately VFR overnight for KRUT, KPBG have introduced some\nfog and possibly MVFR-IFR for KMSS and KBTV.\n\nFog will lift at sunrise and conditions will improve to \nwidespread VFR after 13Z. shortwave may bring a brief chance of\nshowers aft 18z across KMSS, KSLK and KRUT.\n\nOutlook...\n\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Chance SHRA.\nSunday Night: Mainly MVFR, with local IFR possible. Definite\nSHRA, Slight chance TSRA.\nMonday: Mainly MVFR, with local IFR possible. Chance SHRA, Slight\nchance TSRA.\nMonday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nTuesday: Mainly VFR, with local MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Kutikoff/SLW\nAVIATION...SLW\n"
  },
  "lake_forecast": {
-  "issued": "2026-08-14T01:27:00+00:00",
+  "issued": "2026-08-14T06:14:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "Rest Of Tonight",
-    "text": "Northwest winds 5 to 10 knots. Mostly clear. Waves 1 foot or less.",
-    "wind_knots_max": 10,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
-   },
-   {
-    "period": "Friday",
-    "text": "Northwest winds 5 to 15 knots, becoming north. Mostly sunny. Waves 1 foot or less.",
-    "wind_knots_max": 15,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
-   },
-   {
-    "period": "Friday Night",
-    "text": "North winds 5 to 15 knots, diminishing to less than 10 knots. Mostly clear. Waves 1 foot or less.",
-    "wind_knots_max": 15,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
-   },
-   {
-    "period": "Saturday",
-    "text": "North winds 10 knots or less. Sunny. Waves 1 foot or less.",
-    "wind_knots_max": 10,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
-   },
-   {
-    "period": "Saturday Night",
-    "text": "North winds less than 10 knots. Partly cloudy. Waves 1 foot or less.",
-    "wind_knots_max": 10,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
-   },
-   {
-    "period": "Sunday",
-    "text": "South winds 10 knots or less. Partly sunny. A chance of showers in the afternoon. Waves 1 to 2 feet.",
+    "period": "Today",
+    "text": "Northwest winds 10 knots or less, becoming north and increasing to 10 to 15 knots late in the day. Sunny. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
    },
    {
-    "period": "Sunday Night",
-    "text": "Southeast winds 10 knots or less, becoming southwest. Mostly cloudy. A chance of showers. Waves 1 foot or less.",
+    "period": "Tonight",
+    "text": "Northwest winds 10 to 15 knots. Mostly clear. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 2,
+    "calm": false
+   },
+   {
+    "period": "Saturday",
+    "text": "North winds 5 to 15 knots. Sunny. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 2,
+    "calm": false
+   },
+   {
+    "period": "Saturday Night",
+    "text": "North winds 5 to 10 knots, becoming light and variable. Mostly clear. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
+    "calm": true
+   },
+   {
+    "period": "Sunday",
+    "text": "South winds 10 to 15 knots, becoming southeast and increasing to near 20 knots. Partly sunny. A chance of showers in the afternoon. Waves 1 to 3 feet.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 3,
+    "calm": false
+   },
+   {
+    "period": "Sunday Night",
+    "text": "Southeast winds 10 to 15 knots, becoming south. Showers. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Monday",
-    "text": "Northwest winds 5 to 10 knots, becoming north. Partly sunny. A chance of showers. Waves 1 foot or less.",
+    "text": "South winds 5 to 10 knots, becoming northwest. Partly sunny. A chance of showers. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -652,7 +645,7 @@
    },
    {
     "period": "Monday Night",
-    "text": "North winds 5 to 10 knots, becoming light and variable. Partly cloudy. A chance of showers in the evening. Waves 1 foot or less.",
+    "text": "Northwest winds 5 to 10 knots, becoming light and variable. Mostly clear. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -669,72 +662,64 @@
   ],
   "northern": [
    {
-    "period": "Rest Of Tonight",
-    "text": "Northwest winds 5 to 10 knots. Mostly clear. Waves 1 foot or less.",
+    "period": "Today",
+    "text": "Northwest winds 10 knots or less, increasing to 10 to 15 knots by late afternoon. Mostly sunny. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
-    "period": "Friday",
-    "text": "Northwest winds 10 knots or less. Mostly sunny. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "period": "Tonight",
+    "text": "Northwest winds 5 to 15 knots, becoming north. Mostly clear. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": false
-   },
-   {
-    "period": "Friday Night",
-    "text": "Northwest winds 5 to 10 knots, becoming light and variable. Mostly clear. Waves 1 foot or less.",
-    "wind_knots_max": 10,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": true
    },
    {
     "period": "Saturday",
-    "text": "Light and variable winds. Mostly sunny. Waves 1 foot or less.",
-    "wind_knots_max": null,
+    "text": "North winds 5 to 15 knots, diminishing to 10 knots or less. Sunny. Waves 1 foot or less.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
-    "calm": true
+    "calm": false
    },
    {
     "period": "Saturday Night",
-    "text": "Light and variable winds. Partly cloudy. Waves 1 foot or less.",
-    "wind_knots_max": null,
+    "text": "North winds 5 to 10 knots, becoming light and variable. Mostly clear. Waves 1 foot or less.",
+    "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": true
    },
    {
     "period": "Sunday",
-    "text": "Light and variable winds. Partly sunny. A chance of showers in the afternoon. Waves 1 to 3 feet.",
-    "wind_knots_max": null,
+    "text": "South winds 5 to 10 knots, becoming southeast. Partly sunny. A chance of showers in the afternoon. Waves 1 to 3 feet.",
+    "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 3,
-    "calm": true
+    "calm": false
    },
    {
     "period": "Sunday Night",
-    "text": "Southeast winds less than 10 knots. Mostly cloudy. A chance of showers. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "text": "Southeast winds 5 to 15 knots, becoming south. Showers. Waves 1 to 3 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 3,
     "calm": false
    },
    {
     "period": "Monday",
-    "text": "Northwest winds less than 10 knots. Partly sunny. A chance of showers. Waves 1 foot or less.",
+    "text": "Southwest winds 10 knots or less, becoming northwest. Partly sunny. A chance of showers. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Monday Night",
-    "text": "Northwest winds less than 10 knots. Partly cloudy. A chance of showers in the evening. Waves 1 foot or less.",
+    "text": "Northwest winds less than 10 knots. Mostly clear. A chance of showers in the evening. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -742,7 +727,7 @@
    },
    {
     "period": "Tuesday",
-    "text": "Light and variable winds. Mostly sunny. Waves 1 foot or less.",
+    "text": "Light and variable winds. Sunny. Waves 1 foot or less.",
     "wind_knots_max": null,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -751,64 +736,56 @@
   ],
   "southern": [
    {
-    "period": "Rest Of Tonight",
-    "text": "Northwest winds 5 to 10 knots. Mostly clear. Waves 1 foot or less.",
+    "period": "Today",
+    "text": "Northwest winds 10 knots or less, becoming north 10 to 15 knots late in the day. Mostly sunny. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
-    "period": "Friday",
-    "text": "Northwest winds 5 to 10 knots, becoming north. Mostly sunny. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "period": "Tonight",
+    "text": "North winds 5 to 15 knots, becoming northwest. Clear. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
-    "period": "Friday Night",
-    "text": "North winds 5 to 15 knots, becoming northwest less than 10 knots. Clear. Waves 1 foot or less.",
+    "period": "Saturday",
+    "text": "North winds 5 to 15 knots. Sunny. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 2,
+    "calm": false
+   },
+   {
+    "period": "Saturday Night",
+    "text": "North winds 5 to 10 knots, becoming light and variable. Mostly clear. Waves 1 foot or less.",
+    "wind_knots_max": 10,
+    "gust_knots": null,
+    "waves_ft_max": 1,
+    "calm": true
+   },
+   {
+    "period": "Sunday",
+    "text": "South winds 5 to 15 knots, becoming southeast. Partly sunny. A chance of showers in the afternoon. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 2,
+    "calm": false
+   },
+   {
+    "period": "Sunday Night",
+    "text": "Southeast winds 5 to 15 knots, becoming south. Showers. Waves 1 foot or less.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": false
    },
    {
-    "period": "Saturday",
-    "text": "North winds 10 knots or less. Sunny. Waves 1 foot or less.",
-    "wind_knots_max": 10,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
-   },
-   {
-    "period": "Saturday Night",
-    "text": "North winds less than 10 knots. Mostly clear. Waves 1 foot or less.",
-    "wind_knots_max": 10,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
-   },
-   {
-    "period": "Sunday",
-    "text": "South winds 10 knots or less. Partly sunny. A chance of showers in the afternoon. Waves 1 foot or less.",
-    "wind_knots_max": 10,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
-   },
-   {
-    "period": "Sunday Night",
-    "text": "South winds less than 10 knots. Mostly cloudy. A chance of showers. Waves 1 foot or less.",
-    "wind_knots_max": 10,
-    "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
-   },
-   {
     "period": "Monday",
-    "text": "North winds 10 knots or less. Partly sunny. A chance of showers. Waves 1 foot or less.",
+    "text": "South winds 10 knots or less, becoming north. Partly sunny. A chance of showers. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -816,7 +793,7 @@
    },
    {
     "period": "Monday Night",
-    "text": "North winds 5 to 10 knots, becoming light and variable. Partly cloudy. A chance of showers in the evening. Waves 1 foot or less.",
+    "text": "North winds 5 to 10 knots, becoming light and variable. Mostly clear. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -824,37 +801,34 @@
    },
    {
     "period": "Tuesday",
-    "text": "Light and variable winds. Mostly sunny. Waves 1 foot or less. The ultraviolet index for Friday will be a 6. This is in the high category. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 94.66 feet 75 degrees USGS gage at Burlington VT 94.70 feet 76 degrees USGS gage at Port Henry NY 94.74 feet 65 degrees",
+    "text": "Light and variable winds. Sunny. Waves 1 foot or less. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 94.58 feet 74 degrees USGS gage at Burlington VT 94.71 feet 76 degrees USGS gage at Port Henry NY 94.72 feet 68 degrees",
     "wind_knots_max": null,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": true
    }
   ],
-  "uv": {
-   "day": "Friday",
-   "index": 6
-  },
+  "uv": null,
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 94.66,
-    "temp_f": 75
+    "level_ft": 94.58,
+    "temp_f": 74
    },
    "Burlington VT": {
-    "level_ft": 94.7,
+    "level_ft": 94.71,
     "temp_f": 76
    },
    "Port Henry NY": {
-    "level_ft": 94.74,
-    "temp_f": 65
+    "level_ft": 94.72,
+    "temp_f": 68
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 76,
-  "water_temp_at": "2026-08-14T01:00:00.000-04:00",
-  "level_ft": 95.21,
-  "level_at": "2026-08-14T01:00:00.000-04:00",
+  "water_temp_at": "2026-08-14T02:00:00.000-04:00",
+  "level_ft": 95.23,
+  "level_at": "2026-08-14T02:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -862,7 +836,7 @@
   "aqi": 23,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/14/26 1:00",
+  "observed": "08/14/26 2:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, August 14th."
  },
  "sun": {
@@ -877,17 +851,17 @@
    {
     "date": "2026-08-14",
     "high_f": {
-     "GFS": 73,
+     "GFS": 72,
      "Euro": 72,
      "ICON": 75
     },
     "pop_max": {
-     "GFS": 5,
+     "GFS": 6,
      "Euro": 48,
      "ICON": 3
     },
     "precip_in": {
-     "GFS": 0.03,
+     "GFS": 0.06,
      "Euro": 0.05,
      "ICON": 0.0
     },
@@ -915,7 +889,7 @@
    {
     "date": "2026-08-16",
     "high_f": {
-     "GFS": 77,
+     "GFS": 78,
      "Euro": 77,
      "ICON": 81
     },
@@ -925,7 +899,7 @@
      "ICON": 40
     },
     "precip_in": {
-     "GFS": 0.12,
+     "GFS": 0.09,
      "Euro": 0.44,
      "ICON": 0.13
     },
