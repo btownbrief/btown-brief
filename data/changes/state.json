@@ -372,18 +372,18 @@
  "gmt-alerts": {
   "items": [
    {
+    "id": "https://ridegmt.com/?p=24848",
+    "title": "Service Alert :: City Loop",
+    "link": "https://ridegmt.com/service-alert-city-loop/",
+    "ts": "2026-08-14T18:04:24+00:00",
+    "summary": "On Route 8, stop Fern Hill (ID 806029) will be closed due to construction."
+   },
+   {
     "id": "https://ridegmt.com/?p=24835",
     "title": "Building Closure :: GMT Administrative Office",
     "link": "https://ridegmt.com/building-closure-gmt-administrative-office/",
     "ts": "2026-08-13T15:00:00+00:00",
     "summary": "The Green Mountain Transit Administrative Office will be closed to the public on Friday, August 14th. This closure is necessary to prioritize keeping the kiosk at the Downtown Transit Center [ ]"
-   },
-   {
-    "id": "https://ridegmt.com/?p=24832",
-    "title": "Service Alert :: Winooski",
-    "link": "https://ridegmt.com/service-alert-winooski-5/",
-    "ts": "2026-08-13T14:33:19+00:00",
-    "summary": "Buses on Route 9 will be on detour. Toward Riverside/Winooski, stops from E Spring Street at Spring Garden to Main Street at LaFountain Street will not be served."
    },
    {
     "id": "https://ridegmt.com/?p=24837",
@@ -496,6 +496,12 @@
     "hasAgenda": true,
     "files": []
    },
+   "10133": {
+    "name": "CDNR Committee Meeting",
+    "start": "2026-08-19T18:00:00+00:00",
+    "hasAgenda": true,
+    "files": []
+   },
    "10124": {
     "name": "City Council - Ordinance Committee Meeting",
     "start": "2026-08-20T16:30:00+00:00",
@@ -547,12 +553,6 @@
      "Housing Board of Review Agenda 08/24",
      "Housing Board of Review Agenda 08/24"
     ]
-   },
-   "10119": {
-    "name": "Transportation, Energy, and Utilities Committee",
-    "start": "2026-08-25T17:30:00+00:00",
-    "hasAgenda": true,
-    "files": []
    }
   }
  },
@@ -849,11 +849,11 @@
    "vermont-public": {
     "items": [
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
-      "title": "Chefs and servers on the Champlain Valley Dinner Train keep service on track",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
-      "ts": "2026-08-14T09:00:00+00:00",
-      "summary": "As passengers enjoy scenic views, the kitchen staff navigate tight quarters and a bumpy ride to serve up gourmet meals."
+      "id": "https://www.vermontpublic.org/local-news/2026-08-14/vermont-august-stargazing-audio",
+      "title": "An audio guide to the August night sky",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-14/vermont-august-stargazing-audio",
+      "ts": "2026-08-14T17:45:41+00:00",
+      "summary": "Our annual Eye on the Sky Stargazing Party, with Jane Lindholm and meteorologist Mark Breen, took place this week. Take this recording outside at night and look up as you listen, to see what you can discover in the sky above you."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
@@ -861,6 +861,13 @@
       "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
       "ts": "2026-08-14T09:00:00+00:00",
       "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
+      "title": "Chefs and servers on the Champlain Valley Dinner Train keep service on track",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
+      "ts": "2026-08-14T09:00:00+00:00",
+      "summary": "As passengers enjoy scenic views, the kitchen staff navigate tight quarters and a bumpy ride to serve up gourmet meals."
      },
      {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-08-13/passport-to-the-land-of-creemees-vermont-editions-2026-ice-cream-show",
@@ -919,13 +926,6 @@
       "summary": "Gerald Malloy, an Army veteran and defense contractor, captured the Republican primary for Vermont’s sole seat in the U.S. House of Representatives today."
      },
      {
-      "id": "https://www.vermontpublic.org/live-updates/live-updates-voting-underway-for-vermont-primaries",
-      "title": "Live updates: Amanda Janoo, Molly Gray win Democratic nominations",
-      "link": "https://www.vermontpublic.org/live-updates/live-updates-voting-underway-for-vermont-primaries",
-      "ts": "2026-08-11T09:00:00+00:00",
-      "summary": "Vermont voters went to the polls to narrow the field of candidates for Congress, governor, lieutenant governor and more. Check back for the latest updates."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-08-11/vermonts-2026-primary-election-results",
       "title": "Vermont's 2026 primary election results",
       "link": "https://www.vermontpublic.org/local-news/2026-08-11/vermonts-2026-primary-election-results",
@@ -936,6 +936,20 @@
    },
    "wcax": {
     "items": [
+     {
+      "id": "KJEGRWNWCFDWDMDRWFDM76MV34",
+      "title": "Watch Live: Lake Monsters travel to New Britain for Game 2 of FCBL championship series",
+      "link": "https://www.wcax.com/2026/08/14/watch-live-lake-monsters-travel-new-britain-game-2-fcbl-championship-series/",
+      "ts": "2026-08-14T18:06:51+00:00",
+      "summary": "Game 2 of the best-of-three FCBL championship series between the Vermont Lake Monsters and the New Britain Bees gets underway at 6:30 p.m. Saturday night in New Britain, Ct."
+     },
+     {
+      "id": "US2LVJBCUJFNJNOCMAZBWFSHQI",
+      "title": "Pets with Potential: Meet Ouija and Salam, Winnie and Schmidt",
+      "link": "https://www.wcax.com/2026/08/14/pets-with-potential-meet-ouija-salam-winnie-schmidt/",
+      "ts": "2026-08-14T17:23:44+00:00",
+      "summary": "This week’s Pets with Potential come from Burlington’s Queen City Cats. They are two pair of bonded cats"
+     },
      {
       "id": "CB2LMS2FERHKHBQ3WQBTOUIQXM",
       "title": "WATCH LIVE: Lake Monsters host New Britain in opening game of championship series",
@@ -1271,25 +1285,32 @@
       "link": "https://www.wcax.com/2026/08/12/teen-faces-dwi-charges-after-nh-crash-sends-3-hospital/",
       "ts": "2026-08-12T20:11:57+00:00",
       "summary": "Three people were sent to the hospital with serious injuries after a crash on Tuesday in Plainfield, New Hampshire."
-     },
-     {
-      "id": "3A2QPACA5JDN5J7X7CAMYIQXJQ",
-      "title": "Democrat seeks to flip North Country state Senate seat",
-      "link": "https://www.wcax.com/2026/08/12/democrat-seeks-flip-north-country-state-senate-seat/",
-      "ts": "2026-08-12T20:07:01+00:00",
-      "summary": "A Glens Falls woman is running for a state Senate seat in the North Country, hoping to add to Democrats’ majority in Albany."
-     },
-     {
-      "id": "HMOENIOHYVF6DI3AOQ2KDXTAZM",
-      "title": "Partial solar eclipse & the peak of the Perseid meteor shower Wednesday",
-      "link": "https://www.wcax.com/2026/08/12/partial-solar-eclipse-peak-perseid-meteor-shower-wednesday/",
-      "ts": "2026-08-12T18:46:47+00:00",
-      "summary": "Do you still have your solar eclipse glasses from 2024? You can use them again today to view a partial solar eclipse! Then after the sun sets, you won’t need the eclipse glasses to see the peak of the Perseid meteor shower tonight."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73438088",
+      "title": "Ty Gibbs will drive M&M's-themed car in memory of Kyle Busch",
+      "link": "https://www.mynbc5.com/article/ty-gibbs-mms-themed-car-kyle-busch/73438088",
+      "ts": "2026-08-14T18:06:00+00:00",
+      "summary": "Ty Gibbs will drive an M&M's-themed car made famous by former teammate Kyle Busch during the NASCAR Cup Series race at Bristol Motor Speedway next month."
+     },
+     {
+      "id": "73437817",
+      "title": "Family of slain CEO Brian Thompson breaks silence on ‘heinous act’ after Luigi Mangione’s guilty plea",
+      "link": "https://www.mynbc5.com/article/brian-thompson-family-statement-luigi-mangione/73437817",
+      "ts": "2026-08-14T17:38:00+00:00",
+      "summary": "The family of slain UnitedHealthcare CEO Brian Thompson is speaking out on the \"heinous act\" after Luigi Mangione's guilty plea."
+     },
+     {
+      "id": "73437974",
+      "title": "Bald eagle Shadow spotted with another bird days after Jackie's death, leaving fans chirping",
+      "link": "https://www.mynbc5.com/article/shadow-bald-eagle-kd1-new-mate-jackie-california/73437974",
+      "ts": "2026-08-14T17:28:00+00:00",
+      "summary": "Days after celebrity bald eagle Jackie died, her former partner Shadow appears to have met a new bird."
+     },
      {
       "id": "73435470",
       "title": "Luigi Mangione pleads guilty in federal case tied to UnitedHealthcare CEO killing",
@@ -1408,27 +1429,6 @@
       "link": "https://www.mynbc5.com/article/us-food-recalls-trend-analysis/73415731",
       "ts": "2026-08-14T12:58:00+00:00",
       "summary": "There have been 162 food recalls so far in 2026 — but experts say the number alone doesn't tell the whole food safety story."
-     },
-     {
-      "id": "73427849",
-      "title": "10-year-old recalls teacher who died saving her from Myrtle Beach rip current",
-      "link": "https://www.mynbc5.com/article/girl-thanks-teacher-who-died-rescuing-her-rip-current/73427849",
-      "ts": "2026-08-14T12:45:00+00:00",
-      "summary": "A 10-year-old says she owes her life to a Georgia teacher who died after rescuing her from a rip current at Myrtle Beach."
-     },
-     {
-      "id": "73434927",
-      "title": "NYPD officer convicted of using chokehold banned after death of George Floyd",
-      "link": "https://www.mynbc5.com/article/omar-habib-george-floyd-chokehold-conviction/73434927",
-      "ts": "2026-08-14T12:13:00+00:00",
-      "summary": "A New York City police officer, who was the first prosecuted under a local law banning chokeholds and some other methods of restraint, was convicted."
-     },
-     {
-      "id": "73434838",
-      "title": "New York State Police investigate arson at St. Lawrence County home",
-      "link": "https://www.mynbc5.com/article/lisbon-ny-porch-fire-arson/73434838",
-      "ts": "2026-08-14T11:51:00+00:00",
-      "summary": "New York State Police are want to speak with anyone who may have witnesses suspicious activity on Dollar Road in Lisbon last week as they investigate a suspicious fire."
      }
     ]
    },
