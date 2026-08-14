@@ -124,6 +124,20 @@ EXTRA_LOCAL_TAGS = [
     ("Reddit (r/Vermont)", "r/Vermont", "https://www.reddit.com/r/vermont/"),
 ]
 
+# Feeds that ride along OUTSIDE Inoreader entirely: vtcng's bot protection
+# (2026-08) throws a security check at Inoreader's crawler, so The Other
+# Paper can't be (re)subscribed there — the fast lane fetches its section
+# feed directly every run instead. Each entry: (title, feed URL, site URL).
+# Same self-retirement as the tag ride-alongs: if the local folder ever
+# carries the site again, the entry steps aside on its own. Titles must
+# stay stable — the source id is the title slug.
+EXTRA_LOCAL_FEEDS = [
+    ("The Other Paper (South Burlington)",
+     "https://www.vtcng.com/search/?f=rss&t=article&c%5B%5D=otherpapersbvt*"
+     "&l=25&s=start_time&sd=desc&app=editorial",
+     "https://www.vtcng.com/otherpapersbvt/"),
+]
+
 ITEM_CAP = 20          # headlines kept per source
 POD_ITEM_CAP = 40      # podcasts publish weekly — keep a deeper back-catalog
 TITLE_MAX = 200
@@ -842,6 +856,12 @@ def run(args):
             {"title": title, "xml": folder_stream_url(tag_label, 1),
              "html": sub_url}, "local"))
         extra_tags.append(tag_label)
+    for title, feed_url, site_url in EXTRA_LOCAL_FEEDS:
+        if topic_keys(site_url)[0] in folder_sites:
+            continue  # back in the folder — the ride-along retires
+        # no Inoreader stream carries these; the fast lane fetches the feed
+        folder_outlines.append((
+            {"title": title, "xml": feed_url, "html": site_url}, "local"))
 
     sources = build_roster(folder_outlines, topics)
     if len(sources) < MIN_SOURCES:

@@ -691,7 +691,7 @@
       ],
       "updateFrequency": "weekly paper — a handful of stories/week",
       "fragility": "medium — TownNews/BLOX search-as-RSS; param behavior shifts. &sites= does NOT filter (returns the site-wide /state_and_world/ wire — it only LOOKED valid because that wire is same-day fresh). Flat &c=otherpapersbvt/news misses subcategories and returns 2019-2020 leftovers. The wildcard c[]=otherpapersbvt* is current + correct but leaks the occasional cross-posted sibling-paper story — refresh_pulse.py's section guard drops those.",
-      "notes": "The feed the site advertises in its <link> tag is stale (7 items from 2019). Provenance lesson from 2026-08-14: validate these feeds by article PATHS (/otherpapersbvt/...), never by item freshness.",
+      "notes": "The feed the site advertises in its <link> tag is stale (7 items from 2019). Provenance lesson from 2026-08-14: validate these feeds by article PATHS (/otherpapersbvt/...), never by item freshness. Inoreader can no longer subscribe to ANY vtcng feed (bot-protection 'Security Check' challenges its crawler; the old subscription was grandfathered) — this source now rides along outside Inoreader via EXTRA_LOCAL_FEEDS in refresh_pulse.py, fetched directly by the fast lane.",
       "validated": true,
       "confidence": "medium",
       "lastChecked": "2026-08-14"
