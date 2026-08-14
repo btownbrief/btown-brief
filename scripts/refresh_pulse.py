@@ -124,6 +124,27 @@ EXTRA_LOCAL_TAGS = [
     ("Reddit (r/Vermont)", "r/Vermont", "https://www.reddit.com/r/vermont/"),
 ]
 
+# Feeds that ride along OUTSIDE Inoreader entirely: vtcng's bot protection
+# (2026-08) throws a security check at Inoreader's crawler, so no vtcng
+# feed can be (re)subscribed there — the fast lane fetches these directly
+# every run instead. Each entry: (title, feed URL, site URL). Same
+# self-retirement as the tag ride-alongs: if the local folder ever carries
+# the site again, the entry steps aside on its own. Titles must stay
+# stable — the source id is the title slug.
+#
+# The VTCNG feed is the one that lived in Inoreader as "The Other Paper"
+# until 2026-08-14: its &sites= param never filtered, so it is really the
+# site-wide newest-25 across all of the group's Vermont weeklies (plus
+# their shared syndicated wire). Stephen wants that mix — it just carries
+# the group's own name now instead of one paper's. Site is the vtcng root,
+# so the per-paper section guard deliberately does NOT apply.
+EXTRA_LOCAL_FEEDS = [
+    ("Vermont Community Newspaper Group",
+     "https://www.vtcng.com/search/?f=rss&t=article&l=25&s=start_time"
+     "&sd=desc&app=editorial&sites=otherpapersbvt",
+     "https://www.vtcng.com/"),
+]
+
 ITEM_CAP = 20          # headlines kept per source
 POD_ITEM_CAP = 40      # podcasts publish weekly — keep a deeper back-catalog
 TITLE_MAX = 200
@@ -155,6 +176,7 @@ SHORT_NAMES = {
     "burlington-vt-news-flash-police-department": "BTV Police",
     "cnet-news-com": "CNET",
     "engadget-full-rss-feed": "Engadget",
+    "vermont-community-newspaper-group": "VT Community News",
     "espn-com-nba": "ESPN NBA",
     "espn-com-nfl": "ESPN NFL",
     "fortune-fortune": "Fortune",
@@ -340,6 +362,36 @@ def topic_keys(url):
 def slugify(value):
     slug = re.sub(r"[^a-z0-9]+", "-", (value or "").lower()).strip("-")
     return slug or "source"
+
+
+# vtcng.com hosts a dozen Vermont weeklies behind one shared TownNews site,
+# and its search-as-RSS feeds happily leak the sibling papers AND the
+# always-publishing statewide wire (/state_and_world/ syndication). A paper's
+# chip must only ever carry that paper's own stories — the 2026-08 failure
+# was "The Other Paper" showing Texas cartel-drone coverage because the
+# subscribed feed's &sites= filter silently doesn't filter.
+
+# site-wide TownNews paths that are NOT a paper's section — a subscription
+# whose <link> points at /search/ must never grow a guard that filters
+# everything it carries
+VTCNG_NON_PAPER = {"search", "state_and_world", "online_features", "users",
+                   "classifieds", "eedition"}
+
+
+def paper_section(site):
+    """https://www.vtcng.com/otherpapersbvt/ -> 'otherpapersbvt' (else None)."""
+    match = re.search(r"vtcng\.com/([a-z0-9_-]+)", (site or "").lower())
+    if not match or match.group(1) in VTCNG_NON_PAPER:
+        return None
+    return match.group(1)
+
+
+def section_ok(section, url):
+    """A vtcng URL must live under the paper's own section; off-host passes."""
+    low = (url or "").lower()
+    if "vtcng.com" not in low:
+        return True
+    return f"vtcng.com/{section}/" in low
 
 
 def load_json(path, default):
@@ -821,6 +873,12 @@ def run(args):
             {"title": title, "xml": folder_stream_url(tag_label, 1),
              "html": sub_url}, "local"))
         extra_tags.append(tag_label)
+    for title, feed_url, site_url in EXTRA_LOCAL_FEEDS:
+        if topic_keys(site_url)[0] in folder_sites:
+            continue  # back in the folder — the ride-along retires
+        # no Inoreader stream carries these; the fast lane fetches the feed
+        folder_outlines.append((
+            {"title": title, "xml": feed_url, "html": site_url}, "local"))
 
     sources = build_roster(folder_outlines, topics)
     if len(sources) < MIN_SOURCES:
@@ -829,12 +887,21 @@ def run(args):
     previous = load_json(args.store or args.out, {})
     newsletter_ids = {source["id"] for source in sources
                       if source["topic"] == "newsletters"}
+    paper_sections = {}
+    for source in sources:
+        section = paper_section(source["site"])
+        if section:
+            paper_sections[source["id"]] = section
     prev_by_source = {}
     for item in previous.get("items", []):
         # the noise filter guards ingestion; this guards the rolling store,
         # so widening the pattern also scrubs junk that already got in
         if item.get("s") in newsletter_ids and \
                 NEWSLETTER_NOISE_RE.search(item.get("t", "")):
+            continue
+        # same retroactive treatment for wrong-section vtcng stories
+        section = paper_sections.get(item.get("s"))
+        if section and not section_ok(section, item.get("u", "")):
             continue
         prev_by_source.setdefault(item.get("s"), []).append(
             {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
@@ -873,11 +940,19 @@ def run(args):
     per_source, added_total = {}, 0
     for source in sources:
         prev_items = prev_by_source.get(source["id"], [])
+        fresh_items = fresh_by_source.get(source["id"], [])
+        # vtcng section guard sits HERE, the one chokepoint both the stream
+        # loop and fast_lane() flow through — guarding only attribution
+        # missed the fast lane's direct fetches
+        section = paper_sections.get(source["id"])
+        if section:
+            fresh_items = [item for item in fresh_items
+                           if section_ok(section, item["url"])]
         # podcast shows get a deeper store — a weekly show at the news cap
         # holds five months; the pods tab should read like a back-catalog
         is_pod = source["podcast"] or any(item.get("a") for item in prev_items)
         merged, added = merge_source(
-            prev_items, fresh_by_source.get(source["id"], []), now_ts,
+            prev_items, fresh_items, now_ts,
             cap=POD_ITEM_CAP if is_pod else ITEM_CAP)
         per_source[source["id"]] = merged
         added_total += added
@@ -1009,6 +1084,21 @@ def selftest():
     assert norm_site("https://www.Example.com/") == "example.com"
     assert topic_keys("https://www.reddit.com/r/science/") == ["reddit.com/r/science", "reddit.com"]
     assert slugify("ESPN.com - NBA") == "espn-com-nba"
+
+    # vtcng provenance: a paper's chip only carries its own section
+    assert paper_section("https://www.vtcng.com/otherpapersbvt/") == "otherpapersbvt"
+    assert paper_section("https://vtdigger.org/") is None
+    # the group-wide ride-along sits at the vtcng root — no section, no guard
+    assert paper_section("https://www.vtcng.com/") is None
+    # a subscription whose <link> is the search endpoint is NOT a paper
+    assert paper_section("https://www.vtcng.com/search/?f=rss&t=article") is None
+    assert section_ok("otherpapersbvt",
+                      "https://www.vtcng.com/otherpapersbvt/news/local_news/x.html")
+    assert not section_ok("otherpapersbvt",
+                          "https://www.vtcng.com/state_and_world/world_news/x.html")
+    assert not section_ok("otherpapersbvt",
+                          "https://www.vtcng.com/thecitizenvt/news/x.html")
+    assert section_ok("otherpapersbvt", "https://example.com/whatever")
 
     lane = pick_fast_lane([
         {"id": "ok", "topic": "local", "feed": "https://sevendaysvt.com/rss",
