@@ -310,6 +310,68 @@ a.mode:hover { color: #fc560a; }
 }
 .since span { flex: none; }
 
+/* the catch-up strip: what arrived since your last visit, and the finite
+   batch it opens — clearing it is the point */
+.catchline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 680px;
+  margin: 14px auto 4px;
+  padding: 9px 12px;
+  border: 1px solid var(--chipline);
+  border-left: 3px solid var(--accent);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--dim);
+}
+.catchline strong { color: var(--fg); }
+.catchline .act { flex: none; }
+.catchline .catchgo { color: var(--accent); border-color: var(--accent-dim); }
+
+.caughtup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  max-width: 680px;
+  margin: 22px auto 8px;
+  padding: 16px 12px;
+  border: 1px dashed var(--accent-dim);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: var(--accent);
+}
+
+/* dealt on the Live board already — marked, not dimmed like read */
+.fi.live-seen .fi-meta::after {
+  content: "seen on Live";
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: var(--faint);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+/* the previous TOP edition folds away under the current one */
+.prev-top { max-width: 680px; margin: 26px auto 0; }
+.prev-top summary {
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--dim);
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+.prev-top summary:hover { color: var(--fg); }
+
 .feed { max-width: 680px; margin: 0 auto; }
 
 .fi { padding: 11px 0 12px; border-bottom: 1px solid var(--line); }

@@ -146,6 +146,25 @@ def fetch_pulse(url=PULSE_URL, timeout=30):
         return json.load(response)
 
 
+TOP_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
+           "pulse-top/data/pulse-top.json")
+
+
+def fetch_previous(url=TOP_URL, timeout=30):
+    """The edition being replaced, so the page can keep showing it —
+    missing a window shouldn't cost the reader the list. One level only
+    (the fetched payload's own `prev` is dropped). Never a hard failure."""
+    try:
+        payload = fetch_pulse(url, timeout)
+        picks = payload.get("picks")
+        generated = payload.get("generated")
+        if isinstance(picks, list) and picks and generated:
+            return {"generated": generated, "picks": picks}
+    except Exception as exc:  # noqa: BLE001 — the branch may not exist yet
+        print(f"curate_top: no previous edition ({exc})", file=sys.stderr)
+    return None
+
+
 # ----------------------------------------------------------------------
 # Candidates — the last 24 hours, newest first, joined to their source
 # ----------------------------------------------------------------------
@@ -376,12 +395,15 @@ def validate_picks(raw, candidates):
     return picks
 
 
-def build_payload(picks, generated):
-    return {
+def build_payload(picks, generated, prev=None):
+    payload = {
         "v": 1,
         "generated": generated.replace(microsecond=0).isoformat(),
         "picks": picks,
     }
+    if prev:
+        payload["prev"] = prev
+    return payload
 
 
 # ----------------------------------------------------------------------
@@ -423,7 +445,7 @@ def run(args):
         print("curate_top: no usable picks came back", file=sys.stderr)
         return
 
-    write_json(args.out, build_payload(picks, utcnow()))
+    write_json(args.out, build_payload(picks, utcnow(), fetch_previous()))
     local = sum(pick["local"] for pick in picks)
     print(f"curate_top: {len(picks)} picks ({local} local) from "
           f"{len(candidates)} candidates -> {args.out}")

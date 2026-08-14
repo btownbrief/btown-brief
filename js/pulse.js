@@ -55,6 +55,7 @@
     shown: FEED_PAGE,
     set: { theme: 'auto', fs: 17, limit: 15, autohide: false, thumbs: true, hidden: {}, ythidden: {}, intent: false, ytview: 'list', ytlocal: false, window: 'all' },
     newCount: 0,            // headlines newer than the last visit, feed view
+    catchup: false,         // finite since-your-last-visit session (not saved)
     read: {},
     intent: {},             // focus-mode passed marks
     saved: [],              // [{k,t,u,s,d,sv}] newest-saved first
@@ -179,6 +180,12 @@
     return Math.round(d / 365) + 'Y';
   }
 
+  function fmt12(d) {
+    var h = d.getHours();
+    return (h % 12 || 12) + ':' + String(d.getMinutes()).padStart(2, '0') +
+      ' ' + (h >= 12 ? 'PM' : 'AM');
+  }
+
   function topicLabel(t) {
     return TOPIC_LABEL[t] || (t.charAt(0).toUpperCase() + t.slice(1));
   }
@@ -198,6 +205,33 @@
   var VISIT_LAST_KEY = 'pulse2-visit-last';
   var VISIT_BASE_KEY = 'pulse2-visit-base';
   var visitBaseline = 0;
+
+  /* headlines the Live board already dealt this device — the catch-up
+     session skips them, and the feed marks them, distinct from "read" */
+  var liveSeen = {};
+
+  function loadLiveSeen() {
+    try {
+      var r = JSON.parse(localStorage.getItem('pulse-live-recap') || 'null');
+      if (Array.isArray(r)) {
+        r.forEach(function (e) { if (e && e.u) liveSeen[keyOf(e.u)] = true; });
+      }
+    } catch (e) {}
+  }
+
+  /* the reader finished (or dismissed) a catch-up batch: the baseline moves
+     to now, on both surfaces — the Live board shares these keys */
+  function markCaughtUp() {
+    var nowS = Math.floor(Date.now() / 1000);
+    visitBaseline = nowS;
+    try {
+      localStorage.setItem(VISIT_BASE_KEY, String(nowS));
+      localStorage.setItem(VISIT_LAST_KEY, String(nowS));
+    } catch (e) {}
+    state.catchup = false;
+    render();
+    window.scrollTo({ top: 0 });
+  }
 
   function trackVisit() {
     try {
@@ -274,6 +308,61 @@
           state.intent[k]) return false;
       return matchesQuery(item, src);
     });
+  }
+
+  /* ---------- the local floor: ALL's Burlington promise ----------
+     Local runs ~70 fresh stories a day against ~1,100 national, so a purely
+     chronological ALL reads like a national wire. The floor is deterministic
+     editing, not ranking: every 5-item block of the first page carries at
+     least one local headline when a fresh-enough one exists. Chronology is
+     preserved inside each stream, the displaced national item is deferred
+     (never dropped), and clicks/saves/popularity play no part. */
+
+  var LOCAL_FLOOR_SPAN = 120;          // the first page
+  var LOCAL_FLOOR_MAX_PULL_S = 24 * 3600;   // never promote stale local
+
+  function isLocalFeedItem(item) {
+    var src = srcMap[item.s];
+    return !!(src && src.local);
+  }
+
+  function floorSegment(seg, limit) {
+    for (var start = 0; start + 5 <= Math.min(limit, seg.length); start += 5) {
+      var hasLocal = false;
+      for (var b = start; b < start + 5; b++) {
+        if (isLocalFeedItem(seg[b])) { hasLocal = true; break; }
+      }
+      if (hasLocal) continue;
+      var anchor = seg[start + 4];
+      var idx = -1;
+      for (var j = start + 5; j < seg.length; j++) {
+        if (!isLocalFeedItem(seg[j])) continue;
+        // the nearest local below — but only if it isn't a day older than
+        // the block it would join; a quiet local stretch stays honest
+        if (anchor.d && seg[j].d &&
+            anchor.d - seg[j].d > LOCAL_FLOOR_MAX_PULL_S) break;
+        idx = j;
+        break;
+      }
+      if (idx === -1) continue;
+      var promoted = seg.splice(idx, 1)[0];
+      seg.splice(start + 4, 0, promoted);
+    }
+    return seg;
+  }
+
+  function blendLocalFloor(list) {
+    // the floor never moves an item across the last-visit divider
+    var div = list.length;
+    if (visitBaseline) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].d && list[i].d <= visitBaseline) { div = i; break; }
+      }
+    }
+    var head = floorSegment(list.slice(0, div), LOCAL_FLOOR_SPAN);
+    var tail = floorSegment(list.slice(div),
+      Math.max(0, LOCAL_FLOOR_SPAN - head.length));
+    return head.concat(tail);
   }
 
   /* ---------- rendering ---------- */
@@ -581,7 +670,8 @@
         '<button class="act" data-act="dig" data-k="' + k + '" title="Vote for a deep-dive on this topic">Dig ↓</button></div>';
     }
     return '<article class="fi' + (src.local ? ' local' : '') + (read ? ' read' : '') +
-      (passed ? ' passed' : '') + (thumb ? ' has-thumb' : '') +
+      (passed ? ' passed' : '') + (liveSeen[k] ? ' live-seen' : '') +
+      (thumb ? ' has-thumb' : '') +
       (item.x ? '' : '" data-k="' + k) + '">' +
       '<div class="fi-main">' + metaHTML(src, item, acts) + headline +
       (disc ? '<div class="fi-disc">' + disc + '</div>' : '') + '</div>' +
@@ -622,15 +712,62 @@
 
     if (state.view === 'feed') {
       var all = filteredItems();
+      state.newCount = visitBaseline
+        ? all.filter(function (i) { return i.d > visitBaseline; }).length : 0;
+      // catch-up only makes sense with a batch to catch up on; search exits it
+      if (state.catchup && (!state.newCount || state.q || isClientTab(state.topic))) {
+        state.catchup = false;
+      }
+      if (state.catchup) {
+        /* the finite batch: arrivals since the baseline, minus headlines the
+           Live board already dealt this device */
+        all = all.filter(function (i) {
+          return i.d > visitBaseline && !liveSeen[keyOf(i.u)];
+        });
+      }
+      if (state.topic === 'all' && !state.q) all = blendLocalFloor(all);
       var slice = all.slice(0, state.shown);
       /* the earned nudge: ~240 headlines deep (after the 2nd MORE click) */
       var nudge = (state.shown >= 3 * FEED_PAGE && !state.q && slice.length) ? nudgeHTML() : '';
-      state.newCount = visitBaseline
-        ? all.filter(function (i) { return i.d > visitBaseline; }).length : 0;
+
+      /* the catch-up strip: what arrived since the last visit, and the way
+         into (or out of) the finite batch */
+      var catchLine = '';
+      if (state.newCount > 0 && !state.q && !isClientTab(state.topic)) {
+        var sinceLbl = visitBaseline ? fmt12(new Date(visitBaseline * 1000)) : '';
+        if (state.catchup) {
+          catchLine = '<div class="catchline"><span><strong>' +
+            all.length.toLocaleString('en-US') + '</strong> to catch up on since ' +
+            sinceLbl + (state.newCount > all.length
+              ? ' · ' + (state.newCount - all.length) + ' already seen on Live' : '') +
+            '</span><button class="act" data-catchup="off">Full wire ↩</button></div>';
+        } else {
+          var nLocal = 0, nReddit = 0;
+          all.forEach(function (i) {
+            if (!(i.d > visitBaseline)) return;
+            var s = srcMap[i.s];
+            if (s && s.local) nLocal++;
+            else if (s && isReddit(s)) nReddit++;
+          });
+          catchLine = '<div class="catchline"><span>Since ' + sinceLbl + ': <strong>' +
+            state.newCount.toLocaleString('en-US') + '</strong> new · ' + nLocal +
+            ' local · ' + nReddit + ' Reddit · ' +
+            Math.max(0, state.newCount - nLocal - nReddit) + ' elsewhere</span>' +
+            '<button class="act catchgo" data-catchup="on">Catch up ↓</button></div>';
+        }
+      }
+
+      /* the batch ends with a real finish line — reaching it is the point */
+      var caught = '';
+      if (state.catchup && all.length <= state.shown) {
+        caught = '<div class="caughtup"><span>You\'re caught up ✓</span>' +
+          '<button class="act" data-caughtup>Mark it — back to the wire</button></div>';
+      }
+
       /* the divider sits between "since your last visit" and everything
          older — only when the boundary actually falls inside the slice */
       var rows = '';
-      var divided = !(state.newCount > 0);
+      var divided = !(state.newCount > 0) || state.catchup;
       slice.forEach(function (item) {
         if (!divided && item.d && item.d <= visitBaseline) {
           rows += '<div class="since"><span>new since your last visit ↑</span></div>';
@@ -639,8 +776,9 @@
         rows += feedItemHTML(item);
       });
       body.innerHTML = '<div class="feed">' +
-        (slice.length ? hintHTML() + rows + nudge :
-          '<p class="empty">No headlines match.</p>') + '</div>';
+        (slice.length ? hintHTML() + catchLine + rows + caught + nudge :
+          (state.catchup ? catchLine + caught :
+            '<p class="empty">No headlines match.</p>')) + '</div>';
       if (all.length > slice.length) {
         more.hidden = false;
         more.textContent = 'MORE HEADLINES ↓ (' + (all.length - slice.length) + ' MORE)';
@@ -799,21 +937,71 @@
     });
   }
 
+  /* TOP is an appointment, not a stream: three editions a day on a fixed
+     clock (the curate workflow's cron — ~6:35a / 11:35a / 4:35p Eastern).
+     Naming the edition and promising the next one gives readers a schedule
+     without a single notification. */
+  var TOP_SLOTS_UTC = [{ h: 10, m: 35 }, { h: 15, m: 35 }, { h: 20, m: 35 }];
+
+  function topEditionName(ms) {
+    var h = new Date(ms).getHours();
+    return h < 9 ? 'Morning' : h < 14 ? 'Midday' : 'Evening';
+  }
+
+  function nextTopTime() {
+    var now = Date.now();
+    for (var d = 0; d < 2; d++) {
+      for (var i = 0; i < TOP_SLOTS_UTC.length; i++) {
+        var t = new Date();
+        t.setUTCDate(t.getUTCDate() + d);
+        t.setUTCHours(TOP_SLOTS_UTC[i].h, TOP_SLOTS_UTC[i].m, 0, 0);
+        if (t.getTime() > now + 5 * 60000) return t;
+      }
+    }
+    return null;
+  }
+
+  function topRowsOf(picks) {
+    return (picks || []).filter(function (p) { return p && p.t && p.u && clientQ(p.t); })
+      .map(function (p) {
+        return liteItemHTML({ k: keyOf(p.u), t: p.t, u: p.u, s: p.s, short: p.short,
+                              local: p.local, d: p.d, why: p.why });
+      });
+  }
+
   function renderTop(body) {
     if (!topFresh()) {
       body.innerHTML = '<p class="empty">The Top list is being picked. Back soon.</p>';
       renderCount(0, 0);
       return;
     }
-    var rows = state.top.picks.filter(function (p) { return p && p.t && p.u && clientQ(p.t); })
-      .map(function (p) {
-        return liteItemHTML({ k: keyOf(p.u), t: p.t, u: p.u, s: p.s, short: p.short,
-                              local: p.local, d: p.d, why: p.why });
-      });
+    var rows = topRowsOf(state.top.picks);
+    var genMs = Date.parse(state.top.generated);
+    var name = isFinite(genMs) ? topEditionName(genMs) : '';
+    var next = nextTopTime();
+    var head = (name ? 'The ' + name + ' ' + rows.length : rows.length + ' headlines') +
+      ' · the ones worth your time' +
+      (isFinite(genMs) ? ' · picked at ' + fmt12(new Date(genMs)) : '') +
+      (next ? ' · next edition ~' + fmt12(next) : '') +
+      ' · headlines verbatim, never rewritten';
+
+    /* the previous edition rides along so missing a window costs nothing */
+    var prevHtml = '';
+    var prev = state.top.prev;
+    if (prev && Array.isArray(prev.picks)) {
+      var pMs = Date.parse(prev.generated);
+      var pRows = topRowsOf(prev.picks);
+      if (pRows.length && isFinite(pMs)) {
+        prevHtml = '<details class="prev-top"><summary>Earlier — The ' +
+          topEditionName(pMs) + ' ' + pRows.length + ' · picked at ' +
+          fmt12(new Date(pMs)) + '</summary><div class="feed">' +
+          pRows.join('') + '</div></details>';
+      }
+    }
+
     body.innerHTML =
-      '<p class="empty" style="margin:18px auto 0">The 25 headlines worth your time · ' +
-      'refreshed through the day · headlines verbatim, never rewritten</p>' +
-      '<div class="feed">' + rows.join('') + '</div>';
+      '<p class="empty" style="margin:18px auto 0">' + head + '</p>' +
+      '<div class="feed">' + rows.join('') + '</div>' + prevHtml;
     renderCount(rows.length, 0);
   }
 
@@ -1870,7 +2058,7 @@
   function bind() {
     document.addEventListener('click', function (ev) {
       var el = ev.target.closest('[data-topic],[data-source],[data-togsrc],[data-togyt],[data-audio],' +
-        '[data-act],[data-unsave],[data-nudge-dismiss],[data-hint-dismiss],[data-ytview],[data-ytlocal],[data-ytsort],[data-ytshuffle],a[data-k]');
+        '[data-act],[data-unsave],[data-nudge-dismiss],[data-hint-dismiss],[data-ytview],[data-ytlocal],[data-ytsort],[data-ytshuffle],[data-catchup],[data-caughtup],a[data-k]');
       if (!el) return;
       if (el.dataset.topic) { setTopic(el.dataset.topic); return; }
       if (el.hasAttribute('data-ytview')) {
@@ -1883,6 +2071,14 @@
         saveSettings(); renderBody();
         return;
       }
+      if (el.hasAttribute('data-catchup')) {
+        state.catchup = el.getAttribute('data-catchup') === 'on';
+        state.shown = FEED_PAGE;
+        renderBody();
+        window.scrollTo({ top: 0 });
+        return;
+      }
+      if (el.hasAttribute('data-caughtup')) { markCaughtUp(); return; }
       if (el.hasAttribute('data-ytsort')) {
         ytSort = el.getAttribute('data-ytsort');
         renderBody();
@@ -2081,6 +2277,7 @@
   setInterval(checkFresh, 10 * 60 * 1000);
 
   loadStored();
+  loadLiveSeen();
   trackVisit();
   readHash();
   applyFont();
