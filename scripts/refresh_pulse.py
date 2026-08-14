@@ -125,17 +125,24 @@ EXTRA_LOCAL_TAGS = [
 ]
 
 # Feeds that ride along OUTSIDE Inoreader entirely: vtcng's bot protection
-# (2026-08) throws a security check at Inoreader's crawler, so The Other
-# Paper can't be (re)subscribed there — the fast lane fetches its section
-# feed directly every run instead. Each entry: (title, feed URL, site URL).
-# Same self-retirement as the tag ride-alongs: if the local folder ever
-# carries the site again, the entry steps aside on its own. Titles must
-# stay stable — the source id is the title slug.
+# (2026-08) throws a security check at Inoreader's crawler, so no vtcng
+# feed can be (re)subscribed there — the fast lane fetches these directly
+# every run instead. Each entry: (title, feed URL, site URL). Same
+# self-retirement as the tag ride-alongs: if the local folder ever carries
+# the site again, the entry steps aside on its own. Titles must stay
+# stable — the source id is the title slug.
+#
+# The VTCNG feed is the one that lived in Inoreader as "The Other Paper"
+# until 2026-08-14: its &sites= param never filtered, so it is really the
+# site-wide newest-25 across all of the group's Vermont weeklies (plus
+# their shared syndicated wire). Stephen wants that mix — it just carries
+# the group's own name now instead of one paper's. Site is the vtcng root,
+# so the per-paper section guard deliberately does NOT apply.
 EXTRA_LOCAL_FEEDS = [
-    ("The Other Paper (South Burlington)",
-     "https://www.vtcng.com/search/?f=rss&t=article&c%5B%5D=otherpapersbvt*"
-     "&l=25&s=start_time&sd=desc&app=editorial",
-     "https://www.vtcng.com/otherpapersbvt/"),
+    ("Vermont Community Newspaper Group",
+     "https://www.vtcng.com/search/?f=rss&t=article&l=25&s=start_time"
+     "&sd=desc&app=editorial&sites=otherpapersbvt",
+     "https://www.vtcng.com/"),
 ]
 
 ITEM_CAP = 20          # headlines kept per source
@@ -169,6 +176,7 @@ SHORT_NAMES = {
     "burlington-vt-news-flash-police-department": "BTV Police",
     "cnet-news-com": "CNET",
     "engadget-full-rss-feed": "Engadget",
+    "vermont-community-newspaper-group": "VT Community News",
     "espn-com-nba": "ESPN NBA",
     "espn-com-nfl": "ESPN NFL",
     "fortune-fortune": "Fortune",
@@ -1071,6 +1079,8 @@ def selftest():
     # vtcng provenance: a paper's chip only carries its own section
     assert paper_section("https://www.vtcng.com/otherpapersbvt/") == "otherpapersbvt"
     assert paper_section("https://vtdigger.org/") is None
+    # the group-wide ride-along sits at the vtcng root — no section, no guard
+    assert paper_section("https://www.vtcng.com/") is None
     assert section_ok("otherpapersbvt",
                       "https://www.vtcng.com/otherpapersbvt/news/local_news/x.html")
     assert not section_ok("otherpapersbvt",
