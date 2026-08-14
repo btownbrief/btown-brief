@@ -342,6 +342,27 @@ def slugify(value):
     return slug or "source"
 
 
+# vtcng.com hosts a dozen Vermont weeklies behind one shared TownNews site,
+# and its search-as-RSS feeds happily leak the sibling papers AND the
+# always-publishing statewide wire (/state_and_world/ syndication). A paper's
+# chip must only ever carry that paper's own stories — the 2026-08 failure
+# was "The Other Paper" showing Texas cartel-drone coverage because the
+# subscribed feed's &sites= filter silently doesn't filter.
+
+def paper_section(site):
+    """https://www.vtcng.com/otherpapersbvt/ -> 'otherpapersbvt' (else None)."""
+    match = re.search(r"vtcng\.com/([a-z0-9_-]+)", (site or "").lower())
+    return match.group(1) if match else None
+
+
+def section_ok(section, url):
+    """A vtcng URL must live under the paper's own section; off-host passes."""
+    low = (url or "").lower()
+    if "vtcng.com" not in low:
+        return True
+    return f"vtcng.com/{section}/" in low
+
+
 def load_json(path, default):
     try:
         with open(path, encoding="utf-8") as src:
@@ -829,12 +850,21 @@ def run(args):
     previous = load_json(args.store or args.out, {})
     newsletter_ids = {source["id"] for source in sources
                       if source["topic"] == "newsletters"}
+    paper_sections = {}
+    for source in sources:
+        section = paper_section(source["site"])
+        if section:
+            paper_sections[source["id"]] = section
     prev_by_source = {}
     for item in previous.get("items", []):
         # the noise filter guards ingestion; this guards the rolling store,
         # so widening the pattern also scrubs junk that already got in
         if item.get("s") in newsletter_ids and \
                 NEWSLETTER_NOISE_RE.search(item.get("t", "")):
+            continue
+        # same retroactive treatment for wrong-section vtcng stories
+        section = paper_sections.get(item.get("s"))
+        if section and not section_ok(section, item.get("u", "")):
             continue
         prev_by_source.setdefault(item.get("s"), []).append(
             {k: item[k] for k in ("t", "u", "d", "a", "i", "o", "du", "dn",
@@ -873,11 +903,19 @@ def run(args):
     per_source, added_total = {}, 0
     for source in sources:
         prev_items = prev_by_source.get(source["id"], [])
+        fresh_items = fresh_by_source.get(source["id"], [])
+        # vtcng section guard sits HERE, the one chokepoint both the stream
+        # loop and fast_lane() flow through — guarding only attribution
+        # missed the fast lane's direct fetches
+        section = paper_sections.get(source["id"])
+        if section:
+            fresh_items = [item for item in fresh_items
+                           if section_ok(section, item["url"])]
         # podcast shows get a deeper store — a weekly show at the news cap
         # holds five months; the pods tab should read like a back-catalog
         is_pod = source["podcast"] or any(item.get("a") for item in prev_items)
         merged, added = merge_source(
-            prev_items, fresh_by_source.get(source["id"], []), now_ts,
+            prev_items, fresh_items, now_ts,
             cap=POD_ITEM_CAP if is_pod else ITEM_CAP)
         per_source[source["id"]] = merged
         added_total += added
@@ -1009,6 +1047,17 @@ def selftest():
     assert norm_site("https://www.Example.com/") == "example.com"
     assert topic_keys("https://www.reddit.com/r/science/") == ["reddit.com/r/science", "reddit.com"]
     assert slugify("ESPN.com - NBA") == "espn-com-nba"
+
+    # vtcng provenance: a paper's chip only carries its own section
+    assert paper_section("https://www.vtcng.com/otherpapersbvt/") == "otherpapersbvt"
+    assert paper_section("https://vtdigger.org/") is None
+    assert section_ok("otherpapersbvt",
+                      "https://www.vtcng.com/otherpapersbvt/news/local_news/x.html")
+    assert not section_ok("otherpapersbvt",
+                          "https://www.vtcng.com/state_and_world/world_news/x.html")
+    assert not section_ok("otherpapersbvt",
+                          "https://www.vtcng.com/thecitizenvt/news/x.html")
+    assert section_ok("otherpapersbvt", "https://example.com/whatever")
 
     lane = pick_fast_lane([
         {"id": "ok", "topic": "local", "feed": "https://sevendaysvt.com/rss",
