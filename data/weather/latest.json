@@ -1,42 +1,32 @@
 {
- "updated": "2026-08-15T21:57:47+00:00",
+ "updated": "2026-08-15T22:59:41+00:00",
  "sections_updated": {
-  "now": "2026-08-15T21:57:47+00:00",
-  "forecast": "2026-08-15T21:57:47+00:00",
-  "hourly": "2026-08-15T21:57:47+00:00",
-  "alerts": "2026-08-15T21:57:47+00:00",
-  "afd": "2026-08-15T21:57:47+00:00",
-  "lake_forecast": "2026-08-15T21:57:47+00:00",
-  "lake_gage": "2026-08-15T21:57:47+00:00",
-  "air": "2026-08-15T21:57:47+00:00",
-  "sun": "2026-08-15T21:57:47+00:00",
-  "models": "2026-08-15T21:57:47+00:00"
+  "now": "2026-08-15T22:59:41+00:00",
+  "forecast": "2026-08-15T22:59:41+00:00",
+  "hourly": "2026-08-15T22:59:41+00:00",
+  "alerts": "2026-08-15T22:59:41+00:00",
+  "afd": "2026-08-15T22:59:41+00:00",
+  "lake_forecast": "2026-08-15T22:59:41+00:00",
+  "lake_gage": "2026-08-15T22:59:41+00:00",
+  "air": "2026-08-15T22:59:41+00:00",
+  "sun": "2026-08-15T22:59:41+00:00",
+  "models": "2026-08-15T22:59:41+00:00"
  },
  "now": {
-  "observed_at": "2026-08-15T21:35:00+00:00",
+  "observed_at": "2026-08-15T22:35:00+00:00",
   "station": "KBTV",
   "description": "Mostly Clear",
-  "temp_f": 72,
-  "feels_like_f": 71,
-  "humidity": 43,
+  "temp_f": 70,
+  "feels_like_f": 70,
+  "humidity": 46,
   "dewpoint_f": 48,
   "wind_mph": 7,
   "wind_gust_mph": null,
-  "wind_dir": "N"
+  "wind_dir": "NNE"
  },
  "forecast": {
   "updated": "2026-08-15T18:15:33+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-08-15T17:00:00-04:00",
-    "is_day": true,
-    "temp_f": 76,
-    "pop": 0,
-    "wind": "N 10 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 76. North wind around 10 mph."
-   },
    {
     "name": "Tonight",
     "start": "2026-08-15T18:00:00-04:00",
@@ -166,23 +156,22 @@
     "wind": "E 3 to 7 mph",
     "short": "Partly Cloudy",
     "detailed": "Partly cloudy, with a low around 57. East wind 3 to 7 mph."
+   },
+   {
+    "name": "Saturday",
+    "start": "2026-08-22T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 80,
+    "pop": 15,
+    "wind": "S 3 to 7 mph",
+    "short": "Mostly Sunny then Slight Chance Rain Showers",
+    "detailed": "A slight chance of rain showers after 2pm. Mostly sunny, with a high near 80. South wind 3 to 7 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-08-15T18:15:33+00:00",
   "hours": [
-   {
-    "t": "2026-08-15T17:00:00-04:00",
-    "temp_f": 74,
-    "feels_f": 74,
-    "pop": 0,
-    "humidity": 43,
-    "wind_mph": 10,
-    "wind_dir": "N",
-    "sky": 29,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-08-15T18:00:00-04:00",
     "temp_f": 72,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 91,
     "short": "Rain Showers"
+   },
+   {
+    "t": "2026-08-17T05:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 71,
+    "humidity": 97,
+    "wind_mph": 14,
+    "wind_dir": "S",
+    "sky": 94,
+    "short": "Rain Showers Likely"
    }
   ]
  },
@@ -852,17 +852,17 @@
  },
  "lake_gage": {
   "water_temp_f": 75,
-  "water_temp_at": "2026-08-15T16:00:00.000-04:00",
+  "water_temp_at": "2026-08-15T18:00:00.000-04:00",
   "level_ft": 95.14,
-  "level_at": "2026-08-15T16:00:00.000-04:00",
+  "level_at": "2026-08-15T18:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 24,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/15/26 17:00",
+  "observed": "08/15/26 18:00",
   "discussion": "Expect generally good air quality across Vermont on Saturday, August 15th."
  },
  "sun": {
@@ -901,7 +901,7 @@
      "ICON": 76
     },
     "pop_max": {
-     "GFS": 44,
+     "GFS": 30,
      "Euro": 59,
      "ICON": 40
     },
