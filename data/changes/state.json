@@ -1,6 +1,16 @@
 {
  "nws-weather": {
-  "alerts": [],
+  "alerts": [
+   {
+    "id": "urn:oid:2.49.0.1.840.0.393d5722ae00b694bc418e3f1342b2a4d06af42d.001.1",
+    "event": "Special Weather Statement",
+    "headline": "Special Weather Statement issued August 15 at 4:19AM EDT by NWS Burlington VT",
+    "severity": "Moderate",
+    "onset": "2026-08-15T04:19:00-04:00",
+    "ends": "2026-08-15T08:30:00-04:00",
+    "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
+   }
+  ],
   "forecast_flag": {
    "day": "2026-08-14",
    "text": "This Afternoon: A chance of showers and thunderstorms"
@@ -894,18 +904,18 @@
       "summary": "Our annual Eye on the Sky Stargazing Party, with Jane Lindholm and meteorologist Mark Breen, took place this week. Take this recording outside at night and look up as you listen, to see what you can discover in the sky above you."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
-      "title": "Washington Central voters approve school closure article",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
-      "ts": "2026-08-14T09:00:00+00:00",
-      "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
       "title": "Chefs and servers on the Champlain Valley Dinner Train keep service on track",
       "link": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
       "ts": "2026-08-14T09:00:00+00:00",
       "summary": "As passengers enjoy scenic views, the kitchen staff navigate tight quarters and a bumpy ride to serve up gourmet meals."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
+      "title": "Washington Central voters approve school closure article",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
+      "ts": "2026-08-14T09:00:00+00:00",
+      "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
      },
      {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-08-13/passport-to-the-land-of-creemees-vermont-editions-2026-ice-cream-show",
