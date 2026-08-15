@@ -134,11 +134,22 @@
     return h >>> 0;
   }
 
+  /* Burlington's clock, not the device's: a visiting phone still set to
+     another timezone must build the same decks as everyone else's */
+  function nyDateStr() {
+    return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' })
+      .format(new Date());                       // "2026-08-15"
+  }
+
+  function nyHour(dt) {
+    return +new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'America/New_York', hour: '2-digit', hourCycle: 'h23',
+    }).format(dt);
+  }
+
   /* the shared day seed: same for every phone at the same table */
   function daySeed() {
-    var d = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' })
-      .format(new Date());                       // "2026-08-15"
-    return hashStr('table-talk-' + d);
+    return hashStr('table-talk-' + nyDateStr());
   }
 
   function seededShuffle(list, rng) {
@@ -156,16 +167,21 @@
      on two phones building byte-identical decks. */
 
   function firstSentence(text, max) {
-    var s = String(text || '').split(/(?<=[.!?])\s/)[0] || '';
+    // no lookbehind — it's a parse-time SyntaxError on Safari before 16.4
+    var m = String(text || '').match(/^.*?[.!?](?=\s|$)/);
+    var s = m ? m[0] : String(text || '');
     if (s.length > max) s = s.slice(0, max - 3).replace(/\s+\S*$/, '') + '…';
     return s;
   }
 
   function fmt12(dt) {
-    var h = dt.getHours(), m = dt.getMinutes();
-    var ap = h >= 12 ? 'PM' : 'AM';
-    h = h % 12 || 12;
-    return h + (m ? ':' + (m < 10 ? '0' : '') + m : '') + ' ' + ap;
+    var p = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit',
+      hour12: true,
+    }).formatToParts(dt);
+    var g = {};
+    p.forEach(function (x) { g[x.type] = x.value; });
+    return g.hour + (g.minute === '00' ? '' : ':' + g.minute) + ' ' + g.dayPeriod;
   }
 
   function buildDecks() {
@@ -203,14 +219,14 @@
     });
 
     /* events: counts for the next few days, named picks for today+tomorrow,
-       and his week-blurb sentences */
-    var dayStart = new Date(); dayStart.setHours(0, 0, 0, 0);
-    var todayMs = dayStart.getTime();
+       and his week-blurb sentences. "Today" is Burlington's today — parse
+       both sides at UTC noon so device timezone can't shift the calendar */
+    var todayNoon = Date.parse(nyDateStr() + 'T12:00:00Z');
     var dayDiff = function (dateStr) {
       if (!dateStr) return null;
-      var d = Date.parse(dateStr + 'T12:00:00');
+      var d = Date.parse(dateStr + 'T12:00:00Z');
       if (isNaN(d)) return null;
-      return Math.round((d - (todayMs + 12 * 3600 * 1000)) / 86400000);
+      return Math.round((d - todayNoon) / 86400000);
     };
     var rail = raw.rail;
     if (rail && Array.isArray(rail.days)) {
@@ -239,7 +255,7 @@
           if (start && String(p.s).indexOf('T') === -1) start = null;
           if (diff === 0 && start && Date.now() - start.getTime() > 2 * 3600 * 1000) return;
           var when = diff === 1 ? 'Tomorrow'
-            : (start && start.getHours() >= 17) ? 'Tonight' : 'Today';
+            : (start && nyHour(start) >= 17) ? 'Tonight' : 'Today';
           decks.event.push({
             id: 'evp:' + (day.date || '') + ':' + j, kind: 'event',
             text: p.t + (p.v && p.v.toLowerCase() !== p.t.toLowerCase()
@@ -303,7 +319,7 @@
     }
 
     /* in-season hobbies, pitched as a question the table can pick up */
-    var month = new Date().getMonth() + 1;
+    var month = +nyDateStr().slice(5, 7);
     var hobbies = (raw.hobbies && (raw.hobbies.hobbies || raw.hobbies.entries)) || [];
     hobbies.forEach(function (h) {
       if (!h || !h.name) return;
@@ -341,8 +357,6 @@
       }
     }
     if (read && Array.isArray(read.week)) {
-      var todayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' })
-        .format(new Date());
       read.week.forEach(function (w) {
         if (!w || !w.blurb || !w.date) return;
         var diff = dayDiff(w.date);
@@ -474,9 +488,17 @@
     return deck[((counts[chosen.key] || 1) - 1) % deck.length];
   }
 
+  /* NY midnight sits a whole number of 150s slots from the epoch (UTC
+     offsets of -4/-5h and the 86400s day are all multiples of 150), so the
+     epoch clock flips at exactly the same instants as the day-local slot —
+     and unlike the day-local number it never repeats, so it's the identity
+     we track and the millisecond deadline we schedule against. */
+  function absSlot() {
+    return Math.floor(Date.now() / (SYNC_SLOT_S * 1000));
+  }
+
   function syncSlotProgress() {
-    var s = nySecondsSinceMidnight();
-    return (s % SYNC_SLOT_S) / SYNC_SLOT_S;
+    return (Date.now() % (SYNC_SLOT_S * 1000)) / (SYNC_SLOT_S * 1000);
   }
 
   /* ---------- rendering ---------- */
@@ -546,7 +568,7 @@
     var card;
     if (state.sync) {
       card = pickSync();
-      state.syncSlot = Math.floor(nySecondsSinceMidnight() / SYNC_SLOT_S);
+      state.syncSlot = absSlot();
     } else if (fromHistory && state.histAt < state.history.length - 1) {
       state.histAt++;
       card = state.history[state.histAt];
@@ -559,6 +581,7 @@
       }
     }
     if (!card) {
+      state.current = null;      // stranded — a deck toggle or refresh restarts
       $('big').textContent = 'NOTHING TO DEAL — TURN A DECK BACK ON BELOW';
       return;
     }
@@ -572,7 +595,7 @@
     if (state.held) return;
     var ms;
     if (state.sync) {
-      ms = (SYNC_SLOT_S - (nySecondsSinceMidnight() % SYNC_SLOT_S)) * 1000 + 150;
+      ms = SYNC_SLOT_S * 1000 - (Date.now() % (SYNC_SLOT_S * 1000)) + 50;
     } else {
       ms = Math.max(500, cardSeconds(state.current) * 1000 -
                     (Date.now() - state.shownAt));
@@ -596,14 +619,18 @@
     el.classList.toggle('held', held);
     if (held) {
       clearTimeout(state.timer);
-      $('fuse').style.transition = 'none';
+      /* freeze the fuse where it is — killing the transition alone would
+         let the pending scaleX(0) target land instantly */
+      var fuse = $('fuse');
+      var tf = getComputedStyle(fuse).transform;
+      fuse.style.transition = 'none';
+      fuse.style.transform = tf === 'none' ? 'scaleX(1)' : tf;
       /* a held card releases itself after 10 minutes — a table that
          wandered off shouldn't strand the board till someone notices */
       state.holdTimer = setTimeout(function () { setHeld(false); }, 10 * 60 * 1000);
     } else {
       state.shownAt = Date.now();     // the clock restarts on release
-      if (state.sync && state.syncSlot !==
-          Math.floor(nySecondsSinceMidnight() / SYNC_SLOT_S)) {
+      if (state.sync && state.syncSlot !== absSlot()) {
         showNext();                   // rejoin the table's slot
         return;
       }
@@ -690,6 +717,7 @@
         state.enabled[c.key] = !state.enabled[c.key];
         b.setAttribute('aria-pressed', state.enabled[c.key] ? 'true' : 'false');
         saveSet();
+        if (!state.current) showNext();   // un-strand an empty board
       });
       deckRow.appendChild(b);
     });
@@ -752,7 +780,7 @@
       grabWakeLock();
       if (!state.current) return;
       if (state.sync) {
-        if (state.syncSlot !== Math.floor(nySecondsSinceMidnight() / SYNC_SLOT_S)) {
+        if (state.syncSlot !== absSlot()) {
           setHeld(false);
           showNext();
         } else { startFuse(); armFlip(); }
@@ -825,7 +853,14 @@
         document.fonts.ready.then(kickoff);
       } else kickoff();
     });
-    setInterval(function () { loadAll(false); }, REFRESH_MS);
+    setInterval(function () {
+      loadAll(false).then(function () {
+        // a board that booted with no signal recovers on the next good fetch
+        if (state.current) return;
+        var any = CATS.some(function (c) { return (state.decks[c.key] || []).length; });
+        if (any) { if (state.sync) setSync(true); else showNext(); }
+      });
+    }, REFRESH_MS);
   }
 
   start();

@@ -2,124 +2,701 @@
   "_comment": "Table Talk deck — prompts written for strangers at a coffee meetup, held to stay-awhile/QUESTIONS.md doctrine. Kinds: ice (one person answers), room (the whole table plays), fight (friendly local superlative debate), either (quick this-or-that). Depth: light or warm only — deep water belongs to Stay Awhile, not a first coffee. Ids are tt### and never reused.",
   "updated": "2026-08-15",
   "prompts": [
-    { "id": "tt001", "q": "What brought you to Burlington — and what made you stay?", "kind": "ice", "d": "warm" },
-    { "id": "tt002", "q": "What's your coffee order, and how long has it been the same?", "kind": "ice", "d": "light" },
-    { "id": "tt003", "q": "What's your current obsession — the thing you'd talk about for an hour if someone let you?", "kind": "ice", "d": "light" },
-    { "id": "tt004", "q": "What's the best thing you ate this week?", "kind": "ice", "d": "light" },
-    { "id": "tt005", "q": "What are you weirdly good at?", "kind": "ice", "d": "light" },
-    { "id": "tt006", "q": "What's a small purchase — under twenty bucks — that improved your life?", "kind": "ice", "d": "light" },
-    { "id": "tt007", "q": "What's a skill you picked up as an adult?", "kind": "ice", "d": "warm" },
-    { "id": "tt008", "q": "What's the last thing you did that felt like a vacation, even for an hour?", "kind": "ice", "d": "light" },
-    { "id": "tt009", "q": "What's your walking-around neighborhood, and what's its best block?", "kind": "ice", "d": "light" },
-    { "id": "tt010", "q": "What do people always get wrong about your job?", "kind": "ice", "d": "warm" },
-    { "id": "tt011", "q": "What's the last thing you changed your mind about?", "kind": "ice", "d": "warm" },
-    { "id": "tt012", "q": "What's a place in Vermont you recommend to everyone?", "kind": "ice", "d": "light" },
-    { "id": "tt013", "q": "What's your rainy-day routine?", "kind": "ice", "d": "light" },
-    { "id": "tt014", "q": "What's a book, show, or album you've gone back to more than twice?", "kind": "ice", "d": "light" },
-    { "id": "tt015", "q": "What was your first job, and what did it teach you?", "kind": "ice", "d": "warm" },
-    { "id": "tt016", "q": "What are you looking forward to in the next month?", "kind": "ice", "d": "light" },
-    { "id": "tt017", "q": "If tomorrow were a free Saturday with zero obligations, what would it look like?", "kind": "ice", "d": "light" },
-    { "id": "tt018", "q": "What's the best live show you've seen in Vermont?", "kind": "ice", "d": "light" },
-    { "id": "tt019", "q": "What's a food opinion you'll defend at this table?", "kind": "ice", "d": "light" },
-    { "id": "tt020", "q": "What hobby have you always meant to start?", "kind": "ice", "d": "light" },
-    { "id": "tt021", "q": "What's your favorite season here — and what's the first thing you do when it arrives?", "kind": "ice", "d": "light" },
-    { "id": "tt022", "q": "What's a tiny daily ritual you'd hate to give up?", "kind": "ice", "d": "light" },
-    { "id": "tt023", "q": "Where do you take out-of-town guests first?", "kind": "ice", "d": "light" },
-    { "id": "tt024", "q": "What's the farthest from home you've ever been?", "kind": "ice", "d": "light" },
-    { "id": "tt025", "q": "What's something you made recently — food, art, a spreadsheet, anything?", "kind": "ice", "d": "light" },
-    { "id": "tt026", "q": "What's the best advice a coworker ever gave you?", "kind": "ice", "d": "warm" },
-    { "id": "tt027", "q": "What's the most-used app on your phone that isn't texts or email?", "kind": "ice", "d": "light" },
-    { "id": "tt028", "q": "What would your karaoke song be?", "kind": "ice", "d": "light" },
-    { "id": "tt029", "q": "What's a smell that takes you straight back somewhere?", "kind": "ice", "d": "warm" },
-    { "id": "tt030", "q": "What's the best meal you've had in Burlington this year?", "kind": "ice", "d": "light" },
-    { "id": "tt031", "q": "Winter person or summer person — and what's your evidence?", "kind": "ice", "d": "light" },
-    { "id": "tt032", "q": "What's something you've kept since childhood?", "kind": "ice", "d": "warm" },
-    { "id": "tt033", "q": "What class would you take just for fun?", "kind": "ice", "d": "light" },
-    { "id": "tt034", "q": "What's the last thing you stopped to take a picture of?", "kind": "ice", "d": "light" },
-    { "id": "tt035", "q": "What do you listen to on your commute?", "kind": "ice", "d": "light" },
-    { "id": "tt036", "q": "If you could master one dish, what would it be?", "kind": "ice", "d": "light" },
-    { "id": "tt037", "q": "What's the most Vermont thing you've done this month?", "kind": "ice", "d": "light" },
-    { "id": "tt038", "q": "What's something you were into before it was cool — or long after?", "kind": "ice", "d": "light" },
-    { "id": "tt039", "q": "What's a question you love being asked?", "kind": "ice", "d": "warm" },
-    { "id": "tt040", "q": "What's your favorite spot within a ten-minute walk of this chair?", "kind": "ice", "d": "light" },
-    { "id": "tt041", "q": "What's been the best part of your week so far?", "kind": "ice", "d": "light" },
-    { "id": "tt042", "q": "What job would you try for exactly one year?", "kind": "ice", "d": "light" },
-    { "id": "tt043", "q": "What are you reading right now — or what's been open in your tabs all week?", "kind": "ice", "d": "light" },
-    { "id": "tt044", "q": "What's a compliment you still remember?", "kind": "ice", "d": "warm" },
-    { "id": "tt045", "q": "What's the strangest thing in your fridge right now?", "kind": "ice", "d": "light" },
-    { "id": "tt046", "q": "What would you do with a free extra hour every day?", "kind": "ice", "d": "light" },
-    { "id": "tt047", "q": "What's a small act of kindness you saw recently?", "kind": "ice", "d": "warm" },
-    { "id": "tt048", "q": "What's the last thing that made you laugh out loud?", "kind": "ice", "d": "light" },
-    { "id": "tt049", "q": "Where in Burlington do you go to think?", "kind": "ice", "d": "warm" },
-    { "id": "tt050", "q": "What piece of local knowledge took you way too long to learn?", "kind": "ice", "d": "light" },
-    { "id": "tt051", "q": "What's your bad-weather comfort movie?", "kind": "ice", "d": "light" },
-    { "id": "tt052", "q": "What's new in your life this month — big or small?", "kind": "ice", "d": "light" },
-    { "id": "tt053", "q": "What's the best free thing to do in this town?", "kind": "ice", "d": "light" },
-    { "id": "tt054", "q": "What tool or gadget would you evangelize for?", "kind": "ice", "d": "light" },
-    { "id": "tt055", "q": "Winter driving: dread, pride, or denial?", "kind": "ice", "d": "light" },
-    { "id": "tt056", "q": "What's your signature dish — and where'd it come from?", "kind": "ice", "d": "light" },
-    { "id": "tt057", "q": "What's the best decision you've made this year?", "kind": "ice", "d": "warm" },
-    { "id": "tt058", "q": "What's a place you've never been that's been on the list forever?", "kind": "ice", "d": "light" },
-    { "id": "tt059", "q": "Who's the most interesting stranger you've talked to lately?", "kind": "ice", "d": "light" },
-    { "id": "tt060", "q": "What's a habit you picked up from someone else and kept?", "kind": "ice", "d": "warm" },
-    { "id": "tt061", "q": "What did a past version of you spend way too much time on — and was it worth it?", "kind": "ice", "d": "warm" },
-    { "id": "tt062", "q": "What's the best thing you've found at a Vermont thrift store, yard sale, or free pile?", "kind": "ice", "d": "light" },
-
-    { "id": "tt070", "q": "Who at this table would last longest in the woods?", "kind": "room", "d": "light" },
-    { "id": "tt071", "q": "Who here would win on Jeopardy?", "kind": "room", "d": "light" },
-    { "id": "tt072", "q": "Find something everyone at this table has in common that isn't Burlington or coffee.", "kind": "room", "d": "light" },
-    { "id": "tt073", "q": "Who traveled here from farthest away — and who has the shortest walk home?", "kind": "room", "d": "light" },
-    { "id": "tt074", "q": "Around the table: one place you'd recommend within twenty minutes of this chair.", "kind": "room", "d": "light" },
-    { "id": "tt075", "q": "Whose phone wallpaper has the best story?", "kind": "room", "d": "light" },
-    { "id": "tt076", "q": "Who at this table has the most unexpected former job?", "kind": "room", "d": "light" },
-    { "id": "tt077", "q": "As a table: agree on the best creemee in Chittenden County.", "kind": "room", "d": "light" },
-    { "id": "tt078", "q": "Around the table: your week in exactly three words.", "kind": "room", "d": "light" },
-    { "id": "tt079", "q": "Who here is most likely to end up on the local news — and for what nice thing?", "kind": "room", "d": "light" },
-    { "id": "tt080", "q": "Whose name has the best story behind it?", "kind": "room", "d": "light" },
-    { "id": "tt081", "q": "Table draft: build the perfect Burlington day, one pick from each person.", "kind": "room", "d": "light" },
-    { "id": "tt082", "q": "Who at this table would survive a Vermont winter with no car — and how?", "kind": "room", "d": "light" },
-    { "id": "tt083", "q": "Around the table: one thing you're looking forward to.", "kind": "room", "d": "light" },
-    { "id": "tt084", "q": "Guess the table's combined years in Vermont — then check.", "kind": "room", "d": "light" },
-    { "id": "tt085", "q": "Who here would win a maple-syrup blind taste test?", "kind": "room", "d": "light" },
-    { "id": "tt086", "q": "Around the table: the pitch for your hobby, thirty seconds each.", "kind": "room", "d": "light" },
-    { "id": "tt087", "q": "Who at this table has the best hidden talent — and would they show it?", "kind": "room", "d": "light" },
-    { "id": "tt088", "q": "Around the table: the one food you'd bring to a Vermont potluck.", "kind": "room", "d": "light" },
-
-    { "id": "tt100", "q": "Best breakfast in Chittenden County?", "kind": "fight", "d": "light" },
-    { "id": "tt101", "q": "Best pizza in greater Burlington?", "kind": "fight", "d": "light" },
-    { "id": "tt102", "q": "Best sunset spot in town?", "kind": "fight", "d": "light" },
-    { "id": "tt103", "q": "Creemee flavor: maple, vanilla, or twist?", "kind": "fight", "d": "light" },
-    { "id": "tt104", "q": "Best swimming hole within an hour?", "kind": "fight", "d": "light" },
-    { "id": "tt105", "q": "Best coffee shop in Burlington that isn't this one?", "kind": "fight", "d": "light" },
-    { "id": "tt106", "q": "Best bagel in a town that argues about bagels?", "kind": "fight", "d": "light" },
-    { "id": "tt107", "q": "Skiing or snowboarding?", "kind": "fight", "d": "light" },
-    { "id": "tt108", "q": "Best month in Vermont?", "kind": "fight", "d": "light" },
-    { "id": "tt109", "q": "Best sandwich in town?", "kind": "fight", "d": "light" },
-    { "id": "tt110", "q": "Vermont's greatest export: beer, cheese, maple, or Phish?", "kind": "fight", "d": "light" },
-    { "id": "tt111", "q": "Best first-date spot in Burlington?", "kind": "fight", "d": "light" },
-    { "id": "tt112", "q": "The lake: swim in it, sail on it, or look at it?", "kind": "fight", "d": "light" },
-    { "id": "tt113", "q": "Best grocery run: City Market, Trader Joe's, Costco, or the farmers market?", "kind": "fight", "d": "light" },
-    { "id": "tt114", "q": "Best hike within thirty minutes that isn't Camel's Hump?", "kind": "fight", "d": "light" },
-
-    { "id": "tt130", "q": "Mountains or lake?", "kind": "either", "d": "light" },
-    { "id": "tt131", "q": "Snow day: sled, ski, or stay in?", "kind": "either", "d": "light" },
-    { "id": "tt132", "q": "Camping or a hotel?", "kind": "either", "d": "light" },
-    { "id": "tt133", "q": "Sweet or savory breakfast?", "kind": "either", "d": "light" },
-    { "id": "tt134", "q": "Book the flight or save the money?", "kind": "either", "d": "light" },
-    { "id": "tt135", "q": "Farmers market Saturday or sleep-in Saturday?", "kind": "either", "d": "light" },
-    { "id": "tt136", "q": "Live music or a movie?", "kind": "either", "d": "light" },
-    { "id": "tt137", "q": "Cook or be cooked for?", "kind": "either", "d": "light" },
-    { "id": "tt138", "q": "Podcast or playlist?", "kind": "either", "d": "light" },
-    { "id": "tt139", "q": "Paper book or audiobook?", "kind": "either", "d": "light" },
-    { "id": "tt140", "q": "Hot coffee year-round, or iced the second it's warm out?", "kind": "either", "d": "light" },
-    { "id": "tt141", "q": "Bike or walk?", "kind": "either", "d": "light" },
-    { "id": "tt142", "q": "Fall foliage or first snow?", "kind": "either", "d": "light" },
-    { "id": "tt143", "q": "Big party or small dinner?", "kind": "either", "d": "light" },
-    { "id": "tt144", "q": "Window seat or aisle?", "kind": "either", "d": "light" },
-    { "id": "tt145", "q": "Plan the trip or wing it?", "kind": "either", "d": "light" },
-    { "id": "tt146", "q": "Text or call?", "kind": "either", "d": "light" },
-    { "id": "tt147", "q": "Sunrise hike or sunset paddle?", "kind": "either", "d": "light" },
-    { "id": "tt148", "q": "Would you rather have a free season pass or free creemees for a year?", "kind": "either", "d": "light" },
-    { "id": "tt149", "q": "Would you rather live on Church Street or right on the lake?", "kind": "either", "d": "light" }
+    {
+      "id": "tt001",
+      "q": "How did you end up in Burlington?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt002",
+      "q": "What's your coffee order, and how long has it been the same?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt003",
+      "q": "What's your current obsession — the thing you'd talk about for an hour if someone let you?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt004",
+      "q": "What's the best thing you ate this week?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt005",
+      "q": "What are you weirdly good at?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt006",
+      "q": "What's a small purchase — under twenty bucks — that improved your life?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt007",
+      "q": "What's a skill you picked up as an adult?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt008",
+      "q": "What's the last thing you did that felt like a vacation, even for an hour?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt009",
+      "q": "What's your walking-around neighborhood, and what's its best block?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt010",
+      "q": "What do people always get wrong about what you do?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt011",
+      "q": "What's the last thing you changed your mind about?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt012",
+      "q": "What's a place in Vermont you recommend to everyone?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt013",
+      "q": "What's your rainy-day routine?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt014",
+      "q": "What's a book, show, or album you've gone back to more than twice?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt015",
+      "q": "What was your first job, and what did it teach you?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt016",
+      "q": "What are you looking forward to in the next month?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt017",
+      "q": "If tomorrow were a free Saturday with zero obligations, what would it look like?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt018",
+      "q": "What's the best live show you've seen in Vermont?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt019",
+      "q": "What's a food opinion you'll defend at this table?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt020",
+      "q": "What hobby have you always meant to start?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt021",
+      "q": "What's your favorite season here — and what's the first thing you do when it arrives?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt022",
+      "q": "What's a tiny daily ritual you'd hate to give up?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt023",
+      "q": "Where do you take out-of-town guests first?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt024",
+      "q": "What's the farthest from home you've ever been?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt025",
+      "q": "What's something you made recently — food, art, a spreadsheet, anything?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt026",
+      "q": "What's the best piece of advice you didn't ask for?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt027",
+      "q": "What's the most-used app on your phone that isn't texts or email?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt028",
+      "q": "What would your karaoke song be?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt029",
+      "q": "What's a smell that takes you straight back somewhere?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt030",
+      "q": "What's the best meal you've had in Burlington this year?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt031",
+      "q": "Winter person or summer person — and what's your evidence?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt032",
+      "q": "What's something you've kept since childhood?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt033",
+      "q": "What class would you take just for fun?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt034",
+      "q": "What's the last thing you stopped to take a picture of?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt035",
+      "q": "What are you listening to lately?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt036",
+      "q": "If you could master one dish, what would it be?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt037",
+      "q": "What's the most Vermont thing you've done this month?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt038",
+      "q": "What's something you were into before it was cool — or long after?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt039",
+      "q": "What's a question you love being asked?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt040",
+      "q": "What's your favorite spot within a ten-minute walk of this chair?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt041",
+      "q": "What's been the best part of your week so far?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt042",
+      "q": "What job would you try for exactly one year?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt043",
+      "q": "What are you reading right now — or what's been open in your tabs all week?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt044",
+      "q": "What's a compliment you still remember?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt045",
+      "q": "What's the strangest thing in your fridge right now?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt046",
+      "q": "What would you do with a free extra hour every day?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt047",
+      "q": "What's a small act of kindness you saw recently?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt048",
+      "q": "What's the last thing that made you laugh out loud?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt049",
+      "q": "Where in Burlington do you go to think?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt050",
+      "q": "What piece of local knowledge took you way too long to learn?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt051",
+      "q": "What's your bad-weather comfort movie?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt052",
+      "q": "What's new in your life this month — big or small?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt053",
+      "q": "What's the best free thing to do in this town?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt054",
+      "q": "What tool or gadget would you evangelize for?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt055",
+      "q": "Winter driving: dread, pride, or denial?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt056",
+      "q": "What's your signature dish — and where'd it come from?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt057",
+      "q": "What's the best decision you've made this year?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt058",
+      "q": "What's a place you've never been that's been on the list forever?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt059",
+      "q": "Who's the most interesting stranger you've talked to lately?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt060",
+      "q": "What's a habit you picked up from someone else and kept?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt061",
+      "q": "What did a past version of you spend way too much time on — and was it worth it?",
+      "kind": "ice",
+      "d": "warm"
+    },
+    {
+      "id": "tt062",
+      "q": "What's the best thing you've found at a Vermont thrift store, yard sale, or free pile?",
+      "kind": "ice",
+      "d": "light"
+    },
+    {
+      "id": "tt070",
+      "q": "Who at this table would last longest in the woods?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt071",
+      "q": "Who here would win on Jeopardy?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt072",
+      "q": "Find something everyone at this table has in common that isn't Burlington or coffee.",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt073",
+      "q": "Whose hometown is farthest from Burlington?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt074",
+      "q": "Around the table: one place you'd recommend within twenty minutes of this chair.",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt075",
+      "q": "Whose phone wallpaper has the best story — and who'll show theirs?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt076",
+      "q": "Who at this table has the most unexpected former job?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt077",
+      "q": "As a table: agree on the best creemee in Chittenden County.",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt078",
+      "q": "Around the table: your week in exactly three words.",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt079",
+      "q": "Who here is most likely to end up on the local news — and for what nice thing?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt080",
+      "q": "Whose name has the best story behind it?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt081",
+      "q": "Table draft: build the perfect Burlington day, one pick from each person.",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt082",
+      "q": "Who at this table would survive a Vermont winter with no car — and how?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt083",
+      "q": "Around the table: one thing you're looking forward to.",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt084",
+      "q": "Guess the table's combined years in Vermont — then check.",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt085",
+      "q": "Who here would win a maple-syrup blind taste test?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt086",
+      "q": "Around the table: the hobby you'd talk someone into trying.",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt087",
+      "q": "Who at this table has the best hidden talent — and would they show it?",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt088",
+      "q": "Around the table: the one food you'd bring to a Vermont potluck.",
+      "kind": "room",
+      "d": "light"
+    },
+    {
+      "id": "tt100",
+      "q": "Best breakfast in Chittenden County?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt101",
+      "q": "Best pizza in greater Burlington?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt102",
+      "q": "Best sunset spot in town?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt103",
+      "q": "Creemee flavor: maple, vanilla, or twist?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt104",
+      "q": "Best swimming hole within an hour?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt105",
+      "q": "Best coffee shop in Burlington that isn't this one?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt106",
+      "q": "Best bagel in a town that argues about bagels?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt107",
+      "q": "Skiing or snowboarding?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt108",
+      "q": "Best month in Vermont?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt109",
+      "q": "Best sandwich in town?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt110",
+      "q": "Vermont's greatest export: beer, cheese, maple, or Phish?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt111",
+      "q": "Best first-date spot in Burlington?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt112",
+      "q": "The lake: swim in it, sail on it, or look at it?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt113",
+      "q": "Best grocery run: City Market, Trader Joe's, Costco, or the farmers market?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt114",
+      "q": "Best hike within thirty minutes that isn't Camel's Hump?",
+      "kind": "fight",
+      "d": "light"
+    },
+    {
+      "id": "tt130",
+      "q": "Mountains or lake?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt131",
+      "q": "Snow day: sled, ski, or stay in?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt132",
+      "q": "Camping or a hotel?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt133",
+      "q": "Sweet or savory breakfast?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt134",
+      "q": "Book the flight or save the money?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt135",
+      "q": "Farmers market Saturday or sleep-in Saturday?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt136",
+      "q": "Live music or a movie?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt137",
+      "q": "Cook or be cooked for?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt138",
+      "q": "Podcast or playlist?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt139",
+      "q": "Paper book or audiobook?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt140",
+      "q": "Hot coffee year-round, or iced the second it's warm out?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt141",
+      "q": "Bike or walk?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt142",
+      "q": "Fall foliage or first snow?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt143",
+      "q": "Big party or small dinner?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt144",
+      "q": "Window seat or aisle?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt145",
+      "q": "Plan the trip or wing it?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt146",
+      "q": "Text or call?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt147",
+      "q": "Sunrise hike or sunset paddle?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt148",
+      "q": "Would you rather have a free season pass or free creemees for a year?",
+      "kind": "either",
+      "d": "light"
+    },
+    {
+      "id": "tt149",
+      "q": "Would you rather live on Church Street or right on the lake?",
+      "kind": "either",
+      "d": "light"
+    }
   ]
 }
