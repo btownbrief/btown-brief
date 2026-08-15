@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-14T17:01:22-04:00",
+ "generated": "2026-08-15T05:55:27-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 16,
-   "seconds": 6.4
+   "count": 15,
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 71,
-   "seconds": 9.9
+   "count": 70,
+   "seconds": 3.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 54,
-   "seconds": 2.7
+   "count": 55,
+   "seconds": 4.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 153,
-   "seconds": 2.1
+   "count": 152,
+   "seconds": 2.9
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 69,
-   "seconds": 1.4
+   "count": 68,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-14&end_date=2026-10-13&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-15&end_date=2026-10-14&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 153,
-   "seconds": 76.3
+   "count": 156,
+   "seconds": 71.4
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 35,
-   "seconds": 2.8
+   "count": 37,
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.3
+   "seconds": 38.0
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 80,
-   "seconds": 120.1
+   "seconds": 121.0
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 425,
-   "seconds": 67.1
+   "count": 422,
+   "seconds": 76.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 68,
-   "seconds": 121.7
+   "count": 66,
+   "seconds": 125.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 39,
-   "seconds": 17.7
+   "count": 40,
+   "seconds": 14.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 75,
-   "seconds": 1.6
+   "count": 77,
+   "seconds": 1.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 34,
-   "seconds": 34.1
+   "count": 33,
+   "seconds": 33.6
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,97 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 288,
-   "seconds": 12.2
+   "count": 290,
+   "seconds": 21.7
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 190,
-   "seconds": 0.2
+   "count": 187,
+   "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 72,
-   "seconds": 97.2
+   "count": 71,
+   "seconds": 94.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 30,
-   "seconds": 0.1
+   "seconds": 0.3
   }
  },
- "gathered": 2611,
- "afterDedup": 1352,
- "duplicatesMerged": 1259,
- "final": 1820,
+ "gathered": 2608,
+ "afterDedup": 1359,
+ "duplicatesMerged": 1249,
+ "final": 1803,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-12"
-  },
-  {
-   "kept": {
-    "title": "Everything is Everything: Will Kasso Condry",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-12"
-  },
-  {
-   "kept": {
-    "title": "Dream / Mộng : Veronica Pham",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-12"
-  },
-  {
-   "kept": {
-    "title": "Color & Scale: Leah Barranco",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-12"
-  },
-  {
-   "kept": {
-    "title": "Brain Freezer 5K",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-12"
-  },
-  {
-   "kept": {
-    "title": "Sicard Hollow",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-09-13"
-  },
   {
    "kept": {
     "title": "Jim Norton",
@@ -1709,6 +1642,17 @@
   },
   {
    "kept": {
+    "title": "Tōth",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
     "title": "Joe Dombrowski",
     "source": "vcc"
    },
@@ -1859,6 +1803,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -1872,6 +1817,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "vcc"
    ],
    "date": "2026-10-03"
@@ -2010,11 +1956,23 @@
   },
   {
    "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-03"
+  },
+  {
+   "kept": {
     "title": "76th Street",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -2062,6 +2020,28 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-04"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-04"
+  },
+  {
+   "kept": {
+    "title": "Steps for Survivors 5k, 10k, and Kid's 1k",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-04"
   },
@@ -2401,31 +2381,31 @@
     "loveburlington"
    ],
    "date": "2026-10-13"
+  },
+  {
+   "kept": {
+    "title": "Wild Kratts Live 2.0",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "flynn"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
+    "title": "TRIVIA NIGHT",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-14"
   }
  ],
  "changes": [
-  {
-   "id": "6bb45b0554f9",
-   "title": "FREE Kids Club: Magic Show - Alyx Hilshey @ South Burlington Farmers Market",
-   "date": "2026-08-21",
-   "change": "time",
-   "was": "2026-08-21T18:00:00-04:00",
-   "now": "2026-08-21T17:45:00-04:00"
-  },
-  {
-   "id": "d6aac3da6c7d",
-   "title": "Lunch with the Poets",
-   "date": "2026-08-14",
-   "change": "missing",
-   "lastSeen": "2026-08-14T06:36:31-04:00"
-  },
-  {
-   "id": "e1be787321db-2100",
-   "title": "Kurt Braunohler",
-   "date": "2026-08-14",
-   "change": "missing",
-   "lastSeen": "2026-08-11T17:27:28-04:00"
-  },
   {
    "id": "2c8558194bd8",
    "title": "Rik Palieri",
@@ -2465,8 +2445,7 @@
    "id": "4b803ba3457f",
    "title": "Trivia at Four Quarters",
    "date": "2026-08-27",
-   "change": "missing",
-   "lastSeen": "2026-08-11T17:27:28-04:00"
+   "change": "dropped"
   },
   {
    "id": "51ae63f990de",
