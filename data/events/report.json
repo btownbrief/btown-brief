@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-15T05:55:27-04:00",
+ "generated": "2026-08-15T16:57:45-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -8,23 +8,23 @@
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 70,
-   "seconds": 3.9
+   "count": 71,
+   "seconds": 4.6
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 55,
-   "seconds": 4.0
+   "seconds": 2.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 152,
-   "seconds": 2.9
+   "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 68,
-   "seconds": 1.7
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 156,
-   "seconds": 71.4
+   "seconds": 77.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 2.5
+   "seconds": 2.7
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 38.0
+   "seconds": 40.9
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 80,
-   "seconds": 121.0
+   "seconds": 130.1
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,27 +79,27 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 422,
-   "seconds": 76.4
+   "seconds": 67.6
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 125.5
+   "count": 67,
+   "seconds": 122.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 40,
-   "seconds": 14.8
+   "seconds": 16.1
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 77,
-   "seconds": 1.5
+   "seconds": 1.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 33,
-   "seconds": 33.6
+   "seconds": 34.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,18 +113,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 290,
-   "seconds": 21.7
+   "count": 296,
+   "seconds": 13.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 187,
+   "count": 191,
    "seconds": 0.1
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 71,
-   "seconds": 94.2
+   "seconds": 99.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,35 +132,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 2608,
- "afterDedup": 1359,
- "duplicatesMerged": 1249,
- "final": 1803,
+ "gathered": 2620,
+ "afterDedup": 1366,
+ "duplicatesMerged": 1254,
+ "final": 1813,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Jim Norton",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm"
-   ],
-   "date": "2026-09-13"
-  },
-  {
-   "kept": {
-    "title": "WRUV Interest Meeting",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-13"
-  },
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
@@ -530,6 +506,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
+    "title": "Landscapes of risk: modeling and evaluating pesticide exposure in agricultural landscapes ft. Charlie Nicholson",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-09-18"
   },
@@ -1698,6 +1685,17 @@
   },
   {
    "kept": {
+    "title": "Marine Carbon Dioxide Removal: Bad Ideas becoming Good Ideas ft. Libby Jewett",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
     "title": "CAT ECare Training",
     "source": "uvm"
    },
@@ -2407,6 +2405,34 @@
  ],
  "changes": [
   {
+   "id": "6ef58c1fa113",
+   "title": "Board Game Brunch",
+   "date": "2026-08-15",
+   "change": "missing",
+   "lastSeen": "2026-08-15T05:55:27-04:00"
+  },
+  {
+   "id": "c51fd094f1ba",
+   "title": "BTown Coffee Club",
+   "date": "2026-08-15",
+   "change": "missing",
+   "lastSeen": "2026-08-15T05:55:27-04:00"
+  },
+  {
+   "id": "0b382c04d026",
+   "title": "Ghostbusters RPG",
+   "date": "2026-08-15",
+   "change": "missing",
+   "lastSeen": "2026-08-15T05:55:27-04:00"
+  },
+  {
+   "id": "2a1258663533",
+   "title": "Morrisvile brew hop",
+   "date": "2026-08-15",
+   "change": "missing",
+   "lastSeen": "2026-08-15T05:55:27-04:00"
+  },
+  {
    "id": "2c8558194bd8",
    "title": "Rik Palieri",
    "date": "2026-08-15",
@@ -2424,8 +2450,7 @@
    "id": "7b1ba83d85ef",
    "title": "Storytime",
    "date": "2026-08-20",
-   "change": "missing",
-   "lastSeen": "2026-08-12T06:40:22-04:00"
+   "change": "dropped"
   },
   {
    "id": "71404c6864af",
@@ -2440,12 +2465,6 @@
    "date": "2026-08-24",
    "change": "missing",
    "lastSeen": "2026-08-12T17:26:55-04:00"
-  },
-  {
-   "id": "4b803ba3457f",
-   "title": "Trivia at Four Quarters",
-   "date": "2026-08-27",
-   "change": "dropped"
   },
   {
    "id": "51ae63f990de",
@@ -2483,18 +2502,18 @@
    "lastSeen": "2026-08-13T06:41:14-04:00"
   },
   {
-   "id": "44150382f697",
-   "title": "BTown Coffee Club",
-   "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-08-14T06:36:31-04:00"
-  },
-  {
    "id": "f86bbd1e5e74",
    "title": "The Dream Eaters",
    "date": "2026-09-19",
    "change": "missing",
    "lastSeen": "2026-08-13T06:41:14-04:00"
+  },
+  {
+   "id": "ed46e707b0e5",
+   "title": "VCA Presents: $5 Improv Night!",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-08-15T05:55:27-04:00"
   }
  ]
 }
