@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Table Talk — Burlington Brief</title>
+  <meta name="description" content="A meetup companion board. Prop a phone on the table: icebreakers, this-weekend picks, friendly local debates, hobbies, headlines worth a take, and a little weather — one big card at a time, on a slow clock. SYNC puts every phone at the table on the same card.">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Btown Brief">
+  <meta property="og:title" content="Table Talk">
+  <meta property="og:description" content="Prop a phone on the table — icebreakers, weekend picks, friendly fights and headlines rotate on a slow clock. SYNC puts every phone on the same card.">
+  <meta property="og:url" content="https://guide.btownbrief.com/table.html">
+  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-pulse.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Table Talk">
+  <meta name="twitter:description" content="A meetup companion board — one big card at a time, on a slow clock.">
+  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-pulse.png">
+
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="css/table-talk.css">
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2471867016612559');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel -->
+</head>
+<body>
+
+  <header class="bar">
+    <a class="brand" href="live.html" title="The fast sibling — Pulse Live"><span class="brand-pre">BTOWN&nbsp;BRIEF&nbsp;</span><b>TABLE&nbsp;TALK</b></a>
+    <span class="clock" id="clock">--:--</span>
+    <span class="status">
+      <button class="ic-bar" id="join-btn" type="button" aria-label="Get another phone on this board"
+              title="Get another phone on this board">+</button>
+      <button class="ic-bar" id="help-btn" type="button" aria-label="How the table works"
+              title="How the table works">?</button>
+      <button class="sync-badge" id="sync-badge" type="button" aria-pressed="false"
+              title="Every phone with SYNC on shows the same card at the same time"><i></i><span id="sync-badge-label">SYNC</span></button>
+    </span>
+  </header>
+
+  <main class="stage">
+    <div class="card bg-brown" id="card" role="button" tabindex="0" aria-label="The current card — tap to hold it">
+      <span class="fuse" id="fuse" aria-hidden="true"></span>
+      <span class="top"><span class="kind-tag" id="kind-tag">DEALING</span><span class="hold-tag">HELD — TAP TO RELEASE</span></span>
+      <span class="body" id="body">
+        <p class="big" id="big">PULLING UP A CHAIR…</p>
+        <span class="kicker" id="kicker"></span>
+      </span>
+      <span class="meta"><span class="src" id="src"></span><span class="tap-hint">TAP TO HOLD</span></span>
+    </div>
+  </main>
+
+  <div class="lbarwrap">
+  <footer class="lbar" id="lbar">
+    <span class="lgroup">
+      <button class="lopt lstep" id="prev-btn" type="button" title="Back one card">⏮</button>
+      <button class="lopt lstep" id="next-btn" type="button" title="Deal the next card">⏭</button>
+    </span>
+    <span class="lgroup" id="pace-group" role="group" aria-label="Pace">
+      <span class="llbl">PACE</span>
+      <button class="lopt" data-pace="relaxed" type="button" title="5 minutes a card — the table is talking">RELAXED</button>
+      <button class="lopt" data-pace="normal" type="button" title="3 minutes a card">NORMAL</button>
+      <button class="lopt" data-pace="lively" type="button" title="75 seconds a card — speed round">LIVELY</button>
+    </span>
+    <span class="lgroup" id="deck-group" role="group" aria-label="Decks">
+      <span class="llbl">DECKS</span>
+    </span>
+    <span class="lright">
+      <a class="lexit" href="table.html?tv=1" title="Chromeless — for the iPad at the other table">TV ⛶</a>
+      <a class="lexit" href="live.html" title="The fast sibling — headlines on a quick clock">PULSE ↩</a>
+    </span>
+  </footer>
+  </div>
+
+  <div class="scrim" id="panel-scrim" hidden></div>
+
+  <aside class="panel" id="help-panel" hidden aria-label="How the table works">
+    <div class="panel-head">
+      <span class="panel-title">HOW THE TABLE WORKS</span>
+      <button class="panel-close" type="button" aria-label="Close">✕</button>
+    </div>
+    <ul class="help-list">
+      <li><b>PROP THE PHONE UP</b> — cards rotate on a slow clock; the screen stays awake</li>
+      <li><b>TAP THE CARD</b> to hold it while someone answers · tap again to release</li>
+      <li><b>⏮ ⏭</b> step back to a card you missed, or deal the next one</li>
+      <li><b>PACE</b> — RELAXED for deep tables, LIVELY for a speed round</li>
+      <li><b>DECKS</b> — strike out anything you don't want dealt</li>
+      <li><b>SYNC</b> — every phone with it on shows the same card at the same time (no pairing, it's the clock) · pace and decks pin while synced · a tap-hold pauses just this phone and rejoins on release</li>
+      <li><b>+</b> up top gets another phone or the iPad on this board</li>
+    </ul>
+    <p class="panel-note">THE PAGE ASKS THE PHONE TO STAY AWAKE, BUT THE OS HAS THE LAST WORD — IF THE SCREEN STILL DIMS, BUMP AUTO-LOCK IN SETTINGS FOR THE HOUR.</p>
+  </aside>
+
+  <aside class="panel" id="join-panel" hidden aria-label="Get another phone on this board">
+    <div class="panel-head">
+      <span class="panel-title">PUT THIS ON EVERY PHONE</span>
+      <button class="panel-close" type="button" aria-label="Close">✕</button>
+    </div>
+    <p class="join-url">guide.btownbrief.com/<wbr>table.html?sync=1</p>
+    <p class="join-actions">
+      <button class="lopt" id="copy-link" type="button">COPY LINK</button>
+      <button class="lopt" id="share-link" type="button" hidden>SHARE…</button>
+    </p>
+    <p class="panel-note">ANYONE WHO OPENS THAT LINK LANDS ON THE SAME CARD AS THIS SCREEN, AT THE SAME MOMENT — NO PAIRING, NO ACCOUNT; THE CLOCK IS THE SERVER. GOOD FOR A SECOND TABLE, AN IPAD PROPPED ON THE COUNTER, OR THE WHOLE MEETUP.</p>
+  </aside>
+
+  <noscript><p class="noscript">Table Talk needs JavaScript to deal the cards.</p></noscript>
+  <script src="js/table-talk.js"></script>
+</body>
+</html>
