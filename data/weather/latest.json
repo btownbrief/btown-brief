@@ -1,28 +1,28 @@
 {
- "updated": "2026-08-15T05:03:43+00:00",
+ "updated": "2026-08-15T06:01:05+00:00",
  "sections_updated": {
-  "now": "2026-08-15T05:03:43+00:00",
-  "forecast": "2026-08-15T05:03:43+00:00",
-  "hourly": "2026-08-15T05:03:43+00:00",
-  "alerts": "2026-08-15T05:03:43+00:00",
-  "afd": "2026-08-15T05:03:43+00:00",
-  "lake_forecast": "2026-08-15T05:03:43+00:00",
+  "now": "2026-08-15T06:01:05+00:00",
+  "forecast": "2026-08-15T06:01:05+00:00",
+  "hourly": "2026-08-15T06:01:05+00:00",
+  "alerts": "2026-08-15T06:01:05+00:00",
+  "afd": "2026-08-15T06:01:05+00:00",
+  "lake_forecast": "2026-08-15T06:01:05+00:00",
   "lake_gage": "2026-08-15T05:03:43+00:00",
-  "air": "2026-08-15T05:03:43+00:00",
-  "sun": "2026-08-15T05:03:43+00:00",
-  "models": "2026-08-15T05:03:43+00:00"
+  "air": "2026-08-15T06:01:05+00:00",
+  "sun": "2026-08-15T06:01:05+00:00",
+  "models": "2026-08-15T06:01:05+00:00"
  },
  "now": {
-  "observed_at": "2026-08-15T04:40:00+00:00",
+  "observed_at": "2026-08-15T05:40:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 59,
-  "feels_like_f": 59,
+  "temp_f": 57,
+  "feels_like_f": 57,
   "humidity": 94,
-  "dewpoint_f": 57,
-  "wind_mph": 0,
+  "dewpoint_f": 55,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "N"
+  "wind_dir": "E"
  },
  "forecast": {
   "updated": "2026-08-14T20:59:10+00:00",
@@ -860,10 +860,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 19,
+  "aqi": 21,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/15/26 0:00",
+  "observed": "08/15/26 1:00",
   "discussion": "Expect generally good air quality across Vermont on Saturday, August 15th."
  },
  "sun": {
@@ -907,7 +907,7 @@
      "ICON": 55
     },
     "precip_in": {
-     "GFS": 0.26,
+     "GFS": 0.22,
      "Euro": 0.0,
      "ICON": 0.0
     },
@@ -916,7 +916,7 @@
    {
     "date": "2026-08-17",
     "high_f": {
-     "GFS": 68,
+     "GFS": 70,
      "Euro": 76,
      "ICON": 72
     },
@@ -926,11 +926,11 @@
      "ICON": 82
     },
     "precip_in": {
-     "GFS": 0.33,
+     "GFS": 0.31,
      "Euro": 0.98,
      "ICON": 0.18
     },
-    "high_spread_f": 8
+    "high_spread_f": 6
    }
   ]
  }
