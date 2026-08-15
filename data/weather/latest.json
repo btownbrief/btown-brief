@@ -1,19 +1,19 @@
 {
- "updated": "2026-08-15T07:17:17+00:00",
+ "updated": "2026-08-15T08:00:28+00:00",
  "sections_updated": {
-  "now": "2026-08-15T07:17:17+00:00",
-  "forecast": "2026-08-15T07:17:17+00:00",
-  "hourly": "2026-08-15T07:17:17+00:00",
-  "alerts": "2026-08-15T07:17:17+00:00",
-  "afd": "2026-08-15T07:17:17+00:00",
-  "lake_forecast": "2026-08-15T07:17:17+00:00",
-  "lake_gage": "2026-08-15T07:17:17+00:00",
-  "air": "2026-08-15T07:17:17+00:00",
-  "sun": "2026-08-15T07:17:17+00:00",
-  "models": "2026-08-15T07:17:17+00:00"
+  "now": "2026-08-15T08:00:28+00:00",
+  "forecast": "2026-08-15T08:00:28+00:00",
+  "hourly": "2026-08-15T08:00:28+00:00",
+  "alerts": "2026-08-15T08:00:28+00:00",
+  "afd": "2026-08-15T08:00:28+00:00",
+  "lake_forecast": "2026-08-15T08:00:28+00:00",
+  "lake_gage": "2026-08-15T08:00:28+00:00",
+  "air": "2026-08-15T08:00:28+00:00",
+  "sun": "2026-08-15T08:00:28+00:00",
+  "models": "2026-08-15T08:00:28+00:00"
  },
  "now": {
-  "observed_at": "2026-08-15T06:50:00+00:00",
+  "observed_at": "2026-08-15T07:35:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 57,
@@ -29,7 +29,7 @@
   "periods": [
    {
     "name": "Overnight",
-    "start": "2026-08-15T03:00:00-04:00",
+    "start": "2026-08-15T04:00:00-04:00",
     "is_day": false,
     "temp_f": 57,
     "pop": 2,
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-15T06:19:39+00:00",
   "hours": [
-   {
-    "t": "2026-08-15T03:00:00-04:00",
-    "temp_f": 61,
-    "feels_f": 61,
-    "pop": 2,
-    "humidity": 84,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 16,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-08-15T04:00:00-04:00",
     "temp_f": 60,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 54,
     "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-08-16T15:00:00-04:00",
+    "temp_f": 80,
+    "feels_f": 81,
+    "pop": 0,
+    "humidity": 49,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 61,
+    "short": "Partly Sunny"
    }
   ]
  },
@@ -833,10 +833,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 22,
+  "aqi": 23,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/15/26 2:00",
+  "observed": "08/15/26 3:00",
   "discussion": "Expect generally good air quality across Vermont on Saturday, August 15th."
  },
  "sun": {
@@ -890,7 +890,7 @@
     "date": "2026-08-17",
     "high_f": {
      "GFS": 70,
-     "Euro": 76,
+     "Euro": 75,
      "ICON": 72
     },
     "pop_max": {
@@ -900,10 +900,10 @@
     },
     "precip_in": {
      "GFS": 0.31,
-     "Euro": 0.98,
+     "Euro": 1.2,
      "ICON": 0.18
     },
-    "high_spread_f": 6
+    "high_spread_f": 5
    }
   ]
  }
