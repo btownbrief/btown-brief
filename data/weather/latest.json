@@ -1,28 +1,28 @@
 {
- "updated": "2026-08-15T19:04:02+00:00",
+ "updated": "2026-08-15T19:57:53+00:00",
  "sections_updated": {
-  "now": "2026-08-15T19:04:02+00:00",
-  "forecast": "2026-08-15T19:04:02+00:00",
-  "hourly": "2026-08-15T19:04:02+00:00",
-  "alerts": "2026-08-15T19:04:02+00:00",
-  "afd": "2026-08-15T19:04:02+00:00",
-  "lake_forecast": "2026-08-15T19:04:02+00:00",
-  "lake_gage": "2026-08-15T19:04:02+00:00",
-  "air": "2026-08-15T19:04:02+00:00",
-  "sun": "2026-08-15T19:04:02+00:00",
-  "models": "2026-08-15T19:04:02+00:00"
+  "now": "2026-08-15T19:57:53+00:00",
+  "forecast": "2026-08-15T19:57:53+00:00",
+  "hourly": "2026-08-15T19:57:53+00:00",
+  "alerts": "2026-08-15T19:57:53+00:00",
+  "afd": "2026-08-15T19:57:53+00:00",
+  "lake_forecast": "2026-08-15T19:57:53+00:00",
+  "lake_gage": "2026-08-15T19:57:53+00:00",
+  "air": "2026-08-15T19:57:53+00:00",
+  "sun": "2026-08-15T19:57:53+00:00",
+  "models": "2026-08-15T19:57:53+00:00"
  },
  "now": {
-  "observed_at": "2026-08-15T18:40:00+00:00",
+  "observed_at": "2026-08-15T19:40:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Partly Cloudy",
   "temp_f": 72,
   "feels_like_f": 71,
   "humidity": 43,
   "dewpoint_f": 48,
-  "wind_mph": null,
+  "wind_mph": 13,
   "wind_gust_mph": null,
-  "wind_dir": null
+  "wind_dir": "N"
  },
  "forecast": {
   "updated": "2026-08-15T18:15:33+00:00",
@@ -852,18 +852,18 @@
  },
  "lake_gage": {
   "water_temp_f": 75,
-  "water_temp_at": "2026-08-15T14:00:00.000-04:00",
-  "level_ft": 95.18,
-  "level_at": "2026-08-15T14:00:00.000-04:00",
+  "water_temp_at": "2026-08-15T15:00:00.000-04:00",
+  "level_ft": 95.17,
+  "level_at": "2026-08-15T15:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
   "aqi": 20,
   "category": "Good",
-  "pollutant": "PM2.5",
-  "observed": "08/15/26 14:00",
-  "discussion": "Expect generally good air quality across Vermont on Sunday, August 16th."
+  "pollutant": "OZONE",
+  "observed": "08/15/26 15:00",
+  "discussion": "Expect generally good air quality across Vermont on Saturday, August 15th."
  },
  "sun": {
   "sunrise": "2026-08-15T05:56-04:00",
