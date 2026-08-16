@@ -1,35 +1,35 @@
 {
- "updated": "2026-08-16T07:18:53+00:00",
+ "updated": "2026-08-16T08:01:54+00:00",
  "sections_updated": {
-  "now": "2026-08-16T07:18:53+00:00",
-  "forecast": "2026-08-16T07:18:53+00:00",
-  "hourly": "2026-08-16T07:18:53+00:00",
-  "alerts": "2026-08-16T07:18:53+00:00",
-  "afd": "2026-08-16T07:18:53+00:00",
-  "lake_forecast": "2026-08-16T07:18:53+00:00",
-  "lake_gage": "2026-08-16T07:18:53+00:00",
-  "air": "2026-08-16T07:18:53+00:00",
-  "sun": "2026-08-16T07:18:53+00:00",
-  "models": "2026-08-16T07:18:53+00:00"
+  "now": "2026-08-16T08:01:54+00:00",
+  "forecast": "2026-08-16T08:01:54+00:00",
+  "hourly": "2026-08-16T08:01:54+00:00",
+  "alerts": "2026-08-16T08:01:54+00:00",
+  "afd": "2026-08-16T08:01:54+00:00",
+  "lake_forecast": "2026-08-16T08:01:54+00:00",
+  "lake_gage": "2026-08-16T08:01:54+00:00",
+  "air": "2026-08-16T08:01:54+00:00",
+  "sun": "2026-08-16T08:01:54+00:00",
+  "models": "2026-08-16T08:01:54+00:00"
  },
  "now": {
-  "observed_at": "2026-08-16T07:00:00+00:00",
+  "observed_at": "2026-08-16T07:40:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 54,
   "feels_like_f": 54,
-  "humidity": 94,
-  "dewpoint_f": 52,
-  "wind_mph": 6,
+  "humidity": 88,
+  "dewpoint_f": 50,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "E"
+  "wind_dir": "ENE"
  },
  "forecast": {
   "updated": "2026-08-16T06:19:01+00:00",
   "periods": [
    {
     "name": "Overnight",
-    "start": "2026-08-16T03:00:00-04:00",
+    "start": "2026-08-16T04:00:00-04:00",
     "is_day": false,
     "temp_f": 54,
     "pop": 0,
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-16T06:19:01+00:00",
   "hours": [
-   {
-    "t": "2026-08-16T03:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 0,
-    "humidity": 86,
-    "wind_mph": 2,
-    "wind_dir": "SE",
-    "sky": 13,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-08-16T04:00:00-04:00",
     "temp_f": 56,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 86,
     "short": "Rain Showers Likely"
+   },
+   {
+    "t": "2026-08-17T15:00:00-04:00",
+    "temp_f": 75,
+    "feels_f": 75,
+    "pop": 49,
+    "humidity": 84,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 86,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -856,7 +856,7 @@
      "ICON": 76
     },
     "pop_max": {
-     "GFS": 42,
+     "GFS": 41,
      "Euro": 69,
      "ICON": 45
     },
