@@ -1,29 +1,29 @@
 {
- "generated": "2026-08-15T16:57:45-04:00",
+ "generated": "2026-08-16T05:55:17-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 15,
+   "count": 14,
    "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 71,
+   "count": 68,
    "seconds": 4.6
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 55,
-   "seconds": 2.7
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 152,
+   "count": 154,
    "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 68,
+   "count": 66,
    "seconds": 1.5
   },
   "echo": {
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-15&end_date=2026-10-14&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-16&end_date=2026-10-15&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -43,18 +43,18 @@
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 9,
+   "count": 8,
    "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 156,
-   "seconds": 77.1
+   "count": 158,
+   "seconds": 77.5
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 2.7
+   "seconds": 3.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 40.9
+   "seconds": 40.4
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 80,
-   "seconds": 130.1
+   "count": 77,
+   "seconds": 119.1
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 422,
-   "seconds": 67.6
+   "count": 417,
+   "seconds": 68.2
   },
   "meetup": {
    "label": "Meetup",
-   "count": 67,
-   "seconds": 122.1
+   "count": 66,
+   "seconds": 122.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 40,
-   "seconds": 16.1
+   "count": 42,
+   "seconds": 16.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 77,
-   "seconds": 1.4
+   "count": 75,
+   "seconds": 1.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 33,
-   "seconds": 34.2
+   "count": 32,
+   "seconds": 34.0
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,18 +113,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 296,
-   "seconds": 13.2
+   "count": 295,
+   "seconds": 21.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 191,
-   "seconds": 0.1
+   "count": 189,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 71,
-   "seconds": 99.3
+   "count": 69,
+   "seconds": 91.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,91 +132,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 2620,
- "afterDedup": 1366,
- "duplicatesMerged": 1254,
- "final": 1813,
+ "gathered": 2602,
+ "afterDedup": 1369,
+ "duplicatesMerged": 1233,
+ "final": 1793,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-13"
-  },
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-14"
-  },
-  {
-   "kept": {
-    "title": "Industry Day",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-14"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-14"
-  },
-  {
-   "kept": {
-    "title": "Marcus King Band",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "flynn",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-15"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-15"
-  },
-  {
-   "kept": {
-    "title": "Farms to Plates: Vermont's Local Food System",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-15"
-  },
   {
    "kept": {
     "title": "Community Service Fair",
@@ -2102,11 +2022,34 @@
   },
   {
    "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-05"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-05"
+  },
+  {
+   "kept": {
     "title": "Bombargo",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -2120,6 +2063,17 @@
    },
    "merged_sources": [
     "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-06"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-10-06"
@@ -2401,55 +2355,73 @@
     "loveburlington"
    ],
    "date": "2026-10-14"
+  },
+  {
+   "kept": {
+    "title": "Kidder Faculty Award and Lecture: Lizzy Pope G’13",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-10-15"
+  },
+  {
+   "kept": {
+    "title": "Buena Vista Orchestra",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-10-15"
+  },
+  {
+   "kept": {
+    "title": "Thirsty Thursday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-15"
   }
  ],
  "changes": [
   {
-   "id": "6ef58c1fa113",
-   "title": "Board Game Brunch",
-   "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-08-15T05:55:27-04:00"
+   "id": "00fa65e0ab1d",
+   "title": "Industry Day",
+   "date": "2026-10-05",
+   "change": "time",
+   "was": "2026-10-05",
+   "now": "2026-10-05T11:30:00-04:00"
   },
   {
-   "id": "c51fd094f1ba",
-   "title": "BTown Coffee Club",
-   "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-08-15T05:55:27-04:00"
-  },
-  {
-   "id": "0b382c04d026",
-   "title": "Ghostbusters RPG",
-   "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-08-15T05:55:27-04:00"
-  },
-  {
-   "id": "2a1258663533",
-   "title": "Morrisvile brew hop",
-   "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-08-15T05:55:27-04:00"
-  },
-  {
-   "id": "2c8558194bd8",
-   "title": "Rik Palieri",
-   "date": "2026-08-15",
-   "change": "missing",
-   "lastSeen": "2026-08-12T17:26:55-04:00"
+   "id": "653151ba6cf6",
+   "title": "802sDay",
+   "date": "2026-10-06",
+   "change": "time",
+   "was": "2026-10-06",
+   "now": "2026-10-06T11:30:00-04:00"
   },
   {
    "id": "b59c58abcbd9",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-08-17",
-   "change": "missing",
-   "lastSeen": "2026-08-12T17:26:55-04:00"
-  },
-  {
-   "id": "7b1ba83d85ef",
-   "title": "Storytime",
-   "date": "2026-08-20",
    "change": "dropped"
   },
   {
@@ -2463,15 +2435,20 @@
    "id": "8a53f7fea119",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-08-24",
+   "change": "dropped"
+  },
+  {
+   "id": "d0e4e622221f",
+   "title": "Business Networking Event - Startup. Scale. Support.",
+   "date": "2026-08-25",
    "change": "missing",
-   "lastSeen": "2026-08-12T17:26:55-04:00"
+   "lastSeen": "2026-08-15T16:57:45-04:00"
   },
   {
    "id": "51ae63f990de",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-08-31",
-   "change": "missing",
-   "lastSeen": "2026-08-12T17:26:55-04:00"
+   "change": "dropped"
   },
   {
    "id": "8a588990df73",
@@ -2488,11 +2465,17 @@
    "lastSeen": "2026-08-13T06:41:14-04:00"
   },
   {
+   "id": "b66813a5ea6e",
+   "title": "Mills Riverside Park Loop",
+   "date": "2026-09-05",
+   "change": "missing",
+   "lastSeen": "2026-08-15T16:57:45-04:00"
+  },
+  {
    "id": "202f401494a6",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-09-07",
-   "change": "missing",
-   "lastSeen": "2026-08-12T17:26:55-04:00"
+   "change": "dropped"
   },
   {
    "id": "7bb51d75acbc",
