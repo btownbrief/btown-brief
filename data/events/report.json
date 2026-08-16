@@ -1,20 +1,20 @@
 {
- "generated": "2026-08-16T05:55:17-04:00",
+ "generated": "2026-08-16T16:56:53-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 14,
-   "seconds": 5.9
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 68,
-   "seconds": 4.6
+   "count": 67,
+   "seconds": 4.2
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 55,
-   "seconds": 2.8
+   "seconds": 3.6
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
@@ -24,7 +24,7 @@
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 66,
-   "seconds": 1.5
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -49,12 +49,12 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 158,
-   "seconds": 77.5
+   "seconds": 76.8
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 3.2
+   "seconds": 2.8
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 40.4
+   "seconds": 40.6
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 77,
-   "seconds": 119.1
+   "seconds": 120.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,17 +79,17 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 417,
-   "seconds": 68.2
+   "seconds": 67.8
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 122.8
+   "count": 64,
+   "seconds": 125.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 42,
-   "seconds": 16.5
+   "seconds": 16.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -99,7 +99,7 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 32,
-   "seconds": 34.0
+   "seconds": 33.9
   },
   "sevendays": {
    "label": "Seven Days",
@@ -114,7 +114,7 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 295,
-   "seconds": 21.4
+   "seconds": 11.8
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -124,18 +124,18 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 69,
-   "seconds": 91.3
+   "seconds": 95.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 30,
-   "seconds": 0.3
+   "seconds": 0.1
   }
  },
- "gathered": 2602,
- "afterDedup": 1369,
+ "gathered": 2599,
+ "afterDedup": 1366,
  "duplicatesMerged": 1233,
- "final": 1793,
+ "final": 1791,
  "mergeLog": [
   {
    "kept": {
@@ -2403,26 +2403,32 @@
  ],
  "changes": [
   {
-   "id": "00fa65e0ab1d",
-   "title": "Industry Day",
-   "date": "2026-10-05",
-   "change": "time",
-   "was": "2026-10-05",
-   "now": "2026-10-05T11:30:00-04:00"
+   "id": "1ab84c5c84ba",
+   "title": "Start time - 10 am - Bike Ride from Leddy Park to South Hero!",
+   "date": "2026-08-16",
+   "change": "missing",
+   "lastSeen": "2026-08-16T05:55:17-04:00"
   },
   {
-   "id": "653151ba6cf6",
-   "title": "802sDay",
-   "date": "2026-10-06",
-   "change": "time",
-   "was": "2026-10-06",
-   "now": "2026-10-06T11:30:00-04:00"
+   "id": "628844c4405d",
+   "title": "The Amazing Puzzle Race",
+   "date": "2026-08-16",
+   "change": "missing",
+   "lastSeen": "2026-08-16T05:55:17-04:00"
   },
   {
-   "id": "b59c58abcbd9",
-   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
-   "date": "2026-08-17",
-   "change": "dropped"
+   "id": "ccc8f194e893",
+   "title": "Kids Jam",
+   "date": "2026-08-16",
+   "change": "missing",
+   "lastSeen": "2026-08-16T05:55:17-04:00"
+  },
+  {
+   "id": "a35ffd1b320f",
+   "title": "Womxn's Pick-up Soccer - Outdoors at Starr Farm Park",
+   "date": "2026-08-16",
+   "change": "missing",
+   "lastSeen": "2026-08-16T05:55:17-04:00"
   },
   {
    "id": "71404c6864af",
@@ -2432,23 +2438,11 @@
    "lastSeen": "2026-08-14T06:36:31-04:00"
   },
   {
-   "id": "8a53f7fea119",
-   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
-   "date": "2026-08-24",
-   "change": "dropped"
-  },
-  {
    "id": "d0e4e622221f",
    "title": "Business Networking Event - Startup. Scale. Support.",
    "date": "2026-08-25",
    "change": "missing",
    "lastSeen": "2026-08-15T16:57:45-04:00"
-  },
-  {
-   "id": "51ae63f990de",
-   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
-   "date": "2026-08-31",
-   "change": "dropped"
   },
   {
    "id": "8a588990df73",
@@ -2461,8 +2455,7 @@
    "id": "183232429550",
    "title": "HOW TO DIVORCE DURING THE WAR",
    "date": "2026-09-03",
-   "change": "missing",
-   "lastSeen": "2026-08-13T06:41:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "b66813a5ea6e",
@@ -2472,24 +2465,16 @@
    "lastSeen": "2026-08-15T16:57:45-04:00"
   },
   {
-   "id": "202f401494a6",
-   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
-   "date": "2026-09-07",
-   "change": "dropped"
-  },
-  {
    "id": "7bb51d75acbc",
    "title": "Dinner In The Park: Wheeler Homestead",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-08-13T06:41:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "f86bbd1e5e74",
    "title": "The Dream Eaters",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-08-13T06:41:14-04:00"
+   "change": "dropped"
   },
   {
    "id": "ed46e707b0e5",
