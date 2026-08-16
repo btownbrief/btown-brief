@@ -1,26 +1,26 @@
 {
- "updated": "2026-08-16T19:56:36+00:00",
+ "updated": "2026-08-16T20:49:09+00:00",
  "sections_updated": {
-  "now": "2026-08-16T19:56:36+00:00",
-  "forecast": "2026-08-16T19:56:36+00:00",
-  "hourly": "2026-08-16T19:56:36+00:00",
-  "alerts": "2026-08-16T19:56:36+00:00",
-  "afd": "2026-08-16T19:56:36+00:00",
-  "lake_forecast": "2026-08-16T19:56:36+00:00",
-  "lake_gage": "2026-08-16T19:56:36+00:00",
-  "air": "2026-08-16T19:56:36+00:00",
-  "sun": "2026-08-16T19:56:36+00:00",
-  "models": "2026-08-16T19:56:36+00:00"
+  "now": "2026-08-16T20:49:09+00:00",
+  "forecast": "2026-08-16T20:49:09+00:00",
+  "hourly": "2026-08-16T20:49:09+00:00",
+  "alerts": "2026-08-16T20:49:09+00:00",
+  "afd": "2026-08-16T20:49:09+00:00",
+  "lake_forecast": "2026-08-16T20:49:09+00:00",
+  "lake_gage": "2026-08-16T20:49:09+00:00",
+  "air": "2026-08-16T20:49:09+00:00",
+  "sun": "2026-08-16T20:49:09+00:00",
+  "models": "2026-08-16T20:49:09+00:00"
  },
  "now": {
-  "observed_at": "2026-08-16T19:30:00+00:00",
+  "observed_at": "2026-08-16T20:35:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 77,
-  "feels_like_f": 77,
-  "humidity": 50,
-  "dewpoint_f": 57,
-  "wind_mph": 9,
+  "temp_f": 79,
+  "feels_like_f": 79,
+  "humidity": 51,
+  "dewpoint_f": 59,
+  "wind_mph": 13,
   "wind_gust_mph": null,
   "wind_dir": "S"
  },
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-16T18:20:49+00:00",
   "hours": [
-   {
-    "t": "2026-08-16T15:00:00-04:00",
-    "temp_f": 77,
-    "feels_f": 77,
-    "pop": 0,
-    "humidity": 50,
-    "wind_mph": 13,
-    "wind_dir": "S",
-    "sky": 44,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-08-16T16:00:00-04:00",
     "temp_f": 79,
@@ -567,6 +556,17 @@
     "wind_dir": "N",
     "sky": 61,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-08-18T03:00:00-04:00",
+    "temp_f": 65,
+    "feels_f": 65,
+    "pop": 3,
+    "humidity": 100,
+    "wind_mph": 2,
+    "wind_dir": "N",
+    "sky": 57,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -876,17 +876,17 @@
  },
  "lake_gage": {
   "water_temp_f": 74,
-  "water_temp_at": "2026-08-16T15:00:00.000-04:00",
+  "water_temp_at": "2026-08-16T16:00:00.000-04:00",
   "level_ft": 95.11,
-  "level_at": "2026-08-16T15:00:00.000-04:00",
+  "level_at": "2026-08-16T16:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 26,
+  "aqi": 25,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/16/26 15:00",
+  "observed": "08/16/26 16:00",
   "discussion": "Expect generally good air quality across Vermont on Monday, August 17th."
  },
  "sun": {
@@ -902,7 +902,7 @@
     "date": "2026-08-16",
     "high_f": {
      "GFS": 80,
-     "Euro": 76,
+     "Euro": 77,
      "ICON": 77
     },
     "pop_max": {
@@ -911,17 +911,17 @@
      "ICON": 28
     },
     "precip_in": {
-     "GFS": 0.0,
-     "Euro": 0.0,
+     "GFS": 0.02,
+     "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    },
    {
     "date": "2026-08-17",
     "high_f": {
-     "GFS": 78,
-     "Euro": 77,
+     "GFS": 82,
+     "Euro": 76,
      "ICON": 76
     },
     "pop_max": {
@@ -930,17 +930,17 @@
      "ICON": 50
     },
     "precip_in": {
-     "GFS": 0.02,
-     "Euro": 0.58,
+     "GFS": 0.14,
+     "Euro": 0.74,
      "ICON": 0.4
     },
-    "high_spread_f": 2
+    "high_spread_f": 6
    },
    {
     "date": "2026-08-18",
     "high_f": {
      "GFS": 75,
-     "Euro": 76,
+     "Euro": 75,
      "ICON": 80
     },
     "pop_max": {
@@ -949,8 +949,8 @@
      "ICON": 18
     },
     "precip_in": {
-     "GFS": 0.05,
-     "Euro": 0.02,
+     "GFS": 0.0,
+     "Euro": 0.03,
      "ICON": 0.02
     },
     "high_spread_f": 5
