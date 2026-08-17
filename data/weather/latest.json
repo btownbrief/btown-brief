@@ -1,16 +1,16 @@
 {
- "updated": "2026-08-17T10:13:47+00:00",
+ "updated": "2026-08-17T10:16:00+00:00",
  "sections_updated": {
-  "now": "2026-08-17T10:13:47+00:00",
-  "forecast": "2026-08-17T10:13:47+00:00",
-  "hourly": "2026-08-17T10:13:47+00:00",
-  "alerts": "2026-08-17T10:13:47+00:00",
-  "afd": "2026-08-17T10:13:47+00:00",
-  "lake_forecast": "2026-08-17T10:13:47+00:00",
-  "lake_gage": "2026-08-17T10:13:47+00:00",
-  "air": "2026-08-17T10:13:47+00:00",
-  "sun": "2026-08-17T10:13:47+00:00",
-  "models": "2026-08-17T10:13:47+00:00"
+  "now": "2026-08-17T10:16:00+00:00",
+  "forecast": "2026-08-17T10:16:00+00:00",
+  "hourly": "2026-08-17T10:16:00+00:00",
+  "alerts": "2026-08-17T10:16:00+00:00",
+  "afd": "2026-08-17T10:16:00+00:00",
+  "lake_forecast": "2026-08-17T10:16:00+00:00",
+  "lake_gage": "2026-08-17T10:16:00+00:00",
+  "air": "2026-08-17T10:16:00+00:00",
+  "sun": "2026-08-17T10:16:00+00:00",
+  "models": "2026-08-17T10:16:00+00:00"
  },
  "now": {
   "observed_at": "2026-08-17T10:00:00+00:00",
@@ -28,17 +28,7 @@
   "updated": "2026-08-17T06:19:40+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-08-17T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 68,
-    "pop": 32,
-    "wind": "S 16 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 68. South wind around 16 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
-   },
-   {
-    "name": "Monday",
+    "name": "Today",
     "start": "2026-08-17T06:00:00-04:00",
     "is_day": true,
     "temp_f": 80,
@@ -48,7 +38,7 @@
     "detailed": "A chance of rain showers before 2pm, then showers and thunderstorms likely. Mostly cloudy, with a high near 80. Southwest wind 5 to 15 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
-    "name": "Monday Night",
+    "name": "Tonight",
     "start": "2026-08-17T18:00:00-04:00",
     "is_day": false,
     "temp_f": 63,
@@ -95,7 +85,7 @@
     "pop": 61,
     "wind": "W 2 to 6 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely before 2am. Partly cloudy, with a low around 60. West wind 2 to 6 mph. Chance of precipitation is 60%."
+    "detailed": "Rain showers likely before 2am. Partly cloudy, with a low around 60. West wind 2 to 6 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Thursday",
@@ -166,23 +156,22 @@
     "wind": "S 8 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers before 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 81. South wind around 8 mph. Chance of precipitation is 50%."
+   },
+   {
+    "name": "Sunday Night",
+    "start": "2026-08-23T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 59,
+    "pop": 54,
+    "wind": "NW 6 mph",
+    "short": "Chance Showers And Thunderstorms",
+    "detailed": "A chance of showers and thunderstorms. Mostly cloudy, with a low around 59. Northwest wind around 6 mph. Chance of precipitation is 50%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-08-17T06:19:40+00:00",
   "hours": [
-   {
-    "t": "2026-08-17T05:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
-    "pop": 32,
-    "humidity": 81,
-    "wind_mph": 16,
-    "wind_dir": "S",
-    "sky": 87,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-08-17T06:00:00-04:00",
     "temp_f": 71,
@@ -567,6 +556,17 @@
     "wind_dir": "N",
     "sky": 48,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-08-18T17:00:00-04:00",
+    "temp_f": 79,
+    "feels_f": 79,
+    "pop": 0,
+    "humidity": 56,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 27,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -852,7 +852,7 @@
   "aqi": 35,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/17/26 5:00",
+  "observed": "08/17/26 6:00",
   "discussion": "Expect generally good air quality across Vermont on Monday, August 17th."
  },
  "sun": {
