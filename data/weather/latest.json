@@ -1,42 +1,32 @@
 {
- "updated": "2026-08-17T21:03:36+00:00",
+ "updated": "2026-08-17T22:00:54+00:00",
  "sections_updated": {
-  "now": "2026-08-17T21:03:36+00:00",
-  "forecast": "2026-08-17T21:03:36+00:00",
-  "hourly": "2026-08-17T21:03:36+00:00",
-  "alerts": "2026-08-17T21:03:36+00:00",
-  "afd": "2026-08-17T21:03:36+00:00",
-  "lake_forecast": "2026-08-17T21:03:36+00:00",
+  "now": "2026-08-17T22:00:54+00:00",
+  "forecast": "2026-08-17T22:00:54+00:00",
+  "hourly": "2026-08-17T22:00:54+00:00",
+  "alerts": "2026-08-17T22:00:54+00:00",
+  "afd": "2026-08-17T22:00:54+00:00",
+  "lake_forecast": "2026-08-17T22:00:54+00:00",
   "lake_gage": "2026-08-17T21:03:36+00:00",
-  "air": "2026-08-17T21:03:36+00:00",
-  "sun": "2026-08-17T21:03:36+00:00",
-  "models": "2026-08-17T21:03:36+00:00"
+  "air": "2026-08-17T22:00:54+00:00",
+  "sun": "2026-08-17T22:00:54+00:00",
+  "models": "2026-08-17T22:00:54+00:00"
  },
  "now": {
-  "observed_at": "2026-08-17T20:45:00+00:00",
+  "observed_at": "2026-08-17T21:35:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 75,
-  "feels_like_f": 76,
-  "humidity": 83,
-  "dewpoint_f": 70,
-  "wind_mph": 11,
+  "description": "Cloudy",
+  "temp_f": 73,
+  "feels_like_f": 74,
+  "humidity": 78,
+  "dewpoint_f": 66,
+  "wind_mph": 9,
   "wind_gust_mph": null,
-  "wind_dir": "NNE"
+  "wind_dir": "N"
  },
  "forecast": {
   "updated": "2026-08-17T18:09:30+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-08-17T16:00:00-04:00",
-    "is_day": true,
-    "temp_f": 78,
-    "pop": 77,
-    "wind": "NW 5 mph",
-    "short": "Showers And Thunderstorms",
-    "detailed": "Showers and thunderstorms. Cloudy, with a high near 78. Northwest wind around 5 mph. Chance of precipitation is 80%. New rainfall amounts between a tenth and quarter of an inch possible."
-   },
    {
     "name": "Tonight",
     "start": "2026-08-17T18:00:00-04:00",
@@ -166,34 +156,22 @@
     "wind": "S 6 to 9 mph",
     "short": "Showers And Thunderstorms",
     "detailed": "Showers and thunderstorms. Mostly cloudy, with a low around 61. South wind 6 to 9 mph. Chance of precipitation is 80%."
+   },
+   {
+    "name": "Monday",
+    "start": "2026-08-24T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 78,
+    "pop": 52,
+    "wind": "W 6 to 10 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Partly sunny, with a high near 78. West wind 6 to 10 mph. Chance of precipitation is 50%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-08-17T18:09:30+00:00",
   "hours": [
-   {
-    "t": "2026-08-17T16:00:00-04:00",
-    "temp_f": 77,
-    "feels_f": 77,
-    "pop": 77,
-    "humidity": 79,
-    "wind_mph": 5,
-    "wind_dir": "W",
-    "sky": 100,
-    "short": "Showers And Thunderstorms"
-   },
-   {
-    "t": "2026-08-17T17:00:00-04:00",
-    "temp_f": 76,
-    "feels_f": 76,
-    "pop": 60,
-    "humidity": 82,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 94,
-    "short": "Chance Showers And Thunderstorms"
-   },
    {
     "t": "2026-08-17T18:00:00-04:00",
     "temp_f": 75,
@@ -567,6 +545,28 @@
     "wind_dir": "S",
     "sky": 55,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-08-19T04:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 0,
+    "humidity": 93,
+    "wind_mph": 3,
+    "wind_dir": "S",
+    "sky": 59,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-08-19T05:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 3,
+    "humidity": 93,
+    "wind_mph": 5,
+    "wind_dir": "S",
+    "sky": 46,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -859,10 +859,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 22,
+  "aqi": 21,
   "category": "Good",
-  "pollutant": "OZONE",
-  "observed": "08/17/26 16:00",
+  "pollutant": "PM2.5",
+  "observed": "08/17/26 17:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 18th."
  },
  "sun": {
