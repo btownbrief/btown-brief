@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-17T10:16:00+00:00",
+ "updated": "2026-08-17T11:04:01+00:00",
  "sections_updated": {
-  "now": "2026-08-17T10:16:00+00:00",
-  "forecast": "2026-08-17T10:16:00+00:00",
-  "hourly": "2026-08-17T10:16:00+00:00",
-  "alerts": "2026-08-17T10:16:00+00:00",
-  "afd": "2026-08-17T10:16:00+00:00",
-  "lake_forecast": "2026-08-17T10:16:00+00:00",
-  "lake_gage": "2026-08-17T10:16:00+00:00",
-  "air": "2026-08-17T10:16:00+00:00",
-  "sun": "2026-08-17T10:16:00+00:00",
-  "models": "2026-08-17T10:16:00+00:00"
+  "now": "2026-08-17T11:04:01+00:00",
+  "forecast": "2026-08-17T11:04:01+00:00",
+  "hourly": "2026-08-17T11:04:01+00:00",
+  "alerts": "2026-08-17T11:04:01+00:00",
+  "afd": "2026-08-17T11:04:01+00:00",
+  "lake_forecast": "2026-08-17T11:04:01+00:00",
+  "lake_gage": "2026-08-17T11:04:01+00:00",
+  "air": "2026-08-17T11:04:01+00:00",
+  "sun": "2026-08-17T11:04:01+00:00",
+  "models": "2026-08-17T11:04:01+00:00"
  },
  "now": {
-  "observed_at": "2026-08-17T10:00:00+00:00",
+  "observed_at": "2026-08-17T10:45:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
+  "description": "Light Rain",
   "temp_f": 66,
   "feels_like_f": 66,
   "humidity": 94,
   "dewpoint_f": 64,
-  "wind_mph": 13,
-  "wind_gust_mph": 18,
+  "wind_mph": 10,
+  "wind_gust_mph": 17,
   "wind_dir": "S"
  },
  "forecast": {
-  "updated": "2026-08-17T06:19:40+00:00",
+  "updated": "2026-08-17T10:28:39+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-17T06:00:00-04:00",
+    "start": "2026-08-17T07:00:00-04:00",
     "is_day": true,
     "temp_f": 80,
     "pop": 71,
     "wind": "SW 5 to 15 mph",
     "short": "Showers And Thunderstorms Likely",
-    "detailed": "A chance of rain showers before 2pm, then showers and thunderstorms likely. Mostly cloudy, with a high near 80. Southwest wind 5 to 15 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "A chance of rain showers before 2pm, then showers and thunderstorms likely. Cloudy, with a high near 80. Southwest wind 5 to 15 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Tonight",
@@ -170,39 +170,28 @@
   ]
  },
  "hourly": {
-  "updated": "2026-08-17T06:19:40+00:00",
+  "updated": "2026-08-17T10:28:39+00:00",
   "hours": [
    {
-    "t": "2026-08-17T06:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
-    "pop": 43,
-    "humidity": 79,
-    "wind_mph": 15,
-    "wind_dir": "S",
-    "sky": 87,
-    "short": "Chance Rain Showers"
-   },
-   {
     "t": "2026-08-17T07:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
+    "temp_f": 68,
+    "feels_f": 68,
     "pop": 48,
-    "humidity": 81,
+    "humidity": 87,
     "wind_mph": 15,
     "wind_dir": "S",
-    "sky": 83,
+    "sky": 96,
     "short": "Chance Rain Showers"
    },
    {
     "t": "2026-08-17T08:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
+    "temp_f": 69,
+    "feels_f": 69,
     "pop": 49,
     "humidity": 87,
     "wind_mph": 13,
     "wind_dir": "S",
-    "sky": 67,
+    "sky": 96,
     "short": "Chance Rain Showers"
    },
    {
@@ -213,7 +202,7 @@
     "humidity": 90,
     "wind_mph": 13,
     "wind_dir": "S",
-    "sky": 71,
+    "sky": 85,
     "short": "Chance Rain Showers"
    },
    {
@@ -224,7 +213,7 @@
     "humidity": 87,
     "wind_mph": 13,
     "wind_dir": "S",
-    "sky": 63,
+    "sky": 84,
     "short": "Chance Rain Showers"
    },
    {
@@ -235,7 +224,7 @@
     "humidity": 84,
     "wind_mph": 12,
     "wind_dir": "S",
-    "sky": 67,
+    "sky": 92,
     "short": "Chance Rain Showers"
    },
    {
@@ -246,7 +235,7 @@
     "humidity": 79,
     "wind_mph": 9,
     "wind_dir": "S",
-    "sky": 65,
+    "sky": 89,
     "short": "Chance Rain Showers"
    },
    {
@@ -257,7 +246,7 @@
     "humidity": 85,
     "wind_mph": 7,
     "wind_dir": "S",
-    "sky": 75,
+    "sky": 93,
     "short": "Chance Rain Showers"
    },
    {
@@ -268,7 +257,7 @@
     "humidity": 82,
     "wind_mph": 6,
     "wind_dir": "S",
-    "sky": 84,
+    "sky": 89,
     "short": "Chance Showers And Thunderstorms"
    },
    {
@@ -279,7 +268,7 @@
     "humidity": 79,
     "wind_mph": 5,
     "wind_dir": "SW",
-    "sky": 90,
+    "sky": 93,
     "short": "Showers And Thunderstorms Likely"
    },
    {
@@ -290,7 +279,7 @@
     "humidity": 77,
     "wind_mph": 5,
     "wind_dir": "W",
-    "sky": 88,
+    "sky": 91,
     "short": "Showers And Thunderstorms Likely"
    },
    {
@@ -301,7 +290,7 @@
     "humidity": 76,
     "wind_mph": 5,
     "wind_dir": "N",
-    "sky": 76,
+    "sky": 85,
     "short": "Showers And Thunderstorms Likely"
    },
    {
@@ -567,6 +556,17 @@
     "wind_dir": "N",
     "sky": 27,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-08-18T18:00:00-04:00",
+    "temp_f": 78,
+    "feels_f": 78,
+    "pop": 0,
+    "humidity": 60,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 37,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -849,7 +849,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 35,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "08/17/26 6:00",
@@ -867,21 +867,21 @@
    {
     "date": "2026-08-17",
     "high_f": {
-     "GFS": 78,
+     "GFS": 75,
      "Euro": 76,
      "ICON": 78
     },
     "pop_max": {
-     "GFS": 29,
+     "GFS": 43,
      "Euro": 100,
      "ICON": 53
     },
     "precip_in": {
-     "GFS": 0.02,
+     "GFS": 0.2,
      "Euro": 0.26,
      "ICON": 0.15
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    },
    {
     "date": "2026-08-18",
