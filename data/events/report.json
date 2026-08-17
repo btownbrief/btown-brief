@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-17T06:07:52-04:00",
+ "generated": "2026-08-17T17:00:55-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -14,17 +14,17 @@
   "brownell": {
    "label": "Brownell Library",
    "count": 56,
-   "seconds": 3.7
+   "seconds": 3.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 153,
-   "seconds": 3.1
+   "seconds": 2.4
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 66,
-   "seconds": 1.6
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 158,
-   "seconds": 66.2
+   "seconds": 74.6
   },
   "flynn": {
    "label": "The Flynn",
    "count": 35,
-   "seconds": 2.1
+   "seconds": 2.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 37.0
+   "seconds": 42.0
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 78,
-   "seconds": 115.7
+   "seconds": 123.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,27 +79,27 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 412,
-   "seconds": 72.6
+   "seconds": 69.1
   },
   "meetup": {
    "label": "Meetup",
    "count": 64,
-   "seconds": 114.7
+   "seconds": 128.0
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 42,
-   "seconds": 14.6
+   "seconds": 16.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 76,
-   "seconds": 2.1
+   "seconds": 1.7
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 32,
-   "seconds": 32.3
+   "seconds": 34.8
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,64 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 297,
-   "seconds": 19.1
+   "count": 329,
+   "seconds": 13.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 187,
+   "count": 195,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 71,
-   "seconds": 90.7
+   "seconds": 96.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 30,
-   "seconds": 0.4
+   "seconds": 0.1
   }
  },
- "gathered": 2595,
- "afterDedup": 1373,
- "duplicatesMerged": 1222,
- "final": 1777,
+ "gathered": 2635,
+ "afterDedup": 1387,
+ "duplicatesMerged": 1248,
+ "final": 1800,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-15"
-  },
-  {
-   "kept": {
-    "title": "Alela Diane",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-09-16"
-  },
-  {
-   "kept": {
-    "title": "John Craigie",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground"
-   ],
-   "date": "2026-09-16"
-  },
   {
    "kept": {
     "title": "TRIVIA NIGHT",
@@ -195,12 +161,34 @@
   },
   {
    "kept": {
+    "title": "BOOST Sessions",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-16"
+  },
+  {
+   "kept": {
     "title": "Fall 2026 Kickoff Party",
     "source": "uvm"
    },
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-09-16"
+  },
+  {
+   "kept": {
+    "title": "Mikaela Davis w/ Johanna Samuels",
+    "source": "breweries"
+   },
+   "merged_sources": [
+    "breweries",
+    "helloburlington"
    ],
    "date": "2026-09-16"
   },
@@ -239,17 +227,6 @@
   },
   {
    "kept": {
-    "title": "Gooseberry",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-09-17"
-  },
-  {
-   "kept": {
     "title": "Hazlett",
     "source": "higherground"
    },
@@ -259,6 +236,17 @@
     "higherground",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-09-17"
+  },
+  {
+   "kept": {
+    "title": "Gooseberry",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
    ],
    "date": "2026-09-17"
   },
@@ -431,6 +419,17 @@
   },
   {
    "kept": {
+    "title": "Oktoberfest Vermont",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
     "title": "Latin-American Connection Celebration",
     "source": "bca"
    },
@@ -527,12 +526,36 @@
   },
   {
    "kept": {
+    "title": "Oktoberfest Vermont",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-09-19"
+  },
+  {
+   "kept": {
     "title": "Brad Williams",
     "source": "flynn"
    },
    "merged_sources": [
     "champlainvalley",
     "flynn"
+   ],
+   "date": "2026-09-20"
+  },
+  {
+   "kept": {
+    "title": "Jensen McRae",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-09-20"
   },
@@ -551,19 +574,6 @@
   {
    "kept": {
     "title": "Of Monsters and Men",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-20"
-  },
-  {
-   "kept": {
-    "title": "Jensen McRae",
     "source": "higherground"
    },
    "merged_sources": [
@@ -715,6 +725,17 @@
   },
   {
    "kept": {
+    "title": "Random Chats About Statistics: Building Confidence with Data",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-22"
+  },
+  {
+   "kept": {
     "title": "Field Hockey vs Merrimack",
     "source": "uvm"
    },
@@ -804,6 +825,17 @@
   {
    "kept": {
     "title": "Meanwhile in Vermont... Where do we show up in our nation's founding documents?",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-23"
+  },
+  {
+   "kept": {
+    "title": "BOOST Sessions",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1062,7 +1094,7 @@
   },
   {
    "kept": {
-    "title": "Dwight + Nicole",
+    "title": "Donna the Buffalo",
     "source": "higherground"
    },
    "merged_sources": [
@@ -1074,7 +1106,7 @@
   },
   {
    "kept": {
-    "title": "Donna the Buffalo",
+    "title": "Dwight + Nicole",
     "source": "higherground"
    },
    "merged_sources": [
@@ -1200,23 +1232,23 @@
   },
   {
    "kept": {
-    "title": "Chandler",
+    "title": "Cate Le Bon",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-28"
   },
   {
    "kept": {
-    "title": "Cate Le Bon",
+    "title": "Chandler",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground"
    ],
    "date": "2026-09-28"
@@ -1372,6 +1404,17 @@
   {
    "kept": {
     "title": "2026 UVM Job & Internship Fair",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "BOOST Sessions",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1967,34 +2010,11 @@
   },
   {
    "kept": {
-    "title": "Industry Day",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-05"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-05"
-  },
-  {
-   "kept": {
     "title": "Bombargo",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -2014,17 +2034,6 @@
   },
   {
    "kept": {
-    "title": "802sDay",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
     "title": "Ann Wilson: The Voice of Heart & Tripsitter",
     "source": "loveburlington"
    },
@@ -2036,34 +2045,11 @@
   },
   {
    "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
-    "title": "Oteil Burbridge & LaMP",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-10-07"
-  },
-  {
-   "kept": {
     "title": "Briscoe",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -2105,23 +2091,12 @@
   },
   {
    "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
+    "title": "BOOST Sessions",
+    "source": "uvm"
    },
    "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-07"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-10-07"
   },
@@ -2138,7 +2113,7 @@
   },
   {
    "kept": {
-    "title": "Margo Cilker & Lilly Hiatt",
+    "title": "Benjamin Tod & Lost Dog Street Band",
     "source": "higherground"
    },
    "merged_sources": [
@@ -2149,7 +2124,7 @@
   },
   {
    "kept": {
-    "title": "Benjamin Tod & Lost Dog Street Band",
+    "title": "Margo Cilker & Lilly Hiatt",
     "source": "higherground"
    },
    "merged_sources": [
@@ -2172,6 +2147,17 @@
   {
    "kept": {
     "title": "Harvest Connections",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
+    "title": "Beyond Bendy: Improving Recognition and Diagnosis of Hypermobile Ehlers-Danlos Syndrome (hEDS) and Its Comorbidities",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2348,6 +2334,17 @@
   },
   {
    "kept": {
+    "title": "BOOST Sessions",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
     "title": "Kidder Faculty Award and Lecture: Lizzy Pope G’13",
     "source": "uvm"
    },
@@ -2404,11 +2401,34 @@
  ],
  "changes": [
   {
+   "id": "613f100e9a92",
+   "title": "34th Annual South End Art Hop!",
+   "date": "2026-09-11",
+   "change": "time",
+   "was": "2026-09-11",
+   "now": "2026-09-11T22:00:00-04:00"
+  },
+  {
+   "id": "c215db4e3c23",
+   "title": "34th Annual South End Art Hop!",
+   "date": "2026-09-12",
+   "change": "time",
+   "was": "2026-09-12",
+   "now": "2026-09-12T22:00:00-04:00"
+  },
+  {
+   "id": "25350ab12df0",
+   "title": "34th Annual South End Art Hop!",
+   "date": "2026-09-13",
+   "change": "time",
+   "was": "2026-09-13",
+   "now": "2026-09-13T22:00:00-04:00"
+  },
+  {
    "id": "71404c6864af",
    "title": "Family Literacy & Health Night",
    "date": "2026-08-20",
-   "change": "missing",
-   "lastSeen": "2026-08-14T06:36:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "d0e4e622221f",
@@ -2421,8 +2441,7 @@
    "id": "8a588990df73",
    "title": "Catamount Cinema",
    "date": "2026-08-31",
-   "change": "missing",
-   "lastSeen": "2026-08-14T06:36:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "b66813a5ea6e",
@@ -2432,11 +2451,88 @@
    "lastSeen": "2026-08-15T16:57:45-04:00"
   },
   {
+   "id": "f26308f3e4e5",
+   "title": "The Marcus King Band - The Darling Blue Tour",
+   "date": "2026-09-15",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "7d794705dbd7",
+   "title": "Oktoberfest Vermont 2026",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "55927959fa17",
+   "title": "Oktoberfest Vermont 2026",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
    "id": "ed46e707b0e5",
    "title": "VCA Presents: $5 Improv Night!",
    "date": "2026-09-30",
    "change": "missing",
    "lastSeen": "2026-08-15T05:55:27-04:00"
+  },
+  {
+   "id": "87227a21605e",
+   "title": "Traditional Tuesday",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "582199e33b83",
+   "title": "Local Dork at Foam Brewers on a Tuesday",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "fba509a2c38e",
+   "title": "Vermont Figure Drawing Collective",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "6f871019acca",
+   "title": "BASIC",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "04c689132cf3",
+   "title": "Ann Wilson Live In Concert",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "d229b47784bf",
+   "title": "Honky Tonk Tuesday",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "75217c5a9633",
+   "title": "Venetian Trivia Night!",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "d2257760dce1",
+   "title": "Jason Dea West",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-08-17T06:07:52-04:00"
   }
  ]
 }
