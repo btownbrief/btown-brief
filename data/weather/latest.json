@@ -1,27 +1,27 @@
 {
- "updated": "2026-08-17T05:21:50+00:00",
+ "updated": "2026-08-17T06:20:46+00:00",
  "sections_updated": {
-  "now": "2026-08-17T05:21:50+00:00",
-  "forecast": "2026-08-17T05:21:50+00:00",
-  "hourly": "2026-08-17T05:21:50+00:00",
-  "alerts": "2026-08-17T05:21:50+00:00",
-  "afd": "2026-08-17T05:21:50+00:00",
-  "lake_forecast": "2026-08-17T05:21:50+00:00",
-  "lake_gage": "2026-08-17T05:21:50+00:00",
-  "air": "2026-08-17T05:21:50+00:00",
-  "sun": "2026-08-17T05:21:50+00:00",
-  "models": "2026-08-17T05:21:50+00:00"
+  "now": "2026-08-17T06:20:46+00:00",
+  "forecast": "2026-08-17T06:20:46+00:00",
+  "hourly": "2026-08-17T06:20:46+00:00",
+  "alerts": "2026-08-17T06:20:46+00:00",
+  "afd": "2026-08-17T06:20:46+00:00",
+  "lake_forecast": "2026-08-17T06:20:46+00:00",
+  "lake_gage": "2026-08-17T06:20:46+00:00",
+  "air": "2026-08-17T06:20:46+00:00",
+  "sun": "2026-08-17T06:20:46+00:00",
+  "models": "2026-08-17T06:20:46+00:00"
  },
  "now": {
-  "observed_at": "2026-08-17T05:05:00+00:00",
+  "observed_at": "2026-08-17T06:00:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
+  "description": "Mostly Cloudy",
   "temp_f": 70,
   "feels_like_f": 70,
   "humidity": 78,
   "dewpoint_f": 63,
   "wind_mph": null,
-  "wind_gust_mph": 22,
+  "wind_gust_mph": 24,
   "wind_dir": null
  },
  "forecast": {
@@ -29,7 +29,7 @@
   "periods": [
    {
     "name": "Overnight",
-    "start": "2026-08-17T01:00:00-04:00",
+    "start": "2026-08-17T02:00:00-04:00",
     "is_day": false,
     "temp_f": 64,
     "pop": 74,
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-16T18:20:49+00:00",
   "hours": [
-   {
-    "t": "2026-08-17T01:00:00-04:00",
-    "temp_f": 66,
-    "feels_f": 66,
-    "pop": 62,
-    "humidity": 100,
-    "wind_mph": 17,
-    "wind_dir": "S",
-    "sky": 90,
-    "short": "Showers And Thunderstorms Likely"
-   },
    {
     "t": "2026-08-17T02:00:00-04:00",
     "temp_f": 66,
@@ -567,6 +556,17 @@
     "wind_dir": "N",
     "sky": 44,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-08-18T13:00:00-04:00",
+    "temp_f": 77,
+    "feels_f": 77,
+    "pop": 4,
+    "humidity": 67,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 42,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-16T23:45:00+00:00",
+  "issued": "2026-08-17T05:24:00+00:00",
   "key_messages": [
    "Widespread showers overnight, with separate development of showers and some embedded thunderstorms midday/afternoon Monday.",
    "Seasonable conditions persist through the second half of the week with mainly dry weather Thursday into Saturday."
   ],
   "what_changed": "As of 217 PM EDT Sunday... Increased thunder chances during the midday and afternoon hours on Monday, but severe t-storm potential remains low.",
-  "raw": "\n000\nFXUS61 KBTV 162345\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n745 PM EDT Sun Aug 16 2026\n\n.WHAT HAS CHANGED...\nAs of 217 PM EDT Sunday...\n\nIncreased thunder chances during the midday and afternoon hours\non Monday, but severe t-storm potential remains low.\n\n&&\n\n.KEY MESSAGES...\nAs of 217 PM EDT Sunday...\n\n1. Widespread showers overnight, with separate development of \nshowers and some embedded thunderstorms midday/afternoon Monday.\n\n\n2. Seasonable conditions persist through the second half of the\nweek with mainly dry weather Thursday into Saturday.\n\n&&\n\n.DISCUSSION...\nAs of 217 PM EDT Sunday...\n\nKEY MESSAGE 1: \n\nHigh clouds are in the process of increasing from west-to-east \nacross northern New York and Vermont this afternoon, associated \nwith mid-level trough extending from northern Ontario southward \nacross Lake Huron, Lake Erie and into Ohio. PBL winds have \nturned southerly with 1022mb sfc anticyclone now east of Cape \nCod. Southerly winds should remain moderate overnight with \napproaching frontal system and absence of much radiational \ncooling overnight. Overnight lows will generally range from the \nlow-mid 60s. With the increasing southerly gradient flow, a Lake\nWind Advisory has been posted (see Marine section below for \ntonight. The Lake Wind Advisory may be necessary through the \nmorning hours on Monday as well. \n\nNot much in the way of mid-tropospheric height falls overnight,\nbut some low-level WAA in advance of the approaching front \nshould be just enough to yield scattered rain showers overnight,\nespecially after 03Z or so. There is some marginal elevated \nCAPE for parcels lifted from 850-775mb per HRRR and NAM3 \nforecast soundings. As such, kept with the idea that there could\nbe a few embedded convective elements with a few overnight \nrumbles of thunder possible. PoPs are highest across central/nrn\nVT during the pre-dawn hours (70-80%) and generally 30-50% \nelsewhere. \n\nHeading into Monday...surface boundary progresses through \nslowly from west to east. If we get some breaks in the cloud \ncover, there is a chance for modest PBL destabilization by late \nmorning/early afternoon. Consistent with this, the 12Z HRRR \ndeveloped 500-800 J/kg SBCAPE during the peak heating hours \nMonday, that is relatively uncapped. Anticipating a separate \nbroken line of showers - and perhaps a few embedded \nthunderstorms - to develop during the midday hours while \ndrifting slowly ewd across central/ern VT by mid-late afternoon.\nWeak mid-level lapse rates and modest sfc-6km shear suggest \nthat if thunderstorms form, they are unlikely to become severe. \nHowever, have shown a separate period of 60-70% PoPs to account \nfor this expected separate period of convective showers and \nstorms during Monday afternoon. High temperatures on Monday will\nbe seasonable to slightly below average for mid-August, in the \nmid- upper 70s.\n\nKEY MESSAGE 2: Lingering showers will move out on Wednesday \nnight and Thursday as broad cyclonic flow slowly migrates \neastward. After the system moves off, a period of drier weather \nlooks to return for the latter half of the week. Daytime \ntemperatures increase towards climatological normals into next \nweekend with highs in the 70s and lower 80s as well as overnight\nlows falling into the 40s and 50s. There is the potential for \nanother system to sweep through next weekend bringing some \nsustained showers. We'll continue to monitor this potential as \nthe event approaches.\n\n&&\n\n.AVIATION /00Z MONDAY THROUGH FRIDAY/...\nThrough 00Z Tuesday...Widespread showers tonight will be \nfollowed by scattered showers and localized thunderstorms \nMonday. As rain showers arrive tonight, we'll see a general \ntrend towards MVFR or lower ceilings, reaching widespread MVFR \ncigs by 01Z-04Z Monday. Winds should persist out of the south, \nwith sites MSS and SLK picking up a more southwesterly component\naround 05Z-08Z. Southerly flow will likely remain channeled and\ngusty through the Champlain Valley, gusting 20-25 knots at site\nBTV throughout the night tonight and early Monday morning. IFR \nceilings are possible sometime tonight and into Monday morning \nas well, though some uncertainty remains. Most likely spots for \nIFR ceilings will be SLK and MSS with that southwesterly wind, \nthough no site is out of the question. Most model soundings are \nnot as saturated as probabilistic data might suggest. As the \nshowers approach and we get additional observations from areas \nupstream, this may increase confidence in one direction or \nanother. \n\nOutlook...\n\nMonday Night: Mainly VFR, with local IFR possible. Slight chance\nSHRA.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: Mainly VFR, with local MVFR possible. Likely SHRA,\nSlight chance TSRA.\nWednesday Night: Mainly VFR, with local MVFR possible. Slight\nchance SHRA.\nThursday: VFR. Slight chance SHRA.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nAs of 217 PM EDT Sunday...\n\nA Lake Wind Advisory has been posted for Lake Champlain tonight. A \nsharp increase in southerly gradient flow is expected this evening, \nwith sustained winds 20-30kt over the broad lake through the \nmajority of the overnight hours. The Great Lakes Wave Model \nindicates max wave heights of 3-4 ft between 06-14 UTC from near \nColchester Point to east of Valcour Island, which appears reasonable \nbased on expected southerly sustained wind speeds. Should see\nthose wind speeds lessen after noon on Monday.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Banacos\nDISCUSSION...Banacos/Storm\nAVIATION...Neiles\nMARINE...Banacos\n"
+  "raw": "\n000\nFXUS61 KBTV 170524\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n124 AM EDT Mon Aug 17 2026\n\n.WHAT HAS CHANGED...\nAs of 217 PM EDT Sunday...\n\nIncreased thunder chances during the midday and afternoon hours\non Monday, but severe t-storm potential remains low.\n\n&&\n\n.KEY MESSAGES...\nAs of 217 PM EDT Sunday...\n\n1. Widespread showers overnight, with separate development of \nshowers and some embedded thunderstorms midday/afternoon Monday.\n\n\n2. Seasonable conditions persist through the second half of the\nweek with mainly dry weather Thursday into Saturday.\n\n&&\n\n.DISCUSSION...\nAs of 217 PM EDT Sunday...\n\nKEY MESSAGE 1: \n\nHigh clouds are in the process of increasing from west-to-east \nacross northern New York and Vermont this afternoon, associated \nwith mid-level trough extending from northern Ontario southward \nacross Lake Huron, Lake Erie and into Ohio. PBL winds have \nturned southerly with 1022mb sfc anticyclone now east of Cape \nCod. Southerly winds should remain moderate overnight with \napproaching frontal system and absence of much radiational \ncooling overnight. Overnight lows will generally range from the \nlow-mid 60s. With the increasing southerly gradient flow, a Lake\nWind Advisory has been posted (see Marine section below for \ntonight. The Lake Wind Advisory may be necessary through the \nmorning hours on Monday as well. \n\nNot much in the way of mid-tropospheric height falls overnight,\nbut some low-level WAA in advance of the approaching front \nshould be just enough to yield scattered rain showers overnight,\nespecially after 03Z or so. There is some marginal elevated \nCAPE for parcels lifted from 850-775mb per HRRR and NAM3 \nforecast soundings. As such, kept with the idea that there could\nbe a few embedded convective elements with a few overnight \nrumbles of thunder possible. PoPs are highest across central/nrn\nVT during the pre-dawn hours (70-80%) and generally 30-50% \nelsewhere. \n\nHeading into Monday...surface boundary progresses through \nslowly from west to east. If we get some breaks in the cloud \ncover, there is a chance for modest PBL destabilization by late \nmorning/early afternoon. Consistent with this, the 12Z HRRR \ndeveloped 500-800 J/kg SBCAPE during the peak heating hours \nMonday, that is relatively uncapped. Anticipating a separate \nbroken line of showers - and perhaps a few embedded \nthunderstorms - to develop during the midday hours while \ndrifting slowly ewd across central/ern VT by mid-late afternoon.\nWeak mid-level lapse rates and modest sfc-6km shear suggest \nthat if thunderstorms form, they are unlikely to become severe. \nHowever, have shown a separate period of 60-70% PoPs to account \nfor this expected separate period of convective showers and \nstorms during Monday afternoon. High temperatures on Monday will\nbe seasonable to slightly below average for mid-August, in the \nmid- upper 70s.\n\nKEY MESSAGE 2: Lingering showers will move out on Wednesday \nnight and Thursday as broad cyclonic flow slowly migrates \neastward. After the system moves off, a period of drier weather \nlooks to return for the latter half of the week. Daytime \ntemperatures increase towards climatological normals into next \nweekend with highs in the 70s and lower 80s as well as overnight\nlows falling into the 40s and 50s. There is the potential for \nanother system to sweep through next weekend bringing some \nsustained showers. We'll continue to monitor this potential as \nthe event approaches.\n\n&&\n\n.AVIATION /06Z MONDAY THROUGH FRIDAY/...\nThrough 06Z Tuesday...Shower activity overnight will be primarily\nlimited to the vicinity of the international border with ceilings\nlowering into MVFR conditions at many locations. The stronger south\n/southwest flow should prevent fog formation at most locations, with\npossible exceptions for SLK, MPV, and EFK. The winds will be\nenhanced with channeled flow through the Champlain Valley, leaving\nwinds above 20kt at BTV.\n\nOutlook...\n\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. Likely SHRA, Slight chance TSRA.\nWednesday Night: VFR. Slight chance SHRA.\nThursday: VFR. Slight chance SHRA.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nAs of 217 PM EDT Sunday...\n\nA Lake Wind Advisory has been posted for Lake Champlain tonight. A \nsharp increase in southerly gradient flow is expected this evening, \nwith sustained winds 20-30kt over the broad lake through the \nmajority of the overnight hours. The Great Lakes Wave Model \nindicates max wave heights of 3-4 ft between 06-14 UTC from near \nColchester Point to east of Valcour Island, which appears reasonable \nbased on expected southerly sustained wind speeds. Should see\nthose wind speeds lessen after noon on Monday.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Banacos\nDISCUSSION...Storm/Banacos\nAVIATION...Langbauer\nMARINE...Banacos\n"
  },
  "lake_forecast": {
   "issued": "2026-08-16T18:24:00+00:00",
@@ -876,17 +876,17 @@
  },
  "lake_gage": {
   "water_temp_f": 74,
-  "water_temp_at": "2026-08-17T01:00:00.000-04:00",
-  "level_ft": 95.06,
-  "level_at": "2026-08-17T01:00:00.000-04:00",
+  "water_temp_at": "2026-08-17T02:00:00.000-04:00",
+  "level_ft": 95.05,
+  "level_at": "2026-08-17T02:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 35,
+  "aqi": 37,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/17/26 1:00",
+  "observed": "08/17/26 2:00",
   "discussion": "Expect generally good air quality across Vermont on Monday, August 17th."
  },
  "sun": {
@@ -894,7 +894,7 @@
   "sunset": "2026-08-17T19:55-04:00",
   "sunrise_tomorrow": "2026-08-18T05:59-04:00",
   "sunset_tomorrow": "2026-08-18T19:53-04:00",
-  "uv_max": 1.2
+  "uv_max": 5.05
  },
  "models": {
   "days": [
@@ -906,12 +906,12 @@
      "ICON": 78
     },
     "pop_max": {
-     "GFS": 39,
+     "GFS": 37,
      "Euro": 100,
      "ICON": 53
     },
     "precip_in": {
-     "GFS": 0.11,
+     "GFS": 0.0,
      "Euro": 0.26,
      "ICON": 0.15
     },
@@ -939,7 +939,7 @@
    {
     "date": "2026-08-19",
     "high_f": {
-     "GFS": 76,
+     "GFS": 77,
      "Euro": 75,
      "ICON": 76
     },
@@ -949,11 +949,11 @@
      "ICON": 22
     },
     "precip_in": {
-     "GFS": 0.05,
+     "GFS": 0.18,
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    }
   ]
  }
