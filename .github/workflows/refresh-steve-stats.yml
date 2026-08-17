@@ -1,0 +1,47 @@
+# Countach Countdown stats (play.btownbrief.com/countach-countdown)
+#
+#   scripts/refresh_steve_stats.py -> data/steve-stats.json on the
+#   `steve-stats` branch (orphan single commit, force-pushed, fetched by
+#   the page straight off raw.githubusercontent.com — same pattern as
+#   pulse-youtube, so it never touches main or Pages).
+
+name: Refresh Steve stats
+
+on:
+  schedule:
+    - cron: '11,41 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch stats
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          OUT: /tmp/steve-out/data/steve-stats.json
+        run: |
+          mkdir -p /tmp/steve-out/data
+          python3 scripts/refresh_steve_stats.py
+
+      - name: Force-push the single-commit steve-stats branch
+        run: |
+          if [ ! -s /tmp/steve-out/data/steve-stats.json ]; then
+            echo "nothing written this run — leaving the branch alone"
+            exit 0
+          fi
+          cd /tmp/steve-out
+          git init -q -b steve-stats
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/steve-stats.json
+          git commit -q -m "Steve stats $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            steve-stats
