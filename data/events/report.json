@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-16T16:56:53-04:00",
+ "generated": "2026-08-17T06:07:52-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 14,
-   "seconds": 6.0
+   "count": 16,
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 67,
-   "seconds": 4.2
+   "count": 64,
+   "seconds": 3.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 55,
-   "seconds": 3.6
+   "count": 56,
+   "seconds": 3.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 154,
-   "seconds": 2.1
+   "count": 153,
+   "seconds": 3.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 66,
-   "seconds": 1.4
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-16&end_date=2026-10-15&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-17&end_date=2026-10-16&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 158,
-   "seconds": 76.8
+   "seconds": 66.2
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 37,
-   "seconds": 2.8
+   "count": 35,
+   "seconds": 2.1
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 40.6
+   "seconds": 37.0
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 77,
-   "seconds": 120.4
+   "count": 78,
+   "seconds": 115.7
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 417,
-   "seconds": 67.8
+   "count": 412,
+   "seconds": 72.6
   },
   "meetup": {
    "label": "Meetup",
    "count": 64,
-   "seconds": 125.2
+   "seconds": 114.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 42,
-   "seconds": 16.9
+   "seconds": 14.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 75,
-   "seconds": 1.5
+   "count": 76,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 32,
-   "seconds": 33.9
+   "seconds": 32.3
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,85 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 295,
-   "seconds": 11.8
+   "count": 297,
+   "seconds": 19.1
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 189,
+   "count": 187,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 69,
-   "seconds": 95.1
+   "count": 71,
+   "seconds": 90.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 30,
-   "seconds": 0.1
+   "seconds": 0.4
   }
  },
- "gathered": 2599,
- "afterDedup": 1366,
- "duplicatesMerged": 1233,
- "final": 1791,
+ "gathered": 2595,
+ "afterDedup": 1373,
+ "duplicatesMerged": 1222,
+ "final": 1777,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Community Service Fair",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-15"
-  },
-  {
-   "kept": {
-    "title": "Empowerment Self-Defense (Student Session)",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-15"
-  },
-  {
-   "kept": {
-    "title": "Women's Soccer vs Adelphi",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-15"
-  },
-  {
-   "kept": {
-    "title": "Elephant Stone w/ Carinae",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "champlainvalley"
-   ],
-   "date": "2026-09-15"
-  },
-  {
-   "kept": {
-    "title": "802sDay",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-15"
-  },
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
@@ -2091,11 +2036,34 @@
   },
   {
    "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-06"
+  },
+  {
+   "kept": {
+    "title": "Oteil Burbridge & LaMP",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
     "title": "Briscoe",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -2132,6 +2100,28 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-07"
   },
@@ -2399,37 +2389,20 @@
     "loveburlington"
    ],
    "date": "2026-10-15"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-16"
   }
  ],
  "changes": [
-  {
-   "id": "1ab84c5c84ba",
-   "title": "Start time - 10 am - Bike Ride from Leddy Park to South Hero!",
-   "date": "2026-08-16",
-   "change": "missing",
-   "lastSeen": "2026-08-16T05:55:17-04:00"
-  },
-  {
-   "id": "628844c4405d",
-   "title": "The Amazing Puzzle Race",
-   "date": "2026-08-16",
-   "change": "missing",
-   "lastSeen": "2026-08-16T05:55:17-04:00"
-  },
-  {
-   "id": "ccc8f194e893",
-   "title": "Kids Jam",
-   "date": "2026-08-16",
-   "change": "missing",
-   "lastSeen": "2026-08-16T05:55:17-04:00"
-  },
-  {
-   "id": "a35ffd1b320f",
-   "title": "Womxn's Pick-up Soccer - Outdoors at Starr Farm Park",
-   "date": "2026-08-16",
-   "change": "missing",
-   "lastSeen": "2026-08-16T05:55:17-04:00"
-  },
   {
    "id": "71404c6864af",
    "title": "Family Literacy & Health Night",
@@ -2452,29 +2425,11 @@
    "lastSeen": "2026-08-14T06:36:31-04:00"
   },
   {
-   "id": "183232429550",
-   "title": "HOW TO DIVORCE DURING THE WAR",
-   "date": "2026-09-03",
-   "change": "dropped"
-  },
-  {
    "id": "b66813a5ea6e",
    "title": "Mills Riverside Park Loop",
    "date": "2026-09-05",
    "change": "missing",
    "lastSeen": "2026-08-15T16:57:45-04:00"
-  },
-  {
-   "id": "7bb51d75acbc",
-   "title": "Dinner In The Park: Wheeler Homestead",
-   "date": "2026-09-09",
-   "change": "dropped"
-  },
-  {
-   "id": "f86bbd1e5e74",
-   "title": "The Dream Eaters",
-   "date": "2026-09-19",
-   "change": "dropped"
   },
   {
    "id": "ed46e707b0e5",
