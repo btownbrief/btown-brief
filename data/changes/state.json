@@ -3,7 +3,7 @@
   "alerts": [],
   "forecast_flag": {
    "day": "2026-08-17",
-   "text": "This Afternoon: Showers and thunderstorms"
+   "text": "Tonight: Scattered showers and thunderstorms before 10pm"
   }
  },
  "beach-status": {
@@ -916,18 +916,18 @@
       "summary": "Our annual Eye on the Sky Stargazing Party, with Jane Lindholm and meteorologist Mark Breen, took place this week. Take this recording outside at night and look up as you listen, to see what you can discover in the sky above you."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
-      "title": "Washington Central voters approve school closure article",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
-      "ts": "2026-08-14T09:00:00+00:00",
-      "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
       "title": "Chefs and servers on the Champlain Valley Dinner Train keep service on track",
       "link": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
       "ts": "2026-08-14T09:00:00+00:00",
       "summary": "As passengers enjoy scenic views, the kitchen staff navigate tight quarters and a bumpy ride to serve up gourmet meals."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
+      "title": "Washington Central voters approve school closure article",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
+      "ts": "2026-08-14T09:00:00+00:00",
+      "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
      },
      {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-08-13/passport-to-the-land-of-creemees-vermont-editions-2026-ice-cream-show",
@@ -941,10 +941,17 @@
    "wcax": {
     "items": [
      {
+      "id": "SHEFHMWK3JHZHD6WJ5ZZXMZVMQ",
+      "title": "Judge halts St. Albans Creamery closure",
+      "link": "https://www.wcax.com/2026/08/17/judge-halts-st-albans-creamery-closure/",
+      "ts": "2026-08-17T23:32:16+00:00",
+      "summary": "It comes after the union sued the Dairy Farmers of America, alleging the closure is retaliation for employees striking."
+     },
+     {
       "id": "GRYGUNQF3RBGPHBFDNTUOUGVGE",
       "title": "Vt. police ID victim in Albany shooting",
       "link": "https://www.wcax.com/2026/08/17/vt-police-id-victim-albany-shooting/",
-      "ts": "2026-08-17T22:33:31+00:00",
+      "ts": "2026-08-17T23:04:08+00:00",
       "summary": "Vermont State Police have identified the victim in a weekend shooting in the Orleans County town of Albany."
      },
      {
@@ -981,13 +988,6 @@
       "link": "https://www.wcax.com/2026/08/17/burlington-police-continue-investigate-weekend-spate-violence/",
       "ts": "2026-08-17T21:30:26+00:00",
       "summary": "Police say the two stabbings and a shooting early Saturday do not appear to be related."
-     },
-     {
-      "id": "SHEFHMWK3JHZHD6WJ5ZZXMZVMQ",
-      "title": "Union sues DFA, alleging St. Albans Creamery closure is retaliation for strike",
-      "link": "https://www.wcax.com/2026/08/17/union-sues-dfa-alleging-st-albans-creamery-closure-is-retaliation-strike/",
-      "ts": "2026-08-17T21:26:09+00:00",
-      "summary": "Last fall, the Teamsters Local 597 went on a nearly two-week strike over wages, hours, and working conditions."
      },
      {
       "id": "NDOY6C3ZMVHDZEGFD5TUB2LAGY",
@@ -1295,18 +1295,25 @@
    "mynbc5": {
     "items": [
      {
+      "id": "73457537",
+      "title": "Back-to-school checklist includes vaccine requirements",
+      "link": "https://www.mynbc5.com/article/back-to-school-checklist-includes-vaccine-requirements/73457537",
+      "ts": "2026-08-17T23:34:00+00:00",
+      "summary": "Local health experts are reminding families to make sure their kids are up to date on vaccines"
+     },
+     {
+      "id": "73457332",
+      "title": "Boston Tea Party participant who is buried in Vermont was honored at a ceremony on Monday",
+      "link": "https://www.mynbc5.com/article/boston-tea-party-participant-who-is-buried-in-vermont-was-honored-at-a-ceremony-with-descendants-on-monday/73457332",
+      "ts": "2026-08-17T22:54:00+00:00",
+      "summary": "The Boston Tea Party Marker Project identifies and marks graves of Boston Tea Party participants, and on Monday, a ceremony was held in Windsor County for a participant buried in Sharon, Vermont"
+     },
+     {
       "id": "73457064",
       "title": "ICE pitches legal insurance to help shield local officers who make immigration arrests",
       "link": "https://www.mynbc5.com/article/ice-liability-insurance-local-police-immigration-arrests/73457064",
       "ts": "2026-08-17T22:45:00+00:00",
       "summary": "U.S. Immigration and Customs Enforcement is pitching a plan to help shield local police officers who make immigration arrests from possible financial consequences if they are accused of on-duty misconduct"
-     },
-     {
-      "id": "73457537",
-      "title": "Back to school checklist includes vaccine requirements",
-      "link": "https://www.mynbc5.com/article/back-to-school-checklist-includes-vaccine-requirements/73457537",
-      "ts": "2026-08-17T22:37:00+00:00",
-      "summary": "Local health experts are reminding families to make sure their kids are up to date on vaccines"
      },
      {
       "id": "73456603",
@@ -1330,18 +1337,18 @@
       "summary": "More showers possible on Wednesday"
      },
      {
-      "id": "73455170",
-      "title": "President Trump asked about current progress of the deal to end the Iran War",
-      "link": "https://www.mynbc5.com/article/president-trump-iran-war-deal-question/73455170",
-      "ts": "2026-08-17T21:47:00+00:00",
-      "summary": "President Donald Trump says Iran seems unlikely to sign a deal that would end its nuclear program, as Memorandum of Understanding reaches 60-day limit."
-     },
-     {
       "id": "73457007",
       "title": "Prescription arthritis injection recalled nationwide, may contain 'glass particles'",
       "link": "https://www.mynbc5.com/article/tyenne-arthritis-medication-recall-fda/73457007",
       "ts": "2026-08-17T21:47:00+00:00",
       "summary": "An arthritis drug has been recalled because it may contain glass particles. Here’s how to tell if your medication is affected."
+     },
+     {
+      "id": "73455170",
+      "title": "President Trump asked about current progress of the deal to end the Iran War",
+      "link": "https://www.mynbc5.com/article/president-trump-iran-war-deal-question/73455170",
+      "ts": "2026-08-17T21:47:00+00:00",
+      "summary": "President Donald Trump says Iran seems unlikely to sign a deal that would end its nuclear program, as Memorandum of Understanding reaches 60-day limit."
      },
      {
       "id": "73447773",
@@ -1426,13 +1433,6 @@
       "link": "https://www.mynbc5.com/article/illegal-entry-migrant-smuggling-new-york/73455777",
       "ts": "2026-08-17T19:49:00+00:00",
       "summary": "Federal prosecutors from the United States Attorney's Office of New York announced that three people have pleaded guilty to charges associated with alien smuggling and illegal entry across the northern United States border."
-     },
-     {
-      "id": "73455512",
-      "title": "Vermonter crowned Miss Black USA 2026",
-      "link": "https://www.mynbc5.com/article/harmony-edosomwan-vermont-miss-black-usa-2026/73455512",
-      "ts": "2026-08-17T19:42:00+00:00",
-      "summary": "A Vermonter has officially been crowned Miss Black USA 2026 during a competition earlier this month in Washington, D.C."
      }
     ]
    },
