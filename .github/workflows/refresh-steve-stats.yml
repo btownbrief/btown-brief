@@ -9,7 +9,7 @@ name: Refresh Steve stats
 
 on:
   schedule:
-    - cron: '11,41 * * * *'
+    - cron: '41 * * * *'
   workflow_dispatch:
 
 permissions:
