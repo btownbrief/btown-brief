@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-17T23:01:07+00:00",
+ "updated": "2026-08-18T00:00:12+00:00",
  "sections_updated": {
-  "now": "2026-08-17T23:01:07+00:00",
-  "forecast": "2026-08-17T23:01:07+00:00",
-  "hourly": "2026-08-17T23:01:07+00:00",
-  "alerts": "2026-08-17T23:01:07+00:00",
-  "afd": "2026-08-17T23:01:07+00:00",
-  "lake_forecast": "2026-08-17T23:01:07+00:00",
+  "now": "2026-08-18T00:00:12+00:00",
+  "forecast": "2026-08-18T00:00:12+00:00",
+  "hourly": "2026-08-18T00:00:12+00:00",
+  "alerts": "2026-08-18T00:00:12+00:00",
+  "afd": "2026-08-18T00:00:12+00:00",
+  "lake_forecast": "2026-08-18T00:00:12+00:00",
   "lake_gage": "2026-08-17T23:01:07+00:00",
-  "air": "2026-08-17T23:01:07+00:00",
-  "sun": "2026-08-17T23:01:07+00:00",
-  "models": "2026-08-17T23:01:07+00:00"
+  "air": "2026-08-18T00:00:12+00:00",
+  "sun": "2026-08-18T00:00:12+00:00",
+  "models": "2026-08-18T00:00:12+00:00"
  },
  "now": {
-  "observed_at": "2026-08-17T22:40:00+00:00",
+  "observed_at": "2026-08-17T23:35:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 73,
   "feels_like_f": 74,
-  "humidity": 78,
-  "dewpoint_f": 66,
-  "wind_mph": 5,
+  "humidity": 73,
+  "dewpoint_f": 64,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "NE"
+  "wind_dir": "N"
  },
  "forecast": {
   "updated": "2026-08-17T18:09:30+00:00",
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-08-17T19:00:00-04:00",
+    "start": "2026-08-17T20:00:00-04:00",
     "is_day": false,
     "temp_f": 64,
-    "pop": 44,
-    "wind": "N 5 mph",
-    "short": "Scattered Showers And Thunderstorms then Mostly Cloudy",
-    "detailed": "Scattered showers and thunderstorms before 10pm. Mostly cloudy, with a low around 64. North wind around 5 mph. Chance of precipitation is 40%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "pop": 25,
+    "wind": "N 3 mph",
+    "short": "Scattered Rain Showers then Mostly Cloudy",
+    "detailed": "Scattered rain showers before 10pm. Mostly cloudy, with a low around 64. North wind around 3 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tuesday",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-17T18:09:30+00:00",
   "hours": [
-   {
-    "t": "2026-08-17T19:00:00-04:00",
-    "temp_f": 74,
-    "feels_f": 74,
-    "pop": 44,
-    "humidity": 84,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 62,
-    "short": "Scattered Showers And Thunderstorms"
-   },
    {
     "t": "2026-08-17T20:00:00-04:00",
     "temp_f": 73,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 67,
     "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-08-19T07:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 12,
+    "humidity": 93,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 57,
+    "short": "Partly Sunny"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-17T18:18:00+00:00",
+  "issued": "2026-08-17T23:42:00+00:00",
   "key_messages": [
    "Rounds of scattered showers are expected this afternoon, then another weak frontal system will increase shower and thunderstorm chances again Wednesday.",
    "Seasonable conditions prevail for the end of the week into the weekend, with increasing shower chances for Sunday into Monday."
   ],
   "what_changed": "As of 212 PM EDT Monday... No significant changes were made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 171818\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n218 PM EDT Mon Aug 17 2026\n\n.WHAT HAS CHANGED...\nAs of 212 PM EDT Monday...\n\nNo significant changes were made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 212 PM EDT Monday...\n\n1. Rounds of scattered showers are expected this afternoon, then\nanother weak frontal system will increase shower and \nthunderstorm chances again Wednesday.\n\n2. Seasonable conditions prevail for the end of the week into \nthe weekend, with increasing shower chances for Sunday into Monday.\n\n&&\n\n.DISCUSSION...\nAs of 212 PM EDT Monday...\n\nKEY MESSAGE 1: A cold front is crossing the forecast area this \nafternoon resulting in a line of spotty showers. About 10-40% \nchance of lingering showers overnight tonight, with highest \nchance in the Northeast Kingdom, closest to the departing low \npressure system. Otherwise, surface high pressure will build in \nfrom the Midwest overnight and Tuesday, resulting in seasonable \nlow temperatures in the 50s and lower 60s both tonight and \nTuesday night. Widespread patchy fog is possible tonight, \nespecially in the typical valley locations and spots that \nreceive rain this afternoon. Aside from a low chance of a spot \nterrain driven shower on Tuesday, the next chance of rain \ncontinues to be on Wednesday. Consensus suggests that a weak \ncold front will approach the area from Canada during the day and\nstall around the international border. About 55-95% chance of \nprecipitation on Wednesday for most of northern New York and \nnorthwestern Vermont, with lower chances in central, southern, \nand eastern Vermont. The probabilities of thunderstorms remain \nlow with most guidance rather limited in instability consistent \nwith poor lapse rates amidst a thick overcast along the frontal \nzone. Highest chance of a spotty storm will be across northern \nNew York. Overall, this event remains unlikely to be impactful. \nTiming and location of this front and associated cloud cover \nwill affect high temperatures, but as of now highest confidence \nis for temps reaching a seasonable mid 70s to mid 80s both \nTuesday and Wednesday. Showers could linger into Thursday, \nalthough chances are much lower than on Wednesday. Wednesday \nnight should be a touch cooler than previous nights but still \nseasonable with lows in the upper 40s to near 60 F following the\ncold front, then Thursday should see highs in the 70s and lower\n80s.\n\nKEY MESSAGE 2: A period of drier weather is expected towards the end of \nthe week as high pressure builds into the region. Daytime \ntemperatures increase towards climatological normals into next \nweekend with highs in the 70s and lower 80s as well as overnight \nlows generally in the 50s. The next chances for widespread showers \nlook to arrive Sunday into Monday, with plenty of uncertainty \nregarding the timing and evolution of this system. As we get closer, \nforecast guidance should come into better agreement and more details \nshould emerge.\n\n&&\n\n.AVIATION /18Z MONDAY THROUGH SATURDAY/...\nThrough 18Z Tuesday...MVFR conditions currently prevail this\nafternoon with ceilings generally between 1500-3000 ft AGL and a few\nshowers moving through the region as a cold front slowly moves\neastward. MVFR ceilings are expected to persist over the next few\nhours, before gradually scattering out as high pressure builds\noverhead with a brief period of VFR possible towards 00Z. With\nplenty of low level moisture, fog development looks very favorable\ntonight. The greatest confidence for IFR or lower conditions will be\nat KSLK, KMPV, and KRUT, but fog/mist may be possible at most other\nterminals. Guidance suggests that fog could develop earlier than\nnormal, near 04Z or so, and will dissipates after sunrise towards\n12Z. Once fog clears, VFR conditions are expected to prevail through\nthe remainder of the forecast period. Southerly winds this afternoon\nwill trend light/calm overnight before light northerly flow develops\ntomorrow morning.\n\nOutlook...\n\nTuesday Night: VFR. NO SIG WX.\nWednesday: Mainly VFR, with local MVFR possible. Likely SHRA.\nWednesday Night: VFR. Slight chance SHRA.\nThursday: VFR. Slight chance SHRA.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Kremer/Storm\nAVIATION...Kremer\n"
+  "raw": "\n000\nFXUS61 KBTV 172342\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n742 PM EDT Mon Aug 17 2026\n\n.WHAT HAS CHANGED...\nAs of 212 PM EDT Monday...\n\nNo significant changes were made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 212 PM EDT Monday...\n\n1. Rounds of scattered showers are expected this afternoon, \nthen another weak frontal system will increase shower and \nthunderstorm chances again Wednesday.\n\n2. Seasonable conditions prevail for the end of the week into \nthe weekend, with increasing shower chances for Sunday into \nMonday.\n\n&&\n\n.DISCUSSION...\nAs of 212 PM EDT Monday...\n\nKEY MESSAGE 1: A cold front is crossing the forecast area this \nafternoon resulting in a line of spotty showers. About 10-40% \nchance of lingering showers overnight tonight, with highest \nchance in the Northeast Kingdom, closest to the departing low \npressure system. Otherwise, surface high pressure will build in \nfrom the Midwest overnight and Tuesday, resulting in seasonable \nlow temperatures in the 50s and lower 60s both tonight and \nTuesday night. Widespread patchy fog is possible tonight, \nespecially in the typical valley locations and spots that \nreceive rain this afternoon. Aside from a low chance of a spot \nterrain driven shower on Tuesday, the next chance of rain \ncontinues to be on Wednesday. Consensus suggests that a weak \ncold front will approach the area from Canada during the day and\nstall around the international border. About 55-95% chance of \nprecipitation on Wednesday for most of northern New York and \nnorthwestern Vermont, with lower chances in central, southern, \nand eastern Vermont. The probabilities of thunderstorms remain \nlow with most guidance rather limited in instability consistent \nwith poor lapse rates amidst a thick overcast along the frontal \nzone. Highest chance of a spotty storm will be across northern \nNew York. Overall, this event remains unlikely to be impactful. \nTiming and location of this front and associated cloud cover \nwill affect high temperatures, but as of now highest confidence \nis for temps reaching a seasonable mid 70s to mid 80s both \nTuesday and Wednesday. Showers could linger into Thursday, \nalthough chances are much lower than on Wednesday. Wednesday \nnight should be a touch cooler than previous nights but still \nseasonable with lows in the upper 40s to near 60 F following the\ncold front, then Thursday should see highs in the 70s and lower\n80s.\n\nKEY MESSAGE 2: A period of drier weather is expected towards \nthe end of the week as high pressure builds into the region. \nDaytime temperatures increase towards climatological normals \ninto next weekend with highs in the 70s and lower 80s as well as\novernight lows generally in the 50s. The next chances for \nwidespread showers look to arrive Sunday into Monday, with \nplenty of uncertainty regarding the timing and evolution of this\nsystem. As we get closer, forecast guidance should come into \nbetter agreement and more details should emerge.\n\n&&\n\n.AVIATION /00Z TUESDAY THROUGH SATURDAY/...\nThrough 00Z Wednesday...Mainly VFR conditions prevail this \nevening with exception of RUT which has rain at the moment. High\npressure is building into the region as front exits to our \nsouth and east and fog formation will be the big Afton \nchallenge overnight. The greatest confidence for IFR or lower \nconditions will be at KSLK, KMPV, and KRUT, but fog/mist may be \npossible at most other terminals except PBG. Guidance suggests \nthat fog could develop earlier than normal, near 04Z or so, and \nwill dissipates after sunrise towards 12Z. Once fog clears, VFR \nconditions are expected to prevail through the remainder of the \nforecast period. Light/calm winds overnight then light northerly\nflow develops tomorrow morning.\n\nOutlook...\n\nTuesday Night: VFR. Patchy BR.\nWednesday: Mainly VFR, with local MVFR possible. Definite SHRA,\nSlight chance TSRA, Patchy BR.\nWednesday Night: VFR. Chance SHRA.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Kremer/Storm\nAVIATION...Neiles\n"
  },
  "lake_forecast": {
   "issued": "2026-08-17T18:19:00+00:00",
@@ -859,10 +859,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 23,
+  "aqi": 22,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/17/26 18:00",
+  "observed": "08/17/26 19:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 18th."
  },
  "sun": {
@@ -902,7 +902,7 @@
     },
     "pop_max": {
      "GFS": 1,
-     "Euro": 15,
+     "Euro": 33,
      "ICON": 3
     },
     "precip_in": {
@@ -921,7 +921,7 @@
     },
     "pop_max": {
      "GFS": 67,
-     "Euro": 45,
+     "Euro": 49,
      "ICON": 13
     },
     "precip_in": {
