@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-17T17:00:55-04:00",
+ "generated": "2026-08-18T06:01:18-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 16,
-   "seconds": 5.8
+   "seconds": 5.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 64,
-   "seconds": 3.8
+   "seconds": 4.4
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 56,
-   "seconds": 3.3
+   "count": 55,
+   "seconds": 3.4
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 153,
-   "seconds": 2.4
+   "count": 158,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 66,
-   "seconds": 1.4
+   "count": 67,
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-17&end_date=2026-10-16&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-18&end_date=2026-10-17&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -43,18 +43,18 @@
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 8,
-   "seconds": 0.4
+   "count": 9,
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 158,
-   "seconds": 74.6
+   "count": 159,
+   "seconds": 65.5
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 35,
-   "seconds": 2.6
+   "count": 36,
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 42.0
+   "seconds": 36.0
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 78,
-   "seconds": 123.4
+   "count": 80,
+   "seconds": 120.2
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 412,
-   "seconds": 69.1
+   "count": 408,
+   "seconds": 72.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 128.0
+   "count": 65,
+   "seconds": 120.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 42,
-   "seconds": 16.3
+   "seconds": 14.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 76,
-   "seconds": 1.7
+   "count": 77,
+   "seconds": 1.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 32,
-   "seconds": 34.8
+   "count": 34,
+   "seconds": 32.0
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,143 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 329,
-   "seconds": 13.2
+   "count": 335,
+   "seconds": 17.6
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 195,
+   "count": 198,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 71,
-   "seconds": 96.0
+   "count": 74,
+   "seconds": 92.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 30,
-   "seconds": 0.1
+   "count": 31,
+   "seconds": 0.2
   }
  },
- "gathered": 2635,
- "afterDedup": 1387,
- "duplicatesMerged": 1248,
- "final": 1800,
+ "gathered": 2658,
+ "afterDedup": 1406,
+ "duplicatesMerged": 1252,
+ "final": 1805,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-16"
-  },
-  {
-   "kept": {
-    "title": "Charity and Sylvia Composer Talk: Clarice Assad, Composer of Summerland",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-16"
-  },
-  {
-   "kept": {
-    "title": "BOOST Sessions",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-16"
-  },
-  {
-   "kept": {
-    "title": "Fall 2026 Kickoff Party",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-16"
-  },
-  {
-   "kept": {
-    "title": "Mikaela Davis w/ Johanna Samuels",
-    "source": "breweries"
-   },
-   "merged_sources": [
-    "breweries",
-    "helloburlington"
-   ],
-   "date": "2026-09-16"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-16"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-16"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-09-17"
-  },
-  {
-   "kept": {
-    "title": "Hazlett",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-17"
-  },
-  {
-   "kept": {
-    "title": "Gooseberry",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-09-17"
-  },
   {
    "kept": {
     "title": "Thirsty Thursday",
@@ -2010,11 +1897,34 @@
   },
   {
    "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-05"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-05"
+  },
+  {
+   "kept": {
     "title": "Bombargo",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -2028,6 +1938,17 @@
    },
    "merged_sources": [
     "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-06"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-10-06"
@@ -2397,38 +2318,102 @@
     "loveburlington"
    ],
    "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "Men's Ice Hockey vs Boston University",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "Trio Bohémo",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "Adam Ezra Group",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-10-17"
+  },
+  {
+   "kept": {
+    "title": "Judge",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "higherground"
+   ],
+   "date": "2026-10-17"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-17"
+  },
+  {
+   "kept": {
+    "title": "Burlington Farmers Market",
+    "source": "farmersmarket"
+   },
+   "merged_sources": [
+    "farmersmarket",
+    "loveburlington"
+   ],
+   "date": "2026-10-17"
   }
  ],
  "changes": [
   {
-   "id": "613f100e9a92",
-   "title": "34th Annual South End Art Hop!",
-   "date": "2026-09-11",
+   "id": "653151ba6cf6",
+   "title": "802sDay",
+   "date": "2026-10-06",
    "change": "time",
-   "was": "2026-09-11",
-   "now": "2026-09-11T22:00:00-04:00"
+   "was": "2026-10-06",
+   "now": "2026-10-06T11:30:00-04:00"
   },
   {
-   "id": "c215db4e3c23",
-   "title": "34th Annual South End Art Hop!",
-   "date": "2026-09-12",
+   "id": "00fa65e0ab1d",
+   "title": "Industry Day",
+   "date": "2026-10-05",
    "change": "time",
-   "was": "2026-09-12",
-   "now": "2026-09-12T22:00:00-04:00"
-  },
-  {
-   "id": "25350ab12df0",
-   "title": "34th Annual South End Art Hop!",
-   "date": "2026-09-13",
-   "change": "time",
-   "was": "2026-09-13",
-   "now": "2026-09-13T22:00:00-04:00"
-  },
-  {
-   "id": "71404c6864af",
-   "title": "Family Literacy & Health Night",
-   "date": "2026-08-20",
-   "change": "dropped"
+   "was": "2026-10-05",
+   "now": "2026-10-05T11:30:00-04:00"
   },
   {
    "id": "d0e4e622221f",
@@ -2436,12 +2421,6 @@
    "date": "2026-08-25",
    "change": "missing",
    "lastSeen": "2026-08-15T16:57:45-04:00"
-  },
-  {
-   "id": "8a588990df73",
-   "title": "Catamount Cinema",
-   "date": "2026-08-31",
-   "change": "dropped"
   },
   {
    "id": "b66813a5ea6e",
@@ -2475,8 +2454,7 @@
    "id": "ed46e707b0e5",
    "title": "VCA Presents: $5 Improv Night!",
    "date": "2026-09-30",
-   "change": "missing",
-   "lastSeen": "2026-08-15T05:55:27-04:00"
+   "change": "dropped"
   },
   {
    "id": "87227a21605e",
@@ -2495,20 +2473,6 @@
   {
    "id": "fba509a2c38e",
    "title": "Vermont Figure Drawing Collective",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-08-17T06:07:52-04:00"
-  },
-  {
-   "id": "6f871019acca",
-   "title": "BASIC",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-08-17T06:07:52-04:00"
-  },
-  {
-   "id": "04c689132cf3",
-   "title": "Ann Wilson Live In Concert",
    "date": "2026-10-06",
    "change": "missing",
    "lastSeen": "2026-08-17T06:07:52-04:00"
@@ -2533,6 +2497,13 @@
    "date": "2026-10-07",
    "change": "missing",
    "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "0a998ee619df",
+   "title": "Trio Bohémo",
+   "date": "2026-10-16",
+   "change": "missing",
+   "lastSeen": "2026-08-17T17:00:55-04:00"
   }
  ]
 }
