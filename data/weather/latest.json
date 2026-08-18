@@ -1,21 +1,21 @@
 {
- "updated": "2026-08-18T05:13:46+00:00",
+ "updated": "2026-08-18T06:03:14+00:00",
  "sections_updated": {
-  "now": "2026-08-18T05:13:46+00:00",
-  "forecast": "2026-08-18T05:13:46+00:00",
-  "hourly": "2026-08-18T05:13:46+00:00",
-  "alerts": "2026-08-18T05:13:46+00:00",
-  "afd": "2026-08-18T05:13:46+00:00",
-  "lake_forecast": "2026-08-18T05:13:46+00:00",
-  "lake_gage": "2026-08-18T05:13:46+00:00",
-  "air": "2026-08-18T05:13:46+00:00",
-  "sun": "2026-08-18T05:13:46+00:00",
-  "models": "2026-08-18T05:13:46+00:00"
+  "now": "2026-08-18T06:03:14+00:00",
+  "forecast": "2026-08-18T06:03:14+00:00",
+  "hourly": "2026-08-18T06:03:14+00:00",
+  "alerts": "2026-08-18T06:03:14+00:00",
+  "afd": "2026-08-18T06:03:14+00:00",
+  "lake_forecast": "2026-08-18T06:03:14+00:00",
+  "lake_gage": "2026-08-18T06:03:14+00:00",
+  "air": "2026-08-18T06:03:14+00:00",
+  "sun": "2026-08-18T06:03:14+00:00",
+  "models": "2026-08-18T06:03:14+00:00"
  },
  "now": {
-  "observed_at": "2026-08-18T04:50:00+00:00",
+  "observed_at": "2026-08-18T05:40:00+00:00",
   "station": "KBTV",
-  "description": "Fog",
+  "description": "Mostly Cloudy",
   "temp_f": 64,
   "feels_like_f": 64,
   "humidity": 100,
@@ -29,13 +29,13 @@
   "periods": [
    {
     "name": "Overnight",
-    "start": "2026-08-18T01:00:00-04:00",
+    "start": "2026-08-18T02:00:00-04:00",
     "is_day": false,
     "temp_f": 64,
     "pop": 9,
     "wind": "N 3 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 64. North wind around 3 mph. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Mostly cloudy, with a low around 64. North wind around 3 mph."
    },
    {
     "name": "Tuesday",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-17T23:59:20+00:00",
   "hours": [
-   {
-    "t": "2026-08-18T01:00:00-04:00",
-    "temp_f": 67,
-    "feels_f": 67,
-    "pop": 9,
-    "humidity": 93,
-    "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 40,
-    "short": "Partly Cloudy"
-   },
    {
     "t": "2026-08-18T02:00:00-04:00",
     "temp_f": 67,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 63,
     "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-08-19T13:00:00-04:00",
+    "temp_f": 78,
+    "feels_f": 78,
+    "pop": 23,
+    "humidity": 64,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 67,
+    "short": "Slight Chance Rain Showers"
    }
   ]
  },
@@ -859,10 +859,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 23,
+  "aqi": 24,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/18/26 0:00",
+  "observed": "08/18/26 1:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 18th."
  },
  "sun": {
