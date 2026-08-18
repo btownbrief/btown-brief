@@ -1,16 +1,6 @@
 {
  "nws-weather": {
-  "alerts": [
-   {
-    "id": "urn:oid:2.49.0.1.840.0.3afb5448edc93987600afb93cc0f8d8e53056374.001.1",
-    "event": "Special Weather Statement",
-    "headline": "Special Weather Statement issued August 18 at 4:06AM EDT by NWS Burlington VT",
-    "severity": "Moderate",
-    "onset": "2026-08-18T04:06:00-04:00",
-    "ends": "2026-08-18T09:00:00-04:00",
-    "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
-   }
-  ],
+  "alerts": [],
   "forecast_flag": {
    "day": "2026-08-17",
    "text": "Tonight: Scattered showers and thunderstorms before 10pm"
@@ -575,6 +565,20 @@
    "sevendays-news": {
     "items": [
      {
+      "id": "https://www.sevendaysvt.com/?p=215128",
+      "title": "Obituary: Michael Burditt Cadwell, 1952-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-michael-burditt-cadwell-1952-2026/",
+      "ts": "2026-08-18T10:00:00+00:00",
+      "summary": "Professor of architecture and school director at the Ohio State University enjoyed time with his wife, son and extended family most of all The post Obituary: Michael Burditt Cadwell, 1952-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=215123",
+      "title": "Obituary: Robert “Bob” William Friend, 1959-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-robert-bob-william-friend-1959-2026/",
+      "ts": "2026-08-18T10:00:00+00:00",
+      "summary": "Longtime butcher and devoted family man was known for his incredible work ethic, outgoing personality and handsome smile The post Obituary: Robert \"Bob\" William Friend, 1959-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
       "id": "https://www.sevendaysvt.com/?p=215017",
       "title": "Esox Appears to Have Abruptly Closed",
       "link": "https://www.sevendaysvt.com/food-drink/esox-appears-to-have-abruptly-closed/",
@@ -629,20 +633,6 @@
       "link": "https://www.sevendaysvt.com/food-drink/foodnews/blue-paddle-bistro-closes-in-south-hero/",
       "ts": "2026-08-14T13:16:57+00:00",
       "summary": "The longtime Champlain Islands restaurant started canceling reservations earlier this week and announced its permanent closure in a social media post on Thursday night. The post Blue Paddle Bistro Closes in South Hero appeared first on Seven Days . (Image: File: Jordan Barry)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/news/news-quiz-what-did-the-owner-landlord-of-dozens-of-neon-colored-houses-in-burlingtons-old-north-end-announce-he-would-do-36539606/",
-      "title": "News Quiz: Who won the auction for Montpelier’s flood-damaged federal building?",
-      "link": "https://www.sevendaysvt.com/news/newsquiz/news-quiz/",
-      "ts": "2026-08-14T11:00:00+00:00",
-      "summary": "Answer this question and seven others in our new weekly news quiz about Vermont news. It's quick, fun and informative. The post News Quiz: Who won the auction for Montpelier’s flood-damaged federal building? appeared first on Seven Days ."
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=214916",
-      "title": "Obituary: Phyllis (White) Klinefelter Quinn, 1935-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-phyllis-white-klinefelter-quinn-1935-2026/",
-      "ts": "2026-08-14T10:00:00+00:00",
-      "summary": "Burlington native was a longtime volunteer, a wonderful cook, a talented pianist and a loyal friend The post Obituary: Phyllis (White) Klinefelter Quinn, 1935-2026 appeared first on Seven Days . (Image: Courtesy)"
      }
     ]
    },
@@ -933,18 +923,18 @@
       "summary": "Our annual Eye on the Sky Stargazing Party, with Jane Lindholm and meteorologist Mark Breen, took place this week. Take this recording outside at night and look up as you listen, to see what you can discover in the sky above you."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
-      "title": "Washington Central voters approve school closure article",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
-      "ts": "2026-08-14T09:00:00+00:00",
-      "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
       "title": "Chefs and servers on the Champlain Valley Dinner Train keep service on track",
       "link": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
       "ts": "2026-08-14T09:00:00+00:00",
       "summary": "As passengers enjoy scenic views, the kitchen staff navigate tight quarters and a bumpy ride to serve up gourmet meals."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
+      "title": "Washington Central voters approve school closure article",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
+      "ts": "2026-08-14T09:00:00+00:00",
+      "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
      }
     ]
    },
@@ -1305,6 +1295,48 @@
    "mynbc5": {
     "items": [
      {
+      "id": "73463125",
+      "title": "Hayden Panettiere's ex-fiance Wladimir Klitschko in 'profound shock' after her death",
+      "link": "https://www.mynbc5.com/article/hayden-panettiere-death-wladimir-klitschko/73463125",
+      "ts": "2026-08-18T12:59:00+00:00",
+      "summary": "\"Our family is going through a time of profound shock and grief,\" said Wladimir Klitschko, Hayden Panettiere's ex-fiance and a former world heavyweight boxing champion from Ukraine."
+     },
+     {
+      "id": "73463067",
+      "title": "OpenAI launches ChatGPT for Teens, promising a more age-appropriate chatbot",
+      "link": "https://www.mynbc5.com/article/openai-chatgpt-for-teens-safety-protections/73463067",
+      "ts": "2026-08-18T12:39:00+00:00",
+      "summary": "OpenAI is launching a version of ChatGPT designed for teenagers who are already using it for schoolwork, questions about daily life and even companionship."
+     },
+     {
+      "id": "73462115",
+      "title": "Primary elections in four states could have significant impacts on the balance of power",
+      "link": "https://www.mynbc5.com/article/primary-elections-2026-alaska-california-florida-wyoming/73462115",
+      "ts": "2026-08-18T12:22:00+00:00",
+      "summary": "Primary elections in Alaska, California, Florida, and Wyoming are hosting primary elections on Tuesday, with some races highlighting ideological shifts within the Democratic party."
+     },
+     {
+      "id": "73462795",
+      "title": "Opening arguments set to begin in Meta's federal trial over child safety",
+      "link": "https://www.mynbc5.com/article/meta-child-safety-trial-facebook-instagram/73462795",
+      "ts": "2026-08-18T12:11:00+00:00",
+      "summary": "A pivotal trial for Meta Platforms is set to kick off in a California federal court Tuesday. Here's what to know."
+     },
+     {
+      "id": "73462656",
+      "title": "Great white shark spotted by fishermen off New Hampshire coast",
+      "link": "https://www.mynbc5.com/article/great-white-shark-sighting-new-hampshire/73462656",
+      "ts": "2026-08-18T11:56:00+00:00",
+      "summary": "\"Just seeing the power that shark has and how big they actually are, and to get to see one that close, it's not an everyday thing.\" | Two fishermen spotted a great white shark feeding off a whale carcass about two miles off the coast of New Hampshire."
+     },
+     {
+      "id": "73461481",
+      "title": "Princess Eugenie shares the sweet meaning behind her daughter’s name",
+      "link": "https://www.mynbc5.com/article/princess-eugenie-daughter-adelaide-elizabeth-annina-name-meaning/73461481",
+      "ts": "2026-08-18T11:47:00+00:00",
+      "summary": "Princess Eugenie shared the sweet meaning behind her newborn daughter’s name after she and her husband kept it private for two weeks."
+     },
+     {
       "id": "73460434",
       "title": "South Burlington police request funding for emergency operations center",
       "link": "https://www.mynbc5.com/article/south-burlington-police-emergency-operations-center-fund/73460434",
@@ -1401,48 +1433,6 @@
       "link": "https://www.mynbc5.com/article/oklahoma-man-loses-120-pounds-while-picking-up-trash/73458999",
       "ts": "2026-08-18T02:56:00+00:00",
       "summary": "Dusty Stillwell has lost about 120 pounds in less than a year — and says he’s trying to be a better human while cleaning up his community."
-     },
-     {
-      "id": "73449876",
-      "title": "Tariffs on strawberries could increase costs for shoppers",
-      "link": "https://www.mynbc5.com/article/american-strawberry-prices/73449876",
-      "ts": "2026-08-18T02:08:00+00:00",
-      "summary": "A new federal investigation could end decades of duty-free strawberry trade and make a summer favorite cost more year-round."
-     },
-     {
-      "id": "73458092",
-      "title": "Judge blocks the Trump administration from moving FBI headquarters to DC office building",
-      "link": "https://www.mynbc5.com/article/judge-blocks-trump-moving-fbi-headquarters/73458092",
-      "ts": "2026-08-18T02:05:00+00:00",
-      "summary": "A U.S. judge has blocked plans to move the FBI's headquarters to a federal office building in Washington, D.C."
-     },
-     {
-      "id": "73458569",
-      "title": "'Our angel’: Stranger knocks on doors to warn RV park residents of approaching wildfire",
-      "link": "https://www.mynbc5.com/article/oklahoma-rv-park-wildfire-warning/73458569",
-      "ts": "2026-08-18T01:57:00+00:00",
-      "summary": "Residents say a woman was their \"angel\" after she braved wildfire smoke to warn RV park of danger and urged them to leave."
-     },
-     {
-      "id": "73458406",
-      "title": "Kansas tourist dies after lightning strike on Sicily's Mount Etna",
-      "link": "https://www.mynbc5.com/article/us-tourist-dies-lightning-strike-mount-etna/73458406",
-      "ts": "2026-08-18T01:17:00+00:00",
-      "summary": "An American hiker died after being struck by lightning on Mount Etna, where authorities have closed some areas due to prolonged volcanic activity."
-     },
-     {
-      "id": "73458371",
-      "title": "Did you know most of your daily online activities rely on data centers? Here’s how it works",
-      "link": "https://www.mynbc5.com/article/heres-how-data-centers-work-online-activities/73458371",
-      "ts": "2026-08-18T01:17:00+00:00",
-      "summary": "Did you know most of your daily online activities rely on data centers? Here’s how it works"
-     },
-     {
-      "id": "73457527",
-      "title": "In her own words: What Hayden Panettiere said about fame, paparazzi and her iconic roles",
-      "link": "https://www.mynbc5.com/article/hayden-panettiere-interviews-roles-hollywood/73457527",
-      "ts": "2026-08-18T01:08:00+00:00",
-      "summary": "Hayden Panettiere grew up on screen and left behind memorable performances. Revisit some of her old interviews and hear about her experiences and the roles that shaped her career."
      }
     ]
    },
@@ -1616,6 +1606,126 @@
  "reddit-burlington": {
   "posts": [
    {
+    "id": "1vrneta",
+    "title": "Burlington leaders react after violent weekend downtown.",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrneta/burlington_leaders_react_after_violent_weekend/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vrmyq9",
+    "title": "Burlington bar announces closure",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrmyq9/burlington_bar_announces_closure/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vrfq4m",
+    "title": "Parking near Higher Ground",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrfq4m/parking_near_higher_ground/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vrbefv",
+    "title": "Buying a nicer handbag locally",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrbefv/buying_a_nicer_handbag_locally/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vrac55",
+    "title": "Best b-day dinner spot for vegan options",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrac55/best_bday_dinner_spot_for_vegan_options/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vr9l62",
+    "title": "Seeking short-term furnished rental",
+    "url": "https://www.reddit.com/r/burlington/comments/1vr9l62/seeking_shortterm_furnished_rental/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vr8w1c",
+    "title": "Employee POV of Majestic 10",
+    "url": "https://www.reddit.com/r/burlington/comments/1vr8w1c/employee_pov_of_majestic_10/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vr6m7j",
+    "title": "Payouts soar as use of force by Burlington police on Black residents hits record high - VTDigger",
+    "url": "https://www.reddit.com/r/burlington/comments/1vr6m7j/payouts_soar_as_use_of_force_by_burlington_police/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vr479m",
+    "title": "Anyone want to do anything tonight?",
+    "url": "https://www.reddit.com/r/burlington/comments/1vr479m/anyone_want_to_do_anything_tonight/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vr27kc",
+    "title": "Update from the woodstove lamp guy: I started a Youtube series to document everything up to the first manufactured batch!",
+    "url": "https://www.reddit.com/r/burlington/comments/1vr27kc/update_from_the_woodstove_lamp_guy_i_started_a/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vqzud5",
+    "title": "Recommended Movers",
+    "url": "https://www.reddit.com/r/burlington/comments/1vqzud5/recommended_movers/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vqzeit",
+    "title": "Missing car",
+    "url": "https://www.reddit.com/r/burlington/comments/1vqzeit/missing_car/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vqx6qq",
+    "title": "FREE Membership at Generator Makerspace For UVM Undergrads",
+    "url": "https://www.reddit.com/r/burlington/comments/1vqx6qq/free_membership_at_generator_makerspace_for_uvm/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vqwvjn",
+    "title": "Junior League Champlain Valley Recruitement",
+    "url": "https://www.reddit.com/r/burlington/comments/1vqwvjn/junior_league_champlain_valley_recruitement/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
+    "id": "1vqweb7",
+    "title": "Best frame shop",
+    "url": "https://www.reddit.com/r/burlington/comments/1vqweb7/best_frame_shop/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T12:40:22+00:00"
+   },
+   {
     "id": "1vqgovy",
     "title": "Sirens downtown north",
     "url": "https://www.reddit.com/r/burlington/comments/1vqgovy/sirens_downtown_north/",
@@ -1654,126 +1764,6 @@
     "score": null,
     "comments": null,
     "created": "2026-08-17T00:40:16+00:00"
-   },
-   {
-    "id": "1vqbpf2",
-    "title": "Weird handoffs seen at the Simons downtown. What’s really going on here.",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqbpf2/weird_handoffs_seen_at_the_simons_downtown_whats/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-17T00:40:16+00:00"
-   },
-   {
-    "id": "1vqbfqs",
-    "title": "Lost wallet",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqbfqs/lost_wallet/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-17T00:40:16+00:00"
-   },
-   {
-    "id": "1vqartf",
-    "title": "Clean Up This Hole",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqartf/clean_up_this_hole/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-17T00:40:16+00:00"
-   },
-   {
-    "id": "1vq9ho9",
-    "title": "Murder downtown",
-    "url": "https://www.reddit.com/r/burlington/comments/1vq9ho9/murder_downtown/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T21:41:11+00:00"
-   },
-   {
-    "id": "1vq9g5q",
-    "title": "Golf lessons?",
-    "url": "https://www.reddit.com/r/burlington/comments/1vq9g5q/golf_lessons/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T21:41:11+00:00"
-   },
-   {
-    "id": "1vq8z0l",
-    "title": "Car full of hicks",
-    "url": "https://www.reddit.com/r/burlington/comments/1vq8z0l/car_full_of_hicks/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T21:41:11+00:00"
-   },
-   {
-    "id": "1vq6qg2",
-    "title": "Guidance on visiting Burlington",
-    "url": "https://www.reddit.com/r/burlington/comments/1vq6qg2/guidance_on_visiting_burlington/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T21:41:11+00:00"
-   },
-   {
-    "id": "1vq5s8o",
-    "title": "Anyone been to UVMMC Seneca and willing to share their experience?",
-    "url": "https://www.reddit.com/r/burlington/comments/1vq5s8o/anyone_been_to_uvmmc_seneca_and_willing_to_share/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T21:41:11+00:00"
-   },
-   {
-    "id": "1vq4a78",
-    "title": "Microblading recommendations",
-    "url": "https://www.reddit.com/r/burlington/comments/1vq4a78/microblading_recommendations/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T18:41:01+00:00"
-   },
-   {
-    "id": "1vq0fk6",
-    "title": "Buying a TV",
-    "url": "https://www.reddit.com/r/burlington/comments/1vq0fk6/buying_a_tv/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T18:41:01+00:00"
-   },
-   {
-    "id": "1vq096f",
-    "title": "Cheese Tasting",
-    "url": "https://www.reddit.com/r/burlington/comments/1vq096f/cheese_tasting/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T15:41:13+00:00"
-   },
-   {
-    "id": "1vq07x9",
-    "title": "Seven Daysies 2026",
-    "url": "https://www.reddit.com/r/burlington/comments/1vq07x9/seven_daysies_2026/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T15:41:13+00:00"
-   },
-   {
-    "id": "1vpzr2g",
-    "title": "Soda Plant Sundays market today! till 2 on pine st",
-    "url": "https://www.reddit.com/r/burlington/comments/1vpzr2g/soda_plant_sundays_market_today_till_2_on_pine_st/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T15:41:13+00:00"
-   },
-   {
-    "id": "1vpzjkh",
-    "title": "Fri 8/21 Charles Wesley Godwin tix available",
-    "url": "https://www.reddit.com/r/burlington/comments/1vpzjkh/fri_821_charles_wesley_godwin_tix_available/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T15:41:13+00:00"
-   },
-   {
-    "id": "1vpwy8b",
-    "title": "Residential Parking Permit Map",
-    "url": "https://www.reddit.com/r/burlington/comments/1vpwy8b/residential_parking_permit_map/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-16T15:41:13+00:00"
    }
   ]
  },
