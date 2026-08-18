@@ -1,6 +1,16 @@
 {
  "nws-weather": {
-  "alerts": [],
+  "alerts": [
+   {
+    "id": "urn:oid:2.49.0.1.840.0.3afb5448edc93987600afb93cc0f8d8e53056374.001.1",
+    "event": "Special Weather Statement",
+    "headline": "Special Weather Statement issued August 18 at 4:06AM EDT by NWS Burlington VT",
+    "severity": "Moderate",
+    "onset": "2026-08-18T04:06:00-04:00",
+    "ends": "2026-08-18T09:00:00-04:00",
+    "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
+   }
+  ],
   "forecast_flag": {
    "day": "2026-08-17",
    "text": "Tonight: Scattered showers and thunderstorms before 10pm"
@@ -916,18 +926,18 @@
       "summary": "Our annual Eye on the Sky Stargazing Party, with Jane Lindholm and meteorologist Mark Breen, took place this week. Take this recording outside at night and look up as you listen, to see what you can discover in the sky above you."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
-      "title": "Chefs and servers on the Champlain Valley Dinner Train keep service on track",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
-      "ts": "2026-08-14T09:00:00+00:00",
-      "summary": "As passengers enjoy scenic views, the kitchen staff navigate tight quarters and a bumpy ride to serve up gourmet meals."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
       "title": "Washington Central voters approve school closure article",
       "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
       "ts": "2026-08-14T09:00:00+00:00",
       "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
+      "title": "Chefs and servers on the Champlain Valley Dinner Train keep service on track",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
+      "ts": "2026-08-14T09:00:00+00:00",
+      "summary": "As passengers enjoy scenic views, the kitchen staff navigate tight quarters and a bumpy ride to serve up gourmet meals."
      },
      {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-08-13/passport-to-the-land-of-creemees-vermont-editions-2026-ice-cream-show",
@@ -1295,6 +1305,27 @@
    "mynbc5": {
     "items": [
      {
+      "id": "73460434",
+      "title": "South Burlington police request funding for emergency operations center",
+      "link": "https://www.mynbc5.com/article/south-burlington-police-emergency-operations-center-fund/73460434",
+      "ts": "2026-08-18T08:36:00+00:00",
+      "summary": "South Burlington officials are considering using over $48,000 in ARPA reserve funds to establish a new emergency operations center at the police department. The police chief says the need became apparent during a massive protest during an ICE raid on Dorset Street in March."
+     },
+     {
+      "id": "73460431",
+      "title": "New regulations proposed for motorized bikes, scooters in Chittenden County",
+      "link": "https://www.mynbc5.com/article/south-burlington-motorized-bicycle-ban/73460431",
+      "ts": "2026-08-18T08:23:00+00:00",
+      "summary": "South Burlington leaders are reviewing a proposed ordinance to regulate motorized vehicles on public paths, with exemptions for certain e-bikes, e-scooters, and motorized wheelchairs."
+     },
+     {
+      "id": "73460416",
+      "title": "Rattlesnake Mountain fire 100% contained, officials say",
+      "link": "https://www.mynbc5.com/article/rattlesnake-mountain-fire-rain/73460416",
+      "ts": "2026-08-18T08:12:00+00:00",
+      "summary": "The Rattlesnake Mountain fire in Rumney is now 100% contained, with crews working to extinguish hot spots deep inside the mountain, officials said Monday. Rain helped firefighters, but did not put the fire out."
+     },
+     {
       "id": "73459512",
       "title": "Student shooter kills classmate and himself at a Philippine school, mayor says",
       "link": "https://www.mynbc5.com/article/student-shooter-kills-classmate-himself-philippine-school/73459512",
@@ -1412,27 +1443,6 @@
       "link": "https://www.mynbc5.com/article/dolly-parton-skips-dollywood-ride-opening-health-update/73455898",
       "ts": "2026-08-18T00:07:00+00:00",
       "summary": "The 80-year-old country music legend sent a video to Dollywood fans after her doctor told her not to travel for the ride opening. Here's what she said"
-     },
-     {
-      "id": "73457605",
-      "title": "Trump reduces military training with South Korea",
-      "link": "https://www.mynbc5.com/article/trump-reduces-military-training-south-korea-north-korea-kim-jong-un/73457605",
-      "ts": "2026-08-17T23:58:00+00:00",
-      "summary": "We asked the president about concerns that he is prioritizing the interests of a long-time adversary."
-     },
-     {
-      "id": "73457537",
-      "title": "Back-to-school checklist includes vaccine requirements",
-      "link": "https://www.mynbc5.com/article/back-to-school-checklist-includes-vaccine-requirements/73457537",
-      "ts": "2026-08-17T23:34:00+00:00",
-      "summary": "Local health experts are reminding families to make sure their kids are up to date on vaccines"
-     },
-     {
-      "id": "73457332",
-      "title": "Boston Tea Party participant who is buried in Vermont was honored at a ceremony on Monday",
-      "link": "https://www.mynbc5.com/article/boston-tea-party-participant-who-is-buried-in-vermont-was-honored-at-a-ceremony-with-descendants-on-monday/73457332",
-      "ts": "2026-08-17T22:54:00+00:00",
-      "summary": "The Boston Tea Party Marker Project identifies and marks graves of Boston Tea Party participants, and on Monday, a ceremony was held in Windsor County for a participant buried in Sharon, Vermont"
      }
     ]
    },
