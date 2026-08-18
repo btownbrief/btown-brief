@@ -1,44 +1,34 @@
 {
- "updated": "2026-08-18T09:15:29+00:00",
+ "updated": "2026-08-18T10:02:22+00:00",
  "sections_updated": {
-  "now": "2026-08-18T09:15:29+00:00",
-  "forecast": "2026-08-18T09:15:29+00:00",
-  "hourly": "2026-08-18T09:15:29+00:00",
-  "alerts": "2026-08-18T09:15:29+00:00",
-  "afd": "2026-08-18T09:15:29+00:00",
-  "lake_forecast": "2026-08-18T09:15:29+00:00",
+  "now": "2026-08-18T10:02:22+00:00",
+  "forecast": "2026-08-18T10:02:22+00:00",
+  "hourly": "2026-08-18T10:02:22+00:00",
+  "alerts": "2026-08-18T10:02:22+00:00",
+  "afd": "2026-08-18T10:02:22+00:00",
+  "lake_forecast": "2026-08-18T10:02:22+00:00",
   "lake_gage": "2026-08-18T09:15:29+00:00",
-  "air": "2026-08-18T09:15:29+00:00",
-  "sun": "2026-08-18T09:15:29+00:00",
-  "models": "2026-08-18T09:15:29+00:00"
+  "air": "2026-08-18T10:02:22+00:00",
+  "sun": "2026-08-18T10:02:22+00:00",
+  "models": "2026-08-18T10:02:22+00:00"
  },
  "now": {
-  "observed_at": "2026-08-18T08:50:00+00:00",
+  "observed_at": "2026-08-18T09:40:00+00:00",
   "station": "KBTV",
   "description": "Fog",
   "temp_f": 63,
   "feels_like_f": 63,
   "humidity": 100,
   "dewpoint_f": 63,
-  "wind_mph": 3,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "ENE"
+  "wind_dir": "N"
  },
  "forecast": {
   "updated": "2026-08-18T06:12:23+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-08-18T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 64,
-    "pop": 9,
-    "wind": "N 3 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 64. North wind around 3 mph."
-   },
-   {
-    "name": "Tuesday",
+    "name": "Today",
     "start": "2026-08-18T06:00:00-04:00",
     "is_day": true,
     "temp_f": 80,
@@ -48,7 +38,7 @@
     "detailed": "Isolated rain showers between 7am and 8am. Mostly sunny, with a high near 80. North wind 3 to 7 mph. Chance of precipitation is 20%."
    },
    {
-    "name": "Tuesday Night",
+    "name": "Tonight",
     "start": "2026-08-18T18:00:00-04:00",
     "is_day": false,
     "temp_f": 61,
@@ -166,23 +156,22 @@
     "wind": "W 6 to 9 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers before 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 77. West wind 6 to 9 mph. Chance of precipitation is 50%."
+   },
+   {
+    "name": "Monday Night",
+    "start": "2026-08-24T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 58,
+    "pop": 51,
+    "wind": "W 5 to 8 mph",
+    "short": "Chance Showers And Thunderstorms",
+    "detailed": "A chance of showers and thunderstorms. Mostly cloudy, with a low around 58. West wind 5 to 8 mph. Chance of precipitation is 50%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-08-18T06:12:23+00:00",
   "hours": [
-   {
-    "t": "2026-08-18T05:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 9,
-    "humidity": 100,
-    "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 55,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-08-18T06:00:00-04:00",
     "temp_f": 64,
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 62,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-08-19T17:00:00-04:00",
+    "temp_f": 77,
+    "feels_f": 77,
+    "pop": 39,
+    "humidity": 67,
+    "wind_mph": 7,
+    "wind_dir": "SW",
+    "sky": 73,
+    "short": "Chance Showers And Thunderstorms"
    }
   ]
  },
@@ -881,7 +881,7 @@
      "ICON": 76
     },
     "pop_max": {
-     "GFS": 63,
+     "GFS": 52,
      "Euro": 45,
      "ICON": 28
     },
