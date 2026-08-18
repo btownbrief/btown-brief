@@ -25,28 +25,28 @@
    },
    "Leddy Beach North": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-08-17T14:56:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-08-18T15:01:00+00:00"
    },
    "Leddy Beach South": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-08-17T14:56:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-08-18T15:01:00+00:00"
    },
    "North Beach North": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-08-17T15:42:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-08-18T15:33:00+00:00"
    },
    "North Beach South": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-08-17T15:42:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-08-18T15:33:00+00:00"
    },
    "North Shore Natural Area": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-08-17T15:04:00+00:00"
+    "resultTime": "2026-08-18T15:33:00+00:00"
    },
    "Oakledge Cove": {
     "status": "open",
@@ -55,8 +55,8 @@
    },
    "Texaco Beach": {
     "status": "open",
-    "reason": "Choppy",
-    "resultTime": "2026-08-17T15:42:00+00:00"
+    "reason": "Open",
+    "resultTime": "2026-08-18T15:34:00+00:00"
    }
   }
  },
@@ -459,8 +459,8 @@
     "start": "2026-08-18T17:30:00+00:00",
     "hasAgenda": true,
     "files": [
-     "Agenda v1",
-     "Agenda Packet v1"
+     "Agenda v2",
+     "Agenda Packet v2"
     ]
    },
    "10133": {
@@ -506,13 +506,19 @@
    "8624": {
     "name": "Board of Finance Meeting",
     "start": "2026-08-24T17:00:00+00:00",
-    "hasAgenda": false,
+    "hasAgenda": true,
     "files": []
    },
    "8642": {
     "name": "City Council Meeting",
     "start": "2026-08-24T18:00:00+00:00",
-    "hasAgenda": false,
+    "hasAgenda": true,
+    "files": []
+   },
+   "10134": {
+    "name": "Local Control Commission Meeting",
+    "start": "2026-08-24T18:25:00+00:00",
+    "hasAgenda": true,
     "files": []
    },
    "10114": {
@@ -551,12 +557,6 @@
     "files": [
      "Agenda V1"
     ]
-   },
-   "9963": {
-    "name": "Regular Planning Commission Meeting",
-    "start": "2026-09-08T18:30:00+00:00",
-    "hasAgenda": false,
-    "files": []
    }
   }
  },
@@ -923,23 +923,37 @@
       "summary": "Our annual Eye on the Sky Stargazing Party, with Jane Lindholm and meteorologist Mark Breen, took place this week. Take this recording outside at night and look up as you listen, to see what you can discover in the sky above you."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
-      "title": "Washington Central voters approve school closure article",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
-      "ts": "2026-08-14T09:00:00+00:00",
-      "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
       "title": "Chefs and servers on the Champlain Valley Dinner Train keep service on track",
       "link": "https://www.vermontpublic.org/local-news/2026-08-14/chefs-and-servers-on-the-champlain-valley-dinner-train-keep-service-on-track",
       "ts": "2026-08-14T09:00:00+00:00",
       "summary": "As passengers enjoy scenic views, the kitchen staff navigate tight quarters and a bumpy ride to serve up gourmet meals."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
+      "title": "Washington Central voters approve school closure article",
+      "link": "https://www.vermontpublic.org/local-news/2026-08-14/washington-central-voters-approve-school-closure-article",
+      "ts": "2026-08-14T09:00:00+00:00",
+      "summary": "Five towns in central Vermont voted on Tuesday to change how the district makes decisions about closing small schools."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "LSAZBLL37BCHDOH2EYTEQDQUXQ",
+      "title": "Vermont student survey shows improvements in mental health, declines in substance use",
+      "link": "https://www.wcax.com/2026/08/18/vermont-student-survey-shows-improvements-mental-health-declines-substance-use/",
+      "ts": "2026-08-18T15:31:14+00:00",
+      "summary": "The latest survey of Vermont high school and middle schoolers shows improvements in mental health and declines in vaping, alcohol and marijuana use, according to the Vermont Department of Health"
+     },
+     {
+      "id": "LQP3JIZW2BGI7HUYWM2FCPDG4A",
+      "title": "Green Mountain Care Board cuts proposed 2027 health insurance increases",
+      "link": "https://www.wcax.com/2026/08/18/green-mountain-care-board-cuts-proposed-2027-health-insurance-increases/",
+      "ts": "2026-08-18T15:15:10+00:00",
+      "summary": "Health insurance rates are still going up, but the Green Mountain Care Board has significantly lowered the amount of the increases"
+     },
      {
       "id": "4UJZY4KFYVAJZACY4I5TK3LNWM",
       "title": "Vermonter honored for taking part in the Boston Tea Party protest years ago",
@@ -1275,25 +1289,39 @@
       "link": "https://www.wcax.com/2026/08/14/williston-restore-reopen-after-months-fire-smoke-damage-repairs/",
       "ts": "2026-08-15T00:42:48+00:00",
       "summary": "Green Mountain Habitat for Humanity's largest secondhand store is set to reopen Saturday after damage from a fire forced it to close for months."
-     },
-     {
-      "id": "S6NEGTLZYBDQ3A253OZEAONIDE",
-      "title": "Deputy accused of violating fair policing policy was working for feds at the time",
-      "link": "https://www.wcax.com/2026/08/14/deputy-accused-violating-fair-policing-policy-was-working-feds-time/",
-      "ts": "2026-08-14T22:57:13+00:00",
-      "summary": "The detention and deportation of a Vermont dairy farm worker is raising questions about local police participation in a federal border program."
-     },
-     {
-      "id": "KCM6AMJVVFGYRJE6CB6NNNCM7Q",
-      "title": "New poll shows tight NY-21 congressional race",
-      "link": "https://www.wcax.com/2026/08/14/new-poll-shows-tight-ny-21-congressional-race/",
-      "ts": "2026-08-14T22:37:39+00:00",
-      "summary": "A new poll shows a tight race in New York's 21st Congressional District between Democrat Blake Gendebien and Republican Anthony Constantino."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73464445",
+      "title": "Car plunges into backyard swimming pool in Massachusetts backyard",
+      "link": "https://www.mynbc5.com/article/car-plunges-into-backyard-swimming-pool-massachusetts/73464445",
+      "ts": "2026-08-18T15:35:00+00:00",
+      "summary": "A man trying to deliver his neighbors' packages crashed into a swimming pool in their Massachusetts backyard, fully submerging his car."
+     },
+     {
+      "id": "73464334",
+      "title": "US and Canada hold last-minute talks to stop Trump’s 50% tariffs",
+      "link": "https://www.mynbc5.com/article/us-canada-tariff-truce-negotiations/73464334",
+      "ts": "2026-08-18T15:27:00+00:00",
+      "summary": "The U.S. and Canada are negotiating in an effort to reach a truce on tariffs before a 12:01 a.m. Wednesday deadline set by U.S. President Trump."
+     },
+     {
+      "id": "73463934",
+      "title": "Lindsay Clancy's mother testifies that her daughter 'had thoughts of harming the children'",
+      "link": "https://www.mynbc5.com/article/lindsay-clancy-mother-trial-testimony-august-17/73463934",
+      "ts": "2026-08-18T15:00:00+00:00",
+      "summary": "The mother of Lindsay Clancy took the stand in her daughter’s murder trial. She testified about Clancy’s condition in the months and days before her grandchildren were killed."
+     },
+     {
+      "id": "73457537",
+      "title": "Back-to-school checklist includes vaccine requirements",
+      "link": "https://www.mynbc5.com/article/back-to-school-checklist-includes-vaccine-requirements/73457537",
+      "ts": "2026-08-18T14:58:00+00:00",
+      "summary": "Local health experts are reminding families to make sure their kids are up to date on vaccines"
+     },
      {
       "id": "73437011",
       "title": "Recovery scams target fraud victims a second time",
@@ -1405,34 +1433,6 @@
       "link": "https://www.mynbc5.com/article/student-shooter-kills-classmate-himself-philippine-school/73459512",
       "ts": "2026-08-18T09:20:00+00:00",
       "summary": "Authorities say a high school student carrying two firearms shot to death a fellow student before killing himself at a school in the Philippines."
-     },
-     {
-      "id": "73459250",
-      "title": "Shakira makes surprise visit in earthquake-damaged Colombia and commits to rebuilding schools",
-      "link": "https://www.mynbc5.com/article/shakira-visit-colombia-earthquake-damage/73459250",
-      "ts": "2026-08-18T09:16:00+00:00",
-      "summary": "Colombian superstar Shakira pledged to help rebuild at least 10 schools in a remote region of her home country after a devastating earthquake struck last week."
-     },
-     {
-      "id": "73460416",
-      "title": "Rattlesnake Mountain fire 100% contained, officials say",
-      "link": "https://www.mynbc5.com/article/rattlesnake-mountain-fire-rain/73460416",
-      "ts": "2026-08-18T08:12:00+00:00",
-      "summary": "The Rattlesnake Mountain fire in Rumney is now 100% contained, with crews working to extinguish hot spots deep inside the mountain, officials said Monday. Rain helped firefighters, but did not put the fire out."
-     },
-     {
-      "id": "73459403",
-      "title": "O.J. Brigance, Ravens Super Bowl 35 hero, dies at 56",
-      "link": "https://www.mynbc5.com/article/oj-brigance-dies-baltimore-ravens-als/73459403",
-      "ts": "2026-08-18T04:04:00+00:00",
-      "summary": "O.J. Brigance, who was part of the Ravens team that won Super Bowl 35, was diagnosed with ALS in 2007."
-     },
-     {
-      "id": "73447364",
-      "title": "1 death linked to Tropical Storm Lala as more than 100,000 remain without power in Hawaii",
-      "link": "https://www.mynbc5.com/article/hurricane-tropical-storm-lala-hawaii/73447364",
-      "ts": "2026-08-18T03:51:00+00:00",
-      "summary": "Hurricane Lala has weakened to a tropical storm after raking Hawaii without making landfall"
      }
     ]
    },
@@ -1606,6 +1606,62 @@
  "reddit-burlington": {
   "posts": [
    {
+    "id": "1vrr837",
+    "title": "Isopods, Springtails, Mourning Geckos",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrr837/isopods_springtails_mourning_geckos/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T15:40:20+00:00"
+   },
+   {
+    "id": "1vrqpa1",
+    "title": "Office furniture repair?",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrqpa1/office_furniture_repair/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T15:40:20+00:00"
+   },
+   {
+    "id": "1vrqnww",
+    "title": "Free Aikido Workshops at Art Hop Sept. 12th!",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrqnww/free_aikido_workshops_at_art_hop_sept_12th/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T15:40:20+00:00"
+   },
+   {
+    "id": "1vrqkzm",
+    "title": "Shiloh Skalka's father desperate for answers on fatal e-bike crash",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrqkzm/shiloh_skalkas_father_desperate_for_answers_on/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T15:40:20+00:00"
+   },
+   {
+    "id": "1vrqawu",
+    "title": "Manual Transmission Lessons?",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrqawu/manual_transmission_lessons/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T15:40:20+00:00"
+   },
+   {
+    "id": "1vrop84",
+    "title": "Favorite gone or forgotten spaces",
+    "url": "https://www.reddit.com/r/burlington/comments/1vrop84/favorite_gone_or_forgotten_spaces/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T15:40:20+00:00"
+   },
+   {
+    "id": "1vromji",
+    "title": "Where do the weird alt nerds hang out?",
+    "url": "https://www.reddit.com/r/burlington/comments/1vromji/where_do_the_weird_alt_nerds_hang_out/",
+    "score": null,
+    "comments": null,
+    "created": "2026-08-18T15:40:20+00:00"
+   },
+   {
     "id": "1vrneta",
     "title": "Burlington leaders react after violent weekend downtown.",
     "url": "https://www.reddit.com/r/burlington/comments/1vrneta/burlington_leaders_react_after_violent_weekend/",
@@ -1708,62 +1764,6 @@
     "score": null,
     "comments": null,
     "created": "2026-08-18T12:40:22+00:00"
-   },
-   {
-    "id": "1vqwvjn",
-    "title": "Junior League Champlain Valley Recruitement",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqwvjn/junior_league_champlain_valley_recruitement/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-18T12:40:22+00:00"
-   },
-   {
-    "id": "1vqweb7",
-    "title": "Best frame shop",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqweb7/best_frame_shop/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-18T12:40:22+00:00"
-   },
-   {
-    "id": "1vqgovy",
-    "title": "Sirens downtown north",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqgovy/sirens_downtown_north/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-17T03:40:08+00:00"
-   },
-   {
-    "id": "1vqgdfs",
-    "title": "Any locals ever hear of or see Noah Kahan before he was famous?",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqgdfs/any_locals_ever_hear_of_or_see_noah_kahan_before/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-17T03:40:08+00:00"
-   },
-   {
-    "id": "1vqcxs1",
-    "title": "Burlington is back baby!",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqcxs1/burlington_is_back_baby/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-17T00:40:16+00:00"
-   },
-   {
-    "id": "1vqcw51",
-    "title": "Unsweetened matcha lattes?",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqcw51/unsweetened_matcha_lattes/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-17T00:40:16+00:00"
-   },
-   {
-    "id": "1vqbwh0",
-    "title": "Boat Crashed into - Mallet’s Bay",
-    "url": "https://www.reddit.com/r/burlington/comments/1vqbwh0/boat_crashed_into_mallets_bay/",
-    "score": null,
-    "comments": null,
-    "created": "2026-08-17T00:40:16+00:00"
    }
   ]
  },
