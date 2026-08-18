@@ -1,28 +1,28 @@
 {
- "updated": "2026-08-18T15:13:41+00:00",
+ "updated": "2026-08-18T15:53:35+00:00",
  "sections_updated": {
-  "now": "2026-08-18T15:13:41+00:00",
-  "forecast": "2026-08-18T15:13:41+00:00",
-  "hourly": "2026-08-18T15:13:41+00:00",
-  "alerts": "2026-08-18T15:13:41+00:00",
-  "afd": "2026-08-18T15:13:41+00:00",
-  "lake_forecast": "2026-08-18T15:13:41+00:00",
-  "lake_gage": "2026-08-18T15:13:41+00:00",
-  "air": "2026-08-18T15:13:41+00:00",
-  "sun": "2026-08-18T15:13:41+00:00",
-  "models": "2026-08-18T15:13:41+00:00"
+  "now": "2026-08-18T15:53:35+00:00",
+  "forecast": "2026-08-18T15:53:35+00:00",
+  "hourly": "2026-08-18T15:53:35+00:00",
+  "alerts": "2026-08-18T15:53:35+00:00",
+  "afd": "2026-08-18T15:53:35+00:00",
+  "lake_forecast": "2026-08-18T15:53:35+00:00",
+  "lake_gage": "2026-08-18T15:53:35+00:00",
+  "air": "2026-08-18T15:53:35+00:00",
+  "sun": "2026-08-18T15:53:35+00:00",
+  "models": "2026-08-18T15:53:35+00:00"
  },
  "now": {
-  "observed_at": "2026-08-18T15:00:00+00:00",
+  "observed_at": "2026-08-18T15:31:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 70,
-  "feels_like_f": 70,
-  "humidity": 83,
-  "dewpoint_f": 64,
-  "wind_mph": 6,
+  "description": "Mostly Cloudy",
+  "temp_f": 72,
+  "feels_like_f": 73,
+  "humidity": 79,
+  "dewpoint_f": 65,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "NW"
+  "wind_dir": "N"
  },
  "forecast": {
   "updated": "2026-08-18T06:12:23+00:00",
@@ -832,10 +832,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 26,
+  "aqi": 32,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/18/26 10:00",
+  "observed": "08/18/26 11:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 18th."
  },
  "sun": {
@@ -850,59 +850,59 @@
    {
     "date": "2026-08-18",
     "high_f": {
-     "GFS": 80,
+     "GFS": 81,
      "Euro": 76,
      "ICON": 79
     },
     "pop_max": {
      "GFS": 1,
-     "Euro": 35,
-     "ICON": 3
+     "Euro": 23,
+     "ICON": 0
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.0,
-     "ICON": 0.03
+     "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 5
    },
    {
     "date": "2026-08-19",
     "high_f": {
      "GFS": 81,
      "Euro": 78,
-     "ICON": 76
+     "ICON": 75
     },
     "pop_max": {
      "GFS": 23,
-     "Euro": 37,
-     "ICON": 28
+     "Euro": 35,
+     "ICON": 13
     },
     "precip_in": {
      "GFS": 0.03,
      "Euro": 0.03,
-     "ICON": 0.0
+     "ICON": 0.02
     },
-    "high_spread_f": 5
+    "high_spread_f": 6
    },
    {
     "date": "2026-08-20",
     "high_f": {
      "GFS": 77,
      "Euro": 76,
-     "ICON": 77
+     "ICON": 80
     },
     "pop_max": {
      "GFS": 10,
-     "Euro": 22,
-     "ICON": 11
+     "Euro": 25,
+     "ICON": 3
     },
     "precip_in": {
      "GFS": 0.04,
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 1
+    "high_spread_f": 4
    }
   ]
  }
