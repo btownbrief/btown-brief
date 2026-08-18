@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-18T06:01:18-04:00",
+ "generated": "2026-08-18T16:58:50-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 16,
-   "seconds": 5.5
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 64,
-   "seconds": 4.4
+   "count": 65,
+   "seconds": 5.3
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 55,
-   "seconds": 3.4
+   "seconds": 3.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 158,
-   "seconds": 3.2
+   "count": 159,
+   "seconds": 2.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 67,
-   "seconds": 1.5
+   "count": 68,
+   "seconds": 2.1
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 159,
-   "seconds": 65.5
+   "count": 167,
+   "seconds": 76.4
   },
   "flynn": {
    "label": "The Flynn",
    "count": 36,
-   "seconds": 2.5
+   "seconds": 2.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.0
+   "seconds": 39.1
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 80,
-   "seconds": 120.2
+   "seconds": 123.1
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 408,
-   "seconds": 72.4
+   "count": 429,
+   "seconds": 77.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 120.5
+   "count": 63,
+   "seconds": 127.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 42,
-   "seconds": 14.8
+   "seconds": 15.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 77,
-   "seconds": 1.5
+   "seconds": 1.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 34,
-   "seconds": 32.0
+   "seconds": 35.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,131 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 335,
-   "seconds": 17.6
+   "count": 340,
+   "seconds": 14.1
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 198,
+   "count": 205,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 74,
-   "seconds": 92.9
+   "count": 73,
+   "seconds": 100.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 31,
-   "seconds": 0.2
+   "seconds": 0.4
   }
  },
- "gathered": 2658,
- "afterDedup": 1406,
- "duplicatesMerged": 1252,
- "final": 1805,
+ "gathered": 2699,
+ "afterDedup": 1421,
+ "duplicatesMerged": 1278,
+ "final": 1831,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-17"
-  },
-  {
-   "kept": {
-    "title": "Chemistry Seminar ft. Ayanjeet Ghosh",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-17"
-  },
-  {
-   "kept": {
-    "title": "Accounting and Finance Career Showcase",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-17"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-17"
-  },
-  {
-   "kept": {
-    "title": "Hot Dog & A Can Thursdays",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-17"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-17"
-  },
-  {
-   "kept": {
-    "title": "Charity, Sylvia & Cleopatra",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "flynn",
-    "loveburlington"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "Old Crow Medicine Show",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "A Celebration of Vermont Cheese",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-18"
-  },
   {
    "kept": {
     "title": "Live DJ at Ri Ra!",
@@ -246,6 +145,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
+    "title": "Coffee and Code",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-09-18"
   },
@@ -296,6 +206,17 @@
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-18"
+  },
+  {
+   "kept": {
+    "title": "Burlington Baroque Festival: JS Bach’s B Minor Mass",
     "source": "loveburlington"
    },
    "merged_sources": [
@@ -403,6 +324,17 @@
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-19"
+  },
+  {
+   "kept": {
+    "title": "Burlington Baroque Festival: Vivaldi Concerti Stravaganzi!",
     "source": "loveburlington"
    },
    "merged_sources": [
@@ -1197,6 +1129,17 @@
   },
   {
    "kept": {
+    "title": "Vermont Summit ft. Nate Hagens",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-29"
+  },
+  {
+   "kept": {
     "title": "Vermont Agriculture: A Renaissance of the Past",
     "source": "uvm"
    },
@@ -1469,6 +1412,17 @@
   },
   {
    "kept": {
+    "title": "Coffee and Code",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
     "title": "Neurobiological Intersection of Pain and Addiction: Clinical Implications",
     "source": "uvm"
    },
@@ -1514,6 +1468,17 @@
   {
    "kept": {
     "title": "Ask UVM Open House",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
+    "title": "Elevating the Entrepreneurial Legacy",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2233,6 +2198,17 @@
   },
   {
    "kept": {
+    "title": "Random Chats About Statistics: Directed Acyclic Graphs",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-13"
+  },
+  {
+   "kept": {
     "title": "Wild Kratts Live 2.0",
     "source": "flynn"
    },
@@ -2321,6 +2297,17 @@
   },
   {
    "kept": {
+    "title": "Coffee and Code",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
     "title": "CAT ECare Training",
     "source": "uvm"
    },
@@ -2377,6 +2364,17 @@
   },
   {
    "kept": {
+    "title": "Zombie Walk",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-17"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2400,34 +2398,65 @@
  ],
  "changes": [
   {
-   "id": "653151ba6cf6",
-   "title": "802sDay",
-   "date": "2026-10-06",
-   "change": "time",
-   "was": "2026-10-06",
-   "now": "2026-10-06T11:30:00-04:00"
+   "id": "4d3e484dc1d7",
+   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
+   "date": "2026-08-18",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
   },
   {
-   "id": "00fa65e0ab1d",
-   "title": "Industry Day",
-   "date": "2026-10-05",
-   "change": "time",
-   "was": "2026-10-05",
-   "now": "2026-10-05T11:30:00-04:00"
+   "id": "6a23eb05d36c",
+   "title": "Shelburne Farms Garden walk - 4.81 miles",
+   "date": "2026-08-18",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
   },
   {
    "id": "d0e4e622221f",
    "title": "Business Networking Event - Startup. Scale. Support.",
    "date": "2026-08-25",
+   "change": "dropped"
+  },
+  {
+   "id": "d00294290626",
+   "title": "Vegan in Vermont",
+   "date": "2026-08-26",
    "change": "missing",
-   "lastSeen": "2026-08-15T16:57:45-04:00"
+   "lastSeen": "2026-08-18T06:01:18-04:00"
+  },
+  {
+   "id": "b2e5144d1079-2100",
+   "title": "Nataly Aukar",
+   "date": "2026-08-28",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
   },
   {
    "id": "b66813a5ea6e",
    "title": "Mills Riverside Park Loop",
    "date": "2026-09-05",
+   "change": "dropped"
+  },
+  {
+   "id": "6dde55e8d2cc",
+   "title": "Chemistry seminar ft. Carol Manhart",
+   "date": "2026-09-10",
    "change": "missing",
-   "lastSeen": "2026-08-15T16:57:45-04:00"
+   "lastSeen": "2026-08-18T06:01:18-04:00"
+  },
+  {
+   "id": "b320bfb8c80a",
+   "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ POLKAROBICS",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
+  },
+  {
+   "id": "44150382f697",
+   "title": "BTown Coffee Club",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
   },
   {
    "id": "f26308f3e4e5",
@@ -2435,6 +2464,20 @@
    "date": "2026-09-15",
    "change": "missing",
    "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "95d767093a02",
+   "title": "Chemistry Seminar ft. Ayanjeet Ghosh",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
+  },
+  {
+   "id": "6285243c0e9f",
+   "title": "A Celebration of Vermont Cheese",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
   },
   {
    "id": "7d794705dbd7",
@@ -2451,10 +2494,25 @@
    "lastSeen": "2026-08-17T06:07:52-04:00"
   },
   {
-   "id": "ed46e707b0e5",
-   "title": "VCA Presents: $5 Improv Night!",
-   "date": "2026-09-30",
-   "change": "dropped"
+   "id": "a40ed5ba6818",
+   "title": "Burlington Baroque Festival: Vivaldi Concerti Stravaganza!",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
+  },
+  {
+   "id": "29f137cfaa4c",
+   "title": "Chemistry seminar ft. Joseph Alfred Cotruvo Jr.",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
+  },
+  {
+   "id": "d32344b434dc",
+   "title": "Chemistry seminar ft. Stephanie Zaleski",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
   },
   {
    "id": "87227a21605e",
@@ -2497,6 +2555,13 @@
    "date": "2026-10-07",
    "change": "missing",
    "lastSeen": "2026-08-17T06:07:52-04:00"
+  },
+  {
+   "id": "8d3a43a74d96",
+   "title": "Chemistry seminar ft. Jeffrey Dick",
+   "date": "2026-10-08",
+   "change": "missing",
+   "lastSeen": "2026-08-18T06:01:18-04:00"
   },
   {
    "id": "0a998ee619df",
