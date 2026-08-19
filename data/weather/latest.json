@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-19T20:54:48+00:00",
+ "updated": "2026-08-19T21:05:57+00:00",
  "sections_updated": {
-  "now": "2026-08-19T20:54:48+00:00",
-  "forecast": "2026-08-19T20:54:48+00:00",
-  "hourly": "2026-08-19T20:54:48+00:00",
-  "alerts": "2026-08-19T20:54:48+00:00",
-  "afd": "2026-08-19T20:54:48+00:00",
-  "lake_forecast": "2026-08-19T20:54:48+00:00",
-  "lake_gage": "2026-08-19T20:54:48+00:00",
-  "air": "2026-08-19T20:54:48+00:00",
-  "sun": "2026-08-19T20:54:48+00:00",
-  "models": "2026-08-19T20:54:48+00:00"
+  "now": "2026-08-19T21:05:57+00:00",
+  "forecast": "2026-08-19T21:05:57+00:00",
+  "hourly": "2026-08-19T21:05:57+00:00",
+  "alerts": "2026-08-19T21:05:57+00:00",
+  "afd": "2026-08-19T21:05:57+00:00",
+  "lake_forecast": "2026-08-19T21:05:57+00:00",
+  "lake_gage": "2026-08-19T21:05:57+00:00",
+  "air": "2026-08-19T21:05:57+00:00",
+  "sun": "2026-08-19T21:05:57+00:00",
+  "models": "2026-08-19T21:05:57+00:00"
  },
  "now": {
-  "observed_at": "2026-08-19T20:25:00+00:00",
+  "observed_at": "2026-08-19T20:40:00+00:00",
   "station": "KBTV",
   "description": "Partly Cloudy",
   "temp_f": 79,
   "feels_like_f": 79,
   "humidity": 54,
   "dewpoint_f": 61,
-  "wind_mph": null,
+  "wind_mph": 10,
   "wind_gust_mph": null,
-  "wind_dir": null
+  "wind_dir": "SSW"
  },
  "forecast": {
   "updated": "2026-08-19T18:16:03+00:00",
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-08-19T16:00:00-04:00",
+    "start": "2026-08-19T17:00:00-04:00",
     "is_day": true,
     "temp_f": 77,
-    "pop": 47,
-    "wind": "NW 7 mph",
+    "pop": 46,
+    "wind": "NW 6 mph",
     "short": "Scattered Rain Showers",
-    "detailed": "Scattered rain showers. Partly sunny, with a high near 77. Northwest wind around 7 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Scattered rain showers. Partly sunny, with a high near 77. Northwest wind around 6 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-19T18:16:03+00:00",
   "hours": [
-   {
-    "t": "2026-08-19T16:00:00-04:00",
-    "temp_f": 77,
-    "feels_f": 77,
-    "pop": 47,
-    "humidity": 60,
-    "wind_mph": 7,
-    "wind_dir": "W",
-    "sky": 67,
-    "short": "Scattered Rain Showers"
-   },
    {
     "t": "2026-08-19T17:00:00-04:00",
     "temp_f": 76,
@@ -566,6 +555,17 @@
     "wind_mph": 2,
     "wind_dir": "NE",
     "sky": 20,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-21T04:00:00-04:00",
+    "temp_f": 58,
+    "feels_f": 58,
+    "pop": 0,
+    "humidity": 93,
+    "wind_mph": 2,
+    "wind_dir": "E",
+    "sky": 19,
     "short": "Mostly Clear"
    }
   ]
