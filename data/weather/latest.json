@@ -1,26 +1,26 @@
 {
- "updated": "2026-08-19T19:11:21+00:00",
+ "updated": "2026-08-19T20:00:30+00:00",
  "sections_updated": {
-  "now": "2026-08-19T19:11:21+00:00",
-  "forecast": "2026-08-19T19:11:21+00:00",
-  "hourly": "2026-08-19T19:11:21+00:00",
-  "alerts": "2026-08-19T19:11:21+00:00",
-  "afd": "2026-08-19T19:11:21+00:00",
-  "lake_forecast": "2026-08-19T19:11:21+00:00",
-  "lake_gage": "2026-08-19T19:11:21+00:00",
-  "air": "2026-08-19T19:11:21+00:00",
-  "sun": "2026-08-19T19:11:21+00:00",
-  "models": "2026-08-19T19:11:21+00:00"
+  "now": "2026-08-19T20:00:30+00:00",
+  "forecast": "2026-08-19T20:00:30+00:00",
+  "hourly": "2026-08-19T20:00:30+00:00",
+  "alerts": "2026-08-19T20:00:30+00:00",
+  "afd": "2026-08-19T20:00:30+00:00",
+  "lake_forecast": "2026-08-19T20:00:30+00:00",
+  "lake_gage": "2026-08-19T20:00:30+00:00",
+  "air": "2026-08-19T20:00:30+00:00",
+  "sun": "2026-08-19T20:00:30+00:00",
+  "models": "2026-08-19T20:00:30+00:00"
  },
  "now": {
-  "observed_at": "2026-08-19T18:45:00+00:00",
+  "observed_at": "2026-08-19T19:40:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
-  "temp_f": 75,
-  "feels_like_f": 75,
-  "humidity": 65,
+  "description": "Clear",
+  "temp_f": 79,
+  "feels_like_f": 79,
+  "humidity": 58,
   "dewpoint_f": 63,
-  "wind_mph": 7,
+  "wind_mph": 10,
   "wind_gust_mph": null,
   "wind_dir": "S"
  },
@@ -29,13 +29,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-08-19T15:00:00-04:00",
+    "start": "2026-08-19T16:00:00-04:00",
     "is_day": true,
     "temp_f": 77,
-    "pop": 52,
-    "wind": "W 7 mph",
+    "pop": 47,
+    "wind": "NW 7 mph",
     "short": "Scattered Rain Showers",
-    "detailed": "Scattered rain showers. Partly sunny, with a high near 77. West wind around 7 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Scattered rain showers. Partly sunny, with a high near 77. Northwest wind around 7 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-19T18:16:03+00:00",
   "hours": [
-   {
-    "t": "2026-08-19T15:00:00-04:00",
-    "temp_f": 76,
-    "feels_f": 76,
-    "pop": 52,
-    "humidity": 62,
-    "wind_mph": 7,
-    "wind_dir": "SW",
-    "sky": 61,
-    "short": "Scattered Rain Showers"
-   },
    {
     "t": "2026-08-19T16:00:00-04:00",
     "temp_f": 77,
@@ -567,6 +556,17 @@
     "wind_dir": "E",
     "sky": 26,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-08-21T03:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 0,
+    "humidity": 90,
+    "wind_mph": 2,
+    "wind_dir": "NE",
+    "sky": 20,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -862,7 +862,7 @@
   "aqi": 27,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/19/26 14:00",
+  "observed": "08/19/26 15:00",
   "discussion": "Expect generally good air quality across Vermont on Thursday, August 20th."
  },
  "sun": {
@@ -878,7 +878,7 @@
     "date": "2026-08-19",
     "high_f": {
      "GFS": 80,
-     "Euro": 77,
+     "Euro": 79,
      "ICON": 77
     },
     "pop_max": {
@@ -897,7 +897,7 @@
     "date": "2026-08-20",
     "high_f": {
      "GFS": 80,
-     "Euro": 75,
+     "Euro": 76,
      "ICON": 78
     },
     "pop_max": {
@@ -910,13 +910,13 @@
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-08-21",
     "high_f": {
      "GFS": 76,
-     "Euro": 76,
+     "Euro": 75,
      "ICON": 80
     },
     "pop_max": {
@@ -929,7 +929,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 5
    }
   ]
  }
