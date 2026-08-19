@@ -1,26 +1,26 @@
 {
- "updated": "2026-08-19T17:04:55+00:00",
+ "updated": "2026-08-19T18:00:05+00:00",
  "sections_updated": {
-  "now": "2026-08-19T17:04:55+00:00",
-  "forecast": "2026-08-19T17:04:55+00:00",
-  "hourly": "2026-08-19T17:04:55+00:00",
-  "alerts": "2026-08-19T17:04:55+00:00",
-  "afd": "2026-08-19T17:04:55+00:00",
-  "lake_forecast": "2026-08-19T17:04:55+00:00",
+  "now": "2026-08-19T18:00:05+00:00",
+  "forecast": "2026-08-19T18:00:05+00:00",
+  "hourly": "2026-08-19T18:00:05+00:00",
+  "alerts": "2026-08-19T18:00:05+00:00",
+  "afd": "2026-08-19T18:00:05+00:00",
+  "lake_forecast": "2026-08-19T18:00:05+00:00",
   "lake_gage": "2026-08-19T17:04:55+00:00",
-  "air": "2026-08-19T17:04:55+00:00",
-  "sun": "2026-08-19T17:04:55+00:00",
-  "models": "2026-08-19T17:04:55+00:00"
+  "air": "2026-08-19T18:00:05+00:00",
+  "sun": "2026-08-19T18:00:05+00:00",
+  "models": "2026-08-19T18:00:05+00:00"
  },
  "now": {
-  "observed_at": "2026-08-19T16:40:00+00:00",
+  "observed_at": "2026-08-19T17:40:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
+  "description": "Mostly Cloudy",
   "temp_f": 75,
   "feels_like_f": 75,
   "humidity": 61,
   "dewpoint_f": 61,
-  "wind_mph": 7,
+  "wind_mph": 6,
   "wind_gust_mph": null,
   "wind_dir": "SSW"
  },
@@ -832,10 +832,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 27,
+  "aqi": 31,
   "category": "Good",
-  "pollutant": "PM2.5",
-  "observed": "08/19/26 12:00",
+  "pollutant": "OZONE",
+  "observed": "08/19/26 13:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, August 19th."
  },
  "sun": {
@@ -843,7 +843,7 @@
   "sunset": "2026-08-19T19:52-04:00",
   "sunrise_tomorrow": "2026-08-20T06:01-04:00",
   "sunset_tomorrow": "2026-08-20T19:50-04:00",
-  "uv_max": 5.55
+  "uv_max": 5.85
  },
  "models": {
   "days": [
@@ -860,7 +860,7 @@
      "ICON": 15
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.38,
      "Euro": 0.02,
      "ICON": 0.01
     },
@@ -888,7 +888,7 @@
    {
     "date": "2026-08-21",
     "high_f": {
-     "GFS": 77,
+     "GFS": 76,
      "Euro": 76,
      "ICON": 80
     },
