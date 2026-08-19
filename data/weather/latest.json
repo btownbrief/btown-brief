@@ -1,35 +1,35 @@
 {
- "updated": "2026-08-19T05:14:37+00:00",
+ "updated": "2026-08-19T06:04:02+00:00",
  "sections_updated": {
-  "now": "2026-08-19T05:14:37+00:00",
-  "forecast": "2026-08-19T05:14:37+00:00",
-  "hourly": "2026-08-19T05:14:37+00:00",
-  "alerts": "2026-08-19T05:14:37+00:00",
-  "afd": "2026-08-19T05:14:37+00:00",
-  "lake_forecast": "2026-08-19T05:14:37+00:00",
-  "lake_gage": "2026-08-19T05:14:37+00:00",
-  "air": "2026-08-19T05:14:37+00:00",
-  "sun": "2026-08-19T05:14:37+00:00",
-  "models": "2026-08-19T05:14:37+00:00"
+  "now": "2026-08-19T06:04:02+00:00",
+  "forecast": "2026-08-19T06:04:02+00:00",
+  "hourly": "2026-08-19T06:04:02+00:00",
+  "alerts": "2026-08-19T06:04:02+00:00",
+  "afd": "2026-08-19T06:04:02+00:00",
+  "lake_forecast": "2026-08-19T06:04:02+00:00",
+  "lake_gage": "2026-08-19T06:04:02+00:00",
+  "air": "2026-08-19T06:04:02+00:00",
+  "sun": "2026-08-19T06:04:02+00:00",
+  "models": "2026-08-19T06:04:02+00:00"
  },
  "now": {
-  "observed_at": "2026-08-19T05:00:00+00:00",
+  "observed_at": "2026-08-19T05:40:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 63,
   "feels_like_f": 63,
   "humidity": 94,
   "dewpoint_f": 61,
-  "wind_mph": 3,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "E"
+  "wind_dir": "N"
  },
  "forecast": {
   "updated": "2026-08-18T18:11:46+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-08-19T01:00:00-04:00",
+    "name": "Tonight",
+    "start": "2026-08-18T22:00:00-04:00",
     "is_day": false,
     "temp_f": 61,
     "pop": 3,
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-18T18:11:46+00:00",
   "hours": [
-   {
-    "t": "2026-08-19T01:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 1,
-    "humidity": 90,
-    "wind_mph": 2,
-    "wind_dir": "SE",
-    "sky": 72,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-08-19T02:00:00-04:00",
     "temp_f": 63,
@@ -567,6 +556,17 @@
     "wind_dir": "W",
     "sky": 33,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-08-20T13:00:00-04:00",
+    "temp_f": 76,
+    "feels_f": 76,
+    "pop": 7,
+    "humidity": 58,
+    "wind_mph": 5,
+    "wind_dir": "NW",
+    "sky": 41,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-18T23:30:00+00:00",
+  "issued": "2026-08-19T05:35:00+00:00",
   "key_messages": [
    "A weak cold front will bring some shower chances to the region tomorrow, with seasonable and mostly dry conditions prevailing through the remainder of the week.",
    "Showery and cooler conditions with beneficial rain are on track for late this weekend into early next week."
   ],
   "what_changed": "As of 212 PM EDT Tuesday... No significant changes have been made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 182330\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n730 PM EDT Tue Aug 18 2026\n\n.WHAT HAS CHANGED...\nAs of 212 PM EDT Tuesday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 233 PM EDT Tuesday...\n\n1. A weak cold front will bring some shower chances to the \nregion tomorrow, with seasonable and mostly dry conditions \nprevailing through the remainder of the week.\n\n2. Showery and cooler conditions with beneficial rain are on \ntrack for late this weekend into early next week.\n\n&&\n\n.DISCUSSION...\nAs of 212 PM EDT Tuesday...\n\nKEY MESSAGE 1: Mostly dry and seasonable conditions are \nexpected to continue across the region through the remainder of \nthe week, with a few chances for showers possible. High \ntemperatures will generally be in the 70s to low 80s the next \nseveral days. Another round of patchy fog will be possible \ntonight into tomorrow morning with high pressure overhead, but \nmoisture will be limited which will influence how much fog \ndevelops overnight. A decaying cold front will move through the \nregion tomorrow, bringing chances for scattered showers and \npossible embedded thunderstorms, particularly across northern \nNew York. Showers and any thunderstorms that do develop look to \nbe rather unimpactful, with limited dynamics and instability to \npromote any stronger thunderstorms. Shower chances may linger \ninto the evening, especially across the higher terrain before \ndrier conditions return to the region. Some showers cannot be \nentirely ruled out on Thursday as a weak area of low pressure \nmoving across southern New England, but chances are fairly low \nand dry conditions are expected to prevail across most of the \narea, with dry and seasonable conditions continuing into Friday.\n\nKEY MESSAGE 2: A deep 500 millibar trough is expected to dig \ninto the Great Lakes region Saturday night, leading to \nwidespread showers overspreading our area into Sunday. Expect \nshowers will tend to be orographically enhanced with this setup,\nbut thankfully there are are no signals for noteworthy moisture\nor heat to advect northward, which limits potential for \nimpactful/hazardous weather. As such, the latest 48 hour \nrainfall probabilities of exceeding 1.00\" of rain are only in \nthe 15 - 40% range with 2.00\" probabilities below 10%. Greatest \nchances of the higher rainfall amounts appear primarily in the \nwestern foothills of the Adirondacks and westward into the St. \nLawrence Valley. Given the aforementioned meridional winds and \nlikely deep upper level low, would expect a fairly long duration\nevent with at least periods of showers. Generally this system \nshould bring plenty of cloud cover and cool air from the \nnorthwest by Monday, such that daytime temperatures will trend \ntemporarily below normal before recovering towards midweek \nfollowing the departure of the trough.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...The return of radiation fog is possible \ntonight around 06Z-14Z Wednesday, most likely IFR level for a \ncouple hours at the typical sites SLK and MPV. Due to drier air \nmixing down this afternoon as compared to yesterday's increased \nmoisture following the rain, the anticipated fog coverage and \nlongevity tonight is much less than last night. There may also \nbe more southwesterly winds just aloft during the prime fog \nhours tonight from return flow, and clouds are likely to be on \nthe increase, especially across northern New York. Overall, we \ncontinue to see mixed signals on when and for how long fog is \ngoing to develop in the valleys, but expect it will be more \nisolated and shorter duration than last night. On Wednesday, \nwinds will increase out of the south-southwest, resulting in \nchanneled gusts at MSS 15-20 knots by the afternoon hours. We \nalso expect showers to arrive from west to east across northern \nNew York Wednesday morning, arriving at MSS by 11Z-19Z.\n\nOutlook...\n\nWednesday Night: VFR. Slight chance SHRA.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly VFR, with local MVFR possible. Likely SHRA, Slight\nchance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Storm/Kremer\nAVIATION...Neiles\n"
+  "raw": "\n000\nFXUS61 KBTV 190535\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n135 AM EDT Wed Aug 19 2026\n\n.WHAT HAS CHANGED...\nAs of 212 PM EDT Tuesday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 233 PM EDT Tuesday...\n\n1. A weak cold front will bring some shower chances to the \nregion tomorrow, with seasonable and mostly dry conditions \nprevailing through the remainder of the week.\n\n2. Showery and cooler conditions with beneficial rain are on \ntrack for late this weekend into early next week.\n\n&&\n\n.DISCUSSION...\nAs of 212 PM EDT Tuesday...\n\nKEY MESSAGE 1: Mostly dry and seasonable conditions are \nexpected to continue across the region through the remainder of \nthe week, with a few chances for showers possible. High \ntemperatures will generally be in the 70s to low 80s the next \nseveral days. Another round of patchy fog will be possible \ntonight into tomorrow morning with high pressure overhead, but \nmoisture will be limited which will influence how much fog \ndevelops overnight. A decaying cold front will move through the \nregion tomorrow, bringing chances for scattered showers and \npossible embedded thunderstorms, particularly across northern \nNew York. Showers and any thunderstorms that do develop look to \nbe rather unimpactful, with limited dynamics and instability to \npromote any stronger thunderstorms. Shower chances may linger \ninto the evening, especially across the higher terrain before \ndrier conditions return to the region. Some showers cannot be \nentirely ruled out on Thursday as a weak area of low pressure \nmoving across southern New England, but chances are fairly low \nand dry conditions are expected to prevail across most of the \narea, with dry and seasonable conditions continuing into Friday.\n\nKEY MESSAGE 2: A deep 500 millibar trough is expected to dig \ninto the Great Lakes region Saturday night, leading to \nwidespread showers overspreading our area into Sunday. Expect \nshowers will tend to be orographically enhanced with this setup,\nbut thankfully there are are no signals for noteworthy moisture\nor heat to advect northward, which limits potential for \nimpactful/hazardous weather. As such, the latest 48 hour \nrainfall probabilities of exceeding 1.00\" of rain are only in \nthe 15 - 40% range with 2.00\" probabilities below 10%. Greatest \nchances of the higher rainfall amounts appear primarily in the \nwestern foothills of the Adirondacks and westward into the St. \nLawrence Valley. Given the aforementioned meridional winds and \nlikely deep upper level low, would expect a fairly long duration\nevent with at least periods of showers. Generally this system \nshould bring plenty of cloud cover and cool air from the \nnorthwest by Monday, such that daytime temperatures will trend \ntemporarily below normal before recovering towards midweek \nfollowing the departure of the trough.\n\n&&\n\n.AVIATION /06Z WEDNESDAY THROUGH SUNDAY/...\nThrough 06Z Thursday...The return of radiation fog is possible \nearly this morning around 06Z-13z, IFR possible for a couple \nhours at the typical sites SLK and MPV. \n\nApproaching cold front will bring showers to northern NY but\nweaken in coverage and intensity as they move east late this\nmorning and aftn. VFR conditions expected depsite any showers.\n\nWinds will be S-SW at 5-10 kts for most but some channel flow in\nthe St. Lawrence Vly may bring g20 kts to KMSS.\n\n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly MVFR, with areas VFR possible. Definite SHRA,\nSlight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Storm/Kremer\nAVIATION...SLW\n"
  },
  "lake_forecast": {
   "issued": "2026-08-18T18:15:00+00:00",
@@ -859,10 +859,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 25,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/19/26 0:00",
+  "observed": "08/19/26 1:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, August 19th."
  },
  "sun": {
@@ -870,28 +870,28 @@
   "sunset": "2026-08-19T19:52-04:00",
   "sunrise_tomorrow": "2026-08-20T06:01-04:00",
   "sunset_tomorrow": "2026-08-20T19:50-04:00",
-  "uv_max": 5.05
+  "uv_max": 5.85
  },
  "models": {
   "days": [
    {
     "date": "2026-08-19",
     "high_f": {
-     "GFS": 80,
+     "GFS": 79,
      "Euro": 78,
      "ICON": 77
     },
     "pop_max": {
-     "GFS": 41,
+     "GFS": 40,
      "Euro": 50,
      "ICON": 20
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.02,
      "Euro": 0.03,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-08-20",
@@ -915,7 +915,7 @@
    {
     "date": "2026-08-21",
     "high_f": {
-     "GFS": 72,
+     "GFS": 75,
      "Euro": 75,
      "ICON": 79
     },
@@ -929,7 +929,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 7
+    "high_spread_f": 4
    }
   ]
  }
