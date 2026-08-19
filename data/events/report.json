@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-18T16:58:50-04:00",
+ "generated": "2026-08-19T06:02:08-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 16,
-   "seconds": 6.0
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 65,
-   "seconds": 5.3
+   "count": 66,
+   "seconds": 2.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 55,
-   "seconds": 3.7
+   "count": 52,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 159,
-   "seconds": 2.6
+   "count": 161,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 68,
-   "seconds": 2.1
+   "count": 67,
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-18&end_date=2026-10-17&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-19&end_date=2026-10-18&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 167,
-   "seconds": 76.4
+   "count": 165,
+   "seconds": 66.5
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 36,
-   "seconds": 2.6
+   "count": 37,
+   "seconds": 2.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.1
+   "seconds": 36.8
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 80,
-   "seconds": 123.1
+   "count": 81,
+   "seconds": 114.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 429,
-   "seconds": 77.4
+   "count": 421,
+   "seconds": 73.0
   },
   "meetup": {
    "label": "Meetup",
    "count": 63,
-   "seconds": 127.5
+   "seconds": 117.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 42,
-   "seconds": 15.8
+   "count": 43,
+   "seconds": 14.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 77,
-   "seconds": 1.4
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 34,
-   "seconds": 35.2
+   "seconds": 31.8
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,107 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 340,
-   "seconds": 14.1
+   "count": 344,
+   "seconds": 20.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 205,
+   "count": 207,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 73,
-   "seconds": 100.3
+   "seconds": 91.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 31,
-   "seconds": 0.4
+   "count": 30,
+   "seconds": 0.5
   }
  },
- "gathered": 2699,
- "afterDedup": 1421,
- "duplicatesMerged": 1278,
- "final": 1831,
+ "gathered": 2619,
+ "afterDedup": 1345,
+ "duplicatesMerged": 1274,
+ "final": 1806,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "Coffee and Code",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "Landscapes of risk: modeling and evaluating pesticide exposure in agricultural landscapes ft. Charlie Nicholson",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "Charity and Sylvia Author Talk ft. Tillie Walden",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-18"
-  },
   {
    "kept": {
     "title": "Burlington Baroque Festival: JS Bach’s B Minor Mass",
@@ -1931,14 +1854,37 @@
   },
   {
    "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-06"
+  },
+  {
+   "kept": {
     "title": "Briscoe",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "Oteil Burbridge & LaMP",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
    ],
    "date": "2026-10-07"
   },
@@ -1983,6 +1929,28 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-07"
   },
@@ -2394,29 +2362,42 @@
     "loveburlington"
    ],
    "date": "2026-10-17"
+  },
+  {
+   "kept": {
+    "title": "UVM Women's Rugby vs Coast Guard Academy",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-17"
+  },
+  {
+   "kept": {
+    "title": "Men's Soccer vs New Hampshire",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-17"
+  },
+  {
+   "kept": {
+    "title": "Men's Ice Hockey vs Boston University",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-17"
   }
  ],
  "changes": [
-  {
-   "id": "4d3e484dc1d7",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-08-18",
-   "change": "missing",
-   "lastSeen": "2026-08-18T06:01:18-04:00"
-  },
-  {
-   "id": "6a23eb05d36c",
-   "title": "Shelburne Farms Garden walk - 4.81 miles",
-   "date": "2026-08-18",
-   "change": "missing",
-   "lastSeen": "2026-08-18T06:01:18-04:00"
-  },
-  {
-   "id": "d0e4e622221f",
-   "title": "Business Networking Event - Startup. Scale. Support.",
-   "date": "2026-08-25",
-   "change": "dropped"
-  },
   {
    "id": "d00294290626",
    "title": "Vegan in Vermont",
@@ -2430,12 +2411,6 @@
    "date": "2026-08-28",
    "change": "missing",
    "lastSeen": "2026-08-18T06:01:18-04:00"
-  },
-  {
-   "id": "b66813a5ea6e",
-   "title": "Mills Riverside Park Loop",
-   "date": "2026-09-05",
-   "change": "dropped"
   },
   {
    "id": "6dde55e8d2cc",
@@ -2515,43 +2490,8 @@
    "lastSeen": "2026-08-18T06:01:18-04:00"
   },
   {
-   "id": "87227a21605e",
-   "title": "Traditional Tuesday",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-08-17T06:07:52-04:00"
-  },
-  {
-   "id": "582199e33b83",
-   "title": "Local Dork at Foam Brewers on a Tuesday",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-08-17T06:07:52-04:00"
-  },
-  {
-   "id": "fba509a2c38e",
-   "title": "Vermont Figure Drawing Collective",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-08-17T06:07:52-04:00"
-  },
-  {
-   "id": "d229b47784bf",
-   "title": "Honky Tonk Tuesday",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-08-17T06:07:52-04:00"
-  },
-  {
    "id": "75217c5a9633",
    "title": "Venetian Trivia Night!",
-   "date": "2026-10-07",
-   "change": "missing",
-   "lastSeen": "2026-08-17T06:07:52-04:00"
-  },
-  {
-   "id": "d2257760dce1",
-   "title": "Jason Dea West",
    "date": "2026-10-07",
    "change": "missing",
    "lastSeen": "2026-08-17T06:07:52-04:00"
