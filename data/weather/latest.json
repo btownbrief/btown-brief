@@ -1,25 +1,25 @@
 {
- "updated": "2026-08-19T11:03:35+00:00",
+ "updated": "2026-08-19T12:01:51+00:00",
  "sections_updated": {
-  "now": "2026-08-19T11:03:35+00:00",
-  "forecast": "2026-08-19T11:03:35+00:00",
-  "hourly": "2026-08-19T11:03:35+00:00",
-  "alerts": "2026-08-19T11:03:35+00:00",
-  "afd": "2026-08-19T11:03:35+00:00",
-  "lake_forecast": "2026-08-19T11:03:35+00:00",
+  "now": "2026-08-19T12:01:51+00:00",
+  "forecast": "2026-08-19T12:01:51+00:00",
+  "hourly": "2026-08-19T12:01:51+00:00",
+  "alerts": "2026-08-19T12:01:51+00:00",
+  "afd": "2026-08-19T12:01:51+00:00",
+  "lake_forecast": "2026-08-19T12:01:51+00:00",
   "lake_gage": "2026-08-19T11:03:35+00:00",
-  "air": "2026-08-19T11:03:35+00:00",
-  "sun": "2026-08-19T11:03:35+00:00",
-  "models": "2026-08-19T11:03:35+00:00"
+  "air": "2026-08-19T12:01:51+00:00",
+  "sun": "2026-08-19T12:01:51+00:00",
+  "models": "2026-08-19T12:01:51+00:00"
  },
  "now": {
-  "observed_at": "2026-08-19T10:40:00+00:00",
+  "observed_at": "2026-08-19T11:40:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 61,
-  "feels_like_f": 61,
+  "temp_f": 64,
+  "feels_like_f": 64,
   "humidity": 88,
-  "dewpoint_f": 57,
+  "dewpoint_f": 61,
   "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N"
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-19T08:25:14+00:00",
   "hours": [
-   {
-    "t": "2026-08-19T07:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
-    "pop": 3,
-    "humidity": 97,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 48,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-08-19T08:00:00-04:00",
     "temp_f": 65,
@@ -567,6 +556,17 @@
     "wind_dir": "N",
     "sky": 91,
     "short": "Cloudy"
+   },
+   {
+    "t": "2026-08-20T19:00:00-04:00",
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 0,
+    "humidity": 59,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 76,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-19T06:22:00+00:00",
+  "issued": "2026-08-19T11:12:00+00:00",
   "key_messages": [
    "Some showers today before seasonable and dry weather into the weekend",
    "Showers and thunderstorms likely Sunday and possibly into Monday."
   ],
   "what_changed": "As of 221 AM EDT Wednesday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 190622\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n222 AM EDT Wed Aug 19 2026\n\n.WHAT HAS CHANGED...\nAs of 221 AM EDT Wednesday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 221 AM EDT Wednesday...\n\n1. Some showers today before seasonable and dry weather into \nthe weekend\n\n2. Showers and thunderstorms likely Sunday and possibly into \nMonday.\n\n&&\n\n.DISCUSSION...\nAs of 221 AM EDT Wednesday...\n\nKEY MESSAGE 1: A dying cold front moves into the region today, bringing \nsome showers. An area of rain will enter northern New York this \nmorning, mostly being driven off the synoptic forcing. The forcing \nwill decrease as it moves east but enough instability will develop \nduring the day to allow the showers to continue into Vermont. A \ncouple embedded thunderstorms are expected as well. While sufficient \ndeep layer shear will be in place for strong to severe storms, low \ninstability, some dry air aloft, a lack of well-defined surface \nboundary and morning clouds/showers will be working against it. \nTherefore, strong to severe storms are not likely today, but cannot \nbe completely ruled out. These storms will fall apart as they try to \npush southeast this evening and southern areas should remain mostly \ndry. High pressure will build down from Canada to end the week and \nstart the weekend, bringing cooler temperatures and lower humidity. \nBy Friday morning, temperatures should be in the 40s and low 50s for \nmost places. Highs during this stretch will be seasonable, with \ntemperatures rising into the 70s and low 80s.\n\nKEY MESSAGE 2: All models in general agreement that northern stream \nshortwave in central Canada will drop toward the northern Great \nLakes-western Ontario and close with a surface low in the same \nvicinity Sat ngt-Sun. Still in question is whether a secondary low \ndevelops near southern New England or not.\n\nThe best chance for showers/rain, no matter what scenario, will be \nclosest to the primary and upper system in Canada, thus for our CWA \nbeing northern NY beginning early Sunday AM and lasting through the \nday with cold pool and some instability allowing for some -tsra as \nwell. Less activity expected for VT but showers still likely after \ndaybreak Sunday. Some residual -shra chances Sunday night and some \ninstability -shra possible Monday in northern areas closer to \nclosed low.\n\nStill in cyclonic flow for Tuesday with some weak mid-level energy \nso can't totally rule out a chance of showers but more in the slgt \nchc column for now. Temperatures for the period seasonable to a few \ndegrees below.\n\n&&\n\n.AVIATION /06Z WEDNESDAY THROUGH SUNDAY/...\nThrough 06Z Thursday...The return of radiation fog is possible \nearly this morning around 06Z-13z, IFR possible for a couple \nhours at the typical sites SLK and MPV. \n\nApproaching cold front will bring showers to northern NY but\nweaken in coverage and intensity as they move east late this\nmorning and aftn. VFR conditions expected despite any showers.\n\nWinds will be S-SW at 5-10 kts for most but some channel flow in\nthe St. Lawrence Vly may bring g20 kts to KMSS.\n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly MVFR, with areas VFR possible. Definite SHRA,\nSlight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Myskowski/SLW\nAVIATION...SLW\n"
+  "raw": "\n000\nFXUS61 KBTV 191112\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n712 AM EDT Wed Aug 19 2026\n\n.WHAT HAS CHANGED...\nAs of 221 AM EDT Wednesday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 221 AM EDT Wednesday...\n\n1. Some showers today before seasonable and dry weather into \nthe weekend\n\n2. Showers and thunderstorms likely Sunday and possibly into \nMonday.\n\n&&\n\n.DISCUSSION...\nAs of 221 AM EDT Wednesday...\n\nKEY MESSAGE 1: A dying cold front moves into the region today, bringing \nsome showers. An area of rain will enter northern New York this \nmorning, mostly being driven off the synoptic forcing. The forcing \nwill decrease as it moves east but enough instability will develop \nduring the day to allow the showers to continue into Vermont. A \ncouple embedded thunderstorms are expected as well. While sufficient \ndeep layer shear will be in place for strong to severe storms, low \ninstability, some dry air aloft, a lack of well-defined surface \nboundary and morning clouds/showers will be working against it. \nTherefore, strong to severe storms are not likely today, but cannot \nbe completely ruled out. These storms will fall apart as they try to \npush southeast this evening and southern areas should remain mostly \ndry. High pressure will build down from Canada to end the week and \nstart the weekend, bringing cooler temperatures and lower humidity. \nBy Friday morning, temperatures should be in the 40s and low 50s for \nmost places. Highs during this stretch will be seasonable, with \ntemperatures rising into the 70s and low 80s.\n\nKEY MESSAGE 2: All models in general agreement that northern stream \nshortwave in central Canada will drop toward the northern Great \nLakes-western Ontario and close with a surface low in the same \nvicinity Sat ngt-Sun. Still in question is whether a secondary low \ndevelops near southern New England or not.\n\nThe best chance for showers/rain, no matter what scenario, will be \nclosest to the primary and upper system in Canada, thus for our CWA \nbeing northern NY beginning early Sunday AM and lasting through the \nday with cold pool and some instability allowing for some -tsra as \nwell. Less activity expected for VT but showers still likely after \ndaybreak Sunday. Some residual -shra chances Sunday night and some \ninstability -shra possible Monday in northern areas closer to \nclosed low.\n\nStill in cyclonic flow for Tuesday with some weak mid-level energy \nso can't totally rule out a chance of showers but more in the slgt \nchc column for now. Temperatures for the period seasonable to a few \ndegrees below.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...Approaching cold front will bring \nshowers to northern NY but weaken in coverage and intensity as \nthey move east late this morning and aftn. VFR conditions \nexpected despite any showers with perhaps a brief period of MVFR\nfor KMSS/KSLK.\n\nWinds will be S-SW at 5-10 kts for most but some channel flow in\nthe St. Lawrence Vly may bring g20 kts to KMSS.\n\nWinds become light again tonight with varying amount of clouds\nso although I expect fog ard/aft 06z it may be more of a strtus\ndeck for some. IFR likely for KSLK, KMPV and possible for KMSS\nand KEFK.\n\nOutlook...\n\nThursday: VFR. Patchy BR.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nSunday: Mainly MVFR, with local VFR possible. Likely SHRA, Slight\nchance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...SLW/Myskowski\nAVIATION...SLW\n"
  },
  "lake_forecast": {
   "issued": "2026-08-19T06:05:00+00:00",
@@ -835,7 +835,7 @@
   "aqi": 26,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/19/26 6:00",
+  "observed": "08/19/26 7:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, August 19th."
  },
  "sun": {
@@ -843,28 +843,28 @@
   "sunset": "2026-08-19T19:52-04:00",
   "sunrise_tomorrow": "2026-08-20T06:01-04:00",
   "sunset_tomorrow": "2026-08-20T19:50-04:00",
-  "uv_max": 5.85
+  "uv_max": 5.55
  },
  "models": {
   "days": [
    {
     "date": "2026-08-19",
     "high_f": {
-     "GFS": 79,
+     "GFS": 80,
      "Euro": 79,
      "ICON": 77
     },
     "pop_max": {
-     "GFS": 30,
-     "Euro": 50,
+     "GFS": 32,
+     "Euro": 41,
      "ICON": 20
     },
     "precip_in": {
-     "GFS": 0.03,
+     "GFS": 0.0,
      "Euro": 0.04,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    },
    {
     "date": "2026-08-20",
@@ -874,8 +874,8 @@
      "ICON": 79
     },
     "pop_max": {
-     "GFS": 6,
-     "Euro": 25,
+     "GFS": 8,
+     "Euro": 10,
      "ICON": 5
     },
     "precip_in": {
@@ -888,13 +888,13 @@
    {
     "date": "2026-08-21",
     "high_f": {
-     "GFS": 75,
+     "GFS": 77,
      "Euro": 77,
      "ICON": 80
     },
     "pop_max": {
      "GFS": 1,
-     "Euro": 0,
+     "Euro": 2,
      "ICON": 0
     },
     "precip_in": {
@@ -902,7 +902,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 5
+    "high_spread_f": 3
    }
   ]
  }
