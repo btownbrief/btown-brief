@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-19T17:01:24-04:00",
+ "generated": "2026-08-20T06:03:59-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 17,
-   "seconds": 6.5
+   "count": 16,
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 66,
-   "seconds": 3.1
+   "count": 64,
+   "seconds": 3.0
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 52,
-   "seconds": 2.9
+   "count": 51,
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 161,
-   "seconds": 2.4
+   "count": 158,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 72,
-   "seconds": 1.5
+   "count": 71,
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-19&end_date=2026-10-18&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-20&end_date=2026-10-19&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 166,
-   "seconds": 75.5
+   "count": 160,
+   "seconds": 66.5
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 3.1
+   "seconds": 2.8
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 42.1
+   "seconds": 36.4
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 81,
-   "seconds": 150.9
+   "count": 79,
+   "seconds": 116.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 426,
-   "seconds": 70.7
+   "count": 415,
+   "seconds": 73.0
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 122.8
+   "count": 66,
+   "seconds": 113.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 40,
-   "seconds": 17.3
+   "seconds": 15.1
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 85,
-   "seconds": 5.9
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 35,
-   "seconds": 36.9
+   "count": 34,
+   "seconds": 33.4
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,8 +113,8 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 362,
-   "seconds": 16.5
+   "count": 363,
+   "seconds": 18.4
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -123,69 +123,20 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 73,
-   "seconds": 98.8
+   "count": 71,
+   "seconds": 89.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 30,
-   "seconds": 0.2
+   "count": 29,
+   "seconds": 0.3
   }
  },
- "gathered": 2747,
- "afterDedup": 1457,
- "duplicatesMerged": 1290,
- "final": 1845,
+ "gathered": 2633,
+ "afterDedup": 1354,
+ "duplicatesMerged": 1279,
+ "final": 1800,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Swan Lake",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "flynn",
-    "helloburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Scoochie Boochie",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Party on the Bricks is back for a Fall Series!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-19"
-  },
   {
    "kept": {
     "title": "Burlington Farmers Market",
@@ -1891,9 +1842,21 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "Oteil Burbridge & LaMP",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
    ],
    "date": "2026-10-07"
   },
@@ -1938,6 +1901,28 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-07"
   },
@@ -2393,48 +2378,34 @@
     "uvmbored"
    ],
    "date": "2026-10-17"
+  },
+  {
+   "kept": {
+    "title": "Field Hockey vs Yale",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-18"
   }
  ],
  "changes": [
   {
-   "id": "6dde55e8d2cc",
-   "title": "Chemistry seminar ft. Carol Manhart",
-   "date": "2026-09-10",
+   "id": "03a62429927f",
+   "title": "Good Time Line Dancing",
+   "date": "2026-10-18",
    "change": "time",
-   "was": "2026-09-10T10:05:00-04:00",
-   "now": "2026-09-10T11:40:00-04:00"
+   "was": "2026-10-18",
+   "now": "2026-10-18T19:30:00-04:00"
   },
   {
-   "id": "95d767093a02",
-   "title": "Chemistry Seminar ft. Ayanjeet Ghosh",
-   "date": "2026-09-17",
-   "change": "time",
-   "was": "2026-09-17T10:05:00-04:00",
-   "now": "2026-09-17T11:40:00-04:00"
-  },
-  {
-   "id": "29f137cfaa4c",
-   "title": "Chemistry seminar ft. Joseph Alfred Cotruvo Jr.",
-   "date": "2026-09-24",
-   "change": "time",
-   "was": "2026-09-24T10:05:00-04:00",
-   "now": "2026-09-24T11:40:00-04:00"
-  },
-  {
-   "id": "d32344b434dc",
-   "title": "Chemistry seminar ft. Stephanie Zaleski",
-   "date": "2026-10-01",
-   "change": "time",
-   "was": "2026-10-01T10:05:00-04:00",
-   "now": "2026-10-01T11:40:00-04:00"
-  },
-  {
-   "id": "8d3a43a74d96",
-   "title": "Chemistry seminar ft. Jeffrey Dick",
-   "date": "2026-10-08",
-   "change": "time",
-   "was": "2026-10-08T10:05:00-04:00",
-   "now": "2026-10-08T11:40:00-04:00"
+   "id": "e55b7612e810",
+   "title": "The Poetry Experience",
+   "date": "2026-08-22",
+   "change": "missing",
+   "lastSeen": "2026-08-19T17:01:24-04:00"
   },
   {
    "id": "d00294290626",
@@ -2468,13 +2439,6 @@
    "id": "b320bfb8c80a",
    "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ POLKAROBICS",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-08-18T06:01:18-04:00"
-  },
-  {
-   "id": "44150382f697",
-   "title": "BTown Coffee Club",
-   "date": "2026-09-12",
    "change": "missing",
    "lastSeen": "2026-08-18T06:01:18-04:00"
   },
@@ -2533,41 +2497,6 @@
    "date": "2026-10-05",
    "change": "missing",
    "lastSeen": "2026-08-19T06:02:08-04:00"
-  },
-  {
-   "id": "87227a21605e",
-   "title": "Traditional Tuesday",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-08-19T06:02:08-04:00"
-  },
-  {
-   "id": "fba509a2c38e",
-   "title": "Vermont Figure Drawing Collective",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-08-19T06:02:08-04:00"
-  },
-  {
-   "id": "d229b47784bf",
-   "title": "Honky Tonk Tuesday",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-08-19T06:02:08-04:00"
-  },
-  {
-   "id": "d2257760dce1",
-   "title": "Jason Dea West",
-   "date": "2026-10-07",
-   "change": "missing",
-   "lastSeen": "2026-08-19T06:02:08-04:00"
-  },
-  {
-   "id": "75217c5a9633",
-   "title": "Venetian Trivia Night!",
-   "date": "2026-10-07",
-   "change": "missing",
-   "lastSeen": "2026-08-17T06:07:52-04:00"
   },
   {
    "id": "0a998ee619df",
