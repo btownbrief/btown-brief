@@ -1,25 +1,25 @@
 {
- "updated": "2026-08-20T19:19:01+00:00",
+ "updated": "2026-08-20T20:03:18+00:00",
  "sections_updated": {
-  "now": "2026-08-20T19:19:01+00:00",
-  "forecast": "2026-08-20T19:19:01+00:00",
-  "hourly": "2026-08-20T19:19:01+00:00",
-  "alerts": "2026-08-20T19:19:01+00:00",
-  "afd": "2026-08-20T19:19:01+00:00",
-  "lake_forecast": "2026-08-20T19:19:01+00:00",
-  "lake_gage": "2026-08-20T19:19:01+00:00",
-  "air": "2026-08-20T19:19:01+00:00",
-  "sun": "2026-08-20T19:19:01+00:00",
-  "models": "2026-08-20T19:19:01+00:00"
+  "now": "2026-08-20T20:03:18+00:00",
+  "forecast": "2026-08-20T20:03:18+00:00",
+  "hourly": "2026-08-20T20:03:18+00:00",
+  "alerts": "2026-08-20T20:03:18+00:00",
+  "afd": "2026-08-20T20:03:18+00:00",
+  "lake_forecast": "2026-08-20T20:03:18+00:00",
+  "lake_gage": "2026-08-20T20:03:18+00:00",
+  "air": "2026-08-20T20:03:18+00:00",
+  "sun": "2026-08-20T20:03:18+00:00",
+  "models": "2026-08-20T20:03:18+00:00"
  },
  "now": {
-  "observed_at": "2026-08-20T18:45:00+00:00",
+  "observed_at": "2026-08-20T19:40:00+00:00",
   "station": "KBTV",
   "description": "Partly Cloudy",
-  "temp_f": 73,
-  "feels_like_f": 73,
-  "humidity": 61,
-  "dewpoint_f": 59,
+  "temp_f": 72,
+  "feels_like_f": 72,
+  "humidity": 69,
+  "dewpoint_f": 61,
   "wind_mph": 7,
   "wind_gust_mph": null,
   "wind_dir": "N"
@@ -860,11 +860,11 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 37,
+  "aqi": 38,
   "category": "Good",
   "pollutant": "PM2.5",
   "observed": "08/20/26 15:00",
-  "discussion": "Expect generally good air quality across Vermont on Thursday, August 20th."
+  "discussion": "Expect generally good air quality across Vermont on Friday, August 21st."
  },
  "sun": {
   "sunrise": "2026-08-20T06:01-04:00",
@@ -889,7 +889,7 @@
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.0,
+     "Euro": 0.01,
      "ICON": 0.01
     },
     "high_spread_f": 3
@@ -917,7 +917,7 @@
     "date": "2026-08-22",
     "high_f": {
      "GFS": 79,
-     "Euro": 79,
+     "Euro": 78,
      "ICON": 76
     },
     "pop_max": {
@@ -927,7 +927,7 @@
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.01,
+     "Euro": 0.02,
      "ICON": 0.0
     },
     "high_spread_f": 3
