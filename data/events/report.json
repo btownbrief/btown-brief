@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-20T17:02:25-04:00",
+ "generated": "2026-08-21T06:04:14-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 16,
-   "seconds": 6.7
+   "seconds": 7.6
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 66,
-   "seconds": 2.8
+   "count": 63,
+   "seconds": 2.4
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 51,
-   "seconds": 3.1
+   "count": 53,
+   "seconds": 4.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 163,
-   "seconds": 2.6
+   "count": 166,
+   "seconds": 3.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 72,
-   "seconds": 2.0
+   "count": 71,
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-20&end_date=2026-10-19&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-21&end_date=2026-10-20&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 160,
-   "seconds": 73.8
+   "count": 158,
+   "seconds": 66.7
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 37,
-   "seconds": 2.8
+   "count": 35,
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.3
+   "seconds": 36.7
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.9
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 420,
-   "seconds": 77.7
+   "count": 409,
+   "seconds": 72.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 126.0
+   "count": 67,
+   "seconds": 110.9
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 40,
-   "seconds": 16.2
+   "count": 42,
+   "seconds": 14.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 88,
-   "seconds": 4.7
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 34,
-   "seconds": 47.6
+   "count": 32,
+   "seconds": 33.0
   },
   "sevendays": {
    "label": "Seven Days",
@@ -114,158 +114,29 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 366,
-   "seconds": 19.1
+   "seconds": 19.6
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 223,
+   "count": 221,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 78,
-   "seconds": 107.6
+   "count": 77,
+   "seconds": 96.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 29,
-   "seconds": 0.2
+   "seconds": 0.4
   }
  },
- "gathered": 2667,
- "afterDedup": 1446,
- "duplicatesMerged": 1221,
- "final": 1849,
+ "gathered": 2564,
+ "afterDedup": 1353,
+ "duplicatesMerged": 1211,
+ "final": 1816,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "Burlington Baroque Festival: JS Bach’s B Minor Mass",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "Oktoberfest Vermont",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-09-18"
-  },
-  {
-   "kept": {
-    "title": "Latin American Connection Celebration",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Swan Lake",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "flynn",
-    "helloburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Party on the Bricks is back for a Fall Series!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Burlington Farmers Market",
-    "source": "farmersmarket"
-   },
-   "merged_sources": [
-    "farmersmarket",
-    "loveburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Community Yard Sale: Vendor Registration - September 2026",
-    "source": "sbrec"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sbrec"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "UVM Women's Rugby vs Middlebury",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Scoochie Boochie at Higher Ground",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-19"
-  },
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
@@ -2041,6 +1912,50 @@
   },
   {
    "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
+    "title": "Benjamin Tod",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
+    "title": "Margo Cilker & Lilly Hiatt",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2081,6 +1996,50 @@
     "champlainvalley",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "Benjamin Tod",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "White Denim",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
    ],
    "date": "2026-10-09"
   },
@@ -2381,199 +2340,65 @@
     "uvmbored"
    ],
    "date": "2026-10-18"
+  },
+  {
+   "kept": {
+    "title": "Careers in Marketing Panel",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-19"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-19"
+  },
+  {
+   "kept": {
+    "title": "Super Smash Tuesdays",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-20"
   }
  ],
  "changes": [
   {
-   "id": "aefa523836c4",
-   "title": "Charles Wesley Godwin",
-   "date": "2026-08-21",
+   "id": "7e176a1864d4",
+   "title": "Benjamin Tod",
+   "date": "2026-10-09",
    "change": "time",
-   "was": "2026-08-21T20:00:00-04:00",
-   "now": "2026-08-21T19:00:00-04:00"
+   "was": "2026-10-09T20:30:00-04:00",
+   "now": "2026-10-09T20:00:00-04:00"
   },
   {
-   "id": "c68590705169",
-   "title": "PINEO & LOEB",
-   "date": "2026-08-22",
+   "id": "f23b34cb828d",
+   "title": "Margo Cilker & Lilly Hiatt",
+   "date": "2026-10-08",
    "change": "time",
-   "was": "2026-08-22T20:30:00-04:00",
-   "now": "2026-08-22T20:00:00-04:00"
+   "was": "2026-10-08T19:30:00-04:00",
+   "now": "2026-10-08T19:00:00-04:00"
   },
   {
-   "id": "b47eb2150683",
-   "title": "Mad Caddies",
-   "date": "2026-08-23",
+   "id": "7259338f97fd",
+   "title": "White Denim",
+   "date": "2026-10-09",
    "change": "time",
-   "was": "2026-08-23T19:30:00-04:00",
-   "now": "2026-08-23T19:00:00-04:00"
-  },
-  {
-   "id": "79ff5083071d",
-   "title": "Gregory Alan Isakov with Vermont Symphony Orchestra",
-   "date": "2026-08-24",
-   "change": "time",
-   "was": "2026-08-24T19:00:00-04:00",
-   "now": "2026-08-24T18:00:00-04:00"
-  },
-  {
-   "id": "e58ff73f3ba9",
-   "title": "Gregory Alan Isakov with Vermont Symphony Orchestra",
-   "date": "2026-08-25",
-   "change": "time",
-   "was": "2026-08-25T19:00:00-04:00",
-   "now": "2026-08-25T18:00:00-04:00"
-  },
-  {
-   "id": "1013d90c03d0",
-   "title": "Better Off Alone",
-   "date": "2026-08-28",
-   "change": "time",
-   "was": "2026-08-28T21:00:00-04:00",
-   "now": "2026-08-28T20:30:00-04:00"
-  },
-  {
-   "id": "a74a7e1b945e",
-   "title": "D.R.I.",
-   "date": "2026-08-30",
-   "change": "time",
-   "was": "2026-08-30T19:00:00-04:00",
-   "now": "2026-08-30T18:30:00-04:00"
-  },
-  {
-   "id": "8a46ddb79ecd",
-   "title": "Sunday Night Mass",
-   "date": "2026-09-06",
-   "change": "time",
-   "was": "2026-09-06T20:00:00-04:00",
-   "now": "2026-09-06T19:30:00-04:00"
-  },
-  {
-   "id": "aeaf525c3bd9",
-   "title": "WAX, DJ Hoppa",
-   "date": "2026-09-09",
-   "change": "time",
-   "was": "2026-09-09T19:30:00-04:00",
-   "now": "2026-09-09T19:00:00-04:00"
-  },
-  {
-   "id": "1d180c993bbb",
-   "title": "Sicard Hollow",
-   "date": "2026-09-13",
-   "change": "time",
-   "was": "2026-09-13T19:30:00-04:00",
-   "now": "2026-09-13T19:00:00-04:00"
-  },
-  {
-   "id": "04f5195fb0f3",
-   "title": "Alela Diane",
-   "date": "2026-09-16",
-   "change": "time",
-   "was": "2026-09-16T19:30:00-04:00",
-   "now": "2026-09-16T19:00:00-04:00"
-  },
-  {
-   "id": "dd9058711b5d",
-   "title": "Gooseberry",
-   "date": "2026-09-17",
-   "change": "time",
-   "was": "2026-09-17T19:30:00-04:00",
-   "now": "2026-09-17T19:00:00-04:00"
-  },
-  {
-   "id": "36074aacc76f",
-   "title": "Alex Cameron",
-   "date": "2026-09-20",
-   "change": "time",
-   "was": "2026-09-20T19:30:00-04:00",
-   "now": "2026-09-20T19:00:00-04:00"
-  },
-  {
-   "id": "12309287cbf1",
-   "title": "Madison Cunningham",
-   "date": "2026-09-23",
-   "change": "time",
-   "was": "2026-09-23T20:00:00-04:00",
-   "now": "2026-09-23T19:30:00-04:00"
-  },
-  {
-   "id": "177bd48f307d",
-   "title": "Luna",
-   "date": "2026-09-24",
-   "change": "time",
-   "was": "2026-09-24T19:30:00-04:00",
-   "now": "2026-09-24T19:00:00-04:00"
-  },
-  {
-   "id": "778f8eeac2ca",
-   "title": "Tophouse",
-   "date": "2026-09-25",
-   "change": "time",
-   "was": "2026-09-25T20:00:00-04:00",
-   "now": "2026-09-25T19:30:00-04:00"
-  },
-  {
-   "id": "d4a70c5a1066",
-   "title": "Donna the Buffalo",
-   "date": "2026-09-26",
-   "change": "time",
-   "was": "2026-09-26T20:00:00-04:00",
-   "now": "2026-09-26T19:30:00-04:00"
-  },
-  {
-   "id": "013559fa72c4",
-   "title": "Dwight + Nicole",
-   "date": "2026-09-26",
-   "change": "time",
-   "was": "2026-09-26T19:30:00-04:00",
-   "now": "2026-09-26T19:00:00-04:00"
-  },
-  {
-   "id": "c080b80cc6a8",
-   "title": "Chandler",
-   "date": "2026-09-28",
-   "change": "time",
-   "was": "2026-09-28T19:30:00-04:00",
-   "now": "2026-09-28T19:00:00-04:00"
-  },
-  {
-   "id": "2d0c841c1d7e",
-   "title": "Destroyer",
-   "date": "2026-09-29",
-   "change": "time",
-   "was": "2026-09-29T19:30:00-04:00",
-   "now": "2026-09-29T19:00:00-04:00"
-  },
-  {
-   "id": "035da8e2fbd6",
-   "title": "Southern Culture on the Skids",
-   "date": "2026-10-01",
-   "change": "time",
-   "was": "2026-10-01T19:30:00-04:00",
-   "now": "2026-10-01T19:00:00-04:00"
-  },
-  {
-   "id": "06dcdead02ee",
-   "title": "Tōth",
-   "date": "2026-10-02",
-   "change": "time",
-   "was": "2026-10-02T20:00:00-04:00",
-   "now": "2026-10-02T19:30:00-04:00"
-  },
-  {
-   "id": "ce86991acf8c",
-   "title": "Oteil Burbridge, LaMP",
-   "date": "2026-10-07",
-   "change": "time",
-   "was": "2026-10-07T19:00:00-04:00",
-   "now": "2026-10-07T18:00:00-04:00"
-  },
-  {
-   "id": "1a3d28baba66",
-   "title": "Charles Wesley Godwin",
-   "date": "2026-08-20",
-   "change": "missing",
-   "lastSeen": "2026-08-20T06:03:59-04:00"
+   "was": "2026-10-09T19:30:00-04:00",
+   "now": "2026-10-09T19:00:00-04:00"
   },
   {
    "id": "939cabf201a6",
@@ -2607,15 +2432,13 @@
    "id": "d00294290626",
    "title": "Vegan in Vermont",
    "date": "2026-08-26",
-   "change": "missing",
-   "lastSeen": "2026-08-18T06:01:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "b2e5144d1079-2100",
    "title": "Nataly Aukar",
    "date": "2026-08-28",
-   "change": "missing",
-   "lastSeen": "2026-08-18T06:01:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "97a8ec042810",
@@ -2674,6 +2497,20 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
+   "id": "fe06b4940f2b",
+   "title": "Tech Help with Clif",
+   "date": "2026-09-07",
+   "change": "missing",
+   "lastSeen": "2026-08-20T17:02:25-04:00"
+  },
+  {
+   "id": "fe06b4940f2b-1300",
+   "title": "Tech Help with Clif",
+   "date": "2026-09-07",
+   "change": "missing",
+   "lastSeen": "2026-08-20T17:02:25-04:00"
+  },
+  {
    "id": "5ffb6ae3b724",
    "title": "Victoryland",
    "date": "2026-09-07",
@@ -2712,8 +2549,7 @@
    "id": "b320bfb8c80a",
    "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ POLKAROBICS",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-08-18T06:01:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "3b2234bcd1fd",
@@ -2737,10 +2573,11 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
-   "id": "f26308f3e4e5",
-   "title": "The Marcus King Band - The Darling Blue Tour",
-   "date": "2026-09-15",
-   "change": "dropped"
+   "id": "0fe13bc1e6dc",
+   "title": "Libby Cataldi | It Takes a Lifetime to Learn How to Live",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-08-20T17:02:25-04:00"
   },
   {
    "id": "14412b973393",
@@ -2757,15 +2594,15 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
-   "id": "6285243c0e9f",
-   "title": "A Celebration of Vermont Cheese",
+   "id": "4a882979134e",
+   "title": "Spanish Story Time",
    "date": "2026-09-18",
    "change": "missing",
-   "lastSeen": "2026-08-18T06:01:18-04:00"
+   "lastSeen": "2026-08-20T17:02:25-04:00"
   },
   {
-   "id": "7d794705dbd7",
-   "title": "Oktoberfest Vermont 2026",
+   "id": "6285243c0e9f",
+   "title": "A Celebration of Vermont Cheese",
    "date": "2026-09-18",
    "change": "dropped"
   },
@@ -2775,12 +2612,6 @@
    "date": "2026-09-18",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
-   "id": "55927959fa17",
-   "title": "Oktoberfest Vermont 2026",
-   "date": "2026-09-19",
-   "change": "dropped"
   },
   {
    "id": "4bf08fc072d8",
@@ -2793,8 +2624,7 @@
    "id": "a40ed5ba6818",
    "title": "Burlington Baroque Festival: Vivaldi Concerti Stravaganza!",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-08-18T06:01:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "17fc5b5609a4",
@@ -2916,13 +2746,6 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
-   "id": "75217c5a9633",
-   "title": "Venetian Trivia Night!",
-   "date": "2026-10-07",
-   "change": "missing",
-   "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
    "id": "a15469767d5d",
    "title": "Briscoe",
    "date": "2026-10-07",
@@ -2972,17 +2795,18 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
+   "id": "4adbb9d238bb",
+   "title": "Spanish Story Time",
+   "date": "2026-10-16",
+   "change": "missing",
+   "lastSeen": "2026-08-20T17:02:25-04:00"
+  },
+  {
    "id": "89e32f637d32",
    "title": "The Travelin’ McCourys",
    "date": "2026-10-16",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
-   "id": "0a998ee619df",
-   "title": "Trio Bohémo",
-   "date": "2026-10-16",
-   "change": "dropped"
   },
   {
    "id": "cb32212527b6",
