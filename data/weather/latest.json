@@ -1,26 +1,26 @@
 {
- "updated": "2026-08-20T23:03:59+00:00",
+ "updated": "2026-08-21T00:00:44+00:00",
  "sections_updated": {
-  "now": "2026-08-20T23:03:59+00:00",
-  "forecast": "2026-08-20T23:03:59+00:00",
-  "hourly": "2026-08-20T23:03:59+00:00",
-  "alerts": "2026-08-20T23:03:59+00:00",
-  "afd": "2026-08-20T23:03:59+00:00",
-  "lake_forecast": "2026-08-20T23:03:59+00:00",
-  "lake_gage": "2026-08-20T23:03:59+00:00",
-  "air": "2026-08-20T23:03:59+00:00",
-  "sun": "2026-08-20T23:03:59+00:00",
-  "models": "2026-08-20T23:03:59+00:00"
+  "now": "2026-08-21T00:00:44+00:00",
+  "forecast": "2026-08-21T00:00:44+00:00",
+  "hourly": "2026-08-21T00:00:44+00:00",
+  "alerts": "2026-08-21T00:00:44+00:00",
+  "afd": "2026-08-21T00:00:44+00:00",
+  "lake_forecast": "2026-08-21T00:00:44+00:00",
+  "lake_gage": "2026-08-21T00:00:44+00:00",
+  "air": "2026-08-21T00:00:44+00:00",
+  "sun": "2026-08-21T00:00:44+00:00",
+  "models": "2026-08-21T00:00:44+00:00"
  },
  "now": {
-  "observed_at": "2026-08-20T22:40:00+00:00",
+  "observed_at": "2026-08-20T23:40:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
-  "temp_f": 70,
-  "feels_like_f": 70,
-  "humidity": 60,
+  "description": null,
+  "temp_f": 68,
+  "feels_like_f": 68,
+  "humidity": 64,
   "dewpoint_f": 55,
-  "wind_mph": 3,
+  "wind_mph": 5,
   "wind_gust_mph": null,
   "wind_dir": "NNE"
  },
@@ -29,7 +29,7 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-08-20T19:00:00-04:00",
+    "start": "2026-08-20T18:00:00-04:00",
     "is_day": false,
     "temp_f": 56,
     "pop": 0,
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-20T21:49:02+00:00",
   "hours": [
-   {
-    "t": "2026-08-20T19:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 0,
-    "humidity": 68,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 92,
-    "short": "Cloudy"
-   },
    {
     "t": "2026-08-20T20:00:00-04:00",
     "temp_f": 68,
@@ -567,6 +556,17 @@
     "wind_dir": "SE",
     "sky": 16,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-08-22T07:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 1,
+    "humidity": 90,
+    "wind_mph": 3,
+    "wind_dir": "SE",
+    "sky": 31,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -574,14 +574,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-20T18:27:00+00:00",
+  "issued": "2026-08-20T23:28:00+00:00",
   "key_messages": [
    "Dry and seasonable conditions are expected as we head into the weekend on Friday and Saturday.",
    "A pair of systems will increase precipitation chances across northern New York and southeastern Vermont into the latter portion of the weekend.",
    "Quiescent conditions next week"
   ],
   "what_changed": "As of 226 PM EDT Thursday... Trends continue to depict a dry slot between a pair of systems Saturday and Sunday for Vermont.",
-  "raw": "\n000\nFXUS61 KBTV 201827\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n227 PM EDT Thu Aug 20 2026\n\n.WHAT HAS CHANGED...\nAs of 226 PM EDT Thursday...\n\nTrends continue to depict a dry slot between a pair of systems \nSaturday and Sunday for Vermont.\n\n&&\n\n.KEY MESSAGES...\nAs of 226 PM EDT Thursday...\n\n1. Dry and seasonable conditions are expected as we head into \nthe weekend on Friday and Saturday. \n\n2. A pair of systems will increase precipitation chances across \nnorthern New York and southeastern Vermont into the latter portion \nof the weekend.\n\n3. Quiescent conditions next week\n\n&&\n\n.DISCUSSION...\nAs of 226 PM EDT Thursday...\n\nKEY MESSAGE 1: Dry and relatively seasonable conditions are expected to \nprevail through the end of the week with high pressure nudging into \nthe region from the northwest. Ahead of the area of high pressure \nwidespread mid to high clouds will remain over the area until \ntonight as dry air aloft helps to scour our mid to upper level \nmoisture. Some light shower activity currently over southern New \nYork may briefly kiss southern Rutland and Windsor Counties late \nthis afternoon/evening (rain chances less than 20%), though with \ndewpoint depressions between 20-30 degrees, any radar returns will \nlikely fall as virga or just light sprinkles. Clouds will clear this \nevening for most of the region, outside of perhaps southeastern \nVermont, with some lingering low level moisture. Decoupling, similar \nto last night, will lead to patchy valley fog in the favored \nlocations. Locations near Lake Champlain may also see a lake cloud \nreduce visibilities due to the temperature difference between the \ncooling air and the warmer Lake Champlain. Temperatures overnight \ntonight will fall into the upper 40s to low 50s for most areas; mid \n50s for the Champlain Valley. Fog will scour out after sunrise \ntomorrow morning with a pleasant day on Friday. Temperatures will \nwarm into the mid to upper 70s to near 80 tomorrow with mostly clear \nskies. Light northerly channeled flow in the Champlain Valley may \ncreate some light breezes, but by and large calm and variable winds \nwill be the theme across the area tomorrow. Clouds begin to increase \nacross southeastern Vermont late Friday into Saturday as a weak \ncoastal low in southern New England tracks up the coast. \nTemperatures Friday night will be cooler across the northern and \nwestern cloud free locations falling into the upper 40s to low 50s; \nmid 50s for the Champlain Valley and southern Vermont. Shower \nactivity will increase as the coastal system and an approaching \nGreat Lakes trough move about New England through the weekend.\n\nKEY MESSAGE 2: Following a calm start to the weekend, conditions will \nturn more wet and showery by the latter portion of the weekend. As \nhigh pressure drifts to the northwest, it will leave in its wake an \narea of subsidence and subtle ridging centered from northeast to \nsouthwest across Vermont Saturday and Sunday. A pair of systems will \nsplit this area of ridging bringing shower chances to portions of \nthe area. The first of the two systems will be a weak coastal low \nalong the coast of southern New England, which will track near Cape \nCod and is expected to continue moving northeast out into the Gulf \nof Maine. Some showers may be possible in eastern Windsor and Orange \nCounties Saturday afternoon and evening, however, recent trends have \nsuggested precipitation associated with the coastal system will stay \neast of the Connecticut River. Any showers that do develop in \nsoutheastern Vermont will be light in nature. \n\nThe second, higher confidence, system will be an approaching long \nwave trough that will track east from the Great Lakes region. The \ntrough translates east into the St. Lawrence Valley late Saturday \ninto early Sunday, with scattered rounds of showers. The trough \nslowly tracks east through the day Sunday reaching Vermont by late \nSunday into Sunday night. While an isolated rumble of thunder with \nthe shower activity cannot be ruled out, chances are decreasing with \npoor mid level lapse rates, cool surface temperatures, and a lack of \ntrue instability. In all likelihood, the boundary will be a mess of \nscattered to isolated showers with some breaks in between, focused \nmainly over northern New York, and somewhat weakening as it moves \neast. Between both systems during the day Saturday, and most of \nSunday, Vermont will be straddled between in a \"no mans land\" of dry \nand cloudy conditions. Chances for showers do not increase for \nVermont until Sunday afternoon, though some isolated sprinkles or \nmist, especially in the higher terrain, due to low to mid level \nstratus clouds. Precipitation amounts will be light, especially \nacross Vermont, with probabilities of half an inch in the 25th to \n75th percentiles, and probabilities of an inch or more below 25%. \nThe higher amounts around a quarter to half an inch will be in \nnorthern New York, primarily in the northern St. Lawrence Valley. \nLower amount expected in central and northern Vermont. The trough \nwill pull away to the northeast heading towards Monday.\n\nKEY MESSAGE 3: The extended forecast begins with the precipitation \nassociated with Sunday's trough moving east of the region and a surface \nhigh pressure moving in behind. The high pressure will dominate for \nmost of the rest of the week. Daytime highs will gradually increase \nfrom the mid 70s into the upper 70s throughout the week. By late week, \nthe flow turns more zonal and could allow for precipitation to return. \nA couple weak systems appear will try to make their way into our CWA \nThursday and Friday, but impactful weather is not anticipated at this \ntime.\n\n&&\n\n.AVIATION /18Z THURSDAY THROUGH TUESDAY/...\nThrough 18Z Friday...VFR conditions will prevail today, with winds\nremaining under 10kt. Some high clouds are streaming in, developing\ninto a BKN200 deck by this afternoon. Overnight, calm winds will\nallow fog development in the climatologically preferred areas. SLK\nand MPV are the surest bet for IFR conditions overnight with EFK a\nlittle less certain. MSS could go down as well, but for now showing\nvis reducing into MVFR criteria.\n\nOutlook...\n\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. Slight chance SHRA.\nSaturday Night: Mainly VFR, with local MVFR possible. Slight\nchance SHRA.\nSunday: Mainly VFR, with local IFR possible. Likely SHRA, Slight\nchance TSRA.\nSunday Night: MVFR/IFR conditions possible. Slight chance SHRA,\nSlight chance TSRA.\nMonday: Mainly MVFR, with areas VFR possible. Chance SHRA, Slight\nchance TSRA.\nMonday Night: VFR. Slight chance SHRA.\nTuesday: Mainly VFR, with local MVFR possible. Slight chance\nSHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Langbauer\nAVIATION...Langbauer\n"
+  "raw": "\n000\nFXUS61 KBTV 202328\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n728 PM EDT Thu Aug 20 2026\n\n.WHAT HAS CHANGED...\nAs of 226 PM EDT Thursday...\n\nTrends continue to depict a dry slot between a pair of systems \nSaturday and Sunday for Vermont.\n\n&&\n\n.KEY MESSAGES...\nAs of 226 PM EDT Thursday...\n\n1. Dry and seasonable conditions are expected as we head into \nthe weekend on Friday and Saturday. \n\n2. A pair of systems will increase precipitation chances across \nnorthern New York and southeastern Vermont into the latter portion \nof the weekend.\n\n3. Quiescent conditions next week\n\n&&\n\n.DISCUSSION...\nAs of 226 PM EDT Thursday...\n\nKEY MESSAGE 1: Dry and relatively seasonable conditions are expected to \nprevail through the end of the week with high pressure nudging into \nthe region from the northwest. Ahead of the area of high pressure \nwidespread mid to high clouds will remain over the area until \ntonight as dry air aloft helps to scour our mid to upper level \nmoisture. Some light shower activity currently over southern New \nYork may briefly kiss southern Rutland and Windsor Counties late \nthis afternoon/evening (rain chances less than 20%), though with \ndewpoint depressions between 20-30 degrees, any radar returns will \nlikely fall as virga or just light sprinkles. Clouds will clear this \nevening for most of the region, outside of perhaps southeastern \nVermont, with some lingering low level moisture. Decoupling, similar \nto last night, will lead to patchy valley fog in the favored \nlocations. Locations near Lake Champlain may also see a lake cloud \nreduce visibilities due to the temperature difference between the \ncooling air and the warmer Lake Champlain. Temperatures overnight \ntonight will fall into the upper 40s to low 50s for most areas; mid \n50s for the Champlain Valley. Fog will scour out after sunrise \ntomorrow morning with a pleasant day on Friday. Temperatures will \nwarm into the mid to upper 70s to near 80 tomorrow with mostly clear \nskies. Light northerly channeled flow in the Champlain Valley may \ncreate some light breezes, but by and large calm and variable winds \nwill be the theme across the area tomorrow. Clouds begin to increase \nacross southeastern Vermont late Friday into Saturday as a weak \ncoastal low in southern New England tracks up the coast. \nTemperatures Friday night will be cooler across the northern and \nwestern cloud free locations falling into the upper 40s to low 50s; \nmid 50s for the Champlain Valley and southern Vermont. Shower \nactivity will increase as the coastal system and an approaching \nGreat Lakes trough move about New England through the weekend.\n\nKEY MESSAGE 2: Following a calm start to the weekend, conditions will \nturn more wet and showery by the latter portion of the weekend. As \nhigh pressure drifts to the northwest, it will leave in its wake an \narea of subsidence and subtle ridging centered from northeast to \nsouthwest across Vermont Saturday and Sunday. A pair of systems will \nsplit this area of ridging bringing shower chances to portions of \nthe area. The first of the two systems will be a weak coastal low \nalong the coast of southern New England, which will track near Cape \nCod and is expected to continue moving northeast out into the Gulf \nof Maine. Some showers may be possible in eastern Windsor and Orange \nCounties Saturday afternoon and evening, however, recent trends have \nsuggested precipitation associated with the coastal system will stay \neast of the Connecticut River. Any showers that do develop in \nsoutheastern Vermont will be light in nature. \n\nThe second, higher confidence, system will be an approaching long \nwave trough that will track east from the Great Lakes region. The \ntrough translates east into the St. Lawrence Valley late Saturday \ninto early Sunday, with scattered rounds of showers. The trough \nslowly tracks east through the day Sunday reaching Vermont by late \nSunday into Sunday night. While an isolated rumble of thunder with \nthe shower activity cannot be ruled out, chances are decreasing with \npoor mid level lapse rates, cool surface temperatures, and a lack of \ntrue instability. In all likelihood, the boundary will be a mess of \nscattered to isolated showers with some breaks in between, focused \nmainly over northern New York, and somewhat weakening as it moves \neast. Between both systems during the day Saturday, and most of \nSunday, Vermont will be straddled between in a \"no mans land\" of dry \nand cloudy conditions. Chances for showers do not increase for \nVermont until Sunday afternoon, though some isolated sprinkles or \nmist, especially in the higher terrain, due to low to mid level \nstratus clouds. Precipitation amounts will be light, especially \nacross Vermont, with probabilities of half an inch in the 25th to \n75th percentiles, and probabilities of an inch or more below 25%. \nThe higher amounts around a quarter to half an inch will be in \nnorthern New York, primarily in the northern St. Lawrence Valley. \nLower amount expected in central and northern Vermont. The trough \nwill pull away to the northeast heading towards Monday.\n\nKEY MESSAGE 3: The extended forecast begins with the precipitation \nassociated with Sunday's trough moving east of the region and a surface \nhigh pressure moving in behind. The high pressure will dominate for \nmost of the rest of the week. Daytime highs will gradually increase \nfrom the mid 70s into the upper 70s throughout the week. By late week, \nthe flow turns more zonal and could allow for precipitation to return. \nA couple weak systems appear will try to make their way into our CWA \nThursday and Friday, but impactful weather is not anticipated at this \ntime.\n\n&&\n\n.AVIATION /00Z FRIDAY THROUGH TUESDAY/...\nThrough 00Z Saturday...Light rain is streaming into southern\nVermont, but south of any TAF terminal. Overcast is retreating\neast as an upper trough is shifting east, which is likely\nresponsible for several PIREPs noting chop. Skies will become\nclear after sunset with surface high pressure building. Surface\ndewpoints are somewhat variable, with some pockets of drier air\nin a few. But efficient cooling will still likely cause\ncrossover temperatures to be met by most terminals, but it could\nbe somewhat delayed compared to yesterday with the earliest\nlikely at KSLK, then KMPV and KMSS, and then KEFK last. IFR\nto LIFR conditions are most likely between about 07z and 12z.\nAfter 12z, gradual improvements will give way to mostly clear\nskies with northwest to northeast winds 4 to 9 knots.\n\nOutlook...\n\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. Chance SHRA.\nSaturday Night: Mainly VFR, with local MVFR possible. Slight\nchance SHRA.\nSunday: Mainly VFR, with areas MVFR possible. Definite SHRA,\nSlight chance TSRA.\nSunday Night: Mainly MVFR, with areas VFR possible. Chance SHRA,\nSlight chance TSRA.\nMonday: Mainly MVFR, with areas VFR possible. Chance SHRA, Slight\nchance TSRA.\nMonday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nTuesday: Mainly VFR, with local MVFR possible. Slight chance\nSHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Langbauer\nAVIATION...Hastings\n"
  },
  "lake_forecast": {
   "issued": "2026-08-20T18:25:00+00:00",
@@ -853,9 +853,9 @@
  },
  "lake_gage": {
   "water_temp_f": 74,
-  "water_temp_at": "2026-08-20T18:00:00.000-04:00",
-  "level_ft": 94.96,
-  "level_at": "2026-08-20T18:00:00.000-04:00",
+  "water_temp_at": "2026-08-20T19:00:00.000-04:00",
+  "level_ft": 94.98,
+  "level_at": "2026-08-20T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -863,7 +863,7 @@
   "aqi": 36,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/20/26 18:00",
+  "observed": "08/20/26 19:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, August 21st."
  },
  "sun": {
@@ -922,7 +922,7 @@
     },
     "pop_max": {
      "GFS": 8,
-     "Euro": 14,
+     "Euro": 4,
      "ICON": 5
     },
     "precip_in": {
