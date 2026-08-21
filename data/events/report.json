@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-21T06:04:14-04:00",
+ "generated": "2026-08-21T16:58:47-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 16,
-   "seconds": 7.6
+   "seconds": 6.3
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 63,
+   "count": 65,
    "seconds": 2.4
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 53,
-   "seconds": 4.9
+   "count": 55,
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 166,
+   "count": 170,
    "seconds": 3.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 71,
-   "seconds": 1.5
+   "count": 80,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 158,
-   "seconds": 66.7
+   "count": 160,
+   "seconds": 69.4
   },
   "flynn": {
    "label": "The Flynn",
    "count": 35,
-   "seconds": 2.5
+   "seconds": 2.4
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.7
+   "seconds": 39.9
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,18 +78,18 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 409,
-   "seconds": 72.5
+   "count": 419,
+   "seconds": 72.9
   },
   "meetup": {
    "label": "Meetup",
-   "count": 67,
-   "seconds": 110.9
+   "count": 66,
+   "seconds": 107.9
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 42,
-   "seconds": 14.9
+   "seconds": 14.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -99,7 +99,7 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 32,
-   "seconds": 33.0
+   "seconds": 33.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,18 +113,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 366,
-   "seconds": 19.6
+   "count": 368,
+   "seconds": 13.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 221,
+   "count": 223,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 77,
-   "seconds": 96.8
+   "seconds": 98.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,89 +132,11 @@
    "seconds": 0.4
   }
  },
- "gathered": 2564,
- "afterDedup": 1353,
- "duplicatesMerged": 1211,
- "final": 1816,
+ "gathered": 2596,
+ "afterDedup": 1363,
+ "duplicatesMerged": 1233,
+ "final": 1830,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Burlington Baroque Festival: Vivaldi Concerti Stravaganzi!",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Live Music",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Oktoberfest Vermont",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-09-19"
-  },
-  {
-   "kept": {
-    "title": "Brad Williams",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "flynn"
-   ],
-   "date": "2026-09-20"
-  },
-  {
-   "kept": {
-    "title": "Women's Soccer vs UMBC",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-20"
-  },
-  {
-   "kept": {
-    "title": "Handel’s Oratorio: Israel in Egypt",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-20"
-  },
   {
    "kept": {
     "title": "Of Monsters and Men at Shelburne Museum",
@@ -357,6 +279,18 @@
     "source": "churchst"
    },
    "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-22"
+  },
+  {
+   "kept": {
+    "title": "Carson Jordan with Bianca Stone | Dead Hand",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
     "churchst",
     "loveburlington"
    ],
@@ -535,6 +469,18 @@
     "source": "churchst"
    },
    "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-24"
+  },
+  {
+   "kept": {
+    "title": "Stephen Payne | Almost April",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
     "churchst",
     "loveburlington"
    ],
@@ -1156,6 +1102,17 @@
     "champlainvalley",
     "helloburlington",
     "vcc"
+   ],
+   "date": "2026-10-01"
+  },
+  {
+   "kept": {
+    "title": "Thea Lewis | True Crime Stories of Vermont",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
    ],
    "date": "2026-10-01"
   },
@@ -1879,6 +1836,18 @@
   },
   {
    "kept": {
+    "title": "C.N. Crawford | Avalon Tower",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-08"
+  },
+  {
+   "kept": {
     "title": "Thirsty Thursday",
     "source": "churchst"
    },
@@ -2133,6 +2102,18 @@
   },
   {
    "kept": {
+    "title": "Lisa M. Stulberg | How to Win a Culture War: LGBTQ+ Social Change Through Pop Culture",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-13"
+  },
+  {
+   "kept": {
     "title": "Random Chats About Statistics: Directed Acyclic Graphs",
     "source": "uvm"
    },
@@ -2159,6 +2140,18 @@
     "source": "churchst"
    },
    "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
+    "title": "Chuck Wendig in Conversation with Delilah Dawson | The Calamities",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
     "churchst",
     "loveburlington"
    ],
@@ -2193,6 +2186,18 @@
    },
    "merged_sources": [
     "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-10-15"
+  },
+  {
+   "kept": {
+    "title": "Annalee Newitz | A Wall is Also a Road",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "churchst",
     "loveburlington"
    ],
    "date": "2026-10-15"
@@ -2377,28 +2382,19 @@
  ],
  "changes": [
   {
-   "id": "7e176a1864d4",
-   "title": "Benjamin Tod",
-   "date": "2026-10-09",
+   "id": "5fba02bfa610",
+   "title": "Libby Cataldi | It Takes a Lifetime to Learn How to Live: An Italian American Story of Coming Home",
+   "date": "2026-09-17",
    "change": "time",
-   "was": "2026-10-09T20:30:00-04:00",
-   "now": "2026-10-09T20:00:00-04:00"
+   "was": "2026-09-17T18:30:00-04:00",
+   "now": "2026-09-17T19:00:00-04:00"
   },
   {
-   "id": "f23b34cb828d",
-   "title": "Margo Cilker & Lilly Hiatt",
-   "date": "2026-10-08",
-   "change": "time",
-   "was": "2026-10-08T19:30:00-04:00",
-   "now": "2026-10-08T19:00:00-04:00"
-  },
-  {
-   "id": "7259338f97fd",
-   "title": "White Denim",
-   "date": "2026-10-09",
-   "change": "time",
-   "was": "2026-10-09T19:30:00-04:00",
-   "now": "2026-10-09T19:00:00-04:00"
+   "id": "05c9ee8e9792",
+   "title": "Lunch with the Poets",
+   "date": "2026-08-21",
+   "change": "missing",
+   "lastSeen": "2026-08-21T06:04:14-04:00"
   },
   {
    "id": "939cabf201a6",
@@ -2427,18 +2423,6 @@
    "date": "2026-08-23",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
-   "id": "d00294290626",
-   "title": "Vegan in Vermont",
-   "date": "2026-08-26",
-   "change": "dropped"
-  },
-  {
-   "id": "b2e5144d1079-2100",
-   "title": "Nataly Aukar",
-   "date": "2026-08-28",
-   "change": "dropped"
   },
   {
    "id": "97a8ec042810",
@@ -2525,6 +2509,13 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
+   "id": "e0434a00d599",
+   "title": "JoAnna Farrer",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-08-21T06:04:14-04:00"
+  },
+  {
    "id": "5652454a77a8",
    "title": "Lukas Nelson & Molly Tuttle",
    "date": "2026-09-10",
@@ -2546,17 +2537,18 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
-   "id": "b320bfb8c80a",
-   "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ POLKAROBICS",
-   "date": "2026-09-10",
-   "change": "dropped"
-  },
-  {
    "id": "3b2234bcd1fd",
    "title": "All Your Friends",
    "date": "2026-09-11",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
+  },
+  {
+   "id": "f1bd139baae4",
+   "title": "Brain Freezer 5K",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-21T06:04:14-04:00"
   },
   {
    "id": "65a12b334215",
@@ -2601,12 +2593,6 @@
    "lastSeen": "2026-08-20T17:02:25-04:00"
   },
   {
-   "id": "6285243c0e9f",
-   "title": "A Celebration of Vermont Cheese",
-   "date": "2026-09-18",
-   "change": "dropped"
-  },
-  {
    "id": "b667a19d3e4f",
    "title": "Old Crow Medicine Show",
    "date": "2026-09-18",
@@ -2619,12 +2605,6 @@
    "date": "2026-09-19",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
-   "id": "a40ed5ba6818",
-   "title": "Burlington Baroque Festival: Vivaldi Concerti Stravaganza!",
-   "date": "2026-09-19",
-   "change": "dropped"
   },
   {
    "id": "17fc5b5609a4",
@@ -2653,6 +2633,13 @@
    "date": "2026-09-21",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
+  },
+  {
+   "id": "3c1e635d7b38",
+   "title": "Carson Jordan in Conversation with Bianca Stone | DEAD HAND",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-08-21T06:04:14-04:00"
   },
   {
    "id": "62df4cd5cd33",
