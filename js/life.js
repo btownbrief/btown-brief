@@ -129,7 +129,12 @@
   // stamping a thunderhead on a 20% day that's mostly sun is a lie.
   function skyGlyph(short, pop, night) {
     var s = (short || '').toLowerCase();
-    if (pop != null && pop < 30 && /sunny|clear/.test(s)) return night ? '🌙' : '⛅';
+    if (pop != null && pop < 30 && /sunny|clear/.test(s)) {
+      // Low odds: ignore the "then Slight Chance Showers" tail and read the sky.
+      if (/partly/.test(s)) return night ? '🌥️' : '⛅';
+      if (/mostly sunny|mostly clear/.test(s)) return night ? '🌙' : '🌤️';
+      return night ? '🌙' : '☀️';
+    }
     if (/thunder/.test(s)) return '⛈️';
     if (/snow|flurr|sleet|wintry|ice/.test(s)) return '🌨️';
     if (/rain|shower|drizzle/.test(s)) return '🌧️';
@@ -349,9 +354,12 @@
 
     // hours still ahead of us in the Burlington day (open-window looks
     // 20h out so a morning visitor still sees tonight's overnight window)
+    // Burlington's UTC offset is a whole number of hours, so the top of
+    // the current hour is the same instant in both clocks.
+    var topOfHour = now - (now % HOUR);
     var hoursToMidnight = 24 - btvHour(new Date());
     var horizon = key === 'open_window' ? now + 20 * HOUR
-                                        : now + hoursToMidnight * HOUR;
+                                        : topOfHour + hoursToMidnight * HOUR - 1;
     var series = [];
     for (var k = 0; k < hours.length; k++) {
       var tk = new Date(hours[k].t).getTime();
@@ -491,7 +499,7 @@
     if (changed && afd.what_changed) {
       var txt = String(afd.what_changed).replace(/\s+/g, ' ').trim();
       var m = /^As of (.+?)\.\.\.\s*(.*)$/i.exec(txt);
-      var when = m ? m[1] : null, body = m ? m[2] : txt;
+      var when = m ? m[1].replace(/\b(\d{1,2})(\d{2}) (AM|PM)\b/, '$1:$2 $3') : null, body = m ? m[2] : txt;
       if (body) {
         changed.innerHTML = '<span class="rn-changed-label">What changed</span> ' + esc(body) +
           (when ? ' <span class="rn-changed-when">— NWS, as of ' + esc(when) + '</span>' : '');
@@ -590,23 +598,51 @@
 
     var first = runs[0];
     var endOfFirst = new Date(new Date(first.end).getTime() + HOUR).toISOString();
-    var parts = [];
-    var firstWord;
-    if (first.kind === 'wet') {
-      var likely = first.maxPop >= 70 ? ' likely' : '';
-      firstWord = cap(first.word) + likely;
-    } else {
-      // Night-aware sky words: "clear" works any time; "sunny" only by day.
-      firstWord = cap(first.word === 'clear' && isDaylight(first.start, d.__ctx) && first.n <= 8 ? 'sunny' : first.word);
-    }
-    if (runs.length === 1) {
-      parts.push(firstWord + ' for the next ' + span.length + ' hours');
-    } else {
-      parts.push(firstWord + ' ' + whenPhrase(endOfFirst, 'through', 'through'));
+    var ctx = d.__ctx;
+
+    function describe(run, lead) {
+      if (run.kind === 'wet') {
+        var w = run.word;
+        if (lead) return cap(w) + (run.maxPop >= 70 ? ' likely' : ' possible');
+        return w + (run.maxPop >= 70 ? '' : ' possible');
+      }
+      // Night-aware sky words: "clear" works any time, "sunny" only by day.
+      var word = run.word;
+      // "sunny" only for a daytime stretch; a run that spans the night is "clear".
+      if (word === 'clear' && isDaylight(run.start, ctx) && run.n <= 8) word = 'sunny';
+      return lead ? cap(word) : word;
     }
 
-    // Temperatures: tonight's low if the span covers tonight, tomorrow's
-    // high if it covers tomorrow's afternoon.
+    // Clause 1: what it's doing now and how long that lasts.
+    var sentence;
+    if (runs.length === 1) {
+      sentence = describe(first, true) + ' for the next ' + span.length + ' hours';
+    } else {
+      sentence = describe(first, true) + ' ' + whenPhrase(endOfFirst, 'through', 'into');
+    }
+
+    // Clause 2: the turn. Wet after dry (or dry after wet) is the story;
+    // a dry sky change is worth a few words but not a time of its own —
+    // it starts where clause 1 ends.
+    var turn = null;
+    for (var i = 1; i < runs.length; i++) {
+      if (runs[i].kind !== first.kind) { turn = runs[i]; break; }
+    }
+    if (turn) {
+      if (turn.kind === 'wet') {
+        sentence += ', then ' + describe(turn, false) + ' ' + whenPhrase(turn.start, 'around', '') +
+          (turn.maxPop < 70 ? ' (' + Math.round(turn.maxPop / 10) * 10 + '%)' : '');
+      } else {
+        sentence += ', then drying out ' + whenPhrase(turn.start, 'around', '') +
+          (turn.word !== 'cloudy' ? ' and turning ' + turn.word : '');
+      }
+    } else if (runs.length > 1) {
+      sentence += ', then ' + describe(runs[1], false);
+    }
+
+    // Clause 3: temperatures — tonight's low if the span covers tonight,
+    // tomorrow's high if it covers tomorrow's afternoon, today's high if
+    // it's still morning.
     var sun = d.sun || {};
     var nowMs = Date.now();
     var sunsetMs = new Date(sun.sunset).getTime(), riseTmMs = new Date(sun.sunrise_tomorrow).getTime();
@@ -617,43 +653,21 @@
     var tempBits = [];
     if (nightHours.length >= 3) {
       var low = Math.min.apply(null, nightHours.map(function (h) { return h.temp_f; }));
-      tempBits.push('low near ' + low);
+      tempBits.push('low near ' + low + ' tonight');
     }
     var tomorrowKey = btvDayKey(new Date(nowMs + 24 * HOUR));
     var tmDay = span.filter(function (h) { return btvDayKey(h.t) === tomorrowKey && btvHour(h.t) >= 10 && btvHour(h.t) <= 18; });
     if (tmDay.length >= 4) {
       var hiT = Math.max.apply(null, tmDay.map(function (h) { return h.temp_f; }));
-      tempBits.push(btvWeekday(tmDay[0].t) + ' near ' + hiT);
-    } else if (!nightHours.length || nightHours.length < 3) {
-      // daytime visitor: where does today top out from here?
+      tempBits.push('high near ' + hiT + ' ' + btvWeekday(tmDay[0].t));
+    } else if (btvHour(new Date()) < 15) {
       var todayKey = btvDayKey(new Date());
       var rest = span.filter(function (h) { return btvDayKey(h.t) === todayKey && btvHour(h.t) <= 19; });
-      if (rest.length >= 2 && btvHour(new Date()) < 15) {
-        tempBits.push('topping out near ' + Math.max.apply(null, rest.map(function (h) { return h.temp_f; })));
+      if (rest.length >= 2) {
+        tempBits.unshift('topping out near ' + Math.max.apply(null, rest.map(function (h) { return h.temp_f; })) + ' today');
       }
     }
-    var sentence = parts[0];
-    if (tempBits.length) sentence += ', ' + tempBits.join(', ');
-
-    // The turn: the next run that is a different kind (wet after dry, or
-    // dry after wet) — that's the "what changes and when".
-    var turn = null;
-    for (var i = 1; i < runs.length; i++) {
-      if (runs[i].kind !== first.kind) { turn = runs[i]; break; }
-    }
-    if (turn) {
-      if (turn.kind === 'wet') {
-        var verb = turn.maxPop >= 70 ? ' move in ' : ' possible ';
-        sentence += '; ' + turn.word + verb + whenPhrase(turn.start, 'around', '');
-        if (turn.maxPop < 70) sentence += ' (' + Math.round(turn.maxPop / 10) * 10 + '%)';
-      } else {
-        sentence += '; drying out ' + whenPhrase(turn.start, 'around', '');
-      }
-    } else if (runs.length > 1 && first.kind === 'dry') {
-      // dry throughout but the sky changes
-      var nxt = runs[1];
-      sentence += ', ' + nxt.word + ' ' + whenPhrase(nxt.start, 'by', '');
-    }
+    if (tempBits.length) sentence += '; ' + tempBits.join(', ');
 
     // Wind: only when it's a factor.
     var windy = span.slice(0, 12).filter(function (h) { return (h.wind_mph || 0) >= 15; });
@@ -961,7 +975,7 @@
         if (vals.length >= 2) {
           var spread = Math.max.apply(null, vals) - Math.min.apply(null, vals);
           var med = median(vals);
-          if (spread >= 4) modelChip = '<span class="wk-model-chip" title="The models disagree on the high">models ' +
+          if (spread >= 4) modelChip = ' <span class="wk-model-chip" title="The models disagree on the high">models ' +
             Math.min.apply(null, vals) + '–' + Math.max.apply(null, vals) + '</span>';
           modelLineHtml = '<p class="wk-model"><span class="week-detail-when">Model check</span> ' +
             names.map(function (n) { return n + ' ' + model.high_f[n] + '°'; }).join(' · ') +
@@ -976,8 +990,8 @@
       }
 
       var blurb = day.key && blurbs[day.key];
-      var call = blurb ? '<span class="wk-call wk-call-steve">' + esc(blurb) + '</span>'
-                       : '<span class="wk-call">' + esc(short) + '</span>';
+      var call = blurb ? '<span class="wk-call wk-call-steve">' + esc(blurb) + modelChip + '</span>'
+                       : '<span class="wk-call">' + esc(short) + modelChip + '</span>';
 
       var nws = [];
       if (day.dayDetail) nws.push('<p><span class="week-detail-when">' + esc(day.dayName || 'Day') + '</span> ' + esc(day.dayDetail) + '</p>');
@@ -993,7 +1007,7 @@
           '<span class="wk-pop">' + popShown + '</span>' +
           '<span class="wk-lo">' + (lo != null ? lo + '°' : '—') + '</span>' +
           bar +
-          '<span class="wk-hi">' + (hi != null ? hi + '°' : '—') + modelChip + '</span>' +
+          '<span class="wk-hi">' + (hi != null ? hi + '°' : '—') + '</span>' +
           call +
           '<span class="wk-caret" aria-hidden="true">›</span>' +
         '</button>' +

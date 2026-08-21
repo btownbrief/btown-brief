@@ -496,7 +496,23 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 }
 
 /* ---------------- mobile ---------------- */
+/* Phones get hero → next hours → week rows → My read, so the first two
+   screens answer "what now, what next, what this week" before the essay;
+   desktop keeps the read right under the hours. Flip by removing the
+   `order` rules below. */
+.rn-page { display: flex; flex-direction: column; }
 @media (max-width: 720px) {
+  .wx-alerts { order: 1; }
+  .rn-hero { order: 2; }
+  .hours-section { order: 3; }
+  .week-section { order: 4; }
+  .read-section { order: 5; }
+  .life-section { order: 6; }
+  .swim-section { order: 7; }
+  .sources-section { order: 8; }
+  /* The NWS period sentence repeats what the story and the week rows say. */
+  .rn-sub { display: none; }
+
   .rn-hero-inner { padding: var(--space-5) var(--space-4) var(--space-3); }
   .rn-big { font-size: 3rem; }
   .rn-desc { font-size: var(--text-lg); }
@@ -522,6 +538,10 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
   .wk-more { padding-left: var(--space-3); }
   .wk-model-chip { display: none; }
   .swim-name { min-width: 7em; }
+  /* Beach rows: name + status on one line, the sample time underneath. */
+  .swim-row { flex-wrap: wrap; }
+  .swim-status { flex: 1 1 auto; }
+  .swim-when { flex-basis: 100%; padding-left: calc(1.2em + var(--space-3)); }
 }
 
 @media (max-width: 400px) {
