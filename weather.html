@@ -27,20 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=20260802a">
-  <style>
-    /* Deep-link on the Sunset life-score card → the dedicated Sunset page.
-       Scoped inline (not style.css) so feat/sunset stays a clean merge —
-       fold into style.css after this branch lands if you like. */
-    .life-deep-link {
-      display: inline-block;
-      margin-top: var(--space-2);
-      font-size: var(--text-sm);
-      font-weight: 600;
-      color: var(--coral);
-      text-decoration: none;
-    }
-    .life-deep-link:hover { text-decoration: underline; }
-  </style>
+  <link rel="stylesheet" href="css/weather.css?v=20260821a">
   <script>
     /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
        refreshes the cache; this only avoids the white flash after dark. */
@@ -107,30 +94,36 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <div id="rn-page" class="rn-page" hidden>
 
+    <!-- ============ ALERTS (only when NWS has something active) ============ -->
+    <div class="wx-alerts" id="rn-alerts" hidden role="region" aria-label="Weather alerts"></div>
+
     <!-- ============ BURLINGTON RIGHT NOW ============ -->
     <section class="rn-hero" aria-label="Current conditions">
       <div class="rn-hero-inner">
-        <div class="rn-alerts" id="rn-alerts" hidden></div>
-        <h1 class="rn-title">Burlington weather, right now</h1>
+        <h1 class="rn-title">Burlington, right now</h1>
         <p class="rn-stats" id="rn-stats"></p>
+        <div class="rn-chips" id="rn-chips"></div>
         <p class="rn-sub" id="rn-sub"></p>
+        <p class="rn-changed" id="rn-changed" hidden></p>
         <p class="rn-updated" id="rn-updated"></p>
 
-        <!-- Daylight arc — same live arc as the list page -->
+        <!-- Daylight arc — same live arc as the list page; #sun-arc is a deep link -->
         <div class="sun-arc rn-sun-arc" id="sun-arc" hidden aria-label="Daylight remaining today"></div>
+      </div>
+    </section>
 
-        <!-- The sources: hand-holding people to the real tools -->
-        <div class="rn-sources">
-          <span class="rn-sources-label">The sources</span>
-          <a href="https://forecast.weather.gov/MapClick.php?lat=44.4774048&amp;lon=-73.2110569" target="_blank" rel="noopener">NWS forecast</a>
-          <a href="https://forecast.weather.gov/product.php?site=BTV&issuedby=BTV&product=AFD" target="_blank" rel="noopener">Forecast discussion</a>
-          <a href="https://forecast.weather.gov/product.php?site=BTV&issuedby=BTV&product=REC" target="_blank" rel="noopener">Lake forecast</a>
-          <a href="https://radar.weather.gov/station/kcxx/standard" target="_blank" rel="noopener">Radar</a>
-          <a href="https://www.windy.com/44.476/-73.212" target="_blank" rel="noopener">Windy</a>
-          <a href="https://www.wunderground.com/forecast/us/vt/burlington" target="_blank" rel="noopener">Wunderground</a>
-          <a href="https://www.airnow.gov/?city=Burlington&state=VT&country=USA" target="_blank" rel="noopener">AirNow</a>
-          <a href="https://waterdata.usgs.gov/monitoring-location/04294500/" target="_blank" rel="noopener">Lake gauge</a>
+    <!-- ============ THE NEXT HOURS ============ -->
+    <section class="hours-section" id="hours-section" hidden aria-label="The next hours">
+      <div class="hours-inner">
+        <div class="hours-head">
+          <h2 class="hours-title">The next hours</h2>
+          <span class="hours-stamp" id="hours-stamp"></span>
         </div>
+        <p class="hours-story" id="hours-story"></p>
+        <div class="hr-scroll" id="hr-scroll" tabindex="0" aria-label="Hour-by-hour forecast, scroll sideways">
+          <div class="hr-track" id="hr-track"></div>
+        </div>
+        <p class="hours-models" id="hours-models" hidden></p>
       </div>
     </section>
 
@@ -149,19 +142,20 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <!-- ============ THE WEEK AHEAD ============ -->
     <section class="week-section" id="week-section" hidden aria-label="Seven-day forecast">
       <div class="week-inner">
-        <h2 class="week-title">The week ahead</h2>
-        <p class="week-sub">The National Weather Service outlook for Burlington — high, overnight low, and the odds of rain — with my one-line call on each day. Tap a day; the forecaster's full wording is a tap deeper.</p>
+        <div class="week-head">
+          <h2 class="week-title">The week ahead</h2>
+          <p class="week-sub">NWS highs and lows on one temperature scale, rain odds when they matter, and my one-line call on each day. Tap a day for the forecaster's full wording and the model check.</p>
+        </div>
         <div class="week-grid" id="week-grid"></div>
-        <div class="week-detail" id="week-detail"></div>
         <p class="week-note" id="week-note"></p>
       </div>
     </section>
 
     <!-- ============ LIFE SCORES ============ -->
-    <section class="life-section" aria-label="Life scores">
+    <section class="life-section" id="life-section" aria-label="Life scores">
       <div class="life-inner">
         <h2 class="life-title">Should I…?</h2>
-        <p class="life-sub">Six Burlington questions, scored 0–10 from the live data above — temperature, rain chance, wind, humidity, air quality, water, and the hour of the day. Tap <strong>why?</strong> on any card to see exactly what moved the number.</p>
+        <p class="life-sub">Six Burlington questions, scored 0–10 for every remaining hour of today from the live data above — temperature, rain chance, wind, humidity, air quality, water, and the hour. Each card says <em>when</em> today is best. Tap <strong>why?</strong> to see exactly what moved the number.</p>
         <div class="life-grid" id="life-grid"></div>
       </div>
     </section>
@@ -169,12 +163,32 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <!-- ============ CAN I SWIM ============ -->
     <section class="swim-section" id="swim-section" aria-label="Can I swim?">
       <div class="swim-inner">
-        <h2 class="swim-title">Can I swim?</h2>
+        <div class="swim-head">
+          <h2 class="swim-title">Can I swim?</h2>
+          <span class="swim-verdict" id="swim-verdict" hidden></span>
+        </div>
         <p class="swim-sentence" id="swim-sentence"></p>
-        <p class="swim-conditions" id="swim-conditions"></p>
+        <div class="swim-conditions" id="swim-conditions"></div>
         <div class="swim-board" id="swim-board"></div>
         <p class="swim-note" id="swim-note"></p>
         <p class="swim-source">Statuses from the <a href="https://www.burlingtonvt.gov/1219/Beach-Closure-Tracker" target="_blank" rel="noopener">city's beach tracker</a> — E. coli results post by 11 AM Tuesdays and Fridays; cyanobacteria checks are daily in season. When in doubt, believe the sign at the beach. Want the beaches themselves — the vibe, bus routes, and a shore-long scavenger hunt? <a href="beaches.html">The Lake &amp; Beaches guide</a> has them.</p>
+      </div>
+    </section>
+
+    <!-- ============ THE SOURCES ============ -->
+    <section class="sources-section" aria-label="Data sources">
+      <div class="rn-sources">
+        <span class="rn-sources-label">The sources</span>
+        <a href="https://forecast.weather.gov/MapClick.php?lat=44.4774048&amp;lon=-73.2110569" target="_blank" rel="noopener">NWS forecast</a>
+        <a href="https://forecast.weather.gov/product.php?site=BTV&issuedby=BTV&product=AFD" target="_blank" rel="noopener">Forecast discussion</a>
+        <a href="https://forecast.weather.gov/product.php?site=BTV&issuedby=BTV&product=REC" target="_blank" rel="noopener">Lake forecast</a>
+        <a href="https://radar.weather.gov/station/kcxx/standard" target="_blank" rel="noopener">Radar</a>
+        <a href="https://www.windy.com/44.476/-73.212" target="_blank" rel="noopener">Windy</a>
+        <a href="https://www.wunderground.com/forecast/us/vt/burlington" target="_blank" rel="noopener">Wunderground</a>
+        <a href="https://www.airnow.gov/?city=Burlington&state=VT&country=USA" target="_blank" rel="noopener">AirNow</a>
+        <a href="https://waterdata.usgs.gov/monitoring-location/04294500/" target="_blank" rel="noopener">Lake gauge</a>
+        <a href="sunset.html">Sunset tracker</a>
+        <a href="events.html">What's on tonight</a>
       </div>
     </section>
 
@@ -213,7 +227,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <script src="js/theme.js?v=20260711k"></script>
   <script src="js/sunset-score.js?v=20260802a"></script>
-  <script src="js/life.js?v=20260802a"></script>
+  <script src="js/life.js?v=20260821a"></script>
   <script src="js/sun.js?v=20260802a"></script>
   <script src="js/auto-theme.js?v=20260711k"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
