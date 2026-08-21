@@ -81,6 +81,13 @@
     }).format(d);
   }
 
+  // The Burlington calendar day after `key` ("2026-03-08" → "2026-03-09"),
+  // by date arithmetic rather than +24h, so DST days don't shift it.
+  function nextDayKey(key) {
+    var p = key.split('-');
+    return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + 1)).toISOString().slice(0, 10);
+  }
+
   function btvWeekday(dateOrIso, style) {
     var d = typeof dateOrIso === 'object' ? dateOrIso : new Date(dateOrIso);
     return d.toLocaleDateString('en-US', { weekday: style || 'long', timeZone: BTV_TZ });
@@ -170,6 +177,7 @@
   }
 
   function isDaylight(hourIso, ctx) {
+    if (!ctx || !ctx.sunrise || !ctx.sunset) return true; // unknown → no darkness penalties
     var t = new Date(hourIso).getTime();
     // Today's daylight, or tomorrow's for hours past tonight's sunset.
     if (t >= new Date(ctx.sunrise).getTime() && t <= new Date(ctx.sunset).getTime()) return true;
@@ -328,7 +336,8 @@
     var a = fmtHour(startIso), b = fmtHour(endIso);
     if (a === b) return 'around ' + a;
     var am = a.slice(-2), bm = b.slice(-2);
-    if (am === bm) a = a.slice(0, -3);
+    var short = new Date(endIso).getTime() - new Date(startIso).getTime() < 12 * HOUR;
+    if (am === bm && short) a = a.slice(0, -3);
     return a + '–' + b;
   }
 
@@ -340,33 +349,42 @@
     var now = Date.now();
 
     if (key === 'sunset') {
-      var target = window.BtownSunsetScore.selectTarget(ctx.latest, now);
-      var result = window.BtownSunsetScore.computeScore(
-        target.sunsetMs, ctx.openMeteo, ctx.latest);
-      return {
-        score: result.score,
-        parts: result.parts,
-        window: 'sunset at ' + fmtClock(target.sunsetMs),
-        series: null
-      };
+      if (!ctx.sunset) return null;
+      try {
+        var target = window.BtownSunsetScore.selectTarget(ctx.latest, now);
+        var result = window.BtownSunsetScore.computeScore(
+          target.sunsetMs, ctx.openMeteo, ctx.latest);
+        return {
+          score: result.score,
+          parts: result.parts,
+          window: 'sunset at ' + fmtClock(target.sunsetMs),
+          series: null
+        };
+      } catch (e) {
+        return null; // sunset scorer couldn't run — skip the card rather than crash the grid
+      }
     }
     var scorer = SCORERS[key];
 
     // hours still ahead of us in the Burlington day (open-window looks
     // 20h out so a morning visitor still sees tonight's overnight window)
-    // Burlington's UTC offset is a whole number of hours, so the top of
-    // the current hour is the same instant in both clocks.
-    var topOfHour = now - (now % HOUR);
-    var hoursToMidnight = 24 - btvHour(new Date());
-    var horizon = key === 'open_window' ? now + 20 * HOUR
-                                        : topOfHour + hoursToMidnight * HOUR - 1;
+    // "The rest of today" is a Burlington calendar day (DST-safe: we compare
+    // day keys, not elapsed hours). Open-window looks 20h out so a morning
+    // visitor still sees tonight's overnight window.
+    var todayKey = btvDayKey(new Date());
+    var elapsedHorizon = key === 'open_window' ? now + 20 * HOUR : null;
     var series = [];
     for (var k = 0; k < hours.length; k++) {
       var tk = new Date(hours[k].t).getTime();
-      if (tk + HOUR < now || tk > horizon) continue;
+      if (tk + HOUR <= now) continue;
+      if (elapsedHorizon != null ? tk > elapsedHorizon : btvDayKey(hours[k].t) !== todayKey) continue;
       series.push({ h: hours[k], r: scorer(hours[k], ctx) });
     }
-    if (!series.length) series = [{ h: hours[0], r: scorer(hours[0], ctx) }];
+    if (!series.length) {
+      // nothing left in the horizon (very late night): score the last hour we have
+      var lastH = hours[hours.length - 1];
+      series = [{ h: lastH, r: scorer(lastH, ctx) }];
+    }
 
     var current = series[0];
 
@@ -374,8 +392,9 @@
     // wants to hear their best run is at 1 AM. Open-window is the
     // exception: overnight is exactly when it matters.
     function awake(entry) {
-      if (key === 'open_window') return true;
       var hh = btvHour(entry.h.t);
+      // open-window is a night question: 8 PM through 9 AM
+      if (key === 'open_window') return hh >= 20 || hh < 9;
       return hh >= 6 && hh < 22;
     }
     var eligible = series.map(function (e, i) { return { e: e, i: i }; })
@@ -404,6 +423,8 @@
         } else {
           windowText = 'good now, through ' + fmtHour(endIso);
         }
+      } else if (hi >= lastEligible) {
+        windowText = 'best from ' + fmtHour(series[lo].h.t) + ' on';
       } else {
         windowText = 'best ' + fmtRange(series[lo].h.t, endIso);
       }
@@ -427,10 +448,21 @@
   var SEVERITY_RANK = { extreme: 4, severe: 3, moderate: 2, minor: 1, unknown: 0 };
 
   function renderAlerts(d) {
-    var alerts = (d.alerts || {}).active || [];
     var ab = el('rn-alerts');
     if (!ab) return;
+    var nowMs = Date.now();
+    // The pipeline keeps last-good data per section, so an alert that has
+    // since expired must never linger on the page.
+    var alerts = ((d.alerts || {}).active || []).filter(function (a) {
+      if (!a) return false;
+      if (!a.expires) return true;
+      var ex = new Date(a.expires).getTime();
+      return isNaN(ex) || ex > nowMs;
+    });
     if (!alerts.length) { ab.hidden = true; return; }
+    var checkedAt = (d.sections_updated || {}).alerts;
+    var staleNote = checkedAt && nowMs - new Date(checkedAt).getTime() > 2 * HOUR
+      ? '<span class="wx-alerts-stale">last checked ' + esc(fmtAgo(checkedAt)) + '</span>' : '';
     var worst = 'minor';
     alerts.forEach(function (a) {
       var s = (a.severity || 'unknown').toLowerCase();
@@ -448,7 +480,7 @@
           exp + '</div>';
       }).join('') +
       '<a class="wx-alerts-link" href="https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121" target="_blank" rel="noopener">Read the full alert at weather.gov →</a>' +
-      '</div>';
+      staleNote + '</div>';
     ab.hidden = false;
   }
 
@@ -530,7 +562,7 @@
   function upcomingHours(d) {
     var hours = ((d.hourly || {}).hours) || [];
     var now = Date.now();
-    return hours.filter(function (h) { return new Date(h.t).getTime() + HOUR > now; });
+    return hours.filter(function (h) { return new Date(h.t).getTime() + HOUR > now; }); // same rule as scoring
   }
 
   // What is this hour doing? 'wet' if rain is more likely than not-ish,
@@ -538,10 +570,15 @@
   // short forecast breaks ties ("Slight Chance Showers" at 25% is dry).
   function hourClass(h) {
     var s = (h.short || '').toLowerCase();
-    var wetWord = /thunder/.test(s) ? 'storms' : /snow|flurr|sleet/.test(s) ? 'snow'
+    var wetWord = /thunder/.test(s) ? 'storms' : /snow|flurr|sleet|freezing|ice/.test(s) ? 'snow'
                 : /drizzle/.test(s) ? 'drizzle' : /rain|shower/.test(s) ? 'showers' : null;
-    if ((h.pop || 0) >= 45 && wetWord) return { kind: 'wet', word: wetWord, pop: h.pop };
-    if ((h.pop || 0) >= 60) return { kind: 'wet', word: 'showers', pop: h.pop };
+    if (/sleet|freezing|ice/.test(s)) wetWord = 'wintry mix';
+    var pop = h.pop || 0;
+    // Storms and frozen stuff are worth a mention at lower odds than plain
+    // showers — a 30% thunderstorm chance changes a swim plan.
+    var threshold = (wetWord === 'storms' || wetWord === 'snow' || wetWord === 'wintry mix') ? 25 : 45;
+    if (pop >= threshold && wetWord) return { kind: 'wet', word: wetWord, pop: pop };
+    if (pop >= 60) return { kind: 'wet', word: 'showers', pop: pop };
     var sky = h.sky;
     if (sky == null) sky = /clear|sunny/.test(s) ? 15 : /partly/.test(s) ? 50 : /cloudy|overcast/.test(s) ? 85 : 40;
     var word = sky <= 30 ? 'clear' : sky <= 70 ? 'partly cloudy' : 'cloudy';
@@ -565,7 +602,12 @@
   }
   function whenPhrase(iso, prefixClock, prefixDay) {
     var dt = new Date(iso).getTime() - Date.now();
-    if (dt < 12 * HOUR) return prefixClock + ' ' + fmtHour(iso);
+    if (dt < 12 * HOUR) {
+      var clock = fmtHour(iso);
+      if (clock === '12 AM') clock = 'midnight';
+      if (clock === '12 PM') clock = 'noon';
+      return prefixClock + ' ' + clock;
+    }
     return (prefixDay ? prefixDay + ' ' : '') + dayPart(iso);
   }
 
@@ -603,20 +645,24 @@
     function describe(run, lead) {
       if (run.kind === 'wet') {
         var w = run.word;
-        if (lead) return cap(w) + (run.maxPop >= 70 ? ' likely' : ' possible');
-        return w + (run.maxPop >= 70 ? '' : ' possible');
+        if (run.maxPop >= 70) return lead ? cap(w) + ' likely' : w;
+        if (run.maxPop >= 45) return lead ? cap(w) + ' possible' : w + ' possible';
+        return lead ? 'A chance of ' + w : 'a chance of ' + w;
       }
       // Night-aware sky words: "clear" works any time, "sunny" only by day.
       var word = run.word;
-      // "sunny" only for a daytime stretch; a run that spans the night is "clear".
-      if (word === 'clear' && isDaylight(run.start, ctx) && run.n <= 8) word = 'sunny';
+      // "sunny" only for a stretch that starts and ends in daylight; a run
+      // that crosses sunset is "clear".
+      if (word === 'clear' && isDaylight(run.start, ctx) && isDaylight(run.end, ctx) && run.n <= 14) word = 'sunny';
       return lead ? cap(word) : word;
     }
 
     // Clause 1: what it's doing now and how long that lasts.
     var sentence;
     if (runs.length === 1) {
-      sentence = describe(first, true) + ' for the next ' + span.length + ' hours';
+      // One run the whole way: "Clear through early Sunday".
+      var endOfSpan = new Date(new Date(span[span.length - 1].t).getTime() + HOUR).toISOString();
+      sentence = describe(first, true) + ' ' + whenPhrase(endOfSpan, 'through', 'through');
     } else {
       sentence = describe(first, true) + ' ' + whenPhrase(endOfFirst, 'through', 'into');
     }
@@ -629,11 +675,15 @@
       if (runs[i].kind !== first.kind) { turn = runs[i]; break; }
     }
     if (turn) {
+      // The turn's start time only needs saying when something else sits
+      // between clause 1 and the turn; otherwise "through 9 PM, then showers"
+      // already says when.
+      var when = turn === runs[1] ? '' : ' ' + whenPhrase(turn.start, 'around', '');
       if (turn.kind === 'wet') {
-        sentence += ', then ' + describe(turn, false) + ' ' + whenPhrase(turn.start, 'around', '') +
+        sentence += ', then ' + describe(turn, false) + when +
           (turn.maxPop < 70 ? ' (' + Math.round(turn.maxPop / 10) * 10 + '%)' : '');
       } else {
-        sentence += ', then drying out ' + whenPhrase(turn.start, 'around', '') +
+        sentence += ', then drying out' + when +
           (turn.word !== 'cloudy' ? ' and turning ' + turn.word : '');
       }
     } else if (runs.length > 1) {
@@ -655,16 +705,18 @@
       var low = Math.min.apply(null, nightHours.map(function (h) { return h.temp_f; }));
       tempBits.push('low near ' + low + ' tonight');
     }
-    var tomorrowKey = btvDayKey(new Date(nowMs + 24 * HOUR));
-    var tmDay = span.filter(function (h) { return btvDayKey(h.t) === tomorrowKey && btvHour(h.t) >= 10 && btvHour(h.t) <= 18; });
-    if (tmDay.length >= 4) {
-      var hiT = Math.max.apply(null, tmDay.map(function (h) { return h.temp_f; }));
-      tempBits.push('high near ' + hiT + ' ' + btvWeekday(tmDay[0].t));
-    } else if (btvHour(new Date()) < 15) {
-      var todayKey = btvDayKey(new Date());
-      var rest = span.filter(function (h) { return btvDayKey(h.t) === todayKey && btvHour(h.t) <= 19; });
-      if (rest.length >= 2) {
-        tempBits.unshift('topping out near ' + Math.max.apply(null, rest.map(function (h) { return h.temp_f; })) + ' today');
+    // Before mid-afternoon, today's high is the number that matters (the
+    // week rows carry tomorrow's); after that, tomorrow's high is.
+    var todayKey = btvDayKey(new Date());
+    var todayRest = span.filter(function (h) { return btvDayKey(h.t) === todayKey && btvHour(h.t) <= 19; });
+    if (btvHour(new Date()) < 15 && todayRest.length >= 2) {
+      tempBits.unshift('topping out near ' + Math.max.apply(null, todayRest.map(function (h) { return h.temp_f; })) + ' today');
+    } else {
+      var tomorrowKey = nextDayKey(todayKey);
+      var tmDay = span.filter(function (h) { return btvDayKey(h.t) === tomorrowKey && btvHour(h.t) >= 10 && btvHour(h.t) <= 18; });
+      if (tmDay.length >= 4) {
+        var hiT = Math.max.apply(null, tmDay.map(function (h) { return h.temp_f; }));
+        tempBits.push('high near ' + hiT + ' ' + btvWeekday(tmDay[0].t));
       }
     }
     if (tempBits.length) sentence += '; ' + tempBits.join(', ');
@@ -686,22 +738,22 @@
     if (!days.length) return null;
     var nowH = btvHour(new Date());
     var todayKey = btvDayKey(new Date());
-    var targetKey = nowH < 13 ? todayKey : btvDayKey(new Date(Date.now() + 24 * HOUR));
+    var targetKey = nowH < 13 ? todayKey : nextDayKey(todayKey);
     var day = null;
     days.forEach(function (x) { if (x.date === targetKey) day = x; });
     if (!day || !day.high_f) return null;
-    var names = Object.keys(day.high_f);
+    var names = Object.keys(day.high_f).filter(function (n) { return isFinite(day.high_f[n]); });
     if (names.length < 2) return null;
-    var vals = names.map(function (n) { return day.high_f[n]; });
+    var vals = names.map(function (n) { return Number(day.high_f[n]); });
     var spread = Math.max.apply(null, vals) - Math.min.apply(null, vals);
     var med = median(vals);
     var label = targetKey === todayKey ? 'today' : btvWeekday(targetKey + 'T12:00:00');
     var out = '<span class="hours-models-label">Model check</span> ';
     if (spread >= 3) {
-      out += cap(label) + '’s high: ' + names.map(function (n) { return n + ' says ' + day.high_f[n]; }).join(', ') +
+      out += cap(label) + '’s high: ' + names.map(function (n) { return esc(n) + ' says ' + Number(day.high_f[n]); }).join(', ') +
         ' — a ' + spread + '° spread, so call it ' + med + ' and don’t sweat the difference.';
     } else {
-      out += names.join(', ').replace(/, ([^,]*)$/, ' and $1') + ' all land near ' + med + ' for ' + label + '’s high — the forecast is on solid ground.';
+      out += names.map(esc).join(', ').replace(/, ([^,]*)$/, ' and $1') + ' all land near ' + med + ' for ' + label + '’s high — the forecast is on solid ground.';
     }
     // Rain disagreement is worth a clause too.
     var pops = names.map(function (n) { return (day.pop_max || {})[n]; }).filter(function (v) { return v != null; });
@@ -970,15 +1022,15 @@
       var modelChip = '';
       var modelLineHtml = '';
       if (model && model.high_f) {
-        var names = Object.keys(model.high_f);
-        var vals = names.map(function (n) { return model.high_f[n]; });
+        var names = Object.keys(model.high_f).filter(function (n) { return isFinite(model.high_f[n]); });
+        var vals = names.map(function (n) { return Number(model.high_f[n]); });
         if (vals.length >= 2) {
           var spread = Math.max.apply(null, vals) - Math.min.apply(null, vals);
           var med = median(vals);
           if (spread >= 4) modelChip = ' <span class="wk-model-chip" title="The models disagree on the high">models ' +
             Math.min.apply(null, vals) + '–' + Math.max.apply(null, vals) + '</span>';
           modelLineHtml = '<p class="wk-model"><span class="week-detail-when">Model check</span> ' +
-            names.map(function (n) { return n + ' ' + model.high_f[n] + '°'; }).join(' · ') +
+            names.map(function (n) { return esc(n) + ' ' + Number(model.high_f[n]) + '°'; }).join(' · ') +
             (spread >= 3 ? ' — ' + spread + '° apart; call it ' + med + '°.' : ' — agreed.') +
             (function () {
               var pops = names.map(function (n) { return (model.pop_max || {})[n]; }).filter(function (v) { return v != null; });
@@ -1069,7 +1121,11 @@
 
   function renderScores(d, openMeteo) {
     var grid = el('life-grid');
-    if (!grid || !d.hourly || !d.hourly.hours) return;
+    if (!grid) return;
+    if (!d.hourly || !Array.isArray(d.hourly.hours) || !d.hourly.hours.length) {
+      grid.innerHTML = '<p class="swim-empty">No hourly forecast in the latest data, so no scores right now — check the NWS links below instead.</p>';
+      return;
+    }
 
     // If the pipeline has been down long enough that the hourly forecast
     // is a day old, stale scores are worse than no scores.
@@ -1083,8 +1139,10 @@
     var ctx = d.__ctx;
     ctx.openMeteo = openMeteo;
 
-    var html = SCORE_META.map(function (meta) {
+    var html = SCORE_META.map(function (meta, idx) {
       var res = scoreActivity(meta.key, d.hourly.hours, ctx);
+      if (!res) return '';
+      var whyId = 'life-why-' + meta.key;
       var v = verdict(res.score);
       var scoreTxt = (Math.round(res.score * 10) / 10).toFixed(1).replace(/\.0$/, '');
       var whyRows = res.parts.map(function (p) {
@@ -1101,13 +1159,13 @@
       return '<div class="life-card life-' + v.cls + '">' +
         '<div class="life-head"><span class="life-icon" aria-hidden="true">' + meta.icon + '</span>' +
         '<span class="life-name">' + meta.name + '</span>' +
-        '<button class="life-why-btn" type="button" aria-expanded="false" aria-label="Why this score?">why?</button></div>' +
+        '<button class="life-why-btn" type="button" aria-expanded="false" aria-controls="' + whyId + '" aria-label="Why this score?">why?</button></div>' +
         '<div class="life-score"><span class="life-num">' + scoreTxt + '</span><span class="life-outof">/10</span>' +
         '<span class="life-verdict">' + v.word + '</span></div>' +
         (res.window ? '<div class="life-window">' + esc(res.window) + '</div>' : '') +
         spark +
         (meta.link ? '<a class="life-deep-link" href="' + esc(meta.link) + '">' + esc(meta.linkText || 'More →') + '</a>' : '') +
-        '<div class="life-why" hidden>' + whyRows +
+        '<div class="life-why" id="' + whyId + '" hidden>' + whyRows +
         '<p class="life-why-note">' + (meta.key === 'sunset'
           ? 'Uses the exact cloud-layer formula and data feed from the full Sunset Tracker.'
           : 'Started from the feels-like comfort curve, then adjusted for what actually ruins ' +
@@ -1149,15 +1207,17 @@
     var greens = bd.filter(function (b) { return b.status === 'green'; });
     var reds = bd.filter(function (b) { return b.status === 'red'; });
     var sentence;
-    if (reds.length === bd.length && bd.length) {
+    if (bd.length && reds.length === bd.length) {
       sentence = 'Not today — every beach has a posted advisory. The lake will still be there tomorrow.';
+    } else if (bd.length && !greens.length) {
+      sentence = 'No beach has a confirmed-clean test right now — check the board below and believe the sign at the beach.';
     } else {
-      var pick = greens.length ? greens[0].name : 'North Beach';
-      sentence = 'Best bet today is ' + pick;
+      var pick = greens.length ? greens[0].name : 'the lake';
+      sentence = greens.length ? 'Best bet today is ' + pick : 'No beach results yet today';
       if (gage.water_temp_f != null) sentence += ' — the water is ' + gage.water_temp_f + '°';
       if ((broad.waves_ft_max != null && broad.waves_ft_max >= 2) ||
           (broad.wind_knots_max != null && broad.wind_knots_max >= 15)) {
-        sentence += ', but wind builds on the broad lake (' + esc(broad.text || '') + ')';
+        sentence += ', but wind builds on the broad lake (' + (broad.text || '') + ')';
       } else if (broad.calm || (broad.wind_knots_max != null && broad.wind_knots_max <= 10)) {
         sentence += ' and the lake forecast is quiet';
       }

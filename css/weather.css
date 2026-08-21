@@ -5,7 +5,9 @@
    chips, the next-hours rail, the week range rows, sparklines,
    swim verdict) and overrides where the old rules get in the way.
    Mobile first: the hero + next hours + week rows are the first
-   two phone screens, so everything above the read stays tight.
+   two phone screens (one DOM order for every width — no CSS
+   reordering — so reading order, focus order and visual order agree;
+   My read follows the week rows).
 ============================================================ */
 
 :root {
@@ -65,6 +67,7 @@
 .wx-alert-head { font-size: var(--text-sm); color: var(--ink-2); flex-basis: 100%; }
 .wx-alert-until { font-size: var(--text-xs); color: var(--ink-3); }
 .wx-alerts-link { font-size: var(--text-sm); font-weight: 600; color: var(--coral); }
+.wx-alerts-stale { font-size: var(--text-xs); opacity: .8; }
 
 .wx-alerts-severe { background: #B3261E; border-bottom-color: #7F1A14; color: #fff; }
 .wx-alerts-severe .wx-alerts-kicker,
@@ -496,20 +499,7 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 }
 
 /* ---------------- mobile ---------------- */
-/* Phones get hero → next hours → week rows → My read, so the first two
-   screens answer "what now, what next, what this week" before the essay;
-   desktop keeps the read right under the hours. Flip by removing the
-   `order` rules below. */
-.rn-page { display: flex; flex-direction: column; }
 @media (max-width: 720px) {
-  .wx-alerts { order: 1; }
-  .rn-hero { order: 2; }
-  .hours-section { order: 3; }
-  .week-section { order: 4; }
-  .read-section { order: 5; }
-  .life-section { order: 6; }
-  .swim-section { order: 7; }
-  .sources-section { order: 8; }
   /* The NWS period sentence repeats what the story and the week rows say. */
   .rn-sub { display: none; }
 
