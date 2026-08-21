@@ -1,6 +1,8 @@
 /* ============================================================
-   EVENTS PAGE — time-aware buckets + full filterable calendar
+   EVENTS PAGE — time-aware lenses, picks, sticky day strip,
+   a time-railed list, chips for filters, month + map views.
    Data: data/events/events.json (built by scripts/events/update.py)
+         data/weather/latest.json (for the header weather chip)
 ============================================================ */
 (function () {
   'use strict';
@@ -13,17 +15,31 @@
     'games': 'Trivia & games', 'wellness': 'Wellness', 'words': 'Books & words',
     'other': 'Other',
   };
+  const CAT_ORDER = ['music', 'comedy', 'food-drink', 'family', 'outdoors', 'market', 'art',
+    'theater', 'film', 'games', 'words', 'learning', 'community', 'wellness', 'sports', 'other'];
+
+  /* Quick filters: multi-select toggles. Each is a plain predicate. */
+  const QUICK = [
+    { key: 'free',     label: 'Free',       test: (e) => e.free === true },
+    { key: 'under15',  label: 'Under $15',  test: (e) => e.free === true || (e.minPrice != null && e.minPrice < 15) },
+    { key: 'kids',     label: 'Kids',       test: (e) => e.category === 'family' || hasTag(e, 'kids') || hasTag(e, 'family') || hasTag(e, 'teens') },
+    { key: 'outdoors', label: 'Outside',    test: (e) => e.indoorOutdoor === 'outdoor' || e.category === 'outdoors' },
+    { key: 'social',   label: 'Social',     test: (e) => hasTag(e, 'social'), title: 'Showing up alone is normal' },
+    { key: 'oneoff',   label: 'One-offs',   test: (e) => !hasTag(e, 'series'), title: 'Hide the weekly regulars (trivia, karaoke, open mics)' },
+  ];
+  const QUICK_BY_KEY = Object.fromEntries(QUICK.map((q) => [q.key, q]));
 
   const state = {
     events: [],          // active events, hydrated with Date objects
     ongoing: [],         // long-running exhibits/series (tag "ongoing")
+    byId: new Map(),
     meta: null,
     view: 'list',
-    daysShown: 14,
+    daysShown: 7,
     map: null,
     mapLayer: null,
-    activeBucket: null,
-    filters: { when: 'month', day: null, q: '', cat: '', town: '', price: '', age: '', repeat: '' },
+    openId: null,
+    filters: { when: 'all', day: null, q: '', cat: '', town: '', quick: new Set(), soon: false },
   };
 
   /* ---------------- utilities ---------------- */
@@ -35,30 +51,66 @@
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
     }[c]));
   }
+  function hasTag(e, t) { return (e.tags || []).includes(t); }
 
   function dkey(d) {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
       '-' + String(d.getDate()).padStart(2, '0');
   }
-
   function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  function fromKey(k) { return new Date(k + 'T12:00:00'); }
 
   function fmtTime(d) {
-    let h = d.getHours() % 12 || 12;
+    const h = d.getHours() % 12 || 12;
     const m = d.getMinutes();
     const ap = d.getHours() < 12 ? 'AM' : 'PM';
     return m ? `${h}:${String(m).padStart(2, '0')} ${ap}` : `${h} ${ap}`;
   }
+  function fmtRange(e) {
+    if (e.allDay) return 'All day';
+    const s = fmtTime(e._start);
+    if (!e._end || e._end <= e._start) return s;
+    // "7–9:30 PM" when both halves share a meridian
+    const sap = e._start.getHours() < 12 ? 'AM' : 'PM', eap = e._end.getHours() < 12 ? 'AM' : 'PM';
+    const endStr = fmtTime(e._end);
+    if (sap === eap && e._end.getDate() === e._start.getDate()) return `${s.replace(' ' + sap, '')}–${endStr}`;
+    return `${s} – ${endStr}`;
+  }
 
   const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const MON_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'];
 
-  function dayLabel(dateStr, todayKey, tomorrowKey) {
-    const d = new Date(dateStr + 'T12:00:00');
-    const cal = `${DAY_NAMES[d.getDay()]}, ${MON_NAMES[d.getMonth()]} ${d.getDate()}`;
-    if (dateStr === todayKey) return `Today — ${cal}`;
-    if (dateStr === tomorrowKey) return `Tomorrow — ${cal}`;
-    return cal;
+  function relDay(dateStr, todayKey, tomorrowKey) {
+    if (dateStr === todayKey) return 'Today';
+    if (dateStr === tomorrowKey) return 'Tomorrow';
+    const d = fromKey(dateStr);
+    return `${DAY_SHORT[d.getDay()]} ${d.getDate()}`;
+  }
+
+  /* Short, scannable price: "$17–23", "$6", "From $35", "$" when it's prose. */
+  function shortPrice(e) {
+    if (e.free === true || e.minPrice === 0) return { text: 'Free', cls: 'is-free' };
+    const p = (e.price || '').trim();
+    if (!p) return { text: '', cls: 'is-unknown' };
+    const m = p.match(/\$\s?(\d+(?:\.\d{1,2})?)(?:\s?[-–—]\s?\$?\s?(\d+(?:\.\d{1,2})?))?/);
+    if (!m) return { text: p.length <= 10 ? p : '$', cls: '' };
+    const amounts = [...p.matchAll(/\$\s?(\d+(?:\.\d{1,2})?)/g)].map((x) => parseFloat(x[1]));
+    const clean = (n) => String(n).replace(/\.00$/, '');
+    const a = clean(m[1]), b = m[2] ? clean(m[2]) : null;
+    if (b && amounts.length <= 2) return { text: `$${a}–${b}`, cls: '' };
+    if (amounts.length > 2 || (!b && amounts.length > 1) || /and up|\+|various|^from|starting/i.test(p))
+      return { text: `From $${clean(Math.min(...amounts))}`, cls: '' };
+    return { text: `$${a}`, cls: '' };
+  }
+
+  function pickKind(e) {
+    const s = e.signals || {};
+    if (s.own_group) return 'own';
+    if (s.staff_pick) return '7d';
+    return null;
   }
 
   /* ---------------- data load ---------------- */
@@ -79,108 +131,183 @@
       .filter((e) => e.status === 'active')
       .map((e) => {
         e._start = new Date(e.start);
+        e._end = e.end ? new Date(e.end) : null;
         e._search = `${e.title} ${e.venue || ''} ${e.town || ''} ${e.description || ''}`.toLowerCase();
         return e;
       });
-    // long-running exhibits/series live in their own strip, not day groups
-    state.ongoing = active.filter((e) => (e.tags || []).includes('ongoing'));
-    state.events = active.filter((e) => !(e.tags || []).includes('ongoing'));
+    state.ongoing = active.filter((e) => hasTag(e, 'ongoing'));
+    state.events = active.filter((e) => !hasTag(e, 'ongoing'));
+    state.events.forEach((e) => state.byId.set(e.id, e));
     $('ev-loading').hidden = true;
     if (payload.generated) {
       const g = new Date(payload.generated);
       $('ev-generated').textContent =
         `Calendar refreshed ${MON_NAMES[g.getMonth()]} ${g.getDate()}, ${fmtTime(g)}`;
     }
-    initFilters();
+    initTowns();
     readParams();
-    renderBuckets();
-    renderCalendar();
+    renderHero();
+    renderPicks();
+    renderAll();
+    if (state.openId) openEvent(state.openId, { scroll: true });
   }
 
-  /* ---------------- buckets ---------------- */
+  function loadWeather() {
+    fetch('data/weather/latest.json', { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((w) => {
+        if (!w || !w.now || typeof w.now.temp_f !== 'number') return;
+        const desc = (w.now.description || '').toLowerCase();
+        const icon = /thunder/.test(desc) ? '⛈' : /rain|shower|drizzle/.test(desc) ? '🌧'
+          : /snow|flurr/.test(desc) ? '❄' : /fog|haze|mist|smoke/.test(desc) ? '🌫'
+          : /cloud|overcast/.test(desc) ? '☁' : '☀';
+        let sunBit = '';
+        const now = new Date();
+        if (w.sun && w.sun.sunset) {
+          const ss = new Date(w.sun.sunset);
+          if (now < ss) sunBit = `sunset ${fmtTime(ss)}`;
+          else if (w.sun.sunrise_tomorrow) sunBit = `sunrise ${fmtTime(new Date(w.sun.sunrise_tomorrow))}`;
+        }
+        const el = $('ev-wx');
+        el.innerHTML = `<span aria-hidden="true">${icon}</span><b>${Math.round(w.now.temp_f)}°</b>` +
+          `<span>${esc(w.now.description || '')}</span>` +
+          (sunBit ? `<span class="ev-wx-sep">·</span><span>${esc(sunBit)}</span>` : '');
+        el.hidden = false;
+      })
+      .catch(() => {});
+  }
 
-  function bucketDefs() {
+  /* ---------------- time helpers ---------------- */
+
+  function nowCtx() {
     const now = new Date();
     const todayKey = dkey(now);
     const late = now.getHours() >= 22;      // after 10pm: pivot to tomorrow
     const refKey = late ? dkey(addDays(now, 1)) : todayKey;
     const evening = now.getHours() >= 16;
     const dayWord = late ? 'tomorrow' : (evening ? 'tonight' : 'today');
-
-    const onRef = state.events.filter((e) => e.date === refKey);
-    // "still attendable": all-day, or hasn't started more than an hour ago
-    const alive = onRef.filter((e) => e.allDay || e._start >= new Date(now - 3600e3));
-    const tonight = alive.filter((e) => e.allDay || e._start.getHours() >= 16 || late || !evening);
-    const in2h = late ? [] : onRef.filter((e) => !e.allDay &&
-      e._start >= now && e._start <= new Date(+now + 2 * 3600e3));
-
-    const defs = [
-      { key: 'tonight', label: late ? 'Tomorrow' : (evening ? 'Tonight' : 'Today'), list: tonight },
-      { key: 'in2h', label: 'Starting in the next 2 hours', list: in2h },
-      { key: 'free', label: `Free ${dayWord}`, list: tonight.filter((e) => e.free === true) },
-      { key: 'music', label: 'Live music', list: alive.filter((e) => e.category === 'music') },
-      { key: 'social', label: 'Actually social', list: alive.filter((e) => (e.tags || []).includes('social')),
-        hint: 'showing up alone is normal' },
-      { key: 'outside', label: 'Outside', list: alive.filter((e) => e.indoorOutdoor === 'outdoor') },
-      { key: 'under15', label: 'Under $15', list: tonight.filter((e) => e.free === true ||
-        (e.minPrice != null && e.minPrice > 0 && e.minPrice < 15)) },
-    ];
-    return { defs: defs.filter((d) => d.list.length > 0), refKey, dayWord, tonightCount: tonight.length };
+    return { now, todayKey, tomorrowKey: dkey(addDays(now, 1)), late, refKey, evening, dayWord };
   }
 
-  function renderBuckets() {
-    const { defs, dayWord, tonightCount } = bucketDefs();
-    const now = new Date();
-    $('ev-hero-sub').textContent =
-      `${DAY_NAMES[now.getDay()]} ${now.getHours() >= 17 ? 'evening' : now.getHours() >= 12 ? 'afternoon' : 'morning'} in Burlington` +
-      (tonightCount ? ` · ${tonightCount} things ${dayWord}` : '');
+  /* Still worth showing today: all-day, or hasn't started more than an hour ago,
+     or is clearly still running (has an end in the future). */
+  function stillOn(e, now) {
+    if (e.allDay) return true;
+    if (e._end && e._end > now && e._start <= now) return true;
+    return e._start >= new Date(+now - 3600e3);
+  }
+  function isLive(e, now) {
+    if (e.allDay) return false;
+    if (e._start > now) return false;
+    if (e._end) return e._end > now;
+    return (+now - e._start) < 2 * 3600e3;   // no end: assume ~2h
+  }
 
-    const wrap = $('ev-buckets');
+  /* ---------------- hero: right-now lenses ---------------- */
+
+  function lensDefs() {
+    const c = nowCtx();
+    const onRef = state.events.filter((e) => e.date === c.refKey);
+    const alive = onRef.filter((e) => stillOn(e, c.now));
+    const tonight = alive.filter((e) => e.allDay || e._start.getHours() >= 16 || c.late || !c.evening);
+    const in2h = c.late ? [] : onRef.filter((e) => !e.allDay &&
+      e._start >= c.now && e._start <= new Date(+c.now + 2 * 3600e3));
+    const defs = [
+      { key: 'tonight', label: c.late ? 'tomorrow' : (c.evening ? 'tonight' : 'today'), list: tonight, apply: () => {} },
+      { key: 'soon', label: 'starting soon', list: in2h, apply: (f) => { f.soon = true; } },
+      { key: 'free', label: `free ${c.dayWord}`, list: tonight.filter(QUICK_BY_KEY.free.test), apply: (f) => f.quick.add('free') },
+      { key: 'music', label: 'live music', list: alive.filter((e) => e.category === 'music'), apply: (f) => { f.cat = 'music'; } },
+      { key: 'social', label: 'social', list: alive.filter(QUICK_BY_KEY.social.test), apply: (f) => f.quick.add('social') },
+      { key: 'outdoors', label: 'outside', list: alive.filter(QUICK_BY_KEY.outdoors.test), apply: (f) => f.quick.add('outdoors') },
+      { key: 'under15', label: 'under $15', list: tonight.filter(QUICK_BY_KEY.under15.test), apply: (f) => f.quick.add('under15') },
+    ];
+    return { defs: defs.filter((d) => d.list.length > 0), ctx: c, tonightCount: tonight.length };
+  }
+
+  function renderHero() {
+    const { defs, ctx, tonightCount } = lensDefs();
+    const h = ctx.now.getHours();
+    $('ev-hero-sub').textContent =
+      `${DAY_NAMES[ctx.now.getDay()]} ${h >= 17 ? 'evening' : h >= 12 ? 'afternoon' : 'morning'} in Burlington` +
+      (tonightCount ? ` · ${tonightCount} things ${ctx.dayWord}` : '');
+
+    const wrap = $('ev-now');
     wrap.innerHTML = '';
+    if (!defs.length) { wrap.hidden = true; return; }
+    wrap.hidden = false;
+    wrap.insertAdjacentHTML('beforeend', '<span class="ev-now-label">Right now</span>');
     defs.forEach((d) => {
       const btn = document.createElement('button');
-      btn.className = 'ev-bucket';
+      btn.className = 'ev-now-chip';
       btn.setAttribute('role', 'listitem');
-      btn.innerHTML =
-        `<span class="ev-bucket-n">${d.list.length}</span>` +
-        `<span class="ev-bucket-label">${esc(d.label)}</span>` +
-        (d.hint ? `<span class="ev-bucket-hint">${esc(d.hint)}</span>` : '');
-      btn.addEventListener('click', () => toggleBucket(d, btn));
+      btn.dataset.lens = d.key;
+      btn.innerHTML = `<b>${d.list.length}</b><span>${esc(d.label)}</span>`;
+      btn.addEventListener('click', () => {
+        resetFilters({ keepQ: false });
+        state.filters.when = 'day';
+        state.filters.day = ctx.refKey;
+        d.apply(state.filters);
+        setView('list');
+        renderAll();
+        $('ev-bar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
       wrap.appendChild(btn);
     });
+    syncLensChips();
   }
 
-  function toggleBucket(def, btn) {
-    const panel = $('ev-bucket-panel');
-    if (state.activeBucket === def.key) { closeBucket(); return; }
-    state.activeBucket = def.key;
-    document.querySelectorAll('.ev-bucket').forEach((b) => b.removeAttribute('data-open'));
-    btn.setAttribute('data-open', 'true');
-    $('ev-bucket-panel-title').textContent = `${def.label} · ${def.list.length}`;
-    const list = $('ev-bucket-panel-list');
-    list.innerHTML = '';
-    def.list.slice().sort((a, b) => (a.allDay ? -1 : b.allDay ? 1 : a._start - b._start))
-      .forEach((e) => list.appendChild(card(e)));
-    panel.hidden = false;
-    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  function closeBucket() {
-    state.activeBucket = null;
-    $('ev-bucket-panel').hidden = true;
-    document.querySelectorAll('.ev-bucket').forEach((b) => b.removeAttribute('data-open'));
-  }
-
-  /* ---------------- filtering ---------------- */
-
-  function initFilters() {
-    const cats = new Set(), towns = new Set();
-    state.events.forEach((e) => { if (e.category) cats.add(e.category); if (e.town) towns.add(e.town); });
-    const catSel = $('ev-f-category');
-    Object.keys(CATEGORY_LABELS).filter((c) => cats.has(c)).forEach((c) => {
-      catSel.insertAdjacentHTML('beforeend',
-        `<option value="${c}">${CATEGORY_LABELS[c]}</option>`);
+  function syncLensChips() {
+    const f = state.filters;
+    const c = nowCtx();
+    document.querySelectorAll('.ev-now-chip').forEach((b) => {
+      const k = b.dataset.lens;
+      let on = f.when === 'day' && f.day === c.refKey && !f.q && !f.town;
+      if (on) {
+        const q = [...f.quick];
+        if (k === 'tonight') on = !f.soon && !f.cat && q.length === 0;
+        else if (k === 'soon') on = f.soon && !f.cat && q.length === 0;
+        else if (k === 'music') on = f.cat === 'music' && !f.soon && q.length === 0;
+        else on = !f.soon && !f.cat && q.length === 1 && q[0] === k;
+      }
+      b.setAttribute('aria-pressed', String(on));
     });
+  }
+
+  /* ---------------- picks ---------------- */
+
+  function renderPicks() {
+    const c = nowCtx();
+    const hi = dkey(addDays(c.now, 13));
+    const picks = state.events
+      .filter((e) => pickKind(e) && e.date >= c.todayKey && e.date <= hi && (e.date !== c.todayKey || stillOn(e, c.now)))
+      .sort((a, b) => a._start - b._start)
+      .slice(0, 10);
+    const sec = $('ev-picks');
+    if (picks.length < 2) { sec.hidden = true; return; }
+    sec.hidden = false;
+    $('ev-picks-sub').textContent = 'Seven Days staff picks + Steve’s own Meetup, next two weeks';
+    const row = $('ev-picks-row');
+    row.innerHTML = '';
+    picks.forEach((e) => {
+      const kind = pickKind(e);
+      const btn = document.createElement('button');
+      btn.className = 'ev-pick-card';
+      btn.type = 'button';
+      btn.innerHTML =
+        `<span class="ev-pick-tag${kind === 'own' ? ' is-own' : ''}">${kind === 'own' ? 'Steve’s Meetup' : '7 Days pick'}</span>` +
+        `<span class="ev-pick-title">${esc(e.title)}</span>` +
+        `<span class="ev-pick-meta"><b>${esc(relDay(e.date, c.todayKey, c.tomorrowKey))}</b> · ${esc(e.allDay ? 'All day' : fmtTime(e._start))}` +
+        `${e.venue ? ' · ' + esc(e.venue) : ''}</span>`;
+      btn.addEventListener('click', () => openEvent(e.id, { scroll: true }));
+      row.appendChild(btn);
+    });
+  }
+
+  /* ---------------- filters ---------------- */
+
+  function initTowns() {
+    const towns = new Set();
+    state.events.forEach((e) => { if (e.town) towns.add(e.town); });
     const townSel = $('ev-f-town');
     ['Burlington', ...[...towns].filter((t) => t !== 'Burlington').sort()].forEach((t) => {
       if (towns.has(t)) townSel.insertAdjacentHTML('beforeend',
@@ -188,13 +315,42 @@
     });
   }
 
+  function resetFilters({ keepQ } = {}) {
+    const f = state.filters;
+    f.when = 'all'; f.day = null; f.cat = ''; f.town = ''; f.quick = new Set(); f.soon = false;
+    if (!keepQ) { f.q = ''; $('ev-search').value = ''; }
+    $('ev-f-town').value = '';
+    state.daysShown = 7;
+  }
+
   function readParams() {
     const p = new URLSearchParams(location.search);
-    if (p.get('when')) state.filters.when = p.get('when');
-    if (p.get('cat')) { state.filters.cat = p.get('cat'); $('ev-f-category').value = p.get('cat'); }
-    if (p.get('town')) { state.filters.town = p.get('town'); $('ev-f-town').value = p.get('town'); }
-    if (p.get('price')) { state.filters.price = p.get('price'); $('ev-f-price').value = p.get('price'); }
-    syncWhenPills();
+    const f = state.filters;
+    const when = p.get('when');
+    if (when) f.when = when;
+    if (p.get('d') && /^\d{4}-\d{2}-\d{2}$/.test(p.get('d'))) { f.when = 'day'; f.day = p.get('d'); }
+    if (p.get('cat') && CATEGORY_LABELS[p.get('cat')]) f.cat = p.get('cat');
+    if (p.get('town')) { f.town = p.get('town'); $('ev-f-town').value = f.town; }
+    if (p.get('q')) { f.q = p.get('q').toLowerCase(); $('ev-search').value = p.get('q'); }
+    if (p.get('price') === 'free') f.quick.add('free');          // legacy links
+    if (p.get('price') === 'under15') f.quick.add('under15');
+    (p.get('quick') || '').split(',').filter((k) => QUICK_BY_KEY[k]).forEach((k) => f.quick.add(k));
+    if (p.get('e')) state.openId = p.get('e');
+  }
+
+  function writeParams() {
+    const f = state.filters;
+    const p = new URLSearchParams();
+    if (f.when === 'day' && f.day) p.set('d', f.day);
+    else if (f.when && f.when !== 'all') p.set('when', f.when);
+    if (f.cat) p.set('cat', f.cat);
+    if (f.town) p.set('town', f.town);
+    if (f.q) p.set('q', f.q);
+    if (f.quick.size) p.set('quick', [...f.quick].join(','));
+    if (state.openId) p.set('e', state.openId);
+    const qs = p.toString();
+    const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
+    try { history.replaceState(null, '', url); } catch (e) { /* file:// etc. */ }
   }
 
   function whenRange() {
@@ -205,123 +361,370 @@
       case 'tomorrow': { const k = dkey(addDays(now, 1)); return [k, k]; }
       case 'weekend': {
         // upcoming Fri–Sun; if we're already inside the weekend, start today
-        const dow = now.getDay(); // 0 Sun … 5 Fri, 6 Sat
-        if (dow === 0) return [t, t];                       // Sunday: what's left
+        const dow = now.getDay();
+        if (dow === 0) return [t, t];
         const start = dow >= 5 ? now : addDays(now, 5 - dow);
-        const sun = addDays(start, 7 - start.getDay());     // that weekend's Sunday
+        const sun = addDays(start, 7 - start.getDay());
         return [dkey(start), dkey(sun)];
       }
       case 'week': return [t, dkey(addDays(now, 6))];
       case 'twoweeks': return [t, dkey(addDays(now, 13))];
       case 'month': return [t, dkey(addDays(now, 29))];
-      // a single day, picked out of the month grid
       case 'day': return state.filters.day ? [state.filters.day, state.filters.day] : [t, '9999-12-31'];
       default: return [t, '9999-12-31'];
     }
   }
 
-  /* Everything EXCEPT the date window. Split out so the month grid can count a
-     day's events without the "Next 30 days" pill hiding half the calendar —
-     the grid has to show every day it draws, or its numbers are a lie. */
-  function matchesNonDate(e) {
+  /* Everything EXCEPT the date window. Split out so day-strip counts and the
+     month grid can count honestly whatever range is selected. */
+  function matchesNonDate(e, opts = {}) {
     const f = state.filters;
-    if (f.cat && e.category !== f.cat) return false;
+    if (!opts.ignoreCat && f.cat && e.category !== f.cat) return false;
     if (f.town && e.town !== f.town) return false;
-    if (f.price === 'free' && e.free !== true) return false;
-    if (f.price === 'under15' && !(e.free === true ||
-      (e.minPrice != null && e.minPrice < 15))) return false;
-    if (f.age === 'allages' && /\b(18|21)\s*\+/.test(e.age || '')) return false;
-    if (f.age === '21' && !/\b(18|21)\s*\+/.test(e.age || '')) return false;
-    // 'series' = a weekly regular (trivia, karaoke). Readers can ask for only
-    // the one-off special stuff, or only the reliable regulars.
-    const isSeries = (e.tags || []).includes('series');
-    if (f.repeat === 'oneoff' && isSeries) return false;
-    if (f.repeat === 'series' && !isSeries) return false;
+    for (const k of f.quick) {
+      if (opts.ignoreQuick === k) continue;
+      if (!QUICK_BY_KEY[k].test(e)) return false;
+    }
     if (f.q && !e._search.includes(f.q)) return false;
     return true;
   }
 
-  function filtered() {
-    const [lo, hi] = whenRange();
-    const now = new Date();
-    const todayKey = dkey(now);
-    return state.events.filter((e) => {
-      if (e.date < lo || e.date > hi) return false;
-      // today: hide things that started more than an hour ago
-      if (e.date === todayKey && !e.allDay && e._start < new Date(+now - 3600e3)) return false;
-      return matchesNonDate(e);
-    });
+  function inDateWindow(e, lo, hi, c) {
+    if (e.date < lo || e.date > hi) return false;
+    if (e.date === c.todayKey && !stillOn(e, c.now)) return false;
+    if (state.filters.soon) {
+      if (e.allDay || e._start < c.now || e._start > new Date(+c.now + 2 * 3600e3)) return false;
+    }
+    return true;
   }
 
-  /* ---------------- event card ---------------- */
+  function filtered(opts) {
+    const [lo, hi] = whenRange();
+    const c = nowCtx();
+    return state.events.filter((e) => inDateWindow(e, lo, hi, c) && matchesNonDate(e, opts));
+  }
 
-  function badge(text, cls) { return `<span class="ev-badge ${cls || ''}">${esc(text)}</span>`; }
+  /* ---------------- day strip ---------------- */
 
-  function card(e) {
+  function dayTabs() {
+    const c = nowCtx();
+    const f = state.filters;
+    // counts per date, honoring every non-date filter + the today grace rule
+    const counts = new Map();
+    state.events.forEach((e) => {
+      if (e.date < c.todayKey) return;
+      if (e.date === c.todayKey && !stillOn(e, c.now)) return;
+      if (!matchesNonDate(e)) return;
+      counts.set(e.date, (counts.get(e.date) || 0) + 1);
+    });
+    let total = 0; counts.forEach((n) => { total += n; });
+    const dow = c.now.getDay();
+    let wkLo, wkHi;
+    if (dow === 0) { wkLo = wkHi = c.todayKey; }
+    else { const s = dow >= 5 ? c.now : addDays(c.now, 5 - dow); wkLo = dkey(s); wkHi = dkey(addDays(s, 7 - s.getDay())); }
+    let wk = 0; counts.forEach((n, k) => { if (k >= wkLo && k <= wkHi) wk += n; });
+
+    const tabs = [
+      { id: 'all', label: 'Upcoming', n: total, on: f.when === 'all' || ['week', 'twoweeks', 'month'].includes(f.when) },
+      { id: 'today', label: 'Today', n: counts.get(c.todayKey) || 0, on: f.when === 'today' || (f.when === 'day' && f.day === c.todayKey), today: true, day: c.todayKey },
+      { id: 'tomorrow', label: 'Tomorrow', n: counts.get(c.tomorrowKey) || 0, on: f.when === 'tomorrow' || (f.when === 'day' && f.day === c.tomorrowKey), day: c.tomorrowKey },
+      { id: 'weekend', label: dow >= 5 || dow === 0 ? 'This weekend' : 'Weekend', n: wk, on: f.when === 'weekend', sep: true },
+    ];
+    for (let i = 2; i <= 13; i++) {
+      const k = dkey(addDays(c.now, i));
+      const d = fromKey(k);
+      tabs.push({ id: 'day:' + k, label: `${DAY_SHORT[d.getDay()]} ${d.getDate()}`, n: counts.get(k) || 0,
+        on: f.when === 'day' && f.day === k, day: k, sep: i === 2 });
+    }
+    return tabs;
+  }
+
+  function renderDays() {
+    const wrap = $('ev-days');
+    wrap.innerHTML = '';
+    dayTabs().forEach((t) => {
+      const b = document.createElement('button');
+      b.className = 'ev-daytab' + (t.today ? ' is-now' : '') + (t.sep ? ' is-sep' : '') + (t.n === 0 ? ' is-empty' : '');
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', String(!!t.on));
+      b.dataset.tab = t.id;
+      b.innerHTML = `<span class="ev-daytab-l">${esc(t.label)}</span><span class="ev-daytab-n">${t.n}</span>`;
+      b.addEventListener('click', () => {
+        const f = state.filters;
+        f.soon = false;
+        if (t.id === 'all') { f.when = 'all'; f.day = null; }
+        else if (t.id === 'weekend') { f.when = 'weekend'; f.day = null; }
+        else { f.when = 'day'; f.day = t.day; }
+        state.daysShown = 7;
+        setView('list');
+        renderAll();
+      });
+      wrap.appendChild(b);
+    });
+    const sel = wrap.querySelector('[aria-selected="true"]');
+    if (sel && wrap.scrollWidth > wrap.clientWidth) {
+      const left = sel.offsetLeft - 12;
+      if (left < wrap.scrollLeft || sel.offsetLeft + sel.offsetWidth > wrap.scrollLeft + wrap.clientWidth - 28)
+        wrap.scrollTo({ left: Math.max(0, left), behavior: 'auto' });
+    }
+  }
+
+  /* ---------------- chips ---------------- */
+
+  function renderChips() {
+    const f = state.filters;
+    const [lo, hi] = whenRange();
+    const c = nowCtx();
+    const inWin = state.events.filter((e) => inDateWindow(e, lo, hi, c));
+
+    // quick chips — each counted as if it were the only quick filter
+    const qw = $('ev-quick');
+    qw.innerHTML = '';
+    QUICK.forEach((q) => {
+      const n = inWin.filter((e) => q.test(e) && matchesNonDate(e, { ignoreQuick: q.key })).length;
+      const b = document.createElement('button');
+      b.className = 'ev-chip' + (q.key === 'free' ? ' ev-chip-free' : '') + (n === 0 && !f.quick.has(q.key) ? ' is-zero' : '');
+      b.setAttribute('aria-pressed', String(f.quick.has(q.key)));
+      if (q.title) b.title = q.title;
+      b.innerHTML = `${esc(q.label)}<span class="ev-chip-n">${n}</span>`;
+      b.addEventListener('click', () => {
+        if (f.quick.has(q.key)) f.quick.delete(q.key); else f.quick.add(q.key);
+        state.daysShown = 7;
+        renderAll();
+      });
+      qw.appendChild(b);
+    });
+
+    // category chips — single select, counted against everything but category
+    const cw = $('ev-cats');
+    cw.innerHTML = '';
+    const catCounts = new Map();
+    inWin.forEach((e) => { if (matchesNonDate(e, { ignoreCat: true })) catCounts.set(e.category || 'other', (catCounts.get(e.category || 'other') || 0) + 1); });
+    const allN = [...catCounts.values()].reduce((a, b) => a + b, 0);
+    const mk = (key, label, n) => {
+      const b = document.createElement('button');
+      b.className = 'ev-chip' + (key ? ' ev-cat-' + key : '') + (n === 0 && f.cat !== key ? ' is-zero' : '');
+      b.setAttribute('aria-pressed', String(f.cat === key));
+      b.innerHTML = (key ? '<span class="ev-dot" aria-hidden="true"></span>' : '') + `${esc(label)}<span class="ev-chip-n">${n}</span>`;
+      b.addEventListener('click', () => { f.cat = (f.cat === key) ? '' : key; state.daysShown = 7; renderAll(); });
+      return b;
+    };
+    cw.appendChild(mk('', 'All', allN));
+    CAT_ORDER.forEach((k) => {
+      const n = catCounts.get(k) || 0;
+      if (!n && f.cat !== k && !state.events.some((e) => e.category === k)) return;
+      cw.appendChild(mk(k, CATEGORY_LABELS[k], n));
+    });
+    $('ev-f-town').dataset.on = String(!!f.town);
+  }
+
+  /* ---------------- rows ---------------- */
+
+  function row(e, c) {
     const el = document.createElement('article');
-    el.className = 'ev-card';
-    const time = e.allDay ? 'All day' : fmtTime(e._start);
-    const badges = [];
-    if (e.free === true) badges.push(badge('Free', 'ev-badge-free'));
-    else if (e.price) badges.push(badge(e.price.length > 14 ? '$' : e.price, 'ev-badge-price'));
+    el.className = 'ev-row';
+    el.id = 'e-' + e.id;
+    el.dataset.id = e.id;
+    el.tabIndex = 0;
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-expanded', 'false');
+
+    const live = e.date === c.todayKey && isLive(e, c.now);
+    let timeHtml;
+    if (e.allDay) timeHtml = '<span class="ev-t-allday">All day</span>';
+    else {
+      const h = e._start.getHours() % 12 || 12, m = e._start.getMinutes();
+      timeHtml = `<span class="ev-t-h">${h}${m ? ':' + String(m).padStart(2, '0') : ''}</span>` +
+        `<span class="ev-t-ap">${e._start.getHours() < 12 ? 'AM' : 'PM'}</span>`;
+    }
+    if (live) timeHtml = '<span class="ev-live" title="Happening now" aria-label="Happening now"></span>' + timeHtml;
+
+    const meta = [];
+    if (e.venue) meta.push(`<span class="ev-row-venue">${esc(e.venue)}</span>`);
+    if (e.town && e.town !== 'Burlington') meta.push(`<span>${esc(e.town)}</span>`);
+    else if (!e.venue && e.town) meta.push(`<span>${esc(e.town)}</span>`);
     if (e.category && e.category !== 'other')
-      badges.push(badge(CATEGORY_LABELS[e.category] || e.category, 'ev-badge-cat ev-cat-' + e.category));
-    if (e.age) badges.push(badge(e.age, 'ev-badge-age'));
-    if (e.signals && e.signals.staff_pick) badges.push(badge('7D pick', 'ev-badge-pick'));
-    if (e.recurring) badges.push(badge('Recurring', 'ev-badge-rec'));
+      meta.push(`<span class="ev-row-cat ev-cat-${esc(e.category)}"><span class="ev-dot" aria-hidden="true"></span>${esc(CATEGORY_LABELS[e.category] || e.category)}</span>`);
+    const flags = [];
+    if (hasTag(e, 'series')) flags.push('<span class="ev-row-flag" title="A weekly regular">↻ regular</span>');
+    if (e.age && !/all ages/i.test(e.age)) flags.push(`<span class="ev-row-flag">${esc(e.age)}</span>`);
+    const metaHtml = meta.join('<span class="ev-sep">·</span>') + (flags.length ? ' ' + flags.join(' ') : '');
+
+    const price = shortPrice(e);
+    const kind = pickKind(e);
+    const side =
+      (price.text ? `<span class="ev-price ${price.cls}">${esc(price.text)}</span>` : '') +
+      (kind ? `<span class="ev-pick-badge${kind === 'own' ? ' is-own' : ''}">${kind === 'own' ? 'Steve’s' : 'Pick'}</span>` : '');
 
     el.innerHTML =
-      `<div class="ev-card-time">${esc(time)}</div>` +
-      `<div class="ev-card-main">` +
-        `<h3 class="ev-card-title">${esc(e.title)}</h3>` +
-        `<p class="ev-card-where">${esc(e.venue || '')}${e.venue && e.town ? ' · ' : ''}${esc(e.town || '')}</p>` +
-        `<div class="ev-card-badges">${badges.join('')}</div>` +
-        `<div class="ev-card-detail" hidden></div>` +
+      `<div class="ev-row-time">${timeHtml}</div>` +
+      `<div class="ev-row-main">` +
+        `<h3 class="ev-row-title">${esc(e.title)}</h3>` +
+        `<p class="ev-row-meta">${metaHtml}</p>` +
       `</div>` +
-      `<div class="ev-card-chev" aria-hidden="true">›</div>`;
+      `<div class="ev-row-side">${side}</div>`;
 
     el.addEventListener('click', (ev) => {
-      if (ev.target.closest('a')) return;
-      const det = el.querySelector('.ev-card-detail');
-      if (det.hidden) { det.innerHTML = detailHtml(e); det.hidden = false; el.dataset.open = 'true'; }
-      else { det.hidden = true; delete el.dataset.open; }
+      if (ev.target.closest('a, button, .ev-row-detail')) return;
+      toggleRow(el, e);
+    });
+    el.addEventListener('keydown', (ev) => {
+      if (ev.target !== el) return;
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggleRow(el, e); }
     });
     return el;
   }
 
+  function toggleRow(el, e) {
+    const open = el.getAttribute('aria-expanded') === 'true';
+    if (open) {
+      el.querySelector('.ev-row-detail')?.remove();
+      el.setAttribute('aria-expanded', 'false');
+      if (state.openId === e.id) state.openId = null;
+    } else {
+      const det = document.createElement('div');
+      det.className = 'ev-row-detail';
+      det.innerHTML = detailHtml(e);
+      wireDetail(det, e);
+      el.appendChild(det);
+      el.setAttribute('aria-expanded', 'true');
+      state.openId = e.id;
+    }
+    writeParams();
+  }
+
+  function openEvent(id, { scroll } = {}) {
+    const e = state.byId.get(id);
+    if (!e) return;
+    if (state.openId && state.openId !== id) {
+      const prev = document.getElementById('e-' + state.openId);
+      const pe = state.byId.get(state.openId);
+      if (prev && pe && prev.getAttribute('aria-expanded') === 'true') toggleRow(prev, pe);
+      state.openId = null;
+    }
+    let el = document.getElementById('e-' + id);
+    if (!el) {
+      // not in the current view: show its day, then find it
+      resetFilters({ keepQ: false });
+      state.filters.when = 'day';
+      state.filters.day = e.date;
+      setView('list');
+      renderAll();
+      el = document.getElementById('e-' + id);
+      if (!el) return;
+    }
+    if (el.getAttribute('aria-expanded') !== 'true') toggleRow(el, e);
+    if (scroll) {
+      const y = el.getBoundingClientRect().top + window.scrollY - (60 + 58 + 52);
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    }
+  }
+
   function detailHtml(e) {
+    const parts = [];
+    if (e.description) parts.push(`<p class="ev-d-desc">${esc(e.description)}</p>`);
     const rows = [];
-    if (e.description) rows.push(`<p class="ev-d-desc">${esc(e.description)}</p>`);
-    if (e.recurring) rows.push(`<p class="ev-d-row">↻ ${esc(e.recurring)}</p>`);
-    if (e.address) rows.push(`<p class="ev-d-row">📍 ${esc(e.address)}</p>`);
-    if (e.price && e.price.length > 14) rows.push(`<p class="ev-d-row">🎟 ${esc(e.price)}</p>`);
+    const d = fromKey(e.date);
+    rows.push(`<span class="ev-d-row-k" aria-hidden="true">🕒</span><span>${esc(`${DAY_NAMES[d.getDay()]}, ${MON_NAMES[d.getMonth()]} ${d.getDate()} · ${fmtRange(e)}`)}</span>`);
+    if (e.recurring) rows.push(`<span class="ev-d-row-k" aria-hidden="true">↻</span><span>${esc(e.recurring)}</span>`);
+    const place = [e.venue, e.address].filter(Boolean).join(' — ');
+    if (place) {
+      const q = encodeURIComponent(e.address || `${e.venue}, ${e.town || 'Burlington'} VT`);
+      rows.push(`<span class="ev-d-row-k" aria-hidden="true">📍</span><span>${esc(place)} <a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">map ↗</a></span>`);
+    }
+    if (e.price && !(e.free === true && /^free\.?$/i.test(e.price.trim()))) rows.push(`<span class="ev-d-row-k" aria-hidden="true">🎟</span><span>${esc(e.price)}</span>`);
+    if (e.age) rows.push(`<span class="ev-d-row-k" aria-hidden="true">🪪</span><span>${esc(e.age)}</span>`);
+    parts.push(`<div class="ev-d-rows">${rows.map((r) => `<p class="ev-d-row">${r}</p>`).join('')}</div>`);
+
     const links = (e.sources && e.sources.length ? e.sources : [{ source: e.source, url: e.url }])
+      .filter((s) => s.url)
       .map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(sourceLabel(s.source))} ↗</a>`);
-    rows.push(`<p class="ev-d-links">${links.join(' · ')}</p>`);
-    return rows.join('');
+    parts.push(
+      `<div class="ev-d-actions">` +
+        (e.url ? `<a class="ev-act ev-act-primary" href="${esc(e.url)}" target="_blank" rel="noopener">Details &amp; tickets ↗</a>` : '') +
+        `<a class="ev-act" data-act="gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener">+ Google Cal</a>` +
+        `<a class="ev-act" data-act="ics" href="${esc(icsUrl(e))}" download="${esc(slug(e.title))}.ics">+ Apple / .ics</a>` +
+        `<button class="ev-act" data-act="share" type="button">Share</button>` +
+        (links.length ? `<span class="ev-d-sources">via ${links.join(' · ')}</span>` : '') +
+      `</div>`);
+    return parts.join('');
+  }
+
+  function wireDetail(det, e) {
+    det.querySelector('[data-act="share"]')?.addEventListener('click', async () => {
+      const url = location.origin + location.pathname + '?e=' + encodeURIComponent(e.id);
+      const text = `${e.title} — ${DAY_SHORT[fromKey(e.date).getDay()]} ${fmtRange(e)}${e.venue ? ' at ' + e.venue : ''}`;
+      if (navigator.share) {
+        try { await navigator.share({ title: e.title, text, url }); return; } catch (err) { if (err && err.name === 'AbortError') return; }
+      }
+      try { await navigator.clipboard.writeText(url); toast('Link copied'); }
+      catch (err) { toast(url); }
+    });
   }
 
   const SOURCE_LABELS = {
     sevendays: 'Seven Days', helloburlington: 'Hello Burlington', loveburlington: 'Love Burlington',
     flynn: 'The Flynn', higherground: 'Higher Ground', vcc: 'Vermont Comedy Club',
     fletcherfree: 'Fletcher Free Library', sblibrary: 'South Burlington Library',
-    winooskilibrary: 'Winooski Library', eventbrite: 'Eventbrite', meetup: 'Meetup',
+    winooskilibrary: 'Winooski Library', brownell: 'Brownell Library', eventbrite: 'Eventbrite', meetup: 'Meetup',
     uvm: 'UVM', uvmbored: 'UVM Bored', bca: 'Burlington City Arts', echo: 'ECHO',
     shelburnemuseum: 'Shelburne Museum', farmersmarket: 'Farmers Market',
     churchst: 'Church St Marketplace', parksrec: 'Burlington Parks & Rec',
     sbrec: 'South Burlington Rec', greenfc: 'Vermont Green FC', breweries: 'Venue site',
     champlainvalley: 'Champlain Valley calendar', facebook: 'Facebook', instagram: 'Instagram',
+    fpf: 'Front Porch Forum',
   };
   function sourceLabel(s) { return SOURCE_LABELS[s] || s || 'Source'; }
 
-  /* ---------------- calendar list ---------------- */
+  /* ---------------- calendar links ---------------- */
 
-  function renderCalendar() {
+  function pad2(n) { return String(n).padStart(2, '0'); }
+  function utcStamp(d) {
+    return d.getUTCFullYear() + pad2(d.getUTCMonth() + 1) + pad2(d.getUTCDate()) + 'T' +
+      pad2(d.getUTCHours()) + pad2(d.getUTCMinutes()) + '00Z';
+  }
+  function dateStamp(k) { return k.replace(/-/g, ''); }
+  function nextDayKey(k) { return dkey(addDays(fromKey(k), 1)); }
+  function slug(s) { return String(s || 'event').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 60) || 'event'; }
+  function endOf(e) { return e._end && e._end > e._start ? e._end : new Date(+e._start + 2 * 3600e3); }
+  function locStr(e) { return [e.venue, e.address || e.town].filter(Boolean).join(', '); }
+
+  function gcalUrl(e) {
+    const p = new URLSearchParams();
+    p.set('action', 'TEMPLATE');
+    p.set('text', e.title);
+    p.set('dates', e.allDay ? `${dateStamp(e.date)}/${dateStamp(nextDayKey(e.date))}` : `${utcStamp(e._start)}/${utcStamp(endOf(e))}`);
+    if (locStr(e)) p.set('location', locStr(e));
+    p.set('details', [(e.description || '').slice(0, 800), e.url || ''].filter(Boolean).join('\n\n'));
+    p.set('ctz', 'America/New_York');
+    return 'https://calendar.google.com/calendar/render?' + p.toString();
+  }
+
+  function icsUrl(e) {
+    const escI = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/[,;]/g, (c) => '\\' + c);
+    const lines = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Btown Brief//Events//EN', 'BEGIN:VEVENT',
+      `UID:${e.id}@guide.btownbrief.com`,
+      `DTSTAMP:${utcStamp(new Date())}`,
+      e.allDay ? `DTSTART;VALUE=DATE:${dateStamp(e.date)}` : `DTSTART:${utcStamp(e._start)}`,
+      e.allDay ? `DTEND;VALUE=DATE:${dateStamp(nextDayKey(e.date))}` : `DTEND:${utcStamp(endOf(e))}`,
+      `SUMMARY:${escI(e.title)}`,
+    ];
+    if (locStr(e)) lines.push(`LOCATION:${escI(locStr(e))}`);
+    const desc = [(e.description || '').slice(0, 800), e.url || ''].filter(Boolean).join('\n\n');
+    if (desc) lines.push(`DESCRIPTION:${escI(desc)}`);
+    if (e.url) lines.push(`URL:${e.url}`);
+    lines.push('END:VEVENT', 'END:VCALENDAR');
+    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lines.join('\r\n'));
+  }
+
+  /* ---------------- list ---------------- */
+
+  function renderList() {
     const evs = filtered();
-    const now = new Date();
-    const todayKey = dkey(now), tomorrowKey = dkey(addDays(now, 1));
+    const c = nowCtx();
+    const f = state.filters;
 
-    // group by date
     const groups = new Map();
     evs.forEach((e) => {
       if (!groups.has(e.date)) groups.set(e.date, []);
@@ -335,29 +738,61 @@
     shown.forEach((dateStr) => {
       const g = document.createElement('section');
       g.className = 'ev-day';
-      g.innerHTML = `<h3 class="ev-day-head">${esc(dayLabel(dateStr, todayKey, tomorrowKey))}` +
-        `<span class="ev-day-n">${groups.get(dateStr).length}</span></h3>`;
+      const d = fromKey(dateStr);
+      const rel = dateStr === c.todayKey ? 'Today' : dateStr === c.tomorrowKey ? 'Tomorrow' : DAY_NAMES[d.getDay()];
+      const cal = dateStr === c.todayKey || dateStr === c.tomorrowKey
+        ? `${DAY_NAMES[d.getDay()]}, ${MON_NAMES[d.getMonth()]} ${d.getDate()}`
+        : `${MON_NAMES[d.getMonth()]} ${d.getDate()}`;
+      g.innerHTML = `<h3 class="ev-day-head"><span>${rel}</span><span class="ev-day-cal">${cal}</span>` +
+        `<span class="ev-day-n">${groups.get(dateStr).length} event${groups.get(dateStr).length === 1 ? '' : 's'}</span></h3>`;
       const frag = document.createDocumentFragment();
       groups.get(dateStr)
         .sort((a, b) => (a.allDay && b.allDay) ? a.title.localeCompare(b.title)
           : a.allDay ? -1 : b.allDay ? 1 : a._start - b._start)
-        .forEach((e) => frag.appendChild(card(e)));
+        .forEach((e) => frag.appendChild(row(e, c)));
       g.appendChild(frag);
       listEl.appendChild(g);
     });
 
     renderOngoing();
 
-    $('ev-more').hidden = dates.length <= state.daysShown;
+    const more = $('ev-more');
+    more.hidden = dates.length <= state.daysShown;
+    if (!more.hidden) {
+      const rest = dates.length - state.daysShown;
+      more.textContent = `Show ${Math.min(7, rest)} more day${Math.min(7, rest) === 1 ? '' : 's'} (${rest} left)`;
+    }
     $('ev-empty').hidden = evs.length > 0;
+
+    // status line
+    let scope;
+    if (f.when === 'day' && f.day) scope = f.day === c.todayKey ? 'today' : f.day === c.tomorrowKey ? 'tomorrow'
+      : `${DAY_SHORT[fromKey(f.day).getDay()]} ${MON_NAMES[fromKey(f.day).getMonth()]} ${fromKey(f.day).getDate()}`;
+    else if (f.when === 'weekend') scope = 'this weekend';
+    else if (f.when === 'today') scope = 'today';
+    else if (f.when === 'tomorrow') scope = 'tomorrow';
+    else scope = `the next ${dates.length} day${dates.length === 1 ? '' : 's'}`;
     $('ev-count').textContent = evs.length
-      ? `${evs.length} event${evs.length === 1 ? '' : 's'} · ${dates.length} day${dates.length === 1 ? '' : 's'}`
+      ? `${evs.length} event${evs.length === 1 ? '' : 's'} ${scope}${f.soon ? ' · starting in the next 2 hours' : ''}`
       : '';
+    $('ev-clear').hidden = !(f.q || f.cat || f.town || f.quick.size || f.soon);
 
-    const f = state.filters;
-    $('ev-clear').hidden = !(f.q || f.cat || f.town || f.price || f.age || f.repeat);
+    // keep the open card open across re-renders
+    if (state.openId) {
+      const el = document.getElementById('e-' + state.openId);
+      const e = state.byId.get(state.openId);
+      if (el && e) toggleRow(el, e);
+    }
+  }
 
-    if (state.view === 'map') renderMap(evs);
+  function renderAll() {
+    renderDays();
+    renderChips();
+    if (state.view === 'list') renderList();
+    else if (state.view === 'month') renderMonths();
+    else if (state.view === 'map') { renderList(); renderMap(filtered()); }
+    syncLensChips();
+    writeParams();
   }
 
   /* ---------------- ongoing strip ---------------- */
@@ -372,7 +807,7 @@
       (!f.cat || e.category === f.cat) &&
       (!f.town || e.town === f.town) &&
       (!f.q || e._search.includes(f.q)));
-    if (!list.length) { wrap.hidden = true; return; }
+    if (!list.length || f.soon) { wrap.hidden = true; return; }
     wrap.hidden = false;
     $('ev-ongoing-count').textContent = list.length;
     const box = $('ev-ongoing-list');
@@ -380,32 +815,23 @@
     list.sort((a, b) => (a.ongoingUntil || '').localeCompare(b.ongoingUntil || ''))
       .forEach((e) => {
         const until = e.ongoingUntil
-          ? ` — through ${MON_NAMES[new Date(e.ongoingUntil + 'T12:00:00').getMonth()]} ${new Date(e.ongoingUntil + 'T12:00:00').getDate()}`
+          ? ` — through ${MON_NAMES[fromKey(e.ongoingUntil).getMonth()]} ${fromKey(e.ongoingUntil).getDate()}`
           : '';
-        const row = document.createElement('a');
-        row.className = 'ev-ongoing-row';
-        row.href = e.url;
-        row.target = '_blank';
-        row.rel = 'noopener';
-        row.innerHTML = `<span class="ev-ongoing-title">${esc(e.title)}</span>` +
+        const a = document.createElement('a');
+        a.className = 'ev-ongoing-row';
+        a.href = e.url; a.target = '_blank'; a.rel = 'noopener';
+        a.innerHTML = `<span class="ev-ongoing-title">${esc(e.title)}</span>` +
           `<span class="ev-ongoing-meta">${esc(e.venue || e.town || '')}${esc(until)}</span>`;
-        box.appendChild(row);
+        box.appendChild(a);
       });
   }
 
-  /* ---------------- month grid ----------------
-     The list is fine for "what's on tonight" and hopeless for "what's on the
-     14th of next month" — you'd scroll for a minute. This draws BOTH months the
-     60-day window covers, so the whole dataset is one glance, and a day is one
-     click. Counts ignore the date pills (see matchesNonDate) because a grid
-     that hides days it has drawn is just lying. */
+  /* ---------------- month grid ---------------- */
 
-  const MONTHS = ['January','February','March','April','May','June','July',
-                  'August','September','October','November','December'];
-  const DOW = ['S','M','T','W','T','F','S'];
+  const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   function renderMonths() {
-    const counts = new Map();                       // 'YYYY-MM-DD' -> n
+    const counts = new Map();
     state.events.forEach((e) => {
       if (!matchesNonDate(e)) return;
       counts.set(e.date, (counts.get(e.date) || 0) + 1);
@@ -415,9 +841,7 @@
     const lo = (state.meta && state.meta.windowStart) || todayKey;
     const hi = (state.meta && state.meta.windowEnd) || todayKey;
 
-    // The months the data window actually spans — usually two.
-    const start = new Date(lo + 'T12:00:00');
-    const end = new Date(hi + 'T12:00:00');
+    const start = fromKey(lo), end = fromKey(hi);
     const months = [];
     let cur = new Date(start.getFullYear(), start.getMonth(), 1);
     while (cur <= end && months.length < 4) {
@@ -433,32 +857,25 @@
     months.forEach((m) => {
       const grid = document.createElement('div');
       grid.className = 'ev-month';
-
       let html = `<h3 class="ev-month-name">${MONTHS[m.getMonth()]} ${m.getFullYear()}</h3>`;
       html += '<div class="ev-month-grid">';
-      DOW.forEach((d, i) => { html += `<span class="ev-dow" aria-hidden="true">${d}</span>`; });
-
+      DOW.forEach((d) => { html += `<span class="ev-dow" aria-hidden="true">${d}</span>`; });
       const firstDow = new Date(m.getFullYear(), m.getMonth(), 1).getDay();
       const days = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
       for (let i = 0; i < firstDow; i++) html += '<span class="ev-day-cell ev-day-blank"></span>';
-
       for (let d = 1; d <= days; d++) {
         const key = dkey(new Date(m.getFullYear(), m.getMonth(), d));
         const n = counts.get(key) || 0;
         const inWindow = key >= lo && key <= hi;
         const isToday = key === todayKey;
-
         if (!inWindow || !n) {
-          html += `<span class="ev-day-cell ev-day-off${isToday ? ' is-today' : ''}">` +
-                  `<span class="ev-day-num">${d}</span></span>`;
+          html += `<span class="ev-day-cell ev-day-off${isToday ? ' is-today' : ''}"><span class="ev-day-num">${d}</span></span>`;
           continue;
         }
-        // heat: how busy relative to the busiest day in the window
         const heat = busiest ? Math.min(3, Math.ceil((n / busiest) * 3)) : 1;
         html += `<button class="ev-day-cell ev-day-on heat-${heat}${isToday ? ' is-today' : ''}" ` +
-                `data-day="${key}" aria-label="${n} event${n === 1 ? '' : 's'} on ${MONTHS[m.getMonth()]} ${d}">` +
-                `<span class="ev-day-num">${d}</span>` +
-                `<span class="ev-day-count">${n}</span></button>`;
+          `data-day="${key}" aria-label="${n} event${n === 1 ? '' : 's'} on ${MONTHS[m.getMonth()]} ${d}">` +
+          `<span class="ev-day-num">${d}</span><span class="ev-day-count">${n}</span></button>`;
       }
       html += '</div>';
       grid.innerHTML = html;
@@ -469,29 +886,28 @@
       b.addEventListener('click', () => {
         state.filters.when = 'day';
         state.filters.day = b.dataset.day;
-        state.daysShown = 14;
-        syncWhenPills();
+        state.filters.soon = false;
+        state.daysShown = 7;
         setView('list');
-        renderCalendar();
-        const el = $('ev-list');
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        renderAll();
+        $('ev-bar').scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
 
-    const total = [...counts.entries()]
-      .filter(([k]) => k >= lo && k <= hi)
-      .reduce((s, [, n]) => s + n, 0);
+    let total = 0;
+    counts.forEach((n, k) => { if (k >= lo && k <= hi) total += n; });
+    const fl = fromKey(lo), fh = fromKey(hi);
     $('ev-month-note').textContent =
-      `${total} events between ${lo} and ${hi}. Click any day to open it.`;
+      `${total} events between ${MON_NAMES[fl.getMonth()]} ${fl.getDate()} and ${MON_NAMES[fh.getMonth()]} ${fh.getDate()}. Click any day to open it.`;
   }
 
   /* ---------------- map ---------------- */
 
   function renderMap(evs) {
+    if (typeof L === 'undefined') { $('ev-map-note').textContent = 'The map library didn’t load.'; return; }
     const mappable = evs.filter((e) => e.lat != null && e.lng != null);
     if (!state.map) {
-      state.map = L.map('ev-map', { scrollWheelZoom: false })
-        .setView([44.4759, -73.2121], 13);
+      state.map = L.map('ev-map', { scrollWheelZoom: false }).setView([44.4759, -73.2121], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         maxZoom: 19,
@@ -500,7 +916,6 @@
     }
     state.mapLayer.clearLayers();
 
-    // group by venue location
     const byLoc = new Map();
     mappable.forEach((e) => {
       const k = e.lat.toFixed(5) + ',' + e.lng.toFixed(5);
@@ -528,85 +943,70 @@
     setTimeout(() => state.map.invalidateSize(), 60);
   }
 
-  /* ---------------- wiring ---------------- */
+  /* ---------------- toast ---------------- */
 
-  function syncWhenPills() {
-    document.querySelectorAll('#ev-when-pills .ev-pill').forEach((b) => {
-      b.setAttribute('aria-pressed', String(b.dataset.when === state.filters.when));
-    });
+  let toastTimer;
+  function toast(msg) {
+    const t = $('ev-toast');
+    t.textContent = msg;
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.hidden = true; }, 2200);
   }
 
+  /* ---------------- wiring ---------------- */
+
   function wire() {
-    $('ev-bucket-close').addEventListener('click', closeBucket);
-
-    document.querySelectorAll('#ev-when-pills .ev-pill').forEach((b) => {
-      b.addEventListener('click', () => {
-        state.filters.when = b.dataset.when;
-        state.filters.day = null;   // a pill overrides a day picked in the grid
-        state.daysShown = 14;
-        syncWhenPills();
-        setView('list');
-        renderCalendar();
-      });
-    });
-
     let qTimer;
     $('ev-search').addEventListener('input', (ev) => {
       clearTimeout(qTimer);
       qTimer = setTimeout(() => {
         state.filters.q = ev.target.value.trim().toLowerCase();
-        renderCalendar();
+        state.daysShown = 7;
+        renderAll();
       }, 180);
     });
-
-    [['ev-f-category', 'cat'], ['ev-f-town', 'town'], ['ev-f-price', 'price'], ['ev-f-age', 'age'], ['ev-f-repeat', 'repeat']]
-      .forEach(([id, key]) => {
-        $(id).addEventListener('change', (ev) => {
-          state.filters[key] = ev.target.value;
-          renderCalendar();
-        });
-      });
-
+    $('ev-f-town').addEventListener('change', (ev) => {
+      state.filters.town = ev.target.value;
+      state.daysShown = 7;
+      renderAll();
+    });
     $('ev-clear').addEventListener('click', () => {
-      state.filters = { ...state.filters, q: '', cat: '', town: '', price: '', age: '', repeat: '' };
-      $('ev-search').value = '';
-      ['ev-f-category', 'ev-f-town', 'ev-f-price', 'ev-f-age', 'ev-f-repeat']
-        .forEach((id) => { $(id).value = ''; });
-      renderCalendar();
-      if (state.view === 'month') renderMonths();
+      const f = state.filters;
+      f.q = ''; f.cat = ''; f.town = ''; f.quick = new Set(); f.soon = false;
+      $('ev-search').value = ''; $('ev-f-town').value = '';
+      state.daysShown = 7;
+      renderAll();
     });
-
     $('ev-more').addEventListener('click', () => {
-      state.daysShown += 14;
-      renderCalendar();
+      state.daysShown += 7;
+      renderList();
     });
-
-    $('ev-view-list').addEventListener('click', () => setView('list'));
-    $('ev-view-month').addEventListener('click', () => setView('month'));
-    $('ev-view-map').addEventListener('click', () => setView('map'));
+    document.querySelectorAll('[data-view]').forEach((b) => {
+      b.addEventListener('click', () => { setView(b.dataset.view); renderAll(); });
+    });
 
     $('dark-toggle').addEventListener('click', () => {
       const root = document.documentElement;
       root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
     });
 
-    // refresh time-aware buckets if the tab sits open across a time boundary
-    setInterval(() => { if (!state.activeBucket) renderBuckets(); }, 5 * 60e3);
+    // refresh the time-aware bits if the tab sits open across a time boundary
+    setInterval(() => { renderHero(); renderDays(); }, 5 * 60e3);
   }
 
   function setView(v) {
     state.view = v;
-    $('ev-view-list').setAttribute('aria-selected', String(v === 'list'));
-    $('ev-view-month').setAttribute('aria-selected', String(v === 'month'));
-    $('ev-view-map').setAttribute('aria-selected', String(v === 'map'));
+    document.querySelectorAll('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === v)));
     $('ev-list').hidden = v !== 'list';
     document.querySelector('.ev-more-wrap').hidden = v !== 'list';
+    if (v !== 'list') $('ev-ongoing').hidden = true;
     $('ev-month-wrap').hidden = v !== 'month';
     $('ev-map-wrap').hidden = v !== 'map';
-    if (v === 'month') renderMonths();
-    if (v === 'map') renderMap(filtered());
+    $('ev-empty').hidden = true;
   }
 
   wire();
   load();
+  loadWeather();
 })();
