@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-21T11:04:13+00:00",
+ "updated": "2026-08-21T12:03:34+00:00",
  "sections_updated": {
-  "now": "2026-08-21T11:04:13+00:00",
-  "forecast": "2026-08-21T11:04:13+00:00",
-  "hourly": "2026-08-21T11:04:13+00:00",
-  "alerts": "2026-08-21T11:04:13+00:00",
-  "afd": "2026-08-21T11:04:13+00:00",
-  "lake_forecast": "2026-08-21T11:04:13+00:00",
+  "now": "2026-08-21T12:03:34+00:00",
+  "forecast": "2026-08-21T12:03:34+00:00",
+  "hourly": "2026-08-21T12:03:34+00:00",
+  "alerts": "2026-08-21T12:03:34+00:00",
+  "afd": "2026-08-21T12:03:34+00:00",
+  "lake_forecast": "2026-08-21T12:03:34+00:00",
   "lake_gage": "2026-08-21T11:04:13+00:00",
-  "air": "2026-08-21T11:04:13+00:00",
-  "sun": "2026-08-21T11:04:13+00:00",
-  "models": "2026-08-21T11:04:13+00:00"
+  "air": "2026-08-21T12:03:34+00:00",
+  "sun": "2026-08-21T12:03:34+00:00",
+  "models": "2026-08-21T12:03:34+00:00"
  },
  "now": {
-  "observed_at": "2026-08-21T10:10:00+00:00",
+  "observed_at": "2026-08-21T10:45:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
+  "description": "Partly Cloudy",
   "temp_f": 54,
   "feels_like_f": 54,
   "humidity": 94,
   "dewpoint_f": 52,
-  "wind_mph": 5,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "E"
+  "wind_dir": "ENE"
  },
  "forecast": {
   "updated": "2026-08-21T06:13:45+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-21T07:00:00-04:00",
+    "start": "2026-08-21T08:00:00-04:00",
     "is_day": true,
     "temp_f": 78,
     "pop": 0,
-    "wind": "N 2 to 8 mph",
+    "wind": "N 3 to 8 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 78. North wind 2 to 8 mph."
+    "detailed": "Sunny, with a high near 78. North wind 3 to 8 mph."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-21T06:13:45+00:00",
   "hours": [
-   {
-    "t": "2026-08-21T07:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 0,
-    "humidity": 96,
-    "wind_mph": 2,
-    "wind_dir": "N",
-    "sky": 16,
-    "short": "Sunny"
-   },
    {
     "t": "2026-08-21T08:00:00-04:00",
     "temp_f": 61,
@@ -567,6 +556,17 @@
     "wind_dir": "SE",
     "sky": 63,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-08-22T19:00:00-04:00",
+    "temp_f": 76,
+    "feels_f": 76,
+    "pop": 3,
+    "humidity": 62,
+    "wind_mph": 7,
+    "wind_dir": "SE",
+    "sky": 47,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-21T06:28:00+00:00",
+  "issued": "2026-08-21T11:20:00+00:00",
   "key_messages": [
    "Dry before showers return late tomorrow and Sunday.",
    "A few lingering showers north on Tuesday, then dry conditions Wednesday before scattered showers return later Thursday into Friday."
   ],
   "what_changed": "As of 228 AM EDT Friday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 210628\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n228 AM EDT Fri Aug 21 2026\n\n.WHAT HAS CHANGED...\nAs of 228 AM EDT Friday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 228 AM EDT Friday...\n\n1. Dry before showers return late tomorrow and Sunday.\n\n2. A few lingering showers north on Tuesday, then dry \nconditions Wednesday before scattered showers return later Thursday \ninto Friday.\n\n&&\n\n.DISCUSSION...\nAs of 228 AM EDT Friday...\n\nKEY MESSAGE 1: Dry and relatively seasonable conditions will continue \ntoday with low humidity. Highs will be in the 70s and low 80s and \nlows will be in the 40s and 50s away from Lake Champlain. A primary \narea of low pressure will develop over the Great Lakes tomorrow and \na secondary low will form off the Mid-Atlantic coast. The primary \nwill track northeast into Quebec, while the low off the Mid-Atlantic \nlooks to travel up the eastern seaboard. The idea is that these two \nlows should eventually phase over Quebec, past our region. Showers \nare likely tomorrow night over northern New York from the primary \nlow, and these will gradually track eastward. Showers are possible \nlate Saturday into Saturday night in southern areas from the \nsecondary low, but whether these can reach the region or stay south \nremains uncertain. Some showers are expected region-wide on Sunday \nas the parent low passes east. While a couple rumbles of thunder are \npossible during the day, instability will be very low due to a lack \nof consistent sunshine and a cooler airmass. Forecast rainfall \namounts have trended down. GEFS/EPS/CMCE combined probabilities of a \nhalf inch of rain are now between 0-40 percent, with the lowest \nvalues over central and northern Vermont which look to get \nsandwiched between the two lows. Probabilities of an inch are now \nbelow 10 percent.\n\nKEY MESSAGE 2: No large-scale changes in thinking have occurred over \nthe past 24 hours as model solutions remain in broad agreement on \nthe overall synoptic wx pattern for the middle to later portions of \nnext week. Big picture shows the base of the aforementioned upper \ntrough atop our region Tuesday morning, which pulls out to the north \nand east over time by later in the day. A few showers will still be \npossible across the north during this period, mainly across the \nhigher terrain, but many hours of dry wx are also expected. High \npressure and associated sunny/dry wx make a return visit on \nWednesday before additional troughing enters the picture by later \nThursday into Friday with additional shower chances. Temperatures on \nTuesday to run about 5 degrees below climo-average late August norms \nbefore moderating to near normal from Wednesday onward. Winds \ngenerally light through the period.\n\n&&\n\n.AVIATION /06Z FRIDAY THROUGH TUESDAY/...\nThrough 06Z Saturday...Patchy LIFR/IFR BR/FG at\nKSLK/KMPV/KEFK/KMSS through 11-13Z. Otherwise VFR area wide \nunder light winds less than 10 kts with mainly SKC as high\npressure settles across the region.\n\nOutlook...\n\nSaturday: VFR. Patchy BR.\nSaturday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nSunday: VFR/MVFR conditions possible. Likely SHRA, Slight chance\nTSRA.\nSunday Night: Mainly VFR, with local IFR possible. Chance SHRA,\nSlight chance TSRA.\nMonday: Mainly VFR, with areas MVFR possible. Chance SHRA, Slight\nchance TSRA.\nMonday Night: Mainly MVFR, with areas VFR possible. Slight chance\nSHRA.\nTuesday: Mainly VFR, with areas MVFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...JMG/Myskowski\nAVIATION...JMG\n"
+  "raw": "\n000\nFXUS61 KBTV 211120\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n720 AM EDT Fri Aug 21 2026\n\n.WHAT HAS CHANGED...\nAs of 228 AM EDT Friday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 228 AM EDT Friday...\n\n1. Dry before showers return late tomorrow and Sunday.\n\n2. A few lingering showers north on Tuesday, then dry \nconditions Wednesday before scattered showers return later Thursday \ninto Friday.\n\n&&\n\n.DISCUSSION...\nAs of 228 AM EDT Friday...\n\nKEY MESSAGE 1: Dry and relatively seasonable conditions will continue \ntoday with low humidity. Highs will be in the 70s and low 80s and \nlows will be in the 40s and 50s away from Lake Champlain. A primary \narea of low pressure will develop over the Great Lakes tomorrow and \na secondary low will form off the Mid-Atlantic coast. The primary \nwill track northeast into Quebec, while the low off the Mid-Atlantic \nlooks to travel up the eastern seaboard. The idea is that these two \nlows should eventually phase over Quebec, past our region. Showers \nare likely tomorrow night over northern New York from the primary \nlow, and these will gradually track eastward. Showers are possible \nlate Saturday into Saturday night in southern areas from the \nsecondary low, but whether these can reach the region or stay south \nremains uncertain. Some showers are expected region-wide on Sunday \nas the parent low passes east. While a couple rumbles of thunder are \npossible during the day, instability will be very low due to a lack \nof consistent sunshine and a cooler airmass. Forecast rainfall \namounts have trended down. GEFS/EPS/CMCE combined probabilities of a \nhalf inch of rain are now between 0-40 percent, with the lowest \nvalues over central and northern Vermont which look to get \nsandwiched between the two lows. Probabilities of an inch are now \nbelow 10 percent.\n\nKEY MESSAGE 2: No large-scale changes in thinking have occurred over \nthe past 24 hours as model solutions remain in broad agreement on \nthe overall synoptic wx pattern for the middle to later portions of \nnext week. Big picture shows the base of the aforementioned upper \ntrough atop our region Tuesday morning, which pulls out to the north \nand east over time by later in the day. A few showers will still be \npossible across the north during this period, mainly across the \nhigher terrain, but many hours of dry wx are also expected. High \npressure and associated sunny/dry wx make a return visit on \nWednesday before additional troughing enters the picture by later \nThursday into Friday with additional shower chances. Temperatures on \nTuesday to run about 5 degrees below climo-average late August norms \nbefore moderating to near normal from Wednesday onward. Winds \ngenerally light through the period.\n\n&&\n\n.AVIATION /12Z FRIDAY THROUGH TUESDAY/...\nThrough 12Z Saturday...Patchy IFR BR/FG lifts at KRUT/KEFK/KMPV\nin the 12-14Z time frame, otherwise, VFR/SKC expected at all\nterminals through 00Z under light winds less than 10 kts. After\n05Z, SKC/light winds continues with patchy LIFR BR/FG likely to\nreturn to KMPV/KEFK.\n\nOutlook...\n\nSaturday: VFR. Patchy BR.\nSaturday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nSunday: Mainly VFR, with areas MVFR possible. Likely SHRA, Slight\nchance TSRA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA,\nSlight chance TSRA.\nMonday: Mainly VFR, with areas MVFR possible. Chance SHRA, Slight\nchance TSRA.\nMonday Night: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nTuesday: Mainly VFR, with areas MVFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Myskowski/JMG\nAVIATION...JMG\n"
  },
  "lake_forecast": {
   "issued": "2026-08-21T06:14:00+00:00",
@@ -832,10 +832,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 29,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/21/26 6:00",
+  "observed": "08/21/26 7:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, August 21st."
  },
  "sun": {
@@ -875,7 +875,7 @@
     },
     "pop_max": {
      "GFS": 6,
-     "Euro": 0,
+     "Euro": 6,
      "ICON": 0
     },
     "precip_in": {
@@ -888,17 +888,17 @@
    {
     "date": "2026-08-23",
     "high_f": {
-     "GFS": 76,
+     "GFS": 77,
      "Euro": 77,
      "ICON": 76
     },
     "pop_max": {
      "GFS": 65,
-     "Euro": 80,
+     "Euro": 69,
      "ICON": 34
     },
     "precip_in": {
-     "GFS": 0.35,
+     "GFS": 0.04,
      "Euro": 0.26,
      "ICON": 0.0
     },
