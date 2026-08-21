@@ -3,6 +3,8 @@
    a time-railed list, chips for filters, month + map views.
    Data: data/events/events.json (built by scripts/events/update.py)
          data/weather/latest.json (for the header weather chip)
+   All "what day / what hour is it" logic runs in Burlington time
+   (America/New_York), whatever timezone the visitor is in.
 ============================================================ */
 (function () {
   'use strict';
@@ -17,6 +19,7 @@
   };
   const CAT_ORDER = ['music', 'comedy', 'food-drink', 'family', 'outdoors', 'market', 'art',
     'theater', 'film', 'games', 'words', 'learning', 'community', 'wellness', 'sports', 'other'];
+  const WHENS = ['all', 'today', 'tomorrow', 'weekend', 'week', 'twoweeks', 'month', 'day'];
 
   /* Quick filters: multi-select toggles. Each is a plain predicate. */
   const QUICK = [
@@ -30,7 +33,7 @@
   const QUICK_BY_KEY = Object.fromEntries(QUICK.map((q) => [q.key, q]));
 
   const state = {
-    events: [],          // active events, hydrated with Date objects
+    events: [],          // active events, hydrated
     ongoing: [],         // long-running exhibits/series (tag "ongoing")
     byId: new Map(),
     meta: null,
@@ -39,7 +42,8 @@
     map: null,
     mapLayer: null,
     openId: null,
-    filters: { when: 'all', day: null, q: '', cat: '', town: '', quick: new Set(), soon: false },
+    // soon = starting in the next 2 hours; evening = 4pm or later (the "tonight" lens)
+    filters: { when: 'all', day: null, q: '', cat: '', town: '', quick: new Set(), soon: false, evening: false },
   };
 
   /* ---------------- utilities ---------------- */
@@ -53,27 +57,59 @@
   }
   function hasTag(e, t) { return (e.tags || []).includes(t); }
 
-  function dkey(d) {
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
-      '-' + String(d.getDate()).padStart(2, '0');
+  /* Only http(s) links leave this page. Feed data is aggregated from 25+
+     outside calendars, so a URL field is not trusted just because it exists. */
+  function safeUrl(u) {
+    if (!u) return '';
+    try {
+      const x = new URL(String(u).trim(), location.href);
+      return (x.protocol === 'http:' || x.protocol === 'https:') ? x.href : '';
+    } catch (e) { return ''; }
   }
-  function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
-  function fromKey(k) { return new Date(k + 'T12:00:00'); }
 
-  function fmtTime(d) {
-    const h = d.getHours() % 12 || 12;
-    const m = d.getMinutes();
-    const ap = d.getHours() < 12 ? 'AM' : 'PM';
+  /* ---- Burlington time ---- */
+  const TZ = 'America/New_York';
+  const PARTS_FMT = new Intl.DateTimeFormat('en-US', {
+    timeZone: TZ, hourCycle: 'h23', weekday: 'short',
+    year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit',
+  });
+  const DOW_IDX = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  /* Calendar parts of an instant, as seen in Burlington. */
+  function nyParts(d) {
+    const o = {};
+    PARTS_FMT.formatToParts(d).forEach((p) => { o[p.type] = p.value; });
+    return {
+      y: +o.year, mo: +o.month - 1, d: +o.day, h: (+o.hour) % 24, min: +o.minute,
+      dow: DOW_IDX[o.weekday], key: `${o.year}-${o.month}-${o.day}`,
+    };
+  }
+  /* Calendar facts about a YYYY-MM-DD key — no timezone involved. */
+  function kparts(k) {
+    const [y, m, d] = k.split('-').map(Number);
+    return { y, mo: m - 1, d, dow: new Date(Date.UTC(y, m - 1, d)).getUTCDay() };
+  }
+  function keyOf(y, mo, d) { return `${y}-${String(mo + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`; }
+  function addDaysKey(k, n) {
+    const { y, mo, d } = kparts(k);
+    const x = new Date(Date.UTC(y, mo, d + n));
+    return keyOf(x.getUTCFullYear(), x.getUTCMonth(), x.getUTCDate());
+  }
+  function dkey(d) { return nyParts(d).key; }
+
+  function fmtHM(h24, m) {
+    const h = h24 % 12 || 12;
+    const ap = h24 < 12 ? 'AM' : 'PM';
     return m ? `${h}:${String(m).padStart(2, '0')} ${ap}` : `${h} ${ap}`;
   }
+  function fmtTime(d) { const p = nyParts(d); return fmtHM(p.h, p.min); }
   function fmtRange(e) {
     if (e.allDay) return 'All day';
-    const s = fmtTime(e._start);
+    const s = fmtHM(e._h, e._m);
     if (!e._end || e._end <= e._start) return s;
-    // "7–9:30 PM" when both halves share a meridian
-    const sap = e._start.getHours() < 12 ? 'AM' : 'PM', eap = e._end.getHours() < 12 ? 'AM' : 'PM';
-    const endStr = fmtTime(e._end);
-    if (sap === eap && e._end.getDate() === e._start.getDate()) return `${s.replace(' ' + sap, '')}–${endStr}`;
+    const ep = nyParts(e._end);
+    const endStr = fmtHM(ep.h, ep.min);
+    const sap = e._h < 12 ? 'AM' : 'PM', eap = ep.h < 12 ? 'AM' : 'PM';
+    if (sap === eap && ep.key === e.date) return `${s.replace(' ' + sap, '')}–${endStr}`;   // "7–9:30 PM"
     return `${s} – ${endStr}`;
   }
 
@@ -83,27 +119,28 @@
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
     'August', 'September', 'October', 'November', 'December'];
 
-  function relDay(dateStr, todayKey, tomorrowKey) {
-    if (dateStr === todayKey) return 'Today';
-    if (dateStr === tomorrowKey) return 'Tomorrow';
-    const d = fromKey(dateStr);
-    return `${DAY_SHORT[d.getDay()]} ${d.getDate()}`;
+  function relDay(k, todayKey, tomorrowKey) {
+    if (k === todayKey) return 'Today';
+    if (k === tomorrowKey) return 'Tomorrow';
+    const p = kparts(k);
+    return `${DAY_SHORT[p.dow]} ${p.d}`;
   }
+  function longDay(k) { const p = kparts(k); return `${DAY_NAMES[p.dow]}, ${MON_NAMES[p.mo]} ${p.d}`; }
+  function shortDay(k) { const p = kparts(k); return `${DAY_SHORT[p.dow]} ${MON_NAMES[p.mo]} ${p.d}`; }
 
-  /* Short, scannable price: "$17–23", "$6", "From $35", "$" when it's prose. */
+  /* Short, scannable price. Simple strings ("$20", "$17-23") are shown as-is
+     in whole dollars; anything multi-tier falls back to the pipeline's
+     minPrice as "From $x"; prose with no number shows "$" (or the short phrase). */
   function shortPrice(e) {
-    if (e.free === true || e.minPrice === 0) return { text: 'Free', cls: 'is-free' };
+    if (e.free === true) return { text: 'Free', cls: 'is-free' };
     const p = (e.price || '').trim();
+    const whole = (n) => String(Math.round(parseFloat(n)));
+    const simple = p.match(/^\$?\s?(\d+(?:\.\d{1,2})?)(?:\s?(?:-|–|—|to)\s?\$?\s?(\d+(?:\.\d{1,2})?))?\.?$/);
+    if (simple) return { text: simple[2] ? `$${whole(simple[1])}–${whole(simple[2])}` : `$${whole(simple[1])}`, cls: '' };
+    if (e.minPrice != null && e.minPrice > 0) return { text: `From $${whole(e.minPrice)}`, cls: '' };
     if (!p) return { text: '', cls: 'is-unknown' };
-    const m = p.match(/\$\s?(\d+(?:\.\d{1,2})?)(?:\s?[-–—]\s?\$?\s?(\d+(?:\.\d{1,2})?))?/);
-    if (!m) return { text: p.length <= 10 ? p : '$', cls: '' };
-    const amounts = [...p.matchAll(/\$\s?(\d+(?:\.\d{1,2})?)/g)].map((x) => parseFloat(x[1]));
-    const clean = (n) => String(n).replace(/\.00$/, '');
-    const a = clean(m[1]), b = m[2] ? clean(m[2]) : null;
-    if (b && amounts.length <= 2) return { text: `$${a}–${b}`, cls: '' };
-    if (amounts.length > 2 || (!b && amounts.length > 1) || /and up|\+|various|^from|starting/i.test(p))
-      return { text: `From $${clean(Math.min(...amounts))}`, cls: '' };
-    return { text: `$${a}`, cls: '' };
+    if (/\$\s?\d/.test(p)) return { text: '$', cls: 'is-unknown' };
+    return { text: p.length <= 12 ? p.replace(/\.$/, '') : '$', cls: 'is-unknown' };
   }
 
   function pickKind(e) {
@@ -128,10 +165,12 @@
     }
     state.meta = payload;
     const active = (payload.events || [])
-      .filter((e) => e.status === 'active')
+      .filter((e) => e.status === 'active' && e.start && e.date)
       .map((e) => {
         e._start = new Date(e.start);
         e._end = e.end ? new Date(e.end) : null;
+        const p = nyParts(e._start);
+        e._h = p.h; e._m = p.min;
         e._search = `${e.title} ${e.venue || ''} ${e.town || ''} ${e.description || ''}`.toLowerCase();
         return e;
       });
@@ -140,16 +179,18 @@
     state.events.forEach((e) => state.byId.set(e.id, e));
     $('ev-loading').hidden = true;
     if (payload.generated) {
-      const g = new Date(payload.generated);
+      const g = nyParts(new Date(payload.generated));
       $('ev-generated').textContent =
-        `Calendar refreshed ${MON_NAMES[g.getMonth()]} ${g.getDate()}, ${fmtTime(g)}`;
+        `Calendar refreshed ${MON_NAMES[g.mo]} ${g.d}, ${fmtHM(g.h, g.min)}`;
     }
     initTowns();
     readParams();
+    const deep = state.openId;
     renderHero();
     renderPicks();
+    setView(state.view);
     renderAll();
-    if (state.openId) openEvent(state.openId, { scroll: true });
+    if (deep) openEvent(deep, { scroll: true });
   }
 
   function loadWeather() {
@@ -181,27 +222,20 @@
 
   function nowCtx() {
     const now = new Date();
-    const todayKey = dkey(now);
-    const late = now.getHours() >= 22;      // after 10pm: pivot to tomorrow
-    const refKey = late ? dkey(addDays(now, 1)) : todayKey;
-    const evening = now.getHours() >= 16;
+    const np = nyParts(now);
+    const todayKey = np.key;
+    const late = np.h >= 22;                    // after 10pm: pivot to tomorrow
+    const refKey = late ? addDaysKey(todayKey, 1) : todayKey;
+    const evening = np.h >= 16;
     const dayWord = late ? 'tomorrow' : (evening ? 'tonight' : 'today');
-    return { now, todayKey, tomorrowKey: dkey(addDays(now, 1)), late, refKey, evening, dayWord };
+    return { now, np, todayKey, tomorrowKey: addDaysKey(todayKey, 1), late, refKey, evening, dayWord };
   }
 
-  /* Still worth showing today: all-day, or hasn't started more than an hour ago,
-     or is clearly still running (has an end in the future). */
-  function stillOn(e, now) {
-    if (e.allDay) return true;
-    if (e._end && e._end > now && e._start <= now) return true;
-    return e._start >= new Date(+now - 3600e3);
-  }
-  function isLive(e, now) {
-    if (e.allDay) return false;
-    if (e._start > now) return false;
-    if (e._end) return e._end > now;
-    return (+now - e._start) < 2 * 3600e3;   // no end: assume ~2h
-  }
+  /* An event with no end time is assumed to run ~2 hours. */
+  function endOf(e) { return e._end && e._end > e._start ? e._end : new Date(+e._start + 2 * 3600e3); }
+  /* Still worth listing today: all-day, or not over yet. */
+  function stillOn(e, now) { return e.allDay || endOf(e) > now; }
+  function isLive(e, now) { return !e.allDay && e._start <= now && endOf(e) > now; }
 
   /* ---------------- hero: right-now lenses ---------------- */
 
@@ -209,26 +243,31 @@
     const c = nowCtx();
     const onRef = state.events.filter((e) => e.date === c.refKey);
     const alive = onRef.filter((e) => stillOn(e, c.now));
-    const tonight = alive.filter((e) => e.allDay || e._start.getHours() >= 16 || c.late || !c.evening);
+    // "tonight" = 4pm-or-later starts (or all-day) once we're into the evening;
+    // earlier in the day it's simply everything still on. Same rule as the
+    // `evening` filter, so the count and the click agree.
+    const useEvening = c.evening && !c.late;
+    const tonight = useEvening ? alive.filter((e) => e.allDay || e._h >= 16) : alive;
     const in2h = c.late ? [] : onRef.filter((e) => !e.allDay &&
       e._start >= c.now && e._start <= new Date(+c.now + 2 * 3600e3));
+    const base = { soon: false, evening: useEvening, cat: '', quick: [] };
     const defs = [
-      { key: 'tonight', label: c.late ? 'tomorrow' : (c.evening ? 'tonight' : 'today'), list: tonight, apply: () => {} },
-      { key: 'soon', label: 'starting soon', list: in2h, apply: (f) => { f.soon = true; } },
-      { key: 'free', label: `free ${c.dayWord}`, list: tonight.filter(QUICK_BY_KEY.free.test), apply: (f) => f.quick.add('free') },
-      { key: 'music', label: 'live music', list: alive.filter((e) => e.category === 'music'), apply: (f) => { f.cat = 'music'; } },
-      { key: 'social', label: 'social', list: alive.filter(QUICK_BY_KEY.social.test), apply: (f) => f.quick.add('social') },
-      { key: 'outdoors', label: 'outside', list: alive.filter(QUICK_BY_KEY.outdoors.test), apply: (f) => f.quick.add('outdoors') },
-      { key: 'under15', label: 'under $15', list: tonight.filter(QUICK_BY_KEY.under15.test), apply: (f) => f.quick.add('under15') },
+      { key: 'tonight', label: c.late ? 'tomorrow' : (c.evening ? 'tonight' : 'today'), list: tonight, want: { ...base } },
+      { key: 'soon', label: 'starting soon', list: in2h, want: { ...base, evening: false, soon: true } },
+      { key: 'free', label: `free ${c.dayWord}`, list: tonight.filter(QUICK_BY_KEY.free.test), want: { ...base, quick: ['free'] } },
+      { key: 'music', label: 'live music', list: alive.filter((e) => e.category === 'music'), want: { ...base, evening: false, cat: 'music' } },
+      { key: 'social', label: 'social', list: alive.filter(QUICK_BY_KEY.social.test), want: { ...base, evening: false, quick: ['social'] } },
+      { key: 'outdoors', label: 'outside', list: alive.filter(QUICK_BY_KEY.outdoors.test), want: { ...base, evening: false, quick: ['outdoors'] } },
+      { key: 'under15', label: 'under $15', list: tonight.filter(QUICK_BY_KEY.under15.test), want: { ...base, quick: ['under15'] } },
     ];
     return { defs: defs.filter((d) => d.list.length > 0), ctx: c, tonightCount: tonight.length };
   }
 
   function renderHero() {
     const { defs, ctx, tonightCount } = lensDefs();
-    const h = ctx.now.getHours();
+    const h = ctx.np.h;
     $('ev-hero-sub').textContent =
-      `${DAY_NAMES[ctx.now.getDay()]} ${h >= 17 ? 'evening' : h >= 12 ? 'afternoon' : 'morning'} in Burlington` +
+      `${DAY_NAMES[ctx.np.dow]} ${h >= 17 ? 'evening' : h >= 12 ? 'afternoon' : 'morning'} in Burlington` +
       (tonightCount ? ` · ${tonightCount} things ${ctx.dayWord}` : '');
 
     const wrap = $('ev-now');
@@ -239,35 +278,37 @@
     defs.forEach((d) => {
       const btn = document.createElement('button');
       btn.className = 'ev-now-chip';
+      btn.type = 'button';
       btn.setAttribute('role', 'listitem');
       btn.dataset.lens = d.key;
       btn.innerHTML = `<b>${d.list.length}</b><span>${esc(d.label)}</span>`;
       btn.addEventListener('click', () => {
-        resetFilters({ keepQ: false });
-        state.filters.when = 'day';
-        state.filters.day = ctx.refKey;
-        d.apply(state.filters);
+        resetFilters();
+        const f = state.filters;
+        f.when = 'day'; f.day = ctx.refKey;
+        f.soon = d.want.soon; f.evening = d.want.evening; f.cat = d.want.cat;
+        f.quick = new Set(d.want.quick);
         setView('list');
         renderAll();
         $('ev-bar').scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
       wrap.appendChild(btn);
     });
-    syncLensChips();
+    syncLensChips(defs, ctx);
   }
 
-  function syncLensChips() {
+  function syncLensChips(defs, ctx) {
     const f = state.filters;
-    const c = nowCtx();
-    document.querySelectorAll('.ev-now-chip').forEach((b) => {
-      const k = b.dataset.lens;
-      let on = f.when === 'day' && f.day === c.refKey && !f.q && !f.town;
+    const chips = document.querySelectorAll('.ev-now-chip');
+    if (!defs) { chips.forEach((b) => b.setAttribute('aria-pressed', 'false')); return; }
+    const byKey = Object.fromEntries(defs.map((d) => [d.key, d]));
+    chips.forEach((b) => {
+      const d = byKey[b.dataset.lens];
+      let on = !!d && f.when === 'day' && f.day === ctx.refKey && !f.q && !f.town;
       if (on) {
-        const q = [...f.quick];
-        if (k === 'tonight') on = !f.soon && !f.cat && q.length === 0;
-        else if (k === 'soon') on = f.soon && !f.cat && q.length === 0;
-        else if (k === 'music') on = f.cat === 'music' && !f.soon && q.length === 0;
-        else on = !f.soon && !f.cat && q.length === 1 && q[0] === k;
+        const q = [...f.quick].sort().join(',');
+        on = f.soon === d.want.soon && f.evening === d.want.evening && f.cat === d.want.cat &&
+          q === d.want.quick.slice().sort().join(',');
       }
       b.setAttribute('aria-pressed', String(on));
     });
@@ -277,7 +318,7 @@
 
   function renderPicks() {
     const c = nowCtx();
-    const hi = dkey(addDays(c.now, 13));
+    const hi = addDaysKey(c.todayKey, 13);
     const picks = state.events
       .filter((e) => pickKind(e) && e.date >= c.todayKey && e.date <= hi && (e.date !== c.todayKey || stillOn(e, c.now)))
       .sort((a, b) => a._start - b._start)
@@ -296,7 +337,7 @@
       btn.innerHTML =
         `<span class="ev-pick-tag${kind === 'own' ? ' is-own' : ''}">${kind === 'own' ? 'Steve’s Meetup' : '7 Days pick'}</span>` +
         `<span class="ev-pick-title">${esc(e.title)}</span>` +
-        `<span class="ev-pick-meta"><b>${esc(relDay(e.date, c.todayKey, c.tomorrowKey))}</b> · ${esc(e.allDay ? 'All day' : fmtTime(e._start))}` +
+        `<span class="ev-pick-meta"><b>${esc(relDay(e.date, c.todayKey, c.tomorrowKey))}</b> · ${esc(e.allDay ? 'All day' : fmtHM(e._h, e._m))}` +
         `${e.venue ? ' · ' + esc(e.venue) : ''}</span>`;
       btn.addEventListener('click', () => openEvent(e.id, { scroll: true }));
       row.appendChild(btn);
@@ -315,10 +356,10 @@
     });
   }
 
-  function resetFilters({ keepQ } = {}) {
+  function resetFilters() {
     const f = state.filters;
-    f.when = 'all'; f.day = null; f.cat = ''; f.town = ''; f.quick = new Set(); f.soon = false;
-    if (!keepQ) { f.q = ''; $('ev-search').value = ''; }
+    f.when = 'all'; f.day = null; f.cat = ''; f.town = ''; f.quick = new Set(); f.soon = false; f.evening = false;
+    f.q = ''; $('ev-search').value = '';
     $('ev-f-town').value = '';
     state.daysShown = 7;
   }
@@ -327,14 +368,17 @@
     const p = new URLSearchParams(location.search);
     const f = state.filters;
     const when = p.get('when');
-    if (when) f.when = when;
+    if (when && WHENS.includes(when) && when !== 'day') f.when = when;
     if (p.get('d') && /^\d{4}-\d{2}-\d{2}$/.test(p.get('d'))) { f.when = 'day'; f.day = p.get('d'); }
     if (p.get('cat') && CATEGORY_LABELS[p.get('cat')]) f.cat = p.get('cat');
-    if (p.get('town')) { f.town = p.get('town'); $('ev-f-town').value = f.town; }
+    if (p.get('town')) { f.town = p.get('town'); $('ev-f-town').value = f.town; if ($('ev-f-town').value !== f.town) f.town = ''; }
     if (p.get('q')) { f.q = p.get('q').toLowerCase(); $('ev-search').value = p.get('q'); }
     if (p.get('price') === 'free') f.quick.add('free');          // legacy links
     if (p.get('price') === 'under15') f.quick.add('under15');
     (p.get('quick') || '').split(',').filter((k) => QUICK_BY_KEY[k]).forEach((k) => f.quick.add(k));
+    if (p.get('soon') === '1') f.soon = true;
+    if (p.get('tonight') === '1') f.evening = true;
+    if (['month', 'map'].includes(p.get('view'))) state.view = p.get('view');
     if (p.get('e')) state.openId = p.get('e');
   }
 
@@ -347,29 +391,33 @@
     if (f.town) p.set('town', f.town);
     if (f.q) p.set('q', f.q);
     if (f.quick.size) p.set('quick', [...f.quick].join(','));
+    if (f.soon) p.set('soon', '1');
+    if (f.evening) p.set('tonight', '1');
+    if (state.view !== 'list') p.set('view', state.view);
     if (state.openId) p.set('e', state.openId);
     const qs = p.toString();
     const url = location.pathname + (qs ? '?' + qs : '') + location.hash;
     try { history.replaceState(null, '', url); } catch (e) { /* file:// etc. */ }
   }
 
-  function whenRange() {
-    const now = new Date();
-    const t = dkey(now);
+  function weekendRange(c) {
+    // upcoming Fri–Sun; if we're already inside the weekend, start today
+    const dow = c.np.dow;
+    if (dow === 0) return [c.todayKey, c.todayKey];
+    const start = dow >= 5 ? c.todayKey : addDaysKey(c.todayKey, 5 - dow);
+    const sun = addDaysKey(start, 7 - kparts(start).dow);
+    return [start, sun];
+  }
+
+  function whenRange(c) {
+    const t = c.todayKey;
     switch (state.filters.when) {
       case 'today': return [t, t];
-      case 'tomorrow': { const k = dkey(addDays(now, 1)); return [k, k]; }
-      case 'weekend': {
-        // upcoming Fri–Sun; if we're already inside the weekend, start today
-        const dow = now.getDay();
-        if (dow === 0) return [t, t];
-        const start = dow >= 5 ? now : addDays(now, 5 - dow);
-        const sun = addDays(start, 7 - start.getDay());
-        return [dkey(start), dkey(sun)];
-      }
-      case 'week': return [t, dkey(addDays(now, 6))];
-      case 'twoweeks': return [t, dkey(addDays(now, 13))];
-      case 'month': return [t, dkey(addDays(now, 29))];
+      case 'tomorrow': return [c.tomorrowKey, c.tomorrowKey];
+      case 'weekend': return weekendRange(c);
+      case 'week': return [t, addDaysKey(t, 6)];
+      case 'twoweeks': return [t, addDaysKey(t, 13)];
+      case 'month': return [t, addDaysKey(t, 29)];
       case 'day': return state.filters.day ? [state.filters.day, state.filters.day] : [t, '9999-12-31'];
       default: return [t, '9999-12-31'];
     }
@@ -395,12 +443,13 @@
     if (state.filters.soon) {
       if (e.allDay || e._start < c.now || e._start > new Date(+c.now + 2 * 3600e3)) return false;
     }
+    if (state.filters.evening && !e.allDay && e._h < 16) return false;
     return true;
   }
 
   function filtered(opts) {
-    const [lo, hi] = whenRange();
     const c = nowCtx();
+    const [lo, hi] = whenRange(c);
     return state.events.filter((e) => inDateWindow(e, lo, hi, c) && matchesNonDate(e, opts));
   }
 
@@ -410,6 +459,7 @@
     const c = nowCtx();
     const f = state.filters;
     // counts per date, honoring every non-date filter + the today grace rule
+    // (not the soon/evening lenses — picking a day clears those on purpose)
     const counts = new Map();
     state.events.forEach((e) => {
       if (e.date < c.todayKey) return;
@@ -418,11 +468,9 @@
       counts.set(e.date, (counts.get(e.date) || 0) + 1);
     });
     let total = 0; counts.forEach((n) => { total += n; });
-    const dow = c.now.getDay();
-    let wkLo, wkHi;
-    if (dow === 0) { wkLo = wkHi = c.todayKey; }
-    else { const s = dow >= 5 ? c.now : addDays(c.now, 5 - dow); wkLo = dkey(s); wkHi = dkey(addDays(s, 7 - s.getDay())); }
+    const [wkLo, wkHi] = weekendRange(c);
     let wk = 0; counts.forEach((n, k) => { if (k >= wkLo && k <= wkHi) wk += n; });
+    const dow = c.np.dow;
 
     const tabs = [
       { id: 'all', label: 'Upcoming', n: total, on: f.when === 'all' || ['week', 'twoweeks', 'month'].includes(f.when) },
@@ -431,9 +479,9 @@
       { id: 'weekend', label: dow >= 5 || dow === 0 ? 'This weekend' : 'Weekend', n: wk, on: f.when === 'weekend', sep: true },
     ];
     for (let i = 2; i <= 13; i++) {
-      const k = dkey(addDays(c.now, i));
-      const d = fromKey(k);
-      tabs.push({ id: 'day:' + k, label: `${DAY_SHORT[d.getDay()]} ${d.getDate()}`, n: counts.get(k) || 0,
+      const k = addDaysKey(c.todayKey, i);
+      const p = kparts(k);
+      tabs.push({ id: 'day:' + k, label: `${DAY_SHORT[p.dow]} ${p.d}`, n: counts.get(k) || 0,
         on: f.when === 'day' && f.day === k, day: k, sep: i === 2 });
     }
     return tabs;
@@ -444,14 +492,14 @@
     wrap.innerHTML = '';
     dayTabs().forEach((t) => {
       const b = document.createElement('button');
+      b.type = 'button';
       b.className = 'ev-daytab' + (t.today ? ' is-now' : '') + (t.sep ? ' is-sep' : '') + (t.n === 0 ? ' is-empty' : '');
-      b.setAttribute('role', 'tab');
-      b.setAttribute('aria-selected', String(!!t.on));
+      b.setAttribute('aria-pressed', String(!!t.on));
       b.dataset.tab = t.id;
       b.innerHTML = `<span class="ev-daytab-l">${esc(t.label)}</span><span class="ev-daytab-n">${t.n}</span>`;
       b.addEventListener('click', () => {
         const f = state.filters;
-        f.soon = false;
+        f.soon = false; f.evening = false;
         if (t.id === 'all') { f.when = 'all'; f.day = null; }
         else if (t.id === 'weekend') { f.when = 'weekend'; f.day = null; }
         else { f.when = 'day'; f.day = t.day; }
@@ -461,7 +509,7 @@
       });
       wrap.appendChild(b);
     });
-    const sel = wrap.querySelector('[aria-selected="true"]');
+    const sel = wrap.querySelector('[aria-pressed="true"]');
     if (sel && wrap.scrollWidth > wrap.clientWidth) {
       const left = sel.offsetLeft - 12;
       if (left < wrap.scrollLeft || sel.offsetLeft + sel.offsetWidth > wrap.scrollLeft + wrap.clientWidth - 28)
@@ -473,8 +521,8 @@
 
   function renderChips() {
     const f = state.filters;
-    const [lo, hi] = whenRange();
     const c = nowCtx();
+    const [lo, hi] = whenRange(c);
     const inWin = state.events.filter((e) => inDateWindow(e, lo, hi, c));
 
     // quick chips — each counted as if it were the only quick filter
@@ -483,6 +531,7 @@
     QUICK.forEach((q) => {
       const n = inWin.filter((e) => q.test(e) && matchesNonDate(e, { ignoreQuick: q.key })).length;
       const b = document.createElement('button');
+      b.type = 'button';
       b.className = 'ev-chip' + (q.key === 'free' ? ' ev-chip-free' : '') + (n === 0 && !f.quick.has(q.key) ? ' is-zero' : '');
       b.setAttribute('aria-pressed', String(f.quick.has(q.key)));
       if (q.title) b.title = q.title;
@@ -503,6 +552,7 @@
     const allN = [...catCounts.values()].reduce((a, b) => a + b, 0);
     const mk = (key, label, n) => {
       const b = document.createElement('button');
+      b.type = 'button';
       b.className = 'ev-chip' + (key ? ' ev-cat-' + key : '') + (n === 0 && f.cat !== key ? ' is-zero' : '');
       b.setAttribute('aria-pressed', String(f.cat === key));
       b.innerHTML = (key ? '<span class="ev-dot" aria-hidden="true"></span>' : '') + `${esc(label)}<span class="ev-chip-n">${n}</span>`;
@@ -525,17 +575,14 @@
     el.className = 'ev-row';
     el.id = 'e-' + e.id;
     el.dataset.id = e.id;
-    el.tabIndex = 0;
-    el.setAttribute('role', 'button');
-    el.setAttribute('aria-expanded', 'false');
 
     const live = e.date === c.todayKey && isLive(e, c.now);
     let timeHtml;
     if (e.allDay) timeHtml = '<span class="ev-t-allday">All day</span>';
     else {
-      const h = e._start.getHours() % 12 || 12, m = e._start.getMinutes();
-      timeHtml = `<span class="ev-t-h">${h}${m ? ':' + String(m).padStart(2, '0') : ''}</span>` +
-        `<span class="ev-t-ap">${e._start.getHours() < 12 ? 'AM' : 'PM'}</span>`;
+      const h = e._h % 12 || 12;
+      timeHtml = `<span class="ev-t-h">${h}${e._m ? ':' + String(e._m).padStart(2, '0') : ''}</span>` +
+        `<span class="ev-t-ap">${e._h < 12 ? 'AM' : 'PM'}</span>`;
     }
     if (live) timeHtml = '<span class="ev-live" title="Happening now" aria-label="Happening now"></span>' + timeHtml;
 
@@ -559,35 +606,47 @@
     el.innerHTML =
       `<div class="ev-row-time">${timeHtml}</div>` +
       `<div class="ev-row-main">` +
-        `<h3 class="ev-row-title">${esc(e.title)}</h3>` +
+        `<h3 class="ev-row-title"><button type="button" class="ev-row-tbtn" aria-expanded="false" aria-controls="d-${esc(e.id)}">${esc(e.title)}</button></h3>` +
         `<p class="ev-row-meta">${metaHtml}</p>` +
       `</div>` +
       `<div class="ev-row-side">${side}</div>`;
 
+    // the title is the real (keyboard-reachable) toggle; the rest of the row
+    // is a bigger click target for the same thing, minus links and buttons
     el.addEventListener('click', (ev) => {
+      if (ev.target.closest('.ev-row-tbtn')) { toggleRow(el, e); return; }
       if (ev.target.closest('a, button, .ev-row-detail')) return;
       toggleRow(el, e);
-    });
-    el.addEventListener('keydown', (ev) => {
-      if (ev.target !== el) return;
-      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggleRow(el, e); }
     });
     return el;
   }
 
+  function setOpen(el, open) {
+    el.classList.toggle('is-open', open);
+    const b = el.querySelector('.ev-row-tbtn');
+    if (b) b.setAttribute('aria-expanded', String(open));
+  }
+
   function toggleRow(el, e) {
-    const open = el.getAttribute('aria-expanded') === 'true';
+    const open = el.classList.contains('is-open');
     if (open) {
       el.querySelector('.ev-row-detail')?.remove();
-      el.setAttribute('aria-expanded', 'false');
+      setOpen(el, false);
       if (state.openId === e.id) state.openId = null;
     } else {
+      // one open card at a time — collapse any other
+      document.querySelectorAll('.ev-row.is-open').forEach((o) => {
+        if (o === el) return;
+        o.querySelector('.ev-row-detail')?.remove();
+        setOpen(o, false);
+      });
       const det = document.createElement('div');
       det.className = 'ev-row-detail';
+      det.id = 'd-' + e.id;
       det.innerHTML = detailHtml(e);
       wireDetail(det, e);
       el.appendChild(det);
-      el.setAttribute('aria-expanded', 'true');
+      setOpen(el, true);
       state.openId = e.id;
     }
     writeParams();
@@ -596,16 +655,10 @@
   function openEvent(id, { scroll } = {}) {
     const e = state.byId.get(id);
     if (!e) return;
-    if (state.openId && state.openId !== id) {
-      const prev = document.getElementById('e-' + state.openId);
-      const pe = state.byId.get(state.openId);
-      if (prev && pe && prev.getAttribute('aria-expanded') === 'true') toggleRow(prev, pe);
-      state.openId = null;
-    }
     let el = document.getElementById('e-' + id);
     if (!el) {
       // not in the current view: show its day, then find it
-      resetFilters({ keepQ: false });
+      resetFilters();
       state.filters.when = 'day';
       state.filters.day = e.date;
       setView('list');
@@ -613,7 +666,7 @@
       el = document.getElementById('e-' + id);
       if (!el) return;
     }
-    if (el.getAttribute('aria-expanded') !== 'true') toggleRow(el, e);
+    if (!el.classList.contains('is-open')) toggleRow(el, e);
     if (scroll) {
       const y = el.getBoundingClientRect().top + window.scrollY - (60 + 58 + 52);
       window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
@@ -624,8 +677,7 @@
     const parts = [];
     if (e.description) parts.push(`<p class="ev-d-desc">${esc(e.description)}</p>`);
     const rows = [];
-    const d = fromKey(e.date);
-    rows.push(`<span class="ev-d-row-k" aria-hidden="true">🕒</span><span>${esc(`${DAY_NAMES[d.getDay()]}, ${MON_NAMES[d.getMonth()]} ${d.getDate()} · ${fmtRange(e)}`)}</span>`);
+    rows.push(`<span class="ev-d-row-k" aria-hidden="true">🕒</span><span>${esc(`${longDay(e.date)} · ${fmtRange(e)}`)}</span>`);
     if (e.recurring) rows.push(`<span class="ev-d-row-k" aria-hidden="true">↻</span><span>${esc(e.recurring)}</span>`);
     const place = [e.venue, e.address].filter(Boolean).join(' — ');
     if (place) {
@@ -636,12 +688,14 @@
     if (e.age) rows.push(`<span class="ev-d-row-k" aria-hidden="true">🪪</span><span>${esc(e.age)}</span>`);
     parts.push(`<div class="ev-d-rows">${rows.map((r) => `<p class="ev-d-row">${r}</p>`).join('')}</div>`);
 
+    const main = safeUrl(e.url);
     const links = (e.sources && e.sources.length ? e.sources : [{ source: e.source, url: e.url }])
+      .map((s) => ({ label: sourceLabel(s.source), url: safeUrl(s.url) }))
       .filter((s) => s.url)
-      .map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(sourceLabel(s.source))} ↗</a>`);
+      .map((s) => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)} ↗</a>`);
     parts.push(
       `<div class="ev-d-actions">` +
-        (e.url ? `<a class="ev-act ev-act-primary" href="${esc(e.url)}" target="_blank" rel="noopener">Details &amp; tickets ↗</a>` : '') +
+        (main ? `<a class="ev-act ev-act-primary" href="${esc(main)}" target="_blank" rel="noopener">Details &amp; tickets ↗</a>` : '') +
         `<a class="ev-act" data-act="gcal" href="${esc(gcalUrl(e))}" target="_blank" rel="noopener">+ Google Cal</a>` +
         `<a class="ev-act" data-act="ics" href="${esc(icsUrl(e))}" download="${esc(slug(e.title))}.ics">+ Apple / .ics</a>` +
         `<button class="ev-act" data-act="share" type="button">Share</button>` +
@@ -653,7 +707,7 @@
   function wireDetail(det, e) {
     det.querySelector('[data-act="share"]')?.addEventListener('click', async () => {
       const url = location.origin + location.pathname + '?e=' + encodeURIComponent(e.id);
-      const text = `${e.title} — ${DAY_SHORT[fromKey(e.date).getDay()]} ${fmtRange(e)}${e.venue ? ' at ' + e.venue : ''}`;
+      const text = `${e.title} — ${DAY_SHORT[kparts(e.date).dow]} ${fmtRange(e)}${e.venue ? ' at ' + e.venue : ''}`;
       if (navigator.share) {
         try { await navigator.share({ title: e.title, text, url }); return; } catch (err) { if (err && err.name === 'AbortError') return; }
       }
@@ -684,38 +738,53 @@
       pad2(d.getUTCHours()) + pad2(d.getUTCMinutes()) + '00Z';
   }
   function dateStamp(k) { return k.replace(/-/g, ''); }
-  function nextDayKey(k) { return dkey(addDays(fromKey(k), 1)); }
   function slug(s) { return String(s || 'event').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 60) || 'event'; }
-  function endOf(e) { return e._end && e._end > e._start ? e._end : new Date(+e._start + 2 * 3600e3); }
   function locStr(e) { return [e.venue, e.address || e.town].filter(Boolean).join(', '); }
+  function calDetails(e) { return [(e.description || '').slice(0, 800), safeUrl(e.url)].filter(Boolean).join('\n\n'); }
 
   function gcalUrl(e) {
     const p = new URLSearchParams();
     p.set('action', 'TEMPLATE');
     p.set('text', e.title);
-    p.set('dates', e.allDay ? `${dateStamp(e.date)}/${dateStamp(nextDayKey(e.date))}` : `${utcStamp(e._start)}/${utcStamp(endOf(e))}`);
+    p.set('dates', e.allDay ? `${dateStamp(e.date)}/${dateStamp(addDaysKey(e.date, 1))}` : `${utcStamp(e._start)}/${utcStamp(endOf(e))}`);
     if (locStr(e)) p.set('location', locStr(e));
-    p.set('details', [(e.description || '').slice(0, 800), e.url || ''].filter(Boolean).join('\n\n'));
-    p.set('ctz', 'America/New_York');
+    p.set('details', calDetails(e));
+    p.set('ctz', TZ);
     return 'https://calendar.google.com/calendar/render?' + p.toString();
   }
 
+  /* RFC 5545: TEXT values escape \ ; , and newlines; lines fold at 75 octets. */
+  function icsText(s) {
+    return String(s || '').replace(/\r\n?/g, '\n').replace(/\\/g, '\\\\').replace(/[,;]/g, (c) => '\\' + c).replace(/\n/g, '\\n');
+  }
+  function icsFold(line) {
+    const enc = new TextEncoder();
+    const out = [];
+    let cur = '', bytes = 0;
+    for (const ch of line) {
+      const b = enc.encode(ch).length;
+      if (bytes + b > 75) { out.push(cur); cur = ' '; bytes = 1; }
+      cur += ch; bytes += b;
+    }
+    out.push(cur);
+    return out.join('\r\n');
+  }
   function icsUrl(e) {
-    const escI = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/[,;]/g, (c) => '\\' + c);
+    const url = safeUrl(e.url);
     const lines = [
       'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Btown Brief//Events//EN', 'BEGIN:VEVENT',
       `UID:${e.id}@guide.btownbrief.com`,
       `DTSTAMP:${utcStamp(new Date())}`,
       e.allDay ? `DTSTART;VALUE=DATE:${dateStamp(e.date)}` : `DTSTART:${utcStamp(e._start)}`,
-      e.allDay ? `DTEND;VALUE=DATE:${dateStamp(nextDayKey(e.date))}` : `DTEND:${utcStamp(endOf(e))}`,
-      `SUMMARY:${escI(e.title)}`,
+      e.allDay ? `DTEND;VALUE=DATE:${dateStamp(addDaysKey(e.date, 1))}` : `DTEND:${utcStamp(endOf(e))}`,
+      `SUMMARY:${icsText(e.title)}`,
     ];
-    if (locStr(e)) lines.push(`LOCATION:${escI(locStr(e))}`);
-    const desc = [(e.description || '').slice(0, 800), e.url || ''].filter(Boolean).join('\n\n');
-    if (desc) lines.push(`DESCRIPTION:${escI(desc)}`);
-    if (e.url) lines.push(`URL:${e.url}`);
+    if (locStr(e)) lines.push(`LOCATION:${icsText(locStr(e))}`);
+    const desc = calDetails(e);
+    if (desc) lines.push(`DESCRIPTION:${icsText(desc)}`);
+    if (url) lines.push(`URL:${url.replace(/[\r\n\s]/g, '')}`);
     lines.push('END:VEVENT', 'END:VCALENDAR');
-    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lines.join('\r\n'));
+    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(lines.map(icsFold).join('\r\n'));
   }
 
   /* ---------------- list ---------------- */
@@ -735,18 +804,19 @@
     const listEl = $('ev-list');
     listEl.innerHTML = '';
     const shown = dates.slice(0, state.daysShown);
-    shown.forEach((dateStr) => {
+    shown.forEach((k) => {
       const g = document.createElement('section');
       g.className = 'ev-day';
-      const d = fromKey(dateStr);
-      const rel = dateStr === c.todayKey ? 'Today' : dateStr === c.tomorrowKey ? 'Tomorrow' : DAY_NAMES[d.getDay()];
-      const cal = dateStr === c.todayKey || dateStr === c.tomorrowKey
-        ? `${DAY_NAMES[d.getDay()]}, ${MON_NAMES[d.getMonth()]} ${d.getDate()}`
-        : `${MON_NAMES[d.getMonth()]} ${d.getDate()}`;
+      const p = kparts(k);
+      const rel = k === c.todayKey ? 'Today' : k === c.tomorrowKey ? 'Tomorrow' : DAY_NAMES[p.dow];
+      const cal = (k === c.todayKey || k === c.tomorrowKey)
+        ? `${DAY_NAMES[p.dow]}, ${MON_NAMES[p.mo]} ${p.d}`
+        : `${MON_NAMES[p.mo]} ${p.d}`;
+      const n = groups.get(k).length;
       g.innerHTML = `<h3 class="ev-day-head"><span>${rel}</span><span class="ev-day-cal">${cal}</span>` +
-        `<span class="ev-day-n">${groups.get(dateStr).length} event${groups.get(dateStr).length === 1 ? '' : 's'}</span></h3>`;
+        `<span class="ev-day-n">${n} event${n === 1 ? '' : 's'}</span></h3>`;
       const frag = document.createDocumentFragment();
-      groups.get(dateStr)
+      groups.get(k)
         .sort((a, b) => (a.allDay && b.allDay) ? a.title.localeCompare(b.title)
           : a.allDay ? -1 : b.allDay ? 1 : a._start - b._start)
         .forEach((e) => frag.appendChild(row(e, c)));
@@ -766,22 +836,23 @@
 
     // status line
     let scope;
-    if (f.when === 'day' && f.day) scope = f.day === c.todayKey ? 'today' : f.day === c.tomorrowKey ? 'tomorrow'
-      : `${DAY_SHORT[fromKey(f.day).getDay()]} ${MON_NAMES[fromKey(f.day).getMonth()]} ${fromKey(f.day).getDate()}`;
+    if (f.when === 'day' && f.day) scope = f.day === c.todayKey ? 'today' : f.day === c.tomorrowKey ? 'tomorrow' : shortDay(f.day);
     else if (f.when === 'weekend') scope = 'this weekend';
     else if (f.when === 'today') scope = 'today';
     else if (f.when === 'tomorrow') scope = 'tomorrow';
     else scope = `the next ${dates.length} day${dates.length === 1 ? '' : 's'}`;
     $('ev-count').textContent = evs.length
-      ? `${evs.length} event${evs.length === 1 ? '' : 's'} ${scope}${f.soon ? ' · starting in the next 2 hours' : ''}`
+      ? `${evs.length} event${evs.length === 1 ? '' : 's'} ${scope}` +
+        (f.soon ? ' · starting in the next 2 hours' : f.evening ? ' · from 4 PM on' : '')
       : '';
-    $('ev-clear').hidden = !(f.q || f.cat || f.town || f.quick.size || f.soon);
+    $('ev-clear').hidden = !(f.q || f.cat || f.town || f.quick.size || f.soon || f.evening);
 
-    // keep the open card open across re-renders
+    // keep the open card open across re-renders; forget it if it's no longer shown
     if (state.openId) {
       const el = document.getElementById('e-' + state.openId);
       const e = state.byId.get(state.openId);
       if (el && e) toggleRow(el, e);
+      else state.openId = null;
     }
   }
 
@@ -791,7 +862,8 @@
     if (state.view === 'list') renderList();
     else if (state.view === 'month') renderMonths();
     else if (state.view === 'map') { renderList(); renderMap(filtered()); }
-    syncLensChips();
+    const lens = lensDefs();
+    syncLensChips(lens.defs, lens.ctx);
     writeParams();
   }
 
@@ -802,24 +874,20 @@
     if (!wrap) return;
     const f = state.filters;
     const todayKey = dkey(new Date());
-    const list = state.ongoing.filter((e) =>
-      (e.ongoingUntil || e.date) >= todayKey &&
-      (!f.cat || e.category === f.cat) &&
-      (!f.town || e.town === f.town) &&
-      (!f.q || e._search.includes(f.q)));
-    if (!list.length || f.soon) { wrap.hidden = true; return; }
+    const list = state.ongoing.filter((e) => (e.ongoingUntil || e.date) >= todayKey && matchesNonDate(e));
+    if (!list.length || f.soon || f.evening) { wrap.hidden = true; return; }
     wrap.hidden = false;
     $('ev-ongoing-count').textContent = list.length;
     const box = $('ev-ongoing-list');
     box.innerHTML = '';
     list.sort((a, b) => (a.ongoingUntil || '').localeCompare(b.ongoingUntil || ''))
       .forEach((e) => {
-        const until = e.ongoingUntil
-          ? ` — through ${MON_NAMES[fromKey(e.ongoingUntil).getMonth()]} ${fromKey(e.ongoingUntil).getDate()}`
-          : '';
-        const a = document.createElement('a');
+        let until = '';
+        if (e.ongoingUntil) { const p = kparts(e.ongoingUntil); until = ` — through ${MON_NAMES[p.mo]} ${p.d}`; }
+        const href = safeUrl(e.url);
+        const a = document.createElement(href ? 'a' : 'span');
         a.className = 'ev-ongoing-row';
-        a.href = e.url; a.target = '_blank'; a.rel = 'noopener';
+        if (href) { a.href = href; a.target = '_blank'; a.rel = 'noopener'; }
         a.innerHTML = `<span class="ev-ongoing-title">${esc(e.title)}</span>` +
           `<span class="ev-ongoing-meta">${esc(e.venue || e.town || '')}${esc(until)}</span>`;
         box.appendChild(a);
@@ -841,12 +909,12 @@
     const lo = (state.meta && state.meta.windowStart) || todayKey;
     const hi = (state.meta && state.meta.windowEnd) || todayKey;
 
-    const start = fromKey(lo), end = fromKey(hi);
+    const start = kparts(lo), end = kparts(hi);
     const months = [];
-    let cur = new Date(start.getFullYear(), start.getMonth(), 1);
-    while (cur <= end && months.length < 4) {
-      months.push(new Date(cur));
-      cur = new Date(cur.getFullYear(), cur.getMonth() + 1, 1);
+    let y = start.y, mo = start.mo;
+    while ((y < end.y || (y === end.y && mo <= end.mo)) && months.length < 4) {
+      months.push({ y, mo });
+      mo += 1; if (mo > 11) { mo = 0; y += 1; }
     }
 
     const wrap = $('ev-months');
@@ -857,14 +925,14 @@
     months.forEach((m) => {
       const grid = document.createElement('div');
       grid.className = 'ev-month';
-      let html = `<h3 class="ev-month-name">${MONTHS[m.getMonth()]} ${m.getFullYear()}</h3>`;
+      let html = `<h3 class="ev-month-name">${MONTHS[m.mo]} ${m.y}</h3>`;
       html += '<div class="ev-month-grid">';
       DOW.forEach((d) => { html += `<span class="ev-dow" aria-hidden="true">${d}</span>`; });
-      const firstDow = new Date(m.getFullYear(), m.getMonth(), 1).getDay();
-      const days = new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
+      const firstDow = new Date(Date.UTC(m.y, m.mo, 1)).getUTCDay();
+      const days = new Date(Date.UTC(m.y, m.mo + 1, 0)).getUTCDate();
       for (let i = 0; i < firstDow; i++) html += '<span class="ev-day-cell ev-day-blank"></span>';
       for (let d = 1; d <= days; d++) {
-        const key = dkey(new Date(m.getFullYear(), m.getMonth(), d));
+        const key = keyOf(m.y, m.mo, d);
         const n = counts.get(key) || 0;
         const inWindow = key >= lo && key <= hi;
         const isToday = key === todayKey;
@@ -873,8 +941,8 @@
           continue;
         }
         const heat = busiest ? Math.min(3, Math.ceil((n / busiest) * 3)) : 1;
-        html += `<button class="ev-day-cell ev-day-on heat-${heat}${isToday ? ' is-today' : ''}" ` +
-          `data-day="${key}" aria-label="${n} event${n === 1 ? '' : 's'} on ${MONTHS[m.getMonth()]} ${d}">` +
+        html += `<button type="button" class="ev-day-cell ev-day-on heat-${heat}${isToday ? ' is-today' : ''}" ` +
+          `data-day="${key}" aria-label="${n} event${n === 1 ? '' : 's'} on ${MONTHS[m.mo]} ${d}">` +
           `<span class="ev-day-num">${d}</span><span class="ev-day-count">${n}</span></button>`;
       }
       html += '</div>';
@@ -886,7 +954,7 @@
       b.addEventListener('click', () => {
         state.filters.when = 'day';
         state.filters.day = b.dataset.day;
-        state.filters.soon = false;
+        state.filters.soon = false; state.filters.evening = false;
         state.daysShown = 7;
         setView('list');
         renderAll();
@@ -896,9 +964,9 @@
 
     let total = 0;
     counts.forEach((n, k) => { if (k >= lo && k <= hi) total += n; });
-    const fl = fromKey(lo), fh = fromKey(hi);
+    const fl = kparts(lo), fh = kparts(hi);
     $('ev-month-note').textContent =
-      `${total} events between ${MON_NAMES[fl.getMonth()]} ${fl.getDate()} and ${MON_NAMES[fh.getMonth()]} ${fh.getDate()}. Click any day to open it.`;
+      `${total} events between ${MON_NAMES[fl.mo]} ${fl.d} and ${MON_NAMES[fh.mo]} ${fh.d}. Click any day to open it.`;
   }
 
   /* ---------------- map ---------------- */
@@ -928,9 +996,11 @@
         radius: Math.min(8 + list.length, 18), weight: 2,
         color: '#F2683C', fillColor: '#F2683C', fillOpacity: 0.35,
       });
-      const items = list.slice(0, 8).map((e) =>
-        `<li>${esc(e.date.slice(5).replace('-', '/'))}${e.allDay ? '' : ' ' + fmtTime(e._start)} — ` +
-        `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a></li>`).join('');
+      const items = list.slice(0, 8).map((e) => {
+        const href = safeUrl(e.url);
+        const t = href ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(e.title)}</a>` : esc(e.title);
+        return `<li>${esc(e.date.slice(5).replace('-', '/'))}${e.allDay ? '' : ' ' + fmtHM(e._h, e._m)} — ${t}</li>`;
+      }).join('');
       m.bindPopup(
         `<strong>${esc(e0.venue || 'Venue')}</strong>` +
         `<ul class="ev-pop-list">${items}</ul>` +
@@ -973,7 +1043,7 @@
     });
     $('ev-clear').addEventListener('click', () => {
       const f = state.filters;
-      f.q = ''; f.cat = ''; f.town = ''; f.quick = new Set(); f.soon = false;
+      f.q = ''; f.cat = ''; f.town = ''; f.quick = new Set(); f.soon = false; f.evening = false;
       $('ev-search').value = ''; $('ev-f-town').value = '';
       state.daysShown = 7;
       renderAll();
@@ -984,6 +1054,14 @@
     });
     document.querySelectorAll('[data-view]').forEach((b) => {
       b.addEventListener('click', () => { setView(b.dataset.view); renderAll(); });
+    });
+
+    // horizontal strips: keep a keyboard-focused item fully in view (the fade mask hides the edge)
+    ['ev-days', 'ev-quick', 'ev-cats', 'ev-now', 'ev-picks-row'].forEach((id) => {
+      const el = $(id);
+      if (el) el.addEventListener('focusin', (ev) => {
+        if (ev.target.scrollIntoView) ev.target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      });
     });
 
     $('dark-toggle').addEventListener('click', () => {

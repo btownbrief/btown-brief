@@ -172,14 +172,18 @@
 .ev-daytab:hover { background: var(--bg-subtle); }
 .ev-daytab-l { font-size: var(--text-sm); font-weight: 600; white-space: nowrap; }
 .ev-daytab-n { font-size: 0.6875rem; color: var(--ink-4); font-variant-numeric: tabular-nums; }
-.ev-daytab[aria-selected="true"] { background: var(--ink); color: var(--bg); }
-.ev-daytab[aria-selected="true"] .ev-daytab-n { color: var(--bg); opacity: 0.7; }
+.ev-daytab[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.ev-daytab[aria-pressed="true"] .ev-daytab-n { color: var(--bg); opacity: 0.7; }
 .ev-daytab.is-now .ev-daytab-l::after {
   content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%;
   background: var(--coral); margin-left: 5px; vertical-align: 2px;
 }
 .ev-daytab.is-sep { margin-left: 4px; padding-left: 14px; border-left: 1px solid var(--line); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
-.ev-daytab.is-sep[aria-selected="true"] { border-left-color: transparent; }
+.ev-daytab.is-sep[aria-pressed="true"] { border-left-color: transparent; }
+/* visible, inset focus that survives the fade masks */
+.ev-daytab:focus-visible, .ev-chip:focus-visible, .ev-now-chip:focus-visible, .ev-pick-card:focus-visible, .ev-view-btn:focus-visible, .ev-act:focus-visible, .ev-more:focus-visible {
+  outline: none; box-shadow: inset 0 0 0 2px var(--teal);
+}
 .ev-daytab.is-empty { opacity: 0.5; }
 
 .ev-view-toggle {
@@ -341,9 +345,8 @@
 }
 .ev-day .ev-row:first-of-type { border-top-color: transparent; }
 .ev-row:hover, .ev-row:focus-visible { background: var(--bg-subtle); }
-.ev-row[aria-expanded="true"] { background: var(--bg-raised); box-shadow: var(--shadow-sm); border-top-color: transparent; }
-.ev-row[aria-expanded="true"] + .ev-row { border-top-color: transparent; }
-.ev-row:focus-visible { box-shadow: inset 0 0 0 2px var(--teal); }
+.ev-row.is-open { background: var(--bg-raised); box-shadow: var(--shadow-sm); border-top-color: transparent; }
+.ev-row.is-open + .ev-row { border-top-color: transparent; }
 
 .ev-row-time {
   display: flex; align-items: baseline; gap: 3px;
@@ -370,7 +373,12 @@
   font-size: var(--text-base); font-weight: 600; line-height: 1.35; color: var(--ink);
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-.ev-row[aria-expanded="true"] .ev-row-title { -webkit-line-clamp: unset; }
+.ev-row.is-open .ev-row-title { -webkit-line-clamp: unset; }
+.ev-row-tbtn {
+  appearance: none; background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; color: inherit; text-align: left; cursor: pointer; display: inline;
+}
+.ev-row-tbtn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 3px; }
 .ev-row-meta {
   margin-top: 2px;
   color: var(--ink-3); font-size: var(--text-sm); line-height: 1.4;
@@ -556,7 +564,7 @@
 .ev-month-wrap { margin-top: var(--space-4); }
 .ev-months {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: var(--space-5);
 }
 .ev-month-name {
