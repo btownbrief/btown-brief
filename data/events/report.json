@@ -1,15 +1,15 @@
 {
- "generated": "2026-08-22T05:55:06-04:00",
+ "generated": "2026-08-22T16:58:10-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 15,
-   "seconds": 5.4
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 63,
-   "seconds": 2.8
+   "seconds": 2.4
   },
   "brownell": {
    "label": "Brownell Library",
@@ -24,7 +24,7 @@
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 79,
-   "seconds": 2.0
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 165,
-   "seconds": 66.5
+   "seconds": 65.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 35,
-   "seconds": 2.3
+   "seconds": 2.0
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 35.7
+   "seconds": 38.5
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -79,27 +79,27 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 414,
-   "seconds": 73.7
+   "seconds": 73.9
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 108.7
+   "count": 64,
+   "seconds": 105.9
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 43,
-   "seconds": 15.0
+   "seconds": 14.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 91,
-   "seconds": 8.8
+   "seconds": 6.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 29,
-   "seconds": 33.4
+   "seconds": 33.1
   },
   "sevendays": {
    "label": "Seven Days",
@@ -114,7 +114,7 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 372,
-   "seconds": 21.2
+   "seconds": 12.8
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -124,7 +124,7 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 77,
-   "seconds": 97.1
+   "seconds": 100.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,10 +132,10 @@
    "seconds": 0.4
   }
  },
- "gathered": 2682,
- "afterDedup": 1456,
+ "gathered": 2681,
+ "afterDedup": 1455,
  "duplicatesMerged": 1226,
- "final": 1815,
+ "final": 1812,
  "mergeLog": [
   {
    "kept": {
@@ -2383,20 +2383,18 @@
  ],
  "changes": [
   {
-   "id": "bceae1bd2803",
-   "title": "Industry Day",
-   "date": "2026-10-12",
-   "change": "time",
-   "was": "2026-10-12",
-   "now": "2026-10-12T11:30:00-04:00"
+   "id": "4b0f5a6f4646",
+   "title": "BTown Coffee Club",
+   "date": "2026-08-22",
+   "change": "missing",
+   "lastSeen": "2026-08-22T05:55:06-04:00"
   },
   {
-   "id": "474f6a4e1c41",
-   "title": "L. Shankar",
-   "date": "2026-10-12",
-   "change": "time",
-   "was": "2026-10-12T19:30:00-04:00",
-   "now": "2026-10-12T19:00:00-04:00"
+   "id": "613b9086e18d",
+   "title": "Summer River Float on The Winooski River",
+   "date": "2026-08-22",
+   "change": "missing",
+   "lastSeen": "2026-08-22T05:55:06-04:00"
   },
   {
    "id": "e55b7612e810",
@@ -2404,6 +2402,13 @@
    "date": "2026-08-22",
    "change": "missing",
    "lastSeen": "2026-08-19T17:01:24-04:00"
+  },
+  {
+   "id": "9418743e5cbf",
+   "title": "Helm",
+   "date": "2026-08-22",
+   "change": "missing",
+   "lastSeen": "2026-08-22T05:55:06-04:00"
   },
   {
    "id": "570fd62b0fc4",
@@ -2423,8 +2428,7 @@
    "id": "97a8ec042810",
    "title": "Street Soccer Tournament: Adult (age 19+)",
    "date": "2026-08-29",
-   "change": "missing",
-   "lastSeen": "2026-08-19T06:02:08-04:00"
+   "change": "dropped"
   },
   {
    "id": "66ad4d4c10e4",
@@ -2619,8 +2623,7 @@
    "id": "b5de3dfe34d2",
    "title": "Adult Drop- In Table Tennis",
    "date": "2026-09-21",
-   "change": "missing",
-   "lastSeen": "2026-08-19T06:02:08-04:00"
+   "change": "dropped"
   },
   {
    "id": "5f96d5656174",
@@ -2661,8 +2664,7 @@
    "id": "b22d09037583",
    "title": "Adult Drop- In Table Tennis",
    "date": "2026-09-28",
-   "change": "missing",
-   "lastSeen": "2026-08-19T06:02:08-04:00"
+   "change": "dropped"
   },
   {
    "id": "e6d21f28af19",
@@ -2710,8 +2712,7 @@
    "id": "f7b62efc6388",
    "title": "Adult Drop- In Table Tennis",
    "date": "2026-10-05",
-   "change": "missing",
-   "lastSeen": "2026-08-19T06:02:08-04:00"
+   "change": "dropped"
   },
   {
    "id": "c0ea7f397e8a",
@@ -2782,13 +2783,6 @@
    "date": "2026-10-16",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
-   "id": "cb32212527b6",
-   "title": "7th Annual Pumpkin Carving Party & Bonfire",
-   "date": "2026-10-17",
-   "change": "missing",
-   "lastSeen": "2026-08-19T06:02:08-04:00"
   },
   {
    "id": "03a62429927f",
