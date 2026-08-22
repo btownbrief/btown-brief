@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-21T16:58:47-04:00",
+ "generated": "2026-08-22T05:55:06-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 16,
-   "seconds": 6.3
+   "count": 15,
+   "seconds": 5.4
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 65,
-   "seconds": 2.4
+   "count": 63,
+   "seconds": 2.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 55,
-   "seconds": 3.2
+   "count": 56,
+   "seconds": 2.6
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 170,
-   "seconds": 3.3
+   "count": 166,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 80,
-   "seconds": 1.7
+   "count": 79,
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-21&end_date=2026-10-20&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-22&end_date=2026-10-21&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.1
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 160,
-   "seconds": 69.4
+   "count": 165,
+   "seconds": 66.5
   },
   "flynn": {
    "label": "The Flynn",
    "count": 35,
-   "seconds": 2.4
+   "seconds": 2.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.9
+   "seconds": 35.7
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.6
+   "seconds": 0.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 419,
-   "seconds": 72.9
+   "count": 414,
+   "seconds": 73.7
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 107.9
+   "count": 65,
+   "seconds": 108.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 42,
-   "seconds": 14.8
+   "count": 43,
+   "seconds": 15.0
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden"
+   "count": 91,
+   "seconds": 8.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 32,
-   "seconds": 33.2
+   "count": 29,
+   "seconds": 33.4
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,18 +113,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 368,
-   "seconds": 13.4
+   "count": 372,
+   "seconds": 21.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 223,
+   "count": 224,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 77,
-   "seconds": 98.8
+   "seconds": 97.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -132,112 +132,11 @@
    "seconds": 0.4
   }
  },
- "gathered": 2596,
- "afterDedup": 1363,
- "duplicatesMerged": 1233,
- "final": 1830,
+ "gathered": 2682,
+ "afterDedup": 1456,
+ "duplicatesMerged": 1226,
+ "final": 1815,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Of Monsters and Men at Shelburne Museum",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-20"
-  },
-  {
-   "kept": {
-    "title": "Jensen McRae at Higher Ground",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-20"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-20"
-  },
-  {
-   "kept": {
-    "title": "Live Music",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-20"
-  },
-  {
-   "kept": {
-    "title": "Alex Cameron",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-09-20"
-  },
-  {
-   "kept": {
-    "title": "De-Escalation & Communication Strategies",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-21"
-  },
-  {
-   "kept": {
-    "title": "Empowerment Self-Defense (Student Session)",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-21"
-  },
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-21"
-  },
-  {
-   "kept": {
-    "title": "ALICE Workshop: Scenario-Based Threat Response",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-21"
-  },
   {
    "kept": {
     "title": "Cheekface at Higher Ground",
@@ -2019,7 +1918,8 @@
    },
    "merged_sources": [
     "champlainvalley",
-    "flynn"
+    "flynn",
+    "helloburlington"
    ],
    "date": "2026-10-10"
   },
@@ -2030,6 +1930,7 @@
    },
    "merged_sources": [
     "churchst",
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-10-10"
@@ -2069,6 +1970,17 @@
   },
   {
    "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-10"
+  },
+  {
+   "kept": {
     "title": "Field Hockey vs Appalachian State",
     "source": "uvm"
    },
@@ -2080,12 +1992,45 @@
   },
   {
    "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-11"
+  },
+  {
+   "kept": {
     "title": "CAT ECare Training",
     "source": "uvm"
    },
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-12"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-12"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-12"
   },
@@ -2378,30 +2323,80 @@
     "loveburlington"
    ],
    "date": "2026-10-20"
+  },
+  {
+   "kept": {
+    "title": "Empowerment Self-Defense (Student Session)",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-20"
+  },
+  {
+   "kept": {
+    "title": "AI and its implications for research, learning, education, and careers ft. Josh Bongard",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-20"
+  },
+  {
+   "kept": {
+    "title": "Rehash",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-20"
+  },
+  {
+   "kept": {
+    "title": "MANIA: THE ABBA TRIBUTE",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "flynn"
+   ],
+   "date": "2026-10-21"
+  },
+  {
+   "kept": {
+    "title": "TRIVIA NIGHT",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-21"
   }
  ],
  "changes": [
   {
-   "id": "5fba02bfa610",
-   "title": "Libby Cataldi | It Takes a Lifetime to Learn How to Live: An Italian American Story of Coming Home",
-   "date": "2026-09-17",
+   "id": "bceae1bd2803",
+   "title": "Industry Day",
+   "date": "2026-10-12",
    "change": "time",
-   "was": "2026-09-17T18:30:00-04:00",
-   "now": "2026-09-17T19:00:00-04:00"
+   "was": "2026-10-12",
+   "now": "2026-10-12T11:30:00-04:00"
   },
   {
-   "id": "05c9ee8e9792",
-   "title": "Lunch with the Poets",
-   "date": "2026-08-21",
-   "change": "missing",
-   "lastSeen": "2026-08-21T06:04:14-04:00"
-  },
-  {
-   "id": "939cabf201a6",
-   "title": "Modest Mouse",
-   "date": "2026-08-21",
-   "change": "missing",
-   "lastSeen": "2026-08-20T06:03:59-04:00"
+   "id": "474f6a4e1c41",
+   "title": "L. Shankar",
+   "date": "2026-10-12",
+   "change": "time",
+   "was": "2026-10-12T19:30:00-04:00",
+   "now": "2026-10-12T19:00:00-04:00"
   },
   {
    "id": "e55b7612e810",
@@ -2761,13 +2756,6 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
-   "id": "474f6a4e1c41",
-   "title": "L. Shankar",
-   "date": "2026-10-12",
-   "change": "missing",
-   "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
    "id": "8e3aaa4041af",
    "title": "Magoo",
    "date": "2026-10-13",
@@ -2808,6 +2796,13 @@
    "date": "2026-10-18",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
+  },
+  {
+   "id": "9ed6836cb36c",
+   "title": "Rehash w/ The Flooks",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-08-21T16:58:47-04:00"
   }
  ]
 }
