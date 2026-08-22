@@ -1,26 +1,26 @@
 {
- "updated": "2026-08-21T23:01:48+00:00",
+ "updated": "2026-08-22T00:00:42+00:00",
  "sections_updated": {
-  "now": "2026-08-21T23:01:48+00:00",
-  "forecast": "2026-08-21T23:01:48+00:00",
-  "hourly": "2026-08-21T23:01:48+00:00",
-  "alerts": "2026-08-21T23:01:48+00:00",
-  "afd": "2026-08-21T23:01:48+00:00",
-  "lake_forecast": "2026-08-21T23:01:48+00:00",
+  "now": "2026-08-22T00:00:42+00:00",
+  "forecast": "2026-08-22T00:00:42+00:00",
+  "hourly": "2026-08-22T00:00:42+00:00",
+  "alerts": "2026-08-22T00:00:42+00:00",
+  "afd": "2026-08-22T00:00:42+00:00",
+  "lake_forecast": "2026-08-22T00:00:42+00:00",
   "lake_gage": "2026-08-21T23:01:48+00:00",
-  "air": "2026-08-21T23:01:48+00:00",
-  "sun": "2026-08-21T23:01:48+00:00",
-  "models": "2026-08-21T23:01:48+00:00"
+  "air": "2026-08-22T00:00:42+00:00",
+  "sun": "2026-08-22T00:00:42+00:00",
+  "models": "2026-08-22T00:00:42+00:00"
  },
  "now": {
-  "observed_at": "2026-08-21T22:35:00+00:00",
+  "observed_at": "2026-08-21T23:35:00+00:00",
   "station": "KBTV",
   "description": "Mostly Clear",
-  "temp_f": 73,
-  "feels_like_f": 73,
-  "humidity": 47,
+  "temp_f": 72,
+  "feels_like_f": 71,
+  "humidity": 50,
   "dewpoint_f": 52,
-  "wind_mph": 8,
+  "wind_mph": 5,
   "wind_gust_mph": null,
   "wind_dir": "N"
  },
@@ -29,13 +29,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-08-21T19:00:00-04:00",
+    "start": "2026-08-21T20:00:00-04:00",
     "is_day": false,
     "temp_f": 57,
     "pop": 0,
-    "wind": "NE 1 to 6 mph",
+    "wind": "NE 1 to 5 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 57. Northeast wind 1 to 6 mph."
+    "detailed": "Mostly clear, with a low around 57. Northeast wind 1 to 5 mph."
    },
    {
     "name": "Saturday",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-21T22:17:07+00:00",
   "hours": [
-   {
-    "t": "2026-08-21T19:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
-    "pop": 0,
-    "humidity": 46,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 11,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-08-21T20:00:00-04:00",
     "temp_f": 70,
@@ -567,6 +556,17 @@
     "wind_dir": "SE",
     "sky": 57,
     "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-08-23T07:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 9,
+    "humidity": 93,
+    "wind_mph": 6,
+    "wind_dir": "SE",
+    "sky": 58,
+    "short": "Partly Sunny"
    }
   ]
  },
@@ -574,14 +574,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-21T18:21:00+00:00",
+  "issued": "2026-08-21T23:31:00+00:00",
   "key_messages": [
    "Dry and seasonable conditions are expected as we head into the weekend through Saturday.",
    "A pair of systems will increase precipitation chances across northern New York and southeastern Vermont into the latter portion of the weekend.",
    "Seasonable conditions prevail for much of next week with several chances for showers."
   ],
   "what_changed": "As of 220 PM EDT Friday... No significant changes to the current forecast.",
-  "raw": "\n000\nFXUS61 KBTV 211821\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n221 PM EDT Fri Aug 21 2026\n\n.WHAT HAS CHANGED...\nAs of 220 PM EDT Friday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 220 PM EDT Friday...\n\n1. Dry and seasonable conditions are expected as we head into \nthe weekend through Saturday. \n\n2. A pair of systems will increase precipitation chances across \nnorthern New York and southeastern Vermont into the latter portion \nof the weekend.\n\n3. Seasonable conditions prevail for much of next week with \nseveral chances for showers.\n\n&&\n\n.DISCUSSION...\nAs of 220 PM EDT Friday...\n\nKEY MESSAGE 1: Dry and relatively seasonable conditions are expected to \nprevail into the early portion of the weekend with high pressure \noverhead. Fair weather cumulus will wane towards this evening with \nclearing skies tonight. More cloud cover is possible in southeastern \nVermont, associated with a departing coast low off the coast of \nsouthern New England. Temperatures tonight will be cooler across the \nnorthern and western locations falling into the upper 40s to low \n50s; mid 50s for the Champlain Valley and southern Vermont. A few \nsheltered locations could fall as low as the low 40s in portions of \nthe Adirondacks with strong radiational cooling. Patchy river fog in \nthe Connecticut River and sheltered river valleys of the Adirondacks \nand eastern Vermont will be possible near sunrise tomorrow morning. \n\nClouds will increase from southeast to northwest in Vermont, with \nsome clearing hanging on across the St. Lawrence Valley by tomorrow \nafternoon. Temperatures will be fairly similar to today; about a \ndegree or two warmer with highs in the mid 70s to near 80. More \nsoutheasterly light breezes, especially in the Champlain Valley are \nexpected as another coastal low rides up the East Coast by mid to \nlate Saturday. Saturday night lows will be a bit warmer with less \nfog and radiational cooling from increased cloud cover, with values \nin the mid to upper 50s in the higher terrain, and low 60s in the \nChamplain and St. Lawrence Valleys. Precipitation chances begin to \nslowly increase late Saturday night as the coastal low departs to \nthe east, and an approaching Great Lakes Trough slides east into \nnorthern New York.\n\nKEY MESSAGE 2: Following a calm start to the weekend, conditions will \nturn more wet and showery by the latter portion of the weekend. As \nhigh pressure drifts to the northwest, it will leave in its wake an \narea of subsidence and subtle ridging centered from northeast to \nsouthwest across Vermont Saturday and Sunday. A pair of systems will \nsplit this area of ridging bringing shower chances to portions of \nthe area. The first of the two systems will be a weak coastal low \nalong the coast of southern New England, which will track near Cape \nCod and is expected to continue moving northeast out into the Gulf \nof Maine. Some showers may be possible in eastern Windsor and Orange \nCounties Saturday night, however, recent trends have suggested \nsteadier precipitation associated with the coastal system will stay \neast of the Connecticut River. Any showers that do develop in \nsoutheastern Vermont will be light in nature. \n\nThe second, higher confidence, system will be an approaching long \nwave trough that will track east from the Great Lakes region. The \ntrough translates east into the St. Lawrence Valley late Saturday \ninto early Sunday, with scattered rounds of showers. The trough \nslowly tracks east through the day Sunday reaching Vermont by late \nSunday into Sunday night. While an isolated rumble of thunder with \nthe shower activity cannot be ruled out, especially if an earlier \nshower can tap into better diurnal instability, chances are \nrelatively low with poor mid level lapse rates, cool surface \ntemperatures, and a lack of true instability. In all likelihood, the \nboundary will be a mess of scattered to isolated showers with some \nbreaks in between, focused mainly over northern New York, and \nsomewhat weakening as it moves east. Between both systems during the \nday Saturday, and most of Sunday, Vermont will be straddled between \nin a \"no mans land\" of dry and cloudy conditions. Chances for \nshowers do not increase for Vermont until Sunday afternoon, though \nsome isolated sprinkles or mist will be possible, especially in the \nhigher terrain, due to low to mid level stratus clouds. \nPrecipitation amounts will be light and have trended down in recent \nmodel runs, with probabilities of half an inch now below 50%. The \nhigher amounts around a quarter inch will be in northern New York, \nprimarily in the northern St. Lawrence Valley, and the spine of the \nGreens. The trough will pull away to the northeast heading towards \nMonday. As the trough occludes and drifts northeast, the parent \nupper low will continue to keep showers chances around with wrap \naround cyclonic flow. Clouds and shower chances near the \nInternational Border and northern New York will continue through the \nday Monday with seasonable temperatures in the low to mid 70s.\n\nKEY MESSAGE 3: Seasonable weather is expected to prevail throughout \nnext week, with several chances for showers possible. As the upper \nlevel trough from this weekend exits the region, a few lingering \nshowers will be possible into Tuesday, particularly across the \nhigher terrain as broad cyclonic flow persists. A brief period of \nridging is expected to build in for the middle of the week, bringing \nsome drier weather. Additional shower chances look to arrive for the \nend of the week as another system moves through, although details \nare still a little uncertain at this time. Temperatures next week \nlook to be quite seasonable, with high temperatures generally in the \n70s to lower 80s.\n\n&&\n\n.AVIATION /18Z FRIDAY THROUGH WEDNESDAY/...\nThrough 18Z Saturday...VFR conditions currently prevail across all\nterminals, and will continue for much of the forecast period with\nhigh pressure centered over the region. The only exception of VFR\nconditions will be the development of fog overnight at the more\nfavored terminals. THe greatest confidence for IFR or lower will be\nat KMPV, although fog development may also be possible at KSLK and\nKEFK, generally after 07Z or so. Winds this afternoon continue to be\nlight and northerly, less than 10 knots, trending calm and/or\nterrain driven overnight. Winds will become more southerly after 12Z\ntowards the end of the forecast period.\n\nOutlook...\n\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly VFR, with areas MVFR possible. Likely SHRA, Slight\nchance TSRA.\nSunday Night: Mainly VFR, with areas MVFR possible. Chance SHRA,\nSlight chance TSRA.\nMonday: Mainly VFR, with local MVFR possible. Chance SHRA, Slight\nchance TSRA.\nMonday Night: Mainly VFR, with local IFR possible. Slight chance\nSHRA.\nTuesday: Mainly MVFR, with local VFR possible. Chance SHRA.\nTuesday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nWednesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Kremer/Danzig\nAVIATION...Kremer\n"
+  "raw": "\n000\nFXUS61 KBTV 212331\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n731 PM EDT Fri Aug 21 2026\n\n.WHAT HAS CHANGED...\nAs of 220 PM EDT Friday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 220 PM EDT Friday...\n\n1. Dry and seasonable conditions are expected as we head into \nthe weekend through Saturday. \n\n2. A pair of systems will increase precipitation chances across \nnorthern New York and southeastern Vermont into the latter portion \nof the weekend.\n\n3. Seasonable conditions prevail for much of next week with \nseveral chances for showers.\n\n&&\n\n.DISCUSSION...\nAs of 220 PM EDT Friday...\n\nKEY MESSAGE 1: Dry and relatively seasonable conditions are expected to \nprevail into the early portion of the weekend with high pressure \noverhead. Fair weather cumulus will wane towards this evening with \nclearing skies tonight. More cloud cover is possible in southeastern \nVermont, associated with a departing coast low off the coast of \nsouthern New England. Temperatures tonight will be cooler across the \nnorthern and western locations falling into the upper 40s to low \n50s; mid 50s for the Champlain Valley and southern Vermont. A few \nsheltered locations could fall as low as the low 40s in portions of \nthe Adirondacks with strong radiational cooling. Patchy river fog in \nthe Connecticut River and sheltered river valleys of the Adirondacks \nand eastern Vermont will be possible near sunrise tomorrow morning. \n\nClouds will increase from southeast to northwest in Vermont, with \nsome clearing hanging on across the St. Lawrence Valley by tomorrow \nafternoon. Temperatures will be fairly similar to today; about a \ndegree or two warmer with highs in the mid 70s to near 80. More \nsoutheasterly light breezes, especially in the Champlain Valley are \nexpected as another coastal low rides up the East Coast by mid to \nlate Saturday. Saturday night lows will be a bit warmer with less \nfog and radiational cooling from increased cloud cover, with values \nin the mid to upper 50s in the higher terrain, and low 60s in the \nChamplain and St. Lawrence Valleys. Precipitation chances begin to \nslowly increase late Saturday night as the coastal low departs to \nthe east, and an approaching Great Lakes Trough slides east into \nnorthern New York.\n\nKEY MESSAGE 2: Following a calm start to the weekend, conditions will \nturn more wet and showery by the latter portion of the weekend. As \nhigh pressure drifts to the northwest, it will leave in its wake an \narea of subsidence and subtle ridging centered from northeast to \nsouthwest across Vermont Saturday and Sunday. A pair of systems will \nsplit this area of ridging bringing shower chances to portions of \nthe area. The first of the two systems will be a weak coastal low \nalong the coast of southern New England, which will track near Cape \nCod and is expected to continue moving northeast out into the Gulf \nof Maine. Some showers may be possible in eastern Windsor and Orange \nCounties Saturday night, however, recent trends have suggested \nsteadier precipitation associated with the coastal system will stay \neast of the Connecticut River. Any showers that do develop in \nsoutheastern Vermont will be light in nature. \n\nThe second, higher confidence, system will be an approaching long \nwave trough that will track east from the Great Lakes region. The \ntrough translates east into the St. Lawrence Valley late Saturday \ninto early Sunday, with scattered rounds of showers. The trough \nslowly tracks east through the day Sunday reaching Vermont by late \nSunday into Sunday night. While an isolated rumble of thunder with \nthe shower activity cannot be ruled out, especially if an earlier \nshower can tap into better diurnal instability, chances are \nrelatively low with poor mid level lapse rates, cool surface \ntemperatures, and a lack of true instability. In all likelihood, the \nboundary will be a mess of scattered to isolated showers with some \nbreaks in between, focused mainly over northern New York, and \nsomewhat weakening as it moves east. Between both systems during the \nday Saturday, and most of Sunday, Vermont will be straddled between \nin a \"no mans land\" of dry and cloudy conditions. Chances for \nshowers do not increase for Vermont until Sunday afternoon, though \nsome isolated sprinkles or mist will be possible, especially in the \nhigher terrain, due to low to mid level stratus clouds. \nPrecipitation amounts will be light and have trended down in recent \nmodel runs, with probabilities of half an inch now below 50%. The \nhigher amounts around a quarter inch will be in northern New York, \nprimarily in the northern St. Lawrence Valley, and the spine of the \nGreens. The trough will pull away to the northeast heading towards \nMonday. As the trough occludes and drifts northeast, the parent \nupper low will continue to keep showers chances around with wrap \naround cyclonic flow. Clouds and shower chances near the \nInternational Border and northern New York will continue through the \nday Monday with seasonable temperatures in the low to mid 70s.\n\nKEY MESSAGE 3: Seasonable weather is expected to prevail throughout \nnext week, with several chances for showers possible. As the upper \nlevel trough from this weekend exits the region, a few lingering \nshowers will be possible into Tuesday, particularly across the \nhigher terrain as broad cyclonic flow persists. A brief period of \nridging is expected to build in for the middle of the week, bringing \nsome drier weather. Additional shower chances look to arrive for the \nend of the week as another system moves through, although details \nare still a little uncertain at this time. Temperatures next week \nlook to be quite seasonable, with high temperatures generally in the \n70s to lower 80s.\n\n&&\n\n.AVIATION /00Z SATURDAY THROUGH WEDNESDAY/...\nThrough 00Z Sunday...Conditions are VFR across the terminals.\nFair weather cumulus is dissipating past peak heating, and\nthere's high clouds lifting into southern Vermont. Humidities\nare dry this afternoon, and we've had more sunshine. So fog is\nnot expected to be as prevalent, tonight. Noted fog at our climo\nfavored sites (KSLK/KMPV/KEFK). There could be some 10-15 kt\nwinds just off the surface near KSLK, and this may hinder fog,\nand LAV guidance indicates no fog. Still, given the time of\nyear, used a TEMPO leading into a prevailing 2SM at 09z for KSLK.\nKMPV will not have this hindrance, and they will likely observe\n1/2SM FG around 09-12z. Beyond 12z, winds will become south to \nsoutheasterly at 5 to 9 knots with ceilings still at or above \n5000 ft agl, if any.\n\nOutlook...\n\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly VFR, with areas MVFR possible. Likely SHRA, Slight\nchance TSRA.\nSunday Night: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nMonday: Mainly VFR, with local MVFR possible. Chance SHRA, Chance\nTSRA.\nMonday Night: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nTuesday: Mainly MVFR, with local IFR possible. Chance SHRA.\nTuesday Night: Mainly VFR, with local IFR possible. NO SIG WX.\nWednesday: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Kremer/Danzig\nAVIATION...Haynes\n"
  },
  "lake_forecast": {
   "issued": "2026-08-21T18:30:00+00:00",
@@ -863,7 +863,7 @@
   "aqi": 29,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/21/26 18:00",
+  "observed": "08/21/26 19:00",
   "discussion": "Expect generally good air quality across Vermont on Saturday, August 22nd."
  },
  "sun": {
@@ -903,7 +903,7 @@
     },
     "pop_max": {
      "GFS": 0,
-     "Euro": 6,
+     "Euro": 14,
      "ICON": 0
     },
     "precip_in": {
@@ -922,11 +922,11 @@
     },
     "pop_max": {
      "GFS": 56,
-     "Euro": 65,
+     "Euro": 69,
      "ICON": 37
     },
     "precip_in": {
-     "GFS": 0.28,
+     "GFS": 0.1,
      "Euro": 0.11,
      "ICON": 0.0
     },
