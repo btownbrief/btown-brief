@@ -1,26 +1,26 @@
 {
- "updated": "2026-08-22T17:00:57+00:00",
+ "updated": "2026-08-22T17:58:51+00:00",
  "sections_updated": {
-  "now": "2026-08-22T17:00:57+00:00",
-  "forecast": "2026-08-22T17:00:57+00:00",
-  "hourly": "2026-08-22T17:00:57+00:00",
-  "alerts": "2026-08-22T17:00:57+00:00",
-  "afd": "2026-08-22T17:00:57+00:00",
-  "lake_forecast": "2026-08-22T17:00:57+00:00",
-  "lake_gage": "2026-08-22T17:00:57+00:00",
-  "air": "2026-08-22T17:00:57+00:00",
-  "sun": "2026-08-22T17:00:57+00:00",
-  "models": "2026-08-22T17:00:57+00:00"
+  "now": "2026-08-22T17:58:51+00:00",
+  "forecast": "2026-08-22T17:58:51+00:00",
+  "hourly": "2026-08-22T17:58:51+00:00",
+  "alerts": "2026-08-22T17:58:51+00:00",
+  "afd": "2026-08-22T17:58:51+00:00",
+  "lake_forecast": "2026-08-22T17:58:51+00:00",
+  "lake_gage": "2026-08-22T17:58:51+00:00",
+  "air": "2026-08-22T17:58:51+00:00",
+  "sun": "2026-08-22T17:58:51+00:00",
+  "models": "2026-08-22T17:58:51+00:00"
  },
  "now": {
-  "observed_at": "2026-08-22T16:35:00+00:00",
+  "observed_at": "2026-08-22T17:35:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 75,
-  "feels_like_f": 75,
-  "humidity": 54,
-  "dewpoint_f": 57,
-  "wind_mph": 5,
+  "temp_f": 79,
+  "feels_like_f": 79,
+  "humidity": null,
+  "dewpoint_f": null,
+  "wind_mph": 10,
   "wind_gust_mph": null,
   "wind_dir": "S"
  },
@@ -825,17 +825,17 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-08-22T12:00:00.000-04:00",
-  "level_ft": 94.9,
-  "level_at": "2026-08-22T12:00:00.000-04:00",
+  "water_temp_at": "2026-08-22T13:00:00.000-04:00",
+  "level_ft": 94.91,
+  "level_at": "2026-08-22T13:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/22/26 12:00",
+  "observed": "08/22/26 13:00",
   "discussion": "Expect generally good air quality across Vermont on Saturday, August 22nd."
  },
  "sun": {
@@ -843,7 +843,7 @@
   "sunset": "2026-08-22T19:46-04:00",
   "sunrise_tomorrow": "2026-08-23T06:05-04:00",
   "sunset_tomorrow": "2026-08-23T19:45-04:00",
-  "uv_max": 6.1
+  "uv_max": 5.6
  },
  "models": {
   "days": [
@@ -874,7 +874,7 @@
      "ICON": 73
     },
     "pop_max": {
-     "GFS": 27,
+     "GFS": 31,
      "Euro": 90,
      "ICON": 60
     },
@@ -888,7 +888,7 @@
    {
     "date": "2026-08-24",
     "high_f": {
-     "GFS": 71,
+     "GFS": 75,
      "Euro": 72,
      "ICON": 75
     },
@@ -898,11 +898,11 @@
      "ICON": 35
     },
     "precip_in": {
-     "GFS": 0.24,
+     "GFS": 0.05,
      "Euro": 0.07,
      "ICON": 0.1
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    }
   ]
  }
