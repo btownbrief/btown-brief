@@ -363,6 +363,14 @@
     });
   }
 
+  function statStayAwhile() {
+    // The deck grows in batches; read the real count rather than hard-coding one.
+    return getJSON('https://play.btownbrief.com/stay-awhile/data/questions.json').then(function (data) {
+      var n = (data.questions || []).length;
+      if (n >= 100) stat('stat-stayawhile', n + ' questions');
+    });
+  }
+
   function set$(id, html) { var el = $(id); if (el) el.innerHTML = html; }
   function stat(id, text) { var el = $(id); if (el) el.textContent = text; }
 
@@ -436,6 +444,7 @@
     statOpenings().catch(noop);
     statDeals().catch(noop);
     statJobs().catch(noop);
+    statStayAwhile().catch(noop);
   }
 
   function noop() {}

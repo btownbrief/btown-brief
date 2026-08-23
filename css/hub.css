@@ -518,7 +518,10 @@ section { margin-top: 2.4rem; }
   width: 100%;
   max-width: 420px;
   border: none;
-  min-height: 210px;
+  /* Beehiiv's slim embed is a 52px form (their own snippet ships height="52");
+     the old 210px minimum left ~160px of dead glass under the field. */
+  height: 52px;
+  min-height: 52px;
   margin: 0 auto;
   display: block;
   border-radius: var(--radius-sm);
