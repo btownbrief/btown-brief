@@ -365,6 +365,31 @@ html[data-art="photo"] .glint { display: none; }
   text-wrap: pretty;
 }
 .tile-line:empty { display: none; }
+/* The quick row: five prebuilt event filters as chips, one line under the tiles. */
+.quick-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.45rem;
+  margin: 0.7rem 0 0;
+}
+.quick-label { font-size: 0.78rem; color: var(--ink-faint); margin-right: 0.2rem; }
+.quick {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 0.85rem;
+  border-radius: var(--pill);
+  border: 1px solid var(--edge-soft);
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+.quick:hover, .quick:focus-visible { border-color: var(--accent); background: var(--accent-soft); outline: none; }
+.quick:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
+
 .tile {
   background: var(--panel);
   border: 1px solid var(--edge-soft);
@@ -492,7 +517,7 @@ section { margin-top: 2.4rem; }
 ============================================================ */
 .subscribe-embed {
   max-width: 480px;
-  margin: 2.6rem auto 0;
+  margin: 0.4rem auto 2.4rem; /* mid-river now: after the first section, before the first photograph */
   padding: 1.7rem 1.5rem 1.9rem;
   background: var(--panel);
   border: 1px solid var(--edge-soft);

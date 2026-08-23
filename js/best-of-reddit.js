@@ -149,6 +149,20 @@
       toggleBtn.textContent = expand ? 'Collapse all' : 'Expand all';
     });
 
+    // Deep links: best-of-reddit.html#cat-automotive (the hub's "Who do I call?"
+    // question links straight into categories) should land on that category
+    // OPEN, not on a closed summary line. The browser scrolls to the id on its
+    // own; we just open it and nudge the scroll once the content is there.
+    function openFromHash() {
+      var m = /^#cat-([\w-]+)$/.exec(location.hash || '');
+      var target = m && document.getElementById('cat-' + m[1]);
+      if (!target) return;
+      target.open = true;
+      target.scrollIntoView({ block: 'start' });
+    }
+    openFromHash();
+    window.addEventListener('hashchange', openFromHash);
+
     // Clicking a jump chip should open its category, not just scroll past a
     // closed one.
     jumpEl.addEventListener('click', function (e) {
