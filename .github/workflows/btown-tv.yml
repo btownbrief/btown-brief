@@ -1,0 +1,100 @@
+name: Btown TV — tonight's edition
+
+# The daily curated video page:
+#   scripts/curate_tv.py -> data/btown-tv.json (+ tv-history.json,
+#   tv-vault-live.json) on the orphan `btown-tv` branch, and the same picks
+#   into the public "Btown TV — Tonight" YouTube playlist.
+#
+# Raw material comes from the pulse-youtube branch (refresh-youtube.yml,
+# every ~3h). Same publishing shape as curate-top.yml: one orphan commit,
+# force-pushed, fetched by tv.html straight off raw.githubusercontent.com —
+# an edition never queues a Pages deploy.
+#
+# Failure posture: no API key, too few candidates, or any API trouble ends
+# the run quietly without pushing; the branch keeps its last good edition.
+# The playlist sync and the reader-signal read both fail soft on their own.
+
+on:
+  schedule:
+    # 21:40 UTC = 5:40pm EDT / 4:40pm EST — after the 21:17 refresh-youtube
+    # tick, before dinner. One edition a day; "Tonight" is the page.
+    - cron: '40 21 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: btown-tv
+  cancel-in-progress: false
+
+jobs:
+  edition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for an API key
+        id: key
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "no API key, skipping"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install the Anthropic SDK
+        if: steps.key.outputs.ready == 'true'
+        run: python3 -m pip install --quiet 'anthropic>=0.116,<1'
+
+      - name: Pull the edition's memory from the btown-tv branch
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          mkdir -p /tmp/tv-out/data
+          git fetch -q origin btown-tv || true
+          for f in tv-history.json tv-vault-live.json; do
+            git show origin/btown-tv:data/$f > /tmp/tv-out/data/$f 2>/dev/null || true
+          done
+          ls -la /tmp/tv-out/data
+
+      - name: Curate tonight's edition
+        if: steps.key.outputs.ready == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YT_OAUTH_CLIENT_ID: ${{ secrets.YT_OAUTH_CLIENT_ID }}
+          YT_OAUTH_CLIENT_SECRET: ${{ secrets.YT_OAUTH_CLIENT_SECRET }}
+          YT_OAUTH_REFRESH_TOKEN: ${{ secrets.YT_OAUTH_REFRESH_TOKEN }}
+          YT_TV_PLAYLIST_ID: ${{ secrets.YT_TV_PLAYLIST_ID }}
+        run: |
+          python3 scripts/curate_tv.py --selftest
+          # an empty prior file must not read as "history = {}" forever —
+          # drop zero-byte leftovers so the script falls back to the branch URL
+          find /tmp/tv-out/data -size 0 -delete
+          python3 scripts/curate_tv.py \
+            --out /tmp/tv-out/data/btown-tv.json \
+            --history /tmp/tv-out/data/tv-history.json \
+            --vault /tmp/tv-out/data/tv-vault-live.json
+
+      - name: Force-push the single-commit btown-tv branch
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          if [ ! -s /tmp/tv-out/data/btown-tv.json ]; then
+            echo "nothing written this run — leaving the branch alone"
+            exit 0
+          fi
+          cd /tmp/tv-out
+          git init -q -b btown-tv
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/btown-tv.json
+          [ -s data/tv-history.json ] && git add data/tv-history.json
+          [ -s data/tv-vault-live.json ] && git add data/tv-vault-live.json
+          git commit -q -m "Btown TV $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            btown-tv

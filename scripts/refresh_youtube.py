@@ -694,21 +694,22 @@ def run(args):
     elif key:
         # targeted top-up: a channel absent from the stream is usually just
         # quiet, but it might be a feed Inoreader silently dropped — one
-        # playlistItems unit each settles it
+        # playlistItems unit each settles it (60 per run: Btown TV's roster
+        # additions live only in the metadata file until Inoreader catches up)
         covered_set = set(covered)
         missing = [channel for channel in load_channels()
                    if channel["id"] not in covered_set]
         if missing:
             try:
                 extra = fetch_channel_videos_api(key, now_ts,
-                                                 channels=missing[:20])
+                                                 channels=missing[:60])
                 have = {video["id"] for video in own}
                 fresh_extra = [v for v in extra if v["id"] not in have]
                 if fresh_extra:
                     own.extend(fresh_extra)
                     own.sort(key=lambda video: video["d"], reverse=True)
                 print(f"refresh_youtube: api top-up checked "
-                      f"{len(missing[:20])} quiet channels -> "
+                      f"{len(missing[:60])} quiet channels -> "
                       f"+{len(fresh_extra)}")
             except Exception as exc:  # noqa: BLE001
                 print(f"refresh_youtube: top-up trouble ({exc})",

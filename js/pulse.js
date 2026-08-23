@@ -1349,7 +1349,9 @@
           }).join('') + '</div>'
         : '') + '</div>';
 
-    var html = bar;
+    var html = '<p class="empty tv-pointer" style="margin:14px auto 0">' +
+      'The curated edition lives at <a href="tv.html"><b>Btown TV</b></a> — one human-picked page every evening, ' +
+      'with a playlist that plays it on your TV. This tab is the raw wire.</p>' + bar;
     if (shelves) {
       /* national leads (the production values), local sits between national
          blocks, and anything too thin to stand alone pools at the end —
