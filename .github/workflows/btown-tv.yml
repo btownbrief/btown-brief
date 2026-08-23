@@ -55,7 +55,10 @@ jobs:
         if: steps.key.outputs.ready == 'true'
         run: |
           mkdir -p /tmp/tv-out/data
-          git fetch -q origin btown-tv || true
+          # explicit refspec: actions/checkout narrows the remote's fetch
+          # config to the checked-out branch, so a bare `git fetch origin
+          # btown-tv` would not create origin/btown-tv
+          git fetch -q origin btown-tv:refs/remotes/origin/btown-tv || true
           for f in tv-history.json tv-vault-live.json; do
             git show origin/btown-tv:data/$f > /tmp/tv-out/data/$f 2>/dev/null || true
           done
@@ -86,6 +89,12 @@ jobs:
           if [ ! -s /tmp/tv-out/data/btown-tv.json ]; then
             echo "nothing written this run — leaving the branch alone"
             exit 0
+          fi
+          # the push replaces the whole branch with this directory — never
+          # let a run that couldn't enrich the vault delete the last good copy
+          if [ ! -s /tmp/tv-out/data/tv-vault-live.json ]; then
+            git show origin/btown-tv:data/tv-vault-live.json \
+              > /tmp/tv-out/data/tv-vault-live.json 2>/dev/null || true
           fi
           cd /tmp/tv-out
           git init -q -b btown-tv

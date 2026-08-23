@@ -66,8 +66,9 @@ begin
 end;
 $$;
 
--- One row per (kind, vid) for watched/skip and per (kind, channel) for more,
--- with n = distinct players. The editor reads this once a night.
+-- One row per (kind, vid, channel) for watched/skip and per (kind, channel)
+-- for more, with n = distinct players. The editor reads this once a night and
+-- also sums skips per channel (a channel readers keep passing on is flagged).
 create or replace function public.tv_signals(
   p_days integer default 21
 ) returns table (kind text, vid text, channel text, n bigint)
@@ -77,14 +78,14 @@ set search_path = public
 stable
 as $$
   select r.kind,
-         case when r.kind = 'more' then null else r.vid end   as vid,
-         case when r.kind = 'more' then r.channel else null end as channel,
+         case when r.kind = 'more' then null else r.vid end as vid,
+         r.channel,
          count(distinct r.player) as n
   from tv_reactions r
   where r.created > now() - make_interval(days => least(greatest(p_days, 1), 90))
   group by r.kind,
            case when r.kind = 'more' then null else r.vid end,
-           case when r.kind = 'more' then r.channel else null end
+           r.channel
   order by n desc
   limit 500;
 $$;

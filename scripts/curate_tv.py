@@ -40,6 +40,7 @@ CLI:
 """
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -79,7 +80,7 @@ FRESH_REST_DAYS = 14      # a fresh pick shown once is not shown again
 RERUN_MEMORY_DAYS = 60
 HISTORY_KEEP_DAYS = 120
 CLIP_RATIO = 0.35         # under this share of the channel's median = a clip
-CLIP_FLOOR_SEC = 120      # never call something a clip just for being < this
+CLIP_FLOOR_SEC = 120      # under two minutes is a clip regardless of the channel
 SETTLE_MIN_SEC = 20 * 60
 QUICK_MIN_SEC = 5 * 60
 QUICK_MAX_SEC = 12 * 60
@@ -89,6 +90,8 @@ MAX_GOLD = 40
 MAX_VAULT = 40
 MAX_VT = 30
 PLAYLIST_MAX = 25
+VIDEO_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
+PASSED_MIN = 3           # distinct readers saying "not for me" on a channel
 
 SHELVES = [
     # key, title, subtitle, how many the editor should pick
@@ -159,13 +162,26 @@ def http_json(url, timeout=30, headers=None, data=None, method=None):
     return json.loads(raw) if raw else None
 
 
-def fetch_optional(url, default):
+FETCH_FAILED = object()   # sentinel: "the fetch broke", as opposed to "not there"
+
+
+def fetch_optional(url, default, strict=False):
+    """A 404 means the branch genuinely lacks the file -> default. Any other
+    trouble is a transient failure; with strict=True that returns the
+    FETCH_FAILED sentinel so callers can refuse to overwrite memory they
+    couldn't read (a CDN blip must never wipe 120 days of history)."""
     try:
         return http_json(url)
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
+            return default
+        print(f"curate_tv: fetch failed {url.rsplit('/', 1)[-1]} (HTTP {exc.code})",
+              file=sys.stderr)
+        return FETCH_FAILED if strict else default
     except Exception as exc:  # noqa: BLE001 — optional inputs fail soft
-        print(f"curate_tv: optional fetch failed {url.rsplit('/', 1)[-1]} "
-              f"({exc})", file=sys.stderr)
-        return default
+        print(f"curate_tv: fetch failed {url.rsplit('/', 1)[-1]} ({exc})",
+              file=sys.stderr)
+        return FETCH_FAILED if strict else default
 
 
 def read_json(path, default):
@@ -178,9 +194,11 @@ def read_json(path, default):
 
 def write_json(path, value):
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-    with open(path, "w", encoding="utf-8") as dst:
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as dst:
         json.dump(value, dst, separators=(",", ":"), ensure_ascii=False)
         dst.write("\n")
+    os.replace(tmp, path)   # never leave a half-written file for the push step
 
 
 # ----------------------------------------------------------------------
@@ -221,7 +239,7 @@ def remember(history, items, now_ts):
 
 def fetch_signals(days=21):
     """{'skip': {vid: n}, 'watched': {vid: n}, 'more': {channel: n}}."""
-    empty = {"skip": {}, "watched": {}, "more": {}}
+    empty = {"skip": {}, "watched": {}, "more": {}, "skip_ch": {}}
     try:
         headers = {"apikey": SB_KEY, "Content-Type": "application/json"}
         rows = http_json(f"{SB_URL}/rest/v1/rpc/tv_signals", timeout=15,
@@ -233,12 +251,15 @@ def fetch_signals(days=21):
         return empty
     if not isinstance(rows, list):
         return empty
-    out = {"skip": {}, "watched": {}, "more": {}}
+    out = {"skip": {}, "watched": {}, "more": {}, "skip_ch": {}}
     for row in rows:
         kind = row.get("kind")
         n = int(row.get("n") or 0)
         if kind in ("skip", "watched") and row.get("vid"):
             out[kind][row["vid"]] = n
+            if kind == "skip" and row.get("channel"):
+                ch = row["channel"]
+                out["skip_ch"][ch] = out["skip_ch"].get(ch, 0) + n
         elif kind == "more" and row.get("channel"):
             out["more"][row["channel"]] = n
     return out
@@ -314,8 +335,16 @@ def gate(videos, catalog, history, signals, now_ts, roster_g):
         if is_live:
             live.append(item)
             continue
+        if not VIDEO_ID_RE.match(vid):
+            drop("bad-id")
+            continue
         if signals["skip"].get(vid, 0) >= 2:
             drop("not-for-me")
+            continue
+        # promo shapes are banned everywhere — the deep catalog is built
+        # from order=viewCount, where a channel's top hit is often a trailer
+        if PROMO_RE.search(title) or (sec and sec < 180 and HASHTAG_RE.search(title)):
+            drop("promo")
             continue
         if video.get("dc"):
             if shown.get(vid, 0) > now_ts - GOLD_REST_DAYS * 86400:
@@ -326,11 +355,9 @@ def gate(videos, catalog, history, signals, now_ts, roster_g):
             continue
         # --- this week's uploads + the Vermont radar ---
         tkey = title_key(title)
-        if PROMO_RE.search(title) or (sec and sec < 180 and HASHTAG_RE.search(title)):
-            drop("promo")
-            continue
         median = medians.get(ch)
-        if sec and median and sec < max(CLIP_FLOOR_SEC, median * CLIP_RATIO):
+        clip_under = max(CLIP_FLOOR_SEC, median * CLIP_RATIO) if median else CLIP_FLOOR_SEC
+        if sec and sec < clip_under:
             drop("clip")
             continue
         if shown.get(vid, 0) > now_ts - FRESH_REST_DAYS * 86400:
@@ -372,9 +399,17 @@ def vault_candidates(vault_live, history, now_ts):
     # order by how long ago the item was last shown (never-shown first),
     # then by a day-seeded shuffle
     day = now_ts // 86400
-    pool.sort(key=lambda v: (shown.get(v["id"], 0),
-                             hash((v["id"], day)) % 1000))
+    pool.sort(key=lambda v: (shown.get(v["id"], 0), int(hashlib.md5(
+        f"{v['id']}{day}".encode()).hexdigest()[:8], 16)))
     return pool[:MAX_VAULT]
+
+
+def seed_as_live(seed):
+    """The hand-curated seed is usable without the API — it only lacks
+    durations and views. Used when there's no key and no enriched copy yet."""
+    return {"v": 1, "checked": 0,
+            "items": [dict(item, alive=True) for item in seed.get("items", [])
+                      if item.get("id")]}
 
 
 # ----------------------------------------------------------------------
@@ -393,7 +428,7 @@ def refresh_vault(seed, live, key, now_ts):
             all(item["id"] in prior for item in items):
         return live
     if not key:
-        return live
+        return live if live.get("items") else seed_as_live(seed)
     out = []
     for start in range(0, len(items), 50):
         batch = items[start:start + 50]
@@ -404,7 +439,7 @@ def refresh_vault(seed, live, key, now_ts):
             details = http_json(f"{API}/videos?{query}").get("items", [])
         except Exception as exc:  # noqa: BLE001
             print(f"curate_tv: vault enrich trouble ({exc})", file=sys.stderr)
-            return live
+            return live if live.get("items") else seed_as_live(seed)
         by_id = {d.get("id"): d for d in details}
         for item in batch:
             detail = by_id.get(item["id"])
@@ -413,8 +448,7 @@ def refresh_vault(seed, live, key, now_ts):
                 entry["alive"] = False
             else:
                 status = detail.get("status") or {}
-                entry["alive"] = status.get("privacyStatus") == "public" and \
-                    status.get("embeddable", True)
+                entry["alive"] = status.get("privacyStatus") == "public"
                 iso = (detail.get("contentDetails") or {}).get("duration") or ""
                 sec = iso_seconds(iso)
                 entry["sec"] = sec
@@ -485,7 +519,9 @@ local radar), VAULT (timeless videos from thirteen years of the editor's own \
 saves), GOLD (each followed channel's all-time best). Every candidate line \
 carries its channel, length, views, and age. Lines marked RARE are from \
 channels that seldom post — those are the only valid picks for the bench \
-shelf. Lines marked LOVED are from channels readers asked for more of.
+shelf. Lines marked LOVED are from channels readers asked for more of. Lines \
+marked PASSED are from channels readers keep marking "not for me" — pick one \
+only if it is clearly the best thing in its lane tonight.
 
 Pick BY INDEX ONLY:
   * pick — the single Tonight's pick. Usually FRESH or VERMONT, 8–40 minutes,
@@ -535,6 +571,7 @@ def format_candidates(pools, signals, now_ts):
     """Numbered lines + the index -> item map."""
     lines, index = [], []
     loved = {ch for ch, n in signals.get("more", {}).items() if n >= 2}
+    passed = {ch for ch, n in signals.get("skip_ch", {}).items() if n >= PASSED_MIN}
     for group, key in (("FRESH", "fresh"), ("VERMONT", "vt"),
                        ("VAULT", "vault"), ("GOLD", "gold")):
         items = pools.get(key) or []
@@ -549,6 +586,8 @@ def format_candidates(pools, signals, now_ts):
                 flags.append("RARE")
             if item.get("ch") in loved:
                 flags.append("LOVED")
+            if item.get("ch") in passed:
+                flags.append("PASSED")
             if item.get("lane"):
                 flags.append(item["lane"])
             views = item.get("views")
@@ -604,7 +643,7 @@ def validate(raw, index):
         if i < 0 or i >= len(index):
             return None
         pool, item = index[i]
-        if item["id"] in used:
+        if item["id"] in used or not VIDEO_ID_RE.match(item["id"]):
             return None
         sec = item.get("sec")
         if shelf == "settle" and (not sec or sec < SETTLE_MIN_SEC):
@@ -667,58 +706,70 @@ def oauth_access_token():
     return (token or {}).get("access_token")
 
 
-def sync_playlist(video_ids, playlist_id=None, token=None):
-    """Make the playlist hold exactly video_ids, in that order. Removes what
-    isn't in the edition, inserts what is — then re-inserts out-of-order
-    survivors so the order matches. ~50 units per insert/delete."""
+def sync_playlist(video_ids, playlist_id=None, token=None, http=None):
+    """Make the playlist hold exactly video_ids, in that order. Returns the
+    number of videos inserted (0 = the TV has nothing tonight).
+
+    Order of operations is the fail-soft part: INSERT tonight's picks first
+    (appended after whatever is there), THEN delete the old block. A failure
+    mid-way — quota exhausted, expired refresh token, network — leaves
+    yesterday's playable edition rather than an empty playlist. Positions
+    shift under you on this API, so "diff and reorder survivors" is where
+    ordering bugs live; the blunt version costs ~25 inserts + 25 deletes
+    ≈ 2,500 quota units a day against the 10k shared with refresh_youtube
+    (~5–6k/day at steady state after the backfill change)."""
+    http = http or http_json
     playlist_id = playlist_id or os.environ.get("YT_TV_PLAYLIST_ID", "").strip()
     token = token or oauth_access_token()
     if not (playlist_id and token):
         print("curate_tv: playlist sync skipped (no OAuth / playlist id)")
-        return False
+        return 0
     auth = {"Authorization": f"Bearer {token}",
             "Content-Type": "application/json"}
-    existing = []
+    old_items = []
     page = None
     while True:
-        query = {"part": "id,snippet", "playlistId": playlist_id, "maxResults": 50}
+        query = {"part": "id", "playlistId": playlist_id, "maxResults": 50}
         if page:
             query["pageToken"] = page
-        data = http_json(f"{API}/playlistItems?{urllib.parse.urlencode(query)}",
-                         headers=auth)
-        for item in data.get("items", []):
-            rid = (item.get("snippet") or {}).get("resourceId") or {}
-            existing.append({"item": item["id"], "vid": rid.get("videoId"),
-                             "pos": (item.get("snippet") or {}).get("position", 0)})
+        data = http(f"{API}/playlistItems?{urllib.parse.urlencode(query)}",
+                    headers=auth) or {}
+        old_items.extend(item["id"] for item in data.get("items", []) if item.get("id"))
         page = data.get("nextPageToken")
         if not page:
             break
-    wanted = list(dict.fromkeys(video_ids))[:PLAYLIST_MAX]
-    wanted_set = set(wanted)
-    # drop what is not in tonight's edition (and any duplicates)
-    seen = set()
-    for entry in sorted(existing, key=lambda e: e["pos"]):
-        if entry["vid"] not in wanted_set or entry["vid"] in seen:
-            http_json(f"{API}/playlistItems?id={entry['item']}", headers=auth,
-                      method="DELETE")
-        else:
-            seen.add(entry["vid"])
-    # insert the new ones at their position
-    for pos, vid in enumerate(wanted):
-        if vid in seen:
-            continue
+    wanted = [vid for vid in dict.fromkeys(video_ids) if VIDEO_ID_RE.match(vid)][:PLAYLIST_MAX]
+    inserted, failures = 0, 0
+    for vid in wanted:
         body = json.dumps({"snippet": {
-            "playlistId": playlist_id, "position": pos,
+            "playlistId": playlist_id,
             "resourceId": {"kind": "youtube#video", "videoId": vid}}}).encode()
         try:
-            http_json(f"{API}/playlistItems?part=snippet", headers=auth,
-                      data=body, method="POST")
+            http(f"{API}/playlistItems?part=snippet", headers=auth,
+                 data=body, method="POST")
+            inserted += 1
+            failures = 0
         except urllib.error.HTTPError as exc:
-            # a private/deleted video refuses insertion — skip, don't fail
+            # one private/deleted video refuses insertion — skip; three in a
+            # row means quota or auth is gone — stop burning the budget
+            failures += 1
             print(f"curate_tv: playlist insert {vid} -> HTTP {exc.code}",
                   file=sys.stderr)
-    print(f"curate_tv: playlist synced -> {len(wanted)} videos")
-    return True
+            if failures >= 3:
+                print("curate_tv: playlist sync aborted after 3 straight failures",
+                      file=sys.stderr)
+                break
+    if inserted == 0:
+        print("curate_tv: playlist sync inserted nothing — old edition left in place")
+        return 0
+    for item_id in old_items:
+        try:
+            http(f"{API}/playlistItems?id={urllib.parse.quote(item_id)}",
+                 headers=auth, method="DELETE")
+        except urllib.error.HTTPError as exc:
+            print(f"curate_tv: playlist delete -> HTTP {exc.code}", file=sys.stderr)
+    print(f"curate_tv: playlist synced -> {inserted}/{len(wanted)} videos")
+    return inserted
 
 
 # ----------------------------------------------------------------------
@@ -766,8 +817,18 @@ def run(args):
         print("curate_tv: too few videos on the pulse-youtube branch — skipping")
         return
     catalog = (fetch_optional(CATALOG_URL, {}) or {}).get("channels") or {}
-    history = read_json(args.history, None) or fetch_optional(HISTORY_URL, {}) or {}
-    vault_live = read_json(args.vault, None) or fetch_optional(VAULT_LIVE_URL, {}) or {}
+    history = read_json(args.history, None)
+    if history is None:
+        history = fetch_optional(HISTORY_URL, {}, strict=True)
+        if history is FETCH_FAILED:
+            print("curate_tv: could not read the edition memory — not risking "
+                  "a rewrite, skipping this run")
+            return
+    vault_live = read_json(args.vault, None)
+    if vault_live is None:
+        vault_live = fetch_optional(VAULT_LIVE_URL, {}, strict=True)
+        if vault_live is FETCH_FAILED:
+            vault_live = {}          # re-enriched from the seed below; not memory
     vault_seed = read_json(VAULT_SEED, {}) or {}
     signals = fetch_signals()
     roster_g = {ch.get("name", ""): ch.get("g", "")
@@ -803,20 +864,28 @@ def run(args):
         return
     print(f"curate_tv: picked {picked} · {trim(str(raw.get('note','')), 200)}")
 
-    stats = {"candidates": {k: len(v) for k, v in pools.items()},
+    stats = {"candidates": {k: len(v) for k, v in pools.items() if k != "live"},
              "dropped": dropped, "picked": picked}
     playlist_id = os.environ.get("YT_TV_PLAYLIST_ID", "").strip()
     ordered = [pick] + [item for key in SHELF_KEYS for item in shelves.get(key, [])]
-    if not args.no_playlist:
-        try:
-            sync_playlist([item["id"] for item in ordered], playlist_id)
-        except Exception as exc:  # noqa: BLE001
-            print(f"curate_tv: playlist trouble ({exc})", file=sys.stderr)
 
+    # the edition and its memory are written BEFORE the ~50-request playlist
+    # sync, so a job killed mid-sync never leaves the page a day behind the TV
     write_json(args.out, build_payload(pick, shelves, pools["live"], now,
                                        stats, playlist_id))
     write_json(args.history, remember(history, ordered, now_ts))
     print(f"curate_tv: edition {edition_label(now)} -> {args.out}")
+
+    if playlist_id and not args.no_playlist:
+        synced = 0
+        try:
+            synced = sync_playlist([item["id"] for item in ordered], playlist_id)
+        except Exception as exc:  # noqa: BLE001
+            print(f"curate_tv: playlist trouble ({exc})", file=sys.stderr)
+        if not synced:
+            # never advertise a playlist the TV can't play tonight
+            write_json(args.out, build_payload(pick, shelves, pools["live"], now,
+                                               stats, ""))
 
 
 # ----------------------------------------------------------------------
@@ -924,6 +993,68 @@ def selftest():
     assert {"fresh000002", "fresh000007", "fresh000008"} <= ids
     shown, titles = history_index(mem, now_ts)
     assert shown["fresh000002"] == now_ts
+
+    # --- playlist sync: insert first, then delete; abort after 3 failures
+    calls = []
+    def fake_http(url, headers=None, data=None, method=None, timeout=30):
+        calls.append((method or "GET", url, data))
+        if method is None:
+            return {"items": [{"id": "old1"}, {"id": "old2"}]}
+        if method == "POST" and b"badvid00000" in data:
+            raise urllib.error.HTTPError(url, 404, "gone", {}, None)
+        return {}
+    n = sync_playlist(["vidA0000001", "vidB0000002", "vidA0000001", "badvid00000",
+                       "not-an-id"], "PL1", "tok", http=fake_http)
+    methods = [c[0] for c in calls]
+    assert n == 2, n
+    assert methods == ["GET", "POST", "POST", "POST", "DELETE", "DELETE"], methods
+    posts = [json.loads(c[2])["snippet"]["resourceId"]["videoId"] for c in calls if c[0] == "POST"]
+    assert posts == ["vidA0000001", "vidB0000002", "badvid00000"], posts
+    calls.clear()
+    def dead_http(url, headers=None, data=None, method=None, timeout=30):
+        calls.append(method or "GET")
+        if method == "POST":
+            raise urllib.error.HTTPError(url, 403, "quota", {}, None)
+        return {"items": [{"id": "old1"}]}
+    n = sync_playlist([f"vid{i:08d}" for i in range(10)], "PL1", "tok", http=dead_http)
+    assert n == 0 and calls == ["GET", "POST", "POST", "POST"], calls   # no deletes
+    assert sync_playlist(["vidA0000001"], "", "") == 0
+
+    # --- reader signals parse the tv_signals row shape
+    rows = [{"kind": "skip", "vid": "vidA0000001", "channel": "Chan", "n": 2},
+            {"kind": "skip", "vid": "vidB0000002", "channel": "Chan", "n": 1},
+            {"kind": "watched", "vid": "vidC0000003", "channel": "X", "n": 5},
+            {"kind": "more", "vid": None, "channel": "Loved", "n": 3}]
+    parsed = {"skip": {}, "watched": {}, "more": {}, "skip_ch": {}}
+    for row in rows:
+        kind, nn = row["kind"], int(row["n"])
+        if kind in ("skip", "watched") and row.get("vid"):
+            parsed[kind][row["vid"]] = nn
+            if kind == "skip" and row.get("channel"):
+                parsed["skip_ch"][row["channel"]] = parsed["skip_ch"].get(row["channel"], 0) + nn
+        elif kind == "more" and row.get("channel"):
+            parsed["more"][row["channel"]] = nn
+    assert parsed["skip_ch"] == {"Chan": 3} and parsed["more"] == {"Loved": 3}
+    sig2 = dict(signals, skip_ch={"Kurz": 3})
+    text2, _ = format_candidates(pools, sig2, now_ts)
+    assert "PASSED" in text2, text2
+
+    # --- the vault seed stands in when nothing is enriched yet
+    seed = {"items": [{"id": "seed0000001", "t": "A talk", "ch": "TED", "lane": "talk"}]}
+    assert refresh_vault(seed, {}, "", now_ts)["items"][0]["alive"] is True
+    assert refresh_vault(seed, vault_live, "", now_ts) is vault_live
+
+    # --- clip floor applies even with no channel median; promo gate hits gold
+    vids2 = [{"id": "nomedian001", "t": "A ninety second thing", "ch": "Newbie",
+              "d": now_ts - day, "dur": "1:30", "views": 10},
+             {"id": "nomedian002", "t": "A real episode", "ch": "Newbie",
+              "d": now_ts - day, "dur": "9:30", "views": 10},
+             {"id": "goldpromo01", "t": "Season 2 Official Trailer", "ch": "Kurz",
+              "d": now_ts - 900 * day, "dur": "2:10", "views": 5_000_000, "dc": 1}]
+    pools2, dropped2 = gate(vids2, catalog, {}, signals, now_ts, {})
+    assert [v["id"] for v in pools2["fresh"]] == ["nomedian002"], pools2["fresh"]
+    assert dropped2.get("clip") == 1 and dropped2.get("promo") == 1, dropped2
+    assert pools2["gold"] == []
 
     assert iso_seconds("PT1H2M3S") == 3723 and iso_seconds("PT45S") == 45
     assert fmt_seconds(3723) == "1:02:03" and fmt_seconds(305) == "5:05"

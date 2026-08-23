@@ -55,6 +55,7 @@ PORT = 8765
 class Catcher(http.server.BaseHTTPRequestHandler):
     code = None
     state = None
+    got = threading.Event()
 
     def do_GET(self):  # noqa: N802 — http.server API
         query = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
@@ -64,6 +65,7 @@ class Catcher(http.server.BaseHTTPRequestHandler):
             self.wfile.write(b"state mismatch")
             return
         Catcher.code = query.get("code", [""])[0]
+        Catcher.got.set()
         self.send_response(200)
         self.send_header("Content-Type", "text/html")
         self.end_headers()
@@ -108,15 +110,7 @@ def main():
     print("Opening the browser for Google sign-in…")
     if not webbrowser.open(url):
         print("Open this URL yourself:\n" + url)
-    server_thread_done = threading.Event()
-
-    def wait():
-        while Catcher.code is None:
-            pass
-        server_thread_done.set()
-
-    threading.Thread(target=wait, daemon=True).start()
-    server_thread_done.wait(timeout=600)
+    Catcher.got.wait(timeout=600)
     if not Catcher.code:
         print("no code received within 10 minutes — try again", file=sys.stderr)
         sys.exit(1)

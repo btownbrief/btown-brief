@@ -74,7 +74,10 @@ SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
 MAX_VERMONT = 10
 CATALOG = os.path.join(ROOT, "data", "deep-catalog.json")
 DEEP_PER_CHANNEL = 5
-DEEP_BACKFILL_PER_RUN = 8   # 8 searches ≈ 800 units/run while the catalog fills
+DEEP_BACKFILL_PER_RUN = 3   # 3 searches ≈ 300 units/run while the catalog fills
+                            # (was 8; the 8×/day schedule + Btown TV's playlist
+                            # sync share one 10k/day quota — 3 keeps a backfill
+                            # day near 6k instead of 10k)
 DEEP_REFRESH_PER_RUN = 2    # steady state: re-check the two stalest channels
 DEEP_REFRESH_DAYS = 30      # greatest-hits lists barely move
 DEEP_MIN_AGE_DAYS = 180     # a deep cut is old gold, not last month's upload

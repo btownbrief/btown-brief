@@ -28,9 +28,12 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
-  function watchUrl(id) { return 'https://www.youtube.com/watch?v=' + encodeURIComponent(id); }
+  /* ids are used in URLs and attributes; anything that isn't a YouTube id
+     shape becomes empty rather than reaching markup */
+  function ytid(id) { return /^[A-Za-z0-9_-]{11}$/.test(String(id || '')) ? id : ''; }
+  function watchUrl(id) { return 'https://www.youtube.com/watch?v=' + ytid(id); }
   function thumb(id, big) {
-    return 'https://i.ytimg.com/vi/' + encodeURIComponent(id) + (big ? '/maxresdefault.jpg' : '/hqdefault.jpg');
+    return 'https://i.ytimg.com/vi/' + ytid(id) + (big ? '/maxresdefault.jpg' : '/hqdefault.jpg');
   }
   function views(n) {
     if (!n) return '';
@@ -95,15 +98,15 @@
     return '' +
       '<article class="tv-card' + (state === 'watched' ? ' is-watched' : state === 'skip' ? ' is-skipped' : '') + '" data-vid="' + esc(item.id) + '">' +
         '<a class="tv-link" href="' + watchUrl(item.id) + '" target="_blank" rel="noopener">' +
-          '<div class="tv-thumb"><img loading="lazy" src="' + thumb(item.id, big) + '" alt="" ' +
-            (big ? 'onerror="this.onerror=null;this.src=\'' + thumb(item.id, false) + '\'"' : '') + '>' +
+          '<div class="tv-thumb"><img loading="lazy" src="' + thumb(item.id, big) + '" alt=""' +
+            (big ? ' data-fallback="' + thumb(item.id, false) + '"' : '') + '>' +
             (item.dur ? '<span class="tv-dur' + (live ? ' is-live' : '') + '">' + esc(item.dur) + '</span>' : '') +
           '</div>' +
           '<div class="tv-card-body">' +
             '<div class="tv-card-title">' + esc(item.t) + '</div>' +
             '<div class="tv-meta"><span class="tv-ch">' + esc(item.ch) + '</span>' +
               (item.lane ? '<span class="tv-lane">' + esc(item.lane) + '</span>' : '') +
-              (item.views ? '<span>· ' + views(item.views) + '</span>' : '') +
+              (item.views ? '<span>· ' + esc(views(item.views)) + '</span>' : '') +
               (item.d ? '<span>· ' + ago(item.d) + '</span>' : '') +
             '</div>' +
             (item.why ? '<p class="tv-why">' + esc(item.why) + '</p>' : '') +
@@ -146,11 +149,11 @@
       html += '<section class="tv-pick" aria-label="Tonight\'s pick">' +
         '<div class="tv-pick-label">Tonight\'s pick</div>' +
         '<a class="tv-pick-card" href="' + watchUrl(pick.id) + '" target="_blank" rel="noopener">' +
-          '<div class="tv-thumb"><img src="' + thumb(pick.id, true) + '" alt="" onerror="this.onerror=null;this.src=\'' + thumb(pick.id, false) + '\'">' +
+          '<div class="tv-thumb"><img src="' + thumb(pick.id, true) + '" alt="" data-fallback="' + thumb(pick.id, false) + '">' +
             (pick.dur ? '<span class="tv-dur">' + esc(pick.dur) + '</span>' : '') + '</div>' +
           '<div class="tv-pick-body"><h2>' + esc(pick.t) + '</h2>' +
             '<div class="tv-meta"><span class="tv-ch">' + esc(pick.ch) + '</span>' +
-              (pick.views ? '<span>· ' + views(pick.views) + '</span>' : '') +
+              (pick.views ? '<span>· ' + esc(views(pick.views)) + '</span>' : '') +
               (pick.d ? '<span>· ' + ago(pick.d) + '</span>' : '') + '</div>' +
             (pick.why ? '<p class="tv-why" style="margin-top:8px">' + esc(pick.why) + '</p>' : '') +
           '</div>' +
@@ -178,13 +181,19 @@
     var dropBits = Object.keys(dropped).map(function (k) { return dropped[k] + ' ' + k; }).join(', ');
     var cands = st.candidates ? Object.keys(st.candidates).reduce(function (n, k) { return n + st.candidates[k]; }, 0) : 0;
     html += '<footer class="tv-colophon">' +
-      'Edition ' + esc(data.edition || '') + (cands ? ' · the editor read ' + cands + ' candidates' : '') +
-      (dropBits ? ' · the gates dropped ' + esc(dropBits) : '') + ' · picked ' + (st.picked || 0) + '. ' +
+      'Edition ' + esc(data.edition || '') + (cands ? ' · the editor read ' + esc(String(cands)) + ' candidates' : '') +
+      (dropBits ? ' · the gates dropped ' + esc(dropBits) : '') + ' · picked ' + esc(String(st.picked || 0)) + '. ' +
       'Videos open on YouTube; nothing is hosted here. Part of <a href="pulse.html">the Pulse</a> family.' +
     '</footer>';
 
     page.innerHTML = html;
     page.hidden = false;
+    /* maxresdefault is missing for many older videos — fall back to hqdefault */
+    page.querySelectorAll('img[data-fallback]').forEach(function (img) {
+      img.addEventListener('error', function () {
+        if (img.dataset.fallback && img.src !== img.dataset.fallback) img.src = img.dataset.fallback;
+      }, { once: true });
+    });
     wire();
   }
 
@@ -217,7 +226,7 @@
         var ch = cardEl.querySelector('.tv-ch');
         rpc('tv_react', { p_player: playerId(), p_kind: kind, p_vid: vid,
           p_title: title ? title.textContent : '', p_channel: ch ? ch.textContent : '' }).catch(function () {});
-        toast(kind === 'watched' ? 'Marked watched' : kind === 'skip' ? 'Noted — the editor hears it' : 'Noted — more like this');
+        toast(kind === 'watched' ? 'Marked watched' : kind === 'skip' ? 'Hidden for you — enough of these and the editor backs off the channel' : 'Noted — more like this');
       }
     });
   }
