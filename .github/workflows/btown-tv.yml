@@ -20,6 +20,11 @@ on:
     # tick, before dinner. One edition a day; "Tonight" is the page.
     - cron: '40 21 * * *'
   workflow_dispatch:
+    inputs:
+      playlist:
+        description: "Also rewrite the YouTube playlist (costs ~2,500 quota units; off for a page-only rerun)"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -79,6 +84,7 @@ jobs:
           # drop zero-byte leftovers so the script falls back to the branch URL
           find /tmp/tv-out/data -size 0 -delete
           python3 scripts/curate_tv.py \
+            ${{ github.event_name == 'workflow_dispatch' && inputs.playlist == false && '--no-playlist' || '' }} \
             --out /tmp/tv-out/data/btown-tv.json \
             --history /tmp/tv-out/data/tv-history.json \
             --vault /tmp/tv-out/data/tv-vault-live.json \

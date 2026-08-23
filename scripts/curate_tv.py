@@ -847,10 +847,25 @@ def sync_playlist(video_ids, playlist_id=None, token=None, http=None):
 # Run
 # ----------------------------------------------------------------------
 
+EDITION_TZ = timezone(timedelta(hours=-4))
+
+
 def edition_label(now):
     """'Tonight' is the daily 5pm edition; a dispatch earlier in the day is
     still tonight's page, just early."""
-    return now.astimezone(timezone(timedelta(hours=-4))).strftime("%Y-%m-%d")
+    return now.astimezone(EDITION_TZ).strftime("%Y-%m-%d")
+
+
+def forget_today(history, now):
+    """A rerun on the same edition day REPLACES that day's edition — it must
+    not treat the earlier run's picks as 'shown' and rest them, or every
+    dispatch thins the pool for the next one (8/23: a second run the same
+    day could not re-pick the morning's six Vermont videos and the local
+    shelf fell to two). Drops today's entries; yesterday and older stay."""
+    day_start = int(now.astimezone(EDITION_TZ).replace(
+        hour=0, minute=0, second=0, microsecond=0).timestamp())
+    shown = [e for e in history.get("shown", []) if int(e.get("ts") or 0) < day_start]
+    return {"v": 1, "shown": shown}
 
 
 def build_payload(pick, shelves, live, generated, stats, playlist_id, more=None):
@@ -922,6 +937,7 @@ def run(args):
             print("curate_tv: could not read the edition memory — not risking "
                   "a rewrite, skipping this run")
             return
+    history = forget_today(history, now)
     vault_live = read_json(args.vault, None)
     if vault_live is None:
         vault_live = fetch_optional(VAULT_LIVE_URL, {}, strict=True)
@@ -1005,6 +1021,11 @@ def run(args):
             # never advertise a playlist the TV can't play tonight
             write_json(args.out, build_payload(pick, shelves, pools["live"], now,
                                                stats, "", more))
+    elif playlist_id and args.no_playlist:
+        # page-only rerun: the playlist still holds the previous picks — don't
+        # advertise it; the next synced run brings the button back
+        write_json(args.out, build_payload(pick, shelves, pools["live"], now,
+                                           stats, "", more))
 
 
 # ----------------------------------------------------------------------
@@ -1183,6 +1204,12 @@ def selftest():
     assert {"fresh000002", "fresh000007", "fresh000008"} <= ids
     shown, titles = history_index(mem, now_ts)
     assert shown["fresh000002"] == now_ts
+    # a same-day rerun forgets today's picks (they're being replaced), keeps older
+    now_dt = datetime.fromtimestamp(now_ts, tz=timezone.utc)
+    again = forget_today(mem, now_dt)
+    again_ids = {e["id"] for e in again["shown"]}
+    assert "fresh000002" not in again_ids and "fresh000008" in again_ids, again_ids
+    assert edition_label(now_dt) == now_dt.astimezone(EDITION_TZ).strftime("%Y-%m-%d")
 
     # --- playlist sync: insert first, then delete; abort after 3 failures
     calls = []
