@@ -1,0 +1,16 @@
+{
+  "name": "Btown Out Loud — Burlington tells its own stories",
+  "short_name": "Out Loud",
+  "description": "GPS-triggered audio stories for downtown Burlington, Vermont. Walk, and the city talks.",
+  "id": "/out-loud/",
+  "start_url": "/out-loud/?source=pwa",
+  "scope": "/out-loud/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0D1B2A",
+  "theme_color": "#13243B",
+  "icons": [
+    { "src": "../assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "../assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
