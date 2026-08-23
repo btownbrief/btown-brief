@@ -17,8 +17,10 @@ three hours. This script is the editor that runs once a day on top of it:
      to a real item with the URL, channel and timestamp the source gave us.
   3. The page + the TV. data/btown-tv.json goes to the orphan `btown-tv`
      branch (same single-commit pattern as pulse-top), and the same picks are
-     written, in order, into a public YouTube playlist so the edition plays
-     on the TV app with one click.
+     written, in order, into a NEW public YouTube playlist for the night
+     ("Btown TV — Sun, Aug 23") so the edition plays on the TV app with one
+     click. One playlist per night (no deletes = half the API quota of
+     rewriting one); the last 14 stay up, each Past night keeps its own.
 
 The editor also names a BENCH for each shelf (and two runner-up picks): the
 next-best items in that lane, same rules, same reasons. The page keeps them
@@ -45,7 +47,8 @@ CLI:
                    data/tv-vault-live.json)
   --editions PATH  the past-editions archive, read AND rewritten
                    (default data/tv-editions.json)
-  --no-playlist    skip the YouTube playlist sync
+  --no-playlist    page-only: don't publish a playlist (keeps the day's
+                   earlier one on the button if there is one)
   --selftest       run the offline checks and exit
 """
 
@@ -101,7 +104,9 @@ MAX_FRESH = 160
 MAX_GOLD = 40
 MAX_VAULT = 40
 MAX_VT = 30
-PLAYLIST_MAX = 25
+PLAYLIST_MAX = 50        # the page in order: pick, Settle in, Quick one, Vermont, ...
+PLAYLISTS_KEEP = 14      # one playlist per night; older ones are deleted (= EDITIONS_KEEP)
+PAGE_URL = "https://guide.btownbrief.com/tv.html"
 MORE_PER_SHELF = 6       # the bench: alternates the editor names per shelf
 MORE_PICKS = 2           # runner-up Tonight's picks
 MORE_CHANNEL_CAP = 2     # per channel, within the bench
@@ -782,43 +787,58 @@ def oauth_access_token():
     return (token or {}).get("access_token")
 
 
-def sync_playlist(video_ids, playlist_id=None, token=None, http=None):
-    """Make the playlist hold exactly video_ids, in that order. Returns the
-    number of videos inserted (0 = the TV has nothing tonight).
+def playlist_title(edition):
+    """'Btown TV — Sat, Aug 23' from the edition label."""
+    try:
+        day = datetime.strptime(edition, "%Y-%m-%d")
+        return f"Btown TV — {day.strftime('%a, %b')} {day.day}"
+    except ValueError:
+        return f"Btown TV — {edition}"
 
-    Order of operations is the fail-soft part: INSERT tonight's picks first
-    (appended after whatever is there), THEN delete the old block. A failure
-    mid-way — quota exhausted, expired refresh token, network — leaves
-    yesterday's playable edition rather than an empty playlist. Positions
-    shift under you on this API, so "diff and reorder survivors" is where
-    ordering bugs live; the blunt version costs ~25 inserts + 25 deletes
-    ≈ 2,500 quota units a day against the 10k shared with refresh_youtube
-    (~5–6k/day at steady state after the backfill change)."""
+
+def publish_playlist(video_ids, edition, replace_id=None, token=None, http=None):
+    """One NEW public playlist per night holding tonight's page in order;
+    returns its id (None = the TV has nothing tonight).
+
+    Why a new playlist every night instead of rewriting one: the API charges
+    50 units per insert AND per delete, so rewriting a 50-video playlist is
+    ~5,000 of the 10k/day quota shared with refresh_youtube — too much.
+    Creating one (50) + 50 inserts (2,500) with no deletes is half that,
+    and every Past night keeps a playable playlist. The first insert is the
+    probe: if it fails (quota, auth) the empty playlist is removed and the
+    caller keeps whatever it had. A same-day rerun passes the day's earlier
+    playlist as replace_id; it is deleted only after the new one is full.
+    Old nights are pruned separately (prune_playlists)."""
     http = http or http_json
-    playlist_id = playlist_id or os.environ.get("YT_TV_PLAYLIST_ID", "").strip()
     token = token or oauth_access_token()
-    if not (playlist_id and token):
-        print("curate_tv: playlist sync skipped (no OAuth / playlist id)")
-        return 0
+    if not token:
+        print("curate_tv: playlist publish skipped (no OAuth)")
+        return None
     auth = {"Authorization": f"Bearer {token}",
             "Content-Type": "application/json"}
-    old_items = []
-    page = None
-    while True:
-        query = {"part": "id", "playlistId": playlist_id, "maxResults": 50}
-        if page:
-            query["pageToken"] = page
-        data = http(f"{API}/playlistItems?{urllib.parse.urlencode(query)}",
-                    headers=auth) or {}
-        old_items.extend(item["id"] for item in data.get("items", []) if item.get("id"))
-        page = data.get("nextPageToken")
-        if not page:
-            break
     wanted = [vid for vid in dict.fromkeys(video_ids) if VIDEO_ID_RE.match(vid)][:PLAYLIST_MAX]
+    if not wanted:
+        return None
+    body = json.dumps({
+        "snippet": {"title": playlist_title(edition)[:150],
+                    "description": ("Tonight's edition of Btown TV — a human-picked page of "
+                                    "videos for Burlington, Vermont, in the order the editor "
+                                    f"put them. The page: {PAGE_URL}")[:5000]},
+        "status": {"privacyStatus": "public"}}).encode()
+    try:
+        created = http(f"{API}/playlists?part=snippet,status", headers=auth,
+                       data=body, method="POST") or {}
+    except urllib.error.HTTPError as exc:
+        print(f"curate_tv: playlist create -> HTTP {exc.code}", file=sys.stderr)
+        return None
+    new_id = created.get("id")
+    if not new_id:
+        print("curate_tv: playlist create returned no id", file=sys.stderr)
+        return None
     inserted, failures = 0, 0
     for vid in wanted:
         body = json.dumps({"snippet": {
-            "playlistId": playlist_id,
+            "playlistId": new_id,
             "resourceId": {"kind": "youtube#video", "videoId": vid}}}).encode()
         try:
             http(f"{API}/playlistItems?part=snippet", headers=auth,
@@ -832,20 +852,48 @@ def sync_playlist(video_ids, playlist_id=None, token=None, http=None):
             print(f"curate_tv: playlist insert {vid} -> HTTP {exc.code}",
                   file=sys.stderr)
             if failures >= 3:
-                print("curate_tv: playlist sync aborted after 3 straight failures",
+                print("curate_tv: playlist publish aborted after 3 straight failures",
                       file=sys.stderr)
                 break
     if inserted == 0:
-        print("curate_tv: playlist sync inserted nothing — old edition left in place")
+        print("curate_tv: playlist publish inserted nothing — removing the empty one")
+        delete_playlist(new_id, token, http)
+        return None
+    if replace_id and replace_id != new_id:
+        delete_playlist(replace_id, token, http)     # the same day's earlier run
+    print(f"curate_tv: playlist published {new_id} -> {inserted}/{len(wanted)} videos")
+    return new_id
+
+
+def delete_playlist(playlist_id, token, http=None):
+    """50 units; fails soft (a playlist someone already removed is fine)."""
+    http = http or http_json
+    if not (playlist_id and token):
+        return False
+    try:
+        http(f"{API}/playlists?id={urllib.parse.quote(playlist_id)}",
+             headers={"Authorization": f"Bearer {token}"}, method="DELETE")
+        return True
+    except urllib.error.HTTPError as exc:
+        print(f"curate_tv: playlist delete {playlist_id} -> HTTP {exc.code}",
+              file=sys.stderr)
+        return False
+
+
+def prune_playlists(dropped_editions, token=None, http=None):
+    """Editions that just fell out of the archive take their playlists with
+    them. Called after archive_edition; fails soft."""
+    token = token or oauth_access_token()
+    if not token:
         return 0
-    for item_id in old_items:
-        try:
-            http(f"{API}/playlistItems?id={urllib.parse.quote(item_id)}",
-                 headers=auth, method="DELETE")
-        except urllib.error.HTTPError as exc:
-            print(f"curate_tv: playlist delete -> HTTP {exc.code}", file=sys.stderr)
-    print(f"curate_tv: playlist synced -> {inserted}/{len(wanted)} videos")
-    return inserted
+    n = 0
+    for entry in dropped_editions:
+        pid = ((entry or {}).get("playlist") or {}).get("id")
+        if pid and delete_playlist(pid, token, http):
+            n += 1
+    if n:
+        print(f"curate_tv: pruned {n} old playlist(s)")
+    return n
 
 
 # ----------------------------------------------------------------------
@@ -900,25 +948,44 @@ ARCHIVE_FIELDS = ("id", "t", "ch", "d", "dur", "views", "g", "lane", "why", "she
 
 
 def archive_edition(editions, payload):
-    """Prepend tonight's edition to the archive (compact: the pick and the
-    shelves, no bench/live/stats), replacing any earlier entry for the same
-    edition date (a dispatch re-run) and keeping the newest EDITIONS_KEEP."""
+    """Prepend tonight's edition to the archive (compact: the pick, the
+    shelves and the night's playlist — no bench/live/stats), replacing any
+    earlier entry for the same edition date (a dispatch re-run) and keeping
+    the newest EDITIONS_KEEP. Returns (archive, entries that fell out) so
+    their playlists can be pruned."""
     def slim(item):
         return {k: v for k, v in item.items() if k in ARCHIVE_FIELDS}
     entry = {
         "edition": payload["edition"],
         "generated": payload["generated"],
         "pick": slim(payload["pick"]) if payload.get("pick") else None,
+        "playlist": payload.get("playlist"),
         "shelves": [{"key": s["key"], "title": s["title"],
                      "items": [slim(i) for i in s["items"]]}
                     for s in payload.get("shelves", []) if s.get("items")],
     }
-    kept = [e for e in (editions or {}).get("editions", [])
-            if isinstance(e, dict) and e.get("edition")
-            and e["edition"] != entry["edition"]]
+    prior = [e for e in (editions or {}).get("editions", [])
+             if isinstance(e, dict) and e.get("edition")]
+    same_day = [e for e in prior if e["edition"] == entry["edition"]]
+    kept = [e for e in prior if e["edition"] != entry["edition"]]
     kept.insert(0, entry)
     kept.sort(key=lambda e: e["edition"], reverse=True)
-    return {"v": 1, "editions": kept[:EDITIONS_KEEP]}
+    fell_out = kept[EDITIONS_KEEP:]
+    # a same-day earlier entry whose playlist differs is gone too (publish
+    # already deleted it when it replaced it; listing it here is harmless)
+    for e in same_day:
+        if (e.get("playlist") or {}).get("id") and \
+                (e.get("playlist") or {}).get("id") != (entry.get("playlist") or {}).get("id"):
+            fell_out.append(e)
+    return {"v": 1, "editions": kept[:EDITIONS_KEEP]}, fell_out
+
+
+def same_day_playlist(editions, edition):
+    """The playlist id the archive recorded for this edition day, if any."""
+    for e in (editions or {}).get("editions", []) if isinstance(editions, dict) else []:
+        if isinstance(e, dict) and e.get("edition") == edition:
+            return ((e.get("playlist") or {}).get("id")) or None
+    return None
 
 
 def run(args):
@@ -998,39 +1065,52 @@ def run(args):
 
     stats = {"candidates": {k: len(v) for k, v in pools.items() if k != "live"},
              "dropped": dropped, "picked": picked, "bench": benched}
-    playlist_id = os.environ.get("YT_TV_PLAYLIST_ID", "").strip()
     ordered = [pick] + [item for key in SHELF_KEYS for item in shelves.get(key, [])]
+    label = edition_label(now)
+    today_pl = same_day_playlist(editions, label) if editions is not FETCH_FAILED else None
 
     # the edition and its memory are written BEFORE the ~50-request playlist
-    # sync, so a job killed mid-sync never leaves the page a day behind the TV
+    # publish, so a job killed mid-way never leaves the page a day behind.
+    # A page-only rerun keeps the day's earlier playlist (still tonight's
+    # date, slightly stale) rather than hide the button.
+    playlist_id = today_pl if args.no_playlist else None
     edition = build_payload(pick, shelves, pools["live"], now, stats,
-                            playlist_id, more)
+                            playlist_id or "", more)
     write_json(args.out, edition)
     write_json(args.history, remember(history, ordered, now_ts))
+    print(f"curate_tv: edition {label} -> {args.out}")
+
+    fell_out = []
+    if not args.no_playlist:
+        try:
+            playlist_id = publish_playlist([item["id"] for item in ordered], label,
+                                           replace_id=today_pl)
+        except Exception as exc:  # noqa: BLE001
+            print(f"curate_tv: playlist trouble ({exc})", file=sys.stderr)
+            playlist_id = None
+        if not playlist_id:
+            # nothing publishable tonight: fall back to the day's earlier
+            # playlist if there is one, else no button
+            playlist_id = today_pl
+        edition = build_payload(pick, shelves, pools["live"], now, stats,
+                                playlist_id or "", more)
+        write_json(args.out, edition)
+
     if editions is not FETCH_FAILED:
         try:
-            write_json(args.editions, archive_edition(editions, edition))
+            archive, fell_out = archive_edition(editions, edition)
+            write_json(args.editions, archive)
         except Exception as exc:  # noqa: BLE001 — the archive is a nicety, never the run
             print(f"curate_tv: archive trouble ({exc}) — left alone", file=sys.stderr)
     else:
         print("curate_tv: could not read the editions archive — left alone")
-    print(f"curate_tv: edition {edition_label(now)} -> {args.out}")
-
-    if playlist_id and not args.no_playlist:
-        synced = 0
+    if fell_out and not args.no_playlist:
         try:
-            synced = sync_playlist([item["id"] for item in ordered], playlist_id)
+            prune_playlists([e for e in fell_out
+                             if ((e.get("playlist") or {}).get("id")) != playlist_id
+                             and ((e.get("playlist") or {}).get("id")) != today_pl])
         except Exception as exc:  # noqa: BLE001
-            print(f"curate_tv: playlist trouble ({exc})", file=sys.stderr)
-        if not synced:
-            # never advertise a playlist the TV can't play tonight
-            write_json(args.out, build_payload(pick, shelves, pools["live"], now,
-                                               stats, "", more))
-    elif playlist_id and args.no_playlist:
-        # page-only rerun: the playlist still holds the previous picks — don't
-        # advertise it; the next synced run brings the button back
-        write_json(args.out, build_payload(pick, shelves, pools["live"], now,
-                                           stats, "", more))
+            print(f"curate_tv: playlist prune trouble ({exc})", file=sys.stderr)
 
 
 # ----------------------------------------------------------------------
@@ -1192,17 +1272,24 @@ def selftest():
     assert [v["id"] for v in by_key["settle"]["more"]] == ["bench000003"]
 
     # --- the editions archive: newest first, same-day re-run replaces, capped
-    arch = archive_edition({}, payload)
-    assert arch["editions"][0]["edition"] == payload["edition"]
+    arch, out = archive_edition({}, payload)
+    assert arch["editions"][0]["edition"] == payload["edition"] and out == []
     assert arch["editions"][0]["pick"]["id"] == "fresh000002"
+    assert arch["editions"][0]["playlist"]["id"] == "PLxyz"
     assert "more" not in arch["editions"][0]["shelves"][0] and "sec" not in arch["editions"][0]["pick"]
-    arch = archive_edition(arch, payload)
-    assert len(arch["editions"]) == 1, "same-day re-run must replace, not append"
-    older = {"editions": [{"edition": f"2020-01-{d:02d}", "pick": None, "shelves": []}
-                          for d in range(1, 21)]}
-    arch = archive_edition(older, payload)
+    assert same_day_playlist(arch, payload["edition"]) == "PLxyz" and same_day_playlist(arch, "1999-01-01") is None
+    arch, out = archive_edition(arch, payload)
+    assert len(arch["editions"]) == 1 and out == [], "same-day re-run must replace, not append"
+    payload_b = dict(payload, playlist={"id": "PLnew", "url": "u"})
+    arch, out = archive_edition(arch, payload_b)
+    assert arch["editions"][0]["playlist"]["id"] == "PLnew"
+    assert [e["playlist"]["id"] for e in out] == ["PLxyz"], "the day's earlier playlist is reported"
+    older = {"editions": [{"edition": f"2020-01-{d:02d}", "pick": None, "shelves": [],
+                           "playlist": {"id": f"PL2020{d:02d}"}} for d in range(1, 21)]}
+    arch, out = archive_edition(older, payload)
     assert len(arch["editions"]) == EDITIONS_KEEP and arch["editions"][0]["edition"] == payload["edition"]
     assert arch["editions"][1]["edition"] == "2020-01-20"
+    assert [e["edition"] for e in out] == [f"2020-01-{d:02d}" for d in range(7, 0, -1)], [e["edition"] for e in out]
 
     mem = remember(history, [pick] + shelves["settle"], now_ts)
     ids = {e["id"] for e in mem["shown"]}
@@ -1216,31 +1303,43 @@ def selftest():
     assert "fresh000002" not in again_ids and "fresh000008" in again_ids, again_ids
     assert edition_label(now_dt) == now_dt.astimezone(EDITION_TZ).strftime("%Y-%m-%d")
 
-    # --- playlist sync: insert first, then delete; abort after 3 failures
+    # --- nightly playlist: create, insert in order, then replace the day's earlier one
+    assert playlist_title("2026-08-23") == "Btown TV — Sun, Aug 23", playlist_title("2026-08-23")
     calls = []
     def fake_http(url, headers=None, data=None, method=None, timeout=30):
         calls.append((method or "GET", url, data))
-        if method is None:
-            return {"items": [{"id": "old1"}, {"id": "old2"}]}
+        if method == "POST" and "/playlists?" in url:
+            return {"id": "PLnew"}
         if method == "POST" and b"badvid00000" in data:
             raise urllib.error.HTTPError(url, 404, "gone", {}, None)
         return {}
-    n = sync_playlist(["vidA0000001", "vidB0000002", "vidA0000001", "badvid00000",
-                       "not-an-id"], "PL1", "tok", http=fake_http)
-    methods = [c[0] for c in calls]
-    assert n == 2, n
-    assert methods == ["GET", "POST", "POST", "POST", "DELETE", "DELETE"], methods
-    posts = [json.loads(c[2])["snippet"]["resourceId"]["videoId"] for c in calls if c[0] == "POST"]
+    pid = publish_playlist(["vidA0000001", "vidB0000002", "vidA0000001", "badvid00000",
+                            "not-an-id"], "2026-08-23", replace_id="PLold", token="tok", http=fake_http)
+    assert pid == "PLnew", pid
+    kinds = [("create" if "/playlists?" in c[1] and c[0] == "POST" else c[0]) for c in calls]
+    assert kinds == ["create", "POST", "POST", "POST", "DELETE"], kinds
+    assert "id=PLold" in calls[-1][1], calls[-1][1]
+    posts = [json.loads(c[2])["snippet"]["resourceId"]["videoId"] for c in calls if c[0] == "POST" and "/playlistItems" in c[1]]
     assert posts == ["vidA0000001", "vidB0000002", "badvid00000"], posts
+    assert json.loads(calls[0][2])["status"]["privacyStatus"] == "public"
     calls.clear()
     def dead_http(url, headers=None, data=None, method=None, timeout=30):
-        calls.append(method or "GET")
+        calls.append((method or "GET", url))
+        if method == "POST" and "/playlists?" in url:
+            return {"id": "PLnew"}
         if method == "POST":
             raise urllib.error.HTTPError(url, 403, "quota", {}, None)
-        return {"items": [{"id": "old1"}]}
-    n = sync_playlist([f"vid{i:08d}" for i in range(10)], "PL1", "tok", http=dead_http)
-    assert n == 0 and calls == ["GET", "POST", "POST", "POST"], calls   # no deletes
-    assert sync_playlist(["vidA0000001"], "", "") == 0
+        return {}
+    pid = publish_playlist([f"vid{i:08d}" for i in range(10)], "2026-08-23",
+                           replace_id="PLold", token="tok", http=dead_http)
+    assert pid is None
+    assert [c[0] for c in calls] == ["POST", "POST", "POST", "POST", "DELETE"], calls
+    assert "id=PLnew" in calls[-1][1], "the empty new playlist is removed, the old one kept"
+    assert publish_playlist(["vidA0000001"], "2026-08-23", token="", http=dead_http) is None
+    calls.clear()
+    n = prune_playlists([{"playlist": {"id": "PLa"}}, {"playlist": None}, {"playlist": {"id": "PLb"}}],
+                        token="tok", http=fake_http)
+    assert n == 2 and [c[0] for c in calls] == ["DELETE", "DELETE"], calls
 
     # --- reader signals parse the tv_signals row shape
     rows = [{"kind": "skip", "vid": "vidA0000001", "channel": "Chan", "n": 2},

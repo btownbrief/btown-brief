@@ -22,9 +22,9 @@ on:
   workflow_dispatch:
     inputs:
       playlist:
-        description: "Also rewrite the YouTube playlist (costs ~2,500 quota units; off for a page-only rerun)"
+        description: "Also publish tonight's YouTube playlist (~2,600 quota units). Off = page-only rerun; the 21:40 UTC run always publishes."
         type: boolean
-        default: true
+        default: false
 
 permissions:
   contents: write
@@ -77,7 +77,6 @@ jobs:
           YT_OAUTH_CLIENT_ID: ${{ secrets.YT_OAUTH_CLIENT_ID }}
           YT_OAUTH_CLIENT_SECRET: ${{ secrets.YT_OAUTH_CLIENT_SECRET }}
           YT_OAUTH_REFRESH_TOKEN: ${{ secrets.YT_OAUTH_REFRESH_TOKEN }}
-          YT_TV_PLAYLIST_ID: ${{ secrets.YT_TV_PLAYLIST_ID }}
         run: |
           python3 scripts/curate_tv.py --selftest
           # an empty prior file must not read as "history = {}" forever —
