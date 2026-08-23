@@ -6,7 +6,7 @@
    ============================================================ */
 import { createState, step, storyEnded, manualPlay, rank, haversineM } from './engine.js';
 
-const DATA_URL = '../data/out-loud.json';
+const DATA_URL = './stories.json';   // inside the SW scope on purpose (offline)
 const SUPABASE_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3';
 const VISITED_KEY = 'btown-out-loud-visited';
@@ -38,9 +38,12 @@ let eng = createState();
 let mode = 'browse';
 let watchId = null, wakeLock = null, lastPos = null, lastFixAt = 0;
 let currentId = null, wantPlaying = false, tts = null, audioCtx = null;
+let playToken = 0, watchdog = null, lastEndedId = null, lastNearRender = 0;
 let filter = DEEP_ROUTE ? `route:${DEEP_ROUTE}` : 'all';
 let map = null, markers = new Map(), youMarker = null, youCircle = null, followYou = true;
 let visited = loadJSON(VISITED_KEY, {});
+// Cooldown survives reloads (iOS discards backgrounded home-screen apps freely).
+for (const [id, v] of Object.entries(visited)) { const t = v.done || v.started; if (t) eng.lastPlayed[id] = t; }
 let autoplay = localStorage.getItem(AUTO_KEY) !== 'off';
 let replayTimer = null;
 
@@ -67,10 +70,8 @@ async function init() {
   if ('serviceWorker' in navigator && !IS_TEST) {
     navigator.serviceWorker.register('sw.js').catch(() => null);
   }
-  if (DEEP_STORY && byId.has(DEEP_STORY)) {
-    openCard(DEEP_STORY, { scroll: true });
-  }
   if (DEEP_ROUTE) setFilter(`route:${DEEP_ROUTE}`);
+  if (DEEP_STORY && byId.has(DEEP_STORY)) openCard(DEEP_STORY, { scroll: true });
   if (REPLAY) startReplay(REPLAY);
 }
 
@@ -91,25 +92,43 @@ function wire() {
   els.offline.addEventListener('click', () => saveOffline());
   document.querySelectorAll('.ol-chip').forEach((b) => b.addEventListener('click', () => setFilter(b.dataset.filter)));
 
-  audio.addEventListener('ended', () => onEnded(currentId));
+  audio.addEventListener('ended', () => {
+    if (audio.dataset.silent === '1' || audio.dataset.pending === '1') return; // unlock blip / mid-swap
+    onEnded(currentId, { completed: true });
+  });
+  audio.addEventListener('error', () => {
+    const pin = byId.get(currentId);
+    if (!pin || audio.dataset.silent === '1' || audio.dataset.pending === '1') return;
+    // A missing/broken MP3 must never wedge the walk: read it aloud instead.
+    toast('Recording unavailable — reading it instead.');
+    speak(pin, () => onEnded(pin.id, { completed: true }));
+  });
   audio.addEventListener('timeupdate', () => {
     if (audio.duration) els.nowFill.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
   });
   audio.addEventListener('pause', () => syncNowState());
   audio.addEventListener('play', () => syncNowState());
 
-  // Pocket mode: two taps to exit (one tap is too easy to hit in a pocket).
+  // Pocket mode: three quick taps to exit (fabric pressure in a pocket can fake two).
   let taps = 0, tapTimer = null;
-  els.pocketEl.addEventListener('pointerdown', () => {
+  els.pocketEl.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
     taps += 1; clearTimeout(tapTimer);
-    if (taps >= 2) { taps = 0; exitPocket(); return; }
-    tapTimer = setTimeout(() => { taps = 0; }, 700);
+    if (taps >= 3) { taps = 0; exitPocket(); return; }
+    tapTimer = setTimeout(() => { taps = 0; }, 900);
   });
 
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible') return;
     if (mode === 'walk') requestWakeLock();
-    if (wantPlaying && audio.paused && currentId && byId.get(currentId)?.audio) audio.play().catch(() => showNudge());
+    const pin = byId.get(currentId);
+    if (!pin || !wantPlaying) return;
+    if (pin.audio) { if (audio.paused) audio.play().catch(() => showNudge()); return; }
+    // Speech: iOS drops utterances when the page is hidden. If nothing is speaking
+    // or pending, treat the story as over so the walk keeps going.
+    if (tts && !tts.paused && 'speechSynthesis' in window && !speechSynthesis.speaking && !speechSynthesis.pending) {
+      onEnded(currentId, { completed: false, reason: 'lost' });
+    }
   });
 
   if ('mediaSession' in navigator) {
@@ -157,7 +176,7 @@ function onPosition(p) {
   const pos = {
     lat: p.coords.latitude, lng: p.coords.longitude,
     accuracy: p.coords.accuracy, speed: p.coords.speed,
-    ts: p.timestamp || Date.now(),
+    ts: Date.now(),   // one clock for cooldown math (device geolocation clocks vary)
   };
   handlePosition(pos);
 }
@@ -186,6 +205,7 @@ function handlePosition(pos) {
     act(r.actions);
   }
   els.nearby.textContent = nearby(pos);
+  if (filter === 'near' && Date.now() - lastNearRender > 5000) { lastNearRender = Date.now(); renderList(); }
   els.pocketStatus.textContent = currentId ? `Playing: ${byId.get(currentId)?.title}` : (nearest ? `Listening… nearest story ${fmtDist(nearest.dist)}` : 'Listening…');
 }
 
@@ -212,6 +232,7 @@ function unlockAudio() {
   } catch (e) { /* no WebAudio — fine, no chime */ }
   try {
     if (!audio.dataset.unlocked) {
+      audio.dataset.silent = '1';
       audio.src = silentWav();
       audio.muted = false;
       const p = audio.play();
@@ -226,7 +247,11 @@ function unlockAudio() {
 async function playPin(id, via) {
   const pin = byId.get(id);
   if (!pin) return;
+  const token = ++playToken;                 // a newer playPin() wins any race
   stopTts();
+  audio.dataset.pending = '1';               // ignore 'ended' from whatever was loaded before
+  audio.pause();
+  clearTimeout(watchdog);
   currentId = id; wantPlaying = true;
   if (via === 'manual') { const r = manualPlay(eng, id, Date.now()); eng = r.state; }
   renderNow(pin);
@@ -234,54 +259,73 @@ async function playPin(id, via) {
   highlightCard(id);
   if (!IS_TEST) count('play', id);
   await chime();
+  if (token !== playToken) return;           // superseded during the chime
   if (pin.audio) {
+    audio.dataset.silent = '0';
     audio.src = pin.audio;
+    audio.dataset.pending = '0';
     audio.load();
     try { await audio.play(); els.nudge.hidden = true; }
-    catch (e) { showNudge(); }
+    catch (e) { if (token === playToken) showNudge(); }
   } else {
-    speak(pin, () => onEnded(id));
+    audio.dataset.pending = '0';
+    speak(pin, () => onEnded(id, { completed: true }));
   }
   setMediaSession(pin);
+  armWatchdog(pin);
 }
 
-function onEnded(id) {
-  if (id == null) return;
-  if (id === currentId) { wantPlaying = false; markVisited(id, 'done'); }
+/* If a story neither ends nor errors (lost utterance, stalled download, a
+   nudge nobody tapped), end it ourselves so the walk keeps going. */
+function armWatchdog(pin) {
+  clearTimeout(watchdog);
+  const est = pin.duration_s ? pin.duration_s * 1000 : Math.max(60000, ((pin.script || '').split(/\s+/).length / 2.4) * 1000);
+  watchdog = setTimeout(() => {
+    if (currentId === pin.id) onEnded(pin.id, { completed: false, reason: 'watchdog' });
+  }, est + 25000);
+}
+
+function onEnded(id, { completed = false } = {}) {
+  if (id == null || id !== currentId) return;   // stale: a newer story took over
+  clearTimeout(watchdog);
+  wantPlaying = false;
+  if (completed) markVisited(id, 'done');
+  lastEndedId = id;
   const r = storyEnded(eng, id, pins, Date.now());
   eng = r.state;
-  els.nowFill.style.width = '100%';
+  els.nowFill.style.width = completed ? '100%' : els.nowFill.style.width;
   if (r.actions.length) { act(r.actions); return; }
-  if (id === currentId) {
-    currentId = null;
-    els.nowKicker.textContent = 'Finished';
-    els.now.dataset.paused = 'true';
-    renderList();
-    if (mode === 'walk') setStatus('Listening for stories', 'The next one starts when you reach it.');
-    checkRouteDone();
-  }
+  currentId = null;
+  els.nowKicker.textContent = completed ? 'Finished' : 'Stopped';
+  els.now.dataset.paused = 'true';
+  highlightCard(null);
+  if (mode === 'walk') setStatus('Listening for stories', 'The next one starts when you reach it.');
+  checkRouteDone();
 }
 
 function togglePlay() { if (wantPlaying && !isPaused()) pause(); else resume(); }
 function isPaused() { const pin = byId.get(currentId); if (!pin) return true; return pin.audio ? audio.paused : !(tts && tts.speaking && !tts.paused); }
 function pause() {
   const pin = byId.get(currentId); if (!pin) return;
-  wantPlaying = false;
+  wantPlaying = false; clearTimeout(watchdog);
   if (pin.audio) audio.pause(); else if (tts) { speechSynthesis.pause(); tts.paused = true; }
   syncNowState();
 }
 function resume() {
+  if (!currentId && lastEndedId) { unlockAudio(); playPin(lastEndedId, 'manual'); return; }  // replay from the bar
   const pin = byId.get(currentId); if (!pin) return;
   wantPlaying = true;
   if (pin.audio) audio.play().catch(() => showNudge());
   else if (tts && tts.paused) { speechSynthesis.resume(); tts.paused = false; }
-  else if (!tts) speak(pin, () => onEnded(pin.id));
+  else if (!tts) speak(pin, () => onEnded(pin.id, { completed: true }));
   syncNowState();
+  armWatchdog(pin);
 }
 function skip() {
   const id = currentId; if (!id) return;
   stopTts(); audio.pause();
-  onEnded(id);
+  const done = Boolean(byId.get(id)?.audio) && audio.duration > 0 && audio.currentTime / audio.duration > 0.6;
+  onEnded(id, { completed: done });
 }
 function syncNowState() { els.now.dataset.paused = String(isPaused()); els.nowToggle.setAttribute('aria-label', isPaused() ? 'Play' : 'Pause'); }
 function showNudge() { els.nudge.hidden = false; els.now.dataset.paused = 'true'; }
@@ -436,6 +480,7 @@ function refreshMarker(id) {
 function currentRoute() { return filter.startsWith('route:') ? routes.find((r) => r.id === filter.slice(6)) : null; }
 function setFilter(f) {
   filter = f;
+  if (f === 'near' && !lastPos) toast('Tap Start walking first so I know where you are.');
   document.querySelectorAll('.ol-chip').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === f)));
   renderList();
 }
@@ -445,7 +490,6 @@ function orderedPins() {
   let list = pins.map((pin) => ({ pin }));
   if (filter === 'unheard') list = list.filter(({ pin }) => !visited[pin.id]?.done);
   if (filter === 'near' && lastPos) list = rank(lastPos, pins).map(({ pin, dist }) => ({ pin, dist }));
-  else if (filter === 'near') { toast('Tap Start walking first so I know where you are.'); }
   return list;
 }
 function renderList() {
@@ -457,7 +501,7 @@ function renderList() {
   els.list.innerHTML = items.map(({ pin, step, dist }, i) => cardHTML(pin, step, dist, i, Boolean(route))).join('');
   els.list.querySelectorAll('[data-play]').forEach((b) => b.addEventListener('click', () => { unlockAudio(); playPin(b.dataset.play, 'manual'); }));
   els.list.querySelectorAll('[data-read]').forEach((b) => b.addEventListener('click', () => {
-    const body = els.list.querySelector(`[data-body="${b.dataset.read}"]`);
+    const body = b.closest('.ol-card').querySelector('[data-body]');
     body.hidden = !body.hidden; b.textContent = body.hidden ? 'Read' : 'Hide';
   }));
   els.list.querySelectorAll('[data-share]').forEach((b) => b.addEventListener('click', () => share(b.dataset.share)));
@@ -467,7 +511,7 @@ function renderList() {
 function cardHTML(pin, step, dist, i, inRoute) {
   const v = visited[pin.id] || {};
   const dur = pin.duration_s ? `${Math.round(pin.duration_s / 60)} min` : (pin.script ? `${Math.max(1, Math.round(pin.script.split(/\s+/).length / 150))} min` : '');
-  const srcs = (pin.sources || []).map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join('');
+  const srcs = (pin.sources || []).filter((s) => /^https?:\/\//i.test(s.url || '')).map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`).join('');
   return `<li class="ol-card" data-id="${esc(pin.id)}" data-heard="${Boolean(v.done)}">
     <button class="ol-card-play" data-play="${esc(pin.id)}" type="button" aria-label="Play ${esc(pin.title)}">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
@@ -489,7 +533,6 @@ function cardHTML(pin, step, dist, i, inRoute) {
     <div class="ol-card-body" data-body="${esc(pin.id)}" hidden>
       <div class="ol-transcript">${esc(pin.script || '')}</div>
       ${srcs ? `<details class="ol-sources"><summary>Where this comes from</summary><ul>${srcs}</ul></details>` : ''}
-      ${pin.review_notes_public ? `<p class="ol-fine">${esc(pin.review_notes_public)}</p>` : ''}
     </div>
     ${inRoute && step && step.directions ? `<p class="ol-directions"><b>Next:</b> ${esc(step.directions)}${step.minutes_to_next ? ` <span>(~${step.minutes_to_next} min)</span>` : ''}</p>` : ''}
   </li>`;
@@ -503,7 +546,7 @@ function openCard(id, { scroll } = {}) {
   const m = markers.get(id); if (m && map) { map.setView(m.getLatLng(), 17); m.openPopup(); }
 }
 function highlightCard(id) {
-  els.list.querySelectorAll('.ol-card').forEach((c) => { c.dataset.playing = String(c.dataset.id === id); });
+  els.list.querySelectorAll('.ol-card').forEach((c) => { c.dataset.playing = String(id != null && c.dataset.id === id); });
 }
 function checkRouteDone() {
   const route = currentRoute();
@@ -554,11 +597,16 @@ async function saveOffline() {
   try {
     const c = await caches.open('out-loud-audio');
     let n = 0;
+    let tried = 0;
     for (const u of urls) {
-      try { const hit = await c.match(u); if (!hit) { const r = await fetch(u); if (r.ok) await c.put(u, r); } } catch (e) { /* skip */ }
-      n += 1; els.offlineStatus.textContent = `Saving ${n} / ${urls.length}…`;
+      try {
+        const hit = await c.match(u);
+        if (hit) n += 1;
+        else { const r = await fetch(u); if (r.ok && r.status === 200) { await c.put(u, r); n += 1; } }
+      } catch (e) { /* skip */ }
+      tried += 1; els.offlineStatus.textContent = `Saving ${tried} / ${urls.length}…`;
     }
-    els.offlineStatus.textContent = `Saved ${n} stories for offline.`;
+    els.offlineStatus.textContent = n === urls.length ? `Saved all ${n} stories for offline.` : `Saved ${n} of ${urls.length} — try again with better signal.`;
   } catch (e) { els.offlineStatus.textContent = 'Could not save right now.'; }
   els.offline.disabled = false;
 }

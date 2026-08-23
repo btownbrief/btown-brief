@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render Btown Out Loud story audio with ElevenLabs.
 
-Reads data/out-loud.json, renders an MP3 for every enabled pin whose script
+Reads out-loud/stories.json, renders an MP3 for every enabled pin whose script
 hash differs from the stored audio_hash (so edits re-render, untouched stories
 cost nothing), writes out-loud/audio/<id>.mp3, and updates audio / audio_hash /
 duration_s in the data file. The API key never leaves this machine.
@@ -31,7 +31,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data" / "out-loud.json"
+DATA = ROOT / "out-loud" / "stories.json"
 AUDIO_DIR = ROOT / "out-loud" / "audio"
 SECRETS = Path.home() / ".config" / "btownbrief" / "secrets.env"
 API = "https://api.elevenlabs.io/v1"
@@ -70,7 +70,8 @@ def mp3_duration_seconds(path):
     total = 0.0
     n = len(data)
     while i + 4 <= n:
-        if data[i] == 0xFF and (data[i + 1] & 0xE0) == 0xE0:
+        if data[i] == 0xFF and (data[i + 1] & 0xE0) == 0xE0 \
+                and ((data[i + 1] >> 3) & 0x03) == 0x03 and ((data[i + 1] >> 1) & 0x03) == 0x01:  # MPEG-1 Layer III only
             b = (data[i + 2] >> 4) & 0x0F
             r = (data[i + 2] >> 2) & 0x03
             pad = (data[i + 2] >> 1) & 0x01
@@ -162,12 +163,16 @@ def main():
         print(f"  ✓ {p['id']}: {len(audio)/1e6:.2f} MB, ~{p['duration_s']} s")
         DATA.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
         time.sleep(0.5)
-    data["voice"] = {
-        "provider": "elevenlabs", "voice_id": voice_id, "model": MODEL,
-        "about": "Every story is written by a person from cited sources and reviewed before it goes live — tap Where this comes from under any story. The narration is a synthetic voice (ElevenLabs); no real person recorded it.",
-    }
-    DATA.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"rendered {ok}/{len(todo)}; data updated")
+    if ok:
+        all_have_audio = all(p.get("audio") for p in data.get("pins", []) if p.get("enabled", True))
+        data["voice"] = {
+            "provider": "elevenlabs" if all_have_audio else "mixed", "voice_id": voice_id, "model": MODEL,
+            "about": ("Every story is written by a person from cited sources and reviewed before it goes live — tap Where this comes from under any story. The narration is a synthetic voice (ElevenLabs); no real person recorded it."
+                      if all_have_audio else
+                      "Every story is written by a person from cited sources and reviewed before it goes live — tap Where this comes from under any story. Narration is a synthetic voice (ElevenLabs); stories without a recording yet are read by your phone's built-in voice."),
+        }
+        DATA.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"rendered {ok}/{len(todo)}; data {'updated' if ok else 'unchanged'}")
 
 
 if __name__ == "__main__":

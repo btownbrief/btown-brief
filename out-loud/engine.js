@@ -73,13 +73,23 @@ export function step(prev, position, pins, options = {}) {
     inside: { ...prev.inside },
     lastPlayed: { ...prev.lastPlayed },
     queue: prev.queue.slice(),
-    lastPosition: position,
+    lastPosition: prev.lastPosition,   // only a trusted fix becomes "where the walker is"
   };
   const actions = [];
   const ranked = rank(position, pins);
 
-  // 1. Update inside/outside with hysteresis, regardless of gates — leaving
-  //    should always be noticed so re-entry can trigger later.
+  // 0. A fix worse than maxAccuracyM tells us nothing about where the walker is:
+  //    don't let it move anyone in or out of a radius (that would drop queued
+  //    stories on a bad fix). Just report that we're holding.
+  const acc0 = Number(position.accuracy);
+  if (Number.isFinite(acc0) && acc0 > opts.maxAccuracyM) {
+    if (ranked.some(({ pin, dist }) => dist <= radiusOf(pin, opts))) actions.push({ type: 'suppress', reason: 'accuracy' });
+    return { state, actions };
+  }
+  state.lastPosition = position;
+
+  // 1. Update inside/outside with hysteresis, regardless of the speed gate —
+  //    leaving should always be noticed so re-entry can trigger later.
   const entered = [];
   for (const { pin, dist } of ranked) {
     const r = radiusOf(pin, opts);
@@ -100,7 +110,6 @@ export function step(prev, position, pins, options = {}) {
   const spd = position.speed == null ? null : Number(position.speed);
   let gate = null;
   if (spd != null && Number.isFinite(spd) && spd > opts.maxSpeedMps) gate = 'speed';
-  if (Number.isFinite(acc) && acc > opts.maxAccuracyM) gate = gate || 'accuracy';
 
   if (gate) {
     for (const e of entered) delete state.inside[e.pin.id];
@@ -143,8 +152,10 @@ export function storyEnded(prev, endedId, pins, ts, options = {}) {
   const opts = { ...DEFAULTS, ...options };
   const state = { ...prev, queue: prev.queue.slice(), lastPlayed: { ...prev.lastPlayed } };
   const actions = [];
-  if (state.active === endedId || endedId == null) state.active = null;
-  if (state.active != null) return { state, actions };
+  // A stale "ended" for a story that isn't the active one changes nothing —
+  // it must never pop the queue on the active story's behalf.
+  if (endedId != null && endedId !== prev.active) return { state: prev, actions };
+  state.active = null;
 
   const byId = new Map(pins.map((p) => [p.id, p]));
   while (state.queue.length) {

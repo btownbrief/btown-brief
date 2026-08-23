@@ -126,3 +126,50 @@ test('state is not mutated in place', () => {
   step(s, at(0, 0, { ts: 1 }), pins);
   assert.equal(JSON.stringify(s), frozen);
 });
+
+test('stale storyEnded for a non-active story does nothing (no queue pop)', () => {
+  let s = createState();
+  let r = step(s, at(0, 0, { ts: 1 }), pins); s = r.state;            // A plays
+  r = step(s, at(100, 0, { ts: 2 }), pins); s = r.state;              // B queued
+  r = storyEnded(s, 'zzz', pins, 3); s = r.state;
+  assert.deepEqual(r.actions, []);
+  assert.equal(s.active, 'a');
+  assert.deepEqual(s.queue, ['b']);
+  r = storyEnded(s, null, pins, 4); s = r.state;                      // null = "whatever is active"
+  assert.deepEqual(r.actions, [{ type: 'play', id: 'b' }]);
+});
+
+test('nearest pin on cooldown → the farther candidate plays', () => {
+  let s = createState();
+  s = manualPlay(s, 'y', 1).state; s = storyEnded(s, 'y', [], 2).state;  // y heard just now
+  const close = [{ id: 'x', lat: base.lat, lng: base.lng, radius_m: 90 }, { id: 'y', lat: at(40, 0).lat, lng: base.lng, radius_m: 90 }];
+  const r = step(s, at(35, 0, { ts: 1000 }), close);                  // y is nearer but on cooldown
+  assert.deepEqual(r.actions, [{ type: 'play', id: 'x' }]);
+});
+
+test('a wildly inaccurate fix neither drops a queued story nor marks an exit', () => {
+  let s = createState();
+  let r = step(s, at(0, 0, { ts: 1 }), pins); s = r.state;            // A plays
+  r = step(s, at(100, 0, { ts: 2 }), pins); s = r.state;              // B queued
+  r = step(s, at(-400, 0, { ts: 3, accuracy: 300 }), pins); s = r.state; // garbage fix 400 m south
+  assert.deepEqual(s.queue, ['b']);
+  assert.equal(s.inside.a, true);
+  r = storyEnded(s, 'a', pins, 4); s = r.state;
+  assert.deepEqual(r.actions, [{ type: 'play', id: 'b' }]);           // still near B per the last *good* fix
+});
+
+test('a speed-gated fix still records exits (the walker really did move)', () => {
+  let s = createState();
+  let r = step(s, at(0, 0, { ts: 1 }), pins); s = r.state;
+  r = storyEnded(s, 'a', pins, 2); s = r.state;
+  r = step(s, at(-200, 0, { ts: 3, speed: 8 }), pins); s = r.state;   // drove away
+  assert.equal(s.inside.a, undefined);
+});
+
+test('replay: onEnd on a step that also queues still ends the active story and plays the queued one', () => {
+  const track = [at(0, 0, { ts: 0 }), at(100, 0, { ts: 1000 })];
+  const { events, state } = replay(track, pins, {}, () => true);      // end every story immediately
+  const plays = events.filter((e) => e.type === 'play').map((e) => e.id);
+  assert.deepEqual(plays, ['a', 'b']);
+  assert.equal(state.active, null);
+});

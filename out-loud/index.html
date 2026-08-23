@@ -17,13 +17,14 @@
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Out Loud">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="vendor/style.css?v=20260823a">
   <link rel="stylesheet" href="../css/style.css?v=20260823a">
   <link rel="stylesheet" href="out-loud.css?v=20260823a">
   <script>
@@ -132,7 +133,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <section class="ol-stories" id="stories">
       <div class="ol-stories-head">
         <h2 id="stories-title">All stories</h2>
-        <div class="ol-filter" role="tablist" aria-label="Filter stories">
+        <div class="ol-filter" role="group" aria-label="Filter stories">
           <button class="ol-chip" data-filter="all" aria-pressed="true" type="button">All</button>
           <button class="ol-chip" data-filter="route:downtown-loop" aria-pressed="false" type="button">Downtown Loop</button>
           <button class="ol-chip" data-filter="near" aria-pressed="false" type="button">Nearest first</button>
@@ -140,7 +141,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
         </div>
       </div>
       <p class="ol-route-note" id="route-note" hidden></p>
-      <ol class="ol-list" id="list" aria-live="polite"></ol>
+      <ol class="ol-list" id="list"></ol>
       <div class="ol-end-card" id="end-card" hidden>
         <h3>That's the loop.</h3>
         <p>If you liked hearing the city this way, the Burlington Brief is the same thing in your inbox twice a week — what's happening, what opened, what closed, what's worth your Saturday.</p>
@@ -160,7 +161,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
         <div>
           <h3>The voice and the facts</h3>
           <p id="about-voice">Every story is written by a person from cited sources and reviewed before it goes live — tap <em>Where this comes from</em> under any story. The narration is a synthetic voice; until the studio recordings land, your phone's built-in voice reads the script.</p>
-          <p>Free, no account, nothing tracked beyond a count of how many times each story plays. Your "heard" marks live only on this phone.</p>
+          <p>Free, no account. We count how many times each story plays and how many walks start, and this page carries the same analytics pixel as the rest of the guide. Your "heard" marks live only on this phone.</p>
         </div>
         <div>
           <h3>Offline</h3>
@@ -196,7 +197,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <div class="ol-pocket-inner">
       <span class="ol-live-dot" aria-hidden="true"></span>
       <p id="pocket-status">Listening for stories…</p>
-      <p class="ol-pocket-hint">Screen stays on, dimmed. Tap twice to come back.</p>
+      <p class="ol-pocket-hint">Screen stays on, dimmed. Tap three times to come back.</p>
     </div>
   </div>
 
@@ -217,7 +218,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="../js/community.js"></script>
-  <script type="module" src="app.js?v=20260823a"></script>
+  <script type="module" src="app.js?v=20260823b"></script>
   <script src="../js/auto-theme.js?v=20260711k"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
