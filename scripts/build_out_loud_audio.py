@@ -23,6 +23,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import struct
 import sys
 import time
@@ -40,6 +41,63 @@ MODEL = os.environ.get("ELEVENLABS_MODEL") or "eleven_multilingual_v2"
 OUTPUT_FORMAT = "mp3_44100_64"
 
 
+# ---------- spoken-text normalizer (TTS tripwires → words) ----------
+_ONES = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+         "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"]
+_TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]
+
+
+def num_words(n):
+    """Integer → English words (0..999,999,999,999)."""
+    n = int(n)
+    if n < 20:
+        return _ONES[n]
+    if n < 100:
+        return _TENS[n // 10] + ("" if n % 10 == 0 else "-" + _ONES[n % 10])
+    if n < 1000:
+        return _ONES[n // 100] + " hundred" + ("" if n % 100 == 0 else " " + num_words(n % 100))
+    for div, name in ((10**9, "billion"), (10**6, "million"), (10**3, "thousand")):
+        if n >= div:
+            rest = n % div
+            return num_words(n // div) + " " + name + ("" if rest == 0 else (", " if rest >= 100 else " and ") + num_words(rest))
+    return str(n)
+
+
+def _money_cents(m):
+    dollars = int(m.group(1).replace(",", ""))
+    cents = int(m.group(2).ljust(2, "0")[:2])
+    out = num_words(dollars) + (" dollar" if dollars == 1 else " dollars")
+    if cents:
+        out += " and " + num_words(cents) + (" cent" if cents == 1 else " cents")
+    return out
+
+
+def _money_decimal_scale(m):
+    # "$2.4 million" → "two point four million dollars"
+    whole, frac, scale = m.group(1), m.group(2), m.group(3)
+    return f"{num_words(whole)} point {' '.join(_ONES[int(c)] for c in frac)} {scale} dollars"
+
+
+def _plain_decimal(m):
+    whole, frac = m.group(1).replace(",", ""), m.group(2)
+    return f"{num_words(whole)} point {' '.join(_ONES[int(c)] for c in frac)}"
+
+
+def spoken_text(script):
+    """What the narrator actually reads. The transcript on screen keeps the
+    original; this only rewrites the patterns ElevenLabs stumbles on:
+    currency with cents ($22,185.34), scaled decimals ($2.4 million),
+    bare decimals (3.5), en/em-dash ranges (1985–2016), 'No.' and '&'."""
+    t = script
+    t = re.sub(r"\$(\d[\d,]*)\.(\d{1,2})\s+(million|billion|thousand)\b", _money_decimal_scale, t)
+    t = re.sub(r"\$(\d[\d,]*)\.(\d{1,2})\b", _money_cents, t)
+    t = re.sub(r"(?<![\d$])(\d[\d,]*)\.(\d+)\b", _plain_decimal, t)
+    t = re.sub(r"(\d)\s?[–—]\s?(\d)", r"\1 to \2", t)
+    t = re.sub(r"\bNo\.\s?(\d)", r"number \1", t)
+    t = t.replace(" & ", " and ")
+    return t
+
+
 def load_secrets():
     if SECRETS.exists():
         for line in SECRETS.read_text().splitlines():
@@ -52,7 +110,7 @@ def load_secrets():
 
 def script_hash(pin, voice_id):
     h = hashlib.sha256()
-    h.update((pin.get("script") or "").strip().encode("utf-8"))
+    h.update(spoken_text((pin.get("script") or "").strip()).encode("utf-8"))
     h.update(b"|" + voice_id.encode())
     h.update(b"|" + MODEL.encode())
     return h.hexdigest()[:16]
@@ -119,6 +177,7 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--list-voices", action="store_true")
     ap.add_argument("--voice", help="ElevenLabs voice id (overrides env/default)")
+    ap.add_argument("--show-spoken", action="store_true", help="print spoken-text rewrites and exit")
     a = ap.parse_args()
 
     api_key = load_secrets()
@@ -132,10 +191,19 @@ def main():
         return
 
     pins = [p for p in data.get("pins", []) if p.get("enabled", True) and p.get("script")]
+    if a.show_spoken:
+        for p in pins:
+            sp = spoken_text(p["script"])
+            if sp != p["script"]:
+                import difflib
+                for line in difflib.unified_diff(p["script"].split(". "), sp.split(". "), lineterm="", n=0):
+                    if line.startswith(("+", "-")) and not line.startswith(("+++", "---")):
+                        print(f"  {p['id']}: {line}")
+        return
     if a.only:
         pins = [p for p in pins if p["id"] in set(a.only)]
     todo = [p for p in pins if a.force or p.get("audio_hash") != script_hash(p, voice_id) or not (AUDIO_DIR / f"{p['id']}.mp3").exists()]
-    chars = sum(len(p["script"]) for p in todo)
+    chars = sum(len(spoken_text(p["script"])) for p in todo)
     print(f"{len(todo)} of {len(pins)} stories need rendering — {chars:,} characters (≈ {chars:,} credits on {MODEL})")
     if a.dry_run or not todo:
         return
@@ -147,7 +215,7 @@ def main():
     for p in todo:
         out = AUDIO_DIR / f"{p['id']}.mp3"
         try:
-            audio = tts(api_key, voice_id, p["script"].strip())
+            audio = tts(api_key, voice_id, spoken_text(p["script"].strip()))
         except urllib.error.HTTPError as e:
             print(f"  ✗ {p['id']}: HTTP {e.code} {e.read()[:200]!r}")
             continue
