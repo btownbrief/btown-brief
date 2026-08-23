@@ -68,13 +68,16 @@ INO_STREAM_N = 1000
 INO_CHANNEL_RE = re.compile(r"/channel/(UC[A-Za-z0-9_-]{22})")
 API = "https://www.googleapis.com/youtube/v3"
 WINDOW_DAYS = 7
-MAX_CHANNEL_VIDEOS = 160
+MAX_CHANNEL_VIDEOS = 240   # roster grew to ~140 channels for Btown TV (Aug 2026)
 DEFAULT_CAP = 6          # per-channel per refresh; firehoses set lower in the file
 SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
 MAX_VERMONT = 10
 CATALOG = os.path.join(ROOT, "data", "deep-catalog.json")
 DEEP_PER_CHANNEL = 5
-DEEP_BACKFILL_PER_RUN = 8   # 8 searches ≈ 800 units/run while the catalog fills
+DEEP_BACKFILL_PER_RUN = 3   # 3 searches ≈ 300 units/run while the catalog fills
+                            # (was 8; the 8×/day schedule + Btown TV's playlist
+                            # sync share one 10k/day quota — 3 keeps a backfill
+                            # day near 6k instead of 10k)
 DEEP_REFRESH_PER_RUN = 2    # steady state: re-check the two stalest channels
 DEEP_REFRESH_DAYS = 30      # greatest-hits lists barely move
 DEEP_MIN_AGE_DAYS = 180     # a deep cut is old gold, not last month's upload
@@ -694,21 +697,22 @@ def run(args):
     elif key:
         # targeted top-up: a channel absent from the stream is usually just
         # quiet, but it might be a feed Inoreader silently dropped — one
-        # playlistItems unit each settles it
+        # playlistItems unit each settles it (60 per run: Btown TV's roster
+        # additions live only in the metadata file until Inoreader catches up)
         covered_set = set(covered)
         missing = [channel for channel in load_channels()
                    if channel["id"] not in covered_set]
         if missing:
             try:
                 extra = fetch_channel_videos_api(key, now_ts,
-                                                 channels=missing[:20])
+                                                 channels=missing[:60])
                 have = {video["id"] for video in own}
                 fresh_extra = [v for v in extra if v["id"] not in have]
                 if fresh_extra:
                     own.extend(fresh_extra)
                     own.sort(key=lambda video: video["d"], reverse=True)
                 print(f"refresh_youtube: api top-up checked "
-                      f"{len(missing[:20])} quiet channels -> "
+                      f"{len(missing[:60])} quiet channels -> "
                       f"+{len(fresh_extra)}")
             except Exception as exc:  # noqa: BLE001
                 print(f"refresh_youtube: top-up trouble ({exc})",
