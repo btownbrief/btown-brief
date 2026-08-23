@@ -271,12 +271,3 @@
 }
 .tour-listen:hover { border-color: var(--ink-4); }
 .tour-listen-kicker { font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--coral); }
-
-/* Per-stop listen link + the "more walks" aside */
-.tour-listen-link { font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.04em;
-  color: var(--coral); text-decoration: none; white-space: nowrap;
-}
-.tour-listen-link:hover { text-decoration: underline; }
-.tour-walks { margin-top: var(--space-8); padding-top: var(--space-5); border-top: 1px solid var(--line); }
-.tour-walks h2 { font-family: var(--font-display); font-size: var(--text-xl); margin: 0 0 var(--space-2); }
-.tour-walks p { color: var(--ink-2); margin: 0 0 var(--space-3); }
