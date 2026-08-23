@@ -1,44 +1,34 @@
 {
- "updated": "2026-08-23T09:57:12+00:00",
+ "updated": "2026-08-23T10:01:26+00:00",
  "sections_updated": {
-  "now": "2026-08-23T09:57:12+00:00",
-  "forecast": "2026-08-23T09:57:12+00:00",
-  "hourly": "2026-08-23T09:57:12+00:00",
-  "alerts": "2026-08-23T09:57:12+00:00",
-  "afd": "2026-08-23T09:57:12+00:00",
-  "lake_forecast": "2026-08-23T09:57:12+00:00",
+  "now": "2026-08-23T10:01:26+00:00",
+  "forecast": "2026-08-23T10:01:26+00:00",
+  "hourly": "2026-08-23T10:01:26+00:00",
+  "alerts": "2026-08-23T10:01:26+00:00",
+  "afd": "2026-08-23T10:01:26+00:00",
+  "lake_forecast": "2026-08-23T10:01:26+00:00",
   "lake_gage": "2026-08-23T09:57:12+00:00",
-  "air": "2026-08-23T09:57:12+00:00",
-  "sun": "2026-08-23T09:57:12+00:00",
-  "models": "2026-08-23T09:57:12+00:00"
+  "air": "2026-08-23T10:01:26+00:00",
+  "sun": "2026-08-23T10:01:26+00:00",
+  "models": "2026-08-23T10:01:26+00:00"
  },
  "now": {
-  "observed_at": "2026-08-23T09:35:00+00:00",
+  "observed_at": "2026-08-23T09:40:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 63,
-  "feels_like_f": 63,
+  "temp_f": 64,
+  "feels_like_f": 64,
   "humidity": 88,
-  "dewpoint_f": 59,
-  "wind_mph": 6,
+  "dewpoint_f": 61,
+  "wind_mph": 7,
   "wind_gust_mph": null,
-  "wind_dir": "ESE"
+  "wind_dir": "SE"
  },
  "forecast": {
   "updated": "2026-08-23T06:20:33+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-08-23T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 62,
-    "pop": 3,
-    "wind": "SE 7 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 62. Southeast wind around 7 mph."
-   },
-   {
-    "name": "Sunday",
+    "name": "Today",
     "start": "2026-08-23T06:00:00-04:00",
     "is_day": true,
     "temp_f": 79,
@@ -48,7 +38,7 @@
     "detailed": "A chance of rain showers between 7am and 2pm, then a chance of showers and thunderstorms. Mostly cloudy, with a high near 79. Southeast wind 6 to 12 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
-    "name": "Sunday Night",
+    "name": "Tonight",
     "start": "2026-08-23T18:00:00-04:00",
     "is_day": false,
     "temp_f": 57,
@@ -95,7 +85,7 @@
     "pop": 54,
     "wind": "W 7 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers before 2am. Mostly cloudy, with a low around 56. West wind around 7 mph. Chance of precipitation is 50%."
+    "detailed": "A chance of rain showers before 2am. Mostly cloudy, with a low around 56. West wind around 7 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Wednesday",
@@ -166,23 +156,22 @@
     "wind": "NW 6 to 10 mph",
     "short": "Slight Chance Rain Showers",
     "detailed": "A slight chance of rain showers. Mostly sunny, with a high near 77. Northwest wind 6 to 10 mph."
+   },
+   {
+    "name": "Saturday Night",
+    "start": "2026-08-29T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 56,
+    "pop": 17,
+    "wind": "W 3 to 9 mph",
+    "short": "Slight Chance Rain Showers then Partly Cloudy",
+    "detailed": "A slight chance of rain showers before 8pm. Partly cloudy, with a low around 56. West wind 3 to 9 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-08-23T06:20:33+00:00",
   "hours": [
-   {
-    "t": "2026-08-23T05:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
-    "pop": 3,
-    "humidity": 93,
-    "wind_mph": 7,
-    "wind_dir": "SE",
-    "sky": 62,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-08-23T06:00:00-04:00",
     "temp_f": 62,
@@ -567,6 +556,17 @@
     "wind_dir": "SW",
     "sky": 73,
     "short": "Showers And Thunderstorms Likely"
+   },
+   {
+    "t": "2026-08-24T17:00:00-04:00",
+    "temp_f": 72,
+    "feels_f": 72,
+    "pop": 59,
+    "humidity": 64,
+    "wind_mph": 10,
+    "wind_dir": "SW",
+    "sky": 73,
+    "short": "Showers And Thunderstorms Likely"
    }
   ]
  },
@@ -856,7 +856,7 @@
      "ICON": 72
     },
     "pop_max": {
-     "GFS": 35,
+     "GFS": 27,
      "Euro": 99,
      "ICON": 83
     },
