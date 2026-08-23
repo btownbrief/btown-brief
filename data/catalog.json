@@ -1,200 +1,206 @@
 {
- "_note": "Single source of truth for the hub's 'Use the city' grid (hub.btownbrief.com renders from this file at load). When you launch a new guide page, add a card here — the hub picks it up automatically. Full URLs on purpose: a few cards point at play.btownbrief.com or elsewhere. Keep blurbs in the hub's voice: short, concrete, second person.",
- "groups": [
-  {
-   "id": "right-now",
-   "title": "Right now",
-   "cards": [
+  "_note": "Single source of truth for the hub's 'Use the city' grid (hub.btownbrief.com renders from this file at load). When you launch a new guide page, add a card here — the hub picks it up automatically. Full URLs on purpose: a few cards point at play.btownbrief.com or elsewhere. Keep blurbs in the hub's voice: short, concrete, second person.",
+  "groups": [
     {
-     "emoji": "🎲",
-     "title": "What Now",
-     "blurb": "The anti-feed. One good answer to “what do I want to do today?” — then it tells you to put the phone down.",
-     "href": "https://play.btownbrief.com/what-now/"
+      "id": "right-now",
+      "title": "Right now",
+      "cards": [
+        {
+          "emoji": "🎲",
+          "title": "What Now",
+          "blurb": "The anti-feed. One good answer to “what do I want to do today?” — then it tells you to put the phone down.",
+          "href": "https://play.btownbrief.com/what-now/"
+        },
+        {
+          "title": "Open Right Now",
+          "blurb": "Live hours for 281 places — patios, happy hours, late-night kitchens.",
+          "href": "https://guide.btownbrief.com/restaurants.html"
+        },
+        {
+          "title": "Events",
+          "blurb": "Tonight, this weekend, and beyond. Pulled from 25 sources so you don't have to check 25.",
+          "href": "https://guide.btownbrief.com/events.html"
+        },
+        {
+          "title": "Tonight's Sunset",
+          "blurb": "Will it actually be good? A scored forecast, and where to watch it from.",
+          "href": "https://guide.btownbrief.com/sunset.html"
+        },
+        {
+          "title": "Burlington Weather & Lake",
+          "blurb": "Weather, lake conditions, can-I-swim beach statuses, life scores.",
+          "href": "https://guide.btownbrief.com/weather.html"
+        },
+        {
+          "title": "Food & Drink Deals",
+          "blurb": "Happy hours, daily specials, and the cheap-night standbys.",
+          "href": "https://guide.btownbrief.com/restaurants.html?view=deals"
+        },
+        {
+          "title": "Small Bites",
+          "blurb": "Every menu near Church Street, one filterable list — what can I eat, for how much, right here.",
+          "href": "https://guide.btownbrief.com/small-bites.html"
+        },
+        {
+          "title": "Openings & Closings",
+          "blurb": "What just opened and what's gone — try the new place while it's still news.",
+          "href": "https://guide.btownbrief.com/openings.html"
+        },
+        {
+          "title": "Since You Checked",
+          "blurb": "What changed in town since you last looked: beaches, roads, agendas.",
+          "href": "https://guide.btownbrief.com/changes.html"
+        },
+        {
+          "title": "Burlington Pulse",
+          "blurb": "Every local headline next to the national wire — one dense, no-algorithm feed.",
+          "href": "https://guide.btownbrief.com/pulse.html"
+        }
+      ]
     },
     {
-     "title": "Open Right Now",
-     "blurb": "Live hours for 281 places — patios, happy hours, late-night kitchens.",
-     "href": "https://guide.btownbrief.com/restaurants.html"
+      "id": "go-do",
+      "title": "Go and do something",
+      "cards": [
+        {
+          "title": "Things To Do",
+          "blurb": "A local's guide — breweries, beaches, trails, and the definitive top 100.",
+          "href": "https://guide.btownbrief.com/things-to-do.html"
+        },
+        {
+          "emoji": "🎧",
+          "title": "Btown Out Loud",
+          "blurb": "Earbuds in, walk downtown, and the city tells you its stories when you reach them. Two minutes each, free.",
+          "href": "https://guide.btownbrief.com/out-loud/"
+        },
+        {
+          "title": "Clubs & Groups",
+          "blurb": "Run clubs, board games, book clubs, pickup sports. Find your people.",
+          "href": "https://guide.btownbrief.com/clubs.html"
+        },
+        {
+          "title": "Lake & Beaches",
+          "blurb": "Every official beach and the whole shore — live swim statuses and a scavenger hunt along the water.",
+          "href": "https://guide.btownbrief.com/beaches.html"
+        },
+        {
+          "title": "Vermont Hobbies",
+          "blurb": "The hobbies this place is built for, each with a local on-ramp to get you started.",
+          "href": "https://guide.btownbrief.com/hobbies.html"
+        },
+        {
+          "emoji": "🎡",
+          "title": "Stay Awhile",
+          "blurb": "A conversation game for the table you're already at. Spin, land on someone, ask them something real.",
+          "href": "https://play.btownbrief.com/stay-awhile/"
+        },
+        {
+          "emoji": "☕",
+          "title": "Table Talk",
+          "blurb": "Prop a phone up at the meetup — icebreakers, friendly fights, and weekend picks on a slow clock. Synced phones all show the same card.",
+          "href": "https://guide.btownbrief.com/table.html"
+        },
+        {
+          "emoji": "📚",
+          "title": "The Archives",
+          "blurb": "Search every Brief ever written. Find the story you half-remember.",
+          "href": "https://play.btownbrief.com/archive/"
+        }
+      ]
     },
     {
-     "title": "Events",
-     "blurb": "Tonight, this weekend, and beyond. Pulled from 25 sources so you don't have to check 25.",
-     "href": "https://guide.btownbrief.com/events.html"
+      "id": "live-here",
+      "title": "Live here",
+      "cards": [
+        {
+          "title": "Find an Apartment",
+          "blurb": "Every local property manager — email them instead of refreshing Zillow.",
+          "href": "https://guide.btownbrief.com/housing.html"
+        },
+        {
+          "title": "Jobs This Week",
+          "blurb": "The newest postings across the city, the state, UVM, and the hospital.",
+          "href": "https://guide.btownbrief.com/jobs.html"
+        },
+        {
+          "title": "The Walking Tour",
+          "blurb": "A 1.7-mile downtown loop with the history woven in — 14 stops, about 90 minutes.",
+          "href": "https://guide.btownbrief.com/walking-tour.html"
+        },
+        {
+          "title": "Burlington, Briefly",
+          "blurb": "The city's whole story in a five-minute read, with the long version one click deeper.",
+          "href": "https://guide.btownbrief.com/history.html"
+        },
+        {
+          "title": "The Gift Guide",
+          "blurb": "Every gift from a Burlington-area shop or maker — by category, with prices.",
+          "href": "https://guide.btownbrief.com/gifts.html"
+        },
+        {
+          "title": "Civic Meetings",
+          "blurb": "Every public meeting on one calendar — agendas, packets, and video links.",
+          "href": "https://guide.btownbrief.com/civic.html"
+        },
+        {
+          "title": "r/GoodBurlington",
+          "blurb": "The good-news corner of Burlington Reddit.",
+          "href": "https://guide.btownbrief.com/goodburlington.html"
+        },
+        {
+          "title": "Best of r/burlington",
+          "blurb": "What the subreddit actually recommends, linked straight to the threads.",
+          "href": "https://guide.btownbrief.com/best-of-reddit.html"
+        },
+        {
+          "title": "Volunteer",
+          "blurb": "Help this week — filtered by the time you've actually got.",
+          "href": "https://guide.btownbrief.com/volunteer.html"
+        }
+      ]
     },
     {
-     "title": "Tonight's Sunset",
-     "blurb": "Will it actually be good? A scored forecast, and where to watch it from.",
-     "href": "https://guide.btownbrief.com/sunset.html"
-    },
-    {
-     "title": "Burlington Weather & Lake",
-     "blurb": "Weather, lake conditions, can-I-swim beach statuses, life scores.",
-     "href": "https://guide.btownbrief.com/weather.html"
-    },
-    {
-     "title": "Food & Drink Deals",
-     "blurb": "Happy hours, daily specials, and the cheap-night standbys.",
-     "href": "https://guide.btownbrief.com/restaurants.html?view=deals"
-    },
-    {
-     "title": "Small Bites",
-     "blurb": "Every menu near Church Street, one filterable list — what can I eat, for how much, right here.",
-     "href": "https://guide.btownbrief.com/small-bites.html"
-    },
-    {
-     "title": "Openings & Closings",
-     "blurb": "What just opened and what's gone — try the new place while it's still news.",
-     "href": "https://guide.btownbrief.com/openings.html"
-    },
-    {
-     "title": "Since You Checked",
-     "blurb": "What changed in town since you last looked: beaches, roads, agendas.",
-     "href": "https://guide.btownbrief.com/changes.html"
-    },
-    {
-     "title": "Burlington Pulse",
-     "blurb": "Every local headline next to the national wire — one dense, no-algorithm feed.",
-     "href": "https://guide.btownbrief.com/pulse.html"
+      "id": "join-in",
+      "title": "Join in",
+      "cards": [
+        {
+          "emoji": "🎾",
+          "title": "Who's Playing",
+          "blurb": "Find someone to play with — or find the standing pickup game. Partners and drop-in sports, Burlington only.",
+          "href": "https://play.btownbrief.com/whos-playing/"
+        },
+        {
+          "title": "Community Chat",
+          "blurb": "The Telegram group — locals swapping finds and what's actually open in a storm.",
+          "href": "https://guide.btownbrief.com/telegram.html"
+        },
+        {
+          "title": "Community Photos",
+          "blurb": "Burlington through your lens. Send one in and it may run in the Brief.",
+          "href": "https://guide.btownbrief.com/photos.html"
+        },
+        {
+          "title": "Community Playlist",
+          "blurb": "Share a song, upvote the week's list, find Vermont artists.",
+          "href": "https://guide.btownbrief.com/playlist.html"
+        },
+        {
+          "title": "Local Projects",
+          "blurb": "Other people building things for Burlington. Add yours.",
+          "href": "https://guide.btownbrief.com/projects.html"
+        },
+        {
+          "emoji": "👕",
+          "title": "Merch",
+          "blurb": "Burlington shirts. Wearing one is the entire marketing budget.",
+          "href": "https://stephenvdavis-jpg.github.io/t-shirts/"
+        },
+        {
+          "title": "About Me",
+          "blurb": "It really is just one guy behind all of this.",
+          "href": "https://www.btownbrief.com/about-me"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "id": "go-do",
-   "title": "Go and do something",
-   "cards": [
-    {
-     "title": "Things To Do",
-     "blurb": "A local's guide — breweries, beaches, trails, and the definitive top 100.",
-     "href": "https://guide.btownbrief.com/things-to-do.html"
-    },
-    {
-     "emoji": "🎧",
-     "title": "Btown Out Loud",
-     "blurb": "Earbuds in, walk downtown, and the city tells you its stories when you reach them. Two minutes each, free.",
-     "href": "https://guide.btownbrief.com/out-loud/"
-    },
-    {
-     "title": "Clubs & Groups",
-     "blurb": "Run clubs, board games, book clubs, pickup sports. Find your people.",
-     "href": "https://guide.btownbrief.com/clubs.html"
-    },
-    {
-     "title": "Lake & Beaches",
-     "blurb": "Every official beach and the whole shore — live swim statuses and a scavenger hunt along the water.",
-     "href": "https://guide.btownbrief.com/beaches.html"
-    },
-    {
-     "title": "Vermont Hobbies",
-     "blurb": "The hobbies this place is built for, each with a local on-ramp to get you started.",
-     "href": "https://guide.btownbrief.com/hobbies.html"
-    },
-    {
-     "emoji": "🎡",
-     "title": "Stay Awhile",
-     "blurb": "A conversation game for the table you're already at. Spin, land on someone, ask them something real.",
-     "href": "https://play.btownbrief.com/stay-awhile/"
-    },
-    {
-     "emoji": "☕",
-     "title": "Table Talk",
-     "blurb": "Prop a phone up at the meetup — icebreakers, friendly fights, and weekend picks on a slow clock. Synced phones all show the same card.",
-     "href": "https://guide.btownbrief.com/table.html"
-    },
-    {
-     "emoji": "📚",
-     "title": "The Archives",
-     "blurb": "Search every Brief ever written. Find the story you half-remember.",
-     "href": "https://play.btownbrief.com/archive/"
-    }
-   ]
-  },
-  {
-   "id": "live-here",
-   "title": "Live here",
-   "cards": [
-    {
-     "title": "Find an Apartment",
-     "blurb": "Every local property manager — email them instead of refreshing Zillow.",
-     "href": "https://guide.btownbrief.com/housing.html"
-    },
-    {
-     "title": "Jobs This Week",
-     "blurb": "The newest postings across the city, the state, UVM, and the hospital.",
-     "href": "https://guide.btownbrief.com/jobs.html"
-    },
-    {
-     "title": "The Walking Tour",
-     "blurb": "A 1.7-mile downtown loop with the history woven in — 14 stops, about 90 minutes.",
-     "href": "https://guide.btownbrief.com/walking-tour.html"
-    },
-    {
-     "title": "Burlington, Briefly",
-     "blurb": "The city's whole story in a five-minute read, with the long version one click deeper.",
-     "href": "https://guide.btownbrief.com/history.html"
-    },
-    {
-     "title": "The Gift Guide",
-     "blurb": "Every gift from a Burlington-area shop or maker — by category, with prices.",
-     "href": "https://guide.btownbrief.com/gifts.html"
-    },
-    {
-     "title": "Civic Meetings",
-     "blurb": "Every public meeting on one calendar — agendas, packets, and video links.",
-     "href": "https://guide.btownbrief.com/civic.html"
-    },
-    {
-     "title": "r/GoodBurlington",
-     "blurb": "The good-news corner of Burlington Reddit.",
-     "href": "https://guide.btownbrief.com/goodburlington.html"
-    },
-    {
-     "title": "Best of r/burlington",
-     "blurb": "What the subreddit actually recommends, linked straight to the threads.",
-     "href": "https://guide.btownbrief.com/best-of-reddit.html"
-    },
-    {
-     "title": "Volunteer",
-     "blurb": "Help this week — filtered by the time you've actually got.",
-     "href": "https://guide.btownbrief.com/volunteer.html"
-    }
-   ]
-  },
-  {
-   "id": "join-in",
-   "title": "Join in",
-   "cards": [
-    {
-     "title": "Community Chat",
-     "blurb": "The Telegram group — locals swapping finds and what's actually open in a storm.",
-     "href": "https://guide.btownbrief.com/telegram.html"
-    },
-    {
-     "title": "Community Photos",
-     "blurb": "Burlington through your lens. Send one in and it may run in the Brief.",
-     "href": "https://guide.btownbrief.com/photos.html"
-    },
-    {
-     "title": "Community Playlist",
-     "blurb": "Share a song, upvote the week's list, find Vermont artists.",
-     "href": "https://guide.btownbrief.com/playlist.html"
-    },
-    {
-     "title": "Local Projects",
-     "blurb": "Other people building things for Burlington. Add yours.",
-     "href": "https://guide.btownbrief.com/projects.html"
-    },
-    {
-     "emoji": "👕",
-     "title": "Merch",
-     "blurb": "Burlington shirts. Wearing one is the entire marketing budget.",
-     "href": "https://stephenvdavis-jpg.github.io/t-shirts/"
-    },
-    {
-     "title": "About Me",
-     "blurb": "It really is just one guy behind all of this.",
-     "href": "https://www.btownbrief.com/about-me"
-    }
-   ]
-  }
- ]
+  ]
 }
