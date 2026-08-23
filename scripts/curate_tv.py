@@ -664,13 +664,17 @@ def ask_model(prompt):
     import anthropic
 
     client = anthropic.Anthropic()
-    response = client.messages.create(
+    # streamed because the SDK refuses a non-streaming call this long;
+    # reasoning counts toward max_tokens and a full pool + the bench blew
+    # through 16k on 8/23
+    with client.messages.stream(
         model=MODEL,
-        max_tokens=48000,   # reasoning counts; a full pool + the bench blew through 16k on 8/23
+        max_tokens=48000,
         output_config={"format": {"type": "json_schema", "schema": SCHEMA},
                        "effort": "high"},
         messages=[{"role": "user", "content": prompt}],
-    )
+    ) as stream:
+        response = stream.get_final_message()
     if response.stop_reason == "refusal":
         raise RuntimeError("the model declined to answer")
     if response.stop_reason == "max_tokens":
