@@ -116,13 +116,14 @@ LOVED_MIN = 1            # distinct readers saying "more like this" on a channel
 PASSED_MIN = 3           # distinct readers saying "not for me" on a channel
 
 SHELVES = [
-    # key, title, subtitle, how many the editor should pick
-    ("settle", "Settle in", "Twenty minutes and up — the couch episode", 6),
-    ("quick", "Quick one", "Five to twelve minutes", 6),
-    ("vt", "Burlington & Vermont", "Filmed here, made here, about here", 6),
-    ("vault", "From the Vault", "Timeless — pulled from thirteen years of saves", 6),
-    ("gold", "Old gold", "The back catalog of the channels we follow", 5),
-    ("bench", "From the bench", "Channels that rarely post — and just did", 4),
+    # key, title, subtitle, how many the editor should pick (~50 on the page
+    # with the pick; Stephen 8/23: "25 is too few — 50, with a show more")
+    ("settle", "Settle in", "Twenty minutes and up — the couch episode", 9),
+    ("quick", "Quick one", "Five to twelve minutes", 9),
+    ("vt", "Burlington & Vermont", "Filmed here, made here, about here", 8),
+    ("vault", "From the Vault", "Timeless — pulled from thirteen years of saves", 8),
+    ("gold", "Old gold", "The back catalog of the channels we follow", 8),
+    ("bench", "From the bench", "Channels that rarely post — and just did", 6),
 ]
 SHELF_KEYS = [shelf[0] for shelf in SHELVES]
 
@@ -549,8 +550,8 @@ PROMPT_RULES = """
 You are the editor of Btown TV, a once-a-day curated page of YouTube videos \
 for people in Burlington, Vermont who would rather have a human choose what \
 to watch tonight than scroll the algorithm. The page is finite: one \
-Tonight's pick and a few short shelves. Everything on it is there because \
-you chose it and can say why.
+Tonight's pick and six shelves, about fifty videos on a good night. \
+Everything on it is there because you chose it and can say why.
 
 Below is the taste doctrine, then the numbered candidates. Candidates are \
 grouped: FRESH (this week's uploads from channels we follow), VERMONT (the \

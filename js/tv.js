@@ -299,7 +299,7 @@
     html += '<header class="tv-mast">' +
       '<div class="tv-kicker">Btown Brief presents</div>' +
       '<h1 class="tv-title">Btown <em>TV</em></h1>' +
-      '<p class="tv-tag">One human-picked page of videos for Burlington, every evening. A Tonight\'s pick and a few short shelves — watch it here, or send the whole edition to your TV. No algorithm, no infinite scroll.</p>' +
+      '<p class="tv-tag">One human-picked page of videos for Burlington, every evening. A Tonight\'s pick and six shelves — around fifty videos, each with a reason — watch it here, or send the top of the edition to your TV. No algorithm, no infinite scroll.</p>' +
       '<div class="tv-mast-row">' +
         (data.playlist && data.playlist.url ?
           '<a class="tv-play" href="' + esc(data.playlist.url) + '" target="_blank" rel="noopener" title="Opens tonight\'s playlist in YouTube — cast it or open it on your TV">' +
