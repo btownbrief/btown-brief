@@ -583,8 +583,12 @@ you would stand behind in that lane — the next-best, same length rules, \
 same standard, not leftovers — and under `more.pick`, up to {more_picks} \
 runner-up Tonight's picks. The page keeps the bench folded; it shows when a \
 reader asks for more or hides one of your picks, so these must be real \
-choices with real reasons. Nothing from the page repeats on the bench. \
-Fewer if the field is thin; never pad. An empty list is fine.
+choices with real reasons. Nothing from the page repeats on the bench. The \
+bench has its own allowance of two items per channel (separate from the \
+page's two). Lane rules apply unchanged: settle 20 minutes and up, quick \
+5–12 minutes, vt only VERMONT lines, vault only VAULT, gold only GOLD, \
+bench only RARE; a shelf you left empty gets no bench. Fewer if the field \
+is thin; never pad. An empty list is fine.
 
 For each pick write a reason of {why_max} characters or less, written for a \
 viewer deciding whether to press play — not for an editor. Titles are used \
@@ -680,7 +684,8 @@ def validate(raw, index):
     breaks the rules (bad index, duplicate, wrong length for the shelf,
     non-RARE on the bench, a third item from one channel). `more` is the
     folded bench: {"pick": [...], shelf: [...]} — same rules, its own
-    per-channel cap, never overlapping the page."""
+    per-channel cap (two across the whole bench, separate from the page's
+    two), never overlapping the page."""
     used = set()
     per_channel = {}
     counts = {shelf[0]: shelf[3] for shelf in SHELVES}
@@ -740,6 +745,9 @@ def validate(raw, index):
     for key in ["pick"] + SHELF_KEYS:
         kept = []
         limit = MORE_PICKS if key == "pick" else MORE_PER_SHELF
+        if key != "pick" and not shelves.get(key):
+            more[key] = []          # no shelf on the page -> nothing to unfold
+            continue
         for entry in (raw.get("more") or {}).get(key, []) or []:
             item = take(entry, key, per_channel=bench_channels, cap=MORE_CHANNEL_CAP)
             if item:
@@ -958,6 +966,9 @@ def run(args):
     pick, shelves, more = validate(raw, index)
     picked = sum(len(v) for v in shelves.values()) + (1 if pick else 0)
     benched = sum(len(v) for v in more.values())
+    offered = {k: len(v or []) for k, v in (raw.get("more") or {}).items()}
+    print("curate_tv: bench offered/kept "
+          + " ".join(f"{k}={offered.get(k, 0)}/{len(more.get(k, []))}" for k in ["pick"] + SHELF_KEYS))
     if not pick or picked < 8:
         print(f"curate_tv: the editor returned too little ({picked}) — skipping")
         return
@@ -976,7 +987,10 @@ def run(args):
     write_json(args.out, edition)
     write_json(args.history, remember(history, ordered, now_ts))
     if editions is not FETCH_FAILED:
-        write_json(args.editions, archive_edition(editions, edition))
+        try:
+            write_json(args.editions, archive_edition(editions, edition))
+        except Exception as exc:  # noqa: BLE001 — the archive is a nicety, never the run
+            print(f"curate_tv: archive trouble ({exc}) — left alone", file=sys.stderr)
     else:
         print("curate_tv: could not read the editions archive — left alone")
     print(f"curate_tv: edition {edition_label(now)} -> {args.out}")
@@ -1090,28 +1104,55 @@ def selftest():
                [pick] + [x for s in shelves.values() for x in s])
 
     # --- the bench: same rules, never overlapping the page, own channel cap
+    def it(i, ch, dur, **kw):
+        d = {"id": f"bench{i:06d}", "t": f"Bench item {i}", "ch": ch, "dur": dur,
+             "sec": dur_seconds(dur), "d": now_ts - day, "views": 10}
+        d.update(kw)
+        return d
+    index2 = [
+        ("fresh", it(0, "A", "30:00")),          # 0 page pick
+        ("fresh", it(1, "A", "25:00")),          # 1 page settle
+        ("fresh", it(2, "B", "8:00")),           # 2 page quick
+        ("fresh", it(3, "C", "40:00")),          # 3 bench settle
+        ("fresh", it(4, "C", "9:00")),           # 4 bench quick (C's 2nd bench slot)
+        ("fresh", it(5, "C", "50:00")),          # 5 bench settle — C's 3rd: dropped
+        ("fresh", it(6, "D", "3:00")),           # 6 too short for quick
+        ("vault", it(7, "E", "12:00", vault=1)), # 7 vault
+        ("gold", it(8, "F", "15:00", dc=1)),     # 8 gold
+        ("vt", it(9, "G", "6:00", vt=1)),        # 9 vermont
+        ("fresh", it(10, "H", "22:00", rare=1)), # 10 rare
+    ]
     raw2 = {
         "pick": {"i": 0, "why": "lead"},
-        "shelves": {"settle": [], "quick": [], "vt": [], "vault": [],
-                    "gold": [{"i": 4, "why": "gold"}], "bench": []},
+        "shelves": {"settle": [{"i": 1, "why": "settle"}], "quick": [{"i": 2, "why": "quick"}],
+                    "vt": [], "vault": [], "gold": [{"i": 8, "why": "gold"}], "bench": []},
         "more": {
             "pick": [{"i": 0, "why": "already the pick — dropped"},
-                     {"i": 1, "why": "runner-up"}],
-            "settle": [{"i": 1, "why": "taken by more.pick — dropped"},
-                       {"i": 2, "why": "eight minutes — not settle"}],
-            "quick": [{"i": 2, "why": "right length"}, {"i": 99, "why": "bad"}],
-            "vt": [], "vault": [{"i": 3, "why": "evergreen"}],
-            "gold": [{"i": 4, "why": "on the page already — dropped"}],
-            "bench": [{"i": 2, "why": "used, and not rare"}],
+                     {"i": 10, "why": "runner-up"}],
+            "settle": [{"i": 3, "why": "forty minutes"}, {"i": 1, "why": "on the page — dropped"}],
+            "quick": [{"i": 4, "why": "nine minutes"}, {"i": 6, "why": "three minutes — dropped"},
+                      {"i": 99, "why": "bad index"}],
+            "vt": [{"i": 9, "why": "no vt shelf on the page — dropped"}],
+            "vault": [{"i": 7, "why": "no vault shelf on the page — dropped"}],
+            "gold": [{"i": 8, "why": "on the page already — dropped"}, {"i": 7, "why": "vault, not gold — dropped"}],
+            "bench": [{"i": 10, "why": "no bench shelf on the page — dropped"}],
         },
         "note": "",
     }
-    pick2, shelves2, more2 = validate(raw2, index)
-    assert pick2["id"] == "fresh000002" and [v["id"] for v in shelves2["gold"]] == ["old00000001"]
-    assert [v["id"] for v in more2["pick"]] == ["fresh000007"], more2["pick"]
-    assert more2["settle"] == [] and [v["id"] for v in more2["quick"]] == ["fresh000006"], more2
-    assert [v["id"] for v in more2["vault"]] == ["vault000001"] and more2["gold"] == [] and more2["bench"] == []
-    assert all(v["shelf"] in ("pick",) + tuple(SHELF_KEYS) for vs in more2.values() for v in vs)
+    pick2, shelves2, more2 = validate(raw2, index2)
+    assert pick2["id"] == "bench000000" and [v["id"] for v in shelves2["gold"]] == ["bench000008"]
+    assert [v["id"] for v in more2["pick"]] == ["bench000010"], more2["pick"]
+    assert [v["id"] for v in more2["settle"]] == ["bench000003"], more2["settle"]
+    assert [v["id"] for v in more2["quick"]] == ["bench000004"], more2["quick"]
+    assert more2["vt"] == [] and more2["vault"] == [] and more2["bench"] == [], "no shelf on the page -> no bench"
+    assert more2["gold"] == [], more2["gold"]
+    assert all(v["shelf"] == k for k, vs in more2.items() for v in vs)
+    page_ids = {pick2["id"]} | {v["id"] for vs in shelves2.values() for v in vs}
+    assert not page_ids & {v["id"] for vs in more2.values() for v in vs}, "bench overlaps the page"
+    raw3 = dict(raw2, more=dict(raw2["more"], settle=[
+        {"i": 3, "why": "C #1"}, {"i": 5, "why": "C #2"}], quick=[{"i": 4, "why": "C #3 — dropped"}]))
+    _, _, more3 = validate(raw3, index2)
+    assert [v["id"] for v in more3["settle"]] == ["bench000003", "bench000005"] and more3["quick"] == [], more3
 
     payload = build_payload(pick, shelves, pools["live"], utcnow(),
                             {"picked": 5}, "PLxyz", more2)
@@ -1119,10 +1160,10 @@ def selftest():
     assert keys == ["settle", "quick", "vault", "gold"], keys
     assert payload["playlist"]["url"].endswith("PLxyz")
     assert payload["live"][0]["id"] == "fresh000005"
-    assert payload["pick_more"][0]["id"] == "fresh000007"
+    assert payload["pick_more"][0]["id"] == "bench000010"
     by_key = {s["key"]: s for s in payload["shelves"]}
-    assert [v["id"] for v in by_key["quick"]["more"]] == ["fresh000006"]
-    assert by_key["settle"]["more"] == []
+    assert [v["id"] for v in by_key["quick"]["more"]] == ["bench000004"]
+    assert [v["id"] for v in by_key["settle"]["more"]] == ["bench000003"]
 
     # --- the editions archive: newest first, same-day re-run replaces, capped
     arch = archive_edition({}, payload)

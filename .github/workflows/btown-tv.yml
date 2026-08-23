@@ -91,8 +91,19 @@ jobs:
             echo "nothing written this run — leaving the branch alone"
             exit 0
           fi
-          # the push replaces the whole branch with this directory — never
-          # let a run that couldn't enrich the vault delete the last good copy
+          # the push replaces the whole branch with this directory. If the
+          # data branch exists on the remote but we never managed to fetch
+          # it, a push now would silently drop whatever this run didn't
+          # rewrite (the archive, the vault) — fail loudly instead
+          if ! git rev-parse -q --verify origin/btown-tv >/dev/null 2>&1 \
+             && git ls-remote --exit-code --heads origin btown-tv >/dev/null 2>&1; then
+            git fetch -q origin btown-tv:refs/remotes/origin/btown-tv || {
+              echo "::error::btown-tv exists on the remote but could not be fetched — not force-pushing over it"
+              exit 1
+            }
+          fi
+          # never let a run that couldn't enrich the vault / read the archive
+          # delete the last good copy
           for f in tv-vault-live.json tv-editions.json; do
             if [ ! -s /tmp/tv-out/data/$f ]; then
               git show origin/btown-tv:data/$f > /tmp/tv-out/data/$f 2>/dev/null || true

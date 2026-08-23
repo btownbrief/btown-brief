@@ -24,14 +24,17 @@
   var SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon — safe to ship
   var REACT_KEY = 'btown-tv-reacts';            // { vid: 'watched' | 'skip' | 'more' }
   var STALE_MS = 30 * 3600 * 1000;              // an edition older than this says so
-  var PAST_NIGHTS = 7;                          // how many past editions the strip shows
+  var PAST_NIGHTS = 14;                         // how many past editions the strip shows (= what the archive keeps)
+  var SEND_DELAY_MS = 4500;                     // a reaction reaches the server only after the Undo window
 
   var page = document.getElementById('tv-page');
   var reacts = loadReacts();
   var data = null;                              // tonight's edition
   var expanded = {};                            // shelf key -> bench is showing
   var archive = null;                           // past editions (lazy)
+  var archiveAsked = false;
   var openNight = '';                           // which past edition is unfolded
+  var pending = {};                             // vid -> timer for a not-yet-sent reaction
 
   /* ---------- helpers ---------- */
   function esc(s) {
@@ -100,6 +103,34 @@
       body: JSON.stringify(args)
     }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); });
   }
+  /* Reactions reach Supabase late and revocably: a tap is sent after the
+     Undo window closes (so a misclick + Undo never leaves a row), and taking
+     a tap back — toggle off, Undo, switching kinds — deletes the row that
+     may already be there (tv_unreact; fails soft until the SQL is pasted).
+     This matters because the editor now acts on a single reader's ✕. */
+  function sync(vid, was, now, title, ch) {
+    var unsent = pending[vid];                  // {kind, timer} not yet on the server
+    if (unsent) { clearTimeout(unsent.timer); delete pending[vid]; }
+    if (was && was !== now && !(unsent && unsent.kind === was)) {
+      rpc('tv_unreact', { p_player: playerId(), p_kind: was, p_vid: vid }).catch(function () {});
+    }
+    if (now) {
+      pending[vid] = { kind: now, timer: setTimeout(function () {
+        delete pending[vid];
+        rpc('tv_react', { p_player: playerId(), p_kind: now, p_vid: vid, p_title: title, p_channel: ch }).catch(function () {});
+      }, SEND_DELAY_MS) };
+    }
+  }
+  /* tab closing before the window elapsed: send what's pending now */
+  function flush() {
+    Object.keys(pending).forEach(function (vid) {
+      var p = pending[vid]; clearTimeout(p.timer); delete pending[vid];
+      rpc('tv_react', { p_player: playerId(), p_kind: p.kind, p_vid: vid, p_title: '', p_channel: '' }).catch(function () {});
+    });
+  }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
+  window.addEventListener('pagehide', flush);
+
   var toastEl, toastTimer, toastUndo;
   function toast(msg, undo) {
     if (!toastEl) {
@@ -112,7 +143,7 @@
     toastEl.innerHTML = esc(msg) + (undo ? ' <button class="tv-toast-undo" type="button">Undo</button>' : '');
     toastEl.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); toastUndo = null; }, undo ? 4200 : 1800);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); toastUndo = null; }, undo ? SEND_DELAY_MS - 300 : 1800);
   }
   function skipped(item) { return !!item && reacts[item.id] === 'skip'; }
 
@@ -209,13 +240,13 @@
       '<div class="tv-shelf-head"><h2>' + esc(shelf.title) + '</h2>' + (shelf.sub ? '<p>' + esc(shelf.sub) + '</p>' : '') + '</div>' +
       '<div class="tv-grid">' + c.visible.map(function (v) { return card(v.item, { swapped: v.swapped }); }).join('') + '</div>';
     if (open) {
-      html += '<div class="tv-bench" aria-label="' + esc(shelf.title) + ' — the bench">' +
+      html += '<section class="tv-bench" aria-label="' + esc(shelf.title) + ' — the bench" tabindex="-1">' +
         '<div class="tv-bench-head"><span>The bench</span> — ' + (n ? 'the editor\'s next ' + (n === 1 ? 'one' : n) + ' in this lane' : 'all used up') + '</div>' +
         (n ? '<div class="tv-grid">' + c.bench.map(function (it) { return card(it); }).join('') + '</div>' : '') +
-        '<p class="tv-bench-end">That\'s everything the editor stood behind for ' + esc(shelf.title.toLowerCase()) + ' tonight.</p>' +
-      '</div>';
+        '<p class="tv-bench-end">That\'s everything the editor stood behind in this lane tonight.</p>' +
+      '</section>';
     } else if (n) {
-      html += '<button class="tv-more-btn" type="button" data-shelf="' + esc(shelf.key) + '" aria-expanded="false">' +
+      html += '<button class="tv-more-btn" type="button" data-shelf="' + esc(shelf.key) + '">' +
         'Show ' + n + ' more <span>from the editor\'s bench</span></button>';
     }
     return html + '</section>';
@@ -224,8 +255,11 @@
   /* ---------- past nights ---------- */
   function pastHtml() {
     if (!archive || !archive.editions) return '';
+    var today = (data && data.edition) || '';
     var nights = archive.editions.filter(function (e) {
-      return e && e.edition && e.pick && e.edition !== (data && data.edition);
+      /* ISO dates compare as strings; anything not strictly older than the
+         front page is "tonight" (or a newer edition the fallback copy lags) */
+      return e && e.edition && e.pick && (!today || e.edition < today);
     }).slice(0, PAST_NIGHTS);
     if (!nights.length) return '';
     var html = '<section class="tv-past" aria-label="Past nights" data-past>' +
@@ -342,47 +376,59 @@
   function react(holder, kind) {
     var vid = holder.dataset.vid;
     if (!vid) return;
-    var was = reacts[vid];
+    var was = reacts[vid] || '';
     if (was === kind) { delete reacts[vid]; } else { reacts[vid] = kind; }
+    var now = reacts[vid] || '';
     saveReacts();
     var title = holder.querySelector('.tv-card-title, .tv-pick-body h2');
     var ch = holder.querySelector('.tv-ch');
-    if (reacts[vid]) {
-      rpc('tv_react', { p_player: playerId(), p_kind: kind, p_vid: vid,
-        p_title: title ? title.textContent : '', p_channel: ch ? ch.textContent : '' }).catch(function () {});
-    }
+    sync(vid, was, now, title ? title.textContent : '', ch ? ch.textContent : '');
 
     var shelfSec = holder.closest('section[data-shelf]');
     var pickSec = holder.closest('section.tv-pick');
-    var undo = function () { delete reacts[vid]; saveReacts(); repaint(); };
-    var swappedIn = false;
+    var frontCard = !holder.closest('.tv-bench') && !!(shelfSec || pickSec);
+    /* only a ✕ (on or off) on a front-page slot can change what's on the
+       page; everything else toggles in place so focus and aria stay put */
+    var recompose = frontCard && (kind === 'skip' || was === 'skip');
+
+    function inPlace(el) {
+      el.classList.toggle('is-watched', reacts[vid] === 'watched');
+      el.classList.toggle('is-skipped', reacts[vid] === 'skip');
+      el.querySelectorAll('.tv-act').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(reacts[vid] === b.dataset.kind));
+      });
+    }
     function repaint() {
-      if (shelfSec) rerenderShelf(shelfSec.dataset.shelf);
-      else if (pickSec) rerenderPick();
+      if (recompose && shelfSec) rerenderShelf(shelfSec.dataset.shelf);
+      else if (recompose && pickSec) rerenderPick();
       else {
-        holder.classList.toggle('is-watched', reacts[vid] === 'watched');
-        holder.classList.toggle('is-skipped', reacts[vid] === 'skip');
-        holder.querySelectorAll('.tv-act').forEach(function (b) {
-          b.setAttribute('aria-pressed', String(reacts[vid] === b.dataset.kind));
-        });
+        /* the same video can sit in more than one place (a past night and
+           tonight, the bench and a swapped slot) — keep every copy honest */
+        var copies = page.querySelectorAll('[data-vid="' + vid + '"]');
+        if (copies.length) copies.forEach(inPlace); else inPlace(holder);
       }
     }
-    if (reacts[vid] === 'skip' && (shelfSec || pickSec)) {
-      /* did the hide pull an alternate in? (only when the card is still a
-         front-page slot and the bench has something left) */
+    var swappedIn = false;
+    if (now === 'skip' && recompose) {
       if (shelfSec) {
         var s = null;
         (data.shelves || []).forEach(function (x) { if (x.key === shelfSec.dataset.shelf) s = x; });
-        if (s) {
-          var now = composeShelf(s);              // reacts already updated
-          swappedIn = !now.visible.some(function (v) { return v.item.id === vid; });
-        }
+        if (s) swappedIn = !composeShelf(s).visible.some(function (v) { return v.item.id === vid; });
       } else if (pickSec) {
-        swappedIn = composePick().pick && composePick().pick.id !== vid;
+        swappedIn = composePick().pick.id !== vid;
       }
     }
     repaint();
-    if (!reacts[vid]) return;
+    if (!now) return;
+    var undo = function () {
+      if (was) { reacts[vid] = was; } else { delete reacts[vid]; }
+      saveReacts();
+      sync(vid, now, was, title ? title.textContent : '', ch ? ch.textContent : '');
+      /* after an undo the holder may be gone (re-rendered) — repaint from data */
+      if (shelfSec) rerenderShelf(shelfSec.dataset.shelf);
+      else if (pickSec) rerenderPick();
+      else page.querySelectorAll('[data-vid="' + vid + '"]').forEach(inPlace);
+    };
     if (kind === 'watched') toast('Marked watched');
     else if (kind === 'more') toast('Noted — more like this');
     else if (swappedIn) toast('Hidden — the editor\'s next choice stepped in', undo);
@@ -402,6 +448,8 @@
       if (moreBtn) {
         expanded[moreBtn.dataset.shelf] = true;
         rerenderShelf(moreBtn.dataset.shelf);
+        var bench = page.querySelector('section[data-shelf="' + moreBtn.dataset.shelf + '"] .tv-bench');
+        if (bench) bench.focus({ preventScroll: true });
         return;
       }
       var night = ev.target.closest('.tv-past-night, .tv-past-close');
@@ -432,10 +480,23 @@
     });
   }
   function loadArchive() {
-    return fetch(EDITIONS_URL, { cache: 'no-cache' }).then(function (r) {
+    if (archiveAsked) return;
+    archiveAsked = true;
+    fetch(EDITIONS_URL).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
     }).then(function (a) { archive = a; rerenderPast(); }).catch(function () { /* no archive yet — the strip stays hidden */ });
+  }
+  /* the archive is ~100KB of past editions most visits never open — fetch
+     it only when the reader scrolls near where the strip would sit */
+  function watchArchive() {
+    var slot = document.getElementById('tv-past-slot');
+    if (!slot) return;
+    if (!('IntersectionObserver' in window)) { loadArchive(); return; }
+    var io = new IntersectionObserver(function (entries) {
+      if (entries.some(function (e) { return e.isIntersecting; })) { io.disconnect(); loadArchive(); }
+    }, { rootMargin: '600px 0px' });
+    io.observe(slot);
   }
 
   wire();
@@ -443,7 +504,7 @@
     if (!d || !d.pick) throw new Error('empty edition');
     data = d;
     render();
-    loadArchive();
+    watchArchive();
   }).catch(function () {
     page.innerHTML = '<header class="tv-mast"><div class="tv-kicker">Btown Brief presents</div><h1 class="tv-title">Btown <em>TV</em></h1></header>' +
       '<p class="tv-empty">Tonight\'s edition hasn\'t been picked yet. Back around dinner.</p>';
