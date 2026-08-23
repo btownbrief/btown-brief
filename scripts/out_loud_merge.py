@@ -22,7 +22,7 @@ DATA = ROOT / "out-loud" / "stories.json"
 
 KEEP_FIELDS = [
     "id", "title", "tease", "hood", "stand_at", "lat", "lng", "radius_m", "script",
-    "sources", "coord_source", "coord_confidence", "routes",
+    "sources", "coord_source", "coord_confidence", "routes", "factchecked",
 ]
 
 
