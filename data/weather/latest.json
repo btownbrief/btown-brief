@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-23T10:01:26+00:00",
+ "updated": "2026-08-23T11:01:02+00:00",
  "sections_updated": {
-  "now": "2026-08-23T10:01:26+00:00",
-  "forecast": "2026-08-23T10:01:26+00:00",
-  "hourly": "2026-08-23T10:01:26+00:00",
-  "alerts": "2026-08-23T10:01:26+00:00",
-  "afd": "2026-08-23T10:01:26+00:00",
-  "lake_forecast": "2026-08-23T10:01:26+00:00",
-  "lake_gage": "2026-08-23T09:57:12+00:00",
-  "air": "2026-08-23T10:01:26+00:00",
-  "sun": "2026-08-23T10:01:26+00:00",
-  "models": "2026-08-23T10:01:26+00:00"
+  "now": "2026-08-23T11:01:02+00:00",
+  "forecast": "2026-08-23T11:01:02+00:00",
+  "hourly": "2026-08-23T11:01:02+00:00",
+  "alerts": "2026-08-23T11:01:02+00:00",
+  "afd": "2026-08-23T11:01:02+00:00",
+  "lake_forecast": "2026-08-23T11:01:02+00:00",
+  "lake_gage": "2026-08-23T11:01:02+00:00",
+  "air": "2026-08-23T11:01:02+00:00",
+  "sun": "2026-08-23T11:01:02+00:00",
+  "models": "2026-08-23T11:01:02+00:00"
  },
  "now": {
-  "observed_at": "2026-08-23T09:40:00+00:00",
+  "observed_at": "2026-08-23T10:35:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Cloudy",
   "temp_f": 64,
   "feels_like_f": 64,
   "humidity": 88,
   "dewpoint_f": 61,
-  "wind_mph": 7,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "SE"
+  "wind_dir": "SSW"
  },
  "forecast": {
   "updated": "2026-08-23T06:20:33+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-23T06:00:00-04:00",
+    "start": "2026-08-23T07:00:00-04:00",
     "is_day": true,
     "temp_f": 79,
     "pop": 67,
     "wind": "SE 6 to 12 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers between 7am and 2pm, then a chance of showers and thunderstorms. Mostly cloudy, with a high near 79. Southeast wind 6 to 12 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "A chance of rain showers before 2pm, then a chance of showers and thunderstorms. Mostly cloudy, with a high near 79. Southeast wind 6 to 12 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-23T06:20:33+00:00",
   "hours": [
-   {
-    "t": "2026-08-23T06:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
-    "pop": 10,
-    "humidity": 93,
-    "wind_mph": 6,
-    "wind_dir": "SE",
-    "sky": 67,
-    "short": "Partly Sunny"
-   },
    {
     "t": "2026-08-23T07:00:00-04:00",
     "temp_f": 63,
@@ -567,6 +556,17 @@
     "wind_dir": "SW",
     "sky": 73,
     "short": "Showers And Thunderstorms Likely"
+   },
+   {
+    "t": "2026-08-24T18:00:00-04:00",
+    "temp_f": 70,
+    "feels_f": 70,
+    "pop": 47,
+    "humidity": 68,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 65,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 73,
-  "water_temp_at": "2026-08-23T05:00:00.000-04:00",
-  "level_ft": 94.85,
-  "level_at": "2026-08-23T05:00:00.000-04:00",
+  "water_temp_at": "2026-08-23T06:00:00.000-04:00",
+  "level_ft": 94.86,
+  "level_at": "2026-08-23T06:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/23/26 5:00",
+  "observed": "08/23/26 6:00",
   "discussion": "Expect generally good air quality across Vermont on Sunday, August 23rd."
  },
  "sun": {
@@ -856,12 +856,12 @@
      "ICON": 72
     },
     "pop_max": {
-     "GFS": 27,
+     "GFS": 31,
      "Euro": 99,
      "ICON": 83
     },
     "precip_in": {
-     "GFS": 0.02,
+     "GFS": 0.8,
      "Euro": 0.23,
      "ICON": 0.23
     },
