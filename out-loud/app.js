@@ -64,6 +64,7 @@ async function init() {
   if (data.voice && data.voice.about) els.aboutVoice.textContent = data.voice.about;
 
   els.auto.checked = autoplay;
+  buildRouteChips();
   buildMap();
   renderList();
   wire();
@@ -73,6 +74,20 @@ async function init() {
   if (DEEP_ROUTE) setFilter(`route:${DEEP_ROUTE}`);
   if (DEEP_STORY && byId.has(DEEP_STORY)) openCard(DEEP_STORY, { scroll: true });
   if (REPLAY) startReplay(REPLAY);
+}
+
+function buildRouteChips() {
+  const bar = document.querySelector('.ol-filter');
+  if (!bar) return;
+  bar.querySelectorAll('[data-filter^="route:"]').forEach((b) => b.remove());
+  const anchor = bar.querySelector('[data-filter="near"]');
+  for (const r of routes) {
+    if (!r.steps || !r.steps.some((s) => byId.has(s.pin))) continue;
+    const b = document.createElement('button');
+    b.className = 'ol-chip'; b.type = 'button'; b.dataset.filter = `route:${r.id}`;
+    b.setAttribute('aria-pressed', 'false'); b.textContent = r.title;
+    bar.insertBefore(b, anchor);
+  }
 }
 
 function wire() {
@@ -457,7 +472,9 @@ function buildMarkers() {
     markers.set(pin.id, m);
     bounds.push([pin.lat, pin.lng]);
   }
-  if (bounds.length) map.fitBounds(bounds, { padding: [28, 28], maxZoom: 16 });
+  const core = pins.filter((p) => ['downtown', 'waterfront', 'old-north-end'].includes(p.hood)).map((p) => [p.lat, p.lng]);
+  const fit = core.length >= 3 ? core : bounds;
+  if (fit.length) map.fitBounds(fit, { padding: [28, 28], maxZoom: 16 });
 }
 function updateYou(pos) {
   if (!map) return;

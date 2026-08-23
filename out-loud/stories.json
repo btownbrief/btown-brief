@@ -79,19 +79,167 @@
      "minutes_to_next": 7
     }
    ]
+  },
+  {
+   "id": "old-north-end",
+   "title": "The Old North End",
+   "blurb": "From the Little Italy marker up through Battery Park into the neighborhood that took in every wave of newcomers Burlington ever had. About 1.3 miles.",
+   "steps": [
+    {
+     "pin": "little-italy-urban-renewal"
+    },
+    {
+     "pin": "battery-park"
+    },
+    {
+     "pin": "st-joseph-cathedral"
+    },
+    {
+     "pin": "elmwood-cemetery"
+    },
+    {
+     "pin": "old-north-end-north-street"
+    }
+   ]
+  },
+  {
+   "id": "bike-path-north",
+   "title": "Bike Path North",
+   "blurb": "Waterfront Park to the Champlain Thrust at North Beach, with the Coast Guard, the Island Line and the Moran FRAME on the way — and the Ethan Allen Homestead if you keep going. Best on a bike; pins are wider out here.",
+   "steps": [
+    {
+     "pin": "waterfront-park"
+    },
+    {
+     "pin": "coast-guard-station"
+    },
+    {
+     "pin": "island-line-trail"
+    },
+    {
+     "pin": "moran-plant-frame"
+    },
+    {
+     "pin": "champlain-thrust-rock-point"
+    },
+    {
+     "pin": "ethan-allen-homestead"
+    }
+   ]
+  },
+  {
+   "id": "south-end",
+   "title": "The South End",
+   "blurb": "King Street down the lakeshore to Perkins Pier, the old cotton mill at Lakeside, Pine Street, and the Earth Clock at Oakledge. About 2.5 miles one way.",
+   "steps": [
+    {
+     "pin": "king-street-housing-trust"
+    },
+    {
+     "pin": "perkins-pier"
+    },
+    {
+     "pin": "lakeside-mill"
+    },
+    {
+     "pin": "pine-street-south-end"
+    },
+    {
+     "pin": "oakledge-earth-clock"
+    }
+   ]
+  },
+  {
+   "id": "the-hill",
+   "title": "Up the Hill",
+   "blurb": "Main Street past Memorial Auditorium and 242 Main, up to the UVM Green, Billings Library, and Ethan Allen's grave in Greenmount. A climb, about 1.5 miles.",
+   "steps": [
+    {
+     "pin": "memorial-auditorium"
+    },
+    {
+     "pin": "two-forty-two-main"
+    },
+    {
+     "pin": "uvm-green"
+    },
+    {
+     "pin": "billings-library"
+    },
+    {
+     "pin": "ethan-allen-monument"
+    }
+   ]
+  },
+  {
+   "id": "phish",
+   "title": "Phish's Burlington",
+   "blurb": "Three blocks of Main Street where a bar band became Phish: Hunt's, The Front, and Nectar's. Short walk, long story.",
+   "steps": [
+    {
+     "pin": "hunts-main-street"
+    },
+    {
+     "pin": "the-front-phish"
+    },
+    {
+     "pin": "nectars"
+    }
+   ]
+  },
+  {
+   "id": "bernie",
+   "title": "Bernie's Burlington",
+   "blurb": "The 1980s city that a democratic-socialist mayor reshaped: City Hall, the waterfront fight, the land trust. About a mile.",
+   "steps": [
+    {
+     "pin": "city-hall-park"
+    },
+    {
+     "pin": "main-street-landing"
+    },
+    {
+     "pin": "waterfront-park"
+    },
+    {
+     "pin": "king-street-housing-trust"
+    }
+   ]
+  },
+  {
+   "id": "winooski",
+   "title": "Winooski",
+   "blurb": "Across the river: the falls that built a mill city, the Champlain Mill, the Woolen Mill, the roundabout, and the Onion City today. Half a mile, all flat.",
+   "steps": [
+    {
+     "pin": "winooski-falls"
+    },
+    {
+     "pin": "champlain-mill"
+    },
+    {
+     "pin": "woolen-mill-winooski-block"
+    },
+    {
+     "pin": "winooski-roundabout"
+    },
+    {
+     "pin": "winooski-onion-city"
+    }
+   ]
   }
  ],
  "pins": [
   {
    "id": "unitarian-church",
    "title": "The Unitarian Church",
-   "tease": "The white steeple everyone gives directions from, and its Revere bell",
+   "tease": "The white steeple everyone gives directions from, and the Revere bell it used to hold.",
    "hood": "downtown",
    "stand_at": "Stand on Church Street at the Pearl Street crossing, facing the white church across the street.",
    "lat": 44.48038,
    "lng": -73.21278,
    "radius_m": 65,
-   "script": "Look straight up the street. That white spire at the end of Church Street is the thing everything down here aims at. Two heavy brick buildings frame it: the Masonic Temple, finished in 1898, and the Richardson Building, 1895, put up to hold Burlington's largest department store. The state's own historic district file says the church provides a focal point for the area, and that directions in Burlington are frequently given in relation to it.\n\nThe building went up in 1816. The congregation had bought the land two years before that. Five acres of overgrown pasture on the northern edge of the village, for $1,000. The meeting house cost $22,185.34. The timbers came from the Browns River Valley. The brick was fired in Burlington. The nails were hammered by hand.\n\nThe architect was Peter Banner, working out of Boston. There is evidence that Charles Bulfinch supervised or amended Banner's plan. The tower rises about 170 feet.\n\nHere is the part most people walk past. The bell in that tower was cast by Paul Revere's foundry, Revere and Sons, in October 1816. It weighed 1,286 pounds. Then somebody rang it too hard. In 1828 it cracked and had to be recast. In 1928 it was replaced outright with a bell from the Meneely foundry.\n\nThe church was dedicated on January 9, 1817. Its congregation calls it the oldest surviving place of worship in the city. It is the oldest remaining place of worship established by European settlers in Burlington.\n\nYou are standing at the top of the street. Everything else on this walk sits downhill from here. The marketplace. The park. The library. The bluff over the lake. In 1974 these three buildings around you were listed together on the National Register as the Head of Church Street Historic District.",
+   "script": "Look straight up the street. That white spire at the end of Church Street is the thing everything down here aims at. Two heavy brick buildings frame it: the Masonic Temple, finished in 1898, and the Richardson Building, 1895, put up to hold Burlington's largest department store. The state's own historic district file says the church provides a focal point for the area, and that directions in Burlington are frequently given in relation to it.\n\nThe building went up in 1816. The congregation had bought the land two years before that. Five acres of overgrown pasture on the northern edge of the village, for $1,000. The meeting house cost $22,185.34. The timbers came from the Browns River Valley. The brick was fired in Burlington. The nails were hammered by hand.\n\nThe architect was Peter Banner, working out of Boston. There is evidence that Charles Bulfinch supervised or amended Banner's plan. The tower rises about 170 feet, though the spire you are looking at is a 1958 replica. Lightning took the original in 1954.\n\nHere is the part most people walk past. The first bell in that tower was cast by Paul Revere's foundry in October 1816. It weighed about thirteen hundred pounds. Then somebody rang it too hard. In 1828 it cracked and had to be recast. In 1928 it was replaced outright with a bell from the Meneely foundry.\n\nThe church was dedicated on January 9, 1817. Its congregation calls it the oldest surviving place of worship in the city.\n\nYou are standing at the top of the street. Everything else on this walk sits downhill from here. The marketplace. The park. The library. The bluff over the lake. In 1974 these three buildings around you were listed together on the National Register as the Head of Church Street Historic District.",
    "sources": [
     {
      "label": "Vermont Division for Historic Preservation, Head of Church Street Historic District survey form (PDF)",
@@ -120,9 +268,10 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/unitarian-church.mp3",
-   "audio_hash": "838d790d89f59da6",
-   "duration_s": 117,
-   "updated": "2026-08-23"
+   "audio_hash": "4b0f14311316ef1f",
+   "duration_s": 123,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "church-street-marketplace",
@@ -133,7 +282,7 @@
    "lat": 44.47875,
    "lng": -73.21268,
    "radius_m": 55,
-   "script": "Brick under your feet, no cars, benches down the middle. Behind you at the top of the slope, the white church spire. Ahead of you, downhill, City Hall.\n\nUntil 1980 this was a street. Traffic, curbs, parked cars, the whole thing.\n\nThe idea of closing it goes back to 1958, to a round of urban renewal discussions. It got its champion in 1962, when a Burlington architecture student named Bill Truex went to Copenhagen and saw the Stroget, a street the Marketplace's own history describes as a traffic-snarled nightmare that had been handed back to people on foot.\n\nBurlington tested the idea before committing to it. A one-day street fair in 1971 drew about 15,000 people. A week-long fair the next year drew an estimated 50,000. That was the proof.\n\nOn July 7, 1980, the two blocks between College and Cherry closed to traffic for good. Sixteen months of construction followed, on a $6 million design by Carr, Lynch Associates with C.E. Maguire supervising the engineering, paid for with a federal grant and a city bond that Burlington voters passed. The Marketplace opened on September 15, 1981.\n\nNow the part that surprises people who assume it arrived all at once. It didn't. On opening day, only two blocks of it existed. The top block, Cherry up to Pearl, the one you walked down to get here, was not closed and resurfaced in brick until 1994. And the block in front of City Hall, Main to College, was not finished until 2005.\n\nSo the four-block street with roughly 86 storefronts that everyone treats as one thing took 25 years to become one. It is listed on the National Register of Historic Places, and the American Planning Association named it one of America's Great Public Spaces. The stretch you would swear was always here, the block facing City Hall, has only been free of cars since 2005.",
+   "script": "Brick under your feet, no cars, benches down the middle. Behind you at the top of the slope, the white church spire. Ahead of you, downhill, City Hall.\n\nUntil 1980 this was a street. Traffic, curbs, parked cars, the whole thing.\n\nThe idea of closing it goes back to 1958, to a round of urban renewal discussions. It got its champion in 1962, when a Burlington architecture student named Bill Truex went to Copenhagen and saw the Stroget, a street the Marketplace's own history describes as a traffic-snarled nightmare that had been handed back to people on foot.\n\nBurlington tested the idea before committing to it. A one-day street fair in 1971 drew about 15,000 people. A week-long fair the next year drew an estimated 50,000. That was the proof.\n\nOn July 7, 1980, the two blocks between College and Cherry closed to traffic for good. More than a year of construction followed, on a $6 million design by Carr, Lynch Associates with C.E. Maguire supervising the engineering, paid for with a federal grant and a city bond that Burlington voters passed. The Marketplace opened on September 15, 1981.\n\nNow the part that surprises people who assume it arrived all at once. It didn't. On opening day, only two blocks of it existed. The top block, Cherry up to Pearl, the one you walked down to get here, was not closed and resurfaced in brick until 1994. And the block in front of City Hall, Main to College, was not finished until 2005.\n\nSo the four-block street with roughly 86 storefronts that everyone treats as one thing took 25 years to become one. It is listed on the National Register of Historic Places, and the American Planning Association named it one of America's Great Public Spaces. The stretch you would swear was always here, the block facing City Hall, has only been free of cars since 2005.",
    "sources": [
     {
      "label": "Church Street Marketplace, official history page",
@@ -152,9 +301,10 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/church-street-marketplace.mp3",
-   "audio_hash": "4980f97bb86a2dec",
-   "duration_s": 123,
-   "updated": "2026-08-23"
+   "audio_hash": "53c2457ed5a32f1a",
+   "duration_s": 127,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "city-hall-park",
@@ -165,7 +315,7 @@
    "lat": 44.4765,
    "lng": -73.21345,
    "radius_m": 70,
-   "script": "Fountain in front of you. A ring of trees. And on the far side, brick and carved marble with a clock tower on top: City Hall.\n\nThis lawn is older than almost everything around it, and it was decided in a house three blocks downhill. In June 1798 the proprietors of Burlington held their last series of meetings at Gideon King Junior's house on King Street. At one of them, William Coit presented a final plan for the city, the grid that downtown streets still run on. And at those same meetings the proprietors voted to set aside the land you are standing on.\n\nFor its first century this was Court House Square. It sits deliberately partway between the waterfront and the commercial cluster up on College Hill, which may have been a compromise between two sets of business interests that each wanted the center of town nearer to them.\n\nCity Hall came much later. Burlington's 1850s city hall was badly built and falling apart. The replacement went to McKim, Mead and White of New York, with William M. Kendall as architect, and it opened to the public on May 12, 1928. It cost $475,000, which came in $25,000 under budget.\n\nLook at what it is made of. The red brick, the carved marble, the granite, the slate on the roof. Nearly every finish material in that building was produced in Vermont. That was the point of it.\n\nIn 1983 the park and the buildings around it were listed on the National Register as the City Hall Park Historic District, eight acres bounded by Church, College, Main and St. Paul. Most of those buildings went up between about 1880 and 1930, replacing wooden ones.\n\nThe park itself had been reserved 185 years before that listing, by men who had not yet finished drawing the streets.",
+   "script": "Fountain in front of you. A ring of trees. And on the far side, brick and carved marble with a clock tower on top: City Hall.\n\nThis lawn is older than almost everything around it, and it was decided in a house three blocks downhill. In June 1798 the proprietors of Burlington held their last series of meetings at Gideon King Junior's house on King Street. At one of them, William Coit presented a final plan for the city, the grid that downtown streets still run on. And at those same meetings the proprietors voted to set aside the land you are standing on.\n\nFor its first hundred years or so this was Court House Square. It sits partway between the waterfront and the commercial cluster up on College Hill, which may have been a compromise between two sets of business interests that each wanted the center of town nearer to them.\n\nCity Hall came much later. Burlington's 1850s city hall was badly built and falling apart. The replacement went to McKim, Mead and White of New York, with William M. Kendall as architect, and it opened to the public on May 12, 1928. It cost $475,000, which came in $25,000 under budget.\n\nLook at what it is made of. The red brick, the carved marble, the granite, the slate on the roof. Nearly every finish material in that building was produced in Vermont. That was the point of it.\n\nIn 1983 the park and the buildings around it were listed on the National Register as the City Hall Park Historic District, eight acres bounded by Church, College, Main and St. Paul. Most of those buildings went up between about 1880 and 1930, replacing wooden ones.\n\nThe park itself had been reserved 185 years before that listing, by men who had not yet finished drawing the streets.",
    "sources": [
     {
      "label": "Vermont Division for Historic Preservation, Battery Street Historic District survey form (PDF)",
@@ -189,9 +339,10 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/city-hall-park.mp3",
-   "audio_hash": "04deeba3ba7e2b9b",
-   "duration_s": 114,
-   "updated": "2026-08-23"
+   "audio_hash": "36cc012f78924ca7",
+   "duration_s": 110,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "fletcher-free-library",
@@ -202,7 +353,7 @@
    "lat": 44.47714,
    "lng": -73.21058,
    "radius_m": 55,
-   "script": "Columns, stone steps, a Beaux-Arts front sitting right on College Street. This is the Fletcher Free Library, and Burlington has had a free library for more than 150 years.\n\nIt started with a gift. On July 14, 1873, Mrs. Mary L. Fletcher and her daughter, Miss Mary M. Fletcher, gave the city of Burlington $20,000 to found it. Half was to be spent on books. The other half started an endowment.\n\nThe library lived inside the old city hall building and outgrew it by 1901. That same year Andrew Carnegie gave $50,000 for a new building. A Burlington architect, Walter R. B. Willcox, won the competition to design it. It was dedicated and opened for business on August 17, 1904, the first of the four Carnegie libraries in Vermont.\n\nNow the problem nobody planned for. There was a ravine on this site, and the ravine had been filled in. In 1973 the northwest corner of the foundation settled and the building took structural damage. The books had to leave. First to Contois Auditorium, then to the basement of Memorial Auditorium. Demolition was on the table.\n\nWhat saved it was a committee with a very plain name: the Committee to Save the Fletcher Free Library Building. They got the building onto the National Register of Historic Places in August 1976. A federal Economic Development Administration grant of $234,000 paid for stabilization and exterior repairs in 1977.\n\nThen Burlington voters approved a $2.4 million bond for an addition, and that addition was dedicated on January 4, 1981. It is the modern wing behind the old stone one, and it is the reason this is still a working library and not a plaque.\n\nHistoric preservation work on the 1904 Carnegie building itself began in 2025, paid for through Save America's Treasures and Vermont historic preservation grants.",
+   "script": "Columns, stone steps, a Beaux-Arts front sitting right on College Street. This is the Fletcher Free Library, and Burlington has had a free library for more than 150 years.\n\nIt started with a gift. On July 14, 1873, Mrs. Mary L. Fletcher and her daughter, Miss Mary M. Fletcher, gave the city of Burlington $20,000 to found it. Half was to be spent on books. The other half started an endowment.\n\nThe library lived inside the old city hall building and outgrew it by 1901. That same year Andrew Carnegie gave $50,000 for a new building. A Burlington architect, Walter R. B. Willcox, won the competition to design it. It was dedicated and opened for business on August 17, 1904, the first of the four Carnegie libraries in Vermont.\n\nNow the problem nobody planned for. There was a ravine on this site, and the ravine had been filled in. In 1973 the northwest corner of the foundation settled and the building took structural damage. The books had to leave. First to Contois Auditorium, then to the basement of Memorial Auditorium. Demolition was on the table.\n\nWhat saved it was a committee with a very plain name: the Committee to Save the Fletcher Free Library Building. They got the building onto the National Register of Historic Places in August 1976. A federal Economic Development Administration grant of $234,000 paid for stabilization and exterior repairs in 1977.\n\nThen Burlington voters approved a $2.4 million bond for an addition, and that addition was dedicated on January 4, 1981. It is the modern wing behind the old stone one, and it is the reason this is still a working library and not a plaque.\n\nExterior preservation work on the 1904 Carnegie building ran from 2024 into 2026, paid for through Save America's Treasures and Vermont historic preservation grants.",
    "sources": [
     {
      "label": "Fletcher Free Library, official history page",
@@ -226,9 +377,10 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/fletcher-free-library.mp3",
-   "audio_hash": "9f79323461590b41",
-   "duration_s": 128,
-   "updated": "2026-08-23"
+   "audio_hash": "77c5358493a55e15",
+   "duration_s": 129,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "little-italy-urban-renewal",
@@ -265,13 +417,13 @@
   {
    "id": "battery-park",
    "title": "Battery Park",
-   "tease": "The gun battery became a glass factory before it became a park",
+   "tease": "Cannon on this bluff, then a glass furnace just north of it, then a park.",
    "hood": "downtown",
    "stand_at": "Stand at the western rim of Battery Park, at the railing above the bluff, facing the lake.",
    "lat": 44.4812,
    "lng": -73.2209,
    "radius_m": 85,
-   "script": "You are on the edge of a bluff. The lake is in front of you, the Adirondacks across it, and the ground drops away hard from your feet. That drop is why this is Battery Park.\n\nDuring the War of 1812 the United States military put cannon up here to protect the harbor and stationed roughly 4,000 soldiers on and around this ground. Burlington sat within reach of the Canadian border, and the lake was the road an invasion would use. The park takes its name from the artillery, not from anything that happened afterward.\n\nWhat you see now is about 14 acres. A bandshell, a playground, monuments. A bronze of the Civil War general William W. Wells. A red oak carving of Chief Grey Lock by the sculptor Peter Wolf Toth.\n\nAnd here is the stretch of this place's history that almost nobody tells you.\n\nWithin about fifteen years of the soldiers leaving, this was heavy industry. In 1827 Doctor John Peck and Professor James Dean established the Champlain Glass Company on the former battery campsite. It is described as the first extensive manufacturing concern in the town. It covered about two acres. It employed about 100 people. It made window glass.\n\nFrederick Smith, who arrived in Burlington the same year the works opened, ran the glassworks from 1834 until 1850, when the cost of fuel made it unprofitable and it shut down. Smith then subdivided the property himself and laid Park and Front Streets across the site.\n\nSo the order of things on this bluff is artillery, then a glass furnace, then a park. And the glass was not a small footnote to the neighborhood. It was the neighborhood. An 1839 survey labels the district that grew up around the works Glassville.",
+   "script": "You are on the edge of a bluff. The lake is in front of you, the Adirondacks across it, and the ground drops away hard from your feet. That drop is why this is Battery Park.\n\nDuring the War of 1812 the United States military put cannon up here to protect the harbor and stationed roughly 4,000 soldiers on and around this ground. Burlington sat within reach of the Canadian border, and the lake was the road an invasion would use. The park takes its name from the artillery, not from anything that happened afterward.\n\nWhat you see now is a few green acres on the bluff. A bandshell, a playground, monuments. A bronze of the Civil War general William W. Wells. A red oak carving of Chief Grey Lock by the sculptor Peter Wolf Toth.\n\nAnd here is the stretch of this place's history that almost nobody tells you.\n\nWithin about fifteen years of the soldiers leaving, the ground just north of here was heavy industry. In 1827 Doctor John Peck and Professor James Dean established the Champlain Glass Company on the former battery campsite. It is described as the first extensive manufacturing concern in the town. It covered about two acres. It employed about 100 people. It made window glass.\n\nFrederick Smith, who arrived in Burlington the same year the works opened, ran the glassworks from 1834 until 1850, when the cost of fuel made it unprofitable and it shut down. Smith then subdivided the property himself and laid Park and Front Streets across the site.\n\nSo the order on this ground is artillery, then a glass furnace on the blocks to the north, then a park. And the glass was not a small footnote to the neighborhood. It was the neighborhood. An 1839 survey labels the neighborhood north of the battery Glassville.",
    "sources": [
     {
      "label": "Wikipedia, Battery Park (Burlington, Vermont)",
@@ -295,9 +447,10 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/battery-park.mp3",
-   "audio_hash": "52e932313a427d4b",
-   "duration_s": 108,
-   "updated": "2026-08-23"
+   "audio_hash": "7177de3108d1a045",
+   "duration_s": 109,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "battery-street-historic-district",
@@ -308,7 +461,7 @@
    "lat": 44.47688,
    "lng": -73.2189,
    "radius_m": 75,
-   "script": "Battery Street, with the ground falling away in front of you toward the rail line and the lake. Hold onto that drop, because it used to be the edge of the water.\n\nThis street was called Water Street. The lakeshore came right up to it. The shoreline is now hundreds of feet further out than it was. Everything between you and the water down there is made land, filled in across the 1800s for wharves, lumber yards and railroad track.\n\nThe state's historic survey calls this the Battery Street Historic District and describes it as Burlington's earliest settlement, an area of mixed commercial, light industrial and residential use developed from 1790 onward. It is on the National Register.\n\nThe man who ran the lake from here was Gideon King Junior. Between 1790 and 1812 he controlled lake traffic, working a route between Burlington, Saint Johns in Quebec, and Whitehall, New York. His house still stands at 35 King Street, a few blocks south of you, and the survey calls it one of Burlington's oldest structures.\n\nAnd at the foot of King Street was Burlington's only shipyard. What came out of it was the steamboat Vermont, which the state survey calls the world's second commercial steamboat. John and James Winans built her here, and when they went to launch her in 1809 the engine was so heavy the hull stuck fast in the mud. They had to get her up onto logs and roll her into the lake.\n\nDown at the foot of Maple Street, the old South Wharf, known as the Salt Dock, went in in 1810 to get cargo off the boats.\n\nOne more thing happened on this street. The second story of the Pomeroy House was a classroom for University of Vermont medical students from 1804 to 1822. The first regular lectures on anatomy and surgery ever given in Burlington were delivered in that house, to twelve students, in the winter of 1814.",
+   "script": "Battery Street, with the ground falling away in front of you toward the rail line and the lake. Hold onto that drop, because it used to be the edge of the water.\n\nThis street was called Water Street. The lakeshore came right up to it. The shoreline is now hundreds of feet further out than it was. Everything between you and the water down there is made land, filled in across the 1800s for wharves, lumber yards and railroad track.\n\nA block south of you the state's historic survey marks out the Battery Street Historic District, and describes it as Burlington's earliest settlement, an area of mixed commercial, light industrial and residential use developed from 1790 onward. It is on the National Register.\n\nThe man who ran the lake from here was Gideon King Junior. Between 1790 and 1812 he controlled lake traffic, working a route between Burlington, Saint Johns in Quebec, and Whitehall, New York. His house still stands at 35 King Street, a few blocks south of you, and the survey calls it one of Burlington's oldest structures.\n\nAnd at the foot of King Street was Burlington's only shipyard. What came out of it was the steamboat Vermont, which the state survey calls the world's second commercial steamboat. John and James Winans built her here, and when they went to launch her in 1809 the engine was so heavy the hull stuck fast in the mud. They had to get her up onto logs and roll her into the lake.\n\nDown at the foot of Maple Street, the old South Wharf, known as the Salt Dock, went in in 1810 to get cargo off the boats.\n\nOne more thing happened on this street. The second story of the Pomeroy House was a classroom for University of Vermont medical students from 1804 to 1822. The first regular lectures on anatomy and surgery ever given in Burlington were delivered in that house, to twelve students, in the winter of 1814.",
    "sources": [
     {
      "label": "Vermont Division for Historic Preservation, Battery Street Historic District survey form (PDF)",
@@ -337,9 +490,10 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/battery-street-historic-district.mp3",
-   "audio_hash": "1f53f84ab74fbe8e",
-   "duration_s": 112,
-   "updated": "2026-08-23"
+   "audio_hash": "e200a89f5c6f0398",
+   "duration_s": 120,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "union-station-waterfront",
@@ -350,7 +504,7 @@
    "lat": 44.4757,
    "lng": -73.21925,
    "radius_m": 65,
-   "script": "Look up at the clock set into the stone above the entrance. Around it, carved scrolls and swags of fruit and flowers tied with ribbons. And on top of the whole composition, an hourglass with wings.\n\nThis is Burlington Union Station. It opened in January 1916, and it was the city's second try. In 1867 the Vermont Central Railroad built a permanent station on fill at the foot of College Street. Four years later that railroad leased the Rutland Railroad, and the depot became a union station. Union means more than one railroad, sharing one building.\n\nFor the replacement, the city donated land and 15,000 dollars to build a new depot and reroute the tracks. The Central Vermont and the Rutland, who would jointly own it, put up the remaining 150,000 for a steel-framed neoclassical building in buff brick with cream limestone trim.\n\nHere is the part people miss. The architect was Alfred Fellheimer. He had been involved with the design of Grand Central Terminal in Manhattan, and he already had extensive experience with railroad structures. The man who helped shape the biggest station in America also drew this one, at the bottom of Main Street.\n\nThen the trains stopped. The Central Vermont ended passenger service in 1938. The Rutland ran passenger trains here until 1953, when a strike ended them. Two years after that, Green Mountain Power converted the station into office space. The building stayed. The trains did not. Main Street Landing owns it now, and it holds businesses and organizations.\n\nWalk around to the lake side and you will find a platform and a canopy. The Vermont Agency of Transportation built them, with site preparation done in 2020 and 2021.\n\nOn July 29, 2022, Amtrak began direct service to Burlington when the Ethan Allen Express was extended north from Rutland.\n\nSixty-nine years separated the last Rutland passenger train from the first Amtrak train to pull in behind this building.",
+   "script": "Look up at the clock set into the stone above the entrance. Around it, carved scrolls and swags of fruit and flowers tied with ribbons. And on top of the whole composition, an hourglass with wings.\n\nThis is Burlington Union Station. It opened in January 1916, and it was the city's second union station. In 1867 the Vermont Central Railroad built a permanent station on fill at the foot of College Street. Four years later that railroad leased the Rutland Railroad, and the depot became a union station. Union means more than one railroad, sharing one building.\n\nFor the replacement, the city donated land and 15,000 dollars to build a new depot and reroute the tracks. The Central Vermont and the Rutland, who would jointly own it, put up the remaining 150,000 for a steel-framed neoclassical building in buff brick with cream limestone trim.\n\nHere is the part people miss. The architect was Alfred Fellheimer. He had been involved with the design of Grand Central Terminal in Manhattan, and he already had extensive experience with railroad structures. The man who helped shape the biggest station in America also drew this one, at the bottom of Main Street.\n\nThen the trains stopped. The Central Vermont ended passenger service in 1938. The Rutland ran passenger trains here until 1953, when a strike ended them. Two years after that, Green Mountain Power converted the station into office space. The building stayed. The trains did not. Main Street Landing owns it now, and it holds businesses and organizations.\n\nWalk around to the lake side and you will find a platform and a canopy. The Vermont Agency of Transportation built them, with site preparation done in 2020 and 2021.\n\nOn July 29, 2022, Amtrak began direct service to Burlington when the Ethan Allen Express was extended north from Rutland.\n\nSixty-nine years separated the last Rutland passenger train from the first Amtrak train to pull in behind this building.",
    "sources": [
     {
      "label": "Amtrak Great American Stations — Burlington, VT (BTN)",
@@ -369,9 +523,10 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/union-station-waterfront.mp3",
-   "audio_hash": "914bd16f179293c8",
-   "duration_s": 131,
-   "updated": "2026-08-23"
+   "audio_hash": "0e4563215eb17790",
+   "duration_s": 123,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "moran-plant-frame",
@@ -688,7 +843,7 @@
    "lat": 44.47661,
    "lng": -73.21258,
    "radius_m": 50,
-   "script": "Look up. The brick tower above you is 85 feet tall, and it was not built for the bell.\n\nIt was built to hang fire hoses in, so they could dry. That is the whole reason it is that shape: a narrow shaft tall enough to hold a length of wet hose hanging straight down.\n\nThis is the Ethan Allen Firehouse, 135 Church Street, designed by the local architect A. B. Fisher and completed in 1889. The style is a commercial variation of Richardsonian Romanesque.\n\nIt was home to the Ethan Allen Engine Company Number Four, one of seven volunteer fire companies in Burlington. And a volunteer engine house was more than an emergency service. It was where the members socialized, broke bread, and shared ideas. A private club that also happened to put out your fire.\n\nThe company started with horse-drawn equipment. Later it was folded into the city's fire department, and the building was adapted to house motorized fire equipment. After that the Burlington Police Department moved in, and stayed until the late 1960s.\n\nIt was listed on the National Register of Historic Places on April 16, 1971.\n\nHere is the surprise. The bell that belongs in that tower spent decades somewhere else. It ended up in the collection of the Shelburne Museum, down the road, an artifact of a building still standing on Church Street.\n\nThen it came back. On September 12, 2002, the original bell was hoisted back into the firehouse tower, where it had hung when the building was new.\n\nBurlington City Arts had already moved a gallery into half of the ground floor in 1995. In 2002 the whole building opened to the public as the Firehouse Center for the Visual Arts. It is now the BCA Center: contemporary art exhibitions in a nineteenth-century engine house, under a tower designed to dry hose.",
+   "script": "Look up. The brick tower above you is 85 feet tall, and it was not built for the bell.\n\nIt was built to hang fire hoses in, so they could dry. That is the whole reason it is that shape: a narrow shaft tall enough to hold a length of wet hose hanging straight down.\n\nThis is the Ethan Allen Firehouse, 135 Church Street, designed by the local architect A. B. Fisher and built in 1887. The style is a commercial variation of Richardsonian Romanesque.\n\nIt was home to the Ethan Allen Engine Company Number Four, one of the city's volunteer fire companies. And a volunteer engine house was more than an emergency service. It was where the members socialized, broke bread, and shared ideas. A private club that also happened to put out your fire.\n\nThe company started with horse-drawn equipment. Later it was folded into the city's fire department, and the building was adapted to house motorized fire equipment. After that the Burlington Police Department moved in, and stayed until the late 1960s.\n\nIt was listed on the National Register of Historic Places on April 16, 1971.\n\nHere is the surprise. The bell that belongs in that tower spent decades somewhere else. It ended up in the collection of the Shelburne Museum, down the road, an artifact of a building still standing on Church Street.\n\nThen it came back. In 2002 the original bell was hoisted back into the firehouse tower, where it had hung when the building was new.\n\nBurlington City Arts had already moved a gallery into half of the ground floor in 1995. In 2002 the whole building opened to the public as the Firehouse Center for the Visual Arts. It is now the BCA Center: contemporary art exhibitions in a nineteenth-century engine house, under a tower designed to dry hose.",
    "sources": [
     {
      "label": "Wikipedia — Ethan Allen Engine Company No. 4",
@@ -717,20 +872,21 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/firehouse-gallery.mp3",
-   "audio_hash": "594d941f85e2cafd",
-   "duration_s": 120,
-   "updated": "2026-08-23"
+   "audio_hash": "15e3e6b7742f532e",
+   "duration_s": 112,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "follett-house",
    "title": "The Follett House",
    "tease": "The columns face the lake because the money came off the lake",
    "hood": "downtown",
-   "stand_at": "Stand on the College Street sidewalk opposite the white-columned brick mansion, just uphill from Battery Street.",
-   "lat": 44.4768,
-   "lng": -73.21747,
+   "stand_at": "Stand on the College Street sidewalk just west of the white-columned brick mansion, uphill from Battery Street, and look back at the front.",
+   "lat": 44.47682,
+   "lng": -73.21787,
    "radius_m": 55,
-   "script": "Six fluted Doric columns, a pediment, and a front that does not face the street. The house is turned west, toward the lake. That was deliberate. The money that built it came off the water.\n\nTimothy Follett was a shipping man on Lake Champlain, and at the peak of his fortune he built a house to prove it. He put it up in 1840 and hired Ammi B. Young to design it. Young is the architect of Vermont's second State House, in Montpelier. What he built here is brick, two and a half stories, clapboarded, on a stone foundation, five bays across, with a balcony running the full width of the second floor.\n\nThen Follett changed businesses. In 1845 he became the first president of the Burlington and Rutland Railroad. Railroads were the future, and the future ruined him. The line failed, Follett lost his fortune in the 1850s, and he lost the house with it. He died in 1857.\n\nThe building kept going without him. A square cupola went on in the 1880s. Institutions moved through it, including at one point the local Veterans of Foreign Wars chapter. Since 1885 it has held institutional tenants rather than a family. It was listed on the National Register of Historic Places in 1972.\n\nThen the near miss. The Pomerleau real estate agency acquired the property in 1978 to restore it, and a damaging fire hit at the very start of the project. The restoration was finished anyway. The house has been offices since.\n\nLook down College Street toward the water and try to picture the ridge above the harbor lined with houses like this one, built by men who owned boats. This is the last of Burlington's grand nineteenth-century lakeside mansions.",
+   "script": "Six fluted Ionic columns, a pediment, and a front that does not face the street. The house is turned west, toward the lake. That was deliberate. The money that built it came off the water.\n\nTimothy Follett was a shipping man on Lake Champlain, and at the peak of his fortune he built a house to prove it. He put it up in 1840 and hired Ammi B. Young to design it. Young is the architect of Vermont's second State House, in Montpelier. What he built here is brick, two and a half stories, on a cut stone foundation, five bays across, with a balcony running the full width of the second floor.\n\nThen Follett changed businesses. In 1845 he became the first president of the railroad that became the Rutland and Burlington. Railroads were the future, and the future ruined him. The line failed, Follett lost his fortune in the 1850s, and he lost the house with it. He died a few years later.\n\nThe building kept going without him. A square cupola went on in the 1880s. Institutions moved through it, including at one point the local Veterans of Foreign Wars chapter. Since 1885 it has held institutional tenants rather than a family. It was listed on the National Register of Historic Places in 1972.\n\nThen the near miss. The Pomerleau real estate agency acquired the property in 1978 to restore it, and a damaging fire hit at the very start of the project. The restoration was finished anyway. The house has been offices since.\n\nLook down College Street toward the water and try to picture the ridge above the harbor lined with houses like this one, built by men who owned boats. This is one of the last of Burlington's grand nineteenth-century lakeside mansions.",
    "sources": [
     {
      "label": "Wikipedia, Follett House",
@@ -743,24 +899,25 @@
      "supports": "\"The nationally known New England architect, Ammi B. Young built it for Timothy Follett\"; Follett was a shipping magnate; \"In 1845 Follett became the first president of the Burlington & Rutland railroad\"; the Pomerleau Agency acquired the property in 1978 for restoration and \"Despite a damaging fire at the onset of the project, it was completed quickly and thoroughly.\""
     }
    ],
-   "coord_source": "OpenStreetMap way 201656417 (69 College Street building), via https://nominatim.openstreetmap.org/search?format=json&q=69+College+Street%2C+Burlington%2C+Vermont ; standing point offset to the north sidewalk",
-   "coord_confidence": "medium",
-   "coord_verified": "approved-in-bulk-2026-08-23",
+   "coord_source": "OpenStreetMap way 201656417 (69 College Street building), via https://nominatim.openstreetmap.org/search?format=json&q=69+College+Street%2C+Burlington%2C+Vermont ; standing point offset to the north sidewalk (moved by fact-check 2026-08-23)",
+   "coord_confidence": "high",
+   "coord_verified": "factcheck-2026-08-23",
    "enabled": true,
    "presented_by": null,
    "audio": "audio/follett-house.mp3",
-   "audio_hash": "86bc65d3c0137930",
-   "duration_s": 108,
-   "updated": "2026-08-23"
+   "audio_hash": "ea2f6bad8d541ae8",
+   "duration_s": 106,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "howard-opera-house",
    "title": "The Howard Opera House",
-   "tease": "There was a fourteen-hundred-seat theater above these shop windows",
+   "tease": "There was a theater for well over a thousand people above these shop windows",
    "hood": "downtown",
-   "stand_at": "Stand on Church Street just south of Bank, in front of the long brick block on the west corner, and look up above the shop windows.",
-   "lat": 44.47807,
-   "lng": -73.21274,
+   "stand_at": "Stand on the Church Street Marketplace bricks a few steps out from the corner of Church and Bank, and look up above the shop windows on the west corner.",
+   "lat": 44.47805,
+   "lng": -73.21266,
    "radius_m": 55,
    "script": "You are standing under a theater. Look above the shop windows on this corner. Brick, a hundred and thirty feet along Church Street, seventy-six feet along Bank, sixty feet tall. Behind that wall, on the upper floors, there used to be an auditorium with enough chairs for between thirteen hundred and fourteen hundred people.\n\nJohn Purple Howard paid for it. Burlington born, he went to New York as a young man and made a fortune in the hotel business. In 1877, when word got around that he was putting up a business block on this corner, townspeople started lobbying him to include a hall. The theater in City Hall was too small, they said, unsafe, and an acoustical outrage.\n\nHe agreed. He hired Stephen Hatch, another Vermonter who had gone to New York, and told him the building should be as good as anybody's. He was prepared to spend about a hundred thousand dollars.\n\nIt opened on the evening of February 24, 1879, with a touring company singing Lucia di Lammermoor. Gas fixtures lit the walls, and gas jets hidden inside the dome made heat, which pulled the air upward and ventilated the room.\n\nElectric light arrived in October of 1886. And the manager used it only in the foyer, and in the auditorium between the acts. Touring companies wanted the gas kept burning during the show. Gaslight was warm, and it threw softer shadows on an actor's face.\n\nOn November 14, 1881, Howard gave the entire block away. Stores, theater, hall and weather station, all of it, to the Home for Destitute Children. The deed said the block could not be sold and the theater could not close before November of 1901.\n\nThe merchants downstairs eventually bought out the theater lease. Their fire insurance was brutal, because of all that flammable space over their heads.\n\nThe last performance was November 30, 1904.",
    "sources": [
@@ -780,15 +937,16 @@
      "supports": "Howard Opera House 1878-79 at 81-91 Church Street, financed by John Purple Howard; the opera house closed in 1904 because of rising fire insurance costs; the building later housed Magram's Department Store for over 40 years."
     }
    ],
-   "coord_source": "OpenStreetMap way 28160078 (Howard Opera House) via Nominatim (44.47800, -73.21294), offset onto Church Street using the OSM Church Street x Bank Street intersection node (44.47820, -73.21264)",
+   "coord_source": "OpenStreetMap way 28160078 (Howard Opera House) via Nominatim (44.47800, -73.21294), offset onto Church Street using the OSM Church Street x Bank Street intersection node (44.47820, -73.21264) (moved by fact-check 2026-08-23)",
    "coord_confidence": "high",
-   "coord_verified": "approved-in-bulk-2026-08-23",
+   "coord_verified": "factcheck-2026-08-23",
    "enabled": true,
    "presented_by": null,
    "audio": "audio/howard-opera-house.mp3",
    "audio_hash": "e3831f1930104e1e",
    "duration_s": 118,
-   "updated": "2026-08-23"
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "island-line-trail",
@@ -799,7 +957,7 @@
    "lat": 44.48071,
    "lng": -73.22195,
    "radius_m": 70,
-   "script": "The pavement under you is a railroad bed. The Rutland Railroad built the Island Line here in 1901 and ran it north out of Burlington, along this shore, and then straight out into open water.\n\nTo reach the Champlain Islands the railroad did not build a bridge. It built a causeway. Crews tipped marble blocks into the lake for three and a half miles, from Colchester Point across to South Hero, and laid track on top of the rubble. It is still out there. You can walk on it.\n\nPassenger service on the Island Line ended after an employee strike in late June of 1953. The final trains ran on September 25, 1961. In 1963 the state of Vermont bought the abandoned lines.\n\nThe path came later, and it came from a vote. In 1981 Burlington voters approved a bike path on the old right of way with seventy-five percent support. It was fully funded by 1984, and by 1986 the waterfront stretch was complete. In 2010 the trail was inducted into the Rails-to-Trails Hall of Fame.\n\nHere is the part people do not expect. The causeway has a hole in it. About two hundred feet of open water, called the Cut, where a swing bridge used to pivot aside to let boats through. The bridge is gone. The gap is not.\n\nSince 1998 a ferry has crossed it. Not a car ferry. A bike ferry, run by the nonprofit Local Motion. It carries bicycles, trailers, wheelchairs and other mobility devices, and it takes anyone who bikes, walks or rolls out to it. No motor vehicles.\n\nFrom here it is about eight paved miles to the end of the pavement, and five more of crushed gravel out on the marble.",
+   "script": "The pavement under you is a railroad bed. The Rutland Railroad built the Island Line here in 1901 and ran it north out of Burlington, along this shore, and then straight out into open water.\n\nTo reach the Champlain Islands the railroad did not build a bridge. It built a causeway. Crews tipped granite and marble quarry rock into the lake for three and a half miles, from Colchester Point across to South Hero, and laid track on top of the rubble. It is still out there. You can walk on it.\n\nPassenger service on the Island Line ended after an employee strike in the early nineteen fifties. The final trains ran in the fall of 1961. In 1963 the state of Vermont bought the abandoned Rutland lines. It left this one out.\n\nThe path came later, and it came from a vote. In 1981 Burlington voters approved a bike path on the old right of way by about three to one. It was fully funded by 1984, and by 1986 the waterfront stretch was complete. In 2010 the trail was inducted into the Rails-to-Trails Hall of Fame.\n\nHere is the part people do not expect. The causeway has a hole in it. About two hundred feet of open water, called the Cut, where a swing bridge used to pivot aside to let boats through. The bridge is gone. The gap is not.\n\nSince 1998, from late spring into fall, a ferry has crossed it. Not a car ferry. A bike ferry, run by the nonprofit Local Motion. It carries bicycles, trailers, wheelchairs and other mobility devices, and it takes anyone who bikes, walks or rolls out to it. No motor vehicles.\n\nThe whole trail runs about thirteen miles. Eight paved from Oakledge Park up to Airport Park, and five more of crushed gravel out on the causeway.",
    "sources": [
     {
      "label": "Wikipedia, Island Line Trail",
@@ -833,20 +991,21 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/island-line-trail.mp3",
-   "audio_hash": "977163612b8ff635",
-   "duration_s": 102,
-   "updated": "2026-08-23"
+   "audio_hash": "12b11a9a485a0717",
+   "duration_s": 107,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "king-street-ferry-dock",
    "title": "The King Street Ferry Dock",
    "tease": "The dock is still here. The ferry is not.",
    "hood": "waterfront",
-   "stand_at": "Stand at the foot of King Street beside the ferry terminal building, facing out at the water.",
-   "lat": 44.47489,
-   "lng": -73.2205,
+   "stand_at": "Stand on the dock apron just west of the ferry terminal building at the foot of King Street, facing out at the open water.",
+   "lat": 44.4749,
+   "lng": -73.2208,
    "radius_m": 70,
-   "script": "There is a ferry terminal beside you. Look at the water. There is no ferry.\n\nLake Champlain Transportation says it has been carrying people across this lake since 1826. Two hundred years. The company still runs two crossings, and both of them are somewhere else. Grand Isle to Plattsburgh runs around the clock, all year, breaking ice when it has to, and takes about twelve minutes. Charlotte to Essex runs year round as well, weather permitting.\n\nThe Burlington boat went to Port Kent, New York, and it was the long one. It crossed the maximum width of Lake Champlain. It took about an hour. It never ran in winter. It was less a commute than a passage, and people used it that way.\n\nIt last operated in 2019. It has not run since.\n\nIn June of 2022 the company said the line was postponed for the near future. Staffing was tight. The pandemic had wrecked the economics. By then the loading apparatus had already been pulled off this terminal, maintenance work had been moved north to Grand Isle, and the company was talking about putting a restaurant on the site instead.\n\nOn the New York side, a town supervisor said the loss had cut into tourism and forced residents to drive to other ferry terminals. Nothing has been announced since.\n\nSo this is a dock with no crossing. The building is here. The pilings are here. The schedule is not. The water in front of you is the widest part of the lake, and on a clear day the far shore is the place the boat used to land.\n\nAbout one million passengers cross Lake Champlain by ferry every year. Not one of them from this dock.",
+   "script": "There is a ferry terminal beside you. Look at the water. There is no ferry.\n\nLake Champlain Transportation says it has been carrying people across this lake since 1826. Two hundred years. The company still runs two crossings, and both of them are somewhere else. Grand Isle to Plattsburgh runs around the clock, all year, breaking ice when it has to, and takes about twelve minutes. Charlotte to Essex runs year round as well, weather permitting.\n\nThe Burlington boat went to Port Kent, New York, and it was the long one. It crossed the maximum width of Lake Champlain. It took about an hour. It never ran in winter. It was less a commute than a passage, and people used it that way.\n\nIt last operated in 2019. It has not run since.\n\nIn June of 2022 the company said the line was postponed for the near future. Staffing was tight. The pandemic had wrecked the economics. By then the loading apparatus had already been pulled off this terminal, maintenance work had been moved north to Grand Isle, and the company was talking about putting a restaurant on the site instead.\n\nOn the New York side, a town supervisor said the loss had cut into tourism and forced residents to drive to other ferry terminals. The company has not announced a return.\n\nSo this is a dock with no crossing. The building is here. The schedule is not. The water in front of you is the widest part of the lake, and on a clear day the far shore is the place the boat used to land.\n\nThe ferry company carries around a million passengers across Lake Champlain a year. Not one of them from this dock.",
    "sources": [
     {
      "label": "Lake Champlain Transportation Company, \"History\"",
@@ -869,15 +1028,16 @@
      "supports": "Last operated 2019; LCT cited staffing constraints and pandemic economics and called the line postponed for the near future; the ferry apparatus was removed from the terminal; maintenance operations moved to Grand Isle; a restaurant was proposed for the site; a New York town supervisor said the loss reduced tourism and forced residents to use other terminals."
     }
    ],
-   "coord_source": "OpenStreetMap way 105875538 (1 King Street), via https://nominatim.openstreetmap.org/search?format=json&q=1+King+Street%2C+Burlington%2C+Vermont",
+   "coord_source": "OpenStreetMap way 105875538 (1 King Street), via https://nominatim.openstreetmap.org/search?format=json&q=1+King+Street%2C+Burlington%2C+Vermont (moved by fact-check 2026-08-23)",
    "coord_confidence": "high",
-   "coord_verified": "approved-in-bulk-2026-08-23",
+   "coord_verified": "factcheck-2026-08-23",
    "enabled": true,
    "presented_by": null,
    "audio": "audio/king-street-ferry-dock.mp3",
-   "audio_hash": "fed03a14bd5786df",
-   "duration_s": 91,
-   "updated": "2026-08-23"
+   "audio_hash": "08b55d1909bb00cc",
+   "duration_s": 99,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "main-street-landing",
@@ -888,7 +1048,7 @@
    "lat": 44.4769,
    "lng": -73.21958,
    "radius_m": 60,
-   "script": "Stand at this corner and walk your eyes around the building. Each face of it is different. Different materials, different rhythm, as though four separate buildings had grown together.\n\nThat was the instruction. The owners told their architect they wanted every facade to look like a different building, built out of local brick and stone, feeling like the pioneer shops of the eighteen hundreds. He came back with the drawing in two weeks.\n\nNow the part that is hard to believe. In the mid nineteen eighties this corner was inside a twenty-seven acre, hundred million dollar development called the Alden Waterfront Project. Hundreds of condominiums. Offices. A seven story hotel. A large parking garage. An art museum. An ice rink. Bernie Sanders, mayor at the time, backed it. The city council backed it. In December of 1985 the bond vote that would have paid for the public pieces failed, and the whole thing collapsed.\n\nTwo women were left standing in the wreckage. Melinda Moulton had been the project's director of operations. Lisa Steele came out of a divorce owning the waterfront land. Steele phoned Moulton to help her sell it off. Moulton proposed they build it themselves instead. That company is Main Street Landing.\n\nHere is the number that tells the story. Under the Alden plan, eleven acres had been optioned from the railroad at five hundred thousand dollars an acre. After the plan died, the city sued the railroad under the public trust doctrine, and got waterfront land for sixty-five thousand dollars an acre.\n\nTheir first two buildings opened in 1995. This one, the Lake and College building, opened on July 3, 2005. A hundred and twenty thousand square feet, with a two hundred and twenty seat performing arts center inside it, and Silver LEED certification.\n\nIn February of that year it had no tenants at all. The anchor signed after touring an unfinished top floor at ten below zero, with plastic sheeting flapping over the window openings. That tenant was Seventh Generation, and it took thirty-six thousand square feet.",
+   "script": "Stand at this corner and walk your eyes around the building. Each face of it is different. Different materials, different rhythm, as though four separate buildings had grown together.\n\nThat was the instruction. The owners say they told their architect they wanted every facade to look like a different building, built out of local brick and stone, feeling like the pioneer shops of the eighteen hundreds. He came back with the drawing in two weeks.\n\nNow the part that is hard to believe. In the mid nineteen eighties this corner was inside a twenty-seven acre, hundred million dollar development called the Alden Waterfront Project. Hundreds of condominiums. Offices. A seven story hotel. A large parking garage. An art museum. An ice rink. Bernie Sanders, mayor at the time, backed it. The city council backed it. In December of 1985 the bond vote that would have paid for the public pieces failed, and the whole thing collapsed.\n\nTwo women were left standing in the wreckage. Melinda Moulton had been the project's director of operations. Lisa Steele ended up owning the waterfront land. Steele phoned Moulton to help her sell it off. Moulton proposed they build it themselves instead. That company is Main Street Landing.\n\nHere is the number that tells the story. Under the Alden plan, eleven acres had been optioned from the railroad at five hundred thousand dollars an acre. After the plan died, the city sued the railroad under the public trust doctrine, and Moulton says the land came in at sixty-five thousand dollars an acre.\n\nTheir first two buildings opened in 1995. This one, the Lake and College building, opened on July 3, 2005. A hundred and twenty thousand square feet, with a two hundred and twenty seat performing arts center inside it, and Silver LEED certification.\n\nIn February of that year it had no tenants at all. Moulton tells it this way. The anchor signed after touring an unfinished top floor at ten below zero, with plastic sheeting flapping over the window openings. That tenant was Seventh Generation, and it took thirty-six thousand square feet.",
    "sources": [
     {
      "label": "Vermont Business Magazine — Development is my thing: Melinda Moulton and Main Street Landing (Joyce Marcel, Nov 21, 2019)",
@@ -912,20 +1072,21 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/main-street-landing.mp3",
-   "audio_hash": "a0526c7cc3104e87",
-   "duration_s": 134,
-   "updated": "2026-08-23"
+   "audio_hash": "50878db3a22fde60",
+   "duration_s": 129,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "masonic-temple",
    "title": "The Masonic Temple",
    "tease": "Vermont's Masons built a castle at the top of Church Street",
    "hood": "downtown",
-   "stand_at": "Stand on Church Street just below Pearl, on the west side, facing the gray stone building with the steep pyramid roof.",
-   "lat": 44.48038,
-   "lng": -73.21288,
+   "stand_at": "Stand on the Church Street bricks just south of Pearl, out from the storefronts, and look up at the gray stone building with the steep pyramid roof.",
+   "lat": 44.48025,
+   "lng": -73.21281,
    "radius_m": 50,
-   "script": "Look up. Five stories of rough gray stone, and a slate roof that climbs to a pyramid over the corner. This is the Masonic Temple, at the head of Church Street, where Church meets Pearl.\n\nIt went up in 1897 and 1898. Not as a store. Not as an office block. It was built to be the state headquarters of the Grand Lodge of Vermont, Free and Accepted Masons.\n\nThe Masons had wanted this for a long time. The Grand Lodge picked Burlington as the site back in 1868. Thirty years went by before the building existed. When it was done it had cost 87,500 dollars.\n\nThey hired John McArthur Harris, of the Philadelphia firm Wilson Brothers and Company. He gave them Richardsonian Romanesque. Heavy masonry. Round arches. A roof with real weight to it. Step around to the Pearl Street side and look at the windows there. They climb the wall at an angle. That is a staircase, showing through the stone.\n\nThe lodge rooms were upstairs. The ground floor was rented out to shops and offices from the start. A temple with storefronts under it, because the storefronts were supposed to pay for the temple.\n\nThat is not how it went. The Masons were already talking about selling the building in 1914, sixteen years after they finished it. A fire in 1933 did about sixty thousand dollars of damage. Membership thinned through the rest of the century. In 1984 a group called the One Church Street Partnership bought the building and renovated it.\n\nNow every floor is retail and offices. No lodge meets here. The last Burlington lodge merged away in 2016 and moved out to Williston.\n\nThe building is protected all the same. It is one of three in the Head of Church Street Historic District, listed on the National Register of Historic Places on July 15, 1974. The other two are the brick meetinghouse above you and the turreted building across the street.",
+   "script": "Look up. Five stories of rough gray stone, and a slate roof that climbs to a pyramid over the corner. This is the Masonic Temple, at the head of Church Street, where Church meets Pearl.\n\nIt went up in 1897 and 1898. Not as a store. Not as an office block. It was built to be the state headquarters of the Grand Lodge of Vermont, Free and Accepted Masons.\n\nThe Masons had wanted this for a long time. The Grand Lodge picked Burlington as the site back in 1868. Thirty years went by before the building existed. When it was done it had cost about eighty-seven thousand dollars.\n\nThey hired John McArthur Harris, of the Philadelphia firm Wilson Brothers and Company. He gave them Richardsonian Romanesque. Heavy masonry. Round arches. A roof with real weight to it. Step around to the Pearl Street side and look at the windows there. They climb the wall at an angle. That is a staircase, showing through the stone.\n\nThe lodge rooms were upstairs. The ground floor was rented out to shops and offices from the start. A temple with storefronts under it, and rent coming in off the street.\n\nThat is not how it went. The building was expensive to keep warm. The Masons were already talking about selling it in 1914, sixteen years after they finished it, because of the heating bills. A fire in 1933 did about sixty thousand dollars of damage. Membership thinned through the rest of the century. In the mid nineteen eighties a local partnership bought the building and renovated it, lifting it onto new foundations and opening up windows that had been bricked shut.\n\nNow every floor is retail and offices. No lodge meets here. The last Burlington lodge merged away in 2016 and moved out to Williston.\n\nThe building is protected all the same. It is one of three in the Head of Church Street Historic District, listed on the National Register of Historic Places on July 15, 1974. The other two are the brick meetinghouse above you and the turreted building across the street.",
    "sources": [
     {
      "label": "Wikipedia — Masonic Temple (Burlington, Vermont)",
@@ -943,15 +1104,16 @@
      "supports": "Masonic Temple 1897-98, Richardsonian Romanesque, heavy masonry and rounded arches; hosted the Grand Masonic Lodge of Vermont until the 1970s; now mixed businesses and offices."
     }
    ],
-   "coord_source": "OpenStreetMap way 261330850 (Masonic Temple, 1 Church Street) via Nominatim, offset onto the Church Street sidewalk using the OSM Church Street x Pearl Street intersection node (44.48044, -73.21278) from https://api.openstreetmap.org/api/0.6/map?bbox=-73.2260,44.4700,-73.2050,44.4830",
+   "coord_source": "OpenStreetMap way 261330850 (Masonic Temple, 1 Church Street) via Nominatim, offset onto the Church Street sidewalk using the OSM Church Street x Pearl Street intersection node (44.48044, -73.21278) from https://api.openstreetmap.org/api/0.6/map?bbox=-73.2260,44.4700,-73.2050,44.4830 (moved by fact-check 2026-08-23)",
    "coord_confidence": "high",
-   "coord_verified": "approved-in-bulk-2026-08-23",
+   "coord_verified": "factcheck-2026-08-23",
    "enabled": true,
    "presented_by": null,
    "audio": "audio/masonic-temple.mp3",
-   "audio_hash": "8fc6bbb8e06ad864",
-   "duration_s": 120,
-   "updated": "2026-08-23"
+   "audio_hash": "3bd466eddf1eef16",
+   "duration_s": 124,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "perkins-pier",
@@ -959,10 +1121,10 @@
    "tease": "This quiet pier was once stacked forty feet high",
    "hood": "waterfront",
    "stand_at": "Stand out near the end of Perkins Pier, at the rail, facing north up the shoreline.",
-   "lat": 44.47354,
-   "lng": -73.22141,
+   "lat": 44.4736,
+   "lng": -73.2216,
    "radius_m": 70,
-   "script": "You are standing on made land. The lake used to reach further in than this. In 1810 a man named Curtis Holgate built a wharf at the bottom of Maple Street and filled part of the lake to hold it up. That is the ground under your shoes.\n\nFor a while this was the steamboat landing. Canal and stagecoach traffic was routed here by 1823, and the wharf sat at the center of one of the busiest commercial districts in town. Freight moved off boats and onto wagons right where you are standing.\n\nThen came the wood. Look north along the shoreline and take the boats away. Fill it with lumber. Boards stacked thirty to forty feet high, covering more than thirty acres of waterfront.\n\nIn 1865 Burlington was the third most important and largest lumber port in the United States. Some accounts put it second. Only Chicago and Albany moved more. Vermont's own forests were largely cut over by then, so the lumber came south from Canada by boat, got sorted and resawn here, and left by rail.\n\nThe numbers kept climbing. In 1873 this harbor handled upwards of 123 million feet of lumber in a year. At the peak, in 1889, shipments topped 375 million feet. At least twelve wharves worked the harbor.\n\nThen it stopped. New tariffs in the early 1890s cut off the Canadian supply. By 1926 the harbor took in about thirty boats of lumber a year.\n\nThe waterfront did not go quiet, though. It went flammable. Oil companies took the empty wharves and built tanks. By 1958 there were eighty-three fuel tanks along this shore, holding eighty-four million gallons.\n\nPerkins Pier was founded the next year, in 1959.",
+   "script": "You are standing on made land. The lake used to reach further in than this. In 1810 a man named Curtis Holgate built a wharf at the bottom of Maple Street and filled part of the lake to hold it up. That is the ground under your shoes.\n\nFor a while this was the steamboat landing. Canal and stagecoach traffic was routed here by 1823, and the wharf sat at the center of one of the busiest commercial districts in town. Freight moved off boats and onto wagons right where you are standing.\n\nThen came the wood. Look north along the shoreline and take the boats away. Fill it with lumber. Boards stacked thirty to forty feet high, covering more than thirty acres of waterfront.\n\nBy 1865 Burlington had become, by most accounts, the third largest lumber port in the country. Some accounts put it second. Only Chicago and Albany moved more. The lumber came south from Canada by boat. It got sorted and resawn here. It left by rail.\n\nThe numbers kept climbing. In 1873 this harbor handled upwards of 123 million feet of lumber in a year. At the peak, in 1889, shipments topped 375 million feet. At least twelve wharves worked the harbor.\n\nThen it stopped. New tariffs in 1893 and 1894 cut the Canadian supply down hard. By 1926 the harbor took in about thirty boats of lumber a year.\n\nThe waterfront did not go quiet, though. It went flammable. Oil companies took over the empty wharves and built tanks on them. By 1958 there were eighty-three fuel tanks along this shore. Together they held eighty-four million gallons.\n\nThe city opened Perkins Pier the next year, in 1959.",
    "sources": [
     {
      "label": "UVM Historic Preservation Program, \"Perkins Pier\" (Burlington 1830 project)",
@@ -985,26 +1147,27 @@
      "supports": "\"Founded in 1959, Perkins Pier is the neighborhood access point for Lake Champlain\"; the site is on the formerly industrial waterfront."
     }
    ],
-   "coord_source": "OpenStreetMap way 1309164025 (Perkins Pier), via https://nominatim.openstreetmap.org/search?format=json&q=Perkins+Pier%2C+Burlington%2C+Vermont",
-   "coord_confidence": "medium",
-   "coord_verified": "approved-in-bulk-2026-08-23",
+   "coord_source": "OpenStreetMap way 1309164025 (Perkins Pier), via https://nominatim.openstreetmap.org/search?format=json&q=Perkins+Pier%2C+Burlington%2C+Vermont (moved by fact-check 2026-08-23)",
+   "coord_confidence": "high",
+   "coord_verified": "factcheck-2026-08-23",
    "enabled": true,
    "presented_by": null,
    "audio": "audio/perkins-pier.mp3",
-   "audio_hash": "026868d08c08297b",
+   "audio_hash": "7462839dabf0978a",
    "duration_s": 106,
-   "updated": "2026-08-23"
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "pine-street-south-end",
    "title": "The Maltex Building",
-   "tease": "Maypo was invented inside this building",
+   "tease": "The company in this building invented Maypo",
    "hood": "south-end",
    "stand_at": "Stand on the Pine Street sidewalk in front of the four-story brick building with the tall windows.",
    "lat": 44.4676,
-   "lng": -73.2153,
+   "lng": -73.21516,
    "radius_m": 90,
-   "script": "Four stories of brick, tall windows, and a name across the top. Maltex. This was a cereal factory.\n\nWilliam J. Van Patten, a Burlington druggist and politician, founded the Malted Cereal Company in 1899 and had this building put up on Pine Street in 1900. The product was a hot cereal made from wheat and barley. It was called Maltex. The recipe outlived the factory. A company in Ohio makes it now.\n\nHere is the part worth knowing. In 1950 the company invented Maypo, a hot oat cereal flavored with maple. That happened here, on this block.\n\nThe end came without warning. On May 9, 1969, the vice president of the company came in from Missouri and told the workers the factory was closing that day. Production left Vermont.\n\nThe building sat. In 1983 a man named Rick Davis bought it and cut it into space for small businesses, which is still what it is. That move, repeated up and down this street, is how a corridor of dead factories became an arts district. The South End Art Hop runs its thirty-fourth year in September of 2026, free, across more than a hundred locations along a two-mile stretch of this street.\n\nNow stop looking at the buildings and think about the ground.\n\nA few blocks south of here is the Pine Street Barge Canal. It is a federal Superfund site. Thirty-eight acres: a canal, a turning basin, wetlands, and a pond.\n\nA plant on Pine Street used to make the city's gas by cooking coal. It ran until 1966. The waste went into the wetland. In the 1960s and 1970s an oil-like material began seeping out of the ground into the canal and the basin, and Burlington drinks from Lake Champlain. The Environmental Protection Agency settled on a remedy in 1998 and finished the work in 2004, capping the contaminated sediment underwater instead of digging it out.\n\nThe pond the coal tar seeped into had a name. It was called Maltex Pond.",
+   "script": "Four stories of brick, tall windows, and a name across the top. Maltex. This was a cereal factory.\n\nWilliam J. Van Patten, a Burlington druggist and politician, founded the Malted Cereal Company in 1899 and had this building put up on Pine Street in 1900. The product was a hot cereal made from wheat and barley. It was called Maltex. The recipe outlived the factory. A company in Ohio makes it now.\n\nHere is the part worth knowing. In the nineteen fifties the company invented Maypo, a hot oat cereal flavored with maple. This was the company that did it, and this was the building it worked out of.\n\nThe end came without warning. On May 9, 1969, the vice president of the company came in from Missouri and told the workers the factory was closing that day. Production left Vermont.\n\nThe building sat. In 1983 a man named Rick Davis bought it and cut it into space for small businesses, which is still what it is. That move, repeated up and down this street, is how a corridor of dead factories became an arts district. The South End Art Hop runs its thirty-fourth year in September of 2026, free, across more than a hundred locations along a two-mile stretch of this neighborhood.\n\nNow stop looking at the buildings and think about the ground.\n\nA few blocks south of here is the Pine Street Barge Canal. It is a federal Superfund site. Thirty-eight acres: a canal, a turning basin, wetlands, and a pond.\n\nA plant on Pine Street used to make the city's gas by cooking coal. It ran until 1966. The waste went into the wetland. In the 1960s and 1970s an oil-like material began seeping out of the ground into the canal and the basin, and Burlington drinks from Lake Champlain. The Environmental Protection Agency settled on a remedy in 1998 and finished the work in 2004, capping the contaminated sediment underwater instead of digging it out.\n\nThe pond the coal tar seeped into had a name. It was called Maltex Pond.",
    "sources": [
     {
      "label": "UVM HP206, Karyn Norwood, \"From Cereal to Can Openers: Historic Industries along Pine Street\"",
@@ -1027,26 +1190,27 @@
      "supports": "The 2026 event is the \"34th Annual South End Art Hop\", September 11-13, 2026; \"Visit 100+ locations over a 2 mile stretch\"; it is family friendly and free to attend."
     }
    ],
-   "coord_source": "OpenStreetMap way 201654316 (Maltex Building, 431 Pine Street); standing point offset east to the Pine Street sidewalk",
-   "coord_confidence": "medium",
-   "coord_verified": "approved-in-bulk-2026-08-23",
+   "coord_source": "OpenStreetMap way 201654316 (Maltex Building, 431 Pine Street); standing point offset east to the Pine Street sidewalk (moved by fact-check 2026-08-23)",
+   "coord_confidence": "high",
+   "coord_verified": "factcheck-2026-08-23",
    "enabled": true,
    "presented_by": null,
    "audio": "audio/pine-street-south-end.mp3",
-   "audio_hash": "5550f17fd3e8c89d",
-   "duration_s": 123,
-   "updated": "2026-08-23"
+   "audio_hash": "81a4bce0550c0a70",
+   "duration_s": 127,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "richardson-building",
    "title": "Richardson Place",
    "tease": "The turrets say Richardson but everyone here says Abernethy's",
    "hood": "downtown",
-   "stand_at": "Stand on the east sidewalk of Church Street about halfway between Pearl and Cherry, looking back up the hill at the brick building with the round turrets.",
-   "lat": 44.47998,
-   "lng": -73.21266,
+   "stand_at": "Stand on the west side of the Church Street mall, a little below Pearl, looking back up the hill at the brick building with the round turrets.",
+   "lat": 44.4799,
+   "lng": -73.21285,
    "radius_m": 50,
-   "script": "Up the hill from you, on the east side of Church Street, there is a castle. Brick, with round bays that bulge out from the corners and finish in cone-shaped roofs, and dormers punched into a steep roofline.\n\nThe style is called Chateauesque. Chateau, French for castle. It is one of very few buildings in Burlington that use it.\n\nThis is 2 Church Street, built in 1895, and it did not go up as a shop. It went up as a department store, the largest in Burlington, planted at the top of the hill where Church Street starts.\n\nThat siting was not an accident of the market. Church Street runs four blocks, from Pearl at the top down to Main at the bottom. From almost anywhere on it, if you look uphill, those cones are what closes the view.\n\nIt is one of three buildings in the Head of Church Street Historic District, all added to the National Register of Historic Places together in July of 1974. A church, a Masonic lodge and a store, at one intersection.\n\nNow look at the small balconies on the front. There is a letter worked into the ironwork. An R. That is the Richardson in Richardson Place, put on the building the year it opened, and it is still up there.\n\nHere is the thing. Almost nobody who grew up in Burlington calls this the Richardson Building. They call it Abernethy's. Abernethy's Department Store filled these floors for decades, selling high-end clothing and accessories for men and women, and it stayed until the 1980s. Ask anybody on this street over sixty what building you are looking at, and Abernethy's is the answer you will get.\n\nThe R is still on the railing. The name people actually use belongs to somebody else.",
+   "script": "Up the hill from you, on the east side of Church Street, there is a castle. Brick, with round bays that bulge out from the corners and finish in cone-shaped roofs, and dormers punched into a steep roofline.\n\nThe style is called Chateauesque. Chateau, French for castle. It is one of very few buildings in Burlington that use it.\n\nThis is 2 Church Street, built in 1895, and it did not go up as a shop. It went up as a department store, the largest in Burlington, planted at the top of the hill where Church Street starts.\n\nThat siting was not an accident of the market. Church Street runs four blocks, from Pearl at the top down to Main at the bottom. From almost anywhere on it, if you look uphill, the white church closes the view, and this building is one of the two that frame it.\n\nIt is one of three buildings in the Head of Church Street Historic District, all added to the National Register of Historic Places together in July of 1974. A church, a Masonic lodge and a store, at one intersection.\n\nNow look at the small balconies on the front. There is a letter worked into the ironwork. An R. That is the Richardson in Richardson Place, from the year it opened. Abernethy's covered those R's with gold A's, and the R's came back in nineteen eighty-three.\n\nHere is the thing. Almost nobody who grew up in Burlington calls this the Richardson Building. They call it Abernethy's. Abernethy's Department Store filled these floors for decades, selling high-end clothing and accessories for men and women, and it stayed until the 1980s. The store was here so long that the name stuck to the building and never came off.\n\nThe R is back on the railing. The name people actually use belongs to somebody else.",
    "sources": [
     {
      "label": "Church Street Marketplace — Historic Tours",
@@ -1064,26 +1228,27 @@
      "supports": "The Church Street Marketplace runs four blocks between Main and Pearl streets; the Head of Church Street Historic District, listed 1974, includes the Masonic Temple and Richardson Place."
     }
    ],
-   "coord_source": "OpenStreetMap way 614527246 (Richardson (Abernathy) building, 2 Church Street) via Nominatim, offset south along Church Street between the OSM Church x Pearl node (44.48044, -73.21278) and Church x Cherry node (44.47930, -73.21271)",
+   "coord_source": "OpenStreetMap way 614527246 (Richardson (Abernathy) building, 2 Church Street) via Nominatim, offset south along Church Street between the OSM Church x Pearl node (44.48044, -73.21278) and Church x Cherry node (44.47930, -73.21271) (moved by fact-check 2026-08-23)",
    "coord_confidence": "high",
-   "coord_verified": "approved-in-bulk-2026-08-23",
+   "coord_verified": "factcheck-2026-08-23",
    "enabled": true,
    "presented_by": null,
    "audio": "audio/richardson-building.mp3",
-   "audio_hash": "55a8723b41813ff4",
-   "duration_s": 107,
-   "updated": "2026-08-23"
+   "audio_hash": "d5fa8e9720731c50",
+   "duration_s": 101,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "st-pauls-cathedral",
    "title": "St. Paul's Cathedral",
    "tease": "The church burned and the city traded it a lake view",
    "hood": "downtown",
-   "stand_at": "Stand in the plaza on the Cherry Street side of the concrete cathedral, near the tall bell tower, facing the lake.",
-   "lat": 44.47978,
-   "lng": -73.21845,
+   "stand_at": "Stand on the Cherry Street side of the concrete cathedral, out past its west wall on the lake side, facing the water.",
+   "lat": 44.47972,
+   "lng": -73.21864,
    "radius_m": 60,
-   "script": "In front of you is a wall of raw concrete. Poured in place, left rough, nothing faced over it. This is the Cathedral Church of St. Paul, and that tall element beside the sanctuary is a bell tower.\n\nGo closer to it. The bells inside are older than everything around them. There are eight of them, cast in 1895 by the Meneely bell foundry in Troy, New York. They spent their first seventy-six years hanging in a completely different building.\n\nThat building was a Gothic Revival stone church, dedicated in 1832, and it stood on Bank Street between St. Paul and Pine, a few blocks east of here and up the hill. The parish had organized in 1830. Its first service was held in the old courthouse on June 12, 1831. The church was enlarged three times, in 1851, in 1866, and in 1910. In 1965 the diocese made it the cathedral of Vermont.\n\nOn February 15, 1971, it burned.\n\nWhat happened next only happens in a city in the middle of urban renewal. The parish's block, occupied for almost a hundred and forty years, was useful to the city's redevelopment plans. So the city offered a trade. Land down here, on the edge of the bluff, looking west at Lake Champlain and the Adirondacks.\n\nThey took it. An international design competition went to Thomas Cullins and William Henderson of Burlington Associates. The new cathedral was consecrated on November 11, 1973, two and a half years after the fire.\n\nInside it is concrete, white oak, acoustic panelling and slate, with a glass wall aimed at the water. Outside it is Brutalism, and the concrete is doing exactly what the style asks for: it shows you how the building was made.\n\nThe building is 1973. The bells in its tower were cast in 1895.",
+   "script": "In front of you is a wall of raw concrete. Poured in place, left rough, nothing faced over it. This is the Cathedral Church of St. Paul, and that tall element beside the sanctuary is a bell tower.\n\nGo closer to it. The bells inside are older than everything around them. There are eight of them, cast in 1895 by the Meneely bell foundry in Troy, New York. They spent their first seventy-six years hanging in a completely different building.\n\nThat building was a Gothic Revival stone church, dedicated in 1832, and it stood on Bank Street between St. Paul and Pine, a few blocks east of here and up the hill. The parish had organized in 1830. Its first service was held in the old courthouse on June 12, 1831. The church was enlarged three times, in 1851, in 1866, and in 1910. In 1965 the diocese made it the cathedral of Vermont.\n\nOn a February night in 1971, it burned.\n\nWhat happened next only happens in a city in the middle of urban renewal. The parish's block, occupied for almost a hundred and forty years, was useful to the city's redevelopment plans. So the city offered a trade. Land down here, on the edge of the bluff, looking west at Lake Champlain and the Adirondacks.\n\nThey took it. An international design competition went to Thomas Cullins and William Henderson of Burlington Associates. The new cathedral was consecrated on November 11, 1973, less than three years after the fire.\n\nInside it is concrete, white oak, acoustic panelling and slate, with a glass wall aimed at the water. Outside it is Brutalism, and the concrete is doing exactly what the style asks for: it shows you how the building was made.\n\nThe building is 1973. The bells in its tower were cast in 1895.",
    "sources": [
     {
      "label": "Wikipedia — Cathedral Church of St. Paul (Burlington, Vermont)",
@@ -1101,15 +1266,16 @@
      "supports": "The original church stood 'on Bank Street between St. Paul and Pine Streets'; it was destroyed by fire in 1971 and the existing St. Paul's Cathedral was built on a new site on Cherry Street."
     }
    ],
-   "coord_source": "OpenStreetMap way 166149260 (Saint Pauls Cathedral Episcopal Church, 2 Cherry Street), centroid 44.47996 / -73.21849, from https://api.openstreetmap.org/api/0.6/map?bbox=-73.2260,44.4700,-73.2050,44.4830 ; standing point offset to the Cherry Street side of the building",
+   "coord_source": "OpenStreetMap way 166149260 (Saint Pauls Cathedral Episcopal Church, 2 Cherry Street), centroid 44.47996 / -73.21849, from https://api.openstreetmap.org/api/0.6/map?bbox=-73.2260,44.4700,-73.2050,44.4830 ; standing point offset to the Cherry Street side of the building (moved by fact-check 2026-08-23)",
    "coord_confidence": "high",
-   "coord_verified": "approved-in-bulk-2026-08-23",
+   "coord_verified": "factcheck-2026-08-23",
    "enabled": true,
    "presented_by": null,
    "audio": "audio/st-pauls-cathedral.mp3",
-   "audio_hash": "eb6ee484488e2665",
-   "duration_s": 113,
-   "updated": "2026-08-23"
+   "audio_hash": "3be20b4e4580d11a",
+   "duration_s": 121,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "the-flynn",
@@ -1117,10 +1283,10 @@
    "tease": "Vermont opened a half-million-dollar palace into the Depression",
    "hood": "downtown",
    "stand_at": "Stand on the Main Street sidewalk outside 153 Main Street, facing the marquee.",
-   "lat": 44.47586,
+   "lat": 44.4758,
    "lng": -73.21312,
    "radius_m": 50,
-   "script": "You are looking at the marquee of the Flynn, 153 Main Street. Flat facade, big lit sign, the whole thing pushed right up to the sidewalk.\n\nOn the night of Wednesday, November 26, 1930, floodlights danced above Burlington to herald what was billed as Vermont's newest and largest entertainment palace. It cost 500,000 dollars. It was the idea of a local entrepreneur named John J. Flynn and his investors in the Queen City Realty Company, and it was designed as a state-of-the-art facility for both touring stars of vaudeville and motion pictures.\n\nSit with that date for a second. November 1930. The stock market had crashed thirteen months earlier. Burlington opened a half-million-dollar Art Deco theater into the first full winter of the Great Depression.\n\nHere is the surprise. The building was designed for live vaudeville, and the first thing that ever ran on that stage was a movie. A comedy called Big Money.\n\nThe architects were William Luther Mowll and Roger Glade Rand. What they delivered was not just a hall. Flynn and his backers called it an entertainment complex, a state-of-the-art facility built to hold two kinds of show at once.\n\nThere was an organ, too. A Wurlitzer built in 1925, opus 1200, Style H. It started life at Burlington's Majestic Theatre, moved here, and eventually left for a local convent.\n\nThen multiplexes arrived in the 1970s and the theater declined. In 1981 the Lyric Theatre company rediscovered the building, and restoration of the Art Deco theater began that year. A second wave of work in the late 1990s and early 2000s took the interior back toward its original look and added FlynnSpace, a smaller performance venue downstairs.\n\nIt stopped being a movie house. It runs on live performance now, as the Flynn Center for the Performing Arts.\n\nThe Flynn was recognized by the Art Deco Societies of America as one of the country's ten most important Art Deco restoration projects.",
+   "script": "You are looking at the marquee of the Flynn, 153 Main Street. Flat facade, big lit sign, the whole thing pushed right up to the sidewalk.\n\nOn the night of Wednesday, November 26, 1930, floodlights danced above Burlington to herald what was billed as Vermont's newest and largest entertainment palace. It cost 500,000 dollars. It was the idea of a local entrepreneur named John J. Flynn and his investors in the Queen City Realty Company, and it was designed as a state-of-the-art facility for both touring stars of vaudeville and motion pictures.\n\nSit with that date for a second. November 1930. The stock market had crashed thirteen months earlier. Burlington opened a half-million-dollar Art Deco theater into the first full winter of the Great Depression.\n\nHere is the surprise. The building was designed for live vaudeville, and the first thing that ever ran on that stage was a movie. A comedy called Big Money.\n\nThe architects were William Luther Mowll and Roger Glade Rand. What they delivered was not just a hall. Flynn and his backers called it an entertainment complex, a state-of-the-art facility built to hold two kinds of show at once.\n\nThere was an organ, too. A Wurlitzer built in 1925, opus 1200, Style H. It started life at Burlington's Majestic Theatre, moved here, and by most accounts ended up in a Burlington convent.\n\nThen multiplexes arrived in the 1970s and the theater declined. Lyric Theatre had been staging shows here since nineteen seventy-four, and in nineteen eighty-one restoration of the Art Deco theater began. A second wave of work in the late 1990s and early 2000s took the interior back toward its original look and added FlynnSpace, a smaller performance venue downstairs.\n\nIt stopped being a movie house. It runs on live performance now, as the Flynn Center for the Performing Arts.\n\nThe Flynn was recognized by the Art Deco Societies of America as one of the country's ten most important Art Deco restoration projects.",
    "sources": [
     {
      "label": "Flynn — History",
@@ -1133,15 +1299,16 @@
      "supports": "Architects William Luther Mowll and Roger Glade Rand; the November 26, 1930 opening; the theater designed for live vaudeville but opening with the movie 'Big Money'; the 1925 Wurlitzer organ, opus 1200, Style H, originally at Burlington's Majestic Theatre, moved to the Flynn and later relocated to a local convent; decline as multiplexes emerged in the 1970s; the Lyric Theatre group rediscovering it in 1981; late-1990s/early-2000s restoration to the original Art Deco aesthetic and the addition of FlynnSpace."
     }
    ],
-   "coord_source": "OpenStreetMap node 366667624 (Flynn Theatre, 153 Main Street) via https://nominatim.openstreetmap.org/search?format=json&q=Flynn%20Theatre%2C%20Burlington%2C%20Vermont at 44.47576,-73.21312; Main Street centerline at that longitude is 44.47592 (OSM Main Street way geometry), so the theater is on the south side and the sidewalk point is 44.47586.",
+   "coord_source": "OpenStreetMap node 366667624 (Flynn Theatre, 153 Main Street) via https://nominatim.openstreetmap.org/search?format=json&q=Flynn%20Theatre%2C%20Burlington%2C%20Vermont at 44.47576,-73.21312; Main Street centerline at that longitude is 44.47592 (OSM Main Street way geometry), so the theater is on the south side and the sidewalk point is 44.47586. (moved by fact-check 2026-08-23)",
    "coord_confidence": "high",
-   "coord_verified": "approved-in-bulk-2026-08-23",
+   "coord_verified": "factcheck-2026-08-23",
    "enabled": true,
    "presented_by": null,
    "audio": "audio/the-flynn.mp3",
-   "audio_hash": "e5622390f4f7a63e",
-   "duration_s": 127,
-   "updated": "2026-08-23"
+   "audio_hash": "662bd11c6edde142",
+   "duration_s": 134,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "uvm-green",
@@ -1152,7 +1319,7 @@
    "lat": 44.47824,
    "lng": -73.19994,
    "radius_m": 90,
-   "script": "You are standing on a rectangle of grass that a university was built around. Look east at the long building with the tower. That is Old Mill. It is not one building.\n\nThe University of Vermont was chartered in 1791, the same year Vermont became the fourteenth state. It was the fifth college in New England, after Harvard, Yale, Dartmouth and Brown. Ira Allen led the drive to charter it and to put it here, on the hill above Burlington Bay. The bronze Ira Allen on this green is much newer. James Wilbur donated it to the university in 1921.\n\nThe first college building went up on this spot in 1801 and 1802. On May 28, 1824, it burned to the ground. A student had been feeding wood shavings into a stove. The draft carried the glowing shavings up a brick chimney and dropped them back down onto a corner of the roof.\n\nBurlington paid to rebuild. In August of 1824 a citizens' committee announced it had raised $8,362.\n\nNow the part that surprises people. They did not put up one building. They put up two, three stories each, set seven or eight feet apart on purpose so a fire could not jump between them. Governor Cornelius Van Ness laid the cornerstone of North College on April 26, 1825.\n\nTwo months later Burlington got a celebrity. The Marquis de Lafayette was thirteen months into a tour of all twenty-four states. On the evening of June 29, 1825, he laid the cornerstone of South College with Masonic rites, anointing it with oil, wine and corn. Then he went to dinner at Grasse Mount and left that night by steamboat.\n\nA third building, Middle College, filled the gap in 1829. The row was finally connected in 1846.\n\nLafayette's cornerstone is still in that wall. It was reset there during the remodeling of 1882.",
+   "script": "You are standing on a rectangle of grass that a university was built around. Look east at the long building with the tower. That is Old Mill. It is not one building.\n\nThe University of Vermont was chartered in 1791, the same year Vermont became the fourteenth state. It was the fifth college in New England, after Harvard, Yale, Dartmouth and Brown. Ira Allen led the drive to charter it and to put it here, on the hill above Burlington Bay. The bronze Ira Allen on this green is much newer. James Wilbur donated it to the university in 1921.\n\nThe first college building went up on this spot starting in eighteen oh one. On May 28, 1824, it burned to the ground. A student had been feeding wood shavings into a stove. The draft carried the glowing shavings up a brick chimney and dropped them back down onto a corner of the roof.\n\nBurlington paid to rebuild. In August of 1824 a citizens' committee announced it had raised $8,362.\n\nNow the part that surprises people. They did not put up one building. They put up two, three stories each, set seven or eight feet apart on purpose so a fire could not jump between them. Governor Cornelius Van Ness laid the cornerstone of North College on April 26, 1825.\n\nTwo months later Burlington got a celebrity. The Marquis de Lafayette was partway through a thirteen-month tour of all twenty-four states. On the evening of June 29, 1825, he laid the cornerstone of South College with Masonic rites, anointing it with oil, wine and corn. Then he went to dinner at Grasse Mount and left that night by steamboat.\n\nA third building, Middle College, filled the gap in 1829. The row was finally connected in 1846.\n\nLafayette's cornerstone is still in that wall. It was reset there during the remodeling of 1882.",
    "sources": [
     {
      "label": "University of Vermont Catalogue, \"About the University\"",
@@ -1186,9 +1353,10 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/uvm-green.mp3",
-   "audio_hash": "9744b56a243564e0",
-   "duration_s": 118,
-   "updated": "2026-08-23"
+   "audio_hash": "f71cb99db3f9a8b7",
+   "duration_s": 121,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   },
   {
    "id": "waterfront-park",
@@ -1199,7 +1367,7 @@
    "lat": 44.47815,
    "lng": -73.2215,
    "radius_m": 80,
-   "script": "You are standing on a lawn at the edge of a lake. Hold on to that, because for most of this city's history you could not have stood here, and you would not have wanted to.\n\nIn the eighteen hundreds this was one of the busiest lumberyards in the world. When the lumber companies needed more ground, they made it, filling the shallows out into the lake. Part of what is under your feet is manufactured land.\n\nThe Depression finished the lumber trade. By 1935 the failing yards had been replaced with fuel storage holding five and a half million gallons. And it grew. By 1958 there were eighty-three tanks on this waterfront holding eighty-four million gallons. Around them: rail sidings, junkyards, rusting equipment, a coal-burning power plant, and derelict boats rotting in the harbor.\n\nGetting out of that took decades. In 1975 the city passed an ordinance giving the oil companies twenty years to leave. A 1982 poll found eighty-one percent of people here wanted public access to the water. In December of 1985, voters killed a bond that would have put condominiums, a seven story hotel and a parking garage on this ground.\n\nThen the argument went to court. In 1989 the Vermont Supreme Court ruled that filled land on this lakefront is impressed by the public trust doctrine. It belongs to the public, and it can only be used for parks, recreation and things that actually need to be on the water. That decision let the city acquire more than sixty acres from the railroad. It also made the land cheap, because nobody could put condominiums on it anymore.\n\nThe community boathouse opened in 1988. This park, ten and a half acres of it, opened with its boardwalk in 1991.\n\nThe work did not stop there. In August of 2014 the city broke ground on the stretch north of here: a rebuilt bike path, environmental cleanup, power lines buried, and a public skate park. That package cost nine point one million dollars, and the ribbon was cut in November of 2015.",
+   "script": "You are standing on a lawn at the edge of a lake. Hold on to that, because for most of this city's history you could not have stood here, and you would not have wanted to.\n\nIn the eighteen hundreds this was the third busiest lumber port in the country. When the lumber companies needed more ground, they made it, filling the shallows out into the lake. Part of what is under your feet is manufactured land.\n\nThe Depression finished the lumber trade. By 1935 the failing yards had been replaced with fuel storage holding five and a half million gallons. And it grew. By 1958 there were eighty-three tanks on this waterfront holding eighty-four million gallons. Around them: rail sidings, junkyards, rusting equipment, a coal-burning power plant, and derelict boats rotting in the harbor.\n\nGetting out of that took decades. In 1975 the city passed an ordinance giving the oil companies twenty years to leave. In a 1982 poll by a group called Citizens Waterfront, eighty-one percent of those asked wanted public access to the water. In December of 1985 a bond that would have put condominiums, a seven story hotel and a parking garage here won a majority, fell short of the two thirds it needed, and died.\n\nThen the argument went to court. In 1989 the Vermont Supreme Court ruled that filled land on this lakefront is impressed by the public trust doctrine. It belongs to the public, and it can only be used for parks, recreation and things that actually need to be on the water. That decision let the city acquire more than sixty acres from the railroad. It also made the land cheap, because nobody could put condominiums on it anymore.\n\nThe community boathouse opened in 1988. This park, ten and a half acres of it, opened with its boardwalk in 1991.\n\nThe work did not stop there. In August of 2014 the city broke ground on the stretch north of here: a rebuilt bike path, environmental cleanup, power lines buried, and a public skate park. That package cost nine point one million dollars, and the ribbon was cut in November of 2015.",
    "sources": [
     {
      "label": "UVM Burlington Geographic — Evolution of Burlington on the Waterfront",
@@ -1223,9 +1391,10 @@
    "enabled": true,
    "presented_by": null,
    "audio": "audio/waterfront-park.mp3",
-   "audio_hash": "df6d786206578580",
-   "duration_s": 125,
-   "updated": "2026-08-23"
+   "audio_hash": "c0ebf4671687dbc9",
+   "duration_s": 129,
+   "updated": "2026-08-23",
+   "factchecked": "2026-08-23"
   }
  ]
 }
