@@ -109,8 +109,8 @@
             (item.why ? '<p class="tv-why">' + esc(item.why) + '</p>' : '') +
           '</div>' +
         '</a>' +
-        '<div class="tv-acts" role="group" aria-label="Your reaction">' +
-          act('watched', '✓ Watched', state) + act('skip', '✕ Not for me', state) + act('more', '♥ More like this', state) +
+        '<div class="tv-acts" role="group" aria-label="Your reaction — watched, not for me, more like this">' +
+          act('watched', '✓ Watched', state) + act('skip', '✕ Not for me', state) + act('more', '♥ More', state) +
         '</div>' +
       '</article>';
   }

@@ -131,7 +131,7 @@
 .tv-acts { display: flex; gap: 4px; padding: 0 8px 10px; margin-top: auto; }
 .tv-act {
   flex: 1; background: none; border: 1px solid transparent; border-radius: var(--radius-md);
-  color: var(--ink-3); font: inherit; font-size: var(--text-xs); padding: 6px 4px; cursor: pointer;
+  color: var(--ink-3); font: inherit; font-size: var(--text-xs); padding: 6px 4px; cursor: pointer; white-space: nowrap;
   transition: background var(--duration-fast), color var(--duration-fast);
 }
 .tv-act:hover, .tv-act:focus-visible { background: var(--bg-subtle); color: var(--ink); outline: none; }
