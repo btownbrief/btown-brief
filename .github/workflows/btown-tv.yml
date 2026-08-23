@@ -15,12 +15,6 @@ name: Btown TV — tonight's edition
 # The playlist sync and the reader-signal read both fail soft on their own.
 
 on:
-  # TEMPORARY — lets the feature branch exercise the run before merge
-  # (workflow_dispatch only resolves files on the default branch). Remove
-  # before the PR merges.
-  push:
-    branches: [feat/btown-tv]
-    paths: ['.github/workflows/btown-tv.yml', 'scripts/curate_tv.py', 'prompts/tv-taste.md', 'data/tv-vault.json']
   schedule:
     # 21:40 UTC = 5:40pm EDT / 4:40pm EST — after the 21:17 refresh-youtube
     # tick, before dinner. One edition a day; "Tonight" is the page.

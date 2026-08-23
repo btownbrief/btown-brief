@@ -41,6 +41,20 @@ done. Couples watch it together. The TV is the screen, not the phone.
 - **Sports, sparingly, as story.** A classic game, a great 60 Minutes athlete piece,
   a documentary — not highlights, not takes, not "should the Celtics trade…".
 
+## What the editor's own thirteen years of watching says (generalized)
+
+The Vault was pulled from the editor's saves and rewatches. The signals that
+generalize to a room full of Burlingtonians, in order of how strongly they show up:
+long-form over clips (even on a phone); science and explainers with production
+value; long conversations with scientists (the Brian Cox / Sean Carroll kind, not
+the culture-war kind); evergreen satire and sketch over nightly monologues; R&B /
+neo-soul live sessions (Tiny Desk, COLORS) and a long Sunday-morning DJ mix as a
+signature, not a filler; basketball as story — a classic full game, a JJ Redick
+breakdown — never a highlight farm; film essays; Hot Ones; street-level docs
+(Channel 5); food craft you'd cook (Kenji, Weissman, "4 Levels"). Tone: warm over
+edgy, curious over outraged, and he'll happily sit through an hour if it's good.
+On a Sunday, a long DJ mix or a full classic game can lead the Vault shelf.
+
 ## What we're against
 
 - Outrage, doom, partisan bait, "breaking," anything whose energy is *you should be
@@ -74,8 +88,10 @@ Write the reason like a friend would: what happens, why it's worth an evening.
   Frontline, DW, the Grace Potter sit-down. 20 min and up, vary the subjects.
 - **Quick one** — 5–12 minutes that deliver a whole idea. Half as Interesting,
   MinuteEarth at its best, a Stuck in Vermont episode, a Tiny Desk.
-- **Burlington & Vermont** — anything real and local. Fewer is fine. Never pad it
-  with a realty listing, a flight vlog, or a webcam.
+- **Burlington & Vermont** — anything real and local. Fewer is fine; two is fine;
+  zero is fine. Never pad it: a realty listing, a flight vlog, a webcam, a ski-gear
+  roundup, a board meeting, or an indie wrestling match with nineteen views is not
+  a Vermont pick. A 6-minute Vermont Public explainer beats all of those.
 - **From the Vault** — timeless, from thirteen years of the editor's own saves:
   the talk you'll think about for a week, the documentary everyone should see once,
   the performance, the essay. Vary lanes; don't let it become six music mixes.
@@ -86,8 +102,9 @@ Write the reason like a friend would: what happens, why it's worth an evening.
 ## Voice for the one-line reasons
 
 Plain, warm, specific. Say what it is and why tonight. No "must-watch," no
-"incredible," no exclamation points, no colons-as-drama. End on the fact. 90
-characters is the ceiling; 60 is better.
+"incredible," no "still the best thing on YouTube," no exclamation points, no
+colons-as-drama. End on the fact. Aim for 60–75 characters; 90 is the hard
+ceiling — a reason that gets cut mid-word is worse than a shorter one.
 
 Good: "Kenji eats his way through a Tokyo 7-Eleven. You will want a sando."
 Good: "Grace Potter on sneaking into venues as a kid. Fifty-three easy minutes."

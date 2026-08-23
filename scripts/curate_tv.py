@@ -70,7 +70,8 @@ SB_URL = "https://jnouvwxomrcffqwilqkq.supabase.co"
 SB_KEY = "sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3"   # anon — safe
 
 MODEL = "claude-opus-5"
-WHY_MAX = 90
+WHY_MAX = 90              # the prompt's hard ceiling
+WHY_KEEP = 100            # what validate() tolerates before trimming
 FRESH_DAYS = 7            # an "upload" is this week's
 GOLD_REST_DAYS = 30       # an old-gold pick rests this long before it can return
 VAULT_REST_DAYS = 45
@@ -621,7 +622,7 @@ def validate(raw, index):
         ch = item.get("ch", "")
         if per_channel.get(ch, 0) >= 2:
             return None
-        why = trim(str(entry.get("why") or ""), WHY_MAX)
+        why = trim(str(entry.get("why") or ""), WHY_KEEP)
         if not why:
             return None
         used.add(item["id"])
@@ -908,7 +909,7 @@ def selftest():
     assert [v["id"] for v in shelves["vault"]] == ["vault000001"]
     assert [v["id"] for v in shelves["gold"]] == ["old00000001"]
     assert shelves["bench"] == []
-    assert all("why" in v and len(v["why"]) <= WHY_MAX for v in
+    assert all("why" in v and len(v["why"]) <= WHY_KEEP for v in
                [pick] + [x for s in shelves.values() for x in s])
 
     payload = build_payload(pick, shelves, pools["live"], utcnow(),
