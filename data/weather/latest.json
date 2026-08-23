@@ -1,28 +1,28 @@
 {
- "updated": "2026-08-23T15:43:00+00:00",
+ "updated": "2026-08-23T15:59:28+00:00",
  "sections_updated": {
-  "now": "2026-08-23T15:43:00+00:00",
-  "forecast": "2026-08-23T15:43:00+00:00",
-  "hourly": "2026-08-23T15:43:00+00:00",
-  "alerts": "2026-08-23T15:43:00+00:00",
-  "afd": "2026-08-23T15:43:00+00:00",
-  "lake_forecast": "2026-08-23T15:43:00+00:00",
-  "lake_gage": "2026-08-23T15:43:00+00:00",
-  "air": "2026-08-23T15:43:00+00:00",
-  "sun": "2026-08-23T15:43:00+00:00",
-  "models": "2026-08-23T15:43:00+00:00"
+  "now": "2026-08-23T15:59:28+00:00",
+  "forecast": "2026-08-23T15:59:28+00:00",
+  "hourly": "2026-08-23T15:59:28+00:00",
+  "alerts": "2026-08-23T15:59:28+00:00",
+  "afd": "2026-08-23T15:59:28+00:00",
+  "lake_forecast": "2026-08-23T15:59:28+00:00",
+  "lake_gage": "2026-08-23T15:59:28+00:00",
+  "air": "2026-08-23T15:59:28+00:00",
+  "sun": "2026-08-23T15:59:28+00:00",
+  "models": "2026-08-23T15:59:28+00:00"
  },
  "now": {
-  "observed_at": "2026-08-23T15:25:00+00:00",
+  "observed_at": "2026-08-23T15:35:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 72,
   "feels_like_f": 72,
   "humidity": 78,
   "dewpoint_f": 64,
-  "wind_mph": 5,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "SSW"
+  "wind_dir": "S"
  },
  "forecast": {
   "updated": "2026-08-23T11:29:57+00:00",
@@ -853,36 +853,36 @@
     "high_f": {
      "GFS": 75,
      "Euro": 73,
-     "ICON": 72
+     "ICON": 73
     },
     "pop_max": {
      "GFS": 50,
      "Euro": 100,
-     "ICON": 83
+     "ICON": 88
     },
     "precip_in": {
      "GFS": 0.02,
      "Euro": 0.37,
-     "ICON": 0.23
+     "ICON": 0.18
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-08-24",
     "high_f": {
      "GFS": 75,
      "Euro": 70,
-     "ICON": 72
+     "ICON": 74
     },
     "pop_max": {
      "GFS": 30,
      "Euro": 76,
-     "ICON": 28
+     "ICON": 33
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.25,
-     "ICON": 0.07
+     "ICON": 0.05
     },
     "high_spread_f": 5
    },
@@ -896,12 +896,12 @@
     "pop_max": {
      "GFS": 59,
      "Euro": 80,
-     "ICON": 55
+     "ICON": 58
     },
     "precip_in": {
      "GFS": 0.05,
      "Euro": 0.1,
-     "ICON": 0.37
+     "ICON": 0.26
     },
     "high_spread_f": 3
    }
