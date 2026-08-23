@@ -189,6 +189,12 @@
 .tv-past-body { margin-top: 20px; padding: 18px 18px 8px; background: var(--bg-subtle); border-radius: var(--radius-lg); }
 .tv-past-body-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .tv-past-body-head h3 { font-family: var(--font-display); font-size: var(--text-lg); color: var(--ink); font-weight: 600; margin: 0; }
+.tv-past-body-acts { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tv-past-play {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: var(--radius-full);
+  background: var(--coral); color: #fff; text-decoration: none; font-size: var(--text-xs); font-weight: 600;
+}
+.tv-past-play:hover { filter: brightness(1.05); }
 .tv-past-close {
   background: none; border: 1px solid var(--line); color: var(--ink-2); padding: 6px 12px;
   border-radius: var(--radius-full); cursor: pointer; font: inherit; font-size: var(--text-xs);

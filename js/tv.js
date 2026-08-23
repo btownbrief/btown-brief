@@ -278,7 +278,10 @@
     if (open) {
       html += '<div class="tv-past-body">' +
         '<div class="tv-past-body-head"><h3>Edition of ' + fmtNight(open.edition) + '</h3>' +
-          '<button class="tv-past-close" type="button" data-night="' + esc(open.edition) + '">Close</button></div>' +
+          '<span class="tv-past-body-acts">' +
+          (open.playlist && open.playlist.url && /^https:\/\/www\.youtube\.com\/playlist\?list=[A-Za-z0-9_-]+$/.test(open.playlist.url) ?
+            '<a class="tv-past-play" href="' + esc(open.playlist.url) + '" target="_blank" rel="noopener">▶ Play this night on your TV</a>' : '') +
+          '<button class="tv-past-close" type="button" data-night="' + esc(open.edition) + '">Close</button></span></div>' +
         '<div class="tv-past-pick"><div class="tv-pick-label">That night\'s pick</div><div class="tv-grid tv-grid-1">' + card(open.pick) + '</div></div>' +
         (open.shelves || []).map(function (s) {
           if (!s.items || !s.items.length) return '';
@@ -309,7 +312,8 @@
       '</div>' +
       (stale ? '<p class="tv-stale">This is the last edition we made — tonight\'s hasn\'t landed yet.</p>' : '') +
       '<div class="tv-howtext" id="tv-howtext" hidden>' +
-        'Every three hours a script collects new uploads from ~100 channels we follow, a Vermont radar, and each channel\'s back catalog. Before dinner an editor — a model reading a written taste doctrine — throws out clips, trailers, reruns and webcams, then picks one Tonight\'s pick and a few shelves, by index, with a one-line reason for each. Titles are never rewritten. The same picks go into a public YouTube playlist so the edition plays on a TV with one tap. ' +
+        'Every three hours a script collects new uploads from ~100 channels we follow, a Vermont radar, and each channel\'s back catalog. Before dinner an editor — a model reading a written taste doctrine — throws out clips, trailers, reruns and webcams, then picks one Tonight\'s pick and a few shelves, by index, with a one-line reason for each. Titles are never rewritten. ' +
+        'Each night\'s page becomes its own public playlist (the first fifty, in page order) — the "Play tonight on your TV" button — and the last two weeks of those stay up under Past nights. ' +
         'The editor also names a short bench for each shelf — the next few it would stand behind. That\'s what "Show more" unfolds, once, and what steps in when you hide a pick with ✕. It isn\'t a feed: when the bench is out, that\'s the night. Past editions stay up for two weeks under Past nights. ' +
         'Your ✓ ✕ ♥ taps stay on this device and roll up, anonymously, into what the editor sees tomorrow. ' +
         'The taste doctrine is public: <a href="https://github.com/btownbrief/btown-brief/blob/main/prompts/tv-taste.md" target="_blank" rel="noopener">prompts/tv-taste.md</a>.' +
