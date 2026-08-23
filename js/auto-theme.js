@@ -60,7 +60,13 @@
     }
   }, true);
 
-  fetch('data/weather/latest.json', { cache: 'no-cache' })
+  // Resolve against this script's own URL so pages in subfolders (out-loud/) work too.
+  var weatherUrl = 'data/weather/latest.json';
+  try {
+    var here = document.currentScript && document.currentScript.src;
+    if (here) weatherUrl = new URL('../data/weather/latest.json', here).href;
+  } catch (e) {}
+  fetch(weatherUrl, { cache: 'no-cache' })
     .then(function (r) { return r.json(); })
     .then(function (d) {
       var sun = (d && d.sun) || {};

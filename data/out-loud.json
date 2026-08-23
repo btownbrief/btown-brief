@@ -1,0 +1,83 @@
+{
+ "_note": "Btown Out Loud story pins. Scripts are human-reviewed via scripts/out_loud_review.py before they land here; audio via scripts/build_out_loud_audio.py. Engine rules: out-loud/engine.js.",
+ "updated": "2026-08-23",
+ "voice": {
+  "provider": "browser",
+  "about": "Every story is written by a person from cited sources and reviewed before it goes live — tap Where this comes from under any story. The narration will be a studio-grade synthetic voice; until those recordings land, your phone's built-in voice reads the script."
+ },
+ "routes": [
+  {
+   "id": "downtown-loop",
+   "title": "The Downtown Loop",
+   "blurb": "Roughly 1.7 miles, mostly flat with one climb back up from the lake. Budget 90–120 minutes at a casual pace, more if you linger at the waterfront.",
+   "steps": [
+    {
+     "pin": "unitarian-church",
+     "directions": "Face south and start walking down Church Street Marketplace.",
+     "minutes_to_next": 3
+    },
+    {
+     "pin": "church-street-marketplace",
+     "directions": "Continue south to the bottom of Church Street, where City Hall faces the park.",
+     "minutes_to_next": 3
+    },
+    {
+     "pin": "city-hall-park",
+     "directions": "Head west one block on College Street to the library.",
+     "minutes_to_next": 3
+    },
+    {
+     "pin": "fletcher-free-library",
+     "directions": "Backtrack toward Church Street and head north on Cherry Street toward Battery Park. The route goes slightly uphill, then down toward the bluff.",
+     "minutes_to_next": 9
+    },
+    {
+     "pin": "little-italy-urban-renewal",
+     "directions": "Continue north into Battery Park.",
+     "minutes_to_next": 2
+    },
+    {
+     "pin": "battery-park",
+     "directions": "Walk south along Battery Street, back the way you came, taking in the historic houses.",
+     "minutes_to_next": 7
+    },
+    {
+     "pin": "battery-street-historic-district",
+     "directions": "Continue south and then down the hill toward the waterfront — via Pine Street or the Battery Street stairs/path — to Union Station.",
+     "minutes_to_next": 9
+    },
+    {
+     "pin": "union-station-waterfront",
+     "directions": "Walk north along the waterfront bike path toward the old power plant.",
+     "minutes_to_next": 5
+    },
+    {
+     "pin": "moran-plant-frame",
+     "directions": "Walk back south along the waterfront path, past Union Station, toward ECHO.",
+     "minutes_to_next": 8
+    },
+    {
+     "pin": "echo-leahy-center",
+     "directions": "Walk out onto the bike path or the fishing pier just south of ECHO for the breakwater view.",
+     "minutes_to_next": 3
+    },
+    {
+     "pin": "breakwater",
+     "directions": "Head back up College Street toward downtown, retracing part of your earlier route. This stretch is uphill.",
+     "minutes_to_next": 9
+    },
+    {
+     "pin": "memorial-auditorium",
+     "directions": "Walk half a block to Nectar's.",
+     "minutes_to_next": 1
+    },
+    {
+     "pin": "nectars",
+     "directions": "Walk northwest back up to Church Street and climb to the top.",
+     "minutes_to_next": 7
+    }
+   ]
+  }
+ ],
+ "pins": []
+}
