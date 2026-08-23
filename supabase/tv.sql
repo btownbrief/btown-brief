@@ -4,6 +4,8 @@
 -- nightly editor), same project + anon-key pattern as pulse.sql:
 --   tv_react(p_player, p_kind, p_vid, p_title, p_channel)   a reader tapped
 --       watched / skip ("not for me") / more ("more like this") on a card
+--   tv_unreact(p_player, p_kind, p_vid)                     the reader took a
+--       tap back (toggle off / Undo / switched kinds) — deletes their row(s)
 --   tv_signals(p_days)                                      aggregated counts the
 --       editor reads before picking: skipped videos, watched videos, and the
 --       channels readers want more of
@@ -14,7 +16,8 @@
 --    additive counters, capped per player per day.
 --  * The PAGE hides what YOU watched via localStorage; the EDITOR only ever sees
 --    aggregates (distinct-player counts), so one person can't steer the page.
---    curate_tv.py drops a video only when >= 2 distinct players said "not for me".
+--    curate_tv.py drops a video when >= SKIP_MIN distinct players said "not for
+--    me" (1 while the audience is small — see the constant in curate_tv.py).
 --  * Tables are locked (RLS on, no policies). The anon key reaches the data only
 --    through the SECURITY DEFINER functions below.
 --  * Safe to run more than once (idempotent). Paste into the Supabase SQL editor.
@@ -66,6 +69,27 @@ begin
 end;
 $$;
 
+-- A reader taking a tap back. Deletes every row for that player/kind/vid (any
+-- day), so an un-✕ really un-counts. Idempotent; no-op if nothing matches.
+create or replace function public.tv_unreact(
+  p_player uuid, p_kind text, p_vid text
+) returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if p_kind not in ('watched', 'skip', 'more') then
+    raise exception 'bad kind';
+  end if;
+  if p_vid is null or p_vid !~ '^[A-Za-z0-9_-]{11}$' then
+    raise exception 'bad video id';
+  end if;
+  delete from tv_reactions
+   where player = p_player and kind = p_kind and vid = p_vid;
+end;
+$$;
+
 -- One row per (kind, vid, channel) for watched/skip and per (kind, channel)
 -- for more, with n = distinct players. The editor reads this once a night and
 -- also sums skips per channel (a channel readers keep passing on is flagged).
@@ -92,8 +116,10 @@ $$;
 
 -- ------------------------------------------------------------------- grants
 revoke all on function public.tv_react(uuid, text, text, text, text) from public;
+revoke all on function public.tv_unreact(uuid, text, text)           from public;
 revoke all on function public.tv_signals(integer)                    from public;
 grant execute on function public.tv_react(uuid, text, text, text, text) to anon;
+grant execute on function public.tv_unreact(uuid, text, text)           to anon;
 grant execute on function public.tv_signals(integer)                    to anon;
 
 -- ------------------------------------------------- handy operator queries

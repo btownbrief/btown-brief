@@ -20,10 +20,18 @@ three hours. This script is the editor that runs once a day on top of it:
      written, in order, into a public YouTube playlist so the edition plays
      on the TV app with one click.
 
+The editor also names a BENCH for each shelf (and two runner-up picks): the
+next-best items in that lane, same rules, same reasons. The page keeps them
+folded — one "show more" per shelf, and a reader's ✕ on a pick swaps the
+editor's next alternate in — so the page stays finite but never dead-ends.
+The bench never goes to the playlist and is not remembered as "shown".
+
 Memory lives on the branch too: data/tv-history.json remembers what the
-page showed (so old gold and vault rotate instead of repeating), and the
-reader reactions table in Supabase (supabase/tv.sql) feeds back "watched /
-not for me / more like this" as signals — all of it fails soft.
+page showed (so old gold and vault rotate instead of repeating),
+data/tv-editions.json keeps the last two weeks of editions for the page's
+"Past nights" strip, and the reader reactions table in Supabase
+(supabase/tv.sql) feeds back "watched / not for me / more like this" as
+signals — all of it fails soft.
 
 Failure posture, same as the siblings: no key, no candidates, or any API
 trouble logs and exits 0 without writing, so the workflow stays green and
@@ -35,6 +43,8 @@ CLI:
                    (default data/tv-history.json)
   --vault PATH     enriched vault copy, read AND rewritten (default
                    data/tv-vault-live.json)
+  --editions PATH  the past-editions archive, read AND rewritten
+                   (default data/tv-editions.json)
   --no-playlist    skip the YouTube playlist sync
   --selftest       run the offline checks and exit
 """
@@ -55,6 +65,7 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 OUT = os.path.join(ROOT, "data", "btown-tv.json")
 HISTORY = os.path.join(ROOT, "data", "tv-history.json")
 VAULT_LIVE = os.path.join(ROOT, "data", "tv-vault-live.json")
+EDITIONS = os.path.join(ROOT, "data", "tv-editions.json")
 VAULT_SEED = os.path.join(ROOT, "data", "tv-vault.json")
 TASTE = os.path.join(ROOT, "prompts", "tv-taste.md")
 CHANNELS_FILE = os.path.join(ROOT, "data", "youtube-channels.json")
@@ -64,6 +75,7 @@ YT_URL = f"{RAW}/pulse-youtube/data/pulse-youtube.json"
 CATALOG_URL = f"{RAW}/pulse-youtube/data/deep-catalog.json"
 HISTORY_URL = f"{RAW}/btown-tv/data/tv-history.json"
 VAULT_LIVE_URL = f"{RAW}/btown-tv/data/tv-vault-live.json"
+EDITIONS_URL = f"{RAW}/btown-tv/data/tv-editions.json"
 UA = "btown-tv/1.0"
 
 API = "https://www.googleapis.com/youtube/v3"
@@ -90,7 +102,17 @@ MAX_GOLD = 40
 MAX_VAULT = 40
 MAX_VT = 30
 PLAYLIST_MAX = 25
+MORE_PER_SHELF = 6       # the bench: alternates the editor names per shelf
+MORE_PICKS = 2           # runner-up Tonight's picks
+MORE_CHANNEL_CAP = 2     # per channel, within the bench
+EDITIONS_KEEP = 14       # past editions kept for the page's archive strip
 VIDEO_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
+# Reader-signal thresholds. While the audience is small, ONE reader's ✕ is
+# enough to keep a video off the page and one ♥ marks a channel LOVED —
+# otherwise the taps do nothing and the loop never closes. Raise these as
+# readers arrive (the SQL counts distinct players, so they scale cleanly).
+SKIP_MIN = 1             # distinct readers saying "not for me" on a video
+LOVED_MIN = 1            # distinct readers saying "more like this" on a channel
 PASSED_MIN = 3           # distinct readers saying "not for me" on a channel
 
 SHELVES = [
@@ -338,7 +360,7 @@ def gate(videos, catalog, history, signals, now_ts, roster_g):
         if not VIDEO_ID_RE.match(vid):
             drop("bad-id")
             continue
-        if signals["skip"].get(vid, 0) >= 2:
+        if signals["skip"].get(vid, 0) >= SKIP_MIN:
             drop("not-for-me")
             continue
         # promo shapes are banned everywhere — the deep catalog is built
@@ -500,9 +522,26 @@ SCHEMA = {
             "required": SHELF_KEYS,
             "additionalProperties": False,
         },
+        "more": {
+            "type": "object",
+            "properties": {
+                key: {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {"i": {"type": "integer"},
+                                       "why": {"type": "string"}},
+                        "required": ["i", "why"],
+                        "additionalProperties": False,
+                    },
+                } for key in ["pick"] + SHELF_KEYS
+            },
+            "required": ["pick"] + SHELF_KEYS,
+            "additionalProperties": False,
+        },
         "note": {"type": "string"},
     },
-    "required": ["pick", "shelves", "note"],
+    "required": ["pick", "shelves", "more", "note"],
     "additionalProperties": False,
 }
 
@@ -539,6 +578,18 @@ across the whole page. Balance subjects — a page of six space videos is \
 not a balanced page. Prefer substance over noise, access over takes, and \
 videos that feel whole over fragments.
 
+Then name the BENCH in `more`: for each shelf, up to {more} further items \
+you would stand behind in that lane — the next-best, same length rules, \
+same standard, not leftovers — and under `more.pick`, up to {more_picks} \
+runner-up Tonight's picks. The page keeps the bench folded; it shows when a \
+reader asks for more or hides one of your picks, so these must be real \
+choices with real reasons. Nothing from the page repeats on the bench. The \
+bench has its own allowance of two items per channel (separate from the \
+page's two). Lane rules apply unchanged: settle 20 minutes and up, quick \
+5–12 minutes, vt only VERMONT lines, vault only VAULT, gold only GOLD, \
+bench only RARE; a shelf you left empty gets no bench. Fewer if the field \
+is thin; never pad. An empty list is fine.
+
 For each pick write a reason of {why_max} characters or less, written for a \
 viewer deciding whether to press play — not for an editor. Titles are used \
 verbatim on the page; never rewrite one. In `note`, one sentence (for the \
@@ -570,7 +621,7 @@ def age_label(ts, now_ts):
 def format_candidates(pools, signals, now_ts):
     """Numbered lines + the index -> item map."""
     lines, index = [], []
-    loved = {ch for ch, n in signals.get("more", {}).items() if n >= 2}
+    loved = {ch for ch, n in signals.get("more", {}).items() if n >= LOVED_MIN}
     passed = {ch for ch, n in signals.get("skip_ch", {}).items() if n >= PASSED_MIN}
     for group, key in (("FRESH", "fresh"), ("VERMONT", "vt"),
                        ("VAULT", "vault"), ("GOLD", "gold")):
@@ -603,7 +654,8 @@ def format_candidates(pools, signals, now_ts):
 
 def build_prompt(taste, candidate_text):
     counts = {shelf[0]: shelf[3] for shelf in SHELVES}
-    rules = PROMPT_RULES.format(why_max=WHY_MAX, **counts)
+    rules = PROMPT_RULES.format(why_max=WHY_MAX, more=MORE_PER_SHELF,
+                                more_picks=MORE_PICKS, **counts)
     return (f"{rules}\n\n=== TASTE DOCTRINE ===\n{taste}\n\n"
             f"=== CANDIDATES ===\n{candidate_text}\n")
 
@@ -628,14 +680,17 @@ def ask_model(prompt):
 
 
 def validate(raw, index):
-    """Model output -> {pick, shelves}; silently drops anything that breaks
-    the rules (bad index, duplicate, wrong length for the shelf, non-RARE on
-    the bench, a third item from one channel)."""
+    """Model output -> (pick, shelves, more); silently drops anything that
+    breaks the rules (bad index, duplicate, wrong length for the shelf,
+    non-RARE on the bench, a third item from one channel). `more` is the
+    folded bench: {"pick": [...], shelf: [...]} — same rules, its own
+    per-channel cap (two across the whole bench, separate from the page's
+    two), never overlapping the page."""
     used = set()
     per_channel = {}
     counts = {shelf[0]: shelf[3] for shelf in SHELVES}
 
-    def take(entry, shelf):
+    def take(entry, shelf, per_channel=per_channel, cap=2):
         try:
             i = int(entry.get("i"))
         except (TypeError, ValueError):
@@ -659,7 +714,7 @@ def validate(raw, index):
         if shelf == "bench" and not item.get("rare"):
             return None
         ch = item.get("ch", "")
-        if per_channel.get(ch, 0) >= 2:
+        if per_channel.get(ch, 0) >= cap:
             return None
         why = trim(str(entry.get("why") or ""), WHY_KEEP)
         if not why:
@@ -684,7 +739,23 @@ def validate(raw, index):
             if len(kept) >= counts[key]:
                 break
         shelves[key] = kept
-    return pick, shelves
+    # the bench: validated after the page so it can never steal from it
+    more = {}
+    bench_channels = {}
+    for key in ["pick"] + SHELF_KEYS:
+        kept = []
+        limit = MORE_PICKS if key == "pick" else MORE_PER_SHELF
+        if key != "pick" and not shelves.get(key):
+            more[key] = []          # no shelf on the page -> nothing to unfold
+            continue
+        for entry in (raw.get("more") or {}).get(key, []) or []:
+            item = take(entry, key, per_channel=bench_channels, cap=MORE_CHANNEL_CAP)
+            if item:
+                kept.append(item)
+            if len(kept) >= limit:
+                break
+        more[key] = kept
+    return pick, shelves, more
 
 
 # ----------------------------------------------------------------------
@@ -782,18 +853,20 @@ def edition_label(now):
     return now.astimezone(timezone(timedelta(hours=-4))).strftime("%Y-%m-%d")
 
 
-def build_payload(pick, shelves, live, generated, stats, playlist_id):
+def build_payload(pick, shelves, live, generated, stats, playlist_id, more=None):
+    more = more or {}
     shelf_out = []
     for key, title, sub, _ in SHELVES:
         items = shelves.get(key) or []
         if items:
             shelf_out.append({"key": key, "title": title, "sub": sub,
-                              "items": items})
+                              "items": items, "more": more.get(key) or []})
     return {
         "v": 1,
         "generated": generated.replace(microsecond=0).isoformat(),
         "edition": edition_label(generated),
         "pick": pick,
+        "pick_more": more.get("pick") or [],
         "shelves": shelf_out,
         "live": live[:8],
         "playlist": ({"id": playlist_id,
@@ -801,6 +874,31 @@ def build_payload(pick, shelves, live, generated, stats, playlist_id):
                      if playlist_id else None),
         "stats": stats,
     }
+
+
+ARCHIVE_FIELDS = ("id", "t", "ch", "d", "dur", "views", "g", "lane", "why", "shelf")
+
+
+def archive_edition(editions, payload):
+    """Prepend tonight's edition to the archive (compact: the pick and the
+    shelves, no bench/live/stats), replacing any earlier entry for the same
+    edition date (a dispatch re-run) and keeping the newest EDITIONS_KEEP."""
+    def slim(item):
+        return {k: v for k, v in item.items() if k in ARCHIVE_FIELDS}
+    entry = {
+        "edition": payload["edition"],
+        "generated": payload["generated"],
+        "pick": slim(payload["pick"]) if payload.get("pick") else None,
+        "shelves": [{"key": s["key"], "title": s["title"],
+                     "items": [slim(i) for i in s["items"]]}
+                    for s in payload.get("shelves", []) if s.get("items")],
+    }
+    kept = [e for e in (editions or {}).get("editions", [])
+            if isinstance(e, dict) and e.get("edition")
+            and e["edition"] != entry["edition"]]
+    kept.insert(0, entry)
+    kept.sort(key=lambda e: e["edition"], reverse=True)
+    return {"v": 1, "editions": kept[:EDITIONS_KEEP]}
 
 
 def run(args):
@@ -830,6 +928,14 @@ def run(args):
         if vault_live is FETCH_FAILED:
             vault_live = {}          # re-enriched from the seed below; not memory
     vault_seed = read_json(VAULT_SEED, {}) or {}
+    editions = read_json(args.editions, None)
+    if editions is None:
+        editions = fetch_optional(EDITIONS_URL, {}, strict=True)
+        if editions is FETCH_FAILED:
+            # the archive is memory too: never rebuild it from nothing on a
+            # transient failure — skip writing it this run (the workflow
+            # carries the branch's copy forward)
+            editions = FETCH_FAILED
     signals = fetch_signals()
     roster_g = {ch.get("name", ""): ch.get("g", "")
                 for ch in (read_json(CHANNELS_FILE, {}) or {}).get("channels", [])}
@@ -857,23 +963,36 @@ def run(args):
     except Exception as exc:  # noqa: BLE001 — keep the last good edition
         print(f"curate_tv: model trouble ({exc})", file=sys.stderr)
         return
-    pick, shelves = validate(raw, index)
+    pick, shelves, more = validate(raw, index)
     picked = sum(len(v) for v in shelves.values()) + (1 if pick else 0)
+    benched = sum(len(v) for v in more.values())
+    offered = {k: len(v or []) for k, v in (raw.get("more") or {}).items()}
+    print("curate_tv: bench offered/kept "
+          + " ".join(f"{k}={offered.get(k, 0)}/{len(more.get(k, []))}" for k in ["pick"] + SHELF_KEYS))
     if not pick or picked < 8:
         print(f"curate_tv: the editor returned too little ({picked}) — skipping")
         return
-    print(f"curate_tv: picked {picked} · {trim(str(raw.get('note','')), 200)}")
+    print(f"curate_tv: picked {picked} · bench {benched} · "
+          f"{trim(str(raw.get('note','')), 200)}")
 
     stats = {"candidates": {k: len(v) for k, v in pools.items() if k != "live"},
-             "dropped": dropped, "picked": picked}
+             "dropped": dropped, "picked": picked, "bench": benched}
     playlist_id = os.environ.get("YT_TV_PLAYLIST_ID", "").strip()
     ordered = [pick] + [item for key in SHELF_KEYS for item in shelves.get(key, [])]
 
     # the edition and its memory are written BEFORE the ~50-request playlist
     # sync, so a job killed mid-sync never leaves the page a day behind the TV
-    write_json(args.out, build_payload(pick, shelves, pools["live"], now,
-                                       stats, playlist_id))
+    edition = build_payload(pick, shelves, pools["live"], now, stats,
+                            playlist_id, more)
+    write_json(args.out, edition)
     write_json(args.history, remember(history, ordered, now_ts))
+    if editions is not FETCH_FAILED:
+        try:
+            write_json(args.editions, archive_edition(editions, edition))
+        except Exception as exc:  # noqa: BLE001 — the archive is a nicety, never the run
+            print(f"curate_tv: archive trouble ({exc}) — left alone", file=sys.stderr)
+    else:
+        print("curate_tv: could not read the editions archive — left alone")
     print(f"curate_tv: edition {edition_label(now)} -> {args.out}")
 
     if playlist_id and not args.no_playlist:
@@ -885,7 +1004,7 @@ def run(args):
         if not synced:
             # never advertise a playlist the TV can't play tonight
             write_json(args.out, build_payload(pick, shelves, pools["live"], now,
-                                               stats, ""))
+                                               stats, "", more))
 
 
 # ----------------------------------------------------------------------
@@ -968,10 +1087,13 @@ def selftest():
             "gold": [{"i": 4, "why": "old gold"}],
             "bench": [{"i": 0, "why": "not rare"}],
         },
+        "more": {"pick": [], "settle": [], "quick": [], "vt": [], "vault": [],
+                 "gold": [], "bench": []},
         "note": "thin week",
     }
-    pick, shelves = validate(raw, index)
+    pick, shelves, more = validate(raw, index)
     assert pick and pick["id"] == "fresh000002"
+    assert all(v == [] for v in more.values()), more
     assert [v["id"] for v in shelves["settle"]] == ["fresh000007"], shelves["settle"]
     assert [v["id"] for v in shelves["quick"]] == ["fresh000006"], shelves["quick"]
     assert shelves["vt"] == [], shelves["vt"]
@@ -981,12 +1103,80 @@ def selftest():
     assert all("why" in v and len(v["why"]) <= WHY_KEEP for v in
                [pick] + [x for s in shelves.values() for x in s])
 
+    # --- the bench: same rules, never overlapping the page, own channel cap
+    def it(i, ch, dur, **kw):
+        d = {"id": f"bench{i:06d}", "t": f"Bench item {i}", "ch": ch, "dur": dur,
+             "sec": dur_seconds(dur), "d": now_ts - day, "views": 10}
+        d.update(kw)
+        return d
+    index2 = [
+        ("fresh", it(0, "A", "30:00")),          # 0 page pick
+        ("fresh", it(1, "A", "25:00")),          # 1 page settle
+        ("fresh", it(2, "B", "8:00")),           # 2 page quick
+        ("fresh", it(3, "C", "40:00")),          # 3 bench settle
+        ("fresh", it(4, "C", "9:00")),           # 4 bench quick (C's 2nd bench slot)
+        ("fresh", it(5, "C", "50:00")),          # 5 bench settle — C's 3rd: dropped
+        ("fresh", it(6, "D", "3:00")),           # 6 too short for quick
+        ("vault", it(7, "E", "12:00", vault=1)), # 7 vault
+        ("gold", it(8, "F", "15:00", dc=1)),     # 8 gold
+        ("vt", it(9, "G", "6:00", vt=1)),        # 9 vermont
+        ("fresh", it(10, "H", "22:00", rare=1)), # 10 rare
+    ]
+    raw2 = {
+        "pick": {"i": 0, "why": "lead"},
+        "shelves": {"settle": [{"i": 1, "why": "settle"}], "quick": [{"i": 2, "why": "quick"}],
+                    "vt": [], "vault": [], "gold": [{"i": 8, "why": "gold"}], "bench": []},
+        "more": {
+            "pick": [{"i": 0, "why": "already the pick — dropped"},
+                     {"i": 10, "why": "runner-up"}],
+            "settle": [{"i": 3, "why": "forty minutes"}, {"i": 1, "why": "on the page — dropped"}],
+            "quick": [{"i": 4, "why": "nine minutes"}, {"i": 6, "why": "three minutes — dropped"},
+                      {"i": 99, "why": "bad index"}],
+            "vt": [{"i": 9, "why": "no vt shelf on the page — dropped"}],
+            "vault": [{"i": 7, "why": "no vault shelf on the page — dropped"}],
+            "gold": [{"i": 8, "why": "on the page already — dropped"}, {"i": 7, "why": "vault, not gold — dropped"}],
+            "bench": [{"i": 10, "why": "no bench shelf on the page — dropped"}],
+        },
+        "note": "",
+    }
+    pick2, shelves2, more2 = validate(raw2, index2)
+    assert pick2["id"] == "bench000000" and [v["id"] for v in shelves2["gold"]] == ["bench000008"]
+    assert [v["id"] for v in more2["pick"]] == ["bench000010"], more2["pick"]
+    assert [v["id"] for v in more2["settle"]] == ["bench000003"], more2["settle"]
+    assert [v["id"] for v in more2["quick"]] == ["bench000004"], more2["quick"]
+    assert more2["vt"] == [] and more2["vault"] == [] and more2["bench"] == [], "no shelf on the page -> no bench"
+    assert more2["gold"] == [], more2["gold"]
+    assert all(v["shelf"] == k for k, vs in more2.items() for v in vs)
+    page_ids = {pick2["id"]} | {v["id"] for vs in shelves2.values() for v in vs}
+    assert not page_ids & {v["id"] for vs in more2.values() for v in vs}, "bench overlaps the page"
+    raw3 = dict(raw2, more=dict(raw2["more"], settle=[
+        {"i": 3, "why": "C #1"}, {"i": 5, "why": "C #2"}], quick=[{"i": 4, "why": "C #3 — dropped"}]))
+    _, _, more3 = validate(raw3, index2)
+    assert [v["id"] for v in more3["settle"]] == ["bench000003", "bench000005"] and more3["quick"] == [], more3
+
     payload = build_payload(pick, shelves, pools["live"], utcnow(),
-                            {"picked": 5}, "PLxyz")
+                            {"picked": 5}, "PLxyz", more2)
     keys = [s["key"] for s in payload["shelves"]]
     assert keys == ["settle", "quick", "vault", "gold"], keys
     assert payload["playlist"]["url"].endswith("PLxyz")
     assert payload["live"][0]["id"] == "fresh000005"
+    assert payload["pick_more"][0]["id"] == "bench000010"
+    by_key = {s["key"]: s for s in payload["shelves"]}
+    assert [v["id"] for v in by_key["quick"]["more"]] == ["bench000004"]
+    assert [v["id"] for v in by_key["settle"]["more"]] == ["bench000003"]
+
+    # --- the editions archive: newest first, same-day re-run replaces, capped
+    arch = archive_edition({}, payload)
+    assert arch["editions"][0]["edition"] == payload["edition"]
+    assert arch["editions"][0]["pick"]["id"] == "fresh000002"
+    assert "more" not in arch["editions"][0]["shelves"][0] and "sec" not in arch["editions"][0]["pick"]
+    arch = archive_edition(arch, payload)
+    assert len(arch["editions"]) == 1, "same-day re-run must replace, not append"
+    older = {"editions": [{"edition": f"2020-01-{d:02d}", "pick": None, "shelves": []}
+                          for d in range(1, 21)]}
+    arch = archive_edition(older, payload)
+    assert len(arch["editions"]) == EDITIONS_KEEP and arch["editions"][0]["edition"] == payload["edition"]
+    assert arch["editions"][1]["edition"] == "2020-01-20"
 
     mem = remember(history, [pick] + shelves["settle"], now_ts)
     ids = {e["id"] for e in mem["shown"]}
@@ -1063,6 +1253,8 @@ def selftest():
     assert trim("x" * 200, 90).endswith("…") and len(trim("x" * 200, 90)) <= 90
     # the schema is valid JSON schema shape for structured output
     assert SCHEMA["properties"]["shelves"]["required"] == SHELF_KEYS
+    assert SCHEMA["properties"]["more"]["required"] == ["pick"] + SHELF_KEYS
+    assert "{more}" not in build_prompt("t", "c") and "BENCH" in build_prompt("t", "c")
     print("curate_tv selftest: ok")
 
 
@@ -1071,6 +1263,7 @@ def main():
     parser.add_argument("--out", default=OUT)
     parser.add_argument("--history", default=HISTORY)
     parser.add_argument("--vault", default=VAULT_LIVE)
+    parser.add_argument("--editions", default=EDITIONS)
     parser.add_argument("--no-playlist", action="store_true")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
