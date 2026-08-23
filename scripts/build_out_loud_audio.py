@@ -35,7 +35,7 @@ DATA = ROOT / "out-loud" / "stories.json"
 AUDIO_DIR = ROOT / "out-loud" / "audio"
 SECRETS = Path.home() / ".config" / "btownbrief" / "secrets.env"
 API = "https://api.elevenlabs.io/v1"
-DEFAULT_VOICE = os.environ.get("ELEVENLABS_VOICE_ID") or "JBFqnCBsd6RMkjVDRZzb"  # "George" — warm narrator
+DEFAULT_VOICE = "EXAVITQu4vr4xnSDxMaL"  # "Sarah" — Stephen's pick 2026-08-23; stories.json["voice"]["voice_id"] wins once set
 MODEL = os.environ.get("ELEVENLABS_MODEL") or "eleven_multilingual_v2"
 OUTPUT_FORMAT = "mp3_44100_64"
 
@@ -50,10 +50,10 @@ def load_secrets():
     return os.environ.get("ELEVENLABS_API_KEY")
 
 
-def script_hash(pin):
+def script_hash(pin, voice_id):
     h = hashlib.sha256()
     h.update((pin.get("script") or "").strip().encode("utf-8"))
-    h.update(b"|" + (os.environ.get("ELEVENLABS_VOICE_ID") or DEFAULT_VOICE).encode())
+    h.update(b"|" + voice_id.encode())
     h.update(b"|" + MODEL.encode())
     return h.hexdigest()[:16]
 
@@ -122,20 +122,19 @@ def main():
     a = ap.parse_args()
 
     api_key = load_secrets()
-    if a.voice:
-        os.environ["ELEVENLABS_VOICE_ID"] = a.voice
-    voice_id = os.environ.get("ELEVENLABS_VOICE_ID") or DEFAULT_VOICE
+    data = json.loads(DATA.read_text(encoding="utf-8"))
+    # Voice precedence: --voice flag > env > what stories.json already rendered with > default.
+    voice_id = a.voice or os.environ.get("ELEVENLABS_VOICE_ID") or (data.get("voice") or {}).get("voice_id") or DEFAULT_VOICE
     if a.list_voices:
         if not api_key:
             sys.exit("no ELEVENLABS_API_KEY")
         list_voices(api_key)
         return
 
-    data = json.loads(DATA.read_text(encoding="utf-8"))
     pins = [p for p in data.get("pins", []) if p.get("enabled", True) and p.get("script")]
     if a.only:
         pins = [p for p in pins if p["id"] in set(a.only)]
-    todo = [p for p in pins if a.force or p.get("audio_hash") != script_hash(p) or not (AUDIO_DIR / f"{p['id']}.mp3").exists()]
+    todo = [p for p in pins if a.force or p.get("audio_hash") != script_hash(p, voice_id) or not (AUDIO_DIR / f"{p['id']}.mp3").exists()]
     chars = sum(len(p["script"]) for p in todo)
     print(f"{len(todo)} of {len(pins)} stories need rendering — {chars:,} characters (≈ {chars:,} credits on {MODEL})")
     if a.dry_run or not todo:
@@ -157,7 +156,7 @@ def main():
             continue
         out.write_bytes(audio)
         p["audio"] = f"audio/{p['id']}.mp3"
-        p["audio_hash"] = script_hash(p)
+        p["audio_hash"] = script_hash(p, voice_id)
         p["duration_s"] = mp3_duration_seconds(out)
         ok += 1
         print(f"  ✓ {p['id']}: {len(audio)/1e6:.2f} MB, ~{p['duration_s']} s")

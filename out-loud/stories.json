@@ -2,8 +2,10 @@
  "_note": "Btown Out Loud story pins. Scripts are human-reviewed via scripts/out_loud_review.py before they land here; audio via scripts/build_out_loud_audio.py. Engine rules: out-loud/engine.js.",
  "updated": "2026-08-23",
  "voice": {
-  "provider": "browser",
-  "about": "Every story is written by a person from cited sources and reviewed before it goes live — tap Where this comes from under any story. The narration will be a studio-grade synthetic voice; until those recordings land, your phone's built-in voice reads the script."
+  "provider": "elevenlabs",
+  "voice_id": "EXAVITQu4vr4xnSDxMaL",
+  "model": "eleven_multilingual_v2",
+  "about": "Every story is written by a person from cited sources and reviewed before it goes live — tap Where this comes from under any story. The narration is a synthetic voice (ElevenLabs); no real person recorded it."
  },
  "routes": [
   {
@@ -117,9 +119,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/unitarian-church.mp3",
+   "audio_hash": "838d790d89f59da6",
+   "duration_s": 117,
    "updated": "2026-08-23"
   },
   {
@@ -149,9 +151,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/church-street-marketplace.mp3",
+   "audio_hash": "4980f97bb86a2dec",
+   "duration_s": 123,
    "updated": "2026-08-23"
   },
   {
@@ -186,9 +188,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/city-hall-park.mp3",
+   "audio_hash": "04deeba3ba7e2b9b",
+   "duration_s": 114,
    "updated": "2026-08-23"
   },
   {
@@ -223,9 +225,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/fletcher-free-library.mp3",
+   "audio_hash": "9f79323461590b41",
+   "duration_s": 128,
    "updated": "2026-08-23"
   },
   {
@@ -255,9 +257,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/little-italy-urban-renewal.mp3",
+   "audio_hash": "9c4983b0e62f0d5b",
+   "duration_s": 113,
    "updated": "2026-08-23"
   },
   {
@@ -292,9 +294,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/battery-park.mp3",
+   "audio_hash": "52e932313a427d4b",
+   "duration_s": 108,
    "updated": "2026-08-23"
   },
   {
@@ -334,9 +336,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/battery-street-historic-district.mp3",
+   "audio_hash": "1f53f84ab74fbe8e",
+   "duration_s": 112,
    "updated": "2026-08-23"
   },
   {
@@ -366,9 +368,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/union-station-waterfront.mp3",
+   "audio_hash": "914bd16f179293c8",
+   "duration_s": 131,
    "updated": "2026-08-23"
   },
   {
@@ -408,9 +410,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/moran-plant-frame.mp3",
+   "audio_hash": "590bcd4cbeb1ad62",
+   "duration_s": 139,
    "updated": "2026-08-23"
   },
   {
@@ -450,9 +452,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/echo-leahy-center.mp3",
+   "audio_hash": "aefc04605769c58f",
+   "duration_s": 134,
    "updated": "2026-08-23"
   },
   {
@@ -497,9 +499,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/breakwater.mp3",
+   "audio_hash": "08503d8a09f989c9",
+   "duration_s": 134,
    "updated": "2026-08-23"
   },
   {
@@ -534,9 +536,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/memorial-auditorium.mp3",
+   "audio_hash": "e6f9f2790e36c13f",
+   "duration_s": 143,
    "updated": "2026-08-23"
   },
   {
@@ -566,9 +568,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/nectars.mp3",
+   "audio_hash": "934721d72be03602",
+   "duration_s": 115,
    "updated": "2026-08-23"
   },
   {
@@ -603,9 +605,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/ben-and-jerrys-gas-station.mp3",
+   "audio_hash": "9cf347f76ebff96d",
+   "duration_s": 107,
    "updated": "2026-08-23"
   },
   {
@@ -640,9 +642,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/cityplace-burlington-town-center.mp3",
+   "audio_hash": "2053aee89e410094",
+   "duration_s": 126,
    "updated": "2026-08-23"
   },
   {
@@ -672,9 +674,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/community-boathouse.mp3",
+   "audio_hash": "abf8df10d4cc53d4",
+   "duration_s": 99,
    "updated": "2026-08-23"
   },
   {
@@ -714,9 +716,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/firehouse-gallery.mp3",
+   "audio_hash": "594d941f85e2cafd",
+   "duration_s": 120,
    "updated": "2026-08-23"
   },
   {
@@ -746,9 +748,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/follett-house.mp3",
+   "audio_hash": "86bc65d3c0137930",
+   "duration_s": 108,
    "updated": "2026-08-23"
   },
   {
@@ -783,9 +785,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/howard-opera-house.mp3",
+   "audio_hash": "e3831f1930104e1e",
+   "duration_s": 118,
    "updated": "2026-08-23"
   },
   {
@@ -830,9 +832,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/island-line-trail.mp3",
+   "audio_hash": "977163612b8ff635",
+   "duration_s": 102,
    "updated": "2026-08-23"
   },
   {
@@ -872,9 +874,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/king-street-ferry-dock.mp3",
+   "audio_hash": "fed03a14bd5786df",
+   "duration_s": 91,
    "updated": "2026-08-23"
   },
   {
@@ -909,9 +911,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/main-street-landing.mp3",
+   "audio_hash": "a0526c7cc3104e87",
+   "duration_s": 134,
    "updated": "2026-08-23"
   },
   {
@@ -946,9 +948,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/masonic-temple.mp3",
+   "audio_hash": "8fc6bbb8e06ad864",
+   "duration_s": 120,
    "updated": "2026-08-23"
   },
   {
@@ -988,9 +990,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/perkins-pier.mp3",
+   "audio_hash": "026868d08c08297b",
+   "duration_s": 106,
    "updated": "2026-08-23"
   },
   {
@@ -1030,9 +1032,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/pine-street-south-end.mp3",
+   "audio_hash": "5550f17fd3e8c89d",
+   "duration_s": 123,
    "updated": "2026-08-23"
   },
   {
@@ -1067,9 +1069,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/richardson-building.mp3",
+   "audio_hash": "55a8723b41813ff4",
+   "duration_s": 107,
    "updated": "2026-08-23"
   },
   {
@@ -1104,9 +1106,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/st-pauls-cathedral.mp3",
+   "audio_hash": "eb6ee484488e2665",
+   "duration_s": 113,
    "updated": "2026-08-23"
   },
   {
@@ -1136,9 +1138,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/the-flynn.mp3",
+   "audio_hash": "e5622390f4f7a63e",
+   "duration_s": 127,
    "updated": "2026-08-23"
   },
   {
@@ -1183,9 +1185,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/uvm-green.mp3",
+   "audio_hash": "9744b56a243564e0",
+   "duration_s": 118,
    "updated": "2026-08-23"
   },
   {
@@ -1220,9 +1222,9 @@
    "coord_verified": "approved-in-bulk-2026-08-23",
    "enabled": true,
    "presented_by": null,
-   "audio": null,
-   "audio_hash": null,
-   "duration_s": null,
+   "audio": "audio/waterfront-park.mp3",
+   "audio_hash": "df6d786206578580",
+   "duration_s": 125,
    "updated": "2026-08-23"
   }
  ]
