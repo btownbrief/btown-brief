@@ -1,15 +1,15 @@
 {
- "generated": "2026-08-22T16:58:10-04:00",
+ "generated": "2026-08-23T05:56:20-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 15,
-   "seconds": 5.7
+   "count": 13,
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 63,
-   "seconds": 2.4
+   "count": 61,
+   "seconds": 3.7
   },
   "brownell": {
    "label": "Brownell Library",
@@ -18,13 +18,13 @@
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 166,
-   "seconds": 3.2
+   "count": 162,
+   "seconds": 2.4
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 79,
-   "seconds": 1.6
+   "count": 78,
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-22&end_date=2026-10-21&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-23&end_date=2026-10-22&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -43,18 +43,18 @@
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 9,
-   "seconds": 0.2
+   "count": 8,
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 165,
-   "seconds": 65.3
+   "count": 166,
+   "seconds": 74.8
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 35,
-   "seconds": 2.0
+   "count": 36,
+   "seconds": 3.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 38.5
+   "seconds": 41.3
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.5
+   "seconds": 1.3
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 414,
-   "seconds": 73.9
+   "count": 411,
+   "seconds": 68.7
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 105.9
+   "count": 65,
+   "seconds": 113.0
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 43,
-   "seconds": 14.5
+   "count": 45,
+   "seconds": 16.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 91,
-   "seconds": 6.2
+   "seconds": 6.9
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 29,
-   "seconds": 33.1
+   "count": 27,
+   "seconds": 34.1
   },
   "sevendays": {
    "label": "Seven Days",
@@ -114,133 +114,29 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 372,
-   "seconds": 12.8
+   "seconds": 21.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 224,
+   "count": 222,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 77,
-   "seconds": 100.9
+   "count": 76,
+   "seconds": 99.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 29,
-   "seconds": 0.4
+   "seconds": 0.3
   }
  },
- "gathered": 2681,
- "afterDedup": 1455,
- "duplicatesMerged": 1226,
- "final": 1812,
+ "gathered": 2668,
+ "afterDedup": 1451,
+ "duplicatesMerged": 1217,
+ "final": 1793,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Cheekface at Higher Ground",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-21"
-  },
-  {
-   "kept": {
-    "title": "Industry Day",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-21"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-21"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-22"
-  },
-  {
-   "kept": {
-    "title": "Carson Jordan with Bianca Stone | Dead Hand",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-22"
-  },
-  {
-   "kept": {
-    "title": "Random Chats About Statistics: Building Confidence with Data",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-22"
-  },
-  {
-   "kept": {
-    "title": "Field Hockey vs Merrimack",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-22"
-  },
-  {
-   "kept": {
-    "title": "ALICE Workshop: Scenario-Based Threat Response (2-Hour Interactive)",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-22"
-  },
-  {
-   "kept": {
-    "title": "Violet Grohl at Higher Ground",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-22"
-  },
   {
    "kept": {
     "title": "802sDay",
@@ -2070,6 +1966,28 @@
   },
   {
    "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-13"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-13"
+  },
+  {
+   "kept": {
     "title": "Wild Kratts Live 2.0",
     "source": "flynn"
    },
@@ -2121,6 +2039,17 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-14"
   },
@@ -2379,43 +2308,91 @@
     "loveburlington"
    ],
    "date": "2026-10-21"
+  },
+  {
+   "kept": {
+    "title": "BOOST Sessions",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-21"
+  },
+  {
+   "kept": {
+    "title": "Meg Mott - Strange Bedfellows: How Religious Liberties Have Aligned with Nondiscrimination Policies and Can Again",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-21"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-10-22"
+  },
+  {
+   "kept": {
+    "title": "Bored Teachers",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "flynn"
+   ],
+   "date": "2026-10-22"
+  },
+  {
+   "kept": {
+    "title": "Melissa H. Cronin | The Peach: A Memoir of Trauma, Survival, and Forgiveness",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-22"
+  },
+  {
+   "kept": {
+    "title": "Thirsty Thursday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-22"
   }
  ],
  "changes": [
   {
-   "id": "4b0f5a6f4646",
-   "title": "BTown Coffee Club",
-   "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-08-22T05:55:06-04:00"
+   "id": "7512134f34dd",
+   "title": "802sDay",
+   "date": "2026-10-13",
+   "change": "time",
+   "was": "2026-10-13",
+   "now": "2026-10-13T11:30:00-04:00"
   },
   {
-   "id": "613b9086e18d",
-   "title": "Summer River Float on The Winooski River",
-   "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-08-22T05:55:06-04:00"
-  },
-  {
-   "id": "e55b7612e810",
-   "title": "The Poetry Experience",
-   "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-08-19T17:01:24-04:00"
-  },
-  {
-   "id": "9418743e5cbf",
-   "title": "Helm",
-   "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-08-22T05:55:06-04:00"
-  },
-  {
-   "id": "570fd62b0fc4",
-   "title": "The 2026 Vermont Reggae Fest",
-   "date": "2026-08-22",
-   "change": "missing",
-   "lastSeen": "2026-08-20T06:03:59-04:00"
+   "id": "8e3aaa4041af",
+   "title": "Magoo",
+   "date": "2026-10-13",
+   "change": "time",
+   "was": "2026-10-13T19:30:00-04:00",
+   "now": "2026-10-13T19:00:00-04:00"
   },
   {
    "id": "c2d04966e1b3",
@@ -2423,12 +2400,6 @@
    "date": "2026-08-23",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
-   "id": "97a8ec042810",
-   "title": "Street Soccer Tournament: Adult (age 19+)",
-   "date": "2026-08-29",
-   "change": "dropped"
   },
   {
    "id": "66ad4d4c10e4",
@@ -2620,12 +2591,6 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
-   "id": "b5de3dfe34d2",
-   "title": "Adult Drop- In Table Tennis",
-   "date": "2026-09-21",
-   "change": "dropped"
-  },
-  {
    "id": "5f96d5656174",
    "title": "Cheekface",
    "date": "2026-09-21",
@@ -2659,12 +2624,6 @@
    "date": "2026-09-27",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
-   "id": "b22d09037583",
-   "title": "Adult Drop- In Table Tennis",
-   "date": "2026-09-28",
-   "change": "dropped"
   },
   {
    "id": "e6d21f28af19",
@@ -2709,12 +2668,6 @@
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
   {
-   "id": "f7b62efc6388",
-   "title": "Adult Drop- In Table Tennis",
-   "date": "2026-10-05",
-   "change": "dropped"
-  },
-  {
    "id": "c0ea7f397e8a",
    "title": "Katie Pruitt",
    "date": "2026-10-05",
@@ -2753,13 +2706,6 @@
    "id": "3ef0455398e4",
    "title": "Level 1 Ski Film",
    "date": "2026-10-10",
-   "change": "missing",
-   "lastSeen": "2026-08-20T06:03:59-04:00"
-  },
-  {
-   "id": "8e3aaa4041af",
-   "title": "Magoo",
-   "date": "2026-10-13",
    "change": "missing",
    "lastSeen": "2026-08-20T06:03:59-04:00"
   },
