@@ -666,7 +666,7 @@ def ask_model(prompt):
     client = anthropic.Anthropic()
     response = client.messages.create(
         model=MODEL,
-        max_tokens=16000,
+        max_tokens=48000,   # reasoning counts; a full pool + the bench blew through 16k on 8/23
         output_config={"format": {"type": "json_schema", "schema": SCHEMA},
                        "effort": "high"},
         messages=[{"role": "user", "content": prompt}],
