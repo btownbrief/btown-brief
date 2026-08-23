@@ -34,3 +34,15 @@ Open `…/out-loud/?route=downtown-loop`, tap **Start walking**.
 
 Send the numbers back and I'll tune radii, the cooldown, and copy. If 2. fails on
 iOS, that is the one result that changes the architecture — tell me first.
+
+## Things the fact-checkers could not settle from a desk (walk past and tell me)
+- Battery Park: is the Peter Wolf Toth red-oak carving of Chief Grey Lock still standing? (the script mentions it)
+- Fletcher Free: is preservation scaffolding still wrapping the Carnegie columns? (script says work ran 2024 into 2026)
+- Nectar's: marquee still up and dark? building still empty / for lease? (script: "went dark in May 2025")
+- King Street ferry dock: are the old pilings visible from the dock apron? (line was cut pending your eyes)
+- Ben & Jerry's corner (College & St. Paul): what is physically there — parking lot, marker? (script describes a parking lot + marker)
+- Perkins Pier: read the Dr. Charles N. Perkins marker (the "old salt dock renamed 1959" story is omitted until someone reads it)
+- Rock Point / North Beach: the Champlain Thrust pin is at the clifftop trail junction; if you find a safe, legal shoreline viewpoint, send me its coordinates and I'll move it
+- CityPlace block: what's the construction status as you see it? (script says "as of August 2026")
+- Church & Pearl: Unitarian Church, Masonic Temple and Richardson Building all fire within ~50 m — do three back-to-back stories feel like too much there?
+- Boathouse / Breakwater (34 m apart) and Memorial Auditorium / 242 Main (22 m): same question
