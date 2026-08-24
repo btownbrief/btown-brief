@@ -3836,32 +3836,83 @@ a.mode-btn:hover { text-decoration: none; }
   .rn-footer-strip { flex-direction: column; }
 }
 
-/* Burlington Right Now teaser (list page, under the daylight arc) */
-.rn-teaser {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
-  padding: var(--space-2) var(--space-5);
+/* Activity hero (list page, under the daylight arc) — the front door
+   to the Top 100 and the Guides, ahead of the full 206 list. */
+.activity-hero {
   background: var(--bg-subtle);
   border-bottom: 1px solid var(--line-soft);
-  font-size: var(--text-sm);
-  text-decoration: none;
 }
-.rn-teaser:hover { text-decoration: none; filter: brightness(0.98); }
 
-.rn-teaser-main {
+.activity-hero-inner {
+  max-width: var(--max-content);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+}
+
+.activity-hero-kicker {
   font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--teal);
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--space-3);
 }
-.rn-teaser-note { color: var(--ink-3); }
-.rn-teaser-arrow { color: var(--teal); font-weight: 700; }
-.rn-teaser:hover .rn-teaser-arrow { text-decoration: none; }
 
-@media (max-width: 560px) {
-  .rn-teaser-note { font-size: var(--text-xs); }
+.activity-hero-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.activity-hero-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: var(--space-4) var(--space-10) var(--space-4) var(--space-5);
+  border: none;
+  border-radius: var(--radius-md);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration-fast) var(--ease),
+              box-shadow var(--duration-fast) var(--ease),
+              filter var(--duration-fast) var(--ease);
+}
+.activity-hero-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.06); }
+.activity-hero-btn:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+
+.activity-hero-top100 {
+  background:
+    linear-gradient(180deg, rgba(19,36,59,0.55) 0%, rgba(19,36,59,0.88) 100%),
+    url('../assets/img/top100-bg.jpg') center 42% / cover no-repeat,
+    #13243B;
+}
+.activity-hero-guides { background: linear-gradient(135deg, #2E7D8A 0%, #1A4F5A 100%); }
+
+.activity-hero-btn-title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.activity-hero-btn-note {
+  font-size: var(--text-sm);
+  opacity: 0.9;
+}
+.activity-hero-btn-arrow {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .activity-hero-btns { grid-template-columns: 1fr; }
+  .activity-hero-btn-title { font-size: var(--text-md); }
 }
 
 /* ============================================================
