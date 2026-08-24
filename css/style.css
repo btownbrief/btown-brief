@@ -3930,6 +3930,33 @@ a.mode-btn:hover { text-decoration: none; }
   font-weight: 700;
 }
 
+/* Guides column: the big button plus the slim What Now escape hatch. */
+.activity-hero-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.activity-hero-col .activity-hero-btn { flex: 1; }
+
+.activity-hero-mini {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 8px var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-raised);
+  color: var(--ink-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration-fast) var(--ease), box-shadow var(--duration-fast) var(--ease);
+}
+.activity-hero-mini strong { color: var(--teal); }
+.activity-hero-mini:hover { text-decoration: none; transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--ink); }
+
 @media (max-width: 640px) {
   .activity-hero-btns { grid-template-columns: 1fr; }
   .activity-hero-btn-title { font-size: var(--text-md); }
