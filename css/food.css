@@ -36,6 +36,43 @@
 .food-hero-sub { color: var(--ink-3); margin-top: var(--space-1); }
 
 /* --- View rail: the product --- */
+/* Shortcut row under the hero: the two actions people come for most,
+   then the sibling food pages. Same family as the view chips, one size up. */
+.food-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.7em 1.1em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  background: var(--bg-raised);
+  color: var(--ink-2);
+  font: 600 var(--text-sm) var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease);
+}
+.fact:hover { border-color: var(--ink-3); transform: translateY(-1px); }
+.fact-primary { background: var(--coral); border-color: var(--coral); color: #fff; font-weight: 700; }
+.fact-primary:hover { border-color: var(--coral); filter: brightness(1.06); }
+.fact-n {
+  font-size: var(--text-xs);
+  background: var(--coral-light);
+  color: var(--coral);
+  border-radius: var(--radius-full);
+  padding: 0.05em 0.55em;
+  font-variant-numeric: tabular-nums;
+}
+
 .view-rail-wrap {
   position: sticky;
   top: var(--header-h);

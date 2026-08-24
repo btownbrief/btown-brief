@@ -13,9 +13,14 @@
 
   var feed = document.getElementById('o-feed');
   var note = document.getElementById('o-note');
-  var pills = Array.prototype.slice.call(document.querySelectorAll('.o-pill'));
+  var pills = Array.prototype.slice.call(document.querySelectorAll('.o-pill[data-filter]'));
+  var foodPill = document.getElementById('o-food');
   var entries = [];
   var active = 'all';
+  // ?food=1 deep-links the food-and-drink view (the restaurants page points here).
+  var foodOnly = new URLSearchParams(location.search).get('food') === '1';
+
+  function inScope(e) { return !foodOnly || e.food; }
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -71,7 +76,7 @@
 
   function render() {
     var shown = entries.filter(function (e) {
-      return active === 'all' || e.status === active;
+      return inScope(e) && (active === 'all' || e.status === active);
     });
     if (!shown.length) {
       feed.innerHTML = '<p class="o-empty">Nothing in this column right now — check back soon.</p>';
@@ -85,7 +90,7 @@
       if (active !== 'all') return '';
       var n = { 'open': 0, 'opening-soon': 0, 'closed': 0 };
       entries.forEach(function (e) {
-        if (String(e.date || '').slice(0, 4) === y) n[e.status]++;
+        if (inScope(e) && String(e.date || '').slice(0, 4) === y) n[e.status]++;
       });
       var bits = [];
       if (n['open']) bits.push(n['open'] + ' opened');
@@ -119,6 +124,37 @@
     });
   });
 
+  // Status counts follow the food toggle, so the numbers always describe
+  // what a click will actually show.
+  function setCounts() {
+    var counts = { all: 0 };
+    entries.forEach(function (e) {
+      if (!inScope(e)) return;
+      counts.all++;
+      counts[e.status] = (counts[e.status] || 0) + 1;
+    });
+    pills.forEach(function (p) {
+      var n = counts[p.getAttribute('data-filter')] || 0;
+      var span = p.querySelector('.n');
+      if (!span) { p.insertAdjacentHTML('beforeend', '<span class="n"></span>'); span = p.querySelector('.n'); }
+      span.textContent = n;
+    });
+  }
+
+  function syncFoodPill() {
+    foodPill.classList.toggle('is-active', foodOnly);
+    foodPill.setAttribute('aria-pressed', foodOnly ? 'true' : 'false');
+  }
+  foodPill.addEventListener('click', function () {
+    foodOnly = !foodOnly;
+    try {
+      history.replaceState(null, '', location.pathname + (foodOnly ? '?food=1' : ''));
+    } catch (e) {}
+    syncFoodPill();
+    setCounts();
+    render();
+  });
+
   fetch('data/openings.json')
     .then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -135,14 +171,8 @@
       entries = (data.entries || []).slice().sort(function (a, b) {
         return key(b).localeCompare(key(a));
       });
-      var counts = { all: entries.length };
-      entries.forEach(function (e) {
-        counts[e.status] = (counts[e.status] || 0) + 1;
-      });
-      pills.forEach(function (p) {
-        var n = counts[p.getAttribute('data-filter')] || 0;
-        p.insertAdjacentHTML('beforeend', '<span class="n">' + n + '</span>');
-      });
+      setCounts();
+      syncFoodPill();
       note.hidden = false;
       render();
     })

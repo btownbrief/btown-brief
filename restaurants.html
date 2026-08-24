@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=20260711k">
-  <link rel="stylesheet" href="css/food.css?v=20260711k">
+  <link rel="stylesheet" href="css/food.css?v=20260824a">
   <script>
     /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
        refreshes the cache; this only avoids the white flash after dark. */
@@ -97,6 +97,15 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <p class="food-hero-clock" id="food-clock" aria-live="polite"></p>
       <p class="food-hero-sub">Live hours for every restaurant, bar, and café in and around Burlington — one tap per question.</p>
     </section>
+
+    <!-- Shortcuts: the two big actions, then the food pages next door -->
+    <nav class="food-actions" aria-label="Shortcuts">
+      <button class="fact fact-primary" id="act-random">🎲 Restaurant Randomizer</button>
+      <button class="fact" id="act-all">📋 Show all <span class="fact-n" id="act-all-n"></span></button>
+      <a class="fact" href="openings.html?food=1">✨ Openings &amp; Closings</a>
+      <a class="fact" href="deals.html">🏷️ Food &amp; Drink Deals</a>
+      <a class="fact" href="small-bites.html">🥪 Small Bites</a>
+    </nav>
 
     <!-- THE VIEWS: one-tap answer chips, computed against the current time -->
     <nav class="view-rail-wrap" aria-label="Quick views">
@@ -214,7 +223,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   </footer>
 
   <script src="js/food-lib.js?v=20260711k"></script>
-  <script src="js/restaurants.js?v=20260711k"></script>
+  <script src="js/restaurants.js?v=20260824a"></script>
   <script src="js/auto-theme.js?v=20260711k"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
