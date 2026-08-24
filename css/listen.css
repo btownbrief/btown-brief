@@ -1,0 +1,99 @@
+/* ============================================================
+   LISTEN & WATCH — podcasts + video (listen.html)
+
+   Rides on css/hub.css: black ground, glass panels, Instrument
+   Serif headlines. This file adds the feature card, the podcast
+   grid, the watch cards, and the shared mini player.
+============================================================ */
+
+.l-head { padding: 2.6rem 0 1.4rem; }
+.l-back { color: var(--ink-faint); text-decoration: none; }
+.l-back:hover { color: var(--ink); }
+.l-sub { max-width: 60ch; color: var(--ink-soft); margin: .6rem 0 0; }
+
+.l-kicker { display: block; font-size: .72rem; font-weight: 600; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent); margin: 0 0 .35rem; }
+
+/* ---------- the feature: BTown Arts Podcast ---------- */
+.l-feature { display: flex; gap: 1.4rem; align-items: stretch; background: var(--panel);
+  border: 1px solid var(--edge); border-radius: 18px; overflow: hidden; margin: 0 0 2.2rem; }
+.l-feature-art { width: 240px; min-height: 100%; object-fit: cover; flex: 0 0 auto; }
+.l-feature-body { padding: 1.3rem 1.4rem 1.3rem 0; }
+.l-feature h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400;
+  font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 .5rem; }
+.l-blurb { color: var(--ink-soft); max-width: 62ch; margin: 0 0 1rem; }
+.l-btns { display: flex; flex-wrap: wrap; gap: .55rem; }
+.l-btn { display: inline-block; border: 1px solid var(--edge); border-radius: 999px;
+  padding: .5rem .95rem; color: var(--ink); text-decoration: none; font-weight: 600;
+  font-size: .88rem; background: var(--panel); }
+.l-btn:hover { background: var(--panel-hover); }
+.l-btn-hot { background: var(--accent); border-color: var(--accent); color: #1B1200; }
+.l-btn-hot:hover { filter: brightness(1.06); background: var(--accent); }
+
+/* ---------- sections + podcast grid ---------- */
+.l-section { font-family: "Instrument Serif", Georgia, serif; font-weight: 400;
+  font-size: clamp(1.6rem, 3.4vw, 2.2rem); margin: 2.2rem 0 .3rem; }
+.l-section-sub { color: var(--ink-soft); margin: 0 0 1rem; max-width: 62ch; }
+.l-section-sub a { color: var(--accent); }
+
+.l-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.l-pod { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px;
+  padding: .95rem 1rem; }
+.l-pod-head { display: flex; gap: .7rem; align-items: center; margin-bottom: .6rem; }
+.l-pod-art { width: 46px; height: 46px; border-radius: 10px; object-fit: cover;
+  background: var(--panel-hover); flex: 0 0 auto; }
+.l-pod-name { font-weight: 600; margin: 0; line-height: 1.25; }
+.l-pod-name a { color: var(--ink); text-decoration: none; }
+.l-pod-name a:hover { color: var(--accent); }
+.l-eps { list-style: none; margin: 0; padding: 0; }
+.l-eps li { display: flex; gap: .55rem; align-items: baseline; padding: .32rem 0;
+  border-top: 1px solid var(--edge-soft); font-size: .88rem; }
+.l-eps .play { flex: 0 0 auto; border: 1px solid var(--edge); background: none;
+  color: var(--accent); border-radius: 999px; font: inherit; font-size: .74rem;
+  padding: .12rem .55rem; cursor: pointer; }
+.l-eps .play:hover { background: var(--accent-soft); }
+.l-eps a { color: var(--ink-soft); text-decoration: none; }
+.l-eps a:hover { color: var(--ink); }
+.l-eps time { margin-left: auto; color: var(--ink-faint); font-size: .74rem; white-space: nowrap; flex: 0 0 auto; }
+.l-loading, .l-empty { color: var(--ink-faint); }
+
+/* the static follow card (no wire episodes yet) */
+.l-pod-links { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .5rem; }
+.l-pod-links a { font-size: .78rem; border: 1px solid var(--edge); border-radius: 999px;
+  padding: .22rem .65rem; color: var(--ink-soft); text-decoration: none; }
+.l-pod-links a:hover { color: var(--ink); background: var(--panel-hover); }
+.l-pod-note { font-size: .78rem; color: var(--ink-faint); margin: .55rem 0 0; }
+
+/* ---------- watch cards ---------- */
+.l-watch { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.l-tv { display: flex; flex-direction: column; gap: .45rem; background: var(--panel);
+  border: 1px solid var(--edge); border-radius: 16px; padding: 1.05rem 1.1rem;
+  color: var(--ink); text-decoration: none; }
+.l-tv:hover { background: var(--panel-hover); }
+.l-tv-body { color: var(--ink-soft); font-size: .92rem; }
+.l-tv-body b { color: var(--ink); }
+.l-tv-go { margin-top: auto; padding-top: .5rem; color: var(--accent); font-weight: 600; font-size: .9rem; }
+
+.l-note { color: var(--ink-faint); margin: 2rem 0; }
+.l-note a { color: var(--accent); }
+
+/* ---------- shared mini player ---------- */
+.l-player { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  display: flex; gap: .8rem; align-items: center; padding: .55rem clamp(12px, 4vw, 28px);
+  background: rgba(6, 8, 10, .92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--edge); }
+.l-player-title { margin: 0; font-size: .85rem; color: var(--ink-soft); flex: 1 1 auto;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.l-player audio { flex: 0 1 380px; height: 36px; }
+.l-player-close { flex: 0 0 auto; border: 1px solid var(--edge); background: none;
+  color: var(--ink-soft); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; }
+.l-player-close:hover { color: var(--ink); }
+body.has-player { padding-bottom: 64px; }
+
+@media (max-width: 640px) {
+  .l-feature { flex-direction: column; }
+  .l-feature-art { width: 100%; height: 210px; }
+  .l-feature-body { padding: 0 1.1rem 1.2rem; }
+  .l-player audio { flex: 1 1 auto; min-width: 0; }
+  .l-player-title { display: none; }
+}
