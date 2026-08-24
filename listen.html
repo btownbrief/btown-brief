@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/hub.css?v=20260824a">
-  <link rel="stylesheet" href="css/listen.css?v=20260824a">
+  <link rel="stylesheet" href="css/listen.css?v=20260824b">
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -60,21 +60,25 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <!-- ============ THE FEATURE: our own podcast ============ -->
   <section class="l-feature" aria-label="BTown Arts Podcast">
-    <img class="l-feature-art" src="assets/kwame-vibe.jpg" alt="The Kwame Vibe presents — BTown Arts Podcast artwork">
+    <img class="l-feature-art" src="assets/btown-arts-cover.jpg" alt="BTown Brief Arts &amp; Entertainment — the show's cover art">
     <div class="l-feature-body">
-      <p class="l-kicker">Our show</p>
+      <p class="l-kicker">The Brief's own show</p>
       <h2>BTown Arts Podcast</h2>
-      <p class="l-blurb">Arts and entertainment, hosted by <strong>Kwame Dankwa</strong> — an
-        award-winning radio veteran with 20+ years on the air who DJs festivals all over the
-        area. Latest: he sat down with <strong>HAYLA</strong>, the Grammy-nominated voice of
-        "Escape" (Kx5) with six million monthly Spotify listeners, at Ilesoniq in Montreal.</p>
+      <p class="l-blurb">The BTown Brief's arts and entertainment podcast — interviews with the
+        artists coming through and the people making the scene here, hosted by radio veteran
+        Kwame Dankwa. Latest: <strong>HAYLA</strong>, the Grammy-nominated voice of
+        "Escape" (Kx5) with six million monthly Spotify listeners, from Ilesoniq in Montreal.</p>
       <div class="l-btns">
         <a class="l-btn l-btn-hot" href="https://www.youtube.com/watch?v=W6LBJ72UKvo">▶ Watch the HAYLA interview</a>
         <a class="l-btn" href="https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp">Follow on Spotify</a>
-        <a class="l-btn" href="https://www.instagram.com/thekwamevibe/">Kwame on Instagram</a>
       </div>
     </div>
   </section>
+  <!-- Every episode, browsable and playable right here -->
+  <iframe class="l-show-embed" title="BTown Arts Podcast — all episodes"
+    src="https://open.spotify.com/embed/show/6ejf0OFAyNTZNKDzFLWbKp?theme=0"
+    width="100%" height="352" frameborder="0" loading="lazy"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 
   <!-- ============ LISTEN: local shows, playable in place ============ -->
   <section aria-labelledby="local-h">
@@ -92,16 +96,24 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <div class="l-grid" id="national-pods"></div>
   </section>
 
-  <!-- ============ WATCH ============ -->
+  <!-- ============ WATCH: BTown TV is the star ============ -->
   <section aria-labelledby="watch-h">
-    <h2 class="l-section" id="watch-h">Watch</h2>
-    <div class="l-watch" id="watch-cards">
-      <a class="l-tv" id="tv-card" href="tv.html">
-        <span class="l-kicker">BTown TV · tonight's pick</span>
-        <span class="l-tv-body" id="tv-body">One curated page of video every evening — a
-          Tonight's pick, short shelves, a Vermont shelf.</span>
-        <span class="l-tv-go">Watch tonight's page →</span>
-      </a>
+    <h2 class="l-section" id="watch-h">Watch: BTown TV</h2>
+    <p class="l-section-sub">One curated page of video every evening — a Tonight's pick, short
+      shelves, a Vermont shelf, and a playlist that plays the whole edition on your TV.
+      Tonight's picks below refresh with every edition.</p>
+
+    <a class="l-tvhero" id="tv-hero" href="tv.html">
+      <img class="l-tvhero-thumb" id="tv-thumb" src="" alt="" hidden>
+      <span class="l-tvhero-body">
+        <span class="l-kicker" id="tv-kicker">Tonight's pick</span>
+        <span class="l-tv-body" id="tv-body">Loading tonight's page…</span>
+      </span>
+    </a>
+    <div class="l-tvstrip" id="tv-strip" aria-label="More from tonight's page"></div>
+    <p class="l-tvcta"><a class="l-btn l-btn-hot" href="tv.html">Open tonight's BTown TV →</a></p>
+
+    <div class="l-watch">
       <a class="l-tv l-tv-alt" href="pulse.html#t=youtube">
         <span class="l-kicker">The YouTube wall</span>
         <span class="l-tv-body">Every Vermont and Burlington channel we track, one wall —
@@ -135,7 +147,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   <button class="l-player-close" id="l-player-close" aria-label="Close player">✕</button>
 </div>
 
-<script src="js/listen.js?v=20260824a"></script>
+<script src="js/listen.js?v=20260824b"></script>
 <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
 </html>

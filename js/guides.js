@@ -16,6 +16,14 @@
     window.BTV.renderGuidesRail = renderGuidesRail;
   }
 
+  /* A guide with a cover_image gets Stephen's photograph as its ground, with a
+     dark wash so the title stays readable; the gradient class remains the
+     no-photo fallback. */
+  function coverStyle(g) {
+    if (!g.cover_image || !/^assets\/guides\/[\w-]+\.jpg$/.test(g.cover_image)) return '';
+    return ` style="background-image:linear-gradient(rgba(9,13,22,.34),rgba(9,13,22,.6)),url('${g.cover_image}');background-size:cover;background-position:center;"`;
+  }
+
   function typeBadge(g) {
     return g.type === 'place' ? 'Place guide'
       : g.type === 'itinerary' ? 'Itinerary'
@@ -39,7 +47,7 @@
     rail.innerHTML = guides.map(g => {
       const isTop100 = g.id === 'top-100';
       return `
-      <button class="rail-card ${getCoverClass(g)}${isTop100 ? ' rail-card-top100' : ''}" data-guide-id="${esc(g.id)}" role="listitem" aria-label="${esc(g.title)}">
+      <button class="rail-card ${getCoverClass(g)}${isTop100 ? ' rail-card-top100' : ''}"${coverStyle(g)} data-guide-id="${esc(g.id)}" role="listitem" aria-label="${esc(g.title)}">
         ${isTop100 ? arrows : ''}
         <span class="rail-card-type">${isTop100 ? 'The definitive ranking' : typeBadge(g)}</span>
         <span class="rail-card-title">${esc(g.title)}</span>
@@ -95,7 +103,7 @@
 
     return `
       <div class="guide-card" data-guide-id="${esc(g.id)}" role="button" tabindex="0" aria-label="${esc(g.title)}">
-        <div class="guide-card-cover ${coverClass}">
+        <div class="guide-card-cover ${coverClass}"${coverStyle(g)}>
           <span class="guide-card-type-badge">${typeBadge(g)}</span>
         </div>
         <div class="guide-card-body">
