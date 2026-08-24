@@ -353,7 +353,7 @@
 
   function statDeals() {
     return getJSON('data/deals.json').then(function (data) {
-      var list = data.deals || [];
+      var list = (data.deals || []).filter(function (d) { return !d.retired; });
       if (!list.length || !window.BTFood) return;
       var t = window.BTFood.now();
       var today = list.filter(function (d) {
