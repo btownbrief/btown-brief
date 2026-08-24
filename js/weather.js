@@ -97,9 +97,9 @@
 
   // [ lenMin, lenSpan, speedMin, speedSpan, drift, lineWidth, alpha, share ]
   var RAIN_BANDS = [
-    { lenMin: 12, lenSpan: 8,  speedMin: 10, speedSpan: 5, drift: 0.9, width: 0.9, alpha: 0.34, share: 0.45 },
-    { lenMin: 18, lenSpan: 10, speedMin: 16, speedSpan: 5, drift: 1.6, width: 1.3, alpha: 0.50, share: 0.35 },
-    { lenMin: 26, lenSpan: 14, speedMin: 22, speedSpan: 8, drift: 2.5, width: 1.9, alpha: 0.66, share: 0.20 },
+    { lenMin: 12, lenSpan: 8,  speedMin: 10, speedSpan: 5, drift: 0.9, width: 0.9, alpha: 0.28, share: 0.45 },
+    { lenMin: 18, lenSpan: 10, speedMin: 16, speedSpan: 5, drift: 1.6, width: 1.3, alpha: 0.42, share: 0.35 },
+    { lenMin: 26, lenSpan: 14, speedMin: 22, speedSpan: 8, drift: 2.5, width: 1.9, alpha: 0.55, share: 0.20 },
   ];
   // [ radius, speed, sway amplitude, alpha, share ]
   var SNOW_BANDS = [
@@ -115,13 +115,19 @@
     var kind = null;      // 'rain' | 'snow' | 'sun'
     var intensity = 1;    // rain/snow density multiplier
 
-    if ((code >= 51 && code <= 57) || code === 61 || code === 80) { kind = 'rain'; intensity = 0.45; }  // drizzle / light rain
-    else if (code === 63 || code === 81) { kind = 'rain'; intensity = 0.85; }
-    else if (code === 65 || code === 82 || code >= 95) { kind = 'rain'; intensity = 1.4; }
+    if ((code >= 51 && code <= 57) || code === 61 || code === 80) { kind = 'rain'; intensity = 0.35; }  // drizzle / light rain
+    else if (code === 63 || code === 81) { kind = 'rain'; intensity = 0.65; }
+    else if (code === 65 || code === 82 || code >= 95) { kind = 'rain'; intensity = 1.0; }
     else if ((code >= 66 && code <= 77) || code === 85 || code === 86) { kind = 'snow'; intensity = 1; }
     else if (code === 0 && weather.isDay) { kind = 'sun'; }
     else if ((code === 1 || code === 2) && weather.isDay) { kind = 'sun'; intensity = 0.5; }
     if (!kind) return;
+
+    // The layer is optional — some readers found the rain too much. The
+    // choice sticks across visits.
+    var STORE_KEY = 'btown-ambient-off';
+    var enabled = true;
+    try { enabled = localStorage.getItem(STORE_KEY) !== '1'; } catch (e) {}
 
     var canvas = document.createElement('canvas');
     canvas.id = 'weather-ambient';
@@ -272,7 +278,7 @@
     // start()/stop() are guarded by rafId so we can never end up with two
     // concurrent loops (which would run the weather at double speed).
     function start() {
-      if (rafId || reduced || !running) return;
+      if (rafId || reduced || !running || !enabled) return;
       lastTs = 0;
       rafId = requestAnimationFrame(frame);
     }
@@ -293,10 +299,36 @@
       resizeTimer = setTimeout(applySize, 120);
     });
 
+    // Corner toggle to switch the ambient layer off / back on.
+    var icons = { rain: '🌧', snow: '❄️', sun: '☀️' };
+    var toggleBtn = document.createElement('button');
+    toggleBtn.id = 'weather-ambient-toggle';
+    toggleBtn.type = 'button';
+    function updateToggle() {
+      toggleBtn.textContent = icons[kind] + (enabled ? ' on' : ' off');
+      toggleBtn.setAttribute('aria-pressed', String(enabled));
+      toggleBtn.title = 'Weather effects: ' + (enabled ? 'on' : 'off');
+    }
+    updateToggle();
+    toggleBtn.addEventListener('click', function () {
+      enabled = !enabled;
+      try { localStorage.setItem(STORE_KEY, enabled ? '0' : '1'); } catch (e) {}
+      updateToggle();
+      if (enabled) {
+        canvas.hidden = false;
+        if (reduced) draw(false); else start();
+      } else {
+        stop();
+        canvas.hidden = true;
+      }
+    });
+    document.body.appendChild(toggleBtn);
+
     // Reduced motion still gets the weather — applySize() paints one still
     // frame and we never start the loop.
     applySize();
-    start();
+    if (enabled) start();
+    else canvas.hidden = true;
   }
 
   // Preview hook: append ?wx=sun|rain|lightrain|snow|storm to the URL

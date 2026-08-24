@@ -1697,6 +1697,26 @@ img {
   z-index: 40; /* above content, below header (100) and drawers (200+) */
 }
 
+#weather-ambient-toggle {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 41;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-raised);
+  color: var(--ink-3);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  opacity: 0.85;
+  transition: opacity var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+#weather-ambient-toggle:hover { opacity: 1; color: var(--ink); }
+
 /* ============================================================
    NEWSLETTER TEASER BAR
 ============================================================ */
