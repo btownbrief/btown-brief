@@ -1350,7 +1350,7 @@
         : '') + '</div>';
 
     var html = '<p class="empty tv-pointer" style="margin:14px auto 0">' +
-      'The curated edition lives at <a href="tv.html"><b>Btown TV</b></a> — one human-picked page every evening, ' +
+      'The curated edition lives at <a href="tv.html"><b>BTown TV</b></a> — one curated page every evening, ' +
       'with a playlist that plays it on your TV. This tab is the raw wire.</p>' + bar;
     if (shelves) {
       /* national leads (the production values), local sits between national
@@ -1773,8 +1773,8 @@
     if (ns.off) return '';
     var inner = (ns.n % 3 === 0)
       ? 'You’ve been reading a lot. Take a break — ' +
-        '<a href="https://play.btownbrief.com?utm_source=pulse&utm_medium=nudge" target="_blank" rel="noopener">go play something at the Btown Digital Arcade →</a>'
-      : 'You’ve been reading a lot. How about reading the Btown Brief? ' +
+        '<a href="https://play.btownbrief.com?utm_source=pulse&utm_medium=nudge" target="_blank" rel="noopener">go play something at the BTown Digital Arcade →</a>'
+      : 'You’ve been reading a lot. How about reading the BTown Brief? ' +
         '<a href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse-nudge" target="_blank" rel="noopener">Burlington in your inbox, a few mornings a week — free →</a>';
     return '<div class="nudge">' + inner +
       '<button class="nudge-x" data-nudge-dismiss aria-label="Dismiss for today">✕</button></div>';

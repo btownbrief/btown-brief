@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Btown TV — the daily edition: a curated page of videos, not a feed.
+"""BTown TV — the daily edition: a curated page of videos, not a feed.
 
 refresh_youtube.py gathers the raw material (followed-channel uploads, the
 Vermont radar, the deep-cut catalog) onto the `pulse-youtube` branch every
@@ -18,7 +18,7 @@ three hours. This script is the editor that runs once a day on top of it:
   3. The page + the TV. data/btown-tv.json goes to the orphan `btown-tv`
      branch (same single-commit pattern as pulse-top), and the same picks are
      written, in order, into a NEW public YouTube playlist for the night
-     ("Btown TV — Sun, Aug 23") so the edition plays on the TV app with one
+     ("BTown TV — Sun, Aug 23") so the edition plays on the TV app with one
      click. One playlist per night (no deletes = half the API quota of
      rewriting one); the last 14 stay up, each Past night keeps its own.
 
@@ -552,7 +552,7 @@ SCHEMA = {
 }
 
 PROMPT_RULES = """
-You are the editor of Btown TV, a once-a-day curated page of YouTube videos \
+You are the editor of BTown TV, a once-a-day curated page of YouTube videos \
 for people in Burlington, Vermont who would rather have a human choose what \
 to watch tonight than scroll the algorithm. The page is finite: one \
 Tonight's pick and six shelves, about fifty videos on a good night. \
@@ -788,12 +788,12 @@ def oauth_access_token():
 
 
 def playlist_title(edition):
-    """'Btown TV — Sat, Aug 23' from the edition label."""
+    """'BTown TV — Sat, Aug 23' from the edition label."""
     try:
         day = datetime.strptime(edition, "%Y-%m-%d")
-        return f"Btown TV — {day.strftime('%a, %b')} {day.day}"
+        return f"BTown TV — {day.strftime('%a, %b')} {day.day}"
     except ValueError:
-        return f"Btown TV — {edition}"
+        return f"BTown TV — {edition}"
 
 
 def publish_playlist(video_ids, edition, replace_id=None, token=None, http=None):
@@ -821,7 +821,7 @@ def publish_playlist(video_ids, edition, replace_id=None, token=None, http=None)
         return None
     body = json.dumps({
         "snippet": {"title": playlist_title(edition)[:150],
-                    "description": ("Tonight's edition of Btown TV — a human-picked page of "
+                    "description": ("Tonight's edition of BTown TV — a curated page of "
                                     "videos for Burlington, Vermont, in the order the editor "
                                     f"put them. The page: {PAGE_URL}")[:5000]},
         "status": {"privacyStatus": "public"}}).encode()
@@ -1304,7 +1304,7 @@ def selftest():
     assert edition_label(now_dt) == now_dt.astimezone(EDITION_TZ).strftime("%Y-%m-%d")
 
     # --- nightly playlist: create, insert in order, then replace the day's earlier one
-    assert playlist_title("2026-08-23") == "Btown TV — Sun, Aug 23", playlist_title("2026-08-23")
+    assert playlist_title("2026-08-23") == "BTown TV — Sun, Aug 23", playlist_title("2026-08-23")
     calls = []
     def fake_http(url, headers=None, data=None, method=None, timeout=30):
         calls.append((method or "GET", url, data))

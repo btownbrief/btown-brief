@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Btown TV — one-time OAuth setup for the "Btown TV — Tonight" playlist.
+"""BTown TV — one-time OAuth setup for the "BTown TV — Tonight" playlist.
 
 curate_tv.py rewrites a public YouTube playlist every edition so the page
 plays on the TV app with one click. Writing to a playlist needs OAuth as the
@@ -12,14 +12,14 @@ YouTube API key):
   2. "+ Create credentials" -> "OAuth client ID" -> Application type
      "Desktop app" -> name it "btown-tv" -> Create
   3. If it asks you to configure the consent screen first: External,
-     app name "Btown TV", your email, add yourself under Test users, save.
+     app name "BTown TV", your email, add yourself under Test users, save.
      (Test-user mode is fine — only your account ever signs in.)
   4. Copy the Client ID and Client secret.
 
 Then:
   python3 scripts/tv_playlist_auth.py --client-id ... --client-secret ...
 
-A browser opens; sign in with the Btown Brief YouTube account; the script
+A browser opens; sign in with the BTown Brief YouTube account; the script
 catches the redirect on localhost, trades the code for a refresh token,
 creates the playlist, and prints:
 
@@ -69,7 +69,7 @@ class Catcher(http.server.BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "text/html")
         self.end_headers()
-        self.wfile.write(b"<h2>Btown TV is connected. You can close this tab.</h2>")
+        self.wfile.write(b"<h2>BTown TV is connected. You can close this tab.</h2>")
 
     def log_message(self, *args):  # quiet
         pass
@@ -93,7 +93,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--client-id", required=True)
     parser.add_argument("--client-secret", required=True)
-    parser.add_argument("--title", default="Btown TV — Tonight")
+    parser.add_argument("--title", default="BTown TV — Tonight")
     parser.add_argument("--playlist-id", default="",
                         help="reuse an existing playlist instead of creating one")
     args = parser.parse_args()
@@ -132,8 +132,8 @@ def main():
                             json_body={
                                 "snippet": {
                                     "title": args.title,
-                                    "description": ("Tonight's Btown TV edition — one "
-                                                    "human-picked page of videos for "
+                                    "description": ("Tonight's BTown TV edition — one "
+                                                    "curated page of videos for "
                                                     "Burlington, rewritten daily. "
                                                     "guide.btownbrief.com/tv.html")},
                                 "status": {"privacyStatus": "public"}})
