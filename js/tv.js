@@ -302,7 +302,7 @@
     html += '<header class="tv-mast">' +
       '<div class="tv-kicker">BTown Brief presents</div>' +
       '<h1 class="tv-title">BTown <em>TV</em></h1>' +
-      '<p class="tv-tag">One curated page of videos for Burlington, every evening. A Tonight\'s pick and six shelves — around fifty videos, each with a reason — watch it here, or send the top of the edition to your TV. No algorithm, no infinite scroll.</p>' +
+      '<p class="tv-tag">One curated page of videos for Burlington, every evening. A Tonight\'s pick and seven shelves — around fifty videos, each with a reason — watch it here, or send the top of the edition to your TV. No algorithm, no infinite scroll.</p>' +
       '<div class="tv-mast-row">' +
         (data.playlist && data.playlist.url ?
           '<a class="tv-play" href="' + esc(data.playlist.url) + '" target="_blank" rel="noopener" title="Opens tonight\'s playlist in YouTube — cast it or open it on your TV">' +
@@ -312,7 +312,7 @@
       '</div>' +
       (stale ? '<p class="tv-stale">This is the last edition we made — tonight\'s hasn\'t landed yet.</p>' : '') +
       '<div class="tv-howtext" id="tv-howtext" hidden>' +
-        'Every three hours a script collects new uploads from ~100 channels we follow, a Vermont radar, and each channel\'s back catalog. Before dinner an editor — a model reading a written taste doctrine — throws out clips, trailers, reruns and webcams, then picks one Tonight\'s pick and a few shelves, by index, with a one-line reason for each. Titles are never rewritten. ' +
+        'Every three hours a script collects new uploads from ~100 channels we follow, a Vermont radar, and each channel\'s back catalog. Before dinner an editor — a model reading a written taste doctrine — throws out clips, promos, reruns and webcams (movie trailers get their own shelf), then picks one Tonight\'s pick and a few shelves, by index, with a one-line reason for each. Titles are never rewritten. ' +
         'Each night\'s page becomes its own public playlist (the first fifty, in page order) — the "Play tonight on your TV" button — and the last two weeks of those stay up under Past nights. ' +
         'The editor also names a short bench for each shelf — the next few it would stand behind. That\'s what "Show more" unfolds, once, and what steps in when you hide a pick with ✕. It isn\'t a feed: when the bench is out, that\'s the night. Past editions stay up for two weeks under Past nights. ' +
         'Your ✓ ✕ ♥ taps stay on this device and roll up, anonymously, into what the editor sees tomorrow. ' +

@@ -1,5 +1,5 @@
 {
- "_note": "Channels for the Pulse YOUTUBE tab, from the Aug 2026 curation ledger. Uploads come from each channel's free public RSS (no API quota). cap = max videos per refresh (default 3); min_sec = only keep videos at least this long; g = shelf for the Shelves view (vt/news/sci/food/music/fun). lane = Btown TV's finer taxonomy (doc|explainer|talk|comedy|music|film|hoops|craft|vermont|wonder|news); channels added Aug 2026 for Btown TV carry it, the original 78 don't need it.",
+ "_note": "Channels for the Pulse YOUTUBE tab, from the Aug 2026 curation ledger. Uploads come from each channel's free public RSS (no API quota). cap = max videos per refresh (default 3); min_sec = only keep videos at least this long; g = shelf for the Shelves view (vt/news/sci/food/music/fun; trailer = Btown TV's Coming soon shelf only, never a Pulse shelf). lane = Btown TV's finer taxonomy (doc|explainer|talk|comedy|music|film|hoops|craft|vermont|wonder|news); channels added Aug 2026 for Btown TV carry it, the original 78 don't need it.",
  "channels": [
   {
    "id": "UCh3kiOuiI6XLVEXI9WaX5jg",
@@ -809,6 +809,97 @@
    "name": "Vermont Land Trust",
    "g": "vt",
    "lane": "vermont"
+  },
+  {
+   "id": "UCXDIl5ElYimqmasGFGmp7Eg",
+   "name": "Lessons from the Screenplay",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCNvsIonJdJ5E4EXMa65VYpA",
+   "name": "Now You See It",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCs7nPQIEba0T3tGOWWsZpJQ",
+   "name": "Like Stories of Old",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCH_VqR5rFFhgjZmM31xA3Ag",
+   "name": "Accented Cinema",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCNiolZNLiJplmCCzqk9-czQ",
+   "name": "Be Kind Rewind",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCl8W0iKeGjXnGYwOxV8BUOg",
+   "name": "Broey Deschanel",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCdwi3hYqTyrmmxPEchqbEDA",
+   "name": "The Cinema Cartography",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCMAwBUlaxyqZY-2hVac8qgg",
+   "name": "Patrick (H) Willems",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCxxoxF_G-ASR_C3g0AuWvxA",
+   "name": "Karsten Runquist",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCjFqcJQXGZ6T6sxyFB-5i6A",
+   "name": "Every Frame a Painting",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UC3cYcYPnsmXVqqMrqVlc2kg",
+   "name": "Little White Lies",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCuPivVjnfNo4mb3Oog_frZg",
+   "name": "A24",
+   "g": "trailer",
+   "lane": "film"
+  },
+  {
+   "id": "UCpy5dRhZd-JbZP4NsrnLt1w",
+   "name": "NEON",
+   "g": "trailer",
+   "lane": "film"
+  },
+  {
+   "id": "UCor9rW6PgxSQ9vUPWQdnaYQ",
+   "name": "Searchlight Pictures",
+   "g": "trailer",
+   "lane": "film"
+  },
+  {
+   "id": "UCE0Wkd9Jcn2-TNo5G8bLQrA",
+   "name": "Rotten Tomatoes Trailers",
+   "g": "trailer",
+   "lane": "film",
+   "cap": 4
   }
  ]
 }
