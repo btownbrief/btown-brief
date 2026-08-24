@@ -13,9 +13,9 @@ writes the survivors to data/openings-suggestions.md for review.
                                                         # …and remember them
 
 --new-only filters against data/openings-seen.json (candidates already
-surfaced once); --mark-seen records this run's candidates there. The weekly
-openings-radar workflow uses both so its GitHub issue only pings about
-genuinely new candidates. Local runs without flags always show everything.
+surfaced once); --mark-seen records this run's candidates there. The
+biweekly openings-radar workflow uses both so its GitHub issue only pings
+about genuinely new candidates. Local runs without flags show everything.
 
 Set BTB_ARCHIVE_STORIES to point at the archive repo's stories.json when
 the sibling checkout isn't at ../archive (the workflow downloads it).
@@ -42,13 +42,32 @@ FEEDS = [
     ("changes", os.path.join(ROOT, "data", "changes", "changes.json")),
 ]
 
-# The Brief's own archive (sibling repo, ~/btownbrief/archive) tags stories
-# with openClose — the single best source. Optional: skipped silently when
-# the checkout isn't there. BTB_ARCHIVE_STORIES overrides the path (the
-# radar workflow downloads the raw file and points here).
+# The Brief's own archive (sibling repo, ~/btownbrief/archive) is the single
+# best source. All stories are scanned, not just openClose-tagged ones — the
+# tags proved incomplete during the 2026-08 backfill. Optional: skipped
+# silently when the checkout isn't there. BTB_ARCHIVE_STORIES overrides the
+# path (the radar workflow downloads the repo and points here).
 ARCHIVE = os.environ.get(
     "BTB_ARCHIVE_STORIES",
     os.path.join(ROOT, "..", "archive", "data", "stories.json"))
+
+# The archive's edition markdown files carry quick-hit news links that never
+# reach stories.json (the 2026-08 backfill found Alimentari, T&M Asian
+# Market, Simple Roots, Specs' bar, Clover Café and Peak Makaya only here).
+ARCHIVE_EDITIONS = os.environ.get(
+    "BTB_ARCHIVE_EDITIONS",
+    os.path.join(ROOT, "..", "archive", "editions"))
+
+# Edition files are mostly event-calendar links; only markdown links into a
+# news outlet can be an opening/closing story.
+NEWS_DOMAIN = re.compile(
+    r"https?://(www\.)?(sevendaysvt|wcax|mynbc5|vtdigger|burlingtonfreepress|"
+    r"vermontbiz|willistonobserver|vtcng|mychamplainvalley|samessenger|"
+    r"vermontpublic|vtcommunitynews|burlingtondailynews|wptz)\.",
+    re.IGNORECASE,
+)
+
+MD_LINK = re.compile(r"\[([^\]]{4,140})\]\((https?://[^)\s]+)\)")
 
 # Business-change language. Word-boundary anchored so "reopens" still hits
 # ("re" + open) but "chopin" doesn't.
@@ -57,6 +76,7 @@ SIGNAL = re.compile(
     r"shutter(s|ed|ing)?|debut(s|ed|ing)?|launch(es|ed|ing)?|"
     r"first bite|entr[ée]es & exits|last (day|call)|"
     r"going out of business|new (restaurant|caf[eé]|bar|shop|store|spot)|"
+    r"take(s|n)? over|"
     r"relocat(es|ed|ing)|mov(es|ed|ing) (into|back)|"
     r"mov(es|ed|ing) to (?!bring|make|allow|approve|consider|put|require))\b",
     re.IGNORECASE,
@@ -79,6 +99,8 @@ NOISE = re.compile(
     r"meeting|agenda|hearing|subcommittee|session|registration|"
     r"applications?|enrollment|season|weekend|pool|rink|ski|mountain|"
     r"open house|open letter|opening act|open mic|open source|"
+    r"opening (day|night)|(opening|closing) reception|art opening|"
+    r"open studio|farmers market|"
     r"open drug|encampment|flood|rain|wastewater|fema|buyout)\b",
     re.IGNORECASE,
 )
@@ -145,10 +167,38 @@ def harvest(feed_name, data):
                 yield (item["headline"], item.get("url", ""),
                        item.get("sourceName") or "")
     elif feed_name == "archive":
+        # Every story, not just openClose-tagged ones — the tags proved
+        # incomplete (2026-08 backfill). SIGNAL/NOISE filtering in main()
+        # keeps the volume sane, and the seen-file keeps it one-time.
         for item in data if isinstance(data, list) else []:
-            if isinstance(item, dict) and item.get("openClose") and item.get("headline"):
+            if isinstance(item, dict) and item.get("headline"):
                 yield (item["headline"], item.get("url", ""),
                        "Brief %s" % (item.get("date") or "archive"))
+
+
+def harvest_editions(dirpath):
+    """Yield candidates from the archive's edition markdown files: every
+    news-outlet link, as 'title — following snippet' so opening/closing
+    language in the surrounding sentence still triggers SIGNAL."""
+    try:
+        files = sorted(os.listdir(dirpath))
+    except OSError:
+        return
+    for fname in files:
+        if not fname.endswith(".md"):
+            continue
+        try:
+            with open(os.path.join(dirpath, fname)) as f:
+                text = f.read()
+        except OSError:
+            continue
+        for m in MD_LINK.finditer(text):
+            title, url = m.group(1), m.group(2)
+            if not NEWS_DOMAIN.match(url):
+                continue
+            snippet = re.sub(r"\s+", " ", text[m.end():m.end() + 220]).strip()
+            yield ("%s — %s" % (title.strip(), snippet), url,
+                   "Brief %s" % fname[:10])
 
 
 def main():
@@ -159,6 +209,7 @@ def main():
     urls, names = known_keys()
     suggestions, seen, failed = [], set(), []
 
+    sources = []
     feeds = list(FEEDS)
     if os.path.exists(ARCHIVE):
         feeds.append(("archive", ARCHIVE))
@@ -167,7 +218,12 @@ def main():
         if data is None:
             failed.append(feed_name)
             continue
-        for text, url, outlet in harvest(feed_name, data):
+        sources.append((feed_name, harvest(feed_name, data)))
+    if os.path.isdir(ARCHIVE_EDITIONS):
+        sources.append(("editions", harvest_editions(ARCHIVE_EDITIONS)))
+
+    for feed_name, items in sources:
+        for text, url, outlet in items:
             if not SIGNAL.search(text) or NOISE.search(text):
                 continue
             key = (url or text).strip().lower()
@@ -181,7 +237,7 @@ def main():
                 continue
             seen.add(key)
             suggestions.append({
-                "text": text.strip(), "url": url, "outlet": outlet,
+                "text": text.strip()[:260], "url": url, "outlet": outlet,
                 "feed": feed_name, "key": key,
             })
 

@@ -1,17 +1,19 @@
 name: Openings & Closings radar
 
-# Weekly: scan the site's own feeds (ticker, chatter, change log) plus the
-# archive repo's openClose-tagged stories for NEW opening/closing candidates,
-# and surface them in a GitHub issue (GitHub emails the repo owner — that's
-# the notification; same pattern as the photo queue). A committed seen-file
-# keeps repeat candidates from re-pinging every week.
+# Every couple weeks: scan the site's own feeds (ticker, chatter, change
+# log) plus the FULL archive repo — every story in stories.json (the
+# openClose tags proved incomplete) and the edition markdown files' news
+# links (which carry quick hits stories.json misses) — for NEW opening/
+# closing candidates, and surface them in a GitHub issue (GitHub emails the
+# repo owner — that's the notification; same pattern as the photo queue).
+# A committed seen-file keeps repeat candidates from re-pinging every run.
 #
 # The radar only SUGGESTS. Entries reach data/openings.json by hand, after
 # the story checks out — this workflow never touches the page's data.
 
 on:
   schedule:
-    - cron: '30 11 * * 1'   # Mondays 11:30 UTC (~6:30/7:30 AM Burlington)
+    - cron: '30 11 1,15 * *'   # 1st + 15th, 11:30 UTC (~6:30/7:30 AM Burlington)
   workflow_dispatch: {}
 
 permissions:
@@ -24,15 +26,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch archive stories (openClose tags)
+      - name: Fetch the archive repo (stories + editions)
         run: |
-          curl -fsS -o /tmp/archive-stories.json \
-            https://raw.githubusercontent.com/btownbrief/archive/main/data/stories.json \
+          curl -fsSL -o /tmp/archive.tar.gz \
+            https://github.com/btownbrief/archive/archive/refs/heads/main.tar.gz \
+            && mkdir -p /tmp/archive-src \
+            && tar -xzf /tmp/archive.tar.gz -C /tmp/archive-src --strip-components=1 \
             || echo "archive fetch failed — scanning local feeds only"
 
       - name: Scan for new candidates
         env:
-          BTB_ARCHIVE_STORIES: /tmp/archive-stories.json
+          BTB_ARCHIVE_STORIES: /tmp/archive-src/data/stories.json
+          BTB_ARCHIVE_EDITIONS: /tmp/archive-src/editions
         run: |
           python3 scripts/suggest_openings.py --new-only --mark-seen \
             || echo "scanner warned (partial feeds) — continuing"
@@ -51,15 +56,16 @@ jobs:
             --description "New opening/closing candidates to curate" 2>/dev/null || true
           BODY_FILE=/tmp/radar-body.md
           {
-            echo "New opening/closing candidates from this week's feeds."
+            echo "New opening/closing candidates from the latest sweep of"
+            echo "the feeds and the Brief's archive (stories + editions)."
             echo "Verify each story, then add keepers to \`data/openings.json\`"
             echo "by hand (see the file's \`note\` for the entry shape) — the"
             echo "page only ever shows what's curated."
             echo
             grep '^- \[ \]' data/openings-suggestions.md
             echo
-            echo "_Close this issue once the batch is curated; next week's new_"
-            echo "_candidates will open it again._"
+            echo "_Close this issue once the batch is curated; the next run's_"
+            echo "_new candidates will open it again._"
           } > "$BODY_FILE"
           ISSUE=$(gh issue list --label openings-radar --state open \
             --json number --jq '.[0].number // empty')
