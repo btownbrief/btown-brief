@@ -1,29 +1,29 @@
 {
- "generated": "2026-08-24T06:20:24-04:00",
+ "generated": "2026-08-24T17:04:08-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 12,
-   "seconds": 5.6
+   "count": 13,
+   "seconds": 6.3
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 55,
-   "seconds": 4.0
+   "seconds": 3.0
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 56,
-   "seconds": 2.8
+   "count": 70,
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 159,
-   "seconds": 3.2
+   "count": 170,
+   "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 78,
+   "count": 86,
    "seconds": 1.8
   },
   "echo": {
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 170,
-   "seconds": 66.1
+   "count": 180,
+   "seconds": 76.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 35,
-   "seconds": 2.5
+   "seconds": 3.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.5
+   "seconds": 42.2
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 407,
-   "seconds": 74.2
+   "count": 423,
+   "seconds": 68.0
   },
   "meetup": {
    "label": "Meetup",
    "count": 66,
-   "seconds": 108.2
+   "seconds": 116.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 45,
-   "seconds": 16.3
+   "seconds": 16.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 90,
-   "seconds": 5.4
+   "count": 92,
+   "seconds": 4.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 27,
-   "seconds": 31.0
+   "seconds": 34.1
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,130 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 376,
-   "seconds": 20.8
+   "count": 399,
+   "seconds": 16.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 222,
-   "seconds": 0.2
+   "count": 238,
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 78,
-   "seconds": 98.2
+   "seconds": 105.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 29,
-   "seconds": 0.2
+   "seconds": 0.1
   }
  },
- "gathered": 2663,
- "afterDedup": 1456,
- "duplicatesMerged": 1207,
- "final": 1734,
+ "gathered": 2764,
+ "afterDedup": 1506,
+ "duplicatesMerged": 1258,
+ "final": 1792,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-23"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-23"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington"
-   ],
-   "date": "2026-09-24"
-  },
-  {
-   "kept": {
-    "title": "Queer/LGBTQ+ Horror Book Club",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-24"
-  },
-  {
-   "kept": {
-    "title": "Stephen Payne | Almost April",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-24"
-  },
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-24"
-  },
-  {
-   "kept": {
-    "title": "Empowerment Self-Defense (Employee Session)",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-24"
-  },
-  {
-   "kept": {
-    "title": "ALICE Workshop: Scenario-Based Threat Response (2-Hour Interactive)",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-24"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-24"
-  },
   {
    "kept": {
     "title": "Hot Dog & A Can Thursdays",
@@ -269,6 +169,18 @@
     "helloburlington"
    ],
    "date": "2026-09-24"
+  },
+  {
+   "kept": {
+    "title": "Barbershop: The Art of Queer Failure Opening Reception and Artist Performance",
+    "source": "bca"
+   },
+   "merged_sources": [
+    "bca",
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-09-25"
   },
   {
    "kept": {
@@ -373,6 +285,20 @@
   },
   {
    "kept": {
+    "title": "Patagonia Gear Swap",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "helloburlington",
+    "loveburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-26"
+  },
+  {
+   "kept": {
     "title": "Splash Dance: DJ Matt Hagen",
     "source": "churchst"
    },
@@ -425,6 +351,19 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-26"
+  },
+  {
+   "kept": {
+    "title": "Old Spokes Home Fall Fundo",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington",
     "uvm",
     "uvmbored"
    ],
@@ -519,6 +458,20 @@
     "helloburlington"
    ],
    "date": "2026-09-26"
+  },
+  {
+   "kept": {
+    "title": "Patagonia Gear Swap",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "helloburlington",
+    "loveburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-27"
   },
   {
    "kept": {
@@ -677,6 +630,17 @@
   },
   {
    "kept": {
+    "title": "Destroyer",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-09-29"
+  },
+  {
+   "kept": {
     "title": "Samara Joy",
     "source": "flynn"
    },
@@ -761,6 +725,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
     "uvm",
     "uvmbored"
@@ -1532,6 +1497,17 @@
   },
   {
    "kept": {
+    "title": "Oteil Burbridge, LaMP",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
     "title": "Italian Conversation Group",
     "source": "fletcherfree"
    },
@@ -1844,6 +1820,17 @@
   },
   {
    "kept": {
+    "title": "L. Shankar",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-10-12"
+  },
+  {
+   "kept": {
     "title": "Super Smash Tuesdays",
     "source": "churchst"
    },
@@ -1895,6 +1882,17 @@
    "merged_sources": [
     "helloburlington",
     "loveburlington"
+   ],
+   "date": "2026-10-13"
+  },
+  {
+   "kept": {
+    "title": "Magoo",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
    ],
    "date": "2026-10-13"
   },
@@ -2057,6 +2055,17 @@
   {
    "kept": {
     "title": "Coffee and Code",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "Interdisciplinary Dialogue on Disability Working Group",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2380,67 +2389,73 @@
  ],
  "changes": [
   {
-   "id": "3834c112080b",
-   "title": "Buena Vista Orchestra",
-   "date": "2026-10-15",
-   "change": "time",
-   "was": "2026-10-15T20:00:00-04:00",
-   "now": "2026-10-15T19:00:00-04:00"
+   "id": "4fb477e76fbd",
+   "title": "Men's Soccer vs Holy Cross",
+   "date": "2026-09-01",
+   "change": "missing",
+   "lastSeen": "2026-08-24T06:20:24-04:00"
   },
   {
-   "id": "fe06b4940f2b",
-   "title": "Tech Help with Clif",
-   "date": "2026-09-07",
-   "change": "dropped"
+   "id": "147c49b14bc3",
+   "title": "Music Time",
+   "date": "2026-09-04",
+   "change": "missing",
+   "lastSeen": "2026-08-24T06:20:24-04:00"
   },
   {
-   "id": "fe06b4940f2b-1300",
-   "title": "Tech Help with Clif",
-   "date": "2026-09-07",
-   "change": "dropped"
-  },
-  {
-   "id": "e0434a00d599",
-   "title": "JoAnna Farrer",
-   "date": "2026-09-10",
-   "change": "dropped"
-  },
-  {
-   "id": "f1bd139baae4",
-   "title": "Brain Freezer 5K",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
-   "id": "0fe13bc1e6dc",
-   "title": "Libby Cataldi | It Takes a Lifetime to Learn How to Live",
+   "id": "4963a7e45691",
+   "title": "Burlington Baroque Festival: Music, Drama & Dance in the Kingdom of France",
    "date": "2026-09-17",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-08-24T06:20:24-04:00"
   },
   {
-   "id": "4a882979134e",
-   "title": "Spanish Story Time",
-   "date": "2026-09-18",
-   "change": "dropped"
+   "id": "8ded72893081",
+   "title": "Barbershop: The Art of Queer Failure",
+   "date": "2026-09-25",
+   "change": "missing",
+   "lastSeen": "2026-08-24T06:20:24-04:00"
   },
   {
-   "id": "3c1e635d7b38",
-   "title": "Carson Jordan in Conversation with Bianca Stone | DEAD HAND",
-   "date": "2026-09-22",
-   "change": "dropped"
+   "id": "596ee87ee64b",
+   "title": "Old Spokes Home Fall Fundo",
+   "date": "2026-09-26",
+   "change": "missing",
+   "lastSeen": "2026-08-24T06:20:24-04:00"
   },
   {
-   "id": "4adbb9d238bb",
-   "title": "Spanish Story Time",
+   "id": "6b01cd6ad46b",
+   "title": "Music Time",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-08-24T06:20:24-04:00"
+  },
+  {
+   "id": "ed5a92c340c9",
+   "title": "Mystery Artifacts: How Museums Help Share the Past",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-08-24T06:20:24-04:00"
+  },
+  {
+   "id": "1cd2932e2a99",
+   "title": "Trivia Night",
+   "date": "2026-10-15",
+   "change": "missing",
+   "lastSeen": "2026-08-24T06:20:24-04:00"
+  },
+  {
+   "id": "5bd34476e0e0",
+   "title": "Art in the Green Mountains: Stowe, Shelburne, and Burlington",
    "date": "2026-10-16",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-08-24T06:20:24-04:00"
   },
   {
    "id": "9ed6836cb36c",
    "title": "Rehash w/ The Flooks",
    "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-08-21T16:58:47-04:00"
+   "change": "dropped"
   },
   {
    "id": "0b9b74a81730",
