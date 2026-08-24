@@ -65,6 +65,7 @@
           (e.d ? '<time>' + ago(e.d) + '</time>' : '') +
         '</li>';
       }).join('') + '</ul>' +
+      '<p class="l-pod-more"><a href="pulse.html#s=' + esc(src.id) + '">All episodes on the Pulse →</a></p>' +
     '</article>';
   }
 
@@ -131,14 +132,34 @@
     document.body.classList.remove('has-player');
   });
 
-  /* ---------- tonight's TV pick ---------- */
+  /* ---------- tonight's BTown TV: the pick + a strip of the shelves ----------
+     Everything links to tv.html — the nightly page is the show, and its
+     reactions live there; this is the storefront window, not a second store. */
+  function ytThumb(id) { return /^[\w-]{6,20}$/.test(id) ? 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg' : ''; }
   fetch(TV_URL).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
     if (!d || !d.pick) return;
     var p = d.pick;
+    var thumb = document.getElementById('tv-thumb');
+    var tsrc = ytThumb(p.id || '');
+    if (tsrc) { thumb.src = tsrc; thumb.hidden = false; }
     document.getElementById('tv-body').innerHTML =
       '<b>' + esc(p.t) + '</b> — ' + esc(p.ch) +
       (p.dur ? ' · ' + esc(p.dur) : '') +
       (p.why ? '<br>' + esc(p.why) : '');
+    // One taste from each shelf, up to six — tonight's spread at a glance.
+    var picks = [];
+    (d.shelves || []).forEach(function (sh) {
+      (sh.items || []).slice(0, 2).forEach(function (v) {
+        if (picks.length < 6 && v.id !== p.id) picks.push(v);
+      });
+    });
+    document.getElementById('tv-strip').innerHTML = picks.map(function (v) {
+      var t = ytThumb(v.id || '');
+      return '<a class="l-tvpick" href="tv.html">' +
+        (t ? '<img src="' + esc(t) + '" alt="" loading="lazy">' : '') +
+        '<span>' + esc(v.t) + '</span>' +
+      '</a>';
+    }).join('');
   }).catch(function () {});
 
   /* ---------- the podcast wire ---------- */

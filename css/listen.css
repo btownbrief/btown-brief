@@ -64,6 +64,28 @@
 .l-pod-links a:hover { color: var(--ink); background: var(--panel-hover); }
 .l-pod-note { font-size: .78rem; color: var(--ink-faint); margin: .55rem 0 0; }
 
+.l-pod-more { margin: .5rem 0 0; font-size: .78rem; }
+.l-pod-more a { color: var(--ink-faint); text-decoration: none; }
+.l-pod-more a:hover { color: var(--accent); }
+
+.l-show-embed { display: block; border: 0; border-radius: 14px; margin: -1.4rem 0 2.2rem; }
+
+/* ---------- BTown TV: the star of Watch ---------- */
+.l-tvhero { display: flex; gap: 1.1rem; align-items: stretch; background: var(--panel);
+  border: 1px solid var(--edge); border-radius: 16px; overflow: hidden;
+  color: var(--ink); text-decoration: none; margin-bottom: 12px; }
+.l-tvhero:hover { background: var(--panel-hover); }
+.l-tvhero-thumb { width: 300px; object-fit: cover; flex: 0 0 auto; }
+.l-tvhero-body { padding: 1.05rem 1.2rem 1.05rem 0; display: flex; flex-direction: column; gap: .35rem; }
+.l-tvhero-thumb[hidden] + .l-tvhero-body { padding-left: 1.2rem; }
+.l-tvstrip { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.l-tvpick { display: flex; flex-direction: column; gap: .35rem; color: var(--ink-soft);
+  text-decoration: none; font-size: .8rem; line-height: 1.3; }
+.l-tvpick img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 10px;
+  border: 1px solid var(--edge); }
+.l-tvpick:hover { color: var(--ink); }
+.l-tvcta { margin: 1.1rem 0 1.4rem; }
+
 /* ---------- watch cards ---------- */
 .l-watch { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
 .l-tv { display: flex; flex-direction: column; gap: .45rem; background: var(--panel);
@@ -91,6 +113,9 @@
 body.has-player { padding-bottom: 64px; }
 
 @media (max-width: 640px) {
+  .l-tvhero { flex-direction: column; }
+  .l-tvhero-thumb { width: 100%; aspect-ratio: 16 / 9; }
+  .l-tvhero-body { padding: 0 1.1rem 1.1rem; }
   .l-feature { flex-direction: column; }
   .l-feature-art { width: 100%; height: 210px; }
   .l-feature-body { padding: 0 1.1rem 1.2rem; }
