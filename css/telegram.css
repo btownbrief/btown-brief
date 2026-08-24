@@ -63,6 +63,12 @@
   box-shadow: var(--shadow-sm);
 }
 
+/* Meetup gets equal billing with the Telegram button — same size, its red. */
+.tg-btn-meetup {
+  margin-top: var(--space-3);
+  background: #F65858;
+}
+
 /* ---------- the side chat: present, but clearly secondary ---------- */
 .tg-side {
   display: flex;
