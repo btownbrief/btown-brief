@@ -19,7 +19,12 @@ Beyond regrouping by category, the transform:
   Steve, not for readers;
 - applies Seven Days comparisons from data/sevendays.json (Seven Daysies
   readers' choice winners) wherever a question has a matching award, so
-  the page can show the Reddit crowd next to the Seven Days ballot.
+  the page can show the Reddit crowd next to the Seven Days ballot;
+- merges data/bestof-2026.json (fresh "best X" threads mined from the
+  site's Inoreader r/burlington wire after the 2025 list) — an addition
+  whose question matches an existing card becomes an extra thread link on
+  that card, otherwise it becomes its own card. bestof-raw.json itself
+  stays a frozen, untouched copy of the 2023+2025 research merge.
 
 Run: python3 scripts/seed_bestof.py
 """
@@ -30,6 +35,7 @@ import re
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 RAW = os.path.join(ROOT, "data", "bestof-raw.json")
+ADDITIONS = os.path.join(ROOT, "data", "bestof-2026.json")
 SEVENDAYS = os.path.join(ROOT, "data", "sevendays.json")
 OUT = os.path.join(ROOT, "data", "best-of-reddit.json")
 
@@ -84,6 +90,15 @@ def load_sevendays():
 def main():
     with open(RAW, encoding="utf-8") as src:
         raw = json.load(src)
+
+    additions_meta = {}
+    additions = []
+    if os.path.exists(ADDITIONS):
+        with open(ADDITIONS, encoding="utf-8") as src:
+            added = json.load(src)
+        additions_meta = added.get("meta", {})
+        additions = added.get("entries", [])
+        raw["entries"].extend(additions)
 
     meta = raw["meta"]
     taxonomy = meta["taxonomy"]
@@ -223,7 +238,9 @@ def main():
         "comment_suggestions": sum(1 for e in all_entries if e["status"] == "comment-suggestion"),
         "thread_links": source_link_count,
         "with_sevendays": sum(1 for e in all_entries if e["sevendays_url"]),
-        "raw_entries": len(raw["entries"]),
+        "added_2026_entries": len(additions),
+        "added_2026_threads": sum(len(e["sources"]) for e in additions),
+        "raw_entries": len(raw["entries"]) - len(additions),
         # Raw-list accounting: 317 list links across both editions, plus one
         # comment-mined source riding on the 2025 list thread = 318 sources.
         "raw_list_links": meta["counts"]["raw_links_total"],
@@ -231,10 +248,12 @@ def main():
 
     output = {
         "generated": meta["generated"],
+        "updated": additions_meta.get("updated", meta["generated"]),
         "note": (
             "Tier 1: a categorized directory of recurring “best X” questions "
             "r/burlington has already asked, merged from the 2023 and 2025 community "
-            "list threads (repeat questions collapsed into one card each). Each card "
+            "list threads (repeat questions collapsed into one card each) plus fresh "
+            "asks mined from the sub since the 2025 list. Each card "
             "links to its Reddit thread(s) — the crowd's answer lives in the comments, "
             "one click away — and, where Seven Days readers picked a winner in the "
             "same category, shows the Seven Daysies pick for comparison."
@@ -251,7 +270,8 @@ def main():
 
     print(
         f"wrote {OUT}: {len(categories)} categories, {counts['questions']} questions, "
-        f"{counts['thread_links']} thread links, {counts['with_sevendays']} Seven Days comparisons"
+        f"{counts['thread_links']} thread links ({counts['added_2026_threads']} from 2026 asks), "
+        f"{counts['with_sevendays']} Seven Days comparisons"
     )
 
 
