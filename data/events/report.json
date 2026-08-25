@@ -1,29 +1,29 @@
 {
- "generated": "2026-08-24T17:04:08-04:00",
+ "generated": "2026-08-25T06:04:20-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 13,
-   "seconds": 6.3
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 55,
-   "seconds": 3.0
+   "seconds": 4.1
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 70,
-   "seconds": 2.9
+   "count": 67,
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 170,
-   "seconds": 2.1
+   "count": 169,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 86,
+   "count": 87,
    "seconds": 1.8
   },
   "echo": {
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-24&end_date=2026-10-23&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-25&end_date=2026-10-24&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -43,18 +43,18 @@
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 8,
-   "seconds": 0.4
+   "count": 9,
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 180,
-   "seconds": 76.9
+   "count": 184,
+   "seconds": 66.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 35,
-   "seconds": 3.5
+   "seconds": 2.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 42.2
+   "seconds": 37.2
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 423,
-   "seconds": 68.0
+   "count": 418,
+   "seconds": 72.3
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 116.1
+   "count": 65,
+   "seconds": 105.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 45,
-   "seconds": 16.6
+   "count": 44,
+   "seconds": 14.4
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 92,
-   "seconds": 4.8
+   "count": 90,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 27,
-   "seconds": 34.1
+   "seconds": 32.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,154 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 399,
-   "seconds": 16.3
+   "count": 401,
+   "seconds": 23.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 238,
+   "count": 244,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 78,
-   "seconds": 105.6
+   "count": 80,
+   "seconds": 101.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 29,
-   "seconds": 0.1
+   "count": 30,
+   "seconds": 0.3
   }
  },
- "gathered": 2764,
- "afterDedup": 1506,
- "duplicatesMerged": 1258,
- "final": 1792,
+ "gathered": 2768,
+ "afterDedup": 1507,
+ "duplicatesMerged": 1261,
+ "final": 1781,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Hot Dog & A Can Thursdays",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-24"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-24"
-  },
-  {
-   "kept": {
-    "title": "Luna",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-09-24"
-  },
-  {
-   "kept": {
-    "title": "Barbershop: The Art of Queer Failure Opening Reception and Artist Performance",
-    "source": "bca"
-   },
-   "merged_sources": [
-    "bca",
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "Graduate College Monthly Walking Group",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "UVM Libraries Research Fair - Fall edition",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "Film Screening: Barbara Forever",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "Ballaké Sissoko & Piers Faccini",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-25"
-  },
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
@@ -2110,6 +1986,28 @@
   },
   {
    "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
     "title": "Zombie Walk",
     "source": "churchst"
    },
@@ -2385,6 +2283,106 @@
     "loveburlington"
    ],
    "date": "2026-10-23"
+  },
+  {
+   "kept": {
+    "title": "Graduate College Monthly Walking Group",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-23"
+  },
+  {
+   "kept": {
+    "title": "Shifting Perspectives on Bicycle Sustainability ft. Luis Vivanco",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-23"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-23"
+  },
+  {
+   "kept": {
+    "title": "Field Hockey vs Bryant",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-23"
+  },
+  {
+   "kept": {
+    "title": "Men's Ice Hockey vs Clarkson",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-23"
+  },
+  {
+   "kept": {
+    "title": "Dom Flemons & the Traveling Wildfires",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-23"
+  },
+  {
+   "kept": {
+    "title": "Queer/LGBTQ+ Horror Book Club",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-24"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-24"
+  },
+  {
+   "kept": {
+    "title": "Burlington Farmers Market",
+    "source": "farmersmarket"
+   },
+   "merged_sources": [
+    "farmersmarket",
+    "loveburlington"
+   ],
+   "date": "2026-10-24"
   }
  ],
  "changes": [
@@ -2408,6 +2406,13 @@
    "date": "2026-09-17",
    "change": "missing",
    "lastSeen": "2026-08-24T06:20:24-04:00"
+  },
+  {
+   "id": "cd78a8c60a39",
+   "title": "AUTHOR EVENT - more info coming soon!",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-08-24T17:04:08-04:00"
   },
   {
    "id": "8ded72893081",
@@ -2438,31 +2443,18 @@
    "lastSeen": "2026-08-24T06:20:24-04:00"
   },
   {
-   "id": "1cd2932e2a99",
-   "title": "Trivia Night",
-   "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-08-24T06:20:24-04:00"
-  },
-  {
-   "id": "5bd34476e0e0",
-   "title": "Art in the Green Mountains: Stowe, Shelburne, and Burlington",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-08-24T06:20:24-04:00"
-  },
-  {
-   "id": "9ed6836cb36c",
-   "title": "Rehash w/ The Flooks",
-   "date": "2026-10-20",
-   "change": "dropped"
-  },
-  {
    "id": "0b9b74a81730",
    "title": "Dana and Alden",
    "date": "2026-10-22",
    "change": "missing",
    "lastSeen": "2026-08-23T16:57:25-04:00"
+  },
+  {
+   "id": "7b1e890d7409",
+   "title": "Dom Flemons & the Traveling Wildfires",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-08-24T17:04:08-04:00"
   }
  ]
 }
