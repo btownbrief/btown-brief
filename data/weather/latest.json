@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-25T15:28:12+00:00",
+ "updated": "2026-08-25T16:05:25+00:00",
  "sections_updated": {
-  "now": "2026-08-25T15:28:12+00:00",
-  "forecast": "2026-08-25T15:28:12+00:00",
-  "hourly": "2026-08-25T15:28:12+00:00",
-  "alerts": "2026-08-25T15:28:12+00:00",
-  "afd": "2026-08-25T15:28:12+00:00",
-  "lake_forecast": "2026-08-25T15:28:12+00:00",
-  "lake_gage": "2026-08-25T15:28:12+00:00",
-  "air": "2026-08-25T15:28:12+00:00",
-  "sun": "2026-08-25T15:28:12+00:00",
-  "models": "2026-08-25T15:28:12+00:00"
+  "now": "2026-08-25T16:05:25+00:00",
+  "forecast": "2026-08-25T16:05:25+00:00",
+  "hourly": "2026-08-25T16:05:25+00:00",
+  "alerts": "2026-08-25T16:05:25+00:00",
+  "afd": "2026-08-25T16:05:25+00:00",
+  "lake_forecast": "2026-08-25T16:05:25+00:00",
+  "lake_gage": "2026-08-25T16:05:25+00:00",
+  "air": "2026-08-25T16:05:25+00:00",
+  "sun": "2026-08-25T16:05:25+00:00",
+  "models": "2026-08-25T16:05:25+00:00"
  },
  "now": {
-  "observed_at": "2026-08-25T15:00:00+00:00",
+  "observed_at": "2026-08-25T15:35:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
+  "description": "Mostly Cloudy",
   "temp_f": 70,
   "feels_like_f": 70,
   "humidity": 64,
   "dewpoint_f": 57,
-  "wind_mph": 7,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "NNW"
+  "wind_dir": "WNW"
  },
  "forecast": {
   "updated": "2026-08-25T12:32:51+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-08-25T11:00:00-04:00",
+    "name": "This Afternoon",
+    "start": "2026-08-25T12:00:00-04:00",
     "is_day": true,
     "temp_f": 75,
     "pop": 48,
-    "wind": "W 6 mph",
+    "wind": "NW 6 mph",
     "short": "Scattered Rain Showers",
-    "detailed": "Scattered rain showers. Partly sunny, with a high near 75. West wind around 6 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Scattered rain showers. Partly sunny, with a high near 75. Northwest wind around 6 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -832,9 +832,9 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 21,
+  "aqi": 19,
   "category": "Good",
-  "pollutant": "PM2.5",
+  "pollutant": "OZONE",
   "observed": "08/25/26 11:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 25th."
  },
@@ -850,19 +850,19 @@
    {
     "date": "2026-08-25",
     "high_f": {
-     "GFS": 74,
+     "GFS": 73,
      "Euro": 74,
      "ICON": 71
     },
     "pop_max": {
-     "GFS": 12,
-     "Euro": 98,
+     "GFS": 14,
+     "Euro": 77,
      "ICON": 50
     },
     "precip_in": {
-     "GFS": 0.02,
+     "GFS": 0.0,
      "Euro": 0.08,
-     "ICON": 0.12
+     "ICON": 0.09
     },
     "high_spread_f": 3
    },
@@ -871,11 +871,11 @@
     "high_f": {
      "GFS": 78,
      "Euro": 78,
-     "ICON": 78
+     "ICON": 79
     },
     "pop_max": {
      "GFS": 2,
-     "Euro": 43,
+     "Euro": 24,
      "ICON": 0
     },
     "precip_in": {
@@ -883,19 +883,19 @@
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 0
+    "high_spread_f": 1
    },
    {
     "date": "2026-08-27",
     "high_f": {
      "GFS": 82,
      "Euro": 79,
-     "ICON": 80
+     "ICON": 81
     },
     "pop_max": {
      "GFS": 58,
-     "Euro": 92,
-     "ICON": 40
+     "Euro": 89,
+     "ICON": 50
     },
     "precip_in": {
      "GFS": 0.26,
