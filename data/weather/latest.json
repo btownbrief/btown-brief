@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-25T13:35:59+00:00",
+ "updated": "2026-08-25T14:28:28+00:00",
  "sections_updated": {
-  "now": "2026-08-25T13:35:59+00:00",
-  "forecast": "2026-08-25T13:35:59+00:00",
-  "hourly": "2026-08-25T13:35:59+00:00",
-  "alerts": "2026-08-25T13:35:59+00:00",
-  "afd": "2026-08-25T13:35:59+00:00",
-  "lake_forecast": "2026-08-25T13:35:59+00:00",
-  "lake_gage": "2026-08-25T13:35:59+00:00",
-  "air": "2026-08-25T13:35:59+00:00",
-  "sun": "2026-08-25T13:35:59+00:00",
-  "models": "2026-08-25T13:35:59+00:00"
+  "now": "2026-08-25T14:28:28+00:00",
+  "forecast": "2026-08-25T14:28:28+00:00",
+  "hourly": "2026-08-25T14:28:28+00:00",
+  "alerts": "2026-08-25T14:28:28+00:00",
+  "afd": "2026-08-25T14:28:28+00:00",
+  "lake_forecast": "2026-08-25T14:28:28+00:00",
+  "lake_gage": "2026-08-25T14:28:28+00:00",
+  "air": "2026-08-25T14:28:28+00:00",
+  "sun": "2026-08-25T14:28:28+00:00",
+  "models": "2026-08-25T14:28:28+00:00"
  },
  "now": {
-  "observed_at": "2026-08-25T13:20:00+00:00",
+  "observed_at": "2026-08-25T14:10:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 68,
-  "feels_like_f": 68,
-  "humidity": 73,
-  "dewpoint_f": 59,
+  "temp_f": 70,
+  "feels_like_f": 70,
+  "humidity": 64,
+  "dewpoint_f": 57,
   "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": "SSW"
+  "wind_dir": "WSW"
  },
  "forecast": {
   "updated": "2026-08-25T12:32:51+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-25T09:00:00-04:00",
+    "start": "2026-08-25T10:00:00-04:00",
     "is_day": true,
     "temp_f": 75,
     "pop": 48,
-    "wind": "W 3 to 7 mph",
+    "wind": "W 6 mph",
     "short": "Scattered Rain Showers",
-    "detailed": "Scattered rain showers. Partly sunny, with a high near 75. West wind 3 to 7 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Scattered rain showers. Partly sunny, with a high near 75. West wind around 6 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-25T12:32:51+00:00",
   "hours": [
-   {
-    "t": "2026-08-25T09:00:00-04:00",
-    "temp_f": 67,
-    "feels_f": 67,
-    "pop": 38,
-    "humidity": 78,
-    "wind_mph": 7,
-    "wind_dir": "S",
-    "sky": 79,
-    "short": "Scattered Rain Showers"
-   },
    {
     "t": "2026-08-25T10:00:00-04:00",
     "temp_f": 69,
@@ -567,6 +556,17 @@
     "wind_dir": "SE",
     "sky": 48,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-08-26T21:00:00-04:00",
+    "temp_f": 69,
+    "feels_f": 69,
+    "pop": 1,
+    "humidity": 76,
+    "wind_mph": 6,
+    "wind_dir": "SE",
+    "sky": 31,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -825,9 +825,9 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-08-25T09:00:00.000-04:00",
-  "level_ft": 94.82,
-  "level_at": "2026-08-25T09:00:00.000-04:00",
+  "water_temp_at": "2026-08-25T10:00:00.000-04:00",
+  "level_ft": 94.81,
+  "level_at": "2026-08-25T10:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -835,7 +835,7 @@
   "aqi": 23,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/25/26 9:00",
+  "observed": "08/25/26 10:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 25th."
  },
  "sun": {
@@ -850,17 +850,17 @@
    {
     "date": "2026-08-25",
     "high_f": {
-     "GFS": 73,
+     "GFS": 74,
      "Euro": 74,
      "ICON": 71
     },
     "pop_max": {
-     "GFS": 18,
+     "GFS": 23,
      "Euro": 98,
      "ICON": 50
     },
     "precip_in": {
-     "GFS": 0.03,
+     "GFS": 0.02,
      "Euro": 0.08,
      "ICON": 0.12
     },
@@ -869,7 +869,7 @@
    {
     "date": "2026-08-26",
     "high_f": {
-     "GFS": 77,
+     "GFS": 78,
      "Euro": 78,
      "ICON": 78
     },
@@ -883,7 +883,7 @@
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 1
+    "high_spread_f": 0
    },
    {
     "date": "2026-08-27",
