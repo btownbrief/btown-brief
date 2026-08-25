@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-25T12:14:58+00:00",
+ "updated": "2026-08-25T13:35:59+00:00",
  "sections_updated": {
-  "now": "2026-08-25T12:14:58+00:00",
-  "forecast": "2026-08-25T12:14:58+00:00",
-  "hourly": "2026-08-25T12:14:58+00:00",
-  "alerts": "2026-08-25T12:14:58+00:00",
-  "afd": "2026-08-25T12:14:58+00:00",
-  "lake_forecast": "2026-08-25T12:14:58+00:00",
-  "lake_gage": "2026-08-25T12:14:58+00:00",
-  "air": "2026-08-25T12:14:58+00:00",
-  "sun": "2026-08-25T12:14:58+00:00",
-  "models": "2026-08-25T12:14:58+00:00"
+  "now": "2026-08-25T13:35:59+00:00",
+  "forecast": "2026-08-25T13:35:59+00:00",
+  "hourly": "2026-08-25T13:35:59+00:00",
+  "alerts": "2026-08-25T13:35:59+00:00",
+  "afd": "2026-08-25T13:35:59+00:00",
+  "lake_forecast": "2026-08-25T13:35:59+00:00",
+  "lake_gage": "2026-08-25T13:35:59+00:00",
+  "air": "2026-08-25T13:35:59+00:00",
+  "sun": "2026-08-25T13:35:59+00:00",
+  "models": "2026-08-25T13:35:59+00:00"
  },
  "now": {
-  "observed_at": "2026-08-25T11:50:00+00:00",
+  "observed_at": "2026-08-25T13:20:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 63,
-  "feels_like_f": 63,
-  "humidity": 83,
-  "dewpoint_f": 57,
-  "wind_mph": 6,
+  "temp_f": 68,
+  "feels_like_f": 68,
+  "humidity": 73,
+  "dewpoint_f": 59,
+  "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": "S"
+  "wind_dir": "SSW"
  },
  "forecast": {
-  "updated": "2026-08-25T06:30:34+00:00",
+  "updated": "2026-08-25T12:32:51+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-25T08:00:00-04:00",
+    "start": "2026-08-25T09:00:00-04:00",
     "is_day": true,
     "temp_f": 75,
-    "pop": 49,
-    "wind": "W 3 to 8 mph",
+    "pop": 48,
+    "wind": "W 3 to 7 mph",
     "short": "Scattered Rain Showers",
-    "detailed": "Scattered rain showers. Partly sunny, with a high near 75. West wind 3 to 8 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Scattered rain showers. Partly sunny, with a high near 75. West wind 3 to 7 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -170,58 +170,47 @@
   ]
  },
  "hourly": {
-  "updated": "2026-08-25T06:30:34+00:00",
+  "updated": "2026-08-25T12:32:51+00:00",
   "hours": [
    {
-    "t": "2026-08-25T08:00:00-04:00",
-    "temp_f": 63,
-    "feels_f": 63,
-    "pop": 47,
-    "humidity": 84,
+    "t": "2026-08-25T09:00:00-04:00",
+    "temp_f": 67,
+    "feels_f": 67,
+    "pop": 38,
+    "humidity": 78,
     "wind_mph": 7,
     "wind_dir": "S",
-    "sky": 71,
-    "short": "Scattered Rain Showers"
-   },
-   {
-    "t": "2026-08-25T09:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 47,
-    "humidity": 84,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 65,
+    "sky": 79,
     "short": "Scattered Rain Showers"
    },
    {
     "t": "2026-08-25T10:00:00-04:00",
-    "temp_f": 66,
-    "feels_f": 66,
-    "pop": 48,
-    "humidity": 84,
+    "temp_f": 69,
+    "feels_f": 69,
+    "pop": 39,
+    "humidity": 76,
     "wind_mph": 5,
     "wind_dir": "SW",
-    "sky": 65,
+    "sky": 76,
     "short": "Scattered Rain Showers"
    },
    {
     "t": "2026-08-25T11:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 49,
-    "humidity": 78,
+    "temp_f": 71,
+    "feels_f": 71,
+    "pop": 39,
+    "humidity": 71,
     "wind_mph": 3,
-    "wind_dir": "SW",
-    "sky": 66,
+    "wind_dir": "W",
+    "sky": 69,
     "short": "Scattered Rain Showers"
    },
    {
     "t": "2026-08-25T12:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 49,
-    "humidity": 73,
+    "temp_f": 72,
+    "feels_f": 72,
+    "pop": 42,
+    "humidity": 68,
     "wind_mph": 3,
     "wind_dir": "W",
     "sky": 66,
@@ -229,79 +218,79 @@
    },
    {
     "t": "2026-08-25T13:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
-    "pop": 48,
-    "humidity": 71,
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 45,
+    "humidity": 66,
     "wind_mph": 5,
     "wind_dir": "W",
-    "sky": 65,
+    "sky": 63,
     "short": "Scattered Rain Showers"
    },
    {
     "t": "2026-08-25T14:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
+    "temp_f": 74,
+    "feels_f": 74,
     "pop": 48,
-    "humidity": 68,
+    "humidity": 64,
     "wind_mph": 5,
     "wind_dir": "NW",
-    "sky": 65,
+    "sky": 60,
     "short": "Scattered Rain Showers"
    },
    {
     "t": "2026-08-25T15:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
+    "temp_f": 74,
+    "feels_f": 74,
     "pop": 48,
-    "humidity": 66,
+    "humidity": 64,
     "wind_mph": 5,
     "wind_dir": "NW",
-    "sky": 65,
+    "sky": 50,
     "short": "Scattered Rain Showers"
    },
    {
     "t": "2026-08-25T16:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
-    "pop": 47,
-    "humidity": 66,
-    "wind_mph": 5,
-    "wind_dir": "NW",
-    "sky": 65,
-    "short": "Scattered Rain Showers"
-   },
-   {
-    "t": "2026-08-25T17:00:00-04:00",
-    "temp_f": 74,
-    "feels_f": 74,
+    "temp_f": 75,
+    "feels_f": 75,
     "pop": 47,
     "humidity": 62,
     "wind_mph": 6,
     "wind_dir": "NW",
-    "sky": 65,
+    "sky": 55,
+    "short": "Scattered Rain Showers"
+   },
+   {
+    "t": "2026-08-25T17:00:00-04:00",
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 47,
+    "humidity": 64,
+    "wind_mph": 6,
+    "wind_dir": "NW",
+    "sky": 53,
     "short": "Scattered Rain Showers"
    },
    {
     "t": "2026-08-25T18:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
+    "temp_f": 71,
+    "feels_f": 71,
     "pop": 37,
-    "humidity": 64,
+    "humidity": 68,
     "wind_mph": 5,
     "wind_dir": "NW",
-    "sky": 58,
+    "sky": 49,
     "short": "Scattered Rain Showers"
    },
    {
     "t": "2026-08-25T19:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
+    "temp_f": 69,
+    "feels_f": 69,
     "pop": 27,
-    "humidity": 71,
-    "wind_mph": 3,
+    "humidity": 76,
+    "wind_mph": 5,
     "wind_dir": "NW",
-    "sky": 51,
+    "sky": 50,
     "short": "Scattered Rain Showers"
    },
    {
@@ -567,6 +556,17 @@
     "wind_dir": "S",
     "sky": 29,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-08-26T20:00:00-04:00",
+    "temp_f": 74,
+    "feels_f": 74,
+    "pop": 1,
+    "humidity": 64,
+    "wind_mph": 5,
+    "wind_dir": "SE",
+    "sky": 48,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -583,15 +583,15 @@
   "raw": "\n000\nFXUS61 KBTV 251050\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n650 AM EDT Tue Aug 25 2026\n\n.WHAT HAS CHANGED...\nAs of 253 AM EDT Tuesday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 253 AM EDT Tuesday...\n\n1. Additional showers expected today as surface and upper level\ntroughs move across the area.\n\n2. A dry and seasonable weekend will trend showery and more \nhumid by early next week.\n\n&&\n\n.DISCUSSION...\nAs of 253 AM EDT Tuesday...\n\nKEY MESSAGE 1: More shower activity is expected today as a \nsurface trough and upper level trough both cross our area. Not \nexpecting any thunderstorms or severe weather. Coverage and \nintensity should be less than yesterday. Winds will become more \nnorthwesterly as the day goes on as trough axis pushes east of \nour forecast area. Drier air will then work into the region, and\nremain through Wednesday night with surface and upper level \nridges building over the area. More shower activity is expected \non Thursday into Thursday night, and lingering into Friday as \nwell. A surface cold front along with some upper level shortwave\nenergy will cross the region.\n\nKEY MESSAGE 2: Following a frontal passage and parent low \ndeparture Thursday and Friday, the weekend looks to trend drier \nas our flow pattern becomes more zonal. There still looks to be \nsome signs of subtle cyclonic flow as the upper low lifts north \nand east, which may spur some isolated shower activity in \neastern Ontario. Some of which could bring some increase cloud \ncover and an isolated shower to the St. Lawrence Valley (though \nPoPs are still below 20%). Temperatures will generally be \nseasonable in the 70s, though a few spot low 80s will be \npossible in the southern, wider valleys by Sunday. Humidity will\nalso gradually increase through the weekend from the upper 40s \non Saturday to the upper 50s by Monday. The increase in humidity\nwill be a result of a trough swinging through the area to start\nnext week. Models diverge on the strength of this trough with \nthe GFS ensembles denoting a continue more zonal pattern, \nwhereas the Euro ensembles depict a slightly more amplified \ntrough, which is in line with the CMC as well. The forecast will\nlikely change in the coming days as models resolve this feature\nbetter in the days to come. As of right now, most of the area \nhas a 30-40% chance for showers Monday, with temperatures in the\nupper 70s which does seem to be on the warmer side of most \nguidance. There is a good chance for conditions to be quite a \nbit cooler early next week should the pattern become more \namplified with additional cloud cover and daytime precipitation.\n\n&&\n\n.AVIATION /12Z TUESDAY THROUGH SATURDAY/...\nThrough 12Z Wednesday...Showers associated with an eastward moving\ntrough are moving through the region with MVFR cigs on the leading\nedge and IFR cigs across the St. Lawrence Valley. Most terminal\nreductions this morning will be due to low stratus and not fog. Have\nused a TEMPO group as cigs will likely bounce between IFR/low MVFR\nearly this morning at MSS. Elsewhere, low stratus will trend \nmost sites towards MVFR cigs at least between 2000-3500 ft agl. \nLow stratus will likely trend ceilings lower to 1000-2000ft agl \nat MSS/SLK, as the base of the trough moves over northern New \nYork through 13-15Z. With diurnal mixing, ceilings may lift to \n2500-3500ft agl by 18Z, then perhaps all VFR beyond 21-23Z. \nIsolated to scattered showers will accompany these low ceilings,\nwith only PROB30 confidence at this time for showers at a \nterminal. All sites will see VCSH this morning and afternoon, \nbut confidence of a shower moving over a terminal is only 30-40%\nat this time. \n\nAs the trough moves through this morning, light and variable \nwinds will turn to the west-northwest under 10 knots for all \nterminals. Winds shifts will occur between 12-15Z from west to \neast. Models denote the potential for a brief winds shift to the\neast at PBG due to a lake breeze during the late morning hours,\nhowever, the shift looks to be short lived and quickly \novertaken by the prevailing northwesterlies. Winds trend calm \nand variable with a return of low stratus and potential fog \ntowards 06Z tomorrow night at the climatologically favored \nterminals.\n\nOutlook...\n\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Chance SHRA, Chance TSRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Chance\nSHRA, Slight chance TSRA.\nFriday: Mainly MVFR, with local IFR possible. Chance SHRA, Slight\nchance TSRA.\nFriday Night: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nSaturday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Danzig/Neiles\nAVIATION...Danzig\n"
  },
  "lake_forecast": {
-  "issued": "2026-08-25T06:30:00+00:00",
+  "issued": "2026-08-25T12:33:00+00:00",
   "suspended": false,
   "broad": [
    {
     "period": "Today",
-    "text": "South winds 5 to 10 knots, becoming light and variable. Partly sunny. Scattered showers. Waves 1 foot or less.",
+    "text": "South winds 5 to 10 knots, becoming light and variable. Partly sunny. Scattered showers. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": true
    },
    {
@@ -662,11 +662,11 @@
   "northern": [
    {
     "period": "Today",
-    "text": "South winds 5 to 10 knots, becoming light and variable. Numerous showers in the morning, then scattered showers in the afternoon. Waves 1 foot or less.",
+    "text": "Southwest winds less than 10 knots. Partly sunny. Scattered showers. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
-    "calm": true
+    "calm": false
    },
    {
     "period": "Tonight",
@@ -736,7 +736,7 @@
   "southern": [
    {
     "period": "Today",
-    "text": "South winds 10 knots or less, becoming north. Partly sunny. Scattered showers. Waves 1 foot or less.",
+    "text": "South winds less than 10 knots. Partly sunny. Scattered showers. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -800,7 +800,7 @@
    },
    {
     "period": "Saturday",
-    "text": "Light and variable winds. Mostly sunny. Waves 1 foot or less. Winds and waves higher in and near thunderstorms. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 94.24 feet 72 degrees USGS gage at Burlington VT 94.26 feet 72 degrees USGS gage at Port Henry NY 94.17 feet 66 degrees",
+    "text": "Light and variable winds. Mostly sunny. Waves 1 foot or less. Winds and waves higher in and near thunderstorms. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 94.25 feet 71 degrees USGS gage at Burlington VT 94.29 feet 72 degrees USGS gage at Port Henry NY 94.17 feet 65 degrees",
     "wind_knots_max": null,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -810,32 +810,32 @@
   "uv": null,
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 94.24,
-    "temp_f": 72
+    "level_ft": 94.25,
+    "temp_f": 71
    },
    "Burlington VT": {
-    "level_ft": 94.26,
+    "level_ft": 94.29,
     "temp_f": 72
    },
    "Port Henry NY": {
     "level_ft": 94.17,
-    "temp_f": 66
+    "temp_f": 65
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-08-25T08:00:00.000-04:00",
-  "level_ft": 94.81,
-  "level_at": "2026-08-25T08:00:00.000-04:00",
+  "water_temp_at": "2026-08-25T09:00:00.000-04:00",
+  "level_ft": 94.82,
+  "level_at": "2026-08-25T09:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 26,
+  "aqi": 23,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/25/26 7:00",
+  "observed": "08/25/26 9:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 25th."
  },
  "sun": {
@@ -850,37 +850,37 @@
    {
     "date": "2026-08-25",
     "high_f": {
-     "GFS": 75,
+     "GFS": 73,
      "Euro": 74,
      "ICON": 71
     },
     "pop_max": {
      "GFS": 18,
-     "Euro": 69,
+     "Euro": 98,
      "ICON": 50
     },
     "precip_in": {
-     "GFS": 0.0,
-     "Euro": 0.12,
+     "GFS": 0.03,
+     "Euro": 0.08,
      "ICON": 0.12
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    },
    {
     "date": "2026-08-26",
     "high_f": {
      "GFS": 77,
-     "Euro": 77,
+     "Euro": 78,
      "ICON": 78
     },
     "pop_max": {
      "GFS": 2,
-     "Euro": 17,
+     "Euro": 43,
      "ICON": 0
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.04,
+     "Euro": 0.02,
      "ICON": 0.0
     },
     "high_spread_f": 1
@@ -889,20 +889,20 @@
     "date": "2026-08-27",
     "high_f": {
      "GFS": 82,
-     "Euro": 78,
+     "Euro": 79,
      "ICON": 80
     },
     "pop_max": {
      "GFS": 52,
-     "Euro": 79,
+     "Euro": 92,
      "ICON": 40
     },
     "precip_in": {
      "GFS": 0.26,
-     "Euro": 0.13,
+     "Euro": 0.15,
      "ICON": 0.06
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    }
   ]
  }
