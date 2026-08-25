@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-25T06:04:20-04:00",
+ "generated": "2026-08-25T17:01:29-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 13,
-   "seconds": 5.7
+   "seconds": 6.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 55,
-   "seconds": 4.1
+   "count": 60,
+   "seconds": 3.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 67,
-   "seconds": 3.1
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 169,
-   "seconds": 3.2
+   "seconds": 2.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 87,
-   "seconds": 1.8
+   "seconds": 2.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 184,
-   "seconds": 66.2
+   "count": 180,
+   "seconds": 75.6
   },
   "flynn": {
    "label": "The Flynn",
    "count": 35,
-   "seconds": 2.5
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,7 +64,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 37.2
+   "seconds": 39.9
   },
   "higherground": {
    "label": "Higher Ground",
@@ -79,27 +79,27 @@
   "loveburlington": {
    "label": "Love Burlington",
    "count": 418,
-   "seconds": 72.3
+   "seconds": 83.7
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 105.7
+   "count": 63,
+   "seconds": 121.9
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 44,
-   "seconds": 14.4
+   "seconds": 16.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 90,
-   "seconds": 2.1
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 27,
-   "seconds": 32.2
+   "count": 28,
+   "seconds": 34.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,30 +113,41 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 401,
-   "seconds": 23.0
+   "count": 402,
+   "seconds": 18.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 244,
-   "seconds": 0.3
+   "count": 245,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 80,
-   "seconds": 101.2
+   "seconds": 108.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 30,
-   "seconds": 0.3
+   "count": 37,
+   "seconds": 0.7
   }
  },
- "gathered": 2768,
- "afterDedup": 1507,
- "duplicatesMerged": 1261,
- "final": 1781,
+ "gathered": 2687,
+ "afterDedup": 1432,
+ "duplicatesMerged": 1255,
+ "final": 1801,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-09-25"
+  },
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
@@ -1997,17 +2008,6 @@
   },
   {
    "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-16"
-  },
-  {
-   "kept": {
     "title": "Zombie Walk",
     "source": "churchst"
    },
@@ -2387,6 +2387,20 @@
  ],
  "changes": [
   {
+   "id": "93b48ae92daa",
+   "title": "Tech Tuesdays - Breakfast",
+   "date": "2026-08-25",
+   "change": "missing",
+   "lastSeen": "2026-08-25T06:04:20-04:00"
+  },
+  {
+   "id": "1dd63ac3e05f",
+   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
+   "date": "2026-08-25",
+   "change": "missing",
+   "lastSeen": "2026-08-25T06:04:20-04:00"
+  },
+  {
    "id": "4fb477e76fbd",
    "title": "Men's Soccer vs Holy Cross",
    "date": "2026-09-01",
@@ -2401,6 +2415,13 @@
    "lastSeen": "2026-08-24T06:20:24-04:00"
   },
   {
+   "id": "c51ced474660",
+   "title": "Hold for all-ages program",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-25T06:04:20-04:00"
+  },
+  {
    "id": "4963a7e45691",
    "title": "Burlington Baroque Festival: Music, Drama & Dance in the Kingdom of France",
    "date": "2026-09-17",
@@ -2413,6 +2434,13 @@
    "date": "2026-09-24",
    "change": "missing",
    "lastSeen": "2026-08-24T17:04:08-04:00"
+  },
+  {
+   "id": "5a9ed2ea5ee0",
+   "title": "A Conversation with Author J.J. Green",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-08-25T06:04:20-04:00"
   },
   {
    "id": "8ded72893081",
@@ -2441,6 +2469,20 @@
    "date": "2026-10-07",
    "change": "missing",
    "lastSeen": "2026-08-24T06:20:24-04:00"
+  },
+  {
+   "id": "f4dcf578bf70",
+   "title": "Hold for all-ages program",
+   "date": "2026-10-10",
+   "change": "missing",
+   "lastSeen": "2026-08-25T06:04:20-04:00"
+  },
+  {
+   "id": "89e32f637d32",
+   "title": "The Travelin’ McCourys",
+   "date": "2026-10-16",
+   "change": "missing",
+   "lastSeen": "2026-08-25T06:04:20-04:00"
   },
   {
    "id": "0b9b74a81730",
