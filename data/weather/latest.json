@@ -1,45 +1,35 @@
 {
- "updated": "2026-08-25T10:13:45+00:00",
+ "updated": "2026-08-25T11:08:22+00:00",
  "sections_updated": {
-  "now": "2026-08-25T10:13:45+00:00",
-  "forecast": "2026-08-25T10:13:45+00:00",
-  "hourly": "2026-08-25T10:13:45+00:00",
-  "alerts": "2026-08-25T10:13:45+00:00",
-  "afd": "2026-08-25T10:13:45+00:00",
-  "lake_forecast": "2026-08-25T10:13:45+00:00",
-  "lake_gage": "2026-08-25T10:13:45+00:00",
-  "air": "2026-08-25T10:13:45+00:00",
-  "sun": "2026-08-25T10:13:45+00:00",
-  "models": "2026-08-25T10:13:45+00:00"
+  "now": "2026-08-25T11:08:22+00:00",
+  "forecast": "2026-08-25T11:08:22+00:00",
+  "hourly": "2026-08-25T11:08:22+00:00",
+  "alerts": "2026-08-25T11:08:22+00:00",
+  "afd": "2026-08-25T11:08:22+00:00",
+  "lake_forecast": "2026-08-25T11:08:22+00:00",
+  "lake_gage": "2026-08-25T11:08:22+00:00",
+  "air": "2026-08-25T11:08:22+00:00",
+  "sun": "2026-08-25T11:08:22+00:00",
+  "models": "2026-08-25T11:08:22+00:00"
  },
  "now": {
-  "observed_at": "2026-08-25T07:55:00+00:00",
+  "observed_at": "2026-08-25T09:35:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
+  "description": "Light Rain",
   "temp_f": 63,
   "feels_like_f": 63,
   "humidity": 77,
   "dewpoint_f": 55,
-  "wind_mph": 7,
+  "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": "S"
+  "wind_dir": "SSW"
  },
  "forecast": {
   "updated": "2026-08-25T06:30:34+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-08-25T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 61,
-    "pop": 33,
-    "wind": "S 6 mph",
-    "short": "Scattered Rain Showers",
-    "detailed": "Scattered rain showers. Mostly cloudy, with a low around 61. South wind around 6 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
-   },
-   {
-    "name": "Tuesday",
-    "start": "2026-08-25T06:00:00-04:00",
+    "name": "Today",
+    "start": "2026-08-25T07:00:00-04:00",
     "is_day": true,
     "temp_f": 75,
     "pop": 49,
@@ -48,7 +38,7 @@
     "detailed": "Scattered rain showers. Partly sunny, with a high near 75. West wind 3 to 8 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
-    "name": "Tuesday Night",
+    "name": "Tonight",
     "start": "2026-08-25T18:00:00-04:00",
     "is_day": false,
     "temp_f": 57,
@@ -95,7 +85,7 @@
     "pop": 56,
     "wind": "S 9 to 15 mph",
     "short": "Chance Showers And Thunderstorms then Showers And Thunderstorms Likely",
-    "detailed": "A chance of showers and thunderstorms before 8pm, then showers and thunderstorms likely. Mostly cloudy, with a low around 62. South wind 9 to 15 mph, with gusts as high as 25 mph. Chance of precipitation is 60%."
+    "detailed": "A chance of showers and thunderstorms before 8pm, then showers and thunderstorms likely. Mostly cloudy, with a low around 62. South wind 9 to 15 mph, with gusts as high as 25 mph. Chance of precipitation is 60%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Friday",
@@ -166,34 +156,22 @@
     "wind": "W 8 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers. Partly sunny, with a high near 80. West wind around 8 mph. Chance of precipitation is 40%."
+   },
+   {
+    "name": "Monday Night",
+    "start": "2026-08-31T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 59,
+    "pop": 38,
+    "wind": "N 3 to 7 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 59. North wind 3 to 7 mph. Chance of precipitation is 40%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-08-25T06:30:34+00:00",
   "hours": [
-   {
-    "t": "2026-08-25T05:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
-    "pop": 33,
-    "humidity": 84,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 69,
-    "short": "Scattered Rain Showers"
-   },
-   {
-    "t": "2026-08-25T06:00:00-04:00",
-    "temp_f": 61,
-    "feels_f": 61,
-    "pop": 38,
-    "humidity": 84,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 72,
-    "short": "Scattered Rain Showers"
-   },
    {
     "t": "2026-08-25T07:00:00-04:00",
     "temp_f": 61,
@@ -567,6 +545,28 @@
     "wind_dir": "S",
     "sky": 30,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-08-26T17:00:00-04:00",
+    "temp_f": 80,
+    "feels_f": 81,
+    "pop": 1,
+    "humidity": 49,
+    "wind_mph": 3,
+    "wind_dir": "S",
+    "sky": 30,
+    "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-08-26T18:00:00-04:00",
+    "temp_f": 79,
+    "feels_f": 79,
+    "pop": 1,
+    "humidity": 50,
+    "wind_mph": 3,
+    "wind_dir": "S",
+    "sky": 29,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-25T06:55:00+00:00",
+  "issued": "2026-08-25T10:50:00+00:00",
   "key_messages": [
    "Additional showers expected today as surface and upper level troughs move across the area.",
    "A dry and seasonable weekend will trend showery and more humid by early next week."
   ],
   "what_changed": "As of 253 AM EDT Tuesday... No significant changes to the current forecast.",
-  "raw": "\n000\nFXUS61 KBTV 250655\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n255 AM EDT Tue Aug 25 2026\n\n.WHAT HAS CHANGED...\nAs of 253 AM EDT Tuesday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 253 AM EDT Tuesday...\n\n1. Additional showers expected today as surface and upper level\ntroughs move across the area.\n\n2. A dry and seasonable weekend will trend showery and more \nhumid by early next week.\n\n&&\n\n.DISCUSSION...\nAs of 253 AM EDT Tuesday...\n\nKEY MESSAGE 1: More shower activity is expected today as a \nsurface trough and upper level trough both cross our area. Not \nexpecting any thunderstorms or severe weather. Coverage and \nintensity should be less than yesterday. Winds will become more \nnorthwesterly as the day goes on as trough axis pushes east of \nour forecast area. Drier air will then work into the region, and\nremain through Wednesday night with surface and upper level \nridges building over the area. More shower activity is expected \non Thursday into Thursday night, and lingering into Friday as \nwell. A surface cold front along with some upper level shortwave\nenergy will cross the region.\n\nKEY MESSAGE 2: Following a frontal passage and parent low \ndeparture Thursday and Friday, the weekend looks to trend drier \nas our flow pattern becomes more zonal. There still looks to be \nsome signs of subtle cyclonic flow as the upper low lifts north \nand east, which may spur some isolated shower activity in \neastern Ontario. Some of which could bring some increase cloud \ncover and an isolated shower to the St. Lawrence Valley (though \nPoPs are still below 20%). Temperatures will generally be \nseasonable in the 70s, though a few spot low 80s will be \npossible in the southern, wider valleys by Sunday. Humidity will\nalso gradually increase through the weekend from the upper 40s \non Saturday to the upper 50s by Monday. The increase in humidity\nwill be a result of a trough swinging through the area to start\nnext week. Models diverge on the strength of this trough with \nthe GFS ensembles denoting a continue more zonal pattern, \nwhereas the Euro ensembles depict a slightly more amplified \ntrough, which is in line with the CMC as well. The forecast will\nlikely change in the coming days as models resolve this feature\nbetter in the days to come. As of right now, most of the area \nhas a 30-40% chance for showers Monday, with temperatures in the\nupper 70s which does seem to be on the warmer side of most \nguidance. There is a good chance for conditions to be quite a \nbit cooler early next week should the pattern become more \namplified with additional cloud cover and daytime precipitation.\n\n&&\n\n.AVIATION /06Z TUESDAY THROUGH SATURDAY/...\nThrough 06Z Wednesday...Showers associated with an eastward \nmoving trough are moving through the region with MVFR cigs on \nthe leading edge and IFR cigs across the St. Lawrence Valley. \nMost terminal reductions tonight will be due to low stratus and \nnot fog, with the exception of MSS/MPV where fog in the Ottawa \nRiver Valley bodes confidence for some intermittent IFR fog at \nMSS from 06-11Z, and low trapped moisture in eastern Vermont may\nlead to intermittent fog at MPV from 09-12Z. Have used TEMPO \ngroups as cigs will likely bounce between IFR/low MVFR. Outside \nof the fog, low stratus will trend most sites outside of PBG \ntowards MVFR cigs at least between 2000-3000 ft agl. Low stratus\nwill likely trend ceilings lower to 1000-2000ft agl at MSS/SLK,\nas the base of the trough moves over northern New York through \n13-15Z. With diurnal mixing, ceilings may lift to 2500- 3500ft \nagl by 18Z, then perhaps all VFR beyond 21-23Z. Isolated to \nscattered showers will accompany these low ceilings, with only \nPROB30 confidence at this time for showers at a terminal. All \nsites will see VCSH this afternoon, but confidence of a shower \nmoving over a terminal is only 30-40% at this time. \n\nAs the trough moves through this morning, light and variable \nwinds will turn to the west-northwest under 10 knots for all \nterminals. Winds shifts will occur between 12-15Z from west to \neast. Models denote the potential for a brief winds shift to the\neast at PBG due to a lake breeze during the late morning hours,\nhowever, the shift looks to be short lived and quickly \novertaken by the prevailing northwesterlies. Winds trend calm \nand variable with a return of low stratus and potential fog \ntowards 06Z tomorrow night at the climatologically favored \nterminals.\n\nOutlook...\n\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Chance SHRA, Chance TSRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Chance\nSHRA, Slight chance TSRA.\nFriday: Mainly MVFR, with local IFR possible. Chance SHRA, Slight\nchance TSRA.\nFriday Night: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nSaturday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Neiles/Danzig\nAVIATION...Danzig\n"
+  "raw": "\n000\nFXUS61 KBTV 251050\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n650 AM EDT Tue Aug 25 2026\n\n.WHAT HAS CHANGED...\nAs of 253 AM EDT Tuesday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 253 AM EDT Tuesday...\n\n1. Additional showers expected today as surface and upper level\ntroughs move across the area.\n\n2. A dry and seasonable weekend will trend showery and more \nhumid by early next week.\n\n&&\n\n.DISCUSSION...\nAs of 253 AM EDT Tuesday...\n\nKEY MESSAGE 1: More shower activity is expected today as a \nsurface trough and upper level trough both cross our area. Not \nexpecting any thunderstorms or severe weather. Coverage and \nintensity should be less than yesterday. Winds will become more \nnorthwesterly as the day goes on as trough axis pushes east of \nour forecast area. Drier air will then work into the region, and\nremain through Wednesday night with surface and upper level \nridges building over the area. More shower activity is expected \non Thursday into Thursday night, and lingering into Friday as \nwell. A surface cold front along with some upper level shortwave\nenergy will cross the region.\n\nKEY MESSAGE 2: Following a frontal passage and parent low \ndeparture Thursday and Friday, the weekend looks to trend drier \nas our flow pattern becomes more zonal. There still looks to be \nsome signs of subtle cyclonic flow as the upper low lifts north \nand east, which may spur some isolated shower activity in \neastern Ontario. Some of which could bring some increase cloud \ncover and an isolated shower to the St. Lawrence Valley (though \nPoPs are still below 20%). Temperatures will generally be \nseasonable in the 70s, though a few spot low 80s will be \npossible in the southern, wider valleys by Sunday. Humidity will\nalso gradually increase through the weekend from the upper 40s \non Saturday to the upper 50s by Monday. The increase in humidity\nwill be a result of a trough swinging through the area to start\nnext week. Models diverge on the strength of this trough with \nthe GFS ensembles denoting a continue more zonal pattern, \nwhereas the Euro ensembles depict a slightly more amplified \ntrough, which is in line with the CMC as well. The forecast will\nlikely change in the coming days as models resolve this feature\nbetter in the days to come. As of right now, most of the area \nhas a 30-40% chance for showers Monday, with temperatures in the\nupper 70s which does seem to be on the warmer side of most \nguidance. There is a good chance for conditions to be quite a \nbit cooler early next week should the pattern become more \namplified with additional cloud cover and daytime precipitation.\n\n&&\n\n.AVIATION /12Z TUESDAY THROUGH SATURDAY/...\nThrough 12Z Wednesday...Showers associated with an eastward moving\ntrough are moving through the region with MVFR cigs on the leading\nedge and IFR cigs across the St. Lawrence Valley. Most terminal\nreductions this morning will be due to low stratus and not fog. Have\nused a TEMPO group as cigs will likely bounce between IFR/low MVFR\nearly this morning at MSS. Elsewhere, low stratus will trend \nmost sites towards MVFR cigs at least between 2000-3500 ft agl. \nLow stratus will likely trend ceilings lower to 1000-2000ft agl \nat MSS/SLK, as the base of the trough moves over northern New \nYork through 13-15Z. With diurnal mixing, ceilings may lift to \n2500-3500ft agl by 18Z, then perhaps all VFR beyond 21-23Z. \nIsolated to scattered showers will accompany these low ceilings,\nwith only PROB30 confidence at this time for showers at a \nterminal. All sites will see VCSH this morning and afternoon, \nbut confidence of a shower moving over a terminal is only 30-40%\nat this time. \n\nAs the trough moves through this morning, light and variable \nwinds will turn to the west-northwest under 10 knots for all \nterminals. Winds shifts will occur between 12-15Z from west to \neast. Models denote the potential for a brief winds shift to the\neast at PBG due to a lake breeze during the late morning hours,\nhowever, the shift looks to be short lived and quickly \novertaken by the prevailing northwesterlies. Winds trend calm \nand variable with a return of low stratus and potential fog \ntowards 06Z tomorrow night at the climatologically favored \nterminals.\n\nOutlook...\n\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Chance SHRA, Chance TSRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Chance\nSHRA, Slight chance TSRA.\nFriday: Mainly MVFR, with local IFR possible. Chance SHRA, Slight\nchance TSRA.\nFriday Night: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nSaturday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Danzig/Neiles\nAVIATION...Danzig\n"
  },
  "lake_forecast": {
   "issued": "2026-08-25T06:30:00+00:00",
@@ -825,17 +825,17 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-08-25T06:00:00.000-04:00",
+  "water_temp_at": "2026-08-25T07:00:00.000-04:00",
   "level_ft": 94.8,
-  "level_at": "2026-08-25T06:00:00.000-04:00",
+  "level_at": "2026-08-25T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 27,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/25/26 5:00",
+  "observed": "08/25/26 6:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, August 25th."
  },
  "sun": {
@@ -855,12 +855,12 @@
      "ICON": 71
     },
     "pop_max": {
-     "GFS": 17,
+     "GFS": 15,
      "Euro": 69,
      "ICON": 50
     },
     "precip_in": {
-     "GFS": 0.03,
+     "GFS": 0.24,
      "Euro": 0.12,
      "ICON": 0.12
     },
