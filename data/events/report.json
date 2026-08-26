@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-25T17:01:29-04:00",
+ "generated": "2026-08-26T06:15:56-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 13,
-   "seconds": 6.8
+   "seconds": 5.6
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 60,
-   "seconds": 3.4
+   "count": 61,
+   "seconds": 3.1
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 67,
-   "seconds": 3.2
+   "count": 66,
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 169,
-   "seconds": 2.6
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 87,
-   "seconds": 2.4
+   "count": 86,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-25&end_date=2026-10-24&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-26&end_date=2026-10-25&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 180,
-   "seconds": 75.6
+   "count": 186,
+   "seconds": 65.8
   },
   "flynn": {
    "label": "The Flynn",
    "count": 35,
-   "seconds": 0.6
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,7 +64,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.9
+   "seconds": 36.2
   },
   "higherground": {
    "label": "Higher Ground",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 418,
-   "seconds": 83.7
+   "count": 409,
+   "seconds": 73.0
   },
   "meetup": {
    "label": "Meetup",
    "count": 63,
-   "seconds": 121.9
+   "seconds": 107.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 44,
-   "seconds": 16.6
+   "count": 45,
+   "seconds": 14.4
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden"
+   "count": 93,
+   "seconds": 5.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 28,
-   "seconds": 34.5
+   "seconds": 31.0
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,77 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 402,
+   "count": 395,
    "seconds": 18.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 245,
-   "seconds": 0.2
+   "count": 240,
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 80,
-   "seconds": 108.9
+   "count": 81,
+   "seconds": 98.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 37,
-   "seconds": 0.7
+   "seconds": 0.3
   }
  },
- "gathered": 2687,
- "afterDedup": 1432,
- "duplicatesMerged": 1255,
- "final": 1801,
+ "gathered": 2766,
+ "afterDedup": 1520,
+ "duplicatesMerged": 1246,
+ "final": 1782,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "Live Music",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-25"
-  },
-  {
-   "kept": {
-    "title": "Patagonia Gear Swap",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-26"
-  },
   {
    "kept": {
     "title": "Splash Dance: DJ Matt Hagen",
@@ -2008,6 +1961,17 @@
   },
   {
    "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
     "title": "Zombie Walk",
     "source": "churchst"
    },
@@ -2074,12 +2038,45 @@
   },
   {
    "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-17"
+  },
+  {
+   "kept": {
+    "title": "Adam Ezra Group",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-10-17"
+  },
+  {
+   "kept": {
     "title": "Field Hockey vs Yale",
     "source": "uvm"
    },
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-18"
+  },
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-18"
   },
@@ -2387,18 +2384,36 @@
  ],
  "changes": [
   {
-   "id": "93b48ae92daa",
-   "title": "Tech Tuesdays - Breakfast",
-   "date": "2026-08-25",
-   "change": "missing",
-   "lastSeen": "2026-08-25T06:04:20-04:00"
+   "id": "d5ae81766294",
+   "title": "Read to a Dog!",
+   "date": "2026-09-02",
+   "change": "time",
+   "was": "2026-09-02T15:30:00-04:00",
+   "now": "2026-09-02T14:45:00-04:00"
   },
   {
-   "id": "1dd63ac3e05f",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-08-25",
-   "change": "missing",
-   "lastSeen": "2026-08-25T06:04:20-04:00"
+   "id": "7f94fb348d89",
+   "title": "Read to a Dog!",
+   "date": "2026-09-09",
+   "change": "time",
+   "was": "2026-09-09T15:30:00-04:00",
+   "now": "2026-09-09T14:45:00-04:00"
+  },
+  {
+   "id": "59fccb39869d",
+   "title": "Green Mountain Book Festival",
+   "date": "2026-09-19",
+   "change": "time",
+   "was": "2026-09-19T11:00:00-04:00",
+   "now": "2026-09-19T16:00:00-04:00"
+  },
+  {
+   "id": "98bfa21e49b5",
+   "title": "Adam Ezra Group",
+   "date": "2026-10-17",
+   "change": "time",
+   "was": "2026-10-17T20:00:00-04:00",
+   "now": "2026-10-17T19:30:00-04:00"
   },
   {
    "id": "4fb477e76fbd",
@@ -2427,6 +2442,13 @@
    "date": "2026-09-17",
    "change": "missing",
    "lastSeen": "2026-08-24T06:20:24-04:00"
+  },
+  {
+   "id": "59fccb39869d-1600",
+   "title": "Green Mountain Book Festival",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-08-25T17:01:29-04:00"
   },
   {
    "id": "cd78a8c60a39",
@@ -2474,13 +2496,6 @@
    "id": "f4dcf578bf70",
    "title": "Hold for all-ages program",
    "date": "2026-10-10",
-   "change": "missing",
-   "lastSeen": "2026-08-25T06:04:20-04:00"
-  },
-  {
-   "id": "89e32f637d32",
-   "title": "The Travelin’ McCourys",
-   "date": "2026-10-16",
    "change": "missing",
    "lastSeen": "2026-08-25T06:04:20-04:00"
   },
