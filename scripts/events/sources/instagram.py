@@ -60,7 +60,7 @@ SECRETS_ENV = Path.home() / "btown-brief-prompts" / "secrets.env"
 # Docs: https://scrapecreators.com (couldn't be checked while the key was
 # empty). Assumed: GET {POSTS_ENDPOINT}?handle=<handle> with header
 # "x-api-key: <key>". If the first live run 404s, fix these constants.
-POSTS_ENDPOINT = "https://api.scrapecreators.com/v1/instagram/user/posts"
+POSTS_ENDPOINT = "https://api.scrapecreators.com/v2/instagram/user/posts"  # v2 = the proven endpoint (newsletter fetch_instagram.py); v1 404s some handles
 HANDLE_PARAM = "handle"
 API_KEY_HEADER = "x-api-key"
 
@@ -78,7 +78,7 @@ MAX_EVENTS_PER_CAPTION = 3  # a caption listing more dates than this is noise
 # NOT IG-only (42 corpus events via Seven Days).
 HANDLE_TO_VENUE: dict[str, dict] = {
     "despacitovt":    {"venue": "Despacito",    "town": "Burlington"},
-    "thearchivesbtv": {"venue": "The Archives", "town": "Burlington"},
+    "thearchivesbar": {"venue": "The Archives", "town": "Burlington"},  # NOT thearchivesbtv (404s)
     "theframe.btv":   {"venue": "The Frame",    "town": "Burlington"},
     # Announce-late pop-up club: announces 1-3 days ahead on Instagram ONLY, so the
     # newsletter can never list them in advance — this pipeline is how their events
