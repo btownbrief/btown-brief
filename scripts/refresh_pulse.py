@@ -145,6 +145,41 @@ EXTRA_LOCAL_FEEDS = [
      "https://www.vtcng.com/"),
 ]
 
+# National podcasts that ride along OUTSIDE Inoreader, same mechanics as
+# EXTRA_LOCAL_FEEDS: the fast lane fetches each show's own feed directly
+# every run, and an entry retires itself if the Inoreader folders ever
+# carry the same site again. Born from the 2026-08 freeze where Inoreader's
+# crawl of two podcast feeds silently died for months while the shows kept
+# publishing — direct feeds cut that failure mode out entirely. Each entry:
+# (title, feed URL, site URL). Titles must stay stable — the source id is
+# the title slug. Topic comes from data/pulse-topics.json via the site URL.
+EXTRA_NATIONAL_FEEDS = [
+    ("NPR Up First",
+     "https://feeds.npr.org/510318/podcast.xml",
+     "https://www.npr.org/podcasts/510318/up-first"),
+    ("The Daily",
+     "https://feeds.simplecast.com/54nAGcIl",
+     "https://www.nytimes.com/the-daily"),
+    ("Reuters World News",
+     "https://feeds.megaphone.fm/reutersworldnews",
+     "https://www.reuters.com/podcasts/"),
+    ("Today, Explained",
+     "https://feeds.megaphone.fm/VMP5705694065",
+     "https://www.vox.com/today-explained"),
+    ("The Indicator from Planet Money",
+     "https://feeds.npr.org/510325/podcast.xml",
+     "https://www.npr.org/podcasts/510325/the-indicator-from-planet-money"),
+    ("99% Invisible",
+     "https://feeds.simplecast.com/BqbsxVfO",
+     "https://99percentinvisible.org/"),
+    ("Radiolab",
+     "http://feeds.wnyc.org/radiolab",
+     "https://radiolab.org/"),
+    ("Search Engine",
+     "https://feeds.megaphone.fm/search-engine",
+     "https://www.searchengine.show/"),
+]
+
 ITEM_CAP = 20          # headlines kept per source
 POD_ITEM_CAP = 40      # podcasts publish weekly — keep a deeper back-catalog
 TITLE_MAX = 200
@@ -194,6 +229,8 @@ SHORT_NAMES = {
     "marketwatch-com-top-stories": "MarketWatch",
     "nba": "r/NBA",
     "nbc-news-top-stories": "NBC News",
+    "npr-up-first": "Up First",
+    "the-indicator-from-planet-money": "The Indicator",
     "net-zero-energy-burlington-vt": "Net Zero Energy",
     "news": "NPR",
     "pbs-newshour-headlines": "PBS NewsHour",
@@ -202,7 +239,8 @@ SHORT_NAMES = {
     "rocket-shop-radio-hour": "Rocket Shop",
     "science": "r/Science",
     "scientific-american-content-global": "Scientific American",
-    "scientific-american-podcast-60-second-science": "60-Second Science",
+    # the show renamed to Science Quickly in 2023; the feed title never did
+    "scientific-american-podcast-60-second-science": "Science Quickly",
     "technology": "r/Technology",
     "the-frequency-daily-vermont-news": "The Frequency",
     "the-hill-technology-policy": "The Hill",
@@ -611,6 +649,15 @@ def parse_feed(raw):
             "audio": item_audio(node),
             "image": item_image(node),
         })
+    # Some podcast feeds (The Daily, Radiolab) point every episode's <link>
+    # at the show's homepage — one URL for thousands of episodes, which the
+    # URL-keyed dedupe would collapse to a single item wearing the oldest
+    # date. When a shared link covers multiple audio items, the episode's
+    # audio file becomes its identity, same as the no-<link> fallback above.
+    url_counts = Counter(item["url"] for item in items if item["url"])
+    for item in items:
+        if item["audio"] and item["url"] and url_counts[item["url"]] > 1:
+            item["url"] = canon_url(item["audio"])
     return items
 
 
@@ -662,7 +709,8 @@ def build_roster(folder_outlines, topics):
             topic = next((topics[k] for k in topic_keys(site) if k in topics),
                          "news")
         podcast = (
-            any(h in (outline["xml"] or "") for h in PODCAST_HOSTS)
+            bool(outline.get("pod"))  # EXTRA_NATIONAL_FEEDS marks its own
+            or any(h in (outline["xml"] or "") for h in PODCAST_HOSTS)
             or "podcast" in outline["title"].lower()
             or (kind == "local" and "youtube.com" in (outline["xml"] or "")))
         sources.append({
@@ -713,7 +761,7 @@ def attribute(item, by_site, by_title, by_nl_title):
 def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
     """Previous payload items + fresh items → (capped newest-first list,
     count of genuinely new stories) — the count feeds the staleness guard."""
-    by_key, added = {}, 0
+    by_key = {}
     for item in previous:
         if item.get("u"):
             by_key[dedupe_key(item["u"])] = dict(item)
@@ -740,8 +788,8 @@ def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
         key = dedupe_key(item["url"])
         held = by_key.get(key)
         if held is None:
+            fresh["_new"] = True
             by_key[key] = fresh
-            added += 1
         else:
             # Same story seen again: take the freshest headline text and any
             # media that showed up, but keep the EARLIEST timestamp — feeds
@@ -754,7 +802,15 @@ def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
     reconcile_backfill(by_key)
     merged = sorted(by_key.values(), key=lambda entry: entry.get("d", 0),
                     reverse=True)
-    return merged[:cap], added
+    # Only stories that SURVIVE the cap count as new: a deep podcast feed
+    # (The Daily ships ~3000 episodes every fetch) re-offers its whole
+    # back-catalog forever, and counting the beyond-cap tail would advance
+    # the payload's freshness stamp on runs where the page shows nothing new.
+    kept = merged[:cap]
+    added = sum(1 for entry in kept if entry.pop("_new", False))
+    for entry in merged[cap:]:
+        entry.pop("_new", None)
+    return kept, added
 
 
 def norm_title_key(value):
@@ -948,6 +1004,15 @@ def run(args):
         # no Inoreader stream carries these; the fast lane fetches the feed
         folder_outlines.append((
             {"title": title, "xml": feed_url, "html": site_url}, "local"))
+    for title, feed_url, site_url in EXTRA_NATIONAL_FEEDS:
+        if topic_keys(site_url)[0] in folder_sites:
+            continue  # the folder carries it now — the ride-along retires
+        # no Inoreader stream carries these either; the fast lane fetches
+        # the feed. pod is pinned so the show rides the lane (and gets the
+        # podcast item cap) from run one, before any audio item lands.
+        folder_outlines.append((
+            {"title": title, "xml": feed_url, "html": site_url, "pod": True},
+            "national"))
 
     sources = build_roster(folder_outlines, topics)
     if len(sources) < MIN_SOURCES:
@@ -999,6 +1064,15 @@ def run(args):
         # the feed while stamping it fresh. Fail loudly instead.
         sys.exit(f"{unmatched} stream items unattributed vs {matched} matched "
                  "— attribution looks broken, refusing to write")
+
+    # A source is a podcast once any stored item carries audio — promote the
+    # flag onto the source itself so the fast lane sees shows whose feed and
+    # title carry no podcast marker (WSJ Minute Briefing). build_payload
+    # applies the same rule per run; this just makes it stick upstream.
+    for source in sources:
+        if not source["podcast"] and any(
+                item.get("a") for item in prev_by_source.get(source["id"], [])):
+            source["podcast"] = True
 
     if args.seed:
         seed_direct(sources, fresh_by_source)
@@ -1056,11 +1130,16 @@ FAST_LANE_SKIP = ("reddit.com", "inoreader.com", "youtube.com")
 
 
 def pick_fast_lane(sources):
-    """Local-folder sources whose own feed is safe to hit from Actions —
-    Reddit (cloud-hostile) and Inoreader-stream ride-alongs stay stream-only."""
+    """Local-folder sources plus podcast shows whose own feed is safe to hit
+    from Actions — Reddit (cloud-hostile) and Inoreader-stream ride-alongs
+    stay stream-only. Podcasts ride the lane because Inoreader's crawl of a
+    podcast feed can silently die for months while the show keeps publishing
+    (60-Second Science and WSJ Minute Briefing froze that way, 2026-08)."""
     lane = []
     for source in sources:
-        if source.get("topic") != "local" or not source.get("feed"):
+        if not source.get("feed"):
+            continue
+        if source.get("topic") != "local" and not source.get("podcast"):
             continue
         probe = (source.get("feed") or "") + " " + (source.get("site") or "")
         if any(host in probe for host in FAST_LANE_SKIP):
@@ -1203,8 +1282,27 @@ def selftest():
         {"id": "national", "topic": "news", "feed": "https://wire.com/rss",
          "site": "https://wire.com"},
         {"id": "nofeed", "topic": "local", "feed": "", "site": "https://x.com"},
+        {"id": "pod", "topic": "news", "podcast": True,
+         "feed": "https://feeds.npr.org/510318/podcast.xml",
+         "site": "https://www.npr.org/podcasts/510318/up-first"},
     ])
-    assert [source["id"] for source in lane] == ["ok"]
+    assert [source["id"] for source in lane] == ["ok", "pod"]
+
+    # shared-homepage podcast links: audio becomes the identity, non-audio
+    # items keep the link as-is
+    shared = parse_feed(b"""<?xml version="1.0"?><rss version="2.0"><channel>
+    <item><title>Ep 2</title><link>https://pod.example/show</link>
+    <pubDate>Sun, 09 Aug 2026 12:00:00 +0000</pubDate>
+    <enclosure type="audio/mpeg" url="https://pod.example/2.mp3"/></item>
+    <item><title>Ep 1</title><link>https://pod.example/show</link>
+    <pubDate>Sun, 02 Aug 2026 12:00:00 +0000</pubDate>
+    <enclosure type="audio/mpeg" url="https://pod.example/1.mp3"/></item>
+    <item><title>About</title><link>https://pod.example/show</link>
+    <pubDate>Sun, 01 Aug 2026 12:00:00 +0000</pubDate></item>
+    </channel></rss>""")
+    assert [item["url"] for item in shared] == [
+        "https://pod.example/2.mp3", "https://pod.example/1.mp3",
+        "https://pod.example/show"]
 
     assert dedupe_key("https://airy.so/") == dedupe_key("http://www.airy.so")
     assert dedupe_key("https://a.com/x%e2%80%91y") == dedupe_key("https://a.com/x%E2%80%91y")
