@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-26T06:15:56-04:00",
+ "generated": "2026-08-26T20:04:49-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 13,
-   "seconds": 5.6
+   "seconds": 6.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 61,
-   "seconds": 3.1
+   "count": 62,
+   "seconds": 3.0
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 66,
-   "seconds": 2.9
+   "seconds": 4.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 169,
-   "seconds": 3.2
+   "seconds": 2.9
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 86,
-   "seconds": 1.9
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 186,
-   "seconds": 65.8
+   "seconds": 68.1
   },
   "flynn": {
    "label": "The Flynn",
@@ -64,12 +64,12 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.2
+   "seconds": 37.2
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.5
+   "seconds": 1.8
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
@@ -78,28 +78,28 @@
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 409,
-   "seconds": 73.0
+   "count": 411,
+   "seconds": 72.9
   },
   "meetup": {
    "label": "Meetup",
-   "count": 63,
-   "seconds": 107.7
+   "count": 64,
+   "seconds": 127.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 45,
-   "seconds": 14.4
+   "seconds": 13.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 93,
-   "seconds": 5.4
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 28,
-   "seconds": 31.0
+   "seconds": 31.7
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,67 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 395,
-   "seconds": 18.9
+   "count": 404,
+   "seconds": 22.1
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 240,
+   "count": 248,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 81,
-   "seconds": 98.7
+   "seconds": 100.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 37,
-   "seconds": 0.3
+   "count": 50,
+   "seconds": 0.6
   }
  },
- "gathered": 2766,
- "afterDedup": 1520,
- "duplicatesMerged": 1246,
- "final": 1782,
+ "gathered": 2707,
+ "afterDedup": 1458,
+ "duplicatesMerged": 1249,
+ "final": 1816,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Splash Dance: DJ Matt Hagen",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Party on the Bricks is back for a Fall Series!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-26"
-  },
   {
    "kept": {
     "title": "Burlington Farmers Market",
@@ -512,6 +475,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "Coloring in the Marble Court",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-09-30"
   },
@@ -1269,6 +1243,17 @@
   },
   {
    "kept": {
+    "title": "Coloring in the Marble Court",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
     "title": "AMP UP Your Education: UVM's Accelerated Master's Pathway Grad Fair",
     "source": "uvm"
    },
@@ -1454,6 +1439,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "2026 White Coat Ceremony for the Larner Medical Class of 2030",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-10-09"
   },
@@ -2071,17 +2067,6 @@
   },
   {
    "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-18"
-  },
-  {
-   "kept": {
     "title": "Careers in Marketing Panel",
     "source": "uvm"
    },
@@ -2166,6 +2151,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-10-21"
+  },
+  {
+   "kept": {
+    "title": "Coloring in the Marble Court",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-10-21"
   },
@@ -2384,36 +2380,25 @@
  ],
  "changes": [
   {
-   "id": "d5ae81766294",
-   "title": "Read to a Dog!",
-   "date": "2026-09-02",
-   "change": "time",
-   "was": "2026-09-02T15:30:00-04:00",
-   "now": "2026-09-02T14:45:00-04:00"
+   "id": "80f43caad87a",
+   "title": "Pick-up Basketball",
+   "date": "2026-08-26",
+   "change": "missing",
+   "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
-   "id": "7f94fb348d89",
-   "title": "Read to a Dog!",
-   "date": "2026-09-09",
-   "change": "time",
-   "was": "2026-09-09T15:30:00-04:00",
-   "now": "2026-09-09T14:45:00-04:00"
+   "id": "4f36e53a6f25",
+   "title": "Bike Ride @ Upper Pass Beer Co",
+   "date": "2026-08-26",
+   "change": "missing",
+   "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
-   "id": "59fccb39869d",
-   "title": "Green Mountain Book Festival",
-   "date": "2026-09-19",
-   "change": "time",
-   "was": "2026-09-19T11:00:00-04:00",
-   "now": "2026-09-19T16:00:00-04:00"
-  },
-  {
-   "id": "98bfa21e49b5",
-   "title": "Adam Ezra Group",
-   "date": "2026-10-17",
-   "change": "time",
-   "was": "2026-10-17T20:00:00-04:00",
-   "now": "2026-10-17T19:30:00-04:00"
+   "id": "7cdc6a2d716a",
+   "title": "Soulshine & Smoke: An Allman Brothers celebration with Soulshine Revival & BBQ",
+   "date": "2026-08-28",
+   "change": "missing",
+   "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
    "id": "4fb477e76fbd",
@@ -2428,6 +2413,13 @@
    "date": "2026-09-04",
    "change": "missing",
    "lastSeen": "2026-08-24T06:20:24-04:00"
+  },
+  {
+   "id": "9b8350b903c3",
+   "title": "Swimming @ Oakledge",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
    "id": "c51ced474660",
@@ -2500,11 +2492,17 @@
    "lastSeen": "2026-08-25T06:04:20-04:00"
   },
   {
+   "id": "cf0c3c256364",
+   "title": "Jill McCracken w/ Julia Randall",
+   "date": "2026-10-17",
+   "change": "missing",
+   "lastSeen": "2026-08-26T06:15:56-04:00"
+  },
+  {
    "id": "0b9b74a81730",
    "title": "Dana and Alden",
    "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-08-23T16:57:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "7b1e890d7409",
