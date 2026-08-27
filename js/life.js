@@ -346,7 +346,7 @@
       try {
         var target = window.BtownSunsetScore.selectTarget(ctx.latest, now);
         var result = window.BtownSunsetScore.computeScore(
-          target.sunsetMs, ctx.openMeteo, ctx.latest);
+          target.sunsetMs, ctx.openMeteo, ctx.latest, null, ctx.sunsetAq);
         return {
           score: result.score,
           parts: result.parts,
@@ -1047,7 +1047,7 @@
       '<circle class="spark-now" cx="' + x(0) + '" cy="' + y(series[0].score) + '" r="2.5"></circle></svg>';
   }
 
-  function renderScores(d, openMeteo) {
+  function renderScores(d, openMeteo, sunsetAq) {
     var grid = el('life-grid');
     if (!grid) return;
     if (!d.hourly || !Array.isArray(d.hourly.hours) || !d.hourly.hours.length) {
@@ -1066,6 +1066,7 @@
 
     var ctx = d.__ctx;
     ctx.openMeteo = openMeteo;
+    ctx.sunsetAq = sunsetAq;
 
     var html = SCORE_META.map(function (meta, idx) {
       var res = scoreActivity(meta.key, d.hourly.hours, ctx);
@@ -1247,6 +1248,8 @@
     var readP = getJSON(READ_URL).catch(function () { return null; });
     var sunsetP = getJSON(window.BtownSunsetScore.OPEN_METEO_URL)
       .catch(function () { return null; });
+    var sunsetAqP = getJSON(window.BtownSunsetScore.AIR_URL)
+      .catch(function () { return null; });
 
     getJSON(DATA_URL).then(function (d) {
       d.__ctx = buildCtx(d);
@@ -1256,7 +1259,7 @@
       renderNow(d);
       renderHours(d);
       readP.then(function (read) { renderWeek(d, read); });
-      sunsetP.then(function (om) { renderScores(d, om); });
+      Promise.all([sunsetP, sunsetAqP]).then(function (r) { renderScores(d, r[0], r[1]); });
       getJSON(BEACH_URL).then(function (b) { renderBeaches(d, b); })
         .catch(function () { renderBeaches(d, null); });
       var page = el('rn-page');
