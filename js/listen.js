@@ -33,15 +33,11 @@
   }
 
   /* Shows worth the habit that aren't on the wire yet — follow links only.
-     When one of these joins the Inoreader Podcasts folder its episodes start
-     rendering above automatically and its card here can be retired. */
-  var STATIC_NATIONAL = [
-    {
-      name: 'Reuters World News',
-      blurb: 'Ten minutes of actual reporting on the day, twice every weekday. The good one.',
-      links: [['reuters.com/podcasts', 'https://www.reuters.com/podcasts/']]
-    }
-  ];
+     When one joins the wire (the Inoreader Podcasts folder, or
+     EXTRA_NATIONAL_FEEDS in scripts/refresh_pulse.py) its episodes start
+     rendering above automatically and its card here can be retired —
+     Reuters World News graduated that way in Aug 2026. */
+  var STATIC_NATIONAL = [];
 
   function podCardHTML(src, eps) {
     var art = '';
