@@ -23,12 +23,16 @@
   var SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
   var SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon — safe to ship
   var REACT_KEY = 'btown-tv-reacts';            // { vid: 'watched' | 'skip' | 'more' }
+  var LATER_KEY = 'btown-tv-later';             // [{id,t,ch,dur,why,savedAt}] newest first — pure client, never synced
+  var LATER_MAX = 200;                          // items survive dropping out of the nightly edition, up to this many
   var STALE_MS = 30 * 3600 * 1000;              // an edition older than this says so
   var PAST_NIGHTS = 14;                         // how many past editions the strip shows (= what the archive keeps)
   var SEND_DELAY_MS = 4500;                     // a reaction reaches the server only after the Undo window
 
   var page = document.getElementById('tv-page');
   var reacts = loadReacts();
+  var later = loadLater();                      // the reader's watch-later list
+  var laterOpen = false;                        // the saved strip is unfolded
   var data = null;                              // tonight's edition
   var expanded = {};                            // shelf key -> bench is showing
   var archive = null;                           // past editions (lazy)
@@ -82,6 +86,18 @@
   }
   function saveReacts() {
     try { localStorage.setItem(REACT_KEY, JSON.stringify(reacts)); } catch (e) {}
+  }
+  function loadLater() {
+    try {
+      var a = JSON.parse(localStorage.getItem(LATER_KEY) || '[]');
+      return Array.isArray(a) ? a : [];
+    } catch (e) { return []; }
+  }
+  function saveLater() {
+    try { localStorage.setItem(LATER_KEY, JSON.stringify(later)); } catch (e) {}
+  }
+  function isLater(vid) {
+    return later.some(function (o) { return o && o.id === vid; });
   }
   function playerId() {
     var v = null;
@@ -170,12 +186,15 @@
             (item.why ? '<p class="tv-why">' + esc(item.why) + '</p>' : '') +
           '</div>' +
         '</a>' +
-        acts(state) +
+        acts(state, item.id) +
       '</article>';
   }
-  function acts(state) {
-    return '<div class="tv-acts" role="group" aria-label="Your reaction — watched, not for me, more like this">' +
+  function acts(state, vid) {
+    return '<div class="tv-acts" role="group" aria-label="Your reaction — watched, not for me, more like this — plus save for later">' +
       act('watched', '✓ Watched', state) + act('skip', '✕ Not for me', state) + act('more', '♥ More', state) +
+      /* independent of the react map: pure client, never reaches Supabase */
+      '<button class="tv-act tv-act-later" type="button" data-later aria-pressed="' + isLater(vid) +
+        '" title="Save for later — kept on this device">＋ Later</button>' +
     '</div>';
   }
   function act(kind, label, state) {
@@ -208,7 +227,7 @@
           (pick.why ? '<p class="tv-why" style="margin-top:8px">' + esc(pick.why) + '</p>' : '') +
         '</div>' +
       '</a>' +
-      '<div class="tv-pick-acts">' + acts(state) + '</div>' +
+      '<div class="tv-pick-acts">' + acts(state, pick.id) + '</div>' +
     '</section>';
   }
 
@@ -293,6 +312,89 @@
     return html + '</section>';
   }
 
+  /* ---------- saved for later ---------- */
+  /* A collapsed one-line strip near Past nights; unfolds to full cards.
+     Items are stored whole so they outlive the nightly edition. Hidden
+     entirely when empty. ＋ Later on an expanded saved card removes it. */
+  function laterHtml() {
+    if (!later.length) return '';
+    var html = '<section class="tv-later" aria-label="Saved for later">' +
+      '<button class="tv-later-bar" type="button" aria-expanded="' + laterOpen + '">' +
+        '🔖 Saved for later · ' + later.length +
+        '<span class="tv-later-hint">' + (laterOpen ? 'Fold away' : 'Show the list') + '</span>' +
+      '</button>';
+    if (laterOpen) {
+      html += '<div class="tv-grid tv-later-grid">' +
+        later.map(function (it) { return card(it); }).join('') + '</div>' +
+        '<p class="tv-later-note">Kept on this device only — ＋ Later on a card takes it back off.</p>';
+    }
+    return html + '</section>';
+  }
+  function rerenderLater() {
+    var slot = document.getElementById('tv-later-slot');
+    if (slot) slot.innerHTML = laterHtml();
+  }
+  /* the full item for a vid, from wherever it's on the page tonight */
+  function findItem(vid) {
+    var found = null;
+    function check(it) { if (!found && it && it.id === vid) found = it; }
+    later.forEach(check);
+    if (data) {
+      check(data.pick);
+      (data.pick_more || []).forEach(check);
+      (data.shelves || []).forEach(function (s) {
+        (s.items || []).forEach(check);
+        (s.more || []).forEach(check);
+      });
+      (data.live || []).forEach(check);
+    }
+    if (!found && archive && archive.editions) {
+      archive.editions.forEach(function (e) {
+        if (!e) return;
+        check(e.pick);
+        (e.shelves || []).forEach(function (s) { (s.items || []).forEach(check); });
+      });
+    }
+    return found;
+  }
+  function toggleLater(holder) {
+    var vid = holder.dataset.vid;
+    if (!vid) return;
+    var before = later.slice();                 // for Undo
+    var removing = isLater(vid);
+    if (removing) {
+      later = later.filter(function (o) { return !o || o.id !== vid; });
+    } else {
+      var it = findItem(vid) || {};
+      var titleEl = holder.querySelector('.tv-card-title, .tv-pick-body h2');
+      var chEl = holder.querySelector('.tv-ch');
+      later.unshift({
+        id: vid,
+        t: it.t || (titleEl ? titleEl.textContent : ''),
+        ch: it.ch || (chEl ? chEl.textContent : ''),
+        dur: it.dur || '',
+        why: it.why || '',
+        savedAt: Math.round(Date.now() / 1000)
+      });
+      if (later.length > LATER_MAX) later.length = LATER_MAX;
+    }
+    saveLater();
+    repaintLater(vid);
+    toast(removing ? 'Removed' : 'Saved for later', function () {
+      later = before;
+      saveLater();
+      repaintLater(vid);
+    });
+  }
+  /* every copy of the card flips its ＋ Later state; the strip re-renders */
+  function repaintLater(vid) {
+    var on = isLater(vid);
+    page.querySelectorAll('[data-vid="' + vid + '"] [data-later]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(on));
+    });
+    rerenderLater();
+  }
+
   /* ---------- the page ---------- */
   function render() {
     var html = '';
@@ -330,6 +432,7 @@
         }).join('') + '</div></section>';
     }
 
+    html += '<div id="tv-later-slot">' + laterHtml() + '</div>';
     html += '<div id="tv-past-slot">' + pastHtml() + '</div>';
 
     var st = data.stats || {};
@@ -340,7 +443,7 @@
       'Edition ' + esc(data.edition || '') + (cands ? ' · the editor read ' + esc(String(cands)) + ' candidates' : '') +
       (dropBits ? ' · the gates dropped ' + esc(dropBits) : '') + ' · picked ' + esc(String(st.picked || 0)) +
       (st.bench ? ' · benched ' + esc(String(st.bench)) : '') + '. ' +
-      'Videos open on YouTube; nothing is hosted here. Want the whole river instead? <a href="pulse.html">The Pulse</a> has every upload.' +
+      'Videos open on YouTube; nothing is hosted here. Want the whole river instead? <a href="pulse.html#t=youtube">The Pulse</a> has every upload.' +
     '</footer>';
 
     page.innerHTML = html;
@@ -465,6 +568,20 @@
           var body = page.querySelector('.tv-past-body');
           if (body && body.scrollIntoView) body.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        return;
+      }
+      var laterBar = ev.target.closest('.tv-later-bar');
+      if (laterBar) {
+        laterOpen = !laterOpen;
+        rerenderLater();
+        return;
+      }
+      /* before the react branch: ＋ Later shares .tv-act styling but is its
+         own thing — client-only, never part of the mutually-exclusive map */
+      var laterBtn = ev.target.closest('[data-later]');
+      if (laterBtn) {
+        var lh = laterBtn.closest('[data-vid]');
+        if (lh) toggleLater(lh);
         return;
       }
       var btn = ev.target.closest('.tv-act');

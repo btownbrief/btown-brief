@@ -9,6 +9,26 @@
 .tv-page { max-width: 1180px; margin: 0 auto; padding: 0 20px 72px; }
 .tv-page[hidden] { display: none; }
 
+/* --- Podcasts | Video segmented toggle (mirrored on listen.html) --- */
+.lw-toggle {
+  display: flex; width: fit-content; max-width: calc(100% - 40px); margin: 22px auto 0;
+  background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--radius-full);
+  padding: 4px; gap: 4px; box-shadow: var(--shadow-sm);
+}
+.lw-half {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; padding: 8px 20px; border-radius: var(--radius-full);
+  font-family: var(--font-body); font-weight: 600; font-size: var(--text-base);
+  line-height: 1.2; text-align: center; color: var(--ink-2); text-decoration: none;
+  white-space: nowrap; transition: background var(--duration-fast), color var(--duration-fast);
+}
+a.lw-half:hover, a.lw-half:focus-visible { background: var(--bg-subtle); color: var(--ink); outline: none; }
+.lw-half.is-active { background: var(--coral); color: #fff; }
+@media (max-width: 420px) {
+  .lw-toggle { width: calc(100% - 40px); }
+  .lw-half { flex: 1 1 0; padding: 8px 8px; font-size: var(--text-sm); white-space: normal; }
+}
+
 /* --- masthead --- */
 .tv-mast { padding: 28px 0 18px; border-bottom: 1px solid var(--line); }
 .tv-kicker {
@@ -149,6 +169,22 @@
 .tv-act:hover, .tv-act:focus-visible { background: var(--bg-subtle); color: var(--ink); outline: none; }
 .tv-act[aria-pressed="true"] { color: var(--coral); border-color: var(--line); background: var(--bg-subtle); }
 .tv-act[data-kind="more"][aria-pressed="true"] { color: #D23F6A; }
+/* ＋ Later — independent of the react trio, kept on this device */
+.tv-act-later[aria-pressed="true"] { color: var(--teal); border-color: var(--line); background: var(--bg-subtle); }
+
+/* --- saved for later --- */
+.tv-later { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--line); }
+.tv-later-bar {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px;
+  background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
+  padding: 10px 14px; cursor: pointer; font: inherit; font-size: var(--text-base);
+  font-weight: 600; color: var(--ink); text-align: left;
+  transition: background var(--duration-fast), border-color var(--duration-fast);
+}
+.tv-later-bar:hover, .tv-later-bar:focus-visible { background: var(--bg-subtle); border-color: var(--ink-4); outline: none; }
+.tv-later-hint { margin-left: auto; font-weight: 400; font-size: var(--text-sm); color: var(--ink-3); }
+.tv-later-grid { margin-top: 16px; }
+.tv-later-note { margin: 14px 0 0; font-size: var(--text-sm); color: var(--ink-3); font-style: italic; }
 
 /* --- the bench: one fold per shelf, then it's over --- */
 .tv-more-btn {
