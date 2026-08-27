@@ -77,6 +77,12 @@ HANDLE_TO_VENUE: dict[str, dict] = {
     "despacitovt":        {"venue": "Despacito",            "town": "Burlington"},
     "thearchivesbtv":     {"venue": "The Archives",         "town": "Burlington"},
     "queencitybrewery":   {"venue": "Queen City Brewery",   "town": "Burlington"},
+    # Announce-late pop-up clubs (added 2026-08-27): they announce 1-3 days ahead on
+    # Instagram ONLY, so the newsletter can never list them in advance — this twice-daily
+    # pipeline is how their events reach readers at all. Location varies per event and
+    # lives in the caption, so the venue label names the club, not a place.
+    "sunsetwatchersclub":      {"venue": "Sunset Watchers Club pop-up",     "town": "Burlington"},
+    "golden_hour_social_club": {"venue": "Golden Hour Social Club pop-up",  "town": "Burlington"},
 }
 HANDLES: list[str] = list(HANDLE_TO_VENUE)
 # --- /EDIT ME ---------------------------------------------------------------
