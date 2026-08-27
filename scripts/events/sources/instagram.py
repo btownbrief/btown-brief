@@ -288,7 +288,7 @@ def fetch(window_start: date, window_end: date) -> list[dict]:
     # behind. Cost: 1 credit per handle per day. Raise (not return []) so the morning
     # skip counts as a source failure and update.py keeps yesterday's Instagram events
     # untouched instead of flagging them "unconfirmed" every morning.
-    if datetime.now(ZoneInfo("America/New_York")).hour < 12:
+    if datetime.now(common.TZ).hour < 12:
         raise RuntimeError("skipped by design: once-daily gate, Instagram fetches on the afternoon run only")
     for handle in HANDLES:
         try:
