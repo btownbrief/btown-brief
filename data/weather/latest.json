@@ -1,27 +1,27 @@
 {
- "updated": "2026-08-27T19:59:18+00:00",
+ "updated": "2026-08-27T20:04:49+00:00",
  "sections_updated": {
-  "now": "2026-08-27T19:59:18+00:00",
-  "forecast": "2026-08-27T19:59:18+00:00",
-  "hourly": "2026-08-27T19:59:18+00:00",
-  "alerts": "2026-08-27T19:59:18+00:00",
-  "afd": "2026-08-27T19:59:18+00:00",
-  "lake_forecast": "2026-08-27T19:59:18+00:00",
-  "lake_gage": "2026-08-27T19:59:18+00:00",
-  "air": "2026-08-27T19:59:18+00:00",
-  "sun": "2026-08-27T19:59:18+00:00",
-  "models": "2026-08-27T19:59:18+00:00"
+  "now": "2026-08-27T20:04:49+00:00",
+  "forecast": "2026-08-27T20:04:49+00:00",
+  "hourly": "2026-08-27T20:04:49+00:00",
+  "alerts": "2026-08-27T20:04:49+00:00",
+  "afd": "2026-08-27T20:04:49+00:00",
+  "lake_forecast": "2026-08-27T20:04:49+00:00",
+  "lake_gage": "2026-08-27T20:04:49+00:00",
+  "air": "2026-08-27T20:04:49+00:00",
+  "sun": "2026-08-27T20:04:49+00:00",
+  "models": "2026-08-27T20:04:49+00:00"
  },
  "now": {
-  "observed_at": "2026-08-27T19:35:00+00:00",
+  "observed_at": "2026-08-27T19:40:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Partly Cloudy",
   "temp_f": 75,
   "feels_like_f": 76,
   "humidity": 69,
   "dewpoint_f": 64,
-  "wind_mph": 13,
-  "wind_gust_mph": null,
+  "wind_mph": 10,
+  "wind_gust_mph": 17,
   "wind_dir": "S"
  },
  "forecast": {
@@ -29,13 +29,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-08-27T15:00:00-04:00",
+    "start": "2026-08-27T16:00:00-04:00",
     "is_day": true,
     "temp_f": 80,
     "pop": 67,
-    "wind": "S 16 mph",
+    "wind": "S 15 mph",
     "short": "Showers And Thunderstorms Likely",
-    "detailed": "Showers and thunderstorms likely. Mostly cloudy, with a high near 80. South wind around 16 mph, with gusts as high as 28 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "Showers and thunderstorms likely. Mostly cloudy, with a high near 80. South wind around 15 mph, with gusts as high as 26 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,17 +172,6 @@
  "hourly": {
   "updated": "2026-08-27T18:28:26+00:00",
   "hours": [
-   {
-    "t": "2026-08-27T15:00:00-04:00",
-    "temp_f": 79,
-    "feels_f": 79,
-    "pop": 20,
-    "humidity": 64,
-    "wind_mph": 16,
-    "wind_dir": "S",
-    "sky": 61,
-    "short": "Slight Chance Showers And Thunderstorms"
-   },
    {
     "t": "2026-08-27T16:00:00-04:00",
     "temp_f": 80,
@@ -567,6 +556,17 @@
     "wind_dir": "NW",
     "sky": 7,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-08-29T03:00:00-04:00",
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 0,
+    "humidity": 93,
+    "wind_mph": 1,
+    "wind_dir": "NW",
+    "sky": 7,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -871,7 +871,7 @@
   "category": "Good",
   "pollutant": "PM2.5",
   "observed": "08/27/26 15:00",
-  "discussion": "Expect generally good air quality across Vermont on Friday, August 28th."
+  "discussion": "Expect generally good air quality across Vermont on Thursday, August 27th."
  },
  "sun": {
   "sunrise": "2026-08-27T06:10-04:00",
@@ -895,7 +895,7 @@
      "ICON": 53
     },
     "precip_in": {
-     "GFS": 0.75,
+     "GFS": 0.0,
      "Euro": 0.05,
      "ICON": 0.02
     },
@@ -904,7 +904,7 @@
    {
     "date": "2026-08-28",
     "high_f": {
-     "GFS": 72,
+     "GFS": 71,
      "Euro": 74,
      "ICON": 72
     },
@@ -918,7 +918,7 @@
      "Euro": 0.06,
      "ICON": 0.04
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    },
    {
     "date": "2026-08-29",
