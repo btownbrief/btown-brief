@@ -566,6 +566,24 @@ li.read .si-t { color: var(--faint); font-weight: 400; }
 
 /* ---------- shared bits ---------- */
 
+/* the YouTube tab's banner to BTown TV — the one tappable card on the wire */
+.tvbanner {
+  display: flex; align-items: center; gap: 14px;
+  max-width: 680px; margin: 16px auto 0; padding: 14px 18px;
+  border: 2px solid var(--c-youtube); border-radius: 6px;
+  background: var(--chipbg); color: var(--fg); text-decoration: none;
+  min-height: 44px;
+}
+.tvbanner:hover { background: var(--c-youtube); color: #fff; }
+.tvbanner:hover .tvbanner-body b, .tvbanner:hover .tvbanner-go { color: #fff; }
+.tvbanner-icon { font-size: 22px; line-height: 1; flex: 0 0 auto; }
+.tvbanner-body { font-size: 14px; line-height: 1.45; }
+.tvbanner-body b { color: var(--c-youtube); }
+.tvbanner-go {
+  margin-left: auto; flex: 0 0 auto; font-family: var(--mono);
+  font-size: 18px; color: var(--c-youtube);
+}
+
 .empty {
   max-width: 680px;
   margin: 48px auto;
