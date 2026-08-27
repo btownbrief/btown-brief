@@ -42,6 +42,7 @@
   var SPOTS_URL = 'data/sunset-spots.json';
   var GALLERY_URL = 'data/sunset-gallery.json';
   var OM_URL = window.BtownSunsetScore.OPEN_METEO_URL;
+  var AIR_URL = window.BtownSunsetScore.AIR_URL;
 
   // Same Supabase project + anon key the rest of the site uses
   // (community.js / playlist.js). Anon key is public by design.
@@ -126,7 +127,7 @@
   var nwsHourAt = SunsetScore.nwsHourAt;
 
   function computeScore(sunsetMs, om, latest) {
-    return SunsetScore.computeScore(sunsetMs, om, latest, FORCE_SCORE);
+    return SunsetScore.computeScore(sunsetMs, om, latest, FORCE_SCORE, state.aq);
   }
 
   /* ---------- confidence ---------- */
@@ -142,8 +143,10 @@
 
     var i = omIndexAt(om, sunsetMs);
     var nws = nwsHourAt(latest, sunsetMs);
-    if (i >= 0 && nws && nws.sky != null) {
-      var diff = Math.abs(om.hourly.cloud_cover[i] - nws.sky);
+    var omHere = SunsetScore.primary(om);
+    if (i >= 0 && omHere && omHere.hourly && omHere.hourly.cloud_cover &&
+        typeof omHere.hourly.cloud_cover[i] === 'number' && nws && nws.sky != null) {
+      var diff = Math.abs(omHere.hourly.cloud_cover[i] - nws.sky);
       if (diff <= 15) { pts += 1; why.push('NWS and Open-Meteo agree on cloud cover'); }
       else if (diff >= 35) { pts -= 1; why.push('our two cloud sources disagree by ' + Math.round(diff) + ' points'); }
     }
@@ -286,12 +289,90 @@
     el('ss-confidence').title = 'Why: ' + conf.why;
     el('ss-hero-sub').textContent = subline(result, latest);
 
+    // Tomorrow's number as a teaser while tonight is still the show.
+    var chip = el('ss-tomorrow');
+    if (chip) {
+      var tmScore = null;
+      if (isTonight && state.tomorrowSunset) {
+        var tm = computeScore(state.tomorrowSunset, om, latest);
+        if (!tm.degraded) tmScore = tm.score;
+      }
+      chip.hidden = tmScore == null;
+      if (tmScore != null) {
+        chip.textContent = 'Tomorrow: ' + tmScore.toFixed(1);
+        chip.title = 'Tomorrow night’s early read — it firms up as the day gets closer.';
+      }
+    }
+
     // Actual darkness (stars), independent of which night we score.
     var isNight = now > tonight + 40 * 60000 || now < new Date(latest.sun.sunrise).getTime() - 40 * 60000;
     paintSky(result.score, result.inputs, isNight);
 
     renderTiming();
     renderFactors(result, conf);
+    renderLightPath(result);
+  }
+
+  /* ============================================================
+     THE LIGHT PATH — the three air columns tonight's color must
+     cross: 130 km west, 60 km west, and overhead. Band opacity is
+     the forecast cloud cover for that layer at sunset hour.
+  ============================================================ */
+
+  function compassWord(az) {
+    var pts = [[225, 'SW'], [247.5, 'WSW'], [270, 'W'], [292.5, 'WNW'], [315, 'NW']];
+    var best = pts[0];
+    pts.forEach(function (p) { if (Math.abs(az - p[0]) < Math.abs(az - best[0])) best = p; });
+    return best[1];
+  }
+
+  function renderLightPath(result) {
+    var sec = el('ss-lightpath');
+    if (!sec) return;
+    var inp = result.inputs || {};
+    var west = inp.west;
+    if (!west || inp.low == null) { sec.hidden = true; return; }
+
+    var cols = [
+      { x: 120, label: '130 km west', l: west.far },
+      { x: 268, label: '60 km west', l: west.near },
+      { x: 416, label: 'over Burlington', l: { low: inp.low, mid: inp.mid, high: inp.high } },
+    ];
+    var bands = [['high', 16], ['mid', 54], ['low', 92]];
+    var W = 92, H = 32;
+
+    var svg = ['<svg viewBox="0 0 560 172" role="img" aria-label="Cloud layers along tonight\'s light path">'];
+    // The sun, already below the horizon line.
+    svg.push('<line x1="8" y1="130" x2="552" y2="130" class="ss-lp-horizon"/>');
+    svg.push('<circle cx="40" cy="146" r="14" class="ss-lp-sun"/>');
+    // The under-lighting ray, dimmed by the west wall.
+    var rayO = clamp(1 - west.wall / 120, 0.25, 1);
+    svg.push('<path d="M 52 138 Q 250 96 470 26" class="ss-lp-ray" style="opacity:' + rayO.toFixed(2) + '"/>');
+    cols.forEach(function (c) {
+      bands.forEach(function (b) {
+        var cover = clamp(c.l[b[0]], 0, 100);
+        var o = 0.08 + 0.82 * cover / 100;
+        svg.push('<rect x="' + c.x + '" y="' + b[1] + '" width="' + W + '" height="' + H +
+          '" rx="7" class="ss-lp-band" style="fill-opacity:' + o.toFixed(2) + '">' +
+          '<title>' + b[0] + ' clouds, ' + Math.round(cover) + '%</title></rect>');
+      });
+      svg.push('<text x="' + (c.x + W / 2) + '" y="152" class="ss-lp-label" text-anchor="middle">' + c.label + '</text>');
+    });
+    bands.forEach(function (b) {
+      svg.push('<text x="522" y="' + (b[1] + H / 2 + 4) + '" class="ss-lp-layer">' + b[0] + '</text>');
+    });
+    svg.push('</svg>');
+    el('ss-lightpath-viz').innerHTML = svg.join('');
+
+    var az = inp.azimuth;
+    var night = state.isTonight ? 'tonight' : 'tomorrow';
+    el('ss-lightpath-cap').textContent =
+      'The sun drops at ' + az + '° — ' + compassWord(az) + ', over the Adirondacks. ' +
+      'Once it’s below the horizon, everything above Burlington is lit from that air out west: ' +
+      (west.wall >= 60 ? night + ' a ' + west.wall + '% cloud wall stands in the way.'
+        : west.wall >= 25 ? night + ' that path is partly cloudy (' + west.wall + '%).'
+        : night + ' the path is open.');
+    sec.hidden = false;
   }
 
   function renderTiming() {
@@ -334,6 +415,27 @@
     } else {
       l.textContent = '—';
       lNote.textContent = 'catch tomorrow’s';
+    }
+
+    // Peak color: with a canvas up there, the best color is the
+    // afterglow, 5–25 minutes AFTER the sun is gone. Most people
+    // leave exactly when they shouldn't.
+    var pk = el('ss-peak'), pkNote = el('ss-peak-note');
+    if (pk) {
+      var canvas = state.result && state.result.inputs && state.result.inputs.canvas;
+      var hasCanvas = canvas != null && canvas >= 15;
+      var pkStart = target + 5 * 60000, pkEnd = target + 25 * 60000;
+      if (hasCanvas && now < pkEnd) {
+        pk.textContent = now >= pkStart ? 'Now' : fmtClock(pkStart) + '–' + fmtClock(pkEnd);
+        pkNote.textContent = now >= pkStart ? 'the afterglow is on — stay put'
+          : 'afterglow — don’t leave at sunset';
+      } else if (!hasCanvas && now < target + 10 * 60000) {
+        pk.textContent = 'At sunset';
+        pkNote.textContent = 'clear sky — the color fades fast';
+      } else {
+        pk.textContent = '—';
+        pkNote.textContent = 'the show is over';
+      }
     }
   }
 
@@ -586,8 +688,10 @@
       fetchJSON(OM_URL).catch(function () { return null; }),
       fetchJSON(SPOTS_URL),
       fetchJSON(GALLERY_URL).catch(function () { return { photos: [] }; }),
+      fetchJSON(AIR_URL).catch(function () { return null; }),
     ]).then(function (res) {
       var latest = res[0], om = res[1], spots = res[2], gallery = res[3];
+      state.aq = res[4];
 
       state.tonightSunset = new Date(latest.sun.sunset).getTime();
       state.tomorrowSunset = new Date(latest.sun.sunset_tomorrow).getTime();
