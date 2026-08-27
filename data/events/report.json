@@ -1,25 +1,25 @@
 {
- "generated": "2026-08-27T14:25:13-04:00",
+ "generated": "2026-08-27T15:59:00-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 14,
-   "seconds": 5.6
+   "count": 18,
+   "seconds": 6.6
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 61,
-   "seconds": 1.7
+   "count": 63,
+   "seconds": 3.6
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 66,
-   "seconds": 1.8
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 169,
-   "seconds": 3.5
+   "count": 176,
+   "seconds": 2.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.3
+   "seconds": 0.6
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 185,
-   "seconds": 66.2
+   "seconds": 81.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 36,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,42 +64,42 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.8
+   "seconds": 43.5
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.6
+   "seconds": 0.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 11.3
+   "seconds": 15.2
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 398,
-   "seconds": 72.4
+   "seconds": 68.5
   },
   "meetup": {
    "label": "Meetup",
    "count": 66,
-   "seconds": 94.6
+   "seconds": 118.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 44,
-   "seconds": 14.1
+   "seconds": 15.2
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 102,
-   "seconds": 1.8
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden"
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 28,
-   "seconds": 31.5
+   "seconds": 33.9
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,52 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 424,
-   "seconds": 14.8
+   "count": 429,
+   "seconds": 24.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 266,
-   "seconds": 0.2
+   "count": 271,
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 79,
-   "seconds": 97.3
+   "seconds": 299.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 49,
-   "seconds": 0.4
+   "seconds": 0.2
   }
  },
- "gathered": 2827,
- "afterDedup": 1568,
- "duplicatesMerged": 1259,
- "final": 1819,
+ "gathered": 2748,
+ "afterDedup": 1478,
+ "duplicatesMerged": 1270,
+ "final": 1831,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-28"
-  },
-  {
-   "kept": {
-    "title": "Industry Day",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-28"
-  },
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
@@ -623,6 +601,18 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
+    "title": "Film Screening: The Work in Progress",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -1465,6 +1455,18 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-10"
+  },
+  {
+   "kept": {
+    "title": "Film Screening: Cookie Queens",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -2373,11 +2375,42 @@
  ],
  "changes": [
   {
+   "id": "47f788189a86",
+   "title": "Champlain Valley Fair",
+   "date": "2026-08-28",
+   "change": "time",
+   "was": "2026-08-28",
+   "now": "2026-08-28T13:00:00-04:00"
+  },
+  {
+   "id": "f321cdd14934",
+   "title": "The Work in Progress",
+   "date": "2026-10-02",
+   "change": "time",
+   "was": "2026-10-02T16:00:00-04:00",
+   "now": "2026-10-02T19:00:00-04:00"
+  },
+  {
+   "id": "42b2324fe7d8",
+   "title": "Cookie Queens",
+   "date": "2026-10-10",
+   "change": "time",
+   "was": "2026-10-10T13:00:00-04:00",
+   "now": "2026-10-10T15:30:00-04:00"
+  },
+  {
    "id": "ade43b63afdb",
    "title": "President’s Ice Cream Social",
    "date": "2026-08-27",
    "change": "missing",
    "lastSeen": "2026-08-26T20:04:49-04:00"
+  },
+  {
+   "id": "b2ba6eb5aaa6",
+   "title": "Shelburne Summer Night at Shelburne Museum!",
+   "date": "2026-08-27",
+   "change": "missing",
+   "lastSeen": "2026-08-27T14:25:13-04:00"
   },
   {
    "id": "7cdc6a2d716a",
@@ -2387,32 +2420,11 @@
    "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
-   "id": "c3925db9b701",
-   "title": "Walk to the Farmer's Market",
-   "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-08-26T20:04:49-04:00"
-  },
-  {
    "id": "944cbc4c1a78",
    "title": "Rick Maguire (of Pile)",
    "date": "2026-09-05",
    "change": "missing",
    "lastSeen": "2026-08-26T20:04:49-04:00"
-  },
-  {
-   "id": "e71193a95e24",
-   "title": "Sunset Creemee Walk",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-08-26T20:04:49-04:00"
-  },
-  {
-   "id": "52c12f1b8bb2",
-   "title": "Kids Book Club for K-2",
-   "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
    "id": "9b8350b903c3",
@@ -2436,11 +2448,18 @@
    "lastSeen": "2026-08-25T06:04:20-04:00"
   },
   {
-   "id": "90abed62f85a",
-   "title": "Pride Vermont 2026",
+   "id": "4658c695cd34",
+   "title": "SBPL at Vermont Pride 2026",
    "date": "2026-09-13",
    "change": "missing",
-   "lastSeen": "2026-08-27T14:03:17-04:00"
+   "lastSeen": "2026-08-27T14:25:13-04:00"
+  },
+  {
+   "id": "0d344fd9a824",
+   "title": "BTown Coffee Club",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-08-27T14:25:13-04:00"
   },
   {
    "id": "59fccb39869d-1600",
@@ -2457,13 +2476,6 @@
    "lastSeen": "2026-08-26T20:04:49-04:00"
   },
   {
-   "id": "6d54599c76a0",
-   "title": "Kids Book Club for K-2",
-   "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-08-26T06:15:56-04:00"
-  },
-  {
    "id": "cd78a8c60a39",
    "title": "AUTHOR EVENT - more info coming soon!",
    "date": "2026-09-24",
@@ -2478,11 +2490,25 @@
    "lastSeen": "2026-08-25T06:04:20-04:00"
   },
   {
+   "id": "f321cdd14934-1900",
+   "title": "The Work in Progress",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-08-27T14:25:13-04:00"
+  },
+  {
    "id": "f4dcf578bf70",
    "title": "Hold for all-ages program",
    "date": "2026-10-10",
    "change": "missing",
    "lastSeen": "2026-08-25T06:04:20-04:00"
+  },
+  {
+   "id": "42b2324fe7d8-1530",
+   "title": "Cookie Queens",
+   "date": "2026-10-10",
+   "change": "missing",
+   "lastSeen": "2026-08-27T14:25:13-04:00"
   },
   {
    "id": "cf0c3c256364",
