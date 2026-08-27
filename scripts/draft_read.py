@@ -32,7 +32,31 @@ import outlets as outlets_mod
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 LATEST = os.path.join(ROOT, "data", "weather", "latest.json")
 DRAFT = os.path.join(ROOT, "data", "weather", "read-draft.json")
+READ = os.path.join(ROOT, "data", "weather", "read.json")
 BRAIN = os.path.join(ROOT, "prompts", "weather-read.md")
+
+# Edition windows, Burlington time. --auto drafts whichever edition the
+# clock says should be live, so a skipped or hours-late GitHub cron heals
+# on the next run that fires instead of leaving yesterday's read up.
+EDITION_RANK = {"morning": 0, "midday": 1, "evening": 2}
+EDITION_STARTS = [("evening", 16 * 60 + 30), ("midday", 11 * 60 + 30),
+                  ("morning", 5 * 60 + 30)]
+
+
+def edition_due(now_local):
+    minutes = now_local.hour * 60 + now_local.minute
+    for name, start in EDITION_STARTS:
+        if minutes >= start:
+            return name
+    return None  # small hours — yesterday's evening read stands
+
+
+def load_json(path):
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
 
 MODEL = os.environ.get("WEATHER_READ_MODEL", "claude-sonnet-5")
 
@@ -278,16 +302,38 @@ def call_claude_week(key, brain, week_packet, dates, today):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--edition", choices=sorted(EDITIONS), default="morning")
+    parser.add_argument("--auto", action="store_true",
+                        help="draft whichever edition is due by the clock, "
+                             "unless it is already drafted or live; exits "
+                             "quietly otherwise")
     args = parser.parse_args()
+
+    # Burlington-local date (the Action runs in UTC; DST-safe via zoneinfo)
+    local = datetime.now(ZoneInfo("America/New_York"))
+    today = local.strftime("%A, %B %-d")
+
+    edition = args.edition
+    if args.auto:
+        edition = edition_due(local)
+        if not edition:
+            print("auto: no edition due at this hour — nothing to do")
+            return
+        today_iso = local.date().isoformat()
+        for path in (DRAFT, READ):
+            cur = load_json(path)
+            if (cur and cur.get("date") == today_iso
+                    and EDITION_RANK.get(cur.get("edition", "morning"), 0)
+                        >= EDITION_RANK[edition]
+                    and (cur.get("text") or "").strip()):
+                print(f"auto: {edition} edition already covered by "
+                      f"{os.path.basename(path)} — nothing to do")
+                return
+        print(f"auto: {edition} edition is due and missing — drafting")
 
     with open(LATEST) as f:
         data = json.load(f)
     with open(BRAIN) as f:
         brain = f.read()
-
-    # Burlington-local date (the Action runs in UTC; DST-safe via zoneinfo)
-    local = datetime.now(ZoneInfo("America/New_York"))
-    today = local.strftime("%A, %B %-d")
 
     # What the other outlets are telling readers (never load-bearing)
     try:
@@ -302,7 +348,7 @@ def main():
     text, week = None, None
     if key:
         try:
-            text = call_claude(key, brain, packet, today, args.edition)
+            text = call_claude(key, brain, packet, today, edition)
         except Exception as e:  # noqa: BLE001 — a failed draft still queues the packet
             note = f"draft generation failed: {e}"
             print(note, file=sys.stderr)
@@ -315,7 +361,7 @@ def main():
 
     draft = {
         "date": local.date().isoformat(),
-        "edition": args.edition,
+        "edition": edition,
         "drafted_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "status": "draft",
         "model": MODEL if text else None,
