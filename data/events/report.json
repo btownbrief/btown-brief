@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-27T14:13:55-04:00",
+ "generated": "2026-08-27T14:25:13-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 14,
-   "seconds": 5.8
+   "seconds": 5.6
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 61,
-   "seconds": 1.8
+   "seconds": 1.7
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 66,
-   "seconds": 1.6
+   "seconds": 1.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 169,
-   "seconds": 2.5
+   "seconds": 3.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 81,
-   "seconds": 1.8
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 2.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 185,
-   "seconds": 74.4
+   "seconds": 66.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 36,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,42 +64,42 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 43.9
+   "seconds": 36.8
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.3
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 26.7
+   "seconds": 11.3
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 398,
-   "seconds": 68.1
+   "seconds": 72.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 66,
-   "seconds": 101.6
+   "seconds": 94.6
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 44,
-   "seconds": 15.5
+   "seconds": 14.1
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 102,
-   "seconds": 1.6
+   "seconds": 1.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 28,
-   "seconds": 34.0
+   "seconds": 31.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,122 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 408,
-   "seconds": 16.7
+   "count": 424,
+   "seconds": 14.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 250,
+   "count": 266,
    "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 79,
-   "seconds": 102.8
+   "seconds": 97.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 49,
-   "seconds": 0.2
+   "seconds": 0.4
   }
  },
- "gathered": 2795,
- "afterDedup": 1552,
- "duplicatesMerged": 1243,
- "final": 1803,
+ "gathered": 2827,
+ "afterDedup": 1568,
+ "duplicatesMerged": 1259,
+ "final": 1819,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Live Music",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Donna the Buffalo",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Dwight + Nicole",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Patagonia Gear Swap",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-27"
-  },
-  {
-   "kept": {
-    "title": "Hana Stretton & Helena Deland at Higher Ground",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-27"
-  },
-  {
-   "kept": {
-    "title": "Soda Plant Sundays",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-27"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-27"
-  },
   {
    "kept": {
     "title": "CAT ECare Training",
@@ -455,6 +363,17 @@
   {
    "kept": {
     "title": "Midterm Voting 101",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
     "source": "uvm"
    },
    "merged_sources": [
@@ -712,6 +631,17 @@
   {
    "kept": {
     "title": "Blather & Blah: Countdown (A UVM Site Performance Project)",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-02"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1217,6 +1147,17 @@
   },
   {
    "kept": {
+    "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
     "title": "Briscoe at Higher Ground",
     "source": "uvm"
    },
@@ -1397,6 +1338,17 @@
   {
    "kept": {
     "title": "Field Hockey vs UMass Lowell",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-09"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1731,6 +1683,17 @@
   },
   {
    "kept": {
+    "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -1865,6 +1828,17 @@
   {
    "kept": {
     "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2174,6 +2148,17 @@
   },
   {
    "kept": {
+    "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-21"
+  },
+  {
+   "kept": {
     "title": "Italian Conversation Group",
     "source": "fletcherfree"
    },
@@ -2298,6 +2283,17 @@
   {
    "kept": {
     "title": "Field Hockey vs Bryant",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-23"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
     "source": "uvm"
    },
    "merged_sources": [
