@@ -112,13 +112,6 @@
 
   function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 
-  function median(nums) {
-    var a = nums.slice().sort(function (x, y) { return x - y; });
-    if (!a.length) return null;
-    var mid = Math.floor(a.length / 2);
-    return a.length % 2 ? a[mid] : Math.round((a[mid - 1] + a[mid]) / 2);
-  }
-
   // Compass → degrees the wind blows FROM. The arrow glyph points where
   // the air is going, so the rotation adds 180°.
   var COMPASS = { N: 0, NNE: 22.5, NE: 45, ENE: 67.5, E: 90, ESE: 112.5, SE: 135, SSE: 157.5,
@@ -472,11 +465,13 @@
     ab.innerHTML = '<div class="wx-alerts-inner">' +
       '<span class="wx-alerts-kicker">⚠ NWS alert' + (alerts.length > 1 ? 's' : '') + ' for Burlington</span>' +
       alerts.map(function (a) {
+        // Event + expiry only — NWS headlines describe the whole warned
+        // region ("portions of Vermont and northern New York"), and this
+        // page speaks Burlington.
         var exp = a.expires ? '<span class="wx-alert-until">until ' + esc(fmtHour(a.expires)) + ' ' +
           esc(btvWeekday(a.expires, 'short')) + '</span>' : '';
         return '<div class="wx-alert">' +
           '<span class="wx-alert-event">' + esc(a.event || 'Weather alert') + '</span>' +
-          (a.headline && a.headline !== a.event ? '<span class="wx-alert-head">' + esc(a.headline) + '</span>' : '') +
           exp + '</div>';
       }).join('') +
       '<a class="wx-alerts-link" href="https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121" target="_blank" rel="noopener">Read the full alert at weather.gov →</a>' +
@@ -518,25 +513,18 @@
     if (sun.sunset) chips.push('<a class="rn-chip" href="sunset.html" title="Sunset tracker">🌇 ' + fmtClock(sun.sunset) + '</a>');
     el('rn-chips').innerHTML = chips.join('');
 
+    // One compact day line, not the full NWS paragraph — the wording
+    // lives in the week strip's Today row.
     var sub = el('rn-sub');
-    var subBits = [];
     var fc = (d.forecast || {}).periods || [];
-    if (fc.length) subBits.push('<strong>' + esc(fc[0].name) + ':</strong> ' + esc(fc[0].detailed));
-    if (air.discussion) subBits.push(esc(air.discussion));
-    sub.innerHTML = subBits.join(' ');
-
-    // "What changed" — the forecaster's own first line of the AFD.
-    var changed = el('rn-changed');
-    var afd = d.afd || {};
-    if (changed && afd.what_changed) {
-      var txt = String(afd.what_changed).replace(/\s+/g, ' ').trim();
-      var m = /^As of (.+?)\.\.\.\s*(.*)$/i.exec(txt);
-      var when = m ? m[1].replace(/\b(\d{1,2})(\d{2}) (AM|PM)\b/, '$1:$2 $3') : null, body = m ? m[2] : txt;
-      if (body) {
-        changed.innerHTML = '<span class="rn-changed-label">What changed</span> ' + esc(body) +
-          (when ? ' <span class="rn-changed-when">— NWS, as of ' + esc(when) + '</span>' : '');
-        changed.hidden = false;
-      }
+    if (fc.length) {
+      var p0 = fc[0];
+      var bits = [esc((p0.short || '').toLowerCase())];
+      if (p0.temp_f != null) bits.push((p0.is_day ? 'high near ' : 'low near ') + p0.temp_f);
+      if (p0.pop != null && p0.pop >= 30) bits.push(Math.round(p0.pop / 10) * 10 + '% chance of rain');
+      sub.innerHTML = '<strong>' + esc(p0.name) + ':</strong> ' + bits.filter(Boolean).join(', ') + '.';
+    } else {
+      sub.innerHTML = '';
     }
 
     if (now.observed_at) {
@@ -545,8 +533,7 @@
       // section's own timestamp
       var su = d.sections_updated || {};
       var freshT = su.hourly || su.now || d.updated;
-      el('rn-updated').textContent = 'Observed at the airport ' + fmtAgo(now.observed_at) +
-        ' · forecast data ' + fmtAgo(freshT);
+      el('rn-updated').textContent = 'Updated ' + fmtAgo(freshT);
     }
   }
 
@@ -730,43 +717,6 @@
     return sentence + '.';
   }
 
-  // Model check: GFS vs Euro vs ICON for tomorrow's high (or today's,
-  // before mid-afternoon). When they agree, say so; when they split,
-  // that IS the story, and the median is the sane plan.
-  function modelLine(d) {
-    var days = ((d.models || {}).days) || [];
-    if (!days.length) return null;
-    var nowH = btvHour(new Date());
-    var todayKey = btvDayKey(new Date());
-    var targetKey = nowH < 13 ? todayKey : nextDayKey(todayKey);
-    var day = null;
-    days.forEach(function (x) { if (x.date === targetKey) day = x; });
-    if (!day || !day.high_f) return null;
-    var names = Object.keys(day.high_f).filter(function (n) { return isFinite(day.high_f[n]); });
-    if (names.length < 2) return null;
-    var vals = names.map(function (n) { return Number(day.high_f[n]); });
-    var spread = Math.max.apply(null, vals) - Math.min.apply(null, vals);
-    var med = median(vals);
-    var label = targetKey === todayKey ? 'today' : btvWeekday(targetKey + 'T12:00:00');
-    var out = '<span class="hours-models-label">Model check</span> ';
-    if (spread >= 3) {
-      out += cap(label) + '’s high: ' + names.map(function (n) { return esc(n) + ' says ' + Number(day.high_f[n]); }).join(', ') +
-        ' — a ' + spread + '° spread, so call it ' + med + ' and don’t sweat the difference.';
-    } else {
-      out += names.map(esc).join(', ').replace(/, ([^,]*)$/, ' and $1') + ' all land near ' + med + ' for ' + label + '’s high — the forecast is on solid ground.';
-    }
-    // Rain disagreement is worth a clause too.
-    var pops = names.map(function (n) { return (day.pop_max || {})[n]; }).filter(function (v) { return v != null; });
-    if (pops.length >= 2) {
-      var pspread = Math.max.apply(null, pops) - Math.min.apply(null, pops);
-      if (pspread >= 30) {
-        out += ' Rain odds ' + label + ' run ' + Math.min.apply(null, pops) + '–' + Math.max.apply(null, pops) +
-          '% across the models — the wet/dry line is close.';
-      }
-    }
-    return out;
-  }
-
   function renderHours(d) {
     var sec = el('hours-section'), track = el('hr-track');
     if (!sec || !track) return;
@@ -837,17 +787,8 @@
     }).join('');
     track.innerHTML = html + '<svg class="hr-chart" aria-hidden="true"></svg>';
 
-    // The story and the model check.
     var story = el('hours-story');
     if (story) story.textContent = hoursStory(d, hours);
-    var ml = modelLine(d);
-    var mlEl = el('hours-models');
-    if (mlEl) { if (ml) { mlEl.innerHTML = ml; mlEl.hidden = false; } else mlEl.hidden = true; }
-    var stamp = el('hours-stamp');
-    if (stamp) {
-      var su = d.sections_updated || {};
-      stamp.textContent = 'NWS hourly · ' + fmtAgo((d.hourly || {}).updated || su.hourly || d.updated);
-    }
 
     sec.hidden = false;
     // Draw the temperature line + rain bars once the cells have layout.
@@ -1020,24 +961,13 @@
 
       var model = day.key && models[day.key];
       var modelChip = '';
-      var modelLineHtml = '';
       if (model && model.high_f) {
         var names = Object.keys(model.high_f).filter(function (n) { return isFinite(model.high_f[n]); });
         var vals = names.map(function (n) { return Number(model.high_f[n]); });
         if (vals.length >= 2) {
           var spread = Math.max.apply(null, vals) - Math.min.apply(null, vals);
-          var med = median(vals);
           if (spread >= 4) modelChip = ' <span class="wk-model-chip" title="The models disagree on the high">models ' +
             Math.min.apply(null, vals) + '–' + Math.max.apply(null, vals) + '</span>';
-          modelLineHtml = '<p class="wk-model"><span class="week-detail-when">Model check</span> ' +
-            names.map(function (n) { return esc(n) + ' ' + Number(model.high_f[n]) + '°'; }).join(' · ') +
-            (spread >= 3 ? ' — ' + spread + '° apart; call it ' + med + '°.' : ' — agreed.') +
-            (function () {
-              var pops = names.map(function (n) { return (model.pop_max || {})[n]; }).filter(function (v) { return v != null; });
-              if (pops.length < 2) return '';
-              var mn = Math.min.apply(null, pops), mx = Math.max.apply(null, pops);
-              return mx - mn >= 30 ? ' Rain odds ' + mn + '–' + mx + '% across the three.' : '';
-            })() + '</p>';
         }
       }
 
@@ -1048,9 +978,8 @@
       var nws = [];
       if (day.dayDetail) nws.push('<p><span class="week-detail-when">' + esc(day.dayName || 'Day') + '</span> ' + esc(day.dayDetail) + '</p>');
       if (day.nightDetail) nws.push('<p><span class="week-detail-when">' + esc(day.nightName || 'Night') + '</span> ' + esc(day.nightDetail) + '</p>');
-      var more = (nightWet ? '<p class="wk-nightwet">' + esc(nightWet) + ' — the night is the wetter half.</p>' : '') +
-        modelLineHtml +
-        (nws.length ? '<div class="wk-nws">' + (blurb ? '<p class="wk-nws-label">The forecaster’s full wording</p>' : '') + nws.join('') + '</div>' : '');
+      var more = (nightWet ? '<p class="wk-nightwet">' + esc(nightWet) + '</p>' : '') +
+        (nws.length ? '<div class="wk-nws">' + nws.join('') + '</div>' : '');
 
       return '<div class="wk-row' + (isToday ? ' is-today' : '') + '" data-day="' + i + '">' +
         '<button class="wk-main" type="button" aria-expanded="false" aria-controls="wk-more-' + i + '">' +
@@ -1090,8 +1019,7 @@
     var note = el('week-note');
     if (note && issued) {
       note.innerHTML = 'Forecast issued ' + esc(fmtAgo(issued)) +
-        ' by <a href="https://www.weather.gov/btv/" target="_blank" rel="noopener">NWS Burlington</a>; model check from Open-Meteo (GFS, ECMWF, ICON). ' +
-        'Confidence drops fast past day three — treat the back half as a lean, not a plan.';
+        ' by <a href="https://www.weather.gov/btv/" target="_blank" rel="noopener">NWS Burlington</a>.';
     }
     sec.hidden = false;
   }
@@ -1165,11 +1093,7 @@
         (res.window ? '<div class="life-window">' + esc(res.window) + '</div>' : '') +
         spark +
         (meta.link ? '<a class="life-deep-link" href="' + esc(meta.link) + '">' + esc(meta.linkText || 'More →') + '</a>' : '') +
-        '<div class="life-why" id="' + whyId + '" hidden>' + whyRows +
-        '<p class="life-why-note">' + (meta.key === 'sunset'
-          ? 'Uses the exact cloud-layer formula and data feed from the full Sunset Tracker.'
-          : 'Started from the feels-like comfort curve, then adjusted for what actually ruins ' +
-            meta.name.toLowerCase() + '. Scored for every remaining hour; the shaded band is the best window.') + '</p></div>' +
+        '<div class="life-why" id="' + whyId + '" hidden>' + whyRows + '</div>' +
         '</div>';
     }).join('');
 
@@ -1217,7 +1141,8 @@
       if (gage.water_temp_f != null) sentence += ' — the water is ' + gage.water_temp_f + '°';
       if ((broad.waves_ft_max != null && broad.waves_ft_max >= 2) ||
           (broad.wind_knots_max != null && broad.wind_knots_max >= 15)) {
-        sentence += ', but wind builds on the broad lake (' + (broad.text || '') + ')';
+        sentence += ', but wind builds on the broad lake' +
+          (broad.waves_ft_max != null ? ', waves to ' + broad.waves_ft_max + ' ft' : '');
       } else if (broad.calm || (broad.wind_knots_max != null && broad.wind_knots_max <= 10)) {
         sentence += ' and the lake forecast is quiet';
       }
@@ -1247,7 +1172,7 @@
     if (gage.level_ft != null) cond.push(['Level', gage.level_ft + ' ft' + (gage.level_status ? ' · ' + gage.level_status : '')]);
     el('swim-conditions').innerHTML = cond.map(function (c) {
       return '<span class="swim-cond"><span class="swim-cond-k">' + esc(c[0]) + '</span><span class="swim-cond-v">' + esc(c[1]) + '</span></span>';
-    }).join('') + (broad.period ? '<span class="swim-cond swim-cond-note">broad-lake forecast for ' + esc(broad.period.toLowerCase()) + '</span>' : '');
+    }).join('');
 
     if (!bd.length) {
       list.innerHTML = '<p class="swim-empty">Beach test results load here once the season\'s data is flowing — ' +
@@ -1263,7 +1188,6 @@
         (b.sampled ? '<span class="swim-when">' + esc(b.sampled) + '</span>' : '') +
         '</div>';
     }).join('');
-    if (beaches.note) el('swim-note').textContent = beaches.note;
   }
 
   /* ---------- My Read ---------- */

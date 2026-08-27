@@ -59,11 +59,13 @@ def build_packet(d, outlets):
     afd = d.get("afd") or {}
     if afd.get("key_messages"):
         lines.append("AFD KEY MESSAGES (forecaster's reasoning, issued "
-                     f"{afd.get('issued', '?')}):")
+                     f"{afd.get('issued', '?')} — covers the whole BTV area, "
+                     "northern NY included: translate to what Burlington feels, "
+                     "never repeat other regions' place names):")
         for i, m in enumerate(afd["key_messages"], 1):
             lines.append(f"  {i}. {m}")
     if afd.get("what_changed"):
-        lines.append(f"AFD WHAT CHANGED: {afd['what_changed']}")
+        lines.append(f"AFD WHAT CHANGED (same regional caveat): {afd['what_changed']}")
 
     lk = d.get("lake_forecast") or {}
     if lk.get("broad") and not lk.get("suspended"):
@@ -85,8 +87,7 @@ def build_packet(d, outlets):
 
     air = d.get("air") or {}
     if air.get("aqi") is not None:
-        lines.append(f"AIR: AQI {air['aqi']} {air.get('category')} ({air.get('pollutant')})"
-                     + (f" — {air['discussion']}" if air.get("discussion") else ""))
+        lines.append(f"AIR: AQI {air['aqi']} {air.get('category')} ({air.get('pollutant')})")
 
     sun = d.get("sun") or {}
     if sun:
@@ -100,10 +101,11 @@ def build_packet(d, outlets):
             lines.append(f"  high {day['high_f']}, low {day['low_f']}: {day['narrative']}")
     wcax = outlets.get("wcax")
     if wcax and wcax.get("discussion"):
-        lines.append(f"WCAX METEOROLOGIST: {wcax['discussion']}")
+        lines.append("WCAX METEOROLOGIST (regional station — Burlington relevance "
+                     f"only, never their branding): {wcax['discussion']}")
     nbc5 = outlets.get("nbc5")
     if nbc5 and nbc5.get("headline"):
-        lines.append(f"NBC5 FIRST WARNING ({nbc5.get('published', '?')}): "
+        lines.append(f"NBC5 ({nbc5.get('published', '?')} — same caveat): "
                      f"{nbc5['headline']} — {nbc5.get('lede') or ''}")
 
     return "\n".join(lines)
@@ -151,10 +153,9 @@ def build_week_packet(d, outlets):
         lines.append("WEATHER UNDERGROUND / WEATHER.COM:")
         for day in wu["days"]:
             lines.append(f"  {day.get('date') or '?'}: high {day['high_f']}, low {day['low_f']}: {day['narrative']}")
-    wcax = outlets.get("wcax")
-    if wcax and wcax.get("discussion"):
-        lines.append(f"WCAX METEOROLOGIST: {wcax['discussion']}")
-
+    # No free-form outlet prose here — WCAX/NBC5 cover northern New York and
+    # all of Vermont, and their regional wording leaks into blurbs. The NWS
+    # point forecast and the model spread are already Burlington-scoped.
     return "\n".join(lines), [day["date"] for day in days]
 
 
@@ -181,6 +182,16 @@ def get_api_key():
     return key, None
 
 
+# Place names from the rest of the BTV forecast area (northern NY, central
+# and southern VT) plus TV-station branding. This page speaks Burlington —
+# generated prose naming these is a bug, not color.
+REGIONAL_RE = re.compile(
+    r"\b(new york|adirondacks?|north country|capital region|plattsburgh|"
+    r"saranac|lake placid|glens falls|st\.? lawrence|malone|massena|"
+    r"rutland|bennington|brattleboro|windham|windsor|"
+    r"southern vermont|central vermont|first alert|first warning)\b", re.I)
+
+
 def api_call(key, brain, prompt, max_tokens=700):
     body = json.dumps({
         "model": MODEL,
@@ -197,18 +208,32 @@ def api_call(key, brain, prompt, max_tokens=700):
     with urllib.request.urlopen(req, timeout=120) as res:
         out = json.loads(res.read())
     text = "".join(b.get("text", "") for b in out.get("content", [])).strip()
-    if not text:
+    stop = out.get("stop_reason")
+    if not text or stop != "end_turn":
         # Surface WHY in the Action log: stop reason and what blocks came back.
         blocks = [b.get("type") for b in out.get("content", [])]
-        print(f"api_call returned no text: stop_reason={out.get('stop_reason')!r} "
-              f"blocks={blocks} usage={out.get('usage')}", file=sys.stderr)
-    return text
+        print(f"api_call: stop_reason={stop!r} blocks={blocks} "
+              f"usage={out.get('usage')}", file=sys.stderr)
+    return text, stop
 
 
 def call_claude(key, brain, packet, today, edition):
-    text = api_call(key, brain,
-                    f"Today is {today} in Burlington VT. {EDITIONS[edition]} "
-                    f"Output the read only.\n\n{packet}")
+    prompt = (f"Today is {today} in Burlington VT. {EDITIONS[edition]} "
+              f"Output the read only.\n\n{packet}")
+    text, _ = api_call(key, brain, prompt)
+    m = text and REGIONAL_RE.search(text)
+    if m:
+        # One corrective retry, then give up — a read naming other regions
+        # is worse than no read (the page keeps the last good one).
+        print(f"read named {m.group(0)!r} — retrying with correction", file=sys.stderr)
+        text, _ = api_call(key, brain, prompt +
+                           "\n\nIMPORTANT: your previous draft mentioned "
+                           f"'{m.group(0)}'. This read is for Burlington only — "
+                           "never name other regions, counties, or TV-station "
+                           "brands. Rewrite without them.")
+        if text and REGIONAL_RE.search(text):
+            print("read still regional after retry — dropping it", file=sys.stderr)
+            return None
     return text or None
 
 
@@ -216,8 +241,8 @@ def call_claude_week(key, brain, week_packet, dates, today):
     """One blurb per forecast day. Line-based output, not JSON — a model
     told to write like a weatherman will put quotes and asides inside prose,
     and JSON breaks on exactly the days worth writing about. Any line that
-    doesn't parse is simply skipped; no blurbs at all returns None and the
-    page falls back to the NWS wording."""
+    doesn't validate is simply skipped — the page falls back to the NWS
+    wording per day; no blurbs at all returns None."""
     prompt = (
         f"Today is {today} in Burlington VT. Write the week blurbs from the "
         "packet below, per the week-blurbs section of your instructions. "
@@ -225,15 +250,28 @@ def call_claude_week(key, brain, week_packet, dates, today):
         "YYYY-MM-DD | blurb\n"
         "covering these dates: " + ", ".join(dates) + ". No other text.\n\n"
         + week_packet)
-    raw = api_call(key, brain, prompt, max_tokens=2000)
+    raw, stop = api_call(key, brain, prompt, max_tokens=4000)
+    lines = raw.splitlines()
+    if stop == "max_tokens" and lines:
+        # The reply was cut off mid-generation; the last line may end
+        # mid-sentence ("…roll through between 4"). Never publish it.
+        lines = lines[:-1]
     week, seen = [], set()
-    for line in raw.splitlines():
+    for line in lines:
         m = re.match(r"\s*(\d{4}-\d{2}-\d{2})\s*\|\s*(\S.*)", line)
-        if m and m.group(1) in dates and m.group(1) not in seen:
-            seen.add(m.group(1))
-            week.append({"date": m.group(1), "blurb": m.group(2).strip()})
+        if not m or m.group(1) not in dates or m.group(1) in seen:
+            continue
+        blurb = m.group(2).strip()
+        bad = (not re.search(r"[.!?…]['\"”’]?$", blurb) and "truncated") \
+            or (len(blurb.split()) > 28 and "overlong") \
+            or (REGIONAL_RE.search(blurb) and "regional")
+        if bad:
+            print(f"dropping {bad} blurb for {m.group(1)}: {blurb!r}", file=sys.stderr)
+            continue
+        seen.add(m.group(1))
+        week.append({"date": m.group(1), "blurb": blurb})
     if not week:
-        raise ValueError(f"no parseable blurb lines in week reply: {raw[:200]!r}")
+        raise ValueError(f"no usable blurb lines in week reply: {raw[:200]!r}")
     return week
 
 

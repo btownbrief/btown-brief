@@ -150,21 +150,6 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 .rn-sub { margin-top: var(--space-3); font-size: var(--text-sm); }
 .rn-sub strong { color: var(--ink); font-weight: 600; }
 
-.rn-changed {
-  margin: var(--space-2) auto 0;
-  max-width: 64ch;
-  font-size: var(--text-xs);
-  color: var(--ink-3);
-}
-.rn-changed-label {
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--teal);
-  margin-right: 2px;
-}
-.rn-changed-when { color: var(--ink-4); }
-
 .rn-sun-arc { margin-top: var(--space-3); }
 
 /* ---------------- the next hours ---------------- */
@@ -190,7 +175,6 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
   font-weight: 700;
   color: var(--ink);
 }
-.hours-stamp { font-size: var(--text-xs); color: var(--ink-4); }
 
 .hours-story {
   font-family: var(--font-display);
@@ -285,22 +269,6 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 .hr-chart .hr-rain { fill: var(--wx-rain); opacity: 0.35; }
 .hr-chart .hr-now-dot { fill: var(--bg-raised); stroke: var(--wx-warm); stroke-width: 2; }
 
-.hours-models {
-  margin-top: var(--space-3);
-  font-size: var(--text-sm);
-  color: var(--ink-2);
-  max-width: 80ch;
-  line-height: 1.55;
-}
-.hours-models-label {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--teal);
-  margin-right: 4px;
-}
-
 /* ---------------- My read — unchanged, a touch tighter ---------------- */
 .read-inner { padding: var(--space-6) var(--space-5); }
 
@@ -308,7 +276,6 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 
 .week-inner { padding: var(--space-6) var(--space-5) var(--space-6); }
 .week-head { margin-bottom: var(--space-4); }
-.week-sub { margin-bottom: 0; }
 
 .week-grid {
   display: block; /* override the old 7-column grid */
@@ -407,21 +374,14 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 .wk-more p { font-size: var(--text-sm); line-height: 1.65; color: var(--ink); }
 .wk-more p + p { margin-top: var(--space-2); }
 .wk-nightwet { color: var(--wx-rain); font-weight: 600; }
-.wk-model { color: var(--ink-2); }
 .wk-nws { margin-top: var(--space-2); padding-top: var(--space-2); border-top: 1px dashed var(--line); }
-.wk-nws-label {
-  font-size: var(--text-xs) !important;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-3);
-  margin-bottom: var(--space-1);
-}
 
 /* ---------------- life scores: window + sparkline ---------------- */
 
 .life-inner { padding: var(--space-6) var(--space-5); }
-.life-sub { margin-bottom: var(--space-4); }
+/* Grid items default to min-width:auto, so a wide sparkline can push the
+   card past a phone viewport — this pins them to the column. */
+.life-card { min-width: 0; }
 .life-window { font-style: normal; font-weight: 600; color: var(--ink-2); }
 .life-spark-wrap { margin-top: var(--space-2); }
 .life-spark { display: block; width: 100%; height: 30px; }
@@ -500,9 +460,6 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 
 /* ---------------- mobile ---------------- */
 @media (max-width: 720px) {
-  /* The NWS period sentence repeats what the story and the week rows say. */
-  .rn-sub { display: none; }
-
   .rn-hero-inner { padding: var(--space-5) var(--space-4) var(--space-3); }
   .rn-big { font-size: 3rem; }
   .rn-desc { font-size: var(--text-lg); }
