@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-26T20:04:49-04:00",
+ "generated": "2026-08-27T14:03:17-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 13,
-   "seconds": 6.1
+   "count": 14,
+   "seconds": 6.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 62,
-   "seconds": 3.0
+   "count": 61,
+   "seconds": 9.2
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 66,
-   "seconds": 4.0
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 169,
-   "seconds": 2.9
+   "seconds": 2.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 86,
-   "seconds": 1.8
+   "count": 81,
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-26&end_date=2026-10-25&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-27&end_date=2026-10-26&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 186,
-   "seconds": 68.1
+   "count": 185,
+   "seconds": 76.4
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 35,
-   "seconds": 0.3
+   "count": 36,
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,32 +64,32 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 37.2
+   "seconds": 38.3
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 1.8
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 0.0
+   "error": "name 'ZoneInfo' is not defined"
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 411,
-   "seconds": 72.9
+   "count": 398,
+   "seconds": 83.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 127.3
+   "count": 66,
+   "seconds": 129.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 45,
-   "seconds": 13.7
+   "count": 44,
+   "seconds": 14.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -99,7 +99,7 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 28,
-   "seconds": 31.7
+   "seconds": 34.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,111 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 404,
-   "seconds": 22.1
+   "count": 408,
+   "seconds": 24.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 248,
+   "count": 250,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 81,
-   "seconds": 100.2
+   "count": 79,
+   "seconds": 118.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 50,
-   "seconds": 0.6
+   "count": 49,
+   "seconds": 0.3
   }
  },
- "gathered": 2707,
- "afterDedup": 1458,
- "duplicatesMerged": 1249,
- "final": 1816,
+ "gathered": 2693,
+ "afterDedup": 1452,
+ "duplicatesMerged": 1241,
+ "final": 1788,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Burlington Farmers Market",
-    "source": "farmersmarket"
-   },
-   "merged_sources": [
-    "farmersmarket",
-    "loveburlington"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "2nd Annual Fall Classic Wiffle Ball Tournament",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Old Spokes Home Fall Fundo",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Men's and Women's Cross Country at Equality Invitational",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "BTV Market",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Film Screening: Barbara Forever",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-26"
-  },
-  {
-   "kept": {
-    "title": "Men's Soccer vs Bryant",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-26"
-  },
   {
    "kept": {
     "title": "The Ultimate Chocolate Tasting",
@@ -481,6 +400,17 @@
   {
    "kept": {
     "title": "Coloring in the Marble Court",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-09-30"
+  },
+  {
+   "kept": {
+    "title": "Data Design Lab",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1768,6 +1698,17 @@
   },
   {
    "kept": {
+    "title": "Data Design Lab",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
     "title": "BOOST Sessions",
     "source": "uvm"
    },
@@ -1902,6 +1843,17 @@
   {
    "kept": {
     "title": "Interdisciplinary Dialogue on Disability Working Group",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "The State of the States on Environmental Health ft. Susan Kaplan",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2067,6 +2019,17 @@
   },
   {
    "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-18"
+  },
+  {
+   "kept": {
     "title": "Careers in Marketing Panel",
     "source": "uvm"
    },
@@ -2084,6 +2047,17 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-19"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-19"
   },
@@ -2129,6 +2103,17 @@
     "champlainvalley",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-20"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-20"
   },
@@ -2376,22 +2361,59 @@
     "loveburlington"
    ],
    "date": "2026-10-24"
+  },
+  {
+   "kept": {
+    "title": "Carsie Blanton at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-25"
   }
  ],
  "changes": [
   {
-   "id": "80f43caad87a",
-   "title": "Pick-up Basketball",
-   "date": "2026-08-26",
-   "change": "missing",
-   "lastSeen": "2026-08-26T06:15:56-04:00"
+   "id": "09423db647b9",
+   "title": "MOONDOGS",
+   "date": "2026-08-29",
+   "change": "time",
+   "was": "2026-08-29T18:00:00-04:00",
+   "now": "2026-08-29T19:00:00-04:00"
   },
   {
-   "id": "4f36e53a6f25",
-   "title": "Bike Ride @ Upper Pass Beer Co",
-   "date": "2026-08-26",
+   "id": "945173bbe4e9",
+   "title": "Industry Day",
+   "date": "2026-10-19",
+   "change": "time",
+   "was": "2026-10-19",
+   "now": "2026-10-19T11:30:00-04:00"
+  },
+  {
+   "id": "92142ce68c7c",
+   "title": "802sDay",
+   "date": "2026-10-20",
+   "change": "time",
+   "was": "2026-10-20",
+   "now": "2026-10-20T11:30:00-04:00"
+  },
+  {
+   "id": "d676280a85a1",
+   "title": "Women's Soccer vs Boston College",
+   "date": "2026-09-03",
+   "change": "time",
+   "was": "2026-09-03T21:00:00-04:00",
+   "now": "2026-09-03T18:00:00-04:00"
+  },
+  {
+   "id": "ade43b63afdb",
+   "title": "President’s Ice Cream Social",
+   "date": "2026-08-27",
    "change": "missing",
-   "lastSeen": "2026-08-26T06:15:56-04:00"
+   "lastSeen": "2026-08-26T20:04:49-04:00"
   },
   {
    "id": "7cdc6a2d716a",
@@ -2404,15 +2426,34 @@
    "id": "4fb477e76fbd",
    "title": "Men's Soccer vs Holy Cross",
    "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-08-24T06:20:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "147c49b14bc3",
    "title": "Music Time",
    "date": "2026-09-04",
+   "change": "dropped"
+  },
+  {
+   "id": "c3925db9b701",
+   "title": "Walk to the Farmer's Market",
+   "date": "2026-09-05",
    "change": "missing",
-   "lastSeen": "2026-08-24T06:20:24-04:00"
+   "lastSeen": "2026-08-26T20:04:49-04:00"
+  },
+  {
+   "id": "944cbc4c1a78",
+   "title": "Rick Maguire (of Pile)",
+   "date": "2026-09-05",
+   "change": "missing",
+   "lastSeen": "2026-08-26T20:04:49-04:00"
+  },
+  {
+   "id": "e71193a95e24",
+   "title": "Sunset Creemee Walk",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-08-26T20:04:49-04:00"
   },
   {
    "id": "9b8350b903c3",
@@ -2420,6 +2461,13 @@
    "date": "2026-09-10",
    "change": "missing",
    "lastSeen": "2026-08-26T06:15:56-04:00"
+  },
+  {
+   "id": "b84e6ea0f5f8",
+   "title": "Art Hop at Switchback",
+   "date": "2026-09-11",
+   "change": "missing",
+   "lastSeen": "2026-08-26T20:04:49-04:00"
   },
   {
    "id": "c51ced474660",
@@ -2432,8 +2480,7 @@
    "id": "4963a7e45691",
    "title": "Burlington Baroque Festival: Music, Drama & Dance in the Kingdom of France",
    "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-08-24T06:20:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "59fccb39869d-1600",
@@ -2441,6 +2488,13 @@
    "date": "2026-09-19",
    "change": "missing",
    "lastSeen": "2026-08-25T17:01:29-04:00"
+  },
+  {
+   "id": "6bbd17767d09",
+   "title": "Meanwhile in Vermont... Where do we show up in our nation's founding documents?",
+   "date": "2026-09-23",
+   "change": "missing",
+   "lastSeen": "2026-08-26T20:04:49-04:00"
   },
   {
    "id": "cd78a8c60a39",
@@ -2460,29 +2514,25 @@
    "id": "8ded72893081",
    "title": "Barbershop: The Art of Queer Failure",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-08-24T06:20:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "596ee87ee64b",
    "title": "Old Spokes Home Fall Fundo",
    "date": "2026-09-26",
-   "change": "missing",
-   "lastSeen": "2026-08-24T06:20:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "6b01cd6ad46b",
    "title": "Music Time",
    "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-08-24T06:20:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "ed5a92c340c9",
    "title": "Mystery Artifacts: How Museums Help Share the Past",
    "date": "2026-10-07",
-   "change": "missing",
-   "lastSeen": "2026-08-24T06:20:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "f4dcf578bf70",
@@ -2499,17 +2549,18 @@
    "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
-   "id": "0b9b74a81730",
-   "title": "Dana and Alden",
-   "date": "2026-10-22",
-   "change": "dropped"
-  },
-  {
    "id": "7b1e890d7409",
    "title": "Dom Flemons & the Traveling Wildfires",
    "date": "2026-10-23",
    "change": "missing",
    "lastSeen": "2026-08-24T17:04:08-04:00"
+  },
+  {
+   "id": "6f150056982e",
+   "title": "Carsie Blanton",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-08-26T20:04:49-04:00"
   }
  ]
 }
