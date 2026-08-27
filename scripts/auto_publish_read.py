@@ -16,10 +16,16 @@ import json
 import os
 import sys
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 DRAFT = os.path.join(ROOT, "data", "weather", "read-draft.json")
 READ = os.path.join(ROOT, "data", "weather", "read.json")
+
+# Stephen's review window: a morning draft stays queued until 6:35 AM
+# Burlington time (the old publish-read.yml cron), then any scheduled run
+# may promote it. Midday and evening editions publish immediately.
+MORNING_HOLD_UNTIL = 6 * 60 + 35
 
 
 def main():
@@ -32,6 +38,12 @@ def main():
     if draft.get("status") == "approved":
         print(f"Draft for {draft.get('date')} already approved — nothing to do.")
         return
+
+    if draft.get("edition", "morning") == "morning":
+        now_local = datetime.now(ZoneInfo("America/New_York"))
+        if now_local.hour * 60 + now_local.minute < MORNING_HOLD_UNTIL:
+            print("Morning draft held for review until 6:35 AM Burlington time.")
+            return
     text = (draft.get("text") or "").strip()
     if not text:
         print("Draft has no generated text — leaving for manual review.")

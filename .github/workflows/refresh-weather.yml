@@ -33,24 +33,20 @@ jobs:
       - name: Refresh weather data
         run: python3 scripts/refresh_weather.py
 
-      - name: Draft the read
-        # Morning (9:40 UTC) queues for optional review — publish-read.yml
-        # promotes it in time for 7 AM. Midday and evening draft here and
-        # publish in the next step. A manual dispatch drafts the morning
-        # edition.
-        if: github.event.schedule == '40 9 * * *' || github.event.schedule == '30 15 * * *' || github.event.schedule == '30 20 * * *' || github.event_name == 'workflow_dispatch'
+      - name: Draft the read if one is due
+        # GitHub's cron is best-effort and this repo's schedules get skipped
+        # or run hours late, so no step may depend on WHICH cron fired.
+        # --auto looks at the Burlington clock, decides which edition should
+        # be live (morning 5:30 / midday 11:30 / evening 4:30), and drafts
+        # it only if read-draft.json / read.json don't already carry it —
+        # every hourly run is a chance to heal a missed window.
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          case "${{ github.event.schedule }}" in
-            '30 15 * * *') EDITION=midday ;;
-            '30 20 * * *') EDITION=evening ;;
-            *) EDITION=morning ;;
-          esac
-          python3 scripts/draft_read.py --edition "$EDITION"
+        run: python3 scripts/draft_read.py --auto
 
-      - name: Publish the midday/evening update
-        if: github.event.schedule == '30 15 * * *' || github.event.schedule == '30 20 * * *'
+      - name: Publish the update if due
+        # Midday/evening publish immediately; a morning draft is held by the
+        # script until 6:35 AM Burlington time (Stephen's review window).
         run: python3 scripts/auto_publish_read.py
 
       - name: Commit if changed
