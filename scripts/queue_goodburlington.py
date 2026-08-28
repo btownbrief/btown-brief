@@ -37,7 +37,7 @@ QUEUE = os.path.join(ROOT, "data", "goodburlington-queue.json")
 STATE = os.path.join(ROOT, "data", "goodburlington-curated.json")
 REDDIT_JSON = os.path.join(ROOT, "data", "reddit.json")
 UA = "btown-brief-site/1.0 (goodburlington queue)"
-MODEL = os.environ.get("CHATTER_MODEL", "openai/gpt-4o-mini")
+MODEL = os.environ.get("CHATTER_MODEL", "openai/gpt-5.6-luna")
 
 TARGET_SUB = "GoodBurlington"
 SOURCE_SUBS = ("burlington", "vermont")

@@ -62,7 +62,7 @@ def load_json(path):
 # burned entire max_tokens budgets on thinking and returned no text (GMICloud
 # 7998/8000). Short-output calls use a non-reasoning model instead - same
 # OpenRouter key and endpoint, fewer tokens, and no empty-reply failure mode.
-MODEL = os.environ.get("WEATHER_READ_MODEL", "openai/gpt-4o-mini")
+MODEL = os.environ.get("WEATHER_READ_MODEL", "openai/gpt-5.6-luna")
 
 
 def build_packet(d, outlets):
