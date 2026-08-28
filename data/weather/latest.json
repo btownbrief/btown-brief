@@ -1,41 +1,41 @@
 {
- "updated": "2026-08-28T15:11:24+00:00",
+ "updated": "2026-08-28T15:31:00+00:00",
  "sections_updated": {
-  "now": "2026-08-28T15:11:24+00:00",
-  "forecast": "2026-08-28T15:11:24+00:00",
-  "hourly": "2026-08-28T15:11:24+00:00",
-  "alerts": "2026-08-28T15:11:24+00:00",
-  "afd": "2026-08-28T15:11:24+00:00",
-  "lake_forecast": "2026-08-28T15:11:24+00:00",
-  "lake_gage": "2026-08-28T15:11:24+00:00",
-  "air": "2026-08-28T15:11:24+00:00",
-  "sun": "2026-08-28T15:11:24+00:00",
-  "models": "2026-08-28T15:11:24+00:00"
+  "now": "2026-08-28T15:31:00+00:00",
+  "forecast": "2026-08-28T15:31:00+00:00",
+  "hourly": "2026-08-28T15:31:00+00:00",
+  "alerts": "2026-08-28T15:31:00+00:00",
+  "afd": "2026-08-28T15:31:00+00:00",
+  "lake_forecast": "2026-08-28T15:31:00+00:00",
+  "lake_gage": "2026-08-28T15:31:00+00:00",
+  "air": "2026-08-28T15:31:00+00:00",
+  "sun": "2026-08-28T15:31:00+00:00",
+  "models": "2026-08-28T15:31:00+00:00"
  },
  "now": {
-  "observed_at": "2026-08-28T15:00:00+00:00",
+  "observed_at": "2026-08-28T15:15:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 77,
-  "feels_like_f": 77,
-  "humidity": 61,
+  "temp_f": 75,
+  "feels_like_f": 75,
+  "humidity": 65,
   "dewpoint_f": 63,
-  "wind_mph": 8,
+  "wind_mph": 7,
   "wind_gust_mph": null,
-  "wind_dir": "NW"
+  "wind_dir": "WNW"
  },
  "forecast": {
   "updated": "2026-08-28T06:15:33+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-08-28T09:00:00-04:00",
+    "start": "2026-08-28T11:00:00-04:00",
     "is_day": true,
     "temp_f": 73,
-    "pop": 34,
-    "wind": "NW 6 to 12 mph",
+    "pop": 29,
+    "wind": "N 12 mph",
     "short": "Scattered Rain Showers then Isolated Showers And Thunderstorms",
-    "detailed": "Scattered rain showers before noon, then isolated showers and thunderstorms between noon and 2pm. Mostly sunny, with a high near 73. Northwest wind 6 to 12 mph. Chance of precipitation is 30%."
+    "detailed": "Scattered rain showers before noon, then isolated showers and thunderstorms between noon and 2pm. Mostly sunny, with a high near 73. North wind around 12 mph. Chance of precipitation is 30%."
    },
    {
     "name": "Tonight",
@@ -835,7 +835,7 @@
   "aqi": 33,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "08/28/26 10:00",
+  "observed": "08/28/26 11:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, August 28th."
  },
  "sun": {
