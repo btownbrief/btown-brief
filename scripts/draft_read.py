@@ -216,14 +216,15 @@ REGIONAL_RE = re.compile(
     r"southern vermont|central vermont|first alert|first warning)\b", re.I)
 
 
-def api_call(key, brain, prompt, max_tokens=2000):
+def api_call(key, brain, prompt, max_tokens=8000):
     body = json.dumps({
         "model": MODEL,
         "max_tokens": max_tokens,
         "system": brain,
-        # OpenRouter: GLM reasoning cannot be disabled and shares max_tokens
-        # with the answer — an uncapped run burned the whole budget on
-        # thinking and returned no text. Bound it so the reply always fits.
+        # OpenRouter: GLM reasoning cannot be disabled and is billed as output,
+        # drawing from max_tokens. Providers largely ignore this cap (measured
+        # 1.2k-4.2k against a requested 1024), so the budgets above carry the
+        # real headroom; only used tokens are billed.
         "reasoning": {"max_tokens": 1024},
         "messages": [{"role": "user", "content": prompt}],
     }).encode()
@@ -278,7 +279,7 @@ def call_claude_week(key, brain, week_packet, dates, today):
         "YYYY-MM-DD | blurb\n"
         "covering these dates: " + ", ".join(dates) + ". No other text.\n\n"
         + week_packet)
-    raw, stop = api_call(key, brain, prompt, max_tokens=6000)
+    raw, stop = api_call(key, brain, prompt, max_tokens=24000)
     lines = raw.splitlines()
     if stop == "max_tokens" and lines:
         # The reply was cut off mid-generation; the last line may end
