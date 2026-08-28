@@ -15,7 +15,7 @@ Mac opens the page when the queue is non-empty
 Queue hygiene is self-healing: an item disappears once it shows up on
 r/GoodBurlington (he posted it), ages past 48h (he passed), or the judge
 rejected it (logged with a reason in data/goodburlington-curated.json so
-his taste audits stay possible). Without ANTHROPIC_API_KEY the last good
+his taste audits stay possible). Without OPENROUTER_API_KEY the last good
 queue is left untouched — nothing unjudged is ever queued.
 
 CLI flags mirror the sibling scripts: --dry-run, --selftest.
@@ -37,7 +37,7 @@ QUEUE = os.path.join(ROOT, "data", "goodburlington-queue.json")
 STATE = os.path.join(ROOT, "data", "goodburlington-curated.json")
 REDDIT_JSON = os.path.join(ROOT, "data", "reddit.json")
 UA = "btown-brief-site/1.0 (goodburlington queue)"
-MODEL = os.environ.get("CHATTER_MODEL", "claude-sonnet-5")
+MODEL = os.environ.get("CHATTER_MODEL", "z-ai/glm-5.3-flash")
 
 TARGET_SUB = "GoodBurlington"
 SOURCE_SUBS = ("burlington", "vermont")
@@ -170,7 +170,7 @@ JUDGE_CHUNK = 20   # 60 first-run candidates truncated one big reply mid-JSON
 
 
 def judge(candidates):
-    key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
     if not key:
         return None
     verdicts = {}
@@ -191,9 +191,11 @@ def judge_chunk(candidates, key):
         "(found pets are fine), news that is merely neutral, and anything mean or ambiguous. "
         'Return strict JSON only: {"verdicts": {"post-id": {"ok": true/false, "why": "<=12 words"}}} '
         "with a verdict for every candidate.\n" + json.dumps(packet, ensure_ascii=False))
-    body = json.dumps({"model": MODEL, "max_tokens": 2500,
+    # reasoning capped: GLM cannot disable it and it shares the max_tokens budget
+    body = json.dumps({"model": MODEL, "max_tokens": 6000,
+                       "reasoning": {"max_tokens": 1024},
                        "messages": [{"role": "user", "content": prompt}]}).encode()
-    request = urllib.request.Request("https://api.anthropic.com/v1/messages", data=body,
+    request = urllib.request.Request("https://openrouter.ai/api/v1/messages", data=body,
                                      headers={"x-api-key": key, "anthropic-version": "2023-06-01",
                                               "content-type": "application/json"})
     with urllib.request.urlopen(request, timeout=60) as response:
@@ -253,7 +255,7 @@ def run(dry_run=False):
     if candidates:
         verdicts = judge(candidates)
         if verdicts is None:
-            print("ANTHROPIC_API_KEY missing; keeping last good queue untouched")
+            print("OPENROUTER_API_KEY missing; keeping last good queue untouched")
             return 0
         for post in candidates:
             v = verdicts.get(post["id"])

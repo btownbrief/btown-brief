@@ -23,7 +23,7 @@ OUT = os.path.join(ROOT, "data", "chatter.json")
 SEEN = os.path.join(ROOT, "data", "chatter-seen.json")
 TIPS = os.path.join(ROOT, "data", "tips-inbox.md")
 UA = "btown-brief-site/1.0 (chatter refresh)"
-MODEL = os.environ.get("CHATTER_MODEL", "claude-sonnet-5")
+MODEL = os.environ.get("CHATTER_MODEL", "z-ai/glm-5.3-flash")
 
 INOREADER = {
     "r/burlington": "https://www.inoreader.com/stream/user/1003590800/tag/Reddit%20%28r%2Fburlington%29?n=100",
@@ -632,7 +632,7 @@ def llm_json(text):
 
 
 def refine(clusters, picks):
-    key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
     if not key:
         return None
     packet = {"clusters": [{"id": c["id"], "label": cleaned_title(c["rep"]["title"]),
@@ -642,8 +642,11 @@ def refine(clusters, picks):
     prompt = ("Refine this Burlington chatter packet. Return strict JSON only: "
               '{"labels":{"topic-id":"noun phrase"},"slots":{"slot":"post-id or null"},'
               '"rough_ids":[],"flag_ids":[]}. Labels: <=7 words, no emoji.\n' + json.dumps(packet, ensure_ascii=False))
-    body = json.dumps({"model": MODEL, "max_tokens": 1200, "messages": [{"role": "user", "content": prompt}]}).encode()
-    request = urllib.request.Request("https://api.anthropic.com/v1/messages", data=body,
+    # reasoning capped: GLM cannot disable it and it shares the max_tokens budget
+    body = json.dumps({"model": MODEL, "max_tokens": 4000,
+                       "reasoning": {"max_tokens": 1024},
+                       "messages": [{"role": "user", "content": prompt}]}).encode()
+    request = urllib.request.Request("https://openrouter.ai/api/v1/messages", data=body,
                                      headers={"x-api-key": key, "anthropic-version": "2023-06-01",
                                               "content-type": "application/json"})
     try:

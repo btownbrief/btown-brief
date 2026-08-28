@@ -13,7 +13,7 @@ directly. scripts/auto_publish_read.py (or Stephen, via
 scripts/approve_read.py) promotes it to data/weather/read.json, the only
 file the dashboard displays.
 
-Without ANTHROPIC_API_KEY the script still writes the draft entry with the
+Without OPENROUTER_API_KEY the script still writes the draft entry with the
 full packet and an empty text, so the review queue and packet are always
 there to write from by hand (or from a Claude Code session).
 """
@@ -58,7 +58,7 @@ def load_json(path):
     except (OSError, ValueError):
         return None
 
-MODEL = os.environ.get("WEATHER_READ_MODEL", "claude-sonnet-5")
+MODEL = os.environ.get("WEATHER_READ_MODEL", "z-ai/glm-5.3-flash")
 
 
 def build_packet(d, outlets):
@@ -195,13 +195,13 @@ EDITIONS = {
 
 
 def get_api_key():
-    key = (os.environ.get("ANTHROPIC_API_KEY") or "").strip()
+    key = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
     if not key:
-        return None, "no ANTHROPIC_API_KEY — packet-only draft"
+        return None, "no OPENROUTER_API_KEY — packet-only draft"
     if not key.isascii():
         # classic paste accident: copying the *displayed* truncated key
         # ("sk-ant-…") instead of using the console's Copy button
-        return None, ("ANTHROPIC_API_KEY contains invalid characters (a '…'?) — "
+        return None, ("OPENROUTER_API_KEY contains invalid characters (a '…'?) — "
                       "re-copy the full key with the Copy button and update the secret")
     return key, None
 
@@ -216,15 +216,19 @@ REGIONAL_RE = re.compile(
     r"southern vermont|central vermont|first alert|first warning)\b", re.I)
 
 
-def api_call(key, brain, prompt, max_tokens=700):
+def api_call(key, brain, prompt, max_tokens=2000):
     body = json.dumps({
         "model": MODEL,
         "max_tokens": max_tokens,
         "system": brain,
+        # OpenRouter: GLM reasoning cannot be disabled and shares max_tokens
+        # with the answer — an uncapped run burned the whole budget on
+        # thinking and returned no text. Bound it so the reply always fits.
+        "reasoning": {"max_tokens": 1024},
         "messages": [{"role": "user", "content": prompt}],
     }).encode()
     req = urllib.request.Request(
-        "https://api.anthropic.com/v1/messages",
+        "https://openrouter.ai/api/v1/messages",
         data=body,
         headers={"x-api-key": key, "anthropic-version": "2023-06-01",
                  "content-type": "application/json"},
@@ -274,7 +278,7 @@ def call_claude_week(key, brain, week_packet, dates, today):
         "YYYY-MM-DD | blurb\n"
         "covering these dates: " + ", ".join(dates) + ". No other text.\n\n"
         + week_packet)
-    raw, stop = api_call(key, brain, prompt, max_tokens=4000)
+    raw, stop = api_call(key, brain, prompt, max_tokens=6000)
     lines = raw.splitlines()
     if stop == "max_tokens" and lines:
         # The reply was cut off mid-generation; the last line may end

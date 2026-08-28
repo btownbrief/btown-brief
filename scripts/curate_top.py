@@ -41,7 +41,8 @@ PULSE_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
              "pulse-data/data/pulse.json")
 UA = "btown-pulse-top/1.0"
 
-MODEL = "claude-sonnet-5"
+MODEL = "z-ai/glm-5.3-flash"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api"
 WINDOW_HOURS = 24
 MAX_CANDIDATES = 400
 PICK_COUNT = 25
@@ -353,7 +354,10 @@ def verify_signals(signals):
 def ask_model(prompt):
     import anthropic
 
-    client = anthropic.Anthropic()
+    client = anthropic.Anthropic(
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        base_url=OPENROUTER_BASE_URL,
+    )
     response = client.messages.create(
         model=MODEL,
         max_tokens=12000,

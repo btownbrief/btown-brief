@@ -50,7 +50,8 @@ INDEX_PATH = os.path.join(ROOT, "data", "topic-pages.json")
 
 UA = "btown-pulse-topics/1.0"
 TIMEOUT = 20
-MODEL = "claude-sonnet-5"
+MODEL = "z-ai/glm-5.3-flash"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api"
 
 SUPABASE_RPC = ("https://jnouvwxomrcffqwilqkq.supabase.co/rest/v1/rpc/"
                 "pulse_dig_leaders")
@@ -214,7 +215,10 @@ def fetch_leaders():
 def ask_model(prompt, schema, max_tokens):
     import anthropic
 
-    client = anthropic.Anthropic()
+    client = anthropic.Anthropic(
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        base_url=OPENROUTER_BASE_URL,
+    )
     response = client.messages.create(
         model=MODEL,
         max_tokens=max_tokens,

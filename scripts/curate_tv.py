@@ -85,7 +85,8 @@ API = "https://www.googleapis.com/youtube/v3"
 SB_URL = "https://jnouvwxomrcffqwilqkq.supabase.co"
 SB_KEY = "sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3"   # anon — safe
 
-MODEL = "claude-opus-5"
+MODEL = "z-ai/glm-5.3-flash"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api"
 WHY_MAX = 90              # the prompt's hard ceiling
 WHY_KEEP = 100            # what validate() tolerates before trimming
 FRESH_DAYS = 7            # an "upload" is this week's
@@ -669,7 +670,10 @@ def build_prompt(taste, candidate_text):
 def ask_model(prompt):
     import anthropic
 
-    client = anthropic.Anthropic()
+    client = anthropic.Anthropic(
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        base_url=OPENROUTER_BASE_URL,
+    )
     # streamed because the SDK refuses a non-streaming call this long;
     # reasoning counts toward max_tokens and a full pool + the bench blew
     # through 16k on 8/23
@@ -989,8 +993,8 @@ def same_day_playlist(editions, edition):
 
 
 def run(args):
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        print("curate_tv: no ANTHROPIC_API_KEY — nothing to do")
+    if not os.environ.get("OPENROUTER_API_KEY"):
+        print("curate_tv: no OPENROUTER_API_KEY — nothing to do")
         return
     key = os.environ.get("YOUTUBE_API_KEY", "").strip()
     now = utcnow()
