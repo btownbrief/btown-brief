@@ -37,9 +37,9 @@ jobs:
       - name: Check for an API key
         id: key
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          if [ -z "$ANTHROPIC_API_KEY" ]; then
+          if [ -z "$OPENROUTER_API_KEY" ]; then
             echo "no API key, skipping"
             echo "ready=false" >> "$GITHUB_OUTPUT"
           else
@@ -68,7 +68,7 @@ jobs:
       - name: Draft any topic pages
         if: steps.key.outputs.ready == 'true' && steps.gate.outputs.go == 'true'
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           FORCE_URL: ${{ inputs.force_url }}
           FORCE_TITLE: ${{ inputs.force_title }}

@@ -41,7 +41,7 @@ jobs:
         # it only if read-draft.json / read.json don't already carry it —
         # every hourly run is a chance to heal a missed window.
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python3 scripts/draft_read.py --auto
 
       - name: Publish the update if due
