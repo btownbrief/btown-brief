@@ -1,20 +1,20 @@
 {
- "generated": "2026-08-28T00:28:15-04:00",
+ "generated": "2026-08-28T16:58:52-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 5.6
+   "seconds": 6.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 61,
-   "seconds": 10.3
+   "count": 63,
+   "seconds": 10.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 66,
-   "seconds": 2.8
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
@@ -23,8 +23,8 @@
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 79,
-   "seconds": 1.8
+   "count": 84,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 187,
-   "seconds": 65.8
+   "seconds": 70.5
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,42 +64,42 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 35.8
+   "seconds": 36.8
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 12.2
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 390,
-   "seconds": 72.2
+   "count": 397,
+   "seconds": 72.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 68,
-   "seconds": 123.5
+   "count": 67,
+   "seconds": 115.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 46,
-   "seconds": 13.8
+   "seconds": 13.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden"
+   "count": 102,
+   "seconds": 1.9
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 27,
-   "seconds": 31.2
+   "seconds": 31.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,52 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 428,
-   "seconds": 25.9
+   "count": 430,
+   "seconds": 16.1
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 270,
+   "count": 272,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 78,
-   "seconds": 102.0
+   "seconds": 105.5
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 50,
-   "seconds": 0.2
+   "seconds": 0.5
   }
  },
- "gathered": 2739,
- "afterDedup": 1481,
- "duplicatesMerged": 1258,
- "final": 1806,
+ "gathered": 2858,
+ "afterDedup": 1585,
+ "duplicatesMerged": 1273,
+ "final": 1823,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Graduate College Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-29"
-  },
-  {
-   "kept": {
-    "title": "Vermont Agriculture: A Renaissance of the Past",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-29"
-  },
   {
    "kept": {
     "title": "Men's Soccer vs UMass",
@@ -1003,6 +981,18 @@
   },
   {
    "kept": {
+    "title": "Ethan Tapper | The Forest Year: Finding Hope in a World Worth Saving",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-06"
+  },
+  {
+   "kept": {
     "title": "Bombargo at Higher Ground",
     "source": "uvm"
    },
@@ -1150,12 +1140,13 @@
   },
   {
    "kept": {
-    "title": "Oteil Burbridge, LaMP",
-    "source": "helloburlington"
+    "title": "Wish Benefit Tour 2026 with Oteil Burbridge & LaMP",
+    "source": "loveburlington"
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington"
+    "helloburlington",
+    "loveburlington"
    ],
    "date": "2026-10-07"
   },
@@ -1951,6 +1942,17 @@
   },
   {
    "kept": {
+    "title": "The German Army and the Holocaust",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-18"
+  },
+  {
+   "kept": {
     "title": "Field Hockey vs Yale",
     "source": "uvm"
    },
@@ -2379,11 +2381,33 @@
  ],
  "changes": [
   {
+   "id": "3c51639cf2c8",
+   "title": "Oktoberfest at Black Flannel",
+   "date": "2026-09-26",
+   "change": "time",
+   "was": "2026-09-26T13:00:00-04:00",
+   "now": "2026-09-26T14:00:00-04:00"
+  },
+  {
+   "id": "0959e1b00ed0",
+   "title": "Lunch with the Poets",
+   "date": "2026-08-28",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
    "id": "7cdc6a2d716a",
    "title": "Soulshine & Smoke: An Allman Brothers celebration with Soulshine Revival & BBQ",
    "date": "2026-08-28",
    "change": "missing",
    "lastSeen": "2026-08-26T06:15:56-04:00"
+  },
+  {
+   "id": "a87bf256edbe",
+   "title": "Marina Richie with Trish O'Kana | Feathered Forest: Aloft with Birds in Ancient Trees",
+   "date": "2026-08-28",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
   },
   {
    "id": "de6596c8a217",
@@ -2393,11 +2417,25 @@
    "lastSeen": "2026-08-27T15:59:00-04:00"
   },
   {
+   "id": "2879c9962041",
+   "title": "Live Music",
+   "date": "2026-09-05",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
    "id": "944cbc4c1a78",
    "title": "Rick Maguire (of Pile)",
    "date": "2026-09-05",
    "change": "missing",
    "lastSeen": "2026-08-26T20:04:49-04:00"
+  },
+  {
+   "id": "52c12f1b8bb2",
+   "title": "Kids Book Club for K-2",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
    "id": "9b8350b903c3",
@@ -2421,16 +2459,57 @@
    "lastSeen": "2026-08-26T20:04:49-04:00"
   },
   {
+   "id": "13799677e253",
+   "title": "Interstitial Yoko Dreams",
+   "date": "2026-09-11",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
    "id": "c51ced474660",
    "title": "Hold for all-ages program",
    "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-08-25T06:04:20-04:00"
+   "change": "dropped"
   },
   {
-   "id": "4658c695cd34",
-   "title": "SBPL at Vermont Pride 2026",
+   "id": "3eb04a8c47a8",
+   "title": "Live from BCA",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
+   "id": "90abed62f85a",
+   "title": "Pride Vermont 2026",
    "date": "2026-09-13",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
+   "id": "9c7f32bdbd2e",
+   "title": "Btown Bites Young Adult group - Bluebird Barbecue",
+   "date": "2026-09-14",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
+   "id": "c2da40039628",
+   "title": "Accounting and Finance Career Showcase",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
+   "id": "890bad6c1d3c",
+   "title": "South Burlington Green Community Festival",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
+   "id": "f5a6e2021a3b",
+   "title": "Green Community Festival",
+   "date": "2026-09-19",
    "change": "missing",
    "lastSeen": "2026-08-27T14:25:13-04:00"
   },
@@ -2449,6 +2528,13 @@
    "lastSeen": "2026-08-27T15:59:00-04:00"
   },
   {
+   "id": "8a247de9a359",
+   "title": "Faculty Tour of the Museum",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
    "id": "6bbd17767d09",
    "title": "Meanwhile in Vermont... Where do we show up in our nation's founding documents?",
    "date": "2026-09-23",
@@ -2456,17 +2542,17 @@
    "lastSeen": "2026-08-26T20:04:49-04:00"
   },
   {
-   "id": "cd78a8c60a39",
-   "title": "AUTHOR EVENT - more info coming soon!",
+   "id": "6d54599c76a0",
+   "title": "Kids Book Club for K-2",
    "date": "2026-09-24",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
    "id": "5a9ed2ea5ee0",
    "title": "A Conversation with Author J.J. Green",
    "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-08-25T06:04:20-04:00"
+   "change": "dropped"
   },
   {
    "id": "24de2b1138c4",
@@ -2476,6 +2562,13 @@
    "lastSeen": "2026-08-27T15:59:00-04:00"
   },
   {
+   "id": "eb881255f1f8",
+   "title": "Marina Richie with Trish O'Kane | Feathered Forest: Aloft with Birds in Ancient Trees",
+   "date": "2026-09-28",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
    "id": "f321cdd14934-1900",
    "title": "The Work in Progress",
    "date": "2026-10-02",
@@ -2483,11 +2576,17 @@
    "lastSeen": "2026-08-27T14:25:13-04:00"
   },
   {
+   "id": "ce86991acf8c",
+   "title": "Oteil Burbridge, LaMP",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-08-28T00:28:15-04:00"
+  },
+  {
    "id": "f4dcf578bf70",
    "title": "Hold for all-ages program",
    "date": "2026-10-10",
-   "change": "missing",
-   "lastSeen": "2026-08-25T06:04:20-04:00"
+   "change": "dropped"
   },
   {
    "id": "42b2324fe7d8-1530",
@@ -2502,12 +2601,6 @@
    "date": "2026-10-17",
    "change": "missing",
    "lastSeen": "2026-08-26T06:15:56-04:00"
-  },
-  {
-   "id": "7b1e890d7409",
-   "title": "Dom Flemons & the Traveling Wildfires",
-   "date": "2026-10-23",
-   "change": "dropped"
   },
   {
    "id": "6f150056982e",
