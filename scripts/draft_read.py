@@ -225,10 +225,10 @@ def api_call(key, brain, prompt, max_tokens=8000):
         "model": MODEL,
         "max_tokens": max_tokens,
         "system": brain,
-        # OpenRouter: GLM reasoning cannot be disabled and is billed as output,
-        # drawing from max_tokens. Providers largely ignore this cap (measured
-        # 1.2k-4.2k against a requested 1024), so the budgets above carry the
-        # real headroom; only used tokens are billed.
+        # Advisory only: providers largely ignore this cap (measured 1.2k-4.2k
+        # against a requested 1024). It matters only if MODEL is pointed back at
+        # a reasoning model via WEATHER_READ_MODEL; the budgets above carry the
+        # real headroom either way.
         "reasoning": {"max_tokens": 1024},
         "messages": [{"role": "user", "content": prompt}],
     }).encode()
