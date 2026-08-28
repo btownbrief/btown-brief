@@ -1,0 +1,63 @@
+# Rebuild the pool All Day's Wander tab draws from.
+#
+# What it writes: all-day/data/wander-pool.json — roughly 4,000 article titles
+# in three pools (Wikipedia's own unusual-articles index with its hand-written
+# blurbs, the last week's most-read, and everything within walking distance of
+# City Hall Park). About 145 KB gzipped.
+#
+# Why it commits to main rather than riding a data branch: the file changes
+# once a day, not every ten minutes, and it lives inside /all-day/ so the
+# app's service worker can cache it for offline use — a worker scoped to a
+# directory cannot answer for a data branch fetched from another origin.
+# Because it commits to main under GITHUB_TOKEN, and such commits do not fire
+# a `push` event, this workflow's name is listed in pages-deploy.yml's
+# workflow_run list. If you rename this workflow, rename it there too or the
+# site will silently serve the old pool.
+#
+# Schedule: 4:20am UTC, roughly midnight Eastern — after the day's pageview
+# numbers have settled and long before anyone opens the app.
+#
+# Failure posture: the script guards every stage independently, keeps the
+# previous pool for any stage that comes back short, and refuses to write a
+# suspiciously small payload. A bad run commits nothing and the app keeps the
+# pool it has.
+
+name: Refresh the Wander pool
+
+on:
+  schedule:
+    - cron: "20 4 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: wander-pool
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the pool
+        run: python3 scripts/build_wander_pool.py
+
+      - name: Commit if it changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add all-day/data/wander-pool.json
+          if git diff --cached --quiet; then
+            echo "No pool changes."
+          else
+            git commit -m "Auto-refresh the Wander pool"
+            git push || (git pull --rebase && git push)
+          fi
