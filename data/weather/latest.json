@@ -1,27 +1,27 @@
 {
- "updated": "2026-08-28T20:31:08+00:00",
+ "updated": "2026-08-28T20:58:55+00:00",
  "sections_updated": {
-  "now": "2026-08-28T20:31:08+00:00",
-  "forecast": "2026-08-28T20:31:08+00:00",
-  "hourly": "2026-08-28T20:31:08+00:00",
-  "alerts": "2026-08-28T20:31:08+00:00",
-  "afd": "2026-08-28T20:31:08+00:00",
-  "lake_forecast": "2026-08-28T20:31:08+00:00",
-  "lake_gage": "2026-08-28T20:31:08+00:00",
-  "air": "2026-08-28T20:31:08+00:00",
-  "sun": "2026-08-28T20:31:08+00:00",
-  "models": "2026-08-28T20:31:08+00:00"
+  "now": "2026-08-28T20:58:55+00:00",
+  "forecast": "2026-08-28T20:58:55+00:00",
+  "hourly": "2026-08-28T20:58:55+00:00",
+  "alerts": "2026-08-28T20:58:55+00:00",
+  "afd": "2026-08-28T20:58:55+00:00",
+  "lake_forecast": "2026-08-28T20:58:55+00:00",
+  "lake_gage": "2026-08-28T20:58:55+00:00",
+  "air": "2026-08-28T20:58:55+00:00",
+  "sun": "2026-08-28T20:58:55+00:00",
+  "models": "2026-08-28T20:58:55+00:00"
  },
  "now": {
-  "observed_at": "2026-08-28T20:15:00+00:00",
+  "observed_at": "2026-08-28T20:40:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Cloudy",
   "temp_f": 72,
   "feels_like_f": 71,
-  "humidity": 53,
-  "dewpoint_f": 54,
-  "wind_mph": 13,
-  "wind_gust_mph": 20,
+  "humidity": 57,
+  "dewpoint_f": 55,
+  "wind_mph": 15,
+  "wind_gust_mph": null,
   "wind_dir": "N"
  },
  "forecast": {
@@ -29,10 +29,10 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-08-28T15:00:00-04:00",
+    "start": "2026-08-28T16:00:00-04:00",
     "is_day": true,
     "temp_f": 75,
-    "pop": 5,
+    "pop": 2,
     "wind": "N 12 mph",
     "short": "Mostly Sunny",
     "detailed": "Mostly sunny, with a high near 75. North wind around 12 mph."
@@ -920,7 +920,7 @@
      "ICON": 75
     },
     "pop_max": {
-     "GFS": 55,
+     "GFS": 54,
      "Euro": 51,
      "ICON": 30
     },
