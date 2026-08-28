@@ -58,7 +58,11 @@ def load_json(path):
     except (OSError, ValueError):
         return None
 
-MODEL = os.environ.get("WEATHER_READ_MODEL", "z-ai/glm-5.3-flash")
+# GLM's reasoning is mandatory, unbounded and billed as output: providers
+# burned entire max_tokens budgets on thinking and returned no text (GMICloud
+# 7998/8000). Short-output calls use a non-reasoning model instead - same
+# OpenRouter key and endpoint, fewer tokens, and no empty-reply failure mode.
+MODEL = os.environ.get("WEATHER_READ_MODEL", "openai/gpt-4o-mini")
 
 
 def build_packet(d, outlets):

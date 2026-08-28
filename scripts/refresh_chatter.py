@@ -23,7 +23,7 @@ OUT = os.path.join(ROOT, "data", "chatter.json")
 SEEN = os.path.join(ROOT, "data", "chatter-seen.json")
 TIPS = os.path.join(ROOT, "data", "tips-inbox.md")
 UA = "btown-brief-site/1.0 (chatter refresh)"
-MODEL = os.environ.get("CHATTER_MODEL", "z-ai/glm-5.3-flash")
+MODEL = os.environ.get("CHATTER_MODEL", "openai/gpt-4o-mini")
 
 INOREADER = {
     "r/burlington": "https://www.inoreader.com/stream/user/1003590800/tag/Reddit%20%28r%2Fburlington%29?n=100",
