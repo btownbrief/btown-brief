@@ -341,6 +341,10 @@ const ctx = {
      resolve a key back to a row without every mode wiring its own. */
   index(key, row) { saveIndex.set(key, row); return key; },
   isSaved: store.isSaved,
+  /* Programmatic save, for the swipe gesture — same path, same toast, same
+     repaint as tapping the star. */
+  save(key) { doSave(key, true); },
+  rowFor(key) { return saveIndex.get(key) || null; },
   go,
 };
 

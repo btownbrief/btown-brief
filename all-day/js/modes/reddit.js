@@ -14,6 +14,7 @@
 
 import { get } from '../wire.js';
 import * as store from '../store.js';
+import { bindGestures } from '../gestures.js';
 import { esc, safeUrl, ago, isReddit, subOf } from '../ui.js';
 
 const PAGE = 60;
@@ -52,6 +53,24 @@ export default {
 
     root.querySelector('#rx-feed').addEventListener('click', (e) => {
       if (e.target.closest('[data-more]')) { state.page += 1; render(); }
+    });
+
+    bindGestures(root.querySelector('#rx-feed'), {
+      onSave(key) { ctx.save(key); },
+      onDig(key, row) {
+        const item = ctx.rowFor(key);
+        if (!item) return;
+        if (!store.dig(key)) { ctx.toast('Already dug that today'); return; }
+        if (row) row.classList.add('is-dug');
+        store.rpc('pulse_react', {
+          p_player: store.playerId(), p_kind: 'dig',
+          p_url: item.u, p_title: item.t, p_source: item.s || '',
+        });
+        ctx.toast('Dug \u2193', () => {
+          store.undig(key);
+          if (row) row.classList.remove('is-dug');
+        });
+      },
     });
 
     get('pulse')
@@ -143,7 +162,9 @@ function postHTML(it) {
 
   const on = store.isSaved(k);
 
-  return '<div class="fi' + (store.isRead(k) ? ' is-read' : '') + '">' +
+  return '<div class="fi' + (store.isRead(k) ? ' is-read' : '') +
+      (store.isDug(k) ? ' is-dug' : '') + '" data-k="' + esc(k) +
+      '" data-src="' + esc(it.s) + '">' +
     '<div class="fi-body">' +
       '<a class="fi-t" href="' + esc(thread) + '" target="_blank" rel="noopener" data-readkey="' +
         esc(k) + '">' + esc(it.t) + '</a>' +

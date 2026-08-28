@@ -15,6 +15,7 @@
 
 import { get } from '../wire.js';
 import * as store from '../store.js';
+import { bindGestures } from '../gestures.js';
 import { esc, safeUrl, ago, topicClass, isReddit, subOf } from '../ui.js';
 
 const PAGE = 120;
@@ -71,6 +72,13 @@ export default {
 
     root.querySelector('#rd-feed').addEventListener('click', (e) => {
       if (e.target.closest('[data-more]')) { state.page += 1; render(); }
+      if (e.target.closest('[data-hint-done]')) { store.setSetting('gestureHint', 'done'); render(); }
+    });
+
+    bindGestures(root.querySelector('#rd-feed'), {
+      onSave(key) { ctx.save(key); learned(); },
+      onDig(key, row) { doDig(key, row); learned(); },
+      onHold(key, row) { muteFrom(row); learned(); },
     });
 
     load();
@@ -137,6 +145,7 @@ function loadTop() {
 /* ------------------------------------------------------------- filtering */
 
 function visibleSources() {
+  mutes = store.inheritedMutes().hidden || {};
   return (data.sources || []).filter((s) => !mutes[s.id] && !isReddit(s) && !s.pod);
 }
 
@@ -210,7 +219,7 @@ function render() {
   const fresh = shown.filter((it) => it.d >= baseline).length;
   const showDivider = state.topic === 'all' && !state.q && fresh > 0 && fresh < shown.length;
 
-  let html = '';
+  let html = hintHTML();
   let dividerDrawn = false;
 
   shown.forEach((it) => {
@@ -258,6 +267,50 @@ function renderRail() {
 /* The save control rides in the metadata line rather than on a row of its
    own. A dedicated action row cost every headline about 30px of height for a
    control that is almost never the thing you came for. */
+/* A gesture nobody knows about is not a feature, so the card stays until you
+   have actually used one. */
+function learned() {
+  if (store.setting('gestureHint') !== 'done') store.setSetting('gestureHint', 'done');
+}
+
+function hintHTML() {
+  if (store.setting('gestureHint') === 'done') return '';
+  return '<div class="hint">' +
+    '<b>Two shortcuts</b>' +
+    '<p>Swipe a headline <b>right</b> to save it, <b>left</b> to dig it. ' +
+    'Press and hold to stop showing that source.</p>' +
+    '<button data-hint-done>Got it</button></div>';
+}
+
+/* A dig is a public vote — one per story per Eastern day, feeding the same
+   pulse_react function pulse.html writes to, so both pages count together. */
+function doDig(key, row) {
+  const item = ctx.rowFor(key);
+  if (!item) return;
+  if (!store.dig(key)) { ctx.toast('Already dug that today'); return; }
+  if (row) row.classList.add('is-dug');
+  store.rpc('pulse_react', {
+    p_player: store.playerId(), p_kind: 'dig',
+    p_url: item.u, p_title: item.t, p_source: item.s || '',
+  });
+  ctx.toast('Dug ↓', () => {
+    store.undig(key);
+    if (row) row.classList.remove('is-dug');
+  });
+}
+
+function muteFrom(row) {
+  const id = row && row.getAttribute('data-src');
+  const src = srcMap[id];
+  if (!src) return;
+  store.muteSource(id);
+  render();
+  ctx.toast('Hiding ' + (src.short || 'that source'), () => {
+    store.unmuteSource(id);
+    render();
+  });
+}
+
 function saveButton(k) {
   const on = store.isSaved(k);
   return '<button class="fi-save" data-save="' + esc(k) + '" aria-pressed="' +
@@ -299,7 +352,9 @@ function itemHTML(it) {
     ? '<img class="fi-thumb" src="' + esc(safeUrl(it.i)) + '" alt="" loading="lazy" decoding="async">'
     : '';
 
-  return '<div class="fi' + (store.isRead(k) ? ' is-read' : '') + '">' +
+  return '<div class="fi' + (store.isRead(k) ? ' is-read' : '') +
+      (store.isDug(k) ? ' is-dug' : '') + '" data-k="' + esc(k) +
+      '" data-src="' + esc(it.s) + '">' +
     '<div class="fi-body">' + title +
       '<div class="fi-m">' +
         '<span class="fi-src ' + tc + '">' + esc(src.short || '—') + '</span>' +

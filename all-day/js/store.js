@@ -102,8 +102,25 @@ export function allSettings() { return settings; }
    to the other page. */
 export function inheritedMutes() {
   const p = read('pulse2-settings', null);
-  if (!p) return { hidden: {}, ythidden: {} };
-  return { hidden: p.hidden || {}, ythidden: p.ythidden || {} };
+  const theirs = p ? { hidden: p.hidden || {}, ythidden: p.ythidden || {} }
+                   : { hidden: {}, ythidden: {} };
+  // Ours sit on top of theirs; muting here never writes to their file.
+  return {
+    hidden: Object.assign({}, theirs.hidden, settings.hidden || {}),
+    ythidden: Object.assign({}, theirs.ythidden, settings.ythidden || {}),
+  };
+}
+
+export function muteSource(id) {
+  settings.hidden = Object.assign({}, settings.hidden, { [id]: 1 });
+  write(SET_KEY, settings);
+}
+
+export function unmuteSource(id) {
+  const next = Object.assign({}, settings.hidden);
+  delete next[id];
+  settings.hidden = next;
+  write(SET_KEY, settings);
 }
 
 /* ----------------------------------------------------------- read state */
@@ -155,6 +172,44 @@ export function toggleSave(row) {
   if (saved.length > SAVED_CAP) saved.length = SAVED_CAP;
   write(SAVED_KEY, saved);
   return true;
+}
+
+/* ------------------------------------------------------------------ digs */
+/* A dig is a public vote, one per story per Eastern day, and it shares
+   pulse.html's key so a story you dug there is already dug here. The day
+   stamp is Eastern rather than UTC because the reset should happen in the
+   middle of Burlington's night, not at 7pm. */
+
+const DUG_KEY = 'pulse2-dug';       // { urlKey: 'YYYY-MM-DD' }
+const DUG_CAP = 500;
+
+let dug = read(DUG_KEY, {}) || {};
+
+export function etDay() {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).format(new Date());
+}
+
+export function isDug(k) { return dug[k] === etDay(); }
+
+/* Returns true when this call is the one that cast the vote. */
+export function dig(k) {
+  if (!k || isDug(k)) return false;
+  dug[k] = etDay();
+  const keys = Object.keys(dug);
+  if (keys.length > DUG_CAP) {
+    keys.sort((a, b) => (dug[a] < dug[b] ? -1 : 1))
+      .slice(0, keys.length - DUG_CAP)
+      .forEach((old) => delete dug[old]);
+  }
+  write(DUG_KEY, dug);
+  return true;
+}
+
+export function undig(k) {
+  delete dug[k];
+  write(DUG_KEY, dug);
 }
 
 /* ------------------------------------------------- podcast resume points */
