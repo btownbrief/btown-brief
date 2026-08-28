@@ -244,9 +244,12 @@ function render() {
 function renderSub() {
   const el = root.querySelector('#rd-sub');
   const n = (data.items || []).length;
+  // ago() returns the bare word "now" inside the first 90 seconds, so the
+  // usual "<age> ago" suffix would read "updated now ago".
   const when = data.generated ? ago(Math.floor(Date.parse(data.generated) / 1000)) : '';
+  const freshness = !when ? '' : (when === 'now' ? ' · updated just now' : ' · updated ' + when + ' ago');
   el.innerHTML = esc(n.toLocaleString() + ' headlines from ' +
-    (data.sources || []).length + ' sources' + (when ? ' · updated ' + when + ' ago' : '')) +
+    (data.sources || []).length + ' sources' + freshness) +
     (state.stale ? ' <span class="faint">(showing the last good copy)</span>' : '');
 }
 
