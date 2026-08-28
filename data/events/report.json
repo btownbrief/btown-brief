@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-27T15:59:00-04:00",
+ "generated": "2026-08-28T00:28:15-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 6.6
+   "seconds": 5.6
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 63,
-   "seconds": 3.6
+   "count": 61,
+   "seconds": 10.3
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 66,
-   "seconds": 3.0
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 176,
-   "seconds": 2.5
+   "count": 175,
+   "seconds": 3.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 81,
-   "seconds": 1.6
+   "count": 79,
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-27&end_date=2026-10-26&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-28&end_date=2026-10-27&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.6
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 185,
-   "seconds": 81.1
+   "count": 187,
+   "seconds": 65.8
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 36,
-   "seconds": 0.5
+   "count": 37,
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,32 +64,32 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 43.5
+   "seconds": 35.8
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 15.2
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 398,
-   "seconds": 68.5
+   "count": 390,
+   "seconds": 72.2
   },
   "meetup": {
    "label": "Meetup",
-   "count": 66,
-   "seconds": 118.3
+   "count": 68,
+   "seconds": 123.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 44,
-   "seconds": 15.2
+   "count": 46,
+   "seconds": 13.8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -98,8 +98,8 @@
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 28,
-   "seconds": 33.9
+   "count": 27,
+   "seconds": 31.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,74 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 429,
-   "seconds": 24.5
+   "count": 428,
+   "seconds": 25.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 271,
+   "count": 270,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 79,
-   "seconds": 299.3
+   "count": 78,
+   "seconds": 102.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 49,
+   "count": 50,
    "seconds": 0.2
   }
  },
- "gathered": 2748,
- "afterDedup": 1478,
- "duplicatesMerged": 1270,
- "final": 1831,
+ "gathered": 2739,
+ "afterDedup": 1481,
+ "duplicatesMerged": 1258,
+ "final": 1806,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-28"
-  },
-  {
-   "kept": {
-    "title": "Chandler",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-09-28"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-29"
-  },
-  {
-   "kept": {
-    "title": "Vermont Summit ft. Nate Hagens",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-29"
-  },
   {
    "kept": {
     "title": "Graduate College Game Night",
@@ -865,6 +821,17 @@
     "loveburlington"
    ],
    "date": "2026-10-03"
+  },
+  {
+   "kept": {
+    "title": "BALLETX",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "flynn",
+    "helloburlington"
+   ],
+   "date": "2026-10-04"
   },
   {
    "kept": {
@@ -2077,6 +2044,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -2100,7 +2068,8 @@
    },
    "merged_sources": [
     "champlainvalley",
-    "flynn"
+    "flynn",
+    "helloburlington"
    ],
    "date": "2026-10-21"
   },
@@ -2161,6 +2130,17 @@
   },
   {
    "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-21"
+  },
+  {
+   "kept": {
     "title": "Italian Conversation Group",
     "source": "fletcherfree"
    },
@@ -2177,7 +2157,8 @@
    },
    "merged_sources": [
     "champlainvalley",
-    "flynn"
+    "flynn",
+    "helloburlington"
    ],
    "date": "2026-10-22"
   },
@@ -2233,6 +2214,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -2371,53 +2353,44 @@
     "uvmbored"
    ],
    "date": "2026-10-25"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-26"
+  },
+  {
+   "kept": {
+    "title": "Super Smash Tuesdays",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-27"
   }
  ],
  "changes": [
-  {
-   "id": "47f788189a86",
-   "title": "Champlain Valley Fair",
-   "date": "2026-08-28",
-   "change": "time",
-   "was": "2026-08-28",
-   "now": "2026-08-28T13:00:00-04:00"
-  },
-  {
-   "id": "f321cdd14934",
-   "title": "The Work in Progress",
-   "date": "2026-10-02",
-   "change": "time",
-   "was": "2026-10-02T16:00:00-04:00",
-   "now": "2026-10-02T19:00:00-04:00"
-  },
-  {
-   "id": "42b2324fe7d8",
-   "title": "Cookie Queens",
-   "date": "2026-10-10",
-   "change": "time",
-   "was": "2026-10-10T13:00:00-04:00",
-   "now": "2026-10-10T15:30:00-04:00"
-  },
-  {
-   "id": "ade43b63afdb",
-   "title": "President’s Ice Cream Social",
-   "date": "2026-08-27",
-   "change": "missing",
-   "lastSeen": "2026-08-26T20:04:49-04:00"
-  },
-  {
-   "id": "b2ba6eb5aaa6",
-   "title": "Shelburne Summer Night at Shelburne Museum!",
-   "date": "2026-08-27",
-   "change": "missing",
-   "lastSeen": "2026-08-27T14:25:13-04:00"
-  },
   {
    "id": "7cdc6a2d716a",
    "title": "Soulshine & Smoke: An Allman Brothers celebration with Soulshine Revival & BBQ",
    "date": "2026-08-28",
    "change": "missing",
    "lastSeen": "2026-08-26T06:15:56-04:00"
+  },
+  {
+   "id": "de6596c8a217",
+   "title": "Lillian Leadbetter's Album Release Show!",
+   "date": "2026-09-02",
+   "change": "missing",
+   "lastSeen": "2026-08-27T15:59:00-04:00"
   },
   {
    "id": "944cbc4c1a78",
@@ -2432,6 +2405,13 @@
    "date": "2026-09-10",
    "change": "missing",
    "lastSeen": "2026-08-26T06:15:56-04:00"
+  },
+  {
+   "id": "4dbb38c540d5",
+   "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ James Kochalka Superstar",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-08-27T15:59:00-04:00"
   },
   {
    "id": "b84e6ea0f5f8",
@@ -2455,18 +2435,18 @@
    "lastSeen": "2026-08-27T14:25:13-04:00"
   },
   {
-   "id": "0d344fd9a824",
-   "title": "BTown Coffee Club",
-   "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-08-27T14:25:13-04:00"
-  },
-  {
    "id": "59fccb39869d-1600",
    "title": "Green Mountain Book Festival",
    "date": "2026-09-19",
    "change": "missing",
    "lastSeen": "2026-08-25T17:01:29-04:00"
+  },
+  {
+   "id": "2ca321c8deb7",
+   "title": "Joe Kaplow",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-08-27T15:59:00-04:00"
   },
   {
    "id": "6bbd17767d09",
@@ -2479,8 +2459,7 @@
    "id": "cd78a8c60a39",
    "title": "AUTHOR EVENT - more info coming soon!",
    "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-08-24T17:04:08-04:00"
+   "change": "dropped"
   },
   {
    "id": "5a9ed2ea5ee0",
@@ -2488,6 +2467,13 @@
    "date": "2026-09-24",
    "change": "missing",
    "lastSeen": "2026-08-25T06:04:20-04:00"
+  },
+  {
+   "id": "24de2b1138c4",
+   "title": "Southern brewhop",
+   "date": "2026-09-26",
+   "change": "missing",
+   "lastSeen": "2026-08-27T15:59:00-04:00"
   },
   {
    "id": "f321cdd14934-1900",
@@ -2521,8 +2507,7 @@
    "id": "7b1e890d7409",
    "title": "Dom Flemons & the Traveling Wildfires",
    "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-08-24T17:04:08-04:00"
+   "change": "dropped"
   },
   {
    "id": "6f150056982e",
