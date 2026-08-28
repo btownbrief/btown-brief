@@ -676,12 +676,18 @@ def ask_model(prompt):
     )
     # streamed because the SDK refuses a non-streaming call this long;
     # reasoning counts toward max_tokens and a full pool + the bench blew
-    # through 16k on 8/23
+    # through 16k on 8/23.
+    #
+    # No "effort" here on purpose. output_config.effort is an Anthropic
+    # parameter; GLM is a Z.AI model behind OpenRouter's compat shim, which
+    # drops the field rather than honouring it -- measured 2026-08-28,
+    # effort:"bogus" was accepted without error and low vs high thinking
+    # tokens came out backwards and inside the noise. Setting it implies a
+    # control that does not exist. Do not add it back.
     with client.messages.stream(
         model=MODEL,
         max_tokens=48000,
-        output_config={"format": {"type": "json_schema", "schema": SCHEMA},
-                       "effort": "high"},
+        output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
         messages=[{"role": "user", "content": prompt}],
     ) as stream:
         response = stream.get_final_message()
