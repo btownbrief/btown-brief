@@ -118,6 +118,33 @@ function render() {
         'and the live cameras — each with a reason.'
       : 'One curated page of video for Burlington, every evening. A pick for tonight and ' +
         'six shelves — around fifty videos, each with a reason.') + '</p>';
+
+  /* Every edition is published as its own YouTube playlist, and casting the
+     whole night to a TV is the best thing this tab does. It was a quiet
+     outline button below six shelves, which is where features go to die —
+     it belongs in the masthead, filled, the way BTown TV had it. */
+  if (state.view === 'tonight') {
+    const row = el('div', 'tvmast-row');
+    const play = playlistLink(state.tv, 'Play tonight on your TV');
+    if (play) {
+      row.appendChild(play);
+      row.appendChild(el('span', 'tvmast-n', 'the whole edition, in order'));
+    } else {
+      /* Publishing the playlist can fail on the night (a dropped connection
+         mid-upload has done it), and then this tab looks like it never had
+         the feature. Offer the most recent night that does have one, said
+         plainly — it is still fifty picked videos ready for a TV. */
+      const prev = (state.past || []).find((e) => playlistUrl(e));
+      if (prev) {
+        const alt = playlistLink(prev, 'Play ' + dayLabel(prev.generated || prev.edition) + ' on your TV');
+        row.appendChild(alt);
+        row.appendChild(el('span', 'tvmast-n', 'tonight’s playlist isn’t up yet'));
+      } else if (!state.past) {
+        loadPast(() => { if (state.view === 'tonight') render(); });
+      }
+    }
+    if (row.children.length) mast.appendChild(row);
+  }
   root.appendChild(mast);
 
   root.appendChild(seg([
@@ -195,18 +222,14 @@ function renderTonight(root) {
 
   orderShelves(shelves).forEach((s) => {
     shelfHead(root, s.title, s.sub, s.title === LOCAL_SHELF ? pastLocalBtn() : null);
-    const { track, sync } = rail(root, { label: 'videos' });
+    /* Local mode leaves four or five clips on a shelf built for twelve. A
+       half-empty scroller reads as "there is nothing here"; the same clips
+       laid out flat read as a short list, which is the truth. */
+    const { track, sync } = rail(root, { label: 'videos', open: localOnly });
     s.items.forEach((v) => { if (v && app.isVideoId(v.id)) track.appendChild(videoCard(v)); });
     sync();
   });
 
-  const play = playlistLink(tv, 'Play tonight on your TV');
-  if (play) {
-    const row = el('div', 'btns');
-    row.style.marginTop = '4px';
-    row.appendChild(play);
-    root.appendChild(row);
-  }
   root.appendChild(el('p', 'srcline', 'Edition ' + esc(tv.edition || '')));
   hydrateVotes(root, [...root.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
 }
@@ -303,7 +326,7 @@ function renderPast(root) {
     const { track, sync } = rail(root, { label: 'videos' });
     items.forEach((v) => track.appendChild(videoCard(v)));
     sync();
-    const play = playlistLink(ed, 'Play this night on your TV');
+    const play = playlistLink(ed, 'Play this night on your TV', true);
     if (play) {
       const row = el('div', 'btns');
       row.style.margin = '-2px 0 6px';
@@ -347,10 +370,16 @@ function renderWire(root) {
    fifty videos in page order — so you can cast the whole thing to a TV. The
    url is validated to exactly the playlist shape before it becomes an href,
    the same test tv.html used. */
-function playlistLink(edition, label) {
+const playlistUrl = (edition) => {
   const url = edition?.playlist?.url;
-  if (!url || !/^https:\/\/www\.youtube\.com\/playlist\?list=[A-Za-z0-9_-]+$/.test(url)) return null;
-  const a = el('a', 'btn btn-quiet', '▶ ' + label);
+  return url && /^https:\/\/www\.youtube\.com\/playlist\?list=[A-Za-z0-9_-]+$/.test(url) ? url : null;
+};
+
+function playlistLink(edition, label, quiet) {
+  const url = playlistUrl(edition);
+  if (!url) return null;
+  const a = el('a', quiet ? 'btn btn-quiet' : 'btn tv-play',
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>' + esc(label));
   a.href = url;
   a.target = '_blank';
   a.rel = 'noopener';

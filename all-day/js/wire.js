@@ -52,6 +52,13 @@ const FILES = {
     local: 'data/wander-pool.json',
     ok: (j) => j && j.pools && typeof j.pools === 'object',
   },
+  /* The Brief's own stories, pulled out of the newsletter. Same-origin: the
+     file is committed to main by its workflow and main is what Pages serves. */
+  newsletter: {
+    live: null,
+    local: '../data/newsletter-picks.json',
+    ok: (j) => j && Array.isArray(j.editions),
+  },
   /* Weather is committed to main by its own workflow, and main is what Pages
      serves — so same-origin is already the freshest copy there is. No poll:
      the poller only re-fetches `live`, and a temperature is fine until the
