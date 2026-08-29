@@ -855,7 +855,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   padding: 0 10px calc(var(--safe-b) + 8px); pointer-events: none; }
 .dock > * { pointer-events: auto; }
 .tabbar {
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px;
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px;
   max-width: 470px; margin: 0 auto; padding: 6px;
   background: var(--dock-bg); border: 1px solid var(--edge);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-2);
@@ -1152,3 +1152,204 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 @media (prefers-reduced-motion: reduce) {
   .localsw-bar, .localsw-half { transition: none; }
 }
+/* ============================================================ music */
+/* Cover art is the whole point of a music surface, so it leads everything and
+   is never desaturated. Where an artist has no art, the initials sit on their
+   own stable hue rather than a grey box — a grey box reads as a failed image,
+   which is the one thing this tab cannot look like. */
+
+.m-noart {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--ui); font-weight: 700; letter-spacing: -.02em;
+  color: hsl(var(--hue, 30) 62% 32%);
+  background: hsl(var(--hue, 30) 58% 90%);
+  box-shadow: inset 0 0 0 1px hsl(var(--hue, 30) 40% 80%);
+}
+:root[data-theme="dark"] .m-noart,
+:root:not([data-theme="light"]) .m-noart {
+  color: hsl(var(--hue, 30) 70% 78%);
+  background: hsl(var(--hue, 30) 34% 22%);
+  box-shadow: inset 0 0 0 1px hsl(var(--hue, 30) 30% 34%);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .m-noart {
+    color: hsl(var(--hue, 30) 62% 32%);
+    background: hsl(var(--hue, 30) 58% 90%);
+    box-shadow: inset 0 0 0 1px hsl(var(--hue, 30) 40% 80%);
+  }
+}
+
+/* ---- the shelf of people playing soon ---- */
+/* Its own width, set here rather than on .rail — a column size on the shared
+   rail class makes wider cards from other tabs overlap each other. */
+/* 152px, not 216 — at the larger size one card filled a phone screen and the
+   shelf showed one and a bit, which is a list wearing a carousel's clothes.
+   This is the video card's width, and the shelf reads as a row you push. */
+.m-gig {
+  width: 152px; display: flex; flex-direction: column;
+  background: var(--panel); border: 1px solid var(--edge);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-1);
+}
+.m-gig-hit { display: block; text-align: left; width: 100%; }
+.m-gig-art { display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
+  background: var(--panel-2); font-size: 1.45rem; }
+.m-gig-body { display: block; padding: 8px 9px 3px; }
+.m-gig-when { display: block; font-family: var(--mono); font-size: .58rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.m-gig-name { display: block; font-size: .9rem; font-weight: 600; line-height: 1.22;
+  margin-top: 2px; letter-spacing: -.004em; }
+.m-gig-where { display: block; font-size: .74rem; color: var(--ink-soft); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m-gig-foot { display: flex; align-items: center; gap: 4px; padding: 2px 6px 6px; }
+
+/* ---- the directory ---- */
+.m-list { border-top: 1px solid var(--edge-soft); }
+.m-row { display: flex; align-items: center; gap: 8px;
+  padding: 8px 2px; border-bottom: 1px solid var(--edge-soft); }
+.m-row-hit { flex: 1; min-width: 0; display: flex; align-items: center; gap: 11px;
+  text-align: left; }
+.m-row-art { width: 54px; height: 54px; flex: 0 0 auto; border-radius: 10px;
+  object-fit: cover; background: var(--panel-2); font-size: .95rem; }
+.m-row-meta { min-width: 0; display: block; }
+.m-row-name { display: block; font-size: .99rem; font-weight: 600; line-height: 1.25;
+  letter-spacing: -.004em; }
+.m-row-tags { display: block; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 2px; }
+.m-soon { color: var(--accent); font-weight: 700; }
+.m-row-why { display: block; font-size: .82rem; color: var(--ink-soft); line-height: 1.35;
+  margin-top: 3px; overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.m-row-acts { display: flex; align-items: center; gap: 3px; flex: 0 0 auto; }
+
+/* One play button, used in the shelf, the rows and the sheet. */
+.m-play { width: 34px; height: 34px; flex: 0 0 auto; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--accent); background: var(--accent-soft); }
+.m-play svg { width: 17px; height: 17px; fill: currentColor; stroke: none; }
+.m-play:active { transform: scale(.92); }
+
+/* ---- the artist sheet ---- */
+.m-sheet-head { display: flex; gap: 13px; align-items: center; margin-bottom: 12px; }
+.m-sheet-art { width: 86px; height: 86px; flex: 0 0 auto; border-radius: 13px;
+  object-fit: cover; background: var(--panel-2); font-size: 1.5rem; }
+.m-sheet-meta h3 { font-family: var(--serif); font-size: 1.5rem; font-weight: 400;
+  line-height: 1.12; }
+.m-sheet-sub { font-family: var(--mono); font-size: .62rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
+.m-why-big { font-size: 1rem; line-height: 1.5; color: var(--ink-soft);
+  margin: 0 0 16px; }
+
+.m-shows { display: grid; gap: 7px; margin-bottom: 16px; }
+.m-show { display: block; padding: 10px 12px; border-radius: var(--radius-sm);
+  background: var(--panel-2); border: 1px solid var(--edge-soft); }
+.m-show-when { display: block; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.m-show-where { display: block; font-size: .93rem; font-weight: 600; margin-top: 3px; }
+.m-show-what { display: block; font-size: .82rem; color: var(--ink-faint); margin-top: 2px; }
+
+.m-session { display: flex; align-items: center; gap: 11px; margin-bottom: 16px;
+  padding: 10px 12px; border-radius: var(--radius-sm); background: var(--panel-2);
+  border: 1px solid var(--edge-soft); }
+.m-session-meta { min-width: 0; }
+.m-session-title { display: block; font-size: .88rem; font-weight: 500; line-height: 1.3;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.m-session-date { display: block; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 2px; }
+
+/* Bandcamp's own player. It is the only embed here that plays a whole track
+   to someone who is not logged in, and it is built once, in the sheet. */
+.m-bc { width: 100%; height: 120px; border: 0; border-radius: var(--radius-sm);
+  margin-bottom: 14px; background: var(--panel-2); }
+.m-links { margin-bottom: 4px; }
+
+.m-credit { font-size: .78rem; color: var(--ink-faint); line-height: 1.5;
+  margin: 18px 2px 4px; }
+.m-credit a { color: var(--ink-soft); text-decoration: underline; }
+
+/* ---- the mixtape ---- */
+.m-theme { padding: 12px 14px; border-radius: var(--radius); margin-bottom: 13px;
+  background: var(--local-soft); border: 1px solid var(--edge-soft); }
+.m-theme .eyebrow { color: var(--local); }
+.m-theme-title { display: block; font-family: var(--serif); font-size: 1.3rem;
+  line-height: 1.15; margin-top: 3px; }
+.m-theme p { font-size: .87rem; color: var(--ink-soft); margin-top: 5px; line-height: 1.45; }
+.m-add { width: 100%; margin-bottom: 16px; }
+
+.m-tracks { display: block; }
+.m-track { display: flex; align-items: center; gap: 10px; padding: 10px 2px;
+  border-bottom: 1px solid var(--edge-soft); }
+.m-track-body { flex: 1; min-width: 0; }
+.m-track-song { display: block; font-size: .98rem; font-weight: 600; line-height: 1.25; }
+.m-track-by { display: block; font-size: .84rem; color: var(--ink-soft); margin-top: 1px; }
+.m-local { color: var(--local); font-weight: 700; font-size: .74rem;
+  background: var(--local-soft); border-radius: 4px; padding: 1px 5px; }
+.m-track-why { display: block; font-size: .82rem; color: var(--ink-soft);
+  line-height: 1.4; margin-top: 4px; }
+.m-track-who { display: block; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 3px; }
+.m-track-go { flex: 0 0 auto; font-size: .74rem; font-weight: 600; color: var(--accent);
+  background: var(--accent-soft); border-radius: var(--pill); padding: 6px 11px;
+  white-space: nowrap; }
+
+/* ---- the form ---- */
+.m-form-intro { font-size: .9rem; color: var(--ink-soft); line-height: 1.5;
+  margin-bottom: 14px; }
+.m-form { display: grid; gap: 11px; }
+.m-form label { display: block; font-size: .8rem; font-weight: 600; color: var(--ink-soft); }
+.m-form input[type=url], .m-form input[type=text], .m-form textarea {
+  display: block; width: 100%; margin-top: 5px; padding: 11px 12px;
+  font: inherit; font-size: 1rem; color: var(--ink);
+  background: var(--panel-2); border: 1px solid var(--edge);
+  border-radius: var(--radius-sm); min-height: 44px;
+}
+.m-form input:focus, .m-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.m-form-two { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.m-form-check { display: flex; align-items: center; gap: 8px; font-weight: 500;
+  color: var(--ink); }
+.m-form-check input { width: 20px; height: 20px; }
+.m-form details summary { font-size: .84rem; color: var(--ink-faint); cursor: pointer;
+  padding: 4px 0; }
+.m-form details label { margin-top: 9px; }
+
+/* A rail sitting on the app ground needs its dots to mask the track behind
+   them in the same colour, or the pill shows as a patch of the wrong shade. */
+.m-gig .rail-dots { background: var(--ground); }
+
+/* The card classes below set `display: block`, and they are declared after
+   .m-noart, so they were quietly winning and stranding the initials in the
+   top-left corner. Same specificity, so source order settles it — this has to
+   stay at the end of the file. */
+.m-noart { display: grid; place-items: center; }
+
+/* Every music product that shows a lot of sleeves draws a hairline inside the
+   artwork — Apple Music, Spotify, Bandcamp and Last.fm each ship their own
+   version. Without it a white sleeve dissolves into a light page and a black
+   one into a dark page. Bandcamp's is the cheapest: an outline pulled inward,
+   which follows border-radius and costs no layout.
+
+   Dark needs roughly twice the alpha of light. On a dark ground a pale sleeve
+   is already separated by luminance; the case the ring has to win is a BLACK
+   sleeve, and it has to out-contrast that. Apple ships 10% black / 25% white
+   for exactly this reason. */
+.m-gig-art, .m-row-art, .m-sheet-art {
+  outline: 1px solid rgba(20, 16, 8, .11);
+  outline-offset: -1px;
+}
+:root[data-theme="dark"] .m-gig-art,
+:root[data-theme="dark"] .m-row-art,
+:root[data-theme="dark"] .m-sheet-art,
+:root:not([data-theme="light"]) .m-gig-art,
+:root:not([data-theme="light"]) .m-row-art,
+:root:not([data-theme="light"]) .m-sheet-art {
+  outline-color: rgba(255, 255, 255, .22);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .m-gig-art,
+  :root:not([data-theme="dark"]) .m-row-art,
+  :root:not([data-theme="dark"]) .m-sheet-art {
+    outline-color: rgba(20, 16, 8, .11);
+  }
+}
+
+/* Dates, times and prices line up column-wise down a list of shows. */
+.m-gig-when, .m-show-when, .m-row-tags, .m-session-date { font-variant-numeric: tabular-nums; }

@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v10';
+const VERSION = 'all-day-v11';
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -22,8 +22,8 @@ const SHELL_URLS = [
   './js/main.js', './js/app.js', './js/store.js', './js/wire.js', './js/ui.js',
   './js/rows.js', './js/gestures.js',
   './js/modes/wire.js', './js/modes/reddit.js', './js/modes/watch.js',
-  './js/modes/listen.js', './js/modes/wander.js',
-  './data/wander-pool.json',
+  './js/modes/listen.js', './js/modes/wander.js', './js/modes/music.js',
+  './data/wander-pool.json', './data/music.json',
 ];
 
 self.addEventListener('install', (e) => {

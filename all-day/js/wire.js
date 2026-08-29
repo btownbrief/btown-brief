@@ -56,6 +56,14 @@ const FILES = {
      serves — so same-origin is already the freshest copy there is. No poll:
      the poller only re-fetches `live`, and a temperature is fine until the
      next page load. */
+  /* Music is committed to main by its own workflow and lives inside
+     /all-day/, so the service worker can cache it — same reasoning as the
+     wander pool. No poll: the roster changes once a morning. */
+  music: {
+    live: null,
+    local: 'data/music.json',
+    ok: (j) => j && Array.isArray(j.artists),
+  },
   weather: {
     live: null,
     local: '../data/weather/latest.json',

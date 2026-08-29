@@ -14,12 +14,14 @@ import * as wire from './modes/wire.js';
 import * as reddit from './modes/reddit.js';
 import * as watch from './modes/watch.js';
 import * as listen from './modes/listen.js';
+import * as music from './modes/music.js';
 import * as wander from './modes/wander.js';
 
 app.register('wire', wire);
 app.register('reddit', reddit);
 app.register('watch', watch);
 app.register('listen', listen);
+app.register('music', music);
 app.register('wander', wander);
 
 const $ = (id) => document.getElementById(id);
@@ -29,7 +31,7 @@ $('settings-btn').innerHTML = ICON.gear;
 
 /* --------------------------------------------------------------- saved */
 
-const KIND_LABEL = { wire: 'Headline', video: 'Video', episode: 'Episode', wiki: 'Wikipedia', reddit: 'Thread' };
+const KIND_LABEL = { wire: 'Headline', video: 'Video', episode: 'Episode', wiki: 'Wikipedia', reddit: 'Thread', artist: 'Artist' };
 
 $('saved-btn').addEventListener('click', () => {
   app.sheet('Saved', (body, close) => {
@@ -160,6 +162,7 @@ const TOUR = [
   ['Reddit', 'What people are posting'],
   ['Watch', 'Video, picked by hand nightly'],
   ['Listen', 'Every Vermont podcast, playable here'],
+  ['Music', 'Bands from here, and who’s playing this week'],
   ['Wikipedia', 'A rabbit hole worth falling into'],
 ];
 
@@ -170,7 +173,7 @@ function welcome() {
   card.setAttribute('aria-label', 'What All Day is');
   card.innerHTML =
     '<p class="eyebrow">Burlington Brief</p>' +
-    '<h2>Five feeds, one app.</h2>' +
+    '<h2>Six feeds, one app.</h2>' +
     '<ul class="welcome-list">' +
       TOUR.map(([n, d]) =>
         '<li><b>' + esc(n) + '</b><span>' + esc(d) + '</span></li>').join('') +
