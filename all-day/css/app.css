@@ -421,7 +421,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   background: #C8321E; color: #fff; padding: 3px 7px; border-radius: 5px; }
 .v-live i { width: 5px; height: 5px; border-radius: 50%; background: #fff; animation: blink 1.6s ease infinite; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
-.v-body { padding: 8px 10px 9px; }
+.v-body { padding: 7px 9px 7px; }
 .v-title { font-size: .88rem; line-height: 1.3; font-weight: 500;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .v-meta { display: block; font-family: var(--mono); font-size: .6rem; letter-spacing: .07em;
@@ -430,8 +430,8 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .rail .v-why { display: none; }        /* a shelf is for browsing, not reading */
 .hero-body .v-why { display: -webkit-box; -webkit-line-clamp: 3; }
-.v-acts { display: flex; align-items: center; gap: 2px; padding: 0 5px 5px; }
-.v-acts .act { width: 32px; height: 32px; }
+.v-acts { display: flex; align-items: center; gap: 1px; padding: 0 4px 4px; }
+.v-acts .act { width: 29px; height: 29px; }
 .v-acts .act svg { width: 18px; height: 18px; }
 .v-acts .vote { height: 28px; padding: 0 7px 0 5px; font-size: .68rem; }
 .v-acts .spacer { flex: 1; }
@@ -439,9 +439,9 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 
 /* the hero: tonight's one pick, and it says who chose it */
 .hero { display: block; width: 100%; margin-bottom: 16px; text-align: left; }
-.hero img { width: 100%; aspect-ratio: 16/9; max-height: 178px; object-fit: cover; }
-.hero-body { display: block; padding: 11px 14px 13px; }
-.hero-title { display: block; font-family: var(--serif); font-size: 1.34rem; line-height: 1.12; margin: 4px 0 5px; }
+.hero img { width: 100%; aspect-ratio: 16/9; max-height: 140px; object-fit: cover; }
+.hero-body { display: block; padding: 10px 13px 12px; }
+.hero-title { display: block; font-family: var(--serif); font-size: 1.26rem; line-height: 1.1; margin: 3px 0 4px; }
 
 /* A shelf label is a label. Legible — far bigger than the .68rem caption it
    replaces — but a serif headline block per shelf costs a whole video row
