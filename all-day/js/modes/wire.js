@@ -21,8 +21,9 @@ import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
 import { bindGestures } from './../gestures.js';
-import { el, esc, safeHref, ago, rail, chip, heading, scrollHint, voteBtn, paintVote, ICON } from './../ui.js';
-import { feedRow, bindFeed, hydrateVotes, keyOf, isLocalSource } from './../rows.js';
+import { el, esc, safeHref, ago, rail, chip, heading, scrollHint, voteBtn, paintVote, starBtn,
+  tipBar, tabStamp, stampOf, ICON } from './../ui.js';
+import { feedRow, bindFeed, hydrateVotes, watchPassed, keyOf, isLocalSource } from './../rows.js';
 
 const PAGE = 60;
 
@@ -33,6 +34,8 @@ const state = {
   shown: PAGE,
   edition: 0,        // 0 = today, 1 = the one before, …
   q: '',
+  qOpen: false,
+  wx: null,
   byKey: new Map(),
 };
 
@@ -53,6 +56,7 @@ export function mount(root) {
     root.appendChild(box);
   });
   data.load('top', (json) => { state.top = json; if (state.pulse) render(); }, () => {});
+  data.load('weather', (json) => { state.wx = json; if (state.pulse) render(); }, () => {});
 
   bindGestures(root, bindFeed(root, (k) => state.byKey.get(k), () => render()));
 }
@@ -88,6 +92,14 @@ function render() {
   const map = sourceMap();
   const base = store.visitBase();
 
+  /* the source filter is remembered across visits; if that outlet has since
+     been muted or dropped from the roster, its chip is gone too and the
+     reader would be stuck on an empty wire with nothing to un-press */
+  if (set.source && (!map[set.source] || muted[set.source])) {
+    store.setSetting('source', '');
+    set.source = '';
+  }
+
   const all = (Array.isArray(state.pulse.items) ? state.pulse.items : []).filter((it) => {
     const s = it && map[it.s];
     if (!s || muted[s.id]) return false;
@@ -97,6 +109,7 @@ function render() {
 
   const shown = all.filter((it) => {
     const s = map[it.s];
+    if (set.source && s.id !== set.source) return false;
     if (set.localOnly && !isLocalSource(s)) return false;
     if (set.topic !== 'all' && s.topic !== set.topic) return false;
     if (set.focus && store.isRead(keyOf(it))) return false;
@@ -110,11 +123,10 @@ function render() {
   state.byKey = new Map(all.map((it) => [keyOf(it), { it, src: map[it.s] }]));
 
   root.innerHTML = '';
+  tabStamp(root, stampOf(state.pulse.generated), 'the wire, every 20 minutes');
   renderPicks(root, map);
 
   const sourceCount = new Set(shown.map((it) => it.s)).size;
-  const updated = state.pulse.generated
-    ? ago(Math.floor(new Date(state.pulse.generated).getTime() / 1000)) : '';
 
   const localBtn = chip(
     set.localOnly ? '✓ Local only' : 'View local only',
@@ -123,18 +135,39 @@ function render() {
     'local-switch'
   );
 
+  const only = set.source && map[set.source];
   heading(root, {
     eyebrow: set.topic === 'popular' ? 'Popular' : 'The wire',
     title: set.topic === 'popular' ? 'What readers upvoted'
       : state.q ? 'Matching “' + state.q + '”'
+      : only ? String(only.name || only.short)
+      : set.layout === 'sources' ? 'Every outlet, side by side'
       : (set.localOnly ? 'Burlington only' : 'Everything, newest first'),
     sub: '<span class="count">' + shown.length.toLocaleString() + ' headlines from ' +
-      sourceCount + ' source' + (sourceCount === 1 ? '' : 's') +
-      (updated ? ' · updated ' + esc(updated) : '') + '</span>',
+      sourceCount + ' source' + (sourceCount === 1 ? '' : 's') + '</span>',
     right: localBtn,
   });
 
+  /* The chip row leads with search. A full-width search box cost a whole
+     band of the screen to a thing most people never use; as the first chip
+     it costs nothing and sits where the eye already is. */
   const chips = el('div', 'chips');
+  const searchChip = chip(
+    ICON.search + (state.q
+      ? '<span>“' + esc(state.q.length > 12 ? state.q.slice(0, 11) + '…' : state.q) + '”</span>'
+      : '<span>Search</span>'),
+    state.qOpen || !!state.q,
+    () => {
+      if (state.q) { state.q = ''; state.qOpen = false; }
+      else state.qOpen = !state.qOpen;
+      state.shown = PAGE;
+      render();
+      const inp = root.querySelector('#wire-q');
+      if (inp) inp.focus();
+    },
+    'search-chip'
+  );
+  chips.appendChild(searchChip);
   TOPICS.forEach(([value, label]) => {
     if (value !== 'all' && value !== 'local' && value !== 'popular' &&
         !all.some((it) => map[it.s]?.topic === value)) return;
@@ -148,28 +181,13 @@ function render() {
   root.appendChild(chips);
   scrollHint(chips);
 
-  const box = el('div', 'search');
-  box.style.margin = '0 0 14px';
-  box.innerHTML =
-    '<svg class="mag" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>' +
-    '<input id="wire-q" type="search" autocomplete="off" placeholder="Search every headline">';
-  const input = box.querySelector('input');
-  input.value = state.q;
-  let typing = 0;
-  input.addEventListener('input', () => {
-    clearTimeout(typing);
-    typing = setTimeout(() => {
-      state.q = input.value.trim();
-      state.shown = PAGE;
-      render();
-      /* keep the caret where it was — a re-render must not eject you */
-      const next = root.querySelector('#wire-q');
-      if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
-    }, 220);
-  });
-  root.appendChild(box);
+  if (state.qOpen || state.q) root.appendChild(searchBox(root));
 
   if (set.topic === 'popular') { renderPopular(root); return; }
+
+  renderSourceBars(root, all, map, set);
+  renderTools(root, set);
+  renderWeather(root);
 
   if (!shown.length) {
     root.appendChild(el('p', 'empty', state.q
@@ -179,6 +197,11 @@ function render() {
         : 'Nothing on the wire for that.'));
     return;
   }
+
+  tipBar(root, 'swipe',
+    '<span>Swipe a headline <b>left</b> to mute that outlet, <b>right</b> to save it.</span>');
+
+  if (set.layout === 'sources' && !set.source) { renderBySource(root, shown, map, base); return; }
 
   const feed = el('div', 'feed');
   const slice = shown.slice(0, state.shown);
@@ -196,6 +219,187 @@ function render() {
   }
 
   hydrateVotes(root, slice.map(keyOf));
+  watchPassed(root);
+}
+
+function searchBox(root) {
+  const box = el('div', 'search');
+  box.style.margin = '0 0 12px';
+  box.innerHTML =
+    '<svg class="mag" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>' +
+    '<input id="wire-q" type="search" autocomplete="off" placeholder="Search every headline">';
+  const input = box.querySelector('input');
+  input.value = state.q;
+  let typing = 0;
+  input.addEventListener('input', () => {
+    clearTimeout(typing);
+    typing = setTimeout(() => {
+      state.q = input.value.trim();
+      state.shown = PAGE;
+      render();
+      /* keep the caret where it was — a re-render must not eject you */
+      const next = root.querySelector('#wire-q');
+      if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
+    }, 220);
+  });
+  return box;
+}
+
+/* Two rows of outlets, locals on top — straight from Pulse, where it is the
+   fastest way to say "just VTDigger" without opening anything. Sorted by the
+   curator's priority first, then A–Z, so the papers people name lead. */
+function renderSourceBars(root, all, map, set) {
+  const counts = Object.create(null);
+  all.forEach((it) => { counts[it.s] = (counts[it.s] || 0) + 1; });
+
+  const pool = Object.keys(counts)
+    .map((id) => map[id])
+    .filter((s) => s && (set.topic === 'all' || s.topic === set.topic) &&
+      (!set.localOnly || isLocalSource(s)))
+    .sort((a, b) => ((a.pr || 500) - (b.pr || 500)) ||
+      String(a.short || a.name).localeCompare(String(b.short || b.name)));
+
+  const rows = [
+    ['local', pool.filter(isLocalSource)],
+    ['national', pool.filter((s) => !isLocalSource(s))],
+  ];
+  let first = true;
+  rows.forEach(([kind, list]) => {
+    if (!list.length) return;
+    const bar = el('div', 'chips srcbar' + (kind === 'local' ? ' is-local' : ''));
+    if (first) {
+      first = false;
+      bar.appendChild(chip('All sources', !set.source, () => pickSource('')));
+    }
+    list.forEach((s) => {
+      const c = chip(String(s.short || s.name) + ' ' + counts[s.id],
+        set.source === s.id, () => pickSource(s.id),
+        'srcchip c-' + String(s.topic || '').replace(/[^a-z]/gi, ''));
+      bar.appendChild(c);
+    });
+    root.appendChild(bar);
+    scrollHint(bar);
+  });
+}
+
+function pickSource(id) {
+  const set = store.settings();
+  store.setSetting('source', set.source === id ? '' : id);
+  state.shown = PAGE;
+  render();
+  state.root.scrollTo({ top: 0 });
+}
+
+/* Focus and the layout switch were both buried in Settings, which meant
+   nobody used either. They belong next to the thing they change. */
+function renderTools(root, set) {
+  const row = el('div', 'toolrow');
+
+  const seg = el('div', 'toolseg');
+  [['newest', 'Newest first'], ['sources', 'By source']].forEach(([v, label]) => {
+    const b = el('button', 'toolbtn' + (set.layout === v ? ' on' : ''), label);
+    b.addEventListener('click', () => {
+      store.setSetting('layout', v);
+      state.shown = PAGE;
+      render();
+      root.scrollTo({ top: 0 });
+    });
+    seg.appendChild(b);
+  });
+  row.appendChild(seg);
+
+  const focus = el('button', 'toolbtn focus-btn' + (set.focus ? ' on' : ''),
+    (set.focus ? '◉' : '○') + ' Focus');
+  focus.title = set.focus
+    ? 'Focus is on — headlines you have opened disappear'
+    : 'Focus mode: hide headlines you have already opened';
+  focus.addEventListener('click', () => {
+    const on = !set.focus;
+    store.setSetting('focus', on);
+    render();
+    app.toast(on ? 'Focus on — read headlines disappear' : 'Focus off');
+  });
+  row.appendChild(focus);
+  root.appendChild(row);
+}
+
+/* Temperature, lake and sunset — the three numbers a Burlington reader
+   actually checks. One line, from the same file the weather page uses. */
+function renderWeather(root) {
+  const w = state.wx;
+  if (!w) return;
+  const bits = [];
+  if (w.now && w.now.temp_f != null) {
+    bits.push(['Now', Math.round(w.now.temp_f) + '°' +
+      (w.now.description ? ' ' + w.now.description : '')]);
+  }
+  if (w.lake_gage && w.lake_gage.water_temp_f != null) {
+    bits.push(['Lake', Math.round(w.lake_gage.water_temp_f) + '°']);
+  }
+  if (w.sun && w.sun.sunset) {
+    const t = new Date(w.sun.sunset).toLocaleTimeString('en-US',
+      { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
+    bits.push(['Sunset', t.replace(/\s?[AP]M$/i, '')]);
+  }
+  if (bits.length < 2) return;
+  const strip = el('a', 'wxstrip');
+  strip.href = 'https://guide.btownbrief.com/weather.html';
+  strip.target = '_blank';
+  strip.rel = 'noopener';
+  strip.innerHTML = bits.map(([k, v]) =>
+    '<span class="wx-bit"><span class="wx-k">' + esc(k) + '</span>' +
+    '<span class="wx-v">' + esc(v) + '</span></span>').join('') +
+    '<span class="wx-go">Full forecast →</span>';
+  root.appendChild(strip);
+}
+
+/* ------------------------------------------------------------ by source */
+/* Pulse's front page: every outlet its own column, newest few each. It reads
+   like a newsstand instead of a river, which is the point — you can see who
+   is quiet today. The column order is shuffled once per visit so the same
+   three papers do not always own the top of the screen. */
+
+const gridSeed = Object.create(null);
+const PER_SOURCE = 6;
+
+function renderBySource(root, shown, map, base) {
+  const bySrc = new Map();
+  shown.forEach((it) => {
+    const list = bySrc.get(it.s) || [];
+    if (list.length < PER_SOURCE) { list.push(it); bySrc.set(it.s, list); }
+  });
+  if (!bySrc.size) { root.appendChild(el('p', 'empty', 'Nothing on the wire for that.')); return; }
+
+  const secs = [...bySrc.entries()].map(([id, items]) => {
+    if (gridSeed[id] === undefined) gridSeed[id] = Math.random();
+    return { src: map[id], items };
+  }).filter((x) => x.src).sort((a, b) => gridSeed[a.src.id] - gridSeed[b.src.id]);
+
+  const grid = el('div', 'srcgrid');
+  const keys = [];
+  secs.forEach(({ src, items }) => {
+    const sec = el('section', 'srcsec' + (isLocalSource(src) ? ' is-local' : ''));
+    const head = el('h3', 'srcsec-head');
+    const name = el('button', 'srcsec-name c-' + String(src.topic || '').replace(/[^a-z]/gi, ''),
+      esc(String(src.short || src.name)));
+    name.title = 'See only ' + String(src.name || src.short);
+    name.addEventListener('click', () => pickSource(src.id));
+    head.appendChild(name);
+    head.appendChild(el('span', 'srcsec-tag',
+      esc(isLocalSource(src) ? 'Local' : String(src.topic || '')) + ' · ' + items.length));
+    sec.appendChild(head);
+
+    const feed = el('div', 'feed feed-tight');
+    items.forEach((it) => {
+      keys.push(keyOf(it));
+      feed.appendChild(feedRow(it, src, { isNew: base && it.d > base, compact: true }));
+    });
+    sec.appendChild(feed);
+    grid.appendChild(sec);
+  });
+  root.appendChild(grid);
+  hydrateVotes(root, keys);
+  watchPassed(root);
 }
 
 function renderPicks(root, map) {
@@ -230,23 +434,50 @@ function renderPicks(root, map) {
   });
 
   const { track, sync } = rail(root, { label: 'picks' });
+  const keys = [];
   edition.picks.forEach((p) => {
     if (!p || !p.t) return;
-    const card = el('a', 'pick' + (p.local ? ' is-local' : ''));
-    card.href = safeHref(p.u);
-    card.target = '_blank';
-    card.rel = 'noopener';
-    card.innerHTML =
+    /* The picks are the most-argued-with thing on the page and were the one
+       card with no way to argue. A vote button cannot live inside an anchor,
+       so the card is a box holding the link and a footer. */
+    const k = keyOf({ u: p.u, t: p.t });
+    keys.push(k);
+    const card = el('div', 'pick' + (p.local ? ' is-local' : ''));
+    card.dataset.k = k;
+
+    const hit = el('a', 'pick-hit');
+    hit.href = safeHref(p.u);
+    hit.target = '_blank';
+    hit.rel = 'noopener';
+    hit.innerHTML =
       '<span class="fi-meta">' +
         (p.local ? '<span class="tag-local">Local</span>' : '') +
         '<span class="fi-src">' + esc(p.short || '') + '</span>' +
       '</span>' +
       '<span class="pick-title">' + esc(p.t) + '</span>' +
       (p.why ? '<span class="pick-why">' + esc(p.why) + '</span>' : '');
-    card.addEventListener('click', () => store.markRead(p.u));
+    hit.addEventListener('click', () => store.markRead(p.u));
+    card.appendChild(hit);
+
+    const foot = el('div', 'pick-foot');
+    const vote = voteBtn(store.voteCount(k), store.hasVoted(k), store.votesLive());
+    vote.addEventListener('click', () => {
+      const on = store.toggleVote({ k, kind: 'wire', title: p.t, from: p.short || '', href: p.u });
+      paintVote(vote, store.voteCount(k), on);
+    });
+    foot.appendChild(vote);
+
+    const star = starBtn(store.isSaved(k));
+    star.addEventListener('click', () => {
+      star.classList.toggle('on', store.toggleSaved(
+        { k, kind: 'wire', title: p.t, from: p.short || '', href: p.u }));
+    });
+    foot.append(el('span', 'spacer'), star);
+    card.appendChild(foot);
     track.appendChild(card);
   });
   sync();
+  hydrateVotes(root, keys);
 }
 
 /* ---------------------------------------------------------------- popular */

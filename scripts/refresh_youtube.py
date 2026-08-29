@@ -790,8 +790,16 @@ def run(args):
         # playlistItems unit each settles it (60 per run: Btown TV's roster
         # additions live only in the metadata file until Inoreader catches up)
         covered_set = set(covered)
-        missing = [channel for channel in load_channels()
-                   if channel["id"] not in covered_set]
+        # "must" channels are re-checked every run even when the stream says
+        # it covered them. On 2026-08-29 Town Meeting TV was in the roster and
+        # in the OPML and had four uploads that day, and still nothing of its
+        # reached the payload: listed as covered is not the same as delivered.
+        roster = load_channels()
+        got = {video.get("ch") for video in own}
+        missing = [channel for channel in roster
+                   if channel["id"] not in covered_set
+                   or (channel.get("must") and channel.get("name") not in got)]
+        missing.sort(key=lambda c: 0 if c.get("must") else 1)
         if missing:
             try:
                 extra = fetch_channel_videos_api(key, now_ts,

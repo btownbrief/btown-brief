@@ -10,6 +10,8 @@
    On a screen wide enough to show the whole rail the affordance would be a
    lie, so it hides itself. */
 
+import * as store from './store.js';   /* store imports nothing — no cycle */
+
 export const esc = (s) => {
   const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
   return String(s == null ? '' : s)
@@ -177,6 +179,15 @@ export function rail(host, { label } = {}) {
   track.addEventListener('scroll', () => { wake(); requestAnimationFrame(sync); }, { passive: true });
   if ('ResizeObserver' in window) new ResizeObserver(() => sync()).observe(track);
 
+  /* Waking only on horizontal scroll is backwards: you have to already know
+     it scrolls to find out that it scrolls. Coming into view down the page
+     is the moment to show it. */
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { sync(); wake(); } });
+    }, { threshold: 0.35 }).observe(wrap);
+  }
+
   /* DESKTOP. A touch screen pans a rail for free; a mouse has nothing —
      the scrollbar is hidden, and a plain wheel scrolls the page, not the
      rail. So three ways in, none of which interfere with touch:
@@ -263,8 +274,21 @@ export function scrollHint(scroller) {
     thumb.style.left = (ratio * (100 - width)) + '%';
   }
 
-  scroller.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+  let idle = 0;
+  function wake() {
+    if (scroller.scrollWidth <= scroller.clientWidth + 4) return;
+    bar.classList.add('is-live');
+    clearTimeout(idle);
+    idle = setTimeout(() => bar.classList.remove('is-live'), 1200);
+  }
+
+  scroller.addEventListener('scroll', () => { wake(); requestAnimationFrame(sync); }, { passive: true });
   if ('ResizeObserver' in window) new ResizeObserver(() => sync()).observe(scroller);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { sync(); wake(); } });
+    }, { threshold: 0.5 }).observe(scroller);
+  }
 
   /* draggable, same as a rail's — a mouse has no other way to move a chip row */
   let dragging = false;
@@ -338,10 +362,11 @@ export function chip(label, on, onClick, extraClass) {
 /* A shelf label: one line, legible, cheap. The full `heading` block is a
    1.7rem serif plus a subtitle, which is right at the top of a reading
    surface and wrong repeated down a tab you scroll for video. */
-export function shelfHead(host, title, sub) {
+export function shelfHead(host, title, sub, right) {
   const h = el('div', 'shelf-head');
   h.appendChild(el('span', 't', esc(title)));
   if (sub) h.appendChild(el('span', 's', esc(sub)));
+  if (right) { h.classList.add('has-more'); h.appendChild(right); }
   host.appendChild(h);
   return h;
 }
@@ -358,4 +383,44 @@ export function heading(host, { eyebrow, title, sub, right }) {
   if (sub) h.appendChild(el('p', 'sub', sub));
   host.appendChild(h);
   return h;
+}
+
+
+/* A one-line hint that stays gone once dismissed. Used for the things no
+   one discovers by looking — swipe, mostly. */
+export function tipBar(host, name, html) {
+  if (store.tipDone(name)) return null;
+  const bar = el('div', 'tipbar');
+  bar.innerHTML = html;
+  const x = el('button', 'x', '\u00d7');
+  x.setAttribute('aria-label', 'Dismiss this tip');
+  x.addEventListener('click', () => { store.dismissTip(name); bar.remove(); });
+  bar.appendChild(x);
+  host.appendChild(bar);
+  return bar;
+}
+
+/* "updated 20 minutes ago", with a dot that is green while the payload is
+   still warm. Every tab shows one — only the Wire did, and that made the
+   other four look like they might be days stale. */
+export function updatedLine(stampSec, freshHours = 8) {
+  if (!stampSec) return '';
+  const old = (Date.now() / 1000 - stampSec) > freshHours * 3600;
+  return '<span class="updated' + (old ? ' is-old' : '') + '"><i></i>updated ' +
+    esc(ago(stampSec)) + '</span>';
+}
+
+export const stampOf = (iso) => {
+  const t = Date.parse(iso || '');
+  return Number.isFinite(t) ? Math.floor(t / 1000) : 0;
+};
+
+/* The stamp sits above everything on a tab, in the same place on all five,
+   so "is this today's?" is answered before you start reading. */
+export function tabStamp(host, stampSec, what) {
+  if (!stampSec) return;
+  const line = el('p', 'tabstamp');
+  line.innerHTML = updatedLine(stampSec) +
+    (what ? '<span class="tabstamp-what">' + esc(what) + '</span>' : '');
+  host.appendChild(line);
 }

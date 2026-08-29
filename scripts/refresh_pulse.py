@@ -182,6 +182,10 @@ EXTRA_NATIONAL_FEEDS = [
 
 ITEM_CAP = 20          # headlines kept per source
 POD_ITEM_CAP = 40      # podcasts publish weekly — keep a deeper back-catalog
+# A subreddit is a whole tab in All Day, not one chip in a wire, and twenty
+# threads is under an hour of r/burlington. Nine subs x 30 extra is ~10% on
+# the payload, which is worth it for the one tab people scroll to the end of.
+REDDIT_ITEM_CAP = 50
 TITLE_MAX = 200
 MIN_SOURCES = 40       # roster sanity floor (folders hold ~90 today)
 MIN_ITEMS = 150        # payload sanity floor after the folders are warm
@@ -1092,11 +1096,13 @@ def run(args):
             fresh_items = [item for item in fresh_items
                            if section_ok(section, item["url"])]
         # podcast shows get a deeper store — a weekly show at the news cap
-        # holds five months; the pods tab should read like a back-catalog
+        # holds five months; the pods tab should read like a back-catalog.
+        # subreddits get one too: All Day gives each its own tab.
         is_pod = source["podcast"] or any(item.get("a") for item in prev_items)
+        is_sub = "reddit.com" in (source.get("site") or "")
         merged, added = merge_source(
             prev_items, fresh_items, now_ts,
-            cap=POD_ITEM_CAP if is_pod else ITEM_CAP)
+            cap=POD_ITEM_CAP if is_pod else REDDIT_ITEM_CAP if is_sub else ITEM_CAP)
         per_source[source["id"]] = merged
         added_total += added
 

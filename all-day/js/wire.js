@@ -52,6 +52,15 @@ const FILES = {
     local: 'data/wander-pool.json',
     ok: (j) => j && j.pools && typeof j.pools === 'object',
   },
+  /* Weather is committed to main by its own workflow, and main is what Pages
+     serves — so same-origin is already the freshest copy there is. No poll:
+     the poller only re-fetches `live`, and a temperature is fine until the
+     next page load. */
+  weather: {
+    live: null,
+    local: '../data/weather/latest.json',
+    ok: (j) => j && typeof j === 'object' && (j.now || j.lake_gage || j.sun),
+  },
 };
 
 const STALE_RETRIES = [8000, 20000, 60000];
@@ -96,7 +105,15 @@ export const fetchText = (url, ms) => request(url, ms, true);
 const anyStale = () => Object.keys(stale).some((k) => stale[k]);
 
 function emit(key, json) {
-  (subs[key] || []).forEach((cb) => { try { cb(json); } catch (e) { /* one tab's bug is not another's */ } });
+  (subs[key] || []).forEach((cb) => {
+    try {
+      cb(json);
+    } catch (e) {
+      /* One tab's bug is not another's — but swallowing it silently means a
+         renderer that throws leaves a blank panel and no clue anywhere. */
+      console.error('[all-day] ' + key + ' subscriber threw', e);
+    }
+  });
 }
 
 function settle(key, json, isStale) {

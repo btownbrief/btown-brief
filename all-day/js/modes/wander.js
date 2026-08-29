@@ -21,7 +21,8 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, rail, heading, chip, scrollHint, ICON } from './../ui.js';
+import { el, esc, rail, heading, chip, scrollHint, voteBtn, paintVote, starBtn, tabStamp, ICON } from './../ui.js';
+import { hydrateVotes } from './../rows.js';
 
 const REST = 'https://en.wikipedia.org/api/rest_v1/';
 const ACTION = 'https://en.wikipedia.org/w/api.php?format=json&formatversion=2&origin=*&';
@@ -37,6 +38,18 @@ const POOLS = [
   ['onthisday', '📅', 'On this day', 'What happened on this date'],
   ['popular', '🔥', 'What everyone is reading', 'Most-read this week'],
 ];
+
+let visitOrder = null;
+function poolOrder() {
+  if (!visitOrder) {
+    visitOrder = POOLS.slice();
+    for (let i = visitOrder.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [visitOrder[i], visitOrder[j]] = [visitOrder[j], visitOrder[i]];
+    }
+  }
+  return visitOrder;
+}
 
 const state = {
   root: null, pool: null, live: Object.create(null), at: null, gen: 0,
@@ -100,6 +113,8 @@ const pretty = (t) => String(t || '').replace(/_/g, ' ');
 const list = (key) => (Array.isArray(state.live[key]) ? state.live[key]
   : (state.pool && Array.isArray(state.pool[key]) ? state.pool[key] : []));
 
+const poolTotal = () => POOLS.reduce((n, [key]) => n + list(key).length, 0);
+
 /* A stable-per-shuffle sample, so re-rendering does not reshuffle underneath
    a finger already moving toward a card. */
 function sample(key, n) {
@@ -117,6 +132,12 @@ function sample(key, n) {
 function renderDoor() {
   const root = state.root;
   root.innerHTML = '';
+  /* Wikipedia is live on every tap, so the only thing with an age here is
+     the hand-built pool of doors. Say which is which. */
+  const line = el('p', 'tabstamp');
+  line.innerHTML = '<span class="updated"><i></i>live from wikipedia</span>' +
+    '<span class="tabstamp-what">' + poolTotal().toLocaleString() + ' doors</span>';
+  root.appendChild(line);
 
   const door = el('section', 'door');
   door.appendChild(el('h1', null, 'Wikipedia'));
@@ -157,7 +178,10 @@ function renderDoor() {
 
   renderTrail(root);
   renderSaved(root);
-  POOLS.forEach(([key, emoji, name, sub]) => renderPool(root, key, emoji, name, sub));
+  /* A different pool leads each visit, so the tab does not always open on
+     the same shelf. Fixed per visit, not per render, or it would reshuffle
+     under a finger already moving. */
+  poolOrder().forEach(([key, emoji, name, sub]) => renderPool(root, key, emoji, name, sub));
 
   if (!state.pool) root.appendChild(el('p', 'loading', 'Loading the pools…'));
 }
@@ -214,21 +238,56 @@ function renderPool(root, key, emoji, name, sub) {
 
   const body = el('div', 'pool-body');
   const { track, sync } = rail(body, { label: 'to read' });
-  sample(key, open ? 30 : 12).forEach((entry) => track.appendChild(doorCard(entry)));
+  const picked = sample(key, open ? 30 : 12);
+  picked.forEach((entry) => track.appendChild(doorCard(entry)));
   sync();
   box.appendChild(body);
   root.appendChild(box);
   describe(body);
+  hydrateVotes(body, picked.map((e) => 'wiki:' + ((e && e.t) || e)));
 }
 
-function doorCard(entry) {
+/* An article is as votable as a headline — the Popular list is the one place
+   the five tabs meet, and Wikipedia was the only tab not sending anything to
+   it. The vote cannot sit inside the card's own <button>, so the card is a
+   box: a full-width hit area, then a footer. */
+function doorCard(entry, opts = {}) {
   const title = (entry && entry.t) || entry;
+  const box = el('div', 'doorbox');
   const card = el('button', 'doorcard');
   card.dataset.title = title;
-  card.innerHTML = '<span class="t">' + esc(pretty(title)) + '</span>' +
+  card.innerHTML =
+    (opts.img ? '<img loading="lazy" src="' + esc(opts.img) + '" alt="">' : '') +
+    '<span class="t">' + esc(pretty(title)) + '</span>' +
     '<span class="d">' + (entry && entry.d ? esc(entry.d) : '') + '</span>';
   card.addEventListener('click', () => go(title));
-  return card;
+  box.appendChild(card);
+  box.appendChild(doorFoot(title));
+  return box;
+}
+
+function doorFoot(title) {
+  const k = 'wiki:' + title;
+  const href = 'https://en.wikipedia.org/wiki/' + encodeURIComponent(title.replace(/ /g, '_'));
+  const foot = el('div', 'door-foot');
+  foot.dataset.k = k;
+
+  const vote = voteBtn(store.voteCount(k), store.hasVoted(k), store.votesLive());
+  vote.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const on = store.toggleVote({ k, kind: 'wiki', title: pretty(title), from: 'Wikipedia', href });
+    paintVote(vote, store.voteCount(k), on);
+  });
+
+  const star = starBtn(store.isSaved(k));
+  star.addEventListener('click', (e) => {
+    e.stopPropagation();
+    star.classList.toggle('on', store.toggleSaved(
+      { k, kind: 'wiki', title: pretty(title), from: 'Wikipedia', href }));
+  });
+
+  foot.append(vote, el('span', 'spacer'), star);
+  return foot;
 }
 
 /* Only the "weird stuff" pool ships blurbs — its whole point is the
@@ -604,15 +663,11 @@ function keepFalling(title, root) {
       pages.sort((a, b) => (a.index || 0) - (b.index || 0));
       const { track, sync } = rail(box, { label: 'to read' });
       pages.forEach((p) => {
-        const card = el('button', 'doorcard');
-        card.innerHTML =
-          (p.thumbnail ? '<img loading="lazy" src="' + esc(p.thumbnail.source) + '" alt="">' : '') +
-          '<span class="t">' + esc(p.title) + '</span>' +
-          (p.description ? '<span class="d">' + esc(p.description) + '</span>' : '');
-        card.addEventListener('click', () => go(p.title));
-        track.appendChild(card);
+        track.appendChild(doorCard({ t: p.title, d: p.description || '' },
+          { img: p.thumbnail ? p.thumbnail.source : null }));
       });
       sync();
+      hydrateVotes(box, pages.map((p) => 'wiki:' + p.title));
     })
     .catch(() => box.remove());
 }
