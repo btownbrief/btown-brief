@@ -180,11 +180,10 @@ a { color: inherit; text-decoration: none; }
 
 /* ============================================================ top chrome */
 /* nav.js prepends the shared BTown bar in normal flow, which is right for a
-   scrolling page and wrong for a fixed shell — it would own 15% of a phone
-   screen forever. Pinned here, it joins the mast as one stack that slides
-   away as you read. --nav-h stays 0 if the bar never loads. */
-.btnav { position: fixed; top: 0; left: 0; right: 0; z-index: 41; transition: transform .26s ease; }
-body.chrome-away .btnav { transform: translateY(-100%); }
+   scrolling page and wrong for a fixed shell. Pinned here, it is the one
+   thing that travels with you down the page — the way out to the rest of the
+   network is always one tap away. --nav-h stays 0 if the bar never loads. */
+.btnav { position: fixed; top: 0; left: 0; right: 0; z-index: 41; }
 
 .mast {
   position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 40;
@@ -194,13 +193,12 @@ body.chrome-away .btnav { transform: translateY(-100%); }
   border-bottom: 1px solid var(--edge-soft);
   transition: transform .26s ease;
 }
-/* The masthead stays. Only the shared BTown bar above it gets out of the
-   way — and when it goes, the mast rides up into the space it left rather
-   than leaving a gap or following it off the top. Which tab you are on, the
-   Local switch and the theme/saved/settings buttons are all up here; they
-   should not be something you have to scroll back up to reach.
-   --nav-h is 0 when the shared bar never loads, so this is a no-op then. */
-body.chrome-away .mast { transform: translateY(calc(-1 * var(--nav-h))); }
+/* The masthead belongs to the page, not to the chrome: it goes up out of the
+   way as you read and comes back the moment you scroll up. -100% is exactly
+   its own height, which puts its bottom edge level with the bottom of the
+   shared bar — and the bar paints above it (z 41 > 40), so it is fully
+   hidden without needing to know how tall the bar is. */
+body.chrome-away .mast { transform: translateY(-100%); }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .mast, .dock-inner { background: var(--ground); }
 }
@@ -982,7 +980,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .confirm-card p { font-size: .93rem; color: var(--ink-soft); line-height: 1.5; margin-bottom: 18px; }
 .confirm-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 
-body.chrome-away .fresh { top: calc(var(--mast-h) + 12px); }
+body.chrome-away .fresh { top: calc(var(--nav-h) + 12px); }
 .fresh {
   position: fixed; top: calc(var(--nav-h) + var(--mast-h) + 12px); left: 50%;
   transform: translateX(-50%); z-index: 44;
@@ -1228,8 +1226,8 @@ body.chrome-away .fresh { top: calc(var(--mast-h) + 12px); }
   transition: top .26s ease;
 }
 /* the masthead slides away as you read; the band follows it up */
-/* the mast is still there, just higher up */
-body.chrome-away .ctlband { top: calc(var(--mast-h) + 6px); }
+/* the masthead has gone; the shared bar has not */
+body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 .ctlband .chips { padding-bottom: 6px; }
 .ctlband .hint-bar { margin-bottom: 8px; }
 .ctlband .toolrow { margin: 0 0 6px; }
