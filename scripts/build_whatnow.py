@@ -17,14 +17,15 @@ know that — a payload that said "tonight" would be wrong by dinner. The tab
 does the bucketing client-side against the same list.
 
 What it keeps per event, and why:
-  s   start, ISO with offset — the tab needs the real local time to bucket
-  t   title
-  v   venue, and w the town when it is not Burlington
-  c   category, for the chips
-  u   url
-  p   price as printed, f free flag — the loudest signal in the whole app
-      after "is it happening now"
-  g   the artist/genre/image signals the venue sources now carry, when present
+FIELD NAMES ARE THE ENGINE'S, NOT SHORTHAND. The What Now decision engine
+was ported from the standalone app verbatim and reads events by their real
+names — start, end, venue, town, lat, lng, tags, indoorOutdoor, minPrice,
+recurring, status. Renaming them to save bytes would mean adapting the engine,
+and the engine is the thing that must not be touched. So this writes a
+narrower events.json, not a different shape.
+
+Kept per event: the 18 fields the engine actually reads, plus the artist and
+image signals the venue sources now carry.
 
 Run: python3 scripts/build_whatnow.py
 """
@@ -79,31 +80,30 @@ def main() -> int:
             continue
 
         rec = {
-            "t": title,
-            "s": e.get("start") or d,
-            "d": d,
-            "u": e.get("url"),
-            "c": e.get("category") or "other",
+            "id": e.get("id"),
+            "title": title,
+            "start": e.get("start") or d,
+            "date": d,
+            "url": e.get("url"),
+            "category": e.get("category") or "other",
+            "allDay": bool(e.get("allDay")),
         }
-        if e.get("venue"):
-            rec["v"] = e["venue"]
-        town = e.get("town")
-        if town and town != "Burlington":
-            rec["w"] = town
+        for k in ("end", "venue", "town", "price", "minPrice", "age",
+                  "indoorOutdoor", "recurring", "lat", "lng"):
+            if e.get(k) is not None:
+                rec[k] = e[k]
         if e.get("free"):
-            rec["f"] = 1
-        elif e.get("price"):
-            rec["p"] = e["price"][:40]
-        if e.get("allDay"):
-            rec["a"] = 1
+            rec["free"] = True
+        if e.get("tags"):
+            rec["tags"] = e["tags"]
 
         sig = e.get("signals") or {}
         keep = {k: sig[k] for k in ("artist", "genre", "image") if sig.get(k)}
         if keep:
-            rec["g"] = keep
+            rec["signals"] = keep
         rows.append(rec)
 
-    rows.sort(key=lambda r: (r["s"], r["t"]))
+    rows.sort(key=lambda r: (r["start"], r["title"]))
     if len(rows) > CAP:
         log(f"capping {len(rows)} -> {CAP}")
         rows = rows[:CAP]
@@ -114,7 +114,7 @@ def main() -> int:
 
     cats = {}
     for r in rows:
-        cats[r["c"]] = cats.get(r["c"], 0) + 1
+        cats[r["category"]] = cats.get(r["category"], 0) + 1
 
     out = {
         "generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
@@ -124,7 +124,7 @@ def main() -> int:
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n")
-    free = sum(1 for r in rows if r.get("f"))
+    free = sum(1 for r in rows if r.get("free"))
     log(f"wrote {OUT.relative_to(ROOT)}  {len(rows)} events over {DAYS} days · {free} free · "
         f"{OUT.stat().st_size // 1024} KB")
     return 0
