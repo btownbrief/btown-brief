@@ -74,14 +74,6 @@ const FILES = {
     local: 'data/podcast.json',
     ok: (j) => j && Array.isArray(j.episodes),
   },
-  /* Schedules and scores. Committed to main by its own workflow like the
-     rest, and no poll: a score that is a few minutes stale is fine, and the
-     live states come from ESPN at render time. */
-  sports: {
-    live: null,
-    local: 'data/sports.json',
-    ok: (j) => j && Array.isArray(j.games),
-  },
   whatnow: {
     live: null,
     local: 'data/whatnow.json',
