@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v16';
+const VERSION = 'all-day-v17';
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -26,7 +26,7 @@ const SHELL_URLS = [
   './js/modes/whatnow.js', './js/modes/ig.js',
   './js/whatnow-engine.js', './js/whatnow-data.js',
   './data/wander-pool.json', './data/music.json',
-  './data/whatnow.json', './data/instagram.json',
+  './data/whatnow.json', './data/instagram.json', './data/podcast.json',
 ];
 
 self.addEventListener('install', (e) => {

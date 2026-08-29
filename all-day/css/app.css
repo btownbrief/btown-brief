@@ -1650,13 +1650,14 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
    soft tint behind it, the same way every other pill signals itself. */
 .tabbar #tab-whatnow svg {
   background: var(--now); color: var(--now-ink);
-  border-radius: 50%; padding: 4px; width: 26px; height: 26px;
+  border-radius: 50%; padding: 4px; width: 25px; height: 25px;
   /* border-box, or the disc's padding makes this button taller than the other
      eight, which grows the whole grid row and eats the panel's bottom padding
      — at 430px that clearance was down to 1.9px, so the last event in the
      list sat under the dock. */
   box-sizing: border-box;
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--now) 45%, transparent);
+  /* No glow. The colour alone is enough to make it the centre — a drop shadow
+     on a 25px disc reads as a notification badge, not a button. */
 }
 .tabbar #tab-whatnow.on { color: var(--now); background: var(--now-soft); }
 .tabbar #tab-whatnow.on svg { stroke-width: 2.2; }
@@ -1827,3 +1828,21 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 .ig-cap { font-size: .95rem; line-height: 1.55; white-space: pre-wrap; margin-bottom: 12px; }
 .ig-handle { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em;
   text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+
+/* ------------------------------------------------- the Brief's episodes */
+/* Spotify's show embed plays the newest episode at any height, so the archive
+   is a list here and each row opens that episode's own embed. */
+.l-eps { margin-bottom: 18px; }
+.l-ep-list { border-top: 1px solid var(--edge-soft); }
+.l-ep { border-bottom: 1px solid var(--edge-soft); }
+.l-ep-hit { display: block; width: 100%; text-align: left; padding: 11px 2px; }
+.l-ep-t { display: block; font-size: .97rem; font-weight: 600; line-height: 1.3; }
+.l-ep-m { display: block; font-family: var(--mono); font-size: .6rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-faint); margin-top: 3px;
+  font-variant-numeric: tabular-nums; }
+.l-ep-b { display: -webkit-box; margin-top: 5px; font-size: .85rem; line-height: 1.42;
+  color: var(--ink-soft); -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; overflow-wrap: anywhere; }
+.l-ep.is-open .l-ep-t { color: var(--accent); }
+.l-ep-embed { width: 100%; height: 152px; border: 0; border-radius: var(--radius-sm);
+  margin: 4px 0 10px; background: var(--panel-2); }
