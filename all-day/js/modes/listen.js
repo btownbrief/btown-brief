@@ -36,6 +36,7 @@ export function mount(root) {
 }
 
 export function activate() {}
+export function refresh() { if (state.pulse) renderList(); }
 export function deactivate() {}
 
 function build() {

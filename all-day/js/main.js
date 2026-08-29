@@ -90,7 +90,7 @@ $('settings-btn').addEventListener('click', () => {
       store.setSetting('focus', on);
       sw.classList.toggle('on', on);
       sw.setAttribute('aria-checked', on ? 'true' : 'false');
-      wire.mount && app.route();
+      app.refresh();
     };
     sw.addEventListener('click', flip);
     sw.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
@@ -136,7 +136,7 @@ $('settings-btn').addEventListener('click', () => {
           store.setMuted(s.id, nowMuted);
           toggle.classList.toggle('on', !nowMuted);
           toggle.setAttribute('aria-checked', nowMuted ? 'false' : 'true');
-          app.route();
+          app.refresh();
         };
         toggle.addEventListener('click', hit);
         toggle.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hit(); } });
