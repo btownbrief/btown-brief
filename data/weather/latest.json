@@ -1,26 +1,26 @@
 {
- "updated": "2026-08-28T20:58:55+00:00",
+ "updated": "2026-08-29T00:02:09+00:00",
  "sections_updated": {
-  "now": "2026-08-28T20:58:55+00:00",
-  "forecast": "2026-08-28T20:58:55+00:00",
-  "hourly": "2026-08-28T20:58:55+00:00",
-  "alerts": "2026-08-28T20:58:55+00:00",
-  "afd": "2026-08-28T20:58:55+00:00",
-  "lake_forecast": "2026-08-28T20:58:55+00:00",
-  "lake_gage": "2026-08-28T20:58:55+00:00",
-  "air": "2026-08-28T20:58:55+00:00",
-  "sun": "2026-08-28T20:58:55+00:00",
-  "models": "2026-08-28T20:58:55+00:00"
+  "now": "2026-08-29T00:02:09+00:00",
+  "forecast": "2026-08-29T00:02:09+00:00",
+  "hourly": "2026-08-29T00:02:09+00:00",
+  "alerts": "2026-08-29T00:02:09+00:00",
+  "afd": "2026-08-29T00:02:09+00:00",
+  "lake_forecast": "2026-08-29T00:02:09+00:00",
+  "lake_gage": "2026-08-29T00:02:09+00:00",
+  "air": "2026-08-29T00:02:09+00:00",
+  "sun": "2026-08-29T00:02:09+00:00",
+  "models": "2026-08-29T00:02:09+00:00"
  },
  "now": {
-  "observed_at": "2026-08-28T20:40:00+00:00",
+  "observed_at": "2026-08-28T23:40:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 72,
-  "feels_like_f": 71,
-  "humidity": 57,
-  "dewpoint_f": 55,
-  "wind_mph": 15,
+  "description": "Mostly Cloudy",
+  "temp_f": 68,
+  "feels_like_f": 68,
+  "humidity": 56,
+  "dewpoint_f": 52,
+  "wind_mph": 13,
   "wind_gust_mph": null,
   "wind_dir": "N"
  },
@@ -28,24 +28,14 @@
   "updated": "2026-08-28T18:37:14+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-08-28T16:00:00-04:00",
-    "is_day": true,
-    "temp_f": 75,
-    "pop": 2,
-    "wind": "N 12 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 75. North wind around 12 mph."
-   },
-   {
     "name": "Tonight",
-    "start": "2026-08-28T18:00:00-04:00",
+    "start": "2026-08-28T20:00:00-04:00",
     "is_day": false,
     "temp_f": 54,
-    "pop": 1,
-    "wind": "NW 2 to 12 mph",
+    "pop": 0,
+    "wind": "W 2 to 10 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 54. Northwest wind 2 to 12 mph."
+    "detailed": "Mostly clear, with a low around 54. West wind 2 to 10 mph."
    },
    {
     "name": "Saturday",
@@ -95,7 +85,7 @@
     "pop": 14,
     "wind": "N 3 to 7 mph",
     "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 78. North wind 3 to 7 mph."
+    "detailed": "Mostly sunny, with a high near 78. North wind 3 to 7 mph. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Monday Night",
@@ -166,56 +156,22 @@
     "wind": "NW 5 to 9 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers. Mostly cloudy, with a low around 60. Northwest wind 5 to 9 mph. Chance of precipitation is 40%."
+   },
+   {
+    "name": "Friday",
+    "start": "2026-09-04T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 78,
+    "pop": 26,
+    "wind": "N 5 to 9 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Partly sunny, with a high near 78. North wind 5 to 9 mph. Chance of precipitation is 30%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-08-28T18:37:14+00:00",
   "hours": [
-   {
-    "t": "2026-08-28T16:00:00-04:00",
-    "temp_f": 75,
-    "feels_f": 75,
-    "pop": 1,
-    "humidity": 52,
-    "wind_mph": 12,
-    "wind_dir": "N",
-    "sky": 40,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-08-28T17:00:00-04:00",
-    "temp_f": 73,
-    "feels_f": 73,
-    "pop": 2,
-    "humidity": 51,
-    "wind_mph": 12,
-    "wind_dir": "N",
-    "sky": 25,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-08-28T18:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
-    "pop": 1,
-    "humidity": 53,
-    "wind_mph": 12,
-    "wind_dir": "N",
-    "sky": 37,
-    "short": "Partly Cloudy"
-   },
-   {
-    "t": "2026-08-28T19:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 0,
-    "humidity": 59,
-    "wind_mph": 10,
-    "wind_dir": "N",
-    "sky": 35,
-    "short": "Partly Cloudy"
-   },
    {
     "t": "2026-08-28T20:00:00-04:00",
     "temp_f": 65,
@@ -567,6 +523,50 @@
     "wind_dir": "S",
     "sky": 36,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-08-30T04:00:00-04:00",
+    "temp_f": 60,
+    "feels_f": 60,
+    "pop": 0,
+    "humidity": 84,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 39,
+    "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-08-30T05:00:00-04:00",
+    "temp_f": 60,
+    "feels_f": 60,
+    "pop": 2,
+    "humidity": 84,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 62,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-08-30T06:00:00-04:00",
+    "temp_f": 58,
+    "feels_f": 58,
+    "pop": 1,
+    "humidity": 87,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 63,
+    "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-08-30T07:00:00-04:00",
+    "temp_f": 60,
+    "feels_f": 60,
+    "pop": 0,
+    "humidity": 84,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 28,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-28T18:37:00+00:00",
+  "issued": "2026-08-28T23:03:00+00:00",
   "key_messages": [
    "Patchy valley fog expected tonight with pleasant conditions on Saturday, followed by a chance of showers late Sunday afternoon.",
    "Models trending drier for Tuesday but rain is expected to return Wednesday and Thursday."
   ],
   "what_changed": "As of 237 PM EDT Friday... No significant changes made with this forecast package.",
-  "raw": "\n000\nFXUS61 KBTV 281837\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n237 PM EDT Fri Aug 28 2026\n\n.WHAT HAS CHANGED...\nAs of 237 PM EDT Friday...\n\nNo significant changes made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 237 PM EDT Friday...\n\n1. Patchy valley fog expected tonight with pleasant conditions \non Saturday, followed by a chance of showers late Sunday afternoon. \n\n2. Models trending drier for Tuesday but rain is expected to \nreturn Wednesday and Thursday.\n\n&&\n\n.DISCUSSION...\nAs of 237 PM EDT Friday...\n\nKEY MESSAGE 1: First forecast challenge is areal coverage/duration of \nfog after midnight tonight. Sfc analysis shows 1022mb high pres over \nthe thumb of eastern MI, as a sfc cold frnt exits eastern New \nEngland. GOES-19 water vapor imagery shows large axis of dry air \naloft moving acrs the Great Lakes into the NE CONUS this aftn, which \nshould help quickly erode cloud cover by this evening, as sfc \nheating/instability is decreasing. Sounding data indicates modest \ncaa and dry air advection continues thru 04z, before northwest flow \nweakens and shallow inversion strengthens. This sharpening inversion \nwith clearing skies and light winds should allow for development of \npatchy dense fog with highest probability (80-90%) in favored mtn \nvalleys. Temps wl range from the upper 30s SLK to lower/mid 50s near \nLake Champlain.\n\nOn Saturday 1024mb high pres will build toward KBGM with deep dry \nlayer shifting toward central New England by 18z, as a pocket of \nslightly better moisture in the 1000-500mb layer moves overhead. \nThis combined with some weak instability wl help produce some \nshallow fair wx cumulus clouds, especially acrs the mtns. Progged \n925mb temps btwn 14-16C support highs mainly in the 70s with \ncomfortable humidity values. Saturday night is quiet with some \npatchy fog, but less than Friday night, as 925mb to 850mb southwest \nflow develops with some increasing moisture advection from west to \neast. Lows wl be warmer with values in the upper 40s to near 60F.\n\nSunday/Sunday night the forecast challenge wl be potential for \nshowers and a few embedded thunderstorms as weak front approaches, \nalong with s/w energy. Synoptic scale setup shows fast confluent 700-\n500mb flow btwn closed cyclonic circulation over eastern Canada and \nBermuda Ridge over the western Atlantic as weak channeled vortices \nmoves acrs our cwa. Pw values range btwn 1.25 and 1.4\", which is \naround 1 STD above normal ahead of approaching cold front near the \nInternational Border, while best instability is south of our cwa. \nLatest trends have shown less areal coverage of precip and mostly \nconfined to the higher trrn on Sunday aftn, especially with 925 to \n700mb southwest downslope flow here in the CPV. As winds shift to a \nfavorable north/northwest upslope flow behind boundary a period of \nlight upslope rain showers wl be possible on Sunday night, \nespecially northern VT mtns into the eastern CPV. Highs Sunday will \nbe in the 70s with slightly higher humidity with lows in the 50s to \nnear 60F again on Sunday night.\n\nKEY MESSAGE 2: The latest suite of global guidance is bringing high \npressure across the Canadian Maritimes further south which is now \nexpected to suppress much of the rainfall activity on Tuesday to our \nsouth. There is still the potential we could see models shift north \nslightly over the next few days as upper air analysis begins to \nsample several low amplitude features in the longwave trough. \nHowever, the idea that widespread rainfall across the region on \nTuesday looks unlikely and the latest forecast has shows decreased \nrain chances as a result. The ECMWF and GFS both remain in good \nagreement with a series of frontal boundaries moving across the \nregion Wednesday into Thursday with widespread rainfall likely. Deep \nlayer ridging then looks poised to develop across the region with \ndrier conditions expected Friday into next weekend.\n\n&&\n\n.AVIATION /18Z FRIDAY THROUGH WEDNESDAY/...\nThrough 18Z Saturday...A few showers will continue across the\nregion through 00Z but it's unlikely any of these small showers\nwill move over one of our terminals. In the unlikely event one\ndoes, only light rain is expected with no impacts to the flight\ncategory expected. We will continue to see widespread VFR\nconditions through 6Z with some patchy dense fog possible\nbetween 8Z and 13Z at KSLK and KMPV. Winds aloft will remain in\nthe 15-25 knot range with some cloud cover overnight so we have\nused a TEMPO group for the fog to indicate the fog may come and\ngo and not be stagnant. VFR conditions are expected in these\nlocations no later than 13Z with winds backing from the WNW to\nthe South by daybreak.\n\nOutlook...\n\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Chance SHRA, Slight chance TSRA.\nSunday Night: Mainly VFR, with local IFR possible. Slight chance\nSHRA, Slight chance TSRA.\nMonday: Mainly VFR, with local IFR possible. NO SIG WX.\nMonday Night: VFR. Slight chance SHRA.\nTuesday: Mainly VFR, with local MVFR possible. Chance SHRA,\nSlight chance TSRA.\nTuesday Night: MVFR/IFR conditions possible. Chance SHRA, Slight\nchance TSRA.\nWednesday: Mainly MVFR, with local VFR possible. Likely SHRA,\nSlight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Taber\nDISCUSSION...Taber/Clay\nAVIATION...Clay\n"
+  "raw": "\n000\nFXUS61 KBTV 282303\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n703 PM EDT Fri Aug 28 2026\n\n.WHAT HAS CHANGED...\nAs of 237 PM EDT Friday...\n\nNo significant changes made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 237 PM EDT Friday...\n\n1. Patchy valley fog expected tonight with pleasant conditions \non Saturday, followed by a chance of showers late Sunday afternoon. \n\n2. Models trending drier for Tuesday but rain is expected to \nreturn Wednesday and Thursday.\n\n&&\n\n.DISCUSSION...\nAs of 237 PM EDT Friday...\n\nKEY MESSAGE 1: First forecast challenge is areal coverage/duration of \nfog after midnight tonight. Sfc analysis shows 1022mb high pres over \nthe thumb of eastern MI, as a sfc cold frnt exits eastern New \nEngland. GOES-19 water vapor imagery shows large axis of dry air \naloft moving acrs the Great Lakes into the NE CONUS this aftn, which \nshould help quickly erode cloud cover by this evening, as sfc \nheating/instability is decreasing. Sounding data indicates modest \ncaa and dry air advection continues thru 04z, before northwest flow \nweakens and shallow inversion strengthens. This sharpening inversion \nwith clearing skies and light winds should allow for development of \npatchy dense fog with highest probability (80-90%) in favored mtn \nvalleys. Temps wl range from the upper 30s SLK to lower/mid 50s near \nLake Champlain.\n\nOn Saturday 1024mb high pres will build toward KBGM with deep dry \nlayer shifting toward central New England by 18z, as a pocket of \nslightly better moisture in the 1000-500mb layer moves overhead. \nThis combined with some weak instability wl help produce some \nshallow fair wx cumulus clouds, especially acrs the mtns. Progged \n925mb temps btwn 14-16C support highs mainly in the 70s with \ncomfortable humidity values. Saturday night is quiet with some \npatchy fog, but less than Friday night, as 925mb to 850mb southwest \nflow develops with some increasing moisture advection from west to \neast. Lows wl be warmer with values in the upper 40s to near 60F.\n\nSunday/Sunday night the forecast challenge wl be potential for \nshowers and a few embedded thunderstorms as weak front approaches, \nalong with s/w energy. Synoptic scale setup shows fast confluent 700-\n500mb flow btwn closed cyclonic circulation over eastern Canada and \nBermuda Ridge over the western Atlantic as weak channeled vortices \nmoves acrs our cwa. Pw values range btwn 1.25 and 1.4\", which is \naround 1 STD above normal ahead of approaching cold front near the \nInternational Border, while best instability is south of our cwa. \nLatest trends have shown less areal coverage of precip and mostly \nconfined to the higher trrn on Sunday aftn, especially with 925 to \n700mb southwest downslope flow here in the CPV. As winds shift to a \nfavorable north/northwest upslope flow behind boundary a period of \nlight upslope rain showers wl be possible on Sunday night, \nespecially northern VT mtns into the eastern CPV. Highs Sunday will \nbe in the 70s with slightly higher humidity with lows in the 50s to \nnear 60F again on Sunday night.\n\nKEY MESSAGE 2: The latest suite of global guidance is bringing high \npressure across the Canadian Maritimes further south which is now \nexpected to suppress much of the rainfall activity on Tuesday to our \nsouth. There is still the potential we could see models shift north \nslightly over the next few days as upper air analysis begins to \nsample several low amplitude features in the longwave trough. \nHowever, the idea that widespread rainfall across the region on \nTuesday looks unlikely and the latest forecast has shows decreased \nrain chances as a result. The ECMWF and GFS both remain in good \nagreement with a series of frontal boundaries moving across the \nregion Wednesday into Thursday with widespread rainfall likely. Deep \nlayer ridging then looks poised to develop across the region with \ndrier conditions expected Friday into next weekend.\n\n&&\n\n.AVIATION /00Z SATURDAY THROUGH WEDNESDAY/...\nThrough 00Z Sunday...With diurnal heating cut off, clouds will erode\nquickly this evening. The clear skies and light winds that result\nwill allow the favored locations to develop fog between 06-09z. With\nCAA and dry air moving in behind today's front, fog will be more\npatchy with SLK, MPV, and EFK going IFR. RUT is a more borderline\nsituation and for now have left it as TEMPO. Fog will burn off\nquickly in the morning as the shallow inversion gives way to mixing.\nSaturday will be pleasant all around with only some high clouds to\ndeal with.\n\nOutlook...\n\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Chance SHRA, Slight chance TSRA.\nSunday Night: Mainly VFR, with local IFR possible. Chance SHRA.\nMonday: Mainly VFR, with local MVFR possible. NO SIG WX.\nMonday Night: VFR. Slight chance SHRA.\nTuesday: VFR. Chance SHRA, Slight chance TSRA.\nTuesday Night: Mainly VFR, with areas MVFR possible. Likely SHRA,\nSlight chance TSRA.\nWednesday: Mainly MVFR, with local VFR possible. Chance SHRA,\nSlight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Taber\nDISCUSSION...Clay/Taber\nAVIATION...Langbauer\n"
  },
  "lake_forecast": {
   "issued": "2026-08-28T18:23:00+00:00",
@@ -851,18 +851,18 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 74,
-  "water_temp_at": "2026-08-28T16:00:00.000-04:00",
-  "level_ft": 94.65,
-  "level_at": "2026-08-28T16:00:00.000-04:00",
+  "water_temp_f": 73,
+  "water_temp_at": "2026-08-28T19:00:00.000-04:00",
+  "level_ft": 94.64,
+  "level_at": "2026-08-28T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 21,
+  "aqi": 20,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/28/26 16:00",
+  "observed": "08/28/26 19:00",
   "discussion": "Expect generally good air quality across Vermont on Saturday, August 29th."
  },
  "sun": {
@@ -879,11 +879,11 @@
     "high_f": {
      "GFS": 76,
      "Euro": 74,
-     "ICON": 73
+     "ICON": 74
     },
     "pop_max": {
      "GFS": 27,
-     "Euro": 86,
+     "Euro": 90,
      "ICON": 35
     },
     "precip_in": {
@@ -891,18 +891,18 @@
      "Euro": 0.07,
      "ICON": 0.06
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-08-29",
     "high_f": {
      "GFS": 76,
      "Euro": 76,
-     "ICON": 77
+     "ICON": 76
     },
     "pop_max": {
-     "GFS": 3,
-     "Euro": 0,
+     "GFS": 2,
+     "Euro": 4,
      "ICON": 0
     },
     "precip_in": {
@@ -910,26 +910,26 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 1
+    "high_spread_f": 0
    },
    {
     "date": "2026-08-30",
     "high_f": {
-     "GFS": 82,
+     "GFS": 79,
      "Euro": 76,
      "ICON": 75
     },
     "pop_max": {
      "GFS": 54,
-     "Euro": 51,
+     "Euro": 61,
      "ICON": 30
     },
     "precip_in": {
-     "GFS": 0.03,
+     "GFS": 0.05,
      "Euro": 0.01,
-     "ICON": 0.02
+     "ICON": 0.05
     },
-    "high_spread_f": 7
+    "high_spread_f": 4
    }
   ]
  }
