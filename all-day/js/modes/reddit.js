@@ -88,7 +88,7 @@ function render() {
     return;
   }
 
-  const feed = el('div', 'card feed');
+  const feed = el('div', 'feed');
   const slice = shown.slice(0, 220);
   slice.forEach((it) => {
     feed.appendChild(feedRow(it, map[it.s], { tag: map[it.s].short }));

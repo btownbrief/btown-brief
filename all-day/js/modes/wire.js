@@ -180,7 +180,7 @@ function render() {
     return;
   }
 
-  const feed = el('div', 'card feed');
+  const feed = el('div', 'feed');
   const slice = shown.slice(0, state.shown);
   slice.forEach((it) => {
     feed.appendChild(feedRow(it, map[it.s], { isNew: base && it.d > base }));
@@ -275,7 +275,7 @@ function renderPopular(root) {
       holder.appendChild(el('p', 'empty', 'No votes yet. Tap ▲ on anything worth pointing at.'));
       return;
     }
-    const feed = el('div', 'card feed');
+    const feed = el('div', 'feed');
     rows.forEach((r) => {
       const row = el('div', 'fi');
       row.dataset.k = r.k;

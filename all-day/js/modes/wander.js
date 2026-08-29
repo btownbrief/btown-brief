@@ -32,10 +32,10 @@ const HERE = '44.48|-73.21';
 const NS_PLAIN = /^(Special|File|Image|Media|Wikipedia|Help|Category|Template|Talk|Portal|Draft|User|Module|MediaWiki|Book)(\s+talk)?:/i;
 
 const POOLS = [
-  ['unusual', '🙃', 'Weird stuff', 'The strangest pages on Wikipedia, with their own jokes attached'],
-  ['vermont', '🍁', 'Near here', 'Everything within twelve kilometres of City Hall'],
-  ['onthisday', '📅', 'On this day', 'What happened on this date, year by year'],
-  ['popular', '🔥', 'What everyone is reading', 'The most-read articles of the past week'],
+  ['unusual', '🙃', 'Weird stuff', 'The strangest pages, with their own jokes'],
+  ['vermont', '🍁', 'Near here', 'Within twelve kilometres of City Hall'],
+  ['onthisday', '📅', 'On this day', 'What happened on this date'],
+  ['popular', '🔥', 'What everyone is reading', 'Most-read this week'],
 ];
 
 const state = {
@@ -121,7 +121,7 @@ function renderDoor() {
   const door = el('section', 'door');
   door.appendChild(el('h1', null, 'Wikipedia'));
   door.appendChild(el('p', null,
-    'Six million articles. One tap and you are seven deep — still in the app, with a trail of where you went.'));
+    'Six million articles. One tap and you are seven deep — still in the app.'));
 
   const search = el('div', 'search');
   search.innerHTML =
@@ -218,15 +218,60 @@ function renderPool(root, key, emoji, name, sub) {
   sync();
   box.appendChild(body);
   root.appendChild(box);
+  describe(body);
 }
 
 function doorCard(entry) {
   const title = (entry && entry.t) || entry;
   const card = el('button', 'doorcard');
+  card.dataset.title = title;
   card.innerHTML = '<span class="t">' + esc(pretty(title)) + '</span>' +
-    (entry && entry.d ? '<span class="d">' + esc(entry.d) + '</span>' : '');
+    '<span class="d">' + (entry && entry.d ? esc(entry.d) : '') + '</span>';
   card.addEventListener('click', () => go(title));
   return card;
+}
+
+/* Only the "weird stuff" pool ships blurbs — its whole point is the
+   hand-written one-liners. The other pools are bare titles, so a card there
+   said nothing about what it was. Wikipedia's own short descriptions fill
+   that in, fifty titles per request rather than one call per card, cached so
+   a shuffle or a re-render costs nothing. */
+const described = new Map();
+
+function describe(root) {
+  const want = [];
+  root.querySelectorAll('.doorcard').forEach((c) => {
+    const t = c.dataset.title;
+    if (!t) return;
+    if (described.has(t)) {
+      const d = described.get(t);
+      if (d) c.querySelector('.d').textContent = d;
+      return;
+    }
+    if (!c.querySelector('.d').textContent) want.push(t);
+  });
+  if (!want.length) return;
+  const batch = [...new Set(want)].slice(0, 50);
+  data.fetchJSON(ACTION + 'action=query&prop=description&titles=' +
+    encodeURIComponent(batch.join('|')), 10000)
+    .then((r) => {
+      const pages = (r.query && r.query.pages) || [];
+      /* the API normalises titles ("A b" -> "A B"), so map both ways */
+      const norm = Object.create(null);
+      ((r.query && r.query.normalized) || []).forEach((n) => { norm[n.to] = n.from; });
+      pages.forEach((pg) => {
+        const d = (pg.description || '').trim();
+        [pg.title, norm[pg.title]].forEach((key) => {
+          if (!key) return;
+          described.set(key, d);
+          root.querySelectorAll('.doorcard').forEach((c) => {
+            if (c.dataset.title === key && d) c.querySelector('.d').textContent = d;
+          });
+        });
+      });
+      batch.forEach((t) => { if (!described.has(t)) described.set(t, ''); });
+    })
+    .catch(() => { /* a card without a blurb is still a card */ });
 }
 
 function renderTrail(root) {
