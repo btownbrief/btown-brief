@@ -20,7 +20,7 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, safeHref, agoShort, heading, seg, starBtn, voteBtn, paintVote } from './../ui.js';
+import { el, esc, safeHref, agoShort, shelfHead, seg, starBtn, voteBtn, paintVote, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
 
 const SHOW_URL = 'https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp';
@@ -71,8 +71,7 @@ function render() {
     '<div>' +
       '<p class="eyebrow">The Brief’s own show</p>' +
       '<h2>BTown Arts Podcast</h2>' +
-      '<p>Interviews with the artists coming through Burlington and the people making the ' +
-        'scene here, hosted by radio veteran Kwame Dankwa.</p>' +
+      '<p>Artists coming through Burlington, hosted by Kwame Dankwa.</p>' +
       '<div class="btns">' +
         '<a class="btn" href="https://www.youtube.com/watch?v=W6LBJ72UKvo" target="_blank" rel="noopener">▶ Watch the HAYLA interview</a>' +
         '<a class="btn btn-quiet" href="' + SHOW_URL + '" target="_blank" rel="noopener">Follow on Spotify</a>' +
@@ -80,12 +79,27 @@ function render() {
     '</div>';
   root.appendChild(feat);
 
+  /* The episode browser is 352px tall. Open by default it pushed the first
+     local podcast a full screen below the fold, so it opens on request — and
+     the iframe is only created once, on that first open, so nothing here can
+     interrupt playback later. */
+  const toggle = el('button', 'embed-toggle',
+    '<span>Every episode of the show</span><span class="chev">' + ICON.chev + '</span>');
+  toggle.setAttribute('aria-expanded', 'false');
   const embed = el('iframe', 'embed');
+  embed.hidden = true;
   embed.title = 'BTown Arts Podcast — all episodes';
-  embed.src = 'https://open.spotify.com/embed/show/6ejf0OFAyNTZNKDzFLWbKp?theme=0';
   embed.loading = 'lazy';
   embed.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-  root.appendChild(embed);
+  toggle.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    embed.hidden = open;
+    if (!open && !embed.getAttribute('src')) {
+      embed.src = 'https://open.spotify.com/embed/show/6ejf0OFAyNTZNKDzFLWbKp?theme=0';
+    }
+  });
+  root.append(toggle, embed);
 
   root.appendChild(el('div', 'l-list'));
   renderList();
@@ -107,12 +121,9 @@ function renderList() {
   const resume = resumeRow(shows);
   if (resume) list.appendChild(resume);
 
-  heading(list, {
-    eyebrow: state.scope === 'local' ? 'Local podcasts' : 'More shows',
-    title: state.scope === 'local' ? 'Made in Vermont' : 'The rest of the dial',
-    sub: '<span class="count">' + half.length + ' show' + (half.length === 1 ? '' : 's') +
-      ' · ' + eps.toLocaleString() + ' episodes</span>',
-  });
+  shelfHead(list,
+    state.scope === 'local' ? 'Made in Vermont' : 'The rest of the dial',
+    half.length + ' show' + (half.length === 1 ? '' : 's') + ' · ' + eps.toLocaleString() + ' episodes');
 
   const grid = el('div', 'shows');
   half.forEach((s) => grid.appendChild(showCard(s)));
@@ -129,7 +140,7 @@ function resumeRow(shows) {
   }));
   if (!open.length) return null;
   const sec = el('div');
-  heading(sec, { eyebrow: 'Still listening', title: 'Pick up where you left off' });
+  shelfHead(sec, 'Pick up where you left off', 'Still listening');
   const card = el('div', 'card feed');
   open.slice(0, 4).forEach((o) => card.appendChild(epRow(o.ep, o.show)));
   sec.appendChild(card);

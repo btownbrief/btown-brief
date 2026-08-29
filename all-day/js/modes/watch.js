@@ -22,7 +22,7 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, agoShort, dayLabel, rail, heading, seg, voteBtn, paintVote, starBtn, ICON } from './../ui.js';
+import { el, esc, agoShort, dayLabel, rail, heading, shelfHead, seg, voteBtn, paintVote, starBtn, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
 
 const WIRE_PAGE = 24;
@@ -94,25 +94,30 @@ function renderTonight(root) {
   }
 
   const live = Array.isArray(tv.live) ? tv.live.filter((v) => v && app.isVideoId(v.id)) : [];
-  if (live.length) {
-    heading(root, {
-      eyebrow: 'Live right now',
-      title: 'Cameras that never stop',
-      sub: 'Burlington and Vermont, streaming as you read this',
-    });
-    const { track, sync } = rail(root, { label: 'cameras' });
-    track.parentElement.classList.add('livestrip');
+  const liveStrip = () => {
+    if (!live.length) return;
+    const strip = el('div', 'livestrip');
+    shelfHead(strip, 'Live right now', 'Burlington and Vermont, always on');
+    const { track, sync } = rail(strip, { label: 'cameras' });
     live.forEach((v) => track.appendChild(videoCard(v, { live: true })));
+    root.appendChild(strip);
     sync();
-  }
+  };
 
-  (Array.isArray(tv.shelves) ? tv.shelves : []).forEach((s) => {
+  /* Webcams sit BELOW the first real shelf. They are ambient — nobody opens
+     this tab to watch a covered bridge — and putting them straight under the
+     pick meant the first screenful was a hero and seven webcams, with the
+     curated video you actually came for pushed off the bottom. */
+  let placedLive = false;
+  (Array.isArray(tv.shelves) ? tv.shelves : []).forEach((s, i) => {
     if (!s || !Array.isArray(s.items) || !s.items.length) return;
-    heading(root, { eyebrow: s.title, title: s.sub || s.title });
+    shelfHead(root, s.title, s.sub);
     const { track, sync } = rail(root, { label: 'videos' });
     s.items.forEach((v) => { if (v && app.isVideoId(v.id)) track.appendChild(videoCard(v)); });
     sync();
+    if (!placedLive) { placedLive = true; liveStrip(); }
   });
+  if (!placedLive) liveStrip();      /* no shelves tonight — still show them */
 
   const play = playlistLink(tv, 'Play tonight on your TV');
   if (play) {
@@ -149,11 +154,7 @@ function renderPast(root) {
   });
   state.past.forEach((ed) => {
     if (!ed || !ed.edition) return;
-    heading(root, {
-      eyebrow: dayLabel(ed.generated || ed.edition),
-      title: ed.pick?.t ? ed.pick.t : ed.edition,
-      sub: ed.pick?.why ? esc(ed.pick.why) : '',
-    });
+    shelfHead(root, dayLabel(ed.generated || ed.edition), ed.pick?.t || ed.edition);
     const items = [];
     if (ed.pick && app.isVideoId(ed.pick.id)) items.push(ed.pick);
     (Array.isArray(ed.shelves) ? ed.shelves : []).forEach((s) => {
