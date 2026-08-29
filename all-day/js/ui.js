@@ -87,46 +87,109 @@ export function rail(host, { label } = {}) {
   const wrap = el('div', 'rail-wrap');
   const track = el('div', 'rail');
   const nav = el('div', 'rail-nav');
+  const bar = el('div', 'rail-bar', '<i></i>');
   const dots = el('div', 'rail-dots');
-  const bar = el('div', 'rail-track', '<i></i>');
-  const count = el('span', 'rail-more');
-  nav.append(dots, bar, count);
+  nav.append(bar, dots);
   wrap.append(track, nav);
   host.appendChild(wrap);
 
-  const fill = bar.firstElementChild;
+  const thumb = bar.firstElementChild;
 
   /* One dot per screenful, never per card. Past MAX_DOTS the dots stop being
      a map and become a smear, so they cap and track position proportionally
-     instead — the progress bar beside them carries the precision. */
+     — the bar above them carries the precision. */
   const MAX_DOTS = 7;
-
-  function pages() {
-    const w = track.clientWidth;
-    if (!w) return 1;
-    return Math.max(1, Math.ceil((track.scrollWidth - 4) / w));
-  }
+  const MIN_THUMB = 14;   // percent — a sliver you cannot see is not a control
 
   function sync() {
-    const n = Math.min(MAX_DOTS, pages());
-    const full = track.scrollWidth <= track.clientWidth + 4;
-    nav.classList.toggle('is-full', full);
+    const view = track.clientWidth;
+    const total = Math.max(view, track.scrollWidth);
+    const pages = Math.max(1, Math.ceil((total - 4) / Math.max(1, view)));
+    const n = Math.min(MAX_DOTS, pages);
+
+    /* The thumb is always drawn. When everything fits it fills the track,
+       which says "this is all of it" rather than hiding the control. */
+    const width = Math.max(MIN_THUMB, Math.min(100, (view / total) * 100));
+    const max = Math.max(1, total - view);
+    const ratio = total > view ? Math.min(1, track.scrollLeft / max) : 0;
+    thumb.style.width = width + '%';
+    thumb.style.left = (ratio * (100 - width)) + '%';
+
     if (dots.childElementCount !== n) {
       dots.innerHTML = '';
       for (let i = 0; i < n; i++) dots.appendChild(el('i'));
     }
-    const max = Math.max(1, track.scrollWidth - track.clientWidth);
-    const ratio = Math.min(1, track.scrollLeft / max);
     const active = Math.round(ratio * (n - 1));
     [...dots.children].forEach((d, i) => d.classList.toggle('on', i === active));
-    fill.style.transform = 'scaleX(' + Math.max(0.12, track.clientWidth / Math.max(1, track.scrollWidth)) + ')';
-    fill.style.marginLeft = (ratio * (bar.clientWidth * (1 - track.clientWidth / Math.max(1, track.scrollWidth)))) + 'px';
-    const total = track.childElementCount;
-    count.textContent = label ? total + ' ' + label : total + '';
+    dots.hidden = n < 2;
   }
 
   track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
   if ('ResizeObserver' in window) new ResizeObserver(() => sync()).observe(track);
+
+  /* DESKTOP. A touch screen pans a rail for free; a mouse has nothing —
+     the scrollbar is hidden, and a plain wheel scrolls the page, not the
+     rail. So three ways in, none of which interfere with touch:
+
+       · grab the rail and pull it
+       · drag the grey thumb, which is a real scrollbar now
+       · click anywhere on the track to jump there
+
+     A drag must never also open the card underneath it, so past a 4px
+     threshold the click that follows is swallowed. */
+  const scrollable = () => track.scrollWidth > track.clientWidth + 4;
+
+  let panning = false, panX = 0, panFrom = 0, panMoved = false;
+  track.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch' || !scrollable()) return;
+    if (e.button !== 0) return;
+    panning = true;
+    panMoved = false;
+    panX = e.clientX;
+    panFrom = track.scrollLeft;
+  });
+  track.addEventListener('pointermove', (e) => {
+    if (!panning) return;
+    const dx = e.clientX - panX;
+    if (!panMoved && Math.abs(dx) < 4) return;
+    if (!panMoved) {
+      panMoved = true;
+      track.classList.add('is-panning');
+      try { track.setPointerCapture(e.pointerId); } catch (err) { /* optional */ }
+    }
+    track.scrollLeft = panFrom - dx;
+    e.preventDefault();
+  });
+  const endPan = () => {
+    panning = false;
+    track.classList.remove('is-panning');
+  };
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => track.addEventListener(ev, endPan));
+  track.addEventListener('click', (e) => {
+    if (!panMoved) return;
+    e.preventDefault();
+    e.stopPropagation();
+    panMoved = false;
+  }, true);
+
+  let barDrag = false;
+  const seek = (clientX) => {
+    const box = bar.getBoundingClientRect();
+    const w = thumb.getBoundingClientRect().width;
+    const span = Math.max(1, box.width - w);
+    const at = Math.min(1, Math.max(0, (clientX - box.left - w / 2) / span));
+    track.scrollLeft = at * Math.max(0, track.scrollWidth - track.clientWidth);
+  };
+  bar.addEventListener('pointerdown', (e) => {
+    if (!scrollable()) return;
+    barDrag = true;
+    try { bar.setPointerCapture(e.pointerId); } catch (err) { /* optional */ }
+    seek(e.clientX);
+    e.preventDefault();
+  });
+  bar.addEventListener('pointermove', (e) => { if (barDrag) seek(e.clientX); });
+  ['pointerup', 'pointercancel'].forEach((ev) =>
+    bar.addEventListener(ev, () => { barDrag = false; }));
 
   return { track, sync, wrap };
 }

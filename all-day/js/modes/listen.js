@@ -24,6 +24,7 @@ import { el, esc, safeHref, agoShort, shelfHead, seg, starBtn, voteBtn, paintVot
 import { hydrateVotes } from './../rows.js';
 
 const SHOW_URL = 'https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp';
+const PREVIEW = 4;      // newest episodes shown under every show, unasked
 const state = { root: null, pulse: null, open: Object.create(null), scope: 'local' };
 
 export function mount(root) {
@@ -149,67 +150,77 @@ function resumeRow(shows) {
 }
 
 function showCard(s) {
-  const wrap = el('div');
   const open = !!state.open[s.src.id];
-  const head = el('button', 'card show-head' + (open ? ' open' : ''));
+  const shown = open ? Math.min(30, s.eps.length) : Math.min(PREVIEW, s.eps.length);
+  const card = el('div', 'card show');
+
+  const head = el('div', 'show-head');
   head.innerHTML =
     (s.art ? '<img loading="lazy" referrerpolicy="no-referrer" src="' + esc(s.art) + '" alt="">'
            : '<span class="noart">🎙</span>') +
     '<span class="show-meta">' +
       '<span class="show-name">' + esc(s.src.short || s.src.name) + '</span>' +
-      '<span class="v-meta">' + s.eps.length + ' episodes · newest ' + agoShort(s.eps[0].d) + '</span>' +
-    '</span>' +
-    '<span class="chev">▾</span>';
-  head.setAttribute('aria-expanded', open ? 'true' : 'false');
-  head.addEventListener('click', () => {
-    state.open[s.src.id] = !open;
-    renderList();
-  });
-  wrap.appendChild(head);
-  if (open) {
-    const eps = el('div', 'card feed eps');
-    s.eps.slice(0, 30).forEach((ep) => eps.appendChild(epRow(ep, s)));
-    wrap.appendChild(eps);
+      '<span class="v-meta">' + s.eps.length + ' episode' + (s.eps.length === 1 ? '' : 's') +
+        ' · latest ' + agoShort(s.eps[0].d) + '</span>' +
+    '</span>';
+  if (s.src.site) {
+    const out = el('a', 'show-out', '↗');
+    out.href = safeHref(s.src.site);
+    out.target = '_blank';
+    out.rel = 'noopener';
+    out.setAttribute('aria-label', (s.src.short || s.src.name) + ' — the show’s own page');
+    head.appendChild(out);
   }
-  return wrap;
+  card.appendChild(head);
+
+  const eps = el('div', 'eps');
+  s.eps.slice(0, shown).forEach((ep) => eps.appendChild(epRow(ep, s)));
+  card.appendChild(eps);
+
+  /* Older episodes are there, one tap away — the point is that you do not
+     have to tap to see the newest four. */
+  if (s.eps.length > PREVIEW) {
+    const more = el('button', 'show-more',
+      open ? 'Show fewer' : (s.eps.length - PREVIEW) + ' older episode' +
+        (s.eps.length - PREVIEW === 1 ? '' : 's'));
+    more.setAttribute('aria-expanded', open ? 'true' : 'false');
+    more.addEventListener('click', () => { state.open[s.src.id] = !open; renderList(); });
+    card.appendChild(more);
+  }
+  return card;
 }
 
 function epRow(ep, s) {
   const k = ep.a;
-  const row = el('div', 'fi');
-  row.dataset.k = k;
   const at = store.heardAt(k);
   const playing = app.nowPlaying() === k;
+  const row = el('div', 'ep' + (playing ? ' is-playing' : ''));
+  row.dataset.k = k;
 
-  const play = el('button', 'fi-body ep-play');
-  play.innerHTML =
-    '<span class="fi-title">' + esc(ep.t || 'Untitled') + '</span>' +
-    '<span class="fi-meta">' +
-      (playing ? '<span class="tag-local">Playing</span>' : '') +
-      '<span class="fi-src">' + esc(s.src.short || s.src.name) + '</span>' +
-      (ep.d ? '<span>' + agoShort(ep.d) + '</span>' : '') +
-      (at > 30 ? '<span>' + Math.round(at / 60) + ' min in</span>' : '') +
-    '</span>';
+  const play = el('button', 'ep-go', ICON.play);
+  play.setAttribute('aria-label', 'Play ' + (ep.t || 'episode'));
   play.addEventListener('click', () => {
-    app.playAudio({ src: ep.a, title: ep.t, show: s.src.short || s.src.name, art: ep.i || s.art, key: k });
+    app.playAudio({ src: ep.a, title: ep.t, show: s.src.short || s.src.name,
+                    art: ep.i || s.art, key: k });
     renderList();
   });
-  row.appendChild(play);
 
-  const foot = el('div', 'fi-foot');
-  foot.appendChild(el('span', 'spacer'));
-  const rec = { k, kind: 'episode', title: ep.t || 'Untitled', from: s.src.short || s.src.name, href: safeHref(ep.u || ep.a), art: ep.i || s.art || '' };
+  const meta = el('div', 'ep-meta');
+  meta.appendChild(el('span', 'ep-title', esc(ep.t || 'Untitled')));
+  const sub = [];
+  if (ep.d) sub.push(agoShort(ep.d));
+  if (at > 30) sub.push(Math.round(at / 60) + ' min in');
+  if (playing) sub.push('playing');
+  meta.appendChild(el('span', 'ep-age', sub.join(' \u00b7 ')));
+
+  const rec = { k, kind: 'episode', title: ep.t || 'Untitled',
+                from: s.src.short || s.src.name, href: safeHref(ep.u || ep.a),
+                art: ep.i || s.art || '' };
   const vote = voteBtn(store.voteCount(k), store.hasVoted(k), store.votesLive());
-  vote.addEventListener('click', () => {
-    const on = store.toggleVote(rec);
-    paintVote(vote, store.voteCount(k), on);
-  });
+  vote.addEventListener('click', () => paintVote(vote, store.voteCount(k), store.toggleVote(rec)));
   const star = starBtn(store.isSaved(k));
-  star.addEventListener('click', () => {
-    const on = store.toggleSaved(rec);
-    star.classList.toggle('on', on);
-  });
-  foot.append(vote, star);
-  row.appendChild(foot);
+  star.addEventListener('click', () => star.classList.toggle('on', store.toggleSaved(rec)));
+
+  row.append(play, meta, vote, star);
   return row;
 }
