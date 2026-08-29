@@ -1,0 +1,44 @@
+name: Build Currents pools
+
+# Nightly pools for the Wander doorway (currents/ js/wander.js):
+#   scripts/build_currents_pools.py -> data/currents-pools.json
+# on the `currents-pools` branch, single orphan commit, force-pushed -
+# the refresh-pulse.yml pattern. Client reads it from
+# raw.githubusercontent.com (CORS-open). near-here is CLIENT-LIVE
+# geosearch, so it is deliberately not in this payload.
+
+on:
+  schedule:
+    - cron: '17 4 * * *'  # after Wikipedia's featured-day rollover
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: currents-pools
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build pools
+        run: python3 scripts/build_currents_pools.py > /tmp/currents-pools.json
+
+      - name: Force-push the single-commit currents-pools branch
+        run: |
+          cd /tmp
+          rm -rf pools-out && mkdir pools-out && cd pools-out
+          git init -q -b currents-pools
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          mkdir data
+          cp /tmp/currents-pools.json data/currents-pools.json
+          git add data/currents-pools.json
+          git commit -q -m "Currents pools $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            currents-pools
