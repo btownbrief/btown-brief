@@ -27,6 +27,7 @@ export function mount(root) {
 }
 
 export function activate() {}
+export function refresh() { if (state.pulse) render(); }
 export function deactivate() { app.closePeek(); }
 
 function render() {

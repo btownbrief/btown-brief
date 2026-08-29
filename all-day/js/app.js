@@ -81,6 +81,12 @@ function route() {
 const scrollMemory = Object.create(null);
 export const activeTab = () => active;
 
+/* Redraw the tab on screen because something it reads has changed — a source
+   muted from Settings, Focus switched on. route() cannot do this: it only
+   calls activate(), which for most tabs is deliberately empty so that a plain
+   tab switch does not throw away scroll position and re-render. */
+export function refresh() { registry[active]?.refresh?.(); }
+
 /* ----------------------------------------------------------------- chrome */
 
 const mast = $('mast');
