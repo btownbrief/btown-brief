@@ -55,9 +55,10 @@ export function feedRow(it, src, opts = {}) {
   /* the outlet wears its topic's colour — the cheapest colour on the page,
      because the words are already there */
   const topic = (src && src.topic) || '';
-  /* inside a by-source column the outlet name is on the column head — it
-     would be printed once per row for nothing */
-  if (!opts.compact) {
+  /* Skip the outlet name where it is already on screen: on the column head in
+     the by-source grid, or in the tag itself on Reddit, where source and tag
+     are the same subreddit. */
+  if (!opts.compact && !opts.noSource) {
     meta.appendChild(el('span', 'fi-src' + (topic ? ' t-' + topic : ''),
       esc(src?.short || src?.name || '')));
   }

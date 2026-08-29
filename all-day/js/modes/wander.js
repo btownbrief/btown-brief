@@ -21,7 +21,7 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, rail, heading, chip, scrollHint, voteBtn, paintVote, starBtn, tabStamp, ICON } from './../ui.js';
+import { el, esc, rail, heading, chip, scrollHint, voteBtn, paintVote, starBtn, tabStamp, localSwitch, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
 
 const REST = 'https://en.wikipedia.org/api/rest_v1/';
@@ -100,6 +100,11 @@ export function activate(param) {
   else { state.at = null; renderDoor(); }
 }
 
+/* Redraw the door when the Local switch flips on another tab. An article you
+   are part-way through is left alone — the mode changes which doors you are
+   offered, not what you are reading. */
+export function refresh() { if (!state.at) renderDoor(); }
+
 export function deactivate() {
   clearTimeout(state.suggestTimer);
   app.closePeek();
@@ -132,17 +137,33 @@ function sample(key, n) {
 function renderDoor() {
   const root = state.root;
   root.innerHTML = '';
+
+  /* Local on Wikipedia is the geosearch pool: everything with coordinates
+     within twelve kilometres of City Hall. It is the most surprising local
+     thing in the app — most people have no idea their street has an article. */
+  const localOnly = store.settings().localOnly;
+  localSwitch(root, {
+    on: localOnly,
+    local: list('vermont').length,
+    all: poolTotal(),
+    noun: 'articles',
+    onChange(on) { app.setLocal(on); root.scrollTo({ top: 0 }); },
+  });
+
   /* Wikipedia is live on every tap, so the only thing with an age here is
      the hand-built pool of doors. Say which is which. */
   const line = el('p', 'tabstamp');
   line.innerHTML = '<span class="updated"><i></i>live from wikipedia</span>' +
-    '<span class="tabstamp-what">' + poolTotal().toLocaleString() + ' doors</span>';
+    '<span class="tabstamp-what">' +
+      (localOnly ? list('vermont').length.toLocaleString() + ' near here'
+                 : poolTotal().toLocaleString() + ' doors') + '</span>';
   root.appendChild(line);
 
   const door = el('section', 'door');
-  door.appendChild(el('h1', null, 'Wikipedia'));
-  door.appendChild(el('p', null,
-    'Six million articles. One tap and you are seven deep — still in the app.'));
+  door.appendChild(el('h1', null, localOnly ? 'Wikipedia, near here' : 'Wikipedia'));
+  door.appendChild(el('p', null, localOnly
+    ? 'Every article with coordinates within twelve kilometres of City Hall. Your street is probably in here.'
+    : 'Six million articles. One tap and you are seven deep — still in the app.'));
 
   const search = el('div', 'search');
   search.innerHTML =
@@ -151,7 +172,8 @@ function renderDoor() {
     '<div class="suggest" id="wsug" hidden></div>';
   door.appendChild(search);
 
-  const dice = el('button', 'btn btn-big', '🎲 Take me somewhere');
+  const dice = el('button', 'btn btn-big',
+    localOnly ? '🎲 Take me somewhere near here' : '🎲 Take me somewhere');
   dice.addEventListener('click', takeMeSomewhere);
   door.appendChild(dice);
 
@@ -178,6 +200,11 @@ function renderDoor() {
 
   renderTrail(root);
   renderSaved(root);
+  if (localOnly) {
+    /* one pool, opened out — a single row of five would waste the mode */
+    renderPool(root, 'vermont', '🍁', 'Near here', 'Within twelve kilometres of City Hall');
+    return;
+  }
   /* A different pool leads each visit, so the tab does not always open on
      the same shelf. Fixed per visit, not per render, or it would reshuffle
      under a finger already moving. */
@@ -367,10 +394,15 @@ function renderSaved(root) {
 
 function takeMeSomewhere() {
   const buckets = [];
-  if (list('unusual').length) buckets.push({ w: 4, key: 'unusual' });
-  if (list('vermont').length) buckets.push({ w: 3, key: 'vermont' });
-  if (list('onthisday').length) buckets.push({ w: 2, key: 'onthisday' });
-  if (list('popular').length) buckets.push({ w: 2, key: 'popular' });
+  /* in local mode the dice stays in Vermont — that is the whole promise */
+  if (store.settings().localOnly && list('vermont').length) {
+    buckets.push({ w: 1, key: 'vermont' });
+  } else {
+    if (list('unusual').length) buckets.push({ w: 4, key: 'unusual' });
+    if (list('vermont').length) buckets.push({ w: 3, key: 'vermont' });
+    if (list('onthisday').length) buckets.push({ w: 2, key: 'onthisday' });
+    if (list('popular').length) buckets.push({ w: 2, key: 'popular' });
+  }
   const total = buckets.reduce((n, b) => n + b.w, 0);
   if (!total) {
     data.fetchJSON(REST + 'page/random/summary', 10000)

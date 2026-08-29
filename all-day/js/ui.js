@@ -424,3 +424,47 @@ export function tabStamp(host, stampSec, what) {
     (what ? '<span class="tabstamp-what">' + esc(what) + '</span>' : '');
   host.appendChild(line);
 }
+
+
+/* ---------------------------------------------------------- local switch */
+/* Local is not a filter among filters here — it is the reason the paper
+   exists, and it was expressed five different ways: a chip on the wire, a
+   shelf on Watch, a segment on Listen, a pool on Wikipedia, nothing at all
+   on Reddit. One control, one word, one green, the same first thing on every
+   tab, driving one shared setting — so switching it on the wire and walking
+   to Watch keeps you in local.
+
+   Deliberately NOT the app's generic .seg: Watch and Listen already carry
+   segments, and a third would read as more of the same rather than as the
+   thing the whole app is about. */
+export function localSwitch(host, { on, local, all, noun, onChange }) {
+  const box = el('div', 'localsw' + (on ? ' is-on' : ''));
+
+  const bar = el('div', 'localsw-bar');
+  bar.setAttribute('role', 'group');
+  bar.setAttribute('aria-label', 'Local or everything');
+
+  const make = (wantOn, label) => {
+    const b = el('button', 'localsw-half' + (on === wantOn ? ' on' : ''), label);
+    b.setAttribute('aria-pressed', on === wantOn ? 'true' : 'false');
+    b.addEventListener('click', () => { if (on !== wantOn) onChange(wantOn); });
+    return b;
+  };
+  bar.append(
+    make(true, '<span class="localsw-leaf">\u{1F341}</span><span>Local</span>'),
+    make(false, '<span>Everything</span>')
+  );
+  box.appendChild(bar);
+
+  const n = on ? local : all;
+  if (typeof n === 'number') {
+    box.appendChild(el('p', 'localsw-note',
+      (on ? 'Burlington &amp; Vermont \u00b7 ' : '') +
+      '<b>' + n.toLocaleString() + '</b> ' + esc(noun || 'items') +
+      (on && typeof all === 'number' && all > n
+        ? ' <span class="localsw-of">of ' + all.toLocaleString() + '</span>' : '')));
+  }
+
+  host.appendChild(box);
+  return box;
+}
