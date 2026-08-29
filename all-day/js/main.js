@@ -14,16 +14,20 @@ import * as wire from './modes/wire.js';
 import * as reddit from './modes/reddit.js';
 import * as watch from './modes/watch.js';
 import * as listen from './modes/listen.js';
+import * as whatnow from './modes/whatnow.js';
 import * as music from './modes/music.js';
 import * as photos from './modes/photos.js';
+import * as ig from './modes/ig.js';
 import * as wander from './modes/wander.js';
 
 app.register('wire', wire);
 app.register('reddit', reddit);
 app.register('watch', watch);
 app.register('listen', listen);
+app.register('whatnow', whatnow);
 app.register('music', music);
 app.register('photos', photos);
+app.register('ig', ig);
 app.register('wander', wander);
 
 const $ = (id) => document.getElementById(id);
@@ -164,8 +168,10 @@ const TOUR = [
   ['Reddit', 'What people are posting'],
   ['Watch', 'Video, picked by hand nightly'],
   ['Listen', 'Every Vermont podcast, playable here'],
+  ['What Now', 'The next few hours, answered'],
   ['Music', 'Bands from here, and who’s playing this week'],
   ['Photos', 'Burlington as its neighbours see it'],
+  ['Instagram', 'The accounts, in the order they posted'],
   ['Wikipedia', 'A rabbit hole worth falling into'],
 ];
 
@@ -176,7 +182,7 @@ function welcome() {
   card.setAttribute('aria-label', 'What All Day is');
   card.innerHTML =
     '<p class="eyebrow">Burlington Brief</p>' +
-    '<h2>Seven feeds, one app.</h2>' +
+    '<h2>Nine feeds, one app.</h2>' +
     '<ul class="welcome-list">' +
       TOUR.map(([n, d]) =>
         '<li><b>' + esc(n) + '</b><span>' + esc(d) + '</span></li>').join('') +

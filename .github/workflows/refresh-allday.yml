@@ -1,0 +1,73 @@
+# Rebuild the two All Day payloads that go stale fastest.
+#
+# What it writes:
+#   all-day/data/whatnow.json    — the next ten days of the calendar, trimmed
+#                                  to the fields a card renders. ~95 KB.
+#   all-day/data/instagram.json  — recent posts from the Burlington accounts
+#                                  in data/instagram-handles.json. ~135 KB.
+#
+# WHY DAILY, AND WHY IT CANNOT SLIP. Instagram signs every image URL with an
+# `oe` parameter roughly THREE DAYS out. Miss two runs and the grid is broken
+# frames, not stale ones. That is the binding constraint on this schedule.
+#
+# Order matters: it runs at 10:40 UTC, an hour after the events pipeline's
+# 9:40, because build_whatnow.py reads data/events/. Running first would
+# publish yesterday's calendar as today's answer.
+#
+# Credits: one Scrape Creators credit per handle per run. Tier 1 (25 handles)
+# every run plus a rotating slice of tier 2, so the whole roster is covered
+# over a few days without paying for 75 handles a morning.
+#
+# Because it commits to main under GITHUB_TOKEN, and such commits do not fire
+# a `push` event, this workflow's name is listed in pages-deploy.yml's
+# workflow_run list. Rename it there too or the site serves yesterday's.
+#
+# Failure posture: each build refuses to overwrite a good payload with an
+# empty one, and the two are independent — a missing Instagram key costs the
+# Instagram tab and leaves What Now alone.
+
+name: Refresh All Day hub data
+
+on:
+  schedule:
+    - cron: "40 10 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-allday
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build What Now
+        run: python3 scripts/build_whatnow.py
+
+      - name: Build Instagram
+        env:
+          SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
+          SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
+        run: python3 scripts/build_instagram.py --tier2-batch 12 || echo "instagram build skipped"
+
+      - name: Commit if changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add all-day/data/whatnow.json all-day/data/instagram.json
+          if git diff --cached --quiet; then
+            echo "No hub changes."
+          else
+            git commit -m "Auto-refresh All Day hub data"
+            git push || (git pull --rebase && git push)
+          fi

@@ -61,7 +61,7 @@
   --ui: "DM Sans", system-ui, -apple-system, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-  --tabbar-h: 68px;
+  --tabbar-h: 78px;   /* measured: the nine-pill bar is 84-88px tall */
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
   --mast-h: 56px;
@@ -855,7 +855,12 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   padding: 0 10px calc(var(--safe-b) + 8px); pointer-events: none; }
 .dock > * { pointer-events: auto; }
 .tabbar {
-  display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
+  display: grid;
+  /* Eight equal columns and one that sizes to its own label: the centre
+     button keeps the words "What Now" on ONE line while the other eight
+     share what is left. Nine equal columns forced it to wrap, which made
+     the centrepiece look like a mistake rather than a choice. */
+  grid-template-columns: repeat(4, 1fr) auto repeat(4, 1fr); gap: 2px;
   max-width: 470px; margin: 0 auto; padding: 6px;
   background: var(--dock-bg); border: 1px solid var(--edge);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-2);
@@ -1354,12 +1359,25 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 /* Dates, times and prices line up column-wise down a list of shows. */
 .m-gig-when, .m-show-when, .m-row-tags, .m-session-date { font-variant-numeric: tabular-nums; }
 
-/* Seven pills need the labels a shade smaller on a narrow phone. Measured:
-   at .69rem the bar cannot fit seven columns inside 320px and the PAGE scrolls
-   sideways, which is the one thing this app must never do. At .63rem it fits
-   with nothing clipped, and above 360px the size is unchanged. */
-@media (max-width: 360px) {
-  .tabbar button { font-size: .63rem; }
+/* ------------------------------------------------- nine tabs, measured */
+/* Nine labelled pills do not fit a phone. At the standing size the bar
+   overflows the PAGE at 320, 375 AND 390px — every common width — and no
+   amount of shrinking the type fixes it without making the labels unreadable.
+   Shortening them ("Wander", "Insta") still overflows at 320.
+
+   So below 430px the labels step back and the icons carry the bar, with the
+   label kept for the tab you are ON and for What Now, which is the one the
+   whole tab bar now points at.
+
+   Full labels return at 470px, not 430. Measured: with every label shown the
+   bar still overflows the page at 430 — the centre column takes 66px of it —
+   and first fits at 470. Picking the breakpoint by eye would have shipped a
+   sideways-scrolling page on a large phone in landscape. */
+@media (max-width: 469px) {
+  .tabbar button { font-size: .6rem; }
+  .tabbar button > span { display: none; }
+  .tabbar button.on > span,
+  .tabbar #tab-whatnow > span { display: block; }
 }
 
 /* ============================================================ photos */
@@ -1464,3 +1482,126 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
 .ph-potd-by { display: block; font-family: var(--mono); font-size: .58rem;
   letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
+
+/* ============================================ the What Now centrepiece */
+/* One tab is not like the others. What Now answers the question the whole
+   paper exists to answer — what should I do, right now — so it sits dead
+   centre of the nine and wears its own colour, warm red against the app's
+   amber. It keeps its label at every width while the others go icon-only,
+   because a button nobody can name is not a centrepiece.
+
+   The red is defined on :root and redefined in BOTH dark blocks. The topic
+   hues in this file are only defined in one of the two, which is why they
+   stay light-mode values under the dark toggle — a bug worth not copying. */
+:root {
+  --now: #C0362C;
+  --now-soft: rgba(192, 54, 44, .13);
+  --now-ink: #FFFFFF;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --now: #F0705E;
+    --now-soft: rgba(240, 112, 94, .18);
+    --now-ink: #1A0F0D;
+  }
+}
+:root[data-theme="dark"] {
+  --now: #F0705E;
+  --now-soft: rgba(240, 112, 94, .18);
+  --now-ink: #1A0F0D;
+}
+
+.tabbar #tab-whatnow { color: var(--now); }
+.tabbar #tab-whatnow svg { stroke-width: 2; }
+/* The filled disc is the centrepiece: it reads as a button on a bar of
+   glyphs. It stays filled whether or not the tab is active — active adds the
+   soft tint behind it, the same way every other pill signals itself. */
+.tabbar #tab-whatnow svg {
+  background: var(--now); color: var(--now-ink);
+  border-radius: 50%; padding: 4px; width: 26px; height: 26px;
+  /* border-box, or the disc's padding makes this button taller than the other
+     eight, which grows the whole grid row and eats the panel's bottom padding
+     — at 430px that clearance was down to 1.9px, so the last event in the
+     list sat under the dock. */
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--now) 45%, transparent);
+}
+.tabbar #tab-whatnow.on { color: var(--now); background: var(--now-soft); }
+.tabbar #tab-whatnow.on svg { stroke-width: 2.2; }
+.tabbar #tab-whatnow > span { font-weight: 700; letter-spacing: -.01em;
+  white-space: nowrap; padding: 0 3px; }
+
+/* ============================================================ what now */
+.wn-hero { margin-bottom: 14px; }
+.wn-q { font-family: var(--serif); font-size: 2.05rem; line-height: 1.06;
+  letter-spacing: -.01em; }
+.wn-sub { font-size: .95rem; color: var(--ink-soft); margin-top: 5px; line-height: 1.45; }
+.wn-sub b { color: var(--now); font-weight: 700; }
+
+/* The answer card — one event, big, with the time doing the shouting. */
+.wn-pick {
+  display: block; text-align: left; width: 100%; margin-bottom: 10px;
+  padding: 15px 16px; border-radius: var(--radius);
+  background: var(--panel); border: 1px solid var(--edge);
+  box-shadow: var(--shadow-1); position: relative; overflow: hidden;
+}
+.wn-pick::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--now);
+}
+.wn-when { display: block; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .11em; text-transform: uppercase; color: var(--now);
+  font-weight: 700; font-variant-numeric: tabular-nums; }
+.wn-title { display: block; font-family: var(--serif); font-size: 1.32rem;
+  line-height: 1.17; margin-top: 4px; }
+.wn-where { display: block; font-size: .88rem; color: var(--ink-soft); margin-top: 4px; }
+.wn-free { color: var(--local); font-weight: 700; }
+
+/* The rest of the answers, as rows. */
+.wn-list { border-top: 1px solid var(--edge-soft); }
+.wn-row { display: flex; align-items: baseline; gap: 11px; padding: 10px 2px;
+  border-bottom: 1px solid var(--edge-soft); text-align: left; width: 100%; }
+.wn-row-time { flex: 0 0 62px; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink-faint);
+  font-variant-numeric: tabular-nums; }
+.wn-row-body { min-width: 0; flex: 1; }
+.wn-row-t { display: block; font-size: .97rem; font-weight: 500; line-height: 1.3; }
+.wn-row-v { display: block; font-size: .8rem; color: var(--ink-faint); margin-top: 2px; }
+.wn-day { margin: 18px 0 2px; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+
+/* Where this tab hands off — the full calendar and the day planner. */
+.wn-doors { display: grid; gap: 9px; margin: 18px 0 6px; }
+.wn-door { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 15px; border-radius: var(--radius); background: var(--panel-2);
+  border: 1px solid var(--edge); }
+.wn-door-t { display: block; font-size: 1rem; font-weight: 600; }
+.wn-door-s { display: block; font-size: .82rem; color: var(--ink-faint); margin-top: 2px; }
+.wn-door svg { width: 20px; height: 20px; flex: 0 0 auto; fill: none;
+  stroke: currentColor; stroke-width: 1.8; color: var(--ink-faint); }
+
+/* ========================================================== instagram */
+/* A grid in posted order. No ranking, no engagement count, nothing that
+   would make this a second algorithm — which is the entire reason it exists. */
+.ig-note { font-size: .8rem; color: var(--ink-faint); line-height: 1.5; margin: 0 2px 12px; }
+.ig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 5px; }
+.ig-cell { position: relative; }
+.ig-hit { display: block; width: 100%; }
+.ig-img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
+  border-radius: 8px; background: var(--panel-2);
+  outline: 1px solid rgba(20, 16, 8, .11); outline-offset: -1px; }
+:root[data-theme="dark"] .ig-img,
+:root:not([data-theme="light"]) .ig-img { outline-color: rgba(255, 255, 255, .2); }
+.ig-vid { position: absolute; top: 6px; right: 6px; width: 16px; height: 16px;
+  border-radius: 50%; background: rgba(0,0,0,.55); display: grid; place-items: center; }
+.ig-vid::after { content: ""; border-left: 5px solid #fff; border-top: 3.5px solid transparent;
+  border-bottom: 3.5px solid transparent; margin-left: 1px; }
+.ig-who { display: block; font-family: var(--mono); font-size: .55rem; letter-spacing: .06em;
+  color: var(--ink-faint); margin-top: 3px; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; }
+.ig-full { display: block; width: 100%; border-radius: var(--radius-sm);
+  background: var(--panel-2); margin-bottom: 12px; }
+.ig-cap { font-size: .95rem; line-height: 1.55; white-space: pre-wrap; margin-bottom: 12px; }
+.ig-handle { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
