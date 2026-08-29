@@ -239,7 +239,8 @@ function renderTrail(root) {
 }
 
 function renderSaved(root) {
-  const saved = store.saved().filter((i) => i.kind === 'wiki');
+  const saved = store.saved()
+    .filter((i) => i && i.kind === 'wiki' && typeof i.title === 'string' && i.title.trim());
   if (!saved.length) return;
   heading(root, { eyebrow: 'Saved articles', title: 'Kept for later' });
   const row = el('div', 'trail');

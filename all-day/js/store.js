@@ -239,7 +239,21 @@ export function tvReact(videoId, kind) {
 
 /* ---------------------------------------------------------------- trail */
 
-export function trail() { return arr(read(TRAIL_KEY, [])); }
+/* The previous version of this app wrote objects into the same key, so a
+   returning reader can have entries that stringify to "[object Object]".
+   Normalise on read — pull the title out of an object, keep strings, drop
+   anything else — so old storage heals itself instead of showing junk. */
+export function trail() {
+  const raw = arr(read(TRAIL_KEY, []));
+  const clean = [];
+  raw.forEach((entry) => {
+    const title = typeof entry === 'string' ? entry
+      : (entry && typeof entry === 'object' ? (entry.t || entry.title || entry.k) : null);
+    if (typeof title === 'string' && title.trim() && clean.indexOf(title) === -1) clean.push(title);
+  });
+  if (clean.length !== raw.length) write(TRAIL_KEY, clean);   // rewrite once
+  return clean;
+}
 
 export function pushTrail(title) {
   const list = trail().filter((t) => t !== title);
