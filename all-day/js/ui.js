@@ -87,8 +87,15 @@ export function rail(host, { label } = {}) {
   const wrap = el('div', 'rail-wrap');
   const track = el('div', 'rail');
   const nav = el('div', 'rail-nav');
+  /* One strip: the track runs the full width and the dots sit on top of it,
+     so the affordance costs one line instead of two. The track fades in
+     while the rail is moving and out again a moment after it stops — the
+     dots are what stays, and they are enough to say "there is more". */
+  const strip = el('div', 'rail-strip');
   const bar = el('div', 'rail-bar', '<i></i>');
-  nav.appendChild(bar);
+  const dots = el('div', 'rail-dots');
+  strip.append(bar, dots);
+  nav.appendChild(strip);
   wrap.append(track, nav);
   host.appendChild(wrap);
 
@@ -108,9 +115,12 @@ export function rail(host, { label } = {}) {
   });
   nav.appendChild(expand);
 
-  /* No dots. The bar already says where you are and how much is left, and
-     saying it twice in two different resolutions was noise. */
+  /* One dot per screenful, never per card. Past MAX_DOTS they stop being a
+     map and become a smear, so they cap and track position proportionally. */
+  const MAX_DOTS = 7;
   const MIN_THUMB = 14;   // percent — a sliver you cannot see is not a control
+  const IDLE_MS = 1200;
+  let idleTimer = 0;
 
   function sync() {
     const view = track.clientWidth;
@@ -124,12 +134,30 @@ export function rail(host, { label } = {}) {
     thumb.style.width = width + '%';
     thumb.style.left = (ratio * (100 - width)) + '%';
 
+    const pages = Math.max(1, Math.ceil((total - 4) / Math.max(1, view)));
+    const n = Math.min(MAX_DOTS, pages);
+    if (dots.childElementCount !== n) {
+      dots.innerHTML = '';
+      for (let i = 0; i < n; i++) dots.appendChild(el('i'));
+    }
+    const active = Math.round(ratio * (n - 1));
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i === active));
+    /* one dot is not a position, it is a full stop */
+    strip.classList.toggle('is-idle', n < 2);
+
     /* nothing to scroll and nothing to expand — get out of the way rather
        than offering a control that does nothing */
     expand.hidden = track.childElementCount < 3;
   }
 
-  track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+  function wake() {
+    if (track.scrollWidth <= track.clientWidth + 4) return;
+    bar.classList.add('is-live');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => bar.classList.remove('is-live'), IDLE_MS);
+  }
+
+  track.addEventListener('scroll', () => { wake(); requestAnimationFrame(sync); }, { passive: true });
   if ('ResizeObserver' in window) new ResizeObserver(() => sync()).observe(track);
 
   /* DESKTOP. A touch screen pans a rail for free; a mouse has nothing —
