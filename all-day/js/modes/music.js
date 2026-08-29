@@ -27,7 +27,14 @@
 
    The artist card does not carry the Bandcamp iframe. Thirty of them on one
    screen is thirty third-party iframes; the embed lives in the sheet, built
-   when someone actually opens an artist. */
+   when someone actually opens an artist.
+
+   NO LOCAL SWITCH, deliberately. Every act on this tab is from Vermont — that
+   is the entry requirement for the roster — so the app-wide Local/Everything
+   control would have nothing to toggle. A switch that cannot change what you
+   see is worse than no switch: it teaches people the control is decorative,
+   on the one tab where it happens to be, and they carry that lesson to the
+   tabs where it matters. The heading says "60 Vermont artists" instead. */
 
 import * as store from './../store.js';
 import * as data from './../wire.js';
