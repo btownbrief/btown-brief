@@ -635,9 +635,19 @@ a.mode:hover { opacity: 1; }
   color: #7a6c58;
   padding: 3px 6px;
 }
-.lopt[aria-pressed="true"] {
+.lopt[aria-pressed="true"], .lopt.on {
   color: var(--orange);
   border-color: rgba(252, 86, 10, .4);
+}
+a.lopt { text-decoration: none; }
+a.lopt:hover { color: var(--orange); }
+
+/* The board switch only appears where the top bar's switch cannot: phones.
+   Above that the masthead carries it and this would be the same control
+   twice on one screen. */
+.lboard { display: none; }
+@media (max-width: 720px) {
+  .lboard { display: inline-flex; }
 }
 
 .lright {
@@ -757,15 +767,47 @@ body.tv .hint,
 body.tv .lbarwrap { display: none; }
 body.tv.idle, body.tv.idle .cell { cursor: none; }
 
+/* ---------- tablets and small laptop windows ---------- */
+/* Between 721px and a full desktop the bar's three columns (brand | clock |
+   status) simply did not fit: .status ran 180px past the right edge, taking
+   the board switch and the LIVE freeze button off screen with it. The bar is
+   `white-space: nowrap` inside an `auto` grid column, so nothing gave — it
+   just overflowed, silently, at every tablet width. */
+/* Below a laptop the switch keeps the two boards you would actually leave
+   running on a screen. READ is a scan-and-filter page, it is one tap away in
+   the shared nav above, and dropping it is what buys WATCH, TABLE and the
+   freeze button their room. */
+@media (max-width: 800px) {
+  .modes .mode-read { display: none; }
+}
+
+@media (max-width: 1080px) and (min-width: 721px) {
+  .bar { gap: 8px; }
+  .brand-pre { display: none; }
+  .mode { font-size: 9px; letter-spacing: .1em; padding: 5px 6px; }
+  .queue-top { padding: 4px 7px; gap: 4px; }
+  .queue-top .q-lbl { display: none; }
+  .queue-top.clear .q-min { display: inline; }
+  .status { gap: 6px; }
+}
+
 /* ---------- narrow portrait (phone upright) ---------- */
 
 @media (max-width: 720px) {
   .bar { grid-template-columns: 1fr auto auto; gap: 10px; }
-  .dayrow, .modes { display: none; }
+  .dayrow { display: none; }
   .clock { font-size: 17px; }
   .brand { font-size: 11px; letter-spacing: .22em; }
   .status { gap: 8px; }
+  /* The switch stays out of the bar here, and not for tidiness: this bar is
+     `white-space: nowrap`, so anything added to it raises the page's
+     min-content width, and the browser answers by zooming the whole board
+     out. Putting the three modes back cost 405px -> 501px of layout
+     viewport, i.e. every card on the page rendered at 78%. The way to the
+     other board lives in the bottom bar on phones instead — see .lboard. */
+  .modes { display: none; }
 }
+
 @media (max-width: 460px) {
   /* the queue stays on phones — number only, the box says the rest;
      everything else in the bar tightens to make its room */

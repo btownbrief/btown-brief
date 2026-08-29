@@ -101,6 +101,29 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
 }
 .ic-bar:hover { opacity: 1; }
 
+/* READ | WATCH | TABLE — the same switch Pulse Live carries, so the pair of
+   boards reads as one thing you can flip between rather than two pages that
+   happen to look alike. Deliberately identical to css/pulse-live.css. */
+.modes {
+  display: flex;
+  border: 1px solid rgba(252, 86, 10, .4);
+  overflow: hidden;
+}
+.mode {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: .14em;
+  padding: 6px 9px;
+  color: var(--orange);
+  opacity: .75;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.mode + .mode { border-left: 1px solid rgba(252, 86, 10, .4); }
+.mode.on { background: var(--orange); color: var(--ink); opacity: 1; }
+a.mode:hover { opacity: 1; }
+
 /* SYNC badge — the LIVE badge's cousin; pulses while devices march together */
 .sync-badge {
   display: inline-flex;
@@ -124,11 +147,27 @@ button { font: inherit; background: none; border: 0; padding: 0; color: inherit;
 @keyframes syncpulse { 50% { opacity: .25; } }
 
 /* phones: the brand and the SYNC badge matter more than the clock */
-@media (max-width: 520px) {
+@media (max-width: 800px) {
   .bar { grid-template-columns: 1fr auto; gap: 8px; }
   .clock { display: none; }
   .brand { font-size: 11px; letter-spacing: .22em; }
   .status { gap: 7px; }
+  /* The board switch has to fit beside SYNC, which is the whole multi-phone
+     feature and must never be the thing that falls off the edge. "BTOWN
+     BRIEF" is the part the reader can spare — the page is still titled, and
+     the shared nav above already says whose site this is. */
+  .brand-pre { display: none; }
+  .modes { flex: 0 0 auto; }
+  .mode { font-size: 9px; letter-spacing: .1em; padding: 5px 6px; }
+  .ic-bar { width: 24px; height: 24px; font-size: 12px; }
+}
+
+/* Below a laptop the switch keeps the two boards you would actually leave
+   running on a screen. READ is a scan-and-filter page, it is one tap away in
+   the shared nav above, and dropping it is what buys WATCH, TABLE and the
+   SYNC badge their room. Same rule, same width, as Pulse Live. */
+@media (max-width: 800px) {
+  .modes .mode-read { display: none; }
 }
 
 /* ---------- the card ---------- */
