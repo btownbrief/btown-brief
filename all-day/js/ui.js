@@ -176,6 +176,17 @@ export function chip(label, on, onClick, extraClass) {
   return b;
 }
 
+/* A shelf label: one line, legible, cheap. The full `heading` block is a
+   1.7rem serif plus a subtitle, which is right at the top of a reading
+   surface and wrong repeated down a tab you scroll for video. */
+export function shelfHead(host, title, sub) {
+  const h = el('div', 'shelf-head');
+  h.appendChild(el('span', 't', esc(title)));
+  if (sub) h.appendChild(el('span', 's', esc(sub)));
+  host.appendChild(h);
+  return h;
+}
+
 export function heading(host, { eyebrow, title, sub, right }) {
   const h = el('div', 'h-sec');
   const row = el('div', 'h-row');
