@@ -459,26 +459,101 @@ def fetch_vermont(key, now_ts, exclude):
     return found[:MAX_VERMONT]
 
 
-def fetch_live_now(key, now_ts, exclude):
-    """One eventType=live search — is anything Vermont streaming right now?
-    Live hits ride the Vermont shelf (vt:1) with dur 'LIVE', which both
-    clients already render as-is. 100 units per run."""
+# Cameras we always want, whether or not a keyword search happens to surface
+# them. Church Street is THE Burlington webcam and it was missing for exactly
+# this reason: its title and channel are "Church Street Market Place", which
+# a q=Vermont search with ten results never returns. VT_RE was never the
+# problem — the search was.
+PINNED_LIVE = [
+    "zl1woMXGGmQ",   # Church Street Market Place — the marketplace, live
+]
+
+# One search finds what one phrase finds. The cameras worth having are named
+# for the place they point at, not for the state they sit in.
+LIVE_QUERIES = ("Vermont", "Burlington Vermont", "Lake Champlain", "Vermont webcam")
+
+LIVE_MAX = 6
+
+
+def fetch_live_ids(key, ids):
+    """Resolve explicit video ids and keep only the ones actually live.
+
+    A pinned camera can be restarted under a new id or taken down — the live
+    shelf was shipping a 404 (Vermont FarmCam) because nothing ever checked.
+    liveBroadcastContent tells us; anything not currently 'live' is dropped
+    rather than rendered as a dead tile."""
+    if not ids:
+        return {}
     query = urllib.parse.urlencode({
-        "part": "snippet", "type": "video", "eventType": "live",
-        "q": "Vermont", "maxResults": 10, "regionCode": "US", "key": key})
-    live = []
-    for item in http_json(f"{API}/search?{query}").get("items", []):
-        vid = (item.get("id") or {}).get("videoId")
+        "part": "snippet", "id": ",".join(ids), "key": key})
+    found = {}
+    for item in http_json(f"{API}/videos?{query}").get("items", []):
         snippet = item.get("snippet") or {}
-        title = html.unescape((snippet.get("title") or "").strip())
-        channel = html.unescape((snippet.get("channelTitle") or "").strip())
-        if not vid or vid in exclude or not title:
+        if snippet.get("liveBroadcastContent") != "live":
             continue
-        if not VT_RE.search(f"{title} {channel}"):
+        found[item.get("id")] = {
+            "t": html.unescape((snippet.get("title") or "").strip())[:200],
+            "ch": html.unescape((snippet.get("channelTitle") or "").strip())[:60],
+        }
+    return found
+
+
+def fetch_live_now(key, now_ts, exclude):
+    """What is streaming from around here right now.
+
+    Pinned cameras first and unconditionally, then whatever the searches turn
+    up, deduped. Live hits ride the Vermont shelf (vt:1) with dur 'LIVE',
+    which both clients already render as-is. ~100 units per query."""
+    live = []
+    seen = set(exclude)
+    # A 24/7 stream gets restarted under a new id every so often, so the same
+    # camera can come back twice in one search (VermontLiveCam ships as both
+    # u0wvrqqTfcs and 351IvR64Po8). Dedupe on the title as well as the id.
+    titles = set()
+
+    def title_key(t):
+        return re.sub(r"[^a-z0-9]+", "", t.lower())[:60]
+
+    pinned = fetch_live_ids(key, [v for v in PINNED_LIVE if v not in seen])
+    for vid in PINNED_LIVE:
+        meta = pinned.get(vid)
+        if not meta:
+            print(f"warn: pinned live {vid} is not live right now", file=sys.stderr)
             continue
-        live.append({"id": vid, "t": title[:200], "ch": channel[:60],
+        seen.add(vid)
+        titles.add(title_key(meta["t"]))
+        live.append({"id": vid, "t": meta["t"], "ch": meta["ch"],
                      "d": now_ts, "dur": "LIVE", "vt": 1, "lv": 1})
-    return live[:4]
+
+    for phrase in LIVE_QUERIES:
+        if len(live) >= LIVE_MAX:
+            break
+        query = urllib.parse.urlencode({
+            "part": "snippet", "type": "video", "eventType": "live",
+            "q": phrase, "maxResults": 10, "regionCode": "US", "key": key})
+        try:
+            items = http_json(f"{API}/search?{query}").get("items", [])
+        except Exception as exc:  # noqa: BLE001 — one dud query must not cost the rest
+            print(f"warn: live search {phrase!r} failed: {exc}", file=sys.stderr)
+            continue
+        for item in items:
+            vid = (item.get("id") or {}).get("videoId")
+            snippet = item.get("snippet") or {}
+            title = html.unescape((snippet.get("title") or "").strip())
+            channel = html.unescape((snippet.get("channelTitle") or "").strip())
+            if not vid or vid in seen or not title:
+                continue
+            if not VT_RE.search(f"{title} {channel}"):
+                continue
+            if title_key(title) in titles:
+                continue
+            seen.add(vid)
+            titles.add(title_key(title))
+            live.append({"id": vid, "t": title[:200], "ch": channel[:60],
+                         "d": now_ts, "dur": "LIVE", "vt": 1, "lv": 1})
+            if len(live) >= LIVE_MAX:
+                break
+    return live[:LIVE_MAX]
 
 
 def build_digest(own, now_ts):

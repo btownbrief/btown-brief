@@ -1,630 +1,524 @@
-/* modes/wander.js — the rabbit hole.
+/* wander.js — Wikipedia, read inside the app.
 
-   Wikipedia as a place you go, not a link you follow. Everything here comes
-   from the live MediaWiki APIs, which are CORS-open and need no key, so this
-   mode has no server side at all.
+   Two screens on one hash. #wander is the doorway, #wander/{Title} is the
+   reader, so Back walks the rabbit hole in reverse and the trail shows how
+   deep you went.
 
-   Two findings shaped the design, both measured rather than assumed:
+   The doorway leads with things you can tap immediately. Making someone
+   press a category button before seeing a single article is a door in front
+   of a door — the rails are populated on arrival and every pool can be
+   reshuffled or opened out into a full list in place.
 
-   1. Random is the wrong primitive. Twelve real draws from list=random gave
-      NOBLEX E-Optics GmbH, Bray Unknowns F.C., LU 213 grenade and nine more
-      like them; filtering for "has a picture and a real intro" rescued 3 of
-      20, and those three were a butterfly and a defunct Alberta electoral
-      district. So nothing here draws from all of Wikipedia. It draws from
-      pools of things that are already interesting: the ~4,200 entries on
-      Wikipedia:Unusual articles, the last week's most-read, and what is
-      within walking distance of City Hall Park. See
-      scripts/build_wander_pool.py.
+   The search box sits above the big button on purpose: arriving with
+   something in mind is at least as common as wanting to be surprised.
 
-   2. The /page/related/ endpoint the docs recommend is retired — it answers
-      403. The replacement is a morelike: search, which returns eight
-      candidates with thumbnails and one-sentence extracts in a single 4.5 KB
-      request, and is better anyway.
+   THE SANITIZER is the load-bearing part. mobile-html is ~360KB of markup
+   anyone on earth can edit, and it gets injected into this page. Every rule
+   below was checked against a real payload and the comments say what breaks
+   without it. It hands back live nodes rather than an HTML string: the
+   serialise-and-reparse round trip is exactly what mutation-XSS exploits. */
 
-   The one rule the whole mode is built around: a link never leaves the app.
-   Every internal link is intercepted, pushed onto a visible trail, and loaded
-   in place. */
+import * as store from './../store.js';
+import * as data from './../wire.js';
+import * as app from './../app.js';
+import { el, esc, rail, heading, chip, ICON } from './../ui.js';
 
-import { getURL, get } from '../wire.js';
-import * as store from '../store.js';
-import { esc, safeUrl } from '../ui.js';
+const REST = 'https://en.wikipedia.org/api/rest_v1/';
+const ACTION = 'https://en.wikipedia.org/w/api.php?format=json&formatversion=2&origin=*&';
+const HERE = '44.48|-73.21';
 
-const API = 'https://en.wikipedia.org/w/api.php';
-const REST = 'https://en.wikipedia.org/api/rest_v1';
-const BURLINGTON = { lat: 44.4759, lon: -73.2121 };
+/* namespaces that must not become in-app links — the reader only renders
+   mainspace, so these degrade to plain text */
+const NS_PLAIN = /^(Special|File|Image|Media|Wikipedia|Help|Category|Template|Talk|Portal|Draft|User|Module|MediaWiki|Book)(\s+talk)?:/i;
 
-let root = null;
-let ctx = null;
-let pool = null;
-let trail = [];
-let peekTimer = 0;
-let peekEl = null;
+const POOLS = [
+  ['unusual', '🙃', 'Weird stuff', 'The strangest pages on Wikipedia, with their own jokes attached'],
+  ['vermont', '🍁', 'Near here', 'Everything within twelve kilometres of City Hall'],
+  ['popular', '🔥', 'What everyone is reading', 'The most-read articles of the past week'],
+];
 
-export default {
-  mount(el, context) {
-    root = el;
-    ctx = context;
-    trail = store.trail();
-
-    root.innerHTML = '<div id="wa-view"></div>';
-    root.addEventListener('click', onClick);
-    bindPeek();
-
-    loadPool();
-    doorway();
-  },
-
-  deactivate() { hidePeek(); },
-
-  focusSearch() {
-    const box = root.querySelector('#wa-search');
-    if (box) { box.focus(); return; }
-    doorway();
-    setTimeout(() => { const b = root.querySelector('#wa-search'); if (b) b.focus(); }, 60);
-  },
+const state = {
+  root: null, pool: null, at: null, gen: 0,
+  expanded: Object.create(null), shuffle: Object.create(null), suggestTimer: 0,
 };
 
-/* ------------------------------------------------------------------- api */
-
-function api(params) {
-  const p = Object.assign({ action: 'query', format: 'json', origin: '*', formatversion: 2 }, params);
-  return getURL(API + '?' + new URLSearchParams(p).toString());
+export function mount(root) {
+  state.root = root;
+  data.load('pool', (json) => { state.pool = json.pools; if (!state.at) renderDoor(); }, () => {
+    if (!state.at) renderDoor();
+  });
 }
 
-function summary(title) {
-  return getURL(REST + '/page/summary/' + encodeURIComponent(title.replace(/ /g, '_')), 60 * 60 * 1000);
+export function activate(param) {
+  if (param) openReader(param);
+  else { state.at = null; renderDoor(); }
 }
 
-/* Eight where-to-next candidates with art and a sentence, in one request. */
-function morelike(title) {
-  return api({
-    generator: 'search',
-    gsrsearch: 'morelike:' + title,
-    gsrlimit: 8,
-    gsrnamespace: 0,
-    prop: 'pageimages|description|extracts',
-    piprop: 'thumbnail',
-    pithumbsize: 400,
-    exintro: 1,
-    explaintext: 1,
-    exsentences: 1,
-  }).then(pagesOf);
+export function deactivate() {
+  clearTimeout(state.suggestTimer);
+  app.closePeek();
 }
 
-function pagesOf(d) {
-  const pages = (d && d.query && d.query.pages) || [];
-  const list = Array.isArray(pages) ? pages : Object.values(pages);
-  return list
-    .filter((p) => p && p.title && !p.missing)
-    .sort((a, b) => (a.index || 99) - (b.index || 99));
+const go = (title) => app.go('wander', title);
+const pretty = (t) => String(t || '').replace(/_/g, ' ');
+const list = (key) => (state.pool && Array.isArray(state.pool[key]) ? state.pool[key] : []);
+
+/* A stable-per-shuffle sample, so re-rendering does not reshuffle underneath
+   a finger already moving toward a card. */
+function sample(key, n) {
+  const pool = list(key);
+  if (!pool.length) return [];
+  const seed = state.shuffle[key] || 0;
+  const start = seed % Math.max(1, pool.length);
+  const out = [];
+  for (let i = 0; i < Math.min(n, pool.length); i++) out.push(pool[(start + i * 7) % pool.length]);
+  return out;
 }
 
-/* ------------------------------------------------------------------ pools */
+/* ------------------------------------------------------------ doorway */
 
-function loadPool() {
-  get('wanderPool')
-    .then((res) => { pool = res.data; })
-    .catch(() => {
-      /* The nightly pool file may not be built yet. Fall back to a live pool
-         so the mode works on day one; it is smaller but the same idea. */
-      pool = null;
-    });
-}
+function renderDoor() {
+  const root = state.root;
+  root.innerHTML = '';
 
-/* Pool entries are either a bare title or {t, d} — the unusual pool carries
-   the index's hand-written blurb, which is better copy than anything we
-   could generate. */
-function titleOf(entry) { return typeof entry === 'string' ? entry : (entry && entry.t) || ''; }
+  const door = el('section', 'door');
+  door.appendChild(el('h1', null, 'Wander'));
+  door.appendChild(el('p', null,
+    'Six million articles. One tap and you are seven deep — still in the app, with a trail of where you went.'));
 
-function poolList(which) {
-  return (pool && pool.pools && pool.pools[which]) || [];
-}
+  const search = el('div', 'search');
+  search.innerHTML =
+    '<svg class="mag" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>' +
+    '<input id="wq" type="search" autocomplete="off" placeholder="Look something up">' +
+    '<div class="suggest" id="wsug" hidden></div>';
+  door.appendChild(search);
 
-function drawFromPool(which) {
-  const list = poolList(which);
-  if (list.length) {
-    return Promise.resolve(titleOf(list[Math.floor(Math.random() * list.length)]));
-  }
-  // The nightly file may not exist yet. Live fallback: yesterday's most-read.
-  return livePopular().then((l) => l[Math.floor(Math.random() * l.length)]);
-}
+  const dice = el('button', 'btn btn-big', '🎲 Take me somewhere');
+  dice.addEventListener('click', takeMeSomewhere);
+  door.appendChild(dice);
+  root.appendChild(door);
 
-let popularCache = null;
-function livePopular() {
-  if (popularCache) return Promise.resolve(popularCache);
-  const d = new Date(Date.now() - 36 * 3600 * 1000);
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(d.getUTCDate()).padStart(2, '0');
-  return getURL('https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/' +
-    y + '/' + m + '/' + day, 6 * 3600 * 1000)
-    .then((res) => {
-      const arts = (res.items && res.items[0] && res.items[0].articles) || [];
-      popularCache = arts
-        .map((a) => a.article)
-        .filter((t) => !/^(Main_Page|Special:|Wikipedia:|Portal:|Category:|File:|Talk:|Help:)/.test(t))
-        .filter((t) => !/^(List_of|Lists_of|Deaths_in|\d{4}_)/.test(t))
-        .slice(0, 600)
-        .map((t) => t.replace(/_/g, ' '));
-      return popularCache;
-    })
-    .catch(() => ['Voynich manuscript', 'Dyatlov Pass incident', 'Antikythera mechanism']);
-}
-
-/* --------------------------------------------------------------- doorway */
-
-function doorway() {
-  const resume = trail.length > 1
-    ? '<button class="door" data-open="' + esc(trail[0].title) + '">' +
-        '<span class="ic">↩</span><span><span class="dt">Back down yesterday\'s hole</span>' +
-        '<span class="ds">' + esc(trail[0].title.toUpperCase()) + ' → ' + (trail.length - 1) + ' MORE</span></span>' +
-        '<span class="arr">→</span></button>'
-    : '';
-
-  root.querySelector('#wa-view').innerHTML =
-    '<div class="wrap">' +
-      '<div class="page-head">' +
-        '<h1>Wander</h1>' +
-        '<p class="sub">Wikipedia, but you never have to leave. Pick a door, then follow the ' +
-          'blue links as far as they go.</p>' +
-      '</div>' +
-      '<div class="searchwrap">' +
-        '<input class="searchbox" id="wa-search" type="search" placeholder="Look something up" autocomplete="off">' +
-        '<div id="wa-results"></div>' +
-      '</div>' +
-      '<div class="doors">' +
-        '<button class="door big" data-draw="mixed"><span class="ic">🎲</span>' +
-          '<span><span class="dt">Take me somewhere</span><span class="ds">ONE TAP · NO DECISIONS</span></span>' +
-          '<span class="arr">→</span></button>' +
-        '<button class="door" data-door="weird"><span class="ic">🌀</span>' +
-          '<span><span class="dt">The weird stuff</span><span class="ds" id="wa-n-unusual">WIKIPEDIA\'S OWN ODDITIES</span></span>' +
-          '<span class="arr">→</span></button>' +
-        '<button class="door" data-door="near"><span class="ic">📍</span>' +
-          '<span><span class="dt">Near here</span><span class="ds">WITHIN WALKING DISTANCE</span></span>' +
-          '<span class="arr">→</span></button>' +
-        '<button class="door" data-draw="popular"><span class="ic">📈</span>' +
-          '<span><span class="dt">What everyone\'s reading</span><span class="ds">YESTERDAY\'S MOST-READ</span></span>' +
-          '<span class="arr">→</span></button>' +
-        '<button class="door" data-door="today"><span class="ic">📅</span>' +
-          '<span><span class="dt">On this day</span><span class="ds" id="wa-today">' + todayLabel() + '</span></span>' +
-          '<span class="arr">→</span></button>' +
-        resume +
-      '</div>' +
-      '<div id="wa-door-body"></div>' +
-      (trail.length ? trailHistoryHTML() : '') +
-    '</div>';
-
-  const box = root.querySelector('#wa-search');
-  let t = 0;
-  box.addEventListener('input', () => {
-    clearTimeout(t);
-    const q = box.value.trim();
-    if (q.length < 2) { root.querySelector('#wa-results').innerHTML = ''; return; }
-    t = setTimeout(() => runSearch(q), 200);
+  const input = search.querySelector('#wq');
+  input.addEventListener('input', () => {
+    clearTimeout(state.suggestTimer);
+    const term = input.value.trim();
+    if (term.length < 2) { hideSuggest(); return; }
+    state.suggestTimer = setTimeout(() => suggest(term), 220);
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    root.querySelector('#wsug button')?.click();
   });
 
-  if (poolList('unusual').length) {
-    const n = poolList('unusual').length;
-    const el = root.querySelector('#wa-n-unusual');
-    if (el) el.textContent = n.toLocaleString() + ' CURATED ODDITIES';
-  }
+  renderTrail(root);
+  renderSaved(root);
+  POOLS.forEach(([key, emoji, name, sub]) => renderPool(root, key, emoji, name, sub));
+
+  if (!state.pool) root.appendChild(el('p', 'loading', 'Loading the pools…'));
 }
 
-function todayLabel() {
-  const d = new Date();
-  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }).toUpperCase();
+function hideSuggest() {
+  const s = state.root.querySelector('#wsug');
+  if (s) { s.hidden = true; s.innerHTML = ''; }
 }
 
-function trailHistoryHTML() {
-  return '<h2 class="sec">Where you\'ve been</h2>' +
-    '<div class="trail">' + trail.slice(0, 14).map((h, i) =>
-      (i ? '<i>←</i>' : '') + '<button data-open="' + esc(h.title) + '">' + esc(h.title) + '</button>'
-    ).join('') + '</div>';
-}
-
-/* ------------------------------------------------------------ door bodies */
-
-function nearHere(lat, lon, label) {
-  const body = root.querySelector('#wa-door-body');
-  body.innerHTML = '<p class="loading">Looking around…</p>';
-  api({ list: 'geosearch', gscoord: lat + '|' + lon, gsradius: 10000, gslimit: 30 })
-    .then((d) => {
-      const hits = (d.query && d.query.geosearch) || [];
-      if (!hits.length) { body.innerHTML = '<div class="empty"><b>Nothing nearby</b></div>'; return; }
-      return api({
-        titles: hits.map((h) => h.title).slice(0, 30).join('|'),
-        prop: 'pageimages|description',
-        piprop: 'thumbnail',
-        pithumbsize: 300,
-      }).then((meta) => {
-        const info = {};
-        pagesOf(meta).forEach((p) => { info[p.title] = p; });
-        body.innerHTML = '<h2 class="sec">Near ' + esc(label) + '</h2><div class="wa-cards">' +
-          hits.map((h) => cardHTML(h.title, info[h.title], Math.round(h.dist) + ' m away')).join('') +
-          '</div>';
+function suggest(term) {
+  data.fetchJSON(ACTION + 'action=opensearch&limit=8&search=' + encodeURIComponent(term), 8000)
+    .then((r) => {
+      const box = state.root.querySelector('#wsug');
+      if (!box) return;
+      const titles = r?.[1] || [];
+      const descs = r?.[2] || [];
+      if (!titles.length) { hideSuggest(); return; }
+      box.innerHTML = '';
+      titles.forEach((t, i) => {
+        const b = el('button', null,
+          esc(t) + (descs[i] ? '<span class="d">' + esc(descs[i]) + '</span>' : ''));
+        b.addEventListener('click', () => { hideSuggest(); go(t); });
+        box.appendChild(b);
       });
+      box.hidden = false;
     })
-    .catch(() => { body.innerHTML = '<div class="empty"><b>Couldn\'t look around</b></div>'; });
+    .catch(hideSuggest);
 }
 
-/* The index's own blurbs are the draw here — scrolling thirty of them is a
-   rabbit hole before you have opened anything. Shuffle deals thirty more. */
-function weirdList() {
-  const body = root.querySelector('#wa-door-body');
-  const list = poolList('unusual');
-  if (!list.length) {
-    body.innerHTML = '<p class="loading">The weird list isn\'t built yet — try "Take me somewhere".</p>';
+function renderPool(root, key, emoji, name, sub) {
+  const pool = list(key);
+  if (!pool.length) return;
+  const open = !!state.expanded[key];
+
+  const box = el('div', 'pool');
+  const head = el('button', 'pool-head');
+  head.innerHTML =
+    '<span class="pool-emoji">' + emoji + '</span>' +
+    '<span><span class="pool-name">' + esc(name) + '</span>' +
+      '<span class="pool-sub">' + esc(sub) + ' · ' + pool.length.toLocaleString() + '</span></span>' +
+    '<span class="chev">' + (open ? '▴' : '▾') + '</span>';
+  head.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+  const shuffle = el('button', 'iconbtn', ICON.shuffle);
+  shuffle.setAttribute('aria-label', 'Shuffle ' + name);
+  shuffle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    state.shuffle[key] = (state.shuffle[key] || 0) + 1 + Math.floor(Math.random() * 13);
+    renderDoor();
+  });
+  head.insertBefore(shuffle, head.lastElementChild);
+  head.addEventListener('click', () => { state.expanded[key] = !open; renderDoor(); });
+  box.appendChild(head);
+
+  const body = el('div', 'pool-body');
+  const { track, sync } = rail(body, { label: 'to read' });
+  sample(key, open ? 30 : 12).forEach((entry) => track.appendChild(doorCard(entry)));
+  sync();
+  box.appendChild(body);
+  root.appendChild(box);
+}
+
+function doorCard(entry) {
+  const title = (entry && entry.t) || entry;
+  const card = el('button', 'doorcard');
+  card.innerHTML = '<span class="t">' + esc(pretty(title)) + '</span>' +
+    (entry && entry.d ? '<span class="d">' + esc(entry.d) + '</span>' : '');
+  card.addEventListener('click', () => go(title));
+  return card;
+}
+
+function renderTrail(root) {
+  const t = store.trail();
+  if (!t.length) return;
+  heading(root, { eyebrow: 'Where you have been', title: 'Your trail' });
+  const row = el('div', 'trail');
+  t.slice().reverse().slice(0, 14).forEach((title) => {
+    const c = el('button', 'tchip' + (title === state.at ? ' here' : ''), esc(pretty(title)));
+    c.addEventListener('click', () => go(title));
+    row.appendChild(c);
+  });
+  const clear = el('button', 'tchip', 'Clear');
+  clear.addEventListener('click', () => { store.clearTrail(); renderDoor(); });
+  row.appendChild(clear);
+  root.appendChild(row);
+}
+
+function renderSaved(root) {
+  const saved = store.saved().filter((i) => i.kind === 'wiki');
+  if (!saved.length) return;
+  heading(root, { eyebrow: 'Saved articles', title: 'Kept for later' });
+  const row = el('div', 'trail');
+  saved.forEach((i) => {
+    const c = el('button', 'tchip here', '★ ' + esc(pretty(i.title)));
+    c.addEventListener('click', () => go(i.k));
+    row.appendChild(c);
+  });
+  root.appendChild(row);
+}
+
+function takeMeSomewhere() {
+  const buckets = [];
+  if (list('unusual').length) buckets.push({ w: 4, key: 'unusual' });
+  if (list('vermont').length) buckets.push({ w: 3, key: 'vermont' });
+  if (list('popular').length) buckets.push({ w: 2, key: 'popular' });
+  const total = buckets.reduce((n, b) => n + b.w, 0);
+  if (!total) {
+    data.fetchJSON(REST + 'page/random/summary', 10000)
+      .then((s) => { if (s?.titles) go(s.titles.canonical || s.titles.normalized); })
+      .catch(() => app.toast('Wikipedia is not answering — try again'));
     return;
   }
-  const picks = [];
-  const used = {};
-  while (picks.length < 30 && picks.length < list.length) {
-    const i = Math.floor(Math.random() * list.length);
-    if (used[i]) continue;
-    used[i] = 1;
-    picks.push(list[i]);
-  }
-  body.innerHTML =
-    '<h2 class="sec">The weird stuff <button class="chip" data-door="weird" style="margin-left:10px">Shuffle</button></h2>' +
-    '<p class="faint" style="margin:-8px 0 12px;font-size:.86rem">' +
-      list.length.toLocaleString() + ' pages Wikipedia\'s own editors flagged as strange. ' +
-      'The descriptions are theirs.</p>' +
-    '<div class="wa-weird">' + picks.map((e) =>
-      '<button class="wa-weird-row" data-open="' + esc(titleOf(e)) + '">' +
-        '<b>' + esc(titleOf(e)) + '</b>' +
-        (e.d ? '<span>' + esc(e.d) + '</span>' : '') +
-      '</button>').join('') + '</div>';
-  body.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  let roll = Math.random() * total;
+  let pick = buckets[0];
+  for (const b of buckets) { roll -= b.w; if (roll <= 0) { pick = b; break; } }
+  const pool = list(pick.key);
+  const entry = pool[Math.floor(Math.random() * pool.length)];
+  go((entry && entry.t) || entry);
 }
 
-function onThisDay() {
-  const body = root.querySelector('#wa-door-body');
-  body.innerHTML = '<p class="loading">Checking the calendar…</p>';
-  const d = new Date();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  getURL(REST + '/feed/onthisday/selected/' + mm + '/' + dd, 6 * 3600 * 1000)
-    .then((res) => {
-      const sel = (res.selected || []).slice(0, 12);
-      if (!sel.length) { body.innerHTML = '<div class="empty"><b>A quiet day in history</b></div>'; return; }
-      body.innerHTML = '<h2 class="sec">On ' + esc(todayLabel().toLowerCase()) + '</h2>' +
-        '<div class="wa-otd">' + sel.map((ev) => {
-          const p = (ev.pages || [])[0];
-          const title = p ? p.title : '';
-          const thumb = p && p.thumbnail ? p.thumbnail.source : '';
-          return '<button class="wa-otd-row" data-open="' + esc(title) + '">' +
-            (thumb ? '<img src="' + esc(safeUrl(thumb)) + '" alt="" loading="lazy">' : '<span class="wa-otd-nothumb"></span>') +
-            '<span><b class="wa-year">' + esc(ev.year) + '</b>' + esc(ev.text) + '</span></button>';
-        }).join('') + '</div>';
-    })
-    .catch(() => { body.innerHTML = '<div class="empty"><b>Couldn\'t reach the calendar</b></div>'; });
-}
+/* ------------------------------------------------------------- reader */
 
-function runSearch(q) {
-  api({
-    generator: 'search',
-    gsrsearch: q,
-    gsrlimit: 6,
-    gsrnamespace: 0,
-    prop: 'pageimages|description',
-    piprop: 'thumbnail',
-    pithumbsize: 200,
-  })
-    .then((d) => {
-      const hits = pagesOf(d);
-      root.querySelector('#wa-results').innerHTML = hits.length
-        ? '<div class="wa-results">' + hits.map((p) =>
-            '<button data-open="' + esc(p.title) + '"><b>' + esc(p.title) + '</b>' +
-            (p.description ? '<span>' + esc(p.description) + '</span>' : '') + '</button>').join('') + '</div>'
-        : '<p class="faint" style="padding:10px 2px;font-size:.86rem">Nothing found.</p>';
-    })
-    .catch(() => { /* leave the last results up */ });
-}
-
-function cardHTML(title, info, note) {
-  const thumb = info && info.thumbnail ? info.thumbnail.source : '';
-  const desc = (info && info.description) || '';
-  return '<button class="card wa-card" data-open="' + esc(title) + '">' +
-    (thumb ? '<img class="wa-card-img" src="' + esc(safeUrl(thumb)) + '" alt="" loading="lazy" decoding="async">'
-           : '<span class="wa-card-img wa-card-noimg"></span>') +
-    '<span class="wa-card-body">' +
-      '<span class="wa-card-t">' + esc(title) + '</span>' +
-      (desc ? '<span class="wa-card-d">' + esc(desc) + '</span>' : '') +
-      (note ? '<span class="wa-card-n">' + esc(note) + '</span>' : '') +
-    '</span></button>';
-}
-
-/* --------------------------------------------------------------- article */
-
-function open(title, opts) {
-  const view = root.querySelector('#wa-view');
-  view.innerHTML = '<div class="wrap"><p class="loading">Opening ' + esc(title) + '…</p></div>';
+function openReader(title) {
+  const root = state.root;
+  const gen = ++state.gen;          // anything older than this is stale
+  state.at = title;
+  root.innerHTML = '<p class="loading">Opening ' + esc(pretty(title)) + '…</p>';
   root.scrollTop = 0;
+  let summary = null;
 
-  if (!opts || !opts.noPush) pushTrail(title);
-
-  Promise.all([
-    api({ action: 'parse', page: title, prop: 'text|displaytitle', redirects: 1 })
-      .catch(() => null),
-    summary(title).catch(() => null),
-  ]).then(([parsed, sum]) => {
-    if (!parsed || !parsed.parse) {
-      view.innerHTML = '<div class="wrap"><div class="empty"><b>Couldn\'t open that one</b>' +
-        'It may have moved. <button class="btn" data-home style="margin-top:14px">Back to the doors</button></div></div>';
-      return;
-    }
-    const realTitle = (sum && sum.titles && sum.titles.normalized) || parsed.parse.title || title;
-    const k = store.keyOf('wiki:' + realTitle);
-    ctx.index(k, {
-      k,
-      kind: 'wiki',
-      t: realTitle,
-      u: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(realTitle.replace(/ /g, '_')),
-      s: 'Wikipedia',
-      i: sum && sum.thumbnail ? sum.thumbnail.source : '',
-    });
-
-    const article = clean(parsed.parse.text);
-    const on = store.isSaved(k);
-
-    view.innerHTML =
-      '<div class="wa-trailbar">' +
-        '<button class="wa-home" data-home aria-label="Back to the doors">✕</button>' +
-        '<div class="wa-crumbs">' + crumbsHTML() + '</div>' +
-        '<span class="wa-depth">' + trail.length + ' deep</span>' +
-      '</div>' +
-      '<div class="wrap wa-article">' +
-        '<h1 class="wa-title">' + esc(realTitle) + '</h1>' +
-        (sum && sum.description ? '<p class="wa-desc">' + esc(sum.description) + '</p>' : '') +
-        '<div class="wa-acts">' +
-          '<button class="btn" data-save="' + esc(k) + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
-            (on ? 'Saved' : 'Save') + '</button>' +
-          '<button class="btn" data-draw="mixed">Somewhere else</button>' +
-          '<a class="btn" href="https://en.wikipedia.org/wiki/' +
-            esc(encodeURIComponent(realTitle.replace(/ /g, '_'))) +
-            '" target="_blank" rel="noopener">On Wikipedia ↗</a>' +
-        '</div>' +
-        '<div class="wa-body" id="wa-body"></div>' +
-        '<div id="wa-next"><p class="loading">Finding where to go next…</p></div>' +
-      '</div>';
-
-    root.querySelector('#wa-body').appendChild(article);
-    nextShelf(realTitle);
-  });
+  data.fetchJSON(REST + 'page/summary/' + encodeURIComponent(title), 10000)
+    .then((s) => {
+      if (gen !== state.gen) throw new Error('superseded');
+      summary = s;
+      const canonical = s?.titles?.canonical;
+      /* redirects resolve here; replaceState rather than a new hash so Back
+         does not bounce between an alias and its target */
+      if (canonical && canonical !== title) {
+        title = canonical;
+        state.at = title;
+        try { history.replaceState(null, '', '#wander/' + encodeURIComponent(title)); } catch (e) { /* fine */ }
+      }
+      return data.fetchText(REST + 'page/mobile-html/' + encodeURIComponent(title), 20000);
+    })
+    .then((raw) => {
+      if (gen !== state.gen) return;
+      store.pushTrail(title);
+      renderArticle(title, raw, summary);
+    })
+    /* a request the reader has already navigated away from must not replace
+       what they are actually reading, error card included */
+    .catch(() => { if (gen === state.gen) readerError(title); });
 }
 
-/* Turn Wikipedia's article HTML into something that belongs in this app:
-   strip the furniture, neutralise anything executable, and convert every
-   internal link into an in-app navigation. */
-function clean(html) {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
+function readerError(title) {
+  const root = state.root;
+  root.innerHTML = '';
+  const box = el('div', 'errbox',
+    '<p><b>' + esc(pretty(title)) + '</b> would not open — either Wikipedia has no such article, or the connection dropped.</p>');
+  const btns = el('div', 'btns');
+  const retry = el('button', 'btn', 'Try again');
+  retry.addEventListener('click', () => openReader(title));
+  const home = el('button', 'btn btn-quiet', 'Back to the doorway');
+  home.addEventListener('click', () => app.go('wander'));
+  btns.append(retry, home);
+  box.appendChild(btns);
+  root.appendChild(box);
+}
+
+function unwrap(node, keepChildren) {
+  const parent = node.parentNode;
+  if (!parent) return;
+  if (keepChildren) while (node.firstChild) parent.insertBefore(node.firstChild, node);
+  parent.removeChild(node);
+}
+
+function sanitize(raw) {
+  const doc = new DOMParser().parseFromString(raw, 'text/html');
+
+  /* the lead image lives in <head>, which is about to go */
+  let lead = doc.querySelector('meta[property="mw:leadImage"]')?.getAttribute('content') || null;
+  /* it comes from the same untrusted document and has had none of the URL
+     rules applied, so hold it to the same standard */
+  if (lead && lead.startsWith('//')) lead = 'https:' + lead;
+  if (lead && !/^https:\/\//i.test(lead)) lead = null;
+
+  /* RULE 1. Every post-lead <section> ships style="display:none" and the
+     page's own JS reveals them. Miss this and the article renders as a
+     single paragraph and looks broken. */
+  doc.querySelectorAll('section[style]').forEach((s) => {
+    if (/display\s*:\s*none/i.test(s.getAttribute('style') || '')) s.removeAttribute('style');
+  });
+
+  /* RULE 2. Body inner only. The <base href="//en.wikipedia.org/wiki/">
+     dies with the head — a relative URL that leaked past us would resolve
+     against wikipedia.org and break our own chrome. */
   const body = doc.body;
 
-  body.querySelectorAll(
-    'script, style, link, meta, iframe, object, embed, form, ' +
-    '.mw-editsection, .navbox, .vertical-navbox, .metadata, .mbox-text, ' +
-    'table.ambox, table.ombox, .sistersitebox, .portal, .noprint, ' +
-    '#toc, .toc, .reflist, .mw-references-wrap, .refbegin, .navigation-not-searchable, ' +
-    '.mw-empty-elt, .shortdescription, .hatnote + .hatnote, sup.reference, ' +
-    '.mw-cite-backlink, .error, .plainlinks .external'
-  ).forEach((n) => n.remove());
-
-  // Nothing survives that can execute or navigate outside our control.
+  /* RULE 3. Nothing executable, nothing that restyles the page. <base> is
+     listed as well as dying with the head: Parsoid puts it in <head>, but a
+     <base> anywhere in the body would still repoint every relative URL. */
+  body.querySelectorAll('script, style, link, meta, base, iframe, form, input, object, embed, template, noscript')
+    .forEach((n) => n.remove());
   body.querySelectorAll('*').forEach((n) => {
     [...n.attributes].forEach((a) => {
       if (/^on/i.test(a.name)) n.removeAttribute(a.name);
-      if (a.name === 'style' && /expression|url\s*\(/i.test(a.value)) n.removeAttribute('style');
+      else if (/^(href|src|srcset|action|formaction|xlink:href)$/i.test(a.name) &&
+               /^\s*(javascript|data):/i.test(a.value)) n.removeAttribute(a.name);
     });
   });
 
-  body.querySelectorAll('a').forEach((a) => {
+  /* RULE 4 (before rule 5, deliberately). Every citation is an <a> pointing
+     at ./ThisArticle#cite_note-N. Left alone, rule 5 would turn all 700 of
+     them into in-app links back to the page you are already on. */
+  body.querySelectorAll('sup.mw-ref').forEach((sup) => {
+    const note = document.createElement('sup');
+    note.className = 'wikinote';
+    note.textContent = '†';
+    sup.replaceWith(note);
+  });
+  body.querySelectorAll('.mw-references-wrap, ol.mw-references, .reflist, .references, .pcs-ref, [id^="cite_note"]')
+    .forEach((n) => n.remove());
+
+  /* RULE 5. //host/… → https://host/… */
+  body.querySelectorAll('[href], [src], [srcset]').forEach((n) => {
+    ['href', 'src', 'srcset'].forEach((attr) => {
+      const v = n.getAttribute(attr);
+      if (v && v.slice(0, 2) === '//') n.setAttribute(attr, 'https:' + v);
+    });
+  });
+
+  /* RULE 6. Parsoid ./Title → in-app, namespace → plain, redlink → text.
+     Unwrapping keeps CHILD NODES, never textContent: File: links wrap the
+     images, and textContent would silently delete every picture. */
+  body.querySelectorAll('a[href]').forEach((a) => {
     const href = a.getAttribute('href') || '';
-    if (href.startsWith('#')) { unwrap(a); return; }          // citation jumps, nothing to jump to
-    const m = /^\/wiki\/([^#?]+)/.exec(href);
-    if (m) {
-      const t = decodeURIComponent(m[1]).replace(/_/g, ' ');
-      if (/^(File|Image|Category|Template|Help|Portal|Wikipedia|Special|Talk):/i.test(t)) {
-        unwrap(a);
-        return;
-      }
-      a.setAttribute('data-wiki', t);
-      a.removeAttribute('href');
-      a.setAttribute('role', 'link');
-      a.setAttribute('tabindex', '0');
-      a.className = 'wl';
+    if (/\/w\/index\.php\?|action=edit|redlink=1/.test(href) || a.classList.contains('new')) {
+      unwrap(a, true);
       return;
     }
-    const abs = safeUrl(href.startsWith('//') ? 'https:' + href : href);
-    if (abs) {
-      a.setAttribute('href', abs);
+    const m = href.match(/^(?:\.\/|\/wiki\/)([^?#]+)/);
+    if (m) {
+      const target = decodeURIComponent(m[1]).replace(/_/g, ' ');
+      if (NS_PLAIN.test(target)) {
+        const span = document.createElement('span');
+        span.className = 'plain-link';
+        while (a.firstChild) span.appendChild(a.firstChild);
+        a.replaceWith(span);
+      } else {
+        /* mw-redirect links stay clickable — REST resolves redirects */
+        a.setAttribute('data-wiki', target);
+        a.setAttribute('href', '#wander/' + encodeURIComponent(target));
+        a.removeAttribute('target');
+      }
+    } else if (/^https?:\/\//i.test(href)) {
       a.setAttribute('target', '_blank');
-      a.setAttribute('rel', 'noopener nofollow');
-      a.className = 'wx';
-    } else unwrap(a);
-  });
-
-  body.querySelectorAll('img').forEach((img) => {
-    const src = img.getAttribute('src') || '';
-    img.setAttribute('src', src.startsWith('//') ? 'https:' + src : src);
-    img.setAttribute('loading', 'lazy');
-    img.setAttribute('decoding', 'async');
-    img.removeAttribute('srcset');
-  });
-
-  // Infoboxes are table hell on a phone. Keep the picture, fold the rest away.
-  body.querySelectorAll('table.infobox').forEach((t) => {
-    const img = t.querySelector('img');
-    const det = doc.createElement('details');
-    det.className = 'wa-infobox';
-    const sum = doc.createElement('summary');
-    sum.textContent = 'The facts box';
-    det.appendChild(sum);
-    if (img) {
-      const fig = doc.createElement('div');
-      fig.className = 'wa-infoimg';
-      fig.appendChild(img.cloneNode(true));
-      t.parentNode.insertBefore(fig, t);
+      a.setAttribute('rel', 'noopener');
+    } else {
+      a.removeAttribute('href');
     }
-    t.parentNode.insertBefore(det, t);
-    det.appendChild(t);
   });
 
-  const frag = doc.createElement('div');
-  while (body.firstChild) frag.appendChild(body.firstChild);
-  return frag;
+  /* RULE 7. Every id and name goes. Wikipedia uses them for section anchors
+     we already strip, and leaving them lets a page carrying id="theme-btn"
+     — or "vbox", or "sheet" — win a document-wide getElementById and bind
+     the app's own handlers to article content. `name` goes for the same
+     reason: named elements land on window. */
+  body.querySelectorAll('[id], [name]').forEach((n) => {
+    n.removeAttribute('id');
+    n.removeAttribute('name');
+  });
+
+  /* RULE 8. Inline styles are Wikipedia's own table and float layout and are
+     worth keeping — except the positioning ones, which would let article
+     content lift itself out of the reader and sit on top of the app. */
+  body.querySelectorAll('[style]').forEach((n) => {
+    const v = n.getAttribute('style') || '';
+    if (/position\s*:\s*(fixed|sticky|absolute)|z-index/i.test(v)) {
+      n.setAttribute('style', v.replace(/(^|;)\s*(position|z-index|top|left|right|bottom)\s*:[^;]*/gi, ''));
+    }
+  });
+
+  /* RULE 9. Furniture out; wide tables kept but boxed so they can scroll. */
+  body.querySelectorAll(
+    'table.infobox, .infobox, .navbox, .metadata, .mw-empty-elt, .mw-editsection, ' +
+    '.pcs-edit-section-link, .mw-kartographer-map, .mw-kartographer-container, ' +
+    '.pcs-fold-hr, .hatnote-container'
+  ).forEach((n) => n.remove());
+  body.querySelectorAll('table').forEach((t) => {
+    if (t.closest('.table-wrap')) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    t.parentNode.insertBefore(wrap, t);
+    wrap.appendChild(t);
+  });
+
+  /* Live nodes, NOT body.innerHTML. Serialising to a string and reparsing it
+     into the page is the classic mutation-XSS setup: a few elements
+     (svg/style, math/annotation-xml, noembed, xmp) serialise to markup that
+     reparses with a different meaning, which is how a sanitised tree turns
+     back into a live script. Adopting the nodes skips the second parse. */
+  return { body, lead };
 }
 
-function unwrap(a) {
-  const parent = a.parentNode;
-  while (a.firstChild) parent.insertBefore(a.firstChild, a);
-  parent.removeChild(a);
+function renderArticle(title, raw, summary) {
+  const root = state.root;
+  const clean = sanitize(raw);
+  const hero = clean.lead || summary?.originalimage?.source || summary?.thumbnail?.source;
+  root.innerHTML = '';
+
+  const trailBox = el('div');
+  renderTrail(trailBox);
+  root.appendChild(trailBox);
+
+  if (hero) {
+    const img = el('img', 'reader-hero');
+    img.src = hero;
+    img.alt = '';
+    img.loading = 'lazy';
+    img.addEventListener('error', () => img.remove());
+    root.appendChild(img);
+  }
+
+  const art = el('article', 'reader');
+  while (clean.body.firstChild) art.appendChild(document.adoptNode(clean.body.firstChild));
+  root.appendChild(art);
+  wireLinks(art);
+
+  const acts = el('div', 'reader-acts');
+  const rec = { k: title, kind: 'wiki', title: pretty(title), from: 'Wikipedia', href: '#wander/' + encodeURIComponent(title) };
+  const save = el('button', 'btn btn-quiet', store.isSaved(title) ? '★ Saved' : '☆ Save');
+  save.addEventListener('click', () => {
+    save.textContent = store.toggleSaved(rec) ? '★ Saved' : '☆ Save';
+  });
+  const worm = el('button', 'btn btn-quiet', '🌀 Wormhole');
+  worm.addEventListener('click', takeMeSomewhere);
+  const src = el('a', 'btn btn-quiet', 'Sources on Wikipedia ↗');
+  src.href = 'https://en.wikipedia.org/wiki/' + encodeURIComponent(title);
+  src.target = '_blank';
+  src.rel = 'noopener';
+  acts.append(save, worm, src);
+  root.appendChild(acts);
+
+  keepFalling(title, root);
 }
 
-/* Where to go next: morelike candidates, plus a couple of links drawn from
-   the article you just read, because the best next thing is often something
-   the writer already mentioned. */
-function nextShelf(title) {
-  const slot = root.querySelector('#wa-next');
-  if (!slot) return;
+let peeked = false;
 
-  const inline = [...root.querySelectorAll('#wa-body p .wl')]
-    .map((a) => a.getAttribute('data-wiki'))
-    .filter((t, i, arr) => t && arr.indexOf(t) === i);
-
-  morelike(title)
-    .then((list) => {
-      const seen = { [title]: 1 };
-      const cards = [];
-      list.forEach((p) => {
-        if (seen[p.title]) return;
-        seen[p.title] = 1;
-        cards.push(cardHTML(p.title, p, p.extract ? '' : ''));
-      });
-      const extras = inline.filter((t) => !seen[t]).slice(0, 3);
-      return Promise.all(extras.length
-        ? [api({ titles: extras.join('|'), prop: 'pageimages|description', piprop: 'thumbnail', pithumbsize: 300 })]
-        : []
-      ).then(([meta]) => {
-        if (meta) pagesOf(meta).forEach((p) => cards.push(cardHTML(p.title, p, 'mentioned above')));
-        slot.innerHTML = '<h2 class="sec">Where to next</h2>' +
-          '<div class="wa-cards">' + cards.slice(0, 8).join('') + '</div>' +
-          '<button class="more-btn" data-draw="mixed">Somewhere else entirely ↯</button>';
-      });
-    })
-    .catch(() => {
-      slot.innerHTML = '<button class="more-btn" data-draw="mixed">Somewhere else entirely ↯</button>';
+function wireLinks(art) {
+  art.querySelectorAll('a[data-wiki]').forEach((a) => {
+    const target = a.getAttribute('data-wiki');
+    let hold = 0;
+    a.addEventListener('click', (e) => {
+      /* a press-and-hold peek must not also navigate */
+      if (peeked) { e.preventDefault(); peeked = false; }
     });
-}
-
-/* ----------------------------------------------------------------- trail */
-
-function pushTrail(title) {
-  trail = trail.filter((h) => h.title !== title);
-  trail.unshift({ title, at: Math.floor(Date.now() / 1000) });
-  store.setTrail(trail);
-}
-
-function crumbsHTML() {
-  return trail.slice(0, 8).reverse().map((h, i, arr) =>
-    '<button data-open="' + esc(h.title) + '"' + (i === arr.length - 1 ? ' class="on"' : '') + '>' +
-    esc(h.title) + '</button>').join('<i>›</i>');
-}
-
-/* ------------------------------------------------------------------ peek */
-/* Press and hold a link to see what is behind it without losing your place.
-   This is the mechanic that turns reading into wandering. */
-
-function bindPeek() {
-  root.addEventListener('pointerdown', (e) => {
-    const a = e.target.closest('.wl');
-    if (!a) return;
-    clearTimeout(peekTimer);
-    peekTimer = setTimeout(() => showPeek(a), 420);
+    a.addEventListener('pointerdown', () => {
+      clearTimeout(hold);
+      hold = setTimeout(() => { peeked = true; peekArticle(target); }, 450);
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) =>
+      a.addEventListener(ev, () => clearTimeout(hold)));
   });
-  ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) =>
-    root.addEventListener(ev, () => clearTimeout(peekTimer)));
-  root.addEventListener('scroll', hidePeek, { passive: true });
-  root.addEventListener('contextmenu', (e) => { if (e.target.closest('.wl')) e.preventDefault(); });
 }
 
-function showPeek(a) {
-  const title = a.getAttribute('data-wiki');
-  if (!title) return;
-  hidePeek();
-
-  peekEl = document.createElement('div');
-  peekEl.className = 'wa-peek';
-  peekEl.innerHTML = '<p class="loading" style="padding:18px">…</p>';
-  document.body.appendChild(peekEl);
-  place(a);
-
-  summary(title)
+function peekArticle(title) {
+  if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) { /* ignore */ } }
+  const open = el('button', 'btn', 'Open');
+  open.addEventListener('click', () => { app.closePeek(); go(title); });
+  const { content } = app.peek({ title: pretty(title), loading: true, actions: [open] });
+  data.fetchJSON(REST + 'page/summary/' + encodeURIComponent(title), 8000)
     .then((s) => {
-      if (!peekEl) return;
-      const thumb = s.thumbnail ? safeUrl(s.thumbnail.source) : '';
-      peekEl.innerHTML =
-        (thumb ? '<img src="' + esc(thumb) + '" alt="">' : '') +
-        '<div class="wa-peek-body">' +
-          '<b>' + esc(s.title) + '</b>' +
-          (s.description ? '<i>' + esc(s.description) + '</i>' : '') +
-          '<p>' + esc((s.extract || '').slice(0, 220)) + '</p>' +
-          '<button class="btn primary" data-open="' + esc(s.title) + '">Go there</button>' +
-        '</div>';
-      place(a);
+      content.innerHTML = '';
+      if (s.thumbnail?.source) {
+        const img = el('img');
+        img.src = s.thumbnail.source;
+        img.alt = '';
+        content.appendChild(img);
+      }
+      content.appendChild(el('p', null, esc(s.extract || '')));
     })
-    .catch(() => hidePeek());
+    .catch(() => { content.innerHTML = '<p class="empty">Could not load that one.</p>'; });
 }
 
-function place(a) {
-  if (!peekEl) return;
-  const r = a.getBoundingClientRect();
-  const w = Math.min(320, window.innerWidth - 24);
-  peekEl.style.width = w + 'px';
-  let left = Math.min(Math.max(12, r.left), window.innerWidth - w - 12);
-  const below = window.innerHeight - r.bottom;
-  peekEl.style.left = left + 'px';
-  if (below > 230) { peekEl.style.top = (r.bottom + 8) + 'px'; peekEl.style.bottom = 'auto'; }
-  else { peekEl.style.bottom = (window.innerHeight - r.top + 8) + 'px'; peekEl.style.top = 'auto'; }
-}
-
-function hidePeek() {
-  clearTimeout(peekTimer);
-  if (peekEl) { peekEl.remove(); peekEl = null; }
-}
-
-/* ---------------------------------------------------------------- events */
-
-function onClick(e) {
-  if (peekEl && !peekEl.contains(e.target)) {
-    const inPeek = e.target.closest('.wa-peek');
-    if (!inPeek) hidePeek();
-  }
-
-  const link = e.target.closest('.wl');
-  if (link) { e.preventDefault(); hidePeek(); open(link.getAttribute('data-wiki')); return; }
-
-  const openBtn = e.target.closest('[data-open]');
-  if (openBtn) { hidePeek(); open(openBtn.getAttribute('data-open')); return; }
-
-  if (e.target.closest('[data-home]')) { hidePeek(); doorway(); return; }
-
-  const draw = e.target.closest('[data-draw]');
-  if (draw) {
-    const which = draw.getAttribute('data-draw');
-    draw.disabled = true;
-    const kind = which === 'mixed'
-      ? (Math.random() < 0.55 ? 'unusual' : 'popular')
-      : which;
-    drawFromPool(kind)
-      .then((title) => { draw.disabled = false; if (title) open(title); })
-      .catch(() => { draw.disabled = false; ctx.toast('Wikipedia didn\'t answer — try again'); });
-    return;
-  }
-
-  if (e.target.closest('[data-door="near"]')) {
-    nearHere(BURLINGTON.lat, BURLINGTON.lon, 'City Hall Park');
-    return;
-  }
-  if (e.target.closest('[data-door="weird"]')) { weirdList(); return; }
-  if (e.target.closest('[data-door="today"]')) { onThisDay(); return; }
+function keepFalling(title, root) {
+  const box = el('div');
+  heading(box, { eyebrow: 'Keep falling', title: 'Where this leads' });
+  root.appendChild(box);
+  data.fetchJSON(ACTION + 'action=query&generator=search&gsrsearch=' +
+    encodeURIComponent('morelike:' + title) +
+    '&gsrlimit=8&prop=pageimages|description&piprop=thumbnail&pithumbsize=320', 10000)
+    .then((r) => {
+      const pages = r?.query?.pages || [];
+      if (!pages.length) { box.remove(); return; }
+      pages.sort((a, b) => (a.index || 0) - (b.index || 0));
+      const { track, sync } = rail(box, { label: 'to read' });
+      pages.forEach((p) => {
+        const card = el('button', 'doorcard');
+        card.innerHTML =
+          (p.thumbnail ? '<img loading="lazy" src="' + esc(p.thumbnail.source) + '" alt="">' : '') +
+          '<span class="t">' + esc(p.title) + '</span>' +
+          (p.description ? '<span class="d">' + esc(p.description) + '</span>' : '');
+        card.addEventListener('click', () => go(p.title));
+        track.appendChild(card);
+      });
+      sync();
+    })
+    .catch(() => box.remove());
 }

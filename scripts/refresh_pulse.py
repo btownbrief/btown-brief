@@ -555,6 +555,31 @@ HN_THREAD_RE = re.compile(
 HN_COUNT_RE = re.compile(r'#\s*Comments:\s*(\d+)', re.I)
 
 
+EXCERPT_MAX = 260
+EXCERPT_CAP = 500        # newest N items carry one; the rest would double the payload
+
+
+def item_excerpt(node):
+    """The first couple of sentences of a story, for the hold-to-preview card.
+
+    Feeds put this in <description> (RSS) or <summary>/<content> (Atom), as
+    HTML. We strip it to text: the preview renders as plain text on purpose,
+    because injecting feed HTML into the page is a needless attack surface for
+    two sentences of value.
+
+    Reddit and HN descriptions are link scaffolding rather than prose, and
+    Inoreader's email items are whole newsletters — both are dropped by the
+    caller rather than shown."""
+    raw = (node.findtext("description")
+           or node.findtext(ATOM + "summary")
+           or node.findtext(ATOM + "content")
+           or "")
+    text = clean_space(strip_html(html.unescape(raw)))
+    if len(text) < 40:
+        return ""
+    return trim(text, EXCERPT_MAX)
+
+
 def parse_stream(raw):
     """Inoreader folder RSS → items tagged with their origin feed.
 
@@ -573,6 +598,7 @@ def parse_stream(raw):
             "image": item_image(node),
             "src_title": clean_space(source.text if source is not None else ""),
             "src_site": site,
+            "excerpt": item_excerpt(node),
         }
         if "inoreader.com" in site:
             # An email-to-feed item: the <link> is Inoreader-private. Dig the
@@ -779,6 +805,12 @@ def merge_source(previous, incoming, now_ts, cap=ITEM_CAP):
             fresh["a"] = item["audio"]
         if item.get("image"):
             fresh["i"] = item["image"]
+        # reddit/HN descriptions are link scaffolding, and an email item's
+        # description is the entire newsletter — neither is a preview
+        if item.get("excerpt") and not item.get("email"):
+            site = item.get("src_site") or ""
+            if "reddit.com" not in site and "ycombinator.com" not in site:
+                fresh["e"] = item["excerpt"]
         if item.get("out"):
             fresh["o"] = item["out"]
         if item.get("thread"):
@@ -963,6 +995,10 @@ def build_payload(sources, per_source, generated):
         for item in items:
             out_items.append(dict(item, s=source["id"]))
     out_items.sort(key=lambda entry: entry.get("d", 0), reverse=True)
+    # Excerpts are for the preview card, and nobody long-presses row 900.
+    # Keeping them on every item would add roughly half a megabyte.
+    for entry in out_items[EXCERPT_CAP:]:
+        entry.pop("e", None)
     return {
         "v": 1,
         "generated": generated.replace(microsecond=0).isoformat(),

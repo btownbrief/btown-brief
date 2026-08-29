@@ -1,146 +1,198 @@
-/* wire.js — the one place this app fetches anything.
+/* wire.js — one fetch per payload, shared by every tab.
 
-   Three of the five modes (Read, Reddit, Listen) all live off a single file:
-   data/pulse.json on the pulse-data branch, ~894 KB raw and ~262 KB over the
-   wire. Today pulse.html and listen.html each download that separately. Here
-   they share one request, because every caller asking for the same key while
-   a fetch is in flight gets the same promise back.
+   Ported from js/pulse.js's loadData/retryLive/checkFresh, which is the
+   behaviour the site already has and readers already expect:
 
-   Everything is memory-cached with a per-source TTL. Nothing large goes into
-   localStorage or sessionStorage — serialising a 900 KB payload synchronously
-   would block the main thread and double the memory for no gain. The service
-   worker handles cold starts instead.
+   - production: the live data branch first, the same-origin snapshot as
+     fallback. That snapshot is only as fresh as main's daily sync, so
+     falling back to it marks the app STALE, says so, and keeps retrying the
+     live branch on a [8s, 20s, 60s] backoff.
+   - local dev: same-origin first, so the app works with no network.
+   - pulse-top and pulse-youtube have no same-origin copy. They fail soft:
+     the strip they feed simply is not rendered.
+   - the wander pool is committed to the repo, so it is same-origin only and
+     always present — no branch to miss.
 
-   Data branches are orphan branches force-pushed by the refresh workflows and
-   served from raw.githubusercontent.com, which is CORS-open with a ~5 minute
-   edge cache. Each has a first-paint fallback committed on main that may be
-   up to a day stale. */
+   Every ten minutes a poll re-checks. It never re-renders underneath
+   someone: the swap goes through freshGate(), which the shell answers with
+   either "apply now" (barely scrolled) or a "fresh" pill.
 
-const RAW = 'https://raw.githubusercontent.com/btownbrief/btown-brief/';
+   A payload that arrives malformed is treated as a failure, not as data.
+   Without that check a truncated file reaches a tab's renderer, throws
+   inside the subscriber loop, and leaves the tab on "Loading…" forever. */
 
-export const SOURCES = {
+const LIVE = 'https://raw.githubusercontent.com/btownbrief/btown-brief/';
+
+const FILES = {
   pulse: {
-    live: RAW + 'pulse-data/data/pulse.json',
-    fallback: '/data/pulse.json',
-    ttl: 5 * 60 * 1000,
-  },
-  pulseMeta: {
-    live: RAW + 'pulse-data/data/pulse-meta.json',
-    ttl: 60 * 1000,
+    live: LIVE + 'pulse-data/data/pulse.json',
+    local: '../data/pulse.json',
+    poll: true,
+    ok: (j) => j && Array.isArray(j.sources) && Array.isArray(j.items),
   },
   top: {
-    live: RAW + 'pulse-top/data/pulse-top.json',
-    ttl: 10 * 60 * 1000,
-  },
-  youtube: {
-    live: RAW + 'pulse-youtube/data/pulse-youtube.json',
-    ttl: 10 * 60 * 1000,
+    live: LIVE + 'pulse-top/data/pulse-top.json',
+    local: null,
+    poll: true,
+    ok: (j) => j && Array.isArray(j.picks),
   },
   tv: {
-    // tv.html reads the branch; listen.html reads main's copy, which has been
-    // frozen since 2026-08-23. One source of truth, branch first.
-    live: RAW + 'btown-tv/data/btown-tv.json',
-    fallback: '/data/btown-tv.json',
-    ttl: 30 * 60 * 1000,
+    live: LIVE + 'btown-tv/data/btown-tv.json',
+    local: '../data/btown-tv.json',
+    poll: true,
+    ok: (j) => j && (j.pick || Array.isArray(j.shelves)),
   },
-  tvEditions: {
-    live: RAW + 'btown-tv/data/tv-editions.json',
-    ttl: 6 * 60 * 60 * 1000,
+  youtube: {
+    live: LIVE + 'pulse-youtube/data/pulse-youtube.json',
+    local: null,
+    ok: (j) => j && Array.isArray(j.videos),
   },
-  weather: { live: '/data/weather/latest.json', ttl: 10 * 60 * 1000 },
-  wanderPool: { live: 'data/wander-pool.json', ttl: 12 * 60 * 60 * 1000 },
+  pool: {
+    live: null,
+    local: 'data/wander-pool.json',
+    ok: (j) => j && j.pools && typeof j.pools === 'object',
+  },
 };
 
-const mem = new Map();      // key -> { at, data, stale }
-const inflight = new Map(); // key -> promise
+const STALE_RETRIES = [8000, 20000, 60000];
+const POLL_MS = 600000;
+const DEAD_FOR = 120000;   // a startup blip must not disable a feed for the session
 
-/* Note there is deliberately no "prefer the local copy on localhost" flip.
-   pulse.html has one, and it means local development quietly reads a
-   different file from production — which is exactly how listen.html ended up
-   shipping a five-day-old BTown TV edition without anyone noticing. Live
-   first, everywhere, so what you test is what people get. */
+const cache = Object.create(null);
+const subs = Object.create(null);
+const fails = Object.create(null);
+const inflight = Object.create(null);
+const dead = Object.create(null);
+const stale = Object.create(null);
 
-function fetchJSON(url, timeoutMs = 15000, noCache = false) {
-  const ctl = new AbortController();
-  const timer = setTimeout(() => ctl.abort(), timeoutMs);
-  const opts = { signal: ctl.signal };
-  if (noCache) opts.cache = 'no-cache';
-  return fetch(url, opts)
-    .then((r) => {
-      if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + url);
-      return r.json();
-    })
-    .finally(() => clearTimeout(timer));
+let gate = (apply) => apply();
+let onStaleChange = () => {};
+
+export function setFreshGate(fn) { gate = fn; }
+export function setStaleHandler(fn) { onStaleChange = fn; }
+
+export function isLocalDev() {
+  const h = location.hostname;
+  /* 127.x is a prefix, not a whole hostname — anchoring the alternation
+     would quietly send 127.0.0.1 down the production path */
+  return location.protocol === 'file:' ||
+    /^(localhost|0\.0\.0\.0|\[?::1\]?)$/.test(h) || /^127\./.test(h);
 }
 
-/* get(key) resolves to { data, stale, at }. `stale` means the live branch
-   could not be reached and this is main's committed fallback. */
-export function get(key, opts = {}) {
-  const src = SOURCES[key];
-  if (!src) return Promise.reject(new Error('unknown source: ' + key));
-
-  const force = !!opts.force;
-  const hit = mem.get(key);
-  if (!force && hit && Date.now() - hit.at < src.ttl) return Promise.resolve(hit);
-  if (!force && inflight.has(key)) return inflight.get(key);
-
-  const p = fetchJSON(src.live, opts.timeout, force)
-    .then((data) => ({ data, stale: false, at: Date.now() }))
-    .catch((err) => {
-      if (!src.fallback) throw err;
-      return fetchJSON(src.fallback, opts.timeout, force).then((data) => ({
-        data,
-        stale: true,
-        at: Date.now(),
-      }));
-    })
+function request(url, timeoutMs, asText) {
+  const ctl = 'AbortController' in window ? new AbortController() : null;
+  const timer = ctl && setTimeout(() => ctl.abort(), timeoutMs || 8000);
+  return fetch(url, ctl ? { signal: ctl.signal } : {})
     .then((res) => {
-      mem.set(key, res);
-      inflight.delete(key);
-      return res;
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return asText ? res.text() : res.json();
     })
-    .catch((err) => {
-      inflight.delete(key);
-      // A previous good copy beats an error screen.
-      if (hit) return hit;
-      throw err;
+    .finally(() => { if (timer) clearTimeout(timer); });
+}
+
+export const fetchJSON = (url, ms) => request(url, ms, false);
+export const fetchText = (url, ms) => request(url, ms, true);
+
+const anyStale = () => Object.keys(stale).some((k) => stale[k]);
+
+function emit(key, json) {
+  (subs[key] || []).forEach((cb) => { try { cb(json); } catch (e) { /* one tab's bug is not another's */ } });
+}
+
+function settle(key, json, isStale) {
+  delete dead[key];
+  cache[key] = json;
+  stale[key] = !!isStale;
+  delete inflight[key];
+  emit(key, json);
+  onStaleChange(anyStale());
+  if (isStale) setTimeout(() => retryLive(key, 0), STALE_RETRIES[0]);
+}
+
+function bust(key) {
+  dead[key] = Date.now();
+  delete inflight[key];
+  (fails[key] || []).forEach((cb) => { try { cb(); } catch (e) { /* ignore */ } });
+}
+
+const isDead = (key) => dead[key] && Date.now() - dead[key] < DEAD_FOR;
+
+/* A live payload arriving after first render must not yank the page out from
+   under a reader — the shell decides when it lands. */
+function offerFresh(key, json) {
+  const spec = FILES[key];
+  if (!spec.ok(json)) return;
+  if (!cache[key] || json.generated === cache[key].generated) {
+    if (stale[key]) { stale[key] = false; onStaleChange(anyStale()); }
+    return;
+  }
+  gate(() => {
+    cache[key] = json;
+    stale[key] = false;
+    onStaleChange(anyStale());
+    emit(key, json);
+  });
+}
+
+function retryLive(key, attempt) {
+  const spec = FILES[key];
+  if (!spec || !spec.live || !stale[key]) return;
+  fetchJSON(spec.live, 8000)
+    .then((json) => { if (stale[key]) offerFresh(key, json); })
+    .catch(() => {
+      const next = attempt + 1;
+      if (next < STALE_RETRIES.length) setTimeout(() => retryLive(key, next), STALE_RETRIES[next]);
     });
-
-  inflight.set(key, p);
-  return p;
 }
 
-/* What we already have, without touching the network. */
-export function peek(key) {
-  return mem.get(key) || null;
-}
+function start(key) {
+  const spec = FILES[key];
+  const local = isLocalDev();
+  const preferLocal = local || !spec.live;
+  const first = preferLocal && spec.local ? spec.local : spec.live;
+  const second = preferLocal ? (spec.local ? spec.live : null) : spec.local;
+  inflight[key] = true;
 
-/* Ad-hoc JSON with the same in-flight de-duplication, for the Wikipedia API
-   where the URL itself is the key. Small responses only. */
-const adhoc = new Map();
-const adhocInflight = new Map();
+  const take = (json, isStale) => {
+    if (!spec.ok(json)) throw new Error('bad shape');
+    settle(key, json, isStale);
+  };
 
-export function getURL(url, ttl = 10 * 60 * 1000) {
-  const hit = adhoc.get(url);
-  if (hit && Date.now() - hit.at < ttl) return Promise.resolve(hit.data);
-  if (adhocInflight.has(url)) return adhocInflight.get(url);
-
-  const p = fetchJSON(url, 12000)
-    .then((data) => {
-      adhoc.set(url, { data, at: Date.now() });
-      adhocInflight.delete(url);
-      // Keep the ad-hoc cache from growing without bound over a long session.
-      if (adhoc.size > 400) {
-        const oldest = [...adhoc.entries()].sort((a, b) => a[1].at - b[1].at).slice(0, 120);
-        oldest.forEach(([k]) => adhoc.delete(k));
-      }
-      return data;
-    })
-    .catch((err) => {
-      adhocInflight.delete(url);
-      throw err;
+  fetchJSON(first, 8000)
+    .then((json) => take(json, false))
+    .catch(() => {
+      if (!second) { bust(key); return; }
+      /* stale means production had to fall back to main's snapshot;
+         local dev reading its own snapshot is just… local dev */
+      fetchJSON(second, 8000).then((json) => take(json, !local)).catch(() => bust(key));
     });
-
-  adhocInflight.set(url, p);
-  return p;
 }
+
+/* onOk may fire more than once — on load, and again when a fresh payload is
+   accepted. Every tab must be able to re-render from it. */
+export function load(key, onOk, onFail) {
+  const spec = FILES[key];
+  if (!spec) { if (onFail) onFail(); return; }
+  if (onOk) (subs[key] = subs[key] || []).push(onOk);
+  if (onFail) (fails[key] = fails[key] || []).push(onFail);
+  if (cache[key]) { if (onOk) onOk(cache[key]); return; }
+  if (isDead(key)) { if (onFail) onFail(); return; }
+  if (!inflight[key]) start(key);
+}
+
+export const peek = (key) => cache[key] || null;
+
+setInterval(() => {
+  if (document.hidden || isLocalDev()) return;
+  Object.keys(FILES).forEach((key) => {
+    const spec = FILES[key];
+    if (cache[key]) {
+      if (!spec.poll || !spec.live) return;
+      fetchJSON(spec.live, 8000).then((json) => offerFresh(key, json)).catch(() => {});
+    } else if (dead[key] && !inflight[key] && (subs[key] || []).length) {
+      /* nobody ever got this payload — try again for the tabs waiting on it */
+      delete dead[key];
+      start(key);
+    }
+  });
+}, POLL_MS);

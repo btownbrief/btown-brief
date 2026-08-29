@@ -1,23 +1,28 @@
-/* gestures.js — swipe to save, swipe to dig, hold to mute.
+/* gestures.js — swipe right to save, swipe left to mute, hold to preview.
 
-   Ported from pulse.js with its thresholds intact, because they are tuned and
-   the numbers are the feature:
+   Thresholds ported from pulse.js unchanged, because they are tuned and the
+   numbers ARE the feature:
 
      24px   horizontal travel before a swipe is recognised at all
      72px   travel that commits it
-     14px   vertical travel that cancels it — this is what keeps a scroll from
-            turning into a save
-     550ms  press-and-hold that mutes a source
+     14px   vertical travel that cancels it — this is what keeps a scroll
+            from turning into a save
+     550ms  press-and-hold
      400ms  after a gesture, clicks on that row are swallowed, so a swipe
             never also opens the article
 
+   What changed from the first pass: hold used to mute and left-swipe used to
+   "dig". Holding is far too good a gesture to spend on muting — held, a row
+   opens the article right there, which is the thing worth keeping. Muting is
+   destructive and rare, so it moved to a left swipe and now asks first.
+
    Pointer Events only, so one code path covers touch, pen and mouse. Two
-   browser defaults have to be preempted: anchors are natively draggable, and
+   browser defaults must be pre-empted: anchors are natively draggable, and
    Android fires its long-press menu before our hold timer.
 
-   The row translates but the action label does not — the label is injected as
-   an absolutely-positioned child and only .fi-body and .fi-thumb move, so no
-   mode has to change its markup to get this. */
+   The row translates but the action label does not: the label is an
+   absolutely-positioned child that counter-translates, so no caller has to
+   change its markup to get this. */
 
 const START = 24;
 const COMMIT = 72;
@@ -30,21 +35,17 @@ export function bindGestures(root, handlers) {
   let x0 = 0;
   let y0 = 0;
   let dx = 0;
-  let active = false;      // past START, we own this pointer
+  let active = false;
   let holdTimer = 0;
   let deadRow = null;
   let deadUntil = 0;
   let pid = null;
 
-  function labelFor(dir) {
-    return dir > 0 ? 'Save →' : '← Dig';
-  }
-
   function paint(px) {
     if (!row) return;
-    const clamped = Math.max(-120, Math.min(120, px));
+    const clamped = Math.max(-130, Math.min(130, px));
     row.style.setProperty('--swipe', clamped + 'px');
-    row.classList.toggle('is-swiping', true);
+    row.classList.add('is-swiping');
     row.classList.toggle('will-commit', Math.abs(px) >= COMMIT);
     let hint = row.querySelector('.fi-hint');
     if (!hint) {
@@ -52,7 +53,7 @@ export function bindGestures(root, handlers) {
       hint.className = 'fi-hint';
       row.appendChild(hint);
     }
-    hint.textContent = labelFor(px);
+    hint.textContent = px > 0 ? 'Save →' : '← Mute';
     hint.dataset.side = px > 0 ? 'left' : 'right';
   }
 
@@ -75,7 +76,7 @@ export function bindGestures(root, handlers) {
     const r = e.target.closest('.fi');
     if (!r || !r.dataset.k) return;
     // A tap that starts on a control is that control's business.
-    if (e.target.closest('button, a.disc')) return;
+    if (e.target.closest('button, a.act, .vote')) return;
 
     row = r;
     pid = e.pointerId;
@@ -102,11 +103,11 @@ export function bindGestures(root, handlers) {
     const my = e.clientY - y0;
 
     if (!active) {
-      /* Any vertical travel over the threshold cancels, even when the finger
+      /* Any vertical travel past the threshold cancels, even when the finger
          has moved further sideways. A diagonal drag is far more often a
-         scroll that wandered than a deliberate swipe, and wrongly saving
-         something during a scroll is the failure that would make people stop
-         trusting the gesture. Once a swipe is active, vertical stops
+         scroll that wandered than a deliberate swipe, and wrongly muting a
+         source mid-scroll is the failure that would make someone stop
+         trusting the gesture entirely. Once a swipe IS active, vertical stops
          mattering — you have already committed to the horizontal. */
       if (Math.abs(my) > CANCEL_Y) { clear(); return; }
       if (Math.abs(mx) < START) return;
@@ -131,10 +132,9 @@ export function bindGestures(root, handlers) {
       deadUntil = Date.now() + CLICK_DEAD_MS;
     }
     clear();
-    if (committed) {
-      if (dir > 0) handlers.onSave(key, target);
-      else if (handlers.onDig) handlers.onDig(key, target);
-    }
+    if (!committed) return;
+    if (dir > 0) handlers.onSave(key, target);
+    else if (handlers.onMute) handlers.onMute(key, target);
   }
 
   ['pointerup', 'pointercancel'].forEach((ev) =>

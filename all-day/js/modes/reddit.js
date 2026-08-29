@@ -1,178 +1,89 @@
-/* modes/reddit.js — the threads.
+/* reddit.js — the threads, off the same pulse.json wire.
 
-   On pulse.html Reddit is one chip among thirteen and its posts are mixed
-   into the firehose. Here it gets its own room, grouped by subreddit, with
-   the post's preview image and — the part the firehose loses — the outbound
-   article a link post actually points at, so you can go read the thing
-   instead of only the argument about it.
+   There is no Reddit API call here and there never will be: titles come off
+   the feeds we already pull, and the row links out to the thread. That is a
+   standing rule, not a limitation to route around.
 
-   How the posts get here matters and is worth restating: they arrive through
-   public Inoreader streams, the same as every other feed. This app makes no
-   request to reddit.com and holds no Reddit credentials. Two Burlington subs
-   ride along on their own per-tag streams; the rest are ordinary
-   subscriptions in the "Everything" folder. */
+   source.short is already "r/sub" shaped, so it doubles as the filter chip
+   and as the row's badge. */
 
-import { get } from '../wire.js';
-import * as store from '../store.js';
-import { bindGestures } from '../gestures.js';
-import { esc, safeUrl, ago, isReddit, subOf } from '../ui.js';
+import * as store from './../store.js';
+import * as data from './../wire.js';
+import * as app from './../app.js';
+import { bindGestures } from './../gestures.js';
+import { el, esc, chip, heading, ago } from './../ui.js';
+import { feedRow, bindFeed, hydrateVotes, keyOf } from './../rows.js';
 
-const PAGE = 60;
-const LOCAL_SUBS = ['r/burlington', 'r/vermont'];
+const state = { root: null, pulse: null, sub: null, byKey: new Map() };
 
-let root = null;
-let ctx = null;
-let data = null;
-let srcMap = {};
-let subs = [];
-let state = { sub: 'all', page: 1, ready: false };
-
-export default {
-  mount(el, context) {
-    root = el;
-    ctx = context;
-
-    root.innerHTML =
-      '<div class="wrap">' +
-        '<div class="page-head">' +
-          '<h1>Threads</h1>' +
-          '<p class="sub" id="rx-sub">Loading the boards…</p>' +
-        '</div>' +
-        '<nav class="rail" id="rx-rail" aria-label="Subreddits"></nav>' +
-        '<div class="feed" id="rx-feed"><p class="loading">Loading the boards…</p></div>' +
-      '</div>';
-
-    root.querySelector('#rx-rail').addEventListener('click', (e) => {
-      const c = e.target.closest('.chip[data-sub]');
-      if (!c) return;
-      state.sub = c.dataset.sub;
-      state.page = 1;
-      render();
-      root.scrollTop = 0;
-    });
-
-    root.querySelector('#rx-feed').addEventListener('click', (e) => {
-      if (e.target.closest('[data-more]')) { state.page += 1; render(); }
-    });
-
-    bindGestures(root.querySelector('#rx-feed'), {
-      onSave(key) { ctx.save(key); },
-      onDig(key, row) {
-        const item = ctx.rowFor(key);
-        if (!item) return;
-        if (!store.dig(key)) { ctx.toast('Already dug that today'); return; }
-        if (row) row.classList.add('is-dug');
-        store.rpc('pulse_react', {
-          p_player: store.playerId(), p_kind: 'dig',
-          p_url: item.u, p_title: item.t, p_source: item.s || '',
-        });
-        ctx.toast('Dug \u2193', () => {
-          store.undig(key);
-          if (row) row.classList.remove('is-dug');
-        });
-      },
-    });
-
-    get('pulse')
-      .then((res) => {
-        data = res.data;
-        srcMap = {};
-        (data.sources || []).forEach((s) => { srcMap[s.id] = s; });
-        subs = (data.sources || []).filter(isReddit).sort((a, b) => {
-          const al = LOCAL_SUBS.indexOf((a.short || '').toLowerCase());
-          const bl = LOCAL_SUBS.indexOf((b.short || '').toLowerCase());
-          if (al !== bl) return (al < 0 ? 99 : al) - (bl < 0 ? 99 : bl);
-          return (a.pr || 500) - (b.pr || 500);
-        });
-        state.ready = true;
-        render();
-      })
-      .catch(() => {
-        root.querySelector('#rx-feed').innerHTML =
-          '<div class="empty"><b>Couldn\'t reach the boards</b>Try a refresh.</div>';
-      });
-  },
-};
-
-function items() {
-  const ids = {};
-  subs.forEach((s) => {
-    if (state.sub === 'all' || (s.short || '').toLowerCase() === state.sub) ids[s.id] = s;
+export function mount(root) {
+  state.root = root;
+  root.innerHTML = '<p class="loading">Loading threads…</p>';
+  data.load('pulse', (json) => { state.pulse = json; render(); }, () => {
+    root.innerHTML = '';
+    root.appendChild(el('div', 'errbox', '<b>Couldn’t reach the wire.</b><br>Threads ride the same feed as the headlines.'));
   });
-  return (data.items || []).filter((it) => ids[it.s]);
+  bindGestures(root, bindFeed(root, (k) => state.byKey.get(k), () => render()));
 }
 
+export function activate() {}
+export function deactivate() { app.closePeek(); }
+
 function render() {
-  if (!state.ready) return;
+  const root = state.root;
+  const muted = store.muted();
+  const map = Object.create(null);
+  const subs = [];
 
-  root.querySelector('#rx-rail').innerHTML =
-    '<button class="chip c-reddit" data-sub="all" aria-pressed="' +
-      (state.sub === 'all' ? 'true' : 'false') + '">all</button>' +
-    subs.map((s) => {
-      const key = (s.short || '').toLowerCase();
-      return '<button class="chip c-reddit" data-sub="' + esc(key) + '" aria-pressed="' +
-        (state.sub === key ? 'true' : 'false') + '">' + esc(s.short) + '</button>';
-    }).join('');
+  (Array.isArray(state.pulse.sources) ? state.pulse.sources : []).forEach((s) => {
+    if (!s || !s.id) return;
+    map[s.id] = s;
+    if (/reddit\.com/.test(s.site || '') && !muted[s.id]) subs.push(s);
+  });
+  subs.sort((a, b) => (a.short || '').localeCompare(b.short || ''));
+  if (state.sub && !subs.some((s) => s.id === state.sub)) state.sub = null;
 
-  const all = items();
-  const shown = all.slice(0, state.page * PAGE);
-  const feed = root.querySelector('#rx-feed');
+  const all = (Array.isArray(state.pulse.items) ? state.pulse.items : [])
+    .filter((it) => it && map[it.s] && /reddit\.com/.test(map[it.s].site || '') && !muted[it.s]);
+  const shown = state.sub ? all.filter((it) => it.s === state.sub) : all;
+  state.byKey = new Map(all.map((it) => [keyOf(it), { it, src: map[it.s] }]));
 
-  root.querySelector('#rx-sub').textContent =
-    all.length + ' posts across ' + subs.length + ' subreddits' +
-    (state.sub === 'all' ? '' : ' · showing ' + state.sub);
+  root.innerHTML = '';
+  const updated = state.pulse.generated
+    ? ago(Math.floor(new Date(state.pulse.generated).getTime() / 1000)) : '';
+
+  heading(root, {
+    eyebrow: 'Reddit',
+    title: state.sub ? (map[state.sub].short || 'Threads') : 'What people are posting',
+    sub: '<span class="count">' + shown.length + ' post' + (shown.length === 1 ? '' : 's') +
+      ' across ' + subs.length + ' subreddit' + (subs.length === 1 ? '' : 's') +
+      (updated ? ' · updated ' + esc(updated) : '') + '</span>',
+  });
+
+  const chips = el('div', 'chips');
+  chips.appendChild(chip('All', state.sub === null, () => {
+    state.sub = null; render(); root.scrollTo({ top: 0 });
+  }));
+  subs.forEach((s) => {
+    const n = all.filter((it) => it.s === s.id).length;
+    const b = chip(s.short || s.id, state.sub === s.id, () => {
+      state.sub = s.id; render(); root.scrollTo({ top: 0 });
+    });
+    b.appendChild(el('span', 'n', n));
+    chips.appendChild(b);
+  });
+  root.appendChild(chips);
 
   if (!shown.length) {
-    feed.innerHTML = '<div class="empty"><b>Quiet in here</b>Nothing new on this board.</div>';
+    root.appendChild(el('p', 'empty', 'No threads on the wire right now.'));
     return;
   }
 
-  let html = shown.map(postHTML).join('');
-  const left = all.length - shown.length;
-  if (left > 0) {
-    html += '<button class="more-btn" data-more>More posts ↓ (' + Math.min(left, PAGE) + ' more)</button>';
-  } else {
-    html += '<div class="caught-up">That\'s every post we have ✓</div>';
-  }
-  feed.innerHTML = html;
-}
-
-function postHTML(it) {
-  const src = srcMap[it.s] || {};
-  const k = store.keyOf(it.u);
-  ctx.index(k, { k, kind: 'article', t: it.t, u: it.u, s: src.short, d: it.d, i: it.i });
-
-  const thread = safeUrl(it.u);
-  const out = it.o ? safeUrl(it.o) : '';
-  const sub = src.short || subOf(it.u) || 'reddit';
-
-  // The link a post submitted is the point of a link post — surface the
-  // publisher by name rather than making it a mystery behind the thread.
-  let outBit = '';
-  if (out) {
-    let host = '';
-    try { host = new URL(out).hostname.replace(/^www\./, ''); } catch (e) { /* leave blank */ }
-    outBit = '<a class="disc" style="color:var(--accent)" href="' + esc(out) +
-      '" target="_blank" rel="noopener" data-readkey="' + esc(k) + '">↗ ' + esc(host) + '</a>';
-  }
-
-  const thumb = (it.i && store.setting('thumbs'))
-    ? '<img class="fi-thumb" src="' + esc(safeUrl(it.i)) + '" alt="" loading="lazy" decoding="async">'
-    : '';
-
-  const on = store.isSaved(k);
-
-  return '<div class="fi' + (store.isRead(k) ? ' is-read' : '') +
-      (store.isDug(k) ? ' is-dug' : '') + '" data-k="' + esc(k) +
-      '" data-src="' + esc(it.s) + '">' +
-    '<div class="fi-body">' +
-      '<a class="fi-t" href="' + esc(thread) + '" target="_blank" rel="noopener" data-readkey="' +
-        esc(k) + '">' + esc(it.t) + '</a>' +
-      '<div class="fi-m">' +
-        '<span class="fi-src c-reddit">' + esc(sub) + '</span>' +
-        '<span>' + esc(ago(it.d)) + '</span>' + outBit +
-        '<button class="fi-save" data-save="' + esc(k) + '" aria-pressed="' +
-          (on ? 'true' : 'false') + '" aria-label="Save">' + (on ? '★' : '☆') + '</button>' +
-      '</div>' +
-    '</div>' + thumb + '</div>';
+  const feed = el('div', 'card feed');
+  const slice = shown.slice(0, 220);
+  slice.forEach((it) => {
+    feed.appendChild(feedRow(it, map[it.s], { tag: map[it.s].short }));
+  });
+  root.appendChild(feed);
+  hydrateVotes(root, slice.map(keyOf));
 }
