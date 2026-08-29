@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-28T16:58:52-04:00",
+ "generated": "2026-08-28T22:54:32-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 6.1
+   "seconds": 6.2
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 63,
-   "seconds": 10.5
+   "seconds": 2.9
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 66,
-   "seconds": 3.1
+   "seconds": 3.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 175,
-   "seconds": 3.3
+   "seconds": 2.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 84,
-   "seconds": 1.7
+   "seconds": 2.1
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 187,
-   "seconds": 70.5
+   "count": 188,
+   "seconds": 75.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,42 +64,42 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 36.8
+   "seconds": 39.1
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 12.2
+   "seconds": 12.4
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 397,
-   "seconds": 72.5
+   "seconds": 80.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 67,
-   "seconds": 115.7
+   "seconds": 128.6
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 46,
-   "seconds": 13.5
+   "seconds": 14.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 102,
-   "seconds": 1.9
+   "seconds": 1.6
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 27,
-   "seconds": 31.5
+   "seconds": 34.5
   },
   "sevendays": {
    "label": "Seven Days",
@@ -114,7 +114,7 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 430,
-   "seconds": 16.1
+   "seconds": 18.2
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -123,8 +123,8 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 78,
-   "seconds": 105.5
+   "count": 77,
+   "seconds": 106.5
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -133,9 +133,9 @@
   }
  },
  "gathered": 2858,
- "afterDedup": 1585,
- "duplicatesMerged": 1273,
- "final": 1823,
+ "afterDedup": 1586,
+ "duplicatesMerged": 1272,
+ "final": 1824,
  "mergeLog": [
   {
    "kept": {
@@ -2381,14 +2381,6 @@
  ],
  "changes": [
   {
-   "id": "3c51639cf2c8",
-   "title": "Oktoberfest at Black Flannel",
-   "date": "2026-09-26",
-   "change": "time",
-   "was": "2026-09-26T13:00:00-04:00",
-   "now": "2026-09-26T14:00:00-04:00"
-  },
-  {
    "id": "0959e1b00ed0",
    "title": "Lunch with the Poets",
    "date": "2026-08-28",
@@ -2401,6 +2393,13 @@
    "date": "2026-08-28",
    "change": "missing",
    "lastSeen": "2026-08-26T06:15:56-04:00"
+  },
+  {
+   "id": "b2e5144d1079",
+   "title": "Nataly Aukar",
+   "date": "2026-08-28",
+   "change": "missing",
+   "lastSeen": "2026-08-28T16:58:52-04:00"
   },
   {
    "id": "a87bf256edbe",
@@ -2466,12 +2465,6 @@
    "lastSeen": "2026-08-28T00:28:15-04:00"
   },
   {
-   "id": "c51ced474660",
-   "title": "Hold for all-ages program",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
    "id": "3eb04a8c47a8",
    "title": "Live from BCA",
    "date": "2026-09-12",
@@ -2517,8 +2510,7 @@
    "id": "59fccb39869d-1600",
    "title": "Green Mountain Book Festival",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-08-25T17:01:29-04:00"
+   "change": "dropped"
   },
   {
    "id": "2ca321c8deb7",
@@ -2549,12 +2541,6 @@
    "lastSeen": "2026-08-26T06:15:56-04:00"
   },
   {
-   "id": "5a9ed2ea5ee0",
-   "title": "A Conversation with Author J.J. Green",
-   "date": "2026-09-24",
-   "change": "dropped"
-  },
-  {
    "id": "24de2b1138c4",
    "title": "Southern brewhop",
    "date": "2026-09-26",
@@ -2581,12 +2567,6 @@
    "date": "2026-10-07",
    "change": "missing",
    "lastSeen": "2026-08-28T00:28:15-04:00"
-  },
-  {
-   "id": "f4dcf578bf70",
-   "title": "Hold for all-ages program",
-   "date": "2026-10-10",
-   "change": "dropped"
   },
   {
    "id": "42b2324fe7d8-1530",
