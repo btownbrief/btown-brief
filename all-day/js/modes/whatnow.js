@@ -99,6 +99,43 @@ function remember(id) {
 
 /* ---------------------------------------------------------------- spin */
 
+/* A slot machine, not a fade. The reel shows REAL candidates from the same
+   pool the answer comes from — showing nonsense and then a result would be a
+   lie about how the pick is made — and slows on an ease-out before it lands,
+   which is the whole feel of a machine coming to rest.
+
+   It never spins for longer than the reader will wait, and prefers-reduced-
+   motion skips straight to the answer. */
+const REEL_MS = [55, 60, 68, 78, 92, 110, 135, 170, 215, 275, 350];
+
+function roll() {
+  if (state.spinning || !state.feeds) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) { spin(); return; }
+
+  const ctx = buildContext(state.feeds, new Date(), state.mode);
+  const pool = buildPool(state.feeds, ctx, state.chips);
+  if (pool.length < 3) { spin(); return; }
+
+  state.spinning = true;
+  let i = 0;
+  const step = () => {
+    if (i >= REEL_MS.length) {
+      state.spinning = false;
+      spin();                       // the real pick, with its own memory rules
+      return;
+    }
+    /* a different candidate each tick, never the one we are about to land on
+       twice in a row */
+    state.answer = pool[Math.floor(Math.random() * pool.length)];
+    state.poolSize = pool.length;
+    state.ctx = ctx;
+    render();
+    setTimeout(step, REEL_MS[i++]);
+  };
+  step();
+}
+
 function spin(first) {
   if (!state.feeds) return;
   const ctx = buildContext(state.feeds, new Date(), state.mode);
@@ -247,16 +284,11 @@ export function render(first) {
   root.appendChild(card);
 
   const acts = el('div', 'wn-acts');
-  const again = el('button', 'wn-again', 'Nah, again');
-  again.addEventListener('click', () => {
-    /* a beat of motion, because an instant swap does not read as a new pull */
-    state.spinning = true;
-    render();
-    setTimeout(() => { state.spinning = false; spin(); }, 260);
-  });
+  const again = el('button', 'wn-again', 'Nah, spin again');
+  again.addEventListener('click', () => roll());
   acts.appendChild(again);
   if (state.answer) {
-    const going = el('button', 'wn-going', 'I’m going');
+    const going = el('button', 'wn-going', 'Whoa, that’s interesting');
     going.addEventListener('click', () => {
       app.toast('Good. Now put the phone down.');
     });
