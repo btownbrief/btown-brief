@@ -152,7 +152,43 @@ $('settings-btn').addEventListener('click', () => {
   });
 });
 
+/* --------------------------------------------------------------- welcome */
+/* First visit only. Five lines, because someone who has to read a paragraph
+   to find out what an app is will close it instead. */
+const TOUR = [
+  ['Wire', 'Every headline, local and national'],
+  ['Reddit', 'What people are actually posting'],
+  ['Watch', 'One page of video, picked each night'],
+  ['Listen', 'Every Vermont podcast, playable here'],
+  ['Wikipedia', 'A rabbit hole worth falling into'],
+];
+
+function welcome() {
+  const box = el('div', 'welcome');
+  const card = el('div', 'welcome-card');
+  card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-label', 'What All Day is');
+  card.innerHTML =
+    '<p class="eyebrow">Burlington Brief</p>' +
+    '<h2>Five feeds, one app.</h2>' +
+    '<ul class="welcome-list">' +
+      TOUR.map(([n, d]) =>
+        '<li><b>' + esc(n) + '</b><span>' + esc(d) + '</span></li>').join('') +
+    '</ul>' +
+    '<p class="welcome-local"><i></i>Anything local is green.</p>';
+  const go = el('button', 'btn btn-big', 'Start reading');
+  go.addEventListener('click', () => { store.markWelcomed(); box.remove(); });
+  card.appendChild(go);
+  box.appendChild(card);
+  box.addEventListener('click', (e) => {
+    if (e.target === box) { store.markWelcomed(); box.remove(); }
+  });
+  document.body.appendChild(box);
+  go.focus();
+}
+
 /* ---------------------------------------------------------------- boot */
 
 store.touchVisit();
 app.route();
+if (store.needsWelcome()) welcome();

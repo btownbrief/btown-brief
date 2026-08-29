@@ -119,7 +119,7 @@ function renderDoor() {
   root.innerHTML = '';
 
   const door = el('section', 'door');
-  door.appendChild(el('h1', null, 'Wander'));
+  door.appendChild(el('h1', null, 'Wikipedia'));
   door.appendChild(el('p', null,
     'Six million articles. One tap and you are seven deep — still in the app, with a trail of where you went.'));
 
@@ -133,6 +133,14 @@ function renderDoor() {
   const dice = el('button', 'btn btn-big', '🎲 Take me somewhere');
   dice.addEventListener('click', takeMeSomewhere);
   door.appendChild(dice);
+
+  /* Some people want the real thing, and on a phone this hands off to the
+     Wikipedia app if it is installed. */
+  const out = el('a', 'btn btn-quiet door-out', 'Open Wikipedia ↗');
+  out.href = 'https://en.wikipedia.org/';
+  out.target = '_blank';
+  out.rel = 'noopener';
+  door.appendChild(out);
   root.appendChild(door);
 
   const input = search.querySelector('#wq');
@@ -193,7 +201,7 @@ function renderPool(root, key, emoji, name, sub) {
     '<span class="chev">' + (open ? '▴' : '▾') + '</span>';
   head.setAttribute('aria-expanded', open ? 'true' : 'false');
 
-  const shuffle = el('button', 'iconbtn', ICON.shuffle);
+  const shuffle = el('button', 'pool-shuffle', 'Shuffle');
   shuffle.setAttribute('aria-label', 'Shuffle ' + name);
   shuffle.addEventListener('click', (e) => {
     e.stopPropagation();

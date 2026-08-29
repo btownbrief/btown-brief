@@ -78,7 +78,7 @@ function renderTonight(root) {
 
   const pick = tv.pick;
   if (pick && typeof pick === 'object' && app.isVideoId(pick.id)) {
-    const hero = el('button', 'card hero');
+    const hero = el('button', 'hero');
     hero.dataset.k = 'yt:' + pick.id;
     hero.innerHTML =
       '<img loading="lazy" src="' + thumb(pick.id) + '" alt="">' +
@@ -90,7 +90,12 @@ function renderTonight(root) {
         (pick.why ? '<span class="v-why">' + esc(pick.why) + '</span>' : '') +
       '</span>';
     hero.addEventListener('click', () => app.showVideo(pick.id, pick.t));
-    root.appendChild(hero);
+    const card = el('div', 'card hero-card');
+    card.dataset.k = 'yt:' + pick.id;
+    card.appendChild(hero);
+    /* the pick was the one video you could not mark watched, skip or save */
+    card.appendChild(videoActions(pick, card));
+    root.appendChild(card);
   }
 
   const live = Array.isArray(tv.live) ? tv.live.filter((v) => v && app.isVideoId(v.id)) : [];
@@ -221,8 +226,8 @@ function playlistLink(edition, label) {
 
 function videoCard(v, opts = {}) {
   const k = 'yt:' + v.id;
-  const reacts = store.tvReacts();
-  const seen = reacts[v.id] === 'watched' || reacts[v.id] === 'skip';
+  const r = store.tvReacts()[v.id];
+  const seen = r === 'watched' || r === 'skip';
   const card = el('div', 'v' + (seen ? ' is-seen' : ''));
   card.dataset.k = k;
 
@@ -242,42 +247,45 @@ function videoCard(v, opts = {}) {
   hit.addEventListener('click', () => app.showVideo(v.id, v.t));
   card.appendChild(hit);
 
+  card.appendChild(videoActions(v, card));
+  return card;
+}
+
+/* Upvote, watched, not-for-me, save. Shared by the shelf cards and the
+   nightly pick, which had none of them. */
+function videoActions(v, card) {
+  const k = 'yt:' + v.id;
+  const reacts = store.tvReacts();
+  const href = 'https://www.youtube.com/watch?v=' + v.id;
   const acts = el('div', 'v-acts');
+
   const vote = voteBtn(store.voteCount(k), store.hasVoted(k), store.votesLive());
   vote.addEventListener('click', () => {
-    const on = store.toggleVote({ k, kind: 'video', title: v.t, from: v.ch || '', href: 'https://www.youtube.com/watch?v=' + v.id });
+    const on = store.toggleVote({ k, kind: 'video', title: v.t, from: v.ch || '', href });
     paintVote(vote, store.voteCount(k), on);
   });
   acts.appendChild(vote);
   acts.appendChild(el('span', 'spacer'));
 
   /* the two signals that teach tomorrow's edition */
-  const watched = el('button', 'act' + (reacts[v.id] === 'watched' ? ' on' : ''), ICON.check);
-  watched.setAttribute('aria-label', 'Mark watched');
-  watched.title = 'Watched';
-  watched.addEventListener('click', () => {
-    const now = store.tvReact(v.id, 'watched');
-    watched.classList.toggle('on', now === 'watched');
-    card.classList.toggle('is-seen', now === 'watched' || now === 'skip');
-  });
+  const mark = (kind, icon, label) => {
+    const b = el('button', 'act' + (reacts[v.id] === kind ? ' on' : ''), icon);
+    b.setAttribute('aria-label', label);
+    b.title = label;
+    b.addEventListener('click', () => {
+      const now = store.tvReact(v.id, kind);
+      b.classList.toggle('on', now === kind);
+      if (card) card.classList.toggle('is-seen', now === 'watched' || now === 'skip');
+    });
+    return b;
+  };
 
-  const skip = el('button', 'act' + (reacts[v.id] === 'skip' ? ' on' : ''), ICON.x);
-  skip.setAttribute('aria-label', 'Not for me');
-  skip.title = 'Not for me';
-  skip.addEventListener('click', () => {
-    const now = store.tvReact(v.id, 'skip');
-    skip.classList.toggle('on', now === 'skip');
-    card.classList.toggle('is-seen', now === 'watched' || now === 'skip');
-  });
-
-  const rec = { k, kind: 'video', title: v.t, from: v.ch || '', href: 'https://www.youtube.com/watch?v=' + v.id, art: thumb(v.id) };
   const star = starBtn(store.isSaved(k));
   star.addEventListener('click', () => {
-    const on = store.toggleSaved(rec);
-    star.classList.toggle('on', on);
+    star.classList.toggle('on', store.toggleSaved(
+      { k, kind: 'video', title: v.t, from: v.ch || '', href, art: thumb(v.id) }));
   });
 
-  acts.append(watched, skip, star);
-  card.appendChild(acts);
-  return card;
+  acts.append(mark('watched', ICON.check, 'Watched'), mark('skip', ICON.x, 'Not for me'), star);
+  return acts;
 }

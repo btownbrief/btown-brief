@@ -36,6 +36,7 @@ const TRAIL_KEY = 'allday-trail';
 const VISIT_KEY = 'allday-visit';
 const THEME_KEY = 'allday-theme';        // 'light' | 'dark' | absent = follow the phone
 const VOTED_KEY = 'allday-voted';        // optimistic mirror of what you upvoted
+const WELCOME_KEY = 'allday-welcomed';   // the intro card, shown once
 
 const READ_CAP = 4000;
 const SAVED_CAP = 400;
@@ -89,6 +90,16 @@ export function playerId() {
   id = 'p_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   try { localStorage.setItem(PLAYER_KEY, id); } catch (e) { /* ephemeral is fine */ }
   return id;
+}
+
+/* ------------------------------------------------------------- welcome */
+/* Shown once, ever. A returning reader who has already been told what this
+   is does not need telling again. */
+export function needsWelcome() {
+  try { return !localStorage.getItem(WELCOME_KEY); } catch (e) { return false; }
+}
+export function markWelcomed() {
+  try { localStorage.setItem(WELCOME_KEY, String(Date.now())); } catch (e) { /* fine */ }
 }
 
 /* --------------------------------------------------------------- theme */
