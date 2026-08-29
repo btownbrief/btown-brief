@@ -114,8 +114,14 @@ function renderTonight(root) {
     sync();
   });
 
-  root.appendChild(el('p', 'srcline',
-    'Edition ' + esc(tv.edition || '') + ' · <a href="../tv.html">the full board ↗</a>'));
+  const play = playlistLink(tv, 'Play tonight on your TV');
+  if (play) {
+    const row = el('div', 'btns');
+    row.style.marginTop = '4px';
+    row.appendChild(play);
+    root.appendChild(row);
+  }
+  root.appendChild(el('p', 'srcline', 'Edition ' + esc(tv.edition || '')));
   hydrateVotes(root, [...root.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
 }
 
@@ -159,6 +165,13 @@ function renderPast(root) {
     const { track, sync } = rail(root, { label: 'videos' });
     items.forEach((v) => track.appendChild(videoCard(v)));
     sync();
+    const play = playlistLink(ed, 'Play this night on your TV');
+    if (play) {
+      const row = el('div', 'btns');
+      row.style.margin = '-2px 0 6px';
+      row.appendChild(play);
+      root.appendChild(row);
+    }
   });
   hydrateVotes(root, [...root.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
 }
@@ -186,6 +199,21 @@ function renderWire(root) {
     root.appendChild(more);
   }
   hydrateVotes(root, slice.map((v) => 'yt:' + v.id));
+}
+
+/* Each night's edition is published as its own YouTube playlist — the first
+   fifty videos in page order — so you can cast the whole thing to a TV. The
+   url is validated to exactly the playlist shape before it becomes an href,
+   the same test tv.html used. */
+function playlistLink(edition, label) {
+  const url = edition?.playlist?.url;
+  if (!url || !/^https:\/\/www\.youtube\.com\/playlist\?list=[A-Za-z0-9_-]+$/.test(url)) return null;
+  const a = el('a', 'btn btn-quiet', '▶ ' + label);
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.title = 'Opens the playlist in YouTube — cast it, or open it on your TV';
+  return a;
 }
 
 /* ---------------------------------------------------------------- card */

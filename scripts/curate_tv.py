@@ -107,7 +107,7 @@ MAX_VAULT = 40
 MAX_VT = 30
 PLAYLIST_MAX = 50        # the page in order: pick, Settle in, Quick one, Vermont, ...
 PLAYLISTS_KEEP = 14      # one playlist per night; older ones are deleted (= EDITIONS_KEEP)
-PAGE_URL = "https://guide.btownbrief.com/tv.html"
+PAGE_URL = "https://guide.btownbrief.com/all-day/#watch"
 MORE_PER_SHELF = 6       # the bench: alternates the editor names per shelf
 MORE_PICKS = 2           # runner-up Tonight's picks
 MORE_CHANNEL_CAP = 2     # per channel, within the bench
