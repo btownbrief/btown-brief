@@ -85,23 +85,33 @@ function render() {
      local podcast a full screen below the fold, so it opens on request — and
      the iframe is only created once, on that first open, so nothing here can
      interrupt playback later. */
+  /* Spotify's show embed plays the newest episode; it is not an episode
+     browser, so it should not claim to be one. The link underneath is where
+     the back catalogue actually lives. */
   const toggle = el('button', 'embed-toggle',
-    '<span>Every episode of the show</span><span class="chev">' + ICON.chev + '</span>');
+    '<span>Play the latest episode</span><span class="chev">' + ICON.chev + '</span>');
   toggle.setAttribute('aria-expanded', 'false');
   const embed = el('iframe', 'embed');
   embed.hidden = true;
-  embed.title = 'BTown Arts Podcast — all episodes';
+  embed.title = 'BTown Arts Podcast — latest episode';
   embed.loading = 'lazy';
   embed.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+  const allEps = el('a', 'embed-all', 'Every episode on Spotify ↗');
+  allEps.href = SHOW_URL;
+  allEps.target = '_blank';
+  allEps.rel = 'noopener';
+  allEps.hidden = true;
+
   toggle.addEventListener('click', () => {
     const open = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
     embed.hidden = open;
+    allEps.hidden = open;
     if (!open && !embed.getAttribute('src')) {
       embed.src = 'https://open.spotify.com/embed/show/6ejf0OFAyNTZNKDzFLWbKp?theme=0';
     }
   });
-  root.append(toggle, embed);
+  root.append(toggle, embed, allEps);
 
   root.appendChild(el('div', 'l-list'));
   renderList();
