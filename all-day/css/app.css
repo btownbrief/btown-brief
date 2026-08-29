@@ -161,9 +161,15 @@
    [hidden] { display: none }, which silently un-hides anything styled
    display:flex/grid. Settle it once, here. */
 [hidden] { display: none !important; }
-html { height: 100%; -webkit-text-size-adjust: 100%; }
+/* 100dvh, not 100%. On iOS `height: 100%` resolves against the LARGE
+   viewport — the one with Safari's toolbar collapsed — so with the toolbar
+   showing, the bottom of the app sits below what you can see and the dock
+   drifts as the toolbar animates in and out. dvh tracks the visible viewport.
+   The vh line stays first as the fallback for anything that lacks dvh. */
+html { height: 100vh; height: 100dvh; -webkit-text-size-adjust: 100%; }
 body {
-  height: 100%;
+  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: var(--ground);
   color: var(--ink);
@@ -885,7 +891,9 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .seg button.on { background: var(--panel); color: var(--accent); box-shadow: var(--shadow-1); }
 
 /* ============================================================ dock */
-.dock { position: absolute; left: 0; right: 0; bottom: 0; z-index: 45;
+/* fixed, not absolute: it must be anchored to the viewport, not to a
+   container whose height iOS recalculates while you scroll. */
+.dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
   padding: 0 10px calc(var(--safe-b) + 8px); pointer-events: none; }
 .dock > * { pointer-events: auto; }
 .tabbar {
@@ -1740,8 +1748,17 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 
 .wn-acts { display: flex; gap: 9px; margin-bottom: 9px; }
 .wn-again, .wn-going {
-  flex: 1; min-height: 50px; border-radius: var(--pill); font-size: 1rem; font-weight: 700;
+  flex: 1; min-height: 52px; border-radius: var(--pill); font-weight: 700;
+  /* the global reset is `button { text-align: left }`, so these two have to
+     say otherwise — they are labels on a control, not lines of copy */
+  text-align: center;
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px 12px; line-height: 1.18;
+  font-size: .95rem; letter-spacing: -.005em;
 }
+/* "Whoa, that's interesting" is a sentence, not a word — let it take two
+   lines on a narrow phone rather than shrink below reading size. */
+@media (max-width: 380px) { .wn-again, .wn-going { font-size: .87rem; } }
 .wn-again { color: var(--sky-ink); background: rgba(255,255,255,.16);
   border: 1px solid rgba(255,255,255,.24); }
 .wn-going { color: #fff; background: var(--now); box-shadow: 0 4px 14px rgba(192,54,44,.4); }
@@ -1846,3 +1863,22 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 .l-ep.is-open .l-ep-t { color: var(--accent); }
 .l-ep-embed { width: 100%; height: 152px; border: 0; border-radius: var(--radius-sm);
   margin: 4px 0 10px; background: var(--panel-2); }
+/* The wall before anyone has filled it: an invitation, not a blank. */
+.m-mix-empty { font-size: .95rem; line-height: 1.55; color: var(--ink-soft);
+  padding: 14px 15px; border-radius: var(--radius); background: var(--panel-2);
+  border: 1px dashed var(--edge); }
+.m-plerr { color: var(--warn); }
+
+/* Thirty-one account chips is a long sideways push. Opened out they become a
+   plain wrapped list — the same escape the rails offer. */
+.ig-accts.is-open .chips {
+  display: flex; flex-wrap: wrap; overflow: visible; gap: 7px; padding-bottom: 4px;
+}
+.ig-accts.is-open .chips .chip { flex: 0 0 auto; }
+.ig-accts-btn {
+  display: block; margin: 2px auto 14px; font-family: var(--mono); font-size: .6rem;
+  font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-faint); border: 1px solid var(--edge); border-radius: var(--pill);
+  padding: 5px 12px; background: var(--panel); min-height: 30px;
+}
+.ig-accts-btn:hover { color: var(--accent); border-color: var(--accent-soft); }

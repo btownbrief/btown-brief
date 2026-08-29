@@ -27,7 +27,7 @@ import * as app from './../app.js';
 import { el, esc, safeHref, chip, heading, scrollHint, agoShort,
          tabStamp, stampOf } from './../ui.js';
 
-const state = { root: null, ig: null, who: null };
+const state = { root: null, ig: null, who: null, openAccounts: false };
 
 export function mount(root) {
   state.root = root;
@@ -135,17 +135,37 @@ export function render() {
     'of these accounts posted, with what they actually said.'));
 
   if (accounts.length > 1) {
-    const chips = el('div', 'chips');
-    chips.appendChild(chip('Everyone', !state.who, () => { state.who = null; render(); }));
-    /* Ordered by who posted most recently, so the chip row is itself in
-       clock order rather than alphabetical. */
+    /* Ordered by who posted most recently, so the row is itself in clock order
+       rather than alphabetical. */
     const seen = [];
     all.forEach((p) => { if (!seen.includes(p.h)) seen.push(p.h); });
+
+    const wrap = el('div', 'ig-accts' + (state.openAccounts ? ' is-open' : ''));
+    const chips = el('div', 'chips');
+    chips.appendChild(chip('Everyone', !state.who, () => { state.who = null; render(); }));
     seen.forEach((h) => chips.appendChild(
       chip('@' + esc(h), state.who === h,
         () => { state.who = state.who === h ? null : h; render(); })));
-    root.appendChild(chips);
-    scrollHint(chips);
+    wrap.appendChild(chips);
+    root.appendChild(wrap);
+    if (!state.openAccounts) scrollHint(chips);
+
+    /* Thirty-one accounts is a long sideways push, and the one you want is
+       rarely near the front. Same affordance the rails carry: open it out into
+       a plain list, and close it from the same control. */
+    const toggle = el('button', 'ig-accts-btn',
+      state.openAccounts ? 'Back to a row'
+                         : 'All ' + seen.length + ' accounts');
+    toggle.setAttribute('aria-expanded', state.openAccounts ? 'true' : 'false');
+    toggle.addEventListener('click', () => {
+      state.openAccounts = !state.openAccounts;
+      render();
+      if (state.openAccounts) {
+        const w = state.root.querySelector('.ig-accts');
+        if (w) w.scrollIntoView({ block: 'nearest' });
+      }
+    });
+    root.appendChild(toggle);
   }
 
   const list = state.who ? all.filter((p) => p.h === state.who) : all;

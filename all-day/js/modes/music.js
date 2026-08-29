@@ -426,7 +426,7 @@ function trackRow(t, live) {
   const body = el('div', 'm-track-body');
   body.innerHTML =
     '<span class="m-track-song">' + esc(t.song || '') + '</span>' +
-    '<span class="m-track-by">' + esc(t.artist || '') +
+    '<span class="m-track-by">' + esc(t.artist || platform(t.url || '')) +
       (t.is_local ? ' <b class="m-local">Vermont</b>' : '') + '</span>' +
     (t.why ? '<span class="m-track-why">' + esc(t.why) + '</span>' : '') +
     (t.submitter ? '<span class="m-track-who">— ' + esc(t.submitter) + '</span>' : '');
@@ -458,31 +458,66 @@ function trackRow(t, live) {
 }
 
 function submitSheet() {
-  app.sheet('Add a song', (body, close) => {
+  app.sheet('Add a playlist', (body, close) => {
     body.appendChild(el('p', 'm-form-intro',
-      'Any platform. It goes on the wall once we have read it — usually within a day.'));
+      'A whole playlist, not a single track — Spotify, Apple Music or YouTube. ' +
+      'It goes on the wall once we have read it, usually within a day.'));
     const form = el('form', 'm-form');
     form.innerHTML =
-      '<label>Link<input type="url" name="url" required maxlength="500" placeholder="https://…"></label>' +
-      '<div class="m-form-two">' +
-        '<label>Song<input type="text" name="song" required maxlength="120" placeholder="Homesick"></label>' +
-        '<label>Artist<input type="text" name="artist" required maxlength="120" placeholder="Noah Kahan"></label>' +
-      '</div>' +
-      '<label class="m-form-check"><input type="checkbox" name="is_local"> They’re from Vermont</label>' +
+      '<label>Playlist link' +
+        '<input type="url" name="url" required maxlength="500" ' +
+        'placeholder="A Spotify, Apple Music or YouTube playlist">' +
+      '</label>' +
+      '<label>What is it?' +
+        '<input type="text" name="song" required maxlength="120" ' +
+        'placeholder="Songs for a Lake Champlain sunset"></label>' +
+      '<label class="m-form-check"><input type="checkbox" name="is_local"> Mostly Vermont artists</label>' +
       '<details><summary>Say why, and sign it</summary>' +
         '<label>Why this one<textarea name="why" maxlength="280" rows="2" placeholder="One or two sentences"></textarea></label>' +
         '<label>Your name<input type="text" name="submitter" maxlength="60" placeholder="First name is plenty"></label>' +
       '</details>' +
+      '<p class="ph-form-note m-plerr" hidden></p>' +
       '<button class="btn btn-big" type="submit">Send it in</button>';
+
+    /* A PLAYLIST link, not a track link. Checked before it is sent, because
+       the wall is moderated by hand and a stray single spends that pass — and
+       the message names the platform it saw rather than refusing generically. */
+    const looksLikePlaylist = (u) => {
+      let h, path, q;
+      try {
+        const parsed = new URL(u);
+        h = parsed.hostname.replace(/^www\./, '');
+        path = parsed.pathname; q = parsed.search;
+      } catch (e) { return { ok: false, why: 'That does not look like a link.' }; }
+      if (h.indexOf('spotify') !== -1) {
+        return /\/playlist\//.test(path) ? { ok: true }
+          : { ok: false, why: 'That is a Spotify link, but not a playlist — open the playlist and share that.' };
+      }
+      if (h.indexOf('music.apple') !== -1) {
+        return /\/playlist\//.test(path) ? { ok: true }
+          : { ok: false, why: 'That is an Apple Music link, but not a playlist.' };
+      }
+      if (h.indexOf('youtube') !== -1 || h === 'youtu.be') {
+        return (/[?&]list=/.test(q) || /\/playlist/.test(path)) ? { ok: true }
+          : { ok: false, why: 'That is a single YouTube video — share the playlist instead.' };
+      }
+      return { ok: false, why: 'Spotify, Apple Music or YouTube playlists, please.' };
+    };
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const f = new FormData(form);
       const btn = form.querySelector('button[type=submit]');
+      const err = form.querySelector('.m-plerr');
+      const check = looksLikePlaylist((f.get('url') || '').toString().trim());
+      if (!check.ok) { err.textContent = check.why; err.hidden = false; return; }
+      err.hidden = true;
       btn.disabled = true;
       btn.textContent = 'Sending…';
       rpc('btb_playlist_submit', {
         p_song: (f.get('song') || '').toString().trim(),
-        p_artist: (f.get('artist') || '').toString().trim(),
+        /* the row's `artist` column now carries the platform: the wall is
+           playlists, so "who made it" is the submitter, not an artist */
+        p_artist: platform((f.get('url') || '').toString().trim()),
         p_url: (f.get('url') || '').toString().trim(),
         p_why: (f.get('why') || '').toString().trim(),
         p_submitter: (f.get('submitter') || '').toString().trim(),
@@ -502,10 +537,10 @@ function renderMixtape(root) {
   heading(root, {
     eyebrow: 'Sent in by readers',
     title: 'The Burlington mixtape',
-    sub: 'One song at a time, from whoever felt like sharing one.',
+    sub: 'Playlists, not singles — what people here actually put on.',
   });
 
-  const add = el('button', 'btn btn-big m-add', 'Add a song');
+  const add = el('button', 'btn btn-big m-add', 'Add a playlist');
   add.addEventListener('click', submitSheet);
   root.appendChild(add);
 
@@ -516,19 +551,23 @@ function renderMixtape(root) {
   const paint = (rows) => {
     holder.innerHTML = '';
     const live = Array.isArray(rows);
-    const list = (live && rows.length) ? rows : (state.seeds || []);
+    const list = (live && rows.length) ? rows : [];
 
     if (live && !rows.length) {
-      /* Seven weeks live with nothing on it taught the lesson: an empty wall
-         reads as a broken feature. Steve's starter picks hold the space and
-         show what a good submission looks like. */
-      shelfHead(holder, 'Starter picks', 'While the wall fills up');
+      /* The starter picks were single tracks, and the wall is playlists now —
+         showing them would contradict the only thing the form asks for. An
+         empty wall still must not read as broken, so the space says what goes
+         here instead of sitting blank. */
+      shelfHead(holder, 'Nothing on the wall yet', 'Be the first');
     } else if (live) {
       shelfHead(holder, 'This fortnight', rows.length + (rows.length === 1 ? ' song' : ' songs'));
     }
 
     if (!list.length) {
-      holder.appendChild(el('p', 'empty', 'Nothing here yet. Be the first.'));
+      holder.appendChild(el('p', 'm-mix-empty',
+        'A playlist you actually listen to — the drive to Stowe, the walk down ' +
+        'Church Street, closing shift at the bar. Spotify, Apple Music or ' +
+        'YouTube. We read every one before it goes up.'));
       return;
     }
     list.forEach((t) => holder.appendChild(trackRow(t, live && !!t.id)));
