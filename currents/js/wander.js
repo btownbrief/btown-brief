@@ -27,12 +27,13 @@
     'weird-stuff': 'Weird stuff', trending: 'What everyone is reading',
     'on-this-day': 'On this day', 'near-here': 'Near here',
   };
-  var state = { el: null, trail: [], pools: null, near: null, at: null, suggestTimer: null, peeked: false };
+  var state = { el: null, trail: [], pools: null, near: null, at: null,
+                suggestTimer: null, peeked: false, gen: 0 };
 
   Currents.register('read', {
     mount: function (el) {
       state.el = el;
-      state.trail = Currents.storeJSON(Currents.stateKey('trail')) || [];
+      state.trail = asArray(Currents.storeJSON(Currents.stateKey('trail')));
     },
     activate: function (param) { route(param); },
     deactivate: function () { clearTimeout(state.suggestTimer); },
@@ -48,7 +49,8 @@
   function go(title) { location.hash = 'read/' + encodeURIComponent(title); }
   function pretty(t) { return String(t || '').replace(/_/g, ' '); }
 
-  function saved() { return Currents.storeJSON(Currents.stateKey('wiki-saved')) || []; }
+  function asArray(v) { return Array.isArray(v) ? v : []; }
+  function saved() { return asArray(Currents.storeJSON(Currents.stateKey('wiki-saved'))); }
   function isSaved(t) { return saved().indexOf(t) !== -1; }
   function toggleSaved(t) {
     var list = saved(), at = list.indexOf(t);
@@ -102,7 +104,7 @@
     renderTrail();
     renderSavedShelf();
     Currents.load('currents-pools', function (json) {
-      state.pools = (json && json.pools) || null;
+      state.pools = (json && typeof json.pools === 'object') ? json.pools : null;
       renderPools();
     }, function () { renderPools(); });   /* pools are optional — near-here still draws */
     loadNear();
@@ -251,12 +253,14 @@
   /* ---------- the reader ---------- */
   function openReader(title) {
     var el = state.el;
+    var gen = ++state.gen;              /* anything older than this is stale */
     state.at = title;
     el.innerHTML = '<p class="c-loading">Opening ' + esc(pretty(title)) + '…</p>';
     el.scrollTop = 0;
     var summary = null;
     Currents.fetchJSON(REST + 'page/summary/' + encodeURIComponent(title), 10000)
       .then(function (s) {
+        if (gen !== state.gen) throw new Error('superseded');
         summary = s;
         var canonical = s && s.titles && s.titles.canonical;
         /* redirects resolve here; replaceState (not a new hash) so Back
@@ -269,10 +273,13 @@
         return Currents.fetchText(REST + 'page/mobile-html/' + encodeURIComponent(title), 20000);
       })
       .then(function (raw) {
+        if (gen !== state.gen) return;
         pushTrail(title);
         renderArticle(title, raw, summary);
       })
-      .catch(function () { readerError(title); });
+      /* a request the user has already navigated away from must not replace
+         the article they are actually reading, error card included */
+      .catch(function () { if (gen === state.gen) readerError(title); });
   }
 
   function readerError(title) {
@@ -281,8 +288,9 @@
         'Wikipedia has no such article or the connection dropped.</p>' +
         '<div class="l-btns"><button class="w-btn" id="w-retry">Try again</button>' +
         '<button class="w-btn w-btn-quiet" id="w-home">Back to the doorway</button></div></div>';
-    document.getElementById('w-retry').addEventListener('click', function () { openReader(title); });
-    document.getElementById('w-home').addEventListener('click', function () { Currents.go('read'); });
+    var box = state.el.querySelector('.c-error');
+    box.querySelector('#w-retry').addEventListener('click', function () { openReader(title); });
+    box.querySelector('#w-home').addEventListener('click', function () { Currents.go('read'); });
   }
 
   /* ---------- THE SANITIZER ---------- */
@@ -301,6 +309,10 @@
     /* rule 8: the lead image lives in <head>, which is about to go */
     var leadMeta = doc.querySelector('meta[property="mw:leadImage"]');
     var leadImg = leadMeta ? leadMeta.getAttribute('content') : null;
+    /* it is read before the body is cleaned, so it has had none of the URL
+       rules applied to it — hold it to the same standard */
+    if (leadImg && leadImg.slice(0, 2) === '//') leadImg = 'https:' + leadImg;
+    if (leadImg && !/^https:\/\//i.test(leadImg)) leadImg = null;
 
     /* rule 1: every post-lead <section> ships style="display: none" —
        the page's own JS reveals them. Miss this and the article renders as
@@ -314,8 +326,11 @@
        otherwise resolve against wikipedia.org and break our own chrome. */
     var body = doc.body;
 
-    /* rule 3: nothing executable, nothing that restyles our page */
-    body.querySelectorAll('script, style, link, meta, iframe, form, input, object, embed, template, noscript')
+    /* rule 3: nothing executable, nothing that restyles our page. <base>
+       is on this list as well as dying with the head: Parsoid puts it in
+       <head>, but a <base> anywhere in the body would still re-point every
+       relative URL on the page at wikipedia.org. */
+    body.querySelectorAll('script, style, link, meta, base, iframe, form, input, object, embed, template, noscript')
       .forEach(function (n) { n.remove(); });
     body.querySelectorAll('*').forEach(function (n) {
       [].slice.call(n.attributes).forEach(function (a) {
@@ -376,6 +391,26 @@
       }
     });
 
+    /* Every id and name in the article goes. Wikipedia uses them for section
+       anchors we already strip, and leaving them lets a page carrying
+       id="w-save" (or "embedbox", or "savedrawer") win a document-wide
+       getElementById and bind the app's own handlers to article content.
+       `name` goes for the same reason: named elements land on `window`. */
+    body.querySelectorAll('[id], [name]').forEach(function (n) {
+      n.removeAttribute('id');
+      n.removeAttribute('name');
+    });
+
+    /* An article's inline styles are Wikipedia's own table/float layout and
+       are worth keeping — except for the positioning ones, which would let
+       page content lift itself out of the reader and sit on the app's chrome. */
+    body.querySelectorAll('[style]').forEach(function (n) {
+      var v = n.getAttribute('style') || '';
+      if (/position\s*:\s*(fixed|sticky|absolute)|z-index/i.test(v)) {
+        n.setAttribute('style', v.replace(/(^|;)\s*(position|z-index|top|left|right|bottom)\s*:[^;]*/gi, ''));
+      }
+    });
+
     /* rule 7: furniture out, wide tables kept but boxed so they can scroll */
     body.querySelectorAll(
       'table.infobox, .infobox, .navbox, .metadata, .mw-empty-elt, .mw-editsection, ' +
@@ -390,7 +425,13 @@
       wrap.appendChild(t);
     });
 
-    return { html: body.innerHTML, leadImg: leadImg };
+    /* Hand back the live nodes, NOT body.innerHTML. Serialising to a string
+       and re-parsing it into the page is the classic mutation-XSS setup:
+       a few elements (svg/style, math/annotation-xml, noembed, xmp) serialise
+       to markup that re-parses with a different meaning, which is how a
+       sanitised tree turns back into a live script. Adopting the nodes skips
+       the second parse entirely, so there is no second chance to mutate. */
+    return { body: body, leadImg: leadImg };
   }
 
   function renderArticle(title, raw, summary) {
@@ -418,7 +459,7 @@
 
     var art = document.createElement('article');
     art.className = 'reader';
-    art.innerHTML = clean.html;
+    while (clean.body.firstChild) art.appendChild(document.adoptNode(clean.body.firstChild));
     el.appendChild(art);
     wireLinks(art);
 
@@ -430,10 +471,10 @@
       '<a class="w-btn w-btn-quiet" target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/' +
         encodeURIComponent(title) + '">Sources on Wikipedia ↗</a>';
     el.appendChild(acts);
-    document.getElementById('w-save').addEventListener('click', function (e) {
+    acts.querySelector('#w-save').addEventListener('click', function (e) {
       e.target.textContent = toggleSaved(title) ? '★ Saved' : '☆ Save';
     });
-    document.getElementById('w-worm').addEventListener('click', takeMeSomewhere);
+    acts.querySelector('#w-worm').addEventListener('click', takeMeSomewhere);
 
     keepFalling(title, el);
   }

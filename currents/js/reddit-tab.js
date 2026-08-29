@@ -24,15 +24,16 @@
   function render() {
     var el = state.el, esc = Currents.esc, map = {};
     var subs = [];
-    state.data.sources.forEach(function (s) {
+    (Array.isArray(state.data.sources) ? state.data.sources : []).forEach(function (s) {
+      if (!s || !s.id) return;
       map[s.id] = s;
       if (/reddit\.com/.test(s.site || '')) subs.push(s);
     });
     subs.sort(function (a, b) { return (a.short || '').localeCompare(b.short || ''); });
     if (state.sub && !subs.some(function (s) { return s.id === state.sub; })) state.sub = null;
 
-    var items = state.data.items.filter(function (it) {
-      var s = map[it.s];
+    var items = (Array.isArray(state.data.items) ? state.data.items : []).filter(function (it) {
+      var s = it && map[it.s];
       if (!s || !/reddit\.com/.test(s.site || '')) return false;
       return !state.sub || it.s === state.sub;
     });
@@ -59,7 +60,7 @@
       var wrap = document.createElement('div');
       wrap.className = 'feed-row';
       wrap.innerHTML =
-        '<a class="feed-main" href="' + esc(it.u) + '" target="_blank" rel="noopener">' +
+        '<a class="feed-main" href="' + esc(Currents.safeHref(it.u)) + '" target="_blank" rel="noopener">' +
           '<span class="feed-title">' + esc(it.t || 'Untitled') + '</span>' +
           '<span class="feed-src">' + esc(src.short || '') +
             (it.d ? ' · ' + Currents.ago(it.d) : '') + ' · thread ↗</span>' +

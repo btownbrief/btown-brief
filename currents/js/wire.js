@@ -44,22 +44,42 @@
   function fetchJSON(url, ms) { return req(url, ms, false); }
   function fetchText(url, ms) { return req(url, ms, true); }
 
+  var SHAPE = {
+    pulse: function (j) { return j && Array.isArray(j.sources) && Array.isArray(j.items); },
+    'pulse-top': function (j) { return j && Array.isArray(j.picks); },
+    'btown-tv': function (j) { return j && (j.pick || Array.isArray(j.shelves)); },
+    'pulse-youtube': function (j) { return j && Array.isArray(j.videos); },
+    'currents-pools': function (j) { return j && j.pools && typeof j.pools === 'object'; },
+  };
+  function wellFormed(key, json) {
+    var check = SHAPE[key];
+    return check ? !!check(json) : !!json;
+  }
   function emit(key, json) {
     (subs[key] || []).forEach(function (cb) { try { cb(json); } catch (e) {} });
   }
   function settle(key, json, isStale) {
+    delete dead[key];
     cache[key] = json;
     stale[key] = !!isStale;
     delete inflight[key];
     emit(key, json);
-    if (isStale) { Currents.showStale(); retryLive(key, 0); }
+    if (isStale) {
+      Currents.showStale();
+      setTimeout(function () { retryLive(key, 0); }, STALE_RETRIES[0]);
+    }
     else if (!anyStale()) Currents.hideStale();
   }
+  /* A dead key is dead for now, not forever: a blip while the app was
+     starting used to disable that feed until a full reload, which hits the
+     three no-fallback payloads hardest. The poll retries it. */
+  var DEAD_FOR = 120000;
   function bust(key) {
-    dead[key] = true;
+    dead[key] = Date.now();
     delete inflight[key];
     (fails[key] || []).forEach(function (cb) { try { cb(); } catch (e) {} });
   }
+  function isDead(key) { return dead[key] && Date.now() - dead[key] < DEAD_FOR; }
   function anyStale() {
     return Object.keys(stale).some(function (k) { return stale[k]; });
   }
@@ -83,10 +103,11 @@
     var spec = FILES[key];
     if (!spec || !stale[key]) return;
     fetchJSON(spec.live, 8000).then(function (json) {
-      if (stale[key] && json) offerFresh(key, json);
+      if (stale[key] && wellFormed(key, json)) offerFresh(key, json);
     }).catch(function () {
-      if (attempt + 1 < STALE_RETRIES.length) {
-        setTimeout(function () { retryLive(key, attempt + 1); }, STALE_RETRIES[attempt + 1]);
+      var next = attempt + 1;
+      if (next < STALE_RETRIES.length) {
+        setTimeout(function () { retryLive(key, next); }, STALE_RETRIES[next]);
       }
     });
   }
@@ -96,12 +117,20 @@
     var first  = local && spec.local ? spec.local : spec.live;
     var second = local ? (spec.local ? spec.live : null) : spec.local;
     inflight[key] = true;
-    fetchJSON(first, 8000).then(function (json) { settle(key, json, false); })
+    fetchJSON(first, 8000)
+      .then(function (json) {
+        if (!wellFormed(key, json)) throw new Error('bad shape');
+        settle(key, json, false);
+      })
       .catch(function () {
         if (!second) { bust(key); return; }
         /* stale means production had to fall back to main's snapshot;
            local dev reading its own snapshot is just… local dev */
-        fetchJSON(second, 8000).then(function (json) { settle(key, json, !local); })
+        fetchJSON(second, 8000)
+          .then(function (json) {
+            if (!wellFormed(key, json)) throw new Error('bad shape');
+            settle(key, json, !local);
+          })
           .catch(function () { bust(key); });
       });
   }
@@ -116,7 +145,7 @@
     if (onOk) (subs[key] = subs[key] || []).push(onOk);
     if (onFail) (fails[key] = fails[key] || []).push(onFail);
     if (cache[key]) { if (onOk) onOk(cache[key]); return; }
-    if (dead[key]) { if (onFail) onFail(); return; }
+    if (isDead(key)) { if (onFail) onFail(); return; }
     if (!inflight[key]) start(key);
   };
 
@@ -134,10 +163,16 @@
   setInterval(function () {
     if (document.hidden || isLocalDev()) return;
     Object.keys(FILES).forEach(function (key) {
-      if (!FILES[key].poll || !cache[key]) return;
-      fetchJSON(FILES[key].live, 8000)
-        .then(function (json) { if (json) offerFresh(key, json); })
-        .catch(function () {});
+      if (cache[key]) {
+        if (!FILES[key].poll) return;
+        fetchJSON(FILES[key].live, 8000)
+          .then(function (json) { if (wellFormed(key, json)) offerFresh(key, json); })
+          .catch(function () {});
+      } else if (dead[key] && !inflight[key] && (subs[key] || []).length) {
+        /* nobody ever got this payload — try again for the tabs waiting on it */
+        delete dead[key];
+        start(key);
+      }
     });
   }, POLL_MS);
 })();

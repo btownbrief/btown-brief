@@ -33,7 +33,13 @@
   function parseHash() {
     var h = location.hash.replace(/^#/, '');
     var m = h.match(/^read\/(.+)$/);
-    if (m) return { tab: 'read', param: decodeURIComponent(m[1]) };
+    if (m) {
+      /* someone else's shared link can carry broken percent-encoding, and an
+         un-caught URIError here would take the whole router down */
+      var title;
+      try { title = decodeURIComponent(m[1]); } catch (e) { title = m[1]; }
+      return { tab: 'read', param: title };
+    }
     if (TABS.indexOf(h) === -1) h = 'pulse';
     return { tab: h, param: null };
   }
@@ -129,6 +135,13 @@
         return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
       });
   };
+  /* Escaping a URL keeps it inside its attribute; it does NOT stop
+     javascript: from running when the link is clicked. Item URLs come off
+     third-party RSS, so every href the app renders goes through here. */
+  window.Currents.safeHref = function (url) {
+    var u = String(url == null ? '' : url).replace(/[\t\n\r\0]/g, '').trim();
+    return /^(https?:\/\/|#|\.\/|\.\.\/|\/)/i.test(u) ? u : '#';
+  };
   window.Currents.ago = function (epochSeconds) {
     var mins = Math.round((Date.now() / 1000 - epochSeconds) / 60);
     if (!isFinite(mins) || mins < 0) return '';
@@ -206,14 +219,17 @@
 
   /* ---------- miniplayer: ONE <audio>, it survives every tab switch ---------- */
   var audio = $('mp-audio'), mp = $('miniplayer'), bar = mp.querySelector('.mp-progress i');
-  var lastSave = 0;
+  var lastSave = 0, pendingSeek = 0;
   window.Currents.playAudio = function (ep) {
     if (!ep || !ep.src) return;
     var key = ep.key || ep.src;
     if (audio.getAttribute('src') !== ep.src) {
       audio.src = ep.src;
       var pos = parseFloat(store(stateKey('resume-' + key)) || '0');
-      if (pos > 5) { try { audio.currentTime = pos; } catch (e) {} }
+      /* Safari throws on currentTime before the media is seekable, so set it
+         now if it takes and again on loadedmetadata if it did not */
+      pendingSeek = pos > 5 ? pos : 0;
+      if (pendingSeek) { try { audio.currentTime = pendingSeek; } catch (e) {} }
     }
     audio.dataset.key = key;
     $('mp-title').textContent = ep.title || '';
@@ -238,6 +254,12 @@
     }
   };
   window.Currents.nowPlaying = function () { return audio.dataset.key || null; };
+  audio.addEventListener('loadedmetadata', function () {
+    if (pendingSeek && Math.abs(audio.currentTime - pendingSeek) > 2) {
+      try { audio.currentTime = pendingSeek; } catch (e) {}
+    }
+    pendingSeek = 0;
+  });
   audio.addEventListener('timeupdate', function () {
     var now = Date.now();
     if (audio.dataset.key && now - lastSave >= 5000) {
@@ -303,7 +325,10 @@
   $('embedbox').addEventListener('click', function (e) { if (e.target === $('embedbox')) closeVideo(); });
 
   /* ---------- saved ---------- */
-  function savedList() { return storeJSON(stateKey('saved')) || []; }
+  function savedList() {
+    var v = storeJSON(stateKey('saved'));
+    return Array.isArray(v) ? v.filter(function (i) { return i && i.href; }) : [];
+  }
   window.Currents.isSaved = function (href) {
     return savedList().some(function (i) { return i.href === href; });
   };
@@ -330,7 +355,7 @@
       var internal = /^#/.test(it.href || '');
       row.innerHTML =
         '<a class="sd-link" ' + (internal ? '' : 'target="_blank" rel="noopener" ') +
-          'href="' + Currents.esc(it.href) + '">' +
+          'href="' + Currents.esc(Currents.safeHref(it.href)) + '">' +
           '<span class="sd-row-title">' + Currents.esc(it.title) + '</span>' +
           '<span class="feed-src">' + Currents.esc(it.from || '') + '</span></a>' +
         '<button class="mp-btn sd-drop" aria-label="Remove">' +

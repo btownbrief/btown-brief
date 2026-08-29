@@ -53,7 +53,7 @@
     if (!state.tv) { el.insertAdjacentHTML('beforeend', '<p class="c-empty">Tonight\'s edition isn\'t up yet.</p>'); return; }
 
     var pick = state.tv.pick;
-    if (pick && Currents.isVideoId(pick.id)) {
+    if (pick && typeof pick === 'object' && Currents.isVideoId(pick.id)) {
       var hero = document.createElement('button');
       hero.className = 'c-card w-hero';
       hero.innerHTML =
@@ -68,9 +68,11 @@
       el.appendChild(hero);
     }
 
-    (state.tv.live || []).length && el.appendChild(shelf('Live right now', 'Streaming as you read this', state.tv.live));
-    (state.tv.shelves || []).forEach(function (s) {
-      if (s.items && s.items.length) el.appendChild(shelf(s.title, s.sub, s.items));
+    if (Array.isArray(state.tv.live) && state.tv.live.length) {
+      el.appendChild(shelf('Live right now', 'Streaming as you read this', state.tv.live));
+    }
+    (Array.isArray(state.tv.shelves) ? state.tv.shelves : []).forEach(function (s) {
+      if (s && Array.isArray(s.items) && s.items.length) el.appendChild(shelf(s.title, s.sub, s.items));
     });
     if (state.tv.generated) {
       el.insertAdjacentHTML('beforeend',
@@ -81,11 +83,11 @@
 
   function renderWire(el) {
     var esc = Currents.esc;
-    if (!state.yt || !state.yt.videos || !state.yt.videos.length) {
+    if (!state.yt || !Array.isArray(state.yt.videos) || !state.yt.videos.length) {
       el.insertAdjacentHTML('beforeend', '<p class="c-empty">The YouTube wire isn\'t answering right now.</p>');
       return;
     }
-    var vids = state.yt.videos.filter(function (v) { return Currents.isVideoId(v.id); });
+    var vids = state.yt.videos.filter(function (v) { return v && Currents.isVideoId(v.id); });
     el.insertAdjacentHTML('beforeend', '<p class="c-kicker">Everything new · ' + vids.length + ' videos</p>');
     var grid = document.createElement('div');
     grid.className = 'v-grid';
@@ -131,7 +133,7 @@
     var rail = document.createElement('div');
     rail.className = 'w-shelf';
     items.forEach(function (v) {
-      if (!Currents.isVideoId(v.id)) return;
+      if (!v || !Currents.isVideoId(v.id)) return;
       rail.appendChild(vcard(v, esc));
     });
     wrap.appendChild(rail);

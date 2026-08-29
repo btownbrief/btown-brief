@@ -33,32 +33,33 @@
 
   function srcMap() {
     var m = {};
-    state.data.sources.forEach(function (s) { m[s.id] = s; });
+    (Array.isArray(state.data.sources) ? state.data.sources : [])
+      .forEach(function (s) { if (s && s.id) m[s.id] = s; });
     return m;
   }
 
   function render() {
     var el = state.el, map = srcMap(), esc = Currents.esc;
     var base = Currents.visitBase();
-    var items = state.data.items.filter(function (it) {
-      var s = map[it.s];
+    var items = (Array.isArray(state.data.items) ? state.data.items : []).filter(function (it) {
+      var s = it && map[it.s];
       if (!s || /reddit\.com/.test(s.site || '')) return false;
       if (state.local && !(s.local === 1 || s.topic === 'local')) return false;
       return true;
     });
     el.innerHTML = '';
 
-    if (state.top && state.top.picks && state.top.picks.length) {
+    if (state.top && Array.isArray(state.top.picks) && state.top.picks.length) {
       var top = document.createElement('section');
       top.className = 'p-top';
       top.innerHTML = '<p class="c-kicker">The picks · ' +
         esc(Currents.ago(Math.floor(new Date(state.top.generated).getTime() / 1000))) + ' ago</p>';
       var rail = document.createElement('div');
       rail.className = 'w-shelf';
-      state.top.picks.slice(0, 8).forEach(function (p) {
+      state.top.picks.slice(0, 8).filter(Boolean).forEach(function (p) {
         var card = document.createElement('a');
         card.className = 'c-card p-pick';
-        card.href = p.u; card.target = '_blank'; card.rel = 'noopener';
+        card.href = Currents.safeHref(p.u); card.target = '_blank'; card.rel = 'noopener';
         card.innerHTML =
           '<span class="feed-src">' + esc(p.short || '') + (p.local ? ' · Local' : '') + '</span>' +
           '<span class="p-pick-title">' + esc(p.t) + '</span>' +
@@ -115,7 +116,7 @@
     var wrap = document.createElement('div');
     wrap.className = 'feed-row';
     wrap.innerHTML =
-      '<a class="feed-main" href="' + esc(href) + '" target="_blank" rel="noopener">' +
+      '<a class="feed-main" href="' + esc(Currents.safeHref(href)) + '" target="_blank" rel="noopener">' +
         '<span class="feed-title">' + esc(it.t || 'Untitled') + '</span>' +
         '<span class="feed-src">' + esc(src.short || src.name || '') +
           (it.d ? ' · ' + Currents.ago(it.d) : '') +

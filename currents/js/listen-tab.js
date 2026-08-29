@@ -35,13 +35,15 @@
 
   function build() {
     var shows = {}, order = [];
-    state.data.sources.forEach(function (s) {
-      if (s.pod !== 1) return;
+    var sources = Array.isArray(state.data.sources) ? state.data.sources : [];
+    var items = Array.isArray(state.data.items) ? state.data.items : [];
+    sources.forEach(function (s) {
+      if (!s || s.pod !== 1) return;
       shows[s.id] = { src: s, eps: [], local: s.local === 1 || s.topic === 'local' };
       order.push(s.id);
     });
-    state.data.items.forEach(function (it) {
-      if (!it.a || !shows[it.s]) return;
+    items.forEach(function (it) {
+      if (!it || !it.a || !shows[it.s]) return;
       shows[it.s].eps.push(it);
     });
     var list = order.map(function (id) { return shows[id]; })
@@ -53,9 +55,12 @@
     return list;
   }
 
+  /* The feature card and the Spotify embed are built ONCE and never touched
+     again. Rebuilding the panel on every chip tap or show expansion would
+     recreate the iframe, which silently stops anything playing inside it. */
   function render() {
     var el = state.el, esc = Currents.esc;
-    var shows = build();
+    if (el.querySelector('.l-list')) { renderList(); return; }
     el.innerHTML = '';
 
     var feat = document.createElement('section');
@@ -82,22 +87,35 @@
     embed.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
     el.appendChild(embed);
 
+    var list = document.createElement('div');
+    list.className = 'l-list';
+    el.appendChild(list);
+    renderList();
+  }
+
+  function renderList() {
+    var esc = Currents.esc;
+    var list = state.el.querySelector('.l-list');
+    if (!list) return;
+    var shows = build();
     var half = shows.filter(function (s) { return s.local === state.local; });
+    list.innerHTML = '';
+
     var chips = document.createElement('div');
     chips.className = 'chip-row';
-    chips.appendChild(chip('Vermont shows', state.local, function () { state.local = true; render(); el.scrollTo({ top: 0 }); }));
-    chips.appendChild(chip('Everything else', !state.local, function () { state.local = false; render(); el.scrollTo({ top: 0 }); }));
-    el.appendChild(chips);
+    chips.appendChild(chip('Vermont shows', state.local, function () { state.local = true; renderList(); }));
+    chips.appendChild(chip('Everything else', !state.local, function () { state.local = false; renderList(); }));
+    list.appendChild(chips);
 
     var resumes = resumeShelf(shows, esc);
-    if (resumes) el.appendChild(resumes);
+    if (resumes) list.appendChild(resumes);
 
-    el.insertAdjacentHTML('beforeend', '<p class="c-kicker">' +
+    list.insertAdjacentHTML('beforeend', '<p class="c-kicker">' +
       (state.local ? 'Local podcasts' : 'More shows') + ' · ' + half.length + '</p>');
     var grid = document.createElement('div');
     grid.className = 'l-shows';
     half.forEach(function (s) { grid.appendChild(showCard(s, esc)); });
-    el.appendChild(grid);
+    list.appendChild(grid);
   }
 
   /* an episode you left part-way through is the single most useful row on
@@ -139,7 +157,7 @@
       '<span class="l-chev">' + (open ? '▴' : '▾') + '</span>';
     head.addEventListener('click', function () {
       state.open[s.src.id] = !open;
-      render();
+      renderList();
     });
     wrap.appendChild(head);
     if (open) {
