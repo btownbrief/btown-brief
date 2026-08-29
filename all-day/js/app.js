@@ -17,8 +17,10 @@ import { el, esc, safeHref, ICON } from './ui.js';
 const $ = (id) => document.getElementById(id);
 /* What Now sits fifth of nine — dead centre, which is where the bar puts
    its own button. */
-const TABS = ['wire', 'reddit', 'watch', 'listen', 'whatnow',
-              'music', 'photos', 'ig', 'wander'];
+/* Ten tabs on two rows. What Now sits at the centre of the BOTTOM row — the
+   row a thumb reaches — with two tabs either side of it. */
+const TABS = ['wire', 'reddit', 'watch', 'listen', 'music',
+              'photos', 'sports', 'whatnow', 'ig', 'wander'];
 
 const registry = Object.create(null);
 let active = null;
