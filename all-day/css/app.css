@@ -51,6 +51,12 @@
   --shadow-2: 0 8px 30px rgba(20, 16, 8, .14);
   --scrim: rgba(28, 24, 16, .42);
   --dock-bg: rgba(255, 253, 249, .86);
+  /* the tab bar is a control, not chrome — it gets its own, more solid set */
+  --tabbar-bg: rgba(255, 253, 249, .97);
+  --tabbar-edge: rgba(20, 16, 8, .12);
+  --tabbar-lip: rgba(255, 255, 255, .9);
+  --tab-on-ink: #FFFFFF;
+  --shadow-3: 0 10px 34px rgba(20, 16, 8, .20), 0 2px 8px rgba(20, 16, 8, .10);
 
   --radius: 16px;
   --radius-sm: 11px;
@@ -58,7 +64,11 @@
   --pill: 999px;
 
   --serif: "Instrument Serif", "Lora", Georgia, serif;
-  --ui: "DM Sans", system-ui, -apple-system, sans-serif;
+  /* DM Sans read thin on a phone — headlines at 500 looked washed out
+     against the serif display face. Archivo is a sturdier grotesque with
+     real weight at small sizes, which is what a wire of two thousand
+     headlines needs. */
+  --ui: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
 
   --tabbar-h: 78px;   /* measured: the nine-pill bar is 84-88px tall */
@@ -104,6 +114,11 @@
     --shadow-2: 0 12px 40px rgba(0, 0, 0, .55);
     --scrim: rgba(0, 0, 0, .66);
     --dock-bg: rgba(14, 17, 22, .88);
+    --tabbar-bg: rgba(22, 26, 33, .98);
+    --tabbar-edge: rgba(255, 255, 255, .14);
+    --tabbar-lip: rgba(255, 255, 255, .07);
+    --tab-on-ink: #0B0E13;
+    --shadow-3: 0 12px 40px rgba(0, 0, 0, .62), 0 2px 10px rgba(0, 0, 0, .45);
   }
 }
 
@@ -134,6 +149,11 @@
   --shadow-2: 0 12px 40px rgba(0, 0, 0, .55);
   --scrim: rgba(0, 0, 0, .66);
   --dock-bg: rgba(14, 17, 22, .88);
+  --tabbar-bg: rgba(22, 26, 33, .98);
+  --tabbar-edge: rgba(255, 255, 255, .14);
+  --tabbar-lip: rgba(255, 255, 255, .07);
+  --tab-on-ink: #0B0E13;
+  --shadow-3: 0 12px 40px rgba(0, 0, 0, .62), 0 2px 10px rgba(0, 0, 0, .45);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -160,11 +180,10 @@ a { color: inherit; text-decoration: none; }
 
 /* ============================================================ top chrome */
 /* nav.js prepends the shared BTown bar in normal flow, which is right for a
-   scrolling page and wrong for a fixed shell — it would own 15% of a phone
-   screen forever. Pinned here, it joins the mast as one stack that slides
-   away as you read. --nav-h stays 0 if the bar never loads. */
-.btnav { position: fixed; top: 0; left: 0; right: 0; z-index: 41; transition: transform .26s ease; }
-body.chrome-away .btnav { transform: translateY(-100%); }
+   scrolling page and wrong for a fixed shell. Pinned here, it is the one
+   thing that travels with you down the page — the way out to the rest of the
+   network is always one tap away. --nav-h stays 0 if the bar never loads. */
+.btnav { position: fixed; top: 0; left: 0; right: 0; z-index: 41; }
 
 .mast {
   position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 40;
@@ -174,7 +193,12 @@ body.chrome-away .btnav { transform: translateY(-100%); }
   border-bottom: 1px solid var(--edge-soft);
   transition: transform .26s ease;
 }
-body.chrome-away .mast { transform: translateY(calc(-100% - var(--nav-h))); }
+/* The masthead belongs to the page, not to the chrome: it goes up out of the
+   way as you read and comes back the moment you scroll up. -100% is exactly
+   its own height, which puts its bottom edge level with the bottom of the
+   shared bar — and the bar paints above it (z 41 > 40), so it is fully
+   hidden without needing to know how tall the bar is. */
+body.chrome-away .mast { transform: translateY(-100%); }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .mast, .dock-inner { background: var(--ground); }
 }
@@ -235,7 +259,17 @@ body.chrome-away .mast { transform: translateY(calc(-100% - var(--nav-h))); }
 .panel {
   position: absolute; inset: 0; overflow-y: auto; overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
-  padding: calc(var(--nav-h) + var(--mast-h) + 16px) 14px calc(var(--tabbar-h) + 34px + var(--safe-b));
+  padding: 0 14px calc(var(--tabbar-h) + 34px + var(--safe-b));
+}
+/* The room the fixed masthead needs is a flow spacer, not top padding.
+   A sticky child measures its offset from the scroll container's PADDING
+   box, so top padding here silently added itself to every sticky `top` —
+   the control band came to rest 150px down the screen with headlines
+   scrolling above it. As a spacer it costs the same pixels and leaves
+   sticky offsets meaning what they say. */
+.panel::before {
+  content: ""; display: block;
+  height: calc(var(--nav-h) + var(--mast-h) + 16px);
 }
 body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--safe-b)); }
 .panel[hidden] { display: none; }
@@ -412,8 +446,8 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .fi:not(.is-swiping) { transition: transform .18s cubic-bezier(.2, .8, .3, 1); }
 .fi-body { min-width: 0; display: block; }
 .fi-title {
-  display: block; font-size: .99rem; line-height: 1.33; font-weight: 500;
-  letter-spacing: -.003em; color: var(--ink);
+  display: block; font-size: .97rem; line-height: 1.34; font-weight: 600;
+  letter-spacing: -.006em; color: var(--ink);
 }
 .fi-meta {
   display: flex; align-items: center; gap: 6px; min-width: 0; flex-shrink: 1;
@@ -440,9 +474,9 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 }
 .fi.is-read { opacity: .55; }
 /* scrolled off the top while you were looking at it — same shade Pulse uses */
-.fi.passed .fi-title { color: var(--ink-faint); font-weight: 400; }
+.fi.passed .fi-title { color: var(--ink-faint); font-weight: 500; }
 .fi.passed .fi-thumb { opacity: .6; }
-.fi.is-read .fi-title { font-weight: 400; }
+.fi.is-read .fi-title { font-weight: 500; }
 
 /* local is the whole point of the paper — make it visible while scrolling */
 .fi.is-local { background: linear-gradient(90deg, var(--local-soft), transparent 38%); }
@@ -953,9 +987,11 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .confirm-card p { font-size: .93rem; color: var(--ink-soft); line-height: 1.5; margin-bottom: 18px; }
 .confirm-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 
+body.chrome-away .fresh { top: calc(var(--nav-h) + 12px); }
 .fresh {
   position: fixed; top: calc(var(--nav-h) + var(--mast-h) + 12px); left: 50%;
   transform: translateX(-50%); z-index: 44;
+  transition: top .26s ease;
   background: var(--accent); color: #fff; border-radius: var(--pill);
   padding: 9px 18px; font-family: var(--mono); font-size: .66rem; font-weight: 700;
   letter-spacing: .12em; text-transform: uppercase; box-shadow: var(--shadow-2);
@@ -1022,19 +1058,29 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 /* One line on a phone. Three readings plus a link is exactly enough to
    overflow 390px and drop the link onto a row of its own, right-aligned,
    which reads as a layout bug rather than a footnote. */
-.wxstrip { display: flex; align-items: baseline; gap: 12px;
-  padding: 9px 13px; margin: 0 0 16px; border-radius: var(--radius-sm);
+.wxstrip { display: flex; align-items: stretch; gap: 4px;
+  margin: 0 0 16px; border-radius: var(--radius-sm);
   border: 1px solid color-mix(in srgb, var(--local) 22%, var(--edge));
   background: color-mix(in srgb, var(--local) 6%, var(--panel));
   overflow: hidden; }
-.wxstrip .wx-bit { flex: 0 1 auto; min-width: 0; white-space: nowrap;
+.wxstrip-in { display: flex; align-items: baseline; gap: 10px; flex: 1 1 auto;
+  min-width: 0; padding: 9px 2px 9px 12px; }
+/* Lake and Sunset are four characters each and must never truncate. Only the
+   conditions line gives way — "70° Partly Cloudy" can lose its adjective and
+   still be a temperature. */
+.wxstrip .wx-bit { flex: 0 0 auto; white-space: nowrap; }
+.wxstrip .wx-bit:first-child { flex: 0 1 auto; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; }
-.wxstrip:hover { background: color-mix(in srgb, var(--local) 11%, var(--panel)); }
+.wx-x { flex: 0 0 auto; width: 28px; font: inherit; font-size: 1rem;
+  line-height: 1; color: var(--ink-faint); background: none; border: 0;
+  cursor: pointer; }
+.wx-x:hover { color: var(--ink); }
+.wxstrip-in:hover { background: color-mix(in srgb, var(--local) 8%, transparent); }
 .wx-bit { display: inline-flex; align-items: baseline; gap: 6px; }
 .wx-k { font-family: var(--mono); font-size: .6rem; letter-spacing: .1em;
   text-transform: uppercase; color: var(--ink-faint); }
 .wx-v { font-size: .86rem; font-weight: 600; }
-.wx-go { margin-left: auto; padding-left: 2px; font-size: .74rem; color: var(--local);
+.wx-go { margin-left: auto; padding-left: 2px; font-size: .72rem; color: var(--local);
   font-weight: 600; flex: 0 0 auto; white-space: nowrap; }
 
 /* ==================================================== by-source layout */
@@ -1100,10 +1146,13 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 /* ==================================================== btown tv masthead */
 .tvmast { margin: 0 0 14px; }
 .tvmast-pre { font-family: var(--mono); font-size: .58rem; letter-spacing: .16em;
-  text-transform: uppercase; color: var(--ink-faint); margin: 0 0 2px; }
+  text-transform: uppercase; color: var(--ink-faint); margin: 0 0 1px; }
 .tvmast h1 { font-family: var(--serif); font-size: 1.72rem; line-height: 1;
-  letter-spacing: -.018em; margin: 0 0 5px; }
-.tvmast-sub { font-size: .82rem; line-height: 1.42; color: var(--ink-soft);
+  letter-spacing: -.018em; margin: 0 0 4px; }
+/* The Play button is a requested, deliberate ~50px. The rest of the block
+   pays for it rather than the page growing: the tagline tightens and the
+   note under the button rides close. */
+.tvmast-sub { font-size: .79rem; line-height: 1.36; color: var(--ink-soft);
   margin: 0; max-width: 46ch; }
 
 /* ===================================================== the local switch */
@@ -1159,6 +1208,89 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 @media (prefers-reduced-motion: reduce) {
   .localsw-bar, .localsw-half { transition: none; }
 }
+
+/* ================================================== the control band */
+/* Topic chips and the view switch, pinned under the masthead. Scrolling two
+   thousand headlines and then having to scroll all the way back to change
+   topic is the single most annoying thing a feed can do.
+
+   It floats rather than bleeding edge to edge: the panel's horizontal
+   padding is a max() expression on wide screens, so there is no honest
+   negative margin to cancel it. A rounded bar with a shadow reads as a
+   deliberate floating control instead of a sticky element with gaps. */
+.ctlband {
+  position: sticky;
+  top: calc(var(--nav-h) + var(--mast-h) + 6px);
+  z-index: 12;
+  margin: 0 -6px 12px;
+  padding: 8px 8px 2px;
+  border-radius: var(--radius);
+  background: var(--dock-bg);
+  backdrop-filter: saturate(150%) blur(18px);
+  -webkit-backdrop-filter: saturate(150%) blur(18px);
+  border: 1px solid var(--edge-soft);
+  box-shadow: var(--shadow-1);
+  transition: top .26s ease;
+}
+/* the masthead slides away as you read; the band follows it up */
+/* the masthead has gone; the shared bar has not */
+body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
+.ctlband .chips { padding-bottom: 6px; }
+.ctlband .hint-bar { margin-bottom: 8px; }
+.ctlband .toolrow { margin: 0 0 6px; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ctlband { background: var(--ground); }
+}
+
+/* ================================================ the tab bar, louder */
+/* It was a pale row of small grey glyphs on a translucent ground — on first
+   landing it read as a caption, not as the way between five feeds. It now
+   sits up off the page: opaque, a lit top edge, a real shadow under it, and
+   an active tab that is a filled pill rather than a faint tint. */
+.tabbar {
+  background: var(--tabbar-bg);
+  border-color: var(--tabbar-edge);
+  box-shadow: var(--shadow-3), inset 0 1px 0 var(--tabbar-lip);
+}
+.tabbar button { color: var(--ink-soft); }
+.tabbar button svg { stroke-width: 1.9; }
+.tabbar button:active { transform: translateY(1px); }
+.tabbar button.on {
+  color: var(--tab-on-ink);
+  background: var(--accent);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.tabbar button.on svg { stroke-width: 2.3; }
+/* No marker above the pill: it sits outside the bar's padding box and reads
+   as a stray sliver rather than an indicator. The filled pill is the signal. */
+.tabbar button.on .tabdot { background: var(--tab-on-ink); }
+@media (prefers-reduced-motion: reduce) {
+  .tabbar button:active { transform: none; }
+  .ctlband { transition: none; }
+}
+
+
+/* ============================================ play the edition on a TV */
+/* Every night's page is published as its own YouTube playlist. Casting the
+   whole edition is the best thing this tab does and it was a quiet outline
+   button underneath six shelves — filled, and up in the masthead, the way
+   BTown TV had it. */
+.tvmast-row { display: flex; align-items: center; gap: 5px 11px; flex-wrap: wrap; margin-top: 10px; }
+.tv-play {
+  background: var(--accent); color: var(--tab-on-ink); border-color: transparent;
+  padding: 10px 17px; font-size: .89rem; min-height: 42px;
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--accent) 42%, transparent);
+}
+.tv-play:hover { background: color-mix(in srgb, var(--accent) 88%, #000); }
+.tv-play svg { width: 15px; height: 15px; fill: currentColor; stroke: none; flex: 0 0 auto; }
+.tvmast-n { font-size: .74rem; line-height: 1.2; color: var(--ink-faint); }
+
+/* the newsletter edition a hand-written pick came from */
+.pick-from { display: block; margin-top: 9px; font-family: var(--mono);
+  font-size: .58rem; letter-spacing: .11em; text-transform: uppercase;
+  color: var(--local); }
+.pick-why { display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical;
+  overflow: hidden; }
 /* ============================================================ music */
 /* Cover art is the whole point of a music surface, so it leads everything and
    is never desaturated. Where an artist has no art, the initials sit on their

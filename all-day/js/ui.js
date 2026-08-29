@@ -85,7 +85,7 @@ export const ICON = {
 
 /* Build the rail plus its affordance row. Returns the scroller so callers
    can append cards; call `sync` (returned) after appending. */
-export function rail(host, { label } = {}) {
+export function rail(host, { label, open } = {}) {
   const wrap = el('div', 'rail-wrap');
   const track = el('div', 'rail');
   const nav = el('div', 'rail-nav');
@@ -130,6 +130,9 @@ export function rail(host, { label } = {}) {
     }
   }
   expand.addEventListener('click', () => setOpen(!track.classList.contains('is-open')));
+  /* Some shelves open flat from the start — five cards in a scroller that
+     could hold twelve reads as an empty shelf, not a short one. */
+  if (open) setOpen(true);
   collapseTop.addEventListener('click', () => setOpen(false));
   wrap.insertBefore(collapseTop, track);
   nav.appendChild(expand);
@@ -252,7 +255,7 @@ export function rail(host, { label } = {}) {
   ['pointerup', 'pointercancel'].forEach((ev) =>
     bar.addEventListener(ev, () => { barDrag = false; }));
 
-  return { track, sync, wrap };
+  return { track, sync, wrap, setOpen };
 }
 
 /* The same grey bar for anything else that scrolls sideways — the topic
