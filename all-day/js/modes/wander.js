@@ -21,7 +21,7 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, rail, heading, chip, ICON } from './../ui.js';
+import { el, esc, rail, heading, chip, scrollHint, ICON } from './../ui.js';
 
 const REST = 'https://en.wikipedia.org/api/rest_v1/';
 const ACTION = 'https://en.wikipedia.org/w/api.php?format=json&formatversion=2&origin=*&';
@@ -34,11 +34,12 @@ const NS_PLAIN = /^(Special|File|Image|Media|Wikipedia|Help|Category|Template|Ta
 const POOLS = [
   ['unusual', '🙃', 'Weird stuff', 'The strangest pages on Wikipedia, with their own jokes attached'],
   ['vermont', '🍁', 'Near here', 'Everything within twelve kilometres of City Hall'],
+  ['onthisday', '📅', 'On this day', 'What happened on this date, year by year'],
   ['popular', '🔥', 'What everyone is reading', 'The most-read articles of the past week'],
 ];
 
 const state = {
-  root: null, pool: null, at: null, gen: 0,
+  root: null, pool: null, live: Object.create(null), at: null, gen: 0,
   expanded: Object.create(null), shuffle: Object.create(null), suggestTimer: 0,
 };
 
@@ -47,6 +48,38 @@ export function mount(root) {
   data.load('pool', (json) => { state.pool = json.pools; if (!state.at) renderDoor(); }, () => {
     if (!state.at) renderDoor();
   });
+  loadOnThisDay();
+}
+
+/* Eastern day, because that is the day the reader is in — and the feed has
+   no entry for a date that has not arrived in UTC yet, so fall back a day
+   rather than showing an empty shelf. */
+function etDay(offset) {
+  const d = new Date(Date.now() - (offset || 0) * 86400000);
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
+    year: 'numeric', month: '2-digit', day: '2-digit' }).format(d).replace(/-/g, '/');
+}
+
+function loadOnThisDay(offset) {
+  const day = etDay(offset || 0);
+  data.fetchJSON(REST + 'feed/featured/' + day, 10000)
+    .then((j) => {
+      const seen = new Set();
+      const out = [];
+      (j.onthisday || []).forEach((ev) => {
+        const page = (ev.pages || [])[0];
+        const title = page && page.titles && page.titles.normalized;
+        /* one event often anchors several pages, and the feed repeats a page
+           across related entries — keep the first mention */
+        if (!title || seen.has(title)) return;
+        seen.add(title);
+        out.push({ t: title, d: (ev.year ? ev.year + ' · ' : '') + (ev.text || '').slice(0, 120) });
+      });
+      if (!out.length) throw new Error('empty');
+      state.live.onthisday = out;
+      if (!state.at) renderDoor();
+    })
+    .catch(() => { if (!offset) loadOnThisDay(1); });
 }
 
 export function activate(param) {
@@ -61,7 +94,11 @@ export function deactivate() {
 
 const go = (title) => app.go('wander', title);
 const pretty = (t) => String(t || '').replace(/_/g, ' ');
-const list = (key) => (state.pool && Array.isArray(state.pool[key]) ? state.pool[key] : []);
+/* Two kinds of pool. Three come off the nightly file; "on this day" is
+   fetched live, because a list of what happened on this date is stale the
+   moment the date turns and it is one request to get right. */
+const list = (key) => (Array.isArray(state.live[key]) ? state.live[key]
+  : (state.pool && Array.isArray(state.pool[key]) ? state.pool[key] : []));
 
 /* A stable-per-shuffle sample, so re-rendering does not reshuffle underneath
    a finger already moving toward a card. */
@@ -198,6 +235,7 @@ function renderTrail(root) {
   clear.addEventListener('click', () => { store.clearTrail(); renderDoor(); });
   row.appendChild(clear);
   root.appendChild(row);
+  scrollHint(row);
 }
 
 function renderSaved(root) {
@@ -211,12 +249,14 @@ function renderSaved(root) {
     row.appendChild(c);
   });
   root.appendChild(row);
+  scrollHint(row);
 }
 
 function takeMeSomewhere() {
   const buckets = [];
   if (list('unusual').length) buckets.push({ w: 4, key: 'unusual' });
   if (list('vermont').length) buckets.push({ w: 3, key: 'vermont' });
+  if (list('onthisday').length) buckets.push({ w: 2, key: 'onthisday' });
   if (list('popular').length) buckets.push({ w: 2, key: 'popular' });
   const total = buckets.reduce((n, b) => n + b.w, 0);
   if (!total) {

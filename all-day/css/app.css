@@ -34,7 +34,7 @@
   --accent-bright: #C87E12;
   --accent-soft: rgba(200, 126, 18, .13);
   --local: #16704E;
-  --local-soft: rgba(22, 112, 78, .12);
+  --local-soft: rgba(22, 112, 78, .07);
   --good: #16704E;
   --warn: #A33B2A;
 
@@ -79,7 +79,7 @@
     --accent-bright: #F2B44F;
     --accent-soft: rgba(232, 163, 61, .17);
     --local: #6FD79E;
-    --local-soft: rgba(111, 215, 158, .14);
+    --local-soft: rgba(111, 215, 158, .075);
     --good: #6FD79E;
     --warn: #F08A72;
     --rail-track: #2C3134;
@@ -108,7 +108,7 @@
   --accent-bright: #F2B44F;
   --accent-soft: rgba(232, 163, 61, .17);
   --local: #6FD79E;
-  --local-soft: rgba(111, 215, 158, .14);
+  --local-soft: rgba(111, 215, 158, .075);
   --good: #6FD79E;
   --warn: #F08A72;
   --rail-track: #2C3134;
@@ -254,8 +254,20 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .errbox b { color: var(--ink); }
 
 /* ============================================================ chips */
-.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 14px;
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 8px;
   scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+/* the same grey bar a rail gets, for chip rows and the Wander trail — a row
+   that runs off the edge with no sign of it reads as a row that ends there */
+.hint-bar { position: relative; height: 4px; border-radius: 3px; margin: 0 0 14px;
+  background: var(--rail-track); overflow: hidden; }
+.hint-bar i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 3px;
+  background: var(--rail-thumb); transition: left .12s linear, width .12s linear; }
+@media (hover: hover) and (pointer: fine) {
+  .hint-bar { cursor: pointer; height: 6px; }
+  .hint-bar:hover i { background: var(--ink-soft); }
+}
+.trail { padding-bottom: 8px; }
+.trail + .hint-bar { margin-bottom: 16px; }
 .chips::-webkit-scrollbar { display: none; }
 .chip {
   flex: 0 0 auto; font-size: .8rem; font-weight: 500; letter-spacing: .01em;
@@ -280,7 +292,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   display: grid; grid-auto-flow: column; gap: 11px;
   /* NO grid-auto-columns here: each card type sets its own width, and a
      blanket column width makes wider cards overlap each other. */
-  overflow-x: auto; scroll-snap-type: x mandatory;
+  overflow-x: auto; scroll-snap-type: x proximity;
   padding-bottom: 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
   scroll-padding-left: 0;
 }
@@ -300,6 +312,23 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   .rail-bar:hover i { background: var(--ink-soft); }
 }
 .rail-nav { display: flex; flex-direction: column; gap: 8px; padding: 3px 0 2px; }
+.rail-expand {
+  align-self: center; display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: .6rem; font-weight: 500; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-faint);
+  border: 1px solid var(--edge); border-radius: var(--pill); padding: 5px 12px;
+  background: var(--panel); min-height: 30px;
+}
+.rail-expand:hover { color: var(--accent); border-color: var(--accent-soft); }
+
+/* Opened out: the same cards, stacked, no sideways anything. */
+.rail.is-open {
+  grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: 1fr;
+  overflow-x: visible; scroll-snap-type: none; gap: 10px; cursor: default;
+}
+.rail.is-open > * { width: auto !important; }
+.rail.is-open .v img, .rail.is-open .doorcard img { aspect-ratio: 16/9; }
+.rail-wrap.is-open .rail-bar, .rail-wrap.is-open .rail-dots { display: none; }
 .rail-bar { position: relative; height: 5px; border-radius: 3px;
   background: var(--rail-track); overflow: hidden; }
 .rail-bar i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 3px;
@@ -328,27 +357,30 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .fi:not(.is-swiping) { transition: transform .18s cubic-bezier(.2, .8, .3, 1); }
 .fi-body { min-width: 0; display: block; }
 .fi-title {
-  display: block; font-size: 1.05rem; line-height: 1.36; font-weight: 500;
+  display: block; font-size: 1.01rem; line-height: 1.32; font-weight: 500;
   letter-spacing: -.003em; color: var(--ink);
 }
 .fi-meta {
-  display: flex; align-items: center; flex-wrap: wrap; gap: 7px;
-  margin-top: 6px; font-family: var(--mono); font-size: .655rem;
-  letter-spacing: .09em; text-transform: uppercase; color: var(--ink-faint);
+  display: flex; align-items: center; gap: 6px; min-width: 0; flex-shrink: 1;
+  overflow: hidden; white-space: nowrap;
+  font-family: var(--mono); font-size: .625rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
 }
-.fi-src { color: var(--ink-soft); font-weight: 500; }
+.fi-meta > * { flex: 0 0 auto; }
+.fi-src { color: var(--ink-soft); font-weight: 500; overflow: hidden;
+  text-overflow: ellipsis; flex: 0 1 auto; }
 .fi-thumb {
-  width: 84px; height: 84px; object-fit: cover; border-radius: var(--radius-sm);
+  width: 70px; height: 70px; object-fit: cover; border-radius: 9px;
   background: var(--panel-2); flex: 0 0 auto;
 }
 .fi.is-read { opacity: .55; }
 .fi.is-read .fi-title { font-weight: 400; }
 
 /* local is the whole point of the paper — make it visible while scrolling */
-.fi.is-local { background: linear-gradient(90deg, var(--local-soft), transparent 62%); }
+.fi.is-local { background: linear-gradient(90deg, var(--local-soft), transparent 38%); }
 .fi.is-local::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-  background: var(--local);
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2.5px;
+  background: var(--local); opacity: .85;
 }
 .tag-local {
   color: var(--local); font-weight: 600;
@@ -370,27 +402,27 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 
 /* ============================================================ actions */
 .act {
-  width: 40px; height: 40px; border-radius: 12px;
+  width: 34px; height: 34px; border-radius: 10px;
   display: inline-flex; align-items: center; justify-content: center;
   color: var(--ink-faint); flex: 0 0 auto;
   transition: color .14s ease, background .14s ease, transform .14s ease;
 }
 .act:hover { background: var(--panel-hover); color: var(--ink-soft); }
 .act:active { transform: scale(.9); }
-.act svg { width: 22px; height: 22px; fill: none; stroke: currentColor;
+.act svg { width: 21px; height: 21px; fill: none; stroke: currentColor;
   stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .act.on { color: var(--accent); }
 .act.on svg { fill: currentColor; stroke: currentColor; }
 
 /* upvote — a count that reads as a count */
 .vote {
-  display: inline-flex; align-items: center; gap: 4px; height: 34px;
-  padding: 0 9px 0 7px; border-radius: var(--pill); border: 1px solid var(--edge);
+  display: inline-flex; align-items: center; gap: 4px; height: 28px;
+  padding: 0 8px 0 6px; border-radius: var(--pill); border: 1px solid var(--edge);
   color: var(--ink-faint); font-family: var(--mono); font-size: .72rem;
   font-weight: 600; letter-spacing: .02em; flex: 0 0 auto;
   transition: all .14s ease;
 }
-.vote svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2;
+.vote svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2;
   stroke-linecap: round; stroke-linejoin: round; }
 .vote:hover { background: var(--panel-hover); color: var(--ink-soft); }
 .vote.on { color: var(--accent); border-color: transparent; background: var(--accent-soft); }
