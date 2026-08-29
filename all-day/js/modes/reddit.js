@@ -11,7 +11,7 @@ import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
 import { bindGestures } from './../gestures.js';
-import { el, esc, chip, heading, ago } from './../ui.js';
+import { el, esc, chip, heading, scrollHint, ago } from './../ui.js';
 import { feedRow, bindFeed, hydrateVotes, keyOf } from './../rows.js';
 
 const state = { root: null, pulse: null, sub: null, byKey: new Map() };
@@ -74,6 +74,7 @@ function render() {
     chips.appendChild(b);
   });
   root.appendChild(chips);
+  scrollHint(chips);
 
   if (!shown.length) {
     root.appendChild(el('p', 'empty', 'No threads on the wire right now.'));

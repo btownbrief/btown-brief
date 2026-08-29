@@ -211,6 +211,52 @@ export function rail(host, { label } = {}) {
   return { track, sync, wrap };
 }
 
+/* The same grey bar for anything else that scrolls sideways — the topic
+   chips, the subreddit chips, the Wander trail. A rail is not the only thing
+   people have to discover they can push, and a row of chips that runs off
+   the edge with no sign of it reads as a row of chips that ends there. */
+export function scrollHint(scroller) {
+  const bar = el('div', 'hint-bar', '<i></i>');
+  const thumb = bar.firstElementChild;
+  scroller.insertAdjacentElement('afterend', bar);
+
+  function sync() {
+    const view = scroller.clientWidth;
+    const total = Math.max(view, scroller.scrollWidth);
+    const width = Math.max(14, Math.min(100, (view / total) * 100));
+    const max = Math.max(1, total - view);
+    const ratio = total > view ? Math.min(1, scroller.scrollLeft / max) : 0;
+    thumb.style.width = width + '%';
+    thumb.style.left = (ratio * (100 - width)) + '%';
+  }
+
+  scroller.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+  if ('ResizeObserver' in window) new ResizeObserver(() => sync()).observe(scroller);
+
+  /* draggable, same as a rail's — a mouse has no other way to move a chip row */
+  let dragging = false;
+  const seek = (clientX) => {
+    const box = bar.getBoundingClientRect();
+    const w = thumb.getBoundingClientRect().width;
+    const span = Math.max(1, box.width - w);
+    const at = Math.min(1, Math.max(0, (clientX - box.left - w / 2) / span));
+    scroller.scrollLeft = at * Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+  };
+  bar.addEventListener('pointerdown', (e) => {
+    if (scroller.scrollWidth <= scroller.clientWidth + 4) return;
+    dragging = true;
+    try { bar.setPointerCapture(e.pointerId); } catch (err) { /* optional */ }
+    seek(e.clientX);
+    e.preventDefault();
+  });
+  bar.addEventListener('pointermove', (e) => { if (dragging) seek(e.clientX); });
+  ['pointerup', 'pointercancel'].forEach((ev) =>
+    bar.addEventListener(ev, () => { dragging = false; }));
+
+  sync();
+  return sync;
+}
+
 /* ------------------------------------------------------------ small parts */
 
 export function starBtn(saved) {

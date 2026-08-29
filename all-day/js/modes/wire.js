@@ -21,7 +21,7 @@ import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
 import { bindGestures } from './../gestures.js';
-import { el, esc, safeHref, ago, rail, chip, heading, voteBtn, paintVote, ICON } from './../ui.js';
+import { el, esc, safeHref, ago, rail, chip, heading, scrollHint, voteBtn, paintVote, ICON } from './../ui.js';
 import { feedRow, bindFeed, hydrateVotes, keyOf, isLocalSource } from './../rows.js';
 
 const PAGE = 60;
@@ -146,6 +146,7 @@ function render() {
     }));
   });
   root.appendChild(chips);
+  scrollHint(chips);
 
   const box = el('div', 'search');
   box.style.margin = '0 0 14px';

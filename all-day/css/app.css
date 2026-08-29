@@ -254,8 +254,20 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .errbox b { color: var(--ink); }
 
 /* ============================================================ chips */
-.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 14px;
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 0 8px;
   scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+/* the same grey bar a rail gets, for chip rows and the Wander trail — a row
+   that runs off the edge with no sign of it reads as a row that ends there */
+.hint-bar { position: relative; height: 4px; border-radius: 3px; margin: 0 0 14px;
+  background: var(--rail-track); overflow: hidden; }
+.hint-bar i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 3px;
+  background: var(--rail-thumb); transition: left .12s linear, width .12s linear; }
+@media (hover: hover) and (pointer: fine) {
+  .hint-bar { cursor: pointer; height: 6px; }
+  .hint-bar:hover i { background: var(--ink-soft); }
+}
+.trail { padding-bottom: 8px; }
+.trail + .hint-bar { margin-bottom: 16px; }
 .chips::-webkit-scrollbar { display: none; }
 .chip {
   flex: 0 0 auto; font-size: .8rem; font-weight: 500; letter-spacing: .01em;
