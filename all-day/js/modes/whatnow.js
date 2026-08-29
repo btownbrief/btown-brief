@@ -17,8 +17,11 @@
    A wall of forty events is a calendar, and the calendar already exists —
    this tab points at it from the bottom.
 
-   Two doors out, on purpose. The full calendar and the day planner are better
-   at their jobs than a phone tab is; the value here is the next few hours. */
+   Three doors out, on purpose. The full calendar, the day planner and the
+   arcade are all better at their jobs than a phone tab is; the value here is
+   the next few hours. The arcade earns its place because its outdoor half —
+   claim a block, run a challenge — is the answer that still works on a
+   Tuesday in February when the calendar has nothing on it. */
 
 import * as store from './../store.js';
 import * as data from './../wire.js';
@@ -28,6 +31,7 @@ import { el, esc, safeHref, chip, heading, shelfHead, scrollHint,
 
 const EVENTS_URL = '../events.html';
 const PLANNER_URL = 'https://play.btownbrief.com/burlington-days/';
+const ARCADE_URL = 'https://play.btownbrief.com/';
 
 const state = { root: null, wn: null, cat: null, freeOnly: false };
 
@@ -148,6 +152,11 @@ function doors(root) {
     'Every event, filterable, further out than this'));
   box.appendChild(door(PLANNER_URL, 'Build a day',
     'Burlington Days turns a mood into an itinerary'));
+  /* The arcade's outdoor half belongs here rather than under games: claiming a
+     block or running a challenge is an answer to "what now", and it is the one
+     that still works when the calendar is empty. */
+  box.appendChild(door(ARCADE_URL, 'Play something',
+    'The arcade — and five games you go outside for'));
   root.appendChild(box);
 }
 
