@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-28T22:54:32-04:00",
+ "generated": "2026-08-29T10:40:56-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 6.2
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 63,
-   "seconds": 2.9
+   "count": 60,
+   "seconds": 2.7
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 66,
-   "seconds": 3.3
+   "count": 68,
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 175,
-   "seconds": 2.6
+   "count": 171,
+   "seconds": 2.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 84,
-   "seconds": 2.1
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-28&end_date=2026-10-27&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-29&end_date=2026-10-28&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 188,
+   "count": 191,
    "seconds": 75.3
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 37,
-   "seconds": 0.5
+   "count": 36,
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,42 +64,42 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 39.1
+   "seconds": 41.4
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
-   "seconds": 0.5
+   "seconds": 0.2
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 12.4
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 397,
-   "seconds": 80.4
+   "count": 391,
+   "seconds": 70.9
   },
   "meetup": {
    "label": "Meetup",
    "count": 67,
-   "seconds": 128.6
+   "seconds": 126.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 46,
-   "seconds": 14.6
+   "count": 47,
+   "seconds": 15.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 102,
-   "seconds": 1.6
+   "count": 103,
+   "seconds": 1.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 27,
-   "seconds": 34.5
+   "count": 26,
+   "seconds": 34.3
   },
   "sevendays": {
    "label": "Seven Days",
@@ -113,110 +113,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 430,
-   "seconds": 18.2
+   "count": 429,
+   "seconds": 26.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 272,
-   "seconds": 0.3
+   "count": 266,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 77,
-   "seconds": 106.5
+   "count": 78,
+   "seconds": 103.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 50,
-   "seconds": 0.5
+   "count": 51,
+   "seconds": 0.3
   }
  },
- "gathered": 2858,
- "afterDedup": 1586,
- "duplicatesMerged": 1272,
- "final": 1824,
+ "gathered": 2845,
+ "afterDedup": 1589,
+ "duplicatesMerged": 1256,
+ "final": 1800,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Men's Soccer vs UMass",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-09-29"
-  },
-  {
-   "kept": {
-    "title": "802sDay",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-29"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-29"
-  },
-  {
-   "kept": {
-    "title": "Destroyer",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-09-29"
-  },
-  {
-   "kept": {
-    "title": "Samara Joy",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "flynn",
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-30"
-  },
-  {
-   "kept": {
-    "title": "Halvorson's Courtyard Music Series: Arty & Friends",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-09-30"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-09-30"
-  },
   {
    "kept": {
     "title": "Coloring in the Marble Court",
@@ -2166,6 +2086,17 @@
   },
   {
    "kept": {
+    "title": "Sam Jay",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "vcc"
+   ],
+   "date": "2026-10-22"
+  },
+  {
+   "kept": {
     "title": "Melissa H. Cronin | The Peach: A Memoir of Trauma, Survival, and Forgiveness",
     "source": "churchst"
    },
@@ -2221,6 +2152,28 @@
     "uvmbored"
    ],
    "date": "2026-10-22"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-22"
+  },
+  {
+   "kept": {
+    "title": "Sam Jay",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "vcc"
+   ],
+   "date": "2026-10-23"
   },
   {
    "kept": {
@@ -2313,6 +2266,28 @@
   },
   {
    "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-23"
+  },
+  {
+   "kept": {
+    "title": "Sam Jay",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "vcc"
+   ],
+   "date": "2026-10-24"
+  },
+  {
+   "kept": {
     "title": "Queer/LGBTQ+ Horror Book Club",
     "source": "churchst"
    },
@@ -2351,6 +2326,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -2377,37 +2353,31 @@
     "loveburlington"
    ],
    "date": "2026-10-27"
+  },
+  {
+   "kept": {
+    "title": "Data Design Lab",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-27"
+  },
+  {
+   "kept": {
+    "title": "TRIVIA NIGHT",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-28"
   }
  ],
  "changes": [
-  {
-   "id": "0959e1b00ed0",
-   "title": "Lunch with the Poets",
-   "date": "2026-08-28",
-   "change": "missing",
-   "lastSeen": "2026-08-28T00:28:15-04:00"
-  },
-  {
-   "id": "7cdc6a2d716a",
-   "title": "Soulshine & Smoke: An Allman Brothers celebration with Soulshine Revival & BBQ",
-   "date": "2026-08-28",
-   "change": "missing",
-   "lastSeen": "2026-08-26T06:15:56-04:00"
-  },
-  {
-   "id": "b2e5144d1079",
-   "title": "Nataly Aukar",
-   "date": "2026-08-28",
-   "change": "missing",
-   "lastSeen": "2026-08-28T16:58:52-04:00"
-  },
-  {
-   "id": "a87bf256edbe",
-   "title": "Marina Richie with Trish O'Kana | Feathered Forest: Aloft with Birds in Ancient Trees",
-   "date": "2026-08-28",
-   "change": "missing",
-   "lastSeen": "2026-08-28T00:28:15-04:00"
-  },
   {
    "id": "de6596c8a217",
    "title": "Lillian Leadbetter's Album Release Show!",
@@ -2433,15 +2403,13 @@
    "id": "52c12f1b8bb2",
    "title": "Kids Book Club for K-2",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-08-26T06:15:56-04:00"
+   "change": "dropped"
   },
   {
    "id": "9b8350b903c3",
    "title": "Swimming @ Oakledge",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-08-26T06:15:56-04:00"
+   "change": "dropped"
   },
   {
    "id": "4dbb38c540d5",
@@ -2507,12 +2475,6 @@
    "lastSeen": "2026-08-27T14:25:13-04:00"
   },
   {
-   "id": "59fccb39869d-1600",
-   "title": "Green Mountain Book Festival",
-   "date": "2026-09-19",
-   "change": "dropped"
-  },
-  {
    "id": "2ca321c8deb7",
    "title": "Joe Kaplow",
    "date": "2026-09-19",
@@ -2537,8 +2499,7 @@
    "id": "6d54599c76a0",
    "title": "Kids Book Club for K-2",
    "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-08-26T06:15:56-04:00"
+   "change": "dropped"
   },
   {
    "id": "24de2b1138c4",
@@ -2579,8 +2540,7 @@
    "id": "cf0c3c256364",
    "title": "Jill McCracken w/ Julia Randall",
    "date": "2026-10-17",
-   "change": "missing",
-   "lastSeen": "2026-08-26T06:15:56-04:00"
+   "change": "dropped"
   },
   {
    "id": "6f150056982e",
