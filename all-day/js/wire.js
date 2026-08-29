@@ -74,6 +74,14 @@ const FILES = {
     local: 'data/podcast.json',
     ok: (j) => j && Array.isArray(j.episodes),
   },
+  /* Just the games. What Now shows the next couple of days and hands off to
+     sports.html for the rest — a schedule is something you act on, so it lives
+     with the calendar rather than in a tab you scroll. */
+  sports: {
+    live: null,
+    local: '../data/sports.json',
+    ok: (j) => j && Array.isArray(j.games),
+  },
   whatnow: {
     live: null,
     local: 'data/whatnow.json',

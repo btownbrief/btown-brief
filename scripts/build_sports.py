@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build all-day/data/sports.json — the Sports tab's payload.
+"""Build data/sports.json — the payload behind sports.html.
 
 LOCAL comes from each organisation's own feed. NATIONAL comes from ESPN.
 Everything here is keyless.
@@ -53,7 +53,7 @@ from zoneinfo import ZoneInfo
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 TEAMS = ROOT / "data" / "sports-teams.json"
-OUT = ROOT / "all-day" / "data" / "sports.json"
+OUT = ROOT / "data" / "sports.json"
 
 UA = {"User-Agent": "btown-brief/1.0 (+https://btownbrief.com)"}
 
@@ -62,6 +62,22 @@ UA = {"User-Agent": "btown-brief/1.0 (+https://btownbrief.com)"}
 # 83 of 340 games — every evening game — one day late. The day a game belongs
 # to is the day it is in Burlington.
 NY = ZoneInfo("America/New_York")
+
+
+# The Burlington High calendar stamps every event with the school's own postal
+# address, so it repeats on 45 of 48 rows and tells a reader nothing — the field
+# they want is already in the title ("@ Leddy Park"). Drop a street address; keep
+# a real venue name.
+_STREET = re.compile(r"\d+\s+\S+.*(?:,|\bVT\b|\b0\d{4}\b)")
+
+
+def clean_venue(loc):
+    if not loc:
+        return None
+    loc = " ".join(loc.split())
+    if _STREET.match(loc):
+        return None
+    return loc
 
 
 def local_date(start) -> str:
@@ -233,8 +249,9 @@ def ics_to_game(r: dict, org: str, sport: str, level: str) -> dict | None:
         "date": local_date(start),
         "allDay": not isinstance(start, dt.datetime),
     }
-    if r.get("location"):
-        g["venue"] = r["location"]
+    venue = clean_venue(r.get("location"))
+    if venue:
+        g["venue"] = venue
     if r.get("url"):
         g["url"] = r["url"]
     if result:
