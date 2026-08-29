@@ -95,6 +95,20 @@ export function rail(host, { label } = {}) {
 
   const thumb = bar.firstElementChild;
 
+  /* Swiping a long rail twenty times is a chore. Any rail can be opened out
+     into a plain vertical list, which is also the honest answer for anyone
+     who finds horizontal scrolling awkward. */
+  const expand = el('button', 'rail-expand', 'Expand to a list');
+  expand.setAttribute('aria-expanded', 'false');
+  expand.addEventListener('click', () => {
+    const open = track.classList.toggle('is-open');
+    wrap.classList.toggle('is-open', open);
+    expand.setAttribute('aria-expanded', open ? 'true' : 'false');
+    expand.textContent = open ? 'Back to a row' : 'Expand to a list';
+    if (!open) { track.scrollLeft = 0; sync(); }
+  });
+  nav.appendChild(expand);
+
   /* One dot per screenful, never per card. Past MAX_DOTS the dots stop being
      a map and become a smear, so they cap and track position proportionally
      — the bar above them carries the precision. */
@@ -122,6 +136,9 @@ export function rail(host, { label } = {}) {
     const active = Math.round(ratio * (n - 1));
     [...dots.children].forEach((d, i) => d.classList.toggle('on', i === active));
     dots.hidden = n < 2;
+    /* nothing to scroll and nothing to expand — say so by getting out of
+       the way, rather than offering controls that do nothing */
+    expand.hidden = track.childElementCount < 3;
   }
 
   track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });

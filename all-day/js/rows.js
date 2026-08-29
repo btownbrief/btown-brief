@@ -48,14 +48,13 @@ export function feedRow(it, src, opts = {}) {
   link.rel = 'noopener';
   link.appendChild(el('span', 'fi-title', esc(it.t || 'Untitled')));
 
-  const meta = el('div', 'fi-meta');
+  const meta = el('span', 'fi-meta');
   if (local && !opts.tag) meta.appendChild(el('span', 'tag-local', 'Local'));
   if (opts.tag) meta.appendChild(el('span', 'tag-local', esc(opts.tag)));
   meta.appendChild(el('span', 'fi-src', esc(src?.short || src?.name || '')));
   if (it.d) meta.appendChild(el('span', null, agoShort(it.d)));
   if (opts.isNew) meta.appendChild(el('span', 'tag-new', 'New'));
-  if (it.a) meta.appendChild(el('span', null, '♪ Audio'));
-  link.appendChild(meta);
+  if (it.a) meta.appendChild(el('span', null, '♪'));
   link.addEventListener('click', () => {
     store.markRead(k);
     row.classList.add('is-read');
@@ -63,6 +62,7 @@ export function feedRow(it, src, opts = {}) {
   row.appendChild(link);
 
   const foot = el('div', 'fi-foot');
+  foot.appendChild(meta);
   foot.appendChild(el('span', 'spacer'));
   const vote = voteBtn(store.voteCount(k), store.hasVoted(k), store.votesLive());
   vote.addEventListener('click', (e) => {
