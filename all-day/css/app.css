@@ -194,7 +194,13 @@ body.chrome-away .btnav { transform: translateY(-100%); }
   border-bottom: 1px solid var(--edge-soft);
   transition: transform .26s ease;
 }
-body.chrome-away .mast { transform: translateY(calc(-100% - var(--nav-h))); }
+/* The masthead stays. Only the shared BTown bar above it gets out of the
+   way — and when it goes, the mast rides up into the space it left rather
+   than leaving a gap or following it off the top. Which tab you are on, the
+   Local switch and the theme/saved/settings buttons are all up here; they
+   should not be something you have to scroll back up to reach.
+   --nav-h is 0 when the shared bar never loads, so this is a no-op then. */
+body.chrome-away .mast { transform: translateY(calc(-1 * var(--nav-h))); }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .mast, .dock-inner { background: var(--ground); }
 }
@@ -976,9 +982,11 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .confirm-card p { font-size: .93rem; color: var(--ink-soft); line-height: 1.5; margin-bottom: 18px; }
 .confirm-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 
+body.chrome-away .fresh { top: calc(var(--mast-h) + 12px); }
 .fresh {
   position: fixed; top: calc(var(--nav-h) + var(--mast-h) + 12px); left: 50%;
   transform: translateX(-50%); z-index: 44;
+  transition: top .26s ease;
   background: var(--accent); color: #fff; border-radius: var(--pill);
   padding: 9px 18px; font-family: var(--mono); font-size: .66rem; font-weight: 700;
   letter-spacing: .12em; text-transform: uppercase; box-shadow: var(--shadow-2);
@@ -1045,19 +1053,29 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 /* One line on a phone. Three readings plus a link is exactly enough to
    overflow 390px and drop the link onto a row of its own, right-aligned,
    which reads as a layout bug rather than a footnote. */
-.wxstrip { display: flex; align-items: baseline; gap: 12px;
-  padding: 9px 13px; margin: 0 0 16px; border-radius: var(--radius-sm);
+.wxstrip { display: flex; align-items: stretch; gap: 4px;
+  margin: 0 0 16px; border-radius: var(--radius-sm);
   border: 1px solid color-mix(in srgb, var(--local) 22%, var(--edge));
   background: color-mix(in srgb, var(--local) 6%, var(--panel));
   overflow: hidden; }
-.wxstrip .wx-bit { flex: 0 1 auto; min-width: 0; white-space: nowrap;
+.wxstrip-in { display: flex; align-items: baseline; gap: 10px; flex: 1 1 auto;
+  min-width: 0; padding: 9px 2px 9px 12px; }
+/* Lake and Sunset are four characters each and must never truncate. Only the
+   conditions line gives way — "70° Partly Cloudy" can lose its adjective and
+   still be a temperature. */
+.wxstrip .wx-bit { flex: 0 0 auto; white-space: nowrap; }
+.wxstrip .wx-bit:first-child { flex: 0 1 auto; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; }
-.wxstrip:hover { background: color-mix(in srgb, var(--local) 11%, var(--panel)); }
+.wx-x { flex: 0 0 auto; width: 28px; font: inherit; font-size: 1rem;
+  line-height: 1; color: var(--ink-faint); background: none; border: 0;
+  cursor: pointer; }
+.wx-x:hover { color: var(--ink); }
+.wxstrip-in:hover { background: color-mix(in srgb, var(--local) 8%, transparent); }
 .wx-bit { display: inline-flex; align-items: baseline; gap: 6px; }
 .wx-k { font-family: var(--mono); font-size: .6rem; letter-spacing: .1em;
   text-transform: uppercase; color: var(--ink-faint); }
 .wx-v { font-size: .86rem; font-weight: 600; }
-.wx-go { margin-left: auto; padding-left: 2px; font-size: .74rem; color: var(--local);
+.wx-go { margin-left: auto; padding-left: 2px; font-size: .72rem; color: var(--local);
   font-weight: 600; flex: 0 0 auto; white-space: nowrap; }
 
 /* ==================================================== by-source layout */
@@ -1210,7 +1228,8 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   transition: top .26s ease;
 }
 /* the masthead slides away as you read; the band follows it up */
-body.chrome-away .ctlband { top: 6px; }
+/* the mast is still there, just higher up */
+body.chrome-away .ctlband { top: calc(var(--mast-h) + 6px); }
 .ctlband .chips { padding-bottom: 6px; }
 .ctlband .hint-bar { margin-bottom: 8px; }
 .ctlband .toolrow { margin: 0 0 6px; }

@@ -36,6 +36,7 @@ const state = {
   q: '',
   qOpen: false,
   wx: null,
+  wxHidden: false,   // this visit only; a refresh brings the line back
   nl: null,
   byKey: new Map(),
 };
@@ -419,7 +420,14 @@ function renderWeather(root) {
     bits.push(['Sunset', t.replace(/\s?[AP]M$/i, '')]);
   }
   if (bits.length < 2) return;
-  const strip = el('a', 'wxstrip');
+  if (state.wxHidden) return;
+
+  /* The X cannot live inside the link, so the strip is a box holding the
+     link and the close button side by side. Closing it lasts for this visit
+     only — a refresh brings it back, so nothing is buried behind a setting
+     and today's temperature is never permanently gone. */
+  const box = el('div', 'wxstrip');
+  const strip = el('a', 'wxstrip-in');
   strip.href = 'https://guide.btownbrief.com/weather.html';
   strip.target = '_blank';
   strip.rel = 'noopener';
@@ -427,7 +435,17 @@ function renderWeather(root) {
     '<span class="wx-bit"><span class="wx-k">' + esc(k) + '</span>' +
     '<span class="wx-v">' + esc(v) + '</span></span>').join('') +
     '<span class="wx-go">Forecast →</span>';
-  root.appendChild(strip);
+  box.appendChild(strip);
+
+  const x = el('button', 'wx-x', '\u00d7');
+  x.setAttribute('aria-label', 'Hide the weather line for now');
+  x.title = 'Hide it for now — it is back next time you open the page';
+  x.addEventListener('click', () => {
+    state.wxHidden = true;
+    box.remove();
+  });
+  box.appendChild(x);
+  root.appendChild(box);
 }
 
 /* ------------------------------------------------------------ by source */
@@ -491,9 +509,20 @@ function renderPicks(root, map) {
      a national headline was the one thing on the page still arguing with the
      switch. Some editions have no local pick at all — then the carousel steps
      aside rather than showing an empty shelf. */
-  const picks = localOnly && !edition.nl
+  /* Muting an outlet has to mean muting it everywhere. The picks carry an
+     outlet name rather than a source id, so match on the name — otherwise a
+     source you muted keeps leading the page from the carousel while the feed
+     below it obeys you. */
+  const mutedShorts = new Set();
+  const mutes = store.muted();
+  Object.keys(map).forEach((id) => {
+    if (mutes[id]) mutedShorts.add(String(map[id].short || map[id].name || '').toLowerCase());
+  });
+  const audible = (p) => !p || !mutedShorts.has(String(p.short || '').toLowerCase());
+
+  const picks = (localOnly && !edition.nl
     ? (edition.picks || []).filter((p) => p && p.local)
-    : (edition.picks || []);
+    : (edition.picks || [])).filter(audible);
   if (localOnly && !picks.length) {
     heading(root, {
       eyebrow: 'The picks',
