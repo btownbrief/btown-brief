@@ -47,7 +47,7 @@ const WIKI = 'https://en.wikipedia.org/api/rest_v1/feed/featured/';
 
 const state = {
   root: null,
-  view: 'sunsets',            // 'sunsets' | 'all'
+  view: 'all',                // 'all' | 'sunsets' — everything leads, sunsets are the shelf you go to
   photos: null,               // null = not loaded
   live: false,
   cat: null,
@@ -378,7 +378,7 @@ export function render() {
   root.innerHTML = '';
   tabStamp(root, stampOf(data.peek('weather') && data.peek('weather').updated), 'photos, as they are approved');
 
-  root.appendChild(seg([['sunsets', 'Sunsets'], ['all', 'All photos']],
+  root.appendChild(seg([['all', 'All photos'], ['sunsets', 'Sunsets']],
     state.view, (v) => { state.view = v; render(); }));
   root.appendChild(el('div', null, '<div style="height:14px"></div>'));
 

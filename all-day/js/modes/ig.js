@@ -76,20 +76,41 @@ function openPost(p) {
   });
 }
 
+/* A grid of pictures answers "what does Burlington look like". It does not
+   answer "what is happening", which is the whole reason these accounts are
+   worth reading — Sunset Watchers Club names a spot in the caption, Bolters
+   names a time. So the caption rides on the card and the picture sits beside
+   it, rather than the text hiding behind a tap.
+
+   Four lines, clamped. Long captions run to a wall of hashtags; the rest is
+   one tap away and almost nobody wants it. */
 function cell(p) {
-  const box = el('div', 'ig-cell');
+  const box = el('article', 'ig-post');
   const hit = el('button', 'ig-hit');
+
+  const shot = el('span', 'ig-shot');
   const img = el('img', 'ig-img');
   img.loading = 'lazy';
   img.referrerPolicy = 'no-referrer';
-  img.alt = p.c ? p.c.slice(0, 80) : '';
+  img.alt = '';
   img.src = p.i;
-  img.addEventListener('error', () => { box.classList.add('is-dead'); });
-  hit.appendChild(img);
-  if (p.v) hit.appendChild(el('span', 'ig-vid'));
+  /* A signed URL that has aged out must not leave a broken frame — the card
+     drops to text, which is still the useful half. */
+  img.addEventListener('error', () => { box.classList.add('no-art'); });
+  shot.appendChild(img);
+  if (p.v) shot.appendChild(el('span', 'ig-vid'));
+  hit.appendChild(shot);
+
+  const body = el('span', 'ig-body');
+  body.innerHTML =
+    '<span class="ig-who">@' + esc(p.h) + '<span class="ig-when">' +
+      esc(agoShort(p.ts)) + '</span></span>' +
+    (p.c ? '<span class="ig-text">' + esc(p.c) + '</span>'
+         : '<span class="ig-text ig-nocap">No caption — tap for the post.</span>');
+  hit.appendChild(body);
+
   hit.addEventListener('click', () => openPost(p));
   box.appendChild(hit);
-  box.appendChild(el('span', 'ig-who', '@' + esc(p.h)));
   return box;
 }
 
@@ -111,7 +132,7 @@ export function render() {
 
   root.appendChild(el('p', 'ig-note',
     'No algorithm, no likes, no endless scroll — just the newest thing each ' +
-    'of these accounts posted. Tap a picture for the caption.'));
+    'of these accounts posted, with what they actually said.'));
 
   if (accounts.length > 1) {
     const chips = el('div', 'chips');
@@ -128,9 +149,9 @@ export function render() {
   }
 
   const list = state.who ? all.filter((p) => p.h === state.who) : all;
-  const grid = el('div', 'ig-grid');
-  list.forEach((p) => grid.appendChild(cell(p)));
-  root.appendChild(grid);
+  const feed = el('div', 'ig-feed');
+  list.forEach((p) => feed.appendChild(cell(p)));
+  root.appendChild(feed);
 
   if (!list.length) {
     root.appendChild(el('p', 'empty',

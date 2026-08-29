@@ -1584,22 +1584,37 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 /* A grid in posted order. No ranking, no engagement count, nothing that
    would make this a second algorithm — which is the entire reason it exists. */
 .ig-note { font-size: .8rem; color: var(--ink-faint); line-height: 1.5; margin: 0 2px 12px; }
-.ig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
-  gap: 5px; }
-.ig-cell { position: relative; }
-.ig-hit { display: block; width: 100%; }
-.ig-img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
-  border-radius: 8px; background: var(--panel-2);
+/* The caption is the announcement — a spot, a time, a lineup — so it sits on
+   the card next to the picture rather than behind a tap. Picture left at a
+   fixed square, text right and clamped to four lines. */
+.ig-feed { display: grid; gap: 2px; border-top: 1px solid var(--edge-soft); }
+.ig-post { border-bottom: 1px solid var(--edge-soft); }
+.ig-hit { display: flex; gap: 12px; align-items: flex-start; width: 100%;
+  text-align: left; padding: 11px 2px; }
+.ig-shot { position: relative; flex: 0 0 auto; width: 96px; }
+.ig-img { display: block; width: 96px; height: 96px; object-fit: cover;
+  border-radius: 10px; background: var(--panel-2);
   outline: 1px solid rgba(20, 16, 8, .11); outline-offset: -1px; }
 :root[data-theme="dark"] .ig-img,
 :root:not([data-theme="light"]) .ig-img { outline-color: rgba(255, 255, 255, .2); }
-.ig-vid { position: absolute; top: 6px; right: 6px; width: 16px; height: 16px;
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .ig-img { outline-color: rgba(20, 16, 8, .11); }
+}
+/* when the signed URL has aged out, the row becomes text and closes the gap */
+.ig-post.no-art .ig-shot { display: none; }
+.ig-vid { position: absolute; top: 6px; right: 6px; width: 17px; height: 17px;
   border-radius: 50%; background: rgba(0,0,0,.55); display: grid; place-items: center; }
-.ig-vid::after { content: ""; border-left: 5px solid #fff; border-top: 3.5px solid transparent;
-  border-bottom: 3.5px solid transparent; margin-left: 1px; }
-.ig-who { display: block; font-family: var(--mono); font-size: .55rem; letter-spacing: .06em;
-  color: var(--ink-faint); margin-top: 3px; overflow: hidden; text-overflow: ellipsis;
-  white-space: nowrap; }
+.ig-vid::after { content: ""; border-left: 5px solid #fff;
+  border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent; margin-left: 1px; }
+.ig-body { min-width: 0; flex: 1; display: block; }
+.ig-who { display: flex; align-items: baseline; gap: 7px; font-family: var(--mono);
+  font-size: .6rem; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--accent); font-weight: 600; }
+.ig-when { color: var(--ink-faint); font-weight: 400; letter-spacing: .06em; }
+.ig-text { display: -webkit-box; margin-top: 5px; font-size: .89rem; line-height: 1.42;
+  color: var(--ink); -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+  white-space: pre-wrap; }
+.ig-nocap { color: var(--ink-faint); font-style: italic; }
 .ig-full { display: block; width: 100%; border-radius: var(--radius-sm);
   background: var(--panel-2); margin-bottom: 12px; }
 .ig-cap { font-size: .95rem; line-height: 1.55; white-space: pre-wrap; margin-bottom: 12px; }
