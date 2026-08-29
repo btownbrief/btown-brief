@@ -1,4 +1,4 @@
-/* gestures.js — swipe right to save, swipe left to mute, hold to preview.
+/* gestures.js — swipe right to save, swipe left to mute. Holding is Safari's.
 
    Thresholds ported from pulse.js unchanged, because they are tuned and the
    numbers ARE the feature:
@@ -11,14 +11,17 @@
      400ms  after a gesture, clicks on that row are swallowed, so a swipe
             never also opens the article
 
-   What changed from the first pass: hold used to mute and left-swipe used to
-   "dig". Holding is far too good a gesture to spend on muting — held, a row
-   opens the article right there, which is the thing worth keeping. Muting is
-   destructive and rare, so it moved to a left swipe and now asks first.
+   Holding a row is deliberately NOT ours. On iPhone, long-pressing a link
+   makes Safari render a live preview of the page itself, which is better
+   than anything we could put in a card — it is the real article, not a
+   two-sentence RSS blurb. Both earlier passes stole that gesture: v1 muted
+   on hold, v2 opened a card. Muting is destructive and rare, so it lives on
+   a left swipe that asks first, and the hold is handed back to the browser.
 
-   Pointer Events only, so one code path covers touch, pen and mouse. Two
-   browser defaults must be pre-empted: anchors are natively draggable, and
-   Android fires its long-press menu before our hold timer.
+   Pointer Events only, so one code path covers touch, pen and mouse. One
+   browser default still has to be pre-empted — anchors are natively
+   draggable, which fights a swipe — but only while a swipe is actually
+   running, so a plain long-press reaches the browser untouched.
 
    The row translates but the action label does not: the label is an
    absolutely-positioned child that counter-translates, so no caller has to
@@ -27,7 +30,6 @@
 const START = 24;
 const COMMIT = 72;
 const CANCEL_Y = 14;
-const HOLD_MS = 550;
 const CLICK_DEAD_MS = 400;
 
 export function bindGestures(root, handlers) {
@@ -36,7 +38,6 @@ export function bindGestures(root, handlers) {
   let y0 = 0;
   let dx = 0;
   let active = false;
-  let holdTimer = 0;
   let deadRow = null;
   let deadUntil = 0;
   let pid = null;
@@ -58,7 +59,6 @@ export function bindGestures(root, handlers) {
   }
 
   function clear() {
-    clearTimeout(holdTimer);
     if (row) {
       row.style.removeProperty('--swipe');
       row.classList.remove('is-swiping', 'will-commit');
@@ -85,16 +85,6 @@ export function bindGestures(root, handlers) {
     dx = 0;
     active = false;
 
-    if (handlers.onHold) {
-      holdTimer = setTimeout(() => {
-        if (!row || active) return;
-        const held = row;
-        clear();
-        deadRow = held;
-        deadUntil = Date.now() + CLICK_DEAD_MS;
-        handlers.onHold(held.dataset.k, held);
-      }, HOLD_MS);
-    }
   });
 
   root.addEventListener('pointermove', (e) => {
@@ -112,7 +102,6 @@ export function bindGestures(root, handlers) {
       if (Math.abs(my) > CANCEL_Y) { clear(); return; }
       if (Math.abs(mx) < START) return;
       active = true;
-      clearTimeout(holdTimer);
       try { row.setPointerCapture(pid); } catch (err) { /* capture is optional */ }
     }
 
@@ -141,9 +130,11 @@ export function bindGestures(root, handlers) {
     root.addEventListener(ev, (e) => { if (e.pointerId === pid) finish(); }));
   root.addEventListener('pointerleave', () => { if (row && !active) clear(); });
 
-  // Anchors drag natively; Android's long-press menu beats our hold timer.
-  root.addEventListener('dragstart', (e) => { if (e.target.closest('.fi')) e.preventDefault(); });
-  root.addEventListener('contextmenu', (e) => { if (row && e.target.closest('.fi')) e.preventDefault(); });
+  // Anchors drag natively, which fights a swipe. Only block it once a swipe
+  // is actually running — `active`, not merely touched — so a plain
+  // long-press still reaches Safari and gets its own link preview.
+  root.addEventListener('dragstart', (e) => { if (active && e.target.closest('.fi')) e.preventDefault(); });
+  root.addEventListener('contextmenu', (e) => { if (active && e.target.closest('.fi')) e.preventDefault(); });
 
   // Swallow the click a swipe would otherwise also fire — but only on the row
   // the gesture happened on, so the rest of the page stays live.

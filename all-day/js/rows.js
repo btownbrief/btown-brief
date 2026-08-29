@@ -1,5 +1,9 @@
 /* rows.js — one feed row, used by Wire, Reddit and Popular.
 
+   Note there is no hold handler here. Long-pressing a row is Safari's job:
+   iOS renders a live preview of the linked page, which beats any card we
+   could draw from a two-sentence RSS blurb. See gestures.js.
+
    A row is a <div class="fi"> so the swipe layer can translate it, with the
    link as a child rather than the row itself: an <a> that IS the row cannot
    carry a swipe without fighting the browser's own drag handling.
@@ -10,38 +14,12 @@
 import * as store from './store.js';
 import * as app from './app.js';
 import * as wire from './wire.js';
-import { el, esc, safeHref, agoShort, starBtn, voteBtn, paintVote, ICON } from './ui.js';
+import { el, esc, safeHref, agoShort, starBtn, voteBtn, paintVote } from './ui.js';
 
 export const keyOf = (it) => it.u || it.o || it.t;
 
 export function isLocalSource(src) {
   return !!src && (src.local === 1 || src.topic === 'local');
-}
-
-/* The card the row opens when you hold it. Feeds carry two sentences of
-   description; that plus the picture is a real preview, and the button
-   underneath is the actual article. Nothing is fetched — a cross-origin
-   fetch of a news site is blocked anyway, and a proxy would mean handing a
-   third party every headline anyone hovers. */
-export function previewFor(it, src) {
-  const body = it.e
-    ? it.e
-    : 'This one does not carry a preview — its feed publishes headlines only.';
-  const actions = [];
-  const save = el('button', 'btn btn-quiet', store.isSaved(keyOf(it)) ? '★ Saved' : '☆ Save');
-  save.addEventListener('click', () => {
-    const on = store.toggleSaved(itemRecord(it, src));
-    save.textContent = on ? '★ Saved' : '☆ Save';
-  });
-  actions.push(save);
-  return app.peek({
-    title: it.t || 'Untitled',
-    from: [src?.short || src?.name, it.d ? agoShort(it.d) + ' ago' : ''].filter(Boolean).join(' · '),
-    art: it.i,
-    body,
-    href: it.u,
-    actions,
-  });
 }
 
 export function itemRecord(it, src) {
@@ -143,10 +121,6 @@ export function bindFeed(root, lookup, onChange) {
           });
         },
       });
-    },
-    onHold(k) {
-      const found = lookup(k);
-      if (found) previewFor(found.it, found.src);
     },
   };
 }
