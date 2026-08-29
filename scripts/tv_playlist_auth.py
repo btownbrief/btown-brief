@@ -135,7 +135,7 @@ def main():
                                     "description": ("Tonight's BTown TV edition — one "
                                                     "curated page of videos for "
                                                     "Burlington, rewritten daily. "
-                                                    "guide.btownbrief.com/tv.html")},
+                                                    "guide.btownbrief.com/all-day/")},
                                 "status": {"privacyStatus": "public"}})
         playlist_id = created["id"]
         print(f"Created playlist {playlist_id}")

@@ -1349,7 +1349,7 @@
           }).join('') + '</div>'
         : '') + '</div>';
 
-    var html = '<a class="tvbanner" href="tv.html">' +
+    var html = '<a class="tvbanner" href="all-day/#watch">' +
       '<span class="tvbanner-icon" aria-hidden="true">📺</span>' +
       '<span class="tvbanner-body"><b>BTown TV — the curated edition.</b> ' +
       'One page every evening, plays on your TV.</span>' +

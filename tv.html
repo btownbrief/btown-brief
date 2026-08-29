@@ -1,117 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BTown TV — tonight's picks, Burlington VT — Burlington Brief</title>
-  <meta name="description" content="One curated page of YouTube videos for Burlington, every evening: a Tonight's pick, a few short shelves, a Vermont shelf, and a playlist that plays the whole edition on your TV. No algorithm, no infinite scroll.">
-
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="BTown Brief">
-  <meta property="og:title" content="BTown TV">
-  <meta property="og:description" content="One curated page of videos for Burlington, every evening. A Tonight's pick, short shelves, a Vermont shelf — and a playlist that plays the edition on your TV.">
-  <meta property="og:url" content="https://guide.btownbrief.com/tv.html">
-  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="BTown TV">
-  <meta name="twitter:description" content="One curated page of videos for Burlington, every evening — and a playlist that plays it on your TV.">
-  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
-
-  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-title" content="BTown TV">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://i.ytimg.com">
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260711k">
-  <link rel="stylesheet" href="css/tv.css?v=20260827a">
-  <script>
-    /* Theme before first paint. Dark is this page's native mood (it's TV);
-       the guide's cached sunrise/sunset still flips it light during the day
-       like every other page, and the toggle wins for the session. */
-    (function () {
-      try {
-        var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
-        if (!c) return;
-        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
-          year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-        if (c.day !== today) return;
-        var n = Date.now();
-        document.documentElement.setAttribute('data-theme',
-          (n >= c.rise && n < c.set) ? 'light' : 'dark');
-      } catch (e) {}
-    })();
-  </script>
-<!-- Meta Pixel -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2471867016612559');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BTown TV — moved to All Day</title>
+  <!-- This page's job now belongs to All Day, which does everything it did and
+       more. It stays as a redirect rather than a deletion because the shared
+       nav bar, the newsletter archive and Google all still point here: a 404
+       from the site-wide "Listen / Watch" link would be a worse outcome than
+       a stub. Delete it once nothing links here. -->
+  <link rel="canonical" href="https://guide.btownbrief.com/all-day/">
+  <meta name="robots" content="noindex, follow">
+  <meta http-equiv="refresh" content="0; url=/all-day/">
+  <script>location.replace('/all-day/' + location.hash);</script>
+  <style>
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:#FBF9F5;
+           color:#16191D; font-family:"DM Sans",system-ui,sans-serif; text-align:center; padding:24px; }
+    @media (prefers-color-scheme: dark) { body { background:#06080A; color:#F2F0EA; } }
+    a { color:#9A5B00; }
+    @media (prefers-color-scheme: dark) { a { color:#E8A33D; } }
+  </style>
 </head>
 <body>
-
-  <header class="site-header" id="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
-          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-        <span class="logo-sep"></span>
-        <span class="logo-title">BTown TV</span>
-      </div>
-      <nav class="mode-nav" aria-label="Site pages">
-        <a class="mode-btn" href="pulse.html">The Pulse</a>
-        <a class="mode-btn" href="index.html">← City Guide</a>
-      </nav>
-    </div>
-  </header>
-
-  <nav class="lw-toggle" aria-label="Podcasts or video">
-    <a class="lw-half" href="listen.html">🎙 Podcasts</a>
-    <span class="lw-half is-active" aria-current="page">📺 Video · BTown TV</span>
-  </nav>
-
-  <main id="tv-page" class="tv-page" hidden></main>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
-      <span class="footer-sep">·</span>
-      <span>Burlington, Vermont</span>
-      <span class="footer-sep">·</span>
-      <span class="footer-attribution">Videos and thumbnails belong to their channels and open on YouTube.</span>
-    </div>
-  </footer>
-
-  <script src="js/theme.js?v=20260711k"></script>
-  <script src="js/tv.js?v=20260827a"></script>
-  <script src="js/auto-theme.js?v=20260711k"></script>
-  <script src="https://play.btownbrief.com/nav.js" defer></script>
+  <p>This moved to <a href="/all-day/">All Day</a>.</p>
 </body>
 </html>
