@@ -1,0 +1,71 @@
+# Rebuild the payload the Music tab draws from.
+#
+# What it writes: all-day/data/music.json — the curated Vermont roster joined
+# to three things it cannot know on its own: each artist's next local shows
+# (from data/events/), their Rocket Shop session if Big Heavy World has ever
+# recorded one, and a Bandcamp album id so the tab can embed a real player.
+# About 22 KB.
+#
+# The roster itself is NOT built here. data/music-artists.json is hand-edited
+# and is the only thing allowed to name an artist; this job just decorates it.
+# See scripts/build_music.py for why that rule exists.
+#
+# Why it commits to main rather than riding a data branch: same reason as the
+# Wander pool — the file changes once a day, and it lives inside /all-day/ so
+# the app's service worker can cache it. A worker scoped to a directory cannot
+# answer for a data branch fetched from another origin.
+#
+# Because it commits to main under GITHUB_TOKEN, and such commits do not fire
+# a `push` event, this workflow's name is listed in pages-deploy.yml's
+# workflow_run list. If you rename this workflow, rename it there too or the
+# site will silently serve yesterday's music.
+#
+# Schedule: 10:20 UTC, forty minutes after the events pipeline's 9:40 run.
+# The order matters — this job reads data/events/, so running it first would
+# decorate every artist with yesterday's shows. Forty minutes is comfortably
+# more than that pipeline takes and keeps the two commits from racing.
+#
+# Failure posture: a Bandcamp page that 404s or a dead Rocket Shop feed costs
+# that one field and nothing else — the artist still gets a card. If the
+# roster file is missing or unparseable the run fails loudly rather than
+# writing an empty payload over a good one.
+
+name: Refresh music data
+
+on:
+  schedule:
+    - cron: "20 10 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-music
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the music payload
+        run: python3 scripts/build_music.py
+
+      - name: Commit if it changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add all-day/data/music.json
+          if git diff --cached --quiet; then
+            echo "No music changes."
+          else
+            git commit -m "Auto-refresh music data"
+            git push || (git pull --rebase && git push)
+          fi

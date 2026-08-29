@@ -63,6 +63,35 @@ const FILES = {
      serves — so same-origin is already the freshest copy there is. No poll:
      the poller only re-fetches `live`, and a temperature is fine until the
      next page load. */
+  /* Both of these are committed to main by their own workflow and live
+     inside /all-day/, so the service worker can cache them. Instagram is the
+     one payload with a shelf life: its image URLs are signed about three days
+     out, which is why its workflow runs daily rather than weekly. */
+  /* The Brief's own episode list. Spotify's show embed only ever plays the
+     newest one, so the archive has to come from a file. */
+  podcast: {
+    live: null,
+    local: 'data/podcast.json',
+    ok: (j) => j && Array.isArray(j.episodes),
+  },
+  whatnow: {
+    live: null,
+    local: 'data/whatnow.json',
+    ok: (j) => j && Array.isArray(j.events),
+  },
+  instagram: {
+    live: null,
+    local: 'data/instagram.json',
+    ok: (j) => j && Array.isArray(j.posts),
+  },
+  /* Music is committed to main by its own workflow and lives inside
+     /all-day/, so the service worker can cache it — same reasoning as the
+     wander pool. No poll: the roster changes once a morning. */
+  music: {
+    live: null,
+    local: 'data/music.json',
+    ok: (j) => j && Array.isArray(j.artists),
+  },
   weather: {
     live: null,
     local: '../data/weather/latest.json',

@@ -71,7 +71,7 @@
   --ui: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-  --tabbar-h: 68px;
+  --tabbar-h: 78px;   /* measured: the nine-pill bar is 84-88px tall */
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
   --mast-h: 56px;
@@ -889,7 +889,12 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   padding: 0 10px calc(var(--safe-b) + 8px); pointer-events: none; }
 .dock > * { pointer-events: auto; }
 .tabbar {
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px;
+  display: grid;
+  /* Eight equal columns and one that sizes to its own label: the centre
+     button keeps the words "What Now" on ONE line while the other eight
+     share what is left. Nine equal columns forced it to wrap, which made
+     the centrepiece look like a mistake rather than a choice. */
+  grid-template-columns: repeat(4, 1fr) auto repeat(4, 1fr); gap: 2px;
   max-width: 470px; margin: 0 auto; padding: 6px;
   background: var(--dock-bg); border: 1px solid var(--edge);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-2);
@@ -897,14 +902,16 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   -webkit-backdrop-filter: saturate(150%) blur(18px);
 }
 .tabbar button {
-  position: relative; display: grid; justify-items: center; gap: 4px;
-  padding: 8px 2px 7px; border-radius: 15px; min-height: 50px;
-  color: var(--ink-faint); font-size: .69rem; font-weight: 600; letter-spacing: .01em;
+  position: relative; display: grid; justify-items: center; gap: 3px;
+  padding: 7px 1px 6px; border-radius: 14px; min-height: 48px;
+  color: var(--ink-faint); font-size: .6rem; font-weight: 600; letter-spacing: .005em;
+  line-height: 1.2;
   transition: color .16s ease, background .16s ease;
 }
-.tabbar button svg { width: 22px; height: 22px; fill: none; stroke: currentColor;
+.tabbar button svg { width: 21px; height: 21px; fill: none; stroke: currentColor;
   stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .tabbar button:hover { color: var(--ink-soft); }
+.tabbar button > span { white-space: nowrap; }
 .tabbar button.on { color: var(--accent); background: var(--accent-soft); }
 .tabbar button.on svg { stroke-width: 2.1; }
 .tabdot { position: absolute; top: 6px; right: 50%; margin-right: -16px;
@@ -1284,3 +1291,558 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
   color: var(--local); }
 .pick-why { display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical;
   overflow: hidden; }
+/* ============================================================ music */
+/* Cover art is the whole point of a music surface, so it leads everything and
+   is never desaturated. Where an artist has no art, the initials sit on their
+   own stable hue rather than a grey box — a grey box reads as a failed image,
+   which is the one thing this tab cannot look like. */
+
+.m-noart {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--ui); font-weight: 700; letter-spacing: -.02em;
+  color: hsl(var(--hue, 30) 62% 32%);
+  background: hsl(var(--hue, 30) 58% 90%);
+  box-shadow: inset 0 0 0 1px hsl(var(--hue, 30) 40% 80%);
+}
+:root[data-theme="dark"] .m-noart,
+:root:not([data-theme="light"]) .m-noart {
+  color: hsl(var(--hue, 30) 70% 78%);
+  background: hsl(var(--hue, 30) 34% 22%);
+  box-shadow: inset 0 0 0 1px hsl(var(--hue, 30) 30% 34%);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .m-noart {
+    color: hsl(var(--hue, 30) 62% 32%);
+    background: hsl(var(--hue, 30) 58% 90%);
+    box-shadow: inset 0 0 0 1px hsl(var(--hue, 30) 40% 80%);
+  }
+}
+
+/* ---- the shelf of people playing soon ---- */
+/* Its own width, set here rather than on .rail — a column size on the shared
+   rail class makes wider cards from other tabs overlap each other. */
+/* 152px, not 216 — at the larger size one card filled a phone screen and the
+   shelf showed one and a bit, which is a list wearing a carousel's clothes.
+   This is the video card's width, and the shelf reads as a row you push. */
+.m-gig {
+  width: 152px; display: flex; flex-direction: column;
+  background: var(--panel); border: 1px solid var(--edge);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-1);
+}
+.m-gig-hit { display: block; text-align: left; width: 100%; }
+.m-gig-art { display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
+  background: var(--panel-2); font-size: 1.45rem; }
+.m-gig-body { display: block; padding: 8px 9px 3px; }
+.m-gig-when { display: block; font-family: var(--mono); font-size: .58rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.m-gig-name { display: block; font-size: .9rem; font-weight: 600; line-height: 1.22;
+  margin-top: 2px; letter-spacing: -.004em; }
+.m-gig-where { display: block; font-size: .74rem; color: var(--ink-soft); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m-gig-foot { display: flex; align-items: center; gap: 4px; padding: 2px 6px 6px; }
+
+/* ---- the directory ---- */
+.m-list { border-top: 1px solid var(--edge-soft); }
+.m-row { display: flex; align-items: center; gap: 8px;
+  padding: 8px 2px; border-bottom: 1px solid var(--edge-soft); }
+.m-row-hit { flex: 1; min-width: 0; display: flex; align-items: center; gap: 11px;
+  text-align: left; }
+.m-row-art { width: 54px; height: 54px; flex: 0 0 auto; border-radius: 10px;
+  object-fit: cover; background: var(--panel-2); font-size: .95rem; }
+.m-row-meta { min-width: 0; display: block; }
+.m-row-name { display: block; font-size: .99rem; font-weight: 600; line-height: 1.25;
+  letter-spacing: -.004em; }
+.m-row-tags { display: block; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 2px; }
+.m-soon { color: var(--accent); font-weight: 700; }
+.m-row-why { display: block; font-size: .82rem; color: var(--ink-soft); line-height: 1.35;
+  margin-top: 3px; overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.m-row-acts { display: flex; align-items: center; gap: 3px; flex: 0 0 auto; }
+
+/* One play button, used in the shelf, the rows and the sheet. */
+.m-play { width: 34px; height: 34px; flex: 0 0 auto; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--accent); background: var(--accent-soft); }
+.m-play svg { width: 17px; height: 17px; fill: currentColor; stroke: none; }
+.m-play:active { transform: scale(.92); }
+
+/* ---- the artist sheet ---- */
+.m-sheet-head { display: flex; gap: 13px; align-items: center; margin-bottom: 12px; }
+.m-sheet-art { width: 86px; height: 86px; flex: 0 0 auto; border-radius: 13px;
+  object-fit: cover; background: var(--panel-2); font-size: 1.5rem; }
+.m-sheet-meta h3 { font-family: var(--serif); font-size: 1.5rem; font-weight: 400;
+  line-height: 1.12; }
+.m-sheet-sub { font-family: var(--mono); font-size: .62rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
+.m-why-big { font-size: 1rem; line-height: 1.5; color: var(--ink-soft);
+  margin: 0 0 16px; }
+
+.m-shows { display: grid; gap: 7px; margin-bottom: 16px; }
+.m-show { display: block; padding: 10px 12px; border-radius: var(--radius-sm);
+  background: var(--panel-2); border: 1px solid var(--edge-soft); }
+.m-show-when { display: block; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.m-show-where { display: block; font-size: .93rem; font-weight: 600; margin-top: 3px; }
+.m-show-what { display: block; font-size: .82rem; color: var(--ink-faint); margin-top: 2px; }
+
+.m-session { display: flex; align-items: center; gap: 11px; margin-bottom: 16px;
+  padding: 10px 12px; border-radius: var(--radius-sm); background: var(--panel-2);
+  border: 1px solid var(--edge-soft); }
+.m-session-meta { min-width: 0; }
+.m-session-title { display: block; font-size: .88rem; font-weight: 500; line-height: 1.3;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.m-session-date { display: block; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 2px; }
+
+/* Bandcamp's own player. It is the only embed here that plays a whole track
+   to someone who is not logged in, and it is built once, in the sheet. */
+.m-bc { width: 100%; height: 120px; border: 0; border-radius: var(--radius-sm);
+  margin-bottom: 14px; background: var(--panel-2); }
+.m-links { margin-bottom: 4px; }
+
+.m-credit { font-size: .78rem; color: var(--ink-faint); line-height: 1.5;
+  margin: 18px 2px 4px; }
+.m-credit a { color: var(--ink-soft); text-decoration: underline; }
+
+/* ---- the mixtape ---- */
+.m-theme { padding: 12px 14px; border-radius: var(--radius); margin-bottom: 13px;
+  background: var(--local-soft); border: 1px solid var(--edge-soft); }
+.m-theme .eyebrow { color: var(--local); }
+.m-theme-title { display: block; font-family: var(--serif); font-size: 1.3rem;
+  line-height: 1.15; margin-top: 3px; }
+.m-theme p { font-size: .87rem; color: var(--ink-soft); margin-top: 5px; line-height: 1.45; }
+.m-add { width: 100%; margin-bottom: 16px; }
+
+.m-tracks { display: block; }
+.m-track { display: flex; align-items: center; gap: 10px; padding: 10px 2px;
+  border-bottom: 1px solid var(--edge-soft); }
+.m-track-body { flex: 1; min-width: 0; }
+.m-track-song { display: block; font-size: .98rem; font-weight: 600; line-height: 1.25; }
+.m-track-by { display: block; font-size: .84rem; color: var(--ink-soft); margin-top: 1px; }
+.m-local { color: var(--local); font-weight: 700; font-size: .74rem;
+  background: var(--local-soft); border-radius: 4px; padding: 1px 5px; }
+.m-track-why { display: block; font-size: .82rem; color: var(--ink-soft);
+  line-height: 1.4; margin-top: 4px; }
+.m-track-who { display: block; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 3px; }
+.m-track-go { flex: 0 0 auto; font-size: .74rem; font-weight: 600; color: var(--accent);
+  background: var(--accent-soft); border-radius: var(--pill); padding: 6px 11px;
+  white-space: nowrap; }
+
+/* ---- the form ---- */
+.m-form-intro { font-size: .9rem; color: var(--ink-soft); line-height: 1.5;
+  margin-bottom: 14px; }
+.m-form { display: grid; gap: 11px; }
+.m-form label { display: block; font-size: .8rem; font-weight: 600; color: var(--ink-soft); }
+.m-form input[type=url], .m-form input[type=text], .m-form textarea {
+  display: block; width: 100%; margin-top: 5px; padding: 11px 12px;
+  font: inherit; font-size: 1rem; color: var(--ink);
+  background: var(--panel-2); border: 1px solid var(--edge);
+  border-radius: var(--radius-sm); min-height: 44px;
+}
+.m-form input:focus, .m-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.m-form-two { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.m-form-check { display: flex; align-items: center; gap: 8px; font-weight: 500;
+  color: var(--ink); }
+.m-form-check input { width: 20px; height: 20px; }
+.m-form details summary { font-size: .84rem; color: var(--ink-faint); cursor: pointer;
+  padding: 4px 0; }
+.m-form details label { margin-top: 9px; }
+
+/* A rail sitting on the app ground needs its dots to mask the track behind
+   them in the same colour, or the pill shows as a patch of the wrong shade. */
+.m-gig .rail-dots { background: var(--ground); }
+
+/* The card classes below set `display: block`, and they are declared after
+   .m-noart, so they were quietly winning and stranding the initials in the
+   top-left corner. Same specificity, so source order settles it — this has to
+   stay at the end of the file. */
+.m-noart { display: grid; place-items: center; }
+
+/* Every music product that shows a lot of sleeves draws a hairline inside the
+   artwork — Apple Music, Spotify, Bandcamp and Last.fm each ship their own
+   version. Without it a white sleeve dissolves into a light page and a black
+   one into a dark page. Bandcamp's is the cheapest: an outline pulled inward,
+   which follows border-radius and costs no layout.
+
+   Dark needs roughly twice the alpha of light. On a dark ground a pale sleeve
+   is already separated by luminance; the case the ring has to win is a BLACK
+   sleeve, and it has to out-contrast that. Apple ships 10% black / 25% white
+   for exactly this reason. */
+.m-gig-art, .m-row-art, .m-sheet-art {
+  outline: 1px solid rgba(20, 16, 8, .11);
+  outline-offset: -1px;
+}
+:root[data-theme="dark"] .m-gig-art,
+:root[data-theme="dark"] .m-row-art,
+:root[data-theme="dark"] .m-sheet-art,
+:root:not([data-theme="light"]) .m-gig-art,
+:root:not([data-theme="light"]) .m-row-art,
+:root:not([data-theme="light"]) .m-sheet-art {
+  outline-color: rgba(255, 255, 255, .22);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .m-gig-art,
+  :root:not([data-theme="dark"]) .m-row-art,
+  :root:not([data-theme="dark"]) .m-sheet-art {
+    outline-color: rgba(20, 16, 8, .11);
+  }
+}
+
+/* Dates, times and prices line up column-wise down a list of shows. */
+.m-gig-when, .m-show-when, .m-row-tags, .m-session-date { font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------- nine tabs, every label */
+/* Nine labels DO fit — but only with the two longest shortened and the type
+   brought down. Measured across 320/375/390, all nine visible:
+
+     "Wikipedia" + "Instagram"   overflows the page at 320, 375 AND 390
+     "Wiki" + "Insta" @ .6rem    fits 375 and 390, overflows 320
+     "Wiki" + "Insta" @ .52rem   fits 320 too, once gaps and padding tighten
+
+   Hiding the labels was the earlier answer and it made eight of nine tabs a
+   guess. Shortening two words costs less than that. What Now's column is
+   `auto`, so it takes the room its label needs and the other eight share the
+   rest — which is why it can keep two words while they get one. */
+@media (max-width: 374px) {
+  .tabbar { gap: 1px; padding: 3px; }
+  .tabbar button { font-size: .52rem; padding-left: 1px; padding-right: 1px; }
+  .tabbar button svg { width: 20px; height: 20px; }
+  .tabbar #tab-whatnow > span { padding: 0 4px; }
+}
+
+/* ============================================================ photos */
+/* Tonight first, because "is it worth going out" is the question that turns a
+   reader into a photographer. Asking for photos does not get photos. */
+.ph-tonight {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 14px 16px; border-radius: var(--radius); margin-bottom: 6px;
+  background: linear-gradient(105deg,
+    color-mix(in srgb, var(--accent) 15%, transparent),
+    color-mix(in srgb, var(--accent) 4%, transparent));
+  border: 1px solid var(--edge-soft);
+}
+.ph-t-left { min-width: 0; }
+.ph-t-time { display: block; font-family: var(--serif); font-size: 2rem; line-height: 1.05;
+  margin-top: 2px; font-variant-numeric: tabular-nums; }
+.ph-t-sub { display: block; font-size: .92rem; color: var(--ink-soft); margin-top: 2px; }
+.ph-t-note { font-size: .78rem; color: var(--ink-faint); line-height: 1.5;
+  margin: 0 2px 14px; }
+.ph-t-note a { color: var(--ink-soft); text-decoration: underline; }
+
+/* The number, on a ring that fills with the score. */
+.ph-score {
+  flex: 0 0 auto; width: 72px; height: 72px; border-radius: 50%;
+  display: grid; place-items: center; position: relative;
+  background: conic-gradient(var(--accent) var(--fill, 0%), var(--edge-soft) 0);
+}
+.ph-score::after {
+  content: ""; position: absolute; inset: 5px; border-radius: 50%;
+  background: var(--ground);
+}
+.ph-score-n { position: relative; z-index: 1; font-family: var(--serif);
+  font-size: 1.5rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.ph-score-of { position: relative; z-index: 1; font-family: var(--mono);
+  font-size: .55rem; letter-spacing: .08em; color: var(--ink-faint); margin-top: 1px; }
+
+/* Where to stand — its own width, never a column size on the shared rail. */
+.ph-spot {
+  width: 208px; display: flex; flex-direction: column; gap: 3px;
+  padding: 11px 12px; background: var(--panel); border: 1px solid var(--edge);
+  border-radius: var(--radius); box-shadow: var(--shadow-1);
+}
+.ph-spot-name { font-size: .98rem; font-weight: 600; line-height: 1.2; }
+.ph-spot-meta { font-family: var(--mono); font-size: .58rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--accent); font-variant-numeric: tabular-nums; }
+.ph-spot-why { font-size: .8rem; color: var(--ink-soft); line-height: 1.35; margin-top: 2px;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.ph-spot-map { font-size: .76rem; font-weight: 600; color: var(--accent); margin-top: 4px; }
+
+/* The wall. Square tiles, because a grid of mixed aspect ratios reads as a
+   mess and every one of these is somebody's photo of the same lake. */
+.ph-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 6px; margin-top: 2px;
+}
+.ph-tile { position: relative; }
+.ph-tile-hit { display: block; width: 100%; }
+.ph-img {
+  display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
+  border-radius: 10px; background: var(--panel-2);
+  outline: 1px solid rgba(20, 16, 8, .11); outline-offset: -1px;
+}
+:root[data-theme="dark"] .ph-img,
+:root:not([data-theme="light"]) .ph-img { outline-color: rgba(255, 255, 255, .22); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .ph-img { outline-color: rgba(20, 16, 8, .11); }
+}
+.ph-tile-hit:active .ph-img { transform: scale(.97); }
+.ph-img, .ph-tile-hit:active .ph-img { transition: transform .1s ease; }
+
+/* The opened photo. Full width, its own caption, credit always present. */
+.ph-full { display: block; width: 100%; border-radius: var(--radius-sm);
+  background: var(--panel-2); margin-bottom: 12px; }
+.ph-cap { font-size: 1rem; line-height: 1.5; margin-bottom: 6px; }
+.ph-meta { font-family: var(--mono); font-size: .62rem; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+.ph-credit-line { font-size: .84rem; color: var(--ink-soft); margin-bottom: 12px; }
+.ph-form-intro { font-size: .9rem; color: var(--ink-soft); line-height: 1.5; margin-bottom: 14px; }
+.ph-form-note { font-size: .78rem; color: var(--ink-faint); line-height: 1.45; }
+.ph-err { font-size: .84rem; color: var(--warn); margin-top: 8px; }
+.m-form select, .m-form input[type=file] {
+  display: block; width: 100%; margin-top: 5px; padding: 11px 12px;
+  font: inherit; font-size: 1rem; color: var(--ink);
+  background: var(--panel-2); border: 1px solid var(--edge);
+  border-radius: var(--radius-sm); min-height: 44px;
+}
+.ph-spot .rail-dots, .ph-grid .rail-dots { background: var(--ground); }
+
+/* Wikipedia's picture of the day. Ambient and openly not local, so it is
+   small and it sits at the bottom — the house rule the webcams follow on
+   Watch. Landscape, not square, so it never reads as one of ours. */
+.ph-potd { display: flex; gap: 11px; align-items: flex-start; margin-top: 2px;
+  padding-bottom: 4px; }
+.ph-potd-hit { flex: 0 0 auto; width: 116px; }
+.ph-potd-img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover;
+  border-radius: 9px; background: var(--panel-2);
+  outline: 1px solid rgba(20, 16, 8, .11); outline-offset: -1px; }
+:root[data-theme="dark"] .ph-potd-img,
+:root:not([data-theme="light"]) .ph-potd-img { outline-color: rgba(255, 255, 255, .22); }
+.ph-potd-meta { min-width: 0; }
+.ph-potd-cap { display: block; font-size: .84rem; line-height: 1.4; color: var(--ink-soft);
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.ph-potd-by { display: block; font-family: var(--mono); font-size: .58rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
+
+/* ============================================ the What Now centrepiece */
+/* One tab is not like the others. What Now answers the question the whole
+   paper exists to answer — what should I do, right now — so it sits dead
+   centre of the nine and wears its own colour, warm red against the app's
+   amber. It keeps its label at every width while the others go icon-only,
+   because a button nobody can name is not a centrepiece.
+
+   The red is defined on :root and redefined in BOTH dark blocks. The topic
+   hues in this file are only defined in one of the two, which is why they
+   stay light-mode values under the dark toggle — a bug worth not copying. */
+:root {
+  --now: #C0362C;
+  --now-soft: rgba(192, 54, 44, .13);
+  --now-ink: #FFFFFF;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --now: #F0705E;
+    --now-soft: rgba(240, 112, 94, .18);
+    --now-ink: #1A0F0D;
+  }
+}
+:root[data-theme="dark"] {
+  --now: #F0705E;
+  --now-soft: rgba(240, 112, 94, .18);
+  --now-ink: #1A0F0D;
+}
+
+.tabbar #tab-whatnow { color: var(--now); }
+.tabbar #tab-whatnow svg { stroke-width: 2; }
+/* The filled disc is the centrepiece: it reads as a button on a bar of
+   glyphs. It stays filled whether or not the tab is active — active adds the
+   soft tint behind it, the same way every other pill signals itself. */
+.tabbar #tab-whatnow svg {
+  background: var(--now); color: var(--now-ink);
+  border-radius: 50%; padding: 4px; width: 25px; height: 25px;
+  /* border-box, or the disc's padding makes this button taller than the other
+     eight, which grows the whole grid row and eats the panel's bottom padding
+     — at 430px that clearance was down to 1.9px, so the last event in the
+     list sat under the dock. */
+  box-sizing: border-box;
+  /* No glow. The colour alone is enough to make it the centre — a drop shadow
+     on a 25px disc reads as a notification badge, not a button. */
+}
+.tabbar #tab-whatnow.on { color: var(--now); background: var(--now-soft); }
+.tabbar #tab-whatnow.on svg { stroke-width: 2.2; }
+.tabbar #tab-whatnow > span { font-weight: 700; letter-spacing: -.01em;
+  white-space: nowrap; padding: 0 5px; }
+
+/* ============================================================ what now */
+/* The sky is the point. The standalone app painted the whole page with a
+   gradient built from the real sun times, and that is what made it feel like
+   Burlington rather than a list — so it came across with the engine.
+
+   It is scoped to THIS PANEL and nothing else. All Day is a light app with
+   eight other tabs, and a night sky leaking onto the wire would be a bug, not
+   a mood. The panel paints itself and sets its own ink; every colour below
+   comes from that local set rather than the app's tokens, which is why this
+   block does not follow the usual light/dark pattern — the sky IS the theme
+   here, and it is the same at 2pm in either mode. */
+#panel-whatnow { position: relative; }
+.wn-sky {
+  position: absolute; left: 0; right: 0; top: 0; z-index: 0;
+  /* height is set in JS from the last sky-lit element — see whatnow.js */
+  height: 420px; pointer-events: none;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 42%,
+    var(--sky-low) 68%, transparent 100%);
+}
+#panel-whatnow > *:not(.wn-sky) { position: relative; z-index: 1; }
+
+/* six phases, from the sun times — night, dawn, morning, day, golden, dusk */
+#panel-whatnow { --sky-top: #2E5F92; --sky-mid: #5484B0; --sky-low: #9FC0D8;
+  --sky-ink: #FFFFFF; --sky-soft: rgba(255,255,255,.78); --sky-faint: rgba(255,255,255,.6); }
+#panel-whatnow[data-phase="night"]   { --sky-top:#05070D; --sky-mid:#0A1226; --sky-low:#14213A; }
+#panel-whatnow[data-phase="dawn"]    { --sky-top:#1E2A4E; --sky-mid:#8A5A6E; --sky-low:#E8927C; }
+#panel-whatnow[data-phase="morning"] { --sky-top:#27547E; --sky-mid:#4E7CA6; --sky-low:#A8C4D8; }
+#panel-whatnow[data-phase="day"]     { --sky-top:#2E5F92; --sky-mid:#5484B0; --sky-low:#9FC0D8; }
+#panel-whatnow[data-phase="golden"]  { --sky-top:#3D6088; --sky-mid:#E09A4E; --sky-low:#F5C173; }
+#panel-whatnow[data-phase="dusk"]    { --sky-top:#232B55; --sky-mid:#6E4A72; --sky-low:#C96A4A; }
+
+.wn-strip {
+  font-family: var(--mono); font-size: .64rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--sky-soft); margin: 2px 2px 12px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.35);
+}
+
+/* window picker — three words, not a segmented control; it is a sentence */
+.wn-modes { display: flex; gap: 7px; margin-bottom: 14px; }
+.wn-mode {
+  flex: 1; padding: 9px 8px; min-height: 40px; border-radius: var(--pill);
+  font-size: .88rem; font-weight: 600; color: var(--sky-soft);
+  background: rgba(255,255,255,.13); border: 1px solid rgba(255,255,255,.18);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.wn-mode.on { color: #1A1206; background: rgba(255,255,255,.92); border-color: transparent; }
+
+/* the answer — a glass card on the sky */
+.wn-answer {
+  padding: 20px 19px 18px; border-radius: var(--radius-lg); margin-bottom: 12px;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+  backdrop-filter: saturate(140%) blur(16px); -webkit-backdrop-filter: saturate(140%) blur(16px);
+  box-shadow: 0 12px 34px rgba(6,10,20,.28);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.wn-answer.is-spinning { opacity: .35; transform: scale(.985); }
+.wn-kicker {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .11em;
+  text-transform: uppercase; color: var(--sky-faint); margin-bottom: 7px;
+}
+.wn-title {
+  font-family: var(--serif); font-size: 2rem; line-height: 1.08; font-weight: 400;
+  color: var(--sky-ink); letter-spacing: -.008em; text-wrap: balance;
+  text-shadow: 0 2px 10px rgba(0,0,0,.28);
+}
+.wn-meta { font-size: .95rem; color: var(--sky-soft); margin-top: 7px; line-height: 1.4; }
+.wn-blurb { font-size: .92rem; color: var(--sky-soft); margin-top: 9px; line-height: 1.5; }
+.wn-go {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 13px;
+  padding: 10px 17px; border-radius: var(--pill); min-height: 42px;
+  background: rgba(255,255,255,.92); color: #1A1206; font-weight: 600; font-size: .92rem;
+}
+.wn-go svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+.wn-acts { display: flex; gap: 9px; margin-bottom: 9px; }
+.wn-again, .wn-going {
+  flex: 1; min-height: 50px; border-radius: var(--pill); font-size: 1rem; font-weight: 700;
+}
+.wn-again { color: var(--sky-ink); background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.24); }
+.wn-going { color: #fff; background: var(--now); box-shadow: 0 4px 14px rgba(192,54,44,.4); }
+.wn-pool {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .07em;
+  color: var(--sky-faint); margin: 0 2px 14px; line-height: 1.5;
+}
+.wn-paths { margin-bottom: 4px; }
+/* the chips sit on the sky, so they cannot use the app's panel colours */
+.wn-paths .chip { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.2);
+  color: var(--sky-soft); }
+.wn-paths .chip.on { background: rgba(255,255,255,.92); color: #1A1206; border-color: transparent; }
+
+/* below the fold the sky has faded out and the app's own colours resume */
+.wn-list { border-top: 1px solid var(--edge-soft); }
+.wn-row { display: flex; align-items: baseline; gap: 11px; padding: 10px 2px;
+  border-bottom: 1px solid var(--edge-soft); text-align: left; width: 100%; }
+.wn-row-time { flex: 0 0 62px; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink-faint);
+  font-variant-numeric: tabular-nums; }
+.wn-row-body { min-width: 0; flex: 1; }
+.wn-row-t { display: block; font-size: .97rem; font-weight: 500; line-height: 1.3; }
+.wn-row-v { display: block; font-size: .8rem; color: var(--ink-faint); margin-top: 2px; }
+.wn-day { margin: 18px 0 2px; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+
+.wn-doors { display: grid; gap: 9px; margin: 18px 0 6px; }
+.wn-door { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 15px; border-radius: var(--radius); background: var(--panel-2);
+  border: 1px solid var(--edge); }
+.wn-door-t { display: block; font-size: 1rem; font-weight: 600; }
+.wn-door-s { display: block; font-size: .82rem; color: var(--ink-faint); margin-top: 2px; }
+.wn-door svg { width: 20px; height: 20px; flex: 0 0 auto; fill: none;
+  stroke: currentColor; stroke-width: 1.8; color: var(--ink-faint); }
+
+@media (prefers-reduced-motion: reduce) { .wn-answer { transition: none; } }
+
+/* ========================================================== instagram */
+/* A grid in posted order. No ranking, no engagement count, nothing that
+   would make this a second algorithm — which is the entire reason it exists. */
+.ig-note { font-size: .8rem; color: var(--ink-faint); line-height: 1.5; margin: 0 2px 12px; }
+/* The caption is the announcement — a spot, a time, a lineup — so it sits on
+   the card next to the picture rather than behind a tap. Picture left at a
+   fixed square, text right and clamped to four lines. */
+.ig-feed { display: grid; gap: 2px; border-top: 1px solid var(--edge-soft); }
+.ig-post { border-bottom: 1px solid var(--edge-soft); }
+.ig-hit { display: flex; gap: 12px; align-items: flex-start; width: 100%;
+  text-align: left; padding: 11px 2px; }
+.ig-shot { position: relative; flex: 0 0 auto; width: 96px; }
+@media (max-width: 359px) {
+  .ig-shot, .ig-img { width: 78px; }
+  .ig-img { height: 78px; }
+  .ig-hit { gap: 9px; }
+}
+.ig-img { display: block; width: 96px; height: 96px; object-fit: cover;
+  border-radius: 10px; background: var(--panel-2);
+  outline: 1px solid rgba(20, 16, 8, .11); outline-offset: -1px; }
+:root[data-theme="dark"] .ig-img,
+:root:not([data-theme="light"]) .ig-img { outline-color: rgba(255, 255, 255, .2); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .ig-img { outline-color: rgba(20, 16, 8, .11); }
+}
+/* when the signed URL has aged out, the row becomes text and closes the gap */
+.ig-post.no-art .ig-shot { display: none; }
+.ig-vid { position: absolute; top: 6px; right: 6px; width: 17px; height: 17px;
+  border-radius: 50%; background: rgba(0,0,0,.55); display: grid; place-items: center; }
+.ig-vid::after { content: ""; border-left: 5px solid #fff;
+  border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent; margin-left: 1px; }
+.ig-body { min-width: 0; flex: 1; display: block; }
+.ig-who { display: flex; align-items: baseline; gap: 7px; font-family: var(--mono);
+  font-size: .6rem; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--accent); font-weight: 600; }
+.ig-when { color: var(--ink-faint); font-weight: 400; letter-spacing: .06em; }
+.ig-text { display: -webkit-box; margin-top: 5px; font-size: .89rem; line-height: 1.42;
+  color: var(--ink); -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+  white-space: pre-wrap;
+  /* Captions carry bare URLs and 30-character hashtags. Without this an
+     unbreakable token sets a minimum width the row cannot shrink under, and
+     the whole panel scrolls sideways at 320px — measured, not theoretical. */
+  overflow-wrap: anywhere; }
+.ig-nocap { color: var(--ink-faint); font-style: italic; }
+.ig-full { display: block; width: 100%; border-radius: var(--radius-sm);
+  background: var(--panel-2); margin-bottom: 12px; }
+.ig-cap { font-size: .95rem; line-height: 1.55; white-space: pre-wrap; margin-bottom: 12px; }
+.ig-handle { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+
+/* ------------------------------------------------- the Brief's episodes */
+/* Spotify's show embed plays the newest episode at any height, so the archive
+   is a list here and each row opens that episode's own embed. */
+.l-eps { margin-bottom: 18px; }
+.l-ep-list { border-top: 1px solid var(--edge-soft); }
+.l-ep { border-bottom: 1px solid var(--edge-soft); }
+.l-ep-hit { display: block; width: 100%; text-align: left; padding: 11px 2px; }
+.l-ep-t { display: block; font-size: .97rem; font-weight: 600; line-height: 1.3; }
+.l-ep-m { display: block; font-family: var(--mono); font-size: .6rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-faint); margin-top: 3px;
+  font-variant-numeric: tabular-nums; }
+.l-ep-b { display: -webkit-box; margin-top: 5px; font-size: .85rem; line-height: 1.42;
+  color: var(--ink-soft); -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; overflow-wrap: anywhere; }
+.l-ep.is-open .l-ep-t { color: var(--accent); }
+.l-ep-embed { width: 100%; height: 152px; border: 0; border-radius: var(--radius-sm);
+  margin: 4px 0 10px; background: var(--panel-2); }

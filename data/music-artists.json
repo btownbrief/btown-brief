@@ -1,0 +1,556 @@
+{
+ "_comment": "Burlington/Vermont artists. HAND-CURATED — this is the one file in the music pipeline a person owns, and it is deliberately not scraped. `threads` is how many distinct r/burlington or r/vermont threads named the artist, which is what ranked them; every entry had a verification URL at the time it was added. To add an artist: name, a link people can actually follow, and ideally one line in a local's voice. To remove one: delete the object. Nothing else reads a name that is not in here, which is what stops the build inventing bands.",
+ "_sources": [
+  "r/burlington and r/vermont threads 2014-2026",
+  "Seven Days music section and the 2026 Seven Daysies",
+  "The Chrisanthemums, Seven Days, 2026-08-05"
+ ],
+ "updated": "2026-08-29",
+ "artists": [
+  {
+   "name": "Rough Francis",
+   "genre": "punk",
+   "threads": 9,
+   "links": {
+    "bandcamp": "https://roughfrancis.bandcamp.com/",
+    "wikipedia": "https://en.wikipedia.org/wiki/Rough_Francis"
+   },
+   "why": "The most-recommended band in a decade of threads. The members are sons of Death — yes, that Death."
+  },
+  {
+   "name": "Cooked",
+   "genre": "hardcore",
+   "threads": 7,
+   "links": {
+    "bandcamp": "https://cookedvt.bandcamp.com/"
+   },
+   "why": "The name that ends every “is there even a scene here” argument."
+  },
+  {
+   "name": "Greg Freeman",
+   "genre": "indie",
+   "threads": 6,
+   "links": {
+    "site": "https://vtdigger.org/2025/07/05/on-the-eve-of-his-sophomore-release-vermont-singer-songwriter-greg-freemans-star-is-rising-higher/"
+   },
+   "why": "“If Greg Freeman has 0 fans I'm not on this earth anymore.”"
+  },
+  {
+   "name": "Roost.World",
+   "genre": "electronic",
+   "threads": 5,
+   "links": {
+    "instagram": "https://www.instagram.com/roost.world/",
+    "session": "https://bigheavyworld.com/rocket-shop-podcast/2019/12/4/roost"
+   },
+   "why": "Live synthesizer sets — the answer when someone asks for anything that isn't folk or jam."
+  },
+  {
+   "name": "Troy Millette & the Fire Below",
+   "genre": "folk rock",
+   "threads": 5,
+   "links": {
+    "site": "https://troymillettemusic.com/"
+   },
+   "why": "Sad yet upbeat folk songs about his exes, with tons of humour."
+  },
+  {
+   "name": "The Wormdogs",
+   "genre": "rock",
+   "threads": 4,
+   "links": {
+    "site": "https://www.thewormdogs.com/"
+   },
+   "why": "Best Band in the 2026 Seven Daysies. There is a phone hotline: (802) WORMDOG."
+  },
+  {
+   "name": "Robber Robber",
+   "genre": "indie rock",
+   "threads": 4,
+   "links": {
+    "bandcamp": "https://robberrobber.bandcamp.com/"
+   },
+   "why": "The one with national traction. New album, Two Wheels Move The Soul."
+  },
+  {
+   "name": "Lily Seabird",
+   "genre": "indie",
+   "threads": 4,
+   "links": {
+    "bandcamp": "https://lilyseabird.bandcamp.com/",
+    "wikipedia": "https://en.wikipedia.org/wiki/Lily_Seabird"
+   },
+   "why": "Named in the same breath as Greg Freeman and Robber Robber, every time."
+  },
+  {
+   "name": "Dari Bay",
+   "genre": "indie rock",
+   "threads": 4,
+   "links": {
+    "bandcamp": "https://daribay.bandcamp.com/",
+    "site": "https://daribay.com/"
+   },
+   "why": "Robber Robber's drummer's project. The newest solo record is the one people press on you."
+  },
+  {
+   "name": "Old North End",
+   "genre": "hardcore",
+   "threads": 4,
+   "links": {
+    "bandcamp": "https://oneoldnorthend.bandcamp.com/"
+   },
+   "why": "Named ONE. The band posts in the threads themselves."
+  },
+  {
+   "name": "All Night Boogie Band",
+   "genre": "blues rock",
+   "threads": 4,
+   "links": {
+    "site": "https://www.allnightboogieband.com/"
+   },
+   "why": "“All Night Boogie Band never let me down.” Had the Nectar's Wednesday residency."
+  },
+  {
+   "name": "Burning Monk",
+   "genre": "tribute",
+   "threads": 4,
+   "links": {
+    "instagram": "https://www.instagram.com/burningmonkvt/"
+   },
+   "why": "Rage Against the Machine tribute. Locals argue about whether they count as local; consensus is yes."
+  },
+  {
+   "name": "The Edd",
+   "genre": "rock",
+   "threads": 4,
+   "links": {
+    "bandcamp": "https://theedd.bandcamp.com/"
+   },
+   "why": "Named across four threads with no elaboration — the mark of an assumed-known band."
+  },
+  {
+   "name": "Brunch",
+   "genre": "rock",
+   "threads": 4,
+   "links": {
+    "bandcamp": "https://brunchtheband.bandcamp.com/"
+   },
+   "why": "“I work on these guys' guitars and they are absolutely decent humans with great talent.”"
+  },
+  {
+   "name": "Greaseface",
+   "genre": "punk",
+   "threads": 4,
+   "links": {
+    "bandcamp": "https://greaseface.bandcamp.com/"
+   },
+   "why": "On constant rotation for the people who name it."
+  },
+  {
+   "name": "Outnumbered",
+   "genre": "punk",
+   "threads": 4,
+   "links": {
+    "spotify": "https://open.spotify.com/playlist/07wYLyZB0nIY8UKqycYx0K"
+   },
+   "why": null
+  },
+  {
+   "name": "Vallory Falls",
+   "genre": "pop punk",
+   "threads": 4,
+   "links": {
+    "bandcamp": "https://valloryfalls.bandcamp.com/"
+   },
+   "why": "Members post in threads looking for shows."
+  },
+  {
+   "name": "Clive",
+   "genre": "jam",
+   "threads": 3,
+   "links": {
+    "bandcamp": "https://clive.bandcamp.com/album/clive"
+   },
+   "why": "“clive all day all night.” Phish and Zappa in a blender, and the guitarist just rips."
+  },
+  {
+   "name": "Forest Station",
+   "genre": "bluegrass",
+   "threads": 3,
+   "links": {
+    "site": "https://foreststationbluegrass.com/"
+   },
+   "why": "At the top of the Vermont bluegrass scene."
+  },
+  {
+   "name": "Milton Busker & the Grim Work",
+   "genre": "folk rock",
+   "threads": 3,
+   "links": {
+    "site": "https://www.miltonbusker.com/"
+   },
+   "why": "Suit-folk. “If you like Noah Kahan and diving deeper into lyrics — that's your VT band.”"
+  },
+  {
+   "name": "Cricket Blue",
+   "genre": "folk",
+   "threads": 3,
+   "links": {
+    "site": "https://www.cricketbluemusic.com/about"
+   },
+   "why": "“Taylor and Laura are amazing people and so talented.”"
+  },
+  {
+   "name": "The Bubs",
+   "genre": "garage rock",
+   "threads": 3,
+   "links": {
+    "bandcamp": "https://thebubsvt.bandcamp.com/"
+   },
+   "why": "“Some of the most fun shows I've been to.” Start with Make a Mess."
+  },
+  {
+   "name": "The Tenderbellies",
+   "genre": "bluegrass",
+   "threads": 3,
+   "links": {
+    "site": "https://tenderbellies.com/"
+   },
+   "why": "“As good as I've experienced, so good.”"
+  },
+  {
+   "name": "Seth Yacovone",
+   "genre": "blues",
+   "threads": 3,
+   "links": {
+    "site": "https://sethyacovone.com/"
+   },
+   "why": "“One of the greatest guitarists and most soulful musicians you'll find anywhere.”"
+  },
+  {
+   "name": "Bob Wagner",
+   "genre": "guitar",
+   "threads": 3,
+   "links": {
+    "site": "https://bobwagner.art/"
+   },
+   "why": "Recommended as a person, not a band: “Rough Francis and anything Bob Wagner is involved in.”"
+  },
+  {
+   "name": "LaMP",
+   "genre": "funk",
+   "threads": 3,
+   "links": {
+    "site": "https://www.ilikelamp.com/"
+   },
+   "why": "Lawton, Metzger and Paczkowski. Best Jam Band Other Than Phish."
+  },
+  {
+   "name": "Kat Wright",
+   "genre": "soul",
+   "threads": 3,
+   "links": {
+    "site": "https://www.katwright.com/",
+    "wikipedia": "https://en.wikipedia.org/wiki/Kat_Wright"
+   },
+   "why": "The voice of a hundred Burlington summer nights."
+  },
+  {
+   "name": "Rangus",
+   "genre": "thrash",
+   "threads": 3,
+   "links": {
+    "bandcamp": "https://rangus.bandcamp.com/"
+   },
+   "why": "“A bunch of folks in the Rangus crew are in various other bands around here.”"
+  },
+  {
+   "name": "Fifth World",
+   "genre": "hardcore",
+   "threads": 3,
+   "links": {
+    "bandcamp": "https://fifthworld802.bandcamp.com/album/demo"
+   },
+   "why": null
+  },
+  {
+   "name": "Clever Girls",
+   "genre": "indie",
+   "threads": 3,
+   "links": {
+    "bandcamp": "https://clevergirlsmusic.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "The Leatherbound Books",
+   "genre": "indie rock",
+   "threads": 3,
+   "links": {
+    "bandcamp": "https://theleatherboundbooks.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Voices in Vain",
+   "genre": "metal",
+   "threads": 3,
+   "links": {
+    "bandcamp": "https://voicesinvain.bandcamp.com/music"
+   },
+   "why": null
+  },
+  {
+   "name": "Fisher Wagg",
+   "genre": "indie",
+   "threads": 3,
+   "links": {
+    "instagram": "https://www.instagram.com/fisherwagg/"
+   },
+   "why": "“Fisher Wagg just put out my favorite song of the year.”"
+  },
+  {
+   "name": "Phantom Suns",
+   "genre": "rock",
+   "threads": 3,
+   "links": {
+    "bandcamp": "https://phantomsuns.bandcamp.com/music"
+   },
+   "why": "“Killer band!”"
+  },
+  {
+   "name": "Wild Leek River",
+   "genre": "country",
+   "threads": 2,
+   "links": {
+    "site": "https://www.wildleekriver.com/"
+   },
+   "why": "“Rootin' tootin' boot scootin' good time.” Honky Tonk Tuesday regulars."
+  },
+  {
+   "name": "Ponyhustle",
+   "genre": "country",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://ponyhustle.bandcamp.com/album/ponyhustle"
+   },
+   "why": "Best Country Band in the 2026 Chrisanthemums."
+  },
+  {
+   "name": "The High Breaks",
+   "genre": "surf rock",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://thehighbreaks.bandcamp.com/music"
+   },
+   "why": null
+  },
+  {
+   "name": "Soule Monde",
+   "genre": "funk",
+   "threads": 2,
+   "links": {
+    "site": "https://soulemonde.com/bio"
+   },
+   "why": "Russ Lawton and Ray Paczkowski, as a duo."
+  },
+  {
+   "name": "Danny & the Parts",
+   "genre": "alt-country",
+   "threads": 2,
+   "links": {
+    "instagram": "https://www.instagram.com/dannyandtheparts/"
+   },
+   "why": null
+  },
+  {
+   "name": "Reid Parsons",
+   "genre": "americana",
+   "threads": 2,
+   "links": {
+    "site": "http://reidparsons.com/"
+   },
+   "why": "“By far the best!”"
+  },
+  {
+   "name": "Three Piece Meal",
+   "genre": "jazz",
+   "threads": 2,
+   "links": {
+    "site": "https://www.threepiecemealband.com/"
+   },
+   "why": "“Funky jazz project. Very cool.”"
+  },
+  {
+   "name": "Marxist Jargon",
+   "genre": "punk",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://marxistjargon.bandcamp.com/album/to-each-according-to-their-needs"
+   },
+   "why": null
+  },
+  {
+   "name": "Dog Water",
+   "genre": "garage punk",
+   "threads": 2,
+   "links": {
+    "instagram": "https://www.instagram.com/dogwatervt/"
+   },
+   "why": null
+  },
+  {
+   "name": "Burly Girlies",
+   "genre": "indie",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://burlygirlies.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Cady Ternity",
+   "genre": "indie pop",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://cadyternity.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Wolfhand",
+   "genre": "metal",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://wolfhandvt.bandcamp.com/album/the-devil-arrives"
+   },
+   "why": null
+  },
+  {
+   "name": "Green Chapel",
+   "genre": "metal",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://greenchapel-vt.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Ghastly Sound",
+   "genre": "metal",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://ghastlysound.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Honey and Soul",
+   "genre": "soul",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://honeyandsoul.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Void Bringer",
+   "genre": "metal",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://voidbringer802.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Mal Maiz",
+   "genre": "latin",
+   "threads": 2,
+   "links": {
+    "site": "https://www.sevendaysvt.com/music/musicfeature/maiz-vargas-sandoval-flies-the-flag-for-latin-pride/"
+   },
+   "why": null
+  },
+  {
+   "name": "Osage Orange",
+   "genre": "indie",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://osageorange.bandcamp.com/album/souvenir-regrets"
+   },
+   "why": null
+  },
+  {
+   "name": "Vorcza",
+   "genre": "jazz",
+   "threads": 2,
+   "links": {
+    "site": "https://homegrownmusic.net/bands/vorcza"
+   },
+   "why": null
+  },
+  {
+   "name": "Beg, Steal or Borrow",
+   "genre": "bluegrass",
+   "threads": 2,
+   "links": {
+    "site": "https://www.begstealorborrowvt.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Matthew Mercury",
+   "genre": "rock",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://matthewmercury1.bandcamp.com/album/matthew-mercury"
+   },
+   "why": null
+  },
+  {
+   "name": "Dwight & Nicole",
+   "genre": "blues",
+   "threads": 2,
+   "links": {
+    "site": "https://www.dwightandnicole.com/"
+   },
+   "why": "New record, Day or Night."
+  },
+  {
+   "name": "The Eyetraps",
+   "genre": "punk",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://theeyetraps.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Rose Asteroid",
+   "genre": "indie",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://roseasteroid.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Yabai",
+   "genre": "punk",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://yabaiband.bandcamp.com/"
+   },
+   "why": null
+  },
+  {
+   "name": "Acid Wash",
+   "genre": "punk",
+   "threads": 2,
+   "links": {
+    "bandcamp": "https://acidwashvt.bandcamp.com/"
+   },
+   "why": null
+  }
+ ]
+}

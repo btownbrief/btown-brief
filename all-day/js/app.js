@@ -15,7 +15,10 @@ import * as wire from './wire.js';
 import { el, esc, safeHref, ICON } from './ui.js';
 
 const $ = (id) => document.getElementById(id);
-const TABS = ['wire', 'reddit', 'watch', 'listen', 'wander'];
+/* What Now sits fifth of nine — dead centre, which is where the bar puts
+   its own button. */
+const TABS = ['wire', 'reddit', 'watch', 'listen', 'whatnow',
+              'music', 'photos', 'ig', 'wander'];
 
 const registry = Object.create(null);
 let active = null;

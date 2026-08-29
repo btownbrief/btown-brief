@@ -25,11 +25,15 @@ import { hydrateVotes } from './../rows.js';
 
 const SHOW_URL = 'https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp';
 const PREVIEW = 4;      // newest episodes shown under every show, unasked
-const state = { root: null, pulse: null, open: Object.create(null) };
+const state = { root: null, pulse: null, pod: null, open: Object.create(null) };
 
 export function mount(root) {
   state.root = root;
   root.innerHTML = '<p class="loading">Tuning in…</p>';
+  /* The show's own episodes ride in a second payload — Spotify's show embed
+     is a player for the newest episode, not an archive. Fails soft: no file,
+     no list, and the feature card is unchanged. */
+  data.load('podcast', (json) => { state.pod = json; renderEpisodes(); }, () => {});
   data.load('pulse', (json) => { state.pulse = json; render(); }, () => {
     root.innerHTML = '';
     root.appendChild(el('div', 'errbox', '<b>Couldn’t reach the wire.</b><br>Episodes ride the same feed as the headlines.'));
@@ -120,6 +124,9 @@ function render() {
     }
   });
   root.append(toggle, embed, allEps);
+
+  root.appendChild(el('div', 'l-eps'));
+  renderEpisodes();
 
   root.appendChild(el('div', 'l-list'));
   renderList();
@@ -254,4 +261,56 @@ function epRow(ep, s) {
 
   row.append(play, meta, vote, star);
   return row;
+}
+
+
+/* ------------------------------------------------------- the Brief's show */
+/* Every past episode, not just the newest. The Spotify SHOW embed renders the
+   latest episode at any height — checked at 232, 352 and 500px — so the list
+   comes from data/podcast.json and each row opens that EPISODE's own embed,
+   which does play the episode you picked. */
+function renderEpisodes() {
+  const host = state.root && state.root.querySelector('.l-eps');
+  if (!host) return;
+  const eps = (state.pod && Array.isArray(state.pod.episodes)) ? state.pod.episodes : [];
+  host.innerHTML = '';
+  if (!eps.length) return;
+
+  shelfHead(host, 'Every episode',
+    eps.length + (eps.length === 1 ? ' episode' : ' episodes') + ' · newest first');
+
+  const list = el('div', 'l-ep-list');
+  eps.forEach((e) => {
+    const row = el('div', 'l-ep');
+    const hit = el('button', 'l-ep-hit');
+    hit.innerHTML =
+      '<span class="l-ep-t">' + esc(e.title || 'Untitled episode') + '</span>' +
+      '<span class="l-ep-m">' +
+        (e.date ? esc(e.date) : '') +
+        (e.seconds ? ' · ' + Math.round(e.seconds / 60) + ' min' : '') +
+      '</span>' +
+      (e.blurb ? '<span class="l-ep-b">' + esc(e.blurb) + '</span>' : '');
+    /* One iframe at a time, created on tap and left alone afterwards —
+       rebuilding it is what silently stops playback. */
+    hit.addEventListener('click', () => {
+      const open = row.classList.toggle('is-open');
+      let frame = row.querySelector('iframe');
+      if (open && !frame && e.id) {
+        frame = el('iframe', 'l-ep-embed');
+        frame.loading = 'lazy';
+        frame.title = e.title || 'Episode';
+        frame.allow = 'clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+        frame.src = 'https://open.spotify.com/embed/episode/' + encodeURIComponent(e.id) + '?theme=0';
+        row.appendChild(frame);
+      } else if (frame) {
+        frame.hidden = !open;
+      }
+      /* An episode with no Spotify id (hand-added before the API filled the
+         file in) cannot embed — send it out rather than open an empty box. */
+      if (open && !e.id && e.url) window.open(safeHref(e.url), '_blank', 'noopener');
+    });
+    row.appendChild(hit);
+    list.appendChild(row);
+  });
+  host.appendChild(list);
 }

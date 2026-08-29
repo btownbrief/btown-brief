@@ -39,7 +39,8 @@ SOURCES_DIR = Path(__file__).resolve().parent / "sources"
 PRIORITY = {
     "flynn": 90, "higherground": 90, "vcc": 90, "echo": 90, "bca": 90,
     "shelburnemuseum": 90, "greenfc": 90, "fletcherfree": 90, "sblibrary": 90,
-    "winooskilibrary": 90, "churchst": 85, "farmersmarket": 85, "uvm": 85,
+    "winooskilibrary": 90, "radiobean": 90, "monkeyhouse": 90,
+    "churchst": 85, "farmersmarket": 85, "uvm": 85,
     "parksrec": 85, "sbrec": 85, "breweries": 80, "loveburlington": 70,
     "sevendays": 65, "helloburlington": 60, "uvmbored": 55,
     "eventbrite": 50, "meetup": 50, "champlainvalley": 40,
