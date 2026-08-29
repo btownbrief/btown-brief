@@ -125,8 +125,11 @@
       headers: { apikey: SUPABASE_ANON_KEY, 'Content-Type': 'image/jpeg' },
       body: blob,
     });
-    if (res.status === 401 || res.status === 403) {
-      // some storage gateways also want the key as a bearer token
+    if (res.status === 401 || res.status === 403 || res.status === 400) {
+      // Some storage gateways also want the key as a bearer token. Note the
+      // 400: Supabase Storage answers a policy refusal with HTTP 400 carrying
+      // {"statusCode":"403"} in the BODY, so a 401/403-only check never fired
+      // and this fallback was dead code.
       res = await fetch(SUPABASE_URL + '/storage/v1/object/' + BUCKET + '/' + path, {
         method: 'POST',
         headers: {

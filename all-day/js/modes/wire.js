@@ -515,7 +515,7 @@ function renderPicks(root, map) {
    than looked up again, because a headline can fall off the wire while the
    votes it earned are still worth showing. */
 
-const KIND_LABEL = { wire: 'Headline', video: 'Video', episode: 'Episode', wiki: 'Wikipedia', reddit: 'Thread', artist: 'Artist' };
+const KIND_LABEL = { wire: 'Headline', video: 'Video', episode: 'Episode', wiki: 'Wikipedia', reddit: 'Thread', artist: 'Artist', photo: 'Photo' };
 
 function renderPopular(root) {
   const holder = el('div');

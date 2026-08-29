@@ -855,7 +855,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   padding: 0 10px calc(var(--safe-b) + 8px); pointer-events: none; }
 .dock > * { pointer-events: auto; }
 .tabbar {
-  display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px;
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
   max-width: 470px; margin: 0 auto; padding: 6px;
   background: var(--dock-bg); border: 1px solid var(--edge);
   border-radius: var(--radius-lg); box-shadow: var(--shadow-2);
@@ -1353,3 +1353,114 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 
 /* Dates, times and prices line up column-wise down a list of shows. */
 .m-gig-when, .m-show-when, .m-row-tags, .m-session-date { font-variant-numeric: tabular-nums; }
+
+/* Seven pills need the labels a shade smaller on a narrow phone. Measured:
+   at .69rem the bar cannot fit seven columns inside 320px and the PAGE scrolls
+   sideways, which is the one thing this app must never do. At .63rem it fits
+   with nothing clipped, and above 360px the size is unchanged. */
+@media (max-width: 360px) {
+  .tabbar button { font-size: .63rem; }
+}
+
+/* ============================================================ photos */
+/* Tonight first, because "is it worth going out" is the question that turns a
+   reader into a photographer. Asking for photos does not get photos. */
+.ph-tonight {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 14px 16px; border-radius: var(--radius); margin-bottom: 6px;
+  background: linear-gradient(105deg,
+    color-mix(in srgb, var(--accent) 15%, transparent),
+    color-mix(in srgb, var(--accent) 4%, transparent));
+  border: 1px solid var(--edge-soft);
+}
+.ph-t-left { min-width: 0; }
+.ph-t-time { display: block; font-family: var(--serif); font-size: 2rem; line-height: 1.05;
+  margin-top: 2px; font-variant-numeric: tabular-nums; }
+.ph-t-sub { display: block; font-size: .92rem; color: var(--ink-soft); margin-top: 2px; }
+.ph-t-note { font-size: .78rem; color: var(--ink-faint); line-height: 1.5;
+  margin: 0 2px 14px; }
+.ph-t-note a { color: var(--ink-soft); text-decoration: underline; }
+
+/* The number, on a ring that fills with the score. */
+.ph-score {
+  flex: 0 0 auto; width: 72px; height: 72px; border-radius: 50%;
+  display: grid; place-items: center; position: relative;
+  background: conic-gradient(var(--accent) var(--fill, 0%), var(--edge-soft) 0);
+}
+.ph-score::after {
+  content: ""; position: absolute; inset: 5px; border-radius: 50%;
+  background: var(--ground);
+}
+.ph-score-n { position: relative; z-index: 1; font-family: var(--serif);
+  font-size: 1.5rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.ph-score-of { position: relative; z-index: 1; font-family: var(--mono);
+  font-size: .55rem; letter-spacing: .08em; color: var(--ink-faint); margin-top: 1px; }
+
+/* Where to stand — its own width, never a column size on the shared rail. */
+.ph-spot {
+  width: 208px; display: flex; flex-direction: column; gap: 3px;
+  padding: 11px 12px; background: var(--panel); border: 1px solid var(--edge);
+  border-radius: var(--radius); box-shadow: var(--shadow-1);
+}
+.ph-spot-name { font-size: .98rem; font-weight: 600; line-height: 1.2; }
+.ph-spot-meta { font-family: var(--mono); font-size: .58rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--accent); font-variant-numeric: tabular-nums; }
+.ph-spot-why { font-size: .8rem; color: var(--ink-soft); line-height: 1.35; margin-top: 2px;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.ph-spot-map { font-size: .76rem; font-weight: 600; color: var(--accent); margin-top: 4px; }
+
+/* The wall. Square tiles, because a grid of mixed aspect ratios reads as a
+   mess and every one of these is somebody's photo of the same lake. */
+.ph-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 6px; margin-top: 2px;
+}
+.ph-tile { position: relative; }
+.ph-tile-hit { display: block; width: 100%; }
+.ph-img {
+  display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
+  border-radius: 10px; background: var(--panel-2);
+  outline: 1px solid rgba(20, 16, 8, .11); outline-offset: -1px;
+}
+:root[data-theme="dark"] .ph-img,
+:root:not([data-theme="light"]) .ph-img { outline-color: rgba(255, 255, 255, .22); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .ph-img { outline-color: rgba(20, 16, 8, .11); }
+}
+.ph-tile-hit:active .ph-img { transform: scale(.97); }
+.ph-img, .ph-tile-hit:active .ph-img { transition: transform .1s ease; }
+
+/* The opened photo. Full width, its own caption, credit always present. */
+.ph-full { display: block; width: 100%; border-radius: var(--radius-sm);
+  background: var(--panel-2); margin-bottom: 12px; }
+.ph-cap { font-size: 1rem; line-height: 1.5; margin-bottom: 6px; }
+.ph-meta { font-family: var(--mono); font-size: .62rem; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-faint); margin-bottom: 4px; }
+.ph-credit-line { font-size: .84rem; color: var(--ink-soft); margin-bottom: 12px; }
+.ph-form-intro { font-size: .9rem; color: var(--ink-soft); line-height: 1.5; margin-bottom: 14px; }
+.ph-form-note { font-size: .78rem; color: var(--ink-faint); line-height: 1.45; }
+.ph-err { font-size: .84rem; color: var(--warn); margin-top: 8px; }
+.m-form select, .m-form input[type=file] {
+  display: block; width: 100%; margin-top: 5px; padding: 11px 12px;
+  font: inherit; font-size: 1rem; color: var(--ink);
+  background: var(--panel-2); border: 1px solid var(--edge);
+  border-radius: var(--radius-sm); min-height: 44px;
+}
+.ph-spot .rail-dots, .ph-grid .rail-dots { background: var(--ground); }
+
+/* Wikipedia's picture of the day. Ambient and openly not local, so it is
+   small and it sits at the bottom — the house rule the webcams follow on
+   Watch. Landscape, not square, so it never reads as one of ours. */
+.ph-potd { display: flex; gap: 11px; align-items: flex-start; margin-top: 2px;
+  padding-bottom: 4px; }
+.ph-potd-hit { flex: 0 0 auto; width: 116px; }
+.ph-potd-img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover;
+  border-radius: 9px; background: var(--panel-2);
+  outline: 1px solid rgba(20, 16, 8, .11); outline-offset: -1px; }
+:root[data-theme="dark"] .ph-potd-img,
+:root:not([data-theme="light"]) .ph-potd-img { outline-color: rgba(255, 255, 255, .22); }
+.ph-potd-meta { min-width: 0; }
+.ph-potd-cap { display: block; font-size: .84rem; line-height: 1.4; color: var(--ink-soft);
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.ph-potd-by { display: block; font-family: var(--mono); font-size: .58rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }

@@ -15,7 +15,7 @@ import * as wire from './wire.js';
 import { el, esc, safeHref, ICON } from './ui.js';
 
 const $ = (id) => document.getElementById(id);
-const TABS = ['wire', 'reddit', 'watch', 'listen', 'music', 'wander'];
+const TABS = ['wire', 'reddit', 'watch', 'listen', 'music', 'photos', 'wander'];
 
 const registry = Object.create(null);
 let active = null;
