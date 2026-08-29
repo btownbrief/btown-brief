@@ -38,6 +38,7 @@ import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from './../whatn
 const EVENTS_URL = '../events.html';
 const PLANNER_URL = 'https://play.btownbrief.com/burlington-days/';
 const ARCADE_URL = 'https://play.btownbrief.com/';
+const SPORTS_URL = '../sports.html';
 
 /* ~20 hours, so tomorrow does not open with yesterday's answer. */
 const SEEN_KEY = 'allday-wn-seen';
@@ -57,12 +58,21 @@ const state = {
   root: null, feeds: null, status: null,
   mode: 'now', chips: new Set(),
   answer: null, poolSize: 0, ctx: null,
-  spinning: false, loaded: false, listCat: null,
+  spinning: false, loaded: false, listCat: null, games: null,
 };
 
 export function mount(root) {
   state.root = root;
   root.innerHTML = '<p class="loading">Reading the sky…</p>';
+  /* Games ride alongside, and fail soft: no payload, no strip, and the rest
+     of the tab is unchanged. */
+  /* This payload can land BEFORE the engine's own feeds do, and render()
+     needs a context to describe the hat. Store it either way; only redraw once
+     the tab has actually rendered once. */
+  data.load('sports', (json) => {
+    state.games = json;
+    if (state.loaded) render();
+  }, () => {});
   loadAll().then(({ data: feeds, status }) => {
     state.feeds = feeds;
     state.status = status;
@@ -213,6 +223,7 @@ const modeWord = () =>
 function smallHatNote() {
   if (state.poolSize >= 8) return '';
   const ctx = state.ctx;
+  if (!ctx) return '';
   const why = [];
   if (ctx.block === 'Late Night' && state.mode === 'now') why.push("it's late");
   if (ctx.rainT) why.push("it's raining");
@@ -324,6 +335,7 @@ export function render(first) {
     sky.style.height = (h + 90) + 'px';
   });
 
+  sportsStrip(root);
   renderList(root);
   doors(root);
 
@@ -420,5 +432,54 @@ function doors(root) {
     'Burlington Days turns a mood into an itinerary'));
   box.appendChild(door(ARCADE_URL, 'Play something',
     'The arcade — and five games you go outside for'));
+  root.appendChild(box);
+}
+
+
+/* ------------------------------------------------------------- the games */
+/* You are on this tab because you want something to do, and a game is one of
+   the better answers Burlington has. Two days' worth, then out to the full
+   page — this is a pointer, not a second sports tab. */
+function sportsStrip(root) {
+  const doc = state.games;
+  const games = (doc && Array.isArray(doc.games)) ? doc.games : [];
+  if (!games.length) return;
+
+  const now = Date.now();
+  const soon = games
+    .filter((g) => g.level !== 'national')
+    .filter((g) => {
+      const t = new Date(g.start).getTime();
+      return t >= now - 2 * 3600000 && t <= now + 48 * 3600000;
+    })
+    .slice(0, 4);
+
+  const box = el('div', 'wn-sport');
+  const link = el('a', 'wn-sport-hit');
+  link.href = safeHref(SPORTS_URL);
+
+  if (soon.length) {
+    link.innerHTML =
+      '<span class="wn-sport-k">Games in the next two days</span>' +
+      soon.map((g) => {
+        const t = g.allDay ? 'All day' : new Date(g.start).toLocaleTimeString('en-US',
+          { hour: 'numeric', minute: '2-digit' }).replace(':00', '');
+        return '<span class="wn-sport-g">' +
+          '<b>' + esc(t) + '</b> ' + esc(g.title) +
+          (g.venue ? ' <i>' + esc(g.venue) + '</i>' : '') + '</span>';
+      }).join('') +
+      '<span class="wn-sport-more">All Burlington sports ' + ICON.ext + '</span>';
+  } else {
+    /* Nothing in two days is normal here, not a failure — say what there IS. */
+    const next = games.filter((g) => g.level !== 'national' &&
+      new Date(g.start).getTime() > now)[0];
+    link.innerHTML =
+      '<span class="wn-sport-k">Sports</span>' +
+      '<span class="wn-sport-g">' + (next
+        ? 'Nothing tonight or tomorrow. Next up: <b>' + esc(next.title) + '</b>'
+        : 'Schedules for UVM, the high school and the clubs') + '</span>' +
+      '<span class="wn-sport-more">All Burlington sports ' + ICON.ext + '</span>';
+  }
+  box.appendChild(link);
   root.appendChild(box);
 }

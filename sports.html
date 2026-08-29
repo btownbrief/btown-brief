@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burlington Sports — Btown Brief</title>
+  <meta name="description" content="Every UVM, Burlington High School and local pro game — schedules, results and where to watch. Plus the Red Sox, Bruins, Celtics, Patriots and Canadiens.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Btown Brief">
+  <meta property="og:title" content="Burlington Sports">
+  <meta property="og:description" content="Every UVM, Burlington High School and local pro game — schedules, results and where to watch. Plus the Red Sox, Bruins, Celtics, Patriots and Canadiens.">
+  <meta property="og:url" content="https://guide.btownbrief.com/sports.html">
+  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Burlington Sports">
+  <meta name="twitter:description" content="Every UVM, Burlington High School and local pro game — schedules, results and where to watch. Plus the Red Sox, Bruins, Celtics, Patriots and Canadiens.">
+  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="City Guide">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260829a">
+  <script>
+    /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
+       refreshes the cache; this only avoids the white flash after dark. */
+    (function () {
+      try {
+        var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
+        if (!c) return;
+        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
+          year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+        if (c.day !== today) return;
+        var n = Date.now();
+        document.documentElement.setAttribute('data-theme',
+          (n >= c.rise && n < c.set) ? 'light' : 'dark');
+      } catch (e) {}
+    })();
+  </script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2471867016612559');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel -->
+</head>
+<body data-btown-about="off">
+  <script src="https://play.btownbrief.com/nav.js" defer></script>
+
+  <main class="page-wrap">
+    <div class="page-hero">
+      <span class="page-hero-kicker">Scores &amp; Schedules</span>
+      <h1>Burlington sports</h1>
+      <p class="page-hero-sub" id="sp-sub">UVM, the high school and the clubs around town — plus the teams a Vermonter follows anyway.</p>
+    </div>
+
+    <div class="chip-row" id="sp-scope" role="tablist" aria-label="Local or national"></div>
+
+    <div id="sp-lede"></div>
+
+    <div class="chip-row" id="sp-orgs" aria-label="Teams"></div>
+
+    <p class="result-count" id="sp-count" aria-live="polite"></p>
+    <div id="sp-list">
+      <p class="page-empty">Loading the schedule…</p>
+    </div>
+
+    <div id="sp-dormant"></div>
+
+    <p class="sp-foot" id="sp-foot"></p>
+  </main>
+
+  <script src="js/sports.js?v=20260829a" defer></script>
+</body>
+</html>

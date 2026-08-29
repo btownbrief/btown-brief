@@ -1882,3 +1882,18 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
   padding: 5px 12px; background: var(--panel); min-height: 30px;
 }
 .ig-accts-btn:hover { color: var(--accent); border-color: var(--accent-soft); }
+
+/* The games pointer on What Now. It is a door to sports.html, not a tab. */
+.wn-sport { margin: 16px 0 4px; }
+.wn-sport-hit { display: block; padding: 14px 15px; border-radius: var(--radius);
+  background: var(--panel-2); border: 1px solid var(--edge); }
+.wn-sport-k { display: block; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .11em; text-transform: uppercase; color: var(--accent);
+  font-weight: 600; margin-bottom: 7px; }
+.wn-sport-g { display: block; font-size: .92rem; line-height: 1.4; color: var(--ink-soft);
+  margin-top: 3px; }
+.wn-sport-g b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.wn-sport-g i { color: var(--ink-faint); font-style: normal; }
+.wn-sport-more { display: inline-flex; align-items: center; gap: 5px; margin-top: 9px;
+  font-size: .84rem; font-weight: 600; color: var(--accent); }
+.wn-sport-more svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
