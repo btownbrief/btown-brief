@@ -42,7 +42,7 @@ const state = {
 };
 
 const TOPICS = [
-  ['all', 'Everything'], ['popular', '▲ Popular'], ['local', 'Local'], ['news', 'News'], ['politics', 'Politics'],
+  ['all', 'All'], ['popular', '▲ Popular'], ['local', 'Local'], ['news', 'News'], ['politics', 'Politics'],
   ['business', 'Business'], ['tech', 'Tech'], ['science', 'Science'],
   ['sports', 'Sports'], ['culture', 'Culture'], ['gaming', 'Gaming'],
   ['newsletters', 'Newsletters'],
@@ -219,9 +219,6 @@ function render() {
       sourceCount + ' source' + (sourceCount === 1 ? '' : 's') + '</span>',
   });
 
-  /* The chip row leads with search. A full-width search box cost a whole
-     band of the screen to a thing most people never use; as the first chip
-     it costs nothing and sits where the eye already is. */
   const chips = el('div', 'chips');
   const searchChip = chip(
     ICON.search + (state.q
@@ -238,7 +235,6 @@ function render() {
     },
     'search-chip'
   );
-  chips.appendChild(searchChip);
   TOPICS.forEach(([value, label]) => {
     if (value !== 'all' && value !== 'local' && value !== 'popular' &&
         !all.some((it) => map[it.s]?.topic === value)) return;
@@ -249,16 +245,23 @@ function render() {
       root.scrollTo({ top: 0 });
     }));
   });
-  /* Chips and the view switch pin together under the masthead, the way the
-     Pulse page keeps its controls in reach. Scrolling a 2,000-item wire and
-     then having to scroll all the way back to change topic is the single
-     most annoying thing a feed can do. The outlets and the weather are
-     browsing, not steering — they scroll away. */
+  /* Only the chips pin under the masthead. Scrolling a 2,000-item wire and
+     then having to scroll all the way back to change topic is the single most
+     annoying thing a feed can do — but a control you use once per visit does
+     not need to ride along for two thousand headlines. The outlets and the
+     weather are browsing, not steering; they scroll away too. */
   const band = el('div', 'ctlband');
   band.appendChild(chips);
   scrollHint(chips);
-  renderTools(band, set);
+  /* The layout switch takes the pinned row search used to sit in. It is the
+     one control that changes what the whole list IS, and you may want it
+     mid-scroll — so it stays, on its own row rather than inside the chips,
+     which scroll sideways and would carry it out of reach. */
+  const segRow = el('div', 'toolrow');
+  segRow.appendChild(layoutSwitch(root, set));
+  band.appendChild(segRow);
   root.appendChild(band);
+  renderTools(root, set, searchChip);
 
   if (state.qOpen || state.q) root.appendChild(searchBox(root));
 
@@ -368,11 +371,8 @@ function pickSource(id) {
   state.root.scrollTo({ top: 0 });
 }
 
-/* Focus and the layout switch were both buried in Settings, which meant
-   nobody used either. They belong next to the thing they change. */
-function renderTools(root, set) {
-  const row = el('div', 'toolrow');
-
+/* Newest first / By source — built here, pinned in the band by render(). */
+function layoutSwitch(root, set) {
   const seg = el('div', 'toolseg');
   [['newest', 'Newest first'], ['sources', 'By source']].forEach(([v, label]) => {
     const b = el('button', 'toolbtn' + (set.layout === v ? ' on' : ''), label);
@@ -384,10 +384,18 @@ function renderTools(root, set) {
     });
     seg.appendChild(b);
   });
-  row.appendChild(seg);
+  return seg;
+}
+
+/* Focus was buried in Settings, which meant nobody used it. It sits out here
+   with Search — both are once-a-visit controls, so this row stays put and
+   scrolls away rather than following you down two thousand headlines. */
+function renderTools(root, set, searchChip) {
+  const row = el('div', 'toolrow');
+  row.appendChild(searchChip);
 
   const focus = el('button', 'toolbtn focus-btn' + (set.focus ? ' on' : ''),
-    (set.focus ? '◉' : '○') + ' Focus');
+    (set.focus ? '◉' : '○') + ' Focus Mode');
   focus.title = set.focus
     ? 'Focus is on — headlines you have opened disappear'
     : 'Focus mode: hide headlines you have already opened';
