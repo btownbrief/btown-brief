@@ -1,5 +1,5 @@
 {
- "_note": "Channels for the Pulse YOUTUBE tab, from the Aug 2026 curation ledger. Uploads come from each channel's free public RSS (no API quota). cap = max videos per refresh (default 3); min_sec = only keep videos at least this long; g = shelf for the Shelves view (vt/news/sci/food/music/fun). lane = Btown TV's finer taxonomy (doc|explainer|talk|comedy|music|film|hoops|craft|vermont|wonder|news); channels added Aug 2026 for Btown TV carry it, the original 78 don't need it.",
+ "_note": "Channels for the Pulse YOUTUBE tab, from the Aug 2026 curation ledger. Uploads come from each channel's free public RSS (no API quota). cap = max videos per refresh (default 3); min_sec = only keep videos at least this long; g = shelf for the Shelves view (vt/news/sci/food/music/fun). lane = Btown TV's finer taxonomy (doc|explainer|talk|comedy|music|film|hoops|craft|vermont|wonder|news); channels added Aug 2026 for Btown TV carry it, the original 78 don't need it. Channels marked \"must\" are always re-checked through the API even when the Inoreader stream claims to cover them — Town Meeting TV went missing for weeks that way.",
  "channels": [
   {
    "id": "UCh3kiOuiI6XLVEXI9WaX5jg",
@@ -387,8 +387,9 @@
   {
    "id": "UCJkWMLSqRNKLoyUZQiNoAcQ",
    "name": "Town Meeting TV",
-   "cap": 1,
-   "g": "vt"
+   "cap": 3,
+   "g": "vt",
+   "must": 1
   },
   {
    "id": "UCgtBVpxi2rlrIgUHkkAM-ew",

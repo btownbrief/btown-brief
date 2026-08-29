@@ -11,8 +11,8 @@ import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
 import { bindGestures } from './../gestures.js';
-import { el, esc, chip, heading, scrollHint, ago } from './../ui.js';
-import { feedRow, bindFeed, hydrateVotes, keyOf } from './../rows.js';
+import { el, esc, chip, heading, scrollHint, ago, tipBar, tabStamp, stampOf } from './../ui.js';
+import { feedRow, bindFeed, hydrateVotes, watchPassed, keyOf } from './../rows.js';
 
 const state = { root: null, pulse: null, sub: null, byKey: new Map() };
 
@@ -41,12 +41,18 @@ function render() {
     map[s.id] = s;
     if (/reddit\.com/.test(s.site || '') && !muted[s.id]) subs.push(s);
   });
-  /* r/burlington and r/vermont are the reason this tab exists; everything
-     else is alphabetical behind them. */
-  const LEAD = ['r/burlington', 'r/vermont'];
+  /* Not alphabetical. r/burlington and r/vermont are the reason this tab
+     exists, then the news subs, then the specialist ones, and the three you
+     dip into rather than read — jokes, AI, basketball — bring up the rear. */
+  const LEAD = ['r/burlington', 'r/vermont', 'r/news', 'r/worldnews',
+    'r/science', 'r/technology'];
+  const TAIL = ['r/jokes', 'r/artificial', 'r/nba'];
   const rank = (x) => {
-    const i = LEAD.indexOf((x.short || '').toLowerCase());
-    return i === -1 ? LEAD.length : i;
+    const n = (x.short || '').toLowerCase();
+    const lead = LEAD.indexOf(n);
+    if (lead !== -1) return lead;
+    const tail = TAIL.indexOf(n);
+    return tail !== -1 ? LEAD.length + 1 + tail : LEAD.length;
   };
   subs.sort((a, b) => rank(a) - rank(b) || (a.short || '').localeCompare(b.short || ''));
   if (state.sub && !subs.some((s) => s.id === state.sub)) state.sub = null;
@@ -57,15 +63,13 @@ function render() {
   state.byKey = new Map(all.map((it) => [keyOf(it), { it, src: map[it.s] }]));
 
   root.innerHTML = '';
-  const updated = state.pulse.generated
-    ? ago(Math.floor(new Date(state.pulse.generated).getTime() / 1000)) : '';
+  tabStamp(root, stampOf(state.pulse.generated), 'reddit, every 20 minutes');
 
   heading(root, {
     eyebrow: 'Reddit',
     title: state.sub ? (map[state.sub].short || 'Threads') : 'What people are posting',
     sub: '<span class="count">' + shown.length + ' post' + (shown.length === 1 ? '' : 's') +
-      ' across ' + subs.length + ' subreddit' + (subs.length === 1 ? '' : 's') +
-      (updated ? ' · updated ' + esc(updated) : '') + '</span>',
+      ' across ' + subs.length + ' subreddit' + (subs.length === 1 ? '' : 's') + '</span>',
   });
 
   const chips = el('div', 'chips');
@@ -94,5 +98,8 @@ function render() {
     feed.appendChild(feedRow(it, map[it.s], { tag: map[it.s].short }));
   });
   root.appendChild(feed);
+  tipBar(root, 'swipe',
+    '<span>Swipe a post <b>left</b> to mute that subreddit, <b>right</b> to save it.</span>');
   hydrateVotes(root, slice.map(keyOf));
+  watchPassed(root);
 }

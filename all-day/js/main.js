@@ -157,8 +157,8 @@ $('settings-btn').addEventListener('click', () => {
    to find out what an app is will close it instead. */
 const TOUR = [
   ['Wire', 'Every headline, local and national'],
-  ['Reddit', 'What people are actually posting'],
-  ['Watch', 'One page of video, picked each night'],
+  ['Reddit', 'What people are posting'],
+  ['Watch', 'Video, picked by hand nightly'],
   ['Listen', 'Every Vermont podcast, playable here'],
   ['Wikipedia', 'A rabbit hole worth falling into'],
 ];
@@ -175,7 +175,14 @@ function welcome() {
       TOUR.map(([n, d]) =>
         '<li><b>' + esc(n) + '</b><span>' + esc(d) + '</span></li>').join('') +
     '</ul>' +
-    '<p class="welcome-local"><i></i>Anything local is green.</p>';
+    '<p class="welcome-local"><i></i>Anything local is green.</p>' +
+    /* Swipe is the one thing nobody discovers on their own, and muting is
+       the setting that makes the wire yours. Two lines, with the direction
+       drawn, beats a paragraph nobody reads. */
+    '<p class="welcome-swipe"><em>Swipe any headline:</em>' +
+      '<span><b>←</b> mute the outlet</span>' +
+      '<span><b>→</b> save it</span>' +
+    '</p>';
   const go = el('button', 'btn btn-big', 'Start reading');
   go.addEventListener('click', () => { store.markWelcomed(); box.remove(); });
   card.appendChild(go);

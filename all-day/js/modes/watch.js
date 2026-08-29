@@ -22,11 +22,29 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, agoShort, dayLabel, rail, heading, shelfHead, seg, voteBtn, paintVote, starBtn, ICON } from './../ui.js';
+import { el, esc, agoShort, dayLabel, rail, heading, shelfHead, seg, voteBtn, paintVote, starBtn, tabStamp, stampOf, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
 
 const WIRE_PAGE = 24;
 const EDITIONS_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/btown-tv/data/tv-editions.json';
+
+const LOCAL_SHELF = 'Burlington & Vermont';
+
+/* The order the data arrives in is the order the curator builds it, which
+   leads with the longest videos. On a phone that buries everything else, so
+   the page leads with the short ones and lets the couch episode come second. */
+const SHELF_ORDER = ['Quick one', 'Settle in', LOCAL_SHELF];
+
+function orderShelves(shelves) {
+  const live = (Array.isArray(shelves) ? shelves : [])
+    .filter((s) => s && Array.isArray(s.items) && s.items.length);
+  const rank = (s) => {
+    const i = SHELF_ORDER.indexOf(s.title);
+    return i === -1 ? SHELF_ORDER.length : i;
+  };
+  return live.map((s, i) => [s, i]).sort((a, b) =>
+    (rank(a[0]) - rank(b[0])) || (a[1] - b[1])).map((pair) => pair[0]);
+}
 
 const state = { root: null, tv: null, yt: null, past: null, view: 'tonight', shown: WIRE_PAGE };
 
@@ -51,6 +69,18 @@ function render() {
   const root = state.root;
   if (!state.tv && !state.yt) return;
   root.innerHTML = '';
+  tabStamp(root, stampOf(state.tv?.generated) || stampOf(state.yt?.generated),
+    state.view === 'wire' ? 'the youtube wire, every 3 hours' : 'tonight’s edition, built each morning');
+
+  /* The Btown TV masthead, kept to three lines. On tv.html it was a full
+     hero and pushed the first video off the screen; here it is a label. */
+  const mast = el('header', 'tvmast');
+  mast.innerHTML =
+    '<p class="tvmast-pre">Btown Brief presents</p>' +
+    '<h1>BTown TV</h1>' +
+    '<p class="tvmast-sub">One curated page of video for Burlington, every evening. ' +
+    'A pick for tonight and six shelves — around fifty videos, each with a reason.</p>';
+  root.appendChild(mast);
 
   root.appendChild(seg([
     ['tonight', 'Tonight'],
@@ -109,20 +139,16 @@ function renderTonight(root) {
     sync();
   };
 
-  /* Webcams sit BELOW the first real shelf. They are ambient — nobody opens
-     this tab to watch a covered bridge — and putting them straight under the
-     pick meant the first screenful was a hero and seven webcams, with the
-     curated video you actually came for pushed off the bottom. */
-  let placedLive = false;
-  (Array.isArray(tv.shelves) ? tv.shelves : []).forEach((s, i) => {
-    if (!s || !Array.isArray(s.items) || !s.items.length) return;
-    shelfHead(root, s.title, s.sub);
+  /* Webcams are ambient and now tiny, so they ride directly under the pick:
+     one glance at what is happening outside right now, then the shelves. */
+  liveStrip();
+
+  orderShelves(tv.shelves).forEach((s) => {
+    shelfHead(root, s.title, s.sub, s.title === LOCAL_SHELF ? pastLocalBtn() : null);
     const { track, sync } = rail(root, { label: 'videos' });
     s.items.forEach((v) => { if (v && app.isVideoId(v.id)) track.appendChild(videoCard(v)); });
     sync();
-    if (!placedLive) { placedLive = true; liveStrip(); }
   });
-  if (!placedLive) liveStrip();      /* no shelves tonight — still show them */
 
   const play = playlistLink(tv, 'Play tonight on your TV');
   if (play) {
@@ -135,15 +161,68 @@ function renderTonight(root) {
   hydrateVotes(root, [...root.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
 }
 
+/* Local video is the whole reason this tab exists, and one night's shelf is
+   five clips. A channel that posted yesterday is invisible by tomorrow. So
+   the local shelf gets its own history button — not another toggle at the
+   top of the page, where there are already three. */
+function pastLocalBtn() {
+  const b = el('button', 'shelf-more', 'Past picks');
+  b.addEventListener('click', () => {
+    app.sheet('Vermont video, the last two weeks', (body) => {
+      if (!state.past) {
+        body.appendChild(el('p', 'loading', 'Opening the archive…'));
+        loadPast(() => { body.innerHTML = ''; fillLocalHistory(body); });
+        return;
+      }
+      fillLocalHistory(body);
+    });
+  });
+  return b;
+}
+
+function fillLocalHistory(body) {
+  const today = new Set();
+  (state.tv?.shelves || []).forEach((s) => {
+    if (s?.title === LOCAL_SHELF) (s.items || []).forEach((v) => v && today.add(v.id));
+  });
+
+  const seen = new Set();
+  const rows = [];
+  (state.past || []).forEach((ed) => {
+    (Array.isArray(ed?.shelves) ? ed.shelves : []).forEach((s) => {
+      if (s?.title !== LOCAL_SHELF) return;
+      (s.items || []).forEach((v) => {
+        /* skip what is already on the shelf behind this sheet */
+        if (!v || !app.isVideoId(v.id) || today.has(v.id) || seen.has(v.id)) return;
+        seen.add(v.id);
+        rows.push(v);
+      });
+    });
+  });
+
+  if (!rows.length) {
+    body.appendChild(el('p', 'empty', 'Everything local we have picked recently is already on the shelf.'));
+    return;
+  }
+  body.appendChild(el('p', 'sheet-note',
+    esc(rows.length + ' more from Vermont channels, newest first — picked on earlier nights.')));
+  rows.sort((a, b) => (b.d || 0) - (a.d || 0));
+  const grid = el('div', 'vgrid');
+  rows.forEach((v) => grid.appendChild(videoCard(v)));
+  body.appendChild(grid);
+  hydrateVotes(body, rows.map((v) => 'yt:' + v.id));
+}
+
 /* --------------------------------------------------------- past nights */
 
-function loadPast() {
+function loadPast(then) {
   data.fetchJSON(EDITIONS_URL, 10000)
-    .then((json) => {
-      state.past = Array.isArray(json?.editions) ? json.editions : [];
-      if (state.view === 'past') render();
-    })
-    .catch(() => { state.past = []; if (state.view === 'past') render(); });
+    .then((json) => { state.past = Array.isArray(json?.editions) ? json.editions : []; })
+    .catch(() => { state.past = []; })
+    .finally(() => {
+      if (then) then();
+      else if (state.view === 'past') render();
+    });
 }
 
 function renderPast(root) {

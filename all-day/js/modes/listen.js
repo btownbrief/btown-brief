@@ -20,7 +20,7 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, safeHref, agoShort, shelfHead, seg, starBtn, voteBtn, paintVote, ICON } from './../ui.js';
+import { el, esc, safeHref, agoShort, shelfHead, seg, starBtn, voteBtn, paintVote, tabStamp, stampOf, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
 
 const SHOW_URL = 'https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp';
@@ -58,6 +58,9 @@ function build() {
     s.eps.sort((a, b) => (b.d || 0) - (a.d || 0));
     s.art = (s.eps.find((e) => e.i) || {}).i || null;
   });
+  /* Whoever published most recently goes first. Alphabetical order tells you
+     nothing about a podcast list — freshness is the whole question. */
+  list.sort((a, b) => (b.eps[0].d || 0) - (a.eps[0].d || 0));
   return list;
 }
 
@@ -67,6 +70,7 @@ function render() {
   if (root.querySelector('.l-list')) return renderList();
 
   root.innerHTML = '';
+  tabStamp(root, stampOf(state.pulse?.generated), 'episodes, every 20 minutes');
   const feat = el('section', 'card feature');
   feat.innerHTML =
     '<img src="../assets/btown-arts-cover.jpg" alt="BTown Arts Podcast cover art">' +
@@ -125,7 +129,7 @@ function renderList() {
   const eps = half.reduce((n, s) => n + s.eps.length, 0);
   list.innerHTML = '';
 
-  list.appendChild(seg([['local', 'Vermont shows'], ['world', 'Everything else']],
+  list.appendChild(seg([['local', 'Vermont shows'], ['world', 'National']],
     state.scope === 'local' ? 'local' : 'world',
     (v) => { state.scope = v; renderList(); }));
   list.appendChild(el('div', null, '<div style="height:16px"></div>'));
@@ -134,7 +138,7 @@ function renderList() {
   if (resume) list.appendChild(resume);
 
   shelfHead(list,
-    state.scope === 'local' ? 'Made in Vermont' : 'The rest of the dial',
+    state.scope === 'local' ? 'Made in Vermont' : 'National shows',
     half.length + ' show' + (half.length === 1 ? '' : 's') + ' · ' + eps.toLocaleString() + ' episodes');
 
   const grid = el('div', 'shows');

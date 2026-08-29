@@ -39,7 +39,8 @@ export function feedRow(it, src, opts = {}) {
   const local = isLocalSource(src);
   const seen = store.isRead(k);
 
-  const row = el('div', 'fi' + (local ? ' is-local' : '') + (seen ? ' is-read' : ''));
+  const row = el('div', 'fi' + (local ? ' is-local' : '') + (seen ? ' is-read' : '') +
+    (store.hasPassed(k) ? ' passed' : '') + (opts.compact ? ' is-compact' : ''));
   row.dataset.k = k;
 
   const link = el('a', 'fi-body');
@@ -54,8 +55,12 @@ export function feedRow(it, src, opts = {}) {
   /* the outlet wears its topic's colour — the cheapest colour on the page,
      because the words are already there */
   const topic = (src && src.topic) || '';
-  meta.appendChild(el('span', 'fi-src' + (topic ? ' t-' + topic : ''),
-    esc(src?.short || src?.name || '')));
+  /* inside a by-source column the outlet name is on the column head — it
+     would be printed once per row for nothing */
+  if (!opts.compact) {
+    meta.appendChild(el('span', 'fi-src' + (topic ? ' t-' + topic : ''),
+      esc(src?.short || src?.name || '')));
+  }
   if (it.d) meta.appendChild(el('span', null, agoShort(it.d)));
   if (opts.isNew) meta.appendChild(el('span', 'tag-new', 'New'));
   if (it.a) meta.appendChild(el('span', null, '♪'));
@@ -86,7 +91,7 @@ export function feedRow(it, src, opts = {}) {
     star.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
   row.appendChild(star);
-  if (it.i) {
+  if (it.i && !opts.compact) {
     const img = el('img', 'fi-thumb');
     img.src = it.i;
     img.alt = '';
@@ -129,23 +134,53 @@ export function bindFeed(root, lookup, onChange) {
   };
 }
 
+/* Grey out what scrolled off the top. Only what the reader actually watched
+   leave the screen counts — a re-render while scrolled deep reports
+   everything above the viewport as "not intersecting", and none of that was
+   read. Straight port of pulse.js's intent observer, sharing its key. */
+const passWatchers = new WeakMap();
+
+export function watchPassed(root) {
+  if (!('IntersectionObserver' in window)) return null;
+  /* a tab re-renders on every chip tap; the previous pass observer is
+     watching nodes that no longer exist */
+  passWatchers.get(root)?.disconnect();
+  const seen = Object.create(null);
+  let pending = [];
+  let timer = 0;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      const k = e.target.dataset.k;
+      if (!k) return;
+      if (e.isIntersecting) { seen[k] = 1; return; }
+      if (e.boundingClientRect.bottom <= 0 && seen[k]) {
+        e.target.classList.add('passed');
+        pending.push(k);
+        io.unobserve(e.target);
+      }
+    });
+    if (!pending.length) return;
+    clearTimeout(timer);
+    timer = setTimeout(() => { store.markPassed(pending); pending = []; }, 600);
+  }, { root, threshold: 0 });
+  root.querySelectorAll('.fi').forEach((r) => io.observe(r));
+  passWatchers.set(root, io);
+  return io;
+}
+
 /* One request for a screenful of vote counts, then repaint what changed. */
 export function hydrateVotes(root, keys) {
   store.loadVotes(keys).then((ok) => {
     if (!ok) return;
-    root.querySelectorAll('.fi').forEach((row) => {
-      const k = row.dataset.k;
-      const b = row.querySelector('.vote');
+    /* Anything carrying a key and a vote button, rather than a list of card
+       classes to keep in sync — the picks and the Wikipedia doors both got
+       arrows that stayed hidden because they were shapes this list did not
+       know about. */
+    root.querySelectorAll('[data-k]').forEach((host) => {
+      const b = host.querySelector('.vote');
       if (!b) return;
       b.hidden = false;
-      paintVote(b, store.voteCount(k), store.hasVoted(k));
-    });
-    root.querySelectorAll('.v[data-k]').forEach((card) => {
-      const k = card.dataset.k;
-      const b = card.querySelector('.vote');
-      if (!b) return;
-      b.hidden = false;
-      paintVote(b, store.voteCount(k), store.hasVoted(k));
+      paintVote(b, store.voteCount(host.dataset.k), store.hasVoted(host.dataset.k));
     });
   });
 }

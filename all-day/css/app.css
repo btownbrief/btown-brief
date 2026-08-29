@@ -271,12 +271,16 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 /* the same grey bar a rail gets, for chip rows and the Wander trail — a row
    that runs off the edge with no sign of it reads as a row that ends there */
 .hint-bar { position: relative; height: 4px; border-radius: 3px; margin: 0 0 14px;
-  background: var(--rail-track); overflow: hidden; }
+  background: var(--rail-track); overflow: hidden;
+  opacity: 0; transition: opacity .3s ease; }
+.hint-bar.is-live { opacity: 1; }
 .hint-bar i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 3px;
   background: var(--rail-thumb); transition: left .12s linear, width .12s linear; }
 @media (hover: hover) and (pointer: fine) {
   .hint-bar { cursor: pointer; height: 6px; }
   .hint-bar:hover i { background: var(--ink-soft); }
+  /* a mouse has no other way to move a chip row, so keep it reachable */
+  .hint-bar:hover, .chips:hover + .hint-bar, .trail:hover + .hint-bar { opacity: 1; }
 }
 .trail { padding-bottom: 8px; }
 .trail + .hint-bar { margin-bottom: 16px; }
@@ -430,14 +434,19 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   background: var(--panel-2); flex: 0 0 auto;
 }
 .fi.is-read { opacity: .55; }
+/* scrolled off the top while you were looking at it — same shade Pulse uses */
+.fi.passed .fi-title { color: var(--ink-faint); font-weight: 400; }
+.fi.passed .fi-thumb { opacity: .6; }
 .fi.is-read .fi-title { font-weight: 400; }
 
 /* local is the whole point of the paper — make it visible while scrolling */
 .fi.is-local { background: linear-gradient(90deg, var(--local-soft), transparent 38%); }
 .fi.is-local::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2.5px;
-  background: var(--local); opacity: .85;
+  content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px;
+  border-radius: 2px; background: var(--local); opacity: .8;
 }
+/* the rule needs room of its own, or it sits against the first letter */
+.feed .fi.is-local { padding-left: 13px; }
 .tag-local {
   color: var(--local); font-weight: 600;
   background: var(--local-soft); border-radius: 4px; padding: 1px 5px;
@@ -499,10 +508,12 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 
 /* ============================================================ picks */
 .pick {
-  display: block; width: min(300px, 78vw); padding: 15px; height: 100%;
+  display: flex; flex-direction: column; width: min(300px, 78vw); height: 100%;
   border-radius: var(--radius); border: 1px solid var(--edge);
   background: var(--panel); box-shadow: var(--shadow-1);
 }
+.pick-hit { display: block; padding: 15px 15px 12px; flex: 1 1 auto; }
+.pick-foot { display: flex; align-items: center; gap: 8px; padding: 0 11px 9px; }
 .pick-title { display: block; font-family: var(--serif); font-size: 1.3rem;
   line-height: 1.16; margin: 8px 0 7px; }
 .pick-why { display: block; font-size: .88rem; line-height: 1.45; color: var(--ink-soft); }
@@ -532,7 +543,12 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
 .v-why { font-size: .8rem; line-height: 1.38; color: var(--ink-soft); margin-top: 5px;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.rail .v-why { display: none; }        /* a shelf is for browsing, not reading */
+/* The reason IS the product — "around fifty videos, each with a reason".
+   Hiding it on the shelves left a wall of thumbnails like every other video
+   app. Two lines, small, is the whole cost. */
+.rail .v-why { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; font-size: .72rem; line-height: 1.34; margin-top: 4px; }
+.vgrid .v-why { -webkit-line-clamp: 2; }
 .hero-body .v-why { display: -webkit-box; -webkit-line-clamp: 3; }
 .v-acts { display: flex; align-items: center; gap: 1px; padding: 0 4px 4px; }
 .v-acts .act { width: 29px; height: 29px; }
@@ -552,6 +568,15 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
    replaces — but a serif headline block per shelf costs a whole video row
    every time, and this tab is for browsing video, not reading titles. */
 .shelf-head { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; margin: 2px 0 9px; }
+.shelf-head.has-more { flex-wrap: nowrap; }
+.shelf-head.has-more .s { flex: 1 1 auto; min-width: 0; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap; }
+.shelf-more { flex: 0 0 auto; align-self: center; font: inherit; font-size: .74rem;
+  font-weight: 600; letter-spacing: .01em; color: var(--local);
+  background: color-mix(in srgb, var(--local) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--local) 30%, transparent);
+  border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+.shelf-more:hover { background: color-mix(in srgb, var(--local) 20%, transparent); }
 .shelf-head .t { font-size: 1.06rem; font-weight: 600; letter-spacing: -.004em; }
 .shelf-head .s { font-size: .84rem; color: var(--ink-faint); }
 
@@ -559,12 +584,16 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
    documentary for attention: small enough to skim past, big enough to
    actually see, and no action row — you do not rate a webcam. */
 .livestrip { margin-bottom: 18px; }
-.livestrip .rail { gap: 9px; }
-.livestrip .rail .v { width: 134px; }
-.livestrip .v-body { padding: 6px 8px 8px; }
-.livestrip .v-title { font-size: .76rem; line-height: 1.25; }
-.livestrip .v-meta, .livestrip .v-acts, .livestrip .v-dur { display: none; }
-.livestrip .v-live { left: 5px; top: 5px; font-size: .54rem; padding: 2px 5px; }
+.livestrip .rail { gap: 7px; }
+.livestrip .rail .v { width: 96px; border-radius: 9px; }
+.livestrip .v-body { padding: 4px 6px 6px; }
+.livestrip .v-title { font-size: .66rem; line-height: 1.2; -webkit-line-clamp: 2; }
+.livestrip .v-meta, .livestrip .v-acts, .livestrip .v-dur, .livestrip .v-why { display: none; }
+.livestrip .v-live { left: 4px; top: 4px; font-size: .48rem; padding: 1px 4px; gap: 3px; }
+.livestrip .v-live i { width: 4px; height: 4px; }
+.livestrip .shelf-head { margin-bottom: 6px; }
+.livestrip .shelf-head .t { font-size: .92rem; }
+.livestrip .shelf-head .s { font-size: .76rem; }
 
 /* ============================================================ listen */
 /* The Brief's own show still leads, but as a banner rather than a page. It
@@ -682,22 +711,32 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 
 /* a pool door opens in place — it does not throw you somewhere */
 .pool { margin-bottom: 4px; }
-.pool-head { display: grid; grid-template-columns: 32px 1fr auto auto; align-items: center;
-  gap: 11px; padding: 10px 2px 8px; width: 100%; }
+.pool-head { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto auto;
+  align-items: center; gap: 10px; padding: 10px 2px 8px; width: 100%; min-width: 0; }
+.pool-head > * { min-width: 0; }
 .pool-emoji { font-size: 1.25rem; text-align: center; }
 .pool-name { display: block; font-size: 1.02rem; font-weight: 600; }
 .pool-sub { display: block; font-size: .8rem; color: var(--ink-faint); margin-top: 1px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pool-body { padding: 0 0 4px; }
-.doorcard {
-  display: block; width: min(250px, 72vw); padding: 11px 12px;
+.doorbox {
+  display: flex; flex-direction: column; width: min(250px, 72vw); height: 100%;
   border-radius: var(--radius-sm); border: 1px solid var(--edge); background: var(--panel-2);
 }
+.doorcard {
+  display: block; width: 100%; flex: 1 1 auto; padding: 11px 12px 8px;
+  text-align: left; background: none; border: 0; font: inherit; color: inherit; cursor: pointer;
+}
+.door-foot { display: flex; align-items: center; gap: 8px; padding: 0 9px 8px; }
+.pool-body .rail .doorbox, .rail .doorbox { flex: 0 0 auto; }
 .doorcard .d { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
   overflow: hidden; }
 .doorcard .t { display: block; font-size: .93rem; font-weight: 600; line-height: 1.28;
   -webkit-line-clamp: 2; -webkit-box-orient: vertical; display: -webkit-box; overflow: hidden; }
 .doorcard .d { font-size: .82rem; line-height: 1.4; color: var(--ink-soft); margin-top: 4px; }
+/* a handful of articles genuinely have no short description on Wikipedia —
+   the card should close up rather than reserve a line for nothing */
+.doorcard .d:empty { display: none; }
 .doorcard img { width: 100%; aspect-ratio: 16/9; object-fit: cover;
   border-radius: 8px; margin-bottom: 9px; }
 
@@ -795,8 +834,12 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 
 .seg { display: flex; gap: 3px; padding: 3px; background: var(--panel-2);
   border: 1px solid var(--edge); border-radius: var(--pill); }
-.seg button { flex: 1; text-align: center; padding: 9px 12px; border-radius: var(--pill);
-  font-size: .88rem; font-weight: 600; color: var(--ink-faint); min-height: 40px; }
+.seg button { flex: 1; text-align: center; padding: 9px 10px; border-radius: var(--pill);
+  font-size: .84rem; font-weight: 600; color: var(--ink-faint); min-height: 40px;
+  /* three labels on a 390px phone: one line each, or the control doubles in
+     height and the first video leaves the screen */
+  white-space: nowrap; }
+@media (max-width: 400px) { .seg button { font-size: .8rem; padding: 9px 7px; } }
 .seg button.on { background: var(--panel); color: var(--accent); box-shadow: var(--shadow-1); }
 
 /* ============================================================ dock */
@@ -909,3 +952,134 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
     transition-duration: .001ms !important; scroll-behavior: auto !important;
   }
 }
+
+.sheet-note { font-size: .82rem; color: var(--ink-faint); margin: -2px 0 12px; }
+
+/* ================================================ wire header controls */
+
+/* Search is a chip now, not a band. It is the one chip with a colour of its
+   own so it reads as a verb among nouns. */
+.chip.search-chip {
+  color: var(--accent); border-color: color-mix(in srgb, var(--accent) 34%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel));
+  font-weight: 600;
+}
+.chip.search-chip.on { background: var(--accent-soft); border-color: transparent; }
+.chip.search-chip svg { width: 15px; height: 15px; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; flex: 0 0 auto; }
+
+/* Outlets: locals on the first line, the wire on the second. Smaller than a
+   topic chip — there are forty of them and they are a second-order control. */
+.chips.srcbar { gap: 6px; padding-top: 0; padding-bottom: 6px; }
+.chips.srcbar .chip {
+  font-size: .74rem; padding: 5px 11px; min-height: 30px; border-radius: var(--pill);
+  font-weight: 500;
+}
+.chips.srcbar .chip.on { font-weight: 600; }
+.chips.srcbar + .hint-bar { margin-bottom: 8px; }
+.srcbar.is-local .chip { border-color: color-mix(in srgb, var(--local) 26%, var(--edge)); }
+.srcchip.c-local { color: var(--t-local); }
+.srcchip.c-news { color: var(--t-news); }
+.srcchip.c-politics { color: var(--t-politics); }
+.srcchip.c-business { color: var(--t-business); }
+.srcchip.c-tech { color: var(--t-tech); }
+.srcchip.c-science { color: var(--t-science); }
+.srcchip.c-sports { color: var(--t-sports); }
+.srcchip.c-culture { color: var(--t-culture); }
+.srcchip.c-gaming { color: var(--t-gaming); }
+.srcchip.c-newsletters { color: var(--t-newsletters); }
+
+/* Layout switch and Focus, out where they can be found. Focus used to live
+   three taps deep in Settings, which is the same as not existing. */
+.toolrow { display: flex; align-items: center; gap: 8px; margin: 4px 0 12px; flex-wrap: wrap; }
+.toolseg { display: inline-flex; border: 1px solid var(--edge); border-radius: var(--pill);
+  overflow: hidden; background: var(--panel); }
+.toolbtn { font: inherit; font-size: .76rem; font-weight: 500; color: var(--ink-soft);
+  background: none; border: 0; padding: 7px 13px; min-height: 32px; cursor: pointer;
+  transition: background .15s ease, color .15s ease; }
+.toolseg .toolbtn + .toolbtn { border-left: 1px solid var(--edge); }
+.toolbtn:hover { background: var(--panel-hover); }
+.toolbtn.on { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.focus-btn { border: 1px solid var(--edge); border-radius: var(--pill); background: var(--panel); }
+.focus-btn.on { border-color: transparent; }
+
+/* Temperature, lake, sunset. Three numbers, one line, no card. */
+.wxstrip { display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 9px 13px; margin: 0 0 16px; border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--local) 22%, var(--edge));
+  background: color-mix(in srgb, var(--local) 6%, var(--panel)); }
+.wxstrip:hover { background: color-mix(in srgb, var(--local) 11%, var(--panel)); }
+.wx-bit { display: inline-flex; align-items: baseline; gap: 6px; }
+.wx-k { font-family: var(--mono); font-size: .6rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-faint); }
+.wx-v { font-size: .86rem; font-weight: 600; }
+.wx-go { margin-left: auto; font-size: .74rem; color: var(--local); font-weight: 600; }
+
+/* ==================================================== by-source layout */
+.srcgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); gap: 14px; }
+.srcsec { border: 1px solid var(--edge); border-radius: var(--radius-sm);
+  background: var(--panel); padding: 11px 12px 4px; }
+.srcsec.is-local { border-color: color-mix(in srgb, var(--local) 34%, transparent); }
+.srcsec-head { display: flex; align-items: baseline; gap: 8px; margin: 0 0 6px;
+  padding-bottom: 7px; border-bottom: 1px solid var(--edge); }
+.srcsec-name { font: inherit; font-size: .84rem; font-weight: 700; letter-spacing: .01em;
+  background: none; border: 0; padding: 0; cursor: pointer; color: var(--ink); }
+.srcsec-name:hover { text-decoration: underline; }
+.srcsec-name.c-local { color: var(--t-local); }
+.srcsec-name.c-news { color: var(--t-news); }
+.srcsec-name.c-politics { color: var(--t-politics); }
+.srcsec-name.c-business { color: var(--t-business); }
+.srcsec-name.c-tech { color: var(--t-tech); }
+.srcsec-name.c-science { color: var(--t-science); }
+.srcsec-name.c-sports { color: var(--t-sports); }
+.srcsec-name.c-culture { color: var(--t-culture); }
+.srcsec-name.c-gaming { color: var(--t-gaming); }
+.srcsec-name.c-newsletters { color: var(--t-newsletters); }
+.srcsec-tag { margin-left: auto; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); }
+.feed-tight .fi { padding-top: 8px; padding-bottom: 8px; }
+.feed-tight .fi-title { font-size: .9rem; line-height: 1.3; }
+
+.welcome-swipe { display: grid; gap: 5px; margin: 12px 0 0; padding-top: 12px;
+  border-top: 1px solid var(--edge); font-size: .82rem; color: var(--ink-soft); }
+.welcome-swipe em { font-style: normal; font-weight: 600; color: var(--ink);
+  font-size: .78rem; }
+.welcome-swipe b { display: inline-block; width: 1.2em; font-size: 1rem;
+  color: var(--accent); font-weight: 700; }
+
+/* The same lesson, once, on the wire itself — for everyone who tapped past
+   the intro card, and for everyone who was already here before it existed. */
+.tipbar { display: flex; align-items: center; gap: 10px; margin: 0 0 14px;
+  padding: 9px 12px; border-radius: var(--radius-sm);
+  border: 1px dashed var(--edge); background: var(--panel-2);
+  font-size: .8rem; color: var(--ink-soft); }
+.tipbar b { color: var(--ink); font-weight: 600; }
+.tipbar .x { margin-left: auto; flex: 0 0 auto; font: inherit; font-size: 1rem;
+  line-height: 1; background: none; border: 0; color: var(--ink-faint);
+  cursor: pointer; padding: 2px 4px; }
+.tipbar .x:hover { color: var(--ink); }
+
+/* One line under each tab's title: when this tab's content last changed. */
+.updated { display: inline-flex; align-items: center; gap: 5px; }
+.updated i { width: 5px; height: 5px; border-radius: 50%; background: var(--local);
+  flex: 0 0 auto; }
+.updated.is-old i { background: var(--ink-faint); }
+
+.tabstamp { display: flex; align-items: baseline; gap: 10px;
+  margin: 0 0 12px; font-family: var(--mono); font-size: .62rem;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--ink-faint); }
+/* one line: a wrapped stamp puts a right-aligned orphan under the left one,
+   which reads as a layout bug rather than a caption */
+.tabstamp-what { margin-left: auto; text-align: right; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tabstamp .updated { flex: 0 0 auto; }
+
+
+/* ==================================================== btown tv masthead */
+.tvmast { margin: 0 0 14px; }
+.tvmast-pre { font-family: var(--mono); font-size: .58rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-faint); margin: 0 0 2px; }
+.tvmast h1 { font-family: var(--serif); font-size: 1.72rem; line-height: 1;
+  letter-spacing: -.018em; margin: 0 0 5px; }
+.tvmast-sub { font-size: .82rem; line-height: 1.42; color: var(--ink-soft);
+  margin: 0; max-width: 46ch; }

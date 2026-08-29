@@ -24,6 +24,7 @@ const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon — saf
 /* Shared with pulse.html, tv.html and the games. Do not rename. */
 const PLAYER_KEY = 'btown-player-id';
 const READ_KEY = 'pulse2-read';          // { urlKey: epochSec }
+const INTENT_KEY = 'pulse2-intent';      // { urlKey: epochSec } — scrolled past
 const PULSE_SET_KEY = 'pulse2-settings'; // { hidden: { sourceId: 1 }, ... }
 const OLD_SAVED_KEY = 'pulse2-saved';
 const TV_REACT_KEY = 'btown-tv-reacts';  // { videoId: 'watched'|'skip'|'more' }
@@ -98,6 +99,15 @@ export function playerId() {
 export function needsWelcome() {
   try { return !localStorage.getItem(WELCOME_KEY); } catch (e) { return false; }
 }
+/* One-shot UI hints, keyed by name: { tipName: 1 } once dismissed. */
+const TIPS_KEY = 'allday-tips';
+export const tipDone = (name) => !!obj(read(TIPS_KEY, {}))[name];
+export function dismissTip(name) {
+  const m = obj(read(TIPS_KEY, {}));
+  m[name] = 1;
+  write(TIPS_KEY, m);
+}
+
 export function markWelcomed() {
   try { localStorage.setItem(WELCOME_KEY, String(Date.now())); } catch (e) { /* fine */ }
 }
@@ -138,6 +148,8 @@ const SETTING_DEFAULTS = {
   focus: false,      // read items disappear instead of dimming
   topic: 'all',
   localOnly: false,
+  layout: 'newest',  // 'newest' one stream, or 'sources' the by-outlet grid
+  source: '',        // one outlet only, '' for all
 };
 
 export function settings() {
@@ -183,6 +195,29 @@ export function markRead(key) {
   if (m[key]) return;
   m[key] = Math.floor(Date.now() / 1000);
   write(READ_KEY, capMap(m, READ_CAP));
+}
+
+/* --------------------------------------------------------------- passed */
+/* Headlines that scrolled off the top while you were looking at them. Pulse
+   calls this "read with intent" and dims them; the same key, so a headline
+   you scrolled past there is already grey here. */
+
+/* Cached, because hasPassed() is asked once per row: parsing a 500-entry map
+   sixty times to draw one screen is the kind of thing that makes a phone
+   feel slow for no reason. */
+let passedCache = null;
+export function passedMap() {
+  if (!passedCache) passedCache = obj(read(INTENT_KEY, {}));
+  return passedCache;
+}
+export function hasPassed(key) { return !!passedMap()[key]; }
+export function markPassed(keys) {
+  const m = passedMap();
+  let touched = false;
+  keys.forEach((k) => { if (k && !m[k]) { m[k] = Math.floor(Date.now() / 1000); touched = true; } });
+  if (!touched) return;
+  passedCache = capMap(m, READ_CAP);
+  write(INTENT_KEY, passedCache);
 }
 
 /* ---------------------------------------------------------------- saved */
