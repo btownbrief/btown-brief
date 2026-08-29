@@ -36,6 +36,7 @@ const state = {
   q: '',
   qOpen: false,
   wx: null,
+  nl: null,
   byKey: new Map(),
 };
 
@@ -57,6 +58,7 @@ export function mount(root) {
   });
   data.load('top', (json) => { state.top = json; if (state.pulse) render(); }, () => {});
   data.load('weather', (json) => { state.wx = json; if (state.pulse) render(); }, () => {});
+  data.load('newsletter', (json) => { state.nl = json; if (state.pulse) render(); }, () => {});
 
   bindGestures(root, bindFeed(root, (k) => state.byKey.get(k), () => render()));
 }
@@ -65,8 +67,68 @@ export function activate() {}
 export function refresh() { if (state.pulse) render(); }
 export function deactivate() { app.closePeek(); }
 
+/* THE BRIEF'S OWN STORIES.
+   In local mode the picks stop being the machine's and become his. Beehiiv
+   publishes one RSS item per edition, titled "Friday, August 28th", so the
+   wire only ever saw a date; newsletter_picks.py pulls the stories back out,
+   each with the paragraph he wrote about why it matters. Every other pick on
+   this site carries a machine-written reason. These carry his.
+
+   The newsletter lands Monday and Friday. Showing one edition whole would
+   leave Tuesday through Thursday looking like nothing had happened, so today
+   is a window over the last two editions that turns over each day — the same
+   stories all week, a different one leading every morning, and paging back
+   walks whole editions. */
+const NL_DAYS = 12;
+const NL_TODAY = 9;
+
+function newsletterEditions() {
+  const eds = (state.nl && Array.isArray(state.nl.editions) ? state.nl.editions : [])
+    .filter((e) => e && Array.isArray(e.stories) && e.stories.length);
+  if (!eds.length) return [];
+
+  const asPick = (st, ed) => ({
+    t: st.t,
+    u: st.u,
+    short: st.s,
+    local: 1,
+    why: st.w || '',
+    from: ed.edition,
+  });
+
+  const now = Date.now() / 1000;
+  const fresh = eds.filter((e) => !e.d || now - e.d < NL_DAYS * 86400).slice(0, 2);
+  const pool = [];
+  fresh.forEach((e) => e.stories.forEach((st) => pool.push(asPick(st, e))));
+  /* the ones he wrote a paragraph about lead; quick hits fill in behind */
+  pool.sort((a, b) => (b.why ? 1 : 0) - (a.why ? 1 : 0));
+
+  const list = [];
+  if (pool.length) {
+    const day = Math.floor(Date.now() / 86400000);
+    const off = pool.length ? day % pool.length : 0;
+    const today = [];
+    for (let i = 0; i < Math.min(NL_TODAY, pool.length); i++) {
+      today.push(pool[(off + i) % pool.length]);
+    }
+    list.push({ generated: new Date((fresh[0].d || now) * 1000).toISOString(),
+                picks: today, nl: true });
+  }
+  eds.forEach((e) => list.push({
+    generated: new Date((e.d || now) * 1000).toISOString(),
+    picks: e.stories.map((st) => asPick(st, e)),
+    nl: true,
+    label: e.edition,
+  }));
+  return list;
+}
+
 /* every edition we can show: today, then the archive */
 function editions() {
+  if (store.settings().localOnly) {
+    const nl = newsletterEditions();
+    if (nl.length) return nl;
+  }
   const t = state.top;
   if (!t) return [];
   const list = [{ generated: t.generated, picks: t.picks }];
@@ -186,15 +248,22 @@ function render() {
       root.scrollTo({ top: 0 });
     }));
   });
-  root.appendChild(chips);
+  /* Chips and the view switch pin together under the masthead, the way the
+     Pulse page keeps its controls in reach. Scrolling a 2,000-item wire and
+     then having to scroll all the way back to change topic is the single
+     most annoying thing a feed can do. The outlets and the weather are
+     browsing, not steering — they scroll away. */
+  const band = el('div', 'ctlband');
+  band.appendChild(chips);
   scrollHint(chips);
+  renderTools(band, set);
+  root.appendChild(band);
 
   if (state.qOpen || state.q) root.appendChild(searchBox(root));
 
   if (set.topic === 'popular') { renderPopular(root); return; }
 
   renderSourceBars(root, all, map, set);
-  renderTools(root, set);
   renderWeather(root);
 
   if (!shown.length) {
@@ -422,7 +491,7 @@ function renderPicks(root, map) {
      a national headline was the one thing on the page still arguing with the
      switch. Some editions have no local pick at all — then the carousel steps
      aside rather than showing an empty shelf. */
-  const picks = localOnly
+  const picks = localOnly && !edition.nl
     ? (edition.picks || []).filter((p) => p && p.local)
     : (edition.picks || []);
   if (localOnly && !picks.length) {
@@ -453,10 +522,15 @@ function renderPicks(root, map) {
   nav.append(back, fwd);
 
   heading(root, {
-    eyebrow: idx === 0 ? 'The picks' : 'The picks · earlier',
-    title: idx === 0 ? 'What matters today' : 'What mattered then',
-    sub: '<span class="count">Chosen ' + esc(ago(stamp)) +
-      (localOnly ? ' · ' + picks.length + ' from here' : '') +
+    eyebrow: edition.nl ? 'From the Brief' : (idx === 0 ? 'The picks' : 'The picks · earlier'),
+    title: edition.label ? esc(edition.label)
+      : idx === 0 ? 'What matters today' : 'What mattered then',
+    sub: '<span class="count">' + (edition.nl
+      ? (edition.label
+          ? picks.length + ' stories from that edition'
+          : picks.length + ' from the last two editions · written by hand')
+      : 'Chosen ' + esc(ago(stamp)) +
+        (localOnly ? ' · ' + picks.length + ' from here' : '')) +
       (list.length > 1 ? ' · ' + (idx + 1) + ' of ' + list.length + ' editions' : '') + '</span>',
     right: list.length > 1 ? nav : null,
   });
@@ -483,7 +557,10 @@ function renderPicks(root, map) {
         '<span class="fi-src">' + esc(p.short || '') + '</span>' +
       '</span>' +
       '<span class="pick-title">' + esc(p.t) + '</span>' +
-      (p.why ? '<span class="pick-why">' + esc(p.why) + '</span>' : '');
+      (p.why ? '<span class="pick-why">' + esc(p.why) + '</span>' : '') +
+      /* which edition it ran in — the reason above it is his, and the
+         attribution is what makes that legible */
+      (p.from ? '<span class="pick-from">' + esc(p.from) + '</span>' : '');
     hit.addEventListener('click', () => store.markRead(p.u));
     card.appendChild(hit);
 

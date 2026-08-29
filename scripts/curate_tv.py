@@ -857,7 +857,13 @@ def publish_playlist(video_ids, edition, replace_id=None, token=None, http=None)
             failures = 0
         except urllib.error.HTTPError as exc:
             # one private/deleted video refuses insertion — skip; three in a
-            # row means quota or auth is gone — stop burning the budget
+            # row means quota or auth is gone — stop burning the budget.
+            # 409 is a conflict, not a refusal: the video is already on the
+            # playlist, which is the state we wanted anyway.
+            if exc.code == 409:
+                inserted += 1
+                failures = 0
+                continue
             failures += 1
             print(f"curate_tv: playlist insert {vid} -> HTTP {exc.code}",
                   file=sys.stderr)
@@ -865,6 +871,27 @@ def publish_playlist(video_ids, edition, replace_id=None, token=None, http=None)
                 print("curate_tv: playlist publish aborted after 3 straight failures",
                       file=sys.stderr)
                 break
+        except (urllib.error.URLError, OSError) as exc:
+            # A dropped connection used to escape this loop entirely, so a
+            # single blip threw away a playlist that already had forty videos
+            # in it — the 2026-08-28 edition shipped with no Play on TV
+            # button for exactly that reason. One retry, then treat it as a
+            # per-video miss like any other.
+            print(f"curate_tv: playlist insert {vid} -> {exc}; retrying once",
+                  file=sys.stderr)
+            try:
+                http(f"{API}/playlistItems?part=snippet", headers=auth,
+                     data=body, method="POST")
+                inserted += 1
+                failures = 0
+            except Exception as exc2:  # noqa: BLE001
+                failures += 1
+                print(f"curate_tv: playlist insert {vid} failed again ({exc2})",
+                      file=sys.stderr)
+                if failures >= 3:
+                    print("curate_tv: playlist publish aborted after 3 straight failures",
+                          file=sys.stderr)
+                    break
     if inserted == 0:
         print("curate_tv: playlist publish inserted nothing — removing the empty one")
         delete_playlist(new_id, token, http)
@@ -1332,6 +1359,33 @@ def selftest():
     posts = [json.loads(c[2])["snippet"]["resourceId"]["videoId"] for c in calls if c[0] == "POST" and "/playlistItems" in c[1]]
     assert posts == ["vidA0000001", "vidB0000002", "badvid00000"], posts
     assert json.loads(calls[0][2])["status"]["privacyStatus"] == "public"
+
+    # a dropped connection mid-run must not throw away a playlist that is
+    # already half full — 2026-08-28 shipped with no button for exactly that
+    drops = {"n": 0}
+    def flaky_http(url, headers=None, data=None, method=None, timeout=30):
+        if method == "POST" and "/playlists?" in url:
+            return {"id": "PLflaky"}
+        if method == "POST" and b"vid00000003" in data and drops["n"] == 0:
+            drops["n"] = 1
+            raise urllib.error.URLError(OSError(104, "Connection reset by peer"))
+        return {}
+    pid = publish_playlist([f"vid{i:08d}" for i in range(6)], "2026-08-23",
+                           token="tok", http=flaky_http)
+    assert pid == "PLflaky", pid          # survived, and the retry landed
+    assert drops["n"] == 1
+
+    # 409 means the video is already on the playlist — the state we wanted,
+    # not a refusal, and it must not count toward the three-strikes abort
+    def conflict_http(url, headers=None, data=None, method=None, timeout=30):
+        if method == "POST" and "/playlists?" in url:
+            return {"id": "PLconf"}
+        if method == "POST" and "/playlistItems" in url:
+            raise urllib.error.HTTPError(url, 409, "conflict", {}, None)
+        return {}
+    pid = publish_playlist([f"vid{i:08d}" for i in range(5)], "2026-08-23",
+                           token="tok", http=conflict_http)
+    assert pid == "PLconf", pid
     calls.clear()
     def dead_http(url, headers=None, data=None, method=None, timeout=30):
         calls.append((method or "GET", url))

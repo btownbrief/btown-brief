@@ -3,6 +3,7 @@ name: Refresh community data
 # Pulls fresh data for the site on a schedule:
 #  - latest r/GoodBurlington posts  -> data/reddit.json (scripts/refresh_goodburlington.py)
 #  - latest Burlington Brief issue  -> data/newsletter.json
+#  - the stories inside each issue  -> data/newsletter-picks.json
 #
 # r/GoodBurlington fetch was direct-Reddit-only and had been silently broken
 # since Reddit started 403ing GitHub runners (data/reddit.json sat at
@@ -138,6 +139,15 @@ jobs:
               print(f'newsletter fetch failed, keeping last good file: {e}', file=sys.stderr)
           EOF
 
+      # The same Beehiiv feed the step above reads, taken apart into the
+      # individual local stories inside each edition — headline, outlet and
+      # the paragraph Stephen wrote about why it matters. All Day's Local
+      # picks are built from this. Fails soft: on a bad parse the script
+      # leaves the previous file alone and exits non-zero, which we swallow
+      # so one flaky fetch cannot fail the whole refresh.
+      - name: Pull the newsletter's own stories
+        run: python3 scripts/newsletter_picks.py || echo "newsletter picks skipped this run"
+
       - name: Build games ticker feed
         # After the newsletter fetch so events-week.json is current. Combines
         # two months of headlines + this week's picks + Upcoming events into
@@ -148,7 +158,7 @@ jobs:
         run: |
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/reddit.json data/newsletter.json data/events-week.json data/ticker.json
+          git add data/reddit.json data/newsletter.json data/events-week.json data/ticker.json data/newsletter-picks.json
           if git diff --cached --quiet; then
             echo "No data changes."
           else
