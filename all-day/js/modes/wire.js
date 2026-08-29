@@ -349,7 +349,7 @@ function renderWeather(root) {
   strip.innerHTML = bits.map(([k, v]) =>
     '<span class="wx-bit"><span class="wx-k">' + esc(k) + '</span>' +
     '<span class="wx-v">' + esc(v) + '</span></span>').join('') +
-    '<span class="wx-go">Full forecast →</span>';
+    '<span class="wx-go">Forecast →</span>';
   root.appendChild(strip);
 }
 
