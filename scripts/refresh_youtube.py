@@ -98,6 +98,21 @@ VT_QUERY_POOL = [
     "Vermont foliage",
 ]
 VT_ROTATE = 2
+# "Vermont" is also a suburb of Melbourne, so Australian rules football fixtures
+# ("Rowville vs Vermont", Vermont South) match VT_RE perfectly well and are not
+# remotely local. Broadening the live search surfaced one immediately. Cheap
+# deny list, checked alongside VT_RE everywhere relevance is decided.
+NOT_VT_RE = re.compile(
+    r"\bfnl\b|\bafl\b|\bvfl\b|netball|rowville|vermont south"
+    r"|eastern football|aussie rules|\bnsw\b|melbourne",
+    re.I)
+
+
+def is_vermont(text):
+    """Ours, not Melbourne's."""
+    return bool(VT_RE.search(text)) and not NOT_VT_RE.search(text)
+
+
 VT_RE = re.compile(
     r"vermont|burlington|champlain|montpelier|stowe|winooski|green mountain"
     r"|church street|queen city|middlebury|brattleboro|rutland|killington"
@@ -435,7 +450,7 @@ def fetch_vermont(key, now_ts, exclude):
             channel = html_mod.unescape(snippet.get("channelTitle") or "")
             if not vid or vid in seen or not title:
                 continue
-            if not VT_RE.search(title + " " + channel):
+            if not is_vermont(title + " " + channel):
                 continue  # search drifts; only keep the visibly-Vermont ones
             when = None
             published = snippet.get("publishedAt")
@@ -543,7 +558,7 @@ def fetch_live_now(key, now_ts, exclude):
             channel = html.unescape((snippet.get("channelTitle") or "").strip())
             if not vid or vid in seen or not title:
                 continue
-            if not VT_RE.search(f"{title} {channel}"):
+            if not is_vermont(f"{title} {channel}"):
                 continue
             if title_key(title) in titles:
                 continue
@@ -605,7 +620,7 @@ def update_channel_suggestions(key, now_ts, roster_ids, prior):
             title = html.unescape((snippet.get("title") or "").strip())
             if not cid or cid in roster_ids or cid in seen:
                 continue
-            if not VT_RE.search(f"{title} {channel}"):
+            if not is_vermont(f"{title} {channel}"):
                 continue
             seen.add(cid)
             fresh.append({"id": cid, "ch": channel[:60], "t": title[:200],
