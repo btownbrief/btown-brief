@@ -22,13 +22,27 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, agoShort, dayLabel, rail, heading, shelfHead, seg, voteBtn, paintVote, starBtn, tabStamp, stampOf, ICON } from './../ui.js';
+import { el, esc, agoShort, dayLabel, rail, heading, shelfHead, seg, voteBtn, paintVote, starBtn, tabStamp, stampOf, localSwitch, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
 
 const WIRE_PAGE = 24;
 const EDITIONS_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/btown-tv/data/tv-editions.json';
 
 const LOCAL_SHELF = 'Burlington & Vermont';
+
+/* A video is local if the curator marked it so (`vt`), or it came from a
+   channel filed under the Vermont shelf (`g: 'vt'`), or it sits on the
+   Burlington & Vermont shelf. Live cams are local by definition — the strip
+   is titled "Burlington and Vermont, always on". */
+const isLocalVideo = (v) => !!v && (!!v.vt || v.g === 'vt' || v.shelf === LOCAL_SHELF);
+
+function localShelves(shelves) {
+  return (Array.isArray(shelves) ? shelves : []).map((s) => {
+    if (!s || !Array.isArray(s.items)) return null;
+    const items = s.title === LOCAL_SHELF ? s.items : s.items.filter(isLocalVideo);
+    return items.length ? { ...s, items } : null;
+  }).filter(Boolean);
+}
 
 /* The order the data arrives in is the order the curator builds it, which
    leads with the longest videos. On a phone that buries everything else, so
@@ -63,12 +77,31 @@ export function mount(root) {
 }
 
 export function activate() {}
+/* the Local switch is a whole-app mode; a tab that mounted before it flipped
+   has to redraw when you come back to it */
+export function refresh() { if (state.tv || state.yt) render(); }
 export function deactivate() {}
 
 function render() {
   const root = state.root;
   if (!state.tv && !state.yt) return;
   root.innerHTML = '';
+
+  const set = store.settings();
+  const tvAll = [];
+  (Array.isArray(state.tv?.shelves) ? state.tv.shelves : [])
+    .forEach((sh) => (sh?.items || []).forEach((v) => tvAll.push(v)));
+  if (state.tv?.pick) tvAll.push(state.tv.pick);
+  const wireAll = (state.yt?.videos || []);
+  const pool = state.view === 'wire' ? wireAll : tvAll;
+  localSwitch(root, {
+    on: set.localOnly,
+    local: pool.filter(isLocalVideo).length + (state.view === 'wire' ? 0 : (state.tv?.live || []).length),
+    all: pool.length + (state.view === 'wire' ? 0 : (state.tv?.live || []).length),
+    noun: 'videos',
+    onChange(on) { app.setLocal(on); root.scrollTo({ top: 0 }); },
+  });
+
   tabStamp(root, stampOf(state.tv?.generated) || stampOf(state.yt?.generated),
     state.view === 'wire' ? 'the youtube wire, every 3 hours' : 'tonight’s edition, built each morning');
 
@@ -78,8 +111,13 @@ function render() {
   mast.innerHTML =
     '<p class="tvmast-pre">Btown Brief presents</p>' +
     '<h1>BTown TV</h1>' +
-    '<p class="tvmast-sub">One curated page of video for Burlington, every evening. ' +
-    'A pick for tonight and six shelves — around fifty videos, each with a reason.</p>';
+    /* the promise has to match what is actually on the screen — in local mode
+       there is no nightly pick and one shelf, not six */
+    '<p class="tvmast-sub">' + (set.localOnly
+      ? 'Everything filmed here, made here or about here, pulled out of tonight’s edition ' +
+        'and the live cameras — each with a reason.'
+      : 'One curated page of video for Burlington, every evening. A pick for tonight and ' +
+        'six shelves — around fifty videos, each with a reason.') + '</p>';
   root.appendChild(mast);
 
   root.appendChild(seg([
@@ -106,8 +144,14 @@ function renderTonight(root) {
   const tv = state.tv;
   if (!tv) { root.appendChild(el('p', 'empty', 'Tonight’s edition isn’t up yet.')); return; }
 
+  const localOnly = store.settings().localOnly;
+  const shelves = localOnly ? localShelves(tv.shelves) : (Array.isArray(tv.shelves) ? tv.shelves : []);
+
   const pick = tv.pick;
-  if (pick && typeof pick === 'object' && app.isVideoId(pick.id)) {
+  /* the nightly pick is usually a documentary from anywhere; in local mode it
+     only leads if it is actually from here */
+  if (pick && typeof pick === 'object' && app.isVideoId(pick.id) &&
+      (!localOnly || isLocalVideo(pick))) {
     const hero = el('button', 'hero');
     hero.dataset.k = 'yt:' + pick.id;
     hero.innerHTML =
@@ -143,7 +187,13 @@ function renderTonight(root) {
      one glance at what is happening outside right now, then the shelves. */
   liveStrip();
 
-  orderShelves(tv.shelves).forEach((s) => {
+  if (localOnly && !shelves.length) {
+    root.appendChild(el('p', 'empty',
+      'Nothing filmed here made tonight’s edition. The cameras above are still running, ' +
+      'and Past picks has the last two weeks.'));
+  }
+
+  orderShelves(shelves).forEach((s) => {
     shelfHead(root, s.title, s.sub, s.title === LOCAL_SHELF ? pastLocalBtn() : null);
     const { track, sync } = rail(root, { label: 'videos' });
     s.items.forEach((v) => { if (v && app.isVideoId(v.id)) track.appendChild(videoCard(v)); });
@@ -239,11 +289,14 @@ function renderPast(root) {
   state.past.forEach((ed) => {
     if (!ed || !ed.edition) return;
     shelfHead(root, dayLabel(ed.generated || ed.edition), ed.pick?.t || ed.edition);
+    const localOnly = store.settings().localOnly;
     const items = [];
-    if (ed.pick && app.isVideoId(ed.pick.id)) items.push(ed.pick);
+    if (ed.pick && app.isVideoId(ed.pick.id) && (!localOnly || isLocalVideo(ed.pick))) items.push(ed.pick);
     (Array.isArray(ed.shelves) ? ed.shelves : []).forEach((s) => {
       (Array.isArray(s?.items) ? s.items : []).forEach((v) => {
-        if (v && app.isVideoId(v.id)) items.push(v);
+        if (!v || !app.isVideoId(v.id)) return;
+        if (localOnly && !(isLocalVideo(v) || s?.title === LOCAL_SHELF)) return;
+        items.push(v);
       });
     });
     if (!items.length) return;
@@ -264,7 +317,9 @@ function renderPast(root) {
 /* ------------------------------------------------------------ the wire */
 
 function renderWire(root) {
-  const vids = (state.yt?.videos || []).filter((v) => v && app.isVideoId(v.id));
+  const localOnly = store.settings().localOnly;
+  const vids = (state.yt?.videos || [])
+    .filter((v) => v && app.isVideoId(v.id) && (!localOnly || isLocalVideo(v)));
   if (!vids.length) {
     root.appendChild(el('p', 'empty', 'The YouTube wire isn’t answering right now.'));
     return;
@@ -272,7 +327,9 @@ function renderWire(root) {
   heading(root, {
     eyebrow: 'Everything new',
     title: 'The firehose, newest first',
-    sub: '<span class="count">' + vids.length + ' videos from the channels we follow · nothing curated</span>',
+    sub: '<span class="count">' + vids.length + (localOnly
+      ? ' from Vermont channels · nothing curated</span>'
+      : ' videos from the channels we follow · nothing curated</span>'),
   });
   const grid = el('div', 'vgrid');
   const slice = vids.slice(0, state.shown);

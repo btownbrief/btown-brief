@@ -35,6 +35,9 @@
   --accent-soft: rgba(200, 126, 18, .13);
   --local: #16704E;
   --local-soft: rgba(22, 112, 78, .07);
+  /* text that sits ON --local as a fill — flips with the theme, because dark
+     mode's --local is a light mint and white on mint is unreadable */
+  --local-ink: #FFFFFF;
   --good: #16704E;
   --warn: #A33B2A;
 
@@ -84,6 +87,7 @@
     --accent-soft: rgba(232, 163, 61, .17);
     --local: #6FD79E;
     --local-soft: rgba(111, 215, 158, .075);
+    --local-ink: #06251A;
     --good: #6FD79E;
     --warn: #F08A72;
     --t-local: #6FD79E;   --t-news: #E8A33D;      --t-politics: #F08A72;
@@ -121,6 +125,7 @@
   --accent-soft: rgba(232, 163, 61, .17);
   --local: #6FD79E;
   --local-soft: rgba(111, 215, 158, .075);
+  --local-ink: #06251A;
   --good: #6FD79E;
   --warn: #F08A72;
   --rail-track: #2C3134;
@@ -569,6 +574,9 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
    every time, and this tab is for browsing video, not reading titles. */
 .shelf-head { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; margin: 2px 0 9px; }
 .shelf-head.has-more { flex-wrap: nowrap; }
+/* the title keeps its line and the subtitle gives way — a two-line shelf name
+   beside a button reads as a wrap, not a heading */
+.shelf-head.has-more .t { white-space: nowrap; flex: 0 0 auto; }
 .shelf-head.has-more .s { flex: 1 1 auto; min-width: 0; overflow: hidden;
   text-overflow: ellipsis; white-space: nowrap; }
 .shelf-more { flex: 0 0 auto; align-self: center; font: inherit; font-size: .74rem;
@@ -1090,3 +1098,57 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   letter-spacing: -.018em; margin: 0 0 5px; }
 .tvmast-sub { font-size: .82rem; line-height: 1.42; color: var(--ink-soft);
   margin: 0; max-width: 46ch; }
+
+/* ===================================================== the local switch */
+/* The one control the whole app is about. Full width, first thing on every
+   tab, and green enough that you find it without reading it. */
+.localsw { margin: 0 0 14px; }
+
+.localsw-bar {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px;
+  border-radius: var(--pill); background: var(--panel-2);
+  border: 1px solid var(--edge);
+  transition: background .2s ease, border-color .2s ease;
+}
+.localsw-half {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 40px; padding: 8px 10px; border: 0; border-radius: var(--pill);
+  font: inherit; font-size: .92rem; font-weight: 600; letter-spacing: -.005em;
+  color: var(--ink-faint); background: none; cursor: pointer;
+  transition: background .18s ease, color .18s ease, box-shadow .18s ease;
+}
+.localsw-half:hover { color: var(--ink); }
+.localsw-half.on { background: var(--panel); color: var(--ink); box-shadow: var(--shadow-1); }
+
+/* the leaf is the recognisable part — it stays coloured even when Local is
+   the half you are NOT on, so the control reads as "local lives here" */
+.localsw-leaf { font-size: 1.02rem; line-height: 1; filter: saturate(1.1); }
+
+/* switched on, the whole control commits to it */
+.localsw.is-on .localsw-bar {
+  background: color-mix(in srgb, var(--local) 12%, var(--panel-2));
+  border-color: color-mix(in srgb, var(--local) 34%, transparent);
+}
+.localsw.is-on .localsw-half.on {
+  background: var(--local); color: var(--local-ink);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--local) 40%, transparent);
+}
+.localsw.is-on .localsw-half:not(.on) { color: var(--local); }
+/* the leaf reads as a silhouette on the deep-green fill; in dark mode the
+   fill is a light mint and it needs no help */
+.localsw.is-on .localsw-half.on .localsw-leaf { filter: brightness(1.55) saturate(1.3); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .localsw.is-on .localsw-half.on .localsw-leaf { filter: none; }
+}
+:root[data-theme="dark"] .localsw.is-on .localsw-half.on .localsw-leaf { filter: none; }
+
+.localsw-note { margin: 7px 2px 0; font-size: .76rem; color: var(--ink-faint);
+  text-align: center; }
+.localsw-note b { color: var(--ink-soft); font-weight: 600;
+  font-variant-numeric: tabular-nums; }
+.localsw.is-on .localsw-note b { color: var(--local); }
+.localsw-of { opacity: .7; }
+
+@media (prefers-reduced-motion: reduce) {
+  .localsw-bar, .localsw-half { transition: none; }
+}

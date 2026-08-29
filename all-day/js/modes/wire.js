@@ -22,7 +22,7 @@ import * as data from './../wire.js';
 import * as app from './../app.js';
 import { bindGestures } from './../gestures.js';
 import { el, esc, safeHref, ago, rail, chip, heading, scrollHint, voteBtn, paintVote, starBtn,
-  tipBar, tabStamp, stampOf, ICON } from './../ui.js';
+  tipBar, tabStamp, stampOf, localSwitch, ICON } from './../ui.js';
 import { feedRow, bindFeed, hydrateVotes, watchPassed, keyOf, isLocalSource } from './../rows.js';
 
 const PAGE = 60;
@@ -123,17 +123,26 @@ function render() {
   state.byKey = new Map(all.map((it) => [keyOf(it), { it, src: map[it.s] }]));
 
   root.innerHTML = '';
+
+  /* how many headlines the other mode would show, so the switch can say what
+     it costs you before you press it */
+  const localCount = all.filter((it) => isLocalSource(map[it.s])).length;
+  localSwitch(root, {
+    on: set.localOnly,
+    local: localCount,
+    all: all.length,
+    noun: 'headlines',
+    onChange(on) {
+      app.setLocal(on);
+      state.shown = PAGE;
+      root.scrollTo({ top: 0 });
+    },
+  });
+
   tabStamp(root, stampOf(state.pulse.generated), 'the wire, every 20 minutes');
   renderPicks(root, map);
 
   const sourceCount = new Set(shown.map((it) => it.s)).size;
-
-  const localBtn = chip(
-    set.localOnly ? '✓ Local only' : 'View local only',
-    set.localOnly,
-    () => { store.setSetting('localOnly', !set.localOnly); state.shown = PAGE; render(); root.scrollTo({ top: 0 }); },
-    'local-switch'
-  );
 
   const only = set.source && map[set.source];
   heading(root, {
@@ -145,7 +154,6 @@ function render() {
       : (set.localOnly ? 'Burlington only' : 'Everything, newest first'),
     sub: '<span class="count">' + shown.length.toLocaleString() + ' headlines from ' +
       sourceCount + ' source' + (sourceCount === 1 ? '' : 's') + '</span>',
-    right: localBtn,
   });
 
   /* The chip row leads with search. A full-width search box cost a whole
@@ -406,8 +414,27 @@ function renderPicks(root, map) {
   const list = editions();
   if (!list.length) return;
   const idx = Math.min(state.edition, list.length - 1);
+  const localOnly = store.settings().localOnly;
   const edition = list[idx];
   const stamp = Math.floor(new Date(edition.generated).getTime() / 1000);
+
+  /* In local mode the picks narrow too. Leading the Burlington-only wire with
+     a national headline was the one thing on the page still arguing with the
+     switch. Some editions have no local pick at all — then the carousel steps
+     aside rather than showing an empty shelf. */
+  const picks = localOnly
+    ? (edition.picks || []).filter((p) => p && p.local)
+    : (edition.picks || []);
+  if (localOnly && !picks.length) {
+    heading(root, {
+      eyebrow: 'The picks',
+      title: 'No local pick in this edition',
+      sub: '<span class="count">The picks are chosen three times a day from the whole wire. ' +
+        'Everything below is still Burlington.</span>',
+      right: list.length > 1 ? null : null,
+    });
+    return;
+  }
 
   const nav = el('div', 'picks-when');
   const back = el('button', 'iconbtn', ICON.chev);
@@ -429,13 +456,14 @@ function renderPicks(root, map) {
     eyebrow: idx === 0 ? 'The picks' : 'The picks · earlier',
     title: idx === 0 ? 'What matters today' : 'What mattered then',
     sub: '<span class="count">Chosen ' + esc(ago(stamp)) +
+      (localOnly ? ' · ' + picks.length + ' from here' : '') +
       (list.length > 1 ? ' · ' + (idx + 1) + ' of ' + list.length + ' editions' : '') + '</span>',
     right: list.length > 1 ? nav : null,
   });
 
   const { track, sync } = rail(root, { label: 'picks' });
   const keys = [];
-  edition.picks.forEach((p) => {
+  picks.forEach((p) => {
     if (!p || !p.t) return;
     /* The picks are the most-argued-with thing on the page and were the one
        card with no way to argue. A vote button cannot live inside an anchor,

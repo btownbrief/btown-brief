@@ -60,6 +60,7 @@ function route() {
 
   const first = !mounted[tab];
   if (first) { mounted[tab] = true; registry[tab]?.mount?.(panel); }
+  else if (stale[tab]) { delete stale[tab]; registry[tab]?.refresh?.(); }
   panel.hidden = false;
 
   document.querySelectorAll('.tabbar button').forEach((b) => {
@@ -86,6 +87,18 @@ export const activeTab = () => active;
    calls activate(), which for most tabs is deliberately empty so that a plain
    tab switch does not throw away scroll position and re-render. */
 export function refresh() { registry[active]?.refresh?.(); }
+
+/* A tab that mounted earlier does not re-render when you come back to it —
+   that is deliberate, it keeps your scroll position. But the Local switch is
+   one shared mode across all five tabs, so flipping it has to reach the four
+   you cannot see. Mark them; route() redraws on the way in. */
+const stale = Object.create(null);
+
+export function setLocal(on) {
+  store.setSetting('localOnly', !!on);
+  Object.keys(mounted).forEach((t) => { if (t !== active) stale[t] = true; });
+  refresh();
+}
 
 /* ----------------------------------------------------------------- chrome */
 

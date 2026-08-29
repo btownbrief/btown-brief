@@ -20,12 +20,12 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, safeHref, agoShort, shelfHead, seg, starBtn, voteBtn, paintVote, tabStamp, stampOf, ICON } from './../ui.js';
+import { el, esc, safeHref, agoShort, shelfHead, starBtn, voteBtn, paintVote, tabStamp, stampOf, localSwitch, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
 
 const SHOW_URL = 'https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp';
 const PREVIEW = 4;      // newest episodes shown under every show, unasked
-const state = { root: null, pulse: null, open: Object.create(null), scope: 'local' };
+const state = { root: null, pulse: null, open: Object.create(null) };
 
 export function mount(root) {
   state.root = root;
@@ -70,6 +70,10 @@ function render() {
   if (root.querySelector('.l-list')) return renderList();
 
   root.innerHTML = '';
+  /* The switch sits above everything, but the feature card and the Spotify
+     iframe below are built exactly once and must never be torn down — so the
+     switch gets a stable slot that renderList() repaints into. */
+  root.appendChild(el('div', 'localsw-slot'));
   tabStamp(root, stampOf(state.pulse?.generated), 'episodes, every 20 minutes');
   const feat = el('section', 'card feature');
   feat.innerHTML =
@@ -124,21 +128,34 @@ function render() {
 function renderList() {
   const list = state.root.querySelector('.l-list');
   if (!list) return;
+  const set = store.settings();
   const shows = build();
-  const half = shows.filter((s) => (state.scope === 'local') === s.local);
+  /* "Everything" here means every show, the Vermont ones included and still
+     ordered by who published last — not "the national ones", which is what
+     the old either/or segment meant and which no other tab means. */
+  const local = shows.filter((s) => s.local);
+  const half = set.localOnly ? local : shows;
   const eps = half.reduce((n, s) => n + s.eps.length, 0);
-  list.innerHTML = '';
 
-  list.appendChild(seg([['local', 'Vermont shows'], ['world', 'National']],
-    state.scope === 'local' ? 'local' : 'world',
-    (v) => { state.scope = v; renderList(); }));
-  list.appendChild(el('div', null, '<div style="height:16px"></div>'));
+  const slot = state.root.querySelector('.localsw-slot');
+  if (slot) {
+    slot.innerHTML = '';
+    localSwitch(slot, {
+      on: set.localOnly,
+      local: local.length,
+      all: shows.length,
+      noun: 'shows',
+      onChange(on) { app.setLocal(on); state.root.scrollTo({ top: 0 }); },
+    });
+  }
+
+  list.innerHTML = '';
 
   const resume = resumeRow(shows);
   if (resume) list.appendChild(resume);
 
   shelfHead(list,
-    state.scope === 'local' ? 'Made in Vermont' : 'National shows',
+    set.localOnly ? 'Made in Vermont' : 'Every show we follow',
     half.length + ' show' + (half.length === 1 ? '' : 's') + ' · ' + eps.toLocaleString() + ' episodes');
 
   const grid = el('div', 'shows');
