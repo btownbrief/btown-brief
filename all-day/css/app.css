@@ -38,6 +38,8 @@
   --good: #16704E;
   --warn: #A33B2A;
 
+  --rail-track: #DCDCD6;
+  --rail-thumb: #9A9A92;
   --shadow-1: 0 1px 2px rgba(20, 16, 8, .06), 0 2px 8px rgba(20, 16, 8, .05);
   --shadow-2: 0 8px 30px rgba(20, 16, 8, .14);
   --scrim: rgba(28, 24, 16, .42);
@@ -80,6 +82,8 @@
     --local-soft: rgba(111, 215, 158, .14);
     --good: #6FD79E;
     --warn: #F08A72;
+    --rail-track: #2C3134;
+    --rail-thumb: #7E868A;
     --shadow-1: none;
     --shadow-2: 0 12px 40px rgba(0, 0, 0, .55);
     --scrim: rgba(0, 0, 0, .66);
@@ -107,6 +111,8 @@
   --local-soft: rgba(111, 215, 158, .14);
   --good: #6FD79E;
   --warn: #F08A72;
+  --rail-track: #2C3134;
+  --rail-thumb: #7E868A;
   --shadow-1: none;
   --shadow-2: 0 12px 40px rgba(0, 0, 0, .55);
   --scrim: rgba(0, 0, 0, .66);
@@ -271,28 +277,37 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
    gets dots (one per PAGE, not per card) and a live progress bar. */
 .rail-wrap { position: relative; margin-bottom: 8px; }
 .rail {
-  display: grid; grid-auto-flow: column; gap: 11px; grid-auto-columns: 168px;
+  display: grid; grid-auto-flow: column; gap: 11px;
+  /* NO grid-auto-columns here: each card type sets its own width, and a
+     blanket column width makes wider cards overlap each other. */
   overflow-x: auto; scroll-snap-type: x mandatory;
   padding-bottom: 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
   scroll-padding-left: 0;
 }
 .rail::-webkit-scrollbar { display: none; }
 .rail > * { scroll-snap-align: start; }
-.rail-nav { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 2px 0 4px; }
-.rail-dots { display: flex; gap: 6px; align-items: center; }
-.rail-dots i {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--edge);
-  transition: width .2s ease, background .2s ease;
+/* The affordance under every rail: a full-width track with a grey thumb that
+   is ALWAYS drawn, then page dots centred beneath it. Always-drawn matters —
+   a bar that only appears once you already know to scroll teaches nobody. On
+   a rail short enough to fit, the thumb simply fills the track, which is a
+   true statement rather than a hidden control. */
+/* a mouse gets a grab cursor and a usable scrollbar; a finger needs neither */
+@media (hover: hover) and (pointer: fine) {
+  .rail { cursor: grab; }
+  .rail.is-panning { cursor: grabbing; scroll-behavior: auto; }
+  .rail.is-panning * { pointer-events: none; }
+  .rail-bar { cursor: pointer; height: 7px; }
+  .rail-bar:hover i { background: var(--ink-soft); }
 }
-.rail-dots i.on { width: 20px; border-radius: var(--pill); background: var(--accent); }
-.rail-track { flex: 1; max-width: 120px; height: 3px; border-radius: 2px; background: var(--edge-soft); overflow: hidden; }
-.rail-track i { display: block; height: 100%; background: var(--accent); border-radius: 2px; transition: transform .12s linear; transform-origin: left; }
-.rail-more {
-  font-family: var(--mono); font-size: .6rem; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
-}
-/* a wide screen shows the whole rail; the affordance would be a lie */
-@media (min-width: 760px) { .rail-nav.is-full { display: none; } }
+.rail-nav { display: flex; flex-direction: column; gap: 8px; padding: 3px 0 2px; }
+.rail-bar { position: relative; height: 5px; border-radius: 3px;
+  background: var(--rail-track); overflow: hidden; }
+.rail-bar i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 3px;
+  background: var(--rail-thumb); transition: left .12s linear, width .12s linear; }
+.rail-dots { display: flex; gap: 7px; align-items: center; justify-content: center; }
+.rail-dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--rail-track);
+  transition: background .2s ease; }
+.rail-dots i.on { background: var(--accent); }
 
 /* ============================================================ feed rows */
 .feed { overflow: hidden; }
@@ -408,6 +423,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 
 /* ============================================================ video */
 .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 11px; }
+.rail .v { width: 168px; }
 .v { position: relative; border-radius: var(--radius); overflow: hidden;
   border: 1px solid var(--edge); background: var(--panel); box-shadow: var(--shadow-1); }
 .v-hit { display: block; width: 100%; }
@@ -454,7 +470,8 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
    documentary for attention: small enough to skim past, big enough to
    actually see, and no action row — you do not rate a webcam. */
 .livestrip { margin-bottom: 18px; }
-.livestrip .rail { grid-auto-columns: 134px; gap: 9px; }
+.livestrip .rail { gap: 9px; }
+.livestrip .rail .v { width: 134px; }
 .livestrip .v-body { padding: 6px 8px 8px; }
 .livestrip .v-title { font-size: .76rem; line-height: 1.25; }
 .livestrip .v-meta, .livestrip .v-acts, .livestrip .v-dur { display: none; }
@@ -483,16 +500,45 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .embed-toggle[aria-expanded="true"] .chev { transform: rotate(180deg); }
 .embed { width: 100%; height: 352px; border: 0; border-radius: var(--radius);
   margin-bottom: 14px; background: var(--panel); }
-.shows { display: grid; gap: 8px; }
+.shows { display: grid; gap: 10px; }
+/* A show is a card with its newest episodes already in it. The accordion
+   put every episode behind a tap, so a tab full of podcasts showed no
+   podcasts. */
+.show { overflow: hidden; }
 .show-head { display: grid; grid-template-columns: 46px 1fr auto; align-items: center;
-  gap: 11px; padding: 9px 12px 9px 9px; width: 100%; }
+  gap: 11px; padding: 10px 12px 10px 10px; width: 100%;
+  border-bottom: 1px solid var(--edge-soft); }
+.show-out { color: var(--ink-faint); font-size: 1rem; padding: 6px 4px; }
+.show-out:hover { color: var(--accent); }
+.show .eps { margin: 0; }
+/* One line per episode: play, title, age, save. The generic feed row put
+   the buttons on a line of their own, which made every episode 135px tall. */
+.ep { display: grid; grid-template-columns: 34px 1fr auto auto; align-items: center;
+  gap: 10px; padding: 9px 11px; border-bottom: 1px solid var(--edge-soft); }
+.ep:last-child { border-bottom: 0; }
+.ep-go { width: 34px; height: 34px; border-radius: 50%; flex: 0 0 auto;
+  border: 1px solid var(--edge); display: inline-flex; align-items: center;
+  justify-content: center; color: var(--ink); background: var(--panel-2); }
+.ep-go svg { width: 15px; height: 15px; margin-left: 1px; }
+.ep-go:hover { border-color: var(--accent); color: var(--accent); }
+.ep.is-playing .ep-go { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.ep-meta { min-width: 0; }
+.ep-title { display: block; font-size: .93rem; line-height: 1.32; font-weight: 500;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ep-age { display: block; font-family: var(--mono); font-size: .6rem; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-faint); margin-top: 3px; }
+.ep .vote { height: 28px; padding: 0 7px 0 5px; font-size: .68rem; }
+.ep .act { width: 32px; height: 32px; }
+.ep .act svg { width: 19px; height: 19px; }
+.show-more { width: 100%; padding: 11px; text-align: center;
+  font-family: var(--mono); font-size: .66rem; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent); border-top: 1px solid var(--edge-soft); }
+.show-more:hover { background: var(--panel-hover); }
 .show-head img { width: 46px; height: 46px; border-radius: 9px; object-fit: cover; }
 .noart { width: 46px; height: 46px; border-radius: 9px; background: var(--accent-soft);
   display: grid; place-items: center; font-size: 1.15rem; }
 .show-meta { min-width: 0; }
 .show-name { display: block; font-size: .95rem; font-weight: 600; line-height: 1.25; }
-.chev { color: var(--ink-faint); font-size: .95rem; transition: transform .2s ease; }
-.show-head.open .chev { transform: rotate(180deg); }
 .eps { margin-top: 8px; }
 .ep-play { width: 100%; }
 .ep-bar { height: 3px; border-radius: 2px; background: var(--edge); margin-top: 8px; overflow: hidden; }
