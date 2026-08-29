@@ -29,8 +29,11 @@
   var cache = {}, subs = {}, fails = {}, inflight = {}, dead = {}, stale = {};
 
   function isLocalDev() {
+    var h = location.hostname;
+    /* 127.x is a prefix, not a whole hostname — anchoring the whole
+       alternation with $ silently sent 127.0.0.1 down the production path */
     return location.protocol === 'file:' ||
-      /^(localhost|127\.|0\.0\.0\.0)$/.test(location.hostname);
+      /^(localhost|0\.0\.0\.0|\[?::1\]?)$/.test(h) || /^127\./.test(h);
   }
 
   function req(url, timeoutMs, asText) {
