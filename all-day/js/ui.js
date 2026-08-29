@@ -106,13 +106,30 @@ export function rail(host, { label } = {}) {
      who finds horizontal scrolling awkward. */
   const expand = el('button', 'rail-expand', 'Expand to a list');
   expand.setAttribute('aria-expanded', 'false');
-  expand.addEventListener('click', () => {
-    const open = track.classList.toggle('is-open');
+
+  /* An expanded rail can be a screen and a half tall, so the way out has to
+     be at the top as well — otherwise closing it means scrolling to the
+     bottom and then scrolling all the way back. */
+  const collapseTop = el('button', 'rail-collapse-top', 'Back to a row');
+  collapseTop.hidden = true;
+
+  function setOpen(open) {
+    track.classList.toggle('is-open', open);
     wrap.classList.toggle('is-open', open);
     expand.setAttribute('aria-expanded', open ? 'true' : 'false');
     expand.textContent = open ? 'Back to a row' : 'Expand to a list';
-    if (!open) { track.scrollLeft = 0; sync(); }
-  });
+    collapseTop.hidden = !open;
+    if (!open) {
+      track.scrollLeft = 0;
+      sync();
+      /* closing from the top should leave you looking at the rail, not at
+         wherever the bottom of the list used to be */
+      wrap.scrollIntoView({ block: 'nearest' });
+    }
+  }
+  expand.addEventListener('click', () => setOpen(!track.classList.contains('is-open')));
+  collapseTop.addEventListener('click', () => setOpen(false));
+  wrap.insertBefore(collapseTop, track);
   nav.appendChild(expand);
 
   /* One dot per screenful, never per card. Past MAX_DOTS they stop being a
