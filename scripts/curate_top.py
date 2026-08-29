@@ -151,19 +151,49 @@ TOP_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
            "pulse-top/data/pulse-top.json")
 
 
+ARCHIVE_CAP = 10
+
+
 def fetch_previous(url=TOP_URL, timeout=30):
-    """The edition being replaced, so the page can keep showing it —
-    missing a window shouldn't cost the reader the list. One level only
-    (the fetched payload's own `prev` is dropped). Never a hard failure."""
+    """The editions being replaced.
+
+    Returns (prev, archive). `prev` is the single most recent one and keeps
+    its old shape because pulse.html reads it. `archive` is the rolling list
+    All Day pages back through — the picks are the most-read thing on the
+    site and losing them at every rebuild was the complaint.
+
+    The archive is rebuilt from the payload we are replacing: its own picks
+    become the newest entry, then whatever it had archived, deduped on
+    `generated` so a re-run inside one window cannot double an edition.
+    Never a hard failure — a missing branch just means no history yet."""
     try:
         payload = fetch_pulse(url, timeout)
         picks = payload.get("picks")
         generated = payload.get("generated")
-        if isinstance(picks, list) and picks and generated:
-            return {"generated": generated, "picks": picks}
+        if not (isinstance(picks, list) and picks and generated):
+            return None, []
+        prev = {"generated": generated, "picks": picks}
+        archive, seen = [prev], {generated}
+        older = payload.get("editions")
+        if not isinstance(older, list):
+            # first run after this change: fall back to the one level that
+            # the old format carried
+            legacy = payload.get("prev")
+            older = [legacy] if isinstance(legacy, dict) else []
+        for edition in older:
+            if not isinstance(edition, dict):
+                continue
+            stamp = edition.get("generated")
+            if not stamp or stamp in seen or not isinstance(edition.get("picks"), list):
+                continue
+            seen.add(stamp)
+            archive.append({"generated": stamp, "picks": edition["picks"]})
+            if len(archive) >= ARCHIVE_CAP:
+                break
+        return prev, archive
     except Exception as exc:  # noqa: BLE001 — the branch may not exist yet
         print(f"curate_top: no previous edition ({exc})", file=sys.stderr)
-    return None
+    return None, []
 
 
 # ----------------------------------------------------------------------
@@ -399,14 +429,16 @@ def validate_picks(raw, candidates):
     return picks
 
 
-def build_payload(picks, generated, prev=None):
+def build_payload(picks, generated, prev=None, archive=None):
     payload = {
         "v": 1,
         "generated": generated.replace(microsecond=0).isoformat(),
         "picks": picks,
     }
     if prev:
-        payload["prev"] = prev
+        payload["prev"] = prev          # pulse.html still reads this
+    if archive:
+        payload["editions"] = archive   # All Day pages back through these
     return payload
 
 
@@ -449,7 +481,8 @@ def run(args):
         print("curate_top: no usable picks came back", file=sys.stderr)
         return
 
-    write_json(args.out, build_payload(picks, utcnow(), fetch_previous()))
+    prev, archive = fetch_previous()
+    write_json(args.out, build_payload(picks, utcnow(), prev, archive))
     local = sum(pick["local"] for pick in picks)
     print(f"curate_top: {len(picks)} picks ({local} local) from "
           f"{len(candidates)} candidates -> {args.out}")

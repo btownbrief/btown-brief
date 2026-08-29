@@ -1,159 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>All Day — read, watch, listen, wander — Burlington Brief</title>
-  <meta name="description" content="One app for the whole day: the news wire, Reddit, the video shelf, every podcast, and a Wikipedia rabbit hole you can fall down without ever leaving.">
-  <meta name="theme-color" content="#06080A">
-
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Btown Brief">
-  <meta property="og:title" content="All Day">
-  <meta property="og:description" content="Read, watch, listen, wander. Five things worth your afternoon, one place, nothing else needed.">
-  <meta property="og:url" content="https://guide.btownbrief.com/all-day/">
-  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="All Day">
-  <meta name="twitter:description" content="Read, watch, listen, wander. One place, nothing else needed.">
-  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
-
-  <link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="/assets/favicon-16.png" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>All Day — Burlington Brief</title>
+  <meta name="description" content="Everything, one place, all day: the news wire, Reddit, the video shelf, every local podcast and a Wikipedia rabbit hole.">
+  <meta property="og:title" content="All Day — Burlington Brief">
+  <meta property="og:description" content="The wire, Reddit, video, podcasts and a Wikipedia rabbit hole — one app, all day.">
+  <meta property="og:image" content="../assets/og/og-guide.jpg">
+  <meta name="theme-color" content="#FBF9F5">
+  <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="All Day">
-
+  <script>
+    /* Paint the right theme before first paint, or a dark-mode phone gets a
+       white flash on every load. Mirrors store.js applyTheme(). */
+    try {
+      var t = localStorage.getItem('allday-theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+      var dark = t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.style.background = dark ? '#06080A' : '#FBF9F5';
+    } catch (e) { /* private mode: the stylesheet default stands */ }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://raw.githubusercontent.com">
-  <link rel="preconnect" href="https://i.ytimg.com">
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css?v=20260828a">
-<!-- Meta Pixel -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2471867016612559');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel -->
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css?v=20260829a">
 </head>
-<body>
+<body data-btown-about="off">
+  <script src="https://play.btownbrief.com/nav.js" defer></script>
 
-<div class="app">
-
-  <!-- Five panes in one stack. Only the active one is shown; each keeps its
-       own scroll position because each is its own scrolling box. -->
-  <div class="panes" id="panes">
-    <section class="pane" id="pane-read"   aria-label="Read"   hidden></section>
-    <section class="pane" id="pane-reddit" aria-label="Reddit" hidden></section>
-    <section class="pane" id="pane-watch"  aria-label="Watch"  hidden></section>
-    <section class="pane" id="pane-listen" aria-label="Listen" hidden></section>
-    <section class="pane" id="pane-wander" aria-label="Wander" hidden></section>
-  </div>
-
-  <header class="topbar" id="topbar">
-    <div class="wordmark" id="wordmark">All <b>Day</b></div>
-    <div class="top-acts">
-      <button class="iconbtn" id="btn-search" aria-label="Search" title="Search">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      </button>
-      <button class="iconbtn" id="btn-saved" aria-label="Saved" title="Saved">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-6-4.2-6 4.2z"/></svg>
-        <span class="saved-count" id="saved-count" hidden>0</span>
-      </button>
-      <a class="iconbtn is-live" href="/live.html" aria-label="The Pulse Live" title="The Pulse Live — the no-scroll board">
-        <span class="dot"></span>
-      </a>
+  <header class="mast" id="mast">
+    <div class="mast-in">
+      <div class="brand">
+        <span class="wordmark">All Day</span>
+        <span class="tagline">Everything, one place, all day</span>
+      </div>
+      <div class="mast-acts">
+        <button class="iconbtn" id="theme-btn" aria-label="Switch theme"></button>
+        <button class="iconbtn" id="saved-btn" aria-label="Saved"></button>
+        <button class="iconbtn" id="settings-btn" aria-label="Settings"></button>
+        <a class="boardlink" id="board-link" href="../live.html" title="The full-screen headline board">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18M8.5 9v10.5"/></svg>
+          Board
+        </a>
+      </div>
     </div>
+    <div class="stale" id="stale" hidden>Showing an older edition — reconnecting…</div>
+    <div class="readbar" id="readbar"><i></i></div>
   </header>
 
-  <div class="dock" id="dock">
-    <!-- The player lives in the shell, not in a pane, so it keeps playing
-         while you switch tabs. -->
+  <main class="app">
+    <section class="panel" id="panel-wire"   role="tabpanel" aria-labelledby="tab-wire"></section>
+    <section class="panel" id="panel-reddit" role="tabpanel" aria-labelledby="tab-reddit" hidden></section>
+    <section class="panel" id="panel-watch"  role="tabpanel" aria-labelledby="tab-watch" hidden></section>
+    <section class="panel" id="panel-listen" role="tabpanel" aria-labelledby="tab-listen" hidden></section>
+    <section class="panel" id="panel-wander" role="tabpanel" aria-labelledby="tab-wander" hidden></section>
+  </main>
+
+  <div class="dock">
     <div class="player" id="player" hidden>
-      <img class="player-art" id="player-art" alt="" hidden>
-      <div class="player-art" id="player-art-fallback">🎙</div>
-      <div class="player-txt">
-        <div class="player-t" id="player-t"></div>
-        <div class="player-s" id="player-s"></div>
-        <div class="player-bar" id="player-bar" role="slider" aria-label="Seek" tabindex="0"
-             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="player-fill"></i></div>
+      <div class="p-bar" id="p-bar"><i></i></div>
+      <img class="p-art" id="p-art" alt="" hidden>
+      <div class="p-meta">
+        <span class="p-title" id="p-title"></span>
+        <span class="p-show" id="p-show"></span>
       </div>
-      <button class="player-btn ghost" id="player-back" aria-label="Back 15 seconds" title="Back 15s">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9l5 4"/><path d="M6 9h7a5 5 0 0 1 0 10H9"/></svg>
+      <button class="iconbtn" id="p-back" aria-label="Back 15 seconds">
+        <svg viewBox="0 0 24 24"><path d="M11 8 5.5 12 11 16M18 8l-5.5 4L18 16"/></svg>
       </button>
-      <button class="player-btn" id="player-toggle" aria-label="Pause">
-        <svg viewBox="0 0 24 24" aria-hidden="true" id="player-icon"><rect x="7" y="5" width="3.6" height="14" rx="1"/><rect x="13.4" y="5" width="3.6" height="14" rx="1"/></svg>
-      </button>
-      <button class="player-btn ghost" id="player-close" aria-label="Close player">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      <button class="iconbtn" id="p-toggle" aria-label="Play or pause"></button>
+      <button class="iconbtn" id="p-close" aria-label="Close player">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
     </div>
 
-    <nav class="tabbar" id="tabbar" aria-label="Modes">
-      <button data-tab="read" class="on" aria-current="page">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-        Read
+    <nav class="tabbar" role="tablist" aria-label="All Day sections">
+      <button role="tab" id="tab-wire" data-tab="wire" class="on" aria-selected="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h3.4L9 6.4l4.6 11.2L16 12h5"/></svg>
+        <span>Wire</span>
       </button>
-      <button data-tab="reddit">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8 8 0 0 1-8 8H8l-4.5 2.5 1.2-4.2A8 8 0 0 1 11 3.5h2a8 8 0 0 1 8 8z"/></svg>
-        Reddit
+      <button role="tab" id="tab-reddit" data-tab="reddit" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="6.2"/><circle cx="9.6" cy="13" r=".9" fill="currentColor"/><circle cx="14.4" cy="13" r=".9" fill="currentColor"/><path d="M9.2 16.4c1.7 1.2 3.9 1.2 5.6 0M12 7.2l.9-3.4 3 .9"/><circle cx="16.6" cy="4.4" r="1.1" fill="currentColor"/></svg>
+        <span>Reddit</span>
       </button>
-      <button data-tab="watch">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3.5"/><path d="M10.2 9.4l5 2.6-5 2.6z"/></svg>
-        Watch
+      <button role="tab" id="tab-watch" data-tab="watch" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="3"/><path d="M10.3 9.5v5l4.6-2.5z" fill="currentColor"/></svg>
+        <span>Watch</span>
       </button>
-      <button data-tab="listen">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14.5v-2.5a8 8 0 0 1 16 0v2.5"/><rect x="2" y="13.5" width="4.6" height="7" rx="2.3"/><rect x="17.4" y="13.5" width="4.6" height="7" rx="2.3"/></svg>
-        Listen
+      <button role="tab" id="tab-listen" data-tab="listen" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 15.5v-3a7.5 7.5 0 0 1 15 0v3"/><rect x="3.4" y="13.6" width="4" height="6" rx="2" fill="currentColor"/><rect x="16.6" y="13.6" width="4" height="6" rx="2" fill="currentColor"/></svg>
+        <span>Listen</span>
       </button>
-      <button data-tab="wander">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.7 8.3l-2.1 5.3-5.3 2.1 2.1-5.3z"/></svg>
-        Wander
+      <button role="tab" id="tab-wander" data-tab="wander" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="m15.6 8.4-2 5.2-5.2 2 2-5.2z" fill="currentColor"/></svg>
+        <span>Wander</span>
       </button>
     </nav>
   </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <div class="scrim" id="scrim" hidden></div>
-  <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-    <div class="sheet-head">
-      <h2 id="sheet-title">Saved</h2>
-      <button class="iconbtn" id="sheet-close" aria-label="Close">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
+  <div class="vbox" id="vbox" hidden>
+    <div class="vbox-card">
+      <div class="vbox-head">
+        <span class="t" id="vbox-title"></span>
+        <button class="iconbtn" id="vbox-close" aria-label="Close video">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="vbox-frame" id="vbox-frame"></div>
+      <div class="vbox-foot">
+        <span class="vbox-hint" id="vbox-hint" hidden>Not playing? Some videos block embedding.</span>
+        <a class="btn btn-quiet" id="vbox-open" href="#" target="_blank" rel="noopener">Open in YouTube ↗</a>
+      </div>
     </div>
-    <div class="sheet-body" id="sheet-body"></div>
   </div>
 
-  <!-- No crossorigin attribute. Podcast CDNs do not send CORS headers on
-       media, so flagging the element anonymous makes every enclosure fail to
-       load. It is only needed for Web Audio or canvas, and we do neither. -->
+  <div class="sheet" id="sheet" hidden></div>
+  <div class="confirm" id="confirm" hidden></div>
+  <div class="toast" id="toast" hidden></div>
   <audio id="audio" preload="none"></audio>
-</div>
 
-<!-- The repo's ?v=YYYYMMDD<letter> rule is stamped on the entry points only.
-     ES module imports inside app.js cannot carry a version without a build
-     step, so freshness for those is the service worker's job: it serves every
-     /all-day/ file network-first and falls back to cache only when offline,
-     which means a deploy lands immediately. Bump the stamps below when you
-     touch app.css or app.js; the modules follow on their own. -->
-<script type="module" src="js/app.js?v=20260828a"></script>
+  <noscript><p class="empty">All Day needs JavaScript.</p></noscript>
+
+  <script type="module" src="js/main.js?v=20260829a"></script>
 </body>
 </html>

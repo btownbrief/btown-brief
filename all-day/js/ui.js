@@ -1,130 +1,191 @@
-/* ui.js — the small shared vocabulary every mode renders with.
+/* ui.js — the pieces every tab draws with.
 
-   Rendering is string concatenation into innerHTML, the same as the pages this
-   app replaces, so esc() and safeUrl() are not optional politeness: every
-   value here comes off a feed someone else controls. safeUrl admits http and
-   https only, which is what keeps a javascript: URL in a feed item from
-   becoming a link. */
+   The carousel is the important one. A horizontal rail that gives no sign it
+   scrolls is invisible to most people: they see two cards, assume that is
+   all there is, and never swipe. So every rail here gets three affordances
+   at once — page dots, a live progress bar, and a count — and the dots are
+   per PAGE, not per card, because eight dots under four visible cards tells
+   you nothing about where you are.
 
-export function esc(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  }[c]));
+   On a screen wide enough to show the whole rail the affordance would be a
+   lie, so it hides itself. */
+
+export const esc = (s) => {
+  const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+  return String(s == null ? '' : s)
+    /* some feed titles arrive already escaped ("Top News &amp; Analysis") */
+    .replace(/&(amp|lt|gt|quot|apos|nbsp|#39|#x27);/g, (m, n) => ENT[n] || "'")
+    /* upstream truncation can cut an entity in half ("Top News &amp…") */
+    .replace(/&[a-zA-Z]{1,8}(…|\.\.\.)\s*$/, '…')
+    .replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+};
+
+/* Escaping a URL keeps it inside its attribute; it does not stop javascript:
+   from running on click. Item URLs come off third-party RSS. */
+export const safeHref = (url) => {
+  const u = String(url == null ? '' : url).replace(/[\t\n\r\0]/g, '').trim();
+  return /^(https?:\/\/|#|\.\/|\.\.\/|\/)/i.test(u) ? u : '#';
+};
+
+export const el = (tag, cls, html) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (html != null) n.innerHTML = html;
+  return n;
+};
+
+export function ago(epochSeconds) {
+  const mins = Math.round(Date.now() / 1000 / 60 - Number(epochSeconds) / 60);
+  if (!isFinite(mins) || mins < 0) return '';
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + 'm ago';
+  if (mins < 1440) return Math.round(mins / 60) + 'h ago';
+  const d = Math.round(mins / 1440);
+  return d === 1 ? 'yesterday' : d + 'd ago';
 }
 
-export function safeUrl(u) {
-  try {
-    const p = new URL(u, location.href);
-    if (p.protocol === 'http:' || p.protocol === 'https:') return p.href;
-  } catch (e) { /* not a url */ }
-  return '';
+export function agoShort(epochSeconds) {
+  const mins = Math.round(Date.now() / 1000 / 60 - Number(epochSeconds) / 60);
+  if (!isFinite(mins) || mins < 0) return '';
+  if (mins < 60) return Math.max(1, mins) + 'm';
+  if (mins < 1440) return Math.round(mins / 60) + 'h';
+  return Math.round(mins / 1440) + 'd';
 }
 
-/* Relative time, tightened for a dense feed: minutes for the first hour,
-   then hours, then days. */
-export function ago(sec) {
-  const s = Math.floor(Date.now() / 1000) - Number(sec || 0);
-  if (!isFinite(s) || s < 0) return '';
-  if (s < 90) return 'now';
-  const m = Math.floor(s / 60);
-  if (m < 60) return m + 'm';
-  const h = Math.floor(m / 60);
-  if (h < 24) return h + 'h';
-  const d = Math.floor(h / 24);
-  if (d < 30) return d + 'd';
-  const mo = Math.floor(d / 30);
-  return mo < 12 ? mo + 'mo' : Math.floor(mo / 12) + 'y';
-}
+export const dayLabel = (iso) => {
+  const then = new Date(iso);
+  if (isNaN(then)) return '';
+  const days = Math.round((Date.now() - then) / 86400000);
+  if (days <= 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  return then.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+};
 
-/* Longer form, for cards where a date reads better than an age. */
-export function agoLong(sec) {
-  const d = Math.floor((Date.now() / 1000 - Number(sec || 0)) / 86400);
-  if (!isFinite(d)) return '';
-  if (d <= 0) return 'today';
-  if (d === 1) return 'yesterday';
-  if (d < 30) return d + 'd ago';
-  const mo = Math.floor(d / 30);
-  return mo < 12 ? mo + 'mo ago' : Math.floor(mo / 12) + 'y ago';
-}
+export const ICON = {
+  star: '<svg viewBox="0 0 24 24"><path d="m12 3.6 2.7 5.65 6.2.86-4.5 4.32 1.08 6.17L12 17.7l-5.48 2.9 1.08-6.17-4.5-4.32 6.2-.86z"/></svg>',
+  up: '<svg viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg>',
+  check: '<svg viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11"/></svg>',
+  x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  play: '<svg viewBox="0 0 24 24"><path d="M8 5.2v13.6L19 12z" fill="currentColor" stroke="none"/></svg>',
+  pause: '<svg viewBox="0 0 24 24"><path d="M8.5 5v14M15.5 5v14" stroke-width="2.4"/></svg>',
+  back15: '<svg viewBox="0 0 24 24"><path d="M11 8 5.5 12 11 16M18 8l-5.5 4L18 16"/></svg>',
+  ext: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg>',
+  search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>',
+  sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.2 12H2M22 12h-2.2M6.3 6.3 4.8 4.8M19.2 19.2l-1.5-1.5M17.7 6.3l1.5-1.5M4.8 19.2l1.5-1.5"/></svg>',
+  moon: '<svg viewBox="0 0 24 24"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z"/></svg>',
+  gear: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.1"/><path d="M19.4 14.5a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1v.3a2 2 0 1 1-4 0v-.2a1.6 1.6 0 0 0-2.8-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7h-.3a2 2 0 1 1 0-4h.2a1.6 1.6 0 0 0 1.1-2.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3 1.6 1.6 0 0 0 1-1.4v-.3a2 2 0 1 1 4 0v.2a1.6 1.6 0 0 0 2.7 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.2 2.7h.3a2 2 0 1 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></svg>',
+  board: '<svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18M8.5 9v10.5"/></svg>',
+  shuffle: '<svg viewBox="0 0 24 24"><path d="M17 4.5 20.5 8 17 11.5M17 12.5 20.5 16 17 19.5M3.5 8h4.2l8.8 8h4M3.5 16h4.2l2.5-2.4"/></svg>',
+  chev: '<svg viewBox="0 0 24 24"><path d="m6.5 9.5 5.5 5.5 5.5-5.5"/></svg>',
+};
 
-export function fmtViews(n) {
-  const v = Number(n || 0);
-  if (!v) return '';
-  if (v >= 1e6) return (v / 1e6).toFixed(v >= 1e7 ? 0 : 1).replace(/\.0$/, '') + 'M views';
-  if (v >= 1e3) return Math.round(v / 1e3) + 'K views';
-  return v + ' views';
-}
+/* --------------------------------------------------------------- carousel */
 
-export function secsToClock(s) {
-  const n = Math.max(0, Math.floor(Number(s) || 0));
-  const h = Math.floor(n / 3600);
-  const m = Math.floor((n % 3600) / 60);
-  const sec = n % 60;
-  const mm = h ? String(m).padStart(2, '0') : String(m);
-  return (h ? h + ':' : '') + mm + ':' + String(sec).padStart(2, '0');
-}
+/* Build the rail plus its affordance row. Returns the scroller so callers
+   can append cards; call `sync` (returned) after appending. */
+export function rail(host, { label } = {}) {
+  const wrap = el('div', 'rail-wrap');
+  const track = el('div', 'rail');
+  const nav = el('div', 'rail-nav');
+  const dots = el('div', 'rail-dots');
+  const bar = el('div', 'rail-track', '<i></i>');
+  const count = el('span', 'rail-more');
+  nav.append(dots, bar, count);
+  wrap.append(track, nav);
+  host.appendChild(wrap);
 
-/* One restrained hue per topic, matching css/pulse.css so a source reads the
-   same colour here as it does there. */
-export function topicClass(topic) {
-  const known = ['local', 'news', 'tech', 'business', 'science', 'culture',
-    'politics', 'sports', 'gaming', 'newsletters'];
-  return known.indexOf(topic) >= 0 ? 'c-' + topic : '';
-}
+  const fill = bar.firstElementChild;
 
-export function isReddit(src) {
-  return !!(src && src.site && src.site.indexOf('reddit.com') >= 0);
-}
+  /* One dot per screenful, never per card. Past MAX_DOTS the dots stop being
+     a map and become a smear, so they cap and track position proportionally
+     instead — the progress bar beside them carries the precision. */
+  const MAX_DOTS = 7;
 
-/* r/burlington out of a thread or subscription URL. */
-export function subOf(url) {
-  const m = /reddit\.com\/(r\/[^/?#]+)/.exec(String(url || ''));
-  return m ? m[1].toLowerCase() : '';
-}
-
-/* YouTube thumbnails: maxres does not exist for every video, so every <img>
-   that asks for one carries the hq fallback and wireFallbacks() attaches it. */
-export function ytThumb(id, big) {
-  if (!/^[A-Za-z0-9_-]{11}$/.test(String(id || ''))) return '';
-  return 'https://i.ytimg.com/vi/' + id + '/' + (big ? 'maxresdefault' : 'mqdefault') + '.jpg';
-}
-
-export function wireFallbacks(root) {
-  root.querySelectorAll('img[data-fallback]').forEach((img) => {
-    img.addEventListener('error', function onErr() {
-      const alt = img.getAttribute('data-fallback');
-      img.removeAttribute('data-fallback');
-      img.removeEventListener('error', onErr);
-      if (alt) img.src = alt;
-      else img.remove();
-    }, { once: false });
-  });
-}
-
-/* The bookmark control every mode uses, so a save looks and behaves the same
-   whatever it is you are saving. */
-export function saveBtn(key, on) {
-  return '<button class="ad-save" data-save="' + esc(key) + '" aria-pressed="' +
-    (on ? 'true' : 'false') + '">' + (on ? 'Saved' : 'Save') + '</button>';
-}
-
-export function loading(msg) {
-  return '<p class="loading">' + esc(msg || 'Loading…') + '</p>';
-}
-
-export function empty(title, sub) {
-  return '<div class="empty"><b>' + esc(title) + '</b>' + esc(sub || '') + '</div>';
-}
-
-/* Deterministic shuffle so a "shuffle" button gives a new order on demand but
-   a re-render inside one visit does not reorder under the reader's thumb. */
-export function sampleN(list, n, seed) {
-  const a = list.slice();
-  let s = seed || 1;
-  for (let i = a.length - 1; i > 0; i--) {
-    s = (s * 1103515245 + 12345) & 0x7fffffff;
-    const j = s % (i + 1);
-    const t = a[i]; a[i] = a[j]; a[j] = t;
+  function pages() {
+    const w = track.clientWidth;
+    if (!w) return 1;
+    return Math.max(1, Math.ceil((track.scrollWidth - 4) / w));
   }
-  return a.slice(0, n);
+
+  function sync() {
+    const n = Math.min(MAX_DOTS, pages());
+    const full = track.scrollWidth <= track.clientWidth + 4;
+    nav.classList.toggle('is-full', full);
+    if (dots.childElementCount !== n) {
+      dots.innerHTML = '';
+      for (let i = 0; i < n; i++) dots.appendChild(el('i'));
+    }
+    const max = Math.max(1, track.scrollWidth - track.clientWidth);
+    const ratio = Math.min(1, track.scrollLeft / max);
+    const active = Math.round(ratio * (n - 1));
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i === active));
+    fill.style.transform = 'scaleX(' + Math.max(0.12, track.clientWidth / Math.max(1, track.scrollWidth)) + ')';
+    fill.style.marginLeft = (ratio * (bar.clientWidth * (1 - track.clientWidth / Math.max(1, track.scrollWidth)))) + 'px';
+    const total = track.childElementCount;
+    count.textContent = label ? total + ' ' + label : total + '';
+  }
+
+  track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+  if ('ResizeObserver' in window) new ResizeObserver(() => sync()).observe(track);
+
+  return { track, sync, wrap };
+}
+
+/* ------------------------------------------------------------ small parts */
+
+export function starBtn(saved) {
+  const b = el('button', 'act' + (saved ? ' on' : ''), ICON.star);
+  b.setAttribute('aria-label', saved ? 'Saved' : 'Save for later');
+  b.setAttribute('aria-pressed', saved ? 'true' : 'false');
+  return b;
+}
+
+export function voteBtn(count, mine, live) {
+  const b = el('button', 'vote' + (mine ? ' on' : '') + (count ? '' : ' is-zero'),
+    ICON.up + '<span class="n">' + (count || 0) + '</span>');
+  b.setAttribute('aria-label', 'Upvote');
+  b.setAttribute('aria-pressed', mine ? 'true' : 'false');
+  /* until the backend answers once, the whole feature stays out of the way */
+  b.hidden = !live;
+  return b;
+}
+
+export function paintVote(b, count, mine) {
+  if (!b) return;
+  b.classList.toggle('on', !!mine);
+  b.classList.toggle('is-zero', !count);
+  b.setAttribute('aria-pressed', mine ? 'true' : 'false');
+  const n = b.querySelector('.n');
+  if (n) n.textContent = count || 0;
+}
+
+export function seg(options, current, onPick) {
+  const wrap = el('div', 'seg');
+  options.forEach(([value, label]) => {
+    const b = el('button', value === current ? 'on' : '', esc(label));
+    b.addEventListener('click', () => onPick(value));
+    wrap.appendChild(b);
+  });
+  return wrap;
+}
+
+export function chip(label, on, onClick, extraClass) {
+  const b = el('button', 'chip' + (on ? ' on' : '') + (extraClass ? ' ' + extraClass : ''), label);
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+export function heading(host, { eyebrow, title, sub, right }) {
+  const h = el('div', 'h-sec');
+  const row = el('div', 'h-row');
+  const left = el('div');
+  if (eyebrow) left.appendChild(el('p', 'eyebrow', esc(eyebrow)));
+  if (title) left.appendChild(el('h2', null, esc(title)));
+  row.appendChild(left);
+  if (right) row.appendChild(right);
+  h.appendChild(row);
+  if (sub) h.appendChild(el('p', 'sub', sub));
+  host.appendChild(h);
+  return h;
 }
