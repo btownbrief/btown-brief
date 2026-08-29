@@ -323,7 +323,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   .rail-bar { cursor: pointer; height: 7px; }
   .rail-bar:hover i { background: var(--ink-soft); }
 }
-.rail-nav { display: flex; flex-direction: column; gap: 8px; padding: 3px 0 2px; }
+.rail-nav { display: flex; flex-direction: column; gap: 7px; padding: 2px 0; }
 .rail-expand {
   align-self: center; display: inline-flex; align-items: center; gap: 5px;
   font-family: var(--mono); font-size: .6rem; font-weight: 500; letter-spacing: .1em;
@@ -340,10 +340,25 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 }
 .rail.is-open > * { width: auto !important; }
 .rail.is-open .v img, .rail.is-open .doorcard img { aspect-ratio: 16/9; }
-.rail-bar { position: relative; height: 5px; border-radius: 3px;
-  background: var(--rail-track); overflow: hidden; }
+/* One strip carries both: the track spans it, the dots sit on top. The
+   track only shows while the rail is moving and fades a moment after it
+   stops, the way an overlay scrollbar does — the dots are the part that
+   stays, and they are what tells you there is more. */
+.rail-strip { position: relative; height: 14px; display: flex;
+  align-items: center; justify-content: center; }
+.rail-bar { position: absolute; left: 0; right: 0; top: 50%; margin-top: -2px;
+  height: 4px; border-radius: 3px; background: var(--rail-track);
+  overflow: hidden; opacity: 0; transition: opacity .3s ease; }
+.rail-bar.is-live { opacity: 1; }
 .rail-bar i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 3px;
   background: var(--rail-thumb); transition: left .12s linear, width .12s linear; }
+.rail-dots { position: relative; display: flex; gap: 6px; align-items: center;
+  padding: 0 9px; background: var(--ground); border-radius: var(--pill); }
+.rail-dots i { width: 6px; height: 6px; border-radius: 50%;
+  background: var(--rail-track); transition: background .2s ease, width .2s ease; }
+.rail-dots i.on { background: var(--accent); width: 15px; border-radius: var(--pill); }
+.rail-strip.is-idle .rail-dots { display: none; }
+.card .rail-dots, .pool-body .rail-dots { background: var(--panel); }
 /* opened out, there is nothing sideways left to indicate */
 .rail-wrap.is-open .rail-bar { display: none; }
 
