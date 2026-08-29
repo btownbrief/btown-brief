@@ -868,14 +868,16 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   -webkit-backdrop-filter: saturate(150%) blur(18px);
 }
 .tabbar button {
-  position: relative; display: grid; justify-items: center; gap: 4px;
-  padding: 8px 2px 7px; border-radius: 15px; min-height: 50px;
-  color: var(--ink-faint); font-size: .69rem; font-weight: 600; letter-spacing: .01em;
+  position: relative; display: grid; justify-items: center; gap: 3px;
+  padding: 7px 1px 6px; border-radius: 14px; min-height: 48px;
+  color: var(--ink-faint); font-size: .6rem; font-weight: 600; letter-spacing: .005em;
+  line-height: 1.2;
   transition: color .16s ease, background .16s ease;
 }
-.tabbar button svg { width: 22px; height: 22px; fill: none; stroke: currentColor;
+.tabbar button svg { width: 21px; height: 21px; fill: none; stroke: currentColor;
   stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .tabbar button:hover { color: var(--ink-soft); }
+.tabbar button > span { white-space: nowrap; }
 .tabbar button.on { color: var(--accent); background: var(--accent-soft); }
 .tabbar button.on svg { stroke-width: 2.1; }
 .tabdot { position: absolute; top: 6px; right: 50%; margin-right: -16px;
@@ -1359,25 +1361,23 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 /* Dates, times and prices line up column-wise down a list of shows. */
 .m-gig-when, .m-show-when, .m-row-tags, .m-session-date { font-variant-numeric: tabular-nums; }
 
-/* ------------------------------------------------- nine tabs, measured */
-/* Nine labelled pills do not fit a phone. At the standing size the bar
-   overflows the PAGE at 320, 375 AND 390px — every common width — and no
-   amount of shrinking the type fixes it without making the labels unreadable.
-   Shortening them ("Wander", "Insta") still overflows at 320.
+/* ------------------------------------------- nine tabs, every label */
+/* Nine labels DO fit — but only with the two longest shortened and the type
+   brought down. Measured across 320/375/390, all nine visible:
 
-   So below 430px the labels step back and the icons carry the bar, with the
-   label kept for the tab you are ON and for What Now, which is the one the
-   whole tab bar now points at.
+     "Wikipedia" + "Instagram"   overflows the page at 320, 375 AND 390
+     "Wiki" + "Insta" @ .6rem    fits 375 and 390, overflows 320
+     "Wiki" + "Insta" @ .52rem   fits 320 too, once gaps and padding tighten
 
-   Full labels return at 470px, not 430. Measured: with every label shown the
-   bar still overflows the page at 430 — the centre column takes 66px of it —
-   and first fits at 470. Picking the breakpoint by eye would have shipped a
-   sideways-scrolling page on a large phone in landscape. */
-@media (max-width: 469px) {
-  .tabbar button { font-size: .6rem; }
-  .tabbar button > span { display: none; }
-  .tabbar button.on > span,
-  .tabbar #tab-whatnow > span { display: block; }
+   Hiding the labels was the earlier answer and it made eight of nine tabs a
+   guess. Shortening two words costs less than that. What Now's column is
+   `auto`, so it takes the room its label needs and the other eight share the
+   rest — which is why it can keep two words while they get one. */
+@media (max-width: 374px) {
+  .tabbar { gap: 1px; padding: 3px; }
+  .tabbar button { font-size: .52rem; padding-left: 1px; padding-right: 1px; }
+  .tabbar button svg { width: 20px; height: 20px; }
+  .tabbar #tab-whatnow > span { padding: 0 4px; }
 }
 
 /* ============================================================ photos */
@@ -1529,7 +1529,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .tabbar #tab-whatnow.on { color: var(--now); background: var(--now-soft); }
 .tabbar #tab-whatnow.on svg { stroke-width: 2.2; }
 .tabbar #tab-whatnow > span { font-weight: 700; letter-spacing: -.01em;
-  white-space: nowrap; padding: 0 3px; }
+  white-space: nowrap; padding: 0 5px; }
 
 /* ============================================================ what now */
 .wn-hero { margin-bottom: 14px; }
