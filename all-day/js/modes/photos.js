@@ -378,7 +378,7 @@ export function render() {
   root.innerHTML = '';
   tabStamp(root, stampOf(data.peek('weather') && data.peek('weather').updated), 'photos, as they are approved');
 
-  root.appendChild(seg([['sunsets', 'Sunsets'], ['all', 'Everything']],
+  root.appendChild(seg([['sunsets', 'Sunsets'], ['all', 'All photos']],
     state.view, (v) => { state.view = v; render(); }));
   root.appendChild(el('div', null, '<div style="height:14px"></div>'));
 
@@ -420,6 +420,13 @@ function renderSunsets(root) {
 
 /* Small, bottom, and labelled as somebody else's picture. */
 function potdStrip(root) {
+  /* Every photo on this tab is from here, so the app-wide LOCAL switch has
+     nothing to filter — except this. Rather than draw a second control that
+     would do almost nothing, the tab OBEYS the shared setting: turn local on
+     anywhere in the app and the one picture that isn't Burlington's steps
+     aside. That is the promise the switch makes — flip it on the wire, walk
+     here, and you are still in local. */
+  if (store.settings().localOnly) return;
   loadPotd();
   const p = state.potd;
   if (!p) return;
