@@ -1683,30 +1683,78 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
    comes from that local set rather than the app's tokens, which is why this
    block does not follow the usual light/dark pattern — the sky IS the theme
    here, and it is the same at 2pm in either mode. */
-#panel-whatnow { position: relative; }
+/* NO `position: relative` HERE. #panel-whatnow is itself a .panel — which is
+   already `position: absolute; inset: 0`, so it is already a containing block
+   for the sky. An id outranks a class, so adding relative here beat that: the
+   panel stopped being pinned to the shell and grew to its own 7,700px of
+   content, leaving clientHeight === scrollHeight. It could not scroll at all.
+   A desktop browser hid it by scrolling the page instead; on iOS, where the
+   shell is fixed at 100dvh, there is nothing to fall back to — the tab simply
+   would not move on iPad, and dragged a 7,700px layer on iPhone. */
 .wn-sky {
   position: absolute; left: 0; right: 0; top: 0; z-index: 0;
   /* height is set in JS from the last sky-lit element — see whatnow.js */
   height: 420px; pointer-events: none;
-  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 42%,
-    var(--sky-low) 68%, transparent 100%);
+  /* The fade used to start at 68% of that height, so everything in the bottom
+     third — the spin buttons, the pool line, the path chips — sat in sky-lit
+     ink on a near-white wash. JS sizes the sky as (last lit element + 90px),
+     so holding the colour to calc(100% - 90px) puts the whole fade in that
+     tail and every lit element keeps a real ground under it. */
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 46%,
+    var(--sky-low) calc(100% - 90px), transparent 100%);
 }
 #panel-whatnow > *:not(.wn-sky) { position: relative; z-index: 1; }
 
-/* six phases, from the sun times — night, dawn, morning, day, golden, dusk */
-#panel-whatnow { --sky-top: #2E5F92; --sky-mid: #5484B0; --sky-low: #9FC0D8;
-  --sky-ink: #FFFFFF; --sky-soft: rgba(255,255,255,.78); --sky-faint: rgba(255,255,255,.6); }
-#panel-whatnow[data-phase="night"]   { --sky-top:#05070D; --sky-mid:#0A1226; --sky-low:#14213A; }
-#panel-whatnow[data-phase="dawn"]    { --sky-top:#1E2A4E; --sky-mid:#8A5A6E; --sky-low:#E8927C; }
-#panel-whatnow[data-phase="morning"] { --sky-top:#27547E; --sky-mid:#4E7CA6; --sky-low:#A8C4D8; }
-#panel-whatnow[data-phase="day"]     { --sky-top:#2E5F92; --sky-mid:#5484B0; --sky-low:#9FC0D8; }
-#panel-whatnow[data-phase="golden"]  { --sky-top:#3D6088; --sky-mid:#E09A4E; --sky-low:#F5C173; }
-#panel-whatnow[data-phase="dusk"]    { --sky-top:#232B55; --sky-mid:#6E4A72; --sky-low:#C96A4A; }
+/* THE INK FOLLOWS THE SKY.
+   Every phase used to run a dark top into a pale bottom and print white on all
+   of it, which meant the lower half — "Nah, spin again", the pool line, the
+   path chips — was white on #F5C173 at 1.5:1. A gradient that crosses from
+   dark to light cannot carry one ink, so each phase now stays on one side of
+   that line: night and dusk are dark skies with white ink, the four daylight
+   phases are bright skies with dark ink. Nothing below is a bare colour — the
+   glass, the pills and the shadows all come from the set, so a phase switches
+   as a whole and cannot half-invert. Worst contrast measured: 8.5:1. */
+#panel-whatnow {
+  --sky-top: #93BAD6; --sky-mid: #A9C7DE; --sky-low: #C6DCEA;
+  /* dark ink, for a bright sky */
+  --sky-ink: #1A1206;
+  --sky-soft: rgba(26,18,6,.8);
+  --sky-faint: rgba(26,18,6,.62);
+  --sky-glass: rgba(255,255,255,.3);
+  --sky-glass-line: rgba(255,255,255,.5);
+  --sky-pill: rgba(255,255,255,.34);
+  --sky-pill-line: rgba(255,255,255,.55);
+  --sky-solid: rgba(28,20,8,.9);
+  --sky-solid-ink: #FFF6E8;
+  --sky-tshadow: none;
+  --sky-cardshadow: 0 10px 26px rgba(26,40,60,.16);
+}
+#panel-whatnow[data-phase="dawn"]    { --sky-top:#F0A98E; --sky-mid:#EE9C82; --sky-low:#F7CDB2; }
+#panel-whatnow[data-phase="morning"] { --sky-top:#9BBFD8; --sky-mid:#B0CBE0; --sky-low:#CBDFEC; }
+#panel-whatnow[data-phase="day"]     { --sky-top:#93BAD6; --sky-mid:#A9C7DE; --sky-low:#C6DCEA; }
+#panel-whatnow[data-phase="golden"]  { --sky-top:#E8A75C; --sky-mid:#F0BB73; --sky-low:#F8D9A6; }
+/* the two dark phases keep the white ink the panel was designed around */
+#panel-whatnow[data-phase="night"],
+#panel-whatnow[data-phase="dusk"] {
+  --sky-ink: #FFFFFF;
+  --sky-soft: rgba(255,255,255,.82);
+  --sky-faint: rgba(255,255,255,.68);
+  --sky-glass: rgba(255,255,255,.14);
+  --sky-glass-line: rgba(255,255,255,.22);
+  --sky-pill: rgba(255,255,255,.16);
+  --sky-pill-line: rgba(255,255,255,.24);
+  --sky-solid: rgba(255,255,255,.92);
+  --sky-solid-ink: #1A1206;
+  --sky-tshadow: 0 1px 3px rgba(0,0,0,.35);
+  --sky-cardshadow: 0 12px 34px rgba(6,10,20,.28);
+}
+#panel-whatnow[data-phase="night"] { --sky-top:#05070D; --sky-mid:#0A1226; --sky-low:#14213A; }
+#panel-whatnow[data-phase="dusk"]  { --sky-top:#232B55; --sky-mid:#4A3560; --sky-low:#6E3A43; }
 
 .wn-strip {
   font-family: var(--mono); font-size: .64rem; letter-spacing: .1em;
   text-transform: uppercase; color: var(--sky-soft); margin: 2px 2px 12px;
-  text-shadow: 0 1px 3px rgba(0,0,0,.35);
+  text-shadow: var(--sky-tshadow);
 }
 
 /* window picker — three words, not a segmented control; it is a sentence */
@@ -1714,17 +1762,19 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 .wn-mode {
   flex: 1; padding: 9px 8px; min-height: 40px; border-radius: var(--pill);
   font-size: .88rem; font-weight: 600; color: var(--sky-soft);
-  background: rgba(255,255,255,.13); border: 1px solid rgba(255,255,255,.18);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  background: var(--sky-glass); border: 1px solid var(--sky-glass-line);
 }
-.wn-mode.on { color: #1A1206; background: rgba(255,255,255,.92); border-color: transparent; }
+.wn-mode.on { color: var(--sky-solid-ink); background: var(--sky-solid); border-color: transparent; }
 
 /* the answer — a glass card on the sky */
 .wn-answer {
   padding: 20px 19px 18px; border-radius: var(--radius-lg); margin-bottom: 12px;
-  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
-  backdrop-filter: saturate(140%) blur(16px); -webkit-backdrop-filter: saturate(140%) blur(16px);
-  box-shadow: 0 12px 34px rgba(6,10,20,.28);
+  background: var(--sky-glass); border: 1px solid var(--sky-glass-line);
+  /* No backdrop-filter. The only thing behind these is the sky, and the sky is
+     a linear gradient — blurring a linear gradient returns the same linear
+     gradient, so the four filters here cost a full-frame backdrop repaint on
+     every scroll tick and bought nothing visible. */
+  box-shadow: var(--sky-cardshadow);
   transition: opacity .18s ease, transform .18s ease;
 }
 .wn-answer.is-spinning { opacity: .35; transform: scale(.985); }
@@ -1735,14 +1785,14 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 .wn-title {
   font-family: var(--serif); font-size: 2rem; line-height: 1.08; font-weight: 400;
   color: var(--sky-ink); letter-spacing: -.008em; text-wrap: balance;
-  text-shadow: 0 2px 10px rgba(0,0,0,.28);
+  text-shadow: var(--sky-tshadow);
 }
 .wn-meta { font-size: .95rem; color: var(--sky-soft); margin-top: 7px; line-height: 1.4; }
 .wn-blurb { font-size: .92rem; color: var(--sky-soft); margin-top: 9px; line-height: 1.5; }
 .wn-go {
   display: inline-flex; align-items: center; gap: 6px; margin-top: 13px;
   padding: 10px 17px; border-radius: var(--pill); min-height: 42px;
-  background: rgba(255,255,255,.92); color: #1A1206; font-weight: 600; font-size: .92rem;
+  background: var(--sky-solid); color: var(--sky-solid-ink); font-weight: 600; font-size: .92rem;
 }
 .wn-go svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
 
@@ -1759,8 +1809,9 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 /* "Whoa, that's interesting" is a sentence, not a word — let it take two
    lines on a narrow phone rather than shrink below reading size. */
 @media (max-width: 380px) { .wn-again, .wn-going { font-size: .87rem; } }
-.wn-again { color: var(--sky-ink); background: rgba(255,255,255,.16);
-  border: 1px solid rgba(255,255,255,.24); }
+.wn-again { color: var(--sky-ink); background: var(--sky-pill);
+  border: 1px solid var(--sky-pill-line); }
+/* white on #C0362C is 5.3:1 — the one control that reads the same on any sky */
 .wn-going { color: #fff; background: var(--now); box-shadow: 0 4px 14px rgba(192,54,44,.4); }
 .wn-pool {
   font-family: var(--mono); font-size: .6rem; letter-spacing: .07em;
@@ -1768,9 +1819,9 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 }
 .wn-paths { margin-bottom: 4px; }
 /* the chips sit on the sky, so they cannot use the app's panel colours */
-.wn-paths .chip { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.2);
+.wn-paths .chip { background: var(--sky-glass); border-color: var(--sky-glass-line);
   color: var(--sky-soft); }
-.wn-paths .chip.on { background: rgba(255,255,255,.92); color: #1A1206; border-color: transparent; }
+.wn-paths .chip.on { background: var(--sky-solid); color: var(--sky-solid-ink); border-color: transparent; }
 
 /* below the fold the sky has faded out and the app's own colours resume */
 .wn-list { border-top: 1px solid var(--edge-soft); }
