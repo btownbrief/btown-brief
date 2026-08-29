@@ -88,8 +88,7 @@ export function rail(host, { label } = {}) {
   const track = el('div', 'rail');
   const nav = el('div', 'rail-nav');
   const bar = el('div', 'rail-bar', '<i></i>');
-  const dots = el('div', 'rail-dots');
-  nav.append(bar, dots);
+  nav.appendChild(bar);
   wrap.append(track, nav);
   host.appendChild(wrap);
 
@@ -109,17 +108,13 @@ export function rail(host, { label } = {}) {
   });
   nav.appendChild(expand);
 
-  /* One dot per screenful, never per card. Past MAX_DOTS the dots stop being
-     a map and become a smear, so they cap and track position proportionally
-     — the bar above them carries the precision. */
-  const MAX_DOTS = 7;
+  /* No dots. The bar already says where you are and how much is left, and
+     saying it twice in two different resolutions was noise. */
   const MIN_THUMB = 14;   // percent — a sliver you cannot see is not a control
 
   function sync() {
     const view = track.clientWidth;
     const total = Math.max(view, track.scrollWidth);
-    const pages = Math.max(1, Math.ceil((total - 4) / Math.max(1, view)));
-    const n = Math.min(MAX_DOTS, pages);
 
     /* The thumb is always drawn. When everything fits it fills the track,
        which says "this is all of it" rather than hiding the control. */
@@ -129,15 +124,8 @@ export function rail(host, { label } = {}) {
     thumb.style.width = width + '%';
     thumb.style.left = (ratio * (100 - width)) + '%';
 
-    if (dots.childElementCount !== n) {
-      dots.innerHTML = '';
-      for (let i = 0; i < n; i++) dots.appendChild(el('i'));
-    }
-    const active = Math.round(ratio * (n - 1));
-    [...dots.children].forEach((d, i) => d.classList.toggle('on', i === active));
-    dots.hidden = n < 2;
-    /* nothing to scroll and nothing to expand — say so by getting out of
-       the way, rather than offering controls that do nothing */
+    /* nothing to scroll and nothing to expand — get out of the way rather
+       than offering a control that does nothing */
     expand.hidden = track.childElementCount < 3;
   }
 

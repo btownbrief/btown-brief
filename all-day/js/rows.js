@@ -51,7 +51,11 @@ export function feedRow(it, src, opts = {}) {
   const meta = el('span', 'fi-meta');
   if (local && !opts.tag) meta.appendChild(el('span', 'tag-local', 'Local'));
   if (opts.tag) meta.appendChild(el('span', 'tag-local', esc(opts.tag)));
-  meta.appendChild(el('span', 'fi-src', esc(src?.short || src?.name || '')));
+  /* the outlet wears its topic's colour — the cheapest colour on the page,
+     because the words are already there */
+  const topic = (src && src.topic) || '';
+  meta.appendChild(el('span', 'fi-src' + (topic ? ' t-' + topic : ''),
+    esc(src?.short || src?.name || '')));
   if (it.d) meta.appendChild(el('span', null, agoShort(it.d)));
   if (opts.isNew) meta.appendChild(el('span', 'tag-new', 'New'));
   if (it.a) meta.appendChild(el('span', null, '♪'));
@@ -72,6 +76,8 @@ export function feedRow(it, src, opts = {}) {
   });
   foot.appendChild(vote);
 
+  row.appendChild(foot);
+
   const star = starBtn(store.isSaved(k));
   star.addEventListener('click', (e) => {
     e.preventDefault();
@@ -79,9 +85,7 @@ export function feedRow(it, src, opts = {}) {
     star.classList.toggle('on', on);
     star.setAttribute('aria-pressed', on ? 'true' : 'false');
   });
-  foot.appendChild(star);
-
-  row.appendChild(foot);
+  row.appendChild(star);
   if (it.i) {
     const img = el('img', 'fi-thumb');
     img.src = it.i;

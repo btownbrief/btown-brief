@@ -41,7 +41,14 @@ function render() {
     map[s.id] = s;
     if (/reddit\.com/.test(s.site || '') && !muted[s.id]) subs.push(s);
   });
-  subs.sort((a, b) => (a.short || '').localeCompare(b.short || ''));
+  /* r/burlington and r/vermont are the reason this tab exists; everything
+     else is alphabetical behind them. */
+  const LEAD = ['r/burlington', 'r/vermont'];
+  const rank = (x) => {
+    const i = LEAD.indexOf((x.short || '').toLowerCase());
+    return i === -1 ? LEAD.length : i;
+  };
+  subs.sort((a, b) => rank(a) - rank(b) || (a.short || '').localeCompare(b.short || ''));
   if (state.sub && !subs.some((s) => s.id === state.sub)) state.sub = null;
 
   const all = (Array.isArray(state.pulse.items) ? state.pulse.items : [])
