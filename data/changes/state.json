@@ -34,14 +34,14 @@
     "resultTime": "2026-08-28T21:27:00+00:00"
    },
    "North Beach North": {
-    "status": "closed",
-    "reason": "Closed",
-    "resultTime": "2026-08-28T11:35:00+00:00"
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-08-29T11:41:00+00:00"
    },
    "North Beach South": {
-    "status": "closed",
-    "reason": "Closed",
-    "resultTime": "2026-08-28T11:34:00+00:00"
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-08-29T11:42:00+00:00"
    },
    "North Shore Natural Area": {
     "status": "open",
@@ -468,6 +468,15 @@
      "ACC Moose Dangerous Dog Hering"
     ]
    },
+   "10177": {
+    "name": "Parks, Arts, and Culture",
+    "start": "2026-09-01T12:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "9/1/2026 12:00 PM, Parks, Arts, and Culture",
+     "9/1/2026 12:00 PM, Parks, Arts, and Culture"
+    ]
+   },
    "10122": {
     "name": "Development Review Board Meeting",
     "start": "2026-09-01T17:00:00+00:00",
@@ -548,14 +557,6 @@
     "files": [
      "Agenda V.1",
      "Agenda packet V.1"
-    ]
-   },
-   "10160": {
-    "name": "Design Advisory Board Meeting",
-    "start": "2026-09-08T15:00:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "DAB Meeting Cancellation Notice"
     ]
    }
   }
@@ -941,6 +942,13 @@
    "wcax": {
     "items": [
      {
+      "id": "WHWGAQ7XFRGOBBON4V6UUIDSGI",
+      "title": "N.H. feed and supply store hosting party to celebrate 100 years",
+      "link": "https://www.wcax.com/2026/08/29/nh-feed-supply-store-hosting-party-celebrate-100-years/",
+      "ts": "2026-08-29T12:28:50+00:00",
+      "summary": "A well-known Upper Valley feed and supply store is celebrating turning 100 Saturday."
+     },
+     {
       "id": "DZPPX6OH2ZGSLIQIO6SXS4MWPE",
       "title": "What to Do: Saturday, August 29",
       "link": "https://www.wcax.com/2026/08/29/what-do-saturday-august-29/",
@@ -1282,18 +1290,81 @@
       "link": "https://www.wcax.com/2026/08/26/uvm-awarded-33-million-advance-research-snow-outdoor-economy/",
       "ts": "2026-08-26T21:21:33+00:00",
       "summary": "The University of Vermont is leading a major push to understand winter in New England and how it affects our economy."
-     },
-     {
-      "id": "TTO3O7GTFFHEFL7PIZTE7RREQY",
-      "title": "New students arrive at UVM as city, campus step up safety measures",
-      "link": "https://www.wcax.com/2026/08/26/new-students-arrive-uvm-city-campus-step-up-safety-measures/",
-      "ts": "2026-08-26T21:11:27+00:00",
-      "summary": "Safety is a top priority for UVM as Burlington deals with ongoing concerns downtown."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73559625",
+      "title": "Colorado family wakes to bear having ‘breakfast’ in their kitchen",
+      "link": "https://www.mynbc5.com/article/bear-eats-breakfast-in-colorado-home/73559625",
+      "ts": "2026-08-29T14:24:00+00:00",
+      "summary": "A Colorado family woke up to an unusual surprise when they walked downstairs and saw a bear sitting in their kitchen."
+     },
+     {
+      "id": "73559601",
+      "title": "The Earth is sizzling, but climate isn't a hot topic for Democratic candidates",
+      "link": "https://www.mynbc5.com/article/earth-climate-change-democrat-campaign-global-warming/73559601",
+      "ts": "2026-08-29T14:07:00+00:00",
+      "summary": "Climate change has been eclipsed by issues such as affordability, U.S. support for Israel and how to confront Trump in candidates' campaigns."
+     },
+     {
+      "id": "73559212",
+      "title": "At least 37 killed after Russian attack hits Ukraine's Kyiv region",
+      "link": "https://www.mynbc5.com/article/russian-attack-ukraine-kyiv/73559212",
+      "ts": "2026-08-29T13:32:00+00:00",
+      "summary": "At least 37 people have been killed following a Russian attack close to the Ukrainian capital of Kyiv, officials said Saturday."
+     },
+     {
+      "id": "73559340",
+      "title": "Will Trump's 'historic' oil deal with Venezuela lower gas prices?",
+      "link": "https://www.mynbc5.com/article/trumps-historic-oil-deal-venezuela-lower-gas-prices/73559340",
+      "ts": "2026-08-29T13:12:00+00:00",
+      "summary": "President Donald Trump says the deal will substantially lower gas prices for Americans, but experts don't expect an immediate drop."
+     },
+     {
+      "id": "73559472",
+      "title": "Things to Do: Aug. 29, 2026",
+      "link": "https://www.mynbc5.com/article/things-to-doaugust-29-2026/73559472",
+      "ts": "2026-08-29T13:03:00+00:00",
+      "summary": "Looking for your Saturday plans? NBC5's Andrew Grautski has you covered with \"Things to Do.\""
+     },
+     {
+      "id": "73556692",
+      "title": "Vermont field hockey opens 2026 season with 5-2 victory over Northeastern",
+      "link": "https://www.mynbc5.com/article/vermont-opens-2026-season-with-5-2-victory-over-northeastern/73556692",
+      "ts": "2026-08-29T12:49:00+00:00",
+      "summary": "2025 America East all-rookie Veerle Nijhuis scores two goals in win against the Huskies"
+     },
+     {
+      "id": "73559257",
+      "title": "Nepal-China flood survivors reach safe areas; Families await news of nearly 3,000 missing",
+      "link": "https://www.mynbc5.com/article/nepal-china-flood-survivors-families-missing-dead/73559257",
+      "ts": "2026-08-29T12:48:00+00:00",
+      "summary": "The combined toll in Nepal and Tibet rose to 676 dead and nearly 3,000 people missing on Saturday."
+     },
+     {
+      "id": "73559361",
+      "title": "Some US cities are rewarding careful drivers with fewer red lights",
+      "link": "https://www.mynbc5.com/article/us-cities-reward-careful-drivers-fewer-red-lights/73559361",
+      "ts": "2026-08-29T12:42:00+00:00",
+      "summary": "Some U.S. cities have begun rewarding drivers traveling at or below the posted limit with earlier green lights."
+     },
+     {
+      "id": "73559408",
+      "title": "Sunny and pleasant Saturday, followed by a few showers Sunday",
+      "link": "https://www.mynbc5.com/article/sunny-and-pleasant-saturday-followed-by-a-few-showers-sunday-08-29-26/73559408",
+      "ts": "2026-08-29T11:47:00+00:00",
+      "summary": "Seasonable late-summer warmth this weekend; showers return, but not a washout Sunday"
+     },
+     {
+      "id": "73558900",
+      "title": "Trump’s longtime teleprompter operator to pay $65,000 to settle insider-trading case",
+      "link": "https://www.mynbc5.com/article/trump-teleprompter-operator-pay-fine-insider-trading-case/73558900",
+      "ts": "2026-08-29T09:37:00+00:00",
+      "summary": "The Trump administration settled an insider-trading case Friday against Trump's longtime teleprompter operator, fining him $65,000 for “unlawful” prediction-market trades."
+     },
      {
       "id": "73558453",
       "title": "Friday Night Fever Week 0: New York preview",
@@ -1337,13 +1408,6 @@
       "summary": "The White River Junction VA is notifying Veterans after protected health and personal information was unintentionally included in unencrypted communications."
      },
      {
-      "id": "73556692",
-      "title": "Vermont field hockey opens 2026 season with 5-2 victory over Northeastern",
-      "link": "https://www.mynbc5.com/article/vermont-opens-2026-season-with-5-2-victory-over-northeastern/73556692",
-      "ts": "2026-08-29T03:09:00+00:00",
-      "summary": "2025 America East all-rookie Veerle Nijhuis scores two goals in win against the Huskies"
-     },
-     {
       "id": "73557866",
       "title": "Turtle alert! Snapping turtle nests spotted at North Beach",
       "link": "https://www.mynbc5.com/article/turtle-alert-snapping-turtle-nests-spotted-at-north-beach/73557866",
@@ -1370,69 +1434,6 @@
       "link": "https://www.mynbc5.com/article/tiramisu-world-cup-looking-for-judges-to-taste-the-best-tiramisu-from-around-the-world/73557194",
       "ts": "2026-08-29T00:00:00+00:00",
       "summary": "An international dessert contest in Italy is looking for judges from around the world to taste some competitive coffee confections."
-     },
-     {
-      "id": "73556671",
-      "title": "Sand sculptor returns to Champlain Valley Fair with incredible America 250-themed piece",
-      "link": "https://www.mynbc5.com/article/sand-sculptor-returns-to-champlain-valley-fair-with-incredible-america-250-themed-piece/73556671",
-      "ts": "2026-08-28T22:44:00+00:00",
-      "summary": "An artist known for his incredible sand art is back at the Champlain Valley Fair again this year to debut a new America 250-themed piece."
-     },
-     {
-      "id": "73555925",
-      "title": "Police respond to rollover crash on Court Street in Plattsburgh",
-      "link": "https://www.mynbc5.com/article/plattsburgh-rollover-crash-on-court-street/73555925",
-      "ts": "2026-08-28T22:33:00+00:00",
-      "summary": "Police are responding to the scene of a rollover crash on Court Street in Plattsburgh. Viewer video shows that at least two vehicles were involved in the crash."
-     },
-     {
-      "id": "73555590",
-      "title": "States can regulate prediction markets as gambling, federal appeals court rules",
-      "link": "https://www.mynbc5.com/article/states-regulate-prediction-markets-appeals-court/73555590",
-      "ts": "2026-08-28T22:27:00+00:00",
-      "summary": "A federal appeals court ruled Friday that states can regulate prediction markets like gambling, dealing a major blow to the booming industry."
-     },
-     {
-      "id": "73555633",
-      "title": "Man enters plea following three-car hit-and-run crash in Rutland",
-      "link": "https://www.mynbc5.com/article/rutland-vermont-crash-tyson-evans/73555633",
-      "ts": "2026-08-28T22:23:00+00:00",
-      "summary": "Rutland resident Tyson Evans has pleaded not guilty to multiple charges relating to a three-car hit-and-run crash that took place on Thursday"
-     },
-     {
-      "id": "73553155",
-      "title": "Six months after Iran war, America’s oil reserves drop to lowest levels since 1982",
-      "link": "https://www.mynbc5.com/article/us-oil-reserves-hit-all-time-low-iran-war/73553155",
-      "ts": "2026-08-28T22:10:00+00:00",
-      "summary": "The U.S. has used 125.7 million barrels from its emergency stockpile since the start of the Iran war."
-     },
-     {
-      "id": "73553852",
-      "title": "Doctors already have some flu vaccines as COVID shots lag behind",
-      "link": "https://www.mynbc5.com/article/updated-flu-vaccine-available-covid-shot-coming-soon/73553852",
-      "ts": "2026-08-28T22:02:00+00:00",
-      "summary": "Flu season is coming, and while flu vaccines are here, pharmacies still don’t know when updated COVID shots will arrive."
-     },
-     {
-      "id": "73556673",
-      "title": "Vermont representatives share frustrations as USPS mail delays continue",
-      "link": "https://www.mynbc5.com/article/continued-usps-mail-delays/73556673",
-      "ts": "2026-08-28T22:01:00+00:00",
-      "summary": "Vermont's congressional delegation is demanding answers about continuing mail delays across the state."
-     },
-     {
-      "id": "73556620",
-      "title": "Brattleboro Memorial Hospital still searching for ways to keep their birthing center open",
-      "link": "https://www.mynbc5.com/article/birthing-center-still-in-question/73556620",
-      "ts": "2026-08-28T22:00:00+00:00",
-      "summary": "Brattleboro Memorial Hospital is looking for ways to stabilize its finances, with the future of its birthing center still in question."
-     },
-     {
-      "id": "73556559",
-      "title": "State officials met with Vermont's 2026 Kid Governor",
-      "link": "https://www.mynbc5.com/article/2026-kid-governor/73556559",
-      "ts": "2026-08-28T22:00:00+00:00",
-      "summary": "Vermont congresswoman Becca Balint and Secretary of State Sarah Copeland Hanzas visited Highgate Elementary School on Friday, to meet with Vermont's 2026 Kid Governor."
      }
     ]
    },
