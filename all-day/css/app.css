@@ -1956,8 +1956,8 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 
 /* The arcade board sits directly under sports and borrows its whole card, so
    the two read as one pair of pointers rather than two unrelated boxes. Three
-   rows, tabular figures, and the name allowed to run out with an ellipsis —
-   the score is the part that has to stay readable. */
+   rows, and the name allowed to run out with an ellipsis — the count is the
+   part that has to stay readable. */
 .wn-arcade { margin: 10px 0 4px; }
 .wn-arcade-hit { display: block; padding: 14px 15px; border-radius: var(--radius);
   background: var(--panel-2); border: 1px solid var(--edge); }
@@ -1972,8 +1972,8 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 .wn-arcade-r i { font-style: normal; flex: 0 0 auto; }
 .wn-arcade-r em { font-style: normal; color: var(--ink); font-weight: 500;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wn-arcade-r b { margin-left: auto; flex: 0 0 auto; color: var(--ink);
-  font-family: var(--mono); font-size: .82rem; font-variant-numeric: tabular-nums; }
+.wn-arcade-r b { margin-left: auto; flex: 0 0 auto; color: var(--ink-soft);
+  font-size: .8rem; font-weight: 500; font-variant-numeric: tabular-nums; }
 .wn-arcade-more { display: inline-flex; align-items: center; gap: 5px; margin-top: 9px;
   font-size: .84rem; font-weight: 600; color: var(--accent); }
 .wn-arcade-more svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
