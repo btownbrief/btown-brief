@@ -113,16 +113,22 @@ function cover(a, cls) {
   return box;
 }
 
+/* data-pk is the contract with the shell: it paints every button carrying one
+   as play or pause when the audio state changes, so a button pressed inside a
+   sheet answers immediately even though the dock is behind it. */
 function sessionPlay(a) {
   if (!a.session || !a.session.audio) return null;
   const k = 'rs:' + a.id;
-  const b = el('button', 'm-play', ICON.play);
+  const live = app.nowPlaying() === k && app.isPlaying();
+  const b = el('button', 'm-play' + (live ? ' is-playing' : ''), live ? ICON.pause : ICON.play);
+  b.dataset.pk = k;
   b.setAttribute('aria-label', 'Play the Rocket Shop session by ' + a.name);
   b.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    app.playAudio({ src: a.session.audio, title: a.name + ' — Rocket Shop session',
-                    show: 'Big Heavy World', art: artOf(a) || '', key: k });
+    app.toggleAudio({ src: a.session.audio, title: a.name + ' — Rocket Shop session',
+                      show: 'Big Heavy World', art: artOf(a) || '', key: k,
+                      href: a.session.url || '' });
   });
   return b;
 }
@@ -130,6 +136,11 @@ function sessionPlay(a) {
 /* ------------------------------------------------------------ artist sheet */
 
 function openArtist(a) {
+  /* Everything the sheet starts that outlives its own DOM gets unhooked here.
+     The Bandcamp iframe is the reason: it is cross-origin, so it cannot be
+     asked what it is doing or told to stop, and a hidden sheet that still
+     holds one keeps playing underneath whatever you press next. */
+  const teardown = [];
   app.sheet(a.name, (body) => {
     const head = el('div', 'm-sheet-head');
     head.append(cover(a, 'm-sheet-art'));
@@ -177,7 +188,8 @@ function openArtist(a) {
        actually opened. It plays a whole track to someone who is not logged in,
        which is the only embed on this page that does. */
     if (a.bandcamp && a.bandcamp.album) {
-      shelfHead(body, 'Listen', a.bandcamp.title ? esc(a.bandcamp.title) : 'On Bandcamp');
+      shelfHead(body, 'Listen', (a.bandcamp.title ? esc(a.bandcamp.title) + ' · ' : '') +
+        'a whole track, free — this one plays on Bandcamp, not in the app player');
       /* Bandcamp paints its own player, so it has to be told the theme or a
          white panel glares out of a dark sheet. Read the live state rather
          than the stored setting — 'auto' means whatever the phone is doing. */
@@ -193,11 +205,36 @@ function openArtist(a) {
       frame.loading = 'lazy';
       frame.title = a.name + ' on Bandcamp';
       body.appendChild(frame);
+
+      /* Reloading the frame is the only way to stop a player we do not own:
+         there is no API, and postMessage is not answered. Registering it means
+         starting a Rocket Shop session silences Bandcamp first. */
+      teardown.push(app.registerForeign(() => {
+        const src = frame.getAttribute('src');
+        if (!src) return;
+        frame.removeAttribute('src');
+        frame.setAttribute('src', src);
+      }));
+
+      /* And the other direction, which has no event at all: a click inside a
+         cross-origin iframe blurs the page and makes the frame the active
+         element. It is the only signal Bandcamp gives that someone pressed
+         its play button, and it is enough to get our own player out of the
+         way. Worst case it pauses a session while you were only reading the
+         track list — one tap to resume, against two songs at once. */
+      const onBlur = () => { if (document.activeElement === frame) app.pauseAudio(); };
+      window.addEventListener('blur', onBlur);
+      teardown.push(() => window.removeEventListener('blur', onBlur));
     }
 
     const links = el('div', 'btns m-links');
     const LABEL = { bandcamp: 'Bandcamp', site: 'Website', instagram: 'Instagram',
-                    spotify: 'Spotify', wikipedia: 'Wikipedia', session: 'Session' };
+                    spotify: 'Spotify', wikipedia: 'Wikipedia', session: 'Session',
+                    soundcloud: 'SoundCloud',
+                    /* the piece that put them on this roster — provenance a
+                       reader can check, on a tab whose whole claim is that a
+                       person chose these names */
+                    sevendays: 'Seven Days' };
     Object.keys(a.links || {}).forEach((k) => {
       const href = a.links[k];
       if (!href) return;
@@ -208,7 +245,7 @@ function openArtist(a) {
       links.appendChild(btn);
     });
     if (links.childElementCount) body.appendChild(links);
-  });
+  }, () => teardown.forEach((fn) => { try { fn(); } catch (e) { /* going away anyway */ } }));
 }
 
 /* ------------------------------------------------------------ artist cards */
