@@ -481,6 +481,49 @@ def collapse_runs(rows: list[dict]) -> list[dict]:
     return out
 
 
+def adopt_room_truth(calendar: dict, bigrooms: list[dict], today: dt.date) -> None:
+    """For the two rooms that publish their own calendar, use it.
+
+    The combined list is built from aggregators, and an aggregator can be
+    flatly wrong about which room a show is in: `champlainvalley` put the
+    Marcus King Band at Higher Ground on 26 September when Higher Ground's own
+    calendar has it at the Flynn on the 15th. It can also just miss things —
+    the aggregators had 8 Flynn shows inside the window against the Flynn's
+    own 20.
+
+    So inside the window, these two venues' rows come from the venue. This is
+    a substitution and not a merge on purpose: matching titles across sources
+    is exactly the thing that is unreliable here, and the room is the
+    authority on its own bookings.
+
+    Only when the room actually answered. A failed fetch leaves the
+    aggregators' rows alone rather than emptying the venue."""
+    rows = calendar["events"]
+    horizon = (today + dt.timedelta(days=WINDOW_DAYS)).isoformat()
+    for room in bigrooms:
+        if room.get("error") or not room["events"]:
+            continue
+        vid = room["id"]
+        was = sum(1 for r in rows if r["vid"] == vid)
+        rows = [r for r in rows if r["vid"] != vid]
+        # a run that starts inside the window belongs on the day it starts
+        own = [dict(e) for e in room["events"] if e["date"] <= horizon]
+        for e in own:
+            e.pop("through", None)
+        rows.extend(own)
+        log(f"  calendar: {room['name']} {was} aggregator row(s) -> "
+            f"{len(own)} from the room itself")
+    rows.sort(key=lambda r: (r["date"], minutes(r["time"]), r["venue"], r["title"]))
+    calendar["events"] = rows
+
+    counts: dict[str, dict] = {}
+    for r in rows:
+        v = counts.setdefault(r["vid"], {"id": r["vid"], "name": r["venue"], "n": 0})
+        v["n"] += 1
+    calendar["venues"] = sorted(counts.values(),
+                                key=lambda v: (-v["n"], v["name"].lower()))
+
+
 def big_room(room: dict, today: dt.date) -> dict:
     """One room's whole announced calendar, straight from its adapter.
 
@@ -568,6 +611,7 @@ def main() -> int:
     for r in bigrooms:
         log(f"  {r['name']}: {r['n']} shows through {r['far'] or '—'}"
             + (f"  [{r['error']}]" if r.get("error") else ""))
+    adopt_room_truth(calendar, bigrooms, today)
 
     artists, n_bc, n_se, n_sh = [], 0, 0, 0
     for a in roster:
