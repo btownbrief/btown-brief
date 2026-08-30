@@ -76,6 +76,13 @@
   --safe-t: env(safe-area-inset-top, 0px);
   --mast-h: 56px;
   --nav-h: 0px;
+  /* Where the app's own chrome may start. Added to the home screen the page
+     runs edge to edge (viewport-fit=cover + black-translucent), so y=0 is
+     BEHIND the iOS clock — the shared bar pads itself past the inset, and its
+     measured height therefore already clears it. --nav-h is 0 until nav.js
+     lands and stays 0 if it never does, so the inset has to be the floor or
+     the masthead spends that first load under the status bar. */
+  --top-h: max(var(--nav-h), var(--safe-t));
 }
 
 /* phones set to dark — unless the reader explicitly chose light */
@@ -189,10 +196,17 @@ a { color: inherit; text-decoration: none; }
    scrolling page and wrong for a fixed shell. Pinned here, it is the one
    thing that travels with you down the page — the way out to the rest of the
    network is always one tap away. --nav-h stays 0 if the bar never loads. */
-.btnav { position: fixed; top: 0; left: 0; right: 0; z-index: 41; }
+.btnav { position: fixed; top: 0; left: 0; right: 0; z-index: 41;
+  /* The status-bar strip belongs to the bar: it paints its own navy up
+     behind the clock instead of being hidden under it. nav.js sets the same
+     padding for every property that runs full-bleed; this repeats it so the
+     app is right on its own the moment the CSS loads. */
+  padding-top: var(--safe-t);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px); }
 
 .mast {
-  position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 40;
+  position: fixed; top: var(--top-h); left: 0; right: 0; z-index: 40;
   background: var(--dock-bg);
   backdrop-filter: saturate(140%) blur(18px);
   -webkit-backdrop-filter: saturate(140%) blur(18px);
@@ -275,7 +289,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
    sticky offsets meaning what they say. */
 .panel::before {
   content: ""; display: block;
-  height: calc(var(--nav-h) + var(--mast-h) + 16px);
+  height: calc(var(--top-h) + var(--mast-h) + 16px);
 }
 body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--safe-b)); }
 .panel[hidden] { display: none; }
@@ -995,9 +1009,9 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .confirm-card p { font-size: .93rem; color: var(--ink-soft); line-height: 1.5; margin-bottom: 18px; }
 .confirm-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 
-body.chrome-away .fresh { top: calc(var(--nav-h) + 12px); }
+body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
 .fresh {
-  position: fixed; top: calc(var(--nav-h) + var(--mast-h) + 12px); left: 50%;
+  position: fixed; top: calc(var(--top-h) + var(--mast-h) + 12px); left: 50%;
   transform: translateX(-50%); z-index: 44;
   transition: top .26s ease;
   background: var(--accent); color: #fff; border-radius: var(--pill);
@@ -1234,7 +1248,7 @@ body.chrome-away .fresh { top: calc(var(--nav-h) + 12px); }
    deliberate floating control instead of a sticky element with gaps. */
 .ctlband {
   position: sticky;
-  top: calc(var(--nav-h) + var(--mast-h) + 6px);
+  top: calc(var(--top-h) + var(--mast-h) + 6px);
   z-index: 12;
   margin: 0 -6px 12px;
   padding: 8px 8px 2px;
@@ -1248,7 +1262,7 @@ body.chrome-away .fresh { top: calc(var(--nav-h) + 12px); }
 }
 /* the masthead slides away as you read; the band follows it up */
 /* the masthead has gone; the shared bar has not */
-body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
+body.chrome-away .ctlband { top: calc(var(--top-h) + 6px); }
 .ctlband .chips { padding-bottom: 6px; }
 .ctlband .hint-bar { margin-bottom: 8px; }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

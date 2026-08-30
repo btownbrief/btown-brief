@@ -130,9 +130,33 @@ export function applyTheme(mode) {
   const root = document.documentElement;
   if (mode === 'auto') root.removeAttribute('data-theme');
   else root.setAttribute('data-theme', mode);
-  const dark = mode === 'dark' || (mode === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+  paintStatusBar();
+}
+
+/* Added to the home screen the app runs under the iOS clock, and iOS reads
+   theme-color to decide whether to draw that clock in black or white. The
+   strip it lands on is whatever is at the very top of the page: the shared
+   network bar, which is navy in BOTH themes. So the meta has to say navy —
+   answer with the page's own ground and a light-mode phone paints a black
+   clock onto the navy. If the bar never loaded, the masthead is the top strip
+   and the theme's own colour is the right answer again. app.js calls this
+   back when nav.js lands. */
+const NAV_BG = '#0E2230';
+
+export function paintStatusBar() {
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', dark ? '#06080A' : '#FBF9F5');
+  if (!meta) return;
+  /* nav.js is deferred and cross-origin, so for the first moment of every load
+     the bar is merely late rather than absent. Hold navy until the page has
+     finished loading and we can tell the difference — flipping the meta twice
+     on the way in makes the clock blink. */
+  if (document.querySelector('.btnav') || document.readyState !== 'complete') {
+    meta.setAttribute('content', NAV_BG);
+    return;
+  }
+  const t = theme();
+  const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+  meta.setAttribute('content', dark ? '#06080A' : '#FBF9F5');
 }
 
 /* What the toggle should flip to: whatever you are NOT looking at now. */
