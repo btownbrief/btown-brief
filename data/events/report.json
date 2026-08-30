@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-29T18:47:34-04:00",
+ "generated": "2026-08-30T10:30:27-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 18,
-   "seconds": 6.1
+   "count": 17,
+   "seconds": 5.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 68,
-   "seconds": 4.6
+   "count": 66,
+   "seconds": 9.8
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 68,
-   "seconds": 3.3
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 171,
-   "seconds": 2.5
+   "count": 166,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 84,
-   "seconds": 1.5
+   "count": 82,
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-29&end_date=2026-10-28&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-30&end_date=2026-10-29&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -43,18 +43,18 @@
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 9,
-   "seconds": 0.5
+   "count": 8,
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 191,
-   "seconds": 77.8
+   "count": 192,
+   "seconds": 65.4
   },
   "flynn": {
    "label": "The Flynn",
    "count": 36,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,52 +64,52 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 42.0
+   "seconds": 37.5
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 73,
-   "seconds": 0.4
+   "count": 72,
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 11.2
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 391,
-   "seconds": 67.4
+   "count": 384,
+   "seconds": 72.3
   },
   "meetup": {
    "label": "Meetup",
    "count": 67,
-   "seconds": 129.2
+   "seconds": 120.1
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 22,
+   "count": 21,
    "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 47,
-   "seconds": 15.0
+   "count": 49,
+   "seconds": 13.1
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 61,
-   "seconds": 0.8
+   "count": 57,
+   "seconds": 0.2
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 103,
-   "seconds": 1.9
+   "count": 102,
+   "seconds": 5.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 26,
-   "seconds": 34.3
+   "seconds": 31.2
   },
   "sevendays": {
    "label": "Seven Days",
@@ -123,8 +123,8 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 428,
-   "seconds": 23.5
+   "count": 430,
+   "seconds": 24.2
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -133,142 +133,20 @@
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 78,
-   "seconds": 107.2
+   "count": 76,
+   "seconds": 95.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 51,
-   "seconds": 0.1
+   "count": 52,
+   "seconds": 0.3
   }
  },
- "gathered": 3007,
- "afterDedup": 1663,
- "duplicatesMerged": 1344,
- "final": 1914,
+ "gathered": 2986,
+ "afterDedup": 1658,
+ "duplicatesMerged": 1328,
+ "final": 1895,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Thea Lewis | True Crime Stories of Vermont",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-10-01"
-  },
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-10-01"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-01"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-01"
-  },
-  {
-   "kept": {
-    "title": "Tōth",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-10-02"
-  },
-  {
-   "kept": {
-    "title": "Joe Dombrowski",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "vcc"
-   ],
-   "date": "2026-10-02"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-10-02"
-  },
-  {
-   "kept": {
-    "title": "UVM Weekend 2026",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-02"
-  },
-  {
-   "kept": {
-    "title": "Coffee and Code",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-02"
-  },
-  {
-   "kept": {
-    "title": "Neurobiological Intersection of Pain and Addiction: Clinical Implications",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-02"
-  },
-  {
-   "kept": {
-    "title": "Marine Carbon Dioxide Removal: Bad Ideas becoming Good Ideas ft. Libby Jewett",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-02"
-  },
   {
    "kept": {
     "title": "CAT ECare Training",
@@ -2347,6 +2225,17 @@
   },
   {
    "kept": {
+    "title": "Halloween at Winooski Farmers Market",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-10-25"
+  },
+  {
+   "kept": {
     "title": "CAT ECare Training",
     "source": "uvm"
    },
@@ -2358,12 +2247,34 @@
   },
   {
    "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-26"
+  },
+  {
+   "kept": {
     "title": "Allison Russell",
     "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
     "higherground"
+   ],
+   "date": "2026-10-27"
+  },
+  {
+   "kept": {
+    "title": "HONKY TONK TUESDAY!",
+    "source": "radiobean"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "radiobean"
    ],
    "date": "2026-10-27"
   },
@@ -2391,6 +2302,17 @@
   },
   {
    "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-27"
+  },
+  {
+   "kept": {
     "title": "TRIVIA NIGHT",
     "source": "churchst"
    },
@@ -2399,109 +2321,101 @@
     "loveburlington"
    ],
    "date": "2026-10-28"
+  },
+  {
+   "kept": {
+    "title": "Coloring in the Marble Court",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-28"
+  },
+  {
+   "kept": {
+    "title": "Empowerment Self-Defense (Employee Session)",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-28"
+  },
+  {
+   "kept": {
+    "title": "BOOST Sessions",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-28"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-28"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-28"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "loveburlington"
+   ],
+   "date": "2026-10-29"
+  },
+  {
+   "kept": {
+    "title": "Thirsty Thursday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-29"
   }
  ],
  "changes": [
   {
-   "id": "2ae61c191a33",
-   "title": "Quinn Sullivan",
-   "date": "2026-09-03",
+   "id": "026ea6db0b5e",
+   "title": "Industry Day",
+   "date": "2026-10-26",
    "change": "time",
-   "was": "2026-09-03T20:00:00-04:00",
-   "now": "2026-09-03T19:30:00-04:00"
+   "was": "2026-10-26",
+   "now": "2026-10-26T11:30:00-04:00"
   },
   {
-   "id": "a0b910c4ce4d",
-   "title": "Dead Sessions at Shelburne Vineyard",
-   "date": "2026-09-04",
+   "id": "6a2d8ca70931",
+   "title": "802sDay",
+   "date": "2026-10-27",
    "change": "time",
-   "was": "2026-09-04T20:00:00-04:00",
-   "now": "2026-09-04T18:30:00-04:00"
-  },
-  {
-   "id": "5e89d490baff",
-   "title": "Pride Ball",
-   "date": "2026-09-05",
-   "change": "time",
-   "was": "2026-09-05T20:00:00-04:00",
-   "now": "2026-09-05T19:30:00-04:00"
-  },
-  {
-   "id": "c9615a03615c",
-   "title": "A Band of Brothers",
-   "date": "2026-09-25",
-   "change": "time",
-   "was": "2026-09-25T20:00:00-04:00",
-   "now": "2026-09-25T19:30:00-04:00"
-  },
-  {
-   "id": "d4a70c5a1066",
-   "title": "Donna the Buffalo",
-   "date": "2026-09-26",
-   "change": "time",
-   "was": "2026-09-26T19:30:00-04:00",
-   "now": "2026-09-26T20:00:00-04:00"
-  },
-  {
-   "id": "606da42e8d50",
-   "title": "Cate Le Bon",
-   "date": "2026-09-28",
-   "change": "time",
-   "was": "2026-09-28T20:00:00-04:00",
-   "now": "2026-09-28T19:30:00-04:00"
-  },
-  {
-   "id": "035da8e2fbd6",
-   "title": "Southern Culture On The Skids",
-   "date": "2026-10-01",
-   "change": "time",
-   "was": "2026-10-01T19:00:00-04:00",
-   "now": "2026-10-01T19:30:00-04:00"
-  },
-  {
-   "id": "7259338f97fd",
-   "title": "White Denim",
-   "date": "2026-10-09",
-   "change": "time",
-   "was": "2026-10-09T19:00:00-04:00",
-   "now": "2026-10-09T19:30:00-04:00"
-  },
-  {
-   "id": "3834c112080b",
-   "title": "Buena Vista Orchestra",
-   "date": "2026-10-15",
-   "change": "time",
-   "was": "2026-10-15T19:00:00-04:00",
-   "now": "2026-10-15T20:00:00-04:00"
-  },
-  {
-   "id": "6c8b828a27dd",
-   "title": "Judge",
-   "date": "2026-10-17",
-   "change": "time",
-   "was": "2026-10-17T19:30:00-04:00",
-   "now": "2026-10-17T19:00:00-04:00"
-  },
-  {
-   "id": "d6cd2f5a0ac9",
-   "title": "Board Game Brunch",
-   "date": "2026-08-29",
-   "change": "missing",
-   "lastSeen": "2026-08-29T10:40:56-04:00"
-  },
-  {
-   "id": "bf10cd32dce0",
-   "title": "BTown Coffee Club",
-   "date": "2026-08-29",
-   "change": "missing",
-   "lastSeen": "2026-08-29T10:40:56-04:00"
-  },
-  {
-   "id": "39b9e5df68df",
-   "title": "Split in Half",
-   "date": "2026-08-29",
-   "change": "missing",
-   "lastSeen": "2026-08-29T10:40:56-04:00"
+   "was": "2026-10-27",
+   "now": "2026-10-27T11:30:00-04:00"
   },
   {
    "id": "fc05f3cb656a",
@@ -2542,8 +2456,7 @@
    "id": "944cbc4c1a78",
    "title": "Rick Maguire (of Pile)",
    "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-08-26T20:04:49-04:00"
+   "change": "dropped"
   },
   {
    "id": "df92314b4d65",
@@ -2619,8 +2532,7 @@
    "id": "b84e6ea0f5f8",
    "title": "Art Hop at Switchback",
    "date": "2026-09-11",
-   "change": "missing",
-   "lastSeen": "2026-08-26T20:04:49-04:00"
+   "change": "dropped"
   },
   {
    "id": "13799677e253",
@@ -2759,8 +2671,7 @@
    "id": "6bbd17767d09",
    "title": "Meanwhile in Vermont... Where do we show up in our nation's founding documents?",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-08-26T20:04:49-04:00"
+   "change": "dropped"
   },
   {
    "id": "24de2b1138c4",
@@ -2894,6 +2805,13 @@
    "date": "2026-10-24",
    "change": "missing",
    "lastSeen": "2026-08-29T10:40:56-04:00"
+  },
+  {
+   "id": "a96fc4702ece",
+   "title": "Winooski Farmers Market",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-08-29T18:47:34-04:00"
   },
   {
    "id": "3908434d992d",
