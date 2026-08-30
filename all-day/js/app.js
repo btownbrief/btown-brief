@@ -608,6 +608,123 @@ function paintNowPlaying() {
 
 $('p-open').addEventListener('click', openNowPlaying);
 
+/* -------------------------------------------------------------------- jar */
+/* One control, two errands, because they are the same errand: this is a page
+   built by one person, and it gets better either by being told what is
+   missing or by being paid for. Splitting those into a feedback form and a
+   donate button would put two asks on every tab; this is one.
+
+   It lives beside the Local switch because that is the one control already on
+   every tab, in the same place, above the content — the spot a reader's eye
+   has already learned. */
+
+const SB = 'https://jnouvwxomrcffqwilqkq.supabase.co';
+const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3';
+const KOFI = 'https://ko-fi.com/btownbrief';
+
+/* What the jar asks depends on where you opened it — "what should be on the
+   music tab" gets a useful answer where "any feedback?" gets silence. */
+const JAR_ASK = {
+  wire: 'An outlet I should be pulling from? A story the wire keeps missing?',
+  reddit: 'A subreddit worth watching, or one that should go?',
+  watch: 'A channel worth watching, or a video that should have been tonight’s pick?',
+  listen: 'A podcast that should be on here?',
+  music: 'A band, a venue, a night I have missed? This one especially — the roster is only as good as who tells me about it.',
+  photos: 'A spot worth shooting, or a photo you want on the wall?',
+  ig: 'An account I should be following?',
+  wander: 'Something about Burlington that belongs in here?',
+  whatnow: 'Something to do that I never suggest?',
+};
+
+function rpc(fn, args) {
+  return fetch(SB + '/rest/v1/rpc/' + fn, {
+    method: 'POST',
+    headers: { apikey: SB_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify(args || {}),
+  }).then((r) => (r.ok ? r.text().then((t) => (t ? JSON.parse(t) : true)) : null))
+    .catch(() => null);
+}
+
+export function openJar(tab) {
+  const where = tab || active || '';
+  sheet('The jar', (body, close) => {
+    body.appendChild(el('p', 'jar-lede',
+      'Two things in one, because they are the same thing. Tell me what is ' +
+      'missing, or chip in — both make this better.'));
+
+    const form = el('form', 'jar-form');
+    form.innerHTML =
+      '<label>What should be on here?' +
+        '<textarea name="text" rows="4" maxlength="600" required placeholder="' +
+        esc(JAR_ASK[where] || 'Anything missing, wrong, or worth adding.') +
+        '"></textarea></label>' +
+      '<label class="jar-who">Your name or email, if you want an answer' +
+        '<input type="text" name="who" maxlength="120" placeholder="Optional"></label>' +
+      '<p class="jar-err" hidden></p>' +
+      '<button class="btn btn-big" type="submit">Put it in the jar</button>';
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = new FormData(form);
+      const text = (f.get('text') || '').toString().trim();
+      const err = form.querySelector('.jar-err');
+      if (text.length < 4) { err.textContent = 'A few more words than that.'; err.hidden = false; return; }
+      err.hidden = true;
+      const btn = form.querySelector('button[type=submit]');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      rpc('ad_suggest', {
+        p_text: text,
+        p_who: (f.get('who') || '').toString().trim(),
+        p_tab: where,
+        p_sender: store.playerId(),
+      }).then((okay) => {
+        close();
+        toast(okay === null ? 'That didn’t send — try again in a minute'
+                            : 'In the jar. Thank you — I read all of them.');
+      });
+    });
+    body.appendChild(form);
+
+    /* The tip half. It says who is behind this because that is the honest
+       reason to chip in: it is not a company with a team. */
+    const tip = el('div', 'jar-tip');
+    tip.innerHTML =
+      '<p class="jar-tip-lede">All of this — the guide, the arcade, the feed, the ' +
+      'newsletter — is <b>one person</b> in Burlington. No staff, no investors, no ads. ' +
+      'A coffee genuinely keeps it going.</p>';
+    const kofi = el('a', 'btn jar-kofi', 'Chip in on Ko-fi ' + ICON.ext);
+    kofi.href = KOFI;
+    kofi.target = '_blank';
+    kofi.rel = 'noopener';
+    tip.appendChild(kofi);
+    body.appendChild(tip);
+
+    body.appendChild(el('p', 'jar-fine',
+      'No promises. Most suggestions do not make it on, and I cannot answer ' +
+      'every one. I do read every one.'));
+  });
+}
+
+/* The button itself. Modes get it from here rather than from ui.js, because
+   ui.js is imported BY this file — a jar that lived there would have to
+   import back and close the loop. */
+export function jarBtn(tab) {
+  const b = el('button', 'jarbtn', ICON.jar + '<span>Jar</span>');
+  b.setAttribute('aria-label', 'Suggestion jar and tip jar');
+  b.title = 'Suggestions and tips';
+  b.addEventListener('click', () => openJar(tab));
+  return b;
+}
+
+/* For the tabs with no Local switch to sit beside. */
+export function jarRow(host, tab) {
+  const row = el('div', 'jarrow');
+  row.appendChild(jarBtn(tab));
+  host.appendChild(row);
+  return row;
+}
+
 /* ------------------------------------------------------------------ video */
 
 const YT_RE = /^[A-Za-z0-9_-]{11}$/;

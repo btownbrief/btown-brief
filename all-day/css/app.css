@@ -582,9 +582,14 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 /* ============================================================ video */
 .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 11px; }
 .rail .v { width: 168px; }
+/* A column, so the card's spare height goes to the TEXT and the buttons stay
+   on the floor. Cards in a rail stretch to the tallest one; without this the
+   slack opened up as a band of nothing between the reason and the buttons,
+   which is what "a lot of the room taken up by empty white space" was. */
 .v { position: relative; border-radius: var(--radius); overflow: hidden;
-  border: 1px solid var(--edge); background: var(--panel); box-shadow: var(--shadow-1); }
-.v-hit { display: block; width: 100%; }
+  border: 1px solid var(--edge); background: var(--panel); box-shadow: var(--shadow-1);
+  display: flex; flex-direction: column; }
+.v-hit { display: block; width: 100%; flex: 1 1 auto; }
 .v-shot { position: relative; }
 .v img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--panel-2); }
 .v-dur { position: absolute; right: 7px; bottom: 7px; font-family: var(--mono);
@@ -604,12 +609,16 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 /* The reason IS the product — "around fifty videos, each with a reason".
    Hiding it on the shelves left a wall of thumbnails like every other video
-   app. Two lines, small, is the whole cost. */
-.rail .v-why { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  overflow: hidden; font-size: .72rem; line-height: 1.34; margin-top: 4px; }
-.vgrid .v-why { -webkit-line-clamp: 2; }
-.hero-body .v-why { display: -webkit-box; -webkit-line-clamp: 3; }
-.v-acts { display: flex; align-items: center; gap: 1px; padding: 0 4px 4px; }
+   app. Two lines then cut it in the middle of the sentence: the reasons run
+   57 to 87 characters and a 168px card fits about 25 to a line, so two lines
+   lost a third of every one of them. Four shows all of them whole, and the
+   space it takes was already there and empty. */
+.rail .v-why { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
+  overflow: hidden; font-size: .75rem; line-height: 1.36; margin-top: 5px; }
+.vgrid .v-why { -webkit-line-clamp: 4; }
+.hero-body .v-why { display: -webkit-box; -webkit-line-clamp: 4; }
+.v-acts { display: flex; align-items: center; gap: 1px; padding: 2px 4px 4px;
+  flex: 0 0 auto; border-top: 1px solid var(--edge-soft); margin-top: 6px; }
 .v-acts .act { width: 29px; height: 29px; }
 .v-acts .act svg { width: 18px; height: 18px; }
 .v-acts .vote { height: 28px; padding: 0 7px 0 5px; font-size: .68rem; }
@@ -1283,6 +1292,107 @@ body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
 /* The one control the whole app is about. Full width, first thing on every
    tab, and green enough that you find it without reading it. */
 .localsw { margin: 0 0 14px; }
+/* The switch and the jar share a line. The switch takes the room it needs and
+   the jar sits on the end of it — one row, not a second band. */
+.localsw-row { display: flex; align-items: stretch; gap: 8px; }
+.localsw-row .localsw-bar { flex: 1 1 auto; min-width: 0; }
+
+/* ============================================================ music tools */
+.m-tools { display: flex; align-items: stretch; gap: 8px; margin: 0 0 14px; }
+.m-mixlink { flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center;
+  gap: 7px; min-height: 44px; padding: 0 14px; border-radius: var(--pill);
+  border: 1px solid var(--edge); background: var(--panel); color: var(--ink-soft);
+  font-size: .84rem; font-weight: 600; box-shadow: var(--shadow-1); }
+.m-mixlink:hover { color: var(--accent); border-color: var(--accent); }
+.m-mixlink.on { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+
+/* ========================================================= venue calendar */
+/* Text and a date. A show is a name, a night and a room, and a wall of
+   posters is worse at all three. */
+.cal-rooms { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 14px; }
+.cal-room { display: grid; gap: 3px; text-align: left; padding: 12px 13px;
+  border: 1px solid var(--edge); border-radius: var(--radius); background: var(--panel);
+  box-shadow: var(--shadow-1); }
+.cal-room:hover { border-color: var(--accent); }
+.cal-room-name { font-size: .95rem; font-weight: 600; }
+.cal-room-n { font-family: var(--mono); font-size: .6rem; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink-faint); }
+@media (max-width: 360px) { .cal-rooms { grid-template-columns: 1fr; } }
+
+.cal-list { margin-top: 4px; }
+/* Deliberately NOT sticky. A sticky child of .panel measures its offset from
+   the panel's padding box, so `top: 0` parks it under the pinned nav rather
+   than below it — the same trap the wire's control band hit. A date header
+   every few rows does not need to follow you down the page. */
+.cal-day { margin: 16px 0 6px; padding: 6px 0 5px;
+  font-family: var(--mono); font-size: .63rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--accent); }
+.cal-day:first-child { margin-top: 0; }
+.cal-day-rows { border: 1px solid var(--edge); border-radius: var(--radius);
+  background: var(--panel); overflow: hidden; }
+.cal-row { display: grid; grid-template-columns: 62px 1fr auto; align-items: baseline;
+  gap: 10px; padding: 11px 13px; border-bottom: 1px solid var(--edge-soft);
+  color: inherit; text-decoration: none; }
+.cal-row:last-child { border-bottom: 0; }
+.cal-row:hover { background: var(--panel-hover); }
+.cal-when { font-family: var(--mono); font-size: .68rem; color: var(--ink-faint);
+  font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cal-what { min-width: 0; }
+.cal-title { display: block; font-size: .92rem; line-height: 1.32; font-weight: 500; }
+.cal-where { display: block; font-size: .76rem; color: var(--ink-faint); margin-top: 2px; }
+.cal-run { display: block; font-family: var(--mono); font-size: .6rem; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink-faint); margin-top: 3px; }
+.cal-price { font-family: var(--mono); font-size: .68rem; color: var(--ink-faint);
+  white-space: nowrap; }
+.cal-free { color: var(--good); font-weight: 600; }
+.cal-back { display: inline-flex; align-items: center; min-height: 40px; padding: 0 4px;
+  margin-bottom: 4px; font-size: .84rem; font-weight: 600; color: var(--ink-faint); }
+.cal-back:hover { color: var(--accent); }
+.cal-site { width: 100%; margin-top: 14px; }
+.cal-site svg { width: 14px; height: 14px; fill: none; stroke: currentColor;
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ================================================================== jar */
+.jarbtn {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 13px; min-height: 44px; border-radius: var(--pill);
+  border: 1px solid var(--edge); background: var(--panel);
+  color: var(--ink-soft); font-size: .78rem; font-weight: 600;
+  box-shadow: var(--shadow-1); white-space: nowrap;
+  transition: color .15s ease, border-color .15s ease;
+}
+.jarbtn:hover { color: var(--accent); border-color: var(--accent); }
+.jarbtn svg { width: 18px; height: 18px; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 360px) { .jarbtn span { display: none; } .jarbtn { padding: 0 11px; } }
+
+/* on the tabs with no Local switch to sit beside */
+.jarrow { display: flex; justify-content: flex-end; margin: -4px 0 12px; }
+
+.jar-lede { color: var(--ink-soft); margin: 0 0 16px; }
+.jar-form { display: grid; gap: 12px; }
+.jar-form label { display: grid; gap: 6px; font-size: .84rem; font-weight: 600;
+  color: var(--ink-soft); }
+.jar-form textarea, .jar-form input {
+  width: 100%; font: inherit; font-size: .95rem; font-weight: 400; color: var(--ink);
+  background: var(--panel-2); border: 1px solid var(--edge);
+  border-radius: var(--radius-sm); padding: 11px 12px; resize: vertical;
+}
+.jar-form textarea:focus, .jar-form input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.jar-who { font-weight: 500; }
+.jar-err { color: var(--warn); font-size: .85rem; margin: 0; }
+
+/* The tip half, set apart so it reads as an offer rather than a toll on the
+   suggestion above it. */
+.jar-tip { margin: 22px 0 0; padding: 16px 16px 18px; border-radius: var(--radius-sm);
+  background: var(--accent-soft); }
+.jar-tip-lede { margin: 0 0 13px; font-size: .92rem; line-height: 1.5; color: var(--ink); }
+.jar-kofi { width: 100%; }
+.jar-kofi svg { width: 14px; height: 14px; fill: none; stroke: currentColor;
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+.jar-fine { margin: 16px 0 0; font-size: .82rem; line-height: 1.5; color: var(--ink-faint); }
+
 
 .localsw-bar {
   display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px;

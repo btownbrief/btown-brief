@@ -83,6 +83,7 @@ function render() {
     local: localPosts,
     all: all.length,
     noun: 'posts',
+    extra: app.jarBtn('reddit'),
     onChange(on) { app.setLocal(on); root.scrollTo({ top: 0 }); },
   });
 

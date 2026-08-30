@@ -148,6 +148,19 @@ function sourceMap() {
   return m;
 }
 
+/* One publication, one banner. A source id is a feed title's slug, so an
+   outlet Inoreader carries twice — the Seven Days wire AND the 7Days email
+   edition, Vermont Public's RSS AND the legacy VPR feed — used to arrive as
+   two chips with two independent mutes: silencing one left the other
+   talking. The payload now stamps a secondary source with "og", the id of
+   the source it belongs to, and everything here groups, counts and mutes on
+   that instead of the raw id. */
+const outletOf = (s) => (s && (s.og || s.id)) || '';
+const mutedSrc = (mutes, s) => !!(s && (mutes[s.id] || mutes[outletOf(s)]));
+/* the source a chip, column head or mute speaks for — the canonical one,
+   falling back to the source itself if the payload ever loses it */
+const outletSrc = (map, s) => (s && map[outletOf(s)]) || s;
+
 function render() {
   const root = state.root;
   const set = store.settings();
@@ -156,23 +169,25 @@ function render() {
   const base = store.visitBase();
 
   /* the source filter is remembered across visits; if that outlet has since
-     been muted or dropped from the roster, its chip is gone too and the
+     been muted, dropped from the roster, or folded into another one (a
+     remembered '7days' is Seven Days now), its chip is gone too and the
      reader would be stuck on an empty wire with nothing to un-press */
-  if (set.source && (!map[set.source] || muted[set.source])) {
+  const pinned = set.source && map[set.source];
+  if (set.source && (!pinned || pinned.og || mutedSrc(muted, pinned))) {
     store.setSetting('source', '');
     set.source = '';
   }
 
   const all = (Array.isArray(state.pulse.items) ? state.pulse.items : []).filter((it) => {
     const s = it && map[it.s];
-    if (!s || muted[s.id]) return false;
+    if (!s || mutedSrc(muted, s)) return false;
     if (/reddit\.com/.test(s.site || '')) return false;   // Reddit has its own tab
     return true;
   });
 
   const shown = all.filter((it) => {
     const s = map[it.s];
-    if (set.source && s.id !== set.source) return false;
+    if (set.source && outletSrc(map, s).id !== set.source) return false;
     if (set.localOnly && !isLocalSource(s)) return false;
     if (set.topic !== 'all' && s.topic !== set.topic) return false;
     if (set.focus && store.isRead(keyOf(it))) return false;
@@ -183,7 +198,9 @@ function render() {
     return true;
   });
 
-  state.byKey = new Map(all.map((it) => [keyOf(it), { it, src: map[it.s] }]));
+  /* the canonical source, so a swipe-left on a 7Days headline mutes Seven
+     Days — the outlet — and says so in the confirm box */
+  state.byKey = new Map(all.map((it) => [keyOf(it), { it, src: outletSrc(map, map[it.s]) }]));
 
   root.innerHTML = '';
 
@@ -195,6 +212,7 @@ function render() {
     local: localCount,
     all: all.length,
     noun: 'headlines',
+    extra: app.jarBtn('wire'),
     onChange(on) {
       app.setLocal(on);
       state.shown = PAGE;
@@ -205,7 +223,7 @@ function render() {
   tabStamp(root, stampOf(state.pulse.generated), 'the wire, every 20 minutes');
   renderPicks(root, map);
 
-  const sourceCount = new Set(shown.map((it) => it.s)).size;
+  const sourceCount = new Set(shown.map((it) => outletSrc(map, map[it.s]).id)).size;
 
   const only = set.source && map[set.source];
   heading(root, {
@@ -330,13 +348,25 @@ function searchBox(root) {
    fastest way to say "just VTDigger" without opening anything. Sorted by the
    curator's priority first, then A–Z, so the papers people name lead. */
 function renderSourceBars(root, all, map, set) {
+  /* One chip per outlet: an outlet's second feed folds onto the canonical
+     source, so Seven Days is one chip carrying its wire and its digest. The
+     topic and local tests still look at the feeds themselves — the digest
+     keeps its place on the Newsletters tab, it just wears the outlet's name. */
   const counts = Object.create(null);
-  all.forEach((it) => { counts[it.s] = (counts[it.s] || 0) + 1; });
+  const kin = Object.create(null);
+  all.forEach((it) => {
+    const src = map[it.s];
+    const id = outletSrc(map, src).id;
+    counts[id] = (counts[id] || 0) + 1;
+    const list = kin[id] || (kin[id] = []);
+    if (!list.includes(src)) list.push(src);
+  });
 
   const pool = Object.keys(counts)
     .map((id) => map[id])
-    .filter((s) => s && (set.topic === 'all' || s.topic === set.topic) &&
-      (!set.localOnly || isLocalSource(s)))
+    .filter((s) => s && kin[s.id].some((k) =>
+      (set.topic === 'all' || k.topic === set.topic) &&
+      (!set.localOnly || isLocalSource(k))))
     .sort((a, b) => ((a.pr || 500) - (b.pr || 500)) ||
       String(a.short || a.name).localeCompare(String(b.short || b.name)));
 
@@ -466,10 +496,13 @@ const gridSeed = Object.create(null);
 const PER_SOURCE = 6;
 
 function renderBySource(root, shown, map, base) {
+  /* one column per outlet, not per feed — Seven Days' wire and its email
+     edition share a heading instead of standing next to each other twice */
   const bySrc = new Map();
   shown.forEach((it) => {
-    const list = bySrc.get(it.s) || [];
-    if (list.length < PER_SOURCE) { list.push(it); bySrc.set(it.s, list); }
+    const id = outletSrc(map, map[it.s]).id;
+    const list = bySrc.get(id) || [];
+    if (list.length < PER_SOURCE) { list.push(it); bySrc.set(id, list); }
   });
   if (!bySrc.size) { root.appendChild(el('p', 'empty', 'Nothing on the wire for that.')); return; }
 
@@ -524,7 +557,9 @@ function renderPicks(root, map) {
   const mutedShorts = new Set();
   const mutes = store.muted();
   Object.keys(map).forEach((id) => {
-    if (mutes[id]) mutedShorts.add(String(map[id].short || map[id].name || '').toLowerCase());
+    if (mutedSrc(mutes, map[id])) {
+      mutedShorts.add(String(map[id].short || map[id].name || '').toLowerCase());
+    }
   });
   const audible = (p) => !p || !mutedShorts.has(String(p.short || '').toLowerCase());
 

@@ -99,6 +99,7 @@ function render() {
     local: pool.filter(isLocalVideo).length + (state.view === 'wire' ? 0 : (state.tv?.live || []).length),
     all: pool.length + (state.view === 'wire' ? 0 : (state.tv?.live || []).length),
     noun: 'videos',
+    extra: app.jarBtn('watch'),
     onChange(on) { app.setLocal(on); root.scrollTo({ top: 0 }); },
   });
 

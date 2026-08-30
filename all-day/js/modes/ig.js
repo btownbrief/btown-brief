@@ -118,6 +118,7 @@ export function render() {
   const root = state.root;
   root.innerHTML = '';
   tabStamp(root, stampOf(state.ig && state.ig.generated), 'the accounts, every morning');
+  app.jarRow(root, 'ig');
 
   const all = posts();
   const accounts = (state.ig && state.ig.handles) || [];

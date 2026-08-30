@@ -152,6 +152,7 @@ function renderList() {
       local: local.length,
       all: shows.length,
       noun: 'shows',
+      extra: app.jarBtn('listen'),
       onChange(on) { app.setLocal(on); state.root.scrollTo({ top: 0 }); },
     });
   }

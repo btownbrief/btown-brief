@@ -377,6 +377,7 @@ export function render() {
   if (!root) return;
   root.innerHTML = '';
   tabStamp(root, stampOf(data.peek('weather') && data.peek('weather').updated), 'photos, as they are approved');
+  app.jarRow(root, 'photos');
 
   root.appendChild(seg([['all', 'All photos'], ['sunsets', 'Sunsets']],
     state.view, (v) => { state.view = v; render(); }));
