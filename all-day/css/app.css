@@ -1338,8 +1338,14 @@ body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
 .cal-when { font-family: var(--mono); font-size: .68rem; color: var(--ink-faint);
   font-variant-numeric: tabular-nums; white-space: nowrap; }
 .cal-what { min-width: 0; }
-.cal-title { display: block; font-size: .92rem; line-height: 1.32; font-weight: 500; }
-.cal-where { display: block; font-size: .76rem; color: var(--ink-faint); margin-top: 2px; }
+/* Listing titles run to 120 characters and venue names to 45 — a full bill
+   ("PUNK ROCK QUEER PROM at the LIGHT CLUB LAMP SHOP! ft. ...") is five lines
+   of a compact list otherwise. Two lines, and the sheet is not the place to
+   read the whole bill; the link is. */
+.cal-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; font-size: .92rem; line-height: 1.32; font-weight: 500; }
+.cal-where { display: block; font-size: .76rem; color: var(--ink-faint); margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cal-run { display: block; font-family: var(--mono); font-size: .6rem; letter-spacing: .06em;
   text-transform: uppercase; color: var(--ink-faint); margin-top: 3px; }
 .cal-price { font-family: var(--mono); font-size: .68rem; color: var(--ink-faint);

@@ -44,6 +44,7 @@ import sys
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
+from difflib import SequenceMatcher
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 ROSTER = ROOT / "data" / "music-artists.json"
@@ -329,6 +330,63 @@ def shows_for(name: str, events: list[dict], today: dt.date) -> list[dict]:
 
 
 # ---------------------------------------------------------- venue calendar
+# Words that carry no identity in a listing title. Stripped before two
+# titles are compared, along with any word that is already in the venue name —
+# "VT Synth Society at Foam Brewers" and "VT Synth Society Presents: Synth
+# Night" are the same night, and only the venue and the filler differ.
+_TITLE_NOISE = {
+    "at", "the", "a", "an", "of", "and", "with", "w", "ft", "feat", "featuring",
+    "presents", "present", "live", "music", "show", "night", "plus", "vs", "x",
+    "dj", "free",
+}
+
+
+def _title_sig(title: str, venue: str) -> list[str]:
+    venue_words = set(re.sub(r"[^a-z0-9 ]", " ", venue.lower()).split())
+    words = re.sub(r"[^a-z0-9 ]", " ", title.lower()).split()
+    return [w for w in words
+            if w not in _TITLE_NOISE and w not in venue_words and len(w) > 1]
+
+
+def _same_show(a: dict, b: dict) -> bool:
+    """Two rows in the same room at the same minute describing one show.
+
+    The events pipeline already dedupes on title similarity, and these are what
+    survive it: three sources listing one synth night under three names. A
+    compact calendar prints that as three lines.
+
+    Conservative on purpose. It leaves "Blue Sundays" and "Wine & Jazz Sundays"
+    at Shelburne Vineyard alone — nine occurrences, and they may genuinely be
+    two different nights. Merging real shows is worse than repeating one."""
+    sa, sb = _title_sig(a["title"], a["venue"]), _title_sig(b["title"], b["venue"])
+    if not sa or not sb:
+        return False
+    set_a, set_b = set(sa), set(sb)
+    if set_a <= set_b or set_b <= set_a:
+        return True
+    return SequenceMatcher(None, " ".join(sa), " ".join(sb)).ratio() >= 0.70
+
+
+def _dedupe_slot(rows: list[dict]) -> list[dict]:
+    """One row per show, keeping the fullest description of it."""
+    kept: list[dict] = []
+    for r in rows:
+        for i, k in enumerate(kept):
+            if _same_show(k, r):
+                # the longer title says more; a row with a link beats one
+                # without, because the link is what the row is FOR
+                better = max((k, r), key=lambda x: (bool(x["url"]), len(x["title"])))
+                merged = dict(better)
+                merged["url"] = k["url"] or r["url"]
+                merged["price"] = k["price"] or r["price"]
+                merged["free"] = k["free"] or r["free"]
+                kept[i] = merged
+                break
+        else:
+            kept.append(r)
+    return kept
+
+
 def build_calendar(events: list[dict], today: dt.date) -> dict:
     """Every music event in the pipeline's window, as a date-and-text list
     plus the venue counts that drive the filter chips.
@@ -364,6 +422,18 @@ def build_calendar(events: list[dict], today: dt.date) -> dict:
     for r in rows:
         r["venue"] = canon[r["vid"]]
     rows.sort(key=lambda r: (r["date"], minutes(r["time"]), r["venue"], r["title"]))
+
+    # Collapse the duplicates the pipeline's own dedupe could not see, room by
+    # room and minute by minute — the only slot where two rows can be one show.
+    by_slot: dict[tuple, list[dict]] = {}
+    for r in rows:
+        by_slot.setdefault((r["date"], r["time"], r["vid"]), []).append(r)
+    before = len(rows)
+    rows = [r for slot in by_slot.values() for r in _dedupe_slot(slot)]
+    rows.sort(key=lambda r: (r["date"], minutes(r["time"]), r["venue"], r["title"]))
+    if before != len(rows):
+        log(f"  calendar: merged {before - len(rows)} duplicate listing(s) of "
+            f"shows already on the page")
 
     counts: dict[str, dict] = {}
     for r in rows:
