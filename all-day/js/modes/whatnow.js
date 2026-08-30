@@ -40,6 +40,19 @@ const PLANNER_URL = 'https://play.btownbrief.com/burlington-days/';
 const ARCADE_URL = 'https://play.btownbrief.com/';
 const SPORTS_URL = '../sports.html';
 
+/* The arcade's own roster, and the same read-only leaderboard RPC its
+   /leaderboards/ page uses (play.btownbrief.com/leaderboard.js). The key is
+   the published anon key that is already in that file — this reads, it never
+   writes, and `scores` itself is not readable by anon, so the RPC is the only
+   door. Both send CORS headers back to guide.btownbrief.com; either one
+   failing just means no card. */
+const ARCADE_ROSTER_URL = 'https://play.btownbrief.com/games.json';
+const LB_RPC = 'https://jnouvwxomrcffqwilqkq.supabase.co/rest/v1/rpc/get_leaderboard';
+const LB_ANON_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3';
+const LB_TIMEOUT_MS = 6000;
+const LB_CACHE_KEY = 'allday-wn-board';
+const LB_CACHE_MS = 30 * 60 * 1000;
+
 /* ~20 hours, so tomorrow does not open with yesterday's answer. */
 const SEEN_KEY = 'allday-wn-seen';
 const SEEN_MS = 20 * 3600 * 1000;
@@ -58,7 +71,7 @@ const state = {
   root: null, feeds: null, status: null,
   mode: 'now', chips: new Set(),
   answer: null, poolSize: 0, ctx: null,
-  spinning: false, loaded: false, listCat: null, games: null,
+  spinning: false, loaded: false, listCat: null, games: null, board: null,
 };
 
 export function mount(root) {
@@ -73,6 +86,13 @@ export function mount(root) {
     state.games = json;
     if (state.loaded) render();
   }, () => {});
+  /* Same deal for the arcade board: it is two cross-origin requests to
+     another site, so it can only ever be a bonus. It never blocks the tab and
+     it never reports an error — no board, no card. */
+  loadBoard().then((board) => {
+    state.board = board;
+    if (state.loaded && board) render();
+  });
   loadAll().then(({ data: feeds, status }) => {
     state.feeds = feeds;
     state.status = status;
@@ -336,6 +356,7 @@ export function render(first) {
   });
 
   sportsStrip(root);
+  arcadeBoard(root);
   renderList(root);
   doors(root);
 
@@ -480,6 +501,138 @@ function sportsStrip(root) {
         : 'Schedules for UVM, the high school and the clubs') + '</span>' +
       '<span class="wn-sport-more">All Burlington sports ' + ICON.ext + '</span>';
   }
+  box.appendChild(link);
+  root.appendChild(box);
+}
+
+/* ----------------------------------------------------------- the arcade */
+/* Sports is what other people are playing; this is what YOU can play, and
+   the arcade is 32 cabinets deep with a leaderboard on every one. A wall of
+   32 is a page of its own — this is one board, the top three, and a way in.
+
+   ONE cabinet, not the whole arcade. "Who rules the arcade" is the better
+   headline but it costs 32 requests to compute, which is not a thing a tab
+   should do on open for a card three lines tall. One board, rotating on the
+   day, gets the same job done in four small ones — and it is a real ranked
+   board rather than a summary: a score you can go and beat today. */
+
+function monthKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+
+/* Same shape as wire.js's request(), which is GET-only. */
+function rpc(body) {
+  const ctl = 'AbortController' in window ? new AbortController() : null;
+  const timer = ctl && setTimeout(() => ctl.abort(), LB_TIMEOUT_MS);
+  return fetch(LB_RPC, {
+    method: 'POST',
+    headers: { apikey: LB_ANON_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: ctl ? ctl.signal : undefined,
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .finally(() => { if (timer) clearTimeout(timer); });
+}
+
+/* Day-of-year rotation: everyone sees the same cabinet on the same day, and
+   tomorrow it is a different one. Four are asked at once because a board can
+   be empty this month, and a card that says "no scores yet" is a worse card
+   than the next cabinet along.
+
+   The four STRIDE across the roster instead of being four in a row. Seven of
+   the 32 boards had no scores this month and the empty ones sit together —
+   the card games shipped as a batch — so four adjacent cabinets really can
+   all be blank, while four spread across the arcade never were. Simulated
+   over a full year against live counts, a stride of seven put three real
+   names on the card every single day and still rotated through seventeen
+   different cabinets. */
+const LB_TRIES = 4;
+const LB_STEP = 7;
+
+function candidates(games) {
+  const n = games.length;
+  if (!n) return [];
+  const d = new Date();
+  const day = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+  const start = (((day * LB_STEP) % n) + n) % n;
+  const out = [];
+  /* dedupe rather than trust the stride: if the roster ever grows to a
+     multiple of seven the stride lands on the same cabinet four times. */
+  for (let i = 0; out.length < LB_TRIES && i < n; i += 1) {
+    const g = games[(start + i * LB_STEP) % n];
+    if (out.indexOf(g) === -1) out.push(g);
+  }
+  return out;
+}
+
+function loadBoard() {
+  const month = monthKey();
+  const hit = store.read(LB_CACHE_KEY, null);
+  if (hit && hit.month === month && Date.now() - hit.at < LB_CACHE_MS && hit.board) {
+    return Promise.resolve(hit.board);
+  }
+  return data.fetchJSON(ARCADE_ROSTER_URL, LB_TIMEOUT_MS)
+    .then((json) => {
+      const games = ((json && json.games) || []).filter((g) => g.live && g.leaderboard && g.slug);
+      const picks = candidates(games);
+      if (!picks.length) return null;
+      return Promise.all(picks.map((g) => (
+        rpc({ p_game: g.slug, p_month: month })
+          .then((rows) => ({ g, rows: Array.isArray(rows) ? rows : [] }))
+          .catch(() => ({ g, rows: [] }))
+      )));
+    })
+    .then((results) => {
+      if (!results) return null;
+      /* Three names is the card. Take the day's first board that has them,
+         and only if none does fall back to the fullest one going — one row
+         is a high score, not a leaderboard, but it still beats no card. */
+      const best = results.find((r) => r.rows.length >= 3) ||
+        results.slice().sort((a, b) => b.rows.length - a.rows.length)[0];
+      if (!best || !best.rows.length) return null;
+      const board = {
+        slug: best.g.slug,
+        name: best.g.name || best.g.slug,
+        emoji: best.g.emoji || '🕹️',
+        rows: best.rows.slice(0, 3).map((r) => ({
+          name: r.name || 'Anonymous',
+          score: Number(r.score) || 0,
+        })),
+      };
+      store.write(LB_CACHE_KEY, { at: Date.now(), month, board });
+      return board;
+    })
+    .catch(() => null);
+}
+
+const MEDALS = ['🥇', '🥈', '🥉'];
+
+function arcadeBoard(root) {
+  const b = state.board;
+  if (!b || !b.rows.length) return;
+
+  const box = el('div', 'wn-arcade');
+  const link = el('a', 'wn-arcade-hit');
+  link.href = safeHref(ARCADE_URL);
+  link.target = '_blank';
+  link.rel = 'noopener';
+  link.innerHTML =
+    '<span class="wn-arcade-k">This month at the arcade</span>' +
+    '<span class="wn-arcade-g">' + esc(b.emoji) + ' <b>' + esc(b.name) + '</b></span>' +
+    '<span class="wn-arcade-rows">' +
+    b.rows.map((r, i) => (
+      '<span class="wn-arcade-r">' +
+        '<i>' + MEDALS[i] + '</i>' +
+        '<em>' + esc(r.name) + '</em>' +
+        '<b>' + r.score.toLocaleString() + '</b>' +
+      '</span>'
+    )).join('') +
+    '</span>' +
+    '<span class="wn-arcade-more">Go beat it — the arcade ' + ICON.ext + '</span>';
   box.appendChild(link);
   root.appendChild(box);
 }

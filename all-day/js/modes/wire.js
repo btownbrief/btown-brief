@@ -220,6 +220,13 @@ function render() {
   });
 
   const chips = el('div', 'chips');
+  /* The layout switch leads the band. It is the one control that changes what
+     the whole list IS, so it sits ahead of the topics rather than under them,
+     and it rides the pinned row so it is still there mid-scroll. Being first
+     means it is the one thing in a sideways row that is always on screen at
+     rest; it is built a size down from the chips so it reads as the switch it
+     is and not as another topic. */
+  chips.appendChild(layoutSwitch(root, set));
   const searchChip = chip(
     ICON.search + (state.q
       ? '<span>“' + esc(state.q.length > 12 ? state.q.slice(0, 11) + '…' : state.q) + '”</span>'
@@ -245,21 +252,14 @@ function render() {
       root.scrollTo({ top: 0 });
     }));
   });
-  /* Only the chips pin under the masthead. Scrolling a 2,000-item wire and
-     then having to scroll all the way back to change topic is the single most
+  /* The chips pin under the masthead. Scrolling a 2,000-item wire and then
+     having to scroll all the way back to change topic is the single most
      annoying thing a feed can do — but a control you use once per visit does
      not need to ride along for two thousand headlines. The outlets and the
      weather are browsing, not steering; they scroll away too. */
   const band = el('div', 'ctlband');
   band.appendChild(chips);
   scrollHint(chips);
-  /* The layout switch takes the pinned row search used to sit in. It is the
-     one control that changes what the whole list IS, and you may want it
-     mid-scroll — so it stays, on its own row rather than inside the chips,
-     which scroll sideways and would carry it out of reach. */
-  const segRow = el('div', 'toolrow');
-  segRow.appendChild(layoutSwitch(root, set));
-  band.appendChild(segRow);
   root.appendChild(band);
   renderTools(root, set, searchChip);
 
@@ -371,10 +371,10 @@ function pickSource(id) {
   state.root.scrollTo({ top: 0 });
 }
 
-/* Newest first / By source — built here, pinned in the band by render(). */
+/* Newest 1st / By source — built here, led the chip band by render(). */
 function layoutSwitch(root, set) {
-  const seg = el('div', 'toolseg');
-  [['newest', 'Newest first'], ['sources', 'By source']].forEach(([v, label]) => {
+  const seg = el('div', 'toolseg toolseg-sm');
+  [['newest', 'Newest 1st'], ['sources', 'By source']].forEach(([v, label]) => {
     const b = el('button', 'toolbtn' + (set.layout === v ? ' on' : ''), label);
     b.addEventListener('click', () => {
       store.setSetting('layout', v);
