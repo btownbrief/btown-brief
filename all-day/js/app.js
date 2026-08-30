@@ -115,6 +115,9 @@ function measureChrome() {
      rather than assume. It stays 0 if the bar never loads. */
   const nav = document.querySelector('.btnav');
   root.style.setProperty('--nav-h', (nav ? nav.offsetHeight : 0) + 'px');
+  /* The bar arriving changes what sits behind the iOS clock, which changes
+     the colour that keeps the clock readable. */
+  store.paintStatusBar();
 }
 
 function paintReadbar(panel) {
