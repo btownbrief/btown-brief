@@ -1,15 +1,29 @@
 {
- "_comment": "Episodes of the Brief's own show, newest first. scripts/build_podcast.py REWRITES this file when SPOTIFY_CLIENT_ID / SPOTIFY_CLIENT_SECRET are set — set those (free app at developer.spotify.com/dashboard) and every episode appears automatically. Until then this is hand-maintained: add {title, url, date, blurb} and it shows up. Only the newest episode is seeded here because it is the only one Spotify exposes publicly — the show is not on Apple Podcasts, beehiiv, or the YouTube channel, all checked.",
+ "_comment": "Episodes of the Brief's own show, newest first. scripts/build_podcast.py REWRITES this file when SPOTIFY_CLIENT_ID / SPOTIFY_CLIENT_SECRET are set — set those (free app at developer.spotify.com/dashboard) and every episode appears automatically. Until then this is hand-maintained: add {id, title, url, date, blurb} and it shows up (id is the /episode/<id> part of the Spotify link — the tab needs it to build the episode embed). Dates are the release dates off each episode's own Spotify page.",
  "show": "Btown Arts Presents",
  "show_url": "https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp",
  "source": "hand",
  "episodes": [
   {
-   "id": null,
+   "id": "5JXoZEfloHtBbo9NYyBCJW",
    "title": "It Was Meant To Be: DJ Cheetatah",
-   "url": "https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp",
+   "url": "https://open.spotify.com/episode/5JXoZEfloHtBbo9NYyBCJW",
    "date": "2026-06-02",
    "blurb": null
+  },
+  {
+   "id": "514xQMmpPFORaPh2hFGbOa",
+   "title": "There Was Always a Vision: Heloise Williams Returns",
+   "url": "https://open.spotify.com/episode/514xQMmpPFORaPh2hFGbOa",
+   "date": "2026-03-27",
+   "blurb": "Heloise Williams — Burlington frontwoman of Heloise & The Savoir Faire, signed to Elijah Wood's Simian Records and backed on record by Debbie Harry — has spent the years since Diamond Dust practicing as a therapist. Now she's stepping back into the spotlight. Start with \"Odyle\" and \"Illusions\", then come back ready."
+  },
+  {
+   "id": "4ls8rnyXqBfHtUnAF7FUUR",
+   "title": "DJ Fattie B Spins Up New Board Game \"Drop The Needle\" Inspired by Podcast Success",
+   "url": "https://open.spotify.com/episode/4ls8rnyXqBfHtUnAF7FUUR",
+   "date": "2026-02-06",
+   "blurb": "From podcast to playroom: DJ Fattie B is bringing his hit show 3some to life with Drop The Needle, a board game about the songs that shaped our musical souls — designed with nostalgic vinyl aesthetics at his Vergennes home, launching in Vermont shops before going national with a little help from Questlove."
   }
  ]
 }

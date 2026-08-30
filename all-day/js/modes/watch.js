@@ -64,6 +64,43 @@ const state = { root: null, tv: null, yt: null, past: null, view: 'tonight', sho
 
 const thumb = (id) => 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
 
+/* --------------------------------------------------------------- bench */
+/* The editor benches more videos each night than the shelves show —
+   `shelf.more` on the data branch, about thirty a night. tv.html rendered
+   them behind "Show more" and swapped one in whenever a reader hid a pick;
+   this tab dropped both when that page retired, which silently threw the
+   bench away. Ported here with one difference: this app never re-renders
+   under a reader, so a mid-scroll ✕ dims the card now and the swap-in
+   happens on the next draw of the shelf. */
+
+const isSkipped = (v) => !!v && store.tvReacts()[v.id] === 'skip';
+
+function composeShelf(shelf) {
+  const pool = (Array.isArray(shelf.more) ? shelf.more : [])
+    .filter((v) => v && app.isVideoId(v.id));
+  const visible = [];
+  (shelf.items || []).forEach((item) => {
+    if (!item || !app.isVideoId(item.id)) return;
+    if (isSkipped(item)) {
+      const i = pool.findIndex((a) => !isSkipped(a));
+      if (i >= 0) { visible.push({ v: pool.splice(i, 1)[0], swapped: true }); return; }
+    }
+    visible.push({ v: item, swapped: false });
+  });
+  return { visible, bench: pool };
+}
+
+/* The reader hid tonight's pick: the editor's first un-hidden runner-up
+   steps in. If those are all hidden too the original stays, dimmed —
+   the slot is never empty. */
+function composePick(tv) {
+  const pick = tv.pick;
+  if (!pick || !isSkipped(pick)) return { pick, swapped: false };
+  const alt = (Array.isArray(tv.pick_more) ? tv.pick_more : [])
+    .find((a) => a && app.isVideoId(a.id) && !isSkipped(a));
+  return alt ? { pick: alt, swapped: true } : { pick, swapped: false };
+}
+
 export function mount(root) {
   state.root = root;
   root.innerHTML = '<p class="loading">Tuning the set…</p>';
@@ -175,7 +212,8 @@ function renderTonight(root) {
   const localOnly = store.settings().localOnly;
   const shelves = localOnly ? localShelves(tv.shelves) : (Array.isArray(tv.shelves) ? tv.shelves : []);
 
-  const pick = tv.pick;
+  const picked = composePick(tv);
+  const pick = picked.pick;
   /* the nightly pick is usually a documentary from anywhere; in local mode it
      only leads if it is actually from here */
   if (pick && typeof pick === 'object' && app.isVideoId(pick.id) &&
@@ -186,7 +224,9 @@ function renderTonight(root) {
       '<img loading="lazy" src="' + thumb(pick.id) + '" alt="">' +
       '<span class="hero-body">' +
         /* "pick" alone never said who picked it */
-        '<span class="eyebrow">Tonight’s pick · chosen by hand</span>' +
+        '<span class="eyebrow">' + (picked.swapped
+          ? 'Runner-up pick · you hid the first choice'
+          : 'Tonight’s pick · chosen by hand') + '</span>' +
         '<span class="hero-title">' + esc(pick.t) + '</span>' +
         '<span class="v-meta">' + esc(pick.ch || '') + (pick.dur ? ' · ' + esc(pick.dur) : '') + '</span>' +
         (pick.why ? '<span class="v-why">' + esc(pick.why) + '</span>' : '') +
@@ -222,13 +262,31 @@ function renderTonight(root) {
   }
 
   orderShelves(shelves).forEach((s) => {
+    /* localShelves() filters items but not the bench — filter it here or
+       local mode swaps a national video in for a hidden Vermont one */
+    const c = composeShelf(localOnly
+      ? { ...s, more: (Array.isArray(s.more) ? s.more : []).filter(isLocalVideo) }
+      : s);
+    if (!c.visible.length && !c.bench.length) return;
     shelfHead(root, s.title, s.sub, s.title === LOCAL_SHELF ? pastLocalBtn() : null);
     /* Local mode leaves four or five clips on a shelf built for twelve. A
        half-empty scroller reads as "there is nothing here"; the same clips
        laid out flat read as a short list, which is the truth. */
     const { track, sync } = rail(root, { label: 'videos', open: localOnly });
-    s.items.forEach((v) => { if (v && app.isVideoId(v.id)) track.appendChild(videoCard(v)); });
+    c.visible.forEach(({ v, swapped }) => track.appendChild(videoCard(v, { swapped })));
     sync();
+    if (c.bench.length) {
+      const n = c.bench.length;
+      const more = el('button', 'shelf-more bench-more',
+        'Show ' + n + ' more · the editor’s bench');
+      more.addEventListener('click', () => {
+        c.bench.forEach((v) => track.appendChild(videoCard(v)));
+        hydrateVotes(track, c.bench.map((v) => 'yt:' + v.id));
+        sync();
+        more.remove();
+      });
+      root.appendChild(more);
+    }
   });
 
   root.appendChild(el('p', 'srcline', 'Edition ' + esc(tv.edition || '')));
@@ -405,6 +463,7 @@ function videoCard(v, opts = {}) {
         : (v.dur ? '<span class="v-dur">' + esc(v.dur) + '</span>' : '')) +
     '</span>' +
     '<span class="v-body">' +
+      (opts.swapped ? '<span class="v-next">Next up · stepped in for one you hid</span>' : '') +
       '<span class="v-title">' + esc(v.t) + '</span>' +
       '<span class="v-meta">' + esc(v.ch || '') +
         (v.d && !opts.live ? ' · ' + agoShort(v.d) : '') + '</span>' +
@@ -439,7 +498,7 @@ function videoActions(v, card) {
     b.setAttribute('aria-label', label);
     b.title = label;
     b.addEventListener('click', () => {
-      const now = store.tvReact(v.id, kind);
+      const now = store.tvReact(v.id, kind, v.t, v.ch);
       b.classList.toggle('on', now === kind);
       if (card) card.classList.toggle('is-seen', now === 'watched' || now === 'skip');
     });

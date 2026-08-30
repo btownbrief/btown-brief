@@ -18,6 +18,12 @@
   var SUPABASE_ANON_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3';
   var BUCKET = 'btb-photos';
 
+  /* Root-absolute, not relative: this file is also loaded from /all-day/,
+     where a relative path resolved to /all-day/data/... — a 404, so the
+     static fallback could never fire there. The site is served at the
+     domain root (CNAME), so the absolute path is right on every page. */
+  var MANIFEST_URL = '/data/photos/manifest.json';
+
   var CATEGORIES = [
     { id: 'sunsets',  label: '🌅 Sunsets' },
     { id: 'pets',     label: '🐾 Pets' },
@@ -77,7 +83,7 @@
     return rpc('btb_photos_get').then(function (rows) {
       return { live: true, photos: (rows || []).map(normalize) };
     }).catch(function () {
-      return fetch('data/photos/manifest.json')
+      return fetch(MANIFEST_URL)
         .then(function (r) { if (!r.ok) throw new Error('no manifest'); return r.json(); })
         .then(function (m) { return { live: false, photos: (m.photos || []).map(normalize) }; })
         .catch(function () { return { live: false, photos: [] }; });
@@ -90,7 +96,7 @@
     return rpc('btb_photos_potw').then(function (rows) {
       return rows && rows.length ? normalize(rows[0]) : null;
     }).catch(function () {
-      return fetch('data/photos/manifest.json')
+      return fetch(MANIFEST_URL)
         .then(function (r) { if (!r.ok) throw new Error('no manifest'); return r.json(); })
         .then(function (m) { return m.photo_of_the_week ? normalize(m.photo_of_the_week) : null; })
         .catch(function () { return null; });
