@@ -2185,9 +2185,12 @@ body.chrome-away .ctlband { top: calc(var(--top-h) + 6px); }
 }
 .igw-tile { position: relative; }
 .igw-hit {
-  display: block; width: 100%; position: relative; border-radius: 11px;
+  display: block; width: 100%; border-radius: 11px;
   overflow: hidden; background: var(--panel-2); text-align: left;
 }
+/* The picture's own box: the handle scrim and the play badge anchor here,
+   so a caption below never pushes them off the image. */
+.igw-shot { position: relative; display: block; }
 .igw-img {
   display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
   background: var(--panel-2);
@@ -2199,6 +2202,16 @@ body.chrome-away .ctlband { top: calc(var(--top-h) + 6px); }
   :root:not([data-theme="dark"]) .igw-img { outline-color: rgba(20, 16, 8, .11); }
 }
 .igw-hit:active .igw-img { transform: scale(.97); }
+
+/* Two clamped lines of the caption, quiet. Rows share the height of their
+   tallest card, so a short caption leaves a sliver of panel below it —
+   cheaper to accept than a masonry layout, and barely visible at this size. */
+.igw-cap {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; padding: 6px 9px 0; margin-bottom: 8px;
+  font-size: .72rem; line-height: 1.4; color: var(--ink-soft);
+  overflow-wrap: break-word;
+}
 .igw-img { transition: transform .1s ease; }
 
 /* The handle rides on the picture. A scrim rather than a bar: half these

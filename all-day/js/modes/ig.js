@@ -116,13 +116,15 @@ function openPost(p) {
 
    Four lines, clamped. Long captions run to a wall of hashtags; the rest is
    one tap away and almost nobody wants it. */
-function doCell(p) {
+function doCell(p, i) {
   const box = el('article', 'ig-post');
   const hit = el('button', 'ig-hit');
 
   const shot = el('span', 'ig-shot');
   const img = el('img', 'ig-img');
-  img.loading = 'lazy';
+  /* Same first-scroll stall as the SEE wall; the first few cards' art loads
+     eagerly so the tab never opens looking broken. */
+  img.loading = i < 6 ? 'eager' : 'lazy';
   img.referrerPolicy = 'no-referrer';
   img.alt = '';
   img.src = p.i;
@@ -151,16 +153,27 @@ function doCell(p) {
    mess, and the same reason Photos gives: these are all pictures of the same
    town and the eye wants a rhythm to scan.
 
-   The handle sits ON the picture rather than under it. A caption line under
-   every tile turns the wall back into a list, and the one thing you want
-   while scanning is whose it is. The words are still there — the whole
-   caption is one tap away in the same sheet DO uses. */
-function seeCell(p) {
+   The handle sits ON the picture, and the caption gets two quiet clamped
+   lines UNDER it — enough for the words that make a picture useful here (a
+   photographer's caption says where, a DJ's says when) without turning the
+   wall back into a list. The full caption stays one tap away in the same
+   sheet DO uses. We paid to scrape the words; showing none of them was
+   leaving money on the table. */
+function seeCell(p, i) {
   const tile = el('article', 'igw-tile');
   const hit = el('button', 'igw-hit');
 
+  /* The handle overlay and play badge anchor to the PICTURE, not the card —
+     with a caption below, "absolute bottom of the hit" is no longer the same
+     place, so the picture gets its own positioned box. */
+  const shot = el('span', 'igw-shot');
+
   const img = el('img', 'igw-img');
-  img.loading = 'lazy';
+  /* Chrome does not evaluate lazy candidates inserted by script until the
+     first scroll, so an all-lazy wall paints as a grid of dark squares until
+     the reader moves. The first screenful loads eagerly; everything below
+     the fold stays lazy, which is where lazy was earning its keep anyway. */
+  img.loading = i < 10 ? 'eager' : 'lazy';
   img.referrerPolicy = 'no-referrer';
   img.alt = p.c ? esc(p.c).slice(0, 80) : '';
   img.src = p.i;
@@ -179,14 +192,19 @@ function seeCell(p) {
         'These pictures have expired — the wall is rebuilt every morning.'));
     }
   });
-  hit.appendChild(img);
+  shot.appendChild(img);
 
   const foot = el('span', 'igw-foot');
   foot.innerHTML = '<span class="igw-who">@' + esc(p.h) + '</span>' +
     '<span class="igw-when">' + esc(agoShort(p.ts)) + '</span>';
-  hit.appendChild(foot);
+  shot.appendChild(foot);
 
-  if (p.v) hit.appendChild(el('span', 'igw-vid'));
+  if (p.v) shot.appendChild(el('span', 'igw-vid'));
+  hit.appendChild(shot);
+
+  /* No caption, no element — an empty strip under a third of the tiles
+     would read as a rendering bug, not a design. */
+  if (p.c) hit.appendChild(el('span', 'igw-cap', esc(p.c)));
 
   hit.addEventListener('click', () => openPost(p));
   tile.appendChild(hit);
@@ -324,6 +342,6 @@ export function render() {
 
   const feed = el('div', segment === 'see' ? 'igw-wall' : 'ig-feed');
   const cell = segment === 'see' ? seeCell : doCell;
-  list.forEach((p) => feed.appendChild(cell(p)));
+  list.forEach((p, i) => feed.appendChild(cell(p, i)));
   root.appendChild(feed);
 }
