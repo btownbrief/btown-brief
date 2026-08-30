@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build all-day/data/music.json — the Music tab's payload.
 
-Three inputs, and only one of them is trusted to name an artist:
+Four inputs, and only one of them is trusted to name an artist:
 
   * data/music-artists.json — the hand-curated roster. NOTHING else can
     introduce a name. That rule exists because every automatic source tried
@@ -9,9 +9,15 @@ Three inputs, and only one of them is trusted to name an artist:
     episode titles yields "bands" called Breathwork and Lost Media, and the
     iTunes catalogue happily confirms both, because it has no idea Vermont
     exists. A page that claims to know the local scene cannot invent bands.
-  * data/events/events.jsonl — the calendar, for "who is playing this week".
+  * data/events/events.jsonl — the calendar, for "who is playing this week"
+    and for the venue calendar (`calendar`).
   * The Rocket Shop Radio Hour feed — Big Heavy World's archive of live
     in-studio sessions by Vermont artists, ~300 episodes with real audio.
+  * The Higher Ground and Flynn event adapters, called directly, for the two
+    big-room calendars (`bigrooms`). events.jsonl stops at the pipeline's
+    60-day window; both rooms have announced far past it (HG into January,
+    the Flynn into May), and a room calendar that stops in October would
+    misrepresent both.
 
 Matching an artist to a show is deliberately conservative: word-boundary,
 case-folded, music-category events only, and the name must be long enough
@@ -30,6 +36,7 @@ from __future__ import annotations
 
 import datetime as dt
 import html
+import importlib
 import json
 import pathlib
 import re
@@ -37,10 +44,12 @@ import sys
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
+from difflib import SequenceMatcher
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 ROSTER = ROOT / "data" / "music-artists.json"
 EVENTS = ROOT / "data" / "events" / "events.jsonl"
+EVENTS_PKG = ROOT / "scripts" / "events"          # where sources/ and common live
 OUT = ROOT / "all-day" / "data" / "music.json"
 
 ROCKET_RSS = "https://bigheavyworld.com/rocket-shop-podcast?format=rss"
@@ -50,6 +59,38 @@ UA = {"User-Agent": "Mozilla/5.0 (compatible; btown-brief/1.0; +https://btownbri
 # "MJT" and "ONE" would hit constantly. They still get a card, just no shows.
 MIN_MATCH_LEN = 6
 WINDOW_DAYS = 60
+
+# The two rooms that get their own full calendar, fetched from their own
+# adapters so they are not clipped to the pipeline's 60-day window.
+#   * `venue` is what the adapter canonicalises the room to; anything else the
+#     room promotes belongs to somebody else's calendar. Higher Ground lists a
+#     dozen shows a season at Shelburne Museum, Spruce Peak and the Flynn.
+#   * `blank_venue` accepts rows the adapter left without a venue. Only the
+#     Flynn produces those: its Algolia records carry no Location facet for
+#     in-house productions (observed: "Playing Fields", "Bluey's Big Play"),
+#     and the Flynn's own listing with no other room named is the Flynn.
+#   * `collapse` folds a multi-performance run into one row. The Flynn sells
+#     one show as fourteen performances; without this the calendar reads as a
+#     fortnight of different shows.
+BIG_ROOMS = [
+    {"name": "Higher Ground", "source": "higherground",
+     "site": "https://highergroundmusic.com/calendar/",
+     "venue": "Higher Ground", "blank_venue": False, "collapse": False},
+    {"name": "The Flynn", "source": "flynn",
+     "site": "https://www.flynnvt.org/Events",
+     "venue": "The Flynn", "blank_venue": True, "collapse": True},
+]
+BIG_ROOM_DAYS = 400   # past the furthest either room has ever announced
+
+# A run survives one dark day — theatres go dark Mondays and the Flynn's
+# September run of "Playing Fields" does exactly that. Two dark days in a row
+# is a different booking.
+RUN_GAP_DAYS = 2
+
+# A price longer than this is prose, not a price ("$10 Please be aware, our
+# venues are 21+ starting at 9pm nightly…" is a real cost string). The date
+# list has one short column for it.
+PRICE_MAX = 30
 
 
 def log(msg: str) -> None:
@@ -171,6 +212,92 @@ def load_events() -> list[dict]:
     return rows
 
 
+# ------------------------------------------------------------- calendar rows
+# One row shape, used by the artist cards, the venue calendar and the two big
+# rooms alike, so the UI renders all three with the same component.
+#   {date, time, venue, vid, title, url, price, free}  (+ through, on a run)
+
+_MONEY_RE = re.compile(r"\$\d+(?:,\d{3})*(?:\.\d{2})?"
+                       r"(?:\s*[–—-]\s*\$?\d+(?:,\d{3})*(?:\.\d{2})?)?")
+_TIME_RE = re.compile(r"^(\d{1,2})(?::(\d{2}))?\s*([APap])")
+
+
+def price_free(cost: str | None) -> tuple[str, bool]:
+    """Cost text -> (short display price, free?).
+
+    "Free" is a boolean, not a price, so it does not also ride in the display
+    string. A cost that has turned into a paragraph is cut back to the money
+    it names; nothing is invented, only dropped."""
+    text = " ".join((cost or "").split())
+    if not text:
+        return "", False
+    if text.lower() in ("free", "free!", "no cover"):
+        return "", True
+    if len(text) > PRICE_MAX:
+        m = _MONEY_RE.search(text)
+        text = m.group(0) if m else text[:PRICE_MAX - 1].rstrip() + "…"
+    return text, False
+
+
+def minutes(t: str | None) -> int:
+    """"7 PM" -> 1140, for sorting. Lexical order puts 10 PM before 7 PM."""
+    m = _TIME_RE.match((t or "").strip())
+    if not m:
+        return 24 * 60  # unknown time sorts to the end of its day
+    h = int(m.group(1)) % 12
+    if m.group(3).lower() == "p":
+        h += 12
+    return h * 60 + int(m.group(2) or 0)
+
+
+def row_from_export(e: dict) -> dict:
+    """A row from events.jsonl (the newsletter export schema: time already
+    formatted "7:30 PM", price in `cost`, town in `city`)."""
+    venue = " ".join((e.get("venue") or "").split())
+    price, free = price_free(e.get("cost"))
+    return {
+        "date": e.get("date"),
+        "time": " ".join((e.get("time") or "").split()),
+        "venue": venue,
+        "vid": slug(venue),
+        "title": e.get("title") or "",
+        "url": e.get("url") or "",
+        "price": price,
+        "free": free,
+    }
+
+
+def row_from_event(e: dict, venue: str) -> dict:
+    """A row from an adapter's make_event() dict (ISO `start`, `price`/`free`
+    already split). Times are formatted exactly as update.py formats them for
+    events.jsonl so both halves of the payload read the same."""
+    t = ""
+    if not e.get("allDay") and e.get("start"):
+        try:
+            t = dt.datetime.fromisoformat(e["start"]).strftime("%-I:%M %p").replace(":00 ", " ")
+        except ValueError:
+            t = ""
+    price, _ = price_free(e.get("price"))
+    return {
+        "date": e.get("date"),
+        "time": t,
+        "venue": venue,
+        "vid": slug(venue),
+        "title": e.get("title") or "",
+        "url": e.get("url") or "",
+        "price": price,
+        "free": bool(e.get("free")),
+    }
+
+
+def in_window(d: str | None, today: dt.date, days: int) -> bool:
+    try:
+        day = dt.date.fromisoformat(d or "")
+    except ValueError:
+        return False
+    return today <= day <= today + dt.timedelta(days=days)
+
+
 # A bill reads "The Dream Eaters w/ Cady Ternity" or "HONKY TONK TUESDAY:
 # Marley Hale & Wild Leek River" — an act sits at the start, or straight after
 # one of these separators, and ends at one or at the end of the string.
@@ -189,14 +316,7 @@ def shows_for(name: str, events: list[dict], today: dt.date) -> list[dict]:
     for e in events:
         if e.get("category") != "music":
             continue
-        d = e.get("date")
-        if not d:
-            continue
-        try:
-            day = dt.date.fromisoformat(d)
-        except ValueError:
-            continue
-        if not (today <= day <= today + dt.timedelta(days=WINDOW_DAYS)):
+        if not in_window(e.get("date"), today, WINDOW_DAYS):
             continue
         sig = e.get("signals") or {}
         hay = fold(sig.get("artist") or "") or fold(e.get("title") or "")
@@ -204,20 +324,274 @@ def shows_for(name: str, events: list[dict], today: dt.date) -> list[dict]:
             # the support bill is named in the title too
             if not pat.search(fold(e.get("title") or "")):
                 continue
-        out.append({
-            "date": d,
-            "time": e.get("start", "")[11:16] if not e.get("allDay") else None,
-            "venue": e.get("venue"),
-            "title": e.get("title"),
-            "url": e.get("url"),
-            "price": e.get("price"),
-            "free": bool(e.get("free")),
-        })
-    out.sort(key=lambda s: (s["date"], s["time"] or ""))
+        out.append(row_from_export(e))
+    out.sort(key=lambda s: (s["date"], minutes(s["time"])))
     return out[:4]
 
 
+# ---------------------------------------------------------- venue calendar
+# Words that carry no identity in a listing title. Stripped before two
+# titles are compared, along with any word that is already in the venue name —
+# "VT Synth Society at Foam Brewers" and "VT Synth Society Presents: Synth
+# Night" are the same night, and only the venue and the filler differ.
+_TITLE_NOISE = {
+    "at", "the", "a", "an", "of", "and", "with", "w", "ft", "feat", "featuring",
+    "presents", "present", "live", "music", "show", "night", "plus", "vs", "x",
+    "dj", "free",
+}
+
+
+def _title_sig(title: str, venue: str) -> list[str]:
+    venue_words = set(re.sub(r"[^a-z0-9 ]", " ", venue.lower()).split())
+    words = re.sub(r"[^a-z0-9 ]", " ", title.lower()).split()
+    return [w for w in words
+            if w not in _TITLE_NOISE and w not in venue_words and len(w) > 1]
+
+
+def _same_show(a: dict, b: dict) -> bool:
+    """Two rows in the same room at the same minute describing one show.
+
+    The events pipeline already dedupes on title similarity, and these are what
+    survive it: three sources listing one synth night under three names. A
+    compact calendar prints that as three lines.
+
+    Conservative on purpose. It leaves "Blue Sundays" and "Wine & Jazz Sundays"
+    at Shelburne Vineyard alone — nine occurrences, and they may genuinely be
+    two different nights. Merging real shows is worse than repeating one."""
+    sa, sb = _title_sig(a["title"], a["venue"]), _title_sig(b["title"], b["venue"])
+    if not sa or not sb:
+        return False
+    set_a, set_b = set(sa), set(sb)
+    if set_a <= set_b or set_b <= set_a:
+        return True
+    return SequenceMatcher(None, " ".join(sa), " ".join(sb)).ratio() >= 0.70
+
+
+def _dedupe_slot(rows: list[dict]) -> list[dict]:
+    """One row per show, keeping the fullest description of it."""
+    kept: list[dict] = []
+    for r in rows:
+        for i, k in enumerate(kept):
+            if _same_show(k, r):
+                # the longer title says more; a row with a link beats one
+                # without, because the link is what the row is FOR
+                better = max((k, r), key=lambda x: (bool(x["url"]), len(x["title"])))
+                merged = dict(better)
+                merged["url"] = k["url"] or r["url"]
+                merged["price"] = k["price"] or r["price"]
+                merged["free"] = k["free"] or r["free"]
+                kept[i] = merged
+                break
+        else:
+            kept.append(r)
+    return kept
+
+
+def build_calendar(events: list[dict], today: dt.date) -> dict:
+    """Every music event in the pipeline's window, as a date-and-text list
+    plus the venue counts that drive the filter chips.
+
+    "Music" is the same test the artist matcher uses — the pipeline's own
+    category — so an event can never be on one surface and off the other.
+
+    A show with no venue is dropped: the row has nothing to print in its venue
+    column and no chip to file itself under. A handful per build, all of them
+    listings where the source itself named no room. The count is logged."""
+    rows, no_venue = [], []
+    for e in events:
+        if e.get("category") != "music":
+            continue
+        if not in_window(e.get("date"), today, WINDOW_DAYS):
+            continue
+        r = row_from_export(e)
+        if not r["vid"] or not r["title"]:
+            no_venue.append(f'{r["date"]} {r["title"][:40]}')
+            continue
+        rows.append(r)
+
+    # Two sources spell one room two ways ("Cathedral Church of St Paul" /
+    # "St. Paul"). They slug to the same chip, so the rows adopt the commonest
+    # spelling — a chip that reads one thing filtering rows that read another
+    # looks like a bug.
+    spellings: dict[str, dict[str, int]] = {}
+    for r in rows:
+        s = spellings.setdefault(r["vid"], {})
+        s[r["venue"]] = s.get(r["venue"], 0) + 1
+    canon = {vid: max(s.items(), key=lambda kv: (kv[1], kv[0]))[0]
+             for vid, s in spellings.items()}
+    for r in rows:
+        r["venue"] = canon[r["vid"]]
+    rows.sort(key=lambda r: (r["date"], minutes(r["time"]), r["venue"], r["title"]))
+
+    # Collapse the duplicates the pipeline's own dedupe could not see, room by
+    # room and minute by minute — the only slot where two rows can be one show.
+    by_slot: dict[tuple, list[dict]] = {}
+    for r in rows:
+        by_slot.setdefault((r["date"], r["time"], r["vid"]), []).append(r)
+    before = len(rows)
+    rows = [r for slot in by_slot.values() for r in _dedupe_slot(slot)]
+    rows.sort(key=lambda r: (r["date"], minutes(r["time"]), r["venue"], r["title"]))
+    if before != len(rows):
+        log(f"  calendar: merged {before - len(rows)} duplicate listing(s) of "
+            f"shows already on the page")
+
+    counts: dict[str, dict] = {}
+    for r in rows:
+        v = counts.setdefault(r["vid"], {"id": r["vid"], "name": r["venue"], "n": 0})
+        v["n"] += 1
+    venues = sorted(counts.values(), key=lambda v: (-v["n"], v["name"].lower()))
+
+    if no_venue:
+        log(f"  calendar: dropped {len(no_venue)} music events with no venue: "
+            + "; ".join(no_venue[:6]))
+    return {"window": WINDOW_DAYS, "venues": venues, "events": rows}
+
+
+# ------------------------------------------------------------- the big rooms
+def collapse_runs(rows: list[dict]) -> list[dict]:
+    """Same title in the same room across consecutive dates is one run.
+
+    The Flynn sells a show as performances: CINDERELLA is six records over
+    four days, "Playing Fields" is fourteen over thirteen. Listed straight,
+    a fortnight of the calendar is one show repeated. The first performance
+    keeps the row; the last date becomes `through`."""
+    groups: dict[tuple[str, str], list[dict]] = {}
+    for r in rows:
+        groups.setdefault((fold(r["title"]), r["vid"]), []).append(r)
+
+    def close(run: list[dict]) -> dict:
+        row = dict(run[0])
+        if run[-1]["date"] != row["date"]:
+            row["through"] = run[-1]["date"]
+        return row
+
+    out = []
+    for g in groups.values():
+        g.sort(key=lambda r: (r["date"], minutes(r["time"])))
+        run = [g[0]]
+        for r in g[1:]:
+            gap = (dt.date.fromisoformat(r["date"])
+                   - dt.date.fromisoformat(run[-1]["date"])).days
+            if gap <= RUN_GAP_DAYS:
+                run.append(r)
+            else:
+                out.append(close(run))
+                run = [r]
+        out.append(close(run))
+    return out
+
+
+def adopt_room_truth(calendar: dict, bigrooms: list[dict], today: dt.date) -> None:
+    """For the two rooms that publish their own calendar, use it.
+
+    The combined list is built from aggregators, and an aggregator can be
+    flatly wrong about which room a show is in: `champlainvalley` put the
+    Marcus King Band at Higher Ground on 26 September when Higher Ground's own
+    calendar has it at the Flynn on the 15th. It can also just miss things —
+    the aggregators had 8 Flynn shows inside the window against the Flynn's
+    own 20.
+
+    So inside the window, these two venues' rows come from the venue. This is
+    a substitution and not a merge on purpose: matching titles across sources
+    is exactly the thing that is unreliable here, and the room is the
+    authority on its own bookings.
+
+    Only when the room actually answered. A failed fetch leaves the
+    aggregators' rows alone rather than emptying the venue."""
+    rows = calendar["events"]
+    horizon = (today + dt.timedelta(days=WINDOW_DAYS)).isoformat()
+    for room in bigrooms:
+        if room.get("error") or not room["events"]:
+            continue
+        vid = room["id"]
+        was = sum(1 for r in rows if r["vid"] == vid)
+        rows = [r for r in rows if r["vid"] != vid]
+        # a run that starts inside the window belongs on the day it starts
+        own = [dict(e) for e in room["events"] if e["date"] <= horizon]
+        for e in own:
+            e.pop("through", None)
+        rows.extend(own)
+        log(f"  calendar: {room['name']} {was} aggregator row(s) -> "
+            f"{len(own)} from the room itself")
+    rows.sort(key=lambda r: (r["date"], minutes(r["time"]), r["venue"], r["title"]))
+    calendar["events"] = rows
+
+    counts: dict[str, dict] = {}
+    for r in rows:
+        v = counts.setdefault(r["vid"], {"id": r["vid"], "name": r["venue"], "n": 0})
+        v["n"] += 1
+    calendar["venues"] = sorted(counts.values(),
+                                key=lambda v: (-v["n"], v["name"].lower()))
+
+
+def big_room(room: dict, today: dt.date) -> dict:
+    """One room's whole announced calendar, straight from its adapter.
+
+    Never returns without an `events` key, and never returns an empty one
+    without an `error` beside it: a room whose site went down must not read as
+    a room with nothing on."""
+    out = {"id": slug(room["name"]), "name": room["name"], "site": room["site"],
+           "far": None, "n": 0, "events": []}
+    try:
+        # scripts/events/sources/__pycache__ is (unfortunately) git-tracked, so
+        # a read-only data build must not rewrite it every run.
+        sys.dont_write_bytecode = True
+        if str(EVENTS_PKG) not in sys.path:
+            sys.path.insert(0, str(EVENTS_PKG))
+        mod = importlib.import_module(f"sources.{room['source']}")
+        raw = mod.fetch(today, today + dt.timedelta(days=BIG_ROOM_DAYS))
+    except Exception as e:
+        out["error"] = f"{type(e).__name__}: {e}"
+        log(f"  {room['name']}: FETCH FAILED — {out['error']}")
+        return out
+
+    rows, elsewhere, blank, dropped = [], set(), [], 0
+    for e in raw:
+        venue = " ".join((e.get("venue") or "").split())
+        if not venue and room["blank_venue"]:
+            blank.append(e.get("title") or "")
+            venue = room["venue"]
+        if fold(venue) != fold(room["venue"]):
+            elsewhere.add(venue or "(no venue)")
+            dropped += 1
+            continue
+        if not e.get("date") or not e.get("title"):
+            continue
+        rows.append(row_from_event(e, room["venue"]))
+
+    if room["collapse"]:
+        before = len(rows)
+        rows = collapse_runs(rows)
+        log(f"  {room['name']}: {before} performances collapsed to {len(rows)} shows")
+    rows.sort(key=lambda r: (r["date"], minutes(r["time"]), r["title"]))
+
+    out["events"] = rows
+    out["n"] = len(rows)
+    out["far"] = max((r.get("through") or r["date"]) for r in rows) if rows else None
+    if not rows:
+        out["error"] = "the adapter returned no events for this room"
+        log(f"  {room['name']}: NO events — the adapter ran but matched nothing")
+    if elsewhere:
+        log(f"  {room['name']}: dropped {dropped} listings at other rooms: "
+            f"{sorted(elsewhere)}")
+    if blank:
+        log(f"  {room['name']}: {len(blank)} listings stated no room, kept as "
+            f"{room['venue']}: {sorted(set(blank))}")
+    return out
+
+
 def main() -> int:
+    # what the last good build found, so a rate-limited fetch degrades to
+    # yesterday's answer rather than to nothing
+    prev_bandcamp: dict[str, dict] = {}
+    if OUT.exists():
+        try:
+            for a in json.loads(OUT.read_text(encoding="utf-8")).get("artists", []):
+                if a.get("bandcamp"):
+                    prev_bandcamp[a["name"]] = a["bandcamp"]
+        except Exception as e:
+            log(f"  couldn't read the previous payload ({e}); starting clean")
+
     doc = json.loads(ROSTER.read_text(encoding="utf-8"))
     roster = doc["artists"]
     today = dt.date.today()
@@ -227,6 +601,17 @@ def main() -> int:
     log(f"events: {len(events)} rows")
     sessions = rocket_sessions()
     log(f"rocket shop: {len(sessions)} sessions with audio")
+
+    calendar = build_calendar(events, today)
+    log(f"calendar: {len(calendar['events'])} music events at "
+        f"{len(calendar['venues'])} venues over {WINDOW_DAYS} days")
+
+    log(f"big rooms: fetching {BIG_ROOM_DAYS} days ahead")
+    bigrooms = [big_room(r, today) for r in BIG_ROOMS]
+    for r in bigrooms:
+        log(f"  {r['name']}: {r['n']} shows through {r['far'] or '—'}"
+            + (f"  [{r['error']}]" if r.get("error") else ""))
+    adopt_room_truth(calendar, bigrooms, today)
 
     artists, n_bc, n_se, n_sh = [], 0, 0, 0
     for a in roster:
@@ -242,6 +627,16 @@ def main() -> int:
         bc_url = rec["links"].get("bandcamp")
         if bc_url:
             got = bandcamp(bc_url)
+            if not got:
+                # Bandcamp rate-limits: two builds inside ten minutes and it
+                # starts answering 429. Dropping the embed on a 429 publishes a
+                # quieter tab and says nothing about why — measured, one such
+                # run took the playable count from 85 to 62. Keep what the last
+                # good build found; a stale album id still plays, and a real
+                # removal costs one extra day to notice.
+                got = (prev_bandcamp.get(name))
+                if got:
+                    log(f"  kept last build's Bandcamp for {name} (fetch failed)")
             if got:
                 rec["bandcamp"] = got
                 n_bc += 1
@@ -261,11 +656,15 @@ def main() -> int:
     out = {
         "generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "artists": artists,
+        "calendar": calendar,
+        "bigrooms": bigrooms,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")) + "\n")
     log(f"wrote {OUT.relative_to(ROOT)}  "
-        f"{len(artists)} artists · {n_bc} with bandcamp · {n_se} with a session · {n_sh} playing soon")
+        f"{len(artists)} artists · {n_bc} with bandcamp · {n_se} with a session · {n_sh} playing soon"
+        f" · {len(calendar['events'])} on the calendar · "
+        + " + ".join(f"{r['n']} at {r['name']}" for r in bigrooms))
     return 0
 
 

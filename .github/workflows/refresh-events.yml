@@ -34,6 +34,9 @@ jobs:
       - name: Run events pipeline
         env:
           SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
+          # Lets a Cloudflare-blocked source reroute through Firecrawl's
+          # egress. Unset is fine — the source just fails as it does now.
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: |
           python3 scripts/events/update.py --window 60
 

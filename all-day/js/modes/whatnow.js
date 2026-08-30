@@ -348,6 +348,7 @@ export function render(first) {
 
   if (first) tabStamp(root, stampOf(state.feeds && state.feeds.events &&
     state.feeds.events.generated), 'the calendar, every morning');
+  app.jarRow(root, 'whatnow');
 }
 
 /* ------------------------------------------------- the calendar beneath */

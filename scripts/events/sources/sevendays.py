@@ -403,7 +403,12 @@ def _fetch_listings(lo: date, hi: date, staff_picks: bool) -> list[dict]:
     out: list[dict] = []
     page_n = 1
     while page_n <= MAX_PAGES:
-        page = common.fetch(_search_url(lo, hi, page_n, staff_picks))
+        # fallback=True: Cloudflare answers the runner's IP with 403 while
+        # serving the identical request from a laptop, so a blocked page
+        # reroutes through Firecrawl when a key is configured. See the note in
+        # common.fetch.
+        page = common.fetch(_search_url(lo, hi, page_n, staff_picks),
+                            fallback=True)
         items = _parse_listing_page(page)
         if not items:
             break

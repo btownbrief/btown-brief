@@ -71,6 +71,8 @@ export const ICON = {
   play: '<svg viewBox="0 0 24 24"><path d="M8 5.2v13.6L19 12z" fill="currentColor" stroke="none"/></svg>',
   pause: '<svg viewBox="0 0 24 24"><path d="M8.5 5v14M15.5 5v14" stroke-width="2.4"/></svg>',
   back15: '<svg viewBox="0 0 24 24"><path d="M11 8 5.5 12 11 16M18 8l-5.5 4L18 16"/></svg>',
+  /* a jar: a lid, a body, and a coin going in — one glyph for both errands */
+  jar: '<svg viewBox="0 0 24 24"><path d="M7.5 7.5h9v10.2a2.3 2.3 0 0 1-2.3 2.3H9.8a2.3 2.3 0 0 1-2.3-2.3z"/><path d="M6.6 4.4h10.8v2.2H6.6z"/><path d="M12 10.6v4.2M10.2 12.3h3.6"/></svg>',
   ext: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg>',
   search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>',
   sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.2 12H2M22 12h-2.2M6.3 6.3 4.8 4.8M19.2 19.2l-1.5-1.5M17.7 6.3l1.5-1.5M4.8 19.2l1.5-1.5"/></svg>',
@@ -440,7 +442,7 @@ export function tabStamp(host, stampSec, what) {
    Deliberately NOT the app's generic .seg: Watch and Listen already carry
    segments, and a third would read as more of the same rather than as the
    thing the whole app is about. */
-export function localSwitch(host, { on, local, all, noun, onChange }) {
+export function localSwitch(host, { on, local, all, noun, onChange, extra }) {
   const box = el('div', 'localsw' + (on ? ' is-on' : ''));
 
   const bar = el('div', 'localsw-bar');
@@ -457,7 +459,15 @@ export function localSwitch(host, { on, local, all, noun, onChange }) {
     make(true, '<span class="localsw-leaf">\u{1F341}</span><span>Local</span>'),
     make(false, '<span>Everything</span>')
   );
-  box.appendChild(bar);
+  /* `extra` is the jar. It is passed in rather than built here because it
+     opens a sheet, and sheets live in app.js — which imports this file. */
+  if (extra) {
+    const row = el('div', 'localsw-row');
+    row.append(bar, extra);
+    box.appendChild(row);
+  } else {
+    box.appendChild(bar);
+  }
 
   const n = on ? local : all;
   if (typeof n === 'number') {

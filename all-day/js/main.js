@@ -116,8 +116,22 @@ $('settings-btn').addEventListener('click', () => {
 
     const paintSources = (payload) => {
       const muted = store.muted();
-      const sources = (Array.isArray(payload?.sources) ? payload.sources : [])
-        .slice()
+      const all = (Array.isArray(payload?.sources) ? payload.sources : [])
+        .filter((s) => s && s.id);
+      /* One switch per outlet, not per feed. Inoreader carries Seven Days
+         twice — its wire and its 7Days email edition — and two switches meant
+         muting one left the other talking. A secondary feed names the source
+         it belongs to in "og"; it loses its row, and the outlet's switch
+         writes every id it stands for. (A secondary whose canonical is
+         somehow missing keeps its own row, so nothing becomes unmutable.) */
+      const ids = new Set(all.map((s) => s.id));
+      const kin = Object.create(null);
+      all.forEach((s) => {
+        const id = s.og && ids.has(s.og) ? s.og : s.id;
+        (kin[id] = kin[id] || []).push(s.id);
+      });
+      const sources = all
+        .filter((s) => !s.og || !ids.has(s.og))
         .sort((a, b) => (a.short || a.name || '').localeCompare(b.short || b.name || ''));
       holder.innerHTML = '';
       if (!sources.length) {
@@ -141,7 +155,7 @@ $('settings-btn').addEventListener('click', () => {
         toggle.setAttribute('aria-label', (s.short || s.name) + ' visible');
         const hit = () => {
           const nowMuted = !store.muted()[s.id];
-          store.setMuted(s.id, nowMuted);
+          (kin[s.id] || [s.id]).forEach((id) => store.setMuted(id, nowMuted));
           toggle.classList.toggle('on', !nowMuted);
           toggle.setAttribute('aria-checked', nowMuted ? 'false' : 'true');
           app.refresh();

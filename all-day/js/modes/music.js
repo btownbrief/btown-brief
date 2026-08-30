@@ -49,8 +49,10 @@ const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3';
 const state = {
   root: null,
   music: null,
-  view: 'artists',      // 'artists' | 'mixtape'
+  view: 'artists',      // 'artists' | 'calendar' | 'mixtape'
   genre: null,
+  venue: null,          // a vid from calendar.venues, or null for all
+  room: null,           // a bigrooms id when you are inside one room
   mixtape: null,        // null = not asked yet, [] = asked and empty
 };
 
@@ -343,12 +345,187 @@ export function render() {
   root.innerHTML = '';
   tabStamp(root, stampOf(state.music && state.music.generated), 'the roster, every morning');
 
-  root.appendChild(seg([['artists', 'Artists'], ['mixtape', 'The mixtape']],
-    state.view, (v) => { state.view = v; render(); }));
-  root.appendChild(el('div', null, '<div style="height:14px"></div>'));
+  /* Two halves of one question — who is from here, and who is playing. The
+     mixtape is a third thing and it is the smallest of the three, so it gets
+     a way in rather than a third of the control. */
+  root.appendChild(seg([['artists', 'Artists'], ['calendar', 'Venue calendar']],
+    state.view === 'mixtape' ? '' : state.view,
+    (v) => { state.view = v; state.room = null; render(); }));
+
+  /* The jar, and the way into the mixtape. The mixtape is a third view but
+     not a third of the control: it is the smallest thing on this tab and a
+     segment would give it equal billing with the whole local scene. */
+  const tools = el('div', 'm-tools');
+  const mix = el('button', 'm-mixlink' + (state.view === 'mixtape' ? ' on' : ''),
+    '\u{1F3B5} The mixtape');
+  mix.addEventListener('click', () => { state.view = 'mixtape'; render(); });
+  tools.append(mix, app.jarBtn('music'));
+  root.appendChild(tools);
 
   if (state.view === 'mixtape') return renderMixtape(root);
+  if (state.view === 'calendar') return renderCalendar(root);
   renderArtists(root);
+}
+
+/* --------------------------------------------------------------- calendar */
+/* The rooms, as a list you can read down. Deliberately text and a date and
+   nothing else: a show is a name, a night and a place, and a grid of posters
+   is worse at all three.
+
+   The window is sixty days because that is what the events pipeline actually
+   holds, and because past it the calendar stops being the scene. At day 61
+   the real inventory is Higher Ground and the Flynn and almost nothing else —
+   the small rooms have not booked yet, and a longer view would print an empty
+   October for Radio Bean as though it had closed. The two big rooms get their
+   own calendars instead, at whatever horizon they publish. */
+
+const cal = () => (state.music && state.music.calendar) || null;
+const rooms = () => (state.music && Array.isArray(state.music.bigrooms)) ? state.music.bigrooms : [];
+
+function dayHead(iso) {
+  const d = new Date(iso + 'T12:00:00');
+  if (isNaN(d)) return iso;
+  const today = new Date(); today.setHours(12, 0, 0, 0);
+  const days = Math.round((d - today) / 86400000);
+  const label = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  if (days === 0) return 'Tonight';
+  if (days === 1) return 'Tomorrow · ' + label;
+  return label;
+}
+
+function showLine(e, opts) {
+  const row = el(e.url ? 'a' : 'div', 'cal-row');
+  if (e.url) { row.href = safeHref(e.url); row.target = '_blank'; row.rel = 'noopener'; }
+  const when = e.time || '';
+  const price = e.free ? '<b class="cal-free">Free</b>' : (e.price ? esc(e.price) : '');
+  row.innerHTML =
+    '<span class="cal-when">' + esc(when) + '</span>' +
+    '<span class="cal-what">' +
+      '<span class="cal-title">' + esc(e.title || '') + '</span>' +
+      (opts && opts.hideVenue ? '' :
+        '<span class="cal-where">' + esc(e.venue || '') + '</span>') +
+      (e.through ? '<span class="cal-run">through ' + esc(dayHead(e.through)) + '</span>' : '') +
+    '</span>' +
+    (price ? '<span class="cal-price">' + price + '</span>' : '');
+  return row;
+}
+
+/* One list, grouped by night. Days with nothing in them are simply absent —
+   printing "no shows" for a Tuesday is noise, not information. */
+function dayList(host, events, opts) {
+  const byDay = new Map();
+  events.forEach((e) => {
+    const list = byDay.get(e.date) || [];
+    list.push(e);
+    byDay.set(e.date, list);
+  });
+  [...byDay.keys()].sort().forEach((date) => {
+    host.appendChild(el('h4', 'cal-day', esc(dayHead(date))));
+    const box = el('div', 'cal-day-rows');
+    byDay.get(date).forEach((e) => box.appendChild(showLine(e, opts)));
+    host.appendChild(box);
+  });
+  return byDay.size;
+}
+
+function renderRoom(root, room) {
+  const back = el('button', 'cal-back', '\u2190 All venues');
+  back.addEventListener('click', () => { state.room = null; render(); });
+  root.appendChild(back);
+
+  heading(root, {
+    eyebrow: 'The full calendar',
+    title: room.name,
+    sub: room.events.length + (room.events.length === 1 ? ' show' : ' shows') +
+      (room.far ? ' · announced through <span class="count">' + esc(dayHead(room.far)) + '</span>' : ''),
+  });
+
+  if (room.error || !room.events.length) {
+    /* A room that failed to load must not read as a room with nothing on. */
+    root.appendChild(el('p', 'errbox', room.error
+      ? '<b>Couldn\u2019t reach ' + esc(room.name) + '.</b><br>Their own calendar is the one to trust today.'
+      : '<b>Nothing listed yet.</b><br>Check their calendar directly.'));
+  } else {
+    const box = el('div', 'cal-list');
+    dayList(box, room.events, { hideVenue: true });
+    root.appendChild(box);
+  }
+
+  if (room.site) {
+    const go = el('a', 'btn btn-quiet cal-site', esc(room.name) + '\u2019s own calendar ' + ICON.ext);
+    go.href = safeHref(room.site);
+    go.target = '_blank';
+    go.rel = 'noopener';
+    root.appendChild(go);
+  }
+}
+
+function renderCalendar(root) {
+  const c = cal();
+  const big = rooms();
+
+  if (state.room) {
+    const room = big.find((r) => r.id === state.room);
+    if (room) return renderRoom(root, room);
+    state.room = null;
+  }
+
+  if (!c || !Array.isArray(c.events) || !c.events.length) {
+    heading(root, { eyebrow: 'Who is playing', title: 'The venue calendar',
+      sub: 'Every room we sweep, in one list.' });
+    root.appendChild(el('p', 'empty',
+      'The calendar is rebuilt every morning and has not landed yet. Try again shortly.'));
+    return;
+  }
+
+  heading(root, {
+    eyebrow: 'Who is playing',
+    title: 'The venue calendar',
+    sub: c.events.length + ' shows · <span class="count">the next ' +
+      (c.window || 60) + ' days</span>',
+  });
+
+  /* The two biggest rooms, up top, because they are the two people actually
+     look up by name — and because they are the only two that publish months
+     ahead, which the combined list cannot show. */
+  if (big.length) {
+    const cards = el('div', 'cal-rooms');
+    big.forEach((r) => {
+      const b = el('button', 'cal-room');
+      b.innerHTML =
+        '<span class="cal-room-name">' + esc(r.name) + '</span>' +
+        '<span class="cal-room-n">' + r.events.length + ' shows' +
+          (r.far ? ' \u00b7 to ' + esc(dayHead(r.far)) : '') + '</span>';
+      b.addEventListener('click', () => { state.room = r.id; render(); });
+      cards.appendChild(b);
+    });
+    root.appendChild(cards);
+  }
+
+  const venues = Array.isArray(c.venues) ? c.venues : [];
+  if (venues.length > 1) {
+    const chips = el('div', 'chips');
+    chips.appendChild(chip('Every room', !state.venue, () => { state.venue = null; render(); }));
+    venues.forEach((v) => chips.appendChild(
+      chip(esc(v.name) + ' <span class="n">' + v.n + '</span>', state.venue === v.id,
+        () => { state.venue = state.venue === v.id ? null : v.id; render(); })));
+    root.appendChild(chips);
+    scrollHint(chips);
+  }
+
+  const list = state.venue ? c.events.filter((e) => e.vid === state.venue) : c.events;
+  const box = el('div', 'cal-list');
+  const days = dayList(box, list);
+  shelfHead(root, state.venue
+    ? (venues.find((v) => v.id === state.venue) || {}).name || 'That room'
+    : 'Every room',
+    list.length + (list.length === 1 ? ' show' : ' shows') +
+      ' across ' + days + (days === 1 ? ' night' : ' nights'));
+  root.appendChild(box);
+
+  root.appendChild(el('p', 'm-credit',
+    'Swept twice a day from the venues\u2019 own calendars. A room missing? ' +
+    'Put it in the jar.'));
 }
 
 function renderArtists(root) {

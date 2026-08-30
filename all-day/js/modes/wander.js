@@ -147,6 +147,7 @@ function renderDoor() {
     local: list('vermont').length,
     all: poolTotal(),
     noun: 'articles',
+    extra: app.jarBtn('wander'),
     onChange(on) { app.setLocal(on); root.scrollTo({ top: 0 }); },
   });
 

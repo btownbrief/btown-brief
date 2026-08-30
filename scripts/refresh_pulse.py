@@ -261,6 +261,53 @@ SHORT_NAMES = {
 }
 
 
+# One publication, one banner. A source id is the slug of a feed's title, so
+# an outlet Inoreader carries twice — the RSS feed in a news folder AND the
+# email edition in Newsletters — arrives as two sources with two chips, two
+# toggles, and (the real bug) two independent mutes: silencing "Seven Days"
+# left "7Days" talking. This maps each SECONDARY source id to the CANONICAL
+# one it belongs to; build_payload stamps it onto the payload as "og" and
+# every reader groups, counts, and mutes on the outlet instead of the id.
+#
+# Every value MUST already exist in today's payload. Mutes live in the
+# reader's localStorage keyed by source id, so pointing an outlet at a brand
+# new id would silently un-mute it for everyone who had muted it — the guard
+# in run() refuses to publish if a value has no matching source.
+OUTLETS = {
+    "7days": "seven-days",                 # Seven Days: email edition → RSS
+    "vtdigger-dd84": "vtdigger-9ca7",      # VTDigger: email edition → RSS
+    "vermont-public": "local-news-2310",   # Vermont Public: email → local-news RSS
+    "local-news-a7bd": "local-news-2310",  # Vermont Public: legacy VPR feed
+}
+
+
+# Ids follow feed titles, so a publisher (or Stephen) renaming a subscription
+# forks the source: new id, empty rolling history, every reader's mute
+# stranded on the old id. It has happened twice — Vermont Public shortening a
+# title on 2026-08-14 turned "vermont-this-week-delve-into-the-most-important-
+# news-stories-each-week" into "vermont-this-week", and adding the VTDigger
+# newsletter on 2026-08-09 renamed the RSS source "vtdigger" → "vtdigger-9ca7"
+# and dropped its 20 items. The -9ca7 suffix only exists BECAUSE a sibling
+# collides on slug, so unsubscribing that dead newsletter would rename it
+# straight back and void 40 items of history.
+#
+# Pinning the id to the feed URL — the one thing about a subscription that
+# does not drift — stops the churn for the outlets that matter. Keyed on
+# xmlUrl exactly as the OPML gives it; a pin for a URL that is not subscribed
+# is simply never consulted.
+ID_PINS = {
+    "https://vtdigger.org/feed/": "vtdigger-9ca7",
+    "https://www.vermontpublic.org/local-news.rss": "local-news-2310",
+    "http://digital.vpr.net/feeds/1012/rss.xml": "local-news-a7bd",
+    "https://www.sevendaysvt.com/feed/": "seven-days",
+}
+
+
+def outlet_of(source_id):
+    """Canonical outlet id for a source id (itself, unless it's a secondary)."""
+    return OUTLETS.get(source_id, source_id)
+
+
 # Hand-picked ordering for the source rail. Lower runs first within a group;
 # unlisted sources get 500 and sort alphabetically. The flagship local
 # outlets lead the rail, the Burlington subs lead the reddit set, and
@@ -688,19 +735,30 @@ def build_roster(folder_outlines, topics):
         entries.append((outline, kind))
     title_counts = Counter(slugify(outline["title"]) for outline, _ in entries)
 
-    sources, used_ids = [], set()
+    sources = []
+    # Pinned ids are claimed up front so a rename can never hand one of them
+    # to a different subscription: whoever is not the pinned feed takes the
+    # suffix/bump instead.
+    used_ids = {ID_PINS[outline["xml"]] for outline, _ in entries
+                if outline["xml"] in ID_PINS}
+    pins_taken = set()
     for outline, kind in entries:
         base = slugify(outline["title"])
-        if title_counts[base] > 1:
-            suffix = hashlib.md5((outline["xml"] or "").encode()).hexdigest()[:4]
-            source_id = f"{base}-{suffix}"
+        pinned = ID_PINS.get(outline["xml"] or "")
+        if pinned and pinned not in pins_taken:
+            pins_taken.add(pinned)
+            source_id = pinned
         else:
-            source_id = base
-        bump = 2
-        while source_id in used_ids:   # freak hash collision backstop
-            source_id = f"{base}-{bump}"
-            bump += 1
-        used_ids.add(source_id)
+            if title_counts[base] > 1:
+                suffix = hashlib.md5((outline["xml"] or "").encode()).hexdigest()[:4]
+                source_id = f"{base}-{suffix}"
+            else:
+                source_id = base
+            bump = 2
+            while source_id in used_ids:   # freak hash collision backstop
+                source_id = f"{base}-{bump}"
+                bump += 1
+            used_ids.add(source_id)
         site = outline["html"] or outline["xml"]
         if kind == "newsletter":
             # email feeds all claim inoreader.com — swap in the sender's real
@@ -937,11 +995,23 @@ def build_payload(sources, per_source, generated):
     # the legacy VPR feed shadowing Vermont Public).
     ordered = ([source for source in sources if not is_discussion_source(source)]
                + [source for source in sources if is_discussion_source(source)])
+    # An outlet's email edition re-runs the headlines its RSS feed already
+    # carried, under a mailchi.mp tracking URL the URL dedupe above cannot
+    # see. So within one outlet a headline is also claimed by title — but
+    # only ACROSS its sources: a feed repeating its own title (rebroadcast
+    # episodes, "Daybreak Thursday", a weekly column) is a real second item
+    # and must survive. Folder order runs the news folders before
+    # Newsletters, so the article wins and the digest copy drops.
+    title_owner = {}
     for source in ordered:
+        outlet = outlet_of(source["id"])
         items = []
         for item in per_source.get(source["id"], []):
             key = dedupe_key(item["u"])
             if key in seen_urls:
+                continue
+            tkey = (outlet, norm_title_key(item.get("t")))
+            if tkey[1] and title_owner.setdefault(tkey, source["id"]) != source["id"]:
                 continue
             seen_urls.add(key)
             items.append(item)
@@ -956,6 +1026,8 @@ def build_payload(sources, per_source, generated):
                       or shorten(source["name"])),
             "site": source["site"], "topic": source["topic"], "n": len(items),
         }
+        if source["id"] in OUTLETS:
+            entry["og"] = OUTLETS[source["id"]]   # secondary: banner/mute/count on the canonical
         rank = source_priority(source["id"], source["site"])
         if rank is not None:
             entry["pr"] = rank
@@ -1021,6 +1093,15 @@ def run(args):
     sources = build_roster(folder_outlines, topics)
     if len(sources) < MIN_SOURCES:
         sys.exit(f"roster has only {len(sources)} sources — refusing to run")
+    # Every canonical outlet must be a real, currently-rostered id. A typo (or
+    # a canonical feed that quietly went away) would point readers' mutes at
+    # an id nothing carries and silently un-mute that outlet for everyone who
+    # had muted it — fail before writing a payload, not after.
+    roster_ids = {source["id"] for source in sources}
+    stray = sorted(set(OUTLETS.values()) - roster_ids)
+    if stray:
+        sys.exit(f"OUTLETS points at ids no source carries: {', '.join(stray)} "
+                 "— refusing to write")
 
     previous = load_json(args.store or args.out, {})
     newsletter_ids = {source["id"] for source in sources
@@ -1415,6 +1496,37 @@ def selftest():
     assert ids_fwd == ids_rev and len(ids_fwd) == 2
     assert all(len(i) > len("local-news") for i in ids_fwd)
 
+    # one outlet, two subscriptions: the Seven Days RSS feed in a news folder
+    # and the 7Days email edition in Newsletters. Two titles, two ids — and
+    # OUTLETS folds the second onto the first so they share a banner and a mute.
+    sd = build_roster(
+        [({"title": "Seven Days", "xml": "https://www.sevendaysvt.com/feed/",
+           "html": "https://www.sevendaysvt.com/"}, "local"),
+         ({"title": "7Days", "xml": "https://www.inoreader.com/stream/user/x/7d",
+           "html": "https://www.inoreader.com"}, "newsletter")], {})
+    assert [s["id"] for s in sd] == ["seven-days", "7days"]
+    assert outlet_of("7days") == "seven-days" and outlet_of("seven-days") == "seven-days"
+    # the map is one hop deep and never points a source at itself
+    assert not (set(OUTLETS) & set(OUTLETS.values()))
+    assert all(k != v for k, v in OUTLETS.items())
+
+    # a pinned feed keeps its id through a title rename (the 2026-08 churn
+    # that forked Vermont Public and VTDigger), and keeps the suffix it only
+    # has because a sibling collides — so retiring the sibling costs nothing
+    pin = build_roster(
+        [({"title": "Seven Days Vermont News", "xml": "https://www.sevendaysvt.com/feed/",
+           "html": "https://www.sevendaysvt.com/"}, "local"),
+         ({"title": "VTDigger", "xml": "https://vtdigger.org/feed/",
+           "html": "https://vtdigger.org/"}, "local")], {})
+    assert [s["id"] for s in pin] == ["seven-days", "vtdigger-9ca7"]
+    # an impostor cannot take a pinned id, even listed first
+    grab = build_roster(
+        [({"title": "Seven Days", "xml": "https://elsewhere.example/rss",
+           "html": "https://elsewhere.example/"}, "local"),
+         ({"title": "Seven Days", "xml": "https://www.sevendaysvt.com/feed/",
+           "html": "https://www.sevendaysvt.com/"}, "local")], {})
+    assert grab[1]["id"] == "seven-days" and grab[0]["id"] != "seven-days"
+
     now_ts = 1_754_000_000
     older = [{"t": f"old {n}", "u": f"https://a.com/{n}", "d": 100 + n}
              for n in range(ITEM_CAP)]
@@ -1435,6 +1547,27 @@ def selftest():
         utcnow())
     assert payload["sources"][0]["pod"] == 1 and payload["items"][0]["s"] == "a"
     assert payload["sources"][1]["n"] == 0 and len(payload["items"]) == 1
+    assert "og" not in payload["sources"][0] and "og" not in payload["sources"][1]
+
+    # outlet folding in the payload: the secondary carries "og", the email
+    # copy of a story the RSS feed already ran drops even though its URL is
+    # a mailchimp redirect, and a feed's own repeated title survives
+    folded = build_payload(
+        [{"id": "seven-days", "name": "Seven Days", "site": "https://www.sevendaysvt.com/",
+          "topic": "local", "local": True, "podcast": False},
+         {"id": "7days", "name": "7Days", "site": "https://www.sevendaysvt.com/",
+          "topic": "newsletters", "local": False, "podcast": False}],
+        {"seven-days": [{"t": "Prosecutor to Retire", "u": "https://www.sevendaysvt.com/a", "d": 9},
+                        {"t": "Police Log", "u": "https://www.sevendaysvt.com/b", "d": 8},
+                        {"t": "Police log", "u": "https://www.sevendaysvt.com/c", "d": 7}],
+         "7days": [{"t": "Prosecutor to Retire!", "u": "https://mailchi.mp/x/1", "d": 6},
+                   {"t": "This Week in Seven Days", "u": "https://mailchi.mp/x/2", "d": 5}]},
+        utcnow())
+    by_id = {s["id"]: s for s in folded["sources"]}
+    assert "og" not in by_id["seven-days"] and by_id["7days"]["og"] == "seven-days"
+    assert by_id["seven-days"]["n"] == 3   # its own repeated column title stays
+    assert by_id["7days"]["n"] == 1        # the digest's re-run of the story drops
+    assert [i["t"] for i in folded["items"] if i["s"] == "7days"] == ["This Week in Seven Days"]
 
     assert shorten("Latest Science News -- ScienceDaily") == "Latest Science News"
     assert shorten("The Other Paper (South Burlington)") == "The Other Paper"
