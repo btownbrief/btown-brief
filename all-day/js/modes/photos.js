@@ -285,14 +285,25 @@ function openPhoto(p, k) {
 
     if (p.id && state.live) {
       const row = el('div', 'btns');
+      /* Same key photos.html uses, so a heart given on either surface stays
+         given. In-memory `_hearted` alone forgot the vote on reload — the
+         server refused the duplicate but the button still said it took. */
+      const voted = store.read('btb-photos-voted', {}) || {};
+      const done = !!(p._hearted || voted[p.id]);
       const heart = el('button', 'btn btn-quiet',
-        '♥ ' + (p.votes || 0) + (p._hearted ? ' — thanks' : ''));
+        '♥ ' + (p.votes || 0) + (done ? ' — thanks' : ''));
       heart.addEventListener('click', () => {
-        if (p._hearted) return;
+        const seen = store.read('btb-photos-voted', {}) || {};
+        if (p._hearted || seen[p.id]) return;
         p._hearted = true;
         p.votes = (p.votes || 0) + 1;
         heart.textContent = '♥ ' + p.votes + ' — thanks';
-        window.BTBP.vote(p.id, store.playerId()).catch(() => {});
+        window.BTBP.vote(p.id, store.playerId()).then(() => {
+          /* remember it only once the server confirmed — photos.html's rule */
+          const m = store.read('btb-photos-voted', {}) || {};
+          m[p.id] = true;
+          store.write('btb-photos-voted', m);
+        }).catch(() => {});
       });
       row.appendChild(heart);
       body.appendChild(row);
@@ -489,5 +500,9 @@ function renderAll(root) {
       state.photos === null ? 'Loading…' : 'No photos in that one yet.'));
   }
   potdStrip(root);
+  /* the standalone wall does things this tab deliberately does not —
+     Photo of the Week, where-filters, sorting, the email/Telegram routes in */
+  root.appendChild(el('p', 'srcline',
+    '<a href="../photos.html">The full photo wall →</a> Photo of the Week, filters and more ways to send one in.'));
   hydrateVotes(root, [...root.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
 }

@@ -648,6 +648,11 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   border: 1px solid color-mix(in srgb, var(--local) 30%, transparent);
   border-radius: 999px; padding: 4px 10px; cursor: pointer; }
 .shelf-more:hover { background: color-mix(in srgb, var(--local) 20%, transparent); }
+/* the bench reveal sits under its shelf's rail, not in the shelf head */
+.bench-more { display: block; margin: -4px 0 16px; }
+/* a bench video that stepped in for one the reader hid says so */
+.v-next { display: block; font-family: var(--mono); font-size: .58rem; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--local); margin-bottom: 3px; }
 .shelf-head .t { font-size: 1.06rem; font-weight: 600; letter-spacing: -.004em; }
 .shelf-head .s { font-size: .84rem; color: var(--ink-faint); }
 
@@ -1178,6 +1183,9 @@ body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
 .toolseg .toolbtn + .toolbtn { border-left: 1px solid var(--edge); }
 .toolbtn:hover { background: var(--panel-hover); }
 .toolbtn.on { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+/* a toolbtn that is an <a>, not a <button> — dressed like the focus pill */
+.toollink { display: inline-flex; align-items: center; text-decoration: none;
+  border: 1px solid var(--edge); border-radius: var(--pill); background: var(--panel); }
 /* The Wire's layout switch leads the chip band, so it has to survive a flex
    row that stretches its children and scrolls sideways: hold its own width,
    centre against a 38px chip rather than growing to match it, and come in a

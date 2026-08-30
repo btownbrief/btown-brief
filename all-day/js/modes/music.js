@@ -734,7 +734,10 @@ function submitSheet() {
         p_artist: platform((f.get('url') || '').toString().trim()),
         p_url: (f.get('url') || '').toString().trim(),
         p_why: (f.get('why') || '').toString().trim(),
-        p_submitter: (f.get('submitter') || '').toString().trim(),
+        /* the SQL function's parameter is p_name (db/quick-wins.sql) —
+           PostgREST resolves RPCs by named-argument set, so any other name
+           404s and the submission silently never lands */
+        p_name: (f.get('submitter') || '').toString().trim(),
         p_is_local: !!f.get('is_local'),
         p_week: periodKey(),
       }).then((ok) => {

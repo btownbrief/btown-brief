@@ -295,7 +295,7 @@ export function setHeardAt(key, seconds) {
 
 export function tvReacts() { return obj(read(TV_REACT_KEY, {})); }
 
-export function tvReact(videoId, kind) {
+export function tvReact(videoId, kind, title, channel) {
   const m = tvReacts();
   const was = m[videoId] || null;
   if (was === kind) delete m[videoId];
@@ -303,7 +303,15 @@ export function tvReact(videoId, kind) {
   write(TV_REACT_KEY, m);
   const now = m[videoId] || null;
   if (was && was !== now) rpc('tv_unreact', { p_player: playerId(), p_kind: was, p_vid: videoId });
-  if (now) rpc('tv_react', { p_player: playerId(), p_kind: now, p_vid: videoId, p_title: '', p_channel: '' });
+  /* title and channel label the row for the editor building tomorrow's
+     edition — tv.html sent them, and an unlabelled reaction is near useless
+     on that side, so pass them through rather than defaulting to '' */
+  if (now) {
+    rpc('tv_react', {
+      p_player: playerId(), p_kind: now, p_vid: videoId,
+      p_title: (title || '').slice(0, 200), p_channel: (channel || '').slice(0, 120),
+    });
+  }
   return now;
 }
 

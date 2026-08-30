@@ -446,6 +446,16 @@ function renderTools(root, set, searchChip) {
     app.toast(on ? 'Focus on — read headlines disappear' : 'Focus off');
   });
   row.appendChild(focus);
+
+  /* pulse.html is the power-reader edition of this same wire — catch-up
+     since your last visit, time windows, shareable filters, deep-dive
+     voting. It shares read-state and mutes with this tab, so nothing is
+     lost walking over. One quiet chip; most readers never need it. */
+  const pulse = el('a', 'toolbtn toollink', 'The Pulse ↗');
+  pulse.href = '../pulse.html';
+  pulse.title = 'The power-reader edition — catch-up mode, time filters and deep dives';
+  row.appendChild(pulse);
+
   root.appendChild(row);
 }
 
