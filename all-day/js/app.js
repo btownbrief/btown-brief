@@ -227,7 +227,7 @@ export function peek({ title, from, art, body, href, loading, actions }) {
 
 /* ------------------------------------------------------------------ sheet */
 
-export function sheet(title, build) {
+export function sheet(title, build, onClose) {
   const s = $('sheet');
   s.innerHTML = '';
   const scrim = el('div', 'sheet-scrim');
@@ -243,7 +243,20 @@ export function sheet(title, build) {
   card.append(head, body);
   s.append(scrim, card);
   s.hidden = false;
-  const close = () => { s.hidden = true; };
+  document.body.classList.add('sheet-open');
+  /* Emptying it is not tidiness. A sheet can hold a cross-origin iframe — the
+     Bandcamp player on an artist — and hiding its container does not stop the
+     music. Only removing the node does. Closing a sheet therefore destroys
+     what was in it, and any teardown the caller registered runs first. */
+  let closed = false;
+  const close = () => {
+    if (closed) return;
+    closed = true;
+    s.hidden = true;
+    document.body.classList.remove('sheet-open');
+    if (onClose) { try { onClose(); } catch (e) { /* never block the close */ } }
+    s.innerHTML = '';
+  };
   x.addEventListener('click', close);
   scrim.addEventListener('click', close);
   build(body, close);
@@ -253,15 +266,71 @@ export function sheet(title, build) {
 /* ----------------------------------------------------------------- player */
 /* ONE <audio>. It is in the shell, not in a tab, so it keeps playing across
    every tab switch — which is the entire point of a listen tab in an app you
-   are also reading. */
+   are also reading.
+
+   It is also the only sound in this app we actually control. A Bandcamp embed
+   and a YouTube embed are cross-origin iframes: they cannot be asked what they
+   are doing and they cannot be told to pause. So the rule is one-way and
+   absolute — anything that can make a noise registers a stop function here,
+   and when this player starts, all of them are torn down. Two players running
+   at once is the one thing a music app may never do. */
 
 const audio = $('audio');
 const player = $('player');
 let currentKey = null;
+let currentItem = null;
 let lastSave = 0;
 let pendingSeek = 0;
 
-export function playAudio({ src, title, show, art, key }) {
+const foreign = new Set();
+export function registerForeign(stop) {
+  foreign.add(stop);
+  return () => foreign.delete(stop);
+}
+export function silenceForeign() {
+  foreign.forEach((stop) => { try { stop(); } catch (e) { /* already gone */ } });
+}
+
+const RATE_KEY = 'allday-rate';
+const RATES = [1, 1.25, 1.5, 1.75, 2];
+const rate = () => {
+  const r = Number(store.read(RATE_KEY, 1));
+  return RATES.indexOf(r) === -1 ? 1 : r;
+};
+
+const two = (n) => (n < 10 ? '0' : '') + n;
+function clock(sec) {
+  if (!isFinite(sec) || sec < 0) return '0:00';
+  const s = Math.floor(sec % 60);
+  const m = Math.floor(sec / 60) % 60;
+  const h = Math.floor(sec / 3600);
+  return h ? h + ':' + two(m) + ':' + two(s) : m + ':' + two(s);
+}
+
+/* Every play button anywhere in the app carries data-pk="<key>" and the shell
+   paints it. A tab gets the playing state for free, and — the part that was
+   actually broken — a button pressed inside a sheet becomes a pause the
+   instant the audio starts, whether or not the dock is visible behind it. */
+export function paintPlayButtons() {
+  const live = currentKey && !audio.paused;
+  document.querySelectorAll('[data-pk]').forEach((b) => {
+    const on = !!live && b.dataset.pk === currentKey;
+    if (b.classList.contains('is-playing') === on) return;
+    b.classList.toggle('is-playing', on);
+    b.innerHTML = on ? ICON.pause : ICON.play;
+  });
+}
+
+function paintMeta() {
+  const it = currentItem || {};
+  $('p-title').textContent = it.title || '';
+  $('p-show').textContent = it.show || '';
+  const img = $('p-art');
+  if (it.art) { img.src = it.art; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
+}
+
+export function playAudio(item) {
+  const { src, title, show, art, key, href } = item || {};
   if (!src) return;
   const k = key || src;
   if (audio.getAttribute('src') !== src) {
@@ -273,63 +342,271 @@ export function playAudio({ src, title, show, art, key }) {
     if (pendingSeek) { try { audio.currentTime = pendingSeek; } catch (e) { /* retried below */ } }
   }
   currentKey = k;
-  $('p-title').textContent = title || '';
-  $('p-show').textContent = show || '';
-  const img = $('p-art');
-  if (art) { img.src = art; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
+  currentItem = { src, title: title || '', show: show || '', art: art || '', key: k, href: href || '' };
+  audio.playbackRate = rate();
+  paintMeta();
   player.hidden = false;
   document.body.classList.add('has-player');
-  audio.play().catch(() => {});
+  silenceForeign();
   closeVideo();
-  if ('mediaSession' in navigator && window.MediaMetadata) {
-    try {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: title || '', artist: show || '', album: 'All Day',
-        artwork: art ? [{ src: art, sizes: '512x512' }] : [],
-      });
-      navigator.mediaSession.setActionHandler('play', () => audio.play());
-      navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-      navigator.mediaSession.setActionHandler('seekbackward', () => { audio.currentTime = Math.max(0, audio.currentTime - 15); });
-      navigator.mediaSession.setActionHandler('seekforward', () => { audio.currentTime += 30; });
-    } catch (e) { /* handler support varies */ }
+  audio.play().catch(() => {});
+  paintPlayButtons();
+  paintNowPlaying();
+  setMediaSession();
+}
+
+/* What a play button actually wants: press it on the thing already playing
+   and it pauses, press it again and it picks up where it stopped. Calling
+   playAudio twice used to just re-issue play() on a running element. */
+export function toggleAudio(item) {
+  const k = (item && (item.key || item.src)) || '';
+  if (k && k === currentKey && audio.getAttribute('src')) {
+    if (audio.paused) { silenceForeign(); audio.play().catch(() => {}); } else { audio.pause(); }
+    paintPlayButtons();
+    return;
   }
+  playAudio(item);
 }
 
 export const nowPlaying = () => currentKey;
+export const isPlaying = () => !!currentKey && !audio.paused;
+/* for a foreign player that has just started and cannot be listened to */
+export function pauseAudio() { if (!audio.paused) audio.pause(); }
+
+function setMediaSession() {
+  if (!('mediaSession' in navigator) || !window.MediaMetadata) return;
+  const it = currentItem || {};
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: it.title || '', artist: it.show || '', album: 'All Day',
+      artwork: it.art ? [{ src: it.art, sizes: '512x512' }] : [],
+    });
+    navigator.mediaSession.setActionHandler('play', () => audio.play());
+    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+    navigator.mediaSession.setActionHandler('seekbackward', () => back(15));
+    navigator.mediaSession.setActionHandler('seekforward', () => fwd(30));
+    /* the lock screen draws its own scrubber, but only if it is told where in
+       the track we are — without this it shows a dead bar on an hour-long set */
+    navigator.mediaSession.setActionHandler('seekto', (d) => {
+      if (d && d.seekTime != null) { try { audio.currentTime = d.seekTime; } catch (e) { /* ignore */ } }
+    });
+  } catch (e) { /* handler support varies */ }
+}
+
+function setPositionState() {
+  if (!('mediaSession' in navigator) || !navigator.mediaSession.setPositionState) return;
+  if (!audio.duration || !isFinite(audio.duration)) return;
+  try {
+    navigator.mediaSession.setPositionState({
+      duration: audio.duration,
+      playbackRate: audio.playbackRate || 1,
+      position: Math.min(audio.currentTime, audio.duration),
+    });
+  } catch (e) { /* Safari throws on a rate it does not like */ }
+}
+
+const back = (n) => { audio.currentTime = Math.max(0, audio.currentTime - n); };
+const fwd = (n) => {
+  const d = isFinite(audio.duration) ? audio.duration : Infinity;
+  audio.currentTime = Math.min(d, audio.currentTime + n);
+};
 
 audio.addEventListener('loadedmetadata', () => {
   if (pendingSeek && Math.abs(audio.currentTime - pendingSeek) > 2) {
     try { audio.currentTime = pendingSeek; } catch (e) { /* give up quietly */ }
   }
   pendingSeek = 0;
+  paintProgress();
+  setPositionState();
 });
+
+function paintProgress() {
+  const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+  $('p-bar').firstElementChild.style.width = pct + '%';
+  $('p-time').textContent = audio.duration
+    ? clock(audio.currentTime) + ' / ' + clock(audio.duration)
+    : clock(audio.currentTime);
+  paintNowPlaying();
+}
+
 audio.addEventListener('timeupdate', () => {
   const now = Date.now();
   if (currentKey && now - lastSave >= 5000) {
     lastSave = now;
     store.setHeardAt(currentKey, audio.currentTime);
+    setPositionState();
   }
-  $('p-bar').firstElementChild.style.width =
-    (audio.duration ? (audio.currentTime / audio.duration) * 100 : 0) + '%';
+  paintProgress();
 });
 audio.addEventListener('ended', () => { if (currentKey) store.setHeardAt(currentKey, 0); });
 audio.addEventListener('error', () => { if (audio.getAttribute('src')) toast('That episode would not load'); });
 
 function paintPlayIcon() {
   $('p-toggle').innerHTML = audio.paused ? ICON.play : ICON.pause;
+  paintPlayButtons();
+  paintNowPlaying();
 }
-audio.addEventListener('play', paintPlayIcon);
+audio.addEventListener('play', () => { silenceForeign(); paintPlayIcon(); });
 audio.addEventListener('pause', paintPlayIcon);
-$('p-toggle').addEventListener('click', () => { if (audio.paused) audio.play(); else audio.pause(); });
-$('p-back').addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 15); });
-$('p-close').addEventListener('click', () => {
+audio.addEventListener('ratechange', setPositionState);
+
+$('p-toggle').addEventListener('click', () => {
+  if (audio.paused) { silenceForeign(); audio.play().catch(() => {}); } else { audio.pause(); }
+});
+$('p-back').addEventListener('click', () => back(15));
+$('p-fwd').addEventListener('click', () => fwd(30));
+function closePlayer() {
   audio.pause();
   audio.removeAttribute('src');
   audio.load();
   currentKey = null;
+  currentItem = null;
   player.hidden = true;
   document.body.classList.remove('has-player');
-});
+  paintPlayButtons();
+}
+$('p-close').addEventListener('click', closePlayer);
+
+/* ------------------------------------------------------------------ scrub */
+/* The bar was two pixels of decoration. It is a control now: the strip across
+   the top of the player is 14px of hit area drawing a 3px line, and it takes
+   a drag, a tap and the arrow keys. An hour-long session is unusable without
+   it — which is what "there is no way to skip forward" actually meant. */
+
+function bindScrub(bar) {
+  let scrubbing = false;
+  const seek = (e) => {
+    if (!audio.duration || !isFinite(audio.duration)) return;
+    const r = bar.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (e.clientX - r.left) / Math.max(1, r.width)));
+    audio.currentTime = p * audio.duration;
+    paintProgress();
+  };
+  bar.addEventListener('pointerdown', (e) => {
+    if (!audio.duration) return;
+    scrubbing = true;
+    bar.classList.add('scrubbing');
+    try { bar.setPointerCapture(e.pointerId); } catch (err) { /* older Safari */ }
+    seek(e);
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  bar.addEventListener('pointermove', (e) => { if (scrubbing) seek(e); });
+  const stop = (e) => {
+    if (!scrubbing) return;
+    scrubbing = false;
+    bar.classList.remove('scrubbing');
+    try { bar.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+  };
+  bar.addEventListener('pointerup', stop);
+  bar.addEventListener('pointercancel', stop);
+  bar.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { fwd(e.shiftKey ? 60 : 15); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { back(e.shiftKey ? 60 : 15); e.preventDefault(); }
+    else if (e.key === ' ' || e.key === 'Enter') {
+      if (audio.paused) audio.play().catch(() => {}); else audio.pause();
+      e.preventDefault();
+    }
+  });
+}
+bindScrub($('p-bar'));
+
+/* ------------------------------------------------------------ now playing */
+/* The dock row is a handle, not the player. Tapping it opens the thing you
+   actually want on an hour-long recording: a bar wide enough to aim at, a
+   readable clock, and a speed control. */
+
+let npBody = null;
+
+function npRow(label, onClick, cls) {
+  const b = el('button', cls || 'np-btn', label);
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+export function openNowPlaying() {
+  if (!currentItem) return;
+  sheet('Now playing', (body, close) => {
+    npBody = body;
+    const it = currentItem;
+    const head = el('div', 'np-head');
+    if (it.art) {
+      const img = el('img', 'np-art');
+      img.src = it.art; img.alt = ''; img.referrerPolicy = 'no-referrer';
+      head.appendChild(img);
+    }
+    const meta = el('div', 'np-meta');
+    meta.appendChild(el('h3', 'np-title', esc(it.title)));
+    if (it.show) meta.appendChild(el('p', 'np-show', esc(it.show)));
+    head.appendChild(meta);
+    body.appendChild(head);
+
+    const bar = el('div', 'np-bar');
+    bar.id = 'np-bar';
+    bar.setAttribute('role', 'slider');
+    bar.setAttribute('aria-label', 'Seek');
+    bar.tabIndex = 0;
+    bar.appendChild(el('i'));
+    body.appendChild(bar);
+    bindScrub(bar);
+
+    const times = el('div', 'np-times');
+    times.innerHTML = '<span id="np-at"></span><span id="np-left"></span>';
+    body.appendChild(times);
+
+    const row = el('div', 'np-transport');
+    row.appendChild(npRow(ICON.back15 + '<span>15</span>', () => back(15), 'np-btn np-skip'));
+    const toggle = npRow('', () => {
+      if (audio.paused) { silenceForeign(); audio.play().catch(() => {}); } else { audio.pause(); }
+    }, 'np-btn np-big');
+    toggle.id = 'np-toggle';
+    row.appendChild(toggle);
+    const f = npRow(ICON.back15 + '<span>30</span>', () => fwd(30), 'np-btn np-skip np-flip');
+    row.appendChild(f);
+    body.appendChild(row);
+
+    const foot = el('div', 'np-foot');
+    const speed = npRow('', () => {
+      const next = RATES[(RATES.indexOf(rate()) + 1) % RATES.length];
+      store.write(RATE_KEY, next);
+      audio.playbackRate = next;
+      paintNowPlaying();
+    }, 'np-btn np-rate');
+    speed.id = 'np-rate';
+    foot.appendChild(speed);
+    if (it.href) {
+      const open = el('a', 'np-btn np-open', 'Open ' + ICON.ext);
+      open.href = safeHref(it.href);
+      open.target = '_blank';
+      open.rel = 'noopener';
+      foot.appendChild(open);
+    }
+    /* the dock drops its close button under 360px, so the way out of a
+       playing session has to exist here too */
+    const stop = npRow(ICON.x, () => { closePlayer(); close(); }, 'np-btn np-stop');
+    stop.setAttribute('aria-label', 'Close the player');
+    foot.appendChild(stop);
+    body.appendChild(foot);
+    paintNowPlaying();
+  }, () => { npBody = null; });
+}
+
+function paintNowPlaying() {
+  if (!npBody || !npBody.isConnected) { npBody = null; return; }
+  const at = npBody.querySelector('#np-at');
+  const left = npBody.querySelector('#np-left');
+  const bar = npBody.querySelector('#np-bar');
+  const toggle = npBody.querySelector('#np-toggle');
+  const speed = npBody.querySelector('#np-rate');
+  if (at) at.textContent = clock(audio.currentTime);
+  if (left) left.textContent = audio.duration ? '-' + clock(audio.duration - audio.currentTime) : '';
+  if (bar) bar.firstElementChild.style.width =
+    (audio.duration ? (audio.currentTime / audio.duration) * 100 : 0) + '%';
+  if (toggle) toggle.innerHTML = audio.paused ? ICON.play : ICON.pause;
+  if (speed) speed.textContent = rate() + '×';
+}
+
+$('p-open').addEventListener('click', openNowPlaying);
 
 /* ------------------------------------------------------------------ video */
 
@@ -353,6 +630,7 @@ export function showVideo(id, title) {
   $('vbox-hint').hidden = true;
   $('vbox').hidden = false;
   audio.pause();
+  silenceForeign();
   /* embed blocking is invisible cross-origin, so the escape hatch just fades
      in after a few seconds rather than waiting for an error that never comes */
   clearTimeout(hintTimer);

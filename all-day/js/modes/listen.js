@@ -235,11 +235,12 @@ function epRow(ep, s) {
   const row = el('div', 'ep' + (playing ? ' is-playing' : ''));
   row.dataset.k = k;
 
-  const play = el('button', 'ep-go', ICON.play);
+  const play = el('button', 'ep-go' + (playing ? ' is-playing' : ''), playing ? ICON.pause : ICON.play);
+  play.dataset.pk = k;                     /* the shell paints it — see app.js */
   play.setAttribute('aria-label', 'Play ' + (ep.t || 'episode'));
   play.addEventListener('click', () => {
-    app.playAudio({ src: ep.a, title: ep.t, show: s.src.short || s.src.name,
-                    art: ep.i || s.art, key: k });
+    app.toggleAudio({ src: ep.a, title: ep.t, show: s.src.short || s.src.name,
+                      art: ep.i || s.art, key: k, href: ep.u || '' });
     renderList();
   });
 

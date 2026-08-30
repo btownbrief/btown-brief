@@ -941,20 +941,116 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 
 /* ============================================================ player */
 .player {
-  max-width: 470px; margin: 0 auto 8px; display: flex; align-items: center; gap: 11px;
+  max-width: 470px; margin: 0 auto 8px; display: flex; align-items: center; gap: 8px;
   background: var(--dock-bg); border: 1px solid var(--edge); border-radius: var(--radius);
-  box-shadow: var(--shadow-2); padding: 9px 10px 9px 9px; position: relative; overflow: hidden;
+  box-shadow: var(--shadow-2); padding: 14px 8px 9px; position: relative; overflow: hidden;
   backdrop-filter: saturate(150%) blur(18px); -webkit-backdrop-filter: saturate(150%) blur(18px);
 }
 .player[hidden] { display: none; }
-.p-art { width: 44px; height: 44px; border-radius: 11px; object-fit: cover; flex: 0 0 auto; }
+/* four transport controls and a title on a 320px phone: the shell default of
+   42px would leave the title 25px of room, so the player runs its own size */
+.player .iconbtn { width: 36px; height: 36px; border-radius: 11px; }
+.player .iconbtn svg { width: 21px; height: 21px; }
+.p-open { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; text-align: left; }
+.p-art { width: 42px; height: 42px; border-radius: 11px; object-fit: cover; flex: 0 0 auto; }
 .p-meta { flex: 1; min-width: 0; }
 .p-title { display: block; font-size: .9rem; font-weight: 600; white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis; }
-.p-show { display: block; font-family: var(--mono); font-size: .62rem; letter-spacing: .09em;
-  text-transform: uppercase; color: var(--ink-faint); margin-top: 2px; }
-.p-bar { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--edge); }
-.p-bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+.p-sub { display: flex; align-items: baseline; gap: 7px; margin-top: 2px; }
+.p-show { font-family: var(--mono); font-size: .62rem; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-faint);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.p-time { flex: 0 0 auto; font-family: var(--mono); font-size: .62rem; letter-spacing: .04em;
+  color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+@media (max-width: 360px) {
+  .player { gap: 6px; }
+  .player .iconbtn { width: 34px; height: 34px; }
+  /* the row cannot hold five controls this narrow. Close moves into the
+     Now playing sheet, where there is room to label it. */
+  #p-close { display: none; }
+}
+
+/* The bar was two pixels of decoration. It is the seek control now: a 16px
+   strip of hit area across the top of the player drawing a 3px line. An hour
+   of live radio is unusable without one. */
+.p-bar { position: absolute; left: 0; right: 0; top: 0; height: 16px; z-index: 2;
+  cursor: pointer; touch-action: none; }
+.p-bar::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+  background: var(--edge); }
+.p-bar i { position: absolute; left: 0; top: 0; height: 3px; width: 0; background: var(--accent); }
+.p-bar i::after { content: ""; position: absolute; right: -5px; top: -3px; width: 9px; height: 9px;
+  border-radius: 50%; background: var(--accent); opacity: 0; transition: opacity .15s ease; }
+.p-bar:hover i::after, .p-bar.scrubbing i::after, .p-bar:focus-visible i::after { opacity: 1; }
+.p-bar.scrubbing::before, .p-bar.scrubbing i { height: 4px; }
+
+/* A sheet is z 90 and the dock is z 45, so pressing play on an artist put the
+   player behind the sheet you pressed it in — which read as "it did not play".
+
+   Raising the PLAYER is not enough: .dock is positioned with a z-index, so it
+   opens a stacking context and any z-index on a child is resolved inside it.
+   The dock itself has to come up. The tab bar comes with it, so it is hidden
+   for as long as the sheet is open — it was already behind the sheet card and
+   unreachable through the scrim, so nothing is lost and the player keeps the
+   position it always has, above where the bar was. */
+body.sheet-open .dock { z-index: 91; }
+/* display, not visibility: the bar has to leave the layout so the player
+   drops to the bottom edge, which is both where a mini player belongs and
+   the only position the sheet's own bottom padding can be sized against. */
+body.sheet-open .tabbar { display: none; }
+body.sheet-open.has-player .sheet-body { padding-bottom: calc(92px + var(--safe-b)); }
+
+/* ======================================================= now playing sheet */
+.np-head { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; }
+.np-art { width: 76px; height: 76px; border-radius: var(--radius-sm); object-fit: cover;
+  flex: 0 0 auto; }
+.np-meta { min-width: 0; }
+.np-title { font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
+.np-show { font-family: var(--mono); font-size: .64rem; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--ink-faint); margin-top: 5px; }
+.np-bar { position: relative; height: 22px; cursor: pointer; touch-action: none; }
+.np-bar::before { content: ""; position: absolute; left: 0; right: 0; top: 9px; height: 4px;
+  border-radius: 2px; background: var(--edge); }
+.np-bar i { position: absolute; left: 0; top: 9px; height: 4px; border-radius: 2px; width: 0;
+  background: var(--accent); }
+.np-bar i::after { content: ""; position: absolute; right: -7px; top: -5px; width: 14px; height: 14px;
+  border-radius: 50%; background: var(--accent); box-shadow: var(--shadow-1); }
+.np-times { display: flex; justify-content: space-between; font-family: var(--mono);
+  font-size: .68rem; color: var(--ink-faint); font-variant-numeric: tabular-nums;
+  margin: 2px 0 18px; }
+.np-transport { display: flex; align-items: center; justify-content: center; gap: 22px;
+  margin-bottom: 18px; }
+.np-btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  color: var(--ink); border-radius: var(--pill); }
+.np-skip { position: relative; width: 52px; height: 52px; }
+.np-skip svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round; }
+.np-skip span { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center;
+  font-family: var(--mono); font-size: .55rem; color: var(--ink-faint); }
+.np-flip svg { transform: scaleX(-1); }
+/* the app never fills with accent — but a transport button must read as THE
+   button. --ground inverts with the theme, so the glyph is near-white on the
+   brown and near-black on the amber; an invented token would only fail in one. */
+.np-big { width: 68px; height: 68px; background: var(--accent); color: var(--ground);
+  box-shadow: var(--shadow-2); }
+/* fill:none + a stroke, the same way .iconbtn does it: ICON.play carries its
+   own inline fill and wins, ICON.pause is two stroked lines and would render
+   as an empty circle under a fill-only rule. It did. */
+.np-big svg { width: 30px; height: 30px; fill: none; stroke: currentColor;
+  stroke-width: 2.6; stroke-linecap: round; }
+.np-big:active { transform: scale(.95); }
+.np-foot { display: flex; gap: 10px; align-items: center; }
+.np-foot .np-btn { flex: 1; min-height: 44px; border: 1px solid var(--edge);
+  background: var(--panel-2); font-size: .86rem; font-weight: 600; }
+.np-stop { flex: 0 0 46px !important; color: var(--ink-faint); }
+.np-stop svg { width: 17px; height: 17px; fill: none; stroke: currentColor;
+  stroke-width: 1.9; stroke-linecap: round; }
+.np-rate { font-variant-numeric: tabular-nums; }
+.np-open svg { width: 14px; height: 14px; fill: none; stroke: currentColor;
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+/* a play button anywhere in the app turns into a pause while it is the thing
+   playing — including inside a sheet, where the dock cannot be seen */
+[data-pk].is-playing { color: var(--accent); }
 
 /* ============================================================ video modal */
 .vbox { position: fixed; inset: 0; z-index: 92; display: flex; align-items: center;
