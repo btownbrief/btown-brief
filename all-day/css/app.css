@@ -1255,6 +1255,11 @@ body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
   border: 1px dashed var(--edge); background: var(--panel-2);
   font-size: .8rem; color: var(--ink-soft); }
 .tipbar b { color: var(--ink); font-weight: 600; }
+/* The subscribe tip is the one tipbar holding a link; it has to read as the
+   action, not vanish into the hint text around it. */
+.tipbar a { color: var(--accent-bright); font-weight: 600; text-decoration: none;
+  white-space: nowrap; }
+.tipbar a:hover { text-decoration: underline; }
 .tipbar .x { margin-left: auto; flex: 0 0 auto; font: inherit; font-size: 1rem;
   line-height: 1; background: none; border: 0; color: var(--ink-faint);
   cursor: pointer; padding: 2px 4px; }

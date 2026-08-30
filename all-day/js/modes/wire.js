@@ -223,6 +223,16 @@ function render() {
   tabStamp(root, stampOf(state.pulse.generated), 'the wire, every 20 minutes');
   renderPicks(root, map);
 
+  /* The one ask in the whole app, right under the picks it explains. All Day
+     is where the daily habit lives now, but the newsletter is the thing all
+     of this exists to feed — and until this line the app never mentioned it.
+     A tipbar, not a banner: dismiss it once and it stays gone. */
+  tipBar(root, 'brief',
+    '<span><b>Get the Brief</b> — the free newsletter behind all of this. ' +
+    'Burlington in five minutes, Mon &amp; Fri. ' +
+    '<a href="https://www.btownbrief.com?utm_source=all-day&amp;utm_medium=referral&amp;utm_campaign=wire" ' +
+    'target="_blank" rel="noopener">Subscribe →</a></span>');
+
   const sourceCount = new Set(shown.map((it) => outletSrc(map, map[it.s]).id)).size;
 
   const only = set.source && map[set.source];
