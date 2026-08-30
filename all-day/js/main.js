@@ -185,7 +185,7 @@ const TOUR = [
   ['What Now', 'The next few hours, answered'],
   ['Music', 'Bands from here, and who’s playing this week'],
   ['Photos', 'Burlington as its neighbours see it'],
-  ['Instagram', 'The accounts, in the order they posted'],
+  ['Instagram', 'What to do, and who to watch — posted, not ranked'],
   ['Wikipedia', 'A rabbit hole worth falling into'],
 ];
 

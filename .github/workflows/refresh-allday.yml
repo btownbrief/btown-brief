@@ -4,23 +4,31 @@
 #   all-day/data/whatnow.json    — the next ten days of the calendar, trimmed
 #                                  to the fields a card renders. ~95 KB.
 #   all-day/data/instagram.json  — recent posts from the Burlington accounts
-#                                  in data/instagram-handles.json. ~135 KB.
+#                                  in data/instagram-handles.json, both halves
+#                                  of the tab (DO organisers, SEE creators).
+#                                  ~350 KB.
 #   data/sports.json             — UVM, Burlington High, the local clubs and
 #                                  five national teams. Feeds sports.html and
 #                                  the games strip on All Day's What Now tab.
 #                                  ~140 KB.
 #
 # WHY DAILY, AND WHY IT CANNOT SLIP. Instagram signs every image URL with an
-# `oe` parameter roughly THREE DAYS out. Miss two runs and the grid is broken
-# frames, not stale ones. That is the binding constraint on this schedule.
+# `oe` parameter. Measured 2026-08-30 against a live payload it sits 4.3-4.5
+# days out. The builder carries forward posts whose signature is still good,
+# which is how a ~250-handle roster fits in a ~60-credit day — but carrying
+# forward only works if there is a recent payload to carry FROM. Miss three
+# runs and there is nothing left to carry; miss four and the grid is broken
+# frames. That is the binding constraint on this schedule.
 #
 # Order matters: it runs at 10:40 UTC, an hour after the events pipeline's
 # 9:40, because build_whatnow.py reads data/events/. Running first would
 # publish yesterday's calendar as today's answer.
 #
-# Credits: one Scrape Creators credit per handle per run. Tier 1 (25 handles)
-# every run plus a rotating slice of tier 2, so the whole roster is covered
-# over a few days without paying for 75 handles a morning.
+# Credits: one Scrape Creators credit per handle per run, and only for the
+# handles actually fetched. Both halves keep a small always-on core (tier1,
+# see1) plus a rotating slice (tier2 at --tier2-batch, see2 at --see2-batch),
+# so the whole roster is covered over a few days without paying for all of it
+# every morning. Raising either batch raises the daily spend one-for-one.
 #
 # Because it commits to main under GITHUB_TOKEN, and such commits do not fire
 # a `push` event, this workflow's name is listed in pages-deploy.yml's
@@ -65,7 +73,7 @@ jobs:
         env:
           SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
           SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
-        run: python3 scripts/build_instagram.py --tier2-batch 12 || echo "instagram build skipped"
+        run: python3 scripts/build_instagram.py --tier2-batch 12 --see2-batch 26 || echo "instagram build skipped"
 
       - name: Commit if changed
         run: |

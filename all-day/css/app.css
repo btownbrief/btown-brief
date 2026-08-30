@@ -2165,6 +2165,74 @@ body.chrome-away .ctlband { top: calc(var(--top-h) + 6px); }
 }
 .ig-accts-btn:hover { color: var(--accent); border-color: var(--accent-soft); }
 
+/* ------------------------------------------- the SEE wall (Instagram half two)
+
+   Its own class family rather than a reuse of Photos' .ph-grid. The layout is
+   nearly the same and the temptation is real, but Photos is a submission queue
+   with credits and a sunset score, and coupling the two means every change to
+   one has to be checked against the other. These share the tokens, not the
+   selectors.
+
+   Tiles are bigger than Photos'. That wall is thumbnails of one lake from one
+   angle, where density is the point; this one is 250-odd accounts making
+   different things, and at 108px a creemee and a DJ set look identical. */
+.igw-wall {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 7px; margin-top: 2px;
+}
+@media (max-width: 380px) {
+  .igw-wall { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+}
+.igw-tile { position: relative; }
+.igw-hit {
+  display: block; width: 100%; position: relative; border-radius: 11px;
+  overflow: hidden; background: var(--panel-2); text-align: left;
+}
+.igw-img {
+  display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
+  background: var(--panel-2);
+  outline: 1px solid rgba(20, 16, 8, .11); outline-offset: -1px;
+}
+:root[data-theme="dark"] .igw-img,
+:root:not([data-theme="light"]) .igw-img { outline-color: rgba(255, 255, 255, .22); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .igw-img { outline-color: rgba(20, 16, 8, .11); }
+}
+.igw-hit:active .igw-img { transform: scale(.97); }
+.igw-img { transition: transform .1s ease; }
+
+/* The handle rides on the picture. A scrim rather than a bar: half these
+   photographs are a bright sky and half are a dark room, and one flat colour
+   loses the text against one of them. Fixed white on the scrim for the same
+   reason — the ink token flips with the theme, the photograph underneath
+   does not. */
+.igw-foot {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: baseline; gap: 6px;
+  padding: 16px 8px 6px;
+  background: linear-gradient(to top, rgba(0, 0, 0, .72), rgba(0, 0, 0, 0));
+  pointer-events: none;
+}
+.igw-who {
+  font-size: .68rem; font-weight: 600; color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+.igw-when {
+  flex: 0 0 auto; font-family: var(--mono); font-size: .54rem; letter-spacing: .06em;
+  color: rgba(255, 255, 255, .78); text-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+}
+/* Same play triangle DO uses, moved to the corner a thumbnail wants it in. */
+.igw-vid {
+  position: absolute; top: 7px; right: 7px; width: 20px; height: 20px;
+  border-radius: 50%; background: rgba(0, 0, 0, .55); pointer-events: none;
+}
+.igw-vid::after {
+  content: ""; position: absolute; top: 5px; left: 7px;
+  border-left: 7px solid #fff; border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
 /* The games pointer on What Now. It is a door to sports.html, not a tab. */
 .wn-sport { margin: 16px 0 4px; }
 .wn-sport-hit { display: block; padding: 14px 15px; border-radius: var(--radius);
