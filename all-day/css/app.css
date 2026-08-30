@@ -1059,6 +1059,12 @@ body.chrome-away .fresh { top: calc(var(--nav-h) + 12px); }
 .toolseg .toolbtn + .toolbtn { border-left: 1px solid var(--edge); }
 .toolbtn:hover { background: var(--panel-hover); }
 .toolbtn.on { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+/* The Wire's layout switch leads the chip band, so it has to survive a flex
+   row that stretches its children and scrolls sideways: hold its own width,
+   centre against a 38px chip rather than growing to match it, and come in a
+   size down so it reads as the switch and not as another topic. */
+.chips > .toolseg { flex: 0 0 auto; align-self: center; }
+.toolseg-sm .toolbtn { font-size: .72rem; padding: 6px 11px; min-height: 30px; }
 .focus-btn { border: 1px solid var(--edge); border-radius: var(--pill); background: var(--panel); }
 .focus-btn.on { border-color: transparent; }
 
@@ -1245,7 +1251,6 @@ body.chrome-away .fresh { top: calc(var(--nav-h) + 12px); }
 body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 .ctlband .chips { padding-bottom: 6px; }
 .ctlband .hint-bar { margin-bottom: 8px; }
-.ctlband .toolrow { margin: 0 0 6px; }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .ctlband { background: var(--ground); }
 }
@@ -1948,3 +1953,27 @@ body.chrome-away .ctlband { top: calc(var(--nav-h) + 6px); }
 .wn-sport-more { display: inline-flex; align-items: center; gap: 5px; margin-top: 9px;
   font-size: .84rem; font-weight: 600; color: var(--accent); }
 .wn-sport-more svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+/* The arcade board sits directly under sports and borrows its whole card, so
+   the two read as one pair of pointers rather than two unrelated boxes. Three
+   rows, tabular figures, and the name allowed to run out with an ellipsis —
+   the score is the part that has to stay readable. */
+.wn-arcade { margin: 10px 0 4px; }
+.wn-arcade-hit { display: block; padding: 14px 15px; border-radius: var(--radius);
+  background: var(--panel-2); border: 1px solid var(--edge); }
+.wn-arcade-k { display: block; font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .11em; text-transform: uppercase; color: var(--accent);
+  font-weight: 600; margin-bottom: 7px; }
+.wn-arcade-g { display: block; font-size: .92rem; line-height: 1.4; color: var(--ink-soft); }
+.wn-arcade-g b { color: var(--ink); }
+.wn-arcade-rows { display: block; margin-top: 8px; }
+.wn-arcade-r { display: flex; align-items: baseline; gap: 8px;
+  font-size: .88rem; line-height: 1.9; color: var(--ink-soft); }
+.wn-arcade-r i { font-style: normal; flex: 0 0 auto; }
+.wn-arcade-r em { font-style: normal; color: var(--ink); font-weight: 500;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wn-arcade-r b { margin-left: auto; flex: 0 0 auto; color: var(--ink);
+  font-family: var(--mono); font-size: .82rem; font-variant-numeric: tabular-nums; }
+.wn-arcade-more { display: inline-flex; align-items: center; gap: 5px; margin-top: 9px;
+  font-size: .84rem; font-weight: 600; color: var(--accent); }
+.wn-arcade-more svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
