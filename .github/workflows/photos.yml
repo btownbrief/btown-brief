@@ -2,9 +2,9 @@ name: Community photos housekeeping
 
 # Every 3 hours:
 #  1. If reader photos are waiting for review, open a GitHub issue
-#     (GitHub emails the repo owner — that's the notification) and
-#     close it again once the queue is clear. Same pattern as the
-#     caption-this game.
+#     that @-mentions Stephen (the mention is what emails him, since
+#     he does not watch this repo) and close it again once the queue
+#     is clear. Same pattern as the caption-this game.
 #  2. Refresh data/photos/manifest.json (the static fallback + the
 #     newsletter's photo-of-the-week source) and commit it if changed.
 
@@ -41,10 +41,11 @@ jobs:
           ISSUE=$(gh issue list --label photo-queue --state open \
             --json number --jq '.[0].number // empty')
           if [ "$COUNT" -gt 0 ] && [ -z "$ISSUE" ]; then
-            BODY=$(printf '%s\n\n%s\n\n%s' \
-              "Community photo(s) are waiting in the review queue." \
+            BODY=$(printf '%s\n\n%s\n\n%s\n\n%s' \
+              "@stephenvdavis-jpg — community photo(s) are waiting in the review queue." \
               "**Review them here → https://guide.btownbrief.com/photo-admin.html**" \
-              "This issue closes itself automatically once the queue is clear.")
+              "This issue closes itself automatically once the queue is clear." \
+              "(The @-mention is the notification: it emails regardless of whether you watch this repo.)")
             gh issue create --label photo-queue \
               --title "📸 $COUNT community photo(s) waiting for review" \
               --body "$BODY"
