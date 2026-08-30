@@ -74,6 +74,19 @@ const FILES = {
     local: 'data/podcast.json',
     ok: (j) => j && Array.isArray(j.episodes),
   },
+  /* Who is winning at the arcade. Published every six hours by the arcade's
+     own champions workflow, and it is the ONLY cheap way to get an
+     arcade-wide answer: `scores` is not readable by anon and
+     get_leaderboard() is one call per board, so computing this in the client
+     would be 32 requests. Lives in the btownbrief.github.io repo, hence the
+     full URL rather than LIVE + a path. No same-origin copy, so it fails
+     soft the way `top` and `youtube` do: no payload, no card. */
+  champions: {
+    live: 'https://raw.githubusercontent.com/btownbrief/btownbrief.github.io/' +
+      'champions-data/data/champions.json',
+    local: null,
+    ok: (j) => j && Array.isArray(j.royalty) && Array.isArray(j.games),
+  },
   /* Just the games. What Now shows the next couple of days and hands off to
      sports.html for the rest — a schedule is something you act on, so it lives
      with the calendar rather than in a tab you scroll. */
