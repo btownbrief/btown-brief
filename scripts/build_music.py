@@ -337,8 +337,8 @@ def build_calendar(events: list[dict], today: dt.date) -> dict:
     category — so an event can never be on one surface and off the other.
 
     A show with no venue is dropped: the row has nothing to print in its venue
-    column and no chip to file itself under. Five of 330 today, all of them
-    listings where the source itself named no room."""
+    column and no chip to file itself under. A handful per build, all of them
+    listings where the source itself named no room. The count is logged."""
     rows, no_venue = [], []
     for e in events:
         if e.get("category") != "music":
@@ -350,6 +350,19 @@ def build_calendar(events: list[dict], today: dt.date) -> dict:
             no_venue.append(f'{r["date"]} {r["title"][:40]}')
             continue
         rows.append(r)
+
+    # Two sources spell one room two ways ("Cathedral Church of St Paul" /
+    # "St. Paul"). They slug to the same chip, so the rows adopt the commonest
+    # spelling — a chip that reads one thing filtering rows that read another
+    # looks like a bug.
+    spellings: dict[str, dict[str, int]] = {}
+    for r in rows:
+        s = spellings.setdefault(r["vid"], {})
+        s[r["venue"]] = s.get(r["venue"], 0) + 1
+    canon = {vid: max(s.items(), key=lambda kv: (kv[1], kv[0]))[0]
+             for vid, s in spellings.items()}
+    for r in rows:
+        r["venue"] = canon[r["vid"]]
     rows.sort(key=lambda r: (r["date"], minutes(r["time"]), r["venue"], r["title"]))
 
     counts: dict[str, dict] = {}
@@ -455,6 +468,17 @@ def big_room(room: dict, today: dt.date) -> dict:
 
 
 def main() -> int:
+    # what the last good build found, so a rate-limited fetch degrades to
+    # yesterday's answer rather than to nothing
+    prev_bandcamp: dict[str, dict] = {}
+    if OUT.exists():
+        try:
+            for a in json.loads(OUT.read_text(encoding="utf-8")).get("artists", []):
+                if a.get("bandcamp"):
+                    prev_bandcamp[a["name"]] = a["bandcamp"]
+        except Exception as e:
+            log(f"  couldn't read the previous payload ({e}); starting clean")
+
     doc = json.loads(ROSTER.read_text(encoding="utf-8"))
     roster = doc["artists"]
     today = dt.date.today()
@@ -489,6 +513,16 @@ def main() -> int:
         bc_url = rec["links"].get("bandcamp")
         if bc_url:
             got = bandcamp(bc_url)
+            if not got:
+                # Bandcamp rate-limits: two builds inside ten minutes and it
+                # starts answering 429. Dropping the embed on a 429 publishes a
+                # quieter tab and says nothing about why — measured, one such
+                # run took the playable count from 85 to 62. Keep what the last
+                # good build found; a stale album id still plays, and a real
+                # removal costs one extra day to notice.
+                got = (prev_bandcamp.get(name))
+                if got:
+                    log(f"  kept last build's Bandcamp for {name} (fetch failed)")
             if got:
                 rec["bandcamp"] = got
                 n_bc += 1
