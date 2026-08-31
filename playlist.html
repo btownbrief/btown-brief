@@ -1,170 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Burlington Community Playlist — Burlington Brief</title>
-  <meta name="description" content="Burlington's community playlist — share a song you love, upvote the week's list, and discover Vermont artists. Spotify, Apple Music, YouTube, all welcome.">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Btown Brief">
-  <meta property="og:title" content="Burlington Community Playlist">
-  <meta property="og:description" content="Burlington's community playlist — share a song you love, upvote the week's list, and discover Vermont artists. Spotify, Apple Music, YouTube, all welcome.">
-  <meta property="og:url" content="https://guide.btownbrief.com/playlist.html">
-  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Burlington Community Playlist">
-  <meta name="twitter:description" content="Burlington's community playlist — share a song you love, upvote the week's list, and discover Vermont artists. Spotify, Apple Music, YouTube, all welcome.">
-  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
-
-  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-title" content="City Guide">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <script>
-    /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
-       refreshes the cache; this only avoids the white flash after dark. */
-    (function () {
-      try {
-        var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
-        if (!c) return;
-        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
-          year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-        if (c.day !== today) return;
-        var n = Date.now();
-        document.documentElement.setAttribute('data-theme',
-          (n >= c.rise && n < c.set) ? 'light' : 'dark');
-      } catch (e) {}
-    })();
-  </script>
-<!-- Meta Pixel -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2471867016612559');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Community Playlist — moved to All Day</title>
+  <!-- The mixtape lives in All Day's Music tab now — same Supabase tables,
+       same votes, a two-field form instead of seven, plus the artist
+       directory and show calendar around it. This stays as a redirect rather
+       than a deletion because old newsletters and Google still point here.
+       Delete it once nothing links here. -->
+  <link rel="canonical" href="https://guide.btownbrief.com/all-day/">
+  <meta name="robots" content="noindex, follow">
+  <meta http-equiv="refresh" content="0; url=/all-day/#music">
+  <script>location.replace('/all-day/#music');</script>
+  <style>
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:#FBF9F5;
+           color:#16191D; font-family:"DM Sans",system-ui,sans-serif; text-align:center; padding:24px; }
+    @media (prefers-color-scheme: dark) { body { background:#06080A; color:#F2F0EA; } }
+    a { color:#9A5B00; }
+    @media (prefers-color-scheme: dark) { a { color:#E8A33D; } }
+  </style>
 </head>
-<body data-standalone>
-
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
-          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-        <span class="logo-sep"></span>
-        <span class="logo-title">Burlington Brief</span>
-      </div>
-      <nav class="mode-nav" aria-label="Community pages">
-        <a class="mode-btn" href="things-to-do.html">Things To Do</a>
-        <a class="mode-btn" href="volunteer.html">Volunteer</a>
-        <a class="mode-btn" href="clubs.html">Clubs</a>
-        <a class="mode-btn" href="projects.html">Projects</a>
-      </nav>
-    </div>
-  </header>
-
-  <a class="newsletter-bar" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture" target="_blank" rel="noopener">
-    <div class="newsletter-bar-inner">
-      <div class="newsletter-head">
-        <span class="newsletter-label">The Burlington Brief</span>
-        <span class="newsletter-issue">Free Burlington news &amp; events in your inbox</span>
-      </div>
-      <span class="newsletter-cta">Sign up free →</span>
-    </div>
-  </a>
-
-  <main class="page-wrap">
-    <div class="page-hero">
-      <span class="page-hero-kicker">Community Playlist</span>
-      <h1>What's Burlington listening to?</h1>
-      <p class="page-hero-sub">Share a song you love, upvote your favorites, and the list sorts itself. Spotify, Apple Music, YouTube, Bandcamp — every platform welcome. Fresh list every other Monday — and past winners stay on the wall.</p>
-    </div>
-
-    <div class="theme-banner" id="theme-banner" hidden>
-      <span class="theme-banner-label">This round's theme</span>
-      <div class="theme-banner-title" id="theme-title"></div>
-      <p class="theme-banner-sub" id="theme-sub"></p>
-    </div>
-
-    <div class="chip-row">
-      <label class="quick-chip"><input type="checkbox" id="local-only"><span>🍁 Local musicians only</span></label>
-    </div>
-
-    <p class="result-count" id="pl-count" aria-live="polite"></p>
-    <div class="pl-list" id="pl-list">
-      <p class="page-empty">Loading the week's list…</p>
-    </div>
-
-    <div id="pl-winners" hidden>
-      <h2 class="section-label">🏆 Past winners</h2>
-      <div class="pl-list" id="pl-winners-list"></div>
-    </div>
-
-    <h2 class="section-label">Add a song</h2>
-    <form class="pl-form" id="pl-form">
-      <label>Song *
-        <input type="text" name="song" maxlength="120" required placeholder="e.g. Homesick">
-      </label>
-      <label>Artist *
-        <input type="text" name="artist" maxlength="120" required placeholder="e.g. Noah Kahan">
-      </label>
-      <label>Link * <span style="font-weight:400">(Spotify, Apple Music, YouTube, Bandcamp — anything)</span>
-        <input type="url" name="url" maxlength="500" required placeholder="https://…">
-      </label>
-      <label>Why do you love it? <span style="font-weight:400">(optional)</span>
-        <textarea name="why" maxlength="280" placeholder="One or two sentences"></textarea>
-      </label>
-      <label>Your name <span style="font-weight:400">(optional — first name is plenty)</span>
-        <input type="text" name="submitter" maxlength="60" placeholder="Anonymous is fine">
-      </label>
-      <label class="pl-form-check">
-        <input type="checkbox" name="is_local">
-        This is a local Vermont artist 🍁
-      </label>
-      <button class="pl-submit-btn" type="submit" id="pl-submit">Submit song</button>
-      <p class="pl-form-status" id="pl-status" hidden></p>
-      <p class="page-empty" style="padding:0; font-size: var(--text-xs);">Submissions are reviewed before they appear — usually within a day. Keep it friendly.</p>
-    </form>
-  </main>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
-      <span class="footer-sep">·</span>
-      <span>Burlington, Vermont</span>
-    </div>
-  </footer>
-
-  <script src="js/community.js"></script>
-  <script src="js/playlist.js"></script>
-  <script src="js/auto-theme.js"></script>
-  <script src="https://play.btownbrief.com/nav.js" defer></script>
+<body>
+  <p>This moved to <a href="/all-day/#music">All Day’s Music tab</a>.</p>
 </body>
 </html>

@@ -808,4 +808,33 @@ function renderMixtape(root) {
     state.mixtape = Array.isArray(rows) ? rows : [];
     paint(state.mixtape);
   });
+
+  /* The wall's history — the top-voted pick of each earlier fortnight, off
+     the same tables. This lived on playlist.html, now retired into this tab;
+     rows from that page's single-track era render as "song — artist" and
+     playlist-era rows as "name — platform", which is what each one is. */
+  const past = el('div', 'm-winners');
+  root.appendChild(past);
+  rpc('btb_playlist_winners', { p_current: periodKey() }).then((rows) => {
+    if (!Array.isArray(rows) || !rows.length) return;
+    shelfHead(past, 'Past winners', 'the top pick of each round');
+    rows.forEach((t) => {
+      const row = el('div', 'm-track');
+      const body = el('div', 'm-track-body');
+      const votes = Number(t.votes) || 0;
+      body.innerHTML =
+        '<span class="m-track-song">🏆 ' + esc(t.song || '') + '</span>' +
+        '<span class="m-track-by">' + esc(t.artist || platform(t.url || '')) +
+          (t.is_local ? ' <b class="m-local">Vermont</b>' : '') + '</span>' +
+        '<span class="m-track-who">' + votes + (votes === 1 ? ' vote' : ' votes') +
+          (t.submitter ? ' — picked by ' + esc(t.submitter) : '') + '</span>';
+      row.appendChild(body);
+      const go = el('a', 'm-track-go', esc(platform(t.url || '')));
+      go.href = safeHref(t.url);
+      go.target = '_blank';
+      go.rel = 'noopener';
+      row.appendChild(go);
+      past.appendChild(row);
+    });
+  });
 }
