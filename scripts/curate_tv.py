@@ -718,19 +718,35 @@ def ask_model(prompt):
     # effort:"bogus" was accepted without error and low vs high thinking
     # tokens came out backwards and inside the noise. Setting it implies a
     # control that does not exist. Do not add it back.
-    with client.messages.stream(
-        model=MODEL,
-        max_tokens=48000,
-        output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
-        messages=[{"role": "user", "content": prompt}],
-    ) as stream:
-        response = stream.get_final_message()
-    if response.stop_reason == "refusal":
-        raise RuntimeError("the model declined to answer")
-    if response.stop_reason == "max_tokens":
-        raise RuntimeError("response truncated at max_tokens")
-    text = next(block.text for block in response.content if block.type == "text")
-    return json.loads(text)
+    # require_parameters: OpenRouter serves this model from ~20 providers and
+    # seven of them do not support structured_outputs. Routed to one of those,
+    # the schema is dropped SILENTLY and the model free-runs in reasoning mode
+    # until it burns the whole budget — which is how this job went green for
+    # two nights (8/29–8/30) while the Watch tab froze. Same incident as
+    # curate_top.py; see PR #233. Never remove it.
+    last = None
+    for attempt in (1, 2):
+        try:
+            with client.messages.stream(
+                model=MODEL,
+                max_tokens=48000,
+                output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
+                extra_body={"provider": {"require_parameters": True}},
+                messages=[{"role": "user", "content": prompt}],
+            ) as stream:
+                response = stream.get_final_message()
+            if response.stop_reason == "refusal":
+                raise RuntimeError("the model declined to answer")
+            if response.stop_reason == "max_tokens":
+                raise RuntimeError("response truncated at max_tokens")
+            text = next(block.text for block in response.content
+                        if block.type == "text")
+            return json.loads(text)
+        except Exception as exc:  # noqa: BLE001 — one retry, then surface
+            last = exc
+            print(f"curate_tv: attempt {attempt}/2 failed ({exc})",
+                  file=sys.stderr)
+    raise last
 
 
 def validate(raw, index):

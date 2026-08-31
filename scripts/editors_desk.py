@@ -6,8 +6,12 @@ Builds desk.html (local-only, gitignored) from live signals and opens it:
   1. Broken & stale — scheduled GitHub workflows across every local
      btownbrief checkout (found by scanning .github/workflows for cron
      blocks, so new repos join automatically) whose latest run failed,
-     went quiet past its cadence, or wedged in "queued"; launchd jobs
-     with a nonzero exit; plus the hand-kept watchlist in desk-state.json.
+     went quiet past its cadence, or wedged in "queued"; PUBLISHED PAYLOAD
+     AGES checked against each pipeline's cadence — this is the check that
+     catches a job running green while writing nothing, which is how the
+     TOP picks and the Watch tab both froze for two days in late August
+     with every run success; launchd jobs with a nonzero exit; plus the
+     hand-kept watchlist in desk-state.json.
   2. Waiting on you — open PRs org-wide plus job-radar, and the pending
      human steps listed in desk-state.json.
   3. Rhythms — recurring chores with due dates. last_done comes from a
@@ -36,6 +40,9 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 REPOS_DIR = os.path.dirname(ROOT)  # ~/btownbrief
 EXTRA_REPO_DIRS = [os.path.expanduser("~/job-radar")]
+# Checkouts live in two places in practice: the canonical ~/btownbrief/* and
+# the working clones on ~/Desktop. Scan both; gh_slug dedupes the org repos.
+EXTRA_SCAN_DIRS = [os.path.expanduser("~/Desktop")]
 STATE_PATH = os.path.join(ROOT, "desk-state.json")
 OUT_PATH = os.path.join(ROOT, "desk.html")
 
@@ -143,6 +150,10 @@ def local_repos():
     # automation workspaces, often pinned to old commits — not signal.
     dirs = [os.path.join(REPOS_DIR, d) for d in sorted(os.listdir(REPOS_DIR))
             if not d.startswith(".")]
+    for scan in EXTRA_SCAN_DIRS:
+        if os.path.isdir(scan):
+            dirs += [os.path.join(scan, d) for d in sorted(os.listdir(scan))
+                     if not d.startswith(".")]
     return [d for d in dirs + EXTRA_REPO_DIRS if os.path.isdir(os.path.join(d, ".git"))]
 
 
@@ -247,6 +258,80 @@ def check_workflow_health():
     return findings, unreachable
 
 
+# Published payloads, each judged against its own cadence with slack for
+# GitHub's cron-shedding. A workflow can run green and write nothing (a model
+# call that fails quietly, a push guard that bails) — the ONLY thing that
+# notices is looking at the data itself. Budgets are hours; red past the
+# budget, amber past 70% of it.
+RAW = "https://raw.githubusercontent.com/btownbrief/btown-brief/"
+GUIDE = "https://guide.btownbrief.com/"
+PAYLOADS = [
+    ("Pulse wire", RAW + "pulse-data/data/pulse.json", 3,
+     "10-min dispatcher + shed crons; if this is old, check the dispatcher machine first"),
+    ("TOP picks (What matters today)", RAW + "pulse-top/data/pulse-top.json", 16,
+     "3x daily; froze green for 2 days on 8/29 — the incident this check exists for"),
+    ("Btown TV (Watch tab)", RAW + "btown-tv/data/btown-tv.json", 30, "nightly 21:40 UTC"),
+    ("YouTube wire", RAW + "pulse-youtube/data/pulse-youtube.json", 9, "3-hourly"),
+    ("All Day Instagram", GUIDE + "all-day/data/instagram.json", 30,
+     "daily; image URLs also expire ~4 days out"),
+    ("All Day music", GUIDE + "all-day/data/music.json", 30, "daily 10:20 UTC"),
+    ("All Day what-now", GUIDE + "all-day/data/whatnow.json", 30, "daily via refresh-allday"),
+    ("Wander pool", GUIDE + "all-day/data/wander-pool.json", 30, "daily 4:20 UTC"),
+    ("Sports", GUIDE + "data/sports.json", 30, "daily via refresh-allday"),
+    ("Newsletter picks", GUIDE + "data/newsletter-picks.json", 10, "hourly, shed to ~3x/day"),
+    ("Weather latest", GUIDE + "data/weather/latest.json", 4, "hourly :45"),
+    ("Events", GUIDE + "data/events/events.json", 30, "2x daily"),
+    ("Champions", "https://raw.githubusercontent.com/btownbrief/btownbrief.github.io/"
+     "champions-data/data/champions.json", 12, "games leaderboards"),
+]
+
+STAMP_KEYS = ("generated", "built", "updated", "time")
+
+
+def payload_age_hours(url):
+    """Age of a published JSON payload, by its own stamp or Last-Modified."""
+    import urllib.request
+    req = urllib.request.Request(url, headers={"User-Agent": "editors-desk/1.0"})
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        raw = resp.read()
+        last_mod = resp.headers.get("Last-Modified")
+    stamp = None
+    try:
+        data = json.loads(raw)
+        if isinstance(data, dict):
+            stamp = next((data[k] for k in STAMP_KEYS if data.get(k)), None)
+    except Exception:
+        pass
+    if stamp:
+        parsed = parse_iso(str(stamp))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=datetime.timezone.utc)
+        return (NOW - parsed).total_seconds() / 3600
+    if last_mod:
+        parsed = datetime.datetime.strptime(last_mod, "%a, %d %b %Y %H:%M:%S %Z")
+        return (NOW - parsed.replace(tzinfo=datetime.timezone.utc)).total_seconds() / 3600
+    return None
+
+
+def check_payload_freshness():
+    findings = []
+    for name, url, budget_h, note in PAYLOADS:
+        try:
+            age = payload_age_hours(url)
+        except Exception:
+            findings.append(("amber", name, "couldn't fetch the payload to age it", url))
+            continue
+        if age is None:
+            findings.append(("amber", name, "no stamp and no Last-Modified — unmonitorable", url))
+        elif age > budget_h:
+            findings.append(("red", name,
+                             f"payload is {age:.0f}h old (budget {budget_h}h) — {note}", url))
+        elif age > budget_h * 0.7:
+            findings.append(("amber", name,
+                             f"payload is {age:.0f}h old (budget {budget_h}h) — {note}", url))
+    return findings
+
+
 def check_launchd():
     out = sh(["launchctl", "list"], timeout=10)
     findings = []
@@ -310,10 +395,11 @@ def days_ago(iso_ts):
 
 def render(state):
     wf_findings, unreachable = check_workflow_health()
+    payload_findings = check_payload_freshness()
     launchd_findings = check_launchd()
     prs, pr_notes = check_open_prs()
 
-    broken = wf_findings + launchd_findings
+    broken = payload_findings + wf_findings + launchd_findings
     rows = []
 
     def section(title, sub=""):
