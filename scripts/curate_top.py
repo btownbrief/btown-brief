@@ -57,8 +57,11 @@ MAX_TOKENS = 4000
 MODEL_ATTEMPTS = 2
 
 # How stale the live list may get before this job stops pretending it is fine.
-# Three scheduled runs a day, so half a day of silence is already two misses.
-STALE_HOURS = 13
+# The schedule (10:35/15:35/20:35 UTC) has a 14h overnight gap, and GitHub
+# routinely fires crons up to an hour late — so a single missed MORNING run is
+# already checking a ~15h-old list. The limit sits just above that: one miss
+# stays green in every slot, sustained breakage goes red within a day.
+STALE_HOURS = 16
 
 SIGNALS_URL = ("https://www.inoreader.com/stream/user/1003590800/tag/"
                "Top%20Signals?n=30")
