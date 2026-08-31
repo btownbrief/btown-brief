@@ -1,30 +1,30 @@
 {
- "generated": "2026-08-31T11:27:35-04:00",
+ "generated": "2026-08-31T13:12:40-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 17,
-   "seconds": 6.1
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 63,
-   "seconds": 2.4
+   "seconds": 4.6
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 68,
-   "seconds": 2.9
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 165,
-   "seconds": 3.3
+   "seconds": 2.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 83,
-   "seconds": 1.7
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 192,
-   "seconds": 65.7
+   "seconds": 76.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 36,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -66,58 +66,57 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 38.2
+   "seconds": 43.5
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 71,
-   "seconds": 0.6
+   "seconds": 0.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 21.4
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 381,
-   "seconds": 74.1
+   "seconds": 67.1
   },
   "meetup": {
    "label": "Meetup",
    "count": 65,
-   "seconds": 128.7
+   "seconds": 123.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 22,
-   "seconds": 0.4
+   "seconds": 0.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 49,
-   "seconds": 13.7
+   "seconds": 15.1
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 60,
-   "seconds": 0.3
+   "seconds": 0.9
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden",
-   "staleDays": 0
+   "count": 102,
+   "seconds": 5.7
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 26,
-   "seconds": 31.2
+   "seconds": 33.1
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2328,
-   "seconds": 66.5
+   "seconds": 18.6
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -128,7 +127,7 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 451,
-   "seconds": 27.5
+   "seconds": 21.8
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -138,7 +137,7 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 76,
-   "seconds": 97.9
+   "seconds": 102.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -146,37 +145,12 @@
    "seconds": 0.3
   }
  },
- "gathered": 5246,
- "afterDedup": 2445,
- "duplicatesMerged": 2801,
- "final": 2759,
+ "gathered": 5348,
+ "afterDedup": 2504,
+ "duplicatesMerged": 2844,
+ "final": 2760,
  "firecrawlCalls": 14,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Sing-Along with Linda Bassick",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
-    "title": "Bombargo",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-06"
-  },
   {
    "kept": {
     "title": "BASIC",
@@ -1049,6 +1023,17 @@
    "merged_sources": [
     "champlainvalley",
     "higherground"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
    ],
    "date": "2026-10-14"
   },
@@ -2240,6 +2225,17 @@
   },
   {
    "kept": {
+    "title": "Italian Conversation Group",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
+   ],
+   "date": "2026-10-28"
+  },
+  {
+   "kept": {
     "title": "Standup Open Mic",
     "source": "vcc"
    },
@@ -2422,38 +2418,6 @@
  ],
  "changes": [
   {
-   "id": "90ad3c4e4ff8",
-   "title": "Burlington Baroque Festival 2026",
-   "date": "2026-09-18",
-   "change": "time",
-   "was": "2026-09-18T19:30:00-04:00",
-   "now": "2026-09-18T18:45:00-04:00"
-  },
-  {
-   "id": "ae4ccd1129ce",
-   "title": "Burlington Baroque Festival 2026",
-   "date": "2026-09-19",
-   "change": "time",
-   "was": "2026-09-19T19:30:00-04:00",
-   "now": "2026-09-19T14:00:00-04:00"
-  },
-  {
-   "id": "072ec68adfa0",
-   "title": "Burlington Baroque Festival 2026",
-   "date": "2026-09-20",
-   "change": "time",
-   "was": "2026-09-20T19:30:00-04:00",
-   "now": "2026-09-20T14:00:00-04:00"
-  },
-  {
-   "id": "3d707759e586",
-   "title": "2nd Annual Fall Classic Wiffle Ball Tournament",
-   "date": "2026-09-26",
-   "change": "time",
-   "was": "2026-09-26",
-   "now": "2026-09-26T10:00:00-04:00"
-  },
-  {
    "id": "4f8cdcfe87bc",
    "title": "Tech Tuesdays - Breakfast",
    "date": "2026-09-01",
@@ -2461,18 +2425,18 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "661a9878e02b",
-   "title": "Craftytown! Flapping Butterfly",
+   "id": "c814e8e6768d",
+   "title": "Craftytown",
    "date": "2026-09-01",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
-   "id": "cfafd402b0c1",
-   "title": "Cookbook Club: The SalviSoul Cookbook",
+   "id": "41101c337503",
+   "title": "Cookbook Club",
    "date": "2026-09-01",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "fc05f3cb656a",
@@ -2489,11 +2453,11 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "6c063a7e6d1b",
-   "title": "Babytime",
+   "id": "3fbdea201f3a",
+   "title": "Baby Time",
    "date": "2026-09-02",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "6bcb4509b15d",
@@ -2510,11 +2474,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "4a635d262616",
-   "title": "Toddlertime- 9:15am Session",
+   "id": "660ffeab1982",
+   "title": "Knit for Your Neighbor",
    "date": "2026-09-03",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "bf306072fb68",
@@ -2524,11 +2488,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "f9cac7646e7a",
-   "title": "Friday LEGO Builders",
+   "id": "bb78e7f97ca7",
+   "title": "Lego Builders",
    "date": "2026-09-04",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "5d9bc6784dae",
@@ -2543,12 +2507,6 @@
    "date": "2026-09-04",
    "change": "missing",
    "lastSeen": "2026-08-30T18:55:30-04:00"
-  },
-  {
-   "id": "2879c9962041",
-   "title": "Live Music",
-   "date": "2026-09-05",
-   "change": "dropped"
   },
   {
    "id": "fb530ac5d92d",
@@ -2586,6 +2544,13 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
+   "id": "36493d8f0952",
+   "title": "Latin Dance Night",
+   "date": "2026-09-08",
+   "change": "missing",
+   "lastSeen": "2026-08-31T11:27:35-04:00"
+  },
+  {
    "id": "9a06a754eec0",
    "title": "Honky Tonk Tuesday",
    "date": "2026-09-08",
@@ -2593,11 +2558,11 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "a2fb77495797",
-   "title": "Babytime",
+   "id": "a84dc926a1e1",
+   "title": "Baby Time",
    "date": "2026-09-09",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "247a86287079",
@@ -2607,11 +2572,11 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "b1365b26f629",
-   "title": "Toddlertime- 9:15am Session",
+   "id": "8fef2b946888",
+   "title": "Knit for Your Neighbor",
    "date": "2026-09-10",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "4274547e08ac",
@@ -2642,17 +2607,11 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "6c5de7356392",
-   "title": "Friday LEGO Builders",
+   "id": "064e7b5b0752",
+   "title": "Lego Builders",
    "date": "2026-09-11",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "13799677e253",
-   "title": "Interstitial Yoko Dreams",
-   "date": "2026-09-11",
-   "change": "dropped"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "8a0ac7f0a9da",
@@ -2690,12 +2649,6 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "3eb04a8c47a8",
-   "title": "Live from BCA",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
    "id": "ee168b945cde",
    "title": "Sensory-Friendly Sunday at ECHO",
    "date": "2026-09-13",
@@ -2703,11 +2656,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "4658c695cd34",
-   "title": "SBPL at Vermont Pride 2026",
+   "id": "90abed62f85a",
+   "title": "Pride Vermont 2026",
    "date": "2026-09-13",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "d2abf39805f7",
@@ -2717,12 +2670,6 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "9c7f32bdbd2e",
-   "title": "Btown Bites Young Adult group - Bluebird Barbecue",
-   "date": "2026-09-14",
-   "change": "dropped"
-  },
-  {
    "id": "a8b94ce45452",
    "title": "Curator Tour – On Point: Needlework from the Garthwaite Family Collection",
    "date": "2026-09-15",
@@ -2730,25 +2677,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "f4bf51a1d5ee",
-   "title": "Craftytown! Flower Suncatcher",
+   "id": "0684f2f9b1be",
+   "title": "Craftytown",
    "date": "2026-09-15",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
-   "id": "cc496b2749d1",
-   "title": "Babytime",
+   "id": "c089e6f19182",
+   "title": "Baby Time",
    "date": "2026-09-16",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "db284eeb41cf",
-   "title": "Kids' Puzzle Swap",
-   "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "fc5707dd41de",
@@ -2758,11 +2698,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "77a1d0f1c2ca",
-   "title": "Toddlertime- 9:15am Session",
+   "id": "78952acf13db",
+   "title": "Knit for Your Neighbor",
    "date": "2026-09-17",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "3d1c73bb1a80",
@@ -2779,11 +2719,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "636b4b1808dc",
-   "title": "Friday LEGO Builders",
+   "id": "95a7e9fe79a1",
+   "title": "Lego Builders",
    "date": "2026-09-18",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "57b41e392345",
@@ -2807,11 +2747,24 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "f67f6df10ea2",
-   "title": "Green Community Festival",
+   "id": "8b7796b354d6",
+   "title": "South Burlington Green Community Festival",
    "date": "2026-09-19",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
+  },
+  {
+   "id": "890bad6c1d3c",
+   "title": "South Burlington Green Community Festival",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-08-31T11:27:35-04:00"
+  },
+  {
+   "id": "f5a6e2021a3b",
+   "title": "Green Community Festival",
+   "date": "2026-09-19",
+   "change": "dropped"
   },
   {
    "id": "59f3c54c01e0",
@@ -2856,12 +2809,6 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "8a247de9a359",
-   "title": "Faculty Tour of the Museum",
-   "date": "2026-09-22",
-   "change": "dropped"
-  },
-  {
    "id": "a54a211a1e92",
    "title": "Violet Grohl at Higher Ground",
    "date": "2026-09-22",
@@ -2869,11 +2816,11 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "d9da91d0efa5",
-   "title": "Babytime",
+   "id": "77694579a75f",
+   "title": "Baby Time",
    "date": "2026-09-23",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "210764a691d9",
@@ -2883,11 +2830,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "1ae6958ed58b",
-   "title": "Toddlertime- 9:15am Session",
+   "id": "b3e0e1560f2d",
+   "title": "Knit for Your Neighbor",
    "date": "2026-09-24",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "2e5b2bde2902",
@@ -2897,11 +2844,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "1436c69b27ab",
-   "title": "Friday LEGO Builders",
+   "id": "62c3f4a8eedc",
+   "title": "Lego Builders",
    "date": "2026-09-25",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "f8fd8c38abbc",
@@ -2939,12 +2886,6 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "eb881255f1f8",
-   "title": "Marina Richie with Trish O'Kane | Feathered Forest: Aloft with Birds in Ancient Trees",
-   "date": "2026-09-28",
-   "change": "dropped"
-  },
-  {
    "id": "6d88f66cb108",
    "title": "Ora Cogan",
    "date": "2026-09-28",
@@ -2952,11 +2893,11 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "3b04bf2dc8d6",
-   "title": "Storybook Craftytown- Apple",
+   "id": "348e88592d16",
+   "title": "Craftytown",
    "date": "2026-09-29",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "470d8ecbf4c3",
@@ -2966,11 +2907,11 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
-   "id": "b35268f5d210",
-   "title": "Babytime",
+   "id": "b06b8cd265e8",
+   "title": "Baby Time",
    "date": "2026-09-30",
    "change": "missing",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
    "id": "9f10dc9a248b",
