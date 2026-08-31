@@ -77,9 +77,23 @@ function route() {
     document.body.classList.remove('chrome-away');
     paintReadbar(panel);
   }
+  const switched = active !== tab;
   active = tab;
   registry[tab]?.activate?.(param, first);
   store.touchVisit();
+
+  /* Which feeds people actually live in. GoatCounter events, one per tab
+     LANDING (first paint or a real switch, never a same-tab re-route), so
+     the dashboard reads as "times a tab was opened". count.js loads async
+     and ad blockers eat it — the guard means tracking can never break the
+     app. */
+  if ((switched || first) && window.goatcounter && window.goatcounter.count) {
+    window.goatcounter.count({
+      path: 'all-day-tab-' + tab,
+      title: 'All Day tab: ' + tab,
+      event: true,
+    });
+  }
 }
 
 const scrollMemory = Object.create(null);
