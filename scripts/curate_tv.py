@@ -105,7 +105,10 @@ MAX_FRESH = 160
 MAX_GOLD = 40
 MAX_VAULT = 40
 MAX_VT = 30
-PLAYLIST_MAX = 50        # the page in order: pick, Settle in, Quick one, Vermont, ...
+MAX_TRAILERS = 16        # candidates offered to the editor for Coming soon
+TRAILER_MIN_SEC = 45     # under this is a bumper / TV spot, not a trailer
+TRAILER_CHANNEL_CAP = 4  # per channel in the pool — one aggregator can't own it
+PLAYLIST_MAX = 54        # the page in order: pick, Settle in, Quick one, Vermont, ...
 PLAYLISTS_KEEP = 14      # one playlist per night; older ones are deleted (= EDITIONS_KEEP)
 PAGE_URL = "https://guide.btownbrief.com/all-day/#watch"
 MORE_PER_SHELF = 6       # the bench: alternates the editor names per shelf
@@ -126,6 +129,7 @@ SHELVES = [
     # with the pick; Stephen 8/23: "25 is too few — 50, with a show more")
     ("settle", "Settle in", "Twenty minutes and up — the couch episode", 9),
     ("quick", "Quick one", "Five to twelve minutes", 9),
+    ("coming", "Coming soon", "Trailers — what's headed to the movies", 4),
     ("vt", "Burlington & Vermont", "Filmed here, made here, about here", 8),
     ("vault", "From the Vault", "Timeless — pulled from thirteen years of saves", 8),
     ("gold", "Old gold", "The back catalog of the channels we follow", 8),
@@ -332,9 +336,10 @@ def gate(videos, catalog, history, signals, now_ts, roster_g):
     rerun_after = now_ts - RERUN_MEMORY_DAYS * 86400
     fresh_after = now_ts - FRESH_DAYS * 86400
 
-    fresh, gold, vt, live = [], [], [], []
+    fresh, gold, vt, live, trailers = [], [], [], [], []
     dropped = {}
     per_channel = {}
+    trailer_channel = {}
     uploads_this_week = {}
     for video in videos:
         if not video.get("dc") and (video.get("d") or 0) >= fresh_after:
@@ -369,6 +374,27 @@ def gate(videos, catalog, history, signals, now_ts, roster_g):
             continue
         if signals["skip"].get(vid, 0) >= SKIP_MIN:
             drop("not-for-me")
+            continue
+        # trailer houses bypass the promo ban — trailers are their point —
+        # and pool separately: only the Coming soon shelf reads this pool.
+        # Their deep-catalog items (dc) still run the normal gates below,
+        # so an old trailer never sneaks onto Old gold.
+        if item["g"] == "trailer" and not video.get("dc"):
+            if sec is not None and sec < TRAILER_MIN_SEC:
+                drop("bumper")
+                continue
+            if shown.get(vid, 0) > now_ts - FRESH_REST_DAYS * 86400:
+                drop("shown")
+                continue
+            if shown_titles.get(title_key(title), 0) > rerun_after:
+                drop("rerun")
+                continue
+            n = trailer_channel.get(ch, 0)
+            if n >= TRAILER_CHANNEL_CAP:
+                drop("channel-cap")
+                continue
+            trailer_channel[ch] = n + 1
+            trailers.append(item)
             continue
         # promo shapes are banned everywhere — the deep catalog is built
         # from order=viewCount, where a channel's top hit is often a trailer
@@ -414,8 +440,10 @@ def gate(videos, catalog, history, signals, now_ts, roster_g):
     fresh.sort(key=lambda v: (v.get("d") or 0), reverse=True)
     gold.sort(key=lambda v: (v.get("views") or 0), reverse=True)
     vt.sort(key=lambda v: (v.get("d") or 0), reverse=True)
+    trailers.sort(key=lambda v: (v.get("d") or 0), reverse=True)
     return {"fresh": fresh[:MAX_FRESH], "gold": gold[:MAX_GOLD],
-            "vt": vt[:MAX_VT], "live": live[:12]}, dropped
+            "vt": vt[:MAX_VT], "trailers": trailers[:MAX_TRAILERS],
+            "live": live[:12]}, dropped
 
 
 def vault_candidates(vault_live, history, now_ts):
@@ -556,12 +584,13 @@ PROMPT_RULES = """
 You are the editor of BTown TV, a once-a-day curated page of YouTube videos \
 for people in Burlington, Vermont who would rather have a human choose what \
 to watch tonight than scroll the algorithm. The page is finite: one \
-Tonight's pick and six shelves, about fifty videos on a good night. \
+Tonight's pick and seven shelves, about fifty videos on a good night. \
 Everything on it is there because you chose it and can say why.
 
 Below is the taste doctrine, then the numbered candidates. Candidates are \
 grouped: FRESH (this week's uploads from channels we follow), VERMONT (the \
-local radar), VAULT (timeless videos from thirteen years of the editor's own \
+local radar), TRAILERS (this week's movie trailers from the trailer houses), \
+VAULT (timeless videos from thirteen years of the editor's own \
 saves), GOLD (each followed channel's all-time best). Every candidate line \
 carries its channel, length, views, and age. Lines marked RARE are from \
 channels that seldom post — those are the only valid picks for the bench \
@@ -575,6 +604,9 @@ Pick BY INDEX ONLY:
     promote a VAULT or GOLD item rather than pick a weak fresh one.
   * settle — {settle} items, all 20 minutes or longer. The couch episode.
   * quick — {quick} items, 5 to 12 minutes.
+  * coming — {coming} TRAILERS items: the movies actually worth looking
+    forward to, not everything the studios shipped this week (fewer if the
+    week is thin — never pad it; skip duplicate trailers for the same film).
   * vt — {vt} VERMONT items (fewer if the radar is thin — never pad it).
   * vault — {vault} VAULT items, varied across lanes.
   * gold — {gold} GOLD items.
@@ -593,8 +625,9 @@ reader asks for more or hides one of your picks, so these must be real \
 choices with real reasons. Nothing from the page repeats on the bench. The \
 bench has its own allowance of two items per channel (separate from the \
 page's two). Lane rules apply unchanged: settle 20 minutes and up, quick \
-5–12 minutes, vt only VERMONT lines, vault only VAULT, gold only GOLD, \
-bench only RARE; a shelf you left empty gets no bench. Fewer if the field \
+5–12 minutes, coming only TRAILERS lines, vt only VERMONT lines, vault \
+only VAULT, gold only GOLD, bench only RARE; a shelf you left empty gets \
+no bench. Fewer if the field \
 is thin; never pad. An empty list is fine.
 
 For each pick write a reason of {why_max} characters or less, written for a \
@@ -631,6 +664,7 @@ def format_candidates(pools, signals, now_ts):
     loved = {ch for ch, n in signals.get("more", {}).items() if n >= LOVED_MIN}
     passed = {ch for ch, n in signals.get("skip_ch", {}).items() if n >= PASSED_MIN}
     for group, key in (("FRESH", "fresh"), ("VERMONT", "vt"),
+                       ("TRAILERS", "trailers"),
                        ("VAULT", "vault"), ("GOLD", "gold")):
         items = pools.get(key) or []
         if not items:
@@ -724,6 +758,11 @@ def validate(raw, index):
         if shelf == "settle" and (not sec or sec < SETTLE_MIN_SEC):
             return None
         if shelf == "quick" and (not sec or sec < QUICK_MIN_SEC or sec > QUICK_MAX_SEC):
+            return None
+        if shelf == "coming" and pool != "trailers":
+            return None
+        # a trailer can only be a trailer — never Tonight's pick or filler
+        if shelf != "coming" and pool == "trailers":
             return None
         if shelf == "vt" and pool != "vt":
             return None
@@ -1186,6 +1225,10 @@ def selftest():
          "d": now_ts - 900 * day, "dur": "12:00", "views": 1_000_000, "dc": 1},
         {"id": "old00000002", "t": "Classic episode 2", "ch": "Kurz",
          "d": now_ts - 900 * day, "dur": "12:00", "views": 1_000_000, "dc": 1},
+        {"id": "trail000001", "t": "The Lighthouse | Official Trailer HD | A24",
+         "ch": "A24", "d": now_ts - day, "dur": "2:14", "views": 300000},  # trailer pool
+        {"id": "trail000002", "t": "The Lighthouse | 15s Spot | A24", "ch": "A24",
+         "d": now_ts - day, "dur": "0:30", "views": 1000},                 # bumper
     ]
     history = {"shown": [
         {"id": "fresh000008", "tk": title_key("Shown last week already"),
@@ -1193,7 +1236,10 @@ def selftest():
         {"id": "old00000002", "tk": title_key("Classic episode 2"),
          "ts": now_ts - 2 * day}]}
     signals = {"skip": {}, "watched": {}, "more": {"Quiet": 3}}
-    pools, dropped = gate(videos, catalog, history, signals, now_ts, {})
+    pools, dropped = gate(videos, catalog, history, signals, now_ts,
+                          {"A24": "trailer"})
+    assert [v["id"] for v in pools["trailers"]] == ["trail000001"], pools["trailers"]
+    assert dropped.get("bumper") == 1, dropped
     fresh_ids = [v["id"] for v in pools["fresh"]]
     assert "fresh000001" not in fresh_ids and dropped.get("clip") == 1, dropped
     assert "fresh000003" not in fresh_ids and dropped.get("promo") == 1, dropped
@@ -1219,24 +1265,27 @@ def selftest():
     text, index = format_candidates(pools, signals, now_ts)
     assert "== FRESH ==" in text and "RARE LOVED" in text, text
     assert "== VAULT ==" in text and "talk" in text
+    assert "== TRAILERS ==" in text, text
     prompt = build_prompt("Taste: be good.", text)
     assert "TASTE DOCTRINE" in prompt and "Taste: be good." in prompt
 
     # indices: 0 fresh000002, 1 fresh000007(rare), 2 fresh000006(vt),
-    #          3 vault000001, 4 old00000001
+    #          3 trail000001, 4 vault000001, 5 old00000001
     raw = {
         "pick": {"i": 0, "why": "The big one this week"},
         "shelves": {
             "settle": [{"i": 0, "why": "dup — dropped"}, {"i": 1, "why": "thirty-one minutes"}],
             "quick": [{"i": 2, "why": "wrong pool but right length"},
                       {"i": 99, "why": "bad index"}],
+            "coming": [{"i": 3, "why": "the one trailer worth it"},
+                       {"i": 1, "why": "not a trailer — dropped"}],
             "vt": [{"i": 2, "why": "already used above — dropped"}],
-            "vault": [{"i": 3, "why": "evergreen"}, {"i": 4, "why": "gold, not vault"}],
-            "gold": [{"i": 4, "why": "old gold"}],
+            "vault": [{"i": 4, "why": "evergreen"}, {"i": 5, "why": "gold, not vault"}],
+            "gold": [{"i": 5, "why": "old gold"}, {"i": 3, "why": "trailer, not gold — dropped"}],
             "bench": [{"i": 0, "why": "not rare"}],
         },
-        "more": {"pick": [], "settle": [], "quick": [], "vt": [], "vault": [],
-                 "gold": [], "bench": []},
+        "more": {"pick": [], "settle": [], "quick": [], "coming": [], "vt": [],
+                 "vault": [], "gold": [], "bench": []},
         "note": "thin week",
     }
     pick, shelves, more = validate(raw, index)
@@ -1244,6 +1293,7 @@ def selftest():
     assert all(v == [] for v in more.values()), more
     assert [v["id"] for v in shelves["settle"]] == ["fresh000007"], shelves["settle"]
     assert [v["id"] for v in shelves["quick"]] == ["fresh000006"], shelves["quick"]
+    assert [v["id"] for v in shelves["coming"]] == ["trail000001"], shelves["coming"]
     assert shelves["vt"] == [], shelves["vt"]
     assert [v["id"] for v in shelves["vault"]] == ["vault000001"]
     assert [v["id"] for v in shelves["gold"]] == ["old00000001"]
@@ -1305,7 +1355,7 @@ def selftest():
     payload = build_payload(pick, shelves, pools["live"], utcnow(),
                             {"picked": 5}, "PLxyz", more2)
     keys = [s["key"] for s in payload["shelves"]]
-    assert keys == ["settle", "quick", "vault", "gold"], keys
+    assert keys == ["settle", "quick", "coming", "vault", "gold"], keys
     assert payload["playlist"]["url"].endswith("PLxyz")
     assert payload["live"][0]["id"] == "fresh000005"
     assert payload["pick_more"][0]["id"] == "bench000010"

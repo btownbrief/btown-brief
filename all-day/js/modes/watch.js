@@ -46,8 +46,9 @@ function localShelves(shelves) {
 
 /* The order the data arrives in is the order the curator builds it, which
    leads with the longest videos. On a phone that buries everything else, so
-   the page leads with the short ones and lets the couch episode come second. */
-const SHELF_ORDER = ['Quick one', 'Settle in', LOCAL_SHELF];
+   the page leads with the short ones, trailers ride right behind them, and
+   the couch episode comes after. */
+const SHELF_ORDER = ['Quick one', 'Coming soon', 'Settle in', LOCAL_SHELF];
 
 function orderShelves(shelves) {
   const live = (Array.isArray(shelves) ? shelves : [])
@@ -155,7 +156,7 @@ function render() {
       ? 'Everything filmed here, made here or about here, pulled out of tonight’s edition ' +
         'and the live cameras — each with a reason.'
       : 'One curated page of video for Burlington, every evening. A pick for tonight and ' +
-        'six shelves — around fifty videos, each with a reason.') + '</p>';
+        'seven shelves — around fifty videos, each with a reason.') + '</p>';
 
   /* Every edition is published as its own YouTube playlist, and casting the
      whole night to a TV is the best thing this tab does. It was a quiet
@@ -401,7 +402,10 @@ function renderPast(root) {
 function renderWire(root) {
   const localOnly = store.settings().localOnly;
   const vids = (state.yt?.videos || [])
-    .filter((v) => v && app.isVideoId(v.id) && (!localOnly || isLocalVideo(v)));
+    /* trailer-house channels feed only the edition's Coming soon shelf —
+       on the raw wire they'd read as promo spam (same rule as pulse.js) */
+    .filter((v) => v && app.isVideoId(v.id) && v.g !== 'trailer' &&
+      (!localOnly || isLocalVideo(v)));
   if (!vids.length) {
     root.appendChild(el('p', 'empty', 'The YouTube wire isn’t answering right now.'));
     return;

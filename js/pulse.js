@@ -1350,7 +1350,9 @@
     });
     var vt = vids.filter(function (v) { return v.vt; });
     var deep = vids.filter(function (v) { return v.dc; });
-    var own = vids.filter(function (v) { return !v.trend && !v.vt && !v.dc; });
+    /* trailer-house channels feed only Btown TV's Coming soon shelf —
+       on the raw wire they'd read as promo spam */
+    var own = vids.filter(function (v) { return !v.trend && !v.vt && !v.dc && v.g !== 'trailer'; });
     var shelves = state.set.ytview === 'shelves';
 
     /* LOCAL narrows every shelf to Vermont: the vt group, the Filmed-in-VT
