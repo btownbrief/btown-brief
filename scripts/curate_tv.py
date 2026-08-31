@@ -545,10 +545,12 @@ SCHEMA = {
             "properties": {
                 key: {
                     "type": "array",
+                    "maxItems": 12,
                     "items": {
                         "type": "object",
                         "properties": {"i": {"type": "integer"},
-                                       "why": {"type": "string"}},
+                                       "why": {"type": "string",
+                                               "maxLength": 240}},
                         "required": ["i", "why"],
                         "additionalProperties": False,
                     },
@@ -562,10 +564,12 @@ SCHEMA = {
             "properties": {
                 key: {
                     "type": "array",
+                    "maxItems": 12,
                     "items": {
                         "type": "object",
                         "properties": {"i": {"type": "integer"},
-                                       "why": {"type": "string"}},
+                                       "why": {"type": "string",
+                                               "maxLength": 240}},
                         "required": ["i", "why"],
                         "additionalProperties": False,
                     },
@@ -708,9 +712,12 @@ def ask_model(prompt):
         api_key=os.environ["OPENROUTER_API_KEY"],
         base_url=OPENROUTER_BASE_URL,
     )
-    # streamed because the SDK refuses a non-streaming call this long;
-    # reasoning counts toward max_tokens and a full pool + the bench blew
-    # through 16k on 8/23.
+    # streamed because the SDK refuses a non-streaming call this long.
+    # 16000: with require_parameters pinning schema-capable providers,
+    # thinking no longer shares the budget (the old 48000 was sized for
+    # reasoning + answer, and it let one looping attempt burn 15 minutes —
+    # the whole job timeout — on 8/31). A real answer is ~100 bounded items,
+    # well under half of this.
     #
     # No "effort" here on purpose. output_config.effort is an Anthropic
     # parameter; GLM is a Z.AI model behind OpenRouter's compat shim, which
@@ -729,7 +736,7 @@ def ask_model(prompt):
         try:
             with client.messages.stream(
                 model=MODEL,
-                max_tokens=48000,
+                max_tokens=16000,
                 output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
                 extra_body={"provider": {"require_parameters": True}},
                 messages=[{"role": "user", "content": prompt}],

@@ -180,7 +180,7 @@ $('settings-btn').addEventListener('click', () => {
 const TOUR = [
   ['Wire', 'Every headline, local and national'],
   ['Reddit', 'What people are posting'],
-  ['Watch', 'Video, picked by hand nightly'],
+  ['Watch', 'Video, curated nightly'],
   ['Listen', 'Every Vermont podcast, playable here'],
   ['What Now', 'The next few hours, answered'],
   ['Music', 'Bands from here, and who’s playing this week'],
