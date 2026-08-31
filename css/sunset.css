@@ -665,6 +665,54 @@
   .ss-rate-row { gap: var(--space-1); }
 }
 
+/* ---------------- tomorrow teaser chip (hero) ---------------- */
+
+.ss-tomorrow[hidden] { display: none; }
+.ss-tomorrow {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 248, 240, 0.14);
+  color: rgba(255, 248, 240, 0.85);
+}
+
+/* ---------------- the light path ---------------- */
+
+.ss-lightpath-viz {
+  max-width: 640px;
+  margin: var(--space-5) auto 0;
+  color: var(--ink-3); /* cloud-band fill via currentColor */
+}
+.ss-lightpath-viz svg { display: block; width: 100%; height: auto; }
+.ss-lp-band { fill: currentColor; }
+.ss-lp-horizon { stroke: var(--line); stroke-width: 1.5; }
+.ss-lp-sun { fill: #F2683C; }
+.ss-lp-ray {
+  fill: none;
+  stroke: #F2A93C;
+  stroke-width: 2.5;
+  stroke-dasharray: 7 6;
+  stroke-linecap: round;
+}
+.ss-lp-label, .ss-lp-layer {
+  font-family: var(--font-body);
+  font-size: 11px;
+  fill: var(--ink-3);
+}
+.ss-lp-layer { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+.ss-lightpath-cap {
+  max-width: 640px;
+  margin: var(--space-4) auto 0;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  text-align: center;
+  line-height: 1.6;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ss-cloud { animation: none; }
   .ss-hero, .ss-stars, .ss-factor-fill { transition: none; }

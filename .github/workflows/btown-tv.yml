@@ -1,0 +1,128 @@
+name: Btown TV — tonight's edition
+
+# The daily curated video page:
+#   scripts/curate_tv.py -> data/btown-tv.json (+ tv-history.json,
+#   tv-vault-live.json) on the orphan `btown-tv` branch, and the same picks
+#   into the public "Btown TV — Tonight" YouTube playlist.
+#
+# Raw material comes from the pulse-youtube branch (refresh-youtube.yml,
+# every ~3h). Same publishing shape as curate-top.yml: one orphan commit,
+# force-pushed, fetched by tv.html straight off raw.githubusercontent.com —
+# an edition never queues a Pages deploy.
+#
+# Failure posture: no API key, too few candidates, or any API trouble ends
+# the run quietly without pushing; the branch keeps its last good edition.
+# The playlist sync and the reader-signal read both fail soft on their own.
+
+on:
+  schedule:
+    # 21:40 UTC = 5:40pm EDT / 4:40pm EST — after the 21:17 refresh-youtube
+    # tick, before dinner. One edition a day; "Tonight" is the page.
+    - cron: '40 21 * * *'
+  workflow_dispatch:
+    inputs:
+      playlist:
+        description: "Also publish tonight's YouTube playlist (~2,600 quota units). Off = page-only rerun; the 21:40 UTC run always publishes."
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: btown-tv
+  cancel-in-progress: false
+
+jobs:
+  edition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for an API key
+        id: key
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "no API key, skipping"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install the Anthropic SDK
+        if: steps.key.outputs.ready == 'true'
+        run: python3 -m pip install --quiet 'anthropic>=0.116,<1'
+
+      - name: Pull the edition's memory from the btown-tv branch
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          mkdir -p /tmp/tv-out/data
+          # explicit refspec: actions/checkout narrows the remote's fetch
+          # config to the checked-out branch, so a bare `git fetch origin
+          # btown-tv` would not create origin/btown-tv
+          git fetch -q origin btown-tv:refs/remotes/origin/btown-tv || true
+          for f in tv-history.json tv-vault-live.json tv-editions.json; do
+            git show origin/btown-tv:data/$f > /tmp/tv-out/data/$f 2>/dev/null || true
+          done
+          ls -la /tmp/tv-out/data
+
+      - name: Curate tonight's edition
+        if: steps.key.outputs.ready == 'true'
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YT_OAUTH_CLIENT_ID: ${{ secrets.YT_OAUTH_CLIENT_ID }}
+          YT_OAUTH_CLIENT_SECRET: ${{ secrets.YT_OAUTH_CLIENT_SECRET }}
+          YT_OAUTH_REFRESH_TOKEN: ${{ secrets.YT_OAUTH_REFRESH_TOKEN }}
+        run: |
+          python3 scripts/curate_tv.py --selftest
+          # an empty prior file must not read as "history = {}" forever —
+          # drop zero-byte leftovers so the script falls back to the branch URL
+          find /tmp/tv-out/data -size 0 -delete
+          python3 scripts/curate_tv.py \
+            ${{ github.event_name == 'workflow_dispatch' && inputs.playlist == false && '--no-playlist' || '' }} \
+            --out /tmp/tv-out/data/btown-tv.json \
+            --history /tmp/tv-out/data/tv-history.json \
+            --vault /tmp/tv-out/data/tv-vault-live.json \
+            --editions /tmp/tv-out/data/tv-editions.json
+
+      - name: Force-push the single-commit btown-tv branch
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          if [ ! -s /tmp/tv-out/data/btown-tv.json ]; then
+            echo "nothing written this run — leaving the branch alone"
+            exit 0
+          fi
+          # the push replaces the whole branch with this directory. If the
+          # data branch exists on the remote but we never managed to fetch
+          # it, a push now would silently drop whatever this run didn't
+          # rewrite (the archive, the vault) — fail loudly instead
+          if ! git rev-parse -q --verify origin/btown-tv >/dev/null 2>&1 \
+             && git ls-remote --exit-code --heads origin btown-tv >/dev/null 2>&1; then
+            git fetch -q origin btown-tv:refs/remotes/origin/btown-tv || {
+              echo "::error::btown-tv exists on the remote but could not be fetched — not force-pushing over it"
+              exit 1
+            }
+          fi
+          # never let a run that couldn't enrich the vault / read the archive
+          # delete the last good copy
+          for f in tv-vault-live.json tv-editions.json; do
+            if [ ! -s /tmp/tv-out/data/$f ]; then
+              git show origin/btown-tv:data/$f > /tmp/tv-out/data/$f 2>/dev/null || true
+            fi
+          done
+          cd /tmp/tv-out
+          git init -q -b btown-tv
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/btown-tv.json
+          [ -s data/tv-history.json ] && git add data/tv-history.json
+          [ -s data/tv-vault-live.json ] && git add data/tv-vault-live.json
+          [ -s data/tv-editions.json ] && git add data/tv-editions.json
+          git commit -q -m "Btown TV $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            btown-tv

@@ -1,0 +1,16 @@
+{
+  "name": "All Day — Btown Brief",
+  "short_name": "All Day",
+  "description": "Read, watch, listen, wander. The news wire, Reddit, the video shelf, every podcast, and a Wikipedia rabbit hole — one place, nothing else needed.",
+  "id": "/all-day/",
+  "start_url": "/all-day/?source=pwa",
+  "scope": "/all-day/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06080A",
+  "theme_color": "#06080A",
+  "icons": [
+    { "src": "../assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "../assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

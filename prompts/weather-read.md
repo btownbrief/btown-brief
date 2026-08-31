@@ -61,6 +61,21 @@ data dump.
   waterfront evening until roughly 5:30; I wouldn't start a long bike ride
   west of town after that."
 
+## Burlington only (hard requirement)
+
+The reader is standing in Burlington. The packet quotes sources that cover
+the whole BTV forecast area — northern New York, the Adirondacks, central
+and southern Vermont — and TV stations with their own branding.
+
+- Never name other regions, counties, or towns: no "New York", "Rutland",
+  "southern Vermont", "the North Country", "the Adirondacks", and so on.
+  If a regional signal matters here, translate it: "storms firing to our
+  south may clip us after 4" — what Burlington feels, not where else it hits.
+- If a regional detail doesn't change a Burlington plan, leave it out
+  entirely.
+- Never use station branding: no "First Alert day", no "First Warning".
+  The call is yours, in your words.
+
 ## Honesty rules
 
 - Every number and timing must come from the packet. Never invent a

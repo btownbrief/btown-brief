@@ -1,28 +1,36 @@
 """Higher Ground (highergroundmusic.com) — 1214 Williston Rd, S. Burlington.
 
-How this works (discovered 2026-07):
-  * /calendar/ is a WordPress page whose SeeTickets plugin server-renders a
-    ~6-month calendar: <h2 class='month-name'>July 2026</h2> followed by a
-    table of day cells; each event in a cell is a link with
-    class='event-name headliners', a support-act <span>, and a venue <div>.
-    No JSON-LD, no usable wp-json event endpoint.
-  * Detail pages (highergroundmusic.com/events/<slug>/) carry the real data:
-    class="dates" (e.g. "Fri Jul 10, 2026"), class="doors" / class="start"
-    times, class="venue ..." ("Higher Ground,  Showcase Lounge" or an
-    off-site venue), class="age-restriction ..." ("18+" when restricted),
-    and an event-description div. Ticket prices are almost always behind
-    wl.seetickets.us (bot-blocked, 403), so price is only set when a dollar
-    figure appears on the HG page itself.
-  * HG also promotes shows at out-of-region venues (e.g. Seaside Heights NJ);
-    those are filtered out. Off-site but local venues (Waterfront Park,
-    Shelburne Museum, the Flynn...) are kept with the stated venue.
+How this works (rewritten 2026-08 — the site changed):
+  * /calendar/ is a WordPress page. It used to server-render a SeeTickets
+    month-grid whose events carried only a title and a link, so every event
+    needed a second fetch of its detail page to get date/time/venue/price.
+  * Higher Ground has since moved to Eventim's "eventim-us-event-listings"
+    plugin, which renders a LIST view alongside the calendar. Every event is
+    a `.seetickets-list-event-container` card carrying the whole record
+    inline: title, date, headliner, support, venue, door time, price, genre
+    and a 600px image. Nothing needs a detail fetch any more — this source
+    went from ~80 HTTP requests per run to exactly one.
+  * The old parser matched `class='event-name headliners'` (single quotes,
+    month-grid markup). None of that survives in the new theme, so it matched
+    zero events and the source silently returned nothing — no error, just an
+    empty list — from whenever the site was upgraded until this rewrite.
+  * Dates read "Sat Aug 29" with no year. The weekday disambiguates: we take
+    the first year (this one or next) whose weekday matches, which is exact
+    for every date inside a 12-month window.
+  * The headliner/support/genre/image fields have no home in the shared event
+    schema, so they ride along in `signals` — a free-form dict that already
+    passes through make_event untouched. That gives downstream surfaces a
+    clean artist name without re-parsing the title.
+  * HG also promotes shows at out-of-region venues (e.g. Capitol Center for
+    the Arts in Concord NH); those are filtered out. Off-site but local
+    venues (Waterfront Park, Shelburne Museum, the Flynn...) are kept.
 """
 
 from __future__ import annotations
 
 import re
 import sys
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parents[1]))
@@ -33,24 +41,21 @@ LABEL = "Higher Ground"
 
 CALENDAR_URL = "https://highergroundmusic.com/calendar/"
 
-_MONTH_SPLIT = re.compile(r"<h2 class='month-name'>([^<]+)</h2>")
-_DAY_RE = re.compile(r">(\d{1,2})</span>")
-_EVENT_RE = re.compile(
-    r"class='event-name headliners' href='([^']+)'[^>]*>([^<]*)</a></h1>"
-    r"\s*<span[^>]*>(.*?)</span><div[^>]*>([^<]*)</div>", re.S)
-_EVENT_FALLBACK_RE = re.compile(
-    r"class='event-name headliners' href='([^']+)'[^>]*>([^<]*)</a>")
+# One list card per event. Split on the container, then read each field out
+# of the card; the fields are plain <p class="... name">text</p>.
+_CARD_SPLIT = "seetickets-list-event-container"
+_LINK_RE = re.compile(r'<a href=([^\s>"\']+)')
+_IMG_RE = re.compile(r'data-src="([^"]+)"')
 
-_DETAIL_DATE_RE = re.compile(r'class="dates">\s*([^<]+?)\s*<')
-_DOORS_RE = re.compile(r'class="doors">\s*Doors:\s*([^<]+?)\s*<')
-_SHOW_RE = re.compile(r'class="start">\s*Show:\s*([^<]+?)\s*<')
-_VENUE_RE = re.compile(r'class="venue[^"]*">\s*([^<]+?)\s*<')
-_AGE_RE = re.compile(r'class="age-restriction[^"]*">\s*([^<]*?)\s*<')
-_DESC_RE = re.compile(r'<div class="event-description">(.*?)</div>', re.S)
-_PRICE_SECTION_RE = re.compile(r'class="ticket-price[^"]*">(.*?)</section>', re.S)
-_DOLLAR_RE = re.compile(r"\$\s?\d+(?:\.\d{2})?")
+def _field(card: str, cls: str) -> str | None:
+    """Text of the <p class="... cls ..."> in this card, tags stripped."""
+    m = re.search(r'class="[^"]*\b' + cls + r'\b[^"]*"[^>]*>(.*?)</p>', card, re.S)
+    if not m:
+        return None
+    return " ".join(common.strip_tags(m.group(1)).split()) or None
 
-_MAX_DETAIL_FETCHES = 80
+
+_DATE_RE = re.compile(r"^(?:(\w{3}),?\s+)?(\w{3,9})\s+(\d{1,2})$")
 
 # Local venues HG uses whose names carry no town and aren't in venues.json.
 _EXTRA_LOCAL_TOWNS = {
@@ -81,143 +86,157 @@ def _is_local(venue_text: str | None) -> bool:
     return common.town_from_address(t) is not None
 
 
-def _parse_calendar(page: str):
-    """-> list of (date, url, title, support, venue_hint)."""
-    parts = _MONTH_SPLIT.split(page)
-    out, seen = [], set()
-    # parts = [prefix, "July 2026", chunk, "August 2026", chunk, ...]
-    for i in range(1, len(parts) - 1, 2):
+def _year_for(month: int, day: int, weekday: str | None, today: date) -> date | None:
+    """HG prints "Sat Aug 29" with no year. Try this year and next, and take
+    the one whose weekday matches what the page says. Without a weekday, roll
+    forward: a month already past means next year."""
+    cands = []
+    for yr in (today.year, today.year + 1):
         try:
-            month_start = datetime.strptime("1 " + parts[i].strip(), "%d %B %Y").date()
+            d = date(yr, month, day)
         except ValueError:
-            continue
-        for cell in parts[i + 1].split("<td")[1:]:
-            dm = _DAY_RE.search(cell)
-            if not dm:
-                continue
-            day = date(month_start.year, month_start.month, int(dm.group(1)))
-            matches = _EVENT_RE.findall(cell)
-            if not matches:
-                matches = [(u, t, "", "") for u, t in _EVENT_FALLBACK_RE.findall(cell)]
-            for url, title, support, hint in matches:
-                title = " ".join(common.strip_tags(title).split())
-                if not title or (day, url) in seen:
-                    continue
-                seen.add((day, url))
-                out.append((day, url,
-                            title,
-                            " ".join(common.strip_tags(support).split()) or None,
-                            " ".join(hint.split()) or None))
-    return out
-
-
-def _fetch_detail(url: str) -> dict:
-    page = common.fetch(url)
-    d: dict = {}
-    for key, rx in (("date", _DETAIL_DATE_RE), ("doors", _DOORS_RE),
-                    ("show", _SHOW_RE), ("venue", _VENUE_RE), ("age", _AGE_RE)):
-        m = rx.search(page)
-        if m:
-            d[key] = " ".join(m.group(1).split()) or None
-    m = _DESC_RE.search(page)
-    if m:
-        d["description"] = common.strip_tags(m.group(1))
-    # Price: ONLY from the site's own ticket-price section. Description text
-    # is unsafe ("$1 of every ticket goes to charity" is not a price), and
-    # actual prices live behind wl.seetickets.us, which blocks bots.
-    m = _PRICE_SECTION_RE.search(page)
-    if m:
-        dollars = _DOLLAR_RE.findall(common.strip_tags(m.group(1)))
-        if dollars:
-            d["price"] = "–".join(dict.fromkeys(dollars))
-    return d
-
-
-def _norm_age(text: str | None) -> str | None:
-    if not text:
+            continue  # Feb 29 in a non-leap year
+        cands.append(d)
+    if not cands:
         return None
-    m = re.match(r"^\s*(\d{2})\s*\+", text)
-    if m:
-        return f"{m.group(1)}+"
-    if re.match(r"(?i)^\s*all\s*ages", text):
-        return "All ages"
-    return None
+    if weekday:
+        w = weekday[:3].lower()
+        for d in cands:
+            if d.strftime("%a").lower() == w:
+                return d
+    for d in cands:
+        if d >= today - timedelta(days=1):
+            return d
+    return cands[0]
+
+
+def _parse_date(text: str | None, today: date) -> date | None:
+    m = _DATE_RE.match((text or "").strip())
+    if not m:
+        return None
+    weekday, month_name, day = m.groups()
+    for fmt in ("%b", "%B"):
+        try:
+            month = datetime.strptime(month_name[:3] if fmt == "%b" else month_name, fmt).month
+            break
+        except ValueError:
+            month = None
+    if not month:
+        return None
+    return _year_for(month, int(day), weekday, today)
+
+
+def _parse_cards(page: str, today: date):
+    """-> list of dicts, one per event card on the list view."""
+    out, seen = [], set()
+    for card in page.split(_CARD_SPLIT)[1:]:
+        title = _field(card, "event-title")
+        if not title:
+            continue
+        # A postponed or cancelled show is not something to put on a calendar
+        # of what is on. The site marks them in the title.
+        if re.match(r"(?i)\s*(postponed|cancell?ed)\b", title):
+            continue
+        m = _LINK_RE.search(card)
+        url = m.group(1).strip("'\"") if m else None
+        day = _parse_date(_field(card, "event-date"), today)
+        if not url or not day or (day, url) in seen:
+            continue
+        seen.add((day, url))
+        img = _IMG_RE.search(card)
+        out.append({
+            "date": day,
+            "url": url,
+            "title": title,
+            "presenter": _field(card, "event-header"),
+            "artist": _field(card, "headliners"),
+            "support": _field(card, "supporting-talent"),
+            "venue": re.sub(r"(?i)^at\s+", "", _field(card, "venue") or "").strip() or None,
+            "doors": _field(card, "doortime-showtime"),
+            "price": _field(card, "price"),
+            "genre": _field(card, "genre"),
+            "image": img.group(1) if img else None,
+        })
+    return out
 
 
 def fetch(window_start, window_end):
     page = common.fetch(CALENDAR_URL)
-    listings = [l for l in _parse_calendar(page)
-                if window_start <= l[0] <= window_end]
-    if not listings:
-        common.log("higherground: calendar parsed but no events in window")
+    today = date.today()
+    cards = _parse_cards(page, today)
+    if not cards:
+        # Loud, because this is exactly how the previous rewrite went unnoticed:
+        # the markup changed, every regex missed, and the source just returned [].
+        common.log("higherground: NO events parsed — the calendar markup has "
+                   "probably changed again (expected .%s cards)" % _CARD_SPLIT)
+        return []
 
-    details: dict[str, dict] = {}
-    events, skipped, fetches = [], set(), 0
-    for day, url, title, support, hint in listings:
-        if not _is_local(hint):
-            skipped.add(hint or url)
+    events, skipped = [], set()
+    for c in cards:
+        if not (window_start <= c["date"] <= window_end):
             continue
-        if url not in details:
-            if fetches >= _MAX_DETAIL_FETCHES:
-                common.log("higherground: detail-fetch cap reached")
-                details[url] = {}
-            else:
-                fetches += 1
-                try:
-                    details[url] = _fetch_detail(url)
-                except Exception as e:
-                    common.log(f"higherground: detail fetch failed {url} ({e})")
-                    details[url] = {}
-        d = details[url]
-
-        venue_text = d.get("venue") or hint
-        if not _is_local(venue_text):
-            skipped.add(venue_text)
+        if not _is_local(c["venue"]):
+            skipped.add(c["venue"])
             continue
 
         venue, town, tags = None, None, []
-        if venue_text:
-            if "higher ground" in venue_text.lower():
+        vtext = c["venue"]
+        if vtext:
+            if "higher ground" in vtext.lower():
                 venue = "Higher Ground"
-                room = re.sub(r"(?i)higher ground[, ]*", "", venue_text).strip(" ,")
+                room = re.sub(r"(?i)higher ground[, ]*", "", vtext).strip(" ,")
                 if room:
                     tags.append(re.sub(r"[^a-z0-9]+", "-", room.lower()).strip("-"))
             else:
-                venue = venue_text.strip(" ,")
-                town = (common.town_from_address(venue_text)
-                        or _extra_local_town(venue_text))
+                venue = vtext.strip(" ,")
+                town = (common.town_from_address(vtext)
+                        or _extra_local_town(vtext))
 
-        show_hm = common.parse_time_str(d.get("show") or "")
-        doors_hm = common.parse_time_str(d.get("doors") or "")
-        start = common.local_dt(day, show_hm or doors_hm)
+        # "Doors at 7:00PM" / "Doors at 7:00PM Show at 8:00PM" — the show time
+        # if it is given, otherwise doors.
+        hm = None
+        if c["doors"]:
+            times = re.findall(r"\d{1,2}:\d{2}\s*[APap][Mm]", c["doors"])
+            if times:
+                hm = common.parse_time_str(times[-1] if "show" in c["doors"].lower() else times[0])
+        start = common.local_dt(c["date"], hm)
 
         parts = []
-        if d.get("doors"):
-            parts.append(f"Doors {d['doors']}")
-        if support:
-            parts.append(f"With {support}")
-        if d.get("description"):
-            parts.append(d["description"])
+        if c["presenter"]:
+            parts.append(c["presenter"].rstrip(":"))
+        if c["doors"]:
+            parts.append(c["doors"])
+        if c["support"]:
+            parts.append(f"With {c['support']}")
         description = " · ".join(parts) or None
 
-        # Classify from the title only (support acts / venue names / bios
-        # misfire, e.g. support act "Teen Mortgage" -> family); a ticketed
-        # show at a music hall defaults to music.
-        if re.search(r"(?i)drag|cabaret|burlesque", title):
+        # Classify from the title only (support acts and bios misfire — a
+        # support act called "Teen Mortgage" would read as family). HG is
+        # first and foremost a music hall, so anything unclassified is music.
+        if re.search(r"(?i)drag|cabaret|burlesque", c["title"]):
             category = "theater"
         else:
-            category = common.classify(title)
+            category = common.classify(c["title"])
             if category in ("other", "community"):
-                category = "music"  # HG is first and foremost a music hall
+                category = "music"
+
+        # The artist/genre/art have no column in the shared schema but are the
+        # whole point for a music surface, so they ride in signals.
+        signals = {k: v for k, v in (
+            ("artist", c["artist"]), ("support", c["support"]),
+            ("genre", c["genre"]), ("image", c["image"]),
+            ("presenter", c["presenter"]),
+        ) if v}
 
         try:
             events.append(common.make_event(
-                source=SOURCE, title=title, url=url, start=start,
-                venue=venue, town=town, price=d.get("price"),
-                age=_norm_age(d.get("age")), category=category,
-                description=description, tags=tags or None))
+                source=SOURCE, title=c["title"], url=c["url"], start=start,
+                venue=venue, town=town, price=c["price"],
+                category=category, description=description,
+                tags=tags or None, signals=signals or None))
         except Exception as e:
-            common.log(f"higherground: skipping {title!r}: {e}")
+            common.log(f"higherground: skipping {c['title']!r}: {e}")
+
     if skipped:
-        common.log(f"higherground: skipped non-local venues: {sorted(skipped)}")
+        common.log(f"higherground: skipped non-local venues: {sorted(x for x in skipped if x)}")
     return events

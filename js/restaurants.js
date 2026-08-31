@@ -181,6 +181,16 @@
       document.getElementById('food-cat').value = '';
       buildRail(); render();
     });
+    // Hero shortcut row: same actions the rail's chips offer, but visible
+    // without scrolling the rail.
+    document.getElementById('act-random').addEventListener('click', openShuffle);
+    document.getElementById('act-all').addEventListener('click', () => {
+      state.view = 'all';
+      history.replaceState(null, '', `${location.pathname}?view=all`);
+      buildRail(); render();
+      document.getElementById('food-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    document.getElementById('act-all-n').textContent = RESTAURANTS.length;
     document.getElementById('detail-close').addEventListener('click', closeDetail);
     document.getElementById('detail-overlay').addEventListener('click', closeDetail);
     document.getElementById('shuffle-close').addEventListener('click', closeShuffle);

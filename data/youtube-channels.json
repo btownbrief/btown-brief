@@ -1,5 +1,5 @@
 {
- "_note": "Channels for the Pulse YOUTUBE tab, from the Aug 2026 curation ledger. Uploads come from each channel's free public RSS (no API quota). cap = max videos per refresh (default 3); min_sec = only keep videos at least this long; g = shelf for the Shelves view (vt/news/sci/food/music/fun).",
+ "_note": "Channels for the Pulse YOUTUBE tab, from the Aug 2026 curation ledger. Uploads come from each channel's free public RSS (no API quota). cap = max videos per refresh (default 3); min_sec = only keep videos at least this long; g = shelf for the Shelves view (vt/news/sci/food/music/fun). lane = Btown TV's finer taxonomy (doc|explainer|talk|comedy|music|film|hoops|craft|vermont|wonder|news); channels added Aug 2026 for Btown TV carry it, the original 78 don't need it. Channels marked \"must\" are always re-checked through the API even when the Inoreader stream claims to cover them — Town Meeting TV went missing for weeks that way.",
  "channels": [
   {
    "id": "UCh3kiOuiI6XLVEXI9WaX5jg",
@@ -387,8 +387,9 @@
   {
    "id": "UCJkWMLSqRNKLoyUZQiNoAcQ",
    "name": "Town Meeting TV",
-   "cap": 1,
-   "g": "vt"
+   "cap": 3,
+   "g": "vt",
+   "must": 1
   },
   {
    "id": "UCgtBVpxi2rlrIgUHkkAM-ew",
@@ -411,6 +412,696 @@
    "id": "UCU31Avig5u8X84zH9lwJFGQ",
    "name": "Vermont Lake Monsters",
    "g": "vt"
+  },
+  {
+   "id": "UCUyvQV2JsICeLZP4c_h40kA",
+   "name": "Thomas Flight",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCJkMlOu7faDgqh4PfzbpLdg",
+   "name": "Nerdwriter1",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCeTfBygNb1TahcNpZyELO8g",
+   "name": "Jacob Geller",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCC-4I_cirpJnU6VA3bOcudQ",
+   "name": "Kolo Kino",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCVtL1edhT8qqY-j2JIndMzg",
+   "name": "CineFix",
+   "g": "fun",
+   "lane": "film",
+   "cap": 2
+  },
+  {
+   "id": "UCWq-qJSudqKrzquTVep9Jwg",
+   "name": "The Royal Ocean Film Society",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCimiUgDLbi6P17BdaCZpVbg",
+   "name": "exurb1a",
+   "g": "sci",
+   "lane": "wonder"
+  },
+  {
+   "id": "UC-tLyAaPbRZiYrOJxAGB7dQ",
+   "name": "Pursuit of Wonder",
+   "g": "sci",
+   "lane": "wonder"
+  },
+  {
+   "id": "UCO5QSoES5yn2Dw7YixDYT5Q",
+   "name": "Aperture",
+   "g": "sci",
+   "lane": "wonder"
+  },
+  {
+   "id": "UC6nSFpj9HTCZ5t-N3Rm3-HA",
+   "name": "Vsauce",
+   "g": "sci",
+   "lane": "wonder"
+  },
+  {
+   "id": "UCqoAEDirJPjEUFcF2FklnBA",
+   "name": "StarTalk",
+   "g": "fun",
+   "lane": "talk",
+   "cap": 2,
+   "min_sec": 600
+  },
+  {
+   "id": "UCSHZKyawb77ixDdsGog4iWA",
+   "name": "Lex Fridman",
+   "g": "fun",
+   "lane": "talk",
+   "cap": 1,
+   "min_sec": 1800
+  },
+  {
+   "id": "UCvQECJukTDE2i6aCoMnS-Vg",
+   "name": "Big Think",
+   "g": "fun",
+   "lane": "talk",
+   "cap": 3
+  },
+  {
+   "id": "UC7IcJI8PUf5Z3zKxnZvTBog",
+   "name": "The School of Life",
+   "g": "fun",
+   "lane": "talk",
+   "cap": 2
+  },
+  {
+   "id": "UC2C_jShtL725hvbm1arSV9w",
+   "name": "CGP Grey",
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UCH4BNI0-FOK2dMXoFtViWHw",
+   "name": "Be Smart",
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UCUEmaeh13ai1ivT5wzz5Lhg",
+   "name": "Maxinomics",
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UCUMZ7gohGI9HcU9VNsr2FJQ",
+   "name": "Bloomberg Originals",
+   "g": "news",
+   "lane": "doc",
+   "cap": 2
+  },
+  {
+   "id": "UC-AQKm7HUNMmxjdS371MSwg",
+   "name": "Channel 5 with Andrew Callaghan",
+   "g": "news",
+   "lane": "doc"
+  },
+  {
+   "id": "UCp68_FLety0O-n9QU6phsgw",
+   "name": "colinfurze",
+   "g": "sci",
+   "lane": "craft"
+  },
+  {
+   "id": "UCiDJtJKMICpb9B1qf7qjEOA",
+   "name": "Adam Savage's Tested",
+   "g": "sci",
+   "lane": "craft",
+   "cap": 2,
+   "min_sec": 480
+  },
+  {
+   "id": "UCcjhYlL1WRBjKaJsMH_h7Lg",
+   "name": "Epicurious",
+   "g": "sci",
+   "lane": "craft",
+   "cap": 2,
+   "min_sec": 480
+  },
+  {
+   "id": "UChBEbMKI1eCcejTtmI32UEw",
+   "name": "Joshua Weissman",
+   "g": "sci",
+   "lane": "craft",
+   "cap": 2
+  },
+  {
+   "id": "UCbpMy0Fg74eXXkvxJrtEn3w",
+   "name": "Bon Appétit",
+   "g": "sci",
+   "lane": "craft",
+   "cap": 2,
+   "min_sec": 480
+  },
+  {
+   "id": "UCjhMPI8K9D3tu_Og9I_GGOg",
+   "name": "Extra Medium Stuff",
+   "g": "fun",
+   "lane": "comedy"
+  },
+  {
+   "id": "UCr3cBLTYmIK9kY0F_OdFWFQ",
+   "name": "Casually Explained",
+   "g": "fun",
+   "lane": "comedy"
+  },
+  {
+   "id": "UC8bTQzxgvKkXDAaWkeuUlkg",
+   "name": "Trevor Noah",
+   "g": "fun",
+   "lane": "comedy",
+   "cap": 2,
+   "min_sec": 600
+  },
+  {
+   "id": "UCmDdONiBpxpmSlyyhcCHJHg",
+   "name": "Mike O'Leary",
+   "g": "music",
+   "lane": "music",
+   "cap": 1,
+   "min_sec": 1800
+  },
+  {
+   "id": "UCoYAFe4DypQIUqMd1YynPVg",
+   "name": "BADBADNOTGOOD",
+   "g": "music",
+   "lane": "music",
+   "cap": 1
+  },
+  {
+   "id": "UCblfuW_4rakIf2h6aqANefA",
+   "name": "Red Bull",
+   "g": "sci",
+   "lane": "wonder",
+   "cap": 3,
+   "min_sec": 300
+  },
+  {
+   "id": "UCbPY1Efha9VPRBYW2x1M16A",
+   "name": "The Old Man and The Three",
+   "g": "fun",
+   "lane": "hoops",
+   "cap": 2,
+   "min_sec": 900
+  },
+  {
+   "id": "UC6L_LBqoKZXFa4WxHox5iCw",
+   "name": "Mind the Game",
+   "g": "fun",
+   "lane": "hoops",
+   "cap": 1,
+   "min_sec": 1200
+  },
+  {
+   "id": "UCb-LfFU3Wwj6tBnu_E_G1uA",
+   "name": "Hello Burlington",
+   "g": "vt",
+   "lane": "vermont"
+  },
+  {
+   "id": "UC2A-d82099OtSfWDuZ0m44w",
+   "name": "Kickin' It With Kachi",
+   "g": "vt",
+   "lane": "vermont"
+  },
+  {
+   "id": "UCK9OM_51B1HTSgcBKOGdL_Q",
+   "name": "Senator Rocket",
+   "g": "vt",
+   "lane": "vermont",
+   "cap": 2
+  },
+  {
+   "id": "UCHbMevniQEQnGZ4npjYSfaw",
+   "name": "Streetfilms",
+   "g": "vt",
+   "lane": "vermont"
+  },
+  {
+   "id": "UC0k238zFx-Z8xFH0sxCrPJg",
+   "name": "Architectural Digest",
+   "g": "sci",
+   "lane": "craft",
+   "cap": 2,
+   "min_sec": 480
+  },
+  {
+   "id": "UCRzPUBhXUZHclB7B5bURFXw",
+   "name": "Eater",
+   "g": "sci",
+   "lane": "craft",
+   "cap": 2,
+   "min_sec": 480
+  },
+  {
+   "id": "UCY1kMZp36IQSyNx_9h4mpCg",
+   "name": "Mark Rober",
+   "g": "sci",
+   "lane": "craft"
+  },
+  {
+   "id": "UC6107grRI4m0o2-emgoDnAA",
+   "name": "SmarterEveryDay",
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UCj1VqrHhDte54oLgPG4xpuQ",
+   "name": "Stuff Made Here",
+   "g": "sci",
+   "lane": "craft"
+  },
+  {
+   "id": "UC6I0KzAD7uFTL1qzxyunkvA",
+   "name": "Blacktail Studio",
+   "g": "sci",
+   "lane": "craft"
+  },
+  {
+   "id": "UCi7GJNg51C3jgmYTUwqoUXA",
+   "name": "Team Coco",
+   "g": "fun",
+   "lane": "comedy",
+   "cap": 3
+  },
+  {
+   "id": "UCqFzWxSCi39LnW1JKFR3efg",
+   "name": "Saturday Night Live",
+   "g": "fun",
+   "lane": "comedy",
+   "cap": 3,
+   "min_sec": 180
+  },
+  {
+   "id": "UCdN4aXTrHAtfgbVG9HjBmxQ",
+   "name": "Key & Peele",
+   "g": "fun",
+   "lane": "comedy",
+   "cap": 2
+  },
+  {
+   "id": "UC3L9XPe0_FGfRG-CMGtBvFg",
+   "name": "JxmyHighroller",
+   "g": "fun",
+   "lane": "hoops"
+  },
+  {
+   "id": "UCvK4bOhULCpmLabd2pDMtnA",
+   "name": "Yes Theory",
+   "g": "fun",
+   "lane": "wonder"
+  },
+  {
+   "id": "UCu4XcDBdnZkV6-5z2f16M0g",
+   "name": "Real Stories",
+   "g": "news",
+   "lane": "doc",
+   "cap": 2
+  },
+  {
+   "id": "UC88lvyJe7aHZmcvzvubDFRg",
+   "name": "Timeline - World History Documentaries",
+   "g": "news",
+   "lane": "doc",
+   "cap": 2,
+   "min_sec": 1200
+  },
+  {
+   "id": "UCijcd0GR0fkxCAZwkiuWqtQ",
+   "name": "Free Documentary",
+   "g": "news",
+   "lane": "doc",
+   "cap": 2,
+   "min_sec": 1200
+  },
+  {
+   "id": "UCzjbia0NqUsSL1_-loJihMg",
+   "name": "CinemaStix",
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCamLstJyCa-t5gfZegxsFMw",
+   "name": "Colin and Samir",
+   "g": "fun",
+   "lane": "talk"
+  },
+  {
+   "id": "UCPD_bxCRGpmmeQcbe2kpPaA",
+   "name": "First We Feast",
+   "g": "food",
+   "lane": "talk",
+   "cap": 2,
+   "min_sec": 600
+  },
+  {
+   "id": "UC2Qw1dzXDBAZPwS7zm37g8g",
+   "name": "COLORS",
+   "g": "music",
+   "lane": "music",
+   "cap": 3
+  },
+  {
+   "id": "UCG36u-k09zdIPQh5EEdVgTA",
+   "name": "Mahogany",
+   "g": "music",
+   "lane": "music",
+   "cap": 2
+  },
+  {
+   "id": "UCvoR6yaP-b9rBNWGCrIc_Fg",
+   "name": "Seven Days",
+   "g": "vt",
+   "lane": "vermont"
+  },
+  {
+   "id": "UC2uWCVW1_rVMtu4qDyY0FUg",
+   "name": "Shelburne Museum",
+   "g": "vt",
+   "lane": "vermont"
+  },
+  {
+   "id": "UCI88qW-dlbL2-XnukOHAghw",
+   "name": "Vermont Historical Society",
+   "g": "vt",
+   "lane": "vermont"
+  },
+  {
+   "id": "UCKr3Oy8pK03YaS7ij-xET7Q",
+   "name": "Vermont Land Trust",
+   "g": "vt",
+   "lane": "vermont"
+  },
+  {
+   "id": "UCYO_jab_esuFRV4b17AJtAw",
+   "name": "3Blue1Brown",
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UCnZeeKO8qVdtkrA4-uKhtTw",
+   "name": "Animagraffs",
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UCciQ8wFcVoIIMi-lfu8-cjQ",
+   "name": "Anton Petrov",
+   "cap": 2,
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UC1LpsuAUaKoMzzJSEt5WImw",
+   "name": "Asianometry",
+   "g": "sci",
+   "lane": "doc"
+  },
+  {
+   "id": "UCSl5Uxu2LyaoAoMMGp6oTJA",
+   "name": "Atomic Shrimp",
+   "cap": 3,
+   "g": "fun",
+   "lane": "wonder"
+  },
+  {
+   "id": "UCvZe6ZCbF9xgbbbdkiodPKQ",
+   "name": "Baumgartner Restoration",
+   "g": "fun",
+   "lane": "craft"
+  },
+  {
+   "id": "UCXKCiTquPMavBqgXgrM9mBg",
+   "name": "Bobby Fingers",
+   "g": "fun",
+   "lane": "craft"
+  },
+  {
+   "id": "UCEOXxzW2vU0P-0THehuIIeg",
+   "name": "Captain Disillusion",
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UCLGNeElk4sNgzUrZr0c9krA",
+   "name": "Chef Jean-Pierre",
+   "cap": 3,
+   "g": "food",
+   "lane": "craft"
+  },
+  {
+   "id": "UCKOvOaJv4GK-oDqx-sj7VVg",
+   "name": "Chubbyemu",
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UCCKkuXux09y-TCg-BQxCjNA",
+   "name": "Code Blue Cam",
+   "cap": 3,
+   "g": "news",
+   "lane": "doc"
+  },
+  {
+   "id": "UCSpFnDQr88xCZ80N-X7t0nQ",
+   "name": "Corridor Crew",
+   "cap": 2,
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCC-UOdK8-mIjxBQm_ot1T-Q",
+   "name": "Cracking the Cryptic",
+   "cap": 2,
+   "min_sec": 600,
+   "g": "fun",
+   "lane": "talk"
+  },
+  {
+   "id": "UCVo63lbKHjC04KqYhwSZ_Pg",
+   "name": "Defunctland",
+   "g": "fun",
+   "lane": "doc"
+  },
+  {
+   "id": "UCUQo7nzH1sXVpzL92VesANw",
+   "name": "DIY Perks",
+   "g": "sci",
+   "lane": "craft"
+  },
+  {
+   "id": "UC7sDT8jZ76VLV1u__krUutA",
+   "name": "DUST",
+   "cap": 2,
+   "g": "fun",
+   "lane": "film"
+  },
+  {
+   "id": "UCJ0-OtVpF0wOKEqT2Z1HEtA",
+   "name": "ElectroBOOM",
+   "g": "sci",
+   "lane": "comedy"
+  },
+  {
+   "id": "UCzr30osBdTmuFUS8IfXtXmg",
+   "name": "Essential Craftsman",
+   "cap": 3,
+   "g": "fun",
+   "lane": "craft"
+  },
+  {
+   "id": "UCT6Y5JJPKe_JDMivpKgVXew",
+   "name": "Fall of Civilizations",
+   "g": "fun",
+   "lane": "doc"
+  },
+  {
+   "id": "UCFXad0mx4WxY1fXdbvtg0CQ",
+   "name": "Fascinating Horror",
+   "cap": 3,
+   "g": "fun",
+   "lane": "doc"
+  },
+  {
+   "id": "UCyNtlmLB73-7gtlBz00XOQQ",
+   "name": "Folding Ideas",
+   "g": "fun",
+   "lane": "doc"
+  },
+  {
+   "id": "UCNSMdQtn1SuFzCZjfK2C7dQ",
+   "name": "FortNine",
+   "g": "fun",
+   "lane": "craft"
+  },
+  {
+   "id": "UCQHX6ViZmPsWiYSFAyS0a3Q",
+   "name": "GothamChess",
+   "cap": 2,
+   "min_sec": 300,
+   "g": "fun",
+   "lane": "talk"
+  },
+  {
+   "id": "UCVI8Mfisni3GaobL1e2JOIQ",
+   "name": "Inheritance Machining",
+   "g": "fun",
+   "lane": "craft"
+  },
+  {
+   "id": "UCEIs9nkveW9WmYtsOcJBwTg",
+   "name": "Itchy Boots",
+   "cap": 2,
+   "g": "fun",
+   "lane": "doc"
+  },
+  {
+   "id": "UCYJdpnjuSWVOLgGT9fIzL0g",
+   "name": "Jelle's Marble Runs",
+   "cap": 2,
+   "g": "fun",
+   "lane": "wonder"
+  },
+  {
+   "id": "UCl9E4Zxa8CVr2LBLD0_TaNg",
+   "name": "Jomboy Media",
+   "cap": 2,
+   "g": "fun",
+   "lane": "hoops"
+  },
+  {
+   "id": "UCbbQalJ4OaC0oQ0AqRaOJ9g",
+   "name": "Map Men",
+   "g": "fun",
+   "lane": "comedy"
+  },
+  {
+   "id": "UCwpHKudUkP5tNgmMdexB3ow",
+   "name": "Mentour Pilot",
+   "g": "sci",
+   "lane": "doc"
+  },
+  {
+   "id": "UCazRf1jcMNZEL1MS5i_rWQQ",
+   "name": "Midwest Safety",
+   "cap": 3,
+   "g": "news",
+   "lane": "doc"
+  },
+  {
+   "id": "UC-SrCCzkGq0wmSAuRs7EBFg",
+   "name": "Miniminuteman",
+   "g": "sci",
+   "lane": "explainer"
+  },
+  {
+   "id": "UCsE8PTncfn2Vga48jH46HnQ",
+   "name": "Oceanliner Designs",
+   "g": "fun",
+   "lane": "doc"
+  },
+  {
+   "id": "UC3Vuq4Q1bKFtAiKYlwRv3oA",
+   "name": "Peter Santenello",
+   "g": "news",
+   "lane": "doc"
+  },
+  {
+   "id": "UCmEmX_jw_pRp5UbAdzkZq-g",
+   "name": "Posy",
+   "g": "fun",
+   "lane": "wonder"
+  },
+  {
+   "id": "UC2rzsm1Qi6N1X-wuOg_p0Ng",
+   "name": "Project Farm",
+   "cap": 3,
+   "g": "sci",
+   "lane": "craft"
+  },
+  {
+   "id": "UCg-_lYeV8hBnDSay7nmphUA",
+   "name": "Sampson Boat Co",
+   "g": "fun",
+   "lane": "craft"
+  },
+  {
+   "id": "UCfyehHM_eo4g5JUyWmms2LA",
+   "name": "Sorted Food",
+   "cap": 3,
+   "g": "food",
+   "lane": "craft"
+  },
+  {
+   "id": "UCSnqXeK94-iNmwqGO__eJ5g",
+   "name": "Steve Wallis",
+   "cap": 2,
+   "g": "fun",
+   "lane": "wonder"
+  },
+  {
+   "id": "UCtUbO6rBht0daVIOGML3c8w",
+   "name": "Summoning Salt",
+   "g": "fun",
+   "lane": "doc"
+  },
+  {
+   "id": "UCT5C7yaO3RVuOgwP8JVAujQ",
+   "name": "Taskmaster",
+   "cap": 2,
+   "min_sec": 600,
+   "g": "fun",
+   "lane": "comedy"
+  },
+  {
+   "id": "UC6n8I1UDTKP1IWjQMg6_TwA",
+   "name": "The B1M",
+   "g": "sci",
+   "lane": "doc"
+  },
+  {
+   "id": "UCUcyEsEjhPEDf69RRVhRh4A",
+   "name": "The Great War",
+   "cap": 3,
+   "g": "fun",
+   "lane": "doc"
+  },
+  {
+   "id": "UCaTSjmqzOO-P8HmtVW3t7sA",
+   "name": "Todd in the Shadows",
+   "g": "music",
+   "lane": "doc"
+  },
+  {
+   "id": "UCxHcoI9ndIdAihEB7ODTOfQ",
+   "name": "Trash Theory",
+   "g": "music",
+   "lane": "doc"
+  },
+  {
+   "id": "UCk480B1pofOjThMfkBjhDpQ",
+   "name": "Workshop Companion",
+   "g": "fun",
+   "lane": "craft"
   }
  ]
 }

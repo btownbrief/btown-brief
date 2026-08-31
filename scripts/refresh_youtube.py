@@ -68,13 +68,16 @@ INO_STREAM_N = 1000
 INO_CHANNEL_RE = re.compile(r"/channel/(UC[A-Za-z0-9_-]{22})")
 API = "https://www.googleapis.com/youtube/v3"
 WINDOW_DAYS = 7
-MAX_CHANNEL_VIDEOS = 160
+MAX_CHANNEL_VIDEOS = 240   # roster grew to ~140 channels for Btown TV (Aug 2026)
 DEFAULT_CAP = 6          # per-channel per refresh; firehoses set lower in the file
 SHORTS_MAX_SEC = 75      # anything shorter is a Short — not for this shelf
 MAX_VERMONT = 10
 CATALOG = os.path.join(ROOT, "data", "deep-catalog.json")
 DEEP_PER_CHANNEL = 5
-DEEP_BACKFILL_PER_RUN = 8   # 8 searches ≈ 800 units/run while the catalog fills
+DEEP_BACKFILL_PER_RUN = 3   # 3 searches ≈ 300 units/run while the catalog fills
+                            # (was 8; the 8×/day schedule + Btown TV's playlist
+                            # sync share one 10k/day quota — 3 keeps a backfill
+                            # day near 6k instead of 10k)
 DEEP_REFRESH_PER_RUN = 2    # steady state: re-check the two stalest channels
 DEEP_REFRESH_DAYS = 30      # greatest-hits lists barely move
 DEEP_MIN_AGE_DAYS = 180     # a deep cut is old gold, not last month's upload
@@ -95,6 +98,21 @@ VT_QUERY_POOL = [
     "Vermont foliage",
 ]
 VT_ROTATE = 2
+# "Vermont" is also a suburb of Melbourne, so Australian rules football fixtures
+# ("Rowville vs Vermont", Vermont South) match VT_RE perfectly well and are not
+# remotely local. Broadening the live search surfaced one immediately. Cheap
+# deny list, checked alongside VT_RE everywhere relevance is decided.
+NOT_VT_RE = re.compile(
+    r"\bfnl\b|\bafl\b|\bvfl\b|netball|rowville|vermont south"
+    r"|eastern football|aussie rules|\bnsw\b|melbourne",
+    re.I)
+
+
+def is_vermont(text):
+    """Ours, not Melbourne's."""
+    return bool(VT_RE.search(text)) and not NOT_VT_RE.search(text)
+
+
 VT_RE = re.compile(
     r"vermont|burlington|champlain|montpelier|stowe|winooski|green mountain"
     r"|church street|queen city|middlebury|brattleboro|rutland|killington"
@@ -432,7 +450,7 @@ def fetch_vermont(key, now_ts, exclude):
             channel = html_mod.unescape(snippet.get("channelTitle") or "")
             if not vid or vid in seen or not title:
                 continue
-            if not VT_RE.search(title + " " + channel):
+            if not is_vermont(title + " " + channel):
                 continue  # search drifts; only keep the visibly-Vermont ones
             when = None
             published = snippet.get("publishedAt")
@@ -456,26 +474,101 @@ def fetch_vermont(key, now_ts, exclude):
     return found[:MAX_VERMONT]
 
 
-def fetch_live_now(key, now_ts, exclude):
-    """One eventType=live search — is anything Vermont streaming right now?
-    Live hits ride the Vermont shelf (vt:1) with dur 'LIVE', which both
-    clients already render as-is. 100 units per run."""
+# Cameras we always want, whether or not a keyword search happens to surface
+# them. Church Street is THE Burlington webcam and it was missing for exactly
+# this reason: its title and channel are "Church Street Market Place", which
+# a q=Vermont search with ten results never returns. VT_RE was never the
+# problem — the search was.
+PINNED_LIVE = [
+    "zl1woMXGGmQ",   # Church Street Market Place — the marketplace, live
+]
+
+# One search finds what one phrase finds. The cameras worth having are named
+# for the place they point at, not for the state they sit in.
+LIVE_QUERIES = ("Vermont", "Burlington Vermont", "Lake Champlain", "Vermont webcam")
+
+LIVE_MAX = 6
+
+
+def fetch_live_ids(key, ids):
+    """Resolve explicit video ids and keep only the ones actually live.
+
+    A pinned camera can be restarted under a new id or taken down — the live
+    shelf was shipping a 404 (Vermont FarmCam) because nothing ever checked.
+    liveBroadcastContent tells us; anything not currently 'live' is dropped
+    rather than rendered as a dead tile."""
+    if not ids:
+        return {}
     query = urllib.parse.urlencode({
-        "part": "snippet", "type": "video", "eventType": "live",
-        "q": "Vermont", "maxResults": 10, "regionCode": "US", "key": key})
-    live = []
-    for item in http_json(f"{API}/search?{query}").get("items", []):
-        vid = (item.get("id") or {}).get("videoId")
+        "part": "snippet", "id": ",".join(ids), "key": key})
+    found = {}
+    for item in http_json(f"{API}/videos?{query}").get("items", []):
         snippet = item.get("snippet") or {}
-        title = html.unescape((snippet.get("title") or "").strip())
-        channel = html.unescape((snippet.get("channelTitle") or "").strip())
-        if not vid or vid in exclude or not title:
+        if snippet.get("liveBroadcastContent") != "live":
             continue
-        if not VT_RE.search(f"{title} {channel}"):
+        found[item.get("id")] = {
+            "t": html.unescape((snippet.get("title") or "").strip())[:200],
+            "ch": html.unescape((snippet.get("channelTitle") or "").strip())[:60],
+        }
+    return found
+
+
+def fetch_live_now(key, now_ts, exclude):
+    """What is streaming from around here right now.
+
+    Pinned cameras first and unconditionally, then whatever the searches turn
+    up, deduped. Live hits ride the Vermont shelf (vt:1) with dur 'LIVE',
+    which both clients already render as-is. ~100 units per query."""
+    live = []
+    seen = set(exclude)
+    # A 24/7 stream gets restarted under a new id every so often, so the same
+    # camera can come back twice in one search (VermontLiveCam ships as both
+    # u0wvrqqTfcs and 351IvR64Po8). Dedupe on the title as well as the id.
+    titles = set()
+
+    def title_key(t):
+        return re.sub(r"[^a-z0-9]+", "", t.lower())[:60]
+
+    pinned = fetch_live_ids(key, [v for v in PINNED_LIVE if v not in seen])
+    for vid in PINNED_LIVE:
+        meta = pinned.get(vid)
+        if not meta:
+            print(f"warn: pinned live {vid} is not live right now", file=sys.stderr)
             continue
-        live.append({"id": vid, "t": title[:200], "ch": channel[:60],
+        seen.add(vid)
+        titles.add(title_key(meta["t"]))
+        live.append({"id": vid, "t": meta["t"], "ch": meta["ch"],
                      "d": now_ts, "dur": "LIVE", "vt": 1, "lv": 1})
-    return live[:4]
+
+    for phrase in LIVE_QUERIES:
+        if len(live) >= LIVE_MAX:
+            break
+        query = urllib.parse.urlencode({
+            "part": "snippet", "type": "video", "eventType": "live",
+            "q": phrase, "maxResults": 10, "regionCode": "US", "key": key})
+        try:
+            items = http_json(f"{API}/search?{query}").get("items", [])
+        except Exception as exc:  # noqa: BLE001 — one dud query must not cost the rest
+            print(f"warn: live search {phrase!r} failed: {exc}", file=sys.stderr)
+            continue
+        for item in items:
+            vid = (item.get("id") or {}).get("videoId")
+            snippet = item.get("snippet") or {}
+            title = html.unescape((snippet.get("title") or "").strip())
+            channel = html.unescape((snippet.get("channelTitle") or "").strip())
+            if not vid or vid in seen or not title:
+                continue
+            if not is_vermont(f"{title} {channel}"):
+                continue
+            if title_key(title) in titles:
+                continue
+            seen.add(vid)
+            titles.add(title_key(title))
+            live.append({"id": vid, "t": title[:200], "ch": channel[:60],
+                         "d": now_ts, "dur": "LIVE", "vt": 1, "lv": 1})
+            if len(live) >= LIVE_MAX:
+                break
+    return live[:LIVE_MAX]
 
 
 def build_digest(own, now_ts):
@@ -527,7 +620,7 @@ def update_channel_suggestions(key, now_ts, roster_ids, prior):
             title = html.unescape((snippet.get("title") or "").strip())
             if not cid or cid in roster_ids or cid in seen:
                 continue
-            if not VT_RE.search(f"{title} {channel}"):
+            if not is_vermont(f"{title} {channel}"):
                 continue
             seen.add(cid)
             fresh.append({"id": cid, "ch": channel[:60], "t": title[:200],
@@ -694,21 +787,30 @@ def run(args):
     elif key:
         # targeted top-up: a channel absent from the stream is usually just
         # quiet, but it might be a feed Inoreader silently dropped — one
-        # playlistItems unit each settles it
+        # playlistItems unit each settles it (60 per run: Btown TV's roster
+        # additions live only in the metadata file until Inoreader catches up)
         covered_set = set(covered)
-        missing = [channel for channel in load_channels()
-                   if channel["id"] not in covered_set]
+        # "must" channels are re-checked every run even when the stream says
+        # it covered them. On 2026-08-29 Town Meeting TV was in the roster and
+        # in the OPML and had four uploads that day, and still nothing of its
+        # reached the payload: listed as covered is not the same as delivered.
+        roster = load_channels()
+        got = {video.get("ch") for video in own}
+        missing = [channel for channel in roster
+                   if channel["id"] not in covered_set
+                   or (channel.get("must") and channel.get("name") not in got)]
+        missing.sort(key=lambda c: 0 if c.get("must") else 1)
         if missing:
             try:
                 extra = fetch_channel_videos_api(key, now_ts,
-                                                 channels=missing[:20])
+                                                 channels=missing[:60])
                 have = {video["id"] for video in own}
                 fresh_extra = [v for v in extra if v["id"] not in have]
                 if fresh_extra:
                     own.extend(fresh_extra)
                     own.sort(key=lambda video: video["d"], reverse=True)
                 print(f"refresh_youtube: api top-up checked "
-                      f"{len(missing[:20])} quiet channels -> "
+                      f"{len(missing[:60])} quiet channels -> "
                       f"+{len(fresh_extra)}")
             except Exception as exc:  # noqa: BLE001
                 print(f"refresh_youtube: top-up trouble ({exc})",

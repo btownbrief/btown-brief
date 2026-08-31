@@ -57,8 +57,8 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
               title="Every card the board has shown you lately — in case you missed one">⟲</button>
       <button class="ic-bar" id="help-btn" type="button" aria-label="How the board works"
               title="How the board works">?</button>
-      <nav class="modes" aria-label="Read or watch">
-        <a class="mode" href="pulse.html" title="Back to the full wire — scan and filter everything">READ</a>
+      <nav class="modes" aria-label="Switch board">
+        <a class="mode mode-read" href="pulse.html" title="Back to the full wire — scan and filter everything">READ</a>
         <span class="mode on" title="Headlines rotate hands-free — you're watching">WATCH</span>
         <a class="mode" href="table.html" title="The meetup companion — icebreakers and weekend picks on a slow clock">TABLE</a>
       </nav>
@@ -100,6 +100,15 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <div class="lbarwrap" id="lbarwrap">
   <footer class="lbar" id="lbar">
+    <!-- Phones only: the top bar cannot take the board switch without zooming
+         the whole page out, and this row already scrolls and already holds the
+         board's other settings. -->
+    <span class="lgroup lboard" role="group" aria-label="Switch board">
+      <span class="llbl">BOARD</span>
+      <span class="lopt on">LIVE</span>
+      <a class="lopt" href="table.html" title="The meetup companion — icebreakers and weekend picks on a slow clock">TABLE</a>
+      <a class="lopt" href="pulse.html" title="The full wire — scan and filter everything">READ</a>
+    </span>
     <span class="lgroup" id="pace-group" role="group" aria-label="Pace">
       <span class="llbl">PACE</span>
       <button class="lopt" data-pace="slow" type="button">SLOW</button>

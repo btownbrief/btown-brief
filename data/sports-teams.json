@@ -1,0 +1,22 @@
+{
+ "_comment": "Teams with no machine-readable schedule. Everything else in the Sports tab comes from a feed (see scripts/build_sports.py). Add games as {title, start (ISO with offset), date, venue, url, home}. Vermont Green FC types its schedule into a WordPress page — no plugin, no ICS, no league API — and its season runs May-August, so this sits empty most of the year. The Burlington Revolution has published NO games: their site says 'Game times will be announced'.",
+ "updated": "2026-08-29",
+ "teams": [
+  {
+   "name": "Vermont Green FC",
+   "sport": "Soccer",
+   "level": "local",
+   "url": "https://vermontgreenfc.com/2026-schedule-men/",
+   "note": "USL League Two. Won the national title 2-1 over Flint City on 2026-08-01; next season ~May 2027.",
+   "games": []
+  },
+  {
+   "name": "Burlington Revolution",
+   "sport": "Basketball",
+   "level": "local",
+   "url": "https://burlingtonrevolution.com/pages/schedule",
+   "note": "American Basketball Association. Inaugural season October 2026 — no schedule published yet.",
+   "games": []
+  }
+ ]
+}

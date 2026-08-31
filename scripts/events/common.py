@@ -26,6 +26,7 @@ import hashlib
 import html as _html
 import io
 import json
+import os
 import re
 import ssl
 import sys
@@ -81,10 +82,59 @@ _MIN_GAP = 1.0  # polite seconds between hits to the same host
 
 _SSL_CTX = ssl.create_default_context()
 
+# ---------------------------------------------------------- the 403 problem
+#
+# Some sites sit behind Cloudflare and answer a datacenter IP with 403 while
+# serving the identical request from a residential one. Seven Days is the
+# case that forced this: on 2026-08-30 the pipeline's exact URL and headers
+# returned 200 from a laptop and 403 from the GitHub runner, and had done for
+# 106 consecutive runs since 11 July. It is not the user-agent — three header
+# variants all got 200 locally — it is where the request comes from.
+#
+# Firecrawl has its own egress and does get through, and returns HTML the
+# existing parsers handle unchanged. So an adapter that keeps hitting a wall
+# can opt into `fallback=True` and reroute, but ONLY on the status codes that
+# mean "not you" (403/429) and ONLY when a key is configured. Without the key
+# nothing changes and the source simply fails, loudly, as it does today.
+#
+# Costs one credit per page, so it is opt-in per adapter rather than a global
+# retry policy.
+FIRECRAWL_KEY = os.environ.get("FIRECRAWL_API_KEY", "")
+FIRECRAWL_ENDPOINT = "https://api.firecrawl.dev/v2/scrape"
+_FIRECRAWL_CALLS = 0
+
+
+def firecrawl_calls() -> int:
+    """How many credits this run has spent. Reported, so the cost is visible."""
+    return _FIRECRAWL_CALLS
+
+
+def _via_firecrawl(url: str, timeout: int) -> str:
+    global _FIRECRAWL_CALLS
+    body = json.dumps({"url": url, "formats": ["rawHtml"],
+                       "onlyMainContent": False}).encode()
+    req = urllib.request.Request(
+        FIRECRAWL_ENDPOINT, data=body, method="POST",
+        headers={"Authorization": "Bearer " + FIRECRAWL_KEY,
+                 "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=timeout, context=_SSL_CTX) as resp:
+        payload = json.loads(resp.read().decode("utf-8", errors="replace"))
+    _FIRECRAWL_CALLS += 1
+    data = payload.get("data") or payload
+    html = data.get("rawHtml") or data.get("html") or ""
+    if not html:
+        raise RuntimeError("firecrawl returned no html for " + url)
+    return html
+
 
 def fetch(url: str, headers: dict | None = None, retries: int = 3,
-          timeout: int = 30, method: str = "GET", data: bytes | None = None) -> str:
-    """GET a URL politely (UA, gzip, per-host rate limit, retries). Returns text."""
+          timeout: int = 30, method: str = "GET", data: bytes | None = None,
+          fallback: bool = False) -> str:
+    """GET a URL politely (UA, gzip, per-host rate limit, retries). Returns text.
+
+    `fallback=True` lets a blocked request reroute through Firecrawl — see the
+    note above. It applies only to plain GETs.
+    """
     host = urllib.parse.urlparse(url).netloc
     wait = _MIN_GAP - (time.time() - _LAST_HIT.get(host, 0))
     if wait > 0:
@@ -112,7 +162,15 @@ def fetch(url: str, headers: dict | None = None, retries: int = 3,
             last_err = e
             code = getattr(e, "code", None)
             if code in (403, 404, 410):   # won't improve with retries
+                if code == 403 and fallback and FIRECRAWL_KEY and method == "GET":
+                    log(f"  403 direct, rerouting via Firecrawl: {url[:80]}")
+                    _LAST_HIT[host] = time.time()
+                    return _via_firecrawl(url, timeout)
                 raise
+            if code == 429 and fallback and FIRECRAWL_KEY and method == "GET":
+                log(f"  429 direct, rerouting via Firecrawl: {url[:80]}")
+                _LAST_HIT[host] = time.time()
+                return _via_firecrawl(url, timeout)
             time.sleep(2 * (attempt + 1))
     raise RuntimeError(f"fetch failed after {retries} tries: {url} ({last_err})")
 

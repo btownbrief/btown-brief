@@ -60,7 +60,7 @@ SECRETS_ENV = Path.home() / "btown-brief-prompts" / "secrets.env"
 # Docs: https://scrapecreators.com (couldn't be checked while the key was
 # empty). Assumed: GET {POSTS_ENDPOINT}?handle=<handle> with header
 # "x-api-key: <key>". If the first live run 404s, fix these constants.
-POSTS_ENDPOINT = "https://api.scrapecreators.com/v1/instagram/user/posts"
+POSTS_ENDPOINT = "https://api.scrapecreators.com/v2/instagram/user/posts"  # v2 = the proven endpoint (newsletter fetch_instagram.py); v1 404s some handles
 HANDLE_PARAM = "handle"
 API_KEY_HEADER = "x-api-key"
 
@@ -71,12 +71,20 @@ MAX_EVENTS_PER_CAPTION = 3  # a caption listing more dates than this is noise
 # Handles to scan + the venue each one maps to. Seeded with Burlington
 # Instagram-only venues; curate/expand this list over time. HANDLES is
 # derived from the dict so the two can't drift apart.
+# Curated 2026-08-27 against both event corpora (guide events.json + the newsletter's
+# 5,056-event merged archive): ONLY handles with ZERO coverage from every other source
+# stay here. Cut as redundant: foambrewers (76 corpus events via Seven Days etc.),
+# venetiansodalounge (18), queencitybrewery (fpf/meetup). The 126 was checked and is
+# NOT IG-only (42 corpus events via Seven Days).
 HANDLE_TO_VENUE: dict[str, dict] = {
-    "foambrewers":        {"venue": "Foam Brewers",         "town": "Burlington"},
-    "venetiansodalounge": {"venue": "Venetian Soda Lounge", "town": "Burlington"},
-    "despacitovt":        {"venue": "Despacito",            "town": "Burlington"},
-    "thearchivesbtv":     {"venue": "The Archives",         "town": "Burlington"},
-    "queencitybrewery":   {"venue": "Queen City Brewery",   "town": "Burlington"},
+    "despacitovt":    {"venue": "Despacito",    "town": "Burlington"},
+    "thearchivesbar": {"venue": "The Archives", "town": "Burlington"},  # NOT thearchivesbtv (404s)
+    "theframe.btv":   {"venue": "The Frame",    "town": "Burlington"},
+    # Announce-late pop-up club: announces 1-3 days ahead on Instagram ONLY, so the
+    # newsletter can never list them in advance — this pipeline is how their events
+    # reach readers at all. Location varies per event and lives in the caption, so the
+    # venue label names the club, not a place. SEASONAL: remove around November.
+    "sunsetwatchersclub": {"venue": "Sunset Watchers Club pop-up", "town": "Burlington"},
 }
 HANDLES: list[str] = list(HANDLE_TO_VENUE)
 # --- /EDIT ME ---------------------------------------------------------------
@@ -267,10 +275,21 @@ def _fetch_posts(handle: str, key: str) -> list:
 def fetch(window_start: date, window_end: date) -> list[dict]:
     key = _api_key()
     if not key:
-        common.log("instagram: no SCRAPE_CREATORS_API_KEY yet — skipping")
-        return []
+        # Raise instead of returning []: an empty SUCCESS would mark every previously
+        # fetched Instagram event "unconfirmed" (update.py flags vanished events from
+        # sources that succeeded). A "failure" keeps them untouched.
+        raise RuntimeError("skipped by design: no SCRAPE_CREATORS_API_KEY set")
     today = datetime.now(common.TZ).date()
     events: list[dict] = []
+    # Once-daily gate (Stephen, 2026-08-27: "i never need twice per day"). The events
+    # workflow runs 5:40am + 4:40pm ET; Instagram fetches ONLY on the afternoon run —
+    # announce-late accounts post around 8-9am, so the afternoon run catches a same-day
+    # announcement the same evening, while a morning-only run would always be a day
+    # behind. Cost: 1 credit per handle per day. Raise (not return []) so the morning
+    # skip counts as a source failure and update.py keeps yesterday's Instagram events
+    # untouched instead of flagging them "unconfirmed" every morning.
+    if datetime.now(common.TZ).hour < 12:
+        raise RuntimeError("skipped by design: once-daily gate, Instagram fetches on the afternoon run only")
     for handle in HANDLES:
         try:
             posts = _fetch_posts(handle, key)

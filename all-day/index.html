@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>All Day — Burlington Brief</title>
+  <meta name="description" content="Everything, one place, all day: the news wire, Reddit, the video shelf, every local podcast and a Wikipedia rabbit hole.">
+  <meta property="og:title" content="All Day — Burlington Brief">
+  <meta property="og:description" content="The wire, Reddit, video, podcasts and a Wikipedia rabbit hole — one app, all day.">
+  <meta property="og:image" content="../assets/og/og-guide.jpg">
+  <!-- The navy of the shared network bar, which is the strip iOS draws the
+       clock on in a home-screen install. store.js repaints this if the bar
+       never loads. -->
+  <meta name="theme-color" content="#0E2230">
+  <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="All Day">
+  <script>
+    /* Paint the right theme before first paint, or a dark-mode phone gets a
+       white flash on every load. Mirrors store.js applyTheme(). */
+    try {
+      var t = localStorage.getItem('allday-theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+      var dark = t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.style.background = dark ? '#06080A' : '#FBF9F5';
+    } catch (e) { /* private mode: the stylesheet default stands */ }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css?v=20260830h">
+</head>
+<body data-btown-about="off">
+  <script src="https://play.btownbrief.com/nav.js" defer></script>
+
+  <header class="mast" id="mast">
+    <div class="mast-in">
+      <div class="brand">
+        <span class="wordmark">All Day</span>
+        <span class="tagline">Everything, one place, all day</span>
+      </div>
+      <div class="mast-acts">
+        <button class="iconbtn" id="theme-btn" aria-label="Switch theme"></button>
+        <button class="iconbtn" id="saved-btn" aria-label="Saved"></button>
+        <button class="iconbtn" id="settings-btn" aria-label="Settings"></button>
+        <a class="boardlink" id="board-link" href="../live.html" title="The full-screen headline board">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18M8.5 9v10.5"/></svg>
+          Board
+        </a>
+      </div>
+    </div>
+    <div class="stale" id="stale" hidden>Showing an older edition — reconnecting…</div>
+    <div class="readbar" id="readbar"><i></i></div>
+  </header>
+
+  <main class="app">
+    <section class="panel" id="panel-wire"   role="tabpanel" aria-labelledby="tab-wire"></section>
+    <section class="panel" id="panel-reddit" role="tabpanel" aria-labelledby="tab-reddit" hidden></section>
+    <section class="panel" id="panel-watch"  role="tabpanel" aria-labelledby="tab-watch" hidden></section>
+    <section class="panel" id="panel-listen" role="tabpanel" aria-labelledby="tab-listen" hidden></section>
+    <section class="panel" id="panel-whatnow" role="tabpanel" aria-labelledby="tab-whatnow" hidden></section>
+  <section class="panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" hidden></section>
+  <section class="panel" id="panel-photos" role="tabpanel" aria-labelledby="tab-photos" hidden></section>
+  <section class="panel" id="panel-ig" role="tabpanel" aria-labelledby="tab-ig" hidden></section>
+  <section class="panel" id="panel-wander" role="tabpanel" aria-labelledby="tab-wander" hidden></section>
+  </main>
+
+  <div class="dock">
+    <div class="player" id="player" hidden>
+      <div class="p-bar" id="p-bar" role="slider" aria-label="Seek" tabindex="0"><i></i></div>
+      <button class="p-open" id="p-open" aria-label="Open the player">
+        <img class="p-art" id="p-art" alt="" hidden>
+        <span class="p-meta">
+          <span class="p-title" id="p-title"></span>
+          <span class="p-sub">
+            <span class="p-show" id="p-show"></span>
+            <span class="p-time" id="p-time"></span>
+          </span>
+        </span>
+      </button>
+      <button class="iconbtn" id="p-back" aria-label="Back 15 seconds">
+        <svg viewBox="0 0 24 24"><path d="M11 8 5.5 12 11 16M18 8l-5.5 4L18 16"/></svg>
+      </button>
+      <button class="iconbtn" id="p-toggle" aria-label="Play or pause"></button>
+      <button class="iconbtn" id="p-fwd" aria-label="Forward 30 seconds">
+        <svg viewBox="0 0 24 24"><path d="M13 8l5.5 4L13 16M6 8l5.5 4L6 16"/></svg>
+      </button>
+      <button class="iconbtn" id="p-close" aria-label="Close player">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+
+    <nav class="tabbar" role="tablist" aria-label="All Day sections">
+      <button role="tab" id="tab-wire" data-tab="wire" class="on" aria-selected="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h3.4L9 6.4l4.6 11.2L16 12h5"/></svg>
+        <span>Wire</span>
+      </button>
+      <button role="tab" id="tab-reddit" data-tab="reddit" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13.5" r="6.2"/><circle cx="9.6" cy="13" r=".9" fill="currentColor"/><circle cx="14.4" cy="13" r=".9" fill="currentColor"/><path d="M9.2 16.4c1.7 1.2 3.9 1.2 5.6 0M12 7.2l.9-3.4 3 .9"/><circle cx="16.6" cy="4.4" r="1.1" fill="currentColor"/></svg>
+        <span>Reddit</span>
+      </button>
+      <button role="tab" id="tab-watch" data-tab="watch" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="3"/><path d="M10.3 9.5v5l4.6-2.5z" fill="currentColor"/></svg>
+        <span>Watch</span>
+      </button>
+      <button role="tab" id="tab-listen" data-tab="listen" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 15.5v-3a7.5 7.5 0 0 1 15 0v3"/><rect x="3.4" y="13.6" width="4" height="6" rx="2" fill="currentColor"/><rect x="16.6" y="13.6" width="4" height="6" rx="2" fill="currentColor"/></svg>
+        <span>Listen</span>
+      </button>
+      <button role="tab" id="tab-whatnow" data-tab="whatnow" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.6 5.4 13.4h5.2l-.8 8 7.8-10.8h-5.2z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>What Now</span>
+      </button>
+      <button role="tab" id="tab-music" data-tab="music" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V5.2l10-1.7v12.1"/><ellipse cx="6.9" cy="17.6" rx="2.9" ry="2.4" fill="currentColor"/><ellipse cx="16.9" cy="15.6" rx="2.9" ry="2.4" fill="currentColor"/></svg>
+        <span>Music</span>
+      </button>
+      <button role="tab" id="tab-photos" data-tab="photos" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6.6" width="18" height="12.8" rx="3"/><path d="M8.6 6.6l1.5-2.2h3.8l1.5 2.2"/><circle cx="12" cy="13" r="3.4" fill="currentColor"/></svg>
+        <span>Photos</span>
+      </button>
+      <button role="tab" id="tab-ig" data-tab="ig" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.4" y="3.4" width="7.6" height="7.6" rx="2"/><rect x="13" y="3.4" width="7.6" height="7.6" rx="2"/><rect x="3.4" y="13" width="7.6" height="7.6" rx="2" fill="currentColor"/><rect x="13" y="13" width="7.6" height="7.6" rx="2"/></svg>
+        <span>Insta</span>
+      </button>
+      <button role="tab" id="tab-wander" data-tab="wander" aria-selected="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="m15.6 8.4-2 5.2-5.2 2 2-5.2z" fill="currentColor"/></svg>
+        <span>Wiki</span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="vbox" id="vbox" hidden>
+    <div class="vbox-card">
+      <div class="vbox-head">
+        <span class="t" id="vbox-title"></span>
+        <button class="iconbtn" id="vbox-close" aria-label="Close video">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="vbox-frame" id="vbox-frame"></div>
+      <div class="vbox-foot">
+        <span class="vbox-hint" id="vbox-hint" hidden>Not playing? Some videos block embedding.</span>
+        <a class="btn btn-quiet" id="vbox-open" href="#" target="_blank" rel="noopener">Open in YouTube ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet" id="sheet" hidden></div>
+  <div class="confirm" id="confirm" hidden></div>
+  <div class="toast" id="toast" hidden></div>
+  <audio id="audio" preload="none"></audio>
+
+  <noscript><p class="empty">All Day needs JavaScript.</p></noscript>
+
+  <script type="module" src="js/main.js?v=20260830h"></script>
+</body>
+</html>

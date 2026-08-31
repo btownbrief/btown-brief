@@ -1090,6 +1090,13 @@
       if (typeof window.BTV.showGuide === 'function') window.BTV.showGuide('top-100');
     });
 
+    // Activity hero → Top 100 guide / Guides index
+    document.getElementById('hero-top100')?.addEventListener('click', () => {
+      switchMode('guides');
+      if (typeof window.BTV.showGuide === 'function') window.BTV.showGuide('top-100');
+    });
+    document.getElementById('hero-guides')?.addEventListener('click', () => switchMode('guides'));
+
     // Clear filters
     document.getElementById('clear-all-filters')?.addEventListener('click', clearAllFilters);
     document.getElementById('empty-clear-btn')?.addEventListener('click', clearAllFilters);

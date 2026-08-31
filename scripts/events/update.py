@@ -14,6 +14,13 @@ Outputs (git-tracked, consumed by events.html and the newsletter pipeline):
 
 Exit code is 0 as long as at least one source succeeded (a single flaky
 site must not nuke the calendar); nonzero only on total failure.
+
+A source that FAILS keeps its events for a week, then they stop being
+published, then they are forgotten — see FAILED_SOURCE_HOLD_DAYS. Publishing
+filters on status == "active", so an errored source that left its events
+untouched was asserting we had seen listings we had not. report.json carries
+`staleDays` per failing source, and the log shouts once a source is past the
+hold, because 106 consecutive silent failures is how the last one hid.
 """
 from __future__ import annotations
 
@@ -39,7 +46,8 @@ SOURCES_DIR = Path(__file__).resolve().parent / "sources"
 PRIORITY = {
     "flynn": 90, "higherground": 90, "vcc": 90, "echo": 90, "bca": 90,
     "shelburnemuseum": 90, "greenfc": 90, "fletcherfree": 90, "sblibrary": 90,
-    "winooskilibrary": 90, "churchst": 85, "farmersmarket": 85, "uvm": 85,
+    "winooskilibrary": 90, "radiobean": 90, "monkeyhouse": 90,
+    "churchst": 85, "farmersmarket": 85, "uvm": 85,
     "parksrec": 85, "sbrec": 85, "breweries": 80, "loveburlington": 70,
     "sevendays": 65, "helloburlington": 60, "uvmbored": 55,
     "eventbrite": 50, "meetup": 50, "champlainvalley": 40,
@@ -47,6 +55,19 @@ PRIORITY = {
 }
 
 MISSING_GRACE_DAYS = 3  # future event unseen this long -> flagged, then dropped
+
+# A source that ERRORED is a different situation from one that succeeded and
+# stopped listing an event: the first is our problem, the second is probably a
+# cancellation. So a failed source keeps its events rather than losing a whole
+# venue's calendar to one bad fetch.
+#
+# It used to keep them for ever, and unbounded is the wrong end of that trade.
+# Measured 2026-08-30: the Seven Days adapter had returned 403 on 106 of the
+# last 109 runs — down since 11 July — and 126 of its events were still being
+# published as `active`, on the strength of a scrape 50 days old. Absent data
+# is honest; 50-day-old data wearing a live label is not.
+FAILED_SOURCE_HOLD_DAYS = 7   # still published while its source is briefly down
+FAILED_SOURCE_DROP_DAYS = 21  # after this, forget them entirely
 
 
 def discover_sources(only: set[str] | None):
@@ -257,6 +278,26 @@ def collapse_ongoing(events: list[dict], min_days: int = 6, min_density: float =
 
 # ------------------------------------------------------------------ state merge
 
+def _down_since(previous: list[dict], slug: str, now_iso: str):
+    """Days since this source last actually produced one of the events we hold.
+
+    Reads the state file rather than any new bookkeeping: `lastSeen` on the
+    source's own events already records it.
+    """
+    seen = [e["lastSeen"] for e in previous
+            if slug in {s["source"] for s in
+                        e.get("sources", [{"source": e.get("source")}])}
+            and e.get("lastSeen")]
+    if not seen:
+        return None
+    newest = max(seen)
+    try:
+        return (datetime.fromisoformat(now_iso)
+                - datetime.fromisoformat(newest)).days
+    except ValueError:
+        return None
+
+
 def merge_state(fresh: list[dict], previous: list[dict], now_iso: str,
                 today: str, fetched_sources: set[str], failed: set[str]):
     """Carry firstSeen/lastSeen; flag future events that vanished from a
@@ -284,8 +325,25 @@ def merge_state(fresh: list[dict], previous: list[dict], now_iso: str,
             continue
         ev_sources = {s["source"] for s in prev.get("sources", [{"source": prev["source"]}])}
         if failed and ev_sources <= failed:
-            # every source that knew this event errored this run — keep as-is
-            out.append(prev)
+            # Every source that knew this event errored this run. Hold it, but
+            # only for as long as the outage can still be called a blip —
+            # `status` is what publishing filters on, so leaving it `active`
+            # is an assertion that we saw the listing, and after a week we did
+            # not.
+            age = now_dt - datetime.fromisoformat(prev["lastSeen"])
+            if age <= timedelta(days=FAILED_SOURCE_HOLD_DAYS):
+                out.append(prev)
+            elif age <= timedelta(days=FAILED_SOURCE_DROP_DAYS):
+                prev = dict(prev)
+                prev["status"] = "unconfirmed"
+                out.append(prev)
+                changes.append({"id": prev["id"], "title": prev["title"],
+                                "date": prev["date"], "change": "source-down",
+                                "lastSeen": prev["lastSeen"]})
+            else:
+                changes.append({"id": prev["id"], "title": prev["title"],
+                                "date": prev["date"], "change": "dropped",
+                                "lastSeen": prev["lastSeen"]})
             continue
         if ev_sources & fetched_sources or not fetched_sources:
             last = datetime.fromisoformat(prev["lastSeen"])
@@ -345,6 +403,16 @@ def main() -> int:
     failed: set[str] = set()
     fetched: set[str] = set()
 
+    # Loaded before the fetches, not after, so a failing source can be told
+    # how long it has been failing at the moment it fails.
+    prev_path = DATA_DIR / "events.json"
+    previous = []
+    if prev_path.exists():
+        try:
+            previous = json.loads(prev_path.read_text()).get("events", [])
+        except Exception:
+            previous = []
+
     for mod in discover_sources(only):
         slug = getattr(mod, "SOURCE", mod.__name__.split(".")[-1])
         label = getattr(mod, "LABEL", slug)
@@ -361,6 +429,15 @@ def main() -> int:
             failed.add(slug)
             report_sources[slug] = {"label": label, "count": 0, "error": str(e)[:300]}
             log(f"  {slug:16s} FAILED: {e}")
+            # How long has it been like this? A single 403 is noise; the same
+            # 403 for seven weeks is the calendar quietly losing a source, and
+            # nothing in this report used to say so.
+            down = _down_since(previous, slug, now_iso)
+            if down is not None:
+                report_sources[slug]["staleDays"] = down
+                if down >= FAILED_SOURCE_HOLD_DAYS:
+                    log(f"  {slug:16s} ^^ DOWN {down} DAYS — its events are no "
+                        f"longer published")
             traceback.print_exc(file=sys.stderr)
 
     if only is None and not fetched:
@@ -381,14 +458,6 @@ def main() -> int:
             suffix = ev["start"][11:16].replace(":", "") if not ev["allDay"] else "d"
             ev["id"] = f"{ev['id']}-{suffix}"
         seen_ids.add(ev["id"])
-
-    prev_path = DATA_DIR / "events.json"
-    previous = []
-    if prev_path.exists():
-        try:
-            previous = json.loads(prev_path.read_text()).get("events", [])
-        except Exception:
-            previous = []
 
     final, changes = merge_state(merged, previous, now_iso, lo.isoformat(),
                                  fetched, failed)
@@ -419,6 +488,9 @@ def main() -> int:
         "generated": now_iso, "sources": report_sources,
         "gathered": len(all_events), "afterDedup": len(merged),
         "duplicatesMerged": dupes_removed, "final": len(final),
+        # credits spent rerouting blocked pages — visible, so the cost of the
+        # workaround cannot creep without anyone noticing
+        "firecrawlCalls": common.firecrawl_calls(),
         "mergeLog": merge_log[-200:], "changes": changes[-200:],
     }, ensure_ascii=False, indent=1) + "\n")
 

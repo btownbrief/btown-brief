@@ -277,10 +277,33 @@
     return src.topic === topic;
   }
 
+  /* One publication, one mute. A source id is a feed title's slug, so an
+     outlet subscribed twice — the Seven Days wire AND its 7Days email
+     edition, Vermont Public's RSS AND the legacy VPR feed — arrived as two
+     sources with two independent mutes: hiding one left the other talking.
+     The payload names a secondary feed's canonical source in "og", and every
+     hidden test below asks about the outlet, not the raw id. */
+  function outletOf(src) {
+    return (src && (src.og || src.id)) || '';
+  }
+
+  function srcHidden(src) {
+    return !!(src && (state.set.hidden[src.id] || state.set.hidden[outletOf(src)]));
+  }
+
+  /* every id one outlet's switch stands for — the canonical source and any
+     secondary feed pointing at it, so muting writes the whole outlet */
+  function outletKin(id) {
+    var kin = ((state.data && state.data.sources) || []).filter(function (s) {
+      return s.id === id || s.og === id;
+    }).map(function (s) { return s.id; });
+    return kin.length ? kin : [id];
+  }
+
   function visibleSources(topic) {
     if (!state.data) return [];
     return state.data.sources.filter(function (src) {
-      return !state.set.hidden[src.id] && inTopic(src, topic);
+      return !srcHidden(src) && inTopic(src, topic);
     });
   }
 
@@ -297,7 +320,7 @@
     var cutoff = windowCutoff();
     return state.data.items.filter(function (item) {
       var src = srcMap[item.s];
-      if (!src || state.set.hidden[src.id]) return false;
+      if (!src || srcHidden(src)) return false;
       if (cutoff && (!item.d || item.d < cutoff)) return false;
       if (state.source ? src.id !== state.source : !inTopic(src, state.topic)) return false;
       var k = keyOf(item.u);
@@ -521,7 +544,7 @@
   function renderTabs() {
     var present = { all: true };
     state.data.sources.forEach(function (src) {
-      if (state.set.hidden[src.id]) return;
+      if (srcHidden(src)) return;
       present[src.topic] = true;
       if (src.pod) present.pods = true;
       if (isReddit(src)) present.reddit = true;
@@ -863,11 +886,18 @@
       { label: 'Newsletters', match: function (s) { return s.topic === 'newsletters'; } },
       { label: 'National', match: function (s) { return !s.local && s.topic !== 'newsletters'; } },
     ];
+    /* One switch per outlet, not per feed: a secondary feed (the 7Days email
+       edition, the legacy VPR feed) has no row of its own — its outlet's
+       switch covers it. A secondary whose canonical source somehow left the
+       payload keeps its row, so nothing becomes unmutable. */
+    var srcIds = {};
+    state.data.sources.forEach(function (s) { srcIds[s.id] = 1; });
     var togglesHtml = groups.map(function (g) {
-      var rows = state.data.sources.filter(g.match)
+      var rows = state.data.sources
+        .filter(function (s) { return g.match(s) && !(s.og && srcIds[s.og]); })
         .sort(function (a, b) { return a.short.localeCompare(b.short); })
         .map(function (src) {
-          var off = !!state.set.hidden[src.id];
+          var off = srcHidden(src);
           return '<button class="srctog' + (off ? ' off' : '') + '" data-togsrc="' + src.id +
             '" aria-pressed="' + !off + '"><span class="nm">' + esc(src.short) +
             '</span><span class="eye">' + (off ? '✕' : '👁') + '</span></button>';
@@ -1349,7 +1379,12 @@
           }).join('') + '</div>'
         : '') + '</div>';
 
-    var html = bar;
+    var html = '<a class="tvbanner" href="all-day/#watch">' +
+      '<span class="tvbanner-icon" aria-hidden="true">📺</span>' +
+      '<span class="tvbanner-body"><b>BTown TV — the curated edition.</b> ' +
+      'One page every evening, plays on your TV.</span>' +
+      '<span class="tvbanner-go" aria-hidden="true">→</span></a>' +
+      '<p class="empty tv-pointer" style="margin:10px auto 0">This tab is the raw wire — every upload, unfiltered.</p>' + bar;
     if (shelves) {
       /* national leads (the production values), local sits between national
          blocks, and anything too thin to stand alone pools at the end —
@@ -1511,16 +1546,20 @@
     var item = byKey[k];
     var src = item && srcMap[item.s];
     if (!src) return;
+    /* mute the outlet, not the one feed you happened to swipe: muting a
+       7Days headline has to silence Seven Days, and say so */
+    var outlet = srcMap[outletOf(src)] || src;
+    var kin = outletKin(outlet.id);
     confirmBox({
-      title: 'Mute ' + src.short + '?',
-      body: 'You won’t see ' + src.short + ' anywhere on the page. Bring it back any time in Settings → Sources.',
+      title: 'Mute ' + outlet.short + '?',
+      body: 'You won’t see ' + outlet.short + ' anywhere on the page. Bring it back any time in Settings → Sources.',
       yes: 'Mute',
       onYes: function () {
         learnedGestures();
-        state.set.hidden[src.id] = 1;
+        kin.forEach(function (id) { state.set.hidden[id] = 1; });
         saveSettings(); renderSettingsPanel(); render();
-        toastUndo('Muted ' + src.short, function () {
-          delete state.set.hidden[src.id];
+        toastUndo('Muted ' + outlet.short, function () {
+          kin.forEach(function (id) { delete state.set.hidden[id]; });
           saveSettings(); renderSettingsPanel(); render();
         });
       },
@@ -1771,8 +1810,8 @@
     if (ns.off) return '';
     var inner = (ns.n % 3 === 0)
       ? 'You’ve been reading a lot. Take a break — ' +
-        '<a href="https://play.btownbrief.com?utm_source=pulse&utm_medium=nudge" target="_blank" rel="noopener">go play something at the Btown Digital Arcade →</a>'
-      : 'You’ve been reading a lot. How about reading the Btown Brief? ' +
+        '<a href="https://play.btownbrief.com?utm_source=pulse&utm_medium=nudge" target="_blank" rel="noopener">go play something at the BTown Digital Arcade →</a>'
+      : 'You’ve been reading a lot. How about reading the BTown Brief? ' +
         '<a href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=pulse-nudge" target="_blank" rel="noopener">Burlington in your inbox, a few mornings a week — free →</a>';
     return '<div class="nudge">' + inner +
       '<button class="nudge-x" data-nudge-dismiss aria-label="Dismiss for today">✕</button></div>';
@@ -2111,8 +2150,13 @@
         return;
       }
       if (el.dataset.togsrc !== undefined) {
-        if (state.set.hidden[el.dataset.togsrc]) delete state.set.hidden[el.dataset.togsrc];
-        else state.set.hidden[el.dataset.togsrc] = 1;
+        var togId = el.dataset.togsrc;
+        var togOff = !state.set.hidden[togId];
+        /* the switch is the outlet's, so it writes every feed the outlet has */
+        outletKin(togId).forEach(function (id) {
+          if (togOff) state.set.hidden[id] = 1;
+          else delete state.set.hidden[id];
+        });
         saveSettings(); renderSettingsPanel(); render();
         return;
       }

@@ -5,7 +5,7 @@ name: Curate GoodBurlington queue
 # Stephen posts everything himself from goodburlington-queue.html — this
 # job never touches Reddit with credentials and needs no Reddit secrets.
 # Reads use public listing JSON (works from Actions lately) with the
-# Inoreader RSS streams as fallback. Without ANTHROPIC_API_KEY the script
+# Inoreader RSS streams as fallback. Without OPENROUTER_API_KEY the script
 # keeps the last good queue — nothing unjudged is ever queued.
 
 on:
@@ -30,7 +30,7 @@ jobs:
 
       - name: Curate queue
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python3 scripts/queue_goodburlington.py
 
       - name: Commit if changed

@@ -1,14 +1,15 @@
 /* Best of r/burlington — renders data/best-of-reddit.json (18 categories of
-   merged 2023+2025 "best X" questions, repeat asks collapsed into one card
-   with all their threads — Tier 1: a link directory, no named-winner
-   extraction, see SUMMARY-best-of-reddit.md), with Seven Daysies picks shown
-   alongside for comparison where one exists, plus a "Recently on
-   r/GoodBurlington" strip from data/reddit.json. */
+   merged 2023+2025 "best X" questions plus fresh 2026 asks mined from the
+   sub, repeat asks collapsed into one card with all their threads — Tier 1:
+   a link directory, no named-winner extraction, see
+   SUMMARY-best-of-reddit.md), with Seven Daysies picks shown alongside for
+   comparison where one exists, plus a "Recently on r/GoodBurlington" strip
+   from data/reddit.json. */
 (function () {
   'use strict';
 
   var esc = window.BTBC.esc;
-  var YEAR_LABEL = { 2025: '2025', 2023: '2023' };
+  var YEAR_LABEL = { 2026: '2026', 2025: '2025', 2023: '2023' };
 
   function fmtCount(n, singular, plural) {
     return n + ' ' + (n === 1 ? singular : (plural || singular + 's'));
@@ -148,6 +149,20 @@
       allDetails().forEach(function (d) { d.open = expand; });
       toggleBtn.textContent = expand ? 'Collapse all' : 'Expand all';
     });
+
+    // Deep links: best-of-reddit.html#cat-automotive (the hub's "Who do I call?"
+    // question links straight into categories) should land on that category
+    // OPEN, not on a closed summary line. The browser scrolls to the id on its
+    // own; we just open it and nudge the scroll once the content is there.
+    function openFromHash() {
+      var m = /^#cat-([\w-]+)$/.exec(location.hash || '');
+      var target = m && document.getElementById('cat-' + m[1]);
+      if (!target) return;
+      target.open = true;
+      target.scrollIntoView({ block: 'start' });
+    }
+    openFromHash();
+    window.addEventListener('hashchange', openFromHash);
 
     // Clicking a jump chip should open its category, not just scroll past a
     // closed one.

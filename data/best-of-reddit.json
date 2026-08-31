@@ -1,6 +1,7 @@
 {
   "generated": "2026-07-17",
-  "note": "Tier 1: a categorized directory of recurring “best X” questions r/burlington has already asked, merged from the 2023 and 2025 community list threads (repeat questions collapsed into one card each). Each card links to its Reddit thread(s) — the crowd's answer lives in the comments, one click away — and, where Seven Days readers picked a winner in the same category, shows the Seven Daysies pick for comparison.",
+  "updated": "2026-08-30",
+  "note": "Tier 1: a categorized directory of recurring “best X” questions r/burlington has already asked, merged from the 2023 and 2025 community list threads (repeat questions collapsed into one card each) plus fresh asks mined from the sub since the 2025 list. Each card links to its Reddit thread(s) — the crowd's answer lives in the comments, one click away — and, where Seven Days readers picked a winner in the same category, shows the Seven Daysies pick for comparison.",
   "sources": {
     "2025_edition": {
       "title": "Best of r/burlington List - 2025 Edition",
@@ -19,12 +20,14 @@
     }
   },
   "counts": {
-    "questions": 232,
-    "active": 148,
-    "2023_only": 84,
+    "questions": 262,
+    "active": 180,
+    "2023_only": 82,
     "comment_suggestions": 1,
-    "thread_links": 317,
-    "with_sevendays": 46,
+    "thread_links": 360,
+    "with_sevendays": 81,
+    "added_2026_entries": 42,
+    "added_2026_threads": 43,
     "raw_entries": 310,
     "raw_list_links": 317
   },
@@ -35,9 +38,9 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 59,
-        "2023_only": 42,
-        "total": 101
+        "active": 68,
+        "2023_only": 41,
+        "total": 109
       },
       "entries": [
         {
@@ -105,8 +108,8 @@
           "question": "Best Bakery",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-bread-bakery-44015824/",
-          "sevendays_note": "Seven Daysies 2025: August First (bread) · Mirabelles Bakery (sweets)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-bread-bakery-45337174",
+          "sevendays_note": "Seven Daysies 2026: August First (bread) · Mirabelles Bakery (sweets)",
           "sources": [
             {
               "year": 2025,
@@ -131,12 +134,27 @@
           ]
         },
         {
+          "id": "food-restaurants--best-bbq-takeout",
+          "question": "Best BBQ Takeout",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-barbecue-45341061",
+          "sevendays_note": "Seven Daysies 2026: Prohibition Pig (best barbecue)",
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uz5phv/best_bbq_takeout/",
+              "label": "Best bbq takeout"
+            }
+          ]
+        },
+        {
           "id": "food-restaurants--best-breakfast",
           "question": "Best Breakfast",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-breakfast-brunch-44015474/",
-          "sevendays_note": "Seven Daysies 2025: Sneakers Bistro",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-breakfast-brunch-45336592",
+          "sevendays_note": "Seven Daysies 2026: Sneakers Bistro (best breakfast/brunch)",
           "sources": [
             {
               "year": 2025,
@@ -170,9 +188,14 @@
           "question": "Best Burger",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-burger-44016820/",
-          "sevendays_note": "Seven Daysies 2025: The Farmhouse Tap & Grill",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-burger-45341049",
+          "sevendays_note": "Seven Daysies 2026: The Farmhouse Tap & Grill",
           "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1ty2bjh/best_burger_chittenden_county/",
+              "label": "Best burger chittenden county"
+            },
             {
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/15eq1oy/looking_for_the_best_burger/",
@@ -215,8 +238,8 @@
           "question": "Best Burrito",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-mexican-restaurant-44015834/",
-          "sevendays_note": "Seven Daysies 2025: Taco Gordo (best Mexican restaurant)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-mexican-restaurant-45340256",
+          "sevendays_note": "Seven Daysies 2026: Taco Gordo (best Mexican restaurant)",
           "sources": [
             {
               "year": 2025,
@@ -271,6 +294,21 @@
           ]
         },
         {
+          "id": "food-restaurants--best-calzone",
+          "question": "Best Calzone",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uszwrr/best_calzone_in_burlingtonwinooski_area/",
+              "label": "Best calzone in burlingtonwinooski area"
+            }
+          ]
+        },
+        {
           "id": "food-restaurants--best-challah",
           "question": "Best Challah",
           "status": "active",
@@ -282,6 +320,26 @@
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1hfm0jj/best_challah_in_burlington/",
               "label": "Best challah in burlington"
+            }
+          ]
+        },
+        {
+          "id": "food-restaurants--best-cheap-places-for-food",
+          "question": "Best Cheap Places for Food",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uy7isk/best_cheap_food_in_burlington/",
+              "label": "Best cheap food in burlington"
+            },
+            {
+              "year": 2023,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/ug76gb/best_cheap_places_for_food/",
+              "label": "Best cheap places for food"
             }
           ]
         },
@@ -335,8 +393,8 @@
           "question": "Best Chinese Restaurant",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-chinese-restaurant-44016120/",
-          "sevendays_note": "Seven Daysies 2025: A Single Pebble",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-chinese-restaurant-45340260",
+          "sevendays_note": "Seven Daysies 2026: A Single Pebble",
           "sources": [
             {
               "year": 2025,
@@ -356,6 +414,21 @@
           ]
         },
         {
+          "id": "food-restaurants--best-chocolate-mousse",
+          "question": "Best Chocolate Mousse",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vkz1zg/where_to_get_chocolate_mousse/",
+              "label": "Where to get chocolate mousse"
+            }
+          ]
+        },
+        {
           "id": "food-restaurants--best-cider-donuts",
           "question": "Best Cider Donuts",
           "status": "active",
@@ -367,6 +440,21 @@
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/16womir/best_cider_donuts/",
               "label": "Best cider donuts"
+            }
+          ]
+        },
+        {
+          "id": "food-restaurants--best-cooking-classes",
+          "question": "Best Cooking Classes",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1w0s0u5/cooking_classes/",
+              "label": "Cooking classes"
             }
           ]
         },
@@ -390,8 +478,8 @@
           "question": "Best Creemee",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-creemee-44016853/",
-          "sevendays_note": "Seven Daysies 2025: Palmer Lane Maple",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-creemee-45341079",
+          "sevendays_note": "Seven Daysies 2026: Palmer Lane Maple",
           "sources": [
             {
               "year": 2025,
@@ -435,8 +523,8 @@
           "question": "Best Dessert",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-restaurant-for-dessert-45336933",
+          "sevendays_note": "Seven Daysies 2026: Honey Road (best restaurant for dessert)",
           "sources": [
             {
               "year": 2025,
@@ -455,8 +543,8 @@
           "question": "Best Donuts",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-doughnuts-44016848/",
-          "sevendays_note": "Seven Daysies 2025: Madeleine’s Bakery",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-doughnuts-45341073",
+          "sevendays_note": "Seven Daysies 2026: Madeleine’s Bakery",
           "sources": [
             {
               "year": 2025,
@@ -472,6 +560,21 @@
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1kil4p5/anywhere_to_get_good_fresh_gluten_free_donuts_in/",
               "label": "Anywhere to get good fresh gluten free donuts in…"
+            }
+          ]
+        },
+        {
+          "id": "food-restaurants--best-eggplant-parm-sub",
+          "question": "Best Eggplant Parm Sub",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uhebkc/looking_for_the_best_eggplant_parm_sub_for_my/",
+              "label": "Looking for the best eggplant parm sub for my"
             }
           ]
         },
@@ -502,6 +605,21 @@
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1j7xago/best_frozen_pizza/",
               "label": "Best frozen pizza"
+            }
+          ]
+        },
+        {
+          "id": "food-restaurants--best-fruit-tart",
+          "question": "Best Fruit Tart",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1u08s71/wheres_the_best_place_for_a_fruit_tart_in_or/",
+              "label": "Wheres the best place for a fruit tart in or"
             }
           ]
         },
@@ -540,8 +658,8 @@
           "question": "Best Ice Cream",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-housemade-ice-cream-or-gelato-44016857/",
-          "sevendays_note": "Seven Daysies 2025: Shy Guy Gelato",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-housemade-ice-cream-or-gelato-45341083",
+          "sevendays_note": "Seven Daysies 2026: Shy Guy Gelato",
           "sources": [
             {
               "year": 2025,
@@ -570,8 +688,8 @@
           "question": "Best Indian Food",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-indian-nepali-restaurant-44016131/",
-          "sevendays_note": "Seven Daysies 2025: Aromas of India by Sarita’s Kitchen (best Indian/Nepali)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-indian-nepali-restaurant-45382128",
+          "sevendays_note": "Seven Daysies 2026: Aromas of India by Sarita’s Kitchen (best Indian/Nepali)",
           "sources": [
             {
               "year": 2025,
@@ -590,8 +708,8 @@
           "question": "Best Italian Food",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-italian-restaurant-44016138/",
-          "sevendays_note": "Seven Daysies 2025: Trattoria Delia",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-italian-restaurant-45340272",
+          "sevendays_note": "Seven Daysies 2026: Trattoria Delia",
           "sources": [
             {
               "year": 2025,
@@ -620,8 +738,8 @@
           "question": "Best Lunch Sandwich",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-sandwiches-45340887",
+          "sevendays_note": "Seven Daysies 2026: Martone’s Market & Café (best sandwiches)",
           "sources": [
             {
               "year": 2025,
@@ -635,8 +753,8 @@
           "question": "Best Lunch Spot",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-lunch-45336597",
+          "sevendays_note": "Seven Daysies 2026: Martone’s Market & Café (best lunch)",
           "sources": [
             {
               "year": 2025,
@@ -680,8 +798,8 @@
           "question": "Best Momos",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-dumplings-or-momos-45341069",
+          "sevendays_note": "Seven Daysies 2026: Hong’s Chinese Dumplings (best dumplings or momos)",
           "sources": [
             {
               "year": 2025,
@@ -721,6 +839,21 @@
           ]
         },
         {
+          "id": "food-restaurants--best-new-vegetarian-restaurant",
+          "question": "Best New Vegetarian Restaurant",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uz7i95/best_newer_vegetarian_friendly_restaurant/",
+              "label": "Best newer vegetarian friendly restaurant"
+            }
+          ]
+        },
+        {
           "id": "food-restaurants--best-pad-thai",
           "question": "Best Pad Thai",
           "status": "active",
@@ -740,8 +873,8 @@
           "question": "Best Pho",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-vietnamese-restaurant-45340268",
+          "sevendays_note": "Seven Daysies 2026: Pho Hong (best Vietnamese restaurant)",
           "sources": [
             {
               "year": 2025,
@@ -760,8 +893,8 @@
           "question": "Best Pizza",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-pizza-restaurant-44016808/",
-          "sevendays_note": "Seven Daysies 2025: Folino’s",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-pizza-restaurant-45341037",
+          "sevendays_note": "Seven Daysies 2026: Folino’s",
           "sources": [
             {
               "year": 2025,
@@ -805,8 +938,8 @@
           "question": "Best Restaurant",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-restaurant-44015450/",
-          "sevendays_note": "Seven Daysies 2025: Honey Road",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-restaurant-45320970",
+          "sevendays_note": "Seven Daysies 2026: Honey Road",
           "sources": [
             {
               "year": 2025,
@@ -859,6 +992,11 @@
           "sevendays_note": null,
           "sources": [
             {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vwkei1/best_places_to_get_dinner_alone/",
+              "label": "Best places to get dinner alone"
+            },
+            {
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1k3zubn/places_to_dine_alone/",
               "label": "Places to dine alone"
@@ -895,8 +1033,8 @@
           "question": "Best Sandwich Shop",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-sandwiches-44016803/",
-          "sevendays_note": "Seven Daysies 2025: Martone’s Market & Café",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-sandwiches-45340887",
+          "sevendays_note": "Seven Daysies 2026: Martone’s Market & Café (best sandwiches)",
           "sources": [
             {
               "year": 2025,
@@ -975,8 +1113,8 @@
           "question": "Best Sushi",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-sushi-44016836/",
-          "sevendays_note": "Seven Daysies 2025: Koto Japanese Steak House",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-sushi-45341065",
+          "sevendays_note": "Seven Daysies 2026: Koto Japanese Steak House",
           "sources": [
             {
               "year": 2025,
@@ -1015,8 +1153,8 @@
           "question": "Best Syrup",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-maple-syrup-44016865/",
-          "sevendays_note": "Seven Daysies 2025: Morse Farm Maple Sugarworks",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-maple-syrup-45341091",
+          "sevendays_note": "Seven Daysies 2026: Palmer’s Sugarhouse (best maple syrup)",
           "sources": [
             {
               "year": 2025,
@@ -1035,8 +1173,8 @@
           "question": "Best Takeout",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-takeout-45336584",
+          "sevendays_note": "Seven Daysies 2026: Tiny Thai Restaurant",
           "sources": [
             {
               "year": 2025,
@@ -1065,8 +1203,8 @@
           "question": "Best Thai Food",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-thai-restaurant-44016123/",
-          "sevendays_note": "Seven Daysies 2025: Tiny Thai Restaurant",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-thai-restaurant-45340264",
+          "sevendays_note": "Seven Daysies 2026: Tiny Thai Restaurant",
           "sources": [
             {
               "year": 2025,
@@ -1080,8 +1218,8 @@
           "question": "Best Vegan",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-vegan-vegetarian-fare-44016142/",
-          "sevendays_note": "Seven Daysies 2025: Pingala Café (best vegan/vegetarian fare)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-vegan-vegetarian-fare-45340865",
+          "sevendays_note": "Seven Daysies 2026: Pingala Café (best vegan/vegetarian fare)",
           "sources": [
             {
               "year": 2025,
@@ -1092,6 +1230,21 @@
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1gexcdz/vegans_i_need_suggestions/",
               "label": "Vegans i need suggestions"
+            }
+          ]
+        },
+        {
+          "id": "food-restaurants--best-vegan-birthday-dinner",
+          "question": "Best Vegan Birthday Dinner",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vrac55/best_bday_dinner_spot_for_vegan_options/",
+              "label": "Best bday dinner spot for vegan options"
             }
           ]
         },
@@ -1115,8 +1268,8 @@
           "question": "Best Wings",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-wings-44016828/",
-          "sevendays_note": "Seven Daysies 2025: Honey Road",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-wings-45341057",
+          "sevendays_note": "Seven Daysies 2026: Honey Road",
           "sources": [
             {
               "year": 2025,
@@ -1155,8 +1308,8 @@
           "question": "Best Bagel",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-bagel-45340882",
+          "sevendays_note": "Seven Daysies 2026: Burlington Bagel Bakery",
           "sources": [
             {
               "year": 2023,
@@ -1170,8 +1323,8 @@
           "question": "Best Bagels",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-bagel-45340882",
+          "sevendays_note": "Seven Daysies 2026: Burlington Bagel Bakery",
           "sources": [
             {
               "year": 2023,
@@ -1260,28 +1413,13 @@
           "question": "Best Caterer",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-caterer-45361741",
+          "sevendays_note": "Seven Daysies 2026: Sugarsnap",
           "sources": [
             {
               "year": 2023,
               "thread_url": "https://www.reddit.com/r/burlington/comments/107i2rd/looking_for_a_good_local_caterer/",
               "label": "Looking for a good local caterer"
-            }
-          ]
-        },
-        {
-          "id": "food-restaurants--best-cheap-places-for-food",
-          "question": "Best Cheap Places for Food",
-          "status": "2023-only",
-          "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
-          "sources": [
-            {
-              "year": 2023,
-              "thread_url": "https://www.reddit.com/r/burlington/comments/ug76gb/best_cheap_places_for_food/",
-              "label": "Best cheap places for food"
             }
           ]
         },
@@ -1395,8 +1533,8 @@
           "question": "Best Doughnuts",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-doughnuts-45341073",
+          "sevendays_note": "Seven Daysies 2026: Madeleine’s Bakery",
           "sources": [
             {
               "year": 2023,
@@ -1470,8 +1608,8 @@
           "question": "Best Grocery Store",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-locally-owned-grocery-store-45336950",
+          "sevendays_note": "Seven Daysies 2026: City Market, Onion River Co-op (best locally owned grocery)",
           "sources": [
             {
               "year": 2023,
@@ -1530,8 +1668,8 @@
           "question": "Best Iced Coffee",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-cold-brew-iced-coffee-45346921",
+          "sevendays_note": "Seven Daysies 2026: Uncommon Coffee Co. (best cold-brew/iced coffee)",
           "sources": [
             {
               "year": 2023,
@@ -1560,8 +1698,8 @@
           "question": "Best Indian Restaurants",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-indian-nepali-restaurant-45382128",
+          "sevendays_note": "Seven Daysies 2026: Aromas of India by Sarita’s Kitchen (best Indian/Nepali)",
           "sources": [
             {
               "year": 2023,
@@ -1798,8 +1936,8 @@
           "question": "Best Coffee",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-coffee-shop-44023417/",
-          "sevendays_note": "Seven Daysies 2025: Uncommon Coffee Co. (best coffee shop)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-coffee-shop-45346913",
+          "sevendays_note": "Seven Daysies 2026: Uncommon Coffee Co. (best coffee shop)",
           "sources": [
             {
               "year": 2025,
@@ -1818,8 +1956,8 @@
           "question": "Best Coffee Beans",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-coffee-roaster-45346917",
+          "sevendays_note": "Seven Daysies 2026: Speeder & Earl’s Coffee (best coffee roaster)",
           "sources": [
             {
               "year": 2025,
@@ -1833,8 +1971,8 @@
           "question": "Best Coffee Shop",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-coffee-shop-44023417/",
-          "sevendays_note": "Seven Daysies 2025: Uncommon Coffee Co.",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-coffee-shop-45346913",
+          "sevendays_note": "Seven Daysies 2026: Uncommon Coffee Co.",
           "sources": [
             {
               "year": 2025,
@@ -1891,9 +2029,9 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 9,
+        "active": 11,
         "2023_only": 0,
-        "total": 9
+        "total": 11
       },
       "entries": [
         {
@@ -1901,8 +2039,8 @@
           "question": "Best Bars",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-bar-44023065/",
-          "sevendays_note": "Seven Daysies 2025: Three Needs Tap Room & Pizza Cube (best bar)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-bar-45343862",
+          "sevendays_note": "Seven Daysies 2026: Devil Takes a Holiday (best bar)",
           "sources": [
             {
               "year": 2025,
@@ -1931,8 +2069,8 @@
           "question": "Best Beer Store",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-craft-brew-selection-45343698",
+          "sevendays_note": "Seven Daysies 2026: Beverage Warehouse (best craft brew selection)",
           "sources": [
             {
               "year": 2025,
@@ -1961,8 +2099,8 @@
           "question": "Best Breweries",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-craft-brewery-44023014/",
-          "sevendays_note": "Seven Daysies 2025: Zero Gravity (best craft brewery)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-craft-brewery-45343690",
+          "sevendays_note": "Seven Daysies 2026: Zero Gravity (best craft brewery)",
           "sources": [
             {
               "year": 2025,
@@ -1981,9 +2119,14 @@
           "question": "Best Cocktail Bars",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-cocktails-44023382/",
-          "sevendays_note": "Seven Daysies 2025: Barr Hill (best cocktails)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-cocktails-45344287",
+          "sevendays_note": "Seven Daysies 2026: Devil Takes a Holiday (best cocktails)",
           "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uaks7k/is_the_best_cocktail_bar_in_the_area_across_the/",
+              "label": "Is the best cocktail bar in the area across the"
+            },
             {
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1ez1iti/best_cocktail_bar/",
@@ -2007,12 +2150,42 @@
           ]
         },
         {
-          "id": "bars-breweries--best-sport-bar",
-          "question": "Best Sport Bar",
+          "id": "bars-breweries--best-nightlife",
+          "question": "Best Nightlife",
           "status": "active",
           "notes": null,
           "sevendays_url": null,
           "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vmgeef/night_life_in_burlington_where_to_go/",
+              "label": "Night life in burlington where to go"
+            }
+          ]
+        },
+        {
+          "id": "bars-breweries--best-pi-a-colada",
+          "question": "Best Piña Colada",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1usr0zz/who_makes_the_best_pina_colada_in_burlington/",
+              "label": "Who makes the best pina colada in burlington"
+            }
+          ]
+        },
+        {
+          "id": "bars-breweries--best-sport-bar",
+          "question": "Best Sport Bar",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-sports-bar-45344280",
+          "sevendays_note": "Seven Daysies 2026: McGillicuddy’s (best sports bar)",
           "sources": [
             {
               "year": 2025,
@@ -2041,8 +2214,8 @@
           "question": "Dive Bar",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-dive-bar-44023080/",
-          "sevendays_note": "Seven Daysies 2025: Three Needs Tap Room & Pizza Cube",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/drink/best-dive-bar-45344276",
+          "sevendays_note": "Seven Daysies 2026: T. Rugg’s Tavern",
           "sources": [
             {
               "year": 2025,
@@ -2069,8 +2242,8 @@
           "question": "Best Dispensary",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-cannabis-dispensary-43992087/",
-          "sevendays_note": "Seven Daysies 2025: Bern Gallery Smoke Shop & Cannabis",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-cannabis-dispensary-45350932",
+          "sevendays_note": "Seven Daysies 2026: Upstate Elevator",
           "sources": [
             {
               "year": 2025,
@@ -2097,11 +2270,41 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 8,
+        "active": 17,
         "2023_only": 6,
-        "total": 14
+        "total": 23
       },
       "entries": [
+        {
+          "id": "grocery-retail-shopping--best-antique-shops",
+          "question": "Best Antique Shops",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-antique-store-45350954",
+          "sevendays_note": "Seven Daysies 2026: Barge Canal Market (best antique store)",
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vopr7c/best_antique_shops_within_an_hours_drive_of/",
+              "label": "Best antique shops within an hours drive of"
+            }
+          ]
+        },
+        {
+          "id": "grocery-retail-shopping--best-budget-appliance-store",
+          "question": "Best Budget Appliance Store",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1tst057/best_place_to_buy_quality_washerdryer_on_a_budget/",
+              "label": "Best place to buy quality washerdryer on a budget…"
+            }
+          ]
+        },
         {
           "id": "grocery-retail-shopping--best-butcher",
           "question": "Best Butcher",
@@ -2123,12 +2326,77 @@
           ]
         },
         {
+          "id": "grocery-retail-shopping--best-candy-shop",
+          "question": "Best Candy Shop",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1w19cp8/best_candy_shops_in_the_area_particularly_for/",
+              "label": "Best candy shops in the area particularly for"
+            }
+          ]
+        },
+        {
+          "id": "grocery-retail-shopping--best-clothing-alterations",
+          "question": "Best Clothing Alterations",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1tqn4g8/where_can_i_get_clothes_altered/",
+              "label": "Where can i get clothes altered"
+            }
+          ]
+        },
+        {
+          "id": "grocery-retail-shopping--best-farm-stand",
+          "question": "Best Farm Stand",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-farmstand-45337126",
+          "sevendays_note": "Seven Daysies 2026: Sam Mazza’s Farm Market, Bakery and Greenhouses (best farmstand)",
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uvkvk3/favorite_farm_stands/",
+              "label": "Favorite farm stands"
+            },
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1w2hb36/where_can_i_buy_good_local_sweet_corn/",
+              "label": "Where can i buy good local sweet corn"
+            }
+          ]
+        },
+        {
+          "id": "grocery-retail-shopping--best-frame-shop",
+          "question": "Best Frame Shop",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vqweb7/best_frame_shop/",
+              "label": "Best frame shop"
+            }
+          ]
+        },
+        {
           "id": "grocery-retail-shopping--best-grocery-store",
           "question": "Best Grocery Store",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-locally-owned-grocery-store-44015501/",
-          "sevendays_note": "Seven Daysies 2025: City Market, Onion River Co-op (best locally owned grocery)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/food/best-locally-owned-grocery-store-45336950",
+          "sevendays_note": "Seven Daysies 2026: City Market, Onion River Co-op (best locally owned grocery)",
           "sources": [
             {
               "year": 2025,
@@ -2154,6 +2422,56 @@
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1ifa4i2/im_trying_to_switch_my_focus_to_something_good/",
               "label": "Im trying to switch my focus to something good"
+            }
+          ]
+        },
+        {
+          "id": "grocery-retail-shopping--best-place-to-buy-lego",
+          "question": "Best Place to Buy LEGO",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-childrens-toy-store-45350884",
+          "sevendays_note": "Seven Daysies 2026: Turner Toys (best children’s toy store)",
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1ttcv23/where_to_buy_legos/",
+              "label": "Where to buy legos"
+            }
+          ]
+        },
+        {
+          "id": "grocery-retail-shopping--best-place-to-buy-pok-mon-cards",
+          "question": "Best Place to Buy Pokémon Cards",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1tud56e/where_to_buy_pokemon/",
+              "label": "Where to buy pokemon"
+            },
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1v97v45/does_anyone_know_where_to_buy_pokemon_bulk_cards/",
+              "label": "Does anyone know where to buy pokemon bulk cards…"
+            }
+          ]
+        },
+        {
+          "id": "grocery-retail-shopping--best-place-to-sell-gold-jewelry",
+          "question": "Best Place to Sell Gold & Jewelry",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vxj3ss/selling_old_gold_jewellery_in_burlington_looking/",
+              "label": "Selling old gold jewellery in burlington looking…"
             }
           ]
         },
@@ -2212,8 +2530,8 @@
           "question": "Best Thrift Store",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-secondhand-clothing-43971414/",
-          "sevendays_note": "Seven Daysies 2025: Dirt Chic (secondhand) · Old Gold (vintage)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-secondhand-clothing-store-45350874",
+          "sevendays_note": "Seven Daysies 2026: ReSOURCE (secondhand) · Old Gold (vintage)",
           "sources": [
             {
               "year": 2025,
@@ -2237,8 +2555,8 @@
           "question": "Best Thrifting",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-secondhand-clothing-43971414/",
-          "sevendays_note": "Seven Daysies 2025: Dirt Chic (secondhand) · Old Gold (vintage)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-secondhand-clothing-store-45350874",
+          "sevendays_note": "Seven Daysies 2026: ReSOURCE (secondhand) · Old Gold (vintage)",
           "sources": [
             {
               "year": 2025,
@@ -2257,8 +2575,8 @@
           "question": "Best Florist",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-florist-45361751",
+          "sevendays_note": "Seven Daysies 2026: Claussen’s Florist, Greenhouse & Perennial Farm",
           "sources": [
             {
               "year": 2023,
@@ -2360,8 +2678,8 @@
           "question": "Best Barbershop",
           "status": "comment-suggestion",
           "notes": "Suggested in a comment on the 2025 list thread rather than in its own question thread — one to watch, not a settled crowd answer.",
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-barbershop-43962421/",
-          "sevendays_note": "Seven Daysies 2025: Imperial Barber Co.",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-barbershop-45361766",
+          "sevendays_note": "Seven Daysies 2026: Imperial Barber Co.",
           "sources": [
             {
               "year": 2025,
@@ -2420,9 +2738,14 @@
           "question": "Best Hair Stylist",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-salon-43962417/",
-          "sevendays_note": "Seven Daysies 2025: Indigo (best salon)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-salon-45361759",
+          "sevendays_note": "Seven Daysies 2026: Indigo (best salon)",
           "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1voiti9/any_good_hair_salons/",
+              "label": "Any good hair salons"
+            },
             {
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1dzaup5/best_blonde_hair_stylist/",
@@ -2475,8 +2798,8 @@
           "question": "Best Manicure Place",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-manicure-pedicure-43962426/",
-          "sevendays_note": "Seven Daysies 2025: Perfect Nails & Co (best manicure/pedicure)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-manicure-pedicure-45361776",
+          "sevendays_note": "Seven Daysies 2026: Blossom Nail Salon (best manicure/pedicure)",
           "sources": [
             {
               "year": 2025,
@@ -2490,8 +2813,8 @@
           "question": "Best Pedicure Place",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-manicure-pedicure-43962426/",
-          "sevendays_note": "Seven Daysies 2025: Perfect Nails & Co (best manicure/pedicure)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-manicure-pedicure-45361776",
+          "sevendays_note": "Seven Daysies 2026: Blossom Nail Salon (best manicure/pedicure)",
           "sources": [
             {
               "year": 2025,
@@ -2510,8 +2833,8 @@
           "question": "Best Piercing Place",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-place-to-get-body-art-43969796/",
-          "sevendays_note": "Seven Daysies 2025: Yankee Tattoo (best place to get body art)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-place-to-get-body-art-45361786",
+          "sevendays_note": "Seven Daysies 2026: Imperial Tattoo Co. (best place to get body art)",
           "sources": [
             {
               "year": 2025,
@@ -2530,8 +2853,8 @@
           "question": "Best Spa",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-day-spa-43970183/",
-          "sevendays_note": "Seven Daysies 2025: Oasis Day Spa",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-day-spa-45382142",
+          "sevendays_note": "Seven Daysies 2026: Oasis Day Spa",
           "sources": [
             {
               "year": 2025,
@@ -2593,9 +2916,9 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 2,
+        "active": 4,
         "2023_only": 1,
-        "total": 3
+        "total": 5
       },
       "entries": [
         {
@@ -2603,13 +2926,48 @@
           "question": "Best (place for) Glasses",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-eyeglasses-store-45350888",
+          "sevendays_note": "Seven Daysies 2026: 802 Eye Care (best eyeglasses store)",
           "sources": [
             {
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1bjit0c/best_place_for_glasses/",
               "label": "Best place for glasses"
+            }
+          ]
+        },
+        {
+          "id": "health-wellness--best-dentist",
+          "question": "Best Dentist",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vkh9wy/dentist_recommendation/",
+              "label": "Dentist recommendation"
+            },
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vz71ae/dental_cleaning/",
+              "label": "Dental cleaning"
+            }
+          ]
+        },
+        {
+          "id": "health-wellness--best-ent-doctor",
+          "question": "Best ENT Doctor",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1w1b4dg/ent_surgeon/",
+              "label": "Ent surgeon"
             }
           ]
         },
@@ -2651,18 +3009,33 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 3,
+        "active": 4,
         "2023_only": 1,
-        "total": 4
+        "total": 5
       },
       "entries": [
+        {
+          "id": "pets--best-dog-swimming-spot",
+          "question": "Best Dog Swimming Spot",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vcznb5/best_swimming_spots_for_dogs/",
+              "label": "Best swimming spots for dogs"
+            }
+          ]
+        },
         {
           "id": "pets--best-dog-training",
           "question": "Best Dog Training",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-dog-training-company-45361348",
+          "sevendays_note": "Seven Daysies 2026: Gold Star Dog Training (best dog training company)",
           "sources": [
             {
               "year": 2025,
@@ -2676,8 +3049,8 @@
           "question": "Best Pet Store",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-pet-supply-store-43992485/",
-          "sevendays_note": "Seven Daysies 2025: Pet Food Warehouse (best pet-supply store)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-pet-supply-store-45350976",
+          "sevendays_note": "Seven Daysies 2026: Pet Food Warehouse (best pet-supply store)",
           "sources": [
             {
               "year": 2025,
@@ -2691,9 +3064,14 @@
           "question": "Best Vet",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-veterinarian-animal-hospital-43961647/",
-          "sevendays_note": "Seven Daysies 2025: Burlington Emergency & Veterinary Specialists",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-veterinarian-animal-hospital-45360903",
+          "sevendays_note": "Seven Daysies 2026: Burlington Emergency & Veterinary Specialists",
           "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vy6nu6/veterinarian_recs_for_burlington_area/",
+              "label": "Veterinarian recs for burlington area"
+            },
             {
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/18y1gnd/best_vet/",
@@ -2744,9 +3122,9 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 5,
+        "active": 6,
         "2023_only": 0,
-        "total": 5
+        "total": 6
       },
       "entries": [
         {
@@ -2823,6 +3201,21 @@
               "label": "What is the best way to find a rental in"
             }
           ]
+        },
+        {
+          "id": "housing-rentals--best-property-management-company",
+          "question": "Best Property Management Company",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vp13lb/who_is_the_best_property_management_company/",
+              "label": "Who is the best property management company"
+            }
+          ]
         }
       ]
     },
@@ -2832,8 +3225,8 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 4,
-        "2023_only": 7,
+        "active": 5,
+        "2023_only": 6,
         "total": 11
       },
       "entries": [
@@ -2857,9 +3250,14 @@
           "question": "Best Auto Mechanic",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-auto-repair-43970327/",
-          "sevendays_note": "Seven Daysies 2025: Girlington Garage (best auto repair)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-auto-repair-45362000",
+          "sevendays_note": "Seven Daysies 2026: Girlington Garage (best auto repair)",
           "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vyd8gr/toyota_service_provider/",
+              "label": "Toyota service provider"
+            },
             {
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1grgn6c/mechanics_that_work_on_older_cars/",
@@ -2873,12 +3271,32 @@
           ]
         },
         {
+          "id": "automotive--best-car-wash",
+          "question": "Best Car Wash",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uxcjct/best_touchless_car_wash/",
+              "label": "Best touchless car wash"
+            },
+            {
+              "year": 2023,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/11haera/car_wash/",
+              "label": "Car wash"
+            }
+          ]
+        },
+        {
           "id": "automotive--best-honest-auto-mechanic",
           "question": "Best Honest Auto Mechanic",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-auto-repair-43970327/",
-          "sevendays_note": "Seven Daysies 2025: Girlington Garage (best auto repair)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-auto-repair-45362000",
+          "sevendays_note": "Seven Daysies 2026: Girlington Garage (best auto repair)",
           "sources": [
             {
               "year": 2025,
@@ -2892,8 +3310,8 @@
           "question": "Best Shop for Oil Change",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-place-to-get-your-oil-changed-45362004",
+          "sevendays_note": "Seven Daysies 2026: Girlington Garage (best place to get your oil changed)",
           "sources": [
             {
               "year": 2025,
@@ -2914,21 +3332,6 @@
               "year": 2023,
               "thread_url": "https://www.reddit.com/r/burlington/comments/zhibqr/body_shop_recommendations/",
               "label": "Body shop recommendations"
-            }
-          ]
-        },
-        {
-          "id": "automotive--best-car-wash",
-          "question": "Best Car Wash",
-          "status": "2023-only",
-          "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
-          "sources": [
-            {
-              "year": 2023,
-              "thread_url": "https://www.reddit.com/r/burlington/comments/11haera/car_wash/",
-              "label": "Car wash"
             }
           ]
         },
@@ -2997,8 +3400,8 @@
           "question": "Best Winter Tire Changeover",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-place-to-get-your-tires-changed-45362008",
+          "sevendays_note": "Seven Daysies 2026: Vermont Tire (best place to get your tires changed)",
           "sources": [
             {
               "year": 2023,
@@ -3015,9 +3418,9 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 13,
+        "active": 15,
         "2023_only": 2,
-        "total": 15
+        "total": 17
       },
       "entries": [
         {
@@ -3051,12 +3454,27 @@
           ]
         },
         {
+          "id": "home-practical-services--best-contractor",
+          "question": "Best Contractor",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-household-general-contractor-45361523",
+          "sevendays_note": "Seven Daysies 2026: Lewis Creek Builders (best household general contractor)",
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1urslm0/structural_engineercontractor_recommendation/",
+              "label": "Structural engineercontractor recommendation"
+            }
+          ]
+        },
+        {
           "id": "home-practical-services--best-credit-union",
           "question": "Best Credit Union",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-bank-credit-union-43961674/",
-          "sevendays_note": "Seven Daysies 2025: EastRise Credit Union (best bank/credit union)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-bank-credit-union-45361353",
+          "sevendays_note": "Seven Daysies 2026: EastRise Credit Union (best bank/credit union)",
           "sources": [
             {
               "year": 2025,
@@ -3109,6 +3527,11 @@
           "sevendays_note": null,
           "sources": [
             {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uuz1gb/best_home_internet/",
+              "label": "Best home internet"
+            },
+            {
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/wp0yhd/best_internet_provider_in_burlington/",
               "label": "Best internet provider in burlington"
@@ -3117,6 +3540,21 @@
               "year": 2023,
               "thread_url": "https://www.reddit.com/r/burlington/comments/wp0yhd/best_internet_provider_in_burlington/",
               "label": "Best internet provider in burlington"
+            }
+          ]
+        },
+        {
+          "id": "home-practical-services--best-pest-control",
+          "question": "Best Pest Control",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vxi662/recommendations_for_pest_control_in_chittenden/",
+              "label": "Recommendations for pest control in chittenden"
             }
           ]
         },
@@ -3170,8 +3608,8 @@
           "question": "Best Plant Shop",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-garden-center-45350972",
+          "sevendays_note": "Seven Daysies 2026: Gardener’s Supply Company (best garden center)",
           "sources": [
             {
               "year": 2025,
@@ -3283,8 +3721,8 @@
           "question": "Best Bike Shop",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-bike-shop-43992497/",
-          "sevendays_note": "Seven Daysies 2025: Old Spokes Home",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-bike-shop-45351125",
+          "sevendays_note": "Seven Daysies 2026: Old Spokes Home",
           "sources": [
             {
               "year": 2025,
@@ -3298,8 +3736,8 @@
           "question": "Best Golf Course",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-public-golf-course-43992556/",
-          "sevendays_note": "Seven Daysies 2025: Cedar Knoll Country Club (best public course)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/recreation/best-public-golf-course-45364561",
+          "sevendays_note": "Seven Daysies 2026: Cedar Knoll Country Club (best public course)",
           "sources": [
             {
               "year": 2025,
@@ -3313,8 +3751,8 @@
           "question": "Best Gym",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-health-club-gym-43970274/",
-          "sevendays_note": "Seven Daysies 2025: The EDGE (best health club/gym)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-health-club-gym-45361976",
+          "sevendays_note": "Seven Daysies 2026: The EDGE (best health club/gym)",
           "sources": [
             {
               "year": 2025,
@@ -3333,8 +3771,8 @@
           "question": "Best Lake Spots",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-place-to-swim-43992885/",
-          "sevendays_note": "Seven Daysies 2025: Lake Willoughby (best place to swim)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/recreation/best-public-place-to-swim-45364920",
+          "sevendays_note": "Seven Daysies 2026: Lake Willoughby (best public place to swim)",
           "sources": [
             {
               "year": 2025,
@@ -3363,8 +3801,8 @@
           "question": "Best Place for Snowboard Gear",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/shopping/best-ski-snowboard-shop-45351129",
+          "sevendays_note": "Seven Daysies 2026: Outdoor Gear Exchange (best ski/snowboard shop)",
           "sources": [
             {
               "year": 2025,
@@ -3423,8 +3861,8 @@
           "question": "Best Hiking Spots",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/recreation/best-day-hike-45364547",
+          "sevendays_note": "Seven Daysies 2026: Camel’s Hump (best day hike)",
           "sources": [
             {
               "year": 2023,
@@ -3468,8 +3906,8 @@
           "question": "Best Public Ice Rink",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/recreation/best-public-place-to-ice-skate-45364534",
+          "sevendays_note": "Seven Daysies 2026: Lake Morey Skate Trail (best public place to ice skate)",
           "sources": [
             {
               "year": 2023,
@@ -3531,9 +3969,9 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 4,
+        "active": 5,
         "2023_only": 4,
-        "total": 8
+        "total": 9
       },
       "entries": [
         {
@@ -3556,8 +3994,8 @@
           "question": "Best Movie Theater",
           "status": "active",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/culture/best-movie-theater-45347431",
+          "sevendays_note": "Seven Daysies 2026: Essex Cinemas",
           "sources": [
             {
               "year": 2025,
@@ -3571,8 +4009,8 @@
           "question": "Best Music Venue",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-large-live-music-venue-44006699/",
-          "sevendays_note": "Seven Daysies 2025: Higher Ground (large) · Nectar’s (small)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/culture/best-large-live-music-venue-45347219",
+          "sevendays_note": "Seven Daysies 2026: Shelburne Museum (large) · Radio Bean (small)",
           "sources": [
             {
               "year": 2025,
@@ -3593,6 +4031,21 @@
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1jl6jmd/favorite_radio_stations_here/",
               "label": "Favorite radio stations here"
+            }
+          ]
+        },
+        {
+          "id": "arts-culture-entertainment--best-recording-studio",
+          "question": "Best Recording Studio",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vxhvyy/looking_for_a_studio_or_home_studio_to_record/",
+              "label": "Looking for a studio or home studio to record"
             }
           ]
         },
@@ -3646,8 +4099,8 @@
           "question": "Best Trivia Night",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/culture/best-trivia-night-45347408",
+          "sevendays_note": "Seven Daysies 2026: Zero Gravity Beer Hall",
           "sources": [
             {
               "year": 2023,
@@ -3664,9 +4117,9 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 2,
+        "active": 3,
         "2023_only": 2,
-        "total": 4
+        "total": 5
       },
       "entries": [
         {
@@ -3724,8 +4177,8 @@
           "question": "Best Tattoo Shop",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-place-to-get-body-art-43969796/",
-          "sevendays_note": "Seven Daysies 2025: Yankee Tattoo (best place to get body art)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-place-to-get-body-art-45361786",
+          "sevendays_note": "Seven Daysies 2026: Imperial Tattoo Co. (best place to get body art)",
           "sources": [
             {
               "year": 2025,
@@ -3735,12 +4188,27 @@
           ]
         },
         {
+          "id": "tattoos-piercing--best-walk-in-tattoo",
+          "question": "Best Walk-In Tattoo",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vzaukv/best_walkin_tattoo/",
+              "label": "Best walkin tattoo"
+            }
+          ]
+        },
+        {
           "id": "tattoos-piercing--best-piercing-shop",
           "question": "Best Piercing Shop",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-place-to-get-body-art-45361786",
+          "sevendays_note": "Seven Daysies 2026: Imperial Tattoo Co. (best place to get body art)",
           "sources": [
             {
               "year": 2023,
@@ -3754,8 +4222,8 @@
           "question": "Best Tattoo Artist/Shop",
           "status": "2023-only",
           "notes": null,
-          "sevendays_url": null,
-          "sevendays_note": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-place-to-get-body-art-45361786",
+          "sevendays_note": "Seven Daysies 2026: Imperial Tattoo Co. (best place to get body art)",
           "sources": [
             {
               "year": 2023,
@@ -3903,8 +4371,8 @@
           "question": "Best Hotel",
           "status": "active",
           "notes": null,
-          "sevendays_url": "https://www.sevendaysvt.com/seven-daysies-awards/best-lodging-resort-hotel-43962381/",
-          "sevendays_note": "Seven Daysies 2025: Hotel Vermont (best resort/hotel lodging)",
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/services/best-lodging-resort-hotel-45361540",
+          "sevendays_note": "Seven Daysies 2026: Hotel Vermont (best resort/hotel lodging)",
           "sources": [
             {
               "year": 2025,
@@ -3921,9 +4389,9 @@
       "sevendays_url": null,
       "sevendays_note": null,
       "counts": {
-        "active": 13,
+        "active": 16,
         "2023_only": 3,
-        "total": 16
+        "total": 19
       },
       "entries": [
         {
@@ -3938,6 +4406,21 @@
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1da9i5e/activities_with_teen_girl/",
               "label": "Activities with teen girl"
+            }
+          ]
+        },
+        {
+          "id": "visiting-dating-misc--best-alt-nerd-hangout",
+          "question": "Best Alt-Nerd Hangout",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1vromji/where_do_the_weird_alt_nerds_hang_out/",
+              "label": "Where do the weird alt nerds hang out"
             }
           ]
         },
@@ -4040,6 +4523,11 @@
           "sevendays_note": null,
           "sources": [
             {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1uvm60o/where_is_a_good_spot_for_a_refreshing_drink_and_a/",
+              "label": "Where is a good spot for a refreshing drink and a…"
+            },
+            {
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/17k17fw/best_place_to_read_a_book/",
               "label": "Best place to read a book"
@@ -4062,12 +4550,27 @@
           ]
         },
         {
-          "id": "visiting-dating-misc--best-things-not-to-miss-when-visiting-burlington",
-          "question": "Best Things Not To Miss When Visiting Burlington",
+          "id": "visiting-dating-misc--best-quirky-roadside-attraction",
+          "question": "Best Quirky Roadside Attraction",
           "status": "active",
           "notes": null,
           "sevendays_url": null,
           "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1utk0pl/best_quirky_roadside_attraction/",
+              "label": "Best quirky roadside attraction"
+            }
+          ]
+        },
+        {
+          "id": "visiting-dating-misc--best-things-not-to-miss-when-visiting-burlington",
+          "question": "Best Things Not To Miss When Visiting Burlington",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": "https://community.sevendaysvt.com/best-of/2026/recreation/best-place-to-take-an-out-of-towner-45364973",
+          "sevendays_note": "Seven Daysies 2026: Shelburne Farms (best place to take an out-of-towner)",
           "sources": [
             {
               "year": 2025,
@@ -4118,6 +4621,21 @@
               "year": 2025,
               "thread_url": "https://www.reddit.com/r/burlington/comments/1k8i2xc/things_to_explore/",
               "label": "Things to explore"
+            }
+          ]
+        },
+        {
+          "id": "visiting-dating-misc--best-way-to-meet-new-people",
+          "question": "Best Way to Meet New People",
+          "status": "active",
+          "notes": null,
+          "sevendays_url": null,
+          "sevendays_note": null,
+          "sources": [
+            {
+              "year": 2026,
+              "thread_url": "https://www.reddit.com/r/burlington/comments/1tuawcx/where_to_meet_new_people_as_someone_who_recently/",
+              "label": "Where to meet new people as someone who recently…"
             }
           ]
         },
