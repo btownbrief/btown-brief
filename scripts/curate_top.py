@@ -20,7 +20,9 @@ Two rules hold the thing honest:
     and timestamp on the page are the ones the publisher gave us.
 
 Failure posture: any API trouble logs and exits 0 without writing, so the
-workflow stays green and the branch keeps its last good list.
+workflow stays green and the branch keeps its last good list — UNLESS the
+live list has already gone stale (see give_up). One miss is normal; a list
+frozen for STALE_HOURS is a broken pipeline and fails the run so it is seen.
 
 CLI:
   --out PATH   where to write (default data/pulse-top.json)
@@ -48,6 +50,19 @@ MAX_CANDIDATES = 400
 PICK_COUNT = 25
 WHY_MAX = 90
 
+# A real answer is ~800 output tokens. The old 12000 was not headroom, it was
+# how long a runaway got to run before anyone found out: four minutes per
+# attempt. Generous against the real shape, tight against a loop.
+MAX_TOKENS = 4000
+MODEL_ATTEMPTS = 2
+
+# How stale the live list may get before this job stops pretending it is fine.
+# The schedule (10:35/15:35/20:35 UTC) has a 14h overnight gap, and GitHub
+# routinely fires crons up to an hour late — so a single missed MORNING run is
+# already checking a ~15h-old list. The limit sits just above that: one miss
+# stays green in every slot, sustained breakage goes red within a day.
+STALE_HOURS = 16
+
 SIGNALS_URL = ("https://www.inoreader.com/stream/user/1003590800/tag/"
                "Top%20Signals?n=30")
 SIGNAL_WINDOW_HOURS = 36     # newsletters are dailies; yesterday's still count
@@ -72,11 +87,20 @@ SCHEMA = {
     "properties": {
         "picks": {
             "type": "array",
+            # Bounded on purpose. An unbounded array lets a model that starts
+            # looping run until it hits max_tokens — 38k characters of repeated
+            # picks, truncated, unparseable, and four minutes of billing to
+            # find that out. The ceiling is the ask; the floor keeps a
+            # two-pick answer from being written as if it were an edition.
+            "minItems": 5,
+            "maxItems": PICK_COUNT,
             "items": {
                 "type": "object",
                 "properties": {
                     "i": {"type": "integer"},
-                    "why": {"type": "string"},
+                    # Also trimmed in validate_picks — this stops the model
+                    # writing an essay we would only throw away.
+                    "why": {"type": "string", "maxLength": WHY_MAX},
                 },
                 "required": ["i", "why"],
                 "additionalProperties": False,
@@ -381,27 +405,54 @@ def verify_signals(signals):
 # The model call, and the validation that never trusts it
 # ----------------------------------------------------------------------
 
+def ask_once(client, prompt):
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=MAX_TOKENS,
+        output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
+        # OpenRouter serves this model from ~20 providers and SEVEN OF THEM
+        # DO NOT SUPPORT structured_outputs. Routed to one of those, the
+        # schema is dropped silently — no error, no warning — and the model
+        # free-runs in reasoning mode until it burns the whole token budget
+        # and returns empty text. That is what broke this job for two days
+        # starting 2026-08-29: every run green, nothing written, the branch
+        # frozen on one stale edition. require_parameters makes OpenRouter
+        # route only to providers that honour what we sent. Never remove it.
+        extra_body={"provider": {"require_parameters": True}},
+        messages=[{"role": "user", "content": prompt}],
+    )
+    if response.stop_reason == "refusal":
+        raise RuntimeError("the model declined to answer")
+    if response.stop_reason == "max_tokens":
+        # A truncated response is not partially usable — fail loudly rather
+        # than decay into a JSON parse error.
+        raise RuntimeError("response truncated at max_tokens")
+    text = next(block.text for block in response.content if block.type == "text")
+    return json.loads(text)
+
+
 def ask_model(prompt):
+    """One retry, because a bad route is a coin flip and not a bad day.
+
+    Even with require_parameters a provider occasionally loops or returns
+    something unparseable. Measured, a single call lands about 4 times in 5;
+    a second attempt takes the odds past 95% and costs a few cents of a model
+    that is already the cheap one."""
     import anthropic
 
     client = anthropic.Anthropic(
         api_key=os.environ["OPENROUTER_API_KEY"],
         base_url=OPENROUTER_BASE_URL,
     )
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=12000,
-        output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
-        messages=[{"role": "user", "content": prompt}],
-    )
-    if response.stop_reason == "refusal":
-        raise RuntimeError("the model declined to answer")
-    if response.stop_reason == "max_tokens":
-        # adaptive thinking shares the budget with the answer — a truncated
-        # response must fail loudly, not decay into a JSON parse error
-        raise RuntimeError("response truncated at max_tokens")
-    text = next(block.text for block in response.content if block.type == "text")
-    return json.loads(text)
+    last = None
+    for attempt in range(1, MODEL_ATTEMPTS + 1):
+        try:
+            return ask_once(client, prompt)
+        except Exception as exc:  # noqa: BLE001 — retried, then reported
+            last = exc
+            print(f"curate_top: attempt {attempt}/{MODEL_ATTEMPTS} failed "
+                  f"({exc})", file=sys.stderr)
+    raise last
 
 
 def validate_picks(raw, candidates):
@@ -446,19 +497,44 @@ def build_payload(picks, generated, prev=None, archive=None):
 # Main
 # ----------------------------------------------------------------------
 
+def give_up(reason):
+    """End a run that wrote nothing, loudly if the live list has gone stale.
+
+    A single skipped run is normal and must stay green: the branch keeps its
+    last good list and the next run fixes it. What is NOT normal is the list
+    staying frozen while run after run reports success — that is how this job
+    served a two-day-old edition through 2026-08-29/30 without a single red
+    tick, and how the Pages pipeline froze for two days back in August. If
+    nothing has been written for STALE_HOURS, the job fails so it shows up.
+
+    Returns nothing; raises SystemExit(1) when the live list is stale."""
+    print(f"curate_top: {reason}", file=sys.stderr)
+    try:
+        live = fetch_pulse(TOP_URL, 30).get("generated")
+        age = (utcnow() - datetime.fromisoformat(live)).total_seconds() / 3600
+    except Exception as exc:  # noqa: BLE001 — unreadable is not stale
+        print(f"curate_top: could not age the live list ({exc})", file=sys.stderr)
+        return
+    if age > STALE_HOURS:
+        raise SystemExit(
+            f"curate_top: the live TOP list is {age:.1f}h old (limit "
+            f"{STALE_HOURS}h) and this run wrote nothing — failing so this "
+            f"is visible instead of silently serving a stale edition.")
+    print(f"curate_top: live list is {age:.1f}h old, within the "
+          f"{STALE_HOURS}h limit — leaving it in place")
+
+
 def run(args):
     try:
         payload = fetch_pulse()
     except Exception as exc:  # noqa: BLE001 — a fetch failure is not a crash
-        print(f"curate_top: could not fetch pulse.json ({exc})", file=sys.stderr)
-        return
+        return give_up(f"could not fetch pulse.json ({exc})")
 
     now_ts = int(utcnow().timestamp())
     candidates = build_candidates(payload, now_ts)
     if len(candidates) < PICK_COUNT:
-        print(f"curate_top: only {len(candidates)} candidates in the last "
-              f"{WINDOW_HOURS}h — leaving the last list in place")
-        return
+        return give_up(f"only {len(candidates)} candidates in the last "
+                       f"{WINDOW_HOURS}h")
 
     try:
         signals = verify_signals(fetch_signals(now_ts))
@@ -472,14 +548,12 @@ def run(args):
 
     try:
         answer = ask_model(build_prompt(candidates))
-    except Exception as exc:  # noqa: BLE001 — the workflow must stay green
-        print(f"curate_top: model call failed ({exc})", file=sys.stderr)
-        return
+    except Exception as exc:  # noqa: BLE001 — reported by give_up
+        return give_up(f"model call failed ({exc})")
 
     picks = validate_picks(answer.get("picks"), candidates)
     if not picks:
-        print("curate_top: no usable picks came back", file=sys.stderr)
-        return
+        return give_up("no usable picks came back")
 
     prev, archive = fetch_previous()
     write_json(args.out, build_payload(picks, utcnow(), prev, archive))
