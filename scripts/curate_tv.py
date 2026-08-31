@@ -1103,6 +1103,11 @@ def run(args):
     stats = {"candidates": {k: len(v) for k, v in pools.items() if k != "live"},
              "dropped": dropped, "picked": picked, "bench": benched}
     ordered = [pick] + [item for key in SHELF_KEYS for item in shelves.get(key, [])]
+    # the bench rests too: a "Show more" runner-up was on the page tonight,
+    # so it must not come back tomorrow (Stephen 8/24). The playlist stays
+    # `ordered` — the bench is never on the TV.
+    shown_tonight = ordered + [item for key in ["pick"] + SHELF_KEYS
+                               for item in more.get(key, [])]
     label = edition_label(now)
     today_pl = same_day_playlist(editions, label) if editions is not FETCH_FAILED else None
 
@@ -1114,7 +1119,7 @@ def run(args):
     edition = build_payload(pick, shelves, pools["live"], now, stats,
                             playlist_id or "", more)
     write_json(args.out, edition)
-    write_json(args.history, remember(history, ordered, now_ts))
+    write_json(args.history, remember(history, shown_tonight, now_ts))
     print(f"curate_tv: edition {label} -> {args.out}")
 
     fell_out = []
@@ -1328,9 +1333,12 @@ def selftest():
     assert arch["editions"][1]["edition"] == "2020-01-20"
     assert [e["edition"] for e in out] == [f"2020-01-{d:02d}" for d in range(7, 0, -1)], [e["edition"] for e in out]
 
-    mem = remember(history, [pick] + shelves["settle"], now_ts)
+    mem = remember(history, [pick] + shelves["settle"]
+                   + [v for vs in more2.values() for v in vs], now_ts)
     ids = {e["id"] for e in mem["shown"]}
     assert {"fresh000002", "fresh000007", "fresh000008"} <= ids
+    # the bench rests like the page — tonight's runner-ups are remembered
+    assert {"bench000010", "bench000003", "bench000004"} <= ids, ids
     shown, titles = history_index(mem, now_ts)
     assert shown["fresh000002"] == now_ts
     # a same-day rerun forgets today's picks (they're being replaced), keeps older
