@@ -63,7 +63,10 @@
   --radius-lg: 22px;
   --pill: 999px;
 
-  --serif: "Instrument Serif", "Lora", Georgia, serif;
+  /* Instrument Serif read spindly on the wire's pick cards and Tonight's
+     pick — hairline strokes with no middle weight. Lora is the serif the
+     rest of the site already sets its headlines in, and it has real weights. */
+  --serif: "Lora", Georgia, serif;
   /* DM Sans read thin on a phone — headlines at 500 looked washed out
      against the serif display face. Archivo is a sturdier grotesque with
      real weight at small sizes, which is what a wire of two thousand
@@ -574,7 +577,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .pick-hit { display: block; padding: 15px 15px 12px; flex: 1 1 auto; }
 .pick-foot { display: flex; align-items: center; gap: 8px; padding: 0 11px 9px; }
 .pick-title { display: block; font-family: var(--serif); font-size: 1.3rem;
-  line-height: 1.16; margin: 8px 0 7px; }
+  font-weight: 500; line-height: 1.16; margin: 8px 0 7px; }
 .pick-why { display: block; font-size: .88rem; line-height: 1.45; color: var(--ink-soft); }
 .pick.is-local { border-color: color-mix(in srgb, var(--local) 38%, transparent); }
 .picks-when { display: flex; gap: 8px; align-items: center; }
@@ -630,7 +633,7 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 .hero { display: block; width: 100%; text-align: left; }
 .hero img { width: 100%; aspect-ratio: 16/9; max-height: 140px; object-fit: cover; }
 .hero-body { display: block; padding: 10px 13px 12px; }
-.hero-title { display: block; font-family: var(--serif); font-size: 1.26rem; line-height: 1.1; margin: 3px 0 4px; }
+.hero-title { display: block; font-family: var(--serif); font-size: 1.26rem; font-weight: 500; line-height: 1.1; margin: 3px 0 4px; }
 
 /* A shelf label is a label. Legible — far bigger than the .68rem caption it
    replaces — but a serif headline block per shelf costs a whole video row
