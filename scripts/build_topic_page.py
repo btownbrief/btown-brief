@@ -219,18 +219,32 @@ def ask_model(prompt, schema, max_tokens):
         api_key=os.environ["OPENROUTER_API_KEY"],
         base_url=OPENROUTER_BASE_URL,
     )
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=max_tokens,
-        output_config={"format": {"type": "json_schema", "schema": schema}},
-        messages=[{"role": "user", "content": prompt}],
-    )
-    if response.stop_reason == "refusal":
-        raise RuntimeError("the model declined to answer")
-    if response.stop_reason == "max_tokens":
-        raise RuntimeError("response truncated at max_tokens")
-    text = next(block.text for block in response.content if block.type == "text")
-    return json.loads(text)
+    # require_parameters: without it OpenRouter may route to a provider that
+    # silently drops the schema, and the model burns max_tokens as reasoning
+    # and returns nothing — the failure that froze curate_top and curate_tv
+    # for two days (see PR #233). Never remove it.
+    last = None
+    for attempt in (1, 2):
+        try:
+            response = client.messages.create(
+                model=MODEL,
+                max_tokens=max_tokens,
+                output_config={"format": {"type": "json_schema", "schema": schema}},
+                extra_body={"provider": {"require_parameters": True}},
+                messages=[{"role": "user", "content": prompt}],
+            )
+            if response.stop_reason == "refusal":
+                raise RuntimeError("the model declined to answer")
+            if response.stop_reason == "max_tokens":
+                raise RuntimeError("response truncated at max_tokens")
+            text = next(block.text for block in response.content
+                        if block.type == "text")
+            return json.loads(text)
+        except Exception as exc:  # noqa: BLE001 — one retry, then surface
+            last = exc
+            print(f"build_topic_page: attempt {attempt}/2 failed ({exc})",
+                  file=sys.stderr)
+    raise last
 
 
 def derive_topic(headline):
