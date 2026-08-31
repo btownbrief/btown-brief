@@ -224,10 +224,10 @@ function renderTonight(root) {
     hero.innerHTML =
       '<img loading="lazy" src="' + thumb(pick.id) + '" alt="">' +
       '<span class="hero-body">' +
-        /* "pick" alone never said who picked it */
+        /* "pick" alone never said an editor stood behind it */
         '<span class="eyebrow">' + (picked.swapped
           ? 'Runner-up pick · you hid the first choice'
-          : 'Tonight’s pick · chosen by hand') + '</span>' +
+          : 'Tonight’s pick · curated') + '</span>' +
         '<span class="hero-title">' + esc(pick.t) + '</span>' +
         '<span class="v-meta">' + esc(pick.ch || '') + (pick.dur ? ' · ' + esc(pick.dur) : '') + '</span>' +
         (pick.why ? '<span class="v-why">' + esc(pick.why) + '</span>' : '') +
