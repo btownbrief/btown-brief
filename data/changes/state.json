@@ -9,19 +9,19 @@
  "beach-status": {
   "beaches": {
    "Blanchard Beach North": {
-    "status": "closed",
-    "reason": "Closed",
-    "resultTime": "2026-08-31T19:29:00+00:00"
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-09-01T15:57:00+00:00"
    },
    "Blanchard Beach South": {
-    "status": "closed",
-    "reason": "Closed",
-    "resultTime": "2026-08-31T19:30:00+00:00"
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-09-01T15:57:00+00:00"
    },
    "Blodgett Water Access Point": {
-    "status": "closed",
-    "reason": "Closed",
-    "resultTime": "2026-08-31T19:17:00+00:00"
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-09-01T17:03:00+00:00"
    },
    "Leddy Beach North": {
     "status": "closed",
@@ -34,14 +34,14 @@
     "resultTime": "2026-08-31T18:47:00+00:00"
    },
    "North Beach North": {
-    "status": "closed",
-    "reason": "Closed",
-    "resultTime": "2026-08-31T18:54:00+00:00"
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-09-01T18:08:00+00:00"
    },
    "North Beach South": {
-    "status": "closed",
-    "reason": "Closed",
-    "resultTime": "2026-08-31T18:54:00+00:00"
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-09-01T18:08:00+00:00"
    },
    "North Shore Natural Area": {
     "status": "open",
@@ -49,14 +49,14 @@
     "resultTime": "2026-08-31T16:38:00+00:00"
    },
    "Oakledge Cove": {
-    "status": "closed",
-    "reason": "Closed",
-    "resultTime": "2026-08-31T19:33:00+00:00"
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-09-01T15:27:00+00:00"
    },
    "Texaco Beach": {
-    "status": "closed",
-    "reason": "Closed",
-    "resultTime": "2026-08-31T19:09:00+00:00"
+    "status": "open",
+    "reason": "Open",
+    "resultTime": "2026-09-01T18:01:00+00:00"
    }
   }
  },
@@ -487,8 +487,8 @@
     "start": "2026-09-01T17:30:00+00:00",
     "hasAgenda": true,
     "files": [
-     "Agenda v2",
-     "Agenda Packet v2"
+     "Agenda v3",
+     "Agenda Packet v3"
     ]
    },
    "10174": {
@@ -514,8 +514,8 @@
     "start": "2026-09-02T17:30:00+00:00",
     "hasAgenda": true,
     "files": [
-     "Public Safety Committee Trespass Appeal Agenda - 26.08.28",
-     "Public Safety Committee Trespass Appeal Agenda Packet - 26.08.28"
+     "Public Safety Committee Agenda - 26.09.01v2",
+     "Public Safety Committee Agenda Packet - 26.09.01v2"
     ]
    },
    "10172": {
@@ -543,8 +543,11 @@
    "10138": {
     "name": "Tax Fairness Ad Hoc Committee",
     "start": "2026-09-03T15:00:00+00:00",
-    "hasAgenda": false,
-    "files": []
+    "hasAgenda": true,
+    "files": [
+     "Tax Fairness Ad Hoc Committee Agenda 9/3/2026 v2",
+     "Tax Fairness Ad Hoc Committee Agenda Packet 9/3/2026 v2"
+    ]
    },
    "10167": {
     "name": "CDNR Committee Meeting",
@@ -569,6 +572,48 @@
   "feeds": {
    "sevendays-news": {
     "items": [
+     {
+      "id": "https://www.sevendaysvt.com/?p=216240",
+      "title": "A Fig (or 500) Grows in Monkton at Fearless Figs",
+      "link": "https://www.sevendaysvt.com/food-drink/fooddrinkfeatures/a-fig-or-500-grows-in-monkton-at-fearless-figs/",
+      "ts": "2026-09-01T18:35:37+00:00",
+      "summary": "In Monkton, Warren Dixon of Fearless Figs cultivates more than 500 trees of the notoriously finicky Mediterranean fruit. The post A Fig (or 500) Grows in Monkton at Fearless Figs appeared first on Seven Days . (Image: Rachel Stearns)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=216235",
+      "title": "Poco in Burlington to Pause Dinner and Open for Lunch",
+      "link": "https://www.sevendaysvt.com/food-drink/foodnews/poco-in-burlington-to-pause-dinner-and-open-for-lunch/",
+      "ts": "2026-09-01T18:15:34+00:00",
+      "summary": "The sibling co-owners of the small Main Street restaurant said they look forward to “switching things up” but also attributed the shift to lack of kitchen staff. The post Poco in Burlington to Pause Dinner and Open for Lunch appeared first on Seven Days . (Image: File: Glenn Russell)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=216224",
+      "title": "Montpelier’s Ondis Simplifies Its Menu After Chef Departure",
+      "link": "https://www.sevendaysvt.com/food-drink/foodnews/montpeliers-ondis-simplifies-its-menu-after-chef-departure/",
+      "ts": "2026-09-01T18:06:12+00:00",
+      "summary": "Co-owner Emma Sanford is making locally sourced salads and hand-cut fries to pair with drinks now that James Beard-recognized Max Vogel has moved to Barr Hill. The post Montpelier’s Ondis Simplifies Its Menu After Chef Departure appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=216220",
+      "title": "Wunderkammer Biermanufaktur Launches Craftsbury Beer Garden",
+      "link": "https://www.sevendaysvt.com/food-drink/foodnews/wunderkammer-biermanufaktur-launches-craftsbury-beer-garden/",
+      "ts": "2026-09-01T17:49:49+00:00",
+      "summary": "Vasilios Gletsos has earned kudos for his “eccentric” mixed-culture beers made with local and foraged ingredients, which can be sipped this fall in his backyard. The post Wunderkammer Biermanufaktur Launches Craftsbury Beer Garden appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=216216",
+      "title": "In Memoriam: Elaine Parker, 1955-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/inmemoriam/in-memoriam-elaine-parker-1955-2026/",
+      "ts": "2026-09-01T10:00:00+00:00",
+      "summary": "Friends and family honor adventurer, artist and bicycle tour leader whose trademark response was \"How hard can it be?\" The post In Memoriam: Elaine Parker, 1955-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=216207",
+      "title": "Obituary: Shawna Alyson Lidsky: 1975-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-shawna-alyson-lidsky-1975-2026/",
+      "ts": "2026-09-01T10:00:00+00:00",
+      "summary": "Brownies were a love language for \"life of the party\" and baker who built a nationally known business from scratch The post Obituary: Shawna Alyson Lidsky: 1975-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
      {
       "id": "https://www.sevendaysvt.com/?p=216191",
       "title": "Burlington Recommends Prosecutor’s Dog Be Put Down",
@@ -596,53 +641,18 @@
       "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-margaret-ellen-roy/",
       "ts": "2026-08-31T10:00:00+00:00",
       "summary": "Nurse dedicated her career to helping others and found her greatest joy in creating memories with those she loved The post Obituary: Margaret Ellen Roy appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=216110",
-      "title": "Obituary: Larry Place, 1939-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-larry-place-1939-2026/",
-      "ts": "2026-08-31T10:00:00+00:00",
-      "summary": "Meticulous organization was a labor of love for devoted Red Sox fan who bestowed care and attention on everyone in his life The post Obituary: Larry Place, 1939-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=216037",
-      "title": "Prosecutor to Retire Amid More Complaints About Problematic Dog",
-      "link": "https://www.sevendaysvt.com/news/prosecutor-to-retire-amid-more-complaints-about-problematic-dog/",
-      "ts": "2026-08-28T17:39:14+00:00",
-      "summary": "Burlington's Animal Control Committee will hold a hearing on Monday to discuss new complaints against Diane Wheeler and her dog, Moose. The post Prosecutor to Retire Amid More Complaints About Problematic Dog appeared first on Seven Days . (Image: Pool photo by Gregory J. Lamoureux/County Courier)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/news/news-quiz-what-did-the-owner-landlord-of-dozens-of-neon-colored-houses-in-burlingtons-old-north-end-announce-he-would-do-36539606/",
-      "title": "News Quiz: What is the average size of a Vermont household?",
-      "link": "https://www.sevendaysvt.com/news/newsquiz/news-quiz/",
-      "ts": "2026-08-28T11:00:00+00:00",
-      "summary": "Answer this question and seven others in our new weekly news quiz about Vermont news. It's quick, fun and informative. The post News Quiz: What is the average size of a Vermont household? appeared first on Seven Days ."
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=216074",
-      "title": "Obituary: Susan Northrop Sperry, 1942-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-susan-northrop-sperry-1942-2026/",
-      "ts": "2026-08-28T10:00:00+00:00",
-      "summary": "Lifelong Vermonter and proud UVM graduate had a passion for history, antiques and vintage finds The post Obituary: Susan Northrop Sperry, 1942-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=216067",
-      "title": "Obituary: Barbara Rose Sheneﬁel Myers, 1933-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-barbara-rose-shene%ef%ac%81el-myers-1933-2026/",
-      "ts": "2026-08-28T10:00:00+00:00",
-      "summary": "Nurse, quilter and avid bird-watcher was always there when her family needed her the most The post Obituary: Barbara Rose Sheneﬁel Myers, 1933-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=216061",
-      "title": "Obituary: Matthew J. Parisi, 1931-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-matthew-j-parisi-1931-2026/",
-      "ts": "2026-08-28T10:00:00+00:00",
-      "summary": "\"True gentleman\" owned his own masonry business and was passionate about music, sports, antique car restoration and old movies The post Obituary: Matthew J. Parisi, 1931-2026 appeared first on Seven Days . (Image: Courtesy)"
      }
     ]
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=654151",
+      "title": "Susan N. Sperry",
+      "link": "https://vtdigger.org/2026/09/01/susan-n-sperry/",
+      "ts": "2026-09-01T18:39:00+00:00",
+      "summary": "Often described by her children as a ‘force of nature,” Susan was never without strong perfume and a wicked sense of humor. Read the story on VTDigger here: Susan N. Sperry ."
+     },
      {
       "id": "https://vtdigger.org/?p=654136",
       "title": "Vermont veterans, Guard families seek support for Defend the Guard Act",
@@ -845,13 +855,6 @@
       "link": "https://vtdigger.org/2026/08/26/watershed-moment-vermont-secures-92-7m-and-new-restrictions-for-teens-in-meta-settlement/",
       "ts": "2026-08-26T15:33:12+00:00",
       "summary": "“Our priority is to get the harm to stop,” Clark said Wednesday, calling the required changes to Facebook and Instagram “incredibly useful.” Read the story on VTDigger here: ‘Watershed moment’: Vermont secures $92.7M and new restrictions for teens in Meta settlement ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=653625",
-      "title": "Neema starts at Saint Michael’s College to pursue a career in social work",
-      "link": "https://vtdigger.org/2026/08/26/neema-starts-at-saint-michaels-college-to-pursue-a-career-in-social-work/",
-      "ts": "2026-08-26T14:23:00+00:00",
-      "summary": "Neema Isidore came to Vermont from Burundi, then rebuilt her life again after a traumatic brain injury a few years later. This week, she starts at Saint Michael's College on a full scholarship—determined to be like the social worker who was once there for her. Read the story on VTDigger here: Neema starts at Saint Michael’s College to pursue a career in social work ."
      }
     ]
    },
@@ -946,6 +949,27 @@
    "wcax": {
     "items": [
      {
+      "id": "KB3V45TU6FDERPETHXSVZBWVVY",
+      "title": "St. Johnsbury woman finds hope in new pancreatic cancer drug after losing husband",
+      "link": "https://www.wcax.com/2026/08/31/st-johnsbury-woman-finds-hope-new-pancreatic-cancer-drug-after-losing-husband/",
+      "ts": "2026-09-01T16:16:09+00:00",
+      "summary": "UVM got access to the drug long before the FDA signed off last week, enrolling a dozen regional patients in trials."
+     },
+     {
+      "id": "HSKMO2AIQJB37CYPYGHLW72VNQ",
+      "title": "Human Rights Commission reaches legal settlement with Vermont Dept. of Corrections",
+      "link": "https://www.wcax.com/2026/09/01/human-rights-commission-reaches-legal-settlement-with-vermont-dept-corrections/",
+      "ts": "2026-09-01T15:28:39+00:00",
+      "summary": "Vermont’s Human Rights Commission has reached a settlement with the Department of Corrections over discrimination."
+     },
+     {
+      "id": "2BW4H7QAE5F5LH6DS2XAUSF7NM",
+      "title": "Burlington police search for suspect in stabbing of a wheelchair user",
+      "link": "https://www.wcax.com/2026/09/01/burlington-police-search-suspect-stabbing-wheelchair-user/",
+      "ts": "2026-09-01T15:16:52+00:00",
+      "summary": "Burlington police are looking for a suspect in the stabbing incident of a wheelchair user in the old North End."
+     },
+     {
       "id": "XRG6HYHMFJBM7BXS7FMXYJHLK4",
       "title": "Former prosecutor’s dog faces scrutiny at Burlington animal control hearing",
       "link": "https://www.wcax.com/2026/09/01/former-prosecutors-dog-faces-scrutiny-burlington-animal-control-hearing/",
@@ -1014,13 +1038,6 @@
       "link": "https://www.wcax.com/2026/08/31/advocates-mark-overdose-awareness-day-burlington-opc-centers-timeline-remains-unclear/",
       "ts": "2026-08-31T22:43:31+00:00",
       "summary": "Burlington is supposed to be well on its way to building the state’s first prevention site."
-     },
-     {
-      "id": "KB3V45TU6FDERPETHXSVZBWVVY",
-      "title": "St. Johnsbury woman finds hope in new pancreatic cancer drug after losing husband",
-      "link": "https://www.wcax.com/2026/08/31/st-johnsbury-woman-finds-hope-new-pancreatic-cancer-drug-after-losing-husband/",
-      "ts": "2026-08-31T22:10:35+00:00",
-      "summary": "UVM got access to the drug long before the FDA signed off last week, enrolling a dozen regional patients in trials."
      },
      {
       "id": "4D2YHUFRKZA4BCI3WRKPFZPKUE",
@@ -1280,169 +1297,162 @@
       "link": "https://www.wcax.com/2026/08/28/rough-pavement-i-89-caused-by-raveling-vtrans-says/",
       "ts": "2026-08-28T20:00:56+00:00",
       "summary": "Rough roads on Interstate 89 are creating hazards for drivers."
-     },
-     {
-      "id": "PSUNH225YJBF3ASJPK4Z3WKJDI",
-      "title": "Sen. Welch says FEMA will payout $7.8 million for statewide infrastructure recovery",
-      "link": "https://www.wcax.com/2026/08/28/sen-welch-says-fema-will-payout-78-million-statewide-infrastructure-recovery/",
-      "ts": "2026-08-28T20:00:30+00:00",
-      "summary": "Vermont Sen. Peter Welch said FEMA will grant the state $7.84 million to help communities rebuild and recover from infrastructure damage."
-     },
-     {
-      "id": "Z7MVE5EH2VC7LFUPSNXWTA2TAE",
-      "title": "Clancy trial spotlights maternal mental health stigma",
-      "link": "https://www.wcax.com/2026/08/28/clancy-trial-spotlights-maternal-mental-health-stigma/",
-      "ts": "2026-08-28T19:59:59+00:00",
-      "summary": "The Lindsay Clancy trial is putting the spotlight on maternal mental healthcare and the stigma mothers often feel when asking for help."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
-      "id": "73581149",
-      "title": "Clancy jurors sent back to deliberate after group 'unable to come to unanimous decision'",
-      "link": "https://www.mynbc5.com/article/lindsay-clancy-trial-live-updates-sept-1/73581149",
-      "ts": "2026-09-01T14:47:00+00:00",
-      "summary": "The judge in the murder trial of Lindsay Clancy, the Massachusetts mother accused of strangling her three children in the family's Duxbury home in 2023, urged the jury Tuesday to keep deliberating after it said it could not come to a unanimous decision."
+      "id": "73582950",
+      "title": "Oil giant Chevron is expected to announce it will expand operations in Venezuela, US official says",
+      "link": "https://www.mynbc5.com/article/oil-chevron-venezuela-operations/73582950",
+      "ts": "2026-09-01T18:34:00+00:00",
+      "summary": "Oil giant Chevron is expected to soon announce it will expand operations in Venezuela, a U.S. official said."
      },
      {
-      "id": "73580305",
-      "title": "Nearly 1 in 3 young women haven’t had cervical cancer screening. A doctor explains the risks",
-      "link": "https://www.mynbc5.com/article/cervical-cancer-screenings-down-young-women/73580305",
-      "ts": "2026-09-01T14:46:00+00:00",
-      "summary": "Nearly 1 in 3 women ages 21 to 29 in 2023 had never gotten screened for cervical cancer — up from about 1 in 8 in 2005. Here's why doctors are worried."
+      "id": "73572326",
+      "title": "91-year-old man reclaims record as oldest hiker to complete the Appalachian Trail",
+      "link": "https://www.mynbc5.com/article/at-91-dale-grey-beard-sanders-reclaims-record-as-oldest-hiker-to-complete-the-appalachian-trail/73583149",
+      "ts": "2026-09-01T18:31:00+00:00",
+      "summary": "A 91-year-old man has reclaimed the record as oldest hiker to complete the Appalachian Trail, which spans from Georgia to Maine."
      },
      {
-      "id": "73580889",
-      "title": "Man in wheelchair stabbed in the face in Burlington, police say",
-      "link": "https://www.mynbc5.com/article/burlington-vermont-wheelchair-stabbing/73580889",
-      "ts": "2026-09-01T14:28:00+00:00",
-      "summary": "The Burlington Police Department is looking for the person responsible for stabbing a wheelchair-bound victim in the face last month."
+      "id": "73583149",
+      "title": "At 91, Dale ‘Grey Beard’ Sanders reclaims record as oldest hiker to complete the Appalachian Trail",
+      "link": "https://www.mynbc5.com/article/at-91-dale-grey-beard-sanders-reclaims-record-as-oldest-hiker-to-complete-the-appalachian-trail/73583149",
+      "ts": "2026-09-01T18:31:00+00:00",
+      "summary": "A 91-year-old man who goes by the nickname Grey Beard has reclaimed his record as the oldest hiker to complete the Appalachian Trail."
      },
      {
-      "id": "73580476",
-      "title": "Hikers describe flash flood in Grand Canyon that left 2 dead, 1 still missing",
-      "link": "https://www.mynbc5.com/article/grand-canyon-flash-flood-kills-texas-man/73580476",
-      "ts": "2026-09-01T14:08:00+00:00",
-      "summary": "A sudden flash flood in the Grand Canyon killed two people, left dozens missing before they were rescued, and caused significant damage to campsites and trails."
+      "id": "73583686",
+      "title": "Mandatory boil water notice issued for some residents in Ticonderoga",
+      "link": "https://www.mynbc5.com/article/mandatory-boil-water-notice-issued-for-some-residents-in-ticonderoga/73583686",
+      "ts": "2026-09-01T18:27:00+00:00",
+      "summary": "Some residents in the town of Ticonderoga are under a mandatory boil water notice on Tuesday due to a water main break, according to a notice from the Department of Health."
      },
      {
-      "id": "73580300",
-      "title": "Man stole more than $18,000 from ATM in Windsor County, police say",
-      "link": "https://www.mynbc5.com/article/rochester-vermont-atm-theft-suspect/73580300",
-      "ts": "2026-09-01T13:47:00+00:00",
-      "summary": "Vermont State Police are looking for a person accused of stealing more than $18,000 from an ATM in Windsor County over the weekend."
+      "id": "73582830",
+      "title": "US military says it's hitting new targets in Iran as hostilities flare again",
+      "link": "https://www.mynbc5.com/article/us-new-military-strikes-iran/73582830",
+      "ts": "2026-09-01T18:21:00+00:00",
+      "summary": "The U.S. military says it's striking new targets in Iran as hostilities flare again after a month without military action."
      },
      {
-      "id": "73580251",
-      "title": "Supreme Court allows ballroom project to continue for now",
-      "link": "https://www.mynbc5.com/article/supreme-court-allows-ballroom-project-continue-now/73580251",
-      "ts": "2026-09-01T13:36:00+00:00",
-      "summary": "The Supreme Court overruled a lower court order, permitting the $400 million White House ballroom project to proceed for now as legal challenges continue."
+      "id": "73583652",
+      "title": "New York's plan to charge fossil-fuel producers $75B for climate change damages is struck down",
+      "link": "https://www.mynbc5.com/article/new-yorks-plan-to-charge-fossil-fuel-producers-75b-for-climate-change-damages-is-struck-down/73583652",
+      "ts": "2026-09-01T18:18:00+00:00",
+      "summary": "A federal judge has struck down New York’s attempt to make fossil fuel-producing industries pay into a $75 billion fund to repair damage wrought by climate change."
      },
      {
-      "id": "73573378",
-      "title": "Rescuers saved some 80 people in Grand Canyon floods that left 2 dead and 1 missing, officials say",
-      "link": "https://www.mynbc5.com/article/arizona-grand-canyon-flooding-rescue-deaths-missing/73573378",
-      "ts": "2026-09-01T13:26:00+00:00",
-      "summary": "Nearly 80 people were rescued, and one is unaccounted for in Grand Canyon flooding that left 2 dead, officials said Monday."
+      "id": "73583601",
+      "title": "House passes short-term funding bill to avoid a shutdown before the election",
+      "link": "https://www.mynbc5.com/article/house-passes-short-term-funding-avoid-shutdown-midterms/73583601",
+      "ts": "2026-09-01T18:13:45+00:00",
+      "summary": "The House passed a short-term measure Tuesday to fund the federal government into early December, a move designed to avoid a chaotic shutdown as lawmakers campaign for reelection."
      },
      {
-      "id": "73580270",
-      "title": "Principal saved 900 children before his school was washed away in Nepal",
-      "link": "https://www.mynbc5.com/article/principal-saved-900-children-before-his-school-was-washed-away-in-nepal/73580270",
-      "ts": "2026-09-01T13:26:00+00:00",
-      "summary": "A school principal’s quick decision to evacuate his school saved at least 900 students from devastating flash floods in Nepal."
+      "id": "73574219",
+      "title": "Woman randomly stabs 2 people in Times Square, killing a Bank of America vice president",
+      "link": "https://www.mynbc5.com/article/woman-knife-shot-police-times-square/73574219",
+      "ts": "2026-09-01T18:11:00+00:00",
+      "summary": "Police officers shot a woman who had stabbed two people in New York's Times Square."
      },
      {
-      "id": "73575029",
-      "title": "Local dog owner in hot seat again after neighbors say she continues violating city orders",
-      "link": "https://www.mynbc5.com/article/burlington-dog-attack-testimony-neighbors-unsafe/73575029",
-      "ts": "2026-09-01T13:08:00+00:00",
-      "summary": "New North End residents are terrified of a \"dangerous dog\" they say roams free in their neighborhood. The dog's owner claims she's following the city's orders."
+      "id": "73581826",
+      "title": "Postal Service work to comply with Trump's executive order is rushed, sloppy, whistleblower contends",
+      "link": "https://www.mynbc5.com/article/postal-service-trump-midterm-election-mail-ballots/73581826",
+      "ts": "2026-09-01T17:57:00+00:00",
+      "summary": "The Postal Service's work to comply with Trump's executive order limiting mail-in voting is rushed and sloppy, a whistleblower contends."
      },
      {
-      "id": "73580057",
-      "title": "FTC and 22 states sue Amazon, alleging it overcharged advertisers",
-      "link": "https://www.mynbc5.com/article/ftc-22-states-sue-amazon-ad-price-inflation/73580057",
-      "ts": "2026-09-01T13:03:00+00:00",
-      "summary": "The Federal Trade Commission and 22 states filed a lawsuit against online retailer Amazon, claiming that it defrauded advertising customers."
-     },
-     {
-      "id": "73574386",
-      "title": "Vermont school district considers potential closure of 5 schools amid pressure to consolidate",
-      "link": "https://www.mynbc5.com/article/vt-school-district-proposes-closure-of-5-schools-amid-pressure-to-consolidate/73574386",
-      "ts": "2026-09-01T12:52:00+00:00",
-      "summary": "Discussions on district merging are yet to take off as some look to consolidate within their own district."
-     },
-     {
-      "id": "73578562",
-      "title": "President Trump to meet with oil industry leaders as gas prices continue to rise",
-      "link": "https://www.mynbc5.com/article/trump-to-meet-oil-industry-leaders-gas-prices-rise/73578562",
-      "ts": "2026-09-01T12:48:00+00:00",
-      "summary": "President Donald Trump will meet with oil industry leaders today as he attempts different measures to lower rising gas prices amid the war in Iran."
-     },
-     {
-      "id": "73579950",
-      "title": "Judge to decide if Tyler Robinson will stand trial in Charlie Kirk's killing",
-      "link": "https://www.mynbc5.com/article/charlie-kirk-killing-aggravated-murder/73579950",
-      "ts": "2026-09-01T12:37:00+00:00",
-      "summary": "A Utah judge will decide if there's enough evidence to put the man accused of killing Charlie Kirk on trial for aggravated murder."
-     },
-     {
-      "id": "73579627",
-      "title": "Internet-famous toddler reacting at NHL game is all grown up and chasing his own hockey dreams",
-      "link": "https://www.mynbc5.com/article/pittsburgh-penguins-buckle-up-baby-grown-up/73579627",
-      "ts": "2026-09-01T12:07:00+00:00",
-      "summary": "You may recognize him from an internet-famous moment in 2014: the then-2-year-old cheering on his favorite hockey team. Now, he has hockey aspirations of his own."
-     },
-     {
-      "id": "73579139",
-      "title": "Family survives after their vehicle was sandwiched between two semis in pileup",
-      "link": "https://www.mynbc5.com/article/family-survives-six-car-pileup-trapped-inside-vehicle-stuck-between-semis/73579139",
-      "ts": "2026-09-01T11:42:00+00:00",
-      "summary": "Sandwiched between two semis, a family of three – including a toddler – survived a devastating Wisconsin crash."
-     },
-     {
-      "id": "73578799",
-      "title": "Rescuers comb through mud as Nepal-China floods leave more than 1,000 dead",
-      "link": "https://www.mynbc5.com/article/nepal-china-floods-more-than-1000-dead/73578799",
-      "ts": "2026-09-01T11:01:00+00:00",
-      "summary": "Rescue teams are searching for thousands of people still missing after catastrophic flooding in Nepal and China. The disaster has left over 1,000 dead."
+      "id": "73583234",
+      "title": "Tony Romo pleads no contest to charge of operating while intoxicated",
+      "link": "https://www.mynbc5.com/article/tony-romo-no-contest-owi-milwaukee/73583234",
+      "ts": "2026-09-01T17:43:00+00:00",
+      "summary": "Former Dallas Cowboys quarterback and CBS NFL analyst Tony Romo has pleaded no contest to operating while intoxicated after his July arrest."
      },
      {
       "id": "73573841",
       "title": "Early downpours fade to some sunny breaks Tuesday",
       "link": "https://www.mynbc5.com/article/showers-return-tuesday-especially-in-southern-areas-8-31-26/73573841",
-      "ts": "2026-09-01T10:56:00+00:00",
+      "ts": "2026-09-01T16:32:00+00:00",
       "summary": "Wednesday into Thursday looks wettest"
      },
      {
-      "id": "73578558",
-      "title": "Dolly Parton's 'party of a lifetime' will finally happen in 2027",
-      "link": "https://www.mynbc5.com/article/dolly-parton-dollyfest-announcement/73578558",
-      "ts": "2026-09-01T10:28:00+00:00",
-      "summary": "The Estate of Dolly Parton announced that a star-studded, two-day festival spanning two continents in her honor is scheduled for 2027. Here's everything we know so far."
+      "id": "73581823",
+      "title": "Historic cruise ship sets sail for first time since fire on Lake George",
+      "link": "https://www.mynbc5.com/article/adirondac-cruise-boat-sails-for-first-time-after-fire-lake-george/73581823",
+      "ts": "2026-09-01T16:25:00+00:00",
+      "summary": "Nearly one year after the historic Adirondac cruise ship burned down on Lake George, the boat is setting sail again."
      },
      {
-      "id": "73577128",
-      "title": "'Felt something grab me': Otter attacks woman at Lake Tahoe; she needed 38 stitches",
-      "link": "https://www.mynbc5.com/article/lake-tahoe-otter-attacks-woman/73577128",
-      "ts": "2026-09-01T09:10:00+00:00",
-      "summary": "\"I just felt something grab me by my leg and pull me under. And it was so powerful. It felt like it was a human.\" | A woman was attacked by an otter while swimming at Lake Tahoe, leaving her with injuries that required 38 stitches and rabies shots."
+      "id": "73580889",
+      "title": "Man in wheelchair stabbed in the face in Burlington, police say",
+      "link": "https://www.mynbc5.com/article/burlington-vermont-wheelchair-stabbing/73580889",
+      "ts": "2026-09-01T16:12:00+00:00",
+      "summary": "The Burlington Police Department is looking for the person responsible for stabbing a wheelchair-bound victim in the face last month."
      },
      {
-      "id": "73563571",
-      "title": "Nepal warns of possible fresh flooding as communities grapple with devastation",
-      "link": "https://www.mynbc5.com/article/nepal-fresh-flood-warning-bhotekoshi-river/73563571",
-      "ts": "2026-09-01T05:33:00+00:00",
-      "summary": "Authorities in Nepal are warning of potential fresh flooding as water levels rise in the Bhotekoshi River. Residents in flood-affected districts have been urged to stay alert."
+      "id": "73581419",
+      "title": "Another person arrested following fight outside church in Montpelier",
+      "link": "https://www.mynbc5.com/article/montpelier-vermont-church-fight-arrest/73581419",
+      "ts": "2026-09-01T16:12:00+00:00",
+      "summary": "A 19-year-old has been arrested as officers continue to investigate a fight outside of a church in Montpelier this weekend, police said."
+     },
+     {
+      "id": "73581817",
+      "title": "Judge says Smucker's lawsuit against Trader Joe's over frozen PB&J can proceed",
+      "link": "https://www.mynbc5.com/article/smucker-trader-joes-uncrustables-trademark-lawsuit/73581817",
+      "ts": "2026-09-01T16:09:00+00:00",
+      "summary": "A federal judge ruled that J.M. Smucker can proceed with a lawsuit against Trader Joe’s over frozen sandwiches that Smucker claims are too similar to its Uncrustables."
+     },
+     {
+      "id": "73582080",
+      "title": "Weapons, explosives found in car during search, Windham County Sheriff's Office says",
+      "link": "https://www.mynbc5.com/article/putney-vermont-arrests-explosives/73582080",
+      "ts": "2026-09-01T16:07:00+00:00",
+      "summary": "Two people were arrested earlier this year after police said they found a cache of weapons and explosives in their car."
+     },
+     {
+      "id": "73580911",
+      "title": "Welcome back! North Country schools prepare for first day of classes",
+      "link": "https://www.mynbc5.com/article/ny-schools-welcome-students-2026/73580911",
+      "ts": "2026-09-01T15:55:00+00:00",
+      "summary": "New York schools are getting ready to welcome back thousands of students and teachers this week, and some districts in the North Country are launching new initiatives to better support students and their families."
+     },
+     {
+      "id": "73581232",
+      "title": "Florida bans Flock and other license plate readers on state roads",
+      "link": "https://www.mynbc5.com/article/license-plate-readers-removed-from-state-roads-fdot/73581232",
+      "ts": "2026-09-01T15:22:00+00:00",
+      "summary": "All license plate readers, including Flock cameras, must now be removed from state-maintained roads in Florida."
+     },
+     {
+      "id": "73580276",
+      "title": "‘He was my kid’: Family demands answers after police shoot, kill pet donkey during search",
+      "link": "https://www.mynbc5.com/article/donkey-heehaw-shot-killed-police-georgia/73580276",
+      "ts": "2026-09-01T15:09:00+00:00",
+      "summary": "A Georgia family is grieving after their beloved pet donkey, Hee-Haw, was shot and killed by a police officer during a search for a missing child."
+     },
+     {
+      "id": "73571817",
+      "title": "Labor Day deals: What to buy and what to skip",
+      "link": "https://www.mynbc5.com/article/labor-day-deals-what-to-buy-and-what-to-skip/73571817",
+      "ts": "2026-09-01T15:04:00+00:00",
+      "summary": "Good Housekeeping experts share insights on the best deals for Labor Day sales, highlighting standout items and categories to avoid."
      }
     ]
    },
    "btv-news-releases": {
     "items": [
+     {
+      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3887/639238634880000000",
+      "title": "08/22/2026 Aggravated Assault | 26BU019754",
+      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3887",
+      "ts": "2026-09-01T17:44:48+00:00",
+      "summary": ""
+     },
      {
       "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3886/639237649170000000",
       "title": "Closing at 12:30 PM, Thursday 9/3",
@@ -1559,6 +1569,13 @@
    },
    "bpd-updates": {
     "items": [
+     {
+      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3887/639238634880000000",
+      "title": "08/22/2026 Aggravated Assault | 26BU019754",
+      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3887",
+      "ts": "2026-09-01T17:44:48+00:00",
+      "summary": ""
+     },
      {
       "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3885/639234249060000000",
       "title": "08/2026 Drug Enforcement Operations | 26BU018165, 26BU018790, 26BU019542, 26BU020108",
