@@ -1,42 +1,42 @@
 {
- "generated": "2026-08-31T13:12:40-04:00",
+ "generated": "2026-08-31T20:04:22-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 17,
-   "seconds": 6.0
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 63,
-   "seconds": 4.6
+   "count": 73,
+   "seconds": 2.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 68,
-   "seconds": 2.8
+   "count": 65,
+   "seconds": 4.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 165,
-   "seconds": 2.1
+   "seconds": 3.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 83,
-   "seconds": 1.6
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 0
+   "staleDays": 1
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-31&end_date=2026-10-30&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 0
+   "staleDays": 1
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,12 +46,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 192,
-   "seconds": 76.9
+   "seconds": 66.5
   },
   "flynn": {
    "label": "The Flynn",
@@ -66,42 +66,42 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 43.5
+   "seconds": 37.2
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 71,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "seconds": 21.4
+   "count": 1,
+   "seconds": 12.2
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 381,
-   "seconds": 67.1
+   "seconds": 72.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 65,
-   "seconds": 123.5
+   "seconds": 123.1
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 22,
-   "seconds": 0.7
+   "seconds": 0.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 49,
-   "seconds": 15.1
+   "seconds": 13.7
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 60,
-   "seconds": 0.9
+   "seconds": 0.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
@@ -111,44 +111,44 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 26,
-   "seconds": 33.1
+   "seconds": 31.6
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2328,
-   "seconds": 18.6
+   "seconds": 161.1
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 0
+   "staleDays": 1
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 451,
-   "seconds": 21.8
+   "count": 453,
+   "seconds": 17.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 283,
+   "count": 285,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 76,
-   "seconds": 102.8
+   "seconds": 97.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 52,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 5348,
- "afterDedup": 2504,
- "duplicatesMerged": 2844,
- "final": 2760,
+ "gathered": 5360,
+ "afterDedup": 2510,
+ "duplicatesMerged": 2850,
+ "final": 2781,
  "firecrawlCalls": 14,
  "mergeLog": [
   {
@@ -2439,6 +2439,13 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
+   "id": "f40b673b1c52",
+   "title": "Local Dork at Foam Brewers on a Tuesday",
+   "date": "2026-09-01",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
    "id": "fc05f3cb656a",
    "title": "Brown Horse at Higher Ground",
    "date": "2026-09-01",
@@ -2495,6 +2502,13 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
+   "id": "f1d00a158b42",
+   "title": "TAG",
+   "date": "2026-09-04",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
    "id": "5d9bc6784dae",
    "title": "ZZ Top - The Big One Tour",
    "date": "2026-09-04",
@@ -2542,6 +2556,13 @@
    "date": "2026-09-07",
    "change": "missing",
    "lastSeen": "2026-08-29T10:40:56-04:00"
+  },
+  {
+   "id": "8d8ca273ec3a",
+   "title": "Local Dork at Foam Brewers on a Tuesday",
+   "date": "2026-09-08",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
    "id": "36493d8f0952",
@@ -2614,6 +2635,13 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
+   "id": "061dc70039f4",
+   "title": "Dungeons & Dragons (FULL)",
+   "date": "2026-09-11",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
    "id": "8a0ac7f0a9da",
    "title": "All Your Friends: The Indie Sleaze Dance Party",
    "date": "2026-09-11",
@@ -2670,6 +2698,13 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
+   "id": "2777f428ab75",
+   "title": "Breakout Box: Seasonal Sabotage",
+   "date": "2026-09-14",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
    "id": "a8b94ce45452",
    "title": "Curator Tour – On Point: Needlework from the Garthwaite Family Collection",
    "date": "2026-09-15",
@@ -2719,6 +2754,13 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
+   "id": "0e00b8971703",
+   "title": "Spanish Toddler Storytime",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
    "id": "95a7e9fe79a1",
    "title": "Lego Builders",
    "date": "2026-09-18",
@@ -2761,12 +2803,6 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
-   "id": "f5a6e2021a3b",
-   "title": "Green Community Festival",
-   "date": "2026-09-19",
-   "change": "dropped"
-  },
-  {
    "id": "59f3c54c01e0",
    "title": "Zara Anishanslin’s The Painter’s Fire: A Forgotten History of the Artists Who Championed the American Revolution",
    "date": "2026-09-19",
@@ -2802,11 +2838,25 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
+   "id": "e89f8a886c81",
+   "title": "Communities Responding to Extreme Weather- CREW",
+   "date": "2026-09-21",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
    "id": "1670b3518bf7",
    "title": "Cheekface at Higher Ground",
    "date": "2026-09-21",
    "change": "missing",
    "lastSeen": "2026-08-29T10:40:56-04:00"
+  },
+  {
+   "id": "a9673115645d",
+   "title": "Local Dork at Foam Brewers on a Tuesday",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
    "id": "a54a211a1e92",
@@ -2851,6 +2901,13 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
+   "id": "aaec296c42fa",
+   "title": "Dungeons & Dragons (FULL)",
+   "date": "2026-09-25",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
    "id": "f8fd8c38abbc",
    "title": "Rockwell Day",
    "date": "2026-09-26",
@@ -2886,6 +2943,13 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
+   "id": "cb75c9708592",
+   "title": "Must Read Mondays – Patriot : a memoir, by Alexei Navaln",
+   "date": "2026-09-28",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
    "id": "6d88f66cb108",
    "title": "Ora Cogan",
    "date": "2026-09-28",
@@ -2898,6 +2962,13 @@
    "date": "2026-09-29",
    "change": "missing",
    "lastSeen": "2026-08-31T11:27:35-04:00"
+  },
+  {
+   "id": "973e721dd8eb",
+   "title": "Local Dork at Foam Brewers on a Tuesday",
+   "date": "2026-09-29",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
    "id": "470d8ecbf4c3",
@@ -2940,6 +3011,13 @@
    "date": "2026-10-01",
    "change": "missing",
    "lastSeen": "2026-08-30T18:55:30-04:00"
+  },
+  {
+   "id": "688e80df96cc",
+   "title": "Music Time",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
    "id": "b6903ee942c2",
@@ -3033,6 +3111,13 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
+   "id": "57704b8ff8c9",
+   "title": "Dungeons & Dragons (FULL)",
+   "date": "2026-10-09",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
    "id": "7e176a1864d4",
    "title": "Benjamin Tod",
    "date": "2026-10-09",
@@ -3045,6 +3130,13 @@
    "date": "2026-10-11",
    "change": "missing",
    "lastSeen": "2026-08-30T18:55:30-04:00"
+  },
+  {
+   "id": "69974f99ea0b",
+   "title": "Read with Sammy",
+   "date": "2026-10-13",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
    "id": "1cd2932e2a99",
@@ -3073,6 +3165,13 @@
    "date": "2026-10-22",
    "change": "missing",
    "lastSeen": "2026-08-29T10:40:56-04:00"
+  },
+  {
+   "id": "4b5338a2a7d1",
+   "title": "Dungeons & Dragons (FULL)",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
    "id": "1bb445c9a490",
