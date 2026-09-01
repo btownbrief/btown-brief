@@ -1,29 +1,29 @@
 {
- "generated": "2026-08-31T20:04:22-04:00",
+ "generated": "2026-09-01T10:16:24-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 17,
-   "seconds": 5.8
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 73,
-   "seconds": 2.9
+   "seconds": 3.1
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 65,
-   "seconds": 4.1
+   "count": 63,
+   "seconds": 3.6
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 165,
-   "seconds": 3.1
+   "count": 167,
+   "seconds": 3.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 83,
+   "count": 85,
    "seconds": 1.9
   },
   "echo": {
@@ -35,7 +35,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-08-31&end_date=2026-10-30&page=1 (HTTP Error 405: Not Allowed)",
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-01&end_date=2026-10-31&page=1 (HTTP Error 405: Not Allowed)",
    "staleDays": 1
   },
   "facebook": {
@@ -45,18 +45,18 @@
   },
   "farmersmarket": {
    "label": "Burlington Farmers Market",
-   "count": 8,
+   "count": 9,
    "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 192,
-   "seconds": 66.5
+   "count": 194,
+   "seconds": 65.7
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 36,
-   "seconds": 0.5
+   "count": 37,
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,58 +65,59 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 750,
-   "seconds": 37.2
+   "count": 749,
+   "seconds": 37.8
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 71,
-   "seconds": 0.5
+   "count": 73,
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 12.2
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 381,
-   "seconds": 72.4
+   "count": 378,
+   "seconds": 72.6
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 123.1
+   "count": 64,
+   "seconds": 118.1
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 22,
-   "seconds": 0.5
+   "count": 21,
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 49,
-   "seconds": 13.7
+   "count": 48,
+   "seconds": 13.3
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 60,
+   "count": 61,
    "seconds": 0.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 102,
-   "seconds": 5.7
+   "count": 103,
+   "seconds": 5.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 26,
-   "seconds": 31.6
+   "seconds": 31.5
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2328,
-   "seconds": 161.1
+   "count": 2425,
+   "seconds": 73.1
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -126,182 +127,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 453,
-   "seconds": 17.2
+   "count": 449,
+   "seconds": 26.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 285,
+   "count": 284,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 76,
-   "seconds": 97.1
+   "seconds": 98.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 52,
-   "seconds": 0.4
+   "count": 53,
+   "seconds": 0.2
   }
  },
- "gathered": 5360,
- "afterDedup": 2510,
- "duplicatesMerged": 2850,
- "final": 2781,
- "firecrawlCalls": 14,
+ "gathered": 5455,
+ "afterDedup": 2530,
+ "duplicatesMerged": 2925,
+ "final": 2810,
+ "firecrawlCalls": 15,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "BASIC",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "radiobean"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
-    "title": "Ethan Tapper | The Forest Year: Finding Hope in a World Worth Saving",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
-    "title": "802sDay",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
-    "title": "Ann Wilson: The Voice of Heart & Tripsitter",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "loveburlington"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
-    "title": "Tech Breakfast",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "meetup",
-    "sevendays"
-   ],
-   "date": "2026-10-06"
-  },
-  {
-   "kept": {
-    "title": "Oteil Burbridge & LaMP",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "loveburlington"
-   ],
-   "date": "2026-10-07"
-  },
-  {
-   "kept": {
-    "title": "Briscoe",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-07"
-  },
-  {
-   "kept": {
-    "title": "Jason Dea West",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "radiobean"
-   ],
-   "date": "2026-10-07"
-  },
-  {
-   "kept": {
-    "title": "Standup Open Mic",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "sevendays",
-    "vcc"
-   ],
-   "date": "2026-10-07"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-07"
-  },
-  {
-   "kept": {
-    "title": "Coloring in the Marble Court",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-07"
-  },
   {
    "kept": {
     "title": "AMP UP Your Education: UVM's Accelerated Master's Pathway Grad Fair",
@@ -781,7 +631,7 @@
   },
   {
    "kept": {
-    "title": "Second Saturdays | Your Place Is at This Table",
+    "title": "Second Saturdays",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -2406,6 +2256,72 @@
   },
   {
    "kept": {
+    "title": "Coffee and Code",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-30"
+  },
+  {
+   "kept": {
+    "title": "UVM Catamount Educational Farm Stand and Apple Sales",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-30"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-30"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-30"
+  },
+  {
+   "kept": {
+    "title": "Men's Ice Hockey vs New Hampshire",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-30"
+  },
+  {
+   "kept": {
+    "title": "Men's Soccer vs Binghamton",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-30"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -2414,9 +2330,131 @@
     "loveburlington"
    ],
    "date": "2026-10-30"
+  },
+  {
+   "kept": {
+    "title": "The Sorcerer’s Apprentice",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "flynn",
+    "helloburlington",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-10-31"
+  },
+  {
+   "kept": {
+    "title": "Upstate",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-10-31"
+  },
+  {
+   "kept": {
+    "title": "Pink Talking Fish",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-10-31"
+  },
+  {
+   "kept": {
+    "title": "SHEBAD",
+    "source": "radiobean"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "radiobean"
+   ],
+   "date": "2026-10-31"
+  },
+  {
+   "kept": {
+    "title": "Howl'ween Dog Costume Contest",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-31"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-31"
+  },
+  {
+   "kept": {
+    "title": "Burlington Farmers Market",
+    "source": "farmersmarket"
+   },
+   "merged_sources": [
+    "farmersmarket",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-10-31"
   }
  ],
  "changes": [
+  {
+   "id": "dd0080f4b438",
+   "title": "Good Clean Fun! (Family Friendly Show)",
+   "date": "2026-10-17",
+   "change": "time",
+   "was": "2026-10-17T17:00:00-04:00",
+   "now": "2026-10-17T16:30:00-04:00"
+  },
+  {
+   "id": "7f3234efaf49",
+   "title": "Kendall Farrell",
+   "date": "2026-10-15",
+   "change": "time",
+   "was": "2026-10-15T19:00:00-04:00",
+   "now": "2026-10-15T18:30:00-04:00"
+  },
+  {
+   "id": "9e1ad656052b",
+   "title": "Sam Jay",
+   "date": "2026-10-22",
+   "change": "time",
+   "was": "2026-10-22T19:00:00-04:00",
+   "now": "2026-10-22T18:30:00-04:00"
+  },
+  {
+   "id": "a80c9bb7a4f1",
+   "title": "Sam Jay",
+   "date": "2026-10-23",
+   "change": "time",
+   "was": "2026-10-23T19:00:00-04:00",
+   "now": "2026-10-23T18:30:00-04:00"
+  },
+  {
+   "id": "1c57d3ef908e",
+   "title": "Sam Jay",
+   "date": "2026-10-24",
+   "change": "time",
+   "was": "2026-10-24T19:00:00-04:00",
+   "now": "2026-10-24T18:30:00-04:00"
+  },
   {
    "id": "4f8cdcfe87bc",
    "title": "Tech Tuesdays - Breakfast",
@@ -2523,6 +2561,13 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
+   "id": "afe863267ad5",
+   "title": "Soup for Two & Salmo at the Venetian Soda Lounge",
+   "date": "2026-09-05",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
    "id": "fb530ac5d92d",
    "title": "Bermuda Search Party at Higher Ground",
    "date": "2026-09-05",
@@ -2614,6 +2659,13 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
+   "id": "071a16518c5f",
+   "title": "The Silo Sessions with The Faux Paws and special guest Otter Creek",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
    "id": "46caed254235",
    "title": "Thesaurus Rex at Higher Ground",
    "date": "2026-09-10",
@@ -2649,6 +2701,20 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
+   "id": "f77ef7192c35",
+   "title": "Vermont Tree Farm of the Year- Hinesburg Town Forest",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
+   "id": "3522a306e694",
+   "title": "Sober Mom: An Author Reading with Elizabeth Jannuzzi",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
    "id": "ec4489d611a6",
    "title": "Shared Harvest at Merrymac",
    "date": "2026-09-12",
@@ -2661,6 +2727,20 @@
    "date": "2026-09-12",
    "change": "missing",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "3d49fc11738c",
+   "title": "Second Saturdays | Your Place Is at This Table",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
+   "id": "f06de74c49c5",
+   "title": "Film Screening and Writer/Producer Q&A",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
    "id": "97bed91de3e9",
@@ -2696,6 +2776,13 @@
    "date": "2026-09-13",
    "change": "missing",
    "lastSeen": "2026-08-29T10:40:56-04:00"
+  },
+  {
+   "id": "30b56db79a59",
+   "title": "10th Annual LoveYourBrain Golf Tournament",
+   "date": "2026-09-14",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
    "id": "2777f428ab75",
@@ -2992,6 +3079,13 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
+   "id": "dfa99923fc23",
+   "title": "Vegan in Vermont",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
    "id": "909b1becd999",
    "title": "Anberlin at Higher Ground",
    "date": "2026-09-30",
@@ -3125,6 +3219,13 @@
    "lastSeen": "2026-08-29T10:40:56-04:00"
   },
   {
+   "id": "b5caf544a667",
+   "title": "Second Saturdays | Your Place Is at This Table",
+   "date": "2026-10-10",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
    "id": "76f906ad92ee",
    "title": "Sensory-Friendly Sunday at ECHO",
    "date": "2026-10-11",
@@ -3174,11 +3275,25 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
+   "id": "a80c9bb7a4f1-2100",
+   "title": "Sam Jay",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
    "id": "1bb445c9a490",
    "title": "Lamplight, The Clearwater Swimmers, & Fowl",
    "date": "2026-10-24",
    "change": "missing",
    "lastSeen": "2026-08-29T10:40:56-04:00"
+  },
+  {
+   "id": "1c57d3ef908e-2100",
+   "title": "Sam Jay",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
    "id": "a96fc4702ece",
