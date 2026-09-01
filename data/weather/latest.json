@@ -1,45 +1,35 @@
 {
- "updated": "2026-08-31T20:53:51+00:00",
+ "updated": "2026-09-01T00:01:08+00:00",
  "sections_updated": {
-  "now": "2026-08-31T20:53:51+00:00",
-  "forecast": "2026-08-31T20:53:51+00:00",
-  "hourly": "2026-08-31T20:53:51+00:00",
-  "alerts": "2026-08-31T20:53:51+00:00",
-  "afd": "2026-08-31T20:53:51+00:00",
-  "lake_forecast": "2026-08-31T20:53:51+00:00",
-  "lake_gage": "2026-08-31T20:53:51+00:00",
-  "air": "2026-08-31T20:53:51+00:00",
-  "sun": "2026-08-31T20:53:51+00:00",
-  "models": "2026-08-31T20:53:51+00:00"
+  "now": "2026-09-01T00:01:08+00:00",
+  "forecast": "2026-09-01T00:01:08+00:00",
+  "hourly": "2026-09-01T00:01:08+00:00",
+  "alerts": "2026-09-01T00:01:08+00:00",
+  "afd": "2026-09-01T00:01:08+00:00",
+  "lake_forecast": "2026-09-01T00:01:08+00:00",
+  "lake_gage": "2026-09-01T00:01:08+00:00",
+  "air": "2026-09-01T00:01:08+00:00",
+  "sun": "2026-09-01T00:01:08+00:00",
+  "models": "2026-09-01T00:01:08+00:00"
  },
  "now": {
-  "observed_at": "2026-08-31T20:35:00+00:00",
+  "observed_at": "2026-08-31T23:35:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 77,
-  "feels_like_f": 76,
-  "humidity": 39,
-  "dewpoint_f": 50,
+  "temp_f": 70,
+  "feels_like_f": 70,
+  "humidity": 53,
+  "dewpoint_f": 52,
   "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N"
  },
  "forecast": {
-  "updated": "2026-08-31T18:20:22+00:00",
+  "updated": "2026-08-31T23:22:08+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-08-31T16:00:00-04:00",
-    "is_day": true,
-    "temp_f": 78,
-    "pop": 0,
-    "wind": "NW 3 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 78. Northwest wind around 3 mph."
-   },
-   {
     "name": "Tonight",
-    "start": "2026-08-31T18:00:00-04:00",
+    "start": "2026-08-31T19:00:00-04:00",
     "is_day": false,
     "temp_f": 60,
     "pop": 25,
@@ -95,7 +85,7 @@
     "pop": 65,
     "wind": "SW 6 to 14 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Mostly cloudy, with a high near 80. Southwest wind 6 to 14 mph. Chance of precipitation is 70%."
+    "detailed": "Rain showers likely. Mostly cloudy, with a high near 80. Southwest wind 6 to 14 mph. Chance of precipitation is 70%. New rainfall amounts between three quarters and one inch possible."
    },
    {
     "name": "Thursday Night",
@@ -166,45 +156,22 @@
     "wind": "E 2 to 7 mph",
     "short": "Mostly Clear",
     "detailed": "Mostly clear, with a low around 54. East wind 2 to 7 mph."
+   },
+   {
+    "name": "Labor Day",
+    "start": "2026-09-07T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 78,
+    "pop": 9,
+    "wind": "SW 2 to 6 mph",
+    "short": "Mostly Sunny",
+    "detailed": "Mostly sunny, with a high near 78. Southwest wind 2 to 6 mph."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-08-31T18:20:22+00:00",
+  "updated": "2026-08-31T23:22:08+00:00",
   "hours": [
-   {
-    "t": "2026-08-31T16:00:00-04:00",
-    "temp_f": 78,
-    "feels_f": 78,
-    "pop": 0,
-    "humidity": 47,
-    "wind_mph": 3,
-    "wind_dir": "NW",
-    "sky": 36,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-08-31T17:00:00-04:00",
-    "temp_f": 77,
-    "feels_f": 77,
-    "pop": 0,
-    "humidity": 48,
-    "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 37,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-08-31T18:00:00-04:00",
-    "temp_f": 76,
-    "feels_f": 76,
-    "pop": 0,
-    "humidity": 52,
-    "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 47,
-    "short": "Partly Cloudy"
-   },
    {
     "t": "2026-08-31T19:00:00-04:00",
     "temp_f": 74,
@@ -567,6 +534,39 @@
     "wind_dir": "SE",
     "sky": 84,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-02T04:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 12,
+    "humidity": 97,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 79,
+    "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-02T05:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 16,
+    "humidity": 93,
+    "wind_mph": 9,
+    "wind_dir": "SE",
+    "sky": 80,
+    "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-02T06:00:00-04:00",
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 13,
+    "humidity": 97,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 80,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -574,14 +574,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-08-31T18:39:00+00:00",
+  "issued": "2026-08-31T23:51:00+00:00",
   "key_messages": [
    "Periods of showers tonight into tomorrow.",
    "Heavier and more widespread rain Wednesday night with some embedded thunderstorms.",
    "Showery weather Friday trending drier by early next week as upper low pressure departs to the east."
   ],
   "what_changed": "As of 238 PM EDT Monday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 311839\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n239 PM EDT Mon Aug 31 2026\n\n.WHAT HAS CHANGED...\nAs of 238 PM EDT Monday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 238 PM EDT Monday...\n\n1. Periods of showers tonight into tomorrow. \n\n2. Heavier and more widespread rain Wednesday night with some \nembedded thunderstorms. \n\n3. Showery weather Friday trending drier by early next week as \nupper low pressure departs to the east. \n\n&&\n\n.DISCUSSION...\nAs of 238 PM EDT Monday...\n\nKEY MESSAGE 1: The surface high that brought the lower humidity and \nsunshine today will gradually retreat to the east going into the day \ntomorrow, as a low will attempt to push a warm front through. \nHowever, it will fail to fully gain entry into the region and a \nstationary boundary will end up getting stationed over or just south \nof the region into Wednesday. \n\nAn area of steady rain will push into the region late tonight and \ntomorrow morning, but most areas should just see an area of \nrelatively light stratiform precipitation and only pick up a couple \ntenths of an inch, with the Northeast Kingdom possibly remaining \ncompletely dry. However, an area of elevated convection may just \nclip southern Vermont and St. Lawrence County and could lead to \nlocally higher totals of 1-1.5 inches. A few rumbles of thunder are \npossible in those areas as well. However, it should occur over \nseveral hours and the threat for flash flooding is very low. The \nbest synoptic forcing exits in the morning and despite the boundary \nremaining around, there should only be a couple scattered showers \ngoing through the day, but it will likely be dreary.\n\nKEY MESSAGE 2: A more dynamic low pushes through Wednesday night into \nThursday morning, bringing rounds of heavy rain. This one currently \nlooks to make it just far enough northeast that the center passes \nthrough. Therefore, the associated elevated convection looks to be \nable to enter the region and bring periods of heavy rain and \nembedded thunderstorms. However, due to the temperature profiles and \nthe nighttime occurrence, everything should remain elevated and not \nbe severe. It will be continued to be watched if the dynamics from \nthe storm would be strong enough to cause a couple storms with hail \nor gusty winds to break the inversion at the surface. Currently, \nmost areas should receive around an inch of rain, but convective \nenhancement will cause locally higher totals. GEFS/EPS/CMCE \nprobabilities of receiving more than an inch range between 25-50 \npercent and the probabilities of 2 inches are below 10 percent, but \nthe convective enhancement is not taken into account in those. The \nflood threat is low at this point. The one thing that will continued \nto be watched if the axis of heavy convective rain lines up with the \naxis tonight, but even then there will be multiple days in between \nand marginal totals.\n\nKEY MESSAGE 3: An upper low will swing across eastern Maine \nFriday/Friday night, bringing yet another round of showers, \nespecially over the northern high terrain. This feature will not \nmake much eastward progress over the weekend, keeping us under \ncyclonic flow. There may be just enough moisture wrapping back into \nthe region to keep the threat of showers around, especially in the \nafternoons, but don't anticipate a washout by any means. \nTemperatures may be a little on the cooler side, especially on the \nhigher summits, but this will depend on how much eastward progress \nthe upper low is able to make. Have stayed with the NBM/WPC forecast \nfor now since we're a ways out, but adjustments may need to be made \nas the weekend draws closer.\n\n&&\n\n.AVIATION /18Z MONDAY THROUGH SATURDAY/...\nThrough 18Z Tuesday...VFR conditions to prevail at all terminals\nthrough at least the first half of the TAF period. Clouds will\nincrease and lower overnight as a frontal boundary sets up over or\njust to the SW of the region. Rounds of showers will ride along this\nboundary tonight into Tuesday. Ceilings dropping to MVFR after 08z\nat SLK/RUT and perhaps MSS, with visibility 5-6SM in rain showers\nthrough the remainder of the period. Another round of valley fog is\npossible late tonight into early Tuesday as well, mainly at EFK/MPV\nwhere clouds will be slowest to arrive. While not as extensive as\nthis morning, anticipate at least periods of IFR/LIFR at these two\nterminals 08z-13z, with visibility restrictions most likely at EFK.\nMPV is more uncertain, with equal chances of IFR due to visibility\nor ceilings. Winds will remain light and variable through the TAF\nperiod, generally 5 kt or less.\n\nOutlook...\n\nTuesday Night: Mainly VFR, with local IFR possible. Chance SHRA.\nWednesday: Mainly MVFR, with areas VFR possible. Definite SHRA,\nSlight chance TSRA.\nWednesday Night: Mainly MVFR, with local IFR possible. Definite\nSHRA, Slight chance TSRA.\nThursday: Mainly MVFR, with local IFR possible. Chance SHRA,\nSlight chance TSRA.\nThursday Night: Mainly VFR, with local IFR possible. Slight\nchance SHRA.\nFriday: Mainly VFR, with local IFR possible. Chance SHRA.\nFriday Night: Mainly VFR, with local IFR possible. Slight chance\nSHRA.\nSaturday: Mainly MVFR, with local IFR possible. Slight chance\nSHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Hastings/Myskowski\nAVIATION...Hastings\n"
+  "raw": "\n000\nFXUS61 KBTV 312351\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n751 PM EDT Mon Aug 31 2026\n\n.WHAT HAS CHANGED...\nAs of 238 PM EDT Monday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 238 PM EDT Monday...\n\n1. Periods of showers tonight into tomorrow. \n\n2. Heavier and more widespread rain Wednesday night with some \nembedded thunderstorms. \n\n3. Showery weather Friday trending drier by early next week as \nupper low pressure departs to the east.\n\n&&\n\n.DISCUSSION...\nAs of 238 PM EDT Monday...\n\nKEY MESSAGE 1: The surface high that brought the lower humidity and \nsunshine today will gradually retreat to the east going into the day \ntomorrow, as a low will attempt to push a warm front through. \nHowever, it will fail to fully gain entry into the region and a \nstationary boundary will end up getting stationed over or just south \nof the region into Wednesday. \n\nAn area of steady rain will push into the region late tonight and \ntomorrow morning, but most areas should just see an area of \nrelatively light stratiform precipitation and only pick up a couple \ntenths of an inch, with the Northeast Kingdom possibly remaining \ncompletely dry. However, an area of elevated convection may just \nclip southern Vermont and St. Lawrence County and could lead to \nlocally higher totals of 1-1.5 inches. A few rumbles of thunder are \npossible in those areas as well. However, it should occur over \nseveral hours and the threat for flash flooding is very low. The \nbest synoptic forcing exits in the morning and despite the boundary \nremaining around, there should only be a couple scattered showers \ngoing through the day, but it will likely be dreary.\n\nKEY MESSAGE 2: A more dynamic low pushes through Wednesday night into \nThursday morning, bringing rounds of heavy rain. This one currently \nlooks to make it just far enough northeast that the center passes \nthrough. Therefore, the associated elevated convection looks to be \nable to enter the region and bring periods of heavy rain and \nembedded thunderstorms. However, due to the temperature profiles and \nthe nighttime occurrence, everything should remain elevated and not \nbe severe. It will be continued to be watched if the dynamics from \nthe storm would be strong enough to cause a couple storms with hail \nor gusty winds to break the inversion at the surface. Currently, \nmost areas should receive around an inch of rain, but convective \nenhancement will cause locally higher totals. GEFS/EPS/CMCE \nprobabilities of receiving more than an inch range between 25-50 \npercent and the probabilities of 2 inches are below 10 percent, but \nthe convective enhancement is not taken into account in those. The \nflood threat is low at this point. The one thing that will continued \nto be watched if the axis of heavy convective rain lines up with the \naxis tonight, but even then there will be multiple days in between \nand marginal totals.\n\nKEY MESSAGE 3: An upper low will swing across eastern Maine \nFriday/Friday night, bringing yet another round of showers, \nespecially over the northern high terrain. This feature will not \nmake much eastward progress over the weekend, keeping us under \ncyclonic flow. There may be just enough moisture wrapping back into \nthe region to keep the threat of showers around, especially in the \nafternoons, but don't anticipate a washout by any means. \nTemperatures may be a little on the cooler side, especially on the \nhigher summits, but this will depend on how much eastward progress \nthe upper low is able to make. Have stayed with the NBM/WPC forecast \nfor now since we're a ways out, but adjustments may need to be made \nas the weekend draws closer.\n\n&&\n\n.AVIATION /00Z TUESDAY THROUGH SATURDAY/...\nThrough 00Z Wednesday...VFR conditions remain across the\nairspace. An area of thicker clouds with bases between 4 and \n7kft is nearly stationary across the southwestern half of the \nCounty Warning Area, splitting terminals roughly in half with \nMSS/SLK/RUT within this cloudy zone. With only some passing high\nclouds, MPV and EFK will be susceptible to another round of fog\nas long as the lower clouds remain to the south and west; the \ngeography suggests EFK will be more favored to have a longer \nduration of fog after 06Z. \n\nThe aforementioned boundary will also roughly mark where \nscattered showers are most likely to roll through after 06Z and \nespecially after 12Z. The light rain will lead to further \nlowering of ceilings with best chance for MVFR ceilings at SLK \nand RUT for at least a short period during the morning. \nVisibility in showers will tend to be as low as 5-6SM with a low\nchance of temporary IFR conditions. Winds will remain light and\nvariable through the TAF period at all sites, generally at or \nbelow 5 kts.\n\nOutlook...\n\nTuesday Night: Mainly VFR, with local IFR possible. Chance SHRA.\nWednesday: Mainly MVFR, with areas VFR possible. Chance SHRA,\nSlight chance TSRA.\nWednesday Night: Mainly MVFR, with local IFR possible. Definite\nSHRA, Slight chance TSRA.\nThursday: Mainly MVFR, with local IFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Slight\nchance SHRA.\nFriday: Mainly VFR, with local IFR possible. Chance SHRA.\nFriday Night: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nSaturday: Mainly MVFR, with local IFR possible. Slight chance\nSHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Hastings/Myskowski\nAVIATION...Kutikoff\n"
  },
  "lake_forecast": {
   "issued": "2026-08-31T18:26:00+00:00",
@@ -853,17 +853,17 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-08-31T16:00:00.000-04:00",
-  "level_ft": 94.55,
-  "level_at": "2026-08-31T16:00:00.000-04:00",
+  "water_temp_at": "2026-08-31T19:00:00.000-04:00",
+  "level_ft": 94.57,
+  "level_at": "2026-08-31T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 27,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "08/31/26 16:00",
+  "observed": "08/31/26 19:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, September 1st."
  },
  "sun": {
@@ -880,7 +880,7 @@
     "high_f": {
      "GFS": 79,
      "Euro": 77,
-     "ICON": 76
+     "ICON": 77
     },
     "pop_max": {
      "GFS": 17,
@@ -892,43 +892,43 @@
      "Euro": 0.11,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-09-01",
     "high_f": {
-     "GFS": 78,
+     "GFS": 77,
      "Euro": 75,
-     "ICON": 70
+     "ICON": 76
     },
     "pop_max": {
-     "GFS": 30,
-     "Euro": 49,
+     "GFS": 24,
+     "Euro": 31,
      "ICON": 70
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.0,
-     "ICON": 0.36
+     "ICON": 0.01
     },
-    "high_spread_f": 8
+    "high_spread_f": 2
    },
    {
     "date": "2026-09-02",
     "high_f": {
      "GFS": 73,
      "Euro": 70,
-     "ICON": 70
+     "ICON": 72
     },
     "pop_max": {
-     "GFS": 77,
-     "Euro": 57,
+     "GFS": 81,
+     "Euro": 76,
      "ICON": 88
     },
     "precip_in": {
-     "GFS": 0.49,
+     "GFS": 0.42,
      "Euro": 0.39,
-     "ICON": 0.72
+     "ICON": 0.48
     },
     "high_spread_f": 3
    }
