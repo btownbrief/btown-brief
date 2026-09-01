@@ -1,41 +1,41 @@
 {
- "updated": "2026-09-01T15:12:04+00:00",
+ "updated": "2026-09-01T18:39:46+00:00",
  "sections_updated": {
-  "now": "2026-09-01T15:12:04+00:00",
-  "forecast": "2026-09-01T15:12:04+00:00",
-  "hourly": "2026-09-01T15:12:04+00:00",
-  "alerts": "2026-09-01T15:12:04+00:00",
-  "afd": "2026-09-01T15:12:04+00:00",
-  "lake_forecast": "2026-09-01T15:12:04+00:00",
-  "lake_gage": "2026-09-01T15:12:04+00:00",
-  "air": "2026-09-01T15:12:04+00:00",
-  "sun": "2026-09-01T15:12:04+00:00",
-  "models": "2026-09-01T15:12:04+00:00"
+  "now": "2026-09-01T18:39:46+00:00",
+  "forecast": "2026-09-01T18:39:46+00:00",
+  "hourly": "2026-09-01T18:39:46+00:00",
+  "alerts": "2026-09-01T18:39:46+00:00",
+  "afd": "2026-09-01T18:39:46+00:00",
+  "lake_forecast": "2026-09-01T18:39:46+00:00",
+  "lake_gage": "2026-09-01T18:39:46+00:00",
+  "air": "2026-09-01T18:39:46+00:00",
+  "sun": "2026-09-01T18:39:46+00:00",
+  "models": "2026-09-01T18:39:46+00:00"
  },
  "now": {
-  "observed_at": "2026-09-01T14:50:00+00:00",
+  "observed_at": "2026-09-01T18:20:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 72,
-  "feels_like_f": 72,
-  "humidity": null,
-  "dewpoint_f": null,
-  "wind_mph": null,
+  "temp_f": 75,
+  "feels_like_f": 75,
+  "humidity": 54,
+  "dewpoint_f": 57,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": null
+  "wind_dir": "W"
  },
  "forecast": {
   "updated": "2026-09-01T06:20:23+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-09-01T06:00:00-04:00",
+    "name": "This Afternoon",
+    "start": "2026-09-01T14:00:00-04:00",
     "is_day": true,
     "temp_f": 74,
-    "pop": 26,
+    "pop": 22,
     "wind": "SE 6 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly cloudy, with a high near 74. Southeast wind around 6 mph. Chance of precipitation is 30%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "short": "Slight Chance Rain Showers",
+    "detailed": "A slight chance of rain showers. Mostly cloudy, with a high near 74. Southeast wind around 6 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -172,50 +172,6 @@
  "hourly": {
   "updated": "2026-09-01T06:20:23+00:00",
   "hours": [
-   {
-    "t": "2026-09-01T10:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 26,
-    "humidity": 70,
-    "wind_mph": 3,
-    "wind_dir": "SE",
-    "sky": 76,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-01T11:00:00-04:00",
-    "temp_f": 69,
-    "feels_f": 69,
-    "pop": 23,
-    "humidity": 70,
-    "wind_mph": 3,
-    "wind_dir": "SE",
-    "sky": 78,
-    "short": "Slight Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-01T12:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
-    "pop": 21,
-    "humidity": 66,
-    "wind_mph": 5,
-    "wind_dir": "S",
-    "sky": 77,
-    "short": "Slight Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-01T13:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
-    "pop": 19,
-    "humidity": 66,
-    "wind_mph": 5,
-    "wind_dir": "S",
-    "sky": 69,
-    "short": "Slight Chance Rain Showers"
-   },
    {
     "t": "2026-09-01T14:00:00-04:00",
     "temp_f": 73,
@@ -567,6 +523,50 @@
     "wind_dir": "S",
     "sky": 100,
     "short": "Showers And Thunderstorms Likely"
+   },
+   {
+    "t": "2026-09-02T22:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 64,
+    "humidity": 90,
+    "wind_mph": 15,
+    "wind_dir": "S",
+    "sky": 97,
+    "short": "Showers And Thunderstorms Likely"
+   },
+   {
+    "t": "2026-09-02T23:00:00-04:00",
+    "temp_f": 65,
+    "feels_f": 65,
+    "pop": 91,
+    "humidity": 93,
+    "wind_mph": 15,
+    "wind_dir": "S",
+    "sky": 94,
+    "short": "Showers And Thunderstorms"
+   },
+   {
+    "t": "2026-09-03T00:00:00-04:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 91,
+    "humidity": 97,
+    "wind_mph": 15,
+    "wind_dir": "S",
+    "sky": 94,
+    "short": "Showers And Thunderstorms"
+   },
+   {
+    "t": "2026-09-03T01:00:00-04:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 91,
+    "humidity": 93,
+    "wind_mph": 15,
+    "wind_dir": "S",
+    "sky": 94,
+    "short": "Showers And Thunderstorms"
    }
   ]
  },
@@ -574,14 +574,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-01T10:31:00+00:00",
+  "issued": "2026-09-01T17:30:00+00:00",
   "key_messages": [
    "Rain along a stationary boundary will push through the region this morning into early this afternoon, tapering off this evening for most. Some isolated areas of drizzle will be possible overnight mainly in eastern Vermont and the Adirondacks.",
    "Heavier, more widespread, rain is expected Wednesday into Wednesday night with some embedded thunderstorms. Isolated showers will continue Thursday, mainly across Vermont.",
    "A few showers linger into late-week, trending drier through the weekend."
   ],
   "what_changed": "As of 220 AM EDT Tuesday... A Marginal Risk (level 1 out of 5) for severe thunderstorms has been introduced to southwestern St. Lawrence County for Wednesday.",
-  "raw": "\n000\nFXUS61 KBTV 011031\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n631 AM EDT Tue Sep 1 2026\n\n.WHAT HAS CHANGED...\nAs of 220 AM EDT Tuesday...\n\nA Marginal Risk (level 1 out of 5) for severe thunderstorms has been \nintroduced to southwestern St. Lawrence County for Wednesday.\n\n&&\n\n.KEY MESSAGES...\nAs of 220 AM EDT Tuesday...\n\n1. Rain along a stationary boundary will push through the \nregion this morning into early this afternoon, tapering off this \nevening for most. Some isolated areas of drizzle will be possible \novernight mainly in eastern Vermont and the Adirondacks.\n\n2. Heavier, more widespread, rain is expected Wednesday into \nWednesday night with some embedded thunderstorms. Isolated showers \nwill continue Thursday, mainly across Vermont.\n\n3.  A few showers linger into late-week, trending drier through \nthe weekend.\n\n&&\n\n.DISCUSSION...\nAs of 220 AM EDT Tuesday...\n\nKEY MESSAGE 1: Confluent flow driven by departing high pressure to the \nsoutheast, and a stalled stationary boundary over the Great Lakes \nand south into the Mid-Atlantic will push showers through the region \nthis morning into the early afternoon. Radar depicts a broad area of \nlight to moderate showers extending from the St. Lawrence Valley \ninto northeastern Ontario. This area of showers will ride along a \nstationary boundary into northern New York with good isentropic \nlift, before diving south into the Hudson Valley, following the \nsynoptic flow of the departing area of high pressure. Stratiform \nrain is expected across much of northern New York and areas south of \nI-89 in Vermont. The Northeast Kingdom may be able to stay dry \nthrough much of the day today. Rainfall rates will be fairly light \nwith a thin warm cloud depth, in association with decently dry mid \nlevels. Rainfall may resemble light rain or drizzle intermittently \nbetween showers. Most of the more persistent shower activity should \nmove south and east of the region by this afternoon, with just some \nlingering light showers. Trends have kept the better instability and \nthunder chances to our southwest in the quasi warm sector and along \nthe stationary boundary. Rainfall amounts through this evening are \nexpected to be less than half and inch with a quarter to a half an \ninch southwest of a line from Massena, NY to the Orange/Caledonia \nCounty border in Vermont. As showers depart this afternoon, low \nlevel moisture will linger, though mid levels will remain fairly \ndry. Thus, some drizzle may still linger into the overnight hours, \nparticularly in eastern Vermont where damed cold air will reside \nunder the approaching warm air from the west leading to further \nisentropic lift. While it will not be a total washout today, with \nlikely breaks between showers, especially this afternoon, it will \nlikely be dreary. With the added cloud cover temperatures today \ntemperatures will struggle to get out of the 60s in our south and \nwestern regions, with some warmer temperatures on the northern edge \nof the shower activity near the International Border where mid 70s \nwill be possible.\n\nKEY MESSAGE 2: A more dynamic system will push into the area Wednesday \ninto Wednesday night as the stationary boundary to our southwest, \ndrifts northeast closer to our region. A surface low over the Great \nLakes associated with a parent low in northeast Ontario will track \neast from eastern Ontario. Showers are expected to move into the St. \nLawrence Valley by the early afternoon on Wednesday, though with \nlimited instability due to likely convective blowoff preceding \nthese showers. However by the mid to late afternoon models depict \ngood elevated instability above an inversion layer which could help \nsustain some thunderstorm activity primarily in the later afternoon \nand evening hours in the St. Lawrence Valley. 1000-1500J/kg of \nMLCAPE associated with 30-40kts of 0-6km bulk shear would be ample \nto support embedded thunderstorms towards the later afternoon. Any \nstronger storms Wednesday afternoon, would be tied to northwestern \nNew York, and conditional on the amount of cloud cover and \nantecedent convection. Temperature profiles likely will not be of \nmuch help with surface temperatures in the mid to upper 70s \nWednesday afternoon. Should convection become self-sustaining in \nCanada, it likely would be able to continue due to the available \nMUCAPE to 1500-2000J/kg modeled across the St. Lawrence Valley. As a \nresult of this slight upward trend, the Storm Prediction Center has \nadded southwestern St. Lawrence County in a Marginal Risk (level 1 \nout of 5) for Severe thunderstorms Wednesday afternoon-Wednesday \nnight. As the showers and embedded thunderstorms continue to track \neast Wednesday evening, a developing nocturnal inversion will help \ndecrease the threat of any stronger storms in addition to the \noverall thunder chances. However, showers will still retain the \npotential for heavier downpours into Vermont beyond sunset. Rainfall \nrates in the HREF through Wednesday evening denote pockets of 0.25-\n0.5\"/hour rates across northern New York. A good wetting rain is \nanticipated Wednesday night areawide with most areas expected to see \nthree-quarters of an inch to an inch of rain, with perhaps an inch \nto 1.5 inches in the higher terrain of the Greens. Ensembles still \nshow a 20-50% chance of receiving an inch or more, with 2 inch \nprobabilities unchanged and less than 10%. While most of the area is \nstill in a Marginal Risk (level 1 out of 4) for the potential for \nisolated Flash Flooding, the threat remains low and conditional upon \nthe heavy rain axis becoming colocated with the rain axis today. \nRegardless, there will be several hours between rain events today \nand Wednesdays in addition to marginal rainfall totals. The bulk of \nthe rain is expected to fall overnight Wednesday into Thursday \nmorning. The heaviest showers should depart early Thursday morning \nto our east, though some lingering showers will still be possible in \neastern Vermont as a trailing cold front shifts east. Within this \nthin warm sector a few pop up showers and isolated thunderstorms \nwill be possible Thursday afternoon, mainly in southern Vermont \nwhere chances for any clearing will be highest. No severe storms are \nexpected at this time Thursday. Unsettled weather will finally trend \ntowards more quiet conditions as we near Friday and the weekend.\n\nKEY MESSAGE 3: The upper-level low centered over central Quebec will \nshift southeastward through Saturday.  Multiple shortwaves rotating \naround the low will keep some scattered showers around, interspersed \nwith drier periods in between shortwaves.  Friday's showers look \nmainly focused over northwestern slopes of higher terrain with \nnorthwesterly flow in place.  As the low further shifts away on \nSaturday, flow will become northeasterly and thus favor showers on \nthe northeastern slopes.  Sunday will trend drier as the low moves \nout to sea and high pressure builds in from the west. \n\nGiven the lingering upper-level low, temperatures will remain on the \ncooler side of seasonal normals.  Highs through the weekend will \ngenerally be in the 70s, with lows in the 40s and 50s.\n\n&&\n\n.AVIATION /12Z TUESDAY THROUGH SATURDAY/...\nThrough 12Z Wednesday...Steady showers will continue over\nsouthern portions of our forecast area through early this\nafternoon. These showers will bring periods of reduced\nvisibilities in the 3-6SM range to KSLK and KRUT. Showers will\nbe more scattered at other TAF sites, but have included tempos\nand PROB30s where appropriate for KMSS, KPBG, KBTV, and KMPV, as\nthey all remain along or just north of the line of steadier\nshowers. Thus, expect visibilities to bounce up and down at\nthese sites. Steady showers will come to an end early this\nafternoon, though some additional lighter passing showers are\npossible. Once the showers depart, low-level moisture will be\nsuppressed underneath a low-level inversion, setting the stage\nfor some low stratus and a trend towards low MVFR/IFR ceilings\nafter 06Z Wednesday.  \n\nOutlook...\n\nWednesday: Mainly VFR, with local MVFR possible. Chance SHRA,\nSlight chance TSRA.\nWednesday Night: Mainly MVFR, with local IFR possible. Definite\nSHRA, Slight chance TSRA.\nThursday: Mainly MVFR, with areas IFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Slight\nchance SHRA.\nFriday: MVFR. Chance SHRA.\nFriday Night: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nSaturday: Mainly MVFR, with local IFR possible. Slight chance\nSHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Duell\nAVIATION...Duell\n"
+  "raw": "\n000\nFXUS61 KBTV 011730\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n130 PM EDT Tue Sep 1 2026\n\n.WHAT HAS CHANGED...\nAs of 220 AM EDT Tuesday...\n\nA Marginal Risk (level 1 out of 5) for severe thunderstorms has been \nintroduced to southwestern St. Lawrence County for Wednesday.\n\n&&\n\n.KEY MESSAGES...\nAs of 220 AM EDT Tuesday...\n\n1. Rain along a stationary boundary will push through the \nregion this morning into early this afternoon, tapering off this \nevening for most. Some isolated areas of drizzle will be possible \novernight mainly in eastern Vermont and the Adirondacks.\n\n2. Heavier, more widespread, rain is expected Wednesday into \nWednesday night with some embedded thunderstorms. Isolated showers \nwill continue Thursday, mainly across Vermont.\n\n3.  A few showers linger into late-week, trending drier through \nthe weekend.\n\n&&\n\n.DISCUSSION...\nAs of 220 AM EDT Tuesday...\n\nKEY MESSAGE 1: Confluent flow driven by departing high pressure to the \nsoutheast, and a stalled stationary boundary over the Great Lakes \nand south into the Mid-Atlantic will push showers through the region \nthis morning into the early afternoon. Radar depicts a broad area of \nlight to moderate showers extending from the St. Lawrence Valley \ninto northeastern Ontario. This area of showers will ride along a \nstationary boundary into northern New York with good isentropic \nlift, before diving south into the Hudson Valley, following the \nsynoptic flow of the departing area of high pressure. Stratiform \nrain is expected across much of northern New York and areas south of \nI-89 in Vermont. The Northeast Kingdom may be able to stay dry \nthrough much of the day today. Rainfall rates will be fairly light \nwith a thin warm cloud depth, in association with decently dry mid \nlevels. Rainfall may resemble light rain or drizzle intermittently \nbetween showers. Most of the more persistent shower activity should \nmove south and east of the region by this afternoon, with just some \nlingering light showers. Trends have kept the better instability and \nthunder chances to our southwest in the quasi warm sector and along \nthe stationary boundary. Rainfall amounts through this evening are \nexpected to be less than half and inch with a quarter to a half an \ninch southwest of a line from Massena, NY to the Orange/Caledonia \nCounty border in Vermont. As showers depart this afternoon, low \nlevel moisture will linger, though mid levels will remain fairly \ndry. Thus, some drizzle may still linger into the overnight hours, \nparticularly in eastern Vermont where damed cold air will reside \nunder the approaching warm air from the west leading to further \nisentropic lift. While it will not be a total washout today, with \nlikely breaks between showers, especially this afternoon, it will \nlikely be dreary. With the added cloud cover temperatures today \ntemperatures will struggle to get out of the 60s in our south and \nwestern regions, with some warmer temperatures on the northern edge \nof the shower activity near the International Border where mid 70s \nwill be possible.\n\nKEY MESSAGE 2: A more dynamic system will push into the area Wednesday \ninto Wednesday night as the stationary boundary to our southwest, \ndrifts northeast closer to our region. A surface low over the Great \nLakes associated with a parent low in northeast Ontario will track \neast from eastern Ontario. Showers are expected to move into the St. \nLawrence Valley by the early afternoon on Wednesday, though with \nlimited instability due to likely convective blowoff preceding \nthese showers. However by the mid to late afternoon models depict \ngood elevated instability above an inversion layer which could help \nsustain some thunderstorm activity primarily in the later afternoon \nand evening hours in the St. Lawrence Valley. 1000-1500J/kg of \nMLCAPE associated with 30-40kts of 0-6km bulk shear would be ample \nto support embedded thunderstorms towards the later afternoon. Any \nstronger storms Wednesday afternoon, would be tied to northwestern \nNew York, and conditional on the amount of cloud cover and \nantecedent convection. Temperature profiles likely will not be of \nmuch help with surface temperatures in the mid to upper 70s \nWednesday afternoon. Should convection become self-sustaining in \nCanada, it likely would be able to continue due to the available \nMUCAPE to 1500-2000J/kg modeled across the St. Lawrence Valley. As a \nresult of this slight upward trend, the Storm Prediction Center has \nadded southwestern St. Lawrence County in a Marginal Risk (level 1 \nout of 5) for Severe thunderstorms Wednesday afternoon-Wednesday \nnight. As the showers and embedded thunderstorms continue to track \neast Wednesday evening, a developing nocturnal inversion will help \ndecrease the threat of any stronger storms in addition to the \noverall thunder chances. However, showers will still retain the \npotential for heavier downpours into Vermont beyond sunset. Rainfall \nrates in the HREF through Wednesday evening denote pockets of 0.25-\n0.5\"/hour rates across northern New York. A good wetting rain is \nanticipated Wednesday night areawide with most areas expected to see \nthree-quarters of an inch to an inch of rain, with perhaps an inch \nto 1.5 inches in the higher terrain of the Greens. Ensembles still \nshow a 20-50% chance of receiving an inch or more, with 2 inch \nprobabilities unchanged and less than 10%. While most of the area is \nstill in a Marginal Risk (level 1 out of 4) for the potential for \nisolated Flash Flooding, the threat remains low and conditional upon \nthe heavy rain axis becoming colocated with the rain axis today. \nRegardless, there will be several hours between rain events today \nand Wednesdays in addition to marginal rainfall totals. The bulk of \nthe rain is expected to fall overnight Wednesday into Thursday \nmorning. The heaviest showers should depart early Thursday morning \nto our east, though some lingering showers will still be possible in \neastern Vermont as a trailing cold front shifts east. Within this \nthin warm sector a few pop up showers and isolated thunderstorms \nwill be possible Thursday afternoon, mainly in southern Vermont \nwhere chances for any clearing will be highest. No severe storms are \nexpected at this time Thursday. Unsettled weather will finally trend \ntowards more quiet conditions as we near Friday and the weekend.\n\nKEY MESSAGE 3: The upper-level low centered over central Quebec will \nshift southeastward through Saturday.  Multiple shortwaves rotating \naround the low will keep some scattered showers around, interspersed \nwith drier periods in between shortwaves.  Friday's showers look \nmainly focused over northwestern slopes of higher terrain with \nnorthwesterly flow in place.  As the low further shifts away on \nSaturday, flow will become northeasterly and thus favor showers on \nthe northeastern slopes.  Sunday will trend drier as the low moves \nout to sea and high pressure builds in from the west. \n\nGiven the lingering upper-level low, temperatures will remain on the \ncooler side of seasonal normals.  Highs through the weekend will \ngenerally be in the 70s, with lows in the 40s and 50s.\n\n&&\n\n.AVIATION /18Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...Isolated rain showers will taper off this\nafternoon and evening. Once the showers depart, low-level moisture\nwill be suppressed underneath a low-level inversion, setting the\nstage for some low stratus and a trend towards widespread MVFR/IFR\nceilings after 06Z Wednesday. Some isolated areas of drizzle and\nmist will be possible overnight mainly in eastern Vermont and the\nAdirondacks. Most likely locations of IFR ceilings will be at SLK,\nMPV, and RUT 06Z-14Z Wednesday, though it is not out of the question\nat EFK either. MSS may escape most of the lowered ceilings\nthroughout the night with mainly VFR conditions anticipated. Winds\nthis afternoon are light and variable, expected to take on a south\nto southeasterly direction this evening and tonight and increasing\non Wednesday. Ceilings should gradually improve throughout the day\non Wednesday, but exact timing of widespread VFR conditions is not\nquite clear yet. Heavier and widespread rain is expected Wednesday\nnight with some embedded thunderstorms.\n\nOutlook...\n\nWednesday Night: Mainly VFR, with local IFR possible. Definite\nSHRA, Slight chance TSRA.\nThursday: MVFR/IFR conditions possible. Chance SHRA, Slight\nchance TSRA.\nThursday Night: Mainly VFR, with local MVFR possible. Slight\nchance SHRA.\nFriday: Mainly VFR, with local MVFR possible. Chance SHRA.\nFriday Night: Mainly VFR, with local IFR possible. NO SIG WX.\nSaturday: Mainly MVFR, with areas IFR possible. Slight chance\nSHRA.\nSaturday Night: MVFR/IFR conditions possible. NO SIG WX.\nSunday: Mainly VFR, with areas MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Duell/Danzig\nAVIATION...Storm\n"
  },
  "lake_forecast": {
   "issued": "2026-09-01T06:22:00+00:00",
@@ -825,85 +825,85 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 71,
-  "water_temp_at": "2026-09-01T11:00:00.000-04:00",
-  "level_ft": 94.58,
-  "level_at": "2026-09-01T11:00:00.000-04:00",
+  "water_temp_f": 72,
+  "water_temp_at": "2026-09-01T14:00:00.000-04:00",
+  "level_ft": 94.54,
+  "level_at": "2026-09-01T14:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 27,
-  "category": "Good",
-  "pollutant": "PM2.5",
-  "observed": "09/01/26 10:00",
-  "discussion": "Expect generally good air quality across Vermont on Tuesday, September 1st."
+  "aqi": 60,
+  "category": "Moderate",
+  "pollutant": "PM10",
+  "observed": "09/01/26 14:00",
+  "discussion": "Expect generally good air quality across Vermont on Wednesday, September 2nd."
  },
  "sun": {
   "sunrise": "2026-09-01T06:15-04:00",
   "sunset": "2026-09-01T19:29-04:00",
-  "sunrise_tomorrow": "2026-09-02T06:16-04:00",
+  "sunrise_tomorrow": "2026-09-02T06:17-04:00",
   "sunset_tomorrow": "2026-09-02T19:27-04:00",
-  "uv_max": 5.5
+  "uv_max": 6.35
  },
  "models": {
   "days": [
    {
     "date": "2026-09-01",
     "high_f": {
-     "GFS": 75,
+     "GFS": 77,
      "Euro": 74,
-     "ICON": 70
+     "ICON": 78
     },
     "pop_max": {
      "GFS": 33,
-     "Euro": 68,
-     "ICON": 38
+     "Euro": 90,
+     "ICON": 23
     },
     "precip_in": {
      "GFS": 0.04,
      "Euro": 0.19,
-     "ICON": 0.04
+     "ICON": 0.0
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-09-02",
     "high_f": {
      "GFS": 75,
      "Euro": 74,
-     "ICON": 73
+     "ICON": 74
     },
     "pop_max": {
-     "GFS": 79,
-     "Euro": 78,
-     "ICON": 90
+     "GFS": 43,
+     "Euro": 88,
+     "ICON": 93
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.02,
-     "ICON": 0.61
+     "ICON": 0.52
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    },
    {
     "date": "2026-09-03",
     "high_f": {
-     "GFS": 74,
+     "GFS": 76,
      "Euro": 73,
-     "ICON": 80
+     "ICON": 78
     },
     "pop_max": {
      "GFS": 80,
-     "Euro": 86,
-     "ICON": 96
+     "Euro": 92,
+     "ICON": 90
     },
     "precip_in": {
-     "GFS": 2.39,
+     "GFS": 2.41,
      "Euro": 1.08,
-     "ICON": 0.76
+     "ICON": 0.17
     },
-    "high_spread_f": 7
+    "high_spread_f": 5
    }
   ]
  }
