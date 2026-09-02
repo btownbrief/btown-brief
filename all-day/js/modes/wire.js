@@ -128,11 +128,32 @@ function newsletterEditions() {
   return list;
 }
 
+/* Today's card used to be newsletter-only, which read wrong twice over: the
+   Brief lands twice a week, so "what matters today" could be four days old —
+   and every story on it was already sent to subscribers. The machine picks
+   local stories off the wire three times a day; those now lead the card, and
+   the Brief's stories fill in behind them. His paragraphs still carry the
+   `from` line, so whose words are whose stays legible. */
+function blendToday(list) {
+  const today = list[0];
+  if (!today || today.label) return;          // only the rotating today window
+  const t = state.top;
+  const wire = (t && Array.isArray(t.picks) ? t.picks : [])
+    .filter((p) => p && p.local && p.t && p.u);
+  if (!wire.length) return;
+  const seen = new Set(today.picks.map((p) => keyOf(p)));
+  const fresh = wire.filter((p) => !seen.has(keyOf(p)));
+  if (!fresh.length) return;
+  today.picks = fresh.concat(today.picks).slice(0, NL_TODAY);
+  if (t.generated) today.generated = t.generated;
+  today.mixed = true;
+}
+
 /* every edition we can show: today, then the archive */
 function editions() {
   if (store.settings().localOnly) {
     const nl = newsletterEditions();
-    if (nl.length) return nl;
+    if (nl.length) { blendToday(nl); return nl; }
   }
   const t = state.top;
   if (!t) return [];
@@ -645,13 +666,16 @@ function renderPicks(root, map) {
   nav.append(back, fwd);
 
   heading(root, {
-    eyebrow: edition.nl ? 'From the Brief' : (idx === 0 ? 'The picks' : 'The picks · earlier'),
+    eyebrow: edition.nl ? (edition.mixed ? 'Local picks' : 'From the Brief')
+      : (idx === 0 ? 'The picks' : 'The picks · earlier'),
     title: edition.label ? esc(edition.label)
       : idx === 0 ? 'What matters today' : 'What mattered then',
     sub: '<span class="count">' + (edition.nl
       ? (edition.label
           ? picks.length + ' stories from that edition'
-          : picks.length + ' from the last two editions · written by hand')
+          : (edition.mixed
+              ? picks.length + ' — fresh off the wire, plus the Brief'
+              : picks.length + ' from the last two editions'))
       : 'Chosen ' + esc(ago(stamp)) +
         (localOnly ? ' · ' + picks.length + ' from here' : '')) +
       (list.length > 1 ? ' · ' + (idx + 1) + ' of ' + list.length + ' editions' : '') + '</span>',

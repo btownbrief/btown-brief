@@ -1429,6 +1429,21 @@ body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
   border: 1px solid var(--edge);
   transition: background .2s ease, border-color .2s ease;
 }
+/* Liquid mode: ui.js pours the active fill as actual water on a canvas —
+   it sloshes across the bar when you toggle. The buttons go transparent and
+   ride above it; without JS or with reduced motion this class never lands
+   and the plain CSS fill below still does the job. */
+.localsw-liquid { position: relative; overflow: hidden; }
+.localsw-liquid .lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; }
+.localsw-liquid .localsw-half { position: relative; z-index: 1; }
+.localsw-liquid .localsw-half.on,
+.localsw.is-on .localsw-liquid .localsw-half.on,
+.localsw .localsw-liquid .localsw-half:last-child.on {
+  background: transparent; background-color: transparent; box-shadow: none;
+}
+.localsw.is-on .localsw-liquid .localsw-half.on::before,
+.localsw.is-on .localsw-liquid .localsw-half.on::after { content: none; }
 .localsw-half {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
   min-height: 40px; padding: 8px 10px; border: 0; border-radius: var(--pill);
@@ -1451,6 +1466,49 @@ body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
 .localsw.is-on .localsw-half.on {
   background: var(--local); color: var(--local-ink);
   box-shadow: 0 1px 2px color-mix(in srgb, var(--local) 40%, transparent);
+  position: relative; overflow: hidden;
+}
+/* The green half is the lake. Two layers of moving water: a slow diagonal
+   current of light and shade, and wave crests rolling along the bottom at
+   two speeds. Both are white/shadow overlays on the fill, so they hold up
+   on the deep green of light mode and the mint of dark mode alike. */
+.localsw.is-on .localsw-half.on::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  /* two soft bands sliding opposite ways — their interference shimmers
+     like light on moving water, where one marching stripe reads as a
+     barber pole */
+  background:
+    repeating-linear-gradient(104deg,
+      transparent 0 18px, rgba(255, 255, 255, 0.10) 27px 34px, transparent 43px 60px),
+    repeating-linear-gradient(94deg,
+      transparent 0 24px, rgba(4, 48, 38, 0.11) 34px 44px, transparent 54px 76px);
+  background-size: 260px 100%, 340px 100%;
+  animation: localsw-current 9s linear infinite;
+}
+.localsw.is-on .localsw-half.on::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(10px 7px at 11px 115%, rgba(255, 255, 255, 0.22) 46%, transparent 54%)
+      repeat-x 0 100% / 24px 13px,
+    radial-gradient(13px 9px at 15px 120%, rgba(4, 48, 38, 0.18) 46%, transparent 54%)
+      repeat-x 0 100% / 34px 16px;
+  animation: localsw-waves 6s linear infinite;
+}
+/* the label rides above the water */
+.localsw.is-on .localsw-half.on > span { position: relative; z-index: 1; }
+/* and the maple leaf floats on it */
+.localsw.is-on .localsw-half.on .localsw-leaf { animation: localsw-float 3.4s ease-in-out infinite; }
+@keyframes localsw-current {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 260px 0, -340px 0; }
+}
+@keyframes localsw-waves {
+  from { background-position: 0 100%, 0 100%; }
+  to { background-position: -240px 100%, 170px 100%; }
+}
+@keyframes localsw-float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-1.5px) rotate(4deg); }
 }
 .localsw.is-on .localsw-half:not(.on) { color: var(--local); }
 /* the leaf reads as a silhouette on the deep-green fill; in dark mode the
@@ -1470,6 +1528,9 @@ body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
 
 @media (prefers-reduced-motion: reduce) {
   .localsw-bar, .localsw-half { transition: none; }
+  .localsw.is-on .localsw-half.on::before,
+  .localsw.is-on .localsw-half.on::after,
+  .localsw.is-on .localsw-half.on .localsw-leaf { animation: none; }
 }
 
 /* ================================================== the control band */
