@@ -249,7 +249,22 @@ export function markPassed(keys) {
 
 export function saved() {
   const list = arr(read(SAVED_KEY, null));
-  if (list.length) return list.filter((i) => i && i.k);
+  if (list.length) {
+    /* reader saves keyed on the bare title before 9/2; door saves on
+       'wiki:'+title. Normalise to the prefixed shape once, deduped, so the
+       same article can never carry two independent stars. */
+    let dirty = false;
+    const seen = {};
+    const clean = list.filter((i) => i && i.k).map((i) => {
+      if (i.kind === 'wiki' && !String(i.k).startsWith('wiki:')) {
+        dirty = true;
+        return { ...i, k: 'wiki:' + i.k };
+      }
+      return i;
+    }).filter((i) => (seen[i.k] ? (dirty = true, false) : (seen[i.k] = 1, true)));
+    if (dirty) write(SAVED_KEY, clean);
+    return clean;
+  }
   /* first run: inherit whatever pulse.html had starred */
   const old = arr(read(OLD_SAVED_KEY, null));
   if (!old.length) return [];
@@ -415,7 +430,16 @@ export function toggleVote(item) {
     p_href: (item.href || '').slice(0, 600),
   }).then((n) => {
     /* the server is the authority — adopt its number when it answers */
-    if (typeof n === 'number') { voteCounts[item.k] = n; voteReady = true; }
+    if (typeof n === 'number') { voteCounts[item.k] = n; voteReady = true; return; }
+    /* the call failed (offline, RLS, outage): undo the optimistic write so a
+       vote that never landed doesn't survive reloads forever — but only if
+       the flag still reads the way this toggle left it */
+    const cur = votedSet();
+    if (on ? cur[item.k] : !cur[item.k]) {
+      if (on) delete cur[item.k]; else cur[item.k] = 1;
+      write(VOTED_KEY, cur);
+      voteCounts[item.k] = Math.max(0, voteCount(item.k) + (on ? -1 : 1));
+    }
   });
   return on;
 }

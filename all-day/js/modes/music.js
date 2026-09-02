@@ -310,9 +310,10 @@ function artistRow(a) {
 }
 
 function recordOf(a) {
+  const links = a.links || {};   // the validator only checks the array shape
   return { k: 'mus:' + a.id, kind: 'artist', title: a.name,
            from: a.genre || 'Burlington music',
-           href: a.links.bandcamp || a.links.site || a.links.instagram || '',
+           href: links.bandcamp || links.site || links.instagram || '',
            art: artOf(a) || '' };
 }
 
@@ -790,10 +791,10 @@ function renderMixtape(root) {
     list.forEach((t) => holder.appendChild(trackRow(t, live && !!t.id)));
   };
 
-  /* the theme and the starter picks are committed to the repo, so they are
-     always there even when the table is empty or unreachable */
+  /* the theme banner is committed to the repo, so it is always there even
+     when the table is empty or unreachable. (The old playlist-page seeds in
+     this file are dead since the #229 port — nothing renders them.) */
   data.fetchJSON('../data/playlist.json', 8000).then((j) => {
-    state.seeds = (j && Array.isArray(j.seeds)) ? j.seeds : [];
     if (j && j.theme && j.theme.title) {
       const b = el('div', 'm-theme');
       b.innerHTML = '<span class="eyebrow">This round’s theme</span>' +
@@ -802,7 +803,7 @@ function renderMixtape(root) {
       root.insertBefore(b, add);
     }
     if (state.mixtape !== null) paint(state.mixtape);
-  }).catch(() => { state.seeds = []; });
+  }).catch(() => {});
 
   rpc('btb_playlist_get', { p_week: periodKey() }).then((rows) => {
     state.mixtape = Array.isArray(rows) ? rows : [];

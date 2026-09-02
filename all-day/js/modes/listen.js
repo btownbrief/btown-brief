@@ -23,6 +23,20 @@ import * as app from './../app.js';
 import { el, esc, safeHref, agoShort, shelfHead, starBtn, voteBtn, paintVote, tabStamp, stampOf, localSwitch, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
 
+/* The shell's one-sound rule: anything that can make a noise registers a stop
+   function. Spotify's embed has no pause API and answers no postMessage, so —
+   same as Music's Bandcamp trick — the only stop is a reload. A frame that a
+   re-render has dropped unregisters itself at its first silence call. */
+function registerEmbed(frame) {
+  const unreg = app.registerForeign(() => {
+    if (!frame.isConnected) { unreg(); return; }
+    const src = frame.getAttribute('src');
+    if (!src) return;
+    frame.removeAttribute('src');
+    frame.setAttribute('src', src);
+  });
+}
+
 const SHOW_URL = 'https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp';
 const PREVIEW = 4;      // newest episodes shown under every show, unasked
 const state = { root: null, pulse: null, pod: null, open: Object.create(null) };
@@ -121,6 +135,7 @@ function render() {
     allEps.hidden = open;
     if (!open && !embed.getAttribute('src')) {
       embed.src = 'https://open.spotify.com/embed/show/6ejf0OFAyNTZNKDzFLWbKp?theme=0';
+      registerEmbed(embed);
     }
   });
   root.append(toggle, embed, allEps);
@@ -304,6 +319,7 @@ function renderEpisodes() {
         frame.allow = 'clipboard-write; encrypted-media; fullscreen; picture-in-picture';
         frame.src = 'https://open.spotify.com/embed/episode/' + encodeURIComponent(e.id) + '?theme=0';
         row.appendChild(frame);
+        registerEmbed(frame);
       } else if (frame) {
         frame.hidden = !open;
       }

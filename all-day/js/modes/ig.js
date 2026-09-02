@@ -175,7 +175,8 @@ function seeCell(p, i) {
      the fold stays lazy, which is where lazy was earning its keep anyway. */
   img.loading = i < 10 ? 'eager' : 'lazy';
   img.referrerPolicy = 'no-referrer';
-  img.alt = p.c ? esc(p.c).slice(0, 80) : '';
+  /* property assignment, not HTML — esc() here showed literal entities */
+  img.alt = p.c ? p.c.slice(0, 80) : '';
   img.src = p.i;
   /* A photo wall has no useful form without the photo. There is no text
      fallback worth a square here, so the tile leaves rather than sitting in

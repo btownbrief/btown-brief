@@ -26,7 +26,9 @@ export const esc = (s) => {
    from running on click. Item URLs come off third-party RSS. */
 export const safeHref = (url) => {
   const u = String(url == null ? '' : url).replace(/[\t\n\r\0]/g, '').trim();
-  return /^(https?:\/\/|#|\.\/|\.\.\/|\/)/i.test(u) ? u : '#';
+  /* the lone-slash branch must not admit protocol-relative URLs — //host,
+     and the /\host form browsers normalise the same way */
+  return /^(https?:\/\/|#|\.\/|\.\.\/|\/(?![\/\\]))/i.test(u) ? u : '#';
 };
 
 export const el = (tag, cls, html) => {

@@ -174,7 +174,9 @@ export function confirmBox({ title, body, yes, danger, onYes }) {
   box.hidden = false;
   const close = () => { box.hidden = true; };
   no.addEventListener('click', close);
-  box.addEventListener('click', (e) => { if (e.target === box) close(); });
+  /* a property, not addEventListener — the box is persistent and every
+     confirm would otherwise stack one more listener on it forever */
+  box.onclick = (e) => { if (e.target === box) close(); };
   ok.addEventListener('click', () => { close(); onYes(); });
   ok.focus();
 }
@@ -241,7 +243,13 @@ export function peek({ title, from, art, body, href, loading, actions }) {
 
 /* ------------------------------------------------------------------ sheet */
 
+/* The one open sheet's close(), so Escape and a sheet-over-sheet both run the
+   real teardown. Hiding the container instead of closing it strands
+   body.sheet-open (which hides the tab bar) and skips the caller's onClose. */
+let sheetClose = null;
+
 export function sheet(title, build, onClose) {
+  if (sheetClose) sheetClose();
   const s = $('sheet');
   s.innerHTML = '';
   const scrim = el('div', 'sheet-scrim');
@@ -266,11 +274,15 @@ export function sheet(title, build, onClose) {
   const close = () => {
     if (closed) return;
     closed = true;
+    if (sheetClose === close) sheetClose = null;
     s.hidden = true;
     document.body.classList.remove('sheet-open');
-    if (onClose) { try { onClose(); } catch (e) { /* never block the close */ } }
+    /* empty BEFORE onClose: an onClose that opens another sheet would
+       otherwise build into `s` and be wiped when this close resumed */
     s.innerHTML = '';
+    if (onClose) { try { onClose(); } catch (e) { /* never block the close */ } }
   };
+  sheetClose = close;
   x.addEventListener('click', close);
   scrim.addEventListener('click', close);
   build(body, close);
@@ -693,9 +705,18 @@ export function openJar(tab) {
         p_tab: where,
         p_sender: store.playerId(),
       }).then((okay) => {
+        /* ad_suggest returns false on a server-side reject (rate limit,
+           validation) and null when the call itself failed — neither is a
+           success, and closing would throw away what they typed */
+        if (!okay) {
+          btn.disabled = false;
+          btn.textContent = 'Put it in the jar';
+          err.textContent = 'That didn’t send — try again in a minute.';
+          err.hidden = false;
+          return;
+        }
         close();
-        toast(okay === null ? 'That didn’t send — try again in a minute'
-                            : 'In the jar. Thank you — I read all of them.');
+        toast('In the jar. Thank you — I read all of them.');
       });
     });
     body.appendChild(form);
@@ -826,6 +847,9 @@ $('theme-btn').addEventListener('click', () => {
   store.setTheme(store.nextTheme());
   paintThemeBtn();
 });
+/* Settings changes the theme too, and announces it with this event —
+   without a listener the mast's moon/sun shows the previous state. */
+window.addEventListener('allday-theme', paintThemeBtn);
 
 let lastY = 0;
 TABS.forEach((tab) => {
@@ -860,7 +884,9 @@ document.addEventListener('keydown', (e) => {
   if (peekEl) closePeek();
   else if (!$('vbox').hidden) closeVideo();
   else if (!$('confirm').hidden) $('confirm').hidden = true;
-  else if (!$('sheet').hidden) $('sheet').hidden = true;
+  else if (!$('sheet').hidden) {
+    if (sheetClose) sheetClose(); else $('sheet').hidden = true;
+  }
 });
 
 if ('ResizeObserver' in window) {

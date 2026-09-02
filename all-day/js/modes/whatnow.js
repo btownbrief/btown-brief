@@ -34,6 +34,7 @@ import * as app from './../app.js';
 import { el, esc, safeHref, chip, shelfHead, scrollHint, tabStamp, stampOf, ICON } from './../ui.js';
 import { loadAll } from './../whatnow-data.js';
 import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from './../whatnow-engine.js';
+import { sunScore } from './../sun.js';
 
 const EVENTS_URL = '../events.html';
 const PLANNER_URL = 'https://play.btownbrief.com/burlington-days/';
@@ -79,6 +80,10 @@ export function mount(root) {
     state.champs = json;
     if (state.loaded) render();
   }, () => {});
+  /* the engine's gray-night gate (ctx.sunsetScore) was dead until 9/2 —
+     nothing ever filled it. Fetch alongside the feeds; a spin that lands
+     before this resolves just goes ungated once, same as a fetch failure. */
+  sunScore(data).then((sun) => { state.sun = sun; });
   loadAll().then(({ data: feeds, status }) => {
     state.feeds = feeds;
     state.status = status;
@@ -130,6 +135,7 @@ function roll() {
   if (reduced) { spin(); return; }
 
   const ctx = buildContext(state.feeds, new Date(), state.mode);
+  ctx.sunsetScore = state.sun ? state.sun.score : null;
   const pool = buildPool(state.feeds, ctx, state.chips);
   if (pool.length < 3) { spin(); return; }
 
@@ -155,6 +161,7 @@ function roll() {
 function spin(first) {
   if (!state.feeds) return;
   const ctx = buildContext(state.feeds, new Date(), state.mode);
+  ctx.sunsetScore = state.sun ? state.sun.score : null;
   const pool = buildPool(state.feeds, ctx, state.chips);
   state.ctx = ctx;
   state.poolSize = pool.length;
@@ -341,14 +348,19 @@ export function render(first) {
     sky.style.height = (h + 90) + 'px';
   });
 
+  /* the jar sits here — under the answer, above the shelves — because every
+     other tab carries it in the first screen-and-a-bit, not four screens down */
+  app.jarRow(root, 'whatnow');
+
   sportsStrip(root);
   arcadeBoard(root);
   renderList(root);
   doors(root);
 
-  if (first) tabStamp(root, stampOf(state.feeds && state.feeds.events &&
+  /* every render, not just the first — render() rebuilds the panel from
+     scratch, so a stamp gated on `first` vanished at the first respin */
+  tabStamp(root, stampOf(state.feeds && state.feeds.events &&
     state.feeds.events.generated), 'the calendar, every morning');
-  app.jarRow(root, 'whatnow');
 }
 
 /* ------------------------------------------------- the calendar beneath */
