@@ -549,41 +549,85 @@ function lswFrame() {
     return [p + v * dt, v];
   };
   const goingRight = !s.on; // Everything lives on the right
-  [s.L, s.vL] = spring(s.L, s.vL, tL, goingRight ? 60 : 110, goingRight ? 10 : 13);
-  [s.R, s.vR] = spring(s.R, s.vR, tR, goingRight ? 110 : 60, goingRight ? 13 : 10);
+  /* a touch underdamped, so a landing jiggles a couple of times */
+  [s.L, s.vL] = spring(s.L, s.vL, tL, goingRight ? 64 : 130, goingRight ? 9 : 10);
+  [s.R, s.vR] = spring(s.R, s.vR, tR, goingRight ? 130 : 64, goingRight ? 10 : 9);
+
+  const lead = goingRight ? s.R : s.L, leadV = goingRight ? s.vR : s.vL;
+
+  /* spray while the pour is fast: little beads torn off the leading edge */
+  if (s.churn > 0.4 && Math.abs(leadV) > 0.8 && Math.random() < 0.6) {
+    s.drops.push({
+      x: lead * W, y: H * (0.2 + Math.random() * 0.6),
+      vx: leadV * W * (0.5 + Math.random() * 0.5),
+      vy: -20 + Math.random() * 40,
+      r: 1 + Math.random() * 1.6, life: 0.3 + Math.random() * 0.25,
+    });
+  }
 
   /* landing: the leading edge crossing its target at speed throws droplets */
-  const lead = goingRight ? s.R : s.L, leadV = goingRight ? s.vR : s.vL;
   if (!s.splashed && s.churn > 0.5 &&
       Math.abs(lead - (goingRight ? tR : tL)) < 0.045 && Math.abs(leadV) > 0.35) {
     s.splashed = true;
     const bx = (goingRight ? tR : tL) * W;
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 16; i++) {
       s.drops.push({
-        x: bx, y: H * (0.25 + Math.random() * 0.5),
-        vx: (goingRight ? 1 : -1) * (30 + Math.random() * 110) * (Math.random() < 0.25 ? -0.4 : 1),
-        vy: -30 + Math.random() * 60,
-        r: 1.4 + Math.random() * 2.2, life: 0.45 + Math.random() * 0.35,
+        x: bx, y: H * (0.15 + Math.random() * 0.7),
+        vx: (goingRight ? 1 : -1) * (30 + Math.random() * 130) * (Math.random() < 0.25 ? -0.45 : 1),
+        vy: -50 + Math.random() * 90,
+        r: 1.4 + Math.random() * 3.1, life: 0.5 + Math.random() * 0.45,
       });
     }
   }
-  s.churn = Math.max(0, s.churn - dt * 0.9);
+  s.churn = Math.max(0, s.churn - dt * 0.7);
   s.colorT = Math.min(1, s.colorT + dt * 2.2);
+
+  /* bubbles: born low in the water, wobbling up, gone at the rim. The pin
+     was bubbly; so is the lake. */
+  s.bubbles = s.bubbles || [];
+  s.bubbleAt = s.bubbleAt || 0;
+  const slabL = Math.min(s.L, s.R) * W, slabR = Math.max(s.L, s.R) * W;
+  if (now > s.bubbleAt && slabR - slabL > 30) {
+    s.bubbleAt = now + 0.35 + Math.random() * 0.8 - Math.min(0.5, s.churn * 0.5);
+    s.bubbles.push({
+      x: slabL + 12 + Math.random() * (slabR - slabL - 24),
+      y: H - 4, r: 0.9 + Math.random() * 1.7,
+      vy: 9 + Math.random() * 9, ph: Math.random() * Math.PI * 2,
+    });
+  }
 
   const fill = lswMix(s.colorFrom || '#1d7a4f', s.colorTo || '#1d7a4f', s.colorT);
 
-  /* the water body, wavy at any edge that isn't pinned to a pill end */
-  const amp = (edge, target) => (target === 0 || target === 1 ? 0 : 1.4) + s.churn * 5;
+  /* the water body, wavy at any edge that isn't pinned to a pill end —
+     livelier at rest than before, rowdier when churned, with a quick third
+     ripple so the surface never reads as a standing sine */
+  const amp = (edge, target) => (target === 0 || target === 1 ? 0 : 2.4) + s.churn * 8;
   const wave = (yy, ph, a) =>
-    a * (Math.sin(yy * 0.18 + s.phase * 2.1 + ph) * 0.6 +
-         Math.sin(yy * 0.07 - s.phase * 1.4 + ph * 1.7) * 0.4);
-  x.beginPath();
+    a * (Math.sin(yy * 0.18 + s.phase * 2.4 + ph) * 0.5 +
+         Math.sin(yy * 0.07 - s.phase * 1.6 + ph * 1.7) * 0.32 +
+         Math.sin(yy * 0.31 + s.phase * 4.2 + ph * 2.3) * 0.18);
+  const edgeAt = (E, ph, a) => (yy) => E * W + wave(yy, ph, a);
   const aL = amp(s.L, tL), aR = amp(s.R, tR);
-  for (let yy = 0; yy <= H; yy += 3) x.lineTo(s.L * W + wave(yy, 0.9, aL), yy);
-  for (let yy = H; yy >= 0; yy -= 3) x.lineTo(s.R * W + wave(yy, 3.7, aR), yy);
+  const leftEdge = edgeAt(s.L, 0.9, aL), rightEdge = edgeAt(s.R, 3.7, aR);
+  x.beginPath();
+  for (let yy = 0; yy <= H; yy += 3) x.lineTo(leftEdge(yy), yy);
+  for (let yy = H; yy >= 0; yy -= 3) x.lineTo(rightEdge(yy), yy);
   x.closePath();
   x.fillStyle = fill;
   x.fill();
+
+  /* a bright crest along whichever meniscus is loose — the light catching
+     the moving edge is half of what makes liquid read as liquid */
+  const crest = (edgeFn, a) => {
+    if (a <= 0.1) return;
+    x.beginPath();
+    for (let yy = 0; yy <= H; yy += 3) x.lineTo(edgeFn(yy), yy);
+    x.strokeStyle = 'rgba(255,255,255,' + Math.min(0.5, 0.22 + s.churn * 0.3).toFixed(3) + ')';
+    x.lineWidth = 1.4;
+    x.stroke();
+  };
+  crest(leftEdge, aL);
+  crest(rightEdge, aR);
 
   /* a soft light on the surface, drifting like the sun on it */
   const g = x.createLinearGradient((s.phase * 14) % W - W * 0.3, 0, (s.phase * 14) % W + W * 0.3, H);
@@ -592,7 +636,15 @@ function lswFrame() {
   g.addColorStop(1, 'rgba(255,255,255,0)');
   x.save(); x.clip(); x.fillStyle = g; x.fillRect(0, 0, W, H); x.restore();
 
-  /* droplets */
+  /* droplets: stretched along their motion like flung liquid, and when one
+     sits close to the water's edge a smaller blob bridges the gap — poor
+     man's goo, and enough of it at this size */
+  const nearEdge = (d) => {
+    const dl = d.x - leftEdge(d.y), dr = rightEdge(d.y) - d.x;
+    if (dl >= 0 && dr >= 0) return 0;          // inside the water
+    const gap = dl < 0 ? -dl : -dr;
+    return gap < 9 ? (dl < 0 ? leftEdge(d.y) : rightEdge(d.y)) : null;
+  };
   for (let i = s.drops.length - 1; i >= 0; i--) {
     const d = s.drops[i];
     d.life -= dt;
@@ -600,7 +652,32 @@ function lswFrame() {
     d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 260 * dt;
     x.globalAlpha = Math.min(1, d.life * 2.5);
     x.fillStyle = fill;
-    x.beginPath(); x.arc(d.x, d.y, d.r, 0, Math.PI * 2); x.fill();
+    const sp = Math.hypot(d.vx, d.vy);
+    const stretch = Math.min(1.8, 1 + sp / 260);
+    x.save();
+    x.translate(d.x, d.y);
+    x.rotate(Math.atan2(d.vy, d.vx));
+    x.beginPath(); x.ellipse(0, 0, d.r * stretch, d.r / Math.sqrt(stretch), 0, 0, Math.PI * 2); x.fill();
+    x.restore();
+    const e = nearEdge(d);
+    if (e !== null && e !== 0) {
+      x.beginPath(); x.arc((d.x + e) / 2, d.y, d.r * 0.55, 0, Math.PI * 2); x.fill();
+    }
+  }
+  x.globalAlpha = 1;
+
+  /* bubbles rise inside the water and vanish at the rim */
+  for (let i = s.bubbles.length - 1; i >= 0; i--) {
+    const b = s.bubbles[i];
+    b.y -= b.vy * dt;
+    b.x += Math.sin(s.phase * 2.4 + b.ph) * 5 * dt;
+    if (b.y < 6 || b.x < slabL + 4 || b.x > slabR - 4) { s.bubbles.splice(i, 1); continue; }
+    const fade = Math.min(1, (b.y - 6) / 8);
+    x.globalAlpha = fade;
+    x.strokeStyle = 'rgba(255,255,255,0.38)';
+    x.lineWidth = 0.9;
+    x.fillStyle = 'rgba(255,255,255,0.13)';
+    x.beginPath(); x.arc(b.x, b.y, b.r, 0, Math.PI * 2); x.fill(); x.stroke();
   }
   x.globalAlpha = 1;
 
