@@ -22,7 +22,7 @@
 import * as store from './../store.js';
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, agoShort, dayLabel, rail, heading, shelfHead, seg, voteBtn, paintVote, starBtn, tabStamp, stampOf, localSwitch, ICON } from './../ui.js';
+import { el, esc, agoShort, dayLabel, rail, heading, shelfHead, seg, voteBtn, paintVote, starBtn, shareBtn, tabStamp, stampOf, localSwitch, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
 
 const WIRE_PAGE = 24;
@@ -61,7 +61,8 @@ function orderShelves(shelves) {
     (rank(a[0]) - rank(b[0])) || (a[1] - b[1])).map((pair) => pair[0]);
 }
 
-const state = { root: null, tv: null, yt: null, past: null, view: 'tonight', shown: WIRE_PAGE };
+const state = { root: null, tv: null, yt: null, past: null, view: 'tonight', shown: WIRE_PAGE,
+                jump: null, jumpTried: false };   // a shared-in 'yt:' key
 
 const thumb = (id) => 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
 
@@ -114,7 +115,34 @@ export function mount(root) {
   data.load('youtube', (json) => { state.yt = json; render(); }, () => {});
 }
 
-export function activate() {}
+export function activate(param) {
+  /* a shared link: #watch/yt:<id>. The card may live in tonight's edition or
+     only on the wider wire — tryJump() flips the view once before giving up. */
+  if (param) {
+    state.jump = param;
+    state.jumpTried = false;
+    if (state.tv || state.yt) render();
+  }
+}
+
+/* Consumed at the end of every render path. */
+function tryJump(root) {
+  if (!state.jump) return;
+  if (app.flashHit(root, state.jump)) {
+    state.jump = null;
+    state.jumpTried = false;
+    return;
+  }
+  if (!state.jumpTried && state.view === 'tonight') {
+    state.jumpTried = true;
+    state.view = 'wire';
+    render();
+    return;
+  }
+  state.jump = null;
+  state.jumpTried = false;
+  app.toast('That video has moved on — here’s what’s playing now');
+}
 /* the Local switch is a whole-app mode; a tab that mounted before it flipped
    has to redraw when you come back to it */
 export function refresh() { if (state.tv || state.yt) render(); }
@@ -292,6 +320,7 @@ function renderTonight(root) {
 
   root.appendChild(el('p', 'srcline', 'Edition ' + esc(tv.edition || '')));
   hydrateVotes(root, [...root.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
+  tryJump(root);
 }
 
 /* Local video is the whole reason this tab exists, and one night's shelf is
@@ -395,6 +424,7 @@ function renderPast(root) {
     }
   });
   hydrateVotes(root, [...root.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
+  tryJump(root);
 }
 
 /* ------------------------------------------------------------ the wire */
@@ -427,6 +457,7 @@ function renderWire(root) {
     root.appendChild(more);
   }
   hydrateVotes(root, slice.map((v) => 'yt:' + v.id));
+  tryJump(root);
 }
 
 /* Each night's edition is published as its own YouTube playlist — the first
@@ -515,6 +546,9 @@ function videoActions(v, card) {
       { k, kind: 'video', title: v.t, from: v.ch || '', href, art: thumb(v.id) }));
   });
 
-  acts.append(mark('watched', ICON.check, 'Watched'), mark('skip', ICON.x, 'Not for me'), star);
+  const sh = shareBtn();
+  sh.addEventListener('click', () => app.share('watch', k, v.t || ''));
+
+  acts.append(mark('watched', ICON.check, 'Watched'), mark('skip', ICON.x, 'Not for me'), star, sh);
   return acts;
 }

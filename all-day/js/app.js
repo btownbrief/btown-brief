@@ -30,15 +30,54 @@ export function register(tab, mod) { registry[tab] = mod; }
 
 function parseHash() {
   const h = location.hash.replace(/^#/, '');
-  const m = h.match(/^wander\/(.+)$/);
-  if (m) {
+  /* any tab can carry a /param now — wander opens an article, wire and
+     watch jump to a shared card; the rest just land on the tab */
+  const m = h.match(/^([a-z]+)\/(.+)$/);
+  if (m && TABS.includes(m[1])) {
     /* a shared link can carry broken percent-encoding, and an uncaught
        URIError here would take the whole router down */
-    let title;
-    try { title = decodeURIComponent(m[1]); } catch (e) { title = m[1]; }
-    return { tab: 'wander', param: title };
+    let param;
+    try { param = decodeURIComponent(m[2]); } catch (e) { param = m[2]; }
+    return { tab: m[1], param };
   }
   return { tab: TABS.includes(h) ? h : 'wire', param: null };
+}
+
+/* ------------------------------------------------------------------ share */
+/* One card, one link. The URL is this app with the tab and the card's key in
+   the hash, so a text from a neighbour lands the reader inside All Day rather
+   than on YouTube or an outlet's site. Native share sheet where phones have
+   one; the clipboard everywhere else. */
+export function share(tab, key, title) {
+  const url = 'https://guide.btownbrief.com/all-day/#' + tab +
+    (key ? '/' + encodeURIComponent(key) : '');
+  if (window.goatcounter && window.goatcounter.count) {
+    window.goatcounter.count({ path: 'all-day-share-' + tab,
+                               title: 'All Day share: ' + tab, event: true });
+  }
+  if (navigator.share) {
+    navigator.share({ title: title || 'All Day — Burlington Brief', url }).catch(() => {});
+    return;
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url)
+      .then(() => toast('Link copied'), () => toast('Couldn’t copy the link'));
+  } else {
+    toast('Couldn’t copy the link');
+  }
+}
+
+/* Scroll a shared-in card into view and let it glow once. Returns whether the
+   key was found, so the caller can say something honest when it wasn't. */
+export function flashHit(root, key) {
+  const hit = [...root.querySelectorAll('[data-k]')].find((n) => n.dataset.k === key);
+  if (!hit) return false;
+  requestAnimationFrame(() => {
+    hit.scrollIntoView({ block: 'center' });
+    hit.classList.add('shared-hit');
+    setTimeout(() => hit.classList.remove('shared-hit'), 2600);
+  });
+  return true;
 }
 
 export function go(tab, param) {
