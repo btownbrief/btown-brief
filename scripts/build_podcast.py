@@ -32,6 +32,7 @@ Run: python3 scripts/build_podcast.py
 from __future__ import annotations
 
 import base64
+import datetime
 import json
 import os
 import pathlib
@@ -128,6 +129,11 @@ def main() -> int:
         "show": "Btown Arts Presents",
         "show_url": f"https://open.spotify.com/show/{SHOW_ID}",
         "source": "spotify-api",
+        # the app's offerFresh() compares payloads by this stamp; without one
+        # a mid-session update is never adopted (and freshness checks can't
+        # age the file)
+        "generated": datetime.datetime.now(datetime.timezone.utc)
+                     .strftime("%Y-%m-%dT%H:%M:%S+00:00"),
         "episodes": eps,
     }
     OUT.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n")

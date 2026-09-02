@@ -1,0 +1,29 @@
+name: Payload freshness — daily red flag
+
+# scripts/check_freshness.py — Editor's Desk's payload-age check, run at
+# product cadence. The Desk reads these ages every Monday; this fails a run
+# RED the first morning any payload blows its budget, because every silent
+# staleness incident so far (curate-top 8/29, curate-tv 8/31) sat behind
+# green workflows until a human noticed in the product.
+#
+# Red = payload past budget -> run fails -> GitHub emails.
+# Amber (approaching budget / unmonitorable) = warnings only; the Desk owns those.
+
+on:
+  schedule:
+    # 12:15 UTC = 8:15am EDT — after the overnight and 10:40 refresh-allday
+    # runs have had time to land, early enough to fix things the same day.
+    - cron: '15 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Age every payload against its budget
+        run: python3 scripts/check_freshness.py
