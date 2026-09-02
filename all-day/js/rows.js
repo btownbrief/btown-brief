@@ -14,7 +14,7 @@
 import * as store from './store.js';
 import * as app from './app.js';
 import * as wire from './wire.js';
-import { el, esc, safeHref, agoShort, starBtn, voteBtn, paintVote } from './ui.js';
+import { el, esc, safeHref, agoShort, starBtn, voteBtn, paintVote, shareBtn } from './ui.js';
 
 export const keyOf = (it) => it.u || it.o || it.t;
 
@@ -81,6 +81,14 @@ export function feedRow(it, src, opts = {}) {
     paintVote(vote, store.voteCount(k), on);
   });
   foot.appendChild(vote);
+
+  const sh = shareBtn();
+  sh.addEventListener('click', (e) => {
+    e.preventDefault();
+    /* the active tab, so a Reddit row shares #reddit and a wire row #wire */
+    app.share(app.activeTab() || 'wire', k, it.t || '');
+  });
+  foot.appendChild(sh);
 
   row.appendChild(foot);
 

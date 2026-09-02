@@ -76,6 +76,9 @@ export const ICON = {
   /* a jar: a lid, a body, and a coin going in — one glyph for both errands */
   jar: '<svg viewBox="0 0 24 24"><path d="M7.5 7.5h9v10.2a2.3 2.3 0 0 1-2.3 2.3H9.8a2.3 2.3 0 0 1-2.3-2.3z"/><path d="M6.6 4.4h10.8v2.2H6.6z"/><path d="M12 10.6v4.2M10.2 12.3h3.6"/></svg>',
   ext: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg>',
+  /* the iOS share glyph — an arrow leaving a tray — because that is the
+     shape phones have taught people to look for */
+  share: '<svg viewBox="0 0 24 24"><path d="M12 14.5V3.8M8.4 7 12 3.4 15.6 7"/><path d="M8 11H6v9.4h12V11h-2"/></svg>',
   search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>',
   sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M4.2 12H2M22 12h-2.2M6.3 6.3 4.8 4.8M19.2 19.2l-1.5-1.5M17.7 6.3l1.5-1.5M4.8 19.2l1.5-1.5"/></svg>',
   moon: '<svg viewBox="0 0 24 24"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z"/></svg>',
@@ -327,6 +330,13 @@ export function starBtn(saved) {
   const b = el('button', 'act' + (saved ? ' on' : ''), ICON.star);
   b.setAttribute('aria-label', saved ? 'Saved' : 'Save for later');
   b.setAttribute('aria-pressed', saved ? 'true' : 'false');
+  return b;
+}
+
+export function shareBtn() {
+  const b = el('button', 'act share', ICON.share);
+  b.setAttribute('aria-label', 'Share');
+  b.title = 'Share';
   return b;
 }
 

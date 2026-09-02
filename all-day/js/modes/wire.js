@@ -39,6 +39,7 @@ const state = {
   wxHidden: false,   // this visit only; a refresh brings the line back
   nl: null,
   byKey: new Map(),
+  jump: null,        // a shared-in card key, consumed by the next render
 };
 
 const TOPICS = [
@@ -64,7 +65,10 @@ export function mount(root) {
   bindGestures(root, bindFeed(root, (k) => state.byKey.get(k), () => render()));
 }
 
-export function activate() {}
+export function activate(param) {
+  /* a shared link: #wire/<key> — jump to that row once the feed is drawn */
+  if (param) { state.jump = param; if (state.pulse) render(); }
+}
 export function refresh() { if (state.pulse) render(); }
 export function deactivate() { app.closePeek(); }
 
@@ -220,6 +224,15 @@ function render() {
     },
   });
 
+  /* Local is the default now, so first-timers get told once what the other
+     half holds — after that the count line's "of N" carries the reminder. */
+  if (set.localOnly) {
+    tipBar(root, 'localfirst',
+      '<span>You’re seeing the <b>local</b> half of the wire. Tap ' +
+      '<b>Everything</b> above for all ' + all.length.toLocaleString() +
+      ' headlines from every outlet we follow.</span>');
+  }
+
   tabStamp(root, stampOf(state.pulse.generated), 'the wire, every 20 minutes');
   renderPicks(root, map);
 
@@ -329,6 +342,16 @@ function render() {
 
   hydrateVotes(root, slice.map(keyOf));
   watchPassed(root);
+
+  if (state.jump) {
+    const key = state.jump;
+    state.jump = null;
+    if (!app.flashHit(root, key)) {
+      /* the item aged out of the payload, or a filter hides it — say so
+         instead of silently landing at the top */
+      app.toast('That headline has moved on — here’s today’s wire');
+    }
+  }
 }
 
 function searchBox(root) {
@@ -556,6 +579,14 @@ function renderBySource(root, shown, map, base) {
   root.appendChild(grid);
   hydrateVotes(root, keys);
   watchPassed(root);
+
+  /* the by-source grid carries the same data-k rows, so a shared link still
+     lands when the reader's layout preference is this one */
+  if (state.jump) {
+    const key = state.jump;
+    state.jump = null;
+    if (!app.flashHit(root, key)) app.toast('That headline has moved on — here’s today’s wire');
+  }
 }
 
 function renderPicks(root, map) {

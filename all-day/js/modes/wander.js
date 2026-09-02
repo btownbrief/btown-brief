@@ -640,11 +640,13 @@ function renderArticle(title, raw, summary) {
   });
   const worm = el('button', 'btn btn-quiet', '🌀 Wormhole');
   worm.addEventListener('click', takeMeSomewhere);
+  const shareB = el('button', 'btn btn-quiet', 'Share');
+  shareB.addEventListener('click', () => app.share('wander', title, pretty(title)));
   const src = el('a', 'btn btn-quiet', 'Sources on Wikipedia ↗');
   src.href = 'https://en.wikipedia.org/wiki/' + encodeURIComponent(title);
   src.target = '_blank';
   src.rel = 'noopener';
-  acts.append(save, worm, src);
+  acts.append(save, worm, shareB, src);
   root.appendChild(acts);
 
   keepFalling(title, root);

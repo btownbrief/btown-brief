@@ -171,7 +171,11 @@ export function nextTheme() {
 const SETTING_DEFAULTS = {
   focus: false,      // read items disappear instead of dimming
   topic: 'all',
-  localOnly: false,
+  /* Local first since 9/2 — the app's identity is Burlington, and Stephen
+     himself read the wire as local-only before the switch existed. Anyone
+     who has ever touched the switch keeps their own answer; this is only
+     the starting position for people who never chose. */
+  localOnly: true,
   layout: 'newest',  // 'newest' one stream, or 'sources' the by-outlet grid
   source: '',        // one outlet only, '' for all
 };
