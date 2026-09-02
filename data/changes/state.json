@@ -3,7 +3,7 @@
   "alerts": [],
   "forecast_flag": {
    "day": "2026-09-02",
-   "text": "Tonight: Rain showers before 4am, then showers and thunderstorms likely"
+   "text": "Tonight: Rain showers before 3am, then a chance of showers and thunderstorms between 3am and 5am, then a slight chance of showers and thunderstorms"
   }
  },
  "beach-status": {
@@ -11,52 +11,52 @@
    "Blanchard Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:32:00+00:00"
+    "resultTime": "2026-09-02T19:50:00+00:00"
    },
    "Blanchard Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:32:00+00:00"
+    "resultTime": "2026-09-02T19:50:00+00:00"
    },
    "Blodgett Water Access Point": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:31:00+00:00"
+    "resultTime": "2026-09-02T19:50:00+00:00"
    },
    "Leddy Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:31:00+00:00"
+    "resultTime": "2026-09-02T19:51:00+00:00"
    },
    "Leddy Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:31:00+00:00"
+    "resultTime": "2026-09-02T19:51:00+00:00"
    },
    "North Beach North": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:31:00+00:00"
+    "resultTime": "2026-09-02T19:51:00+00:00"
    },
    "North Beach South": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:31:00+00:00"
+    "resultTime": "2026-09-02T19:50:00+00:00"
    },
    "North Shore Natural Area": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:30:00+00:00"
+    "resultTime": "2026-09-02T19:51:00+00:00"
    },
    "Oakledge Cove": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:32:00+00:00"
+    "resultTime": "2026-09-02T19:49:00+00:00"
    },
    "Texaco Beach": {
     "status": "open",
     "reason": "Open",
-    "resultTime": "2026-09-02T16:31:00+00:00"
+    "resultTime": "2026-09-02T19:50:00+00:00"
    }
   }
  },
@@ -372,6 +372,34 @@
  "gmt-alerts": {
   "items": [
    {
+    "id": "https://ridegmt.com/?p=25033",
+    "title": "Service Alert :: Essex Junction",
+    "link": "https://ridegmt.com/service-alert-essex-junction-2/",
+    "ts": "2026-09-02T21:07:28+00:00",
+    "summary": "Buses on Route 2 will be on detour due to an accident. Toward Essex Junction, stops from Colchester Avenue at Latham Court through Abenaki Way at CCV will not be [ ]"
+   },
+   {
+    "id": "https://ridegmt.com/?p=25036",
+    "title": "Service Alert :: Franklin County Commuter",
+    "link": "https://ridegmt.com/service-alert-franklin-county-commuter-2/",
+    "ts": "2026-09-02T20:42:36+00:00",
+    "summary": "Buses on Route 96 will be on detour due to an accident. All regular stops will be served, but please expect significant delays."
+   },
+   {
+    "id": "https://ridegmt.com/?p=25031",
+    "title": "Service Alert :: 326 Neighborhood Special",
+    "link": "https://ridegmt.com/service-alert-326-neighborhood-special/",
+    "ts": "2026-09-02T19:50:38+00:00",
+    "summary": "Buses on Route 326 will be on detour. Detour in effect starting September 3 at 7:00 AM. All regular stops will be served."
+   },
+   {
+    "id": "https://ridegmt.com/?p=25028",
+    "title": "Service Alert :: Pine Street",
+    "link": "https://ridegmt.com/service-alert-pine-street-2/",
+    "ts": "2026-09-02T19:48:59+00:00",
+    "summary": "Buses on Route 5 will be on detour. Detour in effect starting September 3 at 7:00 AM. Toward Pine Street, stops from Pine Street at Lyman Avenue through Pine Street [ ]"
+   },
+   {
     "id": "https://ridegmt.com/?p=24971",
     "title": "Service Alert :: Winooski",
     "link": "https://ridegmt.com/service-alert-winooski-5/",
@@ -412,27 +440,6 @@
     "link": "https://ridegmt.com/medicaid-program-change/",
     "ts": "2026-05-12T22:50:00+00:00",
     "summary": "Effective July 1st, Tri-Valley Transit (TVT), a trusted and experienced transportation serviceprovider, will take over Medicaid Transportation for Washington and parts of Orange Countywhere Green Mountain Transit (GMT) was the [ ]"
-   },
-   {
-    "id": "https://ridegmt.com/?p=22252",
-    "title": "Service Alert :: Essex Junction",
-    "link": "https://ridegmt.com/service-alert-essex/",
-    "ts": "2026-05-07T19:29:12+00:00",
-    "summary": "Buses on Route 2 will be on detour due to construction. Toward Essex Junction, stops Winooski Falls/Champlain Mill and Abenaki Way at CCV will not be served. Toward Burlington, stops [ ]"
-   },
-   {
-    "id": "https://ridegmt.com/?p=21520",
-    "title": "Service Alert :: Franklin County Commuter",
-    "link": "https://ridegmt.com/service-alert-milton-commuter-main-street-revitalization-project/",
-    "ts": "2025-11-28T13:59:21+00:00",
-    "summary": "Due to the construction, buses cannot access stops on Winooski Falls Way. Outbound riders should use the temporary stop at Spinner Place at Champlain Mill. Inbound riders can request the [ ]"
-   },
-   {
-    "id": "https://ridegmt.com/?p=22255",
-    "title": "Service Alert :: Winooski",
-    "link": "https://ridegmt.com/service-alert-winooski/",
-    "ts": "2025-09-26T01:59:42+00:00",
-    "summary": "Due to the closure of Abenaki Way, buses cannot access stops on Winooski Falls Way and Abenaki Way. Outbound riders should utilize the temporary stop at the VSAC building on [ ]"
    }
   ]
  },
@@ -479,7 +486,8 @@
     "hasAgenda": true,
     "files": [
      "Agenda V1",
-     "Packet V2"
+     "Packet V2",
+     "DRB Draft Minutes V1"
     ]
    },
    "10153": {
@@ -644,6 +652,34 @@
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=654235",
+      "title": "Harwood district leaders eye Cabot Creamery’s Waitsfield complex as a possible future school site",
+      "link": "https://vtdigger.org/2026/09/02/harwood-district-leaders-eye-cabot-creamerys-waitsfield-complex-as-a-possible-future-school-site/",
+      "ts": "2026-09-02T21:50:41+00:00",
+      "summary": "The corporate office building may be suitable to convert to an elementary school that would serve Waitsfield, Warren, Fayston and Moretown students. Read the story on VTDigger here: Harwood district leaders eye Cabot Creamery’s Waitsfield complex as a possible future school site ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=654230",
+      "title": "Burlington needs to get serious about stamping out drug markets",
+      "link": "https://vtdigger.org/2026/09/02/opinion-burlington-needs-to-get-serious-about-stamping-out-drug-markets/",
+      "ts": "2026-09-02T20:28:05+00:00",
+      "summary": "It's time for bold, decisive action against Burlington's open-air drug trade. Read the story on VTDigger here: Burlington needs to get serious about stamping out drug markets ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=654226",
+      "title": "Oil or babies, Vermont?",
+      "link": "https://vtdigger.org/2026/09/02/opinion-oil-or-babies-vermont/",
+      "ts": "2026-09-02T18:59:42+00:00",
+      "summary": "While the state clings to costly imported oil, birth centers and rural health services are being left to wither. Read the story on VTDigger here: Oil or babies, Vermont? ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=654224",
+      "title": "Vermont Conversation: Historian Jill Lepore on the threat of authoritarianism and how to counter it",
+      "link": "https://vtdigger.org/2026/09/02/vermont-conversation-historian-jill-lepore-on-the-threat-of-authoritarianism-and-how-to-counter-it/",
+      "ts": "2026-09-02T18:49:00+00:00",
+      "summary": "Lepore’s new book, “The Rise and Fall of the Artificial State,” frames the current state of artificial intelligence in a larger — and longer — historical context. Read the story on VTDigger here: Vermont Conversation: Historian Jill Lepore on the threat of authoritarianism and how to counter it ."
+     },
      {
       "id": "https://vtdigger.org/?p=654205",
       "title": "Court questions Vermont Catholic Diocese plan to sell Rice Memorial High to supporters",
@@ -825,39 +861,32 @@
       "link": "https://vtdigger.org/2026/08/28/opinion-out-of-sight-isnt-a-policy/",
       "ts": "2026-08-28T18:44:10+00:00",
       "summary": "Public drug use isn't rising because more people are using. It's rising because they have nowhere left to go. Read the story on VTDigger here: Out of sight isn’t a policy ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=653989",
-      "title": "Class action lawsuit filed in federal court over local PFOA contamination",
-      "link": "https://vtdigger.org/2026/08/27/class-action-lawsuit-filed-in-federal-court-over-local-pfoa-contamination/",
-      "ts": "2026-08-27T22:16:03+00:00",
-      "summary": "The suit was filed Thursday against 3M, Dupont and others. Read the story on VTDigger here: Class action lawsuit filed in federal court over local PFOA contamination ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=653978",
-      "title": "Are the kids all right? Mental health issues drop — but disparities remain.",
-      "link": "https://vtdigger.org/2026/08/27/are-the-kids-all-right-mental-health-issues-drop-but-disparities-remain/",
-      "ts": "2026-08-27T20:16:35+00:00",
-      "summary": "The latest data from a statewide youth survey shows signs of progress, but that’s partly because our comparison is from a “horrible” pandemic peak, experts say. Read the story on VTDigger here: Are the kids all right? Mental health issues drop — but disparities remain. ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=653934",
-      "title": "Mary Henry left a NH school district amid a $5 million deficit. Woodstock says she’s exactly who they need.",
-      "link": "https://vtdigger.org/2026/08/27/mary-henry-left-a-nh-school-district-amid-a-5-million-deficit-woodstock-says-shes-exactly-who-they-need/",
-      "ts": "2026-08-27T19:30:03+00:00",
-      "summary": "The superintendent of Mountain Views Supervisory District said the hiring committee reviewed 17 applicants and chose Henry for her experience in public school finance. Read the story on VTDigger here: Mary Henry left a NH school district amid a $5 million deficit. Woodstock says she’s exactly who they need. ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=653974",
-      "title": "Burlington artist dug Nap struck and killed e-bike rider in crosswalk, new court filing alleges",
-      "link": "https://vtdigger.org/2026/08/27/burlington-artist-dug-nap-struck-and-killed-e-bike-rider-in-crosswalk-new-court-filing-alleges/",
-      "ts": "2026-08-27T19:21:06+00:00",
-      "summary": "Fatal crash brings outpouring of grief for 16-year-old who died as filing in case states that an “attentive driver” should have seen the crosswalk flashing lights and stopped “before crashing into” her. Read the story on VTDigger here: Burlington artist dug Nap struck and killed e-bike rider in crosswalk, new court filing alleges ."
      }
     ]
    },
    "vermont-public": {
     "items": [
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-09-02/frustrations-new-womens-prison-remains-limbo",
+      "title": "Frustrations mount as new women’s prison remains in limbo",
+      "link": "https://www.vermontpublic.org/local-news/2026-09-02/frustrations-new-womens-prison-remains-limbo",
+      "ts": "2026-09-02T21:15:27+00:00",
+      "summary": "State officials told lawmakers this week that they still haven’t found a location for the facility to replace Vermont's decades-old and decrepit women's prison."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-09-02/bernie-sanders-very-concerned-voting-access-midterm-elections",
+      "title": "Bernie Sanders says he's 'very concerned' about voting access ahead of November election",
+      "link": "https://www.vermontpublic.org/local-news/2026-09-02/bernie-sanders-very-concerned-voting-access-midterm-elections",
+      "ts": "2026-09-02T20:51:25+00:00",
+      "summary": "Bernie Sanders, who has been traveling the country in support of democratic socialist candidates, says he's worried about President Donald Trump's attempts to limit mail-in voting ahead of the midterm elections."
+     },
+     {
+      "id": "https://www.vermontpublic.org/show/vermont-edition/2026-09-02/new-year-new-rule-no-phones-in-vermont-schools",
+      "title": "New year, new rule: No phones in Vermont schools",
+      "link": "https://www.vermontpublic.org/show/vermont-edition/2026-09-02/new-year-new-rule-no-phones-in-vermont-schools",
+      "ts": "2026-09-02T19:02:18+00:00",
+      "summary": "Students across the state have entered the new school year with a cellphone ban. It's up to the districts to decide how to enforce it."
+     },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-09-02/new-geriatric-clinic-opens-in-rutland-expanding-care-options-for-older-patients-and-caregivers",
       "title": "New geriatric clinic opens in Rutland, expanding care options for older patients and caregivers",
@@ -878,6 +907,13 @@
       "link": "https://www.vermontpublic.org/local-news/2026-09-01/vermont-motel-voucher-program-changes-include-end-of-211-access",
       "ts": "2026-09-01T21:45:41+00:00",
       "summary": "Motel vouchers will no longer be available after-hours through Vermont 211 as the state rolls out other changes aimed at restructuring homelessness response."
+     },
+     {
+      "id": "https://www.vermontpublic.org/show/vermont-edition/2026-09-01/ancient-native-trash-fish-get-a-bad-rap-these-anglers-want-to-change-that",
+      "title": "Ancient native 'trash fish' get a bad rap. These anglers want to change that",
+      "link": "https://www.vermontpublic.org/show/vermont-edition/2026-09-01/ancient-native-trash-fish-get-a-bad-rap-these-anglers-want-to-change-that",
+      "ts": "2026-09-01T19:57:12+00:00",
+      "summary": "Fish like gar and bowfin play an important role in the region’s aquatic ecosystem."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-09-01/corrections-department-provide-language-services-detainees-settlement",
@@ -913,39 +949,74 @@
       "link": "https://www.vermontpublic.org/local-news/2026-08-31/mt-ascutney-hospital-urologist-stand-alone-surgery-center-dartmouth",
       "ts": "2026-08-31T09:00:00+00:00",
       "summary": "Michael Curtis, a urologist, has worked part-time at Mt. Ascutney Hospital since 2023. After news broke that regulators had greenlit his plans for an independent surgical facility, he was abruptly let go."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-31/plan-double-st-johnsbury-homeless-shelter-beds-families",
-      "title": "Plan would double St. Johnsbury homeless shelter beds, free up space for families",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-31/plan-double-st-johnsbury-homeless-shelter-beds-families",
-      "ts": "2026-08-31T09:00:00+00:00",
-      "summary": "About 10 to 15 people are typically waiting for a bed to open up at the existing Moose River Drive shelter. The new building, about a quarter mile away, would help meet that need."
-     },
-     {
-      "id": "https://www.vermontpublic.org/show/all-things-gardening/2026-08-30/growing-grapes-backyard",
-      "title": "How to grow grapes in your backyard",
-      "link": "https://www.vermontpublic.org/show/all-things-gardening/2026-08-30/growing-grapes-backyard",
-      "ts": "2026-08-30T12:00:00+00:00",
-      "summary": "Many home gardeners think grape-growing is only the milieu of vineyards, but you can plant a small number of grapevines in your yard and have enough delicious fruit to feed your family (and a hungry bird or two)."
-     },
-     {
-      "id": "https://www.vermontpublic.org/show/vermont-this-week/2026-08-28/in-review-household-size-voter-registration-campaign-finance",
-      "title": "In review: Household size and housing need, campaign cash and Vermont's voter list errors",
-      "link": "https://www.vermontpublic.org/show/vermont-this-week/2026-08-28/in-review-household-size-voter-registration-campaign-finance",
-      "ts": "2026-08-28T20:50:49+00:00",
-      "summary": "Vermont's top journalists join moderator Mitch Wertlieb to delve into the most important news stories of the week."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-08-28/cvsd-electric-school-buses-return-service-after-fire",
-      "title": "Undamaged CVSD electric school buses return to service 5 months after fire",
-      "link": "https://www.vermontpublic.org/local-news/2026-08-28/cvsd-electric-school-buses-return-service-after-fire",
-      "ts": "2026-08-28T19:40:20+00:00",
-      "summary": "Two Champlain Valley School District electric school buses returned to service this week, more than five months after the district lost four other EV buses to a fire. The two buses were unharmed in the fire, and underwent an extensive inspection before use."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "5GXXFIDC3FGE5CWG4IYS75BUZM",
+      "title": "Feds say human smuggler posted clients’ testimonials on TikTok",
+      "link": "https://www.wcax.com/2026/09/02/feds-say-human-smuggler-posted-clients-testimonials-tiktok/",
+      "ts": "2026-09-02T21:47:01+00:00",
+      "summary": "Darren Perron spoke with Seven Days’ Lucy Tompkins, who wrote about how human smugglers are advertising their services on TikTok."
+     },
+     {
+      "id": "ODSICXJ2FJBKBJ4PEXDRWPCGSE",
+      "title": "Franklin, Clinton County sheriffs split over New York immigration law",
+      "link": "https://www.wcax.com/2026/09/02/franklin-clinton-county-sheriffs-split-over-new-york-immigration-law/",
+      "ts": "2026-09-02T21:43:11+00:00",
+      "summary": "North County law enforcement in our region has split over whether to join a lawsuit against a New York law restricting cooperation between local law enforcement and federal immigration officials."
+     },
+     {
+      "id": "TDCHI5QLPBAMRDPQFDHL7EGIWI",
+      "title": "Getting Answers: Does Habitat for Humanity have tax-exempt status?",
+      "link": "https://www.wcax.com/2026/09/02/getting-answers-does-habitat-humanity-have-tax-exempt-status/",
+      "ts": "2026-09-02T21:21:16+00:00",
+      "summary": "A viewer in Rutland wrote to us asking if their donation to Habitat for Humanity would end up going as tax money to the town."
+     },
+     {
+      "id": "X5XAE7J24ZCTTKURZN2NLVL3H4",
+      "title": "National forests in our region impacted by Trump’s roadless rule rollback",
+      "link": "https://www.wcax.com/2026/09/02/national-forests-our-region-impacted-by-trumps-roadless-rule-rollback/",
+      "ts": "2026-09-02T20:50:50+00:00",
+      "summary": "Thousands of acres of federal forest land in our region could be affected as the Trump administration seeks to repeal what is known as the Roadless Rule."
+     },
+     {
+      "id": "XFR7KXQJKBCSBK3PX2YTYYBNNY",
+      "title": "New rules take effect for Vermont’s hotel-motel program",
+      "link": "https://www.wcax.com/2026/09/02/new-rules-take-effect-vermonts-hotel-motel-program/",
+      "ts": "2026-09-02T20:23:24+00:00",
+      "summary": "Vermonters seeking emergency housing through the state’s so-called hotel-motel program face new rules this week."
+     },
+     {
+      "id": "IM43KQXXWZA25OAHNUTVAGZCT4",
+      "title": "Connecticut man sentenced for 2024 murder of Vermont woman",
+      "link": "https://www.wcax.com/2026/09/02/connecticut-man-sentenced-2024-murder-vermont-woman/",
+      "ts": "2026-09-02T20:11:55+00:00",
+      "summary": "Investigators said Jakiy Tramaine Corey Keith shot Kayla Wright when she threatened to tell the police about his drug dealing."
+     },
+     {
+      "id": "NBXQEVSZ3VFU7JMSQ56HOFHBD4",
+      "title": "Lebanon shoppers on alert after suspected rabid animal attacks",
+      "link": "https://www.wcax.com/2026/09/02/lebanon-shoppers-alert-after-suspected-rabid-animal-attacks/",
+      "ts": "2026-09-02T20:11:41+00:00",
+      "summary": "Wildlife experts say if the animal is in fact rabid, it would likely succumb to the disease in a couple of days."
+     },
+     {
+      "id": "PI2ELUA3BBDHJASISFMQMLT6UI",
+      "title": "Man faces federal charges in armed City Market robbery attempt",
+      "link": "https://www.wcax.com/2026/09/02/man-faces-federal-charges-armed-city-market-robbery-attempt/",
+      "ts": "2026-09-02T19:35:17+00:00",
+      "summary": "Shawn Foster, 44, is accused of pulling a knife on an employee while trying to make off with a full grocery cart."
+     },
+     {
+      "id": "UGNRC2UOUJERHDIXO2WHDVAQDY",
+      "title": "Montpelier searches for new police chief after top two officers depart",
+      "link": "https://www.wcax.com/2026/09/02/montpelier-searches-new-police-chief-after-top-two-officers-depart/",
+      "ts": "2026-09-02T19:21:17+00:00",
+      "summary": "Montpelier is searching for a new police chief after both the chief and deputy chief left the department this summer."
+     },
      {
       "id": "GJ37TWMYFNALDCD3FC5KSJPMGM",
       "title": "Death of man hit by train in St. Albans ruled accidental",
@@ -1232,213 +1303,150 @@
       "link": "https://www.wcax.com/2026/08/31/hogansburg-man-arrested-allegedly-possessed-1200-pounds-marijuana/",
       "ts": "2026-08-31T19:36:24+00:00",
       "summary": "A Hogansburg man has been arrested on federal drug charges for allegedly having 1,250 pounds of marijuana."
-     },
-     {
-      "id": "N2ULYQT67NGTLJQNPAP3TK7QFQ",
-      "title": "The disease that decimated American elms could help bring them back",
-      "link": "https://www.wcax.com/2026/08/31/disease-that-decimated-american-elms-could-help-bring-them-back/",
-      "ts": "2026-08-31T16:08:05+00:00",
-      "summary": "A group of 6,000 young American elms in Vermont could help save one of the country’s most iconic trees."
-     },
-     {
-      "id": "FMPGUZTFRRFLPIGGVDEAZQA5R4",
-      "title": "North Country massage therapist faces sex crime charges",
-      "link": "https://www.wcax.com/2026/08/31/north-country-massage-therapist-faces-sex-crime-charges/",
-      "ts": "2026-08-31T15:43:31+00:00",
-      "summary": "New York State Police have arrested a North Country massage therapist for inappropriately touching a patient without their consent."
-     },
-     {
-      "id": "OT5TTCW2DZG7PDR6O74EO2ZKRQ",
-      "title": "Norwich University opening a next-generation cybersecurity research center",
-      "link": "https://www.wcax.com/2026/08/31/norwich-university-opening-next-generation-cybersecurity-research-center/",
-      "ts": "2026-08-31T15:00:39+00:00",
-      "summary": "Norwich University will cut the ribbon on its new cyber fusion research and development center Wednesday."
-     },
-     {
-      "id": "OISLVZJABZDJRP6BGPB3BR3WOU",
-      "title": "Hochul, Kevin Bacon highlight end of NY dancing restrictions at bars, restaurants",
-      "link": "https://www.wcax.com/2026/08/31/hochul-kevin-bacon-highlight-end-ny-dancing-restrictions-bars-restaurants/",
-      "ts": "2026-08-31T14:58:04+00:00",
-      "summary": "Governor Kathy Hochul highlighted a policy change with actor Kevin Bacon that eliminates dancing restrictions for bars and restaurants in New York, according to a state announcement."
-     },
-     {
-      "id": "O5LOU54V4BDNBJGOZRLXSDFQW4",
-      "title": "Dorset Street reopens in South Burlington following crash",
-      "link": "https://www.wcax.com/2026/08/31/crash-shuts-down-portion-dorset-street-south-burlington/",
-      "ts": "2026-08-31T14:34:49+00:00",
-      "summary": "A car went off the road and hit a tree shutting a portion of Dorset Street in South Burlington Monday morning."
-     },
-     {
-      "id": "2VZFBF2IPNEKNIYAVDVQ3PNTAU",
-      "title": "Local gas prices continue to rise",
-      "link": "https://www.wcax.com/2026/08/31/local-gas-prices-continue-rise/",
-      "ts": "2026-08-31T12:11:31+00:00",
-      "summary": "Average gasoline prices in Burlington have risen $.04 per gallon in the last week to $4.24, according to GasBuddy’s survey of 100 stations in the Queen City."
-     },
-     {
-      "id": "NHGBTL2BMZBPBMAA4WXSJTDR7E",
-      "title": "While Burlington opens its new high school, others still battle PCB contamination",
-      "link": "https://www.wcax.com/2026/08/31/while-burlington-opens-its-new-high-school-others-still-battle-pcb-contamination/",
-      "ts": "2026-08-31T11:55:00+00:00",
-      "summary": "A Vermont school has spent millions of dollars toward eliminating toxic PCB contamination, but the problem hasn’t gone away."
-     },
-     {
-      "id": "6T2JDUOUIFAKFKGWXAOH5LRWHI",
-      "title": "2 found dead in Springfield",
-      "link": "https://www.wcax.com/2026/08/31/two-found-dead-springfield/",
-      "ts": "2026-08-31T01:45:42+00:00",
-      "summary": "Police say two people were found dead on Parker Hill Road in Springfield."
-     },
-     {
-      "id": "BXCNGKXCB5ESVFLRBZ4R2PVO6M",
-      "title": "Vermont eyes national historic status for state park buildings",
-      "link": "https://www.wcax.com/2026/08/30/vermont-eyes-national-historic-status-state-park-buildings/",
-      "ts": "2026-08-30T23:13:22+00:00",
-      "summary": "A new study of mid-century modern architecture could earn some Vermont State Park buildings a place on the National Register of Historic Places."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
-      "id": "73595825",
-      "title": "Jury in Lindsay Clancy trial tells judge for a second time that it can't agree on a verdict",
-      "link": "https://www.mynbc5.com/article/lindsay-clancy-trial-live-updates-sept-2/73595825",
-      "ts": "2026-09-02T18:40:00+00:00",
-      "summary": "Jurors in the trial of Lindsay Clancy, the Massachusetts mother accused of strangling her three children in 2023, reported a continued deadlock during their fifth day of deliberations."
+      "id": "73596414",
+      "title": "Riverside Cemetery in Plattsburgh honors more than two centuries of military history",
+      "link": "https://www.mynbc5.com/article/riverside-cemetery-in-plattsburgh-honors-more-than-two-centuries-of-military-history/73596414",
+      "ts": "2026-09-02T21:20:00+00:00",
+      "summary": "Riverside Cemetery in Plattsburgh honors more than two centuries of military history with over 700 soldiers buried there."
      },
      {
-      "id": "73594664",
-      "title": "Trump $1 coins now in circulation, U.S. Mint says",
-      "link": "https://www.mynbc5.com/article/trump-dollar-coins-for-sale-circulation/73594664",
-      "ts": "2026-09-02T18:29:00+00:00",
-      "summary": "A $1 gold-colored coin featuring the likeness of President Donald Trump began circulating Wednesday, officials with the U.S. Mint said."
+      "id": "73597331",
+      "title": "‘Holding on just with my fingertips’: Women clung to Grand Canyon ledge for 5 hours during flood",
+      "link": "https://www.mynbc5.com/article/grand-canyon-flood-women-with-maine-ties-survive/73597331",
+      "ts": "2026-09-02T21:18:00+00:00",
+      "summary": "Three women spent five hours clinging to each other and witnessed something they never want to see again during the deadly flood in the Grand Canyon."
      },
      {
-      "id": "73595354",
-      "title": "Pabst Blue Ribbon offers $20,000 reward to help find its missing beer",
-      "link": "https://www.mynbc5.com/article/pabst-blue-ribbon-reward-beer-theft-california/73595354",
-      "ts": "2026-09-02T18:23:00+00:00",
-      "summary": "Over 1,000 cases of Pabst Blue Ribbon were stolen last month. The company wants its beer back, and it’s offering a $20,000 reward to help that happen."
+      "id": "73597144",
+      "title": "Vermont Agricultural Hall of Fame honors five during Champlain Valley Fair",
+      "link": "https://www.mynbc5.com/article/agriculture-remains-at-heart-of-champlain-valley-fair-as-vermont-agricultural-hall-of-fame-honors-five/73597144",
+      "ts": "2026-09-02T21:17:00+00:00",
+      "summary": "The Champlain Valley Fair is celebrating more than rides, food and entertainment — it’s also honoring the people helping shape the future of Vermont agriculture. Meet the five members of the 2026 Vermont Agricultural Hall of Fame class."
+     },
+     {
+      "id": "73597263",
+      "title": "Need continues to grow at area food shelves almost a year after SNAP benefits lapsed for many",
+      "link": "https://www.mynbc5.com/article/without-snap-benefits-food-shelves-increased-need/73597263",
+      "ts": "2026-09-02T21:13:00+00:00",
+      "summary": "It's been almost a year since SNAP benefits lapsed for many people across the country, putting a strain on local food shelves. The drop in donations over the summer exacerbated that need."
+     },
+     {
+      "id": "73597153",
+      "title": "Vermont man arrested for allegedly having explosives in his bag",
+      "link": "https://www.mynbc5.com/article/brattleboro-vermont-james-arrest-explosives/73597153",
+      "ts": "2026-09-02T21:06:00+00:00",
+      "summary": "A Vermont man was arrested after police said he had explosive devices in his bag during a search last month."
+     },
+     {
+      "id": "73596324",
+      "title": "Penn State cocaine case: Witness said accused leader claimed to be 'the godfather'",
+      "link": "https://www.mynbc5.com/article/penn-state-cocaine-case-witness-says-accused-leader-the-godfather/73596324",
+      "ts": "2026-09-02T21:04:00+00:00",
+      "summary": "Penn State cocaine case: Witness said accused leader claimed to be 'the godfather'"
+     },
+     {
+      "id": "73594134",
+      "title": "Quiz: What other historical figures have appeared on US currency?",
+      "link": "https://www.mynbc5.com/article/us-currency-quiz-trump-historical-figures/73594134",
+      "ts": "2026-09-02T20:52:00+00:00",
+      "summary": "The U.S. Mint has started selling a $1 gold coin featuring President Donald Trump, marking the second living president to appear on a coin."
+     },
+     {
+      "id": "73597031",
+      "title": "NBA announces penalties against LA Clippers, Kawhi Leonard for cap circumvention scheme",
+      "link": "https://www.mynbc5.com/article/nba-clippers-ballmer-kawhi-leonard-picks-fines-penalties/73597031",
+      "ts": "2026-09-02T20:48:00+00:00",
+      "summary": "The National Basketball Association (NBA) announced its findings and penalties from an investigation into salary cap circumvention involving the Los Angeles Clippers and star player Kawhi Leonard."
+     },
+     {
+      "id": "73596736",
+      "title": "Mama moose charges woman and her dogs in dramatic home surveillance video",
+      "link": "https://www.mynbc5.com/article/montana-woman-mama-moose-dogs-ring-camera-video/73596736",
+      "ts": "2026-09-02T20:39:00+00:00",
+      "summary": "A woman says she slapped a charging moose and used bear spray to protect her 14-year-old dog and her other two dogs. Her Ring camera captured it all. See the video"
      },
      {
       "id": "73595653",
       "title": "Unhoused man federally charged with allegedly robbing Burlington grocery store with knife",
       "link": "https://www.mynbc5.com/article/burlington-city-market-robbery-shawn-foster/73595653",
-      "ts": "2026-09-02T18:19:00+00:00",
+      "ts": "2026-09-02T20:37:00+00:00",
       "summary": "The man arrested for allegedly robbing a Burlington grocery store and threatening an employee with a knife has been federally charged with the crime."
      },
      {
-      "id": "73594767",
-      "title": "UVM Cancer Center, FDA announce new treatment for pancreatic cancer",
-      "link": "https://www.mynbc5.com/article/uvmcc-fda-new-treatment-pancreatic-cancer/73594767",
-      "ts": "2026-09-02T18:15:00+00:00",
-      "summary": "Cancer patients in Vermont and New York will soon have access to a new kind of treatment. The medication was just approved for pancreatic cancer patients, and thanks to a clinical trial, some people in our region have already gotten to use it."
+      "id": "73592644",
+      "title": "Death of man killed by train in St. Albans was accidental, report shows",
+      "link": "https://www.mynbc5.com/article/st-albans-vermont-amtrak-train-death-patenaude/73592644",
+      "ts": "2026-09-02T20:36:00+00:00",
+      "summary": "The death of a man who was killed by a train in St. Albans last month was an accident, according to a copy of the death certificate obtained by NBC5."
      },
      {
-      "id": "73592776",
-      "title": "Apple changes Lake Ontario name to 'Lake America' for US users of its Maps",
-      "link": "https://www.mynbc5.com/article/apple-lake-ontario-to-lake-america-maps-trump/73592776",
-      "ts": "2026-09-02T18:07:00+00:00",
-      "summary": "Apple has relabeled Lake Ontario to \"Lake America\" for U.S. users of its maps app, following competitor Google days after President Trump ordered a new name for the body of water amid his escalating trade war with Canada."
+      "id": "73591451",
+      "title": "Hegseth’s focus on culture war disrupting Army progress, sources say",
+      "link": "https://www.mynbc5.com/article/hegseth-defense-department-driscoll-culture-war/73591451",
+      "ts": "2026-09-02T20:30:00+00:00",
+      "summary": "As more leaders resign, some sources say Defense Secretary Pete Hegseth's focus on the culture war is damaging the Army’s efforts to adapt to the 21st-century battlefield environment — where drone warfare is becoming increasingly important."
      },
      {
-      "id": "73594680",
-      "title": "Dollywood announces plans to honor Dolly Parton in her theme park",
-      "link": "https://www.mynbc5.com/article/dollywood-theme-park-updates/73594680",
-      "ts": "2026-09-02T17:44:00+00:00",
-      "summary": "The Dollywood theme park announced its plans to honor late singer Dolly Parton on Wednesday."
+      "id": "73595825",
+      "title": "Lindsay Clancy trial: Jury asked to continue deliberations Thursday after reporting ongoing deadlock",
+      "link": "https://www.mynbc5.com/article/lindsay-clancy-trial-live-updates-sept-2/73595825",
+      "ts": "2026-09-02T20:24:00+00:00",
+      "summary": "Jurors in the trial of Lindsay Clancy, the Massachusetts mother accused of strangling her three children in 2023, reported a continued deadlock during their fifth day of deliberations."
      },
      {
-      "id": "73593642",
-      "title": "Family says Haitian college student died after losing immigration status, facing bullying",
-      "link": "https://www.mynbc5.com/article/pierre-damas-bel-death-springfield-ohio/73593642",
-      "ts": "2026-09-02T17:37:00+00:00",
-      "summary": "A college student from Haiti who lost his immigration status after the government ended TPS and faced bullying over an ICE ankle monitor died in Ohio after police say he walked out onto a highway."
+      "id": "73596646",
+      "title": "Plane carrying DHS Secretary Markwayne Mullin makes emergency landing after engine failure",
+      "link": "https://www.mynbc5.com/article/markwayne-mullin-emergency-landing-plane-engine-failure/73596646",
+      "ts": "2026-09-02T20:12:00+00:00",
+      "summary": "A Coast Guard plane carrying Department of Homeland Security Secretary Markwayne Mullin made an emergency landing in Virginia on Wednesday."
      },
      {
-      "id": "73593450",
-      "title": "China presses the US for answers after a man dies hours after entering ICE custody",
-      "link": "https://www.mynbc5.com/article/china-answers-man-dies-ice-custody/73593450",
-      "ts": "2026-09-02T17:32:00+00:00",
-      "summary": "The Chinese government is pressing for answers after a Chinese man died hours after being taken into custody by U.S. Immigration and Customs Enforcement on a U.S. territory"
+      "id": "73574386",
+      "title": "Vermont school district considers potential closure of 5 schools amid pressure to consolidate",
+      "link": "https://www.mynbc5.com/article/vt-school-district-proposes-closure-of-5-schools-amid-pressure-to-consolidate/73574386",
+      "ts": "2026-09-02T20:11:00+00:00",
+      "summary": "Discussions on district merging are yet to take off as some look to consolidate within their own district."
      },
      {
-      "id": "73594855",
-      "title": "1 adult hurt, no children harmed after shooting at Virginia elementary school, official says",
-      "link": "https://www.mynbc5.com/article/virginia-elementary-school-westwood-hills-shooting/73594855",
-      "ts": "2026-09-02T17:24:00+00:00",
-      "summary": "A local Virginia official says an adult was wounded and no children were harmed in a shooting at an elementary school."
+      "id": "73596263",
+      "title": "VIDEO: Motorcyclist crashes, is catapulted into moving bus",
+      "link": "https://www.mynbc5.com/article/motorcyclist-crash-inside-bus-colombia/73596263",
+      "ts": "2026-09-02T19:58:00+00:00",
+      "summary": "Video shows a motorcyclist crash into a moving bus and somehow end up inside of it."
      },
      {
-      "id": "73585876",
-      "title": "Dry, breezy Wednesday before overnight storms",
-      "link": "https://www.mynbc5.com/article/downpours-storms-slowly-arrive-wednesday-late9126/73585876",
-      "ts": "2026-09-02T16:31:00+00:00",
-      "summary": "Nicer later Labor Day weekend"
+      "id": "73596333",
+      "title": "Tim Curry's cause of death revealed a week after 'Rocky Horror' star's death",
+      "link": "https://www.mynbc5.com/article/tim-curry-cause-of-death/73596333",
+      "ts": "2026-09-02T19:45:00+00:00",
+      "summary": "Tim Curry's cause of death has been revealed."
      },
      {
-      "id": "73594165",
-      "title": "Woman accused of recording Lindsay Clancy trial jury outside courthouse",
-      "link": "https://www.mynbc5.com/article/lindsay-clancy-trial-courthouse-arrest-dawn-light/73594165",
-      "ts": "2026-09-02T16:26:00+00:00",
-      "summary": "A woman accused of recording video of jurors in the Lindsay Clancy murder trial was arraigned Wednesday, but claimed outside of court she was just trying to see the mother accused of strangling her children."
+      "id": "73595988",
+      "title": "NYC, the nation's largest school system, bans AI for students through 8th grade",
+      "link": "https://www.mynbc5.com/article/nyc-school-system-bans-ai-students-through-8th-grade/73595988",
+      "ts": "2026-09-02T19:41:00+00:00",
+      "summary": "New York City's public school system will ban artificial intelligence for students through the 8th grade during the upcoming school year."
      },
      {
-      "id": "73593891",
-      "title": "What happens next if the jury in the Lindsay Clancy murder trial can't reach a verdict?",
-      "link": "https://www.mynbc5.com/article/lindsay-clancy-massachusetts-jury-what-happens-next/73593891",
-      "ts": "2026-09-02T16:19:00+00:00",
-      "summary": "Here's what will happen if a Massachusetts jury can't reach a verdict on whether Lindsay Clancy was criminally responsible when she strangled her three children in 2023."
+      "id": "73585458",
+      "title": "NOAA says El Niño could keep Atlantic hurricanes below normal",
+      "link": "https://www.mynbc5.com/article/el-nino-impact-on-2026-hurricane-season/73585458",
+      "ts": "2026-09-02T19:29:00+00:00",
+      "summary": "NOAA says El Niño is likely to keep Atlantic hurricane activity down this season, with fewer storms than average."
      },
      {
-      "id": "73593836",
-      "title": "Nearly 54,000 cases of popular chocolate milk recalled amid reports of ‘unpleasant’ smell, taste",
-      "link": "https://www.mynbc5.com/article/horizon-organic-chocolate-milk-recall-fda/73593836",
-      "ts": "2026-09-02T16:10:00+00:00",
-      "summary": "Nearly 54,000 cases of popular chocolate milk have been recalled after customers reported bloated cartons and an unpleasant smell, taste or texture."
-     },
-     {
-      "id": "73590335",
-      "title": "'Measles-associated deaths': Dissecting the dispute between RFK Jr. and Pennsylvania's governor",
-      "link": "https://www.mynbc5.com/article/measles-associated-deaths-dissecting-the-dispute/73590335",
-      "ts": "2026-09-02T16:09:00+00:00",
-      "summary": "After Pennsylvania health officials announced the first U.S. \"measles-associated deaths\" in 2026, U.S. Health Secretary Robert F. Kennedy Jr. called the deaths possibly \"fabricated.\""
-     },
-     {
-      "id": "73593603",
-      "title": "Ariana Grande bids fans tearful farewell in last concert before stepping back from public life",
-      "link": "https://www.mynbc5.com/article/ariana-grande-tearful-farewell-fans/73593603",
-      "ts": "2026-09-02T15:54:00+00:00",
-      "summary": "Ariana Grande has bid an emotional farewell to her fans as she steps away from the limelight."
-     },
-     {
-      "id": "73583712",
-      "title": "Vermont DOC expands language services after discrimination allegations",
-      "link": "https://www.mynbc5.com/article/vermont-doc-expands-language-services-after-discrimination-allegations/73583712",
-      "ts": "2026-09-02T15:11:00+00:00",
-      "summary": "A new settlement requires Vermont corrections officials to expand language services for detainees after advocates alleged non-English speakers struggled to access intake information, medical care and attorneys. The Department of Corrections did not admit wrongdoing."
-     },
-     {
-      "id": "73586621",
-      "title": "NBC5 In Depth: Postpartum mood disorders",
-      "link": "https://www.mynbc5.com/article/nbc5-in-depth-postpartum-mood-disorders/73586621",
-      "ts": "2026-09-02T15:09:00+00:00",
-      "summary": "Having a baby can bring joy, but it can also bring overwhelming physical and emotional changes. Experts say knowing the warning signs of postpartum mood disorders can help parents get treatment sooner."
-     },
-     {
-      "id": "73592517",
-      "title": "Hypnotist Steve Bayner returns to the Champlain Valley Fair",
-      "link": "https://www.mynbc5.com/article/hypnotist-returns-to-the-champlain-valley-fair/73592517",
-      "ts": "2026-09-02T15:08:00+00:00",
-      "summary": "Steve Bayner was a crowd favorite for decades at the Champlain Valley Fair and came out of retirement to perform at this year's fair"
-     },
-     {
-      "id": "73586757",
-      "title": "NBC5 In Depth: New York explores 2042 Olympic bid",
-      "link": "https://www.mynbc5.com/article/nbc5-in-depth-new-york-explores-2042-olympic-bid/73586757",
-      "ts": "2026-09-02T15:06:00+00:00",
-      "summary": "New York explores bringing Winter Olympics back to Lake Placid in 2042"
+      "id": "73596058",
+      "title": "What to know about a reported US airstrike that hit a wedding in Iran",
+      "link": "https://www.mynbc5.com/article/what-to-know-reported-us-airstrike-wedding-iran/73596058",
+      "ts": "2026-09-02T19:21:00+00:00",
+      "summary": "What to know about a reported U.S. airstrike that hit a wedding in Iran."
      }
     ]
    },
