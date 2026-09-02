@@ -505,6 +505,7 @@ function lswAttach(bar, on) {
     lsw.colorFrom = lsw.colorTo; lsw.colorTo = want; lsw.colorT = 0;
     lsw.churn = 1;
     lsw.splashed = false;
+    lsw.splashed2 = false;
   } else {
     lsw.colorTo = want; lsw.colorFrom = want; // theme may have changed
   }
@@ -565,17 +566,51 @@ function lswFrame() {
     });
   }
 
-  /* landing: the leading edge crossing its target at speed throws droplets */
+  /* landing: droplets fly — and, the reference's signature, a cluster of
+     round blobs clings at the broken edge like thick milk, hanging almost
+     still before the water takes them back */
   if (!s.splashed && s.churn > 0.5 &&
       Math.abs(lead - (goingRight ? tR : tL)) < 0.045 && Math.abs(leadV) > 0.35) {
     s.splashed = true;
     const bx = (goingRight ? tR : tL) * W;
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 12; i++) {
       s.drops.push({
         x: bx, y: H * (0.15 + Math.random() * 0.7),
-        vx: (goingRight ? 1 : -1) * (30 + Math.random() * 130) * (Math.random() < 0.25 ? -0.45 : 1),
-        vy: -50 + Math.random() * 90,
-        r: 1.4 + Math.random() * 3.1, life: 0.5 + Math.random() * 0.45,
+        vx: (goingRight ? 1 : -1) * (20 + Math.random() * 80) * (Math.random() < 0.25 ? -0.45 : 1),
+        vy: -30 + Math.random() * 55,
+        r: 1.4 + Math.random() * 3.1, life: 0.55 + Math.random() * 0.5,
+      });
+    }
+    s.blobs = s.blobs || [];
+    for (let i = 0; i < 9; i++) {
+      const maxLife = 0.7 + Math.random() * 0.9;
+      s.blobs.push({
+        edge: goingRight ? 'R' : 'L',
+        y: H * (0.1 + Math.random() * 0.8),
+        off: (Math.random() < 0.6 ? 1 + Math.random() * 4       // stuck on the edge
+                                  : 6 + Math.random() * 9),     // detached, hanging
+        r: 2 + Math.random() * 4,
+        life: maxLife, maxLife,
+        slide: 4 + Math.random() * 9,
+      });
+    }
+  }
+  /* the trailing edge lands at the centre boundary — the meniscus everyone
+     actually watches — so it gets its own, smaller cluster of cling blobs */
+  const trail = goingRight ? s.L : s.R, trailV = goingRight ? s.vL : s.vR;
+  if (!s.splashed2 && s.churn > 0.3 &&
+      Math.abs(trail - (goingRight ? tL : tR)) < 0.04 && Math.abs(trailV) > 0.25) {
+    s.splashed2 = true;
+    s.blobs = s.blobs || [];
+    for (let i = 0; i < 6; i++) {
+      const maxLife = 0.6 + Math.random() * 0.8;
+      s.blobs.push({
+        edge: goingRight ? 'L' : 'R',
+        y: H * (0.1 + Math.random() * 0.8),
+        off: (Math.random() < 0.6 ? 1 + Math.random() * 3 : 5 + Math.random() * 7),
+        r: 1.6 + Math.random() * 3.2,
+        life: maxLife, maxLife,
+        slide: 4 + Math.random() * 8,
       });
     }
   }
@@ -602,10 +637,14 @@ function lswFrame() {
      livelier at rest than before, rowdier when churned, with a quick third
      ripple so the surface never reads as a standing sine */
   const amp = (edge, target) => (target === 0 || target === 1 ? 0 : 2.4) + s.churn * 8;
+  /* churned water gets an extra slow lump so the edge bulges irregularly,
+     like something thick, instead of rippling politely */
   const wave = (yy, ph, a) =>
     a * (Math.sin(yy * 0.18 + s.phase * 2.4 + ph) * 0.5 +
          Math.sin(yy * 0.07 - s.phase * 1.6 + ph * 1.7) * 0.32 +
-         Math.sin(yy * 0.31 + s.phase * 4.2 + ph * 2.3) * 0.18);
+         Math.sin(yy * 0.31 + s.phase * 4.2 + ph * 2.3) * 0.18) +
+    s.churn * 5 * Math.sin(yy * 0.045 + s.phase * 1.1 + ph * 3.1) *
+      Math.max(0, Math.sin(yy * 0.02 + ph));
   const edgeAt = (E, ph, a) => (yy) => E * W + wave(yy, ph, a);
   const aL = amp(s.L, tL), aR = amp(s.R, tR);
   const leftEdge = edgeAt(s.L, 0.9, aL), rightEdge = edgeAt(s.R, 3.7, aR);
@@ -629,6 +668,25 @@ function lswFrame() {
   crest(leftEdge, aL);
   crest(rightEdge, aR);
 
+  /* the cling blobs: solid rounds riding the meniscus, sliding down a
+     little, shrinking until the water has them back */
+  if (s.blobs) {
+    for (let i = s.blobs.length - 1; i >= 0; i--) {
+      const b = s.blobs[i];
+      b.life -= dt;
+      if (b.life <= 0) { s.blobs.splice(i, 1); continue; }
+      b.y = Math.min(H - 3, b.y + b.slide * dt);
+      b.off = Math.max(0, b.off - dt * 4);          // drawn back toward the edge
+      const k = b.life / b.maxLife;
+      const ex = b.edge === 'R' ? rightEdge(b.y) : leftEdge(b.y);
+      const dir = b.edge === 'R' ? 1 : -1;
+      x.fillStyle = fill;
+      x.beginPath();
+      x.arc(ex + dir * b.off, b.y, b.r * Math.min(1, k * 1.6), 0, Math.PI * 2);
+      x.fill();
+    }
+  }
+
   /* a soft light on the surface, drifting like the sun on it */
   const g = x.createLinearGradient((s.phase * 14) % W - W * 0.3, 0, (s.phase * 14) % W + W * 0.3, H);
   g.addColorStop(0, 'rgba(255,255,255,0)');
@@ -649,7 +707,7 @@ function lswFrame() {
     const d = s.drops[i];
     d.life -= dt;
     if (d.life <= 0) { s.drops.splice(i, 1); continue; }
-    d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 260 * dt;
+    d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 150 * dt;  // floatier — the reference liquid is thick
     x.globalAlpha = Math.min(1, d.life * 2.5);
     x.fillStyle = fill;
     const sp = Math.hypot(d.vx, d.vy);
