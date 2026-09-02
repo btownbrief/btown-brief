@@ -53,7 +53,12 @@ WHY_MAX = 90
 # A real answer is ~800 output tokens. The old 12000 was not headroom, it was
 # how long a runaway got to run before anyone found out: four minutes per
 # attempt. Generous against the real shape, tight against a loop.
+# GLM's reasoning tokens count against this same budget and cannot be
+# disabled on this endpoint, so REASONING_MAX_TOKENS caps them (see the
+# thinking parameter in ask_once) — without a cap a chatty reasoning pass
+# eats all 4000 and the answer never starts.
 MAX_TOKENS = 4000
+REASONING_MAX_TOKENS = 1024
 MODEL_ATTEMPTS = 2
 
 # How stale the live list may get before this job stops pretending it is fine.
@@ -419,6 +424,14 @@ def ask_once(client, prompt):
         # frozen on one stale edition. require_parameters makes OpenRouter
         # route only to providers that honour what we sent. Never remove it.
         extra_body={"provider": {"require_parameters": True}},
+        # GLM reasons before it answers and the reasoning spends the same
+        # max_tokens budget as the answer. Left uncapped it can burn all
+        # 4000 and stop with empty text — every scheduled run on 2026-09-01
+        # died that way. This must be the SDK's native thinking parameter:
+        # a "reasoning" key in extra_body is silently ignored on
+        # OpenRouter's Anthropic-style endpoint (measured, 3996/4000
+        # tokens of thinking), while thinking budget_tokens is honoured.
+        thinking={"type": "enabled", "budget_tokens": REASONING_MAX_TOKENS},
         messages=[{"role": "user", "content": prompt}],
     )
     if response.stop_reason == "refusal":
