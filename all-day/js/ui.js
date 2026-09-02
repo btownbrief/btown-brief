@@ -359,12 +359,21 @@ export function paintVote(b, count, mine) {
   if (n) n.textContent = count || 0;
 }
 
+/* The house segment control. Its fill is water too — see THE LIQUID below —
+   keyed by the option values, so the same segment re-rendered by its own
+   click resumes the pour rather than starting over. */
 export function seg(options, current, onPick) {
   const wrap = el('div', 'seg');
   options.forEach(([value, label]) => {
     const b = el('button', value === current ? 'on' : '', esc(label));
     b.addEventListener('click', () => onPick(value));
     wrap.appendChild(b);
+  });
+  liquidAttach(wrap, {
+    key: 'seg:' + options.map((o) => o[0]).join('|'),
+    n: options.length,
+    idx: options.findIndex((o) => o[0] === current),
+    prop: '--seg-water', fallback: '#6E92B4',
   });
   return wrap;
 }
@@ -454,107 +463,201 @@ export function tabStamp(host, stampSec, what) {
    Deliberately NOT the app's generic .seg: Watch and Listen already carry
    segments, and a third would read as more of the same rather than as the
    thing the whole app is about. */
-/* THE LIQUID. The switch's fill is a body of water: toggle it and the whole
-   slab pours across the bar — the leading edge springs ahead, the trailing
-   edge lags so the liquid stretches, droplets fly when it lands, and the
-   boundary settles into a lapping wave. Green when Local holds the water,
-   panel-white when Everything does.
+/* THE LIQUID. A toggle's fill is a body of water: pick the other side and the
+   whole slab pours across the bar — the leading edge springs ahead, the
+   trailing edge lags so the liquid stretches, droplets fly and cling blobs
+   hang at the broken edge when it lands, and the boundary settles into a
+   lapping wave. The Local switch's water is green for Local and red for
+   Everything; every other segment (Do/See, All photos/Sunsets, Tonight/Past
+   nights, the theme picker) pours a quieter lake blue so the big one stays
+   the loud one.
 
-   The switch is rebuilt on every render, so the physics lives out here and
-   each new canvas resumes it mid-slosh. Skipped entirely under
-   prefers-reduced-motion — the CSS fill still works without any of this. */
-const lsw = {
-  on: null,          // which side holds the water right now
-  L: 0, R: 0.5,      // slab edges, fractions of the bar
-  vL: 0, vR: 0,
-  churn: 0,          // how stirred the surface is; decays after a slosh
-  drops: [],
-  colorFrom: null, colorTo: null, colorT: 1,
-  canvas: null, ctx: null, bar: null, raf: 0, lastT: 0, phase: 0,
-};
+   Toggles are rebuilt on every render, so the physics lives out here, keyed
+   by which toggle it is, and each new canvas resumes it mid-slosh. One key can
+   have several canvases at once — the Local switch sits on nine tabs — and
+   the loop paints whichever of them are on screen. That is also the fix for
+   a bar that came up blank: the old loop followed the LAST canvas attached,
+   and a tab re-rendering behind the visible one (the wire's ten-minute poll,
+   a stale tab redrawn on the way in) took the water with it, leaving the bar
+   you were looking at with no fill until the next toggle.
 
-function lswColors(bar) {
-  const cs = getComputedStyle(bar);
-  return {
-    local: cs.getPropertyValue('--local').trim() || '#1d7a4f',
-    every: cs.getPropertyValue('--every').trim() || '#a63a2c',
-  };
+   Skipped entirely under prefers-reduced-motion — the CSS fill still works
+   without any of this. */
+const liquids = new Map();   /* key -> one body of water, across re-renders */
+let liquidRaf = 0;
+let liquidWake = false;
+
+function cssVar(node, prop, fallback) {
+  const v = getComputedStyle(node).getPropertyValue(prop).trim();
+  return v || fallback;
 }
 
-function lswAttach(bar, on) {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  let canvas;
-  try {
-    canvas = document.createElement('canvas');
-    if (!canvas.getContext('2d')) return;
-  } catch (e) { return; }
-  canvas.className = 'lsw-canvas';
-  canvas.setAttribute('aria-hidden', 'true');
-  bar.classList.add('localsw-liquid');
-  bar.insertBefore(canvas, bar.firstChild);
-
-  const first = lsw.on === null;
-  const flipped = !first && lsw.on !== on;
-  const colors = lswColors(bar);
-  const want = on ? colors.local : colors.every;
-  if (first) {
-    lsw.L = on ? 0 : 0.5; lsw.R = on ? 0.5 : 1;
-    lsw.vL = 0; lsw.vR = 0;
-    lsw.colorFrom = want; lsw.colorTo = want; lsw.colorT = 1;
-  } else if (flipped) {
-    lsw.colorFrom = lsw.colorTo; lsw.colorTo = want; lsw.colorT = 0;
-    lsw.churn = 1;
-    lsw.splashed = false;
-    lsw.splashed2 = false;
-  } else {
-    lsw.colorTo = want; lsw.colorFrom = want; // theme may have changed
+/* `#rgb`, `#rrggbb` or `rgb(a)(…)` -> [r, g, b]; anything else -> null */
+function rgbOf(c) {
+  if (!c) return null;
+  const hex = c.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (hex) {
+    let h = hex[1];
+    if (h.length === 3) h = h.replace(/./g, (ch) => ch + ch);
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
   }
-  lsw.on = on;
-  lsw.canvas = canvas;
-  lsw.ctx = canvas.getContext('2d');
-  lsw.bar = bar;
-  lsw.lastT = performance.now() / 1000;
-  if (!lsw.raf) lsw.raf = requestAnimationFrame(lswFrame);
+  const n = c.match(/\d+(\.\d+)?/g);
+  return n && n.length >= 3 ? [+n[0], +n[1], +n[2]] : null;
 }
 
-function lswMix(a, b, t) {
-  // colors arrive as rgb(…) or #hex from computed style; lean on canvas to
-  // parse by drawing nothing — simpler: numeric mix of rgb() strings, else b
-  const pa = a.match(/\d+(\.\d+)?/g), pb = b.match(/\d+(\.\d+)?/g);
-  if (!pa || !pb || pa.length < 3 || pb.length < 3) return t < 0.5 ? a : b;
-  const m = (i) => Math.round(+pa[i] + (+pb[i] - +pa[i]) * t);
+function mixColor(a, b, t) {
+  const pa = rgbOf(a), pb = rgbOf(b);
+  if (!pa || !pb) return t < 0.5 ? a : b;
+  const m = (i) => Math.round(pa[i] + (pb[i] - pa[i]) * t);
   return 'rgb(' + m(0) + ',' + m(1) + ',' + m(2) + ')';
 }
 
-function lswFrame() {
-  const s = lsw;
-  s.raf = 0;
-  const bar = s.bar, canvas = s.canvas;
-  if (!bar || !bar.isConnected || !canvas) return; // a render replaced us
+/* Pour the water named `key` into slot `idx` of `n` on this bar. The bar's
+   buttons are the slots; the water is measured against them each frame, so
+   a three-way segment with one wide label still lands under the right word. */
+function liquidAttach(bar, { key, n, idx, prop, fallback }) {
+  if (idx < 0 || !(n > 0)) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let canvas, ctx;
+  try {
+    canvas = document.createElement('canvas');
+    ctx = canvas.getContext('2d');
+    if (!ctx) return;
+  } catch (e) { return; }
+  canvas.className = 'lsw-canvas';
+  canvas.setAttribute('aria-hidden', 'true');
+  bar.classList.add('liquid');
+  bar.insertBefore(canvas, bar.firstChild);
+
+  let s = liquids.get(key);
+  if (!s) {
+    s = {
+      n, idx: null,
+      L: 0, R: 0, vL: 0, vR: 0, dir: 1,   // slab edges as fractions of the bar
+      churn: 0, drops: [], blobs: [], bubbles: [], bubbleAt: 0,
+      /* colours resolve at the first painted frame — a segment is built
+         before it is in the document, and computed style is empty there */
+      colorFrom: null, colorTo: null, colorT: 1,
+      phase: Math.random() * 20, splashed: true, splashed2: true,
+      lastT: 0, faces: [],
+    };
+    liquids.set(key, s);
+  }
+  s.n = n;
+  const first = s.idx === null;
+  const flipped = !first && s.idx !== idx;
+  if (first) {
+    s.L = idx / n; s.R = (idx + 1) / n; s.vL = 0; s.vR = 0;
+  } else if (flipped) {
+    s.dir = idx > s.idx ? 1 : -1;
+    s.colorFrom = s.colorTo; s.colorTo = null; s.colorT = 0;
+    s.churn = 1;
+    s.splashed = false;
+    s.splashed2 = false;
+  }
+  s.idx = idx;
+  s.faces = s.faces.filter((f) => f.canvas.isConnected && f.canvas !== canvas);
+  s.faces.push({ bar, canvas, ctx, prop, fallback, color: null,
+                 slots: [...bar.querySelectorAll('button')] });
+  s.lastT = performance.now() / 1000;
+  if (!liquidRaf) liquidRaf = requestAnimationFrame(liquidFrame);
+}
+
+/* where slot `idx` sits on this bar, widened to the bar's rim at either end
+   so the water touches the edge like it always did on the Local switch */
+function slotBounds(face, s, W) {
+  const b = face.slots[s.idx];
+  if (!b || !W) return [s.idx / s.n, (s.idx + 1) / s.n];
+  const gap = 4;
+  const l = s.idx === 0 ? 0 : (b.offsetLeft - gap / 2) / W;
+  const r = s.idx === s.n - 1 ? 1 : (b.offsetLeft + b.offsetWidth + gap / 2) / W;
+  return [Math.max(0, Math.min(1, l)), Math.max(0, Math.min(1, r))];
+}
+
+function liquidFrame() {
+  liquidRaf = 0;
   const now = performance.now() / 1000;
-  const dt = Math.min(0.05, now - s.lastT);
-  s.lastT = now;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let alive = false;
+  liquids.forEach((s) => {
+    s.faces = s.faces.filter((f) => f.canvas.isConnected);
+    if (!s.faces.length) return;              // a render replaced every canvas — wait for the next
+    alive = true;
+    /* a face in a hidden panel measures 0×0 and is skipped; the physics runs
+       in the pixels of the first face actually on screen */
+    const shown = s.faces.filter((f) => f.bar.clientWidth > 0 && f.bar.clientHeight > 0);
+    if (!shown.length) { s.lastT = now; return; }
+    const W = shown[0].bar.clientWidth, H = shown[0].bar.clientHeight;
+    const dt = Math.min(0.05, Math.max(0, now - s.lastT));
+    s.lastT = now;
+    const [tL, tR] = slotBounds(shown[0], s, W);
+    /* the face knows which token it wears; read it once it is on screen.
+       A flip leaves colorTo empty so the pour blends from the old colour;
+       the same side re-read (a theme change) snaps both. */
+    const face = shown[0];
+    if (!face.color) face.color = cssVar(face.bar, face.prop, face.fallback);
+    if (s.colorTo !== face.color) {
+      if (s.colorT >= 1 || !s.colorFrom) s.colorFrom = face.color;
+      s.colorTo = face.color;
+    }
+    liquidStep(s, W, H, dt, now, tL, tR);
+    shown.forEach((f) => {
+      if (f.canvas.width !== W * dpr || f.canvas.height !== H * dpr) {
+        f.canvas.width = W * dpr; f.canvas.height = H * dpr;
+      }
+      f.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      f.ctx.clearRect(0, 0, W, H);
+      liquidPaint(s, f.ctx, W, H, tL, tR);
+    });
+  });
+  if (!alive) return;                          // the next attach restarts it
+  if (!document.hidden) liquidRaf = requestAnimationFrame(liquidFrame);
+  else if (!liquidWake) {
+    liquidWake = true;
+    document.addEventListener('visibilitychange', () => {
+      liquidWake = false;
+      if (document.hidden || liquidRaf) return;
+      liquids.forEach((s) => { s.lastT = performance.now() / 1000; });
+      liquidRaf = requestAnimationFrame(liquidFrame);
+    }, { once: true });
+  }
+}
+
+/* the wave at an edge: three ripples so the surface never reads as a
+   standing sine, plus a slow lump while churned so the edge bulges
+   irregularly, like something thick, instead of rippling politely */
+function edgeFns(s, W, tL, tR) {
+  const amp = (target) => (target <= 0.001 || target >= 0.999 ? 0 : 2.4) + s.churn * 8;
+  const wave = (yy, ph, a) =>
+    a * (Math.sin(yy * 0.18 + s.phase * 2.4 + ph) * 0.5 +
+         Math.sin(yy * 0.07 - s.phase * 1.6 + ph * 1.7) * 0.32 +
+         Math.sin(yy * 0.31 + s.phase * 4.2 + ph * 2.3) * 0.18) +
+    s.churn * 5 * Math.sin(yy * 0.045 + s.phase * 1.1 + ph * 3.1) *
+      Math.max(0, Math.sin(yy * 0.02 + ph));
+  const aL = amp(tL), aR = amp(tR);
+  return {
+    aL, aR,
+    left: (yy) => s.L * W + wave(yy, 0.9, aL),
+    right: (yy) => s.R * W + wave(yy, 3.7, aR),
+  };
+}
+
+/* everything that moves, once per frame — never per canvas */
+function liquidStep(s, W, H, dt, now, tL, tR) {
   s.phase += dt;
 
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const W = bar.clientWidth, H = bar.clientHeight;
-  if (canvas.width !== W * dpr) { canvas.width = W * dpr; canvas.height = H * dpr; }
-  const x = s.ctx;
-  x.setTransform(dpr, 0, 0, dpr, 0, 0);
-  x.clearRect(0, 0, W, H);
-
-  /* the slab: each edge is a spring; the one moving toward open water leads */
-  const tL = s.on ? 0 : 0.5, tR = s.on ? 0.5 : 1;
+  /* the slab: each edge is a spring; the one moving toward open water leads,
+     a touch underdamped so a landing jiggles a couple of times */
   const spring = (p, v, target, k, c) => {
     v += (k * (target - p) - c * v) * dt;
     return [p + v * dt, v];
   };
-  const goingRight = !s.on; // Everything lives on the right
-  /* a touch underdamped, so a landing jiggles a couple of times */
+  const goingRight = s.dir > 0;
   [s.L, s.vL] = spring(s.L, s.vL, tL, goingRight ? 64 : 130, goingRight ? 9 : 10);
   [s.R, s.vR] = spring(s.R, s.vR, tR, goingRight ? 130 : 64, goingRight ? 10 : 9);
 
   const lead = goingRight ? s.R : s.L, leadV = goingRight ? s.vR : s.vL;
+  const leadT = goingRight ? tR : tL;
 
   /* spray while the pour is fast: little beads torn off the leading edge */
   if (s.churn > 0.4 && Math.abs(leadV) > 0.8 && Math.random() < 0.6) {
@@ -569,10 +672,9 @@ function lswFrame() {
   /* landing: droplets fly — and, the reference's signature, a cluster of
      round blobs clings at the broken edge like thick milk, hanging almost
      still before the water takes them back */
-  if (!s.splashed && s.churn > 0.5 &&
-      Math.abs(lead - (goingRight ? tR : tL)) < 0.045 && Math.abs(leadV) > 0.35) {
+  if (!s.splashed && s.churn > 0.5 && Math.abs(lead - leadT) < 0.045 && Math.abs(leadV) > 0.35) {
     s.splashed = true;
-    const bx = (goingRight ? tR : tL) * W;
+    const bx = leadT * W;
     for (let i = 0; i < 12; i++) {
       s.drops.push({
         x: bx, y: H * (0.15 + Math.random() * 0.7),
@@ -581,7 +683,6 @@ function lswFrame() {
         r: 1.4 + Math.random() * 3.1, life: 0.55 + Math.random() * 0.5,
       });
     }
-    s.blobs = s.blobs || [];
     for (let i = 0; i < 9; i++) {
       const maxLife = 0.7 + Math.random() * 0.9;
       s.blobs.push({
@@ -595,13 +696,12 @@ function lswFrame() {
       });
     }
   }
-  /* the trailing edge lands at the centre boundary — the meniscus everyone
+  /* the trailing edge lands at the inner boundary — the meniscus everyone
      actually watches — so it gets its own, smaller cluster of cling blobs */
   const trail = goingRight ? s.L : s.R, trailV = goingRight ? s.vL : s.vR;
-  if (!s.splashed2 && s.churn > 0.3 &&
-      Math.abs(trail - (goingRight ? tL : tR)) < 0.04 && Math.abs(trailV) > 0.25) {
+  const trailT = goingRight ? tL : tR;
+  if (!s.splashed2 && s.churn > 0.3 && Math.abs(trail - trailT) < 0.04 && Math.abs(trailV) > 0.25) {
     s.splashed2 = true;
-    s.blobs = s.blobs || [];
     for (let i = 0; i < 6; i++) {
       const maxLife = 0.6 + Math.random() * 0.8;
       s.blobs.push({
@@ -619,8 +719,6 @@ function lswFrame() {
 
   /* bubbles: born low in the water, wobbling up, gone at the rim. The pin
      was bubbly; so is the lake. */
-  s.bubbles = s.bubbles || [];
-  s.bubbleAt = s.bubbleAt || 0;
   const slabL = Math.min(s.L, s.R) * W, slabR = Math.max(s.L, s.R) * W;
   if (now > s.bubbleAt && slabR - slabL > 30) {
     s.bubbleAt = now + 0.35 + Math.random() * 0.8 - Math.min(0.5, s.churn * 0.5);
@@ -631,23 +729,34 @@ function lswFrame() {
     });
   }
 
-  const fill = lswMix(s.colorFrom || '#1d7a4f', s.colorTo || '#1d7a4f', s.colorT);
+  /* the cling blobs slide down a little and are drawn back toward the edge */
+  for (let i = s.blobs.length - 1; i >= 0; i--) {
+    const b = s.blobs[i];
+    b.life -= dt;
+    if (b.life <= 0) { s.blobs.splice(i, 1); continue; }
+    b.y = Math.min(H - 3, b.y + b.slide * dt);
+    b.off = Math.max(0, b.off - dt * 4);
+  }
+  /* droplets: floatier than real water — the reference liquid is thick */
+  for (let i = s.drops.length - 1; i >= 0; i--) {
+    const d = s.drops[i];
+    d.life -= dt;
+    if (d.life <= 0) { s.drops.splice(i, 1); continue; }
+    d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 150 * dt;
+  }
+  for (let i = s.bubbles.length - 1; i >= 0; i--) {
+    const b = s.bubbles[i];
+    b.y -= b.vy * dt;
+    b.x += Math.sin(s.phase * 2.4 + b.ph) * 5 * dt;
+    if (b.y < 6 || b.x < slabL + 4 || b.x > slabR - 4) s.bubbles.splice(i, 1);
+  }
+}
 
-  /* the water body, wavy at any edge that isn't pinned to a pill end —
-     livelier at rest than before, rowdier when churned, with a quick third
-     ripple so the surface never reads as a standing sine */
-  const amp = (edge, target) => (target === 0 || target === 1 ? 0 : 2.4) + s.churn * 8;
-  /* churned water gets an extra slow lump so the edge bulges irregularly,
-     like something thick, instead of rippling politely */
-  const wave = (yy, ph, a) =>
-    a * (Math.sin(yy * 0.18 + s.phase * 2.4 + ph) * 0.5 +
-         Math.sin(yy * 0.07 - s.phase * 1.6 + ph * 1.7) * 0.32 +
-         Math.sin(yy * 0.31 + s.phase * 4.2 + ph * 2.3) * 0.18) +
-    s.churn * 5 * Math.sin(yy * 0.045 + s.phase * 1.1 + ph * 3.1) *
-      Math.max(0, Math.sin(yy * 0.02 + ph));
-  const edgeAt = (E, ph, a) => (yy) => E * W + wave(yy, ph, a);
-  const aL = amp(s.L, tL), aR = amp(s.R, tR);
-  const leftEdge = edgeAt(s.L, 0.9, aL), rightEdge = edgeAt(s.R, 3.7, aR);
+/* draw the water as it is right now — pure, so every face gets the same frame */
+function liquidPaint(s, x, W, H, tL, tR) {
+  const fill = mixColor(s.colorFrom || '#1d7a4f', s.colorTo || '#1d7a4f', s.colorT);
+  const { aL, aR, left: leftEdge, right: rightEdge } = edgeFns(s, W, tL, tR);
+
   x.beginPath();
   for (let yy = 0; yy <= H; yy += 3) x.lineTo(leftEdge(yy), yy);
   for (let yy = H; yy >= 0; yy -= 3) x.lineTo(rightEdge(yy), yy);
@@ -668,23 +777,16 @@ function lswFrame() {
   crest(leftEdge, aL);
   crest(rightEdge, aR);
 
-  /* the cling blobs: solid rounds riding the meniscus, sliding down a
-     little, shrinking until the water has them back */
-  if (s.blobs) {
-    for (let i = s.blobs.length - 1; i >= 0; i--) {
-      const b = s.blobs[i];
-      b.life -= dt;
-      if (b.life <= 0) { s.blobs.splice(i, 1); continue; }
-      b.y = Math.min(H - 3, b.y + b.slide * dt);
-      b.off = Math.max(0, b.off - dt * 4);          // drawn back toward the edge
-      const k = b.life / b.maxLife;
-      const ex = b.edge === 'R' ? rightEdge(b.y) : leftEdge(b.y);
-      const dir = b.edge === 'R' ? 1 : -1;
-      x.fillStyle = fill;
-      x.beginPath();
-      x.arc(ex + dir * b.off, b.y, b.r * Math.min(1, k * 1.6), 0, Math.PI * 2);
-      x.fill();
-    }
+  /* the cling blobs: solid rounds riding the meniscus, shrinking until the
+     water has them back */
+  for (const b of s.blobs) {
+    const k = b.life / b.maxLife;
+    const ex = b.edge === 'R' ? rightEdge(b.y) : leftEdge(b.y);
+    const dir = b.edge === 'R' ? 1 : -1;
+    x.fillStyle = fill;
+    x.beginPath();
+    x.arc(ex + dir * b.off, b.y, b.r * Math.min(1, k * 1.6), 0, Math.PI * 2);
+    x.fill();
   }
 
   /* a soft light on the surface, drifting like the sun on it */
@@ -692,7 +794,12 @@ function lswFrame() {
   g.addColorStop(0, 'rgba(255,255,255,0)');
   g.addColorStop(0.5, 'rgba(255,255,255,0.10)');
   g.addColorStop(1, 'rgba(255,255,255,0)');
-  x.save(); x.clip(); x.fillStyle = g; x.fillRect(0, 0, W, H); x.restore();
+  x.save();
+  x.beginPath();
+  for (let yy = 0; yy <= H; yy += 3) x.lineTo(leftEdge(yy), yy);
+  for (let yy = H; yy >= 0; yy -= 3) x.lineTo(rightEdge(yy), yy);
+  x.closePath();
+  x.clip(); x.fillStyle = g; x.fillRect(0, 0, W, H); x.restore();
 
   /* droplets: stretched along their motion like flung liquid, and when one
      sits close to the water's edge a smaller blob bridges the gap — poor
@@ -703,11 +810,7 @@ function lswFrame() {
     const gap = dl < 0 ? -dl : -dr;
     return gap < 9 ? (dl < 0 ? leftEdge(d.y) : rightEdge(d.y)) : null;
   };
-  for (let i = s.drops.length - 1; i >= 0; i--) {
-    const d = s.drops[i];
-    d.life -= dt;
-    if (d.life <= 0) { s.drops.splice(i, 1); continue; }
-    d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 150 * dt;  // floatier — the reference liquid is thick
+  for (const d of s.drops) {
     x.globalAlpha = Math.min(1, d.life * 2.5);
     x.fillStyle = fill;
     const sp = Math.hypot(d.vx, d.vy);
@@ -725,25 +828,14 @@ function lswFrame() {
   x.globalAlpha = 1;
 
   /* bubbles rise inside the water and vanish at the rim */
-  for (let i = s.bubbles.length - 1; i >= 0; i--) {
-    const b = s.bubbles[i];
-    b.y -= b.vy * dt;
-    b.x += Math.sin(s.phase * 2.4 + b.ph) * 5 * dt;
-    if (b.y < 6 || b.x < slabL + 4 || b.x > slabR - 4) { s.bubbles.splice(i, 1); continue; }
-    const fade = Math.min(1, (b.y - 6) / 8);
-    x.globalAlpha = fade;
+  for (const b of s.bubbles) {
+    x.globalAlpha = Math.min(1, (b.y - 6) / 8);
     x.strokeStyle = 'rgba(255,255,255,0.38)';
     x.lineWidth = 0.9;
     x.fillStyle = 'rgba(255,255,255,0.13)';
     x.beginPath(); x.arc(b.x, b.y, b.r, 0, Math.PI * 2); x.fill(); x.stroke();
   }
   x.globalAlpha = 1;
-
-  if (!document.hidden) s.raf = requestAnimationFrame(lswFrame);
-  else {
-    const wake = () => { if (!document.hidden && lsw.bar && lsw.bar.isConnected) { lsw.lastT = performance.now() / 1000; lsw.raf = requestAnimationFrame(lswFrame); } };
-    document.addEventListener('visibilitychange', wake, { once: true });
-  }
 }
 
 export function localSwitch(host, { on, local, all, noun, onChange, extra }) {
@@ -783,6 +875,9 @@ export function localSwitch(host, { on, local, all, noun, onChange, extra }) {
   }
 
   host.appendChild(box);
-  lswAttach(bar, on);
+  liquidAttach(bar, {
+    key: 'local', n: 2, idx: on ? 0 : 1,
+    prop: on ? '--local' : '--every', fallback: on ? '#16704E' : '#A63A2C',
+  });
   return box;
 }

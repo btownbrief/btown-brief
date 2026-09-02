@@ -55,6 +55,7 @@ const state = {
   seeds: null,
   sun: null,                  // { score, sunsetMs, isTonight, degraded }
   potd: undefined,            // undefined = not asked, null = unavailable
+  potw: null,                 // photos.html's Photo of the week, same RPC
 };
 
 /* Load a classic script once. The two libraries this tab needs predate the
@@ -95,6 +96,14 @@ function loadPhotos() {
       render();
     })
     .catch(() => { state.photos = []; render(); });
+
+  /* Photo of the week already exists — photos.html has run it since launch
+     (most-hearted of the last seven days, else thirty) and the newsletter
+     prints it. The tab just never showed it. Same getter, same photo. */
+  script(LIB)
+    .then(() => window.BTBP.getPotw())
+    .then((potw) => { if (potw && potw.url) { state.potw = potw; render(); } })
+    .catch(() => {});
 
   data.fetchJSON(SEEDS, 8000)
     .then((j) => { state.seeds = (j && j.photos) || []; render(); })
@@ -349,13 +358,64 @@ function submitSheet(preset) {
   });
 }
 
-function addButton(root, preset, label) {
-  const b = el('button', 'btn btn-big m-add', label);
-  b.addEventListener('click', () => {
+const FS_ICON = '<svg class="i" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+
+/* One row, two halves: send one in, or see them all full screen. */
+function actionRow(root, preset, label, list) {
+  const row = el('div', 'ph-actions');
+  const add = el('button', 'btn btn-big m-add', label);
+  add.addEventListener('click', () => {
     script(LIB).then(() => submitSheet(preset))
       .catch(() => app.toast('Couldn’t open the uploader'));
   });
-  root.appendChild(b);
+  const fs = el('button', 'btn btn-big btn-quiet', FS_ICON + '<span>Full screen</span>');
+  fs.disabled = !list.length;
+  fs.addEventListener('click', () => app.lightbox(lbItems(list), 0));
+  row.append(add, fs);
+  root.appendChild(row);
+  /* the other way in — it lands on the Instagram tab's tagged shelf */
+  root.appendChild(el('p', 'ph-tagline',
+    'Or post it on Instagram and tag <b>@btownbrief</b> — tagged posts show up on the ' +
+    '<a href="#ig">Instagram tab</a>.'));
+}
+
+/* what the full-screen viewer needs from a photo record */
+function lbItems(list) {
+  return list.map((p) => {
+    /* credit always leads, as it does on the opened photo's sheet */
+    const bits = ['Photo by ' + (p.credit || 'a neighbour')];
+    if (p.spot) bits.push(p.spot);
+    if (p.area) bits.push(p.area);
+    if (p.taken_on) bits.push(p.taken_on);
+    return { src: p.url, alt: p.caption || '', caption: p.caption || '', meta: bits.join(' · ') };
+  });
+}
+
+/* The week's most-hearted, as photos.html and the newsletter already run it. */
+function potwCard(root) {
+  const p = state.potw;
+  if (!p || !p.url) return;
+  const box = el('div', 'ph-potw');
+  const hit = el('button', 'ph-potw-hit');
+  hit.setAttribute('aria-label', 'Photo of the week, full screen');
+  const shot = el('div', 'ph-potw-shot');
+  shot.appendChild(el('span', 'ph-potw-badge', '🏆 Photo of the week'));
+  const img = el('img', 'ph-potw-img');
+  img.loading = 'lazy';
+  img.referrerPolicy = 'no-referrer';
+  img.alt = p.caption || 'Photo of the week';
+  img.src = p.url;
+  shot.appendChild(img);
+  hit.appendChild(shot);
+  const body = el('div', 'ph-potw-body');
+  if (p.caption) body.appendChild(el('p', 'ph-potw-cap', esc(p.caption)));
+  body.appendChild(el('p', 'ph-potw-by',
+    (p.credit ? 'Photo by ' + esc(p.credit) + ' · ' : '') +
+    'Most-hearted this week — it runs in the newsletter. Hearts below pick the next one.'));
+  hit.appendChild(body);
+  hit.addEventListener('click', () => app.lightbox(lbItems([p]), 0));
+  box.appendChild(hit);
+  root.appendChild(box);
 }
 
 /* ----------------------------------------------------------------- render */
@@ -387,17 +447,16 @@ function renderSunsets(root) {
   });
 
   tonight(root);
-  addButton(root, 'sunsets', 'Add tonight’s');
+  /* The five committed sunset photos hold the wall until readers fill it.
+     They are real Burlington sunsets, not placeholder art. */
+  const seeded = seeds.map((s) => ({ url: '../' + s.image, caption: s.caption, credit: s.credit }));
+  actionRow(root, 'sunsets', 'Add tonight’s', [...mine, ...seeded]);
   spotsRail(root);
 
   shelfHead(root, 'On the wall', mine.length ? null : 'Starting with a few of Steve’s');
   const grid = el('div', 'ph-grid');
   mine.forEach((p) => grid.appendChild(photoTile(p)));
-  /* The five committed sunset photos hold the wall until readers fill it.
-     They are real Burlington sunsets, not placeholder art. */
-  seeds.forEach((s, i) => grid.appendChild(photoTile({
-    url: '../' + s.image, caption: s.caption, credit: s.credit,
-  }, 'seed' + i)));
+  seeded.forEach((s, i) => grid.appendChild(photoTile(s, 'seed' + i)));
   root.appendChild(grid);
 
   if (!mine.length && !seeds.length) {
@@ -452,7 +511,9 @@ function renderAll(root) {
          (all.length === 1 ? ' photo' : ' photos') + '</span> from around town.',
   });
 
-  addButton(root, null, 'Add a photo');
+  const list = state.cat ? all.filter((p) => p.category === state.cat) : all;
+  actionRow(root, null, 'Add a photo', list);
+  if (!state.cat) potwCard(root);
 
   const cats = [...new Set(all.map((p) => p.category).filter(Boolean))];
   if (cats.length > 1) {
@@ -467,7 +528,6 @@ function renderAll(root) {
     scrollHint(chips);
   }
 
-  const list = state.cat ? all.filter((p) => p.category === state.cat) : all;
   const grid = el('div', 'ph-grid');
   list.forEach((p) => grid.appendChild(photoTile(p)));
   root.appendChild(grid);

@@ -46,8 +46,17 @@ every run; tier 2 on a rotation keyed to the day of the year.
 Env: SCRAPECREATORS_API_KEY (or SCRAPE_CREATORS_API_KEY), or
      ~/.config/btownbrief/secrets.env.
 
+TAGGED is the third thing this builds, and it is not a roster. It is every
+post by anyone that tags @btownbrief — the route onto the wall for a reader
+who is not an account we follow. One credit per run (`/v1/instagram/user/
+tagged-posts`, by numeric user id). That endpoint returns no `taken_at`, so the
+timestamp is decoded from the post's `pk` — Instagram media ids are snowflakes
+(ms since 2011-08-24 in the high bits), and the decode checks out to within
+minutes against posts that do carry `taken_at`. A handle listed in the roster
+file's `tagged_block` array never lands, whatever it tags.
+
 Run: python3 scripts/build_instagram.py [--tier2-batch N] [--see2-batch N]
-                                        [--dry-run] [--no-carry]
+                                        [--dry-run] [--no-carry] [--no-tagged]
 """
 
 from __future__ import annotations
@@ -77,7 +86,14 @@ WANT_W = 480                  # candidate width to prefer for the grid
 # One cap per segment, not one for the payload. A single global cap lets
 # whichever half posts more often eat the other's slots, and the two halves
 # are not competing for the same attention — you switch to SEE on purpose.
-CAP = {"do": 240, "see": 260}
+CAP = {"do": 240, "see": 260, "tagged": 12}
+
+# @btownbrief's numeric id (the tagged-posts endpoint takes ids, not handles).
+# Checked 2026-09-02 via /v1/instagram/profile?handle=btownbrief.
+TAGGED_ENDPOINT = "https://api.scrapecreators.com/v1/instagram/user/tagged-posts"
+TAGGED_USER_ID = "71971306251"
+TAGGED_DAYS = 120             # nobody has been asked to tag yet; a 3-week window would be empty
+IG_EPOCH_MS = 1314220021721   # media-id snowflake epoch
 
 # How long a carried post may live is not a constant here: it is whatever its
 # own signature says, read per URL by carry_ok(). The measured life is 4.3-4.5
@@ -151,7 +167,58 @@ def taken_at(item: dict) -> int | None:
         v = item.get(k)
         if isinstance(v, (int, float)) and v > 1_000_000_000:
             return int(v)
-    return None
+    # No timestamp on the record (the tagged-posts endpoint): decode the
+    # media id. Verified against posts carrying both: within ~6 minutes.
+    pk = item.get("pk") or item.get("id")
+    try:
+        pk = int(str(pk).split("_")[0])
+    except (TypeError, ValueError):
+        return None
+    if pk <= 0:
+        return None
+    ts = ((pk >> 23) + IG_EPOCH_MS) // 1000
+    return ts if ts > 1_300_000_000 else None
+
+
+def fetch_tagged(key: str) -> list[dict]:
+    """Newest page of posts that tag @btownbrief — ten or so, one credit."""
+    url = TAGGED_ENDPOINT + "?" + urllib.parse.urlencode({"user_id": TAGGED_USER_ID})
+    req = urllib.request.Request(url, headers={"x-api-key": key})
+    with urllib.request.urlopen(req, timeout=45) as r:
+        doc = json.load(r)
+    items = doc.get("posts")
+    if not isinstance(items, list):
+        items = doc.get("items") if isinstance(doc.get("items"), list) else []
+    return items or []
+
+
+def tagged_record(it: dict, cutoff: float) -> dict | None:
+    handle = ((it.get("user") or {}).get("username") or "").strip().lstrip("@").lower()
+    if not handle:
+        return None
+    ts = taken_at(it)
+    if not ts or ts < cutoff:
+        return None
+    thumb, w = pick_thumb(it)
+    if not thumb:
+        return None
+    code = code_of(it)
+    rec = {
+        "h": handle,
+        "ts": ts,
+        "i": thumb,
+        "u": f"https://www.instagram.com/p/{code}/" if code
+             else f"https://www.instagram.com/{handle}/",
+        "s": "tagged",
+    }
+    if w:
+        rec["w"] = w
+    cap = caption_of(it)
+    if cap:
+        rec["c"] = cap[:400]
+    if it.get("media_type") == 2 or it.get("is_video"):
+        rec["v"] = 1
+    return rec
 
 
 def code_of(item: dict) -> str | None:
@@ -204,6 +271,18 @@ def carry_ok(rec: dict, now: float, cutoff: float) -> bool:
     return True
 
 
+def load_block() -> set[str]:
+    """Handles whose tagged posts never land. Same file as the roster, so
+    there is one place to look; the arrays the roster loader reads are
+    untouched by it."""
+    try:
+        raw = json.loads(ROSTER.read_text(encoding="utf-8"))
+        got = raw.get("tagged_block") or []
+        return {str(h).strip().lstrip("@").lower() for h in got if str(h).strip()}
+    except Exception:
+        return set()
+
+
 def load_roster() -> tuple[dict[str, list[str]], dict[str, str]]:
     """The four arrays, and the handle -> segment map they imply.
 
@@ -250,6 +329,8 @@ def main() -> int:
     ap.add_argument("--no-carry", action="store_true",
                     help="ignore the previous payload; scrape-only, as the "
                          "builder behaved before carry-forward existed")
+    ap.add_argument("--no-tagged", action="store_true",
+                    help="skip the one-credit tagged-posts fetch")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -330,12 +411,36 @@ def main() -> int:
             kept += 1
         time.sleep(0.4)
 
+    # The tagged shelf: anyone's posts, so it is judged by its own window and
+    # blocklist, and carried on its own — a rostered account that tagged the
+    # Brief appears in both places, and the two must not fold into one.
+    block = load_block()
+    tagged_cutoff = now - TAGGED_DAYS * 86400
+    tagged, tagged_ok = [], False
+    if not args.no_tagged:
+        try:
+            for it in fetch_tagged(key):
+                rec = tagged_record(it, tagged_cutoff)
+                if rec and rec["h"] not in block:
+                    tagged.append(rec)
+            tagged_ok = True
+        except Exception as e:
+            failed.append(f"tagged: {str(e)[:50]}")
+    if not tagged_ok:
+        for rec in prev_posts:
+            if (isinstance(rec, dict) and rec.get("s") == "tagged"
+                    and rec.get("h") not in block
+                    and carry_ok(rec, now, tagged_cutoff)):
+                tagged.append(rec)
+
     carried = []
     for rec in prev_posts:
         # One malformed record must not cost every good one, so each is judged
         # on its own rather than inside a single try around the whole loop.
         if not isinstance(rec, dict):
             continue
+        if rec.get("s") == "tagged":
+            continue            # handled above, on its own terms
         h = rec.get("h")
         if h in answered:
             continue            # today's fetch replaces it wholesale
@@ -371,12 +476,17 @@ def main() -> int:
         u = rec.get("u") or ""
         by_key["u:" + u if "/p/" in u else f"t:{rec['h']}:{rec['ts']}"] = rec
 
+    tagged_by_key = {}
+    for rec in tagged:
+        tagged_by_key[rec.get("u") or f"{rec['h']}:{rec['ts']}"] = rec
+
     # Cap each half on its own, newest first, then interleave back into one
     # clock-ordered list. The tab filters by segment anyway; sorting the whole
     # thing keeps the payload readable and keeps "newest first" true of it.
     posts = []
     for seg_name, cap_n in CAP.items():
-        half = sorted((r for r in by_key.values() if r["s"] == seg_name),
+        pool = tagged_by_key.values() if seg_name == "tagged" else by_key.values()
+        half = sorted((r for r in pool if r["s"] == seg_name),
                       key=lambda r: -r["ts"])
         if len(half) > cap_n:
             log(f"{seg_name}: capped {len(half)} -> {cap_n}")
@@ -400,7 +510,8 @@ def main() -> int:
     }
     if args.dry_run:
         log(f"dry run — DO {counts['do']} posts/{accounts['do']} accounts · "
-            f"SEE {counts['see']} posts/{accounts['see']} accounts")
+            f"SEE {counts['see']} posts/{accounts['see']} accounts · "
+            f"TAGGED {counts['tagged']} posts/{accounts['tagged']} accounts")
         return 0
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -408,6 +519,7 @@ def main() -> int:
     log(f"wrote {OUT.relative_to(ROOT)}  "
         f"DO {counts['do']} posts/{accounts['do']} accounts · "
         f"SEE {counts['see']} posts/{accounts['see']} accounts · "
+        f"TAGGED {counts['tagged']} posts/{accounts['tagged']} accounts · "
         f"{OUT.stat().st_size // 1024} KB")
     return 0
 

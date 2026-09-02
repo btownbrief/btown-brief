@@ -328,6 +328,123 @@ export function sheet(title, build, onClose) {
   return { body, close };
 }
 
+/* --------------------------------------------------------------- lightbox */
+/* Full screen, one picture per screen, swipe between them. Items are
+   { src, alt, caption, meta, href, hrefLabel, gone }. A scroll-snap track
+   carries the swipe — the browser's flick physics, not ours — and the arrows
+   and arrow keys just scroll it by one screen. Slides fill in around the one
+   on screen, so opening a 400-post wall fetches five pictures, not 400. */
+const LB_ARROW_L = '<svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>';
+const LB_ARROW_R = '<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>';
+let lbClose = null;
+
+export function lightbox(items, start = 0) {
+  if (!Array.isArray(items) || !items.length) return null;
+  if (lbClose) lbClose();
+  const box = $('lb');
+  box.innerHTML = '';
+  box.classList.remove('is-bare');
+  const track = el('div', 'lb-track');
+  const slides = items.map(() => { const sl = el('div', 'lb-slide'); track.appendChild(sl); return sl; });
+  const top = el('div', 'lb-top');
+  const count = el('span', 'lb-count');
+  const x = el('button', 'iconbtn', ICON.x);
+  x.setAttribute('aria-label', 'Close full screen');
+  top.append(count, x);
+  const cap = el('div', 'lb-cap');
+  const prev = el('button', 'lb-arrow lb-prev', LB_ARROW_L);
+  prev.setAttribute('aria-label', 'Previous picture');
+  const next = el('button', 'lb-arrow lb-next', LB_ARROW_R);
+  next.setAttribute('aria-label', 'Next picture');
+  box.append(track, top, cap, prev, next);
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-label', 'Full screen pictures');
+  box.hidden = false;
+  document.body.classList.add('lb-open');
+
+  let cur = -1;
+  const fill = (i) => {
+    const sl = slides[i];
+    if (!sl || sl.dataset.done) return;
+    sl.dataset.done = '1';
+    const it = items[i];
+    const img = el('img', 'lb-img');
+    img.alt = it.alt || '';
+    img.referrerPolicy = 'no-referrer';
+    img.decoding = 'async';
+    /* an expired Instagram signature, a pulled photo — say so in the slot
+       rather than leave a black screen that looks like a stuck load */
+    img.addEventListener('error', () => {
+      sl.classList.add('is-gone');
+      sl.textContent = it.gone || 'This picture is no longer available.';
+    });
+    img.src = it.src;
+    sl.appendChild(img);
+  };
+  const show = (i) => {
+    i = Math.max(0, Math.min(items.length - 1, i));
+    if (i === cur) return;
+    cur = i;
+    for (let k = i - 2; k <= i + 2; k++) fill(k);
+    count.textContent = (i + 1) + ' / ' + items.length;
+    const it = items[i];
+    cap.innerHTML = '';
+    if (it.caption) cap.appendChild(el('p', 'lb-cap-t', esc(it.caption)));
+    if (it.meta) cap.appendChild(el('p', 'lb-cap-m', esc(it.meta)));
+    if (it.href) {
+      const a = el('a', 'btn', esc(it.hrefLabel || 'Open'));
+      a.href = safeHref(it.href);
+      a.target = '_blank';
+      a.rel = 'noopener';
+      cap.appendChild(a);
+    }
+    prev.disabled = i === 0;
+    next.disabled = i === items.length - 1;
+  };
+  const jump = (i, smooth) => {
+    i = Math.max(0, Math.min(items.length - 1, i));
+    track.scrollTo({ left: track.clientWidth * i, behavior: smooth ? 'smooth' : 'auto' });
+  };
+  let tick = 0;
+  track.addEventListener('scroll', () => {
+    if (tick) return;
+    tick = requestAnimationFrame(() => {
+      tick = 0;
+      if (track.clientWidth) show(Math.round(track.scrollLeft / track.clientWidth));
+    });
+  }, { passive: true });
+  prev.addEventListener('click', () => jump(cur - 1, true));
+  next.addEventListener('click', () => jump(cur + 1, true));
+  /* tap the picture and the words step aside; tap again and they return */
+  track.addEventListener('click', (e) => {
+    if (e.target.closest('.lb-slide')) box.classList.toggle('is-bare');
+  });
+  const onKey = (e) => {
+    if (e.key === 'ArrowLeft') { jump(cur - 1, true); e.preventDefault(); }
+    else if (e.key === 'ArrowRight') { jump(cur + 1, true); e.preventDefault(); }
+  };
+  document.addEventListener('keydown', onKey);
+  /* a rotation changes the slide width; keep the same picture on screen */
+  const onResize = () => jump(cur, false);
+  window.addEventListener('resize', onResize);
+
+  const close = () => {
+    if (lbClose !== close) return;
+    lbClose = null;
+    document.removeEventListener('keydown', onKey);
+    window.removeEventListener('resize', onResize);
+    if (tick) { cancelAnimationFrame(tick); tick = 0; }
+    box.hidden = true;
+    box.innerHTML = '';
+    document.body.classList.remove('lb-open');
+  };
+  lbClose = close;
+  x.addEventListener('click', close);
+  show(start);
+  jump(start, false);
+  return close;
+}
+
 /* ----------------------------------------------------------------- player */
 /* ONE <audio>. It is in the shell, not in a tab, so it keeps playing across
    every tab switch — which is the entire point of a listen tab in an app you
@@ -920,7 +1037,8 @@ document.querySelector('.tabbar').addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
-  if (peekEl) closePeek();
+  if (lbClose) lbClose();
+  else if (peekEl) closePeek();
   else if (!$('vbox').hidden) closeVideo();
   else if (!$('confirm').hidden) $('confirm').hidden = true;
   else if (!$('sheet').hidden) {

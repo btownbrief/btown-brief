@@ -41,6 +41,10 @@
   /* the Everything half of the local switch, when it is the active side */
   --every: #A63A2C;
   --every-ink: #FFFFFF;
+  /* the water in every OTHER segment control — a quiet lake blue, so the
+     green-and-red Local switch stays the loud one */
+  --seg-water: #6E92B4;
+  --seg-water-ink: #FFFFFF;
   --good: #16704E;
   --warn: #A33B2A;
 
@@ -113,6 +117,8 @@
     --local-ink: #06251A;
     --every: #F09B8A;
     --every-ink: #2C120C;
+    --seg-water: #7EA5C6;
+    --seg-water-ink: #0C1F2E;
     --good: #6FD79E;
     --warn: #F08A72;
     --t-local: #6FD79E;   --t-news: #E8A33D;      --t-politics: #F08A72;
@@ -158,6 +164,8 @@
   --local-ink: #06251A;
   --every: #F09B8A;
   --every-ink: #2C120C;
+  --seg-water: #7EA5C6;
+  --seg-water-ink: #0C1F2E;
   --good: #6FD79E;
   --warn: #F08A72;
   --rail-track: #2C3134;
@@ -927,6 +935,13 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   white-space: nowrap; }
 @media (max-width: 400px) { .seg button { font-size: .8rem; padding: 9px 7px; } }
 .seg button.on { background: var(--panel); color: var(--accent); box-shadow: var(--shadow-1); }
+/* liquid mode (ui.js pours the fill on a canvas): the pill goes transparent
+   and rides above the water; without JS or with reduced motion the class
+   never lands and the plain fill above still does the job */
+.seg.liquid { position: relative; overflow: hidden; }
+.seg.liquid .lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.seg.liquid button { position: relative; z-index: 1; }
+.seg.liquid button.on { background: transparent; box-shadow: none; color: var(--seg-water-ink); }
 
 /* ============================================================ dock */
 /* fixed, not absolute: it must be anchored to the viewport, not to a
@@ -1021,6 +1036,7 @@ body.sheet-open .dock { z-index: 91; }
    drops to the bottom edge, which is both where a mini player belongs and
    the only position the sheet's own bottom padding can be sized against. */
 body.sheet-open .tabbar { display: none; }
+body.lb-open .tabbar { display: none; }
 body.sheet-open.has-player .sheet-body { padding-bottom: calc(92px + var(--safe-b)); }
 
 /* ======================================================= now playing sheet */
@@ -1433,17 +1449,17 @@ body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
    it sloshes across the bar when you toggle. The buttons go transparent and
    ride above it; without JS or with reduced motion this class never lands
    and the plain CSS fill below still does the job. */
-.localsw-liquid { position: relative; overflow: hidden; }
-.localsw-liquid .lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%;
+.localsw-bar.liquid { position: relative; overflow: hidden; }
+.localsw-bar.liquid .lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%;
   pointer-events: none; }
-.localsw-liquid .localsw-half { position: relative; z-index: 1; }
-.localsw-liquid .localsw-half.on,
-.localsw.is-on .localsw-liquid .localsw-half.on,
-.localsw .localsw-liquid .localsw-half:last-child.on {
+.localsw-bar.liquid .localsw-half { position: relative; z-index: 1; }
+.localsw-bar.liquid .localsw-half.on,
+.localsw.is-on .localsw-bar.liquid .localsw-half.on,
+.localsw .localsw-bar.liquid .localsw-half:last-child.on {
   background: transparent; background-color: transparent; box-shadow: none;
 }
-.localsw.is-on .localsw-liquid .localsw-half.on::before,
-.localsw.is-on .localsw-liquid .localsw-half.on::after { content: none; }
+.localsw.is-on .localsw-bar.liquid .localsw-half.on::before,
+.localsw.is-on .localsw-bar.liquid .localsw-half.on::after { content: none; }
 .localsw-half {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
   min-height: 40px; padding: 8px 10px; border: 0; border-radius: var(--pill);
@@ -2173,13 +2189,13 @@ body.chrome-away .ctlband { top: calc(var(--top-h) + 6px); }
 .ig-post { border-bottom: 1px solid var(--edge-soft); }
 .ig-hit { display: flex; gap: 12px; align-items: flex-start; width: 100%;
   text-align: left; padding: 11px 2px; }
-.ig-shot { position: relative; flex: 0 0 auto; width: 96px; }
+.ig-shot { position: relative; flex: 0 0 auto; width: 112px; }
 @media (max-width: 359px) {
   .ig-shot, .ig-img { width: 78px; }
   .ig-img { height: 78px; }
   .ig-hit { gap: 9px; }
 }
-.ig-img { display: block; width: 96px; height: 96px; object-fit: cover;
+.ig-img { display: block; width: 112px; height: 112px; object-fit: cover;
   border-radius: 10px; background: var(--panel-2);
   outline: 1px solid rgba(20, 16, 8, .11); outline-offset: -1px; }
 :root[data-theme="dark"] .ig-img,
@@ -2199,7 +2215,7 @@ body.chrome-away .ctlband { top: calc(var(--top-h) + 6px); }
   color: var(--accent); font-weight: 600; }
 .ig-when { color: var(--ink-faint); font-weight: 400; letter-spacing: .06em; }
 .ig-text { display: -webkit-box; margin-top: 5px; font-size: .89rem; line-height: 1.42;
-  color: var(--ink); -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+  color: var(--ink); -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden;
   white-space: pre-wrap;
   /* Captions carry bare URLs and 30-character hashtags. Without this an
      unbreakable token sets a minimum width the row cannot shrink under, and
@@ -2291,9 +2307,9 @@ body.chrome-away .ctlband { top: calc(var(--top-h) + 6px); }
    tallest card, so a short caption leaves a sliver of panel below it —
    cheaper to accept than a masonry layout, and barely visible at this size. */
 .igw-cap {
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
   overflow: hidden; padding: 6px 9px 0; margin-bottom: 8px;
-  font-size: .72rem; line-height: 1.4; color: var(--ink-soft);
+  font-size: .74rem; line-height: 1.4; color: var(--ink-soft);
   overflow-wrap: break-word;
 }
 .igw-img { transition: transform .1s ease; }
@@ -2421,3 +2437,97 @@ body.chrome-away .ctlband { top: calc(var(--top-h) + 6px); }
   .localsw-half.on { animation: none; }
   .shared-hit { animation: none; outline: 2px solid var(--accent); outline-offset: 2px; }
 }
+
+/* ============================================================ lightbox */
+/* Full screen, one picture per screen, swipe between them. A scroll-snap
+   track rather than a hand-rolled gesture: the browser's own flick physics
+   on a phone beat anything written here, and the arrows and keys just scroll
+   it. Black on purpose in both themes — it is a photograph, not a page. */
+.lb { position: fixed; inset: 0; z-index: 95; background: #000; color: #fff;
+  display: flex; flex-direction: column; }
+.lb[hidden] { display: none; }
+.lb-track { flex: 1; display: flex; overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.lb-track::-webkit-scrollbar { display: none; }
+.lb-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: start;
+  scroll-snap-stop: always; display: grid; place-items: center; min-width: 0; }
+.lb-img { max-width: 100%; max-height: 100%; width: auto; height: auto;
+  object-fit: contain; display: block; }
+.lb-slide.is-gone { color: rgba(255, 255, 255, .55); font-size: .9rem; padding: 20px; text-align: center; }
+.lb-top { position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: calc(var(--safe-t) + 8px) 8px 12px 16px;
+  background: linear-gradient(rgba(0, 0, 0, .62), rgba(0, 0, 0, 0));
+  transition: opacity .18s ease; }
+.lb-count { font-family: var(--mono); font-size: .72rem; letter-spacing: .1em;
+  color: rgba(255, 255, 255, .82); font-variant-numeric: tabular-nums; }
+.lb .iconbtn { color: #fff; }
+.lb .iconbtn:hover { background: rgba(255, 255, 255, .14); color: #fff; }
+.lb-cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  padding: 30px 16px calc(var(--safe-b) + 14px);
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .74));
+  transition: opacity .18s ease; }
+.lb-cap:empty { display: none; }
+.lb-cap-t { font-size: .95rem; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.lb-cap-m { margin-top: 5px; font-size: .78rem; color: rgba(255, 255, 255, .72); }
+.lb-cap .btn { margin-top: 10px; background: rgba(255, 255, 255, .15); color: #fff;
+  border-color: transparent; padding: 8px 14px; min-height: 36px; font-size: .85rem; }
+/* tap the picture: the words step out of the way; tap again, they return */
+.lb.is-bare .lb-top, .lb.is-bare .lb-cap, .lb.is-bare .lb-arrow { opacity: 0; pointer-events: none; }
+.lb-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%; background: rgba(0, 0, 0, .45);
+  color: #fff; display: grid; place-items: center; transition: opacity .18s ease; }
+.lb-arrow svg { width: 24px; height: 24px; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.lb-prev { left: 10px; }
+.lb-next { right: 10px; }
+.lb-arrow[disabled] { opacity: .25; pointer-events: none; }
+@media (pointer: coarse) { .lb-arrow { display: none; } }
+
+/* the "Full screen" opener: half a row beside Add a photo on Photos, a
+   compact one in the heading on Instagram */
+.ph-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.ph-actions .m-add { margin-bottom: 0; }
+.ph-actions .btn-big { padding-left: 12px; padding-right: 12px; white-space: nowrap; }
+.btn svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+.fs-btn { padding: 8px 13px; min-height: 36px; font-size: .84rem; flex: 0 0 auto; }
+.ph-tagline { font-size: .84rem; color: var(--ink-soft); margin: -8px 0 16px; line-height: 1.45; }
+.ph-tagline b { font-weight: 600; color: var(--ink); }
+
+/* Photo of the week: the standalone wall's most-hearted of the last seven
+   days, surfaced here so the tab carries the thing the newsletter runs */
+.ph-potw { margin: 0 0 18px; border-radius: var(--radius); overflow: hidden;
+  background: var(--panel); border: 1px solid var(--edge); box-shadow: var(--shadow-1); }
+.ph-potw-hit { display: block; width: 100%; text-align: left; }
+.ph-potw-img { display: block; width: 100%; max-height: 56vh; object-fit: cover; background: var(--panel-2); }
+.ph-potw-badge { position: absolute; top: 10px; left: 10px; z-index: 1;
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+  background: rgba(0, 0, 0, .62); color: #fff; padding: 5px 9px; border-radius: var(--pill); }
+.ph-potw-shot { position: relative; }
+.ph-potw-body { padding: 10px 13px 12px; }
+.ph-potw-cap { font-size: .95rem; line-height: 1.45; }
+.ph-potw-by { margin-top: 3px; font-size: .8rem; color: var(--ink-faint); }
+
+/* Instagram: the invitation, and the shelf of posts that took it up */
+.ig-tagus { display: flex; gap: 12px; align-items: center; margin: 0 0 16px; padding: 12px 13px;
+  border-radius: var(--radius); background: var(--panel);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--edge)); }
+.ig-tagus-cam { font-size: 1.5rem; line-height: 1; flex: 0 0 auto; }
+.ig-tagus-t { display: block; font-size: .95rem; font-weight: 600; line-height: 1.3; }
+.ig-tagus-d { display: block; font-size: .83rem; color: var(--ink-soft); line-height: 1.45; margin-top: 2px; }
+.ig-tagus-d b { font-weight: 600; color: var(--ink); }
+.ig-tagged { margin-bottom: 20px; }
+.ig-tagged .igw-who::before { content: "📸 "; }
+
+/* the Brief's episode list folds — the header is the switch */
+.l-eps-head { display: flex; align-items: baseline; gap: 9px; width: 100%; text-align: left;
+  margin: 2px 0 9px; }
+.l-eps-head .t { font-size: 1.06rem; font-weight: 600; letter-spacing: -.004em; }
+.l-eps-head .s { font-size: .84rem; color: var(--ink-faint); flex: 1; }
+.l-eps-head .chev { display: inline-flex; color: var(--ink-faint); transition: transform .2s ease; align-self: center; }
+.l-eps-head .chev svg { width: 20px; height: 20px; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.l-eps-head[aria-expanded="true"] .chev { transform: rotate(180deg); }
