@@ -277,8 +277,10 @@ export function sheet(title, build, onClose) {
     if (sheetClose === close) sheetClose = null;
     s.hidden = true;
     document.body.classList.remove('sheet-open');
-    if (onClose) { try { onClose(); } catch (e) { /* never block the close */ } }
+    /* empty BEFORE onClose: an onClose that opens another sheet would
+       otherwise build into `s` and be wiped when this close resumed */
     s.innerHTML = '';
+    if (onClose) { try { onClose(); } catch (e) { /* never block the close */ } }
   };
   sheetClose = close;
   x.addEventListener('click', close);

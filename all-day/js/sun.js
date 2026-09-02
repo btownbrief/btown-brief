@@ -22,7 +22,9 @@ function lib() {
     const s = document.createElement('script');
     s.src = SCORE_LIB;
     s.onload = () => resolve(true);
-    s.onerror = () => reject(new Error('could not load ' + SCORE_LIB));
+    /* a failed load must not poison every later call — clear so the next
+       sunScore() tries the script again */
+    s.onerror = () => { libPromise = null; reject(new Error('could not load ' + SCORE_LIB)); };
     document.head.appendChild(s);
   });
   return libPromise;
@@ -57,8 +59,10 @@ export function sunScore(data) {
                    sunsetMs: t.sunsetMs, isTonight: t.isTonight };
         });
       })
-      .then((sun) => res(sun || null))
-      .catch(() => res(null));
+      /* a null is a failure, not an answer — don't cache it for 30 minutes;
+         the next caller retries (photos and What Now share this cache) */
+      .then((sun) => { if (!sun) cachedAt = 0; res(sun || null); })
+      .catch(() => { cachedAt = 0; res(null); });
   });
   return cached;
 }
