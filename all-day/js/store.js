@@ -415,7 +415,16 @@ export function toggleVote(item) {
     p_href: (item.href || '').slice(0, 600),
   }).then((n) => {
     /* the server is the authority — adopt its number when it answers */
-    if (typeof n === 'number') { voteCounts[item.k] = n; voteReady = true; }
+    if (typeof n === 'number') { voteCounts[item.k] = n; voteReady = true; return; }
+    /* the call failed (offline, RLS, outage): undo the optimistic write so a
+       vote that never landed doesn't survive reloads forever — but only if
+       the flag still reads the way this toggle left it */
+    const cur = votedSet();
+    if (on ? cur[item.k] : !cur[item.k]) {
+      if (on) delete cur[item.k]; else cur[item.k] = 1;
+      write(VOTED_KEY, cur);
+      voteCounts[item.k] = Math.max(0, voteCount(item.k) + (on ? -1 : 1));
+    }
   });
   return on;
 }

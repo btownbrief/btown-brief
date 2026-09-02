@@ -386,7 +386,9 @@ function renderSaved(root) {
   const row = el('div', 'trail');
   saved.forEach((i) => {
     const c = el('button', 'tchip here', '★ ' + esc(pretty(i.title)));
-    c.addEventListener('click', () => go(i.k));
+    /* door saves key on 'wiki:'+title, older reader saves on the bare title —
+       go() wants the title, never the storage key */
+    c.addEventListener('click', () => go(String(i.k).replace(/^wiki:/, '')));
     row.appendChild(c);
   });
   root.appendChild(row);
@@ -628,8 +630,11 @@ function renderArticle(title, raw, summary) {
   wireLinks(art);
 
   const acts = el('div', 'reader-acts');
-  const rec = { k: title, kind: 'wiki', title: pretty(title), from: 'Wikipedia', href: '#wander/' + encodeURIComponent(title) };
-  const save = el('button', 'btn btn-quiet', store.isSaved(title) ? '★ Saved' : '☆ Save');
+  /* same 'wiki:' key shape as doorFoot, so the door and the reader agree on
+     whether an article is saved (bare-title saves from before 9/2 still
+     render and open; they just carry their own star) */
+  const rec = { k: 'wiki:' + title, kind: 'wiki', title: pretty(title), from: 'Wikipedia', href: '#wander/' + encodeURIComponent(title) };
+  const save = el('button', 'btn btn-quiet', store.isSaved(rec.k) ? '★ Saved' : '☆ Save');
   save.addEventListener('click', () => {
     save.textContent = store.toggleSaved(rec) ? '★ Saved' : '☆ Save';
   });

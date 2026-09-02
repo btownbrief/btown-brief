@@ -300,7 +300,7 @@ function render() {
 
   if (!shown.length) {
     root.appendChild(el('p', 'empty', state.q
-      ? 'Nothing on the wire matches “' + state.q + '”.'
+      ? 'Nothing on the wire matches “' + esc(state.q) + '”.'
       : set.focus
         ? 'Nothing left — you have read everything here. Turn Focus off in Settings to see it again.'
         : 'Nothing on the wire for that.'));

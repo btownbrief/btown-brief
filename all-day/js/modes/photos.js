@@ -35,9 +35,9 @@ import * as app from './../app.js';
 import { el, esc, safeHref, rail, seg, chip, heading, shelfHead, scrollHint,
          voteBtn, paintVote, starBtn, tabStamp, stampOf, ICON } from './../ui.js';
 import { hydrateVotes } from './../rows.js';
+import { sunScore } from './../sun.js';
 
 const LIB = '../js/photos-lib.js';
-const SCORE_LIB = '../js/sunset-score.js';
 const SPOTS = '../data/sunset-spots.json';
 const SEEDS = '../data/sunset-gallery.json';
 /* The same URL the Wikipedia tab already fetches, deliberately — an identical
@@ -110,32 +110,9 @@ function loadPhotos() {
    traffic is those two. A failure here costs the score line and nothing else —
    the sunset TIME comes from the weather payload and is always there. */
 function loadSun() {
-  const weather = data.peek('weather');
-  const withWeather = weather ? Promise.resolve(weather)
-    : new Promise((res) => data.load('weather', res, () => res(null)));
-
-  Promise.all([script(SCORE_LIB), withWeather])
-    .then(([, latest]) => {
-      const S = window.BtownSunsetScore;
-      if (!S || !latest) return null;
-      return Promise.all([
-        data.fetchJSON(S.OPEN_METEO_URL, 12000).catch(() => null),
-        data.fetchJSON(S.AIR_URL, 12000).catch(() => null),
-      ]).then(([om, aq]) => {
-        if (!om) return null;
-        /* selectTarget reads the NWS payload's sun block, not the Open-Meteo
-           one, and takes "now" as its second argument — it decides whether
-           tonight's sunset has already passed and we should be talking about
-           tomorrow's. */
-        const t = S.selectTarget(latest, Date.now());
-        if (!t || !t.sunsetMs) return null;
-        const r = S.computeScore(t.sunsetMs, om, latest, null, aq);
-        return { score: r.score, degraded: r.degraded,
-                 sunsetMs: t.sunsetMs, isTonight: t.isTonight };
-      });
-    })
-    .then((sun) => { if (sun) { state.sun = sun; render(); } })
-    .catch(() => { /* the time still shows */ });
+  /* shared with What Now since 9/2 — sun.js is the one place the score is
+     computed, so the dial here and the engine's gray-night gate agree */
+  sunScore(data).then((sun) => { if (sun) { state.sun = sun; render(); } });
 }
 
 /* Wikipedia's picture of the day. Ambient, and openly not local — it keeps the

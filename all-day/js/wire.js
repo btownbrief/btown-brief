@@ -196,7 +196,12 @@ const isDead = (key) => dead[key] && Date.now() - dead[key] < DEAD_FOR;
 function offerFresh(key, json) {
   const spec = FILES[key];
   if (!spec.ok(json)) return;
-  if (!cache[key] || json.generated === cache[key].generated) {
+  /* two payloads with no `generated` stamp would compare undefined ===
+     undefined and read as identical forever — fall back to content */
+  const same = (json.generated != null || (cache[key] && cache[key].generated != null))
+    ? cache[key] && json.generated === cache[key].generated
+    : cache[key] && JSON.stringify(json) === JSON.stringify(cache[key]);
+  if (!cache[key] || same) {
     if (stale[key]) { stale[key] = false; onStaleChange(anyStale()); }
     return;
   }
