@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-01T18:49:18-04:00",
+ "generated": "2026-09-02T09:50:41-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 19,
-   "seconds": 6.3
+   "seconds": 6.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 81,
-   "seconds": 5.0
+   "count": 80,
+   "seconds": 3.2
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 63,
-   "seconds": 4.2
+   "count": 60,
+   "seconds": 4.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 167,
-   "seconds": 2.7
+   "count": 169,
+   "seconds": 2.8
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 85,
-   "seconds": 1.8
+   "count": 84,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -35,7 +35,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-01&end_date=2026-10-31&page=1 (HTTP Error 405: Not Allowed)",
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-02&end_date=2026-11-01&page=1 (HTTP Error 405: Not Allowed)",
    "staleDays": 2
   },
   "facebook": {
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 194,
-   "seconds": 70.0
+   "count": 193,
+   "seconds": 70.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.6
+   "seconds": 0.7
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,58 +65,59 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 750,
+   "count": 741,
    "seconds": 38.4
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 74,
-   "seconds": 0.7
+   "count": 75,
+   "seconds": 0.9
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 51.3
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 381,
-   "seconds": 74.7
+   "count": 372,
+   "seconds": 74.6
   },
   "meetup": {
    "label": "Meetup",
-   "count": 63,
-   "seconds": 128.6
+   "count": 64,
+   "seconds": 126.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 21,
-   "seconds": 0.7
+   "count": 20,
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 48,
-   "seconds": 15.2
+   "count": 49,
+   "seconds": 13.6
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 61,
+   "count": 59,
    "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 104,
-   "seconds": 5.2
+   "count": 100,
+   "seconds": 5.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 26,
-   "seconds": 33.6
+   "seconds": 46.1
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2425,
-   "seconds": 17.9
+   "count": 2452,
+   "seconds": 67.1
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -126,42 +127,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 453,
-   "seconds": 19.3
+   "count": 440,
+   "seconds": 24.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 288,
-   "seconds": 0.3
+   "count": 276,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 80,
-   "seconds": 108.3
+   "count": 83,
+   "seconds": 106.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 53,
+   "count": 52,
    "seconds": 0.4
   }
  },
- "gathered": 5483,
- "afterDedup": 2550,
- "duplicatesMerged": 2933,
- "final": 2799,
+ "gathered": 5460,
+ "afterDedup": 2532,
+ "duplicatesMerged": 2928,
+ "final": 2777,
  "firecrawlCalls": 15,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "BOOST Sessions",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-07"
-  },
   {
    "kept": {
     "title": "Board Game Night",
@@ -415,17 +405,6 @@
   {
    "kept": {
     "title": "2026 White Coat Ceremony for the Larner Medical Class of 2030",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-09"
-  },
-  {
-   "kept": {
-    "title": "Religion and the American Founding Conference",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1705,7 +1684,7 @@
   },
   {
    "kept": {
-    "title": "Open Studio",
+    "title": "Trivia",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -1716,7 +1695,7 @@
   },
   {
    "kept": {
-    "title": "Trivia",
+    "title": "Open Studio",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -2411,111 +2390,38 @@
     "sevendays"
    ],
    "date": "2026-10-31"
+  },
+  {
+   "kept": {
+    "title": "Men's Ice Hockey vs New Hampshire",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-31"
+  },
+  {
+   "kept": {
+    "title": "Skylark",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "sevendays"
+   ],
+   "date": "2026-11-01"
   }
  ],
  "changes": [
-  {
-   "id": "d87dbe8b54a3",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-09-09",
-   "change": "time",
-   "was": "2026-09-09",
-   "now": "2026-09-09T16:00:00-04:00"
-  },
-  {
-   "id": "4711bc9675b3",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-09-23",
-   "change": "time",
-   "was": "2026-09-23",
-   "now": "2026-09-23T16:00:00-04:00"
-  },
-  {
-   "id": "f0c94bbfeba2",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-09-30",
-   "change": "time",
-   "was": "2026-09-30",
-   "now": "2026-09-30T16:00:00-04:00"
-  },
-  {
-   "id": "8e56a3485417",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-10-07",
-   "change": "time",
-   "was": "2026-10-07",
-   "now": "2026-10-07T16:00:00-04:00"
-  },
-  {
-   "id": "dc83ea3f9eda",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-10-21",
-   "change": "time",
-   "was": "2026-10-21",
-   "now": "2026-10-21T16:00:00-04:00"
-  },
-  {
-   "id": "daf84aaaaa20",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-10-28",
-   "change": "time",
-   "was": "2026-10-28",
-   "now": "2026-10-28T16:00:00-04:00"
-  },
   {
    "id": "42b2324fe7d8",
    "title": "Cookie Queens",
    "date": "2026-10-10",
    "change": "time",
-   "was": "2026-10-10T15:30:00-04:00",
-   "now": "2026-10-10T13:00:00-04:00"
-  },
-  {
-   "id": "4f8cdcfe87bc",
-   "title": "Tech Tuesdays - Breakfast",
-   "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
-  },
-  {
-   "id": "1a66aae8ce88",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-09-01T10:16:24-04:00"
-  },
-  {
-   "id": "c814e8e6768d",
-   "title": "Craftytown",
-   "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
-  },
-  {
-   "id": "41101c337503",
-   "title": "Cookbook Club",
-   "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
-  },
-  {
-   "id": "f40b673b1c52",
-   "title": "Local Dork at Foam Brewers on a Tuesday",
-   "date": "2026-09-01",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
-  },
-  {
-   "id": "fc05f3cb656a",
-   "title": "Brown Horse at Higher Ground",
-   "date": "2026-09-01",
-   "change": "dropped"
-  },
-  {
-   "id": "1c8ac9669ab6",
-   "title": "Honky Tonk Tuesday",
-   "date": "2026-09-01",
-   "change": "dropped"
+   "was": "2026-10-10T13:00:00-04:00",
+   "now": "2026-10-10T15:30:00-04:00"
   },
   {
    "id": "3fbdea201f3a",
@@ -2537,6 +2443,13 @@
    "date": "2026-09-02",
    "change": "missing",
    "lastSeen": "2026-08-30T18:55:30-04:00"
+  },
+  {
+   "id": "8d87c6c465c7",
+   "title": "Preschool Play Time",
+   "date": "2026-09-03",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "660ffeab1982",
@@ -2588,34 +2501,11 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
-   "id": "fb530ac5d92d",
-   "title": "Bermuda Search Party at Higher Ground",
-   "date": "2026-09-05",
-   "change": "dropped"
-  },
-  {
-   "id": "df92314b4d65",
-   "title": "Alabama Shakes (Children 12 and under are FREE)",
-   "date": "2026-09-06",
-   "change": "dropped"
-  },
-  {
-   "id": "dc7ecfb1a313",
-   "title": "Emily King & Alabama Shakes",
-   "date": "2026-09-06",
-   "change": "dropped"
-  },
-  {
-   "id": "366239fc55c2",
-   "title": "Labor Day Comedy Show",
-   "date": "2026-09-07",
-   "change": "dropped"
-  },
-  {
-   "id": "82109ef03884",
-   "title": "Victoryland at Higher Ground",
-   "date": "2026-09-07",
-   "change": "dropped"
+   "id": "51a751ae6489",
+   "title": "Library Cards from all Over the Country (and Beyond!)",
+   "date": "2026-09-08",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "8d8ca273ec3a",
@@ -2632,12 +2522,6 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
-   "id": "9a06a754eec0",
-   "title": "Honky Tonk Tuesday",
-   "date": "2026-09-08",
-   "change": "dropped"
-  },
-  {
    "id": "a84dc926a1e1",
    "title": "Baby Time",
    "date": "2026-09-09",
@@ -2645,10 +2529,11 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
-   "id": "247a86287079",
-   "title": "WAX and DJ Hoppa at Higher Ground",
-   "date": "2026-09-09",
-   "change": "dropped"
+   "id": "c6de40a56162",
+   "title": "Preschool Play Time",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "8fef2b946888",
@@ -2656,12 +2541,6 @@
    "date": "2026-09-10",
    "change": "missing",
    "lastSeen": "2026-08-31T11:27:35-04:00"
-  },
-  {
-   "id": "4274547e08ac",
-   "title": "Lukas Nelson and Molly Tuttle at Shelburne Museum",
-   "date": "2026-09-10",
-   "change": "dropped"
   },
   {
    "id": "5d523f88641e",
@@ -2678,18 +2557,6 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
-   "id": "46caed254235",
-   "title": "Thesaurus Rex at Higher Ground",
-   "date": "2026-09-10",
-   "change": "dropped"
-  },
-  {
-   "id": "2e6d889d7bd2",
-   "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ James Kochalka Superstar & Strelka",
-   "date": "2026-09-10",
-   "change": "dropped"
-  },
-  {
    "id": "064e7b5b0752",
    "title": "Lego Builders",
    "date": "2026-09-11",
@@ -2702,12 +2569,6 @@
    "date": "2026-09-11",
    "change": "missing",
    "lastSeen": "2026-08-31T13:12:40-04:00"
-  },
-  {
-   "id": "8a0ac7f0a9da",
-   "title": "All Your Friends: The Indie Sleaze Dance Party",
-   "date": "2026-09-11",
-   "change": "dropped"
   },
   {
    "id": "f77ef7192c35",
@@ -2752,18 +2613,6 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
-   "id": "97bed91de3e9",
-   "title": "Rainbow Kitten Surprise at the Expo",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
-   "id": "f8f70a97c50d",
-   "title": "Higher Ground Presents: Rainbow Kitten Surprise",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
    "id": "ee168b945cde",
    "title": "Sensory-Friendly Sunday at ECHO",
    "date": "2026-09-13",
@@ -2778,10 +2627,11 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
-   "id": "d2abf39805f7",
-   "title": "Jim Norton at Higher Ground",
-   "date": "2026-09-13",
-   "change": "dropped"
+   "id": "4b9be690e3f2",
+   "title": "Library Cards from all Over the Country (and Beyond!)",
+   "date": "2026-09-14",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "30b56db79a59",
@@ -2819,11 +2669,25 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
+   "id": "04a3bb8e3152",
+   "title": "Charity and Sylvia Composer Talk: Clarice Assad, Composer of Summerland",
+   "date": "2026-09-16",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
+  },
+  {
    "id": "fc5707dd41de",
    "title": "Live Music! Michael Perry",
    "date": "2026-09-16",
    "change": "missing",
    "lastSeen": "2026-08-30T18:55:30-04:00"
+  },
+  {
+   "id": "d6f3fd1ec553",
+   "title": "Preschool Play Time",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "78952acf13db",
@@ -2854,6 +2718,13 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
+   "id": "39c88c22c791",
+   "title": "Charity and Sylvia Author Talk ft. Tillie Walden",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
+  },
+  {
    "id": "95a7e9fe79a1",
    "title": "Lego Builders",
    "date": "2026-09-18",
@@ -2873,12 +2744,6 @@
    "date": "2026-09-18",
    "change": "missing",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "ab9c475ed087",
-   "title": "Old Crow Medicine Show at Shelburne Museum",
-   "date": "2026-09-18",
-   "change": "dropped"
   },
   {
    "id": "8b7796b354d6",
@@ -2916,12 +2781,6 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "eac5734cc00f",
-   "title": "Scoochie Boochie at Higher Ground",
-   "date": "2026-09-19",
-   "change": "dropped"
-  },
-  {
    "id": "5c07a69abff1",
    "title": "Live Music",
    "date": "2026-09-20",
@@ -2929,16 +2788,11 @@
    "lastSeen": "2026-09-01T10:16:24-04:00"
   },
   {
-   "id": "f764a1d66022",
-   "title": "Of Monsters and Men at Shelburne Museum",
-   "date": "2026-09-20",
-   "change": "dropped"
-  },
-  {
-   "id": "53dfe534812c",
-   "title": "Jensen McRae at Higher Ground",
-   "date": "2026-09-20",
-   "change": "dropped"
+   "id": "9fe672bdf884",
+   "title": "Library Cards from all Over the Country (and Beyond!)",
+   "date": "2026-09-21",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "e89f8a886c81",
@@ -2948,12 +2802,6 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
-   "id": "1670b3518bf7",
-   "title": "Cheekface at Higher Ground",
-   "date": "2026-09-21",
-   "change": "dropped"
-  },
-  {
    "id": "a9673115645d",
    "title": "Local Dork at Foam Brewers on a Tuesday",
    "date": "2026-09-22",
@@ -2961,17 +2809,18 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
-   "id": "a54a211a1e92",
-   "title": "Violet Grohl at Higher Ground",
-   "date": "2026-09-22",
-   "change": "dropped"
-  },
-  {
    "id": "77694579a75f",
    "title": "Baby Time",
    "date": "2026-09-23",
    "change": "missing",
    "lastSeen": "2026-08-31T11:27:35-04:00"
+  },
+  {
+   "id": "6bbd17767d09",
+   "title": "Meanwhile in Vermont... Where do we show up in our nation's founding documents?",
+   "date": "2026-09-23",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "210764a691d9",
@@ -2986,6 +2835,13 @@
    "date": "2026-09-24",
    "change": "missing",
    "lastSeen": "2026-09-01T10:16:24-04:00"
+  },
+  {
+   "id": "4002416b7756",
+   "title": "Preschool Play Time",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "b3e0e1560f2d",
@@ -3065,10 +2921,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "30bb5f5049ed",
-   "title": "Hana Stretton & Helena Deland at Higher Ground",
-   "date": "2026-09-27",
-   "change": "dropped"
+   "id": "31d863dc90fe",
+   "title": "Library Cards from all Over the Country (and Beyond!)",
+   "date": "2026-09-28",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "cb75c9708592",
@@ -3076,12 +2933,6 @@
    "date": "2026-09-28",
    "change": "missing",
    "lastSeen": "2026-08-31T13:12:40-04:00"
-  },
-  {
-   "id": "6d88f66cb108",
-   "title": "Ora Cogan",
-   "date": "2026-09-28",
-   "change": "dropped"
   },
   {
    "id": "348e88592d16",
@@ -3098,23 +2949,11 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
-   "id": "470d8ecbf4c3",
-   "title": "Honky Tonk Tuesday",
-   "date": "2026-09-29",
-   "change": "dropped"
-  },
-  {
    "id": "b06b8cd265e8",
    "title": "Baby Time",
    "date": "2026-09-30",
    "change": "missing",
    "lastSeen": "2026-08-31T11:27:35-04:00"
-  },
-  {
-   "id": "9f10dc9a248b",
-   "title": "Wednesday Wine Down Farmers Market",
-   "date": "2026-09-30",
-   "change": "dropped"
   },
   {
    "id": "dfa99923fc23",
@@ -3124,10 +2963,11 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
-   "id": "909b1becd999",
-   "title": "Anberlin at Higher Ground",
-   "date": "2026-09-30",
-   "change": "dropped"
+   "id": "7807d7f83c42",
+   "title": "Preschool Play Time",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "4249fba592e8",
@@ -3172,12 +3012,6 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "03b4ec800fff",
-   "title": "Post Sex Nachos at Higher Ground",
-   "date": "2026-10-03",
-   "change": "dropped"
-  },
-  {
    "id": "e46b3285c535",
    "title": "MASKS ON! Sundays at ECHO",
    "date": "2026-10-04",
@@ -3192,18 +3026,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "1d142f277bf3",
-   "title": "76th Street at Higher Ground",
-   "date": "2026-10-04",
-   "change": "dropped"
-  },
-  {
-   "id": "acfb6935a747",
-   "title": "Katie Pruitt at Higher Ground",
-   "date": "2026-10-05",
-   "change": "dropped"
-  },
-  {
    "id": "a832b551c82f",
    "title": "Tech Tuesdays - Breakfast",
    "date": "2026-10-06",
@@ -3211,22 +3033,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "53fda315c32f",
-   "title": "Bombargo at Higher Ground",
-   "date": "2026-10-06",
-   "change": "dropped"
-  },
-  {
-   "id": "3910d9efb527",
-   "title": "Wish Benefit Tour 2026 with Oteil Burbridge & LaMP",
-   "date": "2026-10-07",
-   "change": "dropped"
-  },
-  {
-   "id": "50d362ce3cf4",
-   "title": "Briscoe at Higher Ground",
-   "date": "2026-10-07",
-   "change": "dropped"
+   "id": "31f877f10201",
+   "title": "Preschool Play Time",
+   "date": "2026-10-08",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "67caa8cb02c2",
@@ -3236,10 +3047,11 @@
    "lastSeen": "2026-08-30T18:55:30-04:00"
   },
   {
-   "id": "6ed1d8209f5f",
-   "title": "Benjamin Tod",
-   "date": "2026-10-08",
-   "change": "dropped"
+   "id": "97c4b39a64ae",
+   "title": "Religion and the American Founding Conference",
+   "date": "2026-10-09",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "57704b8ff8c9",
@@ -3247,12 +3059,6 @@
    "date": "2026-10-09",
    "change": "missing",
    "lastSeen": "2026-08-31T13:12:40-04:00"
-  },
-  {
-   "id": "7e176a1864d4",
-   "title": "Benjamin Tod",
-   "date": "2026-10-09",
-   "change": "dropped"
   },
   {
    "id": "747a3fad7f71-2100",
@@ -3283,6 +3089,13 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
+   "id": "686d293d049b",
+   "title": "Preschool Play Time",
+   "date": "2026-10-15",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
+  },
+  {
    "id": "1cd2932e2a99",
    "title": "Trivia Night",
    "date": "2026-10-15",
@@ -3297,17 +3110,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "c899bd3e5236",
+   "title": "Preschool Play Time",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
+  },
+  {
    "id": "92f8f6e3278d",
    "title": "Trivia Night",
    "date": "2026-10-22",
    "change": "missing",
    "lastSeen": "2026-08-30T18:55:30-04:00"
-  },
-  {
-   "id": "cd2184ea2ab4",
-   "title": "Dana and Alden at Higher Ground",
-   "date": "2026-10-22",
-   "change": "dropped"
   },
   {
    "id": "4b5338a2a7d1",
@@ -3331,12 +3145,6 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
-   "id": "1bb445c9a490",
-   "title": "Lamplight, The Clearwater Swimmers, & Fowl",
-   "date": "2026-10-24",
-   "change": "dropped"
-  },
-  {
    "id": "1c57d3ef908e-2100",
    "title": "Sam Jay",
    "date": "2026-10-24",
@@ -3344,22 +3152,11 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
-   "id": "a96fc4702ece",
-   "title": "Winooski Farmers Market",
-   "date": "2026-10-25",
-   "change": "dropped"
-  },
-  {
-   "id": "3908434d992d",
-   "title": "Carsie Blanton at Higher Ground",
-   "date": "2026-10-25",
-   "change": "dropped"
-  },
-  {
-   "id": "185f27c555bc",
-   "title": "Allison Russell w/ Autumn Nicholas",
-   "date": "2026-10-27",
-   "change": "dropped"
+   "id": "6839e671df73",
+   "title": "Preschool Play Time",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   }
  ]
 }
