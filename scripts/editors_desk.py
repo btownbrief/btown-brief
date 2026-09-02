@@ -10,8 +10,12 @@ Builds desk.html (local-only, gitignored) from live signals and opens it:
      AGES checked against each pipeline's cadence — this is the check that
      catches a job running green while writing nothing, which is how the
      TOP picks and the Watch tab both froze for two days in late August
-     with every run success; launchd jobs with a nonzero exit; plus the
-     hand-kept watchlist in desk-state.json.
+     with every run success; launchd jobs with a nonzero exit; the
+     NEWSLETTER PIPELINE STATUS TRAIL (~/Library/Logs/btownbrief/
+     pipeline-status/*.json, written by every overnight/dad/canary run —
+     failures, warnings, and jobs that quietly stopped firing all become
+     rows here, since a 4:30 AM notification is missable and launchctl
+     forgets exit codes); plus the hand-kept watchlist in desk-state.json.
   2. Waiting on you — open PRs org-wide plus job-radar, and the pending
      human steps listed in desk-state.json.
   3. Rhythms — recurring chores with due dates. last_done comes from a
@@ -346,6 +350,65 @@ def check_launchd():
     return findings
 
 
+PIPELINE_STATUS_DIR = os.path.expanduser("~/Library/Logs/btownbrief/pipeline-status")
+# job name -> max days between completed runs before the row goes amber.
+# All weekly-or-better jobs; 8 gives one grace cycle past a missed week.
+PIPELINE_CADENCE_DAYS = {
+    "overnight-friday": 8, "overnight-monday": 8,
+    "thursday-dad": 8, "feed-canary": 8,
+}
+
+
+def check_pipeline_status():
+    """Newsletter pipeline health from the durable status trail each job
+    writes on every run (added 2026-09-02 — a 4:30 AM notification is
+    missable and `launchctl list` forgets exit codes; these files don't).
+    Written by infrastructure/*.sh + scripts/feed_canary.py in the
+    newsletter repo."""
+    findings = []
+    if not os.path.isdir(PIPELINE_STATUS_DIR):
+        return [("amber", "newsletter pipeline",
+                 "no status trail yet — jobs write it on their next run", None)]
+    seen = set()
+    for name in sorted(os.listdir(PIPELINE_STATUS_DIR)):
+        if not name.endswith(".json"):
+            continue
+        path = os.path.join(PIPELINE_STATUS_DIR, name)
+        try:
+            with open(path) as fh:
+                st = json.load(fh)
+        except (OSError, ValueError):
+            findings.append(("amber", name, "status file unreadable", None))
+            continue
+        job = st.get("job", name[:-5])
+        seen.add(job)
+        try:
+            ran = parse_iso(st.get("run_at", ""))
+            if ran.tzinfo is None:  # jobs stamp naive local time
+                ran = ran.astimezone()
+            age_days = (NOW - ran).total_seconds() / 86400
+        except ValueError:
+            age_days = None
+        when = f"{st.get('run_at', '?')[:16]}"
+        if st.get("status") == "failed":
+            findings.append(("red", f"newsletter · {job}",
+                             f"FAILED {when}: {st.get('reason') or 'no reason'} "
+                             f"(log: {st.get('log', '?')})", None))
+        elif st.get("reason"):
+            findings.append(("amber", f"newsletter · {job}",
+                             f"ran with a warning {when}: {st['reason']}", None))
+        elif age_days is not None and age_days > PIPELINE_CADENCE_DAYS.get(job, 8):
+            findings.append(("amber", f"newsletter · {job}",
+                             f"last completed run {when} ({age_days:.0f}d ago) — "
+                             "has the launchd job stopped firing?", None))
+    for job in PIPELINE_CADENCE_DAYS:
+        if job not in seen:
+            findings.append(("amber", f"newsletter · {job}",
+                             "no status recorded yet — first run under the "
+                             "status trail hasn't happened", None))
+    return findings
+
+
 def check_open_prs():
     prs, notes = [], []
     out = sh(["gh", "search", "prs", "--owner", "btownbrief", "--state", "open",
@@ -397,9 +460,10 @@ def render(state):
     wf_findings, unreachable = check_workflow_health()
     payload_findings = check_payload_freshness()
     launchd_findings = check_launchd()
+    pipeline_findings = check_pipeline_status()
     prs, pr_notes = check_open_prs()
 
-    broken = payload_findings + wf_findings + launchd_findings
+    broken = payload_findings + wf_findings + launchd_findings + pipeline_findings
     rows = []
 
     def section(title, sub=""):
@@ -413,7 +477,7 @@ def render(state):
                 "ok": '<span class="chip ok">ok</span>'}[level]
 
     # 1 — broken & stale
-    section("Broken &amp; stale", "Scheduled workflows across every checkout, launchd exit codes, and the standing watchlist.")
+    section("Broken &amp; stale", "Scheduled workflows across every checkout, launchd exit codes, the newsletter pipeline's own status trail, and the standing watchlist.")
     if not broken:
         rows.append('<p class="allclear">✅ Every scheduled workflow\'s latest run succeeded on time, and all launchd jobs exited clean.</p>')
     else:
