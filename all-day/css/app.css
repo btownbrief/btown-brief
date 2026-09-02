@@ -1429,6 +1429,21 @@ body.chrome-away .fresh { top: calc(var(--top-h) + 12px); }
   border: 1px solid var(--edge);
   transition: background .2s ease, border-color .2s ease;
 }
+/* Liquid mode: ui.js pours the active fill as actual water on a canvas —
+   it sloshes across the bar when you toggle. The buttons go transparent and
+   ride above it; without JS or with reduced motion this class never lands
+   and the plain CSS fill below still does the job. */
+.localsw-liquid { position: relative; overflow: hidden; }
+.localsw-liquid .lsw-canvas { position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; }
+.localsw-liquid .localsw-half { position: relative; z-index: 1; }
+.localsw-liquid .localsw-half.on,
+.localsw.is-on .localsw-liquid .localsw-half.on,
+.localsw .localsw-liquid .localsw-half:last-child.on {
+  background: transparent; background-color: transparent; box-shadow: none;
+}
+.localsw.is-on .localsw-liquid .localsw-half.on::before,
+.localsw.is-on .localsw-liquid .localsw-half.on::after { content: none; }
 .localsw-half {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
   min-height: 40px; padding: 8px 10px; border: 0; border-radius: var(--pill);

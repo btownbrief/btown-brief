@@ -454,6 +454,163 @@ export function tabStamp(host, stampSec, what) {
    Deliberately NOT the app's generic .seg: Watch and Listen already carry
    segments, and a third would read as more of the same rather than as the
    thing the whole app is about. */
+/* THE LIQUID. The switch's fill is a body of water: toggle it and the whole
+   slab pours across the bar — the leading edge springs ahead, the trailing
+   edge lags so the liquid stretches, droplets fly when it lands, and the
+   boundary settles into a lapping wave. Green when Local holds the water,
+   panel-white when Everything does.
+
+   The switch is rebuilt on every render, so the physics lives out here and
+   each new canvas resumes it mid-slosh. Skipped entirely under
+   prefers-reduced-motion — the CSS fill still works without any of this. */
+const lsw = {
+  on: null,          // which side holds the water right now
+  L: 0, R: 0.5,      // slab edges, fractions of the bar
+  vL: 0, vR: 0,
+  churn: 0,          // how stirred the surface is; decays after a slosh
+  drops: [],
+  colorFrom: null, colorTo: null, colorT: 1,
+  canvas: null, ctx: null, bar: null, raf: 0, lastT: 0, phase: 0,
+};
+
+function lswColors(bar) {
+  const cs = getComputedStyle(bar);
+  return {
+    local: cs.getPropertyValue('--local').trim() || '#1d7a4f',
+    every: cs.getPropertyValue('--every').trim() || '#a63a2c',
+  };
+}
+
+function lswAttach(bar, on) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let canvas;
+  try {
+    canvas = document.createElement('canvas');
+    if (!canvas.getContext('2d')) return;
+  } catch (e) { return; }
+  canvas.className = 'lsw-canvas';
+  canvas.setAttribute('aria-hidden', 'true');
+  bar.classList.add('localsw-liquid');
+  bar.insertBefore(canvas, bar.firstChild);
+
+  const first = lsw.on === null;
+  const flipped = !first && lsw.on !== on;
+  const colors = lswColors(bar);
+  const want = on ? colors.local : colors.every;
+  if (first) {
+    lsw.L = on ? 0 : 0.5; lsw.R = on ? 0.5 : 1;
+    lsw.vL = 0; lsw.vR = 0;
+    lsw.colorFrom = want; lsw.colorTo = want; lsw.colorT = 1;
+  } else if (flipped) {
+    lsw.colorFrom = lsw.colorTo; lsw.colorTo = want; lsw.colorT = 0;
+    lsw.churn = 1;
+    lsw.splashed = false;
+  } else {
+    lsw.colorTo = want; lsw.colorFrom = want; // theme may have changed
+  }
+  lsw.on = on;
+  lsw.canvas = canvas;
+  lsw.ctx = canvas.getContext('2d');
+  lsw.bar = bar;
+  lsw.lastT = performance.now() / 1000;
+  if (!lsw.raf) lsw.raf = requestAnimationFrame(lswFrame);
+}
+
+function lswMix(a, b, t) {
+  // colors arrive as rgb(…) or #hex from computed style; lean on canvas to
+  // parse by drawing nothing — simpler: numeric mix of rgb() strings, else b
+  const pa = a.match(/\d+(\.\d+)?/g), pb = b.match(/\d+(\.\d+)?/g);
+  if (!pa || !pb || pa.length < 3 || pb.length < 3) return t < 0.5 ? a : b;
+  const m = (i) => Math.round(+pa[i] + (+pb[i] - +pa[i]) * t);
+  return 'rgb(' + m(0) + ',' + m(1) + ',' + m(2) + ')';
+}
+
+function lswFrame() {
+  const s = lsw;
+  s.raf = 0;
+  const bar = s.bar, canvas = s.canvas;
+  if (!bar || !bar.isConnected || !canvas) return; // a render replaced us
+  const now = performance.now() / 1000;
+  const dt = Math.min(0.05, now - s.lastT);
+  s.lastT = now;
+  s.phase += dt;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = bar.clientWidth, H = bar.clientHeight;
+  if (canvas.width !== W * dpr) { canvas.width = W * dpr; canvas.height = H * dpr; }
+  const x = s.ctx;
+  x.setTransform(dpr, 0, 0, dpr, 0, 0);
+  x.clearRect(0, 0, W, H);
+
+  /* the slab: each edge is a spring; the one moving toward open water leads */
+  const tL = s.on ? 0 : 0.5, tR = s.on ? 0.5 : 1;
+  const spring = (p, v, target, k, c) => {
+    v += (k * (target - p) - c * v) * dt;
+    return [p + v * dt, v];
+  };
+  const goingRight = !s.on; // Everything lives on the right
+  [s.L, s.vL] = spring(s.L, s.vL, tL, goingRight ? 60 : 110, goingRight ? 10 : 13);
+  [s.R, s.vR] = spring(s.R, s.vR, tR, goingRight ? 110 : 60, goingRight ? 13 : 10);
+
+  /* landing: the leading edge crossing its target at speed throws droplets */
+  const lead = goingRight ? s.R : s.L, leadV = goingRight ? s.vR : s.vL;
+  if (!s.splashed && s.churn > 0.5 &&
+      Math.abs(lead - (goingRight ? tR : tL)) < 0.045 && Math.abs(leadV) > 0.35) {
+    s.splashed = true;
+    const bx = (goingRight ? tR : tL) * W;
+    for (let i = 0; i < 10; i++) {
+      s.drops.push({
+        x: bx, y: H * (0.25 + Math.random() * 0.5),
+        vx: (goingRight ? 1 : -1) * (30 + Math.random() * 110) * (Math.random() < 0.25 ? -0.4 : 1),
+        vy: -30 + Math.random() * 60,
+        r: 1.4 + Math.random() * 2.2, life: 0.45 + Math.random() * 0.35,
+      });
+    }
+  }
+  s.churn = Math.max(0, s.churn - dt * 0.9);
+  s.colorT = Math.min(1, s.colorT + dt * 2.2);
+
+  const fill = lswMix(s.colorFrom || '#1d7a4f', s.colorTo || '#1d7a4f', s.colorT);
+
+  /* the water body, wavy at any edge that isn't pinned to a pill end */
+  const amp = (edge, target) => (target === 0 || target === 1 ? 0 : 1.4) + s.churn * 5;
+  const wave = (yy, ph, a) =>
+    a * (Math.sin(yy * 0.18 + s.phase * 2.1 + ph) * 0.6 +
+         Math.sin(yy * 0.07 - s.phase * 1.4 + ph * 1.7) * 0.4);
+  x.beginPath();
+  const aL = amp(s.L, tL), aR = amp(s.R, tR);
+  for (let yy = 0; yy <= H; yy += 3) x.lineTo(s.L * W + wave(yy, 0.9, aL), yy);
+  for (let yy = H; yy >= 0; yy -= 3) x.lineTo(s.R * W + wave(yy, 3.7, aR), yy);
+  x.closePath();
+  x.fillStyle = fill;
+  x.fill();
+
+  /* a soft light on the surface, drifting like the sun on it */
+  const g = x.createLinearGradient((s.phase * 14) % W - W * 0.3, 0, (s.phase * 14) % W + W * 0.3, H);
+  g.addColorStop(0, 'rgba(255,255,255,0)');
+  g.addColorStop(0.5, 'rgba(255,255,255,0.10)');
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.save(); x.clip(); x.fillStyle = g; x.fillRect(0, 0, W, H); x.restore();
+
+  /* droplets */
+  for (let i = s.drops.length - 1; i >= 0; i--) {
+    const d = s.drops[i];
+    d.life -= dt;
+    if (d.life <= 0) { s.drops.splice(i, 1); continue; }
+    d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 260 * dt;
+    x.globalAlpha = Math.min(1, d.life * 2.5);
+    x.fillStyle = fill;
+    x.beginPath(); x.arc(d.x, d.y, d.r, 0, Math.PI * 2); x.fill();
+  }
+  x.globalAlpha = 1;
+
+  if (!document.hidden) s.raf = requestAnimationFrame(lswFrame);
+  else {
+    const wake = () => { if (!document.hidden && lsw.bar && lsw.bar.isConnected) { lsw.lastT = performance.now() / 1000; lsw.raf = requestAnimationFrame(lswFrame); } };
+    document.addEventListener('visibilitychange', wake, { once: true });
+  }
+}
+
 export function localSwitch(host, { on, local, all, noun, onChange, extra }) {
   const box = el('div', 'localsw' + (on ? ' is-on' : ''));
 
@@ -491,5 +648,6 @@ export function localSwitch(host, { on, local, all, noun, onChange, extra }) {
   }
 
   host.appendChild(box);
+  lswAttach(bar, on);
   return box;
 }
