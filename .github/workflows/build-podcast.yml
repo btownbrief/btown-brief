@@ -33,7 +33,9 @@ jobs:
         run: python3 scripts/build_podcast.py
       - name: Commit if anything changed
         run: |
-          if git diff --quiet all-day/data/podcast.json; then
+          # -I: the generated stamp changes on every successful run — a week
+          # with no new episodes must not produce a commit of just that line
+          if git diff --quiet -I'"generated":' all-day/data/podcast.json; then
             echo "no new episodes"
             exit 0
           fi
