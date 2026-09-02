@@ -10,9 +10,11 @@ name: Btown TV — tonight's edition
 # force-pushed, fetched by tv.html straight off raw.githubusercontent.com —
 # an edition never queues a Pages deploy.
 #
-# Failure posture: no API key, too few candidates, or any API trouble ends
-# the run quietly without pushing; the branch keeps its last good edition.
-# The playlist sync and the reader-signal read both fail soft on their own.
+# Failure posture: no API key or too few candidates ends the run quietly
+# without pushing; MODEL failure (truncation, refusal, too-little output)
+# fails the run RED — the branch still keeps its last good edition, but a
+# silent green freeze (8/29-8/31 twice) must never happen again. The
+# playlist sync and the reader-signal read both fail soft on their own.
 
 on:
   schedule:

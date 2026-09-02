@@ -87,6 +87,12 @@ SB_KEY = "sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3"   # anon — safe
 
 MODEL = "z-ai/glm-5.3-flash"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api"
+# GLM's reasoning spends the same max_tokens pool as the answer and cannot be
+# disabled on this endpoint. Uncapped it truncated both attempts on 9/1-9/2
+# (the edition froze on 8/31 while the run stayed green). Same fix as
+# curate_top.py (PR #240): the SDK's native thinking parameter — a "reasoning"
+# key in extra_body is silently ignored here, budget_tokens is honoured.
+REASONING_MAX_TOKENS = 4000
 WHY_MAX = 90              # the prompt's hard ceiling
 WHY_KEEP = 100            # what validate() tolerates before trimming
 FRESH_DAYS = 7            # an "upload" is this week's
@@ -713,11 +719,11 @@ def ask_model(prompt):
         base_url=OPENROUTER_BASE_URL,
     )
     # streamed because the SDK refuses a non-streaming call this long.
-    # 16000: with require_parameters pinning schema-capable providers,
-    # thinking no longer shares the budget (the old 48000 was sized for
-    # reasoning + answer, and it let one looping attempt burn 15 minutes —
-    # the whole job timeout — on 8/31). A real answer is ~100 bounded items,
-    # well under half of this.
+    # 16000 = REASONING_MAX_TOKENS of capped thinking + the answer (~100
+    # bounded items, well under the remainder). An earlier comment here
+    # claimed require_parameters alone stopped thinking from sharing the
+    # budget — the 9/1-9/2 logs disproved that (both attempts truncated at
+    # max_tokens with no thinking cap), hence the explicit cap below.
     #
     # No "effort" here on purpose. output_config.effort is an Anthropic
     # parameter; GLM is a Z.AI model behind OpenRouter's compat shim, which
@@ -739,6 +745,7 @@ def ask_model(prompt):
                 max_tokens=16000,
                 output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
                 extra_body={"provider": {"require_parameters": True}},
+                thinking={"type": "enabled", "budget_tokens": REASONING_MAX_TOKENS},
                 messages=[{"role": "user", "content": prompt}],
             ) as stream:
                 response = stream.get_final_message()
@@ -1140,7 +1147,9 @@ def run(args):
           + ", ".join(f"{k}={len(v)}" for k, v in pools.items())
           + " · dropped " + json.dumps(dropped))
     if len(pools["fresh"]) + len(pools["gold"]) + len(pools["vault"]) < 12:
-        print("curate_tv: not enough candidates for an edition — skipping")
+        # upstream data problem, not ours — skip quietly but visibly
+        print("::warning::curate_tv: not enough candidates for an edition — "
+              "skipping (is refresh-youtube healthy?)")
         return
 
     text, index = format_candidates(pools, signals, now_ts)
@@ -1148,8 +1157,13 @@ def run(args):
     try:
         raw = ask_model(prompt)
     except Exception as exc:  # noqa: BLE001 — keep the last good edition
-        print(f"curate_tv: model trouble ({exc})", file=sys.stderr)
-        return
+        # The branch keeps its last good edition either way — but a model
+        # failure with a full candidate pool is OUR failure, and returning 0
+        # here is how the Watch tab froze for two nights (8/31-9/2) behind
+        # green runs. Fail red so somebody hears about it the same night.
+        print(f"::error::curate_tv: model trouble ({exc}) — no edition "
+              "written; the branch keeps its last good one")
+        sys.exit(1)
     pick, shelves, more = validate(raw, index)
     picked = sum(len(v) for v in shelves.values()) + (1 if pick else 0)
     benched = sum(len(v) for v in more.values())
@@ -1157,8 +1171,9 @@ def run(args):
     print("curate_tv: bench offered/kept "
           + " ".join(f"{k}={offered.get(k, 0)}/{len(more.get(k, []))}" for k in ["pick"] + SHELF_KEYS))
     if not pick or picked < 8:
-        print(f"curate_tv: the editor returned too little ({picked}) — skipping")
-        return
+        print(f"::error::curate_tv: the editor returned too little ({picked}) "
+              "— no edition written; the branch keeps its last good one")
+        sys.exit(1)
     print(f"curate_tv: picked {picked} · bench {benched} · "
           f"{trim(str(raw.get('note','')), 200)}")
 

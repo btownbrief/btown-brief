@@ -1,0 +1,45 @@
+name: Podcast archive — weekly refresh
+
+# scripts/build_podcast.py -> all-day/data/podcast.json, the Listen tab's
+# episode archive. The script is safe by construction: without
+# SPOTIFY_CLIENT_ID / SPOTIFY_CLIENT_SECRET (repo secrets) or on any fetch
+# trouble it leaves the hand-maintained file alone and exits 0 — this
+# workflow then simply has nothing to commit. Until 9/2 the script was
+# hand-run only, so a weekly show drifted whenever nobody remembered.
+
+on:
+  schedule:
+    # Mondays 09:10 UTC — new episodes land on the weekend.
+    - cron: '10 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-podcast
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rebuild the episode list from Spotify
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+        run: python3 scripts/build_podcast.py
+      - name: Commit if anything changed
+        run: |
+          if git diff --quiet all-day/data/podcast.json; then
+            echo "no new episodes"
+            exit 0
+          fi
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add all-day/data/podcast.json
+          git commit -m "Auto-refresh podcast archive"
+          git pull --rebase origin main
+          git push
