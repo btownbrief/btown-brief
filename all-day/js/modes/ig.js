@@ -33,7 +33,7 @@
 
 import * as data from './../wire.js';
 import * as app from './../app.js';
-import { el, esc, safeHref, chip, heading, scrollHint, agoShort, seg,
+import { el, esc, safeHref, chip, heading, shelfHead, scrollHint, agoShort, seg,
          tabStamp, stampOf } from './../ui.js';
 
 /* Machine values, not labels. The words on the buttons are a taste decision
@@ -71,8 +71,10 @@ const allPosts = () =>
 
 /* A payload written before the tab had two halves has no `s` on its records,
    and the service worker can hand us one of those for days. Everything
-   unlabelled is DO — which is exactly what those posts were. */
-const segmentOf = (p) => (p && p.s === 'see') ? 'see' : 'do';
+   unlabelled is DO — which is exactly what those posts were. TAGGED is not a
+   half: it is the shelf of posts by anyone who tagged @btownbrief, and it
+   lives inside SEE. */
+const segmentOf = (p) => (p && (p.s === 'see' || p.s === 'tagged')) ? p.s : 'do';
 
 const postsIn = (segment) => allPosts().filter((p) => segmentOf(p) === segment);
 
@@ -114,8 +116,9 @@ function openPost(p) {
    names a time. So the caption rides on the card and the picture sits beside
    it, rather than the text hiding behind a tap.
 
-   Four lines, clamped. Long captions run to a wall of hashtags; the rest is
-   one tap away and almost nobody wants it. */
+   Seven lines, clamped — the picture beside it is 112px tall and the words
+   should fill that, not leave a band of nothing under four lines. Long
+   captions run to a wall of hashtags; the rest is one tap away. */
 function doCell(p, i) {
   const box = el('article', 'ig-post');
   const hit = el('button', 'ig-hit');
@@ -153,7 +156,7 @@ function doCell(p, i) {
    mess, and the same reason Photos gives: these are all pictures of the same
    town and the eye wants a rhythm to scan.
 
-   The handle sits ON the picture, and the caption gets two quiet clamped
+   The handle sits ON the picture, and the caption gets four quiet clamped
    lines UNDER it — enough for the words that make a picture useful here (a
    photographer's caption says where, a DJ's says when) without turning the
    wall back into a list. The full caption stays one tap away in the same
@@ -210,6 +213,49 @@ function seeCell(p, i) {
   hit.addEventListener('click', () => openPost(p));
   tile.appendChild(hit);
   return tile;
+}
+
+/* what the full-screen viewer needs from a post */
+function lbItems(list) {
+  return list.map((p) => ({
+    src: p.i, alt: p.c ? p.c.slice(0, 80) : '',
+    caption: p.c || '', meta: '@' + p.h + ' · ' + agoShort(p.ts) + ' ago',
+    href: p.u, hrefLabel: 'Open on Instagram',
+    gone: 'This picture has expired — the wall is rebuilt every morning.',
+  }));
+}
+
+const FS_ICON = '<svg class="i" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+
+function fsButton(list) {
+  const b = el('button', 'btn btn-quiet fs-btn', FS_ICON + '<span>Full screen</span>');
+  b.disabled = !list.length;
+  b.addEventListener('click', () => app.lightbox(lbItems(list), 0));
+  return b;
+}
+
+/* The way onto the wall for anyone: tag the Brief. The shelf under it is
+   whatever came in that way, newest first, same rule as everything else.
+   Nobody vets it before it lands — a handle that abuses it goes in the
+   roster file's `tagged_block` list and is gone at the next build. */
+function tagUs(host, tagged) {
+  const card = el('div', 'ig-tagus');
+  card.innerHTML =
+    '<span class="ig-tagus-cam">📸</span>' +
+    '<span><span class="ig-tagus-t">Get on the wall</span>' +
+    '<span class="ig-tagus-d">Post it on Instagram and tag <b>@btownbrief</b>. ' +
+    'Tagged posts land here within a day' +
+    (tagged.length ? '' : ' — yours could be the first') + '.</span></span>';
+  host.appendChild(card);
+  if (!tagged.length) return;
+  const sec = el('div', 'ig-tagged');
+  shelfHead(sec, 'Tagged @btownbrief',
+    tagged.length + ' post' + (tagged.length === 1 ? '' : 's') + ' · newest first',
+    fsButton(tagged));
+  const wall = el('div', 'igw-wall');
+  tagged.forEach((p, i) => wall.appendChild(seeCell(p, i)));
+  sec.appendChild(wall);
+  host.appendChild(sec);
 }
 
 /* --------------------------------------------------------------- chrome */
@@ -315,19 +361,23 @@ export function render() {
   /* Count the accounts in THIS half, not the payload's top-level `handles`
      list — that one spans both, so DO would claim credit for the creators. */
   const here = new Set(mine.map((p) => p.h)).size;
+  const who = state.who[segment];
+  const list = who ? mine.filter((p) => p.h === who) : mine;
   heading(root, {
     eyebrow: copy.eyebrow,
     title: copy.title,
     sub: '<span class="count">' + mine.length + ' post' +
          (mine.length === 1 ? '' : 's') + ' across ' + here +
          ' account' + (here === 1 ? '' : 's') + '</span>',
+    right: fsButton(list),
   });
   root.appendChild(el('p', 'ig-note', copy.note));
 
   accounts(root, mine);
 
-  const who = state.who[segment];
-  const list = who ? mine.filter((p) => p.h === who) : mine;
+  /* the invitation and its shelf sit at the top of SEE — the photo half —
+     and step aside while one account is picked out */
+  if (segment === 'see' && !who) tagUs(root, postsIn('tagged'));
 
   if (!list.length) {
     root.appendChild(el('p', 'empty',

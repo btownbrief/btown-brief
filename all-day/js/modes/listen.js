@@ -39,6 +39,7 @@ function registerEmbed(frame) {
 
 const SHOW_URL = 'https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp';
 const PREVIEW = 4;      // newest episodes shown under every show, unasked
+const EPS_OPEN_KEY = 'allday-eps-open';   // the Brief's episode list, folded or not
 const state = { root: null, pulse: null, pod: null, open: Object.create(null) };
 
 export function mount(root) {
@@ -293,10 +294,26 @@ function renderEpisodes() {
   host.innerHTML = '';
   if (!eps.length) return;
 
-  shelfHead(host, 'Every episode',
-    eps.length + (eps.length === 1 ? ' episode' : ' episodes') + ' · newest first');
+  /* The header is the fold. Three episodes today, but the list only grows,
+     and it sits between the show card and every other podcast — so it
+     closes, and stays closed if you closed it. */
+  const open = store.read(EPS_OPEN_KEY, true) !== false;
+  const head = el('button', 'l-eps-head',
+    '<span class="t">Every episode</span>' +
+    '<span class="s">' + eps.length + (eps.length === 1 ? ' episode' : ' episodes') +
+      ' · newest first</span>' +
+    '<span class="chev">' + ICON.chev + '</span>');
+  head.setAttribute('aria-expanded', open ? 'true' : 'false');
+  host.appendChild(head);
 
   const list = el('div', 'l-ep-list');
+  list.hidden = !open;
+  head.addEventListener('click', () => {
+    const now = list.hidden;
+    list.hidden = !now;
+    head.setAttribute('aria-expanded', now ? 'true' : 'false');
+    store.write(EPS_OPEN_KEY, now);
+  });
   eps.forEach((e) => {
     const row = el('div', 'l-ep');
     const hit = el('button', 'l-ep-hit');

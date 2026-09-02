@@ -1,5 +1,6 @@
 {
  "_comment": "Instagram accounts the Instagram tab reads. HAND-CURATED. The tab has two halves and this file has four arrays. tier1/tier2 are DO — organisers, announcements, the caption is the event. see1/see2 are SEE — the people making content about this place, rendered as a photo wall. A handle's segment is WHICH ARRAY IT IS IN; there is no second map to keep in sync, so you move an account between halves by moving the string. The `1` arrays are fetched every run and the `2` arrays rotate, because each handle costs one Scrape Creators credit per run — that is refresh frequency, not importance, and it is independent of the segment. Drop a handle by deleting it; add one by appending. Nothing else may introduce a handle — the tab shows whoever is in here and nobody else. DO handles were vetted in the newsletter's reference/instagram-sources.md. SEE handles were vetted 2026-08-30 against the live Instagram profile API: every one exists, is public, and had posted within the preceding three weeks when it was added. Recency is a real criterion here — Burlington's meme and campus-confession pages are almost all dead (most last posted in 2021-2022) and a dormant account costs a credit a day to show nothing.",
+ "tagged_block": [],
  "updated": "2026-08-30",
  "tier1": [
   "sunsetwatchersclub",
