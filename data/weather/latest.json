@@ -1,31 +1,31 @@
 {
- "updated": "2026-09-03T10:09:29+00:00",
+ "updated": "2026-09-03T10:29:28+00:00",
  "sections_updated": {
-  "now": "2026-09-03T10:09:29+00:00",
-  "forecast": "2026-09-03T10:09:29+00:00",
-  "hourly": "2026-09-03T10:09:29+00:00",
-  "alerts": "2026-09-03T10:09:29+00:00",
-  "afd": "2026-09-03T10:09:29+00:00",
-  "lake_forecast": "2026-09-03T10:09:29+00:00",
-  "lake_gage": "2026-09-03T10:09:29+00:00",
-  "air": "2026-09-03T10:09:29+00:00",
-  "sun": "2026-09-03T10:09:29+00:00",
-  "models": "2026-09-03T10:09:29+00:00"
+  "now": "2026-09-03T10:29:28+00:00",
+  "forecast": "2026-09-03T10:29:28+00:00",
+  "hourly": "2026-09-03T10:29:28+00:00",
+  "alerts": "2026-09-03T10:29:28+00:00",
+  "afd": "2026-09-03T10:29:28+00:00",
+  "lake_forecast": "2026-09-03T10:29:28+00:00",
+  "lake_gage": "2026-09-03T10:29:28+00:00",
+  "air": "2026-09-03T10:29:28+00:00",
+  "sun": "2026-09-03T10:29:28+00:00",
+  "models": "2026-09-03T10:29:28+00:00"
  },
  "now": {
-  "observed_at": "2026-09-03T10:00:00+00:00",
+  "observed_at": "2026-09-03T10:05:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
+  "description": "Partly Cloudy",
   "temp_f": 64,
   "feels_like_f": 64,
   "humidity": 94,
   "dewpoint_f": 63,
-  "wind_mph": 10,
+  "wind_mph": 11,
   "wind_gust_mph": 17,
-  "wind_dir": "SSW"
+  "wind_dir": "S"
  },
  "forecast": {
-  "updated": "2026-09-03T06:18:13+00:00",
+  "updated": "2026-09-03T10:18:31+00:00",
   "periods": [
    {
     "name": "Today",
@@ -170,14 +170,14 @@
   ]
  },
  "hourly": {
-  "updated": "2026-09-03T06:18:13+00:00",
+  "updated": "2026-09-03T10:18:31+00:00",
   "hours": [
    {
     "t": "2026-09-03T06:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
+    "temp_f": 65,
+    "feels_f": 65,
     "pop": 40,
-    "humidity": 97,
+    "humidity": 93,
     "wind_mph": 14,
     "wind_dir": "S",
     "sky": 86,
@@ -185,10 +185,10 @@
    },
    {
     "t": "2026-09-03T07:00:00-04:00",
-    "temp_f": 65,
-    "feels_f": 65,
+    "temp_f": 66,
+    "feels_f": 66,
     "pop": 33,
-    "humidity": 97,
+    "humidity": 93,
     "wind_mph": 12,
     "wind_dir": "S",
     "sky": 70,
@@ -196,10 +196,10 @@
    },
    {
     "t": "2026-09-03T08:00:00-04:00",
-    "temp_f": 65,
-    "feels_f": 65,
+    "temp_f": 67,
+    "feels_f": 67,
     "pop": 26,
-    "humidity": 100,
+    "humidity": 97,
     "wind_mph": 10,
     "wind_dir": "S",
     "sky": 74,
@@ -859,7 +859,7 @@
   "aqi": 23,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/03/26 5:00",
+  "observed": "09/03/26 6:00",
   "discussion": "Expect generally good air quality across Vermont on Thursday, September 3rd."
  },
  "sun": {
