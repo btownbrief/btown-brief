@@ -1,42 +1,42 @@
 {
- "generated": "2026-09-03T09:50:39-04:00",
+ "generated": "2026-09-03T18:48:33-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 19,
-   "seconds": 5.7
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 79,
-   "seconds": 3.2
+   "seconds": 3.7
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 59,
-   "seconds": 3.2
+   "seconds": 3.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 178,
-   "seconds": 3.2
+   "count": 223,
+   "seconds": 3.8
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 83,
-   "seconds": 1.6
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 3
+   "staleDays": 4
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-03&end_date=2026-11-02&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 3
+   "staleDays": 4
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -51,12 +51,12 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 198,
-   "seconds": 65.3
+   "seconds": 73.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -66,7 +66,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 729,
-   "seconds": 37.1
+   "seconds": 39.1
   },
   "higherground": {
    "label": "Higher Ground",
@@ -76,82 +76,103 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "seconds": 129.7
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 364,
-   "seconds": 73.7
+   "seconds": 77.8
   },
   "meetup": {
    "label": "Meetup",
    "count": 63,
-   "seconds": 118.5
+   "seconds": 128.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 19,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 49,
-   "seconds": 13.5
+   "seconds": 15.5
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 34,
-   "seconds": 0.2
+   "count": 26,
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 96,
-   "seconds": 4.7
+   "count": 98,
+   "seconds": 1.7
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 25,
-   "seconds": 31.3
+   "count": 26,
+   "seconds": 35.1
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2411,
-   "seconds": 65.1
+   "seconds": 18.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 3
+   "staleDays": 4
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 450,
-   "seconds": 27.3
+   "count": 462,
+   "seconds": 21.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 288,
+   "count": 289,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 83,
-   "seconds": 101.7
+   "count": 84,
+   "seconds": 114.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 52,
-   "seconds": 0.7
+   "seconds": 0.3
   }
  },
- "gathered": 5400,
- "afterDedup": 2515,
- "duplicatesMerged": 2885,
- "final": 2745,
+ "gathered": 5454,
+ "afterDedup": 2526,
+ "duplicatesMerged": 2928,
+ "final": 2733,
  "firecrawlCalls": 15,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Coloring in the Marble Court",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
+  {
+   "kept": {
+    "title": "BOOST Sessions",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
   {
    "kept": {
     "title": "Board Game Night",
@@ -760,17 +781,6 @@
     "champlainvalley",
     "helloburlington",
     "higherground"
-   ],
-   "date": "2026-10-13"
-  },
-  {
-   "kept": {
-    "title": "HONKY TONK TUESDAY!",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "radiobean"
    ],
    "date": "2026-10-13"
   },
@@ -1987,17 +1997,6 @@
   },
   {
    "kept": {
-    "title": "HONKY TONK TUESDAY!",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "radiobean"
-   ],
-   "date": "2026-10-27"
-  },
-  {
-   "kept": {
     "title": "Super Smash Tuesdays",
     "source": "churchst"
    },
@@ -2417,19 +2416,27 @@
  "changes": [
   {
    "id": "c2ea828131ac",
-   "title": "HONKY TONK TUESDAY!",
+   "title": "Honky Tonk Tuesday",
    "date": "2026-10-13",
    "change": "time",
-   "was": "2026-10-13T21:00:00-04:00",
-   "now": "2026-10-13T20:30:00-04:00"
+   "was": "2026-10-13T20:30:00-04:00",
+   "now": "2026-10-13T21:00:00-04:00"
+  },
+  {
+   "id": "ea608bbe23af",
+   "title": "Honky Tonk Tuesday",
+   "date": "2026-10-27",
+   "change": "time",
+   "was": "2026-10-27T20:30:00-04:00",
+   "now": "2026-10-27T21:00:00-04:00"
   },
   {
    "id": "f321cdd14934",
    "title": "The Work in Progress",
    "date": "2026-10-02",
    "change": "time",
-   "was": "2026-10-02T19:00:00-04:00",
-   "now": "2026-10-02T16:00:00-04:00"
+   "was": "2026-10-02T16:00:00-04:00",
+   "now": "2026-10-02T19:00:00-04:00"
   },
   {
    "id": "8d87c6c465c7",
@@ -2442,47 +2449,26 @@
    "id": "660ffeab1982",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-03",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
-  },
-  {
-   "id": "bf306072fb68",
-   "title": "Trivia Night",
-   "date": "2026-09-03",
    "change": "dropped"
   },
   {
    "id": "bb78e7f97ca7",
    "title": "Lego Builders",
    "date": "2026-09-04",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "f1d00a158b42",
    "title": "TAG",
    "date": "2026-09-04",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
-  },
-  {
-   "id": "5d9bc6784dae",
-   "title": "ZZ Top - The Big One Tour",
-   "date": "2026-09-04",
    "change": "dropped"
   },
   {
-   "id": "4bdfd51fd04b",
-   "title": "ZZ Top w/ George Thorogood",
-   "date": "2026-09-04",
-   "change": "dropped"
-  },
-  {
-   "id": "ba7c6f5da1b8",
-   "title": "DJ Taka Residency",
+   "id": "2157bf6cd74b",
+   "title": "DJ Taka",
    "date": "2026-09-04",
    "change": "missing",
-   "lastSeen": "2026-09-02T18:50:06-04:00"
+   "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
    "id": "afe863267ad5",
@@ -2490,6 +2476,13 @@
    "date": "2026-09-05",
    "change": "missing",
    "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
+   "id": "229b0729fe10",
+   "title": "Counting down to Sunday, because we back at it and doin’ it again. 🔥",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "51a751ae6489",
@@ -2502,22 +2495,19 @@
    "id": "8d8ca273ec3a",
    "title": "Local Dork at Foam Brewers on a Tuesday",
    "date": "2026-09-08",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "36493d8f0952",
    "title": "Latin Dance Night",
    "date": "2026-09-08",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "a84dc926a1e1",
    "title": "Baby Time",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "774cfccbb709",
@@ -2544,8 +2534,7 @@
    "id": "8fef2b946888",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "06f82ca96283",
@@ -2555,12 +2544,6 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "5d523f88641e",
-   "title": "Trivia Night",
-   "date": "2026-09-10",
-   "change": "dropped"
-  },
-  {
    "id": "071a16518c5f",
    "title": "The Silo Sessions with The Faux Paws and special guest Otter Creek",
    "date": "2026-09-10",
@@ -2568,18 +2551,23 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
+   "id": "6f6346e7d1a4",
+   "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ James Kochalka Superstar & a Strelka afterparty!",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-09-03T09:50:39-04:00"
+  },
+  {
    "id": "064e7b5b0752",
    "title": "Lego Builders",
    "date": "2026-09-11",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "061dc70039f4",
    "title": "Dungeons & Dragons (FULL)",
    "date": "2026-09-11",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "840b664b1c7e",
@@ -2610,12 +2598,6 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
-   "id": "ec4489d611a6",
-   "title": "Shared Harvest at Merrymac",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
    "id": "3d49fc11738c",
    "title": "Second Saturdays | Your Place Is at This Table",
    "date": "2026-09-12",
@@ -2630,17 +2612,10 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
-   "id": "ee168b945cde",
-   "title": "Sensory-Friendly Sunday at ECHO",
-   "date": "2026-09-13",
-   "change": "dropped"
-  },
-  {
    "id": "90abed62f85a",
    "title": "Pride Vermont 2026",
    "date": "2026-09-13",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "4b9be690e3f2",
@@ -2660,15 +2635,13 @@
    "id": "2777f428ab75",
    "title": "Breakout Box: Seasonal Sabotage",
    "date": "2026-09-14",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "0684f2f9b1be",
    "title": "Craftytown",
    "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "01edf9f89291",
@@ -2681,8 +2654,7 @@
    "id": "c089e6f19182",
    "title": "Baby Time",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "d74e0c47d69d",
@@ -2699,10 +2671,11 @@
    "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
-   "id": "fc5707dd41de",
-   "title": "Live Music! Michael Perry",
+   "id": "c46658c15325",
+   "title": "Scrabble Night @ The Boardroom",
    "date": "2026-09-16",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
    "id": "d6f3fd1ec553",
@@ -2715,38 +2688,24 @@
    "id": "78952acf13db",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-17",
+   "change": "dropped"
+  },
+  {
+   "id": "934bb342fb68",
+   "title": "Jake McKelvie w/ A Box of Stars, riverbed, & Izzy Jones",
+   "date": "2026-09-17",
    "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
-  },
-  {
-   "id": "3d1c73bb1a80",
-   "title": "Trivia Night",
-   "date": "2026-09-17",
-   "change": "dropped"
-  },
-  {
-   "id": "cafd562a8afa",
-   "title": "Musical Silents: The Passion of Joan of Arc (1928)",
-   "date": "2026-09-17",
-   "change": "dropped"
+   "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
    "id": "0e00b8971703",
    "title": "Spanish Toddler Storytime",
    "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "95a7e9fe79a1",
    "title": "Lego Builders",
-   "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
-  },
-  {
-   "id": "57b41e392345",
-   "title": "Oktoberfest Vermont",
    "date": "2026-09-18",
    "change": "dropped"
   },
@@ -2761,15 +2720,13 @@
    "id": "8b7796b354d6",
    "title": "South Burlington Green Community Festival",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "890bad6c1d3c",
    "title": "South Burlington Green Community Festival",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "d1266bb176a5",
@@ -2777,12 +2734,6 @@
    "date": "2026-09-19",
    "change": "missing",
    "lastSeen": "2026-09-01T10:16:24-04:00"
-  },
-  {
-   "id": "52c543475102",
-   "title": "Oktoberfest Vermont",
-   "date": "2026-09-19",
-   "change": "dropped"
   },
   {
    "id": "cf144690c65a",
@@ -2809,15 +2760,13 @@
    "id": "e89f8a886c81",
    "title": "Communities Responding to Extreme Weather- CREW",
    "date": "2026-09-21",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "a9673115645d",
    "title": "Local Dork at Foam Brewers on a Tuesday",
    "date": "2026-09-22",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "913bbd65fbe6",
@@ -2830,8 +2779,7 @@
    "id": "77694579a75f",
    "title": "Baby Time",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "9e0fe1457b5d",
@@ -2839,12 +2787,6 @@
    "date": "2026-09-23",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
-  },
-  {
-   "id": "210764a691d9",
-   "title": "Live Music! Jim Yeager Duo",
-   "date": "2026-09-23",
-   "change": "dropped"
   },
   {
    "id": "a935a83a71c8",
@@ -2864,21 +2806,20 @@
    "id": "b3e0e1560f2d",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
-   "id": "2e5b2bde2902",
-   "title": "Trivia Night",
+   "id": "f5c36bf7ec0a",
+   "title": "Old Time Jam",
    "date": "2026-09-24",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
    "id": "62c3f4a8eedc",
    "title": "Lego Builders",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "a7ea15d958ab",
@@ -2891,8 +2832,7 @@
    "id": "aaec296c42fa",
    "title": "Dungeons & Dragons (FULL)",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "8409ddce3264",
@@ -2907,6 +2847,13 @@
    "date": "2026-09-25",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "422055884b98",
+   "title": "Late Night Karaoke Hosted by Kaleigh Karnal!",
+   "date": "2026-09-25",
+   "change": "missing",
+   "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
    "id": "a6747ef75bc9",
@@ -2930,18 +2877,6 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "618938210733",
-   "title": "Youth Vendor Day",
-   "date": "2026-09-27",
-   "change": "dropped"
-  },
-  {
-   "id": "e93b9205a06f",
-   "title": "Hair Peace",
-   "date": "2026-09-27",
-   "change": "dropped"
-  },
-  {
    "id": "31d863dc90fe",
    "title": "Library Cards from all Over the Country (and Beyond!)",
    "date": "2026-09-28",
@@ -2952,22 +2887,19 @@
    "id": "cb75c9708592",
    "title": "Must Read Mondays – Patriot : a memoir, by Alexei Navaln",
    "date": "2026-09-28",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "348e88592d16",
    "title": "Craftytown",
    "date": "2026-09-29",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "973e721dd8eb",
    "title": "Local Dork at Foam Brewers on a Tuesday",
    "date": "2026-09-29",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "77442c3edd36",
@@ -2980,8 +2912,7 @@
    "id": "b06b8cd265e8",
    "title": "Baby Time",
    "date": "2026-09-30",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "dfa99923fc23",
@@ -2998,23 +2929,10 @@
    "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
-   "id": "0647eac46abb",
-   "title": "Trivia Night",
-   "date": "2026-10-01",
-   "change": "dropped"
-  },
-  {
-   "id": "3bbc5759b0b6",
-   "title": "PechaKucha Night Burlington | Volume 44",
-   "date": "2026-10-01",
-   "change": "dropped"
-  },
-  {
    "id": "688e80df96cc",
    "title": "Music Time",
    "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "3255a4fbc03a",
@@ -3022,24 +2940,6 @@
    "date": "2026-10-02",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
-  },
-  {
-   "id": "699cb14233ba",
-   "title": "Evening Song: Bet on Hope 25th Anniversary Celebration",
-   "date": "2026-10-03",
-   "change": "dropped"
-  },
-  {
-   "id": "e46b3285c535",
-   "title": "MASKS ON! Sundays at ECHO",
-   "date": "2026-10-04",
-   "change": "dropped"
-  },
-  {
-   "id": "a832b551c82f",
-   "title": "Tech Tuesdays - Breakfast",
-   "date": "2026-10-06",
-   "change": "dropped"
   },
   {
    "id": "0ca966e22a6f",
@@ -3063,12 +2963,6 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "67caa8cb02c2",
-   "title": "Trivia Night",
-   "date": "2026-10-08",
-   "change": "dropped"
-  },
-  {
    "id": "1f78535f636c",
    "title": "2026 White Coat Ceremony for the Larner Medical Class of 2030",
    "date": "2026-10-09",
@@ -3079,8 +2973,7 @@
    "id": "57704b8ff8c9",
    "title": "Dungeons & Dragons (FULL)",
    "date": "2026-10-09",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "747a3fad7f71-2100",
@@ -3104,17 +2997,10 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
-   "id": "76f906ad92ee",
-   "title": "Sensory-Friendly Sunday at ECHO",
-   "date": "2026-10-11",
-   "change": "dropped"
-  },
-  {
    "id": "69974f99ea0b",
    "title": "Read with Sammy",
    "date": "2026-10-13",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "7300f711e2ff",
@@ -3131,12 +3017,6 @@
    "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
-   "id": "1cd2932e2a99",
-   "title": "Trivia Night",
-   "date": "2026-10-15",
-   "change": "dropped"
-  },
-  {
    "id": "857556d78186-2030",
    "title": "Kendall Farrell",
    "date": "2026-10-16",
@@ -3149,6 +3029,13 @@
    "date": "2026-10-16",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "c8af375ece1e",
+   "title": "Doctor Gasp!",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
    "id": "d07ba56df0c1",
@@ -3165,17 +3052,17 @@
    "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
-   "id": "92f8f6e3278d",
-   "title": "Trivia Night",
+   "id": "8bf390e94fc1",
+   "title": "Old Time Jam",
    "date": "2026-10-22",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
    "id": "4b5338a2a7d1",
    "title": "Dungeons & Dragons (FULL)",
    "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-08-31T13:12:40-04:00"
+   "change": "dropped"
   },
   {
    "id": "e4223228bdf9",
@@ -3190,6 +3077,13 @@
    "date": "2026-10-23",
    "change": "missing",
    "lastSeen": "2026-08-31T20:04:22-04:00"
+  },
+  {
+   "id": "ff7745a91d99",
+   "title": "Late Night Karaoke Hosted by Kaleigh Karnal!",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
    "id": "766c5388e392",
@@ -3211,6 +3105,13 @@
    "date": "2026-10-28",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "1b562042e008",
+   "title": "Villain Of The War w/ antoinette & boat kill by fire",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
    "id": "6839e671df73",
