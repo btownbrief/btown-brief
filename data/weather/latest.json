@@ -1,41 +1,41 @@
 {
- "updated": "2026-09-03T18:52:55+00:00",
+ "updated": "2026-09-03T20:49:46+00:00",
  "sections_updated": {
-  "now": "2026-09-03T18:52:55+00:00",
-  "forecast": "2026-09-03T18:52:55+00:00",
-  "hourly": "2026-09-03T18:52:55+00:00",
-  "alerts": "2026-09-03T18:52:55+00:00",
-  "afd": "2026-09-03T18:52:55+00:00",
-  "lake_forecast": "2026-09-03T18:52:55+00:00",
-  "lake_gage": "2026-09-03T18:52:55+00:00",
-  "air": "2026-09-03T18:52:55+00:00",
-  "sun": "2026-09-03T18:52:55+00:00",
-  "models": "2026-09-03T18:52:55+00:00"
+  "now": "2026-09-03T20:49:46+00:00",
+  "forecast": "2026-09-03T20:49:46+00:00",
+  "hourly": "2026-09-03T20:49:46+00:00",
+  "alerts": "2026-09-03T20:49:46+00:00",
+  "afd": "2026-09-03T20:49:46+00:00",
+  "lake_forecast": "2026-09-03T20:49:46+00:00",
+  "lake_gage": "2026-09-03T20:49:46+00:00",
+  "air": "2026-09-03T20:49:46+00:00",
+  "sun": "2026-09-03T20:49:46+00:00",
+  "models": "2026-09-03T20:49:46+00:00"
  },
  "now": {
-  "observed_at": "2026-09-03T18:35:00+00:00",
+  "observed_at": "2026-09-03T20:25:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
-  "temp_f": 81,
-  "feels_like_f": 83,
-  "humidity": 62,
+  "description": "Mostly Cloudy",
+  "temp_f": 82,
+  "feels_like_f": 85,
+  "humidity": 58,
   "dewpoint_f": 66,
-  "wind_mph": 11,
+  "wind_mph": 6,
   "wind_gust_mph": null,
-  "wind_dir": "SSW"
+  "wind_dir": "WSW"
  },
  "forecast": {
   "updated": "2026-09-03T18:27:23+00:00",
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-09-03T14:00:00-04:00",
+    "start": "2026-09-03T16:00:00-04:00",
     "is_day": true,
     "temp_f": 82,
-    "pop": 17,
-    "wind": "SW 10 mph",
-    "short": "Slight Chance Showers And Thunderstorms",
-    "detailed": "A slight chance of showers and thunderstorms before 3pm. Mostly sunny, with a high near 82. Southwest wind around 10 mph. Chance of precipitation is 20%."
+    "pop": 6,
+    "wind": "W 10 mph",
+    "short": "Sunny",
+    "detailed": "Sunny, with a high near 82. West wind around 10 mph."
    },
    {
     "name": "Tonight",
@@ -172,28 +172,6 @@
  "hourly": {
   "updated": "2026-09-03T18:27:23+00:00",
   "hours": [
-   {
-    "t": "2026-09-03T14:00:00-04:00",
-    "temp_f": 79,
-    "feels_f": 79,
-    "pop": 17,
-    "humidity": 72,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 30,
-    "short": "Slight Chance Showers And Thunderstorms"
-   },
-   {
-    "t": "2026-09-03T15:00:00-04:00",
-    "temp_f": 79,
-    "feels_f": 79,
-    "pop": 14,
-    "humidity": 67,
-    "wind_mph": 8,
-    "wind_dir": "SW",
-    "sky": 27,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-09-03T16:00:00-04:00",
     "temp_f": 82,
@@ -567,6 +545,28 @@
     "wind_dir": "NW",
     "sky": 67,
     "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-05T02:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 13,
+    "humidity": 90,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 75,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-05T03:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 10,
+    "humidity": 93,
+    "wind_mph": 7,
+    "wind_dir": "NW",
+    "sky": 76,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -574,13 +574,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-03T10:45:00+00:00",
+  "issued": "2026-09-03T19:01:00+00:00",
   "key_messages": [
-   "After more widespread precipitation overnight and early this morning, showers will become more scattered. Chances for afternoon showers will continue throughout the week, before drier conditions return towards Sunday.",
-   "Several rounds of showers expected next week but no significant weather expected."
+   "Chances for afternoon showers will continue throughout the week, before drier conditions return towards Sunday.",
+   "Several rounds of showers are expected next week but significant weather is not expected."
   ],
-  "what_changed": "As of 221 AM EDT Thursday... No significant changes have been made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 031045\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n645 AM EDT Thu Sep 3 2026\n\n.WHAT HAS CHANGED...\nAs of 221 AM EDT Thursday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 221 AM EDT Thursday...\n\n1. After more widespread precipitation overnight and early this \nmorning, showers will become more scattered. Chances for afternoon \nshowers will continue throughout the week, before drier conditions \nreturn towards Sunday.   \n\n2. Several rounds of showers expected next week but no \nsignificant weather expected.\n\n&&\n\n.DISCUSSION...\nAs of 221 AM EDT Thursday...\n\nKEY MESSAGE 1: \n\nWidespread precipitation continues to push through the region this \nhour, although rainfall amounts are not nearly impressive as they \nwere earlier in the night when KMSS measured over 3 inches of \nrainfall within a fairly short window. Showers will trend more \nscattered as the day progresses, with the best chances for \nadditional rainfall across eastern Vermont and the northern Green \nMountains although amounts will generally be light. Gusty southerly \nwinds continue across the region this hour, particularly on Lake \nChamplain, but will diminish towards daybreak and become more \nnorthwesterly by this afternoon. Additional chances for diurnally \ndriven showers will continue through the rest of the week, with the \ngreatest chances across the high terrain while the broader valleys \nremain on the drier side. High pressure looks to build in\ntowards Sunday, bringing some drier weather. Temperatures will \nbe on the cooler side as we remain under the influence of an \nupper low, with high temperatures generally in the upper 60s to \nmid 70s by this weekend.\n\nKEY MESSAGE 2: Deep layer ridging will make a brief appearance on \nMonday bringing sunshine, light winds and seasonal temperatures to \nthe North Country and northern New York. This period of dry weather \nwill be short-lived as a shortwave trough in the northwesterly flow \naloft flattens the longwave ridge and drives a cold front through \nthe region Monday night into Tuesday morning. This should spark a \nfew showers but no thunderstorms or impactful weather are expected \nwith this system as we will seriously lack deep moisture. \nThereafter, a series of low amplitude shortwaves are expected to \nmove across the region through the second half of the work week. \nPeriod of light showers seem plausible through much of the week with \nample period of dry weather between rounds of showers. However, if \nyou are looking for an extended period of dry weather, next week \ndoes not look favorable for that at this time.\n\n&&\n\n.AVIATION /12Z THURSDAY THROUGH MONDAY/...\nThrough 12Z Friday...Widely variable conditions are currently\nbeing observed with VFR ceilings in the Champlain Valley with\nMVFR to IFR ceilings elsewhere. We will continue to see these\nlower ceilings through 14Z with quick improvement expected this\nmorning. South to southwest winds ranging from 10 to 20 knots\nwill be common this morning with winds veering toward the WNW\nthis afternoon and weakening throughout the day. Rain chances\nare looking rather lackluster and have removed all PROB30 groups\nas the chances any terminal sees a shower today remain very low.\nDepending on how quickly clouds move out of the region this\nevening, we could see a favorable night for widespread fog\nacross the region.\n\nOutlook...\n\nFriday: VFR. Chance SHRA.\nFriday Night: Mainly VFR, with local IFR possible. Chance SHRA.\nSaturday: Mainly MVFR, with local IFR possible. Chance SHRA.\nSaturday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nLabor Day: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Clay/Kremer\nAVIATION...Clay\n"
+  "what_changed": "As of 254 PM EDT Thursday... No significant changes with this forecast package.",
+  "raw": "\n000\nFXUS61 KBTV 031901\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n301 PM EDT Thu Sep 3 2026\n\n.WHAT HAS CHANGED...\nAs of 254 PM EDT Thursday...\n\nNo significant changes with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 254 PM EDT Thursday...\n\n1. Chances for afternoon showers will continue throughout the \nweek, before drier conditions return towards Sunday. \n\n2. Several rounds of showers are expected next week but \nsignificant weather is not expected.\n\n&&\n\n.DISCUSSION...\nAs of 254 PM EDT Thursday...\n\nKEY MESSAGE 1: Upper level trough and low pressure will remain\nover our region through Saturday. Scattered afternoon showers\nare expected each day, varying in intensity based on potency of\nshortwaves passing through. Tricky to time which day will have\nthe best chance for showers, but presently looks like Saturday\nmay have the most showers. Sunday will trend drier as upper\nlevel trough finally slides eastward and away from our area.\nTemperatures will be a bit cooler than seasonal normals through\nthe weekend.\n\nKEY MESSAGE 2: Deep layer ridging will make a brief appearance \non Monday bringing sunshine, light winds, and seasonal \ntemperatures to the North Country and northern New York. This \nperiod of dry weather will be short-lived as a shortwave trough \nin the northwesterly flow aloft flattens the longwave ridge and \ndrives a cold front through the region Monday night into Tuesday\nmorning. This should spark a few showers but no thunderstorms \nor impactful weather are expected with this system as we will \nseriously lack deep moisture. Thereafter, a series of low \namplitude shortwaves are expected to move across the region \nthrough the second half of the work week. Periods of light \nshowers seem plausible through much of the week with ample \nperiod of dry weather between rounds of showers. However, if you\nare looking for an extended period of dry weather, next week \ndoes not look favorable for that at this time.\n\n&&\n\n.AVIATION /18Z THURSDAY THROUGH TUESDAY/...\nThrough 18Z Friday...Isolated showers are likely this afternoon\nand evening until around 03Z-05Z Friday. Any shower could bring\nwith it visibilities 4-6 miles and MVFR level clouds. Chances \nfor afternoon showers will continue Friday and Saturday before \ndrier conditions return towards Sunday. Overall cloud layers \nthis afternoon vary and fluctuate around 1300-5000 feet above \nground level. A general clearing trend is anticipated into the \nevening, which can already be seen beginning on satellite \nimagery. As high pressure noses into the region tonight after \nrecent (in the case of MSS, heavy) rainfall, we anticipate \npatchy and dense valley mist and fog to develop overnight. This \nafternoon's southerly winds 5-15 knots are expected to turn more\nwesterly this evening with the passage of a weak cold front, \nthen drop to light and variable overnight. This should allow \nSLK, MPV, and EFK to see visibilities drop in mist and fog, as \nlow as 1/2 to 2 miles by 07Z-09Z Friday, with other sites \npotentially seeing some 3-6 mile mist as well. Main limiting \nfactor for fog will be the lack of a strong high pressure \noverhead and if any of the current lower clouds linger into the \nnight to block radiational cooling. Conditions are likely to \nreturn to widespread VFR levels by 15Z-17Z Friday as winds \nincrease out of the northwest 5-10 knots.\n\nOutlook...\n\nFriday Night: Mainly VFR, with local IFR possible. Slight chance\nSHRA.\nSaturday: MVFR/IFR conditions possible. Chance SHRA.\nSaturday Night: Mainly MVFR, with areas VFR possible. NO SIG WX.\nSunday: Mainly VFR, with local MVFR possible. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nLabor Day: VFR. NO SIG WX.\nMonday Night: Mainly VFR, with local MVFR possible. Slight chance\nSHRA.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Neiles/Storm\nAVIATION...Storm\n"
  },
  "lake_forecast": {
   "issued": "2026-09-03T18:45:00+00:00",
@@ -852,17 +852,17 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-09-03T14:00:00.000-04:00",
-  "level_ft": 94.44,
-  "level_at": "2026-09-03T14:00:00.000-04:00",
+  "water_temp_at": "2026-09-03T16:00:00.000-04:00",
+  "level_ft": 94.45,
+  "level_at": "2026-09-03T16:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 30,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/03/26 14:00",
+  "observed": "09/03/26 16:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, September 4th."
  },
  "sun": {
@@ -887,8 +887,8 @@
      "ICON": 95
     },
     "precip_in": {
-     "GFS": 0.03,
-     "Euro": 0.27,
+     "GFS": 0.05,
+     "Euro": 0.28,
      "ICON": 0.26
     },
     "high_spread_f": 4
@@ -906,8 +906,8 @@
      "ICON": 3
     },
     "precip_in": {
-     "GFS": 0.0,
-     "Euro": 0.09,
+     "GFS": 0.44,
+     "Euro": 0.1,
      "ICON": 0.02
     },
     "high_spread_f": 1
@@ -915,8 +915,8 @@
    {
     "date": "2026-09-05",
     "high_f": {
-     "GFS": 65,
-     "Euro": 70,
+     "GFS": 66,
+     "Euro": 69,
      "ICON": 71
     },
     "pop_max": {
@@ -925,11 +925,11 @@
      "ICON": 14
     },
     "precip_in": {
-     "GFS": 0.07,
-     "Euro": 0.07,
+     "GFS": 0.1,
+     "Euro": 0.13,
      "ICON": 0.06
     },
-    "high_spread_f": 6
+    "high_spread_f": 5
    }
   ]
  }
