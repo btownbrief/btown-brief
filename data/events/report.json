@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-02T18:50:06-04:00",
+ "generated": "2026-09-03T09:50:39-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 19,
-   "seconds": 5.8
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 83,
+   "count": 79,
    "seconds": 3.2
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 60,
-   "seconds": 3.4
+   "count": 59,
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 175,
-   "seconds": 2.8
+   "count": 178,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 84,
-   "seconds": 1.9
+   "count": 83,
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -35,7 +35,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-02&end_date=2026-11-01&page=1 (HTTP Error 405: Not Allowed)",
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-03&end_date=2026-11-02&page=1 (HTTP Error 405: Not Allowed)",
    "staleDays": 3
   },
   "facebook": {
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 198,
-   "seconds": 71.4
+   "seconds": 65.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,58 +65,59 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 741,
-   "seconds": 38.2
+   "count": 729,
+   "seconds": 37.1
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 75,
-   "seconds": 0.7
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 13.7
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 373,
-   "seconds": 77.2
+   "count": 364,
+   "seconds": 73.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 63,
-   "seconds": 119.7
+   "seconds": 118.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 20,
-   "seconds": 0.6
+   "count": 19,
+   "seconds": 0.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 49,
-   "seconds": 13.8
+   "seconds": 13.5
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 59,
-   "seconds": 0.6
+   "count": 34,
+   "seconds": 0.2
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 100,
-   "seconds": 5.2
+   "count": 96,
+   "seconds": 4.7
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 26,
-   "seconds": 33.8
+   "count": 25,
+   "seconds": 31.3
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2452,
-   "seconds": 17.4
+   "count": 2411,
+   "seconds": 65.1
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -127,30 +128,41 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 450,
-   "seconds": 22.5
+   "seconds": 27.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 285,
+   "count": 288,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 85,
-   "seconds": 108.6
+   "count": 83,
+   "seconds": 101.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 52,
-   "seconds": 0.5
+   "seconds": 0.7
   }
  },
- "gathered": 5496,
- "afterDedup": 2555,
- "duplicatesMerged": 2941,
- "final": 2791,
+ "gathered": 5400,
+ "afterDedup": 2515,
+ "duplicatesMerged": 2885,
+ "final": 2745,
  "firecrawlCalls": 15,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-07"
+  },
   {
    "kept": {
     "title": "Pub Hour",
@@ -354,17 +366,6 @@
     "champlainvalley",
     "helloburlington",
     "higherground"
-   ],
-   "date": "2026-10-09"
-  },
-  {
-   "kept": {
-    "title": "DJ Taka Residency",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "radiobean",
-    "sevendays"
    ],
    "date": "2026-10-09"
   },
@@ -764,6 +765,17 @@
   },
   {
    "kept": {
+    "title": "HONKY TONK TUESDAY!",
+    "source": "radiobean"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "radiobean"
+   ],
+   "date": "2026-10-13"
+  },
+  {
+   "kept": {
     "title": "Super Smash Tuesdays",
     "source": "churchst"
    },
@@ -1056,17 +1068,6 @@
    "merged_sources": [
     "helloburlington",
     "higherground"
-   ],
-   "date": "2026-10-16"
-  },
-  {
-   "kept": {
-    "title": "DJ Taka Residency",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "radiobean",
-    "sevendays"
    ],
    "date": "2026-10-16"
   },
@@ -1705,17 +1706,6 @@
   },
   {
    "kept": {
-    "title": "DJ Taka Residency",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "radiobean",
-    "sevendays"
-   ],
-   "date": "2026-10-23"
-  },
-  {
-   "kept": {
     "title": "Sam Jay",
     "source": "vcc"
    },
@@ -2211,17 +2201,6 @@
   },
   {
    "kept": {
-    "title": "DJ Taka Residency",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "radiobean",
-    "sevendays"
-   ],
-   "date": "2026-10-30"
-  },
-  {
-   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2403,6 +2382,17 @@
   },
   {
    "kept": {
+    "title": "Women's Soccer vs Binghamton",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-01"
+  },
+  {
+   "kept": {
     "title": "Skylark",
     "source": "sevendays"
    },
@@ -2411,35 +2401,35 @@
     "sevendays"
    ],
    "date": "2026-11-01"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-11-02"
   }
  ],
  "changes": [
   {
-   "id": "3fbdea201f3a",
-   "title": "Baby Time",
-   "date": "2026-09-02",
-   "change": "missing",
-   "lastSeen": "2026-08-31T11:27:35-04:00"
+   "id": "c2ea828131ac",
+   "title": "HONKY TONK TUESDAY!",
+   "date": "2026-10-13",
+   "change": "time",
+   "was": "2026-10-13T21:00:00-04:00",
+   "now": "2026-10-13T20:30:00-04:00"
   },
   {
-   "id": "6bcb4509b15d",
-   "title": "Permanent Markings: Indigenous Tattooing and the Stories They Carry, a Talk with Miciah Stasis Harding",
-   "date": "2026-09-02",
-   "change": "dropped"
-  },
-  {
-   "id": "88d22ccb4e21",
-   "title": "ChatBTV: AI software development meetup",
-   "date": "2026-09-02",
-   "change": "missing",
-   "lastSeen": "2026-09-02T09:50:41-04:00"
-  },
-  {
-   "id": "ba08470b51be",
-   "title": "Live Music! Jenny Porter",
-   "date": "2026-09-02",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "id": "f321cdd14934",
+   "title": "The Work in Progress",
+   "date": "2026-10-02",
+   "change": "time",
+   "was": "2026-10-02T19:00:00-04:00",
+   "now": "2026-10-02T16:00:00-04:00"
   },
   {
    "id": "8d87c6c465c7",
@@ -2459,8 +2449,7 @@
    "id": "bf306072fb68",
    "title": "Trivia Night",
    "date": "2026-09-03",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "bb78e7f97ca7",
@@ -2480,15 +2469,20 @@
    "id": "5d9bc6784dae",
    "title": "ZZ Top - The Big One Tour",
    "date": "2026-09-04",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "4bdfd51fd04b",
    "title": "ZZ Top w/ George Thorogood",
    "date": "2026-09-04",
+   "change": "dropped"
+  },
+  {
+   "id": "ba7c6f5da1b8",
+   "title": "DJ Taka Residency",
+   "date": "2026-09-04",
    "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "afe863267ad5",
@@ -2526,6 +2520,20 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
+   "id": "774cfccbb709",
+   "title": "WAGE Center Welcome Back Party! 💚✨",
+   "date": "2026-09-09",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "7aed25775e8e",
+   "title": "Sundown & Sift",
+   "date": "2026-09-09",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "c6de40a56162",
    "title": "Preschool Play Time",
    "date": "2026-09-10",
@@ -2540,11 +2548,17 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
+   "id": "06f82ca96283",
+   "title": "Old Time Jam",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "5d523f88641e",
    "title": "Trivia Night",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "071a16518c5f",
@@ -2568,6 +2582,20 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
+   "id": "840b664b1c7e",
+   "title": "The Eyetraps, Mimi Fang, MOMDAD, & Yabai!",
+   "date": "2026-09-11",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "18c4e6024700",
+   "title": "DJ Taka Residency",
+   "date": "2026-09-11",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "f77ef7192c35",
    "title": "Vermont Tree Farm of the Year- Hinesburg Town Forest",
    "date": "2026-09-12",
@@ -2583,13 +2611,6 @@
   },
   {
    "id": "ec4489d611a6",
-   "title": "Shared Harvest at Merrymac",
-   "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
-  },
-  {
-   "id": "e2f9898d95f3",
    "title": "Shared Harvest at Merrymac",
    "date": "2026-09-12",
    "change": "dropped"
@@ -2612,8 +2633,7 @@
    "id": "ee168b945cde",
    "title": "Sensory-Friendly Sunday at ECHO",
    "date": "2026-09-13",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "90abed62f85a",
@@ -2644,17 +2664,18 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
-   "id": "a8b94ce45452",
-   "title": "Curator Tour – On Point: Needlework from the Garthwaite Family Collection",
-   "date": "2026-09-15",
-   "change": "dropped"
-  },
-  {
    "id": "0684f2f9b1be",
    "title": "Craftytown",
    "date": "2026-09-15",
    "change": "missing",
    "lastSeen": "2026-08-31T11:27:35-04:00"
+  },
+  {
+   "id": "01edf9f89291",
+   "title": "HONKY TONK: Queen City Cut-Ups",
+   "date": "2026-09-15",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "c089e6f19182",
@@ -2681,8 +2702,7 @@
    "id": "fc5707dd41de",
    "title": "Live Music! Michael Perry",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "d6f3fd1ec553",
@@ -2702,15 +2722,13 @@
    "id": "3d1c73bb1a80",
    "title": "Trivia Night",
    "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "cafd562a8afa",
    "title": "Musical Silents: The Passion of Joan of Arc (1928)",
    "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "0e00b8971703",
@@ -2718,13 +2736,6 @@
    "date": "2026-09-18",
    "change": "missing",
    "lastSeen": "2026-08-31T13:12:40-04:00"
-  },
-  {
-   "id": "39c88c22c791",
-   "title": "Charity and Sylvia Author Talk ft. Tillie Walden",
-   "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "95a7e9fe79a1",
@@ -2737,14 +2748,14 @@
    "id": "57b41e392345",
    "title": "Oktoberfest Vermont",
    "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
-   "id": "921abd4e135c",
-   "title": "Sturgeon Gala: Sensory Science",
+   "id": "2a8500ac55bb",
+   "title": "DJ Taka Residency",
    "date": "2026-09-18",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "8b7796b354d6",
@@ -2761,12 +2772,6 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
-   "id": "59f3c54c01e0",
-   "title": "Zara Anishanslin’s The Painter’s Fire: A Forgotten History of the Artists Who Championed the American Revolution",
-   "date": "2026-09-19",
-   "change": "dropped"
-  },
-  {
    "id": "d1266bb176a5",
    "title": "Live Music",
    "date": "2026-09-19",
@@ -2777,8 +2782,14 @@
    "id": "52c543475102",
    "title": "Oktoberfest Vermont",
    "date": "2026-09-19",
+   "change": "dropped"
+  },
+  {
+   "id": "cf144690c65a",
+   "title": "Broosha",
+   "date": "2026-09-19",
    "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "5c07a69abff1",
@@ -2809,6 +2820,13 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
+   "id": "913bbd65fbe6",
+   "title": "HONKY TONK: Wild Leek River",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "77694579a75f",
    "title": "Baby Time",
    "date": "2026-09-23",
@@ -2816,11 +2834,17 @@
    "lastSeen": "2026-08-31T11:27:35-04:00"
   },
   {
+   "id": "9e0fe1457b5d",
+   "title": "Lit Club",
+   "date": "2026-09-23",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "210764a691d9",
    "title": "Live Music! Jim Yeager Duo",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "a935a83a71c8",
@@ -2847,8 +2871,7 @@
    "id": "2e5b2bde2902",
    "title": "Trivia Night",
    "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "62c3f4a8eedc",
@@ -2879,16 +2902,18 @@
    "lastSeen": "2026-09-01T10:16:24-04:00"
   },
   {
-   "id": "f8fd8c38abbc",
-   "title": "Rockwell Day",
-   "date": "2026-09-26",
-   "change": "dropped"
+   "id": "c86a8833e320",
+   "title": "Dog Lips w/ Peddle",
+   "date": "2026-09-25",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "62d029a4f9da",
-   "title": "Curator Tour – Norman Rockwell: At Home in Vermont",
-   "date": "2026-09-26",
-   "change": "dropped"
+   "id": "a6747ef75bc9",
+   "title": "DJ Taka Residency",
+   "date": "2026-09-25",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "6ae460f474b2",
@@ -2898,18 +2923,23 @@
    "lastSeen": "2026-09-01T10:16:24-04:00"
   },
   {
+   "id": "beea1a3ba258",
+   "title": "Roost.World (DJ Set)",
+   "date": "2026-09-26",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "618938210733",
    "title": "Youth Vendor Day",
    "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "e93b9205a06f",
    "title": "Hair Peace",
    "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "31d863dc90fe",
@@ -2940,6 +2970,13 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
+   "id": "77442c3edd36",
+   "title": "Eustis Album Release Show!",
+   "date": "2026-09-29",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "b06b8cd265e8",
    "title": "Baby Time",
    "date": "2026-09-30",
@@ -2964,15 +3001,13 @@
    "id": "0647eac46abb",
    "title": "Trivia Night",
    "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "3bbc5759b0b6",
    "title": "PechaKucha Night Burlington | Volume 44",
    "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "688e80df96cc",
@@ -2982,35 +3017,21 @@
    "lastSeen": "2026-08-31T13:12:40-04:00"
   },
   {
-   "id": "fac65856c919",
-   "title": "Elevating the Entrepreneurial Legacy",
+   "id": "3255a4fbc03a",
+   "title": "DJ Taka Residency",
    "date": "2026-10-02",
    "change": "missing",
-   "lastSeen": "2026-09-02T09:50:41-04:00"
-  },
-  {
-   "id": "b6903ee942c2",
-   "title": "Curator Tour – Norman Rockwell: At Home in Vermont",
-   "date": "2026-10-02",
-   "change": "dropped"
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "699cb14233ba",
    "title": "Evening Song: Bet on Hope 25th Anniversary Celebration",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "e46b3285c535",
    "title": "MASKS ON! Sundays at ECHO",
-   "date": "2026-10-04",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
-  },
-  {
-   "id": "4979a15dfc4d",
-   "title": "Masks On Sundays: Offered Quarterly",
    "date": "2026-10-04",
    "change": "dropped"
   },
@@ -3018,8 +3039,14 @@
    "id": "a832b551c82f",
    "title": "Tech Tuesdays - Breakfast",
    "date": "2026-10-06",
+   "change": "dropped"
+  },
+  {
+   "id": "0ca966e22a6f",
+   "title": "HONKY TONK: Wild Leek River",
+   "date": "2026-10-06",
    "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "31f877f10201",
@@ -3029,11 +3056,17 @@
    "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
+   "id": "0732496c3ba7",
+   "title": "Old Time Jam",
+   "date": "2026-10-08",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "67caa8cb02c2",
    "title": "Trivia Night",
    "date": "2026-10-08",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "1f78535f636c",
@@ -3057,6 +3090,13 @@
    "lastSeen": "2026-09-01T10:16:24-04:00"
   },
   {
+   "id": "fc22e536c304",
+   "title": "DJ Taka Residency",
+   "date": "2026-10-09",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "b5caf544a667",
    "title": "Second Saturdays | Your Place Is at This Table",
    "date": "2026-10-10",
@@ -3067,8 +3107,7 @@
    "id": "76f906ad92ee",
    "title": "Sensory-Friendly Sunday at ECHO",
    "date": "2026-10-11",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "69974f99ea0b",
@@ -3076,6 +3115,13 @@
    "date": "2026-10-13",
    "change": "missing",
    "lastSeen": "2026-08-31T13:12:40-04:00"
+  },
+  {
+   "id": "7300f711e2ff",
+   "title": "HONKY TONK: Queen City Cut-Ups",
+   "date": "2026-10-13",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "686d293d049b",
@@ -3088,8 +3134,7 @@
    "id": "1cd2932e2a99",
    "title": "Trivia Night",
    "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "857556d78186-2030",
@@ -3099,10 +3144,18 @@
    "lastSeen": "2026-09-02T09:50:41-04:00"
   },
   {
-   "id": "bfcf2207bbf3",
-   "title": "PokeKon-Fest - All Pokemon Show - Burlington, Vermont",
-   "date": "2026-10-17",
-   "change": "dropped"
+   "id": "1733f31b008b",
+   "title": "DJ Taka Residency",
+   "date": "2026-10-16",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "d07ba56df0c1",
+   "title": "HONKY TONK: Wild Leek River",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
    "id": "c899bd3e5236",
@@ -3115,8 +3168,7 @@
    "id": "92f8f6e3278d",
    "title": "Trivia Night",
    "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-08-30T18:55:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "4b5338a2a7d1",
@@ -3140,6 +3192,13 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
+   "id": "766c5388e392",
+   "title": "DJ Taka Residency",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "1c57d3ef908e-2100",
    "title": "Sam Jay",
    "date": "2026-10-24",
@@ -3147,11 +3206,25 @@
    "lastSeen": "2026-08-31T20:04:22-04:00"
   },
   {
+   "id": "c67d8525bdfe",
+   "title": "Lit Club",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
    "id": "6839e671df73",
    "title": "Preschool Play Time",
    "date": "2026-10-29",
    "change": "missing",
    "lastSeen": "2026-09-01T18:49:18-04:00"
+  },
+  {
+   "id": "996bf782b7e2",
+   "title": "DJ Taka Residency",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-09-02T18:50:06-04:00"
   }
  ]
 }
