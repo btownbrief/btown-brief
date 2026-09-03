@@ -1,42 +1,32 @@
 {
- "updated": "2026-09-03T21:53:45+00:00",
+ "updated": "2026-09-03T22:43:57+00:00",
  "sections_updated": {
-  "now": "2026-09-03T21:53:45+00:00",
-  "forecast": "2026-09-03T21:53:45+00:00",
-  "hourly": "2026-09-03T21:53:45+00:00",
-  "alerts": "2026-09-03T21:53:45+00:00",
-  "afd": "2026-09-03T21:53:45+00:00",
-  "lake_forecast": "2026-09-03T21:53:45+00:00",
-  "lake_gage": "2026-09-03T21:53:45+00:00",
-  "air": "2026-09-03T21:53:45+00:00",
-  "sun": "2026-09-03T21:53:45+00:00",
-  "models": "2026-09-03T21:53:45+00:00"
+  "now": "2026-09-03T22:43:57+00:00",
+  "forecast": "2026-09-03T22:43:57+00:00",
+  "hourly": "2026-09-03T22:43:57+00:00",
+  "alerts": "2026-09-03T22:43:57+00:00",
+  "afd": "2026-09-03T22:43:57+00:00",
+  "lake_forecast": "2026-09-03T22:43:57+00:00",
+  "lake_gage": "2026-09-03T22:43:57+00:00",
+  "air": "2026-09-03T22:43:57+00:00",
+  "sun": "2026-09-03T22:43:57+00:00",
+  "models": "2026-09-03T22:43:57+00:00"
  },
  "now": {
-  "observed_at": "2026-09-03T21:35:00+00:00",
+  "observed_at": "2026-09-03T22:25:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 81,
-  "feels_like_f": 82,
+  "description": "Mostly Cloudy",
+  "temp_f": 79,
+  "feels_like_f": 79,
   "humidity": 58,
-  "dewpoint_f": 64,
-  "wind_mph": 8,
+  "dewpoint_f": 63,
+  "wind_mph": 5,
   "wind_gust_mph": null,
   "wind_dir": "NW"
  },
  "forecast": {
   "updated": "2026-09-03T18:27:23+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-09-03T17:00:00-04:00",
-    "is_day": true,
-    "temp_f": 82,
-    "pop": 2,
-    "wind": "W 10 mph",
-    "short": "Sunny",
-    "detailed": "Sunny, with a high near 82. West wind around 10 mph."
-   },
    {
     "name": "Tonight",
     "start": "2026-09-03T18:00:00-04:00",
@@ -65,7 +55,7 @@
     "pop": 17,
     "wind": "NW 6 to 9 mph",
     "short": "Slight Chance Rain Showers",
-    "detailed": "A slight chance of rain showers before 2am. Mostly cloudy, with a low around 59. Northwest wind 6 to 9 mph. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A slight chance of rain showers before 2am. Mostly cloudy, with a low around 59. Northwest wind 6 to 9 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Saturday",
@@ -166,23 +156,22 @@
     "wind": "S 13 to 16 mph",
     "short": "Rain Showers Likely",
     "detailed": "Rain showers likely. Mostly cloudy, with a low around 60. South wind 13 to 16 mph. Chance of precipitation is 70%."
+   },
+   {
+    "name": "Thursday",
+    "start": "2026-09-10T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 77,
+    "pop": 60,
+    "wind": "SW 15 mph",
+    "short": "Rain Showers Likely",
+    "detailed": "Rain showers likely. Mostly cloudy, with a high near 77. Southwest wind around 15 mph, with gusts as high as 26 mph. Chance of precipitation is 60%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-09-03T18:27:23+00:00",
   "hours": [
-   {
-    "t": "2026-09-03T17:00:00-04:00",
-    "temp_f": 80,
-    "feels_f": 82,
-    "pop": 2,
-    "humidity": 62,
-    "wind_mph": 10,
-    "wind_dir": "W",
-    "sky": 19,
-    "short": "Sunny"
-   },
    {
     "t": "2026-09-03T18:00:00-04:00",
     "temp_f": 78,
@@ -567,6 +556,17 @@
     "wind_dir": "N",
     "sky": 62,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-05T05:00:00-04:00",
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 13,
+    "humidity": 93,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 66,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -852,24 +852,24 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-09-03T17:00:00.000-04:00",
+  "water_temp_at": "2026-09-03T18:00:00.000-04:00",
   "level_ft": 94.47,
-  "level_at": "2026-09-03T17:00:00.000-04:00",
+  "level_at": "2026-09-03T18:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 32,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/03/26 17:00",
+  "observed": "09/03/26 18:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, September 4th."
  },
  "sun": {
-  "sunrise": "2026-09-03T06:17-04:00",
-  "sunset": "2026-09-03T19:25-04:00",
+  "sunrise": "2026-09-03T06:18-04:00",
+  "sunset": "2026-09-03T19:26-04:00",
   "sunrise_tomorrow": "2026-09-04T06:19-04:00",
-  "sunset_tomorrow": "2026-09-04T19:23-04:00",
+  "sunset_tomorrow": "2026-09-04T19:24-04:00",
   "uv_max": 6.2
  },
  "models": {
@@ -901,7 +901,7 @@
      "ICON": 76
     },
     "pop_max": {
-     "GFS": 8,
+     "GFS": 16,
      "Euro": 65,
      "ICON": 3
     },
