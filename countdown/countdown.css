@@ -179,6 +179,37 @@ a { color: inherit; }
 }
 .hint b { color: var(--orange); font-weight: 700; }
 
+/* phones: the switch as its own row under the bar */
+.modes-row { display: none; }
+
+/* ---------- the tabs: which deck ---------- */
+
+.chips {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid rgba(252, 86, 10, .28);
+}
+.chip {
+  flex: 1 1 auto;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--orange);
+  border-left: 1px solid rgba(252, 86, 10, .18);
+  padding: 0 12px;
+  height: 38px;
+  white-space: nowrap;
+  text-align: center;
+  opacity: .95;
+  transition: opacity .18s ease, background .18s ease, color .18s ease;
+}
+.chip:first-child { border-left: none; }
+.chip[aria-pressed="false"] { opacity: .55; }
+.chip[aria-pressed="false"]:hover { opacity: .9; }
+.chip[aria-pressed="true"] { background: var(--orange); color: var(--ink); font-weight: 900; }
+
 /* ---------- the board ---------- */
 
 .board {
@@ -283,6 +314,15 @@ a { color: inherit; }
 }
 .lead .window { font-size: clamp(13px, 1.6vw, 20px); }
 
+.kicker {
+  margin: clamp(8px, 1.2vh, 14px) 0 0;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: clamp(9px, .95vw, 11px);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  opacity: .6;
+}
 .why {
   margin: clamp(10px, 1.6vh, 18px) 0 0;
   font-size: clamp(.86rem, 1vw, 1rem);
@@ -531,6 +571,7 @@ a.lopt:hover { color: var(--orange); }
   .lead { grid-column: span 2; grid-row: span 1; min-height: clamp(360px, 52vh, 520px); }
   .bar { grid-template-columns: auto 1fr auto; gap: 12px; }
   .broadcast { justify-self: end; }
+  .modes .mode-read { display: none; }
 }
 
 @media (max-width: 720px) {
@@ -541,10 +582,17 @@ a.lopt:hover { color: var(--orange); }
   .cell .head { font-size: clamp(1.3rem, 6.4vw, 1.8rem); }
   .lead .num { font-size: clamp(2rem, 9vw, 2.8rem); }
   .num { font-size: clamp(1.4rem, 6.4vw, 1.9rem); }
-  .bar { grid-template-columns: 1fr auto; padding: 6px 10px; gap: 8px; }
-  .bar .status { grid-column: 1 / -1; justify-self: stretch; justify-content: space-between; }
+  .bar { grid-template-columns: auto 1fr auto; padding: 6px 10px; gap: 8px; }
+  .broadcast { justify-self: end; }
+  .modes { display: none; }
+  .modes-row { display: flex; border-bottom: 1px solid rgba(252, 86, 10, .28); }
+  .modes-row .mode { flex: 1; text-align: center; padding: 8px 4px; letter-spacing: .18em; }
+  .modes-row .mode + .mode { border-left: 1px solid rgba(252, 86, 10, .18); }
+  .chip { padding: 0 8px; letter-spacing: .12em; }
   .brand { font-size: 11px; letter-spacing: .22em; }
-  .clock { font-size: 20px; }
+  .clock { font-size: 18px; }
+  .ampm { display: none; }
+  .live-badge { font-size: 10px; letter-spacing: .18em; padding: 6px 8px 5px; }
   .dayrow { display: none; }
   .meta .venue { display: none; }
   .meta .venue + .dot { display: none; }

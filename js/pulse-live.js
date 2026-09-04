@@ -28,6 +28,8 @@
   var HOBBIES_URL = 'data/hobbies.json';
   var THINGS_URL = 'data/things.json';
   var HISTORY_URL = 'data/history-facts.json';
+  var DECK_URL = 'data/table-talk.json';
+  var STAY_URL = 'https://play.btownbrief.com/stay-awhile/data/questions.json';
   var SET_KEY = 'pulse-live-set';
   var PULSE_SET_KEY = 'pulse2-settings';   // read-only: reuse muted sources
   var RECAP_KEY = 'pulse-live-recap';
@@ -36,15 +38,21 @@
 
   var TOPICS = ['local', 'brief', 'reddit', 'newsletters', 'video', 'news', 'pods',
                 'todo', 'history', 'tech', 'business', 'science', 'culture',
-                'politics', 'sports', 'gaming', 'play'];
+                'politics', 'sports', 'gaming', 'play', 'table'];
   var TOPIC_LABEL = { newsletters: 'letters', todo: 'to do' };
+  /* TABLE is the mix: Table Talk's questions dealt in among the headlines.
+     It arrives OFF — the wire stays the wire until you ask — and ?mix=1
+     turns it on for a link you can hand someone. */
+  var OFF_BY_DEFAULT = ['table'];
+  var TABLE_SAMPLE = 60;      // questions per visit; the deck runs to hundreds
 
   /* How often a topic surfaces relative to its share of the pool.
      Deep or evergreen content should visit, not move in. Old editions are
      the rarest guest — headlines and events carry the BRIEF chip. */
   var RARITY = { newsletters: 0.45, pods: 0.5, video: 0.5, play: 0.3,
                  archive: 0.45, edition: 0.15, hobby: 0.35, idea: 0.3,
-                 history: 0.4 };
+                 history: 0.4, table: 0.6 };
+  var MIX = /(?:^|[?&])mix=1/.test(window.location.search);
   var ARCHIVE_SAMPLE = 80;    // per-visit sample of the 1,600-story archive
 
   var MAX_VIDEO_AGE_S = 7 * 24 * 3600;
@@ -187,7 +195,7 @@
           // topics added to the board since this reader last saved arrive ON
           var known = Array.isArray(s.known) ? s.known : s.topics;
           TOPICS.forEach(function (t) {
-            if (known.indexOf(t) === -1) state.enabled.add(t);
+            if (known.indexOf(t) === -1 && OFF_BY_DEFAULT.indexOf(t) === -1) state.enabled.add(t);
           });
         }
         if (typeof s.solo === 'string' && TOPICS.indexOf(s.solo) !== -1) state.solo = s.solo;
@@ -198,13 +206,20 @@
           if (Array.isArray(s.topics)) {
             var known2 = Array.isArray(s.known) ? s.known : s.topics;
             TOPICS.forEach(function (t) {
-              if (known2.indexOf(t) === -1) state.prevTopics.add(t);
+              if (known2.indexOf(t) === -1 && OFF_BY_DEFAULT.indexOf(t) === -1) state.prevTopics.add(t);
             });
           }
         }
       }
     } catch (e) {}
-    if (!state.enabled) state.enabled = new Set(TOPICS);
+    if (!state.enabled) {
+      state.enabled = new Set(TOPICS.filter(function (t) { return OFF_BY_DEFAULT.indexOf(t) === -1; }));
+    }
+    if (MIX) {
+      // a handed-out mix link means the questions, whatever this reader saved
+      state.enabled.add('table');
+      if (state.solo && state.solo !== 'table') { state.solo = null; state.prevTopics = null; }
+    }
     // solo invariant: soloed means exactly that one topic runs, with a set to return to
     if (state.solo) {
       if (!state.prevTopics) { state.solo = null; }
@@ -592,6 +607,35 @@
        6h by the hub's champions workflow. The #crown fragment keeps these
        urls distinct from the plain arcade pitch cards above. */
     var champs = extras && extras[10];
+    var deck = extras && extras[11], stay = extras && extras[12];
+
+    /* TABLE: Table Talk's questions, the same cut the table itself deals —
+       the house deck plus Stay Awhile's light and warm shelves. A question is
+       timeless, so it rides evergreen and never ages out; the sample keeps
+       one visit from being all questions once the chip is on. */
+    var questions = [];
+    ((deck && deck.prompts) || []).forEach(function (p) {
+      if (p && p.q && p.id) questions.push({ id: 'tt:' + p.id, q: p.q, src: 'Table deck' });
+    });
+    ((stay && stay.questions) || []).forEach(function (q) {
+      if (!q || !q.q || !q.id || q.deck) return;
+      if (q.d !== 'light' && q.d !== 'warm') return;
+      var t = q.t || [], f = q.f || [];
+      if (t.indexOf('love') !== -1 || t.indexOf('confess') !== -1) return;
+      if (f.indexOf('room') !== -1 || f.indexOf('heavy') !== -1) return;
+      questions.push({ id: 'sa:' + q.id, q: q.q, src: 'Stay Awhile' });
+    });
+    shuffle(questions).slice(0, TABLE_SAMPLE).forEach(function (q) {
+      pool.push({
+        t: q.q,
+        u: 'table.html#' + encodeURIComponent(q.id),
+        d: 0,
+        src: q.src,
+        tags: ['table'],
+        topic: 'table',
+        evergreen: true,
+      });
+    });
     if (champs && Array.isArray(champs.games)) {
       var mLabel = champs.monthLabel || 'month';
       shuffle(champs.games.filter(function (g) {
@@ -1914,6 +1958,8 @@
       fetchJson(THINGS_URL).catch(function () { return null; }),
       fetchJson(HISTORY_URL).catch(function () { return null; }),
       fetchJson(CHAMPS_URL).catch(function () { return null; }),
+      fetchJson(DECK_URL).catch(function () { return null; }),
+      fetchJson(STAY_URL).catch(function () { return null; }),
     ]);
 
     fetchJson(LIVE_URL)

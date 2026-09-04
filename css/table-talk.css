@@ -166,8 +166,22 @@ a.mode:hover { opacity: 1; }
    running on a screen. READ is a scan-and-filter page, it is one tap away in
    the shared nav above, and dropping it is what buys WATCH, TABLE and the
    SYNC badge their room. Same rule, same width, as Pulse Live. */
+/* Phones: the switch moves to its own row under the bar, all four boards. */
+.modes-row { display: none; }
 @media (max-width: 800px) {
-  .modes .mode-read { display: none; }
+  .modes { display: none; }
+  .modes-row {
+    display: flex;
+    border-bottom: 1px solid rgba(252, 86, 10, .28);
+  }
+  .modes-row .mode {
+    flex: 1;
+    text-align: center;
+    padding: 8px 4px;
+    font-size: 10px;
+    letter-spacing: .18em;
+  }
+  .modes-row .mode + .mode { border-left: 1px solid rgba(252, 86, 10, .18); }
 }
 
 /* ---------- the card ---------- */
