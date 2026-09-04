@@ -73,7 +73,14 @@ export function deactivate() { app.closePeek(); }
 /* ------------------------------------------------------------------ parts */
 
 const artists = () => (state.music && Array.isArray(state.music.artists)) ? state.music.artists : [];
-const playingSoon = () => artists().filter((a) => a.shows && a.shows.length);
+const datedShows = (a) => (Array.isArray(a?.shows) ? a.shows : [])
+  .filter((s) => s && /^\d{4}-\d{2}-\d{2}$/.test(s.date || ''))
+  .sort((x, y) => x.date.localeCompare(y.date));
+const playingSoon = () => artists()
+  .map((a) => ({ artist: a, shows: datedShows(a) }))
+  .filter((entry) => entry.shows.length)
+  .sort((x, y) => x.shows[0].date.localeCompare(y.shows[0].date) ||
+    x.artist.name.localeCompare(y.artist.name));
 
 /* "Sat 6 Sep" — the calendar shorthand, not a timestamp. */
 function showDay(iso) {
@@ -254,9 +261,9 @@ function openArtist(a) {
 
 /* The wide card, for the shelf of people playing this week. It leads with the
    show, because that is the reason to look at it. */
-function gigCard(a) {
+function gigCard(a, shows) {
   const k = 'mus:' + a.id;
-  const s = a.shows[0];
+  const s = shows[0];
   const card = el('div', 'm-gig');
   card.dataset.k = k;
 
@@ -543,7 +550,7 @@ function renderArtists(root) {
   if (soon.length) {
     shelfHead(root, 'Playing soon', 'Tap for the date, the room and a listen');
     const { track, sync } = rail(root, { label: 'artists playing soon' });
-    soon.forEach((a) => track.appendChild(gigCard(a)));
+    soon.forEach(({ artist, shows }) => track.appendChild(gigCard(artist, shows)));
     sync();
   }
 

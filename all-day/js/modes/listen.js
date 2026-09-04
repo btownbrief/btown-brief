@@ -239,7 +239,19 @@ function showCard(s) {
       open ? 'Show fewer' : (s.eps.length - PREVIEW) + ' older episode' +
         (s.eps.length - PREVIEW === 1 ? '' : 's'));
     more.setAttribute('aria-expanded', open ? 'true' : 'false');
-    more.addEventListener('click', () => { state.open[s.src.id] = !open; renderList(); });
+    more.addEventListener('click', () => {
+      /* Rebuild only this card's rows: a full renderList() would wipe the
+         panel and drop the reader back at the top. */
+      const nowOpen = !open;
+      state.open[s.src.id] = nowOpen;
+      eps.innerHTML = '';
+      const nextShown = nowOpen ? Math.min(30, s.eps.length) : Math.min(PREVIEW, s.eps.length);
+      s.eps.slice(0, nextShown).forEach((ep) => eps.appendChild(epRow(ep, s)));
+      more.textContent = nowOpen ? 'Show fewer' : (s.eps.length - PREVIEW) + ' older episode' +
+        (s.eps.length - PREVIEW === 1 ? '' : 's');
+      more.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
+      hydrateVotes(card, [...card.querySelectorAll('.ep')].map((n) => n.dataset.k));
+    });
     card.appendChild(more);
   }
   return card;
@@ -297,7 +309,7 @@ function renderEpisodes() {
   /* The header is the fold. Three episodes today, but the list only grows,
      and it sits between the show card and every other podcast — so it
      closes, and stays closed if you closed it. */
-  const open = store.read(EPS_OPEN_KEY, true) !== false;
+  const open = store.read(EPS_OPEN_KEY, false) === true;
   const head = el('button', 'l-eps-head',
     '<span class="t">Every episode</span>' +
     '<span class="s">' + eps.length + (eps.length === 1 ? ' episode' : ' episodes') +
