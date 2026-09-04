@@ -2258,140 +2258,218 @@ img {
 }
 
 /* ============================================================
-   DAYLIGHT ARC (sunrise → sunset countdown)
+   DAYLIGHT SCENE (js/sun.js)
+   A living Lake Champlain panorama: the sky, sun, moon, ridge
+   and water are painted by sun.js from the real sunrise/sunset
+   and the current conditions. Everything here is presentation —
+   the card frame, the overlaid labels, and the loops that make
+   the clouds drift, the water glint and the stars breathe.
 ============================================================ */
 .sun-arc {
   display: block;
-  background: linear-gradient(180deg, var(--bg-raised), var(--bg-subtle));
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0b1730;
   border-bottom: 1px solid var(--line-soft);
   text-decoration: none;
   color: inherit;
 }
-
-.sun-arc-inner {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: var(--space-4) var(--space-5) var(--space-3);
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-areas:
-    "rise graphic set"
-    "count count count"
-    "cta cta cta";
-  align-items: center;
-  gap: var(--space-2) var(--space-4);
+.sun-arc.rn-sun-arc {
+  border-radius: var(--radius-lg, 14px);
+  border-bottom: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 10px 30px rgba(12, 24, 48, 0.16);
+}
+[data-theme="dark"] .sun-arc.rn-sun-arc {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* ---- engraved medallion (drawn by js/sun.js) ----
-   Each state class sets the two ink tones + the warm accent;
-   every stroke inside the SVG only ever uses these variables,
-   so themes and states stay in one place. */
-.sunart-medallion { grid-area: graphic; min-width: 0; text-align: center; }
+/* The panorama is wide on a phone and wider still on a desktop —
+   the SVG is cropped, never squashed. */
+.sun-scene { position: relative; width: 100%; aspect-ratio: 2.2 / 1; }
+@media (min-width: 720px) { .sun-scene { aspect-ratio: 3.3 / 1; } }
+/* The list page is a long scroll; the scene runs shorter there. */
+.sun-arc.is-compact .sun-scene { aspect-ratio: 2.9 / 1; }
+@media (min-width: 720px) { .sun-arc.is-compact .sun-scene { aspect-ratio: 4.4 / 1; } }
 
-.sunart-svg {
-  width: auto;
-  height: 118px;
-  max-width: 100%;
-  display: inline-block;
-  overflow: visible;
+.wx-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  --wx-drift: 320s;
+  --wx-deck-a: 1;
+  --wx-deck-b: 0.6;
+  --wx-deck-c: 0.3;
+  --wx-chop-amp: 0.5;
 }
 
-.sunart-scene { --sunart-ink: #79431f; --sunart-ink2: #a9612f; --sunart-warm: #f7bc4c; }
-.sunart-scene stop,
-.sunart-body,
-.sunart-glow { transition: transform 1s linear, opacity 1s linear, stop-color 1s linear; }
-.sunart-body { transform-box: view-box; transform-origin: 60px 62px; }
-.sunart-glow { fill: var(--sunart-warm); }
-.sunart-ridge { fill: var(--sunart-ink); opacity: 0.34; }
-.sunart-ridge-far { fill: var(--sunart-ink2); opacity: 0.22; }
-.sunart-scene-ring { fill: none; stroke: var(--sunart-ink2); stroke-width: 1; opacity: 0.65; }
-
-@media (prefers-reduced-motion: reduce) {
-  .sunart-scene stop,
-  .sunart-body,
-  .sunart-glow { transition: none; }
-}
-
-.sunart-day     { --sunart-ink: #8A4A21; --sunart-ink2: #B06A33; --sunart-warm: #F5B44A; }
-.sunart-sunrise { --sunart-ink: #94502A; --sunart-ink2: #C06B35; --sunart-warm: #FDBE5E; }
-.sunart-sunset  { --sunart-ink: #7C3A45; --sunart-ink2: #A85560; --sunart-warm: #F5876B; }
-.sunart-night   { --sunart-ink: #2E5560; --sunart-ink2: #48727E; --sunart-warm: #9FC5CE; }
-
-[data-theme="dark"] .sunart-day     { --sunart-ink: #F0B96B; --sunart-ink2: #C98F4A; }
-[data-theme="dark"] .sunart-sunrise { --sunart-ink: #F5C27A; --sunart-ink2: #D19353; }
-[data-theme="dark"] .sunart-sunset  { --sunart-ink: #EE9A88; --sunart-ink2: #C77565; }
-[data-theme="dark"] .sunart-night   { --sunart-ink: #A7CBD4; --sunart-ink2: #7FA9B4; --sunart-warm: #C8E2E8; }
-
-.sunart-disc { fill: var(--sunart-warm); fill-opacity: 0.2; stroke: var(--sunart-ink); stroke-width: 1.6; }
-.sunart-ring { fill: none; stroke: var(--sunart-ink2); stroke-width: 0.7; stroke-dasharray: 2.5 3.5; opacity: 0.9; }
-.sunart-ray  { fill: var(--sunart-warm); fill-opacity: 0.25; stroke: var(--sunart-ink); stroke-width: 1.25; stroke-linejoin: round; }
-.sunart-rayw { fill: none; stroke: var(--sunart-ink2); stroke-width: 1.15; stroke-linecap: round; }
-.sunart-ln   { fill: none; stroke: var(--sunart-ink); stroke-width: 1.5; stroke-linecap: round; }
-.sunart-lnf  { fill: none; stroke: var(--sunart-ink2); stroke-width: 0.95; stroke-linecap: round; }
-.sunart-hor  { fill: none; stroke: var(--sunart-ink2); stroke-width: 1.1; stroke-dasharray: 5 4; }
-.sunart-dot  { fill: var(--sunart-ink2); }
-.sunart-star { fill: var(--sunart-warm); fill-opacity: 0.4; stroke: var(--sunart-ink2); stroke-width: 0.9; stroke-linejoin: round; }
-
-.sun-tracker-cta {
-  grid-area: cta;
-  text-align: center;
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--teal);
-  padding-bottom: var(--space-1);
-}
-.sun-arc:hover .sun-tracker-cta,
-.sun-arc:focus-visible .sun-tracker-cta { text-decoration: underline; }
-.sun-arc:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
-
-.sun-end {
+/* ---- overlaid type. The scene is its own light source, so the
+   labels are always light with a soft shadow — identical in both
+   themes, and legible over a noon sky or a midnight lake. ---- */
+.sun-scene-hud {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2.35rem;
   display: flex;
-  flex-direction: column;
-  line-height: 1.2;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0 clamp(0.9rem, 3.4vw, 2rem);
+  pointer-events: none;
 }
-.sun-end-rise { grid-area: rise; text-align: left; }
-.sun-end-set  { grid-area: set;  text-align: right; }
-
+.sun-end { display: flex; flex-direction: column; line-height: 1.15; }
+.sun-end-set { text-align: right; }
 .sun-end-time {
   font-size: var(--text-md);
   font-weight: 700;
-  color: var(--ink);
+  color: #fff;
   font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 4px rgba(6, 14, 30, 0.7);
 }
 .sun-end-label {
   font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ink-3);
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: 0 1px 4px rgba(6, 14, 30, 0.7);
 }
 
 .sun-countdown {
-  grid-area: count;
-  text-align: center;
   display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: var(--space-2);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 0.1rem;
 }
-
 .sun-count-num {
   font-family: var(--font-display);
-  font-size: var(--text-lg);
+  font-size: clamp(1.35rem, 4.6vw, 2rem);
   font-weight: 600;
-  color: var(--coral);
+  color: #fff;
   font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  text-shadow: 0 2px 10px rgba(6, 14, 30, 0.75);
 }
-.sun-arc.is-night .sun-count-num { color: var(--teal); }
-
 .sun-count-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 1px 4px rgba(6, 14, 30, 0.7);
+}
+
+.sun-tracker-cta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.6rem;
+  text-align: center;
   font-size: var(--text-sm);
-  color: var(--ink-2);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(6, 14, 30, 0.7);
+  text-decoration: none;
+}
+.sun-arc:hover .sun-tracker-cta,
+.sun-arc:focus-visible .sun-tracker-cta,
+.sun-tracker-cta:hover,
+.sun-tracker-cta:focus-visible { text-decoration: underline; }
+.sun-arc:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+
+/* ---- scene layers ---- */
+.wx-body { transform-box: view-box; transition: transform 1s linear, opacity 1s linear; }
+.wx-svg stop { transition: stop-color 1.2s linear; }
+.wx-ridge { transition: fill 1.2s linear; }
+.wx-night, #wx-hglow, #wx-glitter { transition: opacity 1.2s linear; }
+#wx-glitter { transition: opacity 1.2s linear, transform 1s linear; }
+
+.wx-moon-halo { fill: #cfe0ff; opacity: 0.1; }
+.wx-moon-disc { fill: #f6f3e8; }
+
+.wx-star { fill: #eaf1ff; animation: wx-twinkle 4s ease-in-out infinite; }
+@keyframes wx-twinkle {
+  0%, 100% { opacity: 0.28; }
+  50% { opacity: 1; }
+}
+
+.wx-clouds { transition: opacity 1.5s linear, fill 1.2s linear; opacity: 0.5; fill: #fdfdfb; }
+.wx-deck path { fill: inherit; filter: url(#wx-soft); }
+.wx-deck-a { opacity: var(--wx-deck-a); }
+.wx-deck-b { opacity: var(--wx-deck-b); }
+.wx-deck-c { opacity: var(--wx-deck-c); }
+.wx-deck { mix-blend-mode: screen; }
+.wx-cloud-run {
+  animation: wx-drift var(--wx-drift) linear infinite;
+  will-change: transform;
+}
+.wx-deck-b .wx-cloud-run { animation-duration: calc(var(--wx-drift) * 1.5); }
+.wx-deck-c .wx-cloud-run { animation-duration: calc(var(--wx-drift) * 2.2); }
+@keyframes wx-drift {
+  from { transform: translateX(-1200px); }
+  to { transform: translateX(0); }
+}
+
+.wx-glint { animation: wx-shimmer 3s ease-in-out infinite; }
+@keyframes wx-shimmer {
+  0%, 100% { opacity: 0.15; transform: scaleX(0.7); }
+  50% { opacity: 0.95; transform: scaleX(1.2); }
+}
+.wx-chopg { opacity: calc(0.08 + var(--wx-chop-amp) * 0.2); }
+.wx-chop { animation: wx-lap 6s ease-in-out infinite; }
+@keyframes wx-lap {
+  0%, 100% { transform: translateX(-8px); opacity: 0.5; }
+  50% { transform: translateX(8px); opacity: 1; }
+}
+
+.wx-fg { fill: #0a1120; opacity: 0.82; }
+.wx-boat { animation: wx-bob 7s ease-in-out infinite; }
+@keyframes wx-bob {
+  0%, 100% { transform: translate(880px, 0) rotate(-0.6deg); }
+  50% { transform: translate(880px, -2px) rotate(0.6deg); }
+}
+
+#wx-fogband { transition: opacity 1.5s linear; }
+.wx-rain, .wx-snow { transition: opacity 1s linear; }
+.wx-drop {
+  stroke: rgba(232, 243, 255, 0.42);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  animation: wx-fall 1s linear infinite;
+}
+@keyframes wx-fall {
+  from { transform: translate(40px, -60px); }
+  to { transform: translate(-160px, 560px); }
+}
+.wx-flake {
+  fill: rgba(255, 255, 255, 0.86);
+  animation: wx-drift-down 10s linear infinite;
+}
+@keyframes wx-drift-down {
+  from { transform: translate(0, -30px); }
+  50% { transform: translate(26px, 280px); }
+  to { transform: translate(-10px, 580px); }
+}
+
+.wx-scrim { pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wx-cloud-run, .wx-glint, .wx-chop, .wx-star, .wx-drop, .wx-flake, .wx-boat {
+    animation: none;
+  }
+  .wx-body, .wx-svg stop, .wx-ridge, .wx-night, #wx-hglow, #wx-glitter,
+  .wx-clouds, #wx-fogband, .wx-rain, .wx-snow { transition: none; }
+  .wx-glint { opacity: 0.55; }
 }
 
 @media (max-width: 560px) {
-  .sun-arc-inner { padding: var(--space-3) var(--space-4); gap: var(--space-1) var(--space-3); }
-  .sun-end-time { font-size: var(--text-base); }
+  .sun-scene-hud { bottom: 2.1rem; }
 }
+
 
 /* Top 100 banner subhead */
 .top100-sub {
