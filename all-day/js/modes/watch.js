@@ -297,11 +297,12 @@ function renderTonight(root) {
       ? { ...s, more: (Array.isArray(s.more) ? s.more : []).filter(isLocalVideo) }
       : s);
     if (!c.visible.length && !c.bench.length) return;
-    shelfHead(root, s.title, s.sub, s.title === LOCAL_SHELF ? pastLocalBtn() : null);
+    shelfHead(root, s.title, s.sub, s.title === LOCAL_SHELF ? pastShelfHeadBtn(s) : null);
     /* Local mode leaves four or five clips on a shelf built for twelve. A
        half-empty scroller reads as "there is nothing here"; the same clips
        laid out flat read as a short list, which is the truth. */
     const { track, sync } = rail(root, { label: 'videos', open: localOnly });
+    track.appendChild(pastEditionCard(s));
     c.visible.forEach(({ v, swapped }) => track.appendChild(videoCard(v, { swapped })));
     sync();
     if (c.bench.length) {
@@ -327,52 +328,69 @@ function renderTonight(root) {
    five clips. A channel that posted yesterday is invisible by tomorrow. So
    the local shelf gets its own history button — not another toggle at the
    top of the page, where there are already three. */
-function pastLocalBtn() {
-  const b = el('button', 'shelf-more', 'Past picks');
-  b.addEventListener('click', () => {
-    app.sheet('Vermont video, the last two weeks', (body) => {
+function openShelfHistory(shelf) {
+  app.sheet(shelf.title + ' — past editions', (body) => {
       if (!state.past) {
         body.appendChild(el('p', 'loading', 'Opening the archive…'));
-        loadPast(() => { body.innerHTML = ''; fillLocalHistory(body); });
+        loadPast(() => { body.innerHTML = ''; fillShelfHistory(body, shelf); });
         return;
       }
-      fillLocalHistory(body);
-    });
+      fillShelfHistory(body, shelf);
   });
+}
+
+function pastShelfHeadBtn(shelf) {
+  const b = el('button', 'shelf-more', 'Past editions');
+  b.addEventListener('click', () => openShelfHistory(shelf));
   return b;
 }
 
-function fillLocalHistory(body) {
+function pastEditionCard(shelf) {
+  const b = el('button', 'v past-editions-card',
+    '<span class="past-editions-icon" aria-hidden="true">' + ICON.board + '</span>' +
+    '<span class="past-editions-title">Past editions</span>' +
+    '<span class="past-editions-sub">Earlier nights</span>');
+  b.addEventListener('click', () => openShelfHistory(shelf));
+  return b;
+}
+
+function fillShelfHistory(body, shelf) {
   const today = new Set();
-  (state.tv?.shelves || []).forEach((s) => {
-    if (s?.title === LOCAL_SHELF) (s.items || []).forEach((v) => v && today.add(v.id));
-  });
+  const tonightShelves = state.tv?.shelves || [];
+  const tonightMatch = tonightShelves.find((s) => shelf.key && s?.key === shelf.key) ||
+    tonightShelves.find((s) => s?.title === shelf.title);
+  (tonightMatch?.items || []).forEach((v) => v && today.add(v.id));
 
   const seen = new Set();
-  const rows = [];
-  (state.past || []).forEach((ed) => {
-    (Array.isArray(ed?.shelves) ? ed.shelves : []).forEach((s) => {
-      if (s?.title !== LOCAL_SHELF) return;
-      (s.items || []).forEach((v) => {
-        /* skip what is already on the shelf behind this sheet */
-        if (!v || !app.isVideoId(v.id) || today.has(v.id) || seen.has(v.id)) return;
-        seen.add(v.id);
-        rows.push(v);
-      });
+  const nights = [];
+  [...(state.past || [])].sort((a, b) =>
+    Date.parse(b?.generated || b?.edition || '') - Date.parse(a?.generated || a?.edition || '')
+  ).forEach((ed) => {
+    const shelves = Array.isArray(ed?.shelves) ? ed.shelves : [];
+    const match = shelves.find((s) => shelf.key && s?.key === shelf.key) ||
+      shelves.find((s) => s?.title === shelf.title);
+    if (!match) return;
+    const items = (match.items || []).filter((v) => {
+      if (!v || !app.isVideoId(v.id) || today.has(v.id) || seen.has(v.id)) return false;
+      seen.add(v.id);
+      return true;
     });
+    if (items.length) nights.push({ edition: ed, items });
   });
 
-  if (!rows.length) {
-    body.appendChild(el('p', 'empty', 'Everything local we have picked recently is already on the shelf.'));
+  if (!nights.length) {
+    body.appendChild(el('p', 'empty', 'Everything from recent editions is already on tonight’s shelf.'));
     return;
   }
-  body.appendChild(el('p', 'sheet-note',
-    esc(rows.length + ' more from Vermont channels, newest first — picked on earlier nights.')));
-  rows.sort((a, b) => (b.d || 0) - (a.d || 0));
-  const grid = el('div', 'vgrid');
-  rows.forEach((v) => grid.appendChild(videoCard(v)));
-  body.appendChild(grid);
-  hydrateVotes(body, rows.map((v) => 'yt:' + v.id));
+  const keys = [];
+  nights.forEach(({ edition, items }) => {
+    shelfHead(body, dayLabel(edition.generated || edition.edition),
+      items.length + (items.length === 1 ? ' video' : ' videos'));
+    const grid = el('div', 'vgrid');
+    items.forEach((v) => { grid.appendChild(videoCard(v)); keys.push('yt:' + v.id); });
+    body.appendChild(grid);
+  });
+  hydrateVotes(body, keys);
 }
 
 /* --------------------------------------------------------- past nights */
@@ -453,7 +471,14 @@ function renderWire(root) {
   root.appendChild(grid);
   if (state.shown < vids.length) {
     const more = el('button', 'more', 'More videos');
-    more.addEventListener('click', () => { state.shown += WIRE_PAGE; render(); });
+    more.addEventListener('click', () => {
+      const from = state.shown;
+      state.shown += WIRE_PAGE;
+      const added = vids.slice(from, state.shown);
+      added.forEach((v) => grid.appendChild(videoCard(v)));
+      hydrateVotes(grid, added.map((v) => 'yt:' + v.id));
+      if (state.shown >= vids.length) more.remove();
+    });
     root.appendChild(more);
   }
   hydrateVotes(root, slice.map((v) => 'yt:' + v.id));

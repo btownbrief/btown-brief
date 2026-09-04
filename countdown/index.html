@@ -3,31 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Burlington Gift Guide — Burlington Brief</title>
-  <meta name="description" content="A Burlington gift guide filled with specific things from local shops and makers, from small stocking stuffers to Vermont-made splurges.">
+  <title>Burlington, counting down — the city's big events, ticking — Burlington Brief</title>
+  <meta name="description" content="Every Burlington tentpole worth waiting for, in one stack of live countdowns — Art Hop, Grand Point North, the Marathon, Jazz Fest, the fair. Soonest first.">
 
+  <!-- Social unfurls -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Burlington Brief">
-  <meta property="og:title" content="The Burlington Gift Guide">
-  <meta property="og:description" content="Specific gifts from Burlington-area shops and makers, organized by who you're shopping for.">
-  <meta property="og:url" content="https://guide.btownbrief.com/gifts.html">
+  <meta property="og:site_name" content="Btown Brief">
+  <meta property="og:title" content="Burlington, counting down">
+  <meta property="og:description" content="Every Burlington tentpole worth waiting for, in one stack of live countdowns. Soonest first.">
+  <meta property="og:url" content="https://guide.btownbrief.com/countdown/">
   <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Burlington Gift Guide">
-  <meta name="twitter:description" content="Specific gifts from Burlington-area shops and makers, organized by who you're shopping for.">
+  <meta name="twitter:title" content="Burlington, counting down">
+  <meta name="twitter:description" content="Every Burlington tentpole worth waiting for, in one stack of live countdowns. Soonest first.">
   <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
 
-  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../assets/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="City Guide">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260904a">
+  <link rel="stylesheet" href="../css/style.css?v=20260711k">
+  <link rel="stylesheet" href="countdown.css?v=20260904a">
   <script>
     /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
        refreshes the cache; this only avoids the white flash after dark. */
@@ -65,9 +67,10 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 <script data-goatcounter="https://btown-brief.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </head>
-<body data-standalone>
+<body>
 
-  <header class="site-header">
+  <!-- SITE HEADER (same chrome as the other pages) -->
+  <header class="site-header" id="site-header">
     <div class="header-inner">
       <div class="logo">
         <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
@@ -83,46 +86,57 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
           </svg>
         </button>
         <span class="logo-sep"></span>
-        <span class="logo-title">Burlington Brief</span>
+        <span class="logo-title">The Countdown</span>
       </div>
-      <nav class="mode-nav" aria-label="Community pages">
-        <a class="mode-btn" href="things-to-do.html">Things To Do</a>
-        <a class="mode-btn" href="clubs.html">Clubs</a>
-        <a class="mode-btn" href="volunteer.html">Volunteer</a>
-        <a class="mode-btn" href="projects.html">Projects</a>
+
+      <nav class="mode-nav" aria-label="Site pages">
+        <a class="mode-btn" href="../events.html">Events</a>
+        <a class="mode-btn" href="../things-to-do.html">← Things To Do</a>
       </nav>
     </div>
   </header>
 
-  <a class="newsletter-bar" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture" target="_blank" rel="noopener">
-    <div class="newsletter-bar-inner">
-      <div class="newsletter-head">
-        <span class="newsletter-label">The Burlington Brief</span>
-        <span class="newsletter-issue">Free Burlington news &amp; events in your inbox</span>
-      </div>
-      <span class="newsletter-cta">Sign up free →</span>
-    </div>
-  </a>
+  <main class="cd-main">
 
-  <main class="page-wrap">
-    <div class="page-hero">
-      <span class="page-hero-kicker">The Gift Guide</span>
-      <h1>Give something actually from here</h1>
-      <p class="page-hero-sub">Every gift comes from a Burlington-area shop or maker.</p>
-    </div>
+    <section class="cd-hero">
+      <h1 class="cd-title">Burlington,<br>counting down</h1>
+      <p class="cd-sub">The days the whole city plans around — the fair, the hop, the marathon, the fireworks. One stack, soonest first, ticking.</p>
+      <p class="cd-meta" id="cd-meta">Loading the year…</p>
+    </section>
 
-    <nav class="chip-row" id="gift-jump" aria-label="Jump to a gift category">
-      <span class="page-empty">Loading categories…</span>
-    </nav>
+    <div class="cd-stack" id="cd-stack"></div>
 
-    <div id="gifts-list">
-      <p class="page-empty">Loading gifts…</p>
-    </div>
+    <!-- ADD YOUR EVENT -->
+    <section class="cd-add" aria-labelledby="cd-add-title">
+      <h2 id="cd-add-title">Add your event</h2>
+      <p class="cd-add-lede">This list is short on purpose. If yours belongs on it, make the case — the question at the bottom is the one that decides it.</p>
 
-    <div class="note-card">
-      <strong>Local maker with a giftable thing?</strong>
-      Email <a href="mailto:BtownBrief@gmail.com?subject=Local%20gift%20for%20the%20Burlington%20Gift%20Guide">BtownBrief@gmail.com</a> with the item, price, where to find it, and a link.
-    </div>
+      <form class="cd-form" id="cd-form" novalidate>
+        <label>Event name
+          <input type="text" name="name" maxlength="120" autocomplete="off" placeholder="What it's called">
+        </label>
+        <div class="cd-row">
+          <label>Date
+            <input type="date" name="date">
+          </label>
+          <label>Where
+            <input type="text" name="where" maxlength="120" autocomplete="off" placeholder="Venue or neighbourhood">
+          </label>
+        </div>
+        <label>Link <span style="font-weight:400;opacity:.7">(optional)</span>
+          <input type="url" name="link" maxlength="300" autocomplete="off" placeholder="https://">
+        </label>
+        <label>Why should this be on the list?
+          <textarea name="why" rows="4" maxlength="400" placeholder="What makes it one of the events the whole city counts down to?"></textarea>
+        </label>
+        <label>Your name or email <span style="font-weight:400;opacity:.7">(optional, if you want an answer)</span>
+          <input type="text" name="who" maxlength="120" autocomplete="off" placeholder="Optional">
+        </label>
+        <p class="cd-err" hidden></p>
+        <button class="cd-submit" type="submit">Put it in the jar</button>
+      </form>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -130,12 +144,13 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
       <span class="footer-sep">·</span>
       <span>Burlington, Vermont</span>
+      <span class="footer-sep">·</span>
+      <span class="footer-attribution">Dates checked by hand. Tell me when one is wrong.</span>
     </div>
   </footer>
 
-  <script src="js/community.js"></script>
-  <script src="js/gifts.js"></script>
-  <script src="js/auto-theme.js"></script>
+  <script src="countdown.js?v=20260904a"></script>
+  <script src="../js/auto-theme.js?v=20260711k"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
 </html>

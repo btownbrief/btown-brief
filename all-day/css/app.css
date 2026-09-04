@@ -600,6 +600,15 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
 /* ============================================================ video */
 .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 11px; }
 .rail .v { width: 168px; }
+.rail .past-editions-card { width: 118px; min-height: 178px; padding: 18px 12px;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+  text-align: left; border: 1px dashed var(--edge); background: var(--panel-2); }
+.past-editions-icon { width: 34px; height: 34px; display: grid; place-items: center;
+  margin-bottom: 16px; color: var(--accent); }
+.past-editions-icon svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.past-editions-title { font: 600 .88rem/1.2 var(--sans); }
+.past-editions-sub { margin-top: 5px; font: .6rem/1.2 var(--mono); color: var(--ink-soft);
+  letter-spacing: .06em; text-transform: uppercase; }
 /* A column, so the card's spare height goes to the TEXT and the buttons stay
    on the floor. Cards in a rail stretch to the tallest one; without this the
    slack opened up as a band of nothing between the reason and the buttons,
@@ -750,6 +759,14 @@ body.has-player .panel { padding-bottom: calc(var(--tabbar-h) + 92px + var(--saf
   font-family: var(--mono); font-size: .66rem; font-weight: 600; letter-spacing: .1em;
   text-transform: uppercase; color: var(--accent); border-top: 1px solid var(--edge-soft); }
 .show-more:hover { background: var(--panel-hover); }
+.ig-tagged-more { width: 100%; margin: 8px 0 2px; padding: 11px 14px;
+  border: 1px solid var(--edge); border-radius: var(--pill); color: var(--ink-soft);
+  background: var(--panel); font: 600 .72rem/1 var(--sans); }
+.ig-tagged-end { display: flex; align-items: center; gap: 10px; margin: 22px 0 18px;
+  color: var(--ink-soft); font: .6rem/1.35 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+.ig-tagged-end::before, .ig-tagged-end::after { content: ''; height: 1px; flex: 1;
+  background: var(--edge); }
+.ig-tagged-end span { max-width: 220px; text-align: center; }
 .show-head img { width: 46px; height: 46px; border-radius: 9px; object-fit: cover; }
 .noart { width: 46px; height: 46px; border-radius: 9px; background: var(--accent-soft);
   display: grid; place-items: center; font-size: 1.15rem; }

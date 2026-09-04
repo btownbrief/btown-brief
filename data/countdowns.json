@@ -1,0 +1,413 @@
+{
+  "_note": "The Countdown page (guide.btownbrief.com/countdown/) renders from this file, in this order — actually it re-sorts by `start`, soonest first, so you can add an entry anywhere. HAND-EDITED. Nothing writes to this file automatically, on purpose: a wrong date here is the one unforgivable error on this site. To add an event: copy a block, give it a unique `id`, and fill in `start` (YYYY-MM-DD, local Burlington date), optional `end` for a multi-day run, optional `time` (24h \"HH:MM\", only if the start time is firm) with a `timeLabel` for how it should read. `status` must be either \"confirmed\" — you personally opened a page that states the date, and it is listed in `sources` — or \"expected\", which means the organiser has not announced it yet: those entries show `window` (\"usually the second weekend of September\") instead of a ticking clock, and carry a \"date not announced yet\" tag. Never put a guessed date on a \"confirmed\" entry; if you are not sure, it is \"expected\". `start` on an expected entry is used ONLY to place it in the stack and is never shown. `color` is a hue key from countdown.js (lake, maple, coral, foliage, sap, evergreen, twilight, slate, plum, moss); the page reassigns it if two neighbours would clash, so it is a preference, not a promise. `why` is one line, second person, concrete, no hype. An entry drops off the page by itself the day after its `end` (or `start`). Set \"hidden\": true to pull one without deleting it. When an \"expected\" entry gets announced, fill in the real dates, flip it to \"confirmed\", and add the source URL.",
+  "updated": "2026-09-04",
+  "events": [
+    {
+      "id": "champlain-valley-fair-2026",
+      "name": "Champlain Valley Fair",
+      "why": "Ten days of the midway, the grandstand and the demolition derby — the last thing standing between you and September.",
+      "start": "2026-08-28",
+      "end": "2026-09-06",
+      "venue": "Champlain Valley Exposition, Essex Junction",
+      "link": "https://champlainvalleyfair.org/",
+      "status": "confirmed",
+      "color": "sap",
+      "sources": [
+        "https://champlainvalleyfair.org/"
+      ]
+    },
+    {
+      "id": "south-end-art-hop-2026",
+      "name": "South End Art Hop",
+      "why": "Three days when every warehouse, garage and loading dock in the South End opens its doors and hangs art on the wall.",
+      "start": "2026-09-11",
+      "end": "2026-09-13",
+      "timeLabel": "Fri 5–10, Sat 10–10, Sun 11–4",
+      "venue": "South End Arts District, Burlington",
+      "link": "https://www.seaba.com/arthop",
+      "status": "confirmed",
+      "color": "coral",
+      "sources": [
+        "https://www.seaba.com/arthop"
+      ]
+    },
+    {
+      "id": "pride-vermont-2026",
+      "name": "Pride Vermont Parade & Festival",
+      "why": "The parade comes down Main Street at noon and the whole thing ends up in Battery Park.",
+      "start": "2026-09-13",
+      "time": "12:00",
+      "timeLabel": "parade at noon",
+      "venue": "Downtown Burlington to Battery Park",
+      "link": "https://pridevt.org/",
+      "status": "confirmed",
+      "color": "twilight",
+      "sources": [
+        "https://pridevt.org/"
+      ]
+    },
+    {
+      "id": "big-pond-improv-2026",
+      "name": "Big Pond Improv Festival",
+      "why": "Three nights of improv teams from all over at the Comedy Club — the one weekend the room runs on nothing but nerve.",
+      "start": "2026-09-10",
+      "end": "2026-09-12",
+      "venue": "Vermont Comedy Club, Burlington",
+      "link": "https://www.bigpondimprov.com/about-the-fest",
+      "status": "confirmed",
+      "color": "plum",
+      "sources": [
+        "https://www.bigpondimprov.com/about-the-fest"
+      ]
+    },
+    {
+      "id": "grand-point-north-2026",
+      "name": "Grand Point North",
+      "why": "Grace Potter's festival on Waterfront Park — three days of music with the lake right behind the stage.",
+      "start": "2026-09-18",
+      "end": "2026-09-20",
+      "venue": "Waterfront Park, Burlington",
+      "link": "https://www.grandpointnorth.com/",
+      "status": "confirmed",
+      "color": "lake",
+      "sources": [
+        "https://www.grandpointnorth.com/"
+      ]
+    },
+    {
+      "id": "green-mountain-book-fest-2026",
+      "name": "Green Mountain Book Festival",
+      "why": "A day of Vermont writers at Phoenix Books and the Fletcher Free, ending with the keynote in the library.",
+      "start": "2026-09-19",
+      "venue": "Phoenix Books & Fletcher Free Library, Burlington",
+      "link": "https://www.greenmountainbookfestival.org/",
+      "status": "confirmed",
+      "color": "evergreen",
+      "sources": [
+        "https://www.greenmountainbookfestival.org/"
+      ]
+    },
+    {
+      "id": "vt-cheesemakers-2026",
+      "name": "Vermont Cheesemakers Festival",
+      "why": "Forty-odd Vermont cheesemakers in the Breeding Barn at Shelburne Farms. Come hungry, leave heavier.",
+      "start": "2026-09-20",
+      "timeLabel": "11:30–4",
+      "venue": "Shelburne Farms",
+      "link": "https://vtcheese.com/festival/",
+      "status": "confirmed",
+      "color": "maple",
+      "sources": [
+        "https://vtcheese.com/festival/"
+      ]
+    },
+    {
+      "id": "uvm-hockey-opener-2026",
+      "name": "UVM Hockey Home Opener",
+      "why": "Gutterson fills up, the band starts, and winter in Burlington is officially open for business.",
+      "start": "2026-10-03",
+      "time": "19:30",
+      "timeLabel": "7:30pm vs Brock",
+      "venue": "Gutterson Fieldhouse, Burlington",
+      "link": "https://uvmathletics.com/sports/mens-ice-hockey/schedule",
+      "status": "confirmed",
+      "color": "lake",
+      "sources": [
+        "https://uvmathletics.com/sports/mens-ice-hockey/schedule"
+      ]
+    },
+    {
+      "id": "vtiff-2026",
+      "name": "Vermont International Film Festival",
+      "why": "A week of films you will not get another chance to see, most of them at Main Street Landing.",
+      "start": "2026-10-16",
+      "venue": "Main Street Landing, Burlington",
+      "link": "https://vtiff.org/",
+      "status": "confirmed",
+      "color": "slate",
+      "sources": [
+        "https://vtiff.org/festivals/vtiff2025/"
+      ],
+      "end": "2026-10-25"
+    },
+    {
+      "id": "vt-tech-jam-2026",
+      "name": "Vermont Tech Jam",
+      "why": "The state's tech job fair, free and open — go if you are hiring, looking, or just nosy about who is building what.",
+      "start": "2026-10-24",
+      "venue": "Hula, Burlington waterfront",
+      "link": "https://techjamvt.com/",
+      "status": "confirmed",
+      "color": "plum",
+      "sources": [
+        "https://techjamvt.com/"
+      ]
+    },
+    {
+      "id": "howlween-2026",
+      "name": "Howl'ween Dog Costume Contest",
+      "why": "Church Street hands the marketplace over to dogs in costume. It is exactly as good as it sounds.",
+      "start": "2026-10-31",
+      "venue": "Church Street Marketplace",
+      "link": "https://churchstmarketplace.com/annual-events",
+      "status": "confirmed",
+      "color": "foliage",
+      "sources": [
+        "https://churchstmarketplace.com/annual-events"
+      ]
+    },
+    {
+      "id": "elf-the-musical-2026",
+      "name": "Elf the Musical",
+      "why": "The Flynn's big holiday run. Tickets go early because every family in the county has the same idea.",
+      "start": "2026-11-12",
+      "end": "2026-11-15",
+      "venue": "The Flynn, Burlington",
+      "link": "https://www.flynnvt.org/events",
+      "status": "confirmed",
+      "color": "evergreen",
+      "sources": [
+        "https://www.flynnvt.org/events"
+      ]
+    },
+    {
+      "id": "tree-lighting-2026",
+      "name": "Tree Lighting & Santa Parade",
+      "why": "Carollers at five, then 100,000 lights go on at once and downtown is officially in December.",
+      "start": "2026-11-27",
+      "time": "17:00",
+      "timeLabel": "5pm show, 6pm lighting",
+      "venue": "Church Street Marketplace",
+      "link": "https://churchstmarketplace.com/annual-events",
+      "status": "confirmed",
+      "color": "maple",
+      "sources": [
+        "https://churchstmarketplace.com/annual-events"
+      ]
+    },
+    {
+      "id": "holiday-pops-2026",
+      "name": "Holiday Pops",
+      "why": "The Vermont Symphony's holiday night at the Flynn — the one your grandmother asks about in October.",
+      "start": "2026-12-06",
+      "venue": "The Flynn, Burlington",
+      "link": "https://www.flynnvt.org/events",
+      "status": "confirmed",
+      "color": "twilight",
+      "sources": [
+        "https://www.flynnvt.org/events"
+      ]
+    },
+    {
+      "id": "downtown-lights-2026",
+      "name": "Downtown Lights",
+      "why": "Burlington City Arts strings the winter installation through downtown and City Hall Park, and it stays up until the thaw.",
+      "start": "2026-12-12",
+      "window": "Usually mid-December through late February",
+      "venue": "Downtown Burlington & City Hall Park",
+      "link": "https://www.burlingtoncityarts.org/event/downtown-lights",
+      "status": "expected",
+      "color": "lake",
+      "sources": [
+        "https://www.burlingtoncityarts.org/event/downtown-lights"
+      ]
+    },
+    {
+      "id": "highlight-nye-2026",
+      "name": "Highlight — New Year's Eve",
+      "why": "Burlington's own New Year's: art and shows all day downtown, fireworks over the lake at eight.",
+      "start": "2026-12-31",
+      "window": "December 31, as it has been every year since 2018",
+      "venue": "Downtown Burlington & the waterfront",
+      "link": "https://highlight.community/",
+      "status": "expected",
+      "color": "coral",
+      "sources": [
+        "https://highlight.community/",
+        "https://www.burlingtoncityarts.org/event/highlight-new-years-eve-2"
+      ]
+    },
+    {
+      "id": "penguin-plunge-2027",
+      "name": "Penguin Plunge",
+      "why": "You run into Lake Champlain in February for Special Olympics Vermont, and then you never stop telling people.",
+      "start": "2027-02-06",
+      "window": "Usually the first Saturday in February",
+      "venue": "Burlington Waterfront",
+      "link": "https://www.penguinplunge.org/",
+      "status": "expected",
+      "color": "slate",
+      "sources": [
+        "https://www.penguinplunge.org/"
+      ]
+    },
+    {
+      "id": "winter-drag-ball-2027",
+      "name": "Winter is a Drag Ball",
+      "why": "The biggest drag night of the Vermont year, and the reason February is survivable.",
+      "start": "2027-02-20",
+      "window": "Usually mid-to-late February at Higher Ground",
+      "venue": "Higher Ground, South Burlington",
+      "link": "https://highergroundmusic.com/calendar/",
+      "status": "expected",
+      "color": "plum",
+      "sources": [
+        "https://highergroundmusic.com/calendar/"
+      ]
+    },
+    {
+      "id": "town-meeting-day-2027",
+      "name": "Town Meeting Day",
+      "why": "Vermont votes. School budgets, the city ballot, and whatever your town has been arguing about since November.",
+      "start": "2027-03-02",
+      "venue": "Your polling place",
+      "link": "https://sos.vermont.gov/elections/",
+      "status": "confirmed",
+      "color": "evergreen",
+      "sources": [
+        "https://sos.vermont.gov/elections/"
+      ]
+    },
+    {
+      "id": "maple-open-house-2027",
+      "name": "Vermont Maple Open House Weekend",
+      "why": "Eighty-plus sugarhouses open the doors mid-boil. Free samples, steam in your face, sap on your boots.",
+      "start": "2027-03-20",
+      "end": "2027-03-21",
+      "venue": "Sugarhouses statewide",
+      "link": "https://vermontmaple.org/visit/maple-open-house-weekend",
+      "status": "confirmed",
+      "color": "sap",
+      "sources": [
+        "https://vermontmaple.org/visit/maple-open-house-weekend"
+      ]
+    },
+    {
+      "id": "green-up-day-2027",
+      "name": "Green Up Day",
+      "why": "The whole state picks up the roadsides on the same Saturday. Bags are free at the town office.",
+      "start": "2027-05-01",
+      "window": "The first Saturday in May, every year",
+      "venue": "Statewide",
+      "link": "https://greenupvermont.org/",
+      "status": "expected",
+      "color": "moss",
+      "sources": [
+        "https://greenupvermont.org/"
+      ]
+    },
+    {
+      "id": "lake-monsters-opener-2027",
+      "name": "Lake Monsters Home Opener",
+      "why": "Centennial Field, cheap seats, a hill behind right field. Summer does not start until this one.",
+      "start": "2027-05-29",
+      "window": "Usually late May",
+      "venue": "Centennial Field, Burlington",
+      "link": "https://www.vermontlakemonsters.com/",
+      "status": "expected",
+      "color": "lake",
+      "sources": [
+        "https://www.vermontlakemonsters.com/"
+      ]
+    },
+    {
+      "id": "vermont-city-marathon-2027",
+      "name": "Vermont City Marathon",
+      "why": "Twenty-six miles through the whole city on Memorial Day weekend, and half of Burlington out on the curb yelling.",
+      "start": "2027-05-30",
+      "time": "07:15",
+      "timeLabel": "7:15am start",
+      "venue": "Waterfront Park, Burlington",
+      "link": "https://www.runvermont.org/vermont-city-marathon-relay/",
+      "status": "confirmed",
+      "color": "coral",
+      "sources": [
+        "https://www.runvermont.org/vermont-city-marathon-relay/register/"
+      ]
+    },
+    {
+      "id": "discover-jazz-2027",
+      "name": "Burlington Discover Jazz Festival",
+      "why": "A week when the music spills out of the Flynn and onto Church Street, the waterfront and half the bars downtown.",
+      "start": "2027-06-03",
+      "window": "Usually the first week of June",
+      "venue": "Downtown Burlington",
+      "link": "https://www.flynnvt.org/bdjf",
+      "status": "expected",
+      "color": "twilight",
+      "sources": [
+        "https://www.flynnvt.org/bdjf"
+      ]
+    },
+    {
+      "id": "btv-july-3-2027",
+      "name": "Fireworks Over the Lake",
+      "why": "Burlington does its fireworks on the third, off the waterfront, and everyone claims a patch of grass by six.",
+      "start": "2027-07-03",
+      "window": "The evening of July 3, on the waterfront",
+      "venue": "Waterfront Park, Burlington",
+      "link": "https://www.btvjuly3.com/",
+      "status": "expected",
+      "color": "maple",
+      "sources": [
+        "https://www.btvjuly3.com/"
+      ]
+    },
+    {
+      "id": "vt-brewers-fest-2027",
+      "name": "Vermont Brewers Festival",
+      "why": "Dozens of Vermont breweries on Waterfront Park with a tasting glass and the lake in front of you.",
+      "start": "2027-07-16",
+      "window": "Usually mid-July at Waterfront Park",
+      "venue": "Waterfront Park, Burlington",
+      "link": "https://www.vermontbrewers.com/festivals/vermont-brewers-festival-burlington/",
+      "status": "expected",
+      "color": "sap",
+      "sources": [
+        "https://www.vermontbrewers.com/festivals/vermont-brewers-festival-burlington/"
+      ]
+    },
+    {
+      "id": "festival-of-fools-2027",
+      "name": "Festival of Fools",
+      "why": "Street performers from all over the world take Church Street for a weekend, and none of it costs anything.",
+      "start": "2027-07-30",
+      "window": "Usually the end of July into early August",
+      "venue": "Church Street Marketplace",
+      "link": "https://vermontfestivaloffools.com/",
+      "status": "expected",
+      "color": "foliage",
+      "sources": [
+        "https://vermontfestivaloffools.com/"
+      ]
+    },
+    {
+      "id": "dragon-boat-2027",
+      "name": "Lake Champlain Dragon Boat Festival",
+      "why": "Forty-plus crews paddling off the waterfront for Dragonheart. Bring a chair; it runs all day.",
+      "start": "2027-08-08",
+      "window": "Usually early August",
+      "venue": "Burlington Waterfront",
+      "link": "https://dragonheartvermont.org/",
+      "status": "expected",
+      "color": "moss",
+      "sources": [
+        "https://dragonheartvermont.org/"
+      ]
+    },
+    {
+      "id": "champlain-valley-fair-2027",
+      "name": "Champlain Valley Fair 2027",
+      "why": "The one that closes out every Vermont summer. Ten days, Essex Junction, and the smell of the midway.",
+      "start": "2027-08-27",
+      "window": "Usually the last week of August into the first week of September",
+      "venue": "Champlain Valley Exposition, Essex Junction",
+      "link": "https://champlainvalleyfair.org/",
+      "status": "expected",
+      "color": "slate",
+      "sources": [
+        "https://champlainvalleyfair.org/"
+      ]
+    }
+  ]
+}

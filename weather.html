@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260904a">
+  <link rel="stylesheet" href="css/style.css?v=20260904b">
   <link rel="stylesheet" href="css/weather.css?v=20260904a">
   <script>
     /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
@@ -121,6 +121,8 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
           <h2 class="hours-title">The next hours</h2>
         </div>
         <p class="hours-story" id="hours-story"></p>
+        <p class="hours-stamps" id="hours-stamps"></p>
+        <p class="hours-second" id="hours-second" hidden></p>
         <div class="hr-scroll" id="hr-scroll" tabindex="0" aria-label="Hour-by-hour forecast, scroll sideways">
           <div class="hr-track" id="hr-track"></div>
         </div>
@@ -218,13 +220,13 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <span class="footer-sep">·</span>
       <span>Burlington, Vermont</span>
       <span class="footer-sep">·</span>
-      <span class="footer-attribution">Data: <a href="https://www.weather.gov/btv/" target="_blank" rel="noopener">NWS Burlington</a>, <a href="https://waterdata.usgs.gov/monitoring-location/04294500/" target="_blank" rel="noopener">USGS</a>, <a href="https://www.airnow.gov/" target="_blank" rel="noopener">AirNow</a>, <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0), City of Burlington</span>
+      <span class="footer-attribution">Data: <a href="https://www.weather.gov/btv/" target="_blank" rel="noopener">NWS Burlington</a>, Google (weather), <a href="https://waterdata.usgs.gov/monitoring-location/04294500/" target="_blank" rel="noopener">USGS</a>, <a href="https://www.airnow.gov/" target="_blank" rel="noopener">AirNow</a>, <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0), City of Burlington</span>
     </div>
   </footer>
 
   <script src="js/theme.js?v=20260711k"></script>
   <script src="js/sunset-score.js?v=20260827a"></script>
-  <script src="js/life.js?v=20260827b"></script>
+  <script src="js/life.js?v=20260904a"></script>
   <script src="js/sun.js?v=20260904b"></script>
   <script src="js/auto-theme.js?v=20260711k"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>

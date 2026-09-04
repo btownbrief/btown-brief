@@ -528,12 +528,9 @@
     }
 
     if (now.observed_at) {
-      // honest freshness: the top-level `updated` advances even when a
-      // section failed and kept last-good data — report the forecast
-      // section's own timestamp
-      var su = d.sections_updated || {};
-      var freshT = su.hourly || su.now || d.updated;
-      el('rn-updated').textContent = 'Updated ' + fmtAgo(freshT);
+      var observedAge = Date.now() - new Date(now.observed_at).getTime();
+      el('rn-updated').textContent = 'Observed ' + fmtClock(now.observed_at) + ' at the airport' +
+        (observedAge > 2 * HOUR ? ' · ' + fmtAgo(now.observed_at) : '');
     }
   }
 
@@ -596,6 +593,80 @@
       return prefixClock + ' ' + clock;
     }
     return (prefixDay ? prefixDay + ' ' : '') + dayPart(iso);
+  }
+
+  function renderHoursContext(d, hours) {
+    var stamps = el('hours-stamps');
+    if (stamps) {
+      var issued = (d.hourly || {}).updated;
+      // NWS re-issues the grid a few times a day, so "issued 2:10 AM" at
+      // 3 PM is honest; past 20 h the clock alone would mislead, so add the day.
+      var issuedOld = issued && Date.now() - new Date(issued).getTime() > 20 * HOUR;
+      stamps.textContent = issued ? 'NWS forecast issued ' + fmtClock(issued) +
+        (issuedOld ? ' ' + btvWeekday(issued, 'short') : '') : '';
+      if (d.google && d.google.fetched_at) {
+        stamps.textContent += (stamps.textContent ? ' · ' : '') + 'Google checked ' + fmtAgo(d.google.fetched_at);
+      }
+    }
+
+    var second = el('hours-second');
+    if (!second) return;
+    second.hidden = true;
+    second.innerHTML = '';
+    var google = d.google || {};
+    if (!Array.isArray(google.hours) || !google.hours.length || !google.fetched_at ||
+        Date.now() - new Date(google.fetched_at).getTime() >= 3 * HOUR) return;
+
+    var limit = Date.now() + 18 * HOUR;
+    var byHour = {};
+    google.hours.forEach(function (h) {
+      var t = Math.floor(new Date(h.t).getTime() / HOUR) * HOUR;
+      if (isFinite(t) && t <= limit) byHour[t] = h;
+    });
+    var pairs = [];
+    hours.forEach(function (h) {
+      var t = Math.floor(new Date(h.t).getTime() / HOUR) * HOUR;
+      if (t <= limit && byHour[t]) pairs.push({ t: t, nws: h, google: byHour[t] });
+    });
+    if (!pairs.length) return;
+
+    var sentence = '';
+    var nwsRain = pairs.filter(function (p) { return p.nws.pop >= 40; })[0];
+    var googleRain = pairs.filter(function (p) { return p.google.pop >= 40; })[0];
+    if (nwsRain && googleRain && Math.abs(nwsRain.t - googleRain.t) >= 2 * HOUR) {
+      if (nwsRain.t < googleRain.t) {
+        sentence = 'Rain timing is uncertain: NWS brings it in ' + whenPhrase(nwsRain.nws.t, 'near', '') +
+          ', Google holds it until ' + whenPhrase(googleRain.google.t, 'around', '') + '.';
+      } else {
+        sentence = 'Rain timing is uncertain: Google has it arriving earlier, ' +
+          whenPhrase(googleRain.google.t, 'near', '') + '.';
+      }
+    }
+    if (!sentence) {
+      var rainGap = pairs.reduce(function (best, p) {
+        var gap = Math.abs((p.nws.pop || 0) - (p.google.pop || 0));
+        return !best || gap > best.gap ? { pair: p, gap: gap } : best;
+      }, null);
+      if (rainGap && rainGap.gap >= 25) {
+        sentence = 'NWS gives the ' + fmtHour(rainGap.pair.nws.t) + ' hour a ' + rainGap.pair.nws.pop +
+          '% rain chance; Google says ' + rainGap.pair.google.pop + '%.';
+      }
+    }
+    if (!sentence) {
+      var tempGap = pairs.reduce(function (best, p) {
+        if (p.nws.temp_f == null || p.google.temp_f == null) return best;
+        var gap = p.google.temp_f - p.nws.temp_f;
+        return !best || Math.abs(gap) > Math.abs(best.gap) ? { pair: p, gap: gap } : best;
+      }, null);
+      if (tempGap && Math.abs(tempGap.gap) >= 3) {
+        sentence = "Google's forecast runs " + Math.abs(Math.round(tempGap.gap)) + '° ' +
+          (tempGap.gap > 0 ? 'warmer' : 'cooler') + ' than NWS ' + whenPhrase(tempGap.pair.google.t, 'around', '') + '.';
+      }
+    }
+    if (!sentence) return;
+    second.innerHTML = esc(sentence) +
+      '<span class="hours-second-source">Source: Includes weather data from Google</span>';
+    second.hidden = false;
   }
 
   function hoursStory(d, hours) {
@@ -789,6 +860,7 @@
 
     var story = el('hours-story');
     if (story) story.textContent = hoursStory(d, hours);
+    renderHoursContext(d, hours);
 
     sec.hidden = false;
     // Draw the temperature line + rain bars once the cells have layout.
@@ -1222,6 +1294,68 @@
     });
   }
 
+  function getNWS(url) {
+    var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = setTimeout(function () { if (controller) controller.abort(); }, 6000);
+    return fetch(url, {
+      cache: 'no-cache',
+      headers: { Accept: 'application/geo+json' },
+      signal: controller ? controller.signal : undefined
+    }).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function (json) { clearTimeout(timer); return json; }, function (e) { clearTimeout(timer); throw e; });
+  }
+
+  function cToF(v) { return v == null ? null : Math.round(v * 9 / 5 + 32); }
+  function kmToMph(v) { return v == null ? null : Math.round(v * 0.621371); }
+  function valueOf(p, key) { return p[key] && p[key].value != null ? p[key].value : null; }
+  // Same 16-point rose as refresh_weather.py, so a live patch never flips
+  // the hero from "SSW" to "SW".
+  function degreesToCompass(deg) {
+    if (deg == null) return null;
+    var dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
+                'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+    return dirs[Math.floor(deg / 22.5 + 0.5) % 16];
+  }
+
+  function patchLiveNWS(d, observationP, alertsP) {
+    observationP.then(function (json) {
+      var p = json && json.properties;
+      if (!p || !p.timestamp || new Date(p.timestamp).getTime() <= new Date((d.now || {}).observed_at).getTime()) return;
+      var temp = cToF(valueOf(p, 'temperature'));
+      var heat = cToF(valueOf(p, 'heatIndex'));
+      var chill = cToF(valueOf(p, 'windChill'));
+      d.now = {
+        observed_at: p.timestamp,
+        temp_f: temp,
+        feels_like_f: heat != null ? heat : chill != null ? chill : temp,
+        humidity: valueOf(p, 'relativeHumidity') == null ? null : Math.round(valueOf(p, 'relativeHumidity')),
+        dewpoint_f: cToF(valueOf(p, 'dewpoint')),
+        wind_mph: kmToMph(valueOf(p, 'windSpeed')),
+        wind_gust_mph: kmToMph(valueOf(p, 'windGust')),
+        wind_dir: degreesToCompass(valueOf(p, 'windDirection')),
+        description: p.textDescription || '',
+        sky: null
+      };
+      d.__ctx = buildCtx(d);
+      renderNow(d);
+    }).catch(function () {});
+
+    alertsP.then(function (json) {
+      var features = json && json.features;
+      if (!Array.isArray(features)) return;
+      d.alerts = d.alerts || {};
+      d.alerts.active = features.map(function (f) {
+        var p = (f || {}).properties || {};
+        return { event: p.event, headline: p.headline, severity: p.severity, expires: p.expires };
+      });
+      d.sections_updated = d.sections_updated || {};
+      d.sections_updated.alerts = new Date().toISOString();
+      renderAlerts(d);
+    }).catch(function () {});
+  }
+
   // The slow-moving context every renderer shares.
   function buildCtx(d) {
     var now = d.now || {};
@@ -1250,6 +1384,12 @@
       .catch(function () { return null; });
     var sunsetAqP = getJSON(window.BtownSunsetScore.AIR_URL)
       .catch(function () { return null; });
+    // Start the live checks alongside the committed data request. Their
+    // results are applied only after the file has painted successfully.
+    var nwsObservationP = getNWS('https://api.weather.gov/stations/KBTV/observations/latest')
+      .catch(function () { return null; });
+    var nwsAlertsP = getNWS('https://api.weather.gov/alerts/active?point=44.4759,-73.2121')
+      .catch(function () { return null; });
 
     getJSON(DATA_URL).then(function (d) {
       d.__ctx = buildCtx(d);
@@ -1258,6 +1398,7 @@
       renderAlerts(d);
       renderNow(d);
       renderHours(d);
+      patchLiveNWS(d, nwsObservationP, nwsAlertsP);
       readP.then(function (read) { renderWeek(d, read); });
       Promise.all([sunsetP, sunsetAqP]).then(function (r) { renderScores(d, r[0], r[1]); });
       getJSON(BEACH_URL).then(function (b) { renderBeaches(d, b); })

@@ -50,6 +50,7 @@ const state = {
      the other half has never heard of. */
   who: { do: null, see: null },
   openAccounts: false,
+  olderTaggedOpen: false,
 };
 
 export function mount(root) {
@@ -247,15 +248,41 @@ function tagUs(host, tagged) {
     'Tagged posts land here within a day' +
     (tagged.length ? '' : ' — yours could be the first') + '.</span></span>';
   host.appendChild(card);
-  if (!tagged.length) return;
+  const cutoff = Date.now() / 1000 - 14 * 86400;
+  const recent = tagged.filter((p) => Number(p.ts) >= cutoff);
+  const older = tagged.filter((p) => Number(p.ts) < cutoff);
   const sec = el('div', 'ig-tagged');
   shelfHead(sec, 'Tagged @btownbrief',
-    tagged.length + ' post' + (tagged.length === 1 ? '' : 's') + ' · newest first',
-    fsButton(tagged));
-  const wall = el('div', 'igw-wall');
-  tagged.forEach((p, i) => wall.appendChild(seeCell(p, i)));
-  sec.appendChild(wall);
+    recent.length ? recent.length + ' from the last 14 days · newest first' : 'No posts in the last 14 days',
+    fsButton(state.olderTaggedOpen ? tagged : recent));
+  if (recent.length) {
+    const wall = el('div', 'igw-wall');
+    recent.forEach((p, i) => wall.appendChild(seeCell(p, i)));
+    sec.appendChild(wall);
+  }
+  if (older.length) {
+    const more = el('button', 'ig-tagged-more', state.olderTaggedOpen
+      ? 'Hide older tagged posts'
+      : 'Show ' + older.length + ' older tagged post' + (older.length === 1 ? '' : 's'));
+    more.setAttribute('aria-expanded', state.olderTaggedOpen ? 'true' : 'false');
+    const oldWall = el('div', 'igw-wall ig-tagged-old');
+    oldWall.hidden = !state.olderTaggedOpen;
+    older.forEach((p, i) => oldWall.appendChild(seeCell(p, recent.length + i)));
+    more.addEventListener('click', () => {
+      state.olderTaggedOpen = !state.olderTaggedOpen;
+      oldWall.hidden = !state.olderTaggedOpen;
+      more.setAttribute('aria-expanded', state.olderTaggedOpen ? 'true' : 'false');
+      more.textContent = state.olderTaggedOpen
+        ? 'Hide older tagged posts'
+        : 'Show ' + older.length + ' older tagged post' + (older.length === 1 ? '' : 's');
+      const oldFs = sec.querySelector('.fs-btn');
+      if (oldFs) oldFs.replaceWith(fsButton(state.olderTaggedOpen ? tagged : recent));
+    });
+    sec.append(more, oldWall);
+  }
   host.appendChild(sec);
+  host.appendChild(el('div', 'ig-tagged-end',
+    '<span>Tagged @btownbrief ends here · below: the people who shoot Burlington</span>'));
 }
 
 /* --------------------------------------------------------------- chrome */

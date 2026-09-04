@@ -469,7 +469,8 @@
     "start": "2026-09-02T17:45:00+00:00",
     "hasAgenda": true,
     "files": [
-     "Draft agenda for Board of Health September 2, 2026"
+     "Draft agenda for Board of Health September 2, 2026",
+     "September 2026 Draft Meeting Minutes"
     ]
    },
    "10178": {
@@ -506,9 +507,7 @@
     "name": "BCA Board of Directors Executive Committee Meeting",
     "start": "2026-09-08T12:00:00+00:00",
     "hasAgenda": true,
-    "files": [
-     "Burlington City Arts Board of Directors Executive Committee Meeting Agenda Packet 9/14/26"
-    ]
+    "files": []
    },
    "10160": {
     "name": "Design Advisory Board Meeting",
@@ -527,6 +526,15 @@
      "Public Safety Committee Agenda Packet - 26.09.02"
     ]
    },
+   "10192": {
+    "name": "Parks & Recreation Commission Meeting",
+    "start": "2026-09-08T17:30:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "20260908 Parks Commission Agenda",
+     "20260908 Parks Commission Agenda Packet"
+    ]
+   },
    "10023": {
     "name": "Burlington Electric Commission",
     "start": "2026-09-09T17:30:00+00:00",
@@ -538,8 +546,8 @@
     "start": "2026-09-09T17:30:00+00:00",
     "hasAgenda": true,
     "files": [
-     "Public Safety Committee Agenda - 26.09.03",
-     "Public Safety Committee Agenda Packet - 26.09.03"
+     "Public Safety Committee Agenda - 26.09.04v2",
+     "Public Safety Committee Agenda Packet - 26.09.04v2"
     ]
    },
    "10135": {
@@ -549,14 +557,6 @@
     "files": [
      "Ward 1 NPA Agenda 9/9/2026"
     ]
-   },
-   "10151": {
-    "name": "planBTV New North End Community Meeting",
-    "start": "2026-09-10T18:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Meeting Information"
-    ]
    }
   }
  },
@@ -564,6 +564,13 @@
   "feeds": {
    "sevendays-news": {
     "items": [
+     {
+      "id": "https://www.sevendaysvt.com/?p=216550",
+      "title": "Nonprofit Pulls South Burlington Shelter Proposal",
+      "link": "https://www.sevendaysvt.com/news/housingcrisis/nonprofit-pulls-south-burlington-shelter-proposal/",
+      "ts": "2026-09-04T16:31:15+00:00",
+      "summary": "City officials argued that the proposal would bring disorder to the area while making it harder for guests to receive services. The post Nonprofit Pulls South Burlington Shelter Proposal appeared first on Seven Days . (Image: Colin Flanders © Seven Days)"
+     },
      {
       "id": "https://www.sevendaysvt.com/news/news-quiz-what-did-the-owner-landlord-of-dozens-of-neon-colored-houses-in-burlingtons-old-north-end-announce-he-would-do-36539606/",
       "title": "News Quiz: How many Vermonters could lose Medicaid when new requirements take effect on January 1?",
@@ -626,13 +633,6 @@
       "link": "https://www.sevendaysvt.com/news/letters/letters-to-the-editor-9-2-26/",
       "ts": "2026-09-02T13:52:00+00:00",
       "summary": "Readers react to recent articles The post Letters to the Editor (9/2/26) appeared first on Seven Days ."
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=216337",
-      "title": "From the Publisher: Vacation Mode",
-      "link": "https://www.sevendaysvt.com/news/fromthepublisher/from-the-publisher-vacation-mode/",
-      "ts": "2026-09-02T13:52:00+00:00",
-      "summary": "Detaching from Seven Days is hard but invigorating for publisher Paula Routly, who recently traveled abroad — then came home to discover comparable marvels. The post From the Publisher: Vacation Mode appeared first on Seven Days . (Image: Paula Routly)"
      }
     ]
    },
@@ -853,6 +853,13 @@
    "vermont-public": {
     "items": [
      {
+      "id": "https://www.vermontpublic.org/local-news/2026-09-04/plans-100-bed-shelter-chittenden-county-pushback",
+      "title": "Plans for 100-bed shelter in Chittenden County run into pushback",
+      "link": "https://www.vermontpublic.org/local-news/2026-09-04/plans-100-bed-shelter-chittenden-county-pushback",
+      "ts": "2026-09-04T18:23:55+00:00",
+      "summary": "Two nonprofits had hoped to locate the new low-barrier shelter at a former mattress store in South Burlington, until city officials registered their opposition."
+     },
+     {
       "id": "https://www.vermontpublic.org/local-news/2026-09-04/indie-rocker-lily-seabird-opens-up-portals-to-the-past",
       "title": "Indie rocker Lily Seabird opens up \"Portals to the Past\"",
       "link": "https://www.vermontpublic.org/local-news/2026-09-04/indie-rocker-lily-seabird-opens-up-portals-to-the-past",
@@ -928,18 +935,32 @@
       "link": "https://www.vermontpublic.org/local-news/2026-09-01/vermont-motel-voucher-program-changes-include-end-of-211-access",
       "ts": "2026-09-01T21:45:41+00:00",
       "summary": "Motel vouchers will no longer be available after-hours through Vermont 211 as the state rolls out other changes aimed at restructuring homelessness response."
-     },
-     {
-      "id": "https://www.vermontpublic.org/show/vermont-edition/2026-09-01/ancient-native-trash-fish-get-a-bad-rap-these-anglers-want-to-change-that",
-      "title": "Ancient native 'trash fish' get a bad rap. These anglers want to change that",
-      "link": "https://www.vermontpublic.org/show/vermont-edition/2026-09-01/ancient-native-trash-fish-get-a-bad-rap-these-anglers-want-to-change-that",
-      "ts": "2026-09-01T19:57:12+00:00",
-      "summary": "Fish like gar and bowfin play an important role in the region’s aquatic ecosystem."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "ABQD74ODDFEFFFUQP6JVTUVQX4",
+      "title": "7 clergy protesting Williston ICE facility arrested",
+      "link": "https://www.wcax.com/2026/09/04/7-clergy-protesting-williston-ice-facility-arrested/",
+      "ts": "2026-09-04T18:26:07+00:00",
+      "summary": "Several clergy members were arrested during a protest at the Department of Homeland Security building in Williston Friday morning."
+     },
+     {
+      "id": "JYWX6LSIQFD5ZH3CYY5X3TGIV4",
+      "title": "Police searching for missing Vermont man",
+      "link": "https://www.wcax.com/2026/09/04/police-searching-missing-vermont-man/",
+      "ts": "2026-09-04T16:12:08+00:00",
+      "summary": "Vermont troopers are searching for a missing Clarendon man they describe as a vulnerable adult."
+     },
+     {
+      "id": "WUYBQ7E4ZVBGRJISQ5KECGECWM",
+      "title": "Homeless man arrested for breaking into Burlington home, barricading himself in bathroom",
+      "link": "https://www.wcax.com/2026/09/04/homeless-man-arrested-breaking-into-burlington-home-barricading-himself-bathroom/",
+      "ts": "2026-09-04T16:09:21+00:00",
+      "summary": "A homeless man broke into a Burlington home Thursday night and barricaded himself in the bathroom."
+     },
      {
       "id": "UOSQGS33MBDOLHZSZF6Y5YHSEQ",
       "title": "Missing your kids? Now there’s technology to help with that",
@@ -948,18 +969,25 @@
       "summary": "Parents of young children at school or in childcare are able to check-in throughout the day thanks to technology that makes being away a little easier."
      },
      {
+      "id": "NWFMU4NOOJGFTGYIPAOWTK5W5Q",
+      "title": "Overdose deaths down 45% statewide, Hochul says",
+      "link": "https://www.wcax.com/2026/09/04/overdose-deaths-down-45-statewide-hochul-says/",
+      "ts": "2026-09-04T10:32:42+00:00",
+      "summary": "Overdose deaths statewide have dropped 45% since 2022, Gov. Kathy Hochul said following Overdose Awareness Day on Monday."
+     },
+     {
       "id": "XKSLK5P5MVB43HN5DRJMVXODMI",
       "title": "Police continue proactive drug enforcement efforts in Burlington",
       "link": "https://www.wcax.com/2026/09/04/police-continue-proactive-drug-enforcement-efforts-burlington/",
       "ts": "2026-09-04T10:18:25+00:00",
-      "summary": "A large police presence in downtown Burlington Thursday afternoon was the continuation of proactive drug enforcement efforts according to Burlington Police."
+      "summary": "A large police presence in downtown Burlington Thursday afternoon was the continuation of proactive drug enforcement efforts, according to Burlington Police."
      },
      {
       "id": "WE2LEBA2NND5RJEGIPRDG75WLI",
       "title": "St. Johnsbury overnight standoff ends with man taken into custody",
       "link": "https://www.wcax.com/2026/09/04/st-johnsbury-overnight-standoff-ends-with-man-taken-into-custody/",
       "ts": "2026-09-04T09:24:40+00:00",
-      "summary": "Police took a man into custody after an overnight standoff at a home on Costa Avenue in St. Johnsbury Friday morning."
+      "summary": "Police took a man into custody after an overnight standoff at a home on Costa Avenue in St. Johnsbury."
      },
      {
       "id": "XMYQ4BW3IZDH7DXGQFY5M33VKM",
@@ -1261,183 +1289,169 @@
       "link": "https://www.wcax.com/2026/09/02/rep-goodlander-pushes-back-proposed-liberty-utilities-rate-increase/",
       "ts": "2026-09-02T00:22:24+00:00",
       "summary": "New Hampshire residents could soon see a major spike in their energy bills, but Congresswoman Maggie Goodlander is pushing back."
-     },
-     {
-      "id": "XJBIR65Q6FGRLEGKRB4SOGWBJM",
-      "title": "Police search for animal involved in 3 attacks in Lebanon",
-      "link": "https://www.wcax.com/2026/09/02/police-search-animal-involved-3-attacks-lebanon/",
-      "ts": "2026-09-02T00:04:13+00:00",
-      "summary": "A wild animal believed to have been involved in three attacks at Lebanon’s Centerra Park has now been caught on camera."
-     },
-     {
-      "id": "YEV7TPMOINHLPHHSXEUUYUO4ZU",
-      "title": "Diocese of Ogdensburg looks to end bankruptcy with $83M clergy abuse fund",
-      "link": "https://www.wcax.com/2026/09/01/diocese-ogdensburg-looks-end-bankruptcy-with-83m-clergy-abuse-fund/",
-      "ts": "2026-09-01T23:23:59+00:00",
-      "summary": "Three years after declaring bankruptcy amid clergy abuse lawsuits, the Diocese of Ogdensburg has submitted a plan to bring the case to an end and pay abuse survivors."
-     },
-     {
-      "id": "5C7LA6PQ5ZDDRJKL2QWZ4ZMTMM",
-      "title": "Governor Hochul urges federal government to release $87 million in counterterrorism funds",
-      "link": "https://www.wcax.com/2026/09/01/governor-hochul-urges-federal-government-release-87-million-counterterrorism-funds/",
-      "ts": "2026-09-01T23:04:14+00:00",
-      "summary": "While a federal court order prompted the release of $100 million, the remaining balance has still not been delivered."
-     },
-     {
-      "id": "HUWESZFGHFHK3DWQDQOVCZCON4",
-      "title": "All kinds of entertainment on the midway at the Champlain Valley Fair",
-      "link": "https://www.wcax.com/2026/09/01/all-kinds-entertainment-midway-champlain-valley-fair/",
-      "ts": "2026-09-01T22:34:16+00:00",
-      "summary": "From art to music to games, rides and more, you can find it all this year at the Champlain Valley Fair. Our Tia Trudgeon has a few of the highlights."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
-      "id": "73615788",
-      "title": "Romanian prosecutors indict Andrew Tate on trafficking minors and money laundering",
-      "link": "https://www.mynbc5.com/article/andrew-tate-romanian-prosecutors-trafficking-minors/73615788",
-      "ts": "2026-09-04T13:54:00+00:00",
-      "summary": "Romanian prosecutors on Friday indicted social media influencer Andrew Tate on charges of trafficking minors, sex with a minor, and money laundering."
+      "id": "73616718",
+      "title": "Lindsay Clancy’s defense has filed an emergency appeal seeking to avoid a mistrial",
+      "link": "https://www.mynbc5.com/article/lindsay-clancy-murder-case-mistrial/73616718",
+      "ts": "2026-09-04T18:20:00+00:00",
+      "summary": "A judge says he will declare a mistrial in the Lindsay Clancy case and has given the defense a chance to appeal for an emergency stay."
      },
      {
-      "id": "73613470",
-      "title": "Suspect in St. Johnsbury police standoff taken into custody",
-      "link": "https://www.mynbc5.com/article/st-johnsbury-police-presence-costa-avenue/73613470",
-      "ts": "2026-09-04T13:49:00+00:00",
-      "summary": "The St. Johnsbury Police Department, Lyndonville Police Department, and Vermont State Police all responded to an incident early Friday morning, prompting an advisory for residents to avoid Costa Avenue."
+      "id": "73616514",
+      "title": "'We relied too much on AI': Hikers rescued after California mountain climb",
+      "link": "https://www.mynbc5.com/article/california-hikers-rescued-ai-advice/73616514",
+      "ts": "2026-09-04T18:20:00+00:00",
+      "summary": "Three hikers were rescued after getting lost and injured during a California climb. Authorities said the group relied on poor advice from an AI tool when planning their trip."
      },
      {
-      "id": "73605280",
-      "title": "Former NFL player Alphonso Smith Jr. dies at 40",
-      "link": "https://www.mynbc5.com/article/alphonso-smith-jr-dies-nfl-cornerback/73605280",
-      "ts": "2026-09-04T13:30:00+00:00",
-      "summary": "Alphonso Smith Jr., a former NFL cornerback, died at 40, according to his alma mater Wake Forest University."
+      "id": "73617609",
+      "title": "One family, three generations of nurses with 40 years of service at one hospital",
+      "link": "https://www.mynbc5.com/article/california-hospital-family-of-nurses/73617609",
+      "ts": "2026-09-04T18:16:00+00:00",
+      "summary": "Three generations of nurses from the same family have all worked at the same hospital in California. For them, nursing is a family affair."
      },
      {
-      "id": "73615288",
-      "title": "Work to begin on Trump’s 250-foot ‘triumphal arch’ over next 2 weeks, interior secretary says",
-      "link": "https://www.mynbc5.com/article/trump-triumphal-arch-construction-begins/73615288",
-      "ts": "2026-09-04T13:03:00+00:00",
-      "summary": "The Trump administration plans to break ground on the president’s “triumphal arch” in the next two weeks, Interior Secretary Doug Burgum announced on Thursday."
+      "id": "73616318",
+      "title": "Songs of your summers: Trace your life's summer soundtrack with this tool",
+      "link": "https://www.mynbc5.com/article/song-of-the-summer-interactive-tool/73616318",
+      "ts": "2026-09-04T17:55:00+00:00",
+      "summary": "From the summer you learned to drive to your first summer romance, trace the summer songs playing on the radio from key moments in your life with our tool."
      },
      {
-      "id": "73610602",
-      "title": "Fried dough isn't the only option at Champlain Valley Fair; learn about dietary-friendly foods",
-      "link": "https://www.mynbc5.com/article/non-traditional-food-options-balanced-inclusive-champlain-valley-fair/73610602",
-      "ts": "2026-09-04T12:59:00+00:00",
-      "summary": "This year's Champlain Valley Fair has more food options besides fried dough and cotton candy, and they could help fuel you as you walk around the fair."
+      "id": "73616633",
+      "title": "From a parade to 'Dolly Parton Day,': How Dolly Parton is still being honored across the country",
+      "link": "https://www.mynbc5.com/article/dolly-parton-day-recognition/73616633",
+      "ts": "2026-09-04T17:45:00+00:00",
+      "summary": "Country music icon and philanthropist Dolly Parton is being honored nationwide, with states and cities planning remembrance events and proclamations in her memory."
      },
      {
-      "id": "73615238",
-      "title": "A single juror may prevent a verdict in the Lindsay Clancy trial as deliberations resume",
-      "link": "https://www.mynbc5.com/article/lindsay-clancy-trial-live-updates-sept-4/73615238",
-      "ts": "2026-09-04T12:56:00+00:00",
-      "summary": "After a dramatic afternoon in the courtroom, jurors in the Lindsay Clancy trial are scheduled to resume Friday, but first, the defense said they expect the judge to conduct an additional inquiry into a holdout on the jury."
+      "id": "73617008",
+      "title": "Watch: Couple weds waist-deep in floodwaters after heavy rains flood church",
+      "link": "https://www.mynbc5.com/article/watch-couple-weds-waist-deep-in-floodwaters-after-heavy-rains-flood-church/73617008",
+      "ts": "2026-09-04T17:25:00+00:00",
+      "summary": "A bride walked down the aisle in waist-deep floodwaters after heavy rains flooded the church."
      },
      {
-      "id": "73612565",
-      "title": "Cause of fire that killed 17 horses in Saratoga is \"undetermined,\" fire department says",
-      "link": "https://www.mynbc5.com/article/17-horses-killed-in-saratoga-barn-fire-cause-undetermined/73612565",
-      "ts": "2026-09-04T12:36:00+00:00",
-      "summary": "According to the Saratoga Springs fire chief, the investigation into a June fire that killed 17 horses has concluded, and the cause remains undetermined."
+      "id": "73605764",
+      "title": "How well do you know the NCAA’s 2026 football rule changes?",
+      "link": "https://www.mynbc5.com/article/ncaa-2026-college-football-rules-quiz/73605764",
+      "ts": "2026-09-04T17:17:00+00:00",
+      "summary": "College football’s 2026 season comes with new rules and policies. See how many you can guess in our quiz."
+     },
+     {
+      "id": "73617630",
+      "title": "Winooski man arrested after brandishing gun in downtown Burlington, police say",
+      "link": "https://www.mynbc5.com/article/isaac-walters-assault-arrest-burlington-vermont/73617630",
+      "ts": "2026-09-04T17:16:00+00:00",
+      "summary": "A Winooski man is in police custody after he allegedly pulled out a gun and pointed it at several people during arguments in downtown Burlington."
+     },
+     {
+      "id": "73605510",
+      "title": "Mortgage rates just hit their highest level since July 2025. Here’s what that means for your wallet",
+      "link": "https://www.mynbc5.com/article/mortgage-rates-highest-level/73605510",
+      "ts": "2026-09-04T17:15:00+00:00",
+      "summary": "Rising Treasury yields are pushing borrowing rates higher."
+     },
+     {
+      "id": "73617534",
+      "title": "Seven protesters arrested for trespassing at ICE office in Williston, VSP says",
+      "link": "https://www.mynbc5.com/article/williston-vermont-ice-protesters-arrested/73617534",
+      "ts": "2026-09-04T17:02:00+00:00",
+      "summary": "Seven people were arrested outside of an Immigration and Customs Enforcement surveillance office in Williston on Friday, in the latest instance of protesters refusing to leave the property."
+     },
+     {
+      "id": "73617319",
+      "title": "Lindsay Clancy trial: Explaining 1-hour deadline for SJC intervention",
+      "link": "https://www.mynbc5.com/article/lindsay-clancy-reddington-sjc-stay-deadline-sept-4/73617319",
+      "ts": "2026-09-04T16:57:00+00:00",
+      "summary": "LINDSAY CLANCY TRIAL | A retired Massachusetts judge explains defense attorney Kevin Reddington's pursuit of a stay from the Supreme Judicial Court to block a mistrial in the trial of Lindsay Clancy."
      },
      {
       "id": "73609280",
       "title": "Few showers Friday, decent Labor Day Weekend ahead",
       "link": "https://www.mynbc5.com/article/decent-labor-day-weekend-despite-few-showers9326/73609280",
-      "ts": "2026-09-04T12:15:00+00:00",
+      "ts": "2026-09-04T16:33:00+00:00",
       "summary": "Any passing showers will be isolated and brief"
      },
      {
-      "id": "73614849",
-      "title": "Midterm mail ballots start to go to voters as litigation over Trump's order creates uncertainty",
-      "link": "https://www.mynbc5.com/article/midterm-mail-voting-trump-legal-fight/73614849",
-      "ts": "2026-09-04T12:06:00+00:00",
-      "summary": "Statewide mail voting for this year’s midterm elections kicks off Friday amid a churning legal battle over President Donald Trump’s attempts to limit the practice."
+      "id": "73616930",
+      "title": "Homeless man arrested after breaking into Burlington home, hiding in bathroom, police say",
+      "link": "https://www.mynbc5.com/article/burlington-vermont-trespassing-break-in-abdul-kareem/73616930",
+      "ts": "2026-09-04T16:16:00+00:00",
+      "summary": "A homeless man was arrested in Burlington after police said he broke into a home and was caught hiding in a bathroom."
      },
      {
-      "id": "73611556",
-      "title": "VIDEO: 2 trapped workers pulled alive from tunnel 9 days after devastating Nepal floods",
-      "link": "https://www.mynbc5.com/article/2-trapped-workers-rescued-alive-nepal/73611556",
-      "ts": "2026-09-04T11:14:00+00:00",
-      "summary": "Video shows rescuers in Nepal pulling two workers alive from a hydropower tunnel after being trapped for nine days following catastrophic floods."
+      "id": "73613470",
+      "title": "Suspect in St. Johnsbury police standoff taken into custody",
+      "link": "https://www.mynbc5.com/article/st-johnsbury-police-presence-costa-avenue/73613470",
+      "ts": "2026-09-04T16:13:00+00:00",
+      "summary": "The St. Johnsbury Police Department, Lyndonville Police Department, and Vermont State Police all responded to an incident early Friday morning, prompting an advisory for residents to avoid Costa Avenue."
      },
      {
-      "id": "73614137",
-      "title": "Former Kentucky Governor Matt Bevin arrested, charged in child support case",
-      "link": "https://www.mynbc5.com/article/former-kentucky-gov-matt-bevin-arrested/73614137",
-      "ts": "2026-09-04T10:48:00+00:00",
-      "summary": "Former Kentucky Governor Matt Bevin was arrested on a charge stemming from a child support case, according to officials."
+      "id": "73608543",
+      "title": "Friday Night Fever Week 1: Schedule, Scores and Highlights from Vermont & New York",
+      "link": "https://www.mynbc5.com/article/friday-night-fever-week-1-schedule-scores-and-highlights-from-vermont-new-york/73608543",
+      "ts": "2026-09-04T15:29:00+00:00",
+      "summary": "High School Football is back! Check the schedule to see when your team plays!"
      },
      {
-      "id": "73613853",
-      "title": "Fox News abruptly ousts longtime host Maria Bartiromo",
-      "link": "https://www.mynbc5.com/article/fox-news-parts-ways-with-maria-bartiromo/73613853",
-      "ts": "2026-09-04T10:20:00+00:00",
-      "summary": "Fox News has parted ways with longtime anchor Maria Bartiromo. Here's what President Trump said about her ousting."
+      "id": "73610963",
+      "title": "South Burlington boys' volleyball sweeps Montpelier",
+      "link": "https://www.mynbc5.com/article/south-burlington-boys-volleyball-sweeps-montpelier/73610963",
+      "ts": "2026-09-04T15:28:00+00:00",
+      "summary": "Wolves feature balanced offensive attack to win three straight sets against the Solons"
      },
      {
-      "id": "73613679",
-      "title": "Heavy police presence in St. Johnsbury: what it means for your commute",
-      "link": "https://www.mynbc5.com/article/st-johnsbury-police-presence-costa-avenue-traffic-delays/73613679",
-      "ts": "2026-09-04T10:13:00+00:00",
-      "summary": "St. Johnsbury police told residents to avoid the area near Costa Avenue on Friday morning. Ben has more on the impact for the morning commute."
+      "id": "73615635",
+      "title": "FBI investigating potential data breach of more than 153 million driver's license records",
+      "link": "https://www.mynbc5.com/article/drivers-licenses-millions-exposed-company-data-breach/73615635",
+      "ts": "2026-09-04T15:15:00+00:00",
+      "summary": "A potential data breach at the identity verification company IDScan.net has exposed more than 153 million driver's license records. The FBI is investigating."
      },
      {
-      "id": "73613022",
-      "title": "Trump administration asks Supreme Court to step in and allow mail-in voting restrictions",
-      "link": "https://www.mynbc5.com/article/trump-administration-asks-supreme-court-to-step-in-and-allow-mail-in-voting-restrictions/73613022",
-      "ts": "2026-09-04T09:45:00+00:00",
-      "summary": "The Trump administration has filed an emergency appeal with the Supreme Court to implement mail-in voting restrictions, as critics claim the move could affect the midterm elections."
+      "id": "73605591",
+      "title": "Record-breaking Labor Day gas prices: See which counties are paying the most",
+      "link": "https://www.mynbc5.com/article/labor-day-gas-prices/73605591",
+      "ts": "2026-09-04T15:00:00+00:00",
+      "summary": "Gas prices, which are elevated due to the war in Iran, are 30% higher this Labor Day than last year."
      },
      {
-      "id": "73613348",
-      "title": "US diesel prices hit record high of $5.85 on average as Iran War disrupts flow of fuel",
-      "link": "https://www.mynbc5.com/article/record-diesel-prices-iran-war-fuel-supply/73613348",
-      "ts": "2026-09-04T09:28:00+00:00",
-      "summary": "Diesel hit a new record price in the U.S., soaring to an average of $5.85 a gallon for the first time ever."
+      "id": "73616148",
+      "title": "AI agents can act on their own — and sometimes break out",
+      "link": "https://www.mynbc5.com/article/get-the-facts-what-are-ai-agents-how-hacking-companies/73616148",
+      "ts": "2026-09-04T14:55:00+00:00",
+      "summary": "AI agents can book trips and answer emails, but experts warn they’re also increasingly capable of going rogue and hacking into systems."
      },
      {
-      "id": "73611801",
-      "title": "Woman loses $20,000 in scam",
-      "link": "https://www.mynbc5.com/article/woman-loses-20-000-in-courier-scam/73611801",
-      "ts": "2026-09-04T05:14:00+00:00",
-      "summary": "A 79-year-old woman lost more than $20,000 in a money transfer scam, according to Pennsylvania State Police."
-     },
-     {
-      "id": "73610670",
-      "title": "Louisiana judge rules against NCAA, clearing path for ex-NFL players to join LSU roster",
-      "link": "https://www.mynbc5.com/article/louisiana-judge-against-ncaa-ex-nfl-players-join-lsu/73610670",
-      "ts": "2026-09-04T04:55:00+00:00",
-      "summary": "Louisiana judge rules against NCAA in eligibility case, clearing the way for LSU to add ex-NFL players to its roster."
-     },
-     {
-      "id": "73611278",
-      "title": "Emily Mara returns to Virtue Field with two goals, two assists for Boston College",
-      "link": "https://www.mynbc5.com/article/emily-mara-returns-to-virtue-field-with-two-goals-two-assists-for-boston-college/73611278",
-      "ts": "2026-09-04T03:48:00+00:00",
-      "summary": "Eagles demolish Catamounts 5-1, UVM falls to 0-4-2"
-     },
-     {
-      "id": "73610743",
-      "title": "Moon economy: The race to build a business beyond Earth",
-      "link": "https://www.mynbc5.com/article/moon-economy-space-business-beyond-earth/73610743",
-      "ts": "2026-09-04T03:07:00+00:00",
-      "summary": "In our second race back to the moon, NASA isn't just trying to plant an American flag, and it's not going at it alone."
-     },
-     {
-      "id": "73610791",
-      "title": "FDA announces nationwide recall of epinephrine injections after reports of cracked vials",
-      "link": "https://www.mynbc5.com/article/fda-epinephrine-injection-recall-sterility-particulate-matter/73610791",
-      "ts": "2026-09-04T02:40:00+00:00",
-      "summary": "Some epinephrine injections have been recalled after reports of cracked vials and an investigation revealed \"the presence of particulate matter,\" including nylon, glass and more. See whether your medication is affected"
+      "id": "73615723",
+      "title": "‘Your legacy is forever’: Steve Irwin’s family celebrates ‘superhero’ dad 20 years after sudden death",
+      "link": "https://www.mynbc5.com/article/steve-irwin-remembering-20-years-ago/73615723",
+      "ts": "2026-09-04T14:53:00+00:00",
+      "summary": "Twenty years after Steve Irwin’s sudden death, his children are remembering their “superhero” dad and honoring the lasting legacy he left behind."
      }
     ]
    },
    "btv-news-releases": {
     "items": [
+     {
+      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3890/639241236190000000",
+      "title": "09/04/2026 Aggravated Assault with a Deadly Weapon | 26BU021004",
+      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3890",
+      "ts": "2026-09-04T18:00:19+00:00",
+      "summary": ""
+     },
+     {
+      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3889/639241190770000000",
+      "title": "09/03/2026 Unlawful Trespass | 26BU020990",
+      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3889",
+      "ts": "2026-09-04T16:44:37+00:00",
+      "summary": ""
+     },
      {
       "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3887/639238634880000000",
       "title": "08/22/2026 Aggravated Assault | 26BU019754",
@@ -1554,6 +1568,20 @@
    },
    "bpd-updates": {
     "items": [
+     {
+      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3890/639241236190000000",
+      "title": "09/04/2026 Aggravated Assault with a Deadly Weapon | 26BU021004",
+      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3890",
+      "ts": "2026-09-04T18:00:19+00:00",
+      "summary": ""
+     },
+     {
+      "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3889/639241190770000000",
+      "title": "09/03/2026 Unlawful Trespass | 26BU020990",
+      "link": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3889",
+      "ts": "2026-09-04T16:44:37+00:00",
+      "summary": ""
+     },
      {
       "id": "https://www.burlingtonvt.gov/CivicAlerts.aspx?aid=3887/639238634880000000",
       "title": "08/22/2026 Aggravated Assault | 26BU019754",
