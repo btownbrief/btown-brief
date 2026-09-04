@@ -42,6 +42,11 @@
   }
 
   function render(weather) {
+    // The daylight scene (js/sun.js) reads the same conditions rather
+    // than asking Open-Meteo a second time for the same answer.
+    window.btownNowWeather = weather;
+    window.dispatchEvent(new CustomEvent('btown:now-weather', { detail: weather }));
+
     var el = document.getElementById('weather-indicator');
     var wrap = document.getElementById('weather-wrap');
     if (!el) return;
