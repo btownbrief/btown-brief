@@ -1,6 +1,6 @@
 /* The Countdown page.
    Reads data/countdowns.json, drops anything already over, sorts soonest
-   first, paints one colour block per event and ticks the clocks once a
+   first, lays one cell per event on the board and ticks the clocks once a
    second. No dependencies; the file is the whole app. */
 
 (function () {
@@ -10,22 +10,10 @@
   var SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3';
   var PLAYER_KEY = 'btown-player-id'; /* same key All Day uses, on purpose */
 
-  /* Burlington, drawn out of the year: lake, maple, sunset, foliage, sap,
-     evergreen, twilight, slate, plum, moss. Neighbours never repeat — the
-     assignment pass below enforces it whatever order the data arrives in. */
-  var HUES = {
-    lake: '#12496f',
-    maple: '#a52a2a',
-    coral: '#c9503f',
-    foliage: '#bf5a12',
-    sap: '#a06a06',
-    evergreen: '#1d5340',
-    twilight: '#43356f',
-    slate: '#39424c',
-    plum: '#7a2c50',
-    moss: '#4c5f1e'
-  };
-  var ORDER = Object.keys(HUES);
+  /* Cell grounds, in the live board's palette. Neighbours alternate; the
+     colour key in the data is ignored now — the board has two grounds, not
+     ten, and the ticking number is the colour. */
+  var GROUNDS = ['bg-brown', 'bg-black-cream'];
 
   var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -52,10 +40,16 @@
     return d;
   }
 
+  /* The year only appears once it is not this one: the meta row is one
+     line, and on a rail cell every character costs. */
+  function yr(d) {
+    return d.getFullYear() === new Date().getFullYear() ? '' : ', ' + d.getFullYear();
+  }
+
   function fmtDate(iso) {
     var d = atLocal(iso);
     if (!d) return '';
-    return MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    return MONTHS[d.getMonth()] + ' ' + d.getDate() + yr(d);
   }
 
   function fmtRange(ev) {
@@ -64,7 +58,7 @@
     if (!ev.end || ev.end === ev.start) return fmtDate(ev.start);
     var b = atLocal(ev.end);
     if (b && b.getFullYear() === a.getFullYear() && b.getMonth() === a.getMonth()) {
-      return MONTHS[a.getMonth()] + ' ' + a.getDate() + '–' + b.getDate() + ', ' + a.getFullYear();
+      return MONTHS[a.getMonth()] + ' ' + a.getDate() + '–' + b.getDate() + yr(a);
     }
     return fmtDate(ev.start) + ' – ' + fmtDate(ev.end);
   }
@@ -89,10 +83,12 @@
 
   /* --------------------------------------------------------------- render */
 
-  var live = []; /* [{el, ev, startAt, endAt}] for the ticker */
+  var live = []; /* [{slot, pbar, startAt, endAt}] for the ticker */
+  var DAY = 86400000;
+  var HORIZON = 365 * DAY; /* the progress bar fills over the last year */
 
-  /* A rank number on a card that is already in date order says nothing. The
-     month does: it gives the stack a spine you can scan without reading. */
+  /* The month is the cell's topic tag: it gives the board a spine you can
+     scan without reading. */
   function eyebrow(ev, startAt, happening) {
     if (happening) return 'On now';
     var d = startAt || atLocal(ev.start);
@@ -101,44 +97,60 @@
     return (ev.status === 'expected' ? 'Around ' + m : m);
   }
 
-  function card(ev, i) {
+  /* top-right: the live board's "23H" age, read forwards */
+  function age(startAt, happening) {
+    if (happening) return 'Live';
+    if (!startAt) return 'TBA';
+    var days = Math.ceil((startAt.getTime() - Date.now()) / DAY);
+    if (days <= 0) return 'Today';
+    if (days < 60) return days + 'D';
+    if (days < 365) return Math.round(days / 7) + 'W';
+    return (days / 365).toFixed(1).replace(/\.0$/, '') + 'Y';
+  }
+
+  function cell(ev, i) {
     var a = document.createElement(ev.link ? 'a' : 'div');
-    a.className = 'cd-card';
+    a.className = 'cell';
     if (ev.link) { a.href = ev.link; a.target = '_blank'; a.rel = 'noopener'; }
-    a.style.setProperty('--cd-hue', HUES[ev.color] || HUES.lake);
 
     var startAt = atLocal(ev.start, ev.time);
     var endAt = endOfDay(ev.end || ev.start);
     var happening = startAt && endAt && Date.now() >= startAt.getTime() && Date.now() <= endAt.getTime();
-    if (happening) a.classList.add('cd-card-live');
+    var expected = (ev.status === 'expected' || !startAt);
+
+    if (i === 0) a.classList.add('lead');
+    if (happening) a.classList.add('bg-orange');
+    else if (expected) a.classList.add('bg-black', 'expected');
+    else a.classList.add(GROUNDS[i % GROUNDS.length]);
 
     var clock;
-    if (ev.status === 'expected' || !startAt) {
-      clock = '<p class="cd-tag">Date not announced yet</p>' +
-        '<p class="cd-window">' + esc(ev.window || 'Watch this space') + '</p>';
+    if (expected) {
+      clock = '<p class="window">Date not announced · ' + esc(ev.window || 'watch this space') + '</p>';
     } else {
-      clock = '<div class="cd-clock" data-clock role="timer" aria-live="off"></div>';
+      clock = '<div class="clock-row" data-clock role="timer" aria-live="off"></div>';
     }
 
-    var when = (ev.status === 'expected')
-      ? ''
-      : '<p class="cd-when">' + esc(fmtRange(ev)) + (ev.time ? ' · ' + esc(ev.timeLabel || ev.time) : '') + '</p>';
-
-    var cal = (ev.status === 'expected') ? null : gcal(ev);
+    var cal = expected ? null : gcal(ev);
+    var when = expected ? '' : esc(fmtRange(ev)) + (ev.time ? ' · ' + esc(ev.timeLabel || ev.time) : '');
 
     a.innerHTML =
-      '<p class="cd-rank">' + esc(eyebrow(ev, startAt, happening)) + '</p>' +
-      '<h2 class="cd-name">' + esc(ev.name) + '</h2>' +
-      clock +
-      when +
-      (ev.venue ? '<p class="cd-where">' + esc(ev.venue) + '</p>' : '') +
-      (ev.why ? '<p class="cd-why">' + esc(ev.why) + '</p>' : '') +
-      '<div class="cd-links">' +
-        (ev.link ? '<span class="cd-btn">Details ↗</span>' : '') +
-        (cal ? '<span class="cd-btn" data-cal="' + esc(cal) + '">+ Calendar</span>' : '') +
+      '<div class="top"><span class="topic-tag">' + esc(eyebrow(ev, startAt, happening)) + '</span>' +
+        '<span class="age-tag">' + esc(age(startAt, happening)) + '</span></div>' +
+      '<div class="body">' +
+        '<h2 class="head">' + esc(ev.name) + '</h2>' +
+        clock +
+        (ev.why ? '<p class="why">' + esc(ev.why) + '</p>' : '') +
+      '</div>' +
+      '<div class="meta"><i class="ptrack"></i><i class="pbar" data-pbar></i>' +
+        (ev.venue ? '<span class="venue">' + esc(ev.venue) + '</span><i class="dot"></i>' : '') +
+        '<span class="when">' + (when || 'TBA') + '</span>' +
+        '<span class="go">' +
+          (ev.link ? '<span>Details ↗</span>' : '') +
+          (cal ? '<span data-cal="' + esc(cal) + '">+ Cal</span>' : '') +
+        '</span>' +
       '</div>';
 
-    /* The whole card is the link, so the calendar chip has to intercept. */
+    /* The whole cell is the link, so the calendar chip has to intercept. */
     var chip = a.querySelector('[data-cal]');
     if (chip) {
       chip.addEventListener('click', function (e) {
@@ -149,13 +161,15 @@
     }
 
     var slot = a.querySelector('[data-clock]');
-    if (slot) live.push({ slot: slot, startAt: startAt, endAt: endAt, end: ev.end || ev.start });
+    var pbar = a.querySelector('[data-pbar]');
+    if (happening && pbar) pbar.style.width = '100%';
+    if (slot) live.push({ slot: slot, pbar: pbar, startAt: startAt, endAt: endAt });
     return a;
   }
 
   function unit(n, label) {
-    return '<div class="cd-unit"><span class="cd-num">' + n +
-      '</span><span class="cd-lab">' + label + '</span></div>';
+    return '<span class="unit"><span class="num">' + n +
+      '</span><span class="lab">' + label + '</span></span>';
   }
 
   function tick() {
@@ -165,10 +179,11 @@
       var ms = L.startAt.getTime() - now;
       if (ms <= 0) {
         /* multi-day event in progress: say so, and say how much is left */
-        var daysLeft = Math.ceil((L.endAt.getTime() - now) / 86400000);
-        L.slot.outerHTML = '<p class="cd-window">Happening now' +
+        var daysLeft = Math.ceil((L.endAt.getTime() - now) / DAY);
+        L.slot.outerHTML = '<p class="window">Happening now' +
           (daysLeft > 0 ? ' · ' + daysLeft + ' day' + (daysLeft === 1 ? '' : 's') + ' left' : '') +
           '</p>';
+        if (L.pbar) L.pbar.style.width = '100%';
         live.splice(i, 1); i--;
         continue;
       }
@@ -181,25 +196,8 @@
       L.slot.innerHTML = d > 0
         ? unit(d, d === 1 ? 'day' : 'days') + unit(pad(h), 'hrs') + unit(pad(m), 'min') + unit(pad(sec), 'sec')
         : unit(pad(h), 'hrs') + unit(pad(m), 'min') + unit(pad(sec), 'sec');
+      if (L.pbar) L.pbar.style.width = (Math.max(0, 1 - ms / HORIZON) * 100).toFixed(2) + '%';
     }
-  }
-
-  /* Neighbours never share a hue. Honour the colour the data asked for when
-     it does not clash, otherwise take the next free one round the wheel. */
-  function paint(list) {
-    var prev = null;
-    list.forEach(function (ev) {
-      var want = HUES[ev.color] ? ev.color : null;
-      if (!want || want === prev) {
-        var start = ORDER.indexOf(want || prev || ORDER[0]);
-        for (var k = 1; k <= ORDER.length; k++) {
-          var c = ORDER[(start + k) % ORDER.length];
-          if (c !== prev) { want = c; break; }
-        }
-      }
-      ev.color = want;
-      prev = want;
-    });
   }
 
   function render(data) {
@@ -215,19 +213,44 @@
     /* Page order is soonest first; entries with no date yet fall to the end
        of the month they usually land in, which is what `start` carries. */
     list.sort(function (a, b) { return String(a.start).localeCompare(String(b.start)); });
-    paint(list);
 
     stack.innerHTML = '';
-    list.forEach(function (ev, i) { stack.appendChild(card(ev, i)); });
+    list.forEach(function (ev, i) { stack.appendChild(cell(ev, i)); });
 
     var counted = list.filter(function (e) { return e.status !== 'expected'; }).length;
     var meta = document.getElementById('cd-meta');
     if (meta) {
-      meta.textContent = list.length + ' events · ' + counted + ' with a locked date · tap + Calendar to save one';
+      meta.innerHTML = '<b>' + list.length + ' events</b> · ' + counted + ' with a locked date · ' +
+        (list.length - counted) + ' waiting on the organiser · tap + Cal to save one';
     }
+    var count = document.getElementById('cd-count');
+    if (count) count.textContent = list.length + ' events';
 
     tick();
     setInterval(tick, 1000);
+  }
+
+  /* ------------------------------------------------------------- masthead */
+
+  var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  function masthead() {
+    var clock = document.getElementById('clock');
+    var ampm = document.getElementById('ampm');
+    var day = document.getElementById('day');
+    var date = document.getElementById('date');
+    if (!clock) return;
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    function paint() {
+      var n = new Date();
+      var h = n.getHours();
+      clock.textContent = ((h % 12) || 12) + ':' + pad(n.getMinutes()) + ':' + pad(n.getSeconds());
+      if (ampm) ampm.textContent = h < 12 ? 'AM' : 'PM';
+      if (day) day.textContent = DAYS[n.getDay()];
+      if (date) date.textContent = MONTHS[n.getMonth()] + ' ' + pad(n.getDate()) + ' · ' + n.getFullYear();
+    }
+    paint();
+    setInterval(paint, 1000);
   }
 
   /* ----------------------------------------------------------------- form */
@@ -302,8 +325,9 @@
     .then(render)
     .catch(function () {
       var stack = document.getElementById('cd-stack');
-      if (stack) stack.innerHTML = '<p class="cd-sub">The list didn’t load. Try a refresh.</p>';
+      if (stack) stack.innerHTML = '<p class="board-msg">The list didn’t load. Try a refresh.</p>';
     });
 
+  masthead();
   wireForm();
 })();
