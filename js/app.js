@@ -139,7 +139,7 @@
   // Events This Week — curated day-by-day picks pulled from the newsletter
   // (data/events-week.json). Days already past are hidden client-side, so
   // Monday's picks drop off on Tuesday, etc., without waiting for a refresh.
-  function renderEventsWeek() {
+  async function renderEventsWeek() {
     const data  = state.eventsWeek || { days: [] };
     const strip = document.getElementById('week-strip');
     const list  = document.getElementById('week-list');
@@ -150,11 +150,21 @@
     const pad = n => String(n).padStart(2, '0');
     const todayIso = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
 
-    const days = (data.days || []).filter(d => {
+    let days = (data.days || []).filter(d => {
       if (!d.date) return true;
       const dt = new Date(d.date + 'T00:00:00');
       return isNaN(dt) || dt >= today;
     });
+    let fallback = false;
+    if (days.length === 0) {
+      try {
+        const rail = await fetchJSON('data/events/rail.json');
+        days = (rail.days || []).filter(d => d.date >= todayIso && (d.picks || []).length).slice(0, 4);
+        fallback = days.length > 0;
+      } catch (e) {
+        return;
+      }
+    }
     if (days.length === 0) return;
 
     const url = data.issue_url || 'https://www.btownbrief.com';
@@ -171,7 +181,15 @@
 
     list.innerHTML = days.map(d => {
       const isToday = d.date === todayIso;
-      const dateLabel = isToday ? 'Today' : (d.label || '');
+      const dateLabel = isToday ? 'Today' : (d.label || shortDate(d.date));
+      if (fallback) {
+        return `<article class="event-card week-event-card week-calendar-card" role="listitem">
+          <span class="event-date">${esc(dateLabel)}</span>
+          ${(d.picks || []).map(p => p.u
+            ? `<a class="week-calendar-pick" href="${esc(p.u)}" target="_blank" rel="noopener"><strong>${esc(p.t)}</strong>${p.v ? `<small>${esc(p.v)}</small>` : ''}</a>`
+            : `<span class="week-calendar-pick"><strong>${esc(p.t)}</strong>${p.v ? `<small>${esc(p.v)}</small>` : ''}</span>`).join('')}
+        </article>`;
+      }
       return `
         <a class="event-card week-event-card" href="${esc(url)}" target="_blank" rel="noopener" role="listitem" aria-label="${esc(dateLabel)} in the Brief">
           <span class="event-date">${esc(dateLabel)}</span>
@@ -180,6 +198,9 @@
         </a>
       `;
     }).join('');
+
+    const source = document.getElementById('week-source');
+    if (source) source.textContent = fallback ? 'from the calendar' : 'from the Brief';
 
     strip.hidden = false;
   }
