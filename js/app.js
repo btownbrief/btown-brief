@@ -131,6 +131,15 @@
     if (typeof window.BTV.renderGuidesRail === 'function') {
       window.BTV.renderGuidesRail();
     }
+
+    // Deep link: things-to-do.html#top-100 (or #guide-<id>) opens that guide
+    // straight away — the hub's Top 100 bar lands here.
+    const hash = (location.hash || '').replace(/^#/, '');
+    const guideId = hash === 'top-100' ? 'top-100' : (hash.startsWith('guide-') ? hash.slice(6) : '');
+    if (guideId && typeof window.BTV.showGuide === 'function') {
+      switchMode('guides');
+      window.BTV.showGuide(guideId);
+    }
   }
 
   /* ----------------------------------------------------------
