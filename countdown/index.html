@@ -25,7 +25,7 @@
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="City Guide">
 
-  <link rel="stylesheet" href="countdown.css?v=20260904b">
+  <link rel="stylesheet" href="countdown.css?v=20260904c">
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -56,13 +56,31 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <span class="clock-wrap"><span class="clock" id="clock">--:--:--</span><span class="ampm" id="ampm"></span></span>
     </div>
     <div class="status">
-      <nav class="modes" aria-label="Site pages">
-        <a class="mode" href="../events.html">Events</a>
-        <a class="mode" href="../things-to-do.html">To Do</a>
+      <!-- The same four-way switch Pulse Live and Table Talk carry. -->
+      <nav class="modes" aria-label="Switch board">
+        <a class="mode mode-read" href="../pulse.html" title="The full wire — scan and filter everything">READ</a>
+        <a class="mode" href="../live.html" title="Pulse Live — headlines rotate hands-free on their own clock">WATCH</a>
+        <span class="mode on" title="The Countdown — you're here">COUNT</span>
+        <a class="mode" href="../table.html" title="The meetup companion — icebreakers and weekend picks on a slow clock">TABLE</a>
       </nav>
       <a class="live-badge" href="#cd-add"><i aria-hidden="true"></i>Add yours</a>
     </div>
   </header>
+
+  <nav class="modes-row" aria-label="Switch board">
+    <a class="mode" href="../pulse.html">READ</a>
+    <a class="mode" href="../live.html">WATCH</a>
+    <span class="mode on">COUNT</span>
+    <a class="mode" href="../table.html">TABLE</a>
+  </nav>
+
+  <!-- Three decks, one board: the tentpoles, the newsletter's own picks,
+       and what readers sent in. A tab bar in the live board's clothes. -->
+  <nav class="chips" id="cd-tabs" aria-label="Which countdowns">
+    <button class="chip" type="button" data-tab="big" aria-pressed="true">Big events</button>
+    <button class="chip" type="button" data-tab="brief" aria-pressed="false">From the Brief</button>
+    <button class="chip" type="button" data-tab="community" aria-pressed="false">Community</button>
+  </nav>
 
   <p class="hint" id="cd-meta">Loading the year…</p>
 
@@ -73,7 +91,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <div class="add-inner">
       <p class="add-kicker">The jar</p>
       <h2 id="cd-add-title">Add your event</h2>
-      <p class="add-lede">This list is short on purpose. If yours belongs on it, make the case — the question at the bottom is the one that decides it.</p>
+      <p class="add-lede">The Community tab is what readers sent in and I agreed with. Make the case — the question at the bottom is the one that decides it.</p>
 
       <form class="cd-form" id="cd-form" novalidate>
         <label>Event name
@@ -112,7 +130,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     </span>
   </footer>
 
-  <script src="countdown.js?v=20260904b"></script>
+  <script src="countdown.js?v=20260904c"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
 </html>

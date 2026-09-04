@@ -1,7 +1,10 @@
 /* The Countdown page.
-   Reads data/countdowns.json, drops anything already over, sorts soonest
-   first, lays one cell per event on the board and ticks the clocks once a
-   second. No dependencies; the file is the whole app. */
+   Three decks on one board — BIG EVENTS from data/countdowns.json, FROM THE
+   BRIEF from data/brief-picks.json (the newsletter's own event links, dated
+   by scripts/brief_picks.py), COMMUNITY from the `community` list in
+   countdowns.json. Each drops anything already over, sorts soonest first,
+   lays one cell per event and ticks the clocks once a second. No
+   dependencies; the file is the whole app. */
 
 (function () {
   'use strict';
@@ -139,6 +142,7 @@
       '<div class="body">' +
         '<h2 class="head">' + esc(ev.name) + '</h2>' +
         clock +
+        (ev.kicker ? '<p class="kicker">' + esc(ev.kicker) + '</p>' : '') +
         (ev.why ? '<p class="why">' + esc(ev.why) + '</p>' : '') +
       '</div>' +
       '<div class="meta"><i class="ptrack"></i><i class="pbar" data-pbar></i>' +
@@ -163,7 +167,7 @@
     var slot = a.querySelector('[data-clock]');
     var pbar = a.querySelector('[data-pbar]');
     if (happening && pbar) pbar.style.width = '100%';
-    if (slot) live.push({ slot: slot, pbar: pbar, startAt: startAt, endAt: endAt });
+    if (slot) live.push({ slot: slot, pbar: pbar, startAt: startAt, endAt: endAt, multi: !!(ev.end && ev.end !== ev.start) });
     return a;
   }
 
@@ -181,7 +185,7 @@
         /* multi-day event in progress: say so, and say how much is left */
         var daysLeft = Math.ceil((L.endAt.getTime() - now) / DAY);
         L.slot.outerHTML = '<p class="window">Happening now' +
-          (daysLeft > 0 ? ' · ' + daysLeft + ' day' + (daysLeft === 1 ? '' : 's') + ' left' : '') +
+          (L.multi && daysLeft > 0 ? ' · ' + daysLeft + ' day' + (daysLeft === 1 ? '' : 's') + ' left' : '') +
           '</p>';
         if (L.pbar) L.pbar.style.width = '100%';
         live.splice(i, 1); i--;
@@ -200,34 +204,131 @@
     }
   }
 
-  function render(data) {
-    var stack = document.getElementById('cd-stack');
+  function upcoming(events) {
     var todayEnd = new Date(); todayEnd.setHours(0, 0, 0, 0);
-    var list = (data.events || []).filter(function (ev) {
-      if (ev.hidden) return false;
+    var list = (events || []).filter(function (ev) {
+      if (!ev || ev.hidden || !ev.name) return false;
       if (ev.status === 'expected') return true;
       var e = endOfDay(ev.end || ev.start);
       return e && e.getTime() >= todayEnd.getTime();
     });
+    /* Soonest first; a timed pick sorts inside its day. Entries with no date
+       yet fall to the end of the month they usually land in, which is what
+       `start` carries. */
+    list.sort(function (a, b) {
+      return String(a.start + ' ' + (a.time || '99:99')).localeCompare(String(b.start + ' ' + (b.time || '99:99')));
+    });
+    return list;
+  }
 
-    /* Page order is soonest first; entries with no date yet fall to the end
-       of the month they usually land in, which is what `start` carries. */
-    list.sort(function (a, b) { return String(a.start).localeCompare(String(b.start)); });
-
-    stack.innerHTML = '';
-    list.forEach(function (ev, i) { stack.appendChild(cell(ev, i)); });
-
-    var counted = list.filter(function (e) { return e.status !== 'expected'; }).length;
-    var meta = document.getElementById('cd-meta');
-    if (meta) {
-      meta.innerHTML = '<b>' + list.length + ' events</b> · ' + counted + ' with a locked date · ' +
-        (list.length - counted) + ' waiting on the organiser · tap + Cal to save one';
+  /* A newsletter pick becomes the same shape as a tentpole. The time label
+     is the parser's 24h string read back as "7:30 PM"; a pick the calendar
+     did not know has no time and counts down to its day. */
+  function fromBrief(p) {
+    var label = '';
+    if (p.time) {
+      var hm = p.time.split(':');
+      var h = +hm[0];
+      label = ((h % 12) || 12) + ':' + hm[1] + ' ' + (h < 12 ? 'AM' : 'PM');
     }
+    return {
+      name: p.name, start: p.start, time: p.time || '', timeLabel: label,
+      venue: p.venue || '', link: p.link, status: 'confirmed',
+      kicker: p.edition ? 'From the ' + p.edition + ' Brief' : ''
+    };
+  }
+
+  var DECKS = {
+    big: {
+      label: 'Big events',
+      list: function () { return upcoming(state.data.events); },
+      meta: function (list) {
+        var counted = list.filter(function (e) { return e.status !== 'expected'; }).length;
+        return '<b>' + list.length + ' events</b> · ' + counted + ' with a locked date · ' +
+          (list.length - counted) + ' waiting on the organiser · tap + Cal to save one';
+      },
+      empty: function () { return 'Nothing on the board yet.'; }
+    },
+    brief: {
+      label: 'From the Brief',
+      list: function () { return upcoming((state.picks.picks || []).map(fromBrief)); },
+      meta: function (list) {
+        var eds = (state.picks.editions || []).map(function (e) { return e.title; });
+        return '<b>' + list.length + ' picks</b> from the ' + (eds.length ? eds.join(' and ') : 'latest') +
+          ' Brief · the events I actually wrote up, soonest first';
+      },
+      empty: function () {
+        return state.picks.error
+          ? 'The Brief’s picks didn’t load. Try a refresh.'
+          : 'Every pick from the latest Brief has come and gone. The next edition fills this in.';
+      }
+    },
+    community: {
+      label: 'Community',
+      list: function () {
+        return upcoming((state.data.community || []).map(function (ev) {
+          var out = {};
+          for (var k in ev) out[k] = ev[k];
+          if (ev.who) out.kicker = 'Sent in by ' + ev.who;
+          return out;
+        }));
+      },
+      meta: function (list) {
+        return '<b>' + list.length + ' from readers</b> · what you told me the city counts down to · add yours below';
+      },
+      empty: function () { return 'Nothing here yet — the jar below is where it starts.'; }
+    }
+  };
+
+  var state = { data: {}, picks: {}, tab: 'big', timer: 0 };
+
+  function tabFromHash() {
+    var h = (location.hash || '').replace(/^#/, '');
+    return DECKS[h] ? h : 'big';
+  }
+
+  function show(tab) {
+    if (!DECKS[tab]) tab = 'big';
+    state.tab = tab;
+    var stack = document.getElementById('cd-stack');
+    var deck = DECKS[tab];
+    var list = deck.list();
+
+    clearInterval(state.timer);
+    live = [];
+    stack.innerHTML = '';
+    if (!list.length) {
+      stack.innerHTML = '<p class="board-msg">' + esc(deck.empty()) + '</p>';
+    } else {
+      list.forEach(function (ev, i) { stack.appendChild(cell(ev, i)); });
+    }
+
+    var meta = document.getElementById('cd-meta');
+    if (meta) meta.innerHTML = list.length ? deck.meta(list) : '<b>' + esc(deck.label) + '</b>';
     var count = document.getElementById('cd-count');
-    if (count) count.textContent = list.length + ' events';
+    if (count) count.textContent = list.length + (tab === 'brief' ? ' picks' : ' events');
+
+    document.querySelectorAll('#cd-tabs .chip').forEach(function (btn) {
+      btn.setAttribute('aria-pressed', btn.dataset.tab === tab ? 'true' : 'false');
+    });
+    var want = tab === 'big' ? '' : '#' + tab;
+    if ((location.hash || '') !== want) history.replaceState(null, '', location.pathname + location.search + want);
 
     tick();
-    setInterval(tick, 1000);
+    state.timer = setInterval(tick, 1000);
+  }
+
+  function wireTabs() {
+    var bar = document.getElementById('cd-tabs');
+    if (!bar) return;
+    bar.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-tab]');
+      if (btn) show(btn.dataset.tab);
+    });
+    window.addEventListener('hashchange', function () {
+      var t = tabFromHash();
+      if (t !== state.tab) show(t);
+    });
   }
 
   /* ------------------------------------------------------------- masthead */
@@ -320,14 +421,21 @@
     function fail(msg) { err.textContent = msg; err.hidden = false; }
   }
 
-  fetch('../data/countdowns.json?v=' + Math.floor(Date.now() / 3.6e6))
-    .then(function (r) { return r.json(); })
-    .then(render)
-    .catch(function () {
-      var stack = document.getElementById('cd-stack');
-      if (stack) stack.innerHTML = '<p class="board-msg">The list didn’t load. Try a refresh.</p>';
-    });
+  var bust = '?v=' + Math.floor(Date.now() / 3.6e6);
+  Promise.all([
+    fetch('../data/countdowns.json' + bust).then(function (r) { return r.json(); }),
+    fetch('../data/brief-picks.json' + bust).then(function (r) { return r.json(); })
+      .catch(function () { return { picks: [], editions: [], error: true }; })
+  ]).then(function (res) {
+    state.data = res[0] || {};
+    state.picks = res[1] || {};
+    show(tabFromHash());
+  }).catch(function () {
+    var stack = document.getElementById('cd-stack');
+    if (stack) stack.innerHTML = '<p class="board-msg">The list didn’t load. Try a refresh.</p>';
+  });
 
   masthead();
+  wireTabs();
   wireForm();
 })();

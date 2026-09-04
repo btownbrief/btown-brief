@@ -23,7 +23,7 @@
   <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <link rel="stylesheet" href="css/table-talk.css">
+  <link rel="stylesheet" href="css/table-talk.css?v=20260904a">
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -62,12 +62,20 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <nav class="modes" aria-label="Switch board">
         <a class="mode mode-read" href="pulse.html" title="The full wire — scan and filter everything">READ</a>
         <a class="mode" href="live.html" title="Pulse Live — headlines rotate hands-free on their own clock">WATCH</a>
+        <a class="mode" href="countdown/" title="The Countdown — the city's big days, ticking">COUNT</a>
         <span class="mode on" title="The meetup companion — you're here">TABLE</span>
       </nav>
       <button class="sync-badge" id="sync-badge" type="button" aria-pressed="false"
               title="Every phone with SYNC on shows the same card at the same time"><i></i><span id="sync-badge-label">SYNC</span></button>
     </span>
   </header>
+
+  <nav class="modes-row" aria-label="Switch board">
+    <a class="mode" href="pulse.html">READ</a>
+    <a class="mode" href="live.html">WATCH</a>
+    <a class="mode" href="countdown/">COUNT</a>
+    <span class="mode on">TABLE</span>
+  </nav>
 
   <main class="stage">
     <div class="card bg-brown" id="card" role="button" tabindex="0" aria-label="The current card — tap to hold it">
@@ -136,6 +144,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   </aside>
 
   <noscript><p class="noscript">Table Talk needs JavaScript to deal the cards.</p></noscript>
-  <script src="js/table-talk.js"></script>
+  <script src="js/table-talk.js?v=20260904a"></script>
 </body>
 </html>

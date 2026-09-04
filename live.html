@@ -23,7 +23,7 @@
   <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <link rel="stylesheet" href="css/pulse-live.css">
+  <link rel="stylesheet" href="css/pulse-live.css?v=20260904a">
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -63,12 +63,22 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
       <nav class="modes" aria-label="Switch board">
         <a class="mode mode-read" href="pulse.html" title="Back to the full wire — scan and filter everything">READ</a>
         <span class="mode on" title="Headlines rotate hands-free — you're watching">WATCH</span>
+        <a class="mode" href="countdown/" title="The Countdown — the city's big days, ticking">COUNT</a>
         <a class="mode" href="table.html" title="The meetup companion — icebreakers and weekend picks on a slow clock">TABLE</a>
       </nav>
       <button class="live-badge" id="live-badge" type="button" aria-pressed="false"
               title="Freeze the whole board — click again to let it run"><i></i><span id="live-badge-label">LIVE</span></button>
     </span>
   </header>
+
+  <!-- Phones: the same switch as a row of its own under the bar. In the bar it
+       would widen the page and zoom the board out; here it costs one row. -->
+  <nav class="modes-row" aria-label="Switch board">
+    <a class="mode" href="pulse.html">READ</a>
+    <span class="mode on">WATCH</span>
+    <a class="mode" href="countdown/">COUNT</a>
+    <a class="mode" href="table.html">TABLE</a>
+  </nav>
 
   <div class="chipwrap" id="chipwrap">
     <nav class="chips" id="chips" aria-label="Topics"></nav>
@@ -103,15 +113,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 
   <div class="lbarwrap" id="lbarwrap">
   <footer class="lbar" id="lbar">
-    <!-- Phones only: the top bar cannot take the board switch without zooming
-         the whole page out, and this row already scrolls and already holds the
-         board's other settings. -->
-    <span class="lgroup lboard" role="group" aria-label="Switch board">
-      <span class="llbl">BOARD</span>
-      <span class="lopt on">LIVE</span>
-      <a class="lopt" href="table.html" title="The meetup companion — icebreakers and weekend picks on a slow clock">TABLE</a>
-      <a class="lopt" href="pulse.html" title="The full wire — scan and filter everything">READ</a>
-    </span>
     <span class="lgroup" id="pace-group" role="group" aria-label="Pace">
       <span class="llbl">PACE</span>
       <button class="lopt" data-pace="slow" type="button">SLOW</button>
@@ -159,6 +160,7 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <ul class="help-list">
       <li><b>TAP A STORY</b> to hold it · <b>TAP AGAIN</b> to open it</li>
       <li><b>TAP A TOPIC</b> to toggle it · <b>HOLD ONE</b> to see only that</li>
+      <li><b>TABLE</b> (last chip) mixes Table Talk's questions in with the headlines · hold it for questions only</li>
       <li><b>THE QUEUE</b> up top counts down as you're dealt stories — zero means you cleared it</li>
       <li><b>LIVE / FREEZE</b> stops the whole board</li>
       <li><b>SURF</b> visits one topic for a minute, every few minutes</li>
@@ -177,6 +179,6 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   </aside>
 
   <noscript><p class="noscript">The Pulse Live needs JavaScript to run the board.</p></noscript>
-  <script src="js/pulse-live.js"></script>
+  <script src="js/pulse-live.js?v=20260904a"></script>
 </body>
 </html>

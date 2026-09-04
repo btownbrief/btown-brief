@@ -642,12 +642,22 @@ a.mode:hover { opacity: 1; }
 a.lopt { text-decoration: none; }
 a.lopt:hover { color: var(--orange); }
 
-/* The board switch only appears where the top bar's switch cannot: phones.
-   Above that the masthead carries it and this would be the same control
-   twice on one screen. */
-.lboard { display: none; }
+/* Phones: the board switch as its own row under the bar (see .modes-row);
+   above that the masthead carries it. */
+.modes-row { display: none; }
 @media (max-width: 720px) {
-  .lboard { display: inline-flex; }
+  .modes-row {
+    display: flex;
+    border-bottom: 1px solid rgba(252, 86, 10, .28);
+  }
+  .modes-row .mode {
+    flex: 1;
+    text-align: center;
+    padding: 8px 4px;
+    font-size: 10px;
+    letter-spacing: .18em;
+  }
+  .modes-row .mode + .mode { border-left: 1px solid rgba(252, 86, 10, .18); }
 }
 
 .lright {
@@ -803,8 +813,8 @@ body.tv.idle, body.tv.idle .cell { cursor: none; }
      `white-space: nowrap`, so anything added to it raises the page's
      min-content width, and the browser answers by zooming the whole board
      out. Putting the three modes back cost 405px -> 501px of layout
-     viewport, i.e. every card on the page rendered at 78%. The way to the
-     other board lives in the bottom bar on phones instead — see .lboard. */
+     viewport, i.e. every card on the page rendered at 78%. The switch gets
+     its own row under the bar on phones instead — see .modes-row. */
   .modes { display: none; }
 }
 

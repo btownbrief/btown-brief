@@ -147,6 +147,11 @@ jobs:
       # so one flaky fetch cannot fail the whole refresh.
       - name: Pull the newsletter's own stories
         run: python3 scripts/newsletter_picks.py || echo "newsletter picks skipped this run"
+      # Same feed again, this time the event links in the intro's day
+      # paragraphs, dated and timed from the calendar section — the
+      # Countdown page's FROM THE BRIEF tab. Fails soft like the step above.
+      - name: Pull the newsletter's event picks
+        run: python3 scripts/brief_picks.py || echo "brief picks skipped this run"
 
       - name: Build games ticker feed
         # After the newsletter fetch so events-week.json is current. Combines
