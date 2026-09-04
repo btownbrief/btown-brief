@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Burlington, counting down — the city's big events, ticking — Burlington Brief</title>
-  <meta name="description" content="Every Burlington tentpole worth waiting for, in one stack of live countdowns — Art Hop, Grand Point North, the Marathon, Jazz Fest, the fair. Soonest first.">
+  <meta name="description" content="Every Burlington tentpole worth waiting for, on one board of live countdowns — Art Hop, Grand Point North, the Marathon, Jazz Fest, the fair. Soonest first.">
 
   <!-- Social unfurls -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Btown Brief">
   <meta property="og:title" content="Burlington, counting down">
-  <meta property="og:description" content="Every Burlington tentpole worth waiting for, in one stack of live countdowns. Soonest first.">
+  <meta property="og:description" content="Every Burlington tentpole worth waiting for, on one board of live countdowns. Soonest first.">
   <meta property="og:url" content="https://guide.btownbrief.com/countdown/">
   <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Burlington, counting down">
-  <meta name="twitter:description" content="Every Burlington tentpole worth waiting for, in one stack of live countdowns. Soonest first.">
+  <meta name="twitter:description" content="Every Burlington tentpole worth waiting for, on one board of live countdowns. Soonest first.">
   <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
 
   <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
@@ -25,27 +25,7 @@
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="City Guide">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css?v=20260711k">
-  <link rel="stylesheet" href="countdown.css?v=20260904a">
-  <script>
-    /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
-       refreshes the cache; this only avoids the white flash after dark. */
-    (function () {
-      try {
-        var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
-        if (!c) return;
-        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
-          year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
-        if (c.day !== today) return;
-        var n = Date.now();
-        document.documentElement.setAttribute('data-theme',
-          (n >= c.rise && n < c.set) ? 'light' : 'dark');
-      } catch (e) {}
-    })();
-  </script>
+  <link rel="stylesheet" href="countdown.css?v=20260904b">
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -69,47 +49,31 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
 </head>
 <body>
 
-  <!-- SITE HEADER (same chrome as the other pages) -->
-  <header class="site-header" id="site-header">
-    <div class="header-inner">
-      <div class="logo">
-        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
-          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-        <span class="logo-sep"></span>
-        <span class="logo-title">The Countdown</span>
-      </div>
-
-      <nav class="mode-nav" aria-label="Site pages">
-        <a class="mode-btn" href="../events.html">Events</a>
-        <a class="mode-btn" href="../things-to-do.html">← Things To Do</a>
+  <header class="bar">
+    <a class="brand" href="../things-to-do.html" title="Back to Things To Do">THE&nbsp;<b>COUNTDOWN</b></a>
+    <div class="broadcast">
+      <div class="dayrow"><span class="day" id="day">—</span><span class="date" id="date">—</span></div>
+      <span class="clock-wrap"><span class="clock" id="clock">--:--:--</span><span class="ampm" id="ampm"></span></span>
+    </div>
+    <div class="status">
+      <nav class="modes" aria-label="Site pages">
+        <a class="mode" href="../events.html">Events</a>
+        <a class="mode" href="../things-to-do.html">To Do</a>
       </nav>
+      <a class="live-badge" href="#cd-add"><i aria-hidden="true"></i>Add yours</a>
     </div>
   </header>
 
-  <main class="cd-main">
+  <p class="hint" id="cd-meta">Loading the year…</p>
 
-    <section class="cd-hero">
-      <h1 class="cd-title">Burlington,<br>counting down</h1>
-      <p class="cd-sub">The days the whole city plans around — the fair, the hop, the marathon, the fireworks. One stack, soonest first, ticking.</p>
-      <p class="cd-meta" id="cd-meta">Loading the year…</p>
-    </section>
+  <main class="board" id="cd-stack" aria-label="Burlington countdowns"></main>
 
-    <div class="cd-stack" id="cd-stack"></div>
-
-    <!-- ADD YOUR EVENT -->
-    <section class="cd-add" aria-labelledby="cd-add-title">
+  <!-- ADD YOUR EVENT -->
+  <section class="add" id="cd-add" aria-labelledby="cd-add-title">
+    <div class="add-inner">
+      <p class="add-kicker">The jar</p>
       <h2 id="cd-add-title">Add your event</h2>
-      <p class="cd-add-lede">This list is short on purpose. If yours belongs on it, make the case — the question at the bottom is the one that decides it.</p>
+      <p class="add-lede">This list is short on purpose. If yours belongs on it, make the case — the question at the bottom is the one that decides it.</p>
 
       <form class="cd-form" id="cd-form" novalidate>
         <label>Event name
@@ -123,34 +87,32 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
             <input type="text" name="where" maxlength="120" autocomplete="off" placeholder="Venue or neighbourhood">
           </label>
         </div>
-        <label>Link <span style="font-weight:400;opacity:.7">(optional)</span>
+        <label>Link <small>(optional)</small>
           <input type="url" name="link" maxlength="300" autocomplete="off" placeholder="https://">
         </label>
         <label>Why should this be on the list?
           <textarea name="why" rows="4" maxlength="400" placeholder="What makes it one of the events the whole city counts down to?"></textarea>
         </label>
-        <label>Your name or email <span style="font-weight:400;opacity:.7">(optional, if you want an answer)</span>
+        <label>Your name or email <small>(optional, if you want an answer)</small>
           <input type="text" name="who" maxlength="120" autocomplete="off" placeholder="Optional">
         </label>
         <p class="cd-err" hidden></p>
         <button class="cd-submit" type="submit">Put it in the jar</button>
       </form>
-    </section>
-
-  </main>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
-      <span class="footer-sep">·</span>
-      <span>Burlington, Vermont</span>
-      <span class="footer-sep">·</span>
-      <span class="footer-attribution">Dates checked by hand. Tell me when one is wrong.</span>
     </div>
+  </section>
+
+  <footer class="lbar">
+    <span class="lgroup"><span class="llbl">Board</span><span class="lopt on" id="cd-count">—</span></span>
+    <span class="lgroup"><span class="llbl">Order</span><span class="lopt on">Soonest</span></span>
+    <span class="lgroup"><span class="llbl">Dates</span><span class="lopt">Checked by hand</span></span>
+    <span class="lright">
+      <a class="lopt" href="#cd-add">Add yours ↵</a>
+      <a class="lexit" href="https://www.btownbrief.com" target="_blank" rel="noopener">Btown Brief ↗</a>
+    </span>
   </footer>
 
-  <script src="countdown.js?v=20260904a"></script>
-  <script src="../js/auto-theme.js?v=20260711k"></script>
+  <script src="countdown.js?v=20260904b"></script>
   <script src="https://play.btownbrief.com/nav.js" defer></script>
 </body>
 </html>
