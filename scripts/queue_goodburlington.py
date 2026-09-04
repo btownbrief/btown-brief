@@ -18,6 +18,15 @@ rejected it (logged with a reason in data/goodburlington-curated.json so
 his taste audits stay possible). Without OPENROUTER_API_KEY the last good
 queue is left untouched — nothing unjudged is ever queued.
 
+"Already on r/GoodBurlington" has to work without Reddit: since Sept 2026
+Reddit 403s every listing from Actions, so the check reads the sub's
+Inoreader stream — each crosspost's description links back to the source
+post — plus data/reddit.json, and matches on normalised title as a last
+resort (the submit link pre-fills the source title verbatim). The queue
+is capped per source sub so r/vermont can never crowd out r/burlington,
+the one Stephen actually cares about; every item carries queued_at so
+the page can shelve repeats in their own section.
+
 CLI flags mirror the sibling scripts: --dry-run, --selftest.
 """
 
@@ -25,6 +34,7 @@ import argparse
 from datetime import datetime, timezone
 import json
 import os
+import re
 import sys
 import urllib.parse
 import urllib.request
@@ -43,8 +53,10 @@ TARGET_SUB = "GoodBurlington"
 SOURCE_SUBS = ("burlington", "vermont")
 MIN_SCORE = 15          # only enforced when a real score is known (Inoreader has none)
 MAX_AGE_HOURS = 48
-QUEUE_CAP = 8
+QUEUE_CAP_PER_SUB = 6   # per source sub, so r/vermont never crowds out r/burlington
 REJECT_LOG_CAP = 400
+TARGET_INOREADER = ("https://www.inoreader.com/stream/user/1003590800/tag/"
+                    "Reddit%20%28r%2FGoodBurlington%29?n=100")
 
 
 def utcnow():
@@ -120,27 +132,72 @@ def load_candidates():
     return list(merged.values())
 
 
-def target_taken_ids():
-    """IDs already on r/GoodBurlington — native posts and the sources of
-    existing crossposts — so the queue never offers a duplicate. Falls back
-    to the site's own data/reddit.json when the live listing is blocked."""
-    taken = set()
+def title_key(title):
+    """Normalised title for the last-resort duplicate check: lowercase,
+    punctuation stripped, whitespace collapsed."""
+    return " ".join(re.findall(r"[a-z0-9]+", (title or "").lower()))
+
+
+def parse_target_listing(raw):
+    ids, titles = set(), set()
+    for child in (json.loads(raw).get("data") or {}).get("children", []):
+        row = child.get("data") or {}
+        ids.add((row.get("id") or "").lower())
+        for parent in row.get("crosspost_parent_list") or []:
+            ids.add((parent.get("id") or "").lower())
+        if row.get("url"):
+            ids.add(chatter.reddit_id(row["url"]) or "")
+        titles.add(title_key(row.get("title")))
+    return ids - {""}, titles - {""}
+
+
+def parse_target_inoreader(raw):
+    """Every reddit id linked from a r/GoodBurlington feed item: the post
+    itself plus, for link posts and crossposts, the source post in the
+    description body."""
+    import xml.etree.ElementTree as ET
+    ids, titles = set(), set()
+    for item in ET.fromstring(raw).findall(".//item"):
+        ids.add(chatter.reddit_id(item.findtext("link")) or "")
+        for href in re.findall(r'href="([^"]+)"', item.findtext("description") or ""):
+            ids.add(chatter.reddit_id(href) or "")
+        titles.add(title_key(item.findtext("title")))
+    return ids - {""}, titles - {""}
+
+
+def target_taken():
+    """(ids, title keys) already on r/GoodBurlington — native posts and the
+    sources of existing crossposts — so the queue never offers a duplicate.
+    Reddit's own listing is tried first (blocked from Actions since Sept
+    2026), then the sub's Inoreader stream, always merged with the site's
+    data/reddit.json so a dead feed never empties the check."""
+    ids, titles = set(), set()
     for host in ("www.reddit.com", "old.reddit.com", "api.reddit.com"):
         try:
             raw = fetch(f"https://{host}/r/{TARGET_SUB}/new.json?limit=100&raw_json=1", "application/json")
-            for child in (json.loads(raw).get("data") or {}).get("children", []):
-                row = child.get("data") or {}
-                taken.add((row.get("id") or "").lower())
-                for parent in row.get("crosspost_parent_list") or []:
-                    taken.add((parent.get("id") or "").lower())
-                if row.get("url"):
-                    taken.add(chatter.reddit_id(row["url"]) or "")
-            return taken
+            got_ids, got_titles = parse_target_listing(raw)
+            ids |= got_ids
+            titles |= got_titles
+            break
         except Exception as exc:
             print(f"reddit {host} {TARGET_SUB} failed: {exc}", file=sys.stderr)
+    try:
+        got_ids, got_titles = parse_target_inoreader(fetch(TARGET_INOREADER, "application/rss+xml, application/xml"))
+        ids |= got_ids
+        titles |= got_titles
+    except Exception as exc:
+        print(f"inoreader {TARGET_SUB} failed: {exc}", file=sys.stderr)
     for post in chatter.load_json(REDDIT_JSON, {}).get("posts", []):
-        taken.add(chatter.reddit_id(post.get("url")) or "")
-    return taken
+        ids.add(chatter.reddit_id(post.get("url")) or "")
+        titles.add(title_key(post.get("title")))
+    ids.discard("")
+    titles.discard("")
+    return ids, titles
+
+
+def is_taken(post, taken):
+    ids, titles = taken
+    return post["id"] in ids or title_key(post["title"]) in titles
 
 
 # ----------------------------------------------------------------------
@@ -152,7 +209,7 @@ def screen(post, rejected, taken, now=None):
     now_ts = (now or utcnow()).timestamp()
     if post["id"] in rejected:
         return "already-judged"
-    if post["id"] in taken:
+    if is_taken(post, taken):
         return "already-on-target"
     if post["score"] is not None and post["score"] < MIN_SCORE:
         return "low-score"
@@ -215,10 +272,23 @@ def submit_url(post):
             urllib.parse.urlencode({"url": post["permalink"], "title": post["title"][:300]}))
 
 
-def queue_item(post, why):
+def queue_item(post, why, now=None):
     return {"id": post["id"], "sub": post["sub"], "title": post["title"],
             "score": post["score"], "created_utc": post["created_utc"],
+            "queued_at": (now or utcnow()).isoformat(timespec="seconds"),
             "url": post["permalink"], "submit_url": submit_url(post), "why": why}
+
+
+def cap_per_sub(items):
+    """Newest first within each source sub, at most QUEUE_CAP_PER_SUB each;
+    r/burlington (the sub Stephen cares about) is listed before r/vermont."""
+    order = {f"r/{sub}": rank for rank, sub in enumerate(SOURCE_SUBS)}
+    out = []
+    for sub in sorted({item["sub"] for item in items}, key=lambda s: order.get(s, 99)):
+        mine = sorted((i for i in items if i["sub"] == sub),
+                      key=lambda i: i["created_utc"], reverse=True)
+        out.extend(mine[:QUEUE_CAP_PER_SUB])
+    return out
 
 
 # ----------------------------------------------------------------------
@@ -228,14 +298,17 @@ def queue_item(post, why):
 def run(dry_run=False):
     state = chatter.load_json(STATE, {})
     rejected = state.get("rejected") or {}
-    old_queue = chatter.load_json(QUEUE, {}).get("items") or []
+    previous = chatter.load_json(QUEUE, {})
+    old_queue = previous.get("items") or []
 
-    taken = target_taken_ids()
+    taken = target_taken()
     now_ts = utcnow().timestamp()
     # Items he hasn't posted yet stay queued until they age out or appear on
     # the sub — no re-judging needed, a past yes stays a yes.
     keep = [item for item in old_queue
-            if item["id"] not in taken and now_ts - item["created_utc"] <= MAX_AGE_HOURS * 3600]
+            if not is_taken(item, taken) and now_ts - item["created_utc"] <= MAX_AGE_HOURS * 3600]
+    for item in keep:   # items queued before queued_at existed
+        item.setdefault("queued_at", previous.get("updated"))
     kept_ids = {item["id"] for item in keep}
 
     candidates, screened = [], 0
@@ -264,7 +337,7 @@ def run(dry_run=False):
             elif v:
                 rejected[post["id"]] = v["why"] or "judge: no"
 
-    items = sorted(keep + fresh, key=lambda i: i["created_utc"], reverse=True)[:QUEUE_CAP]
+    items = cap_per_sub(keep + fresh)
     output = {"updated": utcnow().isoformat(timespec="seconds"), "items": items}
 
     if dry_run:
@@ -284,13 +357,42 @@ def selftest():
                 "created_utc": now.timestamp() - hours * 3600,
                 "permalink": f"https://www.reddit.com/r/burlington/comments/{post_id}/x/"}
 
-    assert screen(post("aaa", "Stranger paid for my coffee and left a kind note"), {}, set(), now) is None
-    assert screen(post("bbb", "Bike stolen from Church Street rack"), {}, set(), now) == "rough-terms"
-    assert screen(post("ccc", "Lovely sunset", score=3), {}, set(), now) == "low-score"
-    assert screen(post("ino", "Lovely sunset", score=None), {}, set(), now) is None
-    assert screen(post("ddd", "Old news", hours=72), {}, set(), now) == "too-old"
-    assert screen(post("eee", "Repeat"), {"eee": "x"}, set(), now) == "already-judged"
-    assert screen(post("fff", "Nice day"), {}, {"fff"}, now) == "already-on-target"
+    nobody = (set(), set())
+    assert screen(post("aaa", "Stranger paid for my coffee and left a kind note"), {}, nobody, now) is None
+    assert screen(post("bbb", "Bike stolen from Church Street rack"), {}, nobody, now) == "rough-terms"
+    assert screen(post("ccc", "Lovely sunset", score=3), {}, nobody, now) == "low-score"
+    assert screen(post("ino", "Lovely sunset", score=None), {}, nobody, now) is None
+    assert screen(post("ddd", "Old news", hours=72), {}, nobody, now) == "too-old"
+    assert screen(post("eee", "Repeat"), {"eee": "x"}, nobody, now) == "already-judged"
+    assert screen(post("fff", "Nice day"), {}, ({"fff"}, set()), now) == "already-on-target"
+    # Title match catches a crosspost whose source id the feed never told us
+    assert screen(post("ggg", "Been living here for one year now. Thank you all! ❤️"), {},
+                  (set(), {title_key("been living here for one year now, thank you all")}), now) == "already-on-target"
+
+    # Inoreader r/GoodBurlington item: the description links back to the source post
+    feed = ('<rss><channel><item><title>Free creemees on Church St</title>'
+            '<link>https://www.reddit.com/r/GoodBurlington/comments/gb1/free_creemees/</link>'
+            '<description>&lt;a href="https://www.reddit.com/user/whiteshirtdude1"&gt;u&lt;/a&gt; '
+            '&lt;a href="https://www.reddit.com/r/burlington/comments/src1/free_creemees/"&gt;[link]&lt;/a&gt;'
+            '</description></item></channel></rss>')
+    ids, titles = parse_target_inoreader(feed)
+    assert ids == {"gb1", "src1"}, ids
+    assert titles == {"free creemees on church st"}, titles
+    listing_ids, _ = parse_target_listing(json.dumps({"data": {"children": [
+        {"data": {"id": "GB2", "title": "x", "url": "https://www.reddit.com/r/vermont/comments/src2/x/",
+                  "crosspost_parent_list": [{"id": "SRC3"}]}}]}}))
+    assert listing_ids == {"gb2", "src2", "src3"}, listing_ids
+
+    # Per-sub cap: r/burlington first, newest first, r/vermont can't crowd it out
+    def vt(post_id, hours):
+        item = post(post_id, "t", hours=hours)
+        item["sub"] = "r/vermont"
+        return item
+    mixed = ([queue_item(vt(f"v{n}", n), "ok", now) for n in range(10)] +
+             [queue_item(post(f"b{n}", "t", hours=n + 20), "ok", now) for n in range(2)])
+    capped = cap_per_sub(mixed)
+    assert [i["id"] for i in capped] == ["b0", "b1", "v0", "v1", "v2", "v3", "v4", "v5"], [i["id"] for i in capped]
+    assert capped[0]["queued_at"] == now.isoformat(timespec="seconds")
 
     listing = json.dumps({"data": {"children": [
         {"data": {"id": "GG1", "title": "Free creemees on Church St", "selftext": "so good",

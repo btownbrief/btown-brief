@@ -24,9 +24,16 @@
     main { max-width:640px; margin:0 auto; padding:32px 16px 64px; }
     h1 { font-family:Lora,serif; font-size:1.5rem; margin:0 0 4px; }
     .sub { color:var(--muted); font-size:.9rem; margin:0 0 24px; }
+    h2 { font-family:Lora,serif; font-size:1.1rem; margin:28px 0 10px; display:flex;
+         align-items:baseline; gap:8px; }
+    h2 .count { color:var(--muted); font-weight:400; font-size:.85rem; font-family:"DM Sans",system-ui,sans-serif; }
+    h2 + .none { color:var(--muted); font-size:.9rem; margin:0 0 8px; }
+    .repeats h2 { color:var(--muted); }
+    .repeats .card { opacity:.82; }
     .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
             padding:16px; margin-bottom:14px; }
     .meta { color:var(--muted); font-size:.82rem; margin-bottom:6px; }
+    .tapped { color:var(--accent); font-weight:600; }
     .title { font-family:Lora,serif; font-size:1.08rem; font-weight:600; margin:0 0 4px; }
     .why { color:var(--muted); font-size:.88rem; font-style:italic; margin:0 0 12px; }
     .row { display:flex; gap:10px; flex-wrap:wrap; }
@@ -42,13 +49,45 @@
 <main>
   <h1>r/GoodBurlington queue</h1>
   <p class="sub">Curated from r/burlington + r/vermont. <strong>Crosspost →</strong> opens
-    reddit's submit page pre-filled — check it, tap Post. Posted items drop off on the
-    next refresh; anything you skip ages out after 48 hours.</p>
+    reddit's submit page pre-filled — check it, tap Post. Posted items drop off once they
+    show up on r/GoodBurlington; anything you skip ages out after 48 hours. Items you've
+    already seen on an earlier day wait at the bottom under <em>Shown before</em>.</p>
   <div id="list"><p class="empty">Loading…</p></div>
   <footer id="stamp"></footer>
 </main>
 <script>
   const esc = s => { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; };
+  const SUBS = ['r/burlington', 'r/vermont'];   // r/burlington first — it's the one that matters
+  const KEEP_DAYS = 7;
+
+  // Per-browser memory of what this page has already shown (and which
+  // Crosspost buttons were tapped). Lives only in this Mac's browser —
+  // the queue itself never learns about it. Wrapped so a blocked
+  // localStorage just means everything looks new.
+  const store = key => { try { return JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { return {}; } };
+  const save = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} };
+  const dayOf = iso => new Date(iso).toLocaleDateString('en-CA');   // YYYY-MM-DD, local time
+  const today = dayOf(new Date().toISOString());
+
+  const card = (it, tapped) => `
+    <div class="card" data-id="${esc(it.id)}">
+      <div class="meta">${esc(it.sub)}${it.score != null ? ' · ▲ ' + esc(String(it.score)) : ''}${
+        tapped ? ' · <span class="tapped">✓ submit page opened ' + esc(dayOf(tapped)) + '</span>' : ''}</div>
+      <p class="title">${esc(it.title)}</p>
+      <p class="why">${esc(it.why)}</p>
+      <div class="row">
+        <a class="btn go" href="${esc(it.submit_url)}" target="_blank" rel="noopener">Crosspost →</a>
+        <a class="btn peek" href="${esc(it.url)}" target="_blank" rel="noopener">See the post</a>
+      </div>
+    </div>`;
+
+  const section = (title, items, tapped, cls, emptyText) => `
+    <section class="${cls}">
+      <h2>${esc(title)} <span class="count">${items.length ? items.length : ''}</span></h2>
+      ${items.length ? items.map(it => card(it, tapped[it.id])).join('')
+                     : '<p class="none">' + esc(emptyText) + '</p>'}
+    </section>`;
+
   fetch('data/goodburlington-queue.json?' + Date.now())
     .then(r => r.json())
     .then(data => {
@@ -60,16 +99,38 @@
           '<p class="empty">Nothing good queued right now — check back later.</p>';
         return;
       }
-      document.getElementById('list').innerHTML = items.map(it => `
-        <div class="card">
-          <div class="meta">${esc(it.sub)}${it.score != null ? ' · ▲ ' + esc(String(it.score)) : ''}</div>
-          <p class="title">${esc(it.title)}</p>
-          <p class="why">${esc(it.why)}</p>
-          <div class="row">
-            <a class="btn go" href="${esc(it.submit_url)}" target="_blank" rel="noopener">Crosspost →</a>
-            <a class="btn peek" href="${esc(it.url)}" target="_blank" rel="noopener">See the post</a>
-          </div>
-        </div>`).join('');
+
+      const seen = store('gbq.seen'), tapped = store('gbq.tapped');
+      const cutoff = Date.now() - KEEP_DAYS * 864e5;
+      for (const k of Object.keys(seen)) if (new Date(seen[k]) < cutoff) delete seen[k];
+      for (const k of Object.keys(tapped)) if (new Date(tapped[k]) < cutoff) delete tapped[k];
+
+      // A repeat is anything first shown on an earlier day — reloading
+      // today keeps today's batch "new".
+      const isRepeat = it => seen[it.id] && dayOf(seen[it.id]) !== today;
+      const bySub = sub => items.filter(it => it.sub === sub && !isRepeat(it));
+      const repeats = items.filter(isRepeat)
+        .sort((a, b) => SUBS.indexOf(a.sub) - SUBS.indexOf(b.sub) || b.created_utc - a.created_utc);
+      const stray = items.filter(it => !SUBS.includes(it.sub) && !isRepeat(it));
+
+      document.getElementById('list').innerHTML =
+        SUBS.map(sub => section(sub, bySub(sub), tapped, 'fresh', 'Nothing new from ' + sub + '.')).join('') +
+        (stray.length ? section('Elsewhere', stray, tapped, 'fresh', '') : '') +
+        (repeats.length ? section('Shown before', repeats, tapped, 'repeats', '') : '');
+
+      const now = new Date().toISOString();
+      for (const it of items) if (!seen[it.id]) seen[it.id] = now;
+      save('gbq.seen', seen);
+
+      document.getElementById('list').addEventListener('click', e => {
+        const go = e.target.closest('a.go');
+        if (!go) return;
+        const el = go.closest('.card');
+        tapped[el.dataset.id] = new Date().toISOString();
+        save('gbq.tapped', tapped);
+        if (!el.querySelector('.tapped')) el.querySelector('.meta').innerHTML +=
+          ' · <span class="tapped">✓ submit page opened ' + esc(today) + '</span>';
+      });
     })
     .catch(() => {
       document.getElementById('list').innerHTML = '<p class="empty">Couldn’t load the queue.</p>';
