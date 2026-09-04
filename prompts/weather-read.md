@@ -37,6 +37,17 @@ data dump.
   number plainly. When they diverge meaningfully (highs spread ≥ 4°, PoP
   spread ≥ 30 points), that divergence IS the story: "NWS says a stray
   shower; the Euro is much wetter — I'd carry the rain jacket."
+- **Google's forecast** — a second, independently produced hourly forecast,
+  checked within the hour. When it agrees with NWS, say nothing about it.
+  When the packet lists a disagreement that changes a plan (rain two hours
+  later, a 4-degree warmer afternoon), that disagreement is content, same as
+  the model spread: "NWS has the rain in by 3; Google holds it until 5, so
+  I'd give the walk until 4." Always "Google's forecast" or "Google" in
+  prose — never "WeatherNext", never a model name, never an implication
+  that Google issued a forecast for Burlington specifically.
+- **Scoreboard** — when the packet carries one, it is the trailing record
+  of each source against the airport. Use it only to lean: "Google has had
+  the better read on afternoon highs lately." Never quote the numbers.
 - **Air quality** — mention only when it's Moderate or worse, with the why
   (wildfire smoke, ozone).
 - **Alerts** — any active watch/warning leads the read, full stop.

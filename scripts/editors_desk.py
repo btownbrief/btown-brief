@@ -283,7 +283,8 @@ PAYLOADS = [
     ("Wander pool", GUIDE + "all-day/data/wander-pool.json", 30, "daily 4:20 UTC"),
     ("Sports", GUIDE + "data/sports.json", 30, "daily via refresh-allday"),
     ("Newsletter picks", GUIDE + "data/newsletter-picks.json", 10, "hourly, shed to ~3x/day"),
-    ("Weather latest", GUIDE + "data/weather/latest.json", 4, "hourly :45"),
+    ("Weather latest", GUIDE + "data/weather/latest.json", 2,
+     "hourly :45 + the weather-read-watchdog launchd redispatches past 70 min"),
     ("Events", GUIDE + "data/events/events.json", 30, "2x daily"),
     ("Champions", "https://raw.githubusercontent.com/btownbrief/btownbrief.github.io/"
      "champions-data/data/champions.json", 12, "games leaderboards"),
