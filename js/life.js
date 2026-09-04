@@ -599,7 +599,11 @@
     var stamps = el('hours-stamps');
     if (stamps) {
       var issued = (d.hourly || {}).updated;
-      stamps.textContent = issued ? 'NWS forecast issued ' + fmtClock(issued) : '';
+      // NWS re-issues the grid a few times a day, so "issued 2:10 AM" at
+      // 3 PM is honest; past 20 h the clock alone would mislead, so add the day.
+      var issuedOld = issued && Date.now() - new Date(issued).getTime() > 20 * HOUR;
+      stamps.textContent = issued ? 'NWS forecast issued ' + fmtClock(issued) +
+        (issuedOld ? ' ' + btvWeekday(issued, 'short') : '') : '';
       if (d.google && d.google.fetched_at) {
         stamps.textContent += (stamps.textContent ? ' · ' : '') + 'Google checked ' + fmtAgo(d.google.fetched_at);
       }
@@ -1306,9 +1310,13 @@
   function cToF(v) { return v == null ? null : Math.round(v * 9 / 5 + 32); }
   function kmToMph(v) { return v == null ? null : Math.round(v * 0.621371); }
   function valueOf(p, key) { return p[key] && p[key].value != null ? p[key].value : null; }
+  // Same 16-point rose as refresh_weather.py, so a live patch never flips
+  // the hero from "SSW" to "SW".
   function degreesToCompass(deg) {
     if (deg == null) return null;
-    return ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][Math.round(deg / 45) % 8];
+    var dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
+                'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+    return dirs[Math.floor(deg / 22.5 + 0.5) % 16];
   }
 
   function patchLiveNWS(d, observationP, alertsP) {
