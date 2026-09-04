@@ -31,7 +31,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Refresh weather data
+        # GOOGLE_WEATHER_API_KEY is optional: without it the google section
+        # is skipped and the page shows no Google layer at all.
+        env:
+          GOOGLE_WEATHER_API_KEY: ${{ secrets.GOOGLE_WEATHER_API_KEY }}
         run: python3 scripts/refresh_weather.py
+
+      - name: Score the forecasts against the airport
+        # Private for now — verification.json feeds the read, not the page.
+        run: python3 scripts/verify.py
 
       - name: Draft the read if one is due
         # GitHub's cron is best-effort and this repo's schedules get skipped

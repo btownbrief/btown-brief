@@ -65,6 +65,97 @@ def load_json(path):
 MODEL = os.environ.get("WEATHER_READ_MODEL", "openai/gpt-5.6-luna")
 
 
+VERIFICATION = os.path.join(ROOT, "data", "weather", "verification.json")
+
+
+def _hour_key(iso):
+    try:
+        dt = datetime.fromisoformat(str(iso).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return int(dt.timestamp() // 3600)
+
+
+def _clock(iso):
+    try:
+        return datetime.fromisoformat(iso).astimezone(ZoneInfo("America/New_York")).strftime("%-I %p")
+    except (ValueError, TypeError):
+        return iso
+
+
+def google_lines(d):
+    """Google's forecast next to NWS's, hour by hour, plus the disagreements
+    that would change a plan. Same thresholds as the page (3F, 25 points,
+    2 h on rain onset) so the read and the strip never contradict."""
+    g = d.get("google") or {}
+    gh = g.get("hours") or []
+    if not gh:
+        return []
+    try:
+        age_h = (datetime.now(timezone.utc)
+                 - datetime.fromisoformat(g.get("fetched_at"))).total_seconds() / 3600
+    except (ValueError, TypeError):
+        age_h = 99
+    if age_h > 3:
+        return []
+    nws = {_hour_key(h.get("t")): h for h in ((d.get("hourly") or {}).get("hours") or [])}
+    out = [f"GOOGLE'S FORECAST (checked {age_h * 60:.0f} min ago — a blended forecast, "
+           "call it 'Google's forecast' in prose, never 'WeatherNext'):"]
+    pairs = []
+    for h in gh[:18]:
+        k = _hour_key(h.get("t"))
+        n = nws.get(k)
+        if n:
+            pairs.append((h, n))
+    for h, n in pairs[::3]:
+        out.append(f"  {_clock(h['t'])}: Google {h.get('temp_f')}F / {h.get('pop')}% rain"
+                   f"  vs NWS {n.get('temp_f')}F / {n.get('pop')}%")
+    if not pairs:
+        return out
+    diffs = []
+    on_g = next((h for h, _ in pairs if (h.get("pop") or 0) >= 40), None)
+    on_n = next((n for _, n in pairs if (n.get("pop") or 0) >= 40), None)
+    if on_g and on_n:
+        gap = _hour_key(on_g["t"]) - _hour_key(on_n["t"])
+        if abs(gap) >= 2:
+            diffs.append(f"rain onset: NWS {_clock(on_n['t'])}, Google {_clock(on_g['t'])}")
+    elif bool(on_g) != bool(on_n):
+        diffs.append("rain in the next 18 h: " + ("Google yes, NWS no" if on_g else "NWS yes, Google no"))
+    pop_gap = max(pairs, key=lambda p: abs((p[0].get("pop") or 0) - (p[1].get("pop") or 0)))
+    if abs((pop_gap[0].get("pop") or 0) - (pop_gap[1].get("pop") or 0)) >= 25:
+        diffs.append(f"rain chance at {_clock(pop_gap[0]['t'])}: NWS {pop_gap[1].get('pop')}%, "
+                     f"Google {pop_gap[0].get('pop')}%")
+    t_gap = max(pairs, key=lambda p: abs((p[0].get("temp_f") or 0) - (p[1].get("temp_f") or 0)))
+    dt = (t_gap[0].get("temp_f") or 0) - (t_gap[1].get("temp_f") or 0)
+    if abs(dt) >= 3:
+        diffs.append(f"temperature at {_clock(t_gap[0]['t'])}: Google runs {abs(dt)}F "
+                     f"{'warmer' if dt > 0 else 'cooler'} than NWS")
+    out.append("  DISAGREEMENTS THAT CHANGE A PLAN: " + ("; ".join(diffs) if diffs else "none — they agree"))
+    return out
+
+
+def scoreboard_lines():
+    """Trailing verification, only once the sample is worth a sentence."""
+    v = load_json(VERIFICATION)
+    if not v or not v.get("sources"):
+        return []
+    out = []
+    for bucket in ("4-12h", "13-30h"):
+        n = v["sources"].get("nws", {}).get(bucket, {})
+        g = v["sources"].get("google", {}).get(bucket, {})
+        if n.get("n", 0) < 48 or g.get("n", 0) < 48:
+            continue
+        out.append(f"  {bucket} ahead: NWS temp off by {n['temp_mae']}F on average, "
+                   f"Google by {g['temp_mae']}F; rain Brier NWS {n['brier']}, Google {g['brier']} "
+                   "(lower is better)")
+    if not out:
+        return []
+    return [f"SCOREBOARD (last {v.get('window_days')} days vs the airport — only mention if it "
+            "bears on today's call, e.g. 'Google has had the better read on afternoon highs lately'):"] + out
+
+
 def build_packet(d, outlets):
     """A compact, human-readable packet — small enough to read at review
     time, complete enough to write from."""
@@ -112,6 +203,9 @@ def build_packet(d, outlets):
             hi = ", ".join(f"{k} {v}" for k, v in day["high_f"].items())
             pop = ", ".join(f"{k} {v}%" for k, v in day["pop_max"].items())
             lines.append(f"  {day['date']}: highs [{hi}] spread {day['high_spread_f']}F; precip chance [{pop}]")
+
+    lines.extend(google_lines(d))
+    lines.extend(scoreboard_lines())
 
     air = d.get("air") or {}
     if air.get("aqi") is not None:

@@ -12,6 +12,9 @@ Sources (all keyless):
                              with Open-Meteo CAMS model as fallback
   - Open-Meteo               sunrise/sunset/UV + multi-model forecast spread
   - VT DOH / City of BTV     beach status (see fetch_beaches)
+  - Google Weather API       current + 48 h hourly + 24 h history (needs
+                             GOOGLE_WEATHER_API_KEY; section is skipped
+                             without it) — the page's second opinion
 
 Design: every section fetches independently; on failure we KEEP the last
 good section from the existing file (same contract as refresh-data.yml).
@@ -107,6 +110,10 @@ def fetch_now():
         "wind_mph": kmh_to_mph(v("windSpeed")),
         "wind_gust_mph": kmh_to_mph(v("windGust")),
         "wind_dir": deg_to_compass(v("windDirection")),
+        # last-hour precip in inches (often null at KBTV) — verification uses
+        # it, with the text description as the fallback rain signal
+        "precip_last_hr_in": (round(v("precipitationLastHour") / 25.4, 2)
+                              if v("precipitationLastHour") is not None else None),
     }
 
 
@@ -413,10 +420,165 @@ def fetch_models():
                 row["pop_max"][name] = pop
             if pr is not None:
                 row["precip_in"][name] = round(pr / 25.4, 2)  # mm → in
+        days.append(row)
+
+    # Google's daily call joins the spread when the key is present. A
+    # Google failure must never cost us the three national models.
+    key = os.environ.get("GOOGLE_WEATHER_API_KEY")
+    if key:
+        try:
+            gd = _google_daily(key, len(days))
+            for row in days:
+                g = gd.get(row["date"])
+                if not g:
+                    continue
+                if g["high_f"] is not None:
+                    row["high_f"]["Google"] = g["high_f"]
+                if g["pop_max"] is not None:
+                    row["pop_max"]["Google"] = g["pop_max"]
+                row["precip_in"]["Google"] = g["precip_in"]
+        except Exception as e:  # noqa: BLE001
+            print(f"google daily failed ({e}) — spread is GFS/Euro/ICON only", file=sys.stderr)
+
+    for row in days:
         highs = list(row["high_f"].values())
         row["high_spread_f"] = (max(highs) - min(highs)) if len(highs) > 1 else 0
-        days.append(row)
     return {"days": days}
+
+
+
+# ----------------------------------------------------------------------
+# Google Weather API — the second opinion. Google's blended consumer
+# forecast (it says "enhanced by WeatherNext 3"; we get no model provenance,
+# so on the page it is only ever "Google's forecast"). Key is a web-service
+# key restricted to this API with a daily quota cap; never shipped to the
+# browser. ~4 calls/run + history twice a day ≈ 2,200/month, inside the
+# 10,000 free tier. Attribution on the page is mandatory:
+# "Source: Includes weather data from Google".
+# ----------------------------------------------------------------------
+
+GOOGLE_BASE = "https://weather.googleapis.com/v1"
+GOOGLE_HOURS = 48
+HISTORY_EVERY_H = 11          # history/hours only updates twice a day
+_PREVIOUS = {}                # last good latest.json, set in main()
+
+
+def _g(url, key, **params):
+    q = {"key": key, "location.latitude": LAT, "location.longitude": LON,
+         "unitsSystem": "IMPERIAL", **params}
+    full = f"{GOOGLE_BASE}/{url}?" + urllib.parse.urlencode(q)
+    req = urllib.request.Request(full, headers={"User-Agent": UA, "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as res:
+        return json.loads(res.read())
+
+
+def _deg(obj):
+    return round(obj["degrees"]) if isinstance(obj, dict) and obj.get("degrees") is not None else None
+
+
+def _val(obj, k="value"):
+    return round(obj[k]) if isinstance(obj, dict) and obj.get(k) is not None else None
+
+
+def _google_row(h):
+    """One Google hour/observation → the page's row shape (mirrors NWS rows)."""
+    wind = h.get("wind") or {}
+    precip = h.get("precipitation") or {}
+    prob = (precip.get("probability") or {}).get("percent")
+    qpf = (precip.get("qpf") or {}).get("quantity")
+    start = ((h.get("interval") or {}).get("startTime")) or h.get("currentTime")
+    t = start
+    if start:
+        try:
+            t = datetime.fromisoformat(start.replace("Z", "+00:00")).astimezone(BTV_TZ).isoformat(timespec="seconds")
+        except ValueError:
+            t = start
+    return {
+        "t": t,
+        "temp_f": _deg(h.get("temperature")),
+        "feels_f": first_not_none(_deg(h.get("feelsLikeTemperature")), _deg(h.get("temperature"))),
+        "pop": prob if prob is not None else 0,
+        "qpf_in": round(qpf, 2) if qpf is not None else 0.0,
+        "thunder": h.get("thunderstormProbability") or 0,
+        "humidity": h.get("relativeHumidity"),
+        "wind_mph": _val(wind.get("speed")),
+        "wind_gust_mph": _val(wind.get("gust")),
+        "wind_dir": deg_to_compass((wind.get("direction") or {}).get("degrees")),
+        "sky": h.get("cloudCover"),
+        "short": ((h.get("weatherCondition") or {}).get("description") or {}).get("text"),
+        "is_day": h.get("isDaytime"),
+    }
+
+
+def fetch_google():
+    key = os.environ.get("GOOGLE_WEATHER_API_KEY")
+    if not key:
+        raise RuntimeError("no GOOGLE_WEATHER_API_KEY")
+
+    cur = _g("currentConditions:lookup", key)
+    now_row = _google_row(cur)
+    now = {
+        "temp_f": now_row["temp_f"], "feels_like_f": now_row["feels_f"],
+        "humidity": now_row["humidity"], "dewpoint_f": _deg(cur.get("dewPoint")),
+        "wind_mph": now_row["wind_mph"], "wind_gust_mph": now_row["wind_gust_mph"],
+        "wind_dir": now_row["wind_dir"], "description": now_row["short"],
+        "sky": now_row["sky"], "uv": cur.get("uvIndex"),
+    }
+
+    hours, token = [], None
+    while len(hours) < GOOGLE_HOURS:
+        params = {"hours": GOOGLE_HOURS, "pageSize": 24}
+        if token:
+            params["pageToken"] = token
+        page = _g("forecast/hours:lookup", key, **params)
+        hours.extend(_google_row(h) for h in page.get("forecastHours") or [])
+        token = page.get("nextPageToken")
+        if not token:
+            break
+    hours = hours[:GOOGLE_HOURS]
+    if not hours:
+        raise RuntimeError("google: empty hourly forecast")
+
+    # history only refreshes twice a day at Google — don't burn calls on it
+    prev = (_PREVIOUS.get("google") or {})
+    history, hist_at = prev.get("history") or [], prev.get("history_fetched_at")
+    due = True
+    if hist_at:
+        try:
+            age_h = (datetime.now(timezone.utc) - datetime.fromisoformat(hist_at)).total_seconds() / 3600
+            due = age_h >= HISTORY_EVERY_H
+        except ValueError:
+            due = True
+    if due:
+        try:
+            hist = _g("history/hours:lookup", key, hours=24, pageSize=24)
+            history = [_google_row(h) for h in hist.get("historyHours") or []]
+            hist_at = now_iso
+        except Exception as e:  # noqa: BLE001 — history is a nice-to-have
+            print(f"google history failed ({e}) — kept last", file=sys.stderr)
+
+    return {"fetched_at": now_iso, "now": now, "hours": hours,
+            "history_fetched_at": hist_at, "history": history}
+
+
+def _google_daily(key, n=3):
+    """Google's daily highs / rain chance for the model-spread chip."""
+    data = _g("forecast/days:lookup", key, days=n, pageSize=n)
+    out = {}
+    for day in data.get("forecastDays") or []:
+        dd = day.get("displayDate") or {}
+        if not all(k in dd for k in ("year", "month", "day")):
+            continue
+        date = f"{dd['year']:04d}-{dd['month']:02d}-{dd['day']:02d}"
+        dayp = ((day.get("daytimeForecast") or {}).get("precipitation") or {})
+        nightp = ((day.get("nighttimeForecast") or {}).get("precipitation") or {})
+        pops = [x for x in ((dayp.get("probability") or {}).get("percent"),
+                            (nightp.get("probability") or {}).get("percent")) if x is not None]
+        qpf = sum((x.get("qpf") or {}).get("quantity") or 0 for x in (dayp, nightp))
+        out[date] = {"high_f": _deg(day.get("maxTemperature")),
+                     "pop_max": max(pops) if pops else None,
+                     "precip_in": round(qpf, 2)}
+    return out
 
 
 # ----------------------------------------------------------------------
@@ -523,6 +685,7 @@ SECTIONS = {
     "air": fetch_air_quality,
     "sun": fetch_sun,
     "models": fetch_models,
+    "google": fetch_google,
 }
 
 
@@ -535,6 +698,9 @@ def main():
         except Exception:
             previous = {}
 
+    global _PREVIOUS
+    _PREVIOUS = previous
+
     out = {"updated": now_iso, "sections_updated": dict(previous.get("sections_updated", {}))}
     failures = []
     for name, fn in SECTIONS.items():
@@ -544,6 +710,13 @@ def main():
             print(f"{name}: ok")
         except Exception as e:  # noqa: BLE001 — keep last good section, keep going
             failures.append(name)
+            if name == "google" and not os.environ.get("GOOGLE_WEATHER_API_KEY"):
+                # Not configured yet: the page must not show a Google layer
+                # at all, so drop the section rather than carrying stale data.
+                out.pop(name, None)
+                out["sections_updated"].pop(name, None)
+                print("google: skipped (no GOOGLE_WEATHER_API_KEY)")
+                continue
             if name in previous:
                 out[name] = previous[name]
                 print(f"{name}: FAILED ({e}) — kept last good data", file=sys.stderr)
@@ -555,6 +728,15 @@ def main():
     with open(OUT, "w") as f:
         json.dump(out, f, indent=1, ensure_ascii=False)
     print(f"wrote {os.path.relpath(OUT)} ({len(SECTIONS) - len(failures)}/{len(SECTIONS)} sections fresh)")
+
+    # Verification snapshot — what each source said this run, so verify.py
+    # can score it against the airport later. Only fresh sections count.
+    try:
+        import verify
+        verify.snapshot(out, fresh=[n for n in SECTIONS if n not in failures])
+        print("snapshot: ok")
+    except Exception as e:  # noqa: BLE001
+        print(f"snapshot: FAILED ({e})", file=sys.stderr)
 
     # beaches.json — separate file, same keep-last-good contract
     try:
