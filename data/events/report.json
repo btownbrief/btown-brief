@@ -1,42 +1,42 @@
 {
- "generated": "2026-09-04T09:44:35-04:00",
+ "generated": "2026-09-04T18:31:30-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 5.5
+   "seconds": 6.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 77,
-   "seconds": 3.5
+   "seconds": 8.0
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 60,
-   "seconds": 3.4
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 221,
-   "seconds": 4.2
+   "count": 223,
+   "seconds": 4.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 84,
-   "seconds": 1.9
+   "count": 85,
+   "seconds": 2.1
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 4
+   "staleDays": 5
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-04&end_date=2026-11-03&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 4
+   "staleDays": 5
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 199,
-   "seconds": 68.9
+   "seconds": 70.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -66,130 +66,91 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 716,
-   "seconds": 35.6
+   "seconds": 36.9
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 76,
-   "seconds": 0.6
+   "count": 77,
+   "seconds": 0.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 1
+   "count": 1,
+   "seconds": 10.8
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 363,
-   "seconds": 73.0
+   "count": 368,
+   "seconds": 75.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 118.1
+   "count": 63,
+   "seconds": 124.4
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 20,
-   "seconds": 0.4
+   "count": 21,
+   "seconds": 0.6
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 51,
-   "seconds": 13.1
+   "seconds": 14.0
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 25,
+   "count": 61,
    "seconds": 0.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 0,
-   "error": "HTTP Error 403: Forbidden",
-   "staleDays": 0
+   "count": 93,
+   "seconds": 1.6
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 26,
-   "seconds": 32.9
+   "seconds": 34.7
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2385,
-   "seconds": 67.0
+   "seconds": 18.4
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 4
+   "staleDays": 5
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 480,
-   "seconds": 27.1
+   "count": 487,
+   "seconds": 19.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 287,
-   "seconds": 0.3
+   "count": 292,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 82,
-   "seconds": 103.3
+   "seconds": 109.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 51,
-   "seconds": 0.5
+   "seconds": 0.2
   }
  },
- "gathered": 5331,
- "afterDedup": 2488,
- "duplicatesMerged": 2843,
- "final": 2757,
+ "gathered": 5482,
+ "afterDedup": 2576,
+ "duplicatesMerged": 2906,
+ "final": 2793,
  "firecrawlCalls": 16,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Margo Cilker & Lilly Hiatt",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-10-08"
-  },
-  {
-   "kept": {
-    "title": "Benjamin Tod & Lost Dog Street Band",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-10-08"
-  },
-  {
-   "kept": {
-    "title": "C.N. Crawford | Avalon Tower",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-08"
-  },
   {
    "kept": {
     "title": "Thirsty Thursday",
@@ -785,6 +746,17 @@
    "merged_sources": [
     "champlainvalley",
     "higherground"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
+    "title": "Italian Conversation Group",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
    ],
    "date": "2026-10-14"
   },
@@ -1532,7 +1504,9 @@
    },
    "merged_sources": [
     "helloburlington",
-    "higherground"
+    "higherground",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-10-22"
   },
@@ -1976,6 +1950,17 @@
   },
   {
    "kept": {
+    "title": "Italian Conversation Group",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
+   ],
+   "date": "2026-10-28"
+  },
+  {
+   "kept": {
     "title": "Standup Open Mic",
     "source": "vcc"
    },
@@ -2271,6 +2256,17 @@
   },
   {
    "kept": {
+    "title": "Whizbang's Street Wide Trick or Treat",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-31"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2416,11 +2412,26 @@
  ],
  "changes": [
   {
-   "id": "f9cac7646e7a",
-   "title": "Friday LEGO Builders",
+   "id": "51501d6890dd",
+   "title": "Daisychain w/ Mooncusser",
+   "date": "2026-09-18",
+   "change": "time",
+   "was": "2026-09-18T20:00:00.880000-04:00",
+   "now": "2026-09-18T19:45:00.347000-04:00"
+  },
+  {
+   "id": "c02709bef6b5",
+   "title": "Lunch with the Poets",
    "date": "2026-09-04",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
+  },
+  {
+   "id": "bb78e7f97ca7",
+   "title": "Lego Builders",
+   "date": "2026-09-04",
+   "change": "missing",
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "2157bf6cd74b",
@@ -2430,17 +2441,11 @@
    "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
-   "id": "afe863267ad5",
-   "title": "Soup for Two & Salmo at the Venetian Soda Lounge",
-   "date": "2026-09-05",
-   "change": "dropped"
-  },
-  {
-   "id": "7cbd00d36115",
-   "title": "Art Wall: Paintings by El Towle",
+   "id": "51a751ae6489",
+   "title": "Library Cards from all Over the Country (and Beyond!)",
    "date": "2026-09-08",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
    "id": "55d885bfeeec",
@@ -2450,11 +2455,11 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
-   "id": "a2fb77495797",
-   "title": "Babytime",
+   "id": "a84dc926a1e1",
+   "title": "Baby Time",
    "date": "2026-09-09",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "774cfccbb709",
@@ -2478,11 +2483,11 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "463aef06431d",
-   "title": "Morning Book Group: A Marriage at Sea",
+   "id": "291d60fdc343",
+   "title": "Morning Book Group",
    "date": "2026-09-10",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "c6de40a56162",
@@ -2492,11 +2497,11 @@
    "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
-   "id": "fe193b2686f4",
-   "title": "Knit for your Neighbors",
+   "id": "8fef2b946888",
+   "title": "Knit for Your Neighbor",
    "date": "2026-09-10",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "06f82ca96283",
@@ -2506,12 +2511,6 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "071a16518c5f",
-   "title": "The Silo Sessions with The Faux Paws and special guest Otter Creek",
-   "date": "2026-09-10",
-   "change": "dropped"
-  },
-  {
    "id": "6f6346e7d1a4",
    "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ James Kochalka Superstar & a Strelka afterparty!",
    "date": "2026-09-10",
@@ -2519,11 +2518,11 @@
    "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
-   "id": "6c5de7356392",
-   "title": "Friday LEGO Builders",
+   "id": "064e7b5b0752",
+   "title": "Lego Builders",
    "date": "2026-09-11",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "840b664b1c7e",
@@ -2540,12 +2539,6 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "f77ef7192c35",
-   "title": "Vermont Tree Farm of the Year- Hinesburg Town Forest",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
    "id": "db493d998604",
    "title": "Read to a Therapy Dog",
    "date": "2026-09-12",
@@ -2553,49 +2546,32 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
-   "id": "3522a306e694",
-   "title": "Sober Mom: An Author Reading with Elizabeth Jannuzzi",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
-   "id": "3d49fc11738c",
-   "title": "Second Saturdays | Your Place Is at This Table",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
-   "id": "f06de74c49c5",
-   "title": "Film Screening and Writer/Producer Q&A",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
-   "id": "4658c695cd34",
-   "title": "SBPL at Vermont Pride 2026",
+   "id": "90abed62f85a",
+   "title": "Pride Vermont 2026",
    "date": "2026-09-13",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
-   "id": "dca42d5e7089",
-   "title": "Art Wall: Paintings by El Towle",
+   "id": "4b9be690e3f2",
+   "title": "Library Cards from all Over the Country (and Beyond!)",
    "date": "2026-09-14",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
-   "id": "30b56db79a59",
-   "title": "10th Annual LoveYourBrain Golf Tournament",
+   "id": "dc450269b403",
+   "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
    "date": "2026-09-14",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
-   "id": "f4bf51a1d5ee",
-   "title": "Craftytown! Flower Suncatcher",
+   "id": "0684f2f9b1be",
+   "title": "Craftytown",
    "date": "2026-09-15",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "01edf9f89291",
@@ -2605,11 +2581,11 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "cc496b2749d1",
-   "title": "Babytime",
+   "id": "c089e6f19182",
+   "title": "Baby Time",
    "date": "2026-09-16",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "d74e0c47d69d",
@@ -2647,11 +2623,11 @@
    "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
-   "id": "56f92c658cbc",
-   "title": "Knit for your Neighbors",
+   "id": "78952acf13db",
+   "title": "Knit for Your Neighbor",
    "date": "2026-09-17",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "934bb342fb68",
@@ -2661,11 +2637,11 @@
    "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
-   "id": "636b4b1808dc",
-   "title": "Friday LEGO Builders",
+   "id": "95a7e9fe79a1",
+   "title": "Lego Builders",
    "date": "2026-09-18",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "2a8500ac55bb",
@@ -2675,18 +2651,24 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "f67f6df10ea2",
-   "title": "Green Community Festival",
+   "id": "8b7796b354d6",
+   "title": "South Burlington Green Community Festival",
    "date": "2026-09-19",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
+  },
+  {
+   "id": "890bad6c1d3c",
+   "title": "South Burlington Green Community Festival",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "d1266bb176a5",
    "title": "Live Music",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-01T10:16:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "cf144690c65a",
@@ -2699,15 +2681,21 @@
    "id": "5c07a69abff1",
    "title": "Live Music",
    "date": "2026-09-20",
-   "change": "missing",
-   "lastSeen": "2026-09-01T10:16:24-04:00"
+   "change": "dropped"
   },
   {
-   "id": "155c4c47017e",
-   "title": "Art Wall: Paintings by El Towle",
+   "id": "9fe672bdf884",
+   "title": "Library Cards from all Over the Country (and Beyond!)",
    "date": "2026-09-21",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-01T18:49:18-04:00"
+  },
+  {
+   "id": "923adadb23ff",
+   "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
+   "date": "2026-09-21",
+   "change": "missing",
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "913bbd65fbe6",
@@ -2717,11 +2705,11 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "d9da91d0efa5",
-   "title": "Babytime",
+   "id": "77694579a75f",
+   "title": "Baby Time",
    "date": "2026-09-23",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "129c5e5a7e94",
@@ -2748,8 +2736,7 @@
    "id": "a935a83a71c8",
    "title": "UVM Bookstore Fall 2026 Patio Sale",
    "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-09-01T10:16:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "4002416b7756",
@@ -2759,11 +2746,11 @@
    "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
-   "id": "c4a8745e37cf",
-   "title": "Knit for your Neighbors",
+   "id": "b3e0e1560f2d",
+   "title": "Knit for Your Neighbor",
    "date": "2026-09-24",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "f5c36bf7ec0a",
@@ -2773,25 +2760,23 @@
    "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
-   "id": "1436c69b27ab",
-   "title": "Friday LEGO Builders",
+   "id": "62c3f4a8eedc",
+   "title": "Lego Builders",
    "date": "2026-09-25",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "a7ea15d958ab",
    "title": "Live Music",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-09-01T10:16:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "8409ddce3264",
    "title": "Pet Store: A Live Sitcom",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-09-01T10:16:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "c86a8833e320",
@@ -2818,8 +2803,7 @@
    "id": "6ae460f474b2",
    "title": "Live Music",
    "date": "2026-09-26",
-   "change": "missing",
-   "lastSeen": "2026-09-01T10:16:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "beea1a3ba258",
@@ -2829,18 +2813,25 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "caabf1bf59af",
-   "title": "Art Wall: Paintings by El Towle",
+   "id": "31d863dc90fe",
+   "title": "Library Cards from all Over the Country (and Beyond!)",
    "date": "2026-09-28",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-01T18:49:18-04:00"
   },
   {
-   "id": "3b04bf2dc8d6",
-   "title": "Storybook Craftytown- Apple",
+   "id": "ef87e6530179",
+   "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
+   "date": "2026-09-28",
+   "change": "missing",
+   "lastSeen": "2026-09-04T09:44:35-04:00"
+  },
+  {
+   "id": "348e88592d16",
+   "title": "Craftytown",
    "date": "2026-09-29",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "77442c3edd36",
@@ -2850,11 +2841,11 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "b35268f5d210",
-   "title": "Babytime",
+   "id": "b06b8cd265e8",
+   "title": "Baby Time",
    "date": "2026-09-30",
    "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "717c258ffd9c",
@@ -2864,10 +2855,11 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
-   "id": "dfa99923fc23",
-   "title": "Vegan in Vermont",
+   "id": "acd0909292fd",
+   "title": "Pick-up Basketball",
    "date": "2026-09-30",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "7807d7f83c42",
@@ -2882,6 +2874,13 @@
    "date": "2026-10-02",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "876945419604",
+   "title": "October West Coast Swing Social feat. Lucky and Mae!",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "0ca966e22a6f",
@@ -2922,8 +2921,7 @@
    "id": "747a3fad7f71-2100",
    "title": "David Drake",
    "date": "2026-10-09",
-   "change": "missing",
-   "lastSeen": "2026-09-01T10:16:24-04:00"
+   "change": "dropped"
   },
   {
    "id": "fc22e536c304",
@@ -2931,12 +2929,6 @@
    "date": "2026-10-09",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
-  },
-  {
-   "id": "b5caf544a667",
-   "title": "Second Saturdays | Your Place Is at This Table",
-   "date": "2026-10-10",
-   "change": "dropped"
   },
   {
    "id": "7300f711e2ff",
@@ -3005,13 +2997,6 @@
    "id": "e4223228bdf9",
    "title": "Pet Store: A Live Sitcom",
    "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-09-01T10:16:24-04:00"
-  },
-  {
-   "id": "a80c9bb7a4f1-2100",
-   "title": "Sam Jay",
-   "date": "2026-10-23",
    "change": "dropped"
   },
   {
@@ -3027,12 +3012,6 @@
    "date": "2026-10-23",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
-  },
-  {
-   "id": "1c57d3ef908e-2100",
-   "title": "Sam Jay",
-   "date": "2026-10-24",
-   "change": "dropped"
   },
   {
    "id": "6d65ebe640b0",
