@@ -38,7 +38,7 @@
   var W = 1200, H = 520;
   var HORIZON = 336;          // where the far shore meets the water
   var ARC_LEFT = 96, ARC_RIGHT = 1104;
-  var ARC_TOP = 92;           // apex of the sun's noon arc
+  var ARC_TOP = 170;          // apex of the noon arc — low enough to clear the desktop crop (xMidYMid slice at 3.3:1 and 4.4:1)
   var ARC_BASE = 296;         // where the arc meets the far ridge
 
   var sun = null;   // { riseToday, setToday, riseTomorrow }
