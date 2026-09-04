@@ -355,7 +355,18 @@ function render() {
 
   if (state.shown < shown.length) {
     const more = el('button', 'more', 'More headlines');
-    more.addEventListener('click', () => { state.shown += PAGE; render(); });
+    more.addEventListener('click', () => {
+      const from = state.shown;
+      state.shown += PAGE;
+      const added = shown.slice(from, state.shown);
+      added.forEach((it) => feed.appendChild(
+        feedRow(it, map[it.s], { isNew: base && it.d > base })));
+      hydrateVotes(feed, added.map(keyOf));
+      if (state.shown >= shown.length) {
+        more.replaceWith(el('p', 'caught', 'You’re caught up ✓'));
+      }
+      watchPassed(root);
+    });
     root.appendChild(more);
   } else {
     root.appendChild(el('p', 'caught', 'You’re caught up ✓'));
@@ -762,9 +773,11 @@ function renderPopular(root) {
     rows.forEach((r) => {
       const row = el('div', 'fi');
       row.dataset.k = r.k;
-      const link = el('a', 'fi-body');
-      link.href = safeHref(r.href || '#');
-      if (!/^#/.test(r.href || '')) { link.target = '_blank'; link.rel = 'noopener'; }
+      const link = el(r.href ? 'a' : 'div', 'fi-body');
+      if (r.href) {
+        link.href = safeHref(r.href);
+        if (!/^#/.test(r.href)) { link.target = '_blank'; link.rel = 'noopener'; }
+      }
       link.innerHTML = '<span class="fi-title">' + esc(r.title || 'Untitled') + '</span>' +
         '<span class="fi-meta"><span class="tag-local">' + esc(KIND_LABEL[r.kind] || 'Saved') + '</span>' +
         '<span class="fi-src">' + esc(r.from || '') + '</span></span>';
