@@ -1,26 +1,26 @@
 {
- "updated": "2026-09-05T21:43:36+00:00",
+ "updated": "2026-09-05T22:09:42+00:00",
  "sections_updated": {
-  "now": "2026-09-05T21:43:36+00:00",
-  "forecast": "2026-09-05T21:43:36+00:00",
-  "hourly": "2026-09-05T21:43:36+00:00",
-  "alerts": "2026-09-05T21:43:36+00:00",
-  "afd": "2026-09-05T21:43:36+00:00",
-  "lake_forecast": "2026-09-05T21:43:36+00:00",
-  "lake_gage": "2026-09-05T21:43:36+00:00",
-  "air": "2026-09-05T21:43:36+00:00",
-  "sun": "2026-09-05T21:43:36+00:00",
-  "models": "2026-09-05T21:43:36+00:00"
+  "now": "2026-09-05T22:09:42+00:00",
+  "forecast": "2026-09-05T22:09:42+00:00",
+  "hourly": "2026-09-05T22:09:42+00:00",
+  "alerts": "2026-09-05T22:09:42+00:00",
+  "afd": "2026-09-05T22:09:42+00:00",
+  "lake_forecast": "2026-09-05T22:09:42+00:00",
+  "lake_gage": "2026-09-05T22:09:42+00:00",
+  "air": "2026-09-05T22:09:42+00:00",
+  "sun": "2026-09-05T22:09:42+00:00",
+  "models": "2026-09-05T22:09:42+00:00"
  },
  "now": {
-  "observed_at": "2026-09-05T21:20:00+00:00",
+  "observed_at": "2026-09-05T22:00:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 70,
-  "feels_like_f": 70,
-  "humidity": 64,
-  "dewpoint_f": 57,
-  "wind_mph": 7,
+  "temp_f": 68,
+  "feels_like_f": 68,
+  "humidity": 73,
+  "dewpoint_f": 59,
+  "wind_mph": 9,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -28,16 +28,6 @@
  "forecast": {
   "updated": "2026-09-05T19:48:01+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-09-05T17:00:00-04:00",
-    "is_day": true,
-    "temp_f": 70,
-    "pop": 15,
-    "wind": "N 12 mph",
-    "short": "Slight Chance Rain Showers",
-    "detailed": "A slight chance of rain showers. Mostly sunny, with a high near 70. North wind around 12 mph. Chance of precipitation is 20%."
-   },
    {
     "name": "Tonight",
     "start": "2026-09-05T18:00:00-04:00",
@@ -167,23 +157,22 @@
     "wind": "SW 5 to 10 mph",
     "short": "Mostly Clear",
     "detailed": "Mostly clear, with a low around 50. Southwest wind 5 to 10 mph."
+   },
+   {
+    "name": "Saturday",
+    "start": "2026-09-12T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 74,
+    "pop": 8,
+    "wind": "S 6 to 12 mph",
+    "short": "Mostly Sunny",
+    "detailed": "Mostly sunny, with a high near 74. South wind 6 to 12 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-09-05T19:48:01+00:00",
   "hours": [
-   {
-    "t": "2026-09-05T17:00:00-04:00",
-    "temp_f": 69,
-    "feels_f": 69,
-    "pop": 15,
-    "humidity": 70,
-    "wind_mph": 12,
-    "wind_dir": "N",
-    "sky": 47,
-    "short": "Slight Chance Rain Showers"
-   },
    {
     "t": "2026-09-05T18:00:00-04:00",
     "temp_f": 68,
@@ -568,6 +557,17 @@
     "wind_dir": "N",
     "sky": 22,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-09-07T05:00:00-04:00",
+    "temp_f": 54,
+    "feels_f": 54,
+    "pop": 0,
+    "humidity": 90,
+    "wind_mph": 2,
+    "wind_dir": "NE",
+    "sky": 21,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -852,10 +852,10 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 69,
-  "water_temp_at": "2026-09-05T17:00:00.000-04:00",
+  "water_temp_f": 70,
+  "water_temp_at": "2026-09-05T18:00:00.000-04:00",
   "level_ft": 94.49,
-  "level_at": "2026-09-05T17:00:00.000-04:00",
+  "level_at": "2026-09-05T18:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -868,7 +868,7 @@
  },
  "sun": {
   "sunrise": "2026-09-05T06:20-04:00",
-  "sunset": "2026-09-05T19:21-04:00",
+  "sunset": "2026-09-05T19:22-04:00",
   "sunrise_tomorrow": "2026-09-06T06:21-04:00",
   "sunset_tomorrow": "2026-09-06T19:20-04:00",
   "uv_max": 4.35
@@ -880,19 +880,19 @@
     "high_f": {
      "GFS": 71,
      "Euro": 71,
-     "ICON": 70
+     "ICON": 69
     },
     "pop_max": {
-     "GFS": 13,
+     "GFS": 10,
      "Euro": 99,
      "ICON": 38
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.11,
-     "ICON": 0.11
+     "ICON": 0.17
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    },
    {
     "date": "2026-09-06",
@@ -902,7 +902,7 @@
      "ICON": 69
     },
     "pop_max": {
-     "GFS": 24,
+     "GFS": 20,
      "Euro": 54,
      "ICON": 43
     },
