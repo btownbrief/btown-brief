@@ -12,11 +12,23 @@ name: Refresh events calendar
 # Manual run: Actions tab -> "Refresh events calendar" -> Run workflow.
 # Local run:  python3 scripts/events/update.py
 
+# Seven Days answers the runner's IP with 403, so its listing pages reroute
+# through Firecrawl at a credit each (~16 for a full 60-day pass). Twice a day
+# that was ~900 credits a month, so the runs are tiered: a full pass twice a
+# week, the next few days refreshed every morning, page one every
+# afternoon, and the rest of the window carried from a committed cache. See
+# the listing-cache note in scripts/events/sources/sevendays.py. Budget:
+# 2x16 + 5x5 + 7x1 = ~64 credits a week, was ~220.
 on:
   schedule:
-    - cron: '40 9 * * *'    # daily 9:40 UTC = 5:40am Burlington (EDT)
-    - cron: '40 20 * * *'   # and 20:40 UTC = 4:40pm — catch same-day additions
+    - cron: '40 9 * * 1,4'         # Mon+Thu 9:40 UTC = 5:40am Burlington (EDT): full pass
+    - cron: '40 9 * * 0,2,3,5,6'   # other mornings: first 5 pages fresh, rest from cache
+    - cron: '40 20 * * *'          # 20:40 UTC = 4:40pm daily: page 1 — same-day additions
   workflow_dispatch:
+    inputs:
+      fresh_pages:
+        description: 'Seven Days pages to refetch (0 = full pass, rewrites the cache)'
+        default: '0'
 
 permissions:
   contents: write
@@ -31,12 +43,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Pick the Seven Days refresh depth
+        id: depth
+        run: |
+          case "${{ github.event.schedule }}" in
+            '40 9 * * 1,4')        pages=0 ;;
+            '40 9 * * 0,2,3,5,6')  pages=5 ;;
+            '40 20 * * *')         pages=1 ;;
+            *)                     pages='${{ github.event.inputs.fresh_pages || '0' }}' ;;
+          esac
+          echo "Seven Days fresh pages: $pages"
+          echo "pages=$pages" >> "$GITHUB_OUTPUT"
+
       - name: Run events pipeline
         env:
           SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
           # Lets a Cloudflare-blocked source reroute through Firecrawl's
           # egress. Unset is fine — the source just fails as it does now.
           FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          SEVENDAYS_FRESH_PAGES: ${{ steps.depth.outputs.pages }}
         run: |
           python3 scripts/events/update.py --window 60
 
