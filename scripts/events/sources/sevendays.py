@@ -18,6 +18,8 @@ logged — never guessed.
 """
 from __future__ import annotations
 
+import json
+import os
 import re
 import sys
 import urllib.parse
@@ -26,7 +28,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parents[1]))
 import common
-from common import local_dt, log, make_event, strip_tags
+from common import TZ, local_dt, log, make_event, strip_tags
 
 SOURCE = "sevendays"
 LABEL = "Seven Days"
@@ -35,6 +37,102 @@ BASE = "https://community.sevendaysvt.com/vermont/EventSearch"
 # 2124358 = Burlington, 2124360 = Chittenden County
 NEIGHBORHOOD = "2124358,2124360"
 MAX_PAGES = 30
+
+# ------------------------------------------------------------ listing cache
+#
+# From the GitHub runner every listing page is a Firecrawl credit (Cloudflare
+# 403s the direct request — see common.fetch). A 60-day window is ~14 listing
+# pages plus 2 staff-pick pages, and the workflow runs twice a day: measured
+# 2026-09-05 at 15-16 credits a run, ~30 a day, ~900 a month — most of a
+# hobby plan spent on pages whose far end barely changes between runs.
+#
+# So the raw listing items are cached in the repo and a run may refresh only
+# the first N pages (SEVENDAYS_FRESH_PAGES=N; the listing is date-sorted but
+# front-loaded with exhibits and weekly recurrences, so 5 pages is roughly the
+# next three days, page 1 is today) and take the rest from the cache. Unset
+# or 0 is a full fetch, which also rewrites the cache. A cache older than
+# CACHE_MAX_AGE_DAYS is ignored — if the full fetches keep failing, the next
+# run does a full fetch and fails loudly rather than serving stale listings
+# as freshly seen. Staff picks are an enrichment and come from the cache on
+# partial runs.
+CACHE_PATH = common.DATA_DIR / "cache" / "sevendays-listings.json"
+CACHE_MAX_AGE_DAYS = 7
+PAGE_SIZE = 30  # listings per search-result page
+
+
+def _fresh_pages() -> int:
+    try:
+        return max(0, int(os.environ.get("SEVENDAYS_FRESH_PAGES", "0")))
+    except ValueError:
+        return 0
+
+
+def _load_cache() -> dict | None:
+    if not CACHE_PATH.exists():
+        return None
+    try:
+        cache = json.loads(CACHE_PATH.read_text())
+        age = datetime.now(TZ) - datetime.fromisoformat(cache["fetched"])
+        cache["listings"]; cache["picks"]
+    except Exception as e:
+        log(f"  [sevendays] listing cache unreadable ({e}) — ignoring it")
+        return None
+    if age > timedelta(days=CACHE_MAX_AGE_DAYS):
+        log(f"  [sevendays] listing cache is {age.days} days old — ignoring it")
+        return None
+    return cache
+
+
+def _save_cache(listings: list[dict], picks: set[str]) -> None:
+    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CACHE_PATH.write_text(json.dumps({
+        "fetched": datetime.now(TZ).isoformat(timespec="seconds"),
+        "listings": listings, "picks": sorted(picks),
+    }, ensure_ascii=False, indent=0) + "\n")
+
+
+def _merge_cached(fresh: list[dict], cached: list[dict],
+                  lo: date, hi: date) -> list[dict]:
+    """Fresh pages first, then cached entries they did not cover.
+
+    The listing is sorted by next occurrence, so every event dated before the
+    earliest date on the last fresh page should have appeared on the fresh
+    pages. A cached entry from that stretch that no longer appears was removed
+    by Seven Days, and is dropped rather than resurrected — a cancelled show
+    must not outlive the cache. The cutoff is deliberately the *earliest* date
+    on the last page, not the latest: the site's ordering disagrees with our
+    date parsing on the odd recurring item (measured: one "First Friday"
+    entry on page 1 expanded to a month out), and an over-eager cutoff would
+    hide a page-load of real events until the next full pass. If the cutoff
+    would drop more than a quarter of the cache something is off and nothing
+    is dropped.
+    """
+    seen = {it["url"] for it in fresh}
+    boundary: date | None = None
+    last_page = fresh[-(len(fresh) % PAGE_SIZE or PAGE_SIZE):] if fresh else []
+    for it in last_page:
+        expanded = expand_when(it["when"], lo, hi)
+        if expanded and expanded[0]:
+            first = min(d for d, _, _ in expanded[0])
+            boundary = first if boundary is None else min(boundary, first)
+    carried, gone = [], []
+    for it in cached:
+        if it["url"] in seen:
+            continue
+        expanded = expand_when(it["when"], lo, hi) if boundary else None
+        if expanded and expanded[0] and all(
+                d < boundary for d, _, _ in expanded[0]):
+            gone.append(it)
+        else:
+            carried.append(it)
+    if gone and len(gone) > len(cached) / 4:
+        log(f"  [sevendays] WARNING: cutoff {boundary} would drop {len(gone)} "
+            f"of {len(cached)} cached entries — keeping them all")
+        carried += gone
+        gone = []
+    log(f"  [sevendays] {len(carried)} entries carried from cache"
+        f"{f', {len(gone)} dropped as gone before {boundary}' if gone else ''}")
+    return list(fresh) + carried
 
 # Seven Days category tag -> our category (unmapped tags fall back to
 # common.classify() via category=None).
@@ -397,12 +495,14 @@ def _search_url(lo: date, hi: date, page_n: int, staff_picks: bool) -> str:
     return BASE + "?" + urllib.parse.urlencode(params)
 
 
-def _fetch_listings(lo: date, hi: date, staff_picks: bool) -> list[dict]:
-    """All result pages for the window, deduped by event URL."""
+def _fetch_listings(lo: date, hi: date, staff_picks: bool,
+                    max_pages: int = MAX_PAGES) -> list[dict]:
+    """Result pages for the window, deduped by event URL — all of them by
+    default, or the first `max_pages` on a partial refresh."""
     seen: set[str] = set()
     out: list[dict] = []
     page_n = 1
-    while page_n <= MAX_PAGES:
+    while page_n <= max_pages:
         # fallback=True: Cloudflare answers the runner's IP with 403 while
         # serving the identical request from a laptop, so a blocked page
         # reroutes through Firecrawl when a key is configured. See the note in
@@ -421,8 +521,10 @@ def _fetch_listings(lo: date, hi: date, staff_picks: bool) -> list[dict]:
             break
         page_n += 1
     else:
-        log(f"  [sevendays] WARNING: hit {MAX_PAGES}-page safety cap"
-            f"{' (staff picks)' if staff_picks else ''}")
+        page_n -= 1  # loop ran off the end: pages fetched, not the next one
+        if max_pages == MAX_PAGES:
+            log(f"  [sevendays] WARNING: hit {MAX_PAGES}-page safety cap"
+                f"{' (staff picks)' if staff_picks else ''}")
     label = "staff-pick" if staff_picks else "listing"
     log(f"  [sevendays] {len(out)} {label} entries across {page_n} page(s)")
     return out
@@ -431,13 +533,29 @@ def _fetch_listings(lo: date, hi: date, staff_picks: bool) -> list[dict]:
 # ------------------------------------------------------------------- fetch
 
 def fetch(window_start: date, window_end: date) -> list[dict]:
-    listings = _fetch_listings(window_start, window_end, staff_picks=False)
-    try:
-        picks = {it["url"] for it in
-                 _fetch_listings(window_start, window_end, staff_picks=True)}
-    except Exception as e:  # picks are an enrichment, never fatal
-        log(f"  [sevendays] staff-picks fetch failed ({e}); continuing")
-        picks = set()
+    fresh_n = _fresh_pages()
+    cache = _load_cache() if fresh_n else None
+    if fresh_n and cache is None:
+        log("  [sevendays] SEVENDAYS_FRESH_PAGES set but no usable cache — "
+            "doing a full fetch")
+        fresh_n = 0
+    if fresh_n:
+        log(f"  [sevendays] partial refresh: first {fresh_n} page(s), rest "
+            f"from cache dated {cache['fetched'][:10]}")
+        fresh = _fetch_listings(window_start, window_end, staff_picks=False,
+                                max_pages=fresh_n)
+        listings = _merge_cached(fresh, cache["listings"],
+                                 window_start, window_end)
+        picks = set(cache["picks"])
+    else:
+        listings = _fetch_listings(window_start, window_end, staff_picks=False)
+        try:
+            picks = {it["url"] for it in
+                     _fetch_listings(window_start, window_end, staff_picks=True)}
+        except Exception as e:  # picks are an enrichment, never fatal
+            log(f"  [sevendays] staff-picks fetch failed ({e}); continuing")
+            picks = set()
+        _save_cache(listings, picks)
 
     events: list[dict] = []
     unparsed = 0
