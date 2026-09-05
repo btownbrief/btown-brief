@@ -1,26 +1,26 @@
 {
- "updated": "2026-09-05T10:56:06+00:00",
+ "updated": "2026-09-05T12:10:52+00:00",
  "sections_updated": {
-  "now": "2026-09-05T10:56:06+00:00",
-  "forecast": "2026-09-05T10:56:06+00:00",
-  "hourly": "2026-09-05T10:56:06+00:00",
-  "alerts": "2026-09-05T10:56:06+00:00",
-  "afd": "2026-09-05T10:56:06+00:00",
-  "lake_forecast": "2026-09-05T10:56:06+00:00",
-  "lake_gage": "2026-09-05T10:56:06+00:00",
-  "air": "2026-09-05T10:56:06+00:00",
-  "sun": "2026-09-05T10:56:06+00:00",
-  "models": "2026-09-05T10:56:06+00:00"
+  "now": "2026-09-05T12:10:52+00:00",
+  "forecast": "2026-09-05T12:10:52+00:00",
+  "hourly": "2026-09-05T12:10:52+00:00",
+  "alerts": "2026-09-05T12:10:52+00:00",
+  "afd": "2026-09-05T12:10:52+00:00",
+  "lake_forecast": "2026-09-05T12:10:52+00:00",
+  "lake_gage": "2026-09-05T12:10:52+00:00",
+  "air": "2026-09-05T12:10:52+00:00",
+  "sun": "2026-09-05T12:10:52+00:00",
+  "models": "2026-09-05T12:10:52+00:00"
  },
  "now": {
-  "observed_at": "2026-09-05T10:35:00+00:00",
+  "observed_at": "2026-09-05T12:00:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
+  "description": "Light Rain",
   "temp_f": 63,
   "feels_like_f": 63,
   "humidity": 94,
   "dewpoint_f": 61,
-  "wind_mph": 6,
+  "wind_mph": 8,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-05T06:20:15+00:00",
   "hours": [
-   {
-    "t": "2026-09-05T06:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 12,
-    "humidity": 100,
-    "wind_mph": 8,
-    "wind_dir": "N",
-    "sky": 80,
-    "short": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-09-05T07:00:00-04:00",
-    "temp_f": 59,
-    "feels_f": 59,
-    "pop": 12,
-    "humidity": 100,
-    "wind_mph": 8,
-    "wind_dir": "N",
-    "sky": 90,
-    "short": "Cloudy"
-   },
    {
     "t": "2026-09-05T08:00:00-04:00",
     "temp_f": 61,
@@ -568,6 +546,28 @@
     "wind_dir": "N",
     "sky": 12,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-09-06T18:00:00-04:00",
+    "temp_f": 70,
+    "feels_f": 70,
+    "pop": 2,
+    "humidity": 53,
+    "wind_mph": 9,
+    "wind_dir": "N",
+    "sky": 13,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-09-06T19:00:00-04:00",
+    "temp_f": 68,
+    "feels_f": 68,
+    "pop": 0,
+    "humidity": 59,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 9,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-05T06:15:00+00:00",
+  "issued": "2026-09-05T11:40:00+00:00",
   "key_messages": [
    "A few showers today and Sunday but mainly dry through Tuesday.",
    "A more robust system is expected towards mid-late week, followed by some cooler temperatures."
   ],
   "what_changed": "As of 213 AM EDT Saturday... No significant changes have been made to the forecast at this time.",
-  "raw": "\n000\nFXUS61 KBTV 050615\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n215 AM EDT Sat Sep 5 2026\n\n.WHAT HAS CHANGED...\nAs of 213 AM EDT Saturday...\n\nNo significant changes have been made to the forecast at this time.\n\n&&\n\n.KEY MESSAGES...\nAs of 213 AM EDT Saturday...\n\n1. A few showers today and Sunday but mainly dry through \nTuesday.\n\n2. A more robust system is expected towards mid-late week, \nfollowed by some cooler temperatures.  \n\n&&\n\n.DISCUSSION...\nAs of 213 AM EDT Saturday...\n\nKEY MESSAGE 1: A retrograding area of low pressure system near Nova \nScotia will bring some isolated to scattered rain showers to the \nregion throughout the day. Models are showing weak moisture \ntransport but steepening mid-level lapse rates from cold advection \naloft with be able to utilize the modest moisture and produce some \nshowers through the day. We don't expect any heavy rainfall with \namounts likely peaking around a tenth of an inch. Most places, \nhowever, will remain dry through the day as areal coverage will not \nbe overly impressive. Rain chances will diminish as we head into \nSunday morning but an isolated shower cannot be ruled out for the \nfirst part of Sunday. Thereafter, deep layer ridging will become \nestablished across the North Country and northern New York with \nmostly clear skies, light winds, and seasonably cool temperatures \nexpected on both Monday and Tuesday.\n\nKEY MESSAGE 2: Towards the middle of next week, a deepening low \ncentered well to our north will move eastward from Ontario to \nQuebec, with associated frontal boundaries bringing more widespread \nprecipitation to our region, with the most widespread showers \ncurrently expected Wednesday night into Thursday. Although there \nwill be plenty of moisture, the better dynamics will be further \nnorth and the nocturnal timing will limit instability so widespread \nthunderstorm activity is not expected but trends will need to be \nmonitored as we get closer. Behind this system, cooler weather will \nreturn for the end of the week, with high temperatures on Friday \ngenerally in the 60s to near 70 across the region.\n\n&&\n\n.AVIATION /06Z SATURDAY THROUGH WEDNESDAY/...\nThrough 06Z Sunday...A mix of flight conditions is expected\nacross terminals over the next few hours, with lowering\nceilings and intermittent mist/fog making for variable\nconditions. Ceilings are expected to trend MVFR over the next\nfew hours, generally by 09Z or so with some intervals of IFR\npossible. KSLK and KMPV are most likely to see IFR conditions,\nbut it will also be possible at KBTV, KEFK, and KRUT generally\nbetween 09Z and 13Z as as low level inversion develops. In\naddition to ceilings, some visibility reductions will be\npossible with some mist/fog developing, most likely at\nKSLK/KMPV/KEFK. Ceilings are expected to improve to MVFR by 15Z\nwith a mix of MVFR/VFR by 18Z and all terminals trending VFR by\n21Z. Winds will generally be light and variable overnight, with\nnortherly winds 5 to 10 knots expected for tomorrow afternoon\nwith some gusts of 20 knots or so possible. \n\nOutlook...\n\nSunday: VFR. Slight chance SHRA, Patchy BR.\nSunday Night: VFR. Patchy BR.\nLabor Day: VFR. NO SIG WX.\nMonday Night: VFR. Slight chance SHRA.\nTuesday: VFR. Slight chance SHRA.\nTuesday Night: VFR. Slight chance SHRA.\nWednesday: Mainly VFR, with areas MVFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Clay\nDISCUSSION...Clay/Kremer\nAVIATION...Kremer\n"
+  "raw": "\n000\nFXUS61 KBTV 051140\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n740 AM EDT Sat Sep 5 2026\n\n.WHAT HAS CHANGED...\nAs of 213 AM EDT Saturday...\n\nNo significant changes have been made to the forecast at this time.\n\n&&\n\n.KEY MESSAGES...\nAs of 213 AM EDT Saturday...\n\n1. A few showers today and Sunday but mainly dry through \nTuesday.\n\n2. A more robust system is expected towards mid-late week, \nfollowed by some cooler temperatures.\n\n&&\n\n.DISCUSSION...\nAs of 213 AM EDT Saturday...\n\nKEY MESSAGE 1: A retrograding area of low pressure system near Nova \nScotia will bring some isolated to scattered rain showers to the \nregion throughout the day. Models are showing weak moisture \ntransport but steepening mid-level lapse rates from cold advection \naloft with be able to utilize the modest moisture and produce some \nshowers through the day. We don't expect any heavy rainfall with \namounts likely peaking around a tenth of an inch. Most places, \nhowever, will remain dry through the day as areal coverage will not \nbe overly impressive. Rain chances will diminish as we head into \nSunday morning but an isolated shower cannot be ruled out for the \nfirst part of Sunday. Thereafter, deep layer ridging will become \nestablished across the North Country and northern New York with \nmostly clear skies, light winds, and seasonably cool temperatures \nexpected on both Monday and Tuesday.\n\nKEY MESSAGE 2: Towards the middle of next week, a deepening low \ncentered well to our north will move eastward from Ontario to \nQuebec, with associated frontal boundaries bringing more widespread \nprecipitation to our region, with the most widespread showers \ncurrently expected Wednesday night into Thursday. Although there \nwill be plenty of moisture, the better dynamics will be further \nnorth and the nocturnal timing will limit instability so widespread \nthunderstorm activity is not expected but trends will need to be \nmonitored as we get closer. Behind this system, cooler weather will \nreturn for the end of the week, with high temperatures on Friday \ngenerally in the 60s to near 70 across the region.\n\n&&\n\n.AVIATION /12Z SATURDAY THROUGH WEDNESDAY/...\nThrough 12Z Sunday...A mix of flight conditions continue across\nthe region this morning, with all terminals currently\nexperiencing MVFR ceilings or lower. Intermittent IFR ceilings\nare expected to continue for another few hours at\nKSLK/KBTV/KEFK, with improvement back towards MVFR generally\nbetween 13Z and 15Z. MVFR conditions will linger through most of\nthe morning, with improvement backs towards VFR generally by \n18Z to 21Z depending on the terminal. Winds will generally \nnortherly at 5 to 10 knots throughout the day, with gusts up to \n20 knots possible throughout the afternoon, before trending \nlight and variable towards 00Z. A few showers may develop this \nafternoon, but left mention of them out of the TAF due to low \nconfidence in timing and location.\n\nOutlook...\n\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nLabor Day: VFR. NO SIG WX.\nMonday Night: VFR. Slight chance SHRA.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. Chance SHRA.\nWednesday: Mainly VFR, with local MVFR possible. Likely SHRA,\nSlight chance TSRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Clay\nDISCUSSION...Kremer/Clay\nAVIATION...Kremer\n"
  },
  "lake_forecast": {
   "issued": "2026-09-05T06:20:00+00:00",
@@ -825,18 +825,18 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 71,
-  "water_temp_at": "2026-09-05T06:00:00.000-04:00",
+  "water_temp_f": 70,
+  "water_temp_at": "2026-09-05T08:00:00.000-04:00",
   "level_ft": 94.5,
-  "level_at": "2026-09-05T06:00:00.000-04:00",
+  "level_at": "2026-09-05T08:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 24,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/05/26 6:00",
+  "observed": "09/05/26 7:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, September 4th."
  },
  "sun": {
@@ -844,7 +844,7 @@
   "sunset": "2026-09-05T19:22-04:00",
   "sunrise_tomorrow": "2026-09-06T06:21-04:00",
   "sunset_tomorrow": "2026-09-06T19:20-04:00",
-  "uv_max": 4.0
+  "uv_max": 4.25
  },
  "models": {
   "days": [
@@ -857,11 +857,11 @@
     },
     "pop_max": {
      "GFS": 16,
-     "Euro": 84,
+     "Euro": 96,
      "ICON": 48
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.03,
      "Euro": 0.08,
      "ICON": 0.15
     },
@@ -875,8 +875,8 @@
      "ICON": 70
     },
     "pop_max": {
-     "GFS": 15,
-     "Euro": 23,
+     "GFS": 17,
+     "Euro": 53,
      "ICON": 45
     },
     "precip_in": {
@@ -889,13 +889,13 @@
    {
     "date": "2026-09-07",
     "high_f": {
-     "GFS": 75,
+     "GFS": 74,
      "Euro": 74,
      "ICON": 77
     },
     "pop_max": {
      "GFS": 12,
-     "Euro": 4,
+     "Euro": 2,
      "ICON": 2
     },
     "precip_in": {
