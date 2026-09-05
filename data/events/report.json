@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-05T09:00:25-04:00",
+ "generated": "2026-09-05T18:16:35-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -8,35 +8,35 @@
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 75,
-   "seconds": 2.7
+   "count": 74,
+   "seconds": 4.0
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 61,
-   "seconds": 3.3
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 220,
-   "seconds": 3.7
+   "seconds": 3.9
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 85,
-   "seconds": 1.8
+   "seconds": 2.0
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 5
+   "staleDays": 6
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-05&end_date=2026-11-04&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 5
+   "staleDays": 6
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 9,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 204,
-   "seconds": 74.2
+   "seconds": 73.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -66,7 +66,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 750,
-   "seconds": 38.2
+   "seconds": 37.7
   },
   "higherground": {
    "label": "Higher Ground",
@@ -75,33 +75,32 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 11.7
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 366,
-   "seconds": 80.0
+   "seconds": 76.9
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 132.7
+   "count": 65,
+   "seconds": 130.0
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 20,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 52,
-   "seconds": 14.9
+   "seconds": 14.3
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 96,
+   "count": 103,
    "seconds": 0.6
   },
   "sblibrary": {
@@ -112,23 +111,23 @@
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 25,
-   "seconds": 34.0
+   "seconds": 34.2
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2320,
-   "seconds": 22.7
+   "count": 2342,
+   "seconds": 3.1
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 5
+   "staleDays": 6
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 481,
-   "seconds": 19.9
+   "seconds": 24.3
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -138,20 +137,31 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 80,
-   "seconds": 109.4
+   "seconds": 107.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 52,
-   "seconds": 0.4
+   "seconds": 0.5
   }
  },
- "gathered": 5467,
- "afterDedup": 2596,
- "duplicatesMerged": 2871,
- "final": 2819,
- "firecrawlCalls": 5,
+ "gathered": 5497,
+ "afterDedup": 2619,
+ "duplicatesMerged": 2878,
+ "final": 2843,
+ "firecrawlCalls": 1,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "The Ultimate Chocolate Tasting",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-08"
+  },
   {
    "kept": {
     "title": "Guided Tours",
@@ -1705,7 +1715,7 @@
   },
   {
    "kept": {
-    "title": "Lamplight, The Clearwater Swimmers, & Fowl",
+    "title": "Radio Bean Presents: Lamplight, The Clearwater Swimmers, & Fowl @ The Monkey House",
     "source": "radiobean"
    },
    "merged_sources": [
@@ -2373,7 +2383,6 @@
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington",
     "higherground"
    ],
    "date": "2026-11-04"
@@ -2400,47 +2409,39 @@
     "sevendays"
    ],
    "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-04"
   }
  ],
  "changes": [
   {
-   "id": "b8f9f70e6fb8",
-   "title": "VMBA Day",
-   "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "id": "a95a27ee287b",
+   "title": "Hissy Fit",
+   "date": "2026-09-06",
+   "change": "time",
+   "was": "2026-09-06T20:40:00-04:00",
+   "now": "2026-09-06T18:55:00-04:00"
   },
   {
-   "id": "cc44520a32df",
-   "title": "Toqehsuwok in the Farmyard",
-   "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "id": "cf948045399b",
+   "title": "Brunch",
+   "date": "2026-09-06",
+   "change": "time",
+   "was": "2026-09-06T18:55:00-04:00",
+   "now": "2026-09-06T20:40:00-04:00"
   },
   {
-   "id": "477d373bf081",
-   "title": "New Member Orientation",
-   "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "id": "42b2324fe7d8",
+   "title": "Cookie Queens",
+   "date": "2026-10-10",
+   "change": "time",
+   "was": "2026-10-10T13:00:00-04:00",
+   "now": "2026-10-10T15:30:00-04:00"
   },
   {
-   "id": "2d7869d63e56",
-   "title": "Uncle John's Band",
+   "id": "b55082d095d3",
+   "title": "BTown Coffee Club",
    "date": "2026-09-05",
    "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
    "id": "9d05038a97de",
@@ -2450,46 +2451,81 @@
    "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "468fd6db9e4b",
-   "title": "Shane's Apothecary",
-   "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
-  },
-  {
-   "id": "247f3b2fd1f1",
-   "title": "Summer Garden Adventure Dinner",
-   "date": "2026-09-05",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
-  },
-  {
-   "id": "9ef5d7caf692",
+   "id": "afe863267ad5",
    "title": "Soup for Two & Salmo at the Venetian Soda Lounge",
    "date": "2026-09-05",
    "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
-   "id": "6efbe4ecdd40",
-   "title": "Holding Napoleon & Alice Grace",
-   "date": "2026-09-05",
+   "id": "dbb20482d1de",
+   "title": "Mowgli's Bluegrass Trio!",
+   "date": "2026-09-06",
    "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
-   "id": "8da2510ebcf0",
-   "title": "Fake Cancelled",
-   "date": "2026-09-05",
+   "id": "651f6f7cbf33",
+   "title": "Naomi Wallner",
+   "date": "2026-09-06",
    "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
-   "id": "9890bbe4b7fe",
-   "title": "Jerband",
-   "date": "2026-09-05",
+   "id": "b4c8a5c827ce",
+   "title": "Delta Sweet Duo",
+   "date": "2026-09-06",
    "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
+   "id": "bfbaed5eda9b",
+   "title": "Hannah Hausman",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
+   "id": "72c3e4f5e7e2",
+   "title": "Leena Unger",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
+   "id": "03b5679e3afe",
+   "title": "The Dead Shakers",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
+   "id": "9a425da922db",
+   "title": "Izzy Jones",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
+   "id": "9623e89f94b9",
+   "title": "The Cathartic Nights House Band",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
+   "id": "cd7a71a9c90d",
+   "title": "TwoSev",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
+   "id": "5991cc191851",
+   "title": "Blueberry Betty",
+   "date": "2026-09-07",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
    "id": "0d1e590d5b32",
@@ -2499,10 +2535,11 @@
    "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "51a751ae6489",
-   "title": "Library Cards from all Over the Country (and Beyond!)",
-   "date": "2026-09-08",
-   "change": "dropped"
+   "id": "36fef63f255f",
+   "title": "Mooncusser",
+   "date": "2026-09-07",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
    "id": "55d885bfeeec",
@@ -2517,6 +2554,13 @@
    "date": "2026-09-08",
    "change": "missing",
    "lastSeen": "2026-09-04T18:31:30-04:00"
+  },
+  {
+   "id": "54db9a7662d0",
+   "title": "THE WORMDOGS CLOSE OUT THE BEAN",
+   "date": "2026-09-08",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
    "id": "a84dc926a1e1",
@@ -2610,12 +2654,6 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
-   "id": "4b9be690e3f2",
-   "title": "Library Cards from all Over the Country (and Beyond!)",
-   "date": "2026-09-14",
-   "change": "dropped"
-  },
-  {
    "id": "dc450269b403",
    "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
    "date": "2026-09-14",
@@ -2654,8 +2692,7 @@
    "id": "d74e0c47d69d",
    "title": "Power Up Lecture with Jess Serrante and Stephen Posner",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-09-02T09:50:41-04:00"
+   "change": "dropped"
   },
   {
    "id": "d635102047bb",
@@ -2719,12 +2756,6 @@
    "date": "2026-09-19",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
-  },
-  {
-   "id": "9fe672bdf884",
-   "title": "Library Cards from all Over the Country (and Beyond!)",
-   "date": "2026-09-21",
-   "change": "dropped"
   },
   {
    "id": "923adadb23ff",
@@ -2825,12 +2856,6 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "31d863dc90fe",
-   "title": "Library Cards from all Over the Country (and Beyond!)",
-   "date": "2026-09-28",
-   "change": "dropped"
-  },
-  {
    "id": "ef87e6530179",
    "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
    "date": "2026-09-28",
@@ -2871,13 +2896,6 @@
    "date": "2026-09-30",
    "change": "missing",
    "lastSeen": "2026-09-03T18:48:33-04:00"
-  },
-  {
-   "id": "acd0909292fd",
-   "title": "Pick-up Basketball",
-   "date": "2026-09-30",
-   "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
    "id": "3255a4fbc03a",
@@ -2925,8 +2943,7 @@
    "id": "1f78535f636c",
    "title": "2026 White Coat Ceremony for the Larner Medical Class of 2030",
    "date": "2026-10-09",
-   "change": "missing",
-   "lastSeen": "2026-09-02T09:50:41-04:00"
+   "change": "dropped"
   },
   {
    "id": "fc22e536c304",
@@ -2957,11 +2974,17 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
+   "id": "6da14ced6ca0",
+   "title": "First Known Use's EP Release Show w/ Mother of Pearl & Tax Man",
+   "date": "2026-10-15",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
    "id": "857556d78186-2030",
    "title": "Kendall Farrell",
    "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-09-02T09:50:41-04:00"
+   "change": "dropped"
   },
   {
    "id": "1733f31b008b",
@@ -3011,6 +3034,13 @@
    "date": "2026-10-23",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "d43a8470de76",
+   "title": "Lamplight, The Clearwater Swimmers, & Fowl",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
    "id": "6d65ebe640b0",
