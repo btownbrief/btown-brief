@@ -1,42 +1,42 @@
 {
- "updated": "2026-09-04T23:21:51+00:00",
+ "updated": "2026-09-05T00:50:28+00:00",
  "sections_updated": {
-  "now": "2026-09-04T23:21:51+00:00",
-  "forecast": "2026-09-04T23:21:51+00:00",
-  "hourly": "2026-09-04T23:21:51+00:00",
-  "alerts": "2026-09-04T23:21:51+00:00",
-  "afd": "2026-09-04T23:21:51+00:00",
-  "lake_forecast": "2026-09-04T23:21:51+00:00",
-  "lake_gage": "2026-09-04T23:21:51+00:00",
-  "air": "2026-09-04T23:21:51+00:00",
-  "sun": "2026-09-04T23:21:51+00:00",
-  "models": "2026-09-04T23:21:51+00:00"
+  "now": "2026-09-05T00:50:28+00:00",
+  "forecast": "2026-09-05T00:50:28+00:00",
+  "hourly": "2026-09-05T00:50:28+00:00",
+  "alerts": "2026-09-05T00:50:28+00:00",
+  "afd": "2026-09-05T00:50:28+00:00",
+  "lake_forecast": "2026-09-05T00:50:28+00:00",
+  "lake_gage": "2026-09-05T00:50:28+00:00",
+  "air": "2026-09-05T00:50:28+00:00",
+  "sun": "2026-09-05T00:50:28+00:00",
+  "models": "2026-09-05T00:50:28+00:00"
  },
  "now": {
-  "observed_at": "2026-09-04T22:45:00+00:00",
+  "observed_at": "2026-09-05T00:30:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 72,
-  "feels_like_f": 72,
-  "humidity": 69,
+  "temp_f": 70,
+  "feels_like_f": 70,
+  "humidity": 73,
   "dewpoint_f": 61,
-  "wind_mph": 7,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "NNW",
+  "wind_dir": "WNW",
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-09-04T18:35:45+00:00",
+  "updated": "2026-09-04T23:35:21+00:00",
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-09-04T19:00:00-04:00",
+    "start": "2026-09-04T20:00:00-04:00",
     "is_day": false,
     "temp_f": 58,
     "pop": 29,
-    "wind": "NW 5 to 9 mph",
+    "wind": "NW 5 to 8 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers before 4am. Mostly cloudy, with a low around 58. Northwest wind 5 to 9 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A chance of rain showers before 4am. Mostly cloudy, with a low around 58. Northwest wind 5 to 8 mph. Chance of precipitation is 30%."
    },
    {
     "name": "Saturday",
@@ -171,19 +171,8 @@
   ]
  },
  "hourly": {
-  "updated": "2026-09-04T18:35:45+00:00",
+  "updated": "2026-09-04T23:35:21+00:00",
   "hours": [
-   {
-    "t": "2026-09-04T19:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
-    "pop": 16,
-    "humidity": 79,
-    "wind_mph": 9,
-    "wind_dir": "NW",
-    "sky": 44,
-    "short": "Slight Chance Rain Showers"
-   },
    {
     "t": "2026-09-04T20:00:00-04:00",
     "temp_f": 72,
@@ -568,6 +557,17 @@
     "wind_dir": "N",
     "sky": 57,
     "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-06T07:00:00-04:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 19,
+    "humidity": 100,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 64,
+    "short": "Slight Chance Rain Showers"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-04T18:33:00+00:00",
+  "issued": "2026-09-04T23:44:00+00:00",
   "key_messages": [
    "Isolated rain showers today and Saturday, then drier weather Sunday and Monday.",
    "Stronger storm system for mid-late week followed by taste of Fall."
   ],
-  "what_changed": "As of 231 PM EDT Friday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 041833\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n233 PM EDT Fri Sep 4 2026\n\n.WHAT HAS CHANGED...\nAs of 231 PM EDT Friday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 231 PM EDT Friday...\n\n1. Isolated rain showers today and Saturday, then drier weather\nSunday and Monday. \n\n2. Stronger storm system for mid-late week followed by taste of\nFall. \n\n&&\n\n.DISCUSSION...\nAs of 231 PM EDT Friday...\n\nKEY MESSAGE 1: As upper level flow remains northwesterly over \nour region under an upper level trough we will have continued \nchances for isolated rain showers this afternoon and evening and\nagain on Saturday. Surface high pressure will ridge into our \narea from the north on Sunday and into Monday, leading to drier \nweather during that period. Will have areas of fog each \novernight, highs generally in the 70s areawide.\n\nKEY MESSAGE 2: The more dynamic fall-like synoptic pattern is \nbeginning to become established. Going into mid and late week, a\ndeepening low will move east from Ontario into Quebec, with \nensemble guidance indicating it will likely drop blow 990 mb by \nthe time it reaches Atlantic Canada. The center of the low \nshould pass by well to the north and the best dynamics should \nmiss the region. While warm air advection will occur mid-week \nand bring a more humid airmass into the region, there will not \nbe enough time for a fully tropical airmass to become \nestablished. Therefore, this will limit instability as the \nsystem passes by. During Wednesday night and into the day on \nThursday, multiple boundaries/troughs/fronts will pass through \nand bring multiple rounds of showers. A favored nocturnal \npassage of the strongest dynamics and a marginal airmass should \nprevent a widespread severe threat, but with such a strong low \nto the north the threat will still be watched. Afterward, the \ncoolest airmass of the season so far will become established, \nwith widespread highs in the 60s (and potentially 50s in the \ncooler spots) for Friday. Depending on the position of the \nsurface high over the weekend, first frost could be possible in \nthe cold hollows.\n\n&&\n\n.AVIATION /18Z FRIDAY THROUGH WEDNESDAY/...\nThrough 18Z Saturday...VFR conditions are mostly expected to \ncontinue through the evening. The exception is that a few \nisolated to scattered showers will move through northeastern \nVermont and could bring a brief visibility reduction to MVFR at \nEFK. Ceilings will lower/form as the night goes on. Widespread \nMVFR ceilings are likely by late in the night, with some periods\nof IFR possible at SLK, BTV, EFK and MSS. Patchy fog formation \nis possible in areas that remain clear but anything that forms \nshould remain very localized. These ceilings will lift and try \nto scatter during the day tomorrow and mostly VFR conditions \nshould return for the afternoon. Winds will generally be \nnorthwesterly today, becoming northerly tomorrow. Most places \nshould see values in the 5-15 KT range during the day, with \nbrief gusts up to 20 KT possible. Mostly light and variable \nwinds are expected overnight. \n\nOutlook...\n\nSaturday: Mainly VFR, with local IFR possible. Chance SHRA,\nPatchy BR.\nSaturday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nSunday: Mainly VFR, with local MVFR possible. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nLabor Day: VFR. NO SIG WX.\nMonday Night: VFR. Slight chance SHRA.\nTuesday: Mainly VFR, with local MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Neiles/Myskowski\nAVIATION...Myskowski\n"
+  "what_changed": "As of 737 PM EDT Friday...Updated to decrease areal coverage and intensity of fog tonight, as cyclonic flow will produce plenty of clouds and limit fog development, except for parts of the CT River Valley. Expecting low level stratus to develop after midnight with higher terrain becoming obscured by morning.",
+  "raw": "\n000\nFXUS61 KBTV 042344\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n744 PM EDT Fri Sep 4 2026\n\n.WHAT HAS CHANGED...\nAs of 737 PM EDT Friday...Updated to decrease areal coverage and\nintensity of fog tonight, as cyclonic flow will produce plenty\nof clouds and limit fog development, except for parts of the CT\nRiver Valley. Expecting low level stratus to develop after\nmidnight with higher terrain becoming obscured by morning. \n\n&&\n\n.KEY MESSAGES...\nAs of 231 PM EDT Friday...\n\n1. Isolated rain showers today and Saturday, then drier weather\nSunday and Monday. \n\n2. Stronger storm system for mid-late week followed by taste of\nFall.\n\n&&\n\n.DISCUSSION...\nAs of 231 PM EDT Friday...\n\nKEY MESSAGE 1: As upper level flow remains northwesterly over \nour region under an upper level trough we will have continued \nchances for isolated rain showers this afternoon and evening and\nagain on Saturday. Surface high pressure will ridge into our \narea from the north on Sunday and into Monday, leading to drier \nweather during that period. Will have areas of fog each \novernight, highs generally in the 70s areawide.\n\nKEY MESSAGE 2: The more dynamic fall-like synoptic pattern is \nbeginning to become established. Going into mid and late week, a\ndeepening low will move east from Ontario into Quebec, with \nensemble guidance indicating it will likely drop blow 990 mb by \nthe time it reaches Atlantic Canada. The center of the low \nshould pass by well to the north and the best dynamics should \nmiss the region. While warm air advection will occur mid-week \nand bring a more humid airmass into the region, there will not \nbe enough time for a fully tropical airmass to become \nestablished. Therefore, this will limit instability as the \nsystem passes by. During Wednesday night and into the day on \nThursday, multiple boundaries/troughs/fronts will pass through \nand bring multiple rounds of showers. A favored nocturnal \npassage of the strongest dynamics and a marginal airmass should \nprevent a widespread severe threat, but with such a strong low \nto the north the threat will still be watched. Afterward, the \ncoolest airmass of the season so far will become established, \nwith widespread highs in the 60s (and potentially 50s in the \ncooler spots) for Friday. Depending on the position of the \nsurface high over the weekend, first frost could be possible in \nthe cold hollows.\n\n&&\n\n.AVIATION /00Z SATURDAY THROUGH WEDNESDAY/...\nThrough 00Z Sunday...Currently VFR conditions with northwest\nwinds 2 to 7 knots at our TAF sites this evening. Aviation\nchallenge will be lowering cigs to MVFR and eventually areas of\nIFR by early Saturday morning. Deep cyclonic upslope flow\ncontinues with developing MVFR cigs quickly spread southward\nfrom eastern Canada toward northern VT this evening. Based on\nlatest GOES-19 satl imagery and sounding data, expecting MVFR\ncigs to develop by 03z acrs our mtn sites of EFK/MPV and SLK and\nby 06z at BTV and RUT. Intervals of IFR cigs are expected at\nEFK/MPV/SLK/BTV and RUT between 06Z-14Z Saturday associated with\nmoist cyclonic and blocked flow, as low level inversion\ndevelops. Mostly VFR vis will trend toward some MVFR at MPV/SLK\nand EFK after 06Z. CIGS and VIS should slowly improve to MVFR\nconditions by 15z and a mix of MVFR/VFR by 18z Saturday with\nnorthwest to northeast winds 5 to 10 knots. \n\nOutlook...\n\nSaturday Night: VFR. Slight chance SHRA, Patchy BR.\nSunday: VFR. Slight chance SHRA, Patchy BR.\nSunday Night: VFR. Patchy BR.\nLabor Day: VFR. NO SIG WX.\nMonday Night: VFR. Slight chance SHRA.\nTuesday: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nTuesday Night: VFR. Slight chance SHRA.\nWednesday: Mainly VFR, with local IFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles/Taber\nDISCUSSION...Myskowski/Neiles\nAVIATION...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-09-04T18:48:00+00:00",
@@ -853,24 +853,24 @@
  },
  "lake_gage": {
   "water_temp_f": 72,
-  "water_temp_at": "2026-09-04T19:00:00.000-04:00",
-  "level_ft": 94.46,
-  "level_at": "2026-09-04T19:00:00.000-04:00",
+  "water_temp_at": "2026-09-04T20:00:00.000-04:00",
+  "level_ft": 94.48,
+  "level_at": "2026-09-04T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 29,
+  "aqi": 27,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/04/26 19:00",
+  "observed": "09/04/26 20:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, September 4th."
  },
  "sun": {
   "sunrise": "2026-09-04T06:19-04:00",
-  "sunset": "2026-09-04T19:24-04:00",
+  "sunset": "2026-09-04T19:23-04:00",
   "sunrise_tomorrow": "2026-09-05T06:20-04:00",
-  "sunset_tomorrow": "2026-09-05T19:22-04:00",
+  "sunset_tomorrow": "2026-09-05T19:21-04:00",
   "uv_max": 6.2
  },
  "models": {
@@ -902,7 +902,7 @@
      "ICON": 69
     },
     "pop_max": {
-     "GFS": 11,
+     "GFS": 10,
      "Euro": 87,
      "ICON": 23
     },
