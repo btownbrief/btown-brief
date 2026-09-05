@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-04T18:31:30-04:00",
+ "generated": "2026-09-05T01:37:25-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 6.5
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 77,
-   "seconds": 8.0
+   "count": 75,
+   "seconds": 3.3
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 60,
-   "seconds": 3.1
+   "count": 61,
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 223,
-   "seconds": 4.1
+   "count": 220,
+   "seconds": 4.0
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 85,
-   "seconds": 2.1
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -35,7 +35,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-04&end_date=2026-11-03&page=1 (HTTP Error 405: Not Allowed)",
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-05&end_date=2026-11-04&page=1 (HTTP Error 405: Not Allowed)",
    "staleDays": 5
   },
   "facebook": {
@@ -50,13 +50,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 199,
-   "seconds": 70.7
+   "count": 204,
+   "seconds": 71.0
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,58 +65,60 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 716,
-   "seconds": 36.9
+   "count": 750,
+   "seconds": 37.5
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 77,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 10.8
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 368,
-   "seconds": 75.4
+   "count": 366,
+   "seconds": 74.9
   },
   "meetup": {
    "label": "Meetup",
    "count": 63,
-   "seconds": 124.4
+   "seconds": 124.0
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 21,
-   "seconds": 0.6
+   "count": 20,
+   "seconds": 0.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 51,
-   "seconds": 14.0
+   "count": 52,
+   "seconds": 13.4
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 61,
-   "seconds": 0.3
+   "count": 96,
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 93,
-   "seconds": 1.6
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden",
+   "staleDays": 0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 26,
-   "seconds": 34.7
+   "count": 25,
+   "seconds": 33.4
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2385,
-   "seconds": 18.4
+   "count": 2342,
+   "seconds": 4.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -126,65 +128,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 487,
-   "seconds": 19.3
+   "count": 481,
+   "seconds": 35.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 292,
-   "seconds": 0.2
+   "count": 284,
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 82,
-   "seconds": 109.2
+   "count": 80,
+   "seconds": 107.2
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 51,
-   "seconds": 0.2
+   "count": 52,
+   "seconds": 0.3
   }
  },
- "gathered": 5482,
- "afterDedup": 2576,
- "duplicatesMerged": 2906,
- "final": 2793,
- "firecrawlCalls": 16,
+ "gathered": 5397,
+ "afterDedup": 2555,
+ "duplicatesMerged": 2842,
+ "final": 2820,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-08"
-  },
-  {
-   "kept": {
-    "title": "Harvest Connections",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-08"
-  },
-  {
-   "kept": {
-    "title": "Beyond Bendy: Improving Recognition and Diagnosis of Hypermobile Ehlers-Danlos Syndrome (hEDS) and Its Comorbidities",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-08"
-  },
   {
    "kept": {
     "title": "Pub Hour",
@@ -746,17 +714,6 @@
    "merged_sources": [
     "champlainvalley",
     "higherground"
-   ],
-   "date": "2026-10-14"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
    ],
    "date": "2026-10-14"
   },
@@ -1742,6 +1699,7 @@
    },
    "merged_sources": [
     "champlainvalley",
+    "helloburlington",
     "loveburlington"
    ],
    "date": "2026-10-23"
@@ -1947,17 +1905,6 @@
     "sevendays"
    ],
    "date": "2026-10-27"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-10-28"
   },
   {
    "kept": {
@@ -2389,6 +2336,17 @@
   },
   {
    "kept": {
+    "title": "Midterm Election Watch Party",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-03"
+  },
+  {
+   "kept": {
     "title": "802sDay",
     "source": "loveburlington"
    },
@@ -2408,44 +2366,83 @@
     "sevendays"
    ],
    "date": "2026-11-03"
+  },
+  {
+   "kept": {
+    "title": "Porch Light",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-11-04"
+  },
+  {
+   "kept": {
+    "title": "Darryl Rahn",
+    "source": "radiobean"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "radiobean"
+   ],
+   "date": "2026-11-04"
+  },
+  {
+   "kept": {
+    "title": "TRIVIA NIGHT",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-11-04"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-11-04"
   }
  ],
  "changes": [
   {
-   "id": "51501d6890dd",
-   "title": "Daisychain w/ Mooncusser",
-   "date": "2026-09-18",
+   "id": "42b2324fe7d8",
+   "title": "Cookie Queens",
+   "date": "2026-10-10",
    "change": "time",
-   "was": "2026-09-18T20:00:00.880000-04:00",
-   "now": "2026-09-18T19:45:00.347000-04:00"
+   "was": "2026-10-10T15:30:00-04:00",
+   "now": "2026-10-10T13:00:00-04:00"
   },
   {
-   "id": "c02709bef6b5",
-   "title": "Lunch with the Poets",
-   "date": "2026-09-04",
+   "id": "9d05038a97de",
+   "title": "Sawyer Bouley",
+   "date": "2026-09-05",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "bb78e7f97ca7",
-   "title": "Lego Builders",
-   "date": "2026-09-04",
+   "id": "0d1e590d5b32",
+   "title": "Blueberry Betty (LCLS)",
+   "date": "2026-09-07",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "2157bf6cd74b",
-   "title": "DJ Taka",
-   "date": "2026-09-04",
-   "change": "missing",
-   "lastSeen": "2026-09-03T09:50:39-04:00"
-  },
-  {
-   "id": "51a751ae6489",
-   "title": "Library Cards from all Over the Country (and Beyond!)",
+   "id": "7cbd00d36115",
+   "title": "Art Wall: Paintings by El Towle",
    "date": "2026-09-08",
    "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "55d885bfeeec",
@@ -2455,11 +2452,18 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
-   "id": "a84dc926a1e1",
-   "title": "Baby Time",
+   "id": "50aa1a19b1ed",
+   "title": "Soccer Intramurals",
+   "date": "2026-09-08",
+   "change": "missing",
+   "lastSeen": "2026-09-04T18:31:30-04:00"
+  },
+  {
+   "id": "a2fb77495797",
+   "title": "Babytime",
    "date": "2026-09-09",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "774cfccbb709",
@@ -2483,25 +2487,24 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "291d60fdc343",
-   "title": "Morning Book Group",
+   "id": "463aef06431d",
+   "title": "Morning Book Group: A Marriage at Sea",
    "date": "2026-09-10",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "c6de40a56162",
    "title": "Preschool Play Time",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "change": "dropped"
   },
   {
-   "id": "8fef2b946888",
-   "title": "Knit for Your Neighbor",
+   "id": "fe193b2686f4",
+   "title": "Knit for your Neighbors",
    "date": "2026-09-10",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "06f82ca96283",
@@ -2518,11 +2521,11 @@
    "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
-   "id": "064e7b5b0752",
-   "title": "Lego Builders",
+   "id": "6c5de7356392",
+   "title": "Friday LEGO Builders",
    "date": "2026-09-11",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "840b664b1c7e",
@@ -2546,18 +2549,18 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
-   "id": "90abed62f85a",
-   "title": "Pride Vermont 2026",
+   "id": "4658c695cd34",
+   "title": "SBPL at Vermont Pride 2026",
    "date": "2026-09-13",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "4b9be690e3f2",
-   "title": "Library Cards from all Over the Country (and Beyond!)",
+   "id": "dca42d5e7089",
+   "title": "Art Wall: Paintings by El Towle",
    "date": "2026-09-14",
    "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "dc450269b403",
@@ -2567,11 +2570,18 @@
    "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
-   "id": "0684f2f9b1be",
-   "title": "Craftytown",
+   "id": "f4bf51a1d5ee",
+   "title": "Craftytown! Flower Suncatcher",
    "date": "2026-09-15",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
+  },
+  {
+   "id": "cd49fe078afc",
+   "title": "Soccer Intramurals",
+   "date": "2026-09-15",
+   "change": "missing",
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "01edf9f89291",
@@ -2581,11 +2591,11 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "c089e6f19182",
-   "title": "Baby Time",
+   "id": "cc496b2749d1",
+   "title": "Babytime",
    "date": "2026-09-16",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "d74e0c47d69d",
@@ -2598,8 +2608,7 @@
    "id": "04a3bb8e3152",
    "title": "Charity and Sylvia Composer Talk: Clarice Assad, Composer of Summerland",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "d635102047bb",
@@ -2619,15 +2628,14 @@
    "id": "d6f3fd1ec553",
    "title": "Preschool Play Time",
    "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "change": "dropped"
   },
   {
-   "id": "78952acf13db",
-   "title": "Knit for Your Neighbor",
+   "id": "56f92c658cbc",
+   "title": "Knit for your Neighbors",
    "date": "2026-09-17",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "934bb342fb68",
@@ -2637,11 +2645,11 @@
    "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
-   "id": "95a7e9fe79a1",
-   "title": "Lego Builders",
+   "id": "636b4b1808dc",
+   "title": "Friday LEGO Builders",
    "date": "2026-09-18",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "2a8500ac55bb",
@@ -2651,24 +2659,11 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "8b7796b354d6",
-   "title": "South Burlington Green Community Festival",
+   "id": "f67f6df10ea2",
+   "title": "Green Community Festival",
    "date": "2026-09-19",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
-  },
-  {
-   "id": "890bad6c1d3c",
-   "title": "South Burlington Green Community Festival",
-   "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
-  },
-  {
-   "id": "d1266bb176a5",
-   "title": "Live Music",
-   "date": "2026-09-19",
-   "change": "dropped"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "cf144690c65a",
@@ -2678,17 +2673,11 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "5c07a69abff1",
-   "title": "Live Music",
-   "date": "2026-09-20",
-   "change": "dropped"
-  },
-  {
-   "id": "9fe672bdf884",
-   "title": "Library Cards from all Over the Country (and Beyond!)",
+   "id": "155c4c47017e",
+   "title": "Art Wall: Paintings by El Towle",
    "date": "2026-09-21",
    "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "923adadb23ff",
@@ -2698,6 +2687,13 @@
    "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
+   "id": "957d9d7b13a3",
+   "title": "Soccer Intramurals",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-09-04T18:31:30-04:00"
+  },
+  {
    "id": "913bbd65fbe6",
    "title": "HONKY TONK: Wild Leek River",
    "date": "2026-09-22",
@@ -2705,11 +2701,11 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "77694579a75f",
-   "title": "Baby Time",
+   "id": "d9da91d0efa5",
+   "title": "Babytime",
    "date": "2026-09-23",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "129c5e5a7e94",
@@ -2733,24 +2729,17 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "a935a83a71c8",
-   "title": "UVM Bookstore Fall 2026 Patio Sale",
+   "id": "4002416b7756",
+   "title": "Preschool Play Time",
    "date": "2026-09-24",
    "change": "dropped"
   },
   {
-   "id": "4002416b7756",
-   "title": "Preschool Play Time",
+   "id": "c4a8745e37cf",
+   "title": "Knit for your Neighbors",
    "date": "2026-09-24",
    "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
-  },
-  {
-   "id": "b3e0e1560f2d",
-   "title": "Knit for Your Neighbor",
-   "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "f5c36bf7ec0a",
@@ -2760,23 +2749,11 @@
    "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
-   "id": "62c3f4a8eedc",
-   "title": "Lego Builders",
+   "id": "1436c69b27ab",
+   "title": "Friday LEGO Builders",
    "date": "2026-09-25",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
-  },
-  {
-   "id": "a7ea15d958ab",
-   "title": "Live Music",
-   "date": "2026-09-25",
-   "change": "dropped"
-  },
-  {
-   "id": "8409ddce3264",
-   "title": "Pet Store: A Live Sitcom",
-   "date": "2026-09-25",
-   "change": "dropped"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "c86a8833e320",
@@ -2800,12 +2777,6 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "6ae460f474b2",
-   "title": "Live Music",
-   "date": "2026-09-26",
-   "change": "dropped"
-  },
-  {
    "id": "beea1a3ba258",
    "title": "Roost.World (DJ Set)",
    "date": "2026-09-26",
@@ -2813,11 +2784,11 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "31d863dc90fe",
-   "title": "Library Cards from all Over the Country (and Beyond!)",
+   "id": "caabf1bf59af",
+   "title": "Art Wall: Paintings by El Towle",
    "date": "2026-09-28",
    "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "ef87e6530179",
@@ -2827,11 +2798,11 @@
    "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
-   "id": "348e88592d16",
-   "title": "Craftytown",
+   "id": "3b04bf2dc8d6",
+   "title": "Storybook Craftytown- Apple",
    "date": "2026-09-29",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "77442c3edd36",
@@ -2841,11 +2812,18 @@
    "lastSeen": "2026-09-02T18:50:06-04:00"
   },
   {
-   "id": "b06b8cd265e8",
-   "title": "Baby Time",
+   "id": "4a0a92e1ab48",
+   "title": "Soccer Intramurals",
+   "date": "2026-09-29",
+   "change": "missing",
+   "lastSeen": "2026-09-04T18:31:30-04:00"
+  },
+  {
+   "id": "b35268f5d210",
+   "title": "Babytime",
    "date": "2026-09-30",
    "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "717c258ffd9c",
@@ -2865,8 +2843,7 @@
    "id": "7807d7f83c42",
    "title": "Preschool Play Time",
    "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "3255a4fbc03a",
@@ -2881,6 +2858,13 @@
    "date": "2026-10-03",
    "change": "missing",
    "lastSeen": "2026-09-04T09:44:35-04:00"
+  },
+  {
+   "id": "7b32413a29d3",
+   "title": "Soccer Intramurals",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "0ca966e22a6f",
@@ -2900,8 +2884,7 @@
    "id": "31f877f10201",
    "title": "Preschool Play Time",
    "date": "2026-10-08",
-   "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "0732496c3ba7",
@@ -2918,17 +2901,18 @@
    "lastSeen": "2026-09-02T09:50:41-04:00"
   },
   {
-   "id": "747a3fad7f71-2100",
-   "title": "David Drake",
-   "date": "2026-10-09",
-   "change": "dropped"
-  },
-  {
    "id": "fc22e536c304",
    "title": "DJ Taka Residency",
    "date": "2026-10-09",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "972cec1f4b9d",
+   "title": "Soccer Intramurals",
+   "date": "2026-10-13",
+   "change": "missing",
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
    "id": "7300f711e2ff",
@@ -2948,8 +2932,7 @@
    "id": "686d293d049b",
    "title": "Preschool Play Time",
    "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "857556d78186-2030",
@@ -2973,6 +2956,13 @@
    "lastSeen": "2026-09-03T09:50:39-04:00"
   },
   {
+   "id": "af2fb2be5c1e",
+   "title": "Soccer Intramurals",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-09-04T18:31:30-04:00"
+  },
+  {
    "id": "d07ba56df0c1",
    "title": "HONKY TONK: Wild Leek River",
    "date": "2026-10-20",
@@ -2983,8 +2973,7 @@
    "id": "c899bd3e5236",
    "title": "Preschool Play Time",
    "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "8bf390e94fc1",
@@ -2992,12 +2981,6 @@
    "date": "2026-10-22",
    "change": "missing",
    "lastSeen": "2026-09-03T09:50:39-04:00"
-  },
-  {
-   "id": "e4223228bdf9",
-   "title": "Pet Store: A Live Sitcom",
-   "date": "2026-10-23",
-   "change": "dropped"
   },
   {
    "id": "ff7745a91d99",
@@ -3021,6 +3004,13 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
+   "id": "4a8a3430c5dd",
+   "title": "Soccer Intramurals",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-09-04T18:31:30-04:00"
+  },
+  {
    "id": "c67d8525bdfe",
    "title": "Lit Club",
    "date": "2026-10-28",
@@ -3038,8 +3028,7 @@
    "id": "6839e671df73",
    "title": "Preschool Play Time",
    "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-09-01T18:49:18-04:00"
+   "change": "dropped"
   },
   {
    "id": "996bf782b7e2",
@@ -3047,6 +3036,13 @@
    "date": "2026-10-30",
    "change": "missing",
    "lastSeen": "2026-09-02T18:50:06-04:00"
+  },
+  {
+   "id": "1514dff93697",
+   "title": "Soccer Intramurals",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-09-04T18:31:30-04:00"
   }
  ]
 }
