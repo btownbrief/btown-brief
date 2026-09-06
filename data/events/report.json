@@ -1,42 +1,42 @@
 {
- "generated": "2026-09-06T09:05:39-04:00",
+ "generated": "2026-09-06T18:20:54-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 5.5
+   "seconds": 5.6
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 70,
-   "seconds": 3.1
+   "seconds": 4.1
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 61,
-   "seconds": 3.3
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 218,
-   "seconds": 4.3
+   "seconds": 4.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 85,
-   "seconds": 1.9
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 6
+   "staleDays": 7
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-06&end_date=2026-11-05&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 6
+   "staleDays": 7
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 68.1
+   "seconds": 68.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -66,7 +66,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 748,
-   "seconds": 36.3
+   "seconds": 37.2
   },
   "higherground": {
    "label": "Higher Ground",
@@ -75,60 +75,59 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 10.2
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 362,
-   "seconds": 70.6
+   "seconds": 72.8
   },
   "meetup": {
    "label": "Meetup",
    "count": 65,
-   "seconds": 118.9
+   "seconds": 118.7
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 19,
-   "seconds": 0.4
+   "seconds": 0.7
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 54,
-   "seconds": 12.2
+   "seconds": 13.3
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 93,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 90,
-   "seconds": 5.8
+   "seconds": 6.3
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 23,
-   "seconds": 30.6
+   "seconds": 30.9
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2328,
-   "seconds": 23.8
+   "seconds": 2.9
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 6
+   "staleDays": 7
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 482,
-   "seconds": 30.4
+   "seconds": 19.3
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -138,19 +137,19 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 78,
-   "seconds": 99.3
+   "seconds": 99.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 53,
-   "seconds": 0.3
+   "seconds": 0.5
   }
  },
- "gathered": 5455,
- "afterDedup": 2609,
- "duplicatesMerged": 2846,
- "final": 2800,
- "firecrawlCalls": 5,
+ "gathered": 5456,
+ "afterDedup": 2611,
+ "duplicatesMerged": 2845,
+ "final": 2795,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2415,11 +2414,25 @@
  ],
  "changes": [
   {
+   "id": "3dfd7c13256d",
+   "title": "Mix & Mingle",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-09-06T09:05:39-04:00"
+  },
+  {
    "id": "dbb20482d1de",
    "title": "Mowgli's Bluegrass Trio!",
    "date": "2026-09-06",
    "change": "missing",
    "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
+   "id": "4f7356dbfe59",
+   "title": "Julia Randall & Friends",
+   "date": "2026-09-06",
+   "change": "missing",
+   "lastSeen": "2026-09-06T09:05:39-04:00"
   },
   {
    "id": "651f6f7cbf33",
@@ -2478,6 +2491,20 @@
    "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
+   "id": "6cfbdaf930f8",
+   "title": "CISSP Training Program – Become a Cybersecurity Leader in Burlington, VT",
+   "date": "2026-09-07",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "7b6dcde6e239",
+   "title": "CISSP Certification | ISC² Exam Preparation Program in Burlington, VT",
+   "date": "2026-09-07",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "5991cc191851",
    "title": "Blueberry Betty",
    "date": "2026-09-07",
@@ -2497,6 +2524,69 @@
    "date": "2026-09-07",
    "change": "missing",
    "lastSeen": "2026-09-05T09:00:25-04:00"
+  },
+  {
+   "id": "cf86d2d31f75",
+   "title": "Lean Six Sigma Green & Black Belt Combo Certification in Burlington, VT",
+   "date": "2026-09-08",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "83ef329c174d",
+   "title": "PMP Certification In-Person Training in Burlington, VT",
+   "date": "2026-09-08",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "bbb2dd1115eb",
+   "title": "Lean Six Sigma Green Belt In-Person Training in Burlington, VT",
+   "date": "2026-09-08",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "532053418571",
+   "title": "Become a Certified Data Analyst in Burlington, VT",
+   "date": "2026-09-08",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "b1960acaeacd",
+   "title": "Business Analyst (CBAP) Classroom Training in Burlington, VT",
+   "date": "2026-09-08",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "ca7dfaeb947c",
+   "title": "CEH v12 Ethical Hacking Bootcamp – 4 Days Training in Burlington, VT",
+   "date": "2026-09-08",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "c47a5464dee2",
+   "title": "Data Science with Python Certification Training in Burlington, VT",
+   "date": "2026-09-08",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "c5a68362757f",
+   "title": "Become AI Project Ready – PMI-CPMAI Training Program in Vermont, VT",
+   "date": "2026-09-08",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "c59258ece5f4",
+   "title": "PMP Training in Burlington, VT | PMBOK® 8th Edition | PMI Authorized",
+   "date": "2026-09-08",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "55d885bfeeec",
@@ -2520,6 +2610,34 @@
    "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
+   "id": "8ec29109509d",
+   "title": "Trauma Nursing Core Course (TNCC) 9th ed.",
+   "date": "2026-09-09",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "626910fa949a",
+   "title": "Fast-Track Your CAPM Certification! Classroom Training in Vermont, VT",
+   "date": "2026-09-09",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "991ba09fbbac",
+   "title": "PMI-ACP(Agile) Certification Classroom Training in Vermont, VT",
+   "date": "2026-09-09",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "80852fe0f199",
+   "title": "PMI-ACP® Classroom Agile Certification Course in Burlington, VT",
+   "date": "2026-09-09",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "a84dc926a1e1",
    "title": "Baby Time",
    "date": "2026-09-09",
@@ -2527,10 +2645,11 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
-   "id": "774cfccbb709",
-   "title": "WAGE Center Welcome Back Party! 💚✨",
+   "id": "64915f7802cd",
+   "title": "Close Looking: History, Context and the Creative Process",
    "date": "2026-09-09",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "4c49f260c0ec",
@@ -2540,10 +2659,18 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
-   "id": "7aed25775e8e",
-   "title": "Sundown & Sift",
+   "id": "40e981e63032",
+   "title": "Stitch! Member Needlework Workshop",
    "date": "2026-09-09",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "198112a47e48",
+   "title": "Advanced Mechanical Ventilation Architecture: Designing for Occupant Health",
+   "date": "2026-09-10",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "291d60fdc343",
@@ -2560,17 +2687,31 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
-   "id": "06f82ca96283",
-   "title": "Old Time Jam",
+   "id": "de05f2ef8bf4",
+   "title": "Adult Craft: Wooden Fish Lawn Decorations",
    "date": "2026-09-10",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "5f0f6f59e6de",
+   "title": "Back to School Meals",
+   "date": "2026-09-10",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "ed282570307b",
+   "title": "Destination Colombia: Design Competition Launch Event",
+   "date": "2026-09-10",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "6f6346e7d1a4",
    "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ James Kochalka Superstar & a Strelka afterparty!",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-09-03T09:50:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "064e7b5b0752",
@@ -2580,16 +2721,39 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
-   "id": "840b664b1c7e",
-   "title": "The Eyetraps, Mimi Fang, MOMDAD, & Yabai!",
+   "id": "2b55997b7ca9",
+   "title": "Art Hop 2026 at Slate",
    "date": "2026-09-11",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "18c4e6024700",
-   "title": "DJ Taka Residency",
-   "date": "2026-09-11",
-   "change": "dropped"
+   "id": "6476a07ebef7",
+   "title": "Weekly Bird Walks at Rock Point Center",
+   "date": "2026-09-12",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "678646c5931d",
+   "title": "CISSP Certification Weekend Training Course in Vermont, VT",
+   "date": "2026-09-12",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "86749de21c96",
+   "title": "College Student Saturdays",
+   "date": "2026-09-12",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "cfd02e161a27",
+   "title": "Vermont Maple & Artisan Market",
+   "date": "2026-09-12",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "db493d998604",
@@ -2606,11 +2770,60 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
+   "id": "65b715d37b3f",
+   "title": "Test & Protect: Soil Sampling Made Simple!",
+   "date": "2026-09-14",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "dc450269b403",
    "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
    "date": "2026-09-14",
    "change": "missing",
    "lastSeen": "2026-09-04T09:44:35-04:00"
+  },
+  {
+   "id": "586371e536e3",
+   "title": "ECHO is closed",
+   "date": "2026-09-14",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "a681d953114e",
+   "title": "PMP Certification Bootcamp | 4 Days to Get Certified in Burlington, VT",
+   "date": "2026-09-15",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "f232b098ba99",
+   "title": "Lean Six Sigma Green Belt Certification Bootcamp in Burlington, VT",
+   "date": "2026-09-15",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "b7e2592e7f24",
+   "title": "Cisco CCNA Training & Certification Program in Burlington, VT",
+   "date": "2026-09-15",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "4d86147268cd",
+   "title": "CBAP® Classroom Training – IIBA® Aligned in Burlington, VT",
+   "date": "2026-09-15",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "564c318536ea",
+   "title": "4-Day Data Science with Python Bootcamp in Burlington, VT",
+   "date": "2026-09-15",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "0684f2f9b1be",
@@ -2620,6 +2833,27 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
+   "id": "c885216d8787",
+   "title": "Farm to Medicine Cabinet Herb Walk",
+   "date": "2026-09-15",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "afa296caf586",
+   "title": "NNEAC Summit 2026",
+   "date": "2026-09-15",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "319c4161c504",
+   "title": "Scheherazade on the Rocks: A Pre-Concert Listening Party",
+   "date": "2026-09-15",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "cd49fe078afc",
    "title": "Soccer Intramurals",
    "date": "2026-09-15",
@@ -2627,10 +2861,32 @@
    "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "01edf9f89291",
-   "title": "HONKY TONK: Queen City Cut-Ups",
+   "id": "3dbe6d6078dd",
+   "title": "ECHO is closed",
    "date": "2026-09-15",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "88614e3a9aab",
+   "title": "CAPM Certification Weekday Classroom Training in Burlington, VT",
+   "date": "2026-09-16",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "38ca1ddbc95a",
+   "title": "CCNA Certification – 4-Day Classroom Training in Vermont, VT",
+   "date": "2026-09-16",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "901c231e01c6",
+   "title": "Cows, Cheese, and Tractors!",
+   "date": "2026-09-16",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "c089e6f19182",
@@ -2638,6 +2894,13 @@
    "date": "2026-09-16",
    "change": "missing",
    "lastSeen": "2026-09-05T01:37:25-04:00"
+  },
+  {
+   "id": "988b6deb86bd",
+   "title": "Charity, Sylvia & the Vermont Symphony Orchestra",
+   "date": "2026-09-16",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "d635102047bb",
@@ -2654,6 +2917,13 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
+   "id": "acf6ce6dddd4",
+   "title": "ECHO is closed",
+   "date": "2026-09-16",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "78952acf13db",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-17",
@@ -2664,8 +2934,28 @@
    "id": "934bb342fb68",
    "title": "Jake McKelvie w/ A Box of Stars, riverbed, & Izzy Jones",
    "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-09-03T09:50:39-04:00"
+   "change": "dropped"
+  },
+  {
+   "id": "c9ffff2fa96e",
+   "title": "ECHO is closed",
+   "date": "2026-09-17",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "78461071ccb6",
+   "title": "Smart Manager’s Management Skills: 1 Day Workshop in Burlington, VT",
+   "date": "2026-09-18",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "7087c0bd4bbe",
+   "title": "Burlington Artisan, Trade & Vendor Expo",
+   "date": "2026-09-18",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "95a7e9fe79a1",
@@ -2675,10 +2965,81 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
-   "id": "2a8500ac55bb",
-   "title": "DJ Taka Residency",
+   "id": "2004b54925ae",
+   "title": "Vermont Reads 2026 Author Presentation",
    "date": "2026-09-18",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "eca8ed65b605",
+   "title": "ECHO is closed",
+   "date": "2026-09-18",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "2bc9d6aab10f",
+   "title": "Sensory-Friendly Mornings",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "0455875dd1be",
+   "title": "PMP Certification Bootcamp – Weekend Classroom Training in Burlington, VT",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "898f502040a4",
+   "title": "CBAP®Exam Prep Weekend Classroom Training – IIBA® Aligned in Burlington, VT",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "a9071a6eafde",
+   "title": "CBAP®Exam Prep Weekend Classroom Training-IIBA® Aligned in Vermont, VT",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "24ea9f7bf1cd",
+   "title": "PMI-CPMAI® Weekend Training – Project in AI Certification in Vermont, VT",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "a07d68e15a08",
+   "title": "CEH Certification Weekend Training Course in Vermont, VT",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "d6da3a6beb80",
+   "title": "Become a Data Science Pro: 4-Day Python Weekend Bootcamp in Vermont, VT",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "c4c8830baf9a",
+   "title": "College Student Saturdays",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "24334d03d8b6",
+   "title": "Insect Pollinator Walks at Rock Point",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "8b7796b354d6",
@@ -2695,10 +3056,32 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
-   "id": "cf144690c65a",
-   "title": "Broosha",
+   "id": "70d739f06ee1",
+   "title": "Storytime and Artmaking for Families",
    "date": "2026-09-19",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "702dceca2a18",
+   "title": "Words in the Woods: Eli Clare",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "b5b3ae592b59",
+   "title": "Stories and Scoops with Girl Scouts in Richmond, VT",
+   "date": "2026-09-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "ab7fde873458",
+   "title": "Rest, Relax, Recharge: Guided Meditation with Aromatherapy",
+   "date": "2026-09-21",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "923adadb23ff",
@@ -2708,6 +3091,69 @@
    "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
+   "id": "d1299fe10056",
+   "title": "Brewing Better Business (VT)",
+   "date": "2026-09-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "a807fffcbc47",
+   "title": "Lean Six Sigma Green Belt (LSSGB) Certification Training in Burlington, VT",
+   "date": "2026-09-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "0d51cfc3f23d",
+   "title": "PMP Certification 4 Days Classroom Training in Burlington, VT",
+   "date": "2026-09-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "6e69a918aa42",
+   "title": "PMP Certification & Training Bootcamp in Burlington, VT",
+   "date": "2026-09-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "4704cc6ccbf7",
+   "title": "Business Analytics Certification (CBAP) Training in Burlington, VT",
+   "date": "2026-09-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "793d7112c0fd",
+   "title": "CCNA Certification Training Course in Vermont, VT",
+   "date": "2026-09-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "f8a1f8d25aeb",
+   "title": "PMP (Project Management) Certification Training in Burlington, VT",
+   "date": "2026-09-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "bd474b2695e4",
+   "title": "Certified Ethical Hacker – Practical Ethical Hacker in Burlington, VT",
+   "date": "2026-09-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "33970925ffd4",
+   "title": "Data Analytics Certification Training in Burlington, VT",
+   "date": "2026-09-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "957d9d7b13a3",
    "title": "Soccer Intramurals",
    "date": "2026-09-22",
@@ -2715,10 +3161,46 @@
    "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "913bbd65fbe6",
-   "title": "HONKY TONK: Wild Leek River",
-   "date": "2026-09-22",
-   "change": "dropped"
+   "id": "92efbb34b0fb",
+   "title": "Outta Pocket / Sin Against Sin @ SEABA, Burlington VT",
+   "date": "2026-09-23",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "99690c481178",
+   "title": "CAPM Certification In-Person Training in Burlington, VT",
+   "date": "2026-09-23",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "163d7370ef2d",
+   "title": "Salesforce Admin Certification Training in Burlington, VT",
+   "date": "2026-09-23",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "f3608bf2f249",
+   "title": "PMI-CPMAI Certification Training – 3-Day Bootcamp in Vermont, VT",
+   "date": "2026-09-23",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "5bb5caf4207d",
+   "title": "Data Analytics Certification Training in Burlington, VT",
+   "date": "2026-09-23",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "811c5b8b59de",
+   "title": "Fall Trade Show for New England Interior Designers",
+   "date": "2026-09-23",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "77694579a75f",
@@ -2735,6 +3217,13 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
+   "id": "03674606b7ce",
+   "title": "Family Craft: Picture Frames",
+   "date": "2026-09-23",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "228b7b704725",
    "title": "3D Modeling Basics Intro to Blender (2 part series)",
    "date": "2026-09-23",
@@ -2742,10 +3231,18 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
-   "id": "9e0fe1457b5d",
-   "title": "Lit Club",
-   "date": "2026-09-23",
-   "change": "dropped"
+   "id": "0d9011ffd6ea",
+   "title": "SAFe® 5.1 (LPM) 2Days Classroom Training in Burlington, VT",
+   "date": "2026-09-24",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "6199b422ec4d",
+   "title": "Networking Lunch at Hula with the Network of Women--September Lunch",
+   "date": "2026-09-24",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "b3e0e1560f2d",
@@ -2755,11 +3252,24 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
+   "id": "15f7273e6c86",
+   "title": "Adult and Teen Artmaking",
+   "date": "2026-09-24",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "f5c36bf7ec0a",
    "title": "Old Time Jam",
    "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-09-03T09:50:39-04:00"
+   "change": "dropped"
+  },
+  {
+   "id": "eac1851037aa",
+   "title": "Chittenden County Market Days: Food Trucks, Vendors & Creative Experience 2",
+   "date": "2026-09-25",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "62c3f4a8eedc",
@@ -2769,29 +3279,143 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
-   "id": "c86a8833e320",
-   "title": "Dog Lips w/ Peddle",
+   "id": "9934f6759c21",
+   "title": "Very Eric Carle Member Party",
    "date": "2026-09-25",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "acd105331d7f",
+   "title": "Proof: Norman Rockwell and Photography, a lecture by Russell Lord",
+   "date": "2026-09-25",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "7426443da6c3",
+   "title": "Lara Cwass Band",
+   "date": "2026-09-25",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "422055884b98",
    "title": "Late Night Karaoke Hosted by Kaleigh Karnal!",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-09-03T09:50:39-04:00"
-  },
-  {
-   "id": "a6747ef75bc9",
-   "title": "DJ Taka Residency",
-   "date": "2026-09-25",
    "change": "dropped"
   },
   {
-   "id": "beea1a3ba258",
-   "title": "Roost.World (DJ Set)",
+   "id": "59fc36bf5792",
+   "title": "College Student Saturdays",
    "date": "2026-09-26",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "3d6b5b1138d3",
+   "title": "CAPM Certification Weekend Classroom Training in Burlington, VT",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "97b74da845a3",
+   "title": "Very Eric Carle Exhibit",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "7b8004c28bcb",
+   "title": "Drop-in Artmaking: Decorate Your Own Rockwell Scene",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "11eb784979a1",
+   "title": "Model Behavior: A Panel and Gathering of Rockwell Models",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "23854f1387b5",
+   "title": "Model Behavior: A Panel and Gathering of Rockwell Models",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "62d029a4f9da-1500",
+   "title": "Curator Tour – Norman Rockwell: At Home in Vermont",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "47ec42bda162",
+   "title": "Artmaking: Figure Drawing Inspired by The Four Freedoms",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "02a93cc41470",
+   "title": "VERTMONT HAIR SHOW",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "0530449d4b93",
+   "title": "Full Moon Fall Forest Bathing: shinrin-yoku",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "5be39a387b87",
+   "title": "Next Stop Comedy at J Skis! - Burlington, VT",
+   "date": "2026-09-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "a21e4e63e331",
+   "title": "2026 Vermont Compost Operator Certification Training",
+   "date": "2026-09-28",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "6c57f515dd05",
+   "title": "Clinical Supervision Foundations (2 day training)",
+   "date": "2026-09-28",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "c368698b2382",
+   "title": "Career Visioning With Brad Knowles",
+   "date": "2026-09-28",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "985b65fef71a",
+   "title": "CISSP Certification Training Course in Burlington, VT",
+   "date": "2026-09-28",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "7c33e78017a8",
+   "title": "Circus Building Closure",
+   "date": "2026-09-28",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "ef87e6530179",
@@ -2808,10 +3432,11 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
-   "id": "77442c3edd36",
-   "title": "Eustis Album Release Show!",
+   "id": "db3911d480dd",
+   "title": "Kids Program: Nature Illustrations",
    "date": "2026-09-29",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "4a0a92e1ab48",
@@ -2828,6 +3453,13 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
+   "id": "ebd6ae71bfbc",
+   "title": "Libeco: Flax to Fabric",
+   "date": "2026-09-30",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "717c258ffd9c",
    "title": "HOPE Works: The Art of Healing Support Group Series!",
    "date": "2026-09-30",
@@ -2835,10 +3467,39 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
-   "id": "3255a4fbc03a",
-   "title": "DJ Taka Residency",
+   "id": "ef29e9adbc5e",
+   "title": "Art within Reach",
+   "date": "2026-10-01",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "4d1af249a328",
+   "title": "BURLINGTON, VT: Optimistic Personality Disorder Show",
+   "date": "2026-10-01",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "3852260a43d9",
+   "title": "Ethics",
    "date": "2026-10-02",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "da4e38265440",
+   "title": "Brick House & Bubbly",
+   "date": "2026-10-03",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "504331921024",
+   "title": "CVVC Merrymac Farm Sanctuary Tour",
+   "date": "2026-10-03",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "876945419604",
@@ -2848,17 +3509,32 @@
    "lastSeen": "2026-09-04T09:44:35-04:00"
   },
   {
+   "id": "2718d53a5a53",
+   "title": "Varied & Alive Curator Tour",
+   "date": "2026-10-06",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "4e957176c93c",
+   "title": "From Seed to Centerpiece",
+   "date": "2026-10-06",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "a30ebc0a106e",
+   "title": "Mindful Yoga",
+   "date": "2026-10-06",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "7b32413a29d3",
    "title": "Soccer Intramurals",
    "date": "2026-10-06",
    "change": "missing",
    "lastSeen": "2026-09-04T18:31:30-04:00"
-  },
-  {
-   "id": "0ca966e22a6f",
-   "title": "HONKY TONK: Wild Leek River",
-   "date": "2026-10-06",
-   "change": "dropped"
   },
   {
    "id": "3f58a88329e3",
@@ -2868,16 +3544,39 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
-   "id": "0732496c3ba7",
-   "title": "Old Time Jam",
+   "id": "dd3465273c64",
+   "title": "25th Annual VBSR Awards Ceremony & Dinner",
    "date": "2026-10-08",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "fc22e536c304",
-   "title": "DJ Taka Residency",
+   "id": "d3dfd077bcd5",
+   "title": "Mushroom Cultivation Workshop",
    "date": "2026-10-09",
-   "change": "dropped"
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "ebce9000bca7",
+   "title": "Sensory-Friendly Mornings",
+   "date": "2026-10-10",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "1026a72973fd",
+   "title": "Storytime and Artmaking for Families",
+   "date": "2026-10-10",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "7fbf6b3633b3",
+   "title": "Sheer Terror, Burn Kit, Blossom, Shine",
+   "date": "2026-10-11",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "972cec1f4b9d",
@@ -2887,10 +3586,25 @@
    "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "7300f711e2ff",
-   "title": "HONKY TONK: Queen City Cut-Ups",
-   "date": "2026-10-13",
-   "change": "dropped"
+   "id": "225a0add5080",
+   "title": "REV2026 Conference",
+   "date": "2026-10-14",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "8bbb15f3ee8c",
+   "title": "REV2026 Women in Energy Breakfast",
+   "date": "2026-10-14",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "30f3afed4570",
+   "title": "Close Looking: History, Context and the Creative Process",
+   "date": "2026-10-14",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "f26db363b25d",
@@ -2900,6 +3614,20 @@
    "lastSeen": "2026-09-03T18:48:33-04:00"
   },
   {
+   "id": "1837480df93e",
+   "title": "Adult and Teen Artmaking",
+   "date": "2026-10-14",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "a75a16be2610",
+   "title": "Cauldrons & Craft Brews",
+   "date": "2026-10-15",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "6da14ced6ca0",
    "title": "First Known Use's EP Release Show w/ Mother of Pearl & Tax Man",
    "date": "2026-10-15",
@@ -2907,17 +3635,45 @@
    "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
-   "id": "1733f31b008b",
-   "title": "DJ Taka Residency",
-   "date": "2026-10-16",
-   "change": "dropped"
+   "id": "138a86df63d3",
+   "title": "Fall Forest Bathing: shinrin-yoku",
+   "date": "2026-10-17",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "9880c9ab42a5",
+   "title": "Tending Rock Point - Buckthorn Bonanza",
+   "date": "2026-10-17",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "feba8e14fde3",
+   "title": "Burlington VT Wedding Show",
+   "date": "2026-10-18",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "d1ec5aacf968",
+   "title": "Brewing Better Business (VT)",
+   "date": "2026-10-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "321aef9cddef",
+   "title": "Vermont Reads 2026 Author Presentation",
+   "date": "2026-10-19",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "c8af375ece1e",
    "title": "Doctor Gasp!",
    "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-09-03T09:50:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "af2fb2be5c1e",
@@ -2927,28 +3683,21 @@
    "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "d07ba56df0c1",
-   "title": "HONKY TONK: Wild Leek River",
-   "date": "2026-10-20",
-   "change": "dropped"
+   "id": "cc3d801ab0bc",
+   "title": "Film Screening: “Seeding Change: Farming Beyond Neonics”",
+   "date": "2026-10-22",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "8bf390e94fc1",
    "title": "Old Time Jam",
    "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-09-03T09:50:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "ff7745a91d99",
    "title": "Late Night Karaoke Hosted by Kaleigh Karnal!",
-   "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-09-03T09:50:39-04:00"
-  },
-  {
-   "id": "766c5388e392",
-   "title": "DJ Taka Residency",
    "date": "2026-10-23",
    "change": "dropped"
   },
@@ -2960,11 +3709,25 @@
    "lastSeen": "2026-09-05T09:00:25-04:00"
   },
   {
+   "id": "4d340683dfd5",
+   "title": "Haunted Happenings",
+   "date": "2026-10-25",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
    "id": "6d65ebe640b0",
    "title": "She Bravely Returns: An Immersive Women's Wellness & Writing Experience",
    "date": "2026-10-25",
    "change": "missing",
    "lastSeen": "2026-09-03T18:48:33-04:00"
+  },
+  {
+   "id": "e874b58f442e",
+   "title": "ACOTAR 6 Midnight Release Party | Phoenix Books",
+   "date": "2026-10-26",
+   "change": "source-down",
+   "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "4a8a3430c5dd",
@@ -2974,22 +3737,9 @@
    "lastSeen": "2026-09-04T18:31:30-04:00"
   },
   {
-   "id": "c67d8525bdfe",
-   "title": "Lit Club",
-   "date": "2026-10-28",
-   "change": "dropped"
-  },
-  {
    "id": "1b562042e008",
    "title": "Villain Of The War w/ antoinette & boat kill by fire",
    "date": "2026-10-28",
-   "change": "missing",
-   "lastSeen": "2026-09-03T09:50:39-04:00"
-  },
-  {
-   "id": "996bf782b7e2",
-   "title": "DJ Taka Residency",
-   "date": "2026-10-30",
    "change": "dropped"
   },
   {
