@@ -94,10 +94,28 @@ RHYTHMS = [
      "note": "License re-checks; OPR registry has no bulk export, so it's manual."},
     {"slug": "hud-tiles", "title": "HUD income-limit tiles",
      "cadence_days": 365, "source": "stamp", "note": "Hand-updated each October."},
+    # Community rhythms (Sept 5, 2026 — community is the product; doctrine in advisor kb/15).
+    {"slug": "starters", "title": "Community: 2–3 conversation starters posted",
+     "cadence_days": 7, "source": "stamp",
+     "note": "Beehiiv community + Telegram. Source them from the GoodBurlington queue, r/burlington, Dining To Go, Table Talk. One line to answer."},
+    {"slug": "intros", "title": "Community: introductions brokered",
+     "cadence_days": 7, "source": "stamp",
+     "note": "Reply to every unanswered member post with a follow-up question; connect two people who share a thing. Never a bare thumbs-up."},
+    {"slug": "community-digest", "title": "Community digest in Friday's edition + one Telegram pointer",
+     "cadence_days": 7, "source": "stamp",
+     "note": "One block: best thread, next meetup, one member contribution (deliberate submissions only). Cross-communicate; don't mirror."},
+    {"slug": "ritual-review", "title": "The weekly question: how do we make this a little better?",
+     "cadence_days": 7, "source": "stamp",
+     "note": "Coffee turnout + repeat rate, replies per starter, intros made, community DAU/MAU. One tweak, then stop."},
+    {"slug": "creed-check", "title": "Creed / villains / rituals still true?",
+     "cadence_days": 90, "source": "stamp",
+     "note": "Reread advisor kb/15 §2.1. Each season: one ritual added or killed, merch/ads only speak the creed."},
 ]
 
 STATIONS = [
     ("Photo moderation", "photo-admin.html", "the original Editor's Desk — approve community photos"),
+    ("Beehiiv community", "https://www.btownbrief.com/community/channels/general", "the two-way home — starters, replies, intros (approve drafts from the advisor's Host's Desk once it exists)"),
+    ("Community doctrine", "file:///Users/stephendavis/btownbrief/advisor/kb/15-community-doctrine.md", "creed · villains · rituals · the Builder's Filter"),
     ("GoodBurlington queue", "https://github.com/btownbrief/btown-brief/actions/workflows/goodburlington-queue.yml", "manual kick if the 8:45 open didn't fire"),
     ("Actions overview", "https://github.com/btownbrief/btown-brief/actions", "the whole board at a glance"),
 ]
