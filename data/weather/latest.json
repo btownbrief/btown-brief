@@ -1,26 +1,26 @@
 {
- "updated": "2026-09-06T12:50:02+00:00",
+ "updated": "2026-09-06T13:06:18+00:00",
  "sections_updated": {
-  "now": "2026-09-06T12:50:02+00:00",
-  "forecast": "2026-09-06T12:50:02+00:00",
-  "hourly": "2026-09-06T12:50:02+00:00",
-  "alerts": "2026-09-06T12:50:02+00:00",
-  "afd": "2026-09-06T12:50:02+00:00",
-  "lake_forecast": "2026-09-06T12:50:02+00:00",
-  "lake_gage": "2026-09-06T12:50:02+00:00",
-  "air": "2026-09-06T12:50:02+00:00",
-  "sun": "2026-09-06T12:50:02+00:00",
-  "models": "2026-09-06T12:50:02+00:00"
+  "now": "2026-09-06T13:06:18+00:00",
+  "forecast": "2026-09-06T13:06:18+00:00",
+  "hourly": "2026-09-06T13:06:18+00:00",
+  "alerts": "2026-09-06T13:06:18+00:00",
+  "afd": "2026-09-06T13:06:18+00:00",
+  "lake_forecast": "2026-09-06T13:06:18+00:00",
+  "lake_gage": "2026-09-06T13:06:18+00:00",
+  "air": "2026-09-06T13:06:18+00:00",
+  "sun": "2026-09-06T13:06:18+00:00",
+  "models": "2026-09-06T13:06:18+00:00"
  },
  "now": {
-  "observed_at": "2026-09-06T12:35:00+00:00",
+  "observed_at": "2026-09-06T12:50:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 55,
   "feels_like_f": 55,
   "humidity": 94,
   "dewpoint_f": 54,
-  "wind_mph": 10,
+  "wind_mph": 7,
   "wind_gust_mph": null,
   "wind_dir": "NNE",
   "precip_last_hr_in": null
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-06T08:00:00-04:00",
+    "start": "2026-09-06T09:00:00-04:00",
     "is_day": true,
     "temp_f": 72,
     "pop": 3,
-    "wind": "N 8 to 12 mph",
+    "wind": "N 12 mph",
     "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 72. North wind 8 to 12 mph."
+    "detailed": "Mostly sunny, with a high near 72. North wind around 12 mph."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-06T06:24:44+00:00",
   "hours": [
-   {
-    "t": "2026-09-06T08:00:00-04:00",
-    "temp_f": 56,
-    "feels_f": 56,
-    "pop": 0,
-    "humidity": 100,
-    "wind_mph": 8,
-    "wind_dir": "N",
-    "sky": 44,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-09-06T09:00:00-04:00",
     "temp_f": 59,
@@ -568,6 +557,17 @@
     "wind_dir": "NW",
     "sky": 15,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-09-07T20:00:00-04:00",
+    "temp_f": 71,
+    "feels_f": 71,
+    "pop": 2,
+    "humidity": 57,
+    "wind_mph": 6,
+    "wind_dir": "NW",
+    "sky": 44,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -871,7 +871,7 @@
     "date": "2026-09-07",
     "high_f": {
      "GFS": 75,
-     "Euro": 75,
+     "Euro": 74,
      "ICON": 77
     },
     "pop_max": {
@@ -884,7 +884,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    },
    {
     "date": "2026-09-08",
@@ -900,7 +900,7 @@
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.01,
+     "Euro": 0.03,
      "ICON": 0.0
     },
     "high_spread_f": 1
