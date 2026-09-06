@@ -1,0 +1,16 @@
+{
+  "_note": "A commented example, NOT a real sponsor. Copy the object below into data/sponsors.json -> sponsors when a real agreement is signed and paid.",
+  "example": {
+    "id": "example-bakery",
+    "name": "Example Bakery",
+    "url": "https://example.com/?utm_source=btownbrief&utm_medium=guide&utm_campaign=footer",
+    "image": "assets/sponsors/example-bakery.svg",
+    "tagline": "Sourdough on Pine Street, Wednesday to Sunday.",
+    "placement": "footer",
+    "pages": ["events.html", "restaurants.html", "deals.html"],
+    "active": false,
+    "starts": "2026-10-01",
+    "ends": "2026-12-31",
+    "category": "bakery"
+  }
+}

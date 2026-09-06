@@ -70,7 +70,8 @@
       state.taxonomy = taxonomy || {};
       state.calendar = calendar || [];
       state.eventsWeek = eventsWeek || { days: [] };
-      state.sponsors = sponsors || [];
+      // data/sponsors.json is an object with a `sponsors` array since 2026-09-06 (schema inside it)
+      state.sponsors = Array.isArray(sponsors) ? sponsors : ((sponsors && sponsors.sponsors) || []);
       state.faq = faq || [];
       state.photos = photos || [];
       state.reddit = reddit || { posts: [] };
@@ -481,8 +482,12 @@
 
   function renderSponsorFooter() {
     const el = document.getElementById('sponsor-footer');
+    if (!el) return;
+    // js/sponsor.js owns the footer on every guide page (dates, per-page limits,
+    // and the house unit when nothing is sold); fall back to the old render if absent
+    if (window.BtownSponsors) { window.BtownSponsors.render(el); return; }
     const sponsors = activeSponsors('footer');
-    if (!el || sponsors.length === 0) return;
+    if (sponsors.length === 0) return;
 
     el.innerHTML = `
       <span class="sponsor-label">Sponsored</span>

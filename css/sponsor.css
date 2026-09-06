@@ -1,0 +1,87 @@
+/* ============================================================
+   SPONSOR PAGES — advertise.html, media-kit.html, partner.html, privacy.html
+   plus the house unit that js/sponsor.js renders in #sponsor-footer.
+   Rides css/style.css tokens (Lora + DM Sans, lake-at-dusk palette).
+============================================================ */
+
+/* --- the house unit (unsold slot) --- */
+.sponsor-footer.is-house { border-top: 1px dashed var(--line); }
+.house-unit { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: var(--text-sm); color: var(--ink-2); max-width: 72ch; }
+.house-unit strong { color: var(--ink); font-family: var(--font-display); font-size: var(--text-md); font-weight: 600; }
+.house-cta { color: var(--coral); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.house-cta:hover { text-decoration: underline; }
+.sponsor-tagline { color: var(--ink-3); font-size: var(--text-sm); }
+.sponsor-footer { margin: var(--space-8) auto 0; padding: var(--space-5) var(--space-4) 0; max-width: var(--max-content); }
+
+/* --- shared page bones --- */
+.sp-wrap { max-width: 720px; }
+.sp-lede { font-size: var(--text-lg); line-height: 1.5; color: var(--ink-2); max-width: 36em; }
+.sp-lede strong { color: var(--ink); }
+.sp-section { margin-top: var(--space-10); }
+.sp-section h2 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 600; margin: 0 0 var(--space-3); color: var(--ink); }
+.sp-section p { color: var(--ink-2); line-height: 1.55; max-width: 38em; margin: 0 0 var(--space-3); }
+.sp-section p strong { color: var(--ink); }
+.sp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-3); margin: var(--space-4) 0 0; }
+.sp-tile { background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); box-shadow: var(--shadow-sm); }
+.sp-tile b { display: block; font-family: var(--font-display); font-size: var(--text-3xl); line-height: 1; color: var(--coral); font-weight: 600; }
+.sp-tile span { display: block; margin-top: var(--space-2); color: var(--ink-2); font-size: var(--text-sm); line-height: 1.4; }
+.sp-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-3); }
+.sp-list li { background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); color: var(--ink-2); line-height: 1.5; }
+.sp-list li strong { color: var(--ink); display: block; margin-bottom: 2px; }
+.sp-note { font-size: var(--text-sm); color: var(--ink-3); font-style: italic; }
+.sp-cta { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
+.sp-btn { display: inline-flex; align-items: center; gap: 6px; padding: 12px 20px; border-radius: var(--radius-full); background: var(--coral); color: #fff; font-weight: 600; text-decoration: none; font-size: var(--text-base); }
+.sp-btn:hover { filter: brightness(0.95); text-decoration: none; }
+.sp-btn.ghost { background: var(--bg-raised); color: var(--ink); border: 1px solid var(--line); }
+.sp-open { margin-top: var(--space-10); padding: var(--space-4) var(--space-5); border-radius: var(--radius-lg); background: var(--coral-light); color: var(--ink-2); font-size: var(--text-base); }
+.sp-open strong { color: var(--ink); }
+.sp-asof { margin-top: var(--space-6); font-size: var(--text-xs); color: var(--ink-4); }
+
+/* --- partner form --- */
+.sp-form { margin-top: var(--space-6); background: var(--teal-light); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--space-6) var(--space-5); }
+.sp-form h2 { margin-top: 0; }
+.sp-form label { display: block; margin: var(--space-4) 0 var(--space-1); font-weight: 600; font-size: var(--text-sm); color: var(--ink); }
+.sp-form label small { display: block; font-weight: 400; color: var(--ink-3); margin-top: 2px; }
+.sp-form input, .sp-form select, .sp-form textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: var(--text-base); color: var(--ink); background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 10px 12px; }
+.sp-form textarea { min-height: 96px; resize: vertical; }
+.sp-form input:focus, .sp-form select:focus, .sp-form textarea:focus { outline: 2px solid var(--teal); outline-offset: 1px; }
+.sp-form button { margin-top: var(--space-5); width: 100%; font: inherit; font-weight: 700; font-size: var(--text-md); cursor: pointer; background: var(--teal); color: #fff; border: 0; border-radius: var(--radius-full); padding: 14px 20px; }
+.sp-form button:disabled { opacity: .6; cursor: default; }
+.sp-fine { margin-top: var(--space-3); font-size: var(--text-xs); color: var(--ink-3); line-height: 1.5; }
+.sp-fine a { color: var(--teal); }
+.sp-form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.sp-form .form-status { margin-top: var(--space-3); font-size: var(--text-sm); color: var(--ink-2); }
+.sp-form .form-status.bad { color: var(--sp-alert); }
+
+/* --- media kit (one printed Letter page) --- */
+.mk-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 10px 18px; background: var(--bg-raised); border-bottom: 1px solid var(--line); font-size: 14px; position: sticky; top: 0; z-index: 2; }
+.mk-controls button { padding: 6px 14px; border-radius: 999px; border: 0; background: var(--coral); color: #fff; font: 600 14px inherit; cursor: pointer; }
+.mk-controls a { color: var(--teal); text-decoration: none; }
+.mk-body { margin: 0; background: #E9E4DB; color: #13243B; font-family: var(--font-body, "DM Sans", system-ui, sans-serif); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.mk-sheet { box-sizing: border-box; width: 8.5in; min-height: 11in; margin: 24px auto; padding: 0.6in 0.7in 0.5in; background: #FBF8F2; box-shadow: 0 12px 40px rgba(19,36,59,0.18); display: flex; flex-direction: column; font-size: 12.5px; line-height: 1.4; }
+.mk-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; border-bottom: 2px solid #4E342E; padding-bottom: 8px; }
+.mk-head h1 { margin: 0; font-family: "Lora", Georgia, serif; font-size: 28px; font-weight: 700; color: #4E342E; line-height: 1.05; }
+.mk-head .sub { margin: 4px 0 0; color: #3D5166; font-size: 12px; }
+.mk-brand { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #4E342E; }
+.mk-nums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0 0; }
+.mk-num { border: 1px solid #DDD8CF; border-radius: 8px; padding: 8px 10px; background: #fff; }
+.mk-num b { display: block; font-family: "Lora", Georgia, serif; font-size: 22px; color: #F2683C; font-weight: 700; line-height: 1; }
+.mk-num span { display: block; margin-top: 3px; color: #3D5166; font-size: 10.5px; line-height: 1.3; }
+.mk-plus { margin: 6px 0 0; font-size: 11px; color: #3D5166; }
+.mk-h2 { margin: 12px 0 4px; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #F2683C; }
+.mk-pk { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; margin: 0; }
+.mk-pk div { padding: 3px 0; border-bottom: 1px solid #EBE7DF; }
+.mk-pk b { color: #13243B; }
+.mk-terms { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; margin: 0; }
+.mk-terms p { margin: 0; font-size: 11.5px; line-height: 1.4; color: #3D5166; }
+.mk-terms p b { color: #13243B; }
+.mk-foot { margin-top: auto; padding-top: 8px; border-top: 1px solid #DDD8CF; display: flex; justify-content: space-between; gap: 10px; font-size: 11px; color: #3D5166; }
+.mk-foot b { color: #13243B; }
+.mk-fill { border-bottom: 1px solid #13243B; display: inline-block; min-width: 70px; }
+@media (max-width: 900px) { .mk-sheet { width: calc(100vw - 32px); min-height: 0; padding: 20px; } .mk-nums { grid-template-columns: 1fr 1fr; } .mk-terms, .mk-pk { grid-template-columns: 1fr; } }
+@media print {
+  .mk-body { background: #fff; }
+  .mk-controls, .site-header, .newsletter-bar, .site-footer, #sponsor-footer, .btown-nav, .btown-about { display: none !important; }
+  .mk-sheet { width: auto; min-height: 0; margin: 0; padding: 0.35in 0.45in; box-shadow: none; }
+  a { color: inherit; text-decoration: none; }
+}

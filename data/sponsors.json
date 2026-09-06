@@ -1,1 +1,17 @@
-[]
+{
+  "_note": "Live sponsors for the guide. js/sponsor.js reads this on every guide page that carries <div id=\"sponsor-footer\">; js/app.js (things-to-do) reads it for the in-list cards too. While `sponsors` is empty or nothing is active, the footer slot shows the rotating house unit ('this spot could be yours') pointing at advertise.html. Add a real sponsor by copying data/sponsors.example.json's entry into `sponsors`. Never add a sponsor here before the first payment has cleared.",
+  "_schema": {
+    "id": "short slug, unique, e.g. 'example-bakery'",
+    "name": "display name exactly as the sponsor writes it",
+    "url": "https:// link readers land on (add ?utm_source=btownbrief&utm_medium=guide yourself if they want it)",
+    "image": "optional; assets/sponsors/<id>.png or .svg, max height 48px in the footer; omit for a text link",
+    "tagline": "optional, under 80 characters, shown after the name in the footer",
+    "placement": "'footer' (bottom of guide pages) or 'list' (a card every 12 entries on things-to-do)",
+    "pages": "optional list of page filenames the footer unit is limited to, e.g. ['events.html','restaurants.html']; omit = every page",
+    "active": "true to show; false keeps the row on file without rendering it",
+    "starts": "YYYY-MM-DD first day it shows (optional)",
+    "ends": "YYYY-MM-DD last day it shows (optional); after this the row stops rendering by itself",
+    "category": "the exclusive category as written in the agreement, e.g. 'dentist' (for the seller's own records; not rendered)"
+  },
+  "sponsors": []
+}
