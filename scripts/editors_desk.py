@@ -94,22 +94,20 @@ RHYTHMS = [
      "note": "License re-checks; OPR registry has no bulk export, so it's manual."},
     {"slug": "hud-tiles", "title": "HUD income-limit tiles",
      "cadence_days": 365, "source": "stamp", "note": "Hand-updated each October."},
-    # Community rhythms (Sept 5, 2026 — community is the product; doctrine in advisor kb/15).
-    {"slug": "starters", "title": "Community: 2–3 conversation starters posted",
+    # Community (Sept 5, 2026 — community is the product; doctrine in advisor kb/15).
+    # These are opportunities to notice when they exist, not quotas; stamp them when you did the thing.
+    {"slug": "host-check", "title": "Community: anything waiting for a host?",
      "cadence_days": 7, "source": "stamp",
-     "note": "Beehiiv community + Telegram. Source them from the GoodBurlington queue, r/burlington, Dining To Go, Table Talk. One line to answer."},
-    {"slug": "intros", "title": "Community: introductions brokered",
+     "note": "An unanswered first post, someone asking if beginners can join, two people wanting company at the same event, a member contribution worth passing on. Reply in your voice; introduce when both would welcome it."},
+    {"slug": "community-digest", "title": "One community pointer in Friday's edition or Telegram",
      "cadence_days": 7, "source": "stamp",
-     "note": "Reply to every unanswered member post with a follow-up question; connect two people who share a thing. Never a bare thumbs-up."},
-    {"slug": "community-digest", "title": "Community digest in Friday's edition + one Telegram pointer",
-     "cadence_days": 7, "source": "stamp",
-     "note": "One block: best thread, next meetup, one member contribution (deliberate submissions only). Cross-communicate; don't mirror."},
+     "note": "'Here's what people are doing, and here's where to join.' Context over mirroring; deliberate submissions only."},
     {"slug": "ritual-review", "title": "The weekly question: how do we make this a little better?",
      "cadence_days": 7, "source": "stamp",
-     "note": "Coffee turnout + repeat rate, replies per starter, intros made, community DAU/MAU. One tweak, then stop."},
-    {"slug": "creed-check", "title": "Creed / villains / rituals still true?",
+     "note": "What was easy to join, what felt awkward, what would people come back for, how did hosting feel. One tweak, then stop."},
+    {"slug": "creed-check", "title": "Does the welcome still sound like you?",
      "cadence_days": 90, "source": "stamp",
-     "note": "Reread advisor kb/15 §2.1. Each season: one ritual added or killed, merch/ads only speak the creed."},
+     "note": "Reread advisor kb/15 §2.1 and §5 each season. One ritual added or retired; merch and ads speak the welcome."},
 ]
 
 STATIONS = [
