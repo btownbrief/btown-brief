@@ -1,24 +1,24 @@
 {
- "generated": "2026-09-07T11:14:17-04:00",
+ "generated": "2026-09-07T18:59:23-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 6.0
+   "seconds": 6.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 66,
-   "seconds": 3.5
+   "seconds": 3.1
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 61,
-   "seconds": 3.0
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 213,
+   "count": 214,
    "seconds": 3.7
   },
   "churchst": {
@@ -30,13 +30,13 @@
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 7
+   "staleDays": 8
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-07&end_date=2026-11-06&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 7
+   "staleDays": 8
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,12 +46,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 207,
-   "seconds": 73.9
+   "seconds": 74.9
   },
   "flynn": {
    "label": "The Flynn",
@@ -66,48 +66,47 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 738,
-   "seconds": 39.0
+   "seconds": 37.8
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 76,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "seconds": 10.1
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 359,
-   "seconds": 78.4
+   "seconds": 76.2
   },
   "meetup": {
    "label": "Meetup",
    "count": 63,
-   "seconds": 131.5
+   "seconds": 123.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 19,
-   "seconds": 0.8
+   "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 54,
-   "seconds": 14.3
+   "seconds": 14.0
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 46,
+   "count": 47,
    "seconds": 0.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 91,
-   "seconds": 6.1
+   "seconds": 5.4
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
@@ -117,40 +116,40 @@
   "sevendays": {
    "label": "Seven Days",
    "count": 2410,
-   "seconds": 96.8
+   "seconds": 3.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 7
+   "staleDays": 8
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 490,
-   "seconds": 33.3
+   "count": 492,
+   "seconds": 21.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 283,
+   "count": 285,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 78,
-   "seconds": 103.9
+   "seconds": 107.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 54,
-   "seconds": 0.3
+   "seconds": 0.5
   }
  },
- "gathered": 5480,
- "afterDedup": 2563,
- "duplicatesMerged": 2917,
- "final": 2727,
- "firecrawlCalls": 15,
+ "gathered": 5486,
+ "afterDedup": 2566,
+ "duplicatesMerged": 2920,
+ "final": 2720,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2439,8 +2438,7 @@
    "id": "0d1e590d5b32",
    "title": "Blueberry Betty (LCLS)",
    "date": "2026-09-07",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "fbbf80d94cb9",
@@ -2520,17 +2518,10 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "55d885bfeeec",
-   "title": "#NotJustFatigue Documentary Short (15min)",
-   "date": "2026-09-08",
-   "change": "dropped"
-  },
-  {
    "id": "50aa1a19b1ed",
    "title": "Soccer Intramurals",
    "date": "2026-09-08",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "54db9a7662d0",
@@ -2580,12 +2571,6 @@
    "date": "2026-09-09",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "4c49f260c0ec",
-   "title": "HOPE Works: The Art of Healing Support Group Series!",
-   "date": "2026-09-09",
-   "change": "dropped"
   },
   {
    "id": "40e981e63032",
@@ -2686,12 +2671,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "db493d998604",
-   "title": "Read to a Therapy Dog",
-   "date": "2026-09-12",
-   "change": "dropped"
-  },
-  {
    "id": "90abed62f85a",
    "title": "Pride Vermont 2026",
    "date": "2026-09-13",
@@ -2704,12 +2683,6 @@
    "date": "2026-09-14",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "dc450269b403",
-   "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
-   "date": "2026-09-14",
-   "change": "dropped"
   },
   {
    "id": "586371e536e3",
@@ -2785,8 +2758,7 @@
    "id": "cd49fe078afc",
    "title": "Soccer Intramurals",
    "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "3dbe6d6078dd",
@@ -2829,18 +2801,6 @@
    "date": "2026-09-16",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "d635102047bb",
-   "title": "HOPE Works: The Art of Healing Support Group Series!",
-   "date": "2026-09-16",
-   "change": "dropped"
-  },
-  {
-   "id": "453fec0c1463",
-   "title": "3D Modeling Basics Intro to Blender (2 part series)",
-   "date": "2026-09-16",
-   "change": "dropped"
   },
   {
    "id": "acf6ce6dddd4",
@@ -3018,12 +2978,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "923adadb23ff",
-   "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
-   "date": "2026-09-21",
-   "change": "dropped"
-  },
-  {
    "id": "d1299fe10056",
    "title": "Brewing Better Business (VT)",
    "date": "2026-09-22",
@@ -3090,8 +3044,7 @@
    "id": "957d9d7b13a3",
    "title": "Soccer Intramurals",
    "date": "2026-09-22",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "92efbb34b0fb",
@@ -3143,23 +3096,11 @@
    "lastSeen": "2026-09-05T01:37:25-04:00"
   },
   {
-   "id": "129c5e5a7e94",
-   "title": "HOPE Works: The Art of Healing Support Group Series!",
-   "date": "2026-09-23",
-   "change": "dropped"
-  },
-  {
    "id": "03674606b7ce",
    "title": "Family Craft: Picture Frames",
    "date": "2026-09-23",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "228b7b704725",
-   "title": "3D Modeling Basics Intro to Blender (2 part series)",
-   "date": "2026-09-23",
-   "change": "dropped"
   },
   {
    "id": "0d9011ffd6ea",
@@ -3337,12 +3278,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "ef87e6530179",
-   "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
-   "date": "2026-09-28",
-   "change": "dropped"
-  },
-  {
    "id": "348e88592d16",
    "title": "Craftytown",
    "date": "2026-09-29",
@@ -3360,8 +3295,7 @@
    "id": "4a0a92e1ab48",
    "title": "Soccer Intramurals",
    "date": "2026-09-29",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "b06b8cd265e8",
@@ -3376,12 +3310,6 @@
    "date": "2026-09-30",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "717c258ffd9c",
-   "title": "HOPE Works: The Art of Healing Support Group Series!",
-   "date": "2026-09-30",
-   "change": "dropped"
   },
   {
    "id": "ef29e9adbc5e",
@@ -3426,12 +3354,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "876945419604",
-   "title": "October West Coast Swing Social feat. Lucky and Mae!",
-   "date": "2026-10-03",
-   "change": "dropped"
-  },
-  {
    "id": "2718d53a5a53",
    "title": "Varied & Alive Curator Tour",
    "date": "2026-10-06",
@@ -3456,13 +3378,6 @@
    "id": "7b32413a29d3",
    "title": "Soccer Intramurals",
    "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
-  },
-  {
-   "id": "3f58a88329e3",
-   "title": "HOPE Works: The Art of Healing Support Group Series!",
-   "date": "2026-10-07",
    "change": "dropped"
   },
   {
@@ -3504,8 +3419,7 @@
    "id": "972cec1f4b9d",
    "title": "Soccer Intramurals",
    "date": "2026-10-13",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "225a0add5080",
@@ -3527,12 +3441,6 @@
    "date": "2026-10-14",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "f26db363b25d",
-   "title": "HOPE Works: The Art of Healing Support Group Series!",
-   "date": "2026-10-14",
-   "change": "dropped"
   },
   {
    "id": "1837480df93e",
@@ -3594,8 +3502,7 @@
    "id": "af2fb2be5c1e",
    "title": "Soccer Intramurals",
    "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "cc3d801ab0bc",
@@ -3626,12 +3533,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "6d65ebe640b0",
-   "title": "She Bravely Returns: An Immersive Women's Wellness & Writing Experience",
-   "date": "2026-10-25",
-   "change": "dropped"
-  },
-  {
    "id": "e874b58f442e",
    "title": "ACOTAR 6 Midnight Release Party | Phoenix Books",
    "date": "2026-10-26",
@@ -3642,15 +3543,13 @@
    "id": "4a8a3430c5dd",
    "title": "Soccer Intramurals",
    "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
+   "change": "dropped"
   },
   {
    "id": "1514dff93697",
    "title": "Soccer Intramurals",
    "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-09-04T18:31:30-04:00"
+   "change": "dropped"
   }
  ]
 }
