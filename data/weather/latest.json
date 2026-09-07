@@ -1,52 +1,42 @@
 {
- "updated": "2026-09-06T22:13:51+00:00",
+ "updated": "2026-09-07T00:22:07+00:00",
  "sections_updated": {
-  "now": "2026-09-06T22:13:51+00:00",
-  "forecast": "2026-09-06T22:13:51+00:00",
-  "hourly": "2026-09-06T22:13:51+00:00",
-  "alerts": "2026-09-06T22:13:51+00:00",
-  "afd": "2026-09-06T22:13:51+00:00",
-  "lake_forecast": "2026-09-06T22:13:51+00:00",
-  "lake_gage": "2026-09-06T22:13:51+00:00",
-  "air": "2026-09-06T22:13:51+00:00",
-  "sun": "2026-09-06T22:13:51+00:00",
-  "models": "2026-09-06T22:13:51+00:00"
+  "now": "2026-09-07T00:22:07+00:00",
+  "forecast": "2026-09-07T00:22:07+00:00",
+  "hourly": "2026-09-07T00:22:07+00:00",
+  "alerts": "2026-09-07T00:22:07+00:00",
+  "afd": "2026-09-07T00:22:07+00:00",
+  "lake_forecast": "2026-09-07T00:22:07+00:00",
+  "lake_gage": "2026-09-07T00:22:07+00:00",
+  "air": "2026-09-07T00:22:07+00:00",
+  "sun": "2026-09-07T00:22:07+00:00",
+  "models": "2026-09-07T00:22:07+00:00"
  },
  "now": {
-  "observed_at": "2026-09-06T22:00:00+00:00",
+  "observed_at": "2026-09-07T00:05:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 70,
-  "feels_like_f": 70,
-  "humidity": 46,
-  "dewpoint_f": 48,
-  "wind_mph": 11,
+  "temp_f": 64,
+  "feels_like_f": 64,
+  "humidity": 64,
+  "dewpoint_f": 52,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "NNW",
+  "wind_dir": "NW",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-09-06T18:09:58+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-09-06T15:00:00-04:00",
-    "is_day": true,
-    "temp_f": 72,
-    "pop": 1,
-    "wind": "N 12 mph",
-    "short": "Sunny",
-    "detailed": "Sunny, with a high near 72. North wind around 12 mph."
-   },
-   {
     "name": "Tonight",
-    "start": "2026-09-06T18:00:00-04:00",
+    "start": "2026-09-06T20:00:00-04:00",
     "is_day": false,
     "temp_f": 51,
     "pop": 6,
-    "wind": "N 2 to 9 mph",
-    "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 51. North wind 2 to 9 mph."
+    "wind": "N 2 to 6 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 51. North wind 2 to 6 mph."
    },
    {
     "name": "Labor Day",
@@ -66,7 +56,7 @@
     "pop": 18,
     "wind": "W 3 to 9 mph",
     "short": "Partly Cloudy then Slight Chance Rain Showers",
-    "detailed": "A slight chance of rain showers between 2am and 3am. Partly cloudy, with a low around 57. West wind 3 to 9 mph."
+    "detailed": "A slight chance of rain showers between 2am and 3am. Partly cloudy, with a low around 57. West wind 3 to 9 mph. Chance of precipitation is 20%."
    },
    {
     "name": "Tuesday",
@@ -96,7 +86,7 @@
     "pop": 62,
     "wind": "S 8 to 16 mph",
     "short": "Mostly Cloudy then Rain Showers Likely",
-    "detailed": "Rain showers likely after 2pm. Mostly cloudy, with a high near 77. South wind 8 to 16 mph, with gusts as high as 30 mph. Chance of precipitation is 60%."
+    "detailed": "Rain showers likely after 2pm. Mostly cloudy, with a high near 77. South wind 8 to 16 mph, with gusts as high as 30 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Wednesday Night",
@@ -167,45 +157,22 @@
     "wind": "S 12 mph",
     "short": "Partly Cloudy",
     "detailed": "Partly cloudy, with a low around 57. South wind around 12 mph."
+   },
+   {
+    "name": "Sunday",
+    "start": "2026-09-13T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 80,
+    "pop": 20,
+    "wind": "S 12 to 15 mph",
+    "short": "Mostly Sunny then Slight Chance Rain Showers",
+    "detailed": "A slight chance of rain showers after 2pm. Mostly sunny, with a high near 80. South wind 12 to 15 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-09-06T18:09:58+00:00",
   "hours": [
-   {
-    "t": "2026-09-06T17:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
-    "pop": 1,
-    "humidity": 51,
-    "wind_mph": 12,
-    "wind_dir": "N",
-    "sky": 21,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-09-06T18:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 1,
-    "humidity": 57,
-    "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 17,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-09-06T19:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 2,
-    "humidity": 61,
-    "wind_mph": 8,
-    "wind_dir": "N",
-    "sky": 5,
-    "short": "Clear"
-   },
    {
     "t": "2026-09-06T20:00:00-04:00",
     "temp_f": 66,
@@ -568,6 +535,39 @@
     "wind_dir": "W",
     "sky": 70,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-08T05:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 10,
+    "humidity": 83,
+    "wind_mph": 3,
+    "wind_dir": "NW",
+    "sky": 83,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-08T06:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 8,
+    "humidity": 83,
+    "wind_mph": 3,
+    "wind_dir": "N",
+    "sky": 71,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-08T07:00:00-04:00",
+    "temp_f": 58,
+    "feels_f": 58,
+    "pop": 4,
+    "humidity": 86,
+    "wind_mph": 3,
+    "wind_dir": "N",
+    "sky": 76,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-06T18:36:00+00:00",
+  "issued": "2026-09-06T23:27:00+00:00",
   "key_messages": [
    "Dry and seasonable through Tuesday",
    "A brief intrusion of tropical moisture on Thursday will give way to seasonable, dry conditions heading into the weekend"
   ],
   "what_changed": "As of 235 PM EDT Sunday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 061836\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n236 PM EDT Sun Sep 6 2026\n\n.WHAT HAS CHANGED...\nAs of 235 PM EDT Sunday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 235 PM EDT Sunday...\n\n1. Dry and seasonable through Tuesday\n\n2. A brief intrusion of tropical moisture on Thursday will give \nway to seasonable, dry conditions heading into the weekend\n\n&&\n\n.DISCUSSION...\nAs of 235 PM EDT Sunday...\n\nKEY MESSAGE 1: An upper low will remain centered just to the east \nheading into tomorrow, keeping the region in a seasonably cool \nairmass. Skies will continue to clear as it inches to the east and \nby tonight, the clouds should be mostly gone. This will set the \nstage for efficient radiational cooling, with lows generally falling \ninto the 40s and upper 30s. The current forecast low at SLK is 37, \nbut it could easily fall a few more degrees if winds go calm early. \nWarm air advection will begin for Monday and Tuesday, but it will be \nunsuccessful in causing a significant airmass change, with the \nhumidity staying low and temperatures remaining around seasonable \nvalues. A few showers are possible in northern areas Monday night \nand early Tuesday morning as a dying cold front passes into the \nregion.\n\nKEY MESSAGE 2: A very humid air mass will quickly advect into Vermont \nand northern New York late Wednesday into early Thursday due to \nchanneled flow stretching across the Great Lakes into New England \nwith 100+ knot flow at 300mb. Flow will be fast down at 850mb as \nwell, though the intensity of the LLJ has backed off towards 40-45 \nknots. It will still result in a short duration of 2\" PWATs across \nthe region. Departing high pressure and the fast mid-level flow will \nresult in fairly strong isentropic upglide. There should also be \nmarginal CAPE of about 250 J/kg after dark on Wednesday for at least \nthe St. Lawrence Valley (LREF ~40% > 250 J/kg, but expect that to \npercentage to increase as we get into the mesoscale model window). \nSo moderate rain, perhaps briefly heavy, will race eastwards. Again, \nsynoptic models are likely broad brushing rainfall amounts too much \ngiven the LLJ will produce west slope orographic enhancement and \neast slope terrain shadowing. The residence time of this moisture \nwill be very short (5-9 hours) due to the fast flow, which will \nprevent significant rainfall totals. Broadly speaking, totals appear \nto range about 0.25-0.75\", and we'll get towards the end of \nmesoscale models tomorrow for some of those finer details.\n\nOn Thursday, the tropical air mass will be gone, but there's still \ngoing to be a little moisture lingering. Marginal diurnally driven \ninstability could produce a few showers Thursday afternoon, but \nit'll be generally warm in the 70s to near 80 while we await a cold \nfront that'll pass through late Thursday night or Friday morning. \nMedium range guidance has shifted towards drier solutions for \nFriday. So we'll spend most all our weekend without rain as broad \nhigh pressure builds across the area. Some rain showers could begin \napproaching towards next Sunday evening when broad surface higher \npressure will begin shifting offshore.\n\n&&\n\n.AVIATION /18Z SUNDAY THROUGH FRIDAY/...\nThrough 18Z Monday...Stubborn stratocumulus clouds around 1000-2500\nft agl are finally dissipating, or lifting above 3000 ft, as dry air\nand high pressure gradually build across the area. A spot shower or\ntwo is possible, mainly over eastern Vermont through about 23z, but\nthe probabilities are low enough that there's no mention at any\nterminal. North winds are 5-10 knots with a few gusts around 15-18\nknots. Skies are expected to trend clear after sunset with surface\nwinds become light and variable. There will be some 10-15 knot flow\naround 500 ft agl overnight, but sheltered river valleys and\nelevated terrain basins will still likely produce fog. Noted some\nIFR visibilities from 06z- 12z at KSLK and to a lesser extent at\nKMPV. After 12z, generally SKC with northwest winds around 6-11\nknots sustained, and perhaps a few gusts 16-19 knots after 15z.\n\nOutlook...\n\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. Chance SHRA.\nWednesday Night: MVFR/IFR conditions possible. Chance SHRA,\nSlight chance TSRA.\nThursday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Slight\nchance SHRA.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Myskowski/Haynes\nAVIATION...Haynes\n"
+  "raw": "\n000\nFXUS61 KBTV 062327\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n727 PM EDT Sun Sep 6 2026\n\n.WHAT HAS CHANGED...\nAs of 235 PM EDT Sunday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 235 PM EDT Sunday...\n\n1. Dry and seasonable through Tuesday\n\n2. A brief intrusion of tropical moisture on Thursday will give \nway to seasonable, dry conditions heading into the weekend\n\n&&\n\n.DISCUSSION...\nAs of 235 PM EDT Sunday...\n\nKEY MESSAGE 1: An upper low will remain centered just to the east \nheading into tomorrow, keeping the region in a seasonably cool \nairmass. Skies will continue to clear as it inches to the east and \nby tonight, the clouds should be mostly gone. This will set the \nstage for efficient radiational cooling, with lows generally falling \ninto the 40s and upper 30s. The current forecast low at SLK is 37, \nbut it could easily fall a few more degrees if winds go calm early. \nWarm air advection will begin for Monday and Tuesday, but it will be \nunsuccessful in causing a significant airmass change, with the \nhumidity staying low and temperatures remaining around seasonable \nvalues. A few showers are possible in northern areas Monday night \nand early Tuesday morning as a dying cold front passes into the \nregion.\n\nKEY MESSAGE 2: A very humid air mass will quickly advect into Vermont \nand northern New York late Wednesday into early Thursday due to \nchanneled flow stretching across the Great Lakes into New England \nwith 100+ knot flow at 300mb. Flow will be fast down at 850mb as \nwell, though the intensity of the LLJ has backed off towards 40-45 \nknots. It will still result in a short duration of 2\" PWATs across \nthe region. Departing high pressure and the fast mid-level flow will \nresult in fairly strong isentropic upglide. There should also be \nmarginal CAPE of about 250 J/kg after dark on Wednesday for at least \nthe St. Lawrence Valley (LREF ~40% > 250 J/kg, but expect that to \npercentage to increase as we get into the mesoscale model window). \nSo moderate rain, perhaps briefly heavy, will race eastwards. Again, \nsynoptic models are likely broad brushing rainfall amounts too much \ngiven the LLJ will produce west slope orographic enhancement and \neast slope terrain shadowing. The residence time of this moisture \nwill be very short (5-9 hours) due to the fast flow, which will \nprevent significant rainfall totals. Broadly speaking, totals appear \nto range about 0.25-0.75\", and we'll get towards the end of \nmesoscale models tomorrow for some of those finer details.\n\nOn Thursday, the tropical air mass will be gone, but there's still \ngoing to be a little moisture lingering. Marginal diurnally driven \ninstability could produce a few showers Thursday afternoon, but \nit'll be generally warm in the 70s to near 80 while we await a cold \nfront that'll pass through late Thursday night or Friday morning. \nMedium range guidance has shifted towards drier solutions for \nFriday. So we'll spend most all our weekend without rain as broad \nhigh pressure builds across the area. Some rain showers could begin \napproaching towards next Sunday evening when broad surface higher \npressure will begin shifting offshore.\n\n&&\n\n.AVIATION /00Z MONDAY THROUGH FRIDAY/...\nThrough 00Z Tuesday...Surface high pressure is nosing into\nnorthern New York per latest analysis, but still notice a pres\ngradient between this high pres and departing low pres over\neastern Canada. Sounding data shows 10 to 15 knots around 500\nfeet above ground level overnight, which could delay fog\ndevelopment at our climo favored sites. Have used tempo group to\nindicate IFR development between 05-08z at MPV/SLK with\nprevailing IFR/LIFR by 09z at both sites. Meanwhile, less\nconfidence in fog development at EFK/MSS, so just used tempo to\nshow potential near sunrise on Monday. Otherwise, rest of our\ntaf sites stay VFR for the next 12 to 24 hours with northwest\nwinds 5 to 10 knots, but gusts 15 to 20 knots on Monday\nafternoon. \n\nOutlook...\n\nMonday Night: VFR. NO SIG WX.\nTuesday: Mainly VFR, with local MVFR possible. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. Chance SHRA, Slight chance TSRA.\nWednesday Night: Mainly MVFR, with local IFR possible. Chance\nSHRA, Slight chance TSRA.\nThursday: Mainly VFR, with local IFR possible. Chance SHRA.\nThursday Night: VFR. Slight chance SHRA.\nFriday: Mainly VFR, with areas MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Haynes/Myskowski\nAVIATION...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-09-06T18:14:00+00:00",
@@ -853,9 +853,9 @@
  },
  "lake_gage": {
   "water_temp_f": 66,
-  "water_temp_at": "2026-09-06T18:00:00.000-04:00",
+  "water_temp_at": "2026-09-06T20:00:00.000-04:00",
   "level_ft": 94.45,
-  "level_at": "2026-09-06T18:00:00.000-04:00",
+  "level_at": "2026-09-06T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -863,8 +863,8 @@
   "aqi": 27,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/06/26 17:00",
-  "discussion": "On Sunday, September 7th, expect generally good air quality across Vermont."
+  "observed": "09/06/26 20:00",
+  "discussion": "On Monday, September 8th, expect generally good air quality across Vermont."
  },
  "sun": {
   "sunrise": "2026-09-06T06:21-04:00",
@@ -884,7 +884,7 @@
     },
     "pop_max": {
      "GFS": 30,
-     "Euro": 78,
+     "Euro": 80,
      "ICON": 53
     },
     "precip_in": {
@@ -916,21 +916,21 @@
    {
     "date": "2026-09-08",
     "high_f": {
-     "GFS": 71,
+     "GFS": 70,
      "Euro": 71,
      "ICON": 72
     },
     "pop_max": {
      "GFS": 19,
-     "Euro": 15,
+     "Euro": 25,
      "ICON": 3
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.01,
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    }
   ]
  }
