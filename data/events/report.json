@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-06T18:20:54-04:00",
+ "generated": "2026-09-07T11:14:17-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 5.6
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 70,
-   "seconds": 4.1
+   "count": 66,
+   "seconds": 3.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 61,
-   "seconds": 3.1
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 218,
-   "seconds": 4.2
+   "count": 213,
+   "seconds": 3.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 85,
-   "seconds": 1.8
+   "count": 86,
+   "seconds": 2.1
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -35,7 +35,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-06&end_date=2026-11-05&page=1 (HTTP Error 405: Not Allowed)",
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-07&end_date=2026-11-06&page=1 (HTTP Error 405: Not Allowed)",
    "staleDays": 7
   },
   "facebook": {
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 206,
-   "seconds": 68.2
+   "count": 207,
+   "seconds": 73.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.3
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,58 +65,59 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 748,
-   "seconds": 37.2
+   "count": 738,
+   "seconds": 39.0
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 75,
-   "seconds": 0.5
+   "count": 76,
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 10.2
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 362,
-   "seconds": 72.8
+   "count": 359,
+   "seconds": 78.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 65,
-   "seconds": 118.7
+   "count": 63,
+   "seconds": 131.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 19,
-   "seconds": 0.7
+   "seconds": 0.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 54,
-   "seconds": 13.3
+   "seconds": 14.3
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 93,
-   "seconds": 0.3
+   "count": 46,
+   "seconds": 0.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 90,
-   "seconds": 6.3
+   "count": 91,
+   "seconds": 6.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 23,
-   "seconds": 30.9
+   "seconds": 33.0
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2328,
-   "seconds": 2.9
+   "count": 2410,
+   "seconds": 96.8
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -126,109 +127,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 482,
-   "seconds": 19.3
+   "count": 490,
+   "seconds": 33.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 282,
+   "count": 283,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 78,
-   "seconds": 99.7
+   "seconds": 103.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 53,
-   "seconds": 0.5
+   "count": 54,
+   "seconds": 0.3
   }
  },
- "gathered": 5456,
- "afterDedup": 2611,
- "duplicatesMerged": 2845,
- "final": 2795,
- "firecrawlCalls": 1,
+ "gathered": 5480,
+ "afterDedup": 2563,
+ "duplicatesMerged": 2917,
+ "final": 2727,
+ "firecrawlCalls": 15,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Field Hockey vs UMass Lowell",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-09"
-  },
-  {
-   "kept": {
-    "title": "Board Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-09"
-  },
-  {
-   "kept": {
-    "title": "Fraser | San Miguel Fraser",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-09"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-09"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-09"
-  },
-  {
-   "kept": {
-    "title": "Mad Robin Burlington Contra Dance",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-09"
-  },
-  {
-   "kept": {
-    "title": "The Poetry Experience",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-10-10"
-  },
   {
    "kept": {
     "title": "Randy Feltface",
@@ -2391,6 +2314,28 @@
   },
   {
    "kept": {
+    "title": "State of the research on legume-only polyculture ft. Sandi Dincki",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-05"
+  },
+  {
+   "kept": {
+    "title": "2026 UVM Engineering & Technology Fair",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-05"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -2410,86 +2355,65 @@
     "sevendays"
    ],
    "date": "2026-11-05"
+  },
+  {
+   "kept": {
+    "title": "Strings of India: An Evening of North Indian Classical Music",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "sevendays"
+   ],
+   "date": "2026-11-05"
+  },
+  {
+   "kept": {
+    "title": "Fruit Bats",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
+    "title": "Lane Series: Gabriela Martinez",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "sevendays"
+   ],
+   "date": "2026-11-06"
   }
  ],
  "changes": [
-  {
-   "id": "3dfd7c13256d",
-   "title": "Mix & Mingle",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-06T09:05:39-04:00"
-  },
-  {
-   "id": "dbb20482d1de",
-   "title": "Mowgli's Bluegrass Trio!",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
-  {
-   "id": "4f7356dbfe59",
-   "title": "Julia Randall & Friends",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-06T09:05:39-04:00"
-  },
-  {
-   "id": "651f6f7cbf33",
-   "title": "Naomi Wallner",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
-  {
-   "id": "b4c8a5c827ce",
-   "title": "Delta Sweet Duo",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
-  {
-   "id": "bfbaed5eda9b",
-   "title": "Hannah Hausman",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
-  {
-   "id": "72c3e4f5e7e2",
-   "title": "Leena Unger",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
-  {
-   "id": "03b5679e3afe",
-   "title": "The Dead Shakers",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
-  {
-   "id": "9a425da922db",
-   "title": "Izzy Jones",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
-  {
-   "id": "9623e89f94b9",
-   "title": "The Cathartic Nights House Band",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
-  {
-   "id": "cd7a71a9c90d",
-   "title": "TwoSev",
-   "date": "2026-09-06",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
   {
    "id": "6cfbdaf930f8",
    "title": "CISSP Training Program – Become a Cybersecurity Leader in Burlington, VT",
@@ -2517,6 +2441,13 @@
    "date": "2026-09-07",
    "change": "missing",
    "lastSeen": "2026-09-04T18:31:30-04:00"
+  },
+  {
+   "id": "fbbf80d94cb9",
+   "title": "Skin Tight (LCLS)",
+   "date": "2026-09-07",
+   "change": "missing",
+   "lastSeen": "2026-09-06T18:20:54-04:00"
   },
   {
    "id": "36fef63f255f",
@@ -2592,8 +2523,7 @@
    "id": "55d885bfeeec",
    "title": "#NotJustFatigue Documentary Short (15min)",
    "date": "2026-09-08",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "50aa1a19b1ed",
@@ -2655,8 +2585,7 @@
    "id": "4c49f260c0ec",
    "title": "HOPE Works: The Art of Healing Support Group Series!",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "40e981e63032",
@@ -2664,6 +2593,13 @@
    "date": "2026-09-09",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "bdfb2865383c",
+   "title": "Live Music! Temple Mountain",
+   "date": "2026-09-09",
+   "change": "missing",
+   "lastSeen": "2026-09-06T18:20:54-04:00"
   },
   {
    "id": "198112a47e48",
@@ -2706,12 +2642,6 @@
    "date": "2026-09-10",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "6f6346e7d1a4",
-   "title": "David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ James Kochalka Superstar & a Strelka afterparty!",
-   "date": "2026-09-10",
-   "change": "dropped"
   },
   {
    "id": "064e7b5b0752",
@@ -2759,8 +2689,7 @@
    "id": "db493d998604",
    "title": "Read to a Therapy Dog",
    "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "90abed62f85a",
@@ -2780,8 +2709,7 @@
    "id": "dc450269b403",
    "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
    "date": "2026-09-14",
-   "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "586371e536e3",
@@ -2906,15 +2834,13 @@
    "id": "d635102047bb",
    "title": "HOPE Works: The Art of Healing Support Group Series!",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "453fec0c1463",
    "title": "3D Modeling Basics Intro to Blender (2 part series)",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "acf6ce6dddd4",
@@ -2929,12 +2855,6 @@
    "date": "2026-09-17",
    "change": "missing",
    "lastSeen": "2026-09-05T01:37:25-04:00"
-  },
-  {
-   "id": "934bb342fb68",
-   "title": "Jake McKelvie w/ A Box of Stars, riverbed, & Izzy Jones",
-   "date": "2026-09-17",
-   "change": "dropped"
   },
   {
    "id": "c9ffff2fa96e",
@@ -2970,6 +2890,13 @@
    "date": "2026-09-18",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "7d794705dbd7",
+   "title": "Oktoberfest Vermont 2026",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-06T18:20:54-04:00"
   },
   {
    "id": "eca8ed65b605",
@@ -3077,6 +3004,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "55927959fa17",
+   "title": "Oktoberfest Vermont 2026",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-09-06T18:20:54-04:00"
+  },
+  {
    "id": "ab7fde873458",
    "title": "Rest, Relax, Recharge: Guided Meditation with Aromatherapy",
    "date": "2026-09-21",
@@ -3087,8 +3021,7 @@
    "id": "923adadb23ff",
    "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
    "date": "2026-09-21",
-   "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "d1299fe10056",
@@ -3213,8 +3146,7 @@
    "id": "129c5e5a7e94",
    "title": "HOPE Works: The Art of Healing Support Group Series!",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "03674606b7ce",
@@ -3227,8 +3159,7 @@
    "id": "228b7b704725",
    "title": "3D Modeling Basics Intro to Blender (2 part series)",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "0d9011ffd6ea",
@@ -3257,12 +3188,6 @@
    "date": "2026-09-24",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "f5c36bf7ec0a",
-   "title": "Old Time Jam",
-   "date": "2026-09-24",
-   "change": "dropped"
   },
   {
    "id": "eac1851037aa",
@@ -3298,12 +3223,6 @@
    "date": "2026-09-25",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "422055884b98",
-   "title": "Late Night Karaoke Hosted by Kaleigh Karnal!",
-   "date": "2026-09-25",
-   "change": "dropped"
   },
   {
    "id": "59fc36bf5792",
@@ -3421,8 +3340,7 @@
    "id": "ef87e6530179",
    "title": "Exhibit - Becoming a Catamount: A Century of New Students at UVM",
    "date": "2026-09-28",
-   "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "348e88592d16",
@@ -3463,8 +3381,7 @@
    "id": "717c258ffd9c",
    "title": "HOPE Works: The Art of Healing Support Group Series!",
    "date": "2026-09-30",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "ef29e9adbc5e",
@@ -3488,6 +3405,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "684bd86863c1",
+   "title": "BTown Coffee Club",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-06T18:20:54-04:00"
+  },
+  {
    "id": "da4e38265440",
    "title": "Brick House & Bubbly",
    "date": "2026-10-03",
@@ -3505,8 +3429,7 @@
    "id": "876945419604",
    "title": "October West Coast Swing Social feat. Lucky and Mae!",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-04T09:44:35-04:00"
+   "change": "dropped"
   },
   {
    "id": "2718d53a5a53",
@@ -3540,8 +3463,7 @@
    "id": "3f58a88329e3",
    "title": "HOPE Works: The Art of Healing Support Group Series!",
    "date": "2026-10-07",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "dd3465273c64",
@@ -3610,8 +3532,7 @@
    "id": "f26db363b25d",
    "title": "HOPE Works: The Art of Healing Support Group Series!",
    "date": "2026-10-14",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "1837480df93e",
@@ -3670,12 +3591,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "c8af375ece1e",
-   "title": "Doctor Gasp!",
-   "date": "2026-10-20",
-   "change": "dropped"
-  },
-  {
    "id": "af2fb2be5c1e",
    "title": "Soccer Intramurals",
    "date": "2026-10-20",
@@ -3690,16 +3605,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "8bf390e94fc1",
-   "title": "Old Time Jam",
-   "date": "2026-10-22",
-   "change": "dropped"
-  },
-  {
-   "id": "ff7745a91d99",
-   "title": "Late Night Karaoke Hosted by Kaleigh Karnal!",
-   "date": "2026-10-23",
-   "change": "dropped"
+   "id": "4796bb14f3a3",
+   "title": "Fake Far",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-09-06T18:20:54-04:00"
   },
   {
    "id": "d43a8470de76",
@@ -3719,8 +3629,7 @@
    "id": "6d65ebe640b0",
    "title": "She Bravely Returns: An Immersive Women's Wellness & Writing Experience",
    "date": "2026-10-25",
-   "change": "missing",
-   "lastSeen": "2026-09-03T18:48:33-04:00"
+   "change": "dropped"
   },
   {
    "id": "e874b58f442e",
@@ -3735,12 +3644,6 @@
    "date": "2026-10-27",
    "change": "missing",
    "lastSeen": "2026-09-04T18:31:30-04:00"
-  },
-  {
-   "id": "1b562042e008",
-   "title": "Villain Of The War w/ antoinette & boat kill by fire",
-   "date": "2026-10-28",
-   "change": "dropped"
   },
   {
    "id": "1514dff93697",
