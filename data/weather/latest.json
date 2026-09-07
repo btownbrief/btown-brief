@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-07T15:13:15+00:00",
+ "updated": "2026-09-07T16:06:39+00:00",
  "sections_updated": {
-  "now": "2026-09-07T15:13:15+00:00",
-  "forecast": "2026-09-07T15:13:15+00:00",
-  "hourly": "2026-09-07T15:13:15+00:00",
-  "alerts": "2026-09-07T15:13:15+00:00",
-  "afd": "2026-09-07T15:13:15+00:00",
-  "lake_forecast": "2026-09-07T15:13:15+00:00",
-  "lake_gage": "2026-09-07T15:13:15+00:00",
-  "air": "2026-09-07T15:13:15+00:00",
-  "sun": "2026-09-07T15:13:15+00:00",
-  "models": "2026-09-07T15:13:15+00:00"
+  "now": "2026-09-07T16:06:39+00:00",
+  "forecast": "2026-09-07T16:06:39+00:00",
+  "hourly": "2026-09-07T16:06:39+00:00",
+  "alerts": "2026-09-07T16:06:39+00:00",
+  "afd": "2026-09-07T16:06:39+00:00",
+  "lake_forecast": "2026-09-07T16:06:39+00:00",
+  "lake_gage": "2026-09-07T16:06:39+00:00",
+  "air": "2026-09-07T16:06:39+00:00",
+  "sun": "2026-09-07T16:06:39+00:00",
+  "models": "2026-09-07T16:06:39+00:00"
  },
  "now": {
-  "observed_at": "2026-09-07T14:50:00+00:00",
+  "observed_at": "2026-09-07T15:45:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 68,
-  "feels_like_f": 68,
-  "humidity": 60,
-  "dewpoint_f": 54,
-  "wind_mph": 3,
+  "temp_f": 72,
+  "feels_like_f": 71,
+  "humidity": 50,
+  "dewpoint_f": 52,
+  "wind_mph": 10,
   "wind_gust_mph": null,
-  "wind_dir": "NW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Labor Day",
-    "start": "2026-09-07T11:00:00-04:00",
+    "start": "2026-09-07T12:00:00-04:00",
     "is_day": true,
     "temp_f": 79,
     "pop": 0,
-    "wind": "NW 6 to 10 mph",
+    "wind": "NW 7 to 10 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 79. Northwest wind 6 to 10 mph."
+    "detailed": "Sunny, with a high near 79. Northwest wind 7 to 10 mph."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-07T12:17:15+00:00",
   "hours": [
-   {
-    "t": "2026-09-07T11:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 0,
-    "humidity": 59,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 3,
-    "short": "Sunny"
-   },
    {
     "t": "2026-09-07T12:00:00-04:00",
     "temp_f": 73,
@@ -568,6 +557,17 @@
     "wind_dir": "SE",
     "sky": 89,
     "short": "Cloudy"
+   },
+   {
+    "t": "2026-09-08T23:00:00-04:00",
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 0,
+    "humidity": 75,
+    "wind_mph": 3,
+    "wind_dir": "SE",
+    "sky": 77,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -837,7 +837,7 @@
   "aqi": 31,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/07/26 10:00",
+  "observed": "09/07/26 11:00",
   "discussion": "On Monday, September 8th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -854,7 +854,7 @@
     "high_f": {
      "GFS": 78,
      "Euro": 74,
-     "ICON": 76
+     "ICON": 77
     },
     "pop_max": {
      "GFS": 0,
@@ -876,14 +876,14 @@
      "ICON": 72
     },
     "pop_max": {
-     "GFS": 40,
+     "GFS": 35,
      "Euro": 49,
-     "ICON": 20
+     "ICON": 53
     },
     "precip_in": {
      "GFS": 0.02,
      "Euro": 0.05,
-     "ICON": 0.13
+     "ICON": 0.15
     },
     "high_spread_f": 5
    },
@@ -892,17 +892,17 @@
     "high_f": {
      "GFS": 73,
      "Euro": 71,
-     "ICON": 74
+     "ICON": 70
     },
     "pop_max": {
      "GFS": 81,
      "Euro": 75,
-     "ICON": 74
+     "ICON": 94
     },
     "precip_in": {
      "GFS": 0.37,
      "Euro": 0.22,
-     "ICON": 0.41
+     "ICON": 0.6
     },
     "high_spread_f": 3
    }
