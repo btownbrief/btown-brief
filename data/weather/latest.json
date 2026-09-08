@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-07T23:00:15+00:00",
+ "updated": "2026-09-08T00:12:21+00:00",
  "sections_updated": {
-  "now": "2026-09-07T23:00:15+00:00",
-  "forecast": "2026-09-07T23:00:15+00:00",
-  "hourly": "2026-09-07T23:00:15+00:00",
-  "alerts": "2026-09-07T23:00:15+00:00",
-  "afd": "2026-09-07T23:00:15+00:00",
-  "lake_forecast": "2026-09-07T23:00:15+00:00",
-  "lake_gage": "2026-09-07T23:00:15+00:00",
-  "air": "2026-09-07T23:00:15+00:00",
-  "sun": "2026-09-07T23:00:15+00:00",
-  "models": "2026-09-07T23:00:15+00:00"
+  "now": "2026-09-08T00:12:21+00:00",
+  "forecast": "2026-09-08T00:12:21+00:00",
+  "hourly": "2026-09-08T00:12:21+00:00",
+  "alerts": "2026-09-08T00:12:21+00:00",
+  "afd": "2026-09-08T00:12:21+00:00",
+  "lake_forecast": "2026-09-08T00:12:21+00:00",
+  "lake_gage": "2026-09-08T00:12:21+00:00",
+  "air": "2026-09-08T00:12:21+00:00",
+  "sun": "2026-09-08T00:12:21+00:00",
+  "models": "2026-09-08T00:12:21+00:00"
  },
  "now": {
-  "observed_at": "2026-09-07T22:35:00+00:00",
+  "observed_at": "2026-09-07T23:50:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 73,
-  "feels_like_f": 73,
-  "humidity": 47,
+  "description": "Mostly Clear",
+  "temp_f": 70,
+  "feels_like_f": 70,
+  "humidity": 53,
   "dewpoint_f": 52,
-  "wind_mph": 6,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "NW",
+  "wind_dir": "W",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-09-07T19:00:00-04:00",
+    "start": "2026-09-07T20:00:00-04:00",
     "is_day": false,
     "temp_f": 58,
     "pop": 6,
-    "wind": "W 3 to 8 mph",
+    "wind": "W 6 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 58. West wind 3 to 8 mph."
+    "detailed": "Mostly cloudy, with a low around 58. West wind around 6 mph."
    },
    {
     "name": "Tuesday",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-07T18:18:02+00:00",
   "hours": [
-   {
-    "t": "2026-09-07T19:00:00-04:00",
-    "temp_f": 74,
-    "feels_f": 74,
-    "pop": 0,
-    "humidity": 50,
-    "wind_mph": 8,
-    "wind_dir": "NW",
-    "sky": 22,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-09-07T20:00:00-04:00",
     "temp_f": 72,
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 79,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-09T07:00:00-04:00",
+    "temp_f": 58,
+    "feels_f": 58,
+    "pop": 3,
+    "humidity": 80,
+    "wind_mph": 8,
+    "wind_dir": "S",
+    "sky": 83,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -575,14 +575,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-07T18:46:00+00:00",
+  "issued": "2026-09-07T23:24:00+00:00",
   "key_messages": [
    "Mostly Dry and seasonable into Wednesday.",
    "More widespread precipitation arrives late Wednesday into Wednesday night.",
    "Another gorgeous weekend on tap."
   ],
   "what_changed": "As of 246 PM EDT Monday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 071846\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n246 PM EDT Mon Sep 7 2026\n\n.WHAT HAS CHANGED...\nAs of 246 PM EDT Monday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 246 PM EDT Monday...\n\n1. Mostly Dry and seasonable into Wednesday.\n\n2. More widespread precipitation arrives late Wednesday into \nWednesday night. \n\n3. Another gorgeous weekend on tap.\n\n&&\n\n.DISCUSSION...\nAs of 246 PM EDT Monday...\n\nKEY MESSAGE 1: Ridging will become more established and dominate the \nsynoptic pattern going into Wednesday, continuing the quiet and \nrelatively seasonable stretch. A dying cold front will come through \ntonight and early tomorrow morning and bring a few light showers, \nbut weak forcing and dry low levels will minimize the impacts. \nOverall, highs will be in the 70s and lows will be in the 40s and \n50s with low humidity.\n\nKEY MESSAGE 2: A more dynamic fall-like synoptic pattern is beginning \nto become established. On Wednesday into Thursday, a deepening low \nwill move east from northern Ontario and into northern Quebec, with \nensemble guidance indicating it will likely drop to around 985 mb by \nthe time it reaches Atlantic Canada. The center of the low will pass \nby well to the north and the best dynamics should miss the region. \nWhile warm air advection will occur Tuesday and Wednesday and bring \na more humid airmass into the region, there will not be enough time \nfor a fully tropical airmass to become established. Therefore, this \nwill limit instability as the system passes by. The highest \ninstability will be across the St. Lawrence Valley where the warm \nairmass has the most time to become established. Dew points there \nshould briefly reach the mid 60s to around 70 and a few rumbles of \nthunder are possible there. Rain arrives for late Wednesday in \nnorthern areas as a warm front pushes through, though it appears to \nlack much elevated instability so the rain should just be \nstratiform. A strong southwesterly low-level jet will reach the 40-\n50 KT range at 850 mb, causing downsloping in the typical spots like \nthe Champlain Valley, limiting rainfall totals. It will also lead to \nwidespread gusts in the 20-30 mph range, with locally higher gusts. \nThe cold front passes through Wednesday night, but the warm sector \nnever looks to become fully established in the region, so most \nconvection should remain to the southwest. St. Lawrence County and \nsouthern Vermont look to be the places that may see more convective \nenhancement, while the rest of the region should mostly see \nsynoptically forced rain. Overall expected totals range in the 0.25 \nto 0.5 inch range for most places, with some higher totals locally \nacross northern New York.\n\nKEY MESSAGE 3: High pressure will dominate the weekend. The potency of \ncold air doesn't seem quite as strong as a couple days ago, but \nFriday will likely only reach the mid 60s and lower 70s. Then, with \nthe very dry air in place, temperatures are likely to take a nose \ndive Friday night. There may be a little return flow that gets \nstarted over northern New York, but otherwise unimpeded radiational \ncooling should bring temperatures into the 40s with a handful of \nmid/upper 30s in cold hollows except near Lake Champlain or the St. \nLawrence River where some lower 50s are more likely.\n\nHigh pressure will amble offshore as the weekend progresses.\nTemperatures will steadily climb to seasonal norms on Saturday, and \nthen above normal on Sunday as a stretched out cold front \napproaches. The frontal boundary may not push very far given minimal \nforcing and a stronger system developing over the northern Plains \nnext Sunday. So there doesn't seem to be much in the way of \nwidespread rain Sunday evening into next Monday when that front will \napproach.\n\n&&\n\n.AVIATION /18Z MONDAY THROUGH SATURDAY/...\nThrough 18Z Tuesday...VFR conditions are expected over the next 24\nhours. North to northwest winds 6-11 knots will trend light and\nvariable overnight. High clouds and fast 500-1000 ft flow will\nlikely preclude any widespread fog development. A trough with light\nrain showers will drop south about 09z-18z Tuesday, but will be\ndecaying. Highest chances for light rain will be across KMSS, KPBG,\nKBTV, and KEFK. However, there aren't expected to be significant\nreductions in visibilities. Ceilings should trend towards 1500-5000\nft agl along and just behind the trough. The trough washes out over\nthe region, which may slow how quickly ceilings come back up and\nkeep northerly winds relatively light.\n\nOutlook...\n\nTuesday Night: VFR. NO SIG WX.\nWednesday: Mainly VFR, with local MVFR possible. Chance SHRA.\nWednesday Night: Mainly MVFR, with areas VFR possible. Definite\nSHRA, Slight chance TSRA.\nThursday: Mainly VFR, with local MVFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with local MVFR possible. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Haynes/Myskowski\nAVIATION...Haynes\n"
+  "raw": "\n000\nFXUS61 KBTV 072324\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n724 PM EDT Mon Sep 7 2026\n\n.WHAT HAS CHANGED...\nAs of 246 PM EDT Monday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 246 PM EDT Monday...\n\n1. Mostly Dry and seasonable into Wednesday.\n\n2. More widespread precipitation arrives late Wednesday into \nWednesday night. \n\n3. Another gorgeous weekend on tap.\n\n&&\n\n.DISCUSSION...\nAs of 246 PM EDT Monday...\n\nKEY MESSAGE 1: Ridging will become more established and dominate the \nsynoptic pattern going into Wednesday, continuing the quiet and \nrelatively seasonable stretch. A dying cold front will come through \ntonight and early tomorrow morning and bring a few light showers, \nbut weak forcing and dry low levels will minimize the impacts. \nOverall, highs will be in the 70s and lows will be in the 40s and \n50s with low humidity.\n\nKEY MESSAGE 2: A more dynamic fall-like synoptic pattern is beginning \nto become established. On Wednesday into Thursday, a deepening low \nwill move east from northern Ontario and into northern Quebec, with \nensemble guidance indicating it will likely drop to around 985 mb by \nthe time it reaches Atlantic Canada. The center of the low will pass \nby well to the north and the best dynamics should miss the region. \nWhile warm air advection will occur Tuesday and Wednesday and bring \na more humid airmass into the region, there will not be enough time \nfor a fully tropical airmass to become established. Therefore, this \nwill limit instability as the system passes by. The highest \ninstability will be across the St. Lawrence Valley where the warm \nairmass has the most time to become established. Dew points there \nshould briefly reach the mid 60s to around 70 and a few rumbles of \nthunder are possible there. Rain arrives for late Wednesday in \nnorthern areas as a warm front pushes through, though it appears to \nlack much elevated instability so the rain should just be \nstratiform. A strong southwesterly low-level jet will reach the 40-\n50 KT range at 850 mb, causing downsloping in the typical spots like \nthe Champlain Valley, limiting rainfall totals. It will also lead to \nwidespread gusts in the 20-30 mph range, with locally higher gusts. \nThe cold front passes through Wednesday night, but the warm sector \nnever looks to become fully established in the region, so most \nconvection should remain to the southwest. St. Lawrence County and \nsouthern Vermont look to be the places that may see more convective \nenhancement, while the rest of the region should mostly see \nsynoptically forced rain. Overall expected totals range in the 0.25 \nto 0.5 inch range for most places, with some higher totals locally \nacross northern New York.\n\nKEY MESSAGE 3: High pressure will dominate the weekend. The potency of \ncold air doesn't seem quite as strong as a couple days ago, but \nFriday will likely only reach the mid 60s and lower 70s. Then, with \nthe very dry air in place, temperatures are likely to take a nose \ndive Friday night. There may be a little return flow that gets \nstarted over northern New York, but otherwise unimpeded radiational \ncooling should bring temperatures into the 40s with a handful of \nmid/upper 30s in cold hollows except near Lake Champlain or the St. \nLawrence River where some lower 50s are more likely.\n\nHigh pressure will amble offshore as the weekend progresses.\nTemperatures will steadily climb to seasonal norms on Saturday, and \nthen above normal on Sunday as a stretched out cold front \napproaches. The frontal boundary may not push very far given minimal \nforcing and a stronger system developing over the northern Plains \nnext Sunday. So there doesn't seem to be much in the way of \nwidespread rain Sunday evening into next Monday when that front will \napproach.\n\n&&\n\n.AVIATION /00Z TUESDAY THROUGH SATURDAY/...\nThrough 00Z Wednesday...VFR conditions are expected to prevail\nfor the next 6 to 10 hours at all TAF sites as mid level clouds\nand increasing wind fields prevent fog development overnight. A\nweak cold front dropping toward the International Border by\nsunrise will lower the CIGS toward MVFR conditions at EFK/SLK \nand BTV with some brief intervals of IFR CIGS possible at \nEFK/SLK between 10-14z on Tuesday. Any lowering CIGS should \ntrend back to VFR by noon on Tuesday with north to northwest \nwinds 4 to 8 knots. \n\nOutlook...\n\nTuesday Night: VFR. NO SIG WX.\nWednesday: Mainly VFR, with local MVFR possible. Chance SHRA.\nWednesday Night: Mainly MVFR, with areas VFR possible. Definite\nSHRA, Slight chance TSRA.\nThursday: Mainly VFR, with local MVFR possible. Slight chance\nSHRA.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Haynes/Myskowski\nAVIATION...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-09-07T18:18:00+00:00",
@@ -827,9 +827,9 @@
  },
  "lake_gage": {
   "water_temp_f": 69,
-  "water_temp_at": "2026-09-07T18:00:00.000-04:00",
-  "level_ft": 94.42,
-  "level_at": "2026-09-07T18:00:00.000-04:00",
+  "water_temp_at": "2026-09-07T20:00:00.000-04:00",
+  "level_ft": 94.41,
+  "level_at": "2026-09-07T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -837,7 +837,7 @@
   "aqi": 22,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/07/26 18:00",
+  "observed": "09/07/26 19:00",
   "discussion": "On Monday, September 8th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -876,12 +876,12 @@
      "ICON": 72
     },
     "pop_max": {
-     "GFS": 22,
+     "GFS": 32,
      "Euro": 55,
      "ICON": 53
     },
     "precip_in": {
-     "GFS": 0.06,
+     "GFS": 0.0,
      "Euro": 0.06,
      "ICON": 0.04
     },
@@ -900,7 +900,7 @@
      "ICON": 94
     },
     "precip_in": {
-     "GFS": 0.67,
+     "GFS": 0.61,
      "Euro": 0.21,
      "ICON": 0.62
     },
