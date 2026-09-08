@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-07T18:59:23-04:00",
+ "generated": "2026-09-08T09:49:41-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 18,
-   "seconds": 6.1
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 66,
-   "seconds": 3.1
+   "seconds": 3.5
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 61,
-   "seconds": 3.1
+   "count": 60,
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 214,
-   "seconds": 3.7
+   "count": 217,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 86,
-   "seconds": 2.1
+   "count": 87,
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -35,7 +35,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-07&end_date=2026-11-06&page=1 (HTTP Error 405: Not Allowed)",
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-08&end_date=2026-11-07&page=1 (HTTP Error 405: Not Allowed)",
    "staleDays": 8
   },
   "facebook": {
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 207,
-   "seconds": 74.9
+   "count": 208,
+   "seconds": 76.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,58 +65,58 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 738,
-   "seconds": 37.8
+   "count": 732,
+   "seconds": 40.8
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 76,
+   "count": 77,
    "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 10.1
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 359,
-   "seconds": 76.2
+   "count": 352,
+   "seconds": 67.0
   },
   "meetup": {
    "label": "Meetup",
-   "count": 63,
-   "seconds": 123.8
+   "count": 62,
+   "seconds": 125.0
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 19,
-   "seconds": 0.4
+   "count": 18,
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 54,
-   "seconds": 14.0
+   "seconds": 14.6
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 47,
-   "seconds": 0.6
+   "count": 22,
+   "seconds": 0.7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 91,
-   "seconds": 5.4
+   "seconds": 6.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 23,
-   "seconds": 33.0
+   "seconds": 32.1
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2410,
-   "seconds": 3.3
+   "count": 2396,
+   "seconds": 26.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -126,114 +126,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 492,
-   "seconds": 21.0
+   "count": 493,
+   "seconds": 32.1
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 285,
+   "count": 289,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 78,
-   "seconds": 107.6
+   "seconds": 102.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 54,
-   "seconds": 0.5
+   "count": 55,
+   "seconds": 0.3
   }
  },
- "gathered": 5486,
- "afterDedup": 2566,
- "duplicatesMerged": 2920,
- "final": 2720,
- "firecrawlCalls": 1,
+ "gathered": 5443,
+ "afterDedup": 2559,
+ "duplicatesMerged": 2884,
+ "final": 2692,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Randy Feltface",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "flynn",
-    "helloburlington"
-   ],
-   "date": "2026-10-10"
-  },
-  {
-   "kept": {
-    "title": "Party on the Bricks is back for a Fall Series!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "helloburlington",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-10"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-10-10"
-  },
-  {
-   "kept": {
-    "title": "Burlington Farmers Market",
-    "source": "farmersmarket"
-   },
-   "merged_sources": [
-    "farmersmarket",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-10"
-  },
-  {
-   "kept": {
-    "title": "43rd Organic Chemistry Humphrey Symposium",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-10"
-  },
-  {
-   "kept": {
-    "title": "Film Screening: Cookie Queens",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-10"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-10"
-  },
   {
    "kept": {
     "title": "Guided Tours",
@@ -2391,6 +2308,73 @@
   },
   {
    "kept": {
+    "title": "UVM Catamount Educational Farm Stand and Apple Sales",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
+    "title": "Communities filling gaps in forest stewardship, despite growing gaps in resources ft. Cecilia Danks",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
+    "title": "Curator Tour",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
+    "title": "Gabriela Martinez, piano",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -2402,57 +2386,52 @@
   },
   {
    "kept": {
-    "title": "Lane Series: Gabriela Martinez",
-    "source": "sevendays"
+    "title": "Willi Carlisle",
+    "source": "higherground"
    },
    "merged_sources": [
     "champlainvalley",
-    "sevendays"
+    "helloburlington",
+    "higherground"
    ],
-   "date": "2026-11-06"
+   "date": "2026-11-07"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-07"
   }
  ],
  "changes": [
   {
-   "id": "6cfbdaf930f8",
-   "title": "CISSP Training Program – Become a Cybersecurity Leader in Burlington, VT",
-   "date": "2026-09-07",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "id": "613f100e9a92",
+   "title": "34th Annual South End Art Hop!",
+   "date": "2026-09-11",
+   "change": "time",
+   "was": "2026-09-11T22:00:00-04:00",
+   "now": "2026-09-11T17:00:00-04:00"
   },
   {
-   "id": "7b6dcde6e239",
-   "title": "CISSP Certification | ISC² Exam Preparation Program in Burlington, VT",
-   "date": "2026-09-07",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "id": "c215db4e3c23",
+   "title": "34th Annual South End Art Hop!",
+   "date": "2026-09-12",
+   "change": "time",
+   "was": "2026-09-12T22:00:00-04:00",
+   "now": "2026-09-12T10:00:00-04:00"
   },
   {
-   "id": "5991cc191851",
-   "title": "Blueberry Betty",
-   "date": "2026-09-07",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
-  },
-  {
-   "id": "0d1e590d5b32",
-   "title": "Blueberry Betty (LCLS)",
-   "date": "2026-09-07",
-   "change": "dropped"
-  },
-  {
-   "id": "fbbf80d94cb9",
-   "title": "Skin Tight (LCLS)",
-   "date": "2026-09-07",
-   "change": "missing",
-   "lastSeen": "2026-09-06T18:20:54-04:00"
-  },
-  {
-   "id": "36fef63f255f",
-   "title": "Mooncusser",
-   "date": "2026-09-07",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
+   "id": "25350ab12df0",
+   "title": "34th Annual South End Art Hop!",
+   "date": "2026-09-13",
+   "change": "time",
+   "was": "2026-09-13T22:00:00-04:00",
+   "now": "2026-09-13T11:00:00-04:00"
   },
   {
    "id": "cf86d2d31f75",
@@ -2518,17 +2497,10 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "50aa1a19b1ed",
-   "title": "Soccer Intramurals",
-   "date": "2026-09-08",
-   "change": "dropped"
-  },
-  {
    "id": "54db9a7662d0",
    "title": "THE WORMDOGS CLOSE OUT THE BEAN",
    "date": "2026-09-08",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "8ec29109509d",
@@ -2562,8 +2534,7 @@
    "id": "a84dc926a1e1",
    "title": "Baby Time",
    "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "64915f7802cd",
@@ -2597,15 +2568,13 @@
    "id": "291d60fdc343",
    "title": "Morning Book Group",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "8fef2b946888",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "de05f2ef8bf4",
@@ -2629,11 +2598,17 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "039d960a52d0",
+   "title": "Radio Bean Presents: David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ James Kochalka Superstar & Strelka - Live @ The Monkey House!",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-09-07T18:59:23-04:00"
+  },
+  {
    "id": "064e7b5b0752",
    "title": "Lego Builders",
    "date": "2026-09-11",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "2b55997b7ca9",
@@ -2674,8 +2649,7 @@
    "id": "90abed62f85a",
    "title": "Pride Vermont 2026",
    "date": "2026-09-13",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "65b715d37b3f",
@@ -2683,6 +2657,13 @@
    "date": "2026-09-14",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "2c1ea1f93397",
+   "title": "MEDITATION CLASS: Living a Meaningful Life Meditations",
+   "date": "2026-09-14",
+   "change": "missing",
+   "lastSeen": "2026-09-07T18:59:23-04:00"
   },
   {
    "id": "586371e536e3",
@@ -2730,8 +2711,7 @@
    "id": "0684f2f9b1be",
    "title": "Craftytown",
    "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "c885216d8787",
@@ -2753,12 +2733,6 @@
    "date": "2026-09-15",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "cd49fe078afc",
-   "title": "Soccer Intramurals",
-   "date": "2026-09-15",
-   "change": "dropped"
   },
   {
    "id": "3dbe6d6078dd",
@@ -2792,8 +2766,7 @@
    "id": "c089e6f19182",
    "title": "Baby Time",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "988b6deb86bd",
@@ -2813,8 +2786,7 @@
    "id": "78952acf13db",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "c9ffff2fa96e",
@@ -2841,8 +2813,7 @@
    "id": "95a7e9fe79a1",
    "title": "Lego Builders",
    "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "2004b54925ae",
@@ -2932,15 +2903,13 @@
    "id": "8b7796b354d6",
    "title": "South Burlington Green Community Festival",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "890bad6c1d3c",
    "title": "South Burlington Green Community Festival",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "70d739f06ee1",
@@ -3041,12 +3010,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "957d9d7b13a3",
-   "title": "Soccer Intramurals",
-   "date": "2026-09-22",
-   "change": "dropped"
-  },
-  {
    "id": "92efbb34b0fb",
    "title": "Outta Pocket / Sin Against Sin @ SEABA, Burlington VT",
    "date": "2026-09-23",
@@ -3092,8 +3055,14 @@
    "id": "77694579a75f",
    "title": "Baby Time",
    "date": "2026-09-23",
+   "change": "dropped"
+  },
+  {
+   "id": "7e2541e95c7b",
+   "title": "Sickle Cell Treatment Advances",
+   "date": "2026-09-23",
    "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "lastSeen": "2026-09-07T18:59:23-04:00"
   },
   {
    "id": "03674606b7ce",
@@ -3120,8 +3089,7 @@
    "id": "b3e0e1560f2d",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "15f7273e6c86",
@@ -3141,8 +3109,7 @@
    "id": "62c3f4a8eedc",
    "title": "Lego Builders",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "9934f6759c21",
@@ -3281,8 +3248,7 @@
    "id": "348e88592d16",
    "title": "Craftytown",
    "date": "2026-09-29",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "db3911d480dd",
@@ -3292,17 +3258,10 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "4a0a92e1ab48",
-   "title": "Soccer Intramurals",
-   "date": "2026-09-29",
-   "change": "dropped"
-  },
-  {
    "id": "b06b8cd265e8",
    "title": "Baby Time",
    "date": "2026-09-30",
-   "change": "missing",
-   "lastSeen": "2026-09-05T01:37:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "ebd6ae71bfbc",
@@ -3375,12 +3334,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "7b32413a29d3",
-   "title": "Soccer Intramurals",
-   "date": "2026-10-06",
-   "change": "dropped"
-  },
-  {
    "id": "dd3465273c64",
    "title": "25th Annual VBSR Awards Ceremony & Dinner",
    "date": "2026-10-08",
@@ -3414,12 +3367,6 @@
    "date": "2026-10-11",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "972cec1f4b9d",
-   "title": "Soccer Intramurals",
-   "date": "2026-10-13",
-   "change": "dropped"
   },
   {
    "id": "225a0add5080",
@@ -3460,8 +3407,7 @@
    "id": "6da14ced6ca0",
    "title": "First Known Use's EP Release Show w/ Mother of Pearl & Tax Man",
    "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "138a86df63d3",
@@ -3499,12 +3445,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "af2fb2be5c1e",
-   "title": "Soccer Intramurals",
-   "date": "2026-10-20",
-   "change": "dropped"
-  },
-  {
    "id": "cc3d801ab0bc",
    "title": "Film Screening: “Seeding Change: Farming Beyond Neonics”",
    "date": "2026-10-22",
@@ -3522,8 +3462,7 @@
    "id": "d43a8470de76",
    "title": "Lamplight, The Clearwater Swimmers, & Fowl",
    "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-09-05T09:00:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "4d340683dfd5",
@@ -3538,18 +3477,6 @@
    "date": "2026-10-26",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "4a8a3430c5dd",
-   "title": "Soccer Intramurals",
-   "date": "2026-10-27",
-   "change": "dropped"
-  },
-  {
-   "id": "1514dff93697",
-   "title": "Soccer Intramurals",
-   "date": "2026-11-03",
-   "change": "dropped"
   }
  ]
 }
