@@ -1,42 +1,42 @@
 {
- "generated": "2026-09-08T09:49:41-04:00",
+ "generated": "2026-09-08T18:57:58-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 18,
-   "seconds": 6.0
+   "count": 19,
+   "seconds": 6.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 66,
-   "seconds": 3.5
+   "count": 69,
+   "seconds": 3.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 60,
+   "count": 61,
    "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 217,
-   "seconds": 3.2
+   "seconds": 4.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 87,
-   "seconds": 1.4
+   "count": 86,
+   "seconds": 2.1
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 8
+   "staleDays": 9
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-08&end_date=2026-11-07&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 8
+   "staleDays": 9
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 208,
-   "seconds": 76.9
+   "count": 210,
+   "seconds": 70.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 37,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,158 +65,92 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 732,
-   "seconds": 40.8
+   "count": 722,
+   "seconds": 36.6
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 77,
-   "seconds": 0.5
+   "count": 78,
+   "seconds": 0.8
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 15.3
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 352,
-   "seconds": 67.0
+   "count": 399,
+   "seconds": 75.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 62,
-   "seconds": 125.0
+   "seconds": 122.3
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 18,
-   "seconds": 0.3
+   "seconds": 0.6
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 54,
-   "seconds": 14.6
+   "count": 43,
+   "seconds": 7.6
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 22,
-   "seconds": 0.7
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 91,
-   "seconds": 6.2
+   "seconds": 5.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 23,
-   "seconds": 32.1
+   "seconds": 32.6
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2396,
-   "seconds": 26.2
+   "count": 2381,
+   "seconds": 2.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 8
+   "staleDays": 9
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 493,
-   "seconds": 32.1
+   "count": 516,
+   "seconds": 20.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 289,
-   "seconds": 0.3
+   "count": 312,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 78,
-   "seconds": 102.3
+   "seconds": 105.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 55,
-   "seconds": 0.3
+   "count": 64,
+   "seconds": 0.7
   }
  },
- "gathered": 5443,
- "afterDedup": 2559,
- "duplicatesMerged": 2884,
- "final": 2692,
- "firecrawlCalls": 5,
+ "gathered": 5516,
+ "afterDedup": 2576,
+ "duplicatesMerged": 2940,
+ "final": 2796,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Guided Tours",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-10"
-  },
-  {
-   "kept": {
-    "title": "Second Saturdays",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-10-10"
-  },
-  {
-   "kept": {
-    "title": "Dungeons & Dragons Group A with DM Andrew",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-10-11"
-  },
-  {
-   "kept": {
-    "title": "Dad Guild Playgroup (drop-in)",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-10-11"
-  },
-  {
-   "kept": {
-    "title": "Field Hockey vs Appalachian State",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-11"
-  },
-  {
-   "kept": {
-    "title": "The Ultimate Chocolate Tasting",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-11"
-  },
   {
    "kept": {
     "title": "Sensory-Friendly Sunday",
@@ -388,6 +322,17 @@
   },
   {
    "kept": {
+    "title": "Vaccine Clinic",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-13"
+  },
+  {
+   "kept": {
     "title": "Service Career Workshop",
     "source": "uvm"
    },
@@ -492,6 +437,17 @@
   {
    "kept": {
     "title": "Data Design Lab",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-14"
+  },
+  {
+   "kept": {
+    "title": "RSENR Research Seminar",
     "source": "uvm"
    },
    "merged_sources": [
@@ -672,12 +628,34 @@
   },
   {
    "kept": {
+    "title": "Mahjong",
+    "source": "winooskilibrary"
+   },
+   "merged_sources": [
+    "sevendays",
+    "winooskilibrary"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "CDAE Research Slam",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-10-16"
   },
@@ -813,17 +791,6 @@
     "champlainvalley",
     "helloburlington",
     "higherground"
-   ],
-   "date": "2026-10-17"
-  },
-  {
-   "kept": {
-    "title": "Jill McCracken w/ Julia Randall + Andriana & The Bananas",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "radiobean"
    ],
    "date": "2026-10-17"
   },
@@ -1099,6 +1066,28 @@
   },
   {
    "kept": {
+    "title": "Vaccine Clinic",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-21"
+  },
+  {
+   "kept": {
+    "title": "RSENR Research Seminar",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-21"
+  },
+  {
+   "kept": {
     "title": "Coloring in the Marble Court",
     "source": "uvm"
    },
@@ -1206,11 +1195,11 @@
   {
    "kept": {
     "title": "Dead Gowns w/ Helenor",
-    "source": "radiobean"
+    "source": "monkeyhouse"
    },
    "merged_sources": [
     "helloburlington",
-    "radiobean"
+    "monkeyhouse"
    ],
    "date": "2026-10-22"
   },
@@ -1464,17 +1453,6 @@
   },
   {
    "kept": {
-    "title": "Asanabenche",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "radiobean"
-   ],
-   "date": "2026-10-24"
-  },
-  {
-   "kept": {
     "title": "Sam Jay",
     "source": "vcc"
    },
@@ -1673,6 +1651,17 @@
     "churchst",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-10-28"
+  },
+  {
+   "kept": {
+    "title": "RSENR Research Seminar",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-10-28"
   },
@@ -1928,7 +1917,7 @@
   },
   {
    "kept": {
-    "title": "SHEBAD",
+    "title": "Radio Bean Presents: SHEBAD @ Foam",
     "source": "radiobean"
    },
    "merged_sources": [
@@ -2128,17 +2117,6 @@
   },
   {
    "kept": {
-    "title": "Darryl Rahn",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "radiobean"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
     "title": "TRIVIA NIGHT",
     "source": "churchst"
    },
@@ -2146,6 +2124,28 @@
     "churchst",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-11-04"
+  },
+  {
+   "kept": {
+    "title": "Vaccine Clinic",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-04"
+  },
+  {
+   "kept": {
+    "title": "RSENR Research Seminar",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-04"
   },
@@ -2202,17 +2202,6 @@
     "fletcherfree",
     "loveburlington",
     "sevendays"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "The Lowest Pair",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "radiobean"
    ],
    "date": "2026-11-05"
   },
@@ -2292,6 +2281,17 @@
     "champlainvalley",
     "helloburlington",
     "higherground"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
+    "title": "Mahjong",
+    "source": "winooskilibrary"
+   },
+   "merged_sources": [
+    "sevendays",
+    "winooskilibrary"
    ],
    "date": "2026-11-06"
   },
@@ -2410,133 +2410,6 @@
  ],
  "changes": [
   {
-   "id": "613f100e9a92",
-   "title": "34th Annual South End Art Hop!",
-   "date": "2026-09-11",
-   "change": "time",
-   "was": "2026-09-11T22:00:00-04:00",
-   "now": "2026-09-11T17:00:00-04:00"
-  },
-  {
-   "id": "c215db4e3c23",
-   "title": "34th Annual South End Art Hop!",
-   "date": "2026-09-12",
-   "change": "time",
-   "was": "2026-09-12T22:00:00-04:00",
-   "now": "2026-09-12T10:00:00-04:00"
-  },
-  {
-   "id": "25350ab12df0",
-   "title": "34th Annual South End Art Hop!",
-   "date": "2026-09-13",
-   "change": "time",
-   "was": "2026-09-13T22:00:00-04:00",
-   "now": "2026-09-13T11:00:00-04:00"
-  },
-  {
-   "id": "cf86d2d31f75",
-   "title": "Lean Six Sigma Green & Black Belt Combo Certification in Burlington, VT",
-   "date": "2026-09-08",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "83ef329c174d",
-   "title": "PMP Certification In-Person Training in Burlington, VT",
-   "date": "2026-09-08",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "bbb2dd1115eb",
-   "title": "Lean Six Sigma Green Belt In-Person Training in Burlington, VT",
-   "date": "2026-09-08",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "532053418571",
-   "title": "Become a Certified Data Analyst in Burlington, VT",
-   "date": "2026-09-08",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "b1960acaeacd",
-   "title": "Business Analyst (CBAP) Classroom Training in Burlington, VT",
-   "date": "2026-09-08",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "ca7dfaeb947c",
-   "title": "CEH v12 Ethical Hacking Bootcamp – 4 Days Training in Burlington, VT",
-   "date": "2026-09-08",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "c47a5464dee2",
-   "title": "Data Science with Python Certification Training in Burlington, VT",
-   "date": "2026-09-08",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "c5a68362757f",
-   "title": "Become AI Project Ready – PMI-CPMAI Training Program in Vermont, VT",
-   "date": "2026-09-08",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "c59258ece5f4",
-   "title": "PMP Training in Burlington, VT | PMBOK® 8th Edition | PMI Authorized",
-   "date": "2026-09-08",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "54db9a7662d0",
-   "title": "THE WORMDOGS CLOSE OUT THE BEAN",
-   "date": "2026-09-08",
-   "change": "dropped"
-  },
-  {
-   "id": "8ec29109509d",
-   "title": "Trauma Nursing Core Course (TNCC) 9th ed.",
-   "date": "2026-09-09",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "626910fa949a",
-   "title": "Fast-Track Your CAPM Certification! Classroom Training in Vermont, VT",
-   "date": "2026-09-09",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "991ba09fbbac",
-   "title": "PMI-ACP(Agile) Certification Classroom Training in Vermont, VT",
-   "date": "2026-09-09",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "80852fe0f199",
-   "title": "PMI-ACP® Classroom Agile Certification Course in Burlington, VT",
-   "date": "2026-09-09",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "a84dc926a1e1",
-   "title": "Baby Time",
-   "date": "2026-09-09",
-   "change": "dropped"
-  },
-  {
    "id": "64915f7802cd",
    "title": "Close Looking: History, Context and the Creative Process",
    "date": "2026-09-09",
@@ -2551,11 +2424,25 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "9fa74ae0a05d",
+   "title": "Proud Women Play Music",
+   "date": "2026-09-09",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "bdfb2865383c",
    "title": "Live Music! Temple Mountain",
    "date": "2026-09-09",
    "change": "missing",
    "lastSeen": "2026-09-06T18:20:54-04:00"
+  },
+  {
+   "id": "78287029ba79",
+   "title": "Thursday Public Skate",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "198112a47e48",
@@ -2565,16 +2452,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "291d60fdc343",
-   "title": "Morning Book Group",
+   "id": "57a8d11604eb",
+   "title": "Thursday Stick & Puck",
    "date": "2026-09-10",
-   "change": "dropped"
-  },
-  {
-   "id": "8fef2b946888",
-   "title": "Knit for Your Neighbor",
-   "date": "2026-09-10",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "de05f2ef8bf4",
@@ -2582,6 +2464,13 @@
    "date": "2026-09-10",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "c51982395155",
+   "title": "Lincoln Sprague",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "5f0f6f59e6de",
@@ -2598,17 +2487,39 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "039d960a52d0",
-   "title": "Radio Bean Presents: David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ James Kochalka Superstar & Strelka - Live @ The Monkey House!",
+   "id": "1d9d78e4a771",
+   "title": "Mitch Terricciano",
    "date": "2026-09-10",
    "change": "missing",
-   "lastSeen": "2026-09-07T18:59:23-04:00"
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
-   "id": "064e7b5b0752",
-   "title": "Lego Builders",
+   "id": "4e10f546dd18",
+   "title": "David Liebe Hart, James Kochalka Superstar, Strelka",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "91e18ede2376",
+   "title": "Two Sev, JP Black, Rubi, Chaston",
+   "date": "2026-09-10",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "aa099f285445",
+   "title": "Friends Book Sale",
    "date": "2026-09-11",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "e97e1a9801a7",
+   "title": "Justin LaPoint",
+   "date": "2026-09-11",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "2b55997b7ca9",
@@ -2616,6 +2527,34 @@
    "date": "2026-09-11",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "96f71038ac53",
+   "title": "VT Bluegrass Pioneers",
+   "date": "2026-09-11",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "0a472ba2f04f",
+   "title": "Auditions",
+   "date": "2026-09-11",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "18ea6c9b0c58",
+   "title": "The Sweet Remains",
+   "date": "2026-09-11",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "02687dac9953",
+   "title": "21st Annual Kelly Brush Ride - Middlebury College Alumni Stadium - Can join remote!",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "6476a07ebef7",
@@ -2646,10 +2585,25 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "90abed62f85a",
-   "title": "Pride Vermont 2026",
+   "id": "f43351b90c9f",
+   "title": "Auditions",
+   "date": "2026-09-12",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "e3d202843a9a",
+   "title": "Sunday Public Skate",
    "date": "2026-09-13",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "b10422900a09",
+   "title": "Auditions",
+   "date": "2026-09-13",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "65b715d37b3f",
@@ -2671,6 +2625,13 @@
    "date": "2026-09-14",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "2b213e4a5148",
+   "title": "Tuesday Public Skate",
+   "date": "2026-09-15",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "a681d953114e",
@@ -2708,10 +2669,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "0684f2f9b1be",
-   "title": "Craftytown",
+   "id": "d7d98d7dfd8f",
+   "title": "Tuesday Stick & Puck",
    "date": "2026-09-15",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "c885216d8787",
@@ -2733,6 +2695,13 @@
    "date": "2026-09-15",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "831f00dbf59b",
+   "title": "Honky Tonk Tuesday",
+   "date": "2026-09-15",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "3dbe6d6078dd",
@@ -2763,10 +2732,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "c089e6f19182",
-   "title": "Baby Time",
+   "id": "6789aff03f5a",
+   "title": "Wednesday Public Skate",
    "date": "2026-09-16",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "988b6deb86bd",
@@ -2783,10 +2753,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "78952acf13db",
-   "title": "Knit for Your Neighbor",
+   "id": "e0736e5488da",
+   "title": "Thursday Public Skate",
    "date": "2026-09-17",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "8bcb3c1bb98c",
+   "title": "Thursday Stick & Puck",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "c9ffff2fa96e",
@@ -2810,10 +2788,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "95a7e9fe79a1",
-   "title": "Lego Builders",
+   "id": "82480464425b",
+   "title": "Mah-Jongg",
    "date": "2026-09-18",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "2004b54925ae",
@@ -2828,6 +2807,13 @@
    "date": "2026-09-18",
    "change": "missing",
    "lastSeen": "2026-09-06T18:20:54-04:00"
+  },
+  {
+   "id": "d36016f6afa8",
+   "title": "Sturgeon Gala: Sensory Science",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "eca8ed65b605",
@@ -2900,18 +2886,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "8b7796b354d6",
-   "title": "South Burlington Green Community Festival",
-   "date": "2026-09-19",
-   "change": "dropped"
-  },
-  {
-   "id": "890bad6c1d3c",
-   "title": "South Burlington Green Community Festival",
-   "date": "2026-09-19",
-   "change": "dropped"
-  },
-  {
    "id": "70d739f06ee1",
    "title": "Storytime and Artmaking for Families",
    "date": "2026-09-19",
@@ -2940,6 +2914,20 @@
    "lastSeen": "2026-09-06T18:20:54-04:00"
   },
   {
+   "id": "7f770f629fdb",
+   "title": "The Dream Eaters w/ Cady Ternity",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "88e80de64bb8",
+   "title": "Sunday Public Skate",
+   "date": "2026-09-20",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "ab7fde873458",
    "title": "Rest, Relax, Recharge: Guided Meditation with Aromatherapy",
    "date": "2026-09-21",
@@ -2952,6 +2940,13 @@
    "date": "2026-09-22",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "7e2590aed02c",
+   "title": "Tuesday Public Skate",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "a807fffcbc47",
@@ -3010,6 +3005,20 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "97969943d0e9",
+   "title": "Tuesday Stick & Puck",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "7c9b206c5591",
+   "title": "Honky Tonk Tuesday",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "92efbb34b0fb",
    "title": "Outta Pocket / Sin Against Sin @ SEABA, Burlington VT",
    "date": "2026-09-23",
@@ -3052,10 +3061,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "77694579a75f",
-   "title": "Baby Time",
+   "id": "580958745406",
+   "title": "Wednesday Public Skate",
    "date": "2026-09-23",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "7e2541e95c7b",
@@ -3072,6 +3082,20 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "c688ae69e4fc",
+   "title": "Sova w/ Tom Pearo",
+   "date": "2026-09-23",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "5525bb603ba6",
+   "title": "Thursday Public Skate",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "0d9011ffd6ea",
    "title": "SAFe® 5.1 (LPM) 2Days Classroom Training in Burlington, VT",
    "date": "2026-09-24",
@@ -3079,17 +3103,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "1fd2a0a12ed4",
+   "title": "Thursday Stick & Puck",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "6199b422ec4d",
    "title": "Networking Lunch at Hula with the Network of Women--September Lunch",
    "date": "2026-09-24",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "b3e0e1560f2d",
-   "title": "Knit for Your Neighbor",
-   "date": "2026-09-24",
-   "change": "dropped"
   },
   {
    "id": "15f7273e6c86",
@@ -3104,12 +3129,6 @@
    "date": "2026-09-25",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "62c3f4a8eedc",
-   "title": "Lego Builders",
-   "date": "2026-09-25",
-   "change": "dropped"
   },
   {
    "id": "9934f6759c21",
@@ -3210,6 +3229,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "13780d1bd7f9",
+   "title": "Sunday Public Skate",
+   "date": "2026-09-27",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "a21e4e63e331",
    "title": "2026 Vermont Compost Operator Certification Training",
    "date": "2026-09-28",
@@ -3245,10 +3271,25 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "348e88592d16",
-   "title": "Craftytown",
+   "id": "0ac3e79c8e9f",
+   "title": "Ora Cogan w/ Bong Wish",
+   "date": "2026-09-28",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "e8ae281811b6",
+   "title": "Tuesday Public Skate",
    "date": "2026-09-29",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "f41fe5d3aa00",
+   "title": "Tuesday Stick & Puck",
+   "date": "2026-09-29",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "db3911d480dd",
@@ -3258,10 +3299,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "b06b8cd265e8",
-   "title": "Baby Time",
+   "id": "3afe5e9f6667",
+   "title": "Wednesday Public Skate",
    "date": "2026-09-30",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "ebd6ae71bfbc",
@@ -3269,6 +3311,27 @@
    "date": "2026-09-30",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "9a693b3577fa",
+   "title": "SOBS",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "25706f79d84b",
+   "title": "Thursday Public Skate",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "bec8619fde81",
+   "title": "Thursday Stick & Puck",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "ef29e9adbc5e",
@@ -3292,6 +3355,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "bf45d11ad87c",
+   "title": "Mah-Jongg",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "684bd86863c1",
    "title": "BTown Coffee Club",
    "date": "2026-10-03",
@@ -3313,6 +3383,27 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "6640b12a42c4",
+   "title": "Sunday Public Skate",
+   "date": "2026-10-04",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "2ca11d144a1a",
+   "title": "Tuesday Public Skate",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "38f0d9e48885",
+   "title": "Tuesday Stick & Puck",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "2718d53a5a53",
    "title": "Varied & Alive Curator Tour",
    "date": "2026-10-06",
@@ -3332,6 +3423,34 @@
    "date": "2026-10-06",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "d229b47784bf",
+   "title": "Honky Tonk Tuesday",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "2df4b5e3b626",
+   "title": "Wednesday Public Skate",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "d33e2a0073ed",
+   "title": "Thursday Public Skate",
+   "date": "2026-10-08",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "dbecc3409585",
+   "title": "Thursday Stick & Puck",
+   "date": "2026-10-08",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "dd3465273c64",
@@ -3362,11 +3481,39 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "ab3ba3b4fc8f",
+   "title": "Sunday Public Skate",
+   "date": "2026-10-11",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "7fbf6b3633b3",
    "title": "Sheer Terror, Burn Kit, Blossom, Shine",
    "date": "2026-10-11",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "3aeaebd42707",
+   "title": "Tuesday Public Skate",
+   "date": "2026-10-13",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "7891c3b483e8",
+   "title": "Tuesday Stick & Puck",
+   "date": "2026-10-13",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "c2ea828131ac",
+   "title": "Honky Tonk Tuesday",
+   "date": "2026-10-13",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "225a0add5080",
@@ -3383,6 +3530,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "6650baa028f2",
+   "title": "Wednesday Public Skate",
+   "date": "2026-10-14",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "30f3afed4570",
    "title": "Close Looking: History, Context and the Creative Process",
    "date": "2026-10-14",
@@ -3397,6 +3551,20 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "1710871c336f",
+   "title": "Thursday Public Skate",
+   "date": "2026-10-15",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "4e7645cb5554",
+   "title": "Thursday Stick & Puck",
+   "date": "2026-10-15",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "a75a16be2610",
    "title": "Cauldrons & Craft Brews",
    "date": "2026-10-15",
@@ -3404,10 +3572,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "6da14ced6ca0",
-   "title": "First Known Use's EP Release Show w/ Mother of Pearl & Tax Man",
-   "date": "2026-10-15",
-   "change": "dropped"
+   "id": "07109b504f2d",
+   "title": "Mah-Jongg",
+   "date": "2026-10-16",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "138a86df63d3",
@@ -3431,6 +3600,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "9e335b3cec98",
+   "title": "Sunday Public Skate",
+   "date": "2026-10-18",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "d1ec5aacf968",
    "title": "Brewing Better Business (VT)",
    "date": "2026-10-19",
@@ -3445,11 +3621,60 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "1d57b10d3bec",
+   "title": "Tuesday Public Skate",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "878bc330c96d",
+   "title": "Tuesday Stick & Puck",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "4a6ccf9d3b24",
+   "title": "Honky Tonk Tuesday",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "876fae4858d6",
+   "title": "Wednesday Public Skate",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "6859f0da5803",
+   "title": "Thursday Public Skate",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "c6727fa62840",
+   "title": "Thursday Stick & Puck",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "cc3d801ab0bc",
    "title": "Film Screening: “Seeding Change: Farming Beyond Neonics”",
    "date": "2026-10-22",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "cd9bf219490d",
+   "title": "Dead Gowns w/ Helenor",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
    "id": "4796bb14f3a3",
@@ -3459,12 +3684,6 @@
    "lastSeen": "2026-09-06T18:20:54-04:00"
   },
   {
-   "id": "d43a8470de76",
-   "title": "Lamplight, The Clearwater Swimmers, & Fowl",
-   "date": "2026-10-24",
-   "change": "dropped"
-  },
-  {
    "id": "4d340683dfd5",
    "title": "Haunted Happenings",
    "date": "2026-10-25",
@@ -3472,11 +3691,123 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "7c0ef5b63210",
+   "title": "Sunday Public Skate",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
    "id": "e874b58f442e",
    "title": "ACOTAR 6 Midnight Release Party | Phoenix Books",
    "date": "2026-10-26",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "9894445cdb11",
+   "title": "Tuesday Public Skate",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "b936d7e8c6dc",
+   "title": "Tuesday Stick & Puck",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "ea608bbe23af",
+   "title": "Honky Tonk Tuesday",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "75daa9f9cfe7",
+   "title": "Wednesday Public Skate",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "6a3949dab66d",
+   "title": "Thursday Public Skate",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "1a629f4e5cdd",
+   "title": "Thursday Stick & Puck",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "715df5026372",
+   "title": "SHEBAD",
+   "date": "2026-10-31",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "ab6425505a3e",
+   "title": "Sunday Public Skate",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "96a3d15cddb8",
+   "title": "Tuesday Public Skate",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "1cdfcf74c409",
+   "title": "Tuesday Stick & Puck",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "42342aeb2ae2",
+   "title": "Honky Tonk Tuesday",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "dd8f5b38bee6",
+   "title": "Wednesday Public Skate",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "9a2b9d47da35",
+   "title": "Thursday Public Skate",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "c3aee843a3ff",
+   "title": "Thursday Stick & Puck",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "dd2b8e664663",
+   "title": "Mah-Jongg",
+   "date": "2026-11-06",
+   "change": "missing",
+   "lastSeen": "2026-09-08T09:49:41-04:00"
   }
  ]
 }
