@@ -2,8 +2,8 @@
  "nws-weather": {
   "alerts": [],
   "forecast_flag": {
-   "day": "2026-09-03",
-   "text": "Overnight: Rain showers before 4am, then showers and thunderstorms"
+   "day": "2026-09-09",
+   "text": "Tonight: Rain showers before 8pm, then showers and thunderstorms between 8pm and 5am, then isolated showers and thunderstorms"
   }
  },
  "beach-status": {
@@ -518,13 +518,19 @@
    "10101": {
     "name": "Board of Finance Meeting",
     "start": "2026-09-14T17:00:00+00:00",
-    "hasAgenda": false,
+    "hasAgenda": true,
     "files": []
    },
    "10090": {
     "name": "City Council Meeting",
     "start": "2026-09-14T18:00:00+00:00",
-    "hasAgenda": false,
+    "hasAgenda": true,
+    "files": []
+   },
+   "10197": {
+    "name": "Local Control Commission Meeting",
+    "start": "2026-09-14T18:20:00+00:00",
+    "hasAgenda": true,
     "files": []
    },
    "10170": {
@@ -535,19 +541,11 @@
      "Housing Board of Review Agenda 09.03.2026"
     ]
    },
-   "10195": {
-    "name": "Burlington City Arts Board of Directors Meeting",
-    "start": "2026-09-15T14:00:00+00:00",
+   "10198": {
+    "name": "City Council With Mayor Presiding Meeting",
+    "start": "2026-09-14T19:00:00+00:00",
     "hasAgenda": true,
     "files": []
-   },
-   "10136": {
-    "name": "Development Review Board Meeting",
-    "start": "2026-09-15T17:00:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "PH V1"
-    ]
    }
   }
  },
@@ -556,79 +554,86 @@
    "sevendays-news": {
     "items": [
      {
-      "id": "https://www.sevendaysvt.com/?p=216845",
-      "title": "Vermont Creemee Supply Disrupted by Immigration Enforcement",
-      "link": "https://www.sevendaysvt.com/food-drink/foodnews/vermont-creemee-supply-disrupted-by-immigration-enforcement/",
-      "ts": "2026-09-08T16:04:40+00:00",
-      "summary": "Kingdom Creamery, the state’s largest maker of creemee base, is suffering \"a severe labor shortage” after worker detentions, leaving customers to scramble. The post Vermont Creemee Supply Disrupted by Immigration Enforcement appeared first on Seven Days . (Image: File: Bear Cieri)"
+      "id": "https://www.sevendaysvt.com/?p=217027",
+      "title": "Expecting Trouble: Vermonters Are Losing Local Birth Centers",
+      "link": "https://www.sevendaysvt.com/news/gen-zero/expecting-trouble-vermonters-are-losing-local-birth-centers/",
+      "ts": "2026-09-09T14:00:00+00:00",
+      "summary": "As hospitals pull back, people are traveling farther for services — and confronting what’s lost when a community lacks maternity care The post Expecting Trouble: Vermonters Are Losing Local Birth Centers appeared first on Seven Days . (Image: © Lanak | Dreamstime)"
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=216408",
-      "title": "Small Town, Lots of Flavor: A Day Trip to Hardwick",
-      "link": "https://www.sevendaysvt.com/da-capo/paid-post/vermont-daytrip-hardwick/",
-      "ts": "2026-09-08T16:02:08+00:00",
-      "summary": "This Northeast Kingdom town has a thriving food, arts and outdoor scene. Explore local restaurants, shopping and bike trails and find out why it's worth the drive. The post Small Town, Lots of Flavor: A Day Trip to Hardwick appeared first on Seven Days . (Image: Courtesy of Mountain Brother Media)"
+      "id": "https://www.sevendaysvt.com/?p=217019",
+      "title": "Is Any Town Willing to Host a 100-Bed Homeless Shelter?",
+      "link": "https://www.sevendaysvt.com/news/housingcrisis/is-any-town-willing-to-host-a-100-bed-homeless-shelter/",
+      "ts": "2026-09-09T13:57:00+00:00",
+      "summary": "South Burlington pushed back on a proposal for a shelter on Williston Road. Now the Champlain Valley Office of Economic Opportunity is looking elsewhere. The post Is Any Town Willing to Host a 100-Bed Homeless Shelter? appeared first on Seven Days . (Image: Colin Flanders © Seven Days)"
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=216928",
-      "title": "Mule Bar in Winooski to Expand Into Former Our House Spot",
-      "link": "https://www.sevendaysvt.com/food-drink/foodnews/mule-bar-in-winooski-to-expand-into-former-our-house-spot/",
-      "ts": "2026-09-08T16:00:29+00:00",
-      "summary": "The former bistro next door will become the bar’s attached dining room, adding seating and new dinner and entertainment offerings with weekend brunch to follow. The post Mule Bar in Winooski to Expand Into Former Our House Spot appeared first on Seven Days . (Image: Jordan Barry)"
+      "id": "https://www.sevendaysvt.com/?p=217007",
+      "title": "Absent State Action, Vermont Towns Move to Block Data Centers",
+      "link": "https://www.sevendaysvt.com/news/constructiondevelopment/absent-state-action-vermont-towns-move-to-block-data-centers/",
+      "ts": "2026-09-09T13:55:00+00:00",
+      "summary": "Even though most agree that enormous data centers won’t be developed in Vermont, some towns aren’t taking any chances. The post Absent State Action, Vermont Towns Move to Block Data Centers appeared first on Seven Days . (Image: AP Photo / Matt O’Brien)"
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=216932",
-      "title": "Day Trip: Eating — and Working It Off — in Granby, Québec",
-      "link": "https://www.sevendaysvt.com/guides/quebecguide/day-trip-eating-and-working-it-off-in-granby-quebec/",
-      "ts": "2026-09-08T15:55:39+00:00",
-      "summary": "The lively Québec town known for its zoo also boasts inventive world-class dining and plenty of cycling, thrifting and other between-meals activities. The post Day Trip: Eating — and Working It Off — in Granby, Québec appeared first on Seven Days . (Image: KT Harrison)"
+      "id": "https://www.sevendaysvt.com/?p=216791",
+      "title": "Drivers at Rocky Ridge Raceway Battle for the Checkered Flag",
+      "link": "https://www.sevendaysvt.com/arts-culture/sports/drivers-at-rocky-ridge-raceway-battle-for-the-checkered-flag/",
+      "ts": "2026-09-09T13:50:00+00:00",
+      "summary": "At Vermont’s only speedway built exclusively for go-kart racing, drivers from as young as 4 to their sixties get a taste of life in the fast lane. The post Drivers at Rocky Ridge Raceway Battle for the Checkered Flag appeared first on Seven Days . (Image: Jeb Wallace-Brodeur)"
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=216918",
-      "title": "Gather Round Chef Service Stocks the Fridge for Vermont Families",
-      "link": "https://www.sevendaysvt.com/food-drink/fooddrinkfeatures/gather-round-chef-service-stocks-the-fridge-for-vermont-families/",
-      "ts": "2026-09-08T15:50:17+00:00",
-      "summary": "Ariel Voorhees, an English teacher turned personal chef, has built a biz cooking custom meals in people’s homes. She and her team even do the grocery shopping. The post Gather Round Chef Service Stocks the Fridge for Vermont Families appeared first on Seven Days . (Image: Courtesy of Paul Richardson of StoryWorkz)"
+      "id": "https://www.sevendaysvt.com/?p=217030",
+      "title": "Warren to Bury a Time Capsule for Residents to Open in 2076",
+      "link": "https://www.sevendaysvt.com/news/802much/warren-to-bury-a-time-capsule-for-residents-to-open-in-2076/",
+      "ts": "2026-09-09T13:48:00+00:00",
+      "summary": "In May, the town opened a capsule that was buried in 1976. The new one is timed for the country’s tricentennial and will try to capture what life is like today. The post Warren to Bury a Time Capsule for Residents to Open in 2076 appeared first on Seven Days . (Image: Courtesy)"
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=216908",
-      "title": "Venetian Soda Lounge in Burlington’s Soda Plant Is for Sale",
-      "link": "https://www.sevendaysvt.com/food-drink/foodnews/venetian-soda-lounge-in-burlingtons-soda-plant-is-for-sale/",
-      "ts": "2026-09-08T15:45:45+00:00",
-      "summary": "The South End bar and venue will remain open while owner Justin Bunnell looks for a buyer. He’s also selling his related ginger ale biz, Venetian Beverages. The post Venetian Soda Lounge in Burlington’s Soda Plant Is for Sale appeared first on Seven Days . (Image: File: Luke Awtry)"
+      "id": "https://www.sevendaysvt.com/?p=217042",
+      "title": "From the Publisher: People Power",
+      "link": "https://www.sevendaysvt.com/news/fromthepublisher/from-the-publisher-people-power/",
+      "ts": "2026-09-09T13:47:00+00:00",
+      "summary": "Loyal employees with more than two decades of service work side-by-side with newly minted college grads to produce this weekly newspaper. The post From the Publisher: People Power appeared first on Seven Days . (Image: Henry Sieber)"
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=216901",
-      "title": "Stone’s Throw Pizza in Waterbury Cuts Back to Takeout Only",
-      "link": "https://www.sevendaysvt.com/food-drink/foodnews/stones-throw-pizza-in-waterbury-cuts-back-to-takeout-only/",
-      "ts": "2026-09-08T15:40:58+00:00",
-      "summary": "Co-owners Allison and Tyler Stratton said shortages of staff and parking led to their decision to end on-site dining at 13 Stowe Street and focus on takeout. The post Stone’s Throw Pizza in Waterbury Cuts Back to Takeout Only appeared first on Seven Days . (Image: Jeb Wallace-Brodeur)"
+      "id": "https://www.sevendaysvt.com/?p=217162",
+      "title": "From Flying Over Ground Zero to Deploying Overseas",
+      "link": "https://www.sevendaysvt.com/da-capo/paid-post/flying-over-ground-zero-to-deploying-overseas/",
+      "ts": "2026-09-09T13:46:00+00:00",
+      "summary": "The Vermont Army and Air National Guard are always ready to help in an emergency. Are we ready to help them — and their families? The post From Flying Over Ground Zero to Deploying Overseas appeared first on Seven Days . (Image: Courtesy of Airman 1st Class Raymond LaChance)"
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=216616",
-      "title": "The Seven Days Guide to South End Art Hop 2026",
-      "link": "https://www.sevendaysvt.com/guides/arthopguide/the-seven-days-guide-to-south-end-art-hop-2026/",
-      "ts": "2026-09-08T14:00:00+00:00",
-      "summary": "The annual celebration of hyperlocal art runs from September 11 to 13 this year, and we’re guiding the way to visual art, galleries, food, music and more. The post The Seven Days Guide to South End Art Hop 2026 appeared first on Seven Days . (Image: David Magnanelli)"
+      "id": "https://www.sevendaysvt.com/?p=216896",
+      "title": "Letters to the Editor (9/9/26)",
+      "link": "https://www.sevendaysvt.com/news/letters/letters-to-the-editor-9-9-26/",
+      "ts": "2026-09-09T13:46:00+00:00",
+      "summary": "Readers react to recent articles The post Letters to the Editor (9/9/26) appeared first on Seven Days ."
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=216621",
-      "title": "The New SEABA Center Is a Hub for Visual and Performing Arts",
-      "link": "https://www.sevendaysvt.com/guides/arthopguide/the-new-seaba-center-is-a-hub-for-visual-and-performing-arts/",
-      "ts": "2026-09-08T13:55:00+00:00",
-      "summary": "With its art gallery, stage and rental venue, the South End Arts + Business Association headquarters is a hot spot in the heart of Burlington’s arts district. The post The New SEABA Center Is a Hub for Visual and Performing Arts appeared first on Seven Days . (Image: Courtesy of Luke Awtry)"
+      "id": "https://www.sevendaysvt.com/?p=216978",
+      "title": "WTF: What’s With the Costumed Crow Figurines in Shelburne?",
+      "link": "https://www.sevendaysvt.com/arts-culture/wtf/wtf-whats-with-the-costumed-crow-figurines-in-shelburne/",
+      "ts": "2026-09-09T13:45:00+00:00",
+      "summary": "A murder of (model) crows has entertained passersby in Shelburne for decades with clever outfits and configurations that change with the seasons. The post WTF: What’s With the Costumed Crow Figurines in Shelburne? appeared first on Seven Days . (Image: Bear Cieri)"
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=216633",
-      "title": "Exit Interview: Artist Cynthia Cagle Recaps Her SEABA Residency",
-      "link": "https://www.sevendaysvt.com/guides/arthopguide/exit-interview-artist-cynthia-cagle-recaps-her-seaba-residency/",
-      "ts": "2026-09-08T13:50:00+00:00",
-      "summary": "The South Burlington painter and ceramicist talks about her year in a studio at the Vaults, how her artistic vision changed and her plans for the future. The post Exit Interview: Artist Cynthia Cagle Recaps Her SEABA Residency appeared first on Seven Days . (Image: Alice Dodge; Courtesy)"
+      "id": "https://www.sevendaysvt.com/?p=216983",
+      "title": "Patrick Branstetter Gives Grace Coolidge’s Piano a New Life",
+      "link": "https://www.sevendaysvt.com/arts-culture/culture/patrick-branstetter-gives-grace-coolidges-piano-a-new-life/",
+      "ts": "2026-09-09T13:43:00+00:00",
+      "summary": "The Brattleboro piano tech restored the 100-year-old piano at the Coolidge historic site in Plymouth to its former glory for future audiences to enjoy. The post Patrick Branstetter Gives Grace Coolidge’s Piano a New Life appeared first on Seven Days . (Image: Jennifer Sutton)"
      }
     ]
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=654594",
+      "title": "An environmental studies degree will unlock Soren’s goal of becoming a game warden",
+      "link": "https://vtdigger.org/2026/09/09/an-environmental-studies-degree-will-unlock-sorens-goal-of-becoming-a-game-warden/",
+      "ts": "2026-09-09T14:36:04+00:00",
+      "summary": "Soren Stelma-Leonard has always felt most at home in the woods of his Northeast Kingdom home, where hunting with his dad and helping with maple sugaring inspired him to pursue a career as a game warden. Early acceptance to UVM, along with financial aid and scholarships, put his goal within reach. Read the story on VTDigger here: An environmental studies degree will unlock Soren’s goal of becoming "
+     },
      {
       "id": "https://vtdigger.org/?p=654573",
       "title": "Former EPA official Melissa Hoffer to lead Vermont Law and Graduate School",
@@ -831,13 +836,6 @@
       "link": "https://vtdigger.org/2026/09/03/opinion-vermonts-forgotten-abenaki-war-captain/",
       "ts": "2026-09-03T19:42:22+00:00",
       "summary": "An Abenaki captain and his soldiers fought alongside Vermont's militia against the British in the Revolutionary War, some giving their lives for a nation not yet their own. Read the story on VTDigger here: Vermont’s forgotten Abenaki war captain ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=654264",
-      "title": "From shut out to starting over",
-      "link": "https://vtdigger.org/2026/09/03/from-shut-out-to-starting-over/",
-      "ts": "2026-09-03T17:47:00+00:00",
-      "summary": "After eight years out of the workforce, Violetta feared she had become unhireable. She returned to school, earned two nursing degrees with support from The Curtis Fund, and built a new career. Now her daughter is a Curtis Fund scholar, too. Read the story on VTDigger here: From shut out to starting over ."
      }
     ]
    },
@@ -931,6 +929,27 @@
    },
    "wcax": {
     "items": [
+     {
+      "id": "2YSG77PBAFC2HCB464AJHCY4GM",
+      "title": "Mount Washington honors 9/11 victims to mark 25th anniversary",
+      "link": "https://www.wcax.com/2026/09/09/mount-washington-honors-911-victims-mark-25th-anniversary/",
+      "ts": "2026-09-09T13:07:54+00:00",
+      "summary": "New Hampshire’s highest peak will honor the lives lost on 9/11 starting Wednesday night with the honor summit."
+     },
+     {
+      "id": "IS5K5GKEKFBFBKCPKL2DCACB44",
+      "title": "Essex Ice Cream closes its doors",
+      "link": "https://www.wcax.com/2026/09/09/essex-ice-cream-closes-its-doors/",
+      "ts": "2026-09-09T10:53:58+00:00",
+      "summary": "The owners of Essex Ice Cream Cafe posted on social media late Monday night plans to close this Saturday."
+     },
+     {
+      "id": "BBQS7BEYXZATFAC5ZCZAEQH3RI",
+      "title": "Vermont studying online protections for children on heels of Meta settlement",
+      "link": "https://www.wcax.com/2026/09/09/vermont-studying-online-protections-children-heels-meta-settlement/",
+      "ts": "2026-09-09T10:39:37+00:00",
+      "summary": "Vermont Attorney General Charity Clark is holding public hearings throughout September on a proposed rule aimed at protecting kids online."
+     },
      {
       "id": "SFSB64KXVVBCPJC3Q5LGPK3NKU",
       "title": "Pappas to face Sununu in critical Senate race",
@@ -1259,32 +1278,137 @@
       "link": "https://www.wcax.com/2026/09/05/mt-independence-marks-250th-anniversary-with-living-history-weekend/",
       "ts": "2026-09-05T23:59:37+00:00",
       "summary": "Reenactors honor soldiers who built and lived at the site during the Revolutionary War."
-     },
-     {
-      "id": "PYENGTEXRNEKPH266IRGJ7C7JQ",
-      "title": "VMBA Days brings downhill mountain biking to Bolton Valley",
-      "link": "https://www.wcax.com/2026/09/05/vmba-days-brings-downhill-mountain-biking-bolton-valley/",
-      "ts": "2026-09-05T23:51:11+00:00",
-      "summary": "Event offers guided rides, clinics and a scavenger hunt as part of statewide series."
-     },
-     {
-      "id": "B7R2P3C7TZD3JNULWEC2KISVD4",
-      "title": "E-scooter catches fire in apartment",
-      "link": "https://www.wcax.com/2026/09/05/e-scooter-catches-fire-apartment/",
-      "ts": "2026-09-05T14:21:01+00:00",
-      "summary": "Firefighters say an electric scooter caught fire inside an apartment Friday evening."
-     },
-     {
-      "id": "UVLHUWGVCZGSDH5RB2USO4WVBY",
-      "title": "What to Do: Saturday, September 5",
-      "link": "https://www.wcax.com/2026/09/05/what-do-saturday-september-5/",
-      "ts": "2026-09-05T08:16:25+00:00",
-      "summary": "Here’s some things around Vermont you can do today."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73652320",
+      "title": "Anthropic researcher quits over AI fears, warns 'it could kill us all'",
+      "link": "https://www.mynbc5.com/article/ai-safety-warnings-anthropic-researcher-quits/73652320",
+      "ts": "2026-09-09T14:30:00+00:00",
+      "summary": "An AI researcher quit his job at Anthropic and made waves on his way out the door, warning about the dangers of AI."
+     },
+     {
+      "id": "73652547",
+      "title": "Dog loses home after family detained by ICE",
+      "link": "https://www.mynbc5.com/article/dog-loses-home-family-ice/73652547",
+      "ts": "2026-09-09T14:30:00+00:00",
+      "summary": "A Los Angeles animal rescue group is trying to find a permanent home for a 6-year-old dog, Macey, whose owners were detained during an immigration raid."
+     },
+     {
+      "id": "73652369",
+      "title": "Police Investigate Gunshots Near Softball Field",
+      "link": "https://www.mynbc5.com/article/police-investigate-gunshots-near-softball-field/73652369",
+      "ts": "2026-09-09T14:12:00+00:00",
+      "summary": "Police say negligent discharge of a firearm caused damage to shed."
+     },
+     {
+      "id": "73652101",
+      "title": "Lori Loughlin files for divorce from Mossimo Giannulli after nearly 30 years of marriage",
+      "link": "https://www.mynbc5.com/article/lori-loughlin-mossimo-giannulli-divorce/73652101",
+      "ts": "2026-09-09T13:57:00+00:00",
+      "summary": "\"Full House\" star Lori Loughlin has filed for divorce from fashion designer Mossimo Giannulli after nearly 30 years of marriage."
+     },
+     {
+      "id": "73645155",
+      "title": "Six children survive crash that claimed life of Oklahoma mother",
+      "link": "https://www.mynbc5.com/article/oklahoma-choctaw-deadly-crash-mother-six-children-survive/73645155",
+      "ts": "2026-09-09T13:31:00+00:00",
+      "summary": "A 25-year-old mother of six died in a crash in Choctaw, Oklahoma, on Thursday, leaving her children, who were all in the car with her at the time, behind."
+     },
+     {
+      "id": "73581974",
+      "title": "Unofficial primary results point to rematch in New Hampshire Congressional race",
+      "link": "https://www.mynbc5.com/article/new-hampshire-us-house-primary-results-2026/73581974",
+      "ts": "2026-09-09T13:05:00+00:00",
+      "summary": "Live election results: See who Granite State voters chose to represent them on the general election ballot in the race for Congress."
+     },
+     {
+      "id": "73581947",
+      "title": "Republican Gov. Kelly Ayotte wins renomination to a second term",
+      "link": "https://www.mynbc5.com/article/new-hampshire-governor-race-primary-results-2026/73581947",
+      "ts": "2026-09-09T13:05:00+00:00",
+      "summary": "New Hampshire Gov. Kelly Ayotte cruised to victory in the Republican primary and will face Democrat Cinde Warmington in November."
+     },
+     {
+      "id": "73581954",
+      "title": "Primary Results: U.S. Senate Race Set in New Hampshire",
+      "link": "https://www.mynbc5.com/article/new-hampshire-us-senate-primary-results-2026/73581954",
+      "ts": "2026-09-09T13:04:00+00:00",
+      "summary": "New Hampshire Senate primary results: See the latest updates here."
+     },
+     {
+      "id": "73651608",
+      "title": "Pennsylvania teen's football game injury leads to cancer diagnosis",
+      "link": "https://www.mynbc5.com/article/teen-football-game-injury-reveals-cancer/73651608",
+      "ts": "2026-09-09T13:01:00+00:00",
+      "summary": "A 16-year-old football player in Pennsylvania was taken to the hospital with a football injury. Instead, doctors discovered cancer. It was a diagnosis that they say may otherwise have gone unnoticed."
+     },
+     {
+      "id": "73647206",
+      "title": "St. Albans man cited after allegedly assaulting Vermont State Trooper",
+      "link": "https://www.mynbc5.com/article/st-albans-man-cited-after-allegedly-assaulting-vermont-state-trooper/73647206",
+      "ts": "2026-09-09T13:00:00+00:00",
+      "summary": "Vermont State Police cited a St. Albans man on Tuesday after he allegedly assaulted a trooper in Swanton."
+     },
+     {
+      "id": "73581904",
+      "title": "Full Results: New Hampshire Primary election 2026",
+      "link": "https://www.mynbc5.com/article/results-new-hampshire-primary-election-2026/73581904",
+      "ts": "2026-09-09T12:42:00+00:00",
+      "summary": "The results are in after New Hampshire residents voted to decide who would be on the ballot in November for the midterm elections."
+     },
+     {
+      "id": "73651302",
+      "title": "Mount Mansfield's Taft Lodge closed for repairs, Green Mountain Club says",
+      "link": "https://www.mynbc5.com/article/taft-lodge-closed-for-repairs-mount-mansfield-long-trail/73651302",
+      "ts": "2026-09-09T12:24:00+00:00",
+      "summary": "Taft Lodge, the oldest overnight site on Vermont's Long Trail, will remain closed for repairs through the end of October. The Green Mountain Club is reminding hikers that tenting and hammocking are not permitted outside the shelter, as it is located above 2,500 feet, just below the Mount Mansfield summit."
+     },
+     {
+      "id": "73650978",
+      "title": "Trump gave $45,000 holiday gifts to Natalie Harp and two other White House aides",
+      "link": "https://www.mynbc5.com/article/trump-holiday-gifts-white-house-aides/73650978",
+      "ts": "2026-09-09T11:24:00+00:00",
+      "summary": "President Trump gave $45,000 holiday gifts to three White House aides, according to new financial disclosures released by the administration."
+     },
+     {
+      "id": "73650590",
+      "title": "Burglars steal at least $150,000 from Steelers rookie Max Iheanachor, sources say",
+      "link": "https://www.mynbc5.com/article/pittsburgh-steelers-max-iheanachor-burglary/73650590",
+      "ts": "2026-09-09T11:02:00+00:00",
+      "summary": "Pittsburgh rookie offensive tackle Max Iheanachor, the Steelers' first-round pick, had his home recently burglarized, according to multiple sources."
+     },
+     {
+      "id": "73649725",
+      "title": "Why are Republicans holding a midterm convention? What to know about the first-time event",
+      "link": "https://www.mynbc5.com/article/why-are-republicans-holding-a-midterm-convention-what-to-know-about-the-first-time-event/73649725",
+      "ts": "2026-09-09T10:40:00+00:00",
+      "summary": "President Donald Trump is traveling to Dallas, Texas, for a Republican convention, marking the first time the GOP has held such an event ahead of midterm elections."
+     },
+     {
+      "id": "73650287",
+      "title": "At least 1 dead in Hawaii after Hurricane Lowell devastates parts of the state, governor says",
+      "link": "https://www.mynbc5.com/article/hurricane-lowell-hawaii-damage-outages/73650287",
+      "ts": "2026-09-09T10:25:00+00:00",
+      "summary": "Hurricane Lowell has had a “devastating” impact on Hawaii after sweeping past the state’s islands, according to Gov. Josh Green."
+     },
+     {
+      "id": "73594767",
+      "title": "UVM Cancer Center offers new FDA approved treatment for pancreatic cancer",
+      "link": "https://www.mynbc5.com/article/uvmcc-fda-new-treatment-pancreatic-cancer/73594767",
+      "ts": "2026-09-09T10:17:00+00:00",
+      "summary": "Cancer patients in Vermont and New York will soon have access to a new kind of treatment. The medication was just approved for pancreatic cancer patients, and thanks to a clinical trial, some people in our region have already gotten to use it."
+     },
+     {
+      "id": "73645397",
+      "title": "Cloudy and breezy Wednesday, steady rain late afternoon",
+      "link": "https://www.mynbc5.com/article/cloudy-and-breezy-with-rain-developing-by-afternoon-wednesday-09-08-26/73645397",
+      "ts": "2026-09-09T10:02:00+00:00",
+      "summary": "Embedded downpours late Wednesday, then a beautiful stretch with sun and 70s late week"
+     },
      {
       "id": "73649759",
       "title": "'Enough is enough': Patrick Clancy at center of 'destructive defamation campaign,' attorney says",
@@ -1293,137 +1417,11 @@
       "summary": "An attorney for Patrick Clancy said \"enough is enough\" as his family is subjected to a \"relentless, escalating and destructive defamation campaign.\""
      },
      {
-      "id": "73581974",
-      "title": "Unofficial primary results point to rematch in New Hampshire congressional race",
-      "link": "https://www.mynbc5.com/article/new-hampshire-us-house-primary-results-2026/73581974",
-      "ts": "2026-09-09T09:30:00+00:00",
-      "summary": "Live election results: See who Granite State voters chose to represent them on the general election ballot in the race for Congress."
-     },
-     {
       "id": "73649535",
       "title": "Oil rises past $100 a barrel after the latest wave of Middle East attacks",
       "link": "https://www.mynbc5.com/article/oil-prices-top-100-middle-east-attacks/73649535",
       "ts": "2026-09-09T09:15:00+00:00",
       "summary": "The price of oil has surpassed $100 a barrel for the first time in almost six weeks after attacks on oil facilities and ships in the Middle East."
-     },
-     {
-      "id": "73647324",
-      "title": "Grand Canyon water supply to be restored in weeks, not months",
-      "link": "https://www.mynbc5.com/article/grand-canyon-water-supply-restored-weeks/73647324",
-      "ts": "2026-09-09T04:01:00+00:00",
-      "summary": "National Park Service officials expect to restore a reliable water supply in the Grand Canyon within weeks"
-     },
-     {
-      "id": "73646817",
-      "title": "Chazy girls' soccer defeats Boquet Valley in Section VII championship rematch",
-      "link": "https://www.mynbc5.com/article/chazy-girls-soccer-defeats-boquet-valley-in-section-vii-championship-rematch/73646817",
-      "ts": "2026-09-09T03:42:00+00:00",
-      "summary": "Chazy girls' soccer scores three goals in seven minutes to defeat Boquet Valley in Section VII championship rematch"
-     },
-     {
-      "id": "73647457",
-      "title": "CVU & Rice go the distance, end in 1-1 draw",
-      "link": "https://www.mynbc5.com/article/cvu-rice-go-the-distance-end-in-1-1-draw/73647457",
-      "ts": "2026-09-09T03:41:00+00:00",
-      "summary": "Two overtimes not enough in clash of Chittenden County powerhouses"
-     },
-     {
-      "id": "73646798",
-      "title": "Burlington is rigging up to host two collegiate sailing competitions",
-      "link": "https://www.mynbc5.com/article/lake-champlain-prepares-sailing/73646798",
-      "ts": "2026-09-09T03:26:00+00:00",
-      "summary": "Local sailing center and university join forces to host two major collegiate sailing competitions in Burlington."
-     },
-     {
-      "id": "73646855",
-      "title": "Reports: Driveway of actor Nicolas Cage’s Malibu coastal mansion collapses",
-      "link": "https://www.mynbc5.com/article/nicolas-cage-malibu-driveway-collapse-gas-leak/73646855",
-      "ts": "2026-09-09T02:39:00+00:00",
-      "summary": "The driveway of a coastal mansion in Malibu owned by actor Nicolas Cage has collapsed and opened a giant hole in front of the house"
-     },
-     {
-      "id": "73647206",
-      "title": "St. Albans man cited after allegedly assaulting Vermont State Trooper",
-      "link": "https://www.mynbc5.com/article/st-albans-man-cited-after-allegedly-assaulting-vermont-state-trooper/73647206",
-      "ts": "2026-09-09T02:28:00+00:00",
-      "summary": "Vermont State Police cited a St. Albans man on Tuesday after he allegedly assaulted a trooper in Swanton."
-     },
-     {
-      "id": "73581954",
-      "title": "Primary Results: U.S. Senate Race Set in New Hampshire",
-      "link": "https://www.mynbc5.com/article/new-hampshire-us-senate-primary-results-2026/73581954",
-      "ts": "2026-09-09T02:20:00+00:00",
-      "summary": "New Hampshire Senate primary results: See the latest updates here."
-     },
-     {
-      "id": "73647043",
-      "title": "Former US Sen. John E. Sununu to face US Rep. Chris Pappas in New Hampshire Senate race",
-      "link": "https://www.mynbc5.com/article/new-hampshire-senate-race-primaries/73647043",
-      "ts": "2026-09-09T02:11:00+00:00",
-      "summary": "Republican John E. Sununu and Democrat Chris Pappas will compete for an open U.S. Senate seat in New Hampshire."
-     },
-     {
-      "id": "73644185",
-      "title": "NCAA says it can't overturn Michigan's win over Western Michigan after MAC appeals outcome",
-      "link": "https://www.mynbc5.com/article/mac-appeals-michigan-western-michigan-result-ncaa/73644185",
-      "ts": "2026-09-09T01:35:00+00:00",
-      "summary": "The MAC wants Western Michigan recognized as having defeated Michigan. The NCAA said the result will stand, noting that its playing rules do not provide a protocol for overturning a game's outcome."
-     },
-     {
-      "id": "73643036",
-      "title": "Singapore man pleads guilty to orchestrating $240 million bitcoin theft from DC resident",
-      "link": "https://www.mynbc5.com/article/singapore-man-guilty-bitcoin-theft-dc-resident/73643036",
-      "ts": "2026-09-09T01:28:00+00:00",
-      "summary": "A 22-year-old man from Singapore has pleaded guilty to teaming up with friends to steal nearly a quarter-billion dollars in bitcoin from a Washington, D.C., resident and then embarking on a wild spending spree with the laundered proceeds."
-     },
-     {
-      "id": "73644428",
-      "title": "Menendez brothers eligible to face parole board again in spring 2027",
-      "link": "https://www.mynbc5.com/article/menendez-brothers-parole-board-spring-2027/73644428",
-      "ts": "2026-09-09T01:13:00+00:00",
-      "summary": "Erik and Lyle Menendez are eligible to face a parole board again in spring 2027 after getting an early parole suitability hearing."
-     },
-     {
-      "id": "73581947",
-      "title": "Republican Gov. Kelly Ayotte wins renomination to a second term",
-      "link": "https://www.mynbc5.com/article/new-hampshire-governor-race-primary-results-2026/73581947",
-      "ts": "2026-09-09T00:53:00+00:00",
-      "summary": "New Hampshire Gov. Kelly Ayotte cruised to victory in the Republican primary and will face Democrat Cinde Warmington in November."
-     },
-     {
-      "id": "73646528",
-      "title": "Holdout in Lindsay Clancy trial said he had reasonable doubt but still wouldn't acquit, juror says",
-      "link": "https://www.mynbc5.com/article/holdout-lindsay-clancy-trial-reasonable-doubt-wouldnt-acquit-juror/73646528",
-      "ts": "2026-09-09T00:44:00+00:00",
-      "summary": "A jury foreperson says the lone holdout juror in the Lindsay Clancy trial said he had reasonable doubt but still wouldn't acquit."
-     },
-     {
-      "id": "73646432",
-      "title": "U.S. bans dairy, alcohol and motorcycles from Canada as trade war escalates",
-      "link": "https://www.mynbc5.com/article/us-bans-canadian-dairy-alcohol-motorcycles/73646432",
-      "ts": "2026-09-09T00:16:00+00:00",
-      "summary": "The U.S. is banning dairy, most alcohol and motorcycles from Canada as the trade war escalates. Here's what to know"
-     },
-     {
-      "id": "73645758",
-      "title": "Federal judge temporarily blocks Missouri from using old House map after Supreme Court declined case",
-      "link": "https://www.mynbc5.com/article/supreme-court-rejects-missouri-request-congressional-map/73645758",
-      "ts": "2026-09-08T23:49:00+00:00",
-      "summary": "The Supreme Court on Tuesday denied Missouri's request to use a congressional map for the November midterm election, a map that would have given Republicans a chance to flip a seat."
-     },
-     {
-      "id": "73645845",
-      "title": "Barre residents return to polls next week for a third vote on school budget",
-      "link": "https://www.mynbc5.com/article/barre-school-budget-revote/73645845",
-      "ts": "2026-09-08T23:28:00+00:00",
-      "summary": "The only Vermont school district without a budget this year will make another attempt to get it passed next Tuesday."
-     },
-     {
-      "id": "73645182",
-      "title": "US destroys 5 Iranian oil tankers after missile attacks on Navy warship, military says",
-      "link": "https://www.mynbc5.com/article/us-strikes-iranian-tankers-missile-attacks-navy-warship/73645182",
-      "ts": "2026-09-08T22:51:00+00:00",
-      "summary": "US strikes multiple Iranian tankers after more attempted missile attacks on a Navy warship, US official says"
      }
     ]
    },
@@ -1681,6 +1679,62 @@
  "reddit-burlington": {
   "posts": [
    {
+    "id": "1wbl60c",
+    "title": "Burlington Police not Fullfilling Records Requests",
+    "url": "https://www.reddit.com/r/burlington/comments/1wbl60c/burlington_police_not_fullfilling_records_requests/",
+    "score": null,
+    "comments": null,
+    "created": "2026-09-09T13:12:12+00:00"
+   },
+   {
+    "id": "1wbkzp0",
+    "title": "Seeking Plumber Recommendations",
+    "url": "https://www.reddit.com/r/burlington/comments/1wbkzp0/seeking_plumber_recommendations/",
+    "score": null,
+    "comments": null,
+    "created": "2026-09-09T13:12:12+00:00"
+   },
+   {
+    "id": "1wbkywq",
+    "title": "2nd Annual KidCutta at Spanked Puppy",
+    "url": "https://www.reddit.com/r/burlington/comments/1wbkywq/2nd_annual_kidcutta_at_spanked_puppy/",
+    "score": null,
+    "comments": null,
+    "created": "2026-09-09T13:12:12+00:00"
+   },
+   {
+    "id": "1wbkivi",
+    "title": "Best facial",
+    "url": "https://www.reddit.com/r/burlington/comments/1wbkivi/best_facial/",
+    "score": null,
+    "comments": null,
+    "created": "2026-09-09T13:12:12+00:00"
+   },
+   {
+    "id": "1wbjv4m",
+    "title": "best babka in town",
+    "url": "https://www.reddit.com/r/burlington/comments/1wbjv4m/best_babka_in_town/",
+    "score": null,
+    "comments": null,
+    "created": "2026-09-09T13:12:12+00:00"
+   },
+   {
+    "id": "1wbhyx1",
+    "title": "Missing Foster Dog",
+    "url": "https://www.reddit.com/r/burlington/comments/1wbhyx1/missing_foster_dog/",
+    "score": null,
+    "comments": null,
+    "created": "2026-09-09T13:12:12+00:00"
+   },
+   {
+    "id": "1wbcr6v",
+    "title": "Do you like your job?",
+    "url": "https://www.reddit.com/r/burlington/comments/1wbcr6v/do_you_like_your_job/",
+    "score": null,
+    "comments": null,
+    "created": "2026-09-09T10:12:34+00:00"
+   },
+   {
     "id": "1wbaxf2",
     "title": "First time skiiers - best resort and time of year?",
     "url": "https://www.reddit.com/r/burlington/comments/1wbaxf2/first_time_skiiers_best_resort_and_time_of_year/",
@@ -1783,987 +1837,11 @@
     "score": null,
     "comments": null,
     "created": "2026-09-08T01:13:24+00:00"
-   },
-   {
-    "id": "1wa64pf",
-    "title": "Place for a Zoom meeting?",
-    "url": "https://www.reddit.com/r/burlington/comments/1wa64pf/place_for_a_zoom_meeting/",
-    "score": null,
-    "comments": null,
-    "created": "2026-09-07T22:12:36+00:00"
-   },
-   {
-    "id": "1wa4j92",
-    "title": "What are these things?",
-    "url": "https://www.reddit.com/r/burlington/comments/1wa4j92/what_are_these_things/",
-    "score": null,
-    "comments": null,
-    "created": "2026-09-07T22:12:36+00:00"
-   },
-   {
-    "id": "1wa1mdv",
-    "title": "Spotted next to the Winooski Bridge: Elder bugs, not Lantern flies - correct?",
-    "url": "https://www.reddit.com/r/burlington/comments/1wa1mdv/spotted_next_to_the_winooski_bridge_elder_bugs/",
-    "score": null,
-    "comments": null,
-    "created": "2026-09-07T22:12:36+00:00"
-   },
-   {
-    "id": "1w9ygts",
-    "title": "Lost Keys Found on Bike Path",
-    "url": "https://www.reddit.com/r/burlington/comments/1w9ygts/lost_keys_found_on_bike_path/",
-    "score": null,
-    "comments": null,
-    "created": "2026-09-07T19:11:59+00:00"
-   },
-   {
-    "id": "1w9tqxh",
-    "title": "Best place for a short women’s haircut?",
-    "url": "https://www.reddit.com/r/burlington/comments/1w9tqxh/best_place_for_a_short_womens_haircut/",
-    "score": null,
-    "comments": null,
-    "created": "2026-09-07T16:12:00+00:00"
-   },
-   {
-    "id": "1w9ridu",
-    "title": "This week we have the final Radio Bean show, a South Union block party, weekly Church St passeggiata, WAX and DJ Hoppa at Higher Ground, Big Pond Improv opening Thursday, jury selection in the Eaton trial, five local papers sold to a nonprofit and story behind why bars like Radio Bean are struggling",
-    "url": "https://www.reddit.com/r/burlington/comments/1w9ridu/this_week_we_have_the_final_radio_bean_show_a/",
-    "score": null,
-    "comments": null,
-    "created": "2026-09-07T13:12:21+00:00"
-   },
-   {
-    "id": "1w9qfni",
-    "title": "Art Hop Gluten Free Food?",
-    "url": "https://www.reddit.com/r/burlington/comments/1w9qfni/art_hop_gluten_free_food/",
-    "score": null,
-    "comments": null,
-    "created": "2026-09-07T13:12:21+00:00"
    }
   ]
  },
  "events-local": {
   "items": [
-   {
-    "id": "51a751ae6489",
-    "title": "Library Cards from all Over the Country (and Beyond!)",
-    "link": "https://southburlingtonlibrary.org/library-cards-from-all-over-the-country-and-beyond",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T00:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "7cbd00d36115",
-    "title": "Art Wall: Paintings by El Towle",
-    "link": "https://southburlingtonlibrary.org/paintings-by-el-towle",
-    "ts": "2026-08-27T14:13:55-04:00",
-    "start": "2026-09-08T00:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "4ad83e669356",
-    "title": "Faculty Jobs: Understanding and Preparing for the Academic Job Market",
-    "link": "https://events.uvm.edu/event/faculty-jobs-understanding-and-preparing-for-the-academic-job-market",
-    "ts": "2026-08-15T16:57:45-04:00",
-    "start": "2026-09-08T02:00:00-04:00",
-    "venue": "Old Mill & Old Mill Annex"
-   },
-   {
-    "id": "abe78b826821",
-    "title": "Mini Clean Up Crew",
-    "link": "https://community.sevendaysvt.com/event/mini-clean-up-crew-45429908",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T08:00:00-04:00",
-    "venue": "City Hall Park"
-   },
-   {
-    "id": "2fbc7e07562f",
-    "title": "September Networking Coffee for Women at Hula",
-    "link": "https://www.champlain.edu/event/september-networking-coffee-for-women-at-hula/",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T08:30:00-04:00",
-    "venue": "Hula"
-   },
-   {
-    "id": "538a50725399",
-    "title": "Middle Grade Grab & Go: Book Page Flowers",
-    "link": "https://southburlingtonlibrary.org/middle-grade-grab-and-go-book-page-flowers",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "c21dd826cbf2",
-    "title": "Trolley tours",
-    "link": "https://www.helloburlingtonvt.com/event/trolley-tours/4244/",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "Perkins Pier"
-   },
-   {
-    "id": "f096241089e6",
-    "title": "Tuesday Public Skate",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4722",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "Leddy Park"
-   },
-   {
-    "id": "9f433a4957c8",
-    "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-    "link": "https://www.meetup.com/burlington-bitcoin-meetup/events/316181150/",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "Zero Gravity Craft Brewery"
-   },
-   {
-    "id": "cf86d2d31f75",
-    "title": "Lean Six Sigma Green & Black Belt Combo Certification in Burlington, VT",
-    "link": "https://www.eventbrite.com/e/lean-six-sigma-green-black-belt-combo-certification-in-burlington-vt-tickets-1992552266467",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "1068 Williston Rd"
-   },
-   {
-    "id": "83ef329c174d",
-    "title": "PMP Certification In-Person Training in Burlington, VT",
-    "link": "https://www.eventbrite.com/e/pmp-certification-in-person-training-in-burlington-vt-tickets-1987586973141",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "1068 Williston Rd"
-   },
-   {
-    "id": "bbb2dd1115eb",
-    "title": "Lean Six Sigma Green Belt In-Person Training in Burlington, VT",
-    "link": "https://www.eventbrite.com/e/lean-six-sigma-green-belt-in-person-training-in-burlington-vt-tickets-1988864393941",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "1068 Williston Rd"
-   },
-   {
-    "id": "532053418571",
-    "title": "Become a Certified Data Analyst in Burlington, VT",
-    "link": "https://www.eventbrite.com/e/become-a-certified-data-analyst-in-burlington-vt-tickets-1994588757667",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "1068 Williston Rd"
-   },
-   {
-    "id": "b1960acaeacd",
-    "title": "Business Analyst (CBAP) Classroom Training in Burlington, VT",
-    "link": "https://www.eventbrite.com/e/business-analyst-cbap-classroom-training-in-burlington-vt-tickets-1995734479552",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "1068 Williston Rd"
-   },
-   {
-    "id": "ca7dfaeb947c",
-    "title": "CEH v12 Ethical Hacking Bootcamp – 4 Days Training in Burlington, VT",
-    "link": "https://www.eventbrite.com/e/ceh-v12-ethical-hacking-bootcamp-4-days-training-in-burlington-vt-tickets-1993654730968",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "1068 Williston Rd"
-   },
-   {
-    "id": "c47a5464dee2",
-    "title": "Data Science with Python Certification Training in Burlington, VT",
-    "link": "https://www.eventbrite.com/e/data-science-with-python-certification-training-in-burlington-vt-tickets-1994287928880",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "1068 Williston Rd"
-   },
-   {
-    "id": "c5a68362757f",
-    "title": "Become AI Project Ready – PMI-CPMAI Training Program in Vermont, VT",
-    "link": "https://www.eventbrite.com/e/become-ai-project-ready-pmi-cpmai-training-program-in-vermont-vt-tickets-1993811132770",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T09:00:00-04:00",
-    "venue": "300 Interstate Corporate Ctr"
-   },
-   {
-    "id": "c59258ece5f4",
-    "title": "PMP Training in Burlington, VT | PMBOK® 8th Edition | PMI Authorized",
-    "link": "https://www.eventbrite.com/e/pmp-training-in-burlington-vt-pmbok-8th-edition-pmi-authorized-tickets-1998737895851",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T09:00:00-07:00",
-    "venue": "1068 Williston Rd"
-   },
-   {
-    "id": "4d8135825688",
-    "title": "Library Outreach Specialist Office Hours",
-    "link": "https://fletcherfree.libcal.com/event/16213631",
-    "ts": "2026-09-06T09:05:39-04:00",
-    "start": "2026-09-08T10:00:00-04:00",
-    "venue": "Fletcher Free Library"
-   },
-   {
-    "id": "4876d251df53",
-    "title": "Farms to Plates: Vermont's Local Food System",
-    "link": "https://events.uvm.edu/event/farms-to-plates-vermonts-local-food-system",
-    "ts": "2026-07-11T06:44:31-04:00",
-    "start": "2026-09-08T10:00:00-04:00",
-    "venue": "Billings Library"
-   },
-   {
-    "id": "a8c3a2b608a8",
-    "title": "Network with EastRise Credit Union",
-    "link": "https://events.uvm.edu/event/tabling-ft-eastrise-credit-union",
-    "ts": "2026-08-18T16:58:50-04:00",
-    "start": "2026-09-08T10:00:00-04:00",
-    "venue": "Ifshin Hall"
-   },
-   {
-    "id": "b5e7de003649",
-    "title": "Opening Day Fall 2026",
-    "link": "https://events.uvm.edu/event/opening-day-fall-2026",
-    "ts": "2026-07-11T06:44:31-04:00",
-    "start": "2026-09-08T10:00:00-04:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
-    "id": "d39a873fe5d1",
-    "title": "'Champ: America’s Lake Monster' Exhibit",
-    "link": "https://community.sevendaysvt.com/event/champ-americas-lake-monster-exhibit-44279688",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T10:00:00-04:00",
-    "venue": "ECHO, Leahy Center for Lake Champlain"
-   },
-   {
-    "id": "05ac537aaf05",
-    "title": "Glass Factory and Storefront Open !!",
-    "link": "https://www.helloburlingtonvt.com/event/glass-factory-and-storefront-open-!!/5584/",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T10:00:00-04:00",
-    "venue": "AO Glass"
-   },
-   {
-    "id": "33d8b2437952",
-    "title": "Current Events",
-    "link": "https://brownelllibrary.org/event/current-events-2/2026-09-08/",
-    "ts": "2026-07-11T17:24:06-04:00",
-    "start": "2026-09-08T10:00:00-04:00",
-    "venue": "Brownell Library"
-   },
-   {
-    "id": "65b55f7f2830",
-    "title": "Playgroup",
-    "link": "https://calendar.time.ly/nt0nyapn/event/69322679/20260908103000",
-    "ts": "2026-08-01T17:35:25-04:00",
-    "start": "2026-09-08T10:30:00-04:00",
-    "venue": "Winooski Memorial Library"
-   },
-   {
-    "id": "7a8c6964220d",
-    "title": "Story Time",
-    "link": "https://community.sevendaysvt.com/event/story-time-37289491",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T10:30:00-04:00",
-    "venue": "Dorothy Alling Memorial Library"
-   },
-   {
-    "id": "c1aaeaaa6ba5",
-    "title": "'Penguin Island 3D'",
-    "link": "https://community.sevendaysvt.com/event/penguin-island-3d-45433780",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T10:30:00-04:00",
-    "venue": "ECHO, Leahy Center for Lake Champlain"
-   },
-   {
-    "id": "0653e69a9f9b",
-    "title": "Tuesday Stick & Puck",
-    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4853",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T10:45:00-04:00",
-    "venue": "Leddy Park"
-   },
-   {
-    "id": "42a7e5f63f87",
-    "title": "Sing-Along with Linda Bassick",
-    "link": "https://fletcherfree.libcal.com/event/16827642",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T11:00:00-04:00",
-    "venue": "Fletcher Free Library"
-   },
-   {
-    "id": "0b0b48de61cf",
-    "title": "Neighborhood Planning Assemblies: Community Partners Desk",
-    "link": "https://fletcherfree.libcal.com/event/17106652",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T11:00:00-04:00",
-    "venue": "Fletcher Free Library"
-   },
-   {
-    "id": "0ecf0f426b87",
-    "title": "Poetry Group",
-    "link": "https://southburlingtonlibrary.org/poetry-group",
-    "ts": "2026-07-23T17:40:53-04:00",
-    "start": "2026-09-08T11:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "41f0720123a0",
-    "title": "ActivitiesFest 2026",
-    "link": "https://events.uvm.edu/event/activitiesfest-2026",
-    "ts": "2026-07-11T06:44:31-04:00",
-    "start": "2026-09-08T11:00:00-04:00",
-    "venue": "UVM Davis Center"
-   },
-   {
-    "id": "e5ca59b55309",
-    "title": "'Wild Rescue 3D'",
-    "link": "https://community.sevendaysvt.com/event/wild-rescue-3d-45162401",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T11:00:00-04:00",
-    "venue": "ECHO, Leahy Center for Lake Champlain"
-   },
-   {
-    "id": "67a58b8f6586",
-    "title": "Cellular and Molecular Biology Research In Progress",
-    "link": "https://events.uvm.edu/event/cmb-seminar-research-in-progress",
-    "ts": "2026-09-04T18:31:30-04:00",
-    "start": "2026-09-08T11:30:00-04:00",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "df50cdb4d827",
-    "title": "802sDay",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78304375/20260908000000",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T11:30:00-04:00",
-    "venue": "Vermont Pub and Brewery"
-   },
-   {
-    "id": "068cd5260f22",
-    "title": "'Shark Kingdom 3D'",
-    "link": "https://community.sevendaysvt.com/event/shark-kingdom-3d-44971419",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T11:30:00-04:00",
-    "venue": "ECHO, Leahy Center for Lake Champlain"
-   },
-   {
-    "id": "d6fdda63774d",
-    "title": "Fantasy Football Draft Days at Switchback",
-    "link": "https://www.switchbackvt.com/beer-garden-events/fantasy-football-draft-days-w334n",
-    "ts": "2026-08-25T17:01:29-04:00",
-    "start": "2026-09-08T12:00:00-04:00",
-    "venue": "Switchback Brewing Company"
-   },
-   {
-    "id": "34e96f1cb05c",
-    "title": "'Dinosaurs of Antarctica 3D'",
-    "link": "https://community.sevendaysvt.com/event/dinosaurs-of-antarctica-3d-44804713",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T12:00:00-04:00",
-    "venue": "ECHO, Leahy Center for Lake Champlain"
-   },
-   {
-    "id": "c11e708de80e",
-    "title": "Cruise aboard the Spirit of Ethan Allen III",
-    "link": "https://www.helloburlingtonvt.com/event/cruise-aboard-the-spirit-of-ethan-allen-iii/6292/",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T12:00:00-04:00",
-    "venue": "Spirit of Ethan Allen"
-   },
-   {
-    "id": "3d46c1021053",
-    "title": "Tech Help by Appointment",
-    "link": "https://southburlingtonlibrary.org/technology-help2",
-    "ts": "2026-08-12T17:26:55-04:00",
-    "start": "2026-09-08T13:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "7c2c83444de3",
-    "title": "Afternoon Tech Help",
-    "link": "https://community.sevendaysvt.com/event/afternoon-tech-help-43003910",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T13:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "bb409472a77c",
-    "title": "Graduate Writing Center Writing Group",
-    "link": "https://events.uvm.edu/event/graduate-writing-center-writing-group",
-    "ts": "2026-08-25T17:01:29-04:00",
-    "start": "2026-09-08T13:30:00-04:00",
-    "venue": ""
-   },
-   {
-    "id": "098191a76fc1",
-    "title": "The Ultimate Chocolate Tasting",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78391346/20260908140000",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T14:00:00-04:00",
-    "venue": "Lake Champlain Chocolates"
-   },
-   {
-    "id": "d1e20ecdb289",
-    "title": "PCP (Puppets, Crankies, & Pantomime)",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/3017/1788892200000",
-    "ts": "2026-09-08T18:57:58-04:00",
-    "start": "2026-09-08T14:30:00-04:00",
-    "venue": "Light Club Lamp Shop"
-   },
-   {
-    "id": "a228a67b7e56",
-    "title": "PCP (Puppets, Crankies, & Pantomime)",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/3017/1788892200000",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T14:30:00-04:00",
-    "venue": "Radio Bean"
-   },
-   {
-    "id": "d38f8187fc9e",
-    "title": "Craftytown",
-    "link": "https://community.sevendaysvt.com/event/craftytown-45447970",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T15:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "6d9dea997ce5",
-    "title": "FREEWAY RYDE - Freeway Clyde & Ryan Miller reimagine Tom Petty's Wildflowers",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/3009/1788897600000",
-    "ts": "2026-09-05T18:16:35-04:00",
-    "start": "2026-09-08T16:00:00-04:00",
-    "venue": "Radio Bean"
-   },
-   {
-    "id": "01bd0dfa36c0",
-    "title": "Interfaith Welcome Back Party",
-    "link": "https://events.uvm.edu/event/interfaith-welcome-back-party-2026",
-    "ts": "2026-09-08T18:57:58-04:00",
-    "start": "2026-09-08T16:00:00-04:00",
-    "venue": "Interfaith Center"
-   },
-   {
-    "id": "a440b4322c78",
-    "title": "Writer's Circle",
-    "link": "https://community.sevendaysvt.com/event/writers-circle-44975946",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T16:00:00-04:00",
-    "venue": "Pathways Vermont Morgan's Place Peer Support Center"
-   },
-   {
-    "id": "dc9e9c454794",
-    "title": "Half Priced Oysters at La Reprise",
-    "link": "https://www.helloburlingtonvt.com/event/half-priced-oysters-at-la-reprise/7709/",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T16:00:00-04:00",
-    "venue": "La Reprise"
-   },
-   {
-    "id": "6639daa1e30a",
-    "title": "Sandbox - Free Sewing Class for beginners",
-    "link": "https://www.helloburlingtonvt.com/event/sandbox-free-sewing-class-for-beginners/5596/",
-    "ts": "2026-07-14T17:36:01-04:00",
-    "start": "2026-09-08T16:00:00-04:00",
-    "venue": "688 pine street. Burlington- VT 05401"
-   },
-   {
-    "id": "c01081a279a4",
-    "title": "Skiff Oyster Hour",
-    "link": "https://www.helloburlingtonvt.com/event/skiff-oyster-hour/5005/",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08T16:00:00-04:00",
-    "venue": "Hilton Burlington Lake Champlain"
-   },
-   {
-    "id": "af3bad565d62",
-    "title": "Read with Sammy",
-    "link": "https://brownelllibrary.org/event/read-with-sammy/",
-    "ts": "2026-08-24T17:04:08-04:00",
-    "start": "2026-09-08T16:00:00-04:00",
-    "venue": "Brownell Library"
-   },
-   {
-    "id": "841e68458e88",
-    "title": "Interfaith Welcome Back Party 2026",
-    "link": "https://events.uvm.edu/event/interfaith-welcome-back-party-2026",
-    "ts": "2026-09-04T09:44:35-04:00",
-    "start": "2026-09-08T16:00:00-04:00",
-    "venue": "Interfaith Center"
-   },
-   {
-    "id": "7452fa1a035f",
-    "title": "Graduate Student Health Insurance Overview + Q&A",
-    "link": "https://events.uvm.edu/event/graduate-student-health-insurance-overview-qa",
-    "ts": "2026-08-31T11:27:35-04:00",
-    "start": "2026-09-08T16:30:00-04:00",
-    "venue": "UVM Davis Center"
-   },
-   {
-    "id": "70bbd09fbe9d",
-    "title": "MATH Help Sessions",
-    "link": "https://events.uvm.edu/event/math-help-sessions",
-    "ts": "2026-08-17T17:00:55-04:00",
-    "start": "2026-09-08T16:30:00-04:00",
-    "venue": "Perkins Building"
-   },
-   {
-    "id": "526f02dda33a",
-    "title": "Traditional Tuesday",
-    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
-    "ts": "2026-07-14T17:36:01-04:00",
-    "start": "2026-09-08T16:30:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
-    "id": "a47cff4b9bed",
-    "title": "Super Smash Tuesdays",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78077209/20260908170000",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T17:00:00-04:00",
-    "venue": "RiRa Irish Pub"
-   },
-   {
-    "id": "abe9c9d60806",
-    "title": "SGA First-Year Elections Info Sessions",
-    "link": "https://events.uvm.edu/event/sga-first-year-elections-info-sessions",
-    "ts": "2026-09-05T01:37:25-04:00",
-    "start": "2026-09-08T17:00:00-04:00",
-    "venue": "UVM Davis Center"
-   },
-   {
-    "id": "d76e9b555bef",
-    "title": "Students Demand Action Weekly Meeting",
-    "link": "https://www.champlain.edu/event/weekly-students-demand-action/2026-09-08/",
-    "ts": "2026-09-04T09:44:35-04:00",
-    "start": "2026-09-08T17:00:00-04:00",
-    "venue": "Atrium, IDX Student Life Center"
-   },
-   {
-    "id": "49bb43cd4846",
-    "title": "Half Priced Cocktails at The Daily Planet",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78067612/20260908170000",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T17:00:00-04:00",
-    "venue": ""
-   },
-   {
-    "id": "cadf993ef257",
-    "title": "$10 Martini Tuesday",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78340639/20260908170000",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T17:00:00-04:00",
-    "venue": "Doma Bar"
-   },
-   {
-    "id": "5e0d79456598",
-    "title": "Pause-Café Mardi",
-    "link": "https://community.sevendaysvt.com/event/pause-cafe-mardi-44550535",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T17:00:00-04:00",
-    "venue": "Burlington Bay Market & Café"
-   },
-   {
-    "id": "89e625ac9068",
-    "title": "Community Meditation",
-    "link": "https://community.sevendaysvt.com/event/community-meditation-41985684",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T17:15:00-04:00",
-    "venue": "First Unitarian Universalist Society of Burlington"
-   },
-   {
-    "id": "0be9d27d7e79",
-    "title": "Crafters Drop-In",
-    "link": "https://fletcherfree.libcal.com/event/16927747",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T18:00:00-04:00",
-    "venue": "Fletcher Free Library"
-   },
-   {
-    "id": "1484c381abbd",
-    "title": "Playing Fields",
-    "link": "https://www.flynnvt.org/Events/2026/9/playing-fields",
-    "ts": "2026-08-10T17:24:41-04:00",
-    "start": "2026-09-08T18:00:00-04:00",
-    "venue": ""
-   },
-   {
-    "id": "291f3182b55d",
-    "title": "Oli D Remembers w/ Bo Malcom & Ashna Maj Hille",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/2887/1788904800000",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-09-08T18:00:00-04:00",
-    "venue": "Radio Bean"
-   },
-   {
-    "id": "1a7be10489e0",
-    "title": "Local Dork",
-    "link": "https://foambrewers.com/events/local-dork-85",
-    "ts": "2026-08-31T20:04:22-04:00",
-    "start": "2026-09-08T18:00:00-04:00",
-    "venue": "Foam Brewers"
-   },
-   {
-    "id": "11fc71a1224a",
-    "title": "Bashment Tuesday",
-    "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T18:00:00-04:00",
-    "venue": "Akes' Place"
-   },
-   {
-    "id": "34c814a8ac3c",
-    "title": "Vermont Figure Drawing Collective",
-    "link": "https://www.helloburlingtonvt.com/event/vermont-figure-drawing-collective/5712/",
-    "ts": "2026-07-14T17:36:01-04:00",
-    "start": "2026-09-08T18:00:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
-    "id": "a2c6b7ace1ba",
-    "title": "Screening of Boogie Nights (1997)",
-    "link": "https://events.uvm.edu/event/screening-of-boogie-nights-1997",
-    "ts": "2026-09-07T18:59:23-04:00",
-    "start": "2026-09-08T19:00:00-04:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
-    "id": "0118bd8aa2ea",
-    "title": "'Nacho Libre'",
-    "link": "https://community.sevendaysvt.com/event/nacho-libre-45449948",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-08T19:00:00-04:00",
-    "venue": "Main Street Landing Performing Arts Center"
-   },
-   {
-    "id": "6fea2b5b75a2",
-    "title": "All That Jazz Open Mic Comedy",
-    "link": "https://community.sevendaysvt.com/event/all-that-jazz-open-mic-comedy-44620264",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T19:00:00-04:00",
-    "venue": "The 126"
-   },
-   {
-    "id": "49a15c1ee0e0",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T19:00:00-04:00",
-    "venue": "Saint Michael's College"
-   },
-   {
-    "id": "db797b3e41f5",
-    "title": "Trivia Tuesday",
-    "link": "https://community.sevendaysvt.com/event/trivia-tuesday-37688455",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T19:00:00-04:00",
-    "venue": "Vermont Cider Lab"
-   },
-   {
-    "id": "7376df25454c",
-    "title": "#NotJustFatigue Documentary Screening",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78455107/20260908193000",
-    "ts": "2026-09-02T18:50:06-04:00",
-    "start": "2026-09-08T19:30:00-04:00",
-    "venue": "Main Street Landing Performing Arts Center"
-   },
-   {
-    "id": "c0378b8480d1",
-    "title": "#NotJustFatigue Documentary Short (15min)",
-    "link": "https://community.sevendaysvt.com/event/notjustfatigue-documentary-short-15min-45474063",
-    "ts": "2026-09-04T09:44:35-04:00",
-    "start": "2026-09-08T19:30:00-04:00",
-    "venue": "Main Street Landing Performing Arts Center"
-   },
-   {
-    "id": "2157a438c311",
-    "title": "Lavendair w/ Isabel and Friends (Sponsored by Dome City)",
-    "link": "https://www.monkeyhousevt.com/events/lavendair-w-isabel-and-friends-sponsored-by-dome-city",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-09-08T19:30:00.947000-04:00",
-    "venue": "The Monkey House"
-   },
-   {
-    "id": "1a2b6ce7b08a",
-    "title": "Hammydown & Addie Herbert",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/3016/1788912000000",
-    "ts": "2026-09-07T18:59:23-04:00",
-    "start": "2026-09-08T20:00:00-04:00",
-    "venue": "Light Club Lamp Shop"
-   },
-   {
-    "id": "08b2f2f33329",
-    "title": "Dead Is Alive with Dobbs' Dead",
-    "link": "https://community.sevendaysvt.com/event/dead-is-alive-with-dobbs-dead-43938767",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T20:00:00-04:00",
-    "venue": "Einstein's Tap House"
-   },
-   {
-    "id": "768ed1b2c6f2",
-    "title": "HONKY TONK TUESDAY: Marley Hale & Wild Leek River",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/2864/1788913800000",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-09-08T20:30:00-04:00",
-    "venue": "Radio Bean"
-   },
-   {
-    "id": "8280361f3850",
-    "title": "The Champlayers: 12 Angry Jurors Auditions",
-    "link": "https://www.champlain.edu/event/the-champlayers-12-angry-jurors-auditions/2026-09-08/",
-    "ts": "2026-09-07T11:14:17-04:00",
-    "start": "2026-09-08T20:30:00-04:00",
-    "venue": "Alumni Auditorium, Center for Communication & Creative Media (CCM)"
-   },
-   {
-    "id": "5496f7086839",
-    "title": "Big Easy Tuesdays with Jon McBride",
-    "link": "https://community.sevendaysvt.com/event/big-easy-tuesdays-with-jon-mcbride-44620265",
-    "ts": "2026-07-10T17:56:00-04:00",
-    "start": "2026-09-08T21:00:00-04:00",
-    "venue": "The 126"
-   },
-   {
-    "id": "0c784fe59cdb",
-    "title": "KARAOKE WITH A LIVE BAND ft. Marshall Dominguez, Van Garrison, Evan Barker, & Zach Brownstein",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/3018/1788926340000",
-    "ts": "2026-09-08T18:57:58-04:00",
-    "start": "2026-09-08T23:59:00-04:00",
-    "venue": "Radio Bean"
-   },
-   {
-    "id": "fb066f8608b7",
-    "title": "THE WORMDOGS CLOSE OUT THIS ERA OF THE BEAN",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/2987/1788926340000",
-    "ts": "2026-09-05T18:16:35-04:00",
-    "start": "2026-09-08T23:59:00-04:00",
-    "venue": "Radio Bean"
-   },
-   {
-    "id": "e9084577923b",
-    "title": "Everything is Everything: Will Kasso Condry",
-    "link": "https://www.burlingtoncityarts.org/exhibition/everything-everything-will-kasso-condry",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "BCA Center"
-   },
-   {
-    "id": "052cf697bb57",
-    "title": "Dream / Mộng : Veronica Pham",
-    "link": "https://www.burlingtoncityarts.org/exhibition/dream-mong-veronica-pham",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "BCA Center"
-   },
-   {
-    "id": "86d9296746a8",
-    "title": "Color & Scale: Leah Barranco",
-    "link": "https://www.burlingtoncityarts.org/exhibition/color-scale-leah-barranco",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "BCA Center"
-   },
-   {
-    "id": "257c1d7a9d62",
-    "title": "James Secor",
-    "link": "https://community.sevendaysvt.com/event/james-secor-45479384",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Village Wine and Coffee"
-   },
-   {
-    "id": "fe110b871ecc",
-    "title": "'Highly Curated'",
-    "link": "https://community.sevendaysvt.com/event/highly-curated-45270637",
-    "ts": "2026-09-06T09:05:39-04:00",
-    "start": "2026-09-08",
-    "venue": "Gaston Weed Company"
-   },
-   {
-    "id": "eb6390a4a15f",
-    "title": "Art at the Airport: Mike Sipe",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-mike-sipe-45304801",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Patrick Leahy Burlington International Airport"
-   },
-   {
-    "id": "688f9e71b8f7",
-    "title": "Art at the Airport: Natasha Bogar",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-natasha-bogar-45304804",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Patrick Leahy Burlington International Airport"
-   },
-   {
-    "id": "517bb93de866",
-    "title": "Art at the Hospital: Julie Dunigan",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-julie-dunigan-45101780",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "e71b400b714c",
-    "title": "Art at the Hospital: Greg Nicolai",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-greg-nicolai-45101792",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "d22ec037f7f5",
-    "title": "Art at the Hospital: Francois de Melogue",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-francois-de-melogue-45101783",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "d7f58c587b5e",
-    "title": "Art at the Hospital: Becky Chappell",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-becky-chappell-45101785",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "db2f04fc4a7d",
-    "title": "Art at the Hospital: Nancy Chapman",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-nancy-chapman-45101777",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "9de0395606fc",
-    "title": "Art at the Hospital: Todd Cummings",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-todd-cummings-45101789",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "UVM Medical Center"
-   },
-   {
-    "id": "c5af74f50dc4",
-    "title": "'Painters of Vermont, 1900-1955'",
-    "link": "https://community.sevendaysvt.com/event/painters-of-vermont-1900-1955-45436203",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "J. Kenneth Fine Art"
-   },
-   {
-    "id": "62764b116c98",
-    "title": "Art at City Hall: Caleb Kenna",
-    "link": "https://community.sevendaysvt.com/event/art-at-city-hall-caleb-kenna-45304810",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Burlington City Hall"
-   },
-   {
-    "id": "2a158c77ee61",
-    "title": "'Norman Rockwell: At Home in Vermont'",
-    "link": "https://community.sevendaysvt.com/event/norman-rockwell-at-home-in-vermont-44831320",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Shelburne Museum"
-   },
-   {
-    "id": "82029ac483a2",
-    "title": "Christina Watka",
-    "link": "https://community.sevendaysvt.com/event/christina-watka-45334745",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "The S.P.A.C.E. Gallery"
-   },
-   {
-    "id": "6daadd6a4936",
-    "title": "'The Cut & Sew Show'",
-    "link": "https://community.sevendaysvt.com/event/the-cut-and-sew-show-45449069",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Maglianero"
-   },
-   {
-    "id": "6d930629b82e",
-    "title": "'America 250 at Shelburne Museum'",
-    "link": "https://community.sevendaysvt.com/event/america-250-at-shelburne-museum-45233307",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Shelburne Museum"
-   },
-   {
-    "id": "019a8d5bb615",
-    "title": "'On Point: Needlework from the Garthwaite Family Collection'",
-    "link": "https://community.sevendaysvt.com/event/on-point-needlework-from-the-garthwaite-family-collection-45029018",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Shelburne Museum"
-   },
-   {
-    "id": "10c0c80fdea3",
-    "title": "Art at the Airport: Matt Larson",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-matt-larson-45304807",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Patrick Leahy Burlington International Airport"
-   },
-   {
-    "id": "dd6330cf40fa",
-    "title": "'Wings, Waters, Ways'",
-    "link": "https://community.sevendaysvt.com/event/wings-waters-ways-45123659",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Birds of Vermont Museum"
-   },
-   {
-    "id": "58cc87e6450d",
-    "title": "'Next Level: Game History Collection'",
-    "link": "https://community.sevendaysvt.com/event/next-level-game-history-collection-45334614",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Champlain College"
-   },
-   {
-    "id": "bd974090ca56",
-    "title": "'Investigating Child Labor'",
-    "link": "https://community.sevendaysvt.com/event/investigating-child-labor-44989208",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Heritage Winooski Mill Museum"
-   },
-   {
-    "id": "4997b29e3cec",
-    "title": "Ashley Stagner",
-    "link": "https://community.sevendaysvt.com/event/ashley-stagner-44623507",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Artspace 106 at the Men's Room"
-   },
-   {
-    "id": "2e8be48a4219",
-    "title": "'Belonging: A New Collections Gallery'",
-    "link": "https://community.sevendaysvt.com/event/belonging-a-new-collections-gallery-42714240",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Fleming Museum of Art"
-   },
-   {
-    "id": "cebd964d7134",
-    "title": "'Create, Community, Hope'",
-    "link": "https://community.sevendaysvt.com/event/create-community-hope-45462652",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Flynndog Gallery"
-   },
-   {
-    "id": "17b7094a68d6",
-    "title": "Robert Linde",
-    "link": "https://community.sevendaysvt.com/event/robert-linde-45483408",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-08",
-    "venue": "Emile A. Gruppe Gallery"
-   },
-   {
-    "id": "1cd0f538463d",
-    "title": "Scavenger Hunt: Give a cow a cookie",
-    "link": "https://brownelllibrary.org/event/scavenger-hunt-give-a-cow-a-cookie/",
-    "ts": "2026-08-24T17:04:08-04:00",
-    "start": "2026-09-08",
-    "venue": "Brownell Library"
-   },
    {
     "id": "5cd7920f2e4d",
     "title": "VT / NH Society For Respiratory Care Annual Educational Conference",
@@ -2779,6 +1857,22 @@
     "ts": "2026-07-11T17:24:06-04:00",
     "start": "2026-09-09T08:00:00-04:00",
     "venue": "UVM Medical Center"
+   },
+   {
+    "id": "39cfaa9db2f3",
+    "title": "Middle Grade Grab & Go: Book Page Flowers",
+    "link": "https://southburlingtonlibrary.org/middle-grade-grab-and-go-book-page-flowers",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T09:00:00-04:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "273913f697be",
+    "title": "Trolley tours",
+    "link": "https://www.helloburlingtonvt.com/event/trolley-tours/4244/",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T09:00:00-04:00",
+    "venue": "Perkins Pier"
    },
    {
     "id": "626910fa949a",
@@ -2861,6 +1955,22 @@
     "venue": "St. George Historic Schoolhouse"
    },
    {
+    "id": "4bf028bf34a4",
+    "title": "'Champ: America’s Lake Monster' Exhibit",
+    "link": "https://community.sevendaysvt.com/event/champ-americas-lake-monster-exhibit-44279688",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T10:00:00-04:00",
+    "venue": "ECHO, Leahy Center for Lake Champlain"
+   },
+   {
+    "id": "2a889d12b913",
+    "title": "Glass Factory and Storefront Open !!",
+    "link": "https://www.helloburlingtonvt.com/event/glass-factory-and-storefront-open-!!/5584/",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T10:00:00-04:00",
+    "venue": "AO Glass"
+   },
+   {
     "id": "a2fb77495797",
     "title": "Babytime",
     "link": "https://southburlingtonlibrary.org/babytime-wednesday-mornings",
@@ -2933,6 +2043,14 @@
     "venue": "Switchback Brewing Company"
    },
    {
+    "id": "e6483b92992a",
+    "title": "Cruise aboard the Spirit of Ethan Allen III",
+    "link": "https://www.helloburlingtonvt.com/event/cruise-aboard-the-spirit-of-ethan-allen-iii/6292/",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T12:00:00-04:00",
+    "venue": "Spirit of Ethan Allen"
+   },
+   {
     "id": "22bdd6b02b37",
     "title": "Wednesday Public Skate",
     "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4755",
@@ -2957,6 +2075,14 @@
     "venue": "Howe Library"
    },
    {
+    "id": "19cf8d4112ef",
+    "title": "Library Outreach Specialist Office Hours",
+    "link": "https://fletcherfree.libcal.com/event/16213738",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T12:30:00-04:00",
+    "venue": "Fletcher Free Library"
+   },
+   {
     "id": "8de20f92df5f",
     "title": "Soil Chemistry at the Plant Interface: Reducing Contaminant Exposure and Improving Nutrient Supply ft. Hao Chen",
     "link": "https://events.uvm.edu/event/james-marvin-seminar-series-hao-chen",
@@ -2979,6 +2105,14 @@
     "ts": "2026-07-11T06:44:31-04:00",
     "start": "2026-09-09T14:00:00-04:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "dab3ebd80f24",
+    "title": "The Ultimate Chocolate Tasting",
+    "link": "https://calendar.time.ly/vfaca7kw/event/78391346/20260909140000",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T14:00:00-04:00",
+    "venue": "Lake Champlain Chocolates"
    },
    {
     "id": "387b57449b23",
@@ -3077,6 +2211,22 @@
     "venue": "34 South Williams Street"
    },
    {
+    "id": "cbd2b6992657",
+    "title": "Half Priced Oysters at La Reprise",
+    "link": "https://www.helloburlingtonvt.com/event/half-priced-oysters-at-la-reprise/7709/",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T16:00:00-04:00",
+    "venue": "La Reprise"
+   },
+   {
+    "id": "d6ef130dc9ca",
+    "title": "Skiff Oyster Hour",
+    "link": "https://www.helloburlingtonvt.com/event/skiff-oyster-hour/5005/",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T16:00:00-04:00",
+    "venue": "Hilton Burlington Lake Champlain"
+   },
+   {
     "id": "6ee2135802b5",
     "title": "Wednesday $10.00 Burger Night",
     "link": "https://www.helloburlingtonvt.com/event/wednesday-%2410-00-burger-night/6605/",
@@ -3085,12 +2235,12 @@
     "venue": "Hilton Burlington Lake Champlain"
    },
    {
-    "id": "6df33c267bab",
-    "title": "SGA First-Year Elections Info Sessions",
-    "link": "https://events.uvm.edu/event/sga-first-year-elections-info-sessions",
-    "ts": "2026-09-05T01:37:25-04:00",
-    "start": "2026-09-09T17:00:00-04:00",
-    "venue": "UVM Davis Center"
+    "id": "572ef2e7d41f",
+    "title": "MATH Help Sessions",
+    "link": "https://events.uvm.edu/event/math-help-sessions",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T16:30:00-04:00",
+    "venue": "Perkins Building"
    },
    {
     "id": "d00124328a62",
@@ -3115,6 +2265,14 @@
     "ts": "2026-08-17T17:00:55-04:00",
     "start": "2026-09-09T17:00:00-04:00",
     "venue": "Innovation Hall"
+   },
+   {
+    "id": "6df33c267bab",
+    "title": "SGA First-Year Elections Info Sessions",
+    "link": "https://events.uvm.edu/event/sga-first-year-elections-info-sessions",
+    "ts": "2026-09-05T01:37:25-04:00",
+    "start": "2026-09-09T17:00:00-04:00",
+    "venue": "UVM Davis Center"
    },
    {
     "id": "1374b09bf846",
@@ -3149,6 +2307,14 @@
     "venue": ""
    },
    {
+    "id": "80f7ea909237",
+    "title": "Yarn & Yak",
+    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
+    "ts": "2026-07-11T17:24:06-04:00",
+    "start": "2026-09-09T17:00:00-04:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
     "id": "83ec2ca4f2d5",
     "title": "The All-Inclusive Dyke-Tacular",
     "link": "https://community.sevendaysvt.com/event/the-all-inclusive-dyke-tacular-44828742",
@@ -3163,14 +2329,6 @@
     "ts": "2026-07-11T17:24:06-04:00",
     "start": "2026-09-09T17:00:00-04:00",
     "venue": "Must Love Yarn"
-   },
-   {
-    "id": "80f7ea909237",
-    "title": "Yarn & Yak",
-    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
-    "ts": "2026-07-11T17:24:06-04:00",
-    "start": "2026-09-09T17:00:00-04:00",
-    "venue": "Milton Artists' Guild"
    },
    {
     "id": "335cd2fbc83d",
@@ -3205,6 +2363,14 @@
     "venue": "Shelburne Museum"
    },
    {
+    "id": "b31107ca4f36",
+    "title": "Playing Fields",
+    "link": "https://www.flynnvt.org/Events/2026/9/playing-fields",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09T18:00:00-04:00",
+    "venue": ""
+   },
+   {
     "id": "51edd582a3a7",
     "title": "Trash for the Trope: A Romance Lover's Book Club",
     "link": "https://calendar.time.ly/vfaca7kw/event/78413668/20260909180000",
@@ -3237,6 +2403,14 @@
     "venue": "The Media Factory"
    },
    {
+    "id": "9fa74ae0a05d",
+    "title": "Proud Women Play Music",
+    "link": "https://community.sevendaysvt.com/event/proud-women-play-music-45485982",
+    "ts": "2026-09-08T09:49:41-04:00",
+    "start": "2026-09-09T18:00:00-04:00",
+    "venue": "Red Square"
+   },
+   {
     "id": "e45010594365",
     "title": "Toastmasters of Greater Burlington",
     "link": "https://community.sevendaysvt.com/event/toastmasters-of-greater-burlington-43797785",
@@ -3253,20 +2427,20 @@
     "venue": "Church Street Marketplace"
    },
    {
-    "id": "125a55a5eafa",
-    "title": "Recovery Dharma",
-    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
-    "ts": "2026-07-11T17:24:06-04:00",
-    "start": "2026-09-09T18:00:00-04:00",
-    "venue": "First United Methodist Church"
-   },
-   {
     "id": "260136db8e3e",
     "title": "Community Cooking",
     "link": "https://community.sevendaysvt.com/event/community-cooking-42481660",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-09T18:00:00-04:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "125a55a5eafa",
+    "title": "Recovery Dharma",
+    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
+    "ts": "2026-07-11T17:24:06-04:00",
+    "start": "2026-09-09T18:00:00-04:00",
+    "venue": "First United Methodist Church"
    },
    {
     "id": "0d1c371ca847",
@@ -3283,14 +2457,6 @@
     "ts": "2026-08-22T05:55:06-04:00",
     "start": "2026-09-09T18:00:00-04:00",
     "venue": "The Boardroom"
-   },
-   {
-    "id": "9fa74ae0a05d",
-    "title": "Proud Women Play Music",
-    "link": "https://community.sevendaysvt.com/event/proud-women-play-music-45485982",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-09T18:00:00-04:00",
-    "venue": "Red Square"
    },
    {
     "id": "55c88f9078d8",
@@ -3317,14 +2483,6 @@
     "venue": "Citizen Cider"
    },
    {
-    "id": "6c7ed2d3683a",
-    "title": "Soup for Two, Salmo, Hannah Roberts, Perry Donovan",
-    "link": "https://community.sevendaysvt.com/event/soup-for-two-salmo-hannah-roberts-perry-donovan-45463271",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-09-09T18:30:00-04:00",
-    "venue": "Radio Bean"
-   },
-   {
     "id": "36acb577724d",
     "title": "Thacher Hurd",
     "link": "https://community.sevendaysvt.com/event/thacher-hurd-45444916",
@@ -3339,6 +2497,14 @@
     "ts": "2026-09-08T18:57:58-04:00",
     "start": "2026-09-09T18:30:00-04:00",
     "venue": "Citizen Cider"
+   },
+   {
+    "id": "6c7ed2d3683a",
+    "title": "Soup for Two, Salmo, Hannah Roberts, Perry Donovan",
+    "link": "https://community.sevendaysvt.com/event/soup-for-two-salmo-hannah-roberts-perry-donovan-45463271",
+    "ts": "2026-08-29T18:47:34-04:00",
+    "start": "2026-09-09T18:30:00-04:00",
+    "venue": "Radio Bean"
    },
    {
     "id": "aeaf525c3bd9",
@@ -3503,23 +2669,23 @@
    {
     "id": "bbd97c78853e",
     "title": "Everything is Everything: Will Kasso Condry",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78415212/20260715000000",
+    "link": "https://www.burlingtoncityarts.org/exhibition/everything-everything-will-kasso-condry",
     "ts": "2026-09-08T09:49:41-04:00",
     "start": "2026-09-09",
     "venue": "BCA Center"
    },
    {
-    "id": "d0aec80f5ccd",
+    "id": "c1370757ce95",
     "title": "Dream / Mộng : Veronica Pham",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78415214/20260715000000",
-    "ts": "2026-09-08T09:49:41-04:00",
+    "link": "https://www.burlingtoncityarts.org/exhibition/dream-mong-veronica-pham",
+    "ts": "2026-09-09T09:52:26-04:00",
     "start": "2026-09-09",
     "venue": "BCA Center"
    },
    {
     "id": "68bdc7111ce4",
     "title": "Color & Scale: Leah Barranco",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78415215/20260715000000",
+    "link": "https://www.burlingtoncityarts.org/exhibition/color-scale-leah-barranco",
     "ts": "2026-09-08T09:49:41-04:00",
     "start": "2026-09-09",
     "venue": "BCA Center"
@@ -3533,12 +2699,220 @@
     "venue": "Gaston Weed Company"
    },
    {
+    "id": "16b5c6ac805a",
+    "title": "Art at the Airport: Mike Sipe",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-mike-sipe-45304801",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Patrick Leahy Burlington International Airport"
+   },
+   {
+    "id": "f9800875124a",
+    "title": "Art at the Airport: Natasha Bogar",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-natasha-bogar-45304804",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Patrick Leahy Burlington International Airport"
+   },
+   {
+    "id": "17c40095c9d1",
+    "title": "Art at the Hospital: Francois de Melogue",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-francois-de-melogue-45101783",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "UVM Medical Center"
+   },
+   {
     "id": "475c8ce8affa",
     "title": "El Towle",
     "link": "https://community.sevendaysvt.com/event/el-towle-45447973",
     "ts": "2026-09-08T09:49:41-04:00",
     "start": "2026-09-09",
     "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "4c442a927586",
+    "title": "Art at the Hospital: Becky Chappell",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-becky-chappell-45101785",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "UVM Medical Center"
+   },
+   {
+    "id": "70883627c388",
+    "title": "Art at the Hospital: Nancy Chapman",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-nancy-chapman-45101777",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "UVM Medical Center"
+   },
+   {
+    "id": "33a78c753e0c",
+    "title": "James Secor",
+    "link": "https://community.sevendaysvt.com/event/james-secor-45479384",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Village Wine and Coffee"
+   },
+   {
+    "id": "738c5260f7a9",
+    "title": "Art at the Hospital: Todd Cummings",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-todd-cummings-45101789",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "UVM Medical Center"
+   },
+   {
+    "id": "77b8e233b613",
+    "title": "Art at the Hospital: Julie Dunigan",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-julie-dunigan-45101780",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "UVM Medical Center"
+   },
+   {
+    "id": "fd0288e37156",
+    "title": "'Library Cards from All Over the Country (and Beyond!)'",
+    "link": "https://community.sevendaysvt.com/event/library-cards-from-all-over-the-country-and-beyond-45448202",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "bb027f84d058",
+    "title": "Art at the Hospital: Greg Nicolai",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-greg-nicolai-45101792",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "UVM Medical Center"
+   },
+   {
+    "id": "5e858f2260a8",
+    "title": "'Painters of Vermont, 1900-1955'",
+    "link": "https://community.sevendaysvt.com/event/painters-of-vermont-1900-1955-45436203",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "J. Kenneth Fine Art"
+   },
+   {
+    "id": "d40905c1d494",
+    "title": "Art at City Hall: Caleb Kenna",
+    "link": "https://community.sevendaysvt.com/event/art-at-city-hall-caleb-kenna-45304810",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Burlington City Hall"
+   },
+   {
+    "id": "8912b0a577a8",
+    "title": "'America 250 at Shelburne Museum'",
+    "link": "https://community.sevendaysvt.com/event/america-250-at-shelburne-museum-45233307",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Shelburne Museum"
+   },
+   {
+    "id": "35f4516d17aa",
+    "title": "Christina Watka",
+    "link": "https://community.sevendaysvt.com/event/christina-watka-45334745",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "f3f42e4267d6",
+    "title": "'On Point: Needlework from the Garthwaite Family Collection'",
+    "link": "https://community.sevendaysvt.com/event/on-point-needlework-from-the-garthwaite-family-collection-45029018",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Shelburne Museum"
+   },
+   {
+    "id": "2a0543b593cd",
+    "title": "'The Cut & Sew Show'",
+    "link": "https://community.sevendaysvt.com/event/the-cut-and-sew-show-45449069",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Maglianero"
+   },
+   {
+    "id": "15ee6f7136e0",
+    "title": "'Wings, Waters, Ways'",
+    "link": "https://community.sevendaysvt.com/event/wings-waters-ways-45123659",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Birds of Vermont Museum"
+   },
+   {
+    "id": "0a4029a91216",
+    "title": "'Norman Rockwell: At Home in Vermont'",
+    "link": "https://community.sevendaysvt.com/event/norman-rockwell-at-home-in-vermont-44831320",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Shelburne Museum"
+   },
+   {
+    "id": "5aed6de03986",
+    "title": "Art at the Airport: Matt Larson",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-matt-larson-45304807",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Patrick Leahy Burlington International Airport"
+   },
+   {
+    "id": "96de5ff63ffe",
+    "title": "'Next Level: Game History Collection'",
+    "link": "https://community.sevendaysvt.com/event/next-level-game-history-collection-45334614",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Champlain College"
+   },
+   {
+    "id": "b1f40d978f62",
+    "title": "Ashley Stagner",
+    "link": "https://community.sevendaysvt.com/event/ashley-stagner-44623507",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Artspace 106 at the Men's Room"
+   },
+   {
+    "id": "d64df02d8095",
+    "title": "'Belonging: A New Collections Gallery'",
+    "link": "https://community.sevendaysvt.com/event/belonging-a-new-collections-gallery-42714240",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Fleming Museum of Art"
+   },
+   {
+    "id": "9b92717d6f18",
+    "title": "'Investigating Child Labor'",
+    "link": "https://community.sevendaysvt.com/event/investigating-child-labor-44989208",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Heritage Winooski Mill Museum"
+   },
+   {
+    "id": "37103b56647d",
+    "title": "'Create, Community, Hope'",
+    "link": "https://community.sevendaysvt.com/event/create-community-hope-45462652",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Flynndog Gallery"
+   },
+   {
+    "id": "b742ba194bf2",
+    "title": "Robert Linde",
+    "link": "https://community.sevendaysvt.com/event/robert-linde-45483408",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-09",
+    "venue": "Emile A. Gruppe Gallery"
+   },
+   {
+    "id": "d0aec80f5ccd",
+    "title": "Dream / Mộng : Veronica Pham",
+    "link": "https://calendar.time.ly/vfaca7kw/event/78415214/20260715000000",
+    "ts": "2026-09-08T09:49:41-04:00",
+    "start": "2026-09-09",
+    "venue": "BCA Center"
    },
    {
     "id": "bab385bd8f61",
@@ -3653,6 +3027,14 @@
     "venue": "Dorothy Alling Memorial Library"
    },
    {
+    "id": "3d3009840cb8",
+    "title": "'Penguin Island 3D'",
+    "link": "https://community.sevendaysvt.com/event/penguin-island-3d-45433780",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-10T10:30:00-04:00",
+    "venue": "ECHO, Leahy Center for Lake Champlain"
+   },
+   {
     "id": "57a8d11604eb",
     "title": "Thursday Stick & Puck",
     "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4886",
@@ -3675,6 +3057,22 @@
     "ts": "2026-07-23T17:40:53-04:00",
     "start": "2026-09-10T11:00:00-04:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "16c974c2d632",
+    "title": "'Wild Rescue 3D'",
+    "link": "https://community.sevendaysvt.com/event/wild-rescue-3d-45162401",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-10T11:00:00-04:00",
+    "venue": "ECHO, Leahy Center for Lake Champlain"
+   },
+   {
+    "id": "7dbd41a3857b",
+    "title": "'Shark Kingdom 3D'",
+    "link": "https://community.sevendaysvt.com/event/shark-kingdom-3d-44971419",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-10T11:30:00-04:00",
+    "venue": "ECHO, Leahy Center for Lake Champlain"
    },
    {
     "id": "6dde55e8d2cc",
@@ -3707,6 +3105,14 @@
     "ts": "2026-07-12T06:59:21-04:00",
     "start": "2026-09-10T12:00:00-04:00",
     "venue": "Citizen Cider"
+   },
+   {
+    "id": "d4b11d36a0b3",
+    "title": "'Dinosaurs of Antarctica 3D'",
+    "link": "https://community.sevendaysvt.com/event/dinosaurs-of-antarctica-3d-44804713",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-10T12:00:00-04:00",
+    "venue": "ECHO, Leahy Center for Lake Champlain"
    },
    {
     "id": "0cb9815d17a6",
@@ -3813,6 +3219,14 @@
     "venue": "South Burlington Public Library"
    },
    {
+    "id": "44b74fe4bfbf",
+    "title": "Camp Prism: All are Welcome",
+    "link": "https://events.uvm.edu/event/camp-prism-all-are-welcome",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-10T16:00:00-04:00",
+    "venue": "Living & Learning C"
+   },
+   {
     "id": "5425f56e6048",
     "title": "Free Wine Tasting",
     "link": "https://www.helloburlingtonvt.com/event/free-wine-tasting/7772/",
@@ -3837,20 +3251,20 @@
     "venue": "Doubletree by Hilton Hotel in South Burlington, Vermont"
    },
    {
-    "id": "27d1b3c9371d",
-    "title": "Read to Chewie the Therapy Dog",
-    "link": "https://community.sevendaysvt.com/event/read-to-chewie-the-therapy-dog-45462650",
-    "ts": "2026-08-31T11:27:35-04:00",
-    "start": "2026-09-10T16:30:00-04:00",
-    "venue": "Essex Free Library"
-   },
-   {
     "id": "8610d147cc8f",
     "title": "Spanish Conversation",
     "link": "https://community.sevendaysvt.com/event/spanish-conversation-45428019",
     "ts": "2026-07-12T06:59:21-04:00",
     "start": "2026-09-10T16:30:00-04:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "27d1b3c9371d",
+    "title": "Read to Chewie the Therapy Dog",
+    "link": "https://community.sevendaysvt.com/event/read-to-chewie-the-therapy-dog-45462650",
+    "ts": "2026-08-31T11:27:35-04:00",
+    "start": "2026-09-10T16:30:00-04:00",
+    "venue": "Essex Free Library"
    },
    {
     "id": "f1a7c2587678",
@@ -3861,18 +3275,18 @@
     "venue": "UVM Davis Center"
    },
    {
-    "id": "075042f59914",
-    "title": "Big Pond Improv Festival: Thu, Sep 10th",
-    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383545",
-    "ts": "2026-08-12T05:15:35-04:00",
-    "start": "2026-09-10T17:00:00-04:00",
-    "venue": "Vermont Comedy Club"
-   },
-   {
     "id": "11d402a773d8",
     "title": "Big Pond: Thu, Sep 10th (5pm Show)",
     "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383544",
     "ts": "2026-08-11T17:27:28-04:00",
+    "start": "2026-09-10T17:00:00-04:00",
+    "venue": "Vermont Comedy Club"
+   },
+   {
+    "id": "075042f59914",
+    "title": "Big Pond Improv Festival: Thu, Sep 10th",
+    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383545",
+    "ts": "2026-08-12T05:15:35-04:00",
     "start": "2026-09-10T17:00:00-04:00",
     "venue": "Vermont Comedy Club"
    },
@@ -4013,6 +3427,14 @@
     "venue": "Main Street Landing Performing Arts Center"
    },
    {
+    "id": "1d9d78e4a771",
+    "title": "Mitch Terricciano",
+    "link": "https://community.sevendaysvt.com/event/mitch-terricciano-45485975",
+    "ts": "2026-09-08T09:49:41-04:00",
+    "start": "2026-09-10T18:00:00-04:00",
+    "venue": "Vermont Cider Lab"
+   },
+   {
     "id": "60f557a27978",
     "title": "'Ovation!'",
     "link": "https://community.sevendaysvt.com/event/ovation-45466313",
@@ -4045,6 +3467,14 @@
     "venue": ""
    },
    {
+    "id": "a74e768f67f3",
+    "title": "Peer Support Dungeons & Dragons",
+    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-10T18:00:00-04:00",
+    "venue": "Morgan House"
+   },
+   {
     "id": "6317c891f477",
     "title": "Trivia",
     "link": "https://community.sevendaysvt.com/event/trivia-44721904",
@@ -4061,14 +3491,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "72a57744e746",
-    "title": "Trivia",
-    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-10T18:00:00-04:00",
-    "venue": "Four Quarters Brewing"
-   },
-   {
     "id": "d9121dcfbfaa",
     "title": "Vinyl Thursdays",
     "link": "https://community.sevendaysvt.com/event/vinyl-thursdays-45195654",
@@ -4077,12 +3499,12 @@
     "venue": "Hotel Vermont"
    },
    {
-    "id": "a74e768f67f3",
-    "title": "Peer Support Dungeons & Dragons",
-    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "id": "72a57744e746",
+    "title": "Trivia",
+    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-10T18:00:00-04:00",
-    "venue": "Morgan House"
+    "venue": "Four Quarters Brewing"
    },
    {
     "id": "d103272f3df5",
@@ -4107,14 +3529,6 @@
     "ts": "2026-08-27T14:03:17-04:00",
     "start": "2026-09-10T18:00:00-04:00",
     "venue": "The Boardroom"
-   },
-   {
-    "id": "1d9d78e4a771",
-    "title": "Mitch Terricciano",
-    "link": "https://community.sevendaysvt.com/event/mitch-terricciano-45485975",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-10T18:00:00-04:00",
-    "venue": "Vermont Cider Lab"
    },
    {
     "id": "013d487e3951",
@@ -4229,6 +3643,14 @@
     "venue": "Radio Bean"
    },
    {
+    "id": "4e10f546dd18",
+    "title": "David Liebe Hart, James Kochalka Superstar, Strelka",
+    "link": "https://community.sevendaysvt.com/event/david-liebe-hart-james-kochalka-superstar-strelka-45485966",
+    "ts": "2026-09-08T09:49:41-04:00",
+    "start": "2026-09-10T20:00:00-04:00",
+    "venue": "Monkey House"
+   },
+   {
     "id": "72b2d3b328fa",
     "title": "Karaoke in the Alley",
     "link": "https://community.sevendaysvt.com/event/karaoke-in-the-alley-45314407",
@@ -4243,14 +3665,6 @@
     "ts": "2026-09-05T01:37:25-04:00",
     "start": "2026-09-10T20:00:00-04:00",
     "venue": "Radio Bean"
-   },
-   {
-    "id": "4e10f546dd18",
-    "title": "David Liebe Hart, James Kochalka Superstar, Strelka",
-    "link": "https://community.sevendaysvt.com/event/david-liebe-hart-james-kochalka-superstar-strelka-45485966",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-10T20:00:00-04:00",
-    "venue": "Monkey House"
    },
    {
     "id": "e068c4069945",
@@ -4269,20 +3683,20 @@
     "venue": "Alumni Auditorium, Center for Communication & Creative Media (CCM)"
    },
    {
-    "id": "9e810548917f",
-    "title": "Funk Jam",
-    "link": "https://community.sevendaysvt.com/event/funk-jam-45323272",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-10T21:00:00-04:00",
-    "venue": "The 126"
-   },
-   {
     "id": "91e18ede2376",
     "title": "Two Sev, JP Black, Rubi, Chaston",
     "link": "https://community.sevendaysvt.com/event/two-sev-jp-black-rubi-chaston-45485983",
     "ts": "2026-09-08T09:49:41-04:00",
     "start": "2026-09-10T21:00:00-04:00",
     "venue": "Red Square"
+   },
+   {
+    "id": "9e810548917f",
+    "title": "Funk Jam",
+    "link": "https://community.sevendaysvt.com/event/funk-jam-45323272",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-10T21:00:00-04:00",
+    "venue": "The 126"
    },
    {
     "id": "b57c3a12ccdd",
@@ -4533,6 +3947,14 @@
     "venue": "UVM Davis Center"
    },
    {
+    "id": "00ea42a61f27",
+    "title": "Art Hop at BCA Studios",
+    "link": "https://www.burlingtoncityarts.org/event/art-hop-bca-studios",
+    "ts": "2026-09-01T18:49:18-04:00",
+    "start": "2026-09-11T17:00:00-04:00",
+    "venue": "BCA Studios"
+   },
+   {
     "id": "8b2fc2a342a9",
     "title": "Open House @ BCA Studios",
     "link": "https://www.burlingtoncityarts.org/event/open-house-bca-studios",
@@ -4541,18 +3963,18 @@
     "venue": "BCA Studios"
    },
    {
-    "id": "625febaab913",
-    "title": "Big Pond Improv Festival: Fri, Sep 11th",
-    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383546",
-    "ts": "2026-08-11T17:27:28-04:00",
-    "start": "2026-09-11T17:00:00-04:00",
-    "venue": "Vermont Comedy Club"
-   },
-   {
     "id": "cde85581532b",
     "title": "Big Pond: Fri, Sep 11th (5pm Show)",
     "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383551",
     "ts": "2026-08-12T05:15:35-04:00",
+    "start": "2026-09-11T17:00:00-04:00",
+    "venue": "Vermont Comedy Club"
+   },
+   {
+    "id": "625febaab913",
+    "title": "Big Pond Improv Festival: Fri, Sep 11th",
+    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383546",
+    "ts": "2026-08-11T17:27:28-04:00",
     "start": "2026-09-11T17:00:00-04:00",
     "venue": "Vermont Comedy Club"
    },
@@ -4581,14 +4003,6 @@
     "venue": ""
    },
    {
-    "id": "79df93bc0bb4",
-    "title": "Fried Chicken & Pickin'",
-    "link": "https://community.sevendaysvt.com/event/fried-chicken-and-pickin-45219617",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-11T17:00:00-04:00",
-    "venue": "Maple Wind Farm"
-   },
-   {
     "id": "77a9ab6ae9d6",
     "title": "'Remember, Repair, Resist: The Book of Genocides'",
     "link": "https://community.sevendaysvt.com/event/remember-repair-resist-the-book-of-genocides-45441254",
@@ -4597,12 +4011,28 @@
     "venue": "The Maltex Building"
    },
    {
-    "id": "d9b48770641d",
-    "title": "Art Hop Lot Jam: Free concert with Dobbs' Dead at Upstate Elevator",
-    "link": "https://www.helloburlingtonvt.com/event/art-hop-lot-jam%3a-free-concert-with-dobbs-dead-at-upstate-elevator/7937/",
-    "ts": "2026-08-31T13:12:40-04:00",
+    "id": "79df93bc0bb4",
+    "title": "Fried Chicken & Pickin'",
+    "link": "https://community.sevendaysvt.com/event/fried-chicken-and-pickin-45219617",
+    "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-11T17:00:00-04:00",
-    "venue": "Upstate Elevator Dispensary"
+    "venue": "Maple Wind Farm"
+   },
+   {
+    "id": "c9781a31770a",
+    "title": "DJ Cheetatah",
+    "link": "https://community.sevendaysvt.com/event/dj-cheetatah-45487953",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-11T17:00:00-04:00",
+    "venue": "ArtsRiot"
+   },
+   {
+    "id": "f450b3f58039",
+    "title": "Two for Flinching",
+    "link": "https://community.sevendaysvt.com/event/two-for-flinching-45485976",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-11T17:00:00-04:00",
+    "venue": "Vermont Cider Lab"
    },
    {
     "id": "96f71038ac53",
@@ -4611,6 +4041,22 @@
     "ts": "2026-09-08T09:49:41-04:00",
     "start": "2026-09-11T17:00:00-04:00",
     "venue": "Switchback Brewing Company"
+   },
+   {
+    "id": "6bab6442844e",
+    "title": "Art Hop at Green Door with Radio Cowboy, Danny & the Parts, Dad?!",
+    "link": "https://community.sevendaysvt.com/event/art-hop-at-green-door-with-radio-cowboy-danny-and-the-parts-dad-45485991",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-11T17:00:00-04:00",
+    "venue": "The Green Door Studio"
+   },
+   {
+    "id": "d9b48770641d",
+    "title": "Art Hop Lot Jam: Free concert with Dobbs' Dead at Upstate Elevator",
+    "link": "https://www.helloburlingtonvt.com/event/art-hop-lot-jam%3a-free-concert-with-dobbs-dead-at-upstate-elevator/7937/",
+    "ts": "2026-08-31T13:12:40-04:00",
+    "start": "2026-09-11T17:00:00-04:00",
+    "venue": "Upstate Elevator Dispensary"
    },
    {
     "id": "2834621ce3e2",
@@ -4659,6 +4105,14 @@
     "ts": "2026-09-08T18:57:58-04:00",
     "start": "2026-09-11T18:00:00-04:00",
     "venue": "AO Glass"
+   },
+   {
+    "id": "680fc8a50e88",
+    "title": "Swell",
+    "link": "https://community.sevendaysvt.com/event/swell-45485934",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-11T18:00:00-04:00",
+    "venue": "1st Republic Brewing"
    },
    {
     "id": "a209c030ca65",
@@ -4741,6 +4195,14 @@
     "venue": "Mann Hall"
    },
    {
+    "id": "18ea6c9b0c58",
+    "title": "The Sweet Remains",
+    "link": "https://community.sevendaysvt.com/event/the-sweet-remains-45485795",
+    "ts": "2026-09-08T09:49:41-04:00",
+    "start": "2026-09-11T19:00:00-04:00",
+    "venue": "Essex Experience"
+   },
+   {
     "id": "19f30791f3f3",
     "title": "Hot Neon Magic",
     "link": "https://community.sevendaysvt.com/event/hot-neon-magic-45418039",
@@ -4749,20 +4211,36 @@
     "venue": "The Old Post"
    },
    {
+    "id": "f86631363940",
+    "title": "Blue Rock Boys",
+    "link": "https://community.sevendaysvt.com/event/blue-rock-boys-45485962",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-11T19:00:00-04:00",
+    "venue": "Jericho Café & Tavern"
+   },
+   {
+    "id": "3a07ef457ef1",
+    "title": "Milton Busker & The Grim Work",
+    "link": "https://community.sevendaysvt.com/event/milton-busker-and-the-grim-work-45485998",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-11T19:00:00-04:00",
+    "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "b7b393ef28d4",
+    "title": "Two Sev, Ron Stoppable, Bounce, Matt P",
+    "link": "https://community.sevendaysvt.com/event/two-sev-ron-stoppable-bounce-matt-p-45485984",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-11T19:00:00-04:00",
+    "venue": "Red Square"
+   },
+   {
     "id": "adac2e0532d8",
     "title": "Friday Night at Specs",
     "link": "https://community.sevendaysvt.com/event/friday-night-at-specs-44521706",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-11T19:00:00-04:00",
     "venue": ""
-   },
-   {
-    "id": "18ea6c9b0c58",
-    "title": "The Sweet Remains",
-    "link": "https://community.sevendaysvt.com/event/the-sweet-remains-45485795",
-    "ts": "2026-09-08T09:49:41-04:00",
-    "start": "2026-09-11T19:00:00-04:00",
-    "venue": "Essex Experience"
    },
    {
     "id": "fcc8725c204f",
@@ -4837,6 +4315,14 @@
     "venue": "Higher Ground"
    },
    {
+    "id": "77f9f0f5c106",
+    "title": "Nickel & Dime",
+    "link": "https://community.sevendaysvt.com/event/nickel-and-dime-45485977",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-11T21:00:00-04:00",
+    "venue": "Vermont Cider Lab"
+   },
+   {
     "id": "f33f16c89f3d",
     "title": "Big Pond: Fri, Sep 11th (9:30pm Show)",
     "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/383555",
@@ -4907,14 +4393,6 @@
     "ts": "2026-09-08T09:49:41-04:00",
     "start": "2026-09-11",
     "venue": "BCA Center"
-   },
-   {
-    "id": "00ea42a61f27",
-    "title": "Art Hop at BCA Studios",
-    "link": "https://www.burlingtoncityarts.org/event/art-hop-bca-studios",
-    "ts": "2026-09-01T18:49:18-04:00",
-    "start": "2026-09-11",
-    "venue": "BCA Studios"
    },
    {
     "id": "49ae18fc0c40",
@@ -6189,20 +5667,20 @@
     "venue": "ECHO, Leahy Center for Lake Champlain"
    },
    {
-    "id": "0b9de7035d53",
-    "title": "Mini Clean Up Crew",
-    "link": "https://community.sevendaysvt.com/event/mini-clean-up-crew-45429908",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-15T08:00:00-04:00",
-    "venue": "City Hall Park"
-   },
-   {
     "id": "5bfc535e2039",
     "title": "Well-Check on Campus for Employees",
     "link": "https://events.uvm.edu/event/well-check-on-campus-for-employees-in-waterman",
     "ts": "2026-08-26T20:04:49-04:00",
     "start": "2026-09-15T08:00:00-04:00",
     "venue": "Waterman Building"
+   },
+   {
+    "id": "0b9de7035d53",
+    "title": "Mini Clean Up Crew",
+    "link": "https://community.sevendaysvt.com/event/mini-clean-up-crew-45429908",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-15T08:00:00-04:00",
+    "venue": "City Hall Park"
    },
    {
     "id": "686b59bd7dcf",
@@ -6261,6 +5739,14 @@
     "venue": "1068 Williston Rd"
    },
    {
+    "id": "44f2125fd8a9",
+    "title": "Data Design Lab",
+    "link": "https://events.uvm.edu/event/data-design-lab",
+    "ts": "2026-08-27T14:03:17-04:00",
+    "start": "2026-09-15T10:00:00-04:00",
+    "venue": "Howe Library"
+   },
+   {
     "id": "b61950e595db",
     "title": "Farms to Plates: Vermont's Local Food System",
     "link": "https://events.uvm.edu/event/farms-to-plates-vermonts-local-food-system",
@@ -6275,14 +5761,6 @@
     "ts": "2026-07-17T07:08:33-04:00",
     "start": "2026-09-15T10:00:00-04:00",
     "venue": "Brownell Library"
-   },
-   {
-    "id": "44f2125fd8a9",
-    "title": "Data Design Lab",
-    "link": "https://events.uvm.edu/event/data-design-lab",
-    "ts": "2026-08-27T14:03:17-04:00",
-    "start": "2026-09-15T10:00:00-04:00",
-    "venue": "Howe Library"
    },
    {
     "id": "dddb3ed0f349",
@@ -6381,12 +5859,28 @@
     "venue": "Maglianero"
    },
    {
+    "id": "6f0e7590c9e6",
+    "title": "Building Your AI Toolkit",
+    "link": "https://southburlingtonlibrary.org/building-your-ai-toolkit",
+    "ts": "2026-08-04T17:54:10-04:00",
+    "start": "2026-09-15T17:00:00-04:00",
+    "venue": "South Burlington Public Library"
+   },
+   {
     "id": "b86a5533cf9c",
     "title": "Super Smash Tuesdays",
     "link": "https://calendar.time.ly/vfaca7kw/event/78077209/20260915170000",
     "ts": "2026-07-17T07:08:33-04:00",
     "start": "2026-09-15T17:00:00-04:00",
     "venue": "RiRa Irish Pub"
+   },
+   {
+    "id": "abb84211c512",
+    "title": "LGBTQIAP+ Pride Interfaith Service",
+    "link": "https://events.uvm.edu/event/lgbtqiap-pride-interfaith-service",
+    "ts": "2026-09-04T09:44:35-04:00",
+    "start": "2026-09-15T17:00:00-04:00",
+    "venue": "Interfaith Center"
    },
    {
     "id": "80522d88348b",
@@ -6421,22 +5915,6 @@
     "venue": "Burlington Bay Market & Café"
    },
    {
-    "id": "6f0e7590c9e6",
-    "title": "Building Your AI Toolkit",
-    "link": "https://southburlingtonlibrary.org/building-your-ai-toolkit",
-    "ts": "2026-08-04T17:54:10-04:00",
-    "start": "2026-09-15T17:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "abb84211c512",
-    "title": "LGBTQIAP+ Pride Interfaith Service",
-    "link": "https://events.uvm.edu/event/lgbtqiap-pride-interfaith-service",
-    "ts": "2026-09-04T09:44:35-04:00",
-    "start": "2026-09-15T17:00:00-04:00",
-    "venue": "Interfaith Center"
-   },
-   {
     "id": "c885216d8787",
     "title": "Farm to Medicine Cabinet Herb Walk",
     "link": "https://www.eventbrite.com/e/farm-to-medicine-cabinet-herb-walk-tickets-1987395088208",
@@ -6469,22 +5947,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "83d43c0c5615",
-    "title": "Bashment Tuesday",
-    "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-15T18:00:00-04:00",
-    "venue": "Akes' Place"
-   },
-   {
-    "id": "3a62879349e6",
-    "title": "Vermont Figure Drawing Collective",
-    "link": "https://www.helloburlingtonvt.com/event/vermont-figure-drawing-collective/5712/",
-    "ts": "2026-07-30T07:31:16-04:00",
-    "start": "2026-09-15T18:00:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
     "id": "bac7f90a72de",
     "title": "Playing Fields",
     "link": "https://www.flynnvt.org/Events/2026/9/playing-fields",
@@ -6493,12 +5955,28 @@
     "venue": "John J. Flynn Elementary School"
    },
    {
+    "id": "83d43c0c5615",
+    "title": "Bashment Tuesday",
+    "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-15T18:00:00-04:00",
+    "venue": "Akes' Place"
+   },
+   {
     "id": "7dbfaac221e8",
     "title": "Local Dork at Foam Brewers on a Tuesday",
     "link": "https://www.helloburlingtonvt.com/event/local-dork-at-foam-brewers-on-a-tuesday/7444/",
     "ts": "2026-07-30T07:31:16-04:00",
     "start": "2026-09-15T18:00:00-04:00",
     "venue": "Foam Brewers"
+   },
+   {
+    "id": "3a62879349e6",
+    "title": "Vermont Figure Drawing Collective",
+    "link": "https://www.helloburlingtonvt.com/event/vermont-figure-drawing-collective/5712/",
+    "ts": "2026-07-30T07:31:16-04:00",
+    "start": "2026-09-15T18:00:00-04:00",
+    "venue": "Maglianero"
    },
    {
     "id": "afa296caf586",
@@ -6515,6 +5993,14 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-15T18:30:00-04:00",
     "venue": "Expressive Arts Burlington"
+   },
+   {
+    "id": "62e577aeb4cc",
+    "title": "Women's Soccer vs Adelphi",
+    "link": "https://events.uvm.edu/event/womens-soccer-vs-adelphi",
+    "ts": "2026-08-05T17:54:10-04:00",
+    "start": "2026-09-15T19:00:00-04:00",
+    "venue": "Virtue Field"
    },
    {
     "id": "2f56786144ac",
@@ -6541,14 +6027,6 @@
     "venue": "Vermont Cider Lab"
    },
    {
-    "id": "62e577aeb4cc",
-    "title": "Women's Soccer vs Adelphi",
-    "link": "https://events.uvm.edu/event/womens-soccer-vs-adelphi",
-    "ts": "2026-08-05T17:54:10-04:00",
-    "start": "2026-09-15T19:00:00-04:00",
-    "venue": "Virtue Field"
-   },
-   {
     "id": "319c4161c504",
     "title": "Scheherazade on the Rocks: A Pre-Concert Listening Party",
     "link": "https://www.eventbrite.com/e/scheherazade-on-the-rocks-a-pre-concert-listening-party-tickets-1997453296580",
@@ -6573,14 +6051,6 @@
     "venue": "The Monkey House"
    },
    {
-    "id": "acb5aaab5286",
-    "title": "Dead Is Alive with Dobbs' Dead",
-    "link": "https://community.sevendaysvt.com/event/dead-is-alive-with-dobbs-dead-43938767",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-15T20:00:00-04:00",
-    "venue": "Einstein's Tap House"
-   },
-   {
     "id": "c8a05a40588c",
     "title": "Marcus King Band",
     "link": "https://www.flynnvt.org/Events/2026/9/Marcus-King-Band",
@@ -6595,6 +6065,14 @@
     "ts": "2026-09-04T09:44:35-04:00",
     "start": "2026-09-15T20:00:00-04:00",
     "venue": "Room 205, Joyce Hall"
+   },
+   {
+    "id": "acb5aaab5286",
+    "title": "Dead Is Alive with Dobbs' Dead",
+    "link": "https://community.sevendaysvt.com/event/dead-is-alive-with-dobbs-dead-43938767",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-15T20:00:00-04:00",
+    "venue": "Einstein's Tap House"
    },
    {
     "id": "a057c7592e37",
@@ -6957,6 +6435,14 @@
     "venue": ""
    },
    {
+    "id": "7428b16f425e",
+    "title": "Yarn & Yak",
+    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-16T17:00:00-04:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
     "id": "b6aa59ffce3a",
     "title": "The All-Inclusive Dyke-Tacular",
     "link": "https://community.sevendaysvt.com/event/the-all-inclusive-dyke-tacular-44828742",
@@ -6971,14 +6457,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-16T17:00:00-04:00",
     "venue": "Must Love Yarn"
-   },
-   {
-    "id": "7428b16f425e",
-    "title": "Yarn & Yak",
-    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-16T17:00:00-04:00",
-    "venue": "Milton Artists' Guild"
    },
    {
     "id": "5339f2d709b9",
@@ -7045,20 +6523,20 @@
     "venue": "Church Street Marketplace"
    },
    {
-    "id": "bc7160132d65",
-    "title": "Recovery Dharma",
-    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-16T18:00:00-04:00",
-    "venue": "First United Methodist Church"
-   },
-   {
     "id": "7b637468f241",
     "title": "Community Cooking",
     "link": "https://community.sevendaysvt.com/event/community-cooking-42481660",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-16T18:00:00-04:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "bc7160132d65",
+    "title": "Recovery Dharma",
+    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-16T18:00:00-04:00",
+    "venue": "First United Methodist Church"
    },
    {
     "id": "c46658c15325",
@@ -7581,6 +7059,14 @@
     "venue": ""
    },
    {
+    "id": "2f2466e4f27c",
+    "title": "Peer Support Dungeons & Dragons",
+    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-17T18:00:00-04:00",
+    "venue": "Morgan House"
+   },
+   {
     "id": "7a51ad54c0a6",
     "title": "Trivia",
     "link": "https://community.sevendaysvt.com/event/trivia-44721904",
@@ -7597,14 +7083,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "ba58a23eef86",
-    "title": "Trivia",
-    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-17T18:00:00-04:00",
-    "venue": "Four Quarters Brewing"
-   },
-   {
     "id": "1de6b356f8c3",
     "title": "Vinyl Thursdays",
     "link": "https://community.sevendaysvt.com/event/vinyl-thursdays-45195654",
@@ -7613,12 +7091,12 @@
     "venue": "Hotel Vermont"
    },
    {
-    "id": "2f2466e4f27c",
-    "title": "Peer Support Dungeons & Dragons",
-    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "id": "ba58a23eef86",
+    "title": "Trivia",
+    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-17T18:00:00-04:00",
-    "venue": "Morgan House"
+    "venue": "Four Quarters Brewing"
    },
    {
     "id": "a1327f043ddb",
@@ -7853,14 +7331,6 @@
     "venue": "Regus - Burlington, VT"
    },
    {
-    "id": "3f8771bab670",
-    "title": "Tech Help by Appointment",
-    "link": "https://southburlingtonlibrary.org/tech-help",
-    "ts": "2026-08-12T17:26:55-04:00",
-    "start": "2026-09-18T10:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
     "id": "26151d260cc2",
     "title": "Duplicate Bridge Games",
     "link": "https://community.sevendaysvt.com/event/duplicate-bridge-games-41579461",
@@ -7883,6 +7353,14 @@
     "ts": "2026-07-20T08:02:35-04:00",
     "start": "2026-09-18T10:00:00-04:00",
     "venue": "Women’s & Gender Center, Skiff Hall Annex"
+   },
+   {
+    "id": "3f8771bab670",
+    "title": "Tech Help by Appointment",
+    "link": "https://southburlingtonlibrary.org/tech-help",
+    "ts": "2026-08-12T17:26:55-04:00",
+    "start": "2026-09-18T10:00:00-04:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "03146a0675b2",
@@ -9685,20 +9163,20 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "2df04bf7a60b",
-    "title": "Afternoon Tech Help",
-    "link": "https://community.sevendaysvt.com/event/afternoon-tech-help-43003910",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-22T13:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
     "id": "c02aad49d9e7",
     "title": "Campfire - The Power of Play: Gamification in the Higher Ed Classroom",
     "link": "https://events.uvm.edu/event/campfire-power-of-play",
     "ts": "2026-08-05T17:54:10-04:00",
     "start": "2026-09-22T13:00:00-04:00",
     "venue": "Howe Library"
+   },
+   {
+    "id": "2df04bf7a60b",
+    "title": "Afternoon Tech Help",
+    "link": "https://community.sevendaysvt.com/event/afternoon-tech-help-43003910",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-22T13:00:00-04:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "6c3d325160c5",
@@ -9717,14 +9195,6 @@
     "venue": "UVM Davis Center"
    },
    {
-    "id": "083d4ca58406",
-    "title": "Craftytown",
-    "link": "https://community.sevendaysvt.com/event/craftytown-45447970",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-22T15:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
     "id": "f64d6aafadea",
     "title": "Free Play Art! Collage Painting",
     "link": "https://southburlingtonlibrary.org/free-play-art-collage",
@@ -9739,6 +9209,14 @@
     "ts": "2026-07-25T06:54:03-04:00",
     "start": "2026-09-22T15:00:00-04:00",
     "venue": "Virtue Field"
+   },
+   {
+    "id": "083d4ca58406",
+    "title": "Craftytown",
+    "link": "https://community.sevendaysvt.com/event/craftytown-45447970",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-22T15:00:00-04:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "9c685e2615d7",
@@ -9821,14 +9299,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "848aeaabcda8",
-    "title": "Local Dork",
-    "link": "https://foambrewers.com/events/local-dork-86",
-    "ts": "2026-08-31T20:04:22-04:00",
-    "start": "2026-09-22T18:00:00-04:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "dcbd80cbf1b6",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
@@ -9875,6 +9345,14 @@
     "ts": "2026-08-31T11:27:35-04:00",
     "start": "2026-09-22T18:00:00-04:00",
     "venue": "UVM Davis Center"
+   },
+   {
+    "id": "848aeaabcda8",
+    "title": "Local Dork",
+    "link": "https://foambrewers.com/events/local-dork-86",
+    "ts": "2026-08-31T20:04:22-04:00",
+    "start": "2026-09-22T18:00:00-04:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "a5ac4192231b",
@@ -10157,6 +9635,14 @@
     "venue": "Medical Education Pavilion"
    },
    {
+    "id": "7c33d323c51d",
+    "title": "Clinical Informatics Grand Rounds",
+    "link": "https://events.uvm.edu/event/clinical-informatics-grand-rounds",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-23T12:00:00-04:00",
+    "venue": "IDX Building"
+   },
+   {
     "id": "580958745406",
     "title": "Wednesday Public Skate",
     "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4757",
@@ -10325,6 +9811,14 @@
     "venue": ""
    },
    {
+    "id": "8bff7884293b",
+    "title": "Yarn & Yak",
+    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-23T17:00:00-04:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
     "id": "e9c699f7191b",
     "title": "The All-Inclusive Dyke-Tacular",
     "link": "https://community.sevendaysvt.com/event/the-all-inclusive-dyke-tacular-44828742",
@@ -10339,14 +9833,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-23T17:00:00-04:00",
     "venue": "Must Love Yarn"
-   },
-   {
-    "id": "8bff7884293b",
-    "title": "Yarn & Yak",
-    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-23T17:00:00-04:00",
-    "venue": "Milton Artists' Guild"
    },
    {
     "id": "f5ca32f112b7",
@@ -10421,20 +9907,20 @@
     "venue": "Church Street Marketplace"
    },
    {
-    "id": "62491eaebb88",
-    "title": "Recovery Dharma",
-    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-23T18:00:00-04:00",
-    "venue": "First United Methodist Church"
-   },
-   {
     "id": "310ba0b0a22c",
     "title": "Community Cooking",
     "link": "https://community.sevendaysvt.com/event/community-cooking-42481660",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-23T18:00:00-04:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "62491eaebb88",
+    "title": "Recovery Dharma",
+    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-23T18:00:00-04:00",
+    "venue": "First United Methodist Church"
    },
    {
     "id": "3102f5bdd51d",
@@ -10957,6 +10443,14 @@
     "venue": ""
    },
    {
+    "id": "66635d333563",
+    "title": "Peer Support Dungeons & Dragons",
+    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-24T18:00:00-04:00",
+    "venue": "Morgan House"
+   },
+   {
     "id": "dfc23e97654f",
     "title": "Trivia",
     "link": "https://community.sevendaysvt.com/event/trivia-44721904",
@@ -10973,14 +10467,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "f03bbd60d83b",
-    "title": "Trivia",
-    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-24T18:00:00-04:00",
-    "venue": "Four Quarters Brewing"
-   },
-   {
     "id": "15b8d13f7db1",
     "title": "Vinyl Thursdays",
     "link": "https://community.sevendaysvt.com/event/vinyl-thursdays-45195654",
@@ -10989,12 +10475,12 @@
     "venue": "Hotel Vermont"
    },
    {
-    "id": "66635d333563",
-    "title": "Peer Support Dungeons & Dragons",
-    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "id": "f03bbd60d83b",
+    "title": "Trivia",
+    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-24T18:00:00-04:00",
-    "venue": "Morgan House"
+    "venue": "Four Quarters Brewing"
    },
    {
     "id": "665d16597a72",
@@ -11901,6 +11387,14 @@
     "venue": "Standing Stone Wines"
    },
    {
+    "id": "68ce96a91011",
+    "title": "CONTROL TOP in Shelburne",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/control-top-in-shelburne/19864762/2026-09-26T19",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-26T19:00:00-04:00",
+    "venue": "Shelburne Town Hall"
+   },
+   {
     "id": "0530449d4b93",
     "title": "Full Moon Fall Forest Bathing: shinrin-yoku",
     "link": "https://www.eventbrite.com/e/full-moon-fall-forest-bathing-shinrin-yoku-tickets-1998907036756",
@@ -12261,6 +11755,14 @@
     "venue": "Hot Yoga Burlington"
    },
    {
+    "id": "a3f15b6de5fd",
+    "title": "CONTROL TOP in Shelburne",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/control-top-in-shelburne/19864762/2026-09-27T19",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-27T19:00:00-04:00",
+    "venue": "Shelburne Town Hall"
+   },
+   {
     "id": "6f28576ce56c",
     "title": "Hana Stretton & Helena Deland",
     "link": "https://highergroundmusic.com/events/hana-stretton-helena-deland/",
@@ -12565,6 +12067,14 @@
     "venue": "Higher Ground"
    },
    {
+    "id": "a5017ffda45a",
+    "title": "Radio Bean Presents... Ora Cogan @ Foam Brewers",
+    "link": "https://tockify.com/radio.bean.event.calendar1/detail/2800/1790638200000",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-28T19:30:00-04:00",
+    "venue": "Radio Bean"
+   },
+   {
     "id": "6d88f66cb108",
     "title": "Ora Cogan",
     "link": "https://tockify.com/radio.bean.event.calendar1/detail/2800/1790638200000",
@@ -12599,7 +12109,7 @@
    {
     "id": "56c99336ee23",
     "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-    "link": "https://www.meetup.com/burlington-bitcoin-meetup/events/ggfpvtyjcmbmc/",
+    "link": "https://www.meetup.com/burlington-bitcoin-meetup/events/316482849/",
     "ts": "2026-07-31T07:45:12-04:00",
     "start": "2026-09-29T09:00:00-04:00",
     "venue": "Zero Gravity Craft Brewery"
@@ -12717,20 +12227,20 @@
     "venue": "Virtue Field"
    },
    {
-    "id": "85a6586a3fd7",
-    "title": "Traditional Tuesday",
-    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
-    "ts": "2026-08-13T06:41:14-04:00",
-    "start": "2026-09-29T16:30:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
     "id": "6199b11adc07",
     "title": "Spanish Conversation",
     "link": "https://fletcherfree.libcal.com/event/17514808",
     "ts": "2026-08-26T06:15:56-04:00",
     "start": "2026-09-29T16:30:00-04:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "85a6586a3fd7",
+    "title": "Traditional Tuesday",
+    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
+    "ts": "2026-08-13T06:41:14-04:00",
+    "start": "2026-09-29T16:30:00-04:00",
+    "venue": "Maglianero"
    },
    {
     "id": "f2ea0ac69b0b",
@@ -12821,14 +12331,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "3aac5b540f0c",
-    "title": "Local Dork",
-    "link": "https://foambrewers.com/events/local-dork-87",
-    "ts": "2026-08-31T20:04:22-04:00",
-    "start": "2026-09-29T18:00:00-04:00",
-    "venue": "Foam Brewers"
-   },
-   {
     "id": "dab16a0093bf",
     "title": "Bashment Tuesday",
     "link": "https://community.sevendaysvt.com/event/bashment-tuesday-44278125",
@@ -12843,6 +12345,14 @@
     "ts": "2026-08-12T05:15:35-04:00",
     "start": "2026-09-29T18:00:00-04:00",
     "venue": "Maglianero"
+   },
+   {
+    "id": "3aac5b540f0c",
+    "title": "Local Dork",
+    "link": "https://foambrewers.com/events/local-dork-87",
+    "ts": "2026-08-31T20:04:22-04:00",
+    "start": "2026-09-29T18:00:00-04:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "44dede96ed93",
@@ -12909,20 +12419,20 @@
     "venue": "The Monkey House"
    },
    {
-    "id": "8b0e80089e1c",
-    "title": "Dead Is Alive with Dobbs' Dead",
-    "link": "https://community.sevendaysvt.com/event/dead-is-alive-with-dobbs-dead-43938767",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-29T20:00:00-04:00",
-    "venue": "Einstein's Tap House"
-   },
-   {
     "id": "e13251b19ca2",
     "title": "Math Club!",
     "link": "https://www.champlain.edu/event/math-club-meeting-3/2026-09-29/",
     "ts": "2026-09-04T09:44:35-04:00",
     "start": "2026-09-29T20:00:00-04:00",
     "venue": "Room 205, Joyce Hall"
+   },
+   {
+    "id": "8b0e80089e1c",
+    "title": "Dead Is Alive with Dobbs' Dead",
+    "link": "https://community.sevendaysvt.com/event/dead-is-alive-with-dobbs-dead-43938767",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-29T20:00:00-04:00",
+    "venue": "Einstein's Tap House"
    },
    {
     "id": "02a5ca7e5404",
@@ -13045,6 +12555,14 @@
     "venue": "Switchback Brewing Company"
    },
    {
+    "id": "53fbfccab5c3",
+    "title": "Job and Internship Fair",
+    "link": "https://events.uvm.edu/event/2026-uvm-job-internship-fair",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-30T12:00:00-04:00",
+    "venue": "UVM Davis Center"
+   },
+   {
     "id": "3d16750f7067",
     "title": "2026 UVM Job & Internship Fair",
     "link": "https://events.uvm.edu/event/2026-uvm-job-internship-fair",
@@ -13133,6 +12651,14 @@
     "venue": "Hilton Burlington Lake Champlain"
    },
    {
+    "id": "b16b1c54960e",
+    "title": "The Life and Death of Kake Walk",
+    "link": "https://events.uvm.edu/event/the-life-death-of-kake-walk",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-09-30T16:00:00-04:00",
+    "venue": "Interfaith Center"
+   },
+   {
     "id": "4330fd9464f0",
     "title": "Google Sheets and Budgeting (webinar)",
     "link": "https://calendar.time.ly/vfaca7kw/event/78455913/20260930160000",
@@ -13189,6 +12715,14 @@
     "venue": ""
    },
    {
+    "id": "65e1b6a617c0",
+    "title": "Yarn & Yak",
+    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-30T17:00:00-04:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
     "id": "c334bdcefa21",
     "title": "The All-Inclusive Dyke-Tacular",
     "link": "https://community.sevendaysvt.com/event/the-all-inclusive-dyke-tacular-44828742",
@@ -13203,14 +12737,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-30T17:00:00-04:00",
     "venue": "Must Love Yarn"
-   },
-   {
-    "id": "65e1b6a617c0",
-    "title": "Yarn & Yak",
-    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-30T17:00:00-04:00",
-    "venue": "Milton Artists' Guild"
    },
    {
     "id": "39aedabdf512",
@@ -13245,20 +12771,20 @@
     "venue": "Foam Brewers"
    },
    {
-    "id": "d8290a68264c",
-    "title": "Recovery Dharma",
-    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-09-30T18:00:00-04:00",
-    "venue": "First United Methodist Church"
-   },
-   {
     "id": "fbc277217b00",
     "title": "Community Cooking",
     "link": "https://community.sevendaysvt.com/event/community-cooking-42481660",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-30T18:00:00-04:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "d8290a68264c",
+    "title": "Recovery Dharma",
+    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-09-30T18:00:00-04:00",
+    "venue": "First United Methodist Church"
    },
    {
     "id": "f850e76d16df",
@@ -13653,6 +13179,14 @@
     "venue": "Maquam Barn & Winery"
    },
    {
+    "id": "58644282bb3f",
+    "title": "Peer Support Dungeons & Dragons",
+    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-01T18:00:00-04:00",
+    "venue": "Morgan House"
+   },
+   {
     "id": "ec793e6c221b",
     "title": "Trivia",
     "link": "https://community.sevendaysvt.com/event/trivia-44721904",
@@ -13669,14 +13203,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "ac137df22dd4",
-    "title": "Trivia",
-    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-01T18:00:00-04:00",
-    "venue": "Four Quarters Brewing"
-   },
-   {
     "id": "28be125e7697",
     "title": "Vinyl Thursdays",
     "link": "https://community.sevendaysvt.com/event/vinyl-thursdays-45195654",
@@ -13685,12 +13211,12 @@
     "venue": "Hotel Vermont"
    },
    {
-    "id": "58644282bb3f",
-    "title": "Peer Support Dungeons & Dragons",
-    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "id": "ac137df22dd4",
+    "title": "Trivia",
+    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-01T18:00:00-04:00",
-    "venue": "Morgan House"
+    "venue": "Four Quarters Brewing"
    },
    {
     "id": "132425ee55cf",
@@ -13853,14 +13379,6 @@
     "venue": "Delta Hotels Burlington"
    },
    {
-    "id": "69d960d4cfac",
-    "title": "Tech Help by Appointment",
-    "link": "https://southburlingtonlibrary.org/tech-help",
-    "ts": "2026-08-12T17:26:55-04:00",
-    "start": "2026-10-02T10:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
     "id": "75d1b3f15aff",
     "title": "Duplicate Bridge Games",
     "link": "https://community.sevendaysvt.com/event/duplicate-bridge-games-41579461",
@@ -13883,6 +13401,14 @@
     "ts": "2026-08-05T17:54:10-04:00",
     "start": "2026-10-02T10:00:00-04:00",
     "venue": "Women’s & Gender Center, Skiff Hall Annex"
+   },
+   {
+    "id": "69d960d4cfac",
+    "title": "Tech Help by Appointment",
+    "link": "https://southburlingtonlibrary.org/tech-help",
+    "ts": "2026-08-12T17:26:55-04:00",
+    "start": "2026-10-02T10:00:00-04:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "c8d9a943d13e",
@@ -15165,20 +14691,20 @@
     "venue": "Vermont Pub and Brewery"
    },
    {
-    "id": "b95a55c0af8a",
-    "title": "Tech Help by Appointment",
-    "link": "https://southburlingtonlibrary.org/technology-help2",
-    "ts": "2026-08-12T17:26:55-04:00",
-    "start": "2026-10-06T13:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
     "id": "4338cfff3eae",
     "title": "Voter Registration Tabling at Howe Library",
     "link": "https://events.uvm.edu/event/voter-registration-tabling-at-howe-library",
     "ts": "2026-09-02T18:50:06-04:00",
     "start": "2026-10-06T13:00:00-04:00",
     "venue": "Howe Library"
+   },
+   {
+    "id": "b95a55c0af8a",
+    "title": "Tech Help by Appointment",
+    "link": "https://southburlingtonlibrary.org/technology-help2",
+    "ts": "2026-08-12T17:26:55-04:00",
+    "start": "2026-10-06T13:00:00-04:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "148308b0b650",
@@ -15213,20 +14739,20 @@
     "venue": "Shelburne Farms"
    },
    {
-    "id": "87227a21605e",
-    "title": "Traditional Tuesday",
-    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
-    "ts": "2026-08-17T06:07:52-04:00",
-    "start": "2026-10-06T16:30:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
     "id": "e044ad914c13",
     "title": "Spanish Conversation",
     "link": "https://fletcherfree.libcal.com/event/17514809",
     "ts": "2026-08-26T06:15:56-04:00",
     "start": "2026-10-06T16:30:00-04:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "87227a21605e",
+    "title": "Traditional Tuesday",
+    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
+    "ts": "2026-08-17T06:07:52-04:00",
+    "start": "2026-10-06T16:30:00-04:00",
+    "venue": "Maglianero"
    },
    {
     "id": "0b2afcde0948",
@@ -15317,20 +14843,20 @@
     "venue": "Akes' Place"
    },
    {
-    "id": "fba509a2c38e",
-    "title": "Vermont Figure Drawing Collective",
-    "link": "https://www.helloburlingtonvt.com/event/vermont-figure-drawing-collective/5712/",
-    "ts": "2026-08-17T06:07:52-04:00",
-    "start": "2026-10-06T18:00:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
     "id": "582199e33b83",
     "title": "Local Dork at Foam Brewers on a Tuesday",
     "link": "https://www.helloburlingtonvt.com/event/local-dork-at-foam-brewers-on-a-tuesday/7444/",
     "ts": "2026-08-17T06:07:52-04:00",
     "start": "2026-10-06T18:00:00-04:00",
     "venue": "Foam Brewers"
+   },
+   {
+    "id": "fba509a2c38e",
+    "title": "Vermont Figure Drawing Collective",
+    "link": "https://www.helloburlingtonvt.com/event/vermont-figure-drawing-collective/5712/",
+    "ts": "2026-08-17T06:07:52-04:00",
+    "start": "2026-10-06T18:00:00-04:00",
+    "venue": "Maglianero"
    },
    {
     "id": "1cedbcf4aa02",
@@ -15381,14 +14907,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "6f871019acca",
-    "title": "BASIC",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/2840/1791327600000",
-    "ts": "2026-08-16T05:55:17-04:00",
-    "start": "2026-10-06T19:00:00-04:00",
-    "venue": "Radio Bean"
-   },
-   {
     "id": "7f9427e73765",
     "title": "Ethan Tapper | The Forest Year: Finding Hope in a World Worth Saving",
     "link": "https://calendar.time.ly/vfaca7kw/event/78452029/20261006190000",
@@ -15403,6 +14921,22 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-06T19:00:00-04:00",
     "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "6f871019acca",
+    "title": "BASIC",
+    "link": "https://tockify.com/radio.bean.event.calendar1/detail/2840/1791327600000",
+    "ts": "2026-08-16T05:55:17-04:00",
+    "start": "2026-10-06T19:00:00-04:00",
+    "venue": "Radio Bean"
+   },
+   {
+    "id": "6a81a6317e18",
+    "title": "Luis Betancourt \"The Evening Room\" Album Release Party!",
+    "link": "https://www.monkeyhousevt.com/events/luis-betancourt-the-evening-room-album-release-party",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-10-06T19:00:00.890000-04:00",
+    "venue": "The Monkey House"
    },
    {
     "id": "8d617255e26b",
@@ -15677,6 +15211,14 @@
     "venue": ""
    },
    {
+    "id": "dbdb65a490e4",
+    "title": "Yarn & Yak",
+    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-07T17:00:00-04:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
     "id": "a26886d582a4",
     "title": "The All-Inclusive Dyke-Tacular",
     "link": "https://community.sevendaysvt.com/event/the-all-inclusive-dyke-tacular-44828742",
@@ -15691,14 +15233,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-07T17:00:00-04:00",
     "venue": "Must Love Yarn"
-   },
-   {
-    "id": "dbdb65a490e4",
-    "title": "Yarn & Yak",
-    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-07T17:00:00-04:00",
-    "venue": "Milton Artists' Guild"
    },
    {
     "id": "2332e1054572",
@@ -15733,20 +15267,20 @@
     "venue": "Foam Brewers"
    },
    {
-    "id": "361a3a03fd26",
-    "title": "Recovery Dharma",
-    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-07T18:00:00-04:00",
-    "venue": "First United Methodist Church"
-   },
-   {
     "id": "7758f48c510f",
     "title": "Community Cooking",
     "link": "https://community.sevendaysvt.com/event/community-cooking-42481660",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-07T18:00:00-04:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "361a3a03fd26",
+    "title": "Recovery Dharma",
+    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-07T18:00:00-04:00",
+    "venue": "First United Methodist Church"
    },
    {
     "id": "f3c64c91a43a",
@@ -15853,20 +15387,20 @@
     "venue": "Main Street Landing Performing Arts Center"
    },
    {
-    "id": "d2257760dce1",
-    "title": "Jason Dea West",
-    "link": "https://tockify.com/radio.bean.event.calendar1/detail/2849/1791414000000",
-    "ts": "2026-08-17T06:07:52-04:00",
-    "start": "2026-10-07T19:00:00-04:00",
-    "venue": "Radio Bean"
-   },
-   {
     "id": "94ecebd4a075",
     "title": "Wish Benefit Tour 2026 with Oteil Burbridge & LaMP",
     "link": "https://www.helloburlingtonvt.com/event/wish-benefit-tour-2026-with-oteil-burbridge-%26-lamp/7920/",
     "ts": "2026-08-25T17:01:29-04:00",
     "start": "2026-10-07T19:00:00-04:00",
     "venue": "Higher Ground"
+   },
+   {
+    "id": "d2257760dce1",
+    "title": "Jason Dea West",
+    "link": "https://tockify.com/radio.bean.event.calendar1/detail/2849/1791414000000",
+    "ts": "2026-08-17T06:07:52-04:00",
+    "start": "2026-10-07T19:00:00-04:00",
+    "venue": "Radio Bean"
    },
    {
     "id": "e14c782dc714",
@@ -16101,6 +15635,14 @@
     "venue": "Maquam Barn & Winery"
    },
    {
+    "id": "7383217fb5f7",
+    "title": "Peer Support Dungeons & Dragons",
+    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-08T18:00:00-04:00",
+    "venue": "Morgan House"
+   },
+   {
     "id": "8de97e137cbd",
     "title": "Trivia",
     "link": "https://community.sevendaysvt.com/event/trivia-44721904",
@@ -16117,14 +15659,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "5ecbcf9b18ad",
-    "title": "Trivia",
-    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-08T18:00:00-04:00",
-    "venue": "Four Quarters Brewing"
-   },
-   {
     "id": "40307379ce68",
     "title": "Vinyl Thursdays",
     "link": "https://community.sevendaysvt.com/event/vinyl-thursdays-45195654",
@@ -16133,12 +15667,12 @@
     "venue": "Hotel Vermont"
    },
    {
-    "id": "7383217fb5f7",
-    "title": "Peer Support Dungeons & Dragons",
-    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "id": "5ecbcf9b18ad",
+    "title": "Trivia",
+    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-08T18:00:00-04:00",
-    "venue": "Morgan House"
+    "venue": "Four Quarters Brewing"
    },
    {
     "id": "5b4a0a4086cc",
@@ -17285,20 +16819,20 @@
     "venue": "688 pine street. Burlington- VT 05401"
    },
    {
-    "id": "6b828a3809f5",
-    "title": "Traditional Tuesday",
-    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
-    "ts": "2026-08-23T05:56:20-04:00",
-    "start": "2026-10-13T16:30:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
     "id": "5dab9f524d3e",
     "title": "Spanish Conversation",
     "link": "https://fletcherfree.libcal.com/event/17514810",
     "ts": "2026-08-26T06:15:56-04:00",
     "start": "2026-10-13T16:30:00-04:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "6b828a3809f5",
+    "title": "Traditional Tuesday",
+    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
+    "ts": "2026-08-23T05:56:20-04:00",
+    "start": "2026-10-13T16:30:00-04:00",
+    "venue": "Maglianero"
    },
    {
     "id": "2be0a28cbeb7",
@@ -17373,20 +16907,20 @@
     "venue": "Akes' Place"
    },
    {
-    "id": "5c2329191035",
-    "title": "Vermont Figure Drawing Collective",
-    "link": "https://www.helloburlingtonvt.com/event/vermont-figure-drawing-collective/5712/",
-    "ts": "2026-08-23T05:56:20-04:00",
-    "start": "2026-10-13T18:00:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
     "id": "16a50cbd000c",
     "title": "Local Dork at Foam Brewers on a Tuesday",
     "link": "https://www.helloburlingtonvt.com/event/local-dork-at-foam-brewers-on-a-tuesday/7444/",
     "ts": "2026-08-23T05:56:20-04:00",
     "start": "2026-10-13T18:00:00-04:00",
     "venue": "Foam Brewers"
+   },
+   {
+    "id": "5c2329191035",
+    "title": "Vermont Figure Drawing Collective",
+    "link": "https://www.helloburlingtonvt.com/event/vermont-figure-drawing-collective/5712/",
+    "ts": "2026-08-23T05:56:20-04:00",
+    "start": "2026-10-13T18:00:00-04:00",
+    "venue": "Maglianero"
    },
    {
     "id": "5260121b6e84",
@@ -17429,20 +16963,20 @@
     "venue": "Phoenix Books"
    },
    {
-    "id": "3822aea59f35",
-    "title": "Dead Is Alive with Dobbs' Dead",
-    "link": "https://community.sevendaysvt.com/event/dead-is-alive-with-dobbs-dead-43938767",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-13T20:00:00-04:00",
-    "venue": "Einstein's Tap House"
-   },
-   {
     "id": "3cb7cc5fa2ca",
     "title": "Math Club!",
     "link": "https://www.champlain.edu/event/math-club-meeting-3/2026-10-13/",
     "ts": "2026-09-04T09:44:35-04:00",
     "start": "2026-10-13T20:00:00-04:00",
     "venue": "Room 205, Joyce Hall"
+   },
+   {
+    "id": "3822aea59f35",
+    "title": "Dead Is Alive with Dobbs' Dead",
+    "link": "https://community.sevendaysvt.com/event/dead-is-alive-with-dobbs-dead-43938767",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-13T20:00:00-04:00",
+    "venue": "Einstein's Tap House"
    },
    {
     "id": "ea72b0a71ffd",
@@ -17709,6 +17243,14 @@
     "venue": ""
    },
    {
+    "id": "049975ca2e19",
+    "title": "Yarn & Yak",
+    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-14T17:00:00-04:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
     "id": "679ae4749e8f",
     "title": "The All-Inclusive Dyke-Tacular",
     "link": "https://community.sevendaysvt.com/event/the-all-inclusive-dyke-tacular-44828742",
@@ -17723,14 +17265,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-14T17:00:00-04:00",
     "venue": "Must Love Yarn"
-   },
-   {
-    "id": "049975ca2e19",
-    "title": "Yarn & Yak",
-    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-14T17:00:00-04:00",
-    "venue": "Milton Artists' Guild"
    },
    {
     "id": "2052a154655a",
@@ -17789,20 +17323,20 @@
     "venue": "Generator Makerspace"
    },
    {
-    "id": "900224743fd6",
-    "title": "Recovery Dharma",
-    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-14T18:00:00-04:00",
-    "venue": "First United Methodist Church"
-   },
-   {
     "id": "9a94d259da48",
     "title": "Community Cooking",
     "link": "https://community.sevendaysvt.com/event/community-cooking-42481660",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-14T18:00:00-04:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "900224743fd6",
+    "title": "Recovery Dharma",
+    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-14T18:00:00-04:00",
+    "venue": "First United Methodist Church"
    },
    {
     "id": "f7d65735986e",
@@ -18093,6 +17627,14 @@
     "venue": "Maquam Barn & Winery"
    },
    {
+    "id": "9f5cffcca552",
+    "title": "Peer Support Dungeons & Dragons",
+    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-15T18:00:00-04:00",
+    "venue": "Morgan House"
+   },
+   {
     "id": "a72a60f1b6af",
     "title": "Trivia",
     "link": "https://community.sevendaysvt.com/event/trivia-44721904",
@@ -18109,14 +17651,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "ce9987178e58",
-    "title": "Trivia",
-    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-15T18:00:00-04:00",
-    "venue": "Four Quarters Brewing"
-   },
-   {
     "id": "d2a0aff5e23d",
     "title": "Vinyl Thursdays",
     "link": "https://community.sevendaysvt.com/event/vinyl-thursdays-45195654",
@@ -18125,12 +17659,12 @@
     "venue": "Hotel Vermont"
    },
    {
-    "id": "9f5cffcca552",
-    "title": "Peer Support Dungeons & Dragons",
-    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "id": "ce9987178e58",
+    "title": "Trivia",
+    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-15T18:00:00-04:00",
-    "venue": "Morgan House"
+    "venue": "Four Quarters Brewing"
    },
    {
     "id": "b3b1075c26ee",
@@ -18285,14 +17819,6 @@
     "venue": "Howe Library"
    },
    {
-    "id": "701eb107a044",
-    "title": "Tech Help by Appointment",
-    "link": "https://southburlingtonlibrary.org/tech-help",
-    "ts": "2026-08-17T06:07:52-04:00",
-    "start": "2026-10-16T10:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
     "id": "da25c940813f",
     "title": "Duplicate Bridge Games",
     "link": "https://community.sevendaysvt.com/event/duplicate-bridge-games-41579461",
@@ -18315,6 +17841,14 @@
     "ts": "2026-08-17T06:07:52-04:00",
     "start": "2026-10-16T10:00:00-04:00",
     "venue": "Women’s & Gender Center, Skiff Hall Annex"
+   },
+   {
+    "id": "701eb107a044",
+    "title": "Tech Help by Appointment",
+    "link": "https://southburlingtonlibrary.org/tech-help",
+    "ts": "2026-08-17T06:07:52-04:00",
+    "start": "2026-10-16T10:00:00-04:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "0dba8cc97b13",
@@ -19429,20 +18963,20 @@
     "venue": "Pathways Vermont Morgan's Place Peer Support Center"
    },
    {
-    "id": "63dfa1597afc",
-    "title": "Traditional Tuesday",
-    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
-    "ts": "2026-08-28T00:28:15-04:00",
-    "start": "2026-10-20T16:30:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
     "id": "901011da4274",
     "title": "Spanish Conversation",
     "link": "https://fletcherfree.libcal.com/event/17514811",
     "ts": "2026-08-26T06:15:56-04:00",
     "start": "2026-10-20T16:30:00-04:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "63dfa1597afc",
+    "title": "Traditional Tuesday",
+    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
+    "ts": "2026-08-28T00:28:15-04:00",
+    "start": "2026-10-20T16:30:00-04:00",
+    "venue": "Maglianero"
    },
    {
     "id": "969a40f8b15e",
@@ -19829,6 +19363,14 @@
     "venue": ""
    },
    {
+    "id": "0aa192cc9e3b",
+    "title": "Yarn & Yak",
+    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-21T17:00:00-04:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
     "id": "12651b581fd2",
     "title": "The All-Inclusive Dyke-Tacular",
     "link": "https://community.sevendaysvt.com/event/the-all-inclusive-dyke-tacular-44828742",
@@ -19843,14 +19385,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-21T17:00:00-04:00",
     "venue": "Must Love Yarn"
-   },
-   {
-    "id": "0aa192cc9e3b",
-    "title": "Yarn & Yak",
-    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-21T17:00:00-04:00",
-    "venue": "Milton Artists' Guild"
    },
    {
     "id": "f1cf5211c48c",
@@ -19877,20 +19411,20 @@
     "venue": "Foam Brewers"
    },
    {
-    "id": "cf63cab52987",
-    "title": "Recovery Dharma",
-    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-21T18:00:00-04:00",
-    "venue": "First United Methodist Church"
-   },
-   {
     "id": "81b28d44bef2",
     "title": "Community Cooking",
     "link": "https://community.sevendaysvt.com/event/community-cooking-42481660",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-21T18:00:00-04:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "cf63cab52987",
+    "title": "Recovery Dharma",
+    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-21T18:00:00-04:00",
+    "venue": "First United Methodist Church"
    },
    {
     "id": "3b78536d7e69",
@@ -19971,6 +19505,14 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-21T19:00:00-04:00",
     "venue": ""
+   },
+   {
+    "id": "c5df1fce68e7",
+    "title": "Creating Calm Amidst Chaos",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/creating-calm-amidst-chaos/19864759/2026-10-21T19",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-10-21T19:00:00-04:00",
+    "venue": "1 Mill St suite 208"
    },
    {
     "id": "ffcfe830af7e",
@@ -20213,6 +19755,14 @@
     "venue": "Maquam Barn & Winery"
    },
    {
+    "id": "d9e3eb3673d2",
+    "title": "Peer Support Dungeons & Dragons",
+    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-22T18:00:00-04:00",
+    "venue": "Morgan House"
+   },
+   {
     "id": "ca1eae194e76",
     "title": "Trivia",
     "link": "https://community.sevendaysvt.com/event/trivia-44721904",
@@ -20229,14 +19779,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "638324aa4139",
-    "title": "Trivia",
-    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-22T18:00:00-04:00",
-    "venue": "Four Quarters Brewing"
-   },
-   {
     "id": "c5d58cbd6aea",
     "title": "Vinyl Thursdays",
     "link": "https://community.sevendaysvt.com/event/vinyl-thursdays-45195654",
@@ -20245,12 +19787,12 @@
     "venue": "Hotel Vermont"
    },
    {
-    "id": "d9e3eb3673d2",
-    "title": "Peer Support Dungeons & Dragons",
-    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "id": "638324aa4139",
+    "title": "Trivia",
+    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-22T18:00:00-04:00",
-    "venue": "Morgan House"
+    "venue": "Four Quarters Brewing"
    },
    {
     "id": "686769666b0f",
@@ -21269,20 +20811,20 @@
     "venue": "Leddy Park"
    },
    {
-    "id": "aad65ce5eba1",
-    "title": "Current Events",
-    "link": "https://brownelllibrary.org/event/current-events-2/2026-10-27/",
-    "ts": "2026-08-28T00:28:15-04:00",
-    "start": "2026-10-27T10:00:00-04:00",
-    "venue": "Brownell Library"
-   },
-   {
     "id": "82de9552f16f",
     "title": "Data Design Lab",
     "link": "https://events.uvm.edu/event/data-design-lab",
     "ts": "2026-08-29T10:40:56-04:00",
     "start": "2026-10-27T10:00:00-04:00",
     "venue": "Howe Library"
+   },
+   {
+    "id": "aad65ce5eba1",
+    "title": "Current Events",
+    "link": "https://brownelllibrary.org/event/current-events-2/2026-10-27/",
+    "ts": "2026-08-28T00:28:15-04:00",
+    "start": "2026-10-27T10:00:00-04:00",
+    "venue": "Brownell Library"
    },
    {
     "id": "14dd9297b438",
@@ -21357,20 +20899,20 @@
     "venue": "Pathways Vermont Morgan's Place Peer Support Center"
    },
    {
-    "id": "0502c71f4584",
-    "title": "Traditional Tuesday",
-    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
-    "ts": "2026-08-30T10:30:27-04:00",
-    "start": "2026-10-27T16:30:00-04:00",
-    "venue": "Maglianero"
-   },
-   {
     "id": "2f2fefa104b5",
     "title": "Spanish Conversation",
     "link": "https://fletcherfree.libcal.com/event/17514812",
     "ts": "2026-08-28T00:28:15-04:00",
     "start": "2026-10-27T16:30:00-04:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "0502c71f4584",
+    "title": "Traditional Tuesday",
+    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
+    "ts": "2026-08-30T10:30:27-04:00",
+    "start": "2026-10-27T16:30:00-04:00",
+    "venue": "Maglianero"
    },
    {
     "id": "0a7a90e89368",
@@ -21509,20 +21051,20 @@
     "venue": "The Flynn"
    },
    {
-    "id": "de3e08b47dc1",
-    "title": "Dead Is Alive with Dobbs' Dead",
-    "link": "https://community.sevendaysvt.com/event/dead-is-alive-with-dobbs-dead-43938767",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-27T20:00:00-04:00",
-    "venue": "Einstein's Tap House"
-   },
-   {
     "id": "117a0e027fd2",
     "title": "Math Club!",
     "link": "https://www.champlain.edu/event/math-club-meeting-3/2026-10-27/",
     "ts": "2026-09-04T09:44:35-04:00",
     "start": "2026-10-27T20:00:00-04:00",
     "venue": "Room 205, Joyce Hall"
+   },
+   {
+    "id": "de3e08b47dc1",
+    "title": "Dead Is Alive with Dobbs' Dead",
+    "link": "https://community.sevendaysvt.com/event/dead-is-alive-with-dobbs-dead-43938767",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-27T20:00:00-04:00",
+    "venue": "Einstein's Tap House"
    },
    {
     "id": "38c9315f42ee",
@@ -21741,6 +21283,14 @@
     "venue": ""
    },
    {
+    "id": "32e5b345d0ba",
+    "title": "Yarn & Yak",
+    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-28T17:00:00-04:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
     "id": "bd81f949f62b",
     "title": "The All-Inclusive Dyke-Tacular",
     "link": "https://community.sevendaysvt.com/event/the-all-inclusive-dyke-tacular-44828742",
@@ -21755,14 +21305,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-28T17:00:00-04:00",
     "venue": "Must Love Yarn"
-   },
-   {
-    "id": "32e5b345d0ba",
-    "title": "Yarn & Yak",
-    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-28T17:00:00-04:00",
-    "venue": "Milton Artists' Guild"
    },
    {
     "id": "2bd017bd2539",
@@ -21789,20 +21331,20 @@
     "venue": "Generator Makerspace"
    },
    {
-    "id": "54061277f416",
-    "title": "Recovery Dharma",
-    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-28T18:00:00-04:00",
-    "venue": "First United Methodist Church"
-   },
-   {
     "id": "5913e8584187",
     "title": "Community Cooking",
     "link": "https://community.sevendaysvt.com/event/community-cooking-42481660",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-28T18:00:00-04:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "54061277f416",
+    "title": "Recovery Dharma",
+    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-28T18:00:00-04:00",
+    "venue": "First United Methodist Church"
    },
    {
     "id": "3d9fb194c0b6",
@@ -22053,6 +21595,14 @@
     "venue": "South Burlington Public Library"
    },
    {
+    "id": "5860bd087b3e",
+    "title": "Peer Support Dungeons & Dragons",
+    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-29T18:00:00-04:00",
+    "venue": "Morgan House"
+   },
+   {
     "id": "29c11d84783b",
     "title": "Trivia",
     "link": "https://community.sevendaysvt.com/event/trivia-44721904",
@@ -22069,14 +21619,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "d15d891edee4",
-    "title": "Trivia",
-    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-29T18:00:00-04:00",
-    "venue": "Four Quarters Brewing"
-   },
-   {
     "id": "020df855a12c",
     "title": "Vinyl Thursdays",
     "link": "https://community.sevendaysvt.com/event/vinyl-thursdays-45195654",
@@ -22085,12 +21627,12 @@
     "venue": "Hotel Vermont"
    },
    {
-    "id": "5860bd087b3e",
-    "title": "Peer Support Dungeons & Dragons",
-    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "id": "d15d891edee4",
+    "title": "Trivia",
+    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-29T18:00:00-04:00",
-    "venue": "Morgan House"
+    "venue": "Four Quarters Brewing"
    },
    {
     "id": "c24fc7f9635b",
@@ -23029,20 +22571,20 @@
     "venue": "Pathways Vermont Morgan's Place Peer Support Center"
    },
    {
-    "id": "c3c484dc1ce1",
-    "title": "Traditional Tuesday",
-    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
-    "ts": "2026-09-04T09:44:35-04:00",
-    "start": "2026-11-03T16:30:00-05:00",
-    "venue": "Maglianero"
-   },
-   {
     "id": "eddceb4ae316",
     "title": "Spanish Conversation",
     "link": "https://fletcherfree.libcal.com/event/17514813",
     "ts": "2026-09-04T09:44:35-04:00",
     "start": "2026-11-03T16:30:00-05:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "c3c484dc1ce1",
+    "title": "Traditional Tuesday",
+    "link": "https://www.helloburlingtonvt.com/event/traditional-tuesday/6325/",
+    "ts": "2026-09-04T09:44:35-04:00",
+    "start": "2026-11-03T16:30:00-05:00",
+    "venue": "Maglianero"
    },
    {
     "id": "809f3bc62d8f",
@@ -23389,6 +22931,14 @@
     "venue": ""
    },
    {
+    "id": "05e1f84781ee",
+    "title": "Yarn & Yak",
+    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
+    "ts": "2026-09-05T01:37:25-04:00",
+    "start": "2026-11-04T17:00:00-05:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
     "id": "90d8d2e7d5c7",
     "title": "The All-Inclusive Dyke-Tacular",
     "link": "https://community.sevendaysvt.com/event/the-all-inclusive-dyke-tacular-44828742",
@@ -23403,14 +22953,6 @@
     "ts": "2026-09-05T01:37:25-04:00",
     "start": "2026-11-04T17:00:00-05:00",
     "venue": "Must Love Yarn"
-   },
-   {
-    "id": "05e1f84781ee",
-    "title": "Yarn & Yak",
-    "link": "https://community.sevendaysvt.com/event/yarn-and-yak-44563095",
-    "ts": "2026-09-05T01:37:25-04:00",
-    "start": "2026-11-04T17:00:00-05:00",
-    "venue": "Milton Artists' Guild"
    },
    {
     "id": "0e4ad4617d0c",
@@ -23429,20 +22971,20 @@
     "venue": "Foam Brewers"
    },
    {
-    "id": "a31ca776447e",
-    "title": "Recovery Dharma",
-    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
-    "ts": "2026-09-05T01:37:25-04:00",
-    "start": "2026-11-04T18:00:00-05:00",
-    "venue": "First United Methodist Church"
-   },
-   {
     "id": "769d43c21389",
     "title": "Community Cooking",
     "link": "https://community.sevendaysvt.com/event/community-cooking-42481660",
     "ts": "2026-09-05T01:37:25-04:00",
     "start": "2026-11-04T18:00:00-05:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "a31ca776447e",
+    "title": "Recovery Dharma",
+    "link": "https://community.sevendaysvt.com/event/recovery-dharma-44746175",
+    "ts": "2026-09-05T01:37:25-04:00",
+    "start": "2026-11-04T18:00:00-05:00",
+    "venue": "First United Methodist Church"
    },
    {
     "id": "5dd76e455251",
@@ -23773,6 +23315,14 @@
     "venue": "ECHO, Leahy Center for Lake Champlain"
    },
    {
+    "id": "93873f9ed55a",
+    "title": "Peer Support Dungeons & Dragons",
+    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "ts": "2026-09-06T09:05:39-04:00",
+    "start": "2026-11-05T18:00:00-05:00",
+    "venue": "Morgan House"
+   },
+   {
     "id": "431b714572be",
     "title": "Trivia",
     "link": "https://community.sevendaysvt.com/event/trivia-44721904",
@@ -23789,14 +23339,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "985eef7e4a7b",
-    "title": "Trivia",
-    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
-    "ts": "2026-09-06T09:05:39-04:00",
-    "start": "2026-11-05T18:00:00-05:00",
-    "venue": "Four Quarters Brewing"
-   },
-   {
     "id": "98fc949ad6f3",
     "title": "Vinyl Thursdays",
     "link": "https://community.sevendaysvt.com/event/vinyl-thursdays-45195654",
@@ -23805,12 +23347,12 @@
     "venue": "Hotel Vermont"
    },
    {
-    "id": "93873f9ed55a",
-    "title": "Peer Support Dungeons & Dragons",
-    "link": "https://community.sevendaysvt.com/event/peer-support-dungeons-and-dragons-44740369",
+    "id": "985eef7e4a7b",
+    "title": "Trivia",
+    "link": "https://community.sevendaysvt.com/event/trivia-44823056",
     "ts": "2026-09-06T09:05:39-04:00",
     "start": "2026-11-05T18:00:00-05:00",
-    "venue": "Morgan House"
+    "venue": "Four Quarters Brewing"
    },
    {
     "id": "dde436bda5f1",
@@ -23893,14 +23435,6 @@
     "venue": "Pingala Café North Avenue"
    },
    {
-    "id": "5cdbb6a38195",
-    "title": "Tech Help by Appointment",
-    "link": "https://southburlingtonlibrary.org/tech-help",
-    "ts": "2026-09-07T11:14:17-04:00",
-    "start": "2026-11-06T10:00:00-05:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
     "id": "a5886118408c",
     "title": "Duplicate Bridge Games",
     "link": "https://community.sevendaysvt.com/event/duplicate-bridge-games-41579461",
@@ -23923,6 +23457,14 @@
     "ts": "2026-09-07T11:14:17-04:00",
     "start": "2026-11-06T10:00:00-05:00",
     "venue": "Women’s & Gender Center, Skiff Hall Annex"
+   },
+   {
+    "id": "5cdbb6a38195",
+    "title": "Tech Help by Appointment",
+    "link": "https://southburlingtonlibrary.org/tech-help",
+    "ts": "2026-09-07T11:14:17-04:00",
+    "start": "2026-11-06T10:00:00-05:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "909cf13adfce",
@@ -24211,6 +23753,174 @@
     "ts": "2026-09-08T09:49:41-04:00",
     "start": "2026-11-07T22:00:00-05:00",
     "venue": "RiRa Irish Pub"
+   },
+   {
+    "id": "d9aa77558572",
+    "title": "Sensory-Friendly Sunday",
+    "link": "https://community.sevendaysvt.com/event/sensory-friendly-sunday-38540182",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T09:00:00-05:00",
+    "venue": "ECHO, Leahy Center for Lake Champlain"
+   },
+   {
+    "id": "cc4ae22ef4be",
+    "title": "Sunday Brunch Tunes",
+    "link": "https://community.sevendaysvt.com/event/sunday-brunch-tunes-35242744",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T10:00:00-05:00",
+    "venue": "Hotel Vermont"
+   },
+   {
+    "id": "140b607a8aaf",
+    "title": "Vermont Crafters Expo",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/vermont-crafters-expo/18888912/2026-11-08T10",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T10:00:00-05:00",
+    "venue": "Champlain Valley Exposition"
+   },
+   {
+    "id": "da6d017512cd",
+    "title": "Children's Story Time ﻿With Christine﻿",
+    "link": "https://community.sevendaysvt.com/event/childrens-story-time-with-christine-45317524",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T10:30:00-05:00",
+    "venue": "Wild Meadows Books & Café"
+   },
+   {
+    "id": "ccf1b1766220",
+    "title": "Sunday Funday",
+    "link": "https://community.sevendaysvt.com/event/sunday-funday-38405867",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T12:00:00-05:00",
+    "venue": "1st Republic Brewing"
+   },
+   {
+    "id": "990512ca684f",
+    "title": "Dungeons & Dragons Group A with DM Andrew",
+    "link": "https://fletcherfree.libcal.com/event/15547757",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T12:15:00-05:00",
+    "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "dafe3d0f6792",
+    "title": "Social Sundays",
+    "link": "https://community.sevendaysvt.com/event/social-sundays-42351166",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T12:30:00-05:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
+    "id": "84492ffff220",
+    "title": "Duplicate Bridge Games",
+    "link": "https://community.sevendaysvt.com/event/duplicate-bridge-games-41579461",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T13:00:00-05:00",
+    "venue": "Burlington Bridge Club"
+   },
+   {
+    "id": "901e54e159fc",
+    "title": "Social Sunday",
+    "link": "https://community.sevendaysvt.com/event/social-sunday-42357527",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T13:00:00-05:00",
+    "venue": "Milton Artists' Guild"
+   },
+   {
+    "id": "899e9bb61c0e",
+    "title": "Acoustic Brunch",
+    "link": "https://www.helloburlingtonvt.com/event/acoustic-brunch/3027/",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T13:00:00-05:00",
+    "venue": "Foam Brewers"
+   },
+   {
+    "id": "22b8d9a6662a",
+    "title": "Public Skate",
+    "link": "https://www.burlingtonvt.gov/calendar.aspx?EID=4829",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T14:30:00-05:00",
+    "venue": "Leddy Park"
+   },
+   {
+    "id": "ed032a81c0ed",
+    "title": "Sunday Polo Match",
+    "link": "https://community.sevendaysvt.com/event/sunday-polo-match-45209250",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T15:00:00-05:00",
+    "venue": "Amdez Polo Club"
+   },
+   {
+    "id": "513e8e73100f",
+    "title": "Food For Talk Cookbook Club: Turtle Island",
+    "link": "https://fletcherfree.libcal.com/event/15949068",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T15:00:00-05:00",
+    "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "bdec79dd4eb1",
+    "title": "Dad Guild Playgroup (drop-in)",
+    "link": "https://fletcherfree.libcal.com/event/15855022",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T15:30:00-05:00",
+    "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "d1994332e793",
+    "title": "Build It Big: Second Story",
+    "link": "https://fletcherfree.libcal.com/event/17125750",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T15:30:00-05:00",
+    "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "9e678114a202",
+    "title": "Lieder by the Lake - Burlington Schumann Recital",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/lieder-by-the-lake-burlington-schumann-recital/19306510/2026-11-08T16",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T16:00:00-05:00",
+    "venue": "College Street Congregational Church"
+   },
+   {
+    "id": "971930a11382",
+    "title": "Blue Sundays",
+    "link": "https://shelburnevineyard.com/events-list/bluesundays",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T17:00:00-05:00",
+    "venue": "Shelburne Vineyard"
+   },
+   {
+    "id": "c00e79af9512",
+    "title": "Wine & Jazz Sundays",
+    "link": "https://community.sevendaysvt.com/event/wine-and-jazz-sundays-44782762",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T17:00:00-05:00",
+    "venue": "Shelburne Vineyard"
+   },
+   {
+    "id": "125314503645",
+    "title": "New Mindfulness Meditation Gathering",
+    "link": "https://community.sevendaysvt.com/event/new-mindfulness-meditation-gathering-44983853",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T17:30:00-05:00",
+    "venue": "Hood Plant"
+   },
+   {
+    "id": "42baebfede7b",
+    "title": "New Leaf Sangha Mindfulness Practice",
+    "link": "https://community.sevendaysvt.com/event/new-leaf-sangha-mindfulness-practice-41783747",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T18:00:00-05:00",
+    "venue": "Hot Yoga Burlington"
+   },
+   {
+    "id": "2a2ca7e36bc0",
+    "title": "Karaoke Sundays!",
+    "link": "https://www.helloburlingtonvt.com/event/karaoke-sundays!/4512/",
+    "ts": "2026-09-09T09:52:26-04:00",
+    "start": "2026-11-08T21:00:00-05:00",
+    "venue": "Einstein Tap House"
    }
   ]
  }
