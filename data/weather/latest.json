@@ -1,27 +1,27 @@
 {
- "updated": "2026-09-09T18:44:08+00:00",
+ "updated": "2026-09-09T20:01:51+00:00",
  "sections_updated": {
-  "now": "2026-09-09T18:44:08+00:00",
-  "forecast": "2026-09-09T18:44:08+00:00",
-  "hourly": "2026-09-09T18:44:08+00:00",
-  "alerts": "2026-09-09T18:44:08+00:00",
-  "afd": "2026-09-09T18:44:08+00:00",
-  "lake_forecast": "2026-09-09T18:44:08+00:00",
-  "lake_gage": "2026-09-09T18:44:08+00:00",
-  "air": "2026-09-09T18:44:08+00:00",
-  "sun": "2026-09-09T18:44:08+00:00",
-  "models": "2026-09-09T18:44:08+00:00"
+  "now": "2026-09-09T20:01:51+00:00",
+  "forecast": "2026-09-09T20:01:51+00:00",
+  "hourly": "2026-09-09T20:01:51+00:00",
+  "alerts": "2026-09-09T20:01:51+00:00",
+  "afd": "2026-09-09T20:01:51+00:00",
+  "lake_forecast": "2026-09-09T20:01:51+00:00",
+  "lake_gage": "2026-09-09T20:01:51+00:00",
+  "air": "2026-09-09T20:01:51+00:00",
+  "sun": "2026-09-09T20:01:51+00:00",
+  "models": "2026-09-09T20:01:51+00:00"
  },
  "now": {
-  "observed_at": "2026-09-09T18:15:00+00:00",
+  "observed_at": "2026-09-09T19:40:00+00:00",
   "station": "KBTV",
   "description": "Light Rain",
   "temp_f": 66,
   "feels_like_f": 66,
   "humidity": 88,
   "dewpoint_f": 63,
-  "wind_mph": 10,
-  "wind_gust_mph": null,
+  "wind_mph": 13,
+  "wind_gust_mph": 18,
   "wind_dir": "S",
   "precip_last_hr_in": null
  },
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-09-09T14:00:00-04:00",
+    "start": "2026-09-09T16:00:00-04:00",
     "is_day": true,
     "temp_f": 71,
     "pop": 81,
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-09T18:18:01+00:00",
   "hours": [
-   {
-    "t": "2026-09-09T14:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
-    "pop": 45,
-    "humidity": 73,
-    "wind_mph": 15,
-    "wind_dir": "S",
-    "sky": 92,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-09T15:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 48,
-    "humidity": 78,
-    "wind_mph": 16,
-    "wind_dir": "S",
-    "sky": 91,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-09-09T16:00:00-04:00",
     "temp_f": 69,
@@ -568,6 +546,28 @@
     "wind_dir": "NW",
     "sky": 38,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-09-11T02:00:00-04:00",
+    "temp_f": 58,
+    "feels_f": 58,
+    "pop": 0,
+    "humidity": 75,
+    "wind_mph": 6,
+    "wind_dir": "NW",
+    "sky": 10,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-09-11T03:00:00-04:00",
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 0,
+    "humidity": 80,
+    "wind_mph": 6,
+    "wind_dir": "NW",
+    "sky": 7,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -575,14 +575,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-09T18:16:00+00:00",
+  "issued": "2026-09-09T19:02:00+00:00",
   "key_messages": [
-   "Widespread rain is expected to arrive later this morning and spread east through tonight as winds increase from the south and southwest.",
-   "A drier period is anticipated to end the week as gusty winds persist Thursday, decreasing toward the weekend.",
-   "High pressure will bring another stretch of dry and pleasant weather to start the weekend."
+   "Widespread rain is expected to continue through tonight with gusty winds from the south and southwest.",
+   "A drier, fall-like, period is anticipated to end the week as gusty winds persist Thursday, decreasing toward the weekend.",
+   "A pair of similar cold fronts will likely pass through the region Sunday night and Tuesday night. Breezy periods and some showers are expected with no significant hazards anticipated."
   ],
-  "what_changed": "As of 218 AM EDT Wednesday... No significant changes to the current forecast.",
-  "raw": "\n000\nFXUS61 KBTV 091816\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n216 PM EDT Wed Sep 9 2026\n\n.WHAT HAS CHANGED...\nAs of 218 AM EDT Wednesday...\n\nNo significant changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 218 AM EDT Wednesday...\n\n1. Widespread rain is expected to arrive later this morning and \nspread east through tonight as winds increase from the south and \nsouthwest.\n\n2. A drier period is anticipated to end the week as gusty winds \npersist Thursday, decreasing toward the weekend.\n\n3. High pressure will bring another stretch of dry and pleasant \nweather to start the weekend.\n\n&&\n\n.DISCUSSION...\nAs of 218 AM EDT Wednesday...\n\nKEY MESSAGE 1: Our next weather system arrives from the Great Lakes mid \nto late morning as a warm front draped across New York pushes east. \nIsentropic lift along the warm front will lead to widespread light \nto moderate stratiform rain on the leading edge of the system late \nthis morning through the afternoon, moving from the St. Lawrence \nValley eastward into central and northern Vermont. While the system \nwill be fairly progressive, projected precipitable water values in \nthe latest model runs reach as high as 1.75-2.25 inches. As rain \nturns more showery towards the later afternoon and evening today, \nheavy downpours will be possible. Much of central and northern \nVermont are currently in D0 (abnormally dry) to D1 (moderate \ndrought) levels, so we are not anticipating hydrological issues \nfrom this rainfall. Precipitation totals through early Thursday \nmorning will be highest across the on northern and western \nslopes of the mountains across our forecast area with around \n0.50-1.15 inches anticipated. Lower amounts are likely in the \nChamplain and Connecticut River valleys due to shadowing from \nthe mountains, closer to 0.20-0.60 inches in these areas. High \ntemperatures today will be seasonable in the lower and mid 70s, \nso elevated instability is favored over surface, and will likely\nbe competing with the preceding stable air. A few rumbles of \nthunder will be possible with modest overall instability and \nstrong 40-50 knots of shear. No severe or strong storms are \nexpected across northern New York or Vermont through the end of \nthe week. A strong low level jet of 40-50 kts at 850 mb will \nalso build in this evening, resulting in that shear mentioned. \nWhile most of these stronger winds aloft will not be realized at\nthe surface due to concurrent precipitation, gusts between \n25-35 MPH are likely, especially in the favored south-north \nchanneled valleys. For mariners, a Lake Wind Advisory is in \neffect for Lake Champlain today and tonight. Temperatures will \nremain mild overnight tonight in the upper 50s to mid 60s due to\nthe influx of warmer air in the warm sector of the system.\n\nKEY MESSAGE 2: Widespread mild highs in the 70s are expected on \nThursday as gusty winds persist in favorable vertical mixing and \ndrying low levels behind the the system. Winds will likely gust \nbetween 20-30 MPH out of the west and northwest Thursday, then trend \nweaker into Friday but continue to be almost brisk in cold air \nadvection. This will result in a cooler day Friday with highs in the \nmid 60s to lower 70s. Depending on how light winds can become \nThursday night and Friday night, with high pressure nosing in from \nthe Great Lakes during this period, we can expect some patchy valley \nfog in the typical spots. Deep layer ridging will slide over the \nregion on Saturday, supporting a dry and sunny day after fog \ndissipates, with high temperatures back in the mid and upper 70s.\n\nKEY MESSAGE 3: High pressure will build into the region towards the end \nof the week into the weekend, bringing a stretch of dry and pleasant \nweather. Daytime high temperatures on Saturday and Sunday will climb \nthe 70s to near 80 as the ridging shifts eastward leading to warm \nsoutherly flow across the region. While dry weather will persist \nthrough much of the weekend, precipitation chances will increase \nthrough the day on Sunday with a progressive shortwave trough \npushing through. There is still plenty of uncertainty regarding this \nfeature, with some uncertainty regarding how much moisture and \nwidespread shower activity will be, but currently it looks like the \nbetter chances will be towards the International Border. Another \nsystem looks to bring another round of widespread precipitation \nTuesday into Wednesday.\n\n&&\n\n.AVIATION /18Z WEDNESDAY THROUGH MONDAY/...\nThrough 18Z Thursday...A warm front is helping to generate \nwidespread light showers across the airspace, with most coverage\ncurrently north of MPV and RUT but expected to fill in with \ntime. Most showers, aside from at SLK, will be mainly producing \nVFR visibilities through the next few hours, with greater \nchances of heavier rain and visibilities between 2 and 5SM after\n22Z and especially 00Z. Ceilings will also tend to lower with \nhighest probabilities of IFR ceilings, categorically into the \nlikely category, at MSS and SLK through 00Z. Temporary IFR \nconditions may happen after that time, and before winds turn \nwesterly in the 08Z to 12Z period with the approach and passage \nof a cold front Thursday morning which will lead to improvement \nto VFR conditions as cloud bases scatter and lift. \n\nAside from at BTV and RUT where sustained winds are 12-15 knots with \nhigher gusts, winds are relatively light at the surface. With \nincreasing winds aloft after 00Z, most sites should expect \nsignificant LLWS with southwesterly winds at 2000 feet agl \nreaching as high as the 40-50 knot range at times outside of the\nChamplain Valley. These conditions will occur mainly 00Z-06Z in\nnorthern New York and 02Z-08Z in Vermont, concurrent with \nshowers that may briefly be heavy at all terminals. Westerly \nwinds will become gusty in the 20 to 25 knot range from 14Z-18Z.\n\nOutlook...\n\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. Slight chance SHRA.\nSunday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nSunday Night: MVFR/IFR conditions possible. Slight chance SHRA.\nMonday: VFR. Slight chance SHRA.\n\n&&\n\n.MARINE...\nSoutherly wind gusts 15 to 25 knots are expected on Lake\nChamplain this morning by 7 AM to 9 AM, highest across the \nBroad Waters. Sustained winds will reach 15 to 25 knots around \n11 AM to 1 PM today, increasing to 30 knots this afternoon and \npeaking around 2 PM to 4 PM. Waves will be around 1 to 3 feet, \nbuilding to 2 to 4 feet. Sustained winds diminish below 25 knots\nby 1 AM to 3 AM early Thursday morning.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Storm\nDISCUSSION...Kremer/Storm\nAVIATION...Kutikoff\nMARINE...Storm\n"
+  "what_changed": "As of 256 PM EDT Wednesday... The axis of the highest rainfall amounts through Thursday early morning has slightly shifted south into Central Vermont. Though, there still are no hydrological concerns expected.",
+  "raw": "\n000\nFXUS61 KBTV 091902\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n302 PM EDT Wed Sep 9 2026\n\n.WHAT HAS CHANGED...\nAs of 256 PM EDT Wednesday...\n\nThe axis of the highest rainfall amounts through Thursday early \nmorning has slightly shifted south into Central Vermont.\nThough, there still are no hydrological concerns expected.\n\n&&\n\n.KEY MESSAGES...\nAs of 256 PM EDT Wednesday...\n\n1. Widespread rain is expected to continue through tonight \nwith gusty winds from the south and southwest.\n\n2. A drier, fall-like, period is anticipated to end the week as \ngusty winds persist Thursday, decreasing toward the weekend.\n\n3. A pair of similar cold fronts will likely pass through the \nregion Sunday night and Tuesday night. Breezy periods and some \nshowers are expected with no significant hazards anticipated.\n\n&&\n\n.DISCUSSION...\nAs of 256 PM EDT Wednesday...\n\nKEY MESSAGE 1: Our weather system has arrived in portions of northern \nNew York at the time of this discussion, with radar denoting areas \nof stratiform rain showers across the Adirondacks and St. Lawrence \nValley. Isentropic lift along a warm front will continue to spread \neast this afternoon with light to moderate stratiform rain moving \ninto central and northern Vermont. Stratiform rain will become more \nbroken and scattery by this evening as a strong low level jet of 40-\n50kts at 850mb builds in. While most of these stronger winds aloft \nwill not be realized due to concurrent precipitation, gusts between \n25-35 MPH will be possible, especially in the favored south-north \nchanneled valleys. For mariners, a Lake Wind Advisory is in effect \nfor Lake Champlain through at least tomorrow morning. The low-level \njet will be associated with a small warm sector ahead of a clearing \ncold front which will help transition showers around sunset to more \nconvective driven showers. Instability will be elevated and not \nsurface based, and likely will be competing with the preceding \nstable air from todays stratiform rain. That said, a few isolated \nrumbles of thunder, primarily in the St. Lawrence Valley and \nAdirondacks will be possible with just under 500J/kg of elevated \nMLCAPE analyzed currently, and subsequent strong 40-50knots of \nshear. No severe or strong storms are expected, however.\n\nWhile the system will be fairly progressive, Pwats in the latest \nCAMs denote elevated values to around 1.8-2.25 inches areawide with \nwarm cloud depths to 12,000ft agl. As rain turns more showery \ntowards later this afternoon and evening, heavy downpours will be \npossible. Rain should be beneficial with the recent dry stretch and \nantecedent dry conditions through this summer, thus no hydrological \nconcerns are anticipated with this system. Precipitation amounts \nwill be highest across the St. Lawrence Valley, higher terrain of \nthe Adirondacks and spine of the Greens, and near the International \nBorder. Recent CAMs have begun to trend some higher rainfall amounts \na bit south into central Vermont. While these are likely \ncontaminated with more robust convection that appears unlikely, this \ntrend south has been reflected in the latest QPF forecast, where \nrainfall amounts along a line from Tupper Lake, NY to eastern \nAddison have been slightly increased. Some shadowing and less robust \nconvection will help to reduce the magnitude models are suggesting. \nBlocked flow with low Froude numbers will also likely lead to some \norographic enhancement of precipitation totals along the spine of \nthe Greens. Around three-quarters of an inch to and inch of rain \nwill be possible in the aforementioned locations, with a quarter to \nhalf an inch most other locations; lower amounts likely in \nsoutheastern Vermont, and in portions of the central Champlain \nValley due to shadowing from the Adirondacks. Temperatures tonight \nwill be mild in the mid 60s with precipitation and humid conditions \nongoing. Rain showers will taper off towards sunrise Thursday \nmorning, with slightly weakening winds.\n\nKEY MESSAGE 2: Our dynamic weather system today will slide east \nThursday morning with drier low level conditions mixing in from the \nnorth and west. Mid level moisture will linger into Thursday \nafternoon with some clearing conditions, mainly in the wider valley; \nthe higher terrain will likely remain partly to mostly cloudy \ntomorrow. Temperatures will be warmer than today with mixing and \nhighs in the mid to upper 70s. Winds will become gusty once again \nThursday afternoon with good vertical mixing associated with a \nlagging low level jet, and drying low levels behind the Wednesday \nsystem. Winds will gust between 20-30 MPH, primarily in the \nchanneled north to south valleys of the Vermont and New York. Winds \nwill trend weaker by late Thursday with calmer northwest cold \nadvection by Friday. Depending on how fast winds slacken Thursday \nevening, and how fast drier low levels will advect, some patchy fog, \nmainly in the Adirondacks, and perhaps the St. Lawrence Valley, will \nbe possible, as skies will begin to clear overnight from west to \neast. Vermont will likely lag behind in the clearing department with \nclouds lingering towards sunrise Friday. Thursday night lows will \ndip into the 40s for most of the region, outside of areas near Lake \nChamplain. The Adirondacks have the best opportunity to radiate out \nwith some pocket upper 30s in the typical coldest hollows.\n\nA picture perfect weekend looks to be in store, beginning Friday \nthrough Saturday. Temperatures will trend slightly below seasonable \nlevels Friday as northwest flow advects cooler air from Canada. \nHighs will be in the mid 60s to near 70 with clear skies. A few \nlight breezes near the International Border, and Champlain Valley, \nto 10-15 MPH could bring a slight bite to the air Friday afternoon. \nClear skies will persist Friday night with areawide strong \nradiational cooling. Temperatures will cool into the low to mid 40s \nfor most locations, and near 50s for areas around Lake Champlain. \nRaw guidance is hinting at potentially low to mid 30s for areas in \nthe heart of the Adirondacks and within the climatologically favored \nsheltered valleys of the NEK and Adirondacks. Friday night, as \nopposed to Thursday night, looks like the better night for patchy \nvalley fog in the favored river valleys of Vermont and northern New \nYork. Saturday looks to be a repeat of Friday with slightly warmer \nhighs into the mid to upper 40s with mostly clear skies. Some breezy \nchanneled winds in the Champlain Valley will be possible Saturday \nafternoon with winds turning more southerly, hence our warmer \ntemperature advection. Other than some breezy conditions, Saturday \nlooks to be another gorgeous day.\n\nKEY MESSAGE 3: An active pattern from Sunday through Tuesday will be \npresent across the US with a storm track persistently well to our \nnorthwest, as low pressure systems move from near Lake Superior into \nthe vicinity of Hudson Bay. Fast moving, mainly westerly mid and \nupper level flow will help push frontal boundaries through with \nmodest pooling of moisture as strong low level advection and \nconvergence occurs. So rounds of scattered to numerous showers both \non Sunday and Tuesday, especially in the afternoon to evening hours, \nare expected. \n\nFor Sunday, it appears a shortwave passing to our south may bring \nsome light rain to our southern areas earlier in the day ahead of \nthe primary event; PoPs have increased as high as 20-29% in southern \nportions of Vermont by daybreak. Otherwise, no real changes are \nnoted in the rainfall forecast with most of the moderate rainfall \nchances closer to the International Border. The Tuesday system looks \nmore dynamic with stronger wind fields, including high probabilities \nof 40 MPH gusts in the vicinity of Lake Champlain out ahead of its \ncold front. Heavier rainfall potential likewise is elevated for this \nevent, with 1\" in 24 hours ending daybreak Wednesday in the 10-20% \nrange fro much of northern New York and much of northern Vermont.\n\n&&\n\n.AVIATION /18Z WEDNESDAY THROUGH MONDAY/...\nThrough 18Z Thursday...A warm front is helping to generate \nwidespread light showers across the airspace, with most coverage\ncurrently north of MPV and RUT but expected to fill in with \ntime. Most showers, aside from at SLK, will be mainly producing \nVFR visibilities through the next few hours, with greater \nchances of heavier rain and visibilities between 2 and 5SM after\n22Z and especially 00Z. Ceilings will also tend to lower with \nhighest probabilities of IFR ceilings, categorically into the \nlikely category, at MSS and SLK through 00Z. Temporary IFR \nconditions may happen after that time, and before winds turn \nwesterly in the 08Z to 12Z period with the approach and passage \nof a cold front Thursday morning which will lead to improvement \nto VFR conditions as cloud bases scatter and lift. \n\nAside from at BTV and RUT where sustained winds are 12-15 knots with \nhigher gusts, winds are relatively light at the surface. With \nincreasing winds aloft after 00Z, most sites should expect \nsignificant LLWS with southwesterly winds at 2000 feet agl \nreaching as high as the 40-50 knot range at times outside of the\nChamplain Valley. These conditions will occur mainly 00Z-06Z in\nnorthern New York and 02Z-08Z in Vermont, concurrent with \nshowers that may briefly be heavy at all terminals. Westerly \nwinds will become gusty in the 20 to 25 knot range from 14Z-18Z.\n\nOutlook...\n\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. Slight chance SHRA.\nSunday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nSunday Night: MVFR/IFR conditions possible. Slight chance SHRA.\nMonday: VFR. Slight chance SHRA.\n\n&&\n\n.MARINE...\nSoutherly wind gusts 15 to 30 knots are expected on Lake \nChamplain through this evening, weakening back to 10 to 20 knots\nafter midnight tonight. Waves will be around 1 to 3 feet on the\nsouthern and northern waters, and 2 to 4 feet on the broad \nwaters through midnight. Wave heights will lower to 1 to 3 feet \nfor the entire Lake after midnight tonight. Winds will become \nweaker tomorrow morning to 10 to 15 knots, increasing to 15 to \n20 knots by tomorrow afternoon. \n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Kutikoff\nAVIATION...Kutikoff\nMARINE...Storm\n"
  },
  "lake_forecast": {
   "issued": "2026-09-09T18:20:00+00:00",
@@ -851,17 +851,17 @@
  },
  "lake_gage": {
   "water_temp_f": 69,
-  "water_temp_at": "2026-09-09T14:00:00.000-04:00",
-  "level_ft": 94.31,
-  "level_at": "2026-09-09T14:00:00.000-04:00",
+  "water_temp_at": "2026-09-09T15:00:00.000-04:00",
+  "level_ft": 94.32,
+  "level_at": "2026-09-09T15:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 29,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/09/26 14:00",
+  "observed": "09/09/26 15:00",
   "discussion": "On Wednesday, September 9th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -876,46 +876,46 @@
    {
     "date": "2026-09-09",
     "high_f": {
-     "GFS": 75,
-     "Euro": 70,
+     "GFS": 73,
+     "Euro": 71,
      "ICON": 71
     },
     "pop_max": {
-     "GFS": 77,
+     "GFS": 82,
      "Euro": 100,
      "ICON": 100
     },
     "precip_in": {
-     "GFS": 0.13,
-     "Euro": 0.31,
+     "GFS": 0.16,
+     "Euro": 0.3,
      "ICON": 0.53
     },
-    "high_spread_f": 5
+    "high_spread_f": 2
    },
    {
     "date": "2026-09-10",
     "high_f": {
      "GFS": 72,
-     "Euro": 77,
+     "Euro": 76,
      "ICON": 73
     },
     "pop_max": {
-     "GFS": 60,
+     "GFS": 54,
      "Euro": 96,
      "ICON": 98
     },
     "precip_in": {
-     "GFS": 0.11,
-     "Euro": 0.09,
+     "GFS": 0.0,
+     "Euro": 0.18,
      "ICON": 0.24
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-09-11",
     "high_f": {
      "GFS": 70,
-     "Euro": 68,
+     "Euro": 69,
      "ICON": 65
     },
     "pop_max": {
@@ -925,7 +925,7 @@
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.02,
+     "Euro": 0.04,
      "ICON": 0.0
     },
     "high_spread_f": 5
