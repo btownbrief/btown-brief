@@ -1,24 +1,24 @@
 {
- "generated": "2026-09-09T09:52:26-04:00",
+ "generated": "2026-09-09T18:44:48-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 19,
-   "seconds": 6.1
+   "count": 20,
+   "seconds": 6.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 68,
-   "seconds": 3.6
+   "count": 72,
+   "seconds": 2.8
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 58,
-   "seconds": 3.2
+   "seconds": 5.6
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 220,
+   "count": 222,
    "seconds": 3.7
   },
   "churchst": {
@@ -30,13 +30,13 @@
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 9
+   "staleDays": 10
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-09&end_date=2026-11-08&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 9
+   "staleDays": 10
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,11 +46,11 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 8,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 210,
+   "count": 205,
    "seconds": 73.3
   },
   "flynn": {
@@ -65,28 +65,28 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 711,
-   "seconds": 37.2
+   "count": 713,
+   "seconds": 38.1
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 78,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 9.5
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 391,
-   "seconds": 78.4
+   "count": 395,
+   "seconds": 77.3
   },
   "meetup": {
    "label": "Meetup",
    "count": 62,
-   "seconds": 118.8
+   "seconds": 126.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
@@ -95,62 +95,73 @@
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 44,
-   "seconds": 7.9
+   "count": 42,
+   "seconds": 7.8
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 12,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 87,
-   "seconds": 5.4
+   "count": 91,
+   "seconds": 1.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 23,
-   "seconds": 32.9
+   "count": 24,
+   "seconds": 34.1
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2374,
-   "seconds": 31.3
+   "count": 2352,
+   "seconds": 3.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 9
+   "staleDays": 10
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 503,
-   "seconds": 33.1
+   "count": 509,
+   "seconds": 25.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 304,
+   "count": 309,
    "seconds": 0.4
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 78,
-   "seconds": 107.4
+   "seconds": 105.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 63,
-   "seconds": 0.4
+   "seconds": 0.6
   }
  },
  "gathered": 5452,
- "afterDedup": 2553,
- "duplicatesMerged": 2899,
- "final": 2760,
- "firecrawlCalls": 5,
+ "afterDedup": 2552,
+ "duplicatesMerged": 2900,
+ "final": 2787,
+ "firecrawlCalls": 1,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Sensory-Friendly Sunday",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-10-11"
+  },
   {
    "kept": {
     "title": "Autumn Concert of Remembrance",
@@ -998,7 +1009,7 @@
   },
   {
    "kept": {
-    "title": "AI and its implications for research, learning, education, and careers ft. Josh Bongard",
+    "title": "Don’t Panic! AI from the Inside ft. UVM's Josh Bongard",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1426,17 +1437,6 @@
    "merged_sources": [
     "fletcherfree",
     "sevendays"
-   ],
-   "date": "2026-10-24"
-  },
-  {
-   "kept": {
-    "title": "Radio Bean Presents: Lamplight, The Clearwater Swimmers, & Fowl @ The Monkey House",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "radiobean"
    ],
    "date": "2026-10-24"
   },
@@ -2410,125 +2410,6 @@
  ],
  "changes": [
   {
-   "id": "40e981e63032",
-   "title": "Stitch! Member Needlework Workshop",
-   "date": "2026-09-09",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "6c7ed2d3683a",
-   "title": "Soup for Two, Salmo, Hannah Roberts, Perry Donovan",
-   "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-09-08T18:57:58-04:00"
-  },
-  {
-   "id": "bdfb2865383c",
-   "title": "Live Music! Temple Mountain",
-   "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-09-06T18:20:54-04:00"
-  },
-  {
-   "id": "d0aec80f5ccd",
-   "title": "Dream / Mộng : Veronica Pham",
-   "date": "2026-09-09",
-   "change": "missing",
-   "lastSeen": "2026-09-08T18:57:58-04:00"
-  },
-  {
-   "id": "78287029ba79",
-   "title": "Thursday Public Skate",
-   "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-09-08T09:49:41-04:00"
-  },
-  {
-   "id": "198112a47e48",
-   "title": "Advanced Mechanical Ventilation Architecture: Designing for Occupant Health",
-   "date": "2026-09-10",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "57a8d11604eb",
-   "title": "Thursday Stick & Puck",
-   "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-09-08T09:49:41-04:00"
-  },
-  {
-   "id": "de05f2ef8bf4",
-   "title": "Adult Craft: Wooden Fish Lawn Decorations",
-   "date": "2026-09-10",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "5f0f6f59e6de",
-   "title": "Back to School Meals",
-   "date": "2026-09-10",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "ed282570307b",
-   "title": "Destination Colombia: Design Competition Launch Event",
-   "date": "2026-09-10",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "039d960a52d0",
-   "title": "Radio Bean Presents: David Liebe Hart (of the Tim & Eric Awesome Show, Great Job!) w/ James Kochalka Superstar & Strelka - Live @ The Monkey House!",
-   "date": "2026-09-10",
-   "change": "missing",
-   "lastSeen": "2026-09-08T18:57:58-04:00"
-  },
-  {
-   "id": "aa099f285445",
-   "title": "Friends Book Sale",
-   "date": "2026-09-11",
-   "change": "missing",
-   "lastSeen": "2026-09-08T09:49:41-04:00"
-  },
-  {
-   "id": "2b55997b7ca9",
-   "title": "Art Hop 2026 at Slate",
-   "date": "2026-09-11",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "0a472ba2f04f",
-   "title": "Auditions",
-   "date": "2026-09-11",
-   "change": "missing",
-   "lastSeen": "2026-09-08T09:49:41-04:00"
-  },
-  {
-   "id": "02687dac9953",
-   "title": "21st Annual Kelly Brush Ride - Middlebury College Alumni Stadium - Can join remote!",
-   "date": "2026-09-12",
-   "change": "missing",
-   "lastSeen": "2026-09-08T09:49:41-04:00"
-  },
-  {
-   "id": "6476a07ebef7",
-   "title": "Weekly Bird Walks at Rock Point Center",
-   "date": "2026-09-12",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "678646c5931d",
-   "title": "CISSP Certification Weekend Training Course in Vermont, VT",
-   "date": "2026-09-12",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
    "id": "86749de21c96",
    "title": "College Student Saturdays",
    "date": "2026-09-12",
@@ -2704,6 +2585,20 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "3e70b9919367",
+   "title": "Charity and Sylvia Composer Talk: Clarice Assad, Composer of Summerland",
+   "date": "2026-09-16",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
+  },
+  {
+   "id": "2f415b123e39",
+   "title": "Mad River Trivia",
+   "date": "2026-09-16",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
+  },
+  {
    "id": "acf6ce6dddd4",
    "title": "ECHO is closed",
    "date": "2026-09-16",
@@ -2763,8 +2658,7 @@
    "id": "7d794705dbd7",
    "title": "Oktoberfest Vermont 2026",
    "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-09-06T18:20:54-04:00"
+   "change": "dropped"
   },
   {
    "id": "d36016f6afa8",
@@ -2868,8 +2762,7 @@
    "id": "55927959fa17",
    "title": "Oktoberfest Vermont 2026",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-06T18:20:54-04:00"
+   "change": "dropped"
   },
   {
    "id": "7f770f629fdb",
@@ -3019,6 +2912,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "140a10516be8",
+   "title": "Library Littles Playgroup",
+   "date": "2026-09-23",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
+  },
+  {
    "id": "580958745406",
    "title": "Wednesday Public Skate",
    "date": "2026-09-23",
@@ -3038,6 +2938,13 @@
    "date": "2026-09-23",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "b63331c941c6",
+   "title": "Mad River Trivia",
+   "date": "2026-09-23",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
   },
   {
    "id": "c688ae69e4fc",
@@ -3264,6 +3171,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "7c4d873025a4",
+   "title": "Library Littles Playgroup",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
+  },
+  {
    "id": "3d16750f7067",
    "title": "2026 UVM Job & Internship Fair",
    "date": "2026-09-30",
@@ -3283,6 +3197,13 @@
    "date": "2026-09-30",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "22d18ea54a87",
+   "title": "Mad River Trivia",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
   },
   {
    "id": "9a693b3577fa",
@@ -3337,8 +3258,7 @@
    "id": "684bd86863c1",
    "title": "BTown Coffee Club",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-06T18:20:54-04:00"
+   "change": "dropped"
   },
   {
    "id": "da4e38265440",
@@ -3411,11 +3331,25 @@
    "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
+   "id": "58f4ac291a6a",
+   "title": "Library Littles Playgroup",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
+  },
+  {
    "id": "2df4b5e3b626",
    "title": "Wednesday Public Skate",
    "date": "2026-10-07",
    "change": "missing",
    "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "9abd1fb0a464",
+   "title": "Kids Garden!",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
   },
   {
    "id": "d2257760dce1",
@@ -3516,6 +3450,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "3e9a90103b01",
+   "title": "Library Littles Playgroup",
+   "date": "2026-10-14",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
+  },
+  {
    "id": "6650baa028f2",
    "title": "Wednesday Public Skate",
    "date": "2026-10-14",
@@ -3528,6 +3469,13 @@
    "date": "2026-10-14",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "5f0aae9b8453",
+   "title": "Kids Garden!",
+   "date": "2026-10-14",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
   },
   {
    "id": "1837480df93e",
@@ -3563,6 +3511,13 @@
    "date": "2026-10-16",
    "change": "missing",
    "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "87323d4b9a70",
+   "title": "Kathleen Schneider: Taken to Heart",
+   "date": "2026-10-16",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
   },
   {
    "id": "138a86df63d3",
@@ -3628,6 +3583,13 @@
    "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
+   "id": "969a40f8b15e",
+   "title": "AI and its implications for research, learning, education, and careers ft. Josh Bongard",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
+  },
+  {
    "id": "4a6ccf9d3b24",
    "title": "Honky Tonk Tuesday",
    "date": "2026-10-20",
@@ -3635,11 +3597,25 @@
    "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
+   "id": "588dca996e79",
+   "title": "Library Littles Playgroup",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
+  },
+  {
    "id": "876fae4858d6",
    "title": "Wednesday Public Skate",
    "date": "2026-10-21",
    "change": "missing",
    "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "bd0e7eca8985",
+   "title": "Kids Garden!",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
   },
   {
    "id": "6859f0da5803",
@@ -3673,8 +3649,7 @@
    "id": "4796bb14f3a3",
    "title": "Fake Far",
    "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-09-06T18:20:54-04:00"
+   "change": "dropped"
   },
   {
    "id": "4648ebeb8a0a",
@@ -3726,11 +3701,25 @@
    "lastSeen": "2026-09-08T09:49:41-04:00"
   },
   {
+   "id": "157847f8b268",
+   "title": "Library Littles Playgroup",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
+  },
+  {
    "id": "75daa9f9cfe7",
    "title": "Wednesday Public Skate",
    "date": "2026-10-28",
    "change": "missing",
    "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "c34dde883a7f",
+   "title": "Kids Garden!",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
   },
   {
    "id": "6a3949dab66d",
@@ -3780,6 +3769,13 @@
    "date": "2026-11-03",
    "change": "missing",
    "lastSeen": "2026-09-08T09:49:41-04:00"
+  },
+  {
+   "id": "c2a043418929",
+   "title": "Library Littles Playgroup",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-09-09T09:52:26-04:00"
   },
   {
    "id": "dd8f5b38bee6",
