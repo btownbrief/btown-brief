@@ -1,27 +1,27 @@
 {
- "updated": "2026-09-10T13:11:49+00:00",
+ "updated": "2026-09-10T13:47:51+00:00",
  "sections_updated": {
-  "now": "2026-09-10T13:11:49+00:00",
-  "forecast": "2026-09-10T13:11:49+00:00",
-  "hourly": "2026-09-10T13:11:49+00:00",
-  "alerts": "2026-09-10T13:11:49+00:00",
-  "afd": "2026-09-10T13:11:49+00:00",
-  "lake_forecast": "2026-09-10T13:11:49+00:00",
-  "lake_gage": "2026-09-10T13:11:49+00:00",
-  "air": "2026-09-10T13:11:49+00:00",
-  "sun": "2026-09-10T13:11:49+00:00",
-  "models": "2026-09-10T13:11:49+00:00"
+  "now": "2026-09-10T13:47:51+00:00",
+  "forecast": "2026-09-10T13:47:51+00:00",
+  "hourly": "2026-09-10T13:47:51+00:00",
+  "alerts": "2026-09-10T13:47:51+00:00",
+  "afd": "2026-09-10T13:47:51+00:00",
+  "lake_forecast": "2026-09-10T13:47:51+00:00",
+  "lake_gage": "2026-09-10T13:47:51+00:00",
+  "air": "2026-09-10T13:47:51+00:00",
+  "sun": "2026-09-10T13:47:51+00:00",
+  "models": "2026-09-10T13:47:51+00:00"
  },
  "now": {
-  "observed_at": "2026-09-10T12:45:00+00:00",
+  "observed_at": "2026-09-10T13:35:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
+  "description": "Mostly Clear",
   "temp_f": 75,
   "feels_like_f": 75,
   "humidity": 61,
   "dewpoint_f": 61,
   "wind_mph": null,
-  "wind_gust_mph": 17,
+  "wind_gust_mph": 21,
   "wind_dir": null,
   "precip_last_hr_in": null
  },
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-10T06:00:00-04:00",
+    "start": "2026-09-10T09:00:00-04:00",
     "is_day": true,
     "temp_f": 76,
     "pop": 8,
-    "wind": "W 10 to 15 mph",
+    "wind": "W 12 to 15 mph",
     "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 76. West wind 10 to 15 mph, with gusts as high as 26 mph. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Mostly sunny, with a high near 76. West wind 12 to 15 mph, with gusts as high as 26 mph."
    },
    {
     "name": "Tonight",
@@ -858,10 +858,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 27,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/10/26 8:00",
+  "observed": "09/10/26 9:00",
   "discussion": "On Thursday, September 10th, expect generally good air quality across Vermont."
  },
  "sun": {
