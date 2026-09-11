@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-11T14:38:06+00:00",
+ "updated": "2026-09-11T15:32:38+00:00",
  "sections_updated": {
-  "now": "2026-09-11T14:38:06+00:00",
-  "forecast": "2026-09-11T14:38:06+00:00",
-  "hourly": "2026-09-11T14:38:06+00:00",
-  "alerts": "2026-09-11T14:38:06+00:00",
-  "afd": "2026-09-11T14:38:06+00:00",
-  "lake_forecast": "2026-09-11T14:38:06+00:00",
-  "lake_gage": "2026-09-11T14:38:06+00:00",
-  "air": "2026-09-11T14:38:06+00:00",
-  "sun": "2026-09-11T14:38:06+00:00",
-  "models": "2026-09-11T14:38:06+00:00"
+  "now": "2026-09-11T15:32:38+00:00",
+  "forecast": "2026-09-11T15:32:38+00:00",
+  "hourly": "2026-09-11T15:32:38+00:00",
+  "alerts": "2026-09-11T15:32:38+00:00",
+  "afd": "2026-09-11T15:32:38+00:00",
+  "lake_forecast": "2026-09-11T15:32:38+00:00",
+  "lake_gage": "2026-09-11T15:32:38+00:00",
+  "air": "2026-09-11T15:32:38+00:00",
+  "sun": "2026-09-11T15:32:38+00:00",
+  "models": "2026-09-11T15:32:38+00:00"
  },
  "now": {
-  "observed_at": "2026-09-11T14:25:00+00:00",
+  "observed_at": "2026-09-11T15:15:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
+  "description": "Mostly Cloudy",
   "temp_f": 61,
   "feels_like_f": 61,
-  "humidity": 51,
-  "dewpoint_f": 43,
-  "wind_mph": 8,
+  "humidity": 55,
+  "dewpoint_f": 45,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "NNW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-11T09:00:00-04:00",
+    "start": "2026-09-11T11:00:00-04:00",
     "is_day": true,
     "temp_f": 71,
     "pop": 0,
-    "wind": "NW 6 to 9 mph",
+    "wind": "NW 9 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 71. Northwest wind 6 to 9 mph."
+    "detailed": "Sunny, with a high near 71. Northwest wind around 9 mph."
    },
    {
     "name": "Tonight",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-11T06:21:16+00:00",
   "hours": [
-   {
-    "t": "2026-09-11T09:00:00-04:00",
-    "temp_f": 59,
-    "feels_f": 59,
-    "pop": 0,
-    "humidity": 64,
-    "wind_mph": 6,
-    "wind_dir": "NW",
-    "sky": 7,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-09-11T10:00:00-04:00",
-    "temp_f": 61,
-    "feels_f": 61,
-    "pop": 0,
-    "humidity": 62,
-    "wind_mph": 6,
-    "wind_dir": "NW",
-    "sky": 1,
-    "short": "Sunny"
-   },
    {
     "t": "2026-09-11T11:00:00-04:00",
     "temp_f": 63,
@@ -568,6 +546,28 @@
     "wind_dir": "S",
     "sky": 40,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-09-12T21:00:00-04:00",
+    "temp_f": 68,
+    "feels_f": 68,
+    "pop": 8,
+    "humidity": 70,
+    "wind_mph": 13,
+    "wind_dir": "S",
+    "sky": 39,
+    "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-09-12T22:00:00-04:00",
+    "temp_f": 67,
+    "feels_f": 67,
+    "pop": 8,
+    "humidity": 73,
+    "wind_mph": 13,
+    "wind_dir": "S",
+    "sky": 54,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 68,
-  "water_temp_at": "2026-09-11T10:00:00.000-04:00",
-  "level_ft": 94.33,
-  "level_at": "2026-09-11T10:00:00.000-04:00",
+  "water_temp_at": "2026-09-11T11:00:00.000-04:00",
+  "level_ft": 94.35,
+  "level_at": "2026-09-11T11:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 34,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/11/26 10:00",
+  "observed": "09/11/26 11:00",
   "discussion": "On Thursday, September 10th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -851,7 +851,7 @@
    {
     "date": "2026-09-11",
     "high_f": {
-     "GFS": 68,
+     "GFS": 69,
      "Euro": 68,
      "ICON": 66
     },
@@ -865,7 +865,7 @@
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    },
    {
     "date": "2026-09-12",
@@ -875,8 +875,8 @@
      "ICON": 76
     },
     "pop_max": {
-     "GFS": 9,
-     "Euro": 6,
+     "GFS": 25,
+     "Euro": 8,
      "ICON": 10
     },
     "precip_in": {
@@ -894,8 +894,8 @@
      "ICON": 81
     },
     "pop_max": {
-     "GFS": 52,
-     "Euro": 81,
+     "GFS": 55,
+     "Euro": 93,
      "ICON": 21
     },
     "precip_in": {
