@@ -1,24 +1,24 @@
 {
- "updated": "2026-09-11T16:52:44+00:00",
+ "updated": "2026-09-11T17:56:03+00:00",
  "sections_updated": {
-  "now": "2026-09-11T16:52:44+00:00",
-  "forecast": "2026-09-11T16:52:44+00:00",
-  "hourly": "2026-09-11T16:52:44+00:00",
-  "alerts": "2026-09-11T16:52:44+00:00",
-  "afd": "2026-09-11T16:52:44+00:00",
-  "lake_forecast": "2026-09-11T16:52:44+00:00",
-  "lake_gage": "2026-09-11T16:52:44+00:00",
-  "air": "2026-09-11T16:52:44+00:00",
-  "sun": "2026-09-11T16:52:44+00:00",
-  "models": "2026-09-11T16:52:44+00:00"
+  "now": "2026-09-11T17:56:03+00:00",
+  "forecast": "2026-09-11T17:56:03+00:00",
+  "hourly": "2026-09-11T17:56:03+00:00",
+  "alerts": "2026-09-11T17:56:03+00:00",
+  "afd": "2026-09-11T17:56:03+00:00",
+  "lake_forecast": "2026-09-11T17:56:03+00:00",
+  "lake_gage": "2026-09-11T17:56:03+00:00",
+  "air": "2026-09-11T17:56:03+00:00",
+  "sun": "2026-09-11T17:56:03+00:00",
+  "models": "2026-09-11T17:56:03+00:00"
  },
  "now": {
-  "observed_at": "2026-09-11T16:35:00+00:00",
+  "observed_at": "2026-09-11T17:35:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 63,
-  "feels_like_f": 63,
-  "humidity": 52,
+  "temp_f": 64,
+  "feels_like_f": 64,
+  "humidity": 49,
   "dewpoint_f": 45,
   "wind_mph": 0,
   "wind_gust_mph": null,
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-11T09:00:00-04:00",
+    "start": "2026-09-11T06:00:00-04:00",
     "is_day": true,
     "temp_f": 71,
     "pop": 0,
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-11T06:21:16+00:00",
   "hours": [
-   {
-    "t": "2026-09-11T12:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 0,
-    "humidity": 56,
-    "wind_mph": 8,
-    "wind_dir": "NW",
-    "sky": 5,
-    "short": "Sunny"
-   },
    {
     "t": "2026-09-11T13:00:00-04:00",
     "temp_f": 67,
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 69,
     "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-13T00:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 18,
+    "humidity": 75,
+    "wind_mph": 15,
+    "wind_dir": "S",
+    "sky": 69,
+    "short": "Slight Chance Rain Showers"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-11T11:21:00+00:00",
+  "issued": "2026-09-11T17:40:00+00:00",
   "key_messages": [
    "Dry, clear, and seasonably cool weather will lead to pleasant, fall-like, conditions today and most of tomorrow. Light shower chances will approach southern Vermont late Saturday, with a weak frontal passage across the north and central portions of the area Sunday.",
    "Patchy frost possible on Tuesday morning, followed by warmer and unsettled weather for mid to late next week."
   ],
   "what_changed": "As of 311 AM EDT Friday... No changes to the current forecast.",
-  "raw": "\n000\nFXUS61 KBTV 111121\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n721 AM EDT Fri Sep 11 2026\n\n.WHAT HAS CHANGED...\nAs of 311 AM EDT Friday...\n\nNo changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 311 AM EDT Friday...\n\n1. Dry, clear, and seasonably cool weather will lead to \npleasant, fall-like, conditions today and most of tomorrow. Light \nshower chances will approach southern Vermont late Saturday, with a \nweak frontal passage across the north and central portions of the \narea Sunday.\n\n2. Patchy frost possible on Tuesday morning, followed by warmer \nand unsettled weather for mid to late next week.\n\n&&\n\n.DISCUSSION...\nAs of 311 AM EDT Friday...\n\nKEY MESSAGE 1: A picture perfect start the weekend looks to be in store \nbeginning today through Saturday. Temperatures will trend slightly \nbelow seasonable levels today as northwest flow advects cooler air \nfrom Canada. Highs will be in the mid 60s to near 70 with clear \nskies. A few light breezes near the International Border, and \nChamplain Valley, to 10-15 MPH could bring a slight bite to the air \nFriday afternoon. Clear skies will persist through tonight with \nareawide strong radiational cooling. Temperatures will cool into the \nlow to mid 40s for most locations, and near 50 for areas around Lake \nChamplain. Raw guidance denotes low to mid 30s for areas in the \nheart of the Adirondacks. Tonight looks like the better night for \npatchy valley fog in the favored river valleys of Vermont and \nnorthern New York. Though it will not be widespread fog with it \nbeing 2 days detached from rain. Nonetheless, areas near Montpelier, \nthe lamoille Valley, CT river, and sheltered areas of the \nAdirondacks have a good chance for patchy fog. Saturday looks to be \na repeat of Friday with slightly warmer highs into the mid to upper \n40s with mostly clear skies. Gusty channeled winds in the Champlain \nValley, and mountain summit winds, will be possible by Saturday \nafternoon with winds turning more southerly, hence our warmer \ntemperature advection. Winds could gusts up to 25 MPH will be \npossible, with locally higher on Lake Champlain itself. A Lake Wind \nAdvisory may be needed during the day Saturday through Saturday \nevening. \n\nSaturday looks to remain dry up until the late evening. A weak \nshortwave looks to pass just to our south, brining some light shower \nchances to southern Vermont, mainly along or south of US-4. Showers \nwill be confined to the overnight hours, shifting east by sunrise. \nOvernight lows Saturday will be mild as a result into the upper 50s \nto low 60s. Clouds associated with the showers will build across the \nregion keeping the area socked in with cloud cover on Sunday. A \nfrontal passage will bring additional shower chances to the central \nand northern portions of the areas. Showers will be scattery and \nbroken in nature. Model soundings do show the potential for some \nisolated rumbles of thunder, mainly across northern New York, but \nany storms will be weak with limited instability, and lagging \ndynamics. Temperatures will return to seasonably cool level in the \n60s by Monday, with drying conditions.\n\nKEY MESSAGE 2: A fast/progressive flow aloft prevails acrs the northern \nCONUS for next week as our cwa remains in the battle ground btwn \nvery warm/moist airmass over the Ohio/Mississippi Valleys and much \ncooler/drier air to the north over central Canada. As boundary \nsharpens acrs the Mid Atlantic/NE CONUS for mid to late next week, \npotential for widespread precipitation increases for our region. \nStill a large spread in potential solutions from the globe guidance \nand associated ensemble members on placement and timing of heaviest \nprecip, given fast flow aloft and some agreement of boundary \nparalleling the mid/upper lvl winds. \n\nProgged 1025mb high pres directly overhead on Tues morning wl \nproduce light winds and clear skies with valley fog and pockets of \npatchy frost possible. Lows range from near freezing SLK/NEK to \nupper 40s near Lake Champlain. First weak boundary and associated \ns/w energy drops acrs our cwa late Tues into Weds with ribbon of \nenhanced mid lvl moisture, but limited instability. Expect a brief \nperiod of rain showers with latest WPC still indicating chc-likely \n(40 to 70%) pops. Also, progged 850mb winds of 30 to 40 knots are \nexpected acrs our cwa ahead of approaching boundary on Tues, so \nanticipated breezy south to southwest winds, especially \ncentral/northern CPV and higher trrn of dacks/northern Greens. Temps \nwl warm into the mid 70s to lower 80s per latest WPC fcst. Temps wl \nbe highly depend upon what side of the boundary our cwa wl be on for \nmid to late week, along with areas of clouds/precip. WPC has highs \nin the upper 60s to mid 70s with lows mid 40s to mid 50s for Weds \nthru Friday, which looks reasonable attm.\n\n&&\n\n.AVIATION /12Z FRIDAY THROUGH TUESDAY/...\nThrough 12Z Saturday...VFR conditions will prevail at our taf\nsites for the next 18 hours as high pressure and dry air\ncontinue to build across our region. Northwest winds 4 to 8\nknots with localized gusts at MPV of 12 to 18 knots. Overnight\nthe aviation challenge becomes timing and areal coverage of fog\nand associated LIFR/VLIFR. Highest probability (80-90%) of IFR \nor lower conditions is at SLK/MPV with likely (55-65%) at EFK\nand chance (30-40%) at BTV/RUT and MSS. Have used prevailing\ngroup at SLK/MPV for fog, tempo at EFK and just vcfg at RUT/BTV\nfor now, as confidence is too low to mention IFR attm with light\nand variable winds. \n\nOutlook...\n\nSaturday: VFR. NO SIG WX.\nSaturday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nSunday: Mainly MVFR, with local IFR possible. Chance SHRA, Slight\nchance TSRA.\nSunday Night: VFR. Chance SHRA.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Taber/Danzig\nAVIATION...Taber\n"
+  "raw": "\n000\nFXUS61 KBTV 111740\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n140 PM EDT Fri Sep 11 2026\n\n.WHAT HAS CHANGED...\nAs of 311 AM EDT Friday...\n\nNo changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 311 AM EDT Friday...\n\n1. Dry, clear, and seasonably cool weather will lead to \npleasant, fall-like, conditions today and most of tomorrow. Light \nshower chances will approach southern Vermont late Saturday, with a \nweak frontal passage across the north and central portions of the \narea Sunday.\n\n2. Patchy frost possible on Tuesday morning, followed by warmer \nand unsettled weather for mid to late next week.\n\n&&\n\n.DISCUSSION...\nAs of 311 AM EDT Friday...\n\nKEY MESSAGE 1: A picture perfect start the weekend looks to be in store \nbeginning today through Saturday. Temperatures will trend slightly \nbelow seasonable levels today as northwest flow advects cooler air \nfrom Canada. Highs will be in the mid 60s to near 70 with clear \nskies. A few light breezes near the International Border, and \nChamplain Valley, to 10-15 MPH could bring a slight bite to the air \nFriday afternoon. Clear skies will persist through tonight with \nareawide strong radiational cooling. Temperatures will cool into the \nlow to mid 40s for most locations, and near 50 for areas around Lake \nChamplain. Raw guidance denotes low to mid 30s for areas in the \nheart of the Adirondacks. Tonight looks like the better night for \npatchy valley fog in the favored river valleys of Vermont and \nnorthern New York. Though it will not be widespread fog with it \nbeing 2 days detached from rain. Nonetheless, areas near Montpelier, \nthe lamoille Valley, CT river, and sheltered areas of the \nAdirondacks have a good chance for patchy fog. Saturday looks to be \na repeat of Friday with slightly warmer highs into the mid to upper \n40s with mostly clear skies. Gusty channeled winds in the Champlain \nValley, and mountain summit winds, will be possible by Saturday \nafternoon with winds turning more southerly, hence our warmer \ntemperature advection. Winds could gusts up to 25 MPH will be \npossible, with locally higher on Lake Champlain itself. A Lake Wind \nAdvisory may be needed during the day Saturday through Saturday \nevening. \n\nSaturday looks to remain dry up until the late evening. A weak \nshortwave looks to pass just to our south, brining some light shower \nchances to southern Vermont, mainly along or south of US-4. Showers \nwill be confined to the overnight hours, shifting east by sunrise. \nOvernight lows Saturday will be mild as a result into the upper 50s \nto low 60s. Clouds associated with the showers will build across the \nregion keeping the area socked in with cloud cover on Sunday. A \nfrontal passage will bring additional shower chances to the central \nand northern portions of the areas. Showers will be scattery and \nbroken in nature. Model soundings do show the potential for some \nisolated rumbles of thunder, mainly across northern New York, but \nany storms will be weak with limited instability, and lagging \ndynamics. Temperatures will return to seasonably cool level in the \n60s by Monday, with drying conditions.\n\nKEY MESSAGE 2: A fast/progressive flow aloft prevails acrs the northern \nCONUS for next week as our cwa remains in the battle ground btwn \nvery warm/moist airmass over the Ohio/Mississippi Valleys and much \ncooler/drier air to the north over central Canada. As boundary \nsharpens acrs the Mid Atlantic/NE CONUS for mid to late next week, \npotential for widespread precipitation increases for our region. \nStill a large spread in potential solutions from the globe guidance \nand associated ensemble members on placement and timing of heaviest \nprecip, given fast flow aloft and some agreement of boundary \nparalleling the mid/upper lvl winds. \n\nProgged 1025mb high pres directly overhead on Tues morning wl \nproduce light winds and clear skies with valley fog and pockets of \npatchy frost possible. Lows range from near freezing SLK/NEK to \nupper 40s near Lake Champlain. First weak boundary and associated \ns/w energy drops acrs our cwa late Tues into Weds with ribbon of \nenhanced mid lvl moisture, but limited instability. Expect a brief \nperiod of rain showers with latest WPC still indicating chc-likely \n(40 to 70%) pops. Also, progged 850mb winds of 30 to 40 knots are \nexpected acrs our cwa ahead of approaching boundary on Tues, so \nanticipated breezy south to southwest winds, especially \ncentral/northern CPV and higher trrn of dacks/northern Greens. Temps \nwl warm into the mid 70s to lower 80s per latest WPC fcst. Temps wl \nbe highly depend upon what side of the boundary our cwa wl be on for \nmid to late week, along with areas of clouds/precip. WPC has highs \nin the upper 60s to mid 70s with lows mid 40s to mid 50s for Weds \nthru Friday, which looks reasonable attm.\n\n&&\n\n.AVIATION /18Z FRIDAY THROUGH WEDNESDAY/...\nThrough 18Z Saturday...VFR conditions will prevail at our taf\nsites through around 06Z Saturday as high pressure and dry air \ncontinue to build across our region. Northwest winds 4 to 8 \nknots with localized gusts at MPV of 12 to 18 knots. Overnight \nthe aviation challenge becomes timing and areal coverage of fog \nand associated LIFR/VLIFR. Highest probability (80-90%) of IFR \nor lower conditions is at SLK/MPV with likely (55-65%) at EFK \nand chance (30-40%) at BTV/RUT and MSS. Have used prevailing \ngroup at SLK/MPV for fog, tempo at EFK and just vcfg at RUT/BTV \nfor now, as confidence is too low to mention IFR attm with light\nand variable winds. VFR conditions return 12-13Z with light\nsurface flow out of the south developing; PBG could see some\ngusts 15-20kts with winds coming from off of Lake Champlain. \n\nOutlook...\n\nSaturday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nSunday: Mainly MVFR, with local IFR possible. Chance SHRA, Slight\nchance TSRA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nMonday: Mainly VFR, with local MVFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. Chance SHRA.\nTuesday Night: VFR. Chance SHRA, Slight chance TSRA.\nWednesday: Mainly VFR, with local MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Taber/Danzig\nAVIATION...Boyd/Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-09-11T06:23:00+00:00",
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 68,
-  "water_temp_at": "2026-09-11T12:00:00.000-04:00",
+  "water_temp_at": "2026-09-11T13:00:00.000-04:00",
   "level_ft": 94.35,
-  "level_at": "2026-09-11T12:00:00.000-04:00",
+  "level_at": "2026-09-11T13:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 34,
+  "aqi": 33,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/11/26 12:00",
+  "observed": "09/11/26 13:00",
   "discussion": "On Thursday, September 10th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -875,7 +875,7 @@
      "ICON": 77
     },
     "pop_max": {
-     "GFS": 5,
+     "GFS": 6,
      "Euro": 8,
      "ICON": 23
     },
@@ -889,7 +889,7 @@
    {
     "date": "2026-09-13",
     "high_f": {
-     "GFS": 77,
+     "GFS": 76,
      "Euro": 75,
      "ICON": 79
     },
@@ -899,7 +899,7 @@
      "ICON": 33
     },
     "precip_in": {
-     "GFS": 0.28,
+     "GFS": 0.41,
      "Euro": 0.91,
      "ICON": 0.29
     },
