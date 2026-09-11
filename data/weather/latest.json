@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-11T20:32:55+00:00",
+ "updated": "2026-09-11T21:20:37+00:00",
  "sections_updated": {
-  "now": "2026-09-11T20:32:55+00:00",
-  "forecast": "2026-09-11T20:32:55+00:00",
-  "hourly": "2026-09-11T20:32:55+00:00",
-  "alerts": "2026-09-11T20:32:55+00:00",
-  "afd": "2026-09-11T20:32:55+00:00",
-  "lake_forecast": "2026-09-11T20:32:55+00:00",
-  "lake_gage": "2026-09-11T20:32:55+00:00",
-  "air": "2026-09-11T20:32:55+00:00",
-  "sun": "2026-09-11T20:32:55+00:00",
-  "models": "2026-09-11T20:32:55+00:00"
+  "now": "2026-09-11T21:20:37+00:00",
+  "forecast": "2026-09-11T21:20:37+00:00",
+  "hourly": "2026-09-11T21:20:37+00:00",
+  "alerts": "2026-09-11T21:20:37+00:00",
+  "afd": "2026-09-11T21:20:37+00:00",
+  "lake_forecast": "2026-09-11T21:20:37+00:00",
+  "lake_gage": "2026-09-11T21:20:37+00:00",
+  "air": "2026-09-11T21:20:37+00:00",
+  "sun": "2026-09-11T21:20:37+00:00",
+  "models": "2026-09-11T21:20:37+00:00"
  },
  "now": {
-  "observed_at": "2026-09-11T20:20:00+00:00",
+  "observed_at": "2026-09-11T21:05:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 66,
-  "feels_like_f": 66,
-  "humidity": 49,
+  "temp_f": 68,
+  "feels_like_f": 68,
+  "humidity": 46,
   "dewpoint_f": 46,
-  "wind_mph": 8,
+  "wind_mph": 7,
   "wind_gust_mph": null,
-  "wind_dir": "NE",
+  "wind_dir": "NNE",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -854,9 +854,9 @@
  },
  "lake_gage": {
   "water_temp_f": 68,
-  "water_temp_at": "2026-09-11T16:00:00.000-04:00",
+  "water_temp_at": "2026-09-11T17:00:00.000-04:00",
   "level_ft": 94.35,
-  "level_at": "2026-09-11T16:00:00.000-04:00",
+  "level_at": "2026-09-11T17:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -864,7 +864,7 @@
   "aqi": 32,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/11/26 16:00",
+  "observed": "09/11/26 17:00",
   "discussion": "On Thursday, September 10th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -879,7 +879,7 @@
    {
     "date": "2026-09-11",
     "high_f": {
-     "GFS": 69,
+     "GFS": 70,
      "Euro": 68,
      "ICON": 66
     },
@@ -893,7 +893,7 @@
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
    },
    {
     "date": "2026-09-12",
@@ -903,7 +903,7 @@
      "ICON": 77
     },
     "pop_max": {
-     "GFS": 5,
+     "GFS": 4,
      "Euro": 8,
      "ICON": 23
     },
@@ -922,7 +922,7 @@
      "ICON": 79
     },
     "pop_max": {
-     "GFS": 55,
+     "GFS": 73,
      "Euro": 93,
      "ICON": 33
     },
