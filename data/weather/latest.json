@@ -1,16 +1,16 @@
 {
- "updated": "2026-09-11T09:52:18+00:00",
+ "updated": "2026-09-11T10:00:53+00:00",
  "sections_updated": {
-  "now": "2026-09-11T09:52:18+00:00",
-  "forecast": "2026-09-11T09:52:18+00:00",
-  "hourly": "2026-09-11T09:52:18+00:00",
-  "alerts": "2026-09-11T09:52:18+00:00",
-  "afd": "2026-09-11T09:52:18+00:00",
-  "lake_forecast": "2026-09-11T09:52:18+00:00",
-  "lake_gage": "2026-09-11T09:52:18+00:00",
-  "air": "2026-09-11T09:52:18+00:00",
-  "sun": "2026-09-11T09:52:18+00:00",
-  "models": "2026-09-11T09:52:18+00:00"
+  "now": "2026-09-11T10:00:53+00:00",
+  "forecast": "2026-09-11T10:00:53+00:00",
+  "hourly": "2026-09-11T10:00:53+00:00",
+  "alerts": "2026-09-11T10:00:53+00:00",
+  "afd": "2026-09-11T10:00:53+00:00",
+  "lake_forecast": "2026-09-11T10:00:53+00:00",
+  "lake_gage": "2026-09-11T10:00:53+00:00",
+  "air": "2026-09-11T10:00:53+00:00",
+  "sun": "2026-09-11T10:00:53+00:00",
+  "models": "2026-09-11T10:00:53+00:00"
  },
  "now": {
   "observed_at": "2026-09-11T09:35:00+00:00",
@@ -29,17 +29,7 @@
   "updated": "2026-09-11T06:21:16+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-09-11T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 55,
-    "pop": 0,
-    "wind": "NW 8 mph",
-    "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 55. Northwest wind around 8 mph."
-   },
-   {
-    "name": "Friday",
+    "name": "Today",
     "start": "2026-09-11T06:00:00-04:00",
     "is_day": true,
     "temp_f": 71,
@@ -49,7 +39,7 @@
     "detailed": "Sunny, with a high near 71. Northwest wind 6 to 9 mph."
    },
    {
-    "name": "Friday Night",
+    "name": "Tonight",
     "start": "2026-09-11T18:00:00-04:00",
     "is_day": false,
     "temp_f": 52,
@@ -96,7 +86,7 @@
     "pop": 53,
     "wind": "W 6 to 9 mph",
     "short": "Chance Showers And Thunderstorms",
-    "detailed": "A chance of showers and thunderstorms. Mostly cloudy, with a low around 57. West wind 6 to 9 mph. Chance of precipitation is 50%."
+    "detailed": "A chance of showers and thunderstorms. Mostly cloudy, with a low around 57. West wind 6 to 9 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Monday",
@@ -167,23 +157,22 @@
     "wind": "NW 3 to 10 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers. Mostly cloudy, with a high near 74. Northwest wind 3 to 10 mph. Chance of precipitation is 40%."
+   },
+   {
+    "name": "Thursday Night",
+    "start": "2026-09-17T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 55,
+    "pop": 52,
+    "wind": "S 7 to 10 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 55. South wind 7 to 10 mph. Chance of precipitation is 50%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-09-11T06:21:16+00:00",
   "hours": [
-   {
-    "t": "2026-09-11T05:00:00-04:00",
-    "temp_f": 56,
-    "feels_f": 56,
-    "pop": 0,
-    "humidity": 72,
-    "wind_mph": 8,
-    "wind_dir": "NW",
-    "sky": 15,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-09-11T06:00:00-04:00",
     "temp_f": 55,
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 17,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-09-12T17:00:00-04:00",
+    "temp_f": 75,
+    "feels_f": 75,
+    "pop": 0,
+    "humidity": 52,
+    "wind_mph": 15,
+    "wind_dir": "S",
+    "sky": 30,
+    "short": "Mostly Sunny"
    }
   ]
  },
