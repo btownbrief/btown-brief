@@ -1,45 +1,35 @@
 {
- "updated": "2026-09-12T09:53:16+00:00",
+ "updated": "2026-09-12T10:13:18+00:00",
  "sections_updated": {
-  "now": "2026-09-12T09:53:16+00:00",
-  "forecast": "2026-09-12T09:53:16+00:00",
-  "hourly": "2026-09-12T09:53:16+00:00",
-  "alerts": "2026-09-12T09:53:16+00:00",
-  "afd": "2026-09-12T09:53:16+00:00",
-  "lake_forecast": "2026-09-12T09:53:16+00:00",
-  "lake_gage": "2026-09-12T09:53:16+00:00",
-  "air": "2026-09-12T09:53:16+00:00",
-  "sun": "2026-09-12T09:53:16+00:00",
-  "models": "2026-09-12T09:53:16+00:00"
+  "now": "2026-09-12T10:13:18+00:00",
+  "forecast": "2026-09-12T10:13:18+00:00",
+  "hourly": "2026-09-12T10:13:18+00:00",
+  "alerts": "2026-09-12T10:13:18+00:00",
+  "afd": "2026-09-12T10:13:18+00:00",
+  "lake_forecast": "2026-09-12T10:13:18+00:00",
+  "lake_gage": "2026-09-12T10:13:18+00:00",
+  "air": "2026-09-12T10:13:18+00:00",
+  "sun": "2026-09-12T10:13:18+00:00",
+  "models": "2026-09-12T10:13:18+00:00"
  },
  "now": {
-  "observed_at": "2026-09-12T09:35:00+00:00",
+  "observed_at": "2026-09-12T09:45:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 46,
-  "feels_like_f": 46,
+  "temp_f": 48,
+  "feels_like_f": 47,
   "humidity": 93,
-  "dewpoint_f": 45,
-  "wind_mph": 0,
+  "dewpoint_f": 46,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "ESE",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-09-12T06:22:16+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-09-12T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 49,
-    "pop": 0,
-    "wind": "SE 5 mph",
-    "short": "Clear",
-    "detailed": "Clear, with a low around 49. Southeast wind around 5 mph."
-   },
-   {
-    "name": "Saturday",
+    "name": "Today",
     "start": "2026-09-12T06:00:00-04:00",
     "is_day": true,
     "temp_f": 77,
@@ -49,7 +39,7 @@
     "detailed": "Sunny, with a high near 77. South wind 6 to 16 mph, with gusts as high as 26 mph."
    },
    {
-    "name": "Saturday Night",
+    "name": "Tonight",
     "start": "2026-09-12T18:00:00-04:00",
     "is_day": false,
     "temp_f": 61,
@@ -167,23 +157,22 @@
     "wind": "N 9 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers. Mostly sunny, with a high near 72. North wind around 9 mph. Chance of precipitation is 30%."
+   },
+   {
+    "name": "Friday Night",
+    "start": "2026-09-18T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 52,
+    "pop": 18,
+    "wind": "E 5 to 8 mph",
+    "short": "Slight Chance Rain Showers then Partly Cloudy",
+    "detailed": "A slight chance of rain showers before 8pm. Partly cloudy, with a low around 52. East wind 5 to 8 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-09-12T06:22:16+00:00",
   "hours": [
-   {
-    "t": "2026-09-12T05:00:00-04:00",
-    "temp_f": 50,
-    "feels_f": 48,
-    "pop": 0,
-    "humidity": 93,
-    "wind_mph": 5,
-    "wind_dir": "SE",
-    "sky": 3,
-    "short": "Clear"
-   },
    {
     "t": "2026-09-12T06:00:00-04:00",
     "temp_f": 49,
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 65,
     "short": "Chance Showers And Thunderstorms"
+   },
+   {
+    "t": "2026-09-13T17:00:00-04:00",
+    "temp_f": 77,
+    "feels_f": 77,
+    "pop": 53,
+    "humidity": 74,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 69,
+    "short": "Chance Showers And Thunderstorms"
    }
   ]
  },
@@ -842,9 +842,9 @@
  },
  "lake_gage": {
   "water_temp_f": 67,
-  "water_temp_at": "2026-09-12T05:00:00.000-04:00",
+  "water_temp_at": "2026-09-12T06:00:00.000-04:00",
   "level_ft": 94.35,
-  "level_at": "2026-09-12T05:00:00.000-04:00",
+  "level_at": "2026-09-12T06:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
