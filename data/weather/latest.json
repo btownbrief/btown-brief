@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-13T15:34:33+00:00",
+ "updated": "2026-09-13T16:54:36+00:00",
  "sections_updated": {
-  "now": "2026-09-13T15:34:33+00:00",
-  "forecast": "2026-09-13T15:34:33+00:00",
-  "hourly": "2026-09-13T15:34:33+00:00",
-  "alerts": "2026-09-13T15:34:33+00:00",
-  "afd": "2026-09-13T15:34:33+00:00",
-  "lake_forecast": "2026-09-13T15:34:33+00:00",
-  "lake_gage": "2026-09-13T15:34:33+00:00",
-  "air": "2026-09-13T15:34:33+00:00",
-  "sun": "2026-09-13T15:34:33+00:00",
-  "models": "2026-09-13T15:34:33+00:00"
+  "now": "2026-09-13T16:54:36+00:00",
+  "forecast": "2026-09-13T16:54:36+00:00",
+  "hourly": "2026-09-13T16:54:36+00:00",
+  "alerts": "2026-09-13T16:54:36+00:00",
+  "afd": "2026-09-13T16:54:36+00:00",
+  "lake_forecast": "2026-09-13T16:54:36+00:00",
+  "lake_gage": "2026-09-13T16:54:36+00:00",
+  "air": "2026-09-13T16:54:36+00:00",
+  "sun": "2026-09-13T16:54:36+00:00",
+  "models": "2026-09-13T16:54:36+00:00"
  },
  "now": {
-  "observed_at": "2026-09-13T15:20:00+00:00",
+  "observed_at": "2026-09-13T16:35:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 70,
   "feels_like_f": 70,
   "humidity": 78,
   "dewpoint_f": 63,
-  "wind_mph": null,
+  "wind_mph": 13,
   "wind_gust_mph": null,
-  "wind_dir": null,
+  "wind_dir": "SSW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-13T11:00:00-04:00",
+    "start": "2026-09-13T08:00:00-04:00",
     "is_day": true,
     "temp_f": 78,
-    "pop": 33,
-    "wind": "S 10 to 14 mph",
-    "short": "Partly Sunny then Chance Showers And Thunderstorms",
-    "detailed": "A chance of showers and thunderstorms after 4pm. Partly sunny, with a high near 78. South wind 10 to 14 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "pop": 49,
+    "wind": "S 10 to 15 mph",
+    "short": "Chance Rain Showers then Chance Showers And Thunderstorms",
+    "detailed": "A chance of rain showers before 11am, then a chance of showers and thunderstorms. Partly sunny, with a high near 78. South wind 10 to 15 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-13T06:32:29+00:00",
   "hours": [
-   {
-    "t": "2026-09-13T11:00:00-04:00",
-    "temp_f": 74,
-    "feels_f": 74,
-    "pop": 2,
-    "humidity": 74,
-    "wind_mph": 14,
-    "wind_dir": "S",
-    "sky": 85,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-09-13T12:00:00-04:00",
     "temp_f": 75,
@@ -568,6 +557,17 @@
     "wind_dir": "N",
     "sky": 9,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-09-14T23:00:00-04:00",
+    "temp_f": 54,
+    "feels_f": 54,
+    "pop": 0,
+    "humidity": 80,
+    "wind_mph": 5,
+    "wind_dir": "N",
+    "sky": 2,
+    "short": "Clear"
    }
   ]
  },
@@ -850,9 +850,9 @@
  },
  "lake_gage": {
   "water_temp_f": 68,
-  "water_temp_at": "2026-09-13T11:00:00.000-04:00",
+  "water_temp_at": "2026-09-13T12:00:00.000-04:00",
   "level_ft": 94.25,
-  "level_at": "2026-09-13T11:00:00.000-04:00",
+  "level_at": "2026-09-13T12:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -860,7 +860,7 @@
   "aqi": 30,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/13/26 11:00",
+  "observed": "09/13/26 12:00",
   "discussion": "Expect generally good air quality across Vermont on Sunday, September 13th."
  },
  "sun": {
@@ -875,7 +875,7 @@
    {
     "date": "2026-09-13",
     "high_f": {
-     "GFS": 80,
+     "GFS": 79,
      "Euro": 74,
      "ICON": 77
     },
@@ -885,11 +885,11 @@
      "ICON": 95
     },
     "precip_in": {
-     "GFS": 0.89,
+     "GFS": 1.15,
      "Euro": 0.37,
-     "ICON": 0.51
+     "ICON": 0.52
     },
-    "high_spread_f": 6
+    "high_spread_f": 5
    },
    {
     "date": "2026-09-14",
@@ -899,14 +899,14 @@
      "ICON": 69
     },
     "pop_max": {
-     "GFS": 21,
+     "GFS": 22,
      "Euro": 24,
-     "ICON": 35
+     "ICON": 33
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.03,
-     "ICON": 0.04
+     "ICON": 0.02
     },
     "high_spread_f": 4
    },
@@ -920,7 +920,7 @@
     "pop_max": {
      "GFS": 9,
      "Euro": 4,
-     "ICON": 12
+     "ICON": 3
     },
     "precip_in": {
      "GFS": 0.0,
