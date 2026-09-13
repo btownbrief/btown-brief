@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-13T10:14:18+00:00",
+ "updated": "2026-09-13T10:34:18+00:00",
  "sections_updated": {
-  "now": "2026-09-13T10:14:18+00:00",
-  "forecast": "2026-09-13T10:14:18+00:00",
-  "hourly": "2026-09-13T10:14:18+00:00",
-  "alerts": "2026-09-13T10:14:18+00:00",
-  "afd": "2026-09-13T10:14:18+00:00",
-  "lake_forecast": "2026-09-13T10:14:18+00:00",
-  "lake_gage": "2026-09-13T10:14:18+00:00",
-  "air": "2026-09-13T10:14:18+00:00",
-  "sun": "2026-09-13T10:14:18+00:00",
-  "models": "2026-09-13T10:14:18+00:00"
+  "now": "2026-09-13T10:34:18+00:00",
+  "forecast": "2026-09-13T10:34:18+00:00",
+  "hourly": "2026-09-13T10:34:18+00:00",
+  "alerts": "2026-09-13T10:34:18+00:00",
+  "afd": "2026-09-13T10:34:18+00:00",
+  "lake_forecast": "2026-09-13T10:34:18+00:00",
+  "lake_gage": "2026-09-13T10:34:18+00:00",
+  "air": "2026-09-13T10:34:18+00:00",
+  "sun": "2026-09-13T10:34:18+00:00",
+  "models": "2026-09-13T10:34:18+00:00"
  },
  "now": {
-  "observed_at": "2026-09-13T09:50:00+00:00",
+  "observed_at": "2026-09-13T10:25:00+00:00",
   "station": "KBTV",
   "description": "Light Rain and Fog/Mist",
   "temp_f": 63,
   "feels_like_f": 63,
   "humidity": 94,
   "dewpoint_f": 61,
-  "wind_mph": null,
-  "wind_gust_mph": null,
-  "wind_dir": null,
+  "wind_mph": 10,
+  "wind_gust_mph": 24,
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -857,10 +857,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 38,
+  "aqi": 37,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/13/26 5:00",
+  "observed": "09/13/26 6:00",
   "discussion": "Expect generally good air quality across Vermont on Sunday, September 13th."
  },
  "sun": {
