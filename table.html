@@ -23,7 +23,7 @@
   <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <link rel="stylesheet" href="css/table-talk.css?v=20260904a">
+  <link rel="stylesheet" href="css/table-talk.css?v=20260906a">
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -80,12 +80,13 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
   <main class="stage">
     <div class="card bg-brown" id="card" role="button" tabindex="0" aria-label="The current card — tap to hold it">
       <span class="fuse" id="fuse" aria-hidden="true"></span>
-      <span class="top"><span class="kind-tag" id="kind-tag">DEALING</span><span class="hold-tag">HELD — TAP TO RELEASE</span></span>
+      <span class="top"><span class="kind-tag" id="kind-tag">DEALING</span><span class="hold-tag">HELD — TAP TO RELEASE</span><span class="tv-pause">PAUSED — SPACE TO RESUME</span></span>
       <span class="body" id="body">
         <p class="big" id="big">PULLING UP A CHAIR…</p>
         <span class="kicker" id="kicker"></span>
       </span>
       <span class="meta"><span class="src" id="src"></span><span class="tap-hint">TAP TO HOLD</span></span>
+      <span class="tv-welcome" id="tv-welcome" hidden>First time here? Sit anywhere. Someone will say hi.</span>
     </div>
   </main>
 
@@ -143,7 +144,26 @@ src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
     <p class="panel-note">ANYONE WHO OPENS THAT LINK LANDS ON THE SAME CARD AS THIS SCREEN, AT THE SAME MOMENT — NO PAIRING, NO ACCOUNT; THE CLOCK IS THE SERVER. GOOD FOR A SECOND TABLE, AN IPAD PROPPED ON THE COUNTER, OR THE WHOLE MEETUP.</p>
   </aside>
 
+  <!-- TV mode only (table.html?tv=1): the brand corner with two QRs. Hidden
+       everywhere else; the main script unhides it, this module draws the codes. -->
+  <aside class="tv-corner" id="tv-corner" hidden aria-label="Btown Brief, Saturday coffee: scan to join">
+    <div class="tvc-brand">BTOWN BRIEF · SATURDAY COFFEE</div>
+    <div class="tvc-qrs">
+      <figure><div class="tvc-qr" id="qr-phone"></div><figcaption>SCAN · SAME CARD ON YOUR PHONE</figcaption></figure>
+      <figure><div class="tvc-qr" id="qr-meetup"></div><figcaption>THE MEETUP · EVERY SATURDAY</figcaption></figure>
+    </div>
+    <div class="tvc-demo" id="tvc-demo" hidden>REHEARSAL · CLOCK AT 20×</div>
+  </aside>
+  <script type="module">
+    if (/(?:^|[?&])tv=1/.test(location.search)) {
+      import('./js/qr.js').then(function (m) {
+        document.getElementById('qr-phone').innerHTML = m.qrSvg('https://guide.btownbrief.com/table.html?sync=1', { margin: 1 });
+        document.getElementById('qr-meetup').innerHTML = m.qrSvg('https://www.meetup.com/burlington-social-activites-group/', { margin: 1 });
+      }).catch(function () {});
+    }
+  </script>
+
   <noscript><p class="noscript">Table Talk needs JavaScript to deal the cards.</p></noscript>
-  <script src="js/table-talk.js?v=20260904a"></script>
+  <script src="js/table-talk.js?v=20260906a"></script>
 </body>
 </html>

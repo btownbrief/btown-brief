@@ -476,3 +476,60 @@ body.tv .lbarwrap { display: none; }
   .sync-badge.on i { animation: none; }
   .card, .fuse { transition: none; }
 }
+
+/* ---------- TV mode, the big-screen cut (table.html?tv=1) ----------
+   A 1920×1080 bar screen, read from across a room: the card fills the
+   stage, the prompt runs bigger, a corner card carries the brand and two
+   QRs (the phone sync link, the Meetup group), and every fourth slot a
+   welcome band tells a stranger to sit anywhere. No chrome, no touch
+   affordances: a host pauses with the space bar. */
+body.tv .card { cursor: default; padding: clamp(28px, 4vh, 60px) clamp(36px, 4.5vw, 96px) clamp(24px, 3vh, 48px); }
+body.tv .card .tap-hint,
+body.tv .card .hold-tag { display: none; }
+body.tv .card.held .tv-pause { opacity: .9; }
+body.tv .card .big { line-height: 1.02; }
+body.tv .card .top { font-size: clamp(14px, 1.3vw, 24px); }
+body.tv .card .kicker { font-size: clamp(18px, 1.8vw, 34px); }
+body.tv .card .meta { font-size: clamp(12px, 1vw, 18px); padding-right: clamp(300px, 24vw, 460px); }
+.tv-pause { opacity: 0; transition: opacity .3s ease; }
+.tv-corner {
+  position: fixed;
+  right: clamp(16px, 2vw, 40px);
+  bottom: clamp(16px, 2.4vh, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+  background: #000;
+  color: var(--cream);
+  border: 2px solid var(--orange);
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-size: clamp(10px, .8vw, 14px);
+  z-index: 5;
+}
+.tvc-brand { color: var(--orange); }
+.tvc-qrs { display: flex; gap: 16px; }
+.tvc-qrs figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.tvc-qr { width: clamp(96px, 8.4vw, 168px); height: clamp(96px, 8.4vw, 168px); background: #fff; padding: 6px; }
+.tvc-qr svg { width: 100%; height: 100%; display: block; }
+.tvc-qrs figcaption { text-align: center; max-width: 12em; line-height: 1.4; opacity: .85; }
+.tvc-demo { color: var(--orange); opacity: .9; }
+.tv-welcome {
+  grid-column: 1 / -1;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(22px, 2.4vw, 46px);
+  letter-spacing: -.01em;
+  padding: .5em .9em;
+  border: 3px solid currentColor;
+  justify-self: start;
+  max-width: 62%;
+}
+body:not(.tv) .tv-welcome, body:not(.tv) .tv-corner { display: none !important; }
+/* the light variant: cream room instead of a black one */
+body.tv.light { background: var(--cream); }
+body.tv.light .tv-corner { background: var(--cream); color: var(--brown); border-color: var(--brown); }
+body.tv.light .tvc-brand, body.tv.light .tvc-demo { color: var(--orange); }
