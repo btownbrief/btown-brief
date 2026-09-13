@@ -1,15 +1,15 @@
 {
- "generated": "2026-09-13T09:52:26-04:00",
+ "generated": "2026-09-13T18:35:45-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.8
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 59,
-   "seconds": 3.0
+   "count": 58,
+   "seconds": 2.9
   },
   "brownell": {
    "label": "Brownell Library",
@@ -19,24 +19,24 @@
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 253,
-   "seconds": 3.7
+   "seconds": 4.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 79,
-   "seconds": 1.6
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 13
+   "staleDays": 14
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-13&end_date=2026-11-12&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 13
+   "staleDays": 14
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,12 +46,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 7,
-   "seconds": 0.2
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 73.1
+   "seconds": 68.0
   },
   "flynn": {
    "label": "The Flynn",
@@ -66,91 +66,158 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 673,
-   "seconds": 34.3
+   "seconds": 32.5
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 78,
-   "seconds": 0.4
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 10.5
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 416,
-   "seconds": 75.5
+   "seconds": 72.0
   },
   "meetup": {
    "label": "Meetup",
-   "count": 64,
-   "seconds": 124.3
+   "count": 62,
+   "seconds": 128.0
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 14,
-   "seconds": 0.6
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 48,
-   "seconds": 9.2
+   "count": 47,
+   "seconds": 8.2
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 10,
-   "seconds": 0.6
+   "seconds": 0.4
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 111,
-   "seconds": 1.6
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden",
+   "staleDays": 0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 33.7
+   "seconds": 32.0
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2348,
-   "seconds": 25.3
+   "count": 2244,
+   "seconds": 2.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 13
+   "staleDays": 14
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 518,
-   "seconds": 31.9
+   "seconds": 18.2
   },
   "uvmbored": {
    "label": "UVM Bored",
    "count": 312,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 56,
-   "seconds": 76.7
+   "count": 60,
+   "seconds": 76.5
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 60,
-   "seconds": 0.6
+   "seconds": 0.3
   }
  },
- "gathered": 5435,
- "afterDedup": 2538,
- "duplicatesMerged": 2897,
- "final": 2658,
- "firecrawlCalls": 5,
+ "gathered": 5220,
+ "afterDedup": 2455,
+ "duplicatesMerged": 2765,
+ "final": 2663,
+ "firecrawlCalls": 1,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "YOURstory: a circle for midlife women",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "sevendays"
+   ],
+   "date": "2026-10-15"
+  },
+  {
+   "kept": {
+    "title": "The Travelin’ McCourys",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "Mahjong",
+    "source": "winooskilibrary"
+   },
+   "merged_sources": [
+    "sevendays",
+    "winooskilibrary"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "CDAE Research Slam",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-16"
+  },
+  {
+   "kept": {
+    "title": "Coffee and Code",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-16"
+  },
   {
    "kept": {
     "title": "UVM Catamount Educational Farm Stand and Apple Sales",
@@ -680,17 +747,6 @@
   },
   {
    "kept": {
-    "title": "Minecraft Meet-up",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-10-22"
-  },
-  {
-   "kept": {
     "title": "Bored Teachers",
     "source": "flynn"
    },
@@ -1159,17 +1215,6 @@
   },
   {
    "kept": {
-    "title": "Italian Conversation Group",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-10-28"
-  },
-  {
-   "kept": {
     "title": "Standup Open Mic",
     "source": "vcc"
    },
@@ -1265,17 +1310,6 @@
    "merged_sources": [
     "fletcherfree",
     "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-29"
-  },
-  {
-   "kept": {
-    "title": "Minecraft Meet-up",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
     "sevendays"
    ],
    "date": "2026-10-29"
@@ -1766,17 +1800,6 @@
   },
   {
    "kept": {
-    "title": "Minecraft Meet-up",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
     "title": "Thirsty Thursday",
     "source": "churchst"
    },
@@ -2204,17 +2227,6 @@
   },
   {
    "kept": {
-    "title": "Italian Conversation Group",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-11"
-  },
-  {
-   "kept": {
     "title": "TRIVIA NIGHT",
     "source": "churchst"
    },
@@ -2316,17 +2328,6 @@
   },
   {
    "kept": {
-    "title": "Minecraft Meet-up",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-12"
-  },
-  {
-   "kept": {
     "title": "ELF THE MUSICAL",
     "source": "flynn"
    },
@@ -2408,17 +2409,60 @@
  ],
  "changes": [
   {
-   "id": "63753ec6d688",
-   "title": "Pride Vermont 2026",
+   "id": "68e5a0ff6430",
+   "title": "Breakfast Club!: Sneakers Bistro",
    "date": "2026-09-13",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
-   "id": "d48004fad1a9",
-   "title": "Physics Colloquium with Dr. Khadga Thankuri",
+   "id": "4658c695cd34",
+   "title": "SBPL at Vermont Pride 2026",
+   "date": "2026-09-13",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
+  },
+  {
+   "id": "4eb3574d2757",
+   "title": "LGBTQIA+ Mixer",
+   "date": "2026-09-13",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
+  },
+  {
+   "id": "a89aea7bad99",
+   "title": "Public Skate",
+   "date": "2026-09-13",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
+  },
+  {
+   "id": "7bca4de92a3f",
+   "title": "Womxn's Pick-up Soccer - Outdoors at Starr Farm Park",
+   "date": "2026-09-13",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
+  },
+  {
+   "id": "6760efa814f9",
+   "title": "Micah Wood",
+   "date": "2026-09-13",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
+  },
+  {
+   "id": "f69595b5b05c",
+   "title": "Kia'Rae Hanron",
+   "date": "2026-09-13",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
+  },
+  {
+   "id": "dca42d5e7089",
+   "title": "Art Wall: Paintings by El Towle",
    "date": "2026-09-14",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "65b715d37b3f",
@@ -2426,12 +2470,6 @@
    "date": "2026-09-14",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "3ec046abebed",
-   "title": "Collage Collective",
-   "date": "2026-09-14",
-   "change": "dropped"
   },
   {
    "id": "586371e536e3",
@@ -2476,11 +2514,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "0684f2f9b1be",
-   "title": "Craftytown",
+   "id": "f4bf51a1d5ee",
+   "title": "Craftytown! Flower Suncatcher",
    "date": "2026-09-15",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "c885216d8787",
@@ -2495,12 +2533,6 @@
    "date": "2026-09-15",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "34bd6f429dc8",
-   "title": "Open Studio",
-   "date": "2026-09-15",
-   "change": "dropped"
   },
   {
    "id": "319c4161c504",
@@ -2538,17 +2570,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "c089e6f19182",
-   "title": "Baby Time",
+   "id": "cc496b2749d1",
+   "title": "Babytime",
    "date": "2026-09-16",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
-   "id": "faa96957b9e8",
-   "title": "Meeting This Moment Together with Jess Serrante and Stephen Posner",
+   "id": "72bc52114e94",
+   "title": "Live in the Orchard: The Meatpackers",
    "date": "2026-09-16",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "988b6deb86bd",
@@ -2565,12 +2598,6 @@
    "lastSeen": "2026-09-11T18:47:00-04:00"
   },
   {
-   "id": "a24043b98c47",
-   "title": "Passeggiata",
-   "date": "2026-09-16",
-   "change": "dropped"
-  },
-  {
    "id": "acf6ce6dddd4",
    "title": "ECHO is closed",
    "date": "2026-09-16",
@@ -2578,17 +2605,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "78952acf13db",
-   "title": "Knit for Your Neighbor",
+   "id": "56f92c658cbc",
+   "title": "Knit for your Neighbors",
    "date": "2026-09-17",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
-   "id": "545ede0d65e1",
-   "title": "THE PASSION OF JOAN OF ARC (1928)",
+   "id": "1baed1f27d40",
+   "title": "Dr. Marc Watkins",
    "date": "2026-09-17",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "c9ffff2fa96e",
@@ -2612,18 +2640,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "6de26396272f",
-   "title": "'Approaches to Homeschool'",
+   "id": "70608c7c3a85",
+   "title": "Approaches to Homeschool with Rebecca Rupp",
    "date": "2026-09-18",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
-   "id": "95a7e9fe79a1",
-   "title": "Lego Builders",
+   "id": "636b4b1808dc",
+   "title": "Friday LEGO Builders",
    "date": "2026-09-18",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "2004b54925ae",
@@ -2631,12 +2659,6 @@
    "date": "2026-09-18",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "4197e98ca720",
-   "title": "DJ Taka",
-   "date": "2026-09-18",
-   "change": "dropped"
   },
   {
    "id": "eca8ed65b605",
@@ -2709,18 +2731,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "f5a6e2021a3b",
+   "id": "f67f6df10ea2",
    "title": "Green Community Festival",
    "date": "2026-09-19",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
-  },
-  {
-   "id": "890bad6c1d3c",
-   "title": "South Burlington Green Community Festival",
-   "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "70d739f06ee1",
@@ -2737,12 +2752,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "ed47f456531d",
-   "title": "Fall Fest Weekend",
-   "date": "2026-09-19",
-   "change": "dropped"
-  },
-  {
    "id": "b5b3ae592b59",
    "title": "Stories and Scoops with Girl Scouts in Richmond, VT",
    "date": "2026-09-19",
@@ -2750,34 +2759,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "1a5171e8fd60",
-   "title": "Media Factory New Member Orientation",
-   "date": "2026-09-19",
-   "change": "dropped"
-  },
-  {
-   "id": "d70ab0c3c6c4",
-   "title": "The Big Cheese Documentary Screening & Grazing Table",
-   "date": "2026-09-19",
-   "change": "dropped"
-  },
-  {
-   "id": "f418ec886030",
-   "title": "Vermont Cheesemakers Festival 2026",
-   "date": "2026-09-20",
-   "change": "dropped"
-  },
-  {
-   "id": "8f22d4b930e6",
-   "title": "Fall Fest Weekend",
-   "date": "2026-09-20",
-   "change": "dropped"
-  },
-  {
-   "id": "e56ea9feaf94",
-   "title": "Missisquoi River Band at Westford Music Series",
-   "date": "2026-09-20",
-   "change": "dropped"
+   "id": "155c4c47017e",
+   "title": "Art Wall: Paintings by El Towle",
+   "date": "2026-09-21",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "ab7fde873458",
@@ -2850,11 +2836,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "33cfe96f06da",
-   "title": "Evening Book Group",
+   "id": "9f372d78f426",
+   "title": "Evening Book Group: Mexican Gothic",
    "date": "2026-09-22",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "92efbb34b0fb",
@@ -2862,12 +2848,6 @@
    "date": "2026-09-23",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "48bd73f5ac6e",
-   "title": "2026 State of the World Summit: Celebrating International Day of Peace",
-   "date": "2026-09-23",
-   "change": "dropped"
   },
   {
    "id": "99690c481178",
@@ -2898,12 +2878,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "62098e4b38fd",
-   "title": "Mobility Safety Training",
-   "date": "2026-09-23",
-   "change": "dropped"
-  },
-  {
    "id": "811c5b8b59de",
    "title": "Fall Trade Show for New England Interior Designers",
    "date": "2026-09-23",
@@ -2911,11 +2885,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "77694579a75f",
-   "title": "Baby Time",
+   "id": "d9da91d0efa5",
+   "title": "Babytime",
    "date": "2026-09-23",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
+  },
+  {
+   "id": "8d62b4cac04c",
+   "title": "Live in the Orchard: The Meatpackers",
+   "date": "2026-09-23",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "03674606b7ce",
@@ -2939,17 +2920,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "e00e88db5bb3",
-   "title": "Open Studio",
-   "date": "2026-09-24",
-   "change": "dropped"
-  },
-  {
-   "id": "b3e0e1560f2d",
-   "title": "Knit for Your Neighbor",
+   "id": "c4a8745e37cf",
+   "title": "Knit for your Neighbors",
    "date": "2026-09-24",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "15f7273e6c86",
@@ -2966,11 +2941,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "62c3f4a8eedc",
-   "title": "Lego Builders",
+   "id": "1436c69b27ab",
+   "title": "Friday LEGO Builders",
    "date": "2026-09-25",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "9934f6759c21",
@@ -2992,12 +2967,6 @@
    "date": "2026-09-25",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "efc54e33b57c",
-   "title": "DJ Taka",
-   "date": "2026-09-25",
-   "change": "dropped"
   },
   {
    "id": "59fc36bf5792",
@@ -3077,6 +3046,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "caabf1bf59af",
+   "title": "Art Wall: Paintings by El Towle",
+   "date": "2026-09-28",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
+  },
+  {
    "id": "a21e4e63e331",
    "title": "2026 Vermont Compost Operator Certification Training",
    "date": "2026-09-28",
@@ -3112,11 +3088,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "348e88592d16",
-   "title": "Craftytown",
+   "id": "3b04bf2dc8d6",
+   "title": "Storybook Craftytown- Apple",
    "date": "2026-09-29",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "db3911d480dd",
@@ -3126,11 +3102,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "b06b8cd265e8",
-   "title": "Baby Time",
+   "id": "b35268f5d210",
+   "title": "Babytime",
    "date": "2026-09-30",
    "change": "missing",
-   "lastSeen": "2026-09-10T18:46:04-04:00"
+   "lastSeen": "2026-09-13T09:52:26-04:00"
+  },
+  {
+   "id": "24060bbf9280",
+   "title": "Live in the Orchard: The Meatpackers",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "ebd6ae71bfbc",
@@ -3138,12 +3121,6 @@
    "date": "2026-09-30",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "acbc2d0810fc",
-   "title": "Halloween Costume Swap!",
-   "date": "2026-10-01",
-   "change": "dropped"
   },
   {
    "id": "ef29e9adbc5e",
@@ -3165,12 +3142,6 @@
    "date": "2026-10-02",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "3bf8b2298ce7",
-   "title": "DJ Taka",
-   "date": "2026-10-02",
-   "change": "dropped"
   },
   {
    "id": "da4e38265440",
@@ -3208,10 +3179,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "b3f79f50c8e2",
-   "title": "Open Studio",
-   "date": "2026-10-06",
-   "change": "dropped"
+   "id": "f10fa14cbbf6",
+   "title": "Live in the Orchard: The Meatpackers",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "dd3465273c64",
@@ -3235,12 +3207,6 @@
    "lastSeen": "2026-09-11T09:47:53-04:00"
   },
   {
-   "id": "efd605a2b68d",
-   "title": "DJ Taka",
-   "date": "2026-10-09",
-   "change": "dropped"
-  },
-  {
    "id": "ebce9000bca7",
    "title": "Sensory-Friendly Mornings",
    "date": "2026-10-10",
@@ -3255,23 +3221,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "eb97493f2a94",
-   "title": "Dogwood Tales",
-   "date": "2026-10-10",
-   "change": "dropped"
-  },
-  {
    "id": "7fbf6b3633b3",
    "title": "Sheer Terror, Burn Kit, Blossom, Shine",
    "date": "2026-10-11",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "0c545cea42cd",
-   "title": "Collage Collective",
-   "date": "2026-10-12",
-   "change": "dropped"
   },
   {
    "id": "225a0add5080",
@@ -3286,6 +3240,13 @@
    "date": "2026-10-14",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "440187439094",
+   "title": "Live in the Orchard: The Meatpackers",
+   "date": "2026-10-14",
+   "change": "missing",
+   "lastSeen": "2026-09-13T09:52:26-04:00"
   },
   {
    "id": "30f3afed4570",
@@ -3307,12 +3268,6 @@
    "date": "2026-10-15",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "497b6a0aa3ec",
-   "title": "DJ Taka",
-   "date": "2026-10-16",
-   "change": "dropped"
   },
   {
    "id": "138a86df63d3",
@@ -3357,48 +3312,11 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "284dd52b5560",
-   "title": "Hematology/Oncology Grand Rounds",
-   "date": "2026-10-20",
-   "change": "dropped"
-  },
-  {
-   "id": "8bf6b9fa39c6",
-   "title": "Open Studio",
-   "date": "2026-10-20",
-   "change": "dropped"
-  },
-  {
-   "id": "ab771e751e04",
-   "title": "Puzzle Swap",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-09-11T09:47:53-04:00"
-  },
-  {
-   "id": "c5df1fce68e7",
-   "title": "Creating Calm Amidst Chaos",
-   "date": "2026-10-21",
-   "change": "dropped"
-  },
-  {
-   "id": "bed547b2576f",
-   "title": "Open Studio",
-   "date": "2026-10-22",
-   "change": "dropped"
-  },
-  {
    "id": "cc3d801ab0bc",
    "title": "Film Screening: “Seeding Change: Farming Beyond Neonics”",
    "date": "2026-10-22",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "d930350337ab",
-   "title": "DJ Taka",
-   "date": "2026-10-23",
-   "change": "dropped"
   },
   {
    "id": "4d340683dfd5",
@@ -3413,30 +3331,6 @@
    "date": "2026-10-26",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "789244f05bf1",
-   "title": "Bungalow Collect - Disco Hip-Hop Party",
-   "date": "2026-10-29",
-   "change": "dropped"
-  },
-  {
-   "id": "2fa2da662d9c",
-   "title": "DJ Taka",
-   "date": "2026-10-30",
-   "change": "dropped"
-  },
-  {
-   "id": "4b66eef4dafc",
-   "title": "Open Studio",
-   "date": "2026-11-03",
-   "change": "dropped"
-  },
-  {
-   "id": "8d250f246415",
-   "title": "DJ Taka",
-   "date": "2026-11-06",
-   "change": "dropped"
   },
   {
    "id": "ed032a81c0ed",
