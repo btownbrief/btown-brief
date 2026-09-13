@@ -1,19 +1,19 @@
 {
- "updated": "2026-09-13T16:54:36+00:00",
+ "updated": "2026-09-13T17:03:58+00:00",
  "sections_updated": {
-  "now": "2026-09-13T16:54:36+00:00",
-  "forecast": "2026-09-13T16:54:36+00:00",
-  "hourly": "2026-09-13T16:54:36+00:00",
-  "alerts": "2026-09-13T16:54:36+00:00",
-  "afd": "2026-09-13T16:54:36+00:00",
-  "lake_forecast": "2026-09-13T16:54:36+00:00",
-  "lake_gage": "2026-09-13T16:54:36+00:00",
-  "air": "2026-09-13T16:54:36+00:00",
-  "sun": "2026-09-13T16:54:36+00:00",
-  "models": "2026-09-13T16:54:36+00:00"
+  "now": "2026-09-13T17:03:58+00:00",
+  "forecast": "2026-09-13T17:03:58+00:00",
+  "hourly": "2026-09-13T17:03:58+00:00",
+  "alerts": "2026-09-13T17:03:58+00:00",
+  "afd": "2026-09-13T17:03:58+00:00",
+  "lake_forecast": "2026-09-13T17:03:58+00:00",
+  "lake_gage": "2026-09-13T17:03:58+00:00",
+  "air": "2026-09-13T17:03:58+00:00",
+  "sun": "2026-09-13T17:03:58+00:00",
+  "models": "2026-09-13T17:03:58+00:00"
  },
  "now": {
-  "observed_at": "2026-09-13T16:35:00+00:00",
+  "observed_at": "2026-09-13T16:45:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 70,
@@ -22,21 +22,21 @@
   "dewpoint_f": 63,
   "wind_mph": 13,
   "wind_gust_mph": null,
-  "wind_dir": "SSW",
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-09-13T06:32:29+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-09-13T08:00:00-04:00",
+    "name": "This Afternoon",
+    "start": "2026-09-13T13:00:00-04:00",
     "is_day": true,
     "temp_f": 78,
-    "pop": 49,
-    "wind": "S 10 to 15 mph",
-    "short": "Chance Rain Showers then Chance Showers And Thunderstorms",
-    "detailed": "A chance of rain showers before 11am, then a chance of showers and thunderstorms. Partly sunny, with a high near 78. South wind 10 to 15 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "pop": 33,
+    "wind": "S 10 to 14 mph",
+    "short": "Chance Showers And Thunderstorms",
+    "detailed": "A chance of showers and thunderstorms after 4pm. Partly sunny, with a high near 78. South wind 10 to 14 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-13T06:32:29+00:00",
   "hours": [
-   {
-    "t": "2026-09-13T12:00:00-04:00",
-    "temp_f": 75,
-    "feels_f": 75,
-    "pop": 1,
-    "humidity": 71,
-    "wind_mph": 14,
-    "wind_dir": "S",
-    "sky": 77,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-09-13T13:00:00-04:00",
     "temp_f": 76,
@@ -565,6 +554,17 @@
     "pop": 0,
     "humidity": 80,
     "wind_mph": 5,
+    "wind_dir": "N",
+    "sky": 2,
+    "short": "Clear"
+   },
+   {
+    "t": "2026-09-15T00:00:00-04:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 0,
+    "humidity": 83,
+    "wind_mph": 3,
     "wind_dir": "N",
     "sky": 2,
     "short": "Clear"
