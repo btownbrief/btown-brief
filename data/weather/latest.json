@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-14T00:28:23+00:00",
+ "updated": "2026-09-14T01:53:23+00:00",
  "sections_updated": {
-  "now": "2026-09-14T00:28:23+00:00",
-  "forecast": "2026-09-14T00:28:23+00:00",
-  "hourly": "2026-09-14T00:28:23+00:00",
-  "alerts": "2026-09-14T00:28:23+00:00",
-  "afd": "2026-09-14T00:28:23+00:00",
-  "lake_forecast": "2026-09-14T00:28:23+00:00",
-  "lake_gage": "2026-09-14T00:28:23+00:00",
-  "air": "2026-09-14T00:28:23+00:00",
-  "sun": "2026-09-14T00:28:23+00:00",
-  "models": "2026-09-14T00:28:23+00:00"
+  "now": "2026-09-14T01:53:23+00:00",
+  "forecast": "2026-09-14T01:53:23+00:00",
+  "hourly": "2026-09-14T01:53:23+00:00",
+  "alerts": "2026-09-14T01:53:23+00:00",
+  "afd": "2026-09-14T01:53:23+00:00",
+  "lake_forecast": "2026-09-14T01:53:23+00:00",
+  "lake_gage": "2026-09-14T01:53:23+00:00",
+  "air": "2026-09-14T01:53:23+00:00",
+  "sun": "2026-09-14T01:53:23+00:00",
+  "models": "2026-09-14T01:53:23+00:00"
  },
  "now": {
-  "observed_at": "2026-09-14T00:10:00+00:00",
+  "observed_at": "2026-09-14T01:35:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Mostly Clear",
   "temp_f": 70,
   "feels_like_f": 70,
-  "humidity": 83,
-  "dewpoint_f": 64,
+  "humidity": 88,
+  "dewpoint_f": 66,
   "wind_mph": 11,
   "wind_gust_mph": null,
-  "wind_dir": "S",
+  "wind_dir": "SSW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-09-13T19:00:00-04:00",
+    "start": "2026-09-13T21:00:00-04:00",
     "is_day": false,
     "temp_f": 55,
     "pop": 51,
     "wind": "W 7 to 15 mph",
     "short": "Scattered Showers And Thunderstorms",
-    "detailed": "Scattered rain showers before 9pm, then scattered showers and thunderstorms between 9pm and 3am. Mostly cloudy, with a low around 55. West wind 7 to 15 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Scattered showers and thunderstorms before 3am. Mostly cloudy, with a low around 55. West wind 7 to 15 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Monday",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-13T23:37:19+00:00",
   "hours": [
-   {
-    "t": "2026-09-13T19:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
-    "pop": 35,
-    "humidity": 84,
-    "wind_mph": 12,
-    "wind_dir": "S",
-    "sky": 43,
-    "short": "Scattered Rain Showers"
-   },
-   {
-    "t": "2026-09-13T20:00:00-04:00",
-    "temp_f": 71,
-    "feels_f": 71,
-    "pop": 38,
-    "humidity": 87,
-    "wind_mph": 12,
-    "wind_dir": "S",
-    "sky": 55,
-    "short": "Scattered Rain Showers"
-   },
    {
     "t": "2026-09-13T21:00:00-04:00",
     "temp_f": 69,
@@ -568,6 +546,28 @@
     "wind_dir": "SE",
     "sky": 5,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-09-15T07:00:00-04:00",
+    "temp_f": 47,
+    "feels_f": 46,
+    "pop": 0,
+    "humidity": 100,
+    "wind_mph": 3,
+    "wind_dir": "SE",
+    "sky": 13,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-09-15T08:00:00-04:00",
+    "temp_f": 49,
+    "feels_f": 47,
+    "pop": 0,
+    "humidity": 96,
+    "wind_mph": 5,
+    "wind_dir": "S",
+    "sky": 25,
+    "short": "Sunny"
    }
   ]
  },
@@ -854,17 +854,17 @@
  },
  "lake_gage": {
   "water_temp_f": 68,
-  "water_temp_at": "2026-09-13T20:00:00.000-04:00",
-  "level_ft": 94.28,
-  "level_at": "2026-09-13T20:00:00.000-04:00",
+  "water_temp_at": "2026-09-13T21:00:00.000-04:00",
+  "level_ft": 94.27,
+  "level_at": "2026-09-13T21:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 24,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/13/26 20:00",
+  "observed": "09/13/26 21:00",
   "discussion": "Expect generally good air quality across Vermont on Monday, September 14th."
  },
  "sun": {
@@ -880,7 +880,7 @@
     "date": "2026-09-13",
     "high_f": {
      "GFS": 76,
-     "Euro": 75,
+     "Euro": 74,
      "ICON": 75
     },
     "pop_max": {
@@ -890,20 +890,20 @@
     },
     "precip_in": {
      "GFS": 0.23,
-     "Euro": 0.37,
+     "Euro": 0.36,
      "ICON": 0.48
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    },
    {
     "date": "2026-09-14",
     "high_f": {
-     "GFS": 70,
+     "GFS": 69,
      "Euro": 65,
      "ICON": 69
     },
     "pop_max": {
-     "GFS": 27,
+     "GFS": 20,
      "Euro": 33,
      "ICON": 33
     },
@@ -912,13 +912,13 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-09-15",
     "high_f": {
      "GFS": 69,
-     "Euro": 67,
+     "Euro": 68,
      "ICON": 66
     },
     "pop_max": {
