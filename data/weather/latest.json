@@ -1,42 +1,42 @@
 {
- "updated": "2026-09-14T13:44:38+00:00",
+ "updated": "2026-09-14T15:04:42+00:00",
  "sections_updated": {
-  "now": "2026-09-14T13:44:38+00:00",
-  "forecast": "2026-09-14T13:44:38+00:00",
-  "hourly": "2026-09-14T13:44:38+00:00",
-  "alerts": "2026-09-14T13:44:38+00:00",
-  "afd": "2026-09-14T13:44:38+00:00",
-  "lake_forecast": "2026-09-14T13:44:38+00:00",
-  "lake_gage": "2026-09-14T13:44:38+00:00",
-  "air": "2026-09-14T13:44:38+00:00",
-  "sun": "2026-09-14T13:44:38+00:00",
-  "models": "2026-09-14T13:44:38+00:00"
+  "now": "2026-09-14T15:04:42+00:00",
+  "forecast": "2026-09-14T15:04:42+00:00",
+  "hourly": "2026-09-14T15:04:42+00:00",
+  "alerts": "2026-09-14T15:04:42+00:00",
+  "afd": "2026-09-14T15:04:42+00:00",
+  "lake_forecast": "2026-09-14T15:04:42+00:00",
+  "lake_gage": "2026-09-14T15:04:42+00:00",
+  "air": "2026-09-14T15:04:42+00:00",
+  "sun": "2026-09-14T15:04:42+00:00",
+  "models": "2026-09-14T15:04:42+00:00"
  },
  "now": {
-  "observed_at": "2026-09-14T13:20:00+00:00",
+  "observed_at": "2026-09-14T14:40:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 59,
-  "feels_like_f": 59,
-  "humidity": 59,
+  "temp_f": 61,
+  "feels_like_f": 61,
+  "humidity": 55,
   "dewpoint_f": 45,
-  "wind_mph": 10,
-  "wind_gust_mph": 17,
-  "wind_dir": "NNW",
+  "wind_mph": null,
+  "wind_gust_mph": null,
+  "wind_dir": null,
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-09-14T06:18:23+00:00",
+  "updated": "2026-09-14T14:42:52+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-14T09:00:00-04:00",
+    "start": "2026-09-14T11:00:00-04:00",
     "is_day": true,
     "temp_f": 68,
     "pop": 1,
-    "wind": "NW 13 to 16 mph",
+    "wind": "NW 14 mph",
     "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 68. Northwest wind 13 to 16 mph."
+    "detailed": "Mostly sunny, with a high near 68. Northwest wind around 14 mph."
    },
    {
     "name": "Tonight",
@@ -171,30 +171,8 @@
   ]
  },
  "hourly": {
-  "updated": "2026-09-14T06:18:23+00:00",
+  "updated": "2026-09-14T14:42:52+00:00",
   "hours": [
-   {
-    "t": "2026-09-14T09:00:00-04:00",
-    "temp_f": 63,
-    "feels_f": 63,
-    "pop": 1,
-    "humidity": 65,
-    "wind_mph": 16,
-    "wind_dir": "NW",
-    "sky": 26,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-09-14T10:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 1,
-    "humidity": 58,
-    "wind_mph": 14,
-    "wind_dir": "NW",
-    "sky": 28,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-09-14T11:00:00-04:00",
     "temp_f": 65,
@@ -568,6 +546,28 @@
     "wind_dir": "S",
     "sky": 64,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-15T21:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 6,
+    "humidity": 65,
+    "wind_mph": 14,
+    "wind_dir": "S",
+    "sky": 89,
+    "short": "Cloudy"
+   },
+   {
+    "t": "2026-09-15T22:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 13,
+    "humidity": 67,
+    "wind_mph": 14,
+    "wind_dir": "S",
+    "sky": 74,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -575,32 +575,24 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-14T11:14:00+00:00",
+  "issued": "2026-09-14T14:48:00+00:00",
   "key_messages": [
    "Mostly dry and seasonably cool weather through mid-week.",
    "A typical late summer/early fall pattern prevails with fast flow aloft with a very low probability of significant or impact weather over the next 4 to 7 days."
   ],
   "what_changed": "As of 313 AM EDT Monday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 141114\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n714 AM EDT Mon Sep 14 2026\n\n.WHAT HAS CHANGED...\nAs of 313 AM EDT Monday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 313 AM EDT Monday...\n\n1. Mostly dry and seasonably cool weather through mid-week.\n\n2. A typical late summer/early fall pattern prevails with fast \nflow aloft with a very low probability of significant or impact \nweather over the next 4 to 7 days.\n\n&&\n\n.DISCUSSION...\nAs of 313 AM EDT Monday...\n\nKEY MESSAGE 1: Surface high pressure will build into the region\ntoday, bringing drier weather with it. Winds will be gusty out \nof the northwest this morning, then trending lighter as the high\nridges in. Maximum temperatures today will be relatively cool, \ntopping out on the 60s areawide. Tonight frost will be possible \nin the colder valleys of the Adirondacks and Northeast Kingdom. \nSurface ridge will slide east of our region on Tuesday and flow \nwill become southerly and gusty at times. Shortwave energy \nmoving through progressive upper level flow will bring chance \nfor showers Tuesday night into Wednesday.\n\nKEY MESSAGE 2: A fast progressive flow aloft continues acrs the\nnorthern tier of the CONUS for days 4 thru 7, which results in \nchangeable wx conditions every couple of days. The latest global\nguidance and associated ensemble members still indicate the \nhighest probability of precip (60-75%) is on Thurs, with \nadditional chance (30-40%) pops next weekend. Given the fast \n700-500mb flow of 45 to 60 knots, precip on Thurs wl be quickly \nmoving west to east acrs our cwa, as pw values approach 1.5\". \nGiven the fast flow aloft and limited deep layer instability, \nthe probability of any flooding is very low on Thurs. Next large\nscale system is progged to impact our cwa next weekend with sfc\nlow pres moving along strengthening low lvl thermal gradient. \nGiven time frame, a large spread in timing and placement of \nhighest qpf is noted in the latest guidance. As event becomes \nbetter sampled with time, pops for a portion of next weekend \nwill probably need to be increased, but difficult to determine \nattm. Temps are relatively steady for days 4 thru 7, with \nslightly cooler air possible on Thurs associated with \nclouds/precip and feel latest WPC guidance is probably 3 to 5 \ndegrees too high. Otherwise, expect daily highs in the mid 60s \nmtns to mid 70s valleys with a few spots in the upper 70s \npossible, while lows range from the upper 30s to lower/mid 50s.\n\n&&\n\n.AVIATION /12Z MONDAY THROUGH FRIDAY/...\nThrough 12Z Tuesday...Upslope flow behind our surface cold front\nhas resulted in strato cumulus clouds across our mountain TAF\nsites with MVFR cigs. The MVFR cigs at MPV/SLK will become VFR\nby 15/16z this morning. Breezy northwest winds 5 to 15 knots\nwith localized gusts 15 to 20 knots will prevail through early\nafternoon before becoming light and terrain driven by sunset.\nTonight aviation challenge will become timing and areal coverage\nof fog. Highest probability (90-100%) will be at MPV/SLK, with\nlikely (60%) fog at EFK, chance (30-40%) at MSS/RUT/BTV and low\nprobability <15% at PBG. Any fog development with produce\nLIFR/VLIFR conditions roughly from 07z-12z. \n\nOutlook...\n\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. Slight chance SHRA.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly VFR, with areas MVFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Slight\nchance SHRA.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nLake Wind Advisory today with gusty north northwesterly winds \nthis morning. Winds will continue to decrease this afternoon and\nare expected to drop into the 10-15 KT range for the overnight.\nWinds will pick up again out of the south on Tuesday.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Taber/Neiles\nAVIATION...Taber\nMARINE...Neiles\n"
+  "raw": "\n000\nFXUS61 KBTV 141448\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n1048 AM EDT Mon Sep 14 2026\n\n.WHAT HAS CHANGED...\nAs of 313 AM EDT Monday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 313 AM EDT Monday...\n\n1. Mostly dry and seasonably cool weather through mid-week.\n\n2. A typical late summer/early fall pattern prevails with fast \nflow aloft with a very low probability of significant or impact \nweather over the next 4 to 7 days.\n\n&&\n\n.DISCUSSION...\nAs of 313 AM EDT Monday...\n\nKEY MESSAGE 1: Surface high pressure will build into the region\ntoday, bringing drier weather with it. Winds will be gusty out \nof the northwest this morning, then trending lighter as the high\nridges in. Maximum temperatures today will be relatively cool, \ntopping out on the 60s areawide. Tonight frost will be possible \nin the colder valleys of the Adirondacks and Northeast Kingdom. \nSurface ridge will slide east of our region on Tuesday and flow \nwill become southerly and gusty at times. Shortwave energy \nmoving through progressive upper level flow will bring chance \nfor showers Tuesday night into Wednesday.\n\nKEY MESSAGE 2: A fast progressive flow aloft continues acrs the\nnorthern tier of the CONUS for days 4 thru 7, which results in \nchangeable wx conditions every couple of days. The latest global\nguidance and associated ensemble members still indicate the \nhighest probability of precip (60-75%) is on Thurs, with \nadditional chance (30-40%) pops next weekend. Given the fast \n700-500mb flow of 45 to 60 knots, precip on Thurs wl be quickly \nmoving west to east acrs our cwa, as pw values approach 1.5\". \nGiven the fast flow aloft and limited deep layer instability, \nthe probability of any flooding is very low on Thurs. Next large\nscale system is progged to impact our cwa next weekend with sfc\nlow pres moving along strengthening low lvl thermal gradient. \nGiven time frame, a large spread in timing and placement of \nhighest qpf is noted in the latest guidance. As event becomes \nbetter sampled with time, pops for a portion of next weekend \nwill probably need to be increased, but difficult to determine \nattm. Temps are relatively steady for days 4 thru 7, with \nslightly cooler air possible on Thurs associated with \nclouds/precip and feel latest WPC guidance is probably 3 to 5 \ndegrees too high. Otherwise, expect daily highs in the mid 60s \nmtns to mid 70s valleys with a few spots in the upper 70s \npossible, while lows range from the upper 30s to lower/mid 50s.\n\n&&\n\n.AVIATION /12Z MONDAY THROUGH FRIDAY/...\nThrough 12Z Tuesday...Upslope flow behind our surface cold front\nhas resulted in strato cumulus clouds across our mountain TAF\nsites with MVFR cigs. The MVFR cigs at MPV/SLK will become VFR\nby 15/16z this morning. Breezy northwest winds 5 to 15 knots\nwith localized gusts 15 to 20 knots will prevail through early\nafternoon before becoming light and terrain driven by sunset.\nTonight aviation challenge will become timing and areal coverage\nof fog. Highest probability (90-100%) will be at MPV/SLK, with\nlikely (60%) fog at EFK, chance (30-40%) at MSS/RUT/BTV and low\nprobability <15% at PBG. Any fog development with produce\nLIFR/VLIFR conditions roughly from 07z-12z. \n\nOutlook...\n\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. Slight chance SHRA.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly VFR, with areas MVFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Slight\nchance SHRA.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Taber/Neiles\nAVIATION...Taber\n"
  },
  "lake_forecast": {
-  "issued": "2026-09-14T06:22:00+00:00",
+  "issued": "2026-09-14T14:46:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
-    "text": "",
-    "wind_knots_max": null,
-    "gust_knots": null,
-    "waves_ft_max": null,
-    "calm": false
-   },
-   {
-    "period": "Today",
-    "text": "Northwest winds 15 to 25 knots, diminishing to 10 to 15 knots. Mostly sunny. Waves 2 to 4 feet, subsiding to 1 to 3 feet.",
+    "period": "Rest Of Today",
+    "text": "Northwest winds 15 to 25 knots, diminishing to 10 to 15 knots. Mostly sunny. Waves 1 to 3 feet.",
     "wind_knots_max": 25,
     "gust_knots": null,
-    "waves_ft_max": 4,
+    "waves_ft_max": 3,
     "calm": false
    },
    {
@@ -670,11 +662,11 @@
   ],
   "northern": [
    {
-    "period": "Today",
-    "text": "Northwest winds 15 to 20 knots, diminishing to 10 to 15 knots. Mostly sunny. Waves 1 to 3 feet.",
+    "period": "Rest Of Today",
+    "text": "Northwest winds 10 to 20 knots. Partly sunny. Waves 1 to 2 feet.",
     "wind_knots_max": 20,
     "gust_knots": null,
-    "waves_ft_max": 3,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
@@ -744,17 +736,9 @@
   ],
   "southern": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
-    "text": "",
-    "wind_knots_max": null,
-    "gust_knots": null,
-    "waves_ft_max": null,
-    "calm": false
-   },
-   {
-    "period": "Today",
-    "text": "Northwest winds 15 to 25 knots, becoming north and diminishing to 10 to 15 knots. Mostly sunny. Waves 1 to 3 feet.",
-    "wind_knots_max": 25,
+    "period": "Rest Of Today",
+    "text": "Northwest winds 10 to 20 knots, becoming north. Mostly sunny. Waves 1 to 3 feet.",
+    "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 3,
     "calm": false
@@ -817,7 +801,7 @@
    },
    {
     "period": "Friday",
-    "text": "North winds 10 knots or less. Partly sunny. Waves 1 foot or less. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.64 feet 68 degrees USGS gage at Burlington VT 93.75 feet 68 degrees USGS gage at Port Henry NY 93.63 feet 66 degrees",
+    "text": "North winds 10 knots or less. Partly sunny. Waves 1 foot or less. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.60 feet 64 degrees USGS gage at Burlington VT 93.73 feet 67 degrees USGS gage at Port Henry NY 93.69 feet 66 degrees",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -827,32 +811,32 @@
   "uv": null,
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 93.64,
-    "temp_f": 68
+    "level_ft": 93.6,
+    "temp_f": 64
    },
    "Burlington VT": {
-    "level_ft": 93.75,
-    "temp_f": 68
+    "level_ft": 93.73,
+    "temp_f": 67
    },
    "Port Henry NY": {
-    "level_ft": 93.63,
+    "level_ft": 93.69,
     "temp_f": 66
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 67,
-  "water_temp_at": "2026-09-14T09:00:00.000-04:00",
-  "level_ft": 94.27,
-  "level_at": "2026-09-14T09:00:00.000-04:00",
+  "water_temp_at": "2026-09-14T10:00:00.000-04:00",
+  "level_ft": 94.25,
+  "level_at": "2026-09-14T10:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 20,
+  "aqi": 23,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/14/26 9:00",
+  "observed": "09/14/26 10:00",
   "discussion": "Expect generally good air quality across Vermont on Monday, September 14th."
  },
  "sun": {
@@ -891,7 +875,7 @@
      "ICON": 66
     },
     "pop_max": {
-     "GFS": 7,
+     "GFS": 4,
      "Euro": 0,
      "ICON": 3
     },
@@ -910,7 +894,7 @@
      "ICON": 66
     },
     "pop_max": {
-     "GFS": 29,
+     "GFS": 23,
      "Euro": 38,
      "ICON": 33
     },
