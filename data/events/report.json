@@ -1,42 +1,42 @@
 {
- "generated": "2026-09-14T11:59:33-04:00",
+ "generated": "2026-09-14T19:27:59-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.9
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 54,
-   "seconds": 4.8
+   "seconds": 3.0
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 64,
-   "seconds": 3.2
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 252,
-   "seconds": 3.6
+   "seconds": 4.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 81,
-   "seconds": 1.8
+   "count": 82,
+   "seconds": 2.1
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 14
+   "staleDays": 15
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-14&end_date=2026-11-13&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 14
+   "staleDays": 15
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,12 +46,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 7,
-   "seconds": 0.5
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 203,
-   "seconds": 77.4
+   "count": 202,
+   "seconds": 68.0
   },
   "flynn": {
    "label": "The Flynn",
@@ -66,102 +66,91 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 691,
-   "seconds": 38.5
+   "seconds": 34.8
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 77,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 10.4
+   "seconds": 9.8
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 419,
-   "seconds": 69.1
+   "count": 423,
+   "seconds": 71.9
   },
   "meetup": {
    "label": "Meetup",
-   "count": 63,
-   "seconds": 119.7
+   "count": 64,
+   "seconds": 117.7
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 16,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 45,
-   "seconds": 10.9
+   "count": 48,
+   "seconds": 12.7
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 10,
-   "seconds": 0.7
+   "seconds": 0.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 109,
-   "seconds": 2.1
+   "seconds": 1.9
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 20,
-   "seconds": 34.2
+   "count": 21,
+   "seconds": 32.8
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2393,
-   "seconds": 112.4
+   "seconds": 3.0
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 14
+   "staleDays": 15
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 543,
-   "seconds": 54.3
+   "count": 544,
+   "seconds": 28.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 330,
+   "count": 331,
    "seconds": 0.4
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 61,
-   "seconds": 86.8
+   "seconds": 79.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 62,
-   "seconds": 0.2
+   "seconds": 0.3
   }
  },
- "gathered": 5540,
- "afterDedup": 2582,
- "duplicatesMerged": 2958,
- "final": 2708,
- "firecrawlCalls": 16,
+ "gathered": 5551,
+ "afterDedup": 2590,
+ "duplicatesMerged": 2961,
+ "final": 2719,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "All Them Witches",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground"
-   ],
-   "date": "2026-10-20"
-  },
   {
    "kept": {
     "title": "Super Smash Tuesdays",
@@ -485,6 +474,17 @@
   {
    "kept": {
     "title": "Chemistry seminar ft. Rebecca Whelan",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-22"
+  },
+  {
+   "kept": {
+    "title": "Dinner and Dialogue",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2541,8 +2541,7 @@
    "id": "5339f2d709b9",
    "title": "2026 Osteopathic Medical School Fair",
    "date": "2026-09-16",
-   "change": "missing",
-   "lastSeen": "2026-09-11T18:47:00-04:00"
+   "change": "dropped"
   },
   {
    "id": "acf6ce6dddd4",
@@ -2550,6 +2549,13 @@
    "date": "2026-09-16",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "879eface2df1",
+   "title": "Student Transportation Accessibility Forum",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-09-14T11:59:33-04:00"
   },
   {
    "id": "78952acf13db",
@@ -2599,6 +2605,13 @@
    "date": "2026-09-18",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "806274f95dc0",
+   "title": "A Celebration of Life: Sarah O'Sullivan",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-14T11:59:33-04:00"
   },
   {
    "id": "eca8ed65b605",
@@ -3168,12 +3181,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "68b18c10af9f",
-   "title": "Fraser | San Miguel Fraser",
-   "date": "2026-10-09",
-   "change": "dropped"
-  },
-  {
    "id": "ebce9000bca7",
    "title": "Sensory-Friendly Mornings",
    "date": "2026-10-10",
@@ -3186,6 +3193,13 @@
    "date": "2026-10-10",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "6a49a5f90f6b",
+   "title": "Food For Talk Cookbook Club: Foods of La Frontera",
+   "date": "2026-10-11",
+   "change": "missing",
+   "lastSeen": "2026-09-14T11:59:33-04:00"
   },
   {
    "id": "7fbf6b3633b3",
@@ -3216,6 +3230,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "f666168f99a6",
+   "title": "Pick-up Basketball",
+   "date": "2026-10-14",
+   "change": "missing",
+   "lastSeen": "2026-09-14T11:59:33-04:00"
+  },
+  {
    "id": "1837480df93e",
    "title": "Adult and Teen Artmaking",
    "date": "2026-10-14",
@@ -3244,12 +3265,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "cb32212527b6",
-   "title": "7th Annual Pumpkin Carving Party & Bonfire",
-   "date": "2026-10-17",
-   "change": "dropped"
-  },
-  {
    "id": "feba8e14fde3",
    "title": "Burlington VT Wedding Show",
    "date": "2026-10-18",
@@ -3269,12 +3284,6 @@
    "date": "2026-10-19",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "ab771e751e04",
-   "title": "Puzzle Swap",
-   "date": "2026-10-21",
-   "change": "dropped"
   },
   {
    "id": "cc3d801ab0bc",
