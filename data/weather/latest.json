@@ -1,25 +1,25 @@
 {
- "updated": "2026-09-15T22:26:41+00:00",
+ "updated": "2026-09-15T23:04:44+00:00",
  "sections_updated": {
-  "now": "2026-09-15T22:26:41+00:00",
-  "forecast": "2026-09-15T22:26:41+00:00",
-  "hourly": "2026-09-15T22:26:41+00:00",
-  "alerts": "2026-09-15T22:26:41+00:00",
-  "afd": "2026-09-15T22:26:41+00:00",
-  "lake_forecast": "2026-09-15T22:26:41+00:00",
-  "lake_gage": "2026-09-15T22:26:41+00:00",
-  "air": "2026-09-15T22:26:41+00:00",
-  "sun": "2026-09-15T22:26:41+00:00",
-  "models": "2026-09-15T22:26:41+00:00"
+  "now": "2026-09-15T23:04:44+00:00",
+  "forecast": "2026-09-15T23:04:44+00:00",
+  "hourly": "2026-09-15T23:04:44+00:00",
+  "alerts": "2026-09-15T23:04:44+00:00",
+  "afd": "2026-09-15T23:04:44+00:00",
+  "lake_forecast": "2026-09-15T23:04:44+00:00",
+  "lake_gage": "2026-09-15T23:04:44+00:00",
+  "air": "2026-09-15T23:04:44+00:00",
+  "sun": "2026-09-15T23:04:44+00:00",
+  "models": "2026-09-15T23:04:44+00:00"
  },
  "now": {
-  "observed_at": "2026-09-15T22:00:00+00:00",
+  "observed_at": "2026-09-15T22:45:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
-  "temp_f": 66,
-  "feels_like_f": 66,
-  "humidity": 49,
-  "dewpoint_f": 46,
+  "description": "Mostly Cloudy",
+  "temp_f": 64,
+  "feels_like_f": 64,
+  "humidity": 56,
+  "dewpoint_f": 48,
   "wind_mph": 9,
   "wind_gust_mph": null,
   "wind_dir": "S",
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-09-15T18:00:00-04:00",
+    "start": "2026-09-15T19:00:00-04:00",
     "is_day": false,
     "temp_f": 58,
     "pop": 25,
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-15T18:21:32+00:00",
   "hours": [
-   {
-    "t": "2026-09-15T18:00:00-04:00",
-    "temp_f": 70,
-    "feels_f": 70,
-    "pop": 0,
-    "humidity": 49,
-    "wind_mph": 14,
-    "wind_dir": "S",
-    "sky": 72,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-09-15T19:00:00-04:00",
     "temp_f": 68,
@@ -568,6 +557,17 @@
     "wind_dir": "N",
     "sky": 85,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-17T06:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 0,
+    "humidity": 93,
+    "wind_mph": 1,
+    "wind_dir": "N",
+    "sky": 64,
+    "short": "Partly Sunny"
    }
   ]
  },
@@ -884,7 +884,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 22,
+  "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "09/15/26 18:00",
@@ -908,7 +908,7 @@
     },
     "pop_max": {
      "GFS": 16,
-     "Euro": 0,
+     "Euro": 2,
      "ICON": 0
     },
     "precip_in": {
@@ -926,12 +926,12 @@
      "ICON": 71
     },
     "pop_max": {
-     "GFS": 11,
-     "Euro": 59,
+     "GFS": 12,
+     "Euro": 43,
      "ICON": 73
     },
     "precip_in": {
-     "GFS": 0.03,
+     "GFS": 0.02,
      "Euro": 0.0,
      "ICON": 0.02
     },
@@ -946,7 +946,7 @@
     },
     "pop_max": {
      "GFS": 29,
-     "Euro": 54,
+     "Euro": 65,
      "ICON": 13
     },
     "precip_in": {
