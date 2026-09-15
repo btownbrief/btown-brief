@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-15T14:27:01+00:00",
+ "updated": "2026-09-15T15:16:52+00:00",
  "sections_updated": {
-  "now": "2026-09-15T14:27:01+00:00",
-  "forecast": "2026-09-15T14:27:01+00:00",
-  "hourly": "2026-09-15T14:27:01+00:00",
-  "alerts": "2026-09-15T14:27:01+00:00",
-  "afd": "2026-09-15T14:27:01+00:00",
-  "lake_forecast": "2026-09-15T14:27:01+00:00",
+  "now": "2026-09-15T15:16:52+00:00",
+  "forecast": "2026-09-15T15:16:52+00:00",
+  "hourly": "2026-09-15T15:16:52+00:00",
+  "alerts": "2026-09-15T15:16:52+00:00",
+  "afd": "2026-09-15T15:16:52+00:00",
+  "lake_forecast": "2026-09-15T15:16:52+00:00",
   "lake_gage": "2026-09-15T14:27:01+00:00",
-  "air": "2026-09-15T14:27:01+00:00",
-  "sun": "2026-09-15T14:27:01+00:00",
-  "models": "2026-09-15T14:27:01+00:00"
+  "air": "2026-09-15T15:16:52+00:00",
+  "sun": "2026-09-15T15:16:52+00:00",
+  "models": "2026-09-15T15:16:52+00:00"
  },
  "now": {
-  "observed_at": "2026-09-15T14:10:00+00:00",
+  "observed_at": "2026-09-15T15:05:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 57,
-  "feels_like_f": 57,
-  "humidity": 67,
+  "temp_f": 61,
+  "feels_like_f": 61,
+  "humidity": 59,
   "dewpoint_f": 46,
   "wind_mph": 6,
   "wind_gust_mph": null,
-  "wind_dir": "SSW",
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-15T10:00:00-04:00",
+    "start": "2026-09-15T11:00:00-04:00",
     "is_day": true,
     "temp_f": 70,
     "pop": 0,
-    "wind": "S 6 to 14 mph",
+    "wind": "S 8 to 14 mph",
     "short": "Partly Sunny",
-    "detailed": "Partly sunny, with a high near 70. South wind 6 to 14 mph."
+    "detailed": "Partly sunny, with a high near 70. South wind 8 to 14 mph."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-15T06:21:40+00:00",
   "hours": [
-   {
-    "t": "2026-09-15T10:00:00-04:00",
-    "temp_f": 58,
-    "feels_f": 58,
-    "pop": 0,
-    "humidity": 69,
-    "wind_mph": 6,
-    "wind_dir": "S",
-    "sky": 20,
-    "short": "Sunny"
-   },
    {
     "t": "2026-09-15T11:00:00-04:00",
     "temp_f": 61,
@@ -568,6 +557,17 @@
     "wind_dir": "N",
     "sky": 85,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-16T22:00:00-04:00",
+    "temp_f": 65,
+    "feels_f": 65,
+    "pop": 3,
+    "humidity": 87,
+    "wind_mph": 2,
+    "wind_dir": "N",
+    "sky": 78,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -841,10 +841,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 19,
+  "aqi": 21,
   "category": "Good",
-  "pollutant": "PM2.5",
-  "observed": "09/15/26 10:00",
+  "pollutant": "OZONE",
+  "observed": "09/15/26 11:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, September 15th."
  },
  "sun": {
@@ -884,7 +884,7 @@
     },
     "pop_max": {
      "GFS": 14,
-     "Euro": 53,
+     "Euro": 59,
      "ICON": 45
     },
     "precip_in": {
@@ -902,8 +902,8 @@
      "ICON": 78
     },
     "pop_max": {
-     "GFS": 24,
-     "Euro": 45,
+     "GFS": 20,
+     "Euro": 54,
      "ICON": 13
     },
     "precip_in": {
