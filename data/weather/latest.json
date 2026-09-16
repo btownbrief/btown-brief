@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-16T06:49:47+00:00",
+ "updated": "2026-09-16T09:39:25+00:00",
  "sections_updated": {
-  "now": "2026-09-16T06:49:47+00:00",
-  "forecast": "2026-09-16T06:49:47+00:00",
-  "hourly": "2026-09-16T06:49:47+00:00",
-  "alerts": "2026-09-16T06:49:47+00:00",
-  "afd": "2026-09-16T06:49:47+00:00",
-  "lake_forecast": "2026-09-16T06:49:47+00:00",
+  "now": "2026-09-16T09:39:25+00:00",
+  "forecast": "2026-09-16T09:39:25+00:00",
+  "hourly": "2026-09-16T09:39:25+00:00",
+  "alerts": "2026-09-16T09:39:25+00:00",
+  "afd": "2026-09-16T09:39:25+00:00",
+  "lake_forecast": "2026-09-16T09:39:25+00:00",
   "lake_gage": "2026-09-16T06:49:47+00:00",
-  "air": "2026-09-16T06:49:47+00:00",
-  "sun": "2026-09-16T06:49:47+00:00",
-  "models": "2026-09-16T06:49:47+00:00"
+  "air": "2026-09-16T09:39:25+00:00",
+  "sun": "2026-09-16T09:39:25+00:00",
+  "models": "2026-09-16T09:39:25+00:00"
  },
  "now": {
-  "observed_at": "2026-09-16T06:30:00+00:00",
+  "observed_at": "2026-09-16T09:20:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 64,
-  "feels_like_f": 64,
-  "humidity": 64,
-  "dewpoint_f": 52,
-  "wind_mph": null,
+  "temp_f": 59,
+  "feels_like_f": 59,
+  "humidity": 82,
+  "dewpoint_f": 54,
+  "wind_mph": 8,
   "wind_gust_mph": null,
-  "wind_dir": null,
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Overnight",
-    "start": "2026-09-16T02:00:00-04:00",
+    "start": "2026-09-16T05:00:00-04:00",
     "is_day": false,
     "temp_f": 61,
-    "pop": 33,
+    "pop": 9,
     "wind": "S 15 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers before 5am. Cloudy, with a low around 61. South wind around 15 mph. Chance of precipitation is 30%."
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a low around 61. South wind around 15 mph."
    },
    {
     "name": "Wednesday",
@@ -173,39 +173,6 @@
  "hourly": {
   "updated": "2026-09-16T06:18:29+00:00",
   "hours": [
-   {
-    "t": "2026-09-16T02:00:00-04:00",
-    "temp_f": 65,
-    "feels_f": 65,
-    "pop": 18,
-    "humidity": 63,
-    "wind_mph": 15,
-    "wind_dir": "S",
-    "sky": 93,
-    "short": "Slight Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-16T03:00:00-04:00",
-    "temp_f": 65,
-    "feels_f": 65,
-    "pop": 25,
-    "humidity": 65,
-    "wind_mph": 15,
-    "wind_dir": "S",
-    "sky": 95,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-16T04:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 33,
-    "humidity": 67,
-    "wind_mph": 15,
-    "wind_dir": "S",
-    "sky": 93,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-09-16T05:00:00-04:00",
     "temp_f": 63,
@@ -568,6 +535,39 @@
     "wind_dir": "SW",
     "sky": 78,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-17T14:00:00-04:00",
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 40,
+    "humidity": 76,
+    "wind_mph": 5,
+    "wind_dir": "SW",
+    "sky": 72,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-17T15:00:00-04:00",
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 45,
+    "humidity": 76,
+    "wind_mph": 5,
+    "wind_dir": "SW",
+    "sky": 80,
+    "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-17T16:00:00-04:00",
+    "temp_f": 73,
+    "feels_f": 73,
+    "pop": 36,
+    "humidity": 76,
+    "wind_mph": 5,
+    "wind_dir": "SW",
+    "sky": 81,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -575,13 +575,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-15T23:44:00+00:00",
+  "issued": "2026-09-16T06:48:00+00:00",
   "key_messages": [
-   "Dry and seasonable before a few showers Thursday.",
-   "Chances for showers decreasing this weekend, but remaining seasonable cool."
+   "Afternoon/evening showers remain likely for portions of the region Thursday followed by breezy and drier weather for Friday.",
+   "Below normal temperatures and moisture to start the weekend will support chances for patchy to potentially widespread frost in portions of northern New York and central/eastern Vermont.",
+   "Cooler weather with chance for precipitation Saturday night into Sunday."
   ],
-  "what_changed": "As of 233 PM EDT Tuesday... The forecast for the upcoming weekend has trended drier.",
-  "raw": "\n000\nFXUS61 KBTV 152344\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n744 PM EDT Tue Sep 15 2026\n\n.WHAT HAS CHANGED...\nAs of 233 PM EDT Tuesday...\n\nThe forecast for the upcoming weekend has trended drier.\n\n&&\n\n.KEY MESSAGES...\nAs of 233 PM EDT Tuesday...\n\n1. Dry and seasonable before a few showers Thursday.\n\n2. Chances for showers decreasing this weekend, but remaining \nseasonable cool.\n\n&&\n\n.DISCUSSION...\nAs of 233 PM EDT Tuesday...\n\nKEY MESSAGE 1: Surface high pressure is shifting off to the \neast, and return southerly flow has developed. Winds will \nincrease this afternoon and gusts in the 10-20 mph range are \nexpected heading into the evening. A dying cold front will push \ndown from the north overnight and bring the chance of a couple \nshowers. However, weak forcing and dry air in the low levels \nshould cause most of this to fall as virga, though a few \nsprinkles are expected in northern areas. Dry and warm weather \nwill return for Wednesday with highs in the 70s to around 80. An\narea of rain will attempt to move into the region on Thursday \ninto Thursday night as isentropic lift occurs on a warm front. \nEPS ensemble members generally favor a wetter solution and a \nfarther north front, while GEFS and CMCE members generally keep \nthe rain to the south. Models have shifted into a bit more of an\nagreement where it looks like at least southern Vermont should \nsee a few showers, but the northward extent remains uncertain. \nHowever, any precipitation would be light and stratiform, with \nthe wet EPS probabilities of a half inch of rain generally \nranging between 20-30 percent.\n\nKEY MESSAGE 2: Following a washed out cold front by the end of the work \nweek, trends have continued to move towards the ECMWF solution \nkeeping most, if not all, precipitation south of the area Saturday \nnight and Sunday. The baroclinic zone responsible for the area of \npotential showers will be draped more over central and southern New \nYork with better forcing southwest of our region. That said, model \nsolutions Sunday afternoon into Monday denote a subtle redevelopment \nof a surface low off the southern New England coast which could \nbring some light shower chances to southern Vermont. All in all, our \nshower chances this weekend are trending lower. Our flow pattern \nwill remain confluent into next week with zonal flow aloft with \ngenerally dry conditions towards next week. Model solutions begin to \nvary by early next week in terms of precipitation chances. An upper \nlevel high over the Great Lakes will set up a dry corridor from the \nGreat Lakes into northern New England, while a moisture axis over \nthe Mid Atlantic attempts to push north. Model uncertainty in how \nmuch dry air there is will determine if moisture and associated \nshower potential are able to penetrate northward into our region, or \nif dry subsident air keeps our shower chances shunted to the south. \nRegardless, zonal northwesterly flow will keep our temperatures \nthrough the weekend into early next week on the seasonably cool side \nwith highs fairly consistent in the mid to upper 60s, and lows in \nthe low to mid 40s, with some cold hollows hovering about the upper \n30s. Sky conditions favor mainly cloudy conditions through the \nextended.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...VFR with local MVFR expected through the\nTAF period. Current ceilings AOA 8000 ft will gradually lower\novernight as a weak cold front pushes across the region from\nwest to east. Clouds will lower to 3500-5000 ft, except at SLK\nwhere ceilings will drop to 2500 ft. These conditions will\npersist through 16z Wed, then expect gradually lifting ceilings\nthereafter. A few very light rain showers will be possible with\nthe frontal passage, but no visibility restrictions or\nsignificant impacts are expected, so mention in the TAFs is not\nwarranted at this time. Winds light S/SE this evening will\noccasionally become gusty overnight, mainly at BTV as a weak low\nlevel jet moves east. This jet may also bring a period of\nmarginal LLWS overnight, as well, particularly at SLK/MSS. Winds\nturn to the W/SW and eventually NW during the day Tuesday \nbehind the frontal passage. \n\n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly VFR, with local MVFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with local IFR possible. Slight\nchance SHRA.\nFriday: Mainly VFR, with local MVFR possible. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. Slight chance SHRA.\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly VFR, with local MVFR possible. Chance SHRA.\n\n&&\n\n.MARINE...\nChanneled southerly flow will continue to increase this \nafternoon and evening. They should ramp up on the broad waters \ninto the 20 to 25 knot range by late afternoon, and near 20 \nknots over the northern waters. As a result, waves will markedly\nincrease into the 1 to 3 feet range by this evening. During the\nevening, they will likely reach the 3 to 4 feet range in the \nvicinity of Colchester Reef and 2 to 3 foot range in the Inland \nSea as winds will likely peak in intensity. Elevated south winds\nwill likely persist into Wednesday morning before sharply \ndiminishing by Wednesday afternoon.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Myskowski/Danzig\nAVIATION...Hastings\nMARINE...NWS BTV\n"
+  "what_changed": "As of 248 AM EDT Wednesday... For Friday, wind gusts have increased and humidity has decreased for most locations.",
+  "raw": "\n000\nFXUS61 KBTV 160648\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n248 AM EDT Wed Sep 16 2026\n\n.WHAT HAS CHANGED...\nAs of 248 AM EDT Wednesday...\n\nFor Friday, wind gusts have increased and humidity has decreased for \nmost locations.\n\n&&\n\n.KEY MESSAGES...\nAs of 248 AM EDT Wednesday...\n\n1. Afternoon/evening showers remain likely for portions of the \nregion Thursday followed by breezy and drier weather for Friday. \n\n2. Below normal temperatures and moisture to start the weekend \nwill support chances for patchy to potentially widespread frost in \nportions of northern New York and central/eastern Vermont.\n\n3. Cooler weather with chance for precipitation Saturday night \ninto Sunday. \n\n&&\n\n.DISCUSSION...\nAs of 248 AM EDT Wednesday...\n\nKEY MESSAGE 1: Following the passage of decaying front today, the old \nboundary will be positioned just to our south tomorrow as a wave of \nlow pressure develops. Meanwhile, another cold front to our\nnorthwest will be approaching. The combination of large scale\nlift ahead of this front and the moisture advection from the \nsystem south of the region appears to help blossom rain over our\nregion during the afternoon, generally expanding towards the \nnorth and east with time. Model spread continues to be large \nwith regards to the exact footprint of the rain, still favoring \nour southern Vermont locales while rain chances become more \nquestionable as you go northward. Increasing low level moisture \nwill support some instability, but most guidance shows \ninsufficient lapse rates to get deep convection and associated \nthunder. Still, slight chances of thunder statistically are \nwarranted at this time over southern/eastern portions of the \nregion during the late afternoon into the early evening before \nshowers exit to our east.\n\nFriday continues to look like a classic early fall day.\nFollowing a secondary cold front passing through early in the\nday, much drier, cool air will be evident. Have trended winds \nand wind gusts higher as guidance has consistently shown a gusty\nnorthwest flow pattern that would allow widespread 30 MPH gusts\nin much of northern Vermont, with slightly lighter winds in \nnorthern New York. There will be impressively dry air aloft to \ntap into such dew points will plummet during the morning as the \nboundary layer deepens. As a result, low humidity values can be \nexpected in lower elevations especially, likely below 40% in the\nChamplain Valley and Connecticut River Valley.\n\nKEY MESSAGE 2: Following a breezy afternoon, cool high pressure to our \nnorthwest may crest sufficiently overhead that winds slacken enough \nto allow for frost development, especially in most sheltered \nlocations above 1000 feet elevation. The latest NBM 10th percentile \nlow temperatures seems like a good first guess if radiational \ncooling is as efficient as it could be in this type of setup, \nshowing temperatures cooling into the low to mid 30s throughout the \nAdirondacks and central and eastern Vermont Saturday morning. Model \noutput statistics for perennial cold spot at the Adirondack Regional \nAirport currently shows a low of 29, which is only a couple degrees \nlower than what was observed yesterday morning and seems reasonable. \n\nWith light winds and a cooler start to the day, high temperatures \nSaturday will probably be near to slightly lower than on Friday. The \nair will remain crisp with dew points again mainly in the 30s during \nthe day. Precipitable moisture will be quite low, as the \nensemble mean values only gradually increase above 50% of normal\nfrom west to east as the air mass slightly modifies.\n\nKEY MESSAGE 3: Still quite a bit of uncertainty with regards to \npossibility of some rain showers Saturday night into Sunday. ECMWF \nhas continued to keep our region drier with system remaining south \nof our region. GFS has now returned to a solution with our region \nhaving some light rain Saturday night and Sunday. Will hope for \nbetter model agreement as we get closer to the weekend. For now have \nchance for showers mentioned from 06-18z Sunday. Weather pattern \nwill remain active through next week with additional chances for \nshowers on Tuesday and then again towards the end of the work week. \nTemperatures will start out cooler than normal this weekend then \ntrend back towards seasonal normals by mid week.\n\n&&\n\n.AVIATION /06Z WEDNESDAY THROUGH SUNDAY/...\nThrough 06Z Thursday...Much quieter aviation forecast with no \nfog expected as clouds and precipitation move across our region \novernight. Light rain has not lowered any ceilings or \nvisibilities, pretty low impact. Mainly a wind forecast for all \nsites with winds veering from southerly to southwesterly, and \neventually northwesterly.\n\nOutlook...\n\nThursday: Mainly VFR, with local MVFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with areas MVFR possible. Slight\nchance SHRA.\nFriday: Mainly VFR, with local MVFR possible. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. Slight chance SHRA.\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly VFR, with local IFR possible. Chance SHRA.\n\n&&\n\n.MARINE...\nAs of 227 AM EDT Wednesday...Channeled southerly flow remains \nin place early this morning, with winds between 15 and 25 knots \non the north lake and broad waters of Lake Champlain along with \nsignificant wave heights between 2 and 3 feet. Conditions will \nimprove through the morning as winds gradually weaken, and winds\nwill become light and variable this afternoon before turning \nnortherly as a weak front passes through.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Kutikoff/Neiles\nAVIATION...Neiles\nMARINE...Kutikoff\n"
  },
  "lake_forecast": {
   "issued": "2026-09-16T06:24:00+00:00",
@@ -849,10 +850,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 30,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/16/26 2:00",
+  "observed": "09/16/26 5:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, September 16th."
  },
  "sun": {
@@ -867,50 +868,50 @@
    {
     "date": "2026-09-16",
     "high_f": {
-     "GFS": 79,
+     "GFS": 78,
      "Euro": 76,
      "ICON": 74
     },
     "pop_max": {
-     "GFS": 16,
+     "GFS": 23,
      "Euro": 57,
      "ICON": 68
     },
     "precip_in": {
-     "GFS": 0.02,
-     "Euro": 0.02,
-     "ICON": 0.07
+     "GFS": 0.0,
+     "Euro": 0.0,
+     "ICON": 0.01
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-09-17",
     "high_f": {
-     "GFS": 75,
-     "Euro": 69,
+     "GFS": 73,
+     "Euro": 73,
      "ICON": 76
     },
     "pop_max": {
-     "GFS": 38,
+     "GFS": 30,
      "Euro": 61,
      "ICON": 15
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.83,
+     "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 7
+    "high_spread_f": 3
    },
    {
     "date": "2026-09-18",
     "high_f": {
      "GFS": 65,
-     "Euro": 69,
+     "Euro": 70,
      "ICON": 65
     },
     "pop_max": {
-     "GFS": 12,
+     "GFS": 19,
      "Euro": 16,
      "ICON": 8
     },
@@ -919,7 +920,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 4
+    "high_spread_f": 5
    }
   ]
  }
