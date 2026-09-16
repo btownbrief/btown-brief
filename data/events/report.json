@@ -1,42 +1,42 @@
 {
- "generated": "2026-09-16T10:20:34-04:00",
+ "generated": "2026-09-16T19:14:32-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.8
+   "seconds": 6.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 75,
-   "seconds": 3.4
+   "count": 76,
+   "seconds": 3.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 59,
-   "seconds": 3.3
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 254,
-   "seconds": 4.7
+   "seconds": 4.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 82,
-   "seconds": 1.8
+   "count": 83,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 16
+   "staleDays": 17
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-16&end_date=2026-11-15&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 16
+   "staleDays": 17
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 7,
-   "seconds": 0.2
+   "seconds": 0.1
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 65.3
+   "seconds": 66.0
   },
   "flynn": {
    "label": "The Flynn",
    "count": 32,
-   "seconds": 0.1
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,8 +65,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 692,
-   "seconds": 33.2
+   "count": 695,
+   "seconds": 34.1
   },
   "higherground": {
    "label": "Higher Ground",
@@ -76,27 +76,27 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 10.7
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 415,
-   "seconds": 74.6
+   "count": 417,
+   "seconds": 73.2
   },
   "meetup": {
    "label": "Meetup",
    "count": 60,
-   "seconds": 113.9
+   "seconds": 110.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 14,
-   "seconds": 0.3
+   "count": 16,
+   "seconds": 0.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 55,
-   "seconds": 15.3
+   "count": 53,
+   "seconds": 14.7
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -105,51 +105,51 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 105,
-   "seconds": 1.8
+   "count": 106,
+   "seconds": 2.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 25,
-   "seconds": 34.7
+   "seconds": 34.6
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2344,
-   "seconds": 32.0
+   "count": 2332,
+   "seconds": 2.8
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 16
+   "staleDays": 17
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 527,
-   "seconds": 34.6
+   "count": 530,
+   "seconds": 23.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 333,
+   "count": 336,
    "seconds": 0.4
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 64,
-   "seconds": 84.4
+   "seconds": 84.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 62,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 5516,
- "afterDedup": 2608,
- "duplicatesMerged": 2908,
- "final": 2772,
- "firecrawlCalls": 5,
+ "gathered": 5518,
+ "afterDedup": 2604,
+ "duplicatesMerged": 2914,
+ "final": 2766,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2408,30 +2408,6 @@
  ],
  "changes": [
   {
-   "id": "981d9be1d4c3",
-   "title": "Sparkomatik",
-   "date": "2026-09-19",
-   "change": "time",
-   "was": "2026-09-19T19:00:00-04:00",
-   "now": "2026-09-19T19:00:00.062000-04:00"
-  },
-  {
-   "id": "14eb4c5641eb",
-   "title": "The Sheila Divine",
-   "date": "2026-09-26",
-   "change": "time",
-   "was": "2026-09-26T20:00:00-04:00",
-   "now": "2026-09-26T20:00:00.914000-04:00"
-  },
-  {
-   "id": "546921dcf130",
-   "title": "Youth Environmental Science Summit",
-   "date": "2026-10-16",
-   "change": "time",
-   "was": "2026-10-16",
-   "now": "2026-10-16T09:15:00-04:00"
-  },
-  {
    "id": "88614e3a9aab",
    "title": "CAPM Certification Weekday Classroom Training in Burlington, VT",
    "date": "2026-09-16",
@@ -2446,6 +2422,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "30bf70a24328",
+   "title": "Public Skate",
+   "date": "2026-09-16",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
    "id": "901c231e01c6",
    "title": "Cows, Cheese, and Tractors!",
    "date": "2026-09-16",
@@ -2458,6 +2441,13 @@
    "date": "2026-09-16",
    "change": "missing",
    "lastSeen": "2026-09-15T19:10:06-04:00"
+  },
+  {
+   "id": "1ba90a3645c5",
+   "title": "Stick & Puck",
+   "date": "2026-09-16",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
   },
   {
    "id": "327ab158857d",
@@ -2488,6 +2478,13 @@
    "lastSeen": "2026-09-15T10:26:13-04:00"
   },
   {
+   "id": "462a408078bb",
+   "title": "5K Run @ Zero Gravity",
+   "date": "2026-09-16",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
    "id": "fc5707dd41de",
    "title": "Live Music! Michael Perry",
    "date": "2026-09-16",
@@ -2512,8 +2509,21 @@
    "id": "78952acf13db",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-17",
+   "change": "dropped"
+  },
+  {
+   "id": "c93545b912cc",
+   "title": "George Murtie",
+   "date": "2026-09-17",
    "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
+   "id": "91b187c70456",
+   "title": "Unruly Allies",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
   },
   {
    "id": "3d1c73bb1a80",
@@ -2521,6 +2531,13 @@
    "date": "2026-09-17",
    "change": "missing",
    "lastSeen": "2026-09-15T10:26:13-04:00"
+  },
+  {
+   "id": "164b5344dd09",
+   "title": "Jake McKelvie, A Box of Stars, riverbed, Izzy Jones",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
   },
   {
    "id": "c9ffff2fa96e",
@@ -2547,8 +2564,7 @@
    "id": "6de26396272f",
    "title": "'Approaches to Homeschool'",
    "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "d3539e941e1d",
@@ -2561,8 +2577,7 @@
    "id": "95a7e9fe79a1",
    "title": "Lego Builders",
    "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "2004b54925ae",
@@ -2570,6 +2585,62 @@
    "date": "2026-09-18",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "91564f82fb83",
+   "title": "Zach Dupont",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
+   "id": "18d07403425f",
+   "title": "Side Hustle",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
+   "id": "2b28a0a1ac14",
+   "title": "The Dad Bods",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
+   "id": "f4468e9c799c",
+   "title": "Kyle Chadburn & the Earthbound Spirits",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
+   "id": "3092f52e1e69",
+   "title": "Quadra",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
+   "id": "e3ac7a581150",
+   "title": "Daisychain, Repelican, Mooncusser",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
+   "id": "51501d6890dd",
+   "title": "Daisychain w/ Mooncusser",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
+  },
+  {
+   "id": "7b4f3ccc26d0",
+   "title": "Cal Humberto, DJ Kyling",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
   },
   {
    "id": "eca8ed65b605",
@@ -2659,8 +2730,7 @@
    "id": "f5a6e2021a3b",
    "title": "Green Community Festival",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "70d739f06ee1",
@@ -2687,8 +2757,7 @@
    "id": "fdd31b1b8a67",
    "title": "A Conversation with Ethan Tapper | 2026 Green Mountain Book Festival: Climate Critters & Canopies",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "f418ec886030",
@@ -2792,8 +2861,7 @@
    "id": "33cfe96f06da",
    "title": "Evening Book Group",
    "date": "2026-09-22",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "f94033ca8b51",
@@ -2855,15 +2923,13 @@
    "id": "77694579a75f",
    "title": "Baby Time",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "252a2281838f",
    "title": "Oktoberfest at American Flatbread Burlington & Mothership Brewery",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "03674606b7ce",
@@ -2876,8 +2942,7 @@
    "id": "760028969b91",
    "title": "The Silo Sessions with Henry Jamison and Special Guest Isabel Pless",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "210764a691d9",
@@ -2904,8 +2969,7 @@
    "id": "b3e0e1560f2d",
    "title": "Knit for Your Neighbor",
    "date": "2026-09-24",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "15f7273e6c86",
@@ -2939,8 +3003,7 @@
    "id": "62c3f4a8eedc",
    "title": "Lego Builders",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "9934f6759c21",
@@ -3002,8 +3065,7 @@
    "id": "b7eb7615ace4",
    "title": "Fall Fest Weekend",
    "date": "2026-09-26",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "11eb784979a1",
@@ -3018,6 +3080,13 @@
    "date": "2026-09-26",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "3c51639cf2c8",
+   "title": "Oktoberfest at Black Flannel",
+   "date": "2026-09-26",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
   },
   {
    "id": "62d029a4f9da-1500",
@@ -3065,8 +3134,7 @@
    "id": "14075aaa08bf",
    "title": "Fall Fest Weekend",
    "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "e93b9205a06f",
@@ -3121,8 +3189,7 @@
    "id": "348e88592d16",
    "title": "Craftytown",
    "date": "2026-09-29",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "db3911d480dd",
@@ -3135,8 +3202,7 @@
    "id": "b06b8cd265e8",
    "title": "Baby Time",
    "date": "2026-09-30",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "ebd6ae71bfbc",
@@ -3156,8 +3222,7 @@
    "id": "c64553f87a6c",
    "title": "Sebastian Alvarez",
    "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "ef29e9adbc5e",
@@ -3205,8 +3270,7 @@
    "id": "e5621cf2fa3f",
    "title": "Fly By 5K",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "1ba5c4f04478",
@@ -3282,8 +3346,7 @@
    "id": "aec1ae14b6c7",
    "title": "Vermont Historical Society presents Mystery Artifacts: How Museums Help Share the Past",
    "date": "2026-10-07",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "change": "dropped"
   },
   {
    "id": "dd3465273c64",
@@ -3319,6 +3382,13 @@
    "date": "2026-10-10",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "ab3e0b7c1421",
+   "title": "BTown Coffee Club",
+   "date": "2026-10-10",
+   "change": "missing",
+   "lastSeen": "2026-09-16T10:20:34-04:00"
   },
   {
    "id": "8b1cedf44e46",
