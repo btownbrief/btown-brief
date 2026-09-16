@@ -1,10 +1,10 @@
 {
- "generated": "2026-09-15T19:10:06-04:00",
+ "generated": "2026-09-16T10:20:34-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.9
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
@@ -13,17 +13,17 @@
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 60,
-   "seconds": 3.2
+   "count": 59,
+   "seconds": 3.3
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 255,
-   "seconds": 4.1
+   "count": 254,
+   "seconds": 4.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 83,
+   "count": 82,
    "seconds": 1.8
   },
   "echo": {
@@ -35,7 +35,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-15&end_date=2026-11-14&page=1 (HTTP Error 405: Not Allowed)",
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-16&end_date=2026-11-15&page=1 (HTTP Error 405: Not Allowed)",
    "staleDays": 16
   },
   "facebook": {
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 7,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 208,
-   "seconds": 72.0
+   "count": 206,
+   "seconds": 65.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 32,
-   "seconds": 0.4
+   "seconds": 0.1
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,59 +65,58 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 698,
-   "seconds": 36.4
+   "count": 692,
+   "seconds": 33.2
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 79,
+   "count": 82,
    "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 10.0
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 421,
-   "seconds": 74.2
+   "count": 415,
+   "seconds": 74.6
   },
   "meetup": {
    "label": "Meetup",
-   "count": 62,
-   "seconds": 123.5
+   "count": 60,
+   "seconds": 113.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 0,
-   "error": "Expecting ':' delimiter: line 1 column 467 (char 466)",
-   "staleDays": 0
+   "count": 14,
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 55,
-   "seconds": 14.6
+   "seconds": 15.3
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 12,
-   "seconds": 0.4
+   "count": 13,
+   "seconds": 0.2
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 107,
-   "seconds": 5.9
+   "count": 105,
+   "seconds": 1.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 25,
-   "seconds": 36.5
+   "seconds": 34.7
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2366,
-   "seconds": 8.9
+   "count": 2344,
+   "seconds": 32.0
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -127,75 +126,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 548,
-   "seconds": 27.3
+   "count": 527,
+   "seconds": 34.6
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 340,
-   "seconds": 0.3
+   "count": 333,
+   "seconds": 0.4
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 64,
-   "seconds": 86.3
+   "seconds": 84.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 63,
-   "seconds": 0.4
+   "count": 62,
+   "seconds": 0.3
   }
  },
- "gathered": 5570,
- "afterDedup": 2617,
- "duplicatesMerged": 2953,
- "final": 2796,
- "firecrawlCalls": 1,
+ "gathered": 5516,
+ "afterDedup": 2608,
+ "duplicatesMerged": 2908,
+ "final": 2772,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Coloring in the Marble Court",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-21"
-  },
-  {
-   "kept": {
-    "title": "BOOST Sessions",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-21"
-  },
-  {
-   "kept": {
-    "title": "Meg Mott - Strange Bedfellows: How Religious Liberties Have Aligned with Nondiscrimination Policies and Can Again",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-21"
-  },
-  {
-   "kept": {
-    "title": "Board Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-21"
-  },
   {
    "kept": {
     "title": "Pub Hour",
@@ -293,12 +248,12 @@
   },
   {
    "kept": {
-    "title": "Radio Bean Presents: Dead Gowns w/ Helenor @ The Monkey House",
-    "source": "radiobean"
+    "title": "Dead Gowns w/ Helenor",
+    "source": "monkeyhouse"
    },
    "merged_sources": [
     "helloburlington",
-    "radiobean"
+    "monkeyhouse"
    ],
    "date": "2026-10-22"
   },
@@ -2396,6 +2351,17 @@
   },
   {
    "kept": {
+    "title": "Men's Ice Hockey vs Maine",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-14"
+  },
+  {
+   "kept": {
     "title": "Second Saturdays",
     "source": "sevendays"
    },
@@ -2404,164 +2370,66 @@
     "sevendays"
    ],
    "date": "2026-11-14"
+  },
+  {
+   "kept": {
+    "title": "Dungeons & Dragons Group B with DM Andrew",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-11-15"
+  },
+  {
+   "kept": {
+    "title": "ELF THE MUSICAL",
+    "source": "flynn"
+   },
+   "merged_sources": [
+    "flynn",
+    "helloburlington"
+   ],
+   "date": "2026-11-15"
+  },
+  {
+   "kept": {
+    "title": "The Suitcase Junket",
+    "source": "radiobean"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "radiobean"
+   ],
+   "date": "2026-11-15"
   }
  ],
  "changes": [
-  {
-   "id": "b1a520299f7f",
-   "title": "Grand Point North 2026",
-   "date": "2026-09-18",
-   "change": "time",
-   "was": "2026-09-18",
-   "now": "2026-09-18T15:00:00-04:00"
-  },
-  {
-   "id": "53e12e584b2c",
-   "title": "Grand Point North 2026",
-   "date": "2026-09-19",
-   "change": "time",
-   "was": "2026-09-19",
-   "now": "2026-09-19T14:15:00-04:00"
-  },
-  {
-   "id": "c7a175cae540",
-   "title": "Grand Point North 2026",
-   "date": "2026-09-20",
-   "change": "time",
-   "was": "2026-09-20",
-   "now": "2026-09-20T16:00:00-04:00"
-  },
-  {
-   "id": "52c543475102",
-   "title": "Oktoberfest Vermont",
-   "date": "2026-09-19",
-   "change": "time",
-   "was": "2026-09-19T17:30:00-04:00",
-   "now": "2026-09-19T16:30:00-04:00"
-  },
   {
    "id": "981d9be1d4c3",
    "title": "Sparkomatik",
    "date": "2026-09-19",
    "change": "time",
-   "was": "2026-09-19T19:00:00.062000-04:00",
-   "now": "2026-09-19T19:00:00-04:00"
-  },
-  {
-   "id": "3d707759e586",
-   "title": "2nd Annual Fall Classic Wiffle Ball Tournament",
-   "date": "2026-09-26",
-   "change": "time",
-   "was": "2026-09-26",
-   "now": "2026-09-26T10:00:00-04:00"
-  },
-  {
-   "id": "a3f15b6de5fd",
-   "title": "CONTROL TOP in Shelburne",
-   "date": "2026-09-27",
-   "change": "time",
-   "was": "2026-09-27T19:00:00-04:00",
-   "now": "2026-09-27T14:00:00-04:00"
+   "was": "2026-09-19T19:00:00-04:00",
+   "now": "2026-09-19T19:00:00.062000-04:00"
   },
   {
    "id": "14eb4c5641eb",
    "title": "The Sheila Divine",
    "date": "2026-09-26",
    "change": "time",
-   "was": "2026-09-26T20:00:00.914000-04:00",
-   "now": "2026-09-26T20:00:00-04:00"
+   "was": "2026-09-26T20:00:00-04:00",
+   "now": "2026-09-26T20:00:00.914000-04:00"
   },
   {
-   "id": "2894efbc9fb7",
-   "title": "Haunted Hustle 5K Fun Run/Walk Registration 2026",
-   "date": "2026-10-24",
+   "id": "546921dcf130",
+   "title": "Youth Environmental Science Summit",
+   "date": "2026-10-16",
    "change": "time",
-   "was": "2026-10-24T15:30:00-04:00",
-   "now": "2026-10-24T03:15:00-04:00"
-  },
-  {
-   "id": "686b59bd7dcf",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
-  },
-  {
-   "id": "a681d953114e",
-   "title": "PMP Certification Bootcamp | 4 Days to Get Certified in Burlington, VT",
-   "date": "2026-09-15",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "f232b098ba99",
-   "title": "Lean Six Sigma Green Belt Certification Bootcamp in Burlington, VT",
-   "date": "2026-09-15",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "b7e2592e7f24",
-   "title": "Cisco CCNA Training & Certification Program in Burlington, VT",
-   "date": "2026-09-15",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "4d86147268cd",
-   "title": "CBAP® Classroom Training – IIBA® Aligned in Burlington, VT",
-   "date": "2026-09-15",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "564c318536ea",
-   "title": "4-Day Data Science with Python Bootcamp in Burlington, VT",
-   "date": "2026-09-15",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "f4bf51a1d5ee",
-   "title": "Craftytown! Flower Suncatcher",
-   "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-09-14T19:27:59-04:00"
-  },
-  {
-   "id": "0684f2f9b1be",
-   "title": "Craftytown",
-   "date": "2026-09-15",
-   "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
-  },
-  {
-   "id": "c885216d8787",
-   "title": "Farm to Medicine Cabinet Herb Walk",
-   "date": "2026-09-15",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "afa296caf586",
-   "title": "NNEAC Summit 2026",
-   "date": "2026-09-15",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "319c4161c504",
-   "title": "Scheherazade on the Rocks: A Pre-Concert Listening Party",
-   "date": "2026-09-15",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "3dbe6d6078dd",
-   "title": "ECHO is closed",
-   "date": "2026-09-15",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "was": "2026-10-16",
+   "now": "2026-10-16T09:15:00-04:00"
   },
   {
    "id": "88614e3a9aab",
@@ -2585,11 +2453,18 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "c089e6f19182",
-   "title": "Baby Time",
+   "id": "cc496b2749d1",
+   "title": "Babytime",
    "date": "2026-09-16",
    "change": "missing",
-   "lastSeen": "2026-09-13T18:35:45-04:00"
+   "lastSeen": "2026-09-15T19:10:06-04:00"
+  },
+  {
+   "id": "327ab158857d",
+   "title": "Cards on the Table: A Values-First Conversation About AI and Teaching",
+   "date": "2026-09-16",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
   },
   {
    "id": "c042d06fca7c",
@@ -2625,6 +2500,13 @@
    "date": "2026-09-16",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "33a52a2106a5",
+   "title": "UDL Campfire - Engagement",
+   "date": "2026-09-17",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
   },
   {
    "id": "78952acf13db",
@@ -2688,13 +2570,6 @@
    "date": "2026-09-18",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "51501d6890dd",
-   "title": "Daisychain w/ Mooncusser",
-   "date": "2026-09-18",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
   },
   {
    "id": "eca8ed65b605",
@@ -2837,6 +2712,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "7553cc2031be",
+   "title": "Trivia with Craig Mitchell",
+   "date": "2026-09-21",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
+  },
+  {
    "id": "d1299fe10056",
    "title": "Brewing Better Business (VT)",
    "date": "2026-09-22",
@@ -2900,11 +2782,25 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "c02aad49d9e7",
+   "title": "Campfire - The Power of Play: Gamification in the Higher Ed Classroom",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
+  },
+  {
    "id": "33cfe96f06da",
    "title": "Evening Book Group",
    "date": "2026-09-22",
    "change": "missing",
    "lastSeen": "2026-09-13T18:35:45-04:00"
+  },
+  {
+   "id": "f94033ca8b51",
+   "title": "Maggie Grace, Bennie, Lavendair",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
   },
   {
    "id": "92efbb34b0fb",
@@ -2947,13 +2843,6 @@
    "date": "2026-09-23",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "3a52c1f05d10",
-   "title": "Connect with Fidelity Investments: Networking, Career Conversations & Student Events",
-   "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
   },
   {
    "id": "811c5b8b59de",
@@ -3222,6 +3111,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "4c84d2984229",
+   "title": "Trivia with Craig Mitchell",
+   "date": "2026-09-28",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
+  },
+  {
    "id": "348e88592d16",
    "title": "Craftytown",
    "date": "2026-09-29",
@@ -3360,6 +3256,13 @@
    "date": "2026-10-06",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "148308b0b650",
+   "title": "Campfire - Think, Draw, Discover: Visual Mapping in Higher Ed",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
   },
   {
    "id": "4e957176c93c",
@@ -3523,6 +3426,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "efe85e433ba2",
+   "title": "The Staircase in the Woods",
+   "date": "2026-10-17",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
+  },
+  {
    "id": "feba8e14fde3",
    "title": "Burlington VT Wedding Show",
    "date": "2026-10-18",
@@ -3572,13 +3482,6 @@
    "lastSeen": "2026-09-15T10:26:13-04:00"
   },
   {
-   "id": "eee356777406",
-   "title": "Dead Gowns w/ Helenor",
-   "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
-  },
-  {
    "id": "4d340683dfd5",
    "title": "Haunted Happenings",
    "date": "2026-10-25",
@@ -3598,6 +3501,13 @@
    "date": "2026-10-26",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "b0f3b30ca5ac",
+   "title": "UDL Campfire - Representation",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
   },
   {
    "id": "1a08a4f86c7d",
@@ -3628,6 +3538,20 @@
    "lastSeen": "2026-09-15T10:26:13-04:00"
   },
   {
+   "id": "33e669d88480",
+   "title": "Campfire - Stories that Teach: Using Emotion to Deepen Student Learning",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
+  },
+  {
+   "id": "9b986d020d71",
+   "title": "Exploring GenAI for Student Learning and Assignment Design",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-09-15T19:10:06-04:00"
+  },
+  {
    "id": "f4fb5f868a0b",
    "title": "Trivia Night",
    "date": "2026-11-05",
@@ -3640,12 +3564,6 @@
    "date": "2026-11-08",
    "change": "missing",
    "lastSeen": "2026-09-15T10:26:13-04:00"
-  },
-  {
-   "id": "ed032a81c0ed",
-   "title": "Sunday Polo Match",
-   "date": "2026-11-08",
-   "change": "dropped"
   },
   {
    "id": "244315ccbc16",
