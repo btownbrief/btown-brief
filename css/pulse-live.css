@@ -772,6 +772,9 @@ a.lopt:hover { color: var(--orange); }
 
 /* ---------- TV / cast mode (?tv=1): nothing but the board ---------- */
 
+/* a channel inside all.html: that page wears the masthead */
+body.embed .bar,
+body.embed .modes-row { display: none; }
 body.tv .chipwrap,
 body.tv .hint,
 body.tv .lbarwrap { display: none; }

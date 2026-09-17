@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>All Boards — Burlington Brief</title>
+  <meta name="description" content="Pulse Live, Table Talk and Stay Awhile on one screen. The board changes channel on its own clock: headlines, then a card for the table, then three questions worth asking.">
+  <meta name="theme-color" content="#000000">
+  <link rel="canonical" href="https://guide.btownbrief.com/all.html">
+  <meta property="og:title" content="All Boards — Burlington Brief">
+  <meta property="og:description" content="Pulse Live, Table Talk and Stay Awhile, taking turns on one screen.">
+  <meta property="og:url" content="https://guide.btownbrief.com/all.html">
+  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-pulse.png">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/all-board.css?v=20260917a">
+  <!-- GoatCounter -->
+  <script data-goatcounter="https://btown-brief.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+
+  <header class="bar">
+    <a class="brand" href="pulse.html" title="Back to The Pulse"><span class="brand-pre">BTOWN&nbsp;BRIEF&nbsp;</span><b>ALL</b></a>
+
+    <!-- The three channels. The one on air carries a bar that drains until the
+         board changes channel; tapping any of them jumps there. -->
+    <div class="channels" role="tablist" aria-label="Channels">
+      <button class="chan" role="tab" type="button" data-chan="watch" aria-selected="false"><span class="chan-name">WATCH</span><span class="chan-sub">Pulse Live</span><i class="chan-fill"></i></button>
+      <button class="chan" role="tab" type="button" data-chan="table" aria-selected="false"><span class="chan-name">TABLE</span><span class="chan-sub">Table Talk</span><i class="chan-fill"></i></button>
+      <button class="chan" role="tab" type="button" data-chan="ask" aria-selected="false"><span class="chan-name">ASK</span><span class="chan-sub">Stay Awhile</span><i class="chan-fill"></i></button>
+    </div>
+
+    <span class="status">
+      <a class="ic-bar ic-open" id="open-alone" href="live.html" target="_blank" rel="noopener"
+         aria-label="Open this channel on its own" title="Open this channel on its own">↗</a>
+      <button class="ic-bar" id="pace-btn" type="button" aria-label="Change how long each channel stays up"
+              title="How long each channel stays up">NORMAL</button>
+      <button class="ic-bar" id="next-btn" type="button" aria-label="Next channel" title="Next channel">▸▸</button>
+      <nav class="modes" aria-label="Switch board">
+        <a class="mode mode-read" href="pulse.html" title="The full wire — scan and filter everything">READ</a>
+        <a class="mode" href="live.html" title="Headlines rotate hands-free">WATCH</a>
+        <a class="mode" href="countdown/" title="The Countdown — the city's big days, ticking">COUNT</a>
+        <a class="mode" href="table.html" title="The meetup companion">TABLE</a>
+        <span class="mode on" title="All three boards taking turns — you're here">ALL</span>
+      </nav>
+      <button class="live-badge" id="live-badge" type="button" aria-pressed="false"
+              title="Hold this channel — click again to let the board change channels"><i></i><span id="live-badge-label">LIVE</span></button>
+    </span>
+  </header>
+
+  <nav class="modes-row" aria-label="Switch board">
+    <a class="mode" href="pulse.html">READ</a>
+    <a class="mode" href="live.html">WATCH</a>
+    <a class="mode" href="countdown/">COUNT</a>
+    <a class="mode" href="table.html">TABLE</a>
+    <span class="mode on">ALL</span>
+  </nav>
+
+  <main class="stage" id="stage" aria-live="off">
+    <iframe class="screen" data-chan="watch" title="Pulse Live" loading="eager" allow="autoplay; fullscreen"></iframe>
+    <iframe class="screen" data-chan="table" title="Table Talk" allow="autoplay; fullscreen"></iframe>
+    <iframe class="screen" data-chan="ask" title="Stay Awhile" allow="autoplay; fullscreen"></iframe>
+    <p class="hold-note" id="hold-note" hidden>Holding on this channel. Tap LIVE to let it change again.</p>
+  </main>
+
+  <p class="sr-only" id="announce" aria-live="polite"></p>
+
+  <script src="js/all-board.js?v=20260917a"></script>
+</body>
+</html>

@@ -1860,6 +1860,9 @@
   /* ---------- TV mode: nothing but the board on a spare screen ---------- */
 
   function setupTv() {
+    /* ?embed=1: running as a channel inside all.html, which already wears the
+       family masthead, so this board drops its own. */
+    if (/(?:^|[?&])embed=1/.test(window.location.search)) document.body.classList.add('embed');
     if (!TV) return;
     document.body.classList.add('tv');
     var idleTimer = null;
