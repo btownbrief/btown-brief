@@ -837,6 +837,7 @@
 
   function start() {
     if (TV) document.body.classList.add('tv');
+    if (/(?:^|[?&])embed=1/.test(window.location.search)) document.body.classList.add('embed');
     loadSet();
     wireUi();
     grabWakeLock();

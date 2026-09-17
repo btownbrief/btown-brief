@@ -463,6 +463,8 @@ a.mode:hover { opacity: 1; }
 
 /* ---------- TV mode: just the card ---------- */
 
+body.embed .bar,
+body.embed .modes-row,
 body.tv .bar,
 body.tv .lbarwrap { display: none; }
 
