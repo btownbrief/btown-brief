@@ -79,7 +79,18 @@
     'i');
 
   var TV = /(?:^|[?&])tv=1/.test(window.location.search);
-  var WANT_SYNC = /(?:^|[?&])sync=1/.test(window.location.search);
+  var WANT_SYNC = /(?:^|[?&])sync=1/.test(window.location.search) || TV;
+  /* TV mode (table.html?tv=1): the bar-screen cut. Always synced, so the
+     phones at the tables show the identical prompt; a host pauses with the
+     space bar; T flips dark/light; F goes fullscreen. ?demo=1 on the TV
+     runs a 20× clock so a rehearsal sees a new slot every 7.5 s — it never
+     touches the phones, which keep real time. */
+  var DEMO = TV && /(?:^|[?&])demo=1/.test(window.location.search);
+  var DEMO_SPEED = 20;
+  var demoT0 = Date.now();
+  function nowMs() { return DEMO ? demoT0 + (Date.now() - demoT0) * DEMO_SPEED : Date.now(); }
+  var WELCOME_EVERY = 4;                   // every Nth slot the TV shows the "sit anywhere" band
+  var TV_THEME_KEY = 'table-talk-tv-theme';
 
   var state = {
     decks: {},              // cat key -> [card, ...] deterministic order
@@ -138,7 +149,7 @@
      another timezone must build the same decks as everyone else's */
   function nyDateStr() {
     return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' })
-      .format(new Date());                       // "2026-08-15"
+      .format(new Date(nowMs()));                // "2026-08-15"
   }
 
   function nyHour(dt) {
@@ -428,7 +439,7 @@
     var p = new Intl.DateTimeFormat('en-GB', {
       timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit',
       second: '2-digit', hourCycle: 'h23',
-    }).formatToParts(new Date());
+    }).formatToParts(new Date(nowMs()));
     var g = {};
     p.forEach(function (x) { g[x.type] = +x.value; });
     return g.hour * 3600 + g.minute * 60 + g.second;
@@ -442,7 +453,7 @@
       if (c.key === 'news') {
         /* only headlines at least an hour old join sync — both phones will
            have them even if one's snapshot is stale */
-        var cutoff = Math.floor(Date.now() / 3600000) * 3600 - 3600;
+        var cutoff = Math.floor(nowMs() / 3600000) * 3600 - 3600;
         deck = deck.filter(function (card) { return (card.d || 0) < cutoff; });
       }
       deck.sort(function (a, b) { return a.id < b.id ? -1 : a.id > b.id ? 1 : 0; });
@@ -494,23 +505,26 @@
      and unlike the day-local number it never repeats, so it's the identity
      we track and the millisecond deadline we schedule against. */
   function absSlot() {
-    return Math.floor(Date.now() / (SYNC_SLOT_S * 1000));
+    return Math.floor(nowMs() / (SYNC_SLOT_S * 1000));
   }
 
   function syncSlotProgress() {
-    return (Date.now() % (SYNC_SLOT_S * 1000)) / (SYNC_SLOT_S * 1000);
+    return (nowMs() % (SYNC_SLOT_S * 1000)) / (SYNC_SLOT_S * 1000);
   }
 
   /* ---------- rendering ---------- */
 
   function cardColor(card) {
     var palette = KIND_COLORS[card.kind] || ['bg-brown'];
-    if (card.kind === 'news' && card.local) return 'bg-teal';
-    return palette[hashStr(card.id) % palette.length];
+    var c = (card.kind === 'news' && card.local) ? 'bg-teal'
+      : palette[hashStr(card.id) % palette.length];
+    // the light TV variant keeps the room bright: the two black faces go cream
+    if (TV && document.body.classList.contains('light') && /black/.test(c)) c = 'bg-cream';
+    return c;
   }
 
   function autoFit(el, box) {
-    var hi = Math.max(30, Math.min(120, Math.floor(box.clientHeight * 0.3)));
+    var hi = Math.max(30, Math.min(TV ? 260 : 120, Math.floor(box.clientHeight * 0.3)));
     var lo = 16;
     while (hi - lo > 1) {
       var mid = (hi + lo) >> 1;
@@ -531,6 +545,7 @@
     big.textContent = card.text;
     $('kicker').textContent = card.kicker || KIND_KICKER[card.kind] || '';
     $('src').textContent = card.src || '';
+    if (TV && $('tv-welcome')) $('tv-welcome').hidden = !(state.sync && absSlot() % WELCOME_EVERY === 0);
     autoFit(big, $('body'));
     startFuse();
   }
@@ -541,7 +556,7 @@
     var dur, done;
     if (state.sync) {
       done = syncSlotProgress();
-      dur = SYNC_SLOT_S * (1 - done);
+      dur = SYNC_SLOT_S * (1 - done) / (DEMO ? DEMO_SPEED : 1);
     } else {
       dur = cardSeconds(state.current);
       done = Math.min(1, (Date.now() - state.shownAt) / (dur * 1000));
@@ -595,7 +610,7 @@
     if (state.held) return;
     var ms;
     if (state.sync) {
-      ms = SYNC_SLOT_S * 1000 - (Date.now() % (SYNC_SLOT_S * 1000)) + 50;
+      ms = (SYNC_SLOT_S * 1000 - (nowMs() % (SYNC_SLOT_S * 1000))) / (DEMO ? DEMO_SPEED : 1) + 50;
     } else {
       ms = Math.max(500, cardSeconds(state.current) * 1000 -
                     (Date.now() - state.shownAt));
@@ -668,6 +683,7 @@
   }
 
   function saveSet() {
+    if (TV) return;                 // the screen never rewrites a table's saved decks
     try {
       localStorage.setItem(SET_KEY, JSON.stringify({
         pace: state.pace, decks: state.enabled, sync: state.sync,
@@ -835,8 +851,35 @@
     });
   }
 
+  function setTvTheme(theme) {
+    document.body.classList.toggle('light', theme === 'light');
+    try { localStorage.setItem(TV_THEME_KEY, theme); } catch (e) {}
+    if (state.current) render(state.current);
+  }
+
+  function wireTv() {
+    document.body.classList.add('tv');
+    var q = window.location.search;
+    var theme = /(?:^|[?&])theme=light/.test(q) ? 'light'
+      : /(?:^|[?&])theme=dark/.test(q) ? 'dark' : null;
+    if (!theme) { try { theme = localStorage.getItem(TV_THEME_KEY) || 'dark'; } catch (e) { theme = 'dark'; } }
+    document.body.classList.toggle('light', theme === 'light');
+    if ($('tv-corner')) $('tv-corner').hidden = false;
+    if ($('tvc-demo')) $('tvc-demo').hidden = !DEMO;
+    document.addEventListener('keydown', function (e) {
+      if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+      if (e.code === 'Space') { e.preventDefault(); setHeld(!state.held); }
+      else if (e.key === 't' || e.key === 'T') setTvTheme(document.body.classList.contains('light') ? 'dark' : 'light');
+      else if (e.key === 'f' || e.key === 'F') {
+        var el = document.documentElement;
+        if (document.fullscreenElement) { if (document.exitFullscreen) document.exitFullscreen(); }
+        else if (el.requestFullscreen) el.requestFullscreen().catch(function () {});
+      }
+    });
+  }
+
   function start() {
-    if (TV) document.body.classList.add('tv');
+    if (TV) wireTv();
     loadSet();
     wireUi();
     grabWakeLock();
