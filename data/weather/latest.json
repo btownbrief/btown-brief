@@ -1,42 +1,42 @@
 {
- "updated": "2026-09-17T17:07:42+00:00",
+ "updated": "2026-09-17T17:45:12+00:00",
  "sections_updated": {
-  "now": "2026-09-17T17:07:42+00:00",
-  "forecast": "2026-09-17T17:07:42+00:00",
-  "hourly": "2026-09-17T17:07:42+00:00",
-  "alerts": "2026-09-17T17:07:42+00:00",
-  "afd": "2026-09-17T17:07:42+00:00",
-  "lake_forecast": "2026-09-17T17:07:42+00:00",
-  "lake_gage": "2026-09-17T17:07:42+00:00",
-  "air": "2026-09-17T17:07:42+00:00",
-  "sun": "2026-09-17T17:07:42+00:00",
-  "models": "2026-09-17T17:07:42+00:00"
+  "now": "2026-09-17T17:45:12+00:00",
+  "forecast": "2026-09-17T17:45:12+00:00",
+  "hourly": "2026-09-17T17:45:12+00:00",
+  "alerts": "2026-09-17T17:45:12+00:00",
+  "afd": "2026-09-17T17:45:12+00:00",
+  "lake_forecast": "2026-09-17T17:45:12+00:00",
+  "lake_gage": "2026-09-17T17:45:12+00:00",
+  "air": "2026-09-17T17:45:12+00:00",
+  "sun": "2026-09-17T17:45:12+00:00",
+  "models": "2026-09-17T17:45:12+00:00"
  },
  "now": {
-  "observed_at": "2026-09-17T16:45:00+00:00",
+  "observed_at": "2026-09-17T17:15:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 73,
   "feels_like_f": 74,
   "humidity": 69,
   "dewpoint_f": 63,
-  "wind_mph": 8,
+  "wind_mph": 7,
   "wind_gust_mph": null,
-  "wind_dir": "SW",
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-09-17T06:44:43+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-09-17T09:00:00-04:00",
+    "name": "This Afternoon",
+    "start": "2026-09-17T13:00:00-04:00",
     "is_day": true,
     "temp_f": 76,
     "pop": 24,
-    "wind": "NW 2 to 6 mph",
-    "short": "Mostly Cloudy then Slight Chance Rain Showers",
-    "detailed": "A slight chance of rain showers after 2pm. Mostly cloudy, with a high near 76. Northwest wind 2 to 6 mph. Chance of precipitation is 20%."
+    "wind": "NW 3 mph",
+    "short": "Slight Chance Rain Showers",
+    "detailed": "A slight chance of rain showers after 2pm. Partly sunny, with a high near 76. Northwest wind around 3 mph. Chance of precipitation is 20%."
    },
    {
     "name": "Tonight",
@@ -575,14 +575,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-17T11:53:00+00:00",
+  "issued": "2026-09-17T17:33:00+00:00",
   "key_messages": [
    "Light rain showers will move across our area today, especially our southern Vermont zones. Drier breezy conditions return on Friday with cool temperatures overnight.",
    "Next chance for showers will be early Sunday, also especially our southern Vermont zones.",
    "From Monday through Wednesday dry weather is likely along with a warming trend."
   ],
   "what_changed": "As of 314 AM EDT Thursday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 171153\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n753 AM EDT Thu Sep 17 2026\n\n.WHAT HAS CHANGED...\nAs of 314 AM EDT Thursday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 314 AM EDT Thursday...\n\n1. Light rain showers will move across our area today, \nespecially our southern Vermont zones. Drier breezy conditions \nreturn on Friday with cool temperatures overnight.\n\n2. Next chance for showers will be early Sunday, also \nespecially our southern Vermont zones. \n\n3. From Monday through Wednesday dry weather is likely along \nwith a warming trend.\n\n&&\n\n.DISCUSSION...\nAs of 314 AM EDT Thursday...\n\nKEY MESSAGE 1: An open wave of low pressure passes south of our\nforecast area today, spreading some light rain showers across \nthe region. Best chance for showers in our area will be across \nsouthern Vermont, but have some mention of showers across areas \nas far north as the international border. Maximum temperatures \ntoday will range through the 70s. Rainfall totals will be up to \nfour tenths of an inch in our extreme southern zones, with many \nareas not measuring. A ridge of surface high pressure will then \nbuild into our area from the north on Friday into Friday night. \nThis will bring drier weather, and some gusty winds on Friday \nfollowed by cool temperatures Friday night with ideal \nradiational cooling conditions in place.\n\nKEY MESSAGE 2: Another low pressure system will pass south of \nour area Saturday night into Sunday, once again our best chances\nfor showers will be across our southern zones. Models are \nfinally starting to fall into better agreement with how far \nnorth the precipitation will spread. Precipitation will be more \nwidespread with this system than the previous one. At this time \naround a tenth of an inch of rain along the international border\nup to three quarters of an inch in southern Vermont can be \nexpected.\n\nKEY MESSAGE 3: Our region should be under the influence of a \nseasonably cool high pressure area gradually moving eastward to \nstart the work week. Temperatures should be about 10 degrees \nbelow normal Monday trending to around normal on Wednesday. With\nthis pattern and 925 millibar temperatures falling to near the \n10th percentile, Tuesday morning should be another frosty one \nfor sheltered areas that already saw frost Saturday morning. \n\nAn expansive ridge over southern Quebec with the upper level \nridge axis centered farther west will tend to keep our air quite\ndry through this period, with both temperatures and dew points \ngradually modifying. Somewhat increasing spread in guidance with\nregards to the position of a slow moving trough to our south, \nand associated increases in moisture, is evident. As such, \nslight chances of rain do come farther north/east at times \nTuesday and Wednesday, possibly reaching our region. For now, \nthe consensus strongly favors rainfree conditions (PoPs 15% or \nless) even if cloud cover tends to increase.\n\n&&\n\n.AVIATION /12Z THURSDAY THROUGH MONDAY/...\nThrough 12Z Friday...Lingering fog at MPV and SLK will dissipate\nshortly after TAF issuance, with otherwise mainly VFR conditions\nprevailing through much of the next six to twelve hours. There\nwill be abundant cloud cover but ceilings will tend to be at\nleast 3000 feet agl. Redevelopment of fog at SLK and MPV will be\npossible tonight, and briefly at RUT before winds increase\nfollowing a period of rain.\n\nShowers remain on track for southern portions of the airspace, \nwith much higher chances of rain over RUT than any other site, \nparticularly in the 18Z to 00Z timeframe. Rain there will likely\nresult in MVFR conditions, and possibly at MPV if rain tracks \nfarther north than currently anticipated; elsewhere, any rain\nshowers should be light enough to not cause any categorical \nchanges. Winds will remain light, mainly 5 knots or less, \nthrough about 06Z, then northwest winds will increase at\nChamplain Valley sites in particular.\n\nOutlook...\n\nFriday: VFR. Patchy BR.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly VFR, with areas MVFR possible. Likely SHRA.\nSunday Night: VFR/MVFR conditions possible. Slight chance SHRA.\nMonday: Mainly VFR, with local IFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Neiles/Kutikoff\nAVIATION...Kutikoff\n"
+  "raw": "\n000\nFXUS61 KBTV 171733\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n133 PM EDT Thu Sep 17 2026\n\n.WHAT HAS CHANGED...\nAs of 314 AM EDT Thursday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 314 AM EDT Thursday...\n\n1. Light rain showers will move across our area today, \nespecially our southern Vermont zones. Drier breezy conditions \nreturn on Friday with cool temperatures overnight.\n\n2. Next chance for showers will be early Sunday, also \nespecially our southern Vermont zones. \n\n3. From Monday through Wednesday dry weather is likely along \nwith a warming trend.\n\n&&\n\n.DISCUSSION...\nAs of 314 AM EDT Thursday...\n\nKEY MESSAGE 1: An open wave of low pressure passes south of our\nforecast area today, spreading some light rain showers across \nthe region. Best chance for showers in our area will be across \nsouthern Vermont, but have some mention of showers across areas \nas far north as the international border. Maximum temperatures \ntoday will range through the 70s. Rainfall totals will be up to \nfour tenths of an inch in our extreme southern zones, with many \nareas not measuring. A ridge of surface high pressure will then \nbuild into our area from the north on Friday into Friday night. \nThis will bring drier weather, and some gusty winds on Friday \nfollowed by cool temperatures Friday night with ideal \nradiational cooling conditions in place.\n\nKEY MESSAGE 2: Another low pressure system will pass south of \nour area Saturday night into Sunday, once again our best chances\nfor showers will be across our southern zones. Models are \nfinally starting to fall into better agreement with how far \nnorth the precipitation will spread. Precipitation will be more \nwidespread with this system than the previous one. At this time \naround a tenth of an inch of rain along the international border\nup to three quarters of an inch in southern Vermont can be \nexpected.\n\nKEY MESSAGE 3: Our region should be under the influence of a \nseasonably cool high pressure area gradually moving eastward to \nstart the work week. Temperatures should be about 10 degrees \nbelow normal Monday trending to around normal on Wednesday. With\nthis pattern and 925 millibar temperatures falling to near the \n10th percentile, Tuesday morning should be another frosty one \nfor sheltered areas that already saw frost Saturday morning. \n\nAn expansive ridge over southern Quebec with the upper level \nridge axis centered farther west will tend to keep our air quite\ndry through this period, with both temperatures and dew points \ngradually modifying. Somewhat increasing spread in guidance with\nregards to the position of a slow moving trough to our south, \nand associated increases in moisture, is evident. As such, \nslight chances of rain do come farther north/east at times \nTuesday and Wednesday, possibly reaching our region. For now, \nthe consensus strongly favors rainfree conditions (PoPs 15% or \nless) even if cloud cover tends to increase.\n\n&&\n\n.AVIATION /18Z THURSDAY THROUGH TUESDAY/...\nThrough 18Z Friday...Mostly VFR conditions currently across our\ntaf sites with just a few intervals of IFR cigs at MPV/EFK\nthrough early this aftn. Radar imagery is showing rain showers\nangling toward RUT terminal in the next 1 to 2 hours, which will\nproduce MVFR with some IFR conditions possible toward sunset.\nAlso, as moisture increases additional MVFR cigs are likely\n(60%) at MPV/EFK/SLK and BTV, while VFR prevails at PBG/MSS. \nLater this evening expect the highest probability (60-70%) of \nIFR or lower conditions will at RUT/MPV/SLK by midnight with \nchance probability (25-35%) of IFR cigs or vis possible at \nBTV/MSS and EFK. Did note very warm sfc dwpts in the upper 50s \nto mid 60s this aftn, which would support fog development \novernight, but sounding data shows increasing bl winds from the \nnorthwest after 06z at 4 to 8 knots with favorable mixing under \nmodest low level caa, which could offset fog development. A mix \nof IFR cigs/vis are possible, given the setup, especially at\nRUT.\n\nOutlook...\n\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: Mainly VFR, with areas MVFR possible. Chance RA.\nSunday Night: MVFR/IFR conditions possible. NO SIG WX.\nMonday: Mainly VFR, with local IFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Neiles/Kutikoff\nAVIATION...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-09-17T07:17:00+00:00",
@@ -827,17 +827,17 @@
  },
  "lake_gage": {
   "water_temp_f": 67,
-  "water_temp_at": "2026-09-17T12:00:00.000-04:00",
+  "water_temp_at": "2026-09-17T13:00:00.000-04:00",
   "level_ft": 94.18,
-  "level_at": "2026-09-17T12:00:00.000-04:00",
+  "level_at": "2026-09-17T13:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 27,
+  "aqi": 29,
   "category": "Good",
-  "pollutant": "PM2.5",
-  "observed": "09/17/26 12:00",
+  "pollutant": "OZONE",
+  "observed": "09/17/26 13:00",
   "discussion": "Expect generally good air quality across Vermont on Thursday, September 17th."
  },
  "sun": {
@@ -845,28 +845,28 @@
   "sunset": "2026-09-17T18:59-04:00",
   "sunrise_tomorrow": "2026-09-18T06:35-04:00",
   "sunset_tomorrow": "2026-09-18T18:57-04:00",
-  "uv_max": 4.3
+  "uv_max": 3.95
  },
  "models": {
   "days": [
    {
     "date": "2026-09-17",
     "high_f": {
-     "GFS": 77,
+     "GFS": 79,
      "Euro": 73,
      "ICON": 74
     },
     "pop_max": {
-     "GFS": 16,
+     "GFS": 10,
      "Euro": 55,
      "ICON": 53
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.03,
      "Euro": 0.04,
      "ICON": 0.02
     },
-    "high_spread_f": 4
+    "high_spread_f": 6
    },
    {
     "date": "2026-09-18",
@@ -876,7 +876,7 @@
      "ICON": 68
     },
     "pop_max": {
-     "GFS": 7,
+     "GFS": 2,
      "Euro": 6,
      "ICON": 13
     },
