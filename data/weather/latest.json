@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-17T20:27:49+00:00",
+ "updated": "2026-09-17T20:47:55+00:00",
  "sections_updated": {
-  "now": "2026-09-17T20:27:49+00:00",
-  "forecast": "2026-09-17T20:27:49+00:00",
-  "hourly": "2026-09-17T20:27:49+00:00",
-  "alerts": "2026-09-17T20:27:49+00:00",
-  "afd": "2026-09-17T20:27:49+00:00",
-  "lake_forecast": "2026-09-17T20:27:49+00:00",
-  "lake_gage": "2026-09-17T20:27:49+00:00",
-  "air": "2026-09-17T20:27:49+00:00",
-  "sun": "2026-09-17T20:27:49+00:00",
-  "models": "2026-09-17T20:27:49+00:00"
+  "now": "2026-09-17T20:47:55+00:00",
+  "forecast": "2026-09-17T20:47:55+00:00",
+  "hourly": "2026-09-17T20:47:55+00:00",
+  "alerts": "2026-09-17T20:47:55+00:00",
+  "afd": "2026-09-17T20:47:55+00:00",
+  "lake_forecast": "2026-09-17T20:47:55+00:00",
+  "lake_gage": "2026-09-17T20:47:55+00:00",
+  "air": "2026-09-17T20:47:55+00:00",
+  "sun": "2026-09-17T20:47:55+00:00",
+  "models": "2026-09-17T20:47:55+00:00"
  },
  "now": {
-  "observed_at": "2026-09-17T20:15:00+00:00",
+  "observed_at": "2026-09-17T20:30:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 73,
-  "feels_like_f": 74,
+  "temp_f": 72,
+  "feels_like_f": 72,
   "humidity": 78,
-  "dewpoint_f": 66,
-  "wind_mph": 7,
+  "dewpoint_f": 64,
+  "wind_mph": null,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": null,
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -860,7 +860,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 30,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "09/17/26 16:00",
@@ -878,12 +878,12 @@
    {
     "date": "2026-09-17",
     "high_f": {
-     "GFS": 78,
+     "GFS": 76,
      "Euro": 75,
      "ICON": 74
     },
     "pop_max": {
-     "GFS": 10,
+     "GFS": 14,
      "Euro": 55,
      "ICON": 53
     },
@@ -892,7 +892,7 @@
      "Euro": 0.09,
      "ICON": 0.02
     },
-    "high_spread_f": 4
+    "high_spread_f": 2
    },
    {
     "date": "2026-09-18",
@@ -902,7 +902,7 @@
      "ICON": 68
     },
     "pop_max": {
-     "GFS": 3,
+     "GFS": 2,
      "Euro": 6,
      "ICON": 13
     },
