@@ -1,0 +1,237 @@
+/* ============================================================
+   COFFEE KIT — first-time card, printable table card, hosting sheet
+
+   Three pages, one idea: the Saturday table should be findable by
+   someone who has never met anyone here. first-time.html rides the
+   guide's normal chrome (style.css tokens). table-card.html and
+   hosting-sheet.html are print pages: light only, no header, one
+   sheet each, A5 or US Letter for the card, Letter for the sheet.
+============================================================ */
+
+/* ---------- first-time.html ---------- */
+.ft-wrap { max-width: 760px; }
+
+.ft-picker {
+  display: flex; flex-wrap: wrap; gap: var(--space-3);
+  margin: 0 0 var(--space-6);
+}
+.ft-pick {
+  flex: 1 1 220px;
+  display: flex; flex-direction: column; gap: 2px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  color: var(--ink); text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: border-color .15s var(--ease), transform .15s var(--ease);
+}
+.ft-pick:hover { border-color: var(--coral); transform: translateY(-1px); text-decoration: none; }
+.ft-pick.on { border-color: var(--coral); box-shadow: 0 0 0 2px var(--coral-light); }
+.ft-pick b { font-family: var(--font-display); font-size: var(--text-md); font-weight: 600; }
+.ft-pick span { font-size: var(--text-sm); color: var(--ink-3); }
+
+.ft-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+.ft-top {
+  display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--coral-light);
+  border-bottom: 1px solid var(--line-soft);
+}
+.ft-top .ft-label { display: block; margin-bottom: 2px; }
+.ft-when strong { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 600; color: var(--ink); }
+.ft-where a { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 600; color: var(--ink); }
+.ft-where-detail { display: block; margin-top: 2px; font-size: var(--text-sm); color: var(--ink-2); }
+
+.ft-label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--coral);
+}
+.ft-rows { list-style: none; margin: 0; padding: var(--space-2) var(--space-5); }
+.ft-row {
+  display: grid; grid-template-columns: 120px 1fr; gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.ft-row:last-child { border-bottom: 0; }
+.ft-row .ft-label { padding-top: 3px; }
+.ft-text { margin: 0; font-size: var(--text-base); color: var(--ink-2); line-height: 1.5; }
+.ft-confirm {
+  display: inline-block; margin-left: 6px;
+  padding: 1px 7px; border-radius: var(--radius-full);
+  font-size: var(--text-xs); color: var(--ink-3);
+  border: 1px dashed var(--line);
+}
+.ft-links {
+  display: flex; flex-wrap: wrap; gap: var(--space-2);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+}
+.ft-link {
+  padding: 8px 14px; border-radius: var(--radius-full);
+  background: var(--bg-subtle); border: 1px solid var(--line);
+  color: var(--ink); font-size: var(--text-sm); font-weight: 500; text-decoration: none;
+}
+.ft-link:hover { border-color: var(--coral); text-decoration: none; }
+.ft-link:first-child { background: var(--coral); border-color: var(--coral); color: #fff; }
+
+.ft-note pre.ft-checklist {
+  margin: var(--space-3) 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font: 500 var(--text-sm)/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+.ft-copy {
+  padding: 8px 14px; border-radius: var(--radius-full);
+  background: var(--teal); color: #fff; border: 0;
+  font: 600 var(--text-sm) var(--font-body); cursor: pointer;
+}
+
+@media (max-width: 560px) {
+  .ft-top { grid-template-columns: 1fr; }
+  .ft-row { grid-template-columns: 1fr; gap: 4px; }
+}
+
+/* ---------- print pages (table card + hosting sheet) ---------- */
+html.print-page { background: #E9E4DB; }
+.tc-body, .hs-body {
+  margin: 0; min-height: 100vh;
+  background: #E9E4DB;
+  font-family: var(--font-body, "DM Sans", system-ui, sans-serif);
+  color: #13243B;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.print-controls {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px;
+  padding: 10px 18px;
+  background: #FBF8F2; border-bottom: 1px solid #DDD8CF;
+  font-size: 14px;
+}
+.pc-title { font-weight: 700; margin-right: 4px; }
+.print-controls label { display: inline-flex; align-items: center; gap: 6px; }
+.print-controls button {
+  padding: 6px 14px; border-radius: 999px; border: 0;
+  background: #F2683C; color: #fff; font: 600 14px inherit; cursor: pointer;
+}
+.pc-link { color: #2E7D8A; text-decoration: none; }
+.pc-link:hover { text-decoration: underline; }
+
+.sheet {
+  box-sizing: border-box;
+  margin: 24px auto;
+  background: #FBF8F2;
+  color: #13243B;
+  box-shadow: 0 12px 40px rgba(19,36,59,0.18);
+  position: relative;
+}
+
+/* Table card sizes. A5 is 148 × 210 mm; Letter is 8.5 × 11 in. Both portrait. */
+.tc-sheet.size-a5 { width: 148mm; min-height: 210mm; padding: 12mm 12mm 10mm; }
+.tc-sheet.size-letter { width: 8.5in; min-height: 11in; padding: 0.9in 0.9in 0.7in; }
+.tc-sheet { display: flex; flex-direction: column; border: 3px solid #4E342E; outline: 6px solid #FBF8F2; }
+.tc-head { text-align: center; }
+.tc-brand {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: #4E342E;
+}
+.tc-title {
+  margin: 4mm 0 2mm;
+  font-family: "Lora", Georgia, serif; font-weight: 700;
+  font-size: 44px; line-height: 1; color: #4E342E;
+}
+.size-letter .tc-title { font-size: 64px; }
+.tc-sub { margin: 0 auto; max-width: 34ch; font-size: 13px; line-height: 1.45; color: #3D5166; }
+.size-letter .tc-sub { font-size: 16px; }
+
+.tc-facts {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 5mm;
+  margin: 7mm 0 0; padding: 0;
+}
+.size-letter .tc-facts { gap: 5mm 8mm; margin-top: 12mm; }
+.tc-facts div { border-top: 1px solid #DDD8CF; padding-top: 2mm; }
+.tc-facts dt {
+  font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #F2683C;
+}
+.tc-facts dd { margin: 1mm 0 0; font-size: 12.5px; line-height: 1.4; color: #13243B; }
+.size-letter .tc-facts dd { font-size: 15px; }
+
+.tc-qrs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6mm;
+  margin-top: auto; padding-top: 7mm;
+}
+.tc-qr { margin: 0; text-align: center; }
+.qr { display: block; width: 30mm; height: 30mm; margin: 0 auto 2mm; color: #13243B; background: #fff; padding: 1.5mm; box-sizing: border-box; border-radius: 2px; }
+.size-letter .qr { width: 44mm; height: 44mm; }
+.qr.qr-sm { width: 22mm; height: 22mm; }
+.tc-qr figcaption { font-size: 11px; line-height: 1.35; color: #3D5166; }
+.tc-qr figcaption b { display: block; font-size: 12px; color: #13243B; }
+.tc-qr figcaption small { display: block; margin-top: 1mm; font-size: 9px; color: #6C7A8C; word-break: break-all; }
+.size-letter .tc-qr figcaption { font-size: 13px; }
+
+.tc-foot {
+  display: flex; justify-content: space-between; gap: 4mm;
+  margin-top: 6mm; padding-top: 3mm; border-top: 1px solid #DDD8CF;
+  font-size: 9.5px; color: #6C7A8C;
+}
+.size-letter .tc-foot { font-size: 12px; }
+
+/* Hosting sheet: one US Letter page. */
+.hs-sheet { width: 8.5in; min-height: 11in; padding: 0.6in 0.7in 0.5in; display: flex; flex-direction: column; }
+.hs-head h1 { margin: 2mm 0 2mm; font-family: "Lora", Georgia, serif; font-size: 30px; line-height: 1.1; color: #4E342E; }
+.hs-sub { margin: 0; font-size: 14px; color: #3D5166; max-width: 60ch; }
+.hs-block { margin-top: 6mm; }
+.hs-block h2 {
+  margin: 0 0 2mm; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #F2683C;
+}
+.hs-steps { margin: 0; padding-left: 1.3em; font-size: 13px; line-height: 1.5; }
+.hs-steps li { margin-bottom: 1.5mm; }
+.hs-steps li b, .hs-after li b { color: #13243B; }
+.hs-two { display: grid; grid-template-columns: 1.2fr 1fr; gap: 8mm; }
+.hs-script {
+  margin: 0 0 2mm; padding: 3mm 4mm;
+  font-family: "Lora", Georgia, serif; font-size: 17px; line-height: 1.35; font-style: italic; color: #4E342E;
+  background: #EFD9B9; border-radius: 6px;
+}
+.hs-small { margin: 0 0 1.5mm; font-size: 12px; line-height: 1.45; color: #3D5166; }
+.hs-promise { margin: 0 0 2mm; padding-left: 1.2em; font-size: 13px; line-height: 1.5; }
+.hs-after { margin: 0; padding-left: 1.2em; font-size: 13px; line-height: 1.5; }
+.hs-after li { margin-bottom: 1.5mm; }
+.hs-foot { margin-top: auto; padding-top: 5mm; border-top: 1px solid #DDD8CF; display: flex; align-items: center; justify-content: space-between; gap: 6mm; }
+.hs-qrs { display: flex; gap: 6mm; }
+.hs-qrs figure { margin: 0; text-align: center; }
+.hs-qrs figcaption { font-size: 10px; color: #3D5166; margin-top: 1mm; }
+.hs-contact { margin: 0; font-size: 12px; color: #3D5166; max-width: 40ch; text-align: right; }
+
+/* Screens narrower than the sheet: let it scale instead of overflowing. */
+@media (max-width: 900px) {
+  .sheet { transform-origin: top left; }
+  .tc-sheet.size-a5 { width: min(148mm, calc(100vw - 32px)); min-height: 0; }
+  .tc-sheet.size-letter, .hs-sheet { width: calc(100vw - 32px); min-height: 0; padding: 20px; }
+  .hs-two { grid-template-columns: 1fr; }
+}
+
+/* ---------- print ---------- */
+@media print {
+  html.print-page, .tc-body, .hs-body { background: #fff; }
+  .print-controls { display: none !important; }
+  .sheet { margin: 0; box-shadow: none; outline: 0; page-break-after: avoid; }
+  .tc-sheet { border-width: 2px; min-height: 0; height: 100%; }
+  .hs-sheet { width: auto; min-height: 0; padding: 0.35in 0.45in; }
+  a { color: inherit; text-decoration: none; }
+}
+@media print {
+  html[data-size="a5"] .tc-sheet { width: 148mm; padding: 10mm 11mm 8mm; }
+  html[data-size="letter"] .tc-sheet { width: 8.5in; padding: 0.75in 0.85in 0.6in; }
+}
