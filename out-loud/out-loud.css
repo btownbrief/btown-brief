@@ -147,3 +147,40 @@
 @media (min-width: 700px) {
   .ol-map-wrap { margin-left: 0; margin-right: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
 }
+
+/* ---------- Second Sight: the ghost layer ---------- */
+.ol-sight-btn { display: inline-flex; align-items: center; gap: 6px; }
+.ol-sight-btn::before { content: "◐"; font-size: 1.05em; line-height: 1; }
+body.ol-sight-open { overflow: hidden; }
+.ol-sight { position: fixed; inset: 0; z-index: 1200; background: #0b1420; color: #F3EFE8; overflow: hidden; font-family: var(--font-body); }
+.ol-sight-video, .ol-sight-fake, .ol-sight-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ol-sight-fake { background: linear-gradient(180deg, #9fc2e0 0%, #e5e2da 62%, #6b5a4a 63%, #3a3028 100%); }
+.ol-sight-fake::after { content: ""; position: absolute; left: 12%; right: 12%; top: 34%; height: 28%; background: repeating-linear-gradient(90deg, rgba(60,50,45,0.55) 0 22px, rgba(90,78,70,0.55) 22px 44px); border-radius: 4px 4px 0 0; }
+.ol-sight-img { opacity: 0.5; pointer-events: none; transition: opacity .18s linear; }
+.ol-sight-canvas { display: none; }
+.ol-sight-top { position: absolute; top: 0; left: 0; right: 0; padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 12px; display: flex; gap: 10px; align-items: flex-start; background: linear-gradient(to bottom, rgba(11,20,32,0.85), rgba(11,20,32,0)); }
+.ol-sight-close { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.35); background: rgba(11,20,32,0.6); color: #fff; font-size: 16px; cursor: pointer; }
+.ol-sight-titles { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ol-sight-titles strong { font-family: var(--font-display); font-size: 1.05rem; line-height: 1.2; }
+.ol-sight-titles span { font-size: 0.8rem; color: #BFC9D6; line-height: 1.3; }
+.ol-sight-compass { position: absolute; left: 0; right: 0; top: 34%; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; }
+.ol-sight-arrow { width: 64px; height: 64px; border-radius: 50%; background: rgba(11,20,32,0.55); border: 2px solid rgba(255,255,255,0.5); display: grid; place-items: center; color: #fff; transition: transform .12s linear, border-color .2s, background .2s; }
+.ol-sight[data-matched="true"] .ol-sight-arrow { border-color: var(--coral); background: rgba(242,104,60,0.45); }
+.ol-sight-guide { font-size: 0.9rem; font-weight: 600; background: rgba(11,20,32,0.6); padding: 4px 12px; border-radius: 999px; }
+.ol-sight[data-matched="true"] .ol-sight-guide { background: rgba(242,104,60,0.75); }
+.ol-sight-bottom { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px)); background: linear-gradient(to top, rgba(11,20,32,0.92) 0%, rgba(11,20,32,0.7) 70%, rgba(11,20,32,0) 100%); }
+.ol-sight-stand { margin: 0 0 4px; font-size: 0.85rem; line-height: 1.35; color: #F3EFE8; }
+.ol-sight-lineup { margin: 0 0 10px; font-size: 0.8rem; line-height: 1.35; color: #BFC9D6; font-style: italic; }
+.ol-sight-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ol-sight-controls .ol-btn { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.35); }
+.ol-sight-controls .ol-btn-primary { background: var(--coral); border-color: var(--coral); color: #1b1b1b; }
+.ol-sight-controls .ol-btn[aria-pressed="true"] { background: #F3EFE8; color: #13243B; }
+.ol-sight-slider { flex: 1 1 140px; display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #BFC9D6; }
+.ol-sight-slider input { flex: 1; accent-color: var(--coral); min-width: 90px; }
+.ol-sight-credit { display: block; margin-top: 8px; font-size: 0.7rem; color: #9AAABB; text-decoration: none; line-height: 1.3; }
+.ol-sight-credit:hover { color: #fff; text-decoration: underline; }
+.ol-sight-result { position: absolute; inset: 0; background: rgba(11,20,32,0.96); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); }
+.ol-sight-result img { max-width: 100%; max-height: 72vh; border-radius: 10px; box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
+.ol-sight-result-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.ol-sight-result .ol-btn { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.35); }
+.ol-sight-result .ol-btn-primary { background: var(--coral); border-color: var(--coral); color: #1b1b1b; }
