@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-17T19:05:36-04:00",
+ "generated": "2026-09-18T09:47:25-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 6.1
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 73,
-   "seconds": 4.1
+   "count": 71,
+   "seconds": 5.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 58,
-   "seconds": 3.5
+   "count": 59,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 261,
+   "count": 254,
    "seconds": 3.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 82,
-   "seconds": 1.4
+   "count": 83,
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -35,7 +35,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-17&end_date=2026-11-16&page=1 (HTTP Error 405: Not Allowed)",
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-18&end_date=2026-11-17&page=1 (HTTP Error 405: Not Allowed)",
    "staleDays": 18
   },
   "facebook": {
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 7,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 205,
-   "seconds": 73.7
+   "count": 203,
+   "seconds": 74.1
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 31,
-   "seconds": 0.4
+   "count": 30,
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,58 +65,58 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 716,
-   "seconds": 41.1
+   "count": 707,
+   "seconds": 41.5
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 82,
-   "seconds": 0.2
+   "count": 80,
+   "seconds": 0.3
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "seconds": 10.2
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 410,
-   "seconds": 70.1
+   "count": 416,
+   "seconds": 71.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 62,
-   "seconds": 116.2
+   "seconds": 124.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 24,
+   "count": 23,
    "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 56,
-   "seconds": 17.2
+   "seconds": 17.3
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 13,
+   "count": 12,
    "seconds": 0.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 103,
-   "seconds": 2.9
+   "count": 100,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 24,
-   "seconds": 37.6
+   "seconds": 37.7
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2461,
-   "seconds": 2.9
+   "count": 2464,
+   "seconds": 22.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -126,119 +126,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 549,
-   "seconds": 32.2
+   "count": 541,
+   "seconds": 37.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 355,
-   "seconds": 0.3
+   "count": 346,
+   "seconds": 0.4
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 62,
-   "seconds": 85.6
+   "count": 61,
+   "seconds": 81.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 61,
-   "seconds": 0.2
+   "count": 60,
+   "seconds": 0.5
   }
  },
- "gathered": 5705,
- "afterDedup": 2646,
- "duplicatesMerged": 3059,
- "final": 2806,
- "firecrawlCalls": 1,
+ "gathered": 5669,
+ "afterDedup": 2620,
+ "duplicatesMerged": 3049,
+ "final": 2783,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Trivia",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-22"
-  },
-  {
-   "kept": {
-    "title": "Sam Jay",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "vcc"
-   ],
-   "date": "2026-10-23"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-10-23"
-  },
-  {
-   "kept": {
-    "title": "UVM Catamount Educational Farm Stand and Apple Sales",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-23"
-  },
-  {
-   "kept": {
-    "title": "Shifting Perspectives on Bicycle Sustainability ft. Luis Vivanco",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-23"
-  },
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-23"
-  },
-  {
-   "kept": {
-    "title": "Field Hockey vs Bryant",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-23"
-  },
-  {
-   "kept": {
-    "title": "Board Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-23"
-  },
   {
    "kept": {
     "title": "Men's Ice Hockey vs Clarkson",
@@ -1991,18 +1903,6 @@
   },
   {
    "kept": {
-    "title": "Winyah",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-12"
-  },
-  {
-   "kept": {
     "title": "Tropidelic",
     "source": "higherground"
    },
@@ -2012,6 +1912,18 @@
     "higherground",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-11-12"
+  },
+  {
+   "kept": {
+    "title": "Winyah",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
    ],
    "date": "2026-11-12"
   },
@@ -2382,7 +2294,31 @@
    "merged_sources": [
     "champlainvalley",
     "helloburlington",
-    "higherground"
+    "higherground",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-16"
+  },
+  {
+   "kept": {
+    "title": "Assessing the Impact of Impaired Lakes on Zooplankton Community Responses to Salt Stress",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-16"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-16"
   },
@@ -2396,59 +2332,84 @@
     "loveburlington"
    ],
    "date": "2026-11-16"
+  },
+  {
+   "kept": {
+    "title": "Sing-Along with Linda Bassick",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-11-17"
+  },
+  {
+   "kept": {
+    "title": "Spanish Conversation",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-11-17"
+  },
+  {
+   "kept": {
+    "title": "Super Smash Tuesdays",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-17"
+  },
+  {
+   "kept": {
+    "title": "Major Jackson | A Bowl of Goodness: Nourishing Poems with a Side of Soup, Celebrating Community, Friendship, and Resilience",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-17"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-11-17"
+  },
+  {
+   "kept": {
+    "title": "Open Studio",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-11-17"
   }
  ],
  "changes": [
   {
-   "id": "bc09f9d3a62a",
-   "title": "100th Anniversary: Ghost Stories",
-   "date": "2026-10-16",
+   "id": "f321cdd14934",
+   "title": "The Work in Progress",
+   "date": "2026-10-02",
    "change": "time",
-   "was": "2026-10-16T17:00:00-04:00",
-   "now": "2026-10-16T17:30:00-04:00"
-  },
-  {
-   "id": "5494e0b8a8a2",
-   "title": "Learn to DM",
-   "date": "2026-10-31",
-   "change": "time",
-   "was": "2026-10-31T12:00:00-04:00",
-   "now": "2026-10-31T13:00:00-04:00"
-  },
-  {
-   "id": "77a1d0f1c2ca",
-   "title": "Toddlertime- 9:15am Session",
-   "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-09-16T19:14:32-04:00"
-  },
-  {
-   "id": "a37bdebb06d4",
-   "title": "Toddlertime- 10:30am Session",
-   "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-09-16T19:14:32-04:00"
-  },
-  {
-   "id": "3d1c73bb1a80",
-   "title": "Trivia Night",
-   "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
-  },
-  {
-   "id": "164b5344dd09",
-   "title": "Jake McKelvie, A Box of Stars, riverbed, Izzy Jones",
-   "date": "2026-09-17",
-   "change": "missing",
-   "lastSeen": "2026-09-16T10:20:34-04:00"
-  },
-  {
-   "id": "c9ffff2fa96e",
-   "title": "ECHO is closed",
-   "date": "2026-09-17",
-   "change": "source-down",
-   "lastSeen": "2026-08-30T13:28:30-04:00"
+   "was": "2026-10-02T19:00:00-04:00",
+   "now": "2026-10-02T16:00:00-04:00"
   },
   {
    "id": "78461071ccb6",
@@ -2568,6 +2529,13 @@
    "date": "2026-09-19",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "b36f5e088724",
+   "title": "Sensing the Season",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-09-17T19:05:36-04:00"
   },
   {
    "id": "24334d03d8b6",
@@ -2892,6 +2860,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "0a4eeea36c83",
+   "title": "Sensing the Season",
+   "date": "2026-09-26",
+   "change": "missing",
+   "lastSeen": "2026-09-17T19:05:36-04:00"
+  },
+  {
    "id": "7b8004c28bcb",
    "title": "Drop-in Artmaking: Decorate Your Own Rockwell Scene",
    "date": "2026-09-26",
@@ -2904,6 +2879,13 @@
    "date": "2026-09-26",
    "change": "missing",
    "lastSeen": "2026-09-15T10:26:13-04:00"
+  },
+  {
+   "id": "0eba5bfed10b",
+   "title": "BTown Brief Fall Potluck",
+   "date": "2026-09-26",
+   "change": "missing",
+   "lastSeen": "2026-09-17T19:05:36-04:00"
   },
   {
    "id": "11eb784979a1",
@@ -3137,6 +3119,13 @@
    "lastSeen": "2026-09-15T10:26:13-04:00"
   },
   {
+   "id": "eaf156596d00",
+   "title": "Sensing the Season",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-17T19:05:36-04:00"
+  },
+  {
    "id": "1ba5c4f04478",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-10-03",
@@ -3263,6 +3252,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "6cb8b775996b",
+   "title": "Sensing the Season",
+   "date": "2026-10-10",
+   "change": "missing",
+   "lastSeen": "2026-09-17T19:05:36-04:00"
+  },
+  {
    "id": "8b1cedf44e46",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-10-10",
@@ -3289,12 +3285,6 @@
    "date": "2026-10-11",
    "change": "missing",
    "lastSeen": "2026-09-15T10:26:13-04:00"
-  },
-  {
-   "id": "6a49a5f90f6b",
-   "title": "Food For Talk Cookbook Club: Foods of La Frontera",
-   "date": "2026-10-11",
-   "change": "dropped"
   },
   {
    "id": "7fbf6b3633b3",
@@ -3346,12 +3336,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "f666168f99a6",
-   "title": "Pick-up Basketball",
-   "date": "2026-10-14",
-   "change": "dropped"
-  },
-  {
    "id": "1837480df93e",
    "title": "Adult and Teen Artmaking",
    "date": "2026-10-14",
@@ -3385,6 +3369,13 @@
    "date": "2026-10-17",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "4830e9f35d39",
+   "title": "Sensing the Season",
+   "date": "2026-10-17",
+   "change": "missing",
+   "lastSeen": "2026-09-17T19:05:36-04:00"
   },
   {
    "id": "efe85e433ba2",
@@ -3450,6 +3441,13 @@
    "lastSeen": "2026-09-15T10:26:13-04:00"
   },
   {
+   "id": "721aa1135051",
+   "title": "Sensing the Season",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-09-17T19:05:36-04:00"
+  },
+  {
    "id": "4d340683dfd5",
    "title": "Haunted Happenings",
    "date": "2026-10-25",
@@ -3504,6 +3502,13 @@
    "date": "2026-10-29",
    "change": "missing",
    "lastSeen": "2026-09-15T10:26:13-04:00"
+  },
+  {
+   "id": "9db05b26b5fc",
+   "title": "Sensing the Season",
+   "date": "2026-10-31",
+   "change": "missing",
+   "lastSeen": "2026-09-17T19:05:36-04:00"
   },
   {
    "id": "c299df99e33f",
