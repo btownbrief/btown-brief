@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-18T20:28:41+00:00",
+ "updated": "2026-09-18T20:48:47+00:00",
  "sections_updated": {
-  "now": "2026-09-18T20:28:41+00:00",
-  "forecast": "2026-09-18T20:28:41+00:00",
-  "hourly": "2026-09-18T20:28:41+00:00",
-  "alerts": "2026-09-18T20:28:41+00:00",
-  "afd": "2026-09-18T20:28:41+00:00",
-  "lake_forecast": "2026-09-18T20:28:41+00:00",
-  "lake_gage": "2026-09-18T20:28:41+00:00",
-  "air": "2026-09-18T20:28:41+00:00",
-  "sun": "2026-09-18T20:28:41+00:00",
-  "models": "2026-09-18T20:28:41+00:00"
+  "now": "2026-09-18T20:48:47+00:00",
+  "forecast": "2026-09-18T20:48:47+00:00",
+  "hourly": "2026-09-18T20:48:47+00:00",
+  "alerts": "2026-09-18T20:48:47+00:00",
+  "afd": "2026-09-18T20:48:47+00:00",
+  "lake_forecast": "2026-09-18T20:48:47+00:00",
+  "lake_gage": "2026-09-18T20:48:47+00:00",
+  "air": "2026-09-18T20:48:47+00:00",
+  "sun": "2026-09-18T20:48:47+00:00",
+  "models": "2026-09-18T20:48:47+00:00"
  },
  "now": {
-  "observed_at": "2026-09-18T20:05:00+00:00",
+  "observed_at": "2026-09-18T20:35:00+00:00",
   "station": "KBTV",
   "description": "Partly Cloudy",
-  "temp_f": 70,
-  "feels_like_f": 70,
+  "temp_f": 68,
+  "feels_like_f": 68,
   "humidity": null,
   "dewpoint_f": null,
-  "wind_mph": 15,
-  "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_mph": null,
+  "wind_gust_mph": 28,
+  "wind_dir": null,
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -861,7 +861,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "09/18/26 16:00",
@@ -927,7 +927,7 @@
      "ICON": 66
     },
     "precip_in": {
-     "GFS": 0.31,
+     "GFS": 0.3,
      "Euro": 0.69,
      "ICON": 0.54
     },
