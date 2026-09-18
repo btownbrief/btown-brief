@@ -1,42 +1,42 @@
 {
- "generated": "2026-09-18T09:47:25-04:00",
+ "generated": "2026-09-18T18:48:39-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 6.0
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 71,
-   "seconds": 5.9
+   "count": 72,
+   "seconds": 7.0
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 59,
-   "seconds": 2.8
+   "seconds": 3.0
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 254,
-   "seconds": 3.5
+   "seconds": 4.3
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 83,
-   "seconds": 1.5
+   "count": 84,
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 18
+   "staleDays": 19
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-18&end_date=2026-11-17&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 18
+   "staleDays": 19
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 7,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 203,
-   "seconds": 74.1
+   "seconds": 68.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 30,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -65,103 +65,92 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 707,
-   "seconds": 41.5
+   "count": 713,
+   "seconds": 38.1
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 80,
-   "seconds": 0.3
+   "count": 81,
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 10.6
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 416,
-   "seconds": 71.7
+   "count": 418,
+   "seconds": 72.8
   },
   "meetup": {
    "label": "Meetup",
-   "count": 62,
-   "seconds": 124.5
+   "count": 61,
+   "seconds": 114.7
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 23,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 56,
-   "seconds": 17.3
+   "seconds": 14.7
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 12,
-   "seconds": 0.6
+   "seconds": 0.4
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 100,
-   "seconds": 2.1
+   "count": 101,
+   "seconds": 2.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 24,
-   "seconds": 37.7
+   "seconds": 34.9
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2464,
-   "seconds": 22.2
+   "count": 2409,
+   "seconds": 3.1
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 18
+   "staleDays": 19
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 541,
-   "seconds": 37.3
+   "seconds": 23.7
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 346,
+   "count": 347,
    "seconds": 0.4
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 61,
-   "seconds": 81.7
+   "count": 63,
+   "seconds": 84.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 60,
-   "seconds": 0.5
+   "count": 52,
+   "seconds": 0.3
   }
  },
- "gathered": 5669,
- "afterDedup": 2620,
- "duplicatesMerged": 3049,
- "final": 2783,
- "firecrawlCalls": 5,
+ "gathered": 5620,
+ "afterDedup": 2613,
+ "duplicatesMerged": 3007,
+ "final": 2756,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Men's Ice Hockey vs Clarkson",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-23"
-  },
   {
    "kept": {
     "title": "Dom Flemons & the Traveling Wildfires",
@@ -215,6 +204,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -653,6 +643,7 @@
     "source": "higherground"
    },
    "merged_sources": [
+    "helloburlington",
     "higherground",
     "uvm",
     "uvmbored"
@@ -904,6 +895,17 @@
    "merged_sources": [
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-10-31"
+  },
+  {
+   "kept": {
+    "title": "Sensing the Season at Rock Point",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "loveburlington",
+    "sevendays"
    ],
    "date": "2026-10-31"
   },
@@ -1361,17 +1363,6 @@
     "champlainvalley",
     "helloburlington",
     "higherground"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "Mahjong",
-    "source": "winooskilibrary"
-   },
-   "merged_sources": [
-    "sevendays",
-    "winooskilibrary"
    ],
    "date": "2026-11-06"
   },
@@ -2043,6 +2034,17 @@
   },
   {
    "kept": {
+    "title": "Occupational Therapy Open House",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-13"
+  },
+  {
+   "kept": {
     "title": "UVM Catamount Educational Farm Stand and Apple Sales",
     "source": "uvm"
    },
@@ -2404,12 +2406,28 @@
  ],
  "changes": [
   {
-   "id": "f321cdd14934",
-   "title": "The Work in Progress",
-   "date": "2026-10-02",
+   "id": "5f4320ae9b93",
+   "title": "'Penguin Island 3D'",
+   "date": "2026-09-18",
    "change": "time",
-   "was": "2026-10-02T19:00:00-04:00",
-   "now": "2026-10-02T16:00:00-04:00"
+   "was": "2026-09-18T11:00:00-04:00",
+   "now": "2026-09-18T10:30:00-04:00"
+  },
+  {
+   "id": "d285ea73b38b",
+   "title": "'Wild Rescue 3D'",
+   "date": "2026-09-18",
+   "change": "time",
+   "was": "2026-09-18T11:30:00-04:00",
+   "now": "2026-09-18T11:00:00-04:00"
+  },
+  {
+   "id": "370b848a15c4",
+   "title": "'Shark Kingdom 3D'",
+   "date": "2026-09-18",
+   "change": "time",
+   "was": "2026-09-18T12:00:00-04:00",
+   "now": "2026-09-18T11:30:00-04:00"
   },
   {
    "id": "78461071ccb6",
@@ -2426,6 +2444,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "2bebff4af319",
+   "title": "'Sea Otters: A Wild Family Adventure 3D'",
+   "date": "2026-09-18",
+   "change": "missing",
+   "lastSeen": "2026-09-18T09:47:25-04:00"
+  },
+  {
    "id": "4a882979134e",
    "title": "Spanish Story Time",
    "date": "2026-09-18",
@@ -2436,8 +2461,14 @@
    "id": "d3539e941e1d",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-09-18",
+   "change": "dropped"
+  },
+  {
+   "id": "b46f8f7b7270",
+   "title": "Lunch with the Poets",
+   "date": "2026-09-18",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "2004b54925ae",
@@ -2531,13 +2562,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "b36f5e088724",
-   "title": "Sensing the Season",
-   "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-17T19:05:36-04:00"
-  },
-  {
    "id": "24334d03d8b6",
    "title": "Insect Pollinator Walks at Rock Point",
    "date": "2026-09-19",
@@ -2548,15 +2572,13 @@
    "id": "e8f63cc52f4b",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "890bad6c1d3c",
    "title": "South Burlington Green Community Festival",
    "date": "2026-09-19",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "70d739f06ee1",
@@ -2597,15 +2619,20 @@
    "id": "f418ec886030",
    "title": "Vermont Cheesemakers Festival 2026",
    "date": "2026-09-20",
+   "change": "dropped"
+  },
+  {
+   "id": "5006262d7dc6",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-09-20",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "612a62c8f982",
    "title": "Bake Club- Pizza",
    "date": "2026-09-20",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "ab7fde873458",
@@ -2702,8 +2729,7 @@
    "id": "48bd73f5ac6e",
    "title": "2026 State of the World Summit: Celebrating International Day of Peace",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "99690c481178",
@@ -2751,8 +2777,7 @@
    "id": "210764a691d9",
    "title": "Live Music! Jim Yeager Duo",
    "date": "2026-09-23",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "0d9011ffd6ea",
@@ -2786,8 +2811,14 @@
    "id": "2e5b2bde2902",
    "title": "Trivia Night",
    "date": "2026-09-24",
+   "change": "dropped"
+  },
+  {
+   "id": "bb395b0aa0be",
+   "title": "Mahjong",
+   "date": "2026-09-25",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "eac1851037aa",
@@ -2800,8 +2831,7 @@
    "id": "5481f7b7d593",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "9934f6759c21",
@@ -2860,13 +2890,6 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "0a4eeea36c83",
-   "title": "Sensing the Season",
-   "date": "2026-09-26",
-   "change": "missing",
-   "lastSeen": "2026-09-17T19:05:36-04:00"
-  },
-  {
    "id": "7b8004c28bcb",
    "title": "Drop-in Artmaking: Decorate Your Own Rockwell Scene",
    "date": "2026-09-26",
@@ -2877,8 +2900,7 @@
    "id": "5dd91fecc8e9",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-09-26",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "0eba5bfed10b",
@@ -2975,8 +2997,14 @@
    "id": "618938210733",
    "title": "Youth Vendor Day",
    "date": "2026-09-27",
+   "change": "dropped"
+  },
+  {
+   "id": "3e8bc29be94d",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-09-27",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "a3f15b6de5fd",
@@ -2996,8 +3024,7 @@
    "id": "e93b9205a06f",
    "title": "Hair Peace",
    "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "a21e4e63e331",
@@ -3049,6 +3076,13 @@
    "lastSeen": "2026-09-16T19:14:32-04:00"
   },
   {
+   "id": "eec1b053400e",
+   "title": "Vermont Summit ft. Nate Hagens",
+   "date": "2026-09-29",
+   "change": "missing",
+   "lastSeen": "2026-09-18T09:47:25-04:00"
+  },
+  {
    "id": "db3911d480dd",
    "title": "Kids Program: Nature Illustrations",
    "date": "2026-09-29",
@@ -3073,8 +3107,7 @@
    "id": "4249fba592e8",
    "title": "Grossman School of Business presents Stuart Weitzman",
    "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "ef29e9adbc5e",
@@ -3087,15 +3120,13 @@
    "id": "0647eac46abb",
    "title": "Trivia Night",
    "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "3bbc5759b0b6",
    "title": "PechaKucha Night Burlington | Volume 44",
    "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "4d1af249a328",
@@ -3112,11 +3143,24 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "c8d9a943d13e",
+   "title": "Mahjong",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-18T09:47:25-04:00"
+  },
+  {
    "id": "4dd3bffb1fc1",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-10-02",
+   "change": "dropped"
+  },
+  {
+   "id": "fac65856c919",
+   "title": "Elevating the Entrepreneurial Legacy",
+   "date": "2026-10-02",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "eaf156596d00",
@@ -3129,8 +3173,7 @@
    "id": "1ba5c4f04478",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "da4e38265440",
@@ -3150,15 +3193,20 @@
    "id": "699cb14233ba",
    "title": "Evening Song: Bet on Hope 25th Anniversary Celebration",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "e46b3285c535",
    "title": "MASKS ON! Sundays at ECHO",
    "date": "2026-10-04",
+   "change": "dropped"
+  },
+  {
+   "id": "b3eceef137dd",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-04",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "c59b906502ab",
@@ -3171,8 +3219,7 @@
    "id": "a832b551c82f",
    "title": "Tech Tuesdays - Breakfast",
    "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "2718d53a5a53",
@@ -3220,15 +3267,20 @@
    "id": "67caa8cb02c2",
    "title": "Trivia Night",
    "date": "2026-10-08",
+   "change": "dropped"
+  },
+  {
+   "id": "191984b02fee",
+   "title": "Mahjong",
+   "date": "2026-10-09",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "59de01424635",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-10-09",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "d3dfd077bcd5",
@@ -3252,18 +3304,10 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "6cb8b775996b",
-   "title": "Sensing the Season",
-   "date": "2026-10-10",
-   "change": "missing",
-   "lastSeen": "2026-09-17T19:05:36-04:00"
-  },
-  {
    "id": "8b1cedf44e46",
    "title": "Christina Watka's 'The Luminous Bodies of Norton Island' Art Exhibition",
    "date": "2026-10-10",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "1026a72973fd",
@@ -3276,15 +3320,20 @@
    "id": "b5caf544a667",
    "title": "Second Saturdays | Your Place Is at This Table",
    "date": "2026-10-10",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "76f906ad92ee",
    "title": "Sensory-Friendly Sunday at ECHO",
    "date": "2026-10-11",
+   "change": "dropped"
+  },
+  {
+   "id": "158a681a0e0b",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-11",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "7fbf6b3633b3",
@@ -3336,6 +3385,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "2052a154655a",
+   "title": "Catalyst: Artists in Conversation",
+   "date": "2026-10-14",
+   "change": "missing",
+   "lastSeen": "2026-09-18T09:47:25-04:00"
+  },
+  {
    "id": "1837480df93e",
    "title": "Adult and Teen Artmaking",
    "date": "2026-10-14",
@@ -3346,8 +3402,7 @@
    "id": "1cd2932e2a99",
    "title": "Trivia Night",
    "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "a75a16be2610",
@@ -3355,6 +3410,13 @@
    "date": "2026-10-15",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "0dba8cc97b13",
+   "title": "Mahjong",
+   "date": "2026-10-16",
+   "change": "missing",
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "138a86df63d3",
@@ -3392,11 +3454,17 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "586a71c4e477",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-18",
+   "change": "missing",
+   "lastSeen": "2026-09-18T09:47:25-04:00"
+  },
+  {
    "id": "cca8b38d4c4d",
    "title": "Jeff & Gina play Foam Brewers",
    "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "d1ec5aacf968",
@@ -3423,8 +3491,7 @@
    "id": "c5df1fce68e7",
    "title": "Creating Calm Amidst Chaos",
    "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "cc3d801ab0bc",
@@ -3437,15 +3504,14 @@
    "id": "92f8f6e3278d",
    "title": "Trivia Night",
    "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
-   "id": "721aa1135051",
-   "title": "Sensing the Season",
-   "date": "2026-10-24",
+   "id": "40266abca34a",
+   "title": "Mahjong",
+   "date": "2026-10-23",
    "change": "missing",
-   "lastSeen": "2026-09-17T19:05:36-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "4d340683dfd5",
@@ -3453,6 +3519,13 @@
    "date": "2026-10-25",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "fb871a4e09b7",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "aab22522b9a5",
@@ -3465,8 +3538,7 @@
    "id": "6d65ebe640b0",
    "title": "She Bravely Returns: An Immersive Women's Wellness & Writing Experience",
    "date": "2026-10-25",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "aab22522b9a5-1500",
@@ -3493,15 +3565,20 @@
    "id": "1a08a4f86c7d",
    "title": "Hold for Youth Program",
    "date": "2026-10-28",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "bd459aad3d46",
    "title": "Trivia Night",
    "date": "2026-10-29",
+   "change": "dropped"
+  },
+  {
+   "id": "1c3892a9d32e",
+   "title": "Mahjong",
+   "date": "2026-10-30",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "9db05b26b5fc",
@@ -3511,46 +3588,75 @@
    "lastSeen": "2026-09-17T19:05:36-04:00"
   },
   {
+   "id": "4c60ef24d1db",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-09-18T09:47:25-04:00"
+  },
+  {
    "id": "c299df99e33f",
    "title": "Skylark",
    "date": "2026-11-01",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "1415fe9697ef",
    "title": "Tech Tuesdays - Breakfast",
    "date": "2026-11-03",
-   "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "f4fb5f868a0b",
    "title": "Trivia Night",
    "date": "2026-11-05",
+   "change": "dropped"
+  },
+  {
+   "id": "909cf13adfce",
+   "title": "Mahjong",
+   "date": "2026-11-06",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "a3eff46dc2e4",
    "title": "Sensory-Friendly Sunday at ECHO",
    "date": "2026-11-08",
+   "change": "dropped"
+  },
+  {
+   "id": "36588a49ec36",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-11-08",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "244315ccbc16",
    "title": "Trivia Night",
    "date": "2026-11-12",
+   "change": "dropped"
+  },
+  {
+   "id": "1919998bdb72",
+   "title": "Mahjong",
+   "date": "2026-11-13",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
    "id": "eb9074a90307",
    "title": "Second Saturdays | Your Place Is at This Table",
    "date": "2026-11-14",
+   "change": "dropped"
+  },
+  {
+   "id": "2d1491fcc4d6",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-11-15",
    "change": "missing",
-   "lastSeen": "2026-09-15T10:26:13-04:00"
+   "lastSeen": "2026-09-18T09:47:25-04:00"
   }
  ]
 }
