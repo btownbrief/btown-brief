@@ -976,7 +976,7 @@
     const mappable = evs.filter((e) => e.lat != null && e.lng != null);
     if (!state.map) {
       state.map = L.map('ev-map', { scrollWheelZoom: false }).setView([44.4759, -73.2121], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
         maxZoom: 19,
       }).addTo(state.map);
