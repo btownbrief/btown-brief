@@ -1,42 +1,42 @@
 {
- "generated": "2026-09-19T09:22:07-04:00",
+ "generated": "2026-09-19T18:29:05-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.5
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 70,
-   "seconds": 6.5
+   "seconds": 5.1
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 60,
-   "seconds": 2.8
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 248,
+   "count": 249,
    "seconds": 4.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 83,
-   "seconds": 1.7
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 19
+   "staleDays": 20
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-19&end_date=2026-11-18&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 19
+   "staleDays": 20
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 7,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 208,
-   "seconds": 64.9
+   "seconds": 65.8
   },
   "flynn": {
    "label": "The Flynn",
    "count": 29,
-   "seconds": 0.3
+   "seconds": 0.1
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -66,7 +66,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 706,
-   "seconds": 35.1
+   "seconds": 34.5
   },
   "higherground": {
    "label": "Higher Ground",
@@ -76,37 +76,37 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 10.1
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 417,
-   "seconds": 72.2
+   "seconds": 72.3
   },
   "meetup": {
    "label": "Meetup",
-   "count": 61,
-   "seconds": 117.2
+   "count": 58,
+   "seconds": 110.6
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 22,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 58,
-   "seconds": 18.7
+   "count": 57,
+   "seconds": 17.0
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 13,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 99,
-   "seconds": 2.1
+   "count": 100,
+   "seconds": 2.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
@@ -115,29 +115,29 @@
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2419,
-   "seconds": 19.8
+   "count": 2358,
+   "seconds": 2.9
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 19
+   "staleDays": 20
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 541,
-   "seconds": 33.5
+   "seconds": 21.3
   },
   "uvmbored": {
    "label": "UVM Bored",
    "count": 331,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 59,
-   "seconds": 76.7
+   "seconds": 74.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -145,11 +145,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 5596,
- "afterDedup": 2607,
- "duplicatesMerged": 2989,
- "final": 2727,
- "firecrawlCalls": 5,
+ "gathered": 5533,
+ "afterDedup": 2594,
+ "duplicatesMerged": 2939,
+ "final": 2730,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -1508,7 +1508,7 @@
   },
   {
    "kept": {
-    "title": "Shakespeare Out Loud",
+    "title": "NOT MEETING THIS WEEK Shakespeare Out Loud",
     "source": "fletcherfree"
    },
    "merged_sources": [
@@ -2403,6 +2403,30 @@
  ],
  "changes": [
   {
+   "id": "3d8f40cbb344",
+   "title": "'Penguin Island 3D'",
+   "date": "2026-09-19",
+   "change": "time",
+   "was": "2026-09-19T11:00:00-04:00",
+   "now": "2026-09-19T10:30:00-04:00"
+  },
+  {
+   "id": "3415d93326d0",
+   "title": "'Wild Rescue 3D'",
+   "date": "2026-09-19",
+   "change": "time",
+   "was": "2026-09-19T11:30:00-04:00",
+   "now": "2026-09-19T11:00:00-04:00"
+  },
+  {
+   "id": "0ab2ecb5180f",
+   "title": "'Shark Kingdom 3D'",
+   "date": "2026-09-19",
+   "change": "time",
+   "was": "2026-09-19T12:00:00-04:00",
+   "now": "2026-09-19T11:30:00-04:00"
+  },
+  {
    "id": "2bc9d6aab10f",
    "title": "Sensory-Friendly Mornings",
    "date": "2026-09-19",
@@ -2452,6 +2476,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "0d344fd9a824",
+   "title": "BTown Coffee Club",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
    "id": "c4c8830baf9a",
    "title": "College Student Saturdays",
    "date": "2026-09-19",
@@ -2459,11 +2490,25 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "0ee574d1e5c6",
+   "title": "'Sea Otters: A Wild Family Adventure 3D'",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
    "id": "24334d03d8b6",
    "title": "Insect Pollinator Walks at Rock Point",
    "date": "2026-09-19",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "3106229b1453",
+   "title": "Bike the Causeway",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
   },
   {
    "id": "70d739f06ee1",
@@ -2480,11 +2525,25 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "aa13225b07de",
+   "title": "Ward 1 NPA Neighborhood BBQ & Potluck at Schmanska Park",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
    "id": "b5b3ae592b59",
    "title": "Stories and Scoops with Girl Scouts in Richmond, VT",
    "date": "2026-09-19",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "b4caba45f299",
+   "title": "Euphoria",
+   "date": "2026-09-19",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
   },
   {
    "id": "c561d389f2e8",
@@ -2501,17 +2560,25 @@
    "lastSeen": "2026-09-17T10:26:31-04:00"
   },
   {
+   "id": "0b85aa7d9d52",
+   "title": "Uvm women’s soccer game!",
+   "date": "2026-09-20",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
+   "id": "5006262d7dc6",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-09-20",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
    "id": "ab7fde873458",
    "title": "Rest, Relax, Recharge: Guided Meditation with Aromatherapy",
    "date": "2026-09-21",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "7553cc2031be",
-   "title": "Trivia with Craig Mitchell",
-   "date": "2026-09-21",
-   "change": "dropped"
   },
   {
    "id": "d1299fe10056",
@@ -2575,12 +2642,6 @@
    "date": "2026-09-22",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "f94033ca8b51",
-   "title": "Maggie Grace, Bennie, Lavendair",
-   "date": "2026-09-22",
-   "change": "dropped"
   },
   {
    "id": "92efbb34b0fb",
@@ -2761,8 +2822,7 @@
    "id": "3c51639cf2c8",
    "title": "Oktoberfest at Black Flannel",
    "date": "2026-09-26",
-   "change": "missing",
-   "lastSeen": "2026-09-16T10:20:34-04:00"
+   "change": "dropped"
   },
   {
    "id": "62d029a4f9da-1500",
@@ -2828,6 +2888,13 @@
    "lastSeen": "2026-09-16T19:14:32-04:00"
   },
   {
+   "id": "3e8bc29be94d",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-09-27",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
    "id": "a3f15b6de5fd",
    "title": "CONTROL TOP in Shelburne",
    "date": "2026-09-27",
@@ -2875,12 +2942,6 @@
    "date": "2026-09-28",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "4c84d2984229",
-   "title": "Trivia with Craig Mitchell",
-   "date": "2026-09-28",
-   "change": "dropped"
   },
   {
    "id": "00a36e0a2614",
@@ -2974,6 +3035,20 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "b3eceef137dd",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-04",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
+   "id": "ed0a93d6eaf4",
+   "title": "Shakespeare Out Loud",
+   "date": "2026-10-05",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
    "id": "c59b906502ab",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-10-05",
@@ -3056,6 +3131,13 @@
    "date": "2026-10-10",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "158a681a0e0b",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-11",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
   },
   {
    "id": "7fbf6b3633b3",
@@ -3156,17 +3238,18 @@
    "lastSeen": "2026-09-17T19:05:36-04:00"
   },
   {
-   "id": "efe85e433ba2",
-   "title": "The Staircase in the Woods",
-   "date": "2026-10-17",
-   "change": "dropped"
-  },
-  {
    "id": "feba8e14fde3",
    "title": "Burlington VT Wedding Show",
    "date": "2026-10-18",
    "change": "source-down",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "586a71c4e477",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-18",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
   },
   {
    "id": "d1ec5aacf968",
@@ -3211,6 +3294,13 @@
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
+   "id": "fb871a4e09b7",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
    "id": "aab22522b9a5",
    "title": "Hold for youth event",
    "date": "2026-10-25",
@@ -3253,6 +3343,13 @@
    "lastSeen": "2026-09-17T19:05:36-04:00"
   },
   {
+   "id": "4c60ef24d1db",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
    "id": "909cf13adfce",
    "title": "Mahjong",
    "date": "2026-11-06",
@@ -3260,11 +3357,32 @@
    "lastSeen": "2026-09-18T09:47:25-04:00"
   },
   {
+   "id": "36588a49ec36",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
+   "id": "d6db45f0ad99",
+   "title": "Shakespeare Out Loud",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
+  },
+  {
    "id": "1919998bdb72",
    "title": "Mahjong",
    "date": "2026-11-13",
    "change": "missing",
    "lastSeen": "2026-09-18T09:47:25-04:00"
+  },
+  {
+   "id": "2d1491fcc4d6",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-09-19T09:22:07-04:00"
   }
  ]
 }
