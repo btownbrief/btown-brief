@@ -1,42 +1,42 @@
 {
- "updated": "2026-09-20T00:25:39+00:00",
+ "updated": "2026-09-20T05:26:40+00:00",
  "sections_updated": {
-  "now": "2026-09-20T00:25:39+00:00",
-  "forecast": "2026-09-20T00:25:39+00:00",
-  "hourly": "2026-09-20T00:25:39+00:00",
-  "alerts": "2026-09-20T00:25:39+00:00",
-  "afd": "2026-09-20T00:25:39+00:00",
-  "lake_forecast": "2026-09-20T00:25:39+00:00",
-  "lake_gage": "2026-09-20T00:25:39+00:00",
-  "air": "2026-09-20T00:25:39+00:00",
-  "sun": "2026-09-20T00:25:39+00:00",
-  "models": "2026-09-20T00:25:39+00:00"
+  "now": "2026-09-20T05:26:40+00:00",
+  "forecast": "2026-09-20T05:26:40+00:00",
+  "hourly": "2026-09-20T05:26:40+00:00",
+  "alerts": "2026-09-20T05:26:40+00:00",
+  "afd": "2026-09-20T05:26:40+00:00",
+  "lake_forecast": "2026-09-20T05:26:40+00:00",
+  "lake_gage": "2026-09-20T05:26:40+00:00",
+  "air": "2026-09-20T05:26:40+00:00",
+  "sun": "2026-09-20T05:26:40+00:00",
+  "models": "2026-09-20T05:26:40+00:00"
  },
  "now": {
-  "observed_at": "2026-09-20T00:05:00+00:00",
+  "observed_at": "2026-09-20T05:05:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 54,
-  "feels_like_f": 54,
-  "humidity": 77,
-  "dewpoint_f": 46,
-  "wind_mph": 0,
+  "temp_f": 45,
+  "feels_like_f": 41,
+  "humidity": 93,
+  "dewpoint_f": 43,
+  "wind_mph": 6,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "SE",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-09-19T18:20:00+00:00",
   "periods": [
    {
-    "name": "Tonight",
-    "start": "2026-09-19T20:00:00-04:00",
+    "name": "Overnight",
+    "start": "2026-09-20T01:00:00-04:00",
     "is_day": false,
     "temp_f": 45,
     "pop": 0,
-    "wind": "SE 2 to 9 mph",
+    "wind": "S 5 to 9 mph",
     "short": "Partly Cloudy",
-    "detailed": "Partly cloudy, with a low around 45. Southeast wind 2 to 9 mph."
+    "detailed": "Partly cloudy, with a low around 45. South wind 5 to 9 mph."
    },
    {
     "name": "Sunday",
@@ -173,61 +173,6 @@
  "hourly": {
   "updated": "2026-09-19T18:20:00+00:00",
   "hours": [
-   {
-    "t": "2026-09-19T20:00:00-04:00",
-    "temp_f": 56,
-    "feels_f": 56,
-    "pop": 0,
-    "humidity": 66,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 9,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-09-19T21:00:00-04:00",
-    "temp_f": 54,
-    "feels_f": 54,
-    "pop": 0,
-    "humidity": 74,
-    "wind_mph": 2,
-    "wind_dir": "E",
-    "sky": 16,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-09-19T22:00:00-04:00",
-    "temp_f": 51,
-    "feels_f": 51,
-    "pop": 0,
-    "humidity": 83,
-    "wind_mph": 3,
-    "wind_dir": "SE",
-    "sky": 19,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-09-19T23:00:00-04:00",
-    "temp_f": 48,
-    "feels_f": 47,
-    "pop": 0,
-    "humidity": 89,
-    "wind_mph": 3,
-    "wind_dir": "SE",
-    "sky": 24,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-09-20T00:00:00-04:00",
-    "temp_f": 45,
-    "feels_f": 43,
-    "pop": 0,
-    "humidity": 96,
-    "wind_mph": 5,
-    "wind_dir": "SE",
-    "sky": 24,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-09-20T01:00:00-04:00",
     "temp_f": 46,
@@ -568,6 +513,61 @@
     "wind_dir": "N",
     "sky": 91,
     "short": "Cloudy"
+   },
+   {
+    "t": "2026-09-21T08:00:00-04:00",
+    "temp_f": 48,
+    "feels_f": 43,
+    "pop": 0,
+    "humidity": 96,
+    "wind_mph": 12,
+    "wind_dir": "N",
+    "sky": 80,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-21T09:00:00-04:00",
+    "temp_f": 51,
+    "feels_f": 51,
+    "pop": 0,
+    "humidity": 89,
+    "wind_mph": 13,
+    "wind_dir": "N",
+    "sky": 68,
+    "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-09-21T10:00:00-04:00",
+    "temp_f": 54,
+    "feels_f": 54,
+    "pop": 0,
+    "humidity": 80,
+    "wind_mph": 13,
+    "wind_dir": "N",
+    "sky": 57,
+    "short": "Partly Sunny"
+   },
+   {
+    "t": "2026-09-21T11:00:00-04:00",
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 0,
+    "humidity": 72,
+    "wind_mph": 12,
+    "wind_dir": "N",
+    "sky": 50,
+    "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-09-21T12:00:00-04:00",
+    "temp_f": 58,
+    "feels_f": 58,
+    "pop": 0,
+    "humidity": 67,
+    "wind_mph": 10,
+    "wind_dir": "N",
+    "sky": 44,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -853,34 +853,72 @@
  },
  "lake_gage": {
   "water_temp_f": 65,
-  "water_temp_at": "2026-09-19T20:00:00.000-04:00",
-  "level_ft": 94.17,
-  "level_at": "2026-09-19T20:00:00.000-04:00",
+  "water_temp_at": "2026-09-20T01:00:00.000-04:00",
+  "level_ft": 94.15,
+  "level_at": "2026-09-20T01:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 19,
+  "aqi": 22,
   "category": "Good",
-  "pollutant": "OZONE",
-  "observed": "09/19/26 20:00",
+  "pollutant": "PM2.5",
+  "observed": "09/20/26 1:00",
   "discussion": "Expect generally good air quality across Vermont on Sunday, September 20th."
  },
  "sun": {
-  "sunrise": "2026-09-19T06:36-04:00",
-  "sunset": "2026-09-19T18:55-04:00",
-  "sunrise_tomorrow": "2026-09-20T06:37-04:00",
-  "sunset_tomorrow": "2026-09-20T18:53-04:00",
-  "uv_max": 5.35
+  "sunrise": "2026-09-20T06:37-04:00",
+  "sunset": "2026-09-20T18:53-04:00",
+  "sunrise_tomorrow": "2026-09-21T06:38-04:00",
+  "sunset_tomorrow": "2026-09-21T18:52-04:00",
+  "uv_max": 0.35
  },
  "models": {
   "days": [
    {
-    "date": "2026-09-19",
+    "date": "2026-09-20",
     "high_f": {
-     "GFS": 63,
-     "Euro": 61,
-     "ICON": 61
+     "GFS": 55,
+     "Euro": 59,
+     "ICON": 59
+    },
+    "pop_max": {
+     "GFS": 77,
+     "Euro": 100,
+     "ICON": 88
+    },
+    "precip_in": {
+     "GFS": 0.36,
+     "Euro": 0.46,
+     "ICON": 0.03
+    },
+    "high_spread_f": 4
+   },
+   {
+    "date": "2026-09-21",
+    "high_f": {
+     "GFS": 56,
+     "Euro": 58,
+     "ICON": 58
+    },
+    "pop_max": {
+     "GFS": 3,
+     "Euro": 26,
+     "ICON": 0
+    },
+    "precip_in": {
+     "GFS": 0.0,
+     "Euro": 0.02,
+     "ICON": 0.0
+    },
+    "high_spread_f": 2
+   },
+   {
+    "date": "2026-09-22",
+    "high_f": {
+     "GFS": 60,
+     "Euro": 60,
+     "ICON": 63
     },
     "pop_max": {
      "GFS": 0,
@@ -892,45 +930,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
-   },
-   {
-    "date": "2026-09-20",
-    "high_f": {
-     "GFS": 57,
-     "Euro": 59,
-     "ICON": 59
-    },
-    "pop_max": {
-     "GFS": 70,
-     "Euro": 100,
-     "ICON": 98
-    },
-    "precip_in": {
-     "GFS": 0.54,
-     "Euro": 0.8,
-     "ICON": 0.11
-    },
-    "high_spread_f": 2
-   },
-   {
-    "date": "2026-09-21",
-    "high_f": {
-     "GFS": 57,
-     "Euro": 59,
-     "ICON": 57
-    },
-    "pop_max": {
-     "GFS": 11,
-     "Euro": 13,
-     "ICON": 0
-    },
-    "precip_in": {
-     "GFS": 0.0,
-     "Euro": 0.02,
-     "ICON": 0.0
-    },
-    "high_spread_f": 2
+    "high_spread_f": 3
    }
   ]
  }
