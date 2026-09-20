@@ -1,42 +1,42 @@
 {
- "generated": "2026-09-20T09:40:15-04:00",
+ "generated": "2026-09-20T18:41:29-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 9,
-   "seconds": 5.8
+   "seconds": 6.2
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 68,
-   "seconds": 3.3
+   "count": 67,
+   "seconds": 2.7
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 59,
-   "seconds": 3.2
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 237,
-   "seconds": 4.4
+   "seconds": 3.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 77,
-   "seconds": 1.7
+   "seconds": 2.1
   },
   "echo": {
    "label": "ECHO Leahy Center",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 20
+   "staleDays": 21
   },
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
    "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-20&end_date=2026-11-19&page=1 (HTTP Error 405: Not Allowed)",
-   "staleDays": 20
+   "staleDays": 21
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -46,17 +46,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 6,
-   "seconds": 0.1
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 66.1
+   "seconds": 72.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 26,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -66,90 +66,90 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 696,
-   "seconds": 32.9
+   "seconds": 36.0
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 82,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only"
+   "seconds": 9.6
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 409,
-   "seconds": 74.5
+   "seconds": 76.4
   },
   "meetup": {
    "label": "Meetup",
-   "count": 60,
-   "seconds": 113.7
+   "count": 61,
+   "seconds": 123.3
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 21,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 57,
-   "seconds": 15.3
+   "count": 56,
+   "seconds": 16.0
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 12,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 97,
-   "seconds": 1.8
+   "count": 98,
+   "seconds": 5.7
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 18,
-   "seconds": 32.6
+   "seconds": 34.9
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2424,
-   "seconds": 17.8
+   "count": 2360,
+   "seconds": 3.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 20
+   "staleDays": 21
   },
   "uvm": {
    "label": "UVM & Colleges",
    "count": 541,
-   "seconds": 39.0
+   "seconds": 28.0
   },
   "uvmbored": {
    "label": "UVM Bored",
    "count": 329,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 54,
-   "seconds": 70.6
+   "count": 53,
+   "seconds": 70.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 52,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 5540,
- "afterDedup": 2566,
- "duplicatesMerged": 2974,
- "final": 2664,
- "firecrawlCalls": 5,
+ "gathered": 5475,
+ "afterDedup": 2555,
+ "duplicatesMerged": 2920,
+ "final": 2591,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2402,11 +2402,49 @@
  ],
  "changes": [
   {
+   "id": "c398b5adf819",
+   "title": "'Penguin Island 3D'",
+   "date": "2026-09-20",
+   "change": "time",
+   "was": "2026-09-20T11:00:00-04:00",
+   "now": "2026-09-20T10:30:00-04:00"
+  },
+  {
+   "id": "f7b553a5c614",
+   "title": "'Wild Rescue 3D'",
+   "date": "2026-09-20",
+   "change": "time",
+   "was": "2026-09-20T11:30:00-04:00",
+   "now": "2026-09-20T11:00:00-04:00"
+  },
+  {
+   "id": "90d344e742a7",
+   "title": "'Shark Kingdom 3D'",
+   "date": "2026-09-20",
+   "change": "time",
+   "was": "2026-09-20T12:00:00-04:00",
+   "now": "2026-09-20T11:30:00-04:00"
+  },
+  {
+   "id": "022b32f5eeb9",
+   "title": "'Sea Otters: A Wild Family Adventure 3D'",
+   "date": "2026-09-20",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
+  },
+  {
    "id": "da6ace0dba04",
    "title": "Apple picking with lunch after",
    "date": "2026-09-20",
    "change": "missing",
    "lastSeen": "2026-09-19T18:29:05-04:00"
+  },
+  {
+   "id": "6790439ca267",
+   "title": "The Amazing Puzzle Race",
+   "date": "2026-09-20",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "0b85aa7d9d52",
@@ -2416,149 +2454,178 @@
    "lastSeen": "2026-09-19T09:22:07-04:00"
   },
   {
+   "id": "97d4c16d6cdb",
+   "title": "Lunch and drinks after, apple picking another day",
+   "date": "2026-09-20",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
+  },
+  {
+   "id": "5006262d7dc6",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-09-20",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
+  },
+  {
+   "id": "99f852f24f77",
+   "title": "Public Skate",
+   "date": "2026-09-20",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
+  },
+  {
    "id": "ab7fde873458",
    "title": "Rest, Relax, Recharge: Guided Meditation with Aromatherapy",
    "date": "2026-09-21",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "d1299fe10056",
    "title": "Brewing Better Business (VT)",
    "date": "2026-09-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "a807fffcbc47",
    "title": "Lean Six Sigma Green Belt (LSSGB) Certification Training in Burlington, VT",
    "date": "2026-09-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "0d51cfc3f23d",
    "title": "PMP Certification 4 Days Classroom Training in Burlington, VT",
    "date": "2026-09-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "6e69a918aa42",
    "title": "PMP Certification & Training Bootcamp in Burlington, VT",
    "date": "2026-09-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "4704cc6ccbf7",
    "title": "Business Analytics Certification (CBAP) Training in Burlington, VT",
    "date": "2026-09-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "793d7112c0fd",
    "title": "CCNA Certification Training Course in Vermont, VT",
    "date": "2026-09-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "f8a1f8d25aeb",
    "title": "PMP (Project Management) Certification Training in Burlington, VT",
    "date": "2026-09-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "bd474b2695e4",
    "title": "Certified Ethical Hacker – Practical Ethical Hacker in Burlington, VT",
    "date": "2026-09-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "33970925ffd4",
    "title": "Data Analytics Certification Training in Burlington, VT",
    "date": "2026-09-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "92efbb34b0fb",
    "title": "Outta Pocket / Sin Against Sin @ SEABA, Burlington VT",
    "date": "2026-09-23",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "99690c481178",
    "title": "CAPM Certification In-Person Training in Burlington, VT",
    "date": "2026-09-23",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "163d7370ef2d",
    "title": "Salesforce Admin Certification Training in Burlington, VT",
    "date": "2026-09-23",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "f3608bf2f249",
    "title": "PMI-CPMAI Certification Training – 3-Day Bootcamp in Vermont, VT",
    "date": "2026-09-23",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "5bb5caf4207d",
    "title": "Data Analytics Certification Training in Burlington, VT",
    "date": "2026-09-23",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "811c5b8b59de",
    "title": "Fall Trade Show for New England Interior Designers",
    "date": "2026-09-23",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "03674606b7ce",
    "title": "Family Craft: Picture Frames",
    "date": "2026-09-23",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "0d9011ffd6ea",
    "title": "SAFe® 5.1 (LPM) 2Days Classroom Training in Burlington, VT",
    "date": "2026-09-24",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "cd0cd355827a",
+   "title": "Brows for Burlington",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "6199b422ec4d",
    "title": "Networking Lunch at Hula with the Network of Women--September Lunch",
    "date": "2026-09-24",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
-   "id": "1af100ad338f",
-   "title": "Turning Pages with Mary - Live!",
+   "id": "0d78ba967fe1",
+   "title": "Body Composition Scan",
    "date": "2026-09-24",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "15f7273e6c86",
    "title": "Adult and Teen Artmaking",
    "date": "2026-09-24",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -2572,34 +2639,28 @@
    "id": "eac1851037aa",
    "title": "Chittenden County Market Days: Food Trucks, Vendors & Creative Experience 2",
    "date": "2026-09-25",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "9934f6759c21",
    "title": "Very Eric Carle Member Party",
    "date": "2026-09-25",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "acd105331d7f",
    "title": "Proof: Norman Rockwell and Photography, a lecture by Russell Lord",
    "date": "2026-09-25",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "fdc1b63f6e82",
-   "title": "Kevin Lawrence, Violin Honors Memory of Robert Rachlin",
-   "date": "2026-09-25",
-   "change": "dropped"
   },
   {
    "id": "7426443da6c3",
    "title": "Lara Cwass Band",
    "date": "2026-09-25",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -2610,37 +2671,31 @@
    "lastSeen": "2026-09-19T18:29:05-04:00"
   },
   {
-   "id": "f7fa5586833c",
-   "title": "September Bird Monitoring Walk",
-   "date": "2026-09-26",
-   "change": "dropped"
-  },
-  {
    "id": "59fc36bf5792",
    "title": "College Student Saturdays",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "3d6b5b1138d3",
    "title": "CAPM Certification Weekend Classroom Training in Burlington, VT",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "97b74da845a3",
    "title": "Very Eric Carle Exhibit",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "7b8004c28bcb",
    "title": "Drop-in Artmaking: Decorate Your Own Rockwell Scene",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -2654,128 +2709,98 @@
    "id": "11eb784979a1",
    "title": "Model Behavior: A Panel and Gathering of Rockwell Models",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "23854f1387b5",
    "title": "Model Behavior: A Panel and Gathering of Rockwell Models",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "62d029a4f9da-1500",
    "title": "Curator Tour – Norman Rockwell: At Home in Vermont",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "47ec42bda162",
    "title": "Artmaking: Figure Drawing Inspired by The Four Freedoms",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "02a93cc41470",
    "title": "VERTMONT HAIR SHOW",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "3b5986f62a89",
-   "title": "Mosaic",
-   "date": "2026-09-26",
-   "change": "dropped"
-  },
-  {
-   "id": "68ce96a91011",
-   "title": "CONTROL TOP in Shelburne",
-   "date": "2026-09-26",
-   "change": "dropped"
   },
   {
    "id": "0530449d4b93",
    "title": "Full Moon Fall Forest Bathing: shinrin-yoku",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "5be39a387b87",
    "title": "Next Stop Comedy at J Skis! - Burlington, VT",
    "date": "2026-09-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "14eb4c5641eb",
    "title": "The Sheila Divine",
    "date": "2026-09-26",
+   "change": "dropped"
+  },
+  {
+   "id": "3e8bc29be94d",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-09-27",
    "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
-  },
-  {
-   "id": "99f47992e9e3",
-   "title": "Day Tripper: Guided Day-long Bike Tour",
-   "date": "2026-09-27",
-   "change": "dropped"
-  },
-  {
-   "id": "a3f15b6de5fd",
-   "title": "CONTROL TOP in Shelburne",
-   "date": "2026-09-27",
-   "change": "dropped"
-  },
-  {
-   "id": "b4206a9c1c4a",
-   "title": "Hair Peace",
-   "date": "2026-09-27",
-   "change": "dropped"
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "a21e4e63e331",
    "title": "2026 Vermont Compost Operator Certification Training",
    "date": "2026-09-28",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "6c57f515dd05",
    "title": "Clinical Supervision Foundations (2 day training)",
    "date": "2026-09-28",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "c368698b2382",
    "title": "Career Visioning With Brad Knowles",
    "date": "2026-09-28",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "985b65fef71a",
    "title": "CISSP Certification Training Course in Burlington, VT",
    "date": "2026-09-28",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "7c33e78017a8",
    "title": "Circus Building Closure",
    "date": "2026-09-28",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "00a36e0a2614",
-   "title": "Threshing Day Midnight Release Party | Phoenix Books",
-   "date": "2026-09-28",
-   "change": "dropped"
   },
   {
    "id": "eec1b053400e",
@@ -2788,41 +2813,42 @@
    "id": "db3911d480dd",
    "title": "Kids Program: Nature Illustrations",
    "date": "2026-09-29",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "2f930955fa57",
-   "title": "Cyber Security 101",
-   "date": "2026-09-30",
-   "change": "dropped"
   },
   {
    "id": "ebd6ae71bfbc",
    "title": "Libeco: Flax to Fabric",
    "date": "2026-09-30",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "5a9003c16c37",
+   "title": "Body Composition Scan",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "ef29e9adbc5e",
    "title": "Art within Reach",
    "date": "2026-10-01",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "4d1af249a328",
    "title": "BURLINGTON, VT: Optimistic Personality Disorder Show",
    "date": "2026-10-01",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "3852260a43d9",
    "title": "Ethics",
    "date": "2026-10-02",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -2850,15 +2876,22 @@
    "id": "da4e38265440",
    "title": "Brick House & Bubbly",
    "date": "2026-10-03",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "504331921024",
    "title": "CVVC Merrymac Farm Sanctuary Tour",
    "date": "2026-10-03",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "b3eceef137dd",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-04",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "ed0a93d6eaf4",
@@ -2871,48 +2904,40 @@
    "id": "c59b906502ab",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-10-05",
-   "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "2718d53a5a53",
    "title": "Varied & Alive Curator Tour",
    "date": "2026-10-06",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "4e957176c93c",
    "title": "From Seed to Centerpiece",
    "date": "2026-10-06",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "a30ebc0a106e",
    "title": "Mindful Yoga",
    "date": "2026-10-06",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "5c4f01e17fce",
-   "title": "A Sweet and Spooky Story Time | Essex",
-   "date": "2026-10-07",
-   "change": "dropped"
   },
   {
    "id": "94ecebd4a075",
    "title": "Wish Benefit Tour 2026 with Oteil Burbridge & LaMP",
    "date": "2026-10-07",
-   "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "dd3465273c64",
    "title": "25th Annual VBSR Awards Ceremony & Dinner",
    "date": "2026-10-08",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -2926,76 +2951,74 @@
    "id": "d3dfd077bcd5",
    "title": "Mushroom Cultivation Workshop",
    "date": "2026-10-09",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
-  },
-  {
-   "id": "2bd515a4db2e",
-   "title": "Lane Series: Fraser and San Miguel Fraser",
-   "date": "2026-10-09",
-   "change": "dropped"
   },
   {
    "id": "ebce9000bca7",
    "title": "Sensory-Friendly Mornings",
    "date": "2026-10-10",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "1026a72973fd",
    "title": "Storytime and Artmaking for Families",
    "date": "2026-10-10",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "158a681a0e0b",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-11",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "7fbf6b3633b3",
    "title": "Sheer Terror, Burn Kit, Blossom, Shine",
    "date": "2026-10-11",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "82d9e6da1295",
    "title": "Tech Help with Clif",
    "date": "2026-10-12",
-   "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "82d9e6da1295-1300",
    "title": "Tech Help with Clif",
    "date": "2026-10-12",
-   "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "9559d0e31159",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-10-12",
-   "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "225a0add5080",
    "title": "REV2026 Conference",
    "date": "2026-10-14",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "8bbb15f3ee8c",
    "title": "REV2026 Women in Energy Breakfast",
    "date": "2026-10-14",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "30f3afed4570",
    "title": "Close Looking: History, Context and the Creative Process",
    "date": "2026-10-14",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -3009,14 +3032,14 @@
    "id": "1837480df93e",
    "title": "Adult and Teen Artmaking",
    "date": "2026-10-14",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "a75a16be2610",
    "title": "Cauldrons & Craft Brews",
    "date": "2026-10-15",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -3030,14 +3053,14 @@
    "id": "138a86df63d3",
    "title": "Fall Forest Bathing: shinrin-yoku",
    "date": "2026-10-17",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "9880c9ab42a5",
    "title": "Tending Rock Point - Buckthorn Bonanza",
    "date": "2026-10-17",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -3051,35 +3074,41 @@
    "id": "feba8e14fde3",
    "title": "Burlington VT Wedding Show",
    "date": "2026-10-18",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "586a71c4e477",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-18",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "d1ec5aacf968",
    "title": "Brewing Better Business (VT)",
    "date": "2026-10-19",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "321aef9cddef",
    "title": "Vermont Reads 2026 Author Presentation",
    "date": "2026-10-19",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
    "id": "373161e5c7bb",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-10-19",
-   "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "cc3d801ab0bc",
    "title": "Film Screening: “Seeding Change: Farming Beyond Neonics”",
    "date": "2026-10-22",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -3093,35 +3122,39 @@
    "id": "4d340683dfd5",
    "title": "Haunted Happenings",
    "date": "2026-10-25",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
+  },
+  {
+   "id": "fb871a4e09b7",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "aab22522b9a5",
    "title": "Hold for youth event",
    "date": "2026-10-25",
-   "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "aab22522b9a5-1500",
    "title": "Hold for youth event",
    "date": "2026-10-25",
-   "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "41b9b73d3242",
    "title": "Trivia with Craig Mitchell",
    "date": "2026-10-26",
-   "change": "missing",
-   "lastSeen": "2026-09-17T10:26:31-04:00"
+   "change": "dropped"
   },
   {
    "id": "e874b58f442e",
    "title": "ACOTAR 6 Midnight Release Party | Phoenix Books",
    "date": "2026-10-26",
-   "change": "source-down",
+   "change": "dropped",
    "lastSeen": "2026-08-30T13:28:30-04:00"
   },
   {
@@ -3139,11 +3172,25 @@
    "lastSeen": "2026-09-17T19:05:36-04:00"
   },
   {
+   "id": "4c60ef24d1db",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
+  },
+  {
    "id": "909cf13adfce",
    "title": "Mahjong",
    "date": "2026-11-06",
    "change": "missing",
    "lastSeen": "2026-09-18T09:47:25-04:00"
+  },
+  {
+   "id": "36588a49ec36",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   },
   {
    "id": "d6db45f0ad99",
@@ -3158,6 +3205,13 @@
    "date": "2026-11-13",
    "change": "missing",
    "lastSeen": "2026-09-18T09:47:25-04:00"
+  },
+  {
+   "id": "2d1491fcc4d6",
+   "title": "Sunday Wine Tasting",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-09-20T09:40:15-04:00"
   }
  ]
 }
