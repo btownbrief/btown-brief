@@ -1,25 +1,25 @@
 {
- "updated": "2026-09-19T22:24:44+00:00",
+ "updated": "2026-09-20T00:25:39+00:00",
  "sections_updated": {
-  "now": "2026-09-19T22:24:44+00:00",
-  "forecast": "2026-09-19T22:24:44+00:00",
-  "hourly": "2026-09-19T22:24:44+00:00",
-  "alerts": "2026-09-19T22:24:44+00:00",
-  "afd": "2026-09-19T22:24:44+00:00",
-  "lake_forecast": "2026-09-19T22:24:44+00:00",
-  "lake_gage": "2026-09-19T22:24:44+00:00",
-  "air": "2026-09-19T22:24:44+00:00",
-  "sun": "2026-09-19T22:24:44+00:00",
-  "models": "2026-09-19T22:24:44+00:00"
+  "now": "2026-09-20T00:25:39+00:00",
+  "forecast": "2026-09-20T00:25:39+00:00",
+  "hourly": "2026-09-20T00:25:39+00:00",
+  "alerts": "2026-09-20T00:25:39+00:00",
+  "afd": "2026-09-20T00:25:39+00:00",
+  "lake_forecast": "2026-09-20T00:25:39+00:00",
+  "lake_gage": "2026-09-20T00:25:39+00:00",
+  "air": "2026-09-20T00:25:39+00:00",
+  "sun": "2026-09-20T00:25:39+00:00",
+  "models": "2026-09-20T00:25:39+00:00"
  },
  "now": {
-  "observed_at": "2026-09-19T22:00:00+00:00",
+  "observed_at": "2026-09-20T00:05:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Clear",
-  "temp_f": 61,
-  "feels_like_f": 61,
-  "humidity": 51,
-  "dewpoint_f": 43,
+  "description": "Clear",
+  "temp_f": 54,
+  "feels_like_f": 54,
+  "humidity": 77,
+  "dewpoint_f": 46,
   "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-09-19T18:00:00-04:00",
+    "start": "2026-09-19T20:00:00-04:00",
     "is_day": false,
     "temp_f": 45,
     "pop": 0,
-    "wind": "E 2 to 9 mph",
-    "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 45. East wind 2 to 9 mph."
+    "wind": "SE 2 to 9 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 45. Southeast wind 2 to 9 mph."
    },
    {
     "name": "Sunday",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-19T18:20:00+00:00",
   "hours": [
-   {
-    "t": "2026-09-19T18:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
-    "pop": 0,
-    "humidity": 52,
-    "wind_mph": 5,
-    "wind_dir": "NW",
-    "sky": 12,
-    "short": "Mostly Clear"
-   },
-   {
-    "t": "2026-09-19T19:00:00-04:00",
-    "temp_f": 59,
-    "feels_f": 59,
-    "pop": 0,
-    "humidity": 60,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 10,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-09-19T20:00:00-04:00",
     "temp_f": 56,
@@ -568,6 +546,28 @@
     "wind_dir": "N",
     "sky": 92,
     "short": "Cloudy"
+   },
+   {
+    "t": "2026-09-21T06:00:00-04:00",
+    "temp_f": 47,
+    "feels_f": 42,
+    "pop": 0,
+    "humidity": 100,
+    "wind_mph": 12,
+    "wind_dir": "N",
+    "sky": 90,
+    "short": "Cloudy"
+   },
+   {
+    "t": "2026-09-21T07:00:00-04:00",
+    "temp_f": 46,
+    "feels_f": 41,
+    "pop": 0,
+    "humidity": 100,
+    "wind_mph": 12,
+    "wind_dir": "N",
+    "sky": 91,
+    "short": "Cloudy"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-19T18:23:00+00:00",
+  "issued": "2026-09-19T23:23:00+00:00",
   "key_messages": [
    "Light rain and cool temperatures expected on Sunday, followed by drier and seasonable cool weather for the start of the new work week.",
    "Quiet weather for the extended"
   ],
   "what_changed": "As of 222 PM EDT Saturday... No significant changes made with this forecast package.",
-  "raw": "\n000\nFXUS61 KBTV 191823\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n223 PM EDT Sat Sep 19 2026\n\n.WHAT HAS CHANGED...\nAs of 222 PM EDT Saturday...\n\nNo significant changes made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 222 PM EDT Saturday...\n\n1. Light rain and cool temperatures expected on Sunday, \nfollowed by drier and seasonable cool weather for the start of the \nnew work week.   \n\n2. Quiet weather for the extended\n\n&&\n\n.DISCUSSION...\nAs of 222 PM EDT Saturday...\n\nKEY MESSAGE 1: Sfc analysis indicates weakening 1024mb high pres \nstretching from Eastern Canada into central Maine, while  weak \n1010mb low pres is over central Iowa with warm front extending into \nthe Ohio Valley. This area of low pres wl race toward the Ohio \nValley tonight with increasing clouds acrs our fa and light rain \ndeveloping along the warm frontal boundary by mid-morning Sunday. \nTemps drop quickly this evening, due to very dry bl conditions/light \nwinds but warm after midnight. Lows generally mid 30s NEK to \nmid/upper 40s Champlain/St Lawrence Valleys. The highest pops and \ngreatest qpf wl occur btwn 13z and 20z on Sunday, per best moisture \nand lift proggs. Given the lack of instability and highest pw values \n>1.30\" staying south of our cwa, along with relatively quick \nmovement of system, thinking qpf wl range in the 0.20\" to 0.50\" for \nmost areas. Did note some southeast downslope component in the bl to \n900mb wind fields, which could cause some localized shadowing along \nthe western slopes. In addition, RAP/HRRR sounding data at CLC \nindicates good mixing below inversion near 1000 feet of 25 to 29 \nknots, so thinking a brief lake wind advisory wl be needed btwn 10z-\n15z Sunday morning. As rain arrives, conditions wl stabilize and \nmixing/winds wl decrease, especially by early aftn. Next noticeable \nimpact wl be the relatively cool high temps for Sunday, given \nclouds/precip. Expecting highs only mid/upper 40s mtns to mid/upper \n50s warmer valleys. A cool/raw day is anticipated with intervals of \nlight rain. \n\nSunday night, sounding data indicates strong subsidence inversion \ndeveloping under caa and blocked flow. Given this synoptic scale \nscenario with rainfall in the past 6 to 12 hours, expect areas of \nlow clouds/drizzle, especially favorable upslope mtn elevations \nabove 1000 feet with some fog possible. Temps wl range from the mid \n30s to mid/upper 40s with no frost formation expected given the caa \nadvection and bl mixing.\n\nMonday-Tuesday...a period of very quiet wx is anticipated as strong \n1030mb high pres builds toward the International Border from Hudson \nBay. This wl produce a cool-dry anticyclonic flow of air acrs our \ncwa, with pw values dropping <0.50\". This deep dry layer wl result \nin large diurnal spread in daily temps and sharp elevation depend \ngradients from mild valleys to cool summits. Have utilized the mtn \nmax temp tool to highlight this thinking, which supports highs l/m \n40s summits to upper 50s to mid 60s valleys for both Monday and \nTuesday. Conditions look favorable for frost/freeze headlines on \nMonday night/Tuesday morning for parts of the SLV and n-central VT \nvalleys. Lows generally mid/upper 20s SLK/NEK to mid/upper 30s, \nexcept mid 40s near Lake Champlain.\n\nKEY MESSAGE 2: A high pressure to our north and a low pressure to our \nsouth will bring us several days of dry weather and cool \ntemperatures, perfect for your outdoor plans. Daily highs will be in \nthe 60s through Thursday before the forecast becomes less clear. \nWHile the GFS has backed off from the more extreme scenario it was \npainting during the last forecast cycle, the low pressure to  our \nsouth will move up the coast sometime late in the week or into the \nweekend, bringing some rain to the regions.\n\n&&\n\n.AVIATION /18Z SATURDAY THROUGH THURSDAY/...\nThrough 18Z Sunday...VFR conditions will persist through the day\ntoday, with scattered high clouds and light to moderate winds.\nTonight, the winds turn southeast and should remain strong enough to\nkeep the fog away. Tomorrow morning rain will move in. Conditions\nwill primarily remain VFR with some intermittent MVFR possible if\nthe rain showers pick up in intensity.\n\nOutlook...\n\nSunday Night: Mainly VFR, with local IFR possible. NO SIG WX.\nMonday: Mainly VFR, with local IFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Slight chance SHRA.\n\n&&\n\n.MARINE...\nAs of 222 PM EDT Saturday...\n\nA brief Lake Wind Advisory maybe needed between 6 AM and 10 AM on \nSunday morning for breezy south to southeast winds of 15 to 25 \nknots, especially on the open waters. The winds will quickly \ndecrease to 10 to 15 knots once the rain arrives and helps to \nstabilize the winds from mixing down over the warmer waters. Waves \ngenerally 1 to 3 feet, but localized near 4 feet possible on Sunday \nmorning.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Taber\nDISCUSSION...Langbauer/Taber\nAVIATION...Langbauer\nMARINE...Taber\n"
+  "raw": "\n000\nFXUS61 KBTV 192323\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n723 PM EDT Sat Sep 19 2026\n\n.WHAT HAS CHANGED...\nAs of 222 PM EDT Saturday...\n\nNo significant changes made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 222 PM EDT Saturday...\n\n1. Light rain and cool temperatures expected on Sunday, \nfollowed by drier and seasonable cool weather for the start of the \nnew work week.   \n\n2. Quiet weather for the extended\n\n&&\n\n.DISCUSSION...\nAs of 222 PM EDT Saturday...\n\nKEY MESSAGE 1: Sfc analysis indicates weakening 1024mb high pres \nstretching from Eastern Canada into central Maine, while  weak \n1010mb low pres is over central Iowa with warm front extending into \nthe Ohio Valley. This area of low pres wl race toward the Ohio \nValley tonight with increasing clouds acrs our fa and light rain \ndeveloping along the warm frontal boundary by mid-morning Sunday. \nTemps drop quickly this evening, due to very dry bl conditions/light \nwinds but warm after midnight. Lows generally mid 30s NEK to \nmid/upper 40s Champlain/St Lawrence Valleys. The highest pops and \ngreatest qpf wl occur btwn 13z and 20z on Sunday, per best moisture \nand lift proggs. Given the lack of instability and highest pw values \n>1.30\" staying south of our cwa, along with relatively quick \nmovement of system, thinking qpf wl range in the 0.20\" to 0.50\" for \nmost areas. Did note some southeast downslope component in the bl to \n900mb wind fields, which could cause some localized shadowing along \nthe western slopes. In addition, RAP/HRRR sounding data at CLC \nindicates good mixing below inversion near 1000 feet of 25 to 29 \nknots, so thinking a brief lake wind advisory wl be needed btwn 10z-\n15z Sunday morning. As rain arrives, conditions wl stabilize and \nmixing/winds wl decrease, especially by early aftn. Next noticeable \nimpact wl be the relatively cool high temps for Sunday, given \nclouds/precip. Expecting highs only mid/upper 40s mtns to mid/upper \n50s warmer valleys. A cool/raw day is anticipated with intervals of \nlight rain. \n\nSunday night, sounding data indicates strong subsidence inversion \ndeveloping under caa and blocked flow. Given this synoptic scale \nscenario with rainfall in the past 6 to 12 hours, expect areas of \nlow clouds/drizzle, especially favorable upslope mtn elevations \nabove 1000 feet with some fog possible. Temps wl range from the mid \n30s to mid/upper 40s with no frost formation expected given the caa \nadvection and bl mixing.\n\nMonday-Tuesday...a period of very quiet wx is anticipated as strong \n1030mb high pres builds toward the International Border from Hudson \nBay. This wl produce a cool-dry anticyclonic flow of air acrs our \ncwa, with pw values dropping <0.50\". This deep dry layer wl result \nin large diurnal spread in daily temps and sharp elevation depend \ngradients from mild valleys to cool summits. Have utilized the mtn \nmax temp tool to highlight this thinking, which supports highs l/m \n40s summits to upper 50s to mid 60s valleys for both Monday and \nTuesday. Conditions look favorable for frost/freeze headlines on \nMonday night/Tuesday morning for parts of the SLV and n-central VT \nvalleys. Lows generally mid/upper 20s SLK/NEK to mid/upper 30s, \nexcept mid 40s near Lake Champlain.\n\nKEY MESSAGE 2: A high pressure to our north and a low pressure to our \nsouth will bring us several days of dry weather and cool \ntemperatures, perfect for your outdoor plans. Daily highs will be in \nthe 60s through Thursday before the forecast becomes less clear. \nWHile the GFS has backed off from the more extreme scenario it was \npainting during the last forecast cycle, the low pressure to  our \nsouth will move up the coast sometime late in the week or into the \nweekend, bringing some rain to the regions.\n\n&&\n\n.AVIATION /00Z SUNDAY THROUGH THURSDAY/...\nThrough 00Z Monday...VFR expected through 12Z under light winds\nas mid to high cloudiness increases over time after 06Z. Periods\nof light rain will then move into the region in the 12-15Z time\nframe and generally persist through late afternoon before \ntapering off late. Conditions gradually lower to MVFR at most \nsites with exception being KMSS which should remain largely VFR.\nHave opted to stay away from some of the more pessimistic \nguidance showing more widespread IFR cigs tomorrow afternoon \ngiven southeasterly flow regime and have only offered this \nscenario at KSLK at this point as confidence remains low on this\nplaying out as advertised.\n\nOutlook...\n\nSunday Night: Mainly VFR, with local IFR possible. NO SIG WX.\nMonday: Mainly VFR, with local IFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Slight chance SHRA.\n\n&&\n\n.MARINE...\nAs of 222 PM EDT Saturday...\n\nA brief Lake Wind Advisory maybe needed between 6 AM and 10 AM on \nSunday morning for breezy south to southeast winds of 15 to 25 \nknots, especially on the open waters. The winds will quickly \ndecrease to 10 to 15 knots once the rain arrives and helps to \nstabilize the winds from mixing down over the warmer waters. Waves \ngenerally 1 to 3 feet, but localized near 4 feet possible on Sunday \nmorning.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Taber\nDISCUSSION...Langbauer/Taber\nAVIATION...JMG\nMARINE...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-09-19T18:19:00+00:00",
@@ -852,18 +852,18 @@
   }
  },
  "lake_gage": {
-  "water_temp_f": 66,
-  "water_temp_at": "2026-09-19T18:00:00.000-04:00",
+  "water_temp_f": 65,
+  "water_temp_at": "2026-09-19T20:00:00.000-04:00",
   "level_ft": 94.17,
-  "level_at": "2026-09-19T18:00:00.000-04:00",
+  "level_at": "2026-09-19T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 24,
+  "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/19/26 18:00",
+  "observed": "09/19/26 20:00",
   "discussion": "Expect generally good air quality across Vermont on Sunday, September 20th."
  },
  "sun": {
@@ -897,32 +897,32 @@
    {
     "date": "2026-09-20",
     "high_f": {
-     "GFS": 59,
+     "GFS": 57,
      "Euro": 59,
      "ICON": 59
     },
     "pop_max": {
-     "GFS": 79,
+     "GFS": 70,
      "Euro": 100,
      "ICON": 98
     },
     "precip_in": {
-     "GFS": 0.37,
+     "GFS": 0.54,
      "Euro": 0.8,
      "ICON": 0.11
     },
-    "high_spread_f": 0
+    "high_spread_f": 2
    },
    {
     "date": "2026-09-21",
     "high_f": {
-     "GFS": 58,
+     "GFS": 57,
      "Euro": 59,
      "ICON": 57
     },
     "pop_max": {
      "GFS": 11,
-     "Euro": 24,
+     "Euro": 13,
      "ICON": 0
     },
     "precip_in": {
