@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-20T10:29:00+00:00",
+ "updated": "2026-09-20T11:54:57+00:00",
  "sections_updated": {
-  "now": "2026-09-20T10:29:00+00:00",
-  "forecast": "2026-09-20T10:29:00+00:00",
-  "hourly": "2026-09-20T10:29:00+00:00",
-  "alerts": "2026-09-20T10:29:00+00:00",
-  "afd": "2026-09-20T10:29:00+00:00",
-  "lake_forecast": "2026-09-20T10:29:00+00:00",
-  "lake_gage": "2026-09-20T10:29:00+00:00",
-  "air": "2026-09-20T10:29:00+00:00",
-  "sun": "2026-09-20T10:29:00+00:00",
-  "models": "2026-09-20T10:29:00+00:00"
+  "now": "2026-09-20T11:54:57+00:00",
+  "forecast": "2026-09-20T11:54:57+00:00",
+  "hourly": "2026-09-20T11:54:57+00:00",
+  "alerts": "2026-09-20T11:54:57+00:00",
+  "afd": "2026-09-20T11:54:57+00:00",
+  "lake_forecast": "2026-09-20T11:54:57+00:00",
+  "lake_gage": "2026-09-20T11:54:57+00:00",
+  "air": "2026-09-20T11:54:57+00:00",
+  "sun": "2026-09-20T11:54:57+00:00",
+  "models": "2026-09-20T11:54:57+00:00"
  },
  "now": {
-  "observed_at": "2026-09-20T10:10:00+00:00",
+  "observed_at": "2026-09-20T11:35:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 50,
-  "feels_like_f": 50,
-  "humidity": 82,
-  "dewpoint_f": 45,
-  "wind_mph": 7,
+  "description": "Light Rain",
+  "temp_f": 54,
+  "feels_like_f": 54,
+  "humidity": 77,
+  "dewpoint_f": 46,
+  "wind_mph": 9,
   "wind_gust_mph": null,
-  "wind_dir": "SSE",
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-20T06:00:00-04:00",
+    "start": "2026-09-20T07:00:00-04:00",
     "is_day": true,
     "temp_f": 58,
     "pop": 98,
     "wind": "S 6 to 12 mph",
     "short": "Rain",
-    "detailed": "Rain after 8am. Mostly cloudy, with a high near 58. South wind 6 to 12 mph, with gusts as high as 25 mph. Chance of precipitation is 100%. New rainfall amounts between a quarter and half of an inch possible."
+    "detailed": "Rain after 8am. Cloudy, with a high near 58. South wind 6 to 12 mph, with gusts as high as 25 mph. Chance of precipitation is 100%. New rainfall amounts between a quarter and half of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-20T09:46:44+00:00",
   "hours": [
-   {
-    "t": "2026-09-20T06:00:00-04:00",
-    "temp_f": 51,
-    "feels_f": 51,
-    "pop": 1,
-    "humidity": 80,
-    "wind_mph": 12,
-    "wind_dir": "S",
-    "sky": 31,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-09-20T07:00:00-04:00",
     "temp_f": 52,
@@ -568,6 +557,17 @@
     "wind_dir": "N",
     "sky": 47,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-09-21T18:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 0,
+    "humidity": 60,
+    "wind_mph": 9,
+    "wind_dir": "N",
+    "sky": 66,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-20T06:49:00+00:00",
+  "issued": "2026-09-20T11:13:00+00:00",
   "key_messages": [
    "Light rain and cool temperatures today, then a prolonged dry and seasonably cool weather stretch begins.",
    "Dry weather persists through mid week, though we will need to monitor for increasing shower chances from Friday onward."
   ],
   "what_changed": "As of 249 AM EDT Sunday... No significant changes made with this forecast package.",
-  "raw": "\n000\nFXUS61 KBTV 200649\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n249 AM EDT Sun Sep 20 2026\n\n.WHAT HAS CHANGED...\nAs of 249 AM EDT Sunday...\n\nNo significant changes made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 249 AM EDT Sunday...\n\n1. Light rain and cool temperatures today, then a prolonged dry \nand seasonably cool weather stretch begins.   \n\n2. Dry weather persists through mid week, though we will need \nto monitor for increasing shower chances from Friday onward. \n\n&&\n\n.DISCUSSION...\nAs of 249 AM EDT Sunday...\n\nKEY MESSAGE 1: A widespread light rainfall event remains on track for \ntoday. There has been a slight trend towards less rainfall and \nshorter duration of rain, as well as lower chances for rain in the \nSt. Lawrence Valley. That being said, the forecast generally is \npretty consistent with observations so far early this morning. \nMoisture advection from the south and southwest, particularly from \nthe surface up to 700 millibars, is occurring with a sharp gradient, \nwhile westerly mid-level/upper level is present. An inverted trough \nin northern New York and weak surface low sliding eastward across \nnorthern Pennsylvania will support modest southeasterly winds across \nthe Champlain Valley and points east. \n\nStratiform rain will blossom in northern New York and gradually\nexpand east-northeastward this morning. During the afternoon, \nthe area of rain will contract from west to east and towards the\nsoutheast as the 850 millibar trough axis and associated low \nlevel convergence and lift exits. Rainfall rates will be 0.01 - \n0.05\" for most of the event, but up to a few hours intensity \nwill likely increase and reach the 0.1\"-0.15\" range (typically \nconsidered \"moderate\" rather than light). These moderate \nrainfall rates are favored from the Adirondacks eastward over \nmost of northern Vermont at times from about 10 AM and 3 PM. As \na result, event totals, as they would be for a winter weather \nevent, are somewhat uncertain but should be mostly in the 0.25\" \nto 0.5\" range within much of the region. \n\nTemperatures today will generally be chilly in the low to mid 50s \nwith thick clouds and rain for much of the day, and even cooler in \nportions of central/eastern Vermont due to the aforementioned \nupslope easterly component to the wind. It is a tricky hourly \ntemperature forecast with large dependence on rainfall timing; \nas a result, there is potential for late day highs where rain \nends early enough and morning highs in northern and eastern \nportions of Vermont prior to rain arriving.\n \nTonight we'll lock in some low clouds and patchy fog ahead of a\nmoisture starved cold front arriving from the northwest. Once \nthis boundary passes through, northerly flow will develop with\nsome low clouds slow to clear out, especially in the vicinity \nof the higher terrain with moist 925-850 millibar air expected\nto linger into the day. Clouds should gradually scatter\ngenerally from north to south, leading to the beginning of a\nprolonged stretch of primarily clear skies. Fog chances in climo\nfavored areas will begin high Tuesday, but tend to decrease \neach morning following days of drying after Sunday's rainfall.\nTemperatures will remain below normal through Wednesday with the\ndominance of strong high pressure to our north supplying us \nwith seasonably cool air.\n\nKEY MESSAGE 2: The blocking pattern will remain in place much of next \nweek, with high pressure centered to our north while low pressure \ndevelops off the Mid Atlantic. While our weather will be pleasant, \ntemperatures will likely remain below normal, with daytime highs \nmainly in the 60s. Clear skies and light winds will allow for chilly \novernights, and patchy frost will be possible in the \nAdirondacks/eastern VT valleys each morning. While confidence has \nincreased in the dry weather persisting through Thursday, low \npressure meandering around off the East Coast will keep the threat \nof showers around as we head toward the weekend, especially in \nsouthern/eastern VT. Have stayed with the NBM/WPC forecast for \nFriday onward given the spread in model solutions for mid/late next \nweek.\n\n&&\n\n.AVIATION /06Z SUNDAY THROUGH THURSDAY/...\nThrough 06Z Monday...VFR expected through 12Z under light winds\nwith mid/high clouds slowly increasing through that time. Areas\nthat remain clear have seen some patchy fog develop; MPV would\nbe the most likely to be impacted through 08z or so until cloud\ndeck moves overhead. Light rain will move into the region \nbetween 12-15Z and generally persist through late afternoon \nbefore tapering off by 22z. Conditions gradually lower to MVFR \nat most sites with exception being MSS which should remain \nlargely VFR. Have opted to stay away from some of the more \npessimistic guidance showing more widespread IFR ceilings \ntomorrow afternoon/evening given southeasterly flow regime,\nthough will need to monitor for the potential beyond 06z Mon.\n\nOutlook...\n\nMonday: Mainly VFR, with local MVFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. Slight chance SHRA.\n\n&&\n\n.MARINE...\nAs of 249 AM EDT Sunday...\n\nExpect south-southeast winds this morning to ramp up but remain\nbelow Lake Wind Advisory criteria, peaking around 9 AM just \nabove 20 knots in the vicinity of Colchester Reef before \nsettling into the 15-20 knot range during the rest of the day. \nWaves should build up to 3 feet.\n\nFollowing a lull in winds tonight, a favorable setup for well\nmixed northerly winds will develop for Monday when a Lake Wind\nAdvisory may be needed. Waves could build up to 3 to 4 feet over\nthe southern waters during the Monday morning period associated\nwith these gusty north winds.  \n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Hastings/Kutikoff\nAVIATION...Hastings\nMARINE...Kutikoff\n"
+  "raw": "\n000\nFXUS61 KBTV 201113\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n713 AM EDT Sun Sep 20 2026\n\n.WHAT HAS CHANGED...\nAs of 249 AM EDT Sunday...\n\nNo significant changes made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 249 AM EDT Sunday...\n\n1. Light rain and cool temperatures today, then a prolonged dry \nand seasonably cool weather stretch begins.   \n\n2. Dry weather persists through mid week, though we will need \nto monitor for increasing shower chances from Friday onward.\n\n&&\n\n.DISCUSSION...\nAs of 249 AM EDT Sunday...\n\nKEY MESSAGE 1: A widespread light rainfall event remains on track for \ntoday. There has been a slight trend towards less rainfall and \nshorter duration of rain, as well as lower chances for rain in the \nSt. Lawrence Valley. That being said, the forecast generally is \npretty consistent with observations so far early this morning. \nMoisture advection from the south and southwest, particularly from \nthe surface up to 700 millibars, is occurring with a sharp gradient, \nwhile westerly mid-level/upper level is present. An inverted trough \nin northern New York and weak surface low sliding eastward across \nnorthern Pennsylvania will support modest southeasterly winds across \nthe Champlain Valley and points east. \n\nStratiform rain will blossom in northern New York and gradually\nexpand east-northeastward this morning. During the afternoon, \nthe area of rain will contract from west to east and towards the\nsoutheast as the 850 millibar trough axis and associated low \nlevel convergence and lift exits. Rainfall rates will be 0.01 - \n0.05\" for most of the event, but up to a few hours intensity \nwill likely increase and reach the 0.1\"-0.15\" range (typically \nconsidered \"moderate\" rather than light). These moderate \nrainfall rates are favored from the Adirondacks eastward over \nmost of northern Vermont at times from about 10 AM and 3 PM. As \na result, event totals, as they would be for a winter weather \nevent, are somewhat uncertain but should be mostly in the 0.25\" \nto 0.5\" range within much of the region. \n\nTemperatures today will generally be chilly in the low to mid 50s \nwith thick clouds and rain for much of the day, and even cooler in \nportions of central/eastern Vermont due to the aforementioned \nupslope easterly component to the wind. It is a tricky hourly \ntemperature forecast with large dependence on rainfall timing; \nas a result, there is potential for late day highs where rain \nends early enough and morning highs in northern and eastern \nportions of Vermont prior to rain arriving.\n \nTonight we'll lock in some low clouds and patchy fog ahead of a\nmoisture starved cold front arriving from the northwest. Once \nthis boundary passes through, northerly flow will develop with\nsome low clouds slow to clear out, especially in the vicinity \nof the higher terrain with moist 925-850 millibar air expected\nto linger into the day. Clouds should gradually scatter\ngenerally from north to south, leading to the beginning of a\nprolonged stretch of primarily clear skies. Fog chances in climo\nfavored areas will begin high Tuesday, but tend to decrease \neach morning following days of drying after Sunday's rainfall.\nTemperatures will remain below normal through Wednesday with the\ndominance of strong high pressure to our north supplying us \nwith seasonably cool air.\n\nKEY MESSAGE 2: The blocking pattern will remain in place much of next \nweek, with high pressure centered to our north while low pressure \ndevelops off the Mid Atlantic. While our weather will be pleasant, \ntemperatures will likely remain below normal, with daytime highs \nmainly in the 60s. Clear skies and light winds will allow for chilly \novernights, and patchy frost will be possible in the \nAdirondacks/eastern VT valleys each morning. While confidence has \nincreased in the dry weather persisting through Thursday, low \npressure meandering around off the East Coast will keep the threat \nof showers around as we head toward the weekend, especially in \nsouthern/eastern VT. Have stayed with the NBM/WPC forecast for \nFriday onward given the spread in model solutions for mid/late next \nweek.\n\n&&\n\n.AVIATION /12Z SUNDAY THROUGH THURSDAY/...\nThrough 12Z Monday...Deteriorating conditions expected this\nmorning as rain spreads over the region. Ceilings will lower to\n1500-2500 ft by 16z at all terminals. Upstream observations and\nmodel guidance indicates the potential for IFR ceilings, but\nconfidence in this remains somewhat low. The exception is at\nSLK, where ceilings should drop below 1000 ft for several hours\nthis afternoon/evening. Visibility generally 4-6SM in rain,\nwhich will exit to the east by 00z Mon. Ceilings may improve for\na bit thereafter, but widespread MVFR/local IFR develop after\n06z with a cold frontal passage, particularly in northern areas\nand in the higher terrain. S/SW winds less than 10 kt through\nthe daylight hours, becoming near calm with sunset. Winds start\nto shift to the N/NW late in the TAF period with the cold\nfrontal passage. \n\nOutlook...\n\nMonday: Mainly VFR, with local IFR possible. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nAs of 249 AM EDT Sunday...\n\nExpect south-southeast winds this morning to ramp up but remain\nbelow Lake Wind Advisory criteria, peaking around 9 AM just \nabove 20 knots in the vicinity of Colchester Reef before \nsettling into the 15-20 knot range during the rest of the day. \nWaves should build up to 3 feet.\n\nFollowing a lull in winds tonight, a favorable setup for well\nmixed northerly winds will develop for Monday when a Lake Wind\nAdvisory may be needed. Waves could build up to 3 to 4 feet over\nthe southern waters during the Monday morning period associated\nwith these gusty north winds.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Hastings/Kutikoff\nAVIATION...Hastings\nMARINE...Kutikoff\n"
  },
  "lake_forecast": {
   "issued": "2026-09-20T06:27:00+00:00",
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 65,
-  "water_temp_at": "2026-09-20T06:00:00.000-04:00",
+  "water_temp_at": "2026-09-20T07:00:00.000-04:00",
   "level_ft": 94.14,
-  "level_at": "2026-09-20T06:00:00.000-04:00",
+  "level_at": "2026-09-20T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 22,
+  "aqi": 28,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/20/26 6:00",
+  "observed": "09/20/26 7:00",
   "discussion": "Expect generally good air quality across Vermont on Sunday, September 20th."
  },
  "sun": {
@@ -844,7 +844,7 @@
   "sunset": "2026-09-20T18:53-04:00",
   "sunrise_tomorrow": "2026-09-21T06:38-04:00",
   "sunset_tomorrow": "2026-09-21T18:52-04:00",
-  "uv_max": 0.55
+  "uv_max": 0.45
  },
  "models": {
   "days": [
@@ -856,12 +856,12 @@
      "ICON": 58
     },
     "pop_max": {
-     "GFS": 75,
+     "GFS": 80,
      "Euro": 100,
      "ICON": 88
     },
     "precip_in": {
-     "GFS": 0.5,
+     "GFS": 0.56,
      "Euro": 0.34,
      "ICON": 0.21
     },
@@ -876,7 +876,7 @@
     },
     "pop_max": {
      "GFS": 3,
-     "Euro": 26,
+     "Euro": 39,
      "ICON": 0
     },
     "precip_in": {
