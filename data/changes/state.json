@@ -445,49 +445,6 @@
  },
  "civicclerk": {
   "meetings": {
-   "10211": {
-    "name": "Charter Change Committee Meeting",
-    "start": "2026-09-17T12:00:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Charter Change Committee Agenda - 26.09.17",
-     "Charter Change Committee Agenda Packet - 26.09.17"
-    ]
-   },
-   "10139": {
-    "name": "Tax Fairness Ad Hoc Committee",
-    "start": "2026-09-17T15:00:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Tax Fairness Ad Hoc Committee Agenda 9/17/2026"
-    ]
-   },
-   "10204": {
-    "name": "Cemetery Commission Meeting",
-    "start": "2026-09-17T16:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Cemetery Commission Agenda"
-    ]
-   },
-   "10206": {
-    "name": "City Council - Ordinance Committee Meeting",
-    "start": "2026-09-17T16:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Ordinance Committee Meeting Agenda",
-     "Ordinance Committee Meeting Agenda - 26.09.11"
-    ]
-   },
-   "10210": {
-    "name": "Ward 5 NPA Meeting",
-    "start": "2026-09-17T18:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Ward 5 NPA Agenda 9/17/2026",
-     "Ward 5 NPA Agenda Packet 9/17/2026 v2"
-    ]
-   },
    "10214": {
     "name": "Burlington Aging Council",
     "start": "2026-09-18T14:30:00+00:00",
@@ -564,6 +521,38 @@
    "10102": {
     "name": "Board of Finance Meeting",
     "start": "2026-09-28T17:00:00+00:00",
+    "hasAgenda": false,
+    "files": []
+   },
+   "10091": {
+    "name": "City Council Meeting",
+    "start": "2026-09-28T18:00:00+00:00",
+    "hasAgenda": false,
+    "files": []
+   },
+   "10205": {
+    "name": "City Council - Tax Abatement Committee Meeting",
+    "start": "2026-09-29T17:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Tax Abatement Organizaiton Meeting Agenda_FY2027"
+    ]
+   },
+   "10215": {
+    "name": "CSMC Special Meeting",
+    "start": "2026-09-30T09:00:00+00:00",
+    "hasAgenda": false,
+    "files": []
+   },
+   "10103": {
+    "name": "Board of Finance Meeting",
+    "start": "2026-10-05T17:00:00+00:00",
+    "hasAgenda": false,
+    "files": []
+   },
+   "10092": {
+    "name": "City Council Meeting",
+    "start": "2026-10-05T18:00:00+00:00",
     "hasAgenda": false,
     "files": []
    }
@@ -1304,6 +1293,41 @@
    "mynbc5": {
     "items": [
      {
+      "id": "73805641",
+      "title": "Ed Sheeran opens solo concert with statement on Gaza situation",
+      "link": "https://www.mynbc5.com/article/ed-sheeran-gaza-is-solo-concert/73805641",
+      "ts": "2026-09-20T01:06:00+00:00",
+      "summary": "Ed Sheeran has opened a solo concert in Philadelphia with comments about Gaza, saying what's happening is \"catastrophic and unjustifiable.\""
+     },
+     {
+      "id": "73801871",
+      "title": "Lawsuit says Anthropic, OpenAI, SpaceXAI and Google made illegal agreement on AI slowdown",
+      "link": "https://www.mynbc5.com/article/anthropic-openai-spacexai-google-ai-slowdown/73801871",
+      "ts": "2026-09-20T00:57:00+00:00",
+      "summary": "A new lawsuit claims that Anthropic, OpenAI, SpaceXAI and Google illegally agreed to slow their AI development"
+     },
+     {
+      "id": "73804137",
+      "title": "Second annual Latin American Connection Celebration brought community together in Burlington",
+      "link": "https://www.mynbc5.com/article/latin-american-connection-celebration/73804137",
+      "ts": "2026-09-19T23:48:00+00:00",
+      "summary": "A celebration of Latin American culture brought people together in downtown Burlington on Saturday for the second annual Latin American Connection Celebration."
+     },
+     {
+      "id": "73803862",
+      "title": "Annual giant pumpkin weigh-in draws competitors from across the region",
+      "link": "https://www.mynbc5.com/article/giant-pumpkin-weigh-in/73803862",
+      "ts": "2026-09-19T23:46:00+00:00",
+      "summary": "Giant pumpkins began rolling in Saturday morning, with the help of heavy equipment to get them onto the scale at Sam Mazza's annual Giant Pumpkin Weigh-In."
+     },
+     {
+      "id": "73804147",
+      "title": "Grace Potter's Grand Point North festival draws crowds to Burlington Waterfront",
+      "link": "https://www.mynbc5.com/article/grand-point-north-continues/73804147",
+      "ts": "2026-09-19T23:44:00+00:00",
+      "summary": "Live music is filling Burlington's waterfront this weekend as Grand Point North continues its three days of performances."
+     },
+     {
       "id": "73804844",
       "title": "Mount Mansfield High School takes three wins on homecoming Saturday",
       "link": "https://www.mynbc5.com/article/mount-mansfield-high-school-takes-three-wins-on-homecoming-saturday/73804844",
@@ -1407,41 +1431,6 @@
       "link": "https://www.mynbc5.com/article/trump-routine-immunizations-split-five-separate-shots-vaccine/73800981",
       "ts": "2026-09-19T15:43:00+00:00",
       "summary": "President Trump said Friday that his administration is planning to recommend that certain childhood immunizations be broken up into five separate shots."
-     },
-     {
-      "id": "73799812",
-      "title": "Killing endangered wildlife is legal if they aren't the target, new Trump rule says",
-      "link": "https://www.mynbc5.com/article/killing-endangered-wildlife-legal-target-new-trump-rule/73799812",
-      "ts": "2026-09-19T14:02:00+00:00",
-      "summary": "Killing endangered wildlife while logging a forest or building a dam is no longer considered illegal unless the animals are specifically targeted."
-     },
-     {
-      "id": "73798081",
-      "title": "Trump announces new deal to boost military presence in Greenland",
-      "link": "https://www.mynbc5.com/article/trump-announces-new-deal-boost-military-presence-greenland/73798081",
-      "ts": "2026-09-19T12:56:00+00:00",
-      "summary": "President Donald Trump revealed a new agreement with Denmark and Greenland giving the U.S. control over security and \"all other needs\" on the Arctic territory."
-     },
-     {
-      "id": "73798612",
-      "title": "Things to Do: Sept. 19, 2026",
-      "link": "https://www.mynbc5.com/article/things-to-do-september-16-2026/73798612",
-      "ts": "2026-09-19T12:53:00+00:00",
-      "summary": "Looking for your Saturday plans? NBC5's Andrew Grautski has you covered with \"Things to Do.\""
-     },
-     {
-      "id": "73799248",
-      "title": "Plenty of sun, but cooler Saturday",
-      "link": "https://www.mynbc5.com/article/plenty-of-sun-but-cooler-saturday-09-19-26/73799248",
-      "ts": "2026-09-19T12:27:00+00:00",
-      "summary": "Steady rain expected Sunday, especially late morning and afternoon; warming up next week"
-     },
-     {
-      "id": "73799020",
-      "title": "Russia holds parliamentary vote in areas it seized from Ukraine in war",
-      "link": "https://www.mynbc5.com/article/russia-parliamentary-vote-areas-seized-ukraine-war/73799020",
-      "ts": "2026-09-19T11:31:00+00:00",
-      "summary": "Russia’s parliamentary election for the first time includes residents of regions that Moscow illegally annexed from Ukraine, part of Kremlin efforts to cement its gains."
      }
     ]
    },
