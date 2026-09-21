@@ -1,26 +1,26 @@
 {
- "updated": "2026-09-21T09:57:00+00:00",
+ "updated": "2026-09-21T11:07:56+00:00",
  "sections_updated": {
-  "now": "2026-09-21T09:57:00+00:00",
-  "forecast": "2026-09-21T09:57:00+00:00",
-  "hourly": "2026-09-21T09:57:00+00:00",
-  "alerts": "2026-09-21T09:57:00+00:00",
-  "afd": "2026-09-21T09:57:00+00:00",
-  "lake_forecast": "2026-09-21T09:57:00+00:00",
-  "lake_gage": "2026-09-21T09:57:00+00:00",
-  "air": "2026-09-21T09:57:00+00:00",
-  "sun": "2026-09-21T09:57:00+00:00",
-  "models": "2026-09-21T09:57:00+00:00"
+  "now": "2026-09-21T11:07:56+00:00",
+  "forecast": "2026-09-21T11:07:56+00:00",
+  "hourly": "2026-09-21T11:07:56+00:00",
+  "alerts": "2026-09-21T11:07:56+00:00",
+  "afd": "2026-09-21T11:07:56+00:00",
+  "lake_forecast": "2026-09-21T11:07:56+00:00",
+  "lake_gage": "2026-09-21T11:07:56+00:00",
+  "air": "2026-09-21T11:07:56+00:00",
+  "sun": "2026-09-21T11:07:56+00:00",
+  "models": "2026-09-21T11:07:56+00:00"
  },
  "now": {
-  "observed_at": "2026-09-21T09:35:00+00:00",
+  "observed_at": "2026-09-21T10:45:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 52,
   "feels_like_f": 52,
-  "humidity": 94,
-  "dewpoint_f": 50,
-  "wind_mph": 0,
+  "humidity": 100,
+  "dewpoint_f": 52,
+  "wind_mph": 3,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -29,27 +29,17 @@
   "updated": "2026-09-21T09:02:28+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-09-21T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 50,
-    "pop": 4,
-    "wind": "N 5 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 50. North wind around 5 mph."
-   },
-   {
-    "name": "Monday",
-    "start": "2026-09-21T06:00:00-04:00",
+    "name": "Today",
+    "start": "2026-09-21T07:00:00-04:00",
     "is_day": true,
     "temp_f": 60,
-    "pop": 2,
-    "wind": "N 7 to 13 mph",
+    "pop": 0,
+    "wind": "N 9 to 13 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 60. North wind 7 to 13 mph."
+    "detailed": "Mostly cloudy, with a high near 60. North wind 9 to 13 mph."
    },
    {
-    "name": "Monday Night",
+    "name": "Tonight",
     "start": "2026-09-21T18:00:00-04:00",
     "is_day": false,
     "temp_f": 43,
@@ -167,34 +157,22 @@
     "wind": "N 7 to 10 mph",
     "short": "Slight Chance Rain Showers",
     "detailed": "A slight chance of rain showers. Mostly sunny, with a high near 69. North wind 7 to 10 mph."
+   },
+   {
+    "name": "Sunday Night",
+    "start": "2026-09-27T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 50,
+    "pop": 19,
+    "wind": "N 5 to 9 mph",
+    "short": "Slight Chance Rain Showers",
+    "detailed": "A slight chance of rain showers before 2am. Partly cloudy, with a low around 50. North wind 5 to 9 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-09-21T09:02:28+00:00",
   "hours": [
-   {
-    "t": "2026-09-21T05:00:00-04:00",
-    "temp_f": 52,
-    "feels_f": 52,
-    "pop": 4,
-    "humidity": 93,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 85,
-    "short": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-09-21T06:00:00-04:00",
-    "temp_f": 52,
-    "feels_f": 52,
-    "pop": 2,
-    "humidity": 89,
-    "wind_mph": 7,
-    "wind_dir": "N",
-    "sky": 83,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-09-21T07:00:00-04:00",
     "temp_f": 52,
@@ -568,6 +546,28 @@
     "wind_dir": "N",
     "sky": 13,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-09-22T17:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 0,
+    "humidity": 52,
+    "wind_mph": 10,
+    "wind_dir": "N",
+    "sky": 15,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-09-22T18:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 0,
+    "humidity": 60,
+    "wind_mph": 9,
+    "wind_dir": "N",
+    "sky": 17,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-21T06:55:00+00:00",
+  "issued": "2026-09-21T10:58:00+00:00",
   "key_messages": [
    "Tranquil weather conditions expected through mid week, with patchy frost possible tonight and Tuesday night.",
    "While high pressure and cool weather may continue into the weekend, a low pressure system will approach southern New England and potentially bring us periods of rain."
   ],
   "what_changed": "As of 253 AM EDT Monday... No significant changes with this forecast package.",
-  "raw": "\n000\nFXUS61 KBTV 210655\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n255 AM EDT Mon Sep 21 2026\n\n.WHAT HAS CHANGED...\nAs of 253 AM EDT Monday...\n\nNo significant changes with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 253 AM EDT Monday...\n\n1. Tranquil weather conditions expected through mid week, with \npatchy frost possible tonight and Tuesday night. \n\n2. While high pressure and cool weather may continue into the \nweekend, a low pressure system will approach southern New England \nand potentially bring us periods of rain.\n\n&&\n\n.DISCUSSION...\nAs of 253 AM EDT Monday...\n\nKEY MESSAGE 1: A cold front will continue to cross the region early \nthis morning. In the meantime, patchy dense fog, drizzle, and dreary \nskies will linger through sunrise. Conditions will then slowly \nimprove through the day as drier air flows in behind the frontal \nboundary. While not as chilly and damp as yesterday, north winds \nwill be a touch brisk with highs only getting into the mid 50s to \nlow 60s. \n\nThe remainder of the first half of the week will feature fair \nweather as high pressure settles to our north, keeping developing \nlow pressure and its associated precipitation shunted well to our \nsouth. The result will be partly to mostly sunny skies and \nseasonably cool temperatures each day. There will be a slight \nwarming trend through Thursday, with highs mainly in the 60s. Lows \nwill be in the upper 30s to low 40s each night, except in the \nsheltered valleys of the Adirondacks, Northeast Kingdom, and eastern \nVT, where temperatures will dip into the low to mid 30s. This will \nallow for patchy frost; subsequent shifts will need to monitor the \npotential for Frost Advisories. It should be noted that, as of \ntoday, these products will no longer be issued for the \nAdirondacks/Northeast Kingdom since today is the median date of the \nfirst autumn freeze. Thus, the growing season is considered ended in \nthese areas.\n\nKEY MESSAGE 2: No significant impacts are expected, but a beneficial \nrainfall is on the table for the upcoming weekend. The Friday \nthrough Sunday period remains highly uncertain for sensible weather. \nThere is potential for dry weather to continue, but also a chance \nfor widespread rain to occur, associated with an expected deep low \npressure system that tracks northward over the western Atlantic \nOcean. The 48 hour probability of precipitation from the blend of \nmodels suggests some rain is likely across south central Vermont and \nthe Upper Valley, which has trended upward compared to 12 hours ago \nbut similar to 24 hours ago. Otherwise, a coin flip chance across \nthe rest of northern Vermont and northeastern New York as far north \nas near Plattsburgh continues, and a low (under 25%) chance of any \nrain is indicated to the northwest towards the International Border \nand St. Lawrence Valley. \n\nThere have been many runs of deterministic guidance from both the \nGFS and ECMWF showing deformation bands of rain translating \nnorthward across much of Vermont, pinwheeling westward and then \ncontracting back towards the south as surface low pressure stalls \nout/retrogrades and weakens in the Saturday-Saturday night \ntimeframe. This idea is reflected in the six hour PoP trend, with \nmost widespread low chances of rain centered in the Saturday morning \nperiod. Moderate rainfall amounts are possible given this type of \nsystem, especially in our southern and eastern areas. The 90th \npercentile (reasonable high end) shows near 1\" totals possible in \ncentral Vermont increasing to near 2\" in our far southern areas. \nAgain, this type of rain would not pose any hazards but would \nobviously impact weekend outdoor activities. \n\nAdditionally, the higher terrain, especially in the central/southern \nGreens, may see unseasonably strong winds with 40 to 45 MPH easterly \nwinds at the 850 millibar level indicated by the mean of the \nensemble guidance that shows the wetter/more northward low track \namongst the possible scenarios. So potentially hazardous \nrecreational conditions, when combined with rain and temperatures in \nthe 40s, will be present this weekend. Otherwise, aside from cooler \nconditions associated with any rain, consistent temperatures near \nseasonable values should continue into the weekend.\n\n&&\n\n.AVIATION /06Z MONDAY THROUGH FRIDAY/...\nThrough 06Z Tuesday...A wide range in flight conditions\ncontinues early this morning. Northwest wind and VFR conditions\nare present at MSS, while winds are calm elsewhere with MVFR at\nBTV/PBG/RUT and LIFR at MPV/EFK/SLK. Winds will remain light \nenough off the deck to effectively scatter out the low clouds, \nand the north-northwesterly blocked flow supports going more \npessimistic on prevailing LIFR, especially mountain sites and \nthe eastern side of the Champlain Valley. \n\nConditions should slowly improve with ceilings rising to MVFR \nby 15z and mostly VFR by 18z Monday at all sites. After 10-12Z, \nwinds should be about 5 to 10 knots through much of the\nremainder of the period out of the north.\n\nOutlook...\n\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nAs of 253 AM EDT Monday...Near Lake Wind Advisory criteria will be in\nplace early this morning as cold air advection develops with a\ncold frontal passage. North winds will generally remain 15 to 20\nkt, but a few gusts to 25 kt are possible, especially across \nthe central and southern portion of the broad lake and down \ntowards Diamond Island. Wave heights in this region should reach\n2-4 feet between 6 am and 10 am before subsiding this \nafternoon.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Kutikoff/Hastings\nAVIATION...Kutikoff\nMARINE...Hastings\n"
+  "raw": "\n000\nFXUS61 KBTV 211058\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n658 AM EDT Mon Sep 21 2026\n\n.WHAT HAS CHANGED...\nAs of 253 AM EDT Monday...\n\nNo significant changes with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 253 AM EDT Monday...\n\n1. Tranquil weather conditions expected through mid week, with \npatchy frost possible tonight and Tuesday night. \n\n2. While high pressure and cool weather may continue into the \nweekend, a low pressure system will approach southern New England \nand potentially bring us periods of rain.\n\n&&\n\n.DISCUSSION...\nAs of 253 AM EDT Monday...\n\nKEY MESSAGE 1: A cold front will continue to cross the region early \nthis morning. In the meantime, patchy dense fog, drizzle, and dreary \nskies will linger through sunrise. Conditions will then slowly \nimprove through the day as drier air flows in behind the frontal \nboundary. While not as chilly and damp as yesterday, north winds \nwill be a touch brisk with highs only getting into the mid 50s to \nlow 60s. \n\nThe remainder of the first half of the week will feature fair \nweather as high pressure settles to our north, keeping developing \nlow pressure and its associated precipitation shunted well to our \nsouth. The result will be partly to mostly sunny skies and \nseasonably cool temperatures each day. There will be a slight \nwarming trend through Thursday, with highs mainly in the 60s. Lows \nwill be in the upper 30s to low 40s each night, except in the \nsheltered valleys of the Adirondacks, Northeast Kingdom, and eastern \nVT, where temperatures will dip into the low to mid 30s. This will \nallow for patchy frost; subsequent shifts will need to monitor the \npotential for Frost Advisories. It should be noted that, as of \ntoday, these products will no longer be issued for the \nAdirondacks/Northeast Kingdom since today is the median date of the \nfirst autumn freeze. Thus, the growing season is considered ended in \nthese areas.\n\nKEY MESSAGE 2: No significant impacts are expected, but a beneficial \nrainfall is on the table for the upcoming weekend. The Friday \nthrough Sunday period remains highly uncertain for sensible weather. \nThere is potential for dry weather to continue, but also a chance \nfor widespread rain to occur, associated with an expected deep low \npressure system that tracks northward over the western Atlantic \nOcean. The 48 hour probability of precipitation from the blend of \nmodels suggests some rain is likely across south central Vermont and \nthe Upper Valley, which has trended upward compared to 12 hours ago \nbut similar to 24 hours ago. Otherwise, a coin flip chance across \nthe rest of northern Vermont and northeastern New York as far north \nas near Plattsburgh continues, and a low (under 25%) chance of any \nrain is indicated to the northwest towards the International Border \nand St. Lawrence Valley. \n\nThere have been many runs of deterministic guidance from both the \nGFS and ECMWF showing deformation bands of rain translating \nnorthward across much of Vermont, pinwheeling westward and then \ncontracting back towards the south as surface low pressure stalls \nout/retrogrades and weakens in the Saturday-Saturday night \ntimeframe. This idea is reflected in the six hour PoP trend, with \nmost widespread low chances of rain centered in the Saturday morning \nperiod. Moderate rainfall amounts are possible given this type of \nsystem, especially in our southern and eastern areas. The 90th \npercentile (reasonable high end) shows near 1\" totals possible in \ncentral Vermont increasing to near 2\" in our far southern areas. \nAgain, this type of rain would not pose any hazards but would \nobviously impact weekend outdoor activities. \n\nAdditionally, the higher terrain, especially in the central/southern \nGreens, may see unseasonably strong winds with 40 to 45 MPH easterly \nwinds at the 850 millibar level indicated by the mean of the \nensemble guidance that shows the wetter/more northward low track \namongst the possible scenarios. So potentially hazardous \nrecreational conditions, when combined with rain and temperatures in \nthe 40s, will be present this weekend. Otherwise, aside from cooler \nconditions associated with any rain, consistent temperatures near \nseasonable values should continue into the weekend.\n\n&&\n\n.AVIATION /12Z MONDAY THROUGH FRIDAY/...\nThrough 12Z Tuesday...A wide range in flight conditions\ncontinues. IFR conditions at MPV/EFK/BTV/RUT are likely to \nimprove within the 12Z to 15Z period. North winds will be\ngenerally 5-9 knots, except around 10-12 knots at BTV and PBG, \nfor much of the daytime period before becoming light. Limited\nchances for recurrence of fog/stratus tonight with lower surface\nmoisture and continued drying northerly flow off the deck. \n\nOutlook...\n\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nAs of 253 AM EDT Monday...Near Lake Wind Advisory criteria will be in\nplace early this morning as cold air advection develops with a\ncold frontal passage. North winds will generally remain 15 to 20\nkt, but a few gusts to 25 kt are possible, especially across \nthe central and southern portion of the broad lake and down \ntowards Diamond Island. Wave heights in this region should reach\n2-4 feet between 6 am and 10 am before subsiding this \nafternoon.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Hastings/Kutikoff\nAVIATION...Kutikoff\nMARINE...Hastings\n"
  },
  "lake_forecast": {
   "issued": "2026-09-21T06:30:00+00:00",
@@ -826,9 +826,9 @@
  },
  "lake_gage": {
   "water_temp_f": 64,
-  "water_temp_at": "2026-09-21T05:00:00.000-04:00",
-  "level_ft": 94.1,
-  "level_at": "2026-09-21T05:00:00.000-04:00",
+  "water_temp_at": "2026-09-21T06:00:00.000-04:00",
+  "level_ft": 94.13,
+  "level_at": "2026-09-21T06:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -836,7 +836,7 @@
   "aqi": 13,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/21/26 5:00",
+  "observed": "09/21/26 6:00",
   "discussion": "Expect generally good air quality across Vermont on Monday, September 21st."
  },
  "sun": {
@@ -851,7 +851,7 @@
    {
     "date": "2026-09-21",
     "high_f": {
-     "GFS": 60,
+     "GFS": 61,
      "Euro": 57,
      "ICON": 57
     },
@@ -865,7 +865,7 @@
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 4
    },
    {
     "date": "2026-09-22",
