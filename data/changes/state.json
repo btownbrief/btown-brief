@@ -466,7 +466,7 @@
     "hasAgenda": true,
     "files": [
      "Agenda V1",
-     "Packet V5"
+     "Packet V6"
     ]
    },
    "10201": {
@@ -501,6 +501,15 @@
     "files": [
      "Agenda",
      "Agenda Packet"
+    ]
+   },
+   "10221": {
+    "name": "Wards 4&7 NPA Meeting *New Location*",
+    "start": "2026-09-23T18:30:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Wards 4&7 NPA Agenda 9/23/2026",
+     "Wards 4&7 NPA Agenda Packet 9/23/2026"
     ]
    },
    "10219": {
@@ -549,12 +558,6 @@
     "start": "2026-09-30T09:00:00+00:00",
     "hasAgenda": false,
     "files": []
-   },
-   "10103": {
-    "name": "Board of Finance Meeting",
-    "start": "2026-10-05T17:00:00+00:00",
-    "hasAgenda": false,
-    "files": []
    }
   }
  },
@@ -562,6 +565,13 @@
   "feeds": {
    "sevendays-news": {
     "items": [
+     {
+      "id": "https://www.sevendaysvt.com/?p=218147",
+      "title": "Magnificent 7: Must-See, Must-Do Events in and Around Vermont, September 23-30",
+      "link": "https://www.sevendaysvt.com/arts-culture/magnificent7/magnificent-7-must-see-must-do-events-in-and-around-vermont-september-23-30/",
+      "ts": "2026-09-21T21:11:58+00:00",
+      "summary": "Explore our editor’s picks for must-do events in Vermont this week, including two appearances by Canadian folk rocker Lynne Hanson. The post Magnificent 7: Must-See, Must-Do Events in and Around Vermont, September 23-30 appeared first on Seven Days . (Image: Courtesy of Jen Squires)"
+     },
      {
       "id": "https://www.sevendaysvt.com/?p=218102",
       "title": "Jurors Convict Eaton in Shootings of Three Palestinian Men",
@@ -581,7 +591,7 @@
       "title": "Burlington Orders Euthanasia for Former Prosecutor’s Problem Dog",
       "link": "https://www.sevendaysvt.com/news/burlington-orders-euthanasia-for-former-prosecutors-problem-dog/",
       "ts": "2026-09-21T17:00:30+00:00",
-      "summary": "Moose has bitten several people in the last few years. His owner, Diane Wheeler, has repeatedly disobeyed orders from the city's Animal Control Committee. The post Burlington Orders Euthanasia for Former Prosecutor’s Problem Dog appeared first on Seven Days . (Image: Pool photo by Gregory J. Lamoureux/County Courier)"
+      "summary": "Moose has bitten several people in the past few years. His owner, Diane Wheeler, has repeatedly disobeyed orders from the city's Animal Control Committee. The post Burlington Orders Euthanasia for Former Prosecutor’s Problem Dog appeared first on Seven Days . (Image: Pool photo by Gregory J. Lamoureux/County Courier)"
      },
      {
       "id": "https://www.sevendaysvt.com/?p=218050",
@@ -624,18 +634,46 @@
       "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-paul-edward-wamsganz-1947-2026/",
       "ts": "2026-09-21T10:00:00+00:00",
       "summary": "Drafting and construction professional treasured time at his hunting camp and on a lake and always had a list of what needed to be accomplished each day The post Obituary: Paul Edward Wamsganz, 1947-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=218055",
-      "title": "Obituary: William Earl Butterfield, 1936-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-william-earl-butterfield-1936-2026/",
-      "ts": "2026-09-21T10:00:00+00:00",
-      "summary": "Longtime IBM engineer and Knight of Columbus loved music and believed family was the most important thing in the world The post Obituary: William Earl Butterfield, 1936-2026 appeared first on Seven Days . (Image: Courtesy)"
      }
     ]
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=655599",
+      "title": "Federal grants invigorate efforts to address veteran homelessness in Vermont",
+      "link": "https://vtdigger.org/2026/09/21/federal-grants-invigorate-efforts-to-address-veteran-homelessness-in-vermont/",
+      "ts": "2026-09-21T21:49:15+00:00",
+      "summary": "The Department of Veterans Affairs awarded over $18 million to Vermont and New Hampshire community organizations. Read the story on VTDigger here: Federal grants invigorate efforts to address veteran homelessness in Vermont ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=655592",
+      "title": "‘The family is an entire town’ in Hinesburg",
+      "link": "https://vtdigger.org/2026/09/21/the-family-is-an-entire-town-in-hinesburg/",
+      "ts": "2026-09-21T21:22:25+00:00",
+      "summary": "Event celebrates Hinesburg winning Vermont Tree Farmer of the Year Read the story on VTDigger here: ‘The family is an entire town’ in Hinesburg ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=655586",
+      "title": "Drug injection sites are a good thing for Vermont",
+      "link": "https://vtdigger.org/2026/09/21/opinion-drug-injection-sites-are-a-good-thing-for-vermont/",
+      "ts": "2026-09-21T21:07:17+00:00",
+      "summary": "Fear, not evidence, is driving opposition to overdose prevention centers — Denmark's results show why Vermont shouldn't back down. Read the story on VTDigger here: Drug injection sites are a good thing for Vermont ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=655580",
+      "title": "Fund recovery, not active addiction",
+      "link": "https://vtdigger.org/2026/09/21/opinion-fund-recovery-not-active-addiction/",
+      "ts": "2026-09-21T20:27:21+00:00",
+      "summary": "Building a system with treatment on demand, not a safe injection site, is the real path to compassion. Read the story on VTDigger here: Fund recovery, not active addiction ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=655444",
+      "title": "UVM and USDA researchers hope to improve local agriculture",
+      "link": "https://vtdigger.org/2026/09/21/uvm-and-usda-researchers-hope-to-improve-local-agriculture/",
+      "ts": "2026-09-21T19:48:41+00:00",
+      "summary": "The Food Systems Research Station is a long-term collaboration between the University of Vermont and the U.S. Department of Agriculture’s Agricultural Research Service. Read the story on VTDigger here: UVM and USDA researchers hope to improve local agriculture ."
+     },
      {
       "id": "https://vtdigger.org/?p=655374",
       "title": "‘We have more deer than our forests can support’: Norwich walk highlights browse damage",
@@ -659,10 +697,10 @@
      },
      {
       "id": "https://vtdigger.org/?p=655562",
-      "title": "Jury finds Burlington man guilty in shooting of 3 Palestinian students",
+      "title": "‘Justice has been rendered’: Jury finds Burlington man guilty in shooting of 3 Palestinian students",
       "link": "https://vtdigger.org/2026/09/21/jury-finds-burlington-man-guilty-in-shooting-of-three-palestinian-students/",
       "ts": "2026-09-21T17:45:42+00:00",
-      "summary": "The verdict Monday caps a six-day trial for Jason Eaton where experts for the prosecution and defense offered differing opinions on whether he should be held criminally responsible for opening fire and wounding the three men. Read the story on VTDigger here: Jury finds Burlington man guilty in shooting of 3 Palestinian students ."
+      "summary": "The verdict Monday caps a six-day trial for Jason Eaton where experts for the prosecution and defense offered differing opinions on whether he should be held criminally responsible for opening fire and wounding the three men. Read the story on VTDigger here: ‘Justice has been rendered’: Jury finds Burlington man guilty in shooting of 3 Palestinian students ."
      },
      {
       "id": "https://vtdigger.org/?p=655393",
@@ -709,7 +747,7 @@
      {
       "id": "https://vtdigger.org/?p=655493",
       "title": "The Upper Valley’s widening tick-borne disease problem",
-      "link": "https://vtdigger.org/2026/09/19/opinion-the-upper-valleys-widening-tick-borne-disease-problem/",
+      "link": "https://vtdigger.org/2026/09/19/the-upper-valleys-widening-tick-borne-disease-problem/",
       "ts": "2026-09-19T12:11:00+00:00",
       "summary": "Researchers at Dartmouth have identified a critical link between alpha-gal syndrome — a tick-borne allergy — and potentially fatal anaphylactic reactions during blood transfusions for type O patients. Read the story on VTDigger here: The Upper Valley’s widening tick-borne disease problem ."
      },
@@ -810,41 +848,6 @@
       "link": "https://vtdigger.org/2026/09/17/opinion-im-a-former-second-home-owner-we-should-tax-second-homes-higher/",
       "ts": "2026-09-17T19:03:03+00:00",
       "summary": "A high tax on second homes could push more properties back into the hands of year-round residents. Read the story on VTDigger here: I’m a former second-home owner. We should tax second homes higher. ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=655334",
-      "title": "Stop taxing Vermonters out of their own homes",
-      "link": "https://vtdigger.org/2026/09/17/opinion-stop-taxing-vermonters-out-of-their-own-homes/",
-      "ts": "2026-09-17T18:58:24+00:00",
-      "summary": "Abolishing property taxes on homesteads and shifting the burden to luxury vacation properties would ease the housing crisis. Read the story on VTDigger here: Stop taxing Vermonters out of their own homes ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=655232",
-      "title": "All gifts tripled in final stretch of VTDigger Fall Member Drive",
-      "link": "https://vtdigger.org/2026/09/17/all-gifts-matched-in-final-stretch-of-vtdigger-fall-member-drive/",
-      "ts": "2026-09-17T13:00:00+00:00",
-      "summary": "This reporting only happens because people decide it is worth supporting. Read the story on VTDigger here: All gifts tripled in final stretch of VTDigger Fall Member Drive ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=655296",
-      "title": "‘Go stop them now,’ Burlington man says a voice told him before shooting 3 Palestinian students, recording reveals in trial",
-      "link": "https://vtdigger.org/2026/09/16/go-stop-them-now-burlington-man-says-a-voice-told-him-before-shooting-three-palestinian-students-recording-reveals-in-trial/",
-      "ts": "2026-09-16T23:36:52+00:00",
-      "summary": "A defense expert testified Wednesday on the third day of Jason Eaton’s trial that he was legally insane at the time of the incident. Read the story on VTDigger here: ‘Go stop them now,’ Burlington man says a voice told him before shooting 3 Palestinian students, recording reveals in trial ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=655294",
-      "title": "Cold shoulder: Brattleboro won’t be welcoming ICE",
-      "link": "https://vtdigger.org/2026/09/16/cold-shoulder-brattleboro-wont-be-welcoming-ice/",
-      "ts": "2026-09-16T23:11:27+00:00",
-      "summary": "Brattleboro’s police chief said he wants community members to call his department if they hear that officers from U.S. Immigration and Customs Enforcement are in town. Read the story on VTDigger here: Cold shoulder: Brattleboro won’t be welcoming ICE ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=655291",
-      "title": "Barre schools eye cuts to sports and other activities after budget fails on third attempt",
-      "link": "https://vtdigger.org/2026/09/16/barre-schools-eye-cuts-to-sports-and-other-activities-after-budget-fails-on-third-attempt/",
-      "ts": "2026-09-16T22:56:36+00:00",
-      "summary": "Voters in Barre Town and the city of Barre shot down the district's proposed $57.1 million budget at the polls Tuesday. Read the story on VTDigger here: Barre schools eye cuts to sports and other activities after budget fails on third attempt ."
      }
     ]
    },
@@ -907,18 +910,18 @@
       "summary": "The U.S. Department of Justice sued Vermont in December after Vermont Secretary of State Sarah Copeland Hanzas refused to share voter registration information, including personally identifiable details, with the federal government."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-09-18/vermont-funded-lawyers-for-tenants-facing-eviction-the-program-is-out-of-money",
-      "title": "Vermont funded lawyers for tenants facing eviction. The program is out of money",
-      "link": "https://www.vermontpublic.org/local-news/2026-09-18/vermont-funded-lawyers-for-tenants-facing-eviction-the-program-is-out-of-money",
-      "ts": "2026-09-18T09:00:00+00:00",
-      "summary": "Lawyers stepped in to prevent 73 evictions over two years through a pilot program that is now shutting down."
-     },
-     {
       "id": "https://www.vermontpublic.org/local-news/2026-09-18/colchester-musician-urges-people-to-shake-off-inhibition-hit-the-dance-floor",
       "title": "Colchester musician urges people to shake off inhibition, hit the dance floor",
       "link": "https://www.vermontpublic.org/local-news/2026-09-18/colchester-musician-urges-people-to-shake-off-inhibition-hit-the-dance-floor",
       "ts": "2026-09-18T09:00:00+00:00",
       "summary": "The Friday Song is \"Dark Rooms,\" from Colchester-based electronic musician Demagg."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-09-18/vermont-funded-lawyers-for-tenants-facing-eviction-the-program-is-out-of-money",
+      "title": "Vermont funded lawyers for tenants facing eviction. The program is out of money",
+      "link": "https://www.vermontpublic.org/local-news/2026-09-18/vermont-funded-lawyers-for-tenants-facing-eviction-the-program-is-out-of-money",
+      "ts": "2026-09-18T09:00:00+00:00",
+      "summary": "Lawyers stepped in to prevent 73 evictions over two years through a pilot program that is now shutting down."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-09-17/prosecutors-expert-witness-testifies-jason-eaton-wasnt-insane-at-time-of-november-2023-shooting",
@@ -939,10 +942,73 @@
    "wcax": {
     "items": [
      {
+      "id": "MZPAH6RXJVBHFO5VCYQFHTXJZI",
+      "title": "Made in Vermont: An autumn staple produced by a globally known maple brand",
+      "link": "https://www.wcax.com/2026/09/21/made-vermont-an-autumn-staple-produced-by-globally-known-maple-brand/",
+      "ts": "2026-09-21T22:44:29+00:00",
+      "summary": "Fall has arrived and so has pumpkin spice season, so Runamok Maple is putting out a product to encapsulate the autumnal spirit."
+     },
+     {
+      "id": "TM24PLLPVNBQTHCLLADRFZ7XWI",
+      "title": "Doctors call new mRNA flu shot a step forward this season",
+      "link": "https://www.wcax.com/2026/09/21/doctors-call-new-mrna-flu-shot-step-forward-this-season/",
+      "ts": "2026-09-21T22:43:26+00:00",
+      "summary": "A new mRNA flu vaccine is rolling out weeks before flu season begins, and doctors and researchers say it's a game-changer."
+     },
+     {
+      "id": "ASNP4TCF4FHVVAGVXDQFMYHLX4",
+      "title": "Surging diesel prices threaten North Country trucking businesses",
+      "link": "https://www.wcax.com/2026/09/21/surging-diesel-prices-threaten-north-country-trucking-businesses/",
+      "ts": "2026-09-21T22:28:11+00:00",
+      "summary": "With diesel prices inching closer to $7 a gallon, independent truckers say soaring fuel costs are threatening to put them out of business."
+     },
+     {
+      "id": "RXCJFXQBZVDLNI4CYOPZ3AV55U",
+      "title": "First Atlantic hurricane season without a hurricane by Sept. 21 in 112 years",
+      "link": "https://www.wcax.com/2026/09/21/first-atlantic-hurricane-season-without-hurricane-by-sept-21-112-years/",
+      "ts": "2026-09-21T22:27:18+00:00",
+      "summary": "The Atlantic basin has reached late September without a single hurricane forming for the first time since 1914. Explore historical tropical climatology data, 2026 storm totals compared to NOAA predictions, and the rare 112-year weather benchmark."
+     },
+     {
+      "id": "44SDUTHHEFGBZFWO4FS62B77YQ",
+      "title": "Are Vermont shopping malls making a comeback?",
+      "link": "https://www.wcax.com/2026/09/21/are-vermont-shopping-malls-making-comeback/",
+      "ts": "2026-09-21T22:05:09+00:00",
+      "summary": "With new national data showing shopping malls’ financial standing improving, Vermont’s largest shopping center is eyeing future redevelopment to stay relevant."
+     },
+     {
+      "id": "PNBB75QTV5EUXPT7ISUQXOZGBE",
+      "title": "New England investigators collaborate to crack cold cases",
+      "link": "https://www.wcax.com/2026/09/21/new-england-investigators-collaborate-crack-cold-cases/",
+      "ts": "2026-09-21T21:10:52+00:00",
+      "summary": "New England investigators gathered in New Hampshire over the weekend, sharing intelligence and investigative methods to help crack regional cold cases."
+     },
+     {
+      "id": "5S3PUCRO7BHELFWWLIB6ON25LM",
+      "title": "Burlington orders that dog deemed dangerous be euthanized",
+      "link": "https://www.wcax.com/2026/09/21/burlington-orders-that-dog-deemed-dangerous-be-euthanized/",
+      "ts": "2026-09-21T20:24:28+00:00",
+      "summary": "Burlington has ordered that a dog belonging to a former deputy prosecutor be euthanized after repeated aggressive behavior."
+     },
+     {
+      "id": "CYYCIEZ3FVE5FJZAPEU5IEXWRM",
+      "title": "NY man dies after crashing into North Elba home",
+      "link": "https://www.wcax.com/2026/09/21/ny-man-dies-after-crashing-into-north-elba-home/",
+      "ts": "2026-09-21T20:12:08+00:00",
+      "summary": "A New York man died early Sunday morning after crashing into a house foundation in the town of North Elba."
+     },
+     {
+      "id": "QUQHS4EFAZBR3ACPM7FCX2OLC4",
+      "title": "Lebanon opens affordable housing lottery to the general public",
+      "link": "https://www.wcax.com/2026/09/21/lebanon-opens-affordable-housing-lottery-general-public/",
+      "ts": "2026-09-21T19:57:33+00:00",
+      "summary": "A lottery in Lebanon is offering a foot in the door for a potential dream home, but buyers still need their own financing, and the price point is proving to be a problem."
+     },
+     {
       "id": "JDWP2E2AKVHMBL4UNWJL3I7DMY",
-      "title": "Jury finds Jason Eaton guilty on all counts in shooting of Palestinian American students",
-      "link": "https://www.wcax.com/2026/09/21/jury-weighs-insanity-defense-jason-eaton-shooting-trial/",
-      "ts": "2026-09-21T18:52:48+00:00",
+      "title": "Jury finds Eaton guilty in shooting of Palestinian American students",
+      "link": "https://www.wcax.com/2026/09/21/jury-finds-eaton-guilty-shooting-palestinian-american-students/",
+      "ts": "2026-09-21T19:52:30+00:00",
       "summary": "It took a jury only a few hours to find Jason Eaton guilty on all counts in the attempted murder trial"
      },
      {
@@ -951,13 +1017,6 @@
       "link": "https://www.wcax.com/2026/09/20/burlington-camera-trailer-vandalized-days-after-arrival/",
       "ts": "2026-09-21T18:20:01+00:00",
       "summary": "A new camera trailer in City Hall Park was vandalized days after it arrived, Burlington police said."
-     },
-     {
-      "id": "CYYCIEZ3FVE5FJZAPEU5IEXWRM",
-      "title": "NY man dies after crashing into North Elba home",
-      "link": "https://www.wcax.com/2026/09/21/ny-man-dies-after-crashing-into-north-elba-home/",
-      "ts": "2026-09-21T17:57:32+00:00",
-      "summary": "A New York man died early Sunday morning after crashing into a house foundation in the town of North Elba."
      },
      {
       "id": "W6Q6ABNIJZF2JOXOV6QSTOUAEQ",
@@ -1231,80 +1290,136 @@
       "link": "https://www.wcax.com/2026/09/18/anthony-constantino-endorsed-by-house-speaker-mike-johnson/",
       "ts": "2026-09-18T19:15:54+00:00",
       "summary": "Congressional candidate Anthony Constantino met with House Speaker Mike Johnson in Washington, D.C., and got the Speaker’s endorsement."
-     },
-     {
-      "id": "OESYEZHGTJAGVEWKBYNRNXJNQU",
-      "title": "Diesel prices reach all-time high, squeezing truckers in our region",
-      "link": "https://www.wcax.com/2026/09/18/diesel-prices-reach-all-time-high-squeezing-truckers-our-region/",
-      "ts": "2026-09-18T18:55:30+00:00",
-      "summary": "Diesel prices climbed to an all-time high Friday after rising a nickel overnight, according to GasBuddy."
-     },
-     {
-      "id": "SI54JLPQQJCWDJ5YGVTK3SQMSY",
-      "title": "Actor Gary Sinise brings his Lt. Dan Band to Camp Johnson to entertain the troops",
-      "link": "https://www.wcax.com/2026/09/18/actor-gary-sinise-brings-his-lt-dan-band-camp-johnson-entertain-troops/",
-      "ts": "2026-09-18T18:47:45+00:00",
-      "summary": "Lieutenant Dan is coming to the Green Mountain State."
-     },
-     {
-      "id": "XYODQUEAWFH2HOZJ3BG5Y2HZ4U",
-      "title": "Pets with Potential: Meet Noah, Ember, Midna & Twilight",
-      "link": "https://www.wcax.com/2026/09/18/pets-with-potential-meet-noah-ember-midna-twilight/",
-      "ts": "2026-09-18T17:06:02+00:00",
-      "summary": "This week’s Pets with Potential come from the Kingdom Animal Shelter in St. Johnsbury."
-     },
-     {
-      "id": "RLFO3MRF7NG4ZLVH7ISSHF5REU",
-      "title": "3 people escape Wilder house fire",
-      "link": "https://www.wcax.com/2026/09/18/3-people-escape-wilder-house-fire/",
-      "ts": "2026-09-18T15:46:00+00:00",
-      "summary": "Three people escaped a house fire in Wilder Friday morning that killed two pets."
-     },
-     {
-      "id": "4VYIZ32FQVDVFBBZK2XY5KQGWU",
-      "title": "New Hampshire manhunt ends with arrest in Keene",
-      "link": "https://www.wcax.com/2026/09/18/new-hampshire-manhunt-ends-with-arrest-keene/",
-      "ts": "2026-09-18T13:42:02+00:00",
-      "summary": "Police have captured a criminal suspect who triggered a manhunt in New Hampshire."
-     },
-     {
-      "id": "OFJGVGU5BZBCZGJHTP3D5HMWEM",
-      "title": "September is the perfect time for Oktoberfest in Burlington",
-      "link": "https://www.wcax.com/2026/09/18/september-is-perfect-time-oktoberfest-burlington/",
-      "ts": "2026-09-18T11:10:48+00:00",
-      "summary": "Vermonters can raise a stein today as Oktoberfest returns to the Queen City bringing German food, live music and cheer starting Friday night."
-     },
-     {
-      "id": "BGHBKTJXOFE5HJI4I6T3EV5XNM",
-      "title": "Burlington celebrates cheese week with a Gouda time",
-      "link": "https://www.wcax.com/2026/09/18/burlington-celebrates-cheese-week-with-gouda-time/",
-      "ts": "2026-09-18T10:46:41+00:00",
-      "summary": "The Church Street Marketplace is celebrating the third year of Vermont Cheese Week Friday evening."
-     },
-     {
-      "id": "FAGWAIALCBG5XBNQS2UZJTQIFM",
-      "title": "New York residents can get a free car seat safety inspection",
-      "link": "https://www.wcax.com/2026/09/18/new-york-residents-can-get-free-car-seat-safety-inspection/",
-      "ts": "2026-09-18T10:32:05+00:00",
-      "summary": "New York is providing free car seat inspections across the state as part of Child Passenger Safety Week."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
+      "id": "73827675",
+      "title": "Turning brighter, bit milder Tuesday",
+      "link": "https://www.mynbc5.com/article/turning-brighter-bit-milder-tuesday-09-21-26/73827675",
+      "ts": "2026-09-21T23:00:00+00:00",
+      "summary": "Sunny mid-late week, as highs reach closer to 70; showers possible both weekend days"
+     },
+     {
+      "id": "73825008",
+      "title": "2 helicopter pilots killed in Yosemite wildfire crash while dropping water on Dome Fire",
+      "link": "https://www.mynbc5.com/article/yosemite-firefighting-helicopter-crash-kills-two-pilots/73825008",
+      "ts": "2026-09-21T22:47:00+00:00",
+      "summary": "Officials say two helicopter pilots have been killed in a crash while battling a wildfire at Yosemite National Park in California"
+     },
+     {
       "id": "73824525",
-      "title": "Ground stops issued at multiple major airports over equipment outage",
+      "title": "Flights delayed after equipment issue led to ground stops at multiple major airports",
       "link": "https://www.mynbc5.com/article/faa-ground-stop-newark-philadelphia-jfk-lga/73824525",
-      "ts": "2026-09-21T19:17:00+00:00",
+      "ts": "2026-09-21T22:42:00+00:00",
       "summary": "The FAA issued ground stops for a slew of airports in the Northeast related to an equipment outage Monday."
+     },
+     {
+      "id": "73824242",
+      "title": "Family of Ferrisburgh crash victim speaks out as suspect appears in court",
+      "link": "https://www.mynbc5.com/article/ferrisburgh-fatal-crash-victim-family-speaks/73824242",
+      "ts": "2026-09-21T22:24:00+00:00",
+      "summary": "Faith Hobson, who pleaded guilty in a fatal Route 7 crash, appeared remotely in court while the victim’s family expressed frustration awaiting court proceedings."
+     },
+     {
+      "id": "73826758",
+      "title": "Man shot by ICE officer is detained in Texas with a bullet still in his back, attorney says",
+      "link": "https://www.mynbc5.com/article/texas-ice-shooting-doordash-bullet/73826758",
+      "ts": "2026-09-21T22:24:00+00:00",
+      "summary": "The man shot by an immigration officer in Texas is being held at a detention center after being released from a hospital with a bullet still in his back, his attorney said."
+     },
+     {
+      "id": "73825732",
+      "title": "Meet the heavyweight contenders of Fat Bear Week 2026",
+      "link": "https://www.mynbc5.com/article/fat-bear-week-2026-katmai-national-park-voting/73825732",
+      "ts": "2026-09-21T21:58:00+00:00",
+      "summary": "Fat Bear Week is back with 16 hefty contenders. See who made the 2026 bracket and vote for your favorite"
+     },
+     {
+      "id": "73827170",
+      "title": "Man dies after crashing into North Elba building",
+      "link": "https://www.mynbc5.com/article/man-dies-after-crashing-into-north-elba-building/73827170",
+      "ts": "2026-09-21T21:56:00+00:00",
+      "summary": "A man has died after his vehicle left a North Elba roadway and crashed into a nearby building, according to New York State Polcie."
+     },
+     {
+      "id": "73826796",
+      "title": "Seating demolished in grandstand at Champlain Valley Expo, as part of major renovations",
+      "link": "https://www.mynbc5.com/article/seating-demolished-in-grandstand-at-champlain-valley-expo-as-part-of-major-renovations/73826796",
+      "ts": "2026-09-21T21:52:00+00:00",
+      "summary": "A crew started removing the old wooden seating in the Champlain Valley Expo's grandstand on Monday, as part of a $2 million phase of renovations that paves the way for more big concerts"
+     },
+     {
+      "id": "73819308",
+      "title": "Jason Eaton trial Day 6: Jury finds Eaton guilty on all counts",
+      "link": "https://www.mynbc5.com/article/day-6-in-attempted-murder-trial-of-jason-eaton-underway-with-closing-arguments-expected/73819308",
+      "ts": "2026-09-21T21:46:00+00:00",
+      "summary": "Jurors have delivered a guilty verdict in the trial of Jason Eaton."
+     },
+     {
+      "id": "73825653",
+      "title": "Gov. Hochul expands AI safety laws in New York",
+      "link": "https://www.mynbc5.com/article/governor-hochul-expands-ai-safety-laws/73825653",
+      "ts": "2026-09-21T21:25:00+00:00",
+      "summary": "New York's governor is rolling out new updates to the state's AI safety laws after she created the \"Raise Act\" last year."
+     },
+     {
+      "id": "73825880",
+      "title": "Rutland small businesses prepare for annual Halloween window display contest",
+      "link": "https://www.mynbc5.com/article/rutland-small-businesses-prepare-for-annual-halloween-window-display-contest/73825880",
+      "ts": "2026-09-21T21:18:00+00:00",
+      "summary": "Rutland is kicking off the Halloween season early as businesses start to decorate for the city's annual window display contest"
+     },
+     {
+      "id": "73826774",
+      "title": "Technical disruptions impact air travel in Vermont, New York, and New Hampshire. Check your flight.",
+      "link": "https://www.mynbc5.com/article/widespread-flight-delays-impact-vermont-new-york-and-new-hampshire/73826774",
+      "ts": "2026-09-21T21:12:00+00:00",
+      "summary": "Technical problems at a key air traffic center caused flight delays across the northeast on Monday afternoon, including at airports in Burlington and Saranac Lake."
+     },
+     {
+      "id": "73816189",
+      "title": "Presley Gerber, son of Cindy Crawford, dies at 27, family representative says",
+      "link": "https://www.mynbc5.com/article/presley-gerber-son-cindy-crawford-dies/73816189",
+      "ts": "2026-09-21T20:52:00+00:00",
+      "summary": "Presley Gerber, the son of supermodel Cindy Crawford and businessman Rande Gerber, died on Sunday at age 27, a family representative said."
      },
      {
       "id": "73824354",
       "title": "Poultney man, accused of shooting dog, pleads not guilty to animal cruelty",
       "link": "https://www.mynbc5.com/article/poultney-man-pleads-not-guilty-to-animal-cruelty-torture/73824354",
-      "ts": "2026-09-21T18:34:00+00:00",
+      "ts": "2026-09-21T20:43:00+00:00",
       "summary": "A Vermont man appeared in court on Monday to face a charge of animal cruelty after police said he shot a neighbor's dog in Poultney."
+     },
+     {
+      "id": "73825735",
+      "title": "Toys ‘R’ Us opening 120 new stores just in time for holiday shopping",
+      "link": "https://www.mynbc5.com/article/toysrus-120-new-stores-holiday-season/73825735",
+      "ts": "2026-09-21T20:39:00+00:00",
+      "summary": "Toys “R” Us is expanding just in time for the holidays — with 120 new stores planned across the U.S."
+     },
+     {
+      "id": "73825965",
+      "title": "Couple hit by lightning while on a walk reunites with good Samaritans who helped",
+      "link": "https://www.mynbc5.com/article/couple-lightning-strike-winter-garden/73825965",
+      "ts": "2026-09-21T20:20:00+00:00",
+      "summary": "The couple who survived being struck by lightning while walking on a trail in Florida reunited with the good Samaritans who helped them."
+     },
+     {
+      "id": "73825157",
+      "title": "Taylor Swift shows off her ring and yells 'my husband!' as Travis Kelce scores touchdown",
+      "link": "https://www.mynbc5.com/article/taylor-swift-screams-my-husband-travis-kelce-touchdown-ring/73825157",
+      "ts": "2026-09-21T20:02:00+00:00",
+      "summary": "Taylor Swift was seen pointing to her ring and screaming \"my husband\" as Travis Kelce scored a touchdown at the Kansas City Chiefs game."
+     },
+     {
+      "id": "73824894",
+      "title": "Rare two-headed diamondback baby turtle hatchling found in Cape Cod",
+      "link": "https://www.mynbc5.com/article/cape-wildlife-center-two-headed-turtle/73824894",
+      "ts": "2026-09-21T19:56:00+00:00",
+      "summary": "A rare two-headed diamondback terrapin hatchling was found at a protected nesting site on Cape Cod."
      },
      {
       "id": "73820189",
@@ -1319,118 +1434,6 @@
       "link": "https://www.mynbc5.com/article/paramount-reaches-deal-with-states-to-settle-their-case-challenging-warner-buyout-ap-source-says-tv-entertainment/73824634",
       "ts": "2026-09-21T18:18:00+00:00",
       "summary": "A settlement between Paramount and the states would effectively pave the way for the $81 billion mega-merger of Paramount and Warner Bros. Discovery to move forward."
-     },
-     {
-      "id": "73819308",
-      "title": "Jason Eaton trial Day 6: Jury finds Eaton guilty on all counts",
-      "link": "https://www.mynbc5.com/article/day-6-in-attempted-murder-trial-of-jason-eaton-underway-with-closing-arguments-expected/73819308",
-      "ts": "2026-09-21T18:04:00+00:00",
-      "summary": "Jurors have delivered a guilty verdict in the trial of Jason Eaton."
-     },
-     {
-      "id": "73820392",
-      "title": "Jury reaches verdict in trial tied to 2023 shooting of Palestinian men in Burlington",
-      "link": "https://www.mynbc5.com/article/jason-eaton-trial-verdict-palestinian-men-shot-vermont/73820392",
-      "ts": "2026-09-21T18:03:00+00:00",
-      "summary": "A jury has found Jason Eaton guilty of attempted murder after the 2023 shooting of three college students in Burlington's North End."
-     },
-     {
-      "id": "73824579",
-      "title": "Hunter charged in shooting death of woman he mistook for a deer, police say",
-      "link": "https://www.mynbc5.com/article/delaware-hunter-manslaughter-deer-santos-maria-chilel-soto/73824579",
-      "ts": "2026-09-21T18:02:00+00:00",
-      "summary": "A 74-year-old hunter shot and killed a woman he mistook for a deer, according to authorities in Delaware."
-     },
-     {
-      "id": "73810681",
-      "title": "A string of rare childhood cancer cases in this California suburb has the community on edge",
-      "link": "https://www.mynbc5.com/article/ladera-ranch-california-ewing-sarcoma-cancer/73810681",
-      "ts": "2026-09-21T17:37:00+00:00",
-      "summary": "When a father heard that multiple other children had been diagnosed with Ewing sarcoma in the community where his daughter, who died of the cancer, spent much of her childhood, it set off alarm bells."
-     },
-     {
-      "id": "73824271",
-      "title": "Popular pasta sold at Walmart recalled nationwide",
-      "link": "https://www.mynbc5.com/article/bettergoods-fettuccine-recall-walmart/73824271",
-      "ts": "2026-09-21T17:05:00+00:00",
-      "summary": "Two lots of frozen pasta sold at Walmart have been recalled by the company due to potential bacterial contamination. Here's what to know."
-     },
-     {
-      "id": "73824242",
-      "title": "Family of Ferrisburgh crash victim speaks out as suspect appears in court",
-      "link": "https://www.mynbc5.com/article/ferrisburgh-fatal-crash-victim-family-speaks/73824242",
-      "ts": "2026-09-21T16:55:00+00:00",
-      "summary": "Faith Hobson, who pleaded guilty in a fatal Route 7 crash, appeared remotely in court while the victim’s family expressed frustration awaiting court proceedings."
-     },
-     {
-      "id": "73801968",
-      "title": "FBI says 35 potential new victims step forward in 'fake 49er' case",
-      "link": "https://www.mynbc5.com/article/fbi-fake-49er-case-35-potential-victims-daejon-love/73801968",
-      "ts": "2026-09-21T16:40:00+00:00",
-      "summary": "Daejon Love is accused of scamming over a dozen women out of more than $1 million by pretending to be a San Francisco 49er, with the FBI identifying 35 potential victims and urging others to come forward."
-     },
-     {
-      "id": "73822442",
-      "title": "Chicago Cubs third baseman recovering after being hit in the face by foul ball",
-      "link": "https://www.mynbc5.com/article/alex-bregman-chicago-cubs-foul-ball/73822442",
-      "ts": "2026-09-21T16:37:00+00:00",
-      "summary": "A Chicago Cubs third baseman was taken to the hospital during Sunday night's game against the Cincinnati Reds after he was hit in the face by a foul ball."
-     },
-     {
-      "id": "73821205",
-      "title": "New York State Police investigate double-fatal crash in Clinton County",
-      "link": "https://www.mynbc5.com/article/police-investigate-fatal-crash-in-dannemora/73821205",
-      "ts": "2026-09-21T16:28:00+00:00",
-      "summary": "New York State Police are investigating a crash in Dannemora that killed two people over the weekend."
-     },
-     {
-      "id": "73821478",
-      "title": "Federal Reserve official says fighting inflation likely to be 'painful'",
-      "link": "https://www.mynbc5.com/article/federal-reserve-official-inflation-unemployment/73821478",
-      "ts": "2026-09-21T16:23:00+00:00",
-      "summary": "A top Federal Reserve official said Monday that combatting stubbornly high inflation may be \"painful\" and mean higher unemployment."
-     },
-     {
-      "id": "73819585",
-      "title": "Police release cause and manner of death in Brushton investigation",
-      "link": "https://www.mynbc5.com/article/police-identify-victims-cause-of-deaths-brushton/73819585",
-      "ts": "2026-09-21T16:22:00+00:00",
-      "summary": "According to the medical examiner, one of the deaths was ruled a homicide. The other was ruled a suicide."
-     },
-     {
-      "id": "73823649",
-      "title": "'Silence of the Lambs' actress visits Pennsylvania's iconic Buffalo Bill house",
-      "link": "https://www.mynbc5.com/article/brooke-smith-buffalo-bill-house-perryopolis/73823649",
-      "ts": "2026-09-21T16:18:00+00:00",
-      "summary": "Thirty-five years after \"The Silence of the Lambs,\" Brooke Smith is back at the Western Pennsylvania house made famous by the Oscar-winning thriller."
-     },
-     {
-      "id": "73821983",
-      "title": "Video: Lawyers give closing arguments in Jason Eaton trial",
-      "link": "https://www.mynbc5.com/article/closing-arguments-jason-eaton-trial/73821983",
-      "ts": "2026-09-21T16:07:00+00:00",
-      "summary": "Attorneys deliver closing arguments in attempted murder trial of Jason Eaton, the man accused of shooting three Palestinian students in Burlington in 2023."
-     },
-     {
-      "id": "73814747",
-      "title": "'Blissfully unaware' toddler eyed by coyote before man was bitten in a Massachusetts community",
-      "link": "https://www.mynbc5.com/article/massachusetts-rogue-coyote-bites-man-eyes-toddler/73814747",
-      "ts": "2026-09-21T15:53:00+00:00",
-      "summary": "According to police in a Massachusetts community, a coyote was spotted \"eyeballing\" a 2-year-old when a neighbor intervened and got bitten. A video shows the animal tearing apart a backyard."
-     },
-     {
-      "id": "73816189",
-      "title": "Presley Gerber, son of Cindy Crawford, dies at 27, family representative says",
-      "link": "https://www.mynbc5.com/article/presley-gerber-son-cindy-crawford-dies/73816189",
-      "ts": "2026-09-21T15:20:00+00:00",
-      "summary": "Presley Gerber, the son of supermodel Cindy Crawford and businessman Rande Gerber, died on Sunday at age 27, a family representative said."
-     },
-     {
-      "id": "73818303",
-      "title": "CNN, MS NOW, Politico sue over denied White House access, citing First Amendment",
-      "link": "https://www.mynbc5.com/article/cnn-ms-now-politico-trump-lawsuit/73818303",
-      "ts": "2026-09-21T15:08:00+00:00",
-      "summary": "CNN, MS NOW and Politico on Monday sued President Donald Trump's administration after they were barred from covering the White House, saying the selective ban was \"a blatant violation\" of the First Amendment."
      }
     ]
    },
