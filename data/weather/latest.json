@@ -1,16 +1,16 @@
 {
- "updated": "2026-09-21T19:50:37+00:00",
+ "updated": "2026-09-21T20:02:02+00:00",
  "sections_updated": {
-  "now": "2026-09-21T19:50:37+00:00",
-  "forecast": "2026-09-21T19:50:37+00:00",
-  "hourly": "2026-09-21T19:50:37+00:00",
-  "alerts": "2026-09-21T19:50:37+00:00",
-  "afd": "2026-09-21T19:50:37+00:00",
-  "lake_forecast": "2026-09-21T19:50:37+00:00",
-  "lake_gage": "2026-09-21T19:50:37+00:00",
-  "air": "2026-09-21T19:50:37+00:00",
-  "sun": "2026-09-21T19:50:37+00:00",
-  "models": "2026-09-21T19:50:37+00:00"
+  "now": "2026-09-21T20:02:02+00:00",
+  "forecast": "2026-09-21T20:02:02+00:00",
+  "hourly": "2026-09-21T20:02:02+00:00",
+  "alerts": "2026-09-21T20:02:02+00:00",
+  "afd": "2026-09-21T20:02:02+00:00",
+  "lake_forecast": "2026-09-21T20:02:02+00:00",
+  "lake_gage": "2026-09-21T20:02:02+00:00",
+  "air": "2026-09-21T20:02:02+00:00",
+  "sun": "2026-09-21T20:02:02+00:00",
+  "models": "2026-09-21T20:02:02+00:00"
  },
  "now": {
   "observed_at": "2026-09-21T19:10:00+00:00",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-09-21T15:00:00-04:00",
+    "start": "2026-09-21T14:00:00-04:00",
     "is_day": true,
     "temp_f": 58,
     "pop": 0,
     "wind": "N 10 mph",
-    "short": "Partly Sunny",
-    "detailed": "Partly sunny, with a high near 58. North wind around 10 mph."
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a high near 58. North wind around 10 mph."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-21T18:19:29+00:00",
   "hours": [
-   {
-    "t": "2026-09-21T15:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 0,
-    "humidity": 67,
-    "wind_mph": 10,
-    "wind_dir": "N",
-    "sky": 67,
-    "short": "Partly Sunny"
-   },
    {
     "t": "2026-09-21T16:00:00-04:00",
     "temp_f": 57,
@@ -565,6 +554,17 @@
     "pop": 0,
     "humidity": 96,
     "wind_mph": 2,
+    "wind_dir": "NE",
+    "sky": 1,
+    "short": "Clear"
+   },
+   {
+    "t": "2026-09-23T03:00:00-04:00",
+    "temp_f": 46,
+    "feels_f": 46,
+    "pop": 0,
+    "humidity": 96,
+    "wind_mph": 1,
     "wind_dir": "NE",
     "sky": 1,
     "short": "Clear"
