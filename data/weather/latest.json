@@ -1,19 +1,19 @@
 {
- "updated": "2026-09-20T22:42:49+00:00",
+ "updated": "2026-09-21T00:33:44+00:00",
  "sections_updated": {
-  "now": "2026-09-20T22:42:49+00:00",
-  "forecast": "2026-09-20T22:42:49+00:00",
-  "hourly": "2026-09-20T22:42:49+00:00",
-  "alerts": "2026-09-20T22:42:49+00:00",
-  "afd": "2026-09-20T22:42:49+00:00",
-  "lake_forecast": "2026-09-20T22:42:49+00:00",
-  "lake_gage": "2026-09-20T22:42:49+00:00",
-  "air": "2026-09-20T22:42:49+00:00",
-  "sun": "2026-09-20T22:42:49+00:00",
-  "models": "2026-09-20T22:42:49+00:00"
+  "now": "2026-09-21T00:33:44+00:00",
+  "forecast": "2026-09-21T00:33:44+00:00",
+  "hourly": "2026-09-21T00:33:44+00:00",
+  "alerts": "2026-09-21T00:33:44+00:00",
+  "afd": "2026-09-21T00:33:44+00:00",
+  "lake_forecast": "2026-09-21T00:33:44+00:00",
+  "lake_gage": "2026-09-21T00:33:44+00:00",
+  "air": "2026-09-21T00:33:44+00:00",
+  "sun": "2026-09-21T00:33:44+00:00",
+  "models": "2026-09-21T00:33:44+00:00"
  },
  "now": {
-  "observed_at": "2026-09-20T22:25:00+00:00",
+  "observed_at": "2026-09-21T00:20:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 55,
@@ -22,7 +22,7 @@
   "dewpoint_f": 54,
   "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "ENE",
+  "wind_dir": "E",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-09-20T18:00:00-04:00",
+    "start": "2026-09-20T20:00:00-04:00",
     "is_day": false,
     "temp_f": 47,
-    "pop": 24,
+    "pop": 9,
     "wind": "NE 2 to 9 mph",
-    "short": "Slight Chance Light Rain then Mostly Cloudy",
-    "detailed": "A slight chance of rain before 7pm. Mostly cloudy, with a low around 47. Northeast wind 2 to 9 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a low around 47. Northeast wind 2 to 9 mph."
    },
    {
     "name": "Monday",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-20T18:28:37+00:00",
   "hours": [
-   {
-    "t": "2026-09-20T18:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 24,
-    "humidity": 93,
-    "wind_mph": 5,
-    "wind_dir": "SE",
-    "sky": 90,
-    "short": "Slight Chance Light Rain"
-   },
-   {
-    "t": "2026-09-20T19:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 6,
-    "humidity": 93,
-    "wind_mph": 2,
-    "wind_dir": "SE",
-    "sky": 83,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-09-20T20:00:00-04:00",
     "temp_f": 56,
@@ -568,6 +546,28 @@
     "wind_dir": "N",
     "sky": 34,
     "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-09-22T06:00:00-04:00",
+    "temp_f": 43,
+    "feels_f": 40,
+    "pop": 0,
+    "humidity": 93,
+    "wind_mph": 5,
+    "wind_dir": "N",
+    "sky": 34,
+    "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-09-22T07:00:00-04:00",
+    "temp_f": 44,
+    "feels_f": 41,
+    "pop": 0,
+    "humidity": 89,
+    "wind_mph": 5,
+    "wind_dir": "N",
+    "sky": 35,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-20T18:51:00+00:00",
+  "issued": "2026-09-20T23:46:00+00:00",
   "key_messages": [
    "Rain ending late this afternoon; patchy fog overnight then tranquil wx conditions.",
    "High pressure will provide region with dry conditions and cool temperatures through most of the week, before the chances of showers increase late Friday into next weekend"
   ],
   "what_changed": "As of 247 PM EDT Sunday... Prolonged dry weather upcoming, with good radiational cooling nights leading to areas of frost away from the Champlain Valley starting Monday night.",
-  "raw": "\n000\nFXUS61 KBTV 201851\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n251 PM EDT Sun Sep 20 2026\n\n.WHAT HAS CHANGED...\nAs of 247 PM EDT Sunday...\n\nProlonged dry weather upcoming, with good radiational cooling nights \nleading to areas of frost away from the Champlain Valley starting \nMonday night.\n\n&&\n\n.KEY MESSAGES...\nAs of 247 PM EDT Sunday...\n\n1. Rain ending late this afternoon; patchy fog overnight then \ntranquil wx conditions.   \n\n2. High pressure will provide region with dry conditions and \ncool temperatures through most of the week, before the chances of \nshowers increase late Friday into next weekend\n\n&&\n\n.DISCUSSION...\nAs of 247 PM EDT Sunday...\n\nKEY MESSAGE 1: Low-amplitude 850-700mb trough departs ewd this evening \nallowing stratiform rain to taper off quickly. Clearing line has \nalready reached the immediate St. Lawrence Valley as of 18 UTC. \nLingering light rain across central/ern VT should exit east of the \nCT River Valley by 2030 UTC. With wet low-level/soil conditions, it \nappears that patchy dense fog will develop in spots after sunset. \nNAM/HRRR/RRFS model soundings all show a better surge of low-level \nCAA during the pre-dawn hours, and better mixing may yield more low \nstratus as opposed to fog as we head towards daybreak. Either way, \nshould see a combination of fog/low clouds helping to keep overnight \nlows mostly in the low-mid 40s areawide. A few 30s are possible in \nthe nrn Adirondacks especially around KSLK. Winds will also \npick up on Lake Champlain out of the north late (see Marine \nsection below). \n\nLarge area of high pressure building esewd from northern Ontario \nwill then be our controlling weather feature Mon-Thu. Low clouds \ngradually clear on Monday with increasing large-scale subsidence, \nleading toward crisp fall like conditions through the remainder of \nthe short term forecast period with PoPs NIL. Looking for highs in \nthe upper 50s to lower 60s on Monday, then generally low-mid 60s for \nTuesday and Wednesday. Overnight lows in the 30s to lower 40s with \ngood radiational cooling conditions expected. Look for some patchy \nfrost away from the Champlain Valley Monday and Tuesday night...and \nlocally widespread frost in the northern Adirondacks and Vermont's \nNortheast Kingdom.\n\nKEY MESSAGE 2: Guidance is in good agreement through late week with \nregards to large high pres anchored over southern Canada and keeping \nour fa dry. However, a large spread begins to develop Friday into \nnext weekend with regards to evolution and track of coastal low \npres, and potential impacts to our cwa. Attm WPC continues to keep \nchc pops into the fcst for late Friday into next weekend, with \nhighest probabilities acrs central/eastern VT and <10% near the \nInternational Border. Initially, deep dry layer in place with pw \nvalues btwn 0.20 to 0.40\" wl produce sunny conditions on Thurs with \nseasonably cool temps. Highs generally in the upper 50s to mid/upper \n60s Thurs/Friday with lows mid 30s to mid 40s. It should be noted, \nthe lows fcsted by WPC, especially Weds and Thurs nights are too \nwarm, given MEX at SLK is 24F and 28F, while WPC has 34F and 33F. \nSimilar scenario is noted acrs central/northern and eastern VT, \nwhere daily frost advisories will probably be required, given the \nfavorable setup for cool night time. As clouds and moisture slowly \nadvect back into our cwa by next week, daily low temps warm back \ninto the 40s, but cooler daytime highs with northerly flow are \npossible by next weekend. The bottom line is we are not expecting \nany widespread hazardous or significant weather late week into next \nweekend attm.\n\n&&\n\n.AVIATION /18Z SUNDAY THROUGH FRIDAY/...\nThrough 18Z Monday...A wide range in flight conditions this\nafternoon from IFR at SLK/BTV to MVFR at MPV/RUT/EFK/MSS and \nVFR at PBG. Expecting variable conditions between MVFR/IFR at\nMPV/SLK thru 00z with brief IFR possible at BTV/EFK, while\nmostly a combination of MVFR/VFR at PBG/MSS and RUT. After\nsunset expecting the onset of fog/br and associated IFR/LIFR to\noccur pretty quickly, given recent rainfall and light winds.\nHowever, a secondary cold front pushes across our region between\n06z-09z, expect areas of fog/br to transition into IFR cigs with\nMVFR vis, as low level stratus develops under blocked flow and\nlow level northerly flow. Highest probability (60-70%) of long \nduration 8-14 hours)of IFR/LIFR is at SLK/MPV/RUT, with medium\nconfidence (40-60%) at BTV/EFK and intervals of IFR or lower\nconditions possible at MSS/PBG. Greatest potential for fog at\nmost sites will be between 02-08z this evening, with more\nstratus likely after 08z, especially mountain sites and east\nside of CPV. Conditions are slowly improving to MVFR by 15z and\nmostly VFR by 18z Monday. South/southeast winds become light\nthis evening and shift to the north/northwest after 06z tonight\nand increase 5 to 10 knots by sunrise. \n\nOutlook...\n\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nAs of 247 PM EDT Sunday...Near Lake Wind Advisory criteria will be in\nplace around sunrise on Monday with increasing over-lake lapse \nrates bolstered by northerly gradient flow and low-level cold \nair advection. North winds generally 15-20 kts, but a few gusts \nto 25 kts are possible, especially across the central and \nsouthern portion of the broad lake and down towards Diamond \nIsland. Wave heights in this region should reach 2-3 feet \nbetween 11-16 UTC before subsiding Monday aftn.  \n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Banacos\nDISCUSSION...Banacos/Taber\nAVIATION...Taber\nMARINE...Banacos\n"
+  "raw": "\n000\nFXUS61 KBTV 202346\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n746 PM EDT Sun Sep 20 2026\n\n.WHAT HAS CHANGED...\nAs of 247 PM EDT Sunday...\n\nProlonged dry weather upcoming, with good radiational cooling nights \nleading to areas of frost away from the Champlain Valley starting \nMonday night.\n\n&&\n\n.KEY MESSAGES...\nAs of 247 PM EDT Sunday...\n\n1. Rain ending late this afternoon; patchy fog overnight then \ntranquil wx conditions.   \n\n2. High pressure will provide region with dry conditions and \ncool temperatures through most of the week, before the chances of \nshowers increase late Friday into next weekend\n\n&&\n\n.DISCUSSION...\nAs of 247 PM EDT Sunday...\n\nKEY MESSAGE 1: Low-amplitude 850-700mb trough departs ewd this evening \nallowing stratiform rain to taper off quickly. Clearing line has \nalready reached the immediate St. Lawrence Valley as of 18 UTC. \nLingering light rain across central/ern VT should exit east of the \nCT River Valley by 2030 UTC. With wet low-level/soil conditions, it \nappears that patchy dense fog will develop in spots after sunset. \nNAM/HRRR/RRFS model soundings all show a better surge of low-level \nCAA during the pre-dawn hours, and better mixing may yield more low \nstratus as opposed to fog as we head towards daybreak. Either way, \nshould see a combination of fog/low clouds helping to keep overnight \nlows mostly in the low-mid 40s areawide. A few 30s are possible in \nthe nrn Adirondacks especially around KSLK. Winds will also \npick up on Lake Champlain out of the north late (see Marine \nsection below). \n\nLarge area of high pressure building esewd from northern Ontario \nwill then be our controlling weather feature Mon-Thu. Low clouds \ngradually clear on Monday with increasing large-scale subsidence, \nleading toward crisp fall like conditions through the remainder of \nthe short term forecast period with PoPs NIL. Looking for highs in \nthe upper 50s to lower 60s on Monday, then generally low-mid 60s for \nTuesday and Wednesday. Overnight lows in the 30s to lower 40s with \ngood radiational cooling conditions expected. Look for some patchy \nfrost away from the Champlain Valley Monday and Tuesday night...and \nlocally widespread frost in the northern Adirondacks and Vermont's \nNortheast Kingdom.\n\nKEY MESSAGE 2: Guidance is in good agreement through late week with \nregards to large high pres anchored over southern Canada and keeping \nour fa dry. However, a large spread begins to develop Friday into \nnext weekend with regards to evolution and track of coastal low \npres, and potential impacts to our cwa. Attm WPC continues to keep \nchc pops into the fcst for late Friday into next weekend, with \nhighest probabilities acrs central/eastern VT and <10% near the \nInternational Border. Initially, deep dry layer in place with pw \nvalues btwn 0.20 to 0.40\" wl produce sunny conditions on Thurs with \nseasonably cool temps. Highs generally in the upper 50s to mid/upper \n60s Thurs/Friday with lows mid 30s to mid 40s. It should be noted, \nthe lows fcsted by WPC, especially Weds and Thurs nights are too \nwarm, given MEX at SLK is 24F and 28F, while WPC has 34F and 33F. \nSimilar scenario is noted acrs central/northern and eastern VT, \nwhere daily frost advisories will probably be required, given the \nfavorable setup for cool night time. As clouds and moisture slowly \nadvect back into our cwa by next week, daily low temps warm back \ninto the 40s, but cooler daytime highs with northerly flow are \npossible by next weekend. The bottom line is we are not expecting \nany widespread hazardous or significant weather late week into next \nweekend attm.\n\n&&\n\n.AVIATION /00Z MONDAY THROUGH FRIDAY/...\nThrough 00Z Tuesday...A wide range in flight conditions\ncontinues this evening from IFR at BTV to MVFR at \nMPV/RUT/EFK and VFR at MSS/SLK/PBG. Expecting variable \nconditions with the onset of some fog/br and associated \nIFR/LIFR to occur pretty quickly, given recent rainfall and \nlight winds. However, a secondary cold front pushes across our \nregion between 06z-09z, expect areas of fog/br to transition \ninto IFR cigs with MVFR vis, as low level stratus develops under\nblocked flow and low level northerly flow. Highest probability \n(60-70%) of long duration 8-14 hours)of IFR/LIFR is at \nSLK/MPV/RUT, with medium confidence (40-60%) at BTV/EFK and \nintervals of IFR or lower conditions possible at MSS/PBG. \nGreatest potential for fog at most sites will be between 02-08z \nthis evening, with more stratus likely after 08z, especially \nmountain sites and east side of CPV. Conditions are slowly \nimproving to MVFR by 15z and mostly VFR by 18z Monday. \nSouth/southeast winds become light this evening and shift to the\nnorth/northwest after 06z tonight and increase 5 to 10 knots by\nsunrise. \n\nOutlook...\n\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nAs of 247 PM EDT Sunday...Near Lake Wind Advisory criteria will be in\nplace around sunrise on Monday with increasing over-lake lapse \nrates bolstered by northerly gradient flow and low-level cold \nair advection. North winds generally 15-20 kts, but a few gusts \nto 25 kts are possible, especially across the central and \nsouthern portion of the broad lake and down towards Diamond \nIsland. Wave heights in this region should reach 2-3 feet \nbetween 11-16 UTC before subsiding Monday aftn.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Banacos\nDISCUSSION...Taber/Banacos\nAVIATION...Taber/Verasamy\nMARINE...Banacos\n"
  },
  "lake_forecast": {
   "issued": "2026-09-20T18:43:00+00:00",
@@ -853,17 +853,17 @@
  },
  "lake_gage": {
   "water_temp_f": 64,
-  "water_temp_at": "2026-09-20T18:00:00.000-04:00",
+  "water_temp_at": "2026-09-20T20:00:00.000-04:00",
   "level_ft": 94.12,
-  "level_at": "2026-09-20T18:00:00.000-04:00",
+  "level_at": "2026-09-20T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 15,
+  "aqi": 13,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/20/26 18:00",
+  "observed": "09/20/26 20:00",
   "discussion": "Expect generally good air quality across Vermont on Monday, September 21st."
  },
  "sun": {
@@ -903,7 +903,7 @@
     },
     "pop_max": {
      "GFS": 4,
-     "Euro": 39,
+     "Euro": 22,
      "ICON": 0
     },
     "precip_in": {
