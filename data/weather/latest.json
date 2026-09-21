@@ -1,26 +1,26 @@
 {
- "updated": "2026-09-21T20:30:39+00:00",
+ "updated": "2026-09-21T21:14:41+00:00",
  "sections_updated": {
-  "now": "2026-09-21T20:30:39+00:00",
-  "forecast": "2026-09-21T20:30:39+00:00",
-  "hourly": "2026-09-21T20:30:39+00:00",
-  "alerts": "2026-09-21T20:30:39+00:00",
-  "afd": "2026-09-21T20:30:39+00:00",
-  "lake_forecast": "2026-09-21T20:30:39+00:00",
-  "lake_gage": "2026-09-21T20:30:39+00:00",
-  "air": "2026-09-21T20:30:39+00:00",
-  "sun": "2026-09-21T20:30:39+00:00",
-  "models": "2026-09-21T20:30:39+00:00"
+  "now": "2026-09-21T21:14:41+00:00",
+  "forecast": "2026-09-21T21:14:41+00:00",
+  "hourly": "2026-09-21T21:14:41+00:00",
+  "alerts": "2026-09-21T21:14:41+00:00",
+  "afd": "2026-09-21T21:14:41+00:00",
+  "lake_forecast": "2026-09-21T21:14:41+00:00",
+  "lake_gage": "2026-09-21T21:14:41+00:00",
+  "air": "2026-09-21T21:14:41+00:00",
+  "sun": "2026-09-21T21:14:41+00:00",
+  "models": "2026-09-21T21:14:41+00:00"
  },
  "now": {
-  "observed_at": "2026-09-21T20:05:00+00:00",
+  "observed_at": "2026-09-21T21:00:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
-  "temp_f": 54,
-  "feels_like_f": 54,
-  "humidity": 67,
+  "description": "Partly Cloudy",
+  "temp_f": 55,
+  "feels_like_f": 55,
+  "humidity": 62,
   "dewpoint_f": 43,
-  "wind_mph": 6,
+  "wind_mph": 7,
   "wind_gust_mph": null,
   "wind_dir": "NNW",
   "precip_last_hr_in": null
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-09-21T16:00:00-04:00",
+    "start": "2026-09-21T14:00:00-04:00",
     "is_day": true,
     "temp_f": 58,
     "pop": 0,
     "wind": "N 10 mph",
-    "short": "Partly Sunny",
-    "detailed": "Partly sunny, with a high near 58. North wind around 10 mph."
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a high near 58. North wind around 10 mph."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-21T18:19:29+00:00",
   "hours": [
-   {
-    "t": "2026-09-21T16:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 0,
-    "humidity": 64,
-    "wind_mph": 10,
-    "wind_dir": "N",
-    "sky": 64,
-    "short": "Partly Sunny"
-   },
    {
     "t": "2026-09-21T17:00:00-04:00",
     "temp_f": 57,
@@ -568,6 +557,17 @@
     "wind_dir": "NE",
     "sky": 1,
     "short": "Clear"
+   },
+   {
+    "t": "2026-09-23T04:00:00-04:00",
+    "temp_f": 45,
+    "feels_f": 45,
+    "pop": 0,
+    "humidity": 96,
+    "wind_mph": 1,
+    "wind_dir": "NE",
+    "sky": 1,
+    "short": "Clear"
    }
   ]
  },
@@ -853,9 +853,9 @@
  },
  "lake_gage": {
   "water_temp_f": 64,
-  "water_temp_at": "2026-09-21T16:00:00.000-04:00",
-  "level_ft": 94.08,
-  "level_at": "2026-09-21T16:00:00.000-04:00",
+  "water_temp_at": "2026-09-21T17:00:00.000-04:00",
+  "level_ft": 94.09,
+  "level_at": "2026-09-21T17:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -878,7 +878,7 @@
    {
     "date": "2026-09-21",
     "high_f": {
-     "GFS": 56,
+     "GFS": 57,
      "Euro": 57,
      "ICON": 57
     },
@@ -892,7 +892,7 @@
      "Euro": 0.02,
      "ICON": 0.0
     },
-    "high_spread_f": 1
+    "high_spread_f": 0
    },
    {
     "date": "2026-09-22",
