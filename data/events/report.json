@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-21T19:36:50-04:00",
+ "generated": "2026-09-22T10:09:50-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -8,22 +8,22 @@
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 63,
-   "seconds": 4.5
+   "count": 64,
+   "seconds": 3.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 59,
-   "seconds": 3.8
+   "count": 56,
+   "seconds": 10.4
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 233,
-   "seconds": 3.5
+   "count": 238,
+   "seconds": 3.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 77,
+   "count": 78,
    "seconds": 1.6
   },
   "echo": {
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-21&end_date=2026-11-20&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-22&end_date=2026-11-21&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 204,
+   "count": 205,
    "seconds": 74.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 24,
-   "seconds": 0.4
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,57 +64,58 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 685,
-   "seconds": 38.5
+   "seconds": 36.7
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 82,
-   "seconds": 0.2
+   "seconds": 1.2
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 9.4
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 409,
-   "seconds": 69.9
+   "count": 408,
+   "seconds": 69.3
   },
   "meetup": {
    "label": "Meetup",
    "count": 61,
-   "seconds": 119.2
+   "seconds": 129.0
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 21,
+   "count": 20,
    "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 56,
-   "seconds": 19.1
+   "seconds": 19.6
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 12,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 104,
-   "seconds": 2.0
+   "count": 101,
+   "seconds": 8.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 19,
-   "seconds": 33.8
+   "count": 18,
+   "seconds": 47.0
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2367,
-   "seconds": 2.8
+   "count": 2349,
+   "seconds": 28.5
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -123,86 +124,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 548,
-   "seconds": 23.0
+   "count": 541,
+   "seconds": 36.8
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 336,
+   "count": 332,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 55,
-   "seconds": 73.8
+   "count": 56,
+   "seconds": 74.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 53,
-   "seconds": 0.2
+   "count": 54,
+   "seconds": 0.4
   }
  },
- "gathered": 5484,
- "afterDedup": 2585,
- "duplicatesMerged": 2899,
- "final": 2622,
- "firecrawlCalls": 1,
+ "gathered": 5455,
+ "afterDedup": 2583,
+ "duplicatesMerged": 2872,
+ "final": 2611,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Data Design Lab",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-27"
-  },
-  {
-   "kept": {
-    "title": "UPB Art Attack",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-10-27"
-  },
-  {
-   "kept": {
-    "title": "802sDay",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-10-27"
-  },
-  {
-   "kept": {
-    "title": "EZ Breezy Bike Rides",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-10-27"
-  },
-  {
-   "kept": {
-    "title": "Stories & Songs for Library Littles",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-10-28"
-  },
   {
    "kept": {
     "title": "Italian Conversation Group",
@@ -2393,6 +2339,28 @@
   },
   {
    "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-20"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-20"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -2401,51 +2369,66 @@
     "loveburlington"
    ],
    "date": "2026-11-20"
+  },
+  {
+   "kept": {
+    "title": "Greg Freeman",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-11-21"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-21"
+  },
+  {
+   "kept": {
+    "title": "Celebrate Craft Holiday Show",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-11-21"
   }
  ],
  "changes": [
   {
-   "id": "9fe672bdf884",
-   "title": "Library Cards from all Over the Country (and Beyond!)",
-   "date": "2026-09-21",
+   "id": "a90ce6dbe055",
+   "title": "Health Equity Summit",
+   "date": "2026-09-24",
    "change": "time",
-   "was": "2026-09-21",
-   "now": "2026-09-21T00:00:00-04:00"
+   "was": "2026-09-24",
+   "now": "2026-09-24T10:00:00-04:00"
   },
   {
-   "id": "b2161f7aaf53",
-   "title": "Public Skate",
-   "date": "2026-09-21",
-   "change": "missing",
-   "lastSeen": "2026-09-20T18:41:29-04:00"
+   "id": "d91eb6c7254f",
+   "title": "Health Equity Summit",
+   "date": "2026-09-25",
+   "change": "time",
+   "was": "2026-09-25",
+   "now": "2026-09-25T07:30:00-04:00"
   },
   {
-   "id": "fcdd1695517e",
-   "title": "Stick & Puck",
-   "date": "2026-09-21",
-   "change": "missing",
-   "lastSeen": "2026-09-20T18:41:29-04:00"
-  },
-  {
-   "id": "515b5d93b28d",
-   "title": "Harm Reduction and Overdose Response Training with Vermont CARES",
-   "date": "2026-09-21",
-   "change": "missing",
-   "lastSeen": "2026-09-20T18:41:29-04:00"
-  },
-  {
-   "id": "4883d15ca654",
-   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
-   "date": "2026-09-21",
-   "change": "missing",
-   "lastSeen": "2026-09-21T12:00:51-04:00"
-  },
-  {
-   "id": "6ac717799dec",
-   "title": "El Towle",
-   "date": "2026-09-21",
-   "change": "missing",
-   "lastSeen": "2026-09-21T12:00:51-04:00"
+   "id": "d447c98a5769",
+   "title": "Men's Soccer vs NJIT",
+   "date": "2026-10-03",
+   "change": "time",
+   "was": "2026-10-03T19:30:00-04:00",
+   "now": "2026-10-03T16:00:00-04:00"
   },
   {
    "id": "eb2124a72eb0",
@@ -2458,13 +2441,6 @@
    "id": "33cfe96f06da",
    "title": "Evening Book Group",
    "date": "2026-09-22",
-   "change": "missing",
-   "lastSeen": "2026-09-21T12:00:51-04:00"
-  },
-  {
-   "id": "3bc09faf3a0e",
-   "title": "Mobility Safety Tabling",
-   "date": "2026-09-23",
    "change": "missing",
    "lastSeen": "2026-09-21T12:00:51-04:00"
   },
@@ -2539,6 +2515,13 @@
    "lastSeen": "2026-09-21T12:00:51-04:00"
   },
   {
+   "id": "e9bd65522bb4",
+   "title": "Paint Your Pet!",
+   "date": "2026-09-29",
+   "change": "missing",
+   "lastSeen": "2026-09-21T19:36:50-04:00"
+  },
+  {
    "id": "b06b8cd265e8",
    "title": "Baby Time",
    "date": "2026-09-30",
@@ -2549,15 +2532,7 @@
    "id": "ed0a93d6eaf4",
    "title": "Shakespeare Out Loud",
    "date": "2026-10-05",
-   "change": "missing",
-   "lastSeen": "2026-09-19T09:22:07-04:00"
-  },
-  {
-   "id": "34ecfc2dbdf9",
-   "title": "From Trauma to Healing: Taking Responsibility for the Orphanages of the 1990s",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-09-21T12:00:51-04:00"
+   "change": "dropped"
   },
   {
    "id": "38c958aa862a",
@@ -2630,25 +2605,10 @@
    "lastSeen": "2026-09-20T18:41:29-04:00"
   },
   {
-   "id": "b0f3b30ca5ac",
-   "title": "UDL Campfire - Representation",
-   "date": "2026-10-27",
-   "change": "missing",
-   "lastSeen": "2026-09-21T12:00:51-04:00"
-  },
-  {
-   "id": "9b986d020d71",
-   "title": "Exploring GenAI for Student Learning and Assignment Design",
-   "date": "2026-11-04",
-   "change": "missing",
-   "lastSeen": "2026-09-21T12:00:51-04:00"
-  },
-  {
    "id": "d6db45f0ad99",
    "title": "Shakespeare Out Loud",
    "date": "2026-11-09",
-   "change": "missing",
-   "lastSeen": "2026-09-19T09:22:07-04:00"
+   "change": "dropped"
   },
   {
    "id": "86d4fed047a4",
