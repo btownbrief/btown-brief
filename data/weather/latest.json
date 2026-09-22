@@ -1,25 +1,25 @@
 {
- "updated": "2026-09-21T23:28:44+00:00",
+ "updated": "2026-09-22T00:17:54+00:00",
  "sections_updated": {
-  "now": "2026-09-21T23:28:44+00:00",
-  "forecast": "2026-09-21T23:28:44+00:00",
-  "hourly": "2026-09-21T23:28:44+00:00",
-  "alerts": "2026-09-21T23:28:44+00:00",
-  "afd": "2026-09-21T23:28:44+00:00",
-  "lake_forecast": "2026-09-21T23:28:44+00:00",
-  "lake_gage": "2026-09-21T23:28:44+00:00",
-  "air": "2026-09-21T23:28:44+00:00",
-  "sun": "2026-09-21T23:28:44+00:00",
-  "models": "2026-09-21T23:28:44+00:00"
+  "now": "2026-09-22T00:17:54+00:00",
+  "forecast": "2026-09-22T00:17:54+00:00",
+  "hourly": "2026-09-22T00:17:54+00:00",
+  "alerts": "2026-09-22T00:17:54+00:00",
+  "afd": "2026-09-22T00:17:54+00:00",
+  "lake_forecast": "2026-09-22T00:17:54+00:00",
+  "lake_gage": "2026-09-22T00:17:54+00:00",
+  "air": "2026-09-22T00:17:54+00:00",
+  "sun": "2026-09-22T00:17:54+00:00",
+  "models": "2026-09-22T00:17:54+00:00"
  },
  "now": {
-  "observed_at": "2026-09-21T23:05:00+00:00",
+  "observed_at": "2026-09-21T23:50:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 54,
-  "feels_like_f": 54,
-  "humidity": 71,
-  "dewpoint_f": 45,
+  "description": "Mostly Clear",
+  "temp_f": 50,
+  "feels_like_f": 50,
+  "humidity": 87,
+  "dewpoint_f": 46,
   "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N",
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-09-21T18:00:00-04:00",
+    "start": "2026-09-21T20:00:00-04:00",
     "is_day": false,
     "temp_f": 43,
     "pop": 0,
-    "wind": "N 5 to 9 mph",
+    "wind": "N 5 to 8 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a low around 43. North wind 5 to 9 mph."
+    "detailed": "Mostly cloudy, with a low around 43. North wind 5 to 8 mph."
    },
    {
     "name": "Tuesday",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-21T18:19:29+00:00",
   "hours": [
-   {
-    "t": "2026-09-21T18:00:00-04:00",
-    "temp_f": 55,
-    "feels_f": 55,
-    "pop": 0,
-    "humidity": 64,
-    "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 57,
-    "short": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-09-21T19:00:00-04:00",
-    "temp_f": 53,
-    "feels_f": 53,
-    "pop": 0,
-    "humidity": 71,
-    "wind_mph": 8,
-    "wind_dir": "N",
-    "sky": 49,
-    "short": "Partly Cloudy"
-   },
    {
     "t": "2026-09-21T20:00:00-04:00",
     "temp_f": 53,
@@ -568,6 +546,28 @@
     "wind_dir": "NE",
     "sky": 3,
     "short": "Clear"
+   },
+   {
+    "t": "2026-09-23T06:00:00-04:00",
+    "temp_f": 44,
+    "feels_f": 44,
+    "pop": 0,
+    "humidity": 96,
+    "wind_mph": 2,
+    "wind_dir": "NE",
+    "sky": 3,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-09-23T07:00:00-04:00",
+    "temp_f": 45,
+    "feels_f": 45,
+    "pop": 0,
+    "humidity": 93,
+    "wind_mph": 2,
+    "wind_dir": "NE",
+    "sky": 10,
+    "short": "Sunny"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-21T18:18:00+00:00",
+  "issued": "2026-09-21T23:44:00+00:00",
   "key_messages": [
    "Tranquil weather conditions expected through late week, with patchy frost possible nightly through Wednesday night.",
    "Little change in latest forecast with mostly dry conditions prevailing into the upcoming weekend with near normal temperatures."
   ],
   "what_changed": "As of 217 PM EDT Monday... No changes to the current forecast.",
-  "raw": "\n000\nFXUS61 KBTV 211818\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n218 PM EDT Mon Sep 21 2026\n\n.WHAT HAS CHANGED...\nAs of 217 PM EDT Monday...\n\nNo changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 217 PM EDT Monday...\n\n1. Tranquil weather conditions expected through late week, with\npatchy frost possible nightly through Wednesday night. \n\n2. Little change in latest forecast with mostly dry conditions \nprevailing into the upcoming weekend with near normal temperatures. \n\n&&\n\n.DISCUSSION...\nAs of 217 PM EDT Monday...\n\nKEY MESSAGE 1: Fair, cool, and calm weather will settle in across the \nregion tonight through the the late week. Low-level stratocumulus \nclouds will linger this afternoon, and eventually become more \nscattered this evening as strong high pressure begins to take hold \nfrom the north. This high will keep any moisture and precipitation \nchances shunted well south of the area. A seasonably cool and dry \nair mass will shift south tonight with just a few mid-high clouds. \nFog and frost potential looks fairly low tonight, outside of some of \nthe more sheltered valleys of the Adirondacks and central Vermont \ndue to cloud cover and some subtle flow around 1000ft agl. Cool \nnortherly advected air will keep highs tomorrow in the low to mid \n60s, and the higher terrain in the 50s; summit levels around the low \nto mid 40s. Skies will gradually clear from the west throughout the \nday tomorrow with some clouds lingering in southern Vermont, \nassociated with a stationary boundary well south of the region. The \nbetter frost/fog potential this week will be Tuesday night. \nTemperatures have the chance to dip below 40 for the first time this \nseason even in the Champlain Valley. Widespread near freezing \ntemperatures will be possible across the Northeast Kingdom, central \nVermont, and the Adirondacks. Pocket mid to upper 20s will be \npossible with a hard freeze likely in isolated portions of the \nnorthern Adirondacks. Frost Advisories will likely be needed \ntomorrow night for most of the central and northern Vermont, in \naddition to portions of the northern St. Lawrence Valley. It should \nbe noted that, as of today, these products will no longer be issued \nfor the Adirondacks and Northeast Kingdom, as median date of the \nfirst autumn freeze has passed. Thus, the growing season is \nconsidered ended in these areas.\n\nThrough mid to late week, temperatures will slowly creep up a degree \nor two each day towards Thursday, with highs in the mid to upper \n60s, as the high drifts to the east. Portions of the eastern Greens \nmay see below normal temperatures continue Wednesday with a cold air \ndamming setup. Frost potential will continue Wednesday night, though \nradiational cooling will be a touch weaker. Fog potential will also \nbe low or non-existent due to a detachment from rainfall by the end \nof the week.\n\nKEY MESSAGE 2: The primary challenge for the extended forecast is \npotential for rain showers to impact eastern/southern sections this \nweekend. Little change has been observed in the 12z guidance, with a \nlarge spread in potential solutions associated with potential \ncoastal system. 12z GFS ensemble data shows 0.10 to 0.30\" of qpf \nacrs our central/eastern and southern cwa, while near the \nInternational Border stays dry. Latest 12z GFS shows best \nmoisture/lift sliding to our south with mid/upper lvl closed system \ncapturing sfc low pres well off the SNE coast. However, several GFS \nensemble members and latest 12z ICON/CMC would have a little precip \nadvecting back into our region. Either way impacts look minimal \nattm. Initially given very deep dry layer in place with pw values \nonly in the 0.20 to 0.40\" range, expect large daily swings in temps \nwith cool nights and mild days. Highs generally in the 60s to near \n70 late week into the upcoming weekend with lows upper 20s to lower \n40s. However, if more clouds/precip develops this weekend than \nexpected highs will be 4 to 8 degrees cooler, especially associated \nwith north/northeast flow. The prolonged duration of very minimal \nrainfall could result in expansion of drought conditions across \nportions of our region as we head into late Sept/early Oct.\n\n&&\n\n.AVIATION /18Z MONDAY THROUGH SATURDAY/...\nThrough 18Z Tuesday...Cyclonic northerly flow has resulted in\nplenty of strato cumulus clouds this aftn with MVFR cigs at\nBTV/EFK/PBG and RUT with VFR at MPV/SLK and MSS. Expect mostly\nVFR conditions at all sites by 20z this aftn with\nnorth/northeast winds 5 to 10 knots. Overnight aviation\nchallenge is potential for low clouds or fog and associated IFR\nconditions. Overall setup is not ideal for fog, given 10 to 15\nknots near 500 feet, along with some weak cold/dry air\nadvection. Also, HREF continues to support idea of mid/upper\nlevel clouds moving from west to east across our taf sites.\nHowever, it did rain yesterday and sfc dwpts are currently in\nthe mid 40s, so feel cross over values will be reached in\nseveral sites. Highest probability of IFR in fog/low cigs will\nbe SLK/MPV and EFK with VCFG at BTV/RUT possible. Any fog/low\nclouds lifts by 13z with VFR conditions prevailing on Tuesday. \n\nOutlook...\n\nTuesday Night: VFR. Patchy frost.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. Slight chance SHRA.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: VFR. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Taber\nAVIATION...Taber\n"
+  "raw": "\n000\nFXUS61 KBTV 212344\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n744 PM EDT Mon Sep 21 2026\n\n.WHAT HAS CHANGED...\nAs of 217 PM EDT Monday...\n\nNo changes to the current forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 217 PM EDT Monday...\n\n1. Tranquil weather conditions expected through late week, with\npatchy frost possible nightly through Wednesday night. \n\n2. Little change in latest forecast with mostly dry conditions \nprevailing into the upcoming weekend with near normal temperatures.\n\n&&\n\n.DISCUSSION...\nAs of 217 PM EDT Monday...\n\nKEY MESSAGE 1: Fair, cool, and calm weather will settle in across the \nregion tonight through the the late week. Low-level stratocumulus \nclouds will linger this afternoon, and eventually become more \nscattered this evening as strong high pressure begins to take hold \nfrom the north. This high will keep any moisture and precipitation \nchances shunted well south of the area. A seasonably cool and dry \nair mass will shift south tonight with just a few mid-high clouds. \nFog and frost potential looks fairly low tonight, outside of some of \nthe more sheltered valleys of the Adirondacks and central Vermont \ndue to cloud cover and some subtle flow around 1000ft agl. Cool \nnortherly advected air will keep highs tomorrow in the low to mid \n60s, and the higher terrain in the 50s; summit levels around the low \nto mid 40s. Skies will gradually clear from the west throughout the \nday tomorrow with some clouds lingering in southern Vermont, \nassociated with a stationary boundary well south of the region. The \nbetter frost/fog potential this week will be Tuesday night. \nTemperatures have the chance to dip below 40 for the first time this \nseason even in the Champlain Valley. Widespread near freezing \ntemperatures will be possible across the Northeast Kingdom, central \nVermont, and the Adirondacks. Pocket mid to upper 20s will be \npossible with a hard freeze likely in isolated portions of the \nnorthern Adirondacks. Frost Advisories will likely be needed \ntomorrow night for most of the central and northern Vermont, in \naddition to portions of the northern St. Lawrence Valley. It should \nbe noted that, as of today, these products will no longer be issued \nfor the Adirondacks and Northeast Kingdom, as median date of the \nfirst autumn freeze has passed. Thus, the growing season is \nconsidered ended in these areas.\n\nThrough mid to late week, temperatures will slowly creep up a degree \nor two each day towards Thursday, with highs in the mid to upper \n60s, as the high drifts to the east. Portions of the eastern Greens \nmay see below normal temperatures continue Wednesday with a cold air \ndamming setup. Frost potential will continue Wednesday night, though \nradiational cooling will be a touch weaker. Fog potential will also \nbe low or non-existent due to a detachment from rainfall by the end \nof the week.\n\nKEY MESSAGE 2: The primary challenge for the extended forecast is \npotential for rain showers to impact eastern/southern sections this \nweekend. Little change has been observed in the 12z guidance, with a \nlarge spread in potential solutions associated with potential \ncoastal system. 12z GFS ensemble data shows 0.10 to 0.30\" of qpf \nacrs our central/eastern and southern cwa, while near the \nInternational Border stays dry. Latest 12z GFS shows best \nmoisture/lift sliding to our south with mid/upper lvl closed system \ncapturing sfc low pres well off the SNE coast. However, several GFS \nensemble members and latest 12z ICON/CMC would have a little precip \nadvecting back into our region. Either way impacts look minimal \nattm. Initially given very deep dry layer in place with pw values \nonly in the 0.20 to 0.40\" range, expect large daily swings in temps \nwith cool nights and mild days. Highs generally in the 60s to near \n70 late week into the upcoming weekend with lows upper 20s to lower \n40s. However, if more clouds/precip develops this weekend than \nexpected highs will be 4 to 8 degrees cooler, especially associated \nwith north/northeast flow. The prolonged duration of very minimal \nrainfall could result in expansion of drought conditions across \nportions of our region as we head into late Sept/early Oct.\n\n&&\n\n.AVIATION /00Z TUESDAY THROUGH SATURDAY/...\nThrough 00Z Wednesday...VFR conditions will generally persist for the\nnext 24 hours, except for some patchy fog formation tonight.\nConditions at all terminals will remain VFR through the evening. The\nfog will begin to form after midnight and it should reach MPV by\naround 7-8Z. It is possible at SLK and EFK later in the night, but\nconfidence is lower there (~30 percent chance). Any fog lifts by\naround 13Z and VFR conditions will persist for the rest of the day.\nWinds will generally go light/variable and calm tonight, before\nincreasing into the 5-15 KT range out of the north/northeast\ntomorrow.\n\nOutlook...\n\nTuesday Night: VFR. Patchy frost.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. Slight chance SHRA.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: VFR. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Taber\nAVIATION...Myskowski\n"
  },
  "lake_forecast": {
   "issued": "2026-09-21T18:21:00+00:00",
@@ -853,9 +853,9 @@
  },
  "lake_gage": {
   "water_temp_f": 64,
-  "water_temp_at": "2026-09-21T19:00:00.000-04:00",
-  "level_ft": 94.08,
-  "level_at": "2026-09-21T19:00:00.000-04:00",
+  "water_temp_at": "2026-09-21T20:00:00.000-04:00",
+  "level_ft": 94.09,
+  "level_at": "2026-09-21T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -863,7 +863,7 @@
   "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/21/26 19:00",
+  "observed": "09/21/26 20:00",
   "discussion": "Expect generally good air quality across Vermont on Tuesday, September 22nd."
  },
  "sun": {
