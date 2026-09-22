@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-22T10:09:50-04:00",
+ "generated": "2026-09-22T19:15:39-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 9,
-   "seconds": 5.9
+   "seconds": 6.2
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 64,
-   "seconds": 3.8
+   "count": 66,
+   "seconds": 4.2
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 56,
-   "seconds": 10.4
+   "seconds": 2.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 238,
-   "seconds": 3.6
+   "count": 263,
+   "seconds": 4.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 78,
-   "seconds": 1.6
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 6,
-   "seconds": 0.5
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 205,
-   "seconds": 74.3
+   "count": 212,
+   "seconds": 65.3
   },
   "flynn": {
    "label": "The Flynn",
    "count": 24,
-   "seconds": 0.6
+   "seconds": 0.2
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,58 +64,57 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 685,
-   "seconds": 36.7
+   "seconds": 34.3
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 82,
-   "seconds": 1.2
+   "seconds": 0.6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 11.2
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 408,
-   "seconds": 69.3
+   "count": 418,
+   "seconds": 73.0
   },
   "meetup": {
    "label": "Meetup",
-   "count": 61,
-   "seconds": 129.0
+   "count": 60,
+   "seconds": 122.1
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 20,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 56,
-   "seconds": 19.6
+   "seconds": 15.2
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 12,
-   "seconds": 0.5
+   "seconds": 0.2
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 101,
-   "seconds": 8.0
+   "count": 103,
+   "seconds": 6.3
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 18,
-   "seconds": 47.0
+   "seconds": 30.4
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2349,
-   "seconds": 28.5
+   "count": 2336,
+   "seconds": 2.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -124,18 +123,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 541,
-   "seconds": 36.8
+   "count": 545,
+   "seconds": 37.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 332,
+   "count": 336,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 56,
-   "seconds": 74.8
+   "seconds": 73.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -143,23 +142,12 @@
    "seconds": 0.4
   }
  },
- "gathered": 5455,
- "afterDedup": 2583,
- "duplicatesMerged": 2872,
- "final": 2611,
- "firecrawlCalls": 5,
+ "gathered": 5496,
+ "afterDedup": 2590,
+ "duplicatesMerged": 2906,
+ "final": 2634,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-10-28"
-  },
   {
    "kept": {
     "title": "Standup Open Mic",
@@ -692,6 +680,17 @@
   {
    "kept": {
     "title": "Spanish Conversation",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-11-03"
+  },
+  {
+   "kept": {
+    "title": "Pause-Café Mardi - French Conversation",
     "source": "fletcherfree"
    },
    "merged_sources": [
@@ -2407,28 +2406,12 @@
  ],
  "changes": [
   {
-   "id": "a90ce6dbe055",
-   "title": "Health Equity Summit",
-   "date": "2026-09-24",
+   "id": "42b2324fe7d8",
+   "title": "Cookie Queens",
+   "date": "2026-10-10",
    "change": "time",
-   "was": "2026-09-24",
-   "now": "2026-09-24T10:00:00-04:00"
-  },
-  {
-   "id": "d91eb6c7254f",
-   "title": "Health Equity Summit",
-   "date": "2026-09-25",
-   "change": "time",
-   "was": "2026-09-25",
-   "now": "2026-09-25T07:30:00-04:00"
-  },
-  {
-   "id": "d447c98a5769",
-   "title": "Men's Soccer vs NJIT",
-   "date": "2026-10-03",
-   "change": "time",
-   "was": "2026-10-03T19:30:00-04:00",
-   "now": "2026-10-03T16:00:00-04:00"
+   "was": "2026-10-10T15:30:00-04:00",
+   "now": "2026-10-10T13:00:00-04:00"
   },
   {
    "id": "eb2124a72eb0",
@@ -2436,6 +2419,20 @@
    "date": "2026-09-22",
    "change": "missing",
    "lastSeen": "2026-09-21T12:00:51-04:00"
+  },
+  {
+   "id": "55bd41963fe6",
+   "title": "Random Chats About Statistics: Building Confidence with Data",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
+   "id": "245fe83caf6e",
+   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
+   "date": "2026-09-22",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
   },
   {
    "id": "33cfe96f06da",
@@ -2452,11 +2449,25 @@
    "lastSeen": "2026-09-21T12:00:51-04:00"
   },
   {
+   "id": "b542c2c3cdbf",
+   "title": "Ladies Book Club - The Silent Sister",
+   "date": "2026-09-23",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
    "id": "c2be83e9ddbc",
    "title": "Downtown Public Art Tours",
    "date": "2026-09-23",
    "change": "missing",
    "lastSeen": "2026-09-21T12:00:51-04:00"
+  },
+  {
+   "id": "99dd3f7e1eb3",
+   "title": "Evan Barker & Izzy Jones",
+   "date": "2026-09-23",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
   },
   {
    "id": "b3e0e1560f2d",
@@ -2473,6 +2484,48 @@
    "lastSeen": "2026-09-21T12:00:51-04:00"
   },
   {
+   "id": "2f05875d50c4",
+   "title": "The Women Question in Jewish Studies",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
+   "id": "fe7588ca58a1",
+   "title": "Lincoln Sprague",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
+   "id": "b6904103ae1d",
+   "title": "Hard Scrabble",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
+   "id": "a27aab94fc7e",
+   "title": "Dan Parks",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
+   "id": "3002f1b87b37",
+   "title": "Two Sev, JP Black, Eli, Rubi",
+   "date": "2026-09-24",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
+   "id": "c0d324aecae4",
+   "title": "Discover Feldenkrais®️",
+   "date": "2026-09-25",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
    "id": "62c3f4a8eedc",
    "title": "Lego Builders",
    "date": "2026-09-25",
@@ -2480,11 +2533,17 @@
    "lastSeen": "2026-09-21T12:00:51-04:00"
   },
   {
+   "id": "97da5fa558ac",
+   "title": "Pet Store: A Live Sitcom",
+   "date": "2026-09-25",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
    "id": "02d0a564ea21-2100",
    "title": "Sophie Buddle",
    "date": "2026-09-25",
-   "change": "missing",
-   "lastSeen": "2026-09-19T18:29:05-04:00"
+   "change": "dropped"
   },
   {
    "id": "0a4eeea36c83",
@@ -2529,10 +2588,11 @@
    "lastSeen": "2026-09-21T12:00:51-04:00"
   },
   {
-   "id": "ed0a93d6eaf4",
-   "title": "Shakespeare Out Loud",
-   "date": "2026-10-05",
-   "change": "dropped"
+   "id": "bd72a1019915",
+   "title": "Evan Barker & Izzy Jones",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
   },
   {
    "id": "38c958aa862a",
@@ -2584,6 +2644,13 @@
    "lastSeen": "2026-09-20T18:41:29-04:00"
   },
   {
+   "id": "b6c897b958fd",
+   "title": "Pause-Café Mardi",
+   "date": "2026-10-13",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
    "id": "f666168f99a6",
    "title": "Pick-up Basketball",
    "date": "2026-10-14",
@@ -2598,6 +2665,20 @@
    "lastSeen": "2026-09-20T18:41:29-04:00"
   },
   {
+   "id": "910d2b48943e",
+   "title": "Pause-Café Mardi",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
+   "id": "68161c5432db",
+   "title": "Queen City Ghostwalk: Wicked Waterfront Tour",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
    "id": "721aa1135051",
    "title": "Sensing the Season",
    "date": "2026-10-24",
@@ -2605,10 +2686,25 @@
    "lastSeen": "2026-09-20T18:41:29-04:00"
   },
   {
-   "id": "d6db45f0ad99",
-   "title": "Shakespeare Out Loud",
-   "date": "2026-11-09",
-   "change": "dropped"
+   "id": "b6868e85819d",
+   "title": "Queen City Ghostwalk: Fright by Flashlight at Lakeview Cemetery",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
+   "id": "b5771f62f3df",
+   "title": "Pause-Café Mardi",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
+  },
+  {
+   "id": "5118e0cf0132",
+   "title": "Pause-Café Mardi",
+   "date": "2026-11-03",
+   "change": "missing",
+   "lastSeen": "2026-09-22T10:09:50-04:00"
   },
   {
    "id": "86d4fed047a4",
