@@ -1,26 +1,26 @@
 {
- "updated": "2026-09-22T23:10:37+00:00",
+ "updated": "2026-09-23T00:39:19+00:00",
  "sections_updated": {
-  "now": "2026-09-22T23:10:37+00:00",
-  "forecast": "2026-09-22T23:10:37+00:00",
-  "hourly": "2026-09-22T23:10:37+00:00",
-  "alerts": "2026-09-22T23:10:37+00:00",
-  "afd": "2026-09-22T23:10:37+00:00",
-  "lake_forecast": "2026-09-22T23:10:37+00:00",
-  "lake_gage": "2026-09-22T23:10:37+00:00",
-  "air": "2026-09-22T23:10:37+00:00",
-  "sun": "2026-09-22T23:10:37+00:00",
-  "models": "2026-09-22T23:10:37+00:00"
+  "now": "2026-09-23T00:39:19+00:00",
+  "forecast": "2026-09-23T00:39:19+00:00",
+  "hourly": "2026-09-23T00:39:19+00:00",
+  "alerts": "2026-09-23T00:39:19+00:00",
+  "afd": "2026-09-23T00:39:19+00:00",
+  "lake_forecast": "2026-09-23T00:39:19+00:00",
+  "lake_gage": "2026-09-23T00:39:19+00:00",
+  "air": "2026-09-23T00:39:19+00:00",
+  "sun": "2026-09-23T00:39:19+00:00",
+  "models": "2026-09-23T00:39:19+00:00"
  },
  "now": {
-  "observed_at": "2026-09-22T22:50:00+00:00",
+  "observed_at": "2026-09-23T00:20:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 59,
-  "feels_like_f": 59,
-  "humidity": 59,
-  "dewpoint_f": 45,
-  "wind_mph": 7,
+  "temp_f": 55,
+  "feels_like_f": 55,
+  "humidity": 72,
+  "dewpoint_f": 46,
+  "wind_mph": 0,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-09-22T19:00:00-04:00",
+    "start": "2026-09-22T20:00:00-04:00",
     "is_day": false,
     "temp_f": 43,
     "pop": 0,
-    "wind": "N 2 to 8 mph",
+    "wind": "NE 2 to 7 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 43. North wind 2 to 8 mph."
+    "detailed": "Mostly clear, with a low around 43. Northeast wind 2 to 7 mph."
    },
    {
     "name": "Wednesday",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-22T18:16:01+00:00",
   "hours": [
-   {
-    "t": "2026-09-22T19:00:00-04:00",
-    "temp_f": 58,
-    "feels_f": 58,
-    "pop": 0,
-    "humidity": 69,
-    "wind_mph": 8,
-    "wind_dir": "N",
-    "sky": 7,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-09-22T20:00:00-04:00",
     "temp_f": 55,
@@ -568,6 +557,17 @@
     "wind_dir": "NE",
     "sky": 11,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-09-24T07:00:00-04:00",
+    "temp_f": 43,
+    "feels_f": 43,
+    "pop": 0,
+    "humidity": 96,
+    "wind_mph": 2,
+    "wind_dir": "NE",
+    "sky": 35,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -582,13 +582,13 @@
   ]
  },
  "afd": {
-  "issued": "2026-09-22T18:45:00+00:00",
+  "issued": "2026-09-22T23:38:00+00:00",
   "key_messages": [
    "Seasonably cool and dry weather will continue through late week, with patchy frost tonight, and likely Wednesday night.",
    "Still a large spread in potential outcomes associated with coastal system and if any rain/wind impacts our forecast area this weekend."
   ],
   "what_changed": "As of 245 PM EDT Tuesday... Frost Advisories have been issued for the St. Lawrence Valley and eastern Clinton County in New York, as well as for Franklin, Lamoille, Chittenden, Washington, Orange, eastern Rutland, eastern Addison, and western Windsor Counties in Vermont from 2 AM to 9 AM Wednesday.",
-  "raw": "\n000\nFXUS61 KBTV 221845\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n245 PM EDT Tue Sep 22 2026\n\n.WHAT HAS CHANGED...\nAs of 245 PM EDT Tuesday...\n\nFrost Advisories have been issued for the St. Lawrence Valley and \neastern Clinton County in New York, as well as for Franklin, \nLamoille, Chittenden, Washington, Orange, eastern Rutland, eastern \nAddison, and western Windsor Counties in Vermont from 2 AM to 9 AM \nWednesday.\n\n&&\n\n.KEY MESSAGES...\nAs of 245 PM EDT Tuesday...\n\n1. Seasonably cool and dry weather will continue through late \nweek, with patchy frost tonight, and likely Wednesday night.\n\n2. Still a large spread in potential outcomes associated with coastal \nsystem and if any rain/wind impacts our forecast area this weekend. \n\n&&\n\n.DISCUSSION...\nAs of 245 PM EDT Tuesday...\n\nKEY MESSAGE 1: High pressure is settling in across the region with \nclearing skies. The center of the high is actually to our north in \nsouthern Quebec, but we will still enjoy the clear and calm weather \nthat is associated with it. Fair weather terrain cumulus will \ndissipate this evening with a few high clouds remaining across \nsouthern Vermont associated with a stationary boundary well south of \nthe region in the Mid-Atlantic. Patchy fog and frost are expected \ntonight as clearing skies set up for good radiational cooling. \nTemperatures will dip below 40 degrees for majority of the area, \noutside of the wider valleys of southern Vermont. Widespread near \nfreezing temperatures will be possible across the Northeast Kingdom, \ncentral Vermont, and the Adirondacks. Pocket mid to upper 20s will \nbe likely in isolated portions of the northern Adirondacks. Frost \nAdvisories have been issued for the St. Lawrence Valley and eastern \nClinton County in New York, as well as for Franklin, Lamoille, \nChittenden, Washington, Orange, eastern Rutland, eastern Addison, \nand western Windsor Counties in Vermont from 2 AM to 9 AM Wednesday. \nFrost will be less likely in areas near Lake Champlain, due to the \nsurrounding warmer water temperatures helping to moderate the \nsurrounding air. It should be noted that, as of 9/21, these products \nwill no longer be issued for the Adirondacks and Northeast Kingdom, \nas median date of the first autumn freeze has passed. Thus, the \ngrowing season is considered ended in these areas.\n\nThrough the mid to late week, temperatures will slowly creep up a \ndegree or two each day towards Thursday, with highs in the mid to \nupper 60s, as the high drifts to the east. Portions of the eastern \nGreens may see below normal temperatures continue Wednesday with a \ncold air damming setup. Frost potential will continue Wednesday \nnight, though radiational cooling will be a touch weaker resulting \nin less areal coverage of any potential Frost Advisories. Fog \nchances will also see less coverage Wednesday night, though patchy \nfog in the climatologically favored valleys of eastern Vermont and \nthe Adirondacks will still be possible. Clouds begin to build \nThursday into Friday as a nor'easter off the southern New England \nCoast meanders. There is still a large degree of uncertainty with \nregards to the evolution of the system, as it pertains to cloud \ncover and precipitation chances. Currently it looks like Friday \nshould remain dry for now with PoPs below 30%. Regardless, a \ntightening pressure gradient will develop across our area resulting \nin some breezy to channeled winds potentially Friday afternoon.\n\nKEY MESSAGE 2: The long term forecast challenge is evolution and \nmovement of deeply closed off sfc to 250mb cyclonic circulation and \npotential impacts to our cwa. Latest guidance continues to indicate \na large spread in potential solutions between individual \ndeterministic models and associated ensemble members, especially \nwith regards to sfc low pres track and placement of precip. The 12z \ntrends in guidance shows embedded short wave being captured in the \ncyclonic circulation, which helps to retro-grade sfc low pres \nwestward toward the Mid-Atlantic/SNE coast by Sunday. The 12z \nECMWF/ICON are most aggressive with advecting deep layer moisture \nback into parts of our cwa, while GFS/CMC shows better potential \nover central/eastern VT. The challenge will be a very sharp nw-se \nmoisture gradient btwn coastal system and strong/dry high pres \nanchored over southern Canada. Could see band of moisture rotate \naround cyclonic circulation toward VT on Sat/Sunday and fall apart \nwhen they encounter deeper dry layer over our region. Latest WPC pop \ngrids have cutback on precip chcs by 15% to 30%, which seems a \nlittle unreasonable given current trends. Feel these should be \nincreases based on latest data, with highest probability of \nmeasurable precip acrs central/eastern and southern VT on Sat into \nSun. \n\nDid note as the gradient increases between coastal low pres and \nsfc high pres, progged 925mb to 850mb winds increase at 30 to 45 \nknots, which wl support a few gusts in the 20 to 35 mph range, \nespecially higher trrn and aligned north to south valleys. Temps \nmostly in the 60s on Saturday/Sunday, and warm into the upper 60s to \nlower 70s by early next week. Lows in the mid 30s to mid/upper 40s, \nbut could be warmer with more clouds/precip this upcoming weekend.\n\n&&\n\n.AVIATION /18Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...Aviation focus will be on timing and\ncoverage of fog tonight at our TAF sites. VFR conditions prevail\nat all sites thru 06z with north/northeast winds 4 to 8 knots.\nWinds become light tonight with clear skies, allowing for\nfavorable conditions for fog development. Highest probability\n(60-70%) of fog/LIFR will be at SLK/MPV between 08-12z with\nchance (30-40%) at EFK, and less than 20% at RUT/MSS/PBG and\nBTV. Similar to last night, feel fog will be in the vicinity at\nBTV and may impact the north end of the runway toward sunrise \noff the Winooski River. Otherwise, any fog/low clouds should \nlift by 13-14Z on Weds with VFR conditions prevailing. \n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. Slight chance SHRA.\nSaturday Night: VFR. Slight chance SHRA.\nSunday: Mainly VFR, with local MVFR possible. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Frost Advisory from 2 AM to 9 AM EDT Wednesday for VTZ002-005-\n     006-008-010-016>020.\nNY...Frost Advisory from 2 AM to 9 AM EDT Wednesday for NYZ026>028-\n     087.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Danzig/Taber\nAVIATION...Taber\n"
+  "raw": "\n000\nFXUS61 KBTV 222338\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n738 PM EDT Tue Sep 22 2026\n\n.WHAT HAS CHANGED...\nAs of 245 PM EDT Tuesday...\n\nFrost Advisories have been issued for the St. Lawrence Valley and \neastern Clinton County in New York, as well as for Franklin, \nLamoille, Chittenden, Washington, Orange, eastern Rutland, eastern \nAddison, and western Windsor Counties in Vermont from 2 AM to 9 AM \nWednesday.\n\n&&\n\n.KEY MESSAGES...\nAs of 245 PM EDT Tuesday...\n\n1. Seasonably cool and dry weather will continue through late \nweek, with patchy frost tonight, and likely Wednesday night.\n\n2. Still a large spread in potential outcomes associated with coastal \nsystem and if any rain/wind impacts our forecast area this weekend.\n\n&&\n\n.DISCUSSION...\nAs of 245 PM EDT Tuesday...\n\nKEY MESSAGE 1: High pressure is settling in across the region with \nclearing skies. The center of the high is actually to our north in \nsouthern Quebec, but we will still enjoy the clear and calm weather \nthat is associated with it. Fair weather terrain cumulus will \ndissipate this evening with a few high clouds remaining across \nsouthern Vermont associated with a stationary boundary well south of \nthe region in the Mid-Atlantic. Patchy fog and frost are expected \ntonight as clearing skies set up for good radiational cooling. \nTemperatures will dip below 40 degrees for majority of the area, \noutside of the wider valleys of southern Vermont. Widespread near \nfreezing temperatures will be possible across the Northeast Kingdom, \ncentral Vermont, and the Adirondacks. Pocket mid to upper 20s will \nbe likely in isolated portions of the northern Adirondacks. Frost \nAdvisories have been issued for the St. Lawrence Valley and eastern \nClinton County in New York, as well as for Franklin, Lamoille, \nChittenden, Washington, Orange, eastern Rutland, eastern Addison, \nand western Windsor Counties in Vermont from 2 AM to 9 AM Wednesday. \nFrost will be less likely in areas near Lake Champlain, due to the \nsurrounding warmer water temperatures helping to moderate the \nsurrounding air. It should be noted that, as of 9/21, these products \nwill no longer be issued for the Adirondacks and Northeast Kingdom, \nas median date of the first autumn freeze has passed. Thus, the \ngrowing season is considered ended in these areas.\n\nThrough the mid to late week, temperatures will slowly creep up a \ndegree or two each day towards Thursday, with highs in the mid to \nupper 60s, as the high drifts to the east. Portions of the eastern \nGreens may see below normal temperatures continue Wednesday with a \ncold air damming setup. Frost potential will continue Wednesday \nnight, though radiational cooling will be a touch weaker resulting \nin less areal coverage of any potential Frost Advisories. Fog \nchances will also see less coverage Wednesday night, though patchy \nfog in the climatologically favored valleys of eastern Vermont and \nthe Adirondacks will still be possible. Clouds begin to build \nThursday into Friday as a nor'easter off the southern New England \nCoast meanders. There is still a large degree of uncertainty with \nregards to the evolution of the system, as it pertains to cloud \ncover and precipitation chances. Currently it looks like Friday \nshould remain dry for now with PoPs below 30%. Regardless, a \ntightening pressure gradient will develop across our area resulting \nin some breezy to channeled winds potentially Friday afternoon.\n\nKEY MESSAGE 2: The long term forecast challenge is evolution and \nmovement of deeply closed off sfc to 250mb cyclonic circulation and \npotential impacts to our cwa. Latest guidance continues to indicate \na large spread in potential solutions between individual \ndeterministic models and associated ensemble members, especially \nwith regards to sfc low pres track and placement of precip. The 12z \ntrends in guidance shows embedded short wave being captured in the \ncyclonic circulation, which helps to retro-grade sfc low pres \nwestward toward the Mid-Atlantic/SNE coast by Sunday. The 12z \nECMWF/ICON are most aggressive with advecting deep layer moisture \nback into parts of our cwa, while GFS/CMC shows better potential \nover central/eastern VT. The challenge will be a very sharp nw-se \nmoisture gradient btwn coastal system and strong/dry high pres \nanchored over southern Canada. Could see band of moisture rotate \naround cyclonic circulation toward VT on Sat/Sunday and fall apart \nwhen they encounter deeper dry layer over our region. Latest WPC pop \ngrids have cutback on precip chcs by 15% to 30%, which seems a \nlittle unreasonable given current trends. Feel these should be \nincreases based on latest data, with highest probability of \nmeasurable precip acrs central/eastern and southern VT on Sat into \nSun. \n\nDid note as the gradient increases between coastal low pres and \nsfc high pres, progged 925mb to 850mb winds increase at 30 to 45 \nknots, which wl support a few gusts in the 20 to 35 mph range, \nespecially higher trrn and aligned north to south valleys. Temps \nmostly in the 60s on Saturday/Sunday, and warm into the upper 60s to \nlower 70s by early next week. Lows in the mid 30s to mid/upper 40s, \nbut could be warmer with more clouds/precip this upcoming weekend.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...VFR conditions will generally persist for the\nnext 24 hours, except for some patchy fog formation tonight in the\nclimatologically favored areas. Conditions at all terminals will\nremain VFR through the evening. The fog will begin to form after\nmidnight and it should reach MPV and SLK by around 7-8Z. It is\npossible at EFK later in the night, where a few intervals of IFR\ncould occur. Fog will form over the Winooski River right next to the\nrunway at BTV, but whether it will drift onto the runway for a few\nbrief periods of time remains uncertain (maybe a 25 percent chance\nof an instance of IFR). Any fog lifts by around 13Z and VFR\nconditions will persist for the rest of the day. Winds will\ngenerally go light/variable and calm tonight, before increasing into\nthe 5-15 KT range out of the north/northeast tomorrow.\n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: VFR. Slight chance SHRA.\nSaturday Night: VFR. Slight chance SHRA.\nSunday: VFR. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Frost Advisory from 2 AM to 9 AM EDT Wednesday for VTZ002-005-\n     006-008-010-016>020.\nNY...Frost Advisory from 2 AM to 9 AM EDT Wednesday for NYZ026>028-\n     087.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Taber/Danzig\nAVIATION...Myskowski\n"
  },
  "lake_forecast": {
   "issued": "2026-09-22T18:16:00+00:00",
@@ -860,17 +860,17 @@
  },
  "lake_gage": {
   "water_temp_f": 64,
-  "water_temp_at": "2026-09-22T19:00:00.000-04:00",
-  "level_ft": 94.08,
-  "level_at": "2026-09-22T19:00:00.000-04:00",
+  "water_temp_at": "2026-09-22T20:00:00.000-04:00",
+  "level_ft": 94.09,
+  "level_at": "2026-09-22T20:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 21,
+  "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/22/26 18:00",
+  "observed": "09/22/26 20:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, September 23rd."
  },
  "sun": {
@@ -923,7 +923,7 @@
    {
     "date": "2026-09-24",
     "high_f": {
-     "GFS": 64,
+     "GFS": 65,
      "Euro": 64,
      "ICON": 69
     },
