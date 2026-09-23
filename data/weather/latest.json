@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-23T16:51:53+00:00",
+ "updated": "2026-09-23T17:28:58+00:00",
  "sections_updated": {
-  "now": "2026-09-23T16:51:53+00:00",
-  "forecast": "2026-09-23T16:51:53+00:00",
-  "hourly": "2026-09-23T16:51:53+00:00",
-  "alerts": "2026-09-23T16:51:53+00:00",
-  "afd": "2026-09-23T16:51:53+00:00",
-  "lake_forecast": "2026-09-23T16:51:53+00:00",
+  "now": "2026-09-23T17:28:58+00:00",
+  "forecast": "2026-09-23T17:28:58+00:00",
+  "hourly": "2026-09-23T17:28:58+00:00",
+  "alerts": "2026-09-23T17:28:58+00:00",
+  "afd": "2026-09-23T17:28:58+00:00",
+  "lake_forecast": "2026-09-23T17:28:58+00:00",
   "lake_gage": "2026-09-23T16:51:53+00:00",
-  "air": "2026-09-23T16:51:53+00:00",
-  "sun": "2026-09-23T16:51:53+00:00",
-  "models": "2026-09-23T16:51:53+00:00"
+  "air": "2026-09-23T17:28:58+00:00",
+  "sun": "2026-09-23T17:28:58+00:00",
+  "models": "2026-09-23T17:28:58+00:00"
  },
  "now": {
-  "observed_at": "2026-09-23T16:35:00+00:00",
+  "observed_at": "2026-09-23T17:05:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 63,
-  "feels_like_f": 63,
-  "humidity": 52,
+  "temp_f": 64,
+  "feels_like_f": 64,
+  "humidity": 49,
   "dewpoint_f": 45,
-  "wind_mph": 3,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "NE",
+  "wind_dir": "ENE",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-09-23T12:00:00-04:00",
+    "start": "2026-09-23T13:00:00-04:00",
     "is_day": true,
     "temp_f": 66,
     "pop": 0,
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-23T12:34:38+00:00",
   "hours": [
-   {
-    "t": "2026-09-23T12:00:00-04:00",
-    "temp_f": 61,
-    "feels_f": 61,
-    "pop": 0,
-    "humidity": 58,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 2,
-    "short": "Sunny"
-   },
    {
     "t": "2026-09-23T13:00:00-04:00",
     "temp_f": 63,
@@ -568,6 +557,17 @@
     "wind_dir": "N",
     "sky": 12,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-09-25T00:00:00-04:00",
+    "temp_f": 52,
+    "feels_f": 52,
+    "pop": 0,
+    "humidity": 83,
+    "wind_mph": 5,
+    "wind_dir": "N",
+    "sky": 13,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-23T12:32:00+00:00",
+  "issued": "2026-09-23T16:52:00+00:00",
   "key_messages": [
    "Dry weather with seasonable temperatures will continue through Friday, with areas of frost likely again tonight.",
    "Uncertainty remains in the track of a coastal system this weekend and what, if any, impacts it will have on our area."
   ],
   "what_changed": "As of 830 AM EDT Wednesday... The Frost Advisory has been cancelled.",
-  "raw": "\n000\nFXUS61 KBTV 231232\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n832 AM EDT Wed Sep 23 2026\n\n.WHAT HAS CHANGED...\nAs of 830 AM EDT Wednesday...\n\nThe Frost Advisory has been cancelled.\n\n&&\n\n.KEY MESSAGES...\nAs of 227 AM EDT Wednesday...\n\n1. Dry weather with seasonable temperatures will continue \nthrough Friday, with areas of frost likely again tonight. \n\n2. Uncertainty remains in the track of a coastal system this \nweekend and what, if any, impacts it will have on our area.\n\n&&\n\n.DISCUSSION...\nAs of 227 AM EDT Wednesday...\n\nKEY MESSAGE 1: Broad high pressure remains firmly in place across \nsouthern Quebec/Ontario, spreading over the international border and \ninto northern New York/New England. This feature shows no sign of \nbudging over the next few days, and confidence has increased that we \nnow will stay dry through at least Friday. Mostly clear skies will \npersist through Thursday, along with light winds. Temperatures will \nremain seasonable, with highs mainly in the 60s and lows in the 30s \nto near 40F. There will be another round of frost away from Lake \nChamplain tonight, and expect subsequent shifts will issue another \nFrost Advisory for tonight. \n\nClouds start to increase Thursday night and Friday as low pressure \noff the Mid Atlantic coast attempts to force its way north toward \ncoastal New England. Model guidance has come into better agreement \nin keeping any precipitation associated with this system shunted to \nour south through Friday, so no rain is expected in spite of the \nincreasing cloud cover. Thursday will be a little warmer than the \nprevious couple of days, with highs in the mid 60s to around 70F.\n\nKEY MESSAGE 2: Models continue to exhibit differing solutions in how a \ncoastal system will evolve as it meanders off the New England coast \nthis weekend. Just how close to the coast it tracks is still \nuncertain, as is how far north and west its precipitation spreads \ninland. Given the strength of the high to our north and the extent \nof the dry air, it seems likely there will be a tight precipitation \ngradient on the northern/western side of the system, so small \nchanges in track could result in significant changes in rain chances \nand amounts. There will also be a tightening pressure gradient over \nour area between the strengthening low and the high pressure \nanchored over southern Canada, so at the least expect winds to \nincrease late this week and over the weekend, particularly over the \nhigher terrain and down the Champlain Valley, where gusts of 25 to \n35 mph look possible, likely higher at summit level. \n\nOne other potential impact from this system will be its effect on \ntemperatures. With the very dry air currently in place, any rain \nthat does hold together long enough to wrap back into our region \nwould likely result in sharply cooler conditions; note that \ndeterministic guidance lowers temperatures into the 50s where rain \nwould be falling.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...Outside of patchy valley fog, VFR conditions\nwill prevail through the entire TAF period with skies remaining\nSKC. Early morning fog will bring periods of IFR/LIFR \nconditions early in the TAF period, and then again after 07z Thu,\nparticularly at SLK/MPV/EFK. VCFG is also likely at BTV as \nriver fog drifts over portions of the airfield. N/NE winds less\nthan 10 kt through the period, except SE at RUT. \n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: VFR. Chance SHRA.\nSaturday Night: Mainly VFR, with areas MVFR possible. Slight\nchance SHRA.\nSunday: Mainly MVFR, with local VFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Hastings\nAVIATION...Hastings\n"
+  "raw": "\n000\nFXUS61 KBTV 231652\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n1252 PM EDT Wed Sep 23 2026\n\n.WHAT HAS CHANGED...\nAs of 830 AM EDT Wednesday...\n\nThe Frost Advisory has been cancelled.\n\n&&\n\n.KEY MESSAGES...\nAs of 227 AM EDT Wednesday...\n\n1. Dry weather with seasonable temperatures will continue \nthrough Friday, with areas of frost likely again tonight. \n\n2. Uncertainty remains in the track of a coastal system this \nweekend and what, if any, impacts it will have on our area.\n\n&&\n\n.DISCUSSION...\nAs of 227 AM EDT Wednesday...\n\nKEY MESSAGE 1: Broad high pressure remains firmly in place across \nsouthern Quebec/Ontario, spreading over the international border and \ninto northern New York/New England. This feature shows no sign of \nbudging over the next few days, and confidence has increased that we \nnow will stay dry through at least Friday. Mostly clear skies will \npersist through Thursday, along with light winds. Temperatures will \nremain seasonable, with highs mainly in the 60s and lows in the 30s \nto near 40F. There will be another round of frost away from Lake \nChamplain tonight, and expect subsequent shifts will issue another \nFrost Advisory for tonight. \n\nClouds start to increase Thursday night and Friday as low pressure \noff the Mid Atlantic coast attempts to force its way north toward \ncoastal New England. Model guidance has come into better agreement \nin keeping any precipitation associated with this system shunted to \nour south through Friday, so no rain is expected in spite of the \nincreasing cloud cover. Thursday will be a little warmer than the \nprevious couple of days, with highs in the mid 60s to around 70F.\n\nKEY MESSAGE 2: Models continue to exhibit differing solutions in how a \ncoastal system will evolve as it meanders off the New England coast \nthis weekend. Just how close to the coast it tracks is still \nuncertain, as is how far north and west its precipitation spreads \ninland. Given the strength of the high to our north and the extent \nof the dry air, it seems likely there will be a tight precipitation \ngradient on the northern/western side of the system, so small \nchanges in track could result in significant changes in rain chances \nand amounts. There will also be a tightening pressure gradient over \nour area between the strengthening low and the high pressure \nanchored over southern Canada, so at the least expect winds to \nincrease late this week and over the weekend, particularly over the \nhigher terrain and down the Champlain Valley, where gusts of 25 to \n35 mph look possible, likely higher at summit level. \n\nOne other potential impact from this system will be its effect on \ntemperatures. With the very dry air currently in place, any rain \nthat does hold together long enough to wrap back into our region \nwould likely result in sharply cooler conditions; note that \ndeterministic guidance lowers temperatures into the 50s where rain \nwould be falling.\n\n&&\n\n.AVIATION /18Z WEDNESDAY THROUGH MONDAY/...\nThrough 18Z Thursday...Aviation challenge is timing and areal\ncoverage of fog and associated IFR or lower conditions.\nCurrently VFR conditions prevail at all taf sites, but did not\nsfc dewpoints are 3 to 5 degrees lower this aftn, which will\ndelay development of fog as it takes a bit longer to reach cross\nover values. Given the fog development last night and latest\nsounding data feel the highest probability of fog (80-90%) will\nbe at EFK/MPV and SLK between 08z-13z. Similar to last night \nbrief IFR is possible at MSS near sunrise on Thurs, and some\nWinooski River Valley fog could impact the north end of the\nrunaway at BTV near sunrise. Otherwise northwest to northeast\nwinds 4 to 8 knots become light east/southeast tonight, before\nshifting to the north again on Thursday. \n\nOutlook...\n\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. NO SIG WX.\nFriday: VFR. NO SIG WX.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: VFR. Chance SHRA.\nSaturday Night: Mainly VFR, with areas MVFR possible. Slight\nchance SHRA.\nSunday: Mainly MVFR, with local VFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Hastings\nAVIATION...Taber\n"
  },
  "lake_forecast": {
   "issued": "2026-09-23T06:26:00+00:00",
@@ -836,7 +836,7 @@
   "aqi": 19,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/23/26 12:00",
+  "observed": "09/23/26 13:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, September 23rd."
  },
  "sun": {
