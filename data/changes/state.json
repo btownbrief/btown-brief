@@ -2,11 +2,11 @@
  "nws-weather": {
   "alerts": [
    {
-    "id": "urn:oid:2.49.0.1.840.0.aacba77217a1904a439be78bd2bb747e5eda6f79.001.1",
+    "id": "urn:oid:2.49.0.1.840.0.986d3cf28f1abe277c2424680a7cd28c8653840b.001.1",
     "event": "Frost Advisory",
-    "headline": "Frost Advisory issued September 23 at 1:35PM EDT until September 24 at 9:00AM EDT by NWS Burlington VT",
+    "headline": "Frost Advisory issued September 24 at 2:26AM EDT until September 24 at 9:00AM EDT by NWS Burlington VT",
     "severity": "Minor",
-    "onset": "2026-09-24T02:00:00-04:00",
+    "onset": "2026-09-24T02:26:00-04:00",
     "ends": "2026-09-24T09:00:00-04:00",
     "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
    }
@@ -847,6 +847,20 @@
    "vermont-public": {
     "items": [
      {
+      "id": "https://www.vermontpublic.org/local-news/2026-09-24/solar-powered-backpacks-helping-scientists-track-monarch-butterflies",
+      "title": "Solar-powered backpacks are helping Vermont scientists track monarch butterflies in real time",
+      "link": "https://www.vermontpublic.org/local-news/2026-09-24/solar-powered-backpacks-helping-scientists-track-monarch-butterflies",
+      "ts": "2026-09-24T09:00:00+00:00",
+      "summary": "The hope is to learn where the insects stop on their southward migration — and where they’re imperiled along the way."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-09-24/amanda-elridge-growing-up-devoutly-christian-no-financial-stability",
+      "title": "Amanda Elridge on growing up devoutly Christian with no financial stability",
+      "link": "https://www.vermontpublic.org/local-news/2026-09-24/amanda-elridge-growing-up-devoutly-christian-no-financial-stability",
+      "ts": "2026-09-24T09:00:00+00:00",
+      "summary": "Amanda Elridge talks about growing up very Christian and very poor in this episode of \"What Class Are You?\""
+     },
+     {
       "id": "https://www.vermontpublic.org/local-news/2026-09-23/the-great-book-brigade-human-chain-moves-middletown-springs-library",
       "title": "The Great Book Brigade: Human chain moves Middletown Springs library",
       "link": "https://www.vermontpublic.org/local-news/2026-09-23/the-great-book-brigade-human-chain-moves-middletown-springs-library",
@@ -861,11 +875,11 @@
       "summary": "Sen. Bernie Sanders and Rep. Greg Casar are introducing legislation that would ban artificial superintelligence, pause development of advanced AI systems and create a new Department of Artificial Intelligence. The proposal comes as prominent AI executives and researchers increasingly warn about potentially catastrophic risks from rapidly advancing systems."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-09-23/help-loggers-market-low-grade-wood-vermont-lifts-environmental-rules",
-      "title": "To help loggers find a market for low-grade wood, Vermont lifts some environmental rules",
-      "link": "https://www.vermontpublic.org/local-news/2026-09-23/help-loggers-market-low-grade-wood-vermont-lifts-environmental-rules",
+      "id": "https://www.vermontpublic.org/local-news/2026-09-23/more-low-income-seniors-in-vermont-are-now-eligible-for-help-paying-for-medicare",
+      "title": "More low-income seniors in Vermont are now eligible for help paying for Medicare",
+      "link": "https://www.vermontpublic.org/local-news/2026-09-23/more-low-income-seniors-in-vermont-are-now-eligible-for-help-paying-for-medicare",
       "ts": "2026-09-23T09:00:00+00:00",
-      "summary": "The move, state officials say, is an effort to support Vermont’s struggling timber industry amid disruptions in the regional market for pulpwood."
+      "summary": "For Carole Patten of Lake Elmore, Vermont’s expanded Medicare Savings Program now lets her keep an extra $200 a month out of her Social Security check that was previously going to her insurance premiums. That’s effectively a tenth of her income, she said."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-09-23/steve-giroux-talks-class-value-hard-work",
@@ -875,11 +889,11 @@
       "summary": "Erica Heilman has a conversation with Steve Giroux about work ethic and class in this installment of \"What Class Are You?\""
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-09-23/more-low-income-seniors-in-vermont-are-now-eligible-for-help-paying-for-medicare",
-      "title": "More low-income seniors in Vermont are now eligible for help paying for Medicare",
-      "link": "https://www.vermontpublic.org/local-news/2026-09-23/more-low-income-seniors-in-vermont-are-now-eligible-for-help-paying-for-medicare",
+      "id": "https://www.vermontpublic.org/local-news/2026-09-23/help-loggers-market-low-grade-wood-vermont-lifts-environmental-rules",
+      "title": "To help loggers find a market for low-grade wood, Vermont lifts some environmental rules",
+      "link": "https://www.vermontpublic.org/local-news/2026-09-23/help-loggers-market-low-grade-wood-vermont-lifts-environmental-rules",
       "ts": "2026-09-23T09:00:00+00:00",
-      "summary": "For Carole Patten of Lake Elmore, Vermont’s expanded Medicare Savings Program now lets her keep an extra $200 a month out of her Social Security check that was previously going to her insurance premiums. That’s effectively a tenth of her income, she said."
+      "summary": "The move, state officials say, is an effort to support Vermont’s struggling timber industry amid disruptions in the regional market for pulpwood."
      },
      {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-09-22/the-in-and-outs-of-mushroom-hunting-in-vermont",
@@ -915,25 +929,18 @@
       "link": "https://www.vermontpublic.org/local-news/2026-09-21/jury-finds-jason-eaton-guilty-of-attempted-murder-in-2023-shooting",
       "ts": "2026-09-21T17:28:41+00:00",
       "summary": "A jury in Burlington rejected Jason Eaton's insanity defense today and found him guilty of attempting to kill three Palestinian men in 2023."
-     },
-     {
-      "id": "https://www.vermontpublic.org/show/sports-rapport/2026-09-21/the-high-five-hilltoppers-revenge",
-      "title": "The High Five: Hilltoppers' revenge",
-      "link": "https://www.vermontpublic.org/show/sports-rapport/2026-09-21/the-high-five-hilltoppers-revenge",
-      "ts": "2026-09-21T17:06:44+00:00",
-      "summary": "St. Johnsbury gets payback against Middlebury in a rematch of last year's Division I high school football state championship, the UVM men's soccer team suffers its first defeat of the year, and the UVM field hockey team wins its fifth straight."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-09-21/feds-reject-local-bid-to-purchase-former-montpelier-post-office-building",
-      "title": "Feds reject local bid to purchase former Montpelier post office building",
-      "link": "https://www.vermontpublic.org/local-news/2026-09-21/feds-reject-local-bid-to-purchase-former-montpelier-post-office-building",
-      "ts": "2026-09-21T09:00:00+00:00",
-      "summary": "The U.S. General Services Administration this week said a local organization's offer of $540,000 to purchase the building at 87 State St. was too far below the value of the property."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "VYKGPZXXFRCAFI2NJMY52Y77OU",
+      "title": "Second fire ignites at Vermont family owned convenience store",
+      "link": "https://www.wcax.com/2026/09/24/second-fire-ignites-vermont-family-owned-convenience-store/",
+      "ts": "2026-09-24T10:09:36+00:00",
+      "summary": "Main Street remains closed between Buck Hollow Road and Sam Webb Road due to structure fire."
+     },
      {
       "id": "6YFYBZVUUNFVVAON6DC74HOUY4",
       "title": "Green Mountain Transit shielded from record diesel prices, for now",
@@ -1276,18 +1283,46 @@
       "link": "https://www.wcax.com/2026/09/22/north-country-teen-arrested-hit-and-run-collision/",
       "ts": "2026-09-22T15:16:35+00:00",
       "summary": "A North Country teen has been charged with assault following a hit-and-run collision in Malone on Sept. 11."
-     },
-     {
-      "id": "JC2FUQZH75BEJKTL3E72DD3NUQ",
-      "title": "What to know about hospital deals with the Trump administration to avoid treating transgender minors",
-      "link": "https://www.wcax.com/2026/09/22/what-know-about-hospital-deals-with-trump-administration-avoid-treating-transgender-minors/",
-      "ts": "2026-09-22T14:54:41+00:00",
-      "summary": "At least six major hospitals have agreed to refuse gender-affirming hormones and surgery for transgender young people and agreed to make payments to the federal government, according to deals with the Department of Justice."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73862616",
+      "title": "Judge orders White House to restore access to three news outlets",
+      "link": "https://www.mynbc5.com/article/judge-orders-white-house-to-restore-access-to-news-outlets/73862616",
+      "ts": "2026-09-24T09:46:00+00:00",
+      "summary": "A federal judge temporarily blocked President Donald Trump's move to ban three news outlets from the White House grounds and said CNN, MS NOW and Politico must have their access restored"
+     },
+     {
+      "id": "73863681",
+      "title": "Expect delays: Fire rekindles at Franklin County convenience store",
+      "link": "https://www.mynbc5.com/article/nans-mobil-fire-reignites-fairfax/73863681",
+      "ts": "2026-09-24T09:41:00+00:00",
+      "summary": "Vermont Route 104 is obstructed again after a fire rekindled at a beloved Franklin County store."
+     },
+     {
+      "id": "73859558",
+      "title": "More sunny, comfortable weather Thursday",
+      "link": "https://www.mynbc5.com/article/continued-sunshine-thursday-after-a-frosty-start-for-some-9-23-26/73859558",
+      "ts": "2026-09-24T09:10:00+00:00",
+      "summary": "Sun mixes with high clouds Friday, rain chances rise over the weekend"
+     },
+     {
+      "id": "73863879",
+      "title": "Zelenskyy, at UN, urges leaders to keep choking Russia's revenues and impede its war efforts",
+      "link": "https://www.mynbc5.com/article/zelenskyy-un-russia-war/73863879",
+      "ts": "2026-09-24T08:51:00+00:00",
+      "summary": "Ukrainian President Volodymyr Zelenskyy told world leaders Wednesday that Vladimir Putin is the only obstacle to ending “the ridiculous and never-ending war,” and he urged nations large and small to pressure the Russian president for peace by choking the country’s revenues and impeding its war efforts."
+     },
+     {
+      "id": "73862473",
+      "title": "Inside a murder case: Investigator traces Mary Kay Heese's last moments",
+      "link": "https://www.mynbc5.com/article/nebraska-mary-kay-heese-wahoo-cold-case-murder-investigation/73862473",
+      "ts": "2026-09-24T05:12:00+00:00",
+      "summary": "A former investigator reveals everything he believes happened on March 25, 1969, when a 17-year-old girl was murdered."
+     },
      {
       "id": "73862376",
       "title": "Humpback whale 'Rio' is headed west in the Delta toward San Francisco Bay",
@@ -1392,41 +1427,6 @@
       "link": "https://www.mynbc5.com/article/race-for-vt-governor-heats-up-as-candidates-work-to-reach-the-voters/73859982",
       "ts": "2026-09-23T23:13:00+00:00",
       "summary": "While November is still weeks away, key statewide races are steadily heating up as they move towards Election Day. That includes the race for governor."
-     },
-     {
-      "id": "73859036",
-      "title": "Iowa judge dismisses President Trump's lawsuit against Des Moines Register and pollster",
-      "link": "https://www.mynbc5.com/article/iowa-judge-dismisses-trump-des-moines-register-poll-lawsuit/73859036",
-      "ts": "2026-09-23T22:43:00+00:00",
-      "summary": "A judge in Iowa has dismissed President Donald Trump's lawsuit against The Des Moines Register and its former pollster"
-     },
-     {
-      "id": "73859563",
-      "title": "Police look for suspect in South Burlington vandalism investigation",
-      "link": "https://www.mynbc5.com/article/south-burlington-vandalism-investigation/73859563",
-      "ts": "2026-09-23T22:42:00+00:00",
-      "summary": "The South Burlington Police Department is looking for a person accused of vandalizing a resident's porch in the South Village neighborhood during the Jewish holiday of Yom Kippur."
-     },
-     {
-      "id": "73855434",
-      "title": "Some GLP-1 companies facing lawsuits over vision loss. What to know",
-      "link": "https://www.mynbc5.com/article/glp-1-ozempic-companies-lawsuits-vision-loss-naion/73855434",
-      "ts": "2026-09-23T22:16:00+00:00",
-      "summary": "Some of the companies that produce GLP-1 drugs like Ozempic and Zepbound are facing lawsuits alleging that the drugs caused vision loss. Here's what to know."
-     },
-     {
-      "id": "73859551",
-      "title": "Arrest warrant issued for former Santa's Workshop employee accused of sexual misconduct",
-      "link": "https://www.mynbc5.com/article/arrest-warrant-issued-former-santa-s-workshop-employee/73859551",
-      "ts": "2026-09-23T22:14:00+00:00",
-      "summary": "The North Country Santa impersonator accused of trying to solicit sex from kids did not show up for his court appearance in Ticonderoga on Sept 23."
-     },
-     {
-      "id": "73859524",
-      "title": "NASCAR legend Darrell Waltrip steps away from spotlight after FTD diagnosis",
-      "link": "https://www.mynbc5.com/article/nascar-darrell-waltrip-ftd-cte-diagnosis/73859524",
-      "ts": "2026-09-23T22:12:00+00:00",
-      "summary": "NASCAR legend Darrell Waltrip is stepping away from the public eye after being diagnosed with a cognitive disease, according to a statement released Wednesday by his family."
      }
     ]
    },
