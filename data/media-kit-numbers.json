@@ -1,0 +1,33 @@
+{
+  "_note": "The only place sponsor-facing numbers live. advertise.html, media-kit.html and partner.html read this file at load and fall back to the same values baked into their HTML, so keep the two in step: change a number here, then run scripts/media_kit_numbers.py --apply to rewrite the HTML fallbacks. Every value must trace to a screenshot or an API pull; the rule is 'nothing sponsor-facing goes out without a screenshot behind it'. Never put a price here or anywhere on the site.",
+  "_refresh": "The advisor secretary refreshes advisor/data/metrics.json from the Beehiiv API each morning. Copy audience.subscribers, open_rate_4wk and click_rate_4wk from there; opens_per_edition = round(subscribers * open_rate_4wk / 100, -1) rounded DOWN; meetup_members from the Meetup group page; games from play.btownbrief.com/games.json (live: true); guide_pages = top-level *.html in this repo. Update as_of. Then: python3 scripts/media_kit_numbers.py --apply",
+  "as_of": "2026-09-06",
+  "sources": {
+    "subscribers": "Beehiiv API pull 2026-09-05 (advisor/data/metrics.json)",
+    "open_rate_4wk": "Beehiiv 4-week open rate 2026-09-05",
+    "click_rate_4wk": "Beehiiv 4-week click rate 2026-09-05",
+    "meetup_members": "meetup.com/burlington-social-activites-group, read 2026-09-06",
+    "games": "play.btownbrief.com/games.json live entries, 2026-09-06",
+    "guide_pages": "count of top-level pages in btown-brief, 2026-09-06",
+    "editions_published": "Beehiiv posts count 2026-09-05",
+    "ig_followers": "instagram.com/btownbrief 2026-09-05 (not shown on pages; for the call)"
+  },
+  "subscribers": 3141,
+  "subscribers_display": "3,141",
+  "subscribers_rounded": "about 3,100",
+  "open_rate_4wk": 62.27,
+  "open_rate_display": "62%",
+  "open_rate_words": "about 6 in 10",
+  "click_rate_4wk": 11.02,
+  "click_rate_display": "11%",
+  "opens_per_edition": 1956,
+  "opens_display": "nearly 2,000",
+  "meetup_members": 763,
+  "meetup_display": "763",
+  "games": 46,
+  "guide_pages": 42,
+  "editions_published": 170,
+  "ig_followers": 1468,
+  "towns": ["Burlington", "South Burlington", "Winooski", "Essex", "Shelburne", "Williston", "Colchester"],
+  "cadence": "Mondays and Fridays"
+}
