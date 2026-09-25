@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-25T10:53:37+00:00",
+ "updated": "2026-09-25T12:13:38+00:00",
  "sections_updated": {
-  "now": "2026-09-25T10:53:37+00:00",
-  "forecast": "2026-09-25T10:53:37+00:00",
-  "hourly": "2026-09-25T10:53:37+00:00",
-  "alerts": "2026-09-25T10:53:37+00:00",
-  "afd": "2026-09-25T10:53:37+00:00",
-  "lake_forecast": "2026-09-25T10:53:37+00:00",
-  "lake_gage": "2026-09-25T10:53:37+00:00",
-  "air": "2026-09-25T10:53:37+00:00",
-  "sun": "2026-09-25T10:53:37+00:00",
-  "models": "2026-09-25T10:53:37+00:00"
+  "now": "2026-09-25T12:13:38+00:00",
+  "forecast": "2026-09-25T12:13:38+00:00",
+  "hourly": "2026-09-25T12:13:38+00:00",
+  "alerts": "2026-09-25T12:13:38+00:00",
+  "afd": "2026-09-25T12:13:38+00:00",
+  "lake_forecast": "2026-09-25T12:13:38+00:00",
+  "lake_gage": "2026-09-25T12:13:38+00:00",
+  "air": "2026-09-25T12:13:38+00:00",
+  "sun": "2026-09-25T12:13:38+00:00",
+  "models": "2026-09-25T12:13:38+00:00"
  },
  "now": {
-  "observed_at": "2026-09-25T10:30:00+00:00",
+  "observed_at": "2026-09-25T12:00:00+00:00",
   "station": "KBTV",
-  "description": "Fog",
-  "temp_f": 43,
-  "feels_like_f": 41,
+  "description": "Partly Cloudy",
+  "temp_f": 45,
+  "feels_like_f": 45,
   "humidity": 100,
-  "dewpoint_f": 43,
-  "wind_mph": 3,
+  "dewpoint_f": 45,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "E",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-25T06:00:00-04:00",
+    "start": "2026-09-25T08:00:00-04:00",
     "is_day": true,
     "temp_f": 71,
     "pop": 0,
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-25T06:20:15+00:00",
   "hours": [
-   {
-    "t": "2026-09-25T06:00:00-04:00",
-    "temp_f": 46,
-    "feels_f": 44,
-    "pop": 0,
-    "humidity": 100,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 27,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-09-25T07:00:00-04:00",
-    "temp_f": 46,
-    "feels_f": 44,
-    "pop": 0,
-    "humidity": 100,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 32,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-09-25T08:00:00-04:00",
     "temp_f": 47,
@@ -568,6 +546,28 @@
     "wind_dir": "N",
     "sky": 87,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-26T18:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 1,
+    "humidity": 61,
+    "wind_mph": 10,
+    "wind_dir": "N",
+    "sky": 93,
+    "short": "Cloudy"
+   },
+   {
+    "t": "2026-09-26T19:00:00-04:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 13,
+    "humidity": 67,
+    "wind_mph": 10,
+    "wind_dir": "N",
+    "sky": 94,
+    "short": "Cloudy"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-25T06:51:00+00:00",
+  "issued": "2026-09-25T10:50:00+00:00",
   "key_messages": [
    "Dry weather will continue throughout today, with rainfall affecting portions of the area this weekend as a Nor'easter moves along the coast.",
    "Drier and warmer weather will start next week, with additional shower chances towards mid week."
   ],
   "what_changed": "As of 251 AM EDT Friday... No significant changes have been made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 250651\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n251 AM EDT Fri Sep 25 2026\n\n.WHAT HAS CHANGED...\nAs of 251 AM EDT Friday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 251 AM EDT Friday...\n\n1. Dry weather will continue throughout today, with rainfall \naffecting portions of the area this weekend as a Nor'easter moves \nalong the coast. \n\n2. Drier and warmer weather will start next week, with \nadditional shower chances towards mid week. \n\n&&\n\n.DISCUSSION...\nAs of 251 AM EDT Friday...\n\nKEY MESSAGE 1:  High pressure will continue to remain across the region \ntoday, bringing another day of tranquil weather after any early \nmorning fog dissipates. High temperatures this afternoon will warm \ninto the upper 60s to low 70s, with some increasing high clouds \nexpected as the day progresses ahead of the next approaching system, \nlimiting any fog or frost concerns for tonight.\n\nA Nor'easter will continue to track along the coast, bringing heavy \nrainfall and strong winds to portions of the mid-Atlantic and New \nEngland. Our region will be on the periphery of the system, with the \ngreatest impacts expected outside of our area. The better chances \nfor precipitation will be further south, although there is still \nsome uncertainty as the to the overall extent of showers Saturday \ninto Sunday. In addition to the precipitation chances, a strong jet \nassociated with the system will bring gusty surface winds, \nespecially across the higher terrain and the western slopes. \nTemperatures will be on the cooler side as well, especially Sunday \nas clouds and periods of showers are expected, especially across \nsouthern and eastern Vermont.\n\nKEY MESSAGE 2: As the system slowly shifts eastward, shower chances \nwill linger into the start of next week, gradually diminishing \ntowards Tuesday. A frontal boundary looks to move through towards \nmid-week, bringing some additional chances for showers to the \nregion, although there is still plenty of uncertainty at this time \nwith a wide spread amongst models towards that time frame. \nTemperatures will be on the cooler side to start the week, \ngenerally in the 60s areawide, gradually warming a few degrees \ntowards the middle of the week with highs in the upper 60s and lower \n70s. Lingering showers and cloud cover will prevent overnight \ntemperatures from radiating out, with temperatures most \nlikely dropping into the 40s and 50s.\n\n&&\n\n.AVIATION /06Z FRIDAY THROUGH TUESDAY/...\nThrough 06Z Saturday...A mix of flight conditions looks to prevail\nover the next several hours as fog and mist develop across the\nregion with high pressure overhead. KEFK and KMSS have already seen\nbouts if IFR or lower conditions, but more widespread IFR or lower\nis expected towards 09Z before dissipating after sunrise. Compared\nto previous nights, the duration and areal coverage of the fog/mist\nmay be slightly less. Outside of any fog, VFR conditions are\nexpected to prevail through the forecast period, with increasing\nhigh clouds streaming into the region later today. Winds will\ngenerally remain light and variable overnight, trending more\nnortherly this afternoon although still remaining less than 10\nknots.\n\nOutlook...\n\nSaturday: VFR. Chance SHRA.\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly VFR, with local MVFR possible. Chance SHRA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nMonday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nMonday Night: Mainly MVFR, with areas IFR possible. Slight chance\nSHRA.\nTuesday: Mainly MVFR, with local IFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer\nAVIATION...Kremer\n"
+  "raw": "\n000\nFXUS61 KBTV 251050\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n650 AM EDT Fri Sep 25 2026\n\n.WHAT HAS CHANGED...\nAs of 251 AM EDT Friday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 251 AM EDT Friday...\n\n1. Dry weather will continue throughout today, with rainfall \naffecting portions of the area this weekend as a Nor'easter moves \nalong the coast. \n\n2. Drier and warmer weather will start next week, with \nadditional shower chances towards mid week.\n\n&&\n\n.DISCUSSION...\nAs of 251 AM EDT Friday...\n\nKEY MESSAGE 1:  High pressure will continue to remain across the region \ntoday, bringing another day of tranquil weather after any early \nmorning fog dissipates. High temperatures this afternoon will warm \ninto the upper 60s to low 70s, with some increasing high clouds \nexpected as the day progresses ahead of the next approaching system, \nlimiting any fog or frost concerns for tonight.\n\nA Nor'easter will continue to track along the coast, bringing heavy \nrainfall and strong winds to portions of the mid-Atlantic and New \nEngland. Our region will be on the periphery of the system, with the \ngreatest impacts expected outside of our area. The better chances \nfor precipitation will be further south, although there is still \nsome uncertainty as the to the overall extent of showers Saturday \ninto Sunday. In addition to the precipitation chances, a strong jet \nassociated with the system will bring gusty surface winds, \nespecially across the higher terrain and the western slopes. \nTemperatures will be on the cooler side as well, especially Sunday \nas clouds and periods of showers are expected, especially across \nsouthern and eastern Vermont.\n\nKEY MESSAGE 2: As the system slowly shifts eastward, shower chances \nwill linger into the start of next week, gradually diminishing \ntowards Tuesday. A frontal boundary looks to move through towards \nmid-week, bringing some additional chances for showers to the \nregion, although there is still plenty of uncertainty at this time \nwith a wide spread amongst models towards that time frame. \nTemperatures will be on the cooler side to start the week, \ngenerally in the 60s areawide, gradually warming a few degrees \ntowards the middle of the week with highs in the upper 60s and lower \n70s. Lingering showers and cloud cover will prevent overnight \ntemperatures from radiating out, with temperatures most \nlikely dropping into the 40s and 50s.\n\n&&\n\n.AVIATION /12Z FRIDAY THROUGH TUESDAY/...\nThrough 12Z Saturday...Widespread fog and low ceilings this\nmorning continue to bring IFR or lower conditions to most\nterminals this morning. These conditions are expected to quickly\nimprove over the next few hours after sunrise as fog dissipates\nacross the region, generally between 12Z and 14Z. For the\nremainder of the forecast period, VFR conditions are expected to\nprevail, with some increasing high clouds expected as the\nafternoon progresses. Winds will generally be northerly and less\nthan 10 knots throughout the day today, becoming light and \nterrain driven this evening, although a few stronger gusts at \nKRUT cannot be ruled out this afternoon. \n\nOutlook...\n\nSaturday: VFR. Chance SHRA.\nSaturday Night: VFR. Chance SHRA.\nSunday: Mainly VFR, with local MVFR possible. Chance SHRA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nMonday: Mainly MVFR, with areas VFR possible. Chance SHRA.\nMonday Night: Mainly MVFR, with areas IFR possible. Slight chance\nSHRA.\nTuesday: Mainly MVFR, with local IFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer\nAVIATION...Kremer\n"
  },
  "lake_forecast": {
   "issued": "2026-09-25T06:23:00+00:00",
@@ -826,9 +826,9 @@
  },
  "lake_gage": {
   "water_temp_f": 63,
-  "water_temp_at": "2026-09-25T06:00:00.000-04:00",
-  "level_ft": 94.02,
-  "level_at": "2026-09-25T06:00:00.000-04:00",
+  "water_temp_at": "2026-09-25T08:00:00.000-04:00",
+  "level_ft": 94.04,
+  "level_at": "2026-09-25T08:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -836,7 +836,7 @@
   "aqi": 21,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/25/26 6:00",
+  "observed": "09/25/26 7:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, September 25th."
  },
  "sun": {
@@ -844,14 +844,14 @@
   "sunset": "2026-09-25T18:44-04:00",
   "sunrise_tomorrow": "2026-09-26T06:44-04:00",
   "sunset_tomorrow": "2026-09-26T18:42-04:00",
-  "uv_max": 5.15
+  "uv_max": 4.8
  },
  "models": {
   "days": [
    {
     "date": "2026-09-25",
     "high_f": {
-     "GFS": 70,
+     "GFS": 71,
      "Euro": 69,
      "ICON": 74
     },
@@ -889,7 +889,7 @@
    {
     "date": "2026-09-27",
     "high_f": {
-     "GFS": 67,
+     "GFS": 68,
      "Euro": 67,
      "ICON": 63
     },
@@ -899,11 +899,11 @@
      "ICON": 55
     },
     "precip_in": {
-     "GFS": 0.08,
+     "GFS": 0.01,
      "Euro": 0.17,
      "ICON": 0.14
     },
-    "high_spread_f": 4
+    "high_spread_f": 5
    }
   ]
  }
