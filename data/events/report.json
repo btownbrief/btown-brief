@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-25T10:43:13-04:00",
+ "generated": "2026-09-25T19:32:10-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 11,
-   "seconds": 6.0
+   "seconds": 6.1
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 70,
-   "seconds": 5.4
+   "count": 71,
+   "seconds": 6.9
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 57,
-   "seconds": 3.2
+   "count": 58,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 256,
-   "seconds": 3.7
+   "count": 267,
+   "seconds": 3.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 69,
-   "seconds": 1.7
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -49,12 +49,12 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 76.4
+   "seconds": 73.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 23,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,28 +64,27 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 708,
-   "seconds": 42.9
+   "seconds": 41.5
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 82,
-   "seconds": 1.8
+   "seconds": 0.2
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 11.9
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 407,
-   "seconds": 68.2
+   "seconds": 69.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 57,
-   "seconds": 115.1
+   "count": 56,
+   "seconds": 117.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
@@ -95,27 +94,27 @@
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 57,
-   "seconds": 16.5
+   "seconds": 16.8
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 12,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 102,
-   "seconds": 2.2
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 35.3
+   "seconds": 34.9
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2311,
-   "seconds": 23.7
+   "seconds": 2.6
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -124,31 +123,75 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 522,
-   "seconds": 35.3
+   "count": 514,
+   "seconds": 26.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 326,
-   "seconds": 0.2
+   "count": 319,
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 53,
-   "seconds": 74.2
+   "seconds": 72.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 52,
-   "seconds": 0.2
+   "seconds": 0.4
   }
  },
- "gathered": 5427,
- "afterDedup": 2557,
- "duplicatesMerged": 2870,
- "final": 2613,
- "firecrawlCalls": 5,
+ "gathered": 5425,
+ "afterDedup": 2559,
+ "duplicatesMerged": 2866,
+ "final": 2621,
+ "firecrawlCalls": 1,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Men's Soccer vs Binghamton",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-10-30"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-30"
+  },
+  {
+   "kept": {
+    "title": "Live Music",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-10-30"
+  },
+  {
+   "kept": {
+    "title": "Family Playshop",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-10-31"
+  },
   {
    "kept": {
     "title": "The Sorcerer’s Apprentice",
@@ -195,7 +238,9 @@
    },
    "merged_sources": [
     "churchst",
-    "loveburlington"
+    "loveburlington",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-10-31"
   },
@@ -537,17 +582,6 @@
   },
   {
    "kept": {
-    "title": "Coloring in the Marble Court",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
     "title": "BOOST Sessions",
     "source": "uvm"
    },
@@ -807,17 +841,6 @@
   {
    "kept": {
     "title": "Communities filling gaps in forest stewardship, despite growing gaps in resources ft. Cecilia Danks",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "Curator Tour",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1202,17 +1225,6 @@
   {
    "kept": {
     "title": "RSENR Research Seminar",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-11"
-  },
-  {
-   "kept": {
-    "title": "Coloring in the Marble Court",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1955,17 +1967,6 @@
   },
   {
    "kept": {
-    "title": "Coloring in the Marble Court",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-18"
-  },
-  {
-   "kept": {
     "title": "BOOST Sessions",
     "source": "uvm"
    },
@@ -2423,42 +2424,19 @@
  ],
  "changes": [
   {
-   "id": "f321cdd14934",
-   "title": "The Work in Progress",
-   "date": "2026-10-02",
+   "id": "b2833c16cff5",
+   "title": "Howl'ween Dog Costume Contest",
+   "date": "2026-10-31",
    "change": "time",
-   "was": "2026-10-02T16:00:00-04:00",
-   "now": "2026-10-02T19:00:00-04:00"
+   "was": "2026-10-31",
+   "now": "2026-10-31T12:00:00-04:00"
   },
   {
-   "id": "eeeca50c5368",
-   "title": "David Drake",
-   "date": "2026-10-08",
-   "change": "time",
-   "was": "2026-10-08T19:00:00-04:00",
-   "now": "2026-10-08T18:30:00-04:00"
-  },
-  {
-   "id": "747a3fad7f71",
-   "title": "David Drake",
-   "date": "2026-10-09",
-   "change": "time",
-   "was": "2026-10-09T19:00:00-04:00",
-   "now": "2026-10-09T18:30:00-04:00"
-  },
-  {
-   "id": "5999b4af364e",
-   "title": "David Drake",
-   "date": "2026-10-10",
-   "change": "time",
-   "was": "2026-10-10T19:00:00-04:00",
-   "now": "2026-10-10T18:30:00-04:00"
-  },
-  {
-   "id": "c0d324aecae4",
-   "title": "Discover Feldenkrais®️",
+   "id": "fbdf1149aaba",
+   "title": "Lunch with the Poets",
    "date": "2026-09-25",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "62c3f4a8eedc",
@@ -2480,12 +2458,6 @@
    "date": "2026-09-25",
    "change": "missing",
    "lastSeen": "2026-09-23T10:24:21-04:00"
-  },
-  {
-   "id": "97da5fa558ac",
-   "title": "Pet Store: A Live Sitcom",
-   "date": "2026-09-25",
-   "change": "dropped"
   },
   {
    "id": "aff6da4150d0",
@@ -2544,12 +2516,6 @@
    "lastSeen": "2026-09-24T19:26:23-04:00"
   },
   {
-   "id": "e9bd65522bb4",
-   "title": "Paint Your Pet!",
-   "date": "2026-09-29",
-   "change": "dropped"
-  },
-  {
    "id": "b06b8cd265e8",
    "title": "Baby Time",
    "date": "2026-09-30",
@@ -2557,11 +2523,24 @@
    "lastSeen": "2026-09-24T19:26:23-04:00"
   },
   {
+   "id": "f0c94bbfeba2",
+   "title": "Coloring in the Marble Court",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
+  },
+  {
    "id": "09562e547627",
    "title": "Standup Open Mic",
    "date": "2026-09-30",
+   "change": "dropped"
+  },
+  {
+   "id": "235e5567cc16",
+   "title": "Guided Gallery Tour",
+   "date": "2026-10-02",
    "change": "missing",
-   "lastSeen": "2026-09-22T19:15:39-04:00"
+   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "41572f20d4a1",
@@ -2595,8 +2574,7 @@
    "id": "66e4d9049042",
    "title": "Bike Trip",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-22T19:15:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "1c91caedab8a",
@@ -2606,11 +2584,25 @@
    "lastSeen": "2026-09-23T19:08:25-04:00"
   },
   {
+   "id": "ff70a02a47d6",
+   "title": "Guided Gallery Tour",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
+  },
+  {
    "id": "43472f9e1fce",
    "title": "Fall Fest Weekend",
    "date": "2026-10-03",
    "change": "missing",
    "lastSeen": "2026-09-23T19:08:25-04:00"
+  },
+  {
+   "id": "5d49146c55fe",
+   "title": "Arsenic Any Where Presents Chandelier",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "6b4d6b8ba51d",
@@ -2655,6 +2647,13 @@
    "lastSeen": "2026-09-24T10:26:17-04:00"
   },
   {
+   "id": "8e56a3485417",
+   "title": "Coloring in the Marble Court",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
+  },
+  {
    "id": "13e392d8d23e",
    "title": "Trash for the Trope: A Romance Lover's Book Club",
    "date": "2026-10-07",
@@ -2690,17 +2689,18 @@
    "lastSeen": "2026-09-23T19:08:25-04:00"
   },
   {
-   "id": "b6c897b958fd",
-   "title": "Pause-Café Mardi",
-   "date": "2026-10-13",
-   "change": "dropped"
-  },
-  {
    "id": "16a50cbd000c",
    "title": "Local Dork at Foam Brewers on a Tuesday",
    "date": "2026-10-13",
    "change": "missing",
    "lastSeen": "2026-09-24T10:26:17-04:00"
+  },
+  {
+   "id": "2052a154655a",
+   "title": "Catalyst: Artists in Conversation",
+   "date": "2026-10-14",
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "39b3b98b73d1",
@@ -2717,23 +2717,11 @@
    "lastSeen": "2026-09-23T19:08:25-04:00"
   },
   {
-   "id": "8cc7a6a2057a",
-   "title": "Proud Little State - Issue 2 Launch Party",
-   "date": "2026-10-19",
-   "change": "missing",
-   "lastSeen": "2026-09-24T19:26:23-04:00"
-  },
-  {
-   "id": "910d2b48943e",
-   "title": "Pause-Café Mardi",
-   "date": "2026-10-20",
-   "change": "dropped"
-  },
-  {
-   "id": "68161c5432db",
-   "title": "Queen City Ghostwalk: Wicked Waterfront Tour",
+   "id": "dc83ea3f9eda",
+   "title": "Coloring in the Marble Court",
    "date": "2026-10-21",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "5d8e1deb47c9",
@@ -2764,16 +2752,11 @@
    "lastSeen": "2026-09-23T19:08:25-04:00"
   },
   {
-   "id": "b6868e85819d",
-   "title": "Queen City Ghostwalk: Fright by Flashlight at Lakeview Cemetery",
-   "date": "2026-10-25",
-   "change": "dropped"
-  },
-  {
-   "id": "b5771f62f3df",
-   "title": "Pause-Café Mardi",
-   "date": "2026-10-27",
-   "change": "dropped"
+   "id": "daf84aaaaa20",
+   "title": "Coloring in the Marble Court",
+   "date": "2026-10-28",
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "463c072759bf",
@@ -2804,17 +2787,24 @@
    "lastSeen": "2026-09-23T19:08:25-04:00"
   },
   {
-   "id": "5118e0cf0132",
-   "title": "Pause-Café Mardi",
-   "date": "2026-11-03",
-   "change": "dropped"
+   "id": "41887efbc8d9",
+   "title": "Coloring in the Marble Court",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "a0a7b2096da7",
    "title": "Standup Open Mic",
    "date": "2026-11-04",
+   "change": "dropped"
+  },
+  {
+   "id": "056bc15d9046",
+   "title": "Curator Tour",
+   "date": "2026-11-06",
    "change": "missing",
-   "lastSeen": "2026-09-22T19:15:39-04:00"
+   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "971930a11382",
@@ -2831,11 +2821,17 @@
    "lastSeen": "2026-09-23T19:08:25-04:00"
   },
   {
+   "id": "54eaef9d7fc0",
+   "title": "Coloring in the Marble Court",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
+  },
+  {
    "id": "908eec694f66",
    "title": "Standup Open Mic",
    "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-09-22T19:15:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "c6b5d9b8c63e",
@@ -2859,11 +2855,17 @@
    "lastSeen": "2026-09-24T19:26:23-04:00"
   },
   {
+   "id": "b1407d15c4d7",
+   "title": "Coloring in the Marble Court",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-09-25T10:43:13-04:00"
+  },
+  {
    "id": "45439d4ae5a7",
    "title": "Standup Open Mic",
    "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-09-22T19:15:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "6120fcc49ef1",
