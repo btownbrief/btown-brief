@@ -1,24 +1,24 @@
 {
- "updated": "2026-09-26T16:54:49+00:00",
+ "updated": "2026-09-26T18:04:59+00:00",
  "sections_updated": {
-  "now": "2026-09-26T16:54:49+00:00",
-  "forecast": "2026-09-26T16:54:49+00:00",
-  "hourly": "2026-09-26T16:54:49+00:00",
-  "alerts": "2026-09-26T16:54:49+00:00",
-  "afd": "2026-09-26T16:54:49+00:00",
-  "lake_forecast": "2026-09-26T16:54:49+00:00",
+  "now": "2026-09-26T18:04:59+00:00",
+  "forecast": "2026-09-26T18:04:59+00:00",
+  "hourly": "2026-09-26T18:04:59+00:00",
+  "alerts": "2026-09-26T18:04:59+00:00",
+  "afd": "2026-09-26T18:04:59+00:00",
+  "lake_forecast": "2026-09-26T18:04:59+00:00",
   "lake_gage": "2026-09-26T15:34:46+00:00",
-  "air": "2026-09-26T16:54:49+00:00",
-  "sun": "2026-09-26T16:54:49+00:00",
-  "models": "2026-09-26T16:54:49+00:00"
+  "air": "2026-09-26T18:04:59+00:00",
+  "sun": "2026-09-26T18:04:59+00:00",
+  "models": "2026-09-26T18:04:59+00:00"
  },
  "now": {
-  "observed_at": "2026-09-26T16:35:00+00:00",
+  "observed_at": "2026-09-26T17:40:00+00:00",
   "station": "KBTV",
   "description": "Partly Cloudy",
-  "temp_f": 66,
-  "feels_like_f": 66,
-  "humidity": 60,
+  "temp_f": 68,
+  "feels_like_f": 68,
+  "humidity": 56,
   "dewpoint_f": 52,
   "wind_mph": null,
   "wind_gust_mph": null,
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-09-26T12:00:00-04:00",
+    "start": "2026-09-26T14:00:00-04:00",
     "is_day": true,
     "temp_f": 71,
     "pop": 2,
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-26T06:21:28+00:00",
   "hours": [
-   {
-    "t": "2026-09-26T12:00:00-04:00",
-    "temp_f": 65,
-    "feels_f": 65,
-    "pop": 0,
-    "humidity": 68,
-    "wind_mph": 13,
-    "wind_dir": "N",
-    "sky": 70,
-    "short": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-09-26T13:00:00-04:00",
-    "temp_f": 68,
-    "feels_f": 68,
-    "pop": 0,
-    "humidity": 61,
-    "wind_mph": 13,
-    "wind_dir": "N",
-    "sky": 70,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-09-26T14:00:00-04:00",
     "temp_f": 69,
@@ -568,6 +546,28 @@
     "wind_dir": "NE",
     "sky": 61,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-28T00:00:00-04:00",
+    "temp_f": 57,
+    "feels_f": 57,
+    "pop": 26,
+    "humidity": 86,
+    "wind_mph": 6,
+    "wind_dir": "NE",
+    "sky": 60,
+    "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-28T01:00:00-04:00",
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 26,
+    "humidity": 86,
+    "wind_mph": 5,
+    "wind_dir": "NE",
+    "sky": 58,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-26T14:47:00+00:00",
+  "issued": "2026-09-26T17:32:00+00:00",
   "key_messages": [
    "A Nor'easter will continue to move along the coast, bringing chances for showers and breezy winds this weekend, but the strongest impacts will remain over southern New England.",
    "Seasonable, mainly dry weather continues through late week"
   ],
   "what_changed": "As of 1047 AM EDT Saturday... A Lake Wind Advisory has been issued for the Broad Waters and Southern Waters of Lake Champlain. See Marine Section for more details.",
-  "raw": "\n000\nFXUS61 KBTV 261447\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n1047 AM EDT Sat Sep 26 2026\n\n.WHAT HAS CHANGED...\nAs of 1047 AM EDT Saturday...\n\nA Lake Wind Advisory has been issued for the Broad Waters and\nSouthern Waters of Lake Champlain. See Marine Section for more\ndetails. \n\n&&\n\n.KEY MESSAGES...\nAs of 233 AM EDT Saturday...\n\n1. A Nor'easter will continue to move along the coast, bringing \nchances for showers and breezy winds this weekend, but the strongest \nimpacts will remain over southern New England. \n\n2. Seasonable, mainly dry weather continues through late week\n\n&&\n\n.DISCUSSION...\nAs of 233 AM EDT Saturday...\n\nKEY MESSAGE 1: A Nor'easter centered off the Mid-Atlantic coast will be \nthe main weather feature this weekend, with our region on the \nperiphery of the system and more impactful weather further south \ntowards the coast. Several rain bands will move across southern \nVermont and try to make their way further north, but drier air \nacross the region will limit their progress and how much \nprecipitation is expected. Throughout the weekend, southern Vermont \nwill see the most precipitation after several rounds of showers, but \nfurther north look to remain drier. The system will slowly exit the \nregion later this weekend into the start of next week, bringing \ngreater precipitation chances for Sunday into Monday before drier \nconditions return towards Tuesday. \n\nIn addition to the precipitation, a strong jet looks to bring gusty \nwinds to the region, particularly tonight into Sunday, with the \ngreatest concern across the western slopes in southern Vermont and \nsummit levels. Temperatures will be on the cooler side as well, \nespecially for Sunday and Monday with clouds and periods of showers \nexpected, especially across southern and eastern Vermont.\n\nKEY MESSAGE 2: No impactful weather is expected for the middle to later \nportions of next week. The Nor'easter currently affecting southern \nNew England and the Mid-Atlantic region will exist in a much \nweakened state by Tuesday night and be in the process of exiting \nnortheast into the westerlies away from our region as skies trend \npartly cloudy. Thereafter, weak high pressure mainly controls \nregional weather conditions for the Wed-Thu time frame with daily \nhighs warming into the upper 60s to lower 70s. This morning's GFS \ndepiction of a rather sharp northern stream trough feature and \nscattered/numerous showers passing through the area Wednesday \nevening appears overdone. This solution has little support from \nother output which seems reasonable given weak baroclinicity evident \nin 925-850 hPa thermal profiles and I've offered mainly a dry \nweather through this time frame. By Friday a somewhat more \npronounced cold front appears poised to swing through the region. \nAgain, moisture is rather starved with this feature, so \nprecipitation chances will be generally held in the 20-40% range. \nBehind the front, slightly cooler air arrives for next weekend, but \nvalues should remain within 5 degrees of seasonal early October \nnorms.\n\n&&\n\n.AVIATION /12Z SATURDAY THROUGH WEDNESDAY/...\nThrough 12Z Sunday...VFR conditions are expected over the next \n24 hours under thickening mid to high level clouds as coastal \nstorm pivots offshore south of our region. Winds to trend north\nto northeasterly 6-12 knots today with occasional gustiness \ninto the 15-20 kt range this afternoon before some slight abatement\ntonight. In addition, easterly LLWS from 35-45 kts will begin \nto push northward into the area mainly after 00Z Sunday and \nshould persist through the end of the forecast period. This will\naffect KRUT first, then other selected terminals thereafter. As\nsuch, early morning Sunday approaches/departures may experience\noccasional moderate turbulence. A few showers associated with \nthe aforementioned coastal storm may also affect the KRUT and \nKMPV terminals during this overnight/early morning period.\n\nOutlook...\n\nSunday: VFR. Chance SHRA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nMonday: Mainly MVFR, with local IFR possible. Likely SHRA.\nMonday Night: Mainly MVFR, with local IFR possible. Chance SHRA.\nTuesday: Mainly MVFR, with local IFR possible. NO SIG WX.\nTuesday Night: Mainly MVFR, with local IFR possible. NO SIG WX.\nWednesday: MVFR/IFR conditions possible. Slight chance SHRA.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory is in effect for the southern waters and\nthe broad waters of Lake Champlain. Winds will increase today to\n15 to 25 knots, with gusts to 30 knots, especially over \nsouthern portions of the lake. Winds will build to 1 to 3 feet\ntoday, highest over southern Lake Champlain. Winds and waves\nwill peak overnight tonight at 20 to 30 knots with waves 2 to 4\nfeet, especially in the early morning hours on Sunday. Winds\nwill diminish through the day Sunday, becoming around 10 knots\nby the evening. Waves will also subside to 1 to 3 feet by Sunday\nevening, then further subside to 1 to 2 feet Sunday night. \n\nWinds will be lighter and waves lower further north over the\nnorthern waters of Lake Champlain, where winds will peak around\n20 knots tonight and waves will stay in the 1 to 2 foot range. \n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/JMG\nAVIATION...JMG\nMARINE...Duell\n"
+  "raw": "\n000\nFXUS61 KBTV 261732\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n132 PM EDT Sat Sep 26 2026\n\n.WHAT HAS CHANGED...\nAs of 1047 AM EDT Saturday...\n\nA Lake Wind Advisory has been issued for the Broad Waters and\nSouthern Waters of Lake Champlain. See Marine Section for more\ndetails.\n\n&&\n\n.KEY MESSAGES...\nAs of 233 AM EDT Saturday...\n\n1. A Nor'easter will continue to move along the coast, bringing \nchances for showers and breezy winds this weekend, but the strongest \nimpacts will remain over southern New England. \n\n2. Seasonable, mainly dry weather continues through late week\n\n&&\n\n.DISCUSSION...\nAs of 233 AM EDT Saturday...\n\nKEY MESSAGE 1: A Nor'easter centered off the Mid-Atlantic coast will be \nthe main weather feature this weekend, with our region on the \nperiphery of the system and more impactful weather further south \ntowards the coast. Several rain bands will move across southern \nVermont and try to make their way further north, but drier air \nacross the region will limit their progress and how much \nprecipitation is expected. Throughout the weekend, southern Vermont \nwill see the most precipitation after several rounds of showers, but \nfurther north look to remain drier. The system will slowly exit the \nregion later this weekend into the start of next week, bringing \ngreater precipitation chances for Sunday into Monday before drier \nconditions return towards Tuesday. \n\nIn addition to the precipitation, a strong jet looks to bring gusty \nwinds to the region, particularly tonight into Sunday, with the \ngreatest concern across the western slopes in southern Vermont and \nsummit levels. Temperatures will be on the cooler side as well, \nespecially for Sunday and Monday with clouds and periods of showers \nexpected, especially across southern and eastern Vermont.\n\nKEY MESSAGE 2: No impactful weather is expected for the middle to later \nportions of next week. The Nor'easter currently affecting southern \nNew England and the Mid-Atlantic region will exist in a much \nweakened state by Tuesday night and be in the process of exiting \nnortheast into the westerlies away from our region as skies trend \npartly cloudy. Thereafter, weak high pressure mainly controls \nregional weather conditions for the Wed-Thu time frame with daily \nhighs warming into the upper 60s to lower 70s. This morning's GFS \ndepiction of a rather sharp northern stream trough feature and \nscattered/numerous showers passing through the area Wednesday \nevening appears overdone. This solution has little support from \nother output which seems reasonable given weak baroclinicity evident \nin 925-850 hPa thermal profiles and I've offered mainly a dry \nweather through this time frame. By Friday a somewhat more \npronounced cold front appears poised to swing through the region. \nAgain, moisture is rather starved with this feature, so \nprecipitation chances will be generally held in the 20-40% range. \nBehind the front, slightly cooler air arrives for next weekend, but \nvalues should remain within 5 degrees of seasonal early October \nnorms.\n\n&&\n\n.AVIATION /18Z SATURDAY THROUGH THURSDAY/...\nThrough 18Z Sunday...No aviation impacts through the day today.\nClouds will slowly lower in the overnight hours as the nor'easter\ncurrently off the coast of New Jersey approaches our CWA. As the\nsystem approaches, we will see increasing wind shear especially at\nRUT and MPV. Ceilings will lower to MVFR for our southern terminals\nby tomorrow morning. RUT could see some periods of heavier rain\nduring the day tomorrow, but other terminals should see only light\nrain and minimal impact.\n\nOutlook...\n\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nMonday: Mainly MVFR, with local IFR possible. Likely SHRA.\nMonday Night: Mainly MVFR, with local IFR possible. Chance SHRA.\nTuesday: Mainly MVFR, with local IFR possible. NO SIG WX.\nTuesday Night: MVFR/IFR conditions possible. NO SIG WX.\nWednesday: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nWednesday Night: VFR. Slight chance SHRA.\nThursday: Mainly VFR, with local MVFR possible. Slight chance\nSHRA.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory is in effect for the southern waters and\nthe broad waters of Lake Champlain. Winds will increase today to\n15 to 25 knots, with gusts to 30 knots, especially over \nsouthern portions of the lake. Winds will build to 1 to 3 feet\ntoday, highest over southern Lake Champlain. Winds and waves\nwill peak overnight tonight at 20 to 30 knots with waves 2 to 4\nfeet, especially in the early morning hours on Sunday. Winds\nwill diminish through the day Sunday, becoming around 10 knots\nby the evening. Waves will also subside to 1 to 3 feet by Sunday\nevening, then further subside to 1 to 2 feet Sunday night. \n\nWinds will be lighter and waves lower further north over the\nnorthern waters of Lake Champlain, where winds will peak around\n20 knots tonight and waves will stay in the 1 to 2 foot range.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...JMG/Kremer\nAVIATION...Langbauer\nMARINE...Duell\n"
  },
  "lake_forecast": {
   "issued": "2026-09-26T14:38:00+00:00",
@@ -852,7 +852,7 @@
   "aqi": 29,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/26/26 12:00",
+  "observed": "09/26/26 13:00",
   "discussion": "Expect generally good air quality across Vermont on Sunday, September 27th."
  },
  "sun": {
@@ -860,7 +860,7 @@
   "sunset": "2026-09-26T18:42-04:00",
   "sunrise_tomorrow": "2026-09-27T06:45-04:00",
   "sunset_tomorrow": "2026-09-27T18:40-04:00",
-  "uv_max": 4.95
+  "uv_max": 5.05
  },
  "models": {
   "days": [
@@ -872,7 +872,7 @@
      "ICON": 70
     },
     "pop_max": {
-     "GFS": 3,
+     "GFS": 4,
      "Euro": 14,
      "ICON": 8
     },
@@ -905,7 +905,7 @@
    {
     "date": "2026-09-28",
     "high_f": {
-     "GFS": 58,
+     "GFS": 65,
      "Euro": 62,
      "ICON": 61
     },
@@ -915,7 +915,7 @@
      "ICON": 63
     },
     "precip_in": {
-     "GFS": 0.44,
+     "GFS": 0.22,
      "Euro": 0.42,
      "ICON": 0.13
     },
