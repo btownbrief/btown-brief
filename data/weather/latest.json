@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-26T13:52:34+00:00",
+ "updated": "2026-09-26T14:44:47+00:00",
  "sections_updated": {
-  "now": "2026-09-26T13:52:34+00:00",
-  "forecast": "2026-09-26T13:52:34+00:00",
-  "hourly": "2026-09-26T13:52:34+00:00",
-  "alerts": "2026-09-26T13:52:34+00:00",
-  "afd": "2026-09-26T13:52:34+00:00",
-  "lake_forecast": "2026-09-26T13:52:34+00:00",
-  "lake_gage": "2026-09-26T13:52:34+00:00",
-  "air": "2026-09-26T13:52:34+00:00",
-  "sun": "2026-09-26T13:52:34+00:00",
-  "models": "2026-09-26T13:52:34+00:00"
+  "now": "2026-09-26T14:44:47+00:00",
+  "forecast": "2026-09-26T14:44:47+00:00",
+  "hourly": "2026-09-26T14:44:47+00:00",
+  "alerts": "2026-09-26T14:44:47+00:00",
+  "afd": "2026-09-26T14:44:47+00:00",
+  "lake_forecast": "2026-09-26T14:44:47+00:00",
+  "lake_gage": "2026-09-26T14:44:47+00:00",
+  "air": "2026-09-26T14:44:47+00:00",
+  "sun": "2026-09-26T14:44:47+00:00",
+  "models": "2026-09-26T14:44:47+00:00"
  },
  "now": {
-  "observed_at": "2026-09-26T13:35:00+00:00",
+  "observed_at": "2026-09-26T14:30:00+00:00",
   "station": "KBTV",
   "description": null,
-  "temp_f": 57,
-  "feels_like_f": 57,
-  "humidity": 77,
-  "dewpoint_f": 50,
-  "wind_mph": 10,
+  "temp_f": 61,
+  "feels_like_f": 61,
+  "humidity": 72,
+  "dewpoint_f": 52,
+  "wind_mph": 11,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "NNW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-09-26T06:00:00-04:00",
+    "start": "2026-09-26T10:00:00-04:00",
     "is_day": true,
     "temp_f": 71,
     "pop": 2,
-    "wind": "N 7 to 13 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 71. North wind 7 to 13 mph, with gusts as high as 23 mph."
+    "wind": "N 13 mph",
+    "short": "Partly Sunny",
+    "detailed": "Partly sunny, with a high near 71. North wind around 13 mph, with gusts as high as 23 mph."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-26T06:21:28+00:00",
   "hours": [
-   {
-    "t": "2026-09-26T09:00:00-04:00",
-    "temp_f": 55,
-    "feels_f": 55,
-    "pop": 0,
-    "humidity": 86,
-    "wind_mph": 10,
-    "wind_dir": "N",
-    "sky": 72,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-09-26T10:00:00-04:00",
     "temp_f": 59,
@@ -568,6 +557,17 @@
     "wind_dir": "NE",
     "sky": 79,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-09-27T21:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 26,
+    "humidity": 83,
+    "wind_mph": 6,
+    "wind_dir": "NE",
+    "sky": 54,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -584,12 +584,20 @@
   "raw": "\n000\nFXUS61 KBTV 261124\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n724 AM EDT Sat Sep 26 2026\n\n.WHAT HAS CHANGED...\nAs of 233 AM EDT Saturday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 233 AM EDT Saturday...\n\n1. A Nor'easter will continue to move along the coast, bringing \nchances for showers and breezy winds this weekend, but the strongest \nimpacts will remain over southern New England. \n\n2. Seasonable, mainly dry weather continues through late week\n\n&&\n\n.DISCUSSION...\nAs of 233 AM EDT Saturday...\n\nKEY MESSAGE 1: A Nor'easter centered off the Mid-Atlantic coast will be \nthe main weather feature this weekend, with our region on the \nperiphery of the system and more impactful weather further south \ntowards the coast. Several rain bands will move across southern \nVermont and try to make their way further north, but drier air \nacross the region will limit their progress and how much \nprecipitation is expected. Throughout the weekend, southern Vermont \nwill see the most precipitation after several rounds of showers, but \nfurther north look to remain drier. The system will slowly exit the \nregion later this weekend into the start of next week, bringing \ngreater precipitation chances for Sunday into Monday before drier \nconditions return towards Tuesday. \n\nIn addition to the precipitation, a strong jet looks to bring gusty \nwinds to the region, particularly tonight into Sunday, with the \ngreatest concern across the western slopes in southern Vermont and \nsummit levels. Temperatures will be on the cooler side as well, \nespecially for Sunday and Monday with clouds and periods of showers \nexpected, especially across southern and eastern Vermont.\n\nKEY MESSAGE 2: No impactful weather is expected for the middle to later \nportions of next week. The Nor'easter currently affecting southern \nNew England and the Mid-Atlantic region will exist in a much \nweakened state by Tuesday night and be in the process of exiting \nnortheast into the westerlies away from our region as skies trend \npartly cloudy. Thereafter, weak high pressure mainly controls \nregional weather conditions for the Wed-Thu time frame with daily \nhighs warming into the upper 60s to lower 70s. This morning's GFS \ndepiction of a rather sharp northern stream trough feature and \nscattered/numerous showers passing through the area Wednesday \nevening appears overdone. This solution has little support from \nother output which seems reasonable given weak baroclinicity evident \nin 925-850 hPa thermal profiles and I've offered mainly a dry \nweather through this time frame. By Friday a somewhat more \npronounced cold front appears poised to swing through the region. \nAgain, moisture is rather starved with this feature, so \nprecipitation chances will be generally held in the 20-40% range. \nBehind the front, slightly cooler air arrives for next weekend, but \nvalues should remain within 5 degrees of seasonal early October \nnorms.\n\n&&\n\n.AVIATION /12Z SATURDAY THROUGH WEDNESDAY/...\nThrough 12Z Sunday...VFR conditions are expected over the next \n24 hours under thickening mid to high level clouds as coastal \nstorm pivots offshore south of our region. Winds to trend north\nto northeasterly 6-12 knots today with occasional gustiness \ninto the 15-20 kt range this afternoon before some slight abatement\ntonight. In addition, easterly LLWS from 35-45 kts will begin \nto push northward into the area mainly after 00Z Sunday and \nshould persist through the end of the forecast period. This will\naffect KRUT first, then other selected terminals thereafter. As\nsuch, early morning Sunday approaches/departures may experience\noccasional moderate turbulence. A few showers associated with \nthe aforementioned coastal storm may also affect the KRUT and \nKMPV terminals during this overnight/early morning period.\n\nOutlook...\n\nSunday: VFR. Chance SHRA.\nSunday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nMonday: Mainly MVFR, with local IFR possible. Likely SHRA.\nMonday Night: Mainly MVFR, with local IFR possible. Chance SHRA.\nTuesday: Mainly MVFR, with local IFR possible. NO SIG WX.\nTuesday Night: Mainly MVFR, with local IFR possible. NO SIG WX.\nWednesday: MVFR/IFR conditions possible. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...JMG/Kremer\nAVIATION...JMG\n"
  },
  "lake_forecast": {
-  "issued": "2026-09-26T06:33:00+00:00",
+  "issued": "2026-09-26T14:38:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "Today",
-    "text": "North winds 10 to 15 knots, increasing to 15 to 20 knots. Partly sunny. Waves 1 to 2 feet.",
+    "period": "..A Lake Wind Advisory Is In Effect",
+    "text": "",
+    "wind_knots_max": null,
+    "gust_knots": null,
+    "waves_ft_max": null,
+    "calm": false
+   },
+   {
+    "period": "Rest Of Today",
+    "text": "North winds 10 to 15 knots, increasing to 15 to 25 knots. Partly sunny. Waves 1 to 2 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -597,18 +605,18 @@
    },
    {
     "period": "Tonight",
-    "text": "North winds 15 to 20 knots. Mostly cloudy. A chance of showers overnight. Waves 1 to 3 feet.",
-    "wind_knots_max": 20,
+    "text": "North winds 15 to 25 knots. Mostly cloudy. A chance of showers overnight. Waves 1 to 3 feet.",
+    "wind_knots_max": 25,
     "gust_knots": null,
     "waves_ft_max": 3,
     "calm": false
    },
    {
     "period": "Sunday",
-    "text": "North winds 15 to 25 knots, becoming northeast and diminishing to 10 to 15 knots. Mostly cloudy. A chance of showers. Waves 1 to 2 feet.",
+    "text": "North winds 15 to 25 knots, becoming northeast and diminishing to 10 to 15 knots. Mostly cloudy. A chance of showers. Waves 1 to 3 feet.",
     "wind_knots_max": 25,
     "gust_knots": null,
-    "waves_ft_max": 2,
+    "waves_ft_max": 3,
     "calm": false
    },
    {
@@ -662,7 +670,7 @@
   ],
   "northern": [
    {
-    "period": "Today",
+    "period": "Rest Of Today",
     "text": "North winds 5 to 15 knots. Partly sunny. Waves 1 to 2 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
@@ -736,35 +744,43 @@
   ],
   "southern": [
    {
-    "period": "Today",
-    "text": "North winds 10 to 15 knots, increasing to 15 to 20 knots. Partly sunny. Waves 1 to 3 feet.",
-    "wind_knots_max": 15,
+    "period": "..A Lake Wind Advisory Is In Effect",
+    "text": "",
+    "wind_knots_max": null,
+    "gust_knots": null,
+    "waves_ft_max": null,
+    "calm": false
+   },
+   {
+    "period": "Rest Of Today",
+    "text": "North winds 15 to 25 knots. Partly sunny. Waves 1 to 3 feet.",
+    "wind_knots_max": 25,
     "gust_knots": null,
     "waves_ft_max": 3,
     "calm": false
    },
    {
     "period": "Tonight",
-    "text": "North winds 15 to 20 knots. Mostly cloudy. A slight chance of showers in the evening, then a chance of showers overnight. Waves 1 to 3 feet.",
-    "wind_knots_max": 20,
+    "text": "North winds to 30 knots. Mostly cloudy. A slight chance of showers in the evening, then a chance of showers overnight. Waves 1 to 3 feet, building to 2 to 4 feet towards the morning.",
+    "wind_knots_max": 30,
     "gust_knots": null,
     "waves_ft_max": 3,
     "calm": false
    },
    {
     "period": "Sunday",
-    "text": "North winds 15 to 25 knots, diminishing to around 10 knots. Mostly cloudy. A chance of showers. Waves 2 to 4 feet, subsiding to 1 to 3 feet.",
-    "wind_knots_max": 25,
+    "text": "North winds to 30 knots in the morning, diminishing to around 10 knots. Mostly cloudy. A chance of showers. Waves 2 to 4 feet, subsiding to 1 to 3 feet.",
+    "wind_knots_max": 30,
     "gust_knots": null,
     "waves_ft_max": 4,
     "calm": false
    },
    {
     "period": "Sunday Night",
-    "text": "Northeast winds 5 to 10 knots, becoming north. Partly cloudy. A chance of showers. Waves 1 foot or less.",
+    "text": "Northeast winds 5 to 10 knots, becoming north. Partly cloudy. A chance of showers. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
@@ -801,7 +817,7 @@
    },
    {
     "period": "Wednesday",
-    "text": "Light and variable winds. Partly sunny. Waves 1 foot or less. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.34 feet 63 degrees USGS gage at Burlington VT 93.50 feet 63 degrees USGS gage at Port Henry NY 93.47 feet 61 degrees",
+    "text": "Light and variable winds. Partly sunny. Waves 1 foot or less. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.32 feet 61 degrees USGS gage at Burlington VT 93.49 feet 63 degrees USGS gage at Port Henry NY 93.49 feet 62 degrees",
     "wind_knots_max": null,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -811,24 +827,24 @@
   "uv": null,
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 93.34,
-    "temp_f": 63
+    "level_ft": 93.32,
+    "temp_f": 61
    },
    "Burlington VT": {
-    "level_ft": 93.5,
+    "level_ft": 93.49,
     "temp_f": 63
    },
    "Port Henry NY": {
-    "level_ft": 93.47,
-    "temp_f": 61
+    "level_ft": 93.49,
+    "temp_f": 62
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 63,
-  "water_temp_at": "2026-09-26T09:00:00.000-04:00",
-  "level_ft": 94.02,
-  "level_at": "2026-09-26T09:00:00.000-04:00",
+  "water_temp_at": "2026-09-26T10:00:00.000-04:00",
+  "level_ft": 94.01,
+  "level_at": "2026-09-26T10:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -836,8 +852,8 @@
   "aqi": 29,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/26/26 9:00",
-  "discussion": "Expect generally good air quality across Vermont on Saturday September 26th."
+  "observed": "09/26/26 10:00",
+  "discussion": "Expect generally good air quality across Vermont on Sunday, September 27th."
  },
  "sun": {
   "sunrise": "2026-09-26T06:44-04:00",
@@ -880,7 +896,7 @@
      "ICON": 60
     },
     "precip_in": {
-     "GFS": 0.39,
+     "GFS": 0.48,
      "Euro": 0.09,
      "ICON": 0.06
     },
@@ -899,7 +915,7 @@
      "ICON": 68
     },
     "precip_in": {
-     "GFS": 0.46,
+     "GFS": 0.44,
      "Euro": 0.42,
      "ICON": 0.32
     },
