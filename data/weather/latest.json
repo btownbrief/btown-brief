@@ -1,16 +1,16 @@
 {
- "updated": "2026-09-26T10:14:33+00:00",
+ "updated": "2026-09-26T10:17:26+00:00",
  "sections_updated": {
-  "now": "2026-09-26T10:14:33+00:00",
-  "forecast": "2026-09-26T10:14:33+00:00",
-  "hourly": "2026-09-26T10:14:33+00:00",
-  "alerts": "2026-09-26T10:14:33+00:00",
-  "afd": "2026-09-26T10:14:33+00:00",
-  "lake_forecast": "2026-09-26T10:14:33+00:00",
-  "lake_gage": "2026-09-26T10:14:33+00:00",
-  "air": "2026-09-26T10:14:33+00:00",
-  "sun": "2026-09-26T10:14:33+00:00",
-  "models": "2026-09-26T10:14:33+00:00"
+  "now": "2026-09-26T10:17:26+00:00",
+  "forecast": "2026-09-26T10:17:26+00:00",
+  "hourly": "2026-09-26T10:17:26+00:00",
+  "alerts": "2026-09-26T10:17:26+00:00",
+  "afd": "2026-09-26T10:17:26+00:00",
+  "lake_forecast": "2026-09-26T10:17:26+00:00",
+  "lake_gage": "2026-09-26T10:17:26+00:00",
+  "air": "2026-09-26T10:17:26+00:00",
+  "sun": "2026-09-26T10:17:26+00:00",
+  "models": "2026-09-26T10:17:26+00:00"
  },
  "now": {
   "observed_at": "2026-09-26T09:50:00+00:00",
@@ -29,7 +29,17 @@
   "updated": "2026-09-26T06:21:28+00:00",
   "periods": [
    {
-    "name": "Today",
+    "name": "Overnight",
+    "start": "2026-09-26T05:00:00-04:00",
+    "is_day": false,
+    "temp_f": 52,
+    "pop": 0,
+    "wind": "N 6 mph",
+    "short": "Mostly Cloudy",
+    "detailed": "Mostly cloudy, with a low around 52. North wind around 6 mph."
+   },
+   {
+    "name": "Saturday",
     "start": "2026-09-26T06:00:00-04:00",
     "is_day": true,
     "temp_f": 71,
@@ -39,7 +49,7 @@
     "detailed": "Mostly cloudy, with a high near 71. North wind 7 to 13 mph, with gusts as high as 23 mph."
    },
    {
-    "name": "Tonight",
+    "name": "Saturday Night",
     "start": "2026-09-26T18:00:00-04:00",
     "is_day": false,
     "temp_f": 54,
@@ -86,7 +96,7 @@
     "pop": 63,
     "wind": "N 5 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely before 2am. Mostly cloudy, with a low around 53. North wind around 5 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "Rain showers likely before 2am. Mostly cloudy, with a low around 53. North wind around 5 mph. Chance of precipitation is 60%."
    },
    {
     "name": "Tuesday",
@@ -157,22 +167,23 @@
     "wind": "S 10 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers. Partly sunny, with a high near 71. South wind around 10 mph. Chance of precipitation is 30%."
-   },
-   {
-    "name": "Friday Night",
-    "start": "2026-10-02T18:00:00-04:00",
-    "is_day": false,
-    "temp_f": 52,
-    "pop": 19,
-    "wind": "SW 5 to 9 mph",
-    "short": "Slight Chance Rain Showers",
-    "detailed": "A slight chance of rain showers. Mostly cloudy, with a low around 52. Southwest wind 5 to 9 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-09-26T06:21:28+00:00",
   "hours": [
+   {
+    "t": "2026-09-26T05:00:00-04:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 0,
+    "humidity": 86,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 80,
+    "short": "Mostly Cloudy"
+   },
    {
     "t": "2026-09-26T06:00:00-04:00",
     "temp_f": 52,
@@ -557,17 +568,6 @@
     "wind_dir": "NE",
     "sky": 73,
     "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-27T17:00:00-04:00",
-    "temp_f": 66,
-    "feels_f": 66,
-    "pop": 29,
-    "humidity": 68,
-    "wind_mph": 9,
-    "wind_dir": "NE",
-    "sky": 79,
-    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -836,7 +836,7 @@
   "aqi": 29,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "09/26/26 5:00",
+  "observed": "09/26/26 6:00",
   "discussion": "Expect generally good air quality across Vermont on Saturday September 26th."
  },
  "sun": {
