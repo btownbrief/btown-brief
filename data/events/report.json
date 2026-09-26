@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-26T09:51:49-04:00",
+ "generated": "2026-09-26T19:08:49-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 5.4
+   "seconds": 5.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 69,
-   "seconds": 6.3
+   "seconds": 5.3
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 59,
-   "seconds": 3.5
+   "seconds": 3.4
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 256,
-   "seconds": 4.2
+   "seconds": 4.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 67,
-   "seconds": 1.9
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 6,
-   "seconds": 0.4
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 205,
-   "seconds": 68.0
+   "seconds": 65.5
   },
   "flynn": {
    "label": "The Flynn",
    "count": 23,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,7 +64,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 702,
-   "seconds": 37.0
+   "seconds": 35.2
   },
   "higherground": {
    "label": "Higher Ground",
@@ -73,49 +73,48 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 12.0
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 405,
-   "seconds": 72.2
+   "seconds": 73.2
   },
   "meetup": {
    "label": "Meetup",
-   "count": 56,
-   "seconds": 108.9
+   "count": 57,
+   "seconds": 105.4
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 22,
-   "seconds": 1.7
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 58,
-   "seconds": 15.6
+   "seconds": 15.4
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 12,
-   "seconds": 0.4
+   "seconds": 0.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 101,
-   "seconds": 2.1
+   "seconds": 1.9
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 19,
-   "seconds": 32.7
+   "seconds": 32.4
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2258,
-   "seconds": 18.2
+   "seconds": 2.8
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -125,7 +124,7 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 497,
-   "seconds": 28.6
+   "seconds": 26.7
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -135,7 +134,7 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 52,
-   "seconds": 66.1
+   "seconds": 69.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -143,11 +142,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 5319,
- "afterDedup": 2551,
+ "gathered": 5321,
+ "afterDedup": 2553,
  "duplicatesMerged": 2768,
- "final": 2610,
- "firecrawlCalls": 5,
+ "final": 2586,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2426,40 +2425,57 @@
  ],
  "changes": [
   {
-   "id": "42b2324fe7d8",
-   "title": "Cookie Queens",
-   "date": "2026-10-10",
+   "id": "f321cdd14934",
+   "title": "The Work in Progress",
+   "date": "2026-10-02",
    "change": "time",
-   "was": "2026-10-10T13:00:00-04:00",
-   "now": "2026-10-10T15:30:00-04:00"
+   "was": "2026-10-02T19:00:00-04:00",
+   "now": "2026-10-02T16:00:00-04:00"
+  },
+  {
+   "id": "0844a3155c2c",
+   "title": "Board Game Brunch",
+   "date": "2026-09-26",
+   "change": "missing",
+   "lastSeen": "2026-09-26T09:51:49-04:00"
+  },
+  {
+   "id": "88c6093b2d90",
+   "title": "BTown Coffee Club",
+   "date": "2026-09-26",
+   "change": "missing",
+   "lastSeen": "2026-09-26T09:51:49-04:00"
   },
   {
    "id": "aff6da4150d0",
    "title": "Patagonia Gear Swap",
    "date": "2026-09-26",
-   "change": "missing",
-   "lastSeen": "2026-09-23T10:24:21-04:00"
+   "change": "dropped"
   },
   {
    "id": "189212a052f2",
    "title": "Norman Rockwell Day",
    "date": "2026-09-26",
+   "change": "dropped"
+  },
+  {
+   "id": "e9daf8db2bdc",
+   "title": "Learn & Play Epochs Course of Cultures",
+   "date": "2026-09-26",
    "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "lastSeen": "2026-09-26T09:51:49-04:00"
   },
   {
    "id": "6853fa91bd92",
    "title": "Dawn Dance",
    "date": "2026-09-26",
-   "change": "missing",
-   "lastSeen": "2026-09-23T10:24:21-04:00"
+   "change": "dropped"
   },
   {
    "id": "9758dbfff6cc",
    "title": "Patagonia Gear Swap",
    "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-09-23T10:24:21-04:00"
+   "change": "dropped"
   },
   {
    "id": "cbad6059d5f6",
@@ -2479,8 +2495,7 @@
    "id": "947a72f35f63",
    "title": "New Mindfulness Meditation Gathering",
    "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "348e88592d16",
@@ -2514,36 +2529,31 @@
    "id": "41572f20d4a1",
    "title": "Leadership and Legacy Series: Elevating the Entrepreneurial Legacy",
    "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-09-23T10:24:21-04:00"
+   "change": "dropped"
   },
   {
    "id": "261f10fefdea",
    "title": "Movie Night",
    "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "8c8781e9af8d",
    "title": "Opem Studios",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "00ae31cc0b6b",
    "title": "Btown Brief Bike Trip to South Hero",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "1c91caedab8a",
    "title": "Flying Pig Bookstore Author Event with Tracey West & Mitali Ruths!",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "ff70a02a47d6",
@@ -2556,8 +2566,7 @@
    "id": "43472f9e1fce",
    "title": "Fall Fest Weekend",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "5d49146c55fe",
@@ -2570,15 +2579,13 @@
    "id": "6b4d6b8ba51d",
    "title": "Beth Charles in Essex | Lilly's Surprise Pumpkins",
    "date": "2026-10-04",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "5692355320ef",
    "title": "Fall Fest Weekend",
    "date": "2026-10-04",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "c0dbd1644a33",
@@ -2591,8 +2598,7 @@
    "id": "7e98921ff5e0",
    "title": "New Mindfulness Meditation Gathering",
    "date": "2026-10-04",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "f009ebf47147",
@@ -2619,15 +2625,13 @@
    "id": "13e392d8d23e",
    "title": "Trash for the Trope: A Romance Lover's Book Club",
    "date": "2026-10-07",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "ce263cf3da5c",
    "title": "Green Mountain Roller Derby Presents Ye Olde Roller Derby Bout",
    "date": "2026-10-10",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "5999b4af364e-2100",
@@ -2647,8 +2651,7 @@
    "id": "c9808c5c8734",
    "title": "New Mindfulness Meditation Gathering",
    "date": "2026-10-11",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "16a50cbd000c",
@@ -2675,8 +2678,7 @@
    "id": "dc66072d6da1",
    "title": "New Mindfulness Meditation Gathering",
    "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "dc83ea3f9eda",
@@ -2696,8 +2698,7 @@
    "id": "581f900ad1e7",
    "title": "Dungeons & Dragons",
    "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-09-23T10:24:21-04:00"
+   "change": "dropped"
   },
   {
    "id": "2211cacbebff",
@@ -2710,8 +2711,7 @@
    "id": "d27156666a40",
    "title": "New Mindfulness Meditation Gathering",
    "date": "2026-10-25",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "daf84aaaaa20",
@@ -2724,8 +2724,7 @@
    "id": "463c072759bf",
    "title": "Spotlight 802 - Julia Kern",
    "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "bae8886e4a9d",
@@ -2738,15 +2737,13 @@
    "id": "2d82ef1a97bd",
    "title": "New Mindfulness Meditation Gathering",
    "date": "2026-11-01",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "6b151cfeb9f6",
    "title": "Burlington Baroque presents Requiem for a King - Jean Gilles & Marc-Antoine Charpentier",
    "date": "2026-11-01",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "41887efbc8d9",
@@ -2773,8 +2770,7 @@
    "id": "125314503645",
    "title": "New Mindfulness Meditation Gathering",
    "date": "2026-11-08",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "54eaef9d7fc0",
@@ -2794,8 +2790,7 @@
    "id": "74a6041c698a",
    "title": "New Mindfulness Meditation Gathering",
    "date": "2026-11-15",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "e872dba934d8",
@@ -2815,15 +2810,13 @@
    "id": "6120fcc49ef1",
    "title": "Celebrate Craft Holiday Show",
    "date": "2026-11-21",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "3fa4a2c7b715",
    "title": "Celebrate Craft Holiday Show",
    "date": "2026-11-22",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   },
   {
    "id": "18ecb23918e5",
@@ -2836,8 +2829,7 @@
    "id": "23d63084bbb3",
    "title": "New Mindfulness Meditation Gathering",
    "date": "2026-11-22",
-   "change": "missing",
-   "lastSeen": "2026-09-23T19:08:25-04:00"
+   "change": "dropped"
   }
  ]
 }
