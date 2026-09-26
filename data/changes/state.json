@@ -431,15 +431,6 @@
  },
  "civicclerk": {
   "meetings": {
-   "10221": {
-    "name": "Wards 4&7 NPA Meeting *New Location*",
-    "start": "2026-09-23T18:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Wards 4&7 NPA Agenda 9/23/2026 v2",
-     "Wards 4&7 NPA Agenda Packet 9/23/2026 v2"
-    ]
-   },
    "10219": {
     "name": "Public Safety Committee Meeting",
     "start": "2026-09-24T17:30:00+00:00",
@@ -554,6 +545,15 @@
     "start": "2026-10-05T18:00:00+00:00",
     "hasAgenda": false,
     "files": []
+   },
+   "10209": {
+    "name": "Housing Board of Review",
+    "start": "2026-10-05T18:30:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Housing Board of Review Agenda 10/05",
+     "Housing Board of Review Agenda Packet 10/05"
+    ]
    }
   }
  },
@@ -938,11 +938,25 @@
    "wcax": {
     "items": [
      {
+      "id": "XHB5234BZZAFZL5S4YARMGOGLE",
+      "title": "New York man arrested on child sex charges after border stop",
+      "link": "https://www.wcax.com/2026/09/26/new-york-man-arrested-child-sex-charges-after-border-stop/",
+      "ts": "2026-09-26T00:18:08+00:00",
+      "summary": "A New York man has been arrested on charges of lewd and lascivious conduct with a child in Vermont."
+     },
+     {
       "id": "HEQGJOYKYRBC7BJFL2Q2VBKVHY",
-      "title": "Heavy police presence at Ausable Chasm Bridge on Route 9",
+      "title": "Rescue crews recover body from Ausable Chasm",
       "link": "https://www.wcax.com/2026/09/25/heavy-police-presence-ausable-chasm-bridge-route-9/",
-      "ts": "2026-09-25T22:23:45+00:00",
-      "summary": "A strong police presence is on the Ausable Chasm Bridge on Route 9 in New York."
+      "ts": "2026-09-26T00:03:39+00:00",
+      "summary": "Surveillance footage showed the man jumping from the bridge. Police say foul play is not suspected."
+     },
+     {
+      "id": "IDTAZ223FJFYLGP6QZC4GUCSRQ",
+      "title": "1 injured in three-car crash on I-89 in St. Albans",
+      "link": "https://www.wcax.com/2026/09/25/three-cars-collide-interstate-89-st-albans/",
+      "ts": "2026-09-25T23:47:32+00:00",
+      "summary": "One person was taken to the hospital following a three-car crash Friday afternoon on Interstate 89 in St. Albans."
      },
      {
       "id": "MIVCO5ASBFD3XOF2DP4KH7NZJA",
@@ -1272,25 +1286,53 @@
       "link": "https://www.wcax.com/2026/09/23/randolph-voters-approve-library-budget-third-try/",
       "ts": "2026-09-23T19:25:28+00:00",
       "summary": "The third time was the charm for the Kimball Public Library in Randolph as voters approved its funding Tuesday."
-     },
-     {
-      "id": "MN7MJUEBXJDYZGBJDHBCI2NBWQ",
-      "title": "Middlebury College announces tuition-free plan",
-      "link": "https://www.wcax.com/2026/09/23/middlebury-college-announces-tuition-free-plan/",
-      "ts": "2026-09-23T19:15:44+00:00",
-      "summary": "Starting in 2031, students from families making $175,000 or less can attend the college tuition-free."
-     },
-     {
-      "id": "3K56OZ5MXBEQ7FNXZEOF3CB5NM",
-      "title": "Construction on new South End housing slated for 2027",
-      "link": "https://www.wcax.com/2026/09/23/construction-new-south-end-housing-slated-2027/",
-      "ts": "2026-09-23T19:07:21+00:00",
-      "summary": "The South End Coordinated Redevelopment project, known as SECORD, spans a parcel of land between Lakeside Avenue and Sears Lane."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "73896402",
+      "title": "CNN left off Air Force One for Trump's upcoming trip",
+      "link": "https://www.mynbc5.com/article/cnn-left-off-air-force-one/73896402",
+      "ts": "2026-09-26T01:25:00+00:00",
+      "summary": "The White House has signaled that CNN will be left off Air Force One for President Donald Trump's Saturday trip in the latest media restriction from the administration in an ongoing dispute with First Amendment implications"
+     },
+     {
+      "id": "73896319",
+      "title": "South Carolina farm honors Dolly Parton with corn maze",
+      "link": "https://www.mynbc5.com/article/dolly-parton-corn-maze-south-carolina/73896319",
+      "ts": "2026-09-26T00:44:00+00:00",
+      "summary": "A farm in Laurens County, South Carolina, is honoring Dolly Parton's legacy with a corn maze while supporting her Imagination Library and early childhood literacy."
+     },
+     {
+      "id": "73895644",
+      "title": "Vermont Gov. Scott questions poll that favors Amanda Janoo",
+      "link": "https://www.mynbc5.com/article/vt-gov-scott-poll-amanda-janoo/73895644",
+      "ts": "2026-09-26T00:27:00+00:00",
+      "summary": "The University of New Hampshire released its latest Green Mountain State poll Thursday, showing a Democratic newcomer ahead of the Vermont's five-term Republican governor."
+     },
+     {
+      "id": "73866508",
+      "title": "Nor'easter to bring rain, some wind to Vermont, New York this weekend",
+      "link": "https://www.mynbc5.com/article/noreaster-to-bring-rain-some-wind-to-vermont-new-york-this-weekend/73866508",
+      "ts": "2026-09-25T23:08:00+00:00",
+      "summary": "NBC5 meteorologists are tracking a developing coastal storm this weekend, bringing periods of rain and gusty winds to Vermont and northern New York."
+     },
+     {
+      "id": "73895452",
+      "title": "Mostly cloudy and breezy Saturday, showers arrive south",
+      "link": "https://www.mynbc5.com/article/mostly-cloudy-and-breezy-saturday-showers-arrive-south-09-25-26/73895452",
+      "ts": "2026-09-25T22:54:00+00:00",
+      "summary": "Showers most persistent in southern areas this weekend, rain shifts north on Monday"
+     },
+     {
+      "id": "73895272",
+      "title": "Vermont communities honor Dolly Parton's Imagination Library",
+      "link": "https://www.mynbc5.com/article/vermont-communities-honor-dolly-partons-imagination-library-and-her-commitment-to-accessible-books/73895272",
+      "ts": "2026-09-25T22:39:00+00:00",
+      "summary": "Local libraries celebrated the impact of Dolly Parton's Imagination Library on September 25, also known as Dolly Day"
+     },
      {
       "id": "73895287",
       "title": "Local campground sees effects of Trump's Canadian tariffs",
@@ -1388,48 +1430,6 @@
       "link": "https://www.mynbc5.com/article/eva-vekos-supreme-court-decision/73894407",
       "ts": "2026-09-25T20:41:00+00:00",
       "summary": "The Vermont Supreme Court has denied Addison County State’s Attorney Eva Vekos’ attempt to regain her law license for the third time after her suspension earlier this year."
-     },
-     {
-      "id": "73887880",
-      "title": "Vermont Supreme Court says state employees must return to office, reversing previous decision",
-      "link": "https://www.mynbc5.com/article/vermont-supreme-court-says-state-employees-must-return-to-office-reversing-previous-decision/73887880",
-      "ts": "2026-09-25T20:31:00+00:00",
-      "summary": "Vermont state employees will be required to work in-office at least three days a week after the Vermont Supreme Court overturned a decision from the state's Labor Relations Board."
-     },
-     {
-      "id": "73875572",
-      "title": "Schroon Lake gears up for 30th annual ADK Marathon",
-      "link": "https://www.mynbc5.com/article/schroon-lake-gears-up-adk-marathon/73875572",
-      "ts": "2026-09-25T20:14:00+00:00",
-      "summary": "This year marks the 30th annual Adirondack marathon in Schroon Lake. The race will begin Sept. 27 at 8 a.m. on Route 9 in front of the Timberwolf Pub."
-     },
-     {
-      "id": "73889582",
-      "title": "See Killington's new Snowdon Quad lift being installed by helicopter",
-      "link": "https://www.mynbc5.com/article/killington-new-snowdon-quad/73889582",
-      "ts": "2026-09-25T20:09:00+00:00",
-      "summary": "Killington Mountain Resort is marking a major milestone in its construction of a new ski lift with a helicopter fly day."
-     },
-     {
-      "id": "73893514",
-      "title": "ATM theft suspect caught on video throws cash out the window during police chase",
-      "link": "https://www.mynbc5.com/article/atm-theft-suspect-throws-cash/73893514",
-      "ts": "2026-09-25T20:02:00+00:00",
-      "summary": "An ATM theft suspect was caught on a police dashcam lobbing thousands of dollars out the window during a chase in Texas."
-     },
-     {
-      "id": "73892653",
-      "title": "Pair arrested after emerging from manhole near hotel where Netanyahu stays, police say",
-      "link": "https://www.mynbc5.com/article/new-york-manhole-arrest-netanyahu-hotel/73892653",
-      "ts": "2026-09-25T19:05:00+00:00",
-      "summary": "A citywide manhunt led to the arrest of two suspects who New York City police say emerged from a manhole just outside a hotel where Israeli Prime Minister Benjamin Netanyahu regularly stays during the UN General Assembly."
-     },
-     {
-      "id": "73892579",
-      "title": "School where Charlie Kirk was shot didn't do full security assessment despite concerns, report finds",
-      "link": "https://www.mynbc5.com/article/charlie-kirk-security-assessment-utah-valley-university-report/73892579",
-      "ts": "2026-09-25T18:55:00+00:00",
-      "summary": "A new independent review of Charlie Kirk's assassination last year assessed security procedures at the university. The report said the university did not do a full security assessment despite concerns about the outdoor event."
      }
     ]
    },
@@ -2152,6 +2152,14 @@
     "venue": "Vermont Comedy Club"
    },
    {
+    "id": "5bd739ce5214",
+    "title": "Proof: Norman Rockwell and Photography, a lecture by Russell Lord",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/proof-norman-rockwell-and-photography-a-lecture-by-russell-lord/20027522/2026-09-25T17",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-09-25T17:30:00-04:00",
+    "venue": "Pizzagalli Center for Art and Education"
+   },
+   {
     "id": "9776d088f3d5",
     "title": "Norman Rockwell Day",
     "link": "https://community.sevendaysvt.com/event/norman-rockwell-day-45453281",
@@ -2230,6 +2238,14 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-25T18:30:00-04:00",
     "venue": "Outright Vermont"
+   },
+   {
+    "id": "6606de817d70",
+    "title": "Cricket Blue Album Release Show",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/cricket-blue-album-release-show/20027523/2026-09-25T18",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-09-25T18:30:00-04:00",
+    "venue": "First Unitarian Universalist Society of Burlington"
    },
    {
     "id": "85829235f678",
@@ -2408,6 +2424,14 @@
     "venue": "The Old Post"
    },
    {
+    "id": "7426443da6c3",
+    "title": "Lara Cwass Band",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/lara-cwass-band/20027526/2026-09-25T20",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-09-25T20:30:10-04:00",
+    "venue": "Einstein's Tap House"
+   },
+   {
     "id": "b0b061faf7d5",
     "title": "Parker Shper",
     "link": "https://foambrewers.com/events/parker-shper",
@@ -2480,17 +2504,17 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "57a8861ca620",
-    "title": "Art at the Hospital: Nancy Chapman",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-nancy-chapman-45101777",
+    "id": "60d9998d94f1",
+    "title": "Art at the Hospital: Becky Chappell",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-becky-chappell-45101785",
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-09-25",
     "venue": "UVM Medical Center"
    },
    {
-    "id": "95cbfac116a6",
-    "title": "Art at the Hospital: Todd Cummings",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-todd-cummings-45101789",
+    "id": "57a8861ca620",
+    "title": "Art at the Hospital: Nancy Chapman",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-nancy-chapman-45101777",
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-09-25",
     "venue": "UVM Medical Center"
@@ -2502,6 +2526,14 @@
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-09-25",
     "venue": "Village Wine and Coffee"
+   },
+   {
+    "id": "95cbfac116a6",
+    "title": "Art at the Hospital: Todd Cummings",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-todd-cummings-45101789",
+    "ts": "2026-09-25T10:43:13-04:00",
+    "start": "2026-09-25",
+    "venue": "UVM Medical Center"
    },
    {
     "id": "3bf52256de72",
@@ -2520,14 +2552,6 @@
     "venue": "UVM Medical Center"
    },
    {
-    "id": "e9044ae936c2",
-    "title": "Art at the Hospital: Francois de Melogue",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-francois-de-melogue-45101783",
-    "ts": "2026-09-25T10:43:13-04:00",
-    "start": "2026-09-25",
-    "venue": "UVM Medical Center"
-   },
-   {
     "id": "bb6263a773dc",
     "title": "El Towle",
     "link": "https://community.sevendaysvt.com/event/el-towle-45447973",
@@ -2536,9 +2560,9 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "60d9998d94f1",
-    "title": "Art at the Hospital: Becky Chappell",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-becky-chappell-45101785",
+    "id": "e9044ae936c2",
+    "title": "Art at the Hospital: Francois de Melogue",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-hospital-francois-de-melogue-45101783",
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-09-25",
     "venue": "UVM Medical Center"
@@ -2576,9 +2600,33 @@
     "venue": "Emile A. Gruppe Gallery"
    },
    {
-    "id": "f74e31cf28ca",
-    "title": "'America 250 at Shelburne Museum'",
-    "link": "https://community.sevendaysvt.com/event/america-250-at-shelburne-museum-45233307",
+    "id": "8b219d8cb6ed",
+    "title": "Art at the Airport: Matt Larson",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-matt-larson-45304807",
+    "ts": "2026-09-25T10:43:13-04:00",
+    "start": "2026-09-25",
+    "venue": "Patrick Leahy Burlington International Airport"
+   },
+   {
+    "id": "ed9a12c4370e",
+    "title": "'Catalyst: Art as Inquiry'",
+    "link": "https://community.sevendaysvt.com/event/catalyst-art-as-inquiry-45483543",
+    "ts": "2026-09-25T10:43:13-04:00",
+    "start": "2026-09-25",
+    "venue": "Fleming Museum of Art"
+   },
+   {
+    "id": "6a838c533ee8",
+    "title": "'Wings, Waters, Ways'",
+    "link": "https://community.sevendaysvt.com/event/wings-waters-ways-45123659",
+    "ts": "2026-09-25T10:43:13-04:00",
+    "start": "2026-09-25",
+    "venue": "Birds of Vermont Museum"
+   },
+   {
+    "id": "3ed055499730",
+    "title": "'Norman Rockwell: At Home in Vermont'",
+    "link": "https://community.sevendaysvt.com/event/norman-rockwell-at-home-in-vermont-44831320",
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-09-25",
     "venue": "Shelburne Museum"
@@ -2592,14 +2640,6 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "3ed055499730",
-    "title": "'Norman Rockwell: At Home in Vermont'",
-    "link": "https://community.sevendaysvt.com/event/norman-rockwell-at-home-in-vermont-44831320",
-    "ts": "2026-09-25T10:43:13-04:00",
-    "start": "2026-09-25",
-    "venue": "Shelburne Museum"
-   },
-   {
     "id": "3ea99d6a6181",
     "title": "'Create, Community, Hope'",
     "link": "https://community.sevendaysvt.com/event/create-community-hope-45462652",
@@ -2608,12 +2648,12 @@
     "venue": "Flynndog Gallery"
    },
    {
-    "id": "5b82ff8846ab",
-    "title": "Kia'Rae Hanron",
-    "link": "https://community.sevendaysvt.com/event/kiarae-hanron-45494364",
+    "id": "f74e31cf28ca",
+    "title": "'America 250 at Shelburne Museum'",
+    "link": "https://community.sevendaysvt.com/event/america-250-at-shelburne-museum-45233307",
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-09-25",
-    "venue": "Dwellness Shop"
+    "venue": "Shelburne Museum"
    },
    {
     "id": "6a701f5bc8d4",
@@ -2622,6 +2662,14 @@
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-09-25",
     "venue": "Shelburne Museum"
+   },
+   {
+    "id": "5b82ff8846ab",
+    "title": "Kia'Rae Hanron",
+    "link": "https://community.sevendaysvt.com/event/kiarae-hanron-45494364",
+    "ts": "2026-09-25T10:43:13-04:00",
+    "start": "2026-09-25",
+    "venue": "Dwellness Shop"
    },
    {
     "id": "00f5c66073b9",
@@ -2638,30 +2686,6 @@
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-09-25",
     "venue": "Maglianero"
-   },
-   {
-    "id": "8b219d8cb6ed",
-    "title": "Art at the Airport: Matt Larson",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-matt-larson-45304807",
-    "ts": "2026-09-25T10:43:13-04:00",
-    "start": "2026-09-25",
-    "venue": "Patrick Leahy Burlington International Airport"
-   },
-   {
-    "id": "6a838c533ee8",
-    "title": "'Wings, Waters, Ways'",
-    "link": "https://community.sevendaysvt.com/event/wings-waters-ways-45123659",
-    "ts": "2026-09-25T10:43:13-04:00",
-    "start": "2026-09-25",
-    "venue": "Birds of Vermont Museum"
-   },
-   {
-    "id": "ed9a12c4370e",
-    "title": "'Catalyst: Art as Inquiry'",
-    "link": "https://community.sevendaysvt.com/event/catalyst-art-as-inquiry-45483543",
-    "ts": "2026-09-25T10:43:13-04:00",
-    "start": "2026-09-25",
-    "venue": "Fleming Museum of Art"
    },
    {
     "id": "a1ae557fe548",
@@ -2758,6 +2782,22 @@
     "ts": "2026-09-12T18:32:07-04:00",
     "start": "2026-09-26T09:00:00-04:00",
     "venue": "Old Town Cafe & Comics"
+   },
+   {
+    "id": "c889b2a7c8ae",
+    "title": "I Am Vermont Too - 20th Annual Margaret Burgess Women's Prayer Breakfast",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/i-am-vermont-too-20th-annual-margaret-burgess-women-s-prayer-breakfast/20025856/2026-09-26T09",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-09-26T09:00:00-04:00",
+    "venue": "Delta Hotels Burlington"
+   },
+   {
+    "id": "aaa6f4de350e",
+    "title": "2nd Annual Witches of Williston Paddle in Support of the VT Womens Fund",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/2nd-annual-witches-of-williston-paddle-in-support-of-the-vt-womens-fund/20027528/2026-09-26T09",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-09-26T09:00:00-04:00",
+    "venue": "Lake Iroquois Recreation District Beach"
    },
    {
     "id": "5e41ad56a393",
@@ -2936,20 +2976,20 @@
     "venue": "Ethan Allen Homestead"
    },
    {
-    "id": "9e0a14152e8f",
-    "title": "Rug Concert",
-    "link": "https://community.sevendaysvt.com/event/rug-concert-45506459",
-    "ts": "2026-09-17T10:26:31-04:00",
-    "start": "2026-09-26T11:00:00-04:00",
-    "venue": "Elley-Long Music Center"
-   },
-   {
     "id": "203c4774df20",
     "title": "Read to a Therapy Dog",
     "link": "https://community.sevendaysvt.com/event/read-to-a-therapy-dog-45506608",
     "ts": "2026-09-17T10:26:31-04:00",
     "start": "2026-09-26T11:00:00-04:00",
     "venue": "Phoenix Books"
+   },
+   {
+    "id": "9e0a14152e8f",
+    "title": "Rug Concert",
+    "link": "https://community.sevendaysvt.com/event/rug-concert-45506459",
+    "ts": "2026-09-17T10:26:31-04:00",
+    "start": "2026-09-26T11:00:00-04:00",
+    "venue": "Elley-Long Music Center"
    },
    {
     "id": "c4767a66bfbb",
@@ -3018,10 +3058,18 @@
    {
     "id": "b231325c5fc0",
     "title": "Splash Dance: DJ Matt Hagen",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78357577/20260926130000",
+    "link": "https://events.uvm.edu/event/splash-dance-dj-matt-hagen",
     "ts": "2026-07-28T07:37:25-04:00",
     "start": "2026-09-26T13:00:00-04:00",
     "venue": "City Hall Park"
+   },
+   {
+    "id": "23854f1387b5",
+    "title": "Model Behavior: A Panel and Gathering of Rockwell Models",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/model-behavior-a-panel-and-gathering-of-rockwell-models/20027530/2026-09-26T13",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-09-26T13:00:00-04:00",
+    "venue": "Pizzagalli Center for Art and Education"
    },
    {
     "id": "73b2e7880538",
@@ -3040,20 +3088,20 @@
     "venue": "Waterfront Park"
    },
    {
-    "id": "73387c5fc2d1",
-    "title": "Oktoberfest",
-    "link": "https://community.sevendaysvt.com/event/oktoberfest-45506310",
-    "ts": "2026-09-21T12:00:51-04:00",
-    "start": "2026-09-26T14:00:00-04:00",
-    "venue": "Essex Experience"
-   },
-   {
     "id": "83521e1d62db",
     "title": "Guided Tours",
     "link": "https://community.sevendaysvt.com/event/guided-tours-45401826",
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-09-26T14:00:00-04:00",
     "venue": "Merrymac Animal Sanctuary"
+   },
+   {
+    "id": "73387c5fc2d1",
+    "title": "Oktoberfest",
+    "link": "https://community.sevendaysvt.com/event/oktoberfest-45506310",
+    "ts": "2026-09-21T12:00:51-04:00",
+    "start": "2026-09-26T14:00:00-04:00",
+    "venue": "Essex Experience"
    },
    {
     "id": "d5a6e596c917",
@@ -3080,6 +3128,14 @@
     "venue": "Doubletree Hotel"
    },
    {
+    "id": "92534595d3bb",
+    "title": "Artmaking: Figure Drawing Inspired by Rockwell's The Four Freedoms",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/artmaking-figure-drawing-inspired-by-rockwell-s-the-four-freedoms/20027532/2026-09-26T15",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-09-26T15:00:00-04:00",
+    "venue": "Pizzagalli Center for Art and Education"
+   },
+   {
     "id": "739f5bc70601",
     "title": "Vermont Beauty Show",
     "link": "https://www.mychamplainvalley.com/calendar/#/details/vermont-beauty-show/19580402/2026-09-26T15",
@@ -3096,20 +3152,20 @@
     "venue": "Church Street Marketplace"
    },
    {
-    "id": "87c4c76e899d",
-    "title": "Bob Cotton",
-    "link": "https://community.sevendaysvt.com/event/bob-cotton-45524351",
-    "ts": "2026-09-24T10:26:17-04:00",
-    "start": "2026-09-26T17:00:00-04:00",
-    "venue": "Vermont Cider Lab"
-   },
-   {
     "id": "dc2298c1bb5a",
     "title": "Mr. Cheng, Aras, Raul, Nilz",
     "link": "https://community.sevendaysvt.com/event/mr-cheng-aras-raul-nilz-45524356",
     "ts": "2026-09-24T10:26:17-04:00",
     "start": "2026-09-26T17:00:00-04:00",
     "venue": "Red Square"
+   },
+   {
+    "id": "87c4c76e899d",
+    "title": "Bob Cotton",
+    "link": "https://community.sevendaysvt.com/event/bob-cotton-45524351",
+    "ts": "2026-09-24T10:26:17-04:00",
+    "start": "2026-09-26T17:00:00-04:00",
+    "venue": "Vermont Cider Lab"
    },
    {
     "id": "a2e75b064e02",
@@ -3192,14 +3248,6 @@
     "venue": "Shelburne Town Hall"
    },
    {
-    "id": "acac7cd79842",
-    "title": "Esther Rose",
-    "link": "https://community.sevendaysvt.com/event/esther-rose-45524339",
-    "ts": "2026-09-24T10:26:17-04:00",
-    "start": "2026-09-26T19:00:00-04:00",
-    "venue": "Hotel Vermont"
-   },
-   {
     "id": "ec4ee60c09a9",
     "title": "Vermont Symphonic Winds: 'Mosaic'",
     "link": "https://community.sevendaysvt.com/event/vermont-symphonic-winds-mosaic-45434684",
@@ -3208,20 +3256,28 @@
     "venue": "Elley-Long Music Center"
    },
    {
-    "id": "5eed2af167fb",
-    "title": "'Every Day: Big and Small'",
-    "link": "https://community.sevendaysvt.com/event/every-day-big-and-small-45506265",
-    "ts": "2026-09-17T10:26:31-04:00",
-    "start": "2026-09-26T19:00:00-04:00",
-    "venue": "Williston Central School"
-   },
-   {
     "id": "cd8411621867",
     "title": "Frankie White, Steve Hartmann",
     "link": "https://community.sevendaysvt.com/event/frankie-white-steve-hartmann-45524511",
     "ts": "2026-09-24T10:26:17-04:00",
     "start": "2026-09-26T19:00:00-04:00",
     "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "acac7cd79842",
+    "title": "Esther Rose",
+    "link": "https://community.sevendaysvt.com/event/esther-rose-45524339",
+    "ts": "2026-09-24T10:26:17-04:00",
+    "start": "2026-09-26T19:00:00-04:00",
+    "venue": "Hotel Vermont"
+   },
+   {
+    "id": "5eed2af167fb",
+    "title": "'Every Day: Big and Small'",
+    "link": "https://community.sevendaysvt.com/event/every-day-big-and-small-45506265",
+    "ts": "2026-09-17T10:26:31-04:00",
+    "start": "2026-09-26T19:00:00-04:00",
+    "venue": "Williston Central School"
    },
    {
     "id": "c2f5fcfef61a",
@@ -3502,6 +3558,14 @@
     "ts": "2026-09-20T18:41:29-04:00",
     "start": "2026-09-27T11:00:00-04:00",
     "venue": "Mt. Philo State Park"
+   },
+   {
+    "id": "8ee9faa8fff8",
+    "title": "Applying to College Workshop",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/applying-to-college-workshop/20026720/2026-09-27T11",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-09-27T11:30:00-04:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "9f4014931a6e",
@@ -3902,6 +3966,14 @@
     "ts": "2026-07-30T07:31:16-04:00",
     "start": "2026-09-28T13:00:00-04:00",
     "venue": "Brownell Library"
+   },
+   {
+    "id": "ceccc4442a55",
+    "title": "Physics Colloquium with Dr. Alison Patteson",
+    "link": "https://events.uvm.edu/event/physics-colloquium-with-alison-patteson",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-09-28T14:10:00-04:00",
+    "venue": "Innovation Hall"
    },
    {
     "id": "2ea7dd014fc3",
@@ -4800,14 +4872,6 @@
     "venue": "Lafayette Hall"
    },
    {
-    "id": "f0c94bbfeba2",
-    "title": "Coloring in the Marble Court",
-    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
-    "ts": "2026-08-26T20:04:49-04:00",
-    "start": "2026-09-30T16:00:00-04:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "b16b1c54960e",
     "title": "The Life and Death of Kake Walk",
     "link": "https://events.uvm.edu/event/the-life-death-of-kake-walk",
@@ -4838,6 +4902,14 @@
     "ts": "2026-08-14T06:36:31-04:00",
     "start": "2026-09-30T16:00:00-04:00",
     "venue": "Hilton Burlington Lake Champlain"
+   },
+   {
+    "id": "f0c94bbfeba2",
+    "title": "Coloring in the Marble Court",
+    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
+    "ts": "2026-08-26T20:04:49-04:00",
+    "start": "2026-09-30T16:00:00-04:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "1505bdab321a",
@@ -5182,14 +5254,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-09-30T20:30:00-04:00",
     "venue": "Hotel Vermont"
-   },
-   {
-    "id": "09562e547627",
-    "title": "Standup Open Mic",
-    "link": "https://community.sevendaysvt.com/event/standup-open-mic-44800963",
-    "ts": "2026-08-20T17:02:25-04:00",
-    "start": "2026-09-30T20:30:00-04:00",
-    "venue": "Vermont Comedy Club"
    },
    {
     "id": "803bf6493b76",
@@ -5896,20 +5960,20 @@
     "venue": "Howe Library"
    },
    {
-    "id": "235e5567cc16",
-    "title": "Guided Gallery Tour",
-    "link": "https://events.uvm.edu/event/guided-gallery-tour",
-    "ts": "2026-08-05T17:54:10-04:00",
-    "start": "2026-10-02T13:00:00-04:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "bf45d11ad87c",
     "title": "Mah-Jongg",
     "link": "https://community.sevendaysvt.com/event/mah-jongg-37340600",
     "ts": "2026-09-18T18:48:39-04:00",
     "start": "2026-10-02T13:00:00-04:00",
     "venue": "Dorothy Alling Memorial Library"
+   },
+   {
+    "id": "235e5567cc16",
+    "title": "Guided Gallery Tour",
+    "link": "https://events.uvm.edu/event/guided-gallery-tour",
+    "ts": "2026-08-05T17:54:10-04:00",
+    "start": "2026-10-02T13:00:00-04:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "e7e60b747628",
@@ -6030,6 +6094,14 @@
     "ts": "2026-09-24T10:26:17-04:00",
     "start": "2026-10-02T16:00:00-04:00",
     "venue": "ActiveVT"
+   },
+   {
+    "id": "d91e2bcacb56",
+    "title": "TAG",
+    "link": "https://brownelllibrary.org/event/1752/",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-10-02T16:00:00-04:00",
+    "venue": "Brownell Library"
    },
    {
     "id": "bdcd8ed551da",
@@ -6440,14 +6512,6 @@
     "venue": "ECHO, Leahy Center for Lake Champlain"
    },
    {
-    "id": "66e4d9049042",
-    "title": "Bike Trip",
-    "link": "https://www.meetup.com/burlington-social-activites-group/events/316649207/",
-    "ts": "2026-09-21T12:00:51-04:00",
-    "start": "2026-10-03T10:00:00-04:00",
-    "venue": "ECHO, Leahy Center for Lake Champlain"
-   },
-   {
     "id": "72269cae410c",
     "title": "STEAM Ahead Saturdays",
     "link": "https://calendar.time.ly/nt0nyapn/event/67879106/20261003103000",
@@ -6496,14 +6560,6 @@
     "venue": "South Burlington Public Library"
    },
    {
-    "id": "ff70a02a47d6",
-    "title": "Guided Gallery Tour",
-    "link": "https://events.uvm.edu/event/guided-gallery-tour",
-    "ts": "2026-08-05T17:54:10-04:00",
-    "start": "2026-10-03T11:00:00-04:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "548b114ca102",
     "title": "UVM Women's Rugby vs Quinnipiac",
     "link": "https://events.uvm.edu/event/uvm-womens-rugby-vs-quinnipiac",
@@ -6518,6 +6574,14 @@
     "ts": "2026-09-24T10:26:17-04:00",
     "start": "2026-10-03T11:00:00-04:00",
     "venue": "Shelburne Museum"
+   },
+   {
+    "id": "ff70a02a47d6",
+    "title": "Guided Gallery Tour",
+    "link": "https://events.uvm.edu/event/guided-gallery-tour",
+    "ts": "2026-08-05T17:54:10-04:00",
+    "start": "2026-10-03T11:00:00-04:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "f37f190becdc",
@@ -6712,10 +6776,10 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "5d49146c55fe",
-    "title": "Arsenic Any Where Presents Chandelier",
+    "id": "1bab719f96a4",
+    "title": "Arsenic Anywhere Presents Chandelier",
     "link": "https://foambrewers.com/events/arsenic-any-where-presents-chandelier",
-    "ts": "2026-09-24T19:26:23-04:00",
+    "ts": "2026-09-25T19:32:10-04:00",
     "start": "2026-10-03T19:00:00-04:00",
     "venue": "Foam Brewers"
    },
@@ -6726,6 +6790,14 @@
     "ts": "2026-09-10T18:46:04-04:00",
     "start": "2026-10-03T19:00:00-04:00",
     "venue": "Queen City Lodge Oddfellows Hall"
+   },
+   {
+    "id": "5d49146c55fe",
+    "title": "Arsenic Any Where Presents Chandelier",
+    "link": "https://foambrewers.com/events/arsenic-any-where-presents-chandelier",
+    "ts": "2026-09-24T19:26:23-04:00",
+    "start": "2026-10-03T19:00:00-04:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "e29a010fc128",
@@ -6846,6 +6918,14 @@
     "ts": "2026-08-06T07:49:44-04:00",
     "start": "2026-10-04T10:00:00-04:00",
     "venue": "UVM Davis Center"
+   },
+   {
+    "id": "21d84fc7dbb0",
+    "title": "Burlington Vintage Market 5th Anniversary",
+    "link": "https://foambrewers.com/events/burlington-vintage-market-5th-anniversary",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-10-04T10:00:00-04:00",
+    "venue": "Foam Brewers"
    },
    {
     "id": "8b216bdbd308",
@@ -8128,14 +8208,6 @@
     "venue": "Lafayette Hall"
    },
    {
-    "id": "8e56a3485417",
-    "title": "Coloring in the Marble Court",
-    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
-    "ts": "2026-08-26T20:04:49-04:00",
-    "start": "2026-10-07T16:00:00-04:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "40a6a791f8f0",
     "title": "Wednesday $10.00 Burger Night",
     "link": "https://www.helloburlingtonvt.com/event/wednesday-%2410-00-burger-night/6605/",
@@ -8150,6 +8222,14 @@
     "ts": "2026-09-04T09:44:35-04:00",
     "start": "2026-10-07T16:00:00-04:00",
     "venue": ""
+   },
+   {
+    "id": "8e56a3485417",
+    "title": "Coloring in the Marble Court",
+    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
+    "ts": "2026-08-26T20:04:49-04:00",
+    "start": "2026-10-07T16:00:00-04:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "680fbc4c9e5a",
@@ -8746,7 +8826,7 @@
    {
     "id": "0d4c861f0137",
     "title": "Kids Book Club for K-2",
-    "link": "https://southburlingtonlibrary.org/kids-book-club-tbd",
+    "link": "https://southburlingtonlibrary.org/kids-book-club-for-k-2-and-their-parents-mouse-and-the-motorcycle",
     "ts": "2026-09-11T09:47:53-04:00",
     "start": "2026-10-08T16:00:00-04:00",
     "venue": "South Burlington Public Library"
@@ -8950,6 +9030,14 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-08T20:00:00-04:00",
     "venue": "Red Square"
+   },
+   {
+    "id": "3b49dbdae9e7",
+    "title": "TRS LIVE PRESENTS: Cotter & Friends - LATE SHOW",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/trs-live-presents-cotter-friends-late-show/20026157/2026-10-08T20",
+    "ts": "2026-09-25T19:32:10-04:00",
+    "start": "2026-10-08T20:00:00-04:00",
+    "venue": "Tank Recording Studio"
    },
    {
     "id": "57bc84678dce",
@@ -10856,20 +10944,20 @@
     "venue": "Must Love Yarn"
    },
    {
-    "id": "2052a154655a",
-    "title": "Catalyst: Artists in Conversation",
-    "link": "https://events.uvm.edu/event/catalyst-artists-in-conversation",
-    "ts": "2026-08-19T17:01:24-04:00",
-    "start": "2026-10-14T17:00:00-04:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "b90e8a0fe1bf",
     "title": "Kidder Faculty Award and Lecture: Lizzy Pope G’13",
     "link": "https://events.uvm.edu/event/kidder-faculty-award-and-lecture-lizzy-pope-g13",
     "ts": "2026-08-16T05:55:17-04:00",
     "start": "2026-10-14T17:00:00-04:00",
     "venue": "Alumni House and Silver Pavillion"
+   },
+   {
+    "id": "2052a154655a",
+    "title": "Catalyst: Artists in Conversation",
+    "link": "https://events.uvm.edu/event/catalyst-artists-in-conversation",
+    "ts": "2026-08-19T17:01:24-04:00",
+    "start": "2026-10-14T17:00:00-04:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "33b852e0a479",
@@ -13304,14 +13392,6 @@
     "venue": "Lafayette Hall"
    },
    {
-    "id": "dc83ea3f9eda",
-    "title": "Coloring in the Marble Court",
-    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
-    "ts": "2026-08-26T20:04:49-04:00",
-    "start": "2026-10-21T16:00:00-04:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "5b117a446ebc",
     "title": "Wednesday $10.00 Burger Night",
     "link": "https://www.helloburlingtonvt.com/event/wednesday-%2410-00-burger-night/6605/",
@@ -13326,6 +13406,14 @@
     "ts": "2026-09-04T09:44:35-04:00",
     "start": "2026-10-21T16:00:00-04:00",
     "venue": ""
+   },
+   {
+    "id": "dc83ea3f9eda",
+    "title": "Coloring in the Marble Court",
+    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
+    "ts": "2026-08-26T20:04:49-04:00",
+    "start": "2026-10-21T16:00:00-04:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "70c4a32ae083",
@@ -15544,14 +15632,6 @@
     "venue": "Lafayette Hall"
    },
    {
-    "id": "daf84aaaaa20",
-    "title": "Coloring in the Marble Court",
-    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
-    "ts": "2026-08-30T10:30:27-04:00",
-    "start": "2026-10-28T16:00:00-04:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "b43be4a29701",
     "title": "Wednesday $10.00 Burger Night",
     "link": "https://www.helloburlingtonvt.com/event/wednesday-%2410-00-burger-night/6605/",
@@ -15566,6 +15646,14 @@
     "ts": "2026-09-17T10:26:31-04:00",
     "start": "2026-10-28T16:00:00-04:00",
     "venue": "Hula"
+   },
+   {
+    "id": "daf84aaaaa20",
+    "title": "Coloring in the Marble Court",
+    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
+    "ts": "2026-08-30T10:30:27-04:00",
+    "start": "2026-10-28T16:00:00-04:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "cdba8f93a96b",
@@ -15970,7 +16058,7 @@
    {
     "id": "314b42bd20eb",
     "title": "Kids Book Club for K-2",
-    "link": "https://southburlingtonlibrary.org/kids-book-club-tbd",
+    "link": "https://southburlingtonlibrary.org/kids-book-club-for-k-2-and-their-parents-mouse-and-the-motorcycle",
     "ts": "2026-09-11T09:47:53-04:00",
     "start": "2026-10-29T16:00:00-04:00",
     "venue": "South Burlington Public Library"
@@ -16496,6 +16584,14 @@
     "venue": "Vermont Teddy Bear Factory"
    },
    {
+    "id": "b2833c16cff5",
+    "title": "Howl'ween Dog Costume Contest",
+    "link": "https://calendar.time.ly/vfaca7kw/event/78305590/20261031000000",
+    "ts": "2026-09-01T10:16:24-04:00",
+    "start": "2026-10-31T12:00:00-04:00",
+    "venue": "Church Street Marketplace"
+   },
+   {
     "id": "5494e0b8a8a2",
     "title": "Learn to DM",
     "link": "https://southburlingtonlibrary.org/learn-to-dm",
@@ -16630,14 +16726,6 @@
     "ts": "2026-09-01T10:16:24-04:00",
     "start": "2026-10-31T22:00:00-04:00",
     "venue": "RiRa Irish Pub"
-   },
-   {
-    "id": "b2833c16cff5",
-    "title": "Howl'ween Dog Costume Contest",
-    "link": "https://calendar.time.ly/vfaca7kw/event/78305590/20261031000000",
-    "ts": "2026-09-01T10:16:24-04:00",
-    "start": "2026-10-31",
-    "venue": "Church Street Marketplace"
    },
    {
     "id": "ec6214f15b08",
@@ -17496,14 +17584,6 @@
     "venue": "Lafayette Hall"
    },
    {
-    "id": "41887efbc8d9",
-    "title": "Coloring in the Marble Court",
-    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
-    "ts": "2026-09-06T09:05:39-04:00",
-    "start": "2026-11-04T16:00:00-05:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "4c581aa9b833",
     "title": "Wednesday $10.00 Burger Night",
     "link": "https://www.helloburlingtonvt.com/event/wednesday-%2410-00-burger-night/6605/",
@@ -17518,6 +17598,14 @@
     "ts": "2026-09-05T01:37:25-04:00",
     "start": "2026-11-04T16:00:00-05:00",
     "venue": ""
+   },
+   {
+    "id": "41887efbc8d9",
+    "title": "Coloring in the Marble Court",
+    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
+    "ts": "2026-09-06T09:05:39-04:00",
+    "start": "2026-11-04T16:00:00-05:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "cb92c8777f0a",
@@ -17742,14 +17830,6 @@
     "ts": "2026-09-05T01:37:25-04:00",
     "start": "2026-11-04T20:30:00-05:00",
     "venue": "Hotel Vermont"
-   },
-   {
-    "id": "a0a7b2096da7",
-    "title": "Standup Open Mic",
-    "link": "https://community.sevendaysvt.com/event/standup-open-mic-44800963",
-    "ts": "2026-09-05T01:37:25-04:00",
-    "start": "2026-11-04T20:30:00-05:00",
-    "venue": "Vermont Comedy Club"
    },
    {
     "id": "ef1dd28dec82",
@@ -19224,14 +19304,6 @@
     "venue": "Lafayette Hall"
    },
    {
-    "id": "54eaef9d7fc0",
-    "title": "Coloring in the Marble Court",
-    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
-    "ts": "2026-09-13T09:52:26-04:00",
-    "start": "2026-11-11T16:00:00-05:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "a474ec533a24",
     "title": "Wednesday $10.00 Burger Night",
     "link": "https://www.helloburlingtonvt.com/event/wednesday-%2410-00-burger-night/6605/",
@@ -19246,6 +19318,14 @@
     "ts": "2026-09-12T09:05:50-04:00",
     "start": "2026-11-11T16:00:00-05:00",
     "venue": ""
+   },
+   {
+    "id": "54eaef9d7fc0",
+    "title": "Coloring in the Marble Court",
+    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
+    "ts": "2026-09-13T09:52:26-04:00",
+    "start": "2026-11-11T16:00:00-05:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "f40d0cb3dfb7",
@@ -19460,14 +19540,6 @@
     "title": "VT's Funniest: Prelims!",
     "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/388514",
     "ts": "2026-09-18T18:48:39-04:00",
-    "start": "2026-11-11T20:30:00-05:00",
-    "venue": "Vermont Comedy Club"
-   },
-   {
-    "id": "908eec694f66",
-    "title": "Standup Open Mic",
-    "link": "https://community.sevendaysvt.com/event/standup-open-mic-44800963",
-    "ts": "2026-09-12T09:05:50-04:00",
     "start": "2026-11-11T20:30:00-05:00",
     "venue": "Vermont Comedy Club"
    },
@@ -21120,20 +21192,20 @@
     "venue": "Lafayette Hall"
    },
    {
-    "id": "b1407d15c4d7",
-    "title": "Coloring in the Marble Court",
-    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
-    "ts": "2026-09-20T09:40:15-04:00",
-    "start": "2026-11-18T16:00:00-05:00",
-    "venue": "Fleming Museum of Art"
-   },
-   {
     "id": "c0ac569d4a23",
     "title": "Wednesday $10.00 Burger Night",
     "link": "https://www.helloburlingtonvt.com/event/wednesday-%2410-00-burger-night/6605/",
     "ts": "2026-09-19T09:22:07-04:00",
     "start": "2026-11-18T16:00:00-05:00",
     "venue": "Hilton Burlington Lake Champlain"
+   },
+   {
+    "id": "b1407d15c4d7",
+    "title": "Coloring in the Marble Court",
+    "link": "https://events.uvm.edu/event/coloring-in-the-marble-court-fall26",
+    "ts": "2026-09-20T09:40:15-04:00",
+    "start": "2026-11-18T16:00:00-05:00",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "669b18cdba97",
@@ -21350,14 +21422,6 @@
     "ts": "2026-09-19T09:22:07-04:00",
     "start": "2026-11-18T20:30:00-05:00",
     "venue": "Hotel Vermont"
-   },
-   {
-    "id": "45439d4ae5a7",
-    "title": "Standup Open Mic",
-    "link": "https://community.sevendaysvt.com/event/standup-open-mic-44800963",
-    "ts": "2026-09-19T09:22:07-04:00",
-    "start": "2026-11-18T20:30:00-05:00",
-    "venue": "Vermont Comedy Club"
    },
    {
     "id": "09d462648d2d",
