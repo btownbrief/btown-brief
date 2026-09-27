@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-27T19:06:03+00:00",
+ "updated": "2026-09-27T20:25:34+00:00",
  "sections_updated": {
-  "now": "2026-09-27T19:06:03+00:00",
-  "forecast": "2026-09-27T19:06:03+00:00",
-  "hourly": "2026-09-27T19:06:03+00:00",
-  "alerts": "2026-09-27T19:06:03+00:00",
-  "afd": "2026-09-27T19:06:03+00:00",
-  "lake_forecast": "2026-09-27T19:06:03+00:00",
-  "lake_gage": "2026-09-27T19:06:03+00:00",
-  "air": "2026-09-27T19:06:03+00:00",
-  "sun": "2026-09-27T19:06:03+00:00",
-  "models": "2026-09-27T19:06:03+00:00"
+  "now": "2026-09-27T20:25:34+00:00",
+  "forecast": "2026-09-27T20:25:34+00:00",
+  "hourly": "2026-09-27T20:25:34+00:00",
+  "alerts": "2026-09-27T20:25:34+00:00",
+  "afd": "2026-09-27T20:25:34+00:00",
+  "lake_forecast": "2026-09-27T20:25:34+00:00",
+  "lake_gage": "2026-09-27T20:25:34+00:00",
+  "air": "2026-09-27T20:25:34+00:00",
+  "sun": "2026-09-27T20:25:34+00:00",
+  "models": "2026-09-27T20:25:34+00:00"
  },
  "now": {
-  "observed_at": "2026-09-27T18:45:00+00:00",
+  "observed_at": "2026-09-27T20:05:00+00:00",
   "station": "KBTV",
-  "description": "Light Rain and Fog/Mist",
+  "description": "Cloudy",
   "temp_f": 61,
   "feels_like_f": 61,
-  "humidity": 88,
-  "dewpoint_f": 57,
-  "wind_mph": 6,
+  "humidity": 82,
+  "dewpoint_f": 55,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "WNW",
+  "wind_dir": "NNW",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-09-27T15:00:00-04:00",
+    "start": "2026-09-27T16:00:00-04:00",
     "is_day": true,
     "temp_f": 65,
-    "pop": 46,
+    "pop": 41,
     "wind": "N 9 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Cloudy, with a high near 65. North wind around 9 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A chance of rain showers. Cloudy, with a high near 65. North wind around 9 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-09-27T18:28:55+00:00",
   "hours": [
-   {
-    "t": "2026-09-27T15:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 46,
-    "humidity": 75,
-    "wind_mph": 9,
-    "wind_dir": "N",
-    "sky": 90,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-09-27T16:00:00-04:00",
     "temp_f": 65,
@@ -568,6 +557,17 @@
     "wind_dir": "N",
     "sky": 84,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-09-29T03:00:00-04:00",
+    "temp_f": 54,
+    "feels_f": 54,
+    "pop": 2,
+    "humidity": 100,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 84,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -853,18 +853,18 @@
  },
  "lake_gage": {
   "water_temp_f": 62,
-  "water_temp_at": "2026-09-27T14:00:00.000-04:00",
-  "level_ft": 94.02,
-  "level_at": "2026-09-27T14:00:00.000-04:00",
+  "water_temp_at": "2026-09-27T16:00:00.000-04:00",
+  "level_ft": 94.01,
+  "level_at": "2026-09-27T16:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 38,
+  "aqi": 35,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/27/26 14:00",
-  "discussion": "Expect generally good air quality across Vermont on Sunday, September 27th."
+  "observed": "09/27/26 16:00",
+  "discussion": "Expect generally good air quality across Vermont on Monday, September 28th."
  },
  "sun": {
   "sunrise": "2026-09-27T06:45-04:00",
@@ -878,50 +878,50 @@
    {
     "date": "2026-09-27",
     "high_f": {
-     "GFS": 68,
-     "Euro": 63,
+     "GFS": 65,
+     "Euro": 61,
      "ICON": 64
     },
     "pop_max": {
-     "GFS": 36,
+     "GFS": 37,
      "Euro": 89,
      "ICON": 73
     },
     "precip_in": {
-     "GFS": 0.0,
-     "Euro": 0.32,
+     "GFS": 0.02,
+     "Euro": 0.21,
      "ICON": 0.02
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-09-28",
     "high_f": {
-     "GFS": 65,
-     "Euro": 61,
+     "GFS": 62,
+     "Euro": 60,
      "ICON": 61
     },
     "pop_max": {
-     "GFS": 49,
+     "GFS": 50,
      "Euro": 63,
      "ICON": 80
     },
     "precip_in": {
-     "GFS": 0.71,
-     "Euro": 0.15,
+     "GFS": 0.02,
+     "Euro": 0.2,
      "ICON": 0.43
     },
-    "high_spread_f": 4
+    "high_spread_f": 2
    },
    {
     "date": "2026-09-29",
     "high_f": {
      "GFS": 60,
-     "Euro": 60,
+     "Euro": 62,
      "ICON": 58
     },
     "pop_max": {
-     "GFS": 35,
+     "GFS": 18,
      "Euro": 48,
      "ICON": 45
     },
@@ -930,7 +930,7 @@
      "Euro": 0.02,
      "ICON": 0.03
     },
-    "high_spread_f": 2
+    "high_spread_f": 4
    }
   ]
  }
