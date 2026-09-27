@@ -1,20 +1,20 @@
 {
- "generated": "2026-09-27T10:48:54-04:00",
+ "generated": "2026-09-27T19:23:51-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 9,
-   "seconds": 5.6
+   "seconds": 5.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 66,
-   "seconds": 3.8
+   "seconds": 3.4
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 58,
-   "seconds": 3.0
+   "seconds": 3.5
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
@@ -24,7 +24,7 @@
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 65,
-   "seconds": 1.6
+   "seconds": 1.5
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -49,12 +49,12 @@
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 203,
-   "seconds": 70.4
+   "seconds": 69.9
   },
   "flynn": {
    "label": "The Flynn",
    "count": 23,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,7 +64,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 692,
-   "seconds": 34.6
+   "seconds": 36.4
   },
   "higherground": {
    "label": "Higher Ground",
@@ -73,29 +73,28 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 0,
-   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
-   "staleDays": 0
+   "count": 1,
+   "seconds": 13.7
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 394,
-   "seconds": 73.9
+   "seconds": 74.4
   },
   "meetup": {
    "label": "Meetup",
    "count": 47,
-   "seconds": 97.9
+   "seconds": 104.0
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 21,
-   "seconds": 1.3
+   "seconds": 1.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 59,
-   "seconds": 15.2
+   "count": 58,
+   "seconds": 15.0
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -105,17 +104,17 @@
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 100,
-   "seconds": 1.7
+   "seconds": 1.8
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 19,
-   "seconds": 34.0
+   "seconds": 33.9
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2268,
-   "seconds": 20.7
+   "count": 2260,
+   "seconds": 2.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -125,7 +124,7 @@
   "uvm": {
    "label": "UVM & Colleges",
    "count": 487,
-   "seconds": 37.0
+   "seconds": 28.9
   },
   "uvmbored": {
    "label": "UVM Bored",
@@ -135,7 +134,7 @@
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 50,
-   "seconds": 66.8
+   "seconds": 74.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -143,11 +142,11 @@
    "seconds": 0.3
   }
  },
- "gathered": 5247,
- "afterDedup": 2485,
- "duplicatesMerged": 2762,
- "final": 2514,
- "firecrawlCalls": 5,
+ "gathered": 5239,
+ "afterDedup": 2482,
+ "duplicatesMerged": 2757,
+ "final": 2517,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -2424,6 +2423,27 @@
    "lastSeen": "2026-09-26T19:08:49-04:00"
   },
   {
+   "id": "b0b8976ef7fa",
+   "title": "Mount Philo hike",
+   "date": "2026-09-27",
+   "change": "missing",
+   "lastSeen": "2026-09-27T10:48:54-04:00"
+  },
+  {
+   "id": "8f3bb07b86ba",
+   "title": "The Amazing Puzzle Race",
+   "date": "2026-09-27",
+   "change": "missing",
+   "lastSeen": "2026-09-27T10:48:54-04:00"
+  },
+  {
+   "id": "0cc352f5ccf6",
+   "title": "Indian Brook",
+   "date": "2026-09-27",
+   "change": "missing",
+   "lastSeen": "2026-09-27T10:48:54-04:00"
+  },
+  {
    "id": "cbad6059d5f6",
    "title": "Learn Magic: The Gathering",
    "date": "2026-09-27",
@@ -2431,10 +2451,11 @@
    "lastSeen": "2026-09-24T19:26:23-04:00"
   },
   {
-   "id": "a015f67fb3c9",
-   "title": "Blue Sundays",
+   "id": "0c76ba807df1",
+   "title": "Public Skate",
    "date": "2026-09-27",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-09-27T10:48:54-04:00"
   },
   {
    "id": "ee2d40dd7be1",
@@ -2465,6 +2486,27 @@
    "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
+   "id": "f6901bbe38ed",
+   "title": "Music for Young Children With Linda Bassick",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-27T10:48:54-04:00"
+  },
+  {
+   "id": "5056698e4419",
+   "title": "'Bagdad Cafe'",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-27T10:48:54-04:00"
+  },
+  {
+   "id": "38de7cc28d75",
+   "title": "'An Evening of Masterworks'",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-27T10:48:54-04:00"
+  },
+  {
    "id": "235e5567cc16",
    "title": "Guided Gallery Tour",
    "date": "2026-10-02",
@@ -2486,12 +2528,6 @@
    "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
-   "id": "c0dbd1644a33",
-   "title": "Blue Sundays",
-   "date": "2026-10-04",
-   "change": "dropped"
-  },
-  {
    "id": "1baa6f77736c",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-10-05",
@@ -2504,12 +2540,6 @@
    "date": "2026-10-06",
    "change": "missing",
    "lastSeen": "2026-09-24T19:26:23-04:00"
-  },
-  {
-   "id": "582199e33b83",
-   "title": "Local Dork at Foam Brewers on a Tuesday",
-   "date": "2026-10-06",
-   "change": "dropped"
   },
   {
    "id": "8e56a3485417",
@@ -2526,12 +2556,6 @@
    "lastSeen": "2026-09-24T19:26:23-04:00"
   },
   {
-   "id": "44901c5bf01c",
-   "title": "Blue Sundays",
-   "date": "2026-10-11",
-   "change": "dropped"
-  },
-  {
    "id": "ef977d110371",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-10-12",
@@ -2539,23 +2563,11 @@
    "lastSeen": "2026-09-26T19:08:49-04:00"
   },
   {
-   "id": "16a50cbd000c",
-   "title": "Local Dork at Foam Brewers on a Tuesday",
-   "date": "2026-10-13",
-   "change": "dropped"
-  },
-  {
    "id": "2052a154655a",
    "title": "Catalyst: Artists in Conversation",
    "date": "2026-10-14",
    "change": "missing",
    "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
-   "id": "39b3b98b73d1",
-   "title": "Blue Sundays",
-   "date": "2026-10-18",
-   "change": "dropped"
   },
   {
    "id": "ba26ebcd79bd",
@@ -2572,18 +2584,6 @@
    "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
-   "id": "5d8e1deb47c9",
-   "title": "Friday Movie in the Auditorium: How to Train Your Dragon",
-   "date": "2026-10-23",
-   "change": "dropped"
-  },
-  {
-   "id": "2211cacbebff",
-   "title": "Blue Sundays",
-   "date": "2026-10-25",
-   "change": "dropped"
-  },
-  {
    "id": "76a568e01bb9",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-10-26",
@@ -2596,12 +2596,6 @@
    "date": "2026-10-28",
    "change": "missing",
    "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
-   "id": "bae8886e4a9d",
-   "title": "Blue Sundays",
-   "date": "2026-11-01",
-   "change": "dropped"
   },
   {
    "id": "48b31468db94",
@@ -2625,12 +2619,6 @@
    "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
-   "id": "971930a11382",
-   "title": "Blue Sundays",
-   "date": "2026-11-08",
-   "change": "dropped"
-  },
-  {
    "id": "cedab6119907",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-11-09",
@@ -2643,12 +2631,6 @@
    "date": "2026-11-11",
    "change": "missing",
    "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
-   "id": "c6b5d9b8c63e",
-   "title": "Blue Sundays",
-   "date": "2026-11-15",
-   "change": "dropped"
   },
   {
    "id": "6f638ee1fde9",
@@ -2670,12 +2652,6 @@
    "date": "2026-11-18",
    "change": "missing",
    "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
-   "id": "18ecb23918e5",
-   "title": "Blue Sundays",
-   "date": "2026-11-22",
-   "change": "dropped"
   },
   {
    "id": "6a851a185917",
