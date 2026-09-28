@@ -1,28 +1,28 @@
 {
- "updated": "2026-09-27T23:24:57+00:00",
+ "updated": "2026-09-28T01:59:54+00:00",
  "sections_updated": {
-  "now": "2026-09-27T23:24:57+00:00",
-  "forecast": "2026-09-27T23:24:57+00:00",
-  "hourly": "2026-09-27T23:24:57+00:00",
-  "alerts": "2026-09-27T23:24:57+00:00",
-  "afd": "2026-09-27T23:24:57+00:00",
-  "lake_forecast": "2026-09-27T23:24:57+00:00",
-  "lake_gage": "2026-09-27T23:24:57+00:00",
-  "air": "2026-09-27T23:24:57+00:00",
-  "sun": "2026-09-27T23:24:57+00:00",
-  "models": "2026-09-27T23:24:57+00:00"
+  "now": "2026-09-28T01:59:54+00:00",
+  "forecast": "2026-09-28T01:59:54+00:00",
+  "hourly": "2026-09-28T01:59:54+00:00",
+  "alerts": "2026-09-28T01:59:54+00:00",
+  "afd": "2026-09-28T01:59:54+00:00",
+  "lake_forecast": "2026-09-28T01:59:54+00:00",
+  "lake_gage": "2026-09-28T01:59:54+00:00",
+  "air": "2026-09-28T01:59:54+00:00",
+  "sun": "2026-09-28T01:59:54+00:00",
+  "models": "2026-09-28T01:59:54+00:00"
  },
  "now": {
-  "observed_at": "2026-09-27T23:05:00+00:00",
+  "observed_at": "2026-09-28T01:35:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 61,
   "feels_like_f": 61,
   "humidity": 82,
   "dewpoint_f": 55,
-  "wind_mph": 6,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "NNW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-09-27T19:00:00-04:00",
+    "start": "2026-09-27T21:00:00-04:00",
     "is_day": false,
     "temp_f": 53,
     "pop": 48,
-    "wind": "N 3 to 7 mph",
+    "wind": "N 6 mph",
     "short": "Chance Light Rain",
-    "detailed": "A chance of rain. Mostly cloudy, with a low around 53. North wind 3 to 7 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "A chance of rain. Mostly cloudy, with a low around 53. North wind around 6 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Monday",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-09-27T21:40:27+00:00",
   "hours": [
-   {
-    "t": "2026-09-27T19:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 38,
-    "humidity": 87,
-    "wind_mph": 7,
-    "wind_dir": "N",
-    "sky": 86,
-    "short": "Chance Light Rain"
-   },
-   {
-    "t": "2026-09-27T20:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 35,
-    "humidity": 84,
-    "wind_mph": 7,
-    "wind_dir": "NE",
-    "sky": 93,
-    "short": "Chance Light Rain"
-   },
    {
     "t": "2026-09-27T21:00:00-04:00",
     "temp_f": 59,
@@ -568,6 +546,28 @@
     "wind_dir": "N",
     "sky": 90,
     "short": "Cloudy"
+   },
+   {
+    "t": "2026-09-29T07:00:00-04:00",
+    "temp_f": 52,
+    "feels_f": 52,
+    "pop": 0,
+    "humidity": 100,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 91,
+    "short": "Cloudy"
+   },
+   {
+    "t": "2026-09-29T08:00:00-04:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 1,
+    "humidity": 100,
+    "wind_mph": 8,
+    "wind_dir": "N",
+    "sky": 89,
+    "short": "Cloudy"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-27T18:55:00+00:00",
+  "issued": "2026-09-27T23:32:00+00:00",
   "key_messages": [
    "The nor'easter exits the region tomorrow night, and conditions trend warmer and sunnier.",
    "Next chance of showers will be from a cold frontal passage Thursday night into Friday."
   ],
   "what_changed": "As of 255 PM EDT Sunday... No significant changes.",
-  "raw": "\n000\nFXUS61 KBTV 271855\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n255 PM EDT Sun Sep 27 2026\n\n.WHAT HAS CHANGED...\nAs of 255 PM EDT Sunday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 255 PM EDT Sunday...\n\n1. The nor'easter exits the region tomorrow night, and \nconditions trend warmer and sunnier.  \n\n2. Next chance of showers will be from a cold frontal passage \nThursday night into Friday. \n\n&&\n\n.DISCUSSION...\nAs of 255 PM EDT Sunday...\n\nKEY MESSAGE 1: The nor'easter made \"landfall\" this morning on the \nJersey Shore, continuing to gradually weaken. Due to this and its \ncompleted occlusion, the weakening process will continue. The low \nwill begin to re-enter the synoptic circulation tomorrow and drift \nnortheastward into the Gulf of Maine and the Canadian Maritimes. \nEven though the precipitation shield will become smaller and more \nisolated as it weakens, the showers will continue over the region as \nthe center passes closer. The showers will exit tomorrow night as \nthe low continues to push northeast. Even though the rain will end \nfor Tuesday, the boundary layer flow will transition to \nnorthwesterly and become increasingly blocked as the inversion \nheight lowers, and cloud cover looks to hold thick in many areas, \nespecially across the upslope areas and northern Vermont. Drier air \nwill eventually mix into the lower levels for Wednesday and the sun \nshould finally return for everywhere, though high clouds will begin \nto increase in the afternoon from a storm system moving toward the \nregion from the Midwest. Due to the sunshine, temperatures should \nrise into the 70s for most areas on Wednesday.\n\nKEY MESSAGE 2: High pressure builds into our region from the south on \nThursday providing us with the warmest day of the forecast period. \nMaximum temperatures will range through the 70s with some sites \nhaving near record warmth. Thursday night into Friday will bring our \nnext chance for precipitation as a cold front will cross our region \nin that timeframe. Another ridge of surface high pressure will build \ninto our area behind this front bringing additional dry weather, \nthis time with cooler temperatures as the high builds into our area \nfrom Canada.\n\n&&\n\n.AVIATION /18Z SUNDAY THROUGH FRIDAY/...\nThrough 18Z Monday...Scattered rain showers continue at our TAF\nsites today, with the greatest impacts at our southern and \neastern TAF sites including BTV/RUT/MPV/EFK. Ceilings and vsby \nwill mostly remain MVFR or better. Best chances for occasional \nMVFR conditions and HIR TRRN OBSCD during the daylight hours \ntoday will be at RUT and MPV, and mainly due to ceilings. Winds \nwill generally be N to NE, with gusts 20-25kt becoming \nincreasingly common during the daylight hours. During periods in\nwhich stronger wind gusts don't reach the surface, it appears \nthat pockets of LLWS will be possible. MSS should be northwest \nof most of the shower and LLWS activity and is expected to \nremain VFR through the TAF period. \n\nOutlook...\n\nMonday Night: Mainly MVFR, with local IFR possible. Chance SHRA.\nTuesday: Mainly MVFR, with local IFR possible. NO SIG WX.\nTuesday Night: Mainly VFR, with areas MVFR possible. NO SIG WX.\nWednesday: Mainly VFR, with local MVFR possible. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. Chance SHRA.\nFriday: Mainly MVFR, with areas VFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Neiles/Myskowski\nAVIATION...Neiles\n"
+  "raw": "\n000\nFXUS61 KBTV 272332\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n732 PM EDT Sun Sep 27 2026\n\n.WHAT HAS CHANGED...\nAs of 255 PM EDT Sunday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 255 PM EDT Sunday...\n\n1. The nor'easter exits the region tomorrow night, and \nconditions trend warmer and sunnier.  \n\n2. Next chance of showers will be from a cold frontal passage \nThursday night into Friday.\n\n&&\n\n.DISCUSSION...\nAs of 255 PM EDT Sunday...\n\nKEY MESSAGE 1: The nor'easter made \"landfall\" this morning on the \nJersey Shore, continuing to gradually weaken. Due to this and its \ncompleted occlusion, the weakening process will continue. The low \nwill begin to re-enter the synoptic circulation tomorrow and drift \nnortheastward into the Gulf of Maine and the Canadian Maritimes. \nEven though the precipitation shield will become smaller and more \nisolated as it weakens, the showers will continue over the region as \nthe center passes closer. The showers will exit tomorrow night as \nthe low continues to push northeast. Even though the rain will end \nfor Tuesday, the boundary layer flow will transition to \nnorthwesterly and become increasingly blocked as the inversion \nheight lowers, and cloud cover looks to hold thick in many areas, \nespecially across the upslope areas and northern Vermont. Drier air \nwill eventually mix into the lower levels for Wednesday and the sun \nshould finally return for everywhere, though high clouds will begin \nto increase in the afternoon from a storm system moving toward the \nregion from the Midwest. Due to the sunshine, temperatures should \nrise into the 70s for most areas on Wednesday.\n\nKEY MESSAGE 2: High pressure builds into our region from the south on \nThursday providing us with the warmest day of the forecast period. \nMaximum temperatures will range through the 70s with some sites \nhaving near record warmth. Thursday night into Friday will bring our \nnext chance for precipitation as a cold front will cross our region \nin that timeframe. Another ridge of surface high pressure will build \ninto our area behind this front bringing additional dry weather, \nthis time with cooler temperatures as the high builds into our area \nfrom Canada.\n\n&&\n\n.AVIATION /00Z MONDAY THROUGH FRIDAY/...\nThrough 00Z Tuesday...Coverage of showers has decreased over the\nlast few hours. The next swath of rain is taking shape just\nnorth of Lebanon, NH and offshore to Portland, ME and have\nmainly noted some PROB30s and VCSH for that activity over the\nnext 6-12 hours. Northeast winds around 5-10 knots will become \nnortherly. Some LLWS will linger across Vermont, mainly at KRUT,\nKMPV, and KEFK through about 07-09z with 30-40 kt east- \nnortheast winds at 2000 ft agl. Ceilings will likely be somewhat\nvariable across Vermont, but moisture may get briefly trapped \nin the Adirondacks. Broader changes to flight rules will begin \nabout 11z-16z as ceilings begin to trend MVFR. Then, a larger\narea of rain will rotate northwest across all terminals, but\nfailing to reach KMSS. This will likely have some rain with\nvisibilities between 3-6SM and ceilings falling to 800-2500 ft\nagl.\n\nOutlook...\n\nMonday Night: Mainly MVFR, with local IFR possible. Chance SHRA.\nTuesday: Mainly MVFR, with local IFR possible. NO SIG WX.\nTuesday Night: Mainly VFR, with areas MVFR possible. NO SIG WX.\nWednesday: Mainly VFR, with local MVFR possible. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: VFR. Chance SHRA.\nFriday: Mainly MVFR, with areas VFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Neiles/Myskowski\nAVIATION...Haynes\n"
  },
  "lake_forecast": {
   "issued": "2026-09-27T18:29:00+00:00",
@@ -853,17 +853,17 @@
  },
  "lake_gage": {
   "water_temp_f": 62,
-  "water_temp_at": "2026-09-27T19:00:00.000-04:00",
-  "level_ft": 94.04,
-  "level_at": "2026-09-27T19:00:00.000-04:00",
+  "water_temp_at": "2026-09-27T21:00:00.000-04:00",
+  "level_ft": 94.03,
+  "level_at": "2026-09-27T21:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/27/26 19:00",
+  "observed": "09/27/26 21:00",
   "discussion": "Expect generally good air quality across Vermont on Monday, September 28th."
  },
  "sun": {
@@ -884,12 +884,12 @@
     },
     "pop_max": {
      "GFS": 32,
-     "Euro": 89,
+     "Euro": 94,
      "ICON": 73
     },
     "precip_in": {
      "GFS": 0.02,
-     "Euro": 0.21,
+     "Euro": 0.23,
      "ICON": 0.06
     },
     "high_spread_f": 4
@@ -897,37 +897,37 @@
    {
     "date": "2026-09-28",
     "high_f": {
-     "GFS": 62,
+     "GFS": 64,
      "Euro": 60,
      "ICON": 60
     },
     "pop_max": {
      "GFS": 48,
-     "Euro": 63,
+     "Euro": 71,
      "ICON": 80
     },
     "precip_in": {
-     "GFS": 0.02,
-     "Euro": 0.2,
+     "GFS": 0.3,
+     "Euro": 0.05,
      "ICON": 0.28
     },
-    "high_spread_f": 2
+    "high_spread_f": 4
    },
    {
     "date": "2026-09-29",
     "high_f": {
-     "GFS": 60,
+     "GFS": 61,
      "Euro": 62,
      "ICON": 60
     },
     "pop_max": {
      "GFS": 15,
-     "Euro": 48,
+     "Euro": 40,
      "ICON": 45
     },
     "precip_in": {
      "GFS": 0.0,
-     "Euro": 0.02,
+     "Euro": 0.11,
      "ICON": 0.01
     },
     "high_spread_f": 2
