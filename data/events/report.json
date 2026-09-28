@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-27T19:23:51-04:00",
+ "generated": "2026-09-28T13:48:33-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 9,
-   "seconds": 5.8
+   "seconds": 6.5
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 66,
-   "seconds": 3.4
+   "count": 61,
+   "seconds": 4.8
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 58,
-   "seconds": 3.5
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 240,
-   "seconds": 4.0
+   "count": 265,
+   "seconds": 3.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 65,
-   "seconds": 1.5
+   "count": 67,
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-27&end_date=2026-11-26&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-28&end_date=2026-11-27&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 5,
-   "seconds": 0.2
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 203,
-   "seconds": 69.9
+   "count": 204,
+   "seconds": 75.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 23,
-   "seconds": 0.5
+   "seconds": 0.9
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,58 +63,58 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 692,
-   "seconds": 36.4
+   "count": 686,
+   "seconds": 40.3
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 78,
-   "seconds": 0.6
+   "seconds": 0.2
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 13.7
+   "count": 2,
+   "seconds": 10.6
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 394,
-   "seconds": 74.4
+   "count": 393,
+   "seconds": 70.2
   },
   "meetup": {
    "label": "Meetup",
    "count": 47,
-   "seconds": 104.0
+   "seconds": 102.3
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 21,
-   "seconds": 1.5
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 58,
-   "seconds": 15.0
+   "count": 56,
+   "seconds": 16.9
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 12,
-   "seconds": 0.4
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 100,
-   "seconds": 1.8
+   "count": 99,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 19,
-   "seconds": 33.9
+   "count": 18,
+   "seconds": 34.8
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2260,
-   "seconds": 2.7
+   "count": 2424,
+   "seconds": 66.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -123,165 +123,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 487,
-   "seconds": 28.9
+   "count": 502,
+   "seconds": 34.4
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 300,
+   "count": 313,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 50,
-   "seconds": 74.7
+   "seconds": 67.0
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 51,
-   "seconds": 0.3
+   "seconds": 0.1
   }
  },
- "gathered": 5239,
- "afterDedup": 2482,
- "duplicatesMerged": 2757,
- "final": 2517,
- "firecrawlCalls": 1,
+ "gathered": 5444,
+ "afterDedup": 2519,
+ "duplicatesMerged": 2925,
+ "final": 2536,
+ "firecrawlCalls": 15,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-03"
-  },
-  {
-   "kept": {
-    "title": "Tech Breakfast",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "meetup",
-    "sevendays"
-   ],
-   "date": "2026-11-03"
-  },
-  {
-   "kept": {
-    "title": "Stories & Songs for Library Littles",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "Porch Light",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "TRIVIA NIGHT",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "Vaccine Clinic",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "RSENR Research Seminar",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "BOOST Sessions",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "Wednesday Write-Ins",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "Board Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "Pub Quiz",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-04"
-  },
   {
    "kept": {
     "title": "'Very Eric Carle' Exhibit",
@@ -520,6 +386,17 @@
   },
   {
    "kept": {
+    "title": "Curator Tour",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-06"
+  },
+  {
+   "kept": {
     "title": "CAT ECare Training",
     "source": "uvm"
    },
@@ -744,6 +621,17 @@
   },
   {
    "kept": {
+    "title": "Art Wall: Photography by Jeffrey Trubisz",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
+   ],
+   "date": "2026-11-09"
+  },
+  {
+   "kept": {
     "title": "Study Abroad Photo Contest Reception",
     "source": "uvm"
    },
@@ -828,6 +716,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-11-10"
+  },
+  {
+   "kept": {
+    "title": "Monthly Interfaith Breakfast",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-10"
   },
@@ -949,6 +848,17 @@
   {
    "kept": {
     "title": "RSENR Research Seminar",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-11"
+  },
+  {
+   "kept": {
+    "title": "Coloring in the Marble Court",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1563,6 +1473,17 @@
   },
   {
    "kept": {
+    "title": "Art Wall: Photography by Jeffrey Trubisz",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
+   ],
+   "date": "2026-11-16"
+  },
+  {
+   "kept": {
     "title": "Assessing the Impact of Impaired Lakes on Zooplankton Community Responses to Salt Stress",
     "source": "uvm"
    },
@@ -1758,6 +1679,17 @@
   {
    "kept": {
     "title": "RSENR Research Seminar",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-18"
+  },
+  {
+   "kept": {
+    "title": "Coloring in the Marble Court",
     "source": "uvm"
    },
    "merged_sources": [
@@ -2202,6 +2134,17 @@
   },
   {
    "kept": {
+    "title": "Art Wall: Photography by Jeffrey Trubisz",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
+   ],
+   "date": "2026-11-23"
+  },
+  {
+   "kept": {
     "title": "Industry Day",
     "source": "loveburlington"
    },
@@ -2370,6 +2313,17 @@
   },
   {
    "kept": {
+    "title": "Arena Closed for Thanksgiving Holiday",
+    "source": "parksrec"
+   },
+   "merged_sources": [
+    "parksrec",
+    "uvm"
+   ],
+   "date": "2026-11-26"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -2412,50 +2366,74 @@
     "sevendays"
    ],
    "date": "2026-11-26"
+  },
+  {
+   "kept": {
+    "title": "Tree Lighting & Santa Parade",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-27"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-27"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-11-27"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-11-27"
   }
  ],
  "changes": [
   {
-   "id": "0bd0d85e77b1",
-   "title": "RESCHEDULED! Mount Mansfield Sunset Ridge & Long Trail Loop hike",
-   "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
+   "id": "6e624a0b918f",
+   "title": "Magna-Tile Masterpieces",
+   "date": "2026-10-07",
+   "change": "time",
+   "was": "2026-10-07",
+   "now": "2026-10-07T10:00:00-04:00"
   },
   {
-   "id": "b0b8976ef7fa",
-   "title": "Mount Philo hike",
-   "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-09-27T10:48:54-04:00"
-  },
-  {
-   "id": "8f3bb07b86ba",
-   "title": "The Amazing Puzzle Race",
-   "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-09-27T10:48:54-04:00"
-  },
-  {
-   "id": "0cc352f5ccf6",
-   "title": "Indian Brook",
-   "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-09-27T10:48:54-04:00"
-  },
-  {
-   "id": "cbad6059d5f6",
-   "title": "Learn Magic: The Gathering",
-   "date": "2026-09-27",
-   "change": "missing",
-   "lastSeen": "2026-09-24T19:26:23-04:00"
-  },
-  {
-   "id": "0c76ba807df1",
+   "id": "43ac68eacd75",
    "title": "Public Skate",
-   "date": "2026-09-27",
+   "date": "2026-09-28",
    "change": "missing",
-   "lastSeen": "2026-09-27T10:48:54-04:00"
+   "lastSeen": "2026-09-27T19:23:51-04:00"
+  },
+  {
+   "id": "12a05229a508",
+   "title": "Stick & Puck",
+   "date": "2026-09-28",
+   "change": "missing",
+   "lastSeen": "2026-09-27T19:23:51-04:00"
   },
   {
    "id": "ee2d40dd7be1",
@@ -2468,64 +2446,33 @@
    "id": "348e88592d16",
    "title": "Craftytown",
    "date": "2026-09-29",
-   "change": "missing",
-   "lastSeen": "2026-09-24T19:26:23-04:00"
+   "change": "dropped"
   },
   {
    "id": "b06b8cd265e8",
    "title": "Baby Time",
    "date": "2026-09-30",
-   "change": "missing",
-   "lastSeen": "2026-09-24T19:26:23-04:00"
+   "change": "dropped"
   },
   {
-   "id": "f0c94bbfeba2",
-   "title": "Coloring in the Marble Court",
+   "id": "f47314ffb7ec",
+   "title": "Fraud on Tap: Scam‑Smart Trivia Night",
    "date": "2026-09-30",
    "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
-   "id": "f6901bbe38ed",
-   "title": "Music for Young Children With Linda Bassick",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-27T10:48:54-04:00"
-  },
-  {
-   "id": "5056698e4419",
-   "title": "'Bagdad Cafe'",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-27T10:48:54-04:00"
-  },
-  {
-   "id": "38de7cc28d75",
-   "title": "'An Evening of Masterworks'",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-27T10:48:54-04:00"
-  },
-  {
-   "id": "235e5567cc16",
-   "title": "Guided Gallery Tour",
-   "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
-   "id": "ff70a02a47d6",
-   "title": "Guided Gallery Tour",
-   "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
+   "lastSeen": "2026-09-27T19:23:51-04:00"
   },
   {
    "id": "5d49146c55fe",
    "title": "Arsenic Any Where Presents Chandelier",
    "date": "2026-10-03",
+   "change": "dropped"
+  },
+  {
+   "id": "405c571e85c4",
+   "title": "Campus Tree Walk with the Forestry Program",
+   "date": "2026-10-04",
    "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
+   "lastSeen": "2026-09-27T19:23:51-04:00"
   },
   {
    "id": "1baa6f77736c",
@@ -2538,22 +2485,41 @@
    "id": "f009ebf47147",
    "title": "Cookbook Club",
    "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-09-24T19:26:23-04:00"
+   "change": "dropped"
   },
   {
-   "id": "8e56a3485417",
-   "title": "Coloring in the Marble Court",
+   "id": "f2378a57f52c",
+   "title": "East End Walk/Bike Forum",
    "date": "2026-10-07",
    "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
+   "lastSeen": "2026-09-27T19:23:51-04:00"
+  },
+  {
+   "id": "25f815c54764",
+   "title": "2026 Vermont International Film Festival Preview",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-09-27T19:23:51-04:00"
+  },
+  {
+   "id": "ba3763a1fb82",
+   "title": "The Smuggs SNSC Ski & Board Sale",
+   "date": "2026-10-10",
+   "change": "missing",
+   "lastSeen": "2026-09-27T19:23:51-04:00"
   },
   {
    "id": "5999b4af364e-2100",
    "title": "David Drake",
    "date": "2026-10-10",
+   "change": "dropped"
+  },
+  {
+   "id": "00e8c0f1345f",
+   "title": "The Smuggs SNSC Ski & Board Sale",
+   "date": "2026-10-11",
    "change": "missing",
-   "lastSeen": "2026-09-24T19:26:23-04:00"
+   "lastSeen": "2026-09-27T19:23:51-04:00"
   },
   {
    "id": "ef977d110371",
@@ -2563,25 +2529,11 @@
    "lastSeen": "2026-09-26T19:08:49-04:00"
   },
   {
-   "id": "2052a154655a",
-   "title": "Catalyst: Artists in Conversation",
-   "date": "2026-10-14",
-   "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
    "id": "ba26ebcd79bd",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-10-19",
    "change": "missing",
    "lastSeen": "2026-09-26T19:08:49-04:00"
-  },
-  {
-   "id": "dc83ea3f9eda",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "76a568e01bb9",
@@ -2591,13 +2543,6 @@
    "lastSeen": "2026-09-26T19:08:49-04:00"
   },
   {
-   "id": "daf84aaaaa20",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-10-28",
-   "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
    "id": "48b31468db94",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-11-02",
@@ -2605,32 +2550,11 @@
    "lastSeen": "2026-09-26T19:08:49-04:00"
   },
   {
-   "id": "41887efbc8d9",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-11-04",
-   "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
-   "id": "056bc15d9046",
-   "title": "Curator Tour",
-   "date": "2026-11-06",
-   "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
-  },
-  {
    "id": "cedab6119907",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-11-09",
    "change": "missing",
    "lastSeen": "2026-09-26T19:08:49-04:00"
-  },
-  {
-   "id": "54eaef9d7fc0",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-11-11",
-   "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
   },
   {
    "id": "6f638ee1fde9",
@@ -2643,15 +2567,7 @@
    "id": "e872dba934d8",
    "title": "Kids Puzzle Swap",
    "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-09-24T19:26:23-04:00"
-  },
-  {
-   "id": "b1407d15c4d7",
-   "title": "Coloring in the Marble Court",
-   "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-09-25T10:43:13-04:00"
+   "change": "dropped"
   },
   {
    "id": "6a851a185917",
