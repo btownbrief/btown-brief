@@ -1,55 +1,45 @@
 {
- "updated": "2026-09-28T08:58:20+00:00",
+ "updated": "2026-09-28T12:06:16+00:00",
  "sections_updated": {
-  "now": "2026-09-28T08:58:20+00:00",
-  "forecast": "2026-09-28T08:58:20+00:00",
-  "hourly": "2026-09-28T08:58:20+00:00",
-  "alerts": "2026-09-28T08:58:20+00:00",
-  "afd": "2026-09-28T08:58:20+00:00",
-  "lake_forecast": "2026-09-28T08:58:20+00:00",
+  "now": "2026-09-28T12:06:16+00:00",
+  "forecast": "2026-09-28T12:06:16+00:00",
+  "hourly": "2026-09-28T12:06:16+00:00",
+  "alerts": "2026-09-28T12:06:16+00:00",
+  "afd": "2026-09-28T12:06:16+00:00",
+  "lake_forecast": "2026-09-28T12:06:16+00:00",
   "lake_gage": "2026-09-28T08:58:20+00:00",
-  "air": "2026-09-28T08:58:20+00:00",
-  "sun": "2026-09-28T08:58:20+00:00",
-  "models": "2026-09-28T08:58:20+00:00"
+  "air": "2026-09-28T12:06:16+00:00",
+  "sun": "2026-09-28T12:06:16+00:00",
+  "models": "2026-09-28T12:06:16+00:00"
  },
  "now": {
-  "observed_at": "2026-09-28T08:40:00+00:00",
+  "observed_at": "2026-09-28T11:40:00+00:00",
   "station": "KBTV",
   "description": "Light Rain",
   "temp_f": 55,
   "feels_like_f": 55,
   "humidity": 100,
   "dewpoint_f": 55,
-  "wind_mph": 3,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "ESE",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-09-28T06:21:14+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-09-28T04:00:00-04:00",
-    "is_day": false,
-    "temp_f": 53,
-    "pop": 48,
-    "wind": "N 6 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 53. North wind around 6 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
-   },
-   {
-    "name": "Monday",
-    "start": "2026-09-28T06:00:00-04:00",
+    "name": "Today",
+    "start": "2026-09-28T08:00:00-04:00",
     "is_day": true,
     "temp_f": 62,
     "pop": 74,
     "wind": "N 3 to 7 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Mostly cloudy, with a high near 62. North wind 3 to 7 mph. Chance of precipitation is 70%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "detailed": "Rain showers likely. Mostly cloudy, with a high near 62. North wind 3 to 7 mph. Chance of precipitation is 70%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
-    "name": "Monday Night",
+    "name": "Tonight",
     "start": "2026-09-28T18:00:00-04:00",
     "is_day": false,
     "temp_f": 49,
@@ -167,56 +157,22 @@
     "wind": "S 5 to 13 mph",
     "short": "Chance Rain Showers",
     "detailed": "A chance of rain showers. Mostly sunny, with a high near 64. South wind 5 to 13 mph. Chance of precipitation is 30%."
+   },
+   {
+    "name": "Sunday Night",
+    "start": "2026-10-04T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 44,
+    "pop": 35,
+    "wind": "S 13 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 44. South wind around 13 mph. Chance of precipitation is 40%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-09-28T06:21:14+00:00",
   "hours": [
-   {
-    "t": "2026-09-28T04:00:00-04:00",
-    "temp_f": 55,
-    "feels_f": 55,
-    "pop": 45,
-    "humidity": 90,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 76,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-28T05:00:00-04:00",
-    "temp_f": 54,
-    "feels_f": 54,
-    "pop": 48,
-    "humidity": 93,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 82,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-28T06:00:00-04:00",
-    "temp_f": 53,
-    "feels_f": 53,
-    "pop": 40,
-    "humidity": 96,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 90,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-09-28T07:00:00-04:00",
-    "temp_f": 53,
-    "feels_f": 53,
-    "pop": 32,
-    "humidity": 96,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 84,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-09-28T08:00:00-04:00",
     "temp_f": 54,
@@ -568,6 +524,50 @@
     "wind_dir": "N",
     "sky": 38,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-09-29T16:00:00-04:00",
+    "temp_f": 64,
+    "feels_f": 64,
+    "pop": 0,
+    "humidity": 73,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 32,
+    "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-09-29T17:00:00-04:00",
+    "temp_f": 65,
+    "feels_f": 65,
+    "pop": 0,
+    "humidity": 68,
+    "wind_mph": 6,
+    "wind_dir": "N",
+    "sky": 19,
+    "short": "Sunny"
+   },
+   {
+    "t": "2026-09-29T18:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 0,
+    "humidity": 72,
+    "wind_mph": 5,
+    "wind_dir": "N",
+    "sky": 19,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-09-29T19:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 0,
+    "humidity": 75,
+    "wind_mph": 3,
+    "wind_dir": "N",
+    "sky": 24,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-28T06:31:00+00:00",
+  "issued": "2026-09-28T11:16:00+00:00",
   "key_messages": [
    "Rounds of showers will continue throughout the day today, with conditions trending drier for Tuesday and mid-week as high pressure builds into the region",
    "Our next chance for rain will be with a cold frontal passage Thursday into Friday, followed by cooler weather for the weekend."
   ],
   "what_changed": "As of 231 AM EDT Monday... No significant changes have been made to the forecast.",
-  "raw": "\n000\nFXUS61 KBTV 280631\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n231 AM EDT Mon Sep 28 2026\n\n.WHAT HAS CHANGED...\nAs of 231 AM EDT Monday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 231 AM EDT Monday...\n\n1. Rounds of showers will continue throughout the day today, \nwith conditions trending drier for Tuesday and mid-week as high \npressure builds into the region\n\n2. Our next chance for rain will be with a cold frontal passage \nThursday into Friday, followed by cooler weather for the weekend. \n\n&&\n\n.DISCUSSION...\nAs of 231 AM EDT Monday...\n\nKEY MESSAGE 1: Another day of cool and showery weather is expected \nacross the region today as additional rounds of showers move through \nthe region as the system to our south slowly drifts eastward. \nGreatest rainfall amounts for today are expected across eastern and \nsouthern Vermont, where totals are expected to be between 0.25 and \n0.5 inches of rain, while northern New York looks to remain on the \ndrier side. The showers and cloud cover will keep temperatures on \nthe cool side for this time of year, with highs only climbing into \nthe upper 50s and low 60s. \n\nShower activity will gradually wane through the evening and \novernight hours tonight as the low shifts away, with drier weather \nconditions expected to prevail throughout much of the day Tuesday as \nhigh pressure begins to build into the region. The drier conditions \nare expected to continue through much of the week, with temperatures \ngradually trending warmer as well. High temperatures on Tuesday will \nonly be in the 50s and lower 60s again, but by Thursday widespread \nhighs in the 70s are expected.\n\nKEY MESSAGE 2: A cold front will make its way southward across our \nregion late Thursday into Friday, bringing increasing chances of \nprecipitation along with it. The best forcing will remain well to \nour north, so anticipate scattered to perhaps widespread showers, \nmostly light to occasionally moderate in nature. Thunder is not \nanticipated given the unfavorable timing of the frontal passage \n(overnight Thu into early Fri AM). High pressure will immediately \nfollow the front, ushering in a drier and cooler airmass for at \nleast the first half of the weekend. Sunday is a bit less certain; \nthe 00z GFS and to a lesser extent, the 00z CMC indicate a wave of \nprecipitation lifting into our region sometime Sunday. The \ndeterministic GFS is the most aggressive with this feature, though \nit does the support of a few of its ensemble members, along with \nsome GEPS members, as well. Didn't get a chance to look at the 00z \nECMWF, but the 12z run held off any precipitation until Sunday \nnight/Monday, though again, some of its ensemble members show a \nrainy and cool Sunday. Given these differences, have stayed with the \nWPC/NBM forecast, which gives low chance PoPs for Sunday. \nTemperatures will be warmest on Friday, in the mid 60s to near 70F, \nthen trending cooler with highs in the 60s and lows in the low 30s \nto low 40s.\n\n&&\n\n.AVIATION /06Z MONDAY THROUGH FRIDAY/...\nThrough 06Z Tuesday...Scattered showers will persist through the\nfirst several hours of the TAF period, becoming more widespread from\n12z onward, particularly after 18z. A mix of VFR/MVFR ceilings early\nin the period will eventually lower to MVFR at all terminals as\nmoisture increases. Can't rule out IFR conditions, especially as we\nhead toward 00z Tue. Have gone with ceilings below 1000 ft at\nMPV/SLK/RUT where confidence in IFR is highest. Showers have mainly\nbeen handled with PROB30 given the scattered nature, but prevailing\n-SHRA has been included for the afternoon at most terminals.\nVisibility mainly 4-6SM in any precipitation. Rain will wind down\nafter 23z, but wouldn't be surprised for lingering fog or drizzle to\nkeep visibilities 4-6SM for the remainder of the TAF period. N/NE\nwinds remain light through the period, mainly less than 10 kt. Some\nLLWS is possible at RUT/EFK for the first 4-6 hours of the TAF\nperiod, but LLJ will move out as low pressure pulls away from the\nregion.\n\nOutlook...\n\nTuesday: Mainly MVFR, with local IFR possible. NO SIG WX.\nTuesday Night: Mainly VFR, with areas MVFR possible. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: Mainly VFR, with local MVFR possible. Slight\nchance SHRA.\nFriday: Mainly VFR, with areas MVFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Hastings\nAVIATION...Hastings\n"
+  "raw": "\n000\nFXUS61 KBTV 281116\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n716 AM EDT Mon Sep 28 2026\n\n.WHAT HAS CHANGED...\nAs of 231 AM EDT Monday...\n\nNo significant changes have been made to the forecast.\n\n&&\n\n.KEY MESSAGES...\nAs of 231 AM EDT Monday...\n\n1. Rounds of showers will continue throughout the day today, \nwith conditions trending drier for Tuesday and mid-week as high \npressure builds into the region\n\n2. Our next chance for rain will be with a cold frontal passage \nThursday into Friday, followed by cooler weather for the weekend.\n\n&&\n\n.DISCUSSION...\nAs of 231 AM EDT Monday...\n\nKEY MESSAGE 1: Another day of cool and showery weather is expected \nacross the region today as additional rounds of showers move through \nthe region as the system to our south slowly drifts eastward. \nGreatest rainfall amounts for today are expected across eastern and \nsouthern Vermont, where totals are expected to be between 0.25 and \n0.5 inches of rain, while northern New York looks to remain on the \ndrier side. The showers and cloud cover will keep temperatures on \nthe cool side for this time of year, with highs only climbing into \nthe upper 50s and low 60s. \n\nShower activity will gradually wane through the evening and \novernight hours tonight as the low shifts away, with drier weather \nconditions expected to prevail throughout much of the day Tuesday as \nhigh pressure begins to build into the region. The drier conditions \nare expected to continue through much of the week, with temperatures \ngradually trending warmer as well. High temperatures on Tuesday will \nonly be in the 50s and lower 60s again, but by Thursday widespread \nhighs in the 70s are expected.\n\nKEY MESSAGE 2: A cold front will make its way southward across our \nregion late Thursday into Friday, bringing increasing chances of \nprecipitation along with it. The best forcing will remain well to \nour north, so anticipate scattered to perhaps widespread showers, \nmostly light to occasionally moderate in nature. Thunder is not \nanticipated given the unfavorable timing of the frontal passage \n(overnight Thu into early Fri AM). High pressure will immediately \nfollow the front, ushering in a drier and cooler airmass for at \nleast the first half of the weekend. Sunday is a bit less certain; \nthe 00z GFS and to a lesser extent, the 00z CMC indicate a wave of \nprecipitation lifting into our region sometime Sunday. The \ndeterministic GFS is the most aggressive with this feature, though \nit does the support of a few of its ensemble members, along with \nsome GEPS members, as well. Didn't get a chance to look at the 00z \nECMWF, but the 12z run held off any precipitation until Sunday \nnight/Monday, though again, some of its ensemble members show a \nrainy and cool Sunday. Given these differences, have stayed with the \nWPC/NBM forecast, which gives low chance PoPs for Sunday. \nTemperatures will be warmest on Friday, in the mid 60s to near 70F, \nthen trending cooler with highs in the 60s and lows in the low 30s \nto low 40s.\n\n&&\n\n.AVIATION /12Z MONDAY THROUGH FRIDAY/...\nThrough 12Z Tuesday...Scattered showers will persist through the\nfirst several hours of the TAF period, becoming more widespread\nthrough day, particularly after 18z. A mix of VFR/MVFR ceilings\nearly in the period will eventually lower to MVFR at all \nterminals as moisture increases. Can't rule out IFR conditions, \nespecially after 00z Tue. Have gone with ceilings below 1000 ft\nat MPV/SLK/RUT where confidence in IFR is highest. Showers have\nmainly been handled with PROB30 given the scattered nature, but\nprevailing -SHRA has been included for portions of the \nafternoon at most terminals. Visibility mainly 4-6SM in any \nprecipitation. Rain will wind down after 23z, but wouldn't be \nsurprised for lingering fog or drizzle overnight. N/NE winds \nremain light through the period, mainly less than 10 kt. \n\nOutlook...\n\nTuesday: Mainly MVFR, with local IFR possible. NO SIG WX.\nTuesday Night: Mainly VFR, with areas MVFR possible. NO SIG WX.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. NO SIG WX.\nThursday: VFR. NO SIG WX.\nThursday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nFriday: Mainly VFR, with local MVFR possible. Chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Hastings\nAVIATION...Hastings\n"
  },
  "lake_forecast": {
   "issued": "2026-09-28T06:26:00+00:00",
@@ -833,10 +833,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 29,
+  "aqi": 25,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "09/28/26 4:00",
+  "observed": "09/28/26 7:00",
   "discussion": "Expect generally good air quality across Vermont on Monday, September 28th."
  },
  "sun": {
@@ -844,35 +844,35 @@
   "sunset": "2026-09-28T18:38-04:00",
   "sunrise_tomorrow": "2026-09-29T06:48-04:00",
   "sunset_tomorrow": "2026-09-29T18:37-04:00",
-  "uv_max": 3.0
+  "uv_max": 2.2
  },
  "models": {
   "days": [
    {
     "date": "2026-09-28",
     "high_f": {
-     "GFS": 63,
+     "GFS": 64,
      "Euro": 60,
-     "ICON": 62
+     "ICON": 59
     },
     "pop_max": {
-     "GFS": 47,
+     "GFS": 50,
      "Euro": 74,
      "ICON": 85
     },
     "precip_in": {
-     "GFS": 0.11,
+     "GFS": 0.02,
      "Euro": 0.25,
-     "ICON": 0.15
+     "ICON": 0.24
     },
-    "high_spread_f": 3
+    "high_spread_f": 5
    },
    {
     "date": "2026-09-29",
     "high_f": {
      "GFS": 62,
      "Euro": 61,
-     "ICON": 57
+     "ICON": 56
     },
     "pop_max": {
      "GFS": 12,
@@ -884,14 +884,14 @@
      "Euro": 0.01,
      "ICON": 0.0
     },
-    "high_spread_f": 5
+    "high_spread_f": 6
    },
    {
     "date": "2026-09-30",
     "high_f": {
      "GFS": 70,
      "Euro": 68,
-     "ICON": 69
+     "ICON": 66
     },
     "pop_max": {
      "GFS": 1,
@@ -903,7 +903,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 4
    }
   ]
  }
