@@ -1,52 +1,42 @@
 {
- "updated": "2026-09-29T21:03:57+00:00",
+ "updated": "2026-09-29T23:54:02+00:00",
  "sections_updated": {
-  "now": "2026-09-29T21:03:57+00:00",
-  "forecast": "2026-09-29T21:03:57+00:00",
-  "hourly": "2026-09-29T21:03:57+00:00",
-  "alerts": "2026-09-29T21:03:57+00:00",
-  "afd": "2026-09-29T21:03:57+00:00",
-  "lake_forecast": "2026-09-29T21:03:57+00:00",
-  "lake_gage": "2026-09-29T21:03:57+00:00",
-  "air": "2026-09-29T21:03:57+00:00",
-  "sun": "2026-09-29T21:03:57+00:00",
-  "models": "2026-09-29T21:03:57+00:00"
+  "now": "2026-09-29T23:54:02+00:00",
+  "forecast": "2026-09-29T23:54:02+00:00",
+  "hourly": "2026-09-29T23:54:02+00:00",
+  "alerts": "2026-09-29T23:54:02+00:00",
+  "afd": "2026-09-29T23:54:02+00:00",
+  "lake_forecast": "2026-09-29T23:54:02+00:00",
+  "lake_gage": "2026-09-29T23:54:02+00:00",
+  "air": "2026-09-29T23:54:02+00:00",
+  "sun": "2026-09-29T23:54:02+00:00",
+  "models": "2026-09-29T23:54:02+00:00"
  },
  "now": {
-  "observed_at": "2026-09-29T20:45:00+00:00",
+  "observed_at": "2026-09-29T23:35:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 55,
   "feels_like_f": 55,
   "humidity": 94,
   "dewpoint_f": 54,
-  "wind_mph": 5,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "NNE",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-09-29T18:18:44+00:00",
+  "updated": "2026-09-29T22:16:00+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-09-29T17:00:00-04:00",
-    "is_day": true,
-    "temp_f": 61,
-    "pop": 1,
-    "wind": "N 6 mph",
-    "short": "Cloudy",
-    "detailed": "Cloudy, with a high near 61. North wind around 6 mph."
-   },
-   {
     "name": "Tonight",
-    "start": "2026-09-29T18:00:00-04:00",
+    "start": "2026-09-29T19:00:00-04:00",
     "is_day": false,
     "temp_f": 48,
-    "pop": 1,
-    "wind": "NE 1 to 5 mph",
+    "pop": 2,
+    "wind": "E 1 to 5 mph",
     "short": "Mostly Cloudy then Patchy Fog",
-    "detailed": "Patchy fog after midnight. Mostly cloudy, with a low around 48. Northeast wind 1 to 5 mph."
+    "detailed": "Patchy fog after 1am. Mostly cloudy, with a low around 48. East wind 1 to 5 mph."
    },
    {
     "name": "Wednesday",
@@ -55,8 +45,8 @@
     "temp_f": 71,
     "pop": 0,
     "wind": "S 2 to 7 mph",
-    "short": "Patchy Fog then Partly Sunny",
-    "detailed": "Patchy fog before 7am. Partly sunny, with a high near 71. South wind 2 to 7 mph."
+    "short": "Patchy Fog then Mostly Cloudy",
+    "detailed": "Patchy fog before 7am. Mostly cloudy, with a high near 71. South wind 2 to 7 mph."
    },
    {
     "name": "Wednesday Night",
@@ -96,7 +86,7 @@
     "pop": 67,
     "wind": "W 7 mph",
     "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely. Mostly cloudy, with a high near 73. West wind around 7 mph. Chance of precipitation is 70%."
+    "detailed": "Rain showers likely. Mostly cloudy, with a high near 73. West wind around 7 mph. Chance of precipitation is 70%. New rainfall amounts between a quarter and half of an inch possible."
    },
    {
     "name": "Friday Night",
@@ -167,66 +157,54 @@
     "wind": "NW 10 to 15 mph",
     "short": "Partly Cloudy",
     "detailed": "Partly cloudy, with a low around 37. Northwest wind 10 to 15 mph."
+   },
+   {
+    "name": "Tuesday",
+    "start": "2026-10-06T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 57,
+    "pop": 4,
+    "wind": "NW 12 mph",
+    "short": "Mostly Sunny",
+    "detailed": "Mostly sunny, with a high near 57. Northwest wind around 12 mph."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-09-29T18:18:44+00:00",
+  "updated": "2026-09-29T22:16:00+00:00",
   "hours": [
    {
-    "t": "2026-09-29T17:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 1,
-    "humidity": 81,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 100,
-    "short": "Cloudy"
-   },
-   {
-    "t": "2026-09-29T18:00:00-04:00",
-    "temp_f": 59,
-    "feels_f": 59,
-    "pop": 1,
-    "humidity": 87,
-    "wind_mph": 5,
-    "wind_dir": "N",
-    "sky": 100,
-    "short": "Cloudy"
-   },
-   {
     "t": "2026-09-29T19:00:00-04:00",
-    "temp_f": 58,
-    "feels_f": 58,
-    "pop": 0,
-    "humidity": 90,
-    "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 100,
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 2,
+    "humidity": 96,
+    "wind_mph": 5,
+    "wind_dir": "NE",
+    "sky": 91,
     "short": "Cloudy"
    },
    {
     "t": "2026-09-29T20:00:00-04:00",
-    "temp_f": 55,
-    "feels_f": 55,
-    "pop": 0,
-    "humidity": 96,
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 1,
+    "humidity": 93,
     "wind_mph": 3,
-    "wind_dir": "N",
-    "sky": 90,
+    "wind_dir": "NE",
+    "sky": 88,
     "short": "Cloudy"
    },
    {
     "t": "2026-09-29T21:00:00-04:00",
     "temp_f": 54,
     "feels_f": 54,
-    "pop": 0,
+    "pop": 1,
     "humidity": 96,
     "wind_mph": 2,
     "wind_dir": "NE",
-    "sky": 89,
-    "short": "Cloudy"
+    "sky": 77,
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-09-29T22:00:00-04:00",
@@ -235,8 +213,8 @@
     "pop": 0,
     "humidity": 100,
     "wind_mph": 1,
-    "wind_dir": "NE",
-    "sky": 77,
+    "wind_dir": "E",
+    "sky": 70,
     "short": "Mostly Cloudy"
    },
    {
@@ -247,8 +225,8 @@
     "humidity": 100,
     "wind_mph": 1,
     "wind_dir": "E",
-    "sky": 46,
-    "short": "Partly Cloudy"
+    "sky": 65,
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-09-30T00:00:00-04:00",
@@ -256,10 +234,10 @@
     "feels_f": 52,
     "pop": 0,
     "humidity": 100,
-    "wind_mph": 1,
+    "wind_mph": 2,
     "wind_dir": "E",
-    "sky": 25,
-    "short": "Patchy Fog"
+    "sky": 59,
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-09-30T01:00:00-04:00",
@@ -269,7 +247,7 @@
     "humidity": 96,
     "wind_mph": 1,
     "wind_dir": "E",
-    "sky": 62,
+    "sky": 64,
     "short": "Patchy Fog"
    },
    {
@@ -280,7 +258,7 @@
     "humidity": 100,
     "wind_mph": 1,
     "wind_dir": "E",
-    "sky": 49,
+    "sky": 69,
     "short": "Patchy Fog"
    },
    {
@@ -291,7 +269,7 @@
     "humidity": 96,
     "wind_mph": 1,
     "wind_dir": "E",
-    "sky": 38,
+    "sky": 80,
     "short": "Patchy Fog"
    },
    {
@@ -300,9 +278,9 @@
     "feels_f": 49,
     "pop": 0,
     "humidity": 100,
-    "wind_mph": 2,
-    "wind_dir": "SE",
-    "sky": 51,
+    "wind_mph": 1,
+    "wind_dir": "E",
+    "sky": 86,
     "short": "Patchy Fog"
    },
    {
@@ -313,7 +291,7 @@
     "humidity": 100,
     "wind_mph": 2,
     "wind_dir": "SE",
-    "sky": 40,
+    "sky": 89,
     "short": "Patchy Fog"
    },
    {
@@ -324,19 +302,19 @@
     "humidity": 96,
     "wind_mph": 2,
     "wind_dir": "SE",
-    "sky": 32,
+    "sky": 92,
     "short": "Patchy Fog"
    },
    {
     "t": "2026-09-30T07:00:00-04:00",
     "temp_f": 49,
-    "feels_f": 48,
+    "feels_f": 49,
     "pop": 0,
     "humidity": 96,
-    "wind_mph": 3,
+    "wind_mph": 2,
     "wind_dir": "SE",
-    "sky": 23,
-    "short": "Sunny"
+    "sky": 93,
+    "short": "Cloudy"
    },
    {
     "t": "2026-09-30T08:00:00-04:00",
@@ -346,8 +324,8 @@
     "humidity": 100,
     "wind_mph": 3,
     "wind_dir": "S",
-    "sky": 39,
-    "short": "Mostly Sunny"
+    "sky": 90,
+    "short": "Cloudy"
    },
    {
     "t": "2026-09-30T09:00:00-04:00",
@@ -357,8 +335,8 @@
     "humidity": 100,
     "wind_mph": 5,
     "wind_dir": "S",
-    "sky": 56,
-    "short": "Partly Sunny"
+    "sky": 86,
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-09-30T10:00:00-04:00",
@@ -368,8 +346,8 @@
     "humidity": 87,
     "wind_mph": 6,
     "wind_dir": "S",
-    "sky": 55,
-    "short": "Partly Sunny"
+    "sky": 83,
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-09-30T11:00:00-04:00",
@@ -568,6 +546,28 @@
     "wind_dir": "S",
     "sky": 74,
     "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-10-01T05:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 1,
+    "humidity": 93,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 62,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-10-01T06:00:00-04:00",
+    "temp_f": 58,
+    "feels_f": 58,
+    "pop": 0,
+    "humidity": 96,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 73,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -575,14 +575,14 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-09-29T19:02:00+00:00",
+  "issued": "2026-09-29T23:46:00+00:00",
   "key_messages": [
    "Warmer and sunnier mid week, with sharply rebounding temperatures following a cool and cloudy start to the week.",
    "Shower chances return Thursday afternoon and continue into Friday ahead of a cold front.",
    "A progressive pattern aloft will result in a series of cold fronts sweeping across our region this weekend into early next week with temperatures trending below normal."
   ],
   "what_changed": "As of 302 PM EDT Tuesday... Chances for scattered showers Thursday afternoon/evening have increased in much of northern New York and northern Vermont.",
-  "raw": "\n000\nFXUS61 KBTV 291902\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n302 PM EDT Tue Sep 29 2026\n\n.WHAT HAS CHANGED...\nAs of 302 PM EDT Tuesday...\n\nChances for scattered showers Thursday afternoon/evening have \nincreased in much of northern New York and northern Vermont.\n\n&&\n\n.KEY MESSAGES...\nAs of 302 PM EDT Tuesday...\n\n1. Warmer and sunnier mid week, with sharply rebounding \ntemperatures following a cool and cloudy start to the week. \n\n2. Shower chances return Thursday afternoon and continue into \nFriday ahead of a cold front. \n\n3. A progressive pattern aloft will result in a series of cold \nfronts sweeping across our region this weekend into early next week \nwith temperatures trending below normal.\n\n&&\n\n.DISCUSSION...\nAs of 302 PM EDT Tuesday...\n\nKEY MESSAGE 1: Satellite imagery shows stratus eroding and becoming \nstratocumulus across much of northern New York and portions of \ncentral Vermont, especially southeast of the higher peaks\nleading to only localized patches of blue sky this afternoon. A\nsharper clearing line is still well to our north and west near \nthe Ottawa Valley; these trends suggest skies will clear near\nthe International Border towards sunset. Overall, this setup\nleads to a challenging sky cover forecast overnight. The \nclearing timing will delay fog formation, but think because \ndewpoint depressions are so small today, it won't take long for \ntemperatures to pass their crossover values. As such, the \nthinking is mostly unchanged with regards quite a bit of fog to\ndevelop especially after midnight, with relatively late timing \nin central/northeastern Vermont. However, continued light \nnorth- northwesterly flow may help maintain clouds and limit fog\nin some areas that typically see fog, such as the Upper Valley \nin Vermont.\n\nWith mainly clear skies aside from aside from a large veil of\nhigh clouds associated with a plume of deep moisture blowing off\nfrom convection in the southwestern US, it will be a much milder\nday on Wednesday. High temperatures expected to be a few to \nseveral degrees above normal, ranging from the upper 60s to mid \n70s. Aside from the localized stronger south winds on Lake\nChamplain, winds will be rather light as the center of high \npressure shifts to our southeast.\n\nKEY MESSAGE 2: Sunshine will be more variable on Thursday as we\nget under the influence of the first of a few waves of low\npressure extending from the closed upper level low that will\nhave been responsible for excessive rain across a swath of the\nsouthwestern US into the central Plains states. The bulk of the\nrain we see from this system is on track to come through on\nFriday. However, most model guidance now shows some showers \nmoving eastward through the Adirondacks and northern Vermont \nThursday afternoon into the evening, likely driven by isentropic\nlift in a moistening warm advection pattern. Have trended PoPs \nupward and added some spotty measurable rain amounts for this \nperiod, but with the air mass being a modified tropical one, the\nenvironment will become favorable for efficient rainfall. \n\nNo indications for particularly heavy rain were noted, but warm\nrain processes will support downpours and locally higher \nrainfall amounts. This applies for both Thursday \nafternoon/evening and again Thursday night into Friday as a cold\nfront sharpens to our west and pushes through. The front still \nlooks to cross relatively quickly during the Friday morning \nhours. As a result, there is a fairly large spread in possible \ntemperatures on Friday given the impact of both cloud cover and \ncold air advection as the system pushes through. Generally we \ncan expect a cooler day in our northern/western areas, while \ncentral and southern portions of Vermont may see temperatures \njust as warm as Thursday, reaching the mid or upper 70s.\n\nKEY MESSAGE 3: The large scale pattern supports a mean mid/upper lvl \ntrof developing across the Great Lakes into the NE CONUS for late \nweekend into next week, which wl produce below normal temps and \nmostly mtn precip chances. The highest probability of measurable \nprecipitation wl be favorable nw upslope areas of the northern Dacks \nand central/northern Greens on Monday. The latest trends for Sunday \nprecip shows an area going to our north, closer to the better \nforcing and another patch of precip sliding to our south. However, \nstill thinking chc probability in the 30-40% range is reasonable \nfrom WPC this aftn. However, pops on Monday/Monday night probably \nneed to be doubled from WPC, especially with a period of favorable \nupslope flow and strong llvl caa. The window is limited as flow \naloft is progressive and the closed circulation is well north of our \ncwa, while best deep layer moisture is south and east of our fa. The \nbig story going into next week wl be the window of much below normal \ntemps with progged 850mb temps btwn -5C and -8C off the latest 12z \nGFS and sub-530 dam thickness values acrs our fa. Latest WPC \nguidance shows temps in the mid 50s to lower 60s on Monday and \nmostly 50s for Tues with lows 30 to 45F Monday night and 23F at SLK \nto upper 30s near Lake Champlain. Early guidance indicates this \ncould be the coldest airmass of the fall season impacting our cwa \nearly next week. However, as flow remains progressive with no deep \namplification, warmer air redevelops by the middle of next week \nagain.\n\n&&\n\n.AVIATION /18Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...A mix of MVFR and IFR conditions will\ntrend toward MVFR/VFR in the next 1 to 2 hours, as drier air\naloft mixes toward the surface and ceilings slowly improvement.\nHighest probability of lingering MVFR cigs will be\nBTV/MPV/EFK/RUT and SLK with VFR at MSS/PBG. Expecting a mix of\nstratus/fog to redevelop across our taf sites btwn 02-04z this\nevening, as boundary layer moisture associated with cyclonic\nblocked flow will result in widespread IFR/LIFR conditions\ndeveloping. Highest probability (80-90%) of IFR/LIFR is at\nSLK/MPV/EFK with likely probability (60-70%) of intervals of \nIFR/LIFR at BTV/RUT/MSS, with chance of brief fog/stratus \ntoward sunrise at PBG as winds shift to the southeast. \nOtherwise, any fog/stratus should lift btwn 13-15z on Weds as \nwinds shift to the south/southwest at 4 to 8 knots. \n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly VFR, with local MVFR possible. NO SIG WX.\nThursday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nFriday: Mainly VFR, with areas MVFR possible. Likely SHRA.\nFriday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Kutikoff/Taber\nAVIATION...Taber\n"
+  "raw": "\n000\nFXUS61 KBTV 292346\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n746 PM EDT Tue Sep 29 2026\n\n.WHAT HAS CHANGED...\nAs of 302 PM EDT Tuesday...\n\nChances for scattered showers Thursday afternoon/evening have \nincreased in much of northern New York and northern Vermont.\n\n&&\n\n.KEY MESSAGES...\nAs of 302 PM EDT Tuesday...\n\n1. Warmer and sunnier mid week, with sharply rebounding \ntemperatures following a cool and cloudy start to the week. \n\n2. Shower chances return Thursday afternoon and continue into \nFriday ahead of a cold front. \n\n3. A progressive pattern aloft will result in a series of cold \nfronts sweeping across our region this weekend into early next week \nwith temperatures trending below normal.\n\n&&\n\n.DISCUSSION...\nAs of 302 PM EDT Tuesday...\n\nKEY MESSAGE 1: Satellite imagery shows stratus eroding and becoming \nstratocumulus across much of northern New York and portions of \ncentral Vermont, especially southeast of the higher peaks\nleading to only localized patches of blue sky this afternoon. A\nsharper clearing line is still well to our north and west near \nthe Ottawa Valley; these trends suggest skies will clear near\nthe International Border towards sunset. Overall, this setup\nleads to a challenging sky cover forecast overnight. The \nclearing timing will delay fog formation, but think because \ndewpoint depressions are so small today, it won't take long for \ntemperatures to pass their crossover values. As such, the \nthinking is mostly unchanged with regards quite a bit of fog to\ndevelop especially after midnight, with relatively late timing \nin central/northeastern Vermont. However, continued light \nnorth- northwesterly flow may help maintain clouds and limit fog\nin some areas that typically see fog, such as the Upper Valley \nin Vermont.\n\nWith mainly clear skies aside from aside from a large veil of\nhigh clouds associated with a plume of deep moisture blowing off\nfrom convection in the southwestern US, it will be a much milder\nday on Wednesday. High temperatures expected to be a few to \nseveral degrees above normal, ranging from the upper 60s to mid \n70s. Aside from the localized stronger south winds on Lake\nChamplain, winds will be rather light as the center of high \npressure shifts to our southeast.\n\nKEY MESSAGE 2: Sunshine will be more variable on Thursday as we\nget under the influence of the first of a few waves of low\npressure extending from the closed upper level low that will\nhave been responsible for excessive rain across a swath of the\nsouthwestern US into the central Plains states. The bulk of the\nrain we see from this system is on track to come through on\nFriday. However, most model guidance now shows some showers \nmoving eastward through the Adirondacks and northern Vermont \nThursday afternoon into the evening, likely driven by isentropic\nlift in a moistening warm advection pattern. Have trended PoPs \nupward and added some spotty measurable rain amounts for this \nperiod, but with the air mass being a modified tropical one, the\nenvironment will become favorable for efficient rainfall. \n\nNo indications for particularly heavy rain were noted, but warm\nrain processes will support downpours and locally higher \nrainfall amounts. This applies for both Thursday \nafternoon/evening and again Thursday night into Friday as a cold\nfront sharpens to our west and pushes through. The front still \nlooks to cross relatively quickly during the Friday morning \nhours. As a result, there is a fairly large spread in possible \ntemperatures on Friday given the impact of both cloud cover and \ncold air advection as the system pushes through. Generally we \ncan expect a cooler day in our northern/western areas, while \ncentral and southern portions of Vermont may see temperatures \njust as warm as Thursday, reaching the mid or upper 70s.\n\nKEY MESSAGE 3: The large scale pattern supports a mean mid/upper lvl \ntrof developing across the Great Lakes into the NE CONUS for late \nweekend into next week, which wl produce below normal temps and \nmostly mtn precip chances. The highest probability of measurable \nprecipitation wl be favorable nw upslope areas of the northern Dacks \nand central/northern Greens on Monday. The latest trends for Sunday \nprecip shows an area going to our north, closer to the better \nforcing and another patch of precip sliding to our south. However, \nstill thinking chc probability in the 30-40% range is reasonable \nfrom WPC this aftn. However, pops on Monday/Monday night probably \nneed to be doubled from WPC, especially with a period of favorable \nupslope flow and strong llvl caa. The window is limited as flow \naloft is progressive and the closed circulation is well north of our \ncwa, while best deep layer moisture is south and east of our fa. The \nbig story going into next week wl be the window of much below normal \ntemps with progged 850mb temps btwn -5C and -8C off the latest 12z \nGFS and sub-530 dam thickness values acrs our fa. Latest WPC \nguidance shows temps in the mid 50s to lower 60s on Monday and \nmostly 50s for Tues with lows 30 to 45F Monday night and 23F at SLK \nto upper 30s near Lake Champlain. Early guidance indicates this \ncould be the coldest airmass of the fall season impacting our cwa \nearly next week. However, as flow remains progressive with no deep \namplification, warmer air redevelops by the middle of next week \nagain.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...Conditions are currently a mix of VFR and\nMVFR, mainly due to 1000-2500 ft agl ceilings, but there is some\nevidence of drizzle near KEFK with 3SM visibility and running up\nto the TAF due time, there have been some 600-900 ft decks\nstarting to come up. Changeable conditions are possible over \nthe next 3-6 hours. Some partial clearing is expected to take \nplace, but any clearing could easily give way to fog formation. \nFor the most part probabilities of IFR based of NBM guidance \nsuggests mostly 10-30% chances before 04z, and then ramping up \ninto the 60-80% chance realm from 06z-13z. So most terminals \nhave either gradually falling ceilings towards 700-1200 ft agl \nand some mixture of 1-5SM visibility. Winds overnight will \nmostly be light and variable. Gradual improvement is likely, and\nmost locations should be near or at VFR conditions after 18z.\n\nOutlook...\n\nWednesday Night: VFR. NO SIG WX.\nThursday: Mainly VFR, with local MVFR possible. Chance SHRA.\nThursday Night: Mainly VFR, with local MVFR possible. Chance\nSHRA.\nFriday: Mainly MVFR, with areas VFR possible. Likely SHRA.\nFriday Night: Mainly VFR, with local MVFR possible. Chance SHRA.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. Slight chance SHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kutikoff\nDISCUSSION...Taber/Kutikoff\nAVIATION...Haynes\n"
  },
  "lake_forecast": {
   "issued": "2026-09-29T18:28:00+00:00",
@@ -854,17 +854,17 @@
  },
  "lake_gage": {
   "water_temp_f": 62,
-  "water_temp_at": "2026-09-29T16:00:00.000-04:00",
+  "water_temp_at": "2026-09-29T19:00:00.000-04:00",
   "level_ft": 93.97,
-  "level_at": "2026-09-29T16:00:00.000-04:00",
+  "level_at": "2026-09-29T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 53,
+  "aqi": 55,
   "category": "Moderate",
   "pollutant": "PM2.5",
-  "observed": "09/29/26 16:00",
+  "observed": "09/29/26 19:00",
   "discussion": "Expect generally good air quality across Vermont on Wednesday, September 30th.  Note, however, that fine particulate matter (PM25), may register in the moderate range on an hourly basis during the morning hours on Wednesday in portions of the Champlain Valley, but the 24 hour average is expected to remain in the 'good' range."
  },
  "sun": {
@@ -872,14 +872,14 @@
   "sunset": "2026-09-29T18:37-04:00",
   "sunrise_tomorrow": "2026-09-30T06:49-04:00",
   "sunset_tomorrow": "2026-09-30T18:35-04:00",
-  "uv_max": 2.0
+  "uv_max": 2.9
  },
  "models": {
   "days": [
    {
     "date": "2026-09-29",
     "high_f": {
-     "GFS": 59,
+     "GFS": 58,
      "Euro": 60,
      "ICON": 57
     },
@@ -903,7 +903,7 @@
      "ICON": 66
     },
     "pop_max": {
-     "GFS": 5,
+     "GFS": 3,
      "Euro": 0,
      "ICON": 0
     },
@@ -917,21 +917,21 @@
    {
     "date": "2026-10-01",
     "high_f": {
-     "GFS": 74,
+     "GFS": 76,
      "Euro": 71,
-     "ICON": 69
+     "ICON": 70
     },
     "pop_max": {
-     "GFS": 7,
+     "GFS": 4,
      "Euro": 12,
      "ICON": 5
     },
     "precip_in": {
-     "GFS": 0.02,
+     "GFS": 0.0,
      "Euro": 0.01,
      "ICON": 0.0
     },
-    "high_spread_f": 5
+    "high_spread_f": 6
    }
   ]
  }
