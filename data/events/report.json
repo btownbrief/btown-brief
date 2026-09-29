@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-28T20:32:09-04:00",
+ "generated": "2026-09-29T12:06:11-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -8,22 +8,22 @@
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 66,
-   "seconds": 11.1
+   "count": 65,
+   "seconds": 5.4
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 58,
-   "seconds": 2.9
+   "count": 55,
+   "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 276,
-   "seconds": 3.5
+   "count": 274,
+   "seconds": 4.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 67,
+   "count": 76,
    "seconds": 1.8
   },
   "echo": {
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-28&end_date=2026-11-27&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-09-29&end_date=2026-11-28&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 5,
-   "seconds": 0.5
+   "seconds": 0.1
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 204,
-   "seconds": 74.1
+   "count": 206,
+   "seconds": 66.1
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 23,
-   "seconds": 0.7
+   "count": 22,
+   "seconds": 0.1
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,58 +63,58 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 686,
-   "seconds": 39.4
+   "count": 682,
+   "seconds": 33.9
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 78,
-   "seconds": 0.3
+   "count": 77,
+   "seconds": 0.4
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 2,
-   "seconds": 11.3
+   "seconds": 10.4
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 393,
-   "seconds": 69.0
+   "count": 452,
+   "seconds": 73.8
   },
   "meetup": {
    "label": "Meetup",
-   "count": 47,
-   "seconds": 103.9
+   "count": 46,
+   "seconds": 98.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 20,
-   "seconds": 1.3
+   "seconds": 1.9
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 56,
-   "seconds": 16.3
+   "seconds": 15.7
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 12,
-   "seconds": 0.6
+   "count": 11,
+   "seconds": 0.2
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 99,
+   "count": 97,
    "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 18,
-   "seconds": 35.1
+   "count": 20,
+   "seconds": 32.6
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2424,
-   "seconds": 3.1
+   "count": 2422,
+   "seconds": 22.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -123,123 +123,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 503,
-   "seconds": 32.6
+   "count": 491,
+   "seconds": 36.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 314,
+   "count": 305,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 51,
+   "count": 53,
    "seconds": 68.3
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 51,
+   "count": 52,
    "seconds": 0.3
   }
  },
- "gathered": 5462,
- "afterDedup": 2536,
- "duplicatesMerged": 2926,
- "final": 2561,
- "firecrawlCalls": 1,
+ "gathered": 5498,
+ "afterDedup": 2540,
+ "duplicatesMerged": 2958,
+ "final": 2567,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "Dr. Mel Houser | Phoenix Books Essex",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-11-04"
-  },
-  {
-   "kept": {
-    "title": "GROW Preschool Yoga",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "Minecraft Meet-up",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "Moody Joody",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "State of the research on legume-only polyculture ft. Sandi Dincki",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-05"
-  },
   {
    "kept": {
     "title": "2026 UVM Engineering & Technology Fair",
@@ -453,18 +361,6 @@
   },
   {
    "kept": {
-    "title": "Willi Carlisle",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-07"
-  },
-  {
-   "kept": {
     "title": "Nightrain + Sticks and Stones",
     "source": "higherground"
    },
@@ -473,6 +369,18 @@
     "higherground",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-11-07"
+  },
+  {
+   "kept": {
+    "title": "Willi Carlisle",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
    ],
    "date": "2026-11-07"
   },
@@ -824,6 +732,17 @@
   },
   {
    "kept": {
+    "title": "Wine Down Wednesday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-11"
+  },
+  {
+   "kept": {
     "title": "TRIVIA NIGHT",
     "source": "churchst"
    },
@@ -980,7 +899,7 @@
   },
   {
    "kept": {
-    "title": "Tropidelic",
+    "title": "Winyah",
     "source": "higherground"
    },
    "merged_sources": [
@@ -994,7 +913,7 @@
   },
   {
    "kept": {
-    "title": "Winyah",
+    "title": "Tropidelic",
     "source": "higherground"
    },
    "merged_sources": [
@@ -1666,6 +1585,17 @@
   },
   {
    "kept": {
+    "title": "Wine Down Wednesday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-18"
+  },
+  {
+   "kept": {
     "title": "TRIVIA NIGHT",
     "source": "churchst"
    },
@@ -2233,6 +2163,17 @@
   },
   {
    "kept": {
+    "title": "EZ Breezy Bike Rides",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-11-24"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -2244,14 +2185,14 @@
   },
   {
    "kept": {
-    "title": "EZ Breezy Bike Rides",
-    "source": "sevendays"
+    "title": "Wine Down Wednesday",
+    "source": "churchst"
    },
    "merged_sources": [
-    "helloburlington",
-    "sevendays"
+    "churchst",
+    "loveburlington"
    ],
-   "date": "2026-11-24"
+   "date": "2026-11-25"
   },
   {
    "kept": {
@@ -2391,6 +2332,17 @@
   },
   {
    "kept": {
+    "title": "Men's Ice Hockey vs St. Cloud State",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-27"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -2410,36 +2362,68 @@
     "sevendays"
    ],
    "date": "2026-11-27"
+  },
+  {
+   "kept": {
+    "title": "The Poetry Experience",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-11-28"
+  },
+  {
+   "kept": {
+    "title": "Chin Ho!",
+    "source": "higherground"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "higherground"
+   ],
+   "date": "2026-11-28"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-11-28"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-11-28"
   }
  ],
  "changes": [
   {
-   "id": "43ac68eacd75",
-   "title": "Public Skate",
-   "date": "2026-09-28",
-   "change": "missing",
-   "lastSeen": "2026-09-27T19:23:51-04:00"
+   "id": "2894efbc9fb7",
+   "title": "Haunted Hustle 5K Fun Run/Walk Registration 2026",
+   "date": "2026-10-24",
+   "change": "time",
+   "was": "2026-10-24T03:15:00-04:00",
+   "now": "2026-10-24T15:15:00-04:00"
   },
   {
-   "id": "12a05229a508",
-   "title": "Stick & Puck",
-   "date": "2026-09-28",
+   "id": "56c99336ee23",
+   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
+   "date": "2026-09-29",
    "change": "missing",
-   "lastSeen": "2026-09-27T19:23:51-04:00"
-  },
-  {
-   "id": "ee2d40dd7be1",
-   "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
-   "date": "2026-09-28",
-   "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
-  },
-  {
-   "id": "10dafb7a5c09",
-   "title": "Trivia with Craig Mitchell @ The Monkey House",
-   "date": "2026-09-28",
-   "change": "missing",
-   "lastSeen": "2026-09-28T13:48:33-04:00"
+   "lastSeen": "2026-09-28T20:32:09-04:00"
   },
   {
    "id": "f47314ffb7ec",
@@ -2447,6 +2431,20 @@
    "date": "2026-09-30",
    "change": "missing",
    "lastSeen": "2026-09-27T19:23:51-04:00"
+  },
+  {
+   "id": "49b13f2d9063",
+   "title": "Fly By 5K - SOLD OUT",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-28T20:32:09-04:00"
+  },
+  {
+   "id": "89da04f5d8cb",
+   "title": "Real Love Records Porchfest",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-28T20:32:09-04:00"
   },
   {
    "id": "f349fbe16034",
@@ -2505,6 +2503,13 @@
    "lastSeen": "2026-09-26T19:08:49-04:00"
   },
   {
+   "id": "70d9122e0cdb",
+   "title": "CEMA 216 Soil Health Testing Training: A Hands-on Training for Technical Assistance Providers",
+   "date": "2026-10-14",
+   "change": "missing",
+   "lastSeen": "2026-09-28T20:32:09-04:00"
+  },
+  {
    "id": "62eb8218aceb",
    "title": "Blue Sundays 3rd Anniversary!",
    "date": "2026-10-18",
@@ -2517,6 +2522,13 @@
    "date": "2026-10-19",
    "change": "missing",
    "lastSeen": "2026-09-26T19:08:49-04:00"
+  },
+  {
+   "id": "fff1a6158bc2",
+   "title": "Dinner and Dialogue",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-09-28T20:32:09-04:00"
   },
   {
    "id": "085d4c360495",
@@ -2545,6 +2557,13 @@
    "date": "2026-11-02",
    "change": "missing",
    "lastSeen": "2026-09-26T19:08:49-04:00"
+  },
+  {
+   "id": "6969854079a1",
+   "title": "CatChat",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-09-28T20:32:09-04:00"
   },
   {
    "id": "35c36311b9d7",
