@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-29T12:06:11-04:00",
+ "generated": "2026-09-29T19:56:46-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 9,
-   "seconds": 5.7
+   "seconds": 6.4
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 65,
-   "seconds": 5.4
+   "count": 66,
+   "seconds": 4.2
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 55,
-   "seconds": 3.2
+   "count": 59,
+   "seconds": 2.7
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 274,
-   "seconds": 4.6
+   "seconds": 3.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 76,
-   "seconds": 1.8
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 5,
-   "seconds": 0.1
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 206,
-   "seconds": 66.1
+   "seconds": 76.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 22,
-   "seconds": 0.1
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,58 +63,58 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 682,
-   "seconds": 33.9
+   "count": 685,
+   "seconds": 38.5
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 77,
-   "seconds": 0.4
+   "seconds": 1.5
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 2,
-   "seconds": 10.4
+   "seconds": 9.9
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 452,
-   "seconds": 73.8
+   "seconds": 66.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 46,
-   "seconds": 98.9
+   "seconds": 107.8
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 20,
-   "seconds": 1.9
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 56,
-   "seconds": 15.7
+   "count": 57,
+   "seconds": 18.0
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 11,
-   "seconds": 0.2
+   "count": 10,
+   "seconds": 0.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 97,
-   "seconds": 2.1
+   "count": 98,
+   "seconds": 2.3
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 32.6
+   "seconds": 34.3
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2422,
-   "seconds": 22.7
+   "count": 2393,
+   "seconds": 3.5
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -123,30 +123,30 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 491,
-   "seconds": 36.0
+   "count": 498,
+   "seconds": 25.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 305,
+   "count": 306,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 53,
-   "seconds": 68.3
+   "seconds": 70.9
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 52,
-   "seconds": 0.3
+   "count": 54,
+   "seconds": 0.2
   }
  },
- "gathered": 5498,
- "afterDedup": 2540,
- "duplicatesMerged": 2958,
- "final": 2567,
- "firecrawlCalls": 5,
+ "gathered": 5488,
+ "afterDedup": 2538,
+ "duplicatesMerged": 2950,
+ "final": 2577,
+ "firecrawlCalls": 1,
  "mergeLog": [
   {
    "kept": {
@@ -1562,18 +1562,6 @@
   },
   {
    "kept": {
-    "title": "Racecourse",
-    "source": "radiobean"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "radiobean"
-   ],
-   "date": "2026-11-18"
-  },
-  {
-   "kept": {
     "title": "Puzzle Swap",
     "source": "sblibrary"
    },
@@ -1680,6 +1668,17 @@
    "merged_sources": [
     "helloburlington",
     "sevendays"
+   ],
+   "date": "2026-11-18"
+  },
+  {
+   "kept": {
+    "title": "Racecourse",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
    ],
    "date": "2026-11-18"
   },
@@ -2411,14 +2410,6 @@
  ],
  "changes": [
   {
-   "id": "2894efbc9fb7",
-   "title": "Haunted Hustle 5K Fun Run/Walk Registration 2026",
-   "date": "2026-10-24",
-   "change": "time",
-   "was": "2026-10-24T03:15:00-04:00",
-   "now": "2026-10-24T15:15:00-04:00"
-  },
-  {
    "id": "56c99336ee23",
    "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
    "date": "2026-09-29",
@@ -2431,6 +2422,97 @@
    "date": "2026-09-30",
    "change": "missing",
    "lastSeen": "2026-09-27T19:23:51-04:00"
+  },
+  {
+   "id": "5c6def4dfeef",
+   "title": "Lincoln Sprague",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "88e6a34617c1",
+   "title": "Shane's Apothecary",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "8f203c733101",
+   "title": "Milton Busker & The Grim Work",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "094e83a18a4f",
+   "title": "TwoSev, JP Black, Eli, Rubi",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "51809f7edab1",
+   "title": "DJ Cece",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "d91e2bcacb56",
+   "title": "TAG",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "9f52a0d33a18",
+   "title": "Chris & Erica",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "c280294e2c54",
+   "title": "The Dad Bods",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "bf85ae9553f2",
+   "title": "Phish Boardwalk Hall Webcast Party",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "44614eaaa26b",
+   "title": "Blake Matteson",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "40bc41565a48",
+   "title": "Two Sev, Ron Stoppable",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "974c2949e353",
+   "title": "Nobby Reed Project",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "fe42dfc32518",
+   "title": "Dad?!",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
    "id": "49b13f2d9063",
@@ -2447,6 +2529,13 @@
    "lastSeen": "2026-09-28T20:32:09-04:00"
   },
   {
+   "id": "d24e95a9f980",
+   "title": "Phish Boardwalk Hall Webcast Party",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
    "id": "f349fbe16034",
    "title": "Blue Sundays 3rd Anniversary!",
    "date": "2026-10-04",
@@ -2454,11 +2543,17 @@
    "lastSeen": "2026-09-28T13:48:33-04:00"
   },
   {
+   "id": "09efda538ea0",
+   "title": "Phish Boardwalk Hall Webcast Party",
+   "date": "2026-10-04",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
    "id": "1baa6f77736c",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-10-05",
-   "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
+   "change": "dropped"
   },
   {
    "id": "f2378a57f52c",
@@ -2499,15 +2594,7 @@
    "id": "ef977d110371",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-10-12",
-   "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
-  },
-  {
-   "id": "70d9122e0cdb",
-   "title": "CEMA 216 Soil Health Testing Training: A Hands-on Training for Technical Assistance Providers",
-   "date": "2026-10-14",
-   "change": "missing",
-   "lastSeen": "2026-09-28T20:32:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "62eb8218aceb",
@@ -2520,8 +2607,21 @@
    "id": "ba26ebcd79bd",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-10-19",
+   "change": "dropped"
+  },
+  {
+   "id": "a233b379196d",
+   "title": "Local Dork",
+   "date": "2026-10-20",
    "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
+   "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "2ce5bc63105a",
+   "title": "How Courts are Discussed in US Elections: Noise or Silence? ft. Lisa Holmes, Political Science",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
    "id": "fff1a6158bc2",
@@ -2541,8 +2641,14 @@
    "id": "76a568e01bb9",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-10-26",
+   "change": "dropped"
+  },
+  {
+   "id": "7d23682ac9b5",
+   "title": "Local Dork",
+   "date": "2026-10-27",
    "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
+   "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
    "id": "6b6502ca6418",
@@ -2555,15 +2661,14 @@
    "id": "48b31468db94",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-11-02",
-   "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
+   "change": "dropped"
   },
   {
-   "id": "6969854079a1",
-   "title": "CatChat",
-   "date": "2026-11-05",
+   "id": "5cf35951fe55",
+   "title": "Local Dork",
+   "date": "2026-11-03",
    "change": "missing",
-   "lastSeen": "2026-09-28T20:32:09-04:00"
+   "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
    "id": "35c36311b9d7",
@@ -2576,8 +2681,14 @@
    "id": "cedab6119907",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-11-09",
+   "change": "dropped"
+  },
+  {
+   "id": "1e047e6d8973",
+   "title": "Local Dork",
+   "date": "2026-11-10",
    "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
+   "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
    "id": "951654f5cfe3",
@@ -2590,8 +2701,14 @@
    "id": "6f638ee1fde9",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-11-16",
+   "change": "dropped"
+  },
+  {
+   "id": "a1efee2ff14a",
+   "title": "Local Dork",
+   "date": "2026-11-17",
    "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
+   "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
    "id": "15c927768bc0",
@@ -2604,8 +2721,14 @@
    "id": "6a851a185917",
    "title": "Community of Poets Sharing Circle with Darlene Witte March 9 2026 7 PM",
    "date": "2026-11-23",
+   "change": "dropped"
+  },
+  {
+   "id": "54cd7a7f92b7",
+   "title": "Local Dork",
+   "date": "2026-11-24",
    "change": "missing",
-   "lastSeen": "2026-09-26T19:08:49-04:00"
+   "lastSeen": "2026-09-29T12:06:11-04:00"
   }
  ]
 }
