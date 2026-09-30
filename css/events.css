@@ -390,6 +390,14 @@
 .ev-row-cat { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .ev-row-meta .ev-sep { color: var(--ink-4); }
 .ev-row-flag { color: var(--ink-4); font-size: var(--text-xs); white-space: nowrap; }
+/* "Going with Btown" — only on rows that have an open come-along */
+.ev-along, .ev-along:hover {
+  color: var(--coral); font-weight: 700; text-decoration: none;
+  padding: 1px 8px; border-radius: var(--radius-full);
+  background: var(--coral-light); border: 1px solid transparent;
+}
+.ev-along:hover { border-color: var(--coral); }
+.ev-act-along, .ev-act-along:hover { border-color: var(--coral); color: var(--coral); background: var(--coral-light); }
 
 .ev-row-side {
   display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
