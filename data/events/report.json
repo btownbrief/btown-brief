@@ -1,30 +1,30 @@
 {
- "generated": "2026-09-30T12:03:45-04:00",
+ "generated": "2026-09-30T20:10:10-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 9,
+   "count": 11,
    "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 68,
-   "seconds": 5.6
+   "seconds": 6.4
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 58,
-   "seconds": 3.6
+   "count": 81,
+   "seconds": 3.5
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 272,
-   "seconds": 3.8
+   "count": 273,
+   "seconds": 3.2
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 75,
-   "seconds": 1.9
+   "seconds": 1.4
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 5,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 204,
-   "seconds": 73.4
+   "seconds": 76.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 22,
-   "seconds": 0.7
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,58 +63,59 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 679,
-   "seconds": 35.7
+   "count": 687,
+   "seconds": 39.1
   },
   "higherground": {
    "label": "Higher Ground",
-   "count": 79,
-   "seconds": 0.4
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden",
+   "staleDays": 0
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 2,
-   "seconds": 12.0
+   "seconds": 10.6
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 446,
-   "seconds": 74.0
+   "seconds": 67.8
   },
   "meetup": {
    "label": "Meetup",
-   "count": 47,
-   "seconds": 104.5
+   "count": 46,
+   "seconds": 107.4
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 19,
+   "count": 23,
    "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 58,
+   "count": 63,
    "seconds": 17.0
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 9,
-   "seconds": 0.5
+   "seconds": 0.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
    "count": 100,
-   "seconds": 2.2
+   "seconds": 2.0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 35.1
+   "seconds": 34.5
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2386,
-   "seconds": 21.0
+   "count": 2364,
+   "seconds": 3.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -123,31 +124,87 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 513,
-   "seconds": 37.5
+   "count": 515,
+   "seconds": 35.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 298,
+   "count": 300,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 53,
-   "seconds": 71.7
+   "seconds": 72.5
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 52,
-   "seconds": 0.4
+   "seconds": 0.2
   }
  },
- "gathered": 5474,
- "afterDedup": 2546,
- "duplicatesMerged": 2928,
- "final": 2572,
- "firecrawlCalls": 5,
+ "gathered": 5419,
+ "afterDedup": 2567,
+ "duplicatesMerged": 2852,
+ "final": 2649,
+ "firecrawlCalls": 1,
  "mergeLog": [
+  {
+   "kept": {
+    "title": "Minecraft Meet-up",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-11-05"
+  },
+  {
+   "kept": {
+    "title": "Mandarin Conversation Circle",
+    "source": "sblibrary"
+   },
+   "merged_sources": [
+    "sblibrary",
+    "sevendays"
+   ],
+   "date": "2026-11-05"
+  },
+  {
+   "kept": {
+    "title": "Thirsty Thursday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-11-05"
+  },
+  {
+   "kept": {
+    "title": "2026 UVM Engineering & Technology Fair",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-05"
+  },
+  {
+   "kept": {
+    "title": "Chats in the Stacks: Conversations About Water, First-Gen Week Edition",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-05"
+  },
   {
    "kept": {
     "title": "Vermont Outstanding Educator Awards",
@@ -165,6 +222,18 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-05"
+  },
+  {
+   "kept": {
+    "title": "Moody Joody",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -224,29 +293,6 @@
     "sevendays"
    ],
    "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "All Night Boogie Band",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "Fruit Bats",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-06"
   },
   {
    "kept": {
@@ -350,28 +396,14 @@
   },
   {
    "kept": {
-    "title": "Nightrain + Sticks and Stones",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-07"
-  },
-  {
-   "kept": {
-    "title": "Willi Carlisle",
-    "source": "higherground"
+    "title": "Fruit Bats",
+    "source": "helloburlington"
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington",
-    "higherground"
+    "helloburlington"
    ],
-   "date": "2026-11-07"
+   "date": "2026-11-06"
   },
   {
    "kept": {
@@ -381,6 +413,18 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-11-07"
+  },
+  {
+   "kept": {
+    "title": "Nightrain + Sticks and Stones",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-07"
   },
@@ -414,6 +458,17 @@
    "merged_sources": [
     "champlainvalley",
     "sevendays"
+   ],
+   "date": "2026-11-07"
+  },
+  {
+   "kept": {
+    "title": "Willi Carlisle",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
    ],
    "date": "2026-11-07"
   },
@@ -651,31 +706,6 @@
   },
   {
    "kept": {
-    "title": "Weatherday",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-11"
-  },
-  {
-   "kept": {
-    "title": "Sleep",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-11"
-  },
-  {
-   "kept": {
     "title": "June Henry & chrysalis",
     "source": "radiobean"
    },
@@ -683,17 +713,6 @@
     "champlainvalley",
     "helloburlington",
     "radiobean"
-   ],
-   "date": "2026-11-11"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
    ],
    "date": "2026-11-11"
   },
@@ -788,6 +807,18 @@
   },
   {
    "kept": {
+    "title": "Weatherday at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-11"
+  },
+  {
+   "kept": {
     "title": "Pub Quiz",
     "source": "uvm"
    },
@@ -816,6 +847,17 @@
    "merged_sources": [
     "helloburlington",
     "sevendays"
+   ],
+   "date": "2026-11-11"
+  },
+  {
+   "kept": {
+    "title": "Sleep",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
    ],
    "date": "2026-11-11"
   },
@@ -866,34 +908,6 @@
   },
   {
    "kept": {
-    "title": "Winyah",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-12"
-  },
-  {
-   "kept": {
-    "title": "Tropidelic",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-12"
-  },
-  {
-   "kept": {
     "title": "Adam Conover",
     "source": "vcc"
    },
@@ -921,6 +935,32 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-12"
+  },
+  {
+   "kept": {
+    "title": "Tropidelic at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-12"
+  },
+  {
+   "kept": {
+    "title": "Winyah",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -978,20 +1018,6 @@
    "merged_sources": [
     "flynn",
     "helloburlington"
-   ],
-   "date": "2026-11-13"
-  },
-  {
-   "kept": {
-    "title": "Carbon Leaf",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
    ],
    "date": "2026-11-13"
   },
@@ -1085,6 +1111,19 @@
   },
   {
    "kept": {
+    "title": "Carbon Leaf at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-13"
+  },
+  {
+   "kept": {
     "title": "Mad Robin Contra Dance",
     "source": "uvm"
    },
@@ -1149,29 +1188,6 @@
    "merged_sources": [
     "flynn",
     "helloburlington"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Fitter Happier: A Radiohead Tribute",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Phillip Phillips",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
    ],
    "date": "2026-11-14"
   },
@@ -1254,6 +1270,17 @@
   },
   {
    "kept": {
+    "title": "Phillip Phillips",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-11-14"
+  },
+  {
+   "kept": {
     "title": "Dungeons & Dragons Group B with DM Andrew",
     "source": "fletcherfree"
    },
@@ -1276,30 +1303,6 @@
   },
   {
    "kept": {
-    "title": "Stewart Copeland – Have I Said Too Much",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-15"
-  },
-  {
-   "kept": {
-    "title": "Side Stories",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-15"
-  },
-  {
-   "kept": {
     "title": "The Suitcase Junket",
     "source": "radiobean"
    },
@@ -1307,6 +1310,18 @@
     "champlainvalley",
     "helloburlington",
     "radiobean"
+   ],
+   "date": "2026-11-15"
+  },
+  {
+   "kept": {
+    "title": "Side Stories",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-15"
   },
@@ -1356,20 +1371,6 @@
   },
   {
    "kept": {
-    "title": "In Color",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-16"
-  },
-  {
-   "kept": {
     "title": "Art Wall: Photography by Jeffrey Trubisz",
     "source": "sblibrary"
    },
@@ -1385,6 +1386,19 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-16"
+  },
+  {
+   "kept": {
+    "title": "In Color: 99.9 the Buzz 99 cent Low Dough Show",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -1516,19 +1530,6 @@
   },
   {
    "kept": {
-    "title": "Primer 55",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-18"
-  },
-  {
-   "kept": {
     "title": "Puzzle Swap",
     "source": "sblibrary"
    },
@@ -1600,6 +1601,18 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-18"
+  },
+  {
+   "kept": {
+    "title": "Primer 55",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -1685,31 +1698,6 @@
   },
   {
    "kept": {
-    "title": "Tom Hamilton",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
-    "title": "Charlie Parr",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
     "title": "Mandarin Conversation Circle",
     "source": "sblibrary"
    },
@@ -1748,6 +1736,19 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-19"
+  },
+  {
+   "kept": {
+    "title": "Charlie Parr at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -1822,32 +1823,6 @@
   },
   {
    "kept": {
-    "title": "The Warped Tour Band",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-20"
-  },
-  {
-   "kept": {
-    "title": "Gimme Gimme Disco",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-20"
-  },
-  {
-   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -1881,6 +1856,30 @@
   },
   {
    "kept": {
+    "title": "The Warped Tour Band",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-20"
+  },
+  {
+   "kept": {
+    "title": "Gimme Gimme Disco",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-20"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -1903,37 +1902,25 @@
   },
   {
    "kept": {
-    "title": "Aquarius",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
-    "title": "Greg Freeman",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-11-21"
+  },
+  {
+   "kept": {
+    "title": "Greg Freeman at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-21"
   },
@@ -1973,18 +1960,6 @@
   },
   {
    "kept": {
-    "title": "The Bones of J.R. Jones",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-22"
-  },
-  {
-   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -2003,6 +1978,17 @@
     "champlainvalley",
     "helloburlington",
     "sevendays"
+   ],
+   "date": "2026-11-22"
+  },
+  {
+   "kept": {
+    "title": "The Bones of J.R. Jones",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
    ],
    "date": "2026-11-22"
   },
@@ -2342,18 +2328,6 @@
   },
   {
    "kept": {
-    "title": "Chin Ho!",
-    "source": "higherground"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "higherground"
-   ],
-   "date": "2026-11-28"
-  },
-  {
-   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2387,15 +2361,14 @@
   },
   {
    "kept": {
-    "title": "Nate Smith",
-    "source": "higherground"
+    "title": "Chin Ho!",
+    "source": "helloburlington"
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington",
-    "higherground"
+    "helloburlington"
    ],
-   "date": "2026-11-29"
+   "date": "2026-11-28"
   },
   {
    "kept": {
@@ -2407,24 +2380,75 @@
     "sevendays"
    ],
    "date": "2026-11-29"
+  },
+  {
+   "kept": {
+    "title": "Nate Smith",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-11-29"
   }
  ],
  "changes": [
   {
-   "id": "21d84fc7dbb0",
-   "title": "Burlington Vintage Market 5th Anniversary",
-   "date": "2026-10-04",
+   "id": "91bdc5451aa2",
+   "title": "MaMuse",
+   "date": "2026-09-30",
    "change": "time",
-   "was": "2026-10-04T10:00:00-04:00",
-   "now": "2026-10-04T12:00:00-04:00"
+   "was": "2026-09-30T19:00:00-04:00",
+   "now": "2026-09-30T19:30:00-04:00"
   },
   {
-   "id": "42b2324fe7d8",
-   "title": "Cookie Queens",
-   "date": "2026-10-10",
+   "id": "035da8e2fbd6",
+   "title": "Southern Culture on the Skids",
+   "date": "2026-10-01",
    "change": "time",
-   "was": "2026-10-10T15:30:00-04:00",
-   "now": "2026-10-10T13:00:00-04:00"
+   "was": "2026-10-01T19:30:00-04:00",
+   "now": "2026-10-01T19:00:00-04:00"
+  },
+  {
+   "id": "0dc1fe955e66",
+   "title": "Banned Books Week: The Librarians Documentary",
+   "date": "2026-10-05",
+   "change": "time",
+   "was": "2026-10-05T17:30:00-04:00",
+   "now": "2026-10-05T18:00:00-04:00"
+  },
+  {
+   "id": "7259338f97fd",
+   "title": "White Denim",
+   "date": "2026-10-09",
+   "change": "time",
+   "was": "2026-10-09T19:30:00-04:00",
+   "now": "2026-10-09T19:00:00-04:00"
+  },
+  {
+   "id": "6c8b828a27dd",
+   "title": "Judge",
+   "date": "2026-10-17",
+   "change": "time",
+   "was": "2026-10-17T19:00:00-04:00",
+   "now": "2026-10-17T19:30:00-04:00"
+  },
+  {
+   "id": "e92e269cd1b9",
+   "title": "Clutch",
+   "date": "2026-11-03",
+   "change": "time",
+   "was": "2026-11-03T19:00:00-05:00",
+   "now": "2026-11-03T19:30:00-05:00"
+  },
+  {
+   "id": "4dcbc08339f7",
+   "title": "Fruit Bats",
+   "date": "2026-11-06",
+   "change": "time",
+   "was": "2026-11-06T20:00:00-05:00",
+   "now": "2026-11-06T19:00:00-05:00"
   },
   {
    "id": "3db7cbf654ab",
@@ -2444,8 +2468,56 @@
    "id": "f47314ffb7ec",
    "title": "Fraud on Tap: Scam‑Smart Trivia Night",
    "date": "2026-09-30",
+   "change": "dropped"
+  },
+  {
+   "id": "acd0909292fd",
+   "title": "Pick-up Basketball",
+   "date": "2026-09-30",
    "change": "missing",
-   "lastSeen": "2026-09-27T19:23:51-04:00"
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "7cc93ee4500b",
+   "title": "5K Run @ Black Flannel",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "e6d21f28af19",
+   "title": "Anberlin",
+   "date": "2026-09-30",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "8f203c733101",
+   "title": "Milton Busker & The Grim Work",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "88e6a34617c1",
+   "title": "Shane's Apothecary",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "094e83a18a4f",
+   "title": "TwoSev, JP Black, Eli, Rubi",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "51809f7edab1",
+   "title": "DJ Cece",
+   "date": "2026-10-01",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "d91e2bcacb56",
@@ -2453,6 +2525,83 @@
    "date": "2026-10-02",
    "change": "missing",
    "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "9f52a0d33a18",
+   "title": "Chris & Erica",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "c280294e2c54",
+   "title": "The Dad Bods",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "bf85ae9553f2",
+   "title": "Phish Boardwalk Hall Webcast Party",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "44614eaaa26b",
+   "title": "Blake Matteson",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "974c2949e353",
+   "title": "Nobby Reed Project",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "40bc41565a48",
+   "title": "Two Sev, Ron Stoppable",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "fe42dfc32518",
+   "title": "Dad?!",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "1f32cf3a15ff",
+   "title": "Toth, Sean Nicholas Savage",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "b09c1ee03368",
+   "title": "Lazer Dad",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "3f068afe2323",
+   "title": "Phil Abair Band",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "d7e7fd02cc06",
+   "title": "DJ 2Rivers",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "49b13f2d9063",
@@ -2469,6 +2618,20 @@
    "lastSeen": "2026-09-28T20:32:09-04:00"
   },
   {
+   "id": "d24e95a9f980",
+   "title": "Phish Boardwalk Hall Webcast Party",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "f852a1ccc728",
+   "title": "Post Sex Nachos",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "f349fbe16034",
    "title": "Blue Sundays 3rd Anniversary!",
    "date": "2026-10-04",
@@ -2476,32 +2639,105 @@
    "lastSeen": "2026-09-28T13:48:33-04:00"
   },
   {
+   "id": "09efda538ea0",
+   "title": "Phish Boardwalk Hall Webcast Party",
+   "date": "2026-10-04",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "20a23c0c6c8c",
+   "title": "76th Street",
+   "date": "2026-10-04",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "c0ea7f397e8a",
+   "title": "Katie Pruitt",
+   "date": "2026-10-05",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "b8bbd4b3fa62",
+   "title": "Bombargo",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "f19bfec90791",
+   "title": "Spanish Music Kids",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "f2378a57f52c",
    "title": "East End Walk/Bike Forum",
    "date": "2026-10-07",
+   "change": "dropped"
+  },
+  {
+   "id": "ce86991acf8c",
+   "title": "Oteil Burbridge & LaMP",
+   "date": "2026-10-07",
    "change": "missing",
-   "lastSeen": "2026-09-27T19:23:51-04:00"
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "25f815c54764",
    "title": "2026 Vermont International Film Festival Preview",
    "date": "2026-10-07",
+   "change": "dropped"
+  },
+  {
+   "id": "a15469767d5d",
+   "title": "Briscoe",
+   "date": "2026-10-07",
    "change": "missing",
-   "lastSeen": "2026-09-27T19:23:51-04:00"
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "8025638ed678",
+   "title": "The Ethics and Futures of AI Use and Development ft. Chris McElroy",
+   "date": "2026-10-08",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "57bc84678dce",
+   "title": "Benjamin Tod & Lost Dog Street Band",
+   "date": "2026-10-08",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "5729d0ec6e0e",
+   "title": "Benjamin Tod & Lost Dog Street Band",
+   "date": "2026-10-09",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "ba3763a1fb82",
    "title": "The Smuggs SNSC Ski & Board Sale",
    "date": "2026-10-10",
+   "change": "dropped"
+  },
+  {
+   "id": "3ef0455398e4",
+   "title": "Level 1 Ski Film",
+   "date": "2026-10-10",
    "change": "missing",
-   "lastSeen": "2026-09-27T19:23:51-04:00"
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "00e8c0f1345f",
    "title": "The Smuggs SNSC Ski & Board Sale",
    "date": "2026-10-11",
-   "change": "missing",
-   "lastSeen": "2026-09-27T19:23:51-04:00"
+   "change": "dropped"
   },
   {
    "id": "fa3d9888a974",
@@ -2511,11 +2747,46 @@
    "lastSeen": "2026-09-28T13:48:33-04:00"
   },
   {
+   "id": "0aa8d235cdca",
+   "title": "Stephen Lynch",
+   "date": "2026-10-11",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "8e3aaa4041af",
+   "title": "Magoo",
+   "date": "2026-10-13",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "2c0eff0dd174",
+   "title": "Prince Daddy & The Hyena",
+   "date": "2026-10-14",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "f373215ac522",
+   "title": "Nico Suave & The Mothership",
+   "date": "2026-10-16",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "62eb8218aceb",
    "title": "Blue Sundays 3rd Anniversary!",
    "date": "2026-10-18",
    "change": "missing",
    "lastSeen": "2026-09-28T13:48:33-04:00"
+  },
+  {
+   "id": "03a62429927f",
+   "title": "Good Time Line Dancing",
+   "date": "2026-10-18",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "a233b379196d",
@@ -2525,11 +2796,53 @@
    "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
+   "id": "367443209f53",
+   "title": "Rehash",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "fff1a6158bc2",
    "title": "Dinner and Dialogue",
    "date": "2026-10-22",
    "change": "missing",
    "lastSeen": "2026-09-28T20:32:09-04:00"
+  },
+  {
+   "id": "0b9b74a81730",
+   "title": "Dana and Alden",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "8a37835b9f66",
+   "title": "Gaelic Storm",
+   "date": "2026-10-22",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "8317e0174f9a",
+   "title": "Pole 2 Poll",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "987f18c6c7c5",
+   "title": "Radio Bean Presents: Lamplight, The Clearwater Swimmers, & Fowl @ The Monkey House",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "fdeb30f7677c",
+   "title": "Spooky Perreo",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "085d4c360495",
@@ -2539,6 +2852,13 @@
    "lastSeen": "2026-09-28T13:48:33-04:00"
   },
   {
+   "id": "6f150056982e",
+   "title": "Carsie Blanton",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "928f71ff5075",
    "title": "Ladies Book Club - The Witch",
    "date": "2026-10-26",
@@ -2546,11 +2866,39 @@
    "lastSeen": "2026-09-29T19:56:46-04:00"
   },
   {
+   "id": "0b3e7923f4cb",
+   "title": "Allison Russell",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "7d23682ac9b5",
    "title": "Local Dork",
    "date": "2026-10-27",
    "change": "missing",
    "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "a58437d61842",
+   "title": "The Gringos",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "462445d2a280",
+   "title": "Madaila",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "dc5d43a88b7e",
+   "title": "It’s A 2000s (Halloween) Party: Burlington",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "6b6502ca6418",
@@ -2567,6 +2915,13 @@
    "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
+   "id": "d485cac48918",
+   "title": "Spanish Music Kids",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "35c36311b9d7",
    "title": "Blue Sundays 3rd Anniversary!",
    "date": "2026-11-08",
@@ -2581,6 +2936,27 @@
    "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
+   "id": "41323dc2511b",
+   "title": "Weatherday",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "ef15bcbed138",
+   "title": "Tropidelic",
+   "date": "2026-11-12",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "15dab0532b69",
+   "title": "Carbon Leaf",
+   "date": "2026-11-13",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "951654f5cfe3",
    "title": "Blue Sundays 3rd Anniversary!",
    "date": "2026-11-15",
@@ -2588,11 +2964,39 @@
    "lastSeen": "2026-09-28T13:48:33-04:00"
   },
   {
+   "id": "5e72c4d0bbf4",
+   "title": "Stewart Copeland – Have I Said Too Much",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "efa7d77bcd8d",
+   "title": "In Color",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "a1efee2ff14a",
    "title": "Local Dork",
    "date": "2026-11-17",
    "change": "missing",
    "lastSeen": "2026-09-29T12:06:11-04:00"
+  },
+  {
+   "id": "ae83253885f6",
+   "title": "Charlie Parr",
+   "date": "2026-11-19",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "1b5e416fd7bc",
+   "title": "Greg Freeman",
+   "date": "2026-11-21",
+   "change": "missing",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "15c927768bc0",
