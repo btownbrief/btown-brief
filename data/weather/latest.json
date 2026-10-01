@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-01T11:55:41+00:00",
+ "updated": "2026-10-01T13:15:41+00:00",
  "sections_updated": {
-  "now": "2026-10-01T11:55:41+00:00",
-  "forecast": "2026-10-01T11:55:41+00:00",
-  "hourly": "2026-10-01T11:55:41+00:00",
-  "alerts": "2026-10-01T11:55:41+00:00",
-  "afd": "2026-10-01T11:55:41+00:00",
-  "lake_forecast": "2026-10-01T11:55:41+00:00",
-  "lake_gage": "2026-10-01T11:55:41+00:00",
-  "air": "2026-10-01T11:55:41+00:00",
-  "sun": "2026-10-01T11:55:41+00:00",
-  "models": "2026-10-01T11:55:41+00:00"
+  "now": "2026-10-01T13:15:41+00:00",
+  "forecast": "2026-10-01T13:15:41+00:00",
+  "hourly": "2026-10-01T13:15:41+00:00",
+  "alerts": "2026-10-01T13:15:41+00:00",
+  "afd": "2026-10-01T13:15:41+00:00",
+  "lake_forecast": "2026-10-01T13:15:41+00:00",
+  "lake_gage": "2026-10-01T13:15:41+00:00",
+  "air": "2026-10-01T13:15:41+00:00",
+  "sun": "2026-10-01T13:15:41+00:00",
+  "models": "2026-10-01T13:15:41+00:00"
  },
  "now": {
-  "observed_at": "2026-10-01T11:40:00+00:00",
+  "observed_at": "2026-10-01T12:55:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 63,
-  "feels_like_f": 63,
+  "temp_f": 64,
+  "feels_like_f": 64,
   "humidity": 83,
-  "dewpoint_f": 57,
-  "wind_mph": 8,
-  "wind_gust_mph": null,
-  "wind_dir": "S",
+  "dewpoint_f": 59,
+  "wind_mph": null,
+  "wind_gust_mph": 20,
+  "wind_dir": null,
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-01T07:00:00-04:00",
+    "start": "2026-10-01T09:00:00-04:00",
     "is_day": true,
     "temp_f": 71,
     "pop": 7,
-    "wind": "S 8 to 12 mph",
+    "wind": "S 12 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 71. South wind 8 to 12 mph, with gusts as high as 24 mph."
+    "detailed": "Mostly cloudy, with a high near 71. South wind around 12 mph, with gusts as high as 24 mph."
    },
    {
     "name": "Tonight",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-10-01T06:19:01+00:00",
   "hours": [
-   {
-    "t": "2026-10-01T07:00:00-04:00",
-    "temp_f": 59,
-    "feels_f": 59,
-    "pop": 4,
-    "humidity": 90,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 38,
-    "short": "Mostly Sunny"
-   },
-   {
-    "t": "2026-10-01T08:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 4,
-    "humidity": 90,
-    "wind_mph": 8,
-    "wind_dir": "S",
-    "sky": 42,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-10-01T09:00:00-04:00",
     "temp_f": 62,
@@ -568,6 +546,28 @@
     "wind_dir": "NW",
     "sky": 78,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-10-02T19:00:00-04:00",
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 16,
+    "humidity": 84,
+    "wind_mph": 8,
+    "wind_dir": "NW",
+    "sky": 75,
+    "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-10-02T20:00:00-04:00",
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 14,
+    "humidity": 84,
+    "wind_mph": 8,
+    "wind_dir": "NW",
+    "sky": 75,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 62,
-  "water_temp_at": "2026-10-01T07:00:00.000-04:00",
-  "level_ft": 93.89,
-  "level_at": "2026-10-01T07:00:00.000-04:00",
+  "water_temp_at": "2026-10-01T09:00:00.000-04:00",
+  "level_ft": 93.9,
+  "level_at": "2026-10-01T09:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 32,
+  "aqi": 33,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/01/26 7:00",
+  "observed": "10/01/26 9:00",
   "discussion": "Expect generally good air quality across Vermont on Thursday, October 1st."
  },
  "sun": {
