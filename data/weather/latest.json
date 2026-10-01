@@ -1,43 +1,33 @@
 {
- "updated": "2026-10-01T21:24:45+00:00",
+ "updated": "2026-10-01T22:36:11+00:00",
  "sections_updated": {
-  "now": "2026-10-01T21:24:45+00:00",
-  "forecast": "2026-10-01T21:24:45+00:00",
-  "hourly": "2026-10-01T21:24:45+00:00",
-  "alerts": "2026-10-01T21:24:45+00:00",
-  "afd": "2026-10-01T21:24:45+00:00",
-  "lake_forecast": "2026-10-01T21:24:45+00:00",
+  "now": "2026-10-01T22:36:11+00:00",
+  "forecast": "2026-10-01T22:36:11+00:00",
+  "hourly": "2026-10-01T22:36:11+00:00",
+  "alerts": "2026-10-01T22:36:11+00:00",
+  "afd": "2026-10-01T22:36:11+00:00",
+  "lake_forecast": "2026-10-01T22:36:11+00:00",
   "lake_gage": "2026-10-01T21:24:45+00:00",
-  "air": "2026-10-01T21:24:45+00:00",
-  "sun": "2026-10-01T21:24:45+00:00",
-  "models": "2026-10-01T21:24:45+00:00"
+  "air": "2026-10-01T22:36:11+00:00",
+  "sun": "2026-10-01T22:36:11+00:00",
+  "models": "2026-10-01T22:36:11+00:00"
  },
  "now": {
-  "observed_at": "2026-10-01T21:00:00+00:00",
+  "observed_at": "2026-10-01T22:15:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 68,
-  "feels_like_f": 68,
-  "humidity": 78,
+  "temp_f": 66,
+  "feels_like_f": 66,
+  "humidity": 83,
   "dewpoint_f": 61,
-  "wind_mph": 14,
-  "wind_gust_mph": 21,
-  "wind_dir": "S",
+  "wind_mph": null,
+  "wind_gust_mph": null,
+  "wind_dir": null,
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-10-01T18:32:08+00:00",
   "periods": [
-   {
-    "name": "This Afternoon",
-    "start": "2026-10-01T17:00:00-04:00",
-    "is_day": true,
-    "temp_f": 72,
-    "pop": 6,
-    "wind": "S 14 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 72. South wind around 14 mph, with gusts as high as 24 mph."
-   },
    {
     "name": "Tonight",
     "start": "2026-10-01T18:00:00-04:00",
@@ -66,7 +56,7 @@
     "pop": 18,
     "wind": "NW 5 to 8 mph",
     "short": "Slight Chance Rain Showers then Partly Cloudy",
-    "detailed": "A slight chance of rain showers before 7pm. Partly cloudy, with a low around 48. Northwest wind 5 to 8 mph. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A slight chance of rain showers before 7pm. Partly cloudy, with a low around 48. Northwest wind 5 to 8 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Saturday",
@@ -167,23 +157,22 @@
     "wind": "S 15 mph",
     "short": "Partly Cloudy",
     "detailed": "Partly cloudy, with a low around 43. South wind around 15 mph."
+   },
+   {
+    "name": "Thursday",
+    "start": "2026-10-08T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 65,
+    "pop": 14,
+    "wind": "S 14 mph",
+    "short": "Mostly Sunny",
+    "detailed": "Mostly sunny, with a high near 65. South wind around 14 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-01T18:32:08+00:00",
   "hours": [
-   {
-    "t": "2026-10-01T17:00:00-04:00",
-    "temp_f": 72,
-    "feels_f": 72,
-    "pop": 6,
-    "humidity": 71,
-    "wind_mph": 14,
-    "wind_dir": "S",
-    "sky": 85,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-10-01T18:00:00-04:00",
     "temp_f": 71,
@@ -568,6 +557,17 @@
     "wind_dir": "NW",
     "sky": 24,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-10-03T05:00:00-04:00",
+    "temp_f": 50,
+    "feels_f": 47,
+    "pop": 0,
+    "humidity": 89,
+    "wind_mph": 8,
+    "wind_dir": "NW",
+    "sky": 26,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -877,10 +877,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/01/26 17:00",
+  "observed": "10/01/26 18:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, October 2nd."
  },
  "sun": {
@@ -895,7 +895,7 @@
    {
     "date": "2026-10-01",
     "high_f": {
-     "GFS": 73,
+     "GFS": 72,
      "Euro": 70,
      "ICON": 68
     },
@@ -909,14 +909,14 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 5
+    "high_spread_f": 4
    },
    {
     "date": "2026-10-02",
     "high_f": {
      "GFS": 68,
      "Euro": 69,
-     "ICON": 68
+     "ICON": 67
     },
     "pop_max": {
      "GFS": 76,
@@ -924,18 +924,18 @@
      "ICON": 100
     },
     "precip_in": {
-     "GFS": 0.5,
+     "GFS": 0.31,
      "Euro": 0.24,
-     "ICON": 0.49
+     "ICON": 0.61
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    },
    {
     "date": "2026-10-03",
     "high_f": {
      "GFS": 60,
      "Euro": 60,
-     "ICON": 58
+     "ICON": 59
     },
     "pop_max": {
      "GFS": 0,
@@ -947,7 +947,7 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    }
   ]
  }
