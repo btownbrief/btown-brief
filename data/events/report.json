@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-01T20:13:04-04:00",
+ "generated": "2026-10-02T11:57:22-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -8,23 +8,23 @@
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 66,
-   "seconds": 6.3
+   "count": 64,
+   "seconds": 3.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 90,
-   "seconds": 3.8
+   "count": 88,
+   "seconds": 3.9
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 273,
-   "seconds": 4.6
+   "count": 264,
+   "seconds": 4.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 70,
-   "seconds": 1.8
+   "count": 69,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-01&end_date=2026-11-30&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-02&end_date=2026-12-01&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 5,
-   "seconds": 0.1
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 204,
-   "seconds": 65.4
+   "count": 205,
+   "seconds": 65.2
   },
   "flynn": {
    "label": "The Flynn",
    "count": 21,
-   "seconds": 0.1
+   "seconds": 0.3
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,8 +63,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 679,
-   "seconds": 33.4
+   "count": 671,
+   "seconds": 32.0
   },
   "higherground": {
    "label": "Higher Ground",
@@ -74,48 +74,49 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 2,
-   "seconds": 10.6
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 433,
-   "seconds": 73.1
+   "count": 429,
+   "seconds": 73.5
   },
   "meetup": {
    "label": "Meetup",
    "count": 46,
-   "seconds": 102.6
+   "seconds": 95.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 23,
+   "count": 22,
    "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 65,
-   "seconds": 16.7
+   "seconds": 16.1
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 9,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 104,
-   "seconds": 1.9
+   "count": 98,
+   "seconds": 2.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 20,
-   "seconds": 32.4
+   "count": 19,
+   "seconds": 32.5
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2414,
-   "seconds": 2.9
+   "count": 2433,
+   "seconds": 31.0
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -124,108 +125,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 504,
-   "seconds": 20.1
+   "count": 506,
+   "seconds": 35.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 292,
-   "seconds": 0.3
+   "count": 294,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 51,
-   "seconds": 64.6
+   "count": 49,
+   "seconds": 62.6
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 51,
+   "count": 50,
    "seconds": 0.3
   }
  },
- "gathered": 5434,
- "afterDedup": 2560,
- "duplicatesMerged": 2874,
- "final": 2653,
- "firecrawlCalls": 1,
+ "gathered": 5419,
+ "afterDedup": 2525,
+ "duplicatesMerged": 2894,
+ "final": 2615,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "Trivia",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "Strings of India: An Evening of North Indian Classical Music",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-11-05"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "UVM Catamount Educational Farm Stand and Apple Sales",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "Curator Tour",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "CAT ECare Training",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-06"
-  },
   {
    "kept": {
     "title": "Naza @ VTIFF",
@@ -2360,6 +2284,30 @@
   },
   {
    "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-30"
+  },
+  {
+   "kept": {
+    "title": "Bonobo at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-30"
+  },
+  {
+   "kept": {
     "title": "Industry Day",
     "source": "loveburlington"
    },
@@ -2382,82 +2330,73 @@
   },
   {
    "kept": {
-    "title": "Bonobo",
-    "source": "helloburlington"
+    "title": "Sing-Along with Linda Bassick",
+    "source": "fletcherfree"
    },
    "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
+    "fletcherfree",
+    "sevendays"
    ],
-   "date": "2026-11-30"
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "Spanish Conversation",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "Super Smash Tuesdays",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "Open Studio",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-01"
   }
  ],
  "changes": [
-  {
-   "id": "b9d9d3f026a0",
-   "title": "Family Art Saturday",
-   "date": "2026-10-24",
-   "change": "time",
-   "was": "2026-10-24T11:00:00-04:00",
-   "now": "2026-10-24T13:00:00-04:00"
-  },
-  {
-   "id": "151a4b4ef597",
-   "title": "Family Art Saturday",
-   "date": "2026-11-21",
-   "change": "time",
-   "was": "2026-11-21T11:00:00-05:00",
-   "now": "2026-11-21T13:00:00-05:00"
-  },
-  {
-   "id": "1c21c9d9f849",
-   "title": "Display Case: Barbies as Seen in Books and Movies",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-30T20:10:10-04:00"
-  },
-  {
-   "id": "035f6e115c25",
-   "title": "Ethan Allen Playground Replacement Public Engagement",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-10-01T12:41:27-04:00"
-  },
-  {
-   "id": "c21e85803a52",
-   "title": "Thursday Happy Hour at Lincoln’s in Burlington",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-10-01T12:41:27-04:00"
-  },
-  {
-   "id": "564928f00ea3",
-   "title": "Rusty K Boose October Thursday Residency",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-10-01T12:41:27-04:00"
-  },
-  {
-   "id": "69ef89929a93",
-   "title": "Trivia at Burlington Beer Co.",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-10-01T12:41:27-04:00"
-  },
-  {
-   "id": "17e532bc64d7",
-   "title": "Rusty K Booze October Thursday Residency",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-30T20:10:10-04:00"
-  },
-  {
-   "id": "035da8e2fbd6",
-   "title": "Southern Culture on the Skids",
-   "date": "2026-10-01",
-   "change": "missing",
-   "lastSeen": "2026-09-30T20:10:10-04:00"
-  },
   {
    "id": "d91e2bcacb56",
    "title": "TAG",
@@ -2466,18 +2405,44 @@
    "lastSeen": "2026-09-29T12:06:11-04:00"
   },
   {
+   "id": "0004a74e9fb3",
+   "title": "Optimistic Personality Disorde",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-10-01T20:13:04-04:00"
+  },
+  {
+   "id": "357ab6ef4c5b",
+   "title": "Burlington, VT: Optimistic Personality Disorder",
+   "date": "2026-10-02",
+   "change": "missing",
+   "lastSeen": "2026-10-01T20:13:04-04:00"
+  },
+  {
    "id": "49b13f2d9063",
    "title": "Fly By 5K - SOLD OUT",
    "date": "2026-10-03",
-   "change": "missing",
-   "lastSeen": "2026-09-28T20:32:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "89da04f5d8cb",
    "title": "Real Love Records Porchfest",
    "date": "2026-10-03",
+   "change": "dropped"
+  },
+  {
+   "id": "8626724ebf61",
+   "title": "Optimistic Personality Disorde",
+   "date": "2026-10-03",
    "change": "missing",
-   "lastSeen": "2026-09-28T20:32:09-04:00"
+   "lastSeen": "2026-10-01T20:13:04-04:00"
+  },
+  {
+   "id": "7b05655696a3",
+   "title": "Burlington, VT: Optimistic Personality Disorder",
+   "date": "2026-10-03",
+   "change": "missing",
+   "lastSeen": "2026-10-01T20:13:04-04:00"
   },
   {
    "id": "f852a1ccc728",
@@ -2492,12 +2457,6 @@
    "date": "2026-10-04",
    "change": "missing",
    "lastSeen": "2026-09-30T20:10:10-04:00"
-  },
-  {
-   "id": "f349fbe16034",
-   "title": "Blue Sundays 3rd Anniversary!",
-   "date": "2026-10-04",
-   "change": "dropped"
   },
   {
    "id": "20a23c0c6c8c",
@@ -2626,12 +2585,6 @@
    "lastSeen": "2026-09-30T20:10:10-04:00"
   },
   {
-   "id": "fa3d9888a974",
-   "title": "Blue Sundays 3rd Anniversary!",
-   "date": "2026-10-11",
-   "change": "dropped"
-  },
-  {
    "id": "0aa8d235cdca",
    "title": "Stephen Lynch",
    "date": "2026-10-11",
@@ -2702,12 +2655,6 @@
    "lastSeen": "2026-09-30T20:10:10-04:00"
   },
   {
-   "id": "62eb8218aceb",
-   "title": "Blue Sundays 3rd Anniversary!",
-   "date": "2026-10-18",
-   "change": "dropped"
-  },
-  {
    "id": "03a62429927f",
    "title": "Good Time Line Dancing",
    "date": "2026-10-18",
@@ -2753,8 +2700,7 @@
    "id": "fff1a6158bc2",
    "title": "Dinner and Dialogue",
    "date": "2026-10-22",
-   "change": "missing",
-   "lastSeen": "2026-09-28T20:32:09-04:00"
+   "change": "dropped"
   },
   {
    "id": "0b9b74a81730",
@@ -2804,12 +2750,6 @@
    "date": "2026-10-25",
    "change": "missing",
    "lastSeen": "2026-09-30T20:10:10-04:00"
-  },
-  {
-   "id": "085d4c360495",
-   "title": "Blue Sundays 3rd Anniversary!",
-   "date": "2026-10-25",
-   "change": "dropped"
   },
   {
    "id": "6f150056982e",
@@ -2889,12 +2829,6 @@
    "lastSeen": "2026-09-30T20:10:10-04:00"
   },
   {
-   "id": "6b6502ca6418",
-   "title": "Blue Sundays 3rd Anniversary!",
-   "date": "2026-11-01",
-   "change": "dropped"
-  },
-  {
    "id": "0a26f10a3701",
    "title": "Public Skate",
    "date": "2026-11-02",
@@ -2921,12 +2855,6 @@
    "date": "2026-11-08",
    "change": "missing",
    "lastSeen": "2026-09-30T20:10:10-04:00"
-  },
-  {
-   "id": "35c36311b9d7",
-   "title": "Blue Sundays 3rd Anniversary!",
-   "date": "2026-11-08",
-   "change": "dropped"
   },
   {
    "id": "bb8287d19ca5",
@@ -2978,12 +2906,6 @@
    "lastSeen": "2026-09-30T20:10:10-04:00"
   },
   {
-   "id": "951654f5cfe3",
-   "title": "Blue Sundays 3rd Anniversary!",
-   "date": "2026-11-15",
-   "change": "dropped"
-  },
-  {
    "id": "5e72c4d0bbf4",
    "title": "Stewart Copeland – Have I Said Too Much",
    "date": "2026-11-15",
@@ -3033,12 +2955,6 @@
    "lastSeen": "2026-09-30T20:10:10-04:00"
   },
   {
-   "id": "15c927768bc0",
-   "title": "Blue Sundays 3rd Anniversary!",
-   "date": "2026-11-22",
-   "change": "dropped"
-  },
-  {
    "id": "9c66969ed20a",
    "title": "Public Skate",
    "date": "2026-11-23",
@@ -3065,6 +2981,13 @@
    "date": "2026-11-29",
    "change": "missing",
    "lastSeen": "2026-09-30T20:10:10-04:00"
+  },
+  {
+   "id": "140c01bfc517",
+   "title": "Bonobo",
+   "date": "2026-11-30",
+   "change": "missing",
+   "lastSeen": "2026-10-01T20:13:04-04:00"
   }
  ]
 }
