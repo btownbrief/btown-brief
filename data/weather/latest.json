@@ -1,26 +1,26 @@
 {
- "updated": "2026-10-02T09:56:32+00:00",
+ "updated": "2026-10-02T10:16:32+00:00",
  "sections_updated": {
-  "now": "2026-10-02T09:56:32+00:00",
-  "forecast": "2026-10-02T09:56:32+00:00",
-  "hourly": "2026-10-02T09:56:32+00:00",
-  "alerts": "2026-10-02T09:56:32+00:00",
-  "afd": "2026-10-02T09:56:32+00:00",
-  "lake_forecast": "2026-10-02T09:56:32+00:00",
-  "lake_gage": "2026-10-02T09:36:29+00:00",
-  "air": "2026-10-02T09:56:32+00:00",
-  "sun": "2026-10-02T09:56:32+00:00",
-  "models": "2026-10-02T09:56:32+00:00"
+  "now": "2026-10-02T10:16:32+00:00",
+  "forecast": "2026-10-02T10:16:32+00:00",
+  "hourly": "2026-10-02T10:16:32+00:00",
+  "alerts": "2026-10-02T10:16:32+00:00",
+  "afd": "2026-10-02T10:16:32+00:00",
+  "lake_forecast": "2026-10-02T10:16:32+00:00",
+  "lake_gage": "2026-10-02T10:16:32+00:00",
+  "air": "2026-10-02T10:16:32+00:00",
+  "sun": "2026-10-02T10:16:32+00:00",
+  "models": "2026-10-02T10:16:32+00:00"
  },
  "now": {
-  "observed_at": "2026-10-02T09:40:00+00:00",
+  "observed_at": "2026-10-02T10:00:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 70,
-  "feels_like_f": 70,
-  "humidity": 78,
+  "temp_f": 68,
+  "feels_like_f": 68,
+  "humidity": 83,
   "dewpoint_f": 63,
-  "wind_mph": 10,
+  "wind_mph": 9,
   "wind_gust_mph": null,
   "wind_dir": "S",
   "precip_last_hr_in": null
@@ -29,17 +29,7 @@
   "updated": "2026-10-02T06:23:01+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-10-02T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 65,
-    "pop": 25,
-    "wind": "S 14 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Cloudy, with a low around 65. South wind around 14 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
-   },
-   {
-    "name": "Friday",
+    "name": "Today",
     "start": "2026-10-02T06:00:00-04:00",
     "is_day": true,
     "temp_f": 66,
@@ -49,7 +39,7 @@
     "detailed": "Rain showers before 5pm. Cloudy, with a high near 66. West wind 6 to 13 mph. Chance of precipitation is 100%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
-    "name": "Friday Night",
+    "name": "Tonight",
     "start": "2026-10-02T18:00:00-04:00",
     "is_day": false,
     "temp_f": 50,
@@ -167,23 +157,22 @@
     "wind": "S 13 mph",
     "short": "Mostly Sunny",
     "detailed": "Mostly sunny, with a high near 65. South wind around 13 mph."
+   },
+   {
+    "name": "Thursday Night",
+    "start": "2026-10-08T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 47,
+    "pop": 28,
+    "wind": "S 10 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers after 8pm. Mostly cloudy, with a low around 47. South wind around 10 mph. Chance of precipitation is 30%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-02T06:23:01+00:00",
   "hours": [
-   {
-    "t": "2026-10-02T05:00:00-04:00",
-    "temp_f": 66,
-    "feels_f": 66,
-    "pop": 25,
-    "humidity": 90,
-    "wind_mph": 14,
-    "wind_dir": "S",
-    "sky": 92,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-10-02T06:00:00-04:00",
     "temp_f": 66,
@@ -568,6 +557,17 @@
     "wind_dir": "N",
     "sky": 4,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-10-03T17:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 0,
+    "humidity": 57,
+    "wind_mph": 7,
+    "wind_dir": "N",
+    "sky": 3,
+    "short": "Sunny"
    }
   ]
  },
@@ -827,17 +827,17 @@
  },
  "lake_gage": {
   "water_temp_f": 63,
-  "water_temp_at": "2026-10-02T05:00:00.000-04:00",
-  "level_ft": 93.9,
-  "level_at": "2026-10-02T05:00:00.000-04:00",
+  "water_temp_at": "2026-10-02T06:00:00.000-04:00",
+  "level_ft": 93.95,
+  "level_at": "2026-10-02T06:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 44,
+  "aqi": 43,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/02/26 5:00",
+  "observed": "10/02/26 6:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, October 2nd."
  },
  "sun": {
