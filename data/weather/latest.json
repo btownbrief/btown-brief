@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-02T19:32:31+00:00",
+ "updated": "2026-10-02T20:00:02+00:00",
  "sections_updated": {
-  "now": "2026-10-02T19:32:31+00:00",
-  "forecast": "2026-10-02T19:32:31+00:00",
-  "hourly": "2026-10-02T19:32:31+00:00",
-  "alerts": "2026-10-02T19:32:31+00:00",
-  "afd": "2026-10-02T19:32:31+00:00",
-  "lake_forecast": "2026-10-02T19:32:31+00:00",
+  "now": "2026-10-02T20:00:02+00:00",
+  "forecast": "2026-10-02T20:00:02+00:00",
+  "hourly": "2026-10-02T20:00:02+00:00",
+  "alerts": "2026-10-02T20:00:02+00:00",
+  "afd": "2026-10-02T20:00:02+00:00",
+  "lake_forecast": "2026-10-02T20:00:02+00:00",
   "lake_gage": "2026-10-02T18:36:58+00:00",
-  "air": "2026-10-02T19:32:31+00:00",
-  "sun": "2026-10-02T19:32:31+00:00",
-  "models": "2026-10-02T19:32:31+00:00"
+  "air": "2026-10-02T20:00:02+00:00",
+  "sun": "2026-10-02T20:00:02+00:00",
+  "models": "2026-10-02T20:00:02+00:00"
  },
  "now": {
-  "observed_at": "2026-10-02T19:10:00+00:00",
+  "observed_at": "2026-10-02T19:45:00+00:00",
   "station": "KBTV",
-  "description": "Light Rain",
-  "temp_f": 64,
-  "feels_like_f": 64,
-  "humidity": 94,
-  "dewpoint_f": 63,
-  "wind_mph": 6,
+  "description": "Fog/Mist",
+  "temp_f": 61,
+  "feels_like_f": 61,
+  "humidity": 100,
+  "dewpoint_f": 61,
+  "wind_mph": 7,
   "wind_gust_mph": null,
-  "wind_dir": "NW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,10 +30,10 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-10-02T15:00:00-04:00",
+    "start": "2026-10-02T16:00:00-04:00",
     "is_day": true,
     "temp_f": 66,
-    "pop": 19,
+    "pop": 16,
     "wind": "NW 8 mph",
     "short": "Slight Chance Rain Showers",
     "detailed": "A slight chance of rain showers before 5pm. Mostly cloudy, with a high near 66. Northwest wind around 8 mph. Chance of precipitation is 20%. New rainfall amounts less than a tenth of an inch possible."
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-02T18:26:25+00:00",
   "hours": [
-   {
-    "t": "2026-10-02T15:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 19,
-    "humidity": 93,
-    "wind_mph": 7,
-    "wind_dir": "NW",
-    "sky": 87,
-    "short": "Slight Chance Rain Showers"
-   },
    {
     "t": "2026-10-02T16:00:00-04:00",
     "temp_f": 63,
@@ -568,6 +557,17 @@
     "wind_dir": "SE",
     "sky": 4,
     "short": "Clear"
+   },
+   {
+    "t": "2026-10-04T03:00:00-04:00",
+    "temp_f": 44,
+    "feels_f": 42,
+    "pop": 0,
+    "humidity": 89,
+    "wind_mph": 3,
+    "wind_dir": "SE",
+    "sky": 0,
+    "short": "Clear"
    }
   ]
  },
@@ -895,7 +895,7 @@
     "date": "2026-10-02",
     "high_f": {
      "GFS": 70,
-     "Euro": 66,
+     "Euro": 67,
      "ICON": 68
     },
     "pop_max": {
@@ -905,10 +905,10 @@
     },
     "precip_in": {
      "GFS": 0.21,
-     "Euro": 0.66,
+     "Euro": 0.54,
      "ICON": 0.68
     },
-    "high_spread_f": 4
+    "high_spread_f": 3
    },
    {
     "date": "2026-10-03",
