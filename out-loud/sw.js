@@ -6,10 +6,10 @@
    Strategy: navigations + code/data = network-first, cache fallback;
    audio = cache-first (Range requests handled for Safari's media loader).
    Map tiles are NEVER cached — OSM's tile policy forbids it. */
-const VERSION = 'out-loud-v2';
+const VERSION = 'out-loud-v3';   // v3: Second Sight
 const SHELL = `${VERSION}-shell`;
 const AUDIO = 'out-loud-audio';      // unversioned: survives shell bumps
-const SHELL_URLS = ['./', './index.html', './app.js', './engine.js', './out-loud.css', './vendor/style.css', './stories.json', './manifest.webmanifest'];
+const SHELL_URLS = ['./', './index.html', './app.js', './engine.js', './sight.js', './out-loud.css', './vendor/style.css', './stories.json', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(SHELL).then((c) => Promise.all(SHELL_URLS.map((u) => c.add(u).catch(() => null)))).then(() => self.skipWaiting()));

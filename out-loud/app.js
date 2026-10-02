@@ -18,6 +18,8 @@ const REPLAY = qs.get('replay');          // ?replay=downtown-loop → simulated
 const SPIKE = qs.get('spike');            // ?spike=here → two test pins at your first fix
 const DEEP_STORY = qs.get('s');           // ?s=nectars → open that story
 const DEEP_ROUTE = qs.get('route');       // ?route=downtown-loop
+const DEEP_SIGHT = qs.get('sight');       // ?sight=battery-park → open Second Sight on that stop
+const DEMO = qs.get('demo') === '1';       // fake camera + compass sweep for Second Sight on a laptop
 const IS_TEST = Boolean(REPLAY || SPIKE || qs.get('test'));
 
 const $ = (id) => document.getElementById(id);
@@ -73,6 +75,7 @@ async function init() {
   }
   if (DEEP_ROUTE) setFilter(`route:${DEEP_ROUTE}`);
   if (DEEP_STORY && byId.has(DEEP_STORY)) openCard(DEEP_STORY, { scroll: true });
+  if (DEEP_SIGHT && byId.has(DEEP_SIGHT)) { openCard(DEEP_SIGHT, { scroll: true }); openSight(DEEP_SIGHT); }
   if (REPLAY) startReplay(REPLAY);
 }
 
@@ -517,6 +520,7 @@ function renderList() {
   const items = orderedPins();
   els.list.innerHTML = items.map(({ pin, step, dist }, i) => cardHTML(pin, step, dist, i, Boolean(route))).join('');
   els.list.querySelectorAll('[data-play]').forEach((b) => b.addEventListener('click', () => { unlockAudio(); playPin(b.dataset.play, 'manual'); }));
+  els.list.querySelectorAll('[data-sight]').forEach((b) => b.addEventListener('click', () => openSight(b.dataset.sight)));
   els.list.querySelectorAll('[data-read]').forEach((b) => b.addEventListener('click', () => {
     const body = b.closest('.ol-card').querySelector('[data-body]');
     body.hidden = !body.hidden; b.textContent = body.hidden ? 'Read' : 'Hide';
@@ -545,6 +549,7 @@ function cardHTML(pin, step, dist, i, inRoute) {
       <div class="ol-card-actions">
         <button class="ol-link-btn" data-read="${esc(pin.id)}" type="button">Read</button>
         <button class="ol-link-btn" data-share="${esc(pin.id)}" type="button">Share</button>
+        ${pin.sight ? `<button class="ol-link-btn ol-sight-btn" data-sight="${esc(pin.id)}" type="button" title="See ${esc(pin.sight.year)} over today">Second Sight</button>` : ''}
       </div>
     </div>
     <div class="ol-card-body" data-body="${esc(pin.id)}" hidden>
@@ -578,6 +583,21 @@ async function share(id) {
     if (navigator.share) { await navigator.share({ title: pin.title, text, url }); count('share', id); return; }
     await navigator.clipboard.writeText(url); toast('Link copied.'); count('share', id);
   } catch (e) { /* cancelled */ }
+}
+
+/* ---------- Second Sight (the ghost layer; sight.js is loaded on first use) ---------- */
+let sightView = null;
+async function openSight(id) {
+  const pin = byId.get(id);
+  if (!pin || !pin.sight) return;
+  try {
+    const mod = await import('./sight.js');
+    if (sightView) sightView.close();
+    sightView = mod.openSight(pin, { demo: DEMO, count, onClose: () => { sightView = null; } });
+    window.outLoudSight = sightView; // scripted checks reach in here
+  } catch (e) {
+    toast('Second Sight could not load.');
+  }
 }
 
 /* ---------- visited + counters ---------- */
