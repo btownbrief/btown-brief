@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-02T19:59:44-04:00",
+ "generated": "2026-10-03T10:24:35-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 12,
-   "seconds": 6.1
+   "count": 11,
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 65,
-   "seconds": 5.1
+   "count": 62,
+   "seconds": 5.8
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 88,
-   "seconds": 3.3
+   "count": 89,
+   "seconds": 3.5
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 264,
-   "seconds": 3.1
+   "count": 256,
+   "seconds": 3.7
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 69,
-   "seconds": 1.6
+   "count": 70,
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-02&end_date=2026-12-01&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-03&end_date=2026-12-02&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 5,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 205,
-   "seconds": 76.6
+   "count": 210,
+   "seconds": 76.2
   },
   "flynn": {
    "label": "The Flynn",
@@ -63,8 +63,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 671,
-   "seconds": 35.9
+   "count": 663,
+   "seconds": 36.7
   },
   "higherground": {
    "label": "Higher Ground",
@@ -74,28 +74,29 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 2,
-   "seconds": 8.8
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 429,
-   "seconds": 67.2
+   "count": 428,
+   "seconds": 68.7
   },
   "meetup": {
    "label": "Meetup",
    "count": 46,
-   "seconds": 99.6
+   "seconds": 98.6
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 22,
-   "seconds": 0.5
+   "count": 21,
+   "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 65,
-   "seconds": 17.9
+   "count": 67,
+   "seconds": 17.3
   },
   "radiobean": {
    "label": "Radio Bean",
@@ -104,18 +105,18 @@
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 98,
-   "seconds": 1.9
+   "count": 96,
+   "seconds": 2.2
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 18,
-   "seconds": 34.3
+   "seconds": 35.0
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2374,
-   "seconds": 3.3
+   "count": 2414,
+   "seconds": 23.8
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -124,109 +125,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 518,
-   "seconds": 24.0
+   "count": 511,
+   "seconds": 36.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 304,
+   "count": 290,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 49,
-   "seconds": 64.4
+   "count": 47,
+   "seconds": 65.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 50,
+   "count": 51,
    "seconds": 0.2
   }
  },
- "gathered": 5384,
- "afterDedup": 2531,
- "duplicatesMerged": 2853,
- "final": 2622,
- "firecrawlCalls": 1,
+ "gathered": 5385,
+ "afterDedup": 2504,
+ "duplicatesMerged": 2881,
+ "final": 2590,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Pack the Gut: Women's Hockey v.s. Northeastern",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "Board Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "Gabriela Martinez, piano",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "Fruit Bats",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-11-06"
-  },
-  {
-   "kept": {
-    "title": "Chess Club",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-07"
-  },
   {
    "kept": {
     "title": "Live DJ at Ri Ra!",
@@ -2362,6 +2285,39 @@
   },
   {
    "kept": {
+    "title": "Monthly Interfaith Breakfast",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "Data Design Lab",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "UPB Art Attack",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
     "title": "802sDay",
     "source": "loveburlington"
    },
@@ -2393,80 +2349,117 @@
     "sevendays"
    ],
    "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "Wine Down Wednesday",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-02"
+  },
+  {
+   "kept": {
+    "title": "TRIVIA NIGHT",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-02"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-02"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-02"
   }
  ],
  "changes": [
   {
-   "id": "f321cdd14934",
-   "title": "The Work in Progress",
-   "date": "2026-10-02",
+   "id": "e12f08c9bc1e",
+   "title": "Zen Sketch",
+   "date": "2026-10-08",
    "change": "time",
-   "was": "2026-10-02T16:00:00-04:00",
-   "now": "2026-10-02T19:00:00-04:00"
+   "was": "2026-10-08T17:30:00-04:00",
+   "now": "2026-10-08T18:30:00-04:00"
   },
   {
-   "id": "89ab8c3bf0f3",
-   "title": "Field Hockey vs Appalachian State",
-   "date": "2026-10-11",
+   "id": "d87595b06fd1",
+   "title": "Zen Sketch",
+   "date": "2026-10-15",
    "change": "time",
-   "was": "2026-10-11T12:00:00-04:00",
-   "now": "2026-10-11T11:00:00-04:00"
+   "was": "2026-10-15T17:30:00-04:00",
+   "now": "2026-10-15T18:30:00-04:00"
   },
   {
-   "id": "28343d50469f",
-   "title": "Women's Soccer vs Binghamton",
-   "date": "2026-11-01",
+   "id": "7a2da0d68a91",
+   "title": "Zen Sketch",
+   "date": "2026-10-22",
    "change": "time",
-   "was": "2026-11-01T18:30:00-05:00",
-   "now": "2026-11-01T15:30:00-05:00"
+   "was": "2026-10-22T17:30:00-04:00",
+   "now": "2026-10-22T18:30:00-04:00"
   },
   {
-   "id": "4960cafa64b9",
-   "title": "Lunch with the Poets",
-   "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-10-02T11:57:22-04:00"
+   "id": "7a8ae2c136a7",
+   "title": "Zen Sketch",
+   "date": "2026-10-29",
+   "change": "time",
+   "was": "2026-10-29T17:30:00-04:00",
+   "now": "2026-10-29T18:30:00-04:00"
   },
   {
-   "id": "d91e2bcacb56",
-   "title": "TAG",
-   "date": "2026-10-02",
-   "change": "dropped"
+   "id": "db01335e74f7",
+   "title": "Zen Sketch",
+   "date": "2026-11-05",
+   "change": "time",
+   "was": "2026-11-05T17:30:00-05:00",
+   "now": "2026-11-05T18:30:00-05:00"
   },
   {
-   "id": "7a8b446fcbf4",
-   "title": "Community Movie Night Series: FREE Community Movie Night - Minions & Monsters",
-   "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-10-02T11:57:22-04:00"
+   "id": "5272d3af61cd",
+   "title": "Zen Sketch",
+   "date": "2026-11-12",
+   "change": "time",
+   "was": "2026-11-12T17:30:00-05:00",
+   "now": "2026-11-12T18:30:00-05:00"
   },
   {
-   "id": "0004a74e9fb3",
-   "title": "Optimistic Personality Disorde",
-   "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-10-01T20:13:04-04:00"
+   "id": "75a763281e0c",
+   "title": "Zen Sketch",
+   "date": "2026-11-19",
+   "change": "time",
+   "was": "2026-11-19T17:30:00-05:00",
+   "now": "2026-11-19T18:30:00-05:00"
   },
   {
-   "id": "357ab6ef4c5b",
-   "title": "Burlington, VT: Optimistic Personality Disorder",
-   "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-10-01T20:13:04-04:00"
-  },
-  {
-   "id": "51888dad978e",
-   "title": "Sebastian Alvarez",
-   "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-10-02T11:57:22-04:00"
-  },
-  {
-   "id": "f39443e719d7",
-   "title": "Peter Harrigan's Barbies",
-   "date": "2026-10-02",
-   "change": "missing",
-   "lastSeen": "2026-10-02T11:57:22-04:00"
+   "id": "f89b3bf4d2d9",
+   "title": "Zen Sketch",
+   "date": "2026-11-26",
+   "change": "time",
+   "was": "2026-11-26T17:30:00-05:00",
+   "now": "2026-11-26T18:30:00-05:00"
   },
   {
    "id": "8626724ebf61",
@@ -2810,12 +2803,6 @@
    "date": "2026-10-26",
    "change": "missing",
    "lastSeen": "2026-09-30T20:10:10-04:00"
-  },
-  {
-   "id": "928f71ff5075",
-   "title": "Ladies Book Club - The Witch",
-   "date": "2026-10-26",
-   "change": "dropped"
   },
   {
    "id": "0b3e7923f4cb",
