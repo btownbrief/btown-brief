@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-03T08:34:00+00:00",
+ "updated": "2026-10-03T09:37:25+00:00",
  "sections_updated": {
-  "now": "2026-10-03T08:34:00+00:00",
-  "forecast": "2026-10-03T08:34:00+00:00",
-  "hourly": "2026-10-03T08:34:00+00:00",
-  "alerts": "2026-10-03T08:34:00+00:00",
-  "afd": "2026-10-03T08:34:00+00:00",
-  "lake_forecast": "2026-10-03T08:34:00+00:00",
+  "now": "2026-10-03T09:37:25+00:00",
+  "forecast": "2026-10-03T09:37:25+00:00",
+  "hourly": "2026-10-03T09:37:25+00:00",
+  "alerts": "2026-10-03T09:37:25+00:00",
+  "afd": "2026-10-03T09:37:25+00:00",
+  "lake_forecast": "2026-10-03T09:37:25+00:00",
   "lake_gage": "2026-10-03T08:34:00+00:00",
-  "air": "2026-10-03T08:34:00+00:00",
-  "sun": "2026-10-03T08:34:00+00:00",
-  "models": "2026-10-03T08:34:00+00:00"
+  "air": "2026-10-03T09:37:25+00:00",
+  "sun": "2026-10-03T09:37:25+00:00",
+  "models": "2026-10-03T09:37:25+00:00"
  },
  "now": {
-  "observed_at": "2026-10-03T08:15:00+00:00",
+  "observed_at": "2026-10-03T09:15:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 48,
-  "feels_like_f": 46,
-  "humidity": 93,
+  "description": "Cloudy",
+  "temp_f": 50,
+  "feels_like_f": 50,
+  "humidity": 87,
   "dewpoint_f": 46,
-  "wind_mph": 5,
+  "wind_mph": 3,
   "wind_gust_mph": null,
-  "wind_dir": "ESE",
+  "wind_dir": "NE",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Overnight",
-    "start": "2026-10-03T04:00:00-04:00",
+    "start": "2026-10-03T05:00:00-04:00",
     "is_day": false,
     "temp_f": 48,
     "pop": 0,
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-03T06:20:00+00:00",
   "hours": [
-   {
-    "t": "2026-10-03T04:00:00-04:00",
-    "temp_f": 50,
-    "feels_f": 48,
-    "pop": 0,
-    "humidity": 89,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 16,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-10-03T05:00:00-04:00",
     "temp_f": 49,
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 46,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-10-04T16:00:00-04:00",
+    "temp_f": 66,
+    "feels_f": 66,
+    "pop": 2,
+    "humidity": 45,
+    "wind_mph": 12,
+    "wind_dir": "S",
+    "sky": 47,
+    "short": "Mostly Sunny"
    }
   ]
  },
@@ -833,10 +833,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 29,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/03/26 4:00",
+  "observed": "10/03/26 5:00",
   "discussion": null
  },
  "sun": {
@@ -891,19 +891,19 @@
     "high_f": {
      "GFS": 58,
      "Euro": 59,
-     "ICON": 60
+     "ICON": 58
     },
     "pop_max": {
-     "GFS": 47,
+     "GFS": 33,
      "Euro": 65,
      "ICON": 37
     },
     "precip_in": {
      "GFS": 0.09,
      "Euro": 0.2,
-     "ICON": 0.07
+     "ICON": 0.05
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    }
   ]
  }
