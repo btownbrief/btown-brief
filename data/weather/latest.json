@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-03T02:20:34+00:00",
+ "updated": "2026-10-03T03:37:22+00:00",
  "sections_updated": {
-  "now": "2026-10-03T02:20:34+00:00",
-  "forecast": "2026-10-03T02:20:34+00:00",
-  "hourly": "2026-10-03T02:20:34+00:00",
-  "alerts": "2026-10-03T02:20:34+00:00",
-  "afd": "2026-10-03T02:20:34+00:00",
-  "lake_forecast": "2026-10-03T02:20:34+00:00",
+  "now": "2026-10-03T03:37:22+00:00",
+  "forecast": "2026-10-03T03:37:22+00:00",
+  "hourly": "2026-10-03T03:37:22+00:00",
+  "alerts": "2026-10-03T03:37:22+00:00",
+  "afd": "2026-10-03T03:37:22+00:00",
+  "lake_forecast": "2026-10-03T03:37:22+00:00",
   "lake_gage": "2026-10-03T01:17:23+00:00",
-  "air": "2026-10-03T02:20:34+00:00",
-  "sun": "2026-10-03T02:20:34+00:00",
-  "models": "2026-10-03T02:20:34+00:00"
+  "air": "2026-10-03T03:37:22+00:00",
+  "sun": "2026-10-03T03:37:22+00:00",
+  "models": "2026-10-03T03:37:22+00:00"
  },
  "now": {
-  "observed_at": "2026-10-03T02:00:00+00:00",
+  "observed_at": "2026-10-03T03:20:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 57,
-  "feels_like_f": 57,
-  "humidity": 88,
+  "temp_f": 54,
+  "feels_like_f": 54,
+  "humidity": 100,
   "dewpoint_f": 54,
-  "wind_mph": 5,
+  "wind_mph": 0,
   "wind_gust_mph": null,
-  "wind_dir": "W",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-10-02T22:00:00-04:00",
+    "start": "2026-10-02T23:00:00-04:00",
     "is_day": false,
     "temp_f": 48,
     "pop": 0,
-    "wind": "NW 7 to 15 mph",
+    "wind": "N 7 to 15 mph",
     "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 48. Northwest wind 7 to 15 mph."
+    "detailed": "Mostly clear, with a low around 48. North wind 7 to 15 mph."
    },
    {
     "name": "Saturday",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-02T18:26:25+00:00",
   "hours": [
-   {
-    "t": "2026-10-02T22:00:00-04:00",
-    "temp_f": 54,
-    "feels_f": 54,
-    "pop": 0,
-    "humidity": 100,
-    "wind_mph": 12,
-    "wind_dir": "NW",
-    "sky": 56,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-10-02T23:00:00-04:00",
     "temp_f": 53,
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 3,
     "short": "Sunny"
+   },
+   {
+    "t": "2026-10-04T10:00:00-04:00",
+    "temp_f": 51,
+    "feels_f": 51,
+    "pop": 0,
+    "humidity": 80,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 19,
+    "short": "Sunny"
    }
   ]
  },
@@ -876,10 +876,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 32,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/02/26 22:00",
+  "observed": "10/02/26 23:00",
   "discussion": "Expect generally good air quality across Vermont on Friday, October 2nd."
  },
  "sun": {
@@ -937,7 +937,7 @@
      "ICON": 62
     },
     "pop_max": {
-     "GFS": 11,
+     "GFS": 5,
      "Euro": 8,
      "ICON": 3
     },
