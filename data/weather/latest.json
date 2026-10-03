@@ -1,26 +1,26 @@
 {
- "updated": "2026-10-03T10:37:32+00:00",
+ "updated": "2026-10-03T11:57:36+00:00",
  "sections_updated": {
-  "now": "2026-10-03T10:37:32+00:00",
-  "forecast": "2026-10-03T10:37:32+00:00",
-  "hourly": "2026-10-03T10:37:32+00:00",
-  "alerts": "2026-10-03T10:37:32+00:00",
-  "afd": "2026-10-03T10:37:32+00:00",
-  "lake_forecast": "2026-10-03T10:37:32+00:00",
-  "lake_gage": "2026-10-03T10:37:32+00:00",
-  "air": "2026-10-03T10:37:32+00:00",
-  "sun": "2026-10-03T10:37:32+00:00",
-  "models": "2026-10-03T10:37:32+00:00"
+  "now": "2026-10-03T11:57:36+00:00",
+  "forecast": "2026-10-03T11:57:36+00:00",
+  "hourly": "2026-10-03T11:57:36+00:00",
+  "alerts": "2026-10-03T11:57:36+00:00",
+  "afd": "2026-10-03T11:57:36+00:00",
+  "lake_forecast": "2026-10-03T11:57:36+00:00",
+  "lake_gage": "2026-10-03T11:57:36+00:00",
+  "air": "2026-10-03T11:57:36+00:00",
+  "sun": "2026-10-03T11:57:36+00:00",
+  "models": "2026-10-03T11:57:36+00:00"
  },
  "now": {
-  "observed_at": "2026-10-03T10:20:00+00:00",
+  "observed_at": "2026-10-03T11:40:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 48,
-  "feels_like_f": 48,
+  "description": "Mostly Clear",
+  "temp_f": 46,
+  "feels_like_f": 44,
   "humidity": 87,
-  "dewpoint_f": 45,
-  "wind_mph": 0,
+  "dewpoint_f": 43,
+  "wind_mph": 5,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-03T06:00:00-04:00",
+    "start": "2026-10-03T07:00:00-04:00",
     "is_day": true,
     "temp_f": 57,
     "pop": 0,
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-03T10:12:01+00:00",
   "hours": [
-   {
-    "t": "2026-10-03T06:00:00-04:00",
-    "temp_f": 49,
-    "feels_f": 47,
-    "pop": 0,
-    "humidity": 86,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 24,
-    "short": "Sunny"
-   },
    {
     "t": "2026-10-03T07:00:00-04:00",
     "temp_f": 48,
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 43,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-10-04T18:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 0,
+    "humidity": 56,
+    "wind_mph": 12,
+    "wind_dir": "S",
+    "sky": 45,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-03T06:23:00+00:00",
+  "issued": "2026-10-03T10:37:00+00:00",
   "key_messages": [
    "Generally cool weather is expected over the next several days. Sunday will be briefly warmer, but a front will cross on Monday bringing gusty winds, showers, and a return to the cooler weather.",
    "Cold air mid week will moderate by the late week with a pattern change for the weekend."
   ],
   "what_changed": "As of 222 AM EDT Saturday... No significant changes made.",
-  "raw": "\n000\nFXUS61 KBTV 030623\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n223 AM EDT Sat Oct 3 2026\n\n.WHAT HAS CHANGED...\nAs of 222 AM EDT Saturday...\n\nNo significant changes made.\n\n&&\n\n.KEY MESSAGES...\nAs of 222 AM EDT Saturday...\n\n1. Generally cool weather is expected over the next several \ndays. Sunday will be briefly warmer, but a front will cross on \nMonday bringing gusty winds, showers, and a return to the cooler \nweather.\n\n2. Cold air mid week will moderate by the late week with a \npattern change for the weekend. \n\n&&\n\n.DISCUSSION...\nAs of 222 AM EDT Saturday...\n\nKEY MESSAGE 1: A broad 1028mb surface high will be positioned to our \nwest over the Great Lakes region today. This will keep northerly \nflow across the region. Fortunately, the cool air coming in will be \nmore of a glancing blow with zonal flow aloft. Still, it'll feel \nplenty cool with highs lingering mainly in the 50s, except for a few \n60s across south-central Vermont. Mountain summits will likely be in \nthe upper 30s to mid 40s this afternoon. Abundant dry air will \npromote clear skies. We should radiate quite efficiently tonight \nwith these conditions, and that will bring overnight lows in the 30-\n40 F range.\n\nHigh pressure will start moving east Sunday, and south to southwest \nwinds return. A more moderate day in the 60s is expected for Sunday, \nwith a warmer night around 40-50 F. These warmer conditions will \ncome with some wind, though as pressure gradients tighten against \ndeparting high pressure and the next approaching system. Anticipate \n10-15 mph winds, and up to 20 mph in the Champlain Valley. The \nattendant frontal boundary will arrive pre-dawn through the early \nafternoon. The moisture is not great, but the dynamics of a strong \nupper jet and modest frontal support could produce a broken narrow \nline of rain. Larger synoptic scale motion will yield stronger winds \nbehind this front. Combined with the strength of cold air behind it, \nthe 50s forecast on Monday and 25-35 mph gusts across the region \nwill feel nippy. Advective cold will result in mid 20s to upper 30s. \nThe winds may still preclude frost formation in the Champlain \nValley, but plenty cool. Moisture quickly departs behind the frontal \nboundary, but if there's anything lingering, a few flakes or some \nriming is feasible for mountain terrain.\n\nKEY MESSAGE 2: Strong northwest flow will continue through Tuesday with \ntemperatures feeling solidly like fall, before our air mass \nmoderates towards the weekend. Highs Tuesday will struggle to reach \n50 in the higher terrain with low to mid 50s elsewhere with breezy \nnorthwest winds as our flow pattern remains fairly confluent. Skies \nwill remain clear into Tuesday night with one of the coldest nights \nof the season expected. With a stout dry 700-500mb layer, strong \nradiational cooling will take place with many places falling into \nthe low to mid 30s. Some patchy frost will be possible in the \nsheltered locations, but with temperatures falling under clear \nskies, almost the entire region could experience a freeze, with the \nChamplain valley remaining on alert at this time. This will likely \nbe a curtain call for gardeners sensitive plants in the broad \nvalleys. \n\nTemperatures will slowly moderate back up towards the weekend with \nthe approach of a broad long wave trough associated with a deepening \nupper low over the Hudson Bay. Highs will warm to the upper 50s to \nmid 60s, with overnight lows in the upper 30s to mid 40s. A large \nscale cyclonic gyre will shift south from the interior of Canada \nleading to several shortwave passages beginning late next week into \nthe weekend. Daily diurnally enhanced showers will be possible \nstarting Thursday with increasing cloud cover into the weekend. In \naddition to increasing shower chances, each shortwave passage will \nbring with it some breezy to gusty winds to northern New York, and \nlikely some channeled flow in the Champlain Valley each day.\n\n&&\n\n.AVIATION /06Z SATURDAY THROUGH WEDNESDAY/...\nThrough 06Z Sunday...A clearing cold front is currently pushing\nthrough the region from the northwest, with a mix of terminal\nconditions ahead of the front. Across Vermont, where the front is\njust approaching, antecedent valley fog is leading to MVFR-IFR\nvisibility and cig reductions at EFK/RUT/MPV. In northern New York,\nmixing and the presence of a modest LLJ, behind the front, are\nhelping scour out any fog at least for the next few hours. The LLJ\nmay lead to some brief LLWS with 20- 30 knot winds associated with\nfront axis. As the front moves through Vermont over the next few\nhours, expectations are that mixing and prevailing flow aloft should\ntrend fog chances down with general improving terminal conditions\ntowards VFR. Have used TEMPO groups at MPV/EFK to denote when fog\nshould mix out with conditions improving towards VFR. RUT will\nlikely see VCFG through 08Z, though confidence in the prevailing fog\nis low. As sites rebound to VFR by 09-10Z, some decoupling towards\nsunrise may lead to brief additional fog at SLK, though confidence\nis low with a only a TEMPO used. Beyond 12Z, all terminals are\nexpected to return to VFR with calmer and quiet conditions. Light\nnorth winds 10 knots or less are expected through the daylight\nhours. Winds will trend calm after sunset tonight with fog expected\nat the climo favored terminals beyond 04Z.\n\nOutlook...\n\nSunday: VFR. NO SIG WX.\nSunday Night: Mainly VFR, with areas MVFR possible. Chance SHRA.\nMonday: Mainly VFR, with local MVFR possible. Chance SHRA.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Haynes\nDISCUSSION...Haynes/Danzig\nAVIATION...Danzig\n"
+  "raw": "\n000\nFXUS61 KBTV 031037\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n637 AM EDT Sat Oct 3 2026\n\n.WHAT HAS CHANGED...\nAs of 222 AM EDT Saturday...\n\nNo significant changes made.\n\n&&\n\n.KEY MESSAGES...\nAs of 222 AM EDT Saturday...\n\n1. Generally cool weather is expected over the next several \ndays. Sunday will be briefly warmer, but a front will cross on \nMonday bringing gusty winds, showers, and a return to the cooler \nweather.\n\n2. Cold air mid week will moderate by the late week with a \npattern change for the weekend.\n\n&&\n\n.DISCUSSION...\nAs of 222 AM EDT Saturday...\n\nKEY MESSAGE 1: A broad 1028mb surface high will be positioned to our \nwest over the Great Lakes region today. This will keep northerly \nflow across the region. Fortunately, the cool air coming in will be \nmore of a glancing blow with zonal flow aloft. Still, it'll feel \nplenty cool with highs lingering mainly in the 50s, except for a few \n60s across south-central Vermont. Mountain summits will likely be in \nthe upper 30s to mid 40s this afternoon. Abundant dry air will \npromote clear skies. We should radiate quite efficiently tonight \nwith these conditions, and that will bring overnight lows in the 30-\n40 F range.\n\nHigh pressure will start moving east Sunday, and south to southwest \nwinds return. A more moderate day in the 60s is expected for Sunday, \nwith a warmer night around 40-50 F. These warmer conditions will \ncome with some wind, though as pressure gradients tighten against \ndeparting high pressure and the next approaching system. Anticipate \n10-15 mph winds, and up to 20 mph in the Champlain Valley. The \nattendant frontal boundary will arrive pre-dawn through the early \nafternoon. The moisture is not great, but the dynamics of a strong \nupper jet and modest frontal support could produce a broken narrow \nline of rain. Larger synoptic scale motion will yield stronger winds \nbehind this front. Combined with the strength of cold air behind it, \nthe 50s forecast on Monday and 25-35 mph gusts across the region \nwill feel nippy. Advective cold will result in mid 20s to upper 30s. \nThe winds may still preclude frost formation in the Champlain \nValley, but plenty cool. Moisture quickly departs behind the frontal \nboundary, but if there's anything lingering, a few flakes or some \nriming is feasible for mountain terrain.\n\nKEY MESSAGE 2: Strong northwest flow will continue through Tuesday with \ntemperatures feeling solidly like fall, before our air mass \nmoderates towards the weekend. Highs Tuesday will struggle to reach \n50 in the higher terrain with low to mid 50s elsewhere with breezy \nnorthwest winds as our flow pattern remains fairly confluent. Skies \nwill remain clear into Tuesday night with one of the coldest nights \nof the season expected. With a stout dry 700-500mb layer, strong \nradiational cooling will take place with many places falling into \nthe low to mid 30s. Some patchy frost will be possible in the \nsheltered locations, but with temperatures falling under clear \nskies, almost the entire region could experience a freeze, with the \nChamplain valley remaining on alert at this time. This will likely \nbe a curtain call for gardeners sensitive plants in the broad \nvalleys. \n\nTemperatures will slowly moderate back up towards the weekend with \nthe approach of a broad long wave trough associated with a deepening \nupper low over the Hudson Bay. Highs will warm to the upper 50s to \nmid 60s, with overnight lows in the upper 30s to mid 40s. A large \nscale cyclonic gyre will shift south from the interior of Canada \nleading to several shortwave passages beginning late next week into \nthe weekend. Daily diurnally enhanced showers will be possible \nstarting Thursday with increasing cloud cover into the weekend. In \naddition to increasing shower chances, each shortwave passage will \nbring with it some breezy to gusty winds to northern New York, and \nlikely some channeled flow in the Champlain Valley each day.\n\n&&\n\n.AVIATION /12Z SATURDAY THROUGH WEDNESDAY/...\nThrough 12Z Sunday...Beyond the first 2 hours, VFR conditions are\nexpected to continue at least until 04Z tonight for all\nterminals. Any lingering fog this morning will trend towards \nVFR between 12-14Z. Some mountain wave clouds may keep MVFR cigs\nbetween 2500-3500ft agl for a few hours through 14Z for \nEFK/MPV, though cigs should improve towards VFR thereafter. \nSkies will turn SKC by late this morning, continuing through \nsunset. Light and variable north winds are expected for all \nterminals, with a more prevailing 10 knot north wind for BTV \nunder some channeled valley flow. Winds trend calm overnight \ntonight. Climo favored valley fog is expected to develop \novernight tonight, with best chances at SLK/MPV. Some questions \nregarding the onset remain with some boundary layer flow between\n00-06Z, though confidence in fog beyond 08Z through at least \n12Z tomorrow is moderate to high for SLK/MPV. Winds will trend \nsoutherly by 12Z tomorrow.\n\nOutlook...\n\nSunday: VFR. NO SIG WX.\nSunday Night: Mainly VFR, with areas MVFR possible. Chance SHRA.\nMonday: Mainly VFR, with local MVFR possible. Chance SHRA.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. NO SIG WX.\nWednesday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Haynes\nDISCUSSION...Haynes/Danzig\nAVIATION...Danzig\n"
  },
  "lake_forecast": {
   "issued": "2026-10-03T06:21:00+00:00",
@@ -826,17 +826,17 @@
  },
  "lake_gage": {
   "water_temp_f": 62,
-  "water_temp_at": "2026-10-03T06:00:00.000-04:00",
-  "level_ft": 93.93,
-  "level_at": "2026-10-03T06:00:00.000-04:00",
+  "water_temp_at": "2026-10-03T07:00:00.000-04:00",
+  "level_ft": 93.94,
+  "level_at": "2026-10-03T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "PM2.5",
-  "observed": "10/03/26 6:00",
+  "observed": "10/03/26 7:00",
   "discussion": null
  },
  "sun": {
@@ -889,7 +889,7 @@
    {
     "date": "2026-10-05",
     "high_f": {
-     "GFS": 58,
+     "GFS": 56,
      "Euro": 59,
      "ICON": 58
     },
@@ -899,11 +899,11 @@
      "ICON": 37
     },
     "precip_in": {
-     "GFS": 0.09,
+     "GFS": 0.1,
      "Euro": 0.2,
      "ICON": 0.05
     },
-    "high_spread_f": 1
+    "high_spread_f": 3
    }
   ]
  }
