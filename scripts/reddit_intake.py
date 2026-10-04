@@ -246,8 +246,10 @@ def parse_listing(data, sub):
         url = post_url("https://www.reddit.com" + (row.get("permalink") or ""))
         if not pid or not url:
             continue
-        if (row.get("removed_by_category") or row.get("author") == "[deleted]"
-                or row.get("selftext") in ("[removed]", "[deleted]")):
+        # Removed by mods/admins, or deleted by its author. An author who
+        # deleted their ACCOUNT ("[deleted]" author, post still up) doesn't count.
+        if (row.get("removed_by_category") or row.get("selftext") in ("[removed]", "[deleted]")
+                or row.get("title") in ("[removed]", "[deleted]", "[deleted by user]")):
             removed.add(pid)
             continue
         title = clean_space(row.get("title"))
@@ -265,6 +267,7 @@ def parse_listing(data, sub):
         post["comments"] = row.get("num_comments") if isinstance(row.get("num_comments"), int) else None
         post["flair"] = clean_space(row.get("link_flair_text")) or None
         post["nsfw"] = bool(row.get("over_18"))
+        post["stickied"] = bool(row.get("stickied"))  # pinned out of date order; never stored
         posts.append(post)
     return posts, removed
 
@@ -462,7 +465,8 @@ def merge(store, removed, results, now):
                 # Reddit's own listing is the authority on what still exists:
                 # a stored post inside the span it just returned, but missing
                 # from it, was removed or deleted, and leaves on this refresh.
-                times = [p["created"] for p in result["posts"] if p["created"]]
+                # A stickied post can be months old, so it never sets the span.
+                times = [p["created"] for p in result["posts"] if p["created"] and not p.get("stickied")]
                 if len(times) >= 5:
                     oldest = min(times)
                     for pid, held in list(store.items()):
@@ -496,8 +500,11 @@ def prune(store, removed, runs, now):
     return [run for run in runs if parse_iso(run["ts"]) >= run_cutoff]
 
 
-def intake_state(store, receipt, now):
-    newest = max((p["first_seen"] for p in store.values() if p.get("first_seen")), default=None)
+def intake_state(store, receipt, now, last_delivery=None):
+    """last_delivery: the previous run's newest_first_seen. Carried forward so
+    removing (or pruning) the newest post can't make the intake look silent."""
+    newest = max(filter(None, [last_delivery] + [p.get("first_seen") for p in store.values()]),
+                 default=None)
     live = sorted({route for route, by_sub in receipt.items()
                    for entry in by_sub.values() if entry["status"] == "ok"})
     paused = newest is None or now - newest > timedelta(hours=PAUSE_AFTER_HOURS)
@@ -512,7 +519,7 @@ def intake_state(store, receipt, now):
             "routes_live": live, "reason": reason}
 
 
-def serialize(store, removed, runs, receipt, subs, now):
+def serialize(store, removed, runs, receipt, subs, now, last_delivery=None):
     def out(held):
         row = {key: held.get(key) for key in ("id", "sub", "title", "url", "created_exact", "kind",
                                                "out", "score", "comments", "flair", "nsfw")}
@@ -525,7 +532,7 @@ def serialize(store, removed, runs, receipt, subs, now):
 
     posts = sorted(store.values(), key=lambda p: p.get("created") or p["first_seen"], reverse=True)
     return {"v": 1, "generated": iso(now), "subs": list(subs), "window_days": WINDOW_DAYS,
-            "state": intake_state(store, receipt, now), "routes": receipt, "runs": runs,
+            "state": intake_state(store, receipt, now, last_delivery), "routes": receipt, "runs": runs,
             "removed": {pid: iso(ts) for pid, ts in sorted(removed.items())},
             "posts": [out(p) for p in posts]}
 
@@ -534,10 +541,11 @@ def refresh(previous, fetch=http_fetch, env=None, subs=SUBS, routes=ROUTES, now=
     """previous payload (or {}) → new payload. Pure apart from fetch()."""
     now = now or utcnow()
     store, removed, runs = load_store(previous or {})
+    last_delivery = parse_iso(((previous or {}).get("state") or {}).get("newest_first_seen"))
     receipt = merge(store, removed, collect(fetch, env, subs, routes, sleep), now)
     runs.append({"ts": iso(now), "routes": receipt})
     runs = prune(store, removed, runs, now)
-    return serialize(store, removed, runs, receipt, subs, now)
+    return serialize(store, removed, runs, receipt, subs, now, last_delivery)
 
 
 def summary(payload):

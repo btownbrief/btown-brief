@@ -76,9 +76,14 @@ class PulseBridgeTests(unittest.TestCase):
             {"t": "Late night food?", "d": NOW_TS - 3600,
              "u": "https://www.reddit.com/r/burlington/comments/ddd444/late_night_food/"}],
             "wcax": [{"t": "x", "u": "https://www.wcax.com/comments/rem999/", "d": NOW_TS}]}
-        rp.drop_removed(per_source, SOURCES, set(intake["removed"]))
+        self.assertEqual(rp.drop_removed(per_source, SOURCES, set(intake["removed"])), 1)
         self.assertEqual([i["t"] for i in per_source["r-burlington"]], ["Late night food?"])
         self.assertEqual(len(per_source["wcax"]), 1)  # only subreddit lists are touched
+        # incoming stream items use "url": a re-offered removed thread is filtered too
+        fresh = {"r-burlington": [{"title": "x", "when": NOW,
+                                   "url": "https://www.reddit.com/r/burlington/comments/rem999/x/"}]}
+        self.assertEqual(rp.drop_removed(fresh, SOURCES, {"rem999"}, key="url"), 1)
+        self.assertEqual(fresh["r-burlington"], [])
 
     def test_paused_flag(self):
         fresh = {"science": [{"u": "https://www.reddit.com/r/science/comments/s1/x/", "d": NOW_TS - 3600}]}

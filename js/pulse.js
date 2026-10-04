@@ -714,7 +714,7 @@
     var after = when && !isNaN(when.getTime())
       ? ' after ' + when.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
     return '<div class="catchline"><span><strong>Reddit is paused.</strong> New posts stopped ' +
-      'reaching us' + after + '. These are the last threads we saw.</span></div>';
+      'reaching us' + esc(after) + '. These are the last threads we saw.</span></div>';
   }
 
   function renderBody() {

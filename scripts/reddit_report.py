@@ -57,10 +57,11 @@ def route_runs(runs, route, sub):
     return dict(statuses), last_error
 
 
-def median_lag(posts, route, backfill_until):
+def median_lag(posts, route, backfill_until, since):
     """Minutes this route trails whichever route saw each post first, over
-    posts two or more routes have seen. Posts from the store's very first
-    run are skipped: every route "saw" those at the same moment."""
+    posts first seen inside the report window that two or more routes have
+    seen. Posts from the store's very first run are skipped: every route
+    "saw" those at the same moment."""
     lags = []
     for post in posts:
         seen = {r: parse_iso(ts) for r, ts in (post.get("seen") or {}).items()}
@@ -68,7 +69,7 @@ def median_lag(posts, route, backfill_until):
         if route not in seen or len(seen) < 2:
             continue
         first = min(seen.values())
-        if backfill_until and first <= backfill_until:
+        if first < since or (backfill_until and first <= backfill_until):
             continue
         lags.append((seen[route] - first).total_seconds() / 60)
     return round(statistics.median(lags)) if lags else None
@@ -101,7 +102,7 @@ def build_report(intake, now=None, hours=HOURS):
                 "last_new": iso(max(seen)) if seen else None,
                 "found_of_made_24h": sum(1 for p in made if route in (p.get("routes") or [])),
                 "only_route": sum(1 for p in made if (p.get("routes") or []) == [route]),
-                "median_lag_minutes": median_lag(sub_posts, route, backfill_until),
+                "median_lag_minutes": median_lag(sub_posts, route, backfill_until, since),
                 "runs": statuses,
                 "last_error": last_error,
             }

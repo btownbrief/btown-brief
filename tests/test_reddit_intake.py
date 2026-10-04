@@ -89,6 +89,18 @@ class ParserTests(OfflineTestCase):
         self.assertIsNone(by_id["ccc333"]["out"])  # reddit-hosted image
         self.assertFalse(by_id["ddd444"]["nsfw"])
 
+    def test_deleted_account_is_not_a_deleted_post(self):
+        listing = {"data": {"children": [
+            {"data": {"id": "acc1", "title": "Still up", "author": "[deleted]", "selftext": "still visible",
+                      "permalink": "/r/burlington/comments/acc1/still_up/", "created_utc": 1791139394,
+                      "is_self": True}},
+            {"data": {"id": "gone1", "title": "[deleted by user]", "author": "[deleted]", "selftext": "",
+                      "permalink": "/r/burlington/comments/gone1/x/", "created_utc": 1791139394,
+                      "is_self": True}}]}}
+        posts, removed = ri.parse_listing(listing, "r/burlington")
+        self.assertEqual([p["id"] for p in posts], ["acc1"])
+        self.assertEqual(removed, {"gone1"})
+
     def test_url_helpers(self):
         self.assertEqual(ri.post_url("https://old.reddit.com/r/burlington/comments/AbC12/slug/?utm_source=x"),
                          "https://www.reddit.com/r/burlington/comments/abc12/slug/")
@@ -150,6 +162,25 @@ class RefreshTests(OfflineTestCase):
         self.assertNotIn("fff666", {p["id"] for p in payload["posts"]})
         self.assertIn("fff666", payload["removed"])
 
+    def test_old_stickied_post_does_not_widen_the_removal_span(self):
+        # 105 live posts stored; the listing returns a 30-day-old sticky plus
+        # the newest 99. The 6 older live posts fell off the page, not off Reddit.
+        store, removed = {}, {}
+        def make(n, minutes):
+            return ri.blank_post(f"p{n}", "r/burlington", f"P{n}",
+                                 f"https://www.reddit.com/r/burlington/comments/p{n}/x/",
+                                 NOW - timedelta(minutes=minutes), True)
+        for n in range(105):
+            ri.upsert(store, make(n, n), "oauth", NOW - timedelta(hours=1))
+        sticky = ri.blank_post("st1", "r/burlington", "Rules", "https://www.reddit.com/r/burlington/comments/st1/rules/",
+                               NOW - timedelta(days=30), True)
+        sticky["stickied"] = True
+        listing = [sticky] + [make(n, n) for n in range(99)]
+        ri.merge(store, removed, {"oauth": {"r/burlington": {"status": "ok", "posts": listing,
+                                                             "removed": set(), "error": None}}}, NOW)
+        self.assertEqual(removed, {})
+        self.assertTrue(all(f"p{n}" in store for n in range(105)))
+
     def test_oauth_skipped_without_secrets(self):
         fetch = Recorder()
         payload = self.refresh(env={}, fetch=fetch)
@@ -197,6 +228,14 @@ class RefreshTests(OfflineTestCase):
         # stale repeats from a route don't count as "new"
         repeat = self.refresh(previous=first, env={}, now=later)
         self.assertTrue(repeat["state"]["paused"])
+
+    def test_removing_the_newest_post_does_not_fake_a_pause(self):
+        first = self.refresh(env={})
+        # every stored post disappears (removed), yet a route delivered an hour ago
+        emptied = dict(first, posts=[])
+        later = self.refresh(previous=emptied, env={}, fetch=failing_fetch, now=NOW + timedelta(hours=1))
+        self.assertFalse(later["state"]["paused"])
+        self.assertEqual(later["state"]["newest_first_seen"], first["generated"])
 
     def test_empty_store_is_paused(self):
         payload = self.refresh(env={}, fetch=failing_fetch)

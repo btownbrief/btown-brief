@@ -110,7 +110,9 @@ class ReportTests(unittest.TestCase):
         posts = [post("p1", "r/burlington", 10, {"rss": 9, "inoreader": 4}),   # Inoreader 5h behind
                  post("p2", "r/burlington", 8, {"rss": 7, "inoreader": 2}),
                  post("p3", "r/burlington", 6, {"rss": 5}),
-                 post("p4", "r/burlington", 30, {"rss": 30, "inoreader": 30})]  # backfill: no lag
+                 post("p4", "r/burlington", 30, {"rss": 30, "inoreader": 30}),  # backfill: no lag
+                 post("p5", "r/burlington", 100, {"rss": 28, "inoreader": 28}),   # outside the window:
+                 post("p6", "r/burlington", 100, {"rss": 29, "inoreader": 29})]   # must not drag the median
         report = rr.build_report(intake(posts, [backfill_run] + HEALTHY_RUNS), now=NOW)
         stats = report["subs"]["r/burlington"]
         self.assertEqual(stats["overlap"], {"inoreader+rss": 2, "rss": 1})

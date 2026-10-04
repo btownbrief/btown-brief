@@ -1039,17 +1039,23 @@ def intake_items(intake, sources, prev_by_source):
     return fresh
 
 
-def drop_removed(per_source, sources, removed_ids):
+def drop_removed(per_source, sources, removed_ids, key="u"):
     """Threads Reddit's own listing showed as removed or deleted leave every
-    subreddit list, even when Inoreader still carries a copy."""
+    subreddit list, even when Inoreader still carries a copy. Applied to the
+    stored items (key "u") and the incoming ones (key "url") BEFORE merging,
+    so a re-offered removed thread never counts as new. Returns how many
+    items left, so a removal-only run still publishes."""
+    dropped = 0
     if not removed_ids:
-        return
+        return dropped
     for source in sources:
         if "reddit.com" not in (source.get("site") or ""):
             continue
         items = per_source.get(source["id"], [])
         per_source[source["id"]] = [item for item in items
-                                    if reddit_post_id(item.get("u")) not in removed_ids]
+                                    if reddit_post_id(item.get(key)) not in removed_ids]
+        dropped += len(items) - len(per_source[source["id"]])
+    return dropped
 
 
 def reddit_state(sources, per_source, now_ts):
@@ -1259,6 +1265,8 @@ def run(args):
             removed_ids = set((intake.get("removed") or {}).keys())
             print(f"reddit intake: {sum(len(v) for v in fed.values())} posts for "
                   f"{len(fed)} subreddit sources, {len(removed_ids)} removed ids")
+    dropped_removed = drop_removed(prev_by_source, sources, removed_ids)
+    drop_removed(fresh_by_source, sources, removed_ids, key="url")
 
     now_ts = int(utcnow().timestamp())
     per_source, added_total = {}, 0
@@ -1283,11 +1291,15 @@ def run(args):
         per_source[source["id"]] = merged
         added_total += added
 
-    drop_removed(per_source, sources, removed_ids)
     attach_discussions(sources, per_source)
+    reddit = reddit_state(sources, per_source, now_ts)
+    # A Reddit pause flipping on or off, or a removed thread leaving, is a
+    # change worth publishing even on a run with no new headlines.
+    reddit_changed = bool(reddit) and (previous.get("reddit") or {}).get("paused") != reddit["paused"]
 
     prev_total = len(previous.get("items", []))
-    if not args.seed and prev_total and added_total == 0:
+    if not args.seed and prev_total and added_total == 0 and not dropped_removed \
+            and not reddit_changed:
         # Nothing new anywhere: don't write at all. The workflow then skips
         # its push, the branch keeps its honest `generated` stamp, and the
         # page's "updated Xm ago" reflects when content actually changed.
@@ -1295,7 +1307,6 @@ def run(args):
         return
 
     payload = build_payload(sources, per_source, utcnow())
-    reddit = reddit_state(sources, per_source, now_ts)
     if reddit:
         payload["reddit"] = reddit   # pages that predate the key just ignore it
     total = len(payload["items"])
