@@ -431,15 +431,6 @@
  },
  "civicclerk": {
   "meetings": {
-   "10231": {
-    "name": "Ward 6 NPA Meeting",
-    "start": "2026-10-01T18:30:00+00:00",
-    "hasAgenda": true,
-    "files": [
-     "Ward 6 NPA Agenda 10/1/2026",
-     "Ward 6 NPA Agenda Packet 10/1/2026"
-    ]
-   },
    "10230": {
     "name": "City Council - Ordinance Committee Meeting",
     "start": "2026-10-02T14:00:00+00:00",
@@ -560,6 +551,15 @@
     "hasAgenda": true,
     "files": [
      "Public Hearing Notice + Packet"
+    ]
+   },
+   "10222": {
+    "name": "Airport Commission",
+    "start": "2026-10-07T16:00:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "10/7 Airport Commission",
+     "10/7 Airport Commission"
     ]
    }
   }
@@ -871,11 +871,11 @@
       "summary": "The strike vote does not by itself initiate a work stoppage, although it brings workers to the brink of one."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-02/roughly-two-thirds-vermonters-support-statewide-ban-large-data-centers-poll",
-      "title": "Roughly two-thirds of Vermonters support a statewide ban on large data centers, poll finds",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-02/roughly-two-thirds-vermonters-support-statewide-ban-large-data-centers-poll",
+      "id": "https://www.vermontpublic.org/local-news/2026-10-02/poll-shows-majority-vermonters-disapprove-ice-enforcement-actions",
+      "title": "Poll shows majority of Vermonters disapprove of ICE enforcement actions",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-02/poll-shows-majority-vermonters-disapprove-ice-enforcement-actions",
       "ts": "2026-10-02T09:00:00+00:00",
-      "summary": "Proponents say data centers could provide a path for industry to pay for needed upgrades to the local electric grid. Opponents say they suck up resources and send money out of state."
+      "summary": "According to a recent Vermont Public poll, 62% of Vermonters disapprove of how ICE is enforcing immigration laws, with 54% strongly disapproving of the agency’s conduct."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-10-02/stockbridge-musician-bow-thayers-new-song-shows-humans-as-a-reflection-of-nature",
@@ -885,11 +885,11 @@
       "summary": "The Vermont musician's new tune, \"Fireflies,\" is the Friday Song."
      },
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-02/poll-shows-majority-vermonters-disapprove-ice-enforcement-actions",
-      "title": "Poll shows majority of Vermonters disapprove of ICE enforcement actions",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-02/poll-shows-majority-vermonters-disapprove-ice-enforcement-actions",
+      "id": "https://www.vermontpublic.org/local-news/2026-10-02/roughly-two-thirds-vermonters-support-statewide-ban-large-data-centers-poll",
+      "title": "Roughly two-thirds of Vermonters support a statewide ban on large data centers, poll finds",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-02/roughly-two-thirds-vermonters-support-statewide-ban-large-data-centers-poll",
       "ts": "2026-10-02T09:00:00+00:00",
-      "summary": "According to a recent Vermont Public poll, 62% of Vermonters disapprove of how ICE is enforcing immigration laws, with 54% strongly disapproving of the agency’s conduct."
+      "summary": "Proponents say data centers could provide a path for industry to pay for needed upgrades to the local electric grid. Opponents say they suck up resources and send money out of state."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-10-01/vermonts-catholic-diocese-wants-to-abandon-bankruptcy-process",
@@ -944,6 +944,34 @@
    },
    "wcax": {
     "items": [
+     {
+      "id": "VOUR66WA35CRPEGJMURWOWRYXY",
+      "title": "Jay Oktoberfest raises funds for community rec center",
+      "link": "https://www.wcax.com/2026/10/04/jay-oktoberfest-raises-funds-community-rec-center/",
+      "ts": "2026-10-04T00:59:05+00:00",
+      "summary": "Annual festival lines Main Street with food, vendors and fall activities"
+     },
+     {
+      "id": "EQYBSXNENVCCTOFVT5VVROZSNI",
+      "title": "Vermont’s open studio weekend returns for fall edition",
+      "link": "https://www.wcax.com/2026/10/04/vermonts-open-studio-weekend-returns-fall-edition/",
+      "ts": "2026-10-04T00:57:22+00:00",
+      "summary": "Event aims to showcase local artists during tourist season"
+     },
+     {
+      "id": "GX7ASWSBZJHD5MZY6MQGMQCTM4",
+      "title": "Pico Ski Club hosts annual swap and sale ahead of winter",
+      "link": "https://www.wcax.com/2026/10/04/pico-ski-club-hosts-annual-swap-sale-ahead-winter/",
+      "ts": "2026-10-04T00:55:46+00:00",
+      "summary": "Club members say the three-day sale helps drive excitement for winter."
+     },
+     {
+      "id": "PZW43BK65ZAEVN3FT74HP4SZGQ",
+      "title": "Derby Veterans Park adds monuments to honor unrecognized veterans",
+      "link": "https://www.wcax.com/2026/10/04/derby-veterans-park-adds-monuments-honor-unrecognized-veterans/",
+      "ts": "2026-10-04T00:54:12+00:00",
+      "summary": "Community rededicates original Civil War monument, unveils five new ones"
+     },
      {
       "id": "AAVDZ2GMCVDUHOIKHW5UELJRRM",
       "title": "Man arrested after early morning truck fire in Berlin",
@@ -1265,39 +1293,116 @@
       "link": "https://www.wcax.com/2026/10/01/states-cities-sue-over-trumps-epa-eliminating-rule-that-limits-emissions-power-plants/",
       "ts": "2026-10-01T19:04:32+00:00",
       "summary": "Vermont and New York are among the states and cities suing the Trump administration Thursday for repealing rules that limit planet-warming greenhouse gas emissions."
-     },
-     {
-      "id": "LSRLU2U7RBHU5B6L3VBZY3WUCY",
-      "title": "New Medicaid eligibility rules take effect",
-      "link": "https://www.wcax.com/2026/10/01/new-medicaid-eligibility-rules-take-effect/",
-      "ts": "2026-10-01T18:10:19+00:00",
-      "summary": "An estimated 235 Vermonters lose medicaid coverage Thursday because of restrictions tied to their immigration status."
-     },
-     {
-      "id": "DRJJZTFWTNFJ5LWGYMV7O3DOPE",
-      "title": "Police execute search warrant in Waterbury",
-      "link": "https://www.wcax.com/2026/10/01/police-execute-search-warrant-waterbury/",
-      "ts": "2026-10-01T18:01:52+00:00",
-      "summary": "Vermont State Police executed a search warrant at a home on Union Street Thursday morning."
-     },
-     {
-      "id": "XMUNPT7WDVFSBKQTY3MD2KXYVM",
-      "title": "Bennington woman injured after being struck by pickup in crosswalk",
-      "link": "https://www.wcax.com/2026/10/01/bennington-woman-injured-after-being-struck-by-pickup-crosswalk/",
-      "ts": "2026-10-01T17:51:49+00:00",
-      "summary": "A Bennington woman was rushed to the hospital after being struck by a pickup truck in a crosswalk on Wednesday."
-     },
-     {
-      "id": "PWX2G65O3BHB3NDMV6IXYS4VV4",
-      "title": "Facing tight polls, Gov. Scott admits Democratic enthusiasm creating headwinds",
-      "link": "https://www.wcax.com/2026/09/30/facing-tight-polls-gov-scott-admits-democratic-enthusiasm-creating-headwinds/",
-      "ts": "2026-10-01T15:20:10+00:00",
-      "summary": "Scott argues that Democratic majorities have held back his ideas for growing the economy and improving housing affordability."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "74009187",
+      "title": "U.S. Coast Guard locates debris from missing plane off Massachusetts, search for passengers ongoing",
+      "link": "https://www.mynbc5.com/article/medical-plane-debris-search-missing-passengers/74009187",
+      "ts": "2026-10-04T01:36:00+00:00",
+      "summary": "The Coast Guard located debris that was confirmed to be associated with the missing medical transport aircraft off Nantucket, the U.S. Coast Guard confirmed. The search is still ongoing for the missing passengers on board."
+     },
+     {
+      "id": "73984392",
+      "title": "Friday Night Fever Week 5: Scores and Highlights for Vermont & New York",
+      "link": "https://www.mynbc5.com/article/friday-night-fever-week-5-schedule-for-vermont-new-york/73984392",
+      "ts": "2026-10-04T01:28:00+00:00",
+      "summary": "See some of the best plays from week 5 of VPA and Section VII football"
+     },
+     {
+      "id": "74009152",
+      "title": "Randolph Union High School wins 2026 VPA bass fishing state championships",
+      "link": "https://www.mynbc5.com/article/randolph-union-high-school-wins-2026-vpa-bass-fishing-state-championships/74009152",
+      "ts": "2026-10-04T01:20:00+00:00",
+      "summary": "Galloping Ghosts reel in 5.59 lb Small Mouth Lunker, leading to 2nd VPA state title in bass fishing"
+     },
+     {
+      "id": "74009067",
+      "title": "Vermont women's swimming and diving celebrates 50th anniversary",
+      "link": "https://www.mynbc5.com/article/vermont-womens-swimming-and-diving-celebrates-50th-anniversary/74009067",
+      "ts": "2026-10-04T01:07:00+00:00",
+      "summary": "Several Catamount alumni gathered at Forbush Natatorium to celebrate season-opening win against Northeastern"
+     },
+     {
+      "id": "74009114",
+      "title": "'Got to help each other': Elderly Nebraska couple nearly drowns in basement flood",
+      "link": "https://www.mynbc5.com/article/elderly-couple-near-drowning-flood-nebraska/74009114",
+      "ts": "2026-10-04T00:57:00+00:00",
+      "summary": "An elderly couple says floodwaters nearly drowned them in their own basement. The 80-year-olds say they survived rushing waters by refusing to let go of each other."
+     },
+     {
+      "id": "74008930",
+      "title": "Vermont women's hockey splits back-to-back games against No. 7 Minnesota-Duluth",
+      "link": "https://www.mynbc5.com/article/vermont-womens-hockey-splits-back-to-back-games-against-no-7-minnesota-duluth/74008930",
+      "ts": "2026-10-04T00:35:00+00:00",
+      "summary": "Catamounts blank the Bulldogs 3-0 on Friday, lose hard-fought overtime battle 3-2 on Saturday"
+     },
+     {
+      "id": "74008777",
+      "title": "Cornell president calls alleged gang rape 'deeply disturbing,' pledges greater transparency",
+      "link": "https://www.mynbc5.com/article/cornell-president-gang-rape-transparency/74008777",
+      "ts": "2026-10-03T23:54:00+00:00",
+      "summary": "Cornell University's president has called the alleged gang rape of a student at a fraternity house in 2024 \"deeply disturbing.\""
+     },
+     {
+      "id": "74008059",
+      "title": "Trump posts Sen. Tom Cotton’s cellphone number amid clash over Daylight Saving Time",
+      "link": "https://www.mynbc5.com/article/trump-posts-tom-cotton-phone-number-daylight-saving-time/74008059",
+      "ts": "2026-10-03T22:57:00+00:00",
+      "summary": "Trump posted Sen. Tom Cotton’s number while urging him to back permanent daylight saving time, as the Arkansas senator said winter mornings would get too dark."
+     },
+     {
+      "id": "74007838",
+      "title": "Peak foliage draws crowds and boosts business in Stowe",
+      "link": "https://www.mynbc5.com/article/leaf-peepers-in-stowe/74007838",
+      "ts": "2026-10-03T22:40:00+00:00",
+      "summary": "Fall colors are on full display in Stowe, drawing visitors from across the country and around the world as foliage season reaches its peak."
+     },
+     {
+      "id": "74008684",
+      "title": "Bit milder Sunday with a gusty south breeze, more clouds",
+      "link": "https://www.mynbc5.com/article/bit-milder-sunday-with-a-gusty-south-breeze-more-clouds-10-3-26/74008684",
+      "ts": "2026-10-03T22:35:24+00:00",
+      "summary": "Cold front brings a few showers Monday, falling temperatures"
+     },
+     {
+      "id": "74002471",
+      "title": "Driver cited after vehicle fire closes Berlin highway",
+      "link": "https://www.mynbc5.com/article/berlin-state-highway-closed-vehicle-fire/74002471",
+      "ts": "2026-10-03T22:34:00+00:00",
+      "summary": "Berlin State Highway was closed for hours Saturday morning after a car fire. The driver was arrested for suspicion of driving while intoxicated."
+     },
+     {
+      "id": "74008247",
+      "title": "Pups Encouraged at this Vermont Festival",
+      "link": "https://www.mynbc5.com/article/2026-fall-dog-party/74008247",
+      "ts": "2026-10-03T22:31:00+00:00",
+      "summary": "Pups and plenty of foliage: This fall festival in Vermont's Northeast Kingdom has a little bit of something for everyone."
+     },
+     {
+      "id": "74008440",
+      "title": "Mormon leader decries explosion in sports betting, prediction markets",
+      "link": "https://www.mynbc5.com/article/utah-mormon-leader-sports-betting-prediction-markets/74008440",
+      "ts": "2026-10-03T22:28:00+00:00",
+      "summary": "A leader of The Church of Jesus Christ of Latter-day Saints says an explosion in online prediction markets and sports betting is fostering greed among young people"
+     },
+     {
+      "id": "74005874",
+      "title": "Medical transport plane with 6 on board missing off Massachusetts coast",
+      "link": "https://www.mynbc5.com/article/coast-guard-searches-for-missing-plane-off-nantucket/74005874",
+      "ts": "2026-10-03T21:56:00+00:00",
+      "summary": "The U.S. Coast Guard launched a search for a plane with 6 on board that lost contact during a trip from Bermuda to Boston."
+     },
+     {
+      "id": "74008150",
+      "title": "Trump announces $90 payments for seniors on Medicare ahead of midterm elections for premium costs",
+      "link": "https://www.mynbc5.com/article/trump-90-medicare-payments-seniors/74008150",
+      "ts": "2026-10-03T21:48:00+00:00",
+      "summary": "President Donald Trump is promising more payments to voters just ahead of the Nov. 3 midterm elections"
+     },
      {
       "id": "74007896",
       "title": "Zach Bryan wears pro-Palestine shirt onstage at Gillette Stadium",
@@ -1311,13 +1416,6 @@
       "link": "https://www.mynbc5.com/article/plattsburgh-fatal-bike-crash-margaret-street/73989059",
       "ts": "2026-10-03T19:10:00+00:00",
       "summary": "The Plattsburgh City Police Department is investigating a fatal crash involving a vehicle and an electric bike at the intersection of Margaret Street and Cumberland Avenue."
-     },
-     {
-      "id": "74002471",
-      "title": "Crews work for hours Saturday to put out vehicle fire that closed portion of Berlin State Hwy.",
-      "link": "https://www.mynbc5.com/article/berlin-state-highway-closed-vehicle-fire/74002471",
-      "ts": "2026-10-03T19:08:00+00:00",
-      "summary": "Berlin State Highway was closed for hours Saturday morning after a car fire. The driver was arrested for suspicion of driving while intoxicated."
      },
      {
       "id": "74006873",
@@ -1334,109 +1432,11 @@
       "summary": "The NFL has suspended San Francisco 49ers owner Jed York for six games following his arrest earlier this year in a prostitution sting in Ohio."
      },
      {
-      "id": "74005874",
-      "title": "Medical transport plane with 6 on board missing off Massachusetts coast",
-      "link": "https://www.mynbc5.com/article/coast-guard-searches-for-missing-plane-off-nantucket/74005874",
-      "ts": "2026-10-03T16:52:00+00:00",
-      "summary": "The U.S. Coast Guard launched a search for a plane with 6 on board that lost contact during a trip from Bermuda to Boston."
-     },
-     {
       "id": "74005474",
       "title": "Tennessee's prisons chief resigning after failed execution of Christa Pike",
       "link": "https://www.mynbc5.com/article/tennessee-prisons-chief-resign-failed-execution-christa-pike/74005474",
       "ts": "2026-10-03T16:30:00+00:00",
       "summary": "The head of Tennessee’s prison system is resigning after the failed execution of Christa Pike, the governor announced Saturday."
-     },
-     {
-      "id": "74005278",
-      "title": "Doctors warn about risks energy drinks pose to kids. What families need to know",
-      "link": "https://www.mynbc5.com/article/doctors-warn-risks-energy-drinks-pose-kids-families-need-know/74005278",
-      "ts": "2026-10-03T16:15:00+00:00",
-      "summary": "Doctors across the country warn that energy drinks can seriously harm children. Here's what families need to know:"
-     },
-     {
-      "id": "74004424",
-      "title": "Famed Hawaii sea arch collapses, prompting warnings of unstable cliffs",
-      "link": "https://www.mynbc5.com/article/hawaii-sea-arch-collapses-nps-warning-unstable-cliffs/74004424",
-      "ts": "2026-10-03T14:26:00+00:00",
-      "summary": "A scenic cliff on the wave-swept coast of Hawaii's Big Island has collapsed, the National Park Service said."
-     },
-     {
-      "id": "74003557",
-      "title": "One month from Election Day, here are the Senate races to watch",
-      "link": "https://www.mynbc5.com/article/one-month-from-election-day-here-senate-races-watch/74003557",
-      "ts": "2026-10-03T13:42:00+00:00",
-      "summary": "The map of the most competitive races continues to evolve as Republicans shift spending priorities."
-     },
-     {
-      "id": "74003878",
-      "title": "FBI has commissioned a classified, internal 'Patel Report' about times when it 'fell short'",
-      "link": "https://www.mynbc5.com/article/fbi-commission-patel-report-agent-investigation-fell-short/74003878",
-      "ts": "2026-10-03T13:15:00+00:00",
-      "summary": "The FBI is issuing a classified report to its workforce examining what it says are chapters “where this institution fell short,” according to an internal message."
-     },
-     {
-      "id": "74002847",
-      "title": "Things to do: Oct. 3, 2026",
-      "link": "https://www.mynbc5.com/article/things-to-do-october-3-2026/74002847",
-      "ts": "2026-10-03T13:09:00+00:00",
-      "summary": "Looking for your weekend plans? NBC5's Andrew Grautski has you covered with \"Things to Do.\""
-     },
-     {
-      "id": "73929348",
-      "title": "Use heating oil in the winter? Expect your bill to be $900 more",
-      "link": "https://www.mynbc5.com/article/heating-oil-prices-surge-this-winter/73929348",
-      "ts": "2026-10-03T12:38:00+00:00",
-      "summary": "More than 4 million households that rely on heating oil could spend hundreds more this winter as global oil supplies stay limited."
-     },
-     {
-      "id": "74003451",
-      "title": "Trump touts G7 plan to release oil and diesel reserves to address high prices",
-      "link": "https://www.mynbc5.com/article/trump-g7-plan-release-oil-diesel-reserves-address-high-prices/74003451",
-      "ts": "2026-10-03T12:34:00+00:00",
-      "summary": "The G7 announced a plan to release 100 million barrels of oil and fuel products to combat high prices largely caused by the war with Iran."
-     },
-     {
-      "id": "74003565",
-      "title": "Cool and crisp, with full sunshine Saturday",
-      "link": "https://www.mynbc5.com/article/cool-and-crisp-with-full-sunshine-saturday-10-03-26/74003565",
-      "ts": "2026-10-03T12:13:00+00:00",
-      "summary": "Turning a bit milder with a few more clouds Sunday, showers return overnight into Monday"
-     },
-     {
-      "id": "74003342",
-      "title": "'Water was, like, up to my chin': Neighbors work together to escape rising floodwaters",
-      "link": "https://www.mynbc5.com/article/weather-neighbors-community-escape-floodwaters-omaha/74003342",
-      "ts": "2026-10-03T11:42:00+00:00",
-      "summary": "Neighbors and firefighters joined forces to navigate dangerous floodwaters, rescuing people and pets as water levels rose in Omaha."
-     },
-     {
-      "id": "74002552",
-      "title": "Axe-wielding FlyDubai co-pilot had been flagged over extremism concerns, sources say",
-      "link": "https://www.mynbc5.com/article/flydubai-co-pilot-axe-flagged-extremism-concerns-israel/74002552",
-      "ts": "2026-10-03T10:45:00+00:00",
-      "summary": "The FlyDubai co-pilot accused of attacking the captain with an axe had been barred from flying on his country’s airline because of concerns about extremist views, officials said Saturday."
-     },
-     {
-      "id": "74002519",
-      "title": "3 men plead guilty to killing 41 bobcats in NH, exporting them to Canada",
-      "link": "https://www.mynbc5.com/article/bobcat-poaching-guilty-pleas/74002519",
-      "ts": "2026-10-03T09:26:05+00:00",
-      "summary": "Three men pleaded guilty to killing more than 40 bobcats over four years in order to export them to Canada."
-     },
-     {
-      "id": "74001817",
-      "title": "Boquet Valley girls soccer dominates Willsboro, 4-0",
-      "link": "https://www.mynbc5.com/article/boquet-valley-girls-soccer-dominates-willsboro-4-0/74001817",
-      "ts": "2026-10-03T03:51:00+00:00",
-      "summary": "Boquet Valley girls soccer dominates Willsboro, 4-0"
-     },
-     {
-      "id": "73984392",
-      "title": "Friday Night Fever Week 5: Scores and Highlights for Vermont & New York",
-      "link": "https://www.mynbc5.com/article/friday-night-fever-week-5-schedule-for-vermont-new-york/73984392",
-      "ts": "2026-10-03T03:46:00+00:00",
-      "summary": "See when your team is playing"
      }
     ]
    },
@@ -1561,6 +1561,62 @@
  "reddit-burlington": {
   "posts": [
    {
+    "id": "1wwyxgl",
+    "title": "waterman green?",
+    "url": "https://www.reddit.com/r/burlington/comments/1wwyxgl/waterman_green/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-03T22:05:46+00:00"
+   },
+   {
+    "id": "1wwvzpl",
+    "title": "Best volunteering spots?",
+    "url": "https://www.reddit.com/r/burlington/comments/1wwvzpl/best_volunteering_spots/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-03T22:05:46+00:00"
+   },
+   {
+    "id": "1wwv338",
+    "title": "Finally tried IDA",
+    "url": "https://www.reddit.com/r/burlington/comments/1wwv338/finally_tried_ida/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-03T22:05:46+00:00"
+   },
+   {
+    "id": "1wwuifd",
+    "title": "Places to get a tattoo?",
+    "url": "https://www.reddit.com/r/burlington/comments/1wwuifd/places_to_get_a_tattoo/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-03T22:05:46+00:00"
+   },
+   {
+    "id": "1wwuapo",
+    "title": "summer subletting",
+    "url": "https://www.reddit.com/r/burlington/comments/1wwuapo/summer_subletting/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-03T22:05:46+00:00"
+   },
+   {
+    "id": "1wwu99b",
+    "title": "Iso 3 prong extention cord",
+    "url": "https://www.reddit.com/r/burlington/comments/1wwu99b/iso_3_prong_extention_cord/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-03T22:05:46+00:00"
+   },
+   {
+    "id": "1wwtitc",
+    "title": "National Review roasts Btv.",
+    "url": "https://www.reddit.com/r/burlington/comments/1wwtitc/national_review_roasts_btv/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-03T22:05:46+00:00"
+   },
+   {
     "id": "1wwjc3u",
     "title": "let’s talk about the toxicity of the local gay community here in BTV",
     "url": "https://www.reddit.com/r/burlington/comments/1wwjc3u/lets_talk_about_the_toxicity_of_the_local_gay/",
@@ -1663,62 +1719,6 @@
     "score": null,
     "comments": null,
     "created": "2026-10-03T13:05:37+00:00"
-   },
-   {
-    "id": "1ww1fvx",
-    "title": "This weekend Burlington has Tōth at Higher Ground, a free surf movie night at Hula, Party on the Bricks, Meet Me On Main with Toy Story 5, the Vintage Market's fifth anniversary and Sunday polo, and in the news Church Street wrote to the governor, Bowl & Roll opened and a bear in a Winooski park",
-    "url": "https://www.reddit.com/r/burlington/comments/1ww1fvx/this_weekend_burlington_has_t%C5%8Dth_at_higher_ground/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-03T13:05:37+00:00"
-   },
-   {
-    "id": "1wvwvuh",
-    "title": "2 UVM Medical Center unions vote to authorize strike",
-    "url": "https://www.reddit.com/r/burlington/comments/1wvwvuh/2_uvm_medical_center_unions_vote_to_authorize/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-02T16:05:19+00:00"
-   },
-   {
-    "id": "1wvwszd",
-    "title": "UVMMC support staff vote to authorize strike",
-    "url": "https://www.reddit.com/r/burlington/comments/1wvwszd/uvmmc_support_staff_vote_to_authorize_strike/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-02T16:05:19+00:00"
-   },
-   {
-    "id": "1wvw2fx",
-    "title": "Desperately looking for a roommate",
-    "url": "https://www.reddit.com/r/burlington/comments/1wvw2fx/desperately_looking_for_a_roommate/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-02T16:05:19+00:00"
-   },
-   {
-    "id": "1wvufly",
-    "title": "please help a local who doesn't live in Burlington anymore!",
-    "url": "https://www.reddit.com/r/burlington/comments/1wvufly/please_help_a_local_who_doesnt_live_in_burlington/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-02T16:05:19+00:00"
-   },
-   {
-    "id": "1wvt5ay",
-    "title": "Boring Post 🤺",
-    "url": "https://www.reddit.com/r/burlington/comments/1wvt5ay/boring_post/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-02T16:05:19+00:00"
-   },
-   {
-    "id": "1wvssm4",
-    "title": "Part-time apprentice seeking work in the trades",
-    "url": "https://www.reddit.com/r/burlington/comments/1wvssm4/parttime_apprentice_seeking_work_in_the_trades/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-02T16:05:19+00:00"
    }
   ]
  },
@@ -1781,20 +1781,20 @@
     "venue": "Alumni House and Silver Pavillion"
    },
    {
-    "id": "4e4c2c86db22",
-    "title": "Green Mountain Strongest 2026",
-    "link": "https://www.switchbackvt.com/beer-garden-events/green-mountain-strongest-2026",
-    "ts": "2026-09-02T18:50:06-04:00",
-    "start": "2026-10-03T09:00:00-04:00",
-    "venue": "Switchback Brewing Company"
-   },
-   {
     "id": "4998ea8c9b68",
     "title": "Trolley tours",
     "link": "https://www.helloburlingtonvt.com/event/trolley-tours/4244/",
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03T09:00:00-04:00",
     "venue": "Perkins Pier"
+   },
+   {
+    "id": "4e4c2c86db22",
+    "title": "Green Mountain Strongest 2026",
+    "link": "https://www.switchbackvt.com/beer-garden-events/green-mountain-strongest-2026",
+    "ts": "2026-09-02T18:50:06-04:00",
+    "start": "2026-10-03T09:00:00-04:00",
+    "venue": "Switchback Brewing Company"
    },
    {
     "id": "4f8105b50e0e",
@@ -1917,17 +1917,17 @@
     "venue": "ActiveVT"
    },
    {
-    "id": "f3c621f79eb6",
-    "title": "'Champ: America’s Lake Monster' Exhibit",
-    "link": "https://community.sevendaysvt.com/event/champ-americas-lake-monster-exhibit-44279688",
+    "id": "eb0d22c53098",
+    "title": "'Very Eric Carle' Exhibit",
+    "link": "https://community.sevendaysvt.com/event/very-eric-carle-exhibit-45471609",
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03T10:00:00-04:00",
     "venue": "ECHO, Leahy Center for Lake Champlain"
    },
    {
-    "id": "eb0d22c53098",
-    "title": "'Very Eric Carle' Exhibit",
-    "link": "https://community.sevendaysvt.com/event/very-eric-carle-exhibit-45471609",
+    "id": "f3c621f79eb6",
+    "title": "'Champ: America’s Lake Monster' Exhibit",
+    "link": "https://community.sevendaysvt.com/event/champ-americas-lake-monster-exhibit-44279688",
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03T10:00:00-04:00",
     "venue": "ECHO, Leahy Center for Lake Champlain"
@@ -2365,14 +2365,6 @@
     "venue": "Jericho Café & Tavern"
    },
    {
-    "id": "8696f88f338b",
-    "title": "Optimistic Personality Disorder",
-    "link": "https://community.sevendaysvt.com/event/optimistic-personality-disorder-45506598",
-    "ts": "2026-10-02T11:57:22-04:00",
-    "start": "2026-10-03T19:00:00-04:00",
-    "venue": "Off Center for the Dramatic Arts"
-   },
-   {
     "id": "d24e95a9f980",
     "title": "Phish Boardwalk Hall Webcast Party",
     "link": "https://community.sevendaysvt.com/event/phish-boardwalk-hall-webcast-party-45549413",
@@ -2405,28 +2397,20 @@
     "venue": "Thingz From Yaad"
    },
    {
-    "id": "958fe81f8945",
-    "title": "Half Ivory - Odd Fellows",
-    "link": "https://www.mychamplainvalley.com/calendar/#/details/half-ivory-odd-fellows/19876939/2026-10-03T19",
-    "ts": "2026-09-10T18:46:04-04:00",
-    "start": "2026-10-03T19:00:00-04:00",
-    "venue": "Queen City Lodge Oddfellows Hall"
-   },
-   {
-    "id": "2709243ff575",
-    "title": "Darkness Falls Tours",
-    "link": "https://www.mychamplainvalley.com/calendar/#/details/darkness-falls-tours/19811947/2026-10-03T19",
-    "ts": "2026-10-03T10:24:35-04:00",
-    "start": "2026-10-03T19:00:00-04:00",
-    "venue": "199 Main St"
-   },
-   {
     "id": "8626724ebf61",
     "title": "Optimistic Personality Disorde",
     "link": "https://www.helloburlingtonvt.com/event/optimistic-personality-disorde/8044/",
     "ts": "2026-09-30T20:10:10-04:00",
     "start": "2026-10-03T19:00:00-04:00",
     "venue": "Off Center for the Dramatic Arts"
+   },
+   {
+    "id": "958fe81f8945",
+    "title": "Half Ivory - Odd Fellows",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/half-ivory-odd-fellows/19876939/2026-10-03T19",
+    "ts": "2026-09-10T18:46:04-04:00",
+    "start": "2026-10-03T19:00:00-04:00",
+    "venue": "Queen City Lodge Oddfellows Hall"
    },
    {
     "id": "7b05655696a3",
@@ -2437,12 +2421,20 @@
     "venue": "Off Center for the Dramatic Arts"
    },
    {
-    "id": "f852a1ccc728",
-    "title": "Post Sex Nachos",
-    "link": "https://highergroundmusic.com/events/post-sex-nachos/",
-    "ts": "2026-08-29T18:47:34-04:00",
+    "id": "2709243ff575",
+    "title": "Darkness Falls Tours",
+    "link": "https://www.mychamplainvalley.com/calendar/#/details/darkness-falls-tours/19811947/2026-10-03T19",
+    "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03T19:00:00-04:00",
-    "venue": "Higher Ground"
+    "venue": "199 Main St"
+   },
+   {
+    "id": "8696f88f338b",
+    "title": "Optimistic Personality Disorder",
+    "link": "https://community.sevendaysvt.com/event/optimistic-personality-disorder-45506598",
+    "ts": "2026-10-02T11:57:22-04:00",
+    "start": "2026-10-03T19:00:00-04:00",
+    "venue": "Off Center for the Dramatic Arts"
    },
    {
     "id": "e29a010fc128",
@@ -2557,6 +2549,22 @@
     "venue": "Ken's Pizza & Pub"
    },
    {
+    "id": "bff869fd9431",
+    "title": "Micah Wood",
+    "link": "https://community.sevendaysvt.com/event/micah-wood-45494365",
+    "ts": "2026-10-03T10:24:35-04:00",
+    "start": "2026-10-03",
+    "venue": "The S.P.A.C.E. Gallery"
+   },
+   {
+    "id": "b6ed62436250",
+    "title": "'Dark Autumnal Work'",
+    "link": "https://community.sevendaysvt.com/event/dark-autumnal-work-45533554",
+    "ts": "2026-10-03T10:24:35-04:00",
+    "start": "2026-10-03",
+    "venue": "Gaston Weed Company"
+   },
+   {
     "id": "73e001161880",
     "title": "'Painters of Vermont, 1900-1955'",
     "link": "https://community.sevendaysvt.com/event/painters-of-vermont-1900-1955-45436203",
@@ -2579,14 +2587,6 @@
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03",
     "venue": "Champlain College"
-   },
-   {
-    "id": "bff869fd9431",
-    "title": "Micah Wood",
-    "link": "https://community.sevendaysvt.com/event/micah-wood-45494365",
-    "ts": "2026-10-03T10:24:35-04:00",
-    "start": "2026-10-03",
-    "venue": "The S.P.A.C.E. Gallery"
    },
    {
     "id": "6756de53b576",
@@ -2621,44 +2621,12 @@
     "venue": "Shelburne Museum"
    },
    {
-    "id": "99d133f9018a",
-    "title": "Sebastian Alvarez",
-    "link": "https://community.sevendaysvt.com/event/sebastian-alvarez-45453709",
+    "id": "f436eea11da8",
+    "title": "Art at the Airport: Matt Larson",
+    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-matt-larson-45304807",
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03",
-    "venue": "Saint Michael's College"
-   },
-   {
-    "id": "fede9f1561ae",
-    "title": "Peter Harrigan's Barbies",
-    "link": "https://community.sevendaysvt.com/event/peter-harrigans-barbies-45530451",
-    "ts": "2026-10-03T10:24:35-04:00",
-    "start": "2026-10-03",
-    "venue": "South Burlington Public Library"
-   },
-   {
-    "id": "59345219594f",
-    "title": "'Wings, Waters, Ways'",
-    "link": "https://community.sevendaysvt.com/event/wings-waters-ways-45123659",
-    "ts": "2026-10-03T10:24:35-04:00",
-    "start": "2026-10-03",
-    "venue": "Birds of Vermont Museum"
-   },
-   {
-    "id": "26d20b478621",
-    "title": "'Night Shades: A Dark Art Show'",
-    "link": "https://community.sevendaysvt.com/event/night-shades-a-dark-art-show-45534725",
-    "ts": "2026-10-03T10:24:35-04:00",
-    "start": "2026-10-03",
-    "venue": "ArtsRiot"
-   },
-   {
-    "id": "0d20e4ed34b4",
-    "title": "'Create, Community, Hope'",
-    "link": "https://community.sevendaysvt.com/event/create-community-hope-45462652",
-    "ts": "2026-10-03T10:24:35-04:00",
-    "start": "2026-10-03",
-    "venue": "Flynndog Gallery"
+    "venue": "Patrick Leahy Burlington International Airport"
    },
    {
     "id": "f9908febe365",
@@ -2669,28 +2637,20 @@
     "venue": "Maglianero"
    },
    {
-    "id": "f436eea11da8",
-    "title": "Art at the Airport: Matt Larson",
-    "link": "https://community.sevendaysvt.com/event/art-at-the-airport-matt-larson-45304807",
+    "id": "59345219594f",
+    "title": "'Wings, Waters, Ways'",
+    "link": "https://community.sevendaysvt.com/event/wings-waters-ways-45123659",
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03",
-    "venue": "Patrick Leahy Burlington International Airport"
+    "venue": "Birds of Vermont Museum"
    },
    {
-    "id": "f85d53190e12",
-    "title": "'Catalyst: Art as Inquiry'",
-    "link": "https://community.sevendaysvt.com/event/catalyst-art-as-inquiry-45483543",
+    "id": "0d20e4ed34b4",
+    "title": "'Create, Community, Hope'",
+    "link": "https://community.sevendaysvt.com/event/create-community-hope-45462652",
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03",
-    "venue": "Fleming Museum of Art"
-   },
-   {
-    "id": "b6ed62436250",
-    "title": "'Dark Autumnal Work'",
-    "link": "https://community.sevendaysvt.com/event/dark-autumnal-work-45533554",
-    "ts": "2026-10-03T10:24:35-04:00",
-    "start": "2026-10-03",
-    "venue": "Gaston Weed Company"
+    "venue": "Flynndog Gallery"
    },
    {
     "id": "a510aec1a091",
@@ -2717,12 +2677,28 @@
     "venue": "Dwellness Shop"
    },
    {
+    "id": "f85d53190e12",
+    "title": "'Catalyst: Art as Inquiry'",
+    "link": "https://community.sevendaysvt.com/event/catalyst-art-as-inquiry-45483543",
+    "ts": "2026-10-03T10:24:35-04:00",
+    "start": "2026-10-03",
+    "venue": "Fleming Museum of Art"
+   },
+   {
     "id": "b31ae4ae8602",
     "title": "Ashley Stagner",
     "link": "https://community.sevendaysvt.com/event/ashley-stagner-44623507",
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03",
     "venue": "Artspace 106 at the Men's Room"
+   },
+   {
+    "id": "6d6c12a2c06a",
+    "title": "'Belonging: A New Collections Gallery'",
+    "link": "https://community.sevendaysvt.com/event/belonging-a-new-collections-gallery-42714240",
+    "ts": "2026-10-03T10:24:35-04:00",
+    "start": "2026-10-03",
+    "venue": "Fleming Museum of Art"
    },
    {
     "id": "76d8cf8db166",
@@ -2733,12 +2709,28 @@
     "venue": "Heritage Winooski Mill Museum"
    },
    {
-    "id": "6d6c12a2c06a",
-    "title": "'Belonging: A New Collections Gallery'",
-    "link": "https://community.sevendaysvt.com/event/belonging-a-new-collections-gallery-42714240",
+    "id": "99d133f9018a",
+    "title": "Sebastian Alvarez",
+    "link": "https://community.sevendaysvt.com/event/sebastian-alvarez-45453709",
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-10-03",
-    "venue": "Fleming Museum of Art"
+    "venue": "Saint Michael's College"
+   },
+   {
+    "id": "fede9f1561ae",
+    "title": "Peter Harrigan's Barbies",
+    "link": "https://community.sevendaysvt.com/event/peter-harrigans-barbies-45530451",
+    "ts": "2026-10-03T10:24:35-04:00",
+    "start": "2026-10-03",
+    "venue": "South Burlington Public Library"
+   },
+   {
+    "id": "26d20b478621",
+    "title": "'Night Shades: A Dark Art Show'",
+    "link": "https://community.sevendaysvt.com/event/night-shades-a-dark-art-show-45534725",
+    "ts": "2026-10-03T10:24:35-04:00",
+    "start": "2026-10-03",
+    "venue": "ArtsRiot"
    },
    {
     "id": "405c571e85c4",
@@ -2957,20 +2949,20 @@
     "venue": "Shelburne Vineyard"
    },
    {
-    "id": "f052f1853b97",
-    "title": "Tillie Walden",
-    "link": "https://community.sevendaysvt.com/event/tillie-walden-45511861",
-    "ts": "2026-09-24T10:26:17-04:00",
-    "start": "2026-10-04T13:00:00-04:00",
-    "venue": "South Burlington Public Library"
-   },
-   {
     "id": "83f1551ff6ba",
     "title": "Duplicate Bridge Games",
     "link": "https://community.sevendaysvt.com/event/duplicate-bridge-games-41579461",
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-04T13:00:00-04:00",
     "venue": "Burlington Bridge Club"
+   },
+   {
+    "id": "f052f1853b97",
+    "title": "Tillie Walden",
+    "link": "https://community.sevendaysvt.com/event/tillie-walden-45511861",
+    "ts": "2026-09-24T10:26:17-04:00",
+    "start": "2026-10-04T13:00:00-04:00",
+    "venue": "South Burlington Public Library"
    },
    {
     "id": "b3eceef137dd",
@@ -3085,20 +3077,20 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "55f9d787ed93",
-    "title": "Capital City Concerts Presents | A Fall Feast of Music and Poetry (Charlotte)",
-    "link": "https://community.sevendaysvt.com/event/capital-city-concerts-presents-a-fall-feast-of-music-and-poetry-charlotte-45374584",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-04T16:00:00-04:00",
-    "venue": "Charlotte Congregational Church"
-   },
-   {
     "id": "b432bd279658",
     "title": "Green Mountain Monteverdi Ensemble of Vermont",
     "link": "https://community.sevendaysvt.com/event/green-mountain-monteverdi-ensemble-of-vermont-45450503",
     "ts": "2026-09-24T10:26:17-04:00",
     "start": "2026-10-04T16:00:00-04:00",
     "venue": "Cathedral Church of St. Paul"
+   },
+   {
+    "id": "55f9d787ed93",
+    "title": "Capital City Concerts Presents | A Fall Feast of Music and Poetry (Charlotte)",
+    "link": "https://community.sevendaysvt.com/event/capital-city-concerts-presents-a-fall-feast-of-music-and-poetry-charlotte-45374584",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-04T16:00:00-04:00",
+    "venue": "Charlotte Congregational Church"
    },
    {
     "id": "e82cd9b7ffc8",
@@ -3177,14 +3169,6 @@
     "title": "76th Street at Higher Ground",
     "link": "https://events.uvm.edu/event/76th-street",
     "ts": "2026-09-30T20:10:10-04:00",
-    "start": "2026-10-04T19:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
-    "id": "20a23c0c6c8c",
-    "title": "76th Street",
-    "link": "https://highergroundmusic.com/events/76th-street/",
-    "ts": "2026-08-29T18:47:34-04:00",
     "start": "2026-10-04T19:00:00-04:00",
     "venue": "Higher Ground"
    },
@@ -3523,14 +3507,6 @@
     "ts": "2026-10-01T12:41:27-04:00",
     "start": "2026-10-05T19:00:00-04:00",
     "venue": "Essex Experience"
-   },
-   {
-    "id": "c0ea7f397e8a",
-    "title": "Katie Pruitt",
-    "link": "https://highergroundmusic.com/events/katie-pruitt/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-05T19:00:00-04:00",
-    "venue": "Higher Ground"
    },
    {
     "id": "796f23988ae6",
@@ -4013,6 +3989,14 @@
     "venue": "The S.P.A.C.E. Gallery"
    },
    {
+    "id": "9c6898d9d1bb",
+    "title": "Vermont's Freedom & Unity Chorus",
+    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-06T19:00:00-04:00",
+    "venue": "Saint Michael's College"
+   },
+   {
     "id": "11262c2f82eb",
     "title": "All That Jazz Open Mic Comedy",
     "link": "https://community.sevendaysvt.com/event/all-that-jazz-open-mic-comedy-44620264",
@@ -4027,22 +4011,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-06T19:00:00-04:00",
     "venue": "Vermont Cider Lab"
-   },
-   {
-    "id": "9c6898d9d1bb",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-06T19:00:00-04:00",
-    "venue": "Saint Michael's College"
-   },
-   {
-    "id": "b8bbd4b3fa62",
-    "title": "Bombargo",
-    "link": "https://highergroundmusic.com/events/bombargo/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-06T19:00:00-04:00",
-    "venue": "Higher Ground"
    },
    {
     "id": "6a81a6317e18",
@@ -4241,14 +4209,6 @@
     "title": "Spanish Musical Kids",
     "link": "https://calendar.time.ly/nt0nyapn/event/78478187/20261007103000",
     "ts": "2026-09-30T20:10:10-04:00",
-    "start": "2026-10-07T10:30:00-04:00",
-    "venue": ""
-   },
-   {
-    "id": "f19bfec90791",
-    "title": "Spanish Music Kids",
-    "link": "https://calendar.time.ly/nt0nyapn/event/78478187/20261007103000",
-    "ts": "2026-09-29T19:56:46-04:00",
     "start": "2026-10-07T10:30:00-04:00",
     "venue": ""
    },
@@ -4661,14 +4621,6 @@
     "venue": "Old Spokes Home"
    },
    {
-    "id": "ce86991acf8c",
-    "title": "Oteil Burbridge & LaMP",
-    "link": "https://highergroundmusic.com/events/oteil-burbridge-lamp/",
-    "ts": "2026-08-08T06:05:48-04:00",
-    "start": "2026-10-07T18:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "168e3050f09f",
     "title": "VCA: $5 Improv Night!",
     "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/386398",
@@ -4837,14 +4789,6 @@
     "venue": "Argosy Gym, IDX Student Life Center"
    },
    {
-    "id": "a15469767d5d",
-    "title": "Briscoe",
-    "link": "https://highergroundmusic.com/events/briscoe/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-07T19:30:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "9073c3259819",
     "title": "Pub Quiz",
     "link": "https://events.uvm.edu/event/pub-quiz-978",
@@ -4971,14 +4915,6 @@
     "ts": "2026-09-30T20:10:10-04:00",
     "start": "2026-10-08T10:00:00-04:00",
     "venue": "Brownell Library"
-   },
-   {
-    "id": "8025638ed678",
-    "title": "The Ethics and Futures of AI Use and Development ft. Chris McElroy",
-    "link": "https://events.uvm.edu/event/the-ethics-and-futures-of-ai-use-and-development-ft-chris-mcelroy",
-    "ts": "2026-09-07T11:14:17-04:00",
-    "start": "2026-10-08T10:00:00-04:00",
-    "venue": "Farrell Hall"
    },
    {
     "id": "a3e5e2247f11",
@@ -5421,14 +5357,6 @@
     "venue": "Tank Recording Studio"
    },
    {
-    "id": "57bc84678dce",
-    "title": "Benjamin Tod & Lost Dog Street Band",
-    "link": "https://highergroundmusic.com/events/benjamin-tod/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-08T20:30:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "7b07099bd4cb",
     "title": "Funk Jam",
     "link": "https://community.sevendaysvt.com/event/funk-jam-45323272",
@@ -5805,14 +5733,6 @@
     "venue": "The Monkey House"
    },
    {
-    "id": "5729d0ec6e0e",
-    "title": "Benjamin Tod & Lost Dog Street Band",
-    "link": "https://highergroundmusic.com/events/benjamin-tod-2/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-09T20:30:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "95b5e082f753",
     "title": "Live DJ at Ri Ra!",
     "link": "https://calendar.time.ly/vfaca7kw/event/78247926/20261009220000",
@@ -5893,14 +5813,6 @@
     "venue": "Fletcher Free Library"
    },
    {
-    "id": "ab3e0b7c1421",
-    "title": "BTown Coffee Club",
-    "link": "https://www.meetup.com/burlington-social-activites-group/events/316403354/",
-    "ts": "2026-09-12T09:05:50-04:00",
-    "start": "2026-10-10T10:00:00-04:00",
-    "venue": "Zero Gravity Craft Brewery"
-   },
-   {
     "id": "bdfc7e260492",
     "title": "Halloween Costume Swap!",
     "link": "https://southburlingtonlibrary.org/halloween-costume-swap-sat-and-sun",
@@ -5963,6 +5875,14 @@
     "ts": "2026-09-28T13:48:33-04:00",
     "start": "2026-10-10T10:00:00-04:00",
     "venue": "Richmond Elementary School"
+   },
+   {
+    "id": "ab3e0b7c1421",
+    "title": "BTown Coffee Club",
+    "link": "https://www.meetup.com/burlington-social-activites-group/events/316403354/",
+    "ts": "2026-09-12T09:05:50-04:00",
+    "start": "2026-10-10T10:00:00-04:00",
+    "venue": "Zero Gravity Craft Brewery"
    },
    {
     "id": "c047eb332610",
@@ -6069,14 +5989,6 @@
     "venue": "Film House at Main Street Landing"
    },
    {
-    "id": "42b2324fe7d8",
-    "title": "Cookie Queens",
-    "link": "https://www.helloburlingtonvt.com/event/cookie-queens/7921/",
-    "ts": "2026-08-25T17:01:29-04:00",
-    "start": "2026-10-10T13:00:00-04:00",
-    "venue": "Main Street Landing Performing Arts Center"
-   },
-   {
     "id": "59dff57e6e45",
     "title": "Pub Crawl II🍺 South End Breweries",
     "link": "https://www.meetup.com/burlington-social-activites-group/events/316566793/",
@@ -6123,6 +6035,14 @@
     "ts": "2026-08-19T17:01:24-04:00",
     "start": "2026-10-10T15:30:00-04:00",
     "venue": "Church Street Marketplace"
+   },
+   {
+    "id": "42b2324fe7d8",
+    "title": "Cookie Queens",
+    "link": "https://www.helloburlingtonvt.com/event/cookie-queens/7922/",
+    "ts": "2026-08-25T17:01:29-04:00",
+    "start": "2026-10-10T15:30:00-04:00",
+    "venue": "Main Street Landing Performing Arts Center"
    },
    {
     "id": "ce263cf3da5c",
@@ -6251,14 +6171,6 @@
     "ts": "2026-10-01T12:41:27-04:00",
     "start": "2026-10-10T19:00:00-04:00",
     "venue": "First Congregational Church"
-   },
-   {
-    "id": "3ef0455398e4",
-    "title": "Level 1 Ski Film",
-    "link": "https://highergroundmusic.com/events/level-1-ski-film/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-10T19:00:00-04:00",
-    "venue": "Higher Ground"
    },
    {
     "id": "a71d3dc1cb7d",
@@ -6669,14 +6581,6 @@
     "venue": "1st Republic Brewing"
    },
    {
-    "id": "0aa8d235cdca",
-    "title": "Stephen Lynch",
-    "link": "https://highergroundmusic.com/events/stephen-lynch/",
-    "ts": "2026-09-01T18:49:18-04:00",
-    "start": "2026-10-11T19:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "43d5255ae5f6",
     "title": "Karaoke Sundays!",
     "link": "https://www.helloburlingtonvt.com/event/karaoke-sundays!/4512/",
@@ -6891,6 +6795,14 @@
     "ts": "2026-09-10T09:48:32-04:00",
     "start": "2026-10-12T18:30:00-04:00",
     "venue": "Expressive Arts Burlington Studio"
+   },
+   {
+    "id": "72e1cefcc532",
+    "title": "MEDITATION CLASS: Living a Meaningful Life Meditations",
+    "link": "https://www.meetup.com/burlington-meditation-and-buddhism/events/316813192/",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-10-12T18:30:00-04:00",
+    "venue": "Burlington Friends Meeting House"
    },
    {
     "id": "85bbaa1a35b9",
@@ -7261,6 +7173,14 @@
     "venue": "Burlington Beer Company"
    },
    {
+    "id": "402e380d9ec7",
+    "title": "Vermont's Freedom & Unity Chorus",
+    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-13T19:00:00-04:00",
+    "venue": "Saint Michael's College"
+   },
+   {
     "id": "5260121b6e84",
     "title": "All That Jazz Open Mic Comedy",
     "link": "https://community.sevendaysvt.com/event/all-that-jazz-open-mic-comedy-44620264",
@@ -7277,14 +7197,6 @@
     "venue": "Vermont Cider Lab"
    },
    {
-    "id": "402e380d9ec7",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-13T19:00:00-04:00",
-    "venue": "Saint Michael's College"
-   },
-   {
     "id": "e78cd6872cb6",
     "title": "Lisa M. Stulberg | How to Win a Culture War: LGBTQ+ Social Change Through Pop Culture",
     "link": "https://calendar.time.ly/vfaca7kw/event/78444765/20261013190000",
@@ -7297,14 +7209,6 @@
     "title": "Magoo @ Higher Ground",
     "link": "https://events.uvm.edu/event/magoo",
     "ts": "2026-09-30T20:10:10-04:00",
-    "start": "2026-10-13T19:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
-    "id": "8e3aaa4041af",
-    "title": "Magoo",
-    "link": "https://highergroundmusic.com/events/magoo/",
-    "ts": "2026-08-14T06:36:31-04:00",
     "start": "2026-10-13T19:00:00-04:00",
     "venue": "Higher Ground"
    },
@@ -7915,14 +7819,6 @@
     "ts": "2026-09-10T09:48:32-04:00",
     "start": "2026-10-14T19:00:00-04:00",
     "venue": "Union Station"
-   },
-   {
-    "id": "2c0eff0dd174",
-    "title": "Prince Daddy & The Hyena",
-    "link": "https://highergroundmusic.com/events/prince-daddy-the-hyena/",
-    "ts": "2026-08-24T17:04:08-04:00",
-    "start": "2026-10-14T19:00:00-04:00",
-    "venue": "Higher Ground"
    },
    {
     "id": "e5f26a86698a",
@@ -8853,14 +8749,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "f373215ac522",
-    "title": "Nico Suave & The Mothership",
-    "link": "https://highergroundmusic.com/events/nico-suave-the-mothership/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-16T19:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "dea11f60617c",
     "title": "'The Aliens'",
     "link": "https://community.sevendaysvt.com/event/the-aliens-45553056",
@@ -9741,14 +9629,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "03a62429927f",
-    "title": "Good Time Line Dancing",
-    "link": "https://highergroundmusic.com/events/good-time-line-dancing/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-18T19:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "bed9d41a37e3",
     "title": "Karaoke Sundays!",
     "link": "https://www.helloburlingtonvt.com/event/karaoke-sundays!/4512/",
@@ -10261,6 +10141,14 @@
     "venue": "Expressive Arts Burlington Studio"
    },
    {
+    "id": "8ac0b211424f",
+    "title": "Vermont's Freedom & Unity Chorus",
+    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-20T19:00:00-04:00",
+    "venue": "Saint Michael's College"
+   },
+   {
     "id": "88a86c2c0ef2",
     "title": "All That Jazz Open Mic Comedy",
     "link": "https://community.sevendaysvt.com/event/all-that-jazz-open-mic-comedy-44620264",
@@ -10277,26 +10165,10 @@
     "venue": "Vermont Cider Lab"
    },
    {
-    "id": "8ac0b211424f",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-20T19:00:00-04:00",
-    "venue": "Saint Michael's College"
-   },
-   {
     "id": "63eaf1425b7a",
     "title": "Rehash at Higher Ground",
     "link": "https://events.uvm.edu/event/rehash-1226",
     "ts": "2026-09-30T20:10:10-04:00",
-    "start": "2026-10-20T19:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
-    "id": "367443209f53",
-    "title": "Rehash",
-    "link": "https://highergroundmusic.com/events/rehash/",
-    "ts": "2026-08-22T05:55:06-04:00",
     "start": "2026-10-20T19:00:00-04:00",
     "venue": "Higher Ground"
    },
@@ -11269,22 +11141,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "0b9b74a81730",
-    "title": "Dana and Alden",
-    "link": "https://highergroundmusic.com/events/dana-and-alden/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-22T19:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
-    "id": "8a37835b9f66",
-    "title": "Gaelic Storm",
-    "link": "https://highergroundmusic.com/events/gaelic-storm/",
-    "ts": "2026-08-28T00:28:15-04:00",
-    "start": "2026-10-22T19:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "68b452441e1f",
     "title": "Bored Teachers",
     "link": "https://www.flynnvt.org/Events/2026/10/Bored-Teachers",
@@ -11431,7 +11287,7 @@
    {
     "id": "98ced05afbeb",
     "title": "Lunch with the Poets",
-    "link": "https://www.meetup.com/burlington-writers/events/fkbcztyjcnbfc/",
+    "link": "https://www.meetup.com/burlington-writers/events/316828391/",
     "ts": "2026-08-24T06:20:24-04:00",
     "start": "2026-10-23T11:45:00-04:00",
     "venue": "The Innovation Café"
@@ -11633,14 +11489,6 @@
     "title": "Pole 2 Poll @ Higher Ground",
     "link": "https://events.uvm.edu/event/pole-2-poll-higher-ground",
     "ts": "2026-09-30T20:10:10-04:00",
-    "start": "2026-10-23T19:30:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
-    "id": "8317e0174f9a",
-    "title": "Pole 2 Poll",
-    "link": "https://highergroundmusic.com/events/pole-2-poll/",
-    "ts": "2026-09-28T13:48:33-04:00",
     "start": "2026-10-23T19:30:00-04:00",
     "venue": "Higher Ground"
    },
@@ -12013,14 +11861,6 @@
     "venue": "The Community Room at BCA Studios"
    },
    {
-    "id": "987f18c6c7c5",
-    "title": "Radio Bean Presents: Lamplight, The Clearwater Swimmers, & Fowl @ The Monkey House",
-    "link": "https://www.helloburlingtonvt.com/event/radio-bean-presents%3a-lamplight-the-clearwater-swimmers-%26-fowl-%40-the-monkey-house/7906/",
-    "ts": "2026-09-09T18:44:48-04:00",
-    "start": "2026-10-24T20:00:00-04:00",
-    "venue": "The Monkey House"
-   },
-   {
     "id": "b97c92d7ee82",
     "title": "Lamplight, The Clearwater Swimmers & Fowl",
     "link": "https://www.monkeyhousevt.com/events/lamplight-the-clearwater-swimmers-amp-fowl",
@@ -12041,14 +11881,6 @@
     "title": "Spooky Perreo @ Higher Ground",
     "link": "https://events.uvm.edu/event/spooky-perreo",
     "ts": "2026-09-30T20:10:10-04:00",
-    "start": "2026-10-24T20:30:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
-    "id": "fdeb30f7677c",
-    "title": "Spooky Perreo",
-    "link": "https://highergroundmusic.com/events/spooky-perreo/",
-    "ts": "2026-09-08T18:57:58-04:00",
     "start": "2026-10-24T20:30:00-04:00",
     "venue": "Higher Ground"
    },
@@ -12301,14 +12133,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "6f150056982e",
-    "title": "Carsie Blanton",
-    "link": "https://highergroundmusic.com/events/carsie-blanton/",
-    "ts": "2026-08-26T06:15:56-04:00",
-    "start": "2026-10-25T19:30:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "f22f08fd3791",
     "title": "Karaoke Sundays!",
     "link": "https://www.helloburlingtonvt.com/event/karaoke-sundays!/4512/",
@@ -12483,6 +12307,14 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-26T18:00:00-04:00",
     "venue": "Pearl Street Pub"
+   },
+   {
+    "id": "928f71ff5075",
+    "title": "Ladies Book Club - The Witch",
+    "link": "https://www.meetup.com/forever-38/events/316703612/",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-10-26T18:15:00-04:00",
+    "venue": "Barnyard Woodcrafted Pizza"
    },
    {
     "id": "7421b21645b6",
@@ -12853,12 +12685,12 @@
     "venue": "Local Motion"
    },
    {
-    "id": "0b3e7923f4cb",
-    "title": "Allison Russell",
-    "link": "https://highergroundmusic.com/events/allison-russell/",
-    "ts": "2026-08-29T18:47:34-04:00",
-    "start": "2026-10-27T18:00:00-04:00",
-    "venue": "Higher Ground"
+    "id": "88bcb3b32530",
+    "title": "Vermont's Freedom & Unity Chorus",
+    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
+    "ts": "2026-08-30T13:28:30-04:00",
+    "start": "2026-10-27T19:00:00-04:00",
+    "venue": "Saint Michael's College"
    },
    {
     "id": "a7104166e1a9",
@@ -12875,14 +12707,6 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-27T19:00:00-04:00",
     "venue": "Vermont Cider Lab"
-   },
-   {
-    "id": "88bcb3b32530",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-08-30T13:28:30-04:00",
-    "start": "2026-10-27T19:00:00-04:00",
-    "venue": "Saint Michael's College"
    },
    {
     "id": "185f27c555bc",
@@ -13235,6 +13059,14 @@
     "ts": "2026-08-30T13:28:30-04:00",
     "start": "2026-10-28T17:30:00-04:00",
     "venue": "Mercy Connections"
+   },
+   {
+    "id": "3acc528e8bfa",
+    "title": "Pick-up Basketball",
+    "link": "https://www.meetup.com/burlington-social-activites-group/events/vtrmztyjcnblc/",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-10-28T17:30:00-04:00",
+    "venue": "Pomeroy Park"
    },
    {
     "id": "6a7ece1d95cf",
@@ -13749,14 +13581,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "a58437d61842",
-    "title": "The Gringos",
-    "link": "https://highergroundmusic.com/events/the-gringos/",
-    "ts": "2026-08-30T10:30:27-04:00",
-    "start": "2026-10-29T19:30:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "0e3464eca6ea",
     "title": "Karaoke Friday Night",
     "link": "https://community.sevendaysvt.com/event/karaoke-friday-night-44732241",
@@ -13793,14 +13617,6 @@
     "title": "Mom & Dad",
     "link": "https://www.mychamplainvalley.com/calendar/#/details/mom-dad/19876966/2026-10-29T20",
     "ts": "2026-09-10T18:46:04-04:00",
-    "start": "2026-10-29T20:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
-    "id": "462445d2a280",
-    "title": "Madaila",
-    "link": "https://highergroundmusic.com/events/madaila/",
-    "ts": "2026-09-04T18:31:30-04:00",
     "start": "2026-10-29T20:00:00-04:00",
     "venue": "Higher Ground"
    },
@@ -14101,14 +13917,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "dc5d43a88b7e",
-    "title": "It’s A 2000s (Halloween) Party: Burlington",
-    "link": "https://highergroundmusic.com/events/its-a-2000s-halloween-party-burlington/",
-    "ts": "2026-09-07T11:14:17-04:00",
-    "start": "2026-10-30T21:00:00-04:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "09a7916bb5b3",
     "title": "Live DJ at Ri Ra!",
     "link": "https://calendar.time.ly/vfaca7kw/event/78247926/20261030220000",
@@ -14123,6 +13931,14 @@
     "ts": "2026-09-21T12:00:51-04:00",
     "start": "2026-10-30T23:00:00-04:00",
     "venue": "Standing Stone Wines"
+   },
+   {
+    "id": "aaf7fd5ab383",
+    "title": "They’re going to need a bigger room!! The joint was jumping and at capacity.…",
+    "link": "https://www.instagram.com/lloydtylerband/p/DeB-ilvxFIm/",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-10-30",
+    "venue": "The Archives"
    },
    {
     "id": "9ee9a095ebda",
@@ -14155,6 +13971,14 @@
     "ts": "2026-09-01T10:16:24-04:00",
     "start": "2026-10-31T10:00:00-04:00",
     "venue": "Fletcher Free Library"
+   },
+   {
+    "id": "d74ff56a591a",
+    "title": "BTown Coffee Club",
+    "link": "https://www.meetup.com/burlington-social-activites-group/events/csrdwtyjcnbpc/",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-10-31T10:00:00-04:00",
+    "venue": "Zero Gravity Craft Brewery"
    },
    {
     "id": "5c1ee2b8da02",
@@ -15037,6 +14861,14 @@
     "venue": "The S.P.A.C.E. Gallery"
    },
    {
+    "id": "a3545361ff84",
+    "title": "Vermont's Freedom & Unity Chorus",
+    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
+    "ts": "2026-09-04T09:44:35-04:00",
+    "start": "2026-11-03T19:00:00-05:00",
+    "venue": "Saint Michael's College"
+   },
+   {
     "id": "978cda3fa211",
     "title": "All That Jazz Open Mic Comedy",
     "link": "https://community.sevendaysvt.com/event/all-that-jazz-open-mic-comedy-44620264",
@@ -15051,14 +14883,6 @@
     "ts": "2026-09-04T09:44:35-04:00",
     "start": "2026-11-03T19:00:00-05:00",
     "venue": "Vermont Cider Lab"
-   },
-   {
-    "id": "a3545361ff84",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-09-04T09:44:35-04:00",
-    "start": "2026-11-03T19:00:00-05:00",
-    "venue": "Saint Michael's College"
    },
    {
     "id": "b7eb149a3de2",
@@ -15169,14 +14993,6 @@
     "title": "Spanish Musical Kids",
     "link": "https://calendar.time.ly/nt0nyapn/event/78478187/20261104103000",
     "ts": "2026-09-30T20:10:10-04:00",
-    "start": "2026-11-04T10:30:00-05:00",
-    "venue": ""
-   },
-   {
-    "id": "d485cac48918",
-    "title": "Spanish Music Kids",
-    "link": "https://calendar.time.ly/nt0nyapn/event/78478187/20261104103000",
-    "ts": "2026-09-29T19:56:46-04:00",
     "start": "2026-11-04T10:30:00-05:00",
     "venue": ""
    },
@@ -15413,6 +15229,14 @@
     "venue": "Brownell Library"
    },
    {
+    "id": "dd6e338a794f",
+    "title": "Challenge Wheel",
+    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/390496",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-11-04T18:30:00-05:00",
+    "venue": "Vermont Comedy Club"
+   },
+   {
     "id": "7b076f52206c",
     "title": "TRIVIA NIGHT",
     "link": "https://calendar.time.ly/vfaca7kw/event/78077210/20261104190000",
@@ -15507,6 +15331,14 @@
     "ts": "2026-09-05T01:37:25-04:00",
     "start": "2026-11-04T20:00:00-05:00",
     "venue": "Radio Bean"
+   },
+   {
+    "id": "a0a7b2096da7",
+    "title": "Standup Open Mic",
+    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/390487",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-11-04T20:30:00-05:00",
+    "venue": "Vermont Comedy Club"
    },
    {
     "id": "38e9c20e39d2",
@@ -16163,6 +15995,14 @@
     "ts": "2026-09-08T09:49:41-04:00",
     "start": "2026-11-07T10:00:00-05:00",
     "venue": "Champlain Valley Exposition"
+   },
+   {
+    "id": "54e6af856907",
+    "title": "Cantilever trail hike - Mt. Mansfield",
+    "link": "https://www.meetup.com/forever-38/events/316797250/",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-11-07T10:00:00-05:00",
+    "venue": "Cantilever Rock Trail beginning"
    },
    {
     "id": "361fe3075ee1",
@@ -16893,6 +16733,14 @@
     "venue": "Maglianero"
    },
    {
+    "id": "c5941bb81e40",
+    "title": "Vermont's Freedom & Unity Chorus",
+    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
+    "ts": "2026-09-11T09:47:53-04:00",
+    "start": "2026-11-10T19:00:00-05:00",
+    "venue": "Saint Michael's College"
+   },
+   {
     "id": "413e342b9311",
     "title": "All That Jazz Open Mic Comedy",
     "link": "https://community.sevendaysvt.com/event/all-that-jazz-open-mic-comedy-44620264",
@@ -16907,14 +16755,6 @@
     "ts": "2026-09-11T09:47:53-04:00",
     "start": "2026-11-10T19:00:00-05:00",
     "venue": "Vermont Cider Lab"
-   },
-   {
-    "id": "c5941bb81e40",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-09-11T09:47:53-04:00",
-    "start": "2026-11-10T19:00:00-05:00",
-    "venue": "Saint Michael's College"
    },
    {
     "id": "12e194029ce6",
@@ -17317,14 +17157,6 @@
     "venue": "Argosy Gym, IDX Student Life Center"
    },
    {
-    "id": "41323dc2511b",
-    "title": "Weatherday",
-    "link": "https://highergroundmusic.com/events/weatherday/",
-    "ts": "2026-09-12T09:05:50-04:00",
-    "start": "2026-11-11T19:30:00-05:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "4f109c7bd365",
     "title": "Pub Quiz",
     "link": "https://events.uvm.edu/event/pub-quiz-978",
@@ -17669,14 +17501,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "ef15bcbed138",
-    "title": "Tropidelic",
-    "link": "https://highergroundmusic.com/events/tropidelic/",
-    "ts": "2026-09-13T09:52:26-04:00",
-    "start": "2026-11-12T19:00:00-05:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "143e2f37547e",
     "title": "Karaoke Friday Night",
     "link": "https://community.sevendaysvt.com/event/karaoke-friday-night-44732241",
@@ -17945,14 +17769,6 @@
     "title": "Carbon Leaf at Higher Ground",
     "link": "https://events.uvm.edu/event/carbon-leaf-7402",
     "ts": "2026-09-30T20:10:10-04:00",
-    "start": "2026-11-13T19:30:00-05:00",
-    "venue": "Higher Ground"
-   },
-   {
-    "id": "15dab0532b69",
-    "title": "Carbon Leaf",
-    "link": "https://highergroundmusic.com/events/carbon-leaf/",
-    "ts": "2026-09-14T11:59:33-04:00",
     "start": "2026-11-13T19:30:00-05:00",
     "venue": "Higher Ground"
    },
@@ -18453,14 +18269,6 @@
     "venue": "Spruce Peak Arts"
    },
    {
-    "id": "5e72c4d0bbf4",
-    "title": "Stewart Copeland – Have I Said Too Much",
-    "link": "https://highergroundmusic.com/events/stewart-copeland-have-i-said-too-much/",
-    "ts": "2026-09-16T10:20:34-04:00",
-    "start": "2026-11-15T18:30:00-05:00",
-    "venue": "Spruce Peak Arts"
-   },
-   {
     "id": "a6be72fbcc75",
     "title": "The Suitcase Junket",
     "link": "https://tockify.com/radio.bean.event.calendar1/detail/2868/1794787200000",
@@ -18701,14 +18509,6 @@
     "venue": "Higher Ground"
    },
    {
-    "id": "efa7d77bcd8d",
-    "title": "In Color",
-    "link": "https://highergroundmusic.com/events/in-color/",
-    "ts": "2026-09-17T10:26:31-04:00",
-    "start": "2026-11-16T19:30:00-05:00",
-    "venue": "Higher Ground"
-   },
-   {
     "id": "d8c637c52ff8",
     "title": "Mini Clean Up Crew",
     "link": "https://community.sevendaysvt.com/event/mini-clean-up-crew-45429908",
@@ -18925,6 +18725,14 @@
     "venue": "Expressive Arts Burlington Studio"
    },
    {
+    "id": "8e73060bad14",
+    "title": "Vermont's Freedom & Unity Chorus",
+    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
+    "ts": "2026-09-18T09:47:25-04:00",
+    "start": "2026-11-17T19:00:00-05:00",
+    "venue": "Saint Michael's College"
+   },
+   {
     "id": "87d383ea4756",
     "title": "All That Jazz Open Mic Comedy",
     "link": "https://community.sevendaysvt.com/event/all-that-jazz-open-mic-comedy-44620264",
@@ -18939,14 +18747,6 @@
     "ts": "2026-09-18T09:47:25-04:00",
     "start": "2026-11-17T19:00:00-05:00",
     "venue": "Vermont Cider Lab"
-   },
-   {
-    "id": "8e73060bad14",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-09-18T09:47:25-04:00",
-    "start": "2026-11-17T19:00:00-05:00",
-    "venue": "Saint Michael's College"
    },
    {
     "id": "3b1af08ff7ed",
@@ -19365,6 +19165,14 @@
     "venue": "Radio Bean"
    },
    {
+    "id": "45439d4ae5a7",
+    "title": "Standup Open Mic",
+    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/390488",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-11-18T20:30:00-05:00",
+    "venue": "Vermont Comedy Club"
+   },
+   {
     "id": "d7610eda88ce",
     "title": "Jazz Night with Ray Vega",
     "link": "https://community.sevendaysvt.com/event/jazz-night-with-ray-vega-42490163",
@@ -19649,14 +19457,6 @@
     "title": "Charlie Parr at Higher Ground",
     "link": "https://events.uvm.edu/event/charlie-parr",
     "ts": "2026-09-30T20:10:10-04:00",
-    "start": "2026-11-19T19:30:00-05:00",
-    "venue": "Higher Ground"
-   },
-   {
-    "id": "ae83253885f6",
-    "title": "Charlie Parr",
-    "link": "https://highergroundmusic.com/events/charlie-parr/",
-    "ts": "2026-09-20T09:40:15-04:00",
     "start": "2026-11-19T19:30:00-05:00",
     "venue": "Higher Ground"
    },
@@ -20075,14 +19875,6 @@
     "ts": "2026-10-01T12:41:27-04:00",
     "start": "2026-11-21T19:30:00-05:00",
     "venue": "College Street Congregational Church"
-   },
-   {
-    "id": "1b5e416fd7bc",
-    "title": "Greg Freeman",
-    "link": "https://highergroundmusic.com/events/greg-freeman/",
-    "ts": "2026-09-22T10:09:50-04:00",
-    "start": "2026-11-21T19:30:00-05:00",
-    "venue": "Higher Ground"
    },
    {
     "id": "269896763ee9",
@@ -20661,6 +20453,14 @@
     "venue": "Local Motion"
    },
    {
+    "id": "7829859a0b1e",
+    "title": "Vermont's Freedom & Unity Chorus",
+    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
+    "ts": "2026-09-25T10:43:13-04:00",
+    "start": "2026-11-24T19:00:00-05:00",
+    "venue": "Saint Michael's College"
+   },
+   {
     "id": "1a73f4798704",
     "title": "All That Jazz Open Mic Comedy",
     "link": "https://community.sevendaysvt.com/event/all-that-jazz-open-mic-comedy-44620264",
@@ -20675,14 +20475,6 @@
     "ts": "2026-09-25T10:43:13-04:00",
     "start": "2026-11-24T19:00:00-05:00",
     "venue": "Vermont Cider Lab"
-   },
-   {
-    "id": "7829859a0b1e",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-09-25T10:43:13-04:00",
-    "start": "2026-11-24T19:00:00-05:00",
-    "venue": "Saint Michael's College"
    },
    {
     "id": "d6eeedba2cff",
@@ -22085,6 +21877,14 @@
     "venue": "The S.P.A.C.E. Gallery"
    },
    {
+    "id": "8d93ee1efd98",
+    "title": "Vermont's Freedom & Unity Chorus",
+    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
+    "ts": "2026-10-02T11:57:22-04:00",
+    "start": "2026-12-01T19:00:00-05:00",
+    "venue": "Saint Michael's College"
+   },
+   {
     "id": "fa5e4b341e1b",
     "title": "All That Jazz Open Mic Comedy",
     "link": "https://community.sevendaysvt.com/event/all-that-jazz-open-mic-comedy-44620264",
@@ -22099,14 +21899,6 @@
     "ts": "2026-10-02T11:57:22-04:00",
     "start": "2026-12-01T19:00:00-05:00",
     "venue": "Vermont Cider Lab"
-   },
-   {
-    "id": "8d93ee1efd98",
-    "title": "Vermont's Freedom & Unity Chorus",
-    "link": "https://community.sevendaysvt.com/event/vermonts-freedom-and-unity-chorus-44823482",
-    "ts": "2026-10-02T11:57:22-04:00",
-    "start": "2026-12-01T19:00:00-05:00",
-    "venue": "Saint Michael's College"
    },
    {
     "id": "1fa1214d7224",
@@ -22427,6 +22219,14 @@
     "ts": "2026-10-03T10:24:35-04:00",
     "start": "2026-12-02T20:00:00-05:00",
     "venue": "Park Place Tavern & Grill"
+   },
+   {
+    "id": "a9cb133c3d06",
+    "title": "Standup Open Mic",
+    "link": "https://www-vermontcomedyclub-com.seatengine.com/shows/390489",
+    "ts": "2026-10-03T19:19:22-04:00",
+    "start": "2026-12-02T20:30:00-05:00",
+    "venue": "Vermont Comedy Club"
    },
    {
     "id": "847288e6fa5d",
