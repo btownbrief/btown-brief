@@ -1,19 +1,19 @@
 {
- "updated": "2026-10-04T10:18:25+00:00",
+ "updated": "2026-10-04T10:38:28+00:00",
  "sections_updated": {
-  "now": "2026-10-04T10:18:25+00:00",
-  "forecast": "2026-10-04T10:18:25+00:00",
-  "hourly": "2026-10-04T10:18:25+00:00",
-  "alerts": "2026-10-04T10:18:25+00:00",
-  "afd": "2026-10-04T10:18:25+00:00",
-  "lake_forecast": "2026-10-04T10:18:25+00:00",
-  "lake_gage": "2026-10-04T10:18:25+00:00",
-  "air": "2026-10-04T10:18:25+00:00",
-  "sun": "2026-10-04T10:18:25+00:00",
-  "models": "2026-10-04T10:18:25+00:00"
+  "now": "2026-10-04T10:38:28+00:00",
+  "forecast": "2026-10-04T10:38:28+00:00",
+  "hourly": "2026-10-04T10:38:28+00:00",
+  "alerts": "2026-10-04T10:38:28+00:00",
+  "afd": "2026-10-04T10:38:28+00:00",
+  "lake_forecast": "2026-10-04T10:38:28+00:00",
+  "lake_gage": "2026-10-04T10:38:28+00:00",
+  "air": "2026-10-04T10:38:28+00:00",
+  "sun": "2026-10-04T10:38:28+00:00",
+  "models": "2026-10-04T10:38:28+00:00"
  },
  "now": {
-  "observed_at": "2026-10-04T09:55:00+00:00",
+  "observed_at": "2026-10-04T10:20:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 37,
@@ -29,17 +29,7 @@
   "updated": "2026-10-04T06:20:30+00:00",
   "periods": [
    {
-    "name": "Overnight",
-    "start": "2026-10-04T05:00:00-04:00",
-    "is_day": false,
-    "temp_f": 41,
-    "pop": 0,
-    "wind": "SE 3 mph",
-    "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 41. Southeast wind around 3 mph."
-   },
-   {
-    "name": "Sunday",
+    "name": "Today",
     "start": "2026-10-04T06:00:00-04:00",
     "is_day": true,
     "temp_f": 65,
@@ -49,7 +39,7 @@
     "detailed": "Partly sunny, with a high near 65. South wind 5 to 13 mph."
    },
    {
-    "name": "Sunday Night",
+    "name": "Tonight",
     "start": "2026-10-04T18:00:00-04:00",
     "is_day": false,
     "temp_f": 50,
@@ -167,23 +157,22 @@
     "wind": "NW 6 to 10 mph",
     "short": "Mostly Sunny",
     "detailed": "Mostly sunny, with a high near 57. Northwest wind 6 to 10 mph."
+   },
+   {
+    "name": "Saturday Night",
+    "start": "2026-10-10T18:00:00-04:00",
+    "is_day": false,
+    "temp_f": 41,
+    "pop": 5,
+    "wind": "W 6 to 9 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 41. West wind 6 to 9 mph."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-04T06:20:30+00:00",
   "hours": [
-   {
-    "t": "2026-10-04T05:00:00-04:00",
-    "temp_f": 41,
-    "feels_f": 39,
-    "pop": 0,
-    "humidity": 92,
-    "wind_mph": 3,
-    "wind_dir": "SE",
-    "sky": 15,
-    "short": "Mostly Clear"
-   },
    {
     "t": "2026-10-04T06:00:00-04:00",
     "temp_f": 41,
@@ -568,6 +557,17 @@
     "wind_dir": "NW",
     "sky": 50,
     "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-10-05T17:00:00-04:00",
+    "temp_f": 54,
+    "feels_f": 54,
+    "pop": 16,
+    "humidity": 57,
+    "wind_mph": 20,
+    "wind_dir": "NW",
+    "sky": 65,
+    "short": "Slight Chance Rain Showers"
    }
   ]
  },
@@ -833,9 +833,9 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 19,
+  "aqi": 18,
   "category": "Good",
-  "pollutant": "OZONE",
+  "pollutant": "PM2.5",
   "observed": "10/04/26 6:00",
   "discussion": "On Sunday, October 4th, expect generally good air quality across Vermont."
  },
