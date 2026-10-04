@@ -188,6 +188,7 @@ Machine registry: [`data/sources.json`](data/sources.json) · Inoreader import: 
 - **Front Porch Forum** (daily; fragility: n/a — policy decision, not technical) — POLICY: never scraped, per standing decision — FPF is membership-gated and their ToS prohibits reuse. Stephen reads his own neighborhood digest by email. Any FPF-sourced item gets manually re-reported.
 - **r/burlington** (several/day; fragility: medium — Reddit aggressively rate-limits unauthenticated fetches (429s on bare curl); fine via Inoreader or with OAuth) — Confirmed working in Inoreader (and via Stephen's output stream). For direct automation use the JSON mirror (.json) with a descriptive User-Agent and backoff, or the official API with OAuth.
 - **r/vermont** (several/day; fragility: medium — same rate-limit caveat as r/burlington) — Confirmed working (25 items, same-day, despite a 429 on the status probe — Reddit throttles by IP).
+- **Reddit sunset (2026-10-04)** — Reddit's r/redditdev post of 2026-09-30 says new public API access requests close Oct 31, 2026, RSS ends Nov 13, 2026, and remaining public API access ends March 2027. The `.json` endpoints already 403. Inoreader's Reddit feeds stop with RSS. The shared intake (`scripts/reddit_intake.py`, hourly via `refresh-reddit.yml`, output on the `reddit-data` branch) reads both subs from every route side by side, tags each post by route, and `scripts/reddit_report.py` writes the daily comparison and zero-route alarm.
 
 ## Sports
 

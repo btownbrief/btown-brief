@@ -87,11 +87,24 @@ function render() {
     onChange(on) { app.setLocal(on); root.scrollTo({ top: 0 }); },
   });
 
-  tabStamp(root, stampOf(state.pulse.generated), 'reddit, every 20 minutes');
+  /* Reddit stops serving RSS on Nov 13, 2026. When no route has brought in a
+     post for a day and a half, refresh_pulse.py marks the payload paused, and
+     this tab says so plainly instead of wearing a fresh "updated" stamp over
+     threads that stopped moving. The last threads stay, with honest ages. */
+  const paused = !!(state.pulse.reddit && state.pulse.reddit.paused);
+  if (paused) {
+    const last = state.pulse.reddit.last_post ? new Date(state.pulse.reddit.last_post) : null;
+    const after = last && !isNaN(last.getTime())
+      ? ' after ' + last.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+    root.appendChild(el('div', 'errbox', '<b>Reddit is paused.</b><br>New posts stopped reaching us' +
+      esc(after) + '. The threads below are the last ones we saw. We’ll bring new ones back here as soon as we can.'));
+  } else {
+    tabStamp(root, stampOf(state.pulse.generated), 'reddit, every 20 minutes');
+  }
 
   heading(root, {
     eyebrow: 'Reddit',
-    title: state.sub ? (map[state.sub].short || 'Threads') : 'What people are posting',
+    title: state.sub ? (map[state.sub].short || 'Threads') : (paused ? 'The last threads we saw' : 'What people are posting'),
     sub: '<span class="count">' + shown.length + ' post' + (shown.length === 1 ? '' : 's') +
       ' across ' + chipSubs.length + ' subreddit' + (chipSubs.length === 1 ? '' : 's') + '</span>',
   });
