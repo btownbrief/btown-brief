@@ -1,27 +1,27 @@
 {
- "updated": "2026-10-05T16:25:40+00:00",
+ "updated": "2026-10-05T17:40:06+00:00",
  "sections_updated": {
-  "now": "2026-10-05T16:25:40+00:00",
-  "forecast": "2026-10-05T16:25:40+00:00",
-  "hourly": "2026-10-05T16:25:40+00:00",
-  "alerts": "2026-10-05T16:25:40+00:00",
-  "afd": "2026-10-05T16:25:40+00:00",
-  "lake_forecast": "2026-10-05T16:25:40+00:00",
-  "lake_gage": "2026-10-05T16:25:40+00:00",
-  "air": "2026-10-05T16:25:40+00:00",
-  "sun": "2026-10-05T16:25:40+00:00",
-  "models": "2026-10-05T16:25:40+00:00"
+  "now": "2026-10-05T17:40:06+00:00",
+  "forecast": "2026-10-05T17:40:06+00:00",
+  "hourly": "2026-10-05T17:40:06+00:00",
+  "alerts": "2026-10-05T17:40:06+00:00",
+  "afd": "2026-10-05T17:40:06+00:00",
+  "lake_forecast": "2026-10-05T17:40:06+00:00",
+  "lake_gage": "2026-10-05T17:40:06+00:00",
+  "air": "2026-10-05T17:40:06+00:00",
+  "sun": "2026-10-05T17:40:06+00:00",
+  "models": "2026-10-05T17:40:06+00:00"
  },
  "now": {
-  "observed_at": "2026-10-05T15:55:00+00:00",
+  "observed_at": "2026-10-05T17:15:00+00:00",
   "station": "KBTV",
-  "description": "Clear",
-  "temp_f": 61,
-  "feels_like_f": 61,
-  "humidity": null,
-  "dewpoint_f": null,
-  "wind_mph": 14,
-  "wind_gust_mph": null,
+  "description": "Mostly Cloudy",
+  "temp_f": 59,
+  "feels_like_f": 59,
+  "humidity": 41,
+  "dewpoint_f": 36,
+  "wind_mph": 13,
+  "wind_gust_mph": 18,
   "wind_dir": "W",
   "precip_last_hr_in": null
  },
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-10-05T12:00:00-04:00",
+    "start": "2026-10-05T13:00:00-04:00",
     "is_day": true,
     "temp_f": 58,
     "pop": 29,
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-05T10:17:56+00:00",
   "hours": [
-   {
-    "t": "2026-10-05T12:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 5,
-    "humidity": 59,
-    "wind_mph": 16,
-    "wind_dir": "W",
-    "sky": 38,
-    "short": "Mostly Sunny"
-   },
    {
     "t": "2026-10-05T13:00:00-04:00",
     "temp_f": 58,
@@ -568,6 +557,17 @@
     "wind_dir": "SW",
     "sky": 5,
     "short": "Clear"
+   },
+   {
+    "t": "2026-10-07T00:00:00-04:00",
+    "temp_f": 42,
+    "feels_f": 39,
+    "pop": 0,
+    "humidity": 76,
+    "wind_mph": 5,
+    "wind_dir": "SW",
+    "sky": 11,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -585,11 +585,11 @@
   "raw": "\n000\nFXUS61 KBTV 051124\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n724 AM EDT Mon Oct 5 2026\n\n.WHAT HAS CHANGED...\nAs of 236 AM EDT Monday...\n\nPoPs have been increased for this afternoon with a secondary cold \nboundary passage.\n\n&&\n\n.KEY MESSAGES...\nAs of 236 AM EDT Monday...\n\n1. A strong cold front will continue to move through the area \nthis morning with a secondary boundary by the afternoon. Showers \nwill taper off by the mid afternoon, with gusty winds continuing.\n\n2. Frost potential remains on track Tuesday night, mainly for \nportions of eastern and southern Vermont. Temperatures moderate back \nto near normal by midweek.\n\n3. Seasonable conditions for the latter half of the week with \nperiodic showers.\n\n&&\n\n.DISCUSSION...\nAs of 236 AM EDT Monday...\n\nKEY MESSAGE 1: A strong cold front continues to push east through the \narea with a well-defined corridor of showers on radar stretching \nfrom Chazy, NY to Wanakena, NY as of 2 AM this morning. This area of \nlight to locally moderate rain is expected to weaken as it \napproaches Vermont this morning though some isolated to scattered \nshowers remain likely through the morning hours for the Champlain \nValley into northern Vermont. A gap in precipitation is expected to \nfollow before additional isolated shower chances return by the early \nafternoon. CAM solutions have denoted an increasing chance for a \nsecondary shortwave to develop by the late morning with additional \nshower chances. This feature is already taking shape with showers \nacross Lake Huron. It should be noted that model soundings show a \nshallow area of 100-200J/kg of CAPE associated with this secondary \nboundary, albeit still well below the equilibrium level. We did see \na few rumbles of thunder associated with the current boundary as it \nentered our region from eastern Ontario, and the showers across Lake \nHuron did also have a rumble of thunder or two. With this, the \nenvironment would support an isolated rumble of thunder, though the \nconfidence of a rumble or two occurring in any given location is low. \nHowever, showers, mainly in central and southern Vermont do have the \nchance for an isolated rumble of thunder. Any showers today, \nregardless of thunder, will not be impactful. Stratocumulus will \nlikely blanket the area today with strong caa from the northwest. \n\nGusty winds will continue with mixing profiles extending potential \nto 12,000 ft agl. Top of the mixed layer flow around 40 kts with \nbottom of the mixed layer around 20 knots would be supportive of \nvalley winds between 25-30 MPH, especially in the wider valleys of \nthe area, including on Lake Champlain. A Lake Wind Advisory will \ncontinue throughout the entire day today; see Marine section for \nadditional details. Mountain summits, areas along US-11 in northern \nNew York, and locations on the east downwind side of the Adirondacks \ncould see gusts between 30-40 MPH as efficient mixing this afternoon \ntakes place. Minor impacts may be possible with trees still leafed \nout, though winds are unlikely to produce any impacts warranting a \nWind Advisory. Winds will remain gusty into Monday night with \ntemperature falling behind the front this evening.\n\nKEY MESSAGE 2: Conditions will turn cold behind the early week cold \nfront today. Strong northwest flow will advect seasonably cold \nCanadian air into the area beginning tonight through Wednesday \nmorning. A Canadian high will build into the region Monday night \nwith drying and some clearing conditions, mainly for the wider \nvalleys of northern New York and Vermont. Cyclonic flow will likely \nkeep some mountain wave clouds and stratocumulus lingering across \nthe Northeast Kingdom. Lows will dip into the low to mid 30s for \nmajority of the area, with some pocket upper 20s in the Adirondacks. \nGusty westerly winds around 15-20 MPH will continue Monday night as \nour upper low pulls off to the northeast. These winds should \nmitigate frost for many locations, though innately chilly cold \nadvection will bring many locations to near freezing, stifling any \nagricultural interests. The Canadian high will move overhead \nTuesday with chilly conditions remaining as highs will only be in \nthe upper 40s to low 50s. Main impacts Tuesday will be the potential \nfor a dewpoint bomb. Strong northwesterly cold advection, coupled \nwith a stout dry layer between 925-700mb and good mixing profiles in \nthe low levels of the atmosphere will create conditions for \ndewpoints to fall rapidly in the afternoon. Expect dry conditions \nTuesday afternoon with the lip balm handy. \n\nWinds will trend calmer Tuesday night, with a better shot at more \nareawide frost and freezing temperatures. With light winds and \nclearer skies, radiational cooling should be strong enough to push \nmany into the upper 20s to low 30s, with frost potential for the \ncentral and southern Champlain Valley. The broad waters of Lake \nChamplain and increasing south flow by Wednesday morning should \nlimit any frost potential. As winds turn to the south Wednesday \nmorning, gusty channeled flow will return as our next weather \npattern arrives for the later week. Gusts around 25 MPH will be \npossible in the Champlain Valley with another Lake Wind Advisory for \nLake Champlain likely. Temperatures will begin to rebound with highs \nreturning to the 60s Wednesday afternoon, with a generally nice\nday expected otherwise.\n\nKEY MESSAGE 3: A brief 500mb ridge wedged between two upper \nlows sets up for the day on Wednesday, as surface high pressure \nambles offshore. This will produce nice weather conditions, \nfollowed by increasing clouds and some showers over northern New\nYork later in the day. Deep southwest flow will moderate \ntemperatures closer to seasonal norms in the 60s during the day,\nand then a warm night in the 40s.\n\nA broad, and relatively weak, upper low will set up over James Bay \nby Wednesday night with a mature cyclone festering across northern \nQuebec Province. It won't send any significant systems our way, but \nperiodic troughs rounding the southern periphery of this cyclone \nwill bring waves of showers and maintain cool to seasonable \nconditions until the feature departs the area on Saturday. Once it \ndoes, ensemble guidance suggests a broad ridge developing over much \nof the CONUS and a solid 1030mb surface high over the Mid-Atlantic \nthat should dry us out and start warming up.\n\n&&\n\n.AVIATION /12Z MONDAY THROUGH FRIDAY/...\nThrough 12Z Tuesday...Scattered rain showers are progressing\neast across Vermont, with light rain near KEFK, KMPV, and KRUT.\nConditions are mainly VFR, but some patchy MVFR ceilings are\npresent. We're in a lull of winds at the moment with south or\nvariable winds around 5 knots, though remaining at 10 knots at\nKBTV. A west wind shift will take place as the front crosses and\nbegins pushing rain east of the area. Some scattered showers are\nexpected to redevelop during the afternoon behind the feature, \nand there are PROB30s noted for that potential, but did go \nprevailing for KSLK from 16z to 19z given higher confidence \nthere. In general, showers are not likely to reduce ceilings or \nvisibility significantly. So VFR conditions will generally\nprevail, with ceilings approaching 2500 ft agl around 10z \nTuesday at KSLK and KEFK. Surface winds will become a brisk west\nto west-northwest at 10-17 knots surface winds with gusts 19-26\nknots, mainly 15z-23z. A few locations, like KBTV, KMSS, KMPV, \nand KEFK could have gusts persist into the overnight. Pockets of\nLLWS will be possible where surface winds slacken along eastern\nslopes, which seems most likely near KPBG.\n\nOutlook...\n\nTuesday: VFR. NO SIG WX.\nTuesday Night: VFR. Patchy frost.\nWednesday: VFR. NO SIG WX.\nWednesday Night: VFR. Slight chance SHRA.\nThursday: VFR. Slight chance SHRA.\nThursday Night: VFR. Chance SHRA.\nFriday: Mainly VFR, with local MVFR possible. Slight chance SHRA.\n\n&&\n\n.MARINE...\nAs of 720 AM EDT Monday...\n\nA Lake Wind Advisory remains in effect for the entirety of Lake \nChamplain. Sustained winds will lower to 20 to 25 kts by the \nafternoon as a boundary will slide through the area. A switch to\nthe west-northwest or northwest later this morning will then be\nfollowed by renewed gusts between 25-30 kts and wave heights \nremaining 2 to 4 feet. With the northwest flow wave funneling \nmay occur with locally higher waves between 4 to 5 feet near the\nmouth Shelburne Bay and the east side of the Broad Waters \ntowards Burlington Bay. While there will likely be a period \nbetween sunrise and the late morning where winds may be below \nLake Wind Advisory thresholds, with gusts continuing to be \nstrong by the afternoon, the Advisory will continue through the \nday today.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Danzig\nDISCUSSION...Haynes/Danzig\nAVIATION...Haynes\nMARINE...Danzig\n"
  },
  "lake_forecast": {
-  "issued": "2026-10-05T06:35:00+00:00",
+  "issued": "2026-10-05T17:09:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
+    "period": "...A Lake Wind Advisory Is In Effect",
     "text": "",
     "wind_knots_max": null,
     "gust_knots": null,
@@ -597,16 +597,16 @@
     "calm": false
    },
    {
-    "period": "Today",
-    "text": "South winds 15 to 25 knots, becoming northwest 15 to 25 knots. Partly sunny. A chance of showers this morning, then a slight chance of showers in the afternoon. Waves 3 to 5 feet, subsiding to 2 to 4 feet.",
+    "period": "Rest Of Today",
+    "text": "Northwest winds 15 to 25 knots. Partly sunny. A chance of showers. Waves 2 to 4 feet, building to 3 to 5 feet.",
     "wind_knots_max": 25,
     "gust_knots": null,
-    "waves_ft_max": 5,
+    "waves_ft_max": 4,
     "calm": false
    },
    {
     "period": "Tonight",
-    "text": "Northwest winds 15 to 20 knots, becoming west 10 to 15 knots. Mostly clear. Waves 2 to 4 feet.",
+    "text": "Northwest winds 15 to 20 knots, becoming west. Mostly clear. Waves 2 to 4 feet, subsiding to 1 to 3 feet.",
     "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 4,
@@ -614,23 +614,23 @@
    },
    {
     "period": "Tuesday",
-    "text": "West winds 10 to 15 knots, becoming northwest. Sunny. Waves 1 to 3 feet.",
-    "wind_knots_max": 15,
+    "text": "West winds 15 to 20 knots, becoming northwest 10 to 15 knots. Sunny. Waves 1 to 3 feet.",
+    "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 3,
     "calm": false
    },
    {
     "period": "Tuesday Night",
-    "text": "West winds 10 knots or less, becoming south 10 to 15 knots. Clear. Waves 1 foot or less.",
+    "text": "Northwest winds 10 knots or less, becoming south 10 to 15 knots. Clear. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Wednesday",
-    "text": "South winds 15 to 20 knots, diminishing to 10 to 15 knots. Partly sunny. Waves 1 foot or less, building to 1 to 3 feet.",
+    "text": "South winds 15 to 20 knots. Partly sunny. Waves 1 foot or less, building to 1 to 3 feet.",
     "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -646,7 +646,7 @@
    },
    {
     "period": "Thursday",
-    "text": "South winds around 10 knots, becoming west. Partly sunny. A chance of showers in the afternoon. Waves 1 foot or less.",
+    "text": "South winds 5 to 10 knots, becoming west. Partly sunny. A chance of showers in the afternoon. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -671,24 +671,16 @@
   ],
   "northern": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
-    "text": "",
-    "wind_knots_max": null,
-    "gust_knots": null,
-    "waves_ft_max": null,
-    "calm": false
-   },
-   {
-    "period": "Today",
-    "text": "South winds 15 to 25 knots, becoming northwest 15 to 20 knots. Chance of showers in the morning. A slight chance of showers in the afternoon. Waves 2 to 4 feet.",
+    "period": "...A Lake Wind Advisory Is In Effect",
+    "text": "REST OF TODAY...West winds 15 to 25 knots, becoming northwest. Partly sunny. A chance of showers. Waves 1 to 3 feet, building to 2 to 4 feet.",
     "wind_knots_max": 25,
     "gust_knots": null,
-    "waves_ft_max": 4,
+    "waves_ft_max": 3,
     "calm": false
    },
    {
     "period": "Tonight",
-    "text": "Northwest winds 15 to 20 knots, becoming west 10 to 15 knots. Partly cloudy. Waves 1 to 3 feet.",
+    "text": "Northwest winds 15 to 20 knots, becoming west. Partly cloudy. Waves 1 to 3 feet.",
     "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 3,
@@ -696,7 +688,7 @@
    },
    {
     "period": "Tuesday",
-    "text": "West winds 10 to 15 knots. Partly sunny in the morning, then becoming sunny. Waves 1 to 3 feet.",
+    "text": "West winds 10 to 15 knots, becoming northwest. Partly sunny in the morning, then clearing. Waves 1 to 3 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 3,
@@ -704,7 +696,7 @@
    },
    {
     "period": "Tuesday Night",
-    "text": "West winds 5 to 10 knots, becoming south 10 to 15 knots. Clear. Waves 1 to 2 feet.",
+    "text": "West winds 5 to 10 knots, becoming south. Mostly clear. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -712,8 +704,8 @@
    },
    {
     "period": "Wednesday",
-    "text": "South winds 15 to 20 knots, diminishing to 10 to 15 knots. Partly sunny. Waves 1 to 2 feet, building to 2 to 4 feet.",
-    "wind_knots_max": 20,
+    "text": "South winds 10 to 15 knots. Partly sunny. Waves 1 to 2 feet, building to 2 to 4 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
@@ -728,7 +720,7 @@
    },
    {
     "period": "Thursday",
-    "text": "South winds 5 to 10 knots, becoming west. Partly sunny. A chance of showers in the afternoon. Waves 1 to 2 feet.",
+    "text": "Southwest winds 5 to 10 knots, becoming west. Partly sunny. A chance of showers in the afternoon. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -744,7 +736,7 @@
    },
    {
     "period": "Friday",
-    "text": "West winds 10 knots or less. Partly sunny. Waves 1 foot or less. Winds and waves higher in and near thunderstorms.",
+    "text": "West winds 10 knots or less. Partly sunny. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -753,7 +745,7 @@
   ],
   "southern": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
+    "period": "...A Lake Wind Advisory Is In Effect",
     "text": "",
     "wind_knots_max": null,
     "gust_knots": null,
@@ -761,8 +753,8 @@
     "calm": false
    },
    {
-    "period": "Today",
-    "text": "South winds 15 to 25 knots, becoming northwest 15 to 20 knots. Partly sunny. A chance of showers in the morning, then a slight chance of showers in the afternoon. Waves 1 to 3 feet, building to 2 to 4 feet.",
+    "period": "Rest Of Today",
+    "text": "Northwest winds 15 to 25 knots. Partly sunny. A chance of showers. Waves 1 to 3 feet, building to 2 to 4 feet.",
     "wind_knots_max": 25,
     "gust_knots": null,
     "waves_ft_max": 3,
@@ -770,7 +762,7 @@
    },
    {
     "period": "Tonight",
-    "text": "Northwest winds 10 to 15 knots. Partly cloudy. Waves 2 to 4 feet, subsiding to 1 to 3 feet.",
+    "text": "Northwest winds 10 to 15 knots. Mostly clear. Waves 2 to 4 feet, subsiding to 1 to 3 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 4,
@@ -778,7 +770,7 @@
    },
    {
     "period": "Tuesday",
-    "text": "Northwest winds 10 to 15 knots. Sunny. Waves 1 to 3 feet.",
+    "text": "Northwest winds 5 to 15 knots. Sunny. Waves 1 to 3 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 3,
@@ -786,16 +778,16 @@
    },
    {
     "period": "Tuesday Night",
-    "text": "West winds 5 to 10 knots, becoming south 10 to 15 knots. Clear. Waves 1 foot or less.",
+    "text": "Northwest winds 5 to 10 knots, becoming south. Clear. Waves 1 to 2 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Wednesday",
-    "text": "South winds 15 to 20 knots, diminishing to 10 to 15 knots. Partly sunny. Waves 1 to 2 feet.",
-    "wind_knots_max": 20,
+    "text": "South winds 10 to 15 knots. Partly sunny. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
@@ -826,7 +818,7 @@
    },
    {
     "period": "Friday",
-    "text": "Southwest winds 10 knots or less, becoming west. Partly sunny. Waves 1 foot or less. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.56 feet 59 degrees USGS gage at Burlington VT 93.30 feet 61 degrees USGS gage at Port Henry NY 93.16 feet 52 degrees",
+    "text": "Southwest winds 10 knots or less, becoming west. Partly sunny. Waves 1 foot or less. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.27 feet 58 degrees USGS gage at Burlington VT 93.36 feet 61 degrees USGS gage at Port Henry NY 93.30 feet 55 degrees",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -836,32 +828,32 @@
   "uv": null,
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 93.56,
-    "temp_f": 59
+    "level_ft": 93.27,
+    "temp_f": 58
    },
    "Burlington VT": {
-    "level_ft": 93.3,
+    "level_ft": 93.36,
     "temp_f": 61
    },
    "Port Henry NY": {
-    "level_ft": 93.16,
-    "temp_f": 52
+    "level_ft": 93.3,
+    "temp_f": 55
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 61,
-  "water_temp_at": "2026-10-05T12:00:00.000-04:00",
-  "level_ft": 93.84,
-  "level_at": "2026-10-05T12:00:00.000-04:00",
+  "water_temp_at": "2026-10-05T13:00:00.000-04:00",
+  "level_ft": 93.88,
+  "level_at": "2026-10-05T13:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 22,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/05/26 12:00",
+  "observed": "10/05/26 13:00",
   "discussion": "On Monday, October 5th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -876,7 +868,7 @@
    {
     "date": "2026-10-05",
     "high_f": {
-     "GFS": 60,
+     "GFS": 61,
      "Euro": 59,
      "ICON": 60
     },
@@ -886,11 +878,11 @@
      "ICON": 80
     },
     "precip_in": {
-     "GFS": 0.03,
+     "GFS": 0.02,
      "Euro": 0.03,
      "ICON": 0.14
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    },
    {
     "date": "2026-10-06",
@@ -914,7 +906,7 @@
    {
     "date": "2026-10-07",
     "high_f": {
-     "GFS": 62,
+     "GFS": 63,
      "Euro": 62,
      "ICON": 63
     },
