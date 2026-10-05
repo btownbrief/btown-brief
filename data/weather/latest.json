@@ -1,32 +1,32 @@
 {
- "updated": "2026-10-05T10:19:40+00:00",
+ "updated": "2026-10-05T10:39:40+00:00",
  "sections_updated": {
-  "now": "2026-10-05T10:19:40+00:00",
-  "forecast": "2026-10-05T10:19:40+00:00",
-  "hourly": "2026-10-05T10:19:40+00:00",
-  "alerts": "2026-10-05T10:19:40+00:00",
-  "afd": "2026-10-05T10:19:40+00:00",
-  "lake_forecast": "2026-10-05T10:19:40+00:00",
-  "lake_gage": "2026-10-05T10:19:40+00:00",
-  "air": "2026-10-05T10:19:40+00:00",
-  "sun": "2026-10-05T10:19:40+00:00",
-  "models": "2026-10-05T10:19:40+00:00"
+  "now": "2026-10-05T10:39:40+00:00",
+  "forecast": "2026-10-05T10:39:40+00:00",
+  "hourly": "2026-10-05T10:39:40+00:00",
+  "alerts": "2026-10-05T10:39:40+00:00",
+  "afd": "2026-10-05T10:39:40+00:00",
+  "lake_forecast": "2026-10-05T10:39:40+00:00",
+  "lake_gage": "2026-10-05T10:39:40+00:00",
+  "air": "2026-10-05T10:39:40+00:00",
+  "sun": "2026-10-05T10:39:40+00:00",
+  "models": "2026-10-05T10:39:40+00:00"
  },
  "now": {
-  "observed_at": "2026-10-05T10:00:00+00:00",
+  "observed_at": "2026-10-05T10:20:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 54,
   "feels_like_f": 54,
   "humidity": 82,
   "dewpoint_f": 48,
-  "wind_mph": 11,
+  "wind_mph": 10,
   "wind_gust_mph": null,
   "wind_dir": "SSW",
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-10-05T06:28:58+00:00",
+  "updated": "2026-10-05T10:17:56+00:00",
   "periods": [
    {
     "name": "Today",
@@ -43,7 +43,7 @@
     "start": "2026-10-05T18:00:00-04:00",
     "is_day": false,
     "temp_f": 39,
-    "pop": 10,
+    "pop": 4,
     "wind": "NW 14 to 17 mph",
     "short": "Partly Cloudy",
     "detailed": "Partly cloudy, with a low around 39. Northwest wind 14 to 17 mph, with gusts as high as 28 mph."
@@ -171,14 +171,14 @@
   ]
  },
  "hourly": {
-  "updated": "2026-10-05T06:28:58+00:00",
+  "updated": "2026-10-05T10:17:56+00:00",
   "hours": [
    {
     "t": "2026-10-05T06:00:00-04:00",
-    "temp_f": 50,
+    "temp_f": 54,
     "feels_f": 45,
     "pop": 33,
-    "humidity": 96,
+    "humidity": 83,
     "wind_mph": 13,
     "wind_dir": "S",
     "sky": 73,
@@ -186,10 +186,10 @@
    },
    {
     "t": "2026-10-05T07:00:00-04:00",
-    "temp_f": 51,
+    "temp_f": 54,
     "feels_f": 51,
     "pop": 22,
-    "humidity": 93,
+    "humidity": 83,
     "wind_mph": 10,
     "wind_dir": "SW",
     "sky": 66,
@@ -197,10 +197,10 @@
    },
    {
     "t": "2026-10-05T08:00:00-04:00",
-    "temp_f": 51,
+    "temp_f": 54,
     "feels_f": 51,
-    "pop": 23,
-    "humidity": 100,
+    "pop": 21,
+    "humidity": 90,
     "wind_mph": 10,
     "wind_dir": "W",
     "sky": 55,
@@ -208,32 +208,32 @@
    },
    {
     "t": "2026-10-05T09:00:00-04:00",
-    "temp_f": 53,
+    "temp_f": 55,
     "feels_f": 53,
-    "pop": 20,
-    "humidity": 86,
+    "pop": 9,
+    "humidity": 80,
     "wind_mph": 12,
     "wind_dir": "W",
     "sky": 44,
-    "short": "Slight Chance Rain Showers"
+    "short": "Mostly Sunny"
    },
    {
     "t": "2026-10-05T10:00:00-04:00",
-    "temp_f": 55,
+    "temp_f": 56,
     "feels_f": 55,
-    "pop": 16,
-    "humidity": 74,
+    "pop": 7,
+    "humidity": 72,
     "wind_mph": 13,
     "wind_dir": "W",
     "sky": 41,
-    "short": "Slight Chance Rain Showers"
+    "short": "Mostly Sunny"
    },
    {
     "t": "2026-10-05T11:00:00-04:00",
-    "temp_f": 56,
+    "temp_f": 57,
     "feels_f": 56,
-    "pop": 10,
-    "humidity": 64,
+    "pop": 4,
+    "humidity": 62,
     "wind_mph": 14,
     "wind_dir": "W",
     "sky": 49,
@@ -243,7 +243,7 @@
     "t": "2026-10-05T12:00:00-04:00",
     "temp_f": 57,
     "feels_f": 57,
-    "pop": 11,
+    "pop": 5,
     "humidity": 59,
     "wind_mph": 16,
     "wind_dir": "W",
@@ -254,7 +254,7 @@
     "t": "2026-10-05T13:00:00-04:00",
     "temp_f": 58,
     "feels_f": 58,
-    "pop": 12,
+    "pop": 9,
     "humidity": 53,
     "wind_mph": 17,
     "wind_dir": "W",
@@ -265,29 +265,29 @@
     "t": "2026-10-05T14:00:00-04:00",
     "temp_f": 57,
     "feels_f": 57,
-    "pop": 18,
+    "pop": 29,
     "humidity": 53,
     "wind_mph": 17,
     "wind_dir": "NW",
     "sky": 56,
-    "short": "Slight Chance Rain Showers"
+    "short": "Chance Rain Showers"
    },
    {
     "t": "2026-10-05T15:00:00-04:00",
-    "temp_f": 55,
+    "temp_f": 56,
     "feels_f": 55,
-    "pop": 14,
-    "humidity": 57,
+    "pop": 29,
+    "humidity": 55,
     "wind_mph": 18,
     "wind_dir": "NW",
     "sky": 53,
-    "short": "Slight Chance Rain Showers"
+    "short": "Chance Rain Showers"
    },
    {
     "t": "2026-10-05T16:00:00-04:00",
     "temp_f": 55,
     "feels_f": 55,
-    "pop": 9,
+    "pop": 13,
     "humidity": 55,
     "wind_mph": 18,
     "wind_dir": "NW",
@@ -296,10 +296,10 @@
    },
    {
     "t": "2026-10-05T17:00:00-04:00",
-    "temp_f": 55,
+    "temp_f": 54,
     "feels_f": 55,
-    "pop": 6,
-    "humidity": 51,
+    "pop": 3,
+    "humidity": 52,
     "wind_mph": 17,
     "wind_dir": "NW",
     "sky": 75,
@@ -307,10 +307,10 @@
    },
    {
     "t": "2026-10-05T18:00:00-04:00",
-    "temp_f": 53,
+    "temp_f": 52,
     "feels_f": 53,
-    "pop": 10,
-    "humidity": 54,
+    "pop": 4,
+    "humidity": 56,
     "wind_mph": 17,
     "wind_dir": "NW",
     "sky": 50,
@@ -318,10 +318,10 @@
    },
    {
     "t": "2026-10-05T19:00:00-04:00",
-    "temp_f": 51,
+    "temp_f": 50,
     "feels_f": 51,
-    "pop": 8,
-    "humidity": 59,
+    "pop": 4,
+    "humidity": 61,
     "wind_mph": 16,
     "wind_dir": "NW",
     "sky": 49,
@@ -858,7 +858,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 23,
+  "aqi": 22,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "10/05/26 6:00",
@@ -876,7 +876,7 @@
    {
     "date": "2026-10-05",
     "high_f": {
-     "GFS": 60,
+     "GFS": 59,
      "Euro": 59,
      "ICON": 59
     },
@@ -886,11 +886,11 @@
      "ICON": 80
     },
     "precip_in": {
-     "GFS": 0.0,
+     "GFS": 0.02,
      "Euro": 0.06,
      "ICON": 0.2
     },
-    "high_spread_f": 1
+    "high_spread_f": 0
    },
    {
     "date": "2026-10-06",
