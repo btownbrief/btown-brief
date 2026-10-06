@@ -1,36 +1,36 @@
 {
- "updated": "2026-10-06T10:47:56+00:00",
+ "updated": "2026-10-06T16:15:24+00:00",
  "sections_updated": {
-  "now": "2026-10-06T10:47:56+00:00",
-  "forecast": "2026-10-06T10:47:56+00:00",
-  "hourly": "2026-10-06T10:47:56+00:00",
-  "alerts": "2026-10-06T10:47:56+00:00",
-  "afd": "2026-10-06T10:47:56+00:00",
-  "lake_forecast": "2026-10-06T10:47:56+00:00",
-  "lake_gage": "2026-10-06T10:47:56+00:00",
-  "air": "2026-10-06T10:47:56+00:00",
-  "sun": "2026-10-06T10:47:56+00:00",
-  "models": "2026-10-06T10:47:56+00:00"
+  "now": "2026-10-06T16:15:24+00:00",
+  "forecast": "2026-10-06T16:15:24+00:00",
+  "hourly": "2026-10-06T16:15:24+00:00",
+  "alerts": "2026-10-06T16:15:24+00:00",
+  "afd": "2026-10-06T16:15:24+00:00",
+  "lake_forecast": "2026-10-06T16:15:24+00:00",
+  "lake_gage": "2026-10-06T16:15:24+00:00",
+  "air": "2026-10-06T16:15:24+00:00",
+  "sun": "2026-10-06T16:15:24+00:00",
+  "models": "2026-10-06T16:15:24+00:00"
  },
  "now": {
-  "observed_at": "2026-10-06T10:30:00+00:00",
+  "observed_at": "2026-10-06T15:55:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
-  "temp_f": 43,
-  "feels_like_f": 36,
-  "humidity": 61,
-  "dewpoint_f": 30,
+  "description": "Mostly Clear",
+  "temp_f": 50,
+  "feels_like_f": 50,
+  "humidity": 54,
+  "dewpoint_f": 34,
   "wind_mph": 13,
-  "wind_gust_mph": 18,
-  "wind_dir": "WNW",
+  "wind_gust_mph": null,
+  "wind_dir": "W",
   "precip_last_hr_in": null
  },
  "forecast": {
   "updated": "2026-10-06T06:25:00+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-10-06T06:00:00-04:00",
+    "name": "This Afternoon",
+    "start": "2026-10-06T12:00:00-04:00",
     "is_day": true,
     "temp_f": 55,
     "pop": 0,
@@ -173,72 +173,6 @@
  "hourly": {
   "updated": "2026-10-06T06:25:00+00:00",
   "hours": [
-   {
-    "t": "2026-10-06T06:00:00-04:00",
-    "temp_f": 42,
-    "feels_f": 35,
-    "pop": 0,
-    "humidity": 70,
-    "wind_mph": 14,
-    "wind_dir": "NW",
-    "sky": 16,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-10-06T07:00:00-04:00",
-    "temp_f": 41,
-    "feels_f": 33,
-    "pop": 0,
-    "humidity": 73,
-    "wind_mph": 14,
-    "wind_dir": "NW",
-    "sky": 18,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-10-06T08:00:00-04:00",
-    "temp_f": 42,
-    "feels_f": 35,
-    "pop": 0,
-    "humidity": 67,
-    "wind_mph": 13,
-    "wind_dir": "NW",
-    "sky": 19,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-10-06T09:00:00-04:00",
-    "temp_f": 44,
-    "feels_f": 37,
-    "pop": 0,
-    "humidity": 60,
-    "wind_mph": 14,
-    "wind_dir": "NW",
-    "sky": 18,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-10-06T10:00:00-04:00",
-    "temp_f": 45,
-    "feels_f": 39,
-    "pop": 0,
-    "humidity": 55,
-    "wind_mph": 14,
-    "wind_dir": "NW",
-    "sky": 16,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-10-06T11:00:00-04:00",
-    "temp_f": 47,
-    "feels_f": 41,
-    "pop": 0,
-    "humidity": 49,
-    "wind_mph": 14,
-    "wind_dir": "NW",
-    "sky": 22,
-    "short": "Sunny"
-   },
    {
     "t": "2026-10-06T12:00:00-04:00",
     "temp_f": 49,
@@ -568,6 +502,72 @@
     "wind_dir": "S",
     "sky": 40,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-10-07T18:00:00-04:00",
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 7,
+    "humidity": 56,
+    "wind_mph": 16,
+    "wind_dir": "S",
+    "sky": 33,
+    "short": "Partly Cloudy"
+   },
+   {
+    "t": "2026-10-07T19:00:00-04:00",
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 10,
+    "humidity": 60,
+    "wind_mph": 16,
+    "wind_dir": "S",
+    "sky": 51,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-10-07T20:00:00-04:00",
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 13,
+    "humidity": 67,
+    "wind_mph": 16,
+    "wind_dir": "S",
+    "sky": 70,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-10-07T21:00:00-04:00",
+    "temp_f": 57,
+    "feels_f": 57,
+    "pop": 13,
+    "humidity": 75,
+    "wind_mph": 17,
+    "wind_dir": "S",
+    "sky": 90,
+    "short": "Cloudy"
+   },
+   {
+    "t": "2026-10-07T22:00:00-04:00",
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 13,
+    "humidity": 77,
+    "wind_mph": 17,
+    "wind_dir": "S",
+    "sky": 73,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-10-07T23:00:00-04:00",
+    "temp_f": 55,
+    "feels_f": 55,
+    "pop": 12,
+    "humidity": 77,
+    "wind_mph": 16,
+    "wind_dir": "S",
+    "sky": 55,
+    "short": "Mostly Cloudy"
    }
   ]
  },
@@ -582,13 +582,13 @@
   ]
  },
  "afd": {
-  "issued": "2026-10-06T06:27:00+00:00",
+  "issued": "2026-10-06T11:33:00+00:00",
   "key_messages": [
    "A cold day is expected today with a Frost Advisory for the Champlain Valley tonight. Gradual warming with some chances for light rain by Wednesday afternoon.",
    "Dry and seasonable weekend before shower chances return for the beginning of next week."
   ],
   "what_changed": "As of 226 AM EDT Tuesday... A Frost Advisory is in effect for the Champlain Valley tonight.",
-  "raw": "\n000\nFXUS61 KBTV 060627\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n227 AM EDT Tue Oct 6 2026\n\n.WHAT HAS CHANGED...\nAs of 226 AM EDT Tuesday...\n\nA Frost Advisory is in effect for the Champlain Valley tonight.\n\n&&\n\n.KEY MESSAGES...\nAs of 226 AM EDT Tuesday...\n\n1. A cold day is expected today with a Frost Advisory for the \nChamplain Valley tonight. Gradual warming with some chances for \nlight rain by Wednesday afternoon.\n\n2. Dry and seasonable weekend before shower chances return for \nthe beginning of next week. \n\n&&\n\n.DISCUSSION...\nAs of 226 AM EDT Tuesday...\n\nKEY MESSAGE 1: Today will be a cool day in the upper 40s to mid 50s \nacross the region. West to northwest winds will continue, but not so \nstrong as yesterday. Max wind gusts this afternoon should top out \naround 20-25 mph, and higher summits will likely gust around 35-50 \nmph much of the day. It will be dry, and despite the cool \nconditions, we should see relative humidity values fall down towards \n35 percent this afternoon. This isn't quite enough to push us \ntowards fire weather concerns, but it is a bit close and a sign of \nthe changing seasons. The dry conditions in place will mean that \nonce winds drop off this evening, temperatures will quickly fall as \nradiational cooling initiates. It will fall into the mid 20s to mid \n30s across the region. The Champlain Valley remains in the \nFrost/Freeze program with the median first freeze around October \n11th. Grand Isle is less likely to observe frost, but just in case, \nthrew the whole of the Champlain Valley in to a Frost Advisory for \ntonight. After about 5-6am, increasing south winds and cloud cover \nwill end the frost potential.\n\nDuring the day on Wednesday, we'll be at the southeastern periphery \nof a deep, mature low pressure that will set up near James Bay. Its \nwarm front will cross east midday. Forecast soundings depict wide \nmoisture spread. Given today's expected dryness, I'm inclined to \nthink it will not rain Wednesday morning (precipitation falling as \nvirga). In deference to some wetter solutions, there are some 10-30 \nPoPs over the northern tier as the warm front crosses. Moderation \nbehind the warm front will bring temperatures into the 60s, with \nperhaps a few holdouts in the upper 50s across the Northeast \nKingdom. A prefrontal trough will approach the St. Lawrence River \nduring the evening, and this could produce a few afternoon showers \nalong the Route 11 corridor in far northern New York.\n\nThe actual cold front will arrive midday Thursday. It will bring \nrain showers in a fashion similar to today. A dynamic set up with \nmodest 150-300 J/kg of instability will allow some convective \nelements. Although the upper level temperatures aren't quite as \ncool, there could be some pea sized hail as occurred yesterday, and \na rumble of thunder cannot be ruled out either. Cool air will be \nreinforced behind the system, pushing nighttime lows back into the \n30s to lower 40s with a spot shower or two lingering while we remain \nunder large scale cyclonic flow.\n\nKEY MESSAGE 2: Troughing builds in for Friday with strong cold air \nadvection continuing. While most of the moisture and dynamics from \nthe upper low will remain to the north over Quebec, a brief \nshower/sprinkle is possible on Friday, mostly in the higher \nelevations. Snow levels are expected to fall below summit levels \nduring this time, so a brief flurry or snow shower is possible in \nthe highest peaks of the Adirondacks and Greens, but the lack of \nmoisture would prevent anything more. Surface high pressure builds \nin for the weekend, leading to a classic fall stretch. Highs will be \nin the 50s and 60s with mostly sunny skies. As the high builds \noffshore to start next week, temperatures could get close to 70 in \nthe valleys. A few showers will be possible early next week as \nanother cold front makes a run at the region.\n\n&&\n\n.AVIATION /06Z TUESDAY THROUGH SATURDAY/...\nThrough 06Z Wednesday...VFR conditions are expected to persist for\nthe next 24 hours. Winds will stay elevated through the morning,\nwith westerly gusts in the 10-20 KT range for most places. A couple\nterminals, notably RUT and SLK, will lose gusts at times and only\nhave sustained winds around 10 KT. Winds will decrease during the\nafternoon and by tonight, they should be mostly\nlight/variable/terrain driven. Winds become southerly in the later\npart of tonight and tomorrow morning.\n\nOutlook...\n\nWednesday: VFR. Slight chance SHRA.\nWednesday Night: VFR. Chance SHRA.\nThursday: VFR. Chance SHRA, Slight chance TSRA.\nThursday Night: VFR. Slight chance SHRA.\nFriday: Mainly VFR, with local MVFR possible. Slight chance SHRA.\nFriday Night: Mainly VFR, with areas MVFR possible. Chance SHRA.\nSaturday: Mainly VFR, with areas MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Frost Advisory from midnight tonight to 7 AM EDT Wednesday for \n     VTZ001-002-005-009.\nNY...Frost Advisory from midnight tonight to 7 AM EDT Wednesday for \n     NYZ028-035.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Haynes\nDISCUSSION...Myskowski/Haynes\nAVIATION...Myskowski\n"
+  "raw": "\n000\nFXUS61 KBTV 061133\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n733 AM EDT Tue Oct 6 2026\n\n.WHAT HAS CHANGED...\nAs of 226 AM EDT Tuesday...\n\nA Frost Advisory is in effect for the Champlain Valley tonight.\n\n&&\n\n.KEY MESSAGES...\nAs of 226 AM EDT Tuesday...\n\n1. A cold day is expected today with a Frost Advisory for the \nChamplain Valley tonight. Gradual warming with some chances for \nlight rain by Wednesday afternoon.\n\n2. Dry and seasonable weekend before shower chances return for \nthe beginning of next week.\n\n&&\n\n.DISCUSSION...\nAs of 226 AM EDT Tuesday...\n\nKEY MESSAGE 1: Today will be a cool day in the upper 40s to mid 50s \nacross the region. West to northwest winds will continue, but not so \nstrong as yesterday. Max wind gusts this afternoon should top out \naround 20-25 mph, and higher summits will likely gust around 35-50 \nmph much of the day. It will be dry, and despite the cool \nconditions, we should see relative humidity values fall down towards \n35 percent this afternoon. This isn't quite enough to push us \ntowards fire weather concerns, but it is a bit close and a sign of \nthe changing seasons. The dry conditions in place will mean that \nonce winds drop off this evening, temperatures will quickly fall as \nradiational cooling initiates. It will fall into the mid 20s to mid \n30s across the region. The Champlain Valley remains in the \nFrost/Freeze program with the median first freeze around October \n11th. Grand Isle is less likely to observe frost, but just in case, \nthrew the whole of the Champlain Valley in to a Frost Advisory for \ntonight. After about 5-6am, increasing south winds and cloud cover \nwill end the frost potential.\n\nDuring the day on Wednesday, we'll be at the southeastern periphery \nof a deep, mature low pressure that will set up near James Bay. Its \nwarm front will cross east midday. Forecast soundings depict wide \nmoisture spread. Given today's expected dryness, I'm inclined to \nthink it will not rain Wednesday morning (precipitation falling as \nvirga). In deference to some wetter solutions, there are some 10-30 \nPoPs over the northern tier as the warm front crosses. Moderation \nbehind the warm front will bring temperatures into the 60s, with \nperhaps a few holdouts in the upper 50s across the Northeast \nKingdom. A prefrontal trough will approach the St. Lawrence River \nduring the evening, and this could produce a few afternoon showers \nalong the Route 11 corridor in far northern New York.\n\nThe actual cold front will arrive midday Thursday. It will bring \nrain showers in a fashion similar to today. A dynamic set up with \nmodest 150-300 J/kg of instability will allow some convective \nelements. Although the upper level temperatures aren't quite as \ncool, there could be some pea sized hail as occurred yesterday, and \na rumble of thunder cannot be ruled out either. Cool air will be \nreinforced behind the system, pushing nighttime lows back into the \n30s to lower 40s with a spot shower or two lingering while we remain \nunder large scale cyclonic flow.\n\nKEY MESSAGE 2: Troughing builds in for Friday with strong cold air \nadvection continuing. While most of the moisture and dynamics from \nthe upper low will remain to the north over Quebec, a brief \nshower/sprinkle is possible on Friday, mostly in the higher \nelevations. Snow levels are expected to fall below summit levels \nduring this time, so a brief flurry or snow shower is possible in \nthe highest peaks of the Adirondacks and Greens, but the lack of \nmoisture would prevent anything more. Surface high pressure builds \nin for the weekend, leading to a classic fall stretch. Highs will be \nin the 50s and 60s with mostly sunny skies. As the high builds \noffshore to start next week, temperatures could get close to 70 in \nthe valleys. A few showers will be possible early next week as \nanother cold front makes a run at the region.\n\n&&\n\n.AVIATION /12Z TUESDAY THROUGH SATURDAY/...\nThrough 12Z Wednesday...VFR conditions are expected to mostly persist\nfor the next 24 hours. The MVFR ceilings at EFK and SLK will lift\nquickly this morning. Winds will stay elevated through the early\nafternoon, with westerly gusts in the 10-20 KT range for most\nplaces. Winds will decrease during the afternoon and by tonight,\nthey should be mostly light/variable/terrain driven. Winds become\nsoutherly in the later part of tonight and tomorrow morning. Most\nareas should see speeds under 10 KT later tonight, but BTV and PBG\nshould see gusts up to 20 KT.\n\nOutlook...\n\nWednesday: VFR. Slight chance SHRA.\nWednesday Night: VFR. Chance SHRA.\nThursday: VFR. Chance SHRA, Slight chance TSRA.\nThursday Night: VFR. Slight chance SHRA.\nFriday: VFR. Slight chance SHRA.\nFriday Night: Mainly VFR, with areas MVFR possible. Slight chance\nSHRA.\nSaturday: Mainly VFR, with local MVFR possible. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Frost Advisory from midnight tonight to 7 AM EDT Wednesday for \n     VTZ001-002-005-009.\nNY...Frost Advisory from midnight tonight to 7 AM EDT Wednesday for \n     NYZ028-035.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Haynes\nDISCUSSION...Haynes/Myskowski\nAVIATION...Myskowski\n"
  },
  "lake_forecast": {
   "issued": "2026-10-06T06:25:00+00:00",
@@ -833,17 +833,17 @@
  },
  "lake_gage": {
   "water_temp_f": 59,
-  "water_temp_at": "2026-10-06T06:00:00.000-04:00",
-  "level_ft": 93.83,
-  "level_at": "2026-10-06T06:00:00.000-04:00",
+  "water_temp_at": "2026-10-06T12:00:00.000-04:00",
+  "level_ft": 93.82,
+  "level_at": "2026-10-06T12:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 25,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/06/26 6:00",
+  "observed": "10/06/26 12:00",
   "discussion": "On Tuesday, October 6th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -860,11 +860,11 @@
     "high_f": {
      "GFS": 55,
      "Euro": 56,
-     "ICON": 55
+     "ICON": 56
     },
     "pop_max": {
      "GFS": 0,
-     "Euro": 0,
+     "Euro": 3,
      "ICON": 0
     },
     "precip_in": {
@@ -877,40 +877,40 @@
    {
     "date": "2026-10-07",
     "high_f": {
-     "GFS": 67,
+     "GFS": 65,
      "Euro": 61,
      "ICON": 62
     },
     "pop_max": {
-     "GFS": 24,
-     "Euro": 31,
-     "ICON": 8
+     "GFS": 18,
+     "Euro": 49,
+     "ICON": 35
     },
     "precip_in": {
-     "GFS": 0.02,
-     "Euro": 0.02,
-     "ICON": 0.01
+     "GFS": 0.0,
+     "Euro": 0.04,
+     "ICON": 0.02
     },
-    "high_spread_f": 6
+    "high_spread_f": 4
    },
    {
     "date": "2026-10-08",
     "high_f": {
-     "GFS": 66,
-     "Euro": 65,
+     "GFS": 65,
+     "Euro": 62,
      "ICON": 66
     },
     "pop_max": {
-     "GFS": 29,
-     "Euro": 49,
-     "ICON": 47
+     "GFS": 39,
+     "Euro": 75,
+     "ICON": 62
     },
     "precip_in": {
-     "GFS": 0.23,
-     "Euro": 0.04,
-     "ICON": 0.13
+     "GFS": 0.15,
+     "Euro": 0.06,
+     "ICON": 0.15
     },
-    "high_spread_f": 1
+    "high_spread_f": 4
    }
   ]
  }
