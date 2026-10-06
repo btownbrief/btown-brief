@@ -2,9 +2,9 @@
  "nws-weather": {
   "alerts": [
    {
-    "id": "urn:oid:2.49.0.1.840.0.13527584f1ba4c60811e4216cf36f2a6ca77457b.001.1",
+    "id": "urn:oid:2.49.0.1.840.0.00b592bdf075f15b36c7f704791f0c797300c8cb.001.1",
     "event": "Frost Advisory",
-    "headline": "Frost Advisory issued October 6 at 2:23AM EDT until October 7 at 7:00AM EDT by NWS Burlington VT",
+    "headline": "Frost Advisory issued October 6 at 1:57PM EDT until October 7 at 7:00AM EDT by NWS Burlington VT",
     "severity": "Minor",
     "onset": "2026-10-07T00:00:00-04:00",
     "ends": "2026-10-07T07:00:00-04:00",
@@ -507,7 +507,7 @@
     "start": "2026-10-06T17:00:00+00:00",
     "hasAgenda": true,
     "files": [
-     "Agenda V1",
+     "Agenda V2",
      "Packet V1"
     ]
    },
@@ -559,8 +559,8 @@
     "start": "2026-10-07T16:00:00+00:00",
     "hasAgenda": true,
     "files": [
-     "10/7 Agenda v2",
-     "10/7 Agenda v2"
+     "AC 10-7 v3",
+     "AC 10-7 v3"
     ]
    },
    "10244": {
@@ -578,6 +578,41 @@
    "sevendays-news": {
     "items": [
      {
+      "id": "https://www.sevendaysvt.com/?p=219618",
+      "title": "Florida Preacher Closes on Former Green Mountain College Campus",
+      "link": "https://www.sevendaysvt.com/news/florida-preacher-closes-on-former-green-mountain-college-campus/",
+      "ts": "2026-10-06T20:18:27+00:00",
+      "summary": "Tommie Zito, an evangelical leader based in Florida, is paying $6 million for campus in the heart of downtown Poultney. The post Florida Preacher Closes on Former Green Mountain College Campus appeared first on Seven Days . (Image: File: Caleb Kenna)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=219600",
+      "title": "Doughnuts on the Rise: Three New Vermont Purveyors",
+      "link": "https://www.sevendaysvt.com/food-drink/fooddrinkfeatures/doughnuts-on-the-rise-three-new-vermont-purveyors/",
+      "ts": "2026-10-06T19:44:37+00:00",
+      "summary": "Three Vermont doughnut purveyors have expanded their operations in recent months to meet a growing appetite for fried dough. The post Doughnuts on the Rise: Three New Vermont Purveyors appeared first on Seven Days . (Image: Carolyn Shapiro)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=219578",
+      "title": "One Dish: Sabah’s House Shares Shawarma From a Family Recipe",
+      "link": "https://www.sevendaysvt.com/food-drink/restaurantreviews/one-dish-sabahs-house-shares-shawarma-from-a-family-recipe/",
+      "ts": "2026-10-06T19:43:19+00:00",
+      "summary": "Since taking over the kiosk at the corner of Church and College streets in Burlington, Mustafa Khudaier has built a following for his chicken shawarma wrap. The post One Dish: Sabah’s House Shares Shawarma From a Family Recipe appeared first on Seven Days . (Image: Melissa Pasanen)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=219592",
+      "title": "Big Heart Social in Vergennes Has Closed",
+      "link": "https://www.sevendaysvt.com/food-drink/foodnews/big-heart-social-in-vergennes-has-closed/",
+      "ts": "2026-10-06T19:30:50+00:00",
+      "summary": "For exactly three months, the café-bar established itself as a home for Addison County’s queer community. But sales didn’t cover the new business’ expenses. The post Big Heart Social in Vergennes Has Closed appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=219588",
+      "title": "Crumbs: Ondis in Montpelier to Close in November",
+      "link": "https://www.sevendaysvt.com/food-drink/foodnews/crumbs-ondis-in-montpelier-to-close-in-november/",
+      "ts": "2026-10-06T19:29:17+00:00",
+      "summary": "In Vermont restaurant news: Montpelier’s Ondis announced the end of its three-year run. For now, the Barre Street bar remains open with snacks and drinks. The post Crumbs: Ondis in Montpelier to Close in November appeared first on Seven Days . (Image: File: Jeb Wallace-Brodeur)"
+     },
+     {
       "id": "https://www.sevendaysvt.com/?p=219553",
       "title": "Obituary: Audrey Ochs Kiendl, 1929-2026",
       "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-audrey-ochs-kiendl-1929-2026/",
@@ -592,6 +627,13 @@
       "summary": "Their community remembers a 50-year couple who met in high school The post In Memoriam: Brenda Emmons, 1957-2026 and Kevin Lee Emmons, 1958-2026 appeared first on Seven Days . (Image: Courtesy)"
      },
      {
+      "id": "https://www.sevendaysvt.com/?p=219503",
+      "title": "Obituary: Frances “Fran” Mount, 1942-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-frances-fran-mount-1942-2026/",
+      "ts": "2026-10-06T10:00:00+00:00",
+      "summary": "Faith, family and music were central to the life of 26-year staffing industry professional who cofounded Westaff The post Obituary: Frances \"Fran\" Mount, 1942-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
       "id": "https://www.sevendaysvt.com/?p=219499",
       "title": "In Memoriam: Gerry Malavenda, 1956-2022",
       "link": "https://www.sevendaysvt.com/life-lines/in-memoriam-gerry-malavenda-1956-2022-2/",
@@ -599,58 +641,51 @@
       "summary": "\"Gone but not forgotten.\" The post In Memoriam: Gerry Malavenda, 1956-2022 appeared first on Seven Days . (Image: Courtesy)"
      },
      {
-      "id": "https://www.sevendaysvt.com/?p=219525",
-      "title": "Magnificent 7: Must-See, Must-Do Events in and Around Vermont, October 7-14",
-      "link": "https://www.sevendaysvt.com/arts-culture/magnificent7/magnificent-7-must-see-must-do-events-in-and-around-vermont-october-7-14/",
-      "ts": "2026-10-05T20:56:58+00:00",
-      "summary": "Explore our editor’s picks for must-do events in Vermont this week, including alt-Americana icon Lucinda Williams at New Hampshire’s Lebanon Opera House. The post Magnificent 7: Must-See, Must-Do Events in and Around Vermont, October 7-14 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219520",
-      "title": "Obituary: Celia “Sis” Jarvis McClintock, 1925-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-celia-sis-jarvis-mcclintock-1925-2026/",
-      "ts": "2026-10-05T10:00:00+00:00",
-      "summary": "Lifelong Vermonter found beauty and joy in the simplest things and made every person in her family feel uniquely loved The post Obituary: Celia “Sis” Jarvis McClintock, 1925-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219516",
-      "title": "Obituary: Peter M. Ireland, 1937-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-peter-m-ireland-1937-2026/",
-      "ts": "2026-10-05T10:00:00+00:00",
-      "summary": "Proud Vermonter with a long career in health care administration was a deeply involved community member and volunteer The post Obituary: Peter M. Ireland, 1937-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219509",
-      "title": "Obituary: Katie Marie Line, 1983-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-katie-marie-line-1983-2026/",
-      "ts": "2026-10-05T10:00:00+00:00",
-      "summary": "\"Mom’s best friend\" loved spending time with family and friends, and her smile and laugh were contagious The post Obituary: Katie Marie Line, 1983-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219490",
-      "title": "Obituary: Ralph Leo Jr., 1942-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-ralph-leo-jr-1942-2026/",
-      "ts": "2026-10-05T10:00:00+00:00",
-      "summary": "Thirty-five-year employee of General Dynamics was a member of the American Legion Post 91 and the Eagles Club in Milton The post Obituary: Ralph Leo Jr., 1942-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219486",
-      "title": "Obituary: Suzanne Slesar, 1962-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-suzanne-slesar-1962-2026/",
-      "ts": "2026-10-05T10:00:00+00:00",
-      "summary": "Force to be reckoned with thrived on helping people get through their most difficult times The post Obituary: Suzanne Slesar, 1962-2026 appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219388",
-      "title": "Obituary: William J. “Bill” Drzyzga, 1945-2026",
-      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-william-j-bill-drzyzga-1945-2026/",
-      "ts": "2026-10-05T10:00:00+00:00",
-      "summary": "U.S. Air Force veteran and decorated member of the Vermont Air National Guard loved hunting, fishing and a game of cribbage The post Obituary: William J. \"Bill\" Drzyzga, 1945-2026 appeared first on Seven Days . (Image: Courtesy)"
+      "id": "https://www.sevendaysvt.com/?p=219495",
+      "title": "Obituary: Sally Burrell, 1958-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-sally-burrell-1958-2026/",
+      "ts": "2026-10-06T10:00:00+00:00",
+      "summary": "Advocate for energy efficiency, conservation and renewable energy had a “spirit of positivity and possibility” The post Obituary: Sally Burrell, 1958-2026 appeared first on Seven Days . (Image: Courtesy)"
      }
     ]
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=656428",
+      "title": "Rink on the brink: Barre makes last-minute ice rink repairs, but the arena’s future is uncertain",
+      "link": "https://vtdigger.org/2026/10/06/rink-on-the-brink-barre-makes-last-minute-ice-rink-repairs-but-the-arenas-future-is-uncertain/",
+      "ts": "2026-10-06T21:32:07+00:00",
+      "summary": "For one local high school coach, the rink holds three generations of family history. Read the story on VTDigger here: Rink on the brink: Barre makes last-minute ice rink repairs, but the arena’s future is uncertain ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=656425",
+      "title": "UVM Medical Center unions reach tentative agreement in contract negotiations",
+      "link": "https://vtdigger.org/2026/10/06/uvm-medical-center-unions-reach-tentative-agreement-in-contract-negotiations/",
+      "ts": "2026-10-06T21:12:42+00:00",
+      "summary": "Union members now have until Sunday to vote on ratifying the contract. Read the story on VTDigger here: UVM Medical Center unions reach tentative agreement in contract negotiations ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=656422",
+      "title": "Proposal 4’s language is flawed",
+      "link": "https://vtdigger.org/2026/10/06/proposal-4s-language-is-flawed/",
+      "ts": "2026-10-06T21:02:01+00:00",
+      "summary": "The Legislature’s own constitutional law expert has raised concerns about the amendment’s language. Read the story on VTDigger here: Proposal 4’s language is flawed ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=656190",
+      "title": "Vermont colleges chart a path forward against demographic and financial headwinds",
+      "link": "https://vtdigger.org/2026/10/06/vermont-colleges-chart-a-path-forward-against-demographic-and-financial-headwinds/",
+      "ts": "2026-10-06T20:19:33+00:00",
+      "summary": "“We cannot lose more colleges in Vermont if we're going to try to address Vermont's demographic issue,” said a leader of Middlebury College. Read the story on VTDigger here: Vermont colleges chart a path forward against demographic and financial headwinds ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=656404",
+      "title": "Vermont’s return-to-office order is an insult",
+      "link": "https://vtdigger.org/2026/10/06/opinion-vermonts-return-to-office-order-is-an-insult/",
+      "ts": "2026-10-06T18:12:38+00:00",
+      "summary": "The order ignores the dignity, work ethic and worth of the people who do the state's work. Read the story on VTDigger here: Vermont’s return-to-office order is an insult ."
+     },
      {
       "id": "https://vtdigger.org/?p=656351",
       "title": "Brattleboro fire chief deploys for 13 months",
@@ -825,52 +860,24 @@
       "link": "https://vtdigger.org/2026/10/01/brattleboro-memorial-hospital-promotes-its-financial-consultant-to-post-of-interim-ceo/",
       "ts": "2026-10-01T21:13:17+00:00",
       "summary": "David Sanville’s appointment comes a year after the southeastern Vermont healthcare hub reported a multimillion-dollar deficit and the subsequent departures of two top executives. Read the story on VTDigger here: Brattleboro Memorial Hospital promotes its financial consultant to post of interim CEO ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=656089",
-      "title": "Peak foliage arrives in Vermont, and next week could bring year’s first flakes",
-      "link": "https://vtdigger.org/2026/10/01/peak-foliage-arrives-in-vermont-and-next-week-could-bring-years-first-flakes/",
-      "ts": "2026-10-01T20:31:15+00:00",
-      "summary": "The brightest colors of the year have arrived in the mountains and the Northeast Kingdom. Expect it to get cold early next week. Read the story on VTDigger here: Peak foliage arrives in Vermont, and next week could bring year’s first flakes ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=656103",
-      "title": "Jack Sawyer, accused of foiled school shooting plot 8 years ago, is back in court on unrelated charges",
-      "link": "https://vtdigger.org/2026/10/01/jack-sawyer-accused-of-foiled-school-shooting-plot-8-years-ago-is-back-in-court-on-unrelated-charges/",
-      "ts": "2026-10-01T20:08:59+00:00",
-      "summary": "The new charges include allegedly stealing more than $20,000 in items from Sterling College, where he was once a student. Read the story on VTDigger here: Jack Sawyer, accused of foiled school shooting plot 8 years ago, is back in court on unrelated charges ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=656082",
-      "title": "One vote I’m proud of",
-      "link": "https://vtdigger.org/2026/10/01/opinion-one-vote-im-proud-of/",
-      "ts": "2026-10-01T18:29:13+00:00",
-      "summary": "Proposal 3 passed the Legislature by rare bipartisan margins. Now it's up to voters. Read the story on VTDigger here: One vote I’m proud of ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=656079",
-      "title": "Can Vermont afford Proposal 3?",
-      "link": "https://vtdigger.org/2026/10/01/opinion-can-vermont-afford-proposal-3/",
-      "ts": "2026-10-01T18:16:02+00:00",
-      "summary": "Proposal 3 would bar Vermont lawmakers from adopting a right-to-work law, a tool other states use to compete for jobs. Read the story on VTDigger here: Can Vermont afford Proposal 3? ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=656067",
-      "title": "In a surprise move, Vermont’s Roman Catholic Diocese seeks to dismiss its 2-year-old bankruptcy case",
-      "link": "https://vtdigger.org/2026/10/01/in-a-surprise-move-vermonts-roman-catholic-diocese-seeks-to-dismiss-its-2-year-old-bankruptcy-case/",
-      "ts": "2026-10-01T13:05:54+00:00",
-      "summary": "The state’s largest religious denomination filed its request after spending $2 million in legal fees — and before facing a related creditors’ lawsuit seeking access to an estimated $500 million in local parish assets. Read the story on VTDigger here: In a surprise move, Vermont’s Roman Catholic Diocese seeks to dismiss its 2-year-old bankruptcy case ."
      }
     ]
    },
    "vermont-public": {
     "items": [
      {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-06/poll-residents-losing-faith-vermont-good-place-start-life",
-      "title": "Poll: Residents are losing faith in Vermont as a good place to start life",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-06/poll-residents-losing-faith-vermont-good-place-start-life",
-      "ts": "2026-10-06T09:00:00+00:00",
-      "summary": "For the third time, Vermont Public asked residents how they would advise an 18-year-old on their future. This year’s results were the gloomiest."
+      "id": "https://www.vermontpublic.org/local-news/2026-10-06/gray-rodgers-clash-tense-lieutenant-governor-debate",
+      "title": "Gray, Rodgers clash in tense lieutenant governor’s debate",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-06/gray-rodgers-clash-tense-lieutenant-governor-debate",
+      "ts": "2026-10-06T21:30:17+00:00",
+      "summary": "Lt. Gov. John Rodgers, the Republican incumbent, accused the farm operated by Democratic candidate Molly Gray’s family of labor violations surrounding its treatment of migrant farmworkers. In response, Gray said going after her family was “a new low.”"
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-06/support-staff-techs-reach-tentative-deal-with-uvmmc",
+      "title": "Support staff, techs reach tentative deal with UVMMC",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-06/support-staff-techs-reach-tentative-deal-with-uvmmc",
+      "ts": "2026-10-06T19:28:06+00:00",
+      "summary": "The announcement means Vermont’s largest hospital should avert a strike, which union members had authorized last week."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-10-06/new-brattleboro-shelter-opens-after-social-workers-death",
@@ -878,6 +885,13 @@
       "link": "https://www.vermontpublic.org/local-news/2026-10-06/new-brattleboro-shelter-opens-after-social-workers-death",
       "ts": "2026-10-06T09:00:00+00:00",
       "summary": "The 40-bed shelter — which has about 25% more capacity than the old facility — has glass windows throughout the first floor so staff can see what is happening at all times."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-06/poll-residents-losing-faith-vermont-good-place-start-life",
+      "title": "Poll: Residents are losing faith in Vermont as a good place to start life",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-06/poll-residents-losing-faith-vermont-good-place-start-life",
+      "ts": "2026-10-06T09:00:00+00:00",
+      "summary": "For the third time, Vermont Public asked residents how they would advise an 18-year-old on their future. This year’s results were the gloomiest."
      },
      {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-10-05/2026-election-interviews-vermont-attorney-general",
@@ -905,14 +919,7 @@
       "title": "Vermont Public's 2026 lieutenant governor debate",
       "link": "https://www.vermontpublic.org/show/vermont-edition/2026-10-05/live-vermont-publics-2026-lieutenant-governor-debate",
       "ts": "2026-10-05T16:44:49+00:00",
-      "summary": "Current Lt. Gov. John Rodgers, a Republican, and former Lt. Gov. Molly Gray, a Democrat, will meet for a debate. Tune in live at noon on the radio or on YouTube."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-05/vermont-general-election-2026-candidate-guide",
-      "title": "Vermont election 2026: Look up who's on your ballot and where to vote",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-05/vermont-general-election-2026-candidate-guide",
-      "ts": "2026-10-05T09:00:00+00:00",
-      "summary": "Vermont's 2026 general election is Tuesday, Nov. 3. Use our interactive guide to learn about your local candidates and find your polling place."
+      "summary": "Read the transcript of the debate between Lt. Gov. John Rodgers, a Republican, and former Lt. Gov. Molly Gray, a Democrat."
      },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-10-05/vermonters-unhappy-school-performance-property-taxes-poll-finds",
@@ -920,6 +927,13 @@
       "link": "https://www.vermontpublic.org/local-news/2026-10-05/vermonters-unhappy-school-performance-property-taxes-poll-finds",
       "ts": "2026-10-05T09:00:00+00:00",
       "summary": "About half of those who took part in the poll said the state's education system was fair or poor, and there were more people who said it was more important to keep taxes low than to keep public schools in the community."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-05/vermont-general-election-2026-candidate-guide",
+      "title": "Vermont election 2026: Look up who's on your ballot and where to vote",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-05/vermont-general-election-2026-candidate-guide",
+      "ts": "2026-10-05T09:00:00+00:00",
+      "summary": "Vermont's 2026 general election is Tuesday, Nov. 3. Use our interactive guide to learn about your local candidates and find your polling place."
      },
      {
       "id": "https://www.vermontpublic.org/show/all-things-gardening/2026-10-04/plant-trees-before-the-freeze-and-cook-the-soil-to-get-rid-of-jumping-worms",
@@ -934,45 +948,87 @@
       "link": "https://www.vermontpublic.org/show/vermont-this-week/2026-10-02/in-review-poll-results-scott-janoo-issues",
       "ts": "2026-10-02T21:15:45+00:00",
       "summary": "Vermont's top journalists join moderator Mitch Wertlieb to delve into the most important news stories of the week."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-02/support-staff-techs-at-uvmmc-authorize-a-strike",
-      "title": "Support staff, techs at UVMMC authorize a strike",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-02/support-staff-techs-at-uvmmc-authorize-a-strike",
-      "ts": "2026-10-02T19:15:51+00:00",
-      "summary": "The strike vote does not by itself initiate a work stoppage, although it brings workers to the brink of one."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-02/stockbridge-musician-bow-thayers-new-song-shows-humans-as-a-reflection-of-nature",
-      "title": "Stockbridge musician Bow Thayer's new song shows humans as a reflection of nature",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-02/stockbridge-musician-bow-thayers-new-song-shows-humans-as-a-reflection-of-nature",
-      "ts": "2026-10-02T09:00:00+00:00",
-      "summary": "The Vermont musician's new tune, \"Fireflies,\" is the Friday Song."
      }
     ]
    },
    "wcax": {
     "items": [
      {
+      "id": "P6EHKZDTTVDU3LCPNHEKGZNKTA",
+      "title": "Week-long protests aim to put Vermont ICE presence in focus",
+      "link": "https://www.wcax.com/2026/10/06/week-long-protests-aim-put-vermont-ice-presence-focus/",
+      "ts": "2026-10-06T21:43:33+00:00",
+      "summary": "Anti-ICE protesters blocked entrances to two DHS buildings in Williston on Tuesday, turning them into temporary community gardens."
+     },
+     {
+      "id": "I3Q4X7KJGBFCXOKJKCO2CRPJIA",
+      "title": "Molly Gray responds to scrutiny of family farm’s migrant worker housing",
+      "link": "https://www.wcax.com/2026/10/06/molly-gray-responds-scrutiny-family-farms-migrant-worker-housing/",
+      "ts": "2026-10-06T21:28:38+00:00",
+      "summary": "Lt. Governor John Rodgers highlights investigations into living conditions for seasonal workers at the Gray family's farm."
+     },
+     {
+      "id": "WGIC55JDD5GV7I6NZSMM2DTFUM",
+      "title": "New senior housing rises in Brattleboro on site destroyed by Irene flooding",
+      "link": "https://www.wcax.com/2026/10/06/new-senior-housing-rises-brattleboro-site-destroyed-by-irene-flooding/",
+      "ts": "2026-10-06T21:22:14+00:00",
+      "summary": "The apartments are being brought back to life thanks in part to $1.75 million in funding secured by Rep. Becca Balint."
+     },
+     {
+      "id": "XXX6LFEHSRBZHMLTCFGA5O5HCM",
+      "title": "Vermont fuel consultant tempers expectations on Trump’s diesel order",
+      "link": "https://www.wcax.com/2026/10/06/vermont-fuel-consultant-tempers-expectations-trumps-diesel-order/",
+      "ts": "2026-10-06T21:21:25+00:00",
+      "summary": "President Donald Trump has signed an executive order aimed at bringing down diesel prices, but experts say drivers may not notice a difference at the pump."
+     },
+     {
+      "id": "BXV67MZVGZBOLGXWU6OLFSLIKI",
+      "title": "Fabulous fall foliage keeps dazzling",
+      "link": "https://www.wcax.com/2026/10/06/fabulous-fall-foliage-keeps-dazzling/",
+      "ts": "2026-10-06T21:16:03+00:00",
+      "summary": "The foliage is now at its peak in some areas of our region and it won't last for long! Our Jess Langlois has a look at the colors and shots our viewers captured."
+     },
+     {
+      "id": "SHZGBDW3VRD7ZPXL6SV6SHNHLE",
+      "title": "Mount Washington records first measurable snow of the season",
+      "link": "https://www.wcax.com/2026/10/06/mount-washington-records-first-measurable-snow-season/",
+      "ts": "2026-10-06T20:41:50+00:00",
+      "summary": "The Mount Washington Observatory posted a photo of the first measurable snow of the season on the summit -- 0.7 inches on Monday."
+     },
+     {
       "id": "6FTO2MBEORC3BHAFQVXK25TNLM",
-      "title": "South Burlington roads reopen following gas leak response",
-      "link": "https://www.wcax.com/2026/10/06/south-burlington-roads-reopen-following-gas-leak-response/",
-      "ts": "2026-10-06T15:56:35+00:00",
-      "summary": "Emergency responders were on the scene of a gas leak in the area of Market Street in South Burlington Tuesday."
+      "title": "Excavator strikes gas line, prompts road closure in South Burlington",
+      "link": "https://www.wcax.com/2026/10/06/excavator-strikes-gas-line-prompts-road-closure-south-burlington/",
+      "ts": "2026-10-06T20:13:01+00:00",
+      "summary": "Emergency responders were on the scene of a gas leak in the area of Market Street in South Burlington on Tuesday."
      },
      {
       "id": "MXTORGME6BFZDGFOC6HC6O7QIU",
-      "title": "UVMMC and support staff unions reach contract agreement",
+      "title": "UVM Medical Center and support staff unions reach contract agreement",
       "link": "https://www.wcax.com/2026/10/06/uvmmc-support-staff-unions-reach-contract-agreement/",
-      "ts": "2026-10-06T15:43:48+00:00",
+      "ts": "2026-10-06T19:55:46+00:00",
       "summary": "Just days after the unionized technical and support staff authorized a strike, a tentative agreement has been reached with the UVM Medical Center on a new contract."
      },
      {
-      "id": "P6EHKZDTTVDU3LCPNHEKGZNKTA",
-      "title": "Protesters hold week of action against ICE",
-      "link": "https://www.wcax.com/2026/10/06/protesters-hold-week-action-against-ice/",
-      "ts": "2026-10-06T13:28:34+00:00",
-      "summary": "Protests are being held throughout Chittenden County this week as part of a so-called nationwide effort to shut down ICE."
+      "id": "5NPR6FU4WVCAXMDAIYCHGHDK74",
+      "title": "Milton business fined for oil spill into Lamoille River",
+      "link": "https://www.wcax.com/2026/10/06/milton-business-fined-oil-spill-into-lamoille-river/",
+      "ts": "2026-10-06T19:09:26+00:00",
+      "summary": "ANR says petroleum product from Rowley Fuels Inc. overflowed from a fuel delivery truck during a transfer at their storage facility in 2024."
+     },
+     {
+      "id": "CLVWNGABJBF2JHRDFBRZUPVCOM",
+      "title": "Barre school board approves revised budget for fourth vote",
+      "link": "https://www.wcax.com/2026/10/06/barre-school-board-approves-revised-budget-fourth-vote/",
+      "ts": "2026-10-06T18:56:01+00:00",
+      "summary": "In Monday night’s meeting, officials settled on a $56.6 million budget, a 1.2% increase from last year’s budget."
+     },
+     {
+      "id": "KBVQO4UB3RB2JJZU4GBGBJ755U",
+      "title": "Teen admits to spray-painting businesses in Lancaster",
+      "link": "https://www.wcax.com/2026/10/06/teen-admits-spray-painting-businesses-lancaster/",
+      "ts": "2026-10-06T18:55:55+00:00",
+      "summary": "A teen faces charges after police say several businesses in Lancaster were vandalized overnight."
      },
      {
       "id": "ZKNFLLW6BJE4LGHOXDWWMT6OA4",
@@ -1063,7 +1119,7 @@
       "title": "Repairs underway at downtown Burlington parking garages",
       "link": "https://www.wcax.com/2026/10/05/repairs-underway-downtown-burlington-parking-garages/",
       "ts": "2026-10-05T20:32:50+00:00",
-      "summary": "The Downtown, Marketplace, and Lakeview Garages remain open, but elevator access may be limited during repairs."
+      "summary": "The Downtown, Marketplace and Lakeview garages remain open, but elevator access may be limited during repairs."
      },
      {
       "id": "JUJ7GVNYEJH4TOY3NAAB5UR3LE",
@@ -1106,6 +1162,13 @@
       "link": "https://www.wcax.com/2026/10/05/section-i-91-renamed-honor-fallen-border-patrol-agent/",
       "ts": "2026-10-05T19:08:36+00:00",
       "summary": "Interstate 91 between Exit 26 in Orleans and Exit 28 in Derby is now known as the David Chris Maland Memorial Highway."
+     },
+     {
+      "id": "4UGP7YRYVBELHDOTYKYXGL5KRA",
+      "title": "Multiple people hurt in hay wagon crash",
+      "link": "https://www.wcax.com/2026/10/05/multiple-people-hurt-hay-wagon-crash/",
+      "ts": "2026-10-05T18:25:44+00:00",
+      "summary": "A hayride crash in New York on Sunday left multiple people injured, authorities said."
      },
      {
       "id": "ZP7SAQNN7ZHOHGIUIYLVSOUTZI",
@@ -1239,213 +1302,150 @@
       "link": "https://www.wcax.com/2026/10/03/winooski-valley-park-district-acquires-charlies-boathouse-property/",
       "ts": "2026-10-03T02:27:15+00:00",
       "summary": "A new park could soon be open along Lake Champlain."
-     },
-     {
-      "id": "BI4TXWEF6ZBLJHKPWYHUBDU4KU",
-      "title": "Three men plead guilty to poaching bobcats in New Hampshire",
-      "link": "https://www.wcax.com/2026/10/03/three-men-plead-guilty-poaching-bobcats-new-hampshire/",
-      "ts": "2026-10-03T01:36:58+00:00",
-      "summary": "Three men are pleading guilty in New Hampshire to poaching more than 40 bobcats and taking them to Canada."
-     },
-     {
-      "id": "XV62GADEZNFUXPKTD3U2UCMQ64",
-      "title": "Basin Harbor Resort celebrates 140 years on Lake Champlain",
-      "link": "https://www.wcax.com/2026/10/03/basin-harbor-resort-celebrates-140-years-lake-champlain/",
-      "ts": "2026-10-03T01:34:49+00:00",
-      "summary": "A Vermont resort is celebrating 140 years of hosting guests on the shores of Lake Champlain."
-     },
-     {
-      "id": "AZDZTSTRSRFPJAO3VZR3R46ECI",
-      "title": "Fundraising totals mirror tight polls in Vermont governor’s race",
-      "link": "https://www.wcax.com/2026/10/02/fundraising-totals-mirror-tight-polls-vermont-governors-race/",
-      "ts": "2026-10-03T00:10:56+00:00",
-      "summary": "The latest campaign finance reports confirm the candidates are neck and neck in fundraising."
-     },
-     {
-      "id": "6677UKLECVB4DEUSZINPUXGMGU",
-      "title": "Scott asks Trump administration to raise Vermont’s refugee cap",
-      "link": "https://www.wcax.com/2026/10/02/scott-asks-trump-administration-raise-vermonts-refugee-cap/",
-      "ts": "2026-10-02T22:40:32+00:00",
-      "summary": "Gov. Phil Scott this week wrote a letter to the Trump administration, asking to increase the allotment of refugees Vermont welcomes in."
-     },
-     {
-      "id": "KEYBUPBNYFAMDAKWB7PBBYE46I",
-      "title": "Barre ice rink to stay closed this winter, future uncertain",
-      "link": "https://www.wcax.com/2026/10/02/barre-ice-rink-stay-closed-this-winter-future-uncertain/",
-      "ts": "2026-10-02T22:11:14+00:00",
-      "summary": "The BOR Arena, home to Barre's ice rink, will stay dark this winter after city leaders say the old equipment finally gave out."
-     },
-     {
-      "id": "ECZV6IB7UBDPDLKKIQACOT4OJA",
-      "title": "Guard commander says Vermont F-35 pilots faced hostile fire over Iran",
-      "link": "https://www.wcax.com/2026/10/02/guard-commander-says-vermont-f-35-pilots-faced-hostile-fire-over-iran/",
-      "ts": "2026-10-02T21:54:54+00:00",
-      "summary": "A handful of F-35 jets remain stationed overseas, the Guard’s top commander revealed in an exclusive WCAX interview."
-     },
-     {
-      "id": "L7ACURKIRBFA5NV4GTVEUTHFCY",
-      "title": "Campaign Countdown: New York’s 21st Congressional District",
-      "link": "https://www.wcax.com/2026/10/02/campaign-countdown-new-yorks-21st-congressional-district/",
-      "ts": "2026-10-02T21:41:08+00:00",
-      "summary": "Candidates vie to replace Elise Stefanik in New York's 21st Congressional District"
-     },
-     {
-      "id": "MZIQV5M33RH4DJ5Q5CM27SB5Y4",
-      "title": "Stuck in Vermont: Cambridge volunteers help an established cat colony",
-      "link": "https://www.wcax.com/2026/10/02/stuck-vermont-cambridge-volunteers-help-an-established-cat-colony/",
-      "ts": "2026-10-02T21:38:54+00:00",
-      "summary": "The village of Cambridge has been home to an established colony of cats until the flooding in 2023."
-     },
-     {
-      "id": "SBWD3FUFHNAQ7FVFEQEUNJNY3A",
-      "title": "Crash slows traffic on I-89 south in Colchester",
-      "link": "https://www.wcax.com/2026/10/02/crash-slows-traffic-i-89-south-colchester/",
-      "ts": "2026-10-02T21:10:42+00:00",
-      "summary": "Police are warning drivers of a crash on Interstate 89 south near Exit 16 in Colchester."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
+      "id": "74047106",
+      "title": "Tracking the limited-time October Prime Day deals",
+      "link": "https://www.mynbc5.com/article/october-prime-day-lightning-deals/74047106",
+      "ts": "2026-10-06T21:34:00+00:00",
+      "summary": "Remember to act quickly. Once the deal is fully claimed or time expires, the savings go with it."
+     },
+     {
+      "id": "74057182",
+      "title": "Milton fuel delivery service fined for illegal dumping",
+      "link": "https://www.mynbc5.com/article/milton-fuel-deliver-service-fined-for-illegal-dumping/74057182",
+      "ts": "2026-10-06T21:26:00+00:00",
+      "summary": "Rowley Fuels Inc. agreed to pay a penalty after petroleum spilled at its Milton facility and flowed into storm drains leading to the Lamoille River."
+     },
+     {
+      "id": "74056888",
+      "title": "Elevator, concrete repairs underway at Burlington parking garages",
+      "link": "https://www.mynbc5.com/article/burlington-downtown-parking-garage-repairs/74056888",
+      "ts": "2026-10-06T21:24:00+00:00",
+      "summary": "Elevator, concrete repairs underway at Burlington parking garages"
+     },
+     {
+      "id": "74057352",
+      "title": "Christa Pike is conscious and speaking after failed execution, her attorneys say",
+      "link": "https://www.mynbc5.com/article/christa-pike-awake-tennessee-execution/74057352",
+      "ts": "2026-10-06T21:24:00+00:00",
+      "summary": "Christa Pike, a Tennessee inmate who survived Tennessee’s attempt to execute her, is awake and speaking as she receives treatment at a hospital, her attorneys said Tuesday."
+     },
+     {
+      "id": "74055678",
+      "title": "Dispute over campaign ad grows in Chittenden North race",
+      "link": "https://www.mynbc5.com/article/dispute-over-campaign-ad-grows-in-chittenden-north-race/74055678",
+      "ts": "2026-10-06T21:23:00+00:00",
+      "summary": "A campaign flier quoting a deceased Republican lawmaker has drawn criticism in the Chittenden North Senate race. Local Republicans say the secondhand account misrepresents whom he supported; the candidate says the flier was meant to honor him."
+     },
+     {
       "id": "74051781",
       "title": "Several roads in South Burlington reopen following gas leak",
       "link": "https://www.mynbc5.com/article/south-burlington-gas-leak/74051781",
-      "ts": "2026-10-06T17:13:00+00:00",
+      "ts": "2026-10-06T21:20:00+00:00",
       "summary": "Several road in South Burlington were briefly closed on Tuesday afternoon due to a reported gas leak."
-     },
-     {
-      "id": "74051832",
-      "title": "Plattsburgh man arrested after altercation at CVPH hospital",
-      "link": "https://www.mynbc5.com/article/plattsburgh-dugger-arrest-warrant/74051832",
-      "ts": "2026-10-06T16:57:00+00:00",
-      "summary": "A North Country man wanted on an out-of-state arrest warrant was captured in Plattsburgh following a car crash last week."
-     },
-     {
-      "id": "74052758",
-      "title": "Plentiful sunshine, but chilly and breezy Tuesday afternoon",
-      "link": "https://www.mynbc5.com/article/plentiful-sunshine-but-chilly-and-breezy-tuesday-afternoon-10-06-26/74052758",
-      "ts": "2026-10-06T16:55:00+00:00",
-      "summary": "Turning more seasonable Wednesday and Thursday, as a few showers return"
-     },
-     {
-      "id": "74049093",
-      "title": "Video shows moment hayride crashes in New York, injuring nearly a dozen people",
-      "link": "https://www.mynbc5.com/article/wellsburg-new-york-hayride-crash-video/74049093",
-      "ts": "2026-10-06T16:51:00+00:00",
-      "summary": "Nearly a dozen people were injured, including one critically, after a tractor rolled over during a hayride in New York near the Pennsylvania border."
-     },
-     {
-      "id": "74051906",
-      "title": "The Halloween October Prime Day deals we're finding right now",
-      "link": "https://www.mynbc5.com/article/halloween-october-prime-day-deals/74051906",
-      "ts": "2026-10-06T16:45:00+00:00",
-      "summary": "With the cost of Halloween expected to reach record highs, we thought to highlight some of the Halloween-specific deals that are happening at Amazon right now."
-     },
-     {
-      "id": "74050364",
-      "title": "Michael J. Fox receives Canada’s highest honor for Parkinson’s advocacy",
-      "link": "https://www.mynbc5.com/article/michael-j-fox-canadas-highest-honor-parkinsons-advocacy/74050364",
-      "ts": "2026-10-06T16:29:00+00:00",
-      "summary": "Michael J. Fox made a rare public appearance at the official residence of the governor general of Canada to be honored for his advocacy in Parkinson's."
-     },
-     {
-      "id": "74050616",
-      "title": "Why deer eat mums — and how to protect your fall flowers",
-      "link": "https://www.mynbc5.com/article/deer-eat-mums-fall/74050616",
-      "ts": "2026-10-06T16:27:00+00:00",
-      "summary": "Hungry deer will eat almost anything — including your porch mums. An expert shares what can help protect your fall flowers."
-     },
-     {
-      "id": "74034246",
-      "title": "Vermont State University sees consistent increase in enrollment among multiple programs",
-      "link": "https://www.mynbc5.com/article/vermont-state-university-enrollment-increases/74034246",
-      "ts": "2026-10-06T16:20:00+00:00",
-      "summary": "Vermont State University is continuing to see an increase in enrollment this school year. The institution says accessibility and affordability are to thank for the steady rise in numbers."
      },
      {
       "id": "74051682",
       "title": "Strike averted: UVM Medical Center, support staff union reach tentative agreement",
       "link": "https://www.mynbc5.com/article/uvm-support-staff-agreement/74051682",
-      "ts": "2026-10-06T16:17:00+00:00",
+      "ts": "2026-10-06T21:19:00+00:00",
       "summary": "Leadership at the University of Vermont Medical Center and representatives from the Support Staff and Technical Professionals union have reached a tentative agreement to avert a possible strike."
      },
      {
-      "id": "74048302",
-      "title": "Trump draws backlash after he suggests Iran could 'take out' Los Angeles or San Diego",
-      "link": "https://www.mynbc5.com/article/trump-iran-los-angeles-san-diego-california-backlash/74048302",
-      "ts": "2026-10-06T15:57:00+00:00",
-      "summary": "At a rally in Nebraska, President Trump appeared to suggest Iran could “take out” California city: \"Let, let them take out Los Angeles. Let them take out San Diego.\""
+      "id": "74057036",
+      "title": "Eagles All-Pro offensive lineman Lane Johnson retires after 14 seasons",
+      "link": "https://www.mynbc5.com/article/eagles-lane-johnson-retires/74057036",
+      "ts": "2026-10-06T20:43:00+00:00",
+      "summary": "Philadelphia Eagles All-Pro offensive lineman Lane Johnson has announced his retirement from the NFL after 14 seasons"
      },
      {
-      "id": "74049889",
-      "title": "'It honestly broke my heart': Witness helps injured kids after deadly Florida school bus crash",
-      "link": "https://www.mynbc5.com/article/witness-helps-injured-kids-winter-haven-bus-crash/74049889",
-      "ts": "2026-10-06T15:48:00+00:00",
-      "summary": "A witness rushed to help after a school bus crashed in Florida, killing a high school student and a driver and injuring dozens of others."
+      "id": "74056469",
+      "title": "Top Democrat is investigating Jared Kushner’s financial investments after recent report",
+      "link": "https://www.mynbc5.com/article/democrat-investigating-jared-kushner-financial-investments/74056469",
+      "ts": "2026-10-06T20:37:00+00:00",
+      "summary": "A top Democrat seeks information on Jared Kushner’s investments after a CNN report tied his firm to an Israeli company that backs businesses involved in Israel’s military campaigns."
      },
      {
-      "id": "74048389",
-      "title": "Tillie Walden’s graphic novel explores the true story of Charity Bryant and Sylvia Drake, a couple in 19th-century Vermont, defying societal norms",
-      "link": "https://www.mynbc5.com/article/this-is-our-home-weybridge-vermont/74048389",
-      "ts": "2026-10-06T15:44:00+00:00",
-      "summary": "Tillie Walden’s graphic novel explores the true story of Charity Bryant and Sylvia Drake, two women who lived openly as a couple in 19th-century Weybridge, Vermont, defying societal norms of their time."
+      "id": "74056756",
+      "title": "'The Blacklist' actor and wife turn car around to adopt unforgettable puppy",
+      "link": "https://www.mynbc5.com/article/the-blacklist-actor-wife-turns-car-around-adopt-puppy/74056756",
+      "ts": "2026-10-06T20:32:00+00:00",
+      "summary": "The actor and his wife found their newest family member at an animal shelter in New Mexico — but it took a change of heart and a quick U-turn to bring Avocado home"
      },
      {
-      "id": "74036838",
-      "title": "Halloween spending to reach record $13.5 billion nationwide",
-      "link": "https://www.mynbc5.com/article/halloween-2026-spending-how-to-save/74036838",
-      "ts": "2026-10-06T15:43:00+00:00",
-      "summary": "The National Retail Federation predicts Halloween spending will hit $13.5 billion this year, with affordability driving creative shopping strategies."
+      "id": "74056668",
+      "title": "From childhood drawings to McDonald's cups: Artist takes Chicano art to national brands",
+      "link": "https://www.mynbc5.com/article/cecelia-perez-chicano-art-mcdonalds-cup/74056668",
+      "ts": "2026-10-06T20:32:00+00:00",
+      "summary": "Artist Cecelia Perez has built a growing national profile, creating Chicano art for brands and organizations including the Sacramento Kings and San Francisco Giants."
      },
      {
-      "id": "74047106",
-      "title": "Tracking the limited-time October Prime Day deals",
-      "link": "https://www.mynbc5.com/article/october-prime-day-lightning-deals/74047106",
-      "ts": "2026-10-06T15:42:00+00:00",
-      "summary": "Remember to act quickly. Once the deal is fully claimed or time expires, the savings go with it."
+      "id": "74056515",
+      "title": "Why you just got a $90 Social Security check, and why 40 million other seniors didn’t",
+      "link": "https://www.mynbc5.com/article/social-security-check-90-who-gets-it/74056515",
+      "ts": "2026-10-06T20:28:00+00:00",
+      "summary": "Millions of Americans are receiving $90 from the Social Security Administration this week. But some don't seem to know why."
      },
      {
-      "id": "74049918",
-      "title": "Mark Mortimer, 'Another World' soap star, dies at 59",
-      "link": "https://www.mynbc5.com/article/mark-mortimer-another-world-dead/74049918",
-      "ts": "2026-10-06T15:34:00+00:00",
-      "summary": "Mark Mortimer, best known for his role in the soap opera \"Another World\" in the '90s, died after \"a fearless journey with cancer.\" He was 59 years old."
+      "id": "74055602",
+      "title": "Amazon refund payments are being sent: How to know if you'll be receiving one",
+      "link": "https://www.mynbc5.com/article/amazon-prime-refund-payments-ftc-settlement/74055602",
+      "ts": "2026-10-06T20:14:00+00:00",
+      "summary": "More people are eligible for an Amazon settlement – and some could now receive hundreds of dollars in payments. Here's what to know."
      },
      {
-      "id": "74046506",
-      "title": "Vermont voters weigh in on midterm races one month out",
-      "link": "https://www.mynbc5.com/article/vermont-voters-weigh-in-on-midterms-one-month-out/74046506",
-      "ts": "2026-10-06T15:23:00+00:00",
-      "summary": "With four weeks until the general election, voters of all ages in Vermont shared what's motivating them to participate in November."
+      "id": "74042593",
+      "title": "Student protests are rocking France as more than 250,000 rally",
+      "link": "https://www.mynbc5.com/article/france-paris-student-protests/74042593",
+      "ts": "2026-10-06T20:13:00+00:00",
+      "summary": "Thousands of students are protesting for school funding in France, with rallies growing to more than 250,000. Though the majority are peaceful, some have seen clashes with police."
      },
      {
-      "id": "74042175",
-      "title": "NBC5 Play of the Week: October 5-8",
-      "link": "https://www.mynbc5.com/article/nbc5-play-of-the-week-october-5-8/74042175",
-      "ts": "2026-10-06T14:42:00+00:00",
-      "summary": "Watch all of this week's top plays and vote for your favorite!"
+      "id": "74056431",
+      "title": "Disney is raising some ticket prices at its theme parks again",
+      "link": "https://www.mynbc5.com/article/disney-ticket-prices-rise-florida-california/74056431",
+      "ts": "2026-10-06T20:03:00+00:00",
+      "summary": "Disney is raising prices on some theme park tickets and services in California and Florida, according to reports."
      },
      {
-      "id": "74048977",
-      "title": "17-year-old college football recruit found shot and killed in vehicle",
-      "link": "https://www.mynbc5.com/article/christopher-wilson-jr-wvu-football-recruit-shot-killed-indiana/74048977",
-      "ts": "2026-10-06T14:34:00+00:00",
-      "summary": "A high school football star recruited by West Virginia University was found dead in a vehicle after being shot multiple times, according to police."
+      "id": "74052763",
+      "title": "From Spongebob to the Food Network, here's what's now under the Skydance umbrella",
+      "link": "https://www.mynbc5.com/article/what-does-skydance-own-merger-harry-potter-hbo-cnn/74052763",
+      "ts": "2026-10-06T19:29:00+00:00",
+      "summary": "Skydance-owned Paramount closed its $81 billion takeover of Warner Bros. on Tuesday."
      },
      {
       "id": "74037274",
       "title": "The October Prime Day deals you need to know about. Use our tool to see how good that deal is",
       "link": "https://www.mynbc5.com/article/october-prime-day-2026-deals/74037274",
-      "ts": "2026-10-06T14:30:00+00:00",
-      "summary": "Amazon's October Prime Day is live and there are thousands of deals available."
+      "ts": "2026-10-06T18:51:00+00:00",
+      "summary": "Amazon's October Prime Day is live, and there are thousands of deals available."
      },
      {
-      "id": "74048849",
-      "title": "'The silence was deafening': Entourage actress Constance Zimmer reveals cancer diagnosis",
-      "link": "https://www.mynbc5.com/article/entourage-actress-constance-zimmer-cancer-diagnosis/74048849",
-      "ts": "2026-10-06T14:29:00+00:00",
-      "summary": "Actress Constance Zimmer revealed in a post on social media that she was diagnosed with breast cancer."
+      "id": "74055189",
+      "title": "Firefighters survive 8-foot fall into burning basement after floor collapses at vacant home",
+      "link": "https://www.mynbc5.com/article/2-firefighters-escape-injury-after-floor-collapses-into-basement-fire/74055189",
+      "ts": "2026-10-06T18:46:00+00:00",
+      "summary": "Rapid intervention and training prevented tragedy during a vacant building search."
+     },
+     {
+      "id": "74055118",
+      "title": "California couple with 21 children arrested on child abuse charges, police say",
+      "link": "https://www.mynbc5.com/article/california-surrogacy-abuse-21-children/74055118",
+      "ts": "2026-10-06T18:39:00+00:00",
+      "summary": "A California couple has been arrested on child abuse charges following an investigation into a surrogacy scheme involving at least 21 children, police said."
+     },
+     {
+      "id": "74053261",
+      "title": "Despite Mullin’s comment, President Trump has grown wealthier while in office",
+      "link": "https://www.mynbc5.com/article/fact-check-president-trump-gained-wealth-markwayne-mullin/74053261",
+      "ts": "2026-10-06T18:32:00+00:00",
+      "summary": "“There’s no financial gain like the past presidents have had. It’s cost him to be in office,\" DHS Secretary Markwayne Mullin said. Disclosure forms and further analysis show President Trump pulled in at least $2 billion in 2025."
      }
     ]
    },
@@ -1541,6 +1541,22 @@
  },
  "reddit-burlington": {
   "posts": [
+   {
+    "id": "1wz9pi7",
+    "title": "Why do homeless people love walking in the bike lane here lmao",
+    "url": "https://www.reddit.com/r/burlington/comments/1wz9pi7/why_do_homeless_people_love_walking_in_the_bike/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-06T19:01:29+00:00"
+   },
+   {
+    "id": "1wz8sej",
+    "title": "Gardening in Williston",
+    "url": "https://www.reddit.com/r/burlington/comments/1wz8sej/gardening_in_williston/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-06T19:01:29+00:00"
+   },
    {
     "id": "1wz574c",
     "title": "Organ Recital!",
@@ -1681,22 +1697,6 @@
     "id": "1wxvw4c",
     "title": "Taxi recommendation to airport at 4 in the morning?",
     "url": "https://www.reddit.com/r/burlington/comments/1wxvw4c/taxi_recommendation_to_airport_at_4_in_the_morning/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-06T00:59:01+00:00"
-   },
-   {
-    "id": "1wxvlqk",
-    "title": "HEALTHY LIVING PSA",
-    "url": "https://www.reddit.com/r/burlington/comments/1wxvlqk/healthy_living_psa/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-06T00:59:01+00:00"
-   },
-   {
-    "id": "1wxugyz",
-    "title": "Sandwich Bread",
-    "url": "https://www.reddit.com/r/burlington/comments/1wxugyz/sandwich_bread/",
     "score": null,
     "comments": null,
     "created": "2026-10-06T00:59:01+00:00"
