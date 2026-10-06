@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-05T21:27:24-04:00",
+ "generated": "2026-10-06T12:14:15-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 9,
-   "seconds": 5.9
+   "seconds": 6.8
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 55,
-   "seconds": 4.5
+   "count": 56,
+   "seconds": 15.6
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 90,
-   "seconds": 4.1
+   "count": 85,
+   "seconds": 3.4
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 249,
+   "count": 253,
    "seconds": 3.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 74,
-   "seconds": 1.9
+   "count": 75,
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-05&end_date=2026-12-04&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-06&end_date=2026-12-05&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 4,
-   "seconds": 0.3
+   "seconds": 0.4
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 209,
-   "seconds": 74.1
+   "count": 211,
+   "seconds": 74.9
   },
   "flynn": {
    "label": "The Flynn",
@@ -63,59 +63,60 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 658,
-   "seconds": 38.7
+   "count": 657,
+   "seconds": 37.1
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 5
+   "staleDays": 6
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 9.6
+   "seconds": 10.3
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 412,
-   "seconds": 69.1
+   "count": 409,
+   "seconds": 69.9
   },
   "meetup": {
    "label": "Meetup",
-   "count": 48,
-   "seconds": 120.2
+   "count": 45,
+   "seconds": 91.5
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 18,
-   "seconds": 1.3
+   "seconds": 0.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 64,
-   "seconds": 80.2
+   "seconds": 16.3
   },
   "radiobean": {
    "label": "Radio Bean",
-   "count": 9,
-   "seconds": 0.5
+   "count": 10,
+   "seconds": 0.6
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 96,
-   "seconds": 2.7
+   "count": 0,
+   "error": "HTTP Error 403: Forbidden",
+   "staleDays": 0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 15,
-   "seconds": 32.7
+   "count": 17,
+   "seconds": 34.1
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2536,
-   "seconds": 3.2
+   "count": 2527,
+   "seconds": 22.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -124,42 +125,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 501,
-   "seconds": 24.9
+   "count": 498,
+   "seconds": 40.0
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 280,
+   "count": 281,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 57,
-   "seconds": 77.1
+   "count": 59,
+   "seconds": 78.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 52,
-   "seconds": 0.6
+   "count": 53,
+   "seconds": 0.2
   }
  },
- "gathered": 5457,
- "afterDedup": 2532,
- "duplicatesMerged": 2925,
- "final": 2587,
- "firecrawlCalls": 1,
+ "gathered": 5352,
+ "afterDedup": 2493,
+ "duplicatesMerged": 2859,
+ "final": 2592,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "UPB Art Attack",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-10"
-  },
   {
    "kept": {
     "title": "802sDay",
@@ -716,17 +706,6 @@
   },
   {
    "kept": {
-    "title": "Chess Club",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
     "title": "Good Clean Fun! (Family Friendly Show)",
     "source": "vcc"
    },
@@ -883,17 +862,6 @@
   },
   {
    "kept": {
-    "title": "Art Wall: Photography by Jeffrey Trubisz",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-16"
-  },
-  {
-   "kept": {
     "title": "CAT ECare Training",
     "source": "uvm"
    },
@@ -956,17 +924,6 @@
    },
    "merged_sources": [
     "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-17"
-  },
-  {
-   "kept": {
-    "title": "Knitting Workshop for Middle Grade Students",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
     "sevendays"
    ],
    "date": "2026-11-17"
@@ -1048,17 +1005,6 @@
    "merged_sources": [
     "champlainvalley",
     "flynn"
-   ],
-   "date": "2026-11-18"
-  },
-  {
-   "kept": {
-    "title": "Puzzle Swap",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
    ],
    "date": "2026-11-18"
   },
@@ -1215,17 +1161,6 @@
    },
    "merged_sources": [
     "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
-    "title": "Mandarin Conversation Circle",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
     "sevendays"
    ],
    "date": "2026-11-19"
@@ -1425,17 +1360,6 @@
   },
   {
    "kept": {
-    "title": "Chess Club",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -1577,17 +1501,6 @@
    },
    "merged_sources": [
     "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-23"
-  },
-  {
-   "kept": {
-    "title": "Art Wall: Photography by Jeffrey Trubisz",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
     "sevendays"
    ],
    "date": "2026-11-23"
@@ -1889,17 +1802,6 @@
    },
    "merged_sources": [
     "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-28"
-  },
-  {
-   "kept": {
-    "title": "Chess Club",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
     "sevendays"
    ],
    "date": "2026-11-28"
@@ -2352,6 +2254,63 @@
   },
   {
    "kept": {
+    "title": "Coffee and Code",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
+    "title": "CAT ECare Training",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
+    "title": "UVM Libraries AI Fridays",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
+    "title": "Board Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
+    "title": "Còig - Lane Series",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "sevendays",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -2385,59 +2344,90 @@
   },
   {
    "kept": {
-    "title": "Lane Series: Còig",
+    "title": "LUCY (Cooper B. Handy) w/ F.G.S.",
+    "source": "radiobean"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "radiobean"
+   ],
+   "date": "2026-12-05"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-05"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-05"
+  },
+  {
+   "kept": {
+    "title": "Paul Winter’s Winter Solstice Celebration",
     "source": "sevendays"
    },
    "merged_sources": [
     "champlainvalley",
     "sevendays"
    ],
-   "date": "2026-12-04"
+   "date": "2026-12-05"
+  },
+  {
+   "kept": {
+    "title": "Karina Rykman",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-12-05"
   }
  ],
  "changes": [
   {
-   "id": "7dfbd268270b",
-   "title": "Meg Mott - Strange Bedfellows: How Religious Liberties Have Aligned with Nondiscrimination Policies and Can Again",
+   "id": "42b2324fe7d8",
+   "title": "Cookie Queens",
+   "date": "2026-10-10",
+   "change": "time",
+   "was": "2026-10-10T15:30:00-04:00",
+   "now": "2026-10-10T13:00:00-04:00"
+  },
+  {
+   "id": "fd27adfc07e0",
+   "title": "Kids Puzzle Swap",
    "date": "2026-10-21",
    "change": "time",
-   "was": "2026-10-21T17:30:00-04:00",
-   "now": "2026-10-21T18:00:00-04:00"
+   "was": "2026-10-21T14:30:00-04:00",
+   "now": "2026-10-21T14:00:00-04:00"
   },
   {
-   "id": "7341e48b5b9e",
-   "title": "Public Skate",
-   "date": "2026-10-05",
+   "id": "d0a2a62be9a2",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-10-06",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
-   "id": "06029562384f",
-   "title": "Stick & Puck",
-   "date": "2026-10-05",
+   "id": "ed0b68f24bed",
+   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
+   "date": "2026-10-06",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
-  },
-  {
-   "id": "7d6bebb297f5",
-   "title": "Movie Night - Verity",
-   "date": "2026-10-05",
-   "change": "missing",
-   "lastSeen": "2026-10-05T14:49:31-04:00"
-  },
-  {
-   "id": "796f23988ae6",
-   "title": "Trivia with Craig Mitchell @ The Monkey House",
-   "date": "2026-10-05",
-   "change": "missing",
-   "lastSeen": "2026-10-05T14:49:31-04:00"
-  },
-  {
-   "id": "cadc86fd61c0",
-   "title": "Dakar 2000",
-   "date": "2026-10-05",
-   "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "21e0c1e89274",
@@ -2454,25 +2444,18 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "2edc159b3a42",
-   "title": "Craftytown",
+   "id": "c362004ca5a5",
+   "title": "Craftytown! Leaf Pocket and Peg Doll",
    "date": "2026-10-06",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
-   "id": "f009ebf47147",
-   "title": "Cookbook Club",
+   "id": "99813d216b57",
+   "title": "Cookbook Club: Something from Nothing",
    "date": "2026-10-06",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
-  },
-  {
-   "id": "6816164dc2c1",
-   "title": "Jeffrey Trubisz",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "5bfedf917da7",
@@ -2496,11 +2479,18 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "3414e53d00af",
-   "title": "Toddlertime",
+   "id": "50e6586106f6",
+   "title": "Jeffrey Trubisz",
+   "date": "2026-10-07",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
+  },
+  {
+   "id": "70a7a5f255ab",
+   "title": "Toddlertime- 9:15am Session",
    "date": "2026-10-08",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "6ed1d8209f5f",
@@ -2510,11 +2500,18 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "e5874f4cd307",
-   "title": "LEGO Builders",
+   "id": "1a8a2fc0fe7e",
+   "title": "Coffee Ride to Blank Page Café",
    "date": "2026-10-09",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
+  },
+  {
+   "id": "cf797459a0a5",
+   "title": "Friday LEGO Builders",
+   "date": "2026-10-09",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "7259338f97fd",
@@ -2552,11 +2549,11 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "29ac658478fd",
-   "title": "Toddlertime",
+   "id": "3f6b7c216612",
+   "title": "Toddlertime- 9:15am Session",
    "date": "2026-10-15",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "8543338f0777",
@@ -2580,11 +2577,11 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "ab87e8e75c1b",
-   "title": "LEGO Builders",
+   "id": "a1a89ba6a783",
+   "title": "Friday LEGO Builders",
    "date": "2026-10-16",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "c392ac2f0650",
@@ -2592,6 +2589,13 @@
    "date": "2026-10-16",
    "change": "missing",
    "lastSeen": "2026-10-04T19:35:24-04:00"
+  },
+  {
+   "id": "45dee1714543",
+   "title": "Author Event: Ryan Hagen",
+   "date": "2026-10-17",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "e63da20b4c6e",
@@ -2608,6 +2612,13 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
+   "id": "31e8dabead94",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-10-19",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
+  },
+  {
    "id": "340b543928b9",
    "title": "Trunk or Treat (FREE)",
    "date": "2026-10-19",
@@ -2615,18 +2626,18 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "2b254f834364",
-   "title": "Toddlertime",
+   "id": "002bf7043719",
+   "title": "Toddlertime- 9:15am Session",
    "date": "2026-10-22",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
-   "id": "2c7a54f1c0d4",
-   "title": "LEGO Builders",
+   "id": "933ca87599b3",
+   "title": "Friday LEGO Builders",
    "date": "2026-10-23",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "2444dcc19444",
@@ -2650,6 +2661,13 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
+   "id": "030e2d57b3d7",
+   "title": "'Night Watch'",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
+  },
+  {
    "id": "8f4c44e2ffd9",
    "title": "Natasha's Brian's Nic's Little Treasures",
    "date": "2026-10-24",
@@ -2671,11 +2689,18 @@
    "lastSeen": "2026-10-03T19:19:22-04:00"
   },
   {
-   "id": "6bf03d16161d",
-   "title": "Middle Grade Movie: 'How to Train Your Dragon'",
+   "id": "32a893a8f6ab",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
    "date": "2026-10-26",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
+  },
+  {
+   "id": "ce76e17a39cd",
+   "title": "Middle Grade Movie: How to Train Your Dragon (2025)",
+   "date": "2026-10-26",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "74d3c3d7de64",
@@ -2685,11 +2710,11 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "3088e87d8e03",
-   "title": "Craftytown",
+   "id": "5ea8c648081b",
+   "title": "Storybook Craftytown- Arlo Needs Glasses",
    "date": "2026-10-27",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "3acc528e8bfa",
@@ -2699,18 +2724,18 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "047fbcf1fd9c",
-   "title": "Toddlertime",
+   "id": "a0544b5f5f27",
+   "title": "Toddlertime- 9:15am Session",
    "date": "2026-10-29",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
-   "id": "361f5b4d9984",
-   "title": "LEGO Builders",
+   "id": "cd8fe5063ade",
+   "title": "Friday LEGO Builders",
    "date": "2026-10-30",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "5517621f0c9d",
@@ -2734,11 +2759,39 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "e872dba934d8",
-   "title": "Kids Puzzle Swap",
+   "id": "4f6436fef009",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-02",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
+  },
+  {
+   "id": "75c15f063da8",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
+  },
+  {
+   "id": "bc31c6f7292f",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
+  },
+  {
+   "id": "3abf9a87b71c",
+   "title": "Puzzle Swap",
    "date": "2026-11-18",
    "change": "missing",
-   "lastSeen": "2026-10-04T19:35:24-04:00"
+   "lastSeen": "2026-10-05T21:27:24-04:00"
+  },
+  {
+   "id": "73338132928e",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-23",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   },
   {
    "id": "23ac55a7c4cf",
@@ -2746,6 +2799,13 @@
    "date": "2026-11-30",
    "change": "missing",
    "lastSeen": "2026-10-05T14:49:31-04:00"
+  },
+  {
+   "id": "37afb53e826f",
+   "title": "Lane Series: Còig",
+   "date": "2026-12-04",
+   "change": "missing",
+   "lastSeen": "2026-10-05T21:27:24-04:00"
   }
  ]
 }
