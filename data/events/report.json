@@ -1,25 +1,25 @@
 {
- "generated": "2026-10-05T14:49:31-04:00",
+ "generated": "2026-10-05T21:27:24-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 9,
-   "seconds": 5.5
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 55,
-   "seconds": 6.5
+   "seconds": 4.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 90,
-   "seconds": 3.4
+   "seconds": 4.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
    "count": 249,
-   "seconds": 4.6
+   "seconds": 3.5
   },
   "churchst": {
    "label": "Church Street Marketplace",
@@ -48,13 +48,13 @@
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 210,
-   "seconds": 66.1
+   "count": 209,
+   "seconds": 74.1
   },
   "flynn": {
    "label": "The Flynn",
    "count": 20,
-   "seconds": 0.3
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,7 +64,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 658,
-   "seconds": 37.8
+   "seconds": 38.7
   },
   "higherground": {
    "label": "Higher Ground",
@@ -75,47 +75,47 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 13.0
+   "seconds": 9.6
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 410,
-   "seconds": 72.7
+   "count": 412,
+   "seconds": 69.1
   },
   "meetup": {
    "label": "Meetup",
-   "count": 49,
-   "seconds": 90.6
+   "count": 48,
+   "seconds": 120.2
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 19,
-   "seconds": 0.1
+   "count": 18,
+   "seconds": 1.3
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 64,
-   "seconds": 59.9
+   "seconds": 80.2
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 9,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 95,
-   "seconds": 6.4
+   "count": 96,
+   "seconds": 2.7
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 15,
-   "seconds": 30.3
+   "seconds": 32.7
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2536,
-   "seconds": 62.1
+   "seconds": 3.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -124,53 +124,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 495,
-   "seconds": 33.7
+   "count": 501,
+   "seconds": 24.9
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 274,
+   "count": 280,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 54,
-   "seconds": 69.5
+   "count": 57,
+   "seconds": 77.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 52,
-   "seconds": 0.2
+   "seconds": 0.6
   }
  },
- "gathered": 5442,
- "afterDedup": 2522,
- "duplicatesMerged": 2920,
- "final": 2572,
- "firecrawlCalls": 15,
+ "gathered": 5457,
+ "afterDedup": 2532,
+ "duplicatesMerged": 2925,
+ "final": 2587,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Super Smash Tuesdays",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-11-10"
-  },
-  {
-   "kept": {
-    "title": "Monthly Interfaith Breakfast",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-10"
-  },
   {
    "kept": {
     "title": "UPB Art Attack",
@@ -236,6 +214,17 @@
     "churchst",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-11-11"
+  },
+  {
+   "kept": {
+    "title": "Zero Waste Resource Fair",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-11"
   },
@@ -1516,6 +1505,17 @@
   },
   {
    "kept": {
+    "title": "Equinox Wind Quintet",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-22"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -2397,68 +2397,12 @@
  ],
  "changes": [
   {
-   "id": "3580427e9b64",
-   "title": "Dakar 2000",
-   "date": "2026-10-10",
-   "change": "time",
-   "was": "2026-10-10T14:00:00-04:00",
-   "now": "2026-10-10T19:30:00-04:00"
-  },
-  {
-   "id": "6c11d2750626",
-   "title": "Dakar 2000",
-   "date": "2026-10-11",
-   "change": "time",
-   "was": "2026-10-11T14:00:00-04:00",
-   "now": "2026-10-11T19:30:00-04:00"
-  },
-  {
-   "id": "f23b34cb828d",
-   "title": "Margo Cilker, Lilly Hiatt",
-   "date": "2026-10-08",
-   "change": "time",
-   "was": "2026-10-08T19:00:00-04:00",
-   "now": "2026-10-08T19:30:00-04:00"
-  },
-  {
-   "id": "474f6a4e1c41",
-   "title": "L. Shankar",
-   "date": "2026-10-12",
-   "change": "time",
-   "was": "2026-10-12T19:00:00-04:00",
-   "now": "2026-10-12T19:30:00-04:00"
-  },
-  {
-   "id": "a2a3e9af8159",
-   "title": "Taken to Heart: Kathleen Schneider",
-   "date": "2026-10-16",
-   "change": "time",
-   "was": "2026-10-16",
-   "now": "2026-10-16T17:00:00-04:00"
-  },
-  {
-   "id": "b41ae6df3c19",
-   "title": "Dark Botanica",
-   "date": "2026-10-16",
-   "change": "time",
-   "was": "2026-10-16",
-   "now": "2026-10-16T17:00:00-04:00"
-  },
-  {
-   "id": "16baa68e39ee",
-   "title": "Forms of Connection: Trystan Bates",
-   "date": "2026-10-16",
-   "change": "time",
-   "was": "2026-10-16",
-   "now": "2026-10-16T17:00:00-04:00"
-  },
-  {
-   "id": "fd27adfc07e0",
-   "title": "Kids' Puzzle Swap",
+   "id": "7dfbd268270b",
+   "title": "Meg Mott - Strange Bedfellows: How Religious Liberties Have Aligned with Nondiscrimination Policies and Can Again",
    "date": "2026-10-21",
    "change": "time",
-   "was": "2026-10-21T14:00:00-04:00",
-   "now": "2026-10-21T14:30:00-04:00"
+   "was": "2026-10-21T17:30:00-04:00",
+   "now": "2026-10-21T18:00:00-04:00"
   },
   {
    "id": "7341e48b5b9e",
@@ -2475,11 +2419,32 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
+   "id": "7d6bebb297f5",
+   "title": "Movie Night - Verity",
+   "date": "2026-10-05",
+   "change": "missing",
+   "lastSeen": "2026-10-05T14:49:31-04:00"
+  },
+  {
+   "id": "796f23988ae6",
+   "title": "Trivia with Craig Mitchell @ The Monkey House",
+   "date": "2026-10-05",
+   "change": "missing",
+   "lastSeen": "2026-10-05T14:49:31-04:00"
+  },
+  {
    "id": "cadc86fd61c0",
    "title": "Dakar 2000",
    "date": "2026-10-05",
    "change": "missing",
    "lastSeen": "2026-10-04T19:35:24-04:00"
+  },
+  {
+   "id": "21e0c1e89274",
+   "title": "Piano Tuning",
+   "date": "2026-10-06",
+   "change": "missing",
+   "lastSeen": "2026-10-05T14:49:31-04:00"
   },
   {
    "id": "148308b0b650",
@@ -2573,12 +2538,6 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "9f2be29fd653",
-   "title": "Green Mountain Roller Derby: Ye Olde Bout",
-   "date": "2026-10-10",
-   "change": "dropped"
-  },
-  {
    "id": "e13197f8cc69",
    "title": "Winter Swap",
    "date": "2026-10-11",
@@ -2619,12 +2578,6 @@
    "date": "2026-10-15",
    "change": "missing",
    "lastSeen": "2026-10-04T19:35:24-04:00"
-  },
-  {
-   "id": "b789aa63cde5",
-   "title": "The Eyetraps + Mooncusser",
-   "date": "2026-10-15",
-   "change": "dropped"
   },
   {
    "id": "ab87e8e75c1b",
@@ -2681,6 +2634,13 @@
    "date": "2026-10-23",
    "change": "missing",
    "lastSeen": "2026-10-04T10:58:26-04:00"
+  },
+  {
+   "id": "b5c1a7802ad1",
+   "title": "Spooky Science",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-05T14:49:31-04:00"
   },
   {
    "id": "a89af23cfc9f",
@@ -2781,10 +2741,11 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "140c01bfc517",
-   "title": "Bonobo",
+   "id": "23ac55a7c4cf",
+   "title": "Author Event - Hold",
    "date": "2026-11-30",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-05T14:49:31-04:00"
   }
  ]
 }
