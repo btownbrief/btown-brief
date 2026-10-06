@@ -1,26 +1,26 @@
 {
- "updated": "2026-10-06T21:54:07+00:00",
+ "updated": "2026-10-06T23:58:47+00:00",
  "sections_updated": {
-  "now": "2026-10-06T21:54:07+00:00",
-  "forecast": "2026-10-06T21:54:07+00:00",
-  "hourly": "2026-10-06T21:54:07+00:00",
-  "alerts": "2026-10-06T21:54:07+00:00",
-  "afd": "2026-10-06T21:54:07+00:00",
-  "lake_forecast": "2026-10-06T21:54:07+00:00",
-  "lake_gage": "2026-10-06T21:54:07+00:00",
-  "air": "2026-10-06T21:54:07+00:00",
-  "sun": "2026-10-06T21:54:07+00:00",
-  "models": "2026-10-06T21:54:07+00:00"
+  "now": "2026-10-06T23:58:47+00:00",
+  "forecast": "2026-10-06T23:58:47+00:00",
+  "hourly": "2026-10-06T23:58:47+00:00",
+  "alerts": "2026-10-06T23:58:47+00:00",
+  "afd": "2026-10-06T23:58:47+00:00",
+  "lake_forecast": "2026-10-06T23:58:47+00:00",
+  "lake_gage": "2026-10-06T23:58:47+00:00",
+  "air": "2026-10-06T23:58:47+00:00",
+  "sun": "2026-10-06T23:58:47+00:00",
+  "models": "2026-10-06T23:58:47+00:00"
  },
  "now": {
-  "observed_at": "2026-10-06T21:40:00+00:00",
+  "observed_at": "2026-10-06T23:40:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 55,
-  "feels_like_f": 55,
-  "humidity": null,
-  "dewpoint_f": null,
-  "wind_mph": 9,
+  "temp_f": 50,
+  "feels_like_f": 50,
+  "humidity": 40,
+  "dewpoint_f": 27,
+  "wind_mph": 6,
   "wind_gust_mph": null,
   "wind_dir": "NW",
   "precip_last_hr_in": null
@@ -29,18 +29,8 @@
   "updated": "2026-10-06T21:42:28+00:00",
   "periods": [
    {
-    "name": "This Afternoon",
-    "start": "2026-10-06T17:00:00-04:00",
-    "is_day": true,
-    "temp_f": 57,
-    "pop": 0,
-    "wind": "NW 13 mph",
-    "short": "Sunny",
-    "detailed": "Sunny, with a high near 57. Northwest wind around 13 mph."
-   },
-   {
     "name": "Tonight",
-    "start": "2026-10-06T18:00:00-04:00",
+    "start": "2026-10-06T19:00:00-04:00",
     "is_day": false,
     "temp_f": 37,
     "pop": 1,
@@ -66,7 +56,7 @@
     "pop": 22,
     "wind": "S 10 to 18 mph",
     "short": "Slight Chance Rain Showers",
-    "detailed": "A slight chance of rain showers. Partly cloudy, with a low around 49. South wind 10 to 18 mph."
+    "detailed": "A slight chance of rain showers. Partly cloudy, with a low around 49. South wind 10 to 18 mph. Chance of precipitation is 20%."
    },
    {
     "name": "Thursday",
@@ -167,34 +157,22 @@
     "wind": "NW 8 to 12 mph",
     "short": "Slight Chance Rain Showers",
     "detailed": "A slight chance of rain showers after 8pm. Mostly cloudy, with a low around 49. Northwest wind 8 to 12 mph."
+   },
+   {
+    "name": "Tuesday",
+    "start": "2026-10-13T06:00:00-04:00",
+    "is_day": true,
+    "temp_f": 62,
+    "pop": 28,
+    "wind": "W 10 to 15 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers. Partly sunny, with a high near 62. West wind 10 to 15 mph. Chance of precipitation is 30%."
    }
   ]
  },
  "hourly": {
   "updated": "2026-10-06T21:42:28+00:00",
   "hours": [
-   {
-    "t": "2026-10-06T17:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 0,
-    "humidity": 30,
-    "wind_mph": 13,
-    "wind_dir": "NW",
-    "sky": 3,
-    "short": "Sunny"
-   },
-   {
-    "t": "2026-10-06T18:00:00-04:00",
-    "temp_f": 54,
-    "feels_f": 54,
-    "pop": 0,
-    "humidity": 36,
-    "wind_mph": 9,
-    "wind_dir": "NW",
-    "sky": 3,
-    "short": "Clear"
-   },
    {
     "t": "2026-10-06T19:00:00-04:00",
     "temp_f": 51,
@@ -568,6 +546,28 @@
     "wind_dir": "S",
     "sky": 25,
     "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-10-08T05:00:00-04:00",
+    "temp_f": 50,
+    "feels_f": 46,
+    "pop": 22,
+    "humidity": 96,
+    "wind_mph": 10,
+    "wind_dir": "S",
+    "sky": 65,
+    "short": "Slight Chance Rain Showers"
+   },
+   {
+    "t": "2026-10-08T06:00:00-04:00",
+    "temp_f": 49,
+    "feels_f": 45,
+    "pop": 27,
+    "humidity": 100,
+    "wind_mph": 9,
+    "wind_dir": "S",
+    "sky": 76,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -582,13 +582,13 @@
   ]
  },
  "afd": {
-  "issued": "2026-10-06T18:30:00+00:00",
+  "issued": "2026-10-06T23:30:00+00:00",
   "key_messages": [
    "Cool and dry conditions continue this afternoon into tonight, with a Frost Advisory in effect for the Champlain Valley. Temperatures trend more seasonable for the remainder of the week, with some chances for light rain showers.",
    "Dry and warming this weekend before showers return next week."
   ],
   "what_changed": "As of 229 PM EDT Tuesday... No significant changes have been made to the forecast. A Frost Advisory remains in effect for the Champlain Valley tonight.",
-  "raw": "\n000\nFXUS61 KBTV 061830\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n230 PM EDT Tue Oct 6 2026\n\n.WHAT HAS CHANGED...\nAs of 229 PM EDT Tuesday...\n\nNo significant changes have been made to the forecast. A Frost \nAdvisory remains in effect for the Champlain Valley tonight.\n\n&&\n\n.KEY MESSAGES...\nAs of 229 PM EDT Tuesday...\n\n1. Cool and dry conditions continue this afternoon into \ntonight, with a Frost Advisory in effect for the Champlain Valley. \nTemperatures trend more seasonable for the remainder of the week, \nwith some chances for light rain showers. \n\n2. Dry and warming this weekend before showers return next \nweek. \n\n&&\n\n.DISCUSSION...\nAs of 229 PM EDT Tuesday...\n\nKEY MESSAGE 1: Cool, dry, and breezy conditions continue across the \nregion this afternoon with temperatures generally in the upper 40s \nto mid 50s. West to northwesterly winds continue to be breezy, \nthough not as strong as yesterday. These winds will drop off this \nevening, which will allow for temperatures to drop this evening as \nideal radiational cooling takes place given the dry airmass across \nthe region. Temperatures overnight will generally drop into the 20s \nand 30s across the region. A Frost Advisory remains in effect for \nthe Champlain Valley, where the growing season is still active. The \nbest potential for frost development will be earlier in the night, \nwith southerly winds and increased cloud cover putting an end to \nfrost potential by 5AM or so. \n\nFor tomorrow, the region will be on the periphery of a low centered \nover James Bay, with an associated warm front passing through mid-\nday tomorrow. Temperatures tomorrow will be much warmer in \ncomparison to this afternoon, with daytime highs generally in the \nupper 50s and 60s. Some light rain showers will be possible \nthroughout the day tomorrow, particularly in the afternoon or \nevening but expected rainfall amounts will be fairly light. \nAdditional shower chances will be possible through the end of the \nwork week as a cold front moves through on Thursday. Thursday looks \nlike it could be quite similar to yesterday, with more convective \nshowers developing behind the front and the potential for some small \nhail and/or graupel.\n\nKEY MESSAGE 2: Large ridging over the Mid-Atlantic states is expected \nto roll eastward supporting an increase in ridging over the \nNortheast. Conditions will be around to slightly below seasonal \naverages for Saturday as ridging keeps conditions dry. Sunday, flow \nis favored to shift more out of the south to southwest promoting \nwarm air advection and temperatures warming above seasonal averages \ninto the upper 60s to around 70 degrees. Winds will likely be on the \nrise under this pattern shift for Sunday with gusts 15-20 mph. \n\nBeyond Sunday, the high is favored to remain progressive with a \nsouthern trajectory low pressure system potentially riding up the \nbackside of the ridge. This low could be the remnants of a tropical \nsystem out of the Gulf waters off Texas and Louisiana. However, \nmodels tend to be too progressive with these features at this time \nscale, so it's more likely that this low will be delayed longer. If \nso, a northern stream trough will sweep through. Either way, some \nprecipitation chances are possible.\n\n&&\n\n.AVIATION /18Z TUESDAY THROUGH SUNDAY/...\nThrough 18Z Wednesday...VFR conditions are expected to prevail\nthrough the forecast period. The main aviation challenges will\nbe gusts 15-20kts out of the west this afternoon, winds\nswitching south after 12Z with more gusts 15-20kts in general,\nand some potential for light showers after 12Z Wednesday in \nportions of northern New York. PBG could see higher gusts to \naround 25kts with winds coming off of Lake Champlain tomorrow. \n\nOutlook...\n\nWednesday Night: VFR. Chance SHRA.\nThursday: VFR. Chance SHRA, Slight chance TSRA.\nThursday Night: VFR. Slight chance SHRA.\nFriday: VFR. Slight chance SHRA.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Frost Advisory from midnight tonight to 7 AM EDT Wednesday for \n     VTZ001-002-005-009.\nNY...Frost Advisory from midnight tonight to 7 AM EDT Wednesday for \n     NYZ028-035.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Boyd\nAVIATION...Boyd\n"
+  "raw": "\n000\nFXUS61 KBTV 062330\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n730 PM EDT Tue Oct 6 2026\n\n.WHAT HAS CHANGED...\nAs of 229 PM EDT Tuesday...\n\nNo significant changes have been made to the forecast. A Frost \nAdvisory remains in effect for the Champlain Valley tonight.\n\n&&\n\n.KEY MESSAGES...\nAs of 229 PM EDT Tuesday...\n\n1. Cool and dry conditions continue this afternoon into \ntonight, with a Frost Advisory in effect for the Champlain Valley. \nTemperatures trend more seasonable for the remainder of the week, \nwith some chances for light rain showers. \n\n2. Dry and warming this weekend before showers return next \nweek.\n\n&&\n\n.DISCUSSION...\nAs of 229 PM EDT Tuesday...\n\nKEY MESSAGE 1: Cool, dry, and breezy conditions continue across the \nregion this afternoon with temperatures generally in the upper 40s \nto mid 50s. West to northwesterly winds continue to be breezy, \nthough not as strong as yesterday. These winds will drop off this \nevening, which will allow for temperatures to drop this evening as \nideal radiational cooling takes place given the dry airmass across \nthe region. Temperatures overnight will generally drop into the 20s \nand 30s across the region. A Frost Advisory remains in effect for \nthe Champlain Valley, where the growing season is still active. The \nbest potential for frost development will be earlier in the night, \nwith southerly winds and increased cloud cover putting an end to \nfrost potential by 5AM or so. \n\nFor tomorrow, the region will be on the periphery of a low centered \nover James Bay, with an associated warm front passing through mid-\nday tomorrow. Temperatures tomorrow will be much warmer in \ncomparison to this afternoon, with daytime highs generally in the \nupper 50s and 60s. Some light rain showers will be possible \nthroughout the day tomorrow, particularly in the afternoon or \nevening but expected rainfall amounts will be fairly light. \nAdditional shower chances will be possible through the end of the \nwork week as a cold front moves through on Thursday. Thursday looks \nlike it could be quite similar to yesterday, with more convective \nshowers developing behind the front and the potential for some small \nhail and/or graupel.\n\nKEY MESSAGE 2: Large ridging over the Mid-Atlantic states is expected \nto roll eastward supporting an increase in ridging over the \nNortheast. Conditions will be around to slightly below seasonal \naverages for Saturday as ridging keeps conditions dry. Sunday, flow \nis favored to shift more out of the south to southwest promoting \nwarm air advection and temperatures warming above seasonal averages \ninto the upper 60s to around 70 degrees. Winds will likely be on the \nrise under this pattern shift for Sunday with gusts 15-20 mph. \n\nBeyond Sunday, the high is favored to remain progressive with a \nsouthern trajectory low pressure system potentially riding up the \nbackside of the ridge. This low could be the remnants of a tropical \nsystem out of the Gulf waters off Texas and Louisiana. However, \nmodels tend to be too progressive with these features at this time \nscale, so it's more likely that this low will be delayed longer. If \nso, a northern stream trough will sweep through. Either way, some \nprecipitation chances are possible.\n\n&&\n\n.AVIATION /00Z WEDNESDAY THROUGH SUNDAY/...\nThrough 00Z Thursday...VFR conditions will prevail through the\nTAF period. Skies remain mostly clear through 06z, then mid/high\nclouds from west to east thereafter as a warm front lifts\nthrough the region. Ceilings generally to remain AOA 5000 ft\nuntil late in the period, when they may approach MVFR at\nMSS/SLK. Scattered showers are possible during the day\nWednesday, mainly after 18z; lack of coverage precluded mention\nin the TAFs at this time. Light and variable winds overnight\nturn to the S/SW by 12z Wed, becoming gusty 15-25 kt, especially\nat BTV/PBG/MSS due to channeling. Low-level jet moving through\nnorthern NY late tonight/early Wed morning will bring periods of\nLLWS at MSS/SLK 10z-16z Wed. \n\nOutlook...\n\nWednesday Night: VFR. Slight chance SHRA.\nThursday: VFR. Chance SHRA.\nThursday Night: VFR. Chance SHRA.\nFriday: VFR. Slight chance SHRA.\nFriday Night: VFR. Slight chance SHRA.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...Frost Advisory from midnight tonight to 7 AM EDT Wednesday for \n     VTZ001-002-005-009.\nNY...Frost Advisory from midnight tonight to 7 AM EDT Wednesday for \n     NYZ028-035.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Kremer\nDISCUSSION...Kremer/Boyd\nAVIATION...Hastings\n"
  },
  "lake_forecast": {
   "issued": "2026-10-06T21:42:00+00:00",
@@ -860,17 +860,17 @@
  },
  "lake_gage": {
   "water_temp_f": 60,
-  "water_temp_at": "2026-10-06T17:00:00.000-04:00",
-  "level_ft": 93.83,
-  "level_at": "2026-10-06T17:00:00.000-04:00",
+  "water_temp_at": "2026-10-06T19:00:00.000-04:00",
+  "level_ft": 93.84,
+  "level_at": "2026-10-06T19:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 30,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/06/26 17:00",
+  "observed": "10/06/26 19:00",
   "discussion": "On Wednesday, October 7th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -923,21 +923,21 @@
    {
     "date": "2026-10-08",
     "high_f": {
-     "GFS": 66,
+     "GFS": 65,
      "Euro": 64,
      "ICON": 65
     },
     "pop_max": {
      "GFS": 25,
-     "Euro": 75,
+     "Euro": 49,
      "ICON": 62
     },
     "precip_in": {
-     "GFS": 0.05,
+     "GFS": 0.09,
      "Euro": 0.02,
      "ICON": 0.15
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    }
   ]
  }
