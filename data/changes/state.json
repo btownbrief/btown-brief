@@ -1,6 +1,16 @@
 {
  "nws-weather": {
-  "alerts": [],
+  "alerts": [
+   {
+    "id": "urn:oid:2.49.0.1.840.0.13527584f1ba4c60811e4216cf36f2a6ca77457b.001.1",
+    "event": "Frost Advisory",
+    "headline": "Frost Advisory issued October 6 at 2:23AM EDT until October 7 at 7:00AM EDT by NWS Burlington VT",
+    "severity": "Minor",
+    "onset": "2026-10-07T00:00:00-04:00",
+    "ends": "2026-10-07T07:00:00-04:00",
+    "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
+   }
+  ],
   "forecast_flag": {
    "day": "2026-09-13",
    "text": "Tonight: Scattered rain showers before 9pm, then scattered showers and thunderstorms between 9pm and 3am"
@@ -856,6 +866,20 @@
    "vermont-public": {
     "items": [
      {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-06/new-brattleboro-shelter-opens-after-social-workers-death",
+      "title": "New Brattleboro shelter opens more than 3 years after social worker's death",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-06/new-brattleboro-shelter-opens-after-social-workers-death",
+      "ts": "2026-10-06T09:00:00+00:00",
+      "summary": "The 40-bed shelter — which has about 25% more capacity than the old facility — has glass windows throughout the first floor so staff can see what is happening at all times."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-06/poll-residents-losing-faith-vermont-good-place-start-life",
+      "title": "Poll: Residents are losing faith in Vermont as a good place to start life",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-06/poll-residents-losing-faith-vermont-good-place-start-life",
+      "ts": "2026-10-06T09:00:00+00:00",
+      "summary": "For the third time, Vermont Public asked residents how they would advise an 18-year-old on their future. This year’s results were the gloomiest."
+     },
+     {
       "id": "https://www.vermontpublic.org/show/vermont-edition/2026-10-05/2026-election-interviews-vermont-attorney-general",
       "title": "2026 election interviews: Vermont attorney general",
       "link": "https://www.vermontpublic.org/show/vermont-edition/2026-10-05/2026-election-interviews-vermont-attorney-general",
@@ -924,25 +948,25 @@
       "link": "https://www.vermontpublic.org/local-news/2026-10-02/stockbridge-musician-bow-thayers-new-song-shows-humans-as-a-reflection-of-nature",
       "ts": "2026-10-02T09:00:00+00:00",
       "summary": "The Vermont musician's new tune, \"Fireflies,\" is the Friday Song."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-02/poll-shows-majority-vermonters-disapprove-ice-enforcement-actions",
-      "title": "Poll shows majority of Vermonters disapprove of ICE enforcement actions",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-02/poll-shows-majority-vermonters-disapprove-ice-enforcement-actions",
-      "ts": "2026-10-02T09:00:00+00:00",
-      "summary": "According to a recent Vermont Public poll, 62% of Vermonters disapprove of how ICE is enforcing immigration laws, with 54% strongly disapproving of the agency’s conduct."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-02/roughly-two-thirds-vermonters-support-statewide-ban-large-data-centers-poll",
-      "title": "Roughly two-thirds of Vermonters support a statewide ban on large data centers, poll finds",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-02/roughly-two-thirds-vermonters-support-statewide-ban-large-data-centers-poll",
-      "ts": "2026-10-02T09:00:00+00:00",
-      "summary": "Proponents say data centers could provide a path for industry to pay for needed upgrades to the local electric grid. Opponents say they suck up resources and send money out of state."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "CCRKT2JP6ZH4BFLK37PTYSDQ4I",
+      "title": "“The Sound of Music” family history recognized in Vermont roadside marker",
+      "link": "https://www.wcax.com/2026/10/06/sound-music-family-history-recognized-vermont-roadside-marker/",
+      "ts": "2026-10-06T10:24:33+00:00",
+      "summary": "The Von Trapp Family Lodge and Resort is receiving a historic roadside marker Tuesday to recognize the family’s history and its lasting connection to Vermont."
+     },
+     {
+      "id": "YHT4XSKZQNFCXOI46VD7L2SCIQ",
+      "title": "Public meeting set on Central Vermont Career Center’s $54.9 million bond proposal",
+      "link": "https://www.wcax.com/2026/10/06/public-meeting-set-central-vermont-career-centers-549-million-bond-proposal/",
+      "ts": "2026-10-06T09:15:50+00:00",
+      "summary": "The CVCC School Board will host a public information meeting about the $54.9 million bond proposal Tuesday night at U-32 Middle and High School."
+     },
      {
       "id": "BIOWJGBZJVD37MYO2UPO6WA3UM",
       "title": "Vermont Treasury awards $3.4 million in higher education funding, scholarships",
@@ -1278,25 +1302,81 @@
       "link": "https://www.wcax.com/2026/10/02/slate-valley-school-district-refuses-ransom-following-cyberattack/",
       "ts": "2026-10-02T20:45:31+00:00",
       "summary": "A southern Vermont school system declined to pay a ransom following a recent cyberattack that compromised staff records and business documents."
-     },
-     {
-      "id": "XHRLF2L47BCNBGRA72TDESWGIQ",
-      "title": "Nonprofit takes over popular Upper Valley online forum",
-      "link": "https://www.wcax.com/2026/10/02/nonprofit-takes-over-popular-upper-valley-online-forum/",
-      "ts": "2026-10-02T20:43:25+00:00",
-      "summary": "A popular Upper Valley LISTSERV used by thousands of residents has new ownership after facing a potential shutdown."
-     },
-     {
-      "id": "OQW7L3QTPREORKBTYS77VO47IU",
-      "title": "Pets with Potential: Meet Bebes, Jax, and Oakley",
-      "link": "https://www.wcax.com/2026/10/02/pets-with-potential-meet-bebes-jax-oakley/",
-      "ts": "2026-10-02T20:40:30+00:00",
-      "summary": "Homeward Bound in Addison County has several animals waiting for permanent homes."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "74044053",
+      "title": "Measles outbreak in rural New York leads to statewide emergency declaration",
+      "link": "https://www.mynbc5.com/article/state-of-emergency-measles-outbreak-ny/74044053",
+      "ts": "2026-10-06T10:21:00+00:00",
+      "summary": "As of October 3, Gov. Kathy Hochul said there were seven confirmed cases of measles in New York City and more than 100 outside of the metropolitan area. She issued an emergency order to expand the number of people eligible to administer vaccines."
+     },
+     {
+      "id": "74045016",
+      "title": "UK novelist and former politician jailed for lying in libel case, dies at 86",
+      "link": "https://www.mynbc5.com/article/jeffrey-archer-uk-novelist-politician-dies-86/74045016",
+      "ts": "2026-10-06T09:50:00+00:00",
+      "summary": "Jeffrey Archer, a British bestselling author who sold more than 300 million book copies in his career and a former politician who was jailed for lying in a high-profile libel case, died Monday."
+     },
+     {
+      "id": "74037274",
+      "title": "AirPods, toys and a household essential sale highlight October Prime Day",
+      "link": "https://www.mynbc5.com/article/october-prime-day-2026-deals/74037274",
+      "ts": "2026-10-06T09:32:00+00:00",
+      "summary": "Amazon's October Prime Day is live and there are thousands of deals available."
+     },
+     {
+      "id": "74044799",
+      "title": "Arizona welcomes new Taiwan representative office, rejecting warning from China",
+      "link": "https://www.mynbc5.com/article/arizona-taiwan-representative-office-china/74044799",
+      "ts": "2026-10-06T09:08:00+00:00",
+      "summary": "Arizona Gov. Katie Hobbs joined Taiwanese leaders at the opening of an economic and cultural office Monday to aid Taiwanese businesses and citizens in the region, despite pressure from the Chinese government to block it."
+     },
+     {
+      "id": "74015157",
+      "title": "Dozens quarantined after researcher at Russian plague laboratory dies of ‘unknown’ infection",
+      "link": "https://www.mynbc5.com/article/russia-lab-worker-dies-suspected-dangerous-infection/74015157",
+      "ts": "2026-10-06T08:41:00+00:00",
+      "summary": "Reports say U.S. health officials are monitoring after a Russian lab worker died of an unknown infection | What we know so far"
+     },
+     {
+      "id": "74042670",
+      "title": "Televangelist Jim Bakker dead at 86",
+      "link": "https://www.mynbc5.com/article/jim-bakker-televangelist-died-at-86/74042670",
+      "ts": "2026-10-06T05:43:00+00:00",
+      "summary": "Jim Bakker, who, along with his then-wife Tammy Faye, built an evangelical empire around the hugely successful \"The PTL Club\" TV show, only to lose it all over a sex scandal and financial crimes, has died"
+     },
+     {
+      "id": "74042709",
+      "title": "'Live in the moment': College student recalls rare cancer diagnosis",
+      "link": "https://www.mynbc5.com/article/college-student-recalls-rare-cancer-diagnosis-iowa/74042709",
+      "ts": "2026-10-06T04:40:00+00:00",
+      "summary": "What began as abdominal pain led to a rare cancer diagnosis for a college student. Abbie Whittemore says the experience changed how she sees life."
+     },
+     {
+      "id": "74042175",
+      "title": "NBC5 Play of the Week: October 5-8",
+      "link": "https://www.mynbc5.com/article/nbc5-play-of-the-week-october-5-8/74042175",
+      "ts": "2026-10-06T03:38:00+00:00",
+      "summary": "Watch all the plays and vote for your favorite!"
+     },
+     {
+      "id": "74042244",
+      "title": "Burr & Burton moves to 10-0-1 with shutout win at Burlington",
+      "link": "https://www.mynbc5.com/article/burr-burton-moves-to-10-0-1-with-shutout-win-at-burlington/74042244",
+      "ts": "2026-10-06T03:38:00+00:00",
+      "summary": "No. 1 Bulldogs continue undefeated start to 2027 season"
+     },
+     {
+      "id": "74039380",
+      "title": "Barre school district board approves fourth budget proposal, set revote date",
+      "link": "https://www.mynbc5.com/article/barre-school-district-fourth-budget-proposal/74039380",
+      "ts": "2026-10-06T03:23:00+00:00",
+      "summary": "Barre Unified School District's board members passed its fourth budget proposal on Monday night after voters rejected three previous plans, leaving the district facing financial strain."
+     },
      {
       "id": "74002314",
       "title": "VIDEO: Take a flight with Jake, the air traffic controller who flies himself to work",
@@ -1317,13 +1397,6 @@
       "link": "https://www.mynbc5.com/article/gleason-punt-block-domecoming-saints-new-orleans-als/74041535",
       "ts": "2026-10-06T01:53:00+00:00",
       "summary": "Former New Orleans Saints player Steve Gleason reflects on the 20th anniversary of his legendary punt block, his battle with ALS, and the enduring connection between his life and the city of New Orleans."
-     },
-     {
-      "id": "74039380",
-      "title": "Barre school district board approves fourth budget proposal as financial challenges mount",
-      "link": "https://www.mynbc5.com/article/barre-school-district-fourth-budget-proposal/74039380",
-      "ts": "2026-10-06T01:50:00+00:00",
-      "summary": "Barre Unified School District's board members passed its fourth budget proposal on Monday night after voters rejected three previous plans, leaving the district facing financial strain."
      },
      {
       "id": "74041365",
@@ -1373,69 +1446,6 @@
       "link": "https://www.mynbc5.com/article/anti-ice-week-south-burlington-prison-day-2/74040530",
       "ts": "2026-10-05T23:47:00+00:00",
       "summary": "Anti-ICE week of action reaches South Burlington prison on Day 2"
-     },
-     {
-      "id": "74033749",
-      "title": "Week of protests targets ICE facilities in Williston, Vermont",
-      "link": "https://www.mynbc5.com/article/week-of-protests-targets-ice-facilities-in-williston-vermont/74033749",
-      "ts": "2026-10-05T23:44:00+00:00",
-      "summary": "Protesters in Vermont are staging demonstrations against ICE facilities in Williston, emphasizing nonviolence and civil disobedience throughout the week."
-     },
-     {
-      "id": "74032489",
-      "title": "Washington Capitals captain Alex Ovechkin says his 22nd NHL season will be his last",
-      "link": "https://www.mynbc5.com/article/washington-capitals-alex-ovechkin-retiring-last-season/74032489",
-      "ts": "2026-10-05T23:26:00+00:00",
-      "summary": "Washington Capitals captain and career goal-scoring record holder Alex Ovechkin said this will be his final season in the NHL."
-     },
-     {
-      "id": "74040660",
-      "title": "Flu cases are rising earlier this year — here's what that means",
-      "link": "https://www.mynbc5.com/article/best-time-to-get-flu-shot-this-year/74040660",
-      "ts": "2026-10-05T23:20:00+00:00",
-      "summary": "Doctors are already seeing flu cases, and say getting vaccinated sooner is better because the shot takes about two weeks to kick in."
-     },
-     {
-      "id": "74036961",
-      "title": "A crowd of students protests Cornell's response to gang rape allegation",
-      "link": "https://www.mynbc5.com/article/cornell-protest-graffiti-fraternity-sexual-assault-case/74036961",
-      "ts": "2026-10-05T23:08:00+00:00",
-      "summary": "Cornell's main administration building was splashed with graffiti and a glass door was broken amid protests over the university's handling of an alleged 2024 fraternity-house gang rape."
-     },
-     {
-      "id": "74038512",
-      "title": "How the Trump administration's revamped healthcare price transparency rules could impact patients",
-      "link": "https://www.mynbc5.com/article/how-the-trump-administrations-revamped-healthcare-price-transparency-rules-could-impact-patients/74038512",
-      "ts": "2026-10-05T22:57:00+00:00",
-      "summary": "Consumer advocates say the rules are an important step, but stress there's more work today to ensure full transparency."
-     },
-     {
-      "id": "74040535",
-      "title": "What parents should know about GLP-1s for kids",
-      "link": "https://www.mynbc5.com/article/glp-1s-for-kids-weight-health-safety/74040535",
-      "ts": "2026-10-05T22:51:00+00:00",
-      "summary": "Some doctors are prescribing the medications known as GLP-1s to address childhood obesity. Here's what parents should know about GLP-1s and kids."
-     },
-     {
-      "id": "74038337",
-      "title": "Robert Kelker-Kelly, known for roles in major soap operas, has died at 62, reports say",
-      "link": "https://www.mynbc5.com/article/robert-kelker-kelly-days-of-our-lives-actor-dies-62/74038337",
-      "ts": "2026-10-05T22:45:00+00:00",
-      "summary": "Robert Kelker-Kelly, one of the actors who played Bo Brady on \"Days of Our Lives\" but was also well-known for roles on \"General Hospital\" and \"Another World,\" has died at 62, according to reports."
-     },
-     {
-      "id": "74040395",
-      "title": "Lots of sunshine, but staying chilly and breezy Tuesday",
-      "link": "https://www.mynbc5.com/article/lots-of-sunshine-but-staying-chilly-and-breezy-tuesday-10-05-26/74040395",
-      "ts": "2026-10-05T22:36:00+00:00",
-      "summary": "Turning more seasonable Wednesday and Thursday, as a few showers return"
-     },
-     {
-      "id": "74037505",
-      "title": "Ex-pastor, 'American Idol' contestant Caleb Flynn sentenced for wife's murder",
-      "link": "https://www.mynbc5.com/article/caleb-flynn-murder-conviction-ashley-flynn-sentenced/74037505",
-      "ts": "2026-10-05T22:28:00+00:00",
-      "summary": "Caleb Flynn, the former pastor and \"American Idol\" contestant convicted of murdering his wife, was sentenced Monday."
      }
     ]
    },
@@ -1531,6 +1541,14 @@
  },
  "reddit-burlington": {
   "posts": [
+   {
+    "id": "1wyu8oh",
+    "title": "singer for band?",
+    "url": "https://www.reddit.com/r/burlington/comments/1wyu8oh/singer_for_band/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-06T06:59:02+00:00"
+   },
    {
     "id": "1wymqvp",
     "title": "242 Main",
@@ -1679,14 +1697,6 @@
     "id": "1wxlp3b",
     "title": "$13.49 healthy living sushi roll",
     "url": "https://www.reddit.com/r/burlington/comments/1wxlp3b/1349_healthy_living_sushi_roll/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-06T00:59:01+00:00"
-   },
-   {
-    "id": "1wxeiib",
-    "title": "Price gouging",
-    "url": "https://www.reddit.com/r/burlington/comments/1wxeiib/price_gouging/",
     "score": null,
     "comments": null,
     "created": "2026-10-06T00:59:01+00:00"
