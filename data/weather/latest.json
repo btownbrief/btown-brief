@@ -1,196 +1,185 @@
 {
- "updated": "2026-10-07T18:11:20+00:00",
+ "updated": "2026-10-07T19:31:25+00:00",
  "sections_updated": {
-  "now": "2026-10-07T18:11:20+00:00",
-  "forecast": "2026-10-07T18:11:20+00:00",
-  "hourly": "2026-10-07T18:11:20+00:00",
-  "alerts": "2026-10-07T18:11:20+00:00",
-  "afd": "2026-10-07T18:11:20+00:00",
-  "lake_forecast": "2026-10-07T18:11:20+00:00",
-  "lake_gage": "2026-10-07T15:31:11+00:00",
-  "air": "2026-10-07T18:11:20+00:00",
-  "sun": "2026-10-07T18:11:20+00:00",
-  "models": "2026-10-07T18:11:20+00:00"
+  "now": "2026-10-07T19:31:25+00:00",
+  "forecast": "2026-10-07T19:31:25+00:00",
+  "hourly": "2026-10-07T19:31:25+00:00",
+  "alerts": "2026-10-07T19:31:25+00:00",
+  "afd": "2026-10-07T19:31:25+00:00",
+  "lake_forecast": "2026-10-07T19:31:25+00:00",
+  "lake_gage": "2026-10-07T19:31:25+00:00",
+  "air": "2026-10-07T19:31:25+00:00",
+  "sun": "2026-10-07T19:31:25+00:00",
+  "models": "2026-10-07T19:31:25+00:00"
  },
  "now": {
-  "observed_at": "2026-10-07T17:55:00+00:00",
+  "observed_at": "2026-10-07T19:20:00+00:00",
   "station": "KBTV",
-  "description": "Partly Cloudy",
+  "description": "Cloudy",
   "temp_f": 61,
   "feels_like_f": 61,
-  "humidity": 39,
-  "dewpoint_f": 36,
-  "wind_mph": 15,
+  "humidity": 42,
+  "dewpoint_f": 37,
+  "wind_mph": null,
   "wind_gust_mph": null,
-  "wind_dir": "S",
+  "wind_dir": null,
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-10-07T10:33:17+00:00",
+  "updated": "2026-10-07T18:34:24+00:00",
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-10-07T14:00:00-04:00",
+    "start": "2026-10-07T15:00:00-04:00",
     "is_day": true,
     "temp_f": 62,
-    "pop": 4,
-    "wind": "S 16 to 20 mph",
-    "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 62. South wind 16 to 20 mph, with gusts as high as 31 mph."
+    "pop": 5,
+    "wind": "S 17 to 21 mph",
+    "short": "Partly Sunny",
+    "detailed": "Partly sunny, with a high near 62. South wind 17 to 21 mph, with gusts as high as 37 mph."
    },
    {
     "name": "Tonight",
     "start": "2026-10-07T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 49,
-    "pop": 43,
-    "wind": "S 10 to 15 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers after 7pm. Mostly cloudy, with a low around 49. South wind 10 to 15 mph, with gusts as high as 29 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "temp_f": 51,
+    "pop": 85,
+    "wind": "S 12 to 18 mph",
+    "short": "Mostly Cloudy then Rain Showers",
+    "detailed": "Rain showers after midnight. Mostly cloudy, with a low around 51. South wind 12 to 18 mph, with gusts as high as 32 mph. Chance of precipitation is 90%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Thursday",
     "start": "2026-10-08T06:00:00-04:00",
     "is_day": true,
     "temp_f": 64,
-    "pop": 57,
-    "wind": "SW 10 to 14 mph",
-    "short": "Rain Showers Likely",
-    "detailed": "Rain showers likely before 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 64. Southwest wind 10 to 14 mph. Chance of precipitation is 60%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "pop": 58,
+    "wind": "SW 9 to 17 mph",
+    "short": "Slight Chance Showers And Thunderstorms then Chance Showers And Thunderstorms",
+    "detailed": "Rain showers likely before 11am, then a slight chance of showers and thunderstorms between 11am and noon, then a chance of showers and thunderstorms between noon and 1pm, then a slight chance of showers and thunderstorms between 1pm and 2pm, then a chance of showers and thunderstorms. Partly sunny, with a high near 64. Southwest wind 9 to 17 mph. Chance of precipitation is 60%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Thursday Night",
     "start": "2026-10-08T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 44,
-    "pop": 30,
-    "wind": "W 6 to 13 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers before 2am. Mostly cloudy, with a low around 44. West wind 6 to 13 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
+    "temp_f": 46,
+    "pop": 63,
+    "wind": "SW 3 to 14 mph",
+    "short": "Rain Showers Likely",
+    "detailed": "Rain showers likely before 1am. Mostly cloudy, with a low around 46. Southwest wind 3 to 14 mph. Chance of precipitation is 60%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Friday",
     "start": "2026-10-09T06:00:00-04:00",
     "is_day": true,
-    "temp_f": 57,
-    "pop": 20,
-    "wind": "W 6 to 13 mph",
-    "short": "Slight Chance Rain Showers",
-    "detailed": "A slight chance of rain showers after 8am. Mostly sunny, with a high near 57. West wind 6 to 13 mph. New rainfall amounts less than a tenth of an inch possible."
+    "temp_f": 56,
+    "pop": 27,
+    "wind": "W 7 to 13 mph",
+    "short": "Chance Rain Showers",
+    "detailed": "A chance of rain showers between 8am and 2pm. Mostly cloudy, with a high near 56. West wind 7 to 13 mph. Chance of precipitation is 30%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Friday Night",
     "start": "2026-10-09T18:00:00-04:00",
     "is_day": false,
     "temp_f": 40,
-    "pop": 20,
-    "wind": "W 3 to 9 mph",
-    "short": "Slight Chance Rain Showers then Partly Cloudy",
-    "detailed": "A slight chance of rain showers before 8pm. Partly cloudy, with a low around 40. West wind 3 to 9 mph. New rainfall amounts less than a tenth of an inch possible."
+    "pop": 14,
+    "wind": "W 3 to 12 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 40. West wind 3 to 12 mph."
    },
    {
     "name": "Saturday",
     "start": "2026-10-10T06:00:00-04:00",
     "is_day": true,
-    "temp_f": 60,
-    "pop": 6,
-    "wind": "S 5 to 9 mph",
+    "temp_f": 63,
+    "pop": 3,
+    "wind": "S 3 to 8 mph",
     "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 60. South wind 5 to 9 mph."
+    "detailed": "Mostly sunny, with a high near 63. South wind 3 to 8 mph."
    },
    {
     "name": "Saturday Night",
     "start": "2026-10-10T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 47,
-    "pop": 3,
-    "wind": "S 8 to 14 mph",
-    "short": "Mostly Clear",
-    "detailed": "Mostly clear, with a low around 47. South wind 8 to 14 mph."
+    "temp_f": 48,
+    "pop": 1,
+    "wind": "S 8 to 16 mph",
+    "short": "Partly Cloudy",
+    "detailed": "Partly cloudy, with a low around 48. South wind 8 to 16 mph."
    },
    {
     "name": "Sunday",
     "start": "2026-10-11T06:00:00-04:00",
     "is_day": true,
-    "temp_f": 68,
-    "pop": 9,
-    "wind": "S 15 mph",
-    "short": "Mostly Sunny",
-    "detailed": "Mostly sunny, with a high near 68. South wind around 15 mph."
+    "temp_f": 69,
+    "pop": 50,
+    "wind": "S 16 mph",
+    "short": "Mostly Sunny then Chance Rain Showers",
+    "detailed": "A chance of rain showers after 2pm. Mostly sunny, with a high near 69. South wind around 16 mph. Chance of precipitation is 50%."
    },
    {
     "name": "Sunday Night",
     "start": "2026-10-11T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 53,
-    "pop": 47,
-    "wind": "S 9 to 15 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers after 8pm. Mostly cloudy, with a low around 53. South wind 9 to 15 mph. Chance of precipitation is 50%."
+    "temp_f": 54,
+    "pop": 67,
+    "wind": "S 9 to 16 mph",
+    "short": "Rain Showers Likely",
+    "detailed": "Rain showers likely. Mostly cloudy, with a low around 54. South wind 9 to 16 mph. Chance of precipitation is 70%."
    },
    {
     "name": "Columbus Day",
     "start": "2026-10-12T06:00:00-04:00",
     "is_day": true,
-    "temp_f": 65,
-    "pop": 47,
-    "wind": "W 8 to 12 mph",
-    "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Partly sunny, with a high near 65. West wind 8 to 12 mph. Chance of precipitation is 50%."
+    "temp_f": 66,
+    "pop": 20,
+    "wind": "SW 9 mph",
+    "short": "Slight Chance Rain Showers",
+    "detailed": "A slight chance of rain showers. Mostly cloudy, with a high near 66. Southwest wind around 9 mph."
    },
    {
     "name": "Monday Night",
     "start": "2026-10-12T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 46,
-    "pop": 34,
-    "wind": "N 12 mph",
+    "temp_f": 45,
+    "pop": 36,
+    "wind": "NW 8 to 12 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 46. North wind around 12 mph. Chance of precipitation is 30%."
+    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 45. Northwest wind 8 to 12 mph. Chance of precipitation is 40%."
    },
    {
     "name": "Tuesday",
     "start": "2026-10-13T06:00:00-04:00",
     "is_day": true,
-    "temp_f": 59,
-    "pop": 38,
-    "wind": "NW 8 to 13 mph",
+    "temp_f": 56,
+    "pop": 54,
+    "wind": "SW 12 to 18 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Partly sunny, with a high near 59. Northwest wind 8 to 13 mph. Chance of precipitation is 40%."
+    "detailed": "A chance of rain showers. Partly sunny, with a high near 56. Southwest wind 12 to 18 mph. Chance of precipitation is 50%."
    },
    {
     "name": "Tuesday Night",
     "start": "2026-10-13T18:00:00-04:00",
     "is_day": false,
-    "temp_f": 42,
-    "pop": 38,
-    "wind": "NW 14 mph",
+    "temp_f": 39,
+    "pop": 54,
+    "wind": "NW 17 to 21 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 42. Northwest wind around 14 mph. Chance of precipitation is 40%."
+    "detailed": "A chance of rain showers. Mostly cloudy, with a low around 39. Northwest wind 17 to 21 mph. Chance of precipitation is 50%."
    }
   ]
  },
  "hourly": {
-  "updated": "2026-10-07T10:33:17+00:00",
+  "updated": "2026-10-07T18:34:24+00:00",
   "hours": [
-   {
-    "t": "2026-10-07T14:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 2,
-    "humidity": 41,
-    "wind_mph": 20,
-    "wind_dir": "S",
-    "sky": 83,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-10-07T15:00:00-04:00",
     "temp_f": 61,
     "feels_f": 61,
-    "pop": 3,
+    "pop": 4,
     "humidity": 42,
-    "wind_mph": 20,
+    "wind_mph": 21,
     "wind_dir": "S",
     "sky": 77,
     "short": "Mostly Cloudy"
@@ -201,373 +190,384 @@
     "feels_f": 62,
     "pop": 4,
     "humidity": 43,
-    "wind_mph": 18,
+    "wind_mph": 20,
     "wind_dir": "S",
     "sky": 68,
     "short": "Partly Sunny"
    },
    {
     "t": "2026-10-07T17:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
-    "pop": 4,
-    "humidity": 44,
-    "wind_mph": 16,
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 5,
+    "humidity": 46,
+    "wind_mph": 17,
     "wind_dir": "S",
     "sky": 52,
     "short": "Partly Sunny"
    },
    {
     "t": "2026-10-07T18:00:00-04:00",
-    "temp_f": 61,
-    "feels_f": 61,
-    "pop": 7,
-    "humidity": 48,
-    "wind_mph": 15,
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 4,
+    "humidity": 46,
+    "wind_mph": 17,
     "wind_dir": "S",
     "sky": 51,
     "short": "Mostly Cloudy"
    },
    {
     "t": "2026-10-07T19:00:00-04:00",
-    "temp_f": 59,
-    "feels_f": 59,
-    "pop": 23,
-    "humidity": 53,
-    "wind_mph": 13,
+    "temp_f": 60,
+    "feels_f": 60,
+    "pop": 7,
+    "humidity": 51,
+    "wind_mph": 16,
     "wind_dir": "S",
     "sky": 63,
-    "short": "Slight Chance Rain Showers"
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-10-07T20:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 31,
-    "humidity": 62,
-    "wind_mph": 12,
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 5,
+    "humidity": 67,
+    "wind_mph": 17,
     "wind_dir": "S",
-    "sky": 79,
-    "short": "Chance Rain Showers"
+    "sky": 74,
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-10-07T21:00:00-04:00",
-    "temp_f": 56,
-    "feels_f": 56,
-    "pop": 34,
-    "humidity": 66,
-    "wind_mph": 13,
+    "temp_f": 58,
+    "feels_f": 58,
+    "pop": 5,
+    "humidity": 72,
+    "wind_mph": 17,
     "wind_dir": "S",
-    "sky": 79,
-    "short": "Chance Rain Showers"
+    "sky": 75,
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-10-07T22:00:00-04:00",
-    "temp_f": 55,
-    "feels_f": 55,
-    "pop": 30,
-    "humidity": 72,
-    "wind_mph": 13,
+    "temp_f": 57,
+    "feels_f": 57,
+    "pop": 5,
+    "humidity": 75,
+    "wind_mph": 18,
     "wind_dir": "S",
     "sky": 74,
-    "short": "Chance Rain Showers"
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-10-07T23:00:00-04:00",
-    "temp_f": 54,
-    "feels_f": 54,
-    "pop": 18,
-    "humidity": 74,
-    "wind_mph": 13,
+    "temp_f": 57,
+    "feels_f": 57,
+    "pop": 9,
+    "humidity": 75,
+    "wind_mph": 18,
     "wind_dir": "S",
-    "sky": 58,
-    "short": "Slight Chance Rain Showers"
+    "sky": 79,
+    "short": "Mostly Cloudy"
    },
    {
     "t": "2026-10-08T00:00:00-04:00",
-    "temp_f": 53,
-    "feels_f": 53,
-    "pop": 24,
-    "humidity": 77,
-    "wind_mph": 14,
+    "temp_f": 55,
+    "feels_f": 55,
+    "pop": 23,
+    "humidity": 80,
+    "wind_mph": 18,
     "wind_dir": "S",
-    "sky": 53,
+    "sky": 78,
     "short": "Slight Chance Rain Showers"
    },
    {
     "t": "2026-10-08T01:00:00-04:00",
-    "temp_f": 52,
-    "feels_f": 52,
-    "pop": 27,
-    "humidity": 80,
-    "wind_mph": 13,
+    "temp_f": 54,
+    "feels_f": 54,
+    "pop": 36,
+    "humidity": 83,
+    "wind_mph": 14,
     "wind_dir": "S",
-    "sky": 55,
+    "sky": 87,
     "short": "Chance Rain Showers"
    },
    {
     "t": "2026-10-08T02:00:00-04:00",
-    "temp_f": 51,
-    "feels_f": 51,
-    "pop": 43,
+    "temp_f": 54,
+    "feels_f": 54,
+    "pop": 66,
     "humidity": 86,
     "wind_mph": 13,
     "wind_dir": "S",
-    "sky": 62,
-    "short": "Chance Rain Showers"
+    "sky": 93,
+    "short": "Rain Showers Likely"
    },
    {
     "t": "2026-10-08T03:00:00-04:00",
-    "temp_f": 51,
-    "feels_f": 51,
-    "pop": 38,
-    "humidity": 86,
-    "wind_mph": 13,
-    "wind_dir": "S",
-    "sky": 64,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-10-08T04:00:00-04:00",
-    "temp_f": 51,
-    "feels_f": 51,
-    "pop": 43,
+    "temp_f": 54,
+    "feels_f": 54,
+    "pop": 85,
     "humidity": 86,
     "wind_mph": 12,
     "wind_dir": "S",
-    "sky": 63,
-    "short": "Chance Rain Showers"
+    "sky": 94,
+    "short": "Rain Showers"
    },
    {
-    "t": "2026-10-08T05:00:00-04:00",
-    "temp_f": 51,
-    "feels_f": 51,
-    "pop": 38,
-    "humidity": 89,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 66,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-10-08T06:00:00-04:00",
-    "temp_f": 50,
-    "feels_f": 46,
-    "pop": 44,
-    "humidity": 89,
-    "wind_mph": 10,
-    "wind_dir": "S",
-    "sky": 82,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-10-08T07:00:00-04:00",
-    "temp_f": 49,
-    "feels_f": 45,
-    "pop": 57,
-    "humidity": 96,
-    "wind_mph": 10,
+    "t": "2026-10-08T04:00:00-04:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 67,
+    "humidity": 93,
+    "wind_mph": 12,
     "wind_dir": "S",
     "sky": 82,
     "short": "Rain Showers Likely"
    },
    {
-    "t": "2026-10-08T08:00:00-04:00",
-    "temp_f": 49,
-    "feels_f": 45,
-    "pop": 54,
-    "humidity": 96,
-    "wind_mph": 10,
+    "t": "2026-10-08T05:00:00-04:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 64,
+    "humidity": 93,
+    "wind_mph": 12,
     "wind_dir": "S",
-    "sky": 69,
+    "sky": 89,
+    "short": "Rain Showers Likely"
+   },
+   {
+    "t": "2026-10-08T06:00:00-04:00",
+    "temp_f": 51,
+    "feels_f": 51,
+    "pop": 58,
+    "humidity": 100,
+    "wind_mph": 13,
+    "wind_dir": "S",
+    "sky": 72,
+    "short": "Rain Showers Likely"
+   },
+   {
+    "t": "2026-10-08T07:00:00-04:00",
+    "temp_f": 51,
+    "feels_f": 51,
+    "pop": 52,
+    "humidity": 100,
+    "wind_mph": 12,
+    "wind_dir": "S",
+    "sky": 72,
+    "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-10-08T08:00:00-04:00",
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 46,
+    "humidity": 96,
+    "wind_mph": 14,
+    "wind_dir": "S",
+    "sky": 75,
     "short": "Chance Rain Showers"
    },
    {
     "t": "2026-10-08T09:00:00-04:00",
-    "temp_f": 52,
-    "feels_f": 52,
-    "pop": 53,
+    "temp_f": 55,
+    "feels_f": 55,
+    "pop": 15,
     "humidity": 93,
-    "wind_mph": 12,
+    "wind_mph": 13,
     "wind_dir": "S",
-    "sky": 69,
-    "short": "Chance Rain Showers"
+    "sky": 64,
+    "short": "Slight Chance Rain Showers"
    },
    {
     "t": "2026-10-08T10:00:00-04:00",
-    "temp_f": 56,
-    "feels_f": 56,
-    "pop": 45,
-    "humidity": 83,
-    "wind_mph": 12,
-    "wind_dir": "S",
-    "sky": 63,
-    "short": "Chance Rain Showers"
+    "temp_f": 57,
+    "feels_f": 57,
+    "pop": 20,
+    "humidity": 90,
+    "wind_mph": 10,
+    "wind_dir": "SW",
+    "sky": 58,
+    "short": "Slight Chance Rain Showers"
    },
    {
     "t": "2026-10-08T11:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 38,
-    "humidity": 72,
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 18,
+    "humidity": 83,
     "wind_mph": 12,
-    "wind_dir": "S",
-    "sky": 59,
-    "short": "Chance Rain Showers"
+    "wind_dir": "SW",
+    "sky": 61,
+    "short": "Slight Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-10-08T12:00:00-04:00",
-    "temp_f": 63,
-    "feels_f": 63,
-    "pop": 32,
-    "humidity": 65,
-    "wind_mph": 13,
-    "wind_dir": "SW",
-    "sky": 55,
-    "short": "Chance Rain Showers"
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 26,
+    "humidity": 78,
+    "wind_mph": 17,
+    "wind_dir": "W",
+    "sky": 60,
+    "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-10-08T13:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 29,
-    "humidity": 63,
-    "wind_mph": 13,
-    "wind_dir": "SW",
-    "sky": 53,
-    "short": "Chance Rain Showers"
+    "temp_f": 62,
+    "feels_f": 62,
+    "pop": 19,
+    "humidity": 72,
+    "wind_mph": 9,
+    "wind_dir": "W",
+    "sky": 39,
+    "short": "Slight Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-10-08T14:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 29,
-    "humidity": 60,
-    "wind_mph": 14,
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 27,
+    "humidity": 67,
+    "wind_mph": 12,
     "wind_dir": "W",
-    "sky": 53,
+    "sky": 51,
     "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-10-08T15:00:00-04:00",
-    "temp_f": 64,
-    "feels_f": 64,
-    "pop": 30,
-    "humidity": 58,
-    "wind_mph": 14,
+    "temp_f": 63,
+    "feels_f": 63,
+    "pop": 36,
+    "humidity": 65,
+    "wind_mph": 12,
     "wind_dir": "W",
-    "sky": 53,
+    "sky": 57,
     "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-10-08T16:00:00-04:00",
     "temp_f": 64,
     "feels_f": 64,
-    "pop": 29,
-    "humidity": 58,
-    "wind_mph": 14,
+    "pop": 44,
+    "humidity": 63,
+    "wind_mph": 13,
     "wind_dir": "W",
-    "sky": 53,
+    "sky": 63,
     "short": "Chance Showers And Thunderstorms"
    },
    {
     "t": "2026-10-08T17:00:00-04:00",
-    "temp_f": 62,
-    "feels_f": 62,
-    "pop": 27,
-    "humidity": 60,
-    "wind_mph": 14,
-    "wind_dir": "W",
-    "sky": 51,
+    "temp_f": 61,
+    "feels_f": 61,
+    "pop": 52,
+    "humidity": 67,
+    "wind_mph": 9,
+    "wind_dir": "SW",
+    "sky": 68,
     "short": "Chance Rain Showers"
    },
    {
     "t": "2026-10-08T18:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 29,
-    "humidity": 64,
-    "wind_mph": 13,
-    "wind_dir": "W",
-    "sky": 53,
-    "short": "Chance Rain Showers"
+    "temp_f": 59,
+    "feels_f": 59,
+    "pop": 56,
+    "humidity": 72,
+    "wind_mph": 14,
+    "wind_dir": "SW",
+    "sky": 100,
+    "short": "Rain Showers Likely"
    },
    {
     "t": "2026-10-08T19:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 30,
-    "humidity": 72,
-    "wind_mph": 10,
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 60,
+    "humidity": 83,
+    "wind_mph": 9,
     "wind_dir": "W",
-    "sky": 53,
-    "short": "Chance Rain Showers"
+    "sky": 99,
+    "short": "Rain Showers Likely"
    },
    {
     "t": "2026-10-08T20:00:00-04:00",
     "temp_f": 54,
     "feels_f": 54,
-    "pop": 25,
-    "humidity": 77,
-    "wind_mph": 8,
+    "pop": 63,
+    "humidity": 86,
+    "wind_mph": 3,
     "wind_dir": "W",
-    "sky": 50,
-    "short": "Chance Rain Showers"
+    "sky": 88,
+    "short": "Rain Showers Likely"
    },
    {
     "t": "2026-10-08T21:00:00-04:00",
-    "temp_f": 51,
-    "feels_f": 51,
-    "pop": 25,
-    "humidity": 86,
-    "wind_mph": 6,
+    "temp_f": 53,
+    "feels_f": 53,
+    "pop": 48,
+    "humidity": 89,
+    "wind_mph": 3,
     "wind_dir": "W",
-    "sky": 66,
+    "sky": 65,
     "short": "Chance Rain Showers"
    },
    {
     "t": "2026-10-08T22:00:00-04:00",
-    "temp_f": 50,
-    "feels_f": 48,
-    "pop": 25,
-    "humidity": 89,
+    "temp_f": 52,
+    "feels_f": 52,
+    "pop": 32,
+    "humidity": 93,
     "wind_mph": 6,
     "wind_dir": "W",
-    "sky": 58,
+    "sky": 55,
     "short": "Chance Rain Showers"
    },
    {
     "t": "2026-10-08T23:00:00-04:00",
-    "temp_f": 49,
-    "feels_f": 47,
-    "pop": 25,
+    "temp_f": 51,
+    "feels_f": 51,
+    "pop": 17,
     "humidity": 93,
-    "wind_mph": 6,
+    "wind_mph": 8,
     "wind_dir": "W",
-    "sky": 50,
-    "short": "Chance Rain Showers"
+    "sky": 92,
+    "short": "Slight Chance Rain Showers"
    },
    {
     "t": "2026-10-09T00:00:00-04:00",
-    "temp_f": 48,
-    "feels_f": 45,
-    "pop": 25,
+    "temp_f": 50,
+    "feels_f": 47,
+    "pop": 21,
     "humidity": 96,
-    "wind_mph": 6,
-    "wind_dir": "W",
-    "sky": 50,
-    "short": "Chance Rain Showers"
+    "wind_mph": 8,
+    "wind_dir": "SW",
+    "sky": 68,
+    "short": "Slight Chance Rain Showers"
    },
    {
     "t": "2026-10-09T01:00:00-04:00",
-    "temp_f": 47,
-    "feels_f": 44,
-    "pop": 25,
-    "humidity": 96,
-    "wind_mph": 6,
+    "temp_f": 50,
+    "feels_f": 47,
+    "pop": 9,
+    "humidity": 93,
+    "wind_mph": 8,
     "wind_dir": "SW",
-    "sky": 50,
-    "short": "Chance Rain Showers"
+    "sky": 75,
+    "short": "Mostly Cloudy"
+   },
+   {
+    "t": "2026-10-09T02:00:00-04:00",
+    "temp_f": 49,
+    "feels_f": 46,
+    "pop": 5,
+    "humidity": 96,
+    "wind_mph": 7,
+    "wind_dir": "SW",
+    "sky": 45,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -575,16 +575,17 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-07T11:31:00+00:00",
+  "issued": "2026-10-07T18:53:00+00:00",
   "key_messages": [
-   "Showery conditions developing for the rest of the week.",
-   "Dry and seasonable weekend before showers return for the beginning of next week."
+   "Unsettled pattern prevails through Friday with several rounds of showers expected, with greatest concentration over the higher terrain.",
+   "Cooler and drier weather develops late Friday into Saturday, with patchy frost possible in the Champlain Valley on Saturday morning.",
+   "After a dry start to the weekend, showers look to return late Sunday into the start of next week."
   ],
-  "what_changed": "As of 229 PM EDT Tuesday... Frost Advisory will end this morning for the Champlain Valley. Timing for rain showers next week has been moved up earlier to Sunday evening.",
-  "raw": "\n000\nFXUS61 KBTV 071131\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n731 AM EDT Wed Oct 7 2026\n\n.WHAT HAS CHANGED...\nAs of 229 PM EDT Tuesday...\n\nFrost Advisory will end this morning for the Champlain Valley.\nTiming for rain showers next week has been moved up earlier to \nSunday evening.\n\n&&\n\n.KEY MESSAGES...\nAs of 227 AM EDT Wednesday...\n\n1. Showery conditions developing for the rest of the week.\n\n2. Dry and seasonable weekend before showers return for the \nbeginning of next week.\n\n&&\n\n.DISCUSSION...\nAs of 227 AM EDT Wednesday...\n\nKEY MESSAGE 1: A warm front will push east across the area with \nrelatively little fanfare. Mid-level dry air is expected to limit \nshower activity as it lifts northeast this morning. Moderation \nbehind the front will push temperatures into the 60s for most today, \nbut with a few spot 50s still in the Northeast Kingdom. Today's main \nstory will be the strong south to southwesterly winds that develop. \nModest mixing behind the warm front will bring 20-30 mph wind gusts, \nlocally to 35 mph on the northern slopes of the Dacks near Malone, \nNY and then near the shores of Lake Champlain. A prefrontal trough \nwill begin to track east towards the St. Lawrence Valley later this \nevening. Then, it'll translate to Vermont overnight. Showers will \ntrack east along the feature, with a greater concentration over \nnorthern New York where better dynamics and moisture lies that will \ndegrade heading into Vermont. By Thursday morning, temperatures will \nbegin to cool aloft as an upper low digs southeastwards. Surface \npressures will lower as the upper vort swings in, and this could \ncontinue to generate showers across the area. This will set up \nThursday afternoon to be convective. The combination of a \nstrengthening cold front as a 1001-1002mb low tracks just north of \nMontreal, mid-level cooling, and surface temperatures in the 60s \nwill allow for the dynamic system to take advantage of around 250-\n500 J/kg of CAPE across the area. Like Monday, we may have some pea-\nsized hail and isolated thunder on Thursday afternoon, with the \ngreatest likelihood near the international border.\n\nTemperatures will sink back near to below seasonal norms in the 50s \nto near 60 for Friday. The post-frontal air mass will still be \nbeneath a broad upper low, and some spot showers remain possible \nFriday afternoon. The backside of the upper trough will start \nsliding east by Friday night. This will allow for one night of \nradiational cooling and frost potential again in the Champlain \nValley. A few additional spot showers will be possible as warm \nadvection begins to nose in heading into Saturday, but nothing \nsignificant is expected.\n\nKEY MESSAGE 2: Surface high pressure builds in for the weekend, leading \nto a couple classic fall days. Highs will be in the 50s and 60s with \nmostly sunny skies. The remnants of what will likely become Isaias \nlooks to move into the region to start next week. The center of the \nlow should track well to the south, but periods of showers and \npotentially an area of stratiform rain are increasingly likely for \nMonday and Tuesday. By the time it reaches the region, it will have \nweakened significantly so any rainfall will remain beneficial \nand there will be no wind threat. The next cold front passes \nthrough mid- week, bringing more potential showers. Overall, \ntemperatures will be relatively seasonable, with slightly above \naverage temperatures to start the week and slightly below \naverage temperatures to end the week.\n\n&&\n\n.AVIATION /12Z WEDNESDAY THROUGH SUNDAY/...\nThrough 12Z Thursday...VFR conditions are expected to mostly persist\nfor the next 24 hours. The only exceptions could be late this\nafternoon and late tonight when a few showers move through. While\nmost of them will be too light to cause significant visibility\nreductions, a brief drop to MVFR visibility is possible. This\nafternoon, that would likely only occur over northern New York \nbut late tonight, that could occur at any terminal. Winds will \nbecome southerly to southwesterly and increase quickly this \nmorning. Gusts in the 15-30 KT range are expected during the \nday, with the strongest gusts at BTV, PBG and MSS. Winds will \ndecrease a bit this evening and by 06Z, the gusts should mostly \nbe below 20 KT. LLWS is expected to develop in places this \nevening, especially in Vermont outside the Champlain Valley.\n\nOutlook...\n\nThursday: VFR. Chance SHRA, Slight chance TSRA.\nThursday Night: VFR. Chance SHRA.\nFriday: VFR. Slight chance SHRA.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory will be in effect over Lake Champlain\nbeginning later this morning. Winds are expected to increase \nbehind a warm front that will pass through without much\nprecipitation. South winds of 15 to 25 knots will arrive around\n10 AM and peak just under 30 knots over the broad waters by mid\nafternoon before decreasing very slowly. Waves are expected to \nbuild up to 2 to 4 feet, with values closer to 3 to 5 feet over \nthe broad waters. Lingering 2 to 4 foot waves are likely during \nthe evening.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Haynes\nDISCUSSION...Haynes/Myskowski\nAVIATION...Myskowski\nMARINE...Haynes\n"
+  "what_changed": "As of 246 PM EDT Wednesday... No significant changes made.",
+  "raw": "\n000\nFXUS61 KBTV 071853\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n253 PM EDT Wed Oct 7 2026\n\n.WHAT HAS CHANGED...\nAs of 246 PM EDT Wednesday...\n\nNo significant changes made.\n\n&&\n\n.KEY MESSAGES...\nAs of 246 PM EDT Wednesday...\n\n1. Unsettled pattern prevails through Friday with several \nrounds of showers expected, with greatest concentration over the \nhigher terrain. \n\n2. Cooler and drier weather develops late Friday into Saturday, \nwith patchy frost possible in the Champlain Valley on Saturday \nmorning. \n\n3. After a dry start to the weekend, showers look to return \nlate Sunday into the start of next week. \n\n&&\n\n.DISCUSSION...\nAs of 246 PM EDT Wednesday...\n\nKEY MESSAGE 1: After the coolest start of the fall season, which saw \ntemps ranging from 22F at East Haven, 25F at SLK, and 34F at BTV, \ntemps have quickly rebounded into the 50s to lower 60s under gusty \nsoutherly winds. Peak wind gusts observed have been 41 mph at BTV \nand 51 mph at Colchester Reef so far today.\n\nThe core of the strongest 925mb to 850mb jet of 35 to 45 knots will \nbe exiting our cwa by 06z, but localized gusts 30 to 40 mph will be \npossible acrs Lake Champlain and exposed ridges thru this evening. \n\nGOES-19 mid lvl water vapor imagery shows initial s/w energy \nresponsible for some lightning north of the eastern Great Lakes \nquickly shearing out to our west. Meanwhile, another potent s/w and \nstronger mid/upper lvl trof is quickly diving southeast toward our \ncwa and should be entering the SLV by 06z. This energy is \naccompanied by a left front quadrant of a 100-120 knot jet at 25h, \nwhich should help to enhance synoptic scale ascent acrs our region \nfor a line of showers btwn 06-12z. Sounding analysis does indicate a \nweak layer of elevated instability with MUCAPE values of 150 to 300 \nJ/kg, especially over northern NY, so a rumble of thunder is \npossible.  \n\nMeanwhile, additional s/w energy, along with better instability \ndevelops between 15z and 21z Thursday, supporting additional showers \nwith embedded rumbles of thunder possible. The cooling temps aloft \nhelp to steepen sfc to 3km lapse rates, while MUCAPE values climb \nbtwn 800-1200 J/kg. Given the relatively high EQL up to 25kft, a few \nstronger cores wl be capable of small hail/graupel, but probability \nof any severe is <5%. Just not enough confidence in areal coverage \nto mention small hail in grids attm. Highest probability and areal \ncoverage of showers on Thurs wl be between 16z and 21z, based on \nmoisture/instability and forcing parameters. Given the potential for \nhigh based showers with favorable deep layer lapse rates, localized \ngusty winds are possible in the stronger cores. Temps under caa \naloft, warm into the mid 60s valleys to mid/upper 40s summits. \n\nMid/upper lvl trof continues to deepen acrs our cwa Thurs night into \nFriday with 925mb to 850mb caa prevailing. This favorable upslope \nflow and lingering 925mb to 700mb moisture wl continue to produce \nplenty of clouds with intervals of showers, especially northern \nDacks into the central/northern Greens. Highest likely pops wl be \nfocused acrs these area, especially on Friday morning. Progged 850mb \ntemps drop to near 0C by 12z Friday, so given lingering moisture and \ncooling thermal profiles, a few wet flakes are possible above 3500 \nfeet in the Dacks and northern Greens from Mt Mansfield to Jay Peak \non Friday morning. Temps Friday struggle in the mid/upper 30s \nsummits to mid/upper 50s warmest valleys.\n\nKEY MESSAGE 2: A 1028mb high pres will be expanding acrs our fa late \nFriday into Saturday with cooler and drier weather anticipated. This \ncool and dry airmass with light bl winds wl allow for temps to \nquickly drop after sunset on Friday night. However, have noted some \nincreasing 1000 to 500mb rh after 06z Saturday associated with \nmodest waa. This moisture could result in some mid/upper lvl clouds \ntoward sunrise on Saturday, preventing temps from completely \nbottoming out. Either way wl mention lows mid 20s to mid/upper 30s, \nvery similar to this morning with some clouds increasing over \nnorthern NY toward sunrise. Saturday is a beautiful fall day with \ntemps quickly climbing back into the mid 50s to lower 60s with \ndeveloping southerly winds.\n\nKEY MESSAGE 3: After a stretch of dry and seasonable weather to start \nthe weekend, shower chances look to return late Sunday into the \nstart of next week. Model guidance at this time shows the remnants \nof current Tropical Storm Isaias will move into the region towards \nthe start of the week. At this time, the center of the low looks to \nremain to our south, but widespread precipitation is looking likely \nfor Monday into Tuesday. The system will weaken significantly by the \ntime it reaches the region, bringing beneficial rainfall. Once this \nsystem exits, it looks a strong cold front moves through the region \ntowards mid-week. As usual with this time range, the trends for \nthese systems will need to be monitored as we get closer. \nTemperatures will be on the warm side for Sunday and Monday, with \nhighs in the 60s and even low 70s, but will trend cooler for next \nweek with highs in the 50s to near 60 for Tuesday.\n\n&&\n\n.AVIATION /18Z WEDNESDAY THROUGH MONDAY/...\nThrough 18Z Thursday...VFR conditions are expected to mostly persist\nfor the next 24 hours. The only exceptions could be late this\nafternoon and late tonight when a few showers move through. While\nmost of them will be too light to cause significant visibility\nreductions, a brief drop to MVFR visibility is possible. This\nafternoon, that would likely only occur over northern New York \nbut late tonight, that could occur at any terminal. Winds will \nbecome southerly to southwesterly and increase quickly this \nmorning. Gusts in the 15-30 KT range are expected during the \nday, with the strongest gusts at BTV, PBG and MSS. Winds will \ndecrease a bit this evening and by 06Z, the gusts should mostly \nbe below 20 KT. LLWS is expected to develop in places this \nevening, especially in Vermont outside the Champlain Valley.\n\nOutlook...\n\nThursday Night: VFR. Chance SHRA.\nFriday: VFR. Slight chance SHRA.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. Chance SHRA.\nColumbus Day: VFR. Chance SHRA.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory continues on Lake Champlain tonight with\nbreezy to gusty south winds of 20 to 30 knots expected, along\nwith localized gusts up to 35 knots, especially before midnight.\nAs rain showers develop over the Lake toward midnight, winds\nwill decrease below advisory levels. Waves will generally be 2\nto 4 feet, with a few higher swells possible.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Taber\nDISCUSSION...Taber/Kremer\nAVIATION...Kremer\nMARINE...Taber\n"
  },
  "lake_forecast": {
-  "issued": "2026-10-07T06:27:00+00:00",
+  "issued": "2026-10-07T18:36:00+00:00",
   "suspended": false,
   "broad": [
    {
@@ -596,40 +597,32 @@
     "calm": false
    },
    {
-    "period": "Today",
-    "text": "South winds 15 to 25 knots. Mostly cloudy. Waves 1 to 3 feet, building to 3 to 5 feet, then subsiding to 2 to 4 feet.",
-    "wind_knots_max": 25,
-    "gust_knots": null,
-    "waves_ft_max": 3,
-    "calm": false
-   },
-   {
     "period": "Tonight",
-    "text": "South winds 15 to 25 knots. Partly cloudy. A chance of showers. Waves 1 to 3 feet.",
-    "wind_knots_max": 25,
-    "gust_knots": null,
-    "waves_ft_max": 3,
+    "text": "South winds 20 to 30 knots with gusts up to 35 knots, becoming 15 to 20 knots after midnight. Showers overnight. Waves 2 to 4 feet, subsiding to 1 to 3 feet.",
+    "wind_knots_max": 30,
+    "gust_knots": 35,
+    "waves_ft_max": 4,
     "calm": false
    },
    {
     "period": "Thursday",
-    "text": "South winds 10 to 15 knots, becoming west. Showers likely in the morning, then a chance of showers in the afternoon. Waves 1 to 3 feet.",
-    "wind_knots_max": 15,
+    "text": "South winds 15 to 20 knots, becoming west 10 to 15 knots. Partly sunny. A chance of showers with a slight chance of thunderstorms. Waves 1 to 3 feet, subsiding to 1 foot or less.",
+    "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 3,
     "calm": false
    },
    {
     "period": "Thursday Night",
-    "text": "West winds 5 to 10 knots, becoming southwest. Partly cloudy. A chance of showers in the evening. Waves around 1 foot.",
-    "wind_knots_max": 10,
+    "text": "West winds 15 to 25 knots, becoming southwest and diminishing to 5 to 15 knots. Becoming partly cloudy overnight. Showers likely in the evening. Waves 1 to 2 feet.",
+    "wind_knots_max": 25,
     "gust_knots": null,
-    "waves_ft_max": null,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Friday",
-    "text": "Southwest winds 5 to 15 knots, becoming northwest. Partly sunny. Waves 1 to 2 feet.",
+    "text": "South winds 10 to 15 knots, becoming northwest. Partly sunny. Waves 1 to 2 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
@@ -637,15 +630,15 @@
    },
    {
     "period": "Friday Night",
-    "text": "Northwest winds 10 knots or less, becoming southwest. Mostly clear. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "text": "Northwest winds 10 to 15 knots, becoming light and variable. Mostly clear. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": 1,
-    "calm": false
+    "waves_ft_max": 2,
+    "calm": true
    },
    {
     "period": "Saturday",
-    "text": "South winds 5 to 10 knots. Mostly sunny. Waves 1 foot or less.",
+    "text": "South winds 10 knots or less, becoming southeast. Mostly sunny. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -653,18 +646,34 @@
    },
    {
     "period": "Saturday Night",
-    "text": "South winds 10 knots or less, increasing to 10 to 15 knots. Mostly clear. Waves 1 to 2 feet.",
-    "wind_knots_max": 10,
+    "text": "South winds 5 to 15 knots, increasing to 15 to 20 knots. Partly cloudy. Waves 1 to 3 feet.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 3,
+    "calm": false
+   },
+   {
+    "period": "Sunday",
+    "text": "South winds 15 to 20 knots, diminishing to 10 to 15 knots. Partly sunny. A chance of showers in the afternoon. Waves 1 to 3 feet.",
+    "wind_knots_max": 20,
+    "gust_knots": null,
+    "waves_ft_max": 3,
+    "calm": false
+   },
+   {
+    "period": "Sunday Night",
+    "text": "South winds 5 to 15 knots. Showers likely. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
    },
    {
-    "period": "Sunday",
-    "text": "South winds 10 to 15 knots. Partly sunny. Waves 1 to 3 feet.",
-    "wind_knots_max": 15,
+    "period": "Columbus Day",
+    "text": "South winds 5 to 10 knots, becoming northwest. Partly sunny. Waves 1 foot or less. Winds and waves higher in and near thunderstorms.",
+    "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 3,
+    "waves_ft_max": 1,
     "calm": false
    }
   ],
@@ -678,56 +687,48 @@
     "calm": false
    },
    {
-    "period": "Today",
-    "text": "South winds 15 to 25 knots. Mostly cloudy. Waves 1 to 3 feet, building to 2 to 4 feet, then subsiding to 1 to 3 feet.",
-    "wind_knots_max": 25,
+    "period": "Tonight",
+    "text": "South winds 20 to 30 knots. A chance of showers in the evening, then showers overnight. Waves 2 to 4 feet.",
+    "wind_knots_max": 30,
     "gust_knots": null,
-    "waves_ft_max": 3,
+    "waves_ft_max": 4,
     "calm": false
    },
    {
-    "period": "Tonight",
-    "text": "South winds 15 to 20 knots, diminishing to 10 to 15 knots. Mostly cloudy in the evening, then becoming partly cloudy. A chance of showers. Waves 1 to 3 feet.",
+    "period": "Thursday",
+    "text": "South winds 15 to 20 knots, becoming west 10 to 15 knots. Showers likely with a slight chance of thunderstorms. Waves 1 to 3 feet, subsiding to 1 foot or less.",
     "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 3,
     "calm": false
    },
    {
-    "period": "Thursday",
-    "text": "South winds 10 to 15 knots, becoming west. Partly sunny. A chance of showers. Waves 1 to 3 feet.",
-    "wind_knots_max": 15,
-    "gust_knots": null,
-    "waves_ft_max": 3,
-    "calm": false
-   },
-   {
     "period": "Thursday Night",
-    "text": "West winds 10 knots or less, becoming southwest. Partly cloudy. A chance of showers in the evening. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "text": "West winds 15 to 25 knots, becoming southwest and diminishing to 10 to 15 knots. Showers likely in the evening. Waves 1 to 2 feet.",
+    "wind_knots_max": 25,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Friday",
-    "text": "West winds 5 to 10 knots. Partly sunny. Waves 1 to 2 feet.",
-    "wind_knots_max": 10,
+    "text": "Southwest winds 10 to 15 knots, becoming northwest. Cloudy in the morning, then becoming partly sunny. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Friday Night",
-    "text": "Northwest winds 5 to 10 knots, becoming light and variable. Mostly clear. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "text": "Northwest winds 10 to 15 knots, becoming light and variable. Mostly clear. Waves 1 to 3 feet, subsiding to 1 foot or less.",
+    "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 3,
     "calm": true
    },
    {
     "period": "Saturday",
-    "text": "South winds 10 knots or less. Mostly sunny. Waves 1 foot or less.",
+    "text": "South winds less than 10 knots. Mostly sunny. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -735,7 +736,7 @@
    },
    {
     "period": "Saturday Night",
-    "text": "South winds 10 knots or less, increasing to 10 to 15 knots. Mostly clear. Waves 1 to 3 feet.",
+    "text": "South winds less than 10 knots, increasing to 10 to 15 knots. Partly cloudy. Waves 1 to 3 feet.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 3,
@@ -743,10 +744,26 @@
    },
    {
     "period": "Sunday",
-    "text": "South winds 10 to 15 knots. Partly sunny. Waves 1 to 3 feet, building to 2 to 4 feet.",
+    "text": "South winds 10 to 15 knots. Partly sunny. A chance of showers in the afternoon. Waves 2 to 4 feet, subsiding to 1 to 3 feet.",
     "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": 3,
+    "waves_ft_max": 4,
+    "calm": false
+   },
+   {
+    "period": "Sunday Night",
+    "text": "South winds 5 to 15 knots. Showers likely. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 2,
+    "calm": false
+   },
+   {
+    "period": "Columbus Day",
+    "text": "South winds 5 to 10 knots, becoming northwest. Mostly cloudy. Waves 1 foot or less. Winds and waves higher in and near thunderstorms.",
+    "wind_knots_max": 10,
+    "gust_knots": null,
+    "waves_ft_max": 1,
     "calm": false
    }
   ],
@@ -760,56 +777,48 @@
     "calm": false
    },
    {
-    "period": "Today",
-    "text": "South winds 15 to 25 knots. Partly sunny. Waves 1 to 2 feet, building to 2 to 4 feet, then subsiding to 1 to 2 feet.",
+    "period": "Tonight",
+    "text": "South winds 15 to 25 knots with gusts to around 35 knots. Partly cloudy in the evening. Showers overnight. Waves 2 to 4 feet.",
     "wind_knots_max": 25,
     "gust_knots": null,
-    "waves_ft_max": 2,
-    "calm": false
-   },
-   {
-    "period": "Tonight",
-    "text": "South winds 15 to 20 knots. Partly cloudy. A slight chance of showers in the evening, then a chance of showers overnight. Waves 1 to 3 feet.",
-    "wind_knots_max": 20,
-    "gust_knots": null,
-    "waves_ft_max": 3,
+    "waves_ft_max": 4,
     "calm": false
    },
    {
     "period": "Thursday",
-    "text": "South winds 10 to 15 knots, becoming west. Showers likely in the morning. Waves 1 to 2 feet.",
-    "wind_knots_max": 15,
+    "text": "South winds 15 to 20 knots, becoming west 10 to 15 knots. Partly sunny. A chance of showers in the morning, then a chance of showers with a slight chance of thunderstorms in the afternoon. Waves 1 to 2 feet.",
+    "wind_knots_max": 20,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Thursday Night",
-    "text": "West winds 10 knots or less, becoming southwest. Partly cloudy. Waves around 1 foot.",
-    "wind_knots_max": 10,
+    "text": "West winds 5 to 15 knots, becoming south. Mostly cloudy in the evening, then becoming partly cloudy. A chance of showers in the evening. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": null,
+    "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Friday",
-    "text": "Southwest winds 10 knots or less, becoming northwest. Partly sunny. Waves 1 to 2 feet.",
-    "wind_knots_max": 10,
+    "text": "South winds 5 to 15 knots, becoming northwest. Partly sunny. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
    },
    {
     "period": "Friday Night",
-    "text": "Northwest winds 5 to 10 knots, becoming light and variable. Mostly clear. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "text": "Northwest winds 10 to 15 knots, becoming light and variable. Mostly clear. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
-    "waves_ft_max": 1,
+    "waves_ft_max": 2,
     "calm": true
    },
    {
     "period": "Saturday",
-    "text": "South winds 10 knots or less. Mostly sunny. Waves 1 foot or less.",
+    "text": "South winds 10 knots or less, becoming southeast. Mostly sunny. Waves 1 foot or less.",
     "wind_knots_max": 10,
     "gust_knots": null,
     "waves_ft_max": 1,
@@ -817,51 +826,70 @@
    },
    {
     "period": "Saturday Night",
-    "text": "South winds 10 knots or less, increasing to 10 to 15 knots. Mostly clear. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "text": "South winds 5 to 15 knots, increasing to 15 to 20 knots. Mostly clear. Waves 1 to 3 feet.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 3,
+    "calm": false
+   },
+   {
+    "period": "Sunday",
+    "text": "South winds 10 to 15 knots. Partly sunny. A chance of showers in the afternoon. Waves 1 to 3 feet, subsiding to 1 foot or less.",
+    "wind_knots_max": 15,
+    "gust_knots": null,
+    "waves_ft_max": 3,
+    "calm": false
+   },
+   {
+    "period": "Sunday Night",
+    "text": "South winds 5 to 15 knots. Showers likely. Waves 1 foot or less.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": false
    },
    {
-    "period": "Sunday",
-    "text": "South winds 10 to 15 knots. Partly sunny. Waves 1 to 3 feet. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.28 feet 54 degrees USGS gage at Burlington VT 93.29 feet 59 degrees USGS gage at Port Henry NY 93.18 feet 39 degrees",
-    "wind_knots_max": 15,
+    "period": "Columbus Day",
+    "text": "South winds 5 to 10 knots, becoming northwest. Mostly cloudy. Waves 1 foot or less. Winds and waves higher in and near thunderstorms. The ultraviolet index for Thursday will be a 3. This is in the moderate category. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.59 feet 55 degrees USGS gage at Burlington VT 93.24 feet 58 degrees USGS gage at Port Henry NY 93.06 feet 58 degrees",
+    "wind_knots_max": 10,
     "gust_knots": null,
-    "waves_ft_max": 3,
+    "waves_ft_max": 1,
     "calm": false
    }
   ],
-  "uv": null,
+  "uv": {
+   "day": "Thursday",
+   "index": 3
+  },
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 93.28,
-    "temp_f": 54
+    "level_ft": 93.59,
+    "temp_f": 55
    },
    "Burlington VT": {
-    "level_ft": 93.29,
-    "temp_f": 59
+    "level_ft": 93.24,
+    "temp_f": 58
    },
    "Port Henry NY": {
-    "level_ft": 93.18,
-    "temp_f": 39
+    "level_ft": 93.06,
+    "temp_f": 58
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 58,
-  "water_temp_at": "2026-10-07T11:00:00.000-04:00",
-  "level_ft": 93.73,
-  "level_at": "2026-10-07T11:00:00.000-04:00",
+  "water_temp_at": "2026-10-07T15:00:00.000-04:00",
+  "level_ft": 93.74,
+  "level_at": "2026-10-07T15:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 33,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/07/26 13:00",
-  "discussion": "On Wednesday, October 7th, expect generally good air quality across Vermont."
+  "observed": "10/07/26 15:00",
+  "discussion": "On Thursday, October 8th, expect generally good air quality across Vermont."
  },
  "sun": {
   "sunrise": "2026-10-07T06:58-04:00",
@@ -904,7 +932,7 @@
      "ICON": 88
     },
     "precip_in": {
-     "GFS": 0.07,
+     "GFS": 0.56,
      "Euro": 0.11,
      "ICON": 0.22
     },
