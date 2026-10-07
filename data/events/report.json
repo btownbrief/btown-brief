@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-06T20:07:50-04:00",
+ "generated": "2026-10-07T12:52:47-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -9,22 +9,22 @@
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 57,
-   "seconds": 5.3
+   "seconds": 4.0
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 85,
-   "seconds": 3.6
+   "count": 83,
+   "seconds": 3.1
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 253,
-   "seconds": 4.5
+   "count": 251,
+   "seconds": 4.0
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 75,
-   "seconds": 2.0
+   "count": 73,
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-06&end_date=2026-12-05&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-07&end_date=2026-12-06&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 4,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 215,
-   "seconds": 65.8
+   "count": 212,
+   "seconds": 71.4
   },
   "flynn": {
    "label": "The Flynn",
    "count": 20,
-   "seconds": 0.4
+   "seconds": 0.6
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,59 +63,59 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 656,
-   "seconds": 33.6
+   "count": 649,
+   "seconds": 33.0
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 6
+   "staleDays": 7
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 10.6
+   "seconds": 12.3
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 409,
-   "seconds": 73.0
+   "count": 400,
+   "seconds": 73.5
   },
   "meetup": {
    "label": "Meetup",
-   "count": 44,
-   "seconds": 96.2
+   "count": 45,
+   "seconds": 90.1
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 21,
-   "seconds": 0.3
+   "count": 20,
+   "seconds": 0.5
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 64,
-   "seconds": 14.3
+   "count": 63,
+   "seconds": 13.9
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 10,
-   "seconds": 0.3
+   "seconds": 0.5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 95,
+   "count": 91,
    "seconds": 1.9
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 17,
-   "seconds": 31.8
+   "seconds": 32.7
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2516,
-   "seconds": 2.8
+   "count": 2506,
+   "seconds": 18.1
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -124,75 +124,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 515,
-   "seconds": 18.7
+   "count": 505,
+   "seconds": 37.7
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 293,
-   "seconds": 0.3
+   "count": 290,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 59,
-   "seconds": 77.2
+   "count": 60,
+   "seconds": 84.8
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 53,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 5471,
- "afterDedup": 2548,
- "duplicatesMerged": 2923,
- "final": 2611,
- "firecrawlCalls": 1,
+ "gathered": 5419,
+ "afterDedup": 2535,
+ "duplicatesMerged": 2884,
+ "final": 2587,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Coloring in the Marble Court",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-11"
-  },
-  {
-   "kept": {
-    "title": "Japan After Dark: The Tokugawa Transformation of the Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-11"
-  },
-  {
-   "kept": {
-    "title": "BOOST Sessions",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-11"
-  },
-  {
-   "kept": {
-    "title": "Cats-Giving",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-11"
-  },
   {
    "kept": {
     "title": "Board Game Night",
@@ -788,6 +744,17 @@
    "merged_sources": [
     "sblibrary",
     "sevendays"
+   ],
+   "date": "2026-11-16"
+  },
+  {
+   "kept": {
+    "title": "Film screening of The Paper Bag Plan",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-16"
   },
@@ -2363,6 +2330,28 @@
   },
   {
    "kept": {
+    "title": "Men's Ice Hockey vs Providence",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-05"
+  },
+  {
+   "kept": {
+    "title": "\"Break Forth Into Joy\": English Christmas Music",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-05"
+  },
+  {
+   "kept": {
     "title": "'Very Eric Carle' Exhibit",
     "source": "sevendays"
    },
@@ -2393,58 +2382,48 @@
     "helloburlington"
    ],
    "date": "2026-12-05"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-06"
   }
  ],
  "changes": [
   {
-   "id": "fd27adfc07e0",
-   "title": "Kids' Puzzle Swap",
-   "date": "2026-10-21",
+   "id": "42b2324fe7d8",
+   "title": "Cookie Queens",
+   "date": "2026-10-10",
    "change": "time",
-   "was": "2026-10-21T14:00:00-04:00",
-   "now": "2026-10-21T14:30:00-04:00"
+   "was": "2026-10-10T13:00:00-04:00",
+   "now": "2026-10-10T15:30:00-04:00"
   },
   {
-   "id": "ed0b68f24bed",
-   "title": "Burlington Bitcoin Meetup - @ Zero Gravity",
-   "date": "2026-10-06",
+   "id": "e6f144caf171",
+   "title": "Public Skate",
+   "date": "2026-10-07",
    "change": "missing",
-   "lastSeen": "2026-10-05T21:27:24-04:00"
+   "lastSeen": "2026-10-06T20:07:50-04:00"
   },
   {
-   "id": "21e0c1e89274",
-   "title": "Piano Tuning",
-   "date": "2026-10-06",
+   "id": "1a3885ed504b",
+   "title": "Stick & Puck",
+   "date": "2026-10-07",
    "change": "missing",
-   "lastSeen": "2026-10-05T14:49:31-04:00"
+   "lastSeen": "2026-10-06T20:07:50-04:00"
   },
   {
-   "id": "2edc159b3a42",
-   "title": "Craftytown",
-   "date": "2026-10-06",
+   "id": "c3621553295d",
+   "title": "National Life @ UVM!",
+   "date": "2026-10-07",
    "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
-   "id": "f009ebf47147",
-   "title": "Cookbook Club",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
-   "id": "ed5aff3e4f6d",
-   "title": "5K Run @ Howl Bier in Winooski",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
-   "id": "6816164dc2c1",
-   "title": "Jeffrey Trubisz",
-   "date": "2026-10-06",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
+   "lastSeen": "2026-10-06T20:07:50-04:00"
   },
   {
    "id": "5bfedf917da7",
@@ -2475,32 +2454,11 @@
    "lastSeen": "2026-10-06T12:14:15-04:00"
   },
   {
-   "id": "57ca6209c4f7",
-   "title": "Lincoln Sprague",
+   "id": "6ea2abfa8ec7",
+   "title": "National Life @ UVM!",
    "date": "2026-10-08",
    "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
-   "id": "544778cdb360",
-   "title": "Cooper",
-   "date": "2026-10-08",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
-   "id": "d505012715b4",
-   "title": "Red Hot Juba",
-   "date": "2026-10-08",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
-   "id": "4f0b5ddc72e2",
-   "title": "Two Sev, JP Black, Cece, Chaston",
-   "date": "2026-10-08",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
+   "lastSeen": "2026-10-06T20:07:50-04:00"
   },
   {
    "id": "6ed1d8209f5f",
@@ -2510,29 +2468,15 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "d764e4725cce",
-   "title": "Coffee Ride",
+   "id": "1a8a2fc0fe7e",
+   "title": "Coffee Ride to Blank Page Café",
    "date": "2026-10-09",
    "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
-   "id": "e8ad798226df",
-   "title": "Dave Mitchell's Blue's Revue",
-   "date": "2026-10-09",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
+   "lastSeen": "2026-10-06T20:07:50-04:00"
   },
   {
    "id": "e5874f4cd307",
    "title": "LEGO Builders",
-   "date": "2026-10-09",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
-   "id": "594064c12c63",
-   "title": "Reid Parsons",
    "date": "2026-10-09",
    "change": "missing",
    "lastSeen": "2026-10-06T12:14:15-04:00"
@@ -2629,20 +2573,6 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
-   "id": "dcff28acc523",
-   "title": "The German Army and the Holocaust",
-   "date": "2026-10-18",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
-   "id": "4e01da49e8ab",
-   "title": "Careers in Marketing Panel",
-   "date": "2026-10-19",
-   "change": "missing",
-   "lastSeen": "2026-10-06T12:14:15-04:00"
-  },
-  {
    "id": "340b543928b9",
    "title": "Trunk or Treat (FREE)",
    "date": "2026-10-19",
@@ -2674,8 +2604,7 @@
    "id": "2444dcc19444",
    "title": "Pet Store: A Live Sitcom",
    "date": "2026-10-23",
-   "change": "missing",
-   "lastSeen": "2026-10-04T10:58:26-04:00"
+   "change": "dropped"
   },
   {
    "id": "b5c1a7802ad1",
@@ -2709,13 +2638,6 @@
    "id": "38ec1bc42ed7",
    "title": "Burlington Blackout",
    "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-04T10:58:26-04:00"
-  },
-  {
-   "id": "66fdb89393d2",
-   "title": "Halloween dance party at Whitcomb barn!",
-   "date": "2026-10-24",
    "change": "dropped"
   },
   {
@@ -2745,6 +2667,20 @@
    "date": "2026-10-28",
    "change": "missing",
    "lastSeen": "2026-10-04T19:35:24-04:00"
+  },
+  {
+   "id": "bd8d86cc5e44",
+   "title": "Over The Garden Wall",
+   "date": "2026-10-28",
+   "change": "source-down",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "74e18b891405",
+   "title": "Tyler Daniel Bean",
+   "date": "2026-10-28",
+   "change": "source-down",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "047fbcf1fd9c",
@@ -2782,6 +2718,34 @@
    "lastSeen": "2026-10-04T19:35:24-04:00"
   },
   {
+   "id": "ffe63f40e3e8",
+   "title": "Myra Flynn",
+   "date": "2026-11-01",
+   "change": "source-down",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "d23942972d1e",
+   "title": "2026 UVM Engineering & Technology Fair",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-10-06T20:07:50-04:00"
+  },
+  {
+   "id": "78c5a0c15c0b",
+   "title": "Good Time Line Dancing",
+   "date": "2026-11-13",
+   "change": "source-down",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "8084a008f1bc",
+   "title": "Sam Shackleton",
+   "date": "2026-11-15",
+   "change": "source-down",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
    "id": "e872dba934d8",
    "title": "Kids Puzzle Swap",
    "date": "2026-11-18",
@@ -2794,6 +2758,13 @@
    "date": "2026-11-21",
    "change": "missing",
    "lastSeen": "2026-10-06T12:14:15-04:00"
+  },
+  {
+   "id": "57eda5c0288b",
+   "title": "House of Sparkle",
+   "date": "2026-11-27",
+   "change": "source-down",
+   "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
    "id": "23ac55a7c4cf",
