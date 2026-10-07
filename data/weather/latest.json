@@ -1,16 +1,16 @@
 {
- "updated": "2026-10-07T15:31:11+00:00",
+ "updated": "2026-10-07T16:51:14+00:00",
  "sections_updated": {
-  "now": "2026-10-07T15:31:11+00:00",
-  "forecast": "2026-10-07T15:31:11+00:00",
-  "hourly": "2026-10-07T15:31:11+00:00",
-  "alerts": "2026-10-07T15:31:11+00:00",
-  "afd": "2026-10-07T15:31:11+00:00",
-  "lake_forecast": "2026-10-07T15:31:11+00:00",
+  "now": "2026-10-07T16:51:14+00:00",
+  "forecast": "2026-10-07T16:51:14+00:00",
+  "hourly": "2026-10-07T16:51:14+00:00",
+  "alerts": "2026-10-07T16:51:14+00:00",
+  "afd": "2026-10-07T16:51:14+00:00",
+  "lake_forecast": "2026-10-07T16:51:14+00:00",
   "lake_gage": "2026-10-07T15:31:11+00:00",
-  "air": "2026-10-07T15:31:11+00:00",
-  "sun": "2026-10-07T15:31:11+00:00",
-  "models": "2026-10-07T15:31:11+00:00"
+  "air": "2026-10-07T16:51:14+00:00",
+  "sun": "2026-10-07T16:51:14+00:00",
+  "models": "2026-10-07T16:51:14+00:00"
  },
  "now": {
   "observed_at": "2026-10-07T14:50:00+00:00",
@@ -29,8 +29,8 @@
   "updated": "2026-10-07T10:33:17+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-10-07T11:00:00-04:00",
+    "name": "This Afternoon",
+    "start": "2026-10-07T12:00:00-04:00",
     "is_day": true,
     "temp_f": 62,
     "pop": 4,
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-07T10:33:17+00:00",
   "hours": [
-   {
-    "t": "2026-10-07T11:00:00-04:00",
-    "temp_f": 50,
-    "feels_f": 44,
-    "pop": 2,
-    "humidity": 52,
-    "wind_mph": 20,
-    "wind_dir": "S",
-    "sky": 76,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-10-07T12:00:00-04:00",
     "temp_f": 54,
@@ -568,6 +557,17 @@
     "wind_dir": "W",
     "sky": 58,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-10-08T23:00:00-04:00",
+    "temp_f": 49,
+    "feels_f": 47,
+    "pop": 25,
+    "humidity": 93,
+    "wind_mph": 6,
+    "wind_dir": "W",
+    "sky": 50,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -860,7 +860,7 @@
   "aqi": 30,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/07/26 11:00",
+  "observed": "10/07/26 12:00",
   "discussion": "On Wednesday, October 7th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -880,9 +880,9 @@
      "ICON": 61
     },
     "pop_max": {
-     "GFS": 9,
+     "GFS": 8,
      "Euro": 76,
-     "ICON": 8
+     "ICON": 23
     },
     "precip_in": {
      "GFS": 0.0,
@@ -896,19 +896,19 @@
     "high_f": {
      "GFS": 64,
      "Euro": 65,
-     "ICON": 66
+     "ICON": 64
     },
     "pop_max": {
-     "GFS": 26,
+     "GFS": 34,
      "Euro": 69,
-     "ICON": 47
+     "ICON": 88
     },
     "precip_in": {
-     "GFS": 0.04,
+     "GFS": 0.02,
      "Euro": 0.11,
-     "ICON": 0.19
+     "ICON": 0.22
     },
-    "high_spread_f": 2
+    "high_spread_f": 1
    },
    {
     "date": "2026-10-09",
@@ -920,12 +920,12 @@
     "pop_max": {
      "GFS": 25,
      "Euro": 37,
-     "ICON": 11
+     "ICON": 38
     },
     "precip_in": {
      "GFS": 0.02,
      "Euro": 0.02,
-     "ICON": 0.08
+     "ICON": 0.03
     },
     "high_spread_f": 4
    }
