@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-07T16:51:14+00:00",
+ "updated": "2026-10-07T18:11:20+00:00",
  "sections_updated": {
-  "now": "2026-10-07T16:51:14+00:00",
-  "forecast": "2026-10-07T16:51:14+00:00",
-  "hourly": "2026-10-07T16:51:14+00:00",
-  "alerts": "2026-10-07T16:51:14+00:00",
-  "afd": "2026-10-07T16:51:14+00:00",
-  "lake_forecast": "2026-10-07T16:51:14+00:00",
+  "now": "2026-10-07T18:11:20+00:00",
+  "forecast": "2026-10-07T18:11:20+00:00",
+  "hourly": "2026-10-07T18:11:20+00:00",
+  "alerts": "2026-10-07T18:11:20+00:00",
+  "afd": "2026-10-07T18:11:20+00:00",
+  "lake_forecast": "2026-10-07T18:11:20+00:00",
   "lake_gage": "2026-10-07T15:31:11+00:00",
-  "air": "2026-10-07T16:51:14+00:00",
-  "sun": "2026-10-07T16:51:14+00:00",
-  "models": "2026-10-07T16:51:14+00:00"
+  "air": "2026-10-07T18:11:20+00:00",
+  "sun": "2026-10-07T18:11:20+00:00",
+  "models": "2026-10-07T18:11:20+00:00"
  },
  "now": {
-  "observed_at": "2026-10-07T14:50:00+00:00",
+  "observed_at": "2026-10-07T17:55:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
-  "temp_f": 52,
-  "feels_like_f": 52,
-  "humidity": 43,
-  "dewpoint_f": 30,
-  "wind_mph": null,
+  "description": "Partly Cloudy",
+  "temp_f": 61,
+  "feels_like_f": 61,
+  "humidity": 39,
+  "dewpoint_f": 36,
+  "wind_mph": 15,
   "wind_gust_mph": null,
-  "wind_dir": null,
+  "wind_dir": "S",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "This Afternoon",
-    "start": "2026-10-07T12:00:00-04:00",
+    "start": "2026-10-07T14:00:00-04:00",
     "is_day": true,
     "temp_f": 62,
     "pop": 4,
-    "wind": "S 16 to 21 mph",
+    "wind": "S 16 to 20 mph",
     "short": "Mostly Cloudy",
-    "detailed": "Mostly cloudy, with a high near 62. South wind 16 to 21 mph, with gusts as high as 33 mph."
+    "detailed": "Mostly cloudy, with a high near 62. South wind 16 to 20 mph, with gusts as high as 31 mph."
    },
    {
     "name": "Tonight",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-10-07T10:33:17+00:00",
   "hours": [
-   {
-    "t": "2026-10-07T12:00:00-04:00",
-    "temp_f": 54,
-    "feels_f": 54,
-    "pop": 1,
-    "humidity": 45,
-    "wind_mph": 21,
-    "wind_dir": "S",
-    "sky": 78,
-    "short": "Mostly Cloudy"
-   },
-   {
-    "t": "2026-10-07T13:00:00-04:00",
-    "temp_f": 57,
-    "feels_f": 57,
-    "pop": 1,
-    "humidity": 43,
-    "wind_mph": 20,
-    "wind_dir": "S",
-    "sky": 79,
-    "short": "Mostly Cloudy"
-   },
    {
     "t": "2026-10-07T14:00:00-04:00",
     "temp_f": 60,
@@ -568,6 +546,28 @@
     "wind_dir": "W",
     "sky": 50,
     "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-10-09T00:00:00-04:00",
+    "temp_f": 48,
+    "feels_f": 45,
+    "pop": 25,
+    "humidity": 96,
+    "wind_mph": 6,
+    "wind_dir": "W",
+    "sky": 50,
+    "short": "Chance Rain Showers"
+   },
+   {
+    "t": "2026-10-09T01:00:00-04:00",
+    "temp_f": 47,
+    "feels_f": 44,
+    "pop": 25,
+    "humidity": 96,
+    "wind_mph": 6,
+    "wind_dir": "SW",
+    "sky": 50,
+    "short": "Chance Rain Showers"
    }
   ]
  },
@@ -857,10 +857,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 30,
+  "aqi": 31,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/07/26 12:00",
+  "observed": "10/07/26 13:00",
   "discussion": "On Wednesday, October 7th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -868,19 +868,19 @@
   "sunset": "2026-10-07T18:22-04:00",
   "sunrise_tomorrow": "2026-10-08T06:59-04:00",
   "sunset_tomorrow": "2026-10-08T18:20-04:00",
-  "uv_max": 3.3
+  "uv_max": 2.8
  },
  "models": {
   "days": [
    {
     "date": "2026-10-07",
     "high_f": {
-     "GFS": 63,
+     "GFS": 64,
      "Euro": 58,
      "ICON": 61
     },
     "pop_max": {
-     "GFS": 8,
+     "GFS": 6,
      "Euro": 76,
      "ICON": 23
     },
@@ -889,7 +889,7 @@
      "Euro": 0.04,
      "ICON": 0.04
     },
-    "high_spread_f": 5
+    "high_spread_f": 6
    },
    {
     "date": "2026-10-08",
@@ -899,12 +899,12 @@
      "ICON": 64
     },
     "pop_max": {
-     "GFS": 34,
+     "GFS": 60,
      "Euro": 69,
      "ICON": 88
     },
     "precip_in": {
-     "GFS": 0.02,
+     "GFS": 0.07,
      "Euro": 0.11,
      "ICON": 0.22
     },
@@ -923,7 +923,7 @@
      "ICON": 38
     },
     "precip_in": {
-     "GFS": 0.02,
+     "GFS": 0.07,
      "Euro": 0.02,
      "ICON": 0.03
     },
