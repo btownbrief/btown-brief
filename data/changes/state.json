@@ -3,7 +3,7 @@
   "alerts": [],
   "forecast_flag": {
    "day": "2026-10-08",
-   "text": "Thursday: Rain showers likely before 10am, then a chance of showers and thunderstorms between 10am and 4pm, then a slight chance of showers and thunderstorms"
+   "text": "Today: A chance of rain showers before 11am, then a chance of showers and thunderstorms between 11am and 4pm, then a slight chance of showers and thunderstorms"
   }
  },
  "beach-status": {
@@ -63,6 +63,24 @@
  "roads": {
   "construction": {
    "items": [
+    {
+     "id": "fb180d15-f86b-41ff-ae3e-779be1d1dabd",
+     "name": "CY27 Paving",
+     "ts": "2026-10-08T14:22:33+00:00",
+     "url": "https://www.burlingtonvt.gov/DPW"
+    },
+    {
+     "id": "5d0a754d-9709-4da5-9504-44cd97540859",
+     "name": "CY27 Paving",
+     "ts": "2026-10-08T14:11:43+00:00",
+     "url": "https://www.burlingtonvt.gov/DPW"
+    },
+    {
+     "id": "d0daa868-1d01-4130-9e23-97ce0bff4044",
+     "name": "CY27 Paving",
+     "ts": "2026-10-08T14:06:45+00:00",
+     "url": "https://www.burlingtonvt.gov/DPW"
+    },
     {
      "id": "94aeaddc-f1e2-49c8-85d8-6f61631426ee",
      "name": "Paving",
@@ -169,12 +187,6 @@
      "id": "49bdf6b3-8707-4d6e-beae-5394ed3ce11e",
      "name": "CY26 Paving",
      "ts": "2026-10-06T12:38:36+00:00",
-     "url": "https://www.burlingtonvt.gov/DPW"
-    },
-    {
-     "id": "d0daa868-1d01-4130-9e23-97ce0bff4044",
-     "name": "CY27 Paving",
-     "ts": "2026-10-06T12:38:22+00:00",
      "url": "https://www.burlingtonvt.gov/DPW"
     },
     {
@@ -350,18 +362,6 @@
      "name": "Construction project 4f224d27-6218-4433-88a4-45e0284f814d",
      "ts": "2026-10-01T18:58:42+00:00",
      "url": "https://www.burlingtonvt.gov/DPW"
-    },
-    {
-     "id": "328dc2bb-c47c-4397-a9e7-1ed6df9c9115",
-     "name": "Construction project 328dc2bb-c47c-4397-a9e7-1ed6df9c9115",
-     "ts": "2026-10-01T18:58:30+00:00",
-     "url": "https://www.burlingtonvt.gov/DPW"
-    },
-    {
-     "id": "238274dd-9006-4110-85f0-6c96f9220f79",
-     "name": "Construction project 238274dd-9006-4110-85f0-6c96f9220f79",
-     "ts": "2026-10-01T18:58:01+00:00",
-     "url": "https://www.burlingtonvt.gov/DPW"
     }
    ]
   },
@@ -453,7 +453,8 @@
     "hasAgenda": true,
     "files": [
      "Agenda V2",
-     "Packet V1"
+     "Packet V1",
+     "DRB Draft Minutes V1"
     ]
    },
    "10238": {
@@ -540,15 +541,18 @@
      "DAB Meeting Cancellation Notice"
     ]
    },
+   "10248": {
+    "name": "City Council - Ordinance Committee Meeting",
+    "start": "2026-10-13T17:30:00+00:00",
+    "hasAgenda": true,
+    "files": [
+     "Ordinance Committee Meeting Agenda v1",
+     "Ordinance Committee Agenda Packet v1"
+    ]
+   },
    "9965": {
     "name": "Planning Commission Meeting - Collaborative Working Group on Inclusionary Zoning",
     "start": "2026-10-13T18:00:00+00:00",
-    "hasAgenda": false,
-    "files": []
-   },
-   "10024": {
-    "name": "Burlington Electric Commission",
-    "start": "2026-10-14T17:00:00+00:00",
     "hasAgenda": false,
     "files": []
    }
@@ -558,6 +562,34 @@
   "feeds": {
    "sevendays-news": {
     "items": [
+     {
+      "id": "https://www.sevendaysvt.com/?p=219930",
+      "title": "Driver Who Fatally Struck Teen Cyclist Sued for Wrongful Death",
+      "link": "https://www.sevendaysvt.com/news/driver-who-fatally-struck-teen-cyclist-sued-for-wrongful-death/",
+      "ts": "2026-10-08T14:49:39+00:00",
+      "summary": "Shiloh Skalka's parents said in the lawsuit against local folk artist Douglas Knapp that their 16-year-old's death was preventable. The post Driver Who Fatally Struck Teen Cyclist Sued for Wrongful Death appeared first on Seven Days ."
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=219959",
+      "title": "Obituary: Evelyn Vinton Beliveau, 1931-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-evelyn-vinton-beliveau-1931-2026/",
+      "ts": "2026-10-08T10:00:00+00:00",
+      "summary": "Unflappable, empathetic and generous Jericho woman was the magnetic center of her home and “more fun than a barrel of monkeys” The post Obituary: Evelyn Vinton Beliveau, 1931-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=219954",
+      "title": "Obituary: Thomas Phillips Johnson Jr., 1939-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-thomas-phillips-johnson-jr-1939-2026/",
+      "ts": "2026-10-08T10:00:00+00:00",
+      "summary": "Documentary filmmaker and advocate for the public good worked to preserve local history and the land that touched and motivated him The post Obituary: Thomas Phillips Johnson Jr., 1939-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
+     {
+      "id": "https://www.sevendaysvt.com/?p=219950",
+      "title": "Obituary: Peter Edvard Beneš, 1948-2026",
+      "link": "https://www.sevendaysvt.com/life-lines/obituaries/obituary-peter-edvard-benes-1948-2026/",
+      "ts": "2026-10-08T10:00:00+00:00",
+      "summary": "Restaurant and hospitality professional showed his love through service and made people feel appreciated and cared for The post Obituary: Peter Edvard Beneš, 1948-2026 appeared first on Seven Days . (Image: Courtesy)"
+     },
      {
       "id": "https://www.sevendaysvt.com/?p=219895",
       "title": "Vermont Superior Court, Civil Division, Case No. 26-CV-05267",
@@ -599,39 +631,18 @@
       "link": "https://www.sevendaysvt.com/legal-notices/act250notices/act-250-notice-minor-application-300022-810-v-s-a-%c2%a7%c2%a7-6000-6111/",
       "ts": "2026-10-07T19:48:57+00:00",
       "summary": "Application 300022-8 from Pomerleau Properties, Inc., Attn: Scott Kirkwood, 69 College Street, Burlington, VT 05401 and Antonio B. Pomerleau, LLC, Attn: Ernest Pomerleau, 69 College Street, Burlington, VT 05401 was received on September 22, 2026 and deemed complete on October 2, 2026. The project is generally described as installation of a new, double-sided monument sign [ ] The post Act 250 Notic"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219875",
-      "title": "State of Vermont Superior Court, Probate Division, Franklin Unit, Docket No. 26-pR 05525",
-      "link": "https://www.sevendaysvt.com/legal-notices/noticetocreditors/state-of-vermont-superior-court-probate-division-franklin-unit-docket-no-26-pr-05525/",
-      "ts": "2026-10-07T19:47:05+00:00",
-      "summary": "In re ESTATE of Bradley Keith NOTICE TO CREDITORS To the creditors of: Bradley Keith, late of Georgia, Vermont. I have been appointed to administer this estate. All creditors having claims against the decedent or the estate must present their claims in writing within four (4) months of the date of the first publication of [ ] The post State of Vermont Superior Court, Probate Division, Franklin Uni"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219870",
-      "title": "Northstar Self Storage will be having a public and online sale/auction for the following storage units on October 22, 2026 at 9:00 am EST",
-      "link": "https://www.sevendaysvt.com/legal-notices/storageauctions/northstar-self-storage-will-be-having-a-public-and-online-sale-auction-for-the-following-storage-units-on-october-22-2026-at-900-am-est/",
-      "ts": "2026-10-07T19:16:39+00:00",
-      "summary": "Northstar Self Storage will be having a public and online sale/auction on October 22, 2026 at 9:00 am EST at Northstar Self Storage Castleton, 205 Route 4A West, Castleton, Vermont 05735 (Unit C98), Northstar Self Storage Springfield, 1124 Charlestown Road, Springfield, Vermont 05156 (Units S15, S50, S57, S59), and online at www.storagetreasures.com at [ ] The post Northstar Self Storage will be h"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219867",
-      "title": "State of Vermont Superior Court, Probate Division, Chittenden Unit, Docket No. 26-PR-05040",
-      "link": "https://www.sevendaysvt.com/legal-notices/noticetocreditors/state-of-vermont-superior-court-probate-division-chittenden-unit-docket-no-26-pr-05040/",
-      "ts": "2026-10-07T19:05:12+00:00",
-      "summary": "In re ESTATE of SHARON WEBSTER NOTICE TO CREDITORS To the creditors of: Sharon Webster, late of Charlotte, Vermont. I have been appointed to administer this estate. All creditors having claims against the decedent or the estate must present their claims in writing within four (4) months of the date of the first publication of [ ] The post State of Vermont Superior Court, Probate Division, Chittend"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=219864",
-      "title": "State of Vermont, Superior Court Probate Division, Addison Unit, Docket No. 26-PR-05707",
-      "link": "https://www.sevendaysvt.com/legal-notices/noticetocreditors/state-of-vermont-superior-court-probate-division-addison-unit-docket-no-26-pr-05707/",
-      "ts": "2026-10-07T19:03:42+00:00",
-      "summary": "In re ESTATE of Kyle Matthew Conner NOTICE TO CREDITORS To the creditors of: Kyle Matthew Conner, late of North Ferrisburgh I have been appointed to administer this estate. All creditors having claims against the decedent or the estate must present their claims in writing within four (4) months of the date of the first [ ] The post State of Vermont, Superior Court Probate Division, Addison Unit, D"
      }
     ]
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=656530",
+      "title": "State police investigate shooting by Williston officer that wounded a man early Thursday",
+      "link": "https://vtdigger.org/2026/10/08/state-police-investigate-shooting-by-williston-officer-that-wounded-a-man-early-thursday/",
+      "ts": "2026-10-08T15:55:58+00:00",
+      "summary": "The injured man was taken to a hospital, where he was reported in stable condition. Read the story on VTDigger here: State police investigate shooting by Williston officer that wounded a man early Thursday ."
+     },
      {
       "id": "https://vtdigger.org/?p=656501",
       "title": "Vermont governor’s race will test voters’ appetite for raising new taxes — or cutting them",
@@ -655,10 +666,10 @@
      },
      {
       "id": "https://vtdigger.org/?p=656491",
-      "title": "Florida evangelist purchases former Green Mountain College campus from Whiskey mogul",
+      "title": "Florida evangelist purchases former Green Mountain College campus from whiskey mogul",
       "link": "https://vtdigger.org/2026/10/07/florida-evangelist-purchases-former-green-mountain-college-campus-from-whiskey-mogul/",
       "ts": "2026-10-07T20:56:48+00:00",
-      "summary": "The sale price for the Poultney campus property was $6 million. Read the story on VTDigger here: Florida evangelist purchases former Green Mountain College campus from Whiskey mogul ."
+      "summary": "The sale price for the Poultney campus property was $6 million. Read the story on VTDigger here: Florida evangelist purchases former Green Mountain College campus from whiskey mogul ."
      },
      {
       "id": "https://vtdigger.org/?p=656489",
@@ -834,18 +845,18 @@
       "link": "https://vtdigger.org/2026/10/04/timothy-michael-kane/",
       "ts": "2026-10-04T12:30:20+00:00",
       "summary": "Renowned for his dry wit, Tim's sense of humor delighted those who knew him. An unassuming, good-hearted person, Tim was loved by many. Read the story on VTDigger here: Timothy Michael Kane ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=656126",
-      "title": "Vermont officials and advocates tackle voting accessibility concerns ahead of November election",
-      "link": "https://vtdigger.org/2026/10/04/vermont-officials-and-advocates-tackle-voting-accessibility-concerns-ahead-of-november-election/",
-      "ts": "2026-10-04T11:57:00+00:00",
-      "summary": "Data shows low voter turnout for disabled in Vermont; efforts afoot to change that. Read the story on VTDigger here: Vermont officials and advocates tackle voting accessibility concerns ahead of November election ."
      }
     ]
    },
    "vermont-public": {
     "items": [
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-08/man-shot-and-injured-by-williston-police",
+      "title": "Man shot and injured by Williston police",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-08/man-shot-and-injured-by-williston-police",
+      "ts": "2026-10-08T15:29:03+00:00",
+      "summary": "Vermont State Police are investigating a Williston police officer who shot and injured a man early Thursday morning. State police didn’t release any details about what led to the shooting."
+     },
      {
       "id": "https://www.vermontpublic.org/local-news/2026-10-08/fossil-fuel-prices-vermonters-struggling-foot-bill",
       "title": "Fossil fuel prices are up, and Vermonters are struggling to foot the bill",
@@ -922,31 +933,52 @@
       "link": "https://www.vermontpublic.org/show/vermont-edition/2026-10-05/2026-election-interviews-vermont-attorney-general",
       "ts": "2026-10-05T19:04:49+00:00",
       "summary": "Get to know one of the candidates for this statewide position, Attorney General Charity Clark."
-     },
-     {
-      "id": "https://www.vermontpublic.org/show/vermont-edition/2026-10-05/2026-election-interviews-vermont-secretary-of-state",
-      "title": "2026 election interviews: Vermont secretary of state",
-      "link": "https://www.vermontpublic.org/show/vermont-edition/2026-10-05/2026-election-interviews-vermont-secretary-of-state",
-      "ts": "2026-10-05T19:04:30+00:00",
-      "summary": "Get to know two of the candidates for this statewide position, H. Brooke Paige and Sec. Sarah Copeland Hanzas."
      }
     ]
    },
    "wcax": {
     "items": [
      {
-      "id": "WJIISHK3HJE7LOUK4Q7OQJGW44",
-      "title": "VT-100 closed in Wardsboro due to law enforcement incident",
-      "link": "https://www.wcax.com/2026/10/08/vt-100-closed-wardsboro-due-law-enforcement-incident/",
-      "ts": "2026-10-08T08:54:37+00:00",
-      "summary": "VT-100 remains closed between Streeter Road and Penny Avenue in Wardsboro."
+      "id": "QML4GLQIIVFETJZHMOMSSE3UYA",
+      "title": "Caregivers need to take care of themselves, too",
+      "link": "https://www.wcax.com/2026/10/08/caregivers-need-take-care-themselves-too/",
+      "ts": "2026-10-08T16:02:25+00:00",
+      "summary": "Nearly one in four adults in the United States provide care to adults or children with medical conditions or disabilities, and that number is on the rise."
+     },
+     {
+      "id": "5XYP5VURJZDK7OK6AMFYDLK4EM",
+      "title": "State police investigating officer-involved shooting in Williston",
+      "link": "https://www.wcax.com/2026/10/08/officer-involved-shooting-williston-being-investigated-by-vermont-state-police/",
+      "ts": "2026-10-08T15:14:09+00:00",
+      "summary": "Vermont troopers are investigating a shooting involving a Williston police officer that happened Thursday morning on Route 2A."
+     },
+     {
+      "id": "SZTD2FPC4JFLDHF3ZIIQXNHZAY",
+      "title": "Burlington man facing civil lawsuit for e-bike crash that killed a local teen",
+      "link": "https://www.wcax.com/2026/10/08/burlington-man-facing-civil-lawsuit-e-bike-crash-that-killed-local-teen/",
+      "ts": "2026-10-08T13:50:00+00:00",
+      "summary": "A man accused of killing a teen cyclist in July is now facing a wrongful death lawsuit."
+     },
+     {
+      "id": "W7YTVIZZFZGWLF7ZKTZM33K46M",
+      "title": "Vermont Legal Aid program to fight eviction may end due to lost funding",
+      "link": "https://www.wcax.com/2026/10/08/vermont-legal-aid-program-fight-eviction-may-end-due-lost-funding/",
+      "ts": "2026-10-08T11:23:26+00:00",
+      "summary": "A state-funded pilot program that has provided legal help for vulnerable Vermonters is coming to an end."
      },
      {
       "id": "2QMHUIVVI5HJNIKSTART42NZMU",
-      "title": "House fire underway in South Burlington",
-      "link": "https://www.wcax.com/2026/10/08/house-fire-underway-south-burlington/",
-      "ts": "2026-10-08T03:15:37+00:00",
-      "summary": "Emergency crews were called out to a house fire on Wednesday night."
+      "title": "Fire destroys South Burlington home",
+      "link": "https://www.wcax.com/2026/10/08/fire-destroys-south-burlington-home/",
+      "ts": "2026-10-08T09:29:02+00:00",
+      "summary": "The two-story home on Butler Drive was engulfed in flames when crews responded."
+     },
+     {
+      "id": "WJIISHK3HJE7LOUK4Q7OQJGW44",
+      "title": "Route 100 reopens in Wardsboro after law enforcement incident",
+      "link": "https://www.wcax.com/2026/10/08/law-enforcement-incident-closes-route-100-wardsboro/",
+      "ts": "2026-10-08T08:54:37+00:00",
+      "summary": "VT Route 100 was blocked off at Meadow Wood Lane."
      },
      {
       "id": "D74WYNGI2BEJDOAT3X23XXAQ44",
@@ -1255,178 +1287,150 @@
       "link": "https://www.wcax.com/2026/10/05/globalfoundries-brings-massive-solar-array-battery-storage-online-essex-junction/",
       "ts": "2026-10-05T21:33:22+00:00",
       "summary": "With the flip of the ceremonial breakers, GlobalFoundries’ new on-site solar array and 16-megawatt battery energy storage system are now online."
-     },
-     {
-      "id": "XK5RPBHQ7JASHE2G4BO7CBZKH4",
-      "title": "Study finds Vermont youth justice reform is lowering repeat crime",
-      "link": "https://www.wcax.com/2026/10/05/study-finds-vermont-youth-justice-reform-is-lowering-repeat-crime/",
-      "ts": "2026-10-05T21:10:16+00:00",
-      "summary": "Vermont’s “raise the age” juvenile justice reform effort is paying off by keeping young people from committing more crimes."
-     },
-     {
-      "id": "7P6L7SOR75AHLLESQAKKK53FLQ",
-      "title": "Newly refurbished Quechee Gorge Bridge a big draw for leaf peepers",
-      "link": "https://www.wcax.com/2026/10/05/newly-refurbished-quechee-gorge-bridge-attracts-leaf-peepers/",
-      "ts": "2026-10-05T20:49:17+00:00",
-      "summary": "The newly refurbished Quechee Gorge Bridge is once again fully open to sightseers."
-     },
-     {
-      "id": "2R2D3ESKQNEKPAJAR5CBSLMRUE",
-      "title": "New federal funds expand rural nursing assistant training in Vermont",
-      "link": "https://www.wcax.com/2026/10/05/new-federal-funds-expand-rural-nursing-assistant-training-vermont/",
-      "ts": "2026-10-05T20:37:01+00:00",
-      "summary": "New federal funding aims to strengthen high-quality care in rural areas by expanding training for Vermont’s future health care workforce."
-     },
-     {
-      "id": "PJ2JL4QFGNGXTCKPXUA2KMFYK4",
-      "title": "Repairs underway at downtown Burlington parking garages",
-      "link": "https://www.wcax.com/2026/10/05/repairs-underway-downtown-burlington-parking-garages/",
-      "ts": "2026-10-05T20:32:50+00:00",
-      "summary": "The Downtown, Marketplace and Lakeview garages remain open, but elevator access may be limited during repairs."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
-      "id": "74075776",
-      "title": "Mia Goth files for divorce from Shia LaBeouf after nearly 10 years of marriage",
-      "link": "https://www.mynbc5.com/article/mia-goth-shia-labeouf-divorce/74075776",
-      "ts": "2026-10-08T08:55:00+00:00",
-      "summary": "Mia Goth has filed for divorce from Shia LaBeouf nearly 10 years after the two actors were married."
+      "id": "74081610",
+      "title": "Trump administration is suspending Microsoft from green card program, alleging fraud",
+      "link": "https://www.mynbc5.com/article/trump-suspends-microsoft-h1b-green-card-program-fraud/74081610",
+      "ts": "2026-10-08T16:36:00+00:00",
+      "summary": "The Trump administration is suspending Microsoft from a program to apply for green cards for workers who come to the U.S. to live and work using H-1B visas, accusing the company of fraud."
      },
      {
-      "id": "74075701",
-      "title": "Indian actor and filmmaker Nana Patekar dies at 75",
-      "link": "https://www.mynbc5.com/article/indian-actor-filmmaker-nana-patekar-dies-75/74075701",
-      "ts": "2026-10-08T08:34:00+00:00",
-      "summary": "Nana Patekar, an acclaimed Indian actor and filmmaker, died Thursday at his home in the western state of Goa. He was 75."
+      "id": "74081314",
+      "title": "Four-legged friend reunited with owner after wandering to police station",
+      "link": "https://www.mynbc5.com/article/dog-reunited-owner-wandering-police-station/74081314",
+      "ts": "2026-10-08T16:32:00+00:00",
+      "summary": "An \"unexpected K-9 applicant\" was reunited with its owner after the furry friend was caught on camera making a stop at a police station in Tampa, Florida."
      },
      {
-      "id": "74072808",
-      "title": "Tracking Isaias: Storm becomes the first hurricane of the Atlantic season",
-      "link": "https://www.mynbc5.com/article/tracking-isaias-atlantic-hurricane-season-2026/74072808",
-      "ts": "2026-10-08T08:09:00+00:00",
-      "summary": "Isaias became the Atlantic season’s first hurricane late Wednesday night as it headed toward the Gulf Coast"
+      "id": "74070269",
+      "title": "Nearly 70 million Trump Accounts created, White House says",
+      "link": "https://www.mynbc5.com/article/nearly-70-million-trump-accounts-created-white-house-says/74070269",
+      "ts": "2026-10-08T16:27:00+00:00",
+      "summary": "Automatic enrollment added 60 million of the nearly 70 million Trump Accounts. Parents must claim and manage them through the official app."
      },
      {
-      "id": "74070230",
-      "title": "Benefit concert brings Make-A-Wish families and jam band fans together in South Burlington",
-      "link": "https://www.mynbc5.com/article/wish-benefit-tour-south-burlington-music-fundraising/74070230",
-      "ts": "2026-10-08T02:37:00+00:00",
-      "summary": "Benefit tour stops in Vermont for special performance of Oteil Burbridge and LaMP. One Burlington teenager fighting leukemia learns her wish was approved."
+      "id": "74067816",
+      "title": "Showers, few scattered downpours Thursday",
+      "link": "https://www.mynbc5.com/article/showers-few-scattered-downpours-tonight-and-thursday-10-7-26/74067816",
+      "ts": "2026-10-08T16:26:00+00:00",
+      "summary": "Chilly, but dry start to holiday weekend with increasing temperatures"
      },
      {
-      "id": "74071987",
-      "title": "Manson Family member Patricia Krenwinkel gets third parole recommendation in California",
-      "link": "https://www.mynbc5.com/article/patricia-krenwinkel-parole-recommended-manson-family-murders/74071987",
-      "ts": "2026-10-08T02:31:00+00:00",
-      "summary": "Patricia Krenwinkel, one of the women convicted of murder in the Tate-LaBianca murders in 1969, has been recommended for parole. This is the third time Krenwinkel has been recommended for release. Gov. Newsom last denied her parole last year."
+      "id": "74080747",
+      "title": "Arizona congressional candidate says she was raped while repairing campaign sign",
+      "link": "https://www.mynbc5.com/article/arizona-congress-greene-placentia-rape-campaign-sign/74080747",
+      "ts": "2026-10-08T16:21:00+00:00",
+      "summary": "A U.S. congressional candidate in Arizona, Bernadette Greene-Placentia, says she was hit in the head and raped by two men while she was repairing one of her campaign signs."
      },
      {
-      "id": "74071800",
-      "title": "Texas carries out nation's first execution since Christa Pike's failed lethal injection",
-      "link": "https://www.mynbc5.com/article/texas-first-execution-since-christa-pikes-failed-injection/74071800",
-      "ts": "2026-10-08T01:32:00+00:00",
-      "summary": "A Texas man who fatally shot a convenience store clerk in 2000 has been executed, a week after a failed lethal injection in Tennessee."
+      "id": "74081070",
+      "title": "Man with a gun fatally shot by security at Nashville federal courthouse, police say",
+      "link": "https://www.mynbc5.com/article/federal-courthouse-shooting-downtown-nashville/74081070",
+      "ts": "2026-10-08T16:17:00+00:00",
+      "summary": "A man armed with a pistol and knife was fatally shot just inside the busy entrance at a federal courthouse in Tennessee’s largest city, authorities said."
      },
      {
-      "id": "74070963",
-      "title": "Deadly attacks by Iran-backed Houthis on Saudi airports highlight widening fallout from Yemen conflict",
-      "link": "https://www.mynbc5.com/article/deadly-attacks-houthis-saudi-airports-yemen-conflict/74070963",
-      "ts": "2026-10-08T01:12:00+00:00",
-      "summary": "Houthi rebels attacked two Saudi airports, killing three people and injuring 36 others this week, Saudi Arabia’s General Authority of Civil Aviation said Wednesday."
+      "id": "74078739",
+      "title": "South Burlington home destroyed in late-night fire",
+      "link": "https://www.mynbc5.com/article/south-burlington-home-destroyed-in-late-night-fire/74078739",
+      "ts": "2026-10-08T16:12:00+00:00",
+      "summary": "A South Burlington home was badly damaged in a fire that broke out at 10:30 p.m. Wednesday."
      },
      {
-      "id": "74071555",
-      "title": "Margaret Hamilton, whose software helped land Apollo astronauts on the moon, has dies at 90",
-      "link": "https://www.mynbc5.com/article/margaret-hamilton-dies-apollo-software-pioneer/74071555",
-      "ts": "2026-10-08T00:26:00+00:00",
-      "summary": "Margaret Hamilton, a groundbreaking researcher whose Apollo software helped land astronauts on the moon, has died."
+      "id": "74081373",
+      "title": "Ten years later: Remembering the deadly wrong-way crash that killed five teens in Williston",
+      "link": "https://www.mynbc5.com/article/williston-i-89-fatal-crash-anniversary/74081373",
+      "ts": "2026-10-08T16:11:00+00:00",
+      "summary": "Ten years ago, on Oct. 8, 2016, five teenagers were killed after a wrong-way driver caused several crashes near the Interstate 89 exit in Williston."
      },
      {
-      "id": "74047106",
-      "title": "Tracking the limited-time October Prime Day deals",
-      "link": "https://www.mynbc5.com/article/october-prime-day-lightning-deals/74047106",
-      "ts": "2026-10-08T00:00:00+00:00",
-      "summary": "Remember to act quickly. Once the deal is fully claimed or time expires, the savings go with it."
+      "id": "74080649",
+      "title": "Vermont voter guide: Everything you need to know ahead of the Midterm Elections",
+      "link": "https://www.mynbc5.com/article/vermont-voter-guide-2026-midterms/74080649",
+      "ts": "2026-10-08T16:08:00+00:00",
+      "summary": "Prepare for the Midterms with our Vermont voters' guide: What you need to know to register to vote, see who is on the ballot, and what you can do to cast your ballot early."
      },
      {
-      "id": "74037274",
-      "title": "Final hours of October Prime Day. The last-minute deals you need to know about",
-      "link": "https://www.mynbc5.com/article/october-prime-day-2026-deals/74037274",
-      "ts": "2026-10-07T23:55:00+00:00",
-      "summary": "Amazon's October Prime Day is live, and there are thousands of deals available."
+      "id": "74080742",
+      "title": "Judge says search warrants used to seize property from former Prince Andrew were unlawful",
+      "link": "https://www.mynbc5.com/article/judge-search-warrants-seize-property-former-prince-andrew/74080742",
+      "ts": "2026-10-08T15:40:00+00:00",
+      "summary": "Police investigating former Prince Andrew's links to the late sex offender Jeffrey Epstein unlawfully searched his homes, a London judge said Thursday."
      },
      {
-      "id": "74069886",
-      "title": "Hegseth visits the long-deployed USS Lincoln to bestow a top award before the ship returns home",
-      "link": "https://www.mynbc5.com/article/hegseth-visit-uss-lincoln-return/74069886",
-      "ts": "2026-10-07T23:55:00+00:00",
-      "summary": "Defense Secretary Pete Hegseth has given the crew of the USS Abraham Lincoln a high-level award during a visit to the aircraft carrier."
+      "id": "74079765",
+      "title": "Bodycam footage shows moments after 6-year-old shoots teacher",
+      "link": "https://www.mynbc5.com/article/police-video-virginia-6-year-old-shot-teacher-zwerner/74079765",
+      "ts": "2026-10-08T15:39:00+00:00",
+      "summary": "\"I don't care if I go to jail\" | Body camera video shows the moments after a 6-year-old shot his teacher inside a Virginia elementary school in January 2023."
      },
      {
-      "id": "74071461",
-      "title": "Saranac Lake nurses hold a picket demanding a settled contract",
-      "link": "https://www.mynbc5.com/article/saranac-lake-nurses-demanding-a-settled-contract/74071461",
-      "ts": "2026-10-07T23:55:00+00:00",
-      "summary": "This evening, nearly 40 nurses held an informational picket in front of the hospital, calling on leadership with a public demonstration."
+      "id": "74077030",
+      "title": "VT Route 100 reopens in Wardsboro following police incident",
+      "link": "https://www.mynbc5.com/article/vt-route-100-closed-in-wardsboro-early-thursday-due-to-ongoing-incident/74077030",
+      "ts": "2026-10-08T15:21:00+00:00",
+      "summary": "Both lanes were blocked for several hours between Streeter Road and Penny Avenue on Thursday morning."
      },
      {
-      "id": "74069852",
-      "title": "'Something that you dream of': 1,116-pound bluefin tuna catch sets a record",
-      "link": "https://www.mynbc5.com/article/bluefin-tuna-catch-record/74069852",
-      "ts": "2026-10-07T23:48:00+00:00",
-      "summary": "\"We lifted it out of the water and immediately knew it was way bigger than what we thought and bigger than anything neither of us had seen before.\" Check out the size of that record-breaking fish"
+      "id": "74079951",
+      "title": "One-in-2.9 million Marvel card, with Spider-Man co-creator's cut signature, found at comic shop",
+      "link": "https://www.mynbc5.com/article/card-pulled-lancaster-shop-one-of-one/74079951",
+      "ts": "2026-10-08T15:11:00+00:00",
+      "summary": "Brian Schmidt bought a pack of trading cards on a whim while he was at a comic shop with his kids. Now, what came out of it could change his life."
      },
      {
-      "id": "74070665",
-      "title": "The World Figure and Fancy Skating Championships return to Lake Placid",
-      "link": "https://www.mynbc5.com/article/the-world-figure-and-fancy-skating-championships-return-to-lake-placid/74070665",
-      "ts": "2026-10-07T23:21:00+00:00",
-      "summary": "The Figure and Fancy Skating World Championships return to Lake Placid"
+      "id": "74079770",
+      "title": "Boy, 5, killed after video board falls on him at Florida school",
+      "link": "https://www.mynbc5.com/article/palm-bay-school-display-board-kills-boy-family-demands-answers/74079770",
+      "ts": "2026-10-08T14:43:00+00:00",
+      "summary": "A Florida family is demanding answers after a 120-pound video display board fell on a 5-year-old student at an elementary school Wednesday, killing him."
      },
      {
-      "id": "74071198",
-      "title": "Florida crocodile dies from lead poisoning in first-of-its-kind case, officials say",
-      "link": "https://www.mynbc5.com/article/florida-crocodile-dies-lead-poisoning/74071198",
-      "ts": "2026-10-07T22:59:00+00:00",
-      "summary": "A Florida crocodile has died from lead poisoning in a first-of-its-kind case after a routine capture, state officials say."
+      "id": "74079718",
+      "title": "Pet Connection: Oct. 8, 2026",
+      "link": "https://www.mynbc5.com/article/pet-connection-oct-8-2026/74079718",
+      "ts": "2026-10-08T14:29:00+00:00",
+      "summary": "Three adorable dogs are up for adoption in this week's episode of Pet Connection!"
      },
      {
-      "id": "74070775",
-      "title": "Gov. Phil Scott says more federal funding is needed for heat assistance as fuel costs increase",
-      "link": "https://www.mynbc5.com/article/gov-phil-scott-says-more-federal-funding-is-needed-for-heat-assistance-as-fuel-costs-continue-to-increase/74070775",
-      "ts": "2026-10-07T22:38:00+00:00",
-      "summary": "Governor Scott says more money from Congress is needed to help Vermonters with home heating costs this winter"
+      "id": "74078903",
+      "title": "Groom carries bride to altar after she suffers rare artery tear, stroke on wedding day",
+      "link": "https://www.mynbc5.com/article/wedding-day-stroke-leaves-couple-rebuilding-life/74078903",
+      "ts": "2026-10-08T14:18:00+00:00",
+      "summary": "Anna Lasco was flown to the ER on her wedding night after suffering a vertebral artery dissection, a tear in an artery that supplies blood to the brain."
      },
      {
-      "id": "74070796",
-      "title": "von Trapp Resort honored with Roadside Historic Marker",
-      "link": "https://www.mynbc5.com/article/vonn-trapp-roadside-marker/74070796",
-      "ts": "2026-10-07T22:33:00+00:00",
-      "summary": "The famous von Trapp family is getting a permanent place in Vermont state history, with a new historic roadside marker in Stowe."
+      "id": "74077779",
+      "title": "Portion of VT 2A closed after officer shoots suspect, department says",
+      "link": "https://www.mynbc5.com/article/portion-of-vt-2a-closed-due-to-ongoing-police-incident/74077779",
+      "ts": "2026-10-08T13:38:00+00:00",
+      "summary": "A portion of Route 2A in Williston is closed to all traffic after a police officer shot a suspect during an incident."
      },
      {
-      "id": "74067738",
-      "title": "Singer Olivia Dean served with copyright lawsuit for track on award-winning album",
-      "link": "https://www.mynbc5.com/article/olivia-dean-copyright-lawsuit-bill-withers-just-the-two-of-us/74067738",
-      "ts": "2026-10-07T22:08:00+00:00",
-      "summary": "The estate of deceased singer-songwriter Bill Withers filed a lawsuit against Olivia Dean over similarities between one of Dean's songs and Withers' \"Just the Two of Us.\""
+      "id": "74078634",
+      "title": "Suspected intoxicated driver arrested after video shows car doing donuts in front of courthouse",
+      "link": "https://www.mynbc5.com/article/indiana-suspected-intoxicated-driver-courthouse-video/74078634",
+      "ts": "2026-10-08T13:06:00+00:00",
+      "summary": "\"Don't do donuts on the courthouse lawn.\" | A 67-year-old suspected intoxicated driver was arrested in Vernon, Indiana, after she was caught on video doing donuts in front of a courthouse."
      },
      {
-      "id": "74070577",
-      "title": "Lake Placid fall decorations damaged by vandals",
-      "link": "https://www.mynbc5.com/article/lake-placid-fall-decorations-vandalized/74070577",
-      "ts": "2026-10-07T22:08:00+00:00",
-      "summary": "Fall decorations along Main Street in Lake Placid were damaged, prompting the mayor to express disappointment over the incident."
+      "id": "74078571",
+      "title": "The 'glass skin' Korean beauty trend has risks, experts warn",
+      "link": "https://www.mynbc5.com/article/glass-skin-korean-beauty-trend-risks-experts-warn/74078571",
+      "ts": "2026-10-08T13:01:00+00:00",
+      "summary": "Greta Costioli was once known as the \" glass skin girl \" on TikTok. Following the Korean beauty trend, Costioli would layer on product after product — toners, serums, essences and moisturizers — in pursuit of an ultra-dewy complexion."
      },
      {
-      "id": "74069211",
-      "title": "DEC clears Gendebein following illegal dumping investigation; NYSP still investigating",
-      "link": "https://www.mynbc5.com/article/gendebien-illegal-dumping-investigation/74069211",
-      "ts": "2026-10-07T21:48:00+00:00",
-      "summary": "NY-21 Democratic candidate Blake Gendebien has been cleared of wrongdoing following a New York Department of Environmental Conservation investigation into allegations of illegal dumping on his property. NYSP is still investigating."
+      "id": "73985035",
+      "title": "Massachusetts man dies days after three-vehicle crash in Vermont",
+      "link": "https://www.mynbc5.com/article/marlboro-vermont-hannum-crash/73985035",
+      "ts": "2026-10-08T12:59:00+00:00",
+      "summary": "A Massachusetts man was seriously injured and later died after he hit two other vehicles in Marlboro, Vermont, on Wednesday."
      }
     ]
    },
@@ -1536,6 +1540,54 @@
  },
  "reddit-burlington": {
   "posts": [
+   {
+    "id": "1x0us7d",
+    "title": "Home Repair 101 Workshop In Burlington On Saturday, October 10th... This Weekend!",
+    "url": "https://www.reddit.com/r/burlington/comments/1x0us7d/home_repair_101_workshop_in_burlington_on/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-08T16:12:57+00:00"
+   },
+   {
+    "id": "1x0sxjc",
+    "title": "Where can I shake ass this weekend? I'm 30 n wanna dance, help",
+    "url": "https://www.reddit.com/r/burlington/comments/1x0sxjc/where_can_i_shake_ass_this_weekend_im_30_n_wanna/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-08T16:12:57+00:00"
+   },
+   {
+    "id": "1x0stex",
+    "title": "French Language Table? Or something?",
+    "url": "https://www.reddit.com/r/burlington/comments/1x0stex/french_language_table_or_something/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-08T16:12:57+00:00"
+   },
+   {
+    "id": "1x0rdhm",
+    "title": "The expected arrival of a CME (Coronal Mass Ejection) could trigger Moderate G2 conditions, allowing the northern lights to become visible across high and perhaps even mid-latitudes.",
+    "url": "https://www.reddit.com/r/burlington/comments/1x0rdhm/the_expected_arrival_of_a_cme_coronal_mass/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-08T16:12:57+00:00"
+   },
+   {
+    "id": "1x0n54y",
+    "title": "Phil Scott Despises Burlington",
+    "url": "https://www.reddit.com/r/burlington/comments/1x0n54y/phil_scott_despises_burlington/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-08T10:35:39+00:00"
+   },
+   {
+    "id": "1x0n2rt",
+    "title": "ICE out protests",
+    "url": "https://www.reddit.com/r/burlington/comments/1x0n2rt/ice_out_protests/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-08T10:35:39+00:00"
+   },
    {
     "id": "1x0cox2",
     "title": "K-Star Massage",
@@ -1647,54 +1699,6 @@
     "score": null,
     "comments": null,
     "created": "2026-10-07T13:14:35+00:00"
-   },
-   {
-    "id": "1wzjvvd",
-    "title": "Help Wanted: Cat parents whose cats like other cats",
-    "url": "https://www.reddit.com/r/burlington/comments/1wzjvvd/help_wanted_cat_parents_whose_cats_like_other_cats/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-07T04:02:37+00:00"
-   },
-   {
-    "id": "1wzjd0x",
-    "title": "Low expectations in public schools",
-    "url": "https://www.reddit.com/r/burlington/comments/1wzjd0x/low_expectations_in_public_schools/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-07T01:02:16+00:00"
-   },
-   {
-    "id": "1wzhhvg",
-    "title": "November’s coming! Get out there and vote! Every vote DOES count towards the total. (These are live poll results from tonight)",
-    "url": "https://www.reddit.com/r/burlington/comments/1wzhhvg/novembers_coming_get_out_there_and_vote_every/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-07T01:02:16+00:00"
-   },
-   {
-    "id": "1wzczf0",
-    "title": "Moving to CO",
-    "url": "https://www.reddit.com/r/burlington/comments/1wzczf0/moving_to_co/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-06T22:01:39+00:00"
-   },
-   {
-    "id": "1wzcoyg",
-    "title": "MeshCore/Meshtastic in Burlington",
-    "url": "https://www.reddit.com/r/burlington/comments/1wzcoyg/meshcoremeshtastic_in_burlington/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-06T22:01:39+00:00"
-   },
-   {
-    "id": "1wz9pi7",
-    "title": "Why do homeless people love walking in the bike lane here lmao",
-    "url": "https://www.reddit.com/r/burlington/comments/1wz9pi7/why_do_homeless_people_love_walking_in_the_bike/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-06T19:01:29+00:00"
    }
   ]
  },
