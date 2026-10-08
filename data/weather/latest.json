@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-08T15:32:15+00:00",
+ "updated": "2026-10-08T16:52:20+00:00",
  "sections_updated": {
-  "now": "2026-10-08T15:32:15+00:00",
-  "forecast": "2026-10-08T15:32:15+00:00",
-  "hourly": "2026-10-08T15:32:15+00:00",
-  "alerts": "2026-10-08T15:32:15+00:00",
-  "afd": "2026-10-08T15:32:15+00:00",
-  "lake_forecast": "2026-10-08T15:32:15+00:00",
-  "lake_gage": "2026-10-08T15:32:15+00:00",
-  "air": "2026-10-08T15:32:15+00:00",
-  "sun": "2026-10-08T15:32:15+00:00",
-  "models": "2026-10-08T15:32:15+00:00"
+  "now": "2026-10-08T16:52:20+00:00",
+  "forecast": "2026-10-08T16:52:20+00:00",
+  "hourly": "2026-10-08T16:52:20+00:00",
+  "alerts": "2026-10-08T16:52:20+00:00",
+  "afd": "2026-10-08T16:52:20+00:00",
+  "lake_forecast": "2026-10-08T16:52:20+00:00",
+  "lake_gage": "2026-10-08T16:52:20+00:00",
+  "air": "2026-10-08T16:52:20+00:00",
+  "sun": "2026-10-08T16:52:20+00:00",
+  "models": "2026-10-08T16:52:20+00:00"
  },
  "now": {
-  "observed_at": "2026-10-08T15:15:00+00:00",
+  "observed_at": "2026-10-08T16:30:00+00:00",
   "station": "KBTV",
-  "description": "Mostly Cloudy",
+  "description": "Clear",
   "temp_f": 64,
   "feels_like_f": 64,
-  "humidity": 52,
-  "dewpoint_f": 46,
-  "wind_mph": null,
-  "wind_gust_mph": null,
-  "wind_dir": null,
+  "humidity": null,
+  "dewpoint_f": null,
+  "wind_mph": 13,
+  "wind_gust_mph": 18,
+  "wind_dir": "W",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-08T08:00:00-04:00",
+    "start": "2026-10-08T06:00:00-04:00",
     "is_day": true,
     "temp_f": 64,
     "pop": 36,
-    "wind": "SW 10 mph",
+    "wind": "SW 9 to 13 mph",
     "short": "Chance Showers And Thunderstorms",
-    "detailed": "A chance of rain showers before 11am, then a chance of showers and thunderstorms between 11am and 4pm, then a slight chance of showers and thunderstorms. Partly sunny, with a high near 64. Southwest wind around 10 mph, with gusts as high as 24 mph. Chance of precipitation is 40%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A chance of rain showers before 11am, then a chance of showers and thunderstorms between 11am and 4pm, then a slight chance of showers and thunderstorms. Partly sunny, with a high near 64. Southwest wind 9 to 13 mph, with gusts as high as 24 mph. Chance of precipitation is 40%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,28 +173,6 @@
  "hourly": {
   "updated": "2026-10-08T09:17:43+00:00",
   "hours": [
-   {
-    "t": "2026-10-08T10:00:00-04:00",
-    "temp_f": 58,
-    "feels_f": 58,
-    "pop": 31,
-    "humidity": 80,
-    "wind_mph": 10,
-    "wind_dir": "SW",
-    "sky": 70,
-    "short": "Chance Rain Showers"
-   },
-   {
-    "t": "2026-10-08T11:00:00-04:00",
-    "temp_f": 60,
-    "feels_f": 60,
-    "pop": 34,
-    "humidity": 69,
-    "wind_mph": 10,
-    "wind_dir": "SW",
-    "sky": 52,
-    "short": "Chance Showers And Thunderstorms"
-   },
    {
     "t": "2026-10-08T12:00:00-04:00",
     "temp_f": 61,
@@ -568,6 +546,28 @@
     "wind_dir": "NW",
     "sky": 24,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-10-09T22:00:00-04:00",
+    "temp_f": 48,
+    "feels_f": 45,
+    "pop": 1,
+    "humidity": 83,
+    "wind_mph": 6,
+    "wind_dir": "NW",
+    "sky": 24,
+    "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-10-09T23:00:00-04:00",
+    "temp_f": 47,
+    "feels_f": 44,
+    "pop": 1,
+    "humidity": 83,
+    "wind_mph": 6,
+    "wind_dir": "NW",
+    "sky": 23,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -585,21 +585,13 @@
   "raw": "\n000\nFXUS61 KBTV 081124\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n724 AM EDT Thu Oct 8 2026\n\n.WHAT HAS CHANGED...\nAs of 311 AM EDT Thursday...\n\nNo significant changes.\n\n&&\n\n.KEY MESSAGES...\nAs of 311 AM EDT Thursday...\n\n1. Unsettled pattern prevails through Friday with several \nrounds of showers expected, with greatest concentration over the\nhigher terrain.\n\n2. Cooler and drier weather develops late Friday into Saturday,\nwith patchy frost possible in the Champlain Valley on Saturday \nmorning. \n\n3. Remnants of tropical system to bring rain to parts of our \nregion.\n\n&&\n\n.DISCUSSION...\nAs of 311 AM EDT Thursday...\n\nKEY MESSAGE 1: An upper level low slowly builds into the region\ntoday and tomorrow, bringing several rounds of showers as \nshortwaves pivot around the longwave trough. Instability will \nreach its maximum today and some of the stronger showers will \nlikely contain thunder. Pea sized hail will be possible, and \nmaybe graupel in the higher terrain. The highest chances for \nshowers will be farther north where the better dynamics and \ncoldest air aloft will be. A lowering inversion heading into \nFriday should prevent any thunder chances, with instability only\nreaching up to around 10,000 feet and not significantly \nsurpassing -10 Celsius. However, the airmass will continue to \ncool and temperatures at the summits are expected to fall below \nfreezing on Friday, so a few flurries/snow showers will be \npossible in the mountains, especially farther north. Snow levels\nlook to drop to around 3,500-4,000 feet. Flow remains unblocked\nheading through Friday as the inversion will stay well above \nsummit level.\n\nKEY MESSAGE 2: Surface high pressure builds in for the weekend,\nleading to a couple classic fall days. Highs will be in the 50s\nand 60s with mostly sunny skies. Radiational cooling conditions\nwill become somewhat favorable for Friday night, but some \nlingering boundary flow may prevent the most efficient \ntemperature decreases. The boundary layer looks to decouple at \nleast in the later part of the night though. Frost formation is \nexpected across most of the region, but it looks more uncertain \nin the Champlain Valley, the only area left in the growing \nseason. Temperatures there will be marginal and winds there will\nlikely hold on the longest.\n\nKEY MESSAGE 3: The remnants of Isaias will bring some rain to \nsouthern portions of our forecast area Sunday night into Monday.\nNot expecting any strong winds with this system. Northern \nextent of precipitation is uncertain. For now have highest \nchances for precipitation from Saranac Lake NY to Montpelier VT \nand areas south of there.\n\n&&\n\n.AVIATION /12Z THURSDAY THROUGH MONDAY/...\nThrough 12Z Friday...An area of isolated showers is currently \nmoving across the area, and could potentially lower conditions \nbriefly to MVFR. Additional isolated to scattered showers are \nexpected again this afternoon, with the best chances to impact \nMSS. Included a PROB30 group there for brief MVFR visibility \nwith showers. Otherwise, winds remain brisk out of the south and\nwill become more westerly during the day today. \n\nOutlook...\n\nFriday: VFR. Slight chance SHRA.\nFriday Night: VFR. NO SIG WX.\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: Mainly VFR, with local IFR possible. Chance SHRA.\nColumbus Day: Mainly MVFR, with areas IFR possible. Slight chance\nSHRA.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory continues with sustained southerly winds \nbetween 20-30 KT. Winds will turn southwesterly and then \nwesterly this morning, and will then drop into the 10-20 KT \nrange. Wave heights will drop from the 1-3 foot range to below 2\nfeet after this wind shift occurs.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Myskowski\nDISCUSSION...Myskowski/Neiles\nAVIATION...Neiles\nMARINE...Taber\n"
  },
  "lake_forecast": {
-  "issued": "2026-10-08T09:26:00+00:00",
+  "issued": "2026-10-08T15:40:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
-    "text": "",
-    "wind_knots_max": null,
-    "gust_knots": null,
-    "waves_ft_max": null,
-    "calm": false
-   },
-   {
     "period": "Today",
-    "text": "South winds 15 to 25 knots, becoming west 10 to 15 knots. Partly sunny. A chance of showers early, then a chance of showers with a slight chance of thunderstorms. Waves 1 to 3 feet.",
-    "wind_knots_max": 25,
+    "text": "West winds 10 to 15 knots. Partly sunny with a chance of showers and a slight chance of thunderstorms. Waves 1 to 3 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 3,
     "calm": false
@@ -671,17 +663,9 @@
   ],
   "northern": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
-    "text": "",
-    "wind_knots_max": null,
-    "gust_knots": null,
-    "waves_ft_max": null,
-    "calm": false
-   },
-   {
     "period": "Today",
-    "text": "South winds 15 to 25 knots, becoming west 10 to 15 knots. Partly sunny. A chance of showers early, then a chance of showers with a slight chance of thunderstorms. Waves 1 to 3 feet.",
-    "wind_knots_max": 25,
+    "text": "West winds 10 to 15 knots. Partly sunny with a chance of showers and a slight chance of thunderstorms. Waves 1 to 3 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 3,
     "calm": false
@@ -753,17 +737,9 @@
   ],
   "southern": [
    {
-    "period": "..A Lake Wind Advisory Is In Effect",
-    "text": "",
-    "wind_knots_max": null,
-    "gust_knots": null,
-    "waves_ft_max": null,
-    "calm": false
-   },
-   {
     "period": "Today",
-    "text": "South winds 15 to 25 knots, becoming west 10 to 15 knots. Partly sunny. A chance of showers early, then a chance of showers with a slight chance of thunderstorms in the morning. A slight chance of showers and thunderstorms in the afternoon. Waves 1 to 2 feet.",
-    "wind_knots_max": 25,
+    "text": "West winds 10 to 15 knots. Partly sunny with a chance of showers and a slight chance of thunderstorms in the afternoon. Waves 1 to 2 feet.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 2,
     "calm": false
@@ -851,17 +827,17 @@
  },
  "lake_gage": {
   "water_temp_f": 59,
-  "water_temp_at": "2026-10-08T11:00:00.000-04:00",
-  "level_ft": 93.77,
-  "level_at": "2026-10-08T11:00:00.000-04:00",
+  "water_temp_at": "2026-10-08T12:00:00.000-04:00",
+  "level_ft": 93.75,
+  "level_at": "2026-10-08T12:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 31,
+  "aqi": 33,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/08/26 11:00",
+  "observed": "10/08/26 12:00",
   "discussion": "On Thursday, October 8th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -886,9 +862,9 @@
      "ICON": 93
     },
     "precip_in": {
-     "GFS": 0.02,
+     "GFS": 0.0,
      "Euro": 0.11,
-     "ICON": 0.2
+     "ICON": 0.21
     },
     "high_spread_f": 1
    },
@@ -897,17 +873,17 @@
     "high_f": {
      "GFS": 54,
      "Euro": 61,
-     "ICON": 60
+     "ICON": 59
     },
     "pop_max": {
-     "GFS": 17,
+     "GFS": 23,
      "Euro": 25,
-     "ICON": 40
+     "ICON": 58
     },
     "precip_in": {
      "GFS": 0.02,
      "Euro": 0.01,
-     "ICON": 0.13
+     "ICON": 0.1
     },
     "high_spread_f": 7
    },
@@ -916,19 +892,19 @@
     "high_f": {
      "GFS": 55,
      "Euro": 54,
-     "ICON": 55
+     "ICON": 56
     },
     "pop_max": {
      "GFS": 4,
      "Euro": 6,
-     "ICON": 11
+     "ICON": 3
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    }
   ]
  }
