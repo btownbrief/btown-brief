@@ -1,19 +1,19 @@
 {
- "updated": "2026-10-09T20:09:37+00:00",
+ "updated": "2026-10-09T20:33:39+00:00",
  "sections_updated": {
-  "now": "2026-10-09T20:09:37+00:00",
-  "forecast": "2026-10-09T20:09:37+00:00",
-  "hourly": "2026-10-09T20:09:37+00:00",
-  "alerts": "2026-10-09T20:09:37+00:00",
-  "afd": "2026-10-09T20:09:37+00:00",
-  "lake_forecast": "2026-10-09T20:09:37+00:00",
-  "lake_gage": "2026-10-09T20:09:37+00:00",
-  "air": "2026-10-09T20:09:37+00:00",
-  "sun": "2026-10-09T20:09:37+00:00",
-  "models": "2026-10-09T20:09:37+00:00"
+  "now": "2026-10-09T20:33:39+00:00",
+  "forecast": "2026-10-09T20:33:39+00:00",
+  "hourly": "2026-10-09T20:33:39+00:00",
+  "alerts": "2026-10-09T20:33:39+00:00",
+  "afd": "2026-10-09T20:33:39+00:00",
+  "lake_forecast": "2026-10-09T20:33:39+00:00",
+  "lake_gage": "2026-10-09T20:33:39+00:00",
+  "air": "2026-10-09T20:33:39+00:00",
+  "sun": "2026-10-09T20:33:39+00:00",
+  "models": "2026-10-09T20:33:39+00:00"
  },
  "now": {
-  "observed_at": "2026-10-09T19:55:00+00:00",
+  "observed_at": "2026-10-09T20:05:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
   "temp_f": 59,
@@ -863,7 +863,7 @@
   "aqi": 27,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/09/26 15:00",
+  "observed": "10/09/26 16:00",
   "discussion": "On Saturday, October 10th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -878,7 +878,7 @@
    {
     "date": "2026-10-09",
     "high_f": {
-     "GFS": 61,
+     "GFS": 62,
      "Euro": 61,
      "ICON": 60
     },
@@ -888,16 +888,16 @@
      "ICON": 53
     },
     "precip_in": {
-     "GFS": 0.06,
+     "GFS": 0.0,
      "Euro": 0.02,
      "ICON": 0.05
     },
-    "high_spread_f": 1
+    "high_spread_f": 2
    },
    {
     "date": "2026-10-10",
     "high_f": {
-     "GFS": 52,
+     "GFS": 54,
      "Euro": 55,
      "ICON": 54
     },
@@ -911,12 +911,12 @@
      "Euro": 0.01,
      "ICON": 0.0
     },
-    "high_spread_f": 3
+    "high_spread_f": 1
    },
    {
     "date": "2026-10-11",
     "high_f": {
-     "GFS": 63,
+     "GFS": 65,
      "Euro": 63,
      "ICON": 62
     },
@@ -930,7 +930,7 @@
      "Euro": 0.02,
      "ICON": 0.09
     },
-    "high_spread_f": 1
+    "high_spread_f": 3
    }
   ]
  }
