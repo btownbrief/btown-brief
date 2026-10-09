@@ -1,27 +1,27 @@
 {
- "updated": "2026-10-09T16:32:50+00:00",
+ "updated": "2026-10-09T16:37:30+00:00",
  "sections_updated": {
-  "now": "2026-10-09T16:32:50+00:00",
-  "forecast": "2026-10-09T16:32:50+00:00",
-  "hourly": "2026-10-09T16:32:50+00:00",
-  "alerts": "2026-10-09T16:32:50+00:00",
-  "afd": "2026-10-09T16:32:50+00:00",
-  "lake_forecast": "2026-10-09T16:32:50+00:00",
-  "lake_gage": "2026-10-09T16:32:50+00:00",
-  "air": "2026-10-09T16:32:50+00:00",
-  "sun": "2026-10-09T16:32:50+00:00",
-  "models": "2026-10-09T16:32:50+00:00"
+  "now": "2026-10-09T16:37:30+00:00",
+  "forecast": "2026-10-09T16:37:30+00:00",
+  "hourly": "2026-10-09T16:37:30+00:00",
+  "alerts": "2026-10-09T16:37:30+00:00",
+  "afd": "2026-10-09T16:37:30+00:00",
+  "lake_forecast": "2026-10-09T16:37:30+00:00",
+  "lake_gage": "2026-10-09T16:37:30+00:00",
+  "air": "2026-10-09T16:37:30+00:00",
+  "sun": "2026-10-09T16:37:30+00:00",
+  "models": "2026-10-09T16:37:30+00:00"
  },
  "now": {
-  "observed_at": "2026-10-09T16:10:00+00:00",
+  "observed_at": "2026-10-09T16:20:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 59,
-  "feels_like_f": 59,
-  "humidity": 48,
-  "dewpoint_f": 39,
+  "temp_f": 57,
+  "feels_like_f": 57,
+  "humidity": null,
+  "dewpoint_f": null,
   "wind_mph": null,
-  "wind_gust_mph": 21,
+  "wind_gust_mph": null,
   "wind_dir": null,
   "precip_last_hr_in": null
  },
@@ -29,14 +29,14 @@
   "updated": "2026-10-09T06:17:14+00:00",
   "periods": [
    {
-    "name": "Today",
-    "start": "2026-10-09T06:00:00-04:00",
+    "name": "This Afternoon",
+    "start": "2026-10-09T12:00:00-04:00",
     "is_day": true,
     "temp_f": 59,
     "pop": 48,
-    "wind": "W 7 to 12 mph",
+    "wind": "W 12 mph",
     "short": "Chance Rain Showers",
-    "detailed": "A chance of rain showers after 7am. Partly sunny, with a high near 59. West wind 7 to 12 mph, with gusts as high as 25 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
+    "detailed": "A chance of rain showers after 4pm. Partly sunny, with a high near 59. West wind around 12 mph, with gusts as high as 25 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible."
    },
    {
     "name": "Tonight",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-09T06:17:14+00:00",
   "hours": [
-   {
-    "t": "2026-10-09T11:00:00-04:00",
-    "temp_f": 54,
-    "feels_f": 54,
-    "pop": 9,
-    "humidity": 71,
-    "wind_mph": 9,
-    "wind_dir": "W",
-    "sky": 53,
-    "short": "Partly Sunny"
-   },
    {
     "t": "2026-10-09T12:00:00-04:00",
     "temp_f": 56,
@@ -568,6 +557,17 @@
     "wind_dir": "SE",
     "sky": 23,
     "short": "Mostly Clear"
+   },
+   {
+    "t": "2026-10-10T23:00:00-04:00",
+    "temp_f": 47,
+    "feels_f": 44,
+    "pop": 0,
+    "humidity": 74,
+    "wind_mph": 7,
+    "wind_dir": "SE",
+    "sky": 38,
+    "short": "Partly Cloudy"
    }
   ]
  },
@@ -859,7 +859,7 @@
     "pop_max": {
      "GFS": 53,
      "Euro": 37,
-     "ICON": 11
+     "ICON": 53
     },
     "precip_in": {
      "GFS": 0.13,
@@ -878,7 +878,7 @@
     "pop_max": {
      "GFS": 2,
      "Euro": 12,
-     "ICON": 15
+     "ICON": 0
     },
     "precip_in": {
      "GFS": 0.0,
@@ -897,7 +897,7 @@
     "pop_max": {
      "GFS": 76,
      "Euro": 86,
-     "ICON": 18
+     "ICON": 64
     },
     "precip_in": {
      "GFS": 0.0,
