@@ -1,26 +1,26 @@
 {
- "updated": "2026-10-09T10:13:01+00:00",
+ "updated": "2026-10-09T10:33:04+00:00",
  "sections_updated": {
-  "now": "2026-10-09T10:13:01+00:00",
-  "forecast": "2026-10-09T10:13:01+00:00",
-  "hourly": "2026-10-09T10:13:01+00:00",
-  "alerts": "2026-10-09T10:13:01+00:00",
-  "afd": "2026-10-09T10:13:01+00:00",
-  "lake_forecast": "2026-10-09T10:13:01+00:00",
-  "lake_gage": "2026-10-09T10:13:01+00:00",
-  "air": "2026-10-09T10:13:01+00:00",
-  "sun": "2026-10-09T10:13:01+00:00",
-  "models": "2026-10-09T10:13:01+00:00"
+  "now": "2026-10-09T10:33:04+00:00",
+  "forecast": "2026-10-09T10:33:04+00:00",
+  "hourly": "2026-10-09T10:33:04+00:00",
+  "alerts": "2026-10-09T10:33:04+00:00",
+  "afd": "2026-10-09T10:33:04+00:00",
+  "lake_forecast": "2026-10-09T10:33:04+00:00",
+  "lake_gage": "2026-10-09T10:33:04+00:00",
+  "air": "2026-10-09T10:33:04+00:00",
+  "sun": "2026-10-09T10:33:04+00:00",
+  "models": "2026-10-09T10:33:04+00:00"
  },
  "now": {
-  "observed_at": "2026-10-09T09:55:00+00:00",
+  "observed_at": "2026-10-09T10:15:00+00:00",
   "station": "KBTV",
-  "description": "Cloudy",
+  "description": "Mostly Clear",
   "temp_f": 48,
   "feels_like_f": 45,
   "humidity": 81,
   "dewpoint_f": 43,
-  "wind_mph": 8,
+  "wind_mph": 7,
   "wind_gust_mph": null,
   "wind_dir": "SSW",
   "precip_last_hr_in": null
@@ -834,10 +834,10 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 26,
+  "aqi": 25,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/09/26 5:00",
+  "observed": "10/09/26 6:00",
   "discussion": "On Friday, October 9th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -859,7 +859,7 @@
     "pop_max": {
      "GFS": 44,
      "Euro": 35,
-     "ICON": 11
+     "ICON": 53
     },
     "precip_in": {
      "GFS": 0.0,
@@ -878,7 +878,7 @@
     "pop_max": {
      "GFS": 1,
      "Euro": 2,
-     "ICON": 15
+     "ICON": 0
     },
     "precip_in": {
      "GFS": 0.0,
@@ -897,7 +897,7 @@
     "pop_max": {
      "GFS": 65,
      "Euro": 73,
-     "ICON": 18
+     "ICON": 64
     },
     "precip_in": {
      "GFS": 0.0,
