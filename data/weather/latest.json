@@ -1,42 +1,42 @@
 {
- "updated": "2026-10-10T12:14:17+00:00",
+ "updated": "2026-10-10T13:34:20+00:00",
  "sections_updated": {
-  "now": "2026-10-10T12:14:17+00:00",
-  "forecast": "2026-10-10T12:14:17+00:00",
-  "hourly": "2026-10-10T12:14:17+00:00",
-  "alerts": "2026-10-10T12:14:17+00:00",
-  "afd": "2026-10-10T12:14:17+00:00",
-  "lake_forecast": "2026-10-10T12:14:17+00:00",
-  "lake_gage": "2026-10-10T12:14:17+00:00",
-  "air": "2026-10-10T12:14:17+00:00",
-  "sun": "2026-10-10T12:14:17+00:00",
-  "models": "2026-10-10T12:14:17+00:00"
+  "now": "2026-10-10T13:34:20+00:00",
+  "forecast": "2026-10-10T13:34:20+00:00",
+  "hourly": "2026-10-10T13:34:20+00:00",
+  "alerts": "2026-10-10T13:34:20+00:00",
+  "afd": "2026-10-10T13:34:20+00:00",
+  "lake_forecast": "2026-10-10T13:34:20+00:00",
+  "lake_gage": "2026-10-10T13:34:20+00:00",
+  "air": "2026-10-10T13:34:20+00:00",
+  "sun": "2026-10-10T13:34:20+00:00",
+  "models": "2026-10-10T13:34:20+00:00"
  },
  "now": {
-  "observed_at": "2026-10-10T12:00:00+00:00",
+  "observed_at": "2026-10-10T13:10:00+00:00",
   "station": "KBTV",
-  "description": null,
-  "temp_f": 39,
-  "feels_like_f": 39,
-  "humidity": 87,
-  "dewpoint_f": 36,
-  "wind_mph": 0,
+  "description": "Clear",
+  "temp_f": 45,
+  "feels_like_f": 43,
+  "humidity": 76,
+  "dewpoint_f": 37,
+  "wind_mph": 3,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
-  "updated": "2026-10-10T06:30:59+00:00",
+  "updated": "2026-10-10T12:28:31+00:00",
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-10T06:00:00-04:00",
+    "start": "2026-10-10T09:00:00-04:00",
     "is_day": true,
     "temp_f": 55,
     "pop": 0,
-    "wind": "N 2 to 8 mph",
+    "wind": "N 2 to 6 mph",
     "short": "Sunny",
-    "detailed": "Sunny, with a high near 55. North wind 2 to 8 mph."
+    "detailed": "Sunny, with a high near 55. North wind 2 to 6 mph."
    },
    {
     "name": "Tonight",
@@ -171,26 +171,15 @@
   ]
  },
  "hourly": {
-  "updated": "2026-10-10T06:30:59+00:00",
+  "updated": "2026-10-10T12:28:31+00:00",
   "hours": [
    {
-    "t": "2026-10-10T08:00:00-04:00",
-    "temp_f": 44,
-    "feels_f": 41,
-    "pop": 0,
-    "humidity": 65,
-    "wind_mph": 6,
-    "wind_dir": "N",
-    "sky": 4,
-    "short": "Sunny"
-   },
-   {
     "t": "2026-10-10T09:00:00-04:00",
-    "temp_f": 46,
-    "feels_f": 42,
+    "temp_f": 45,
+    "feels_f": 44,
     "pop": 0,
-    "humidity": 58,
-    "wind_mph": 8,
+    "humidity": 68,
+    "wind_mph": 3,
     "wind_dir": "N",
     "sky": 2,
     "short": "Sunny"
@@ -200,7 +189,7 @@
     "temp_f": 47,
     "feels_f": 44,
     "pop": 0,
-    "humidity": 53,
+    "humidity": 56,
     "wind_mph": 6,
     "wind_dir": "N",
     "sky": 2,
@@ -223,7 +212,7 @@
     "feels_f": 52,
     "pop": 0,
     "humidity": 43,
-    "wind_mph": 6,
+    "wind_mph": 5,
     "wind_dir": "N",
     "sky": 2,
     "short": "Sunny"
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 96,
     "short": "Cloudy"
+   },
+   {
+    "t": "2026-10-11T20:00:00-04:00",
+    "temp_f": 56,
+    "feels_f": 56,
+    "pop": 75,
+    "humidity": 74,
+    "wind_mph": 12,
+    "wind_dir": "S",
+    "sky": 98,
+    "short": "Rain Showers"
    }
   ]
  },
@@ -584,13 +584,13 @@
   "raw": "\n000\nFXUS61 KBTV 101124\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n724 AM EDT Sat Oct 10 2026\n\n.WHAT HAS CHANGED...\nAs of 259 AM EDT Saturday...\n\nNo big changes to this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 259 AM EDT Saturday...\n\n1. Drier weather through Sunday afternoon. Rainfall associated\nwith remnants of Isaias to bring rain to parts of our area, no\nflooding expected.\n\n2. Seasonably cool middle and end to the week with a couple \nshower chances.\n\n&&\n\n.DISCUSSION...\nAs of 259 AM EDT Saturday...\n\nKEY MESSAGE 1: Surface high pressure builds into the region \ntoday, leading to mostly sunny skies, lighter winds and high \ntemperatures in the 50s for most places. Relatively widespread \nfrost is likely tomorrow morning, but winds are expected to \nremain brisk for a longer portion of the overnight, so extent of\nfrost formation in the Champlain valley is somewhat limited, \nthough it could be enough for a Frost Advisory to be issued \nlater. High pressure slides east Sunday and return southerly \nflow will provide warmer temperatures to rise into the 60s \nareawide. High clouds ahead of Isaias will infiltrate the region\nduring the afternoon Sunday. Widespread rainfall will hold off \nuntil after sunset for most locations with a quarter to half of \nan inch of rain expected for many locations. Areas near the \nCanadian Border will likely see the least rainfall with amounts \ncloser to a tenth of an inch. Will have to monitor for heavier \nbands within the precipitation shield. This will likely change \nrun to run and with the lack of mesoscale models having the \ntemporal resolution to analyze this feature, we won't know about\nplacement of this possible banded precipitation until tomorrow \nafternoon most likely. Nevertheless, the rainfall seen Sunday \nnight, even if it's in the 1-1.5 inch rain locally, will be \nhighly beneficial with no flood concerns anticipated at this \ntime. A strengthening mid-level jet Sunday night will help to \nquickly shift these remnants eastward with dry conditions \nexpected by daybreak on Monday.\n\nKEY MESSAGE 2: A surface low will pass through from west to east \nTuesday night, bringing widespread showers. While it will be quick \nmoving and technically more northern stream and not have a strong \nconnection to Gulf/Atlantic moisture, it will include the remnants \nof Tropical Storm Rachael so there will be some efficient \nrainfall with the former tropical moisture. GEFS/EPS/CMCE \ncombined probabilities of a half inch of rain range between \n30-50 percent and probabilities of an inch are below 10 percent,\nso the rain would only be beneficial. Warm air aloft will \nremain on the backside so even though the cold front drops \ntemperatures significantly, rainfall amounts on Sunday have \nincreased slightly with most locations seeing between a quarter \nto half of an inch of rain with closer to a tenth of an inch of \nrain near the Canadian Border.ny upslope showers look to remain \nrain in the mountains. Dry, sunny and seasonably cool conditions\ndevelop for Thursday before more shower chances arrive for \nFriday and the weekend.\n\n&&\n\n.AVIATION /12Z SATURDAY THROUGH WEDNESDAY/...\nThrough 12Z Sunday...Any fog will lift by 14Z and then VFR conditions\nshould prevail through tonight at all terminals. Winds will\ngenerally be light and northwesterly or variable today. Winds change\nto southerly and begin to increase quickly tonight. The flip will\nlikely be first at MSS, BTV, PBG, and RUT where it should occur\nbefore 6Z. The rest may take until 12Z. By late in the night, gusts\nat BTV, PBG, and MSS will likely be in the 10-20 KT range.\nElsewhere, winds and gusts should mostly stay under 10 KT.\n\nOutlook...\n\nSunday: VFR. NO SIG WX.\nSunday Night: Mainly MVFR, with local IFR possible. Chance SHRA.\nColumbus Day: Mainly MVFR, with local IFR possible. Slight chance\nSHRA.\nMonday Night: Mainly MVFR, with local VFR possible. Definite\nSHRA.\nTuesday: Mainly MVFR, with local VFR possible. Definite SHRA.\nTuesday Night: Mainly IFR, with local MVFR possible. Chance SHRA.\nWednesday: Mainly MVFR, with areas IFR possible. Slight chance\nSHRA.\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Neiles\nDISCUSSION...Myskowski/Neiles\nAVIATION...Myskowski\n"
  },
  "lake_forecast": {
-  "issued": "2026-10-10T10:53:00+00:00",
+  "issued": "2026-10-10T12:29:00+00:00",
   "suspended": false,
   "broad": [
    {
-    "period": "Today",
-    "text": "Northwest winds 5 to 10 knots, becoming light and variable. Sunny. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "period": "Rest Of Today",
+    "text": "Northwest winds 10 to 15 knots, becoming light and variable. Sunny. Waves 1 foot or less.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": true
@@ -662,10 +662,10 @@
   ],
   "northern": [
    {
-    "period": "Today",
-    "text": "Northwest winds 5 to 10 knots, becoming light and variable. Gusts up to 20 knots in the evening. Sunny. Waves 1 foot or less.",
+    "period": "Rest Of Today",
+    "text": "Northwest winds 5 to 10 knots, becoming light and variable. Sunny. Waves 1 foot or less.",
     "wind_knots_max": 10,
-    "gust_knots": 20,
+    "gust_knots": null,
     "waves_ft_max": 1,
     "calm": true
    },
@@ -736,9 +736,9 @@
   ],
   "southern": [
    {
-    "period": "Today",
-    "text": "Northwest winds 5 to 10 knots, becoming light and variable. Sunny. Waves 1 foot or less.",
-    "wind_knots_max": 10,
+    "period": "Rest Of Today",
+    "text": "Northwest winds 10 to 15 knots, becoming light and variable. Sunny. Waves 1 foot or less.",
+    "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 1,
     "calm": true
@@ -801,7 +801,7 @@
    },
    {
     "period": "Wednesday",
-    "text": "North winds 10 to 15 knots. Partly sunny. A chance of showers in the morning. Waves 1 to 3 feet. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.15 feet 52 degrees USGS gage at Burlington VT 93.24 feet 58 degrees USGS gage at Port Henry NY 93.13 feet 42 degrees",
+    "text": "North winds 10 to 15 knots. Partly sunny. A chance of showers in the morning. Waves 1 to 3 feet. Latest Level and Temperature Data from Around Lake Champlain Level Temperature USGS gage at Rouses Point NY 93.14 feet 51 degrees USGS gage at Burlington VT 93.23 feet 58 degrees USGS gage at Port Henry NY 93.13 feet 44 degrees",
     "wind_knots_max": 15,
     "gust_knots": null,
     "waves_ft_max": 3,
@@ -811,32 +811,32 @@
   "uv": null,
   "gage_table": {
    "Rouses Point NY": {
-    "level_ft": 93.15,
-    "temp_f": 52
+    "level_ft": 93.14,
+    "temp_f": 51
    },
    "Burlington VT": {
-    "level_ft": 93.24,
+    "level_ft": 93.23,
     "temp_f": 58
    },
    "Port Henry NY": {
     "level_ft": 93.13,
-    "temp_f": 42
+    "temp_f": 44
    }
   }
  },
  "lake_gage": {
   "water_temp_f": 58,
-  "water_temp_at": "2026-10-10T08:00:00.000-04:00",
-  "level_ft": 93.75,
-  "level_at": "2026-10-10T08:00:00.000-04:00",
+  "water_temp_at": "2026-10-10T09:00:00.000-04:00",
+  "level_ft": 93.73,
+  "level_at": "2026-10-10T09:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 18,
+  "aqi": 19,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/10/26 7:00",
+  "observed": "10/10/26 9:00",
   "discussion": "On Saturday, October 10th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -871,7 +871,7 @@
     "date": "2026-10-11",
     "high_f": {
      "GFS": 68,
-     "Euro": 61,
+     "Euro": 60,
      "ICON": 63
     },
     "pop_max": {
@@ -884,13 +884,13 @@
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 7
+    "high_spread_f": 8
    },
    {
     "date": "2026-10-12",
     "high_f": {
      "GFS": 62,
-     "Euro": 66,
+     "Euro": 67,
      "ICON": 64
     },
     "pop_max": {
@@ -900,10 +900,10 @@
     },
     "precip_in": {
      "GFS": 0.14,
-     "Euro": 0.11,
+     "Euro": 0.02,
      "ICON": 0.09
     },
-    "high_spread_f": 4
+    "high_spread_f": 5
    }
   ]
  }
