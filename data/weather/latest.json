@@ -1,26 +1,26 @@
 {
- "updated": "2026-10-11T09:19:17+00:00",
+ "updated": "2026-10-11T09:35:04+00:00",
  "sections_updated": {
-  "now": "2026-10-11T09:19:17+00:00",
-  "forecast": "2026-10-11T09:19:17+00:00",
-  "hourly": "2026-10-11T09:19:17+00:00",
-  "alerts": "2026-10-11T09:19:17+00:00",
-  "afd": "2026-10-11T09:19:17+00:00",
-  "lake_forecast": "2026-10-11T09:19:17+00:00",
-  "lake_gage": "2026-10-11T09:19:17+00:00",
-  "air": "2026-10-11T09:19:17+00:00",
-  "sun": "2026-10-11T09:19:17+00:00",
-  "models": "2026-10-11T09:19:17+00:00"
+  "now": "2026-10-11T09:35:04+00:00",
+  "forecast": "2026-10-11T09:35:04+00:00",
+  "hourly": "2026-10-11T09:35:04+00:00",
+  "alerts": "2026-10-11T09:35:04+00:00",
+  "afd": "2026-10-11T09:35:04+00:00",
+  "lake_forecast": "2026-10-11T09:35:04+00:00",
+  "lake_gage": "2026-10-11T09:35:04+00:00",
+  "air": "2026-10-11T09:35:04+00:00",
+  "sun": "2026-10-11T09:35:04+00:00",
+  "models": "2026-10-11T09:35:04+00:00"
  },
  "now": {
-  "observed_at": "2026-10-11T09:00:00+00:00",
+  "observed_at": "2026-10-11T09:15:00+00:00",
   "station": "KBTV",
   "description": "Clear",
   "temp_f": 39,
-  "feels_like_f": 39,
+  "feels_like_f": 37,
   "humidity": 87,
   "dewpoint_f": 36,
-  "wind_mph": 0,
+  "wind_mph": 3,
   "wind_gust_mph": null,
   "wind_dir": "N",
   "precip_last_hr_in": null
@@ -878,17 +878,17 @@
     "high_f": {
      "GFS": 67,
      "Euro": 61,
-     "ICON": 62
+     "ICON": 61
     },
     "pop_max": {
      "GFS": 13,
      "Euro": 43,
-     "ICON": 64
+     "ICON": 18
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.0,
-     "ICON": 0.0
+     "ICON": 0.02
     },
     "high_spread_f": 6
    },
@@ -897,38 +897,37 @@
     "high_f": {
      "GFS": 64,
      "Euro": 66,
-     "ICON": 65
+     "ICON": 63
     },
     "pop_max": {
      "GFS": 23,
      "Euro": 57,
-     "ICON": 80
+     "ICON": 25
     },
     "precip_in": {
      "GFS": 0.06,
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    },
    {
     "date": "2026-10-13",
     "high_f": {
      "GFS": 63,
      "Euro": 62,
-     "ICON": 60
+     "ICON": 64
     },
     "pop_max": {
      "GFS": 85,
-     "Euro": 91,
-     "ICON": 48
+     "Euro": 91
     },
     "precip_in": {
      "GFS": 0.62,
      "Euro": 1.23,
-     "ICON": 2.6
+     "ICON": 2.08
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    }
   ]
  }
