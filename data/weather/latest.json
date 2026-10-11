@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-11T10:15:09+00:00",
+ "updated": "2026-10-11T10:35:11+00:00",
  "sections_updated": {
-  "now": "2026-10-11T10:15:09+00:00",
-  "forecast": "2026-10-11T10:15:09+00:00",
-  "hourly": "2026-10-11T10:15:09+00:00",
-  "alerts": "2026-10-11T10:15:09+00:00",
-  "afd": "2026-10-11T10:15:09+00:00",
-  "lake_forecast": "2026-10-11T10:15:09+00:00",
-  "lake_gage": "2026-10-11T10:15:09+00:00",
-  "air": "2026-10-11T10:15:09+00:00",
-  "sun": "2026-10-11T10:15:09+00:00",
-  "models": "2026-10-11T10:15:09+00:00"
+  "now": "2026-10-11T10:35:11+00:00",
+  "forecast": "2026-10-11T10:35:11+00:00",
+  "hourly": "2026-10-11T10:35:11+00:00",
+  "alerts": "2026-10-11T10:35:11+00:00",
+  "afd": "2026-10-11T10:35:11+00:00",
+  "lake_forecast": "2026-10-11T10:35:11+00:00",
+  "lake_gage": "2026-10-11T10:35:11+00:00",
+  "air": "2026-10-11T10:35:11+00:00",
+  "sun": "2026-10-11T10:35:11+00:00",
+  "models": "2026-10-11T10:35:11+00:00"
  },
  "now": {
-  "observed_at": "2026-10-11T09:55:00+00:00",
+  "observed_at": "2026-10-11T10:10:00+00:00",
   "station": "KBTV",
   "description": "Clear",
-  "temp_f": 41,
-  "feels_like_f": 41,
-  "humidity": 75,
-  "dewpoint_f": 34,
-  "wind_mph": 0,
+  "temp_f": 39,
+  "feels_like_f": 36,
+  "humidity": 87,
+  "dewpoint_f": 36,
+  "wind_mph": 5,
   "wind_gust_mph": null,
-  "wind_dir": "N",
+  "wind_dir": "SE",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -858,7 +858,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 23,
+  "aqi": 26,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "10/11/26 6:00",
@@ -883,7 +883,7 @@
     "pop_max": {
      "GFS": 13,
      "Euro": 43,
-     "ICON": 64
+     "ICON": 18
     },
     "precip_in": {
      "GFS": 0.0,
@@ -902,7 +902,7 @@
     "pop_max": {
      "GFS": 23,
      "Euro": 57,
-     "ICON": 80
+     "ICON": 25
     },
     "precip_in": {
      "GFS": 0.06,
@@ -920,8 +920,7 @@
     },
     "pop_max": {
      "GFS": 85,
-     "Euro": 91,
-     "ICON": 48
+     "Euro": 91
     },
     "precip_in": {
      "GFS": 0.62,
