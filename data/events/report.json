@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-11T19:58:39-04:00",
+ "generated": "2026-10-12T15:18:29-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
@@ -8,23 +8,23 @@
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 59,
-   "seconds": 4.1
+   "count": 56,
+   "seconds": 5.7
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 83,
-   "seconds": 3.2
+   "count": 85,
+   "seconds": 3.4
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 225,
-   "seconds": 4.5
+   "count": 237,
+   "seconds": 3.9
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 72,
-   "seconds": 1.8
+   "count": 73,
+   "seconds": 1.6
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-11&end_date=2026-12-10&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-12&end_date=2026-12-11&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,12 +44,12 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 3,
-   "seconds": 0.3
+   "seconds": 0.2
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 214,
-   "seconds": 67.6
+   "count": 213,
+   "seconds": 70.8
   },
   "flynn": {
    "label": "The Flynn",
@@ -63,60 +63,60 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 632,
-   "seconds": 32.4
+   "count": 645,
+   "seconds": 34.3
   },
   "higherground": {
    "label": "Higher Ground",
    "count": 0,
    "error": "HTTP Error 403: Forbidden",
-   "staleDays": 11
+   "staleDays": 12
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 10.7
+   "seconds": 9.7
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 389,
-   "seconds": 73.5
+   "count": 388,
+   "seconds": 74.3
   },
   "meetup": {
    "label": "Meetup",
-   "count": 45,
-   "seconds": 97.8
+   "count": 46,
+   "seconds": 96.4
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 17,
+   "count": 18,
    "seconds": 1.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 68,
+   "count": 65,
    "seconds": 15.5
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 3
+   "staleDays": 4
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 87,
+   "count": 86,
    "seconds": 2.5
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 19,
-   "seconds": 33.8
+   "seconds": 36.4
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2451,
-   "seconds": 2.8
+   "count": 2493,
+   "seconds": 57.1
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -125,77 +125,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 478,
-   "seconds": 21.4
+   "count": 494,
+   "seconds": 35.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 276,
-   "seconds": 0.3
+   "count": 289,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 55,
-   "seconds": 72.2
+   "count": 57,
+   "seconds": 77.1
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
    "count": 50,
-   "seconds": 0.3
+   "seconds": 0.4
   }
  },
- "gathered": 5254,
- "afterDedup": 2519,
- "duplicatesMerged": 2735,
- "final": 2548,
- "firecrawlCalls": 1,
+ "gathered": 5348,
+ "afterDedup": 2554,
+ "duplicatesMerged": 2794,
+ "final": 2592,
+ "firecrawlCalls": 16,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-13"
-  },
-  {
-   "kept": {
-    "title": "Jukebox Turns Ten",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-13"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-13"
-  },
-  {
-   "kept": {
-    "title": "CANCELLED: The Poetry Experience",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-14"
-  },
   {
    "kept": {
     "title": "ELF THE MUSICAL",
@@ -204,116 +158,17 @@
    "merged_sources": [
     "flynn",
     "helloburlington"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Chess Club",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Good Clean Fun! (Family Friendly Show)",
-    "source": "vcc"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "vcc"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Live DJ at Ri Ra!",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Conference Honoring Retiring Faculty, Don Loeb and Sin yee Chan",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Men's Ice Hockey vs Maine",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Second Saturdays",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Phillip Phillips",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-11-14"
-  },
-  {
-   "kept": {
-    "title": "Dungeons & Dragons Group B with DM Andrew",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
    ],
    "date": "2026-11-15"
   },
   {
    "kept": {
-    "title": "ELF THE MUSICAL",
-    "source": "flynn"
+    "title": "Philharmonic Fall Concert",
+    "source": "uvm"
    },
    "merged_sources": [
-    "flynn",
-    "helloburlington"
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-15"
   },
@@ -935,6 +790,18 @@
     "sevendays"
    ],
    "date": "2026-11-20"
+  },
+  {
+   "kept": {
+    "title": "Family Art Saturday",
+    "source": "bca"
+   },
+   "merged_sources": [
+    "bca",
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-11-21"
   },
   {
    "kept": {
@@ -1965,6 +1832,17 @@
   },
   {
    "kept": {
+    "title": "Welcome to Night Vale",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2076,6 +1954,17 @@
   {
    "kept": {
     "title": "Bella Voce Concert \"Cool Yule\"",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "sevendays"
+   ],
+   "date": "2026-12-06"
+  },
+  {
+   "kept": {
+    "title": "Cheryl A. Ossola in Conversation with Lisa DeNatale | How Long a Shadow",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -2353,6 +2242,39 @@
   },
   {
    "kept": {
+    "title": "Chemistry Graduate Seminars",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-10"
+  },
+  {
+   "kept": {
+    "title": "Empowerment Self-Defense (Employee Session)",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-10"
+  },
+  {
+   "kept": {
+    "title": "UPB Game Night",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-10"
+  },
+  {
+   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -2383,48 +2305,157 @@
     "sevendays"
    ],
    "date": "2026-12-10"
+  },
+  {
+   "kept": {
+    "title": "Albert Cummings",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-12-10"
+  },
+  {
+   "kept": {
+    "title": "Live DJ at Ri Ra!",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "Pub Hour",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "Mad Robin Burlington Contra Dance",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "Lane Series: Lorelei Ensemble",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "sevendays"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
+    "title": "TRSH",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-12-11"
   }
  ],
  "changes": [
   {
-   "id": "6391e95d0d84",
-   "title": "LGBTQIA+ Mixer",
-   "date": "2026-10-11",
-   "change": "missing",
-   "lastSeen": "2026-10-11T11:56:18-04:00"
+   "id": "98bfa21e49b5",
+   "title": "Adam Ezra Group",
+   "date": "2026-10-17",
+   "change": "time",
+   "was": "2026-10-17T19:30:00-04:00",
+   "now": "2026-10-17T20:00:00-04:00"
   },
   {
-   "id": "889172b55f0c",
+   "id": "ffe63f40e3e8",
+   "title": "Myra Flynn",
+   "date": "2026-11-01",
+   "change": "time",
+   "was": "2026-11-01T19:00:00-05:00",
+   "now": "2026-11-01T19:30:00-05:00"
+  },
+  {
+   "id": "fd9a87e6589b",
+   "title": "Welcome to Night Vale",
+   "date": "2026-12-04",
+   "change": "time",
+   "was": "2026-12-04T19:00:00-05:00",
+   "now": "2026-12-04T18:00:00-05:00"
+  },
+  {
+   "id": "c9e64bc79c52",
+   "title": "Albert Cummings",
+   "date": "2026-12-10",
+   "change": "time",
+   "was": "2026-12-10T20:00:00-05:00",
+   "now": "2026-12-10T19:00:00-05:00"
+  },
+  {
+   "id": "ee3e2734d9cd",
+   "title": "Indigenous Peoples' Day - Campus Walk",
+   "date": "2026-10-12",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
+   "id": "563c6bec7066",
    "title": "Public Skate",
-   "date": "2026-10-11",
+   "date": "2026-10-12",
    "change": "missing",
-   "lastSeen": "2026-10-11T11:56:18-04:00"
+   "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "121c1acda62d",
-   "title": "Bonnie Acker",
-   "date": "2026-10-11",
+   "id": "4d3bdf4d768d",
+   "title": "Stick & Puck",
+   "date": "2026-10-12",
    "change": "missing",
-   "lastSeen": "2026-10-11T11:56:18-04:00"
+   "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "eaee2eab5e77",
-   "title": "'Body Horror: Immoral Feast III'",
-   "date": "2026-10-11",
+   "id": "fd28f6bde0e9",
+   "title": "Indigenous Peoples' Day - Video Discussion",
+   "date": "2026-10-12",
    "change": "missing",
-   "lastSeen": "2026-10-11T11:56:18-04:00"
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
+   "id": "dc7abf6d74f0",
+   "title": "Indigenous Peoples' Day - Indigenous Artist Presentation",
+   "date": "2026-10-12",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
    "id": "72e1cefcc532",
    "title": "MEDITATION CLASS: Living a Meaningful Life Meditations",
    "date": "2026-10-12",
-   "change": "missing",
-   "lastSeen": "2026-10-08T20:38:36-04:00"
-  },
-  {
-   "id": "f666168f99a6",
-   "title": "Pick-up Basketball",
-   "date": "2026-10-14",
    "change": "dropped"
   },
   {
@@ -2433,6 +2464,13 @@
    "date": "2026-10-15",
    "change": "missing",
    "lastSeen": "2026-10-10T19:48:59-04:00"
+  },
+  {
+   "id": "98291ba5d090",
+   "title": "The Band Memo",
+   "date": "2026-10-15",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
    "id": "ab87e8e75c1b",
@@ -2449,17 +2487,45 @@
    "lastSeen": "2026-10-10T19:48:59-04:00"
   },
   {
+   "id": "6c8b828a27dd",
+   "title": "Judge",
+   "date": "2026-10-17",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
+   "id": "9ed6836cb36c",
+   "title": "Rehash w/ The Flooks",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
+   "id": "3e2453221ced",
+   "title": "All Them Witches",
+   "date": "2026-10-20",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
    "id": "4e88034ce252",
    "title": "Lake Champlain Memory Café:",
    "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-09T12:31:32-04:00"
+   "change": "dropped"
   },
   {
-   "id": "1d585f2fe408",
-   "title": "Pick-up Basketball",
+   "id": "7dfbd268270b",
+   "title": "Meg Mott - Strange Bedfellows: How Religious Liberties Have Aligned with Nondiscrimination Policies and Can Again",
    "date": "2026-10-21",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
+   "id": "9e430e325837",
+   "title": "Ryan La Sala and Don Martin | The Dead of Summer and Verity Vox and the Curse of Foxfire",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
    "id": "2b254f834364",
@@ -2476,6 +2542,34 @@
    "lastSeen": "2026-10-10T19:48:59-04:00"
   },
   {
+   "id": "ab9bc126096e",
+   "title": "22nd Annual Ooky Spooky 5k to Benefit COTS",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
+   "id": "d50fde81c8b0",
+   "title": "Ooky Spooky 5k Race to Benefit COTS",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
+   "id": "9d8c7516335f",
+   "title": "Sea Turtle One-Day Woodcarving Workshop",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
+   "id": "f1ce9a611551",
+   "title": "Fire Safety Story Time With Michelle",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
    "id": "6bf03d16161d",
    "title": "Middle Grade Movie: 'How to Train Your Dragon'",
    "date": "2026-10-26",
@@ -2490,10 +2584,11 @@
    "lastSeen": "2026-10-10T19:48:59-04:00"
   },
   {
-   "id": "3acc528e8bfa",
-   "title": "Pick-up Basketball",
+   "id": "c1a10ef4c115",
+   "title": "Dance, Paint, Write!",
    "date": "2026-10-28",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
    "id": "bd8d86cc5e44",
@@ -2517,6 +2612,13 @@
    "lastSeen": "2026-10-10T19:48:59-04:00"
   },
   {
+   "id": "708eefff5b22",
+   "title": "Thursday Trivia at Burlington Beer Co.",
+   "date": "2026-10-29",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
    "id": "361f5b4d9984",
    "title": "LEGO Builders",
    "date": "2026-10-30",
@@ -2524,36 +2626,29 @@
    "lastSeen": "2026-10-10T19:48:59-04:00"
   },
   {
-   "id": "902e40d7e886",
-   "title": "Whizbang's Street Wide Trick or Treat",
+   "id": "75e518017f41",
+   "title": "Green Mountain Woodcarvers October Carve-In & Annual Meeting",
    "date": "2026-10-31",
    "change": "missing",
-   "lastSeen": "2026-10-08T20:38:36-04:00"
+   "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "ea15a05c633e",
-   "title": "The Web presented by Le Petit Fouet",
+   "id": "902e40d7e886",
+   "title": "Whizbang's Street Wide Trick or Treat",
    "date": "2026-10-31",
    "change": "dropped"
   },
   {
-   "id": "ffe63f40e3e8",
-   "title": "Myra Flynn",
-   "date": "2026-11-01",
-   "change": "source-down",
-   "lastSeen": "2026-09-30T12:03:45-04:00"
+   "id": "0f2988ea0ba7",
+   "title": "Dance, Paint, Write!",
+   "date": "2026-11-04",
+   "change": "missing",
+   "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
    "id": "78c5a0c15c0b",
    "title": "Good Time Line Dancing",
    "date": "2026-11-13",
-   "change": "source-down",
-   "lastSeen": "2026-09-30T12:03:45-04:00"
-  },
-  {
-   "id": "8084a008f1bc",
-   "title": "Sam Shackleton",
-   "date": "2026-11-15",
    "change": "source-down",
    "lastSeen": "2026-09-30T12:03:45-04:00"
   },
@@ -2568,8 +2663,7 @@
    "id": "952325d287fa",
    "title": "Lake Champlain Memory Café:",
    "date": "2026-11-18",
-   "change": "missing",
-   "lastSeen": "2026-10-09T12:31:32-04:00"
+   "change": "dropped"
   },
   {
    "id": "57eda5c0288b",
