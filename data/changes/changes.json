@@ -1,28 +1,6 @@
 {
- "generated": "2026-10-13T03:40:19+00:00",
+ "generated": "2026-10-13T11:57:46+00:00",
  "events": [
-  {
-   "ts": "2026-10-06T06:59:02+00:00",
-   "category": "chatter",
-   "headline": "New on r/burlington: singer for band?",
-   "detail": "",
-   "url": "https://www.reddit.com/r/burlington/comments/1wyu8oh/singer_for_band/",
-   "source": "reddit-burlington",
-   "sourceName": "r/burlington",
-   "priority": 1,
-   "kind": "added"
-  },
-  {
-   "ts": "2026-10-06T10:33:54+00:00",
-   "category": "weather",
-   "headline": "Frost Advisory issued",
-   "detail": "Frost Advisory issued October 6 at 2:23AM EDT until October 7 at 7:00AM EDT by NWS Burlington VT",
-   "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121",
-   "source": "nws-weather",
-   "sourceName": "NWS Burlington",
-   "priority": 3,
-   "kind": "status"
-  },
   {
    "ts": "2026-10-06T12:40:32+00:00",
    "category": "roads",
@@ -3234,6 +3212,17 @@
    "sourceName": "BTown Brief events",
    "priority": 1,
    "kind": "added"
+  },
+  {
+   "ts": "2026-10-13T11:57:46+00:00",
+   "category": "weather",
+   "headline": "Today: Rain showers before 8am, then showers and thunderstorms",
+   "detail": "",
+   "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121",
+   "source": "nws-weather",
+   "sourceName": "NWS Burlington",
+   "priority": 2,
+   "kind": "changed"
   }
  ]
 }
