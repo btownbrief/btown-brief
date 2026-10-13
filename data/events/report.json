@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-12T15:18:29-04:00",
+ "generated": "2026-10-12T22:14:11-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 11,
-   "seconds": 5.8
+   "seconds": 5.7
   },
   "breweries": {
    "label": "Breweries & Taprooms",
    "count": 56,
-   "seconds": 5.7
+   "seconds": 5.5
   },
   "brownell": {
    "label": "Brownell Library",
    "count": 85,
-   "seconds": 3.4
+   "seconds": 3.5
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 237,
-   "seconds": 3.9
+   "count": 251,
+   "seconds": 4.6
   },
   "churchst": {
    "label": "Church Street Marketplace",
    "count": 73,
-   "seconds": 1.6
+   "seconds": 1.7
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 3,
-   "seconds": 0.2
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
    "count": 213,
-   "seconds": 70.8
+   "seconds": 66.8
   },
   "flynn": {
    "label": "The Flynn",
    "count": 19,
-   "seconds": 0.5
+   "seconds": 0.4
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -64,7 +64,7 @@
   "helloburlington": {
    "label": "Hello Burlington",
    "count": 645,
-   "seconds": 34.3
+   "seconds": 31.4
   },
   "higherground": {
    "label": "Higher Ground",
@@ -75,48 +75,49 @@
   "instagram": {
    "label": "Instagram (Scrape Creators)",
    "count": 1,
-   "seconds": 9.7
+   "seconds": 11.5
   },
   "loveburlington": {
    "label": "Love Burlington",
    "count": 388,
-   "seconds": 74.3
+   "seconds": 73.3
   },
   "meetup": {
    "label": "Meetup",
-   "count": 46,
-   "seconds": 96.4
+   "count": 45,
+   "seconds": 104.1
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 18,
-   "seconds": 1.4
+   "count": 17,
+   "seconds": 1.1
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 65,
-   "seconds": 15.5
+   "seconds": 15.2
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 4
+   "staleDays": 5
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 86,
-   "seconds": 2.5
+   "count": 0,
+   "error": "events listing markup not found (page layout changed?)",
+   "staleDays": 0
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 19,
-   "seconds": 36.4
+   "seconds": 34.0
   },
   "sevendays": {
    "label": "Seven Days",
    "count": 2493,
-   "seconds": 57.1
+   "seconds": 2.7
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -125,18 +126,18 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 494,
-   "seconds": 35.2
+   "count": 513,
+   "seconds": 22.5
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 289,
-   "seconds": 0.2
+   "count": 308,
+   "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
    "count": 57,
-   "seconds": 77.1
+   "seconds": 72.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
@@ -144,90 +145,12 @@
    "seconds": 0.4
   }
  },
- "gathered": 5348,
- "afterDedup": 2554,
- "duplicatesMerged": 2794,
- "final": 2592,
- "firecrawlCalls": 16,
+ "gathered": 5312,
+ "afterDedup": 2521,
+ "duplicatesMerged": 2791,
+ "final": 2625,
+ "firecrawlCalls": 1,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "ELF THE MUSICAL",
-    "source": "flynn"
-   },
-   "merged_sources": [
-    "flynn",
-    "helloburlington"
-   ],
-   "date": "2026-11-15"
-  },
-  {
-   "kept": {
-    "title": "Philharmonic Fall Concert",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-15"
-  },
-  {
-   "kept": {
-    "title": "Side Stories",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-15"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-15"
-  },
-  {
-   "kept": {
-    "title": "Sing We and Chant It",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "sevendays"
-   ],
-   "date": "2026-11-15"
-  },
-  {
-   "kept": {
-    "title": "The Suitcase Junket",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-11-15"
-  },
-  {
-   "kept": {
-    "title": "Stories & Crafts: Animal Antics!",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-16"
-  },
   {
    "kept": {
     "title": "Shakespeare Out Loud",
@@ -235,17 +158,6 @@
    },
    "merged_sources": [
     "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-16"
-  },
-  {
-   "kept": {
-    "title": "Art Wall: Photography by Jeffrey Trubisz",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
     "sevendays"
    ],
    "date": "2026-11-16"
@@ -331,17 +243,6 @@
   },
   {
    "kept": {
-    "title": "Knitting Workshop for Middle Grade Students",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-17"
-  },
-  {
-   "kept": {
     "title": "Super Smash Tuesdays",
     "source": "churchst"
    },
@@ -361,6 +262,17 @@
     "churchst",
     "loveburlington",
     "sevendays"
+   ],
+   "date": "2026-11-17"
+  },
+  {
+   "kept": {
+    "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-17"
   },
@@ -417,17 +329,6 @@
    "merged_sources": [
     "champlainvalley",
     "flynn"
-   ],
-   "date": "2026-11-18"
-  },
-  {
-   "kept": {
-    "title": "Puzzle Swap",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
    ],
    "date": "2026-11-18"
   },
@@ -504,6 +405,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
     "uvm",
     "uvmbored"
@@ -584,17 +486,6 @@
    },
    "merged_sources": [
     "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
-    "title": "Mandarin Conversation Circle",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
     "sevendays"
    ],
    "date": "2026-11-19"
@@ -751,6 +642,7 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "champlainvalley",
     "helloburlington",
     "uvm",
     "uvmbored"
@@ -799,18 +691,9 @@
    "merged_sources": [
     "bca",
     "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-21"
-  },
-  {
-   "kept": {
-    "title": "Chess Club",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
+    "sevendays",
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-21"
   },
@@ -827,6 +710,17 @@
   },
   {
    "kept": {
+    "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-11-21"
+  },
+  {
+   "kept": {
     "title": "Greg Freeman at Higher Ground",
     "source": "uvm"
    },
@@ -835,6 +729,17 @@
     "helloburlington",
     "uvm",
     "uvmbored"
+   ],
+   "date": "2026-11-21"
+  },
+  {
+   "kept": {
+    "title": "Eliza Edens w/ Riverbed",
+    "source": "breweries"
+   },
+   "merged_sources": [
+    "breweries",
+    "champlainvalley"
    ],
    "date": "2026-11-21"
   },
@@ -974,17 +879,6 @@
   },
   {
    "kept": {
-    "title": "Art Wall: Photography by Jeffrey Trubisz",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-23"
-  },
-  {
-   "kept": {
     "title": "Industry Day",
     "source": "loveburlington"
    },
@@ -1046,6 +940,17 @@
    "merged_sources": [
     "churchst",
     "loveburlington"
+   ],
+   "date": "2026-11-24"
+  },
+  {
+   "kept": {
+    "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
    ],
    "date": "2026-11-24"
   },
@@ -1242,17 +1147,6 @@
   },
   {
    "kept": {
-    "title": "Men's Ice Hockey vs St. Cloud State",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-27"
-  },
-  {
-   "kept": {
     "title": "Pub Hour",
     "source": "loveburlington"
    },
@@ -1286,17 +1180,6 @@
   },
   {
    "kept": {
-    "title": "Chess Club",
-    "source": "sblibrary"
-   },
-   "merged_sources": [
-    "sblibrary",
-    "sevendays"
-   ],
-   "date": "2026-11-28"
-  },
-  {
-   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -1308,7 +1191,7 @@
   },
   {
    "kept": {
-    "title": "Men's Ice Hockey vs St. Cloud State",
+    "title": "Sculpt HIIT and Flow",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1476,6 +1359,17 @@
   {
    "kept": {
     "title": "Data Design Lab",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-01"
+  },
+  {
+   "kept": {
+    "title": "Sculpt HIIT and Flow",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1654,6 +1548,17 @@
   },
   {
    "kept": {
+    "title": "Ariel Elias",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "vcc"
+   ],
+   "date": "2026-12-03"
+  },
+  {
+   "kept": {
     "title": "Thirsty Thursday",
     "source": "churchst"
    },
@@ -1681,6 +1586,18 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-03"
+  },
+  {
+   "kept": {
+    "title": "2DEAD BOYZ + The Underachievers at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -1732,6 +1649,17 @@
   },
   {
    "kept": {
+    "title": "Ariel Elias",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "vcc"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -1776,10 +1704,34 @@
   },
   {
    "kept": {
+    "title": "Welcome to Night Vale at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
     "title": "Board Game Night",
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-04"
+  },
+  {
+   "kept": {
+    "title": "lespecial at Higher Ground",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -1832,14 +1784,14 @@
   },
   {
    "kept": {
-    "title": "Welcome to Night Vale",
-    "source": "helloburlington"
+    "title": "Ariel Elias",
+    "source": "vcc"
    },
    "merged_sources": [
     "champlainvalley",
-    "helloburlington"
+    "vcc"
    ],
-   "date": "2026-12-04"
+   "date": "2026-12-05"
   },
   {
    "kept": {
@@ -1854,7 +1806,7 @@
   },
   {
    "kept": {
-    "title": "Men's Ice Hockey vs Providence",
+    "title": "Sculpt HIIT and Flow",
     "source": "uvm"
    },
    "merged_sources": [
@@ -1975,6 +1927,17 @@
   },
   {
    "kept": {
+    "title": "Tall Heights",
+    "source": "helloburlington"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington"
+   ],
+   "date": "2026-12-06"
+  },
+  {
+   "kept": {
     "title": "Stories & Crafts: Animal Antics!",
     "source": "fletcherfree"
    },
@@ -1990,6 +1953,19 @@
     "source": "uvm"
    },
    "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-07"
+  },
+  {
+   "kept": {
+    "title": "Bit Brigade: performing “The Legend of Zelda” + “Castlevania” + “Tetris”",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "helloburlington",
     "uvm",
     "uvmbored"
    ],
@@ -2063,6 +2039,17 @@
   },
   {
    "kept": {
+    "title": "Sculpt HIIT and Flow",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-08"
+  },
+  {
+   "kept": {
     "title": "UPB Art Attack",
     "source": "uvm"
    },
@@ -2096,14 +2083,14 @@
   },
   {
    "kept": {
-    "title": "Italian Conversation Group",
-    "source": "sblibrary"
+    "title": "Sue Foley + GA-20",
+    "source": "helloburlington"
    },
    "merged_sources": [
-    "sblibrary",
-    "sevendays"
+    "champlainvalley",
+    "helloburlington"
    ],
-   "date": "2026-12-09"
+   "date": "2026-12-08"
   },
   {
    "kept": {
@@ -2230,6 +2217,17 @@
   },
   {
    "kept": {
+    "title": "Matt Braunger",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "vcc"
+   ],
+   "date": "2026-12-10"
+  },
+  {
+   "kept": {
     "title": "Thirsty Thursday",
     "source": "churchst"
    },
@@ -2319,6 +2317,17 @@
   },
   {
    "kept": {
+    "title": "Matt Braunger",
+    "source": "vcc"
+   },
+   "merged_sources": [
+    "champlainvalley",
+    "vcc"
+   ],
+   "date": "2026-12-11"
+  },
+  {
+   "kept": {
     "title": "Live DJ at Ri Ra!",
     "source": "churchst"
    },
@@ -2386,36 +2395,20 @@
  ],
  "changes": [
   {
-   "id": "98bfa21e49b5",
-   "title": "Adam Ezra Group",
-   "date": "2026-10-17",
+   "id": "fd27adfc07e0",
+   "title": "Kids Puzzle Swap",
+   "date": "2026-10-21",
    "change": "time",
-   "was": "2026-10-17T19:30:00-04:00",
-   "now": "2026-10-17T20:00:00-04:00"
-  },
-  {
-   "id": "ffe63f40e3e8",
-   "title": "Myra Flynn",
-   "date": "2026-11-01",
-   "change": "time",
-   "was": "2026-11-01T19:00:00-05:00",
-   "now": "2026-11-01T19:30:00-05:00"
+   "was": "2026-10-21T14:30:00-04:00",
+   "now": "2026-10-21T14:00:00-04:00"
   },
   {
    "id": "fd9a87e6589b",
    "title": "Welcome to Night Vale",
    "date": "2026-12-04",
    "change": "time",
-   "was": "2026-12-04T19:00:00-05:00",
-   "now": "2026-12-04T18:00:00-05:00"
-  },
-  {
-   "id": "c9e64bc79c52",
-   "title": "Albert Cummings",
-   "date": "2026-12-10",
-   "change": "time",
-   "was": "2026-12-10T20:00:00-05:00",
-   "now": "2026-12-10T19:00:00-05:00"
+   "was": "2026-12-04T18:00:00-05:00",
+   "now": "2026-12-04T19:00:00-05:00"
   },
   {
    "id": "ee3e2734d9cd",
@@ -2453,17 +2446,25 @@
    "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "72e1cefcc532",
-   "title": "MEDITATION CLASS: Living a Meaningful Life Meditations",
+   "id": "a33a58fc79c2",
+   "title": "Trivia Mondays at Black Flannel",
    "date": "2026-10-12",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
-   "id": "29ac658478fd",
-   "title": "Toddlertime",
+   "id": "66a6e88b6857",
+   "title": "Trivia with Craig Mitchell @ The Monkey House",
+   "date": "2026-10-12",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "3f6b7c216612",
+   "title": "Toddlertime- 9:15am Session",
    "date": "2026-10-15",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
    "id": "98291ba5d090",
@@ -2473,18 +2474,39 @@
    "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "ab87e8e75c1b",
-   "title": "LEGO Builders",
+   "id": "a1a89ba6a783",
+   "title": "Friday LEGO Builders",
    "date": "2026-10-16",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
-   "id": "8310e85feeb2",
-   "title": "Ryan Hagen",
+   "id": "f0efbdd53867",
+   "title": "Men's Ice Hockey vs Boston University",
+   "date": "2026-10-16",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "45dee1714543",
+   "title": "Author Event: Ryan Hagen",
    "date": "2026-10-17",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "84a99e852e90",
+   "title": "'Coward'",
+   "date": "2026-10-17",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "7f52998cd2fc",
+   "title": "Men's Ice Hockey vs Boston University",
+   "date": "2026-10-17",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
    "id": "6c8b828a27dd",
@@ -2492,6 +2514,13 @@
    "date": "2026-10-17",
    "change": "missing",
    "lastSeen": "2026-10-11T19:58:39-04:00"
+  },
+  {
+   "id": "31e8dabead94",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-10-19",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
    "id": "9ed6836cb36c",
@@ -2508,12 +2537,6 @@
    "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "4e88034ce252",
-   "title": "Lake Champlain Memory Café:",
-   "date": "2026-10-21",
-   "change": "dropped"
-  },
-  {
    "id": "7dfbd268270b",
    "title": "Meg Mott - Strange Bedfellows: How Religious Liberties Have Aligned with Nondiscrimination Policies and Can Again",
    "date": "2026-10-21",
@@ -2528,18 +2551,46 @@
    "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "2b254f834364",
-   "title": "Toddlertime",
+   "id": "002bf7043719",
+   "title": "Toddlertime- 9:15am Session",
    "date": "2026-10-22",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
-   "id": "2c7a54f1c0d4",
-   "title": "LEGO Builders",
+   "id": "933ca87599b3",
+   "title": "Friday LEGO Builders",
    "date": "2026-10-23",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "94658234d573",
+   "title": "'Josephine'",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "306418ba6b67",
+   "title": "Men's Ice Hockey vs Clarkson",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "67fafe814b37",
+   "title": "'Look Back'",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "92091b5ba2b8",
+   "title": "Burlington Contra Dance",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
    "id": "ab9bc126096e",
@@ -2563,6 +2614,13 @@
    "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
+   "id": "33c7e208bb66",
+   "title": "Fire Safety Storytime",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
    "id": "f1ce9a611551",
    "title": "Fire Safety Story Time With Michelle",
    "date": "2026-10-24",
@@ -2570,18 +2628,46 @@
    "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "6bf03d16161d",
-   "title": "Middle Grade Movie: 'How to Train Your Dragon'",
-   "date": "2026-10-26",
+   "id": "0f178be56add",
+   "title": "Free Movie: No Country for Mothers",
+   "date": "2026-10-24",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
-   "id": "3088e87d8e03",
-   "title": "Craftytown",
+   "id": "8d7f0e772503",
+   "title": "'Fatherland'",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "32a893a8f6ab",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-10-26",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "ce76e17a39cd",
+   "title": "Middle Grade Movie: How to Train Your Dragon (2025)",
+   "date": "2026-10-26",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "5ea8c648081b",
+   "title": "Storybook Craftytown- Arlo Needs Glasses",
    "date": "2026-10-27",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "fe9227b86dab",
+   "title": "Evening Book Group: A Grandmother Begins the Story",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
    "id": "c1a10ef4c115",
@@ -2605,11 +2691,11 @@
    "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
-   "id": "047fbcf1fd9c",
-   "title": "Toddlertime",
+   "id": "a0544b5f5f27",
+   "title": "Toddlertime- 9:15am Session",
    "date": "2026-10-29",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
    "id": "708eefff5b22",
@@ -2619,11 +2705,18 @@
    "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "361f5b4d9984",
-   "title": "LEGO Builders",
+   "id": "cd8fe5063ade",
+   "title": "Friday LEGO Builders",
    "date": "2026-10-30",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "f7c28c672c3e",
+   "title": "Men's Ice Hockey vs New Hampshire",
+   "date": "2026-10-30",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
    "id": "75e518017f41",
@@ -2633,10 +2726,18 @@
    "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
-   "id": "902e40d7e886",
-   "title": "Whizbang's Street Wide Trick or Treat",
+   "id": "15c1315ff38d",
+   "title": "Men's Ice Hockey vs New Hampshire",
    "date": "2026-10-31",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "4f6436fef009",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-02",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
    "id": "0f2988ea0ba7",
@@ -2646,6 +2747,20 @@
    "lastSeen": "2026-10-11T19:58:39-04:00"
   },
   {
+   "id": "75c15f063da8",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "47dea2d180a4",
+   "title": "Men's Ice Hockey vs Maine",
+   "date": "2026-11-13",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
    "id": "78c5a0c15c0b",
    "title": "Good Time Line Dancing",
    "date": "2026-11-13",
@@ -2653,17 +2768,46 @@
    "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
-   "id": "e872dba934d8",
-   "title": "Kids Puzzle Swap",
-   "date": "2026-11-18",
+   "id": "8bf1c603aee5",
+   "title": "Men's Ice Hockey vs Maine",
+   "date": "2026-11-14",
    "change": "missing",
-   "lastSeen": "2026-10-10T19:48:59-04:00"
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
-   "id": "952325d287fa",
-   "title": "Lake Champlain Memory Café:",
+   "id": "8084a008f1bc",
+   "title": "Sam Shackleton",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "bc31c6f7292f",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "3abf9a87b71c",
+   "title": "Puzzle Swap",
    "date": "2026-11-18",
-   "change": "dropped"
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "73338132928e",
+   "title": "Art Wall: Photography by Jeffrey Trubisz",
+   "date": "2026-11-23",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "fd70ed16ff44",
+   "title": "Men's Ice Hockey vs St. Cloud State",
+   "date": "2026-11-27",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
    "id": "57eda5c0288b",
@@ -2671,6 +2815,34 @@
    "date": "2026-11-27",
    "change": "source-down",
    "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "f11afef30c50",
+   "title": "Men's Ice Hockey vs St. Cloud State",
+   "date": "2026-11-28",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "d004809cbd4f",
+   "title": "2DEAD BOYZ + The Underachievers",
+   "date": "2026-12-03",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "a1a1f8ef4de6",
+   "title": "lespecial",
+   "date": "2026-12-04",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "68cf81fd87d3",
+   "title": "Men's Ice Hockey vs Providence",
+   "date": "2026-12-05",
+   "change": "missing",
+   "lastSeen": "2026-10-12T15:18:29-04:00"
   }
  ]
 }
