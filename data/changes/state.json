@@ -64,6 +64,24 @@
   "construction": {
    "items": [
     {
+     "id": "e539479a-5831-48d6-adbe-cafa351f6450",
+     "name": "Construction project e539479a-5831-48d6-adbe-cafa351f6450",
+     "ts": "2026-10-15T19:50:15+00:00",
+     "url": "https://www.burlingtonvt.gov/DPW"
+    },
+    {
+     "id": "fbfc0e78-73c3-4a8d-bbe5-67e6d3e15af0",
+     "name": "Construction project fbfc0e78-73c3-4a8d-bbe5-67e6d3e15af0",
+     "ts": "2026-10-15T19:50:06+00:00",
+     "url": "https://www.burlingtonvt.gov/DPW"
+    },
+    {
+     "id": "9db38b2c-7fc5-454a-828c-b742e5ef45d9",
+     "name": "Construction project 9db38b2c-7fc5-454a-828c-b742e5ef45d9",
+     "ts": "2026-10-15T19:20:16+00:00",
+     "url": "https://www.burlingtonvt.gov/DPW"
+    },
+    {
      "id": "b9ba4400-5c0b-4e02-b88f-4533300dfe01",
      "name": "CY27 Pavin",
      "ts": "2026-10-13T13:47:22+00:00",
@@ -292,27 +310,9 @@
      "url": "https://www.burlingtonvt.gov/DPW"
     },
     {
-     "id": "e539479a-5831-48d6-adbe-cafa351f6450",
-     "name": "Construction project e539479a-5831-48d6-adbe-cafa351f6450",
-     "ts": "2026-10-01T19:01:55+00:00",
-     "url": "https://www.burlingtonvt.gov/DPW"
-    },
-    {
-     "id": "fbfc0e78-73c3-4a8d-bbe5-67e6d3e15af0",
-     "name": "Construction project fbfc0e78-73c3-4a8d-bbe5-67e6d3e15af0",
-     "ts": "2026-10-01T19:01:39+00:00",
-     "url": "https://www.burlingtonvt.gov/DPW"
-    },
-    {
      "id": "3a9e402d-3157-48ee-b8f2-e5e542d8e2b5",
      "name": "Construction project 3a9e402d-3157-48ee-b8f2-e5e542d8e2b5",
      "ts": "2026-10-01T19:01:29+00:00",
-     "url": "https://www.burlingtonvt.gov/DPW"
-    },
-    {
-     "id": "9db38b2c-7fc5-454a-828c-b742e5ef45d9",
-     "name": "Construction project 9db38b2c-7fc5-454a-828c-b742e5ef45d9",
-     "ts": "2026-10-01T19:01:08+00:00",
      "url": "https://www.burlingtonvt.gov/DPW"
     },
     {
@@ -463,7 +463,8 @@
     "hasAgenda": true,
     "files": [
      "Parks Commission Agenda",
-     "Parks Commission Agenda Packet"
+     "Parks Commission Agenda Packet",
+     "20261013 Parks Commission Meeting Minutes"
     ]
    },
    "9965": {
@@ -529,7 +530,10 @@
     "name": "Retirement Board Meeting",
     "start": "2026-10-19T09:30:00+00:00",
     "hasAgenda": true,
-    "files": []
+    "files": [
+     "Retirement Board Meeting",
+     "Retirement Board Meeting"
+    ]
    },
    "9860": {
     "name": "Advisory Committee on Accessibility Meeting",
@@ -558,6 +562,13 @@
   "feeds": {
    "sevendays-news": {
     "items": [
+     {
+      "id": "https://www.sevendaysvt.com/?p=221074",
+      "title": "Digital Forensics Expert Hany Farid Vets Deepfakes at Vermont Tech Jam",
+      "link": "https://www.sevendaysvt.com/news/tech/hany-farid-deepfakes-vermont-tech-jam/",
+      "ts": "2026-10-15T19:38:48+00:00",
+      "summary": "On October 24, the Dartmouth professor will discuss the difficulty of discerning reality in a world of AI fakery and what people can do to avoid being fooled. The post Digital Forensics Expert Hany Farid Vets Deepfakes at Vermont Tech Jam appeared first on Seven Days . (Image: Courtesy)"
+     },
      {
       "id": "https://www.sevendaysvt.com/?p=220962",
       "title": "Kismayo Kitchen Reopens in BTV on Riverside Ave — for Now",
@@ -620,18 +631,32 @@
       "link": "https://www.sevendaysvt.com/news/fromthepublisher/from-the-publisher-north-star/",
       "ts": "2026-10-14T13:47:00+00:00",
       "summary": "In this week’s paper, Richmond’s Jen Rose Smith — who just won Travel Journalist of the Year — takes readers with her to Québec’s Manicouagan Reservoir. The post From the Publisher: North Star appeared first on Seven Days . (Image: Courtesy)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=220454",
-      "title": "Letters to the Editor (10/14/26)",
-      "link": "https://www.sevendaysvt.com/news/letters/letters-to-the-editor-10-14-26/",
-      "ts": "2026-10-14T13:46:00+00:00",
-      "summary": "Readers react to recent articles The post Letters to the Editor (10/14/26) appeared first on Seven Days ."
      }
     ]
    },
    "vtdigger": {
     "items": [
+     {
+      "id": "https://vtdigger.org/?p=657001",
+      "title": "After a stormy week, cold arrives and much of Vermont passes peak foliage",
+      "link": "https://vtdigger.org/2026/10/15/after-a-stormy-week-cold-arrives-and-much-of-vermont-passes-peak-foliage/",
+      "ts": "2026-10-15T20:15:44+00:00",
+      "summary": "The high elevations of the northern Green Mountains could see accumulating snowfall this weekend. Read the story on VTDigger here: After a stormy week, cold arrives and much of Vermont passes peak foliage ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=657010",
+      "title": "Vermont’s land laws should incentivize people who heal the land",
+      "link": "https://vtdigger.org/2026/10/15/opinion-vermonts-land-laws-should-incentivize-people-who-heal-the-land/",
+      "ts": "2026-10-15T19:26:09+00:00",
+      "summary": "Tax and permitting rules built for large-scale operations leave little room for small landholders who do the most to bolster ecosystem services. Read the story on VTDigger here: Vermont’s land laws should incentivize people who heal the land ."
+     },
+     {
+      "id": "https://vtdigger.org/?p=656996",
+      "title": "English programs face rising anxiety amid fears of immigration enforcement",
+      "link": "https://vtdigger.org/2026/10/15/english-programs-face-rising-anxiety-amid-fears-of-immigration-enforcement/",
+      "ts": "2026-10-15T18:15:46+00:00",
+      "summary": "The services bring people from around the world together under one roof. Read the story on VTDigger here: English programs face rising anxiety amid fears of immigration enforcement ."
+     },
      {
       "id": "https://vtdigger.org/?p=655527",
       "title": "David Martin",
@@ -820,27 +845,6 @@
       "link": "https://vtdigger.org/2026/10/11/political-mailer-sparks-vermont-disclosure-complaint/",
       "ts": "2026-10-11T13:34:00+00:00",
       "summary": "The attorney general is reviewing allegations that a PAC failed to disclose donors and file a required report. Read the story on VTDigger here: Political mailer sparks Vermont disclosure complaint ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=656639",
-      "title": "Fight trafficking by decriminalizing consensual adult sex work",
-      "link": "https://vtdigger.org/2026/10/11/fight-trafficking-by-decriminalizing-consensual-adult-sex-work/",
-      "ts": "2026-10-11T12:55:00+00:00",
-      "summary": "Vermont's prostitution laws make it harder for people to report exploitation and for survivors to rebuild their lives. Read the story on VTDigger here: Fight trafficking by decriminalizing consensual adult sex work ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=656640",
-      "title": "Political polls historically underestimate Phil Scott. Will 2026 be different?",
-      "link": "https://vtdigger.org/2026/10/11/political-polls-historically-underestimate-phil-scott-will-2026-be-different/",
-      "ts": "2026-10-11T12:11:00+00:00",
-      "summary": "Two new polls differ sharply on Vermont’s governor’s race. History suggests the numbers deserve a closer look. Read the story on VTDigger here: Political polls historically underestimate Phil Scott. Will 2026 be different? ."
-     },
-     {
-      "id": "https://vtdigger.org/?p=656644",
-      "title": "At odds over the “Aud,” Vermont Coyotes announce departure from Barre",
-      "link": "https://vtdigger.org/2026/10/11/at-odds-over-the-aud-vermont-coyotes-announce-departure-from-barre/",
-      "ts": "2026-10-11T11:21:00+00:00",
-      "summary": "This season will be their last at the Barre Civic Center, the team announced. Read the story on VTDigger here: At odds over the “Aud,” Vermont Coyotes announce departure from Barre ."
      }
     ]
    },
@@ -935,18 +939,46 @@
    "wcax": {
     "items": [
      {
+      "id": "NHOFTJDRG5G2ZFGCN63HIS2ZZQ",
+      "title": "Suspicious package at Essex County, NY, government building prompts evacuation",
+      "link": "https://www.wcax.com/2026/10/15/suspicious-package-essex-county-ny-government-building-prompts-evacuation/",
+      "ts": "2026-10-15T20:21:03+00:00",
+      "summary": "A suspicious envelope prompted a four-hour investigation and closure of the Essex County government building in Elizabethtown, New York, on Thursday."
+     },
+     {
+      "id": "MPESXRYZEJDIBD6QB7FV7FWOAE",
+      "title": "Man captured in Vermont pleads not guilty to Massachusetts murder",
+      "link": "https://www.wcax.com/2026/10/15/man-captured-vermont-pleads-not-guilty-massachusetts-murder/",
+      "ts": "2026-10-15T20:13:43+00:00",
+      "summary": "A man who police arrested in Vermont after he allegedly shot and killed his mother in Massachusetts pleaded not guilty to murder Thursday afternoon."
+     },
+     {
+      "id": "LHYYLQ47KJDFBBFAUKA77ODL24",
+      "title": "Deadly officer-involved shooting in New Hampshire ruled justified",
+      "link": "https://www.wcax.com/2026/10/15/deadly-officer-involved-shooting-new-hampshire-ruled-justified/",
+      "ts": "2026-10-15T19:23:57+00:00",
+      "summary": "Officials say a police-involved shooting that left a man dead in Keene, New Hampshire, was justified."
+     },
+     {
+      "id": "TOGZIRRTYJHZLK6CSEE5UNJPY4",
+      "title": "Teen inmate accused of attacking two Vermont correctional officers",
+      "link": "https://www.wcax.com/2026/10/15/teen-inmate-accused-attacking-two-vermont-correctional-officers/",
+      "ts": "2026-10-15T18:47:44+00:00",
+      "summary": "Vermont State Police say Rian Donahue, 18, of Berlin, attacked two officers last Thursday."
+     },
+     {
+      "id": "NJXAKZ4A2NHXHDKMC2UBA6AWDI",
+      "title": "WATCH LIVE: Balint, Malloy to face off in U.S. House debate",
+      "link": "https://www.wcax.com/2026/10/15/watch-live-balint-malloy-face-off-us-house-debate/",
+      "ts": "2026-10-15T18:36:41+00:00",
+      "summary": "The Vermont candidates running for U.S. House will debate on WCAX at 7 p.m. The 6 p.m. news will be shortened and the CBS Evening News will start at 6:30 p.m."
+     },
+     {
       "id": "H5UHDNQNXVGLRCVDKBL5D3BGBE",
       "title": "Nectar’s could be making a comeback in Burlington",
       "link": "https://www.wcax.com/2026/10/15/nectars-could-be-making-comeback-burlington/",
       "ts": "2026-10-15T16:41:13+00:00",
       "summary": "The iconic Burlington nightclub Nectar’s that closed last year could be coming back to life."
-     },
-     {
-      "id": "C7SXHTXVFNGLRN5UVDDDIMK2JI",
-      "title": "Frustrated with Trump, voters overwhelmingly want change in Washington, an AP-NORC poll finds",
-      "link": "https://www.wcax.com/2026/10/15/frustrated-with-trump-voters-overwhelmingly-want-change-washington-an-ap-norc-poll-finds/",
-      "ts": "2026-10-15T14:06:54+00:00",
-      "summary": "A strong majority of voters believe that President Donald Trump is falling short at home and abroad, and they want major change in the upcoming midterm elections, according to a new AP-NORC poll that raises serious warning signs for the Republican Party at a critical moment."
      },
      {
       "id": "AKGFC7SOQVBYXDCAR7ESGKOWEY",
@@ -961,13 +993,6 @@
       "link": "https://www.wcax.com/2026/10/15/vermont-state-police-traffic-stop-produces-suspected-drug-trafficking-arrest/",
       "ts": "2026-10-15T10:37:52+00:00",
       "summary": "A traffic stop on Interstate 91 Wednesday evening turned into an arrest for suspected drug trafficking."
-     },
-     {
-      "id": "NJXAKZ4A2NHXHDKMC2UBA6AWDI",
-      "title": "PROGRAMMING NOTE: Congressional debate to shorten 6 p.m. news, CBS Evening News starts at 6:30 p.m.",
-      "link": "https://www.wcax.com/2026/10/15/programming-note-congressional-debate-shorten-6-pm-news-cbs-evening-news-starts-630-pm/",
-      "ts": "2026-10-15T09:59:13+00:00",
-      "summary": "Due to coverage of the Vermont congressional debate on Thursday, the WCAX 6 p.m. news will be shortened, and the CBS Evening News will start at 6:30 p.m."
      },
      {
       "id": "TKONEW5OIFHNNMQEMWWAQ7CZOY",
@@ -1262,171 +1287,150 @@
       "link": "https://www.wcax.com/2026/10/13/last-warning-bch-massena-woman-allegedly-fires-gun-punches-victim/",
       "ts": "2026-10-13T19:12:11+00:00",
       "summary": "A Massena woman faces charges for allegedly firing a muzzleloader and punching a person during an argument over hunting."
-     },
-     {
-      "id": "G5SG5CE6INGLHEPXPP5DJNEDCU",
-      "title": "SUNY students compete to design ‘I Voted’ stickers for November midterm elections",
-      "link": "https://www.wcax.com/2026/10/13/suny-students-compete-design-i-voted-stickers-november-midterm-elections/",
-      "ts": "2026-10-13T17:10:03+00:00",
-      "summary": "SUNY students, faculty, and staff are encouraged to vote for their favorite student-submitted sticker design by visiting suny.edu/vote. Voting is open through Thursday, Oct. 15 at 3 p.m."
-     },
-     {
-      "id": "GEIH4EP3TFGVVLJVMXLOKOP4YQ",
-      "title": "Police arrest Vermont Corrections employee on assault charge",
-      "link": "https://www.wcax.com/2026/10/13/police-arrest-vermont-corrections-employee-assault-charge/",
-      "ts": "2026-10-13T15:26:06+00:00",
-      "summary": "A Vermont corrections employee was arrested Saturday night, accused of aggravated assault and disorderly conduct."
-     },
-     {
-      "id": "BBVUK3XV5RCW3IJ5ORKQPTQU7E",
-      "title": "Colder months usually mean lower gas prices, but not this year, AAA says",
-      "link": "https://www.wcax.com/2026/10/13/colder-months-usually-mean-lower-gas-prices-not-this-year-aaa-says/",
-      "ts": "2026-10-13T11:52:58+00:00",
-      "summary": "Gas stations are beginning the transition to winter blend gas which usually lowers prices but AAA says we shouldn’t expect much of a drop this year."
      }
     ]
    },
    "mynbc5": {
     "items": [
      {
-      "id": "74050333",
-      "title": "Social Security benefits are rising in 2027. Calculate how much more you’ll get",
-      "link": "https://www.mynbc5.com/article/social-security-cola-2027-benefits/74050333",
-      "ts": "2026-10-15T16:57:00+00:00",
-      "summary": "The new COLA for 2027 could add roughly $75 a month to the average retired worker's benefit."
+      "id": "74144029",
+      "title": "Final candidate selected in search for Burlington police chief; conditional offer extended",
+      "link": "https://www.mynbc5.com/article/burlington-police-chief-finalist-picked-offer-made/74144029",
+      "ts": "2026-10-15T20:17:00+00:00",
+      "summary": "The City of Burlington has been narrowing down the pool of candidates to replace Shawn Burke, who has been serving as the city's interim police chief since March of 2025."
      },
      {
-      "id": "74147028",
-      "title": "Kitten guided out of drain pipe by custom equipment",
-      "link": "https://www.mynbc5.com/article/utah-stuck-kitten-drain-pipe/74147028",
-      "ts": "2026-10-15T16:43:00+00:00",
-      "summary": "A kitten found in a drain pipe in Utah was safely rescued, thanks to the use of a custom piece of equipment."
+      "id": "74149186",
+      "title": "Search warrant offers new details after a woman killed her son and husband at a Pennsylvania resort",
+      "link": "https://www.mynbc5.com/article/great-wolf-lodge-killings-search-warrant-details/74149186",
+      "ts": "2026-10-15T20:14:00+00:00",
+      "summary": "Great Wolf Lodge killings: A newly released search warrant reveals what police found in the family home and what other family members told investigators about the woman who allegedly killed her young son and her husband."
      },
      {
-      "id": "74135679",
-      "title": "We tested Amazon's 'About You' feature. Here's what it got right — and wrong",
-      "link": "https://www.mynbc5.com/article/amazon-about-you-feature/74135679",
-      "ts": "2026-10-15T16:40:00+00:00",
-      "summary": "The National Consumer Unit tried Amazon's personalization feature with several co-workers and asked the company how it builds customer profiles."
+      "id": "74149383",
+      "title": "Saranac Lake hardware store reopens after devastating fire",
+      "link": "https://www.mynbc5.com/article/saranac-lake-hardware-store-reopens/74149383",
+      "ts": "2026-10-15T20:10:00+00:00",
+      "summary": "Aubuchon Hardware in Lake Placid is hosting a grand reopening celebration this weekend after a fire in January 2023 caused a total loss of its building."
+     },
+     {
+      "id": "74148866",
+      "title": "Snapchat messages show how Nolan Wells' friends reacted to his death",
+      "link": "https://www.mynbc5.com/article/nolan-wells-snapchat-messages-friends-report/74148866",
+      "ts": "2026-10-15T19:57:00+00:00",
+      "summary": "A digital forensic report of Nolan Wells' phone, released by his family, shows what friends said while Wells was missing and after they learned of his death."
+     },
+     {
+      "id": "74148996",
+      "title": "Scientists knew Doomsday Glacier was melting. They didn’t realize how ‘aggressively’",
+      "link": "https://www.mynbc5.com/article/doomsday-glacier-melting-aggressively-climate-change/74148996",
+      "ts": "2026-10-15T19:56:00+00:00",
+      "summary": "The planet’s widest glacier is melting \"more aggressively\" than previously projected."
+     },
+     {
+      "id": "74149213",
+      "title": "Man killed ex-fiancee hours after their 'People's Court' episode aired, police say",
+      "link": "https://www.mynbc5.com/article/dale-smith-michelle-parker-court-appearance-florida/74149213",
+      "ts": "2026-10-15T19:55:00+00:00",
+      "summary": "A Florida man has been charged with killing his ex-fiancee nearly 15 years ago, just hours after their pretaped appearance on \"The People’s Court\" was broadcast, police said."
+     },
+     {
+      "id": "74147057",
+      "title": "Trailblazing doctor, 47, dies of the cancer she was working to cure",
+      "link": "https://www.mynbc5.com/article/rachna-shroff-stomach-cancer/74147057",
+      "ts": "2026-10-15T19:49:00+00:00",
+      "summary": "A trailblazing doctor has died from the very same cancer she spent years trying to cure."
+     },
+     {
+      "id": "74148780",
+      "title": "Local departments grapple with rising diesel costs",
+      "link": "https://www.mynbc5.com/article/local-departments-rising-diesel-costs/74148780",
+      "ts": "2026-10-15T19:38:00+00:00",
+      "summary": "Towns like Plattsburgh and Hinesburg are looking at how they can mitigate the spike while continuing to provide services residents rely on."
+     },
+     {
+      "id": "74148974",
+      "title": "Al Pacino to get lifetime achievement award from the Screen Actors Guild",
+      "link": "https://www.mynbc5.com/article/al-pacino-lifetime-achievement-award-screen-actors-guild/74148974",
+      "ts": "2026-10-15T19:25:00+00:00",
+      "summary": "Al Pacino has been named the next recipient of the SAG-AFTRA Life Achievement Award. The 86-year-old actor is known for films like “Dog Day Afternoon” and “The Godfather” trilogy. He is the 62nd actor to receive this honor."
+     },
+     {
+      "id": "74148111",
+      "title": "Eagles rule out quarterback Jalen Hurts for Sunday's game over blood clot",
+      "link": "https://www.mynbc5.com/article/jalen-hurts-eagles-carolina-blood-clot/74148111",
+      "ts": "2026-10-15T19:20:00+00:00",
+      "summary": "The Philadelphia Eagles have ruled out quarterback Jalen Hurts for Sunday's game against Carolina because of \"movement\" in a small blood clot."
+     },
+     {
+      "id": "74148916",
+      "title": "TSA scales back PreCheck benefit announced just weeks ago",
+      "link": "https://www.mynbc5.com/article/tsa-scales-back-gateside-precheck/74148916",
+      "ts": "2026-10-15T19:19:00+00:00",
+      "summary": "The TSA has scaled back a program that allows PreCheck members who are not flying to go through security."
+     },
+     {
+      "id": "74148684",
+      "title": "Government records reveal mechanical failures at Six Flags theme parks",
+      "link": "https://www.mynbc5.com/article/six-flags-georgia-fatal-accident-ride-safety-concerns/74148684",
+      "ts": "2026-10-15T18:54:00+00:00",
+      "summary": "There have been hundreds of reports of injuries and dangerous malfunctions at Six Flags in the years leading up to this week’s fatal accident, according to government records."
+     },
+     {
+      "id": "74148689",
+      "title": "Baby sleepers sold on Amazon recalled due to suffocation risk",
+      "link": "https://www.mynbc5.com/article/baby-sleeper-recall-papablic-amazon-suffocation/74148689",
+      "ts": "2026-10-15T18:46:00+00:00",
+      "summary": "Parents are being urged to stop using a recalled baby sleeper because it could put infants at risk."
+     },
+     {
+      "id": "74148393",
+      "title": "FBI agents and analysts fired for roles in Trump classified files probe sue to get their jobs back",
+      "link": "https://www.mynbc5.com/article/fbi-employees-fired-trump-classified-documents-lawsuit/74148393",
+      "ts": "2026-10-15T18:12:00+00:00",
+      "summary": "FBI employees fired for their roles in the investigation of President Trump’s retention of classified documents at his Florida estate are suing to get their jobs back."
+     },
+     {
+      "id": "74147874",
+      "title": "Trump cancels livestream of Fort Hood shooter's execution",
+      "link": "https://www.mynbc5.com/article/trump-cancels-livestream-fort-hood-nidal-hasan-execution/74147874",
+      "ts": "2026-10-15T17:44:00+00:00",
+      "summary": "President Trump announced the cancellation of plans to livestream the execution of Nidal Hasan, convicted of the 2009 Fort Hood shooting, citing public discomfort and bipartisan backlash."
+     },
+     {
+      "id": "74147597",
+      "title": "Commercial goods are no longer entering Gaza, raising fears of worsening shortages in the territory",
+      "link": "https://www.mynbc5.com/article/commercial-goods-no-longer-entering-gaza-israel/74147597",
+      "ts": "2026-10-15T17:27:00+00:00",
+      "summary": "No commercial goods have entered Gaza for two days, Israeli authorities said Thursday. Israel says the decision came from Palestinian merchants, but importers say that's not true."
      },
      {
       "id": "74147248",
       "title": "Massachusetts teen arrested in Vermont on drug charges",
       "link": "https://www.mynbc5.com/article/massachusetts-teen-arrested-putney-drug-charges/74147248",
-      "ts": "2026-10-15T16:29:00+00:00",
+      "ts": "2026-10-15T17:21:00+00:00",
       "summary": "Vermont State Police arrested an 18-year-old Massachusetts man in Putney after finding over half a pound of suspected cocaine during a traffic stop."
      },
      {
-      "id": "74147006",
-      "title": "A new Medicare season begins, but some shifts will arrive in 2027",
-      "link": "https://www.mynbc5.com/article/medicare-open-enrollment-2027-cost-changes/74147006",
-      "ts": "2026-10-15T16:27:00+00:00",
-      "summary": "Open enrollment for Medicare plans begins Oct. 15. Here are a few of the biggest changes to know before you enroll."
-     },
-     {
-      "id": "74108856",
-      "title": "Is the Michigan Senate race make-or-break for the progressive movement?",
-      "link": "https://www.mynbc5.com/article/michigan-senate-race-make-or-break-progressive-movement/74108856",
-      "ts": "2026-10-15T16:14:00+00:00",
-      "summary": "Democrat Abdul El-Sayed says he's not thinking much about the progressive movement, but his Senate race is seen as a high-stakes test case for a growing faction of the Democratic Party."
-     },
-     {
-      "id": "74145078",
-      "title": "Landmark hotel featured in 'Home Alone 2' will undergo closure for façade repairs",
-      "link": "https://www.mynbc5.com/article/plaza-hotel-new-york-4-year-closure-facade-repairs/74145078",
-      "ts": "2026-10-15T15:58:00+00:00",
-      "summary": "The Plaza Hotel in New York will be closing for renovations, the plaza said."
+      "id": "74147236",
+      "title": "104-year-old Brewers fan hopes for World Series win as 105th birthday gift",
+      "link": "https://www.mynbc5.com/article/104-year-old-brewers-fan-hopes-for-world-series-win-as-105th-birthday-gift/74147236",
+      "ts": "2026-10-15T17:15:00+00:00",
+      "summary": "Ruth Werning, a 104-year-old Milwaukee Brewers fan turning 105 next month, predicts a 6-2 win and hopes for a World Series birthday gift."
      },
      {
       "id": "74146573",
       "title": "'Suspicious substances' sent to congressional, election offices nationwide",
       "link": "https://www.mynbc5.com/article/federal-authorities-investigate-suspicious-letters-election-offices/74146573",
-      "ts": "2026-10-15T15:46:00+00:00",
+      "ts": "2026-10-15T17:12:00+00:00",
       "summary": "Federal authorities are investigating letters with \"suspicious substances\" that have been mailed to congressional and election offices nationwide."
      },
      {
-      "id": "74146617",
-      "title": "Mass. man to face murder charge in mother’s shooting death after arrest in Vermont",
-      "link": "https://www.mynbc5.com/article/ryan-hanafin-arraignment-woburn-court/74146617",
-      "ts": "2026-10-15T15:34:00+00:00",
-      "summary": "Reading man faces murder charges after his mother was found shot dead in their home, prosecutors said."
-     },
-     {
-      "id": "74145381",
-      "title": "US considering using 'mother of all bombs' against Iran, CNN sources say",
-      "link": "https://www.mynbc5.com/article/trump-moab-mother-of-all-bombs-iran-strike/74145381",
-      "ts": "2026-10-15T14:57:00+00:00",
-      "summary": "The U.S. military has developed new strike plans that include potentially using the so-called \"mother of all bombs\" to target Iranian energy infrastructure, CNN reports"
-     },
-     {
-      "id": "74145424",
-      "title": "Pet Connection: All about cats",
-      "link": "https://www.mynbc5.com/article/pet-connection-oct-15-2026/74145424",
-      "ts": "2026-10-15T14:45:00+00:00",
-      "summary": "It's a feline frenzy on Pet Connection as we feature some truly adorable cats who need new homes!"
-     },
-     {
-      "id": "74145063",
-      "title": "World’s oldest shipwreck found off coast of Turkey",
-      "link": "https://www.mynbc5.com/article/worlds-oldest-shipwreck-coast-of-turkey/74145063",
-      "ts": "2026-10-15T14:34:00+00:00",
-      "summary": "Archaeologists working off the coast of Turkey have found a shipwreck dating back around 4,700 years, making it the oldest in the world."
-     },
-     {
-      "id": "74145655",
-      "title": "Trump says Pentagon will not livestream firing squad execution of Fort Hood shooter",
-      "link": "https://www.mynbc5.com/article/trump-pentagon-no-livestream-nidal-malik-hasan-firing-squad-execution/74145655",
-      "ts": "2026-10-15T14:26:00+00:00",
-      "summary": "President Trump says the Pentagon will not be livestreaming the firing squad execution of Fort Hood shooter Nidal Malik Hasan."
-     },
-     {
-      "id": "74136892",
-      "title": "Vermont State Senate candidate criticized for comments she says are misconstrued",
-      "link": "https://www.mynbc5.com/article/vermont-state-senate-candidate-criticized-out-of-context/74136892",
-      "ts": "2026-10-15T13:57:00+00:00",
-      "summary": "Irene Wrenner says her comments about the job were not meant to disparage her opponent, Ashley Bartley."
-     },
-     {
-      "id": "74138746",
-      "title": "New sober home in Burlington aims at helping men reestablish their lives, find jobs",
-      "link": "https://www.mynbc5.com/article/sober-living-home-burlington-men-fresh-start/74138746",
-      "ts": "2026-10-15T13:24:00+00:00",
-      "summary": "\"Fresh Start Recovery,\" a sober living home for men, will be opening up in Burlington in a few weeks."
-     },
-     {
-      "id": "74144822",
-      "title": "Rep. Ilhan Omar's phone seized and relatives subpoenaed in criminal probe, AP source says",
-      "link": "https://www.mynbc5.com/article/ilhan-omar-federal-probe-phone-seizure-subpoenas/74144822",
-      "ts": "2026-10-15T13:22:00+00:00",
-      "summary": "Federal authorities investigating Rep. Ilhan Omar seized the lawmaker’s phone and issued subpoenas, including to some of her relatives, according to AP sources."
-     },
-     {
-      "id": "74144693",
-      "title": "Vatican says Pope Leo XIV resumes work from the hospital as doctors say he's 'recovered well'",
-      "link": "https://www.mynbc5.com/article/pope-leo-xiv-resumes-work-lung-surgery/74144693",
-      "ts": "2026-10-15T13:15:00+00:00",
-      "summary": "Pope Leo XIV’s lung has recovered well from surgery to remove a cancerous nodule , and he resumed working from the hospital on Thursday, his doctors and the Vatican reported."
-     },
-     {
-      "id": "74144298",
-      "title": "New report: Cause of death of famed bald eagle, Jackie, revealed",
-      "link": "https://www.mynbc5.com/article/beloved-bald-eagle-jackie-cause-death-revealed/74144298",
-      "ts": "2026-10-15T12:58:00+00:00",
-      "summary": "Officials have revealed the cause of death of Jackie, the beloved California bald eagle whose life was watched by millions around the world via video livestreams."
-     },
-     {
-      "id": "74144588",
-      "title": "Holdout juror breaks silence on Lindsay Clancy mistrial in new TV interview",
-      "link": "https://www.mynbc5.com/article/holdout-juror-lindsay-clancy-interview/74144588",
-      "ts": "2026-10-15T12:47:00+00:00",
-      "summary": "The lone holdout juror in Lindsay Clancy’s murder trial sat down with Fox News in his first televised interview."
-     },
-     {
-      "id": "74143393",
-      "title": "'This one releases in December': Actress Hilary Swank is expecting her third child at 52",
-      "link": "https://www.mynbc5.com/article/actress-hilary-swank-is-expecting-her-third-child/74143393",
-      "ts": "2026-10-15T11:55:00+00:00",
-      "summary": "Actress Hilary Swank took to social media to announce that she is expecting her third baby."
+      "id": "74050333",
+      "title": "Social Security benefits are rising in 2027. Calculate how much more you’ll get",
+      "link": "https://www.mynbc5.com/article/social-security-cola-2027-benefits/74050333",
+      "ts": "2026-10-15T16:57:00+00:00",
+      "summary": "The new COLA for 2027 could add roughly $75 a month to the average retired worker's benefit."
      }
     ]
    },
