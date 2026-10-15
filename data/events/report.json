@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-14T19:26:16-04:00",
+ "generated": "2026-10-15T10:24:08-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
-   "count": 11,
-   "seconds": 6.6
+   "count": 10,
+   "seconds": 6.0
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 83,
-   "seconds": 2.9
+   "count": 81,
+   "seconds": 4.6
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 89,
-   "seconds": 2.9
+   "count": 88,
+   "seconds": 2.8
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 249,
-   "seconds": 3.6
+   "count": 242,
+   "seconds": 3.1
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 73,
-   "seconds": 1.9
+   "count": 69,
+   "seconds": 1.8
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-14&end_date=2026-12-13&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-15&end_date=2026-12-14&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,16 +44,16 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 3,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 213,
-   "seconds": 74.3
+   "count": 210,
+   "seconds": 77.1
   },
   "flynn": {
    "label": "The Flynn",
-   "count": 20,
+   "count": 18,
    "seconds": 0.4
   },
   "greenfc": {
@@ -63,8 +63,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 651,
-   "seconds": 39.0
+   "count": 645,
+   "seconds": 35.3
   },
   "higherground": {
    "label": "Higher Ground",
@@ -74,49 +74,50 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 25.4
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 384,
-   "seconds": 75.4
+   "count": 376,
+   "seconds": 67.7
   },
   "meetup": {
    "label": "Meetup",
-   "count": 48,
-   "seconds": 105.5
+   "count": 49,
+   "seconds": 100.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
    "count": 22,
-   "seconds": 1.4
+   "seconds": 0.4
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
-   "count": 66,
-   "seconds": 16.7
+   "count": 69,
+   "seconds": 19.2
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 6
+   "staleDays": 7
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 96,
-   "seconds": 2.2
+   "count": 92,
+   "seconds": 2.3
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
    "count": 20,
-   "seconds": 37.5
+   "seconds": 39.8
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2457,
-   "seconds": 3.2
+   "count": 2482,
+   "seconds": 87.3
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -125,87 +126,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 516,
-   "seconds": 27.0
+   "count": 508,
+   "seconds": 39.2
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 317,
+   "count": 316,
    "seconds": 0.3
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 59,
-   "seconds": 82.7
+   "count": 57,
+   "seconds": 77.4
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 51,
-   "seconds": 0.6
+   "count": 50,
+   "seconds": 0.2
   }
  },
- "gathered": 5429,
- "afterDedup": 2619,
- "duplicatesMerged": 2810,
- "final": 2707,
- "firecrawlCalls": 1,
+ "gathered": 5407,
+ "afterDedup": 2578,
+ "duplicatesMerged": 2829,
+ "final": 2680,
+ "firecrawlCalls": 17,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-18"
-  },
-  {
-   "kept": {
-    "title": "'Very Eric Carle' Exhibit",
-    "source": "sevendays"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-18"
-  },
-  {
-   "kept": {
-    "title": "Racecourse",
-    "source": "helloburlington"
-   },
-   "merged_sources": [
-    "champlainvalley",
-    "helloburlington"
-   ],
-   "date": "2026-11-18"
-  },
-  {
-   "kept": {
-    "title": "GROW Preschool Yoga",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "sevendays"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
-    "title": "Italian Conversation Group",
-    "source": "fletcherfree"
-   },
-   "merged_sources": [
-    "fletcherfree",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-19"
-  },
   {
    "kept": {
     "title": "Minecraft Meet-up",
@@ -531,7 +476,7 @@
   },
   {
    "kept": {
-    "title": "The Vermont Choral Union: The American Mercury",
+    "title": "Burlington Choral Society presents Voices of Change: Songs that Shaped History",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -542,7 +487,7 @@
   },
   {
    "kept": {
-    "title": "Burlington Choral Society presents Voices of Change: Songs that Shaped History",
+    "title": "The Vermont Choral Union: The American Mercury",
     "source": "sevendays"
    },
    "merged_sources": [
@@ -2328,6 +2273,18 @@
   },
   {
    "kept": {
+    "title": "The Walrus",
+    "source": "uvm"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "uvm",
+    "uvmbored"
+   ],
+   "date": "2026-12-12"
+  },
+  {
+   "kept": {
     "title": "Lily Seabird w/ Eliza Niemi",
     "source": "breweries"
    },
@@ -2392,60 +2349,61 @@
     "sevendays"
    ],
    "date": "2026-12-13"
+  },
+  {
+   "kept": {
+    "title": "Stories & Crafts: Animal Antics!",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-12-14"
+  },
+  {
+   "kept": {
+    "title": "Industry Day",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-14"
+  },
+  {
+   "kept": {
+    "title": "Collage Collective",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-14"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-14"
   }
  ],
  "changes": [
   {
-   "id": "cb8b26b57528",
-   "title": "Vermont Comedy Club Show: Good Clean Fun",
+   "id": "1385508c6618",
+   "title": "Diversity and Wellbeing Committee Town Hall",
    "date": "2026-10-17",
    "change": "time",
-   "was": "2026-10-17T17:00:00-04:00",
-   "now": "2026-10-17T16:30:00-04:00"
-  },
-  {
-   "id": "e872dba934d8",
-   "title": "Kids' Puzzle Swap",
-   "date": "2026-11-18",
-   "change": "time",
-   "was": "2026-11-18T14:00:00-05:00",
-   "now": "2026-11-18T14:30:00-05:00"
-  },
-  {
-   "id": "4a87fba3cb71",
-   "title": "Thanksgiving",
-   "date": "2026-11-27",
-   "change": "time",
-   "was": "2026-11-27",
-   "now": "2026-11-27T08:00:00-05:00"
-  },
-  {
-   "id": "aa69dc3ab876",
-   "title": "Public Skate",
-   "date": "2026-10-14",
-   "change": "missing",
-   "lastSeen": "2026-10-13T19:52:34-04:00"
-  },
-  {
-   "id": "70b32214cc86",
-   "title": "Stick & Puck",
-   "date": "2026-10-14",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "2f26d6e536d0",
-   "title": "Pick-up Basketball",
-   "date": "2026-10-14",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "2049d9258f34",
-   "title": "5K Run @ 1st Republic",
-   "date": "2026-10-14",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "was": "2026-10-17T17:30:00-04:00",
+   "now": "2026-10-17T17:00:00-04:00"
   },
   {
    "id": "29ac658478fd",
@@ -2455,32 +2413,10 @@
    "lastSeen": "2026-10-13T19:52:34-04:00"
   },
   {
-   "id": "0386cfac01a6",
-   "title": "Lincoln Sprague",
-   "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "5721d64da10e",
-   "title": "George Murtie",
-   "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
    "id": "98291ba5d090",
    "title": "The Band Memo",
    "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
-  },
-  {
-   "id": "d001cdfc842b",
-   "title": "Two Sev, JP Black, RPMZ, Chaston",
-   "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
+   "change": "dropped"
   },
   {
    "id": "ab87e8e75c1b",
@@ -2490,20 +2426,6 @@
    "lastSeen": "2026-10-13T19:52:34-04:00"
   },
   {
-   "id": "49f8ad42352c",
-   "title": "Will & Evan",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "ae70857bbe39",
-   "title": "Vachsean",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
    "id": "b0cbcb4df0e5",
    "title": "Mystical Market at Oakledge Park",
    "date": "2026-10-16",
@@ -2511,57 +2433,8 @@
    "lastSeen": "2026-10-14T10:38:50-04:00"
   },
   {
-   "id": "4e5ed598a66b",
-   "title": "AliT",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "b799ba2397a0",
-   "title": "Smokey Newfield Project",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "36642709e155",
-   "title": "Copilots",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "f5288dc0bace",
-   "title": "Blood Eclipse, Applesnozz, Jesse Chain Saw, Revolt, Joe Pro, Barnyardie Dubs",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
    "id": "5ff2f412d0dd",
    "title": "Movie Night: You Can See Everything (the Elizabeth Holmes Doc)",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "739d92b4d553",
-   "title": "Moonbird",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "ed4b222a9d9f",
-   "title": "Bad Horsey",
-   "date": "2026-10-16",
-   "change": "missing",
-   "lastSeen": "2026-10-14T10:38:50-04:00"
-  },
-  {
-   "id": "d564d1d0b100",
-   "title": "DJ Viu",
    "date": "2026-10-16",
    "change": "missing",
    "lastSeen": "2026-10-14T10:38:50-04:00"
@@ -2598,8 +2471,7 @@
    "id": "6c8b828a27dd",
    "title": "Judge",
    "date": "2026-10-17",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "4687897df119",
@@ -2609,32 +2481,49 @@
    "lastSeen": "2026-10-13T13:06:34-04:00"
   },
   {
+   "id": "ba5cae39d966",
+   "title": "Song Together: A Musical Playgroup",
+   "date": "2026-10-18",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "375c196d3f76",
+   "title": "Public Skate",
+   "date": "2026-10-19",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
    "id": "9ed6836cb36c",
    "title": "Rehash w/ The Flooks",
    "date": "2026-10-20",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "3e2453221ced",
    "title": "All Them Witches",
    "date": "2026-10-20",
+   "change": "dropped"
+  },
+  {
+   "id": "3ded9dffe32c",
+   "title": "Public Skate",
+   "date": "2026-10-21",
    "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "7dfbd268270b",
    "title": "Meg Mott - Strange Bedfellows: How Religious Liberties Have Aligned with Nondiscrimination Policies and Can Again",
    "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "9e430e325837",
    "title": "Ryan La Sala and Don Martin | The Dead of Summer and Verity Vox and the Curse of Foxfire",
    "date": "2026-10-21",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "2b254f834364",
@@ -2642,6 +2531,20 @@
    "date": "2026-10-22",
    "change": "missing",
    "lastSeen": "2026-10-13T19:52:34-04:00"
+  },
+  {
+   "id": "8b04c251576a",
+   "title": "Radio Bean Presents: Dead Gowns w/ Helenor @ The Monkey House",
+   "date": "2026-10-22",
+   "change": "source-down",
+   "lastSeen": "2026-10-07T20:24:11-04:00"
+  },
+  {
+   "id": "8449b1fea425",
+   "title": "Public Skate",
+   "date": "2026-10-23",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "2c7a54f1c0d4",
@@ -2682,22 +2585,19 @@
    "id": "ab9bc126096e",
    "title": "22nd Annual Ooky Spooky 5k to Benefit COTS",
    "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "d50fde81c8b0",
    "title": "Ooky Spooky 5k Race to Benefit COTS",
    "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "9d8c7516335f",
    "title": "Sea Turtle One-Day Woodcarving Workshop",
    "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "b50b64299219",
@@ -2710,8 +2610,7 @@
    "id": "f1ce9a611551",
    "title": "Fire Safety Story Time With Michelle",
    "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "cb1c2ff30140",
@@ -2719,6 +2618,20 @@
    "date": "2026-10-24",
    "change": "missing",
    "lastSeen": "2026-10-13T19:52:34-04:00"
+  },
+  {
+   "id": "e608792041f0",
+   "title": "Drag Story Hour | Phoenix Books Burlington",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "7057731aa8a3",
+   "title": "Art Night Benefit for the Birds of Vermont Museum",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "a5cbbe59de66",
@@ -2735,6 +2648,13 @@
    "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
+   "id": "c4152cb325c3",
+   "title": "Radio Bean Presents: Lamplight, The Clearwater Swimmers, & Fowl @ The Monkey House",
+   "date": "2026-10-24",
+   "change": "source-down",
+   "lastSeen": "2026-10-07T20:24:11-04:00"
+  },
+  {
    "id": "57c0e56f579d",
    "title": "Lamplight & Fowl",
    "date": "2026-10-24",
@@ -2742,11 +2662,39 @@
    "lastSeen": "2026-10-14T10:38:50-04:00"
   },
   {
+   "id": "b8da721be59d",
+   "title": "Natural History Open House",
+   "date": "2026-10-24",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "b51b84b55ab6",
+   "title": "Song Together: A Musical Playgroup",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
    "id": "1ec7e0629aa8",
    "title": "Halloween Roll & Stroll",
    "date": "2026-10-25",
    "change": "missing",
    "lastSeen": "2026-10-13T13:06:34-04:00"
+  },
+  {
+   "id": "5ac546f76cc1",
+   "title": "Public Skate",
+   "date": "2026-10-25",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "becf6a3045b1",
+   "title": "Public Skate",
+   "date": "2026-10-26",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "6bf03d16161d",
@@ -2763,6 +2711,13 @@
    "lastSeen": "2026-10-13T19:52:34-04:00"
   },
   {
+   "id": "401a55755e51",
+   "title": "Board Games for Ages 18+",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
    "id": "a8e0b185f666",
    "title": "Evening Book Group",
    "date": "2026-10-27",
@@ -2770,11 +2725,24 @@
    "lastSeen": "2026-10-13T19:52:34-04:00"
   },
   {
+   "id": "34bb6e232047",
+   "title": "Gordon MacFarland in conversation with Dr. Karen Westervelt | Staying With It",
+   "date": "2026-10-27",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
    "id": "c1a10ef4c115",
    "title": "Dance, Paint, Write!",
    "date": "2026-10-28",
+   "change": "dropped"
+  },
+  {
+   "id": "d3c969f93541",
+   "title": "Public Skate",
+   "date": "2026-10-28",
    "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "bd8d86cc5e44",
@@ -2801,8 +2769,7 @@
    "id": "708eefff5b22",
    "title": "Thursday Trivia at Burlington Beer Co.",
    "date": "2026-10-29",
-   "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "change": "dropped"
   },
   {
    "id": "361f5b4d9984",
@@ -2826,11 +2793,39 @@
    "lastSeen": "2026-10-14T10:38:50-04:00"
   },
   {
-   "id": "75e518017f41",
-   "title": "Green Mountain Woodcarvers October Carve-In & Annual Meeting",
+   "id": "177e0563aad6",
+   "title": "Green Mountain Woodcarvers Carve-In",
    "date": "2026-10-31",
    "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "88db379efc65",
+   "title": "Radio Bean Presents: SHEBAD @ Foam",
+   "date": "2026-10-31",
+   "change": "source-down",
+   "lastSeen": "2026-10-07T20:24:11-04:00"
+  },
+  {
+   "id": "c30a4906506f",
+   "title": "Song Together: A Musical Playgroup",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "f7a05ba6e550",
+   "title": "Public Skate",
+   "date": "2026-11-01",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "0a26f10a3701",
+   "title": "Public Skate",
+   "date": "2026-11-02",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "b18957e04933",
@@ -2843,8 +2838,28 @@
    "id": "0f2988ea0ba7",
    "title": "Dance, Paint, Write!",
    "date": "2026-11-04",
+   "change": "dropped"
+  },
+  {
+   "id": "661faf74c1e4",
+   "title": "Public Skate",
+   "date": "2026-11-04",
    "change": "missing",
-   "lastSeen": "2026-10-11T19:58:39-04:00"
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "aa2da2a62757",
+   "title": "Darryl Rahn",
+   "date": "2026-11-04",
+   "change": "source-down",
+   "lastSeen": "2026-10-07T20:24:11-04:00"
+  },
+  {
+   "id": "cc998c82d744",
+   "title": "No Thursday Trivia: Taproom Closed",
+   "date": "2026-11-05",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "b5b9f78a478d",
@@ -2852,6 +2867,34 @@
    "date": "2026-11-05",
    "change": "missing",
    "lastSeen": "2026-10-13T13:06:34-04:00"
+  },
+  {
+   "id": "c5c93bd8ff50",
+   "title": "The Lowest Pair",
+   "date": "2026-11-05",
+   "change": "source-down",
+   "lastSeen": "2026-10-07T20:24:11-04:00"
+  },
+  {
+   "id": "b3c708863ec4",
+   "title": "Song Together: A Musical Playgroup",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "22b8d9a6662a",
+   "title": "Public Skate",
+   "date": "2026-11-08",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "bb8287d19ca5",
+   "title": "Public Skate",
+   "date": "2026-11-09",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "f01377f7c5ea",
@@ -2868,11 +2911,25 @@
    "lastSeen": "2026-10-13T19:52:34-04:00"
   },
   {
+   "id": "387245928682",
+   "title": "Public Skate",
+   "date": "2026-11-10",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
    "id": "e6a003686b7d",
    "title": "Current Events",
    "date": "2026-11-10",
    "change": "missing",
    "lastSeen": "2026-10-14T10:38:50-04:00"
+  },
+  {
+   "id": "7ea7e41af17a",
+   "title": "Public Skate",
+   "date": "2026-11-11",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "779b320f5d9a",
@@ -2903,11 +2960,32 @@
    "lastSeen": "2026-09-30T12:03:45-04:00"
   },
   {
+   "id": "7da8b807f81f",
+   "title": "Song Together: A Musical Playgroup",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "b0ed80c97d2a",
+   "title": "Public Skate",
+   "date": "2026-11-15",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
    "id": "8084a008f1bc",
    "title": "Sam Shackleton",
    "date": "2026-11-15",
    "change": "missing",
    "lastSeen": "2026-10-12T15:18:29-04:00"
+  },
+  {
+   "id": "bd554bc7082a",
+   "title": "Public Skate",
+   "date": "2026-11-16",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "aba465097f1f",
@@ -2917,11 +2995,39 @@
    "lastSeen": "2026-10-14T10:38:50-04:00"
   },
   {
+   "id": "f5b1d775b170",
+   "title": "Public Skate",
+   "date": "2026-11-18",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
    "id": "3abf9a87b71c",
    "title": "Puzzle Swap",
    "date": "2026-11-18",
    "change": "missing",
    "lastSeen": "2026-10-14T10:38:50-04:00"
+  },
+  {
+   "id": "ffe3843432b0",
+   "title": "Song Together: A Musical Playgroup",
+   "date": "2026-11-22",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "daa4bcfeaee5",
+   "title": "Public Skate",
+   "date": "2026-11-22",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "9c66969ed20a",
+   "title": "Public Skate",
+   "date": "2026-11-23",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "1275c2b45d1c",
@@ -2931,11 +3037,46 @@
    "lastSeen": "2026-10-14T10:38:50-04:00"
   },
   {
+   "id": "13caf4cc22fb",
+   "title": "Public Skate",
+   "date": "2026-11-25",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "cabef42d4247",
+   "title": "Public Skate",
+   "date": "2026-11-27",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
    "id": "57eda5c0288b",
    "title": "House of Sparkle",
    "date": "2026-11-27",
    "change": "source-down",
    "lastSeen": "2026-09-30T12:03:45-04:00"
+  },
+  {
+   "id": "e0df8517a71d",
+   "title": "Song Together: A Musical Playgroup",
+   "date": "2026-11-29",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "6c5bd9ad2a87",
+   "title": "Public Skate",
+   "date": "2026-11-29",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "f44b8fd35abe",
+   "title": "Public Skate",
+   "date": "2026-11-30",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "a44c61af6145",
@@ -2950,6 +3091,13 @@
    "date": "2026-12-01",
    "change": "missing",
    "lastSeen": "2026-10-13T19:52:34-04:00"
+  },
+  {
+   "id": "23c766411ac2",
+   "title": "Public Skate",
+   "date": "2026-12-02",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "899a81223e17",
@@ -2973,11 +3121,39 @@
    "lastSeen": "2026-10-12T15:18:29-04:00"
   },
   {
+   "id": "2cab02a24f00",
+   "title": "Song Together: A Musical Playgroup",
+   "date": "2026-12-06",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "b76ed9662bc1",
+   "title": "Public Skate",
+   "date": "2026-12-06",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
    "id": "376d5473cebd",
    "title": "A Masked Murder",
    "date": "2026-12-06",
    "change": "missing",
    "lastSeen": "2026-10-12T22:14:11-04:00"
+  },
+  {
+   "id": "ef8089c63613",
+   "title": "Public Skate",
+   "date": "2026-12-07",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "70aa8d449e66",
+   "title": "Public Skate",
+   "date": "2026-12-09",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
    "id": "0c686cef0792",
@@ -2999,6 +3175,20 @@
    "date": "2026-12-11",
    "change": "missing",
    "lastSeen": "2026-10-12T22:14:11-04:00"
+  },
+  {
+   "id": "2d9dc6aa8476",
+   "title": "Song Together: A Musical Playgroup",
+   "date": "2026-12-13",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "0033ee661172",
+   "title": "Public Skate",
+   "date": "2026-12-13",
+   "change": "missing",
+   "lastSeen": "2026-10-14T19:26:16-04:00"
   }
  ]
 }
