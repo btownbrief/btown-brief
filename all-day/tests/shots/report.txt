@@ -105,7 +105,7 @@
   ok   390 light live › art: at most two subnav rows
   ok   390 light live › onair: its panel is the one showing
   ok   390 light live › onair: no error box
-  ok   390 light live › onair: live, it states its promise
+  ok   390 light live › onair: it draws its screen
   ok   390 light live › onair: nothing fixed or sticky inside the tab
   ok   390 light live › onair: uppercase only in the caps roles
   ok   390 light live › onair: no monospace
@@ -288,7 +288,7 @@
   ok   390 dark live › art: at most two subnav rows
   ok   390 dark live › onair: its panel is the one showing
   ok   390 dark live › onair: no error box
-  ok   390 dark live › onair: live, it states its promise
+  ok   390 dark live › onair: it draws its screen
   ok   390 dark live › onair: nothing fixed or sticky inside the tab
   ok   390 dark live › onair: uppercase only in the caps roles
   ok   390 dark live › onair: no monospace
@@ -473,7 +473,7 @@
   ok   390 light reduced-motion live › art: at most two subnav rows
   ok   390 light reduced-motion live › onair: its panel is the one showing
   ok   390 light reduced-motion live › onair: no error box
-  ok   390 light reduced-motion live › onair: live, it states its promise
+  ok   390 light reduced-motion live › onair: it draws its screen
   ok   390 light reduced-motion live › onair: nothing fixed or sticky inside the tab
   ok   390 light reduced-motion live › onair: uppercase only in the caps roles
   ok   390 light reduced-motion live › onair: no monospace
@@ -656,7 +656,7 @@
   ok   1280 light live › art: at most two subnav rows
   ok   1280 light live › onair: its panel is the one showing
   ok   1280 light live › onair: no error box
-  ok   1280 light live › onair: live, it states its promise
+  ok   1280 light live › onair: it draws its screen
   ok   1280 light live › onair: nothing fixed or sticky inside the tab
   ok   1280 light live › onair: uppercase only in the caps roles
   ok   1280 light live › onair: no monospace
@@ -837,7 +837,7 @@
   ok   1280 dark reduced-motion live › art: at most two subnav rows
   ok   1280 dark reduced-motion live › onair: its panel is the one showing
   ok   1280 dark reduced-motion live › onair: no error box
-  ok   1280 dark reduced-motion live › onair: live, it states its promise
+  ok   1280 dark reduced-motion live › onair: it draws its screen
   ok   1280 dark reduced-motion live › onair: nothing fixed or sticky inside the tab
   ok   1280 dark reduced-motion live › onair: uppercase only in the caps roles
   ok   1280 dark reduced-motion live › onair: no monospace
@@ -964,8 +964,8 @@
   ok   deep links, demo › #vintage/sp2: no console errors
   ok   deep links, demo › #art/aw6 lands on its card and flashes
   ok   deep links, demo › #art/aw6: no console errors
-  ok   deep links, demo › #onair/tv3 lands on its card and flashes
-  ok   deep links, demo › #onair/tv3: no console errors
+  ok   deep links, demo › #onair/yt:demo-tv-003 lands on its card and flashes
+  ok   deep links, demo › #onair/yt:demo-tv-003: no console errors
   ok   deep links, demo › #whatnow/missions opens the mode
   ok   deep links, demo › #onair/everything flips the shared switch
   ok   deep links, demo › an unknown key says the card has moved on
@@ -1029,6 +1029,45 @@
   ok   the Wire, Unfiltered › hold to peek works on the raw wire
   ok   the Wire, Unfiltered › ‹ Today’s paper comes back
   ok   the Wire, Unfiltered › no console errors
+  ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
+  ok   On Air, demo › the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights
+  ok   On Air, demo › the sections run in that order
+  ok   On Air, demo › a chip scrolls to its section
+  ok   On Air, demo › Local: the Brief’s own show is first in Podcasts
+  ok   On Air, demo › Local: every local show, no national ones
+  ok   On Air, demo › Local: Btown TV shows only the local picks
+  ok   On Air, demo › each pick carries its reason
+  ok   On Air, demo › Everything adds exactly three wider picks (5 + 3)
+  ok   On Air, demo › and the local picks still lead
+  ok   On Air, demo › Everything adds exactly two national podcasts
+  ok   On Air, demo › Everything: the Brief’s own show is still first
+  ok   On Air, demo › the TV head says local and beyond
+  ok   On Air, demo › a show opens in place to its newest episodes (3)
+  ok   On Air, demo › and says it is open
+  ok   On Air, demo › a past night opens its videos and its TV playlist
+  ok   On Air, demo › demo: “more like this” lights
+  ok   On Air, demo › demo: a reaction never reaches localStorage
+  ok   On Air, demo › demo: no Supabase call
+  ok   On Air, demo › no console errors
+  ok   On Air, live › nothing autoplays
+  ok   On Air, live › today’s clip: the card says today and its length
+  ok   On Air, live › live: the Brief’s own show is first in Podcasts
+  ok   On Air, live › live: tonight’s local picks, the pick and the Burlington & Vermont shelf
+  ok   On Air, live › “Read it instead” shows the script the voice read
+  ok   On Air, live › play loads today’s MP3 from the wire-audio branch into the shell’s player
+  ok   On Air, live › the player survives a tab switch
+  ok   On Air, live › a reaction says what it teaches
+  ok   On Air, live › it is written to btown-tv-reacts, the key tv.html used
+  ok   On Air, live › and sent to tv_react, so the editor sees it
+  ok   On Air, live › a reaction persists across a reload
+  ok   On Air, live › “not for me” gives its place to the editor’s bench
+  ok   On Air, live › and the newcomer says so
+  ok   On Air, live › no console errors
+  ok   On Air, the audio card › no clip: no audio card, no section, no chip
+  ok   On Air, the audio card › none: no console errors
+  ok   On Air, the audio card › no clip today: the latest one, with its date (Thursday, October 15)
+  ok   On Air, the audio card › and it says when today’s lands
+  ok   On Air, the audio card › yesterday: no console errors
   ok   interactions, demo › the star saves and lights the mast
   ok   interactions, demo › the Saved sheet lists it
   ok   interactions, demo › Escape closes the sheet
@@ -1055,4 +1094,4 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 6ms (budget 100)

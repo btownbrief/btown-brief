@@ -20,6 +20,10 @@ name: The Brief, out loud
 # Burlington makes the clip and the other finds it already up.
 
 on:
+  # TEMPORARY: one Opus-written sample script from this branch (a push here
+  # runs script-only); removed in the next commit
+  push:
+    branches: [claude/new-nine-onair-be75fa]
   schedule:
     - cron: '0 11 * * *'
     - cron: '0 12 * * *'
@@ -96,7 +100,7 @@ jobs:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          if [ "${{ inputs.script_only }}" = "true" ]; then
+          if [ "${{ inputs.script_only || github.event_name == 'push' }}" = "true" ]; then
             if [ -n "$ANTHROPIC_API_KEY" ]; then
               echo "voice=on" >> "$GITHUB_OUTPUT"
               echo "### The Brief, out loud · script only: Claude Opus 5.5 writes, nothing voiced" >> "$GITHUB_STEP_SUMMARY"
@@ -131,7 +135,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: >-
           python3 scripts/build_wire_audio.py --out-dir /tmp/wa/data/audio
-          ${{ inputs.force && '--force' || '' }} ${{ inputs.script_only && '--script-only' || '' }}
+          ${{ inputs.force && '--force' || '' }} ${{ (inputs.script_only || github.event_name == 'push') && '--script-only' || '' }}
 
       - name: Force-push the single-commit wire-audio branch
         # Also after a failed step: the cost ledger is worth keeping. Never
