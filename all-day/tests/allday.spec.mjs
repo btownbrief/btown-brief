@@ -20,7 +20,9 @@
 //
 // Network: nothing leaves the machine but Google Fonts. GoatCounter and the
 // Meta pixel are stubbed, Supabase is answered locally, pulse-top.json comes
-// from tests/fixtures, and third-party pictures get a 1px PNG.
+// from tests/fixtures, the Wire's wire-data files are built below in the
+// real contract and dated to the real clock, pulse.json is the repo's own
+// snapshot, and third-party pictures get a 1px PNG.
 
 import { createRequire } from 'node:module';
 import { spawn } from 'node:child_process';
@@ -109,6 +111,89 @@ async function staticChecks() {
   });
 }
 
+/* --------------------------------------------------------- the Wire's data */
+/* wire-today.json, wire/index.json and two frozen editions in the contract
+   curate_wire.py writes, dated to today in Burlington on the real clock so
+   "the dateline is today" means something whenever this runs. Today's river
+   is long on purpose (160 items, four updates), past the 120 the progressive
+   renderer has to get beyond. */
+const ET = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+function etParts(ms) { const o = {}; ET.formatToParts(new Date(ms)).forEach((p) => { o[p.type] = p.value; }); return o; }
+const etKey = (ms) => { const o = etParts(ms); return o.year + '-' + o.month + '-' + o.day; };
+const dayMinus = (key, n) => { const [y, m, d] = key.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d - n, 12)).toISOString().slice(0, 10); };
+const ETNAME = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric' });
+const nameOf = (key) => { const [y, m, d] = key.split('-').map(Number); return ETNAME.format(new Date(Date.UTC(y, m - 1, d, 12))); };
+const CHIPS = ['x', 'facebook', 'reddit', 'newsletters', 'video'];
+function wireDay(date, n, opts) {
+  const now = Date.now();
+  const o = etParts(now);
+  const sinceMidnight = (Number(o.hour) * 60 + Number(o.minute)) * 60000;
+  const isToday = date === etKey(now);
+  /* today: spread from just after midnight to a minute ago; earlier days: their own 6 am to 11 pm */
+  const top = isToday ? now - 60000 : now - sinceMidnight - (Date.parse(etKey(now)) - Date.parse(date)) + 23 * 3600000;
+  const bottom = isToday ? now - sinceMidnight + 60000 : top - 17 * 3600000;
+  const tag = date.replace(/-/g, '');
+  const items = [];
+  for (let i = 0; i < n; i++) {
+    let ch = i % 8 === 3 ? 'world' : i % 3 === 1 ? 'world' : 'local';
+    if (i % 23 === 5) ch = 'reddit';
+    if (i % 29 === 7) ch = 'newsletters';
+    if (i % 37 === 11) ch = 'video';
+    if (opts.inbox && i % 31 === 13) ch = 'x';
+    if (opts.inbox && i % 41 === 17) ch = 'facebook';
+    const local = ch !== 'world';
+    const src = ch === 'x' ? 'x:@wcax' : ch === 'facebook' ? 'facebook:old-north-end' : ch === 'reddit' ? 'r-burlington' : ch === 'video' ? 'vermont-public-video'
+      : ch === 'newsletters' ? 'love-burlington' : local ? ['seven-days', 'vtdigger', 'wcax', 'mynbc5'][i % 4] : ['ap', 'reuters', 'npr'][i % 3];
+    const name = { 'x:@wcax': 'WCAX', 'facebook:old-north-end': 'Old North End', 'r-burlington': 'r/burlington', 'vermont-public-video': 'Vermont Public',
+      'love-burlington': 'Love Burlington', 'seven-days': 'Seven Days', vtdigger: 'VTDigger', wcax: 'WCAX', mynbc5: 'NBC5', ap: 'AP', reuters: 'Reuters', npr: 'NPR' }[src];
+    const it = { id: tag + '-' + String(i).padStart(3, '0'), ch, local, src, name, title: (local ? 'Burlington story ' : 'National story ') + i + ' of ' + nameOf(date),
+      url: 'https://example.org/' + tag + '/' + i, posted_at: new Date(top - (top - bottom) * (i / n)).toISOString() };
+    if (ch === 'x') it.handle = '@wcax';
+    if (ch === 'reddit' || ch === 'facebook') it.comments = 12;
+    if (ch === 'video') { it.url = 'https://www.youtube.com/watch?v=dQw4w9WgXc' + (i % 10); it.media = { type: 'video', url: it.url }; }
+    if (i % 4 === 0) it.thumb = 'https://example.org/pic/' + tag + '-' + i + '.jpg';
+    items.push(it);
+  }
+  if (opts.brief) items.splice(9, 0, { id: tag + '-brief', ch: 'newsletters', local: true, src: 'btown-brief', name: 'Btown Brief', own: true,
+    title: nameOf(date) + ', the Brief', url: 'https://www.btownbrief.com/p/' + tag, posted_at: new Date(top - (top - bottom) * 0.06).toISOString() });
+  const labels = [['evening', 'Evening'], ['afternoon', 'Afternoon'], ['midday', 'Midday'], ['morning', 'Morning']];
+  const per = Math.ceil(items.length / 4);
+  const updates = labels.map(([key, label], u) => {
+    const list = items.slice(u * per, (u + 1) * per);
+    return { key, label, time: (u ? 11 - u * 3 : 9) + ':05 pm', updated: list[0] ? list[0].posted_at : null,
+      lead: list[0] ? { id: list[0].id, why: 'Why update ' + u + ' leads with this.' } : null, items: list };
+  }).filter((u) => u.items.length);
+  const ranked = items.filter((it) => !it.own && (it.ch === 'local' || it.ch === 'world'));
+  const picks = ranked.filter((it) => it.local).slice(0, 15).concat(ranked.filter((it) => !it.local).slice(0, 10))
+    .map((it, r) => ({ ...it, rank: r + 1, why: r === 2 ? '' : 'Reason ' + (r + 1) + ': why this one matters.' }));
+  const counts = {};
+  for (const scope of ['local', 'everything']) {
+    const pool = items.filter((it) => scope === 'everything' || it.local);
+    counts[scope] = { all: pool.length };
+    CHIPS.forEach((c) => { counts[scope][c] = pool.filter((it) => it.ch === c).length; });
+  }
+  const sources = {};
+  items.forEach((it) => { sources[it.src] = { name: it.name, ch: it.ch, site: 'https://example.org/site/' + it.src }; });
+  const paused = { paused: !opts.inbox, reason: opts.inbox ? null : 'the inbox reader is not live yet', updated_at: null };
+  const day = { v: 1, date, tz: 'America/New_York', final: !isToday, updated: updates[0].updated, checked: new Date(now).toISOString(), count: items.length,
+    counts, picks, updates, sources, status: { x: paused, facebook: { ...paused }, reddit: { paused: false, last_post: null } } };
+  if (opts.brief) day.brief = items.find((it) => it.own);
+  return day;
+}
+const wireCache = new Map();
+function wireFiles(opts = {}) {
+  const o = { inbox: !!opts.inbox, brief: opts.brief !== false };
+  const key = JSON.stringify(o) + etKey(Date.now());
+  if (!wireCache.has(key)) {
+    const today = etKey(Date.now());
+    const y1 = dayMinus(today, 1), y2 = dayMinus(today, 2);
+    const files = { 'wire-today.json': wireDay(today, 160, o), [y1 + '.json']: wireDay(y1, 40, { ...o, brief: true }), [y2 + '.json']: wireDay(y2, 40, { ...o, brief: false }) };
+    files['index.json'] = { v: 1, editions: [y1, y2].map((d) => ({ date: d, count: files[d + '.json'].count, picks: files[d + '.json'].picks.length })) };
+    wireCache.set(key, files);
+  }
+  return wireCache.get(key);
+}
+
 /* ------------------------------------------------------------- the page */
 async function newPage(browser, base, opts = {}) {
   const ctx = await browser.newContext({
@@ -126,6 +211,11 @@ async function newPage(browser, base, opts = {}) {
   const top = await readFile(path.join(HERE, 'fixtures/pulse-top.json'));
   await page.route(/gc\.zgo\.at|goatcounter\.com|facebook\.net|facebook\.com/, (r) => r.fulfill({ status: 200, body: '', contentType: 'text/javascript' }));
   await page.route(/raw\.githubusercontent\.com\/.*pulse-top/, (r) => r.fulfill({ status: 200, body: top, contentType: 'application/json' }));
+  const wire = wireFiles(opts.wire);
+  await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/wire-data\/data\/(?:wire\/)?([\w.-]+\.json)$/, (r) => {
+    const f = wire[r.request().url().match(/([\w.-]+\.json)$/)[1]];
+    return f ? r.fulfill({ status: 200, body: JSON.stringify(f), contentType: 'application/json' }) : r.fulfill({ status: 404, body: '' });
+  });
   await page.route(/supabase\.co/, (r) => {
     const u = r.request().url();
     supabase.push(r.request().method() + ' ' + u.replace(/^https:\/\/[^/]+/, ''));
@@ -288,35 +378,35 @@ async function deepLinks(browser, base) {
   });
 
   await group('deep links, live Wire', async () => {
-    /* a card from Everything, past the first sixty of Burlington's newest
-       day, opened by a reader on the default Local setting */
-    const pulse = JSON.parse(await readFile(path.join(REPO, 'data/pulse.json'), 'utf8'));
-    const local = new Set(pulse.sources.filter((s) => s.local === 1 || s.topic === 'local').map((s) => s.id));
-    const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });
-    const items = pulse.items.filter((it) => it.u && it.t && it.d).sort((a, b) => b.d - a.d);
-    const day = fmt.format(new Date(items[0].d * 1000));
-    const today = items.filter((it) => fmt.format(new Date(it.d * 1000)) === day);
-    const far = today.slice(70).find((it) => !local.has(it.s));
+    const files = wireFiles();
+    const today = files['wire-today.json'];
+    const items = today.updates.flatMap((u) => u.items);
+    const far = items.filter((it) => !it.local)[50];          /* national, past the first chunk, for a Local reader */
+    const y1 = files['index.json'].editions[0].date;
+    const old = files[y1 + '.json'].updates[1].items[3];
     const { ctx, page, errors } = await newPage(browser, base);
-    await page.goto(base + '/all-day/');
-    await page.waitForSelector('#subnav .dl b', { timeout: 15000 });
-    await page.waitForTimeout(300);
-    const keys = await page.$$eval('.panel:not([hidden]) .card.row', (rs) => rs.map((r) => r.dataset.k));
-    const todayET = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
-    check(await page.$eval('#subnav .dl b', (b) => b.textContent) === todayET, 'the dateline is today in America/New_York on the real clock (' + todayET + ')', await page.$eval('#subnav .dl b', (b) => b.textContent));
-    await page.screenshot({ path: path.join(SHOTS, 'live-wire-today.png') });
-    await page.click('#subnav .dateline .nav[aria-label="Earlier day"]');
-    await page.waitForTimeout(200);
-    check(/final/.test(await page.$eval('#subnav .dl .s', (b) => b.textContent)), 'the back arrow reaches yesterday, marked final', '');
-    await page.screenshot({ path: path.join(SHOTS, 'live-wire-yesterday.png') });
-    const rowsY = await page.$$eval('.panel:not([hidden]) .card.row', (rs) => rs.map((r) => r.dataset.k));
-    check(keys.length + rowsY.length >= 10, 'the live Wire draws rows from pulse.json', keys.length + rowsY.length);
-    if (check(!!far, 'the fixture day has a non-local card past row 70', today.length)) {
-      await page.goto(base + '/all-day/#wire/' + encodeURIComponent(far.u));
-      await page.reload();
-      check(await flashes(page, far.u), 'a shared non-local card past the first page lands and flashes for a Local reader', far.u);
-      check(await page.evaluate(() => JSON.parse(localStorage.getItem('allday-settings') || '{}').localOnly === false), 'and the switch moved to Everything to show it', '');
-    }
+    await page.goto(base + '/all-day/#wire/' + far.id);
+    check(await flashes(page, far.id), 'a shared national card far down today lands and flashes for a Local reader', far.id);
+    check(await page.evaluate(() => JSON.parse(localStorage.getItem('allday-settings') || '{}').localOnly === false), 'and the switch moved to Everything to show it', '');
+    await page.goto(base + '/all-day/#wire/' + old.id);
+    await page.reload();
+    check(await flashes(page, old.id), 'a card from yesterday’s edition lands and flashes', old.id);
+    await page.goto(base + '/all-day/#wire/' + y1);
+    await page.reload();
+    await page.waitForFunction((n) => document.querySelector('#subnav .dl b')?.textContent === n, nameOf(y1), { timeout: 6000 }).catch(() => {});
+    check(await page.$eval('#subnav .dl b', (b) => b.textContent) === nameOf(y1), '#wire/' + y1 + ' opens that edition', await page.$eval('#subnav .dl b', (b) => b.textContent));
+    check(/What mattered /.test(await page.$eval('.panel:not([hidden])', (p) => p.innerText)), 'an earlier day reads “What mattered …”', '');
+    /* a pre-rebuild link (a URL key) still lands, on the raw wire */
+    const pulse = JSON.parse(await readFile(path.join(REPO, 'data/pulse.json'), 'utf8'));
+    const ids = new Set(pulse.sources.map((x) => x.id));
+    const raw = pulse.items.filter((it) => it.u && it.t && ids.has(it.s)).sort((a, b) => b.d - a.d)[90];
+    await page.goto(base + '/all-day/#wire/' + encodeURIComponent(raw.u));
+    await page.reload();
+    check(await flashes(page, raw.u), 'an old URL link opens Unfiltered and flashes the headline', raw.u);
+    await page.goto(base + '/all-day/#wire/nope-not-a-card');
+    await page.reload();
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 8000 }).catch(() => {});
+    check(/moved on/.test(await page.$eval('#toast', (t) => t.textContent)), 'live: an unknown key says the card has moved on', '');
     await page.goto(base + '/all-day/#food/');
     await settle(page);
     check(await page.$eval('#tab-food', (b) => b.getAttribute('aria-selected')) === 'true', '#food/ lands on Food', '');
@@ -341,6 +431,223 @@ async function deepLinks(browser, base) {
     const after = await page.evaluate(() => ({ auth: localStorage.getItem('allday-auth'), settings: localStorage.getItem('allday-settings'), visit: localStorage.getItem('allday-visit') }));
     check(JSON.stringify(after) === JSON.stringify(real), 'demo leaves the real session, settings and visit untouched', JSON.stringify(after));
     check(!supabase.length, 'demo makes no Supabase call', supabase.join(', '));
+    await ctx.close();
+  });
+}
+
+/* -------------------------------------------------------------- the Wire */
+const panelText = (page) => page.$eval('.panel:not([hidden])', (p) => p.innerText);
+/* the cards above the first earlier-day head: what today's page drew */
+const todayKeys = (page) => page.evaluate(() => {
+  const p = document.querySelector('.panel:not([hidden]) .feed');
+  const out = [];
+  for (const n of p.querySelectorAll('[data-k], [data-day]')) { if (n.dataset.day) break; out.push(n.dataset.k); }
+  return out;
+});
+/* scroll until today is fully drawn (the first earlier-day head is on the page) */
+async function drawToday(page) {
+  for (let i = 0; i < 30 && !(await page.$('.panel:not([hidden]) [data-day]')); i++) {
+    await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); p.scrollTop = p.scrollHeight; });
+    await page.waitForTimeout(120);
+  }
+}
+
+/* back to the top, where the mast (and its chips) is always showing */
+async function toTop(page) {
+  await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); p.scrollTop = 0; });
+  await page.waitForFunction(() => !document.body.classList.contains('chrome-away'));
+  await page.waitForTimeout(250);
+}
+async function chipTo(page, k) {
+  await toTop(page);
+  await page.click('#subnav .chip[data-chip="' + k + '"]');
+  await page.waitForTimeout(80);
+}
+
+async function theWire(browser, base) {
+  await group('the Wire, live', async () => {
+    const files = wireFiles();
+    const today = files['wire-today.json'];
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('#subnav .dl b', { timeout: 15000 });
+    await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    const todayET = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
+    check(await page.$eval('#subnav .dl b', (b) => b.textContent) === todayET, 'the dateline is today in America/New_York on the real clock (' + todayET + ')', await page.$eval('#subnav .dl b', (b) => b.textContent));
+    const sub = await page.$eval('#subnav .dl .s', (b) => b.textContent);
+    check(sub.startsWith(today.counts.local.all + ' stories so far · updated '), 'the dateline counts today’s local stories and says when it updated', sub);
+    await page.screenshot({ path: path.join(SHOTS, 'live-wire-today.png') });
+
+    /* the chips: kinds only, X and Facebook hidden while paused, Unfiltered last */
+    const chipsNow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '']));
+    check(JSON.stringify(chipsNow.map((c) => c[0])) === JSON.stringify(['all', 'reddit', 'newsletters', 'video', '__raw']), 'X and Facebook chips are hidden while paused; Unfiltered is last', JSON.stringify(chipsNow));
+    check(chipsNow.filter((c) => !['all', '__raw'].includes(c[0])).every((c) => Number(c[1]) === today.counts.local[c[0]]), 'chip counts are counts.local', JSON.stringify(chipsNow));
+
+    /* the Brief, pinned above What matters today, and nowhere else today */
+    const brief = await page.evaluate(() => {
+      const c = document.querySelector('.panel:not([hidden]) .feed > .card.pick');
+      return c ? { k: c.dataset.k, eyebrow: c.querySelector('.eyebrow').textContent, before: !!(c.compareDocumentPosition(document.querySelector('.wm')) & 4) } : null;
+    });
+    check(brief && brief.k === today.brief.id && /The Brief/i.test(brief.eyebrow) && brief.before, 'the Brief is pinned above What matters today', JSON.stringify(brief));
+
+    /* What matters today: ten local picks, five open, the rest on request */
+    check(await page.$$eval('.wm .card', (c) => c.length) === 5, 'one pick card and four ranked rows to start', '');
+    check(await page.$$eval('.wm .wm-row', (rs) => rs.filter((r) => !r.querySelector('.why')).length) === 1, 'an empty why draws no reason line', '');
+    await page.click('.wm .btn.more');
+    check(await page.$$eval('.wm .card', (c) => c.length) === 10, '“5 more picks” opens six to ten in place', '');
+    check(/That’s the ten\./.test(await page.$eval('.wm', (w) => w.innerText)), 'and the list ends “That’s the ten.”', '');
+
+    /* the river leaves the shown picks out and counts add up */
+    await drawToday(page);
+    const keys = await todayKeys(page);
+    check(new Set(keys).size === keys.length, 'nothing shows twice on today’s page', keys.length);
+    check(keys.length === today.counts.local.all, 'today’s page draws every local story once: Brief + picks + river = the count', keys.length + ' vs ' + today.counts.local.all);
+    for (const [k, n] of chipsNow.filter((c) => !['all', '__raw'].includes(c[0]))) {
+      await chipTo(page, k);
+      await drawToday(page);
+      const got = (await todayKeys(page)).length;
+      check(got === Number(n), 'the ' + k + ' chip shows exactly its count today (' + n + ')', got);
+    }
+    await chipTo(page, 'all');
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.waitForTimeout(150);
+    const every = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => [c.dataset.chip, (c.querySelector('.n') || {}).textContent || '']));
+    check(every.filter((c) => !['all', '__raw'].includes(c[0])).every((c) => Number(c[1]) === today.counts.everything[c[0]]), 'on Everything the chips are counts.everything', JSON.stringify(every));
+    check((await page.$eval('#subnav .dl .s', (b) => b.textContent)).startsWith(today.counts.everything.all + ' stories'), 'and the dateline counts everything', '');
+    check(await page.$$eval('.wm .card', (c) => c.length) >= 5 && /What matters today/.test(await panelText(page)), 'Everything keeps the picks', '');
+
+    /* the long river: it keeps drawing past 120 and runs into the editions, then really ends */
+    let cardsN = 0;
+    for (let i = 0; i < 60 && !(await page.$('.panel:not([hidden]) .caught')); i++) {
+      await page.evaluate(() => { const p = document.querySelector('.panel:not([hidden])'); p.scrollTop = p.scrollHeight; });
+      await page.waitForTimeout(100);
+    }
+    cardsN = await page.$$eval('.panel:not([hidden]) [data-k]', (c) => c.length);
+    check(cardsN > 120, 'the river keeps rendering past 120 items (' + cardsN + ')', cardsN);
+    const heads = await page.$$eval('.panel:not([hidden]) [data-day]', (h) => h.map((x) => x.innerText.split('\n')[0]));
+    const [y1, y2] = files['index.json'].editions.map((e) => e.date);
+    check(heads.length === 2 && heads[0] === 'Yesterday, ' + nameOf(y1) && heads[1] === nameOf(y2), 'today flows into yesterday, then the day before, each with its own head', JSON.stringify(heads));
+    check(/whole archive/.test(await page.$eval('.panel:not([hidden]) .caught', (c) => c.innerText)), 'when the editions run out, the end says so', '');
+    /* put yesterday's head well above the top of the panel: the dateline names it */
+    await page.evaluate(() => {
+      const p = document.querySelector('.panel:not([hidden])');
+      const h = p.querySelector('[data-day]');
+      p.scrollTop += h.getBoundingClientRect().top - p.getBoundingClientRect().top + 400;
+    });
+    await page.waitForTimeout(250);
+    check(await page.$eval('#subnav .dl b', (b) => b.textContent) === nameOf(y1), 'scrolled into yesterday, the dateline names it', await page.$eval('#subnav .dl b', (b) => b.textContent));
+
+    /* a mute leaves the river */
+    await toTop(page);
+    const victim = await page.$eval('.panel:not([hidden]) .card.row .srcbtn', (b) => b.dataset.src);
+    await page.click('.panel:not([hidden]) .card.row .srcbtn');
+    await page.waitForSelector('.sheet-card', { timeout: 3000 });
+    const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
+    check(/Mute/.test(sheet) && /Open the site/.test(sheet) && /stor(y|ies) today/.test(sheet), 'the source sheet: its stories today, Mute, Open the site', sheet.slice(0, 120));
+    await page.click('.sheet-body .linkrow .btn:text("Mute")');
+    await page.click('#confirm [data-yes]');
+    await page.waitForTimeout(200);
+    check(!(await page.$('.panel:not([hidden]) [data-src="' + victim + '"]')), 'a muted source leaves the river (' + victim + ')', '');
+    const after = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => [c.dataset.chip, Number((c.querySelector('.n') || {}).textContent || 0)]));
+    const sumAfter = after.filter((c) => !['all', '__raw'].includes(c[0])).reduce((a, c) => a + c[1], 0);
+    const sumBefore = every.filter((c) => !['all', '__raw'].includes(c[0])).reduce((a, c) => a + Number(c[1]), 0);
+    check(sumAfter <= sumBefore, 'the chip counts are recounted without the muted source', sumBefore + ' -> ' + sumAfter);
+    await toTop(page);
+    await page.click('#settings-btn');
+    check((await page.$eval('.sheet-body', (b) => b.innerText)).includes('Muted sources'), 'Settings lists mutes', '');
+    await page.keyboard.press('Escape');
+    check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
+    await ctx.close();
+  });
+
+  await group('the Wire, walking back', async () => {
+    const files = wireFiles();
+    const [y1, y2] = files['index.json'].editions.map((e) => e.date);
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    await page.click('#subnav .dateline .nav[aria-label="Earlier day"]');
+    await page.waitForFunction((n) => document.querySelector('#subnav .dl b')?.textContent === n, nameOf(y1), { timeout: 6000 }).catch(() => {});
+    await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 6000 }).catch(() => {});
+    check(await page.$eval('#subnav .dl b', (b) => b.textContent) === nameOf(y1) && / · final$/.test(await page.$eval('#subnav .dl .s', (b) => b.textContent)), 'one day back: yesterday, final', await page.$eval('#subnav .dl', (b) => b.innerText));
+    check(new RegExp('What mattered ' + nameOf(y1).split(',')[0]).test(await panelText(page)), 'yesterday reads “What mattered ' + nameOf(y1).split(',')[0] + '”', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-wire-yesterday.png') });
+    await page.click('#subnav .dateline .nav[aria-label="Earlier day"]');
+    await page.waitForFunction((n) => document.querySelector('#subnav .dl b')?.textContent === n, nameOf(y2), { timeout: 6000 }).catch(() => {});
+    check(await page.$eval('#subnav .dl b', (b) => b.textContent) === nameOf(y2), 'two days back: ' + nameOf(y2), await page.$eval('#subnav .dl b', (b) => b.textContent));
+    check(await page.$eval('#subnav .dateline .nav[aria-label="Earlier day"]', (b) => b.disabled), 'and that is as far as the archive goes', '');
+    check(/#wire\/\d{4}-\d{2}-\d{2}$/.test(await page.evaluate(() => location.hash)), 'the edition is in the address, so it can be shared', '');
+    await page.click('#subnav .dateline .nav[aria-label="Later day"]');
+    await page.click('#subnav .dateline .nav[aria-label="Later day"]');
+    await page.waitForTimeout(200);
+    check(/so far/.test(await page.$eval('#subnav .dl .s', (b) => b.textContent)), '› › comes back to today', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('the Wire, inbox live and no Brief', async () => {
+    const files = wireFiles({ inbox: true, brief: false });
+    const today = files['wire-today.json'];
+    const { ctx, page, errors } = await newPage(browser, base, { wire: { inbox: true, brief: false } });
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    const ch = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
+    check(ch.includes('x') && ch.includes('facebook'), 'the X and Facebook chips come back when the inbox is live', JSON.stringify(ch));
+    check(!(await page.$('.panel:not([hidden]) .feed > .card.pick:first-child .eyebrow')) ||
+      !/The Brief/i.test(await page.$eval('.panel:not([hidden]) .feed > .card.pick', (c) => c.querySelector('.eyebrow').textContent)), 'no `brief`, no pinned Brief card', '');
+    await page.click('#subnav .chip[data-chip="x"]');
+    await page.waitForTimeout(100);
+    const post = await page.$eval('.panel:not([hidden]) .card.post', (c) => ({ via: c.querySelector('.via:last-of-type')?.textContent, open: c.querySelector('.openlink')?.getAttribute('href') }));
+    const xItem = today.updates.flatMap((u) => u.items).find((it) => it.ch === 'x');
+    check(post.open === xItem.url, 'an X card links to the original post', JSON.stringify(post));
+    await page.click('.panel:not([hidden]) .card.post .srcbtn');
+    await page.waitForSelector('.sheet-card', { timeout: 3000 });
+    check(/Open on X/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'an X source sheet opens on X', '');
+    await page.keyboard.press('Escape');
+    await page.click('#subnav .chip[data-chip="facebook"]');
+    await page.waitForTimeout(100);
+    check(/Facebook group, via Muse/.test(await page.$eval('.panel:not([hidden]) .card.post', (c) => c.innerText)), 'a Facebook card shows its kind', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('the Wire, Unfiltered', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 15000 });
+    await page.click('#subnav .chip[data-chip="__raw"]');
+    await page.waitForSelector('#subnav .chips.outlets', { timeout: 8000 });
+    check(/Unfiltered/.test(await page.$eval('#subnav .dl', (d) => d.innerText)) && await page.evaluate(() => location.hash) === '#wire/unfiltered', 'Unfiltered opens inside the tab', '');
+    const rows = await page.$$eval('.panel:not([hidden]) .card.row', (r) => r.length);
+    check(rows === 60, 'the raw wire draws sixty headlines to start', rows);
+    const outlet = await page.$eval('#subnav .chips.outlets .chip:nth-child(2)', (c) => [c.dataset.chip, c.querySelector('span').textContent]);
+    await page.click('#subnav .chips.outlets .chip:nth-child(2)');
+    await page.waitForTimeout(100);
+    const srcs = await page.$$eval('.panel:not([hidden]) .card.row .c-src', (s) => [...new Set(s.map((x) => x.textContent))]);
+    check(srcs.length === 1 && srcs[0] === outlet[1], 'an outlet chip narrows the wire to that outlet', JSON.stringify(srcs));
+    await page.click('#subnav .chips.outlets .chip:first-child');
+    const word = (await page.$eval('.panel:not([hidden]) .card.row .c-title', (t) => t.textContent)).split(/\s+/).find((w) => w.length > 5);
+    await page.fill('.panel:not([hidden]) .toolrow input', word);
+    await page.waitForTimeout(400);
+    const titles = await page.$$eval('.panel:not([hidden]) .card.row .c-title', (t) => t.map((x) => x.textContent.toLowerCase()));
+    check(titles.length > 0 && titles.every((t) => t.includes(word.toLowerCase())), 'search keeps only matching headlines (“' + word + '”)', titles.length);
+    check(await page.$eval('.panel:not([hidden]) .toolrow input', (i) => document.activeElement === i), 'and the search field keeps the caret', '');
+    await page.fill('.panel:not([hidden]) .toolrow input', '');
+    await page.waitForTimeout(400);
+    await page.click('.panel:not([hidden]) .toolrow .pills button:nth-child(2)');
+    check(await page.$$eval('.panel:not([hidden]) .srcsec', (s) => s.length) > 3, 'By outlet draws a section per outlet', '');
+    const b = await page.locator('.panel:not([hidden]) .srcsec .card.row').first().boundingBox();
+    await page.mouse.move(b.x + 100, b.y + 20);
+    await page.mouse.down();
+    await page.waitForTimeout(700);
+    await page.mouse.up();
+    check(await page.$('.peek') !== null, 'hold to peek works on the raw wire', '');
+    await page.keyboard.press('Escape');
+    await page.click('.panel:not([hidden]) .toolrow .pills button:nth-child(1)');
+    await page.click('#subnav .btn.back');
+    await page.waitForSelector('.panel:not([hidden]) .wm', { timeout: 4000 });
+    check(/so far/.test(await page.$eval('#subnav .dl .s', (s) => s.textContent)), '‹ Today’s paper comes back', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 }
@@ -459,10 +766,7 @@ async function interactions(browser, base) {
     await page.goto(base + '/all-day/');
     await page.waitForSelector('#subnav .dl b', { timeout: 15000 });
     await page.click('#subnav .localsw-half:not(.on)');   /* Everything: a full page of rows */
-    await page.waitForTimeout(200);
-    /* the local snapshot can be a day old, so measure the fuller of today and yesterday */
-    if (!(await page.$('.panel:not([hidden]) .card.row'))) await page.click('#subnav .dateline .nav[aria-label="Earlier day"]');
-    await page.waitForSelector('.panel:not([hidden]) .card.row', { timeout: 15000 });   /* Everything: a full page of rows */
+    await page.waitForSelector('.panel:not([hidden]) .card.row', { timeout: 15000 });
     await page.waitForTimeout(200);
     const ms = await page.evaluate(() => {
       const chip = document.querySelector('#subnav .chip[data-chip="all"]');
@@ -485,6 +789,7 @@ const browser = await chromium.launch();
 try {
   await matrix(browser, base);
   await deepLinks(browser, base);
+  await theWire(browser, base);
   await interactions(browser, base);
 } finally {
   await browser.close();
