@@ -265,5 +265,10 @@ reset role;
 select pg_temp.ok(not exists (select 1 from public.nn_votes where voter = 'u:22222222-2222-2222-2222-222222222222'), 'and their votes');
 select pg_temp.ok(not exists (select 1 from public.nn_reports where reporter = '22222222-2222-2222-2222-222222222222'), 'and their reports');
 select pg_temp.ok(exists (select 1 from auth.users where id = '22222222-2222-2222-2222-222222222222'), 'the shared email sign-in itself stays');
+select pg_temp.ok((select reports from public.nn_posts where id = (select id from pg_temp.ids where k = 'swap')) = 0, 'and their report no longer counts against the post');
+reset role; insert into public.btb_photos (storage_path, status, spot) values ('submissions/left-0006.jpg', 'pending', 'All Day · Vintage');
+set role anon; select pg_temp.who(null);
+select pg_temp.ok((public.nn_photo_abandon('submissions/left-0006.jpg') ->> 'removed')::boolean, 'a board photo whose post never happened leaves the queue');
+reset role; select pg_temp.ok((select status from public.btb_photos where storage_path = 'submissions/left-0006.jpg') = 'removed', 'marked removed');
 
 \echo 'test-nn-sql.sql: every case passed'

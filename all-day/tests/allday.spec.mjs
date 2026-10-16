@@ -279,8 +279,12 @@ async function newPage(browser, base, opts = {}) {
     const ap = (u.match(/\/auth\/v1\/([\w?=&_-]+)/) || [])[1];
     if (ap && opts.auth) {
       const out = opts.auth(ap, JSON.parse(r.request().postData() || '{}'), r.request().headers());
-      if (out !== undefined) return r.fulfill({ status: out.status || 200, contentType: 'application/json', body: JSON.stringify(out.body || {}) });
+      if (out !== undefined) return new Promise((res) => setTimeout(res, out.delay || 0))
+        .then(() => r.fulfill({ status: out.status || 200, contentType: 'application/json', body: JSON.stringify(out.body || {}) })).catch(() => {});
     }
+    /* a stored session trades its refresh token for a fresh access token on each visit */
+    if (ap && /^token/.test(ap)) return r.fulfill({ status: 200, contentType: 'application/json',
+      body: JSON.stringify({ access_token: 'a.b.c', refresh_token: 'r-next', expires_in: 3600, token_type: 'bearer', user: { id: 'u-1' } }) });
     const fn = (u.match(/\/rest\/v1\/rpc\/(\w+)/) || [])[1];
     if (fn && opts.rpc) {
       const out = opts.rpc(fn, JSON.parse(r.request().postData() || '{}'), r.request().headers());
@@ -1741,7 +1745,8 @@ async function accounts(browser, base) {
     check(await inn.page.evaluate(() => location.hash) === '#wire', 'the tokens leave the address bar', '');
     check(seen.some((x) => /^user Bearer a\.b\.c/.test(x)), 'the token is checked with Supabase', seen.join(', '));
     const kept = await inn.page.evaluate(() => localStorage.getItem('allday-auth'));
-    check(kept && !/@/.test(kept) && JSON.parse(kept).user.id === 'u-1', 'the session is kept without the email address', kept);
+    check(kept && !/@/.test(kept) && JSON.stringify(Object.keys(JSON.parse(kept)).sort()) === '["refresh_token","user"]' && JSON.parse(kept).user.id === 'u-1',
+      'storage keeps only the refresh token and the account id: no email, no access token (whose claims carry it)', kept);
     const t2 = await settingsText(inn.page);
     check(/Signed in\s+as Maya R\./.test(t2) && /Your profile/.test(t2) && /Your posts/.test(t2) && /Delete my account and posts/.test(t2), 'signed in: the name, profile, posts, delete', t2.slice(0, 300));
     check(!/reader@example\.com/.test(await inn.page.content()), 'the email is nowhere on the page', '');
@@ -1769,12 +1774,35 @@ async function accounts(browser, base) {
     check(toks.every((t) => t === 'n.e.w'), 'a session about to run out is refreshed', JSON.stringify(toks));
     check(refreshes === 1, 'once, however many callers ask at the same moment', refreshes);
     const kept = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-auth')));
-    check(kept.refresh_token === 'r2' && !('email' in kept.user), 'the new tokens are kept, and the old saved email is gone', JSON.stringify(kept));
+    check(kept.refresh_token === 'r2' && !('email' in kept.user) && !('access_token' in kept), 'the new refresh token is kept; the old saved email and access token are gone', JSON.stringify(kept));
     await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION({ expires: Math.floor(Date.now() / 1000) + 60 }).replace('"r1"', '"spent"'));
-    const gone = await page.evaluate(() => import('/all-day/js/app.js').then((app) => new Promise((res) => { app.onAuth((u) => res(u)); app.token(); })));
-    check(gone === null && await page.evaluate(() => localStorage.getItem('allday-auth')) === null, 'a refused refresh signs out quietly, and onAuth hears it', JSON.stringify(gone));
+    await page.reload();
+    await settle(page);
+    check(await page.evaluate(() => localStorage.getItem('allday-auth')) === null && await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.user())) === null,
+      'a refused refresh signs out quietly', '');
+    check(refreshes === 2, 'one try for the spent token, no retries', refreshes);
     const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 400/.test(e));
     check(!real.length, 'no console errors beyond the browser logging the refused refresh', real.join(' | '));
+    await ctx.close();
+  });
+
+  await group('accounts: a slow refresh cannot sign a reader back in', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, {
+      auth: (p) => (/^token/.test(p) ? { delay: 900, body: { access_token: 'late.tok.en', refresh_token: 'r-late', expires_in: 3600, user: { id: 'u-1' } } } : undefined),
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    const heard = await page.evaluate(() => import('/all-day/js/app.js').then((app) => {
+      const seen = [];
+      app.onAuth((u) => seen.push(u));
+      app.signOut();                       // while the visit's refresh is still on its way
+      return new Promise((res) => setTimeout(() => res({ seen, user: app.user(), kept: localStorage.getItem('allday-auth') }), 1400));
+    }));
+    check(heard.user === null && heard.kept === null, 'after Sign out the late answer is dropped: still signed out, nothing stored', JSON.stringify(heard));
+    check(heard.seen.length === 1 && heard.seen[0] === null, 'and onAuth heard the sign-out once, nothing after', JSON.stringify(heard.seen));
+    check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
 
@@ -1980,6 +2008,16 @@ async function boards(browser, base) {
     await page.click('.bform button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
     check(/The photo shows once it’s been checked/.test(await page.$eval('#toast', (t) => t.textContent)), 'with a photo and consent: posted, the photo waits for the queue', await page.$eval('#toast', (t) => t.textContent));
+    const orphan = await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
+      const f = b._fake();
+      const ban = f.bans; ban.set('demo-0000-4000-8000-00000000me00', Date.now());
+      const r = await b.create('art', { kind: 'art', title: 'Refused', photo: new Blob(['x']), consent: true });
+      ban.delete('demo-0000-4000-8000-00000000me00');
+      await new Promise((res) => setTimeout(res, 50));
+      const last = [...f.photos.entries()].pop();
+      return { error: r.error, path: last[0], status: last[1].status };
+    }));
+    check(orphan.error === 'banned' && orphan.status === 'removed', 'a photo whose post is refused is taken back out of the queue', JSON.stringify(orphan));
     const listed = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.list('art').then((r) => r.posts.some((p) => p.title === 'Oakledge, low water'))));
     check(!listed, 'an Art post is not on the wall until its photo is approved', '');
     await settingsText(page);

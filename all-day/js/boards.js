@@ -68,7 +68,13 @@ function call(fn, args) {
     return Promise.resolve().then(() => ({ ok: true, data: demoBackend().as(u ? u.id : null).call(fn, args || {}) }))
       .catch((e) => fail(e.code || 'offline'));
   }
-  return Promise.resolve(app.user() ? app.token() : null).then((tok) => fetch(store.SB_URL + '/rest/v1/rpc/' + fn, {
+  const signedIn = !!app.user();
+  return Promise.resolve(signedIn ? app.token() : null).then((tok) => {
+    /* signed in but no token (offline, or the refresh failed): say so, rather
+       than let the call go as a stranger and come back "sign in first" */
+    if (signedIn && !tok) throw new Error('no token');
+    return tok;
+  }).then((tok) => fetch(store.SB_URL + '/rest/v1/rpc/' + fn, {
     method: 'POST',
     headers: Object.assign({ apikey: store.SB_KEY, 'Content-Type': 'application/json' }, tok ? { Authorization: 'Bearer ' + tok } : {}),
     body: JSON.stringify(args || {}),
@@ -81,7 +87,7 @@ function call(fn, args) {
     const code = j && typeof j.message === 'string' && /^[a-z_]+$/.test(j.message) ? j.message : 'offline';
     if (code !== 'offline') state = 'live';
     return fail(code);
-  }), () => fail('offline'));
+  }), () => fail(app.user() ? 'offline' : 'not_signed_in'));   // a refused refresh has signed the reader out
 }
 
 const changed = (board, id, what) => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board, id, what } }));
@@ -189,7 +195,12 @@ export function create(board, input = {}) {
         p_board: board, p_kind: pre.post.kind, p_title: pre.post.title, p_body: pre.post.body, p_place: pre.post.place,
         p_meta: pre.post.meta, p_photo: path,
       }).then((r) => {
-        if (!r.ok) return r;
+        if (!r.ok) {
+          /* the photo is in the queue but its post is not: take it back out,
+             so it can never be approved into the gallery on its own */
+          if (path) call('nn_photo_abandon', { p_path: path });
+          return r;
+        }
         changed(board, r.data.id, 'create');
         return { ok: true, post: r.data, photoWaiting: !!path };
       });

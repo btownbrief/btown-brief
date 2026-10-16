@@ -43,6 +43,7 @@ const make = (o) => {
   f.tick = (ms) => { t += ms; };
   ['submissions/aaaa-0001.jpg', 'submissions/aaaa-0002.jpg'].forEach((p, i) => f.addPhoto(p, i ? 'approved' : 'pending'));
   f.addPhoto('submissions/aaaa-0003.jpg', 'rejected');
+  f.addPhoto('submissions/gall-0004.jpg', 'pending', { board: false });   // a gallery photo, not from a board
   return f;
 };
 
@@ -159,6 +160,14 @@ test('fake: a profile, then every refusal a post can meet', () => {
   const photo = (p) => code(() => f.call('nn_post_create', { p_board: 'art', p_kind: 'photo', p_title: 'Dawn', p_photo: p }));
   assert.equal(photo('submissions/nope-9999.jpg'), 'bad_photo', 'a photo not in the queue');
   assert.equal(photo('submissions/aaaa-0003.jpg'), 'bad_photo', 'a photo the queue rejected');
+  assert.equal(photo('submissions/aaaa-0002.jpg'), 'bad_photo', 'an approved photo: its path is public, so it can never be claimed');
+  assert.equal(photo('submissions/gall-0004.jpg'), 'bad_photo', 'a photo the gallery form sent, not a board');
+  assert.equal(f.call('nn_photo_abandon', { p_path: 'submissions/gall-0004.jpg' }).removed, false, 'and a board cannot take it out of the queue');
+  f.addPhoto('submissions/old0-0005.jpg', 'pending', { at: f.now() - 2 * DAY });
+  assert.equal(photo('submissions/old0-0005.jpg'), 'bad_photo', 'a board photo more than a day old');
+  f.addPhoto('submissions/left-0006.jpg', 'pending');
+  assert.equal(f.as(null).call('nn_photo_abandon', { p_path: 'submissions/left-0006.jpg' }).removed, true, 'a board photo whose post never happened leaves the queue');
+  assert.equal(f.photos.get('submissions/left-0006.jpg').status, 'removed');
 });
 
 test('fake: a find, listed, voted on, reported, approved, expired, swept', () => {
@@ -241,7 +250,7 @@ test('fake: a find, listed, voted on, reported, approved, expired, swept', () =>
   assert.equal(code(() => f.as(SAM).call('nn_post_delete_own', { p_post: art.id })), 'not_found');
   assert.equal(f.as(MAYA).call('nn_post_delete_own', { p_post: art.id }).deleted, true);
   assert.deepEqual(f.call('nn_posts_list', { p_board: 'art' }), []);
-  assert.equal(f.photos.get('submissions/aaaa-0001.jpg'), 'removed', 'its photo leaves the gallery');
+  assert.equal(f.photos.get('submissions/aaaa-0001.jpg').status, 'removed', 'its photo leaves the gallery');
 });
 
 test('fake: the two limits, pre-moderation and bans', () => {
@@ -270,7 +279,10 @@ test('fake: the two limits, pre-moderation and bans', () => {
 });
 
 test('fake: missions, and deleting everything', () => {
-  const f = make().as(SAM);
+  const f = make();
+  assert.equal(code(() => f.call('nn_mission_set', { p_key: 'm7', p_done: true })), 'not_signed_in', 'missions are signed-in only, as the SQL grants them');
+  f.as(SAM);
+  assert.equal(code(() => f.call('nn_mission_set', { p_key: 'x7', p_done: true })), 'bad_key');
   f.call('nn_mission_set', { p_key: 'm7', p_done: true });
   f.call('nn_mission_set', { p_key: 'm9', p_done: true });
   f.call('nn_mission_set', { p_key: 'm9', p_done: false });
@@ -281,7 +293,9 @@ test('fake: missions, and deleting everything', () => {
   f.call('nn_post_create', { p_board: 'watch', p_kind: 'rating', p_title: 'Causeway', p_meta: { stars: 4 } });
   f.call('nn_vote', { p_post: swap.id });
   f.call('nn_report', { p_post: swap.id, p_reason: 'other' });
+  assert.equal(f.posts.find((p) => p.id === swap.id).reports, 1);
   assert.equal(f.call('nn_delete_me').deleted, true);
+  assert.equal(f.posts.find((p) => p.id === swap.id).reports, 0, 'their report no longer counts against the post');
   assert.equal(f.call('nn_profile_get'), null);
   assert.deepEqual(f.call('nn_post_mine'), []);
   assert.deepEqual(f.call('nn_missions_done'), []);

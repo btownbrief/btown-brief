@@ -8,8 +8,9 @@
    any reader, or nobody.
 
    The photo queue (btb_photos, photo-admin.html) is mirrored as a map of
-   storage path to status; addPhoto() and setPhoto() stand in for a reader
-   uploading and Stephen approving. */
+   storage path to { status, board, at }: board says the photo was filed from
+   an All Day board (spot "All Day · …"), at is when it arrived. addPhoto()
+   and setPhoto() stand in for a reader uploading and Stephen approving. */
 
 import { RULES, checkProfile, checkPost, expiresAt, startsPending, photoRequired, rateError, voterFor } from './boards-core.js';
 
@@ -30,20 +31,28 @@ export class FakeBoards {
     this.reports = [];           // { post_id, reporter, reason, at }
     this.bans = new Map();       // uid -> at
     this.missions = new Map();   // uid -> Set of keys
-    this.photos = new Map();     // storage path -> 'pending' | 'approved' | 'rejected' | 'removed'
+    this.photos = new Map();     // storage path -> { status: 'pending' | 'approved' | 'rejected' | 'removed', board, at }
   }
 
   as(uid) { this.uid = uid || null; return this; }
-  addPhoto(path, status) { this.photos.set(path, status || 'pending'); return path; }
-  setPhoto(path, status) { if (this.photos.has(path)) this.photos.set(path, status); }
+  addPhoto(path, status, o = {}) {
+    this.photos.set(path, { status: status || 'pending', board: o.board !== false, at: o.at == null ? this.now() : o.at });
+    return path;
+  }
+  setPhoto(path, status) { const p = this.photos.get(path); if (p) p.status = status; }
 
   /* --------------------------------------------------------------- helpers */
   _t() { return this.now(); }
   _photoState(path) {
     if (!path) return 'none';
-    const s = this.photos.get(path);
-    if (!s) return 'missing';
-    return s === 'approved' ? 'approved' : s === 'pending' ? 'pending' : 'rejected';
+    const p = this.photos.get(path);
+    if (!p) return 'missing';
+    return p.status === 'approved' ? 'approved' : p.status === 'pending' ? 'pending' : 'rejected';
+  }
+  /* nn_photo_claimable: a board's own photo, still waiting, from the last day */
+  _claimable(path) {
+    const p = path && this.photos.get(path);
+    return !!p && p.status === 'pending' && p.board && p.at > this._t() - DAY;
   }
   _listable(p) {
     return p.status === 'approved' && (p.expires_at == null || p.expires_at > this._t()) &&
@@ -72,7 +81,7 @@ export class FakeBoards {
     for (const k of [...this.votes]) if (ids.has(k.split('|')[0])) this.votes.delete(k);
     this.reports = this.reports.filter((r) => !ids.has(r.post_id));
   }
-  _photoRemove(path) { if (path && this.photos.has(path)) this.photos.set(path, 'removed'); }
+  _photoRemove(path) { const p = path && this.photos.get(path); if (p && p.board) p.status = 'removed'; }
   _need() { if (!this.uid) throw fail('not_signed_in'); return this.uid; }
   _find(id) { return this.posts.find((p) => p.id === id) || null; }
 
@@ -107,13 +116,13 @@ export class FakeBoards {
     const photo = p_photo || null;
     const r = checkPost(this.rules, p_board, { kind: p_kind, title: p_title, body: p_body, place: p_place, meta: p_meta, photo_path: photo });
     if (!r.ok) throw fail(r.error);
-    if (photo && (['missing', 'rejected'].includes(this._photoState(photo)) || this.posts.some((p) => p.photo_path === photo))) throw fail('bad_photo');
+    if (photo && (!this._claimable(photo) || this.posts.some((p) => p.photo_path === photo))) throw fail('bad_photo');
+    this._sweep();
     const t = this._t();
     const today = this.posts.filter((p) => p.user_id === u && p.created_at > t - DAY).length;
     const waiting = this.posts.filter((p) => p.user_id === u && (p.status === 'pending' || (p.photo_path && this._photoState(p.photo_path) === 'pending'))).length;
     const rate = rateError(this.rules, today, waiting);
     if (rate) throw fail(rate);
-    this._sweep();
     const row = {
       id: newId(), board: p_board, user_id: u, kind: p_kind, title: r.post.title, body: r.post.body, photo_path: photo,
       photo_req: photoRequired(this.rules, p_board, p_kind), meta: r.post.meta, place: r.post.place,
@@ -159,6 +168,11 @@ export class FakeBoards {
     return { deleted: true };
   }
 
+  nn_photo_abandon({ p_path }) {
+    if (this._claimable(p_path) && !this.posts.some((p) => p.photo_path === p_path)) { this._photoRemove(p_path); return { removed: true }; }
+    return { removed: false };
+  }
+
   /* ---------------------------------------------------------------- votes */
   _votable(p_post, p_player) {
     const voter = voterFor(this.uid, p_player);
@@ -202,6 +216,8 @@ export class FakeBoards {
     mine.forEach((p) => this._photoRemove(p.photo_path));
     this._drop(new Set(mine.map((p) => p.id)));
     for (const k of [...this.votes]) if (k.endsWith('|u:' + u)) this.votes.delete(k);
+    /* their reports stop counting against the posts they reported */
+    this.reports.filter((r) => r.reporter === u).forEach((r) => { const p = this._find(r.post_id); if (p) p.reports = Math.max(0, p.reports - 1); });
     this.reports = this.reports.filter((r) => r.reporter !== u);
     this.missions.delete(u);
     this.profiles.delete(u);
@@ -209,14 +225,16 @@ export class FakeBoards {
   }
 
   /* ------------------------------------------------------------- missions */
+  /* signed-in only, as the SQL grants them; the table takes keys m1..m999 */
   nn_mission_set({ p_key, p_done }) {
-    if (!this.uid) return null;
+    this._need();
+    if (!/^m[0-9]{1,3}$/.test(String(p_key))) throw fail('bad_key');
     const s = this.missions.get(this.uid) || new Set();
     if (p_done) s.add(p_key); else s.delete(p_key);
     this.missions.set(this.uid, s);
     return null;
   }
-  nn_missions_done() { return this.uid ? [...(this.missions.get(this.uid) || [])].map((key) => ({ key })) : []; }
+  nn_missions_done() { const u = this._need(); return [...(this.missions.get(u) || [])].map((key) => ({ key })); }
 
   /* ----------------------------------------------------------- moderation */
   _modOk(secret) { return !!this.modSecret && !!secret && secret === this.modSecret; }
