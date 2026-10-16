@@ -1,27 +1,27 @@
 {
- "updated": "2026-10-16T10:49:07+00:00",
+ "updated": "2026-10-16T11:55:42+00:00",
  "sections_updated": {
-  "now": "2026-10-16T10:49:07+00:00",
-  "forecast": "2026-10-16T10:49:07+00:00",
-  "hourly": "2026-10-16T10:49:07+00:00",
-  "alerts": "2026-10-16T10:49:07+00:00",
-  "afd": "2026-10-16T10:49:07+00:00",
-  "lake_forecast": "2026-10-16T10:49:07+00:00",
-  "lake_gage": "2026-10-16T10:49:07+00:00",
-  "air": "2026-10-16T10:49:07+00:00",
-  "sun": "2026-10-16T10:49:07+00:00",
-  "models": "2026-10-16T10:49:07+00:00"
+  "now": "2026-10-16T11:55:42+00:00",
+  "forecast": "2026-10-16T11:55:42+00:00",
+  "hourly": "2026-10-16T11:55:42+00:00",
+  "alerts": "2026-10-16T11:55:42+00:00",
+  "afd": "2026-10-16T11:55:42+00:00",
+  "lake_forecast": "2026-10-16T11:55:42+00:00",
+  "lake_gage": "2026-10-16T11:55:42+00:00",
+  "air": "2026-10-16T11:55:42+00:00",
+  "sun": "2026-10-16T11:55:42+00:00",
+  "models": "2026-10-16T11:55:42+00:00"
  },
  "now": {
-  "observed_at": "2026-10-16T10:35:00+00:00",
+  "observed_at": "2026-10-16T11:40:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
-  "temp_f": 50,
-  "feels_like_f": 50,
+  "temp_f": 52,
+  "feels_like_f": 52,
   "humidity": 82,
-  "dewpoint_f": 45,
+  "dewpoint_f": 46,
   "wind_mph": null,
-  "wind_gust_mph": 22,
+  "wind_gust_mph": 35,
   "wind_dir": null,
   "precip_last_hr_in": null
  },
@@ -30,7 +30,7 @@
   "periods": [
    {
     "name": "Today",
-    "start": "2026-10-16T06:00:00-04:00",
+    "start": "2026-10-16T07:00:00-04:00",
     "is_day": true,
     "temp_f": 63,
     "pop": 96,
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-16T06:21:26+00:00",
   "hours": [
-   {
-    "t": "2026-10-16T06:00:00-04:00",
-    "temp_f": 47,
-    "feels_f": 41,
-    "pop": 95,
-    "humidity": 93,
-    "wind_mph": 15,
-    "wind_dir": "SE",
-    "sky": 98,
-    "short": "Rain Showers"
-   },
    {
     "t": "2026-10-16T07:00:00-04:00",
     "temp_f": 48,
@@ -568,6 +557,17 @@
     "wind_dir": "NW",
     "sky": 26,
     "short": "Mostly Sunny"
+   },
+   {
+    "t": "2026-10-17T18:00:00-04:00",
+    "temp_f": 39,
+    "feels_f": 31,
+    "pop": 0,
+    "humidity": 57,
+    "wind_mph": 14,
+    "wind_dir": "NW",
+    "sky": 23,
+    "short": "Mostly Clear"
    }
   ]
  },
@@ -575,13 +575,13 @@
   "active": []
  },
  "afd": {
-  "issued": "2026-10-16T06:35:00+00:00",
+  "issued": "2026-10-16T11:36:00+00:00",
   "key_messages": [
    "A strong storm system will bring widespread rain and gusty winds today, followed by much colder weather and mountain snow showers on Saturday.",
    "Next week continues to look very quiet with temperatures near normal and high confidence of an extended dry period of weather."
   ],
   "what_changed": "As of 232 AM EDT Friday... No significant changes were made with this forecast package.",
-  "raw": "\n000\nFXUS61 KBTV 160635\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n235 AM EDT Fri Oct 16 2026\n\n.WHAT HAS CHANGED...\nAs of 232 AM EDT Friday...\n\nNo significant changes were made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 232 AM EDT Friday...\n\n1. A strong storm system will bring widespread rain and gusty \nwinds today, followed by much colder weather and mountain snow \nshowers on Saturday. \n\n2. Next week continues to look very quiet with temperatures \nnear normal and high confidence of an extended dry period of \nweather. \n\n&&\n\n.DISCUSSION...\nAs of 232 AM EDT Friday...\n\nKEY MESSAGE 1: Low pressure is currently moving through central \nMichigan this morning, spreading rain across southern Ontario and \ninto northern/central New York. Much of this rain isn't reaching the \nground yet per NYS Mesonet observations, but expect it won't take \nmuch longer for the atmosphere to moisten enough for rain to arrive \nin earnest. This precipitation shield will continue to spread over \nNew York and into Vermont early this morning as the low lifts along \nthe St Lawrence Valley before shifting eastward just north of the \ninternational border. There are still some indications that one this \nfirst round of rain moves through, precipitation will turn more \nshowery in nature with some spots getting a bit of a break around \nmid morning. Meanwhile, a 55+ kt 850 mb jet, currently moving into \nthe eastern Great Lakes, will also make its way to our area. There's \nstill some question how much of this will be able to mix to the \nground as it will be somewhat coincident with the steadier rain, \nespecially in northern New York. However, it will at least allow \ntemperatures to surge into the upper 50s/low 60s. Mountain summits \nwill be very windy as well, with gusts to 60 mph expected. Gusts \nwill also likely be strong in the Champlain Valley and the northern \nslopes of the Greens, due to funneling down the valley and \ndownsloping off the higher terrain. The aforementioned dry break \ncould coincide with the jet's arrival at these areas, so mixing \ncould be better as well. Hence still anticipate gusts up to 40 mph \nin these locations, with perhaps some briefly higher gusts at times. \nThis could be enough to bring a few branches down, perhaps resulting \nin isolated power outages, but widespread impacts are not expected \nat this time. Elsewhere, gusts will remain in the 25 to 35 mph \nrange. \n\nThe low moves to our north by mid day, dragging its attendant cold \nfront across northern New York and Vermont during the afternoon and \nearly evening. The latest CAM guidance shows convective showers \ndeveloping ahead of/along this front as it pushes southeastward. \nWe'll have little to no instability given the early morning \nrainfall, so anticipate showers won't be organized or strong/severe \nin our area. Still, there may be a few rumbles of thunder, \nespecially in southern Vermont. Total rainfall through the daylight \nhours today will be 0.50 to 1.0 inch, with locally higher amounts in \nthe higher terrain. \n\nWinds will turn to the northwest behind the cold front, ushering in \na much colder airmass. Moisture will linger for a time overnight, \nand the northwest flow will cause showers to focus on the favored \nwestern upslope sides of the Adirondacks and northern/central \nGreens. Rain will gradually transition to snow as temperatures fall \novernight. Showers should wane in coverage through the night and \nespecially Saturday morning as drier air works in behind a secondary \nfront, coming to an end by afternoon. Between the brief timing of \nsnow and the relatively warm ground, snow accumulations will be \nminimal and mainly confined to elevations above 1500 ft. Even there, \naccumulations will likely be half inch or less. The highest summits \ncould see upwards of 2 inches or so. \n\nSaturday will be much colder, with highs only in the mid 30s to mid \n40s. Sun should start to break out in the afternoon, but winds will \nremain brisk, with gusts 25 to 30 mph. The morning will start out \nwith wind chills in the teens and 20s; the summits will likely feel \nlike the single digits in the morning, with negative numbers \npossible. These wind chills improve only slightly through the day, \nso anyone who has outdoor plans should prepare for bitterly cold \nconditions.\n\nKEY MESSAGE 2: South to southwest flow will resume on Sunday, and we \nwill moderate closer to seasonal norms with widespread 50s for highs \nunder high pressure. This high pressure should shift north and east, \nthen to start the work week, another high pressure over Quebec will \ndive southeastward into northern New England and the southern \nCanadian Maritimes, keeping our forecast area dry. Ahead of a weak \nback door cold front, daytime temperatures will be in the upper 50s \nand lower 60s Tuesday, decreasing slightly for the second half of \nthe week. Nighttime temperatures next week fall into the mid 20s to \nlower 40s. Fire weather concerns will increase next week due to the \nlong duration of dry weather anticipated, but winds will remain \nmostly light and terrain driven under high pressure.\n\n&&\n\n.AVIATION /06Z FRIDAY THROUGH TUESDAY/...\nThrough 06Z Saturday...Rainfall and gusty winds are expected to\narrive from west to east throughout next few hours, with rain\nstarting at MSS and SLK around 06Z-08Z Friday, then PBG, BTV, and\nRUT 07Z-09Z, then everywhere else by 08Z-10Z. Rain is likely to\ncause visibilities 3-6 miles or higher, though heavier periods are\npossible this morning. Winds will become strong aloft first\n(southerly to southwesterly 30-50 knots), making LLWS likely at all\nsites through 18Z-23Z Friday. Surface winds will begin to gust 10-30\nknots around 08Z-12Z, initially out of the south-southeast, then\nturning west-southwesterly this afternoon, with most sites seeing a\nswitch to northwesterly in the evening and overnight hours.\nStrongest surface winds (30-35 knots) are expected across the\nChamplain Valley from 10Z through 20Z Friday out of the south. Cloud\nceilings are also anticipated to lower throughout the next few\nhours, and we should see widespread MVFR or lower cigs by 10Z-13Z\nFriday, lasting through the end of the 24 hour TAF period. Most\nsites could see some brief off and on IFR cigs throughout the day\nFriday, but most likely spots for persistent IFR cigs include SLK,\nMPV, RUT, and MSS from 10Z through 20Z Friday. And lastly, around\n02Z-04Z Saturday, temperatures should drop enough at SLK to see a\nrain snow mix for a few hours, likely becoming all snow later in the\nnight into early Saturday morning. Rain snow mix or even just snow\nis also possible at EFK and MPV later in the night into early\nSaturday morning. At other sites, we can expect precipitation to end\nthroughout the evening and overnight hours.\n\nOutlook...\n\nSaturday: VFR. Slight chance SHSN.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory remains in effect for Lake Champlain today.\nSouth winds will increase early this morning, becoming 15 to 30\nknots with gusts to 35 knots. Locally higher gusts possible.\nWinds will turn to the northwest and lessen somewhat after a\ncold front moves through later this afternoon, but the Lake\nWind Advisory will likely need to remain in place through\nSaturday. \n\n&&\n\n.CLIMATE...\nDaily low maximum temperatures will likely be broken on Saturday.\nCurrent records at some climate sites in our region are as\nfollows:\n\nRecord Low Maximum Temperatures:\n\nOctober 17:\nKBTV: 42/1970\nKPBG: 44/2015\nKSLK: 36/1970\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Hastings/Storm/Taber\nAVIATION...Storm\nMARINE...NWS BTV\nCLIMATE...NWS BTV\n"
+  "raw": "\n000\nFXUS61 KBTV 161136\nAFDBTV\n\nArea Forecast Discussion\nNational Weather Service Burlington VT\n736 AM EDT Fri Oct 16 2026\n\n.WHAT HAS CHANGED...\nAs of 232 AM EDT Friday...\n\nNo significant changes were made with this forecast package.\n\n&&\n\n.KEY MESSAGES...\nAs of 232 AM EDT Friday...\n\n1. A strong storm system will bring widespread rain and gusty \nwinds today, followed by much colder weather and mountain snow \nshowers on Saturday. \n\n2. Next week continues to look very quiet with temperatures \nnear normal and high confidence of an extended dry period of \nweather.\n\n&&\n\n.DISCUSSION...\nAs of 232 AM EDT Friday...\n\nKEY MESSAGE 1: Low pressure is currently moving through central \nMichigan this morning, spreading rain across southern Ontario and \ninto northern/central New York. Much of this rain isn't reaching the \nground yet per NYS Mesonet observations, but expect it won't take \nmuch longer for the atmosphere to moisten enough for rain to arrive \nin earnest. This precipitation shield will continue to spread over \nNew York and into Vermont early this morning as the low lifts along \nthe St Lawrence Valley before shifting eastward just north of the \ninternational border. There are still some indications that one this \nfirst round of rain moves through, precipitation will turn more \nshowery in nature with some spots getting a bit of a break around \nmid morning. Meanwhile, a 55+ kt 850 mb jet, currently moving into \nthe eastern Great Lakes, will also make its way to our area. There's \nstill some question how much of this will be able to mix to the \nground as it will be somewhat coincident with the steadier rain, \nespecially in northern New York. However, it will at least allow \ntemperatures to surge into the upper 50s/low 60s. Mountain summits \nwill be very windy as well, with gusts to 60 mph expected. Gusts \nwill also likely be strong in the Champlain Valley and the northern \nslopes of the Greens, due to funneling down the valley and \ndownsloping off the higher terrain. The aforementioned dry break \ncould coincide with the jet's arrival at these areas, so mixing \ncould be better as well. Hence still anticipate gusts up to 40 mph \nin these locations, with perhaps some briefly higher gusts at times. \nThis could be enough to bring a few branches down, perhaps resulting \nin isolated power outages, but widespread impacts are not expected \nat this time. Elsewhere, gusts will remain in the 25 to 35 mph \nrange. \n\nThe low moves to our north by mid day, dragging its attendant cold \nfront across northern New York and Vermont during the afternoon and \nearly evening. The latest CAM guidance shows convective showers \ndeveloping ahead of/along this front as it pushes southeastward. \nWe'll have little to no instability given the early morning \nrainfall, so anticipate showers won't be organized or strong/severe \nin our area. Still, there may be a few rumbles of thunder, \nespecially in southern Vermont. Total rainfall through the daylight \nhours today will be 0.50 to 1.0 inch, with locally higher amounts in \nthe higher terrain. \n\nWinds will turn to the northwest behind the cold front, ushering in \na much colder airmass. Moisture will linger for a time overnight, \nand the northwest flow will cause showers to focus on the favored \nwestern upslope sides of the Adirondacks and northern/central \nGreens. Rain will gradually transition to snow as temperatures fall \novernight. Showers should wane in coverage through the night and \nespecially Saturday morning as drier air works in behind a secondary \nfront, coming to an end by afternoon. Between the brief timing of \nsnow and the relatively warm ground, snow accumulations will be \nminimal and mainly confined to elevations above 1500 ft. Even there, \naccumulations will likely be half inch or less. The highest summits \ncould see upwards of 2 inches or so. \n\nSaturday will be much colder, with highs only in the mid 30s to mid \n40s. Sun should start to break out in the afternoon, but winds will \nremain brisk, with gusts 25 to 30 mph. The morning will start out \nwith wind chills in the teens and 20s; the summits will likely feel \nlike the single digits in the morning, with negative numbers \npossible. These wind chills improve only slightly through the day, \nso anyone who has outdoor plans should prepare for bitterly cold \nconditions.\n\nKEY MESSAGE 2: South to southwest flow will resume on Sunday, and we \nwill moderate closer to seasonal norms with widespread 50s for highs \nunder high pressure. This high pressure should shift north and east, \nthen to start the work week, another high pressure over Quebec will \ndive southeastward into northern New England and the southern \nCanadian Maritimes, keeping our forecast area dry. Ahead of a weak \nback door cold front, daytime temperatures will be in the upper 50s \nand lower 60s Tuesday, decreasing slightly for the second half of \nthe week. Nighttime temperatures next week fall into the mid 20s to \nlower 40s. Fire weather concerns will increase next week due to the \nlong duration of dry weather anticipated, but winds will remain \nmostly light and terrain driven under high pressure.\n\n&&\n\n.AVIATION /12Z FRIDAY THROUGH TUESDAY/...\nThrough 12Z Saturday...\nA strong storm system is bringing widespread rain, MVFR \nceilings, lowered visibilities, low level wind shear, and gusty \nsurface winds today, followed by mountain snow showers tonight.\n\nRain has begun across northern New York and Vermont this\nmorning, resulting in visibility restrictions of 4-6 miles or\nhigher, with a few brief periods of 1-3 mile vis in heavier\nprecipitation. On and off rain showers will continue today, with\nlull periods in between. Precipitation will likely come to an\nend around 22Z Friday - 00Z Saturday, potentially lingering\nlater and changing to a rain/snow mix in the mountain sites\n(SLK, MPV, EFK) around 02Z-06Z Saturday. Highest confidence of\nany snow is at SLK from 03Z-08Z Saturday. \n\nLowered ceilings are also in full swing across the forecast area\nthis morning, with cigs ranging from 300 to 3100 feet above \nground level. We expect mostly ceilings between 1200-3500 for \nmuch of today at BTV, PBG, MPV, and RUT. Site MSS has already \nreported steady ceilings 300-500 feet AGL this morning in\nnortheasterly flow, and we expect IFR or LIFR ceilings to \npersist through around 21Z Friday. Sites SLK and EFK have the \npotential for IFR ceilings as well, most likely between 15Z and \n21Z Friday. Otherwise, sites could see occasional dips into IFR \ncig territory throughout the day today. \n\nWinds aloft will be strong (30-55 knots) today out of the \nsouthwest, resulting in periods of LLWS at all sites over the\nnext 24 hours. Surface winds are also already beginning to mix\ndown some breezier gusts 15-30 knots out of the south, except at\nMSS which has its northeasterly wind 5-10 knots instead. Winds\nwill continue to be gusty over the next 24 hours, turning more\nsouthwesterly around 15Z-22Z Friday. Highest gusts are expected\nin the Champlain Valley 35-40 knots out of the south from 14Z\nthrough 20Z Friday. \n\n\nOutlook...\n\nSaturday: VFR. NO SIG WX.\nSaturday Night: VFR. NO SIG WX.\nSunday: VFR. NO SIG WX.\nSunday Night: VFR. NO SIG WX.\nMonday: VFR. NO SIG WX.\nMonday Night: VFR. NO SIG WX.\nTuesday: VFR. NO SIG WX.\n\n&&\n\n.MARINE...\nA Lake Wind Advisory remains in effect for Lake Champlain today.\nSouth winds will increase early this morning, becoming 15 to 30\nknots with gusts to 35 knots. Locally higher gusts possible.\nWinds will turn to the northwest and lessen somewhat after a\ncold front moves through later this afternoon, but the Lake\nWind Advisory will likely need to remain in place through\nSaturday.\n\n&&\n\n.CLIMATE...\nDaily low maximum temperatures will likely be broken on Saturday.\nCurrent records at some climate sites in our region are as\nfollows:\n\nRecord Low Maximum Temperatures:\n\nOctober 17:\nKBTV: 42/1970\nKPBG: 44/2015\nKSLK: 36/1970\n\n&&\n\n.BTV WATCHES/WARNINGS/ADVISORIES...\nVT...None.\nNY...None.\n\n&&\n\n$$\n\nWHAT HAS CHANGED...Hastings\nDISCUSSION...Taber/Hastings/Storm\nAVIATION...Storm\nMARINE...NWS BTV\nCLIMATE...NWS BTV\n"
  },
  "lake_forecast": {
   "issued": "2026-10-16T06:26:00+00:00",
@@ -850,9 +850,9 @@
  },
  "lake_gage": {
   "water_temp_f": 57,
-  "water_temp_at": "2026-10-16T06:00:00.000-04:00",
-  "level_ft": 93.92,
-  "level_at": "2026-10-16T06:00:00.000-04:00",
+  "water_temp_at": "2026-10-16T07:00:00.000-04:00",
+  "level_ft": 93.98,
+  "level_at": "2026-10-16T07:00:00.000-04:00",
   "level_status": "normal"
  },
  "air": {
@@ -860,7 +860,7 @@
   "aqi": 28,
   "category": "Good",
   "pollutant": "OZONE",
-  "observed": "10/16/26 6:00",
+  "observed": "10/16/26 7:00",
   "discussion": "On Friday, October 16th, expect generally good air quality across Vermont."
  },
  "sun": {
@@ -868,14 +868,14 @@
   "sunset": "2026-10-16T18:06-04:00",
   "sunrise_tomorrow": "2026-10-17T07:10-04:00",
   "sunset_tomorrow": "2026-10-17T18:05-04:00",
-  "uv_max": 2.05
+  "uv_max": 1.4
  },
  "models": {
   "days": [
    {
     "date": "2026-10-16",
     "high_f": {
-     "GFS": 63,
+     "GFS": 64,
      "Euro": 65,
      "ICON": 62
     },
@@ -885,7 +885,7 @@
      "ICON": 100
     },
     "precip_in": {
-     "GFS": 0.34,
+     "GFS": 0.44,
      "Euro": 0.16,
      "ICON": 1.01
     },
@@ -894,7 +894,7 @@
    {
     "date": "2026-10-17",
     "high_f": {
-     "GFS": 43,
+     "GFS": 44,
      "Euro": 49,
      "ICON": 45
     },
@@ -908,12 +908,12 @@
      "Euro": 0.0,
      "ICON": 0.04
     },
-    "high_spread_f": 6
+    "high_spread_f": 5
    },
    {
     "date": "2026-10-18",
     "high_f": {
-     "GFS": 53,
+     "GFS": 54,
      "Euro": 52,
      "ICON": 55
     },
