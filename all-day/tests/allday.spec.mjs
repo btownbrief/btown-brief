@@ -1779,6 +1779,22 @@ async function shellFixes(browser, base) {
     await ctx.close();
   });
 
+  await group('shell fixes: chips inside a tab wrap on a wide screen', async () => {
+    for (const width of [390, 1280]) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 800 } });
+      await page.goto(base + '/all-day/#whatnow/missions');
+      await page.waitForSelector(wnPanel + ' .chips.themes .chip', { timeout: 15000 });
+      const r = await page.$eval(wnPanel + ' .chips.themes', (c) => {
+        const tops = new Set([...c.querySelectorAll('.chip')].map((b) => Math.round(b.getBoundingClientRect().top)));
+        return { wrap: getComputedStyle(c).flexWrap, rows: tops.size, over: c.scrollWidth - c.clientWidth };
+      });
+      if (width >= 900) check(r.wrap === 'wrap' && r.over <= 1, '1280: the theme chips wrap, nothing to scroll sideways', JSON.stringify(r));
+      else check(r.wrap === 'nowrap' && r.rows === 1, '390: they stay one row that scrolls', JSON.stringify(r));
+      check(!errors.length, width + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+
   await group('shell fixes: third-party players use the shared .embed', async () => {
     for (const f of ['modes/onair.js', 'modes/whatnow.js', 'modes/food.js']) {
       const src = (await readFile(path.join(APP, 'js', f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');

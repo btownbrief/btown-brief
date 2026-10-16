@@ -740,9 +740,12 @@ body.desk { overflow: auto; }
 .desk-body { font-size: var(--fs-body); color: var(--ink-2); margin-top: var(--s1); white-space: pre-line; }
 
 @media (min-width: 900px) {
-  /* a wide screen has room: chips wrap instead of scrolling, so a mouse can reach them all */
-  .subnav .chips { flex-wrap: wrap; row-gap: 8px; -webkit-mask-image: none; mask-image: none; padding-bottom: 12px; }
-  .subnav .chips::after { display: none; }
+  /* a wide screen has room: chips wrap instead of scrolling, so a mouse can
+     reach them all, under the mast and inside a tab alike (Food's filters,
+     What Now's themes) */
+  .subnav .chips, .panel-body .chips { flex-wrap: wrap; row-gap: 8px; -webkit-mask-image: none; mask-image: none; }
+  .subnav .chips { padding-bottom: 12px; }
+  .subnav .chips::after, .panel-body .chips::after { display: none; }
   .toolband { flex-wrap: wrap; row-gap: 8px; }
   .toolband .chips { padding-right: var(--gutter); }
   .srcgrid { grid-template-columns: 1fr 1fr; column-gap: 24px; }
