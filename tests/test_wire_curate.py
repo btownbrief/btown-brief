@@ -419,7 +419,7 @@ class ReasonPassTests(unittest.TestCase):
         return {"picks": [{"id": "a", "title": "VSP provides update on investigation into Williston police shooting",
                            "why": why},
                           {"id": "b", "title": "Vermont regulators finalize 5.5% rate increase",
-                           "why": "Your electric bill, starting in January."}],
+                           "why": "What it adds to every household's bill."}],
                 "updates": []}
 
     def stub(self, rewrites):
@@ -445,11 +445,11 @@ class ReasonPassTests(unittest.TestCase):
         _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
         self.assertEqual((rewritten, emptied), (0, 1))
         self.assertEqual(day["picks"][0]["why"], "")
-        self.assertEqual(day["picks"][1]["why"], "Your electric bill, starting in January.")
+        self.assertEqual(day["picks"][1]["why"], "What it adds to every household's bill.")
 
     def test_paraphrase_caught_by_the_model_is_accepted(self):
         day = self.day("Answers about a shooting by officers next door.")
-        ask, _ = self.stub([{"i": 1, "why": "Every household's bill goes up in January."}])
+        ask, _ = self.stub([{"i": 1, "why": "Every household's bill goes up with it."}])
         _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
         self.assertEqual((rewritten, emptied), (1, 0))
 
@@ -462,7 +462,7 @@ class ReasonPassTests(unittest.TestCase):
         _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
         self.assertEqual((rewritten, emptied), (0, 1))
         self.assertEqual(day["picks"][0]["why"], "")                      # the restatement goes
-        self.assertEqual(day["picks"][1]["why"], "Your electric bill, starting in January.")
+        self.assertEqual(day["picks"][1]["why"], "What it adds to every household's bill.")
 
     def test_a_lead_that_is_a_pick_is_sent_once_and_shares_the_reason(self):
         day = self.day("State police update on a police shooting in Williston.")
@@ -482,8 +482,45 @@ class ReasonPassTests(unittest.TestCase):
         _, _, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, broken)
         self.assertEqual((emptied, day["picks"][0]["why"]), (1, ""))
 
+    def test_an_invented_fact_gets_one_rewrite_naming_the_word(self):
+        """Seen live on 2026-10-16, pick 7: neither "free" nor "UVM" is in its headline."""
+        title = "Center for Research on Vermont hosts revolutionary war history panel"
+        why = "A free UVM evening on Vermont's Revolutionary history."
+        self.assertEqual(cw.invented(why, title, "Vermont Biz"), "free")
+        self.assertEqual(cw.invented("A UVM evening on Vermont's Revolutionary history.", title), "UVM")
+        day = {"picks": [{"id": "a", "title": title, "name": "UVM Today", "why": why}], "updates": []}
+        ask, calls = self.stub([{"i": 0, "problem": "free is not in it",
+                                 "why": "An evening on what the war looked like from Vermont."}])
+        _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertIn('0. MUST (invented: "free") · Center for Research', calls[0])
+        self.assertEqual((rewritten, emptied), (1, 0))
+        self.assertEqual(day["picks"][0]["why"], "An evening on what the war looked like from Vermont.")
+
+    def test_an_invented_fact_the_rewrite_keeps_ships_empty(self):
+        title = "Center for Research on Vermont hosts revolutionary war history panel"
+        day = {"picks": [{"id": "a", "title": title, "why": "A free UVM evening on Vermont's Revolutionary history."}],
+               "updates": []}
+        ask, _ = self.stub([{"i": 0, "problem": "", "why": "A free evening of history talk for anyone curious."}])
+        _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertEqual((rewritten, emptied, day["picks"][0]["why"]), (0, 1, ""))
+
+    def test_a_reason_that_reuses_the_headlines_number_is_fine(self):
+        title = "New $4.95M investment to strengthen suicide care across Vermont"
+        self.assertIsNone(cw.invented("The $4.95M reaches crisis lines Burlington callers use.", title))
+        self.assertIsNone(cw.invented("Heating oil follows it toward $110.", "Oil prices jump sharply, to nearly $110 per barrel"))
+        self.assertEqual(cw.invented("Heating oil follows it toward $120.", "Oil prices jump sharply, to nearly $110 per barrel"), "$120")
+        self.assertIsNone(cw.invented("First look at the team this season, at home Saturday.",
+                                      "Men's Basketball Hosts Holy Cross in Exhibition Saturday Afternoon"))
+        self.assertEqual(cw.invented("Tickets go on sale Friday.", "The Flynn adds a second show"), "Friday")
+        day = {"picks": [{"id": "a", "title": title, "why": "The $4.95M reaches crisis lines Burlington callers use."}],
+               "updates": []}
+        ask, calls = self.stub([])
+        _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertNotIn("MUST", calls[0])
+        self.assertEqual((rewritten, emptied), (0, 0))
+
     def test_no_call_when_only_a_clean_lead_is_due(self):
-        day = {"picks": [], "updates": [{"lead": {"id": "a", "why": "Your bill, in January."},
+        day = {"picks": [], "updates": [{"lead": {"id": "a", "why": "Your bill, the next time it comes."},
                                          "items": [{"id": "a", "title": "Rates finalized"}]}]}
         ask, calls = self.stub([])
         self.assertEqual(cw.polish_reasons(day, {"provider": "anthropic"}, False, ask), (None, 0, 0))
