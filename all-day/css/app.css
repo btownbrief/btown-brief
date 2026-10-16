@@ -336,6 +336,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .vbox-head .t { flex: 1; min-width: 0; font-weight: 600; font-size: var(--fs-body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .vbox-frame { position: relative; aspect-ratio: 16 / 9; background: var(--lightbox); }
 .vbox-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+/* showClip(): a file video in the same box; a reel stands 9:16 */
+.vbox-frame.vertical { aspect-ratio: 9 / 16; max-height: 70vh; margin: 0 auto; }
+.vbox-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--lightbox); }
 .vbox-foot { display: flex; align-items: center; gap: var(--s3); padding: var(--s3) var(--gutter); }
 .vbox-foot .note { flex: 1; }
 

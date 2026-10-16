@@ -692,6 +692,7 @@ export function showVideo(id, title) {
   f.title = title || 'Video';
   frame.appendChild(f);
   $('vbox-open').href = 'https://www.youtube.com/watch?v=' + id;
+  $('vbox-open').textContent = 'Open in YouTube ↗';
   $('vbox-hint').hidden = true;
   $('vbox').hidden = false;
   audio.pause();
@@ -701,9 +702,57 @@ export function showVideo(id, title) {
   clearTimeout(hintTimer);
   hintTimer = setTimeout(() => { if (!$('vbox').hidden) $('vbox-hint').hidden = false; }, 3000);
 }
+/* The same box for a video that is a file, not a YouTube id: a reel from
+   Instagram, a clip from a kitchen. A <video> with controls, started by the
+   tap that opened it (never before), 9:16 when `vertical`. The Open link
+   names where the original lives. Demo items have no file; the box shows
+   the poster and says so. */
+const OPEN_ON = [[/(^|\.)instagram\.com$/, 'Open on Instagram'], [/(^|\.)(youtube\.com|youtu\.be)$/, 'Open in YouTube'],
+  [/(^|\.)facebook\.com$/, 'Open on Facebook'], [/(^|\.)tiktok\.com$/, 'Open on TikTok'], [/(^|\.)vimeo\.com$/, 'Open on Vimeo']];
+function openLabel(href) {
+  let host = '';
+  try { host = new URL(href, location.href).hostname; } catch (e) { host = ''; }
+  const hit = OPEN_ON.find(([re]) => re.test(host));
+  return hit ? hit[1] : 'Open the original';
+}
+export function showClip({ src, poster, title, href, vertical } = {}) {
+  closeVideo();
+  audio.pause();
+  stopFake();
+  silenceForeign();
+  paintPlayButtons();
+  $('vbox-title').textContent = title || '';
+  const frame = $('vbox-frame');
+  frame.classList.toggle('vertical', !!vertical);
+  const ok = /^https?:\/\//.test(String(src || ''));
+  if (demo || !ok) {
+    frame.innerHTML = art(poster || 'paper');
+    toast(demo ? 'The video plays here in the real build' : 'This video can’t play here. Open the original.');
+  } else {
+    const v = document.createElement('video');
+    v.src = src;
+    if (/^https?:\/\//.test(String(poster || ''))) v.poster = poster;
+    v.controls = true;
+    v.playsInline = true;
+    v.setAttribute('playsinline', '');
+    v.preload = 'none';
+    frame.appendChild(v);
+    v.play().catch(() => {});
+  }
+  const open = $('vbox-open');
+  open.href = safeHref(href || src);
+  open.textContent = openLabel(href || src) + ' ↗';
+  $('vbox-hint').hidden = true;
+  $('vbox').hidden = false;
+}
+/* Closing gives the box back as YouTube expects it: 16:9, its own label. */
 export function closeVideo() {
   clearTimeout(hintTimer);
-  $('vbox-frame').innerHTML = '';
+  const frame = $('vbox-frame');
+  frame.querySelectorAll('video').forEach((v) => { try { v.pause(); } catch (e) { /* gone */ } v.removeAttribute('src'); });
+  frame.innerHTML = '';
+  frame.classList.remove('vertical');
+  $('vbox-open').textContent = 'Open in YouTube ↗';
   $('vbox').hidden = true;
 }
 $('vbox-close').addEventListener('click', closeVideo);
