@@ -216,9 +216,12 @@ export class FakeBoards {
     mine.forEach((p) => this._photoRemove(p.photo_path));
     this._drop(new Set(mine.map((p) => p.id)));
     for (const k of [...this.votes]) if (k.endsWith('|u:' + u)) this.votes.delete(k);
-    /* their reports stop counting against the posts they reported */
-    this.reports.filter((r) => r.reporter === u).forEach((r) => { const p = this._find(r.post_id); if (p) p.reports = Math.max(0, p.reports - 1); });
+    /* their reports stop counting: each post is recounted from the reports
+       that remain since Stephen last cleared it */
     this.reports = this.reports.filter((r) => r.reporter !== u);
+    this.posts.filter((p) => p.reports > 0).forEach((p) => {
+      p.reports = this.reports.filter((r) => r.post_id === p.id && (p.cleared_at == null || r.at > p.cleared_at)).length;
+    });
     this.missions.delete(u);
     this.profiles.delete(u);
     return { deleted: true };
@@ -261,7 +264,7 @@ export class FakeBoards {
     const p = this._find(p_post);
     if (!p) return { error: 'not_found' };
     const t = this._t();
-    if (p_action === 'approve') Object.assign(p, { status: 'approved', reports: 0, decided_at: t });
+    if (p_action === 'approve') Object.assign(p, { status: 'approved', reports: 0, decided_at: t, cleared_at: t });
     else if (p_action === 'hide') Object.assign(p, { status: 'hidden', decided_at: t });
     else if (p_action === 'delete') Object.assign(p, { status: 'deleted', decided_at: t });
     else if (p_action === 'ban') {

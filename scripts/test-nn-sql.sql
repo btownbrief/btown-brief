@@ -266,6 +266,18 @@ select pg_temp.ok(not exists (select 1 from public.nn_votes where voter = 'u:222
 select pg_temp.ok(not exists (select 1 from public.nn_reports where reporter = '22222222-2222-2222-2222-222222222222'), 'and their reports');
 select pg_temp.ok(exists (select 1 from auth.users where id = '22222222-2222-2222-2222-222222222222'), 'the shared email sign-in itself stays');
 select pg_temp.ok((select reports from public.nn_posts where id = (select id from pg_temp.ids where k = 'swap')) = 0, 'and their report no longer counts against the post');
+-- an old report Stephen already cleared must not erase a newer one
+set role authenticated; select pg_temp.who('33333333-3333-3333-3333-333333333333');
+insert into pg_temp.ids select 'p2', (public.nn_post_create('art', 'notice', 'Free easel, Old North End porch') ->> 'id')::uuid;
+select pg_temp.who('11111111-1111-1111-1111-111111111111'); select public.nn_report((select id from pg_temp.ids where k = 'p2'), 'spam');
+set role anon; select pg_temp.who(null);
+select public.nn_mod_act('test-secret', (select id from pg_temp.ids where k = 'p2'), 'approve');
+reset role; update public.nn_posts set cleared_at = now() - interval '1 second' where id = (select id from pg_temp.ids where k = 'p2');
+update public.nn_reports set created_at = now() - interval '2 seconds' where post_id = (select id from pg_temp.ids where k = 'p2');
+set role authenticated; select pg_temp.who('44444444-4444-4444-4444-444444444444'); select public.nn_report((select id from pg_temp.ids where k = 'p2'), 'unkind');
+select pg_temp.who('11111111-1111-1111-1111-111111111111'); select public.nn_delete_me();
+reset role;
+select pg_temp.ok((select reports from public.nn_posts where id = (select id from pg_temp.ids where k = 'p2')) = 1, 'a cleared old report goes; the newer one still counts');
 reset role; insert into public.btb_photos (storage_path, status, spot) values ('submissions/left-0006.jpg', 'pending', 'All Day · Vintage');
 set role anon; select pg_temp.who(null);
 select pg_temp.ok((public.nn_photo_abandon('submissions/left-0006.jpg') ->> 'removed')::boolean, 'a board photo whose post never happened leaves the queue');

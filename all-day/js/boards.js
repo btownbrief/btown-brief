@@ -198,8 +198,7 @@ export function create(board, input = {}) {
         if (!r.ok) {
           /* the photo is in the queue but its post is not: take it back out,
              so it can never be approved into the gallery on its own */
-          if (path) call('nn_photo_abandon', { p_path: path });
-          return r;
+          return (path ? call('nn_photo_abandon', { p_path: path }) : Promise.resolve()).then(() => r);
         }
         changed(board, r.data.id, 'create');
         return { ok: true, post: r.data, photoWaiting: !!path };

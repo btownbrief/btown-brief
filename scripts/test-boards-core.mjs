@@ -296,6 +296,17 @@ test('fake: missions, and deleting everything', () => {
   assert.equal(f.posts.find((p) => p.id === swap.id).reports, 1);
   assert.equal(f.call('nn_delete_me').deleted, true);
   assert.equal(f.posts.find((p) => p.id === swap.id).reports, 0, 'their report no longer counts against the post');
+  /* an old report Stephen already cleared must not erase a newer one */
+  const g = make({ modSecret: 's' });
+  g.as(MAYA).call('nn_profile_set', { p_display_name: 'Maya' });
+  const p2 = g.call('nn_post_create', { p_board: 'watch', p_kind: 'pick', p_title: 'Pick' });
+  g.as(SAM).call('nn_report', { p_post: p2.id, p_reason: 'spam' });
+  g.tick(1000);
+  g.call('nn_mod_act', { p_secret: 's', p_post: p2.id, p_action: 'approve' });
+  g.tick(1000);
+  g.as(KIM).call('nn_report', { p_post: p2.id, p_reason: 'spam' });
+  g.as(SAM).call('nn_delete_me');
+  assert.equal(g.posts.find((p) => p.id === p2.id).reports, 1, 'Sam’s cleared report goes; Kim’s newer one still counts');
   assert.equal(f.call('nn_profile_get'), null);
   assert.deepEqual(f.call('nn_post_mine'), []);
   assert.deepEqual(f.call('nn_missions_done'), []);

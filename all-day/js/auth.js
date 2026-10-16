@@ -103,14 +103,14 @@ function jwtClaims(t) {
 /* Keep a session. The refresh token and the account id go to storage (they
    carry no email); the access token, a JWT whose claims include the email,
    stays in this module's memory and is gone when the page is. */
-let access = null;   // { token, expires_at } for this page only
+let access = null;   // { token, expires_at, uid } for this page only
 let gen = 0;         // bumped on every sign-in and sign-out: a late answer from before is ignored
 function keep(tok, id) {
   const now = Math.floor(Date.now() / 1000);
   const before = store.user();
   if (!before || before.id !== id) gen++;
   store.setSession({ refresh_token: tok.refresh_token, user: { id } });
-  access = { token: tok.access_token, expires_at: Number(tok.expires_at) || now + (Number(tok.expires_in) || 3600) };
+  access = { token: tok.access_token, expires_at: Number(tok.expires_at) || now + (Number(tok.expires_in) || 3600), uid: id };
   schedule();
   if (!before || before.id !== id) tell();
 }
@@ -157,6 +157,9 @@ let inflight = null;
 export function refresh() {
   const s = store.session();
   if (!s || store.isDemo()) return Promise.resolve(null);
+  /* the token in memory belongs to one account; if another tab has since
+     signed in as someone else, it is not this reader's to use */
+  if (access && access.uid !== s.user.id) { gen++; access = null; inflight = null; }
   const now = Math.floor(Date.now() / 1000);
   if (access && access.expires_at - now > EARLY) { schedule(); return Promise.resolve(access.token); }
   if (inflight) return inflight;
@@ -184,6 +187,15 @@ function schedule() {
   timer = setTimeout(() => { refresh(); }, Math.max(1000, Math.min(wait, 2147483000)));
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && store.session()) refresh(); });
+
+/* Another All Day tab signed in, out, or as someone else: this tab drops its
+   token and tells its listeners, so it never acts for the wrong account. */
+window.addEventListener('storage', (e) => {
+  if (e.key !== 'allday-auth' && e.key !== null) return;
+  const s = store.session();
+  if (access && (!s || access.uid !== s.user.id)) { gen++; access = null; inflight = null; unschedule(); }
+  tell();
+});
 
 export function signOut() {
   if (store.isDemo()) { demoUser = null; tell(); return; }

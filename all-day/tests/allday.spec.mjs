@@ -1806,6 +1806,28 @@ async function accounts(browser, base) {
     await ctx.close();
   });
 
+  await group('accounts: another tab switching accounts never borrows the old token', async () => {
+    const sent = [];
+    const { ctx, page, errors } = await newPage(browser, base, {
+      auth: (p, body) => { if (/^token/.test(p)) { sent.push(body.refresh_token); return { body: { access_token: 'tok-' + body.refresh_token, refresh_token: body.refresh_token + '+', expires_in: 3600, user: { id: 'x' } } }; } return undefined; },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    const a = await page.evaluate(() => import('/all-day/js/app.js').then((app) => app.token()));
+    check(a === 'tok-r1', 'tab one holds the first account’s token', a);
+    const two = await ctx.newPage();
+    await two.goto(base + '/all-day/?x=2');
+    await two.evaluate(() => localStorage.setItem('allday-auth', JSON.stringify({ refresh_token: 'rB', user: { id: 'u-2' } })));
+    await page.waitForTimeout(200);
+    const b = await page.evaluate(() => import('/all-day/js/app.js').then((app) => app.token().then((t) => ({ t, id: app.user() && app.user().id }))));
+    check(b.id === 'u-2' && b.t === 'tok-rB', 'after the other tab signs in as someone else, tab one drops the old token and fetches the new account’s', JSON.stringify(b));
+    check(sent.includes('rB'), 'with the new account’s refresh token', sent.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('accounts: before the SQL is pasted, posting says so', async () => {
     const missing = { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } };
     const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn) => (/^nn_/.test(fn) ? missing : undefined) });

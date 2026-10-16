@@ -88,6 +88,8 @@ create table if not exists public.nn_posts (
   created_at  timestamptz not null default now(),
   decided_at  timestamptz
 );
+-- when Stephen last approved it: reports from before then no longer count
+alter table public.nn_posts add column if not exists cleared_at timestamptz;
 create index if not exists nn_posts_board_idx on public.nn_posts (board, status, created_at desc);
 create index if not exists nn_posts_user_idx on public.nn_posts (user_id, created_at desc);
 create unique index if not exists nn_posts_photo_idx on public.nn_posts (photo_path) where photo_path is not null;
@@ -367,6 +369,8 @@ begin
   if photo is not null and kr ->> 'photo' = 'none' then raise exception 'photo_not_allowed'; end if;
   if photo is null and kr ->> 'photo' = 'required' then raise exception 'photo_required'; end if;
   if photo is not null and photo !~ '^submissions/[A-Za-z0-9-]+\.jpg$' then raise exception 'bad_photo'; end if;
+  -- one claim per photo at a time; nn_photo_abandon takes the same lock
+  if photo is not null then perform pg_advisory_xact_lock(hashtext('nn_photo:' || photo)); end if;
   if photo is not null and (not public.nn_photo_claimable(photo)
                             or exists (select 1 from public.nn_posts where photo_path = photo)) then raise exception 'bad_photo'; end if;
   perform public.nn_sweep();
@@ -452,6 +456,8 @@ end $$;
 create or replace function public.nn_photo_abandon(p_path text) returns jsonb
 language plpgsql security definer set search_path = public as $$
 begin
+  if p_path is null then return jsonb_build_object('removed', false); end if;
+  perform pg_advisory_xact_lock(hashtext('nn_photo:' || p_path));   -- waits out a post claiming it right now
   if public.nn_photo_claimable(p_path) and not exists (select 1 from public.nn_posts where photo_path = p_path) then
     perform public.nn_photo_remove(p_path);
     return jsonb_build_object('removed', true);
@@ -531,10 +537,12 @@ begin
   end loop;
   delete from public.nn_posts where user_id = u;
   delete from public.nn_votes where voter = 'u:' || u::text;
-  -- their reports stop counting against the posts they reported
-  update public.nn_posts p set reports = greatest(0, p.reports - 1)
-   where p.id in (select post_id from public.nn_reports where reporter = u);
+  -- their reports stop counting: each post they reported is recounted from
+  -- the reports that remain since Stephen last cleared it
   delete from public.nn_reports where reporter = u;
+  update public.nn_posts p set reports = (select count(*) from public.nn_reports r
+     where r.post_id = p.id and (p.cleared_at is null or r.created_at > p.cleared_at))
+   where p.reports > 0;
   delete from public.nn_mission_done where user_id = u;
   delete from public.nn_profiles where user_id = u;
   return jsonb_build_object('deleted', true);
@@ -624,7 +632,7 @@ begin
   select user_id into who from public.nn_posts where id = p_post;
   if who is null then return jsonb_build_object('error', 'not_found'); end if;
   if p_action = 'approve' then
-    update public.nn_posts set status = 'approved', reports = 0, decided_at = now() where id = p_post;
+    update public.nn_posts set status = 'approved', reports = 0, decided_at = now(), cleared_at = now() where id = p_post;
   elsif p_action = 'hide' then
     update public.nn_posts set status = 'hidden', decided_at = now() where id = p_post;
   elsif p_action = 'delete' then
