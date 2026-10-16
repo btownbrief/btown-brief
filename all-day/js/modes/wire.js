@@ -92,15 +92,18 @@ function build() {
   const seen = new Set();
   const uniq = all.filter((it) => (seen.has(it.k) ? false : (seen.add(it.k), true)));
   app.know(uniq);
-  DAYS = [];
-  if (!uniq.length) return;
-  /* the newest Burlington days the payload holds, newest first */
+  /* Today in Burlington, then the day before: always the real dates, even
+     when the newest data is older (today then reads "0 stories so far" and
+     yesterday is one arrow back, never shown as if it were today). */
   const byDay = new Map();
   uniq.forEach((it) => { if (!byDay.has(it.day)) byDay.set(it.day, []); byDay.get(it.day).push(it); });
-  [...byDay.keys()].slice(0, DAYS_KEPT).forEach((key) => {
-    const items = byDay.get(key);
-    DAYS.push({ key, name: dayFmt.format(new Date(items[0].d * 1000)), items });
-  });
+  let key = et(Date.now() / 1000).key;
+  DAYS = [];
+  for (let i = 0; i < DAYS_KEPT; i++) {
+    const [y, m, d] = key.split('-').map(Number);
+    DAYS.push({ key, name: dayFmt.format(new Date(Date.UTC(y, m - 1, d, 17))), items: byDay.get(key) || [] });
+    key = new Date(Date.UTC(y, m - 1, d - 1)).toISOString().slice(0, 10);   /* calendar step, DST-safe */
+  }
 }
 
 /* pulse-top's ranked picks, as cards can draw them, with a thumbnail when
@@ -123,7 +126,8 @@ function picks() {
 const isToday = (day) => day.key === et(Date.now() / 1000).key;
 function stamp() {
   const g = L.pulse && Date.parse(L.pulse.generated);
-  return g ? clock(g / 1000) : '';
+  if (!g) return '';
+  return clock(g / 1000) + (et(g / 1000).key === DAYS[0].key ? '' : ' ' + dayFmt.format(new Date(g)).split(',')[0]);
 }
 function slot(h) {
   if (h >= 21) return 'Late';
@@ -149,7 +153,7 @@ function subnav() {
   prev.addEventListener('click', () => goDay(L.day + 1));
   next.addEventListener('click', () => goDay(L.day - 1));
   const sub = L.day > 0 ? n + ' stories · final'
-    : n + (today ? ' stories so far' : ' stories') + (stamp() ? ' · updated ' + stamp() : '') + (L.stale ? ' · reconnecting' : '');
+    : n + ' stories so far' + (stamp() ? ' · updated ' + stamp() : '') + (L.stale ? ' · reconnecting' : '');
   dl.append(prev, el('span', 'dl', '<b>' + esc(day.name) + '</b><span class="s">' + esc(sub) + '</span>'), next);
   frag.appendChild(dl);
 
@@ -185,7 +189,7 @@ function render() {
 
   const day = DAYS[L.day];
   const green = geo() === 'everything';
-  const shownPicks = L.day === 0 && L.ch === 'all' ? renderMatters(feed) : new Set();
+  const shownPicks = L.ch === 'all' ? renderMatters(feed, day) : new Set();
   const river = day.items.filter((it) => visible(it) && !shownPicks.has(it.k) && (L.ch === 'all' || it.ch === L.ch));
   if (shownPicks.size) divider(feed, 'The rest of ' + (isToday(day) ? 'today' : 'the day'), geo() === 'local' ? 'local only' : 'every source');
 
@@ -201,13 +205,13 @@ function render() {
       feed.appendChild(cards.newline(fresh + ' new since you were here at ' + clock(base)));
     }
   });
-  if (!river.length) feed.appendChild(el('p', 'empty', L.ch === 'all' ? 'Nothing local on this day yet. Flip the switch to Everything for the rest.' : 'Nothing from ' + esc(label(L.ch)) + ' on this day.'));
+  if (!river.length) feed.appendChild(el('p', 'empty', L.ch === 'all' ? (L.day === 0 ? 'Nothing yet today. Yesterday’s edition is one arrow back.' : 'Nothing local on this day. Flip the switch to Everything for the rest.') : 'Nothing from ' + esc(label(L.ch)) + ' on this day.'));
 
   if (L.page < river.length) {
     feed.appendChild(button('Show ' + Math.min(PAGE, river.length - L.page) + ' more from ' + (L.day ? 'that day' : 'today'), 'ghost more', () => { L.page += PAGE; render(); }));
   } else if (L.day === 0 && DAYS.length > 1) {
     feed.appendChild(cards.caught({
-      title: isToday(day) ? 'That’s today so far' : 'That’s the latest edition',
+      title: 'That’s today so far',
       text: 'New stories land through the day, above a line, never under your thumb.' + (stamp() ? ' Last updated ' + stamp() + '.' : ''),
       buttons: [button('Yesterday’s edition ' + ICON.arrow, '', () => goDay(1)), button('What now ' + ICON.arrow, 'ghost', () => app.go('whatnow'))],
     }));
@@ -226,12 +230,14 @@ const label = (k) => (KINDS.find((x) => x[0] === k) || ['', ''])[1];
 /* What matters today: number one as the pick card, two to five as ranked
    rows, six to ten on request. Returns the keys it drew so the river can
    leave them out. */
-function renderMatters(feed) {
+function renderMatters(feed, day) {
+  const built = L.top && Date.parse(L.top.generated);
+  /* picks belong to the Burlington day they were made on */
+  if (!built || et(built / 1000).key !== day.key) return new Set();
   const list = picks().filter(visible).slice(0, PICKS_SHOWN);
   if (!list.length) return new Set();
   const wm = el('div', 'wm');
-  const built = L.top && Date.parse(L.top.generated);
-  section(wm, 'What matters today', list.length + ' picks from the whole wire, each with a reason.' + (built ? ' Picked at ' + esc(clock(built / 1000)) + '.' : ''));
+  section(wm, L.day === 0 ? 'What matters today' : 'What mattered ' + day.name.split(',')[0], list.length + ' picks from the whole wire, each with a reason.' + (built ? ' Picked at ' + esc(clock(built / 1000)) + '.' : ''));
   const first = list[0];
   put(wm, cards.pick({ ...first, media: first.thumb, thumb: '', eyebrow: '1 of ' + list.length }, { tagLocal: geo() === 'everything' && first.local }));
   list.slice(1, 5).forEach((it, i) => wm.appendChild(demo.wmRow(it, i + 2)));

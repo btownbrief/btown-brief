@@ -969,6 +969,8 @@
   ok   deep links, demo › #whatnow/missions opens the mode
   ok   deep links, demo › #onair/everything flips the shared switch
   ok   deep links, demo › an unknown key says the card has moved on
+  ok   deep links, live Wire › the dateline is today in America/New_York on the real clock (Friday, October 16)
+  ok   deep links, live Wire › the back arrow reaches yesterday, marked final
   ok   deep links, live Wire › the live Wire draws rows from pulse.json
   ok   deep links, live Wire › the fixture day has a non-local card past row 70
   ok   deep links, live Wire › a shared non-local card past the first page lands and flashes for a Local reader
@@ -1004,4 +1006,4 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 65 cards in 10ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)

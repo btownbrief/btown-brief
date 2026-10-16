@@ -299,9 +299,18 @@ async function deepLinks(browser, base) {
     const far = today.slice(70).find((it) => !local.has(it.s));
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/');
-    await page.waitForSelector('.panel:not([hidden]) .card.row', { timeout: 15000 });
+    await page.waitForSelector('#subnav .dl b', { timeout: 15000 });
+    await page.waitForTimeout(300);
     const keys = await page.$$eval('.panel:not([hidden]) .card.row', (rs) => rs.map((r) => r.dataset.k));
-    check(keys.length >= 10, 'the live Wire draws rows from pulse.json', keys.length);
+    const todayET = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
+    check(await page.$eval('#subnav .dl b', (b) => b.textContent) === todayET, 'the dateline is today in America/New_York on the real clock (' + todayET + ')', await page.$eval('#subnav .dl b', (b) => b.textContent));
+    await page.screenshot({ path: path.join(SHOTS, 'live-wire-today.png') });
+    await page.click('#subnav .dateline .nav[aria-label="Earlier day"]');
+    await page.waitForTimeout(200);
+    check(/final/.test(await page.$eval('#subnav .dl .s', (b) => b.textContent)), 'the back arrow reaches yesterday, marked final', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-wire-yesterday.png') });
+    const rowsY = await page.$$eval('.panel:not([hidden]) .card.row', (rs) => rs.map((r) => r.dataset.k));
+    check(keys.length + rowsY.length >= 10, 'the live Wire draws rows from pulse.json', keys.length + rowsY.length);
     if (check(!!far, 'the fixture day has a non-local card past row 70', today.length)) {
       await page.goto(base + '/all-day/#wire/' + encodeURIComponent(far.u));
       await page.reload();
@@ -346,7 +355,9 @@ async function interactions(browser, base) {
     const k = await row.getAttribute('data-k');
     await row.locator('[data-act="save"]').click();
     check(await page.$eval('#saved-btn', (b) => b.classList.contains('on')), 'the star saves and lights the mast', '');
-    await page.click('#saved-btn');
+    await page.evaluate(() => document.querySelector('.panel:not([hidden])').scrollBy(0, -60));   /* the mast returns on an upward scroll */
+    await page.waitForTimeout(300);
+    await page.evaluate(() => document.getElementById('saved-btn').click());
     check(await page.locator('.sheet-card .sheet-row').count() === 1, 'the Saved sheet lists it', '');
     await page.keyboard.press('Escape');
     check(await page.$('#sheet[hidden]') !== null, 'Escape closes the sheet', '');
@@ -446,8 +457,12 @@ async function interactions(browser, base) {
   await group('performance', async () => {
     const { ctx, page } = await newPage(browser, base, { viewport: { width: 390, height: 844 } });
     await page.goto(base + '/all-day/');
-    await page.waitForSelector('.panel:not([hidden]) .card.row', { timeout: 15000 });
+    await page.waitForSelector('#subnav .dl b', { timeout: 15000 });
     await page.click('#subnav .localsw-half:not(.on)');   /* Everything: a full page of rows */
+    await page.waitForTimeout(200);
+    /* the local snapshot can be a day old, so measure the fuller of today and yesterday */
+    if (!(await page.$('.panel:not([hidden]) .card.row'))) await page.click('#subnav .dateline .nav[aria-label="Earlier day"]');
+    await page.waitForSelector('.panel:not([hidden]) .card.row', { timeout: 15000 });   /* Everything: a full page of rows */
     await page.waitForTimeout(200);
     const ms = await page.evaluate(() => {
       const chip = document.querySelector('#subnav .chip[data-chip="all"]');
