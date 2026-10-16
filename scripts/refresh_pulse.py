@@ -983,6 +983,95 @@ def attach_discussions(sources, per_source):
                     target["hc"] = item["dn"]
 
 
+# ----------------------------------------------------------------------
+# Reddit bridge: the shared intake as a second route, and the paused state
+# ----------------------------------------------------------------------
+
+# Reddit stops serving RSS on 2026-11-13, and Inoreader's subreddit feeds stop
+# with it. scripts/reddit_intake.py collects r/burlington and r/vermont from
+# every route that still answers (Inoreader, direct RSS, OAuth); --reddit-intake
+# feeds those posts into the matching subreddit sources here. When no Reddit
+# source has had a new item for this long, the payload says "paused" and the
+# Pulse and All Day's Reddit tab say so instead of quietly going stale.
+# Inoreader alone has gone 30h between Reddit batches, hence the margin.
+REDDIT_PAUSE_HOURS = 36
+REDDIT_POST_ID_RE = re.compile(r"/comments/([a-z0-9]+)", re.I)
+
+
+def reddit_post_id(url):
+    match = REDDIT_POST_ID_RE.search(url or "")
+    return match.group(1).lower() if match else None
+
+
+def intake_items(intake, sources, prev_by_source):
+    """Shared-intake posts → {source_id: [stream-shaped items]}.
+
+    Only subreddits the roster already carries are fed (matched on the site
+    URL, so r/Vermont and r/vermont meet). A post the store already holds
+    keeps its stored URL, so a casing difference between routes can't split
+    one thread into two headlines."""
+    by_key = {}
+    for source in sources:
+        site = source.get("site") or ""
+        if "reddit.com" in site:
+            by_key[topic_keys(site)[0]] = source["id"]
+    known = {}
+    for source_id in by_key.values():
+        for item in prev_by_source.get(source_id, []):
+            pid = reddit_post_id(item.get("u"))
+            if pid:
+                known.setdefault(source_id, {})[pid] = item["u"]
+    fresh = {}
+    for post in (intake or {}).get("posts") or []:
+        if not isinstance(post, dict):
+            continue
+        source_id = by_key.get("reddit.com/" + str(post.get("sub") or "").lower())
+        url = canon_url(post.get("url") or "")
+        when = parse_time(post.get("created") or "")
+        title = trim(clean_space(post.get("title")), TITLE_MAX)
+        if not source_id or not url or not title or when is None:
+            continue
+        item = {"title": title, "url": known.get(source_id, {}).get(reddit_post_id(url), url),
+                "when": when}
+        if post.get("out"):
+            item["out"] = canon_url(post["out"])
+        fresh.setdefault(source_id, []).append(item)
+    return fresh
+
+
+def drop_removed(per_source, sources, removed_ids, key="u"):
+    """Threads Reddit's own listing showed as removed or deleted leave every
+    subreddit list, even when Inoreader still carries a copy. Applied to the
+    stored items (key "u") and the incoming ones (key "url") BEFORE merging,
+    so a re-offered removed thread never counts as new. Returns how many
+    items left, so a removal-only run still publishes."""
+    dropped = 0
+    if not removed_ids:
+        return dropped
+    for source in sources:
+        if "reddit.com" not in (source.get("site") or ""):
+            continue
+        items = per_source.get(source["id"], [])
+        per_source[source["id"]] = [item for item in items
+                                    if reddit_post_id(item.get(key)) not in removed_ids]
+        dropped += len(items) - len(per_source[source["id"]])
+    return dropped
+
+
+def reddit_state(sources, per_source, now_ts):
+    """{"paused", "last_post", "pause_after_hours"}, or None without subreddits."""
+    ids = [source["id"] for source in sources if "reddit.com" in (source.get("site") or "")]
+    if not ids:
+        return None
+    newest = max((item.get("d") or 0 for source_id in ids
+                  for item in per_source.get(source_id, [])), default=0)
+    paused = not newest or now_ts - newest > REDDIT_PAUSE_HOURS * 3600
+    return {"paused": bool(paused),
+            "last_post": (datetime.fromtimestamp(newest, timezone.utc).isoformat()
+                          if newest else None),
+            "pause_after_hours": REDDIT_PAUSE_HOURS}
+
+
 def build_payload(sources, per_source, generated):
     out_sources, out_items = [], []
     seen_urls = set()
@@ -1164,6 +1253,21 @@ def run(args):
     else:
         fast_lane(sources, fresh_by_source)
 
+    removed_ids = set()
+    if getattr(args, "reddit_intake", None):
+        # A bonus route, never a blocker: an unreadable intake file just
+        # means the subreddits ride on the Inoreader streams alone.
+        intake = load_json(args.reddit_intake, {})
+        if isinstance(intake, dict):
+            fed = intake_items(intake, sources, prev_by_source)
+            for source_id, items in fed.items():
+                fresh_by_source.setdefault(source_id, []).extend(items)
+            removed_ids = set((intake.get("removed") or {}).keys())
+            print(f"reddit intake: {sum(len(v) for v in fed.values())} posts for "
+                  f"{len(fed)} subreddit sources, {len(removed_ids)} removed ids")
+    dropped_removed = drop_removed(prev_by_source, sources, removed_ids)
+    drop_removed(fresh_by_source, sources, removed_ids, key="url")
+
     now_ts = int(utcnow().timestamp())
     per_source, added_total = {}, 0
     for source in sources:
@@ -1188,9 +1292,14 @@ def run(args):
         added_total += added
 
     attach_discussions(sources, per_source)
+    reddit = reddit_state(sources, per_source, now_ts)
+    # A Reddit pause flipping on or off, or a removed thread leaving, is a
+    # change worth publishing even on a run with no new headlines.
+    reddit_changed = bool(reddit) and (previous.get("reddit") or {}).get("paused") != reddit["paused"]
 
     prev_total = len(previous.get("items", []))
-    if not args.seed and prev_total and added_total == 0:
+    if not args.seed and prev_total and added_total == 0 and not dropped_removed \
+            and not reddit_changed:
         # Nothing new anywhere: don't write at all. The workflow then skips
         # its push, the branch keeps its honest `generated` stamp, and the
         # page's "updated Xm ago" reflects when content actually changed.
@@ -1198,6 +1307,8 @@ def run(args):
         return
 
     payload = build_payload(sources, per_source, utcnow())
+    if reddit:
+        payload["reddit"] = reddit   # pages that predate the key just ignore it
     total = len(payload["items"])
     floor = max(MIN_ITEMS, prev_total // 2)
     if total < floor:
@@ -1573,6 +1684,34 @@ def selftest():
     assert shorten("The Other Paper (South Burlington)") == "The Other Paper"
     assert shorten("CNET News.com") == "CNET News"
     assert shorten("Vox -  All") == "Vox"
+
+    # reddit bridge: intake posts land on the roster's subreddit sources, a
+    # stored thread keeps its URL, and the paused flag tracks the newest item
+    subs = [{"id": "r-burlington", "site": "https://www.reddit.com/r/burlington/"},
+            {"id": "r-vermont", "site": "https://www.reddit.com/r/vermont/"},
+            {"id": "wcax", "site": "https://www.wcax.com/"}]
+    fed = intake_items(
+        {"posts": [{"sub": "r/Vermont", "title": "Leaf report", "created": "2026-10-04T12:00:00+00:00",
+                    "url": "https://www.reddit.com/r/vermont/comments/abc12/leaf_report/"},
+                   {"sub": "r/burlington", "title": "Link post", "created": "2026-10-04T13:00:00+00:00",
+                    "url": "https://www.reddit.com/r/burlington/comments/def34/link_post/",
+                    "out": "https://vtdigger.org/a?utm_source=x"},
+                   {"sub": "r/nowhere", "title": "x", "created": "2026-10-04T13:00:00+00:00",
+                    "url": "https://www.reddit.com/r/nowhere/comments/zz1/x/"}]},
+        subs, {"r-vermont": [{"u": "https://www.reddit.com/r/Vermont/comments/abc12/leaf_report/"}]})
+    assert sorted(fed) == ["r-burlington", "r-vermont"]
+    assert fed["r-vermont"][0]["url"] == "https://www.reddit.com/r/Vermont/comments/abc12/leaf_report/"
+    assert fed["r-burlington"][0]["out"] == "https://vtdigger.org/a"
+    now_ts = 1_800_000_000
+    lists = {"r-burlington": [{"u": "https://www.reddit.com/r/burlington/comments/def34/x/",
+                               "d": now_ts - 3600}]}
+    assert reddit_state(subs, lists, now_ts)["paused"] is False
+    lists["r-burlington"][0]["d"] = now_ts - (REDDIT_PAUSE_HOURS + 1) * 3600
+    assert reddit_state(subs, lists, now_ts)["paused"] is True
+    assert reddit_state(subs, {}, now_ts)["paused"] is True
+    assert reddit_state(subs[2:], {}, now_ts) is None
+    drop_removed(lists, subs, {"def34"})
+    assert lists["r-burlington"] == []
     print("selftest ok")
 
 
@@ -1583,6 +1722,9 @@ def main():
     parser.add_argument("--store", help="previous payload to merge (default: --out)")
     parser.add_argument("--out", default=OUT)
     parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--reddit-intake", metavar="PATH",
+                        help="shared Reddit intake (scripts/reddit_intake.py) to feed "
+                             "the r/burlington and r/vermont sources")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     if args.selftest:
