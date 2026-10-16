@@ -20,6 +20,7 @@ Output, data/wire-today.json:
    "updated": "...", "checked": "...", "count": 52,
    "counts": {"local": {"all": 40, "x": 3, ...}, "everything": {...}},
    "picks": [{"rank": 1, "why": "...", ...item}, ...],
+   "brief": {...item, "own": true}            (only on days the Brief went out)
    "updates": [{"key": "afternoon", "label": "Afternoon", "time": "2:10 pm",
                 "updated": "...", "lead": {"id": "...", "why": "..."},
                 "items": [item, ...]}, ...newest first],
@@ -351,7 +352,7 @@ def line(index, item, now_ts):
     if item.get("ch") in wc.THREAD_CHANNELS:
         count = item.get("comments")
         talk = f" · {count} comments" if isinstance(count, int) else " · comments unknown"
-    block = wc.pick_block(item)
+    block = "the Brief's own edition, pinned above the picks" if item.get("own") else wc.pick_block(item)
     gate = f" · river only ({block})" if block else ""
     return (f"{index}. {'LOCAL' if item['local'] else 'NATIONAL'} · {item['ch']} · {who} · "
             f"{age_label(item, now_ts)}{topic}{place}{talk}{gate} · {item['title']}")
@@ -489,8 +490,11 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
     if want_picks:
         for entry in answer.get("picks") or []:
             index = as_index(entry.get("i") if isinstance(entry, dict) else None, 0, total)
-            if index is None or index in pick_seen or wc.pick_block(by_index[index]):
-                continue   # a "river only" item stays out of the picks whatever the answer
+            if index is None or index in pick_seen or by_index[index].get("own") \
+                    or wc.pick_block(by_index[index]):
+                # a "river only" item stays out of the picks whatever the answer;
+                # the Brief's own edition is pinned above them as `brief` instead
+                continue
             why = wc.trim(entry.get("why", ""), WHY_MAX)
             if not why:
                 continue
@@ -677,9 +681,26 @@ def polish_reasons(day, engine, picks_too, ask=None):
     return usage, rewritten, len(flagged)
 
 
+def brief_of(items):
+    """The newest of the Brief's own editions on today's page, or None. The
+    page pins it above "What matters today" rather than ranking it."""
+    own = [item for item in items if item.get("own")]
+    return dict(max(own, key=lambda item: item.get("posted_at") or "")) if own else None
+
+
 def finish(day, pulse, now, changed):
     stamp = now.replace(microsecond=0).isoformat()
     items = river(day)
+    # the Brief's own edition is never a pick (picks that stood from before
+    # this rule drop out and the rest close ranks); it rides on top as `brief`
+    if any(pick.get("own") for pick in day.get("picks") or []):
+        kept = [pick for pick in day["picks"] if not pick.get("own")]
+        day["picks"] = [dict(pick, rank=rank) for rank, pick in enumerate(kept, start=1)]
+    brief = brief_of(items)
+    if brief:
+        day["brief"] = brief
+    else:
+        day.pop("brief", None)
     day["count"] = len(items)
     day["counts"] = counts(items)
     day["checked"] = stamp

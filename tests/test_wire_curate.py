@@ -234,6 +234,60 @@ class HouseRuleTests(Workdir):
         self.assertEqual(len(own), 1)
         self.assertEqual((own[0]["ch"], own[0]["title"]), ("newsletters", "Friday, October 16th"))
 
+    def test_the_briefs_own_edition_is_never_a_pick(self):
+        payload = pulse()
+        payload["sources"].append({"id": "btown-brief", "name": "Btown Brief", "short": "Btown Brief",
+                                   "site": "https://www.btownbrief.com/", "topic": "local", "local": 1})
+        payload["items"] += [
+            {"t": "Friday, the early edition", "u": "https://www.btownbrief.com/p/friday-early",
+             "d": NOW_TS - 9 * 3600, "s": "btown-brief"},
+            {"t": "Friday, October 16th", "u": "https://www.btownbrief.com/p/friday",
+             "d": NOW_TS - 7 * 3600, "s": "btown-brief"},
+        ]
+        self.write_pulse(payload)
+
+        def rank_own_first(numbers, river_n, schema):
+            answer = take_all(numbers, river_n, schema)
+            own = [n for n in numbers if "Btown Brief" in lines[n]]
+            answer["picks"] = [{"i": n, "why": "The Brief, first."} for n in own] + answer["picks"]
+            return answer
+        lines = {}
+
+        class Peek(Stub):
+            def __call__(self, engine, system, user, schema, *a, **k):
+                for row in user.splitlines():
+                    if row[:1].isdigit():
+                        lines[int(row.split(".")[0])] = row
+                return super().__call__(engine, system, user, schema, *a, **k)
+        stub = Peek(rank_own_first)
+        self.run_curate(stub)
+        day = self.today()
+        # the editor was told, and its answer was overruled anyway
+        self.assertIn("river only (the Brief's own edition", stub.prompts[0][1])
+        self.assertTrue(day["picks"])
+        self.assertFalse([pick for pick in day["picks"] if pick.get("own")])
+        self.assertEqual([pick["rank"] for pick in day["picks"]], list(range(1, len(day["picks"]) + 1)))
+        # the newest own edition rides on top; both stay in the river
+        self.assertEqual(day["brief"]["title"], "Friday, October 16th")
+        self.assertTrue(day["brief"]["own"])
+        self.assertEqual(len([item for item in cw.river(day) if item.get("own")]), 2)
+
+    def test_standing_picks_lose_an_own_edition_and_close_ranks(self):
+        day = cw.empty_day("2026-10-16")
+        own = {"id": "b1", "ch": "newsletters", "local": True, "src": "btown-brief", "name": "Btown Brief",
+               "title": "Friday", "url": "https://www.btownbrief.com/p/f", "posted_at": "2026-10-16T11:00:00+00:00",
+               "own": True}
+        other = {"id": "a1", "ch": "local", "local": True, "src": "wcax", "name": "WCAX", "title": "Other",
+                 "url": "https://a.com/1", "posted_at": "2026-10-16T12:00:00+00:00"}
+        day["updates"] = [{"key": "midday", "label": "Midday", "items": [own, other]}]
+        day["picks"] = [dict(own, rank=1, why="x"), dict(other, rank=2, why="y")]
+        cw.finish(day, pulse(), NOW, changed=False)
+        self.assertEqual([(p["id"], p["rank"]) for p in day["picks"]], [("a1", 1)])
+        self.assertEqual(day["brief"]["id"], "b1")
+        day["updates"][0]["items"] = [other]
+        cw.finish(day, pulse(), NOW, changed=False)
+        self.assertNotIn("brief", day)
+
     def test_a_reddit_post_that_only_links_an_outlet_is_that_article(self):
         payload = pulse()
         payload["sources"].append({"id": "r-burlington", "name": "r/burlington", "short": "r/burlington",
