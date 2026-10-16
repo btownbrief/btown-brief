@@ -52,13 +52,22 @@ GOOD = [
 ]
 
 
-def fake_answers(*answers):
-    """An ask_json stand-in that returns each answer in turn and records the prompts."""
-    calls = []
+def fake_answers(*answers, checks=()):
+    """An ask_json stand-in. The writer's calls get `answers` in turn and are
+    recorded in `calls`; the fact check's get `checks` in turn (default:
+    nothing unsupported) and are recorded in `ask.checked`."""
+    calls, checked = [], []
 
     def ask(engine, system, user, schema, max_tokens, log_prefix):
+        if "unsupported" in schema["properties"]:
+            checked.append(SimpleNamespace(system=system, user=user))
+            got = checks[len(checked) - 1] if len(checked) <= len(checks) else {"unsupported": []}
+            if isinstance(got, Exception):
+                raise got
+            return got, {"in": 800, "out": 200, "calls": 1}
         calls.append(SimpleNamespace(system=system, user=user))
         return answers[min(len(calls), len(answers)) - 1], {"in": 1000, "out": 600, "calls": 1}
+    ask.checked = checked
     return ask, calls
 
 
@@ -118,7 +127,9 @@ class Writer(unittest.TestCase):
         self.assertIn("read by an AI voice", script)
         self.assertTrue(wa.WORDS_MIN <= wa.word_count(script) <= wa.WORDS_MAX, wa.word_count(script))
         self.assertEqual(teaser, "The Williston case, the governor's race money, and a scam warning.")
-        self.assertEqual(usage["calls"], 1)
+        self.assertEqual(usage["calls"], 2)          # the draft and its fact check
+        self.assertIn("The script:\nState police have an update", ask.checked[0].user)
+        self.assertIn("1. VSP provides update", ask.checked[0].user)
         self.assertNotIn("\n\n\n", script)
 
     def test_an_invented_fact_gets_one_rewrite_naming_it(self):
@@ -133,15 +144,66 @@ class Writer(unittest.TestCase):
         self.assertIn("Your draft:", calls[1].user)
         self.assertIsNotNone(script)
         self.assertNotIn("Fleming", script)
-        self.assertEqual(usage["calls"], 2)
+        self.assertEqual((usage["calls"], len(ask.checked)), (3, 1))   # no fact check on a draft that already invents
 
-    def test_still_inventing_after_the_rewrite_means_no_clip(self):
+    def test_still_inventing_after_the_rewrites_means_no_clip(self):
         bad = pad(["Mayor Emma Mulvaney-Stanak will speak at 6 pm."] + GOOD)
         ask, calls = fake_answers({"paragraphs": bad, "teaser": "x"})
         script, teaser, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
         self.assertIsNone(script)
-        self.assertEqual(len(calls), 2)
+        self.assertEqual(len(calls), wa.DRAFTS)
         self.assertTrue(any("no clip today" in n for n in notes))
+
+    def test_a_rewrite_that_invents_loses_to_an_honest_short_draft(self):
+        short = pad(GOOD, words=385)
+        liar = pad(["Lieutenant Jane Doe briefed reporters."] + GOOD)
+        ask, calls = fake_answers({"paragraphs": short, "teaser": "x"}, {"paragraphs": liar, "teaser": "x"})
+        script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertEqual(len(calls), 3)
+        self.assertIsNotNone(script)
+        self.assertNotIn("Lieutenant", script)
+        self.assertTrue(any("soft problem" in n for n in notes), notes)
+
+    def test_the_fact_check_sends_back_what_the_word_checks_miss(self):
+        claim = "It is a reminder that the choices on the ballot are being watched far past our borders."
+        draft = pad(GOOD + [claim])
+        ask, calls = fake_answers({"paragraphs": draft, "teaser": "x"}, {"paragraphs": pad(GOOD), "teaser": "x"},
+                                  checks=({"unsupported": [{"sentence": claim, "problem": "opinion stated as fact"}]},))
+        script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertEqual((len(calls), len(ask.checked)), (2, 2))
+        self.assertIn("opinion stated as fact", calls[1].user)
+        self.assertIn(claim, calls[1].user)
+        self.assertNotIn("ballot", script)
+
+    def test_a_sentence_the_check_flags_on_every_draft_is_cut(self):
+        claim = "It is a reminder that the choices on the ballot are being watched far past our borders."
+        draft = pad(GOOD + [claim], words=440)
+        flag = {"unsupported": [{"sentence": claim, "problem": "opinion stated as fact"}]}
+        ask, calls = fake_answers({"paragraphs": draft, "teaser": "x"}, checks=(flag,) * wa.DRAFTS)
+        script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertEqual(len(calls), wa.DRAFTS)
+        self.assertIsNotNone(script, notes)
+        self.assertNotIn("ballot", script)
+        self.assertIn("Vox takes a national look", script)
+        self.assertTrue(any("cut 1 sentence" in n for n in notes), notes)
+
+    def test_a_gendered_pronoun_no_source_gives_is_invented(self):
+        she = pad(["Janoo again leads Governor Scott in fundraising, and she has the money."] + GOOD[2:])
+        p = wa.problems_of(she, "", self.stories, "2026-10-16", "today")
+        self.assertIn("she", p["invented"])
+
+    def test_a_fact_check_that_does_not_run_means_no_clip(self):
+        ask, _ = fake_answers({"paragraphs": pad(GOOD), "teaser": "x"}, checks=(wa.wc.ModelError("down"),) * wa.DRAFTS)
+        script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertIsNone(script)
+        self.assertTrue(any("did not run" in n for n in notes), notes)
+
+    def test_a_quote_that_is_not_in_the_script_does_not_count(self):
+        ask, calls = fake_answers({"paragraphs": pad(GOOD), "teaser": "x"},
+                                  checks=({"unsupported": [{"sentence": "A sentence nobody wrote.", "problem": "x"}]},))
+        script, *_ = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertIsNotNone(script)
+        self.assertEqual(len(calls), 1)
 
     def test_a_headline_read_out_is_sent_back(self):
         verbatim = pad(["One month in, Vermont’s diverging diamond traffic pattern receives positive reviews."] + GOOD[3:])
@@ -163,6 +225,11 @@ class Writer(unittest.TestCase):
         script, teaser, _, _ = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
         self.assertIsNotNone(script)
         self.assertEqual(teaser, "")
+
+    def test_a_spelled_out_acronym_is_given_but_a_first_name_is_not(self):
+        srcs = wa.sources_of(self.stories)      # pick 1 says "VSP", pick 2 "Gov. Scott"
+        self.assertEqual(wa.made_up("The Vermont State Police have an update on the Williston case.", srcs), [])
+        self.assertEqual(wa.made_up("Janoo again leads Governor Phil Scott.", srcs), ["Phil"])
 
     def test_the_fixed_parts_and_the_voice_text(self):
         self.assertIn("yesterday", wa.intro("2026-10-16", "yesterday"))
@@ -188,13 +255,25 @@ class Run(unittest.TestCase):
             writer.assert_not_called()
             self.assertIn("no ELEVENLABS_API_KEY", out.getvalue())
 
+    def test_opus_only_no_cheaper_writer(self):
+        env = {"ELEVENLABS_API_KEY": "k", "OPENROUTER_API_KEY": "o"}
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(os.environ, env, clear=True), \
+                mock.patch.object(wa, "load_secrets"), mock.patch.object(wa.wc, "ask_json") as ask, \
+                mock.patch.object(wa, "tts") as voice:
+            with redirect_stdout(io.StringIO()) as out:
+                wa.run(self.args(tmp))
+            ask.assert_not_called()
+            voice.assert_not_called()
+            self.assertIn("no ANTHROPIC_API_KEY", out.getvalue())
+            self.assertEqual(wa.WRITER["model"], "claude-opus-5-5")
+
     def test_a_full_run_publishes_the_clip_its_script_and_the_index(self):
         ask, _ = fake_answers({"paragraphs": pad(GOOD), "teaser": "The Williston case and a scam warning."})
         env = {"ELEVENLABS_API_KEY": "k", "ANTHROPIC_API_KEY": "a"}
         with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(os.environ, env, clear=True), \
                 mock.patch.object(wa, "load_secrets"), mock.patch.object(wa.wc, "utcnow", return_value=NOW), \
                 mock.patch.object(wa.wc, "ask_json", ask), \
-                mock.patch.object(wa, "tts", return_value=(b"ID3fake", {"x-character-count": "2650"})) as voice, \
+                mock.patch.object(wa, "tts", return_value=(b"ID3fake", {"character-cost": "310"})) as voice, \
                 mock.patch.object(wa, "normalize", return_value=(b"ID3normal", 201.4)):
             with redirect_stdout(io.StringIO()):
                 self.assertEqual(wa.run(self.args(tmp)), 0)
@@ -208,8 +287,9 @@ class Run(unittest.TestCase):
             self.assertEqual((clip["from"], clip["stories"], clip["edition"]), ("today", 8, "2026-10-16"))
             with open(os.path.join(tmp, "cost.json"), encoding="utf-8") as f:
                 cost = json.load(f)
-            self.assertEqual(cost["tts_chars"], 2650)
-            self.assertAlmostEqual(cost["tts_usd"], 0.106)
+            chars = len(sent[2])
+            self.assertEqual((cost["tts_chars"], cost["runs"][-1]["tts_credits"]), (chars, 310))
+            self.assertAlmostEqual(cost["tts_usd"], chars / 1000 * 0.04, places=5)
             with redirect_stdout(io.StringIO()) as out:
                 self.assertEqual(wa.run(self.args(tmp)), 0)
             self.assertIn("already up", out.getvalue())

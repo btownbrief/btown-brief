@@ -13,7 +13,7 @@ name: The Brief, out loud
 # Secrets: ELEVENLABS_API_KEY (required; without it the run ends green and
 # writes nothing), ELEVENLABS_VOICE_ID (optional; default Wyatt,
 # FrS6cKLB1wg4WYgPa9GW), and the Wire's ANTHROPIC_API_KEY (Claude Opus 5.5
-# writes the script) or OPENROUTER_API_KEY (GLM 5.3 Flash).
+# writes the script; there is deliberately no cheaper fallback).
 #
 # 7 am Eastern is 11:00 UTC in summer time and 12:00 UTC in winter, so the job
 # is scheduled at both; the first one that finds it is 7 or later in
@@ -91,7 +91,6 @@ jobs:
         env:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
           if [ -z "$ELEVENLABS_API_KEY" ]; then
             echo "voice=none" >> "$GITHUB_OUTPUT"
@@ -100,12 +99,9 @@ jobs:
           elif [ -n "$ANTHROPIC_API_KEY" ]; then
             echo "voice=on" >> "$GITHUB_OUTPUT"
             echo "### The Brief, out loud · Claude Opus 5.5 writes, ElevenLabs reads" >> "$GITHUB_STEP_SUMMARY"
-          elif [ -n "$OPENROUTER_API_KEY" ]; then
-            echo "voice=on" >> "$GITHUB_OUTPUT"
-            echo "### The Brief, out loud · GLM 5.3 Flash writes, ElevenLabs reads" >> "$GITHUB_STEP_SUMMARY"
           else
             echo "voice=none" >> "$GITHUB_OUTPUT"
-            echo "### The Brief, out loud · no model key to write the script, nothing made" >> "$GITHUB_STEP_SUMMARY"
+            echo "### The Brief, out loud · no ANTHROPIC_API_KEY to write the script, nothing made" >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Install the Anthropic SDK and ffmpeg
@@ -121,7 +117,6 @@ jobs:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python3 scripts/build_wire_audio.py --out-dir /tmp/wa/data/audio ${{ inputs.force && '--force' || '' }}
 
       - name: Force-push the single-commit wire-audio branch
