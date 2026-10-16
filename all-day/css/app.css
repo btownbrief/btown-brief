@@ -577,7 +577,8 @@ body.chrome-away .mast { transform: translateY(-100%); }
 /* list rows (restaurants, shops, podcasts, people) */
 .lrow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px var(--gutter); border-bottom: 1px solid var(--line); }
 .lrow .th { position: relative; display: block; width: 52px; height: 52px; border-radius: var(--r-thumb); overflow: hidden; background: var(--paper-2); }
-.lrow .th.bare { background: transparent; display: flex; align-items: center; justify-content: center; }
+/* a bare thumb holds an icon or an emoji (a game's), drawn at the emoji size */
+.lrow .th.bare { background: transparent; display: flex; align-items: center; justify-content: center; font-size: var(--fs-emoji); line-height: 1; }
 .lrow .t { font-size: var(--fs-body); font-weight: 600; line-height: 1.3; }
 .lrow .s { font-size: var(--fs-meta); color: var(--ink-3); margin-top: 2px; line-height: 1.35; }
 .lrow .s b { color: var(--ink-2); font-weight: 600; }

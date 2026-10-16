@@ -1795,6 +1795,18 @@ async function shellFixes(browser, base) {
     }
   });
 
+  await group('shell fixes: an emoji thumb is drawn at the emoji size', async () => {
+    const tokens = await readFile(path.join(APP, 'css/tokens.css'), 'utf8');
+    const want = (tokens.match(/--fs-emoji:\s*(\d+)px/) || [])[1];
+    check(!!want, 'tokens.css has --fs-emoji', '');
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#games');
+    await page.waitForSelector('#panel-games .lrow .th.bare', { timeout: 15000 });
+    const fs = await page.$eval('#panel-games .lrow .th.bare', (t) => getComputedStyle(t).fontSize);
+    check(fs === want + 'px', 'a game’s emoji in a list row is ' + want + 'px, not body size', fs);
+    await ctx.close();
+  });
+
   await group('shell fixes: third-party players use the shared .embed', async () => {
     for (const f of ['modes/onair.js', 'modes/whatnow.js', 'modes/food.js']) {
       const src = (await readFile(path.join(APP, 'js', f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
