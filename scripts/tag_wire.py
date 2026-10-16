@@ -34,6 +34,7 @@ CLI:
 
 import argparse
 import json
+import re
 import os
 import sys
 import urllib.request
@@ -58,6 +59,8 @@ TOPICS = (
     "national-politics", "world", "economy", "tech", "science", "media", "other",
 )
 FIXED = ("x", "facebook", "reddit", "newsletters", "video")
+TUNEIN_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|join us|"
+                       r"streaming now|tonight at \d|tonight on|this week on|\bLIVE\b", re.I)
 
 SCHEMA_ITEM = {
     "type": "object",
@@ -144,6 +147,10 @@ def validate_tags(raw, batch, now_ts):
         if item["id"] in out:
             continue
         junk = entry.get("junk") if entry.get("junk") in JUNK else None
+        if junk == "tunein" and item["ch"] in ("local", "world") and not TUNEIN_RE.search(item["title"]):
+            # a story about an event is news; "tune in" means a broadcast or
+            # livestream notice, and only a headline that says so is one
+            junk = "none"
         topic = entry.get("topic") if entry.get("topic") in TOPICS else "other"
         score = entry.get("score")
         if junk is None or not isinstance(score, int) or isinstance(score, bool):
@@ -195,7 +202,7 @@ def run(args):
         print(f"tag_wire: could not read pulse.json ({exc})", file=sys.stderr)
         return 0
 
-    store = load_store(args.data_dir)
+    store = {"v": 1, "tags": {}} if getattr(args, "retag", False) else load_store(args.data_dir)
     prune(store, now_ts)
     todo = untagged(wc.wire_items(pulse, now_ts, WINDOW_HOURS), store)
     if not todo:
@@ -276,6 +283,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--data-dir", default=os.path.join(wc.ROOT, "data"))
     parser.add_argument("--pulse")
+    parser.add_argument("--retag", action="store_true",
+                        help="forget every stored tag and tag the window again (after a rules change)")
     parser.add_argument("--as-of", metavar="ISO",
                         help="run as if it were this moment (a labelled backfill of an earlier "
                              "day from the pulse store; costs are still real and logged)")

@@ -60,6 +60,7 @@ import argparse
 import glob
 import json
 import os
+import re
 import sys
 import urllib.request
 from datetime import datetime, timedelta, timezone
@@ -94,7 +95,11 @@ MAX_TOKENS = {"openrouter": 6000, "anthropic": 16000}
 LABELS = (("morning", "Morning", 0), ("midday", "Midday", 11),
           ("afternoon", "Afternoon", 14), ("evening", "Evening", 18))
 ITEM_KEYS = ("id", "ch", "local", "src", "name", "title", "url", "posted_at",
-             "thumb", "media", "handle", "discuss", "site", "topic", "kind", "own")
+             "thumb", "media", "handle", "discuss", "site", "topic", "kind", "own",
+             "town", "comments")
+REDDIT_INTAKE_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
+                     "reddit-data/data/reddit-intake.json")
+REDDIT_POST_ID_RE = re.compile(r"/comments/([a-z0-9]+)", re.I)
 
 TASK = """
 
@@ -243,9 +248,33 @@ def default_score(item):
     return 5 if item.get("local") else 3
 
 
-def apply_tags(items, tags):
+def annotate(item, comments=None):
+    """Place, the local-is-the-subject rule, and a thread's comment count.
+
+    Local is the subject, not the outlet: a headline that names the
+    Burlington area, a Vermont town or Vermont itself is local whoever
+    published it (Vox on a Vermont governor's race), and one about New
+    Hampshire is not local even on WCAX. Only news headlines move; an X
+    post, a thread or a newsletter keeps its own channel."""
+    region, town = wc.place_of(item.get("title"), item.get("src"))
+    item["region"] = region
+    if town:
+        item["town"] = town
+    if item.get("ch") in ("local", "world") and region:
+        item["local"] = region != "out"
+        item["ch"] = "local" if item["local"] else "world"
+    if comments and item.get("ch") == "reddit":
+        match = REDDIT_POST_ID_RE.search(item.get("url") or "")
+        count = comments.get(match.group(1).lower()) if match else None
+        if isinstance(count, int):
+            item["comments"] = count
+    return item
+
+
+def apply_tags(items, tags, comments=None):
     """Fold the tagger's verdict into each item. Untagged items keep their
-    mechanical channel and a default score; junk is removed."""
+    mechanical channel and a default score; junk is removed. The mechanical
+    place rules run last, so they win over the tagger."""
     out = []
     for item in items:
         tag = tags.get(item["id"])
@@ -259,7 +288,26 @@ def apply_tags(items, tags):
             item["_score"] = tag.get("score", default_score(item))
         else:
             item["_score"] = default_score(item)
-        out.append(item)
+        out.append(annotate(item, comments))
+    return out
+
+
+def reddit_comments(url=REDDIT_INTAKE_URL, timeout=15):
+    """{post_id: comment count} from the Reddit bridge's intake, when it
+    exists and its OAuth route has counts. Never a failure: {} otherwise."""
+    try:
+        request = urllib.request.Request(url, headers={"User-Agent": UA})
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            intake = json.load(response)
+    except Exception:  # noqa: BLE001 — the bridge is optional
+        return {}
+    out = {}
+    for post in (intake or {}).get("posts") or []:
+        if not isinstance(post, dict) or not isinstance(post.get("comments"), int):
+            continue
+        match = REDDIT_POST_ID_RE.search(post.get("url") or "")
+        if match:
+            out[match.group(1).lower()] = post["comments"]
     return out
 
 
@@ -290,8 +338,19 @@ def age_label(item, now_ts):
 def line(index, item, now_ts):
     who = item.get("handle") or item.get("name") or item.get("src")
     topic = f" · {item['topic']}" if item.get("topic") else ""
+    place = {"btv": "Burlington area", "away": "outside the Burlington area",
+             "out": "out of state"}.get(item.get("region"), "")
+    if place and item.get("town"):
+        place = f"{item['town']} ({place})"
+    place = f" · {place}" if place else ""
+    talk = ""
+    if item.get("ch") in wc.THREAD_CHANNELS:
+        count = item.get("comments")
+        talk = f" · {count} comments" if isinstance(count, int) else " · comments unknown"
+    block = wc.pick_block(item)
+    gate = f" · river only ({block})" if block else ""
     return (f"{index}. {'LOCAL' if item['local'] else 'NATIONAL'} · {item['ch']} · {who} · "
-            f"{age_label(item, now_ts)}{topic} · {item['title']}")
+            f"{age_label(item, now_ts)}{topic}{place}{talk}{gate} · {item['title']}")
 
 
 def build_prompt(numbered_river, new, current, ran, want_picks, et, label, now_ts):
@@ -359,6 +418,35 @@ def spread_outlets(picks):
     return out
 
 
+def order_picks(picks):
+    """The house rules on the editor's ranking, applied in order:
+
+    1. local picks sorted by tier (Burlington area and statewide decisions,
+       then statewide features, then trips out of the area), the editor's
+       order kept within a tier; national picks keep their slots
+    2. never two from one outlet back to back
+    3. at most THREAD_PICKS_MAX threads, and none above THREAD_TOP_RANK"""
+    slots = [i for i, pick in enumerate(picks) if pick.get("local")]
+    local = sorted((picks[i] for i in slots), key=wc.pick_tier)
+    out = list(picks)
+    for slot, pick in zip(slots, local):
+        out[slot] = pick
+    out = spread_outlets(out)
+    threads, rest = [], []
+    for pick in out:
+        if pick.get("ch") in wc.THREAD_CHANNELS:
+            if len(threads) < wc.THREAD_PICKS_MAX:
+                threads.append(pick)
+            continue
+        rest.append(pick)
+    floor = wc.THREAD_TOP_RANK - 1
+    for pick in threads:
+        at = next(i for i, p in enumerate(out) if p is pick)
+        rest.insert(min(max(at, floor), len(rest)), pick)
+        floor += 1
+    return rest
+
+
 def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
     """Fold a validated answer into the day. Returns a dict of what changed."""
     offset, total = len(numbered_river), len(numbered_river) + len(new)
@@ -381,8 +469,8 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
     if want_picks:
         for entry in answer.get("picks") or []:
             index = as_index(entry.get("i") if isinstance(entry, dict) else None, 0, total)
-            if index is None or index in pick_seen:
-                continue
+            if index is None or index in pick_seen or wc.pick_block(by_index[index]):
+                continue   # a "river only" item stays out of the picks whatever the answer
             why = wc.trim(entry.get("why", ""), WHY_MAX)
             if not why:
                 continue
@@ -461,11 +549,89 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
                 if national > NATIONAL_PICKS:
                     continue
             kept.append((index, why))
-        ranked = spread_outlets([dict(public(by_index[index]), why=why) for index, why in kept])
+        ranked = order_picks([dict(by_index[index], why=why) for index, why in kept])
+        ranked = [dict(public(pick), why=pick["why"]) for pick in ranked]
         in_river = {item["id"] for item in river(day)}
         day["picks"] = [dict(pick, rank=rank) for rank, pick in
                         enumerate((p for p in ranked if p["id"] in in_river), start=1)]
     return {"added": added_ids, "dropped": dropped, "picks": len(picks) if want_picks else None}
+
+
+REASONS_TASK = """You check the one-line reasons on a Burlington, Vermont news page.
+
+A reason must add something the headline does not say: what changes for the
+reader, who it reaches, what to do about it. It must not restate or paraphrase
+the headline, must stay under 90 characters, and may not state a fact (a
+number, a date, a name) that the headline does not give.
+
+Good: "Your electric bill, starting in January." "Three nights of one lane on
+the only bridge to Winooski." Bad: "Police are looking for whoever broke into
+a market." (restates) "A local shop growing into a new line of goods."
+(paraphrases "DandyLion expands into furniture").
+
+Below, each numbered line is a headline and its reason. Lines marked MUST are
+known restatements: rewrite every one of them. Rewrite any other reason that
+only restates or paraphrases its headline. Return only the lines you rewrote."""
+
+REASONS_SCHEMA = {
+    "type": "object",
+    "properties": {"rewrites": {"type": "array", "maxItems": PICK_COUNT + 1, "items": {
+        "type": "object",
+        "properties": {"i": {"type": "integer"}, "why": {"type": "string", "maxLength": WHY_MAX}},
+        "required": ["i", "why"], "additionalProperties": False}}},
+    "required": ["rewrites"],
+    "additionalProperties": False,
+}
+
+
+def reason_slots(day, picks_too):
+    """[(holder dict, headline)] for every reason the pass should look at:
+    the picks (on a re-rank) and the current update's lead."""
+    slots = []
+    if picks_too:
+        slots += [(pick, pick["title"]) for pick in day.get("picks") or []]
+    updates = day.get("updates") or []
+    if updates and updates[0].get("lead"):
+        lead = updates[0]["lead"]
+        title = next((item["title"] for item in updates[0]["items"] if item["id"] == lead["id"]), "")
+        slots.append((lead, title))
+    return slots
+
+
+def polish_reasons(day, engine, picks_too, ask=None):
+    """Fable's rule: a reason that shares half or more of its content words
+    with its headline gets one rewrite, and the editor reviews the rest for
+    paraphrases in the same call. A rewrite that still restates, or a
+    flagged reason the call did not fix, ships empty: no reason beats a
+    restatement. -> (usage or None, rewritten, emptied)."""
+    ask = ask or wc.ask_json
+    slots = [slot for slot in reason_slots(day, picks_too) if slot[0].get("why")]
+    flagged = {i for i, (holder, title) in enumerate(slots) if wc.restates(holder["why"], title)}
+    if not slots or (not picks_too and not flagged):
+        return None, 0, 0
+    lines = [f"{i}. {'MUST · ' if i in flagged else ''}{title} || {holder['why']}"
+             for i, (holder, title) in enumerate(slots)]
+    usage, rewritten = None, 0
+    try:
+        answer, usage = ask(engine, REASONS_TASK, "\n".join(lines), REASONS_SCHEMA,
+                            max_tokens=MAX_TOKENS[engine["provider"]], log_prefix="curate_wire")
+    except wc.ModelError as exc:
+        usage, answer = getattr(exc, "usage", None), {}
+    except Exception:  # noqa: BLE001 — the reasons pass is never fatal
+        answer = {}
+    for entry in (answer or {}).get("rewrites") or []:
+        index = as_index(entry.get("i") if isinstance(entry, dict) else None, 0, len(slots))
+        why = wc.trim((entry or {}).get("why", ""), WHY_MAX) if index is not None else ""
+        if index is None or not why:
+            continue
+        holder, title = slots[index]
+        if not wc.restates(why, title):
+            holder["why"] = why
+            flagged.discard(index)
+            rewritten += 1
+    for index in flagged:
+        slots[index][0]["why"] = ""
+    return usage, rewritten, len(flagged)
 
 
 def finish(day, pulse, now, changed):
@@ -476,16 +642,41 @@ def finish(day, pulse, now, changed):
     day["checked"] = stamp
     if changed or not day.get("updated"):
         day["updated"] = stamp
+    # every source on today's page: id -> how a reader knows it
     sources = {}
-    for ch, state in (pulse.get("inbox") or {}).items():
-        if isinstance(state, dict):
-            sources[ch] = {"paused": bool(state.get("paused")), "reason": state.get("reason"),
-                           "updated_at": state.get("updated_at")}
-    if isinstance(pulse.get("reddit"), dict):
-        sources["reddit"] = {"paused": bool(pulse["reddit"].get("paused")),
-                             "last_post": pulse["reddit"].get("last_post")}
-    day["sources"] = sources
+    for item in items + list(day.get("picks") or []):
+        entry = sources.setdefault(item["src"], {"name": item.get("name"), "ch": item.get("ch")})
+        if item.get("site") and not entry.get("site"):
+            entry["site"] = item["site"]
+    day["sources"] = dict(sorted(sources.items()))
+    day["status"] = status_of(pulse)
     return day
+
+
+def status_of(pulse):
+    """Is each kind of source flowing? The page hides or labels a chip from
+    this. Always all three keys, so a page never has to guess."""
+    inbox = pulse.get("inbox") if isinstance(pulse.get("inbox"), dict) else {}
+    status = {}
+    for ch in ("x", "facebook"):
+        state = inbox.get(ch)
+        if isinstance(state, dict):
+            status[ch] = {"paused": bool(state.get("paused")), "reason": state.get("reason"),
+                          "updated_at": state.get("updated_at")}
+        else:
+            status[ch] = {"paused": True, "reason": "the inbox reader is not live yet",
+                          "updated_at": None}
+    reddit = pulse.get("reddit")
+    if isinstance(reddit, dict):
+        status["reddit"] = {"paused": bool(reddit.get("paused")), "last_post": reddit.get("last_post")}
+    else:
+        subs = {source["id"] for source in pulse.get("sources") or []
+                if "reddit.com" in (source.get("site") or "") and source.get("local")}
+        newest = max((item.get("d") or 0 for item in pulse.get("items") or [] if item.get("s") in subs),
+                     default=0)
+        status["reddit"] = {"paused": not newest or wc.utcnow().timestamp() - newest > 36 * 3600,
+                            "last_post": wc.iso_ts(newest) if newest else None}
+    return status
 
 
 # ----------------------------------------------------------------------
@@ -548,6 +739,14 @@ def run(args):
 
     day = wc.load_json(files["today"], {})
     state = wc.load_json(files["state"], {})
+    if getattr(args, "rebuild_today", False):
+        # start today over from the pool (after a doctrine change); the
+        # frozen editions, the cost ledger and the re-serve guard stay
+        print("curate_wire: rebuilding today from the pool")
+        if isinstance(day, dict) and day.get("date") == today:
+            day = empty_day(today)
+        state = {"date": today, "considered": (state or {}).get("considered", []),
+                 "considered_today": [], "picks_at": None}
     day, state, frozen = roll_over(day if isinstance(day, dict) else {},
                                    state if isinstance(state, dict) else {}, today, args.data_dir)
     if frozen:
@@ -573,7 +772,8 @@ def run(args):
         return give_up(f"could not read pulse.json ({exc})", args.data_dir, now)
 
     tags = (wc.load_json(files["tags"], {}) or {}).get("tags") or {}
-    pool = apply_tags(wc.wire_items(pulse, now_ts, WINDOW_HOURS), tags)
+    comments = {} if args.pulse else reddit_comments()
+    pool = apply_tags(wc.wire_items(pulse, now_ts, WINDOW_HOURS), tags, comments)
     reserved_ids, reserved_urls, ran = reserved(args.data_dir, today)
     numbered_river = river(day)
     in_river = {item["id"] for item in numbered_river}
@@ -595,6 +795,10 @@ def run(args):
 
     # The river's own entries carry their tag score for the prompt's sake only
     scored = {item["id"]: item for item in pool}
+    numbered_river = [annotate(dict(item, **{key: scored[item["id"]][key] for key in ("topic", "comments")
+                                             if item["id"] in scored and key in scored[item["id"]]}),
+                               comments)
+                      for item in numbered_river]
     numbered_river = [dict(item, _score=scored.get(item["id"], {}).get("_score", default_score(item)),
                            d=int(datetime.fromisoformat(item["posted_at"]).timestamp()))
                       for item in numbered_river]
@@ -621,6 +825,11 @@ def run(args):
     result = apply_answer(day, answer, numbered_river, new, want_picks, et, now)
     if want_picks and not result["picks"]:
         return give_up("asked for picks and got no usable ones", args.data_dir, now)
+    polish_usage, rewritten, emptied = polish_reasons(day, engine, want_picks)
+    if polish_usage:
+        wc.record_cost(args.data_dir, "curate_wire (reasons)", engine, polish_usage, now)
+    if rewritten or emptied:
+        print(f"curate_wire: reasons pass rewrote {rewritten}, left {emptied} empty")
     if want_picks:
         state["picks_at"] = now.replace(microsecond=0).isoformat()
     # everything shown is now considered: passed items stay passed today
@@ -720,6 +929,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--data-dir", default=os.path.join(wc.ROOT, "data"))
     parser.add_argument("--pulse")
+    parser.add_argument("--rebuild-today", action="store_true",
+                        help="start today's paper over from the pool (yesterday stays frozen)")
     parser.add_argument("--as-of", metavar="ISO",
                         help="run as if it were this moment (a labelled backfill of an earlier "
                              "day from the pulse store; costs are still real and logged)")

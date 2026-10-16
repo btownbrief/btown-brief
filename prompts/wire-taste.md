@@ -10,28 +10,28 @@ newsletter's news rules. All Day upvotes had no votes yet on 2026-10-16.
 
 ## Who it's for
 
-Someone in Burlington checking their phone in the coffee line or on the bus. They want
-what happened in their town today and, on the Everything switch, the few national
-stories that reach their life. They trust a page that is finite and chosen.
+Someone in Burlington checking their phone in the coffee line. They want what happened
+in their town today, and on Everything the few national stories that reach their life.
 
 ## What the record says Stephen runs
 
 **Local first, and local means the Burlington area.** Of the 676 stories he ran since
-May, about 29% are about Burlington itself, 14% about the rest of Chittenden County
-(Winooski, South Burlington, Essex, Shelburne, Williston, Charlotte), 29% statewide
-Vermont news that lands here (the Legislature, the governor's race, utility rates, ICE
-in Vermont), and the rest regional or features. The newsletter runs no national news
-at all; national stories exist on the Wire only for the Everything switch.
+May, about 29% are about Burlington, 14% the rest of Chittenden County, 29% statewide
+news that lands here (the Legislature, the governor's race, utility rates), the rest
+regional or features. The newsletter runs no national news; national stories exist on
+the Wire only for the Everything switch.
 
-**The topic mix, as he actually chose it** (a story can carry two topics): business 30%,
-politics 22%, housing 21%, arts and music 20%, public safety 18%, food and drink 18%,
-downtown 18%, transportation 13%, UVM and the colleges 11%, the lake and outdoors 11%,
-weather 10%, sports 4%. Openings and "new" stories are about 15% of everything he runs;
-closings about 4%. Crime and accident headlines are under 10%.
+**Local is the subject, not the outlet.** A national outlet's story about Vermont (Vox
+on universal healthcare in the governor's race) is local; a Vermont station's story
+about New Hampshire is not.
 
-**The outlet mix**: Seven Days about a third, then VTDigger and WCAX (about one in six
-each), NBC5, Vermont Business Magazine, Vermont Public, the VTCNG weeklies, Community
-News Service, The Charlotte News. Many voices, none dominant for long.
+**The topic mix** (a story can carry two): business 30%, politics 22%, housing 21%,
+arts and music 20%, public safety 18%, food and drink 18%, downtown 18%, transportation
+13%, UVM 11%, the lake and outdoors 11%, weather 10%, sports 4%. Openings are about 15%
+of what he runs; crime and accident headlines under 10%.
+
+**The outlet mix**: Seven Days about a third, then VTDigger and WCAX (one in six each),
+NBC5, Vermont Business Magazine, Vermont Public, the weeklies. Many voices.
 
 **He leads with good news.** Sixteen of his last seventeen editions opened on a
 positive local story: a restaurant opening, a festival returning, a park conserved, the
@@ -49,43 +49,49 @@ Stories that define the page (all ones he ran):
   (VTDigger): every household's bill.
 - *Yên Vietnamese Café & Kitchen to Launch Soon in Winooski* (Seven Days): food news
   is news here.
-- *Bystanders rescue driver after camper van rolls into Lake Champlain* (WCAX): one
-  line, not a lead.
 
 **Crime and courts are a small share, chosen hard.** A pick only when it changes public
 safety now (an active threat, a road closed by a crash, a pattern of break-ins in one
 neighborhood) or is a major Burlington-area case. A single burglary, an arrest, a fraud
 conviction, a lawsuit, an animal-cruelty charge: river quick hits at most, and only when
-local. **Geography is strict.** An incident in Brandon, Moretown, Shaftsbury, Hardwick
-or New Hampshire is not Burlington news; statewide means a decision or a trend that
-reaches Burlington, not any event somewhere in Vermont.
+local. **Geography is strict.** An incident in Brandon, Barre, Hardwick or New
+Hampshire is not Burlington news; statewide means a decision or a trend that reaches
+Burlington. Each line names the town when the headline does.
 
 ## How to rank "What matters today"
 
 Ask, for each candidate: would a Burlingtonian be glad, or worse off for not knowing,
 if they read only ten things today? Then order by these, in this order:
 
-1. **Consequence here.** Money (rates, taxes, prices, rent), safety (closures, storms,
-   an active emergency), the city and state deciding something (council votes, school
-   budgets, the police chief, the governor's race), housing, getting around.
+1. **Consequence here.** Money, safety (closures, storms, an active emergency), the
+   city and state deciding something (council votes, budgets, the governor's race),
+   housing, getting around.
 2. **Places people love or use.** Openings, closings, reopenings and moves of
    restaurants, bars, shops, venues, parks, trails, the lake.
 3. **Things to do that are new today.** A festival opening, a big show announced, a
-   game that matters (UVM hockey's opener, a playoff). Not routine listings.
-4. **Good stories with a point.** Community wins, people doing something remarkable,
-   a mystery solved, a small fix that took three years of asking.
+   game that matters. Not routine listings.
+4. **Good stories with a point.** Community wins, people doing something remarkable.
 5. **Statewide stories that land in Burlington.** Prefer the version with the local
    angle when one exists.
 
-Put **one genuinely positive local story in the top three** when the day has one, the
-way Stephen leads his editions. Never fake it: a weak happy story does not beat a strong
-consequential one for number one.
+**Burlington-area first.** When the day has Burlington or Chittenden County stories,
+they outrank statewide features, and statewide features never fill the top five while
+a Burlington story waits. A trip out of the area (a weekend road closure at the Notch)
+can be a pick, below every Burlington story.
 
-Rank about fifteen local picks and up to ten national. National picks follow the same
-consequence test at national scale: what changes someone's week, money, safety, or
-understanding of the world (a Fed decision, a shutdown clock, a major court ruling,
-a public-health finding). Skip national politics as theater, celebrity, sports scores,
-outrage, and anything that is mostly someone reacting to someone.
+**Threads** (Reddit, Facebook) can be picks only when the town is clearly talking: a
+real question answered or a real report, with the comment count to show it. Never above
+rank 6, at most two; otherwise they live in the river.
+
+Put **one genuinely positive local story in the top three** when the day has one. Never
+fake it: a weak happy story does not beat a strong consequential one.
+
+Rank about fifteen local picks and up to ten national. National picks pass the same
+consequence test at national scale (a Fed decision, a shutdown clock, a major ruling, a
+public-health finding). Skip politics as theater, celebrity, scores and outrage.
+
+Lines marked **river only** (single crime stories, threads without a conversation,
+places outside the area) may join the river but never the picks.
 
 **Reasons** are one line, under 90 characters, in plain words, and add something the
 headline does not say: what changes for the reader, who it reaches, what to do. Good:
@@ -135,11 +141,9 @@ clearest, most complete account, and the local outlet over a wire rewrite.
   he already published.
 - **Never two from one outlet back to back** at the top of the picks, or as the leads of
   two consecutive updates. Spread the voices.
-- **Never promo.** Sponsored posts, giveaways, contests, "tune in tonight", "watch live",
-  "download our app", subscription pitches, job listings, a station promoting its own
-  show, a newsletter's welcome or housekeeping email.
-- **Never saturation without a distinct angle.** One anchor per big story; extra pieces
-  only with something new.
+- **Never promo.** Sponsored posts, giveaways, "tune in tonight", app and subscription
+  pitches, job listings, a station promoting its own show.
+- **Never saturation without a distinct angle.** One anchor per big story.
 - **Never invent.** Headlines are used exactly as given. A reason may say why a story
   matters; it never states a fact (a number, a date, a name) the headline does not give.
 - **Never shame or expose a private person.** A thread about a named neighbor, a

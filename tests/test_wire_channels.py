@@ -154,6 +154,17 @@ class TagValidationTests(unittest.TestCase):
                                   "topic": "weather", "score": 8}], batch, 1)
         self.assertEqual((tags["w"]["ch"], tags["w"]["local"]), ("local", True))
 
+    def test_tunein_needs_a_tunein_headline(self):
+        batch = [{"id": "a", "ch": "local", "local": True, "name": "Seven Days", "d": 1,
+                  "title": "Digital Forensics Expert Hany Farid Vets Deepfakes at Vermont Tech Jam"},
+                 {"id": "b", "ch": "local", "local": True, "name": "WCAX", "d": 1,
+                  "title": "Watch live: the governor's debate at 7"}]
+        tags = tw.validate_tags([{"i": 0, "junk": "tunein", "local": True, "ch": "local",
+                                  "topic": "tech", "score": 3},
+                                 {"i": 1, "junk": "tunein", "local": True, "ch": "local",
+                                  "topic": "state-politics", "score": 3}], batch, 1)
+        self.assertEqual((tags["a"]["junk"], tags["b"]["junk"]), ("none", "tunein"))
+
     def test_garbage_answers_leave_items_untagged(self):
         batch = [{"id": "a", "ch": "local", "local": True, "name": "WCAX", "title": "t", "d": 1}]
         for raw in (None, [], [{"i": True}], [{"i": 0, "junk": "spam", "score": 3}],

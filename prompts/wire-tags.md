@@ -20,7 +20,8 @@ For each item return:
     housekeeping email, a sale that is only an ad.
   - `giveaway`: contests, sweepstakes, "win tickets", raffles.
   - `tunein`: "tune in", "watch live", "join us tonight at 6", a livestream notice,
-    a podcast episode whose title is only a show name and date.
+    a podcast episode whose title is only a show name and date. A news story about an
+    event (a talk, a panel, a festival, an expert visiting) is news, not `tunein`.
   - `jobs`: job listings and hiring posts (a story about a big employer hiring is news,
     not jobs).
   - `duplicate`: the same story as an item already in today's river (listed under

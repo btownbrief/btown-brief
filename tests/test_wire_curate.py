@@ -51,10 +51,15 @@ class Stub:
     """Stands in for wire_common.ask_json. `plan(numbers)` builds an answer
     from the numbered lines the prompt actually showed."""
 
-    def __init__(self, plan=None, error=None):
+    def __init__(self, plan=None, error=None, rewrite=None):
         self.plan, self.error, self.prompts = plan, error, []
+        self.rewrite, self.reason_prompts = rewrite, []
 
     def __call__(self, engine, system, user, schema, max_tokens, attempts=2, log_prefix=""):
+        if "rewrites" in schema["properties"]:      # the reasons pass
+            self.reason_prompts.append(user)
+            rows = [line for line in user.splitlines() if line[:1].isdigit()]
+            return {"rewrites": self.rewrite(rows) if self.rewrite else []}, {"in": 300, "out": 50, "calls": 1}
         self.prompts.append((system, user, schema))
         if self.error:
             exc = wc.ModelError(self.error)
@@ -124,7 +129,12 @@ class IndexMappingTests(Workdir):
         self.assertEqual(len(day["picks"]), 18)
         self.assertEqual(day["counts"]["everything"]["all"], 18)
         self.assertEqual(day["counts"]["local"]["all"], 12)
-        self.assertEqual(day["sources"]["x"]["reason"], "no WIRE_INBOX_TOKEN secret")
+        self.assertEqual(day["status"]["x"]["reason"], "no WIRE_INBOX_TOKEN secret")
+        self.assertEqual(day["status"]["facebook"]["reason"], "the inbox reader is not live yet")
+        self.assertEqual(set(day["status"]), {"x", "facebook", "reddit"})
+        self.assertEqual(day["sources"]["wcax"], {"name": "WCAX", "ch": "local",
+                                                  "site": "https://www.wcax.com/"})
+        self.assertEqual(set(day["sources"]), {"wcax", "vtd", "ap"})
         self.assertNotIn("model", json.dumps(day))
 
     def test_every_output_item_is_a_real_item_verbatim(self):
@@ -242,6 +252,134 @@ class HouseRuleTests(Workdir):
         self.run_curate(Stub(lambda numbers, river_n, schema: dict(
             take_all(numbers, river_n, schema), add=[n for n in numbers if n >= river_n][:45])))
         self.assertEqual(self.today()["count"], cw.ADD_MAX_FIRST)
+
+
+def item(n, title, ch="local", local=True, src=None, topic=None, region=None, comments=None):
+    out = {"id": f"i{n}", "ch": ch, "local": local, "src": src or f"s{n}", "name": f"S{n}",
+           "title": title, "url": f"https://x.example/{n}", "posted_at": NOW.isoformat(),
+           "d": NOW_TS - n, "_score": 5}
+    if topic:
+        out["topic"] = topic
+    if comments is not None:
+        out["comments"] = comments
+    return cw.annotate(out) if region is None else dict(out, region=region)
+
+
+class FableRuleTests(unittest.TestCase):
+    """The six defects in the first front page, each now enforced in code."""
+
+    def test_crime_gate(self):
+        burglary = item(1, "Police searching for suspect in Winooski market burglary", topic="public-safety")
+        self.assertEqual(wc.pick_block(burglary), "a single crime or court story")
+        self.assertIn("river only (a single crime or court story)", cw.line(0, burglary, NOW_TS))
+        closure = item(2, "Route 2 closed in Richmond after a crash; driver charged")
+        self.assertIsNone(wc.pick_block(closure))
+        for title in ("Former Vermont therapist convicted of Medicaid fraud",
+                      "Animal cruelty charges for Vermont man", "Parents file lawsuit against driver"):
+            self.assertTrue(wc.pick_block(item(3, title)), title)
+
+    def test_threads_need_a_real_conversation_and_stay_below_five(self):
+        quiet = item(1, "Monkey House (And Other Winooski Music Venues)", ch="reddit")
+        self.assertEqual(wc.pick_block(quiet), "a thread with no comment count")
+        self.assertIn("comments unknown", cw.line(0, quiet, NOW_TS))
+        self.assertTrue(wc.pick_block(item(2, "Parking at the Flynn?", ch="reddit", comments=6)))
+        talked = [item(10 + k, f"Thread {k} about Burlington", ch="reddit", comments=50, src=f"r{k}")
+                  for k in range(3)]
+        news = [item(20 + k, f"Burlington story {k}", src=f"n{k}") for k in range(8)]
+        ranked = cw.order_picks(talked + news)
+        positions = [i for i, pick in enumerate(ranked) if pick["ch"] == "reddit"]
+        self.assertEqual(len(positions), wc.THREAD_PICKS_MAX)
+        self.assertTrue(all(i >= wc.THREAD_TOP_RANK - 1 for i in positions), positions)
+
+    def test_local_is_the_subject_not_the_outlet(self):
+        vox = item(1, "Vermont once dreamed of universal healthcare. This Democrat wants to try again",
+                   ch="world", local=False, src="vox-all")
+        self.assertEqual((vox["ch"], vox["local"]), ("local", True))
+        claremont = item(2, "Claremont mayor under police investigation", src="wcax")
+        self.assertEqual((claremont["ch"], claremont["local"]), ("world", False))
+        self.assertEqual(wc.pick_block(claremont), "out of state")
+        post = item(3, "Frost advisory for Burlington tonight", ch="x")
+        self.assertEqual(post["ch"], "x")                    # a post keeps its kind
+
+    def test_geography_order_and_gate(self):
+        barre = item(1, "Millions in funding announced to rebuild Barre's North End", topic="housing")
+        self.assertEqual(barre["town"], "Barre")
+        self.assertEqual(wc.pick_block(barre), "outside the Burlington area")
+        self.assertIn("Barre (outside the Burlington area)", cw.line(0, barre, NOW_TS))
+        notch = item(2, "Smugglers’ Notch road off-limits to leaf peepers this weekend",
+                     topic="transportation")
+        self.assertIsNone(wc.pick_block(notch))              # a weekend plan may stay
+        feature = item(3, "Horse logging, a 200-year Vermont tradition", topic="environment")
+        rate = item(4, "Vermont regulators finalize rate increase for every GMP customer",
+                    topic="economy")
+        btv = [item(10 + k, f"Burlington council story {k}", topic="city-government", src=f"b{k}")
+               for k in range(3)]
+        ranked = cw.order_picks([notch, feature, rate] + btv)
+        titles = [pick["title"] for pick in ranked]
+        self.assertEqual(titles[-1], notch["title"])         # below every Burlington story
+        self.assertLess(titles.index(rate["title"]), titles.index(feature["title"]))
+        self.assertTrue(all(titles.index(b["title"]) < titles.index(feature["title"]) for b in btv))
+
+    def test_display_names(self):
+        self.assertEqual(wc.display_name({"id": "top-news-amp-analysis", "short": "Top News &amp…",
+                                          "name": "Top News &amp; Analysis"}), "Top News & Analysis")
+        self.assertEqual(wc.display_name({"id": "local-news-2310", "short": "Vermont Public",
+                                          "name": "Local News"}), "Vermont Public")
+
+
+class ReasonPassTests(unittest.TestCase):
+    def day(self, why):
+        return {"picks": [{"id": "a", "title": "VSP provides update on investigation into Williston police shooting",
+                           "why": why},
+                          {"id": "b", "title": "Vermont regulators finalize 5.5% rate increase",
+                           "why": "Your electric bill, starting in January."}],
+                "updates": []}
+
+    def stub(self, rewrites):
+        calls = []
+
+        def ask(engine, system, user, schema, max_tokens, attempts=2, log_prefix=""):
+            calls.append(user)
+            return {"rewrites": rewrites}, {"in": 10, "out": 5, "calls": 1}
+        return ask, calls
+
+    def test_restatement_is_rewritten(self):
+        day = self.day("State police update on a police shooting in Williston.")
+        ask, calls = self.stub([{"i": 0, "why": "A shooting by officers in a town next door; answers are coming."}])
+        usage, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertIn("0. MUST · VSP provides", calls[0])
+        self.assertNotIn("1. MUST", calls[0])
+        self.assertEqual((rewritten, emptied), (1, 0))
+        self.assertTrue(day["picks"][0]["why"].startswith("A shooting by officers"))
+
+    def test_a_rewrite_that_still_restates_ships_empty(self):
+        day = self.day("State police update on a police shooting in Williston.")
+        ask, _ = self.stub([{"i": 0, "why": "Williston police shooting investigation update."}])
+        _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertEqual((rewritten, emptied), (0, 1))
+        self.assertEqual(day["picks"][0]["why"], "")
+        self.assertEqual(day["picks"][1]["why"], "Your electric bill, starting in January.")
+
+    def test_paraphrase_caught_by_the_model_is_accepted(self):
+        day = self.day("Answers about a shooting by officers next door.")
+        ask, _ = self.stub([{"i": 1, "why": "Every household's bill goes up in January."}])
+        _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertEqual((rewritten, emptied), (1, 0))
+
+    def test_a_failed_pass_still_empties_restatements(self):
+        day = self.day("State police update on a police shooting in Williston.")
+
+        def broken(*args, **kwargs):
+            raise wc.ModelError("overloaded")
+        _, _, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, broken)
+        self.assertEqual((emptied, day["picks"][0]["why"]), (1, ""))
+
+    def test_no_call_when_only_a_clean_lead_is_due(self):
+        day = {"picks": [], "updates": [{"lead": {"id": "a", "why": "Your bill, in January."},
+                                         "items": [{"id": "a", "title": "Rates finalized"}]}]}
+        ask, calls = self.stub([])
+        self.assertEqual(cw.polish_reasons(day, {"provider": "anthropic"}, False, ask), (None, 0, 0))
+        self.assertEqual(calls, [])
 
 
 class CapTests(Workdir):
@@ -394,9 +532,10 @@ class FailurePostureTests(Workdir):
     def test_costs_are_logged(self):
         self.run_curate(Stub(take_all))
         ledger = wc.load_json(os.path.join(self.data, "wire-cost.json"), {})
-        run = ledger["runs"][-1]
+        run, reasons = ledger["runs"][-2], ledger["runs"][-1]
         self.assertEqual((run["script"], run["model"], run["in"], run["out"]),
                          ("curate_wire", wc.GLM, 4000, 900))
+        self.assertEqual((reasons["script"], reasons["in"]), ("curate_wire (reasons)", 300))
         self.assertAlmostEqual(run["usd"], (4000 * 0.014 + 900 * 0.90) / 1e6)
 
     def test_garbage_answer_with_picks_due_writes_nothing(self):
