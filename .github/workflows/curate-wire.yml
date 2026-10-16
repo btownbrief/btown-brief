@@ -23,11 +23,6 @@ on:
   schedule:
     - cron: '7 * * * *'
   workflow_dispatch:
-  # TEMPORARY: lets the branch run for real before it is on main (schedules
-  # and workflow_dispatch only fire from the default branch). Removed before
-  # the pull request leaves draft.
-  push:
-    branches: ['claude/new-nine-pipeline-c4db4d']
 
 permissions:
   contents: write
@@ -108,36 +103,6 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python3 scripts/curate_wire.py --data-dir /tmp/wire/data
-
-      - name: TEMPORARY GLM measurement on a scratch copy (never published)
-        continue-on-error: true
-        env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: |
-          python3 - <<'PY'
-          import json, shutil, time
-          now = time.time()
-          for name in ("glm-hour", "glm-picks"):
-              shutil.copytree("/tmp/wire", f"/tmp/{name}")
-              d = f"/tmp/{name}/data"
-              tags = json.load(open(f"{d}/wire-tags.json"))
-              recent = {k for k, t in tags["tags"].items() if t.get("at", 0) >= now - 3600}
-              state = json.load(open(f"{d}/wire-state.json"))
-              state["considered_today"] = [k for k in state.get("considered_today", []) if k not in recent]
-              if name == "glm-hour":
-                  tags["tags"] = {k: t for k, t in tags["tags"].items() if k not in recent}
-              else:
-                  state["picks_at"] = None
-              json.dump(tags, open(f"{d}/wire-tags.json", "w"))
-              json.dump(state, open(f"{d}/wire-state.json", "w"))
-              json.dump({"v": 1, "month": "2026-10", "usd": 0, "runs": []}, open(f"{d}/wire-cost.json", "w"))
-          PY
-          echo "#### GLM 5.3 Flash, one hour's work (scratch copy)" >> "$GITHUB_STEP_SUMMARY"
-          python3 scripts/tag_wire.py --data-dir /tmp/glm-hour/data
-          python3 scripts/curate_wire.py --data-dir /tmp/glm-hour/data
-          echo "#### GLM 5.3 Flash, a picks run (scratch copy)" >> "$GITHUB_STEP_SUMMARY"
-          python3 scripts/curate_wire.py --data-dir /tmp/glm-picks/data
-          python3 -c "import json;d=json.load(open('/tmp/glm-picks/data/wire-today.json'));[print(p['rank'],p['name'],'|',p['title'][:80],'||',p['why']) for p in d['picks'][:12]]"
 
       - name: Force-push the single-commit wire-data branch
         # Also after a failed curate step: the tags and the cost ledger it
