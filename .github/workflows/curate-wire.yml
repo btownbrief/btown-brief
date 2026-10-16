@@ -23,6 +23,11 @@ on:
   schedule:
     - cron: '7 * * * *'
   workflow_dispatch:
+  # TEMPORARY: lets the branch run for real before it is on main (schedules
+  # and workflow_dispatch only fire from the default branch). Removed before
+  # the pull request leaves draft.
+  push:
+    branches: ['claude/new-nine-pipeline-c4db4d']
 
 permissions:
   contents: write
