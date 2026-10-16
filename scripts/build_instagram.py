@@ -244,7 +244,7 @@ def fetch_tagged(key: str) -> list[dict]:
     return items or []
 
 
-def tagged_record(it: dict, cutoff: float) -> dict | None:
+def tagged_record(it: dict, cutoff: float, now: float | None = None) -> dict | None:
     handle = ((it.get("user") or {}).get("username") or "").strip().lstrip("@").lower()
     if not handle:
         return None
@@ -270,7 +270,7 @@ def tagged_record(it: dict, cutoff: float) -> dict | None:
         rec["c"] = cap[:400]
     if it.get("media_type") == 2 or it.get("is_video"):
         rec["v"] = 1
-        add_video(rec, it)
+        add_video(rec, it, now if now is not None else time.time())
     return rec
 
 
@@ -293,13 +293,14 @@ def pick_video(item: dict) -> str | None:
     return best[1]["url"]
 
 
-def add_video(rec: dict, item: dict) -> None:
+def add_video(rec: dict, item: dict, now: float) -> None:
     """Give a video post its MP4: `vu`, `ve` and `vd`. Fails closed: a video
-    URL whose expiry cannot be read is left off, and the post stays a photo
-    (it is still marked `v` so the tab can say it is a reel)."""
+    URL whose expiry cannot be read, or that lapses inside the carry margin,
+    is left off, and the post stays a photo (it is still marked `v` so the
+    tab can say it is a reel)."""
     url = pick_video(item)
     exp = signature_expiry(url) if url else None
-    if not url or not exp:
+    if not url or not exp or exp - now < CARRY_MARGIN_H * 3600:
         return
     rec["vu"] = url
     rec["ve"] = exp
@@ -368,7 +369,7 @@ def carry_ok(rec: dict, now: float, cutoff: float) -> bool:
     return True
 
 
-def post_record(h: str, it: dict, cutoff: float) -> dict | None:
+def post_record(h: str, it: dict, cutoff: float, now: float | None = None) -> dict | None:
     """One rostered account's post as the payload keeps it, or None when it
     is too old or has no picture."""
     ts = taken_at(it)
@@ -392,7 +393,7 @@ def post_record(h: str, it: dict, cutoff: float) -> dict | None:
         rec["c"] = cap[:400]
     if it.get("media_type") == 2 or it.get("is_video"):
         rec["v"] = 1
-        add_video(rec, it)
+        add_video(rec, it, now if now is not None else time.time())
     return rec
 
 
@@ -526,7 +527,7 @@ def main() -> int:
         for it in items:
             if kept >= POSTS_PER_HANDLE:
                 break
-            rec = post_record(h, it, cutoff)
+            rec = post_record(h, it, cutoff, now)
             if not rec:
                 continue
             fresh.append(rec)
@@ -542,7 +543,7 @@ def main() -> int:
     if not args.no_tagged:
         try:
             for it in fetch_tagged(key):
-                rec = tagged_record(it, tagged_cutoff)
+                rec = tagged_record(it, tagged_cutoff, now)
                 if rec and rec["h"] not in block:
                     tagged.append(rec)
             tagged_ok = True

@@ -1090,11 +1090,13 @@
     "id": "demo-taco-late",
     "business": "Pine Street taqueria",
     "restaurant_id": "demo-pine-taqueria",
-    "title": "Two tacos and a drink, $9",
+    "title": "Two tacos and a drink, $9, Friday late",
     "type": "happy-hour",
-    "days": null,
-    "start": "21:00",
-    "end": "23:59",
+    "days": [
+     "fri"
+    ],
+    "start": "22:00",
+    "end": "02:00",
     "all_day": false,
     "price_note": "Two tacos and a drink, $9",
     "link": null,

@@ -37,7 +37,7 @@ class Records(unittest.TestCase):
 
     def test_reel_carries_the_smallest_video_its_expiry_and_length(self):
         it = self.items["DeAW5ciSB3L"]
-        rec = bi.post_record("foambrewers", it, self.cutoff)
+        rec = bi.post_record("foambrewers", it, self.cutoff, self.now)
         self.assertEqual(rec["v"], 1)
         self.assertTrue(rec["vu"].startswith("https://") and ".mp4" in rec["vu"])
         self.assertEqual(rec["vu"], it["video_versions"][0]["url"])   # three equal copies: the first wins the tie
@@ -49,13 +49,13 @@ class Records(unittest.TestCase):
 
     def test_reel_poster_is_the_reel_shape_not_the_square_crop(self):
         it = self.items["DeAW5ciSB3L"]
-        rec = bi.post_record("foambrewers", it, self.cutoff)
+        rec = bi.post_record("foambrewers", it, self.cutoff, self.now)
         chosen = next(c for c in it["image_versions2"]["candidates"] if c["url"] == rec["i"])
         self.assertEqual((chosen["width"], chosen["height"]), (480, 853))
 
     def test_photo_and_carousel_carry_no_video(self):
         for code in ("Decvek2gbKz", "DefTsFYGSGP"):
-            rec = bi.post_record("foambrewers", self.items[code], self.cutoff)
+            rec = bi.post_record("foambrewers", self.items[code], self.cutoff, self.now)
             self.assertNotIn("vu", rec, code)
             self.assertNotIn("v", rec, code)
 
@@ -63,7 +63,7 @@ class Records(unittest.TestCase):
         """The photo came back with no widths at all; it used to be dropped."""
         it = self.items["Decvek2gbKz"]
         self.assertFalse(any(c.get("width") for c in it["image_versions2"]["candidates"]))
-        rec = bi.post_record("foambrewers", it, self.cutoff)
+        rec = bi.post_record("foambrewers", it, self.cutoff, self.now)
         self.assertEqual(rec["w"], 480)
         self.assertIn("p480x480", rec["i"])             # the uncropped 480, not the square crop
 
@@ -78,11 +78,18 @@ class Records(unittest.TestCase):
 
     def test_unreadable_expiry_leaves_the_video_off(self):
         rec = {"v": 1}
-        bi.add_video(rec, {"video_versions": [{"url": "https://x.test/a.mp4"}]})
+        bi.add_video(rec, {"video_versions": [{"url": "https://x.test/a.mp4"}]}, 0)
+        self.assertNotIn("vu", rec)
+
+    def test_a_fresh_video_already_near_its_expiry_is_left_off(self):
+        it = self.items["DeAW5ciSB3L"]
+        exp = bi.signature_expiry(it["video_versions"][0]["url"])
+        rec = bi.post_record("foambrewers", it, self.cutoff, exp - 3600)
+        self.assertEqual(rec["v"], 1)
         self.assertNotIn("vu", rec)
 
     def test_a_video_about_to_lapse_is_dropped_but_the_post_stays(self):
-        rec = bi.post_record("foambrewers", self.items["DeAW5ciSB3L"], self.cutoff)
+        rec = bi.post_record("foambrewers", self.items["DeAW5ciSB3L"], self.cutoff, self.now)
         self.assertTrue(bi.video_ok(rec, self.now))
         late = rec["ve"] - (bi.CARRY_MARGIN_H * 3600) + 60
         self.assertFalse(bi.video_ok(rec, late))

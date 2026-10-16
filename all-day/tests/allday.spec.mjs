@@ -1364,6 +1364,13 @@ async function theFood(browser, base) {
     check((await card()).k === first.k, 'and the next tap starts over', '');
     await page.evaluate(() => document.querySelector('#panel-food .deck').scrollIntoView({ block: 'center' }));
     await page.screenshot({ path: path.join(SHOTS, 'demo-food-deck.png') });
+
+    /* a Friday 10 pm to 2 am deal is still on at 12:30 on Saturday morning */
+    await page.clock.setFixedTime(Date.parse('2026-10-17T00:30:00-04:00'));
+    await page.reload();
+    await page.waitForSelector(foodPanel + ' .deck', { timeout: 15000 });
+    const late = await card();
+    check(late.k === 'd-demo-taco-late' && late.eyebrow === 'Happening now · until 2 am', 'an overnight deal is still happening after midnight, and leads', JSON.stringify(late));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

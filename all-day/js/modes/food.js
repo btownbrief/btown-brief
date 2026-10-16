@@ -141,6 +141,7 @@ function takePlaces(j) {
     if (!had) { keep.set(k, { r, aka: new Set([r.id]) }); keep.set('id:' + r.id, keep.get(k)); return; }
     had.aka.add(r.id);
     if (worth(r) > worth(had.r)) had.r = r;
+    keep.set(k, had);
     keep.set('id:' + r.id, had);
   });
   S.byId = Object.create(null);
@@ -241,12 +242,14 @@ const listFor = (k, t) => S.places.filter((r) => filterOf(k).test(r, t));
 /* What it is: the first cuisine that names a kind of food, else the category. */
 const NOT_A_KIND = new Set(['lunch', 'outdoor dining', 'other', 'romantic', 'activities']);
 function kind(r) {
-  const c = (r.cuisine || []).map((x) => String(x).replace(/\s*\(.*\)\s*$/, '').trim()).find((x) => x && !NOT_A_KIND.has(x.toLowerCase()));
-  return c || r.category || '';
+  const c = (r.cuisine || []).map((x) => String(x).replace(/\s*\(.*$/, '').split(/\s+\/\s+|[,;]/)[0].trim()).find((x) => x && !NOT_A_KIND.has(x.toLowerCase()));
+  return trim(c || r.category || '', 32);
 }
 
-/* The editorial blurbs, minus the few that are notes to ourselves. */
-const NOTE_RE = /\b(the 20\d\d window|per google|unverified|seed|sheet|beehiiv)\b|^(opened|grand opening|open daily)\b/i;
+/* The editorial blurbs, minus the ones that are research notes to ourselves
+   ("cafe closed permanently…", hours, a URL): nothing negative, nothing
+   half-checked. A reader-facing field in restaurants.json would be better. */
+const NOTE_RE = /https?:|\b(the 20\d\d window|per google|unverified|seed|sheet|beehiiv|yelp|confirmed|do not|categori[sz]e|defunct|no longer|closed|permanently|not burlington|reportedly)\b|\b\d{1,2}(:\d\d)?\s?(am|pm)\b|^(opened|opening|grand opening|open|also|company|aimed|hotel|in \w+, not)\b/i;
 const cleanBlurb = (r) => (r.blurb && r.blurb.length >= 40 && !NOTE_RE.test(r.blurb) ? r.blurb : '');
 
 /* What to order, when the blurb says: the one sentence that names a dish to
@@ -438,7 +441,8 @@ function placeSheet(r) {
    time, then the untimed ones. A window that has already closed today is
    left out. */
 function deck(t) {
-  const out = (S.deals || []).filter((d) => F.dealAppliesToday(d, t)).map((d) => {
+  /* a Thursday 10 pm to 1 am deal is still on at 12:30 Friday morning */
+  const out = (S.deals || []).filter((d) => F.dealAppliesToday(d, t) || F.dealLiveNow(d, t)).map((d) => {
     const s = F.toMin(d.start), e = F.toMin(d.end);
     const live = F.dealLiveNow(d, t);
     const over = !live && !d.all_day && s !== null && e !== null && e > s && t.minutes >= e;
