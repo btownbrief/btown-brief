@@ -47,7 +47,12 @@ CLI:
   --wire-file PATH   read wire-today.json from a file (else the wire-data branch)
   --edition-file P   read yesterday's frozen edition from a file
   --date YYYY-MM-DD  make the clip for that day (default: today in Burlington)
-  --script-file P    read the script from a file instead of asking the model
+  --script-only      stage one alone: write and check the script, save it as
+                     YYYY-MM-DD.txt with pending.json beside it, no voice
+                     (needs only ANTHROPIC_API_KEY)
+  --audio-from P     stage two alone: voice and publish an existing script
+                     (needs only ELEVENLABS_API_KEY; reads pending.json
+                     beside P for the teaser and the rest)
   --dry-run          write and check the script, print it, call no TTS
   --force            make today's clip even if one exists
   --selftest         run the offline checks and exit
@@ -610,6 +615,9 @@ def publish(out_dir, date, mp3, script, meta, now):
     clips.append({"date": date, "file": f"{date}.mp3", "script": f"{date}.txt", "bytes": len(mp3), **meta})
     index["clips"] = sorted(clips, key=lambda c: c.get("date") or "", reverse=True)
     index["updated"] = now.replace(microsecond=0).isoformat()
+    pending = os.path.join(out_dir, "pending.json")
+    if (wc.load_json(pending, {}) or {}).get("date") == date:
+        os.remove(pending)
     prune(out_dir, index, date)
     wc.write_json(os.path.join(out_dir, "index.json"), index)
     return index
@@ -619,6 +627,9 @@ def prune(out_dir, index, today):
     oldest = (as_date(today) - timedelta(days=KEEP_DAYS - 1)).isoformat()
     index["clips"] = [c for c in index["clips"] if (c.get("date") or "") >= oldest]
     keep = {c["file"] for c in index["clips"]} | {c["script"] for c in index["clips"]}
+    pending = wc.load_json(os.path.join(out_dir, "pending.json"), {})
+    if isinstance(pending, dict) and pending.get("script"):
+        keep.add(pending["script"])
     for name in os.listdir(out_dir):
         if re.fullmatch(r"\d{4}-\d{2}-\d{2}\.(mp3|txt)", name) and name not in keep:
             os.remove(os.path.join(out_dir, name))
@@ -650,6 +661,16 @@ def record(out_dir, now, entry):
 # The run
 # ----------------------------------------------------------------------
 
+def write_pending(out_dir, date, script, meta):
+    """--script-only: the script beside where its MP3 will go, and
+    pending.json, which --audio-from reads back. The page never sees either:
+    only index.json lists clips, and only clips with an MP3."""
+    os.makedirs(out_dir, exist_ok=True)
+    with open(os.path.join(out_dir, f"{date}.txt"), "w", encoding="utf-8") as f:
+        f.write(script)
+    wc.write_json(os.path.join(out_dir, "pending.json"), {"date": date, "script": f"{date}.txt", **meta})
+
+
 def run(args):
     load_secrets()
     now = wc.utcnow()
@@ -662,61 +683,71 @@ def run(args):
     def give_up(reason, fatal=False):
         print(f"wire_audio: {reason}; nothing written")
         wc.step_summary(f"- wire_audio: {reason}; nothing written")
-        return 1 if fatal and stale and not args.dry_run else 0
+        return 1 if fatal and stale and not args.dry_run and not args.script_only else 0
 
     api_key = os.environ.get("ELEVENLABS_API_KEY")
-    if not api_key and not args.dry_run:
+    if not api_key and not args.dry_run and not args.script_only:
         return give_up("no ELEVENLABS_API_KEY (add it as a repository secret to turn the audio brief on)")
     if not args.force and any(c.get("date") == date for c in index["clips"] if isinstance(c, dict)):
         return give_up(f"the clip for {date} is already up")
-
-    # what to read from
-    if args.wire_file:
-        today_payload = wc.load_json(args.wire_file, None)
-    else:
-        try:
-            today_payload = fetch_json(RAW + "wire-today.json")
-        except Exception as exc:  # noqa: BLE001
-            today_payload = None
-            print(f"wire_audio: wire-today.json did not load ({exc})")
-
-    def fetch_edition(day):
-        if args.edition_file:
-            return wc.load_json(args.edition_file, None)
-        return fetch_json(RAW + f"wire/{day}.json")
-
-    payload, which = choose_edition(today_payload, date, fetch_edition)
-    if not payload:
-        return give_up(which, fatal=True)
-    stories = local_stories(payload)
-    print(f"wire_audio: {len(stories)} local stories from the {which} edition ({payload.get('date')})")
-
     cost_now = load_cost(out_dir, now)
-    entry = {"edition": payload.get("date")}
-    if args.script_file:
-        with open(args.script_file, encoding="utf-8") as f:
+
+    if args.audio_from:
+        # stage two on its own: voice a script already written (and checked)
+        with open(args.audio_from, encoding="utf-8") as f:
             script = f.read().strip() + "\n"
-        teaser, notes = "", ["script read from a file"]
-        entry["writer"] = "file"
+        pending = wc.load_json(os.path.join(os.path.dirname(os.path.abspath(args.audio_from)), "pending.json"), {})
+        if not isinstance(pending, dict) or pending.get("date") != date:
+            pending = {}
+        entry = {"edition": pending.get("edition"), "writer": pending.get("writer") or "file"}
+        teaser, stories_n, which = pending.get("teaser") or "", pending.get("stories") or 0, pending.get("from") or ""
+        print(f"wire_audio: voicing {args.audio_from}" + (f" (written by {entry['writer']})" if pending else ""))
     else:
+        if args.wire_file:
+            today_payload = wc.load_json(args.wire_file, None)
+        else:
+            try:
+                today_payload = fetch_json(RAW + "wire-today.json")
+            except Exception as exc:  # noqa: BLE001
+                today_payload = None
+                print(f"wire_audio: wire-today.json did not load ({exc})")
+
+        def fetch_edition(day):
+            if args.edition_file:
+                return wc.load_json(args.edition_file, None)
+            return fetch_json(RAW + f"wire/{day}.json")
+
+        payload, which = choose_edition(today_payload, date, fetch_edition)
+        if not payload:
+            return give_up(which, fatal=True)
+        stories = local_stories(payload)
+        stories_n = len(stories)
+        print(f"wire_audio: {stories_n} local stories from the {which} edition ({payload.get('date')})")
         if not os.environ.get("ANTHROPIC_API_KEY"):
             return give_up("no ANTHROPIC_API_KEY to write the script (Opus only, no fallback)", fatal=True)
-        engine = WRITER
         if cost_now["llm_usd"] >= LLM_CAP_USD:
             return give_up(f"the model cap (${LLM_CAP_USD:.0f} a month) is spent", fatal=True)
-        script, teaser, usage, notes = write_script(stories, engine, date, which)
-        entry.update(writer=engine["model"], llm_usd=round(wc.cost_usd(engine["model"], usage), 6),
-                     llm_in=usage.get("in", 0), llm_out=usage.get("out", 0))
-    for note in notes:
-        print("wire_audio: " + note)
-    if not script:
-        if not args.dry_run:
-            record(out_dir, now, {**entry, "result": "no script"})
-        return give_up("no script passed the checks", fatal=True)
+        script, teaser, usage, notes = write_script(stories, WRITER, date, which)
+        entry = {"edition": payload.get("date"), "writer": WRITER["model"],
+                 "llm_usd": round(wc.cost_usd(WRITER["model"], usage), 6),
+                 "llm_in": usage.get("in", 0), "llm_out": usage.get("out", 0)}
+        for note in notes:
+            print("wire_audio: " + note)
+        if not script:
+            if not args.dry_run:
+                record(out_dir, now, {**entry, "result": "no script"})
+            return give_up("no script passed the checks", fatal=True)
 
     words = word_count(script)
     print(f"wire_audio: script, {words} words, {len(script):,} characters\n\n{script}")
     if args.dry_run:
+        return 0
+    if args.script_only:
+        write_pending(out_dir, date, script, {"words": words, "stories": stories_n, "edition": entry.get("edition"),
+                                              "from": which, "teaser": teaser, "writer": entry["writer"],
+                                              "written": now.replace(microsecond=0).isoformat()})
+        record(out_dir, now, {**entry, "result": "script only"})
+        wc.step_summary(f"- wire_audio: wrote {date}.txt ({words} words); voice it with --audio-from")
         return 0
     voice_text = for_voice(script)
     if cost_now["tts_chars"] + len(voice_text) > TTS_MONTH_CHARS:
@@ -747,13 +778,13 @@ def run(args):
     except Exception as exc:  # noqa: BLE001 — the voice's own file is still good
         print(f"wire_audio: ffmpeg failed ({exc}); publishing the voice's MP3 as is")
         mp3, seconds = raw, round(len(raw) * 8 / 64000, 1)
-    meta = {"duration": seconds, "words": words, "stories": len(stories), "edition": payload.get("date"),
+    meta = {"duration": seconds, "words": words, "stories": stories_n, "edition": entry.get("edition"),
             "from": which, "teaser": teaser, "made": now.replace(microsecond=0).isoformat(),
             "voice": voice, "model": model, "writer": entry.get("writer", "")}
     publish(out_dir, date, mp3, script, meta, now)
     record(out_dir, now, entry)
     print(f"wire_audio: published {date}.mp3, {len(mp3) / 1e6:.2f} MB, {seconds:.0f} s, {words} words")
-    wc.step_summary(f"- wire_audio: published {date}.mp3 ({seconds:.0f} s, {words} words, {len(stories)} stories)")
+    wc.step_summary(f"- wire_audio: published {date}.mp3 ({seconds:.0f} s, {words} words, {stories_n} stories)")
     return 0
 
 
@@ -825,7 +856,8 @@ def main():
     ap.add_argument("--wire-file")
     ap.add_argument("--edition-file")
     ap.add_argument("--date")
-    ap.add_argument("--script-file")
+    ap.add_argument("--script-only", action="store_true")
+    ap.add_argument("--audio-from")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--selftest", action="store_true")

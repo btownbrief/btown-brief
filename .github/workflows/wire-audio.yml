@@ -29,6 +29,10 @@ on:
         description: "Make today's clip again even if one is up (costs one more clip)"
         type: boolean
         default: false
+      script_only:
+        description: "Write and check today's script only (Opus), no voice; voice it later with --audio-from"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -92,7 +96,15 @@ jobs:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          if [ -z "$ELEVENLABS_API_KEY" ]; then
+          if [ "${{ inputs.script_only }}" = "true" ]; then
+            if [ -n "$ANTHROPIC_API_KEY" ]; then
+              echo "voice=on" >> "$GITHUB_OUTPUT"
+              echo "### The Brief, out loud · script only: Claude Opus 5.5 writes, nothing voiced" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "voice=none" >> "$GITHUB_OUTPUT"
+              echo "### The Brief, out loud · no ANTHROPIC_API_KEY to write the script, nothing made" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          elif [ -z "$ELEVENLABS_API_KEY" ]; then
             echo "voice=none" >> "$GITHUB_OUTPUT"
             echo "### The Brief, out loud · no ELEVENLABS_API_KEY secret, nothing made" >> "$GITHUB_STEP_SUMMARY"
             echo "Add it under Settings, Secrets and variables, Actions to turn the audio brief on." >> "$GITHUB_STEP_SUMMARY"
@@ -117,14 +129,16 @@ jobs:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python3 scripts/build_wire_audio.py --out-dir /tmp/wa/data/audio ${{ inputs.force && '--force' || '' }}
+        run: >-
+          python3 scripts/build_wire_audio.py --out-dir /tmp/wa/data/audio
+          ${{ inputs.force && '--force' || '' }} ${{ inputs.script_only && '--script-only' || '' }}
 
       - name: Force-push the single-commit wire-audio branch
         # Also after a failed step: the cost ledger is worth keeping. Never
         # after a failed pull, and never with nothing in the folder.
         if: always() && steps.pull.outcome == 'success' && steps.key.outputs.voice == 'on'
         run: |
-          if [ ! -s /tmp/wa/data/audio/index.json ] && [ ! -s /tmp/wa/data/audio/cost.json ]; then
+          if [ ! -s /tmp/wa/data/audio/index.json ] && [ ! -s /tmp/wa/data/audio/cost.json ] && [ ! -s /tmp/wa/data/audio/pending.json ]; then
             echo "nothing written yet — leaving the branch alone"
             exit 0
           fi

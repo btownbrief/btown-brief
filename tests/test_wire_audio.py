@@ -239,7 +239,7 @@ class Writer(unittest.TestCase):
 
 class Run(unittest.TestCase):
     def args(self, out_dir, **kw):
-        base = dict(out_dir=out_dir, wire_file=FIXTURE, edition_file=None, date="2026-10-16", script_file=None,
+        base = dict(out_dir=out_dir, wire_file=FIXTURE, edition_file=None, date="2026-10-16", script_only=False, audio_from=None,
                     dry_run=False, force=False)
         base.update(kw)
         return SimpleNamespace(**base)
@@ -294,6 +294,23 @@ class Run(unittest.TestCase):
                 self.assertEqual(wa.run(self.args(tmp)), 0)
             self.assertIn("already up", out.getvalue())
             self.assertEqual(voice.call_count, 1)
+
+    def test_the_two_stages_apart_write_then_voice(self):
+        ask, _ = fake_answers({"paragraphs": pad(GOOD), "teaser": "The Williston case and a scam warning."})
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(wa, "load_secrets"), \
+                mock.patch.object(wa.wc, "utcnow", return_value=NOW), mock.patch.object(wa.wc, "ask_json", ask), \
+                mock.patch.object(wa, "normalize", return_value=(b"ID3normal", 201.4)), \
+                mock.patch.object(wa, "tts", return_value=(b"ID3fake", {"character-cost": "300"})) as voice:
+            with mock.patch.dict(os.environ, {"ANTHROPIC_API_KEY": "a"}, clear=True), redirect_stdout(io.StringIO()):
+                self.assertEqual(wa.run(self.args(tmp, script_only=True)), 0)     # in Actions: Opus, no voice key
+            self.assertEqual(sorted(os.listdir(tmp)), ["2026-10-16.txt", "cost.json", "pending.json"])
+            voice.assert_not_called()
+            with mock.patch.dict(os.environ, {"ELEVENLABS_API_KEY": "k"}, clear=True), redirect_stdout(io.StringIO()):
+                self.assertEqual(wa.run(self.args(tmp, audio_from=os.path.join(tmp, "2026-10-16.txt"), wire_file=None)), 0)
+            self.assertEqual(sorted(os.listdir(tmp)), ["2026-10-16.mp3", "2026-10-16.txt", "cost.json", "index.json"])
+            with open(os.path.join(tmp, "index.json"), encoding="utf-8") as f:
+                clip = json.load(f)["clips"][0]
+            self.assertEqual((clip["writer"], clip["teaser"], clip["stories"]), ("claude-opus-5-5", "The Williston case and a scam warning.", 8))
 
     def test_a_dead_voice_fails_the_run_only_once_the_clips_are_stale(self):
         ask, _ = fake_answers({"paragraphs": pad(GOOD), "teaser": "x"})
