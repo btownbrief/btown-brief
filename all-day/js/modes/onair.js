@@ -655,12 +655,14 @@ function onKey(e) {
 }
 
 /* -------------------------------------------------------------- deep links */
+/* Only once every payload has settled: each one redraws the page, which
+   would replace a card that had just flashed, and a key cannot be called
+   gone while a payload that might hold it is still on its way. */
 function land() {
   const k = O.pending;
-  if (!k || !O.root || !O.built) return;
-  if (app.flashHit(O.root, k)) { O.pending = null; return; }
-  /* wait for every payload before saying it has gone */
-  if (FEEDS.every((f) => O.settled[f])) { O.pending = null; app.toast('That one has moved on. Here’s what’s on now.'); }
+  if (!k || !O.root || !O.built || !FEEDS.every((f) => O.settled[f])) return;
+  O.pending = null;
+  if (!app.flashHit(O.root, k)) app.toast('That one has moved on. Here’s what’s on now.');
 }
 
 /* ----------------------------------------------------------------- the tab */
