@@ -322,7 +322,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'whatnow', 'onair']);
+const LIVE = new Set(['wire', 'whatnow', 'onair', 'food']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -404,7 +404,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'fv2'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'r-demo-all-night-diner'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -1208,6 +1208,309 @@ async function theWhatNow(browser, base) {
   });
 }
 
+/* -------------------------------------------------------------- Food */
+/* The expected answers are worked out here, from the same files the tab
+   reads, with a small copy of food-lib's hours rules: the tab gets them
+   through food-lib itself, so the two meeting is the check. */
+const FDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+const fMin = (s) => { if (!s) return null; const [h, m] = s.split(':').map(Number); return h * 60 + m; };
+function fOpenAt(hours, day, mins) {
+  for (const [o, c] of hours[day] || []) { const a = fMin(o), b = fMin(c); if (b > a ? mins >= a && mins < b : mins >= a) return true; }
+  for (const [o, c] of hours[FDAYS[(FDAYS.indexOf(day) + 6) % 7]] || []) { const a = fMin(o), b = fMin(c); if (b <= a && mins < b) return true; }
+  return false;
+}
+function fLatest(hours, day) {
+  let l = null;
+  for (const [o, c] of hours[day] || []) { const a = fMin(o), b = fMin(c); const e = b > a ? b : b + 1440; if (l === null || e > l) l = e; }
+  return l;
+}
+async function foodData() {
+  const R = JSON.parse(await readFile(path.join(REPO, 'data/restaurants.json'), 'utf8')).restaurants;
+  const D = JSON.parse(await readFile(path.join(REPO, 'data/deals.json'), 'utf8')).deals;
+  /* one row per place: duplicates by Google id or id fold into the record with the blurb */
+  const worth = (r) => (r.blurb ? 4 : 0) + (r.hours_confidence === 'google' ? 2 : 0) + (r.place_id ? 1 : 0);
+  const keep = new Map();
+  R.filter((r) => r.id && r.name && !r.closed && !(r.closing && /temporar/i.test(r.closing.note || ''))).forEach((r) => {
+    const k = r.place_id || 'id:' + r.id;
+    const had = keep.get(k) || keep.get('id:' + r.id);
+    if (!had) { const e = { r, aka: new Set([r.id]) }; keep.set(k, e); keep.set('id:' + r.id, e); return; }
+    had.aka.add(r.id); if (worth(r) > worth(had.r)) had.r = r; keep.set('id:' + r.id, had);
+  });
+  const places = [...new Set(keep.values())].map(({ r, aka }) => ({ ...r, aka: [...aka] }));
+  const deals = D.filter((d) => d.id && d.title && d.business && !d.retired && !d.conflict && /^\d{4}-\d{2}-\d{2}$/.test(String(d.last_verified || '')));
+  return { places, deals };
+}
+function foodExpect({ places, deals }, day, mins) {
+  const has = (r) => r.hours && Object.keys(r.hours).length && r.hours_confidence !== 'unverified';
+  const open = (r) => has(r) && fOpenAt(r.hours, day, mins);
+  const today = (d) => !d.days || d.days.includes(day);
+  const at = (r) => deals.filter((d) => r.aka.includes(d.restaurant_id));
+  const tests = {
+    open, late: (r) => has(r) && (fLatest(r.hours, day) ?? -1) >= 1380, patio: (r) => r.patio === true && open(r),
+    hh: (r) => at(r).some((d) => d.type === 'happy-hour' && today(d)), cheap: (r) => r.under_15 === true, deal: (r) => at(r).some(today),
+  };
+  const out = {};
+  for (const k of Object.keys(tests)) out[k] = places.filter(tests[k]).map((r) => r.id);
+  return out;
+}
+
+const foodPanel = '#panel-food';
+async function foodFilter(page, k) {
+  await page.click(foodPanel + ' .chips.filters .chip[data-chip="' + k + '"]');
+  const more = await page.$(foodPanel + ' [data-sec="open"] .btn.more');
+  if (more) await more.click();
+  return page.evaluate((p) => ({
+    rows: [...document.querySelectorAll(p + ' [data-sec="open"] .lrow.place')].map((r) => r.dataset.k.slice(2)),
+    n: Number(document.querySelector(p + ' .chips.filters .chip.on .n')?.textContent),
+  }), foodPanel);
+}
+
+/* An Instagram payload in the builder's shape: three food reels (one about
+   to lapse), a food photo, and a reel from an account that is not food. */
+function foodInstagram(withVideo) {
+  const now = Math.floor(Date.now() / 1000);
+  const oe = (s) => (now + s).toString(16).toUpperCase();
+  const post = (h, code, hrsAgo, extra) => ({ h, ts: now - hrsAgo * 3600, i: 'https://scontent.example/' + code + '.jpg?stp=dst-jpg_e15_p480x480&oe=' + oe(4 * 86400),
+    u: 'https://www.instagram.com/p/' + code + '/', w: 480, c: 'A post from ' + h, s: 'do', ...extra });
+  const reel = (h, code, hrsAgo, life, f) => post(h, code, hrsAgo, { v: 1, ...(withVideo ? { vu: 'https://scontent.example/' + code + '.mp4?oe=' + oe(life), ve: now + life, vd: 12.4 } : {}), ...(f ? { f: 1 } : {}) });
+  const posts = [reel('foambrewers', 'FoodReelA', 2, 30 * 3600, true), reel('eatvermont', 'FoodReelB', 5, 20 * 3600, true),
+    reel('haymakerbunsbtv', 'FoodReelLapsing', 1, 600, true), post('waterworksvt', 'FoodPhoto', 3, { f: 1 }),
+    reel('sunsetwatchersclub', 'NotFoodReel', 1, 30 * 3600, false)];
+  return { generated: new Date().toISOString(), expires_hint_days: 4, handles: [...new Set(posts.map((p) => p.h))], posts };
+}
+
+async function theFood(browser, base) {
+  const fd = await foodData();
+  /* Friday, October 16, 2026, in Burlington; the reader is in Los Angeles */
+  const NINE = Date.parse('2026-10-16T21:00:00-04:00');
+  const ELEVEN = Date.parse('2026-10-16T23:00:00-04:00');
+  const at9 = foodExpect(fd, 'fri', 21 * 60);
+  const at11 = foodExpect(fd, 'fri', 23 * 60);
+  const pick = fd.places.find((r) => r.place_id && r.hours_confidence === 'google' && (r.hours.fri || []).length === 1 &&
+    r.hours.fri[0][1] === '22:00' && r.hours.fri[0][0] <= '20:00');
+
+  await group('Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles' });
+    await page.clock.setFixedTime(NINE);
+    await page.goto(base + '/all-day/#food');
+    await page.waitForSelector(foodPanel + ' .lrow.place', { timeout: 15000 });
+    check(!!pick, 'the data has a place that closes at 10 pm on Fridays', '');
+    const nine = await foodFilter(page, 'open');
+    check(nine.rows.includes(pick.id), '9 pm Friday: ' + pick.name + ' is open', nine.rows.length);
+    const row = await page.$eval(foodPanel + ' [data-k="r-' + pick.id + '"]', (r) => r.innerText);
+    check(/Open until 10 pm/.test(row), 'and says it is open until 10 pm', row);
+    check(nine.rows.length === at9.open.length && nine.n === at9.open.length, '9 pm: Open now lists exactly the places open then (' + at9.open.length + ')', nine.rows.length + ' rows, chip ' + nine.n);
+    check(new Set(nine.rows).size === nine.rows.length, 'no place shows twice', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-food-9pm.png') });
+
+    /* every filter chip: its count, and the rows it draws, are the expected set */
+    for (const k of ['late', 'patio', 'hh', 'cheap', 'deal', 'open']) {
+      const got = await foodFilter(page, k);
+      const want = at9[k];
+      check(got.rows.length === want.length && got.n === want.length && want.every((id) => got.rows.includes(id)),
+        'the ' + k + ' chip shows its ' + want.length + ' places and says so', got.rows.length + ' rows, chip ' + got.n);
+    }
+    const counts = new Set(['open', 'late', 'patio', 'hh', 'cheap', 'deal'].map((k) => at9[k].length));
+    check(counts.size >= 4, 'the chips really do change the count', [...counts].join(', '));
+
+    /* the Google link is the place's own, by its Google place id */
+    await page.click(foodPanel + ' [data-k="r-' + pick.id + '"] .open');
+    await page.waitForSelector('.sheet-body a.google');
+    const g = await page.$eval('.sheet-body a.google', (a) => ({ href: a.href, text: a.textContent, target: a.target }));
+    check(g.href.includes('query_place_id=' + encodeURIComponent(pick.place_id)) && /^https:\/\/www\.google\.com\/maps\//.test(g.href) && g.target === '_blank',
+      '“Full reviews on Google” opens the place by its place id', g.href);
+    check(/Full reviews on Google/.test(g.text), 'and says what it is', g.text);
+    const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
+    check(/Today, Friday/.test(sheet) && /10 pm/.test(sheet), 'the sheet gives today’s hours in Burlington’s clock', sheet.slice(0, 200));
+    check(!/[★☆]|\b\d(\.\d)?\s*(stars?|\/\s*5)\b|\brating\b/i.test(sheet), 'no stars, scores or ratings in the sheet', '');
+    await page.keyboard.press('Escape');
+    await page.click('.sheet-head .iconbtn').catch(() => {});
+
+    /* two hours later the same place has closed and the list says so */
+    await page.clock.setFixedTime(ELEVEN);
+    await page.reload();
+    await page.waitForSelector(foodPanel + ' .lrow.place', { timeout: 15000 });
+    const eleven = await foodFilter(page, 'open');
+    check(!eleven.rows.includes(pick.id), '11 pm Friday: ' + pick.name + ' has left Open now', '');
+    check(eleven.rows.length === at11.open.length, '11 pm: Open now lists exactly the places open then (' + at11.open.length + ')', eleven.rows.length);
+    check(at11.open.length < at9.open.length, 'fewer places are open at 11 than at 9', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Food, the deals deck (demo, noon)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.clock.setFixedTime(Date.parse('2026-10-16T12:00:00-04:00'));
+    await page.goto(base + '/all-day/?demo=1#food/deals');
+    await page.waitForSelector(foodPanel + ' .deck', { timeout: 15000 });
+    const card = () => page.$eval(foodPanel + ' .deck', (d) => ({ k: d.dataset.k, eyebrow: d.querySelector('.eyebrow').textContent, h: d.querySelector('h3').textContent,
+      verified: d.querySelector('.verified')?.textContent || '', on: d.querySelectorAll('.segs i.on').length, segs: d.querySelectorAll('.segs i').length }));
+    const first = await card();
+    check(first.k === 'd-demo-diner-coffee' && /^Happening now/.test(first.eyebrow), 'the deal happening now comes first', JSON.stringify(first));
+    check(first.verified === 'Verified Oct 14', 'the card carries its verified date', first.verified);
+    check(first.segs === 7 && first.on === 1, 'progress bars on top: six deals and the end card, the first lit', first.on + '/' + first.segs);
+    await page.click(foodPanel + ' .deck .hit.r');
+    const second = await card();
+    check(second.k === 'd-demo-bistro-oysters' && second.on === 2 && /^Later today · 3 pm–5 pm$/.test(second.eyebrow), 'a tap on the right side turns to the next deal, the next one to start', JSON.stringify(second));
+    check(/^Verified /.test(second.verified), 'its verified date is showing', second.verified);
+    await page.click(foodPanel + ' .deck .hit.l');
+    check((await card()).k === first.k, 'a tap on the left side goes back', '');
+    const seen = [];
+    for (let i = 0; i < 6; i++) { const c = await card(); seen.push(c); await page.click(foodPanel + ' .deck .hit.r'); }
+    check(seen.every((c) => /^Verified [A-Z][a-z]{2} \d{1,2}$/.test(c.verified)), 'every deal card has its verified date', seen.map((c) => c.verified).join(', '));
+    const end = await card();
+    check(end.k === 'deals-end' && /That’s today/i.test(end.eyebrow), 'after the last deal, the deck says that’s today', JSON.stringify(end));
+    await page.click(foodPanel + ' .deck .hit.r');
+    check((await card()).k === first.k, 'and the next tap starts over', '');
+    await page.evaluate(() => document.querySelector('#panel-food .deck').scrollIntoView({ block: 'center' }));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-food-deck.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Food, kitchens in their own words (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const ig = foodInstagram(true);
+    const mp4 = [];
+    await page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(ig), contentType: 'application/json' }));
+    await page.route(/scontent\.example\/.*\.mp4/, (r) => { mp4.push(r.request().url()); return r.fulfill({ status: 200, body: '', contentType: 'video/mp4' }); });
+    await page.goto(base + '/all-day/#food/kitchens');
+    await page.waitForSelector(foodPanel + ' .vcard.clip', { timeout: 15000 });
+    const keys = await page.$$eval(foodPanel + ' [data-sec="kitchens"] .vcard', (c) => c.map((x) => x.dataset.k));
+    check(JSON.stringify(keys) === JSON.stringify(['ig-FoodReelA', 'ig-FoodReelB']), 'the rail holds the food reels, newest first; a reel about to lapse and a non-food account are left out', keys.join(', '));
+    check(await page.$$eval('video', (v) => v.length) === 0 && !mp4.length, 'before a tap: no video on the page and nothing fetched', mp4.join(', '));
+    check(await page.$eval('#vbox', (b) => b.hidden), 'and the video box is closed', '');
+    await page.click(foodPanel + ' [data-k="ig-FoodReelA"]');
+    await page.waitForSelector('#vbox:not([hidden]) #vbox-frame video', { timeout: 4000 }).catch(() => {});
+    const box = await page.evaluate(() => {
+      const v = document.querySelector('#vbox-frame video');
+      return v && { src: v.getAttribute('src'), controls: v.controls, autoplay: v.autoplay, open: document.getElementById('vbox-open').textContent, href: document.getElementById('vbox-open').href,
+        frames: document.querySelectorAll('video').length, inBox: !!v.closest('#vbox') };
+    });
+    check(box && box.inBox && box.frames === 1 && box.src === ig.posts[0].vu, 'a tap plays the reel in the shell’s one video box', JSON.stringify(box));
+    check(box && box.controls && !box.autoplay, 'with controls, and no autoplay attribute: the tap is what started it', JSON.stringify(box));
+    check(box && /Open on Instagram/.test(box.open) && box.href === ig.posts[0].u, 'the box links to the post on Instagram', JSON.stringify(box));
+    await page.screenshot({ path: path.join(SHOTS, 'live-food-clip.png') });
+    await page.click('#vbox-close');
+    const after = await page.evaluate(() => ({ videos: document.querySelectorAll('video').length, open: document.getElementById('vbox-open').textContent, ar: document.getElementById('vbox-frame').style.aspectRatio }));
+    check(after.videos === 0 && /Open in YouTube/.test(after.open) && !after.ar, 'closing gives the box back as the shell left it', JSON.stringify(after));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    const p2 = await newPage(browser, base);
+    await p2.page.route(/\/all-day\/data\/instagram\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify(foodInstagram(false)), contentType: 'application/json' }));
+    await p2.page.goto(base + '/all-day/#food/kitchens');
+    await p2.page.waitForSelector(foodPanel + ' [data-sec="kitchens"] .sec', { timeout: 15000 });
+    await p2.page.waitForFunction((p) => !document.querySelector(p + ' [data-sec="kitchens"] .loading'), foodPanel);
+    const txt = await p2.page.$eval(foodPanel + ' [data-sec="kitchens"]', (s) => s.innerText);
+    const tiles = await p2.page.$$eval(foodPanel + ' [data-sec="kitchens"] .vcard', (c) => c.map((x) => x.dataset.k + (x.classList.contains('clip') ? ':clip' : '')));
+    check(/No new videos from the kitchens/.test(txt) && tiles.length === 4 && !tiles.some((t) => /clip|NotFood/.test(t)),
+      'with no videos it says so and shows the food accounts’ latest photos', tiles.join(', '));
+    check(!p2.errors.length, 'no console errors', p2.errors.join(' | '));
+    await p2.ctx.close();
+  });
+
+  await group('Food, the Weekly Bite and Feature a dish (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const dish = { id: '11111111-2222-3333-4444-555555555555', storage_path: 'submissions/aaaa-bbbb.jpg', caption: 'The pho with extra basil, worth the walk', category: 'dish',
+      area: 'Old North End', spot: pick.name, taken_on: '', credit: 'Sam', display_label: null, approved_on: '2026-10-15', votes: 7 };
+    const sunset = { ...dish, id: '99999999-2222-3333-4444-555555555555', storage_path: 'submissions/cccc.jpg', caption: 'A sunset', category: 'sunsets', spot: '' };
+    await page.route(/\/rest\/v1\/rpc\/btb_photos_get/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([sunset, dish]) }));
+    const photo = await readFile(path.join(REPO, 'assets/icon-192.png'));   // a real picture: the resize step decodes it
+    const sent = [];
+    page.on('request', (q) => { if (q.method() === 'POST' && /supabase\.co\/(storage|rest\/v1\/rpc\/btb_photos_submit)/.test(q.url())) sent.push({ url: q.url(), body: q.postData() }); });
+    await page.goto(base + '/all-day/#food');
+    await page.waitForSelector(foodPanel + ' .hero[data-k="bite"]', { timeout: 15000 });
+    const hero = await page.$eval(foodPanel + ' .hero[data-k="bite"]', (h) => h.innerText);
+    check(/featured, not reviewed/i.test(hero) && hero.includes(dish.caption) && hero.includes(pick.name) && /sent in by Sam/.test(hero),
+      'the Weekly Bite is the newest approved dish: its line, the place, the reader', hero);
+    check(!/\b7\b/.test(hero) && !/vote|score|rating|★/i.test(hero), 'featured, never rated: no votes or score on it', hero);
+    await page.click(foodPanel + ' .hero .btn:text("The place")');
+    check(await page.$eval('.sheet-head h2', (h) => h.textContent) === pick.name, '“The place” opens the place it came from', '');
+    await page.click('.sheet-head .iconbtn');
+
+    /* the form: we feature, we don't review; nothing goes without consent */
+    const form = foodPanel + ' form.dish';
+    const add = await page.$eval(foodPanel + ' [data-sec="add"]', (s) => s.innerText);
+    check(/We feature, we don’t review\./.test(add), 'the form says we feature, we don’t review', '');
+    check(!/\b(rate|rating|stars? (out of|\/))\b/i.test(add), 'nothing on the form asks for a rating', '');
+    await page.setInputFiles(form + ' input[type=file]', { name: 'dish.png', mimeType: 'image/png', buffer: photo });
+    await page.fill(form + ' input[name=line]', 'The cold sesame noodles, every time');
+    await page.fill(form + ' input[name=place]', pick.name);
+    await page.click(form + ' .send');
+    await page.waitForTimeout(400);
+    const err = await page.$eval(form + ' .err', (e) => (e.hidden ? '' : e.textContent));
+    check(/Tick the box/.test(err), 'without the consent box it refuses, and says why', err);
+    check(!sent.length, 'and nothing was uploaded or queued', JSON.stringify(sent));
+    await page.fill(form + ' input[name=line]', 'Worst noodles in town');
+    await page.check(form + ' input[name=consent]');
+    await page.click(form + ' .send');
+    await page.waitForTimeout(200);
+    check(/only feature what you’d recommend/.test(await page.$eval(form + ' .err', (e) => e.textContent)) && !sent.length, 'a line that reads as a takedown is turned back before it is sent', '');
+    await page.fill(form + ' input[name=line]', 'The cold sesame noodles, every time');
+    await page.click(form + ' .send');
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    const rpc = sent.find((x) => /btb_photos_submit/.test(x.url));
+    const args = rpc ? JSON.parse(rpc.body) : {};
+    check(sent.some((x) => /\/storage\/v1\/object\/btb-photos\/submissions\//.test(x.url)), 'with consent, the photo uploads to the photo queue’s bucket', JSON.stringify(sent.map((x) => x.url)));
+    check(args.p_category === 'dish' && args.p_permission === true && args.p_spot === pick.name && args.p_caption === 'The cold sesame noodles, every time' && /^p_/.test(args.p_voter || ''),
+      'and goes to the moderation queue as a dish, with consent, the place and the line', JSON.stringify(args));
+    check(/Sent/.test(await page.$eval('#toast', (t) => t.textContent)), 'the reader is told it is in the queue', await page.$eval(form + ' .err', (e) => e.textContent));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* nobody approved yet: the slot invites the first one; the demo never sends */
+    const d = await newPage(browser, base);
+    await d.page.goto(base + '/all-day/#food');
+    await d.page.waitForSelector(foodPanel + ' [data-k="bite"]', { timeout: 15000 });
+    check(/starts with you/.test(await d.page.$eval(foodPanel + ' [data-k="bite"]', (h) => h.innerText)), 'with no dish approved, the Bite invites the first one', '');
+    await d.ctx.close();
+    const m = await newPage(browser, base);
+    await m.page.goto(base + '/all-day/?demo=1#food/add');
+    await m.page.waitForSelector(foodPanel + ' form.dish', { timeout: 15000 });
+    await m.page.setInputFiles(form + ' input[type=file]', { name: 'dish.png', mimeType: 'image/png', buffer: PNG });
+    await m.page.fill(form + ' input[name=line]', 'Morning buns');
+    await m.page.fill(form + ' input[name=place]', 'Old North End bakery');
+    await m.page.click(form + ' .send');
+    check(/Tick the box/.test(await m.page.$eval(form + ' .err', (e) => e.textContent)), 'demo: the consent box is required there too', '');
+    await m.page.check(form + ' input[name=consent]');
+    await m.page.click(form + ' .send');
+    check(/Demo: nothing was sent/.test(await m.page.$eval('#toast', (t) => t.textContent)) && !m.supabase.length, 'demo: nothing is sent anywhere', m.supabase.join(', '));
+    check(!m.errors.length, 'no console errors', m.errors.join(' | '));
+    await m.ctx.close();
+  });
+
+  await group('Food, deep links and the chip row', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#food/r-demo-noodle-counter');
+    check(await flashes(page, 'r-demo-noodle-counter'), '#food/r-<id> lands on the place and flashes it', '');
+    check(await page.$eval('.sheet-head h2', (h) => h.textContent).catch(() => '') === 'The noodle counter on Bank', 'and opens its sheet', '');
+    await page.keyboard.press('Escape');
+    await page.click('.sheet-head .iconbtn').catch(() => {});
+    await toTop(page);
+    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.dataset.chip));
+    check(JSON.stringify(toc) === JSON.stringify(['bite', 'open', 'deals', 'kitchens', 'add']), 'the chip row is the table of contents: Bite, Open now, Deals, Kitchens, Feature a dish', toc.join(', '));
+    await page.click('#subnav .chip[data-chip="add"]');
+    await page.waitForTimeout(700);
+    const top = await page.$eval(foodPanel + ' [data-sec="add"]', (s) => s.getBoundingClientRect().top);
+    check(top >= 0 && top < 260, 'a chip scrolls to its section', top);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-food-desktop-dark.png') });
+    await page.goto(base + '/all-day/?demo=1#food/late');
+    await page.reload();
+    await page.waitForSelector(foodPanel + ' .chips.filters', { timeout: 15000 });
+    check(await page.$eval(foodPanel + ' .chips.filters .chip.on', (c) => c.dataset.chip) === 'late', '#food/late opens Open now on the Open late filter', '');
+    await page.goto(base + '/all-day/?demo=1#food/d-demo-pub-trivia');
+    await page.reload();
+    check(await flashes(page, 'd-demo-pub-trivia'), '#food/d-<id> turns the deck to that deal', '');
+    await page.goto(base + '/all-day/?demo=1#food/r-not-a-place');
+    await page.reload();
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    check(/isn’t in the guide/.test(await page.$eval('#toast', (t) => t.textContent)), 'an unknown place says so', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -1219,6 +1522,7 @@ try {
   await deepLinks(browser, base);
   await theWire(browser, base);
   await theWhatNow(browser, base);
+  await theFood(browser, base);
   await onAir(browser, base);
   await interactions(browser, base);
 } finally {
