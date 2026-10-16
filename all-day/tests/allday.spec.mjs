@@ -289,7 +289,8 @@ async function newPage(browser, base, opts = {}) {
     if (fn && opts.rpc) {
       const out = opts.rpc(fn, JSON.parse(r.request().postData() || '{}'), r.request().headers());
       if (out && out.hang) return undefined;   // never answers: a stalled request
-      if (out !== undefined) return r.fulfill({ status: out && out.status || 200, contentType: 'application/json', body: JSON.stringify(out && out.status ? out.body : out) });
+      const wrapped = out && typeof out.status === 'number';   // { status: 404, body } is an HTTP answer; a row may have its own status field
+      if (out !== undefined) return r.fulfill({ status: wrapped ? out.status : 200, contentType: 'application/json', body: JSON.stringify(wrapped ? out.body : out) });
     }
     if (fn) return r.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
     return r.fulfill({ status: 200, contentType: 'application/json', body: '{}' });
@@ -2109,6 +2110,40 @@ async function boards(browser, base) {
   });
 }
 
+async function boardPhotos(browser, base) {
+  await group('boards: a Vintage photo stays out of the gallery; an Art photo joins it (live)', async () => {
+    const sent = [];
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args) => {
+        if (fn === 'btb_photos_submit') { sent.push(args); return null; }
+        if (fn === 'nn_profile_get') return { display_name: 'Kara', neighborhood: 'downtown', archetype: null };
+        if (fn === 'nn_post_create') return { id: '0000bbbb-0000-4000-8000-00000000000' + sent.length, board: args.p_board, kind: args.p_kind, title: args.p_title, status: 'approved' };
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/#vintage');
+    await settle(page);
+    const r = await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
+      const c = document.createElement('canvas'); c.width = 8; c.height = 8; c.getContext('2d').fillRect(0, 0, 8, 8);
+      const blob = await new Promise((res) => c.toBlob(res, 'image/png'));
+      const file = new File([blob], 'find.png', { type: 'image/png' });
+      const v = await b.create('vintage', { kind: 'spotted', title: 'Red barn jacket', meta: { shop: 'Old Gold' }, photo: file, consent: true });
+      const a = await b.create('art', { kind: 'photo', title: 'North Beach at dawn', photo: file, consent: true });
+      return [v.ok, a.ok];
+    }));
+    check(r[0] && r[1], 'both posts go through', JSON.stringify(r));
+    const [v, a] = sent;
+    check(v && v.p_category === 'board' && v.p_spot === 'All Day · Vintage' && v.p_permission === true && v.p_area === 'Downtown / Church St',
+      'Vintage files its photo as category "board", which the gallery leaves out', JSON.stringify(v));
+    check(a && a.p_category === 'other' && a.p_spot === 'All Day · Art', 'Art files its photo as "other": it joins the gallery', JSON.stringify(a));
+    check(sent.every((x) => /^submissions\/[A-Za-z0-9-]+\.jpg$/.test(x.p_path) && x.p_name === 'Kara' && !/@/.test(JSON.stringify(x))), 'resized to a jpeg, credited by first name, no email', JSON.stringify(sent.map((x) => x.p_path)));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ---------------------------------------------------------- shell fixes */
 /* The small shell changes the tab sessions asked for, one check each. */
 async function shellFixes(browser, base) {
@@ -2289,6 +2324,7 @@ try {
   await run(shellFixes);
   await run(accounts);
   await run(boards);
+  await run(boardPhotos);
 } finally {
   await browser.close();
   proc.kill();

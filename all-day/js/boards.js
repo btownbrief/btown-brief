@@ -129,7 +129,8 @@ function sendPhoto(board, file, title, prof) {
     const blob = await P.resizeImage(file);
     const path = await P.uploadBlob(blob);
     await P.rpc('btb_photos_submit', {
-      p_path: path, p_caption: title.slice(0, 280), p_category: 'other', p_area: AREA[prof && prof.neighborhood] || 'Greater Burlington',
+      /* 'board' stays out of the community gallery (db/photos-board.sql) */
+      p_path: path, p_caption: title.slice(0, 280), p_category: RULES.boards[board] && RULES.boards[board].gallery ? 'other' : 'board', p_area: AREA[prof && prof.neighborhood] || 'Greater Burlington',
       p_spot: ('All Day · ' + (BOARD_LABELS[board] || board)).slice(0, 120), p_taken: '', p_name: ((prof && prof.display_name) || '').slice(0, 60),
       p_permission: true, p_ai: false, p_voter: store.playerId(),
     });

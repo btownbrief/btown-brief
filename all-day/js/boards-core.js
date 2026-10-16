@@ -14,7 +14,11 @@
    "swap"). META is the kind's own small fields (size, price, shop), each
    with a type the server checks. A post with a photo sends the picture
    through the fleet's photo queue (photos-lib.js, photo-admin.html); the
-   post shows its photo only once that queue approves it. */
+   post shows its photo only once that queue approves it. `gallery` says
+   whether a board's approved photos also join the community gallery
+   (photos.html): Art's do, it is the gallery's new home; a Vintage find on
+   a rack does not belong there, so it is filed as category 'board', which
+   the gallery leaves out (db/photos-board.sql). */
 
 export const RULES = {
   version: 1,
@@ -41,6 +45,7 @@ export const RULES = {
   boards: {
     people: {
       premod: false,
+      gallery: false,
       kinds: { plan: { days: 14, photo: 'none', needs: ['when'] } },
       meta: {
         when: { type: 'text', max: 60 },
@@ -50,6 +55,7 @@ export const RULES = {
     },
     vintage: {
       premod: false,
+      gallery: false,
       kinds: {
         spotted: { days: 21, photo: 'optional', needs: ['shop'] },
         swap: { days: 21, photo: 'optional', needs: ['want'] },
@@ -63,6 +69,7 @@ export const RULES = {
     },
     art: {
       premod: false,
+      gallery: true,
       kinds: {
         photo: { days: null, photo: 'required', needs: [] },
         art: { days: null, photo: 'required', needs: [] },
@@ -75,6 +82,7 @@ export const RULES = {
     },
     watch: {
       premod: false,
+      gallery: false,
       kinds: {
         rating: { days: null, photo: 'none', needs: ['stars'] },
         pick: { days: 30, photo: 'none', needs: [] },

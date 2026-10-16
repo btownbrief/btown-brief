@@ -12,4 +12,6 @@
 
 alter table btb_photos drop constraint if exists btb_photos_category_check;
 alter table btb_photos add constraint btb_photos_category_check check (category in
-  ('sunsets','pets','gardens','food','wildlife','street','events','other','dish'));
+  ('sunsets','pets','gardens','food','wildlife','street','events','other','dish','board'));
+-- 'board' is All Day's board photos (db/photos-board.sql); listed here too so
+-- running the two files in either order leaves both categories allowed.

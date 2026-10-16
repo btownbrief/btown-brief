@@ -12,8 +12,8 @@
 #
 # Supabase's own pieces are stood in for: an auth schema with auth.users and
 # auth.uid() reading request.jwt.claims, the anon/authenticated roles, the
-# extensions schema with pgcrypto, and a minimal btb_photos (the reader
-# photo queue from db/photos.sql) holding only what nn_ reads.
+# extensions schema with pgcrypto, and a btb_photos / btb_photo_votes pair
+# with db/photos.sql's columns, so db/photos-board.sql applies to it too.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 DB=${DB:-nn_scratch}
@@ -41,12 +41,18 @@ grant execute on function auth.uid() to anon, authenticated;
 alter default privileges in schema public grant all on tables to anon, authenticated;
 alter default privileges in schema public grant all on functions to anon, authenticated;
 create table public.btb_photos (id uuid primary key default gen_random_uuid(), storage_path text unique not null,
-  status text not null default 'pending', decided_at timestamptz, spot text not null default '', created_at timestamptz not null default now());
-revoke all on table public.btb_photos from anon, authenticated;
+  status text not null default 'pending', decided_at timestamptz, spot text not null default '', created_at timestamptz not null default now(),
+  caption text not null default '', category text not null default 'other' constraint btb_photos_category_check check (category in ('other')),
+  area text not null default 'Elsewhere', taken_on text not null default '', credit text not null default '', display_label text);
+create table public.btb_photo_votes (photo_id uuid references public.btb_photos(id) on delete cascade, voter text, primary key (photo_id, voter));
+revoke all on table public.btb_photos, public.btb_photo_votes from anon, authenticated;
 SQL
 psql -v ON_ERROR_STOP=1 -d "$DB" -q -f all-day/supabase/nn-SETUP.sql >/dev/null
 # Twice: the file must be safe to paste again.
 psql -v ON_ERROR_STOP=1 -d "$DB" -q -f all-day/supabase/nn-SETUP.sql >/dev/null
+# the photo queue's gallery filter for board photos, also twice
+psql -v ON_ERROR_STOP=1 -d "$DB" -q -f db/photos-board.sql >/dev/null
+psql -v ON_ERROR_STOP=1 -d "$DB" -q -f db/photos-board.sql >/dev/null
 psql -v ON_ERROR_STOP=1 -d "$DB" -q -o /dev/null -f scripts/test-nn-sql.sql
 psql -d postgres -qc "drop database if exists $DB" >/dev/null
 echo "test-nn-sql: OK"

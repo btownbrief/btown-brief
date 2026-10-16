@@ -283,4 +283,16 @@ set role anon; select pg_temp.who(null);
 select pg_temp.ok((public.nn_photo_abandon('submissions/left-0006.jpg') ->> 'removed')::boolean, 'a board photo whose post never happened leaves the queue');
 reset role; select pg_temp.ok((select status from public.btb_photos where storage_path = 'submissions/left-0006.jpg') = 'removed', 'marked removed');
 
+-- ------------------------------------------- board photos and the gallery
+reset role;
+insert into public.btb_photos (storage_path, status, decided_at, spot, category) values
+  ('submissions/vint-0001.jpg', 'approved', now(), 'All Day · Vintage', 'board'),
+  ('submissions/art0-0001.jpg', 'approved', now(), 'All Day · Art', 'other');
+set role anon; select pg_temp.who(null);
+select pg_temp.ok(not exists (select 1 from public.btb_photos_get() where storage_path = 'submissions/vint-0001.jpg'), 'a Vintage photo stays out of the community gallery');
+select pg_temp.ok(exists (select 1 from public.btb_photos_get() where storage_path = 'submissions/art0-0001.jpg'), 'an Art photo joins it');
+select pg_temp.ok(not exists (select 1 from public.btb_photos_potw() where category = 'board'), 'and a board photo is never photo of the week');
+reset role;
+select pg_temp.ok(public.nn_photo_state('submissions/vint-0001.jpg') = 'approved', 'while the board post still sees its photo approved');
+
 \echo 'test-nn-sql.sql: every case passed'
