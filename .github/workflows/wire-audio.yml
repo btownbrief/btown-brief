@@ -1,0 +1,145 @@
+name: The Brief, out loud
+
+# A three-minute audio brief written from the Wire's top local picks, every
+# morning at 7 Eastern, for the On Air tab in All Day:
+#   scripts/build_wire_audio.py -> data/audio/YYYY-MM-DD.mp3 (mono, 64 kbps, -16 LUFS)
+#                                  data/audio/YYYY-MM-DD.txt (the script it read)
+#                                  data/audio/index.json     (the rolling 30 days)
+#                                  data/audio/cost.json      (model and voice spend, month to date)
+# on the `wire-audio` branch, force-pushed as one orphan commit each run (the
+# way wire-data is published), so the page reads raw.githubusercontent.com and
+# old MP3s never pile up in git history.
+#
+# Secrets: ELEVENLABS_API_KEY (required; without it the run ends green and
+# writes nothing), ELEVENLABS_VOICE_ID (optional; default Wyatt,
+# FrS6cKLB1wg4WYgPa9GW), and the Wire's ANTHROPIC_API_KEY (Claude Opus 5.5
+# writes the script) or OPENROUTER_API_KEY (GLM 5.3 Flash).
+#
+# 7 am Eastern is 11:00 UTC in summer time and 12:00 UTC in winter, so the job
+# is scheduled at both; the first one that finds it is 7 or later in
+# Burlington makes the clip and the other finds it already up.
+
+on:
+  schedule:
+    - cron: '0 11 * * *'
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Make today's clip again even if one is up (costs one more clip)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wire-audio
+  cancel-in-progress: false
+
+jobs:
+  audio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Offline tests and selftest (no network, no model, no voice)
+        run: |
+          python3 -m unittest tests.test_wire_audio
+          python3 scripts/build_wire_audio.py --selftest
+
+      - name: Is it 7 am in Burlington yet?
+        id: gate
+        run: |
+          hour=$(TZ=America/New_York date +%-H)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$hour" -lt 7 ]; then
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "It is ${hour} o'clock in Burlington; the later run makes the clip."
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pull the previous wire-audio branch
+        id: pull
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          mkdir -p /tmp/wa
+          # ls-remote --exit-code says 2 for "no such branch" and something
+          # else for a network or auth failure. Only a confirmed "no such
+          # branch" may start from nothing; anything else fails the run
+          # rather than force-push away thirty days of clips.
+          set +e
+          git ls-remote --exit-code --heads origin wire-audio >/dev/null
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            git fetch -q origin wire-audio --depth 1
+            git archive FETCH_HEAD | tar -x -C /tmp/wa
+          elif [ "$status" -eq 2 ]; then
+            echo "no wire-audio branch yet: first run"
+          else
+            echo "::error::could not reach the wire-audio branch (ls-remote exit $status)"
+            exit 1
+          fi
+          mkdir -p /tmp/wa/data/audio
+          ls -la /tmp/wa/data/audio
+
+      - name: Check the keys
+        id: key
+        if: steps.gate.outputs.go == 'true'
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -z "$ELEVENLABS_API_KEY" ]; then
+            echo "voice=none" >> "$GITHUB_OUTPUT"
+            echo "### The Brief, out loud · no ELEVENLABS_API_KEY secret, nothing made" >> "$GITHUB_STEP_SUMMARY"
+            echo "Add it under Settings, Secrets and variables, Actions to turn the audio brief on." >> "$GITHUB_STEP_SUMMARY"
+          elif [ -n "$ANTHROPIC_API_KEY" ]; then
+            echo "voice=on" >> "$GITHUB_OUTPUT"
+            echo "### The Brief, out loud · Claude Opus 5.5 writes, ElevenLabs reads" >> "$GITHUB_STEP_SUMMARY"
+          elif [ -n "$OPENROUTER_API_KEY" ]; then
+            echo "voice=on" >> "$GITHUB_OUTPUT"
+            echo "### The Brief, out loud · GLM 5.3 Flash writes, ElevenLabs reads" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "voice=none" >> "$GITHUB_OUTPUT"
+            echo "### The Brief, out loud · no model key to write the script, nothing made" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Install the Anthropic SDK and ffmpeg
+        if: steps.key.outputs.voice == 'on'
+        run: |
+          python3 -m pip install --quiet 'anthropic>=0.116,<1'
+          command -v ffmpeg >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+          ffmpeg -version | head -1
+
+      - name: Write, read and publish today's brief
+        if: steps.key.outputs.voice == 'on'
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python3 scripts/build_wire_audio.py --out-dir /tmp/wa/data/audio ${{ inputs.force && '--force' || '' }}
+
+      - name: Force-push the single-commit wire-audio branch
+        # Also after a failed step: the cost ledger is worth keeping. Never
+        # after a failed pull, and never with nothing in the folder.
+        if: always() && steps.pull.outcome == 'success' && steps.key.outputs.voice == 'on'
+        run: |
+          if [ ! -s /tmp/wa/data/audio/index.json ] && [ ! -s /tmp/wa/data/audio/cost.json ]; then
+            echo "nothing written yet — leaving the branch alone"
+            exit 0
+          fi
+          cd /tmp/wa
+          rm -rf .git
+          git init -q -b wire-audio
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data
+          git commit -q -m "The Brief, out loud $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            wire-audio
