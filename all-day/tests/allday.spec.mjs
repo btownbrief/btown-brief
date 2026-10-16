@@ -1723,6 +1723,33 @@ async function shellFixes(browser, base) {
     }
   });
 
+  await group('shell fixes: a new address closes an open sheet', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    await page.click('#settings-btn');
+    check(await page.$eval('#sheet', (s) => !s.hidden), 'Settings is open', '');
+    await page.evaluate(() => { location.hash = '#food'; });
+    await page.waitForFunction(() => document.querySelector('#tab-food').getAttribute('aria-selected') === 'true');
+    check(await page.$eval('#sheet', (s) => s.hidden && !s.children.length), 'a hash change to another tab closes it', '');
+    await page.click('#saved-btn');
+    await page.evaluate(() => { location.hash = '#food/open'; });
+    await page.waitForTimeout(200);
+    check(await page.$eval('#sheet', (s) => s.hidden), 'and a deep link inside the same tab does too', '');
+    await page.goto(base + '/all-day/#whatnow/missions');
+    await page.waitForSelector(wnPanel + ' .lrow[data-k="m5"] .open', { timeout: 15000 });
+    await page.click(wnPanel + ' .lrow[data-k="m5"] .open');
+    await page.waitForSelector('.sheet-card h2');
+    await page.evaluate(() => { location.hash = '#wire'; });
+    await page.waitForTimeout(200);
+    check(await page.$eval('#sheet', (s) => s.hidden), 'a tab’s own sheet (a mission) closes when you leave', '');
+    await page.goBack();
+    await page.waitForTimeout(200);
+    check(await page.$eval('#sheet', (s) => s.hidden) && await page.$eval('#tab-whatnow', (b) => b.getAttribute('aria-selected')) === 'true', 'and Back lands on the tab, not a ghost sheet', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('shell fixes: third-party players use the shared .embed', async () => {
     for (const f of ['modes/onair.js', 'modes/whatnow.js', 'modes/food.js']) {
       const src = (await readFile(path.join(APP, 'js', f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');

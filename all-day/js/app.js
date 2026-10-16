@@ -861,6 +861,10 @@ export function route() {
   const { tab, param } = parseHash();
   const mod = registry[tab];
   if (!mod) return;
+  /* a new address is a new place: a sheet left open (Settings, a mission,
+     a film) closes, as the peek already did; a tab that wants one for its
+     deep link opens it again in activate() below */
+  if (sheetClose) sheetClose();
   const prev = active;
   if (prev && prev !== tab) {
     scrollMemory[prev] = panels[prev].scrollTop;
