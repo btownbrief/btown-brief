@@ -884,8 +884,19 @@ window.addEventListener('allday-geo', () => {
 });
 
 /* ----------------------------------------------------------------- routing */
+/* Links from before the New Nine: the old Listen tab and Btown TV videos
+   shared as #watch/yt:<id> both live in On Air now. The address bar is
+   rewritten so the next share carries the new link. */
+function legacy(h) {
+  if (h === 'listen' || h.startsWith('listen/')) return 'onair' + h.slice(6);
+  if (/^watch\/yt:/.test(h)) return 'onair/' + h.slice(6);
+  return null;
+}
+
 function parseHash() {
-  const h = location.hash.replace(/^#/, '');
+  let h = location.hash.replace(/^#/, '');
+  const moved = legacy(h);
+  if (moved) { history.replaceState(null, '', location.pathname + location.search + '#' + moved); h = moved; }
   const m = h.match(/^([a-z]+)\/(.*)$/);
   if (m && TABS.includes(m[1]) && registry[m[1]]) {
     /* a shared link can carry broken percent-encoding, and an uncaught

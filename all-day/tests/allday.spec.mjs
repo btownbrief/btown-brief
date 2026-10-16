@@ -1807,6 +1807,26 @@ async function shellFixes(browser, base) {
     await ctx.close();
   });
 
+  await group('shell fixes: old Listen and TV links land in On Air', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const landed = async (hash) => {
+      await page.goto(base + '/all-day/?demo=1' + hash);
+      await page.waitForFunction(() => document.querySelector('#tab-onair')?.getAttribute('aria-selected') === 'true', null, { timeout: 15000 }).catch(() => {});
+      return page.evaluate(() => ({ on: document.querySelector('#tab-onair').getAttribute('aria-selected') === 'true', hash: location.hash }));
+    };
+    let r = await landed('#listen');
+    check(r.on && r.hash === '#onair', '#listen opens On Air, and the address says #onair', JSON.stringify(r));
+    r = await landed('#watch/yt:dQw4w9WgXcQ');
+    check(r.on && r.hash === '#onair/yt:dQw4w9WgXcQ', '#watch/yt:<id> opens On Air with the same video key', JSON.stringify(r));
+    r = await landed('#listen/brief');
+    check(r.on && r.hash === '#onair/brief', '#listen/<key> keeps its key', JSON.stringify(r));
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await settle(page);
+    check(await page.$eval('#tab-watch', (b) => b.getAttribute('aria-selected')) === 'true', 'a plain #watch is still the Watchlist', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('shell fixes: third-party players use the shared .embed', async () => {
     for (const f of ['modes/onair.js', 'modes/whatnow.js', 'modes/food.js']) {
       const src = (await readFile(path.join(APP, 'js', f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
