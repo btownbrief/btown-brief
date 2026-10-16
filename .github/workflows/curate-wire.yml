@@ -28,6 +28,9 @@ on:
         description: "Start today's paper over (retag the window, rebuild the river and picks)"
         type: boolean
         default: false
+  # TEMPORARY: one rebuild of today from this branch for Fable's review.
+  push:
+    branches: ['claude/new-nine-pipeline-c4db4d']
 
 permissions:
   contents: write
@@ -101,13 +104,13 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python3 scripts/tag_wire.py --data-dir /tmp/wire/data ${{ inputs.rebuild && '--retag' || '' }}
+        run: python3 scripts/tag_wire.py --data-dir /tmp/wire/data ${{ (inputs.rebuild || github.event_name == 'push') && '--retag' || '' }}
 
       - name: Curate the river and the picks
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python3 scripts/curate_wire.py --data-dir /tmp/wire/data ${{ inputs.rebuild && '--rebuild-today' || '' }}
+        run: python3 scripts/curate_wire.py --data-dir /tmp/wire/data ${{ (inputs.rebuild || github.event_name == 'push') && '--rebuild-today' || '' }}
 
       - name: Force-push the single-commit wire-data branch
         # Also after a failed curate step: the tags and the cost ledger it
