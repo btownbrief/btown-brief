@@ -1,0 +1,113 @@
+name: Curate the Wire
+
+# The All Day Wire's daily paper, once an hour:
+#   scripts/tag_wire.py    -> data/wire-tags.json   (junk, local, topic, score per new item)
+#   scripts/curate_wire.py -> data/wire-today.json  (the picks and the river)
+#                             data/wire/YYYY-MM-DD.json + index.json (frozen days, 30 kept)
+#                             data/wire-state.json, data/wire-cost.json (bookkeeping)
+# all on the `wire-data` branch, force-pushed as one orphan commit each run,
+# the way pulse-top is published, so the page reads raw.githubusercontent.com
+# and a new hour never queues a Pages deploy.
+#
+# Models, chosen by which secret exists: ANTHROPIC_API_KEY -> Claude Haiku 5.5
+# tags and Claude Opus 5.5 (effort low) curates; otherwise OPENROUTER_API_KEY
+# -> GLM 5.3 Flash runs both prompts. Tokens and estimated dollars go to the
+# step summary; both scripts refuse to call a model once the month-to-date
+# estimate in data/wire-cost.json reaches $25.
+#
+# Failure posture: no key, the cap, or API trouble ends the run green and the
+# branch keeps its last good paper. A paper left unchecked for 4 hours fails
+# the run so a stale Wire is seen.
+
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: curate-wire
+  cancel-in-progress: false
+
+jobs:
+  curate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Offline tests and selftests (no network, no model)
+        run: |
+          python3 -m unittest discover -s tests -p 'test_wire*.py'
+          python3 scripts/wire_common.py --selftest
+          python3 scripts/wire_inbox.py --selftest
+          python3 scripts/tag_wire.py --selftest
+          python3 scripts/curate_wire.py --selftest
+
+      - name: Pull the previous wire-data branch
+        id: pull
+        run: |
+          mkdir -p /tmp/wire
+          if git ls-remote --exit-code --heads origin wire-data >/dev/null; then
+            # The branch exists, so a fetch failure must fail the run rather
+            # than force-push away thirty days of editions.
+            git fetch -q origin wire-data --depth 1
+            git archive FETCH_HEAD | tar -x -C /tmp/wire
+          fi
+          mkdir -p /tmp/wire/data
+          ls -la /tmp/wire/data
+
+      - name: Choose the engine
+        id: key
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ]; then
+            echo "engine=claude" >> "$GITHUB_OUTPUT"
+            echo "### Wire run · Claude (Haiku 5.5 tags, Opus 5.5 curates)" >> "$GITHUB_STEP_SUMMARY"
+          elif [ -n "$OPENROUTER_API_KEY" ]; then
+            echo "engine=glm" >> "$GITHUB_OUTPUT"
+            echo "### Wire run · GLM 5.3 Flash (no ANTHROPIC_API_KEY yet)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "engine=none" >> "$GITHUB_OUTPUT"
+            echo "### Wire run · no model key, nothing curated" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Install the Anthropic SDK
+        if: steps.key.outputs.engine != 'none'
+        run: python3 -m pip install --quiet 'anthropic>=0.116,<1'
+
+      - name: Tag new items
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python3 scripts/tag_wire.py --data-dir /tmp/wire/data
+
+      - name: Curate the river and the picks
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python3 scripts/curate_wire.py --data-dir /tmp/wire/data
+
+      - name: Force-push the single-commit wire-data branch
+        # Also after a failed curate step: the tags and the cost ledger it
+        # spent are worth keeping. Never after a failed pull.
+        if: always() && steps.pull.outcome == 'success'
+        run: |
+          if [ ! -s /tmp/wire/data/wire-today.json ] && [ ! -s /tmp/wire/data/wire-tags.json ]; then
+            echo "nothing written yet — leaving the branch alone"
+            exit 0
+          fi
+          cd /tmp/wire
+          rm -rf .git
+          git init -q -b wire-data
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data
+          git commit -q -m "Wire $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            wire-data
