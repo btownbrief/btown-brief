@@ -526,10 +526,11 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
             and by_index[lead_index]["id"] in lead_ok:
         current["lead"] = {"id": by_index[lead_index]["id"], "why": lead_why}
 
-    # drops: only past RIVER_MAX, never a pick or a lead
+    # drops: only past RIVER_MAX, never a pick, a lead or the Brief's own edition
     protected = {by_index[index]["id"] for index, _ in picks} if want_picks else \
         {pick["id"] for pick in day.get("picks") or []}
     protected |= {update["lead"]["id"] for update in updates if update.get("lead")}
+    protected |= {item["id"] for item in river(day) if item.get("own")}   # the Brief stays
     dropped = []
     excess = len(river(day)) - RIVER_MAX
     if excess > 0:

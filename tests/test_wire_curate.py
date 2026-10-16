@@ -288,6 +288,28 @@ class HouseRuleTests(Workdir):
         cw.finish(day, pulse(), NOW, changed=False)
         self.assertNotIn("brief", day)
 
+    def test_the_cap_never_drops_the_briefs_own_edition(self):
+        def mk(n, own=False):
+            item = {"id": f"r{n}", "ch": "local", "local": True, "src": "wcax", "name": "WCAX",
+                    "title": f"Headline {n}", "url": f"https://a.com/{n}",
+                    "posted_at": f"2026-10-16T{(n % 12):02d}:00:00+00:00"}
+            if own:
+                item.update(src="btown-brief", name="Btown Brief", own=True, ch="newsletters",
+                            posted_at="2026-10-16T00:00:00+00:00")   # the oldest thing in the river
+            return item
+        river_now = [mk(0, own=True)] + [mk(n) for n in range(1, cw.RIVER_MAX)]
+        day = cw.empty_day("2026-10-16")
+        day["updates"] = [{"key": "midday", "label": "Midday", "time": "12:10 pm", "updated": "x",
+                           "lead": None, "items": [dict(item) for item in river_now]}]
+        new = [dict(mk(1000 + n), d=NOW_TS, _score=5) for n in range(20)]
+        numbered = [dict(item, d=NOW_TS, _score=5) for item in river_now]
+        cw.apply_answer(day, {"add": list(range(cw.RIVER_MAX, cw.RIVER_MAX + 20)), "drop": []},
+                        numbered, new, False, wc.et_now(NOW), NOW)
+        self.assertEqual(len(cw.river(day)), cw.RIVER_MAX)
+        self.assertTrue([item for item in cw.river(day) if item.get("own")])
+        cw.finish(day, pulse(), NOW, changed=True)
+        self.assertEqual(day["brief"]["id"], "r0")
+
     def test_a_reddit_post_that_only_links_an_outlet_is_that_article(self):
         payload = pulse()
         payload["sources"].append({"id": "r-burlington", "name": "r/burlington", "short": "r/burlington",
