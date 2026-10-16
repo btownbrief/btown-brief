@@ -24,6 +24,8 @@ const SHELL_URLS = [
   './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/watch.js', './js/modes/food.js',
   './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/art.js',
   './js/modes/onair.js', './js/modes/games.js',
+  /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
+  './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
 ];
 
 self.addEventListener('install', (e) => {

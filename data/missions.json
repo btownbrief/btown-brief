@@ -1,0 +1,3210 @@
+{
+ "generated": "2026-10-16",
+ "source": "data/guides.json (top-100) and data/things.json; words from scripts/missions_copy.json",
+ "themes": [
+  "eat",
+  "drink",
+  "outdoors",
+  "water",
+  "culture",
+  "play",
+  "family",
+  "winter",
+  "free"
+ ],
+ "count": 100,
+ "needs_check": 10,
+ "missions": [
+  {
+   "n": 1,
+   "k": "m1",
+   "title": "Stroll the Church Street Marketplace",
+   "theme": "culture",
+   "paragraph": "Four brick blocks of pedestrian-only downtown have been Burlington's living room since 1981, and it's free to walk. Start at Outdoor Gear Exchange, Church Street's legendary gear shop, where patient people dig through the consignment section for serious deals on used outdoor kit. Then browse Flora & Fauna, downtown's oddest and best gift shop, full of plants, taxidermy-adjacent curiosities and objects you didn't know had a category. Finish with a scoop at Ben & Jerry's, 82 Church Street, a few blocks from the St. Paul Street gas station where Ben and Jerry started in 1978. Then come back at night, when the string lights are on and it's a different place.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "church-street-marketplace",
+     "name": "Church Street Marketplace",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "outdoor-gear-exchange",
+     "name": "Outdoor Gear Exchange",
+     "url": "https://www.gearx.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "flora-and-fauna",
+     "name": "Flora & Fauna",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "ben-jerrys-church-street",
+     "name": "Ben & Jerry's (Church Street Scoop Shop)",
+     "url": "https://www.benjerry.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Stroll the Church Street Marketplace"
+  },
+  {
+   "n": 2,
+   "k": "m2",
+   "title": "Watch the sun set from the Waterfront Park swings",
+   "theme": "free",
+   "paragraph": "Charles Dickens allegedly called Champlain's sunsets the best in the world, and the yellow porch swings at Waterfront Park, facing west over the lake toward the Adirondacks, are the correct place to judge his claim. It's free every single night. Locals check the sky around 7, then walk down. Come early for a lobster roll at Shanty on the Shore, the seafood institution at 181 Battery Street with a deck over the water and a raw bar, open spring through fall. Both are on the waterfront, so finish dinner, claim a swing and let the lake do the rest.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "waterfront-park",
+     "name": "Waterfront Park",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "shanty-on-shore",
+     "name": "Shanty on the Shore",
+     "url": "https://www.shantyontheshore.com",
+     "neighborhood": "Waterfront",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "waterfront-park",
+     "to": "shanty-on-shore",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Watch the sun set over Lake Champlain from the Waterfront Park swings"
+  },
+  {
+   "n": 3,
+   "k": "m3",
+   "title": "Bike the Island Line Trail out into the middle of the lake",
+   "theme": "outdoors",
+   "paragraph": "The old railroad causeway runs more than three miles into Lake Champlain, with water on both sides and mountains on both horizons. Rent a bike at Local Motion, 1 Steele Street on the Greenway, for about $20 to $30 a day, then ride out along the Island Line. The wind at the midpoint is real. In summer, the $4 bike ferry carries you across the gap in the causeway to South Hero island, so the ride isn't a dead-end out-and-back. Push on to Snow Farm Vineyard in South Hero for cold-climate wines and, on some summer evenings, free lawn concerts, and call it a full day.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "island-line-causeway",
+     "name": "Island Line Trail & Lake Champlain Causeway",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "local-motion",
+     "name": "Local Motion (Bike & Ferry)",
+     "url": "https://www.localmotion.org",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "snow-farm-vineyard",
+     "name": "Snow Farm Vineyard",
+     "url": "",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "island-line-causeway",
+     "to": "local-motion",
+     "km": 1.5,
+     "mode": "walk",
+     "min": 25
+    }
+   ],
+   "top100": "Bike the Island Line Trail out into the middle of the lake"
+  },
+  {
+   "n": 4,
+   "k": "m4",
+   "title": "Eat a maple creemee, then settle the argument",
+   "theme": "eat",
+   "paragraph": "Vermont's soft-serve combines the state's two great exports, dairy and maple, and the classic way to eat one is near the water. On the waterfront, Champ's Legendary Creemees runs the window at ECHO, summer only, and Burlington Bay Market & Café at Perkins Pier rotates local-dairy flavors by the week for about $4 to $5. Village Scoop in Colchester, ten minutes from downtown Burlington, is the after-beach stop for the whole north end of the county. Then make the twenty-minute drive to Palmer Lane Maple in Jericho, the stand that ends arguments, with real Vermont syrup in the mix and a summer-weekend line that moves fast.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "burlington-bay-creemee",
+     "name": "Burlington Bay Market & Café",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "champs-creemees",
+     "name": "Champ's Legendary Creemees",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "palmer-lane-maple",
+     "name": "Palmer Lane Maple",
+     "url": "",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    },
+    {
+     "id": "village-scoop",
+     "name": "Village Scoop",
+     "url": "",
+     "neighborhood": "Colchester",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Eat a maple creemee — this is not optional"
+  },
+  {
+   "n": 5,
+   "k": "m5",
+   "title": "Crawl the Pine Street breweries",
+   "theme": "drink",
+   "paragraph": "Four-plus taprooms sit inside half a mile here, all walkable. Start at Citizen Cider, 316 Pine Street, where the Wit's Up is the right first pour for anyone who doesn't usually drink cider. Head along Pine to Zero Gravity at 716 for a Conehead IPA or the Clean State Pilsner, then cross the street to Queen City Brewery for old-world lagers and, if you're brave, the smoked-malt Rauchbier. Finish over on Flynn Avenue, where Switchback at 160 still makes its beer unfiltered the way it did in 1996, and Burlington Beer Company at 180 pours from 30-plus taps and has an arcade room.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "zero-gravity-brewery",
+     "name": "Zero Gravity Craft Brewery",
+     "url": "https://zerogravitybeer.com",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "switchback-brewing",
+     "name": "Switchback Brewing Co.",
+     "url": "https://www.switchbackvt.com",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "citizen-cider",
+     "name": "Citizen Cider",
+     "url": "https://www.citizencider.com",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "queen-city-brewery",
+     "name": "Queen City Brewery",
+     "url": "http://www.queencitybrewery.com",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "burlington-beer-company",
+     "name": "Burlington Beer Company",
+     "url": "https://www.burlingtonbeercompany.com",
+     "neighborhood": "South End",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "zero-gravity-brewery",
+     "to": "switchback-brewing",
+     "km": 0.5,
+     "mode": "walk",
+     "min": 7
+    },
+    {
+     "from": "switchback-brewing",
+     "to": "citizen-cider",
+     "km": 0.5,
+     "mode": "walk",
+     "min": 9
+    }
+   ],
+   "top100": "Crawl the Pine Street breweries"
+  },
+  {
+   "n": 6,
+   "k": "m6",
+   "title": "Drink a Foam beer at the water's edge at golden hour",
+   "theme": "drink",
+   "paragraph": "Foam Brewers pours its hazy IPAs at 112 Lake Street, a stone's throw from the lake, and the patio fills up fast on warm evenings. The Vacation IPA is a reliable starting point, with pints around $7 to $8. Deep City, the kitchen right next door, handles the food: order there, drink Foam's beer, and watch the lake do its evening thing. Time it for sunset and you've stacked two of Burlington's best experiences into one folding chair. For a shorter wait, go on a Tuesday, when the light off the lake is still good.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "foam-brewers",
+     "name": "Foam Brewers",
+     "url": "https://foambrewers.com",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "deep-city",
+     "name": "Deep City",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Drink a Foam beer at the water's edge at golden hour"
+  },
+  {
+   "n": 7,
+   "k": "m7",
+   "title": "Spend Saturday morning at the farmers market",
+   "theme": "eat",
+   "paragraph": "More than 90 vendors set up on Saturdays from May through October, with maple syrup, artisan bread and cheese as the anchors, plus wood-fired everything and apple cider slushies. The Burlington Farmers Market at 377 Pine St is free to enter; arrive before noon if you want the best of the prepared food, and show up hungry. Half the city moves at quarter speed. For the local counterpart, find the Old North End Farmers' Market, smaller and cheaper, with food that mirrors the most diverse neighborhood in Vermont. It runs on summer and fall afternoons.",
+   "needs_check": true,
+   "check_note": "Old North End Farmers' Market has no address or day in the data, so the paragraph gives neither",
+   "places": [
+    {
+     "id": "burlington-farmers-market",
+     "name": "Burlington Farmers Market",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "one-farmers-market",
+     "name": "Old North End Farmers' Market",
+     "url": "https://onefarmersmarket.com",
+     "neighborhood": "Old North End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Spend Saturday morning at the farmers market"
+  },
+  {
+   "n": 8,
+   "k": "m8",
+   "title": "Lose a full day at Shelburne Museum",
+   "theme": "culture",
+   "paragraph": "One collector moved thirty-nine buildings, a lighthouse, a round barn and a jail among them, onto 45 acres, then parked a full-size 1906 steamboat on the lawn. That's the SS Ticonderoga, a side-wheeler moved overland and permanently installed on the grounds. Add folk art, Monets and a working carousel, and you have the strangest museum campus in America, fifteen minutes south at 6000 Shelburne Road. Adults run about $25 and kids about $14, and it's open seasonally, spring through fall. When you're done, Shelburne Vineyard sits at 6308 on the same road, pouring cold-climate wines from grapes grown on the property.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "shelburne-museum",
+     "name": "Shelburne Museum",
+     "url": "https://www.shelburnemuseum.org",
+     "neighborhood": "Shelburne",
+     "nearby": false
+    },
+    {
+     "id": "shelburne-vineyard",
+     "name": "Shelburne Vineyard",
+     "url": "https://www.shelburnevineyard.com",
+     "neighborhood": "Shelburne",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "shelburne-museum",
+     "to": "shelburne-vineyard",
+     "km": 1.8,
+     "mode": "walk",
+     "min": 30
+    }
+   ],
+   "top100": "Lose a full day at Shelburne Museum"
+  },
+  {
+   "n": 9,
+   "k": "m9",
+   "title": "Walk the Vanderbilt estate at Shelburne Farms",
+   "theme": "outdoors",
+   "paragraph": "Shelburne Farms covers 1,400 acres, a working farm and National Historic Landmark on a former Vanderbilt-Webb estate, with Olmsted-shaped grounds rolling down to the lake. Farm access runs about $10, spring through fall, at 1611 Harbor Road in Shelburne. Walk the public trails, watch cheddar being made, and let kids loose in the children's farmyard. The cheese is made, aged and sold right on the property, so the farm store is the obvious stop on your way out. Then get a drink at the Inn as the sun drops behind the Adirondacks.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "shelburne-farms",
+     "name": "Shelburne Farms",
+     "url": "https://www.shelburnefarms.org",
+     "neighborhood": "Shelburne",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Walk the Vanderbilt estate at Shelburne Farms"
+  },
+  {
+   "n": 10,
+   "k": "m10",
+   "title": "Meet the lake's residents at ECHO",
+   "theme": "family",
+   "paragraph": "The tanks at ECHO are stocked from the water outside, so the stars are Champlain's own sturgeon, turtles and frogs, plus the full Champ lake-monster treatment. It's at 1 College Street on the waterfront, about $17 for adults and $13 for kids, and it's the best rainy-day building in the city. Afterward, head over to The Skinny Pancake at 60 Lake Street for sweet and savory crepes, $8 to $14, on a patio that faces the water. In summer and fall, end with a creemee at Burlington Bay Market & Café by Perkins Pier, where the flavors rotate by the week.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "echo-leahy-center",
+     "name": "ECHO Leahy Center for Lake Champlain",
+     "url": "https://www.echovermont.org",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "skinny-pancake",
+     "name": "The Skinny Pancake",
+     "url": "https://www.skinnypancake.com",
+     "neighborhood": "Waterfront",
+     "nearby": true
+    },
+    {
+     "id": "burlington-bay-creemee",
+     "name": "Burlington Bay Market & Café",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "echo-leahy-center",
+     "to": "skinny-pancake",
+     "km": 0.0,
+     "mode": "walk",
+     "min": 1
+    },
+    {
+     "from": "skinny-pancake",
+     "to": "burlington-bay-creemee",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 2
+    }
+   ],
+   "top100": "Meet the lake's residents at ECHO"
+  },
+  {
+   "n": 11,
+   "k": "m11",
+   "title": "Swim at the city beaches",
+   "theme": "water",
+   "paragraph": "North Beach is the only sandy Burlington beach with lifeguards on duty, plus a concession stand, a campground and a view of the Adirondacks across forty miles of water. Beach access is free with a parking fee in summer, and it hits capacity by 11 AM on hot August weekends. Leddy Beach, reachable from the Greenway, draws a calmer crowd and hosts Leddy Beach Bites, the Wednesday summer food truck series. Dogs swim off leash at Texaco Beach, right on the Greenway, and Oakledge Park in the South End has red-rock ledges at its cove for a quick plunge. Pick by mood; the lake is the same everywhere.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "north-beach",
+     "name": "North Beach",
+     "url": "",
+     "neighborhood": "New North End",
+     "nearby": false
+    },
+    {
+     "id": "leddy-beach",
+     "name": "Leddy Beach",
+     "url": "",
+     "neighborhood": "New North End",
+     "nearby": false
+    },
+    {
+     "id": "texaco-beach",
+     "name": "Texaco Beach (Dog Beach)",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "oakledge-park",
+     "name": "Oakledge Park",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "north-beach",
+     "to": "leddy-beach",
+     "km": 0.8,
+     "mode": "walk",
+     "min": 15
+    },
+    {
+     "from": "leddy-beach",
+     "to": "texaco-beach",
+     "km": 0.8,
+     "mode": "walk",
+     "min": 10
+    },
+    {
+     "from": "texaco-beach",
+     "to": "oakledge-park",
+     "km": 3.3,
+     "mode": "drive",
+     "min": 10
+    }
+   ],
+   "top100": "Swim at the city beaches"
+  },
+  {
+   "n": 12,
+   "k": "m12",
+   "title": "Ride the Greenway end to end",
+   "theme": "outdoors",
+   "paragraph": "Eight flat, car-free miles run along the whole city shoreline, linking every major park, beach and creemee window between Oakledge and the Winooski River. No bike? Local Motion at 1 Steele Street rents bikes and e-bikes right on the Greenway for about $20 to $30 a day, spring through fall. From there the path is bikeable end to end in 25 minutes, but nobody sensible does it that fast. Stop for a swim, a park bench or a creemee along the way, and if you'd rather run it, plan on an hour.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "burlington-greenway",
+     "name": "Burlington Bike Path (The Greenway)",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "local-motion",
+     "name": "Local Motion (Bike & Ferry)",
+     "url": "https://www.localmotion.org",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "burlington-greenway",
+     "to": "local-motion",
+     "km": 0.2,
+     "mode": "walk",
+     "min": 4
+    }
+   ],
+   "top100": "Ride the Greenway end to end"
+  },
+  {
+   "n": 13,
+   "k": "m13",
+   "title": "Stand on 500 million years of geology at Rock Point",
+   "theme": "outdoors",
+   "paragraph": "The Champlain Thrust Fault puts 500-million-year-old rock directly on top of younger stone, and at Rock Point you can see it right at the waterline. The walk there is short and cedar-shaded, on quiet church-owned land with two miles of trail, and you need a free property pass, reserved online, before you go. Geology classes travel here from other states, and most Burlingtonians still haven't been. Rock Point sits next to North Beach, so cool off afterward at 60 Institute Road, where there are lifeguards in summer and a view of the Adirondacks across forty miles of water.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "rock-point",
+     "name": "Rock Point (Lone Rock Point)",
+     "url": "https://www.rockpointvt.org/trails",
+     "neighborhood": "New North End",
+     "nearby": false
+    },
+    {
+     "id": "north-beach",
+     "name": "North Beach",
+     "url": "",
+     "neighborhood": "New North End",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Stand on 500 million years of geology at Rock Point"
+  },
+  {
+   "n": 14,
+   "k": "m14",
+   "title": "See a show at the Flynn",
+   "theme": "culture",
+   "paragraph": "A 1,400-seat Art Deco theater from 1930 that somehow never went dark, the Flynn on Main Street pulls national tours a city ten times this size would envy: Broadway runs, folk acts, comedy, jazz, and the anchor stage of the Discover Jazz Festival every June. Tickets vary widely, so check the calendar. Before the curtain, eat downtown at Vermont Pub & Brewery, 144 College Street, the state's original brewpub, opened in 1988 by Greg Noonan, whose textbook on lager brewing is still referenced by professional brewers. It runs a full pub menu and stays open late, so it works after the show too.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "flynn-center",
+     "name": "Flynn Center for the Performing Arts",
+     "url": "https://www.flynncenter.org",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "vermont-pub-brewery",
+     "name": "Vermont Pub & Brewery",
+     "url": "https://www.vermontbrewery.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "flynn-center",
+     "to": "vermont-pub-brewery",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 2
+    }
+   ],
+   "top100": "See a show at the Flynn"
+  },
+  {
+   "n": 15,
+   "k": "m15",
+   "title": "Do a full night at Radio Bean and the Lamp Shop",
+   "theme": "culture",
+   "paragraph": "Radio Bean, at 8 N. Winooski Avenue, is a coffee shop by day and a live music room by evening, with folk, jazz, experimental and everything between. Catch an early set in its cluttered, beloved chaos, where there's no cover most nights and drinks run $5 to $10. Then slide next door to the Light Club Lamp Shop, a room lit entirely by a ceiling of vintage lamps, with eclectic sets early and dancing late. Several hundred of those lamps are for sale. This is the eclectic heart of Burlington's music scene, and a full night here rarely costs a cover.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "radio-bean",
+     "name": "Radio Bean",
+     "url": "https://www.radiobean.com",
+     "neighborhood": "Old North End",
+     "nearby": false
+    },
+    {
+     "id": "light-club-lamp-shop",
+     "name": "Light Club Lamp Shop",
+     "url": "https://www.radiobean.com/light-club-info",
+     "neighborhood": "Old North End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Do a full night at Radio Bean and the Lamp Shop"
+  },
+  {
+   "n": 16,
+   "k": "m16",
+   "title": "Catch a no-cover show at Red Square",
+   "theme": "culture",
+   "paragraph": "Walk past Red Square on any night and someone's playing, which makes it the reliable answer to whether anything is actually happening downtown. Live music runs nearly every night on Church Street, there's rarely a cover for local acts, and in summer the side patio turns sets into street parties. Start with dinner at Leunig's Bistro & Café, 115 Church Street, a French-style bistro with outdoor café seating on the pedestrian mall and a wine list that's better than the prices suggest. Then follow the music to Red Square.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "red-square",
+     "name": "Red Square",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "leunigs-bistro",
+     "name": "Leunig's Bistro & Café",
+     "url": "https://www.leunigs.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Catch a free show on Church Street"
+  },
+  {
+   "n": 17,
+   "k": "m17",
+   "title": "Book the mushroom toast at Hen of the Wood",
+   "theme": "eat",
+   "paragraph": "The mushroom toast has never left the menu at Hen of the Wood, because the customers would not allow it. This is the benchmark for Vermont farm-to-table, the restaurant every other farm-to-table menu in the state gets measured against. The original lives in an old grist mill in Waterbury; the Burlington room is the easier reservation, and it's an evening place. To make a full night of it downtown, follow dinner with a show at the Flynn, the 1,400-seat Art Deco theater on Main Street that books Broadway touring shows, folk acts and comedy.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "hen-of-the-wood",
+     "name": "Hen of the Wood",
+     "url": "https://www.henofthewood.com/burlington",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "flynn-center",
+     "name": "Flynn Center for the Performing Arts",
+     "url": "https://www.flynncenter.org",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Book the mushroom toast at Hen of the Wood"
+  },
+  {
+   "n": 18,
+   "k": "m18",
+   "title": "Share everything at Honey Road",
+   "theme": "eat",
+   "paragraph": "The fried halloumi at Honey Road has a citywide reputation, and the whole Eastern Mediterranean mezze menu on Church Street is built for sharing. It's routinely named among the best restaurants in Vermont, and it's the one locals actually pick for their own celebrations. Plates add up, but they're worth it. Reservations are a sport, so if you can't land one, the walk-in bar seats are the cheat code. Afterward, keep the group together at The Archives on N. Winooski Avenue, a downtown bar with dozens of arcade games and pinball alongside craft beer and cocktails.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "honey-road",
+     "name": "Honey Road",
+     "url": "https://www.honeyroadrestaurant.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "archives-bar",
+     "name": "The Archives",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Share everything at Honey Road"
+  },
+  {
+   "n": 19,
+   "k": "m19",
+   "title": "Climb Mt. Philo, then eat at Philo Ridge Farm",
+   "theme": "outdoors",
+   "paragraph": "The summit of Mt. Philo is only 968 feet, but a short, manageable climb buys the best panoramic view of the Champlain Valley, full stop, with Lake Champlain and the Adirondacks in the frame. It's twenty minutes south at 5425 Mt. Philo Road in Charlotte, with a day-use fee of about $5, and an auto road lets you drive up when hiking isn't the goal. Come down hungry. Philo Ridge Farm, a working regenerative farm across the road, serves meals grown in sight of your table, and reservations are recommended.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "mt-philo-state-park",
+     "name": "Mt. Philo State Park",
+     "url": "",
+     "neighborhood": "Shelburne",
+     "nearby": false
+    },
+    {
+     "id": "philo-ridge-farm",
+     "name": "Philo Ridge Farm",
+     "url": "https://www.philoridgefarm.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Take the easiest great hike in Vermont: Mt. Philo"
+  },
+  {
+   "n": 20,
+   "k": "m20",
+   "title": "Earn Camel's Hump",
+   "theme": "outdoors",
+   "paragraph": "Camel's Hump tops out at 4,083 feet, with views to the Adirondacks and the White Mountains on a clear day, and it's Vermont's best serious day hike, 45 minutes out. Go up Forest City and down Burrows for the mossy Brush Brook scenery, and watch for the WW2 bomber crash site off the bad-weather bypass south of the summit. The Long Trail runs across the exposed talus summit, so the climb feels like joining a longer journey. Plan five to six hours, real footwear and an early start on summer weekends.",
+   "needs_check": true,
+   "check_note": "the data's address (Couching Lion Farm Road, Duxbury) may not be the Forest City/Burrows trailheads the guide recommends, so the paragraph leaves it out",
+   "places": [
+    {
+     "id": "camels-hump",
+     "name": "Camel's Hump",
+     "url": "",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Earn Camel's Hump"
+  },
+  {
+   "n": 21,
+   "k": "m21",
+   "title": "Get to the top of Mount Mansfield, any way you like",
+   "theme": "outdoors",
+   "paragraph": "At 4,393 feet, Mount Mansfield is Vermont's highest summit, and there are three ways up: the Long Trail on foot, the Stowe gondola, or the auto toll road to the ridgeline. Hiking is free; the gondola and toll road charge fees. Alpine tundra has survived along the top since the last ice age, so stay on the rocks. For the quiet local approach, start at Underhill State Park on the west side, with CCC-built stonework and several summit trail options. Stowe gets the tourists, Underhill gets the regulars. Go in summer or fall.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "mount-mansfield",
+     "name": "Mount Mansfield",
+     "url": "",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    },
+    {
+     "id": "underhill-state-park",
+     "name": "Underhill State Park",
+     "url": "https://vtstateparks.com/underhill.html",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Get to the top of Mount Mansfield — any way you like"
+  },
+  {
+   "n": 22,
+   "k": "m22",
+   "title": "Get out on the lake by kayak, schooner or cruise",
+   "theme": "water",
+   "paragraph": "A day membership at the Community Sailing Center, 1 Steele Street, lets you rent a kayak or paddleboard in summer without a lesson requirement. For something slower, Whistling Man Schooner Company runs two-hour evening sails on a classic schooner out of the Community Boathouse, ten guests max, about $45 to $55 a person and BYOB. Bring a layer; the lake runs ten degrees cooler than shore. Or board the Spirit of Ethan Allen at Perkins Pier for a narrated cruise, around $35 for lunch and $55 for the sunset dinner version. The city looks better from the lake, and everyone should see it from out there once.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "community-sailing-center",
+     "name": "Community Sailing Center",
+     "url": "https://www.communitysailingcenter.org",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "whistling-man-schooner",
+     "name": "Whistling Man Schooner Company",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "spirit-of-ethan-allen",
+     "name": "Spirit of Ethan Allen",
+     "url": "https://www.soea.com",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "community-sailing-center",
+     "to": "whistling-man-schooner",
+     "km": 0.2,
+     "mode": "walk",
+     "min": 3
+    },
+    {
+     "from": "whistling-man-schooner",
+     "to": "spirit-of-ethan-allen",
+     "km": 0.0,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Get out on the water under sail"
+  },
+  {
+   "n": 23,
+   "k": "m23",
+   "title": "Eat dinner practically in the lake",
+   "theme": "eat",
+   "paragraph": "Splash sits directly on the public marina dock at the Community Boathouse, so dinner comes with working boats leaving the slip, casual food around $10 to $18 and the loosest dress code on the waterfront. Spot on the Dock at King Street serves fish tacos and frozen drinks, summer only, and sunset seating goes first. Shanty on the Shore, 181 Battery Street, has a deck over the water, a raw bar, fried perch and the lobster roll at about $28. The Skinny Pancake at 60 Lake Street does sweet and savory crepes on a patio that faces the water. Afternoon cocktails, water under your feet.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "splash-boathouse",
+     "name": "Splash at the Boathouse",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "spot-on-the-dock",
+     "name": "Spot on the Dock",
+     "url": "https://www.spotonthedock.com",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "shanty-on-shore",
+     "name": "Shanty on the Shore",
+     "url": "https://www.shantyontheshore.com",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "skinny-pancake",
+     "name": "The Skinny Pancake",
+     "url": "https://www.skinnypancake.com",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "shanty-on-shore",
+     "to": "skinny-pancake",
+     "km": 0.2,
+     "mode": "walk",
+     "min": 3
+    }
+   ],
+   "top100": "Eat dinner practically in the lake"
+  },
+  {
+   "n": 24,
+   "k": "m24",
+   "title": "Laugh at Vermont Comedy Club",
+   "theme": "culture",
+   "paragraph": "Vermont Comedy Club at 101 Main Street is the state's only dedicated comedy club, an intimate room that pulls national names and sharpens local ones. Shows run Thursday through Sunday at $10 to $25, the local showcases on Thursdays are often the better shows, and the Wednesday open mic is free. Warm up earlier at The Boardroom, also on Main Street, Vermont's first board game café, with 500-plus games for a table fee of about $5 a person. After the show, The Archives on N. Winooski Avenue has dozens of arcade games and pinball, plus craft beer and cocktails, late into the night.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "vermont-comedy-club",
+     "name": "Vermont Comedy Club",
+     "url": "https://www.vermontcomedyclub.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "archives-bar",
+     "name": "The Archives",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    },
+    {
+     "id": "boardroom-games",
+     "name": "The Boardroom",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "vermont-comedy-club",
+     "to": "archives-bar",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    },
+    {
+     "from": "archives-bar",
+     "to": "boardroom-games",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Laugh at Vermont Comedy Club"
+  },
+  {
+   "n": 25,
+   "k": "m25",
+   "title": "Catch a touring act at Higher Ground",
+   "theme": "culture",
+   "paragraph": "The mainstage at Higher Ground holds 500, and the Showcase Lounge runs smaller shows most nights of the week, which makes this South Burlington club the region's essential mid-size venue for touring acts, drag shows and the bands that can't fit anywhere else in Vermont. Tickets run $15 to $50, and $5 to $20 in the Showcase Lounge. Before the show, eat at Al's French Fries, also on Williston Road at 1251, a spot running since 1948 with fresh-cut fries and soft-serve that's mandatory and Vermont-correct. Check the calendar before any visit; something's on.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "higher-ground",
+     "name": "Higher Ground",
+     "url": "https://www.highergroundmusic.com",
+     "neighborhood": "South Burlington",
+     "nearby": false
+    },
+    {
+     "id": "als-french-fries",
+     "name": "Al's French Fries",
+     "url": "",
+     "neighborhood": "South Burlington",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "higher-ground",
+     "to": "als-french-fries",
+     "km": 0.8,
+     "mode": "walk",
+     "min": 15
+    }
+   ],
+   "top100": "Catch a touring act at Higher Ground"
+  },
+  {
+   "n": 26,
+   "k": "m26",
+   "title": "Line up for a proper Burlington breakfast",
+   "theme": "eat",
+   "paragraph": "Handy's Lunch has fed Burlington for generations from a family-run counter on Maple Street, with cramped booths, big plates, and regulars who order without looking at the menu. It's cash-friendly, so come prepared. If the line is long, the Friendly Toast near Church Street does all-day breakfast in a retro, kitsch-crammed room, with bottomless coffee and pancakes you can order at 4 PM without apology. For a weekend with more ambition, cross the river to Sneakers Bistro in Winooski, where the weekend wait proves the point and the maple magic bacon has a following of its own. Any of the three sets up the day right.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "handy-lunch",
+     "name": "Handy's Lunch",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "the-friendly-toast",
+     "name": "The Friendly Toast",
+     "url": "https://www.thefriendlytoast.com/burlington-vt",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "sneakers-bistro",
+     "name": "Sneakers Bistro",
+     "url": "https://www.sneakersbistrovt.com",
+     "neighborhood": "Winooski",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Line up for a proper Burlington breakfast"
+  },
+  {
+   "n": 27,
+   "k": "m27",
+   "title": "Walk the redstone cliffs at Red Rocks",
+   "theme": "outdoors",
+   "paragraph": "Red rock cliffs rise over the lake at Red Rocks Park, with shaded trails along them and a sandy beach below for swimming in summer. The formations don't look like anything else around Burlington, which is the whole reason to go. Head in off Red Rocks Park Road in South Burlington, walk the trails, and find a spot on the cliffs to watch the water. It's free and best from spring through fall. Afterward, drive over to Al's French Fries at 1251 Williston Road, running since 1948, for fries cut from whole potatoes in-house and a soft-serve that is mandatory and Vermont-correct.",
+   "needs_check": true,
+   "check_note": "The sources disagree on the rock: the guide body says 270-million-year-old quartzite, the place data says Permian flood-plain deposits; I left the age and rock type out. The 270-million-year Permian figure looks doubtful for Vermont bedrock, so verify it before it goes in anywhere.",
+   "places": [
+    {
+     "id": "red-rocks-park",
+     "name": "Red Rocks Park",
+     "url": "",
+     "neighborhood": "South Burlington",
+     "nearby": false
+    },
+    {
+     "id": "als-french-fries",
+     "name": "Al's French Fries",
+     "url": "",
+     "neighborhood": "South Burlington",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "red-rocks-park",
+     "to": "als-french-fries",
+     "km": 3.4,
+     "mode": "drive",
+     "min": 10
+    }
+   ],
+   "top100": "Walk the redstone cliffs at Red Rocks"
+  },
+  {
+   "n": 28,
+   "k": "m28",
+   "title": "Climb the ADA treehouse and find the Earth Clock at Oakledge",
+   "theme": "outdoors",
+   "paragraph": "Oakledge packs 45 acres off Flynn Avenue, starting with the world's first fully ADA-accessible treehouse, built so wheelchair users reach the canopy. Climb up, then work your way down to the Cove, where red-rock ledges make some of the best swimming in Burlington, or rent a kayak if you'd rather be out on the water. There's sand volleyball too. Save the evening for the Earth Clock on the lakeshore, a circle of standing stones aligned to the solstices and equinoxes and positioned for the best possible sunset. It sits inside the park, so the walk over is short. Quieter than North Beach, and worth it.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "oakledge-park",
+     "name": "Oakledge Park",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "earth-clock-oakledge",
+     "name": "Earth Clock at Oakledge Park",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "oakledge-park",
+     "to": "earth-clock-oakledge",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Climb the ADA treehouse and find the Earth Clock at Oakledge"
+  },
+  {
+   "n": 29,
+   "k": "m29",
+   "title": "Walk under the girders of the Moran Frame",
+   "theme": "culture",
+   "paragraph": "The Moran Frame is what's left of a 1950s coal power plant, stripped to its steel skeleton and reopened in 2021 as an open-air landmark. Start on the lawn at Waterfront Park off College Street, where the yellow porch swings face west over the lake toward the Adirondacks and earn their reputation as the most photographed spot in Burlington. Then follow the waterfront to the park's north end on Lake Street and wander under the girders, catching whatever installation or pop-up has moved in. Stay for sunset, when the whole thing becomes a building-sized picture frame for the lake. Both stops are free.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "moran-frame",
+     "name": "The Moran Frame",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "waterfront-park",
+     "name": "Waterfront Park",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "moran-frame",
+     "to": "waterfront-park",
+     "km": 0.4,
+     "mode": "walk",
+     "min": 6
+    }
+   ],
+   "top100": "Walk through the Frame — the skeleton of the Moran Plant"
+  },
+  {
+   "n": 30,
+   "k": "m30",
+   "title": "Wander the Soda Plant halls",
+   "theme": "culture",
+   "paragraph": "Ginger ale used to be bottled in the Soda Plant on Pine Street, and the old factory is now packed with working studios, galleries, and small makers you can simply walk in on. Start at Brio Coffeeworks, the roastery inside, where the beans roast in the same room you drink them, then carry the cup down the halls and drift from studio to studio. Wandering is free, and what's open varies by shop. Most people leave with something they didn't plan on. When evening comes, the Venetian Soda Lounge in the same building pours cocktails that nod to the soda history without turning it into a theme park.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "soda-plant",
+     "name": "The Soda Plant",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "brio-coffeeworks",
+     "name": "Brio Coffeeworks",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "venetian-soda-lounge",
+     "name": "Venetian Soda Lounge",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Wander the Soda Plant halls"
+  },
+  {
+   "n": 31,
+   "k": "m31",
+   "title": "Gallery-hop down Church Street",
+   "theme": "culture",
+   "paragraph": "Admission is free at the BCA Center, Burlington City Arts' main gallery at 135 Church Street, where rotating contemporary shows lean toward New England artists and routinely surprise people who walk in off the street. When you're done, head down the marketplace to Frog Hollow at 85 Church Street, steps away, for juried work from hundreds of Vermont artisans: ceramics, fiber, glass, and jewelry, every piece vetted. Browsing costs nothing there either, though you may leave carrying something. It's free, air-conditioned culture in the middle of a Church Street stroll, and an easy way to fill a morning or afternoon on the bricks.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "bca-center",
+     "name": "BCA Center",
+     "url": "https://www.burlingtoncityarts.org",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "frog-hollow-gallery",
+     "name": "Frog Hollow Vermont Craft Gallery",
+     "url": "https://www.froghollowvt.org",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "bca-center",
+     "to": "frog-hollow-gallery",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Gallery-hop downtown on a First Friday"
+  },
+  {
+   "n": 32,
+   "k": "m32",
+   "title": "Sing with the supporters at a Vermont Green FC match",
+   "theme": "play",
+   "paragraph": "Vermont Green FC won the 2025 USL League Two national title, and the supporters' section at Virtue Field outsings most professional clubs. It's summer soccer in the evening from a club that put climate action in its founding documents, and the atmosphere is the best sports experience in the state. Games often sell out, so buy ahead. Come early and walk the UVM campus first, open to walk through, with hilltop views of Lake Champlain and the Adirondacks that rival any formal lookout in the city. Then find a spot near the singing and join in.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "vermont-green-fc",
+     "name": "Vermont Green FC",
+     "url": "https://vermontgreenfc.com",
+     "neighborhood": "UVM / University",
+     "nearby": false
+    },
+    {
+     "id": "uvm-campus",
+     "name": "UVM Campus (University of Vermont)",
+     "url": "https://www.uvm.edu",
+     "neighborhood": "UVM / University",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Sing with the supporters at a Vermont Green FC match"
+  },
+  {
+   "n": 33,
+   "k": "m33",
+   "title": "Take in a Lake Monsters game at Centennial Field",
+   "theme": "play",
+   "paragraph": "Centennial Field has hosted baseball since 1906, which makes it one of the oldest continuously used ballparks in the country, and the park itself is as much a draw as the game. The Vermont Lake Monsters play minor league ball there all summer, with tickets around $8 to $15, hot dogs that are exactly right, and between-innings chaos starring Champ, the lake monster mascot, up on the dugout. Watch the schedule for themed nights like Wild West and Special Olympics Night. It might be the cheapest great summer evening in the city.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "vermont-lake-monsters",
+     "name": "Vermont Lake Monsters",
+     "url": "https://www.milb.com/vermont",
+     "neighborhood": "Hill Section",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Take in a Lake Monsters game at Centennial Field"
+  },
+  {
+   "n": 34,
+   "k": "m34",
+   "title": "Feel Gutterson shake at a UVM hockey game",
+   "theme": "play",
+   "paragraph": "Gutterson Fieldhouse is one of college hockey's classic barns, and on a January night with the Catamounts home, the building is half the show. It's Division I hockey at the Gut, loud and old-school, and one of the best winter nights out in the city. Spend the afternoon before at the Fleming Museum of Art at 61 Colchester Avenue, UVM's art museum, where the collection runs 4,000 years from Egyptian antiquities to contemporary Vermont work and fits into under an hour. Adults pay around $5. Then head over for the game and feel the place shake.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "uvm-hockey",
+     "name": "UVM Hockey at Gutterson Fieldhouse",
+     "url": "https://uvmathletics.com",
+     "neighborhood": "UVM / University",
+     "nearby": false
+    },
+    {
+     "id": "fleming-museum",
+     "name": "Fleming Museum of Art",
+     "url": "https://www.flemingmuseum.org",
+     "neighborhood": "UVM / University",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Feel Gutterson shake at a UVM hockey game"
+  },
+  {
+   "n": 35,
+   "k": "m35",
+   "title": "Let Waking Windows take over your May weekend",
+   "theme": "culture",
+   "paragraph": "Waking Windows packs 30-plus acts into a single weekend in early May, with stages in bars, on street corners, and inside the Champlain Mill across downtown Winooski. A weekend pass runs about $30 to $40, and some shows are free. Planning helps, though stumbling into something good works too. Between sets, dig through the bins at Autumn Records at 11 E. Allen Street, open noon to 6 daily, where the owner is an internationally recognized experimental musician and the used vinyl starts at $3. Then take the short Riverwalk along the falls that powered the mills, loudest at spring melt. The downtown circulator of bars and restaurants sits two blocks away.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "waking-windows",
+     "name": "Waking Windows",
+     "url": "",
+     "neighborhood": "Winooski",
+     "nearby": false
+    },
+    {
+     "id": "autumn-records",
+     "name": "Autumn Records",
+     "url": "",
+     "neighborhood": "Winooski",
+     "nearby": true
+    },
+    {
+     "id": "winooski-riverwalk",
+     "name": "Winooski Riverwalk & Falls",
+     "url": "",
+     "neighborhood": "Winooski",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "waking-windows",
+     "to": "autumn-records",
+     "km": 0.0,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Let Waking Windows take over your May weekend"
+  },
+  {
+   "n": 36,
+   "k": "m36",
+   "title": "Take the high ground at Battery Park",
+   "theme": "outdoors",
+   "paragraph": "In 1813 an American shore battery on this bluff traded fire with British ships, and Battery Park still looks down on the lake from a hundred feet up. It's the wide-angle version of the waterfront view, the perch locals use for storm-watching, and in summer the only artillery left is a long-running free concert series. When you've had your fill, follow Battery Street down to Shanty on the Shore at 181 for a lobster roll, around $28, on the deck over the water. Finish at Foam Brewers at 112 Lake Street, where the Vacation IPA is a reliable start and the patio fills fast on warm evenings.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "battery-park",
+     "name": "Battery Park",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "shanty-on-shore",
+     "name": "Shanty on the Shore",
+     "url": "https://www.shantyontheshore.com",
+     "neighborhood": "Waterfront",
+     "nearby": true
+    },
+    {
+     "id": "foam-brewers",
+     "name": "Foam Brewers",
+     "url": "https://foambrewers.com",
+     "neighborhood": "Waterfront",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "battery-park",
+     "to": "shanty-on-shore",
+     "km": 0.2,
+     "mode": "walk",
+     "min": 4
+    },
+    {
+     "from": "shanty-on-shore",
+     "to": "foam-brewers",
+     "km": 0.0,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Take the high ground at Battery Park"
+  },
+  {
+   "n": 37,
+   "k": "m37",
+   "title": "Pick apples above the lake at Shelburne Orchards",
+   "theme": "outdoors",
+   "paragraph": "The Adirondacks stack up behind the rows at Shelburne Orchards, a third-generation orchard on the lake side of Shelburne where you pick your own apples and pay by the bag during picking season. Fill it, then head into the ciderhouse barn, which smells like cider all season, for fresh-pressed cider and a bottle of the farm's own Dead Bird apple brandy. To stretch the afternoon, drive over to Shelburne Vineyard at 6308 Shelburne Road, where the Marquette reds and La Crescent whites come from grapes grown on the property, and harvest in September makes the best argument for a fall visit.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "shelburne-orchards",
+     "name": "Shelburne Orchards",
+     "url": "https://shelburneorchards.com",
+     "neighborhood": "Shelburne",
+     "nearby": false
+    },
+    {
+     "id": "shelburne-vineyard",
+     "name": "Shelburne Vineyard",
+     "url": "https://www.shelburnevineyard.com",
+     "neighborhood": "Shelburne",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "shelburne-orchards",
+     "to": "shelburne-vineyard",
+     "km": 4.5,
+     "mode": "drive",
+     "min": 10
+    }
+   ],
+   "top100": "Pick apples above the lake at Shelburne Orchards"
+  },
+  {
+   "n": 38,
+   "k": "m38",
+   "title": "Drop down to Salmon Hole below the Winooski falls",
+   "theme": "outdoors",
+   "paragraph": "Salmon Hole is the broad pool below the Winooski falls, ringed by bare rock ledges and reached by short trails from both banks, a five-minute walk from downtown Winooski. Anglers work it for salmon, steelhead, and bass, while everyone else scrambles the ledges and watches the river do its thing. Start at Riverside Avenue by the Winooski Bridge, then walk up into Winooski. On a weekday, the Winooski Mill Museum at 1 Main Street tells the mill-era story inside the restored Champlain Mill, with a view of the falls that powered it. Finish at Autumn Records on E. Allen Street, open noon to 6 daily, for used vinyl from $3.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "salmon-hole",
+     "name": "Salmon Hole",
+     "url": "https://www.wvpd.org/salmon-hole",
+     "neighborhood": "Winooski",
+     "nearby": false
+    },
+    {
+     "id": "autumn-records",
+     "name": "Autumn Records",
+     "url": "",
+     "neighborhood": "Winooski",
+     "nearby": true
+    },
+    {
+     "id": "winooski-mill-museum",
+     "name": "Winooski Mill Museum",
+     "url": "",
+     "neighborhood": "Winooski",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "salmon-hole",
+     "to": "autumn-records",
+     "km": 0.6,
+     "mode": "walk",
+     "min": 10
+    },
+    {
+     "from": "autumn-records",
+     "to": "winooski-mill-museum",
+     "km": 0.0,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Drop down to Salmon Hole below the Winooski falls"
+  },
+  {
+   "n": 39,
+   "k": "m39",
+   "title": "Eat from the trucks at the South End Get Down",
+   "theme": "eat",
+   "paragraph": "Every Friday evening all summer, the South End Get Down turns Pine Street into a living room, with a rotating fleet of food trucks, live music, and outdoor drinking in the arts district. It's free to attend, and it has defined Friday evenings in the South End for over a decade. Come early. AO Glass at 416 Pine Street lets you watch glassblowing for free, Monday to Saturday from 10 AM to 3 PM, and the factory floor is unexpectedly compelling. Then browse the vintage shops, studios, and galleries in Pine Street's converted industrial buildings until the trucks get going.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "south-end-get-down",
+     "name": "South End Get Down",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "pine-street-shops",
+     "name": "Pine Street (South End Shopping)",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": true
+    },
+    {
+     "id": "ao-glass",
+     "name": "AO Glass",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "south-end-get-down",
+     "to": "pine-street-shops",
+     "km": 0.0,
+     "mode": "walk",
+     "min": 1
+    },
+    {
+     "from": "pine-street-shops",
+     "to": "ao-glass",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Eat from the trucks at the South End Get Down"
+  },
+  {
+   "n": 40,
+   "k": "m40",
+   "title": "Catch golden hour at Summervale",
+   "theme": "free",
+   "paragraph": "On Thursday evenings in summer, Summervale fills the Intervale with food trucks and local bands, and the farm fields at golden hour do half the work. Admission is free, with food and drink for sale. Come a little early and walk the public trails of the Intervale Center at 180 Intervale Road first: three hundred sixty acres of working organic farms threading through the Winooski River floodplain, all inside city limits, along a river corridor most Burlington residents have never walked. Then circle back for dinner from a truck and whoever's playing. It's easy to walk into and hard to leave.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "summervale",
+     "name": "Summervale at the Intervale",
+     "url": "https://www.intervale.org/summervale",
+     "neighborhood": "New North End",
+     "nearby": false
+    },
+    {
+     "id": "intervale-center",
+     "name": "Intervale Center",
+     "url": "https://www.intervale.org",
+     "neighborhood": "New North End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Golden hour at Summervale"
+  },
+  {
+   "n": 41,
+   "k": "m41",
+   "title": "Cross the river for a Winooski night out",
+   "theme": "drink",
+   "paragraph": "Four Quarters Brewing pours top-shelf beer alongside a kitchen that takes grilled cheese and burgers as seriously as the brewing, which makes it the right first stop in Winooski. Have a beer, then save room for Misery Loves Co., the kitchen that grew from a food truck into one of the state's most inventive rooms, where the menu shifts constantly and rewards trust. End the night at the Monkey House, Winooski's scrappy venue-bar, where you can catch a band two years before the bigger stages find them, for a fraction of the ticket. It all sits around one walkable circulator, so you can park once and leave the car.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "four-quarters-brewing",
+     "name": "Four Quarters Brewing",
+     "url": "",
+     "neighborhood": "Winooski",
+     "nearby": false
+    },
+    {
+     "id": "misery-loves-co",
+     "name": "Misery Loves Co.",
+     "url": "https://miserylovescovt.com",
+     "neighborhood": "Winooski",
+     "nearby": false
+    },
+    {
+     "id": "monkey-house",
+     "name": "The Monkey House",
+     "url": "",
+     "neighborhood": "Winooski",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Cross the river for a Winooski night out"
+  },
+  {
+   "n": 42,
+   "k": "m42",
+   "title": "Get a window seat over the Winooski falls",
+   "theme": "eat",
+   "paragraph": "Waterworks Food + Drink is built into the old Champlain Mill with windows directly over the Winooski falls, and no other dining room around has anything close to that view. Ask for a window table, and if you can, time it for spring melt, when the river is deafening and the glass barely holds the drama back. After the meal, walk the Riverwalk, a short free path along the same roaring falls that powered the mills Winooski was built on. Almost everyone drives over them without stopping. The downtown circulator of restaurants and bars sits two blocks away if the night isn't over.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "waterworks",
+     "name": "Waterworks Food + Drink",
+     "url": "https://www.waterworksvt.com",
+     "neighborhood": "Winooski",
+     "nearby": false
+    },
+    {
+     "id": "winooski-riverwalk",
+     "name": "Winooski Riverwalk & Falls",
+     "url": "",
+     "neighborhood": "Winooski",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Get a window seat over the Winooski falls"
+  },
+  {
+   "n": 43,
+   "k": "m43",
+   "title": "Tacos, mezcal, then a creemee at Gordo",
+   "theme": "eat",
+   "paragraph": "Al pastor first, then argue about the rest. Taco Gordo makes its tortillas in-house and pours mezcal on North Winooski Avenue, and in summer Little Gordo, the creemee window bolted on for the season, handles dessert, a taco-then-creemee one-two that only exists here. Afterward, head down North Winooski Avenue to Radio Bean at number 8, a coffee shop that turns into a live music venue by evening, with folk, jazz, experimental, and everything between. Its sibling room next door, Light Club Lamp Shop, is lit entirely by a ceiling of vintage lamps, with eclectic sets early and dancing late.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "taco-gordo",
+     "name": "Taco Gordo",
+     "url": "https://www.tacogordovt.com",
+     "neighborhood": "Old North End",
+     "nearby": false
+    },
+    {
+     "id": "radio-bean",
+     "name": "Radio Bean",
+     "url": "https://www.radiobean.com",
+     "neighborhood": "Old North End",
+     "nearby": true
+    },
+    {
+     "id": "light-club-lamp-shop",
+     "name": "Light Club Lamp Shop",
+     "url": "https://www.radiobean.com/light-club-info",
+     "neighborhood": "Old North End",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Tacos, mezcal, then a creemee at Gordo"
+  },
+  {
+   "n": 44,
+   "k": "m44",
+   "title": "Slurp pho and dumplings in the Old North End",
+   "theme": "eat",
+   "paragraph": "Handmade dumplings come first, at Cafe Dim Sum, a small, unfussy Old North End room doing dim sum staples that would hold their own in a much bigger city. Getting proper dim sum used to mean a drive to Montreal, and now it doesn't. Save room, because the main event is Pho Hong on North Street, the family kitchen whose broth locals measure all other pho against. The depth is real, the menu goes far past soup, and the prices haven't noticed the decade. Dumplings in the daytime, a bowl of pho by evening, all in the same neighborhood. Cheap, deep, and beloved.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "pho-hong",
+     "name": "Pho Hong",
+     "url": "",
+     "neighborhood": "Old North End",
+     "nearby": false
+    },
+    {
+     "id": "cafe-dim-sum",
+     "name": "Cafe Dim Sum",
+     "url": "",
+     "neighborhood": "Old North End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Slurp pho on North Street"
+  },
+  {
+   "n": 45,
+   "k": "m45",
+   "title": "Eat your way through the Old North End",
+   "theme": "eat",
+   "paragraph": "Willow's Bagels hand-rolls and boils its bagels and runs out by late morning on weekends, so this Old North End crawl starts early. Lunch is a sandwich at Henry Street Deli, the corner deli with a neighborhood following, or a seat at Poppy Cafe & Market, where breakfast and lunch come with market shelves along the wall. Dinner depends on the day. On a Monday, the Wise Fool's shawarma night has a word-of-mouth economy all its own. Any other night, May Day cooks like it has downtown rent to justify and is easier to book than anything on Church Street. All neighborhood, zero performance.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "wise-fool",
+     "name": "The Wise Fool",
+     "url": "",
+     "neighborhood": "Old North End",
+     "nearby": false
+    },
+    {
+     "id": "may-day",
+     "name": "May Day",
+     "url": "",
+     "neighborhood": "Old North End",
+     "nearby": false
+    },
+    {
+     "id": "poppy-cafe",
+     "name": "Poppy Cafe & Market",
+     "url": "https://www.poppyvt.com",
+     "neighborhood": "Old North End",
+     "nearby": false
+    },
+    {
+     "id": "henry-street-deli",
+     "name": "Henry Street Deli",
+     "url": "https://www.henrystreetdeli.com",
+     "neighborhood": "Old North End",
+     "nearby": false
+    },
+    {
+     "id": "willows-bagels",
+     "name": "Willow's Bagels",
+     "url": "",
+     "neighborhood": "Old North End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Eat your way through the Old North End"
+  },
+  {
+   "n": 46,
+   "k": "m46",
+   "title": "Bring cash to Four Corners of the Earth",
+   "theme": "eat",
+   "paragraph": "The lamb comes up every time locals argue favorites at Four Corners of the Earth, a Pine Street deli whose sandwiches read like they shouldn't work and do. It's cash only, so bring bills and some patience. Take lunch over to Flynn Avenue, where the World's Tallest Filing Cabinet stacks thirty-eight drawers 38 feet high, built in 2002 as commentary on bureaucracy, with birds nesting in the top drawers. Keep going on Flynn to Oakledge Park, 45 acres with the Cove's red-rock ledges, and eat lakeside from spring through fall. Quieter than North Beach, and worth it.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "four-corners-of-the-earth",
+     "name": "Four Corners of the Earth",
+     "url": "https://www.fourcornersdeli.com",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "worlds-tallest-filing-cabinet",
+     "name": "World's Tallest Filing Cabinet",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": true
+    },
+    {
+     "id": "oakledge-park",
+     "name": "Oakledge Park",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "worlds-tallest-filing-cabinet",
+     "to": "oakledge-park",
+     "km": 1.9,
+     "mode": "drive",
+     "min": 5
+    }
+   ],
+   "top100": "Bring cash to Four Corners of the Earth"
+  },
+  {
+   "n": 47,
+   "k": "m47",
+   "title": "Get a wood-fired Montreal bagel at Myer's",
+   "theme": "eat",
+   "paragraph": "Myer's Bagels boils its bagels in honey water the way the Mile End shops do it, then bakes them in a wood-fired oven, the labor-intensive way since the 90s. The result is smaller, denser, and sweeter than the New York kind, and the closest thing to a true Montreal bagel south of the border. Go in the morning if you want the full choice. Then walk Pine Street with the bag in hand and poke into the studios, galleries, and makers in converted industrial buildings, where the most interesting art in Burlington sits in the back rooms of buildings that used to make things.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "myers-bagels",
+     "name": "Myer's Bagels",
+     "url": "https://www.myersbagels.com",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "south-end-arts-district",
+     "name": "South End Arts District",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Taste the Montreal-vs-New York bagel debate at Myer's"
+  },
+  {
+   "n": 48,
+   "k": "m48",
+   "title": "Get fries and a creemee at Al's, unchanged since 1948",
+   "theme": "eat",
+   "paragraph": "Al's French Fries at 1251 Williston Road has been running since 1948, cutting fries from whole potatoes in-house daily, and the formula still hasn't needed revision. Order at the counter, fries for about $4 to $6 and a creemee for about $3, because the soft-serve is mandatory and Vermont-correct. Eat in the car if you like, the way generations of Vermonters have. Then make a night of it at Higher Ground at 1214 Williston Road, the club that brings actual touring acts to South Burlington. The mainstage holds 500, and the Showcase Lounge runs smaller shows most nights of the week, so check the calendar.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "als-french-fries",
+     "name": "Al's French Fries",
+     "url": "",
+     "neighborhood": "South Burlington",
+     "nearby": false
+    },
+    {
+     "id": "higher-ground",
+     "name": "Higher Ground",
+     "url": "https://www.highergroundmusic.com",
+     "neighborhood": "South Burlington",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "als-french-fries",
+     "to": "higher-ground",
+     "km": 0.8,
+     "mode": "walk",
+     "min": 15
+    }
+   ],
+   "top100": "Get fries and a creemee at Al's, unchanged since 1948"
+  },
+  {
+   "n": 49,
+   "k": "m49",
+   "title": "Have a grown-up brunch off Church Street",
+   "theme": "eat",
+   "paragraph": "A serious cocktail list at brunch is the point of the Grey Jay, a polished room a block off Church Street doing modern American plates that make the meal feel like an occasion rather than a recovery. Not every Burlington brunch has to be a diner. Afterward, walk the block over to Church Street and spend the rest of the morning at the BCA Center at 135, Burlington City Arts' main gallery, where admission is free and the contemporary shows lean toward New England artists. Then go down the marketplace to Frog Hollow at 85 Church Street for juried Vermont craft: ceramics, fiber, glass, and jewelry.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "the-grey-jay",
+     "name": "The Grey Jay",
+     "url": "https://www.greyjayvt.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "bca-center",
+     "name": "BCA Center",
+     "url": "https://www.burlingtoncityarts.org",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    },
+    {
+     "id": "frog-hollow-gallery",
+     "name": "Frog Hollow Vermont Craft Gallery",
+     "url": "https://www.froghollowvt.org",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "bca-center",
+     "to": "frog-hollow-gallery",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Have a grown-up brunch off Church Street"
+  },
+  {
+   "n": 50,
+   "k": "m50",
+   "title": "Have the best-pizza-downtown argument properly",
+   "theme": "eat",
+   "paragraph": "The margherita is the test at Pizzeria Verità, and the blistered Neapolitan pie from the wood oven passes without needing toppings to hide behind. Order it with something off the cocktail list, which takes itself as seriously as the dough. For the other side of the argument, go to American Flatbread's Burlington Hearth, where you can watch the flatbread come out of a blazing hearth from your table and drink the house-brewed beer. It's also the room where Zero Gravity brewed before Pine Street existed, a real piece of Burlington beer history. Research both sides, then repeat as needed.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "pizzeria-verita",
+     "name": "Pizzeria Verità",
+     "url": "https://www.pizzeriaverita.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "american-flatbread",
+     "name": "American Flatbread (Burlington Hearth)",
+     "url": "https://americanflatbread.com/locations/burlington-vt/",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Have the best-pizza-downtown argument properly"
+  },
+  {
+   "n": 51,
+   "k": "m51",
+   "title": "Catch Duff Hour at Three Needs",
+   "theme": "drink",
+   "paragraph": "Duff Hour is the famously cheap early-evening pint window at Three Needs, a downtown brewpub-dive hybrid, and catching it is a local rite of passage. It has survived every rent increase downtown, which may make it Burlington's last true beer deal. Get there early in the evening and grab a cheap pint, then head to Farmhouse Tap & Grill on Bank Street for dinner, where suppliers are named on the menu and the beef burger is the standard Burlington burgers get measured against. If the night runs long, wander back to Three Needs, which has slices available late.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "three-needs",
+     "name": "Three Needs Taproom & Brewery",
+     "url": "https://www.threeneeds.net",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "farmhouse-tap-grill",
+     "name": "Farmhouse Tap & Grill",
+     "url": "https://www.farmhousetg.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Catch Duff Hour at Three Needs"
+  },
+  {
+   "n": 52,
+   "k": "m52",
+   "title": "Find the door to Lincoln's",
+   "theme": "drink",
+   "paragraph": "Every drink at Lincoln's is $5, it's cash only, and the basement entrance is deliberately unmarked. It's a speakeasy that runs on word of mouth, and the flat $5 pricing hasn't budged, which in this decade qualifies as a public service. Start the evening with dinner at Leunig's Bistro & Café at 115 Church Street, a French-style bistro whose wine list is better than the prices suggest, then go looking for the door. Bring cash, because Lincoln's won't take anything else, and plan on staying into the late night. Consider this your word.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "lincolns",
+     "name": "Lincoln's",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "leunigs-bistro",
+     "name": "Leunig's Bistro & Café",
+     "url": "https://www.leunigs.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Find the door to Lincoln's"
+  },
+  {
+   "n": 53,
+   "k": "m53",
+   "title": "Catch live jazz over a pastrami at Deli 126",
+   "theme": "culture",
+   "paragraph": "Deli 126 is one part New York deli and one part 1920s cocktail lounge, with live jazz regularly, cocktails that commit to the era, and lighting that flatters everyone. It's the only room in town where live jazz and a proper pastrami coexist on purpose. Make a night of it by catching a show at the Flynn Center, the 1,400-seat Art Deco theater from 1930 at 153 Main Street, then heading to Deli 126 for a late pastrami and a drink, with a live band on the right night. It runs evenings and late night, so there's no rush once the show lets out.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "deli-126",
+     "name": "Deli 126",
+     "url": "https://www.deli126vt.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "flynn-center",
+     "name": "Flynn Center for the Performing Arts",
+     "url": "https://www.flynncenter.org",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Live jazz and a pastrami at Deli 126"
+  },
+  {
+   "n": 54,
+   "k": "m54",
+   "title": "Play the vintage cabinets at the Archives",
+   "theme": "play",
+   "paragraph": "Dozens of arcade games and pinball machines fill the Archives, a dim downtown bar on N. Winooski Avenue where the games actually work and no quarters are needed. The selection is curated, with machines that haven't been in wide circulation since the '80s next to well-maintained modern cabinets, and drinks run $6 to 12. Pair it with a show at the Vermont Comedy Club at 101 Main Street, which runs Thursday through Sunday plus a free open mic Wednesday, with tickets $10 to 25. The local showcases on Thursdays are often the better shows, so catch one, then settle in at the Archives with a craft beer and chase a high score.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "archives-bar",
+     "name": "The Archives",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "vermont-comedy-club",
+     "name": "Vermont Comedy Club",
+     "url": "https://www.vermontcomedyclub.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "archives-bar",
+     "to": "vermont-comedy-club",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Play the vintage cabinets at the Archives"
+  },
+  {
+   "n": 55,
+   "k": "m55",
+   "title": "Play unlimited pinball at the Pinball Co-op",
+   "theme": "play",
+   "paragraph": "Around forty pristine pinball machines, one flat fee of about $20, and unlimited play: that's the deal at the Pinball Co-op in South Burlington, open Wednesday and Friday evenings. It's volunteer-run and alcohol-free, and every machine works because the people who play there maintain them. Fuel up first at Al's French Fries on Williston Road, a South Burlington spot running since 1948, where the fries are fresh-cut and the soft-serve is mandatory. Then head to the co-op and settle in for an evening of play, since one fee covers it all. The whole place runs on enthusiasm.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "pinball-coop",
+     "name": "The Pinball Co-op",
+     "url": "",
+     "neighborhood": "South Burlington",
+     "nearby": false
+    },
+    {
+     "id": "als-french-fries",
+     "name": "Al's French Fries",
+     "url": "",
+     "neighborhood": "South Burlington",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Discover the Pinball Co-op"
+  },
+  {
+   "n": 56,
+   "k": "m56",
+   "title": "Climb the walls at Petra Cliffs",
+   "theme": "play",
+   "paragraph": "Lead walls at Petra Cliffs reach 45 feet, tall enough to humble experienced climbers, and the intro lesson program is the right entry point for true beginners. It's Burlington's only indoor climbing gym, at 105 Morse Place in the South End, with walls for every level and a day pass with gear rental around $25 to 35. Youth programs mean half the county's kids pass through. Afterward, head over to Flynn Avenue for a pint at Switchback Brewing, an unfussy warehouse taproom at number 160 that still makes its beer unfiltered, and look for the World's Tallest Filing Cabinet on the same street, 38 drawers stacked 38 feet high.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "petra-cliffs",
+     "name": "Petra Cliffs Climbing Center",
+     "url": "https://www.petracliffs.com",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "worlds-tallest-filing-cabinet",
+     "name": "World's Tallest Filing Cabinet",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": true
+    },
+    {
+     "id": "switchback-brewing",
+     "name": "Switchback Brewing Co.",
+     "url": "https://www.switchbackvt.com",
+     "neighborhood": "South End",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "petra-cliffs",
+     "to": "worlds-tallest-filing-cabinet",
+     "km": 1.7,
+     "mode": "walk",
+     "min": 30
+    },
+    {
+     "from": "worlds-tallest-filing-cabinet",
+     "to": "switchback-brewing",
+     "km": 0.0,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Climb the walls at Petra Cliffs"
+  },
+  {
+   "n": 57,
+   "k": "m57",
+   "title": "Skate the park Tony Hawk endorsed",
+   "theme": "play",
+   "paragraph": "Good bowls and transitions and an Adirondack backdrop from the halfpipe make the Andy A-Dog Williams Skatepark a world-class concrete park right on the lake. It's named for local DJ Andy 'A-Dog' Williams, whose death galvanized the community to build a permanent public park, and Tony Hawk himself endorsed it. It sits on the Greenway, the paved car-free path along the waterfront, so when you're done skating, roll along the path to Waterfront Park off College Street. The yellow porch swings there face west over the lake, and they deliver at sunset every clear evening. The skatepark is a spring through fall spot.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "andy-adog-skatepark",
+     "name": "Andy A-Dog Williams Skatepark",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "burlington-greenway",
+     "name": "Burlington Bike Path (The Greenway)",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": true
+    },
+    {
+     "id": "waterfront-park",
+     "name": "Waterfront Park",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "andy-adog-skatepark",
+     "to": "burlington-greenway",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    },
+    {
+     "from": "burlington-greenway",
+     "to": "waterfront-park",
+     "km": 0.2,
+     "mode": "walk",
+     "min": 3
+    }
+   ],
+   "top100": "Skate the park Tony Hawk endorsed"
+  },
+  {
+   "n": 58,
+   "k": "m58",
+   "title": "Catch a double feature at the Sunset Drive-In",
+   "theme": "culture",
+   "paragraph": "Per-car admission runs about $12 at the Sunset Drive-In on Roosevelt Highway in Colchester, one of a handful of operating drive-ins left in New England. It shows double features on weekends, the audio comes through your AM radio, and the concession stand has actual popcorn. Make a day of it in Colchester by hiking at Niquette Bay State Park first, where trails run through old forest and meadows to cobbled Lake Champlain beaches and the Lone Tree Hill loop takes about an hour, finishing at the water. Then pack the car, drive over for the evening show, tune the radio, and do summer the way it used to work.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "sunset-drive-in",
+     "name": "Sunset Drive-In",
+     "url": "",
+     "neighborhood": "Colchester",
+     "nearby": false
+    },
+    {
+     "id": "niquette-bay-state-park",
+     "name": "Niquette Bay State Park",
+     "url": "",
+     "neighborhood": "Colchester",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "sunset-drive-in",
+     "to": "niquette-bay-state-park",
+     "km": 12.4,
+     "mode": "drive",
+     "min": 30
+    }
+   ],
+   "top100": "Double feature at the Sunset Drive-In"
+  },
+  {
+   "n": 59,
+   "k": "m59",
+   "title": "See a free movie, or a mystery one",
+   "theme": "free",
+   "paragraph": "Required Viewing posts a three-word clue and doesn't tell you the movie until it starts, screening a guest curator's pick for free at the Spiral House, 19 Church Street, on the second and fourth Mondays. That's one free film night. Main Street Landing Film House adds another, with free classic screenings Tuesday evenings in a restored waterfront building on the ferry dock at 1 Main Street, cycling through black-and-whites, foreign film and documentaries. The same building's screening room hosts monthly international films from the Vermont International Film Festival, plus the festival itself every fall. Burlington's film scene is a genuine bargain, so pick a week and catch more than one.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "main-street-film-house",
+     "name": "Main Street Landing Film House",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "vtiff",
+     "name": "Vermont International Film Festival",
+     "url": "https://vtiff.org",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "required-viewing",
+     "name": "Required Viewing (Mystery Movie Club)",
+     "url": "https://www.instagram.com/requiredviewing_movieclub/",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "See a movie for free (or a mystery one)"
+  },
+  {
+   "n": 60,
+   "k": "m60",
+   "title": "Order the mock eel at A Single Pebble",
+   "theme": "eat",
+   "paragraph": "The mock eel at A Single Pebble is crispy shiitake with no eel involved, and it has been converting skeptics on faith for twenty years. The restaurant does Chinese banquet-style dining in a Bank Street rowhouse, built for sharing, so bring a full table and share everything. Make the eel the first thing you order and let the table argue about the rest. Afterward, head to the Ben & Jerry's scoop shop at 82 Church Street for dessert, a few blocks from the gas station on St. Paul Street where Ben and Jerry started in 1978. The soft-serve is better than expected.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "a-single-pebble",
+     "name": "A Single Pebble",
+     "url": "https://asinglepebble.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "ben-jerrys-church-street",
+     "name": "Ben & Jerry's (Church Street Scoop Shop)",
+     "url": "https://www.benjerry.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Order the mock eel at A Single Pebble"
+  },
+  {
+   "n": 61,
+   "k": "m61",
+   "title": "Do a proper sit-down night on Church Street",
+   "theme": "eat",
+   "paragraph": "Leunig's Bistro & Café at 115 Church Street has been the see-and-be-seen classic for decades, and its outdoor café seating on the pedestrian mall is among the best people-watching positions in the city. Start there with a glass from a wine list that's better than the prices suggest, then walk over to Farmhouse Tap & Grill at 160 Bank Street for dinner. Suppliers are named on the menu, most within thirty miles, and the beef burger is the standard Burlington burgers get measured against, at $16 to 20. Its beer list and winter basement fireplace make Farmhouse the year-round fallback that never misses, so on a cold night you can skip straight there.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "leunigs-bistro",
+     "name": "Leunig's Bistro & Café",
+     "url": "https://www.leunigs.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "farmhouse-tap-grill",
+     "name": "Farmhouse Tap & Grill",
+     "url": "https://www.farmhousetg.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "leunigs-bistro",
+     "to": "farmhouse-tap-grill",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Do a proper sit-down night on Church Street"
+  },
+  {
+   "n": 62,
+   "k": "m62",
+   "title": "Warm up over a bowl of ramen",
+   "theme": "eat",
+   "paragraph": "Rich tonkotsu at Gaku Ramen is exactly what a Vermont February demands at 6 PM, and the January line out the door makes the case better than we can. It's proper ramen downtown in a busy room, the reliable answer to the coldest nights of the year. Get in line, warm up over a bowl, then settle into a booth at Vermont Pub & Brewery at 144 College Street, the state's original brewpub, opened in 1988 by Greg Noonan. The booths in back are older than most of the state's craft breweries. It's the meal and the pint that turn a cold night around.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "gaku-ramen",
+     "name": "Gaku Ramen",
+     "url": "https://gakuramen.com/burlington",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "vermont-pub-brewery",
+     "name": "Vermont Pub & Brewery",
+     "url": "https://www.vermontbrewery.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Warm up over a bowl of ramen"
+  },
+  {
+   "n": 63,
+   "k": "m63",
+   "title": "Join the 3 AM kabob line",
+   "theme": "eat",
+   "paragraph": "Ahli Baba's Kabob Shop stays open until 3 AM on Friday and Saturday, which makes the Main Street counter the last honest meal standing between downtown and tomorrow. Kountry Kart Deli is the other half of the closing-time tradition, a downtown grab-and-go institution that's fast at noon and open late. Both have absorbed decades of Burlington's closing-time hunger, and nothing about either has changed in years, which is precisely the appeal. Pick one at the end of the night, or do the kabob first and save Kountry Kart for the morning-after recovery. Ask any former UVM student about Ahli Baba's and watch their face change.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "ahli-babas",
+     "name": "Ahli Baba's Kabob Shop",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "kountry-kart-deli",
+     "name": "Kountry Kart Deli",
+     "url": "https://kountrykartdeli.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Join the 3 AM kabob line"
+  },
+  {
+   "n": 64,
+   "k": "m64",
+   "title": "Have a real diner morning",
+   "theme": "eat",
+   "paragraph": "Henry's Diner has held down Bank Street since the 1920s, with booths, big breakfasts, and coffee refills that arrive before you ask. It's a century-old diner that still works as one, not as a theme, and the regulars are real. The Parkway Diner is the other real diner morning, a genuine 1950s stainless-steel diner car out on Williston Road in South Burlington, restored and cooking, chrome and all. It's one of the few authentic manufactured diner cars left in Vermont. They're a drive apart, so pick your morning, downtown at Henry's or out at the Parkway. Either way it's big breakfasts, bottomless coffee, zero irony.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "henrys-diner",
+     "name": "Henry's Diner",
+     "url": "https://henrysdinervt.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "parkway-diner",
+     "name": "The Parkway Diner",
+     "url": "https://www.parkwaydinervt.com",
+     "neighborhood": "South Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Have a real diner morning"
+  },
+  {
+   "n": 65,
+   "k": "m65",
+   "title": "Do the coffee crawl",
+   "theme": "drink",
+   "paragraph": "Muddy Waters is all wood, plants and low light, a Main Street coffee cave made for reading a book in the corner, and it's the right first stop. Stay downtown for August First, the bakery-café that famously banned laptops, where the bread program is the real draw and lunch is an actual conversation. Onyx Tonics pours the most technically serious cup in the city, and baristas elsewhere drink their coffee there. Then make your way to Pine Street in the South End for Speeder & Earl's, Pine Street's original coffee roaster, with deep roasts and longtime regulars, and finish at Scout & Company, where coffee and house-made ice cream meet in the affogato.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "muddy-waters",
+     "name": "Muddy Waters",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "august-first",
+     "name": "August First Bakery & Café",
+     "url": "https://www.augustfirstvt.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "onyx-tonics",
+     "name": "Onyx Tonics Specialty Coffee",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "speeder-and-earls",
+     "name": "Speeder & Earl's",
+     "url": "https://www.speederandearls.com",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "scout-and-company",
+     "name": "Scout & Company",
+     "url": "https://scoutvt.com",
+     "neighborhood": "South End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Do the coffee crawl"
+  },
+  {
+   "n": 66,
+   "k": "m66",
+   "title": "Climb Ethan Allen Tower",
+   "theme": "outdoors",
+   "paragraph": "A 1905 stone observation tower sits on the hilltop at Ethan Allen Park, and the short walk up rewards you with sweeping views of the city, the lake and the mountains, the best effort-to-view ratio in Burlington. The 67-acre New North End park off Ethan Allen Parkway also has forested trails, and tower access is seasonal, so plan for spring through fall. On a summer day, drive over to North Beach on Institute Road afterward for a swim. It has lifeguards, a concession stand and a view of the Adirondacks across forty miles of water, but it hits capacity on hot August weekends by 11 AM, so climb early.",
+   "needs_check": true,
+   "check_note": "Computed legs put North Beach and the Homestead 0.4 km from Ethan Allen Park; the addresses (Ethan Allen Parkway, 60 Institute Road, 1 ATP Drive) look farther apart, so the copy says drive to North Beach and skips the Homestead.",
+   "places": [
+    {
+     "id": "ethan-allen-park",
+     "name": "Ethan Allen Park",
+     "url": "",
+     "neighborhood": "New North End",
+     "nearby": false
+    },
+    {
+     "id": "north-beach",
+     "name": "North Beach",
+     "url": "",
+     "neighborhood": "New North End",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "ethan-allen-park",
+     "to": "north-beach",
+     "km": 0.4,
+     "mode": "walk",
+     "min": 7
+    }
+   ],
+   "top100": "Climb Ethan Allen Tower"
+  },
+  {
+   "n": 67,
+   "k": "m67",
+   "title": "Tour Ethan Allen's homestead",
+   "theme": "culture",
+   "paragraph": "Ethan Allen's farmhouse sits in the Intervale, and the homestead around it is genuinely preserved rather than reconstructed, with a museum, a recreated Abenaki village and daily guided tours in season. Adult admission is about $6, and the grounds are free to walk, including trails down to the Winooski River. The history is more nuanced than the legend, which makes the tour worth taking. Afterward, stay in the floodplain and head to the Intervale Center on Intervale Road, where three hundred sixty acres of working organic farms and public trails thread along the same river. The homestead is a spring through fall outing, best in the morning or afternoon.",
+   "needs_check": true,
+   "check_note": "The farmhouse year conflicts: the Top 100 body says 1785, the place blurb says 1787, so the copy names no year; also confirm the recreated Abenaki village (body only) still stands.",
+   "places": [
+    {
+     "id": "ethan-allen-homestead",
+     "name": "Ethan Allen Homestead Museum",
+     "url": "https://www.ethanallenhomestead.org",
+     "neighborhood": "New North End",
+     "nearby": false
+    },
+    {
+     "id": "intervale-center",
+     "name": "Intervale Center",
+     "url": "https://www.intervale.org",
+     "neighborhood": "New North End",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "ethan-allen-homestead",
+     "to": "intervale-center",
+     "km": 2.0,
+     "mode": "drive",
+     "min": 5
+    }
+   ],
+   "top100": "Tour the Revolutionary hero's homestead"
+  },
+  {
+   "n": 68,
+   "k": "m68",
+   "title": "Walk the Intervale's farm trails",
+   "theme": "outdoors",
+   "paragraph": "Three hundred sixty acres of working organic farms and public trails thread through the Winooski River floodplain at the Intervale Center, 180 Intervale Road, all inside city limits and about ten minutes from Church Street. It's an actively farmed agricultural center, not a demonstration garden, so the trails pass through real growing land and along a river corridor most Burlington residents have never walked. The paths are flat and scenic. Come on an autumn morning, when fog settles in the basin and is worth setting an alarm for, or in summer, when the weekly CSA market draws locals. In winter, bring cross-country skis.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "intervale-center",
+     "name": "Intervale Center",
+     "url": "https://www.intervale.org",
+     "neighborhood": "New North End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Walk the Intervale's farm trails"
+  },
+  {
+   "n": 69,
+   "k": "m69",
+   "title": "Take the sunset walk nobody knows about",
+   "theme": "outdoors",
+   "paragraph": "Victorian monuments line the paths at Lakeview Cemetery, a garden cemetery on North Avenue where the walks run along the lake bluffs, and it's one of the most under-visited sunset walks in the city. It works exactly the way 19th-century garden cemeteries were designed to, as public green space, and locals walk and watch the sunset here without it ever feeling crowded. On a summer day, spend the afternoon at North Beach on Institute Road first, with its lifeguards, concession stand and a view of the Adirondacks across forty miles of water. Then head to the cemetery as the evening comes on and find a spot along the bluffs.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "lakeview-cemetery",
+     "name": "Lakeview Cemetery",
+     "url": "",
+     "neighborhood": "New North End",
+     "nearby": false
+    },
+    {
+     "id": "north-beach",
+     "name": "North Beach",
+     "url": "",
+     "neighborhood": "New North End",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Take the sunset walk nobody knows about"
+  },
+  {
+   "n": 70,
+   "k": "m70",
+   "title": "Spend an hour at the Fleming",
+   "theme": "culture",
+   "paragraph": "A Rockwell hangs in UVM's art museum, alongside American landscapes, global anthropology and Egyptian antiquities, a collection spanning 4,000 years that you can take in within an hour. The Fleming Museum of Art at 61 Colchester Avenue holds Vermont's most comprehensive collection, and on weekdays you'll have the building nearly to yourself. Adults pay about $5, and UVM students get in free. When you come out, walk the hilltop campus of the University of Vermont, which is open to walk through and has some of the best views of Lake Champlain and the Adirondacks in Burlington. The university has been here since 1791.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "fleming-museum",
+     "name": "Fleming Museum of Art",
+     "url": "https://www.flemingmuseum.org",
+     "neighborhood": "UVM / University",
+     "nearby": false
+    },
+    {
+     "id": "uvm-campus",
+     "name": "UVM Campus (University of Vermont)",
+     "url": "https://www.uvm.edu",
+     "neighborhood": "UVM / University",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "fleming-museum",
+     "to": "uvm-campus",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 2
+    }
+   ],
+   "top100": "Spend an hour at the Fleming"
+  },
+  {
+   "n": 71,
+   "k": "m71",
+   "title": "Read something in the Carnegie reading room",
+   "theme": "free",
+   "paragraph": "The restored reading room at Fletcher Free Library is the best free interior downtown, inside an original Carnegie library that's still doing its everyday job at 235 College Street, just off Church Street. Grab the day's papers or something off the shelves, use the free wifi, and settle in for an hour, especially if it's raining. When you're done reading, walk over to Church Street and the BCA Center at number 135, Burlington City Arts' main gallery, where rotating contemporary shows lean toward New England artists. Admission there is free too, and the work routinely surprises people who walk in off the street.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "fletcher-free-library",
+     "name": "Fletcher Free Library",
+     "url": "https://fletcherfree.org",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "bca-center",
+     "name": "BCA Center",
+     "url": "https://www.burlingtoncityarts.org",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Read something in the Carnegie reading room"
+  },
+  {
+   "n": 72,
+   "k": "m72",
+   "title": "Do the bookstore crawl",
+   "theme": "culture",
+   "paragraph": "Phoenix Books carries a deep Vermont shelf and a steady author-event calendar, and it's where local authors launch, so start the crawl there. Crow Bookshop is a block away on Church Street, the used-side counterpart with creaky floors and staff picks worth trusting, and it's the one where you find the out-of-print thing. From downtown, make your way to Pine Street in the South End for Speaking Volumes, where used books, old maps and vinyl share shelf space and three kinds of collectors get lost in one shop. Get there by afternoon, since that browse rewards patience and punishes schedules.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "phoenix-books",
+     "name": "Phoenix Books",
+     "url": "https://www.phoenixbooks.biz",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "crow-books",
+     "name": "Crow Bookshop",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "speaking-volumes",
+     "name": "Speaking Volumes",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Do the bookstore crawl"
+  },
+  {
+   "n": 73,
+   "k": "m73",
+   "title": "Go on a vintage safari",
+   "theme": "culture",
+   "paragraph": "Mid-century furniture, records and oddities from many sellers fill Barge Canal Market, Pine Street's vintage anchor, where the inventory turns over often enough that regulars check in weekly. Start there, then cross town to North Winooski Avenue in the Old North End for Junktiques Collective, a dig-for-it trove of furniture and oddities with the occasional genuine score priced like nobody checked. Finish with the drive to Five Corners Antiques in Essex, fifteen minutes out, a massive depot where dozens of dealers under one roof make it the county's deepest single antiquing stop. You'll walk in curious and leave two hours later carrying a lamp. Budget double the time you planned.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "barge-canal-market",
+     "name": "Barge Canal Market",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "junktiques",
+     "name": "Junktiques Collective",
+     "url": "",
+     "neighborhood": "Old North End",
+     "nearby": false
+    },
+    {
+     "id": "five-corners-antiques",
+     "name": "Five Corners Antiques",
+     "url": "",
+     "neighborhood": "Essex / Essex Jct",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Go on a vintage safari"
+  },
+  {
+   "n": 74,
+   "k": "m74",
+   "title": "Flip through the record stores",
+   "theme": "culture",
+   "paragraph": "Used vinyl starts at $1 in the crates at Burlington Records, downtown's independent vinyl shop, with an extensive catalog organized by genre and era and new records from $25. The crates reward patience, and the staff have opinions they'll share. Go in the morning, then head to Winooski for Autumn Records at 11 E. Allen Street, which is open noon to 6 daily. It's run by an internationally recognized experimental musician, and the used vinyl, from $3, is curated unlike any other shop in Vermont, alongside new records, CDs, cassettes and turntables. One shop is deep and classic, the other sharp and curated, and vinyl culture is alive in both.",
+   "needs_check": true,
+   "check_note": "Burlington Records' why_special is still a TODO placeholder and its address is only 'Church Street area'; Autumn Records' noon to 6 daily hours are worth confirming before print.",
+   "places": [
+    {
+     "id": "burlington-records",
+     "name": "Burlington Records",
+     "url": "",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "autumn-records",
+     "name": "Autumn Records",
+     "url": "",
+     "neighborhood": "Winooski",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Flip through the record stores"
+  },
+  {
+   "n": 75,
+   "k": "m75",
+   "title": "Build a waterfront picnic from City Market",
+   "theme": "eat",
+   "paragraph": "Sourdough donuts from Ms. Weinerz empty the racks by mid-morning, funkier and chewier than the word donut prepares you for, and City Market stocks them too, so go early. The downtown co-op, also known as Onion River Co-op, is open to everyone, member or not, and its shelves are a tour of Vermont producers: cheese, bread, local beer and picnic supplies. Grab a donut, then assemble the rest of your picnic from the Vermont shelves. When the bag is full, walk four blocks west and eat at the water. The density of local producers makes it a better local-food tour than most actual tours.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "city-market",
+     "name": "City Market / Onion River Co-op",
+     "url": "https://www.citymarket.coop",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "ms-weinerz",
+     "name": "Ms. Weinerz",
+     "url": "",
+     "neighborhood": "Old North End",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Build a waterfront picnic from City Market"
+  },
+  {
+   "n": 76,
+   "k": "m76",
+   "title": "Watch glass being blown at AO Glass",
+   "theme": "culture",
+   "paragraph": "Molten glass gets shaped by hand on the factory floor at AO Glass, 416 Pine Street, and you can watch it free Monday through Saturday, 10 AM to 3 PM. Stay as long as it holds you, then book a hands-on class, about $60 to $90, if you want to make and take home a piece of your own. Back outside, the South End Arts District fills Pine Street's converted industrial buildings with studios and galleries in the back rooms of places that used to make things. Wander down Pine to Citizen Cider at 316, where the Wit's Up is the right first pour for anyone who doesn't usually drink cider.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "ao-glass",
+     "name": "AO Glass",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "south-end-arts-district",
+     "name": "South End Arts District",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": true
+    },
+    {
+     "id": "citizen-cider",
+     "name": "Citizen Cider",
+     "url": "https://www.citizencider.com",
+     "neighborhood": "South End",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "ao-glass",
+     "to": "south-end-arts-district",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    },
+    {
+     "from": "south-end-arts-district",
+     "to": "citizen-cider",
+     "km": 0.1,
+     "mode": "walk",
+     "min": 1
+    }
+   ],
+   "top100": "Watch glass being blown at AO"
+  },
+  {
+   "n": 77,
+   "k": "m77",
+   "title": "Tour the Teddy Bear Hospital",
+   "theme": "family",
+   "paragraph": "Every bear that lands in the Bear Hospital at the Vermont Teddy Bear Factory is there under a lifetime guarantee, waiting to be repaired. The factory tour at 6655 Shelburne Road runs 30 minutes, costs about $5, and walks you past the production floor before that oddly moving hospital stop; building a custom bear costs extra and adds time. Afterward, drive over to Shelburne Farms at 1611 Harbor Road, a 1,400-acre working farm and National Historic Landmark with a children's farmyard, public walking trails, and cheese made and aged on-site. Together they turn a morning tour into a full Shelburne day.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "vermont-teddy-bear",
+     "name": "Vermont Teddy Bear Factory",
+     "url": "https://www.vermontteddybear.com",
+     "neighborhood": "Shelburne",
+     "nearby": false
+    },
+    {
+     "id": "shelburne-farms",
+     "name": "Shelburne Farms",
+     "url": "https://www.shelburnefarms.org",
+     "neighborhood": "Shelburne",
+     "nearby": true
+    }
+   ],
+   "legs": [
+    {
+     "from": "vermont-teddy-bear",
+     "to": "shelburne-farms",
+     "km": 1.9,
+     "mode": "drive",
+     "min": 5
+    }
+   ],
+   "top100": "Tour the Teddy Bear Hospital"
+  },
+  {
+   "n": 78,
+   "k": "m78",
+   "title": "Taste cold-climate wine and wild cider",
+   "theme": "drink",
+   "paragraph": "Marquette reds and La Crescent whites grow right on the property at Shelburne Vineyard, 6308 Shelburne Road, from grapes designed for Vermont winters. Tastings run about $15 to $20 and bottles $18 to $35, and the grounds in September, when harvest is on, make the best case for a fall visit; plan it as a spring through fall stop. Then drive on to Vergennes for an afternoon pour at the Shacksbury Cider Tasting Room, where wild and heritage apples scouted from old Vermont hedgerows become cider that's drier, stranger, and more wine-like than the sweet stuff the word usually promises. Call it the state's other fermentation scene.",
+   "needs_check": true,
+   "check_note": "Shacksbury has no address or hours in the data; confirm the Vergennes tasting room before sending people there.",
+   "places": [
+    {
+     "id": "shelburne-vineyard",
+     "name": "Shelburne Vineyard",
+     "url": "https://www.shelburnevineyard.com",
+     "neighborhood": "Shelburne",
+     "nearby": false
+    },
+    {
+     "id": "shacksbury-cider",
+     "name": "Shacksbury Cider Tasting Room",
+     "url": "https://www.shacksbury.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Taste cold-climate wine and wild cider"
+  },
+  {
+   "n": 79,
+   "k": "m79",
+   "title": "Make the pilgrimage to the Alchemist",
+   "theme": "drink",
+   "paragraph": "Heady Topper, the double IPA that set off the haze craze nationally, comes from The Alchemist in Stowe, and the source is 40 minutes from Burlington. Make the drive in the afternoon, taste at the visitor center, and buy cans to go straight from the brewery, where they never sit long. For beer people this is a pilgrimage, and the bragging rights from buying Heady at the source last forever.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "the-alchemist",
+     "name": "The Alchemist",
+     "url": "https://alchemistbeer.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Make the pilgrimage to the Alchemist"
+  },
+  {
+   "n": 80,
+   "k": "m80",
+   "title": "Run the Waterbury gauntlet of donuts, barbecue and ice cream",
+   "theme": "eat",
+   "paragraph": "A cider donut warm from the fryer at Cold Hollow Cider Mill in Waterbury Center is the only correct way to start, ideally after watching the press run a few feet away. Next comes the Ben & Jerry's Factory Tour at 1281 Waterbury-Stowe Road: 30 minutes on the production floor, a free sample of whatever's being made that day, and the Flavor Graveyard, with tombstones and epitaphs for discontinued pints. Tours run about $5, and summer tours sell out by 10 AM, so book online. Drive on to Prohibition Pig in Waterbury for a late lunch, barbecue with its own brewery attached, smokehouse and brewhouse under one roof.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "cold-hollow-cider-mill",
+     "name": "Cold Hollow Cider Mill",
+     "url": "https://www.coldhollow.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    },
+    {
+     "id": "prohibition-pig",
+     "name": "Prohibition Pig",
+     "url": "https://prohibitionpig.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    },
+    {
+     "id": "ben-jerrys-factory",
+     "name": "Ben & Jerry's Factory Tour",
+     "url": "https://www.benjerry.com/waterbury",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Run the Route 100 gauntlet: cider donuts, Heady, and the Flavor Graveyard"
+  },
+  {
+   "n": 81,
+   "k": "m81",
+   "title": "Drive to the best brewery on Earth",
+   "theme": "drink",
+   "paragraph": "Hill Farmstead Brewery sits on a Greensboro hilltop over an hour from Burlington, and the international rating sites keep naming it the best brewery in the world. That makes the drive a pilgrimage, not an errand, and beer people plan whole trips around it. Check hours before you leave, aim to arrive in the afternoon, bring a cooler for the ride home, and make a Northeast Kingdom day of it.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "hill-farmstead",
+     "name": "Hill Farmstead Brewery",
+     "url": "https://hillfarmstead.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Drive to the best brewery on Earth"
+  },
+  {
+   "n": 82,
+   "k": "m82",
+   "title": "Drink a lager where the Sound of Music family landed",
+   "theme": "drink",
+   "paragraph": "Yes, the Sound of Music family: the von Trapps settled in Stowe after the story everyone knows, and their lodge now brews Austrian-style lagers. Order one in the timber bierhall at Trapp Family Lodge, where the mountain views do half the work, and settle in for a long afternoon or an evening. Come in winter and the cross-country ski trails complete the alpine cosplay, skis first and lager after. Where else does a world-famous family story end in a genuinely good lager?",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "von-trapp-bierhall",
+     "name": "Trapp Family Lodge & Bierhall",
+     "url": "https://www.vontrappbrewing.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Drink a lager where the Sound of Music family landed"
+  },
+  {
+   "n": 83,
+   "k": "m83",
+   "title": "Jump into the Bolton Potholes",
+   "theme": "water",
+   "paragraph": "Joiner Brook drops through a staircase of natural stone bowls and small falls at the Bolton Potholes, about 25 minutes east of Burlington, and several of them connect in a row, where most swimming holes give you one. It's the classic Vermont swimming hole and a summer outing, best on a weekday or early in the morning, since parking is tight and the locals know. Always check the depth before you jump.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "bolton-potholes",
+     "name": "Bolton Potholes",
+     "url": "",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Jump into the Bolton Potholes"
+  },
+  {
+   "n": 84,
+   "k": "m84",
+   "title": "Swim behind the curtain at Bristol Falls",
+   "theme": "water",
+   "paragraph": "On a good-flow day at Bristol Falls, also called Bartlett Falls, you can swim behind the curtain of a broad waterfall on the New Haven River, then drop back into the deep pool below. It's in Bristol, forty minutes south of Burlington, and worth every one of those minutes in July. Make it a summer morning or afternoon, pick a day when the water is running well, and come home with a permanent memory.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "bristol-falls",
+     "name": "Bristol Falls (Bartlett Falls)",
+     "url": "",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Swim behind the curtain at Bristol Falls"
+  },
+  {
+   "n": 85,
+   "k": "m85",
+   "title": "Float a lazy river in a tube",
+   "theme": "water",
+   "paragraph": "A 90-degree Vermont afternoon has one correct answer: rent a tube from Umiak's Waterbury or Richmond outpost and float a lazy stretch of river. The shuttle is included, so they drop you upstream and the river does everything else, which is the whole appeal. It's a summer outing that works in the morning or the afternoon, and it asks nothing of you beyond showing up and getting in.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "umiak-tubing",
+     "name": "River Tubing with Umiak",
+     "url": "https://www.umiak.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Float a lazy river in a tube"
+  },
+  {
+   "n": 86,
+   "k": "m86",
+   "title": "Paddle out from the Surf Club",
+   "theme": "water",
+   "paragraph": "Paddleboard and windsurf rentals wait at the bottom of Lakeside Avenue, where the Burlington Surf Club runs the closest thing this city has to actual surf culture, on a lake, and commits to the bit. Rentals are open to members and non-members, so take a board out, then come back to sand, music, and a drink. It's a summer spot that works morning, afternoon, or evening. When you're hungry, drive over to Bluebird Barbecue at 317 Riverside Avenue, for long-smoked brisket and house-made sides at outdoor picnic tables. Get there before the brisket sells out.",
+   "needs_check": true,
+   "check_note": "The Surf Club has no street address in the data, so the drive to Bluebird on Riverside Avenue is unverified.",
+   "places": [
+    {
+     "id": "burlington-surf-club",
+     "name": "Burlington Surf Club",
+     "url": "https://www.burlingtonsurfclub.com",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "bluebird-bbq",
+     "name": "Bluebird Barbecue",
+     "url": "https://www.bluebirdbbq.com",
+     "neighborhood": "South End",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Paddle out from the Surf Club"
+  },
+  {
+   "n": 87,
+   "k": "m87",
+   "title": "Drop in on a dragon boat Saturday",
+   "theme": "water",
+   "paragraph": "Twenty paddlers share one dragon boat when the Malia Paddling Club heads out from the Community Sailing Center, and its Saturday morning recreational sessions welcome drop-ins, with gear and instruction included. Yes, you can really just show up and paddle on Lake Champlain, and most people never learn this is allowed. It's a summer thing, so plan around a warm Saturday. Afterward, head to The Skinny Pancake at 60 Lake Street for sweet and savory crepes made with local ingredients; the patio tables fill up by noon in summer, so go straight from the water.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "malia-dragon-boating",
+     "name": "Dragon Boating (Malia Paddling Club)",
+     "url": "http://www.maliaracing.com/",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "skinny-pancake",
+     "name": "The Skinny Pancake",
+     "url": "https://www.skinnypancake.com",
+     "neighborhood": "Waterfront",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Drop in on a dragon boat Saturday"
+  },
+  {
+   "n": 88,
+   "k": "m88",
+   "title": "Sweat, then jump in the lake at Savu",
+   "theme": "water",
+   "paragraph": "Private wood-fired saunas sit by the lake near Hula at Savu Sauna, where you book a session ahead and alternate rounds of heat with cold plunges. In deep winter the plunge becomes a jump into the actual frozen lake, a real Nordic hot-cold cycle ten minutes from downtown, if you've got the nerve. Sessions run morning, afternoon, or evening, all year. If you'd rather make a whole day of it, the Essex Resort & Spa in Essex is the plush alternative, with treatments, pools, and two on-site restaurants: less a treatment than an itinerary.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "savu-sauna",
+     "name": "Savu Sauna",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "essex-resort-spa",
+     "name": "The Essex Resort & Spa",
+     "url": "https://www.essexresort.com",
+     "neighborhood": "Essex / Essex Jct",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Sweat, then jump in the lake at Savu"
+  },
+  {
+   "n": 89,
+   "k": "m89",
+   "title": "Take small kids to Sand Bar",
+   "theme": "family",
+   "paragraph": "Waist-deep water a long way out is the whole draw at Sand Bar State Park in Milton, where a natural sandbar makes this the warmest, shallowest swimming on this side of the lake. That long shallow shelf means small kids can actually play in open Lake Champlain water without anyone hovering, which makes it the calmest family beach in the area. It's twenty minutes north of Burlington, a summer morning or afternoon trip, with a day-use fee per person.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "sandbar-state-park",
+     "name": "Sand Bar State Park",
+     "url": "https://vtstateparks.com/sandbar.html",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Take small kids to Sand Bar"
+  },
+  {
+   "n": 90,
+   "k": "m90",
+   "title": "Find your quiet trail",
+   "theme": "outdoors",
+   "paragraph": "Sixty-five acres of hemlock forest sit tucked behind UVM at Centennial Woods, with a boardwalk over a kettle pond and birdlife you'd expect in more remote terrain. In Colchester, the gentle loop at Colchester Pond circles a shoreline with no houses in view, Sunny Hollow's pine singletrack is kept in shockingly good shape by the Fellowship of the Wheel, and Niquette Bay State Park's Lone Tree Hill loop takes about an hour before finishing at a cobbled Lake Champlain beach, with a day-use fee around $5. Out in Huntington, the Green Mountain Audubon Center has beaver ponds and a working sugarbush. Pick one; none of them draws a crowd.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "centennial-woods",
+     "name": "Centennial Woods Natural Area",
+     "url": "",
+     "neighborhood": "UVM / University",
+     "nearby": false
+    },
+    {
+     "id": "colchester-pond",
+     "name": "Colchester Pond Natural Area",
+     "url": "",
+     "neighborhood": "Colchester",
+     "nearby": false
+    },
+    {
+     "id": "sunny-hollow",
+     "name": "Sunny Hollow Natural Area",
+     "url": "",
+     "neighborhood": "Colchester",
+     "nearby": false
+    },
+    {
+     "id": "niquette-bay-state-park",
+     "name": "Niquette Bay State Park",
+     "url": "",
+     "neighborhood": "Colchester",
+     "nearby": false
+    },
+    {
+     "id": "audubon-vermont",
+     "name": "Green Mountain Audubon Center",
+     "url": "https://vt.audubon.org",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Find your quiet trail"
+  },
+  {
+   "n": 91,
+   "k": "m91",
+   "title": "Ski Bolton under the lights",
+   "theme": "winter",
+   "paragraph": "Leave Burlington after work and you can be on a lit trail by six at Bolton Valley Resort, the locals' ski hill about 35 minutes out. It's smaller and cheaper than the famous names, with lift tickets well under the big resorts, night skiing under the lights, and a backcountry program that outclasses its size. For the flatland version, head to the Catamount Outdoor Family Center in Williston, where groomed fat-bike and snowshoe loops take over once the snow lands, with a trail-use fee and rentals available. It's what keeps Burlington runners and riders sane in February.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "bolton-valley",
+     "name": "Bolton Valley Resort",
+     "url": "https://www.boltonvalley.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    },
+    {
+     "id": "catamount-outdoor-center",
+     "name": "Catamount Outdoor Family Center",
+     "url": "",
+     "neighborhood": "Williston",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Ski Bolton under the lights"
+  },
+  {
+   "n": 92,
+   "k": "m92",
+   "title": "Walk on the lake to the sea caves",
+   "theme": "winter",
+   "paragraph": "For only a few weeks a year, when the lake builds a floor, you can walk over solid ice to the Donahue Sea Caves in the cliffs near the Winooski River delta. Locals wait for a long stretch of hard cold, then go, never early in the season and never alone. This is a place for real judgment, reachable only when the lake is solidly frozen. If the ice isn't there yet, stay in the New North End and skate at Leddy Park Arena, 216 Leddy Park Road, where public skating sessions and rentals at the counter make it a zero-gear outing.",
+   "needs_check": true,
+   "check_note": "Safety-sensitive: the data gives no access point or ice guidance beyond 'solidly frozen'; worth Stephen's read before print.",
+   "places": [
+    {
+     "id": "donahue-sea-caves",
+     "name": "Donahue Sea Caves (Winter)",
+     "url": "",
+     "neighborhood": "New North End",
+     "nearby": false
+    },
+    {
+     "id": "leddy-arena",
+     "name": "Leddy Park Arena (Gordon H. Paquette Ice Arena)",
+     "url": "",
+     "neighborhood": "New North End",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Walk on the lake to the sea caves"
+  },
+  {
+   "n": 93,
+   "k": "m93",
+   "title": "Take the boardwalk to the river's mouth at Delta Park",
+   "theme": "outdoors",
+   "paragraph": "A short boardwalk at Delta Park winds through flooded silver-maple forest and ends at the sandy point where the Winooski River empties into Lake Champlain. River-delta wetlands like this are rare on Champlain, and here you stand in the middle of one with dry feet. It's free, it's one of the county's best birding sites, with herons, waterfowl, and spring migrants, and it connects straight onto the bike path near the causeway. Find it off Windemere Way in Colchester, then drive to Village Scoop, Colchester's creemee-and-scoop window and the after-anything stop for the north end of the county.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "delta-park",
+     "name": "Delta Park",
+     "url": "https://www.wvpd.org/delta-park",
+     "neighborhood": "Colchester",
+     "nearby": false
+    },
+    {
+     "id": "village-scoop",
+     "name": "Village Scoop",
+     "url": "",
+     "neighborhood": "Colchester",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Take the boardwalk to the river's mouth at Delta Park"
+  },
+  {
+   "n": 94,
+   "k": "m94",
+   "title": "Drive Smugglers' Notch before winter closes it",
+   "theme": "outdoors",
+   "paragraph": "Route 108 squeezes through a thousand-foot cleft between Mount Mansfield and Spruce Peak in hairpins so tight that trucks are banned, and winter closes it to cars entirely, so go in summer or fall. The road runs between Stowe and Jeffersonville, about 40 minutes from Burlington, and driving it is free. Park at the height of land and scramble among the house-sized boulders that hid smugglers during the 1807 embargo and bootleggers a century later. Foliage season through the Notch is a rite of passage.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "smugglers-notch-drive",
+     "name": "Smugglers' Notch (Route 108)",
+     "url": "https://vtstateparks.com/smugglers.html",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Drive the Notch while it's open"
+  },
+  {
+   "n": 95,
+   "k": "m95",
+   "title": "Learn to ski where Olympians did at Cochran's",
+   "theme": "winter",
+   "paragraph": "Barbara Ann Cochran's 1972 Olympic gold and Ryan Cochran-Siegle's 2022 silver both started on one small hill in Richmond. Cochran's Ski Area, at 910 Cochran Road, is a nonprofit community hill run by the Cochran family since 1961, with surface lifts, lift tickets at a fraction of resort prices, and half of Chittenden County's kids learning to turn. It's twenty-five minutes from downtown and best on a winter afternoon or evening. This is skiing as a community utility: cheap, volunteer-powered, and zero attitude.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "cochrans-ski-area",
+     "name": "Cochran's Ski Area",
+     "url": "https://cochranskiarea.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Learn to ski where Olympians did at Cochran's"
+  },
+  {
+   "n": 96,
+   "k": "m96",
+   "title": "Ride the dinner train down the valley",
+   "theme": "eat",
+   "paragraph": "White tablecloths, vintage rail cars, and a new view every ten minutes: the Champlain Valley Dinner Train serves dinner aboard a train rolling south along the lake and through the Champlain Valley, so the scenery changes courses with the meal. It runs evenings on a seasonal schedule in summer and fall, and you'll need to book ahead. Before you board, grab a hazy IPA on the patio at Foam Brewers, 112 Lake Street, where the Vacation IPA is a reliable starting point and the light off the lake is still good on a warm evening.",
+   "needs_check": true,
+   "check_note": "The data doesn't say where the train boards; the Foam pairing assumes a Burlington waterfront departure (neighborhood field only).",
+   "places": [
+    {
+     "id": "champlain-valley-dinner-train",
+     "name": "Champlain Valley Dinner Train",
+     "url": "",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "foam-brewers",
+     "name": "Foam Brewers",
+     "url": "https://foambrewers.com",
+     "neighborhood": "Waterfront",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Ride the dinner train down the valley"
+  },
+  {
+   "n": 97,
+   "k": "m97",
+   "title": "Take the ghost walk",
+   "theme": "culture",
+   "paragraph": "Fires, hauntings, and the stories the historical markers skip make up Queen City Ghostwalk, a guided evening walk through Burlington's darker record. It's real local history dressed as a ghost story, and you leave knowing more about the city than most residents. Plan it for summer or fall, and book ahead in October, when everyone has the same idea. Afterward, stay downtown for a pint at Vermont Pub & Brewery, 144 College Street, the state's original brewpub, opened in 1988 by Greg Noonan, where the booths in back are older than most of the state's craft breweries.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "queen-city-ghost-walk",
+     "name": "Queen City Ghostwalk",
+     "url": "https://queencityghostwalk.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": false
+    },
+    {
+     "id": "vermont-pub-brewery",
+     "name": "Vermont Pub & Brewery",
+     "url": "https://www.vermontbrewery.com",
+     "neighborhood": "Downtown / Church St",
+     "nearby": true
+    }
+   ],
+   "legs": [],
+   "top100": "Take the ghost walk"
+  },
+  {
+   "n": 98,
+   "k": "m98",
+   "title": "Hunt the niche museums",
+   "theme": "culture",
+   "paragraph": "More than 500 hand-carved wooden birds, each painted and posed in its habitat by woodcarver Bob Spear, fill the Birds of Vermont Museum in Huntington, about $7 for adults with the trails free. In Jericho, the Old Red Mill tells the story of Wilson \"Snowflake\" Bentley, the farmer who photographed a single snowflake in 1885, the first person ever to do it. Ferrisburgh has two: the free Lake Champlain Maritime Museum, with shipwreck archaeology and boatbuilders on site, and Rokeby Museum, one of the best-documented Underground Railroad sites in the country. On the islands, the Hyde Log Cabin in Grand Isle dates to 1783. Several are seasonal, so check hours first.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "birds-of-vermont-museum",
+     "name": "Birds of Vermont Museum",
+     "url": "https://www.birdsofvermont.org",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    },
+    {
+     "id": "snowflake-bentley-exhibit",
+     "name": "Snowflake Bentley Exhibit (Old Red Mill)",
+     "url": "https://snowflakebentley.com",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    },
+    {
+     "id": "lc-maritime-museum",
+     "name": "Lake Champlain Maritime Museum",
+     "url": "https://www.lcmm.org",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    },
+    {
+     "id": "rokeby-museum",
+     "name": "Rokeby Museum",
+     "url": "https://rokeby.org",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    },
+    {
+     "id": "hyde-log-cabin",
+     "name": "Hyde Log Cabin",
+     "url": "https://www.gihsvt.org/hyde-log-cabin",
+     "neighborhood": "Greater Burlington",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "Hunt the niche museums"
+  },
+  {
+   "n": 99,
+   "k": "m99",
+   "title": "See small professional theater done right",
+   "theme": "culture",
+   "paragraph": "Vermont Stage has staged contemporary plays at Main Street Landing since 1994, Burlington's professional theater company in a small room with serious work and no bad seats. Its shows run fall through spring, and when summer comes, Saint Michael's Playhouse takes over in Colchester, with Equity actors doing classic plays and musicals on the Saint Michael's campus, one of the last true professional summer-stock houses in the region and ten minutes from downtown. Between them you can catch an evening show almost any time of year, in rooms small enough to watch the actors think.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "vermont-stage",
+     "name": "Vermont Stage",
+     "url": "https://www.vermontstage.org",
+     "neighborhood": "Waterfront",
+     "nearby": false
+    },
+    {
+     "id": "saint-michaels-playhouse",
+     "name": "Saint Michael's Playhouse",
+     "url": "",
+     "neighborhood": "Colchester",
+     "nearby": false
+    }
+   ],
+   "legs": [],
+   "top100": "See small professional theater done right"
+  },
+  {
+   "n": 100,
+   "k": "m100",
+   "title": "Pay your respects to the World's Tallest Filing Cabinet",
+   "theme": "culture",
+   "paragraph": "Finish the list at thirty-eight filing cabinet drawers stacked 38 feet high on Flynn Avenue, the World's Tallest Filing Cabinet, built in 2002 as commentary on bureaucracy. Birds have nested in the top drawers, and local lore says there's treasure up there too. It's entirely underwhelming and completely mandatory. Then collect the next piece of the quirky-landmark set with a drive out to Shelburne, where Jim Sardonis's granite whale tails, \"Reverence,\" rise from a hillside off I-89 South. They commemorate beluga fossils that proved this valley was a saltwater sea 12,000 years ago. They're easy to miss at speed and worth the exit.",
+   "needs_check": false,
+   "places": [
+    {
+     "id": "worlds-tallest-filing-cabinet",
+     "name": "World's Tallest Filing Cabinet",
+     "url": "",
+     "neighborhood": "South End",
+     "nearby": false
+    },
+    {
+     "id": "whale-tails-sculpture",
+     "name": "\"Reverence\" (Whale Tails Sculpture)",
+     "url": "",
+     "neighborhood": "Shelburne",
+     "nearby": false
+    }
+   ],
+   "legs": [
+    {
+     "from": "worlds-tallest-filing-cabinet",
+     "to": "whale-tails-sculpture",
+     "km": 9.6,
+     "mode": "drive",
+     "min": 20
+    }
+   ],
+   "top100": "Pay your respects to the World's Tallest Filing Cabinet"
+  }
+ ]
+}
