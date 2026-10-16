@@ -407,11 +407,13 @@ function drawChallenge(host) {
   card.appendChild(row);
   card.appendChild(el('p', '', esc(g.pitch || '')));
   const go = el('div', 'row');
-  const a = extLink('Host a room in ' + esc(g.name) + ' ' + ICON.ext, playUrl(g.slug));
+  /* the same tab: the arcade is the same network, and the tab bar's #games link brings the reader back */
+  const a = el('a', 'btn', 'Host a room in ' + esc(g.name) + ' ' + ICON.arrow);
+  a.href = playUrl(g.slug);
   a.dataset.host = g.slug;
   go.appendChild(a);
   card.appendChild(go);
-  card.appendChild(el('p', 'fine', esc('On the arcade, tap Play online, then Host, then Send an invite: that’s the link to text. The room is made there so your seat stays yours, and it waits a couple of hours.')));
+  card.appendChild(el('p', 'fine', esc('The game opens on the arcade, where you host a room online and send your neighbor the invite link it gives you.')));
   host.appendChild(card);
   return true;
 }
