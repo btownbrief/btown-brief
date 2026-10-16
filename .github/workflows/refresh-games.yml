@@ -1,0 +1,55 @@
+# Rebuild the arcade catalog the Games tab draws from.
+#
+# What it writes: data/games-catalog.json, the arcade's games.json (slug,
+# name, pitch, section, live and leaderboard flags) plus the day each game
+# first appeared and first went live, read from games.json's own git history
+# in btownbrief/btownbrief.github.io. About 15 KB. See scripts/build_games.py.
+#
+# It commits to main, like the music and missions data: the file changes a
+# few times a month, and same-origin keeps it inside the app's service-worker
+# cache. Because a GITHUB_TOKEN commit fires no `push`, this workflow's name
+# is listed in pages-deploy.yml's workflow_run list. Rename it there too.
+#
+# Failure posture: the arcade repo is public, so no secret is needed. If it
+# cannot be cloned, or reads back with fewer than ten live games, the script
+# keeps the last file, prints a warning and exits 0; nothing is committed.
+
+name: Refresh games catalog
+
+on:
+  schedule:
+    - cron: "35 10 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-games
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the catalog
+        run: python3 scripts/build_games.py
+
+      - name: Commit if it changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/games-catalog.json
+          if git diff --cached --quiet; then
+            echo "No catalog changes."
+          else
+            git commit -m "Auto-refresh games catalog"
+            git push || (git pull --rebase && git push)
+          fi
