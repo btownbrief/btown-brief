@@ -51,6 +51,16 @@ URL). So do part A before the New Nine goes live.
 This also installs What Now's two mission functions (`nn_mission_set`, `nn_missions_done`), so a
 signed-in reader's "Mark done" starts following them across devices.
 
+6. Click **New query** again, open `db/photos-board.sql` from the repo, paste the whole file, and
+   click **Run**. It should also end with "Success. No rows returned." This one teaches the reader
+   photo queue a new kind of photo, `board`, and keeps those out of the community gallery
+   (photos.html) and out of photo of the week. Vintage finds are filed that way: you still
+   approve them in the photo desk, and they show on their Vintage post, but not in the gallery.
+   Art photos join the gallery as before, since the Art wall is where the gallery is moving.
+
+Before step 6 is done, a Vintage post **with a photo** is refused ("That photo didn't go through.
+Try another one."); Vintage posts without a photo, and every Art post, work.
+
 **Before part B is done**, signed-in readers see:
 
 - In Settings, under Your account: "Signed in · Posting is coming soon."
@@ -65,7 +75,11 @@ The passphrase opens `https://guide.btownbrief.com/all-day/mod.html`, the boards
 approve, hide, delete or ban. Photos on board posts are checked where every reader photo is, in
 the photo desk (`photo-admin.html`), so a board post's picture shows once you approve it there.
 
-1. Pick a long passphrase (your password manager's "generate" is perfect) and save it there.
+1. Have your password manager **generate** the passphrase (20 or more random characters) and save
+   it there. Don't make one up. The desk shuts for everyone for 15 minutes after 20 wrong tries,
+   and anyone can make those tries, so a stranger could keep the desk shut for a while by guessing
+   badly on purpose; what they can't do is guess a generated passphrase. That trade is the same
+   one Who's Playing and Up For It make.
 2. In **SQL Editor**, click **New query**.
 3. Paste this one line, put your passphrase between the single quotes in place of
    `YOUR-PASSPHRASE`, and click **Run**:
@@ -83,6 +97,21 @@ the photo desk (`photo-admin.html`), so a board post's picture shows once you ap
 didn't open it." Posts still go up, and two reports still take a post down; it simply waits for
 you until the desk opens. Twenty wrong tries in 15 minutes shut the desk for everyone, you
 included, until they age out.
+
+## One trade-off to know about: the saved sign-in
+
+When a reader signs in, All Day keeps a **refresh token** in the browser so they stay signed in for
+weeks without another email. It is a long random string, not their email or password. Anything
+running inside the All Day page can read it, and two outside scripts do run there: GoatCounter
+(the visit counter) and the Meta Pixel (Facebook's ad tracker). In plain words: if either company
+ever served bad code, or someone broke into them, that code could copy the token and use it to act
+as that reader on the boards (post, vote, report, delete their posts) until the reader signs out
+or the token expires. It could not read their email from it, and it could not touch their inbox.
+
+This is how the standard Supabase sign-in library works on every website too; the only way around
+it is a small server of our own holding the token in a cookie scripts can't read, which All Day
+doesn't have. The cheaper fix, if this ever worries you, is taking the Meta Pixel off the All Day
+page (GoatCounter is a small, privacy-focused counter and the lower risk). Nothing to do today.
 
 ## What readers see, step by step
 
