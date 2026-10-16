@@ -54,6 +54,14 @@ LOCAL_NEWSLETTERS = {
     "vermont-public", "vermont-sports", "vtdigger-dd84",
 }
 VIDEO_HOSTS = ("youtube.com", "youtu.be", "vimeo.com")
+# The newsletter's own edition. It is always in the river (the way Stephen's
+# own events are always in the newsletter) and never judged as junk.
+OWN_SOURCES = {"btown-brief"}
+
+
+def host_of(url):
+    host = re.sub(r"^https?://", "", (url or "").lower()).split("/")[0]
+    return re.sub(r"^(www|m|amp)\.", "", host)
 
 
 def utcnow():
@@ -97,6 +105,12 @@ def wire_items(pulse, now_ts, window_hours):
     nothing here writes a word a reader will see."""
     sources = {source["id"]: source for source in pulse.get("sources") or []
                if isinstance(source, dict) and source.get("id")}
+    # hosts of the outlets the wire already carries: a subreddit post that
+    # only links one of their articles is that article, so the outlet's own
+    # copy is the one that runs (it wears the thread as `discuss`)
+    outlet_hosts = {host_of(source.get("site")) for source in sources.values()
+                    if source.get("site") and "reddit.com" not in source["site"]}
+    outlet_hosts.discard("")
     cutoff = now_ts - window_hours * 3600
     out = []
     for item in pulse.get("items") or []:
@@ -114,12 +128,19 @@ def wire_items(pulse, now_ts, window_hours):
             # ~200 a day. The Reddit chip is the town talking, so only the
             # local subs reach the Wire (the raw wire keeps the rest).
             continue
+        if ch == "reddit" and host_of(item.get("o")) in outlet_hosts:
+            continue
+        own = source["id"] in OWN_SOURCES
+        if own:
+            ch, local = "newsletters", True
         entry = {
             "id": item_id(url), "ch": item.get("ch") or ch,
             "local": bool(item["local"]) if "local" in item else local,
             "src": source["id"], "name": source.get("short") or source.get("name") or source["id"],
             "title": title, "url": url, "posted_at": iso_ts(when), "d": when,
         }
+        if own:
+            entry["own"] = True
         if source.get("site"):
             entry["site"] = source["site"]   # the source sheet's "Open the site"
         if item.get("i"):

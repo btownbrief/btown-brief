@@ -24,8 +24,10 @@ For each item return:
   - `jobs`: job listings and hiring posts (a story about a big employer hiring is news,
     not jobs).
   - `duplicate`: the same story as an item already in today's river (listed under
-    ALREADY IN THE RIVER) or as an earlier item in this same list. Same event, same
-    facts, even if the wording differs. A genuinely new development is not a duplicate.
+    ALREADY IN THE RIVER). Same event, same facts, even if the wording differs. A
+    genuinely new development is not a duplicate. Two items in the NEW list about
+    the same story are NOT duplicates: tag both normally; the editor chooses the best
+    version.
   - `noise`: jokes, memes, horoscopes, quizzes, puzzles, "open thread", recipes of the
     day with no local hook, generic listicles, pure clickbait.
 - **local**: true when the story is about the Burlington area or Vermont as defined

@@ -28,6 +28,7 @@ river's ranking, never its existence.
 CLI:
   --data-dir DIR   wire-data working tree (default data/)
   --pulse PATH     read pulse.json from a file instead of the pulse-data branch
+  --as-of ISO      run as if it were that moment (a labelled backfill)
   --selftest       run the offline checks and exit
 """
 
@@ -36,6 +37,7 @@ import json
 import os
 import sys
 import urllib.request
+from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import wire_common as wc  # noqa: E402
@@ -106,7 +108,8 @@ def river_titles(data_dir):
 
 def untagged(items, store):
     tags = store.get("tags") or {}
-    fresh = [item for item in items if item["id"] not in tags]
+    # the Brief's own edition is never judged (curate_wire always runs it)
+    fresh = [item for item in items if item["id"] not in tags and not item.get("own")]
     # local first, then newest: a capped first run spends itself on the
     # items the page leads with
     fresh.sort(key=lambda item: (not item["local"], -item["d"]))
@@ -165,8 +168,13 @@ def prune(store, now_ts):
                      if isinstance(tag, dict) and tag.get("at", 0) >= cutoff}
 
 
+def as_of(args):
+    value = getattr(args, "as_of", None)
+    return datetime.fromisoformat(value).astimezone(timezone.utc) if value else None
+
+
 def run(args):
-    now = wc.utcnow()
+    now = as_of(args) or wc.utcnow()
     now_ts = int(now.timestamp())
     engine = wc.pick_engine("tag")
     if engine is None:
@@ -268,6 +276,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--data-dir", default=os.path.join(wc.ROOT, "data"))
     parser.add_argument("--pulse")
+    parser.add_argument("--as-of", metavar="ISO",
+                        help="run as if it were this moment (a labelled backfill of an earlier "
+                             "day from the pulse store; costs are still real and logged)")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     if args.selftest:

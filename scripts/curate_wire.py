@@ -52,6 +52,7 @@ is seen. A quiet hour (nothing new worth asking about) still stamps
 CLI:
   --data-dir DIR   wire-data working tree (default data/)
   --pulse PATH     read pulse.json from a file instead of the pulse-data branch
+  --as-of ISO      run as if it were that moment (a labelled backfill)
   --selftest       run the offline checks and exit
 """
 
@@ -75,6 +76,7 @@ RESERVE_DAYS = 7           # nothing in the last week's editions comes back
 KEEP_DAYS = 30             # frozen editions kept on the branch
 RIVER_MAX = 80
 ADD_MAX = 20               # per hourly update
+ADD_MAX_FIRST = 40         # the day's first update can catch up on the night
 PICK_COUNT = 25
 WHY_MAX = 90
 NEW_MAX_LOCAL = 70         # candidates shown to the editor per run
@@ -91,7 +93,7 @@ MAX_TOKENS = {"openrouter": 6000, "anthropic": 16000}
 LABELS = (("morning", "Morning", 0), ("midday", "Midday", 11),
           ("afternoon", "Afternoon", 14), ("evening", "Evening", 18))
 ITEM_KEYS = ("id", "ch", "local", "src", "name", "title", "url", "posted_at",
-             "thumb", "media", "handle", "discuss", "site", "topic", "kind")
+             "thumb", "media", "handle", "discuss", "site", "topic", "kind", "own")
 
 TASK = """
 
@@ -102,8 +104,8 @@ with numbers from those lists and short reasons. You never write, shorten or
 rewrite a headline: the page shows each one exactly as the outlet wrote it.
 
 - `add`: numbers from NEW that earn a place in today's river this hour (at
-  most 20). Leave out what does not earn a place; a passed item does not come
-  back later today.
+  most 20, or 40 when the river is empty). Leave out what does not earn a
+  place; a passed item does not come back later today.
 - `lead` and `lead_why`: the item that leads the current update, from what you
   add this hour or from the current update's items already in the river, with
   a reason in the style of the picks. Use -1 and an empty reason only when
@@ -111,8 +113,9 @@ rewrite a headline: the page shows each one exactly as the outlet wrote it.
 - `drop`: numbers from TODAY'S RIVER to remove, only when the river would pass
   80 items. Otherwise an empty list.
 - `picks`, only when asked for: the ranked "What matters today" list from the
-  river and NEW together, about 15 local and up to 10 national, each with a
-  reason under 90 characters. A pick from NEW is added to the river for you.
+  river and NEW together: 25 picks, about 15 local and up to 10 national,
+  fewer only when the day truly lacks them. Each has a reason under 90
+  characters. A pick from NEW is added to the river for you.
 """
 
 
@@ -367,7 +370,11 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
         index = as_index(value, offset, total)
         if index is not None and index not in adds:
             adds.append(index)
-    adds = adds[:ADD_MAX]
+    adds = adds[:ADD_MAX if numbered_river else ADD_MAX_FIRST]
+    # the Brief's own edition is always in the paper, never the model's call
+    for index in range(offset, total):
+        if by_index[index].get("own") and index not in adds:
+            adds.append(index)
 
     picks, pick_seen = [], set()
     if want_picks:
@@ -516,8 +523,13 @@ def decide(day, state, new, et, now):
     return False, False, "quiet hour"
 
 
+def as_of(args):
+    value = getattr(args, "as_of", None)
+    return datetime.fromisoformat(value).astimezone(timezone.utc) if value else None
+
+
 def run(args):
-    now = wc.utcnow()
+    now = as_of(args) or wc.utcnow()
     now_ts = int(now.timestamp())
     et = wc.et_now(now)
     today = et.date().isoformat()
@@ -604,6 +616,8 @@ def run(args):
     state["considered_today"] = sorted(set(state.get("considered_today", []))
                                        | {item["id"] for item in new})
     finish(day, pulse, now, changed=bool(result["added"] or result["dropped"] or result["picks"]))
+    if as_of(args):
+        day["backfilled"] = True   # replayed later from the pulse store, and says so
     wc.write_json(files["today"], day)
     wc.write_json(files["state"], state)
     local_picks = sum(1 for pick in day["picks"] if pick.get("local"))
@@ -622,6 +636,8 @@ def run(args):
 
 def selftest():
     import tempfile
+
+    os.environ.pop("GITHUB_STEP_SUMMARY", None)   # selftest lines are not a run's costs
 
     now = datetime(2026, 10, 16, 18, 10, tzinfo=timezone.utc)   # 2:10 pm Eastern
     et = wc.et_now(now)
@@ -693,6 +709,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--data-dir", default=os.path.join(wc.ROOT, "data"))
     parser.add_argument("--pulse")
+    parser.add_argument("--as-of", metavar="ISO",
+                        help="run as if it were this moment (a labelled backfill of an earlier "
+                             "day from the pulse store; costs are still real and logged)")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     if args.selftest:

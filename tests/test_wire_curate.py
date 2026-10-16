@@ -4,12 +4,14 @@ the failure posture. The model is always a stub; nothing touches the network.
 Run: python3 -m unittest discover -s tests -p 'test_wire*.py'
 """
 
+import io
 import json
 import os
 import sys
 import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
+from contextlib import redirect_stderr, redirect_stdout
 from types import SimpleNamespace
 from unittest import mock
 
@@ -82,8 +84,15 @@ class Workdir(unittest.TestCase):
         self.env = mock.patch.dict(os.environ, {"OPENROUTER_API_KEY": "test"}, clear=False)
         self.env.start()
         os.environ.pop("ANTHROPIC_API_KEY", None)
+        # never write a test's fake costs into a real Actions run's summary
+        os.environ.pop("GITHUB_STEP_SUMMARY", None)
+        self.quiet = (redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()))
+        for stream in self.quiet:
+            stream.__enter__()
 
     def tearDown(self):
+        for stream in reversed(self.quiet):
+            stream.__exit__(None, None, None)
         self.env.stop()
         self.tmp.cleanup()
 
@@ -193,6 +202,46 @@ class RiverMergeTests(Workdir):
             ids = {item["id"] for item in cw.river(day)}
             self.assertTrue({pick["id"] for pick in day["picks"]} <= ids)
             self.assertTrue(all(u["lead"]["id"] in ids for u in day["updates"] if u["lead"]))
+
+
+class HouseRuleTests(Workdir):
+    def test_the_briefs_own_edition_always_runs(self):
+        payload = pulse()
+        payload["sources"].append({"id": "btown-brief", "name": "Btown Brief", "short": "Btown Brief",
+                                   "site": "https://www.btownbrief.com/", "topic": "local", "local": 1})
+        payload["items"].append({"t": "Friday, October 16th", "u": "https://www.btownbrief.com/p/friday",
+                                 "d": NOW_TS - 7 * 3600, "s": "btown-brief"})
+        self.write_pulse(payload)
+
+        def skip_it(numbers, river_n, schema):
+            answer = take_all(numbers, river_n, schema)
+            answer["add"] = answer["add"][:3]
+            answer["picks"] = answer["picks"][:8]
+            return answer
+        self.run_curate(Stub(skip_it))
+        own = [item for item in cw.river(self.today()) if item.get("own")]
+        self.assertEqual(len(own), 1)
+        self.assertEqual((own[0]["ch"], own[0]["title"]), ("newsletters", "Friday, October 16th"))
+
+    def test_a_reddit_post_that_only_links_an_outlet_is_that_article(self):
+        payload = pulse()
+        payload["sources"].append({"id": "r-burlington", "name": "r/burlington", "short": "r/burlington",
+                                   "site": "https://www.reddit.com/r/burlington/", "topic": "local", "local": 1})
+        payload["items"] += [
+            {"t": "Local headline 0", "u": "https://www.reddit.com/r/burlington/comments/a/x/",
+             "d": NOW_TS - 60, "s": "r-burlington", "o": "https://www.wcax.com/2026/10/16/x"},
+            {"t": "Repair Cafe Saturday!", "u": "https://www.reddit.com/r/burlington/comments/b/y/",
+             "d": NOW_TS - 90, "s": "r-burlington", "o": "https://www.facebook.com/share/1"},
+        ]
+        titles = [(i["ch"], i["title"]) for i in wc.wire_items(payload, NOW_TS, 26)]
+        self.assertNotIn(("reddit", "Local headline 0"), titles)
+        self.assertIn(("reddit", "Repair Cafe Saturday!"), titles)
+
+    def test_first_update_of_the_day_can_catch_up(self):
+        self.write_pulse(pulse(n_local=50, n_world=0))
+        self.run_curate(Stub(lambda numbers, river_n, schema: dict(
+            take_all(numbers, river_n, schema), add=[n for n in numbers if n >= river_n][:45])))
+        self.assertEqual(self.today()["count"], cw.ADD_MAX_FIRST)
 
 
 class FreezeTests(Workdir):

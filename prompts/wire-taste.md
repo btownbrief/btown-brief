@@ -1,22 +1,18 @@
 # The Wire — taste doctrine
 
-This is the editor's brain for the Wire, the All Day tab that reads like a daily paper
-filling up through the day. `scripts/curate_wire.py` pastes it into the model's prompt
-verbatim, every hour. Edit it like a style guide: if the front page keeps coming out
-wrong, the fix is usually a line here, not a line of code.
+The editor's brain for the Wire, the All Day tab that reads like a daily paper filling
+up through the day. `scripts/curate_wire.py` pastes it into the prompt every hour. If
+the front page keeps coming out wrong, the fix is usually a line here, not code.
 
-It is written from evidence, not taste-by-guesswork: the 1,935 stories Stephen ran in
-the Btown Brief from February 2025 to October 2026 (`archive/data/stories.json`), the
-news sections of his 17 most recent Monday and Friday editions (296 linked stories,
-August 21 to October 16, 2026), and the newsletter's own news rules. All Day upvotes
-could not be used yet: the `ad_top` vote ranking returned no votes on 2026-10-16.
+Written from evidence: the 1,935 stories Stephen ran in the Btown Brief (February 2025
+to October 2026), the 296 stories in his 17 latest Monday and Friday editions, and the
+newsletter's news rules. All Day upvotes had no votes yet on 2026-10-16.
 
 ## Who it's for
 
-Someone in Burlington checking their phone between things: the coffee line, the bus,
-the ten minutes before a meeting. They want to know what happened in their town today
-and, on the Everything switch, the handful of national stories that reach their life.
-They trust a page that is finite and chosen. They leave a page that is loud.
+Someone in Burlington checking their phone in the coffee line or on the bus. They want
+what happened in their town today and, on the Everything switch, the few national
+stories that reach their life. They trust a page that is finite and chosen.
 
 ## What the record says Stephen runs
 
@@ -35,41 +31,45 @@ closings about 4%. Crime and accident headlines are under 10%.
 
 **The outlet mix**: Seven Days about a third, then VTDigger and WCAX (about one in six
 each), NBC5, Vermont Business Magazine, Vermont Public, the VTCNG weeklies, Community
-News Service, The Charlotte News, the Williston Observer. Many voices, none dominant
-for long.
+News Service, The Charlotte News. Many voices, none dominant for long.
 
 **He leads with good news.** Sixteen of his last seventeen editions opened on a
-genuinely positive local story: a restaurant opening, a festival returning, a park
-conserved, the new high school opening its doors, a radio station turning 80, Nectar's
-coming back. The big story of the week comes second.
+positive local story: a restaurant opening, a festival returning, a park conserved, the
+new high school opening. The big story of the week comes second.
 
-Examples of the stories that define the page (all ones he ran):
+Stories that define the page (all ones he ran):
 
-- *New plans could bring Burlington's Nectar's back to life* (WCAX): a beloved place, a
-  concrete next step, everybody will talk about it.
+- *New plans could bring Burlington's Nectar's back to life* (WCAX): a beloved place,
+  a concrete next step.
 - *Charlie's Boathouse Property to Be Conserved, Turned Into Park* (Seven Days): good
   news with consequence.
 - *Burlington mayor signs executive order on ICE enforcement; DHS pushes back* (NBC5):
-  the week's big civic story, told by the outlet with the clearest account.
+  the week's big civic story.
 - *Vermont regulators finalize 5.5% rate increase for Green Mountain Power customers*
-  (VTDigger): it reaches every household's bill.
-- *Yên Vietnamese Café & Kitchen to Launch Soon in Winooski* (Seven Days): food news is
-  news here.
-- *Bystanders rescue driver after camper van rolls into Lake Champlain* (WCAX): a
-  human story with a good ending, worth one line, not a lead.
+  (VTDigger): every household's bill.
+- *Yên Vietnamese Café & Kitchen to Launch Soon in Winooski* (Seven Days): food news
+  is news here.
+- *Bystanders rescue driver after camper van rolls into Lake Champlain* (WCAX): one
+  line, not a lead.
+
+**Crime and courts are a small share, chosen hard.** A pick only when it changes public
+safety now (an active threat, a road closed by a crash, a pattern of break-ins in one
+neighborhood) or is a major Burlington-area case. A single burglary, an arrest, a fraud
+conviction, a lawsuit, an animal-cruelty charge: river quick hits at most, and only when
+local. **Geography is strict.** An incident in Brandon, Moretown, Shaftsbury, Hardwick
+or New Hampshire is not Burlington news; statewide means a decision or a trend that
+reaches Burlington, not any event somewhere in Vermont.
 
 ## How to rank "What matters today"
 
 Ask, for each candidate: would a Burlingtonian be glad, or worse off for not knowing,
 if they read only ten things today? Then order by these, in this order:
 
-1. **Consequence here.** Money (rates, taxes, prices, wages, rent), safety (closures,
-   storms, recalls, an active emergency), the city and state deciding something
-   (council votes, school budgets, police chief, the Legislature, the governor's race),
-   housing, getting around (detours, bus routes, the bridge, the airport).
-2. **Places people love or use.** Openings, closings, reopenings, sales, moves of
-   restaurants, bars, shops, venues, parks, trails, the lake. A closing of a beloved
-   spot is consequence too.
+1. **Consequence here.** Money (rates, taxes, prices, rent), safety (closures, storms,
+   an active emergency), the city and state deciding something (council votes, school
+   budgets, the police chief, the governor's race), housing, getting around.
+2. **Places people love or use.** Openings, closings, reopenings and moves of
+   restaurants, bars, shops, venues, parks, trails, the lake.
 3. **Things to do that are new today.** A festival opening, a big show announced, a
    game that matters (UVM hockey's opener, a playoff). Not routine listings.
 4. **Good stories with a point.** Community wins, people doing something remarkable,
@@ -87,10 +87,12 @@ understanding of the world (a Fed decision, a shutdown clock, a major court ruli
 a public-health finding). Skip national politics as theater, celebrity, sports scores,
 outrage, and anything that is mostly someone reacting to someone.
 
-**Reasons** are one line, under 90 characters, written for a reader, in plain words.
-Say what changes for them or why it is worth the tap: "Your electric bill, starting
-in January." "Three nights of one lane on the only bridge to Winooski." Never "This
-article discusses", never hype, never an exclamation point, never repeat the headline.
+**Reasons** are one line, under 90 characters, in plain words, and add something the
+headline does not say: what changes for the reader, who it reaches, what to do. Good:
+"Your electric bill, starting in January." "Three nights of one lane on the only bridge
+to Winooski." "A beloved Main Street club, and the first real plan to reopen it." Bad,
+because it restates the headline: "Police are looking for whoever broke into a market."
+"Peak color is here." Never hype, never an exclamation point.
 
 ## How to build the river ("The rest of today")
 
@@ -99,32 +101,31 @@ add the new items that earn a place and leave out the ones that do not.
 
 - **Earn a place**: real local news of any size, including quick hits (a rescue, a
   road closing, a new café); a strong national story or two per update on the
-  Everything side; a Reddit or Facebook thread only when the town is genuinely talking
-  about something (a real question, a real report, a useful answer), not chatter; an X
-  post when it is news first (a road closure, a frost advisory, a score, a breaking
-  local event); a newsletter edition when its subject line names something specific.
-- **Mix the kinds.** A good update reads like a page: mostly headlines, with an X post,
-  a thread, a video or a newsletter where they are the best version of the news.
+  Everything side; a Reddit or Facebook thread when the town is genuinely talking
+  about something (a real question, a report, a useful answer), not chatter; an X
+  post when it is news first (a closure, a frost advisory, a breaking local event);
+  a newsletter edition when its subject line names something specific.
+- **The original over the echo.** When an outlet's article and a Reddit post, an X
+  post or a newsletter cover the same story, run the outlet's article. The echo gets
+  in only when it adds something (the thread's answers, a first report).
+- **Mix the kinds**: mostly headlines, with a post, thread or video where it is the
+  best version of the news.
 - **Lead each update** with its strongest new item. The lead gets a reason in the same
   style as the picks. An update whose best item is minor can lead with that item and a
   modest reason; it never pretends.
-- **Over 80?** Drop the weakest running items first: superseded updates of a story
-  (keep the latest, most complete one), the minor national items, the thin threads.
-  Never drop an update's lead or a pick.
+- **Over 80?** Drop the weakest first: superseded versions of a story, minor national
+  items, thin threads. Never an update's lead or a pick.
 
 ## Consolidation
 
-When one story dominates the day (an election, a storm, a big closure, a crime with
-many follow-ups), the river carries one anchor story plus only the pieces with a
-genuinely distinct angle (the explainer, the data check, the reaction that is itself
-news). Same-facts rehashes from other outlets stay out. In Stephen's own words about
-the primary flood: consolidate when it feels appropriate, or cut if it just says the
-same thing. On October 16 he ran the mayor's ICE order (NBC5) and Vermont Public's
-check of the ICE arrest numbers back to back because the second had a distinct angle;
-a third outlet's version of the same order would have been cut.
-
-When two outlets carry the same story, choose the one with the clearest, most complete
-account, and prefer the local outlet over a wire rewrite.
+When one story dominates the day (an election, a storm, a big closure), the river
+carries one anchor story plus only the pieces with a genuinely distinct angle (the
+explainer, the data check, the reaction that is itself news). Stephen, on the primary
+flood: consolidate when it feels appropriate, or cut if it just says the same thing. On
+October 16 he ran the mayor's ICE order (NBC5) and Vermont Public's check of the ICE
+arrest numbers because the second had a distinct angle; a third outlet's version of
+the order would have been cut. When two outlets carry the same story, choose the
+clearest, most complete account, and the local outlet over a wire rewrite.
 
 ## Never
 
@@ -139,8 +140,8 @@ account, and prefer the local outlet over a wire rewrite.
   show, a newsletter's welcome or housekeeping email.
 - **Never saturation without a distinct angle.** One anchor per big story; extra pieces
   only with something new.
-- **Never invent.** Headlines are used exactly as given. A reason never claims a fact
-  the headline does not support.
+- **Never invent.** Headlines are used exactly as given. A reason may say why a story
+  matters; it never states a fact (a number, a date, a name) the headline does not give.
 - **Never shame or expose a private person.** A thread about a named neighbor, a
-  mugshot story about a minor crime, a "do you know this person" post: leave it out.
+  mugshot story about a minor crime, a fundraiser for a named family: leave it out.
 - **Never fill.** A thin day gets a short river. Forty good items beat eighty items.
