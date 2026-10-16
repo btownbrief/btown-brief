@@ -13,7 +13,7 @@ name: Curate the Wire
 # tags and Claude Opus 5.5 (effort low) curates; otherwise OPENROUTER_API_KEY
 # -> GLM 5.3 Flash runs both prompts. Tokens and estimated dollars go to the
 # step summary; both scripts refuse to call a model once the month-to-date
-# estimate in data/wire-cost.json reaches $25.
+# estimate in data/wire-cost.json reaches $60 (of the $100 monthly API credits).
 #
 # Failure posture: no key, the cap, or API trouble ends the run green and the
 # branch keeps its last good paper. A paper left unchecked for 4 hours fails

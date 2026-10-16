@@ -12,7 +12,7 @@ editor model, with prompts/wire-taste.md as its doctrine, for:
     picks stand.
   * This hour's additions to the river ("The rest of today"), the lead of
     the current update with its reason, and which running items to drop if
-    the day passes RIVER_MAX.
+    the day passes RIVER_MAX (300: the river is meant to feel almost endless).
 
 Output, data/wire-today.json:
 
@@ -75,14 +75,17 @@ UA = "btown-wire/1.0"
 WINDOW_HOURS = 26          # a story from last evening can still lead this morning
 RESERVE_DAYS = 7           # nothing in the last week's editions comes back
 KEEP_DAYS = 30             # frozen editions kept on the branch
-RIVER_MAX = 80
-ADD_MAX = 20               # per hourly update
-ADD_MAX_FIRST = 40         # the day's first update can catch up on the night
+# Stephen, 2026-10-16: the river should feel almost endless, curated well down
+# from the ~1,000 items a day, not a 40-to-80-item digest.
+RIVER_MAX = 300
+ADD_MAX = 40               # per hourly update
+ADD_MAX_FIRST = 60         # the day's first update can catch up on the night
+RIVER_SHOWN_HOURLY = 60    # between re-ranks the editor sees the newest river items only
 PICK_COUNT = 25
 NATIONAL_PICKS = 10        # the rest of the 25 are local
 WHY_MAX = 90
-NEW_MAX_LOCAL = 70         # candidates shown to the editor per run
-NEW_MAX_WORLD = 30
+NEW_MAX_LOCAL = 80         # candidates shown to the editor per run
+NEW_MAX_WORLD = 60
 WORLD_MIN_SCORE = 3        # national items the tagger scored lower never reach the editor
 PICKS_EVERY_HOURS = 5      # re-rank cadence: about 7am, noon, 5pm, 10pm
 PICKS_MIN_POOL = 8         # the first ranking of the day waits for this many items
@@ -110,14 +113,15 @@ with numbers from those lists and short reasons. You never write, shorten or
 rewrite a headline: the page shows each one exactly as the outlet wrote it.
 
 - `add`: numbers from NEW that earn a place in today's river this hour (at
-  most 20, or 40 when the river is empty). Leave out what does not earn a
-  place; a passed item does not come back later today.
+  most 40, or 60 when the river is empty). The river is meant to be long:
+  add everything that earns a place, leave out what does not. A passed item
+  does not come back later today.
 - `lead` and `lead_why`: the item that leads the current update, from what you
   add this hour or from the current update's items already in the river, with
   a reason in the style of the picks. Use -1 and an empty reason only when
   nothing is added and the current update has no items.
 - `drop`: numbers from TODAY'S RIVER to remove, only when the river would pass
-  80 items. Otherwise an empty list.
+  300 items. Otherwise an empty list.
 - `picks`, only when asked for: the ranked "What matters today" list from the
   river and NEW together: 25 picks, about 15 local and up to 10 national,
   fewer only when the day truly lacks them. Each has a reason under 90
@@ -353,7 +357,20 @@ def line(index, item, now_ts):
             f"{age_label(item, now_ts)}{topic}{place}{talk}{gate} · {item['title']}")
 
 
-def build_prompt(numbered_river, new, current, ran, want_picks, et, label, now_ts):
+def shown_river(river_items, current_ids, want_picks):
+    """The river items the editor sees. On a re-rank, all of them (a pick
+    may come from anywhere today). Between re-ranks, the current update's
+    items and the newest RIVER_SHOWN_HOURLY: enough to judge leads and
+    near-duplicates, and the prompt stays the same size as the river grows."""
+    if want_picks or len(river_items) <= RIVER_SHOWN_HOURLY:
+        return list(river_items)
+    newest = sorted(river_items, key=lambda item: item.get("posted_at") or "",
+                    reverse=True)[:RIVER_SHOWN_HOURLY]
+    keep = {item["id"] for item in newest} | set(current_ids)
+    return [item for item in river_items if item["id"] in keep]
+
+
+def build_prompt(numbered_river, new, current, ran, want_picks, et, label, now_ts, total=None):
     lines = [f"It is {et.strftime('%A, %B')} {et.day}, {clock(et)} in Burlington. "
              f"This is the {label} update."]
     if want_picks:
@@ -367,7 +384,10 @@ def build_prompt(numbered_river, new, current, ran, want_picks, et, label, now_t
     if current:
         lines += ["", f"The current {label} update holds: "
                   + ", ".join(str(index) for index in current) + "."]
-    lines += ["", f"TODAY'S RIVER ({len(numbered_river)} items):"]
+    total = len(numbered_river) if total is None else total
+    shown = (f"{len(numbered_river)} items" if total == len(numbered_river)
+             else f"{len(numbered_river)} shown of {total} items, the newest")
+    lines += ["", f"TODAY'S RIVER ({shown}):"]
     lines += [line(i, item, now_ts) for i, item in enumerate(numbered_river)] or ["(empty)"]
     offset = len(numbered_river)
     lines += ["", f"NEW since the last update ({len(new)} items):"]
@@ -827,10 +847,12 @@ def run(args):
                       for item in numbered_river]
     current_ids = {item["id"] for item in (day["updates"][0]["items"]
                    if day.get("updates") and day["updates"][0].get("key") == key else [])}
+    river_total = len(numbered_river)
+    numbered_river = shown_river(numbered_river, current_ids, want_picks)
     current = [i for i, item in enumerate(numbered_river) if item["id"] in current_ids]
     system = wc.read_prompt("wire-taste.md") + TASK
     user = build_prompt(numbered_river, new, current, ran if want_picks else [],
-                        want_picks, et, label, now_ts)
+                        want_picks, et, label, now_ts, total=river_total)
     try:
         answer, usage = wc.ask_json(engine, system, user, schema(want_picks),
                                     max_tokens=MAX_TOKENS[engine["provider"]],

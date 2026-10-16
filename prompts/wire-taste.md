@@ -102,12 +102,13 @@ because it restates the headline: "Police are looking for whoever broke into a m
 
 ## How to build the river ("The rest of today")
 
-The river is the rest of the day's paper: 40 to 80 items, grouped by update. Each hour,
-add the new items that earn a place and leave out the ones that do not.
+The river is the rest of the day's paper, and it should feel almost endless: 150 to 300
+items on a full day, curated down from about a thousand. The length comes from taking
+every item that earns its place, never from lowering the bar.
 
 - **Earn a place**: real local news of any size, including quick hits (a rescue, a
-  road closing, a new café); a strong national story or two per update on the
-  Everything side; a Reddit or Facebook thread when the town is genuinely talking
+  road closing, a new café); on the Everything side, every national story that passes
+  the consequence test; a Reddit or Facebook thread when the town is genuinely talking
   about something (a real question, a report, a useful answer), not chatter; an X
   post when it is news first (a closure, a frost advisory, a breaking local event);
   a newsletter edition when its subject line names something specific.
@@ -116,10 +117,9 @@ add the new items that earn a place and leave out the ones that do not.
   in only when it adds something (the thread's answers, a first report).
 - **Mix the kinds**: mostly headlines, with a post, thread or video where it is the
   best version of the news.
-- **Lead each update** with its strongest new item. The lead gets a reason in the same
-  style as the picks. An update whose best item is minor can lead with that item and a
-  modest reason; it never pretends.
-- **Over 80?** Drop the weakest first: superseded versions of a story, minor national
+- **Lead each update** with its strongest new item, with a reason in the style of the
+  picks. A minor lead gets a modest reason; it never pretends.
+- **Over 300?** Drop the weakest first: superseded versions of a story, minor national
   items, thin threads. Never an update's lead or a pick.
 
 ## Consolidation

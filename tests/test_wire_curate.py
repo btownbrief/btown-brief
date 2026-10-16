@@ -249,10 +249,20 @@ class HouseRuleTests(Workdir):
         self.assertIn(("reddit", "Repair Cafe Saturday!"), titles)
 
     def test_first_update_of_the_day_can_catch_up(self):
-        self.write_pulse(pulse(n_local=50, n_world=0))
+        self.write_pulse(pulse(n_local=cw.NEW_MAX_LOCAL, n_world=0))
         self.run_curate(Stub(lambda numbers, river_n, schema: dict(
-            take_all(numbers, river_n, schema), add=[n for n in numbers if n >= river_n][:45])))
+            take_all(numbers, river_n, schema), add=[n for n in numbers if n >= river_n])))
         self.assertEqual(self.today()["count"], cw.ADD_MAX_FIRST)
+
+    def test_between_re_ranks_the_editor_sees_only_the_newest_river(self):
+        items = [{"id": f"i{k}", "posted_at": f"2026-10-16T{k % 24:02d}:00:00+00:00"} for k in range(100)]
+        shown = cw.shown_river(items, {"i0"}, want_picks=False)
+        self.assertEqual(len(shown), cw.RIVER_SHOWN_HOURLY + 1)       # newest 60 plus the current update
+        self.assertIn("i0", {item["id"] for item in shown})
+        self.assertEqual(len(cw.shown_river(items, set(), want_picks=True)), 100)   # a re-rank sees all
+        shown = [item(k, f"Burlington story {k}") for k in range(3)]
+        text = cw.build_prompt(shown, [], [], [], False, wc.et_now(NOW), "Afternoon", NOW_TS, total=100)
+        self.assertIn("TODAY'S RIVER (3 shown of 100 items, the newest):", text)
 
 
 def item(n, title, ch="local", local=True, src=None, topic=None, region=None, comments=None):
@@ -405,9 +415,14 @@ class ReasonPassTests(unittest.TestCase):
 
 
 class CapTests(Workdir):
-    def test_an_all_local_river_still_stops_at_eighty(self):
-        """Codex's repro: 80 local items, 20 more, no drops from the model."""
+    def test_an_all_local_river_still_stops_at_the_cap(self):
+        """Codex's repro: a full all-local river, 20 more, no drops from the
+        model. Run at a cap of 80 to keep the fixture small; the rule is the
+        same at the real cap."""
         self.write_pulse(pulse(n_local=80, n_world=0))
+        cap = mock.patch.object(cw, "RIVER_MAX", 80)
+        cap.start()
+        self.addCleanup(cap.stop)
         with mock.patch.object(cw, "ADD_MAX_FIRST", 80), mock.patch.object(cw, "NEW_MAX_LOCAL", 100):
             self.run_curate(Stub(lambda numbers, river_n, schema: dict(
                 take_all(numbers, river_n, schema), add=[n for n in numbers if n >= river_n][:80])))
@@ -539,7 +554,7 @@ class FailurePostureTests(Workdir):
 
     def test_month_cap_refuses(self):
         wc.write_json(os.path.join(self.data, "wire-cost.json"),
-                      {"v": 1, "month": "2026-10", "usd": 25.01, "runs": []})
+                      {"v": 1, "month": "2026-10", "usd": wc.MONTH_CAP_USD + 0.01, "runs": []})
         stub = Stub(take_all)
         self.assertEqual(self.run_curate(stub), 0)
         self.assertEqual(stub.prompts, [])

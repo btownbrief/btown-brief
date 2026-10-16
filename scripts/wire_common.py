@@ -392,7 +392,9 @@ GLM = "z-ai/glm-5.3-flash"
 PRICES["claude-opus-4-8"] = {"in": 5.00, "out": 25.00, "cache_read": 0.50, "cache_write": 6.25}
 FALLBACK_PRICE_AS = "claude-opus-4-8"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api"
-MONTH_CAP_USD = 25.0
+# Stephen's Max plan carries $100 a month of API credits (2026-10-16). The Wire
+# takes at most $60 of it, leaving room for whatever else uses the key.
+MONTH_CAP_USD = 60.0
 
 
 def pick_engine(role):

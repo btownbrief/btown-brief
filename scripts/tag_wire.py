@@ -50,7 +50,7 @@ WINDOW_HOURS = 30        # the curator looks back 26h; tag a little wider
 BATCH = 120              # items per call: ~4k tokens in, ~3k out
 MAX_PER_RUN = 600        # the first run of a fresh store tags local first
 KEEP_HOURS = 72          # tags older than this leave the store
-RIVER_TITLES = 80        # duplicates are judged against today's river
+RIVER_TITLES = 300       # duplicates are judged against all of today's river
 JUNK = ("none", "promo", "giveaway", "tunein", "jobs", "duplicate", "noise")
 TOPICS = (
     "city-government", "state-politics", "schools", "housing", "transportation",
