@@ -155,6 +155,7 @@ export function pills(options, current, onPick, cls) {
   const wrap = el('div', 'pills' + (cls ? ' ' + cls : ''));
   options.forEach(([v, label]) => {
     const b = el('button', v === current ? 'on' : '', esc(label));
+    b.type = 'button';   // inside a form (the profile sheet) a pill must not submit it
     b.addEventListener('click', () => { [...wrap.children].forEach((c) => c.classList.toggle('on', c === b)); onPick(v); });
     wrap.appendChild(b);
   });

@@ -275,9 +275,15 @@ async function newPage(browser, base, opts = {}) {
     const u = r.request().url();
     supabase.push(r.request().method() + ' ' + u.replace(/^https:\/\/[^/]+/, ''));
     if (/\/auth\/v1\/settings/.test(u)) return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ external: { email: opts.authEmail !== false } }) });
+    /* opts.auth(path, body, headers) answers Supabase Auth: { status, body } or undefined for the default */
+    const ap = (u.match(/\/auth\/v1\/([\w?=&_-]+)/) || [])[1];
+    if (ap && opts.auth) {
+      const out = opts.auth(ap, JSON.parse(r.request().postData() || '{}'), r.request().headers());
+      if (out !== undefined) return r.fulfill({ status: out.status || 200, contentType: 'application/json', body: JSON.stringify(out.body || {}) });
+    }
     const fn = (u.match(/\/rest\/v1\/rpc\/(\w+)/) || [])[1];
     if (fn && opts.rpc) {
-      const out = opts.rpc(fn, JSON.parse(r.request().postData() || '{}'));
+      const out = opts.rpc(fn, JSON.parse(r.request().postData() || '{}'), r.request().headers());
       if (out && out.hang) return undefined;   // never answers: a stalled request
       if (out !== undefined) return r.fulfill({ status: out && out.status || 200, contentType: 'application/json', body: JSON.stringify(out && out.status ? out.body : out) });
     }
@@ -1699,6 +1705,345 @@ async function theFood(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------- accounts */
+/* The sign-in row's three states, live, with Supabase Auth answered here. */
+const SESSION = (o = {}) => JSON.stringify({ access_token: 'a.b.c', refresh_token: 'r1', expires_at: o.expires || 4102444800, user: { id: 'u-1', ...(o.user || {}) } });
+async function settingsText(page) {
+  if (await page.$eval('#sheet', (x) => !x.hidden)) { await page.keyboard.press('Escape'); await page.waitForTimeout(50); }
+  await page.click('#settings-btn');
+  await page.waitForFunction(() => { const b = document.querySelector('.sheet-body'); return b && !/Checking…|One moment…/.test(b.innerText); }, null, { timeout: 6000 }).catch(() => {});
+  return page.$eval('.sheet-body', (b) => b.innerText);
+}
+async function accounts(browser, base) {
+  await group('accounts: the sign-in row, three states', async () => {
+    const off = await newPage(browser, base, { authEmail: false });
+    await off.page.goto(base + '/all-day/');
+    await settle(off.page);
+    check(/Sign in\s+Coming soon/.test(await settingsText(off.page)), 'Auth off in the project: "Sign in · Coming soon"', '');
+    await off.ctx.close();
+
+    const out = await newPage(browser, base);
+    await out.page.goto(base + '/all-day/');
+    await settle(out.page);
+    const t = await settingsText(out.page);
+    check(await out.page.$('.signin input[type=email]') !== null && /posting on a board and reporting do/.test(t), 'signed out: the email field, and what it is for', t.slice(0, 200));
+    await out.ctx.close();
+
+    /* the emailed link lands with tokens in the hash; /auth/v1/user names the reader */
+    const seen = [];
+    const inn = await newPage(browser, base, {
+      auth: (p, body, h) => { seen.push(p + ' ' + (h.authorization || '')); if (/^user/.test(p)) return { body: { id: 'u-1', email: 'reader@example.com', aud: 'authenticated' } }; if (/^logout/.test(p)) return { status: 204 }; return undefined; },
+      rpc: (fn) => (fn === 'nn_profile_get' ? { display_name: 'Maya R.', neighborhood: null, archetype: null } : undefined),
+    });
+    await inn.page.goto(base + '/all-day/#access_token=a.b.c&refresh_token=r1&expires_in=3600&token_type=bearer&type=magiclink');
+    await inn.page.waitForSelector('#toast:not([hidden])', { timeout: 6000 });
+    check(/You’re signed in/.test(await inn.page.$eval('#toast', (x) => x.textContent)), 'the link signs the reader in, and says so without the address', '');
+    check(await inn.page.evaluate(() => location.hash) === '#wire', 'the tokens leave the address bar', '');
+    check(seen.some((x) => /^user Bearer a\.b\.c/.test(x)), 'the token is checked with Supabase', seen.join(', '));
+    const kept = await inn.page.evaluate(() => localStorage.getItem('allday-auth'));
+    check(kept && !/@/.test(kept) && JSON.parse(kept).user.id === 'u-1', 'the session is kept without the email address', kept);
+    const t2 = await settingsText(inn.page);
+    check(/Signed in\s+as Maya R\./.test(t2) && /Your profile/.test(t2) && /Your posts/.test(t2) && /Delete my account and posts/.test(t2), 'signed in: the name, profile, posts, delete', t2.slice(0, 300));
+    check(!/reader@example\.com/.test(await inn.page.content()), 'the email is nowhere on the page', '');
+    await inn.page.click('.sheet-body .sheet-row button:has-text("Sign out")');
+    await inn.page.waitForTimeout(150);
+    check(await inn.page.evaluate(() => localStorage.getItem('allday-auth')) === null && await inn.page.$('.signin input[type=email]') !== null, 'Sign out forgets the session and shows the email field again', '');
+    check(seen.some((x) => /^logout/.test(x)), 'and tells Supabase', seen.join(', '));
+    check(!inn.errors.length, 'no console errors', inn.errors.join(' | '));
+    await inn.ctx.close();
+  });
+
+  await group('accounts: sessions refresh once, and an old email is dropped', async () => {
+    let refreshes = 0;
+    const { ctx, page, errors } = await newPage(browser, base, {
+      auth: (p, body) => {
+        if (/^token/.test(p)) { refreshes++; return body.refresh_token === 'r1' ? { body: { access_token: 'n.e.w', refresh_token: 'r2', expires_in: 3600, user: { id: 'u-1', email: 'reader@example.com' } } } : { status: 400, body: { error: 'invalid_grant' } }; }
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION({ expires: Math.floor(Date.now() / 1000) + 60, user: { email: 'reader@example.com' } }));
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    const toks = await page.evaluate(() => import('/all-day/js/app.js').then((app) => Promise.all([app.token(), app.token(), app.token()])));
+    check(toks.every((t) => t === 'n.e.w'), 'a session about to run out is refreshed', JSON.stringify(toks));
+    check(refreshes === 1, 'once, however many callers ask at the same moment', refreshes);
+    const kept = JSON.parse(await page.evaluate(() => localStorage.getItem('allday-auth')));
+    check(kept.refresh_token === 'r2' && !('email' in kept.user), 'the new tokens are kept, and the old saved email is gone', JSON.stringify(kept));
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION({ expires: Math.floor(Date.now() / 1000) + 60 }).replace('"r1"', '"spent"'));
+    const gone = await page.evaluate(() => import('/all-day/js/app.js').then((app) => new Promise((res) => { app.onAuth((u) => res(u)); app.token(); })));
+    check(gone === null && await page.evaluate(() => localStorage.getItem('allday-auth')) === null, 'a refused refresh signs out quietly, and onAuth hears it', JSON.stringify(gone));
+    const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 400/.test(e));
+    check(!real.length, 'no console errors beyond the browser logging the refused refresh', real.join(' | '));
+    await ctx.close();
+  });
+
+  await group('accounts: before the SQL is pasted, posting says so', async () => {
+    const missing = { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } };
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn) => (/^nn_/.test(fn) ? missing : undefined) });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    check(/Signed in\s+Posting is coming soon\./.test(await settingsText(page)), 'Settings: "Signed in · Posting is coming soon."', '');
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.compose({ board: 'vintage', kind: 'spotted', heading: 'Post a find' })));
+    await page.waitForFunction(() => !/One moment/.test(document.querySelector('.sheet-body').innerText));
+    check(/Posting is coming soon\. Everything else here works\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'the compose sheet says the same, and offers no form', '');
+    const l = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.list('vintage').then((r) => ({ ok: r.ok, n: r.posts.length, err: r.error, status: b.status() }))));
+    check(!l.ok && l.n === 0 && l.err === 'off' && l.status === 'off', 'a list resolves empty with "off", never throws', JSON.stringify(l));
+    const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 404/.test(e));
+    check(!real.length, 'no console errors beyond the browser logging the 404s (the reader sees none)', real.join(' | '));
+    await ctx.close();
+  });
+}
+
+/* --------------------------------------------------------------- boards */
+/* The tab-facing API, driven in ?demo=1 against boards-fake.js, plus the
+   live wire format. A test host feed is drawn at the top of the Vintage tab,
+   the way a tab will draw one. */
+const VMETA = (p) => [p.meta.shop, p.meta.size, p.meta.price != null ? '$' + p.meta.price : ''].filter(Boolean).join(' · ');
+async function drawBoard(page, board, extra) {
+  await page.evaluate(async ({ board, extra }) => {
+    const B = await import('/all-day/js/boards.js');
+    const app = await import('/all-day/js/app.js');
+    let host = document.getElementById('board-test');
+    if (!host) {
+      host = document.createElement('div');
+      host.className = 'feed';
+      host.id = 'board-test';
+      document.querySelector('.panel:not([hidden]) .panel-body').prepend(host);
+      app.bindFeed(host);
+    }
+    host.innerHTML = '';
+    const r = await B.list(board, extra || {});
+    const meta = (p) => [p.meta.shop, p.meta.size, p.meta.price != null ? '$' + p.meta.price : ''].filter(Boolean).join(' · ');
+    B.put(host, r.posts, { meta: board === 'vintage' ? meta : undefined });
+  }, { board, extra });
+}
+const COMPOSE = { board: 'vintage', kind: 'spotted', heading: 'Post a find', title: 'What did you spot?',
+  fields: [{ key: 'shop', label: 'Shop' }, { key: 'size', label: 'Size' }, { key: 'price', label: 'Price', type: 'int' }],
+  notes: ['A find lasts three weeks, then it is gone.'] };
+async function openCompose(page, o) {
+  await page.evaluate((o) => import('/all-day/js/boards.js').then((b) => b.compose(o)), o || COMPOSE);
+  await page.waitForSelector('.sheet-body form.bform, .sheet-body .linkrow', { timeout: 4000 });
+}
+const fakeOf = (page, fn) => page.evaluate(`import('/all-day/js/boards.js').then((B) => { const f = B._fake(); return (${fn})(f); })`);
+
+async function boards(browser, base) {
+  await group('boards: the profile, set and read (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await openCompose(page);
+    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)) && await page.$('.sheet-body form') === null, 'signed out, compose asks for sign-in and shows no form', '');
+    await page.click('.sheet-body .linkrow button:has-text("Sign in")');
+    await page.waitForSelector('.sheet-body .sheet-row button:has-text("Sign in")');
+    await page.click('.sheet-body .sheet-row button:has-text("Sign in")');
+    await page.waitForFunction(() => /Add your first name before you post/.test(document.querySelector('.sheet-body').innerText));
+    check(true, 'Settings → Sign in signs into the demo account, which has no name yet', '');
+    await page.click('.sheet-body .sheet-row button:has-text("Edit")');
+    await page.waitForSelector('.sheet-body form.bform input[name=display_name]');
+    await page.fill('input[name=display_name]', 'me@example.com');
+    await page.click('.bform button[type=submit]');
+    check(/no @ in it/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'an email as a name is refused', '');
+    await page.fill('input[name=display_name]', '  Maya   R. ');
+    await page.selectOption('select[name=neighborhood]', 'old-north-end');
+    await page.click('.bform .pills button:has-text("Trail person")');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
+    const p = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.profile()));
+    check(p.ok && JSON.stringify(p.profile) === JSON.stringify({ display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail' }), 'saved, tidied, and read back', JSON.stringify(p));
+    check(/Signed in\s+as Maya R\./.test(await settingsText(page)), 'Settings names the reader by first name', '');
+    await page.click('.sheet-body .sheet-row button:has-text("Edit")');
+    await page.waitForSelector('input[name=display_name]');
+    check(await page.$eval('input[name=display_name]', (i) => i.value) === 'Maya R.' && await page.$eval('select[name=neighborhood]', (s) => s.value) === 'old-north-end' &&
+      await page.$eval('.bform .pills button.on', (b) => b.textContent) === 'Trail person', 'the profile sheet opens on what was saved', '');
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-profile.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: compose refuses, then posts (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    const before = await fakeOf(page, (f) => f.posts.length);
+    await openCompose(page);
+    await page.waitForTimeout(400);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-compose.png') });
+    check(await page.$('input[name=display_name]') !== null, 'a reader with no name is asked for one in the sheet', '');
+    await page.fill('input[name=title]', '1994 UVM crewneck');
+    await page.fill('input[name="m:shop"]', 'Battery Street Jeans');
+    await page.click('.bform button[type=submit]');
+    check(/Add your first name before you post/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'no name: refused, with the reason', '');
+    await page.fill('input[name=display_name]', 'Kara');
+    await page.setInputFiles('.bform input[type=file]', { name: 'find.jpg', mimeType: 'image/jpeg', buffer: PNG });
+    check(/find\.jpg/.test(await page.$eval('.bf-photo', (x) => x.textContent)), 'the chosen photo is named', '');
+    await page.click('.bform button[type=submit]');
+    check(/Tick the box first/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'a photo without the consent box: refused', '');
+    const sent = await fakeOf(page, (f) => ({ posts: f.posts.length, photos: [...f.photos.keys()].filter((k) => !/^submissions\/demo-[a-z]+\.jpg$/.test(k)).length }));
+    check(sent.posts === before && sent.photos === 0, 'and nothing was sent: no post, no photo', JSON.stringify(sent));
+    await page.setInputFiles('.bform input[type=file]', []);
+    await page.fill('input[name="m:size"]', 'L');
+    await page.fill('input[name="m:price"]', '28');
+    await page.fill('textarea[name=body]', 'Back rack by the boots. https://spam.example');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
+    check(/^Posted$/.test(await page.$eval('#toast', (t) => t.textContent)), 'posted, and the toast says so', await page.$eval('#toast', (t) => t.textContent));
+    await drawBoard(page, 'vintage', { kind: 'spotted' });
+    const card = await page.$eval('#board-test .card.board', (c) => ({ title: c.querySelector('.b-title').textContent, meta: c.querySelector('.b-meta') && c.querySelector('.b-meta').textContent,
+      text: c.querySelector('.c-text').textContent, who: c.querySelector('.c-src').textContent, left: c.querySelector('.tag-left') && c.querySelector('.tag-left').textContent,
+      del: !!c.querySelector('[data-act=bdelete]'), rep: !!c.querySelector('[data-act=breport]') }));
+    check(card.title === '1994 UVM crewneck' && card.meta === 'Battery Street Jeans · L · $28', 'it is first on the board, with the tab’s meta line', JSON.stringify(card));
+    check(card.who === 'Kara' && card.text === 'Back rack by the boots.' && /^2[01]d left$/.test(card.left), 'by first name, the link stripped, three weeks to run', JSON.stringify(card));
+    check(card.del && !card.rep, 'your own post offers delete, not report', JSON.stringify(card));
+    await pageRules(page, 'boards', 390);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-board-cards.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: votes, reports, delete, expiry (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await drawBoard(page, 'vintage');
+    const first = '#board-test .card.board:first-child';
+    const n0 = Number(await page.$eval(first + ' [data-act=bvote] .n', (n) => n.textContent || 0));
+    await page.click(first + ' [data-act=bvote]');
+    await page.waitForTimeout(100);
+    const v1 = await page.$eval(first + ' [data-act=bvote]', (b) => ({ n: Number(b.querySelector('.n').textContent || 0), on: b.getAttribute('aria-pressed') }));
+    check(v1.n === n0 + 1 && v1.on === 'true', 'signed out, a vote counts (the device’s vote) and the arrow fills', JSON.stringify([n0, v1]));
+    await drawBoard(page, 'vintage');
+    check(await page.$eval(first + ' [data-act=bvote]', (b) => b.getAttribute('aria-pressed')) === 'true', 'and it is still yours when the board redraws', '');
+    await page.click(first + ' [data-act=bvote]');
+    await page.waitForTimeout(100);
+    check(Number(await page.$eval(first + ' [data-act=bvote] .n', (n) => n.textContent || 0)) === n0, 'unvote takes it back', '');
+    await page.click(first + ' [data-act=breport]');
+    check(/Reporting needs the email sign-in/.test(await page.$eval('#toast', (t) => t.textContent)), 'signed out, report asks for sign-in', '');
+
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    const target = await page.$eval(first, (c) => c.dataset.k.slice(2));
+    await fakeOf(page, `(f) => { f.as('demo-0000-4000-8000-0000000other').call('nn_report', { p_post: '${target}', p_reason: 'spam' }); return 1; }`);
+    await page.click(first + ' [data-act=breport]');
+    await page.waitForSelector('.sheet-card[aria-label="Report this post"]');
+    await page.click('.sheet-body .sheet-row:nth-child(3) button');
+    await page.waitForTimeout(150);
+    check(/It’s down until Stephen has a look/.test(await page.$eval('#toast', (t) => t.textContent)), 'the second report takes it down, and says so', await page.$eval('#toast', (t) => t.textContent));
+    check(!(await page.$('#board-test .card.board[data-k="b-' + target + '"]')), 'its card leaves the board at once', '');
+    await drawBoard(page, 'vintage');
+    check(!(await page.$('#board-test .card.board[data-k="b-' + target + '"]')), 'and it is not listed again', '');
+    const again = await page.evaluate((id) => import('/all-day/js/boards.js').then((b) => b.vote(id)), target);
+    check(!again.ok && again.error === 'not_found', 'a hidden post cannot be voted on', JSON.stringify(again));
+
+    const mine = await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
+      await b.setProfile({ display_name: 'Sam' });
+      const r = await b.create('watch', { kind: 'rating', title: 'Winter Light', meta: { stars: 5, year: 2024 } });
+      return r.post.id;
+    }));
+    await drawBoard(page, 'watch');
+    await page.click('#board-test .card.board[data-k="b-' + mine + '"] [data-act=bdelete]');
+    await page.click('#confirm [data-yes]');
+    await page.waitForTimeout(150);
+    check(!(await page.$('#board-test .card.board[data-k="b-' + mine + '"]')) && /Deleted/.test(await page.$eval('#toast', (t) => t.textContent)), 'delete-own asks, then removes it', '');
+    const still = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.mine()));
+    check(still.ok && !still.posts.length, 'and Your posts no longer has it', JSON.stringify(still.posts.map((p) => p.title)));
+
+    const old = await page.$eval('#board-test .card.board:first-child', (c) => c.dataset.k.slice(2));
+    await fakeOf(page, `(f) => { f.posts.find((p) => p.id === '${old}').expires_at = Date.now() - 1000; return 1; }`);
+    await drawBoard(page, 'watch');
+    check(!(await page.$('#board-test .card.board[data-k="b-' + old + '"]')), 'an expired post is not listed', '');
+    await pageRules(page, 'boards', 1280);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-board-desktop-dark.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: Your posts, and delete my account (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#art');
+    await settle(page);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then(async (b) => {
+      await b.setProfile({ display_name: 'Jess' });
+      await b.create('vintage', { kind: 'swap', title: 'Two band tees for denim', meta: { want: 'Denim, 32' } });
+    }));
+    await openCompose(page, { board: 'art', kind: 'photo', heading: 'Add a photo', title: 'What is it?', body: false, notes: ['Photos are checked before they show.'] });
+    await page.fill('input[name=title]', 'Oakledge, low water');
+    await page.click('.bform button[type=submit]');
+    check(/This one needs a photo/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'an Art photo without a photo: refused', '');
+    await page.setInputFiles('.bform input[type=file]', { name: 'dawn.jpg', mimeType: 'image/jpeg', buffer: PNG });
+    await page.check('.bform input[name=consent]');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
+    check(/The photo shows once it’s been checked/.test(await page.$eval('#toast', (t) => t.textContent)), 'with a photo and consent: posted, the photo waits for the queue', await page.$eval('#toast', (t) => t.textContent));
+    const listed = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.list('art').then((r) => r.posts.some((p) => p.title === 'Oakledge, low water'))));
+    check(!listed, 'an Art post is not on the wall until its photo is approved', '');
+    await settingsText(page);
+    await page.click('.sheet-body .sheet-row button:has-text("Open")');
+    await page.waitForSelector('.sheet-row.mine');
+    const rows = await page.$$eval('.sheet-row.mine', (r) => r.map((x) => x.innerText.replace(/\s+/g, ' ')));
+    check(rows.length === 2 && /Oakledge, low water.*Art · Live · photo waiting for a check/.test(rows[0]) && /Two band tees.*Vintage · Live · 2[01]d left/.test(rows[1]), 'Your posts lists both, with where each stands', JSON.stringify(rows));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-your-posts.png') });
+    await settingsText(page);
+    await page.click('.sheet-body button:has-text("Delete my account and posts")');
+    check(/Your email sign-in is shared/.test(await page.$eval('#confirm', (c) => c.innerText)), 'delete asks first, and says the shared sign-in stays', '');
+    await page.click('#confirm [data-yes]');
+    await page.waitForTimeout(200);
+    const after = await fakeOf(page, `(f) => ({ posts: f.posts.filter((p) => p.user_id === 'demo-0000-4000-8000-00000000me00').length, profile: f.profiles.has('demo-0000-4000-8000-00000000me00') })`);
+    check(after.posts === 0 && !after.profile, 'everything of theirs is gone', JSON.stringify(after));
+    check(/Deleted\. You’re signed out\./.test(await page.$eval('#toast', (t) => t.textContent)) && await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.user())) === null, 'and they are signed out', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards: what goes over the wire (live)', async () => {
+    const calls = [];
+    const post = { id: '0000aaaa-0000-4000-8000-000000000001', board: 'vintage', kind: 'spotted', title: 'Red barn jacket', body: '', place: '', meta: { shop: 'Old Gold', size: 'M', price: 45 },
+      photo: 'submissions/abcd-1234.jpg', author: 'Kara', author_arch: null, created_at: new Date(Date.now() - 3600000).toISOString(), expires_at: new Date(Date.now() + 20 * 86400000).toISOString(), votes: 3, voted: false, mine: false };
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args, h) => {
+        if (!/^nn_/.test(fn)) return undefined;
+        calls.push({ fn, args, auth: h.authorization || null });
+        if (fn === 'nn_posts_list') return [post];
+        if (fn === 'nn_vote') return { votes: 4, voted: true };
+        if (fn === 'nn_report') return { status: 400, body: { code: 'P0001', message: 'already_reported' } };
+        if (fn === 'nn_profile_get') return { display_name: 'Maya', neighborhood: null, archetype: null };
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/#wire');
+    await settle(page);
+    await drawBoard(page, 'vintage', { kind: 'spotted', meta: { size: 'M' } });
+    const list = calls.find((c) => c.fn === 'nn_posts_list');
+    check(list && list.auth === null && list.args.p_board === 'vintage' && JSON.stringify(list.args.p_filter) === '{"kind":"spotted","meta":{"size":"M"}}' && /^p_/.test(list.args.p_player),
+      'signed out: the list goes with the device’s player id and no token', JSON.stringify(list));
+    const img = await page.$eval('#board-test .card.board .c-media img', (i) => i.getAttribute('src'));
+    check(img === 'https://jnouvwxomrcffqwilqkq.supabase.co/storage/v1/object/public/btb-photos/submissions/abcd-1234.jpg', 'an approved photo is drawn from the public bucket', img);
+    await page.click('#board-test [data-act=bvote]');
+    await page.waitForTimeout(200);
+    check(await page.$eval('#board-test [data-act=bvote] .n', (n) => n.textContent) === '4', 'the vote adopts the server’s count', '');
+    check(calls.some((c) => c.fn === 'nn_vote' && c.auth === null && c.args.p_post === post.id), 'signed out, nn_vote goes without a token', '');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.reload();
+    await settle(page);
+    await drawBoard(page, 'vintage');
+    await page.click('#board-test [data-act=breport]');
+    await page.waitForSelector('.sheet-card[aria-label="Report this post"]');
+    await page.click('.sheet-body .sheet-row:first-of-type button');
+    await page.waitForTimeout(250);
+    check(/already reported this one/.test(await page.$eval('#toast', (t) => t.textContent)), 'a refusal from the server becomes its sentence', await page.$eval('#toast', (t) => t.textContent));
+    check(calls.some((c) => c.fn === 'nn_report' && c.auth === 'Bearer a.b.c' && c.args.p_reason === 'spam'), 'signed in, a report carries the reader’s token', JSON.stringify(calls.filter((c) => c.fn === 'nn_report')));
+    check(!calls.some((c) => /@/.test(JSON.stringify(c.args))), 'no call carries an email', '');
+    const real = errors.filter((e) => !/Failed to load resource: the server responded with a status of 400/.test(e));
+    check(!real.length, 'no console errors beyond the browser logging the refusal', real.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ---------------------------------------------------------- shell fixes */
 /* The small shell changes the tab sessions asked for, one check each. */
 async function shellFixes(browser, base) {
@@ -1867,6 +2212,8 @@ try {
   await run(theGames);
   await run(interactions);
   await run(shellFixes);
+  await run(accounts);
+  await run(boards);
 } finally {
   await browser.close();
   proc.kill();
