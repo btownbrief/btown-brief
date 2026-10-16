@@ -75,6 +75,11 @@ jobs:
           fi
 
       - name: Refresh pulse data
+        env:
+          # Read-only token for the private btownbrief/wire-inbox repo (the X
+          # and Facebook posts). Absent, the run is unchanged and the payload
+          # just marks both inbox sources paused.
+          WIRE_INBOX_TOKEN: ${{ secrets.WIRE_INBOX_TOKEN }}
         run: |
           python3 scripts/refresh_pulse.py --selftest
           mkdir -p /tmp/pulse-out/data

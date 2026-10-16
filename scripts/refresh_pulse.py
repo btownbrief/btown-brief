@@ -53,6 +53,12 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 
+# The Wire's two siblings: the inbox reader (X and Facebook posts from the
+# private wire-inbox repo) and the mechanical channel rules. Both are
+# standard library only and never raise into this run.
+import wire_inbox
+from wire_common import mechanical_channel
+
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 OUT = os.path.join(ROOT, "data", "pulse.json")
 TOPICS_FILE = os.path.join(ROOT, "data", "pulse-topics.json")
@@ -1126,7 +1132,10 @@ def build_payload(sources, per_source, generated):
             entry["pod"] = 1
         out_sources.append(entry)
         for item in items:
-            out_items.append(dict(item, s=source["id"]))
+            # The Wire's chips and Local switch read these. The folder and the
+            # site decide them here; tag_wire.py settles the rest hourly.
+            ch, local = mechanical_channel(source, item.get("u"))
+            out_items.append(dict(item, s=source["id"], ch=ch, local=local))
     out_items.sort(key=lambda entry: entry.get("d", 0), reverse=True)
     return {
         "v": 1,
@@ -1296,10 +1305,14 @@ def run(args):
     # A Reddit pause flipping on or off, or a removed thread leaving, is a
     # change worth publishing even on a run with no new headlines.
     reddit_changed = bool(reddit) and (previous.get("reddit") or {}).get("paused") != reddit["paused"]
+    # X and Facebook posts from the wire inbox. A missing token, file or
+    # fresh write pauses that source and changes nothing else about the run.
+    inbox, inbox_added, inbox_changed = wire_inbox.read_inbox(previous.get("inbox"))
+    print(wire_inbox.summary_line(inbox), f"({inbox_added} new)")
 
     prev_total = len(previous.get("items", []))
     if not args.seed and prev_total and added_total == 0 and not dropped_removed \
-            and not reddit_changed:
+            and not reddit_changed and not inbox_changed:
         # Nothing new anywhere: don't write at all. The workflow then skips
         # its push, the branch keeps its honest `generated` stamp, and the
         # page's "updated Xm ago" reflects when content actually changed.
@@ -1309,6 +1322,7 @@ def run(args):
     payload = build_payload(sources, per_source, utcnow())
     if reddit:
         payload["reddit"] = reddit   # pages that predate the key just ignore it
+    payload["inbox"] = inbox         # same: only the Wire reads it
     total = len(payload["items"])
     floor = max(MIN_ITEMS, prev_total // 2)
     if total < floor:
@@ -1659,6 +1673,8 @@ def selftest():
     assert payload["sources"][0]["pod"] == 1 and payload["items"][0]["s"] == "a"
     assert payload["sources"][1]["n"] == 0 and len(payload["items"]) == 1
     assert "og" not in payload["sources"][0] and "og" not in payload["sources"][1]
+    # every item carries the Wire's mechanical channel and local flag
+    assert payload["items"][0]["ch"] == "world" and payload["items"][0]["local"] is False
 
     # outlet folding in the payload: the secondary carries "og", the email
     # copy of a story the RSS feed already ran drops even though its URL is
