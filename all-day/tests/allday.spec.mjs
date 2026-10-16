@@ -805,6 +805,30 @@ async function onAir(browser, base) {
     await ctx.close();
   });
 
+  await group('On Air, Live is cameras', async () => {
+    const JAZZ = ['Peaceful Autumn Village in Vermont with Relaxing Jazz 🍂 Smooth Jazz & Falling Leaves for Slow Days',
+      'Peaceful Autumn Village in Vermont 🍂 Smooth & Relaxing Jazz at a Cozy Café for Slow Days ☕'];
+    const { tv } = await onairFiles();
+    check(JAZZ.every((t) => tv.live.some((v) => v.t === t)), 'the fixture carries the two jazz streams the live search found on 2026-10-16', '');
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#onair');
+    await page.waitForSelector('#panel-onair [data-slot="live"] .vcard', { timeout: 15000 });
+    const titles = () => page.$$eval('#panel-onair [data-slot="live"] .vcard .t', (t) => t.map((x) => x.textContent));
+    const local = await titles();
+    check(local.includes('Church Street Market Place Live Stream') && local.includes('The lake, from ECHO') && local.includes('The ferry dock at King Street'),
+      'Local: the pinned Church Street camera and the lake cams', JSON.stringify(local));
+    check(!JAZZ.some((t) => local.includes(t)), 'Local: no “Relaxing Jazz” ambience streams', JSON.stringify(local));
+    check(!local.some((t) => /football|Documentaries/.test(t)), 'Local: nothing off the Vermont shelf or the pinned roster', JSON.stringify(local));
+    await toTop(page);
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.waitForTimeout(250);
+    const every = await titles();
+    check(!JAZZ.some((t) => every.includes(t)), 'Everything: still no ambience streams', JSON.stringify(every));
+    check(every.some((t) => /football/.test(t)) && every.some((t) => /Documentaries/.test(t)), 'Everything: the other live streams come back', JSON.stringify(every));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('On Air, the audio card', async () => {
     for (const audio of ['none', 'yesterday']) {
       const { ctx, page, errors } = await newPage(browser, base, { onair: { audio } });

@@ -153,8 +153,16 @@ function clipItem(c) {
 
 /* ------------------------------------------------------------ the videos */
 const isLocalVideo = (v) => !!v && (!!v.vt || v.g === 'vt' || v.shelf === LOCAL_SHELF);
-const LIVE_AWAY = new Set(['news', 'sci', 'music', 'fun', 'food']);
-const isLocalCam = (v) => !!v && (isLocalVideo(v) || !LIVE_AWAY.has(String(v.g || '')));
+/* Live on Local is cameras around here: a stream on the Vermont shelf, or
+   one of the pinned cameras (scripts/refresh_youtube.py PINNED_LIVE, kept in
+   step by hand). The live search also matches "Vermont" in titles like
+   "Peaceful Autumn Village in Vermont with Relaxing Jazz", so anything that
+   reads as music or ambience is never shown, on either side of the switch.
+   The real fix is a pinned live roster in refresh_youtube.py. */
+const PINNED_LIVE = new Set(['zl1woMXGGmQ']);   // Church Street Market Place
+const AMBIENCE_RE = /\b(jazz|lo-?fi|relaxing|ambient|ambience|sleep|study)\b|\bcaf[eé](?![a-z])/i;
+const isAmbience = (v) => AMBIENCE_RE.test(String(v && v.t || ''));
+const isLocalCam = (v) => !!v && (isLocalVideo(v) || PINNED_LIVE.has(v.id));
 const shelvesOf = (tv) => arr(tv && tv.shelves).filter((s) => s && typeof s === 'object');
 
 function videoItem(v, opts = {}) {
@@ -344,7 +352,7 @@ function drawTV(host) {
 }
 
 function drawLive(host) {
-  const live = arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && (geo() === 'everything' || isLocalCam(v)));
+  const live = arr(O.tv && O.tv.live).filter((v) => v && app.isVideoId(v.id) && !isAmbience(v) && (geo() === 'everything' || isLocalCam(v)));
   if (!live.length) return false;
   sec(host, 'Live', esc(geo() === 'everything' ? 'Always on, here and elsewhere. Tap to watch.' : 'Always on, around here. A lake at night is not competing with anything.'), 'live');
   const r = rail(host);

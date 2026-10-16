@@ -7,7 +7,13 @@ Every morning at 7 Eastern (.github/workflows/wire-audio.yml):
      morning's picks are ranked, today's paper is too thin to read from, so
      yesterday's frozen edition (data/wire/YYYY-MM-DD.json) is used instead,
      and the brief says so.
-  2. Take the top local picks, in rank order, with their one-line reasons.
+  2. Take the top local picks (up to twelve), in rank order. Facts come from
+     their headlines (and an item's own text, when it has any) and nothing
+     else: the Wire's one-line reasons are passed to the writer marked as an
+     editor's note that may shape emphasis and order but is never a source,
+     and they are left out of every check's source set. (The first Opus
+     clip said a panel was free because pick 7's reason did; its headline
+     never did.)
   3. Ask Claude Opus 5.5 (ANTHROPIC_API_KEY) for the body of a 400 to 500
      word script in a newsreader's spoken English. Opus only: this is the
      Brief speaking in its own name, and accuracy here is the product, so
@@ -85,9 +91,14 @@ DEFAULT_VOICE = "FrS6cKLB1wg4WYgPa9GW"     # Wyatt, made and kept by ElevenLabs 
 OUTPUT_FORMAT = "mp3_44100_64"
 USD_PER_1K_CHARS = {"eleven_v4_turbo": 0.04, "eleven_v4": 0.08}   # API pricing page, 2026-10-16
 
-WORDS_MIN, WORDS_MAX = 400, 500            # the whole script, greeting and sign-off included
-WORDS_SOFT_MIN, WORDS_SOFT_MAX = 360, 560  # after the rewrite, close enough to ship
-STORIES_MAX = 8
+# Length, the whole script with the greeting and sign-off. 400 to 500 is the
+# target the writer is given; a shorter brief that is all true is a finished
+# one (facts come from headlines alone, and a headline holds a sentence or
+# two), so only SHORT_OK and WORDS_MAX send a draft back. Never padding.
+WORDS_MIN, WORDS_MAX = 400, 500
+SHORT_OK = 250                             # twelve headlines told plainly run about 270
+WORDS_SOFT_MIN, WORDS_SOFT_MAX = 230, 560  # after the rewrites, close enough to ship
+STORIES_MAX = 12
 STORIES_MIN = 4                            # fewer local picks than this and today is too thin
 COPY_RUN = 8                               # words in a row copied from a headline
 KEEP_DAYS = 30
@@ -109,9 +120,9 @@ RESPELL = {
     "Lamoille": "la-MOYL",
 }
 
-# Saying an acronym in full is good for the ear ("Vermont State Police" for
-# "VSP"), so when a headline or reason uses one of these, its spelled-out
-# words count as given. Nothing else is expanded.
+# Saying an acronym or a title in full is good for the ear ("Vermont State
+# Police" for "VSP", "Governor" for "Gov."), so when a headline uses one of
+# these, its spelled-out words count as given. Nothing else is expanded.
 ACRONYMS = {
     "VSP": "Vermont State Police",
     "AOT": "Vermont Agency of Transportation",
@@ -129,6 +140,10 @@ ACRONYMS = {
     "DCF": "Department for Children and Families",
     "PUC": "Public Utility Commission",
     "FEMA": "Federal Emergency Management Agency",
+    "Gov": "Governor",
+    "Lt": "Lieutenant",
+    "Sen": "Senator",
+    "Rep": "Representative",
 }
 
 TASK = """You write the Btown Brief, out loud: a three-minute morning news brief for
@@ -136,13 +151,21 @@ Burlington, Vermont, read aloud by a synthetic voice. Write it the way a public
 radio newsreader talks to a neighbour: plain, warm, unhurried.
 
 You get the stories, numbered in order of importance. Each is a headline, the
-outlet that ran it, and a one-line note on why it matters. Write the body of the
-brief: every story, in the order given, as short spoken paragraphs.
+outlet that ran it, sometimes the story's own text, and an editor's note on why
+it was picked. Write the body of the brief: every story, in the order given, as
+short spoken paragraphs.
 
 Rules, all of them hard:
-- Every fact comes from the headline or the note. Add no name, number, date,
-  day of the week, place, price or detail that they do not give. When a headline
-  is unclear, say less, never more. Do not guess what happened or what comes next.
+- The headline (and the story's own text, when it is given) is your only source
+  of facts. The editor's note may shape what you put first and what you stress,
+  but it is never a source: state nothing from the note that the headline does
+  not say. Add no name, number, date, day of the week, place, price, cost or
+  detail the headline does not give. When a headline is unclear, say less,
+  never more. Do not guess what happened, why, or what comes next.
+- If a headline gives little, say little: one plain sentence is enough. Never
+  pad. No vague filler ("of some kind", "it remains to be seen", "time will
+  tell"), no repeating what you just said. A sentence you cannot ground in the
+  headline is left out, and a short true brief beats a long padded one.
 - Never read a headline out. Retell each story in your own words: full, short
   sentences, one idea each. Never copy more than six words in a row from a headline.
 - No lists, no bullets, no "first" or "number one", no headings, no emoji, no
@@ -155,11 +178,11 @@ Rules, all of them hard:
 - Write for the ear: numbers the way they are said ("4.95 million dollars"),
   no symbols, no abbreviation a listener cannot decode unless the headline uses it.
 - No greeting, no sign-off, no date, no weather: those are added for you.
-- Length: {lo} to {hi} words for the body.
+- Length: about {lo} to {hi} words for the body, only if the headlines carry it.
 
 Also write `teaser`: one plain phrase under 90 characters naming three of the
 stories' topics, for the card the clip sits on, e.g. "The governor's race money,
-a new interchange, and a scam warning." Same rules on facts."""
+a new interchange, and a scam warning." Same rules on facts: headlines only."""
 
 SCHEMA = {
     "type": "object",
@@ -171,13 +194,15 @@ SCHEMA = {
     "additionalProperties": False,
 }
 
-# The second pass: the same model reads the draft against the sources and
-# quotes every sentence they do not support. The word checks above catch a
+# The second pass: the same model reads the draft against the headlines alone
+# (never the reasons) and quotes every sentence they do not support, padding
+# included. The word checks above catch a
 # new name or number; this catches what they cannot (seen on the first real
 # run: "She's the one with the cash advantage" about a candidate no source
 # gave a gender, and a line of opinion about health care stated as fact).
 VERIFY_TASK = """You fact-check a short radio news script against its only sources: the
-numbered stories below, each a headline, the outlet that ran it, and a one-line note.
+numbered headlines below, each with the outlet that ran it (and the story's own
+text, when it is given). Nothing else counts as a source.
 
 List every sentence of the script that says something the sources do not support.
 Unsupported means: a name, title or role; a pronoun that gives someone a gender;
@@ -185,7 +210,9 @@ a number, date, time or place; what happened, why, or what comes next; who is
 affected; an opinion, judgement or prediction stated as fact. Rewording a headline
 or a note is supported. So are turns between stories and words to the listener
 ("If you drive...", "Worth a look before you head out") that assert nothing new,
-and saying when the brief airs ("this morning").
+and saying when the brief airs ("this morning"). Also list padding: a sentence
+of vague filler that grounds nothing ("with a twist of some kind", "it remains
+to be seen") or that only repeats what the script already said.
 
 Quote each unsupported sentence exactly as it appears and say in a few words what
 it adds. Return an empty list when every sentence is supported."""
@@ -250,7 +277,8 @@ def word_count(text):
 def local_stories(payload, limit=STORIES_MAX):
     """The edition's local picks in rank order (never the Brief's own
     edition), then the local leads of its updates, as
-    [{"id", "title", "source", "why"}]. Nothing without a title."""
+    [{"id", "title", "source", "text", "why"}]. Nothing without a title.
+    `why` is the Wire's reason: emphasis and order, never a fact."""
     out, seen = [], set()
 
     def add(item, why):
@@ -261,8 +289,9 @@ def local_stories(payload, limit=STORIES_MAX):
         if not key or not title or key in seen:
             return
         seen.add(key)
+        text = re.sub(r"\s+", " ", str(item.get("text") or item.get("summary") or "")).strip()
         out.append({"id": key, "title": title, "source": str(item.get("name") or item.get("src") or "").strip(),
-                    "why": re.sub(r"\s+", " ", str(why or "")).strip()})
+                    "text": text[:600], "why": re.sub(r"\s+", " ", str(why or "")).strip()})
 
     picks = [p for p in payload.get("picks") or [] if isinstance(p, dict)]
     for pick in sorted(picks, key=lambda p: p.get("rank") or 99):
@@ -312,15 +341,29 @@ def prompt_for(stories, which):
     budget_lo = WORDS_MIN - word_count(intro("2026-10-16", which)) - word_count(OUTRO)
     budget_hi = WORDS_MAX - word_count(intro("2026-10-16", which)) - word_count(OUTRO)
     system = TASK.replace("{lo}", str(budget_lo)).replace("{hi}", str(budget_hi))
-    lines = [f"{i}. {s['title']} || {s['source'] or 'unknown outlet'} || {s['why'] or '(no note)'}"
+    lines = [f"{i}. Headline: {s['title']} || Outlet: {s['source'] or 'unknown'}"
+             + (f" || Text: {s['text']}" if s.get("text") else "")
+             + (f" || Editor's note, not a source: {s['why']}" if s.get("why") else "")
              for i, s in enumerate(stories, 1)]
     head = ("These are this morning's top local stories:" if which == "today"
             else "These were yesterday's top local stories; write them as yesterday's news:")
     return system, head + "\n" + "\n".join(lines)
 
 
+def headlines_for_check(stories):
+    """What the fact check reads: the headlines, outlets and own text, and
+    never the Wire's reasons (they once invented "free" for a panel whose
+    headline never said so, and the first Opus clip repeated it)."""
+    return "\n".join(f"{i}. {s['title']} || {s['source'] or 'unknown outlet'}"
+                     + (f" || {s['text']}" if s.get("text") else "")
+                     for i, s in enumerate(stories, 1))
+
+
 def sources_of(stories):
-    given = [s["title"] for s in stories] + [s["why"] for s in stories] + [s["source"] for s in stories]
+    """The words a script may state as fact: headlines, outlets, the items'
+    own text, and the spelled-out form of an acronym a headline uses. The
+    reasons are not here: they shape emphasis, never facts."""
+    given = [s["title"] for s in stories] + [s.get("text", "") for s in stories] + [s["source"] for s in stories]
     spelled = [full for short, full in ACRONYMS.items()
                if any(re.search(r"\b" + short + r"\b", text) for text in given)]
     return given + spelled + ["Btown Brief"]
@@ -395,14 +438,15 @@ def hard_fail(p):
 
 
 def clean(p, soft=False):
-    lo, hi = (WORDS_SOFT_MIN, WORDS_SOFT_MAX) if soft else (WORDS_MIN, WORDS_MAX)
+    lo, hi = (WORDS_SOFT_MIN, WORDS_SOFT_MAX) if soft else (SHORT_OK, WORDS_MAX)
     return not hard_fail(p) and not p["list"] and lo <= p["words"] <= hi and (soft or not p["copied"])
 
 
 def describe(p):
     out = []
     if p["invented"]:
-        out.append("These words state facts the headlines and notes do not give; remove them and any "
+        out.append("These words state facts the headlines do not give (an editor's note is never a source); "
+                   "remove them and any "
                    "other such fact: " + ", ".join(f'"{w}"' for w in dict.fromkeys(p["invented"])))
     for u in p["unsupported"]:
         out.append(f'This sentence says what the sources do not ({u["problem"]}); cut it or say only '
@@ -412,9 +456,12 @@ def describe(p):
                    + " | ".join(p["copied"]))
     if p["list"]:
         out.append("It reads as a list; write connected spoken paragraphs.")
-    if not WORDS_MIN <= p["words"] <= WORDS_MAX:
+    if p["words"] > WORDS_MAX:
         out.append(f"The whole script is {p['words']} words with the greeting and sign-off; "
-                   f"the body must bring it to {WORDS_MIN} to {WORDS_MAX}.")
+                   f"cut it to under {WORDS_MAX}, dropping the least grounded sentences first.")
+    elif p["words"] < SHORT_OK:
+        out.append(f"The whole script is only {p['words']} words. Retell each story a little more fully "
+                   "from its headline, but add no fact and no filler; if a headline gives no more, leave it.")
     if p["teaser_invented"]:
         out.append("The teaser states facts not given: " + ", ".join(p["teaser_invented"]))
     return out
@@ -440,11 +487,10 @@ def verify(stories, paragraphs, engine, ask):
     really are in the draft count, so a confused checker cannot sink a good
     script; a checker that does not answer at all can, because nothing ships
     unchecked."""
-    _, sources = prompt_for(stories, "today")
     body = "\n\n".join(paragraphs)
     flat = re.sub(r"\s+", " ", body)
     try:
-        answer, usage = ask(engine, VERIFY_TASK, sources.split("\n", 1)[1] + "\n\nThe script:\n" + body,
+        answer, usage = ask(engine, VERIFY_TASK, headlines_for_check(stories) + "\n\nThe script:\n" + body,
                             VERIFY_SCHEMA, max_tokens=MAX_TOKENS[engine["provider"]], log_prefix="wire_audio")
     except wc.ModelError as exc:
         return [{"sentence": "", "problem": "the fact check did not run"}], getattr(exc, "usage", None) or {}
@@ -510,7 +556,7 @@ def write_script(stories, engine, date, which, ask=None):
         notes.append("every draft invented a fact, failed the fact check or read as a list: "
                      "no clip today rather than a wrong one")
         return None, "", usage, notes
-    off = lambda d: max(WORDS_MIN - d[2]["words"], d[2]["words"] - WORDS_MAX, 0)  # noqa: E731
+    off = lambda d: max(SHORT_OK - d[2]["words"], d[2]["words"] - WORDS_MAX, 0)  # noqa: E731
     paragraphs, teaser, p = min(honest, key=lambda d: (off(d), len(d[2]["copied"])))
     if not clean(p, soft=True):
         notes.append(f"the nearest draft is {p['words']} words: no clip today")
@@ -828,7 +874,7 @@ def selftest():
         return {"paragraphs": body, "teaser": "Bike lanes on North Avenue."}, {"in": 10, "out": 10, "calls": 1}
     script, teaser, usage, notes = write_script(stories, {"provider": "anthropic", "model": "m"}, "2026-10-16", "today", ask=fake)
     assert script and script.startswith("Good morning. It's Friday, October 16") and "AI voice" in script, script
-    assert WORDS_MIN <= word_count(script) <= WORDS_MAX, word_count(script)
+    assert SHORT_OK <= word_count(script) <= WORDS_MAX, word_count(script)
     assert len(calls) == 1 and teaser == "Bike lanes on North Avenue." and usage["calls"] == 2, (calls, usage)
     assert gendered("She said his plan works.", srcs) == ["She", "his"] and not gendered("She said so.", ["she won"])
 
