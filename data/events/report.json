@@ -1,30 +1,30 @@
 {
- "generated": "2026-10-15T19:16:55-04:00",
+ "generated": "2026-10-16T10:12:13-04:00",
  "sources": {
   "bca": {
    "label": "Burlington City Arts",
    "count": 10,
-   "seconds": 6.4
+   "seconds": 5.9
   },
   "breweries": {
    "label": "Breweries & Taprooms",
-   "count": 82,
-   "seconds": 4.4
+   "count": 79,
+   "seconds": 2.6
   },
   "brownell": {
    "label": "Brownell Library",
-   "count": 88,
+   "count": 89,
    "seconds": 3.2
   },
   "champlainvalley": {
    "label": "Champlain Valley (WFFF calendar)",
-   "count": 242,
-   "seconds": 3.6
+   "count": 231,
+   "seconds": 4.0
   },
   "churchst": {
    "label": "Church Street Marketplace",
-   "count": 70,
-   "seconds": 1.6
+   "count": 77,
+   "seconds": 1.9
   },
   "echo": {
    "label": "ECHO Leahy Center",
@@ -34,7 +34,7 @@
   "eventbrite": {
    "label": "Eventbrite",
    "count": 0,
-   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-15&end_date=2026-12-14&page=1 (HTTP Error 405: Not Allowed)"
+   "error": "fetch failed after 3 tries: https://www.eventbrite.com/d/vt--burlington/all-events/?start_date=2026-10-16&end_date=2026-12-15&page=1 (HTTP Error 405: Not Allowed)"
   },
   "facebook": {
    "label": "Facebook (manual drops)",
@@ -44,17 +44,17 @@
   "farmersmarket": {
    "label": "Burlington Farmers Market",
    "count": 3,
-   "seconds": 0.5
+   "seconds": 0.3
   },
   "fletcherfree": {
    "label": "Fletcher Free Library",
-   "count": 215,
-   "seconds": 76.3
+   "count": 217,
+   "seconds": 70.7
   },
   "flynn": {
    "label": "The Flynn",
    "count": 18,
-   "seconds": 0.6
+   "seconds": 0.5
   },
   "greenfc": {
    "label": "Vermont Green FC",
@@ -63,8 +63,8 @@
   },
   "helloburlington": {
    "label": "Hello Burlington",
-   "count": 657,
-   "seconds": 38.5
+   "count": 647,
+   "seconds": 33.5
   },
   "higherground": {
    "label": "Higher Ground",
@@ -74,49 +74,50 @@
   },
   "instagram": {
    "label": "Instagram (Scrape Creators)",
-   "count": 1,
-   "seconds": 35.5
+   "count": 0,
+   "error": "skipped by design: once-daily gate, Instagram fetches on the afternoon run only",
+   "staleDays": 0
   },
   "loveburlington": {
    "label": "Love Burlington",
-   "count": 384,
-   "seconds": 68.6
+   "count": 395,
+   "seconds": 74.7
   },
   "meetup": {
    "label": "Meetup",
-   "count": 50,
-   "seconds": 106.4
+   "count": 53,
+   "seconds": 105.9
   },
   "monkeyhouse": {
    "label": "The Monkey House",
-   "count": 22,
-   "seconds": 0.5
+   "count": 21,
+   "seconds": 1.8
   },
   "parksrec": {
    "label": "Burlington Parks & Rec",
    "count": 69,
-   "seconds": 16.2
+   "seconds": 16.1
   },
   "radiobean": {
    "label": "Radio Bean",
    "count": 0,
    "error": "HTTP Error 404: Not Found",
-   "staleDays": 7
+   "staleDays": 8
   },
   "sblibrary": {
    "label": "South Burlington Public Library",
-   "count": 92,
-   "seconds": 2.3
+   "count": 86,
+   "seconds": 2.1
   },
   "sbrec": {
    "label": "South Burlington Rec & Parks",
-   "count": 20,
-   "seconds": 25.1
+   "count": 19,
+   "seconds": 24.1
   },
   "sevendays": {
    "label": "Seven Days",
-   "count": 2482,
-   "seconds": 3.4
+   "count": 2467,
+   "seconds": 28.2
   },
   "shelburnemuseum": {
    "label": "Shelburne Museum",
@@ -125,99 +126,31 @@
   },
   "uvm": {
    "label": "UVM & Colleges",
-   "count": 508,
-   "seconds": 22.2
+   "count": 506,
+   "seconds": 32.3
   },
   "uvmbored": {
    "label": "UVM Bored",
-   "count": 315,
-   "seconds": 0.3
+   "count": 313,
+   "seconds": 0.2
   },
   "vcc": {
    "label": "Vermont Comedy Club",
-   "count": 57,
-   "seconds": 79.5
+   "count": 56,
+   "seconds": 74.7
   },
   "winooskilibrary": {
    "label": "Winooski Memorial Library",
-   "count": 50,
+   "count": 49,
    "seconds": 0.3
   }
  },
- "gathered": 5435,
- "afterDedup": 2589,
- "duplicatesMerged": 2846,
- "final": 2690,
- "firecrawlCalls": 1,
+ "gathered": 5405,
+ "afterDedup": 2557,
+ "duplicatesMerged": 2848,
+ "final": 2652,
+ "firecrawlCalls": 5,
  "mergeLog": [
-  {
-   "kept": {
-    "title": "Thirsty Thursday",
-    "source": "churchst"
-   },
-   "merged_sources": [
-    "churchst",
-    "loveburlington",
-    "sevendays"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
-    "title": "I'm Able: A Woman's Advice for Disability Change Agents ft. Sefakor G.M.A. Komabu-Pomeyie",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
-    "title": "West Coast Swing Lessons",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
-    "title": "Charlie Parr at Higher Ground",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
-    "title": "UPB Game Night",
-    "source": "uvm"
-   },
-   "merged_sources": [
-    "uvm",
-    "uvmbored"
-   ],
-   "date": "2026-11-19"
-  },
-  {
-   "kept": {
-    "title": "Pub Hour",
-    "source": "loveburlington"
-   },
-   "merged_sources": [
-    "helloburlington",
-    "loveburlington"
-   ],
-   "date": "2026-11-19"
-  },
   {
    "kept": {
     "title": "'Very Eric Carle' Exhibit",
@@ -2395,24 +2328,76 @@
     "sevendays"
    ],
    "date": "2026-12-14"
+  },
+  {
+   "kept": {
+    "title": "Sing-Along with Linda Bassick",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
+    "title": "Spanish Conversation",
+    "source": "fletcherfree"
+   },
+   "merged_sources": [
+    "fletcherfree",
+    "sevendays"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
+    "title": "Super Smash Tuesdays",
+    "source": "churchst"
+   },
+   "merged_sources": [
+    "churchst",
+    "loveburlington"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
+    "title": "802sDay",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
+    "title": "Open Studio",
+    "source": "loveburlington"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "loveburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-15"
+  },
+  {
+   "kept": {
+    "title": "'Very Eric Carle' Exhibit",
+    "source": "sevendays"
+   },
+   "merged_sources": [
+    "helloburlington",
+    "sevendays"
+   ],
+   "date": "2026-12-15"
   }
  ],
  "changes": [
-  {
-   "id": "6867a4c0b102",
-   "title": "Wild Leek River",
-   "date": "2026-10-23",
-   "change": "time",
-   "was": "2026-10-23T21:00:00-04:00",
-   "now": "2026-10-23T20:00:00-04:00"
-  },
-  {
-   "id": "29ac658478fd",
-   "title": "Toddlertime",
-   "date": "2026-10-15",
-   "change": "missing",
-   "lastSeen": "2026-10-13T19:52:34-04:00"
-  },
   {
    "id": "ab87e8e75c1b",
    "title": "LEGO Builders",
@@ -2452,19 +2437,11 @@
    "id": "0d71c9445839",
    "title": "Flaxtravaganza!",
    "date": "2026-10-17",
-   "change": "missing",
-   "lastSeen": "2026-10-12T22:14:11-04:00"
+   "change": "dropped"
   },
   {
    "id": "c8eb60c9b6c9",
    "title": "Flaxtravaganza @ Ethan Allen Homestead",
-   "date": "2026-10-17",
-   "change": "missing",
-   "lastSeen": "2026-10-12T22:14:11-04:00"
-  },
-  {
-   "id": "84a99e852e90",
-   "title": "'Coward'",
    "date": "2026-10-17",
    "change": "dropped"
   },
@@ -2495,6 +2472,13 @@
    "date": "2026-10-21",
    "change": "missing",
    "lastSeen": "2026-10-14T19:26:16-04:00"
+  },
+  {
+   "id": "39fd361f0e4a",
+   "title": "Ryan La Sala & Don Martin",
+   "date": "2026-10-21",
+   "change": "missing",
+   "lastSeen": "2026-10-15T19:16:55-04:00"
   },
   {
    "id": "2b254f834364",
@@ -2532,24 +2516,6 @@
    "lastSeen": "2026-10-14T10:38:50-04:00"
   },
   {
-   "id": "94658234d573",
-   "title": "'Josephine'",
-   "date": "2026-10-23",
-   "change": "dropped"
-  },
-  {
-   "id": "67fafe814b37",
-   "title": "'Look Back'",
-   "date": "2026-10-23",
-   "change": "dropped"
-  },
-  {
-   "id": "92091b5ba2b8",
-   "title": "Burlington Contra Dance",
-   "date": "2026-10-23",
-   "change": "dropped"
-  },
-  {
    "id": "b50b64299219",
    "title": "Fire Safety Story Time",
    "date": "2026-10-24",
@@ -2564,11 +2530,11 @@
    "lastSeen": "2026-10-13T19:52:34-04:00"
   },
   {
-   "id": "e608792041f0",
-   "title": "Drag Story Hour | Phoenix Books Burlington",
+   "id": "a89af23cfc9f",
+   "title": "Drag Story Hour",
    "date": "2026-10-24",
    "change": "missing",
-   "lastSeen": "2026-10-14T19:26:16-04:00"
+   "lastSeen": "2026-10-15T19:16:55-04:00"
   },
   {
    "id": "7057731aa8a3",
@@ -2580,13 +2546,6 @@
   {
    "id": "a5cbbe59de66",
    "title": "Haunted Homestead Tours",
-   "date": "2026-10-24",
-   "change": "missing",
-   "lastSeen": "2026-10-12T22:14:11-04:00"
-  },
-  {
-   "id": "8d7f0e772503",
-   "title": "'Fatherland'",
    "date": "2026-10-24",
    "change": "dropped"
   },
@@ -2668,11 +2627,11 @@
    "lastSeen": "2026-10-13T19:52:34-04:00"
   },
   {
-   "id": "34bb6e232047",
-   "title": "Gordon MacFarland in conversation with Dr. Karen Westervelt | Staying With It",
+   "id": "8a2b8d52f7e3",
+   "title": "Gordon MacFarland",
    "date": "2026-10-27",
    "change": "missing",
-   "lastSeen": "2026-10-14T19:26:16-04:00"
+   "lastSeen": "2026-10-15T19:16:55-04:00"
   },
   {
    "id": "d3c969f93541",
@@ -2948,12 +2907,6 @@
    "lastSeen": "2026-10-14T19:26:16-04:00"
   },
   {
-   "id": "8084a008f1bc",
-   "title": "Sam Shackleton",
-   "date": "2026-11-15",
-   "change": "dropped"
-  },
-  {
    "id": "bd554bc7082a",
    "title": "Public Skate",
    "date": "2026-11-16",
@@ -3080,18 +3033,6 @@
    "lastSeen": "2026-10-13T13:06:34-04:00"
   },
   {
-   "id": "d004809cbd4f",
-   "title": "2DEAD BOYZ + The Underachievers",
-   "date": "2026-12-03",
-   "change": "dropped"
-  },
-  {
-   "id": "a1a1f8ef4de6",
-   "title": "lespecial",
-   "date": "2026-12-04",
-   "change": "dropped"
-  },
-  {
    "id": "2cab02a24f00",
    "title": "Song Together: A Musical Playgroup",
    "date": "2026-12-06",
@@ -3109,8 +3050,7 @@
    "id": "376d5473cebd",
    "title": "A Masked Murder",
    "date": "2026-12-06",
-   "change": "missing",
-   "lastSeen": "2026-10-12T22:14:11-04:00"
+   "change": "dropped"
   },
   {
    "id": "ef8089c63613",
@@ -3130,22 +3070,19 @@
    "id": "0c686cef0792",
    "title": "TRSH",
    "date": "2026-12-11",
-   "change": "missing",
-   "lastSeen": "2026-10-12T22:14:11-04:00"
+   "change": "dropped"
   },
   {
    "id": "a972bc932603",
    "title": "Lane Series: Lorelei Ensemble",
    "date": "2026-12-11",
-   "change": "missing",
-   "lastSeen": "2026-10-12T22:14:11-04:00"
+   "change": "dropped"
   },
   {
    "id": "7074d760b355",
    "title": "Mad Robin Burlington Contra Dance",
    "date": "2026-12-11",
-   "change": "missing",
-   "lastSeen": "2026-10-12T22:14:11-04:00"
+   "change": "dropped"
   },
   {
    "id": "2d9dc6aa8476",
