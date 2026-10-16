@@ -467,6 +467,7 @@ function settingsSheet() {
       }
       acct.appendChild(el('p', 'sheet-note', 'Optional. An email link signs you in; no password. Nothing here needs it yet.'));
       const f = el('form', 'signin');
+      f.noValidate = true;   /* our own message, not the browser's bubble */
       const input = el('input', 'field');
       input.type = 'email'; input.placeholder = 'you@example.com'; input.autocomplete = 'email';
       input.setAttribute('aria-label', 'Email address');

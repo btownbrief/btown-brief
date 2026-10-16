@@ -101,6 +101,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
   transform: translateX(var(--swipe, 0)); touch-action: pan-y;
   -webkit-touch-callout: none;
 }
+/* a link inside a card must not start the browser's own drag, or a mouse
+   swipe turns into dragging a URL */
+.card a, .card img { -webkit-user-drag: none; }
 .card:not(.is-swiping) { transition: transform .18s cubic-bezier(.2, .8, .3, 1); }
 .card.is-swiping { transition: none; }
 .flash { animation: flash 2.2s ease; }
@@ -112,7 +115,9 @@ body.chrome-away .mast { transform: translateY(-100%); }
   text-overflow: ellipsis; min-width: 0; }
 .c-head .dot { flex: 0 0 auto; }
 .c-head .dot::before { content: "·"; }
-.c-head .via { white-space: nowrap; }
+.c-head .via { white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* a long source and a long "via" share the line; both give way, the age never does */
+.c-head .srcbtn { min-width: 0; flex: 0 1 auto; }
 
 .mark { position: relative; width: 22px; height: 22px; border-radius: var(--r-sm); flex: 0 0 auto; display: inline-flex;
   align-items: center; justify-content: center; font-size: var(--fs-label); font-weight: 700; overflow: hidden;
@@ -581,7 +586,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .pillbtn.on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
 
 /* the hero card: one big thing, used by Food's Weekly Bite and Art's photo of the week */
-.hero { padding: var(--s3) var(--gutter) 6px; }
+.hero { padding: 0 var(--gutter) 6px; }
 .hero .c-media { margin: 0; }
 .hero .eyebrow { display: block; margin: 12px 0 4px; }
 .hero h3 { font-family: var(--serif); font-size: var(--fs-hero); font-weight: 500; line-height: var(--lh-tight); }
