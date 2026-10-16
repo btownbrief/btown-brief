@@ -16,7 +16,12 @@
    nothing on the page breaks.
 
    Every localStorage touch is wrapped. Safari in private mode throws on
-   write, and an uncaught QuotaExceededError here would take down the app. */
+   write, and an uncaught QuotaExceededError here would take down the app.
+
+   Demo mode (?demo=1) never touches any of it: saves, votes, read state and
+   mutes live in memory for the visit, and no vote reaches Supabase, so fake
+   items cannot leak into a reader's real lists or into ad_votes. Theme is
+   the one thing demo mode still remembers. */
 
 const SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
 const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon — safe to ship
@@ -82,6 +87,12 @@ function capMap(map, cap) {
   return out;
 }
 
+/* ----------------------------------------------------------------- demo */
+
+let DEMO = null;   // { saved: [], voted: {}, read: {}, hidden: {} } while ?demo=1
+export function setDemo(on) { DEMO = on ? { saved: [], voted: {}, read: {}, hidden: {} } : null; }
+export const isDemo = () => !!DEMO;
+
 /* --------------------------------------------------------------- player */
 
 export function playerId() {
@@ -135,28 +146,15 @@ export function applyTheme(mode) {
 
 /* Added to the home screen the app runs under the iOS clock, and iOS reads
    theme-color to decide whether to draw that clock in black or white. The
-   strip it lands on is whatever is at the very top of the page: the shared
-   network bar, which is navy in BOTH themes. So the meta has to say navy —
-   answer with the page's own ground and a light-mode phone paints a black
-   clock onto the navy. If the bar never loaded, the masthead is the top strip
-   and the theme's own colour is the right answer again. app.js calls this
-   back when nav.js lands. */
-const NAV_BG = '#0E2230';
-
+   shared network bar left All Day with the New Nine (design call 5), so the
+   strip under the clock is the mast, and the right answer is the theme's own
+   paper. These two values mirror --paper in tokens.css. */
 export function paintStatusBar() {
   const meta = document.querySelector('meta[name="theme-color"]');
   if (!meta) return;
-  /* nav.js is deferred and cross-origin, so for the first moment of every load
-     the bar is merely late rather than absent. Hold navy until the page has
-     finished loading and we can tell the difference — flipping the meta twice
-     on the way in makes the clock blink. */
-  if (document.querySelector('.btnav') || document.readyState !== 'complete') {
-    meta.setAttribute('content', NAV_BG);
-    return;
-  }
   const t = theme();
   const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-  meta.setAttribute('content', dark ? '#06080A' : '#FBF9F5');
+  meta.setAttribute('content', dark ? '#0D0E10' : '#FBF9F5');
 }
 
 /* What the toggle should flip to: whatever you are NOT looking at now. */
@@ -196,6 +194,7 @@ export function setSetting(key, value) {
    pulse2-settings. Muting here mutes there, which is the whole point. */
 
 export function muted() {
+  if (DEMO) return DEMO.hidden;
   return obj(obj(read(PULSE_SET_KEY, {})).hidden);
 }
 
@@ -204,6 +203,8 @@ export function isMuted(sourceId) {
 }
 
 export function setMuted(sourceId, on) {
+  if (!sourceId) return;
+  if (DEMO) { if (on) DEMO.hidden[sourceId] = 1; else delete DEMO.hidden[sourceId]; return; }
   const s = obj(read(PULSE_SET_KEY, {}));
   s.hidden = obj(s.hidden);
   if (on) s.hidden[sourceId] = 1;
@@ -213,7 +214,7 @@ export function setMuted(sourceId, on) {
 
 /* ----------------------------------------------------------------- read */
 
-export function readMap() { return obj(read(READ_KEY, {})); }
+export function readMap() { return DEMO ? DEMO.read : obj(read(READ_KEY, {})); }
 
 export function isRead(key) { return !!readMap()[key]; }
 
@@ -222,7 +223,7 @@ export function markRead(key) {
   const m = readMap();
   if (m[key]) return;
   m[key] = Math.floor(Date.now() / 1000);
-  write(READ_KEY, capMap(m, READ_CAP));
+  if (!DEMO) write(READ_KEY, capMap(m, READ_CAP));
 }
 
 /* --------------------------------------------------------------- passed */
@@ -252,6 +253,7 @@ export function markPassed(keys) {
 /* One list across all five kinds of thing: { k, kind, title, from, href, art } */
 
 export function saved() {
+  if (DEMO) return DEMO.saved;
   const list = arr(read(SAVED_KEY, null));
   if (list.length) {
     /* reader saves keyed on the bare title before 9/2; door saves on
@@ -292,7 +294,7 @@ export function toggleSaved(item) {
   const at = list.findIndex((i) => i.k === item.k);
   if (at >= 0) list.splice(at, 1);
   else list.unshift(item);
-  write(SAVED_KEY, list.slice(0, SAVED_CAP));
+  if (!DEMO) write(SAVED_KEY, list.slice(0, SAVED_CAP));
   return at < 0;
 }
 
@@ -402,13 +404,14 @@ export function rpc(fn, args) {
 let voteCounts = Object.create(null);
 let voteReady = false;
 
-export function votedSet() { return obj(read(VOTED_KEY, {})); }
+export function votedSet() { return DEMO ? DEMO.voted : obj(read(VOTED_KEY, {})); }
 export function hasVoted(k) { return !!votedSet()[k]; }
 export function voteCount(k) { return Number(voteCounts[k]) || 0; }
 export function votesLive() { return voteReady; }
 
 /* One request for a screenful of keys, not one per card. */
 export function loadVotes(keys) {
+  if (DEMO) return Promise.resolve(false);
   const want = [...new Set(arr(keys).filter(Boolean))].slice(0, 300);
   if (!want.length) return Promise.resolve(false);
   return rpc('ad_counts', { p_keys: want }).then((rows) => {
@@ -422,6 +425,13 @@ export function loadVotes(keys) {
 export function toggleVote(item) {
   const mine = votedSet();
   const on = !mine[item.k];
+  if (DEMO) {
+    /* in memory only: the count the card shows is the demo's own number
+       plus this one, and nothing goes to Supabase */
+    if (on) mine[item.k] = 1; else delete mine[item.k];
+    voteCounts[item.k] = on ? 1 : 0;
+    return on;
+  }
   if (on) mine[item.k] = 1; else delete mine[item.k];
   write(VOTED_KEY, mine);
   voteCounts[item.k] = Math.max(0, voteCount(item.k) + (on ? 1 : -1));
@@ -456,4 +466,22 @@ export function topVoted(limit) {
     rows.forEach((r) => { if (r && r.k) voteCounts[r.k] = Number(r.n) || 0; });
     return rows;
   });
+}
+
+/* ---------------------------------------------------------------- user */
+/* The optional email sign-in. auth.js talks to Supabase Auth and keeps the
+   session here; tabs only ever ask app.user(), which is this. Null when
+   nobody is signed in, which is the normal state: no tab may require it. */
+const AUTH_KEY = 'allday-auth';
+export function session() {
+  const s = obj(read(AUTH_KEY, null));
+  return s.access_token && s.user ? s : null;
+}
+export function setSession(s) {
+  if (s) write(AUTH_KEY, s);
+  else { try { localStorage.removeItem(AUTH_KEY); } catch (e) { /* fine */ } }
+}
+export function user() {
+  const s = session();
+  return s ? { id: s.user.id, email: s.user.email || '' } : null;
 }
