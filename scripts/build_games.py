@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import http.client
 import json
 import pathlib
 import re
@@ -72,21 +73,32 @@ def fetch(url: str) -> str:
         return r.read().decode("utf-8", "replace")
 
 
+NET_ERRORS = (OSError, ValueError, http.client.HTTPException)
+
+
+def old_rooms(previous: dict | None) -> set[str]:
+    games = previous.get("games") if isinstance(previous, dict) else None
+    return {g["slug"] for g in games if isinstance(g, dict) and g.get("rooms") and isinstance(g.get("slug"), str)} \
+        if isinstance(games, list) else set()
+
+
 def room_games(previous: dict | None) -> set[str] | None:
     """The slugs that can host a challenge today, or None when unknown."""
     try:
         src = fetch(CHALLENGE_JS)
         listed = src.split("export const GAMES", 1)[1].split("];", 1)[0]
-        slugs = re.findall(r"slug:\s*'([a-z0-9-]+)'", listed)
-    except (OSError, IndexError, ValueError):
+        slugs = re.findall(r"""slug:\s*['"`]([a-z0-9-]+)['"`]""", listed)
+    except (*NET_ERRORS, IndexError):
         return None
+    if not slugs:
+        return None  # the file changed shape, not the list: don't empty it on a parse
     ok = set()
-    before = {g["slug"] for g in (previous or {}).get("games", []) if g.get("rooms")}
+    before = old_rooms(previous)
     for slug in slugs:
         try:
             if JOIN_RE.search(fetch(GAME_MAIN.format(slug=slug))):
                 ok.add(slug)
-        except (OSError, ValueError):
+        except NET_ERRORS:
             if slug in before:
                 ok.add(slug)  # unreachable this morning: yesterday's answer stands
     return ok
@@ -123,9 +135,18 @@ def history(repo: pathlib.Path, ref: str) -> tuple[dict[str, str], dict[str, str
     for line in log.splitlines():
         sha, iso = line.split(" ", 1)
         try:
-            games = games_of(git(repo, "show", sha + ":games.json"))
-        except (subprocess.CalledProcessError, json.JSONDecodeError):
-            continue  # a commit that deleted or broke the file teaches nothing
+            text = git(repo, "show", sha + ":games.json")
+        except subprocess.CalledProcessError:
+            # Deleted in that commit teaches nothing. But the clone is blobless,
+            # so a failed lazy fetch of a file that IS there must stop the run
+            # (and keep the last catalog) rather than shift a game's date.
+            if git(repo, "ls-tree", sha, "--", "games.json").strip():
+                raise
+            continue
+        try:
+            games = games_of(text)
+        except json.JSONDecodeError:
+            continue  # a commit that broke the file teaches nothing
         day = et_day(iso)
         for g in games:
             first.setdefault(g["slug"], day)
@@ -169,6 +190,7 @@ def main() -> int:
     ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--strict", action="store_true", help="fail instead of keeping the last file")
     ap.add_argument("--offline", action="store_true", help="skip the room checks; keep the last catalog's")
+    ap.add_argument("--allow-shrink", action="store_true", help="accept losing more than a fifth of the live games")
     args = ap.parse_args()
 
     dest = pathlib.Path(args.out)
@@ -178,11 +200,10 @@ def main() -> int:
             old = json.loads(dest.read_text())
         except json.JSONDecodeError:
             old = None
-    rooms = None if args.offline else room_games(old)
-    if rooms is None:
-        rooms = {g["slug"] for g in (old or {}).get("games", []) if g.get("rooms")}
-
     try:
+        rooms = None if args.offline else room_games(old)
+        if rooms is None:
+            rooms = old_rooms(old)
         with tempfile.TemporaryDirectory() as tmp:
             if args.arcade:
                 repo = pathlib.Path(args.arcade).expanduser()
@@ -191,7 +212,8 @@ def main() -> int:
                 repo = clone(pathlib.Path(tmp) / "arcade")
                 ref = args.ref or "origin/HEAD"
             catalog = build(repo, ref, rooms)
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError) as e:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError,
+            AttributeError, TypeError, KeyError, http.client.HTTPException) as e:
         msg = f"build_games: could not read the arcade ({type(e).__name__}: {e}); keeping the last catalog"
         if args.strict:
             print(msg, file=sys.stderr)
@@ -200,15 +222,21 @@ def main() -> int:
         return 0
 
     live = [g for g in catalog["games"] if g["live"]]
+    before = [g for g in (old or {}).get("games", []) if isinstance(g, dict) and g.get("live")] if isinstance(old, dict) and isinstance(old.get("games"), list) else []
+    why = None
     if len(live) < 10:
-        msg = f"build_games: only {len(live)} live games; refusing to overwrite the catalog with a probably-broken read"
+        why = f"only {len(live)} live games"
+    elif before and len(live) < 0.8 * len(before) and not args.allow_shrink:
+        why = f"{len(live)} live games where the last catalog had {len(before)} (pass --allow-shrink if that is real)"
+    if why:
+        msg = f"build_games: {why}; refusing to overwrite the catalog with a probably-broken read"
         print(msg if args.strict else "::warning::" + msg, file=sys.stderr if args.strict else sys.stdout)
         return 1 if args.strict else 0
 
     # an arcade commit that left games.json alone must not make a commit here
     # every day just for the stamp and the sha
     same = lambda c: {k: v for k, v in c.items() if k not in ("generated", "source")}
-    if old and same(old) == same(catalog):
+    if isinstance(old, dict) and same(old) == same(catalog):
         print(f"build_games: {len(catalog['games'])} games, unchanged")
         return 0
     dest.parent.mkdir(parents=True, exist_ok=True)

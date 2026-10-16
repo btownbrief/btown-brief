@@ -14,6 +14,7 @@ import sys
 import tempfile
 import unittest
 from contextlib import redirect_stdout
+from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "scripts"))
@@ -91,6 +92,53 @@ class BuildGames(unittest.TestCase):
             self.assertFalse(out.exists(), "three live games is below the floor; nothing is written")
         finally:
             sys.argv = argv
+
+    def test_a_failed_lazy_blob_stops_the_run_instead_of_shifting_dates(self):
+        real = bg.git
+        shas = real(self.repo, "log", "--format=%H", "main", "--", "games.json").split()
+        middle = shas[1]
+
+        def flaky(repo, *args):
+            if args[:1] == ("show",) and args[1] == middle + ":games.json":
+                raise subprocess.CalledProcessError(128, "git show", stderr="fatal: could not fetch blob")
+            return real(repo, *args)
+        with mock.patch.object(bg, "git", flaky):
+            with self.assertRaises(subprocess.CalledProcessError):
+                bg.build(self.repo, "main")
+
+    def test_a_big_shrink_keeps_the_last_file(self):
+        many = [game("g%02d" % i) for i in range(12)]
+        commit(self.repo, many, "2026-10-12T09:00:00-04:00")
+        out = pathlib.Path(self.tmp.name) / "games-catalog.json"
+        last = {"games": [game("g%02d" % i) for i in range(20)]}
+        out.write_text(json.dumps(last))
+        argv = sys.argv
+        try:
+            sys.argv = ["build_games.py", "--arcade", str(self.repo), "--out", str(out), "--offline"]
+            with redirect_stdout(io.StringIO()) as buf:
+                self.assertEqual(bg.main(), 0)
+            self.assertIn("--allow-shrink", buf.getvalue())
+            self.assertEqual(json.loads(out.read_text()), last)
+            sys.argv.append("--allow-shrink")
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(bg.main(), 0)
+            self.assertEqual(len(json.loads(out.read_text())["games"]), 12)
+        finally:
+            sys.argv = argv
+
+    def test_room_list_parse_drift_is_unknown_not_empty(self):
+        prev = {"games": [{"slug": "fresh", "rooms": True}]}
+        with mock.patch.object(bg, "fetch", lambda url: "export const GAMES = [ { name: 'x' } ];"):
+            self.assertIsNone(bg.room_games(prev))
+        pages = {bg.CHALLENGE_JS: 'export const GAMES = [ { slug: "fresh" }, { slug: \'soon\' } ];',
+                 bg.GAME_MAIN.format(slug="soon"): "const c = params.get('join');"}
+
+        def fetch(url):
+            if url not in pages:
+                raise OSError("down")
+            return pages[url]
+        with mock.patch.object(bg, "fetch", fetch):
+            self.assertEqual(bg.room_games(prev), {"fresh", "soon"}, "an unreachable game keeps yesterday's answer")
 
 
 if __name__ == "__main__":

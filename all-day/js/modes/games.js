@@ -46,6 +46,7 @@ const TOP = 10;           // the arcade's own board is a top ten
 const SHOWN = 3;          // drawn before "the rest of the top ten"
 const NEW_DAYS = 30;
 const PARALLEL = 6;       // board requests in flight at once
+const BOARD_MS = 8000;    // a board that has not answered by then is counted as not loaded
 const SLUG = /^[a-z0-9-]{1,40}$/;
 
 const arr = (v) => (Array.isArray(v) ? v : []);
@@ -87,6 +88,8 @@ const G = {
   root: null, slots: null,
   catalog: null, champions: null,
   boards: Object.create(null),   // slug -> rows, or null when that board did not answer
+  boardMonth: '',                // the ET month the boards were read for
+  run: 0,                        // which board load is current; an older one's answers are dropped
   settled: Object.create(null), failed: Object.create(null),
   open: Object.create(null),     // slug -> the rest of the top ten is showing
   group: null,                   // which section's boards are showing
@@ -160,15 +163,24 @@ function loadLive() {
 function loadBoards() {
   const list = boardGames();
   const month = monthKey();
+  const run = ++G.run;
+  G.boardMonth = month;
   let i = 0;
+  /* store.rpc has no deadline of its own; one stalled board must not hold
+     the other thirty, or the deep links that wait for them */
+  const ask = (slug) => Promise.race([
+    store.rpc('get_leaderboard', { p_game: slug, p_month: month }),
+    new Promise((res) => setTimeout(() => res(null), BOARD_MS)),
+  ]);
   const next = () => {
-    if (i >= list.length) return Promise.resolve();
+    if (i >= list.length || run !== G.run) return Promise.resolve();
     const g = list[i++];
-    return store.rpc('get_leaderboard', { p_game: g.slug, p_month: month })
-      .then((rows) => { G.boards[g.slug] = Array.isArray(rows) ? rows : null; })
+    return ask(g.slug)
+      .then((rows) => { if (run === G.run) G.boards[g.slug] = Array.isArray(rows) ? rows : null; })
       .then(next);
   };
   return Promise.all(Array.from({ length: Math.min(PARALLEL, list.length) }, next)).then(() => {
+    if (run !== G.run) return;
     G.settled.boards = true;
     if (list.length && list.every((g) => G.boards[g.slug] === null)) G.failed.boards = true;
     render();
@@ -283,7 +295,7 @@ function drawYou(host) {
 function drawBoardHead(host) {
   const r = nextReset();
   const all = extLink('All boards ' + ICON.ext, BOARDS_PAGE, 'ghost sm');
-  sec(host, 'This month’s leaderboard', esc(monthName(monthKey()) + '’s top ten in every game. Boards reset ' + dayName(r.date) +
+  sec(host, 'This month’s leaderboard', esc(monthName(G.boardMonth || monthKey()) + '’s top ten in every game. Boards reset ' + dayName(r.date) +
     (r.days === 1 ? ', tomorrow.' : ', in ' + r.days + ' days.')), 'board', all);
 }
 
@@ -538,9 +550,16 @@ function render() {
    #games/challenge:<slug> picks that game, or says it cannot host; any
    other key flashes its row once everything that might hold it is in. */
 const SECTIONS = ['board', 'challenge', 'new', 'party', 'chat', 'champs'];
+/* what a key has to wait for before it can be found, or called gone */
+function needs(k) {
+  if (k === 'board' || /^g:/.test(k)) return ['catalog', 'boards'];
+  if (k === 'champs' || /^champ:/.test(k)) return ['catalog', 'champions'];
+  if (SECTIONS.includes(k) || /^(challenge|new|party):/.test(k)) return ['catalog'];
+  return PARTS;
+}
 function land() {
   const k = G.pending;
-  if (!k || !G.root || !G.slots || !PARTS.every((p) => G.settled[p])) return;
+  if (!k || !G.root || !G.slots || !needs(k).every((p) => G.settled[p])) return;
   G.pending = null;
   const m = /^challenge:([a-z0-9-]{1,40})$/.exec(k);
   if (m) {
@@ -575,7 +594,18 @@ function mount(root) {
    never claims something the reader may already have seen. */
 function newSince(ts) {
   if (!G.catalog) return 0;
-  return newGames().filter((g) => Date.parse(since(g) + 'T00:00:00-05:00') / 1000 > ts).length;
+  const seen = etDay(ts * 1000);
+  return newGames().filter((g) => since(g) > seen).length;
+}
+
+/* a tab left open across midnight on the 1st reads the new month's boards */
+function rollover() {
+  if (app.demo || !G.settled.boards || G.boardMonth === monthKey()) return;
+  G.boards = Object.create(null);
+  G.settled.boards = false;
+  delete G.failed.boards;
+  render();
+  loadBoards();
 }
 
 app.register(KEY, {
@@ -583,7 +613,7 @@ app.register(KEY, {
   icon: ICON.games,
   promise: 'The arcade’s leaderboard, challenges to send a neighbor, and new games every month.',
   mount,
-  activate(param) { G.pending = param || null; land(); },
+  activate(param) { rollover(); G.pending = param || null; land(); },
   refresh() { if (G.root) render(); },
   deactivate() {},
   subnav() {

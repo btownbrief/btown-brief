@@ -277,6 +277,7 @@ async function newPage(browser, base, opts = {}) {
     const fn = (u.match(/\/rest\/v1\/rpc\/(\w+)/) || [])[1];
     if (fn && opts.rpc) {
       const out = opts.rpc(fn, JSON.parse(r.request().postData() || '{}'));
+      if (out && out.hang) return undefined;   // never answers: a stalled request
       if (out !== undefined) return r.fulfill({ status: out && out.status || 200, contentType: 'application/json', body: JSON.stringify(out && out.status ? out.body : out) });
     }
     if (fn) return r.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
@@ -980,6 +981,19 @@ async function theGames(browser, base) {
     check(/No game can host a room right now/.test(await w.page.$eval(gmPanel + ' [data-challenge]', (n) => n.innerText)), 'with no game able to host, it says so instead of offering a dead button', '');
     check(!errors.length && !w.errors.length, 'no console errors', errors.concat(w.errors).join(' | '));
     await w.ctx.close();
+  });
+
+  await group('Games, one board stalls', async () => {
+    const t = Date.now();
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn, body) => (fn === 'get_leaderboard' && body.p_game === 'filed' ? { hang: true } : undefined) });
+    await page.goto(base + '/all-day/#games/challenge');
+    await page.waitForSelector(gmPanel + ' [data-sec="challenge"]', { timeout: 15000 });
+    const landed = await page.waitForFunction((p) => { const r = document.querySelector(p + ' [data-sec="challenge"]').getBoundingClientRect(); return r.top >= 0 && r.top < 260; }, gmPanel, { timeout: 5000 }).then(() => true, () => false);
+    check(landed && Date.now() - t < 7500, 'a deep link that needs only the catalog lands while a board is still stuck', (Date.now() - t) + 'ms');
+    await page.waitForFunction((p) => /FILED!? \(didn’t load\)/i.test(document.querySelector(p).innerText), gmPanel, { timeout: 15000 }).catch(() => {});
+    check(/FILED!? \(didn’t load\)/i.test(await gmText(page)), 'the stuck board gives up and says it didn’t load; the rest drew', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 
   await group('Games, new this month', async () => {
