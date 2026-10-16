@@ -791,14 +791,15 @@ async function interactions(browser, base) {
 /* Tonight's fixtures, dated to today in Burlington on the real clock: what
    must show (5 pm on, today, not over, once) and what must not (morning,
    4:59 pm, all day, cancelled, tomorrow, yesterday). The page runs in Los
-   Angeles, so "today after 5 pm" has to be Burlington's, not the reader's. */
+   Angeles, so "today after 5 pm" has to be Burlington's, not the reader's.
+   The fixtures and the page share one frozen instant, 6:30 pm in Burlington
+   today, so the test cannot straddle midnight or a clock change. */
 const etOffset = (ms) => {
   const p = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', timeZoneName: 'longOffset' }).formatToParts(new Date(ms)).find((x) => x.type === 'timeZoneName');
   const m = p && /GMT([+-]\d{2}:\d{2})/.exec(p.value);
   return m ? m[1] : '-05:00';
 };
-function tonightFiles() {
-  const now = Date.now();
+function tonightFiles(now) {
   const today = etKey(now);
   const at = (day, hm) => day + 'T' + hm + ':00' + etOffset(now);
   const ev = (id, title, day, start, end, extra) => ({ id, title, date: day, start: at(day, start), ...(end ? { end: at(day, end) } : {}), url: 'https://example.com/' + id,
@@ -939,17 +940,20 @@ async function theWhatNow(browser, base) {
   });
 
   await group('What Now, Tonight (live, a reader in Los Angeles)', async () => {
-    const files = tonightFiles();
+    const day = etKey(Date.now());
+    const frozen = Date.parse(day + 'T18:30:00' + etOffset(Date.parse(day + 'T12:00:00Z')));
+    const files = tonightFiles(frozen);
     const routes = [[/\/all-day\/data\/whatnow\.json/, files.events], [/\/all-day\/data\/music\.json/, files.music]];
     const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes });
+    await page.clock.setFixedTime(frozen);
     await page.goto(base + '/all-day/#whatnow/tonight');
     await page.waitForSelector(wnPanel + ' [data-sec="tonight"]', { timeout: 15000 });
     const keys = await page.$$eval(wnPanel + ' .card.event', (c) => c.map((x) => x.dataset.k));
     const ok = new Set(['e-ok-1700', 'e-ok-dup', 'e-ok-2345']);
-    check(keys.length && keys.every((k) => ok.has(k)), 'Tonight lists only items after 5 pm today in America/New_York', keys.join(', '));
+    check(keys.length === 3 && keys.every((k) => ok.has(k)), 'Tonight lists only items after 5 pm today in America/New_York', keys.join(', '));
     check(keys.includes('e-ok-2345'), 'tonight’s late listing is there', keys.join(', '));
     check(!keys.includes('e-ok-dup2'), 'a listing posted twice shows once', keys.join(', '));
-    const today = etParts(Date.now()).day;
+    const today = etParts(frozen).day;
     check(await page.$$eval(wnPanel + ' .card.event .dom', (d) => d.map((x) => x.textContent)).then((d) => d.every((x) => Number(x) === Number(today))), 'every date tile is today in Burlington', '');
     const artists = await page.$$eval(wnPanel + ' .artist', (a) => a.map((x) => x.innerText.replace(/\s+/g, ' ')));
     check(artists.length === 2 && /Tonight Band/.test(artists[0]) && /Tonight/.test(artists[0]) && /Later Band/.test(artists[1]), 'Playing this week: tonight’s and this week’s artists, soonest first, not next week’s', JSON.stringify(artists));
@@ -971,6 +975,9 @@ async function theWhatNow(browser, base) {
     await page.goto(base + '/all-day/#whatnow/m42');
     check(await flashes(page, 'm42'), '#whatnow/m42 opens Missions and flashes mission 42', '');
     await page.screenshot({ path: path.join(SHOTS, 'live-whatnow-missions-desktop-dark.png') });
+    await page.click(wnPanel + ' .chips.themes .chip[data-chip="eat"]');
+    await page.evaluate(() => { location.hash = 'whatnow/m5'; });
+    check(await flashes(page, 'm5'), 'a mission link lands even while the list is filtered to another theme', '');
     await page.goto(base + '/all-day/?demo=1#whatnow/tonight');
     await page.reload();
     await page.waitForSelector(wnPanel + ' [data-sec="tonight"]', { timeout: 15000 });
@@ -986,6 +993,18 @@ async function theWhatNow(browser, base) {
     check(!(await page.$eval(wnPanel + ' .lrow[data-k="m2"]', (r) => r.classList.contains('done'))) && !(await page.evaluate(() => localStorage.getItem('allday-missions'))), 'demo marks never reach localStorage', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+
+    /* the demo moved to a winter evening keeps Burlington's wall clock:
+       its 5:45 pm walk is still 5:45 pm, and sunset still reads 6:06 */
+    const w = await newPage(browser, base);
+    await w.page.clock.setFixedTime(Date.parse('2026-12-10T18:00:00-05:00'));
+    await w.page.goto(base + '/all-day/?demo=1#whatnow/tonight');
+    await w.page.waitForSelector(wnPanel + ' [data-sec="tonight"]', { timeout: 15000 });
+    const wk = await w.page.$$eval(wnPanel + ' .card.event', (c) => c.map((x) => x.dataset.k));
+    check(wk.includes('e-tn4') && wk.includes('e-tn3'), 'in December the demo’s 5:45 pm and 6 pm listings are still tonight', wk.join(', '));
+    check(/6:06 sunset/.test(await w.page.$eval(wnPanel + ' .wx', (x) => x.innerText.replace(/\s+/g, ' '))), 'and its sunset still reads 6:06', '');
+    check(!w.errors.length, 'no console errors', w.errors.join(' | '));
+    await w.ctx.close();
   });
 }
 

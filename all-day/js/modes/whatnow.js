@@ -82,7 +82,7 @@ const S = {
   feeds: null, feedsFailed: false, sun: null,
   weather: null, events: null, music: null, missions: null, missionsFailed: false,
 };
-let root = null, pending = null, ready = false, loaded = null, D = null;
+let root = null, pending = null, ready = false, loaded = null, D = null, reel = 0;
 const done = app.demo ? Object.create(null) : { ...readMap(DONE_KEY) };
 const seenDemo = Object.create(null);
 
@@ -99,10 +99,14 @@ function load() {
       S.feeds = { ...D.feeds, weather: D.weather, events: D.events };
     });
   }
+  /* the wire may hand a payload over again later (a retry after a failed
+     first try, or a fresh copy): keep the engine's view of it current and
+     repaint the tab if it is showing */
+  const sub = (key, take) => new Promise((res) => data.load(key, (j) => { take(j); res(); if (ready) repaint(); }, res));
   const parts = [
-    new Promise((res) => data.load('weather', (j) => { S.weather = j; res(); }, res)),
-    new Promise((res) => data.load('whatnow', (j) => { S.events = j; res(); }, res)),
-    new Promise((res) => data.load('music', (j) => { S.music = j; res(); }, res)),
+    sub('weather', (j) => { S.weather = j; if (S.feeds) S.feeds.weather = j; }),
+    sub('whatnow', (j) => { S.events = j; if (S.feeds) S.feeds.events = j; }),
+    sub('music', (j) => { S.music = j; }),
     data.fetchJSON(MISSIONS_URL, 8000).then((j) => {
       if (!j || !Array.isArray(j.missions)) throw new Error('bad shape');
       S.missions = j;
@@ -114,13 +118,33 @@ function load() {
   return Promise.all(parts);
 }
 
+function repaint() {
+  if (!root || app.activeTab() !== KEY || S.rolling || (S.mode === 'tonight' && embed)) return;
+  const y = panel() ? panel().scrollTop : 0;
+  render();
+  app.paintSubnav();
+  if (panel()) panel().scrollTop = y;
+}
+
 /* The demo file is dated 2026-10-16. Its dates move to today (Burlington's)
    and its weather reads as just observed, so the engine and Tonight see a
    live day whenever the demo is opened. */
 function redate(d) {
   const shift = Math.round((utcNoon(et(Date.now()).date) - utcNoon(d.anchor || '2026-10-16')) / 86400000);
+  /* a Burlington time keeps its wall clock: 5 pm in October is 5 pm in
+     December, so the offset is the one in force on the new date */
+  const offsetOn = (day) => {
+    const part = new Intl.DateTimeFormat('en-US', { timeZone: TZ, timeZoneName: 'longOffset' }).formatToParts(utcNoon(day)).find((x) => x.type === 'timeZoneName');
+    const m = part && /GMT([+-]\d{2}:\d{2})/.exec(part.value);
+    return m ? m[1] : '-05:00';
+  };
   const walk = (v) => {
-    if (typeof v === 'string') return /^\d{4}-\d{2}-\d{2}/.test(v) ? addDays(v.slice(0, 10), shift) + v.slice(10) : v;
+    if (typeof v === 'string') {
+      if (!/^\d{4}-\d{2}-\d{2}/.test(v)) return v;
+      const day = addDays(v.slice(0, 10), shift);
+      const m = /^(T[\d:.]+)(-0[45]:00)$/.exec(v.slice(10));
+      return day + (m ? m[1] + offsetOn(day) : v.slice(10));
+    }
     if (Array.isArray(v)) return v.map(walk);
     if (v && typeof v === 'object') { const o = {}; Object.keys(v).forEach((k) => { o[k] = walk(v[k]); }); return o; }
     return v;
@@ -136,6 +160,7 @@ function redate(d) {
 /* ---------------------------------------------------------------- the tab */
 function render() {
   if (!root) return;
+  closeBandcamp();
   root.innerHTML = '';
   const wx = weatherLine();
   if (wx) root.appendChild(wx);
@@ -206,8 +231,10 @@ function roll() {
   const pool = buildPool(S.feeds, ctx, S.chips);
   if (pool.length < 3) { spin(); return; }
   S.rolling = true; S.did = false; S.ctx = ctx; S.pool = pool.length;
+  const mine = ++reel;
   let i = 0;
   const step = () => {
+    if (mine !== reel) return;
     if (!root || i >= REEL_MS.length) { S.rolling = false; spin(); return; }
     S.answer = pool[Math.floor(Math.random() * pool.length)];
     render();
@@ -459,13 +486,21 @@ function rpcAs(fn, args) {
     }).then((r) => (r.ok ? r.json().catch(() => null) : null)).finally(() => { if (t) clearTimeout(t); });
   }).catch(() => null);
 }
-function pushDone(k, on) { rpcAs('nn_mission_set', { p_key: k, p_done: !!on }); }
+const touched = new Set();
+const queue = Object.create(null);
+function pushDone(k, on) {
+  touched.add(k);
+  queue[k] = (queue[k] || Promise.resolve()).then(() => rpcAs('nn_mission_set', { p_key: k, p_done: !!on }));
+}
 function pullDone() {
   rpcAs('nn_missions_done').then((rows) => {
     if (!Array.isArray(rows)) return;
     let added = 0;
-    rows.forEach((r) => { const k = r && (r.key || r.mission); if (typeof k === 'string' && /^m\d+$/.test(k) && !done[k]) { done[k] = Math.floor(Date.now() / 1000); added++; } });
-    if (added) { store.write(DONE_KEY, done); if (ready && app.activeTab() === KEY) { render(); app.paintSubnav(); } }
+    rows.forEach((r) => {
+      const k = r && (r.key || r.mission);
+      if (typeof k === 'string' && /^m\d+$/.test(k) && !done[k] && !touched.has(k)) { done[k] = Math.floor(Date.now() / 1000); added++; }
+    });
+    if (added) { store.write(DONE_KEY, done); if (ready) repaint(); }
   });
 }
 
@@ -634,8 +669,15 @@ function openLink(label, href, ours) {
   return a;
 }
 
+function stopReel() {
+  if (!S.rolling) return;
+  reel++;
+  S.rolling = false;
+  S.answer = null;
+}
+
 function setMode(mode) {
-  if (embed) closeBandcamp();
+  stopReel();
   S.mode = mode;
   history.replaceState(null, '', location.search + '#whatnow/' + mode);
   app.paintSubnav();
@@ -650,7 +692,7 @@ function land() {
   const k = pending; pending = null;
   if (MODES.includes(k)) { if (S.mode !== k) setMode(k); return; }
   const want = /^m\d+$/.test(k) ? 'missions' : /^[ea]-/.test(k) ? 'tonight' : null;
-  if (want && S.mode !== want) { S.mode = want; S.theme = 'all'; app.paintSubnav(); render(); }
+  if (want && (S.mode !== want || (want === 'missions' && S.theme !== 'all'))) { stopReel(); S.mode = want; S.theme = 'all'; app.paintSubnav(); render(); }
   if (!app.flashHit(root, k)) app.toast(want === 'missions' ? 'That mission isn’t on the list any more.' : 'That one has passed.');
 }
 
@@ -670,9 +712,9 @@ app.register(KEY, {
       app.recount();
     }).catch(() => { r.innerHTML = '<div class="errbox"><b>What Now didn’t load.</b> Reload to try again.</div>'; });
   },
-  activate(param) { if (param) { pending = param; land(); } },
+  activate(param) { pending = param || null; land(); },
   refresh() { if (ready) render(); },
-  deactivate() { closeBandcamp(); app.closePeek(); },
+  deactivate() { stopReel(); closeBandcamp(); app.closePeek(); },
   subnav() {
     if (!ready) return null;
     return chips([

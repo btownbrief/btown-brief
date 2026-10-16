@@ -28,10 +28,13 @@ Two kinds of input, kept apart on purpose:
 
 The build checks every paragraph against the sources it was written from.
 Style rules fail the build (60 to 120 words, no em or en dashes, no
-exclamation points). Grounding is softer: a number, or a capitalized word
-mid-sentence, that appears nowhere in the entry's guide text, its places'
-fields or the computed legs marks the mission needs_check, with the reason,
-so Stephen reads it before it ships. A drafter can set needs_check too.
+exclamation points). Grounding is softer: a number, a number with its unit
+("3 miles", "$25") or a capitalized word mid-sentence that appears nowhere in
+the entry's guide text or its places' fields marks the mission needs_check,
+with the reason, so Stephen reads it before it ships; a rewritten title is
+checked the same way. A drafter can set needs_check too. The check is a net,
+not a proof: a lowercase claim ("the patio fills fast") passes it, which is
+why every paragraph was also read by a person against its sources.
 
 If the Top 100 changes under the copy (an entry's title no longer matches
 the one the paragraph was written for), the mission keeps the guide's own
@@ -178,6 +181,26 @@ def numbers_in(text: str) -> set:
     return out
 
 
+UNITS = r"(miles?|feet|foot|acres?|hours?|years?|percent|%)"
+
+
+def measures(text: str) -> set:
+    """Each number with its unit ("3 mile", "38 foot", "$25"), so a price
+    cannot ground a distance. Number words become digits, plurals singular."""
+    words = "|".join(NUMBER_WORDS)
+    out = set()
+    # a range is both ends: "$20–30" and "$20 to $30" say the same thing
+    for m in re.finditer(r"\$\s?(\d[\d,]*(?:\.\d+)?)(?:\s*(?:[-\u2013\u2014]|to)\s*\$?(\d[\d,]*(?:\.\d+)?))?", text):
+        out.update("$" + g.replace(",", "") for g in m.groups() if g)
+    for m in re.finditer(r"(?<![\w-])(\d[\d,]*(?:\.\d+)?|" + words + r")(?:\+|-plus)?[ -]" + UNITS + r"(?![\w])", text, re.I):
+        n = m.group(1).lower().replace(",", "")
+        n = str(NUMBER_WORDS.get(n, n))
+        unit = m.group(2).lower()
+        unit = {"feet": "foot", "%": "percent"}.get(unit, unit)
+        out.add(n + " " + unit.rstrip("s") if unit not in ("percent",) else n + " percent")
+    return out
+
+
 def grounding(paragraph: str, src: str, legs: list) -> list:
     """Reasons a paragraph may say something its sources do not."""
     why = []
@@ -194,6 +217,9 @@ def grounding(paragraph: str, src: str, legs: list) -> list:
             why.append("the " + n + " minutes is " + ("estimated from approximate coordinates" if est else "not in the sources"))
     for n in sorted(numbers_in(paragraph) - have - said, key=lambda s: float(s)):
         why.append("the number " + n + " is not in the sources")
+    for x in sorted(measures(paragraph) - measures(src)):
+        if not x.endswith(" minute"):
+            why.append("“" + x + "” is not in the sources as written")
     for sentence in re.split(r"(?<=[.?:;])\s+", paragraph):
         tokens = re.findall(r"[A-Za-z][\w'’&.-]*", sentence)
         for tok in tokens[1:]:
@@ -270,6 +296,7 @@ def main() -> int:
             title, para, theme = c.get("title") or e["title"], c["paragraph"].strip(), c.get("theme")
             errors += style(n, para)
             note += grounding(para, source_text(e, f), f["legs"])
+            note += ["title: " + x for x in grounding(title, source_text(e, f), f["legs"]) if title != e["title"]]
             if c.get("needs_check"):
                 note.insert(0, c.get("check_note") or "the drafter asked for a read")
         else:
