@@ -23,8 +23,10 @@
 // from tests/fixtures, the Wire's wire-data files are built below in the
 // real contract and dated to the real clock, On Air's btown-tv and
 // wire-audio files are the demo payloads re-dated to the real clock (the
-// clip itself is two seconds of silence from tests/fixtures), pulse.json is
-// the repo's own snapshot, and third-party pictures get a 1px PNG.
+// clip itself is two seconds of silence from tests/fixtures), the arcade's
+// champions.json is the Games demo's, every leaderboard RPC answers an empty
+// board unless a group says otherwise, pulse.json and games-catalog.json are
+// the repo's own, and third-party pictures get a 1px PNG.
 
 import { createRequire } from 'node:module';
 import { spawn } from 'node:child_process';
@@ -227,6 +229,10 @@ async function onairFiles(opts = {}) {
   return out;
 }
 
+/* the Games demo file: its champions.json answers the live champions fetch */
+let gamesDemoP = null;
+const gamesDemo = () => (gamesDemoP = gamesDemoP || readFile(path.join(APP, 'data/demo/games.json'), 'utf8').then(JSON.parse));
+
 /* ------------------------------------------------------------- the page */
 async function newPage(browser, base, opts = {}) {
   const ctx = await browser.newContext({
@@ -261,11 +267,19 @@ async function newPage(browser, base, opts = {}) {
     const f = onair.files[name];
     return f ? r.fulfill({ status: 200, body: f, contentType: /\.txt$/.test(name) ? 'text/plain' : 'application/json' }) : r.fulfill({ status: 404, body: '' });
   });
+  const champions = opts.champions || (await gamesDemo()).champions;
+  await page.route(/raw\.githubusercontent\.com\/btownbrief\/btownbrief\.github\.io\/champions-data\/data\/champions\.json$/,
+    (r) => r.fulfill({ status: 200, body: JSON.stringify(champions), contentType: 'application/json' }));
   await page.route(/supabase\.co/, (r) => {
     const u = r.request().url();
     supabase.push(r.request().method() + ' ' + u.replace(/^https:\/\/[^/]+/, ''));
     if (/\/auth\/v1\/settings/.test(u)) return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ external: { email: opts.authEmail !== false } }) });
-    if (/\/rest\/v1\/rpc\//.test(u)) return r.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
+    const fn = (u.match(/\/rest\/v1\/rpc\/(\w+)/) || [])[1];
+    if (fn && opts.rpc) {
+      const out = opts.rpc(fn, JSON.parse(r.request().postData() || '{}'));
+      if (out !== undefined) return r.fulfill({ status: out && out.status || 200, contentType: 'application/json', body: JSON.stringify(out && out.status ? out.body : out) });
+    }
+    if (fn) return r.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
     return r.fulfill({ status: 200, contentType: 'application/json', body: '{}' });
   });
   await page.route((u) => !u.href.startsWith(base) && !/fonts\.(googleapis|gstatic)\.com/.test(u.href), (r) => {
@@ -322,7 +336,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'whatnow', 'onair']);
+const LIVE = new Set(['wire', 'whatnow', 'onair', 'games']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -375,9 +389,9 @@ async function matrix(browser, base) {
             await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '.png') });
           }
           if (demo && combo === COMBOS[1] && tab === 'wire') await page.screenshot({ path: path.join(SHOTS, 'demo-wire-dark.png') });
-          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
-          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'food' || tab === 'onair')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
-          if (!demo && combo === COMBOS[1] && tab === 'onair') await page.screenshot({ path: path.join(SHOTS, 'live-onair-dark.png') });
+          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
+          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'food' || tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
+          if (!demo && combo === COMBOS[1] && (tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '-dark.png') });
         }
         const gc = await page.evaluate(() => window.__gc);
         check(JSON.stringify(gc) === JSON.stringify(TABS.map((t) => 'all-day-tab-' + t)), 'one GoatCounter tab-landing event per landing', JSON.stringify(gc));
@@ -404,7 +418,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'fv2'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'fv2'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -860,6 +874,156 @@ async function onAir(browser, base) {
 }
 
 /* ------------------------------------------------------------ interactions */
+/* -------------------------------------------------------------- Games */
+const gmPanel = '#panel-games';
+const gmText = (page) => page.$eval(gmPanel, (p) => p.innerText);
+const CHAT = 'https://www.btownbrief.com/community/channels/photo-wall';
+/* the repo's own catalog, with every game's dates moved so the newest went
+   live `newest` days ago */
+async function catalogAged(newest) {
+  const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
+  const today = etKey(Date.now());
+  cat.games.forEach((g, i) => { g.first_seen = g.live_since = dayMinus(today, newest + i); });
+  return cat;
+}
+const ROWS = (names) => names.map((n, i) => ({ name: n, score: 1000 - i * 10, player_id: '00000000-0000-4000-8000-' + String(i).padStart(12, '0') }));
+const findMe = async (page, name) => {
+  await page.fill(gmPanel + ' [data-you] input', name);
+  await page.click(gmPanel + ' [data-you] button[type="submit"]');
+  await page.waitForSelector(gmPanel + ' [data-you="found"], ' + gmPanel + ' [data-you="none"]', { timeout: 6000 });
+};
+
+async function theGames(browser, base) {
+  await group('Games, live', async () => {
+    const asked = [];
+    const rpc = (fn, body) => {
+      if (fn !== 'get_leaderboard') return undefined;
+      asked.push(body);
+      if (body.p_game === 'btown-wordle') return ROWS(['Ada W.', 'Cy F.', 'Juniper', 'Max T.', 'Lou B.', 'Ivy R.', 'Mo J.']);
+      if (body.p_game === 'trivia-ladder') return ROWS(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', ' juniper ']);
+      if (body.p_game === 'filed') return { status: 500, body: { message: 'boom' } };
+      return [];
+    };
+    const { ctx, page, errors, supabase } = await newPage(browser, base, { rpc });
+    await page.goto(base + '/all-day/#games');
+    await page.waitForSelector(gmPanel + ' [data-you="ask"]', { timeout: 15000 });
+    await page.waitForFunction((p) => !/Loading \d+ boards/.test(document.querySelector(p).innerText), gmPanel, { timeout: 15000 });
+    const cat = JSON.parse(await readFile(path.join(REPO, 'data/games-catalog.json'), 'utf8'));
+    const boards = cat.games.filter((g) => g.live && g.leaderboard).map((g) => g.slug);
+    const month = etKey(Date.now()).slice(0, 7);
+    check(asked.length === boards.length && asked.every((a) => a.p_month === month && boards.includes(a.p_game)),
+      'one get_leaderboard call per live board, for this month in Burlington', asked.length + ' of ' + boards.length);
+    check(!supabase.some((u) => /room_create|room_join|submit_score/.test(u)), 'the tab only ever reads', supabase.filter((u) => /room_|submit/.test(u)).join(', '));
+    check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 0, 'before a name, no row is marked as yours', '');
+    const groups = await page.$$eval(gmPanel + ' [data-group]', (b) => b.map((x) => x.textContent));
+    check(groups.length >= 3 && !groups.includes('Yours'), 'the boards come in the arcade’s own sections', groups.join(' / '));
+    await page.click(gmPanel + ' [data-group="daily-puzzles"]');
+    check(await page.$(gmPanel + ' [data-board="btown-wordle"]') !== null, 'a board with scores draws its rows', '');
+    check(/No scores yet this month:/.test(await gmText(page)), 'boards with no scores yet are named in one line', '');
+    await page.click(gmPanel + ' [data-group="arcade-action"]');
+    check(/FILED!? \(didn’t load\)/i.test(await gmText(page)), 'a board that failed says so, and the rest still draw', '');
+
+    await findMe(page, 'Nobody Here');
+    const none = await page.$eval(gmPanel + ' [data-you]', (n) => n.innerText);
+    check(/No score this month is under/.test(none) && /Nobody Here/.test(none), 'a name on no board says so plainly', none);
+    check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 0, 'and marks nothing', '');
+
+    await page.click(gmPanel + ' [data-you] button');
+    await findMe(page, 'Juniper');
+    check(await page.$eval(gmPanel + ' [data-group].on', (b) => b.dataset.group) === 'yours', 'with a name on the boards, Yours opens first', '');
+    const marked = await page.$$eval(gmPanel + ' [data-me]', (n) => n.map((x) => x.closest('[data-board]')?.dataset.board + ':' + x.querySelector('.rank').textContent));
+    check(JSON.stringify(marked.sort()) === JSON.stringify(['btown-wordle:3', 'trivia-ladder:15']), 'after the name, the reader’s rows are marked, matched without case or spaces', JSON.stringify(marked));
+    check(/outside the top ten/.test(await page.$eval(gmPanel + ' [data-board="trivia-ladder"] [data-me]', (n) => n.innerText)), 'a place past tenth is shown, and called that', '');
+    const said = await page.$eval(gmPanel + ' [data-you]', (n) => n.innerText);
+    check(/on 2 boards/.test(said) && /2 players use that name/.test(said), 'two different players under one name: it says some marks may be someone else’s', said);
+    check(await page.evaluate(() => localStorage.getItem('allday-arcade-name')) === '"Juniper"', 'the name stays on this device', '');
+    await page.reload();
+    await page.waitForSelector(gmPanel + ' [data-you="found"]', { timeout: 15000 });
+    check(true, 'and is still there after a reload', '');
+    await page.click(gmPanel + ' [data-you] button:nth-of-type(2)');
+    await page.waitForSelector(gmPanel + ' [data-you="ask"]');
+    check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 0, 'Forget it takes the marks away', '');
+
+    const host = await page.$$eval(gmPanel + ' [data-pick]', (b) => b.map((x) => x.dataset.pick));
+    const rooms = cat.games.filter((g) => g.rooms).map((g) => g.slug);
+    check(rooms.length && JSON.stringify(host) === JSON.stringify(rooms), 'Challenge offers exactly the games the catalog says can host', host.join(', '));
+    await page.click(gmPanel + ' [data-pick="' + rooms[rooms.length - 1] + '"]');
+    const href = await page.$eval(gmPanel + ' [data-host]', (a) => [a.dataset.host, a.href, a.target]);
+    check(href[0] === rooms[rooms.length - 1] && href[1] === 'https://play.btownbrief.com/' + rooms[rooms.length - 1] + '/' && href[2] === '_blank', 'picking a game points Host at that game on the arcade', JSON.stringify(href));
+    const doors = await page.$$eval(gmPanel + ' [data-door]', (a) => a.map((x) => [x.dataset.door, x.getAttribute('href')]));
+    check(JSON.stringify(doors) === JSON.stringify([['community', CHAT], ['telegram', '../telegram.html']]), 'the chat door opens the Btown Arcade channel, with Telegram beside it', JSON.stringify(doors));
+    check(await page.$(gmPanel + ' [data-chat] input, ' + gmPanel + ' [data-chat] textarea') === null, 'no chat is built here', '');
+    const champs = await page.$$eval(gmPanel + ' [data-champs] [data-k]', (n) => n.length);
+    check(champs === (await gamesDemo()).champions.games.length, 'Champions: the reigning champ on every board', champs);
+    check(await page.$$eval(gmPanel + ' [data-royalty] .r', (n) => n.length) === 5, 'and the five all-arcade leaders', '');
+    /* the one board stubbed to fail logs its 500, once per load; nothing else may */
+    const other = errors.filter((e) => !/status of 500/.test(e));
+    check(!other.length, 'no console errors beyond the board stubbed to fail', other.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Games, challenge fails soft', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#games/challenge:queen-city-chess');
+    await page.waitForSelector(gmPanel + ' [data-refused]', { timeout: 15000 });
+    check(/can’t host a room right now/.test(await page.$eval(gmPanel + ' [data-refused]', (n) => n.textContent)), 'a game off the allowlist: that game can’t host a room right now', '');
+    check(await page.$$eval(gmPanel + ' [data-pick]', (b) => b.length) > 0, 'and the ones that can are still offered', '');
+    await page.goto(base + '/all-day/#games/challenge:church-street-checkers');
+    await page.waitForFunction((p) => document.querySelector(p + ' [data-host]')?.dataset.host === 'church-street-checkers', gmPanel, { timeout: 8000 }).catch(() => {});
+    check(await page.$eval(gmPanel + ' [data-host]', (a) => a.dataset.host) === 'church-street-checkers' && !(await page.$(gmPanel + ' [data-refused]')), 'an allowlisted game from a link is picked', '');
+    await ctx.close();
+    const cat = await catalogAged(40);
+    cat.games.forEach((g) => { g.rooms = false; });
+    const w = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json/, cat]] });
+    await w.page.goto(base + '/all-day/#games/challenge');
+    await w.page.waitForSelector(gmPanel + ' [data-challenge]', { timeout: 15000 });
+    check(/No game can host a room right now/.test(await w.page.$eval(gmPanel + ' [data-challenge]', (n) => n.innerText)), 'with no game able to host, it says so instead of offering a dead button', '');
+    check(!errors.length && !w.errors.length, 'no console errors', errors.concat(w.errors).join(' | '));
+    await w.ctx.close();
+  });
+
+  await group('Games, new this month', async () => {
+    const old = await catalogAged(31);
+    const a = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json/, old]] });
+    await a.page.goto(base + '/all-day/#games/new');
+    await a.page.waitForSelector(gmPanel + ' [data-sec="new"]', { timeout: 15000 });
+    check(/Nothing new this month/.test(await gmText(a.page)) && !(await a.page.$(gmPanel + ' [data-k^="new:"]')), 'nothing within 30 days: “nothing new this month”', '');
+    await a.ctx.close();
+    const fresh = await catalogAged(3);
+    const b = await newPage(browser, base, { routes: [[/\/data\/games-catalog\.json/, fresh]] });
+    await b.page.goto(base + '/all-day/#games/new');
+    await b.page.waitForSelector(gmPanel + ' [data-k^="new:"]', { timeout: 15000 });
+    const keys = await b.page.$$eval(gmPanel + ' [data-k^="new:"]', (n) => n.map((x) => x.dataset.k));
+    const want = fresh.games.filter((g) => g.live && g.live_since > dayMinus(etKey(Date.now()), 30)).map((g) => 'new:' + g.slug);
+    check(JSON.stringify(keys) === JSON.stringify(want), 'within 30 days: those games, newest first', keys.length + ' vs ' + want.length);
+    check(b.page.url().endsWith('#games/new'), 'a #games/new link lands there', b.page.url());
+    check(!a.errors.length && !b.errors.length, 'no console errors', a.errors.concat(b.errors).join(' | '));
+    await b.ctx.close();
+  });
+
+  await group('Games, demo', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#games');
+    await page.waitForSelector(gmPanel + ' [data-you="ask"]', { timeout: 15000 });
+    const chipsAt = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(chipsAt) === JSON.stringify(['This month', 'Challenge', 'New', 'Party night', 'Champions']), 'the chip row is the table of contents', chipsAt.join(' / '));
+    check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 0, 'before a name, nothing is marked', '');
+    await findMe(page, 'Juniper');
+    check(await page.$$eval(gmPanel + ' [data-me]', (n) => n.length) === 3, 'the demo reader is on three boards', '');
+    check(await page.evaluate(() => localStorage.getItem('allday-arcade-name')) === null, 'the demo keeps the name to the visit', '');
+    const newRows = await page.$$eval(gmPanel + ' [data-k^="new:"]', (n) => n.length);
+    check(newRows === 3, 'three new games', newRows);
+    check(await page.$$eval(gmPanel + ' [data-k^="party:"]', (n) => n.length) >= 1, 'Party night lists its games', '');
+    await page.click('#subnav .chip[data-chip="champs"]');
+    await page.waitForTimeout(700);
+    check(await page.evaluate(() => { const r = document.querySelector('#panel-games [data-sec="champs"]').getBoundingClientRect(); return r.top >= 0 && r.top < 300; }), 'a chip scrolls to its section', '');
+    await page.screenshot({ path: path.join(SHOTS, 'demo-games-desktop-dark.png') });
+    check(!supabase.length, 'the demo never calls Supabase', supabase.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 async function interactions(browser, base) {
   await group('interactions, demo', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
@@ -1220,6 +1384,7 @@ try {
   await theWire(browser, base);
   await theWhatNow(browser, base);
   await onAir(browser, base);
+  await theGames(browser, base);
   await interactions(browser, base);
 } finally {
   await browser.close();
