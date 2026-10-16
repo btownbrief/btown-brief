@@ -6,15 +6,17 @@
    How it works, in plain terms: you type your email in Settings, Supabase
    emails a link, the link opens All Day with a one-time token in the URL,
    and this file swaps that token for a session it keeps in localStorage
-   (store.js 'allday-auth'). The session is refreshed before it runs out, on
-   a timer and whenever the app comes back to the front, so a reader stays
+   (store.js 'allday-auth'). The access token is refreshed on each visit and
+   before it runs out, on a timer and whenever the app comes back to the
+   front, so a reader stays
    signed in for weeks without seeing a sign-in again. Raw REST against
    Supabase Auth (GoTrue) with the publishable key, the same way store.js
    talks to the database, so there is no library to load.
 
-   What is kept: the two tokens, when they expire, and the account id.
-   Never the email address. Supabase knows it; nothing a tab can read does,
-   and nothing here ever prints it.
+   What is kept: the refresh token and the account id, in localStorage. The
+   access token lives in memory only, because Supabase's access token is a
+   JWT that carries the email among its claims. Nothing here stores, prints
+   or decodes the email; Supabase knows it, the page does not keep it.
 
    Fails soft in every direction. If Email sign-in is switched off in the
    project, or the settings call fails, status() is 'off' and the Settings
@@ -98,16 +100,17 @@ function jwtClaims(t) {
   } catch (e) { return null; }
 }
 
-/* Keep a session: the tokens, the expiry, the account id. Not the email. */
+/* Keep a session. The refresh token and the account id go to storage (they
+   carry no email); the access token, a JWT whose claims include the email,
+   stays in this module's memory and is gone when the page is. */
+let access = null;   // { token, expires_at } for this page only
+let gen = 0;         // bumped on every sign-in and sign-out: a late answer from before is ignored
 function keep(tok, id) {
   const now = Math.floor(Date.now() / 1000);
   const before = store.user();
-  store.setSession({
-    access_token: tok.access_token,
-    refresh_token: tok.refresh_token,
-    expires_at: Number(tok.expires_at) || now + (Number(tok.expires_in) || 3600),
-    user: { id },
-  });
+  if (!before || before.id !== id) gen++;
+  store.setSession({ refresh_token: tok.refresh_token, user: { id } });
+  access = { token: tok.access_token, expires_at: Number(tok.expires_at) || now + (Number(tok.expires_in) || 3600) };
   schedule();
   if (!before || before.id !== id) tell();
 }
@@ -142,51 +145,60 @@ export function consumeHash() {
   });
 }
 
-/* Keep a session alive: refresh when it is within five minutes of expiring.
+/* A live access token, refreshing when there is none on this page yet or it
+   is within five minutes of running out. Resolves the token, or null.
    One refresh at a time: Supabase rotates the refresh token, so two racing
    requests would spend it twice and the loser would sign the reader out.
    A refresh that is refused (revoked, expired) signs out quietly; one that
-   cannot reach the server keeps the session for the next try. */
+   cannot reach the server keeps the session for the next try. An answer
+   that arrives after the reader signed out (or in as someone else) is
+   dropped, so a slow refresh can never sign a reader back in. */
 let inflight = null;
 export function refresh() {
   const s = store.session();
   if (!s || store.isDemo()) return Promise.resolve(null);
   const now = Math.floor(Date.now() / 1000);
-  if (Number(s.expires_at) - now > EARLY) { schedule(); return Promise.resolve(s); }
+  if (access && access.expires_at - now > EARLY) { schedule(); return Promise.resolve(access.token); }
   if (inflight) return inflight;
+  const mine = gen;
   inflight = call('token?grant_type=refresh_token', { method: 'POST', body: { refresh_token: s.refresh_token } }).then((r) => {
+    if (mine !== gen) return null;
     inflight = null;
-    if (r.ok && r.json && r.json.access_token && r.json.user && r.json.user.id) { keep(r.json, r.json.user.id); return store.session(); }
-    if (r.status >= 400 && r.status < 500) { store.setSession(null); unschedule(); tell(); }
+    const cur = store.session();
+    if (!cur || cur.user.id !== s.user.id) return null;
+    if (r.ok && r.json && r.json.access_token && r.json.refresh_token) { keep(r.json, s.user.id); return access.token; }
+    if (r.status >= 400 && r.status < 500) { gen++; store.setSession(null); access = null; unschedule(); tell(); }
     return null;
   });
   return inflight;
 }
 
-/* A timer for just before the session runs out, plus a check whenever the
-   app comes back to the front (a phone that slept through the timer). */
+/* A timer for just before the access token runs out, plus a check whenever
+   the app comes back to the front (a phone that slept through the timer). */
 let timer = 0;
 function unschedule() { clearTimeout(timer); timer = 0; }
 function schedule() {
   unschedule();
-  const s = store.session();
-  if (!s) return;
-  const wait = (Number(s.expires_at) - EARLY - Math.floor(Date.now() / 1000)) * 1000;
+  if (!access || !store.session()) return;
+  const wait = (access.expires_at - EARLY - Math.floor(Date.now() / 1000)) * 1000;
   timer = setTimeout(() => { refresh(); }, Math.max(1000, Math.min(wait, 2147483000)));
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && store.session()) refresh(); });
 
 export function signOut() {
   if (store.isDemo()) { demoUser = null; tell(); return; }
-  const s = store.session();
+  const tok = access && access.token;
+  gen++;
+  inflight = null;
+  access = null;
   store.setSession(null);
   unschedule();
   tell();
-  if (s) call('logout?scope=local', { method: 'POST', token: s.access_token });
+  if (tok) call('logout?scope=local', { method: 'POST', token: tok });
 }
 
 /* The demo's sign-in button: the pretend reader is back. */
 export function demoSignIn() { if (store.isDemo()) { demoUser = DEMO_ID; tell(); } }
 
 /* A fresh access token for a tab that calls Supabase as the reader. */
-export function token() { return refresh().then((s) => (s ? s.access_token : null)); }
+export function token() { return refresh(); }
