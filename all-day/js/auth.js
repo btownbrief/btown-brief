@@ -59,6 +59,7 @@ const redirectTo = () => (/^(localhost|127\.|\[?::1)/.test(location.hostname) ||
 
 /* Send the link. Resolves { ok, message } for the Settings row to show. */
 export function sendLink(email) {
+  if (store.isDemo()) return Promise.resolve({ ok: false, message: 'Sign-in is off in the demo.' });
   const e = String(email || '').trim();
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) return Promise.resolve({ ok: false, message: 'That doesn’t look like an email address.' });
   if (state !== 'on') return Promise.resolve({ ok: false, message: 'Sign-in is coming soon.' });
@@ -68,6 +69,13 @@ export function sendLink(email) {
       if (r.status === 429) return { ok: false, message: 'Too many tries. Wait a minute and send it again.' };
       return { ok: false, message: 'Couldn’t send the link. Try again in a moment.' };
     });
+}
+
+function jwtClaims(t) {
+  try {
+    const part = String(t).split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(part + '='.repeat((4 - part.length % 4) % 4)));
+  } catch (e) { return null; }
 }
 
 function keep(tok, u) {
@@ -87,6 +95,7 @@ function keep(tok, u) {
    it) and the reader lands on the Wire. Returns a promise of a message for
    the toast, or null when the hash was not ours. */
 export function consumeHash() {
+  if (store.isDemo()) return null;
   const h = location.hash.replace(/^#/, '');
   if (!/(^|&)(access_token|error_code|error)=/.test(h)) return null;
   const p = new URLSearchParams(h);
@@ -100,9 +109,13 @@ export function consumeHash() {
     expires_at: p.get('expires_at'), expires_in: p.get('expires_in') };
   if (!tok.access_token) return Promise.resolve(null);
   return call('user', { token: tok.access_token }).then((r) => {
-    if (!r.ok || !r.json || !r.json.id) return 'Sign-in didn’t work. Send a new link from Settings.';
-    keep(tok, r.json);
-    return 'Signed in as ' + (r.json.email || 'you');
+    if (r.ok && r.json && r.json.id) { keep(tok, r.json); return 'Signed in as ' + (r.json.email || 'you'); }
+    /* Offline or a blip, not a refusal: the tokens came straight from
+       Supabase's redirect, so keep them, naming the reader from the token's
+       own claims; the next refresh() checks them with the server. */
+    const claims = r.status === 0 ? jwtClaims(tok.access_token) : null;
+    if (claims && claims.sub) { keep(tok, { id: claims.sub, email: claims.email || '' }); return 'Signed in as ' + (claims.email || 'you'); }
+    return 'Sign-in didn’t work. Send a new link from Settings.';
   });
 }
 
@@ -121,10 +134,11 @@ export function refresh() {
 }
 
 export function signOut() {
+  if (store.isDemo()) return;
   const s = store.session();
   store.setSession(null);
   tell();
-  if (s) call('logout', { method: 'POST', token: s.access_token });
+  if (s) call('logout?scope=local', { method: 'POST', token: s.access_token });
 }
 
 /* A fresh access token for a later tab that calls Supabase as the reader. */

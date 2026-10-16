@@ -7,7 +7,7 @@
    replaces the demo branch with real data and keeps the contract. */
 
 import * as app from '../app.js';
-import { el, esc, ICON, art, mark, section, rail, chips, button } from '../ui.js';
+import { el, esc, safeHref, ICON, art, mark, section, rail, chips, button } from '../ui.js';
 
 const KEY = 'vintage';
 let root = null, D = null, pending = null;
@@ -23,7 +23,7 @@ function render() {
   D.spotted.forEach((p) => {
     const w = el('div');
     const t = el('a', 'tile');
-    t.href = p.href;
+    t.href = safeHref(p.href);
     t.dataset.k = p.k;
     t.innerHTML = art(p.media) + '<span class="ct">' + ICON.clock + ' ' + esc(p.days) + 'd left</span>';
     t.addEventListener('click', (e) => { e.preventDefault(); app.lightbox(p); });

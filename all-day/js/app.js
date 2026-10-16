@@ -253,7 +253,7 @@ export function mute(sid, it) {
    elsewhere links there, and demo mode shows the prototype's sheet. */
 function comments(it) {
   if (!demo) {
-    if (it.open && /^https?:/.test(it.href || '')) { window.open(it.href, '_blank', 'noopener'); return; }
+    if (it.open && /^https?:/.test(safeHref(it.href))) { window.open(safeHref(it.href), '_blank', 'noopener'); return; }
     toast('Comments come to All Day with sign-in.');
     return;
   }
@@ -809,13 +809,13 @@ window.addEventListener('allday-geo', () => {
 /* ----------------------------------------------------------------- routing */
 function parseHash() {
   const h = location.hash.replace(/^#/, '');
-  const m = h.match(/^([a-z]+)\/(.+)$/);
-  if (m && TABS.includes(m[1])) {
+  const m = h.match(/^([a-z]+)\/(.*)$/);
+  if (m && TABS.includes(m[1]) && registry[m[1]]) {
     /* a shared link can carry broken percent-encoding, and an uncaught
-       URIError here would take the whole router down */
+       URIError here would take the whole router down. #food/ is #food. */
     let param;
     try { param = decodeURIComponent(m[2]); } catch (e) { param = m[2]; }
-    return { tab: m[1], param };
+    return { tab: m[1], param: param || null };
   }
   return { tab: TABS.includes(h) && registry[h] ? h : 'wire', param: null };
 }

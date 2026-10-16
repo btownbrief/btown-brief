@@ -8,7 +8,7 @@
    / Everything switch here is the shell's, shared with the Wire. */
 
 import * as app from '../app.js';
-import { el, esc, ICON, art, section, rail, chips, button, localSwitch, geo, setGeo } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, rail, chips, button, localSwitch, geo, setGeo } from '../ui.js';
 
 const KEY = 'onair';
 let root = null, D = null, pending = null;
@@ -23,7 +23,7 @@ const sec = (title, sub, key) => { const s = section(root, title, sub); if (key)
 
 function vcard(v, w) {
   const c = el('a', 'vcard ' + w);
-  c.href = v.href;
+  c.href = safeHref(v.href);
   c.dataset.k = v.k;
   c.innerHTML = '<span class="c-media r169">' + art(v.media) + '<span class="play">' + ICON.play + '</span>' + (v.dur ? '<span class="dur">' + esc(v.dur) + '</span>' : '') +
     (v.live ? '<span class="tag tag-live on-pic">Live</span>' : '') + '</span><span class="t">' + esc(v.title) + '</span><span class="s">' + esc(v.why || v.text || '') + '</span>';

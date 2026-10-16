@@ -92,7 +92,6 @@ export function agoShort(epochSec) {
   if (s < 86400) return Math.round(s / 3600) + 'h';
   return Math.round(s / 86400) + 'd';
 }
-export const clockTime = (d) => d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase().replace(/\s/g, ' ');
 
 /* --------------------------------------------------------------- pictures */
 /* A picture is either a URL (the real thing, lazy, reserving its box) or, in

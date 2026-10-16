@@ -81,8 +81,11 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(SHELL).then((c) => c.put('./index.html', copy)).catch(() => {});
+          /* only a good page becomes the offline shell; a 404 must not */
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(SHELL).then((c) => c.put('./index.html', copy)).catch(() => {});
+          }
           return res;
         })
         .catch(() => caches.match('./index.html').then((hit) => hit || Response.error()))

@@ -7,7 +7,7 @@
 
 import * as app from '../app.js';
 import * as store from '../store.js';
-import { el, esc, ICON, art, mark, section, rail, chips, button } from '../ui.js';
+import { el, esc, safeHref, ICON, art, mark, section, rail, chips, button } from '../ui.js';
 
 const KEY = 'art';
 let root = null, D = null, pending = null;
@@ -15,7 +15,7 @@ const S = { f: 'all' };
 const loaded = app.demo ? app.demoData(KEY).then((d) => { D = d; app.know(d.wall); app.recount(); return d; }) : null;
 
 const sec = (title, sub, key) => { const s = section(root, title, sub); s.dataset.sec = key; return s; };
-const votes = (w) => (w.votes || 0) + store.voteCount(w.k);
+const votes = (w) => (Number(w.votes) || 0) + store.voteCount(w.k);
 
 function render() {
   root.innerHTML = '';
@@ -23,7 +23,7 @@ function render() {
   const hero = el('div', 'hero');
   hero.dataset.k = top.k + '-hero';
   hero.innerHTML = '<span class="c-media r169">' + art(top.media) + '</span><span class="eyebrow">Photo of the week</span><h3>' + esc(top.text) + '</h3><p>by ' +
-    esc(top.author) + ' · ' + votes(top) + ' votes. ' + esc(D.heroNote) + '</p>';
+    esc(top.author) + ' · ' + esc(votes(top)) + ' votes. ' + esc(D.heroNote) + '</p>';
   const row = el('div', 'row');
   const up = button(ICON.up + ' Vote', store.hasVoted(top.k) ? '' : 'ghost', () => {
     app.toggleVote(top);
@@ -39,10 +39,10 @@ function render() {
   const g = el('div', 'grid3');
   D.wall.forEach((w) => {
     const t = el('a', 'tile' + (w.tall ? ' tall' : ''));
-    t.href = w.href;
+    t.href = safeHref(w.href);
     t.dataset.k = w.k;
     t.setAttribute('aria-label', w.text + ', by ' + w.author);
-    t.innerHTML = art(w.media) + '<span class="ct">' + ICON.up + votes(w) + '</span>';
+    t.innerHTML = art(w.media) + '<span class="ct">' + ICON.up + esc(votes(w)) + '</span>';
     t.addEventListener('click', (e) => { e.preventDefault(); app.lightbox(w); });
     g.appendChild(t);
   });

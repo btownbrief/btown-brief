@@ -288,16 +288,50 @@ async function deepLinks(browser, base) {
   });
 
   await group('deep links, live Wire', async () => {
+    /* a card from Everything, past the first sixty of Burlington's newest
+       day, opened by a reader on the default Local setting */
+    const pulse = JSON.parse(await readFile(path.join(REPO, 'data/pulse.json'), 'utf8'));
+    const local = new Set(pulse.sources.filter((s) => s.local === 1 || s.topic === 'local').map((s) => s.id));
+    const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });
+    const items = pulse.items.filter((it) => it.u && it.t && it.d).sort((a, b) => b.d - a.d);
+    const day = fmt.format(new Date(items[0].d * 1000));
+    const today = items.filter((it) => fmt.format(new Date(it.d * 1000)) === day);
+    const far = today.slice(70).find((it) => !local.has(it.s));
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/');
     await page.waitForSelector('.panel:not([hidden]) .card.row', { timeout: 15000 });
     const keys = await page.$$eval('.panel:not([hidden]) .card.row', (rs) => rs.map((r) => r.dataset.k));
     check(keys.length >= 10, 'the live Wire draws rows from pulse.json', keys.length);
-    const key = keys[Math.min(keys.length - 1, 25)];
-    await page.goto(base + '/all-day/#wire/' + encodeURIComponent(key));
-    await page.reload();
-    check(await flashes(page, key), 'a shared #wire/<url> lands and flashes', key);
+    if (check(!!far, 'the fixture day has a non-local card past row 70', today.length)) {
+      await page.goto(base + '/all-day/#wire/' + encodeURIComponent(far.u));
+      await page.reload();
+      check(await flashes(page, far.u), 'a shared non-local card past the first page lands and flashes for a Local reader', far.u);
+      check(await page.evaluate(() => JSON.parse(localStorage.getItem('allday-settings') || '{}').localOnly === false), 'and the switch moved to Everything to show it', '');
+    }
+    await page.goto(base + '/all-day/#food/');
+    await settle(page);
+    check(await page.$eval('#tab-food', (b) => b.getAttribute('aria-selected')) === 'true', '#food/ lands on Food', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('demo mode keeps its hands off the real app', async () => {
+    const { ctx, page, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/');
+    await settle(page);
+    const real = { auth: JSON.stringify({ access_token: 'a.b.c', refresh_token: 'r', expires_at: 4102444800, user: { id: 'u1', email: 'reader@example.com' } }),
+      settings: JSON.stringify({ localOnly: true }), visit: JSON.stringify({ base: 1700000000, last: 1700000100 }) };
+    await page.evaluate((r) => { localStorage.setItem('allday-auth', r.auth); localStorage.setItem('allday-settings', r.settings); localStorage.setItem('allday-visit', r.visit); }, real);
+    supabase.length = 0;
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.click('#settings-btn');
+    const txt = await page.$eval('.sheet-body', (b) => b.innerText);
+    check(!/reader@example\.com|Sign out/.test(txt), 'demo Settings does not show the real account', '');
+    const after = await page.evaluate(() => ({ auth: localStorage.getItem('allday-auth'), settings: localStorage.getItem('allday-settings'), visit: localStorage.getItem('allday-visit') }));
+    check(JSON.stringify(after) === JSON.stringify(real), 'demo leaves the real session, settings and visit untouched', JSON.stringify(after));
+    check(!supabase.length, 'demo makes no Supabase call', supabase.join(', '));
     await ctx.close();
   });
 }

@@ -11,7 +11,7 @@
 
 import * as app from '../app.js';
 import * as store from '../store.js';
-import { el, esc, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, setGeo, put } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, setGeo, put } from '../ui.js';
 
 let D = null;
 const W = { root: null, day: 0, ch: 'all', every: false, layout: 'newest', outlet: '', page: 30, fresh: false, more: false, pending: null };
@@ -81,7 +81,7 @@ function cardsDateline(d, n) {
   prev.disabled = W.day >= D.days.length - 1; next.disabled = W.day === 0;
   prev.addEventListener('click', () => goDay(W.day + 1));
   next.addEventListener('click', () => goDay(W.day - 1));
-  dl.append(prev, el('span', 'dl', '<b>' + esc(d.date) + '</b><span class="s">' + n + (d.final ? ' stories · final' : ' stories so far · updated ' + esc(d.updated)) + '</span>'), next);
+  dl.append(prev, el('span', 'dl', '<b>' + esc(d.date) + '</b><span class="s">' + esc(n) + (d.final ? ' stories · final' : ' stories so far · updated ' + esc(d.updated)) + '</span>'), next);
   return dl;
 }
 function countDay(d) {
@@ -129,7 +129,7 @@ export function render() {
     fine: 'Demo. Every item on this page is made up.',
   } : {
     title: 'That was ' + d.date.split(',')[0] + '.',
-    text: d.count + ' stories. An edition is final at midnight and stays exactly as it was.',
+    text: (Number(d.count) || 0) + ' stories. An edition is final at midnight and stays exactly as it was.',
     buttons: [later, earlier], check: false,
   }));
   app.bindFeed(feed, { onSource: sourceSheet });
@@ -166,7 +166,7 @@ export function wmRow(it, n) {
   const r = el('article', 'wm-row card fi' + (store.isRead(it.k) ? ' is-read' : ''));
   r.dataset.k = it.k;
   const ext = /^https?:/.test(it.href || '');
-  r.innerHTML = '<span class="num">' + n + '</span><div><a class="c-title" href="' + esc(it.href) + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + ' data-open>' + esc(it.title || it.text) + '</a>' +
+  r.innerHTML = '<span class="num">' + esc(n) + '</span><div><a class="c-title" href="' + esc(safeHref(it.href)) + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + ' data-open>' + esc(it.title || it.text) + '</a>' +
     (it.why ? '<p class="why">' + esc(it.why) + '</p>' : '') +
     '<div class="c-foot"><button class="srcbtn" data-src="' + esc(it.sid || it.src) + '">' + mark(it.src, 'xs') + '<span class="c-src' + (greenOf(it) ? ' is-local' : '') + '">' + esc(it.src) + '</span></button>' +
     (it.ago ? '<span class="dot"></span><span class="age">' + esc(it.ago) + '</span>' : '') +

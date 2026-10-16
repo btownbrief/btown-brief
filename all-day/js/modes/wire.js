@@ -21,14 +21,14 @@ import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as demo from './wire-demo.js';
-import { el, esc, ICON, mark, cards, chips, button, divider, section, localSwitch, geo, setGeo, agoShort, clockTime, put } from '../ui.js';
+import { el, esc, safeHref, ICON, mark, cards, chips, button, divider, section, localSwitch, geo, setGeo, agoShort, put } from '../ui.js';
 
 const PAGE = 60;
 const DAYS_KEPT = 2;
 const PICKS_SHOWN = 10;
 
 const L = { root: null, pulse: null, top: null, srcs: Object.create(null), day: 0, ch: 'all', page: PAGE, more: false,
-  pending: null, queued: null, stale: false, failed: false };
+  pending: null, queued: null, stale: false, failed: false, topDone: false };
 
 /* ------------------------------------------------------------ the items */
 const isLocal = (src) => !!src && (src.local === 1 || src.topic === 'local');
@@ -57,7 +57,7 @@ function toItem(it) {
   return {
     k: keyOf(it), kind: 'headline', title: it.t, href: it.u, d: Number(it.d) || 0,
     src: src.short || src.name || it.s, sid: canon(it.s), local: isLocal(src), ch: kindOf(src),
-    thumb: it.i || '', ago: it.d ? agoShort(it.d) : '',
+    thumb: it.i || '', ago: it.d ? agoShort(it.d) : '', day: it.d ? et(it.d).key : '', h: it.d ? et(it.d).h : 0,
   };
 }
 
@@ -69,7 +69,19 @@ function loadMutes() {
   Object.keys(store.muted()).forEach((id) => { MUTE[id] = 1; MUTE[canon(id)] = 1; });
 }
 const visible = (it) => !MUTE[it.sid] && (geo() === 'everything' || it.local);
-const dayStart = (sec) => { const d = new Date(sec * 1000); d.setHours(0, 0, 0, 0); return Math.floor(d.getTime() / 1000); };
+/* Burlington's clock, not the reader's: a day and a time of day are always
+   America/New_York, so a reader in another timezone sees the same paper and
+   daylight-saving days are as long as they really are. */
+const TZ = 'America/New_York';
+const partsFmt = new Intl.DateTimeFormat('en-US', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23' });
+const dayFmt = new Intl.DateTimeFormat('en-US', { timeZone: TZ, weekday: 'long', month: 'long', day: 'numeric' });
+const timeFmt = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', minute: '2-digit' });
+function et(sec) {
+  const o = {};
+  partsFmt.formatToParts(new Date(sec * 1000)).forEach((p) => { o[p.type] = p.value; });
+  return { key: o.year + '-' + o.month + '-' + o.day, h: Number(o.hour) % 24 };
+}
+const clock = (sec) => timeFmt.format(new Date(sec * 1000)).replace(/\s+/g, ' ').toLowerCase();
 
 /* The days the payload holds, newest first: [{ start, items }] */
 let DAYS = [];
@@ -82,12 +94,13 @@ function build() {
   app.know(uniq);
   DAYS = [];
   if (!uniq.length) return;
-  let start = dayStart(uniq[0].d);
-  for (let i = 0; i < DAYS_KEPT; i++) {
-    const end = start + 86400;
-    DAYS.push({ start, items: uniq.filter((it) => it.d >= start && it.d < end) });
-    start = dayStart(start - 3600);
-  }
+  /* the newest Burlington days the payload holds, newest first */
+  const byDay = new Map();
+  uniq.forEach((it) => { if (!byDay.has(it.day)) byDay.set(it.day, []); byDay.get(it.day).push(it); });
+  [...byDay.keys()].slice(0, DAYS_KEPT).forEach((key) => {
+    const items = byDay.get(key);
+    DAYS.push({ key, name: dayFmt.format(new Date(items[0].d * 1000)), items });
+  });
 }
 
 /* pulse-top's ranked picks, as cards can draw them, with a thumbnail when
@@ -107,14 +120,12 @@ function picks() {
 }
 
 /* ----------------------------------------------------------------- dates */
-const dayName = (start) => new Date(start * 1000).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-const isToday = (start) => start === dayStart(Date.now() / 1000);
+const isToday = (day) => day.key === et(Date.now() / 1000).key;
 function stamp() {
   const g = L.pulse && Date.parse(L.pulse.generated);
-  return g ? clockTime(new Date(g)) : '';
+  return g ? clock(g / 1000) : '';
 }
-function slot(sec) {
-  const h = new Date(sec * 1000).getHours();
+function slot(h) {
   if (h >= 21) return 'Late';
   if (h >= 17) return 'Evening';
   if (h >= 13) return 'Afternoon';
@@ -130,7 +141,7 @@ function subnav() {
   const frag = document.createDocumentFragment();
   const day = DAYS[L.day];
   const n = day.items.filter(visible).length;
-  const today = isToday(day.start);
+  const today = isToday(day);
   const dl = el('div', 'dateline');
   const prev = el('button', 'iconbtn nav', ICON.left); prev.setAttribute('aria-label', 'Earlier day');
   const next = el('button', 'iconbtn nav', ICON.right); next.setAttribute('aria-label', 'Later day');
@@ -139,7 +150,7 @@ function subnav() {
   next.addEventListener('click', () => goDay(L.day - 1));
   const sub = L.day > 0 ? n + ' stories · final'
     : n + (today ? ' stories so far' : ' stories') + (stamp() ? ' · updated ' + stamp() : '') + (L.stale ? ' · reconnecting' : '');
-  dl.append(prev, el('span', 'dl', '<b>' + esc(dayName(day.start)) + '</b><span class="s">' + esc(sub) + '</span>'), next);
+  dl.append(prev, el('span', 'dl', '<b>' + esc(day.name) + '</b><span class="s">' + esc(sub) + '</span>'), next);
   frag.appendChild(dl);
 
   const counts = Object.create(null);
@@ -176,18 +187,18 @@ function render() {
   const green = geo() === 'everything';
   const shownPicks = L.day === 0 && L.ch === 'all' ? renderMatters(feed) : new Set();
   const river = day.items.filter((it) => visible(it) && !shownPicks.has(it.k) && (L.ch === 'all' || it.ch === L.ch));
-  if (shownPicks.size) divider(feed, 'The rest of ' + (isToday(day.start) ? 'today' : 'the day'), geo() === 'local' ? 'local only' : 'every source');
+  if (shownPicks.size) divider(feed, 'The rest of ' + (isToday(day) ? 'today' : 'the day'), geo() === 'local' ? 'local only' : 'every source');
 
   /* new since you were here: the line sits under the newest unseen item */
   const base = store.visitBase();
   const fresh = L.day === 0 && base ? river.filter((it) => it.d > base).length : 0;
   let lastSlot = null;
   river.slice(0, L.page).forEach((it, i) => {
-    const s = slot(it.d);
-    if (s !== lastSlot) { divider(feed, s, 'latest ' + clockTime(new Date(it.d * 1000))); lastSlot = s; }
+    const s = slot(it.h);
+    if (s !== lastSlot) { divider(feed, s, 'latest ' + clock(it.d)); lastSlot = s; }
     put(feed, cards.row(it, { greenLocal: green && it.local, noComments: true }));
     if (fresh && fresh < river.length && i === fresh - 1) {
-      feed.appendChild(cards.newline(fresh + ' new since you were here at ' + clockTime(new Date(base * 1000))));
+      feed.appendChild(cards.newline(fresh + ' new since you were here at ' + clock(base)));
     }
   });
   if (!river.length) feed.appendChild(el('p', 'empty', L.ch === 'all' ? 'Nothing local on this day yet. Flip the switch to Everything for the rest.' : 'Nothing from ' + esc(label(L.ch)) + ' on this day.'));
@@ -196,7 +207,7 @@ function render() {
     feed.appendChild(button('Show ' + Math.min(PAGE, river.length - L.page) + ' more from ' + (L.day ? 'that day' : 'today'), 'ghost more', () => { L.page += PAGE; render(); }));
   } else if (L.day === 0 && DAYS.length > 1) {
     feed.appendChild(cards.caught({
-      title: isToday(day.start) ? 'That’s today so far' : 'That’s the latest edition',
+      title: isToday(day) ? 'That’s today so far' : 'That’s the latest edition',
       text: 'New stories land through the day, above a line, never under your thumb.' + (stamp() ? ' Last updated ' + stamp() + '.' : ''),
       buttons: [button('Yesterday’s edition ' + ICON.arrow, '', () => goDay(1)), button('What now ' + ICON.arrow, 'ghost', () => app.go('whatnow'))],
     }));
@@ -220,7 +231,7 @@ function renderMatters(feed) {
   if (!list.length) return new Set();
   const wm = el('div', 'wm');
   const built = L.top && Date.parse(L.top.generated);
-  section(wm, 'What matters today', list.length + ' picks from the whole wire, each with a reason.' + (built ? ' Picked at ' + esc(clockTime(new Date(built))) + '.' : ''));
+  section(wm, 'What matters today', list.length + ' picks from the whole wire, each with a reason.' + (built ? ' Picked at ' + esc(clock(built / 1000)) + '.' : ''));
   const first = list[0];
   put(wm, cards.pick({ ...first, media: first.thumb, thumb: '', eyebrow: '1 of ' + list.length }, { tagLocal: geo() === 'everything' && first.local }));
   list.slice(1, 5).forEach((it, i) => wm.appendChild(demo.wmRow(it, i + 2)));
@@ -273,9 +284,9 @@ function sourceSheet(sid, from) {
       '</div><div class="n">' + items.length + ' today</div></div>'));
     const row = el('div', 'linkrow');
     row.appendChild(button('Mute', 'ghost', () => muteSource(sid, from || { src: name })));
-    if (/^https?:/.test(src.site || '')) {
+    if (/^https?:/.test(safeHref(src.site))) {
       const a = el('a', 'btn ghost', 'Open the site ' + ICON.ext);
-      a.href = src.site; a.target = '_blank'; a.rel = 'noopener';
+      a.href = safeHref(src.site); a.target = '_blank'; a.rel = 'noopener';
       row.appendChild(a);
     }
     body.appendChild(row);
@@ -290,17 +301,23 @@ function sourceSheet(sid, from) {
 }
 
 /* ------------------------------------------------------------ deep links */
+/* waits for both payloads: picks arriving after a landing would redraw the
+   page and lose the card it just scrolled to */
 function land() {
   const p = L.pending;
-  if (!p || !L.pulse) return;
+  if (!p || !L.pulse || !L.topDone) return;
   L.pending = null;
   if (p === 'local' || p === 'everything') { setGeo(p); app.paintSubnav(); render(); return; }
   if (KINDS.some(([k]) => k === p)) { L.ch = p; L.page = PAGE; app.paintSubnav(); render(); return; }
   loadMutes();
   if (app.flashHit(L.root, p)) return;
-  /* a shared card further down the day, or on yesterday's page */
+  /* a shared card further down the day, on yesterday's page, or hidden by
+     the Local switch (a link shared from Everything to a Local reader) */
+  const it = app.item(p);
+  if (it && MUTE[it.sid]) { app.toast('That card is from ' + it.src + ', which you muted. Unmute it in Settings.'); return; }
+  if (it && !it.local && geo() === 'local') { setGeo('everything'); loadMutes(); }
   for (let d = 0; d < DAYS.length; d++) {
-    const idx = DAYS[d].items.filter(visible).findIndex((it) => it.k === p);
+    const idx = DAYS[d].items.filter(visible).findIndex((x) => x.k === p);
     if (idx < 0) continue;
     L.day = d; L.ch = 'all'; L.page = Math.max(PAGE, Math.ceil((idx + 1) / PAGE) * PAGE);
     app.paintSubnav(); render();
@@ -328,7 +345,7 @@ const live = {
       land();
       app.recount();
     }, () => { L.failed = true; render(); });
-    data.load('top', (j) => { L.top = j; if (L.pulse) render(); }, () => {});
+    data.load('top', (j) => { L.top = j; L.topDone = true; if (L.pulse) { render(); land(); } }, () => { L.topDone = true; land(); });
   },
   activate(param) { if (param) { L.pending = param; land(); } },
   refresh() { if (L.pulse) { build(); app.paintSubnav(); render(); } },

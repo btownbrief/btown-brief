@@ -7,7 +7,7 @@
    replaces the demo branch with real data and keeps the contract. */
 
 import * as app from '../app.js';
-import { el, esc, ICON, art, section, rail, chips, pills, button } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button } from '../ui.js';
 
 const KEY = 'watch';
 let root = null, D = null, pending = null;
@@ -18,7 +18,7 @@ const sec = (title, sub, key, right) => { const s = section(root, title, sub, ri
 
 function poster(f, o = {}) {
   const a = el('a', 'poster');
-  a.href = f.href || '#';
+  a.href = safeHref(f.href);
   a.dataset.k = f.k;
   a.innerHTML = '<span class="c-media">' + art(f.art) +
     (o.trailer ? '<span class="play">' + ICON.play + '</span><span class="dur">' + esc(f.dur) + '</span>' : '') +
@@ -86,13 +86,13 @@ function render() {
 
   sec('Vote for the next screening', esc(D.voteSub), 'vote');
   const card = el('div', 'textcard');
-  const total = D.vote.reduce((a, v) => a + v.n, 0) + (S.voted ? 1 : 0);
+  const total = D.vote.reduce((a, v) => a + (Number(v.n) || 0), 0) + (S.voted ? 1 : 0);
   D.vote.forEach((v) => {
-    const nn = v.n + (S.voted === v.title ? 1 : 0);
+    const nn = (Number(v.n) || 0) + (S.voted === v.title ? 1 : 0);
     const o = el('div', 'vote-opt' + (S.voted === v.title ? ' on' : ''));
     o.setAttribute('role', 'button');
     o.tabIndex = 0;
-    o.innerHTML = '<div class="l">' + esc(v.title) + '<span>' + nn + '</span></div><div class="bar"><i style="width:' + Math.round(nn / total * 100) + '%"></i></div>';
+    o.innerHTML = '<div class="l">' + esc(v.title) + '<span>' + esc(nn) + '</span></div><div class="bar"><i style="width:' + Math.round(nn / (total || 1) * 100) + '%"></i></div>';
     o.addEventListener('click', () => { S.voted = S.voted === v.title ? null : v.title; render(); app.toast(S.voted ? 'Voted for ' + v.title : 'Vote removed'); });
     card.appendChild(o);
   });

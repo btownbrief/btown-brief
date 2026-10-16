@@ -970,8 +970,14 @@
   ok   deep links, demo › #onair/everything flips the shared switch
   ok   deep links, demo › an unknown key says the card has moved on
   ok   deep links, live Wire › the live Wire draws rows from pulse.json
-  ok   deep links, live Wire › a shared #wire/<url> lands and flashes
+  ok   deep links, live Wire › the fixture day has a non-local card past row 70
+  ok   deep links, live Wire › a shared non-local card past the first page lands and flashes for a Local reader
+  ok   deep links, live Wire › and the switch moved to Everything to show it
+  ok   deep links, live Wire › #food/ lands on Food
   ok   deep links, live Wire › no console errors
+  ok   demo mode keeps its hands off the real app › demo Settings does not show the real account
+  ok   demo mode keeps its hands off the real app › demo leaves the real session, settings and visit untouched
+  ok   demo mode keeps its hands off the real app › demo makes no Supabase call
   ok   interactions, demo › the star saves and lights the mast
   ok   interactions, demo › the Saved sheet lists it
   ok   interactions, demo › Escape closes the sheet
@@ -998,4 +1004,4 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 65 cards in 12ms (budget 100)
+  ok   performance › the live Wire redraws 65 cards in 10ms (budget 100)

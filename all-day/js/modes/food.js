@@ -6,7 +6,7 @@
    replaces the demo branch with real data and keeps the contract. */
 
 import * as app from '../app.js';
-import { el, esc, ICON, art, section, rail, chips, button } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, rail, chips, button } from '../ui.js';
 
 const KEY = 'food';
 let root = null, D = null, pending = null;
@@ -65,7 +65,7 @@ function render() {
   const r4 = rail(root);
   D.videos.forEach((v) => {
     const c = el('a', 'vcard vert');
-    c.href = v.href;
+    c.href = safeHref(v.href);
     c.dataset.k = v.k;
     c.innerHTML = '<span class="c-media">' + art(v.media) + '<span class="play">' + ICON.play + '</span></span><span class="t">' + esc(v.title) + '</span><span class="s">' + esc(v.text) + '</span>';
     c.addEventListener('click', (e) => { e.preventDefault(); app.play(v); });

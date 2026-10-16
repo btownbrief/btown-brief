@@ -90,7 +90,7 @@ function capMap(map, cap) {
 /* ----------------------------------------------------------------- demo */
 
 let DEMO = null;   // { saved: [], voted: {}, read: {}, hidden: {} } while ?demo=1
-export function setDemo(on) { DEMO = on ? { saved: [], voted: {}, read: {}, hidden: {} } : null; }
+export function setDemo(on) { DEMO = on ? { saved: [], voted: {}, read: {}, hidden: {}, settings: {} } : null; }
 export const isDemo = () => !!DEMO;
 
 /* --------------------------------------------------------------- player */
@@ -179,13 +179,14 @@ const SETTING_DEFAULTS = {
 };
 
 export function settings() {
+  if (DEMO) return { ...SETTING_DEFAULTS, ...DEMO.settings };
   return { ...SETTING_DEFAULTS, ...obj(read(SET_KEY, {})) };
 }
 
 export function setSetting(key, value) {
   const s = settings();
   s[key] = value;
-  write(SET_KEY, s);
+  if (DEMO) DEMO.settings[key] = value; else write(SET_KEY, s);
   return s;
 }
 
@@ -367,11 +368,13 @@ export function clearTrail() { write(TRAIL_KEY, []); }
    so a reload does not reset it; restarted after 30 minutes away. */
 
 export function visitBase() {
+  if (DEMO) return 0;
   const v = obj(read(VISIT_KEY, {}));
   return Number(v.base) || 0;
 }
 
 export function touchVisit() {
+  if (DEMO) return;
   const now = Math.floor(Date.now() / 1000);
   const v = obj(read(VISIT_KEY, {}));
   const last = Number(v.last) || 0;
@@ -474,10 +477,12 @@ export function topVoted(limit) {
    nobody is signed in, which is the normal state: no tab may require it. */
 const AUTH_KEY = 'allday-auth';
 export function session() {
+  if (DEMO) return null;   /* demo mode never shows or touches a real account */
   const s = obj(read(AUTH_KEY, null));
   return s.access_token && s.user ? s : null;
 }
 export function setSession(s) {
+  if (DEMO) return;
   if (s) write(AUTH_KEY, s);
   else { try { localStorage.removeItem(AUTH_KEY); } catch (e) { /* fine */ } }
 }
