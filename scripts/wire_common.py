@@ -30,6 +30,7 @@ scripts skip quietly and the last good files stay up.
 """
 
 import hashlib
+import html
 import json
 import os
 import re
@@ -76,6 +77,163 @@ def item_id(url):
     """Stable short id for a URL. Pulse URLs are already canonical
     (refresh_pulse.canon_url), so a plain hash is stable across runs."""
     return hashlib.sha1((url or "").strip().encode("utf-8")).hexdigest()[:12]
+
+
+def display_name(source):
+    """The outlet's name as a reader knows it ("Vermont Public", not
+    local-news-2310). Entities are decoded and a short name that was cut
+    off ("Top News &amp…") gives way to the full one."""
+    short = html.unescape(source.get("short") or "").strip()
+    full = html.unescape(source.get("name") or "").strip()
+    if not short or short.endswith("…"):
+        short = full or short
+    return short or source.get("id") or ""
+
+
+# ----------------------------------------------------------------------
+# Places: is the story about the Burlington area, elsewhere in Vermont, or
+# out of state? Read from the headline (and a few single-town sources).
+# ----------------------------------------------------------------------
+
+BTV_PLACES = (
+    "Burlington", "Winooski", "South Burlington", "Essex", "Essex Junction", "Colchester",
+    "Williston", "Shelburne", "Charlotte", "Milton", "Hinesburg", "Richmond", "Jericho",
+    "Underhill", "Westford", "St. George", "Huntington", "Bolton", "Chittenden",
+    "Church Street", "Old North End", "South End", "New North End", "Intervale", "North Beach",
+    "Oakledge", "the Flynn", "UVM", "University of Vermont", "Champlain College",
+    "Saint Michael's", "St. Michael's", "Lake Champlain", "BTV", "Queen City",
+)
+AWAY_PLACES = (
+    "Barre", "Montpelier", "Rutland", "Brattleboro", "Bennington", "St. Albans",
+    "Saint Albans", "Middlebury", "Stowe", "Waterbury", "Brandon", "Moretown", "Shaftsbury",
+    "Hardwick", "Newport", "St. Johnsbury", "Springfield", "Randolph", "Bristol",
+    "Vergennes", "Woodstock", "Killington", "Ludlow", "Dorset", "Northfield", "Morrisville",
+    "Johnson", "Swanton", "Enosburg", "Lyndonville", "Windsor", "White River Junction",
+    "Norwich", "Thetford", "Groton", "Otter Valley", "Smugglers' Notch", "Smugglers’ Notch",
+    "Jay Peak", "Sugarbush", "Mad River", "Arlington", "Castleton", "Fair Haven", "Poultney",
+    "Wilmington", "Bellows Falls", "Derby", "Barton", "Cabot", "Waitsfield", "Warren",
+    "Manchester, Vt", "Northeast Kingdom", "Franklin County", "Addison County",
+    "Rutland County", "Washington County", "Lamoille",
+)
+OUT_PLACES = (
+    "New Hampshire", "N.H.", "Claremont", "Hanover", "Lebanon, N.H.", "Plattsburgh",
+    "Keene", "Adirondack", "Upstate New York", "Massachusetts", "Maine",
+)
+VERMONT_WORDS = ("Vermont", "Vermonters", "Vt.", "VT", "statewide", "Statehouse",
+                 "Legislature", "Gov. Scott", "Phil Scott")
+# sources that only ever cover the Burlington area
+BTV_SOURCES = {"r-burlington", "burlington-vt-news-flash-police-department",
+               "the-charlotte-news", "btown-brief", "btv-daily", "love-burlington",
+               "the-vermont-cynic", "burlington-tasting-room"}
+
+
+def _place_re(names):
+    return re.compile(r"(?<![\w'’])(" + "|".join(re.escape(n) for n in names) + r")(?!\w)")
+
+
+BTV_RE, AWAY_RE, OUT_RE, VT_RE = (_place_re(BTV_PLACES), _place_re(AWAY_PLACES),
+                                  _place_re(OUT_PLACES), _place_re(VERMONT_WORDS))
+
+
+def place_of(title, src=""):
+    """-> (region, town). region: "btv" (Burlington area), "away" (named
+    Vermont town outside it), "out" (out of state), "vt" (statewide), or
+    None (no place named). A Burlington-area name wins over any other."""
+    title = title or ""
+    # "South Burlington" must not read as "Burlington" plus "South"
+    for regex, region in ((BTV_RE, "btv"), (AWAY_RE, "away"), (OUT_RE, "out")):
+        match = regex.search(title)
+        if match:
+            return region, match.group(1)
+    if src in BTV_SOURCES:
+        return "btv", None
+    if VT_RE.search(title):
+        return "vt", None
+    return None, None
+
+
+# ----------------------------------------------------------------------
+# Pick gates: kinds of story the doctrine keeps out of "What matters today"
+# ----------------------------------------------------------------------
+
+# a single incident or case (doctrine: river quick hits at most) ...
+CRIME_RE = re.compile(
+    r"burglar|robber|theft|stole|shoplift|arrest|charged|charges|cited for|convicted|"
+    r"conviction|sentenced|pleads|plea deal|indicted|lawsuit|sues\b|sued\b|cruelty|fraud",
+    re.I)
+# ... unless it is an active public-safety situation
+ACTIVE_RE = re.compile(
+    r"closed|closure|evacuat|lockdown|shelter in place|missing|at large|manhunt|"
+    r"warning|alert|advisory|recall|outbreak|outage|boil water|road(s)? closed", re.I)
+THREAD_CHANNELS = ("reddit", "facebook")
+THREAD_MIN_COMMENTS = 15
+THREAD_PICKS_MAX = 2
+THREAD_TOP_RANK = 6          # a thread is never above rank 6
+WEEKEND_TOPICS = {"events", "weather", "transportation", "environment", "sports"}
+FEATURE_TOPICS = {"arts-culture", "music", "community", "environment", "tech", "science",
+                  "health", "media", "other", "food-drink", "events", "sports", "weather"}
+
+
+def pick_block(item):
+    """Why an item may not be a pick, or None. Applied before the editor
+    sees the list (the line says "river only") and again after it answers."""
+    title = item.get("title") or ""
+    if CRIME_RE.search(title) and not ACTIVE_RE.search(title):
+        return "a single crime or court story"
+    if item.get("ch") in THREAD_CHANNELS:
+        comments = item.get("comments")
+        if not isinstance(comments, int):
+            return "a thread with no comment count"
+        if comments < THREAD_MIN_COMMENTS:
+            return f"a thread with {comments} comments"
+    region = item.get("region")
+    if region == "out":
+        return "out of state"
+    if region == "away" and item.get("topic") not in WEEKEND_TOPICS:
+        return "outside the Burlington area"
+    return None
+
+
+def pick_tier(item):
+    """Local picks sort by this, model order kept within a tier: Burlington
+    area first (and statewide decisions with it), then statewide features,
+    then trips out of the area."""
+    region = item.get("region")
+    if region == "btv":
+        return 0
+    if region == "away":
+        return 2
+    return 1 if item.get("topic") in FEATURE_TOPICS or item.get("topic") is None else 0
+
+
+# ----------------------------------------------------------------------
+# Reasons that only restate their headline
+# ----------------------------------------------------------------------
+
+STOPWORDS = set("""a an and are as at be been but by for from has have he her his in into is it its
+of on or our over she so that the their them they this to up was were what when where which
+who will with you your new after about more than just now how why can its it's not no""".split())
+
+
+def content_words(text):
+    words = re.findall(r"[a-z0-9']+", html.unescape(text or "").lower())
+    out = set()
+    for word in words:
+        word = word.strip("'")
+        if len(word) < 3 or word in STOPWORDS:
+            continue
+        out.add(word[:-1] if word.endswith("s") and len(word) > 4 else word)
+    return out
+
+
+def restates(reason, headline, share=0.5):
+    """True when half or more of the reason's content words are the
+    headline's (Fable's rule says more than half; at exactly half the
+    reason is still mostly the headline, so the line sits there)."""
+    words = content_words(reason)
+    if not words:
+        return True
+    return len(words & content_words(headline)) / len(words) >= share
 
 
 def mechanical_channel(source, url=""):
@@ -136,7 +294,7 @@ def wire_items(pulse, now_ts, window_hours):
         entry = {
             "id": item_id(url), "ch": item.get("ch") or ch,
             "local": bool(item["local"]) if "local" in item else local,
-            "src": source["id"], "name": source.get("short") or source.get("name") or source["id"],
+            "src": source["id"], "name": display_name(source),
             "title": title, "url": url, "posted_at": iso_ts(when), "d": when,
         }
         if own:
@@ -444,6 +602,21 @@ def selftest():
     assert item_id("https://a.com/1") == item_id("https://a.com/1 ") != item_id("https://a.com/2")
     assert abs(cost_usd("claude-opus-5-5", {"in": 1_000_000, "out": 100_000}) - 6.0) < 1e-9
     assert pick_engine is not None and et_now().tzinfo is not None
+    assert display_name({"id": "t", "short": "Top News &amp…", "name": "Top News &amp; Analysis"}) \
+        == "Top News & Analysis"
+    assert place_of("Millions announced to rebuild Barre's North End") == ("away", "Barre")
+    assert place_of("South Burlington adds a bus") == ("btv", "South Burlington")
+    assert place_of("Claremont mayor under investigation") == ("out", "Claremont")
+    assert place_of("Vermont once dreamed of universal healthcare") == ("vt", None)
+    assert place_of("Fed holds rates") == (None, None)
+    assert pick_block({"title": "Police searching for suspect in Winooski market burglary"})
+    assert pick_block({"title": "Route 2 closed after a crash; driver charged"}) is None
+    assert pick_block({"title": "A thread", "ch": "reddit"}) == "a thread with no comment count"
+    assert pick_block({"title": "A thread", "ch": "reddit", "comments": 40}) is None
+    assert restates("State police update on a police shooting in Williston, a Chittenden County town.",
+                    "VSP provides update on investigation into Williston police shooting")
+    assert not restates("Your electric bill, starting in January.",
+                        "Vermont regulators finalize 5.5% rate increase for Green Mountain Power")
     usage = {}
     add_usage(usage, type("U", (), {"input_tokens": 10, "output_tokens": 0, "iterations": [
         type("I", (), {"type": "message", "input_tokens": 10, "output_tokens": 0}),
