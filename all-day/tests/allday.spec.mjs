@@ -2172,6 +2172,16 @@ async function shellFixes(browser, base) {
     await ctx.close();
   });
 
+  await group('shell fixes: the offline shell carries the new modules', async () => {
+    const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
+    const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
+    check(/VERSION = 'all-day-v44'/.test(sw), 'sw.js VERSION is bumped once, to v44', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
+    for (const f of ['js/boards.js', 'js/boards-core.js', 'js/boards-fake.js']) check(listed.includes(f), f + ' is in the offline list', '');
+    const imported = [...main.matchAll(/import '\.\/([\w/.-]+\.js)'/g)].map((m) => 'js/' + m[1]);
+    check(imported.every((f) => listed.includes(f)), 'every module main.js imports is in the offline list', imported.filter((f) => !listed.includes(f)).join(', '));
+  });
+
   await group('shell fixes: third-party players use the shared .embed', async () => {
     for (const f of ['modes/onair.js', 'modes/whatnow.js', 'modes/food.js']) {
       const src = (await readFile(path.join(APP, 'js', f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
