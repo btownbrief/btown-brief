@@ -969,17 +969,66 @@
   ok   deep links, demo › #whatnow/missions opens the mode
   ok   deep links, demo › #onair/everything flips the shared switch
   ok   deep links, demo › an unknown key says the card has moved on
-  ok   deep links, live Wire › the dateline is today in America/New_York on the real clock (Friday, October 16)
-  ok   deep links, live Wire › the back arrow reaches yesterday, marked final
-  ok   deep links, live Wire › the live Wire draws rows from pulse.json
-  ok   deep links, live Wire › the fixture day has a non-local card past row 70
-  ok   deep links, live Wire › a shared non-local card past the first page lands and flashes for a Local reader
+  ok   deep links, live Wire › a shared national card far down today lands and flashes for a Local reader
   ok   deep links, live Wire › and the switch moved to Everything to show it
+  ok   deep links, live Wire › a card from yesterday’s edition lands and flashes
+  ok   deep links, live Wire › #wire/2026-10-15 opens that edition
+  ok   deep links, live Wire › an earlier day reads “What mattered …”
+  ok   deep links, live Wire › an old URL link opens Unfiltered and flashes the headline
+  ok   deep links, live Wire › live: an unknown key says the card has moved on
   ok   deep links, live Wire › #food/ lands on Food
   ok   deep links, live Wire › no console errors
   ok   demo mode keeps its hands off the real app › demo Settings does not show the real account
   ok   demo mode keeps its hands off the real app › demo leaves the real session, settings and visit untouched
   ok   demo mode keeps its hands off the real app › demo makes no Supabase call
+  ok   the Wire, live › the dateline is today in America/New_York on the real clock (Friday, October 16)
+  ok   the Wire, live › the dateline counts today’s local stories and says when it updated
+  ok   the Wire, live › X and Facebook chips are hidden while paused; Unfiltered is last
+  ok   the Wire, live › chip counts are counts.local
+  ok   the Wire, live › the Brief is pinned above What matters today
+  ok   the Wire, live › one pick card and four ranked rows to start
+  ok   the Wire, live › an empty why draws no reason line
+  ok   the Wire, live › “5 more picks” opens six to ten in place
+  ok   the Wire, live › and the list ends “That’s the ten.”
+  ok   the Wire, live › nothing shows twice on today’s page
+  ok   the Wire, live › today’s page draws every local story once: Brief + picks + river = the count
+  ok   the Wire, live › the reddit chip shows exactly its count today (7)
+  ok   the Wire, live › the newsletters chip shows exactly its count today (7)
+  ok   the Wire, live › the video chip shows exactly its count today (5)
+  ok   the Wire, live › on Everything the chips are counts.everything
+  ok   the Wire, live › and the dateline counts everything
+  ok   the Wire, live › Everything keeps the picks
+  ok   the Wire, live › the river keeps rendering past 120 items (242)
+  ok   the Wire, live › today flows into yesterday, then the day before, each with its own head
+  ok   the Wire, live › when the editions run out, the end says so
+  ok   the Wire, live › scrolled into yesterday, the dateline names it
+  ok   the Wire, live › the source sheet: its stories today, Mute, Open the site
+  ok   the Wire, live › a muted source leaves the river (reuters)
+  ok   the Wire, live › the chip counts are recounted without the muted source
+  ok   the Wire, live › Settings lists mutes
+  ok   the Wire, live › no console errors
+  ok   the Wire, walking back › one day back: yesterday, final
+  ok   the Wire, walking back › yesterday reads “What mattered Thursday”
+  ok   the Wire, walking back › two days back: Wednesday, October 14
+  ok   the Wire, walking back › and that is as far as the archive goes
+  ok   the Wire, walking back › the edition is in the address, so it can be shared
+  ok   the Wire, walking back › › › comes back to today
+  ok   the Wire, walking back › no console errors
+  ok   the Wire, inbox live and no Brief › the X and Facebook chips come back when the inbox is live
+  ok   the Wire, inbox live and no Brief › no `brief`, no pinned Brief card
+  ok   the Wire, inbox live and no Brief › an X card links to the original post
+  ok   the Wire, inbox live and no Brief › an X source sheet opens on X
+  ok   the Wire, inbox live and no Brief › a Facebook card shows its kind
+  ok   the Wire, inbox live and no Brief › no console errors
+  ok   the Wire, Unfiltered › Unfiltered opens inside the tab
+  ok   the Wire, Unfiltered › the raw wire draws sixty headlines to start
+  ok   the Wire, Unfiltered › an outlet chip narrows the wire to that outlet
+  ok   the Wire, Unfiltered › search keeps only matching headlines (“Ocarina”)
+  ok   the Wire, Unfiltered › and the search field keeps the caret
+  ok   the Wire, Unfiltered › By outlet draws a section per outlet
+  ok   the Wire, Unfiltered › hold to peek works on the raw wire
+  ok   the Wire, Unfiltered › ‹ Today’s paper comes back
+  ok   the Wire, Unfiltered › no console errors
   ok   interactions, demo › the star saves and lights the mast
   ok   interactions, demo › the Saved sheet lists it
   ok   interactions, demo › Escape closes the sheet
@@ -1006,4 +1055,4 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
