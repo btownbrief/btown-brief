@@ -23,8 +23,8 @@
    items cannot leak into a reader's real lists or into ad_votes. Theme is
    the one thing demo mode still remembers. */
 
-const SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
-const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon — safe to ship
+export const SB_URL = 'https://jnouvwxomrcffqwilqkq.supabase.co';
+export const SB_KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3'; // anon — safe to ship
 
 /* Shared with pulse.html, tv.html and the games. Do not rename. */
 const PLAYER_KEY = 'btown-player-id';
@@ -474,12 +474,17 @@ export function topVoted(limit) {
 /* ---------------------------------------------------------------- user */
 /* The optional email sign-in. auth.js talks to Supabase Auth and keeps the
    session here; tabs only ever ask app.user(), which is this. Null when
-   nobody is signed in, which is the normal state: no tab may require it. */
+   nobody is signed in, which is the normal state: no tab may require it.
+   The session holds tokens and the account id, never the email address:
+   a session saved by an earlier build that carried one is rewritten
+   without it the first time it is read. */
 const AUTH_KEY = 'allday-auth';
 export function session() {
   if (DEMO) return null;   /* demo mode never shows or touches a real account */
   const s = obj(read(AUTH_KEY, null));
-  return s.access_token && s.user ? s : null;
+  if (!s.access_token || !s.user || !s.user.id) return null;
+  if (Object.keys(s.user).some((k) => k !== 'id')) { s.user = { id: s.user.id }; write(AUTH_KEY, s); }
+  return s;
 }
 export function setSession(s) {
   if (DEMO) return;
@@ -488,5 +493,5 @@ export function setSession(s) {
 }
 export function user() {
   const s = session();
-  return s ? { id: s.user.id, email: s.user.email || '' } : null;
+  return s ? { id: s.user.id } : null;
 }
