@@ -60,7 +60,7 @@
   ok   390 light live › watch: at most two subnav rows
   ok   390 light live › food: its panel is the one showing
   ok   390 light live › food: no error box
-  ok   390 light live › food: live, it states its promise
+  ok   390 light live › food: it draws its screen
   ok   390 light live › food: nothing fixed or sticky inside the tab
   ok   390 light live › food: uppercase only in the caps roles
   ok   390 light live › food: no monospace
@@ -78,7 +78,7 @@
   ok   390 light live › people: at most two subnav rows
   ok   390 light live › whatnow: its panel is the one showing
   ok   390 light live › whatnow: no error box
-  ok   390 light live › whatnow: live, it states its promise
+  ok   390 light live › whatnow: it draws its screen
   ok   390 light live › whatnow: nothing fixed or sticky inside the tab
   ok   390 light live › whatnow: uppercase only in the caps roles
   ok   390 light live › whatnow: no monospace
@@ -243,7 +243,7 @@
   ok   390 dark live › watch: at most two subnav rows
   ok   390 dark live › food: its panel is the one showing
   ok   390 dark live › food: no error box
-  ok   390 dark live › food: live, it states its promise
+  ok   390 dark live › food: it draws its screen
   ok   390 dark live › food: nothing fixed or sticky inside the tab
   ok   390 dark live › food: uppercase only in the caps roles
   ok   390 dark live › food: no monospace
@@ -261,7 +261,7 @@
   ok   390 dark live › people: at most two subnav rows
   ok   390 dark live › whatnow: its panel is the one showing
   ok   390 dark live › whatnow: no error box
-  ok   390 dark live › whatnow: live, it states its promise
+  ok   390 dark live › whatnow: it draws its screen
   ok   390 dark live › whatnow: nothing fixed or sticky inside the tab
   ok   390 dark live › whatnow: uppercase only in the caps roles
   ok   390 dark live › whatnow: no monospace
@@ -428,7 +428,7 @@
   ok   390 light reduced-motion live › watch: at most two subnav rows
   ok   390 light reduced-motion live › food: its panel is the one showing
   ok   390 light reduced-motion live › food: no error box
-  ok   390 light reduced-motion live › food: live, it states its promise
+  ok   390 light reduced-motion live › food: it draws its screen
   ok   390 light reduced-motion live › food: nothing fixed or sticky inside the tab
   ok   390 light reduced-motion live › food: uppercase only in the caps roles
   ok   390 light reduced-motion live › food: no monospace
@@ -446,7 +446,7 @@
   ok   390 light reduced-motion live › people: at most two subnav rows
   ok   390 light reduced-motion live › whatnow: its panel is the one showing
   ok   390 light reduced-motion live › whatnow: no error box
-  ok   390 light reduced-motion live › whatnow: live, it states its promise
+  ok   390 light reduced-motion live › whatnow: it draws its screen
   ok   390 light reduced-motion live › whatnow: nothing fixed or sticky inside the tab
   ok   390 light reduced-motion live › whatnow: uppercase only in the caps roles
   ok   390 light reduced-motion live › whatnow: no monospace
@@ -611,7 +611,7 @@
   ok   1280 light live › watch: at most two subnav rows
   ok   1280 light live › food: its panel is the one showing
   ok   1280 light live › food: no error box
-  ok   1280 light live › food: live, it states its promise
+  ok   1280 light live › food: it draws its screen
   ok   1280 light live › food: nothing fixed or sticky inside the tab
   ok   1280 light live › food: uppercase only in the caps roles
   ok   1280 light live › food: no monospace
@@ -629,7 +629,7 @@
   ok   1280 light live › people: at most two subnav rows
   ok   1280 light live › whatnow: its panel is the one showing
   ok   1280 light live › whatnow: no error box
-  ok   1280 light live › whatnow: live, it states its promise
+  ok   1280 light live › whatnow: it draws its screen
   ok   1280 light live › whatnow: nothing fixed or sticky inside the tab
   ok   1280 light live › whatnow: uppercase only in the caps roles
   ok   1280 light live › whatnow: no monospace
@@ -792,7 +792,7 @@
   ok   1280 dark reduced-motion live › watch: at most two subnav rows
   ok   1280 dark reduced-motion live › food: its panel is the one showing
   ok   1280 dark reduced-motion live › food: no error box
-  ok   1280 dark reduced-motion live › food: live, it states its promise
+  ok   1280 dark reduced-motion live › food: it draws its screen
   ok   1280 dark reduced-motion live › food: nothing fixed or sticky inside the tab
   ok   1280 dark reduced-motion live › food: uppercase only in the caps roles
   ok   1280 dark reduced-motion live › food: no monospace
@@ -810,7 +810,7 @@
   ok   1280 dark reduced-motion live › people: at most two subnav rows
   ok   1280 dark reduced-motion live › whatnow: its panel is the one showing
   ok   1280 dark reduced-motion live › whatnow: no error box
-  ok   1280 dark reduced-motion live › whatnow: live, it states its promise
+  ok   1280 dark reduced-motion live › whatnow: it draws its screen
   ok   1280 dark reduced-motion live › whatnow: nothing fixed or sticky inside the tab
   ok   1280 dark reduced-motion live › whatnow: uppercase only in the caps roles
   ok   1280 dark reduced-motion live › whatnow: no monospace
@@ -954,12 +954,12 @@
   ok   deep links, demo › #wire/y4: no console errors
   ok   deep links, demo › #watch/fm3 lands on its card and flashes
   ok   deep links, demo › #watch/fm3: no console errors
-  ok   deep links, demo › #food/fv2 lands on its card and flashes
-  ok   deep links, demo › #food/fv2: no console errors
+  ok   deep links, demo › #food/r-demo-all-night-diner lands on its card and flashes
+  ok   deep links, demo › #food/r-demo-all-night-diner: no console errors
   ok   deep links, demo › #people/pp2 lands on its card and flashes
   ok   deep links, demo › #people/pp2: no console errors
-  ok   deep links, demo › #whatnow/tn3 lands on its card and flashes
-  ok   deep links, demo › #whatnow/tn3: no console errors
+  ok   deep links, demo › #whatnow/e-tn3 lands on its card and flashes
+  ok   deep links, demo › #whatnow/e-tn3: no console errors
   ok   deep links, demo › #vintage/sp2 lands on its card and flashes
   ok   deep links, demo › #vintage/sp2: no console errors
   ok   deep links, demo › #art/aw6 lands on its card and flashes
@@ -1029,6 +1029,127 @@
   ok   the Wire, Unfiltered › hold to peek works on the raw wire
   ok   the Wire, Unfiltered › ‹ Today’s paper comes back
   ok   the Wire, Unfiltered › no console errors
+  ok   What Now, Spin (demo) › the chip row is the mode switch, Spin first
+  ok   What Now, Spin (demo) › the weather line: feels like, the lake, sunset
+  ok   What Now, Spin (demo) › the weather line is one line at 390
+  ok   What Now, Spin (demo) › the six path chips
+  ok   What Now, Spin (demo) › Spin returns an answer
+  ok   What Now, Spin (demo) › the answer spells out its reason
+  ok   What Now, Spin (demo) › the answer says it is for right now
+  ok   What Now, Spin (demo) › Another changes the answer
+  ok   What Now, Spin (demo) › Do it ends the session: “Now put the phone down.”
+  ok   What Now, Spin (demo) › the window: Tomorrow plans tomorrow
+  ok   What Now, Spin (demo) › Teach me something swaps the hat for the hobbies
+  ok   What Now, Spin (demo) › a path chip shows it is on
+  ok   What Now, Spin (demo) › no console errors
+  ok   What Now, Spin (live, reduced motion) › reduced motion: the answer lands at once, no reel
+  ok   What Now, Spin (live, reduced motion) › live: the real engine answers (or says honestly that nothing fits)
+  ok   What Now, Spin (live, reduced motion) › the pool line says what the answer was picked from
+  ok   What Now, Spin (live, reduced motion) › no console errors
+  ok   What Now, Missions (live) › data/missions.json holds 100 missions
+  ok   What Now, Missions (live) › every paragraph is 60 to 120 words
+  ok   What Now, Missions (live) › no dashes or exclamation points, a known theme, at least one place
+  ok   What Now, Missions (live) › needs_check is counted honestly (10)
+  ok   What Now, Missions (live) › the hundred, numbered 1 to 100
+  ok   What Now, Missions (live) › a theme chip filters to its missions, and its count is right (10)
+  ok   What Now, Missions (live) › Mark done marks it
+  ok   What Now, Missions (live) › a mission marked done survives a reload
+  ok   What Now, Missions (live) › and the Missions chip counts it: 1/100
+  ok   What Now, Missions (live) › signed out, nothing goes to the account
+  ok   What Now, Missions (live) › Surprise me scrolls the list to a highlighted mission
+  ok   What Now, Missions (live) › and it is one you have not done
+  ok   What Now, Missions (live) › focus lands on it too
+  ok   What Now, Missions (live) › no modal: the list itself moves
+  ok   What Now, Missions (live) › tapping a mission opens its paragraph
+  ok   What Now, Missions (live) › with its places, linked to their sites
+  ok   What Now, Missions (live) › signed in, marks are read from and written to the account
+  ok   What Now, Missions (live) › and the device copy stands either way
+  ok   What Now, Missions (live) › no console errors
+  ok   What Now, Tonight (live, a reader in Los Angeles) › Tonight lists only items after 5 pm today in America/New_York
+  ok   What Now, Tonight (live, a reader in Los Angeles) › tonight’s late listing is there
+  ok   What Now, Tonight (live, a reader in Los Angeles) › a listing posted twice shows once
+  ok   What Now, Tonight (live, a reader in Los Angeles) › every date tile is today in Burlington
+  ok   What Now, Tonight (live, a reader in Los Angeles) › Playing this week: tonight’s and this week’s artists, soonest first, not next week’s
+  ok   What Now, Tonight (live, a reader in Los Angeles) › the old Music tab’s why lines come along (the genre when there is no why)
+  ok   What Now, Tonight (live, a reader in Los Angeles) › nothing is embedded until you ask
+  ok   What Now, Tonight (live, a reader in Los Angeles) › Listen builds that artist’s Bandcamp player, which does not autoplay
+  ok   What Now, Tonight (live, a reader in Los Angeles) › pressing it again takes the player away
+  ok   What Now, Tonight (live, a reader in Los Angeles) › the list ends, and says so
+  ok   What Now, Tonight (live, a reader in Los Angeles) › no console errors
+  ok   What Now, deep links and wide › #whatnow/m42 opens Missions and flashes mission 42
+  ok   What Now, deep links and wide › a mission link lands even while the list is filtered to another theme
+  ok   What Now, deep links and wide › #whatnow/tonight opens Tonight
+  ok   What Now, deep links and wide › the demo carries six missions
+  ok   What Now, deep links and wide › demo marks never reach localStorage
+  ok   What Now, deep links and wide › no console errors
+  ok   What Now, deep links and wide › in December the demo’s 5:45 pm and 6 pm listings are still tonight
+  ok   What Now, deep links and wide › and its sunset still reads 6:06
+  ok   What Now, deep links and wide › no console errors
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the data has a place that closes at 10 pm on Fridays
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › 9 pm Friday: 99 Restaurants is open
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › and says it is open until 10 pm
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › 9 pm: Open now lists exactly the places open then (99)
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › no place shows twice
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the late chip shows its 45 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the patio chip shows its 14 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the hh chip shows its 7 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the cheap chip shows its 50 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the deal chip shows its 12 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the open chip shows its 99 places and says so
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the chips really do change the count
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › “Full reviews on Google” opens the place by its place id
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › and says what it is
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › the sheet gives today’s hours in Burlington’s clock
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › no stars, scores or ratings in the sheet
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › 11 pm Friday: 99 Restaurants has left Open now
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › 11 pm: Open now lists exactly the places open then (30)
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › fewer places are open at 11 than at 9
+  ok   Food, Open now on a frozen Burlington clock (live, a reader in Los Angeles) › no console errors
+  ok   Food, the deals deck (demo, noon) › the deal happening now comes first
+  ok   Food, the deals deck (demo, noon) › the card carries its verified date
+  ok   Food, the deals deck (demo, noon) › progress bars on top: six deals and the end card, the first lit
+  ok   Food, the deals deck (demo, noon) › a tap on the right side turns to the next deal, the next one to start
+  ok   Food, the deals deck (demo, noon) › its verified date is showing
+  ok   Food, the deals deck (demo, noon) › a tap on the left side goes back
+  ok   Food, the deals deck (demo, noon) › every deal card has its verified date
+  ok   Food, the deals deck (demo, noon) › after the last deal, the deck says that’s today
+  ok   Food, the deals deck (demo, noon) › and the next tap starts over
+  ok   Food, the deals deck (demo, noon) › an overnight deal is still happening after midnight, and leads
+  ok   Food, the deals deck (demo, noon) › no console errors
+  ok   Food, kitchens in their own words (live) › the rail holds the food reels, newest first; a reel about to lapse and a non-food account are left out
+  ok   Food, kitchens in their own words (live) › before a tap: no video on the page and nothing fetched
+  ok   Food, kitchens in their own words (live) › and the video box is closed
+  ok   Food, kitchens in their own words (live) › a tap plays the reel in the shell’s one video box
+  ok   Food, kitchens in their own words (live) › with controls, and no autoplay attribute: the tap is what started it
+  ok   Food, kitchens in their own words (live) › the box links to the post on Instagram
+  ok   Food, kitchens in their own words (live) › closing gives the box back as the shell left it
+  ok   Food, kitchens in their own words (live) › no console errors
+  ok   Food, kitchens in their own words (live) › with no videos it says so and shows the food accounts’ latest photos
+  ok   Food, kitchens in their own words (live) › no console errors
+  ok   Food, the Weekly Bite and Feature a dish (live) › the Weekly Bite is the newest approved dish: its line, the place, the reader
+  ok   Food, the Weekly Bite and Feature a dish (live) › featured, never rated: no votes or score on it
+  ok   Food, the Weekly Bite and Feature a dish (live) › “The place” opens the place it came from
+  ok   Food, the Weekly Bite and Feature a dish (live) › the form says we feature, we don’t review
+  ok   Food, the Weekly Bite and Feature a dish (live) › nothing on the form asks for a rating
+  ok   Food, the Weekly Bite and Feature a dish (live) › without the consent box it refuses, and says why
+  ok   Food, the Weekly Bite and Feature a dish (live) › and nothing was uploaded or queued
+  ok   Food, the Weekly Bite and Feature a dish (live) › a line that reads as a takedown is turned back before it is sent
+  ok   Food, the Weekly Bite and Feature a dish (live) › with consent, the photo uploads to the photo queue’s bucket
+  ok   Food, the Weekly Bite and Feature a dish (live) › and goes to the moderation queue as a dish, with consent, the place and the line
+  ok   Food, the Weekly Bite and Feature a dish (live) › the reader is told it is in the queue
+  ok   Food, the Weekly Bite and Feature a dish (live) › no console errors
+  ok   Food, the Weekly Bite and Feature a dish (live) › with no dish approved, the Bite invites the first one
+  ok   Food, the Weekly Bite and Feature a dish (live) › demo: the consent box is required there too
+  ok   Food, the Weekly Bite and Feature a dish (live) › demo: nothing is sent anywhere
+  ok   Food, the Weekly Bite and Feature a dish (live) › no console errors
+  ok   Food, deep links and the chip row › #food/r-<id> lands on the place and flashes it
+  ok   Food, deep links and the chip row › and opens its sheet
+  ok   Food, deep links and the chip row › the chip row is the table of contents: Bite, Open now, Deals, Kitchens, Feature a dish
+  ok   Food, deep links and the chip row › a chip scrolls to its section
+  ok   Food, deep links and the chip row › #food/late opens Open now on the Open late filter
+  ok   Food, deep links and the chip row › #food/d-<id> turns the deck to that deal
+  ok   Food, deep links and the chip row › an unknown place says so
+  ok   Food, deep links and the chip row › no console errors
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
   ok   On Air, demo › the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights
   ok   On Air, demo › the sections run in that order
@@ -1063,6 +1184,13 @@
   ok   On Air, live › “not for me” gives its place to the editor’s bench
   ok   On Air, live › and the newcomer says so
   ok   On Air, live › no console errors
+  ok   On Air, Live is cameras › the fixture carries the two jazz streams the live search found on 2026-10-16
+  ok   On Air, Live is cameras › Local: the pinned Church Street camera and the lake cams
+  ok   On Air, Live is cameras › Local: no “Relaxing Jazz” ambience streams
+  ok   On Air, Live is cameras › Local: nothing off the Vermont shelf or the pinned roster
+  ok   On Air, Live is cameras › Everything: still no ambience streams
+  ok   On Air, Live is cameras › Everything: the other live streams come back
+  ok   On Air, Live is cameras › no console errors
   ok   On Air, the audio card › no clip: no audio card, no section, no chip
   ok   On Air, the audio card › none: no console errors
   ok   On Air, the audio card › no clip today: the latest one, with its date (Thursday, October 15)
@@ -1094,4 +1222,4 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 6ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 7ms (budget 100)
