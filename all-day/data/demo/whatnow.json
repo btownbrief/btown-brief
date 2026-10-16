@@ -1,290 +1,1382 @@
 {
- "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders.",
+ "_": "Demo data for the What Now tab, in the real payloads' shapes. Dates are on the anchor day; the tab moves them to today.",
+ "anchor": "2026-10-16",
  "weather": {
-  "temp": "61°",
-  "sky": "clear",
-  "lake": "61°",
-  "sunset": "5:58",
-  "when": "Thursday 2:14 pm",
-  "now": "2:14 pm"
+  "updated": "2026-10-16T18:00:00+00:00",
+  "now": {
+   "observed_at": "2026-10-16T17:55:00+00:00",
+   "station": "DEMO",
+   "description": "Clear",
+   "temp_f": 61,
+   "feels_like_f": 59,
+   "humidity": 60,
+   "dewpoint_f": 45,
+   "wind_mph": 8,
+   "wind_gust_mph": null,
+   "wind_dir": "W",
+   "precip_last_hr_in": null
+  },
+  "forecast": {
+   "updated": "2026-10-16T12:00:00+00:00",
+   "periods": [
+    {
+     "name": "Today",
+     "start": "2026-10-16T06:00:00-04:00",
+     "is_day": true,
+     "temp_f": 62,
+     "pop": 10,
+     "wind": "W 5 to 10 mph",
+     "short": "Sunny",
+     "detailed": "Sunny."
+    },
+    {
+     "name": "Saturday",
+     "start": "2026-10-17T06:00:00-04:00",
+     "is_day": true,
+     "temp_f": 60,
+     "pop": 10,
+     "wind": "W 5 to 10 mph",
+     "short": "Mostly Sunny",
+     "detailed": "Mostly sunny."
+    }
+   ]
+  },
+  "hourly": {
+   "updated": "2026-10-16T12:00:00+00:00",
+   "hours": [
+    {
+     "t": "2026-10-16T00:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T01:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T02:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T03:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T04:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T05:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T06:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T07:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T08:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T09:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T10:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T11:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T12:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T13:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T14:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T15:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T16:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T17:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T18:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T19:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T20:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T21:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T22:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-16T23:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T00:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T01:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T02:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T03:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T04:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T05:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T06:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T07:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T08:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T09:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T10:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T11:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T12:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T13:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T14:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T15:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T16:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T17:00:00-04:00",
+     "temp_f": 62,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T18:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T19:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T20:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T21:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T22:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    },
+    {
+     "t": "2026-10-17T23:00:00-04:00",
+     "temp_f": 58,
+     "feels_f": 58,
+     "pop": 10,
+     "humidity": 60,
+     "wind_mph": 8,
+     "wind_dir": "W",
+     "sky": 20,
+     "short": "Mostly Clear"
+    }
+   ]
+  },
+  "alerts": {
+   "active": []
+  },
+  "air": {
+   "source": "demo",
+   "aqi": 25,
+   "category": "Good"
+  },
+  "lake_gage": {
+   "water_temp_f": 61,
+   "water_temp_at": "2026-10-16T11:00:00-04:00",
+   "level_ft": 94.0,
+   "level_at": "2026-10-16T11:00:00-04:00",
+   "level_status": "normal"
+  },
+  "sun": {
+   "sunrise": "2026-10-16T07:09-04:00",
+   "sunset": "2026-10-16T18:06-04:00",
+   "sunrise_tomorrow": "2026-10-17T07:10-04:00",
+   "sunset_tomorrow": "2026-10-17T18:05-04:00",
+   "uv_max": 2.0
+  }
  },
- "answers": [
-  {
-   "title": "Walk the breakwater before the light goes",
-   "why": "61° and clear until 6, and the lake is still warm enough to argue about.",
-   "art": "lake"
+ "feeds": {
+  "things": [
+   {
+    "id": "demo-board-games",
+    "name": "The Long Table board game cafe",
+    "group": "Do & Play",
+    "category": "Activity & Experience",
+    "neighborhood": "Downtown / Church St",
+    "cost_tier": "$",
+    "cost_note": "Table fee ~$5",
+    "season": [
+     "Year-Round"
+    ],
+    "time_of_day": [
+     "Morning",
+     "Afternoon",
+     "Evening",
+     "Late Night"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+     "Groups & Friends",
+     "Rainy Day"
+    ],
+    "vibe": [
+     "Cozy"
+    ],
+    "blurb": "Four hundred games on the wall and a staff that will teach you any of them. The corner booth fits six.",
+    "why_special": "",
+    "address": null,
+    "coords": null,
+    "website": null,
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "demo",
+    "last_verified": "2026-10"
+   },
+   {
+    "id": "demo-library",
+    "name": "The reading room at the big library",
+    "group": "Do & Play",
+    "category": "Library & Bookstore",
+    "neighborhood": "Downtown / Church St",
+    "cost_tier": "Free",
+    "cost_note": null,
+    "season": [
+     "Year-Round"
+    ],
+    "time_of_day": [
+     "Morning",
+     "Afternoon",
+     "Evening",
+     "Late Night"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+     "Rainy Day",
+     "Locals' Pick"
+    ],
+    "vibe": [
+     "Cozy"
+    ],
+    "blurb": "Tall windows, long tables and the quietest hour in town. Bring a book or borrow one.",
+    "why_special": "",
+    "address": null,
+    "coords": null,
+    "website": null,
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "demo",
+    "last_verified": "2026-10"
+   },
+   {
+    "id": "demo-pinball",
+    "name": "The pinball basement",
+    "group": "Do & Play",
+    "category": "Activity & Experience",
+    "neighborhood": "Old North End",
+    "cost_tier": "$",
+    "cost_note": "Quarters",
+    "season": [
+     "Year-Round"
+    ],
+    "time_of_day": [
+     "Morning",
+     "Afternoon",
+     "Evening",
+     "Late Night"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+     "Groups & Friends",
+     "Date Night"
+    ],
+    "vibe": [
+     "Cozy"
+    ],
+    "blurb": "Twenty machines in a basement that smells like popcorn. The high score on the space one is beatable.",
+    "why_special": "",
+    "address": null,
+    "coords": null,
+    "website": null,
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "demo",
+    "last_verified": "2026-10"
+   },
+   {
+    "id": "demo-pier",
+    "name": "Walk to the end of the long pier",
+    "group": "Do & Play",
+    "category": "Scenic Spot",
+    "neighborhood": "Waterfront",
+    "cost_tier": "Free",
+    "cost_note": null,
+    "season": [
+     "Year-Round"
+    ],
+    "time_of_day": [
+     "Morning",
+     "Afternoon",
+     "Evening",
+     "Late Night"
+    ],
+    "indoor_outdoor": "Outdoor",
+    "good_for": [
+     "Sunny Day",
+     "Date Night"
+    ],
+    "vibe": [
+     "Cozy"
+    ],
+    "blurb": "The boards run straight out over the water. Go at dusk when the far shore turns blue.",
+    "why_special": "",
+    "address": null,
+    "coords": null,
+    "website": null,
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "demo",
+    "last_verified": "2026-10"
+   },
+   {
+    "id": "demo-bakery",
+    "name": "Morning buns at the corner bakery",
+    "group": "Do & Play",
+    "category": "Cafe & Bakery",
+    "neighborhood": "South End",
+    "cost_tier": "$",
+    "cost_note": "Buns ~$4",
+    "season": [
+     "Year-Round"
+    ],
+    "time_of_day": [
+     "Morning",
+     "Afternoon",
+     "Evening",
+     "Late Night"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+     "Locals' Pick"
+    ],
+    "vibe": [
+     "Cozy"
+    ],
+    "blurb": "The morning bun is the order. They sell out, then they bake more, then they sell out again.",
+    "why_special": "",
+    "address": null,
+    "coords": null,
+    "website": null,
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "demo",
+    "last_verified": "2026-10"
+   },
+   {
+    "id": "demo-climb",
+    "name": "Bouldering at the warehouse gym",
+    "group": "Do & Play",
+    "category": "Sports & Recreation",
+    "neighborhood": "South End",
+    "cost_tier": "$$",
+    "cost_note": "Day pass ~$20",
+    "season": [
+     "Year-Round"
+    ],
+    "time_of_day": [
+     "Morning",
+     "Afternoon",
+     "Evening",
+     "Late Night"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+     "Groups & Friends",
+     "Rainy Day"
+    ],
+    "vibe": [
+     "Cozy"
+    ],
+    "blurb": "Short walls, thick mats and a friendly crowd. Rent shoes at the desk and start on the yellow routes.",
+    "why_special": "",
+    "address": null,
+    "coords": null,
+    "website": null,
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "demo",
+    "last_verified": "2026-10"
+   },
+   {
+    "id": "demo-records",
+    "name": "Dig through the record shop bins",
+    "group": "Do & Play",
+    "category": "Shop",
+    "neighborhood": "Winooski",
+    "cost_tier": "$",
+    "cost_note": null,
+    "season": [
+     "Year-Round"
+    ],
+    "time_of_day": [
+     "Morning",
+     "Afternoon",
+     "Evening",
+     "Late Night"
+    ],
+    "indoor_outdoor": "Indoor",
+    "good_for": [
+     "Rainy Day"
+    ],
+    "vibe": [
+     "Cozy"
+    ],
+    "blurb": "The dollar bins in the back are where the good stuff hides. Ask what is new this week.",
+    "why_special": "",
+    "address": null,
+    "coords": null,
+    "website": null,
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "demo",
+    "last_verified": "2026-10"
+   },
+   {
+    "id": "demo-cider",
+    "name": "A flight at the cider bar",
+    "group": "Do & Play",
+    "category": "Brewery & Cidery",
+    "neighborhood": "South End",
+    "cost_tier": "$",
+    "cost_note": "Flights ~$12",
+    "season": [
+     "Year-Round"
+    ],
+    "time_of_day": [
+     "Morning",
+     "Afternoon",
+     "Evening",
+     "Late Night"
+    ],
+    "indoor_outdoor": "Both",
+    "good_for": [
+     "Groups & Friends",
+     "Date Night"
+    ],
+    "vibe": [
+     "Cozy"
+    ],
+    "blurb": "Six small pours from dry to sweet, and a patio with heaters when it gets cold.",
+    "why_special": "",
+    "address": null,
+    "coords": null,
+    "website": null,
+    "image": null,
+    "has_guide": false,
+    "guide_id": null,
+    "source": "demo",
+    "last_verified": "2026-10"
+   }
+  ],
+  "clubs": {
+   "_comment": "demo",
+   "clubs": [
+    {
+     "name": "Thursday run club",
+     "what": "A free three-mile loop at an easy pace, then coffee. Everyone waits for everyone.",
+     "when": "Weekly",
+     "category": "Fitness",
+     "url": "#whatnow/spin"
+    },
+    {
+     "name": "The sketch group",
+     "what": "Bring a pencil and draw whoever is there. Free, and nobody looks at your page.",
+     "when": "Most weeks",
+     "category": "Art",
+     "url": "#whatnow/spin"
+    }
+   ]
   },
-  {
-   "title": "Trivia at the Archives, 7 pm",
-   "why": "A team of four posted on the Wire looking for two more.",
-   "art": "brick"
+  "hobbies": {
+   "_comment": "demo",
+   "hobbies": [
+    {
+     "id": "demo-knit",
+     "name": "Knitting",
+     "emoji": "",
+     "tier": "anywhere",
+     "season": "year-round",
+     "months": [],
+     "what": "Two needles and a ball of yarn, and the group at the yarn shop will get you to a scarf.",
+     "start": "Drop in on the Tuesday circle with nothing but curiosity."
+    },
+    {
+     "id": "demo-sail",
+     "name": "Sailing",
+     "emoji": "",
+     "tier": "vermont",
+     "season": "year-round",
+     "months": [],
+     "what": "The lake is the classroom. Start on a small boat with an instructor beside you.",
+     "start": "A two-hour intro lesson on a calm evening."
+    }
+   ]
   },
-  {
-   "title": "Catch the sunset from Battery Park",
-   "why": "Sunset is 5:58. You have 31 minutes.",
-   "art": "dawn"
+  "sunsetSpots": {
+   "_comment": "demo",
+   "spots": [
+    {
+     "id": "demo-steps",
+     "name": "the lakeside steps",
+     "area": "Waterfront",
+     "walk_min": 8,
+     "coords": null,
+     "why": "Front row on the whole western sky, five minutes downhill from the bricks."
+    }
+   ]
   },
-  {
-   "title": "The foliage loop on the bike path",
-   "why": "Peak color this week, by every map.",
-   "art": "foliage"
-  },
-  {
-   "title": "A show at Higher Ground on a weeknight",
-   "why": "Mission 14 of 100, and there is one tonight at 8.",
-   "art": "night"
-  },
-  {
-   "title": "Coffee at the big table, Scout",
-   "why": "The Coffee Club meets Saturday; this is the scouting trip.",
-   "art": "coffee"
+  "beaches": {
+   "updated": "2026-10-16T12:00:00+00:00",
+   "source": "demo",
+   "note": "",
+   "beaches": []
   }
- ],
- "guides": [
-  {
-   "title": "Perfect Saturday",
-   "n": 8,
-   "art": "dawn",
-   "theme": "Perfect Saturday"
+ },
+ "events": {
+  "generated": "2026-10-16T12:00:00+00:00",
+  "days": 10,
+  "counts": {
+   "music": 3,
+   "social": 2,
+   "comedy": 1,
+   "art": 1
   },
-  {
-   "title": "A day on the water",
-   "n": 7,
-   "art": "lake",
-   "theme": "Water"
+  "events": [
+   {
+    "id": "am1",
+    "title": "Morning stretch on the green",
+    "start": "2026-10-16T10:00:00-04:00",
+    "date": "2026-10-16",
+    "url": "#whatnow/e-am1",
+    "category": "social",
+    "allDay": false,
+    "venue": "The town green",
+    "town": "Burlington",
+    "indoorOutdoor": "outdoor",
+    "free": true,
+    "end": "2026-10-16T11:00:00-04:00"
+   },
+   {
+    "id": "pm1",
+    "title": "Afternoon gallery talk",
+    "start": "2026-10-16T16:30:00-04:00",
+    "date": "2026-10-16",
+    "url": "#whatnow/e-pm1",
+    "category": "art",
+    "allDay": false,
+    "venue": "The small gallery",
+    "town": "Burlington",
+    "indoorOutdoor": "indoor",
+    "free": true,
+    "end": "2026-10-16T17:30:00-04:00"
+   },
+   {
+    "id": "tn1",
+    "title": "A touring band and two local openers",
+    "start": "2026-10-16T20:00:00-04:00",
+    "date": "2026-10-16",
+    "url": "#whatnow/e-tn1",
+    "category": "music",
+    "allDay": false,
+    "venue": "The big room",
+    "town": "Burlington",
+    "indoorOutdoor": "indoor",
+    "free": false,
+    "price": "$22"
+   },
+   {
+    "id": "tn2",
+    "title": "Honky tonk night at the coffee bar",
+    "start": "2026-10-16T21:30:00-04:00",
+    "date": "2026-10-16",
+    "url": "#whatnow/e-tn2",
+    "category": "music",
+    "allDay": false,
+    "venue": "The coffee bar",
+    "town": "Burlington",
+    "indoorOutdoor": "indoor",
+    "free": true
+   },
+   {
+    "id": "tn3",
+    "title": "Last patio night of the season, with a DJ",
+    "start": "2026-10-16T18:00:00-04:00",
+    "date": "2026-10-16",
+    "url": "#whatnow/e-tn3",
+    "category": "music",
+    "allDay": false,
+    "venue": "The lakeside brewery",
+    "town": "Burlington",
+    "indoorOutdoor": "outdoor",
+    "free": true,
+    "end": "2026-10-16T23:59:00-04:00"
+   },
+   {
+    "id": "tn4",
+    "title": "Btown Brief walk and talk, waterfront loop",
+    "start": "2026-10-16T17:45:00-04:00",
+    "date": "2026-10-16",
+    "url": "#whatnow/e-tn4",
+    "category": "social",
+    "allDay": false,
+    "venue": "The lakeside steps",
+    "town": "Burlington",
+    "indoorOutdoor": "outdoor",
+    "free": true,
+    "end": "2026-10-16T19:00:00-04:00"
+   },
+   {
+    "id": "tn5",
+    "title": "Late show at the comedy cellar",
+    "start": "2026-10-16T23:30:00-04:00",
+    "date": "2026-10-16",
+    "url": "#whatnow/e-tn5",
+    "category": "comedy",
+    "allDay": false,
+    "venue": "The comedy cellar",
+    "town": "Burlington",
+    "indoorOutdoor": "indoor",
+    "free": false,
+    "price": "$15"
+   },
+   {
+    "id": "tm1",
+    "title": "Saturday trivia",
+    "start": "2026-10-17T19:00:00-04:00",
+    "date": "2026-10-17",
+    "url": "#whatnow/e-tm1",
+    "category": "social",
+    "allDay": false,
+    "venue": "The pub on the corner",
+    "town": "Burlington",
+    "indoorOutdoor": "indoor",
+    "free": true
+   }
+  ]
+ },
+ "music": {
+  "generated": "2026-10-16T12:00:00+00:00",
+  "artists": [
+   {
+    "id": "winooski-ramblers",
+    "name": "The Winooski Ramblers",
+    "genre": "folk",
+    "why": "Three-part harmonies and a washboard. Played every porch party last summer.",
+    "threads": 0,
+    "links": {},
+    "bandcamp": {
+     "album": "1000000001",
+     "title": "The Winooski Ramblers (demo record)",
+     "art": "pine"
+    },
+    "shows": [
+     {
+      "date": "2026-10-16",
+      "time": "9 PM",
+      "venue": "The coffee bar",
+      "vid": "demo",
+      "title": "The Winooski Ramblers",
+      "url": "#whatnow/a-winooski-ramblers",
+      "price": "",
+      "free": true
+     }
+    ]
+   },
+   {
+    "id": "low-tide-choir",
+    "name": "Low Tide Choir",
+    "genre": "indie rock",
+    "why": null,
+    "threads": 0,
+    "links": {},
+    "bandcamp": {
+     "album": "1000000002",
+     "title": "Low Tide Choir (demo record)",
+     "art": "teal"
+    },
+    "shows": [
+     {
+      "date": "2026-10-18",
+      "time": "8 PM",
+      "venue": "The lakeside brewery",
+      "vid": "demo",
+      "title": "Low Tide Choir",
+      "url": "#whatnow/a-low-tide-choir",
+      "price": "$12",
+      "free": false
+     }
+    ]
+   },
+   {
+    "id": "ferry-street",
+    "name": "Ferry Street",
+    "genre": "punk",
+    "why": "Loud, fast and over in twenty-five minutes.",
+    "threads": 0,
+    "links": {},
+    "bandcamp": {
+     "album": "1000000003",
+     "title": "Ferry Street (demo record)",
+     "art": "slate"
+    },
+    "shows": [
+     {
+      "date": "2026-10-21",
+      "time": "7:30 PM",
+      "venue": "The cellar",
+      "vid": "demo",
+      "title": "Ferry Street",
+      "url": "#whatnow/a-ferry-street",
+      "price": "$10",
+      "free": false
+     }
+    ]
+   },
+   {
+    "id": "far-off",
+    "name": "Next Month Band",
+    "genre": "jazz",
+    "why": "Not this week, so not on the shelf.",
+    "threads": 0,
+    "links": {},
+    "bandcamp": {
+     "album": "1000000004",
+     "title": "Next Month Band (demo record)",
+     "art": "dawn"
+    },
+    "shows": [
+     {
+      "date": "2026-11-20",
+      "time": "7 PM",
+      "venue": "The big room",
+      "vid": "demo",
+      "title": "Next Month Band",
+      "url": "#whatnow/a-far-off",
+      "price": "$20",
+      "free": false
+     }
+    ]
+   }
+  ],
+  "calendar": {
+   "window": 60,
+   "venues": []
   },
-  {
-   "title": "Snow day",
-   "n": 7,
-   "art": "rink",
-   "theme": "Snow"
-  },
-  {
-   "title": "Dog day",
-   "n": 8,
-   "art": "field",
-   "theme": "Dog"
-  },
-  {
-   "title": "Rainy day",
-   "n": 6,
-   "art": "slate",
-   "theme": "All"
-  }
- ],
- "themes": [
-  "All",
-  "Water",
-  "Snow",
-  "Dog",
-  "Perfect Saturday"
- ],
- "missions": [
-  {
-   "n": 1,
-   "title": "Swim at North Beach before work",
-   "theme": "Water",
-   "done": 1,
-   "doneBy": 937
-  },
-  {
-   "n": 2,
-   "title": "Sunset from the top of the parking garage",
-   "theme": "Perfect Saturday",
-   "done": 1,
-   "doneBy": 974
-  },
-  {
-   "n": 3,
-   "title": "A full lap of the bike path",
-   "theme": "Water",
-   "done": 0,
-   "doneBy": 1011
-  },
-  {
-   "n": 4,
-   "title": "Trivia night, any bar",
-   "theme": "Perfect Saturday",
-   "done": 1,
-   "doneBy": 1048
-  },
-  {
-   "n": 5,
-   "title": "The farmers market before 9 am",
-   "theme": "Perfect Saturday",
-   "done": 0,
-   "doneBy": 1085
-  },
-  {
-   "n": 6,
-   "title": "Camel’s Hump on a weekday",
-   "theme": "Snow",
-   "done": 0,
-   "doneBy": 1122
-  },
-  {
-   "n": 7,
-   "title": "Dog hour at Oakledge",
-   "theme": "Dog",
-   "done": 0,
-   "doneBy": 1159
-  },
-  {
-   "n": 8,
-   "title": "A ferry ride for no reason",
-   "theme": "Water",
-   "done": 0,
-   "doneBy": 1196
-  },
-  {
-   "n": 9,
-   "title": "Skate the waterfront bowl",
-   "theme": "Perfect Saturday",
-   "done": 0,
-   "doneBy": 1233
-  },
-  {
-   "n": 10,
-   "title": "Night ski at Bolton",
-   "theme": "Snow",
-   "done": 0,
-   "doneBy": 1270
-  },
-  {
-   "n": 11,
-   "title": "The Intervale in a frost",
-   "theme": "Dog",
-   "done": 0,
-   "doneBy": 1307
-  },
-  {
-   "n": 12,
-   "title": "A Catamounts hockey game",
-   "theme": "Snow",
-   "done": 1,
-   "doneBy": 1344
-  },
-  {
-   "n": 13,
-   "title": "Paddle to the breakwater light",
-   "theme": "Water",
-   "done": 0,
-   "doneBy": 1381
-  },
-  {
-   "n": 14,
-   "title": "A show at Higher Ground on a weeknight",
-   "theme": "Perfect Saturday",
-   "done": 0,
-   "doneBy": 1418
-  }
- ],
- "missionsDone": 14,
- "missionsTotal": 100,
- "tonight": [
-  {
-   "kind": "event",
-   "src": "Higher Ground",
-   "ago": "Tonight",
-   "dow": "Thu",
-   "dom": "16",
-   "title": "A touring band and two local openers",
-   "when": "8:00 pm",
-   "where": "Ballroom, S. Burlington",
-   "price": "$22",
-   "text": "Doors at 7.",
-   "votes": 9,
-   "comments": 2,
-   "k": "tn1",
-   "sid": "Higher Ground"
-  },
-  {
-   "kind": "event",
-   "src": "Radio Bean",
-   "ago": "Tonight",
-   "dow": "Thu",
-   "dom": "16",
-   "title": "Honky Tonk Tuesday’s Thursday cousin",
-   "when": "9:30 pm",
-   "where": "Radio Bean, N. Winooski",
-   "price": "Free",
-   "text": "",
-   "votes": 6,
-   "comments": 0,
-   "k": "tn2",
-   "sid": "Radio Bean"
-  },
-  {
-   "kind": "event",
-   "src": "Foam Brewers",
-   "ago": "Tonight",
-   "dow": "Thu",
-   "dom": "16",
-   "title": "Last patio night of the season, with a DJ",
-   "when": "6:00 pm",
-   "where": "Foam, Lake St",
-   "price": "Free",
-   "text": "",
-   "votes": 14,
-   "comments": 3,
-   "k": "tn3",
-   "sid": "Foam Brewers"
-  },
-  {
-   "kind": "event",
-   "src": "Burlington Social Activities Group",
-   "via": "Meetup",
-   "own": true,
-   "ago": "Tonight",
-   "dow": "Thu",
-   "dom": "16",
-   "title": "Btown Brief walk and talk, waterfront loop",
-   "when": "5:45 pm",
-   "where": "ECHO steps",
-   "price": "Free",
-   "going": "11",
-   "cta": "Going",
-   "text": "",
-   "votes": 17,
-   "comments": 5,
-   "k": "tn4",
-   "sid": "Burlington Social Activities Group"
-  }
- ],
- "artists": [
-  {
-   "kind": "video",
-   "src": "Music",
-   "title": "The Winooski Ramblers",
-   "media": "pine",
-   "dur": "3:48",
-   "text": "Playing Radio Bean Saturday. Newest single.",
-   "show": "Bandcamp",
-   "k": "ar1",
-   "sid": "Music"
-  },
-  {
-   "kind": "video",
-   "src": "Music",
-   "title": "Low Tide Choir",
-   "media": "teal",
-   "dur": "4:20",
-   "text": "Playing Foam on the 24th.",
-   "show": "Bandcamp",
-   "k": "ar2",
-   "sid": "Music"
-  },
-  {
-   "kind": "video",
-   "src": "Music",
-   "title": "Ferry Street",
-   "media": "slate",
-   "dur": "2:56",
-   "text": "Playing Monkey House Friday.",
-   "show": "Bandcamp",
-   "k": "ar3",
-   "sid": "Music"
-  }
- ],
- "newSince": 0
+  "bigrooms": []
+ },
+ "missions": {
+  "generated": "2026-10-16",
+  "source": "demo",
+  "themes": [
+   "eat",
+   "drink",
+   "outdoors",
+   "water",
+   "culture",
+   "play",
+   "family",
+   "winter",
+   "free"
+  ],
+  "count": 6,
+  "needs_check": 0,
+  "missions": [
+   {
+    "n": 1,
+    "k": "m1",
+    "title": "Walk the brick blocks after dark",
+    "theme": "outdoors",
+    "paragraph": "String lights go on over four brick blocks around dusk, and the street turns into a different place. Start at the top by the church steps, drift down past the buskers and the patios, duck into the gear basement for ten minutes, and finish at the scoop shop on the corner. It is a slow walk on purpose. Nobody is in a hurry here after dark, and you should not be either. Come back on a Saturday morning to see it the other way.",
+    "needs_check": false,
+    "places": [
+     {
+      "id": "demo-bricks",
+      "name": "The brick blocks",
+      "url": "https://example.com/demo-bricks",
+      "neighborhood": "Downtown",
+      "nearby": false
+     },
+     {
+      "id": "demo-gear",
+      "name": "The gear basement",
+      "url": "https://example.com/demo-gear",
+      "neighborhood": "Downtown",
+      "nearby": false
+     },
+     {
+      "id": "demo-scoops",
+      "name": "The scoop shop",
+      "url": "https://example.com/demo-scoops",
+      "neighborhood": "Downtown",
+      "nearby": false
+     }
+    ],
+    "legs": [],
+    "top100": "Demo"
+   },
+   {
+    "n": 2,
+    "k": "m2",
+    "title": "Go on a South End cider and beer crawl",
+    "theme": "drink",
+    "paragraph": "Four taprooms sit inside half a mile on the same long street, which makes this the easiest crawl in town. Start with the lagers at the warehouse with the patio, walk north to the cider bar for a flight from dry to sweet, then cross to the old brewery that has not changed its flagship in thirty years. Finish at the arcade taproom if you still want a game. Eat something at the second stop, and walk home.",
+    "needs_check": false,
+    "places": [
+     {
+      "id": "demo-lager",
+      "name": "The lager warehouse",
+      "url": "https://example.com/demo-lager",
+      "neighborhood": "South End",
+      "nearby": false
+     },
+     {
+      "id": "demo-cider",
+      "name": "The cider bar",
+      "url": "https://example.com/demo-cider",
+      "neighborhood": "South End",
+      "nearby": false
+     },
+     {
+      "id": "demo-old",
+      "name": "The old brewery",
+      "url": "https://example.com/demo-old",
+      "neighborhood": "South End",
+      "nearby": false
+     },
+     {
+      "id": "demo-arcade",
+      "name": "The arcade taproom",
+      "url": "https://example.com/demo-arcade",
+      "neighborhood": "South End",
+      "nearby": false
+     }
+    ],
+    "legs": [],
+    "top100": "Demo"
+   },
+   {
+    "n": 3,
+    "k": "m3",
+    "title": "Swim off the north beach before work",
+    "theme": "water",
+    "paragraph": "The water is calmest before eight, when the beach is just you and the dog walkers. Park by the pines, leave your shoes on the steps, and swim out to the second buoy and back. The city tests the water twice a week, so check the board by the lifeguard stand first. Then towel off, get a coffee at the stand on the bike path, and show up to work with wet hair and a better attitude than anyone in the room.",
+    "needs_check": true,
+    "check_note": "demo: shows how a flagged mission looks in the data",
+    "places": [
+     {
+      "id": "demo-beach",
+      "name": "The north beach",
+      "url": "https://example.com/demo-beach",
+      "neighborhood": "New North End",
+      "nearby": false
+     },
+     {
+      "id": "demo-stand",
+      "name": "The coffee stand",
+      "url": "https://example.com/demo-stand",
+      "neighborhood": "New North End",
+      "nearby": true
+     }
+    ],
+    "legs": [],
+    "top100": "Demo"
+   },
+   {
+    "n": 4,
+    "k": "m4",
+    "title": "Hit the dog parks in one morning",
+    "theme": "outdoors",
+    "paragraph": "Three fenced parks sit within a short drive of each other, and a tired dog is a happy dog. Start at the big field with the agility ramps, move to the shady one by the river when it gets warm, and end at the small park with the water fountain for dogs. Bring a ball you do not mind losing. The regulars all know each other's dogs by name and will learn yours by the second visit.",
+    "needs_check": false,
+    "places": [
+     {
+      "id": "demo-field",
+      "name": "The big field dog park",
+      "url": "https://example.com/demo-field",
+      "neighborhood": "South End",
+      "nearby": false
+     },
+     {
+      "id": "demo-river",
+      "name": "The river dog park",
+      "url": "https://example.com/demo-river",
+      "neighborhood": "Winooski",
+      "nearby": false
+     },
+     {
+      "id": "demo-small",
+      "name": "The small dog park",
+      "url": "https://example.com/demo-small",
+      "neighborhood": "Old North End",
+      "nearby": false
+     }
+    ],
+    "legs": [],
+    "top100": "Demo"
+   },
+   {
+    "n": 5,
+    "k": "m5",
+    "title": "Catch a free movie on a Tuesday",
+    "theme": "free",
+    "paragraph": "The old film house on the waterfront shows a classic for free every Tuesday evening, and the seats are better than they have any right to be. Get there twenty minutes early, because the good rows go first. Walk the lakeside path afterward while you argue about the ending, and stop at the pier if the sky is doing anything. It is the cheapest good night in town, and almost nobody knows about it.",
+    "needs_check": false,
+    "places": [
+     {
+      "id": "demo-film",
+      "name": "The film house",
+      "url": "https://example.com/demo-film",
+      "neighborhood": "Waterfront",
+      "nearby": false
+     },
+     {
+      "id": "demo-pier",
+      "name": "The long pier",
+      "url": "https://example.com/demo-pier",
+      "neighborhood": "Waterfront",
+      "nearby": true
+     }
+    ],
+    "legs": [],
+    "top100": "Demo"
+   },
+   {
+    "n": 6,
+    "k": "m6",
+    "title": "Ski under the lights after work",
+    "theme": "winter",
+    "paragraph": "The lifts keep running after dark on winter weeknights, and the trails are half empty once the day crowd goes home. Leave the office at five, be on the snow by six, and get in a dozen runs before the lodge closes. The cold is real up there, so bring a layer more than you think you need. A bowl of chili in the lodge afterward is the reward, and the drive home is quiet.",
+    "needs_check": false,
+    "places": [
+     {
+      "id": "demo-ski",
+      "name": "The night ski hill",
+      "url": "https://example.com/demo-ski",
+      "neighborhood": "Out of town",
+      "nearby": false
+     }
+    ],
+    "legs": [],
+    "top100": "Demo"
+   }
+  ]
+ }
 }

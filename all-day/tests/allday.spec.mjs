@@ -235,6 +235,7 @@ async function newPage(browser, base, opts = {}) {
     reducedMotion: opts.motion || 'no-preference',
     deviceScaleFactor: opts.dpr || 1,
     serviceWorkers: 'block',
+    ...(opts.timezoneId ? { timezoneId: opts.timezoneId } : {}),
   });
   const page = await ctx.newPage();
   const errors = [];
@@ -244,6 +245,10 @@ async function newPage(browser, base, opts = {}) {
   const top = await readFile(path.join(HERE, 'fixtures/pulse-top.json'));
   await page.route(/gc\.zgo\.at|goatcounter\.com|facebook\.net|facebook\.com/, (r) => r.fulfill({ status: 200, body: '', contentType: 'text/javascript' }));
   await page.route(/raw\.githubusercontent\.com\/.*pulse-top/, (r) => r.fulfill({ status: 200, body: top, contentType: 'application/json' }));
+  /* What Now's sunset score asks Open-Meteo; here it gets nothing usable, so the engine runs ungated, as it does offline */
+  await page.route(/open-meteo\.com/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/json' }));
+  await page.route(/bandcamp\.com/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>Bandcamp</title>', contentType: 'text/html' }));
+  if (opts.routes) for (const [re, body] of opts.routes) await page.route(re, (r) => r.fulfill({ status: 200, body: JSON.stringify(body), contentType: 'application/json' }));
   const wire = wireFiles(opts.wire);
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/wire-data\/data\/(?:wire\/)?([\w.-]+\.json)$/, (r) => {
     const f = wire[r.request().url().match(/([\w.-]+\.json)$/)[1]];
@@ -316,6 +321,8 @@ const COMBOS = [
   { viewport: { width: 1280, height: 800 }, scheme: 'dark', motion: 'reduce' },
 ];
 const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
+/* tabs that are built: live, they draw their screen instead of the promise */
+const LIVE = new Set(['wire', 'whatnow', 'onair']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -351,12 +358,12 @@ async function matrix(browser, base) {
           if (tab !== 'wire') await goTab(page, tab);
           const state = await page.evaluate(() => {
             const p = document.querySelector('.panel:not([hidden])');
-            return { id: p.id, promise: !!p.querySelector('.promise'), h2: p.querySelector('.promise h2')?.textContent || '', cards: p.querySelectorAll('[data-k]').length + p.querySelectorAll('.sec').length,
+            return { id: p.id, promise: !!p.querySelector('.promise'), h2: p.querySelector('.promise h2')?.textContent || '', cards: p.querySelectorAll('[data-k]').length + p.querySelectorAll('.sec').length + p.querySelectorAll('.spin').length,
               title: document.getElementById('mast-title').textContent, err: !!p.querySelector('.errbox') };
           });
           check(state.id === 'panel-' + tab, tab + ': its panel is the one showing', state.id);
           check(!state.err, tab + ': no error box', '');
-          if (!demo && tab !== 'wire' && tab !== 'onair') {
+          if (!demo && !LIVE.has(tab)) {
             check(state.promise && state.h2 === LABELS[TABS.indexOf(tab)], tab + ': live, it states its promise', JSON.stringify(state));
           } else {
             check(state.cards > 0 && !state.promise, tab + ': it draws its screen', JSON.stringify(state));
@@ -397,7 +404,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'fv2'], ['people', 'pp2'], ['whatnow', 'tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'fv2'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -980,6 +987,227 @@ async function interactions(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------- What Now */
+/* Tonight's fixtures, dated to today in Burlington on the real clock: what
+   must show (5 pm on, today, not over, once) and what must not (morning,
+   4:59 pm, all day, cancelled, tomorrow, yesterday). The page runs in Los
+   Angeles, so "today after 5 pm" has to be Burlington's, not the reader's.
+   The fixtures and the page share one frozen instant, 6:30 pm in Burlington
+   today, so the test cannot straddle midnight or a clock change. */
+const etOffset = (ms) => {
+  const p = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', timeZoneName: 'longOffset' }).formatToParts(new Date(ms)).find((x) => x.type === 'timeZoneName');
+  const m = p && /GMT([+-]\d{2}:\d{2})/.exec(p.value);
+  return m ? m[1] : '-05:00';
+};
+function tonightFiles(now) {
+  const today = etKey(now);
+  const at = (day, hm) => day + 'T' + hm + ':00' + etOffset(now);
+  const ev = (id, title, day, start, end, extra) => ({ id, title, date: day, start: at(day, start), ...(end ? { end: at(day, end) } : {}), url: 'https://example.com/' + id,
+    category: 'music', allDay: false, venue: 'Fixture Hall ' + id, town: 'Burlington', free: true, ...(extra || {}) });
+  const events = [
+    ev('x-morning', 'Morning thing', today, '10:00', '11:00'),
+    ev('x-459', 'Starts a minute early', today, '16:59', '23:59'),
+    ev('ok-1700', 'Starts at five', today, '17:00', '23:59'),
+    ev('ok-dup', 'Listed twice', today, '21:00', '23:59'),
+    ev('ok-dup2', 'Listed twice', today, '21:00', '23:59'),
+    ev('ok-2345', 'Late one', today, '23:45', null),
+    ev('x-allday', 'All day thing', today, '00:00', null, { allDay: true }),
+    ev('x-cancel', 'CANCELLED--Evening thing', today, '19:00', '21:00'),
+    ev('x-tomorrow', 'Tomorrow night', dayMinus(today, -1), '19:00', '21:00'),
+    ev('x-yesterday', 'Last night', dayMinus(today, 1), '20:00', '22:00'),
+  ];
+  const artist = (id, name, day, why, album) => ({ id, name, genre: 'folk', why, threads: 0, links: {},
+    bandcamp: album ? { album, title: name + ' record', art: 'https://f4.bcbits.com/img/a1_2.jpg' } : null,
+    shows: [{ date: day, time: '8 PM', venue: 'Fixture Hall', vid: 'fixture', title: name, url: 'https://example.com/' + id, price: '$10', free: false }] });
+  const music = { generated: new Date(now).toISOString(), calendar: { window: 60, venues: [] }, bigrooms: [], artists: [
+    artist('tonight-band', 'Tonight Band', today, 'Played every porch party last summer.', '1234567'),
+    artist('saturday-band', 'Later Band', dayMinus(today, -3), null, '7654321'),
+    artist('far-band', 'Far Band', dayMinus(today, -10), 'Not this week.', '1111111'),
+  ] };
+  return { events: { generated: new Date(now).toISOString(), days: 10, counts: {}, events }, music };
+}
+
+const wnPanel = '#panel-whatnow';
+async function spinAnswer(page) {
+  await page.click(wnPanel + ' .spin .big');
+  await page.waitForSelector(wnPanel + ' .result:not(.rolling) h3', { timeout: 8000 });
+  return page.$eval(wnPanel + ' .result h3', (h) => h.textContent);
+}
+
+async function theWhatNow(browser, base) {
+  await group('What Now, Spin (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
+    check(await page.$eval('#subnav .chip.on', (b) => /Spin/.test(b.innerText)), 'the chip row is the mode switch, Spin first', '');
+    const wx = await page.$eval(wnPanel + ' .wx', (w) => w.innerText.replace(/\s+/g, ' '));
+    check(/59° feels like/.test(wx) && /61° lake/.test(wx) && /6:06 sunset/.test(wx), 'the weather line: feels like, the lake, sunset', wx);
+    check(await page.$eval(wnPanel + ' .wx', (w) => w.getBoundingClientRect().height < 40), 'the weather line is one line at 390', '');
+    check(await page.$$eval(wnPanel + ' .chips.paths .chip', (c) => c.map((x) => x.innerText).join('|')) === 'I’m broke|Get me outside|People, please|Two hours|Close by|Teach me something', 'the six path chips', '');
+    const first = await spinAnswer(page);
+    check(first.length > 3, 'Spin returns an answer', first);
+    check(/^Because /.test(await page.$eval(wnPanel + ' .result .because', (p) => p.textContent).catch(() => '')), 'the answer spells out its reason', '');
+    check(/^Right now · /.test(await page.$eval(wnPanel + ' .result .eyebrow', (e) => e.textContent)), 'the answer says it is for right now', '');
+    await page.click(wnPanel + ' .result .another');
+    await page.waitForSelector(wnPanel + ' .result:not(.rolling) h3', { timeout: 8000 });
+    const second = await page.$eval(wnPanel + ' .result h3', (h) => h.textContent);
+    check(second !== first, 'Another changes the answer', first + ' → ' + second);
+    await page.click(wnPanel + ' .result .doit');
+    check(await page.$eval(wnPanel + ' .result h3', (h) => h.textContent) === 'Now put the phone down.', 'Do it ends the session: “Now put the phone down.”', '');
+    await page.click(wnPanel + ' .pills button:has-text("Tomorrow")');
+    await spinAnswer(page);
+    check(await page.$eval(wnPanel + ' .result .eyebrow', (e) => e.textContent) === 'Tomorrow', 'the window: Tomorrow plans tomorrow', '');
+    await page.click(wnPanel + ' .chip[data-chip="hobby"]');
+    await page.waitForSelector(wnPanel + ' .result:not(.rolling) h3');
+    const hobby = await page.$eval(wnPanel + ' .result h3', (h) => h.textContent);
+    check(['Knitting', 'Sailing'].includes(hobby.trim()), 'Teach me something swaps the hat for the hobbies', hobby);
+    check(await page.$eval(wnPanel + ' .chip[data-chip="hobby"]', (b) => b.getAttribute('aria-pressed')) === 'true', 'a path chip shows it is on', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('What Now, Spin (live, reduced motion)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await page.goto(base + '/all-day/#whatnow');
+    await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
+    await page.click(wnPanel + ' .spin .big');
+    check(await page.$(wnPanel + ' .result:not(.rolling)') !== null, 'reduced motion: the answer lands at once, no reel', '');
+    const txt = await page.$eval(wnPanel + ' .result', (r) => r.innerText);
+    check(/Do it|Nothing fits all that/.test(txt), 'live: the real engine answers (or says honestly that nothing fits)', txt.slice(0, 80));
+    check(/^(Picked from \d+ things? that fit|Nothing in the hat for) right now/.test(await page.$eval(wnPanel + ' .note.pad', (n) => n.textContent)), 'the pool line says what the answer was picked from', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-whatnow-spin.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('What Now, Missions (live)', async () => {
+    const real = JSON.parse(await readFile(path.join(REPO, 'data/missions.json'), 'utf8'));
+    check(real.count === 100 && real.missions.length === 100, 'data/missions.json holds 100 missions', real.missions.length);
+    const words = real.missions.map((m) => m.paragraph.split(/\s+/).length);
+    check(words.every((n) => n >= 60 && n <= 120), 'every paragraph is 60 to 120 words', words.filter((n) => n < 60 || n > 120).join(', '));
+    check(real.missions.every((m) => !/[—–!]/.test(m.paragraph) && real.themes.includes(m.theme) && m.places.length), 'no dashes or exclamation points, a known theme, at least one place', '');
+    check(real.needs_check === real.missions.filter((m) => m.needs_check).length, 'needs_check is counted honestly (' + real.needs_check + ')', '');
+
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#whatnow/missions');
+    await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
+    const nums = await page.$$eval(wnPanel + ' .lrow.mission .num', (n) => n.map((x) => Number(x.textContent)));
+    check(nums.length === 100 && nums.every((n, i) => n === i + 1), 'the hundred, numbered 1 to 100', nums.length);
+    const themeChip = await page.$eval(wnPanel + ' .chips.themes .chip[data-chip="drink"] .n', (n) => Number(n.textContent));
+    await page.click(wnPanel + ' .chips.themes .chip[data-chip="drink"]');
+    const shown = await page.$$eval(wnPanel + ' .lrow.mission .s', (s) => s.map((x) => x.textContent));
+    check(shown.length === themeChip && shown.every((t) => /^Drink/.test(t)), 'a theme chip filters to its missions, and its count is right (' + themeChip + ')', shown.length);
+    await page.click(wnPanel + ' .chips.themes .chip[data-chip="all"]');
+    await page.click(wnPanel + ' .lrow[data-k="m7"] .markdone');
+    check(await page.$eval(wnPanel + ' .lrow[data-k="m7"]', (r) => r.classList.contains('done')), 'Mark done marks it', '');
+    await page.reload();
+    await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
+    check(await page.$eval(wnPanel + ' .lrow[data-k="m7"]', (r) => r.classList.contains('done')), 'a mission marked done survives a reload', '');
+    check(/1\/100/.test(await page.$eval('#subnav .chip[data-chip="missions"]', (b) => b.innerText)), 'and the Missions chip counts it: 1/100', '');
+    check(!supabase.some((x) => /nn_mission/.test(x)), 'signed out, nothing goes to the account', supabase.join(', '));
+
+    await page.click(wnPanel + ' .surprise');
+    const landed = await page.waitForFunction(() => {
+      const r = document.querySelector('#panel-whatnow .lrow.hl');
+      if (!r) return false;
+      const b = r.getBoundingClientRect();
+      return b.top >= 0 && b.bottom <= innerHeight ? r.dataset.k : false;
+    }, null, { timeout: 4000 }).then((h) => h.jsonValue(), () => null);
+    check(!!landed, 'Surprise me scrolls the list to a highlighted mission', '');
+    check(landed !== 'm7', 'and it is one you have not done', landed);
+    check(await page.evaluate(() => document.activeElement && document.activeElement.closest('.lrow.hl') !== null), 'focus lands on it too', '');
+    check(await page.$('.sheet-card') === null, 'no modal: the list itself moves', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-whatnow-surprise.png') });
+
+    await page.click(wnPanel + ' .lrow[data-k="m5"] .open');
+    await page.waitForSelector('.sheet-card');
+    const sheet = await page.$eval('.sheet-card', (c) => ({ h: c.querySelector('h2').textContent, p: c.querySelector('.pick-why').textContent, links: [...c.querySelectorAll('a.t')].map((a) => a.href) }));
+    check(sheet.h.startsWith('5. ') && sheet.p === real.missions[4].paragraph, 'tapping a mission opens its paragraph', sheet.h);
+    check(sheet.links.length >= 1 && sheet.links.every((u) => /^https?:/.test(u)), 'with its places, linked to their sites', JSON.stringify(sheet.links));
+    await page.screenshot({ path: path.join(SHOTS, 'live-whatnow-mission.png') });
+    await page.keyboard.press('Escape');
+
+    /* signed in: the mark also goes to the account, and a failure costs nothing */
+    await page.evaluate(() => localStorage.setItem('allday-auth', JSON.stringify({ access_token: 'a.b.c', refresh_token: 'r', expires_at: 4102444800, user: { id: 'u1', email: 'reader@example.com' } })));
+    await page.reload();
+    await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
+    await page.click(wnPanel + ' .lrow[data-k="m9"] .markdone');
+    await page.waitForTimeout(400);
+    check(supabase.some((x) => /POST \/rest\/v1\/rpc\/nn_missions_done/.test(x)) && supabase.some((x) => /POST \/rest\/v1\/rpc\/nn_mission_set/.test(x)), 'signed in, marks are read from and written to the account', supabase.filter((x) => /nn_/.test(x)).join(', '));
+    check(await page.$eval(wnPanel + ' .lrow[data-k="m9"]', (r) => r.classList.contains('done')), 'and the device copy stands either way', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('What Now, Tonight (live, a reader in Los Angeles)', async () => {
+    const day = etKey(Date.now());
+    const frozen = Date.parse(day + 'T18:30:00' + etOffset(Date.parse(day + 'T12:00:00Z')));
+    const files = tonightFiles(frozen);
+    const routes = [[/\/all-day\/data\/whatnow\.json/, files.events], [/\/all-day\/data\/music\.json/, files.music]];
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes });
+    await page.clock.setFixedTime(frozen);
+    await page.goto(base + '/all-day/#whatnow/tonight');
+    await page.waitForSelector(wnPanel + ' [data-sec="tonight"]', { timeout: 15000 });
+    const keys = await page.$$eval(wnPanel + ' .card.event', (c) => c.map((x) => x.dataset.k));
+    const ok = new Set(['e-ok-1700', 'e-ok-dup', 'e-ok-2345']);
+    check(keys.length === 3 && keys.every((k) => ok.has(k)), 'Tonight lists only items after 5 pm today in America/New_York', keys.join(', '));
+    check(keys.includes('e-ok-2345'), 'tonight’s late listing is there', keys.join(', '));
+    check(!keys.includes('e-ok-dup2'), 'a listing posted twice shows once', keys.join(', '));
+    const today = etParts(frozen).day;
+    check(await page.$$eval(wnPanel + ' .card.event .dom', (d) => d.map((x) => x.textContent)).then((d) => d.every((x) => Number(x) === Number(today))), 'every date tile is today in Burlington', '');
+    const artists = await page.$$eval(wnPanel + ' .artist', (a) => a.map((x) => x.innerText.replace(/\s+/g, ' ')));
+    check(artists.length === 2 && /Tonight Band/.test(artists[0]) && /Tonight/.test(artists[0]) && /Later Band/.test(artists[1]), 'Playing this week: tonight’s and this week’s artists, soonest first, not next week’s', JSON.stringify(artists));
+    check(/Played every porch party last summer\./.test(artists[0]) && /Folk/.test(artists[1]), 'the old Music tab’s why lines come along (the genre when there is no why)', '');
+    check(await page.$(wnPanel + ' iframe') === null, 'nothing is embedded until you ask', '');
+    await page.click(wnPanel + ' .artist .listen');
+    const src = await page.$eval(wnPanel + ' .artist iframe', (f) => f.src);
+    check(/bandcamp\.com\/EmbeddedPlayer\/album=1234567\//.test(src) && !/autoplay/.test(src), 'Listen builds that artist’s Bandcamp player, which does not autoplay', src);
+    await page.click(wnPanel + ' .artist .listen');
+    check(await page.$(wnPanel + ' iframe') === null, 'pressing it again takes the player away', '');
+    check(await page.$(wnPanel + ' .caught') !== null, 'the list ends, and says so', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-whatnow-tonight.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('What Now, deep links and wide', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/#whatnow/m42');
+    check(await flashes(page, 'm42'), '#whatnow/m42 opens Missions and flashes mission 42', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-whatnow-missions-desktop-dark.png') });
+    await page.click(wnPanel + ' .chips.themes .chip[data-chip="eat"]');
+    await page.evaluate(() => { location.hash = 'whatnow/m5'; });
+    check(await flashes(page, 'm5'), 'a mission link lands even while the list is filtered to another theme', '');
+    await page.goto(base + '/all-day/?demo=1#whatnow/tonight');
+    await page.reload();
+    await page.waitForSelector(wnPanel + ' [data-sec="tonight"]', { timeout: 15000 });
+    check(await page.$eval('#subnav .chip.on', (b) => /Tonight/.test(b.innerText)), '#whatnow/tonight opens Tonight', '');
+    await page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-tonight-desktop-dark.png') });
+    await page.goto(base + '/all-day/?demo=1#whatnow/missions');
+    await page.reload();
+    await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
+    check(await page.$$eval(wnPanel + ' .lrow.mission', (r) => r.length) === 6, 'the demo carries six missions', '');
+    await page.click(wnPanel + ' .lrow[data-k="m2"] .markdone');
+    await page.reload();
+    await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
+    check(!(await page.$eval(wnPanel + ' .lrow[data-k="m2"]', (r) => r.classList.contains('done'))) && !(await page.evaluate(() => localStorage.getItem('allday-missions'))), 'demo marks never reach localStorage', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* the demo moved to a winter evening keeps Burlington's wall clock:
+       its 5:45 pm walk is still 5:45 pm, and sunset still reads 6:06 */
+    const w = await newPage(browser, base);
+    await w.page.clock.setFixedTime(Date.parse('2026-12-10T18:00:00-05:00'));
+    await w.page.goto(base + '/all-day/?demo=1#whatnow/tonight');
+    await w.page.waitForSelector(wnPanel + ' [data-sec="tonight"]', { timeout: 15000 });
+    const wk = await w.page.$$eval(wnPanel + ' .card.event', (c) => c.map((x) => x.dataset.k));
+    check(wk.includes('e-tn4') && wk.includes('e-tn3'), 'in December the demo’s 5:45 pm and 6 pm listings are still tonight', wk.join(', '));
+    check(/6:06 sunset/.test(await w.page.$eval(wnPanel + ' .wx', (x) => x.innerText.replace(/\s+/g, ' '))), 'and its sunset still reads 6:06', '');
+    check(!w.errors.length, 'no console errors', w.errors.join(' | '));
+    await w.ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -990,6 +1218,7 @@ try {
   await matrix(browser, base);
   await deepLinks(browser, base);
   await theWire(browser, base);
+  await theWhatNow(browser, base);
   await onAir(browser, base);
   await interactions(browser, base);
 } finally {
