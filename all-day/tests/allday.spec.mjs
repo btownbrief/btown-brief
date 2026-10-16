@@ -1739,11 +1739,16 @@ async function accounts(browser, base) {
       auth: (p, body, h) => { seen.push(p + ' ' + (h.authorization || '')); if (/^user/.test(p)) return { body: { id: 'u-1', email: 'reader@example.com', aud: 'authenticated' } }; if (/^logout/.test(p)) return { status: 204 }; return undefined; },
       rpc: (fn) => (fn === 'nn_profile_get' ? { display_name: 'Maya R.', neighborhood: null, archetype: null } : undefined),
     });
-    await inn.page.goto(base + '/all-day/#access_token=a.b.c&refresh_token=r1&expires_in=3600&token_type=bearer&type=magiclink');
+    /* a token shaped like Supabase's: a JWT whose claims carry the email */
+    const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
+    const jwt = b64({ alg: 'HS256', typ: 'JWT' }) + '.' + b64({ sub: 'u-1', email: 'reader@example.com', role: 'authenticated', exp: 4102444800 }) + '.c2ln';
+    await inn.page.goto(base + '/all-day/#access_token=' + jwt + '&refresh_token=r1&expires_in=3600&token_type=bearer&type=magiclink');
     await inn.page.waitForSelector('#toast:not([hidden])', { timeout: 6000 });
     check(/You’re signed in/.test(await inn.page.$eval('#toast', (x) => x.textContent)), 'the link signs the reader in, and says so without the address', '');
     check(await inn.page.evaluate(() => location.hash) === '#wire', 'the tokens leave the address bar', '');
-    check(seen.some((x) => /^user Bearer a\.b\.c/.test(x)), 'the token is checked with Supabase', seen.join(', '));
+    check(seen.some((x) => x === 'user Bearer ' + jwt), 'the token is checked with Supabase', seen.join(', '));
+    const stored = await inn.page.evaluate(() => Object.keys(localStorage).map((k) => k + '=' + localStorage.getItem(k)));
+    check(stored.length && !stored.some((v) => /@|eyJ|%40/.test(v)), 'nothing in localStorage holds an "@" or a JWT after sign-in', stored.filter((v) => /@|eyJ|%40/.test(v)).join(' | '));
     const kept = await inn.page.evaluate(() => localStorage.getItem('allday-auth'));
     check(kept && !/@/.test(kept) && JSON.stringify(Object.keys(JSON.parse(kept)).sort()) === '["refresh_token","user"]' && JSON.parse(kept).user.id === 'u-1',
       'storage keeps only the refresh token and the account id: no email, no access token (whose claims carry it)', kept);
