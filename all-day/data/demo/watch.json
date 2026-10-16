@@ -1,0 +1,171 @@
+{
+ "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders.",
+ "partner": "Sam",
+ "films": [
+  {
+   "k": "fm1",
+   "title": "The Long Lake",
+   "year": 2026,
+   "art": "lake",
+   "me": 1,
+   "them": 0,
+   "rate": 4.2,
+   "n": 37
+  },
+  {
+   "k": "fm2",
+   "title": "Night Shift at the Co-op",
+   "year": 2025,
+   "art": "night",
+   "me": 1,
+   "them": 1,
+   "rate": 3.8,
+   "n": 61
+  },
+  {
+   "k": "fm3",
+   "title": "Winter Light",
+   "year": 2024,
+   "art": "rink",
+   "me": 0,
+   "them": 1,
+   "rate": 4.5,
+   "n": 112
+  },
+  {
+   "k": "fm4",
+   "title": "Harbor",
+   "year": 2026,
+   "art": "slate",
+   "me": 0,
+   "them": 0,
+   "rate": 3.9,
+   "n": 18
+  },
+  {
+   "k": "fm5",
+   "title": "Salt and Smoke",
+   "year": 2023,
+   "art": "foliage",
+   "me": 0,
+   "them": 0,
+   "rate": 4.1,
+   "n": 44
+  },
+  {
+   "k": "fm6",
+   "title": "The Quiet Car",
+   "year": 2025,
+   "art": "plum",
+   "me": 1,
+   "them": 0,
+   "rate": 3.6,
+   "n": 29
+  },
+  {
+   "k": "fm7",
+   "title": "A Year on Pine Street",
+   "year": 2026,
+   "art": "brick",
+   "me": 0,
+   "them": 0,
+   "rate": 4.4,
+   "n": 52
+  },
+  {
+   "k": "fm8",
+   "title": "Causeway",
+   "year": 2024,
+   "art": "dawn",
+   "me": 1,
+   "them": 1,
+   "rate": 4,
+   "n": 80
+  }
+ ],
+ "soon": [
+  {
+   "k": "tr1",
+   "title": "Harbor",
+   "when": "Oct 24 · Roxy",
+   "dur": "2:14",
+   "art": "slate"
+  },
+  {
+   "k": "tr2",
+   "title": "The Long Lake",
+   "when": "Oct 31 · Roxy",
+   "dur": "1:58",
+   "art": "lake"
+  },
+  {
+   "k": "tr3",
+   "title": "A Year on Pine Street",
+   "when": "Nov 7 · Savoy",
+   "dur": "2:30",
+   "art": "brick"
+  },
+  {
+   "k": "tr4",
+   "title": "Late Frost",
+   "when": "Nov 14 · streaming",
+   "dur": "2:02",
+   "art": "rink"
+  },
+  {
+   "k": "tr5",
+   "title": "The Second Bridge",
+   "when": "Nov 21 · Roxy",
+   "dur": "1:45",
+   "art": "night"
+  }
+ ],
+ "filters": [
+  {
+   "key": "all",
+   "label": "All"
+  },
+  {
+   "key": "neither",
+   "label": "Neither of us"
+  },
+  {
+   "key": "top",
+   "label": "Top rated"
+  },
+  {
+   "key": "short",
+   "label": "Under 100 min"
+  },
+  {
+   "key": "vt",
+   "label": "Shot in Vermont"
+  }
+ ],
+ "neitherCount": 38,
+ "leftCount": 71,
+ "vote": [
+  {
+   "title": "Winter Light",
+   "n": 28
+  },
+  {
+   "title": "Causeway",
+   "n": 19
+  },
+  {
+   "title": "Salt and Smoke",
+   "n": 14
+  }
+ ],
+ "voteSub": "The winner books the Roxy for a Tuesday. 61 votes, closes Sunday.",
+ "voteFine": "One vote each. The screening becomes a Meetup event the moment it is booked.",
+ "whereToWatch": "Roxy · Oct 24 at 7:10 · Also streaming from Nov 14.",
+ "trailerLength": "2:10",
+ "chat": {
+  "title": "Tonight: Winter Light, 8 pm",
+  "text": "14 people said they are in. The chat opens an hour before and closes at midnight.",
+  "in": 14
+ },
+ "newSince": 0
+}

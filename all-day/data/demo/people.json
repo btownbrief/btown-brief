@@ -1,0 +1,132 @@
+{
+ "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders.",
+ "archetypes": [
+  {
+   "key": "new",
+   "name": "New in town",
+   "line": "Arrived in the last year. Wants the lay of the land and three names.",
+   "icon": "pin"
+  },
+  {
+   "key": "regular",
+   "name": "Weeknight regular",
+   "line": "Has a bar, a trivia night and a standing Tuesday. Room for one more.",
+   "icon": "clock"
+  },
+  {
+   "key": "trail",
+   "name": "Trail person",
+   "line": "Red Rocks before work, Camel’s Hump on Sunday. Coffee after.",
+   "icon": "whatnow"
+  },
+  {
+   "key": "games",
+   "name": "Game night",
+   "line": "Board games, pickup soccer, the arcade. Competitive but kind.",
+   "icon": "games"
+  }
+ ],
+ "plans": [
+  {
+   "kind": "person",
+   "name": "Maya R.",
+   "arch": "Trail person",
+   "ago": "2h",
+   "line": "Open to strangers: Sunday trail run, 5 to 8 miles",
+   "text": "Moved here in August from Portland, the Maine one. Red Rocks, Niquette Bay, anything with a view. Coffee after is not optional.",
+   "cta": "I’d go",
+   "going": "3 going",
+   "k": "pp1"
+  },
+  {
+   "kind": "person",
+   "name": "Dev K.",
+   "arch": "Game night",
+   "ago": "4h",
+   "line": "Open to strangers: pickup soccer at Leddy, Sunday 10 am",
+   "text": "We have seven. Need four more and a second goalie who does not mind the cold.",
+   "cta": "I’d go",
+   "going": "7 going",
+   "k": "pp2"
+  },
+  {
+   "kind": "person",
+   "name": "Tom A.",
+   "arch": "New in town",
+   "ago": "6h",
+   "line": "Open to strangers: a slow walk through the Intervale, Saturday at 9",
+   "text": "Two months in, know nobody, like trees. Will bring a thermos.",
+   "cta": "I’d go",
+   "going": "1 going",
+   "k": "pp3"
+  }
+ ],
+ "mixers": [
+  {
+   "kind": "event",
+   "src": "Btown Brief",
+   "own": true,
+   "ago": "Thu",
+   "dow": "Thu",
+   "dom": "23",
+   "title": "New in Town mixer at Foam",
+   "when": "6:30 pm",
+   "where": "Foam Brewers, Lake St",
+   "price": "Free",
+   "going": 14,
+   "cta": "Going",
+   "text": "Name tags, one icebreaker, then we leave you alone.",
+   "votes": 12,
+   "comments": 3,
+   "k": "mx1",
+   "sid": "Btown Brief"
+  },
+  {
+   "kind": "event",
+   "src": "Burlington Social Activities Group",
+   "via": "Meetup",
+   "ago": "Sat",
+   "dow": "Sat",
+   "dom": "25",
+   "title": "Game Night archetype: board games at the Archives",
+   "when": "7:00 pm",
+   "where": "The Archives, Main St",
+   "price": "Free",
+   "going": 22,
+   "cta": "Going",
+   "text": "Bring a game or play ours.",
+   "votes": 9,
+   "comments": 5,
+   "k": "mx2",
+   "sid": "Burlington Social Activities Group"
+  }
+ ],
+ "directory": [
+  {
+   "name": "Priya N.",
+   "arch": "Weeknight regular"
+  },
+  {
+   "name": "Ben S.",
+   "arch": "Trail person"
+  },
+  {
+   "name": "Jules O.",
+   "arch": "New in town"
+  },
+  {
+   "name": "Nora L.",
+   "arch": "Game night"
+  },
+  {
+   "name": "Sam P.",
+   "arch": "Weeknight regular"
+  },
+  {
+   "name": "Kara M.",
+   "arch": "Trail person"
+  }
+ ],
+ "directoryCount": 124,
+ "newSince": 0
+}

@@ -1,799 +1,358 @@
-/* wire.js (mode) — the headline wire.
+/* The Wire. TEMPORARY: Stage 2 replaces this file.
 
-   Two payloads. pulse-top.json carries the editorial picks, rebuilt three
-   times a day, each with a one-line `why`; pulse.json is the full 2,500-item
-   wire underneath. The picks now ship with an archive of past editions, so
-   the most-read thing on the site stops vanishing at every rebuild — you can
-   page back through the week.
+   Until the curated river exists (Stage 1's wire-today.json), the live Wire
+   draws the feed the app already has, pulse.json and pulse-top.json through
+   js/wire.js, with the new shell's rows and cards, so the shell can be used
+   and tested end to end:
 
-   The picks ride a carousel because they are the most important thing here
-   and deserve the space, and every carousel in this app announces itself:
-   dots per page, a progress bar and a count. A rail with no affordance is
-   invisible to most people.
+   - the dateline (the newest day in the payload, its count, when it was
+     built), ‹ › to yesterday and back; two days, then the feed says so
+   - the Local / Everything switch (the shell's, shared with On Air) and
+     chips by kind of source, counted (only kinds the payload has)
+   - What matters today: pulse-top's ranked picks with their reasons, number
+     one as the pick card, two to five as ranked rows, the rest on request
+   - the river: the rest of the day, newest first, under time dividers, with
+     the "N new since you were here" line, sixty rows at a time
+   - the caught-up card, the source sheet, swipe to save or mute, hold to peek
 
-   Local is not a topic among topics. It is the reason this paper exists, so
-   it gets its own switch, its own colour and a left edge you can see while
-   scrolling past. The switch says "Local only" as an instruction, because
-   labelled as a state people read the whole wire as already-local and never
-   press it. */
+   Under ?demo=1 the Wire is the prototype's, from wire-demo.js. */
 
-import * as store from './../store.js';
-import * as data from './../wire.js';
-import * as app from './../app.js';
-import { bindGestures } from './../gestures.js';
-import { el, esc, safeHref, ago, rail, chip, heading, scrollHint, voteBtn, paintVote, starBtn,
-  tipBar, tabStamp, stampOf, localSwitch, ICON } from './../ui.js';
-import { feedRow, bindFeed, hydrateVotes, watchPassed, keyOf, isLocalSource } from './../rows.js';
+import * as app from '../app.js';
+import * as store from '../store.js';
+import * as data from '../wire.js';
+import * as demo from './wire-demo.js';
+import { el, esc, ICON, mark, cards, chips, button, divider, section, localSwitch, geo, setGeo, agoShort, clockTime, put } from '../ui.js';
 
 const PAGE = 60;
+const DAYS_KEPT = 2;
+const PICKS_SHOWN = 10;
 
-const state = {
-  root: null,
-  pulse: null,
-  top: null,
-  shown: PAGE,
-  edition: 0,        // 0 = today, 1 = the one before, …
-  q: '',
-  qOpen: false,
-  wx: null,
-  wxHidden: false,   // this visit only; a refresh brings the line back
-  nl: null,
-  byKey: new Map(),
-  jump: null,        // a shared-in card key, consumed by the next render
+const L = { root: null, pulse: null, top: null, srcs: Object.create(null), day: 0, ch: 'all', page: PAGE, more: false,
+  pending: null, queued: null, stale: false, failed: false };
+
+/* ------------------------------------------------------------ the items */
+const isLocal = (src) => !!src && (src.local === 1 || src.topic === 'local');
+const keyOf = (it) => it.u || it.o || it.t;
+/* A kind of source, from what pulse.json already says about it. X and
+   Facebook arrive with Stage 1's inbox reader; until then they never show. */
+function kindOf(src) {
+  if (!src) return 'news';
+  const site = String(src.site || '');
+  if (src.ch) return src.ch;
+  if (/reddit\.com/.test(site) || /^r\//.test(src.short || '')) return 'reddit';
+  if (/youtube\.com|youtu\.be/.test(site)) return 'video';
+  if (src.topic === 'newsletters') return 'newsletters';
+  return 'news';
+}
+const KINDS = [['all', 'All'], ['x', 'X'], ['facebook', 'Facebook'], ['reddit', 'Reddit'], ['newsletters', 'Newsletters'], ['video', 'Video']];
+
+/* Outlets that publish twice (Seven Days' wire and its email edition) name
+   their main feed in "og"; a mute covers both, as in Settings before. */
+const canon = (sid) => { const s = L.srcs[sid]; return s && s.og && L.srcs[s.og] ? s.og : sid; };
+const kin = (sid) => Object.keys(L.srcs).filter((id) => canon(id) === sid);
+
+function toItem(it) {
+  const src = L.srcs[it.s];
+  if (!src || !it.u || !it.t) return null;
+  return {
+    k: keyOf(it), kind: 'headline', title: it.t, href: it.u, d: Number(it.d) || 0,
+    src: src.short || src.name || it.s, sid: canon(it.s), local: isLocal(src), ch: kindOf(src),
+    thumb: it.i || '', ago: it.d ? agoShort(it.d) : '',
+  };
+}
+
+/* mutes, read once per draw rather than once per row: a muted feed hides its
+   whole outlet, because items carry the outlet's main id */
+let MUTE = Object.create(null);
+function loadMutes() {
+  MUTE = Object.create(null);
+  Object.keys(store.muted()).forEach((id) => { MUTE[id] = 1; MUTE[canon(id)] = 1; });
+}
+const visible = (it) => !MUTE[it.sid] && (geo() === 'everything' || it.local);
+const dayStart = (sec) => { const d = new Date(sec * 1000); d.setHours(0, 0, 0, 0); return Math.floor(d.getTime() / 1000); };
+
+/* The days the payload holds, newest first: [{ start, items }] */
+let DAYS = [];
+function build() {
+  L.srcs = Object.create(null);
+  (L.pulse.sources || []).forEach((s) => { if (s && s.id) L.srcs[s.id] = s; });
+  const all = (L.pulse.items || []).map(toItem).filter(Boolean).sort((a, b) => b.d - a.d);
+  const seen = new Set();
+  const uniq = all.filter((it) => (seen.has(it.k) ? false : (seen.add(it.k), true)));
+  app.know(uniq);
+  DAYS = [];
+  if (!uniq.length) return;
+  let start = dayStart(uniq[0].d);
+  for (let i = 0; i < DAYS_KEPT; i++) {
+    const end = start + 86400;
+    DAYS.push({ start, items: uniq.filter((it) => it.d >= start && it.d < end) });
+    start = dayStart(start - 3600);
+  }
+}
+
+/* pulse-top's ranked picks, as cards can draw them, with a thumbnail when
+   the wire has one for the same story */
+function picks() {
+  const list = (L.top && Array.isArray(L.top.picks) ? L.top.picks : []).map((p) => {
+    const base = app.item(p.u);
+    const it = {
+      k: p.u, kind: 'headline', title: p.t, href: p.u, why: p.why || '', d: Number(p.d) || 0,
+      src: p.short || (L.srcs[p.s] && (L.srcs[p.s].short || L.srcs[p.s].name)) || '', sid: canon(p.s), local: p.local === 1,
+      ch: kindOf(L.srcs[p.s]), ago: p.d ? agoShort(p.d) : '', thumb: (base && base.thumb) || '',
+    };
+    return it;
+  }).filter((it) => it.href && it.title);
+  app.know(list);
+  return list;
+}
+
+/* ----------------------------------------------------------------- dates */
+const dayName = (start) => new Date(start * 1000).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+const isToday = (start) => start === dayStart(Date.now() / 1000);
+function stamp() {
+  const g = L.pulse && Date.parse(L.pulse.generated);
+  return g ? clockTime(new Date(g)) : '';
+}
+function slot(sec) {
+  const h = new Date(sec * 1000).getHours();
+  if (h >= 21) return 'Late';
+  if (h >= 17) return 'Evening';
+  if (h >= 13) return 'Afternoon';
+  if (h >= 11) return 'Midday';
+  if (h >= 5) return 'Morning';
+  return 'Overnight';
+}
+
+/* ---------------------------------------------------------------- subnav */
+function subnav() {
+  if (!L.pulse || !DAYS.length) return null;
+  loadMutes();
+  const frag = document.createDocumentFragment();
+  const day = DAYS[L.day];
+  const n = day.items.filter(visible).length;
+  const today = isToday(day.start);
+  const dl = el('div', 'dateline');
+  const prev = el('button', 'iconbtn nav', ICON.left); prev.setAttribute('aria-label', 'Earlier day');
+  const next = el('button', 'iconbtn nav', ICON.right); next.setAttribute('aria-label', 'Later day');
+  prev.disabled = L.day >= DAYS.length - 1; next.disabled = L.day === 0;
+  prev.addEventListener('click', () => goDay(L.day + 1));
+  next.addEventListener('click', () => goDay(L.day - 1));
+  const sub = L.day > 0 ? n + ' stories · final'
+    : n + (today ? ' stories so far' : ' stories') + (stamp() ? ' · updated ' + stamp() : '') + (L.stale ? ' · reconnecting' : '');
+  dl.append(prev, el('span', 'dl', '<b>' + esc(dayName(day.start)) + '</b><span class="s">' + esc(sub) + '</span>'), next);
+  frag.appendChild(dl);
+
+  const counts = Object.create(null);
+  day.items.forEach((it) => { if (visible(it)) counts[it.ch] = (counts[it.ch] || 0) + 1; });
+  const items = KINDS.filter(([k]) => k === 'all' || counts[k] || k === L.ch).map(([key, label]) => ({ key, label, n: key === 'all' ? null : (counts[key] || 0) }));
+  const band = el('div', 'toolband');
+  band.appendChild(localSwitch(() => { L.more = false; L.page = PAGE; app.paintSubnav(); render(); app.scrollTop(); }));
+  band.appendChild(chips(items, L.ch, (k) => {
+    L.ch = k; L.page = PAGE;
+    history.replaceState(null, '', location.search + '#wire' + (k === 'all' ? '' : '/' + k));
+    app.paintSubnav(); render(); app.scrollTop();
+  }));
+  frag.appendChild(band);
+  return frag;
+}
+function goDay(i) { L.day = Math.max(0, Math.min(DAYS.length - 1, i)); L.page = PAGE; L.more = false; app.paintSubnav(); render(); app.scrollTop(); }
+
+/* ---------------------------------------------------------------- render */
+function render() {
+  const root = L.root;
+  if (!root) return;
+  if (L.failed && !L.pulse) {
+    root.innerHTML = '<div class="errbox"><b>Couldn’t reach the wire.</b><br>The feed is served from GitHub. If you are offline it will come back on its own.</div>';
+    return;
+  }
+  if (!L.pulse) { root.innerHTML = '<p class="loading">Loading the wire…</p>'; return; }
+  loadMutes();
+  root.innerHTML = '';
+  const feed = el('div', 'feed');
+  root.appendChild(feed);
+  if (!DAYS.length) { feed.appendChild(el('p', 'empty', 'Nothing on the wire right now.')); return; }
+
+  const day = DAYS[L.day];
+  const green = geo() === 'everything';
+  const shownPicks = L.day === 0 && L.ch === 'all' ? renderMatters(feed) : new Set();
+  const river = day.items.filter((it) => visible(it) && !shownPicks.has(it.k) && (L.ch === 'all' || it.ch === L.ch));
+  if (shownPicks.size) divider(feed, 'The rest of ' + (isToday(day.start) ? 'today' : 'the day'), geo() === 'local' ? 'local only' : 'every source');
+
+  /* new since you were here: the line sits under the newest unseen item */
+  const base = store.visitBase();
+  const fresh = L.day === 0 && base ? river.filter((it) => it.d > base).length : 0;
+  let lastSlot = null;
+  river.slice(0, L.page).forEach((it, i) => {
+    const s = slot(it.d);
+    if (s !== lastSlot) { divider(feed, s, 'latest ' + clockTime(new Date(it.d * 1000))); lastSlot = s; }
+    put(feed, cards.row(it, { greenLocal: green && it.local, noComments: true }));
+    if (fresh && fresh < river.length && i === fresh - 1) {
+      feed.appendChild(cards.newline(fresh + ' new since you were here at ' + clockTime(new Date(base * 1000))));
+    }
+  });
+  if (!river.length) feed.appendChild(el('p', 'empty', L.ch === 'all' ? 'Nothing local on this day yet. Flip the switch to Everything for the rest.' : 'Nothing from ' + esc(label(L.ch)) + ' on this day.'));
+
+  if (L.page < river.length) {
+    feed.appendChild(button('Show ' + Math.min(PAGE, river.length - L.page) + ' more from ' + (L.day ? 'that day' : 'today'), 'ghost more', () => { L.page += PAGE; render(); }));
+  } else if (L.day === 0 && DAYS.length > 1) {
+    feed.appendChild(cards.caught({
+      title: isToday(day.start) ? 'That’s today so far' : 'That’s the latest edition',
+      text: 'New stories land through the day, above a line, never under your thumb.' + (stamp() ? ' Last updated ' + stamp() + '.' : ''),
+      buttons: [button('Yesterday’s edition ' + ICON.arrow, '', () => goDay(1)), button('What now ' + ICON.arrow, 'ghost', () => app.go('whatnow'))],
+    }));
+  } else {
+    feed.appendChild(cards.caught({
+      title: 'That’s everything. Really.',
+      text: 'All Day keeps two days, not an endless scroll.',
+      buttons: [button('Back to today', '', () => goDay(0))], check: false,
+    }));
+  }
+  app.bindFeed(feed, { onSource: sourceSheet, onMute: muteSource });
+  hydrateVotes(feed);
+}
+const label = (k) => (KINDS.find((x) => x[0] === k) || ['', ''])[1];
+
+/* What matters today: number one as the pick card, two to five as ranked
+   rows, six to ten on request. Returns the keys it drew so the river can
+   leave them out. */
+function renderMatters(feed) {
+  const list = picks().filter(visible).slice(0, PICKS_SHOWN);
+  if (!list.length) return new Set();
+  const wm = el('div', 'wm');
+  const built = L.top && Date.parse(L.top.generated);
+  section(wm, 'What matters today', list.length + ' picks from the whole wire, each with a reason.' + (built ? ' Picked at ' + esc(clockTime(new Date(built))) + '.' : ''));
+  const first = list[0];
+  put(wm, cards.pick({ ...first, media: first.thumb, thumb: '', eyebrow: '1 of ' + list.length }, { tagLocal: geo() === 'everything' && first.local }));
+  list.slice(1, 5).forEach((it, i) => wm.appendChild(demo.wmRow(it, i + 2)));
+  const rest = list.slice(5);
+  if (rest.length) {
+    if (L.more) {
+      rest.forEach((it, i) => wm.appendChild(demo.wmRow(it, i + 6)));
+      wm.appendChild(el('p', 'wm-end', 'That’s the ' + list.length + '. Everything else from the day is below.'));
+    } else {
+      wm.appendChild(button(rest.length + ' more pick' + (rest.length > 1 ? 's' : ''), 'ghost more', () => { L.more = true; render(); }));
+    }
+  }
+  feed.appendChild(wm);
+  return new Set((L.more ? list : list.slice(0, 5)).map((it) => it.k));
+}
+
+/* One request for the screenful's vote counts; paint them when they land. */
+function hydrateVotes(feed) {
+  const keys = [...feed.querySelectorAll('[data-k]')].map((n) => n.dataset.k);
+  store.loadVotes(keys).then((ok) => {
+    if (!ok) return;
+    feed.querySelectorAll('[data-k]').forEach((n) => {
+      const c = n.querySelector('[data-act="up"] .n');
+      if (c) c.textContent = store.voteCount(n.dataset.k) || '';
+    });
+  });
+}
+
+function muteSource(sid, it) {
+  const name = (it && it.src) || sid;
+  app.confirmBox({
+    title: 'Mute ' + name + '?',
+    body: 'You won’t see ' + name + ' anywhere in All Day, or on the Pulse page. Bring it back any time in Settings.',
+    yes: 'Mute',
+    onYes() {
+      kin(sid).concat(sid).forEach((id) => store.setMuted(id, true));
+      app.refresh();
+      app.toast('Muted ' + name, () => { kin(sid).concat(sid).forEach((id) => store.setMuted(id, false)); app.refresh(); });
+    },
+  });
+}
+
+/* tap a source: what it is, its items today, mute, open the site */
+function sourceSheet(sid, from) {
+  const src = L.srcs[sid] || {};
+  const name = (from && from.src) || src.short || src.name || sid;
+  const items = DAYS.length ? DAYS[0].items.filter((it) => it.sid === sid) : [];
+  app.sheet(name, (body) => {
+    body.appendChild(el('div', 'srchead', mark(name, 'xl') + '<div><div class="k">' + esc(isLocal(src) ? 'Local news' : (src.topic ? src.topic[0].toUpperCase() + src.topic.slice(1) : 'Source')) +
+      '</div><div class="n">' + items.length + ' today</div></div>'));
+    const row = el('div', 'linkrow');
+    row.appendChild(button('Mute', 'ghost', () => muteSource(sid, from || { src: name })));
+    if (/^https?:/.test(src.site || '')) {
+      const a = el('a', 'btn ghost', 'Open the site ' + ICON.ext);
+      a.href = src.site; a.target = '_blank'; a.rel = 'noopener';
+      row.appendChild(a);
+    }
+    body.appendChild(row);
+    if (items.length) {
+      body.appendChild(el('div', 'sheet-h', 'Today from ' + esc(name)));
+      const f = el('div', 'feed tight');
+      items.slice(0, 12).forEach((it) => put(f, cards.row(it, { noComments: true })));
+      body.appendChild(f);
+      app.bindFeed(f, { onSource() {}, onMute: muteSource });
+    }
+  });
+}
+
+/* ------------------------------------------------------------ deep links */
+function land() {
+  const p = L.pending;
+  if (!p || !L.pulse) return;
+  L.pending = null;
+  if (p === 'local' || p === 'everything') { setGeo(p); app.paintSubnav(); render(); return; }
+  if (KINDS.some(([k]) => k === p)) { L.ch = p; L.page = PAGE; app.paintSubnav(); render(); return; }
+  loadMutes();
+  if (app.flashHit(L.root, p)) return;
+  /* a shared card further down the day, or on yesterday's page */
+  for (let d = 0; d < DAYS.length; d++) {
+    const idx = DAYS[d].items.filter(visible).findIndex((it) => it.k === p);
+    if (idx < 0) continue;
+    L.day = d; L.ch = 'all'; L.page = Math.max(PAGE, Math.ceil((idx + 1) / PAGE) * PAGE);
+    app.paintSubnav(); render();
+    if (app.flashHit(L.root, p)) return;
+  }
+  app.toast('That card has moved on. Here’s today’s feed.');
+}
+
+/* ------------------------------------------------------------- the live tab */
+const live = {
+  mount(root) {
+    L.root = root;
+    render();
+    /* a fresh payload never lands under a reader: at the top it applies,
+       further down it waits for a pull or a tap on the tab */
+    data.setFreshGate((apply) => {
+      const p = root.closest('.panel');
+      if (app.activeTab() !== 'wire' || !p || p.scrollTop < 120) apply();
+      else { L.queued = apply; app.toast('New stories on the Wire. Pull down or tap Wire to see them.'); }
+    });
+    data.setStaleHandler((s) => { if (L.stale !== s) { L.stale = s; if (app.activeTab() === 'wire') app.paintSubnav(); } });
+    data.load('pulse', (j) => {
+      L.pulse = j; build(); render();
+      if (app.activeTab() === 'wire') app.paintSubnav();
+      land();
+      app.recount();
+    }, () => { L.failed = true; render(); });
+    data.load('top', (j) => { L.top = j; if (L.pulse) render(); }, () => {});
+  },
+  activate(param) { if (param) { L.pending = param; land(); } },
+  refresh() { if (L.pulse) { build(); app.paintSubnav(); render(); } },
+  deactivate() { app.closePeek(); },
+  subnav,
+  newSince(ts) { loadMutes(); return DAYS.length ? DAYS[0].items.filter((it) => visible(it) && it.d > ts).length : 0; },
+  pull() {
+    if (L.queued) { const q = L.queued; L.queued = null; q(); return 'Fresh stories are in'; }
+    return null;
+  },
 };
 
-const TOPICS = [
-  ['all', 'All'], ['popular', '▲ Popular'], ['local', 'Local'], ['news', 'News'], ['politics', 'Politics'],
-  ['business', 'Business'], ['tech', 'Tech'], ['science', 'Science'],
-  ['sports', 'Sports'], ['culture', 'Culture'], ['gaming', 'Gaming'],
-  ['newsletters', 'Newsletters'],
-];
-
-export function mount(root) {
-  state.root = root;
-  root.innerHTML = '<p class="loading">Loading the wire…</p>';
-
-  data.load('pulse', (json) => { state.pulse = json; render(); }, () => {
-    root.innerHTML = '';
-    const box = el('div', 'errbox', '<b>Couldn’t reach the wire.</b><br>The feed is served from GitHub — if you are offline it will come back on its own.');
-    root.appendChild(box);
-  });
-  data.load('top', (json) => { state.top = json; if (state.pulse) render(); }, () => {});
-  data.load('weather', (json) => { state.wx = json; if (state.pulse) render(); }, () => {});
-  data.load('newsletter', (json) => { state.nl = json; if (state.pulse) render(); }, () => {});
-
-  bindGestures(root, bindFeed(root, (k) => state.byKey.get(k), () => render()));
-}
-
-export function activate(param) {
-  /* a shared link: #wire/<key> — jump to that row once the feed is drawn */
-  if (param) { state.jump = param; if (state.pulse) render(); }
-}
-export function refresh() { if (state.pulse) render(); }
-export function deactivate() { app.closePeek(); }
-
-/* THE BRIEF'S OWN STORIES.
-   In local mode the picks stop being the machine's and become his. Beehiiv
-   publishes one RSS item per edition, titled "Friday, August 28th", so the
-   wire only ever saw a date; newsletter_picks.py pulls the stories back out,
-   each with the paragraph he wrote about why it matters. Every other pick on
-   this site carries a machine-written reason. These carry his.
-
-   The newsletter lands Monday and Friday. Showing one edition whole would
-   leave Tuesday through Thursday looking like nothing had happened, so today
-   is a window over the last two editions that turns over each day — the same
-   stories all week, a different one leading every morning, and paging back
-   walks whole editions. */
-const NL_DAYS = 12;
-const NL_TODAY = 9;
-
-function newsletterEditions() {
-  const eds = (state.nl && Array.isArray(state.nl.editions) ? state.nl.editions : [])
-    .filter((e) => e && Array.isArray(e.stories) && e.stories.length);
-  if (!eds.length) return [];
-
-  const asPick = (st, ed) => ({
-    t: st.t,
-    u: st.u,
-    short: st.s,
-    local: 1,
-    why: st.w || '',
-    from: ed.edition,
-  });
-
-  const now = Date.now() / 1000;
-  const fresh = eds.filter((e) => !e.d || now - e.d < NL_DAYS * 86400).slice(0, 2);
-  const pool = [];
-  fresh.forEach((e) => e.stories.forEach((st) => pool.push(asPick(st, e))));
-  /* the ones he wrote a paragraph about lead; quick hits fill in behind */
-  pool.sort((a, b) => (b.why ? 1 : 0) - (a.why ? 1 : 0));
-
-  const list = [];
-  if (pool.length) {
-    const day = Math.floor(Date.now() / 86400000);
-    const off = pool.length ? day % pool.length : 0;
-    const today = [];
-    for (let i = 0; i < Math.min(NL_TODAY, pool.length); i++) {
-      today.push(pool[(off + i) % pool.length]);
-    }
-    list.push({ generated: new Date((fresh[0].d || now) * 1000).toISOString(),
-                picks: today, nl: true });
-  }
-  eds.forEach((e) => list.push({
-    generated: new Date((e.d || now) * 1000).toISOString(),
-    picks: e.stories.map((st) => asPick(st, e)),
-    nl: true,
-    label: e.edition,
-  }));
-  return list;
-}
-
-/* Today's card used to be newsletter-only, which read wrong twice over: the
-   Brief lands twice a week, so "what matters today" could be four days old —
-   and every story on it was already sent to subscribers. The machine picks
-   local stories off the wire three times a day; those now lead the card, and
-   the Brief's stories fill in behind them. His paragraphs still carry the
-   `from` line, so whose words are whose stays legible. */
-function blendToday(list) {
-  const today = list[0];
-  if (!today || today.label) return;          // only the rotating today window
-  const t = state.top;
-  const wire = (t && Array.isArray(t.picks) ? t.picks : [])
-    .filter((p) => p && p.local && p.t && p.u);
-  if (!wire.length) return;
-  const seen = new Set(today.picks.map((p) => keyOf(p)));
-  const fresh = wire.filter((p) => !seen.has(keyOf(p)));
-  if (!fresh.length) return;
-  today.picks = fresh.concat(today.picks).slice(0, NL_TODAY);
-  if (t.generated) today.generated = t.generated;
-  today.mixed = true;
-}
-
-/* every edition we can show: today, then the archive */
-function editions() {
-  if (store.settings().localOnly) {
-    const nl = newsletterEditions();
-    if (nl.length) { blendToday(nl); return nl; }
-  }
-  const t = state.top;
-  if (!t) return [];
-  const list = [{ generated: t.generated, picks: t.picks }];
-  const archive = Array.isArray(t.editions) ? t.editions
-    : (t.prev ? [t.prev] : []);
-  archive.forEach((e) => {
-    if (e && Array.isArray(e.picks) && e.generated) list.push(e);
-  });
-  return list;
-}
-
-function sourceMap() {
-  const m = Object.create(null);
-  (Array.isArray(state.pulse.sources) ? state.pulse.sources : [])
-    .forEach((s) => { if (s && s.id) m[s.id] = s; });
-  return m;
-}
-
-/* One publication, one banner. A source id is a feed title's slug, so an
-   outlet Inoreader carries twice — the Seven Days wire AND the 7Days email
-   edition, Vermont Public's RSS AND the legacy VPR feed — used to arrive as
-   two chips with two independent mutes: silencing one left the other
-   talking. The payload now stamps a secondary source with "og", the id of
-   the source it belongs to, and everything here groups, counts and mutes on
-   that instead of the raw id. */
-const outletOf = (s) => (s && (s.og || s.id)) || '';
-const mutedSrc = (mutes, s) => !!(s && (mutes[s.id] || mutes[outletOf(s)]));
-/* the source a chip, column head or mute speaks for — the canonical one,
-   falling back to the source itself if the payload ever loses it */
-const outletSrc = (map, s) => (s && map[outletOf(s)]) || s;
-
-function render() {
-  const root = state.root;
-  const set = store.settings();
-  const muted = store.muted();
-  const map = sourceMap();
-  const base = store.visitBase();
-
-  /* the source filter is remembered across visits; if that outlet has since
-     been muted, dropped from the roster, or folded into another one (a
-     remembered '7days' is Seven Days now), its chip is gone too and the
-     reader would be stuck on an empty wire with nothing to un-press */
-  const pinned = set.source && map[set.source];
-  if (set.source && (!pinned || pinned.og || mutedSrc(muted, pinned))) {
-    store.setSetting('source', '');
-    set.source = '';
-  }
-
-  const all = (Array.isArray(state.pulse.items) ? state.pulse.items : []).filter((it) => {
-    const s = it && map[it.s];
-    if (!s || mutedSrc(muted, s)) return false;
-    if (/reddit\.com/.test(s.site || '')) return false;   // Reddit has its own tab
-    return true;
-  });
-
-  const shown = all.filter((it) => {
-    const s = map[it.s];
-    if (set.source && outletSrc(map, s).id !== set.source) return false;
-    if (set.localOnly && !isLocalSource(s)) return false;
-    if (set.topic !== 'all' && s.topic !== set.topic) return false;
-    if (set.focus && store.isRead(keyOf(it))) return false;
-    if (state.q) {
-      const hay = (it.t + ' ' + (s.short || s.name || '')).toLowerCase();
-      if (!state.q.toLowerCase().split(/\s+/).every((w) => hay.includes(w))) return false;
-    }
-    return true;
-  });
-
-  /* the canonical source, so a swipe-left on a 7Days headline mutes Seven
-     Days — the outlet — and says so in the confirm box */
-  state.byKey = new Map(all.map((it) => [keyOf(it), { it, src: outletSrc(map, map[it.s]) }]));
-
-  root.innerHTML = '';
-
-  /* how many headlines the other mode would show, so the switch can say what
-     it costs you before you press it */
-  const localCount = all.filter((it) => isLocalSource(map[it.s])).length;
-  localSwitch(root, {
-    on: set.localOnly,
-    local: localCount,
-    all: all.length,
-    noun: 'headlines',
-    extra: app.jarBtn('wire'),
-    onChange(on) {
-      app.setLocal(on);
-      state.shown = PAGE;
-      root.scrollTo({ top: 0 });
-    },
-  });
-
-  /* Local is the default now, so first-timers get told once what the other
-     half holds — after that the count line's "of N" carries the reminder. */
-  if (set.localOnly) {
-    tipBar(root, 'localfirst',
-      '<span>You’re seeing the <b>local</b> half of the wire. Tap ' +
-      '<b>Everything</b> above for all ' + all.length.toLocaleString() +
-      ' headlines from every outlet we follow.</span>');
-  }
-
-  tabStamp(root, stampOf(state.pulse.generated), 'the wire, every 20 minutes');
-  renderPicks(root, map);
-
-  /* The one ask in the whole app, right under the picks it explains. All Day
-     is where the daily habit lives now, but the newsletter is the thing all
-     of this exists to feed — and until this line the app never mentioned it.
-     A tipbar, not a banner: dismiss it once and it stays gone. */
-  tipBar(root, 'brief',
-    '<span><b>Get the Brief</b> — the free newsletter behind all of this. ' +
-    'Burlington in five minutes, Mon &amp; Fri. ' +
-    '<a href="https://www.btownbrief.com?utm_source=all-day&amp;utm_medium=referral&amp;utm_campaign=wire" ' +
-    'target="_blank" rel="noopener">Subscribe →</a></span>');
-
-  const sourceCount = new Set(shown.map((it) => outletSrc(map, map[it.s]).id)).size;
-
-  const only = set.source && map[set.source];
-  heading(root, {
-    eyebrow: set.topic === 'popular' ? 'Popular' : 'The wire',
-    title: set.topic === 'popular' ? 'What readers upvoted'
-      : state.q ? 'Matching “' + state.q + '”'
-      : only ? String(only.name || only.short)
-      : set.layout === 'sources' ? 'Every outlet, side by side'
-      : (set.localOnly ? 'Burlington only' : 'Everything, newest first'),
-    sub: '<span class="count">' + shown.length.toLocaleString() + ' headlines from ' +
-      sourceCount + ' source' + (sourceCount === 1 ? '' : 's') + '</span>',
-  });
-
-  const chips = el('div', 'chips');
-  /* The layout switch leads the band. It is the one control that changes what
-     the whole list IS, so it sits ahead of the topics rather than under them,
-     and it rides the pinned row so it is still there mid-scroll. Being first
-     means it is the one thing in a sideways row that is always on screen at
-     rest; it is built a size down from the chips so it reads as the switch it
-     is and not as another topic. */
-  chips.appendChild(layoutSwitch(root, set));
-  const searchChip = chip(
-    ICON.search + (state.q
-      ? '<span>“' + esc(state.q.length > 12 ? state.q.slice(0, 11) + '…' : state.q) + '”</span>'
-      : '<span>Search</span>'),
-    state.qOpen || !!state.q,
-    () => {
-      if (state.q) { state.q = ''; state.qOpen = false; }
-      else state.qOpen = !state.qOpen;
-      state.shown = PAGE;
-      render();
-      const inp = root.querySelector('#wire-q');
-      if (inp) inp.focus();
-    },
-    'search-chip'
-  );
-  TOPICS.forEach(([value, label]) => {
-    if (value !== 'all' && value !== 'local' && value !== 'popular' &&
-        !all.some((it) => map[it.s]?.topic === value)) return;
-    chips.appendChild(chip(label, set.topic === value, () => {
-      store.setSetting('topic', value);
-      state.shown = PAGE;
-      render();
-      root.scrollTo({ top: 0 });
-    }));
-  });
-  /* The chips pin under the masthead. Scrolling a 2,000-item wire and then
-     having to scroll all the way back to change topic is the single most
-     annoying thing a feed can do — but a control you use once per visit does
-     not need to ride along for two thousand headlines. The outlets and the
-     weather are browsing, not steering; they scroll away too. */
-  const band = el('div', 'ctlband');
-  band.appendChild(chips);
-  scrollHint(chips);
-  root.appendChild(band);
-  renderTools(root, set, searchChip);
-
-  if (state.qOpen || state.q) root.appendChild(searchBox(root));
-
-  if (set.topic === 'popular') { renderPopular(root); return; }
-
-  renderSourceBars(root, all, map, set);
-  renderWeather(root);
-
-  if (!shown.length) {
-    root.appendChild(el('p', 'empty', state.q
-      ? 'Nothing on the wire matches “' + esc(state.q) + '”.'
-      : set.focus
-        ? 'Nothing left — you have read everything here. Turn Focus off in Settings to see it again.'
-        : 'Nothing on the wire for that.'));
-    return;
-  }
-
-  tipBar(root, 'swipe',
-    '<span>Swipe a headline <b>left</b> to mute that outlet, <b>right</b> to save it.</span>');
-
-  if (set.layout === 'sources' && !set.source) { renderBySource(root, shown, map, base); return; }
-
-  const feed = el('div', 'feed');
-  const slice = shown.slice(0, state.shown);
-  slice.forEach((it) => {
-    feed.appendChild(feedRow(it, map[it.s], { isNew: base && it.d > base }));
-  });
-  root.appendChild(feed);
-
-  if (state.shown < shown.length) {
-    const more = el('button', 'more', 'More headlines');
-    more.addEventListener('click', () => {
-      const from = state.shown;
-      state.shown += PAGE;
-      const added = shown.slice(from, state.shown);
-      added.forEach((it) => feed.appendChild(
-        feedRow(it, map[it.s], { isNew: base && it.d > base })));
-      hydrateVotes(feed, added.map(keyOf));
-      if (state.shown >= shown.length) {
-        more.replaceWith(el('p', 'caught', 'You’re caught up ✓'));
-      }
-      watchPassed(root);
-    });
-    root.appendChild(more);
-  } else {
-    root.appendChild(el('p', 'caught', 'You’re caught up ✓'));
-  }
-
-  hydrateVotes(root, slice.map(keyOf));
-  watchPassed(root);
-
-  if (state.jump) {
-    const key = state.jump;
-    state.jump = null;
-    if (!app.flashHit(root, key)) {
-      /* the item aged out of the payload, or a filter hides it — say so
-         instead of silently landing at the top */
-      app.toast('That headline has moved on — here’s today’s wire');
-    }
-  }
-}
-
-function searchBox(root) {
-  const box = el('div', 'search');
-  box.style.margin = '0 0 12px';
-  box.innerHTML =
-    '<svg class="mag" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>' +
-    '<input id="wire-q" type="search" autocomplete="off" placeholder="Search every headline">';
-  const input = box.querySelector('input');
-  input.value = state.q;
-  let typing = 0;
-  input.addEventListener('input', () => {
-    clearTimeout(typing);
-    typing = setTimeout(() => {
-      state.q = input.value.trim();
-      state.shown = PAGE;
-      render();
-      /* keep the caret where it was — a re-render must not eject you */
-      const next = root.querySelector('#wire-q');
-      if (next) { next.focus(); next.setSelectionRange(next.value.length, next.value.length); }
-    }, 220);
-  });
-  return box;
-}
-
-/* Two rows of outlets, locals on top — straight from Pulse, where it is the
-   fastest way to say "just VTDigger" without opening anything. Sorted by the
-   curator's priority first, then A–Z, so the papers people name lead. */
-function renderSourceBars(root, all, map, set) {
-  /* One chip per outlet: an outlet's second feed folds onto the canonical
-     source, so Seven Days is one chip carrying its wire and its digest. The
-     topic and local tests still look at the feeds themselves — the digest
-     keeps its place on the Newsletters tab, it just wears the outlet's name. */
-  const counts = Object.create(null);
-  const kin = Object.create(null);
-  all.forEach((it) => {
-    const src = map[it.s];
-    const id = outletSrc(map, src).id;
-    counts[id] = (counts[id] || 0) + 1;
-    const list = kin[id] || (kin[id] = []);
-    if (!list.includes(src)) list.push(src);
-  });
-
-  const pool = Object.keys(counts)
-    .map((id) => map[id])
-    .filter((s) => s && kin[s.id].some((k) =>
-      (set.topic === 'all' || k.topic === set.topic) &&
-      (!set.localOnly || isLocalSource(k))))
-    .sort((a, b) => ((a.pr || 500) - (b.pr || 500)) ||
-      String(a.short || a.name).localeCompare(String(b.short || b.name)));
-
-  const rows = [
-    ['local', pool.filter(isLocalSource)],
-    ['national', pool.filter((s) => !isLocalSource(s))],
-  ];
-  let first = true;
-  rows.forEach(([kind, list]) => {
-    if (!list.length) return;
-    const bar = el('div', 'chips srcbar' + (kind === 'local' ? ' is-local' : ''));
-    if (first) {
-      first = false;
-      bar.appendChild(chip('All sources', !set.source, () => pickSource('')));
-    }
-    list.forEach((s) => {
-      const c = chip(String(s.short || s.name) + ' ' + counts[s.id],
-        set.source === s.id, () => pickSource(s.id),
-        'srcchip c-' + String(s.topic || '').replace(/[^a-z]/gi, ''));
-      bar.appendChild(c);
-    });
-    root.appendChild(bar);
-    scrollHint(bar);
-  });
-}
-
-function pickSource(id) {
-  const set = store.settings();
-  store.setSetting('source', set.source === id ? '' : id);
-  state.shown = PAGE;
-  render();
-  state.root.scrollTo({ top: 0 });
-}
-
-/* Newest 1st / By source — built here, led the chip band by render(). */
-function layoutSwitch(root, set) {
-  const seg = el('div', 'toolseg toolseg-sm');
-  [['newest', 'Newest 1st'], ['sources', 'By source']].forEach(([v, label]) => {
-    const b = el('button', 'toolbtn' + (set.layout === v ? ' on' : ''), label);
-    b.addEventListener('click', () => {
-      store.setSetting('layout', v);
-      state.shown = PAGE;
-      render();
-      root.scrollTo({ top: 0 });
-    });
-    seg.appendChild(b);
-  });
-  return seg;
-}
-
-/* Focus was buried in Settings, which meant nobody used it. It sits out here
-   with Search — both are once-a-visit controls, so this row stays put and
-   scrolls away rather than following you down two thousand headlines. */
-function renderTools(root, set, searchChip) {
-  const row = el('div', 'toolrow');
-  row.appendChild(searchChip);
-
-  const focus = el('button', 'toolbtn focus-btn' + (set.focus ? ' on' : ''),
-    (set.focus ? '◉' : '○') + ' Focus Mode');
-  focus.title = set.focus
-    ? 'Focus is on — headlines you have opened disappear'
-    : 'Focus mode: hide headlines you have already opened';
-  focus.addEventListener('click', () => {
-    const on = !set.focus;
-    store.setSetting('focus', on);
-    render();
-    app.toast(on ? 'Focus on — read headlines disappear' : 'Focus off');
-  });
-  row.appendChild(focus);
-
-  /* pulse.html is the power-reader edition of this same wire — catch-up
-     since your last visit, time windows, shareable filters, deep-dive
-     voting. It shares read-state and mutes with this tab, so nothing is
-     lost walking over. One quiet chip; most readers never need it. */
-  const pulse = el('a', 'toolbtn toollink', 'The Pulse ↗');
-  pulse.href = '../pulse.html';
-  pulse.title = 'The power-reader edition — catch-up mode, time filters and deep dives';
-  row.appendChild(pulse);
-
-  root.appendChild(row);
-}
-
-/* Temperature, lake and sunset — the three numbers a Burlington reader
-   actually checks. One line, from the same file the weather page uses. */
-function renderWeather(root) {
-  const w = state.wx;
-  if (!w) return;
-  const bits = [];
-  if (w.now && w.now.temp_f != null) {
-    bits.push(['Now', Math.round(w.now.temp_f) + '°' +
-      (w.now.description ? ' ' + w.now.description : '')]);
-  }
-  if (w.lake_gage && w.lake_gage.water_temp_f != null) {
-    bits.push(['Lake', Math.round(w.lake_gage.water_temp_f) + '°']);
-  }
-  if (w.sun && w.sun.sunset) {
-    const t = new Date(w.sun.sunset).toLocaleTimeString('en-US',
-      { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
-    bits.push(['Sunset', t.replace(/\s?[AP]M$/i, '')]);
-  }
-  if (bits.length < 2) return;
-  if (state.wxHidden) return;
-
-  /* The X cannot live inside the link, so the strip is a box holding the
-     link and the close button side by side. Closing it lasts for this visit
-     only — a refresh brings it back, so nothing is buried behind a setting
-     and today's temperature is never permanently gone. */
-  const box = el('div', 'wxstrip');
-  const strip = el('a', 'wxstrip-in');
-  strip.href = 'https://guide.btownbrief.com/weather.html';
-  strip.target = '_blank';
-  strip.rel = 'noopener';
-  strip.innerHTML = bits.map(([k, v]) =>
-    '<span class="wx-bit"><span class="wx-k">' + esc(k) + '</span>' +
-    '<span class="wx-v">' + esc(v) + '</span></span>').join('') +
-    '<span class="wx-go">Forecast →</span>';
-  box.appendChild(strip);
-
-  const x = el('button', 'wx-x', '\u00d7');
-  x.setAttribute('aria-label', 'Hide the weather line for now');
-  x.title = 'Hide it for now — it is back next time you open the page';
-  x.addEventListener('click', () => {
-    state.wxHidden = true;
-    box.remove();
-  });
-  box.appendChild(x);
-  root.appendChild(box);
-}
-
-/* ------------------------------------------------------------ by source */
-/* Pulse's front page: every outlet its own column, newest few each. It reads
-   like a newsstand instead of a river, which is the point — you can see who
-   is quiet today. The column order is shuffled once per visit so the same
-   three papers do not always own the top of the screen. */
-
-const gridSeed = Object.create(null);
-const PER_SOURCE = 6;
-
-function renderBySource(root, shown, map, base) {
-  /* one column per outlet, not per feed — Seven Days' wire and its email
-     edition share a heading instead of standing next to each other twice */
-  const bySrc = new Map();
-  shown.forEach((it) => {
-    const id = outletSrc(map, map[it.s]).id;
-    const list = bySrc.get(id) || [];
-    if (list.length < PER_SOURCE) { list.push(it); bySrc.set(id, list); }
-  });
-  if (!bySrc.size) { root.appendChild(el('p', 'empty', 'Nothing on the wire for that.')); return; }
-
-  const secs = [...bySrc.entries()].map(([id, items]) => {
-    if (gridSeed[id] === undefined) gridSeed[id] = Math.random();
-    return { src: map[id], items };
-  }).filter((x) => x.src).sort((a, b) => gridSeed[a.src.id] - gridSeed[b.src.id]);
-
-  const grid = el('div', 'srcgrid');
-  const keys = [];
-  secs.forEach(({ src, items }) => {
-    const sec = el('section', 'srcsec' + (isLocalSource(src) ? ' is-local' : ''));
-    const head = el('h3', 'srcsec-head');
-    const name = el('button', 'srcsec-name c-' + String(src.topic || '').replace(/[^a-z]/gi, ''),
-      esc(String(src.short || src.name)));
-    name.title = 'See only ' + String(src.name || src.short);
-    name.addEventListener('click', () => pickSource(src.id));
-    head.appendChild(name);
-    head.appendChild(el('span', 'srcsec-tag',
-      esc(isLocalSource(src) ? 'Local' : String(src.topic || '')) + ' · ' + items.length));
-    sec.appendChild(head);
-
-    const feed = el('div', 'feed feed-tight');
-    items.forEach((it) => {
-      keys.push(keyOf(it));
-      feed.appendChild(feedRow(it, src, { isNew: base && it.d > base, compact: true }));
-    });
-    sec.appendChild(feed);
-    grid.appendChild(sec);
-  });
-  root.appendChild(grid);
-  hydrateVotes(root, keys);
-  watchPassed(root);
-
-  /* the by-source grid carries the same data-k rows, so a shared link still
-     lands when the reader's layout preference is this one */
-  if (state.jump) {
-    const key = state.jump;
-    state.jump = null;
-    if (!app.flashHit(root, key)) app.toast('That headline has moved on — here’s today’s wire');
-  }
-}
-
-function renderPicks(root, map) {
-  const list = editions();
-  if (!list.length) return;
-  const idx = Math.min(state.edition, list.length - 1);
-  const localOnly = store.settings().localOnly;
-  const edition = list[idx];
-  const stamp = Math.floor(new Date(edition.generated).getTime() / 1000);
-
-  /* In local mode the picks narrow too. Leading the Burlington-only wire with
-     a national headline was the one thing on the page still arguing with the
-     switch. Some editions have no local pick at all — then the carousel steps
-     aside rather than showing an empty shelf. */
-  /* Muting an outlet has to mean muting it everywhere. The picks carry an
-     outlet name rather than a source id, so match on the name — otherwise a
-     source you muted keeps leading the page from the carousel while the feed
-     below it obeys you. */
-  const mutedShorts = new Set();
-  const mutes = store.muted();
-  Object.keys(map).forEach((id) => {
-    if (mutedSrc(mutes, map[id])) {
-      mutedShorts.add(String(map[id].short || map[id].name || '').toLowerCase());
-    }
-  });
-  const audible = (p) => !p || !mutedShorts.has(String(p.short || '').toLowerCase());
-
-  const picks = (localOnly && !edition.nl
-    ? (edition.picks || []).filter((p) => p && p.local)
-    : (edition.picks || [])).filter(audible);
-  if (localOnly && !picks.length) {
-    heading(root, {
-      eyebrow: 'The picks',
-      title: 'No local pick in this edition',
-      sub: '<span class="count">The picks are chosen three times a day from the whole wire. ' +
-        'Everything below is still Burlington.</span>',
-      right: list.length > 1 ? null : null,
-    });
-    return;
-  }
-
-  const nav = el('div', 'picks-when');
-  const back = el('button', 'iconbtn', ICON.chev);
-  back.style.transform = 'rotate(90deg)';
-  back.setAttribute('aria-label', 'Earlier picks');
-  back.disabled = idx >= list.length - 1;
-  back.style.opacity = back.disabled ? '.35' : '1';
-  back.addEventListener('click', () => { state.edition = idx + 1; render(); });
-
-  const fwd = el('button', 'iconbtn', ICON.chev);
-  fwd.style.transform = 'rotate(-90deg)';
-  fwd.setAttribute('aria-label', 'Later picks');
-  fwd.disabled = idx <= 0;
-  fwd.style.opacity = fwd.disabled ? '.35' : '1';
-  fwd.addEventListener('click', () => { state.edition = idx - 1; render(); });
-  nav.append(back, fwd);
-
-  heading(root, {
-    eyebrow: edition.nl ? (edition.mixed ? 'Local picks' : 'From the Brief')
-      : (idx === 0 ? 'The picks' : 'The picks · earlier'),
-    title: edition.label ? esc(edition.label)
-      : idx === 0 ? 'What matters today' : 'What mattered then',
-    sub: '<span class="count">' + (edition.nl
-      ? (edition.label
-          ? picks.length + ' stories from that edition'
-          : (edition.mixed
-              ? picks.length + ' — fresh off the wire, plus the Brief'
-              : picks.length + ' from the last two editions'))
-      : 'Chosen ' + esc(ago(stamp)) +
-        (localOnly ? ' · ' + picks.length + ' from here' : '')) +
-      (list.length > 1 ? ' · ' + (idx + 1) + ' of ' + list.length + ' editions' : '') + '</span>',
-    right: list.length > 1 ? nav : null,
-  });
-
-  const { track, sync } = rail(root, { label: 'picks' });
-  const keys = [];
-  picks.forEach((p) => {
-    if (!p || !p.t) return;
-    /* The picks are the most-argued-with thing on the page and were the one
-       card with no way to argue. A vote button cannot live inside an anchor,
-       so the card is a box holding the link and a footer. */
-    const k = keyOf({ u: p.u, t: p.t });
-    keys.push(k);
-    const card = el('div', 'pick' + (p.local ? ' is-local' : ''));
-    card.dataset.k = k;
-
-    const hit = el('a', 'pick-hit');
-    hit.href = safeHref(p.u);
-    hit.target = '_blank';
-    hit.rel = 'noopener';
-    hit.innerHTML =
-      '<span class="fi-meta">' +
-        (p.local ? '<span class="tag-local">Local</span>' : '') +
-        '<span class="fi-src">' + esc(p.short || '') + '</span>' +
-      '</span>' +
-      '<span class="pick-title">' + esc(p.t) + '</span>' +
-      (p.why ? '<span class="pick-why">' + esc(p.why) + '</span>' : '') +
-      /* which edition it ran in — the reason above it is his, and the
-         attribution is what makes that legible */
-      (p.from ? '<span class="pick-from">' + esc(p.from) + '</span>' : '');
-    hit.addEventListener('click', () => store.markRead(p.u));
-    card.appendChild(hit);
-
-    const foot = el('div', 'pick-foot');
-    const vote = voteBtn(store.voteCount(k), store.hasVoted(k), store.votesLive());
-    vote.addEventListener('click', () => {
-      const on = store.toggleVote({ k, kind: 'wire', title: p.t, from: p.short || '', href: p.u });
-      paintVote(vote, store.voteCount(k), on);
-    });
-    foot.appendChild(vote);
-
-    const star = starBtn(store.isSaved(k));
-    star.addEventListener('click', () => {
-      star.classList.toggle('on', store.toggleSaved(
-        { k, kind: 'wire', title: p.t, from: p.short || '', href: p.u }));
-    });
-    foot.append(el('span', 'spacer'), star);
-    card.appendChild(foot);
-    track.appendChild(card);
-  });
-  sync();
-  hydrateVotes(root, keys);
-}
-
-/* ---------------------------------------------------------------- popular */
-/* Votes are cast on headlines, videos, episodes and Wikipedia articles
-   alike, so this list is deliberately mixed — it is the one place the five
-   tabs meet. The rows are drawn from what was stored with each vote rather
-   than looked up again, because a headline can fall off the wire while the
-   votes it earned are still worth showing. */
-
-const KIND_LABEL = { wire: 'Headline', video: 'Video', episode: 'Episode', wiki: 'Wikipedia', reddit: 'Thread', artist: 'Artist', photo: 'Photo' };
-
-function renderPopular(root) {
-  const holder = el('div');
-  holder.appendChild(el('p', 'loading', 'Counting votes…'));
-  root.appendChild(holder);
-
-  store.topVoted(60).then((rows) => {
-    holder.innerHTML = '';
-    if (rows === null) {
-      holder.appendChild(el('div', 'errbox',
-        '<b>Voting isn’t switched on yet.</b><br>The counter needs its table created in Supabase — ' +
-        'until then the arrows stay hidden and everything else works as normal.'));
-      return;
-    }
-    if (!rows.length) {
-      holder.appendChild(el('p', 'empty', 'No votes yet. Tap ▲ on anything worth pointing at.'));
-      return;
-    }
-    const feed = el('div', 'feed');
-    rows.forEach((r) => {
-      const row = el('div', 'fi');
-      row.dataset.k = r.k;
-      const link = el(r.href ? 'a' : 'div', 'fi-body');
-      if (r.href) {
-        link.href = safeHref(r.href);
-        if (!/^#/.test(r.href)) { link.target = '_blank'; link.rel = 'noopener'; }
-      }
-      link.innerHTML = '<span class="fi-title">' + esc(r.title || 'Untitled') + '</span>' +
-        '<span class="fi-meta"><span class="tag-local">' + esc(KIND_LABEL[r.kind] || 'Saved') + '</span>' +
-        '<span class="fi-src">' + esc(r.from || '') + '</span></span>';
-      row.appendChild(link);
-
-      const foot = el('div', 'fi-foot');
-      foot.appendChild(el('span', 'spacer'));
-      const vote = voteBtn(store.voteCount(r.k), store.hasVoted(r.k), true);
-      vote.addEventListener('click', () => {
-        const on = store.toggleVote(r);
-        paintVote(vote, store.voteCount(r.k), on);
-      });
-      foot.appendChild(vote);
-      row.appendChild(foot);
-      feed.appendChild(row);
-    });
-    holder.appendChild(feed);
-  });
-}
+if (app.demo) demo.init();
+const impl = app.demo ? demo : live;
+
+app.register('wire', {
+  label: 'Wire',
+  icon: ICON.wire,
+  promise: 'Today’s Burlington news, picked from everything that arrived, with a reason on the ones that matter.',
+  mount: (root) => impl.mount(root),
+  activate: (param, first) => impl.activate(param, first),
+  refresh: () => impl.refresh(),
+  deactivate: () => impl.deactivate(),
+  subnav: () => impl.subnav(),
+  newSince: (ts) => impl.newSince(ts),
+  pull: () => impl.pull(),
+});
