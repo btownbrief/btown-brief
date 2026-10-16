@@ -638,15 +638,11 @@ function toggleBandcamp(wrap, btn, a, album) {
   if (app.demo) {
     box.appendChild(el('p', 'note', esc('The Bandcamp player for “' + ((a.bandcamp && a.bandcamp.title) || a.name) + '” goes here in the real build.')));
   } else {
-    const f = document.createElement('iframe');
+    const f = el('iframe', 'embed bandcamp');
     f.src = 'https://bandcamp.com/EmbeddedPlayer/album=' + encodeURIComponent(album) + '/size=large/bgcol=' + (dark ? '181a1f' : 'ffffff') +
       '/linkcol=' + (dark ? 'e8a33d' : '9a5b00') + '/artwork=small/transparent=true/';
     f.title = a.name + ' on Bandcamp';
     f.loading = 'lazy';
-    f.width = '100%';
-    f.height = '120';
-    f.setAttribute('frameborder', '0');
-    f.setAttribute('seamless', '');
     box.appendChild(f);
   }
   wrap.appendChild(box);

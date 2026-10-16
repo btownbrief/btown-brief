@@ -682,6 +682,12 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .tee .design { position: absolute; left: 37%; right: 37%; top: 36%; aspect-ratio: 1; border-radius: var(--r-xs); overflow: hidden; }
 .tee .t { display: block; font-size: var(--fs-meta); font-weight: 600; margin-top: 8px; }
 .tee .s { display: block; font-size: var(--fs-small); color: var(--ink-3); }
+/* A third-party player (Spotify, Bandcamp) in a tab: full width, no frame of
+   its own, the media radius, a sunk ground while it loads. The height is the
+   player's own; .spotify and .bandcamp are the two sizes in use. */
+.embed { display: block; width: 100%; border: 0; border-radius: var(--r-media); background: var(--paper-2); }
+.embed.spotify { height: 152px; }
+.embed.bandcamp { height: 120px; }
 .spacer { height: 12px; }
 .addrow { padding: 12px var(--gutter) 0; }
 

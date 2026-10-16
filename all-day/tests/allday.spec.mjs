@@ -1341,6 +1341,8 @@ async function theWhatNow(browser, base) {
     await page.click(wnPanel + ' .artist .listen');
     const src = await page.$eval(wnPanel + ' .artist iframe', (f) => f.src);
     check(/bandcamp\.com\/EmbeddedPlayer\/album=1234567\//.test(src) && !/autoplay/.test(src), 'Listen builds that artist’s Bandcamp player, which does not autoplay', src);
+    const frame = await page.$eval(wnPanel + ' .artist iframe', (f) => ({ cls: f.className, r: getComputedStyle(f).borderRadius, h: Math.round(f.getBoundingClientRect().height), w: f.getBoundingClientRect().width === f.parentElement.getBoundingClientRect().width - parseFloat(getComputedStyle(f.parentElement).paddingLeft) - parseFloat(getComputedStyle(f.parentElement).paddingRight) }));
+    check(frame.cls === 'embed bandcamp' && frame.r === '12px' && frame.h === 120 && frame.w, 'the player is the shell’s .embed: full width, the media radius, its own height', JSON.stringify(frame));
     await page.click(wnPanel + ' .artist .listen');
     check(await page.$(wnPanel + ' iframe') === null, 'pressing it again takes the player away', '');
     check(await page.$(wnPanel + ' .caught') !== null, 'the list ends, and says so', '');
@@ -1719,6 +1721,25 @@ async function shellFixes(browser, base) {
       check(!errors.length, width + ': no console errors', errors.join(' | '));
       await ctx.close();
     }
+  });
+
+  await group('shell fixes: third-party players use the shared .embed', async () => {
+    for (const f of ['modes/onair.js', 'modes/whatnow.js', 'modes/food.js']) {
+      const src = (await readFile(path.join(APP, 'js', f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
+      const made = src.match(/el\('iframe'[^)]*\)|createElement\('iframe'\)/g) || [];
+      check(made.every((m) => /'embed (spotify|bandcamp)'/.test(m)), f + ': every iframe it builds is an .embed', made.join(' '));
+      check(!/\.(width|height|frameBorder)\s*=|setAttribute\('(frameborder|seamless)'/.test(src), f + ': and sizes none by hand', '');
+    }
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await settle(page);
+    const sp = await page.evaluate(() => {
+      const f = document.createElement('iframe'); f.className = 'embed spotify';
+      document.querySelector('#panel-onair .panel-body').appendChild(f);
+      const cs = getComputedStyle(f); const out = { h: cs.height, r: cs.borderRadius, b: cs.borderTopWidth, d: cs.display }; f.remove(); return out;
+    });
+    check(sp.h === '152px' && sp.r === '12px' && sp.b === '0px' && sp.d === 'block', '.embed.spotify is Spotify’s 152px, the media radius, no border', JSON.stringify(sp));
+    await ctx.close();
   });
 }
 
