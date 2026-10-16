@@ -1,243 +1,1005 @@
 {
- "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders.",
- "brief": {
-  "kind": "audio",
-  "src": "The Brief",
-  "show": "The Brief, out loud",
-  "title": "Thursday’s news in four minutes",
-  "media": "coffee",
-  "dur": "4:08",
-  "text": "Read by a stock voice at 7 am. The school budget gap, a late bus, and the lake that won’t cool down.",
-  "k": "ol1",
-  "sid": "The Brief",
-  "when": "Thursday · 7:00 am · 4:08"
- },
- "tv": [
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "A short about the Intervale’s last harvest week",
-   "media": "field",
+ "_": "Demo data for ?demo=1, in the real payloads' shapes: tv is btown-tv.json, tvEditions is tv-editions.json, pulse is the podcast part of pulse.json, podcast is all-day/data/podcast.json, audio is the wire-audio branch's index.json. Every item is invented. `art` (a placeholder palette) and `_script` are demo-only fields. Dates are moved to the reader's clock from _anchor.",
+ "_anchor": "2026-10-16",
+ "tv": {
+  "v": 1,
+  "generated": "2026-10-16T23:45:00+00:00",
+  "edition": "2026-10-16",
+  "pick": {
+   "id": "demo-tv-001",
+   "t": "A short about the Intervale’s last harvest week",
+   "ch": "Stuck in Vermont",
+   "d": 1792094400,
    "dur": "6:12",
-   "why": "Because the share closes Sunday and this is why it matters.",
-   "k": "tv1",
-   "sid": "Btown TV"
+   "views": 1037,
+   "g": "vt",
+   "vt": 1,
+   "why": "The share closes Sunday, and this is why it matters.",
+   "shelf": "pick",
+   "art": "field"
   },
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "How the Winooski River made Burlington",
-   "media": "lake",
-   "dur": "9:40",
-   "why": "The best local history video of the year, and it is from Vermont Public.",
-   "k": "tv2",
-   "sid": "Btown TV"
-  },
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "The Catamounts’ season preview, in one sitting",
-   "media": "rink",
-   "dur": "22:05",
-   "why": "Puck drops Friday. Watch this first.",
-   "k": "tv3",
-   "sid": "Btown TV"
-  },
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "A film essay on small-town newspapers",
-   "media": "paper",
-   "dur": "18:30",
-   "why": "Long. Worth it on the couch, not the bus.",
-   "k": "tv4",
-   "sid": "Btown TV"
-  },
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "Fall color from the bike path, start to finish",
-   "media": "foliage",
-   "dur": "4:12",
-   "why": "Four minutes of orange. No talking.",
-   "k": "tv5",
-   "sid": "Btown TV"
+  "pick_more": [
+   {
+    "id": "demo-tv-013",
+    "t": "A brand-new crater on the moon",
+    "ch": "Anton Petrov",
+    "d": 1792094400,
+    "dur": "13:12",
+    "views": 1481,
+    "g": "sci",
+    "why": "Found fast, explained well.",
+    "shelf": "pick",
+    "art": "night"
+   }
+  ],
+  "shelves": [
+   {
+    "key": "settle",
+    "title": "Settle in",
+    "sub": "Twenty minutes and up, the couch episode",
+    "items": [
+     {
+      "id": "demo-tv-009",
+      "t": "A film essay on why small cities keep their downtowns",
+      "ch": "Johnny Harris",
+      "d": 1792094400,
+      "dur": "24:10",
+      "views": 1333,
+      "g": "news",
+      "why": "Not local, but about places like this one.",
+      "shelf": "settle",
+      "art": "street"
+     },
+     {
+      "id": "demo-tv-010",
+      "t": "A train ride from Montreal to New York, the whole thing",
+      "ch": "Rail Journeys",
+      "d": 1792094400,
+      "dur": "58:00",
+      "views": 1370,
+      "g": "fun",
+      "why": "Ambient. Passes near here at minute 31.",
+      "shelf": "settle",
+      "art": "pine"
+     }
+    ],
+    "more": []
+   },
+   {
+    "key": "quick",
+    "title": "Quick one",
+    "sub": "Five to twelve minutes",
+    "items": [
+     {
+      "id": "demo-tv-007",
+      "t": "The physics of lake-effect snow, in eleven minutes",
+      "ch": "SciShow",
+      "d": 1792094400,
+      "dur": "11:02",
+      "views": 1259,
+      "g": "sci",
+      "why": "Winter is six weeks out. This is the explainer.",
+      "shelf": "quick",
+      "art": "slate"
+     },
+     {
+      "id": "demo-tv-008",
+      "t": "Why gold never tarnishes",
+      "ch": "SciShow",
+      "d": 1792094400,
+      "dur": "9:14",
+      "views": 1296,
+      "g": "sci",
+      "why": "Nine tidy minutes on a shiny question.",
+      "shelf": "quick",
+      "art": "mustard"
+     }
+    ],
+    "more": []
+   },
+   {
+    "key": "vt",
+    "title": "Burlington & Vermont",
+    "sub": "Filmed here, made here, about here",
+    "items": [
+     {
+      "id": "demo-tv-002",
+      "t": "How the Winooski River made Burlington",
+      "ch": "Vermont Public",
+      "d": 1792094400,
+      "dur": "9:40",
+      "views": 1074,
+      "g": "vt",
+      "vt": 1,
+      "why": "The best local history video of the year.",
+      "shelf": "vt",
+      "art": "lake"
+     },
+     {
+      "id": "demo-tv-003",
+      "t": "The Catamounts’ season preview, in one sitting",
+      "ch": "UVM Athletics",
+      "d": 1792094400,
+      "dur": "22:05",
+      "views": 1111,
+      "g": "vt",
+      "vt": 1,
+      "why": "Puck drops Friday. Watch this first.",
+      "shelf": "vt",
+      "art": "rink"
+     },
+     {
+      "id": "demo-tv-004",
+      "t": "Fall color from the bike path, start to finish",
+      "ch": "Planet Fast Forward",
+      "d": 1792094400,
+      "dur": "4:12",
+      "views": 1148,
+      "g": "vt",
+      "vt": 1,
+      "why": "Four minutes of orange. No talking.",
+      "shelf": "vt",
+      "art": "foliage"
+     },
+     {
+      "id": "demo-tv-005",
+      "t": "Lake Champlain, a daily timelapse",
+      "ch": "Planet Fast Forward",
+      "d": 1792094400,
+      "dur": "0:58",
+      "views": 1185,
+      "g": "vt",
+      "vt": 1,
+      "why": "Yesterday’s lake, ten seconds at a time.",
+      "shelf": "vt",
+      "art": "dawn"
+     }
+    ],
+    "more": [
+     {
+      "id": "demo-tv-006",
+      "t": "A night shift at the ferry dock",
+      "ch": "Stuck in Vermont",
+      "d": 1792094400,
+      "dur": "7:30",
+      "views": 1222,
+      "g": "vt",
+      "vt": 1,
+      "why": "The boat that runs while you sleep.",
+      "shelf": "vt",
+      "art": "night"
+     }
+    ]
+   },
+   {
+    "key": "vault",
+    "title": "From the Vault",
+    "sub": "Timeless, pulled from thirteen years of saves",
+    "items": [
+     {
+      "id": "demo-tv-011",
+      "t": "All of human history in one hour",
+      "ch": "Kurzgesagt",
+      "d": 1792094400,
+      "dur": "1:00:12",
+      "views": 1407,
+      "g": "",
+      "why": "Still the best hour on the internet.",
+      "shelf": "vault",
+      "art": "plum"
+     }
+    ],
+    "more": []
+   },
+   {
+    "key": "gold",
+    "title": "Old gold",
+    "sub": "The back catalog of the channels we follow",
+    "items": [
+     {
+      "id": "demo-tv-012",
+      "t": "Jungle, live in the studio",
+      "ch": "KEXP",
+      "d": 1792094400,
+      "dur": "18:20",
+      "views": 1444,
+      "g": "music",
+      "why": "One of the great sessions.",
+      "shelf": "gold",
+      "art": "neon"
+     }
+    ],
+    "more": []
+   }
+  ],
+  "live": [
+   {
+    "id": "demo-cam-01",
+    "t": "The lake, from ECHO",
+    "ch": "ECHO Leahy Center",
+    "d": 1792162800,
+    "dur": "LIVE",
+    "g": "",
+    "art": "lake"
+   },
+   {
+    "id": "demo-cam-02",
+    "t": "Church Street, top block",
+    "ch": "Church Street Marketplace",
+    "d": 1792162800,
+    "dur": "LIVE",
+    "g": "",
+    "art": "street"
+   },
+   {
+    "id": "demo-cam-03",
+    "t": "The ferry dock at King Street",
+    "ch": "Lake Champlain Ferries",
+    "d": 1792162800,
+    "dur": "LIVE",
+    "g": "",
+    "art": "teal"
+   },
+   {
+    "id": "demo-cam-04",
+    "t": "Documentaries, around the clock",
+    "ch": "Bloomberg Originals",
+    "d": 1792162800,
+    "dur": "LIVE",
+    "g": "news",
+    "art": "slate"
+   }
+  ],
+  "playlist": {
+   "id": "PLdemo",
+   "url": "https://www.youtube.com/playlist?list=PLdemo"
   }
- ],
- "tvMore": [
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "A film essay on why small cities keep their downtowns",
-   "media": "street",
-   "dur": "24:10",
-   "why": "From the wider shelf. Not local, but about places like this one.",
-   "k": "tv6",
-   "sid": "Btown TV"
-  },
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "The physics of lake-effect snow, in eleven minutes",
-   "media": "rink",
-   "dur": "11:02",
-   "why": "Winter is six weeks out. This is the explainer.",
-   "k": "tv7",
-   "sid": "Btown TV"
-  },
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "A train ride from Montreal to New York, the whole thing",
-   "media": "slate",
-   "dur": "58:00",
-   "why": "Ambient. Passes through here at minute 31.",
-   "k": "tv8",
-   "sid": "Btown TV"
-  }
- ],
- "channels": 197,
- "cams": [
-  {
-   "kind": "video",
-   "src": "ECHO",
-   "live": true,
-   "title": "The lake, from ECHO",
-   "media": "lake",
-   "text": "Live. Sunset at 5:58.",
-   "k": "cam1",
-   "sid": "ECHO"
-  },
-  {
-   "kind": "video",
-   "src": "Church Street Marketplace",
-   "live": true,
-   "title": "Church Street, top block",
-   "media": "street",
-   "text": "Live.",
-   "k": "cam2",
-   "sid": "Church Street Marketplace"
-  }
- ],
- "pods": [
-  {
-   "kind": "audio",
-   "src": "Podcasts",
-   "show": "The Btown Brief Podcast",
-   "title": "Ep. 41: the Main Street rebuild, with the city engineer",
-   "media": "coffee",
-   "dur": "38 min",
-   "text": "2 days ago",
-   "k": "pd1",
-   "sid": "Podcasts"
-  },
-  {
-   "kind": "audio",
-   "src": "Podcasts",
-   "show": "Vermont Edition",
-   "title": "The housing dashboard, explained",
-   "media": "paper",
-   "dur": "52 min",
-   "text": "Today",
-   "k": "pd2",
-   "sid": "Podcasts"
-  },
-  {
-   "kind": "audio",
-   "src": "Podcasts",
-   "show": "Rumble Strip",
-   "title": "A night shift at the ferry dock",
-   "media": "night",
-   "dur": "29 min",
-   "text": "4 days ago",
-   "k": "pd3",
-   "sid": "Podcasts"
-  },
-  {
-   "kind": "audio",
-   "src": "Podcasts",
-   "show": "Brave Little State",
-   "title": "Why is the lake so warm this fall?",
-   "media": "lake",
-   "dur": "34 min",
-   "text": "1 week ago",
-   "k": "pd4",
-   "sid": "Podcasts"
-  },
-  {
-   "kind": "audio",
-   "src": "Podcasts",
-   "show": "The Deeper Dig",
-   "title": "Inside the school budget numbers",
-   "media": "slate",
-   "dur": "26 min",
-   "text": "1 week ago",
-   "k": "pd5",
-   "sid": "Podcasts"
-  }
- ],
- "podsMore": [
-  {
-   "kind": "audio",
-   "src": "Podcasts",
-   "show": "The Daily",
-   "title": "The shutdown clock, explained",
-   "media": "paper",
-   "dur": "28 min",
-   "text": "Today",
-   "k": "pd6",
-   "sid": "Podcasts"
-  },
-  {
-   "kind": "audio",
-   "src": "Podcasts",
-   "show": "99% Invisible",
-   "title": "The crosswalk",
-   "media": "street",
-   "dur": "41 min",
-   "text": "2 days ago",
-   "k": "pd7",
-   "sid": "Podcasts"
-  }
- ],
- "showCount": 23,
- "past": [
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "Wednesday night’s picks",
-   "media": "night",
-   "text": "5 videos",
-   "k": "pn0",
-   "sid": "Btown TV"
-  },
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "Tuesday night’s picks",
-   "media": "slate",
-   "text": "5 videos",
-   "k": "pn1",
-   "sid": "Btown TV"
-  },
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "Monday night’s picks",
-   "media": "teal",
-   "text": "5 videos",
-   "k": "pn2",
-   "sid": "Btown TV"
-  },
-  {
-   "kind": "video",
-   "src": "Btown TV",
-   "title": "Sunday night’s picks",
-   "media": "dawn",
-   "text": "5 videos",
-   "k": "pn3",
-   "sid": "Btown TV"
-  }
- ],
- "newSince": 0
+ },
+ "tvEditions": {
+  "v": 1,
+  "editions": [
+   {
+    "edition": "2026-10-16",
+    "generated": "2026-10-16T23:45:00+00:00",
+    "pick": {
+     "id": "demo-tv-001",
+     "t": "A short about the Intervale’s last harvest week",
+     "ch": "Stuck in Vermont",
+     "d": 1792094400,
+     "dur": "6:12",
+     "views": 1037,
+     "g": "vt",
+     "vt": 1,
+     "why": "The share closes Sunday, and this is why it matters.",
+     "shelf": "pick",
+     "art": "field"
+    },
+    "playlist": {
+     "id": "PLdemo",
+     "url": "https://www.youtube.com/playlist?list=PLdemo"
+    },
+    "shelves": [
+     {
+      "key": "settle",
+      "title": "Settle in",
+      "sub": "Twenty minutes and up, the couch episode",
+      "items": [
+       {
+        "id": "demo-tv-009",
+        "t": "A film essay on why small cities keep their downtowns",
+        "ch": "Johnny Harris",
+        "d": 1792094400,
+        "dur": "24:10",
+        "views": 1333,
+        "g": "news",
+        "why": "Not local, but about places like this one.",
+        "shelf": "settle",
+        "art": "street"
+       },
+       {
+        "id": "demo-tv-010",
+        "t": "A train ride from Montreal to New York, the whole thing",
+        "ch": "Rail Journeys",
+        "d": 1792094400,
+        "dur": "58:00",
+        "views": 1370,
+        "g": "fun",
+        "why": "Ambient. Passes near here at minute 31.",
+        "shelf": "settle",
+        "art": "pine"
+       }
+      ],
+      "more": []
+     },
+     {
+      "key": "quick",
+      "title": "Quick one",
+      "sub": "Five to twelve minutes",
+      "items": [
+       {
+        "id": "demo-tv-007",
+        "t": "The physics of lake-effect snow, in eleven minutes",
+        "ch": "SciShow",
+        "d": 1792094400,
+        "dur": "11:02",
+        "views": 1259,
+        "g": "sci",
+        "why": "Winter is six weeks out. This is the explainer.",
+        "shelf": "quick",
+        "art": "slate"
+       },
+       {
+        "id": "demo-tv-008",
+        "t": "Why gold never tarnishes",
+        "ch": "SciShow",
+        "d": 1792094400,
+        "dur": "9:14",
+        "views": 1296,
+        "g": "sci",
+        "why": "Nine tidy minutes on a shiny question.",
+        "shelf": "quick",
+        "art": "mustard"
+       }
+      ],
+      "more": []
+     },
+     {
+      "key": "vt",
+      "title": "Burlington & Vermont",
+      "sub": "Filmed here, made here, about here",
+      "items": [
+       {
+        "id": "demo-tv-002",
+        "t": "How the Winooski River made Burlington",
+        "ch": "Vermont Public",
+        "d": 1792094400,
+        "dur": "9:40",
+        "views": 1074,
+        "g": "vt",
+        "vt": 1,
+        "why": "The best local history video of the year.",
+        "shelf": "vt",
+        "art": "lake"
+       },
+       {
+        "id": "demo-tv-003",
+        "t": "The Catamounts’ season preview, in one sitting",
+        "ch": "UVM Athletics",
+        "d": 1792094400,
+        "dur": "22:05",
+        "views": 1111,
+        "g": "vt",
+        "vt": 1,
+        "why": "Puck drops Friday. Watch this first.",
+        "shelf": "vt",
+        "art": "rink"
+       },
+       {
+        "id": "demo-tv-004",
+        "t": "Fall color from the bike path, start to finish",
+        "ch": "Planet Fast Forward",
+        "d": 1792094400,
+        "dur": "4:12",
+        "views": 1148,
+        "g": "vt",
+        "vt": 1,
+        "why": "Four minutes of orange. No talking.",
+        "shelf": "vt",
+        "art": "foliage"
+       },
+       {
+        "id": "demo-tv-005",
+        "t": "Lake Champlain, a daily timelapse",
+        "ch": "Planet Fast Forward",
+        "d": 1792094400,
+        "dur": "0:58",
+        "views": 1185,
+        "g": "vt",
+        "vt": 1,
+        "why": "Yesterday’s lake, ten seconds at a time.",
+        "shelf": "vt",
+        "art": "dawn"
+       }
+      ],
+      "more": [
+       {
+        "id": "demo-tv-006",
+        "t": "A night shift at the ferry dock",
+        "ch": "Stuck in Vermont",
+        "d": 1792094400,
+        "dur": "7:30",
+        "views": 1222,
+        "g": "vt",
+        "vt": 1,
+        "why": "The boat that runs while you sleep.",
+        "shelf": "vt",
+        "art": "night"
+       }
+      ]
+     },
+     {
+      "key": "vault",
+      "title": "From the Vault",
+      "sub": "Timeless, pulled from thirteen years of saves",
+      "items": [
+       {
+        "id": "demo-tv-011",
+        "t": "All of human history in one hour",
+        "ch": "Kurzgesagt",
+        "d": 1792094400,
+        "dur": "1:00:12",
+        "views": 1407,
+        "g": "",
+        "why": "Still the best hour on the internet.",
+        "shelf": "vault",
+        "art": "plum"
+       }
+      ],
+      "more": []
+     },
+     {
+      "key": "gold",
+      "title": "Old gold",
+      "sub": "The back catalog of the channels we follow",
+      "items": [
+       {
+        "id": "demo-tv-012",
+        "t": "Jungle, live in the studio",
+        "ch": "KEXP",
+        "d": 1792094400,
+        "dur": "18:20",
+        "views": 1444,
+        "g": "music",
+        "why": "One of the great sessions.",
+        "shelf": "gold",
+        "art": "neon"
+       }
+      ],
+      "more": []
+     }
+    ]
+   },
+   {
+    "edition": "2026-10-15",
+    "generated": "2026-10-15T23:40:00+00:00",
+    "pick": {
+     "id": "demo-tv-015",
+     "t": "Why bridges sing in the wind",
+     "ch": "Wider shelf",
+     "d": 1792080000,
+     "dur": "12:11",
+     "views": 1555,
+     "g": "sci",
+     "why": "From the wider shelf, and worth it.",
+     "shelf": "quick",
+     "art": "dawn"
+    },
+    "playlist": {
+     "url": "https://www.youtube.com/playlist?list=PLdemo1"
+    },
+    "shelves": [
+     {
+      "key": "vt",
+      "title": "Burlington & Vermont",
+      "items": [
+       {
+        "id": "demo-tv-014",
+        "t": "Burlington’s last drive-in, one more summer",
+        "ch": "Stuck in Vermont",
+        "d": 1792080000,
+        "dur": "8:11",
+        "views": 1518,
+        "g": "vt",
+        "vt": 1,
+        "why": "Filmed here, worth the eight minutes.",
+        "shelf": "vt",
+        "art": "night"
+       }
+      ]
+     },
+     {
+      "key": "quick",
+      "title": "Quick one",
+      "items": []
+     }
+    ]
+   },
+   {
+    "edition": "2026-10-14",
+    "generated": "2026-10-14T23:40:00+00:00",
+    "pick": {
+     "id": "demo-tv-017",
+     "t": "The world’s slowest race",
+     "ch": "Wider shelf",
+     "d": 1791993600,
+     "dur": "12:12",
+     "views": 1629,
+     "g": "sci",
+     "why": "From the wider shelf, and worth it.",
+     "shelf": "quick",
+     "art": "brick"
+    },
+    "playlist": {
+     "url": "https://www.youtube.com/playlist?list=PLdemo2"
+    },
+    "shelves": [
+     {
+      "key": "vt",
+      "title": "Burlington & Vermont",
+      "items": [
+       {
+        "id": "demo-tv-016",
+        "t": "The co-op’s new bakery, start to finish",
+        "ch": "Stuck in Vermont",
+        "d": 1791993600,
+        "dur": "8:12",
+        "views": 1592,
+        "g": "vt",
+        "vt": 1,
+        "why": "Filmed here, worth the eight minutes.",
+        "shelf": "vt",
+        "art": "slate"
+       }
+      ]
+     },
+     {
+      "key": "quick",
+      "title": "Quick one",
+      "items": []
+     }
+    ]
+   },
+   {
+    "edition": "2026-10-13",
+    "generated": "2026-10-13T23:40:00+00:00",
+    "pick": {
+     "id": "demo-tv-019",
+     "t": "A chef cooks one egg ten ways",
+     "ch": "Wider shelf",
+     "d": 1791907200,
+     "dur": "12:13",
+     "views": 1703,
+     "g": "sci",
+     "why": "From the wider shelf, and worth it.",
+     "shelf": "quick",
+     "art": "sand"
+    },
+    "playlist": {
+     "url": "https://www.youtube.com/playlist?list=PLdemo3"
+    },
+    "shelves": [
+     {
+      "key": "vt",
+      "title": "Burlington & Vermont",
+      "items": [
+       {
+        "id": "demo-tv-018",
+        "t": "A canoe across the lake at dawn",
+        "ch": "Stuck in Vermont",
+        "d": 1791907200,
+        "dur": "8:13",
+        "views": 1666,
+        "g": "vt",
+        "vt": 1,
+        "why": "Filmed here, worth the eight minutes.",
+        "shelf": "vt",
+        "art": "teal"
+       }
+      ]
+     },
+     {
+      "key": "quick",
+      "title": "Quick one",
+      "items": []
+     }
+    ]
+   },
+   {
+    "edition": "2026-10-12",
+    "generated": "2026-10-12T23:40:00+00:00",
+    "pick": {
+     "id": "demo-tv-021",
+     "t": "How maps lie",
+     "ch": "Wider shelf",
+     "d": 1791820800,
+     "dur": "12:14",
+     "views": 1777,
+     "g": "sci",
+     "why": "From the wider shelf, and worth it.",
+     "shelf": "quick",
+     "art": "night"
+    },
+    "playlist": {
+     "url": "https://www.youtube.com/playlist?list=PLdemo4"
+    },
+    "shelves": [
+     {
+      "key": "vt",
+      "title": "Burlington & Vermont",
+      "items": [
+       {
+        "id": "demo-tv-020",
+        "t": "The Old North End’s mural walk",
+        "ch": "Stuck in Vermont",
+        "d": 1791820800,
+        "dur": "8:14",
+        "views": 1740,
+        "g": "vt",
+        "vt": 1,
+        "why": "Filmed here, worth the eight minutes.",
+        "shelf": "vt",
+        "art": "dawn"
+       }
+      ]
+     },
+     {
+      "key": "quick",
+      "title": "Quick one",
+      "items": []
+     }
+    ]
+   },
+   {
+    "edition": "2026-10-11",
+    "generated": "2026-10-11T23:40:00+00:00",
+    "pick": {
+     "id": "demo-tv-023",
+     "t": "The quiet genius of elevators",
+     "ch": "Wider shelf",
+     "d": 1791734400,
+     "dur": "12:15",
+     "views": 1851,
+     "g": "sci",
+     "why": "From the wider shelf, and worth it.",
+     "shelf": "quick",
+     "art": "slate"
+    },
+    "playlist": {
+     "url": "https://www.youtube.com/playlist?list=PLdemo5"
+    },
+    "shelves": [
+     {
+      "key": "vt",
+      "title": "Burlington & Vermont",
+      "items": [
+       {
+        "id": "demo-tv-022",
+        "t": "Shelburne Farms at milking time",
+        "ch": "Stuck in Vermont",
+        "d": 1791734400,
+        "dur": "8:15",
+        "views": 1814,
+        "g": "vt",
+        "vt": 1,
+        "why": "Filmed here, worth the eight minutes.",
+        "shelf": "vt",
+        "art": "brick"
+       }
+      ]
+     },
+     {
+      "key": "quick",
+      "title": "Quick one",
+      "items": []
+     }
+    ]
+   },
+   {
+    "edition": "2026-10-10",
+    "generated": "2026-10-10T23:40:00+00:00",
+    "pick": {
+     "id": "demo-tv-025",
+     "t": "A year on a lighthouse",
+     "ch": "Wider shelf",
+     "d": 1791648000,
+     "dur": "12:16",
+     "views": 1925,
+     "g": "sci",
+     "why": "From the wider shelf, and worth it.",
+     "shelf": "quick",
+     "art": "teal"
+    },
+    "playlist": {
+     "url": "https://www.youtube.com/playlist?list=PLdemo6"
+    },
+    "shelves": [
+     {
+      "key": "vt",
+      "title": "Burlington & Vermont",
+      "items": [
+       {
+        "id": "demo-tv-024",
+        "t": "A brewer explains the hops harvest",
+        "ch": "Stuck in Vermont",
+        "d": 1791648000,
+        "dur": "8:16",
+        "views": 1888,
+        "g": "vt",
+        "vt": 1,
+        "why": "Filmed here, worth the eight minutes.",
+        "shelf": "vt",
+        "art": "sand"
+       }
+      ]
+     },
+     {
+      "key": "quick",
+      "title": "Quick one",
+      "items": []
+     }
+    ]
+   }
+  ]
+ },
+ "pulse": {
+  "v": 1,
+  "generated": 1792166400,
+  "sources": [
+   {
+    "id": "demo-vermont-edition",
+    "name": "Vermont Edition",
+    "short": "Vermont Edition",
+    "topic": "local",
+    "site": "https://example.org/vermont-edition",
+    "pod": 1,
+    "local": 1
+   },
+   {
+    "id": "demo-brave-little-state",
+    "name": "Brave Little State",
+    "short": "Brave Little State",
+    "topic": "local",
+    "site": "https://example.org/brave-little-state",
+    "pod": 1,
+    "local": 1
+   },
+   {
+    "id": "demo-the-frequency",
+    "name": "The Frequency: Daily Vermont News",
+    "short": "The Frequency",
+    "topic": "local",
+    "site": "https://example.org/the-frequency",
+    "pod": 1,
+    "local": 1
+   },
+   {
+    "id": "demo-deeper-dig",
+    "name": "The Deeper Dig",
+    "short": "The Deeper Dig",
+    "topic": "local",
+    "site": "https://example.org/deeper-dig",
+    "pod": 1,
+    "local": 1
+   },
+   {
+    "id": "demo-802-news",
+    "name": "802 News",
+    "short": "802 News",
+    "topic": "local",
+    "site": "https://example.org/802-news",
+    "pod": 1,
+    "local": 1
+   },
+   {
+    "id": "demo-the-daily",
+    "name": "The Daily",
+    "short": "The Daily",
+    "topic": "news",
+    "site": "https://example.org/the-daily",
+    "pod": 1,
+    "local": null
+   },
+   {
+    "id": "demo-99pi",
+    "name": "99% Invisible",
+    "short": "99% Invisible",
+    "topic": "news",
+    "site": "https://example.org/99pi",
+    "pod": 1,
+    "local": null
+   },
+   {
+    "id": "demo-up-first",
+    "name": "NPR Up First",
+    "short": "Up First",
+    "topic": "news",
+    "site": "https://example.org/up-first",
+    "pod": 1,
+    "local": null
+   },
+   {
+    "id": "demo-seven-days",
+    "name": "Seven Days",
+    "short": "Seven Days",
+    "local": 1,
+    "topic": "local",
+    "site": "https://example.org/7d"
+   }
+  ],
+  "items": [
+   {
+    "t": "The housing dashboard, explained",
+    "u": "https://example.org/demo/episode-01",
+    "d": 1792155600,
+    "a": "https://example.org/demo/episode-01.mp3",
+    "i": "paper",
+    "s": "demo-vermont-edition"
+   },
+   {
+    "t": "A morning with the snowplow crews",
+    "u": "https://example.org/demo/episode-02",
+    "d": 1792069200,
+    "a": "https://example.org/demo/episode-02.mp3",
+    "i": "slate",
+    "s": "demo-vermont-edition"
+   },
+   {
+    "t": "What the lake tells scientists",
+    "u": "https://example.org/demo/episode-03",
+    "d": 1791896400,
+    "a": "https://example.org/demo/episode-03.mp3",
+    "i": "lake",
+    "s": "demo-vermont-edition"
+   },
+   {
+    "t": "Why is the lake so warm this fall?",
+    "u": "https://example.org/demo/episode-04",
+    "d": 1792022400,
+    "a": "https://example.org/demo/episode-04.mp3",
+    "i": "lake",
+    "s": "demo-brave-little-state"
+   },
+   {
+    "t": "Who named the Green Mountains?",
+    "u": "https://example.org/demo/episode-05",
+    "d": 1791446400,
+    "a": "https://example.org/demo/episode-05.mp3",
+    "i": "pine",
+    "s": "demo-brave-little-state"
+   },
+   {
+    "t": "Thursday: the school budget gap",
+    "u": "https://example.org/demo/episode-06",
+    "d": 1792134000,
+    "a": "https://example.org/demo/episode-06.mp3",
+    "i": "coffee",
+    "s": "demo-the-frequency"
+   },
+   {
+    "t": "Wednesday: a late bus, and why",
+    "u": "https://example.org/demo/episode-07",
+    "d": 1792047600,
+    "a": "https://example.org/demo/episode-07.mp3",
+    "i": "street",
+    "s": "demo-the-frequency"
+   },
+   {
+    "t": "Inside the school budget numbers",
+    "u": "https://example.org/demo/episode-08",
+    "d": 1791950400,
+    "a": "https://example.org/demo/episode-08.mp3",
+    "i": "slate",
+    "s": "demo-deeper-dig"
+   },
+   {
+    "t": "The bond vote, line by line",
+    "u": "https://example.org/demo/episode-09",
+    "d": 1791338400,
+    "a": "https://example.org/demo/episode-09.mp3",
+    "i": "paper",
+    "s": "demo-deeper-dig"
+   },
+   {
+    "t": "The week in Montpelier",
+    "u": "https://example.org/demo/episode-10",
+    "d": 1792101600,
+    "a": "https://example.org/demo/episode-10.mp3",
+    "i": "brick",
+    "s": "demo-802-news"
+   },
+   {
+    "t": "The shutdown clock, explained",
+    "u": "https://example.org/demo/episode-11",
+    "d": 1792144800,
+    "a": "https://example.org/demo/episode-11.mp3",
+    "i": "paper",
+    "s": "demo-the-daily"
+   },
+   {
+    "t": "A trial, day three",
+    "u": "https://example.org/demo/episode-12",
+    "d": 1792058400,
+    "a": "https://example.org/demo/episode-12.mp3",
+    "i": "night",
+    "s": "demo-the-daily"
+   },
+   {
+    "t": "The crosswalk",
+    "u": "https://example.org/demo/episode-13",
+    "d": 1791986400,
+    "a": "https://example.org/demo/episode-13.mp3",
+    "i": "street",
+    "s": "demo-99pi"
+   },
+   {
+    "t": "Friday’s news",
+    "u": "https://example.org/demo/episode-14",
+    "d": 1792123200,
+    "a": "https://example.org/demo/episode-14.mp3",
+    "i": "dawn",
+    "s": "demo-up-first"
+   },
+   {
+    "t": "A headline, not an episode",
+    "u": "https://example.org/demo/story",
+    "d": 1792162800,
+    "s": "demo-seven-days"
+   }
+  ]
+ },
+ "podcast": {
+  "show": "Btown Arts Presents",
+  "show_url": "https://open.spotify.com/show/6ejf0OFAyNTZNKDzFLWbKp",
+  "source": "demo",
+  "episodes": [
+   {
+    "id": "demoepisode00000000001",
+    "title": "Ep. 41: the Main Street rebuild, with the city engineer",
+    "url": "https://example.org/demo/ep41",
+    "date": "2026-10-14",
+    "blurb": null
+   },
+   {
+    "id": "demoepisode00000000002",
+    "title": "Ep. 40: a printmaker who works in lake water",
+    "url": "https://example.org/demo/ep40",
+    "date": "2026-09-30",
+    "blurb": null
+   },
+   {
+    "id": "demoepisode00000000003",
+    "title": "Ep. 39: the drummer behind three Burlington bands",
+    "url": "https://example.org/demo/ep39",
+    "date": "2026-09-16",
+    "blurb": null
+   }
+  ]
+ },
+ "audio": {
+  "v": 1,
+  "updated": "2026-10-16T11:03:00+00:00",
+  "clips": [
+   {
+    "date": "2026-10-16",
+    "file": "2026-10-16.mp3",
+    "script": "2026-10-16.txt",
+    "duration": 207,
+    "bytes": 1656000,
+    "words": 446,
+    "stories": 7,
+    "edition": "2026-10-16",
+    "made": "2026-10-16T11:02:00+00:00",
+    "teaser": "The school budget gap, a late bus, and the lake that won’t cool down.",
+    "voice": "FrS6cKLB1wg4WYgPa9GW",
+    "model": "eleven_v4_turbo",
+    "writer": "claude-opus-5-5"
+   },
+   {
+    "date": "2026-10-15",
+    "file": "2026-10-15.mp3",
+    "script": "2026-10-15.txt",
+    "duration": 194,
+    "bytes": 1552000,
+    "words": 431,
+    "stories": 6,
+    "edition": "2026-10-14",
+    "made": "2026-10-15T11:02:00+00:00",
+    "teaser": "A bridge closing, a new bakery, and the Catamounts.",
+    "voice": "FrS6cKLB1wg4WYgPa9GW",
+    "model": "eleven_v4_turbo",
+    "writer": "claude-opus-5-5"
+   }
+  ],
+  "_script": "Good morning, and this is the Btown Brief, out loud.\n\nThe school board meets tonight with a budget gap to close, and the first proposal on the table would trim the late bus. If your kids ride it, tonight is the night to say so.\n\nThe lake is still warm for the middle of October, and the scientists who watch it say that matters for what grows in it next summer.\n\nThat’s the Brief for this morning. Every story is on the Wire in All Day. This summary is read by an AI voice."
+ }
 }
