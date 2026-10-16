@@ -21,8 +21,10 @@
 // Network: nothing leaves the machine but Google Fonts. GoatCounter and the
 // Meta pixel are stubbed, Supabase is answered locally, pulse-top.json comes
 // from tests/fixtures, the Wire's wire-data files are built below in the
-// real contract and dated to the real clock, pulse.json is the repo's own
-// snapshot, and third-party pictures get a 1px PNG.
+// real contract and dated to the real clock, On Air's btown-tv and
+// wire-audio files are the demo payloads re-dated to the real clock (the
+// clip itself is two seconds of silence from tests/fixtures), pulse.json is
+// the repo's own snapshot, and third-party pictures get a 1px PNG.
 
 import { createRequire } from 'node:module';
 import { spawn } from 'node:child_process';
@@ -194,6 +196,37 @@ function wireFiles(opts = {}) {
   return wireCache.get(key);
 }
 
+/* ------------------------------------------------------------ On Air's data */
+/* btown-tv.json, tv-editions.json and the wire-audio index in their real
+   shapes: the demo file's payloads, moved from its _anchor to today in
+   Burlington. `audio` picks the clip state: 'today', 'yesterday' or 'none'. */
+const onairCache = new Map();
+async function onairFiles(opts = {}) {
+  const audio = opts.audio || 'today';
+  const key = audio + etKey(Date.now());
+  if (onairCache.has(key)) return onairCache.get(key);
+  const d = JSON.parse(await readFile(path.join(APP, 'data/demo/onair.json'), 'utf8'));
+  const today = etKey(Date.now());
+  const days = Math.round((Date.parse(today) - Date.parse(d._anchor)) / 86400000);
+  const shift = (date) => dayMinus(date, -days);
+  const secs = days * 86400;
+  const tv = d.tv;
+  tv.edition = shift(tv.edition);
+  const vids = [tv.pick, ...tv.pick_more, ...tv.live, ...tv.shelves.flatMap((x) => [...x.items, ...(x.more || [])])];
+  vids.forEach((v) => { v.d += secs; delete v.art; });
+  d.tvEditions.editions.forEach((e) => {
+    e.edition = shift(e.edition);
+    [e.pick, ...e.shelves.flatMap((x) => x.items)].forEach((v) => { if (v) delete v.art; });
+  });
+  const clips = d.audio.clips.map((c) => ({ ...c, date: shift(c.date), file: shift(c.date) + '.mp3', script: shift(c.date) + '.txt', made: new Date().toISOString() }));
+  const index = { v: 1, updated: new Date().toISOString(), clips: audio === 'none' ? [] : audio === 'yesterday' ? clips.slice(1) : clips };
+  const files = { 'btown-tv.json': JSON.stringify(tv), 'tv-editions.json': JSON.stringify(d.tvEditions), 'index.json': JSON.stringify(index) };
+  clips.forEach((c) => { files[c.script] = d.audio._script; });
+  const out = { files, tv, index, today, mp3: await readFile(path.join(HERE, 'fixtures/silence.mp3')) };
+  onairCache.set(key, out);
+  return out;
+}
+
 /* ------------------------------------------------------------- the page */
 async function newPage(browser, base, opts = {}) {
   const ctx = await browser.newContext({
@@ -220,6 +253,13 @@ async function newPage(browser, base, opts = {}) {
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/wire-data\/data\/(?:wire\/)?([\w.-]+\.json)$/, (r) => {
     const f = wire[r.request().url().match(/([\w.-]+\.json)$/)[1]];
     return f ? r.fulfill({ status: 200, body: JSON.stringify(f), contentType: 'application/json' }) : r.fulfill({ status: 404, body: '' });
+  });
+  const onair = await onairFiles(opts.onair);
+  await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/(btown-tv|wire-audio)\/data\/(?:audio\/)?([\w.-]+)$/, (r) => {
+    const name = r.request().url().match(/([\w.-]+)$/)[1];
+    if (/\.mp3$/.test(name) && onair.index.clips.some((c) => c.file === name)) return r.fulfill({ status: 200, body: onair.mp3, contentType: 'audio/mpeg' });
+    const f = onair.files[name];
+    return f ? r.fulfill({ status: 200, body: f, contentType: /\.txt$/.test(name) ? 'text/plain' : 'application/json' }) : r.fulfill({ status: 404, body: '' });
   });
   await page.route(/supabase\.co/, (r) => {
     const u = r.request().url();
@@ -282,7 +322,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'whatnow']);
+const LIVE = new Set(['wire', 'whatnow', 'onair']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -336,7 +376,8 @@ async function matrix(browser, base) {
           }
           if (demo && combo === COMBOS[1] && tab === 'wire') await page.screenshot({ path: path.join(SHOTS, 'demo-wire-dark.png') });
           if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
-          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'food')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
+          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'food' || tab === 'onair')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
+          if (!demo && combo === COMBOS[1] && tab === 'onair') await page.screenshot({ path: path.join(SHOTS, 'live-onair-dark.png') });
         }
         const gc = await page.evaluate(() => window.__gc);
         check(JSON.stringify(gc) === JSON.stringify(TABS.map((t) => 'all-day-tab-' + t)), 'one GoatCounter tab-landing event per landing', JSON.stringify(gc));
@@ -363,7 +404,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'fv2'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'tv3']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'fv2'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -656,6 +697,165 @@ async function theWire(browser, base) {
     check(/so far/.test(await page.$eval('#subnav .dl .s', (s) => s.textContent)), '‹ Today’s paper comes back', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+}
+
+/* ---------------------------------------------------------------- On Air */
+const onairText = (page) => page.$eval('#panel-onair', (p) => p.innerText);
+const podRows = (page) => page.$$eval('#panel-onair [data-show]', (rs) => rs.map((r) => [r.dataset.show, r.dataset.national || '']));
+const tvCards = (page) => page.$$eval('#panel-onair [data-slot="tv"] .vcard', (cs) => cs.map((c) => [c.dataset.k, c.dataset.wider || '']));
+
+async function onAir(browser, base) {
+  await group('On Air, demo', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await settle(page);
+    await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 8000 });
+    check(await page.evaluate(() => document.querySelector('audio').paused && !document.querySelector('#panel-onair iframe')), 'nothing autoplays: the shell’s audio is paused and no frame is loaded', '');
+    const toc = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.innerText.trim()));
+    check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Btown TV', 'Live', 'Podcasts', 'Past nights']), 'the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights', JSON.stringify(toc));
+    const order = await page.$$eval('#panel-onair [data-sec]', (s) => s.map((x) => x.dataset.sec));
+    check(JSON.stringify(order) === JSON.stringify(['brief', 'tv', 'live', 'pods', 'past']), 'the sections run in that order', JSON.stringify(order));
+    await page.click('#subnav .chip[data-chip="pods"]');
+    await page.waitForTimeout(600);
+    check(await page.$eval('#panel-onair [data-sec="pods"]', (h) => { const r = h.getBoundingClientRect(); return r.top >= 0 && r.top < innerHeight / 2; }), 'a chip scrolls to its section', '');
+
+    const localRows = await podRows(page);
+    const localTv = await tvCards(page);
+    check(localRows[0] && localRows[0][0] === 'btown-brief', 'Local: the Brief’s own show is first in Podcasts', JSON.stringify(localRows.slice(0, 3)));
+    check(localRows.length > 2 && localRows.every((r) => !r[1]), 'Local: every local show, no national ones', JSON.stringify(localRows));
+    check(localTv.length > 0 && localTv.every((c) => !c[1]), 'Local: Btown TV shows only the local picks', JSON.stringify(localTv));
+    check((await page.$$eval('#panel-onair [data-slot="tv"] .vcard .s', (s) => s.map((x) => x.textContent))).some((t) => /reason|matters|Watch this first/.test(t)), 'each pick carries its reason', '');
+
+    await toTop(page);
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.waitForTimeout(250);
+    const everyRows = await podRows(page);
+    const everyTv = await tvCards(page);
+    check(everyTv.filter((c) => c[1]).length === 3 && everyTv.length === localTv.length + 3, 'Everything adds exactly three wider picks (' + localTv.length + ' + 3)', JSON.stringify(everyTv));
+    check(JSON.stringify(everyTv.slice(0, localTv.length)) === JSON.stringify(localTv), 'and the local picks still lead', '');
+    check(everyRows.filter((r) => r[1]).length === 2 && everyRows.length === localRows.length + 2, 'Everything adds exactly two national podcasts', JSON.stringify(everyRows));
+    check(everyRows[0][0] === 'btown-brief', 'Everything: the Brief’s own show is still first', JSON.stringify(everyRows[0]));
+    check(await page.$eval('#panel-onair [data-sec="tv"] h2', (h) => h.textContent) === 'Tonight, local and beyond', 'the TV head says local and beyond', '');
+
+    /* a show opens in place, its newest episodes with a play pill each */
+    const showId = everyRows[1][0];
+    await page.click('#panel-onair [data-show="' + showId + '"] .t');
+    const eps = await page.$$eval('#panel-onair [data-eps="' + showId + '"] .lrow', (r) => r.length);
+    check(eps > 0 && eps <= 5, 'a show opens in place to its newest episodes (' + eps + ')', eps);
+    check(await page.$eval('#panel-onair [data-show="' + showId + '"]', (r) => r.getAttribute('aria-expanded')) === 'true', 'and says it is open', '');
+
+    /* Past nights opens that night's edition */
+    await page.click('#panel-onair [data-night] .c-media');
+    await page.waitForSelector('.sheet-card', { timeout: 3000 });
+    check(await page.$$eval('.sheet-body .card.video', (c) => c.length) > 0 && /Play it on your TV/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a past night opens its videos and its TV playlist', '');
+    await page.keyboard.press('Escape');
+
+    /* a reaction in the demo lives for the visit only */
+    await page.click('#panel-onair [data-slot="tv"] .vcard [data-react="more"]');
+    check(await page.$eval('#panel-onair [data-slot="tv"] .vcard [data-react="more"]', (b) => b.classList.contains('on')), 'demo: “more like this” lights', '');
+    check(await page.evaluate(() => !localStorage.getItem('btown-tv-reacts')), 'demo: a reaction never reaches localStorage', '');
+    check(!supabase.length, 'demo: no Supabase call', supabase.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('On Air, live', async () => {
+    const { files, tv, index, today } = await onairFiles();
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#onair');
+    await page.waitForSelector('#panel-onair .audio', { timeout: 15000 });
+    await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+    check(await page.evaluate(() => document.querySelector('audio').paused && document.getElementById('player').hidden), 'nothing autoplays', '');
+    const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
+    check(/^Today · /.test(eyebrow) && / · 3:27$/.test(eyebrow), 'today’s clip: the card says today and its length', eyebrow);
+    check((await podRows(page))[0][0] === 'btown-brief', 'live: the Brief’s own show is first in Podcasts', '');
+    check((await tvCards(page)).length === tv.shelves.find((x) => x.key === 'vt').items.length + 1, 'live: tonight’s local picks, the pick and the Burlington & Vermont shelf', '');
+    await page.click('#panel-onair .btn.more:text("Read it instead")');
+    await page.waitForFunction(() => /Good morning/.test(document.querySelector('.sheet-body')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
+    check(/Good morning/.test(await page.$eval('.sheet-body', (b) => b.innerText)), '“Read it instead” shows the script the voice read', '');
+    await page.keyboard.press('Escape');
+
+    /* the player: the clip plays in the shell's one player and survives a tab switch */
+    await page.click('#panel-onair .audio .pb');
+    await page.waitForSelector('#player:not([hidden])', { timeout: 3000 }).catch(() => {});
+    const src = await page.evaluate(() => document.querySelector('audio').getAttribute('src'));
+    check(src === 'https://raw.githubusercontent.com/btownbrief/btown-brief/wire-audio/data/audio/' + today + '.mp3', 'play loads today’s MP3 from the wire-audio branch into the shell’s player', src);
+    await goTab(page, 'wire');
+    await goTab(page, 'food');
+    check(await page.$('#player:not([hidden])') !== null && /news in/.test(await page.$eval('#p-title', (t) => t.textContent)), 'the player survives a tab switch', '');
+    await goTab(page, 'onair');
+
+    /* a reaction writes tv.html's key, tells Supabase, and survives a reload */
+    const first = (await tvCards(page))[0][0];
+    const vid = first.slice(3);
+    await page.click('#panel-onair [data-k="' + first + '"] [data-react="watched"]');
+    check(/Tomorrow’s edition/.test(await page.$eval('#toast', (t) => t.textContent)), 'a reaction says what it teaches', '');
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('btown-tv-reacts') || '{}'));
+    check(stored[vid] === 'watched', 'it is written to btown-tv-reacts, the key tv.html used', JSON.stringify(stored));
+    check(supabase.some((x) => /\/rpc\/tv_react$/.test(x)), 'and sent to tv_react, so the editor sees it', supabase.join(', '));
+    await page.reload();
+    await page.waitForSelector('#panel-onair [data-k="' + first + '"] [data-react="watched"]', { timeout: 15000 });
+    check(await page.$eval('#panel-onair [data-k="' + first + '"] [data-react="watched"]', (b) => b.classList.contains('on') && b.getAttribute('aria-pressed') === 'true'), 'a reaction persists across a reload', '');
+
+    /* not for me: the editor's next local one steps in on the next draw */
+    const bench = tv.shelves.find((x) => x.key === 'vt').more[0];
+    const victim = (await tvCards(page))[1][0];
+    await page.click('#panel-onair [data-k="' + victim + '"] [data-react="skip"]');
+    await page.reload();
+    await page.waitForSelector('#panel-onair [data-slot="tv"] .vcard', { timeout: 15000 });
+    const after = (await tvCards(page)).map((c) => c[0]);
+    check(!after.includes(victim) && after.includes('yt:' + bench.id), '“not for me” gives its place to the editor’s bench', JSON.stringify(after));
+    check(/Stepped in/.test(await page.$eval('#panel-onair [data-k="yt:' + bench.id + '"]', (c) => c.innerText)), 'and the newcomer says so', '');
+    await page.evaluate(() => localStorage.removeItem('btown-tv-reacts'));
+    check(!errors.length, 'no console errors', errors.slice(0, 5).join(' | '));
+    await ctx.close();
+  });
+
+  await group('On Air, Live is cameras', async () => {
+    const JAZZ = ['Peaceful Autumn Village in Vermont with Relaxing Jazz 🍂 Smooth Jazz & Falling Leaves for Slow Days',
+      'Peaceful Autumn Village in Vermont 🍂 Smooth & Relaxing Jazz at a Cozy Café for Slow Days ☕'];
+    const { tv } = await onairFiles();
+    check(JAZZ.every((t) => tv.live.some((v) => v.t === t)), 'the fixture carries the two jazz streams the live search found on 2026-10-16', '');
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#onair');
+    await page.waitForSelector('#panel-onair [data-slot="live"] .vcard', { timeout: 15000 });
+    const titles = () => page.$$eval('#panel-onair [data-slot="live"] .vcard .t', (t) => t.map((x) => x.textContent));
+    const local = await titles();
+    check(local.includes('Church Street Market Place Live Stream') && local.includes('The lake, from ECHO') && local.includes('The ferry dock at King Street'),
+      'Local: the pinned Church Street camera and the lake cams', JSON.stringify(local));
+    check(!JAZZ.some((t) => local.includes(t)), 'Local: no “Relaxing Jazz” ambience streams', JSON.stringify(local));
+    check(!local.some((t) => /football|Documentaries/.test(t)), 'Local: nothing off the Vermont shelf or the pinned roster', JSON.stringify(local));
+    await toTop(page);
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.waitForTimeout(250);
+    const every = await titles();
+    check(!JAZZ.some((t) => every.includes(t)), 'Everything: still no ambience streams', JSON.stringify(every));
+    check(every.some((t) => /football/.test(t)) && every.some((t) => /Documentaries/.test(t)), 'Everything: the other live streams come back', JSON.stringify(every));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('On Air, the audio card', async () => {
+    for (const audio of ['none', 'yesterday']) {
+      const { ctx, page, errors } = await newPage(browser, base, { onair: { audio } });
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair [data-sec="tv"]', { timeout: 15000 });
+      await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+      await page.waitForTimeout(300);
+      const card = await page.$('#panel-onair .audio');
+      const toc = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
+      if (audio === 'none') {
+        check(!card && !toc.includes('brief') && !(await page.$('#panel-onair [data-sec="brief"]')), 'no clip: no audio card, no section, no chip', JSON.stringify(toc));
+      } else {
+        const y = dayMinus(etKey(Date.now()), 1);
+        const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
+        check(card && eyebrow.startsWith(nameOf(y)), 'no clip today: the latest one, with its date (' + nameOf(y) + ')', eyebrow);
+        check(/Today’s lands at 7 am/.test(await onairText(page)), 'and it says when today’s lands', '');
+      }
+      check(!errors.length, audio + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
   });
 }
 
@@ -1019,6 +1219,7 @@ try {
   await deepLinks(browser, base);
   await theWire(browser, base);
   await theWhatNow(browser, base);
+  await onAir(browser, base);
   await interactions(browser, base);
 } finally {
   await browser.close();

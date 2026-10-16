@@ -61,11 +61,32 @@ const FILES = {
     poll: true,
     ok: (j) => j && Array.isArray(j.editions),
   },
+  /* Btown TV's nightly edition (scripts/curate_tv.py, on the btown-tv
+     branch). main's same-origin copy is only as fresh as its daily sync, so
+     the live branch comes first everywhere and the copy is the fallback. */
   tv: {
     live: LIVE + 'btown-tv/data/btown-tv.json',
     local: '../data/btown-tv.json',
+    liveFirst: true,
     poll: true,
     ok: (j) => j && (j.pick || Array.isArray(j.shelves)),
+  },
+  /* The last two weeks of editions, for On Air's Past nights. Only on the
+     branch; a miss just leaves the section out. */
+  tvEditions: {
+    live: LIVE + 'btown-tv/data/tv-editions.json',
+    local: null,
+    poll: true,
+    ok: (j) => j && Array.isArray(j.editions),
+  },
+  /* The Brief, out loud (scripts/build_wire_audio.py, daily at 7 am, on the
+     orphan wire-audio branch): index.json lists the rolling 30 days of clips;
+     audioUrl() is where each MP3 and its script live. */
+  audio: {
+    live: LIVE + 'wire-audio/data/audio/index.json',
+    local: null,
+    poll: true,
+    ok: (j) => j && Array.isArray(j.clips),
   },
   youtube: {
     live: LIVE + 'pulse-youtube/data/pulse-youtube.json',
@@ -160,6 +181,14 @@ export function edition(date) {
     };
   }
   return key;
+}
+
+/* A clip or its script on the wire-audio branch. raw.githubusercontent.com
+   serves .mp3 as audio/mpeg with byte ranges, so the shell's <audio> can
+   seek in it. Only a bare YYYY-MM-DD.mp3 / .txt name is accepted. */
+export function audioUrl(file) {
+  const f = String(file || '');
+  return /^\d{4}-\d{2}-\d{2}\.(mp3|txt)$/.test(f) ? LIVE + 'wire-audio/data/audio/' + f : '';
 }
 
 const STALE_RETRIES = [8000, 20000, 60000];
