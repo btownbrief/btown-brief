@@ -1,109 +1,965 @@
 {
- "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders.",
- "board": [
-  {
-   "name": "Nora L.",
-   "game": "Snake",
-   "score": 12840,
-   "me": false
-  },
-  {
-   "name": "Dev K.",
-   "game": "Word Ladder",
-   "score": 11200,
-   "me": false
-  },
-  {
-   "name": "Priya N.",
-   "game": "Dots",
-   "score": 10950,
-   "me": false
-  },
-  {
-   "name": "Ben S.",
-   "game": "Snake",
-   "score": 9870,
-   "me": false
-  },
-  {
-   "name": "You",
-   "game": "Snake",
-   "score": 9120,
-   "me": true
-  },
-  {
-   "name": "Sam P.",
-   "game": "Lake Run",
-   "score": 8800,
-   "me": false
-  },
-  {
-   "name": "Kara M.",
-   "game": "Dots",
-   "score": 8410,
-   "me": false
-  },
-  {
-   "name": "Tom A.",
-   "game": "Word Ladder",
-   "score": 7990,
-   "me": false
-  }
- ],
- "resetsIn": 15,
- "challengeGames": [
-  "Snake",
-  "Word Ladder",
-  "Dots",
-  "Lake Run"
- ],
- "openChallenges": 3,
- "new": [
-  {
-   "title": "Lake Run",
-   "line": "2 min · 1 player",
-   "art": "lake"
-  },
-  {
-   "title": "Church St Dash",
-   "line": "3 min · 2 players",
-   "art": "street"
-  },
-  {
-   "title": "Foliage Match",
-   "line": "1 min · 1 player",
-   "art": "foliage"
-  },
-  {
-   "title": "Ferry Tycoon",
-   "line": "10 min · 1 player",
-   "art": "slate"
-  }
- ],
- "party": {
-  "title": "Nov 13 · the big screen, your phone is the controller.",
-  "text": "Scan the QR on the screen and you are in. Four games, prizes, 7 to 9.",
-  "when": "Second Thursday at the Archives."
+ "_": "Demo data for ?demo=1. Every player name and score is invented; the games are the arcade’s own, with invented dates. Shapes: catalog = data/games-catalog.json, boards = get_leaderboard rows per slug, champions = champions.json.",
+ "_anchor": "2026-10-16",
+ "_you": "Juniper",
+ "catalog": {
+  "generated": "2026-10-16T10:35:00Z",
+  "source": "demo",
+  "sections": [
+   {
+    "id": "arcade-action",
+    "title": "Action & Arcade",
+    "description": "Quick reflexes, high scores, and Burlington-sized chaos."
+   },
+   {
+    "id": "daily-puzzles",
+    "title": "Daily Puzzles & Quizzes",
+    "description": "Words, trivia, local knowledge, and fresh reasons to come back."
+   },
+   {
+    "id": "board-card",
+    "title": "Board & Card Classics",
+    "description": "Familiar favorites rebuilt with a Vermont twist. Solo vs the bot, pass the phone, or play online — bot wins make the leaderboard."
+   },
+   {
+    "id": "party-community",
+    "title": "Party & Community",
+    "description": "Pass the phone, share a laugh, or let the town decide."
+   },
+   {
+    "id": "local-more",
+    "title": "Local Challenges & Stories",
+    "description": "Take the arcade into Burlington, or dig into the Brief."
+   },
+   {
+    "id": "party-night",
+    "title": "Party Night",
+    "description": "Live games for a whole room — everyone scans a QR code, phones stay mostly pocketed, and the reveals land together on a big screen (or read aloud by whoever's hosting). Built for Btown Brief meetups and mixers — or your own living room. Anyone can host, free, no accounts."
+   }
+  ],
+  "games": [
+   {
+    "slug": "church-street-skate",
+    "name": "Church Street Skate",
+    "emoji": "🛹",
+    "pitch": "Skate real downtown Burlington in 3D — ollie the City Hall steps, grind the planters, bomb College Street to the lake.",
+    "section": "arcade-action",
+    "live": true,
+    "leaderboard": true,
+    "boardHint": "Trick points from your best skate session.",
+    "first_seen": "2026-08-05",
+    "live_since": "2026-08-05",
+    "rooms": false
+   },
+   {
+    "slug": "street-yeet",
+    "name": "STREET YEET",
+    "emoji": "🚀",
+    "pitch": "Ragdoll-physics yeeting on Church Street. Creemees, syrup jugs, leaf peepers. You know what to do.",
+    "section": "arcade-action",
+    "live": true,
+    "leaderboard": true,
+    "boardHint": "Yeet points — bigger launches, bigger score.",
+    "first_seen": "2026-08-21",
+    "live_since": "2026-08-21",
+    "rooms": false
+   },
+   {
+    "slug": "creemee-drop",
+    "name": "Creemee Drop",
+    "emoji": "🍦",
+    "pitch": "Catch falling swirls and stack Vermont soft-serve to the sky.",
+    "section": "arcade-action",
+    "live": true,
+    "leaderboard": true,
+    "first_seen": "2026-07-03",
+    "live_since": "2026-07-03",
+    "rooms": false
+   },
+   {
+    "slug": "pothole-patrol",
+    "name": "Pothole Patrol",
+    "emoji": "🕳️",
+    "pitch": "Patch Burlington's potholes before mud season swallows the street.",
+    "section": "arcade-action",
+    "live": true,
+    "leaderboard": true,
+    "first_seen": "2026-10-14",
+    "live_since": "2026-10-14",
+    "rooms": false
+   },
+   {
+    "slug": "tap-the-maple",
+    "name": "Tap the Maple",
+    "emoji": "🍁",
+    "pitch": "Knife-Hit sugaring season: tap taps into the maple, don't hit the taps.",
+    "section": "arcade-action",
+    "live": true,
+    "leaderboard": true,
+    "first_seen": "2026-09-29",
+    "live_since": "2026-09-29",
+    "rooms": false
+   },
+   {
+    "slug": "btown-wordle",
+    "name": "BTown Wordle",
+    "emoji": "🟩",
+    "pitch": "A fresh Burlington-flavored word puzzle every single day.",
+    "section": "daily-puzzles",
+    "live": true,
+    "leaderboard": true,
+    "first_seen": "2026-07-02",
+    "live_since": "2026-07-02",
+    "rooms": false
+   },
+   {
+    "slug": "btown-riddle",
+    "name": "Btown Riddle",
+    "emoji": "🍁",
+    "pitch": "One Burlington riddle a day. Four maple leaves if you get it without a hint.",
+    "section": "daily-puzzles",
+    "live": true,
+    "leaderboard": true,
+    "boardHint": "Longest daily solving streak this month.",
+    "first_seen": "2026-07-14",
+    "live_since": "2026-07-14",
+    "rooms": false
+   },
+   {
+    "slug": "trivia-ladder",
+    "name": "Trivia Ladder",
+    "emoji": "🪜",
+    "pitch": "Climb the Burlington trivia ladder: one wrong rung and you fall.",
+    "section": "daily-puzzles",
+    "live": true,
+    "leaderboard": true,
+    "first_seen": "2026-08-03",
+    "live_since": "2026-08-03",
+    "rooms": false
+   },
+   {
+    "slug": "four-in-a-rowboat",
+    "name": "Four in a Rowboat",
+    "emoji": "🚣",
+    "pitch": "Drop your buoys and line up four across Lake Champlain — race a friend or take on the Skipper.",
+    "section": "board-card",
+    "live": true,
+    "leaderboard": true,
+    "boardHint": "Fewest buoys to line up four — ⛵ Skipper wins outrank 🛶 Paddler wins.",
+    "first_seen": "2026-07-03",
+    "live_since": "2026-07-03",
+    "rooms": true
+   },
+   {
+    "slug": "church-street-checkers",
+    "name": "Church Street Checkers",
+    "emoji": "🔴",
+    "pitch": "Checkers on the Marketplace bricks — captures are mandatory, no mercy.",
+    "section": "board-card",
+    "live": true,
+    "leaderboard": true,
+    "boardHint": "Fewest moves to beat the bots — a 🎩 Marketplace Master win outranks every 🍦 Stroller win.",
+    "first_seen": "2026-08-02",
+    "live_since": "2026-08-02",
+    "rooms": true
+   },
+   {
+    "slug": "btown-cribbage",
+    "name": "Btown Cribbage",
+    "emoji": "🏔️",
+    "pitch": "Full cribbage on the Long Trail peg board — the app does all the counting.",
+    "section": "board-card",
+    "live": true,
+    "leaderboard": true,
+    "boardHint": "Beat Champ by the most points — a skunk scores 31+.",
+    "first_seen": "2026-10-08",
+    "live_since": "2026-10-08",
+    "rooms": false
+   },
+   {
+    "slug": "queen-city-chess",
+    "name": "Queen City Chess",
+    "emoji": "♛",
+    "pitch": "Burlington IS the Queen City — full chess: pass the phone, race a friend online, or test the Queen City Club.",
+    "section": "board-card",
+    "live": true,
+    "leaderboard": true,
+    "boardHint": "Fastest checkmate — ♛ Queen City Club wins outrank 🧳 Tourist wins.",
+    "first_seen": "2026-07-19",
+    "live_since": "2026-07-19",
+    "rooms": false
+   },
+   {
+    "slug": "caption-this",
+    "name": "Caption This",
+    "emoji": "💬",
+    "pitch": "BTown's weekly caption contest: swipe on the funniest, or write your own.",
+    "section": "party-community",
+    "live": true,
+    "leaderboard": false,
+    "first_seen": "2026-08-02",
+    "live_since": "2026-08-02",
+    "rooms": false
+   },
+   {
+    "slug": "btown-party",
+    "name": "Btown Party",
+    "emoji": "🎪",
+    "pitch": "One room code, five games: read the room, spin tall tales, write together, blend in, finish the chain. Anyone can host.",
+    "section": "party-night",
+    "live": true,
+    "leaderboard": false,
+    "first_seen": "2026-07-02",
+    "live_since": "2026-07-02",
+    "rooms": false
+   }
+  ]
  },
- "champions": [
-  {
-   "month": "September",
-   "who": "Nora L.",
-   "game": "Snake",
-   "art": "cherry"
-  },
-  {
-   "month": "August",
-   "who": "Dev K.",
-   "game": "Dots",
-   "art": "teal"
-  },
-  {
-   "month": "July",
-   "who": "Priya N.",
-   "game": "Word Ladder",
-   "art": "mustard"
-  }
- ],
- "newSince": 3
+ "boards": {
+  "church-street-skate": [
+   {
+    "name": "Kara M.",
+    "score": 29,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Priya N.",
+    "score": 28,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Lou B.",
+    "score": 26,
+    "player_id": "6d76b07e-881e-d162-ae2e-b1547f150524"
+   },
+   {
+    "name": "Tom A.",
+    "score": 25,
+    "player_id": "34b9b5df-9e77-69b1-0f42-05b4907a70c3"
+   },
+   {
+    "name": "Nora L.",
+    "score": 24,
+    "player_id": "4a23d596-2217-bead-dbc4-96cb8e81973e"
+   },
+   {
+    "name": "Dev K.",
+    "score": 22,
+    "player_id": "1e27a1c0-8a6a-63ec-24ed-e6a46b4cb242"
+   },
+   {
+    "name": "Juniper",
+    "score": 21,
+    "player_id": "c1d3fcff-2a3a-f4d4-6b0a-18e8830e07bc"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 17,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Mo J.",
+    "score": 15,
+    "player_id": "1e398f10-12bd-4ace-faec-bd389be4bcfc"
+   },
+   {
+    "name": "Cy F.",
+    "score": 12,
+    "player_id": "49b64a08-72e6-cc3a-babc-ed2057ee05cd"
+   },
+   {
+    "name": "Ada W.",
+    "score": 11,
+    "player_id": "e00902c7-7ebf-f206-8673-47214cdd2055"
+   },
+   {
+    "name": "Gus H.",
+    "score": 10,
+    "player_id": "930d6eaf-14f4-733f-3e7d-1bfbc7a2ea20"
+   },
+   {
+    "name": "Ben S.",
+    "score": 9,
+    "player_id": "94e3bf91-1a61-dbe2-2e44-158bae97ba94"
+   },
+   {
+    "name": "Sam P.",
+    "score": 8,
+    "player_id": "5f557203-3018-50c5-a38f-d547923a7369"
+   }
+  ],
+  "street-yeet": [
+   {
+    "name": "Priya N.",
+    "score": 483,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Lou B.",
+    "score": 453,
+    "player_id": "6d76b07e-881e-d162-ae2e-b1547f150524"
+   },
+   {
+    "name": "Tom A.",
+    "score": 445,
+    "player_id": "34b9b5df-9e77-69b1-0f42-05b4907a70c3"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 427,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Sam P.",
+    "score": 335,
+    "player_id": "5f557203-3018-50c5-a38f-d547923a7369"
+   }
+  ],
+  "creemee-drop": [
+   {
+    "name": "Sam P.",
+    "score": 29,
+    "player_id": "5f557203-3018-50c5-a38f-d547923a7369"
+   },
+   {
+    "name": "Nora L.",
+    "score": 28,
+    "player_id": "4a23d596-2217-bead-dbc4-96cb8e81973e"
+   },
+   {
+    "name": "Priya N.",
+    "score": 26,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Tom A.",
+    "score": 22,
+    "player_id": "34b9b5df-9e77-69b1-0f42-05b4907a70c3"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 20,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Kara M.",
+    "score": 19,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Max T.",
+    "score": 17,
+    "player_id": "4cbd87ad-5c90-a958-7403-e430ec66a787"
+   },
+   {
+    "name": "Ada W.",
+    "score": 16,
+    "player_id": "e00902c7-7ebf-f206-8673-47214cdd2055"
+   }
+  ],
+  "pothole-patrol": [
+   {
+    "name": "Dev K.",
+    "score": 11933,
+    "player_id": "1e27a1c0-8a6a-63ec-24ed-e6a46b4cb242"
+   },
+   {
+    "name": "Kara M.",
+    "score": 11793,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Max T.",
+    "score": 11529,
+    "player_id": "4cbd87ad-5c90-a958-7403-e430ec66a787"
+   },
+   {
+    "name": "Nora L.",
+    "score": 10687,
+    "player_id": "4a23d596-2217-bead-dbc4-96cb8e81973e"
+   },
+   {
+    "name": "Mo J.",
+    "score": 10549,
+    "player_id": "1e398f10-12bd-4ace-faec-bd389be4bcfc"
+   },
+   {
+    "name": "Ben S.",
+    "score": 10357,
+    "player_id": "94e3bf91-1a61-dbe2-2e44-158bae97ba94"
+   },
+   {
+    "name": "Tom A.",
+    "score": 7614,
+    "player_id": "34b9b5df-9e77-69b1-0f42-05b4907a70c3"
+   },
+   {
+    "name": "Priya N.",
+    "score": 7471,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Cy F.",
+    "score": 7469,
+    "player_id": "49b64a08-72e6-cc3a-babc-ed2057ee05cd"
+   },
+   {
+    "name": "Lou B.",
+    "score": 7044,
+    "player_id": "6d76b07e-881e-d162-ae2e-b1547f150524"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 6873,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Sam P.",
+    "score": 5689,
+    "player_id": "5f557203-3018-50c5-a38f-d547923a7369"
+   }
+  ],
+  "tap-the-maple": [
+   {
+    "name": "Ivy R.",
+    "score": 495,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Kara M.",
+    "score": 421,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Priya N.",
+    "score": 416,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Cy F.",
+    "score": 415,
+    "player_id": "49b64a08-72e6-cc3a-babc-ed2057ee05cd"
+   },
+   {
+    "name": "Ben S.",
+    "score": 403,
+    "player_id": "94e3bf91-1a61-dbe2-2e44-158bae97ba94"
+   },
+   {
+    "name": "Mo J.",
+    "score": 392,
+    "player_id": "1e398f10-12bd-4ace-faec-bd389be4bcfc"
+   },
+   {
+    "name": "Max T.",
+    "score": 345,
+    "player_id": "4cbd87ad-5c90-a958-7403-e430ec66a787"
+   },
+   {
+    "name": "Gus H.",
+    "score": 342,
+    "player_id": "930d6eaf-14f4-733f-3e7d-1bfbc7a2ea20"
+   }
+  ],
+  "btown-wordle": [
+   {
+    "name": "Ada W.",
+    "score": 11933,
+    "player_id": "e00902c7-7ebf-f206-8673-47214cdd2055"
+   },
+   {
+    "name": "Juniper",
+    "score": 11483,
+    "player_id": "c1d3fcff-2a3a-f4d4-6b0a-18e8830e07bc"
+   },
+   {
+    "name": "Gus H.",
+    "score": 11128,
+    "player_id": "930d6eaf-14f4-733f-3e7d-1bfbc7a2ea20"
+   },
+   {
+    "name": "Kara M.",
+    "score": 10934,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Mo J.",
+    "score": 10412,
+    "player_id": "1e398f10-12bd-4ace-faec-bd389be4bcfc"
+   },
+   {
+    "name": "Dev K.",
+    "score": 9536,
+    "player_id": "1e27a1c0-8a6a-63ec-24ed-e6a46b4cb242"
+   },
+   {
+    "name": "Ben S.",
+    "score": 9329,
+    "player_id": "94e3bf91-1a61-dbe2-2e44-158bae97ba94"
+   },
+   {
+    "name": "Rae C.",
+    "score": 9230,
+    "player_id": "b2f14c94-2e05-319a-cb5c-74273f98e277"
+   },
+   {
+    "name": "Max T.",
+    "score": 8574,
+    "player_id": "4cbd87ad-5c90-a958-7403-e430ec66a787"
+   },
+   {
+    "name": "Lou B.",
+    "score": 8504,
+    "player_id": "6d76b07e-881e-d162-ae2e-b1547f150524"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 8071,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Priya N.",
+    "score": 6867,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Cy F.",
+    "score": 6846,
+    "player_id": "49b64a08-72e6-cc3a-babc-ed2057ee05cd"
+   },
+   {
+    "name": "Tom A.",
+    "score": 6565,
+    "player_id": "34b9b5df-9e77-69b1-0f42-05b4907a70c3"
+   }
+  ],
+  "btown-riddle": [
+   {
+    "name": "Priya N.",
+    "score": 459,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Max T.",
+    "score": 451,
+    "player_id": "4cbd87ad-5c90-a958-7403-e430ec66a787"
+   },
+   {
+    "name": "Cy F.",
+    "score": 449,
+    "player_id": "49b64a08-72e6-cc3a-babc-ed2057ee05cd"
+   },
+   {
+    "name": "Lou B.",
+    "score": 433,
+    "player_id": "6d76b07e-881e-d162-ae2e-b1547f150524"
+   },
+   {
+    "name": "Rae C.",
+    "score": 430,
+    "player_id": "b2f14c94-2e05-319a-cb5c-74273f98e277"
+   },
+   {
+    "name": "Kara M.",
+    "score": 426,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Mo J.",
+    "score": 410,
+    "player_id": "1e398f10-12bd-4ace-faec-bd389be4bcfc"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 405,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Nora L.",
+    "score": 395,
+    "player_id": "4a23d596-2217-bead-dbc4-96cb8e81973e"
+   },
+   {
+    "name": "Tom A.",
+    "score": 364,
+    "player_id": "34b9b5df-9e77-69b1-0f42-05b4907a70c3"
+   },
+   {
+    "name": "Ada W.",
+    "score": 343,
+    "player_id": "e00902c7-7ebf-f206-8673-47214cdd2055"
+   },
+   {
+    "name": "Dev K.",
+    "score": 317,
+    "player_id": "1e27a1c0-8a6a-63ec-24ed-e6a46b4cb242"
+   },
+   {
+    "name": "Ben S.",
+    "score": 306,
+    "player_id": "94e3bf91-1a61-dbe2-2e44-158bae97ba94"
+   },
+   {
+    "name": "Sam P.",
+    "score": 304,
+    "player_id": "5f557203-3018-50c5-a38f-d547923a7369"
+   }
+  ],
+  "trivia-ladder": [
+   {
+    "name": "Priya N.",
+    "score": 489,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Mo J.",
+    "score": 471,
+    "player_id": "1e398f10-12bd-4ace-faec-bd389be4bcfc"
+   },
+   {
+    "name": "Cy F.",
+    "score": 469,
+    "player_id": "49b64a08-72e6-cc3a-babc-ed2057ee05cd"
+   },
+   {
+    "name": "Lou B.",
+    "score": 457,
+    "player_id": "6d76b07e-881e-d162-ae2e-b1547f150524"
+   },
+   {
+    "name": "Max T.",
+    "score": 450,
+    "player_id": "4cbd87ad-5c90-a958-7403-e430ec66a787"
+   },
+   {
+    "name": "Dev K.",
+    "score": 422,
+    "player_id": "1e27a1c0-8a6a-63ec-24ed-e6a46b4cb242"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 342,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Nora L.",
+    "score": 309,
+    "player_id": "4a23d596-2217-bead-dbc4-96cb8e81973e"
+   },
+   {
+    "name": "Ada W.",
+    "score": 303,
+    "player_id": "e00902c7-7ebf-f206-8673-47214cdd2055"
+   },
+   {
+    "name": "Kara M.",
+    "score": 280,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Sam P.",
+    "score": 230,
+    "player_id": "5f557203-3018-50c5-a38f-d547923a7369"
+   },
+   {
+    "name": "Juniper",
+    "score": 210,
+    "player_id": "c1d3fcff-2a3a-f4d4-6b0a-18e8830e07bc"
+   },
+   {
+    "name": "Ben S.",
+    "score": 199,
+    "player_id": "94e3bf91-1a61-dbe2-2e44-158bae97ba94"
+   },
+   {
+    "name": "Gus H.",
+    "score": 181,
+    "player_id": "930d6eaf-14f4-733f-3e7d-1bfbc7a2ea20"
+   }
+  ],
+  "four-in-a-rowboat": [
+   {
+    "name": "Priya N.",
+    "score": 1983,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Tom A.",
+    "score": 1948,
+    "player_id": "34b9b5df-9e77-69b1-0f42-05b4907a70c3"
+   },
+   {
+    "name": "Dev K.",
+    "score": 1924,
+    "player_id": "1e27a1c0-8a6a-63ec-24ed-e6a46b4cb242"
+   },
+   {
+    "name": "Cy F.",
+    "score": 1835,
+    "player_id": "49b64a08-72e6-cc3a-babc-ed2057ee05cd"
+   },
+   {
+    "name": "Lou B.",
+    "score": 1812,
+    "player_id": "6d76b07e-881e-d162-ae2e-b1547f150524"
+   },
+   {
+    "name": "Kara M.",
+    "score": 1731,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Ada W.",
+    "score": 1654,
+    "player_id": "e00902c7-7ebf-f206-8673-47214cdd2055"
+   },
+   {
+    "name": "Ben S.",
+    "score": 1545,
+    "player_id": "94e3bf91-1a61-dbe2-2e44-158bae97ba94"
+   },
+   {
+    "name": "Rae C.",
+    "score": 1456,
+    "player_id": "b2f14c94-2e05-319a-cb5c-74273f98e277"
+   },
+   {
+    "name": "Nora L.",
+    "score": 1224,
+    "player_id": "4a23d596-2217-bead-dbc4-96cb8e81973e"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 1179,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   }
+  ],
+  "church-street-checkers": [
+   {
+    "name": "Dev K.",
+    "score": 29,
+    "player_id": "1e27a1c0-8a6a-63ec-24ed-e6a46b4cb242"
+   },
+   {
+    "name": "Gus H.",
+    "score": 28,
+    "player_id": "930d6eaf-14f4-733f-3e7d-1bfbc7a2ea20"
+   },
+   {
+    "name": "Kara M.",
+    "score": 27,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Nora L.",
+    "score": 26,
+    "player_id": "4a23d596-2217-bead-dbc4-96cb8e81973e"
+   },
+   {
+    "name": "Ada W.",
+    "score": 25,
+    "player_id": "e00902c7-7ebf-f206-8673-47214cdd2055"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 24,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Lou B.",
+    "score": 22,
+    "player_id": "6d76b07e-881e-d162-ae2e-b1547f150524"
+   },
+   {
+    "name": "Max T.",
+    "score": 18,
+    "player_id": "4cbd87ad-5c90-a958-7403-e430ec66a787"
+   },
+   {
+    "name": "Rae C.",
+    "score": 15,
+    "player_id": "b2f14c94-2e05-319a-cb5c-74273f98e277"
+   }
+  ],
+  "btown-cribbage": [
+   {
+    "name": "Priya N.",
+    "score": 475,
+    "player_id": "d0eda82f-8f6d-0558-4ef8-aa3892276658"
+   },
+   {
+    "name": "Ivy R.",
+    "score": 470,
+    "player_id": "95e761d1-7731-af10-506b-f2efc6f87718"
+   },
+   {
+    "name": "Cy F.",
+    "score": 445,
+    "player_id": "49b64a08-72e6-cc3a-babc-ed2057ee05cd"
+   },
+   {
+    "name": "Max T.",
+    "score": 442,
+    "player_id": "4cbd87ad-5c90-a958-7403-e430ec66a787"
+   },
+   {
+    "name": "Lou B.",
+    "score": 420,
+    "player_id": "6d76b07e-881e-d162-ae2e-b1547f150524"
+   },
+   {
+    "name": "Kara M.",
+    "score": 353,
+    "player_id": "1012f037-b64c-e422-8c38-fb2918f135d2"
+   },
+   {
+    "name": "Dev K.",
+    "score": 321,
+    "player_id": "1e27a1c0-8a6a-63ec-24ed-e6a46b4cb242"
+   },
+   {
+    "name": "Sam P.",
+    "score": 310,
+    "player_id": "5f557203-3018-50c5-a38f-d547923a7369"
+   },
+   {
+    "name": "Nora L.",
+    "score": 281,
+    "player_id": "4a23d596-2217-bead-dbc4-96cb8e81973e"
+   },
+   {
+    "name": "Gus H.",
+    "score": 270,
+    "player_id": "930d6eaf-14f4-733f-3e7d-1bfbc7a2ea20"
+   }
+  ],
+  "queen-city-chess": []
+ },
+ "champions": {
+  "updated": "2026-10-16T17:40:26Z",
+  "month": "2026-10",
+  "monthLabel": "October",
+  "games": [
+   {
+    "slug": "church-street-skate",
+    "name": "Church Street Skate",
+    "emoji": "🛹",
+    "champ": "Kara M.",
+    "score": 29,
+    "players": 14
+   },
+   {
+    "slug": "street-yeet",
+    "name": "STREET YEET",
+    "emoji": "🚀",
+    "champ": "Priya N.",
+    "score": 483,
+    "players": 5
+   },
+   {
+    "slug": "creemee-drop",
+    "name": "Creemee Drop",
+    "emoji": "🍦",
+    "champ": "Sam P.",
+    "score": 29,
+    "players": 8
+   },
+   {
+    "slug": "pothole-patrol",
+    "name": "Pothole Patrol",
+    "emoji": "🕳️",
+    "champ": "Dev K.",
+    "score": 11933,
+    "players": 12
+   },
+   {
+    "slug": "tap-the-maple",
+    "name": "Tap the Maple",
+    "emoji": "🍁",
+    "champ": "Ivy R.",
+    "score": 495,
+    "players": 8
+   },
+   {
+    "slug": "btown-wordle",
+    "name": "BTown Wordle",
+    "emoji": "🟩",
+    "champ": "Ada W.",
+    "score": 11933,
+    "players": 14
+   },
+   {
+    "slug": "btown-riddle",
+    "name": "Btown Riddle",
+    "emoji": "🍁",
+    "champ": "Priya N.",
+    "score": 459,
+    "players": 14
+   },
+   {
+    "slug": "trivia-ladder",
+    "name": "Trivia Ladder",
+    "emoji": "🪜",
+    "champ": "Priya N.",
+    "score": 489,
+    "players": 14
+   },
+   {
+    "slug": "four-in-a-rowboat",
+    "name": "Four in a Rowboat",
+    "emoji": "🚣",
+    "champ": "Priya N.",
+    "score": 1983,
+    "players": 11
+   },
+   {
+    "slug": "church-street-checkers",
+    "name": "Church Street Checkers",
+    "emoji": "🔴",
+    "champ": "Dev K.",
+    "score": 29,
+    "players": 9
+   },
+   {
+    "slug": "btown-cribbage",
+    "name": "Btown Cribbage",
+    "emoji": "🏔️",
+    "champ": "Priya N.",
+    "score": 475,
+    "players": 10
+   }
+  ],
+  "royalty": [
+   {
+    "name": "Priya N.",
+    "crowns": 5,
+    "podiums": 8,
+    "boards": 9
+   },
+   {
+    "name": "Dev K.",
+    "crowns": 2,
+    "podiums": 3,
+    "boards": 7
+   },
+   {
+    "name": "Kara M.",
+    "crowns": 1,
+    "podiums": 4,
+    "boards": 10
+   },
+   {
+    "name": "Ivy R.",
+    "crowns": 1,
+    "podiums": 2,
+    "boards": 8
+   },
+   {
+    "name": "Ada W.",
+    "crowns": 1,
+    "podiums": 1,
+    "boards": 5
+   }
+  ]
+ }
 }
