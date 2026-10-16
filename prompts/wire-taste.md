@@ -135,10 +135,8 @@ clearest, most complete account, and the local outlet over a wire rewrite.
 
 ## Never
 
-- **Never re-serve.** A story that already ran in an earlier day's edition does not
-  come back unless there is a genuinely new development, and then the reason says so
-  ("Follow-up: the council voted"). Nothing is worse to Stephen than re-serving a story
-  he already published.
+- **Never re-serve.** A story from an earlier day's edition comes back only with a
+  genuinely new development, and the reason says so ("Follow-up: the council voted").
 - **Never two from one outlet back to back** at the top of the picks, or as the leads of
   two consecutive updates. Spread the voices.
 - **Never promo.** Sponsored posts, giveaways, "tune in tonight", app and subscription
@@ -148,4 +146,6 @@ clearest, most complete account, and the local outlet over a wire rewrite.
   matters; it never states a fact (a number, a date, a name) the headline does not give.
 - **Never shame or expose a private person.** A thread about a named neighbor, a
   mugshot story about a minor crime, a fundraiser for a named family: leave it out.
-- **Never fill.** A thin day gets a short river. Forty good items beat eighty items.
+- **Never fill.** A thin day gets a short river and fewer picks: twelve real local
+  picks beat fifteen padded with press releases (an award gathering, an expo, a
+  company's stunt abroad) or event listings.

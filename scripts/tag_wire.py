@@ -99,13 +99,19 @@ def load_store(data_dir):
     return store
 
 
-def river_titles(data_dir):
+def river_titles(data_dir, rebuilding=False):
+    """[(id, title)] of today's river, for judging duplicates. Empty when
+    today is being rebuilt: the old river is about to be thrown away."""
+    if rebuilding:
+        return []
     today = wc.load_json(os.path.join(data_dir, "wire-today.json"), {})
+    if today.get("date") != wc.et_now().date().isoformat():
+        return []   # yesterday's river is not today's
     titles = []
     for update in today.get("updates") or []:
         for item in update.get("items") or []:
             if item.get("title"):
-                titles.append(item["title"])
+                titles.append((item.get("id"), item["title"]))
     return titles[:RIVER_TITLES]
 
 
@@ -120,6 +126,11 @@ def untagged(items, store):
 
 
 def format_batch(batch, titles):
+    """The numbered list. A river item that is itself in this batch is left
+    off the ALREADY IN THE RIVER list, so nothing is judged a duplicate of
+    itself."""
+    in_batch = {item["id"] for item in batch}
+    titles = [title for item_id, title in titles if item_id not in in_batch]
     lines = []
     if titles:
         lines.append("ALREADY IN THE RIVER (today):")
@@ -212,7 +223,7 @@ def run(args):
         return 0
 
     system = wc.read_prompt("wire-tags.md")
-    titles = river_titles(args.data_dir)
+    titles = river_titles(args.data_dir, rebuilding=getattr(args, "retag", False))
     usage = {"in": 0, "out": 0, "cache_read": 0, "cache_write": 0, "calls": 0}
     tagged = failed = 0
     for start in range(0, len(todo), BATCH):
@@ -270,8 +281,9 @@ def selftest():
     assert tags["a"]["ch"] == "world" and tags["a"]["local"] is False   # geography flips
     assert tags["b"]["ch"] == "local" and tags["b"]["score"] == 10      # clamped
     assert tags["c"]["ch"] == "x" and tags["c"]["local"] is True        # inbox stays put
-    text = format_batch(batch, ["Earlier story"])
+    text = format_batch(batch, [("zz", "Earlier story"), ("a", "Council votes")])
     assert "ALREADY IN THE RIVER" in text and "2. x · LOCAL · @wcax · I-89 closed" in text
+    assert "- Council votes" not in text      # never a duplicate of itself
     store = {"tags": {"old": {"at": 0}, "new": {"at": 10 ** 9}}}
     prune(store, 10 ** 9)
     assert list(store["tags"]) == ["new"]

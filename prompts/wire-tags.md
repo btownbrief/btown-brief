@@ -17,7 +17,10 @@ For each item return:
 - **junk**: `none`, or why it should never reach a reader:
   - `promo`: sponsored, advertising, a station or outlet promoting itself or its own
     show, "download our app", a subscription pitch, a newsletter's welcome or
-    housekeeping email, a sale that is only an ad.
+    housekeeping email, a sale that is only an ad, and press releases that are
+    publicity rather than news: an award ceremony or gathering, an expo or conference
+    appearance, a company's marketing stunt. A company opening, closing, moving, hiring
+    at scale or winning a contract is news.
   - `giveaway`: contests, sweepstakes, "win tickets", raffles.
   - `tunein`: "tune in", "watch live", "join us tonight at 6", a livestream notice,
     a podcast episode whose title is only a show name and date. A news story about an
@@ -30,7 +33,8 @@ For each item return:
     the same story are NOT duplicates: tag both normally; the editor chooses the best
     version.
   - `noise`: jokes, memes, horoscopes, quizzes, puzzles, "open thread", recipes of the
-    day with no local hook, generic listicles, pure clickbait.
+    day with no local hook, generic listicles, pure clickbait. A police warning about
+    a scam, a missing person or a road closure is never noise.
 - **local**: true when the story is about the Burlington area or Vermont as defined
   above, whatever the source. A Vermont outlet running a wire story about Gaza is
   `false`. A national outlet's story about a Vermont town is `true`.
