@@ -13,20 +13,17 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v42';
+const VERSION = 'all-day-v43';   // v43: the New Nine shell
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
 const SHELL_URLS = [
-  './', './index.html', './manifest.webmanifest', './css/app.css',
+  './', './index.html', './manifest.webmanifest', './css/tokens.css', './css/app.css',
   './js/main.js', './js/app.js', './js/store.js', './js/wire.js', './js/ui.js',
-  './js/rows.js', './js/gestures.js', './js/sun.js',
-  './js/modes/wire.js', './js/modes/reddit.js', './js/modes/watch.js',
-  './js/modes/listen.js', './js/modes/wander.js', './js/modes/music.js', './js/modes/photos.js',
-  './js/modes/whatnow.js', './js/modes/ig.js',
-  './js/whatnow-engine.js', './js/whatnow-data.js',
-  './data/wander-pool.json', './data/music.json',
-  './data/whatnow.json', './data/instagram.json', './data/podcast.json',
+  './js/liquid.js', './js/gestures.js', './js/auth.js',
+  './js/modes/wire.js', './js/modes/wire-demo.js', './js/modes/watch.js', './js/modes/food.js',
+  './js/modes/people.js', './js/modes/whatnow.js', './js/modes/vintage.js', './js/modes/art.js',
+  './js/modes/onair.js', './js/modes/games.js',
 ];
 
 self.addEventListener('install', (e) => {
@@ -84,8 +81,11 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(SHELL).then((c) => c.put('./index.html', copy)).catch(() => {});
+          /* only a good page becomes the offline shell; a 404 must not */
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(SHELL).then((c) => c.put('./index.html', copy)).catch(() => {});
+          }
           return res;
         })
         .catch(() => caches.match('./index.html').then((hit) => hit || Response.error()))

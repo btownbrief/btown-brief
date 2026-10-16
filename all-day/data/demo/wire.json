@@ -1,0 +1,1804 @@
+{
+ "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders. days[0] is today; picks are keyed by day index and either reference a river item (ref) or are extra picks; fresh is what a pull to refresh brings; every is the raw wire.",
+ "channels": [
+  {
+   "key": "all",
+   "label": "All"
+  },
+  {
+   "key": "x",
+   "label": "X"
+  },
+  {
+   "key": "facebook",
+   "label": "Facebook"
+  },
+  {
+   "key": "reddit",
+   "label": "Reddit"
+  },
+  {
+   "key": "newsletters",
+   "label": "Newsletters"
+  },
+  {
+   "key": "video",
+   "label": "Video"
+  }
+ ],
+ "days": [
+  {
+   "date": "Thursday, October 16",
+   "short": "Today",
+   "final": false,
+   "updated": "2:10 pm",
+   "groups": [
+    {
+     "key": "pm",
+     "label": "Afternoon",
+     "sub": "updated 2:10 pm",
+     "items": [
+      {
+       "kind": "pick",
+       "ch": "local",
+       "src": "Seven Days",
+       "local": true,
+       "ago": "2h",
+       "media": "street",
+       "title": "The Main Street rebuild gets a real schedule, and the detours start in November",
+       "why": "Every downtown trip changes for two years. This is the one piece that explains which blocks close in what order.",
+       "text": "The city released a block-by-block sequence for the two-year rebuild, starting at the Battery Street end. Buses reroute first; parking goes second.",
+       "votes": 48,
+       "comments": 12,
+       "k": "w1",
+       "sid": "Seven Days"
+      },
+      {
+       "kind": "post",
+       "ch": "x",
+       "local": true,
+       "src": "@wcax",
+       "author": "@wcax",
+       "handle": "WCAX on X",
+       "ago": "23m",
+       "open": "Open on X",
+       "text": "Northbound I-89 is closed at exit 14 after a tractor-trailer rollover. No injuries reported. Expect delays on Williston Road through the afternoon.",
+       "votes": 9,
+       "comments": 4,
+       "k": "w2",
+       "sid": "@wcax"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "VTDigger",
+       "local": true,
+       "ago": "1h",
+       "thumb": "brick",
+       "title": "Council votes 9 to 3 to keep Church Street outdoor dining open through Halloween",
+       "text": "Snow removal was the sticking point; the agreement puts it on the city until Nov 1.",
+       "votes": 31,
+       "comments": 7,
+       "k": "w3",
+       "sid": "VTDigger"
+      },
+      {
+       "kind": "post",
+       "ch": "facebook",
+       "local": true,
+       "src": "Burlington Twenty Somethings",
+       "via": "Facebook, via Muse",
+       "ago": "1h",
+       "open": "Open the post",
+       "text": "Anyone want to split a winter CSA share? Intervale pickup, Thursdays. The full share is too much for one person; thinking two or three of us.",
+       "votes": 8,
+       "comments": 12,
+       "k": "w4",
+       "sid": "Burlington Twenty Somethings"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "WCAX",
+       "local": true,
+       "ago": "2h",
+       "thumb": "night",
+       "title": "GMT adds a late bus on the Route 1 line after months of asking from Winooski riders",
+       "text": "The last outbound bus now leaves downtown at 11:40 pm on weeknights, up from 10:10.",
+       "votes": 22,
+       "comments": 4,
+       "k": "w5",
+       "sid": "WCAX"
+      },
+      {
+       "kind": "video",
+       "ch": "video",
+       "src": "WCAX",
+       "local": true,
+       "ago": "2h",
+       "media": "foliage",
+       "dur": "4:12",
+       "title": "Fall color from the Burlington bike path, start to finish",
+       "text": "Eight miles of path from Oakledge to the causeway, shot last Saturday morning.",
+       "votes": 19,
+       "comments": 3,
+       "k": "w6",
+       "sid": "WCAX"
+      },
+      {
+       "kind": "post",
+       "ch": "reddit",
+       "local": true,
+       "src": "r/burlington",
+       "via": "Reddit",
+       "ago": "2h",
+       "open": "Open the thread",
+       "title": "Where do people actually park for a Flynn show now that the garage rates changed?",
+       "text": "Went last night, paid $18 at the Marketplace garage and walked past a dozen empty spots on Pine. Is there a trick I am missing?",
+       "votes": 26,
+       "comments": 48,
+       "k": "w7",
+       "sid": "r/burlington"
+      },
+      {
+       "kind": "headline",
+       "ch": "world",
+       "src": "AP",
+       "ago": "2h",
+       "thumb": "paper",
+       "title": "Fed holds rates steady and signals one more cut before the year ends",
+       "text": "Markets had priced in the pause.",
+       "votes": 12,
+       "comments": 3,
+       "k": "w8",
+       "sid": "AP"
+      }
+     ]
+    },
+    {
+     "newline": "8 new since you were here at 11:52 am"
+    },
+    {
+     "key": "noon",
+     "label": "Midday",
+     "sub": "updated 11:40 am",
+     "items": [
+      {
+       "kind": "post",
+       "ch": "x",
+       "local": true,
+       "src": "@NWSBurlington",
+       "author": "@NWSBurlington",
+       "handle": "NWS Burlington on X",
+       "ago": "3h",
+       "open": "Open on X",
+       "text": "Frost advisory tonight for the Champlain Valley, 2 am to 8 am. Cover the tomatoes one more time.",
+       "votes": 14,
+       "comments": 1,
+       "k": "w9",
+       "sid": "@NWSBurlington"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "Burlington Free Press",
+       "local": true,
+       "ago": "4h",
+       "thumb": "rink",
+       "title": "UVM men’s hockey opens the season at Gutterson Friday against Northeastern",
+       "text": "Puck drops at 7. Student section tickets were gone by Tuesday.",
+       "votes": 14,
+       "comments": 2,
+       "k": "w10",
+       "sid": "Burlington Free Press"
+      },
+      {
+       "kind": "post",
+       "ch": "newsletters",
+       "local": true,
+       "src": "Hello Burlington",
+       "via": "Newsletter",
+       "ago": "4h",
+       "open": "Open the newsletter",
+       "title": "This week: the Pumpkin Regatta returns to the waterfront Saturday, plus eleven more things",
+       "text": "Giant pumpkins, paddled. Also a cider pressing at the Intervale, two gallery openings and the last farmers market on Pine.",
+       "votes": 11,
+       "comments": 2,
+       "k": "w11",
+       "sid": "Hello Burlington"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "NBC5",
+       "local": true,
+       "ago": "5h",
+       "thumb": "lake",
+       "title": "Lake Champlain is still 61 degrees, which is warm for the middle of October",
+       "text": "Swimmers are still going in at Oakledge most mornings.",
+       "votes": 11,
+       "comments": 1,
+       "k": "w12",
+       "sid": "NBC5"
+      },
+      {
+       "kind": "post",
+       "ch": "local",
+       "src": "Front Porch Forum",
+       "via": "Old North End",
+       "local": true,
+       "ago": "5h",
+       "open": "Open the post",
+       "title": "Found: a very confident orange cat on Archibald Street. Collar, no tag.",
+       "text": "He walked into our kitchen like he owned it. Currently asleep on the dog’s bed. The dog is confused.",
+       "votes": 40,
+       "comments": 15,
+       "k": "w13",
+       "sid": "Front Porch Forum"
+      },
+      {
+       "kind": "headline",
+       "ch": "world",
+       "src": "NPR",
+       "ago": "5h",
+       "title": "A new study puts a number on the sleep teenagers lose to their phones",
+       "text": "About 40 minutes a night, on average.",
+       "votes": 9,
+       "comments": 2,
+       "k": "w14",
+       "sid": "NPR"
+      },
+      {
+       "kind": "video",
+       "ch": "video",
+       "src": "Vermont Public",
+       "local": true,
+       "ago": "6h",
+       "media": "lake",
+       "dur": "9:40",
+       "title": "How the Winooski River made Burlington",
+       "text": "The mills, the falls, and the flood.",
+       "votes": 15,
+       "comments": 2,
+       "k": "w15",
+       "sid": "Vermont Public"
+      },
+      {
+       "kind": "post",
+       "ch": "reddit",
+       "local": true,
+       "src": "r/vermont",
+       "via": "Reddit",
+       "ago": "6h",
+       "open": "Open the thread",
+       "title": "The foliage map says peak in the valley this weekend. Where are you going?",
+       "text": "Looking for somewhere that is not Stowe.",
+       "votes": 18,
+       "comments": 31,
+       "k": "w16",
+       "sid": "r/vermont"
+      }
+     ]
+    },
+    {
+     "key": "am",
+     "label": "Morning",
+     "sub": "updated 7:10 am",
+     "items": [
+      {
+       "kind": "pick",
+       "ch": "newsletters",
+       "eyebrow": "The Brief",
+       "src": "The Brief",
+       "own": true,
+       "local": true,
+       "ago": "7h",
+       "media": "coffee",
+       "title": "Thursday’s Brief: the school budget gap, a late bus, and the lake that won’t cool down",
+       "why": "Stephen’s morning edition, read in four minutes. Tap the headphones on Listen to hear it.",
+       "text": "The Thursday edition, as sent to 3,130 inboxes.",
+       "votes": 33,
+       "comments": 6,
+       "k": "w17",
+       "sid": "The Brief"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "Vermont Public",
+       "local": true,
+       "ago": "8h",
+       "thumb": "paper",
+       "title": "School board to hear the budget outlook Tuesday, with a gap in the millions",
+       "text": "Administrators will present three scenarios.",
+       "votes": 9,
+       "comments": 3,
+       "k": "w18",
+       "sid": "Vermont Public"
+      },
+      {
+       "kind": "post",
+       "ch": "x",
+       "local": true,
+       "src": "@vtdigger",
+       "author": "@vtdigger",
+       "handle": "VTDigger on X",
+       "ago": "8h",
+       "open": "Open on X",
+       "text": "New this morning: the state’s housing dashboard shows Chittenden County permits up 18% over last year, most of it in South Burlington and Essex.",
+       "votes": 7,
+       "comments": 2,
+       "k": "w19",
+       "sid": "@vtdigger"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "Seven Days",
+       "local": true,
+       "ago": "9h",
+       "title": "Foam’s lakeside lot closes for the season after this weekend",
+       "text": "Inside stays open all winter.",
+       "votes": 13,
+       "comments": 2,
+       "k": "w20",
+       "sid": "Seven Days"
+      },
+      {
+       "kind": "post",
+       "ch": "facebook",
+       "local": true,
+       "src": "Burlington Twenty Somethings",
+       "via": "Facebook, via Muse",
+       "ago": "9h",
+       "open": "Open the post",
+       "text": "Thursday trivia at the Archives, team of four looking for two more. We are good at music and bad at geography. 7 pm.",
+       "votes": 5,
+       "comments": 9,
+       "k": "w21",
+       "sid": "Burlington Twenty Somethings"
+      },
+      {
+       "kind": "image",
+       "ch": "local",
+       "src": "@northbeachmornings",
+       "author": "@northbeachmornings",
+       "via": "Instagram",
+       "local": true,
+       "ago": "10h",
+       "media": "dawn",
+       "ratio": "r45",
+       "text": "6:52 this morning at North Beach. Worth the alarm.",
+       "votes": 64,
+       "comments": 9,
+       "k": "w22",
+       "sid": "@northbeachmornings"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "UVM Athletics",
+       "local": true,
+       "ago": "11h",
+       "thumb": "field",
+       "title": "Catamounts women’s soccer clinches a home playoff game with a win at Albany",
+       "text": "The quarterfinal is at Virtue Field next Thursday.",
+       "votes": 8,
+       "comments": 0,
+       "k": "w23",
+       "sid": "UVM Athletics"
+      },
+      {
+       "kind": "headline",
+       "ch": "world",
+       "src": "BBC",
+       "ago": "11h",
+       "thumb": "field",
+       "title": "A wind farm the size of a city is approved off the Scottish coast",
+       "text": "First power in 2029.",
+       "votes": 6,
+       "comments": 1,
+       "k": "w24",
+       "sid": "BBC"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "Wednesday, October 15",
+   "short": "Yesterday",
+   "final": true,
+   "count": 9,
+   "groups": [
+    {
+     "key": "pm",
+     "label": "Afternoon",
+     "sub": "final",
+     "items": [
+      {
+       "kind": "pick",
+       "ch": "local",
+       "src": "VTDigger",
+       "local": true,
+       "ago": "Wed",
+       "media": "slate",
+       "title": "The waterfront skate park reopens after a summer of repairs",
+       "why": "New coping, new drainage, same bowl. The first session was at 3:15.",
+       "text": "The park closed in June.",
+       "votes": 25,
+       "comments": 6,
+       "k": "y1",
+       "sid": "VTDigger"
+      },
+      {
+       "kind": "post",
+       "ch": "x",
+       "local": true,
+       "src": "@TylerJankoski",
+       "author": "@TylerJankoski",
+       "handle": "NBC5 weather on X",
+       "ago": "Wed",
+       "open": "Open on X",
+       "text": "A clear night and a late moonrise: the aurora forecast is the best of the month. Look north from the causeway after 10.",
+       "votes": 41,
+       "comments": 8,
+       "k": "y2",
+       "sid": "@TylerJankoski"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "Seven Days",
+       "local": true,
+       "ago": "Wed",
+       "thumb": "coffee",
+       "title": "A third coffee roaster is opening on Pine Street, two doors from the second",
+       "text": "The owners say the block can take it.",
+       "votes": 7,
+       "comments": 4,
+       "k": "y3",
+       "sid": "Seven Days"
+      },
+      {
+       "kind": "post",
+       "ch": "reddit",
+       "local": true,
+       "src": "r/burlington",
+       "via": "Reddit",
+       "ago": "Wed",
+       "open": "Open the thread",
+       "title": "The new crosswalk signal on North Ave is a big improvement, whoever asked for it",
+       "text": "Cars actually stop now.",
+       "votes": 52,
+       "comments": 31,
+       "k": "y4",
+       "sid": "r/burlington"
+      }
+     ]
+    },
+    {
+     "key": "am",
+     "label": "Morning",
+     "sub": "final",
+     "items": [
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "WCAX",
+       "local": true,
+       "ago": "Wed",
+       "title": "Leaf pickup in the Old North End starts Monday; bags on the curb by 7 am",
+       "text": "Paper bags only.",
+       "votes": 3,
+       "comments": 0,
+       "k": "y5",
+       "sid": "WCAX"
+      },
+      {
+       "kind": "video",
+       "ch": "video",
+       "src": "Btown TV",
+       "local": true,
+       "ago": "Wed",
+       "media": "night",
+       "dur": "12:04",
+       "title": "Wednesday night’s picks: a short about the Intervale and a long one about the lake",
+       "votes": 9,
+       "comments": 1,
+       "k": "y6",
+       "sid": "Btown TV"
+      },
+      {
+       "kind": "headline",
+       "ch": "world",
+       "src": "Reuters",
+       "ago": "Wed",
+       "title": "Oil slips as the strait reopens to tankers",
+       "text": "Brent fell two percent.",
+       "votes": 2,
+       "comments": 0,
+       "k": "y7",
+       "sid": "Reuters"
+      },
+      {
+       "kind": "post",
+       "ch": "facebook",
+       "local": true,
+       "src": "Burlington Twenty Somethings",
+       "via": "Facebook, via Muse",
+       "ago": "Wed",
+       "open": "Open the post",
+       "text": "Who is going to the Saturday Coffee Club at Scout? First time, slightly nervous, will be the one in the green hat.",
+       "votes": 9,
+       "comments": 5,
+       "k": "y8",
+       "sid": "Burlington Twenty Somethings"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "NBC5",
+       "local": true,
+       "ago": "Wed",
+       "thumb": "lake",
+       "title": "Ferry crossings to Port Kent end for the season on Sunday",
+       "text": "The Grand Isle run continues all winter.",
+       "votes": 4,
+       "comments": 0,
+       "k": "y9",
+       "sid": "NBC5"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "date": "Tuesday, October 14",
+   "short": "Tuesday",
+   "final": true,
+   "count": 6,
+   "groups": [
+    {
+     "key": "pm",
+     "label": "The day",
+     "sub": "final",
+     "items": [
+      {
+       "kind": "pick",
+       "ch": "local",
+       "src": "Seven Days",
+       "local": true,
+       "ago": "Tue",
+       "media": "brick",
+       "title": "Nectar’s building sells, and the buyer says music stays",
+       "why": "The one everyone asked about. The lease runs through 2028.",
+       "votes": 61,
+       "comments": 22,
+       "k": "t1",
+       "sid": "Seven Days"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "VTDigger",
+       "local": true,
+       "ago": "Tue",
+       "title": "City Market’s South End store starts holiday hiring early, with 40 openings",
+       "text": "",
+       "votes": 6,
+       "comments": 0,
+       "k": "t2",
+       "sid": "VTDigger"
+      },
+      {
+       "kind": "post",
+       "ch": "x",
+       "local": true,
+       "src": "@511VT",
+       "author": "@511VT",
+       "handle": "511 Vermont on X",
+       "ago": "Tue",
+       "open": "Open on X",
+       "text": "Winooski bridge down to one lane tonight 9 pm to 5 am for deck work. Expect delays.",
+       "votes": 3,
+       "comments": 0,
+       "k": "t3",
+       "sid": "@511VT"
+      },
+      {
+       "kind": "headline",
+       "ch": "world",
+       "src": "The Verge",
+       "ago": "Tue",
+       "thumb": "teal",
+       "title": "The cheaper laptop is real, and it ships next month",
+       "text": "",
+       "votes": 7,
+       "comments": 5,
+       "k": "t4",
+       "sid": "The Verge"
+      },
+      {
+       "kind": "post",
+       "ch": "newsletters",
+       "local": true,
+       "src": "Love Burlington",
+       "via": "Newsletter",
+       "ago": "Tue",
+       "open": "Open the newsletter",
+       "title": "Downtown this week: late-night shopping Thursday and the last outdoor market",
+       "text": "",
+       "votes": 4,
+       "comments": 0,
+       "k": "t5",
+       "sid": "Love Burlington"
+      },
+      {
+       "kind": "headline",
+       "ch": "local",
+       "src": "UVM Athletics",
+       "local": true,
+       "ago": "Tue",
+       "thumb": "field",
+       "title": "Men’s soccer draws at home; the America East table is a four-way tie",
+       "text": "",
+       "votes": 5,
+       "comments": 1,
+       "k": "t6",
+       "sid": "UVM Athletics"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "fresh": [
+  {
+   "kind": "headline",
+   "ch": "local",
+   "src": "VTDigger",
+   "local": true,
+   "ago": "now",
+   "title": "Main Street rebuild: the first detour map is out, and Pearl takes the bus traffic",
+   "text": "Posted minutes ago.",
+   "votes": 0,
+   "comments": 0,
+   "k": "f1",
+   "sid": "VTDigger"
+  },
+  {
+   "kind": "post",
+   "ch": "x",
+   "local": true,
+   "src": "@wcax",
+   "author": "@wcax",
+   "handle": "WCAX on X",
+   "ago": "3m",
+   "open": "Open on X",
+   "text": "I-89 northbound has reopened at exit 14.",
+   "votes": 1,
+   "comments": 0,
+   "k": "f2",
+   "sid": "@wcax"
+  }
+ ],
+ "picks": {
+  "0": [
+   {
+    "ref": "w1",
+    "why": "Every downtown trip changes for two years. This is the one piece that explains which blocks close in what order."
+   },
+   {
+    "ref": "w9",
+    "why": "First frost of the fall tonight. If you have plants or pipes, this is the headline."
+   },
+   {
+    "ref": "w3",
+    "why": "The tables stay out two more weeks, and the city picks up the snow bill."
+   },
+   {
+    "ref": "w5",
+    "why": "A 90-minute later bus is the difference between a show and a cab for anyone in Winooski."
+   },
+   {
+    "ref": "w18",
+    "why": "The number in the school budget gap is the number that decides March."
+   },
+   {
+    "kind": "headline",
+    "ch": "local",
+    "src": "VTDigger",
+    "local": true,
+    "ago": "3h",
+    "title": "Burlington Electric asks for a 3 percent rate change, its first in four years",
+    "text": "The public hearing is Nov 4.",
+    "votes": 12,
+    "comments": 4,
+    "why": "Your bill, your meeting. Four weeks to say something.",
+    "k": "p6",
+    "sid": "VTDigger"
+   },
+   {
+    "ref": "w8",
+    "why": "The national story that reaches your mortgage. One line is enough: rates hold, one cut likely by December."
+   },
+   {
+    "kind": "headline",
+    "ch": "local",
+    "src": "Seven Days",
+    "local": true,
+    "ago": "6h",
+    "thumb": "night",
+    "title": "The Flynn adds a second night for the December show after the first sold out in an hour",
+    "text": "Tickets at 10 am Friday.",
+    "votes": 21,
+    "comments": 3,
+    "why": "Tickets go on sale Friday at 10. You will want to know that before Friday at 10.",
+    "k": "p8",
+    "sid": "Seven Days"
+   },
+   {
+    "kind": "headline",
+    "ch": "local",
+    "src": "WCAX",
+    "local": true,
+    "ago": "7h",
+    "title": "Winooski bridge down to one lane overnight for deck work through Thursday",
+    "text": "9 pm to 5 am.",
+    "votes": 5,
+    "comments": 1,
+    "why": "Three nights of one lane on the only bridge that matters at 11 pm.",
+    "k": "p9",
+    "sid": "WCAX"
+   },
+   {
+    "kind": "headline",
+    "ch": "local",
+    "src": "Vermont Public",
+    "local": true,
+    "ago": "9h",
+    "thumb": "field",
+    "title": "Peak foliage reaches the Champlain Valley this weekend, a week later than usual",
+    "text": "The warm lake is the reason.",
+    "votes": 17,
+    "comments": 2,
+    "why": "This is the weekend. Everyone will ask; now you know.",
+    "k": "p10",
+    "sid": "Vermont Public"
+   },
+   {
+    "kind": "headline",
+    "ch": "local",
+    "src": "Vermont Public",
+    "local": true,
+    "ago": "10h",
+    "thumb": "field",
+    "title": "The Intervale’s fall share closes Sunday with 30 slots left",
+    "text": "Pickup is Thursdays through December.",
+    "votes": 8,
+    "comments": 1,
+    "why": "Last call for the winter share. Thirty slots, and the pickup is the Thursday CSA people were splitting on Facebook this morning.",
+    "k": "p13",
+    "sid": "Vermont Public"
+   },
+   {
+    "kind": "headline",
+    "ch": "world",
+    "src": "NPR",
+    "ago": "4h",
+    "thumb": "paper",
+    "title": "A new antibiotic clears drug-resistant infections in its first large trial",
+    "text": "Approval could come next year.",
+    "votes": 9,
+    "comments": 2,
+    "why": "The rare science story worth your minute. It works, and it is new.",
+    "k": "p11",
+    "sid": "NPR"
+   },
+   {
+    "kind": "headline",
+    "ch": "world",
+    "src": "Reuters",
+    "ago": "5h",
+    "title": "The Senate advances the stopgap spending bill with ten days to spare",
+    "text": "A vote is expected Thursday.",
+    "votes": 4,
+    "comments": 1,
+    "why": "The shutdown clock, in one sentence, so you can stop checking.",
+    "k": "p12",
+    "sid": "Reuters"
+   }
+  ],
+  "1": [
+   {
+    "ref": "y1",
+    "why": "New coping, new drainage, same bowl. The first session was at 3:15."
+   },
+   {
+    "ref": "y2",
+    "why": "The best aurora night of the month, and the forecast held."
+   },
+   {
+    "ref": "y4",
+    "why": "A crosswalk that took three years of emails. Cars stop now."
+   },
+   {
+    "ref": "y9",
+    "why": "Last Port Kent ferry of the year is Sunday. Grand Isle keeps running."
+   }
+  ],
+  "2": [
+   {
+    "ref": "t1",
+    "why": "The one everyone asked about. Music stays, the lease runs to 2028."
+   },
+   {
+    "ref": "t3",
+    "why": "The Winooski bridge, one lane, tonight."
+   },
+   {
+    "ref": "t6",
+    "why": "A four-way tie at the top of America East with two weeks left."
+   }
+  ]
+ },
+ "outlets": [
+  {
+   "name": "Seven Days",
+   "local": true,
+   "n": 41
+  },
+  {
+   "name": "VTDigger",
+   "local": true,
+   "n": 28
+  },
+  {
+   "name": "WCAX",
+   "local": true,
+   "n": 33
+  },
+  {
+   "name": "NBC5",
+   "local": true,
+   "n": 25
+  },
+  {
+   "name": "Vermont Public",
+   "local": true,
+   "n": 12
+  },
+  {
+   "name": "Burlington Free Press",
+   "local": true,
+   "n": 19
+  },
+  {
+   "name": "The Other Paper",
+   "local": true,
+   "n": 3
+  },
+  {
+   "name": "Williston Observer",
+   "local": true,
+   "n": 2
+  },
+  {
+   "name": "Vermont Cynic",
+   "local": true,
+   "n": 4
+  },
+  {
+   "name": "Vermontbiz",
+   "local": true,
+   "n": 7
+  },
+  {
+   "name": "AP",
+   "local": false,
+   "n": 60
+  },
+  {
+   "name": "Reuters",
+   "local": false,
+   "n": 55
+  },
+  {
+   "name": "NPR",
+   "local": false,
+   "n": 30
+  },
+  {
+   "name": "BBC",
+   "local": false,
+   "n": 40
+  },
+  {
+   "name": "The Verge",
+   "local": false,
+   "n": 22
+  },
+  {
+   "name": "Ars Technica",
+   "local": false,
+   "n": 12
+  },
+  {
+   "name": "ESPN",
+   "local": false,
+   "n": 18
+  },
+  {
+   "name": "The Atlantic",
+   "local": false,
+   "n": 6
+  },
+  {
+   "name": "Bloomberg",
+   "local": false,
+   "n": 26
+  },
+  {
+   "name": "The Guardian",
+   "local": false,
+   "n": 34
+  },
+  {
+   "name": "r/news",
+   "local": false,
+   "n": 20
+  },
+  {
+   "name": "r/science",
+   "local": false,
+   "n": 9
+  },
+  {
+   "name": "Hacker News",
+   "local": false,
+   "n": 15
+  },
+  {
+   "name": "Stat",
+   "local": false,
+   "n": 5
+  }
+ ],
+ "every": [
+  {
+   "k": "e0",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Seven Days",
+   "sid": "Seven Days",
+   "local": true,
+   "ago": "12m",
+   "title": "Winooski’s Main Street circulator plan goes to a public meeting next week",
+   "votes": 0,
+   "comments": 0,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "brick"
+  },
+  {
+   "k": "e1",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Williston Observer",
+   "sid": "Williston Observer",
+   "local": true,
+   "ago": "16m",
+   "title": "Shelburne Farms’ cheese takes a world medal",
+   "votes": 13,
+   "comments": 5,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "paper"
+  },
+  {
+   "k": "e2",
+   "kind": "headline",
+   "ch": "world",
+   "src": "The Verge",
+   "sid": "The Verge",
+   "local": false,
+   "ago": "20m",
+   "title": "The Celtics open camp with a healthy roster",
+   "votes": 9,
+   "comments": 3,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "lake"
+  },
+  {
+   "k": "e3",
+   "kind": "headline",
+   "ch": "world",
+   "src": "r/science",
+   "sid": "r/science",
+   "local": false,
+   "ago": "24m",
+   "title": "Burlington Electric asks for a 3 percent rate change",
+   "votes": 5,
+   "comments": 1,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "night"
+  },
+  {
+   "k": "e4",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Vermont Public",
+   "sid": "Vermont Public",
+   "local": true,
+   "ago": "28m",
+   "title": "Court filing details the Church Street garage dispute",
+   "votes": 1,
+   "comments": 6,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "field"
+  },
+  {
+   "k": "e5",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Reuters",
+   "sid": "Reuters",
+   "local": false,
+   "ago": "32m",
+   "title": "Electric trucks pass a sales milestone in Europe",
+   "votes": 14,
+   "comments": 4,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "teal"
+  },
+  {
+   "k": "e6",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Bloomberg",
+   "sid": "Bloomberg",
+   "local": false,
+   "ago": "36m",
+   "title": "Essex approves a new fire station on the Route 15 side",
+   "votes": 10,
+   "comments": 2,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "slate"
+  },
+  {
+   "k": "e7",
+   "kind": "headline",
+   "ch": "local",
+   "src": "VTDigger",
+   "sid": "VTDigger",
+   "local": true,
+   "ago": "40m",
+   "title": "Senate panel advances the stopgap spending bill",
+   "votes": 6,
+   "comments": 0,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "street"
+  },
+  {
+   "k": "e8",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Vermont Cynic",
+   "sid": "Vermont Cynic",
+   "local": true,
+   "ago": "44m",
+   "title": "Hospitals report the earliest flu uptick in years",
+   "votes": 2,
+   "comments": 5,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e9",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Ars Technica",
+   "sid": "Ars Technica",
+   "local": false,
+   "ago": "48m",
+   "title": "Champlain College opens a downtown maker space",
+   "votes": 15,
+   "comments": 3,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e10",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Hacker News",
+   "sid": "Hacker News",
+   "local": false,
+   "ago": "52m",
+   "title": "The biggest telescope yet finds water on a distant world",
+   "votes": 11,
+   "comments": 1,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e11",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Burlington Free Press",
+   "sid": "Burlington Free Press",
+   "local": true,
+   "ago": "56m",
+   "title": "The Intervale’s fall share closes Sunday; 30 slots left",
+   "votes": 7,
+   "comments": 6,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "brick"
+  },
+  {
+   "k": "e12",
+   "kind": "headline",
+   "ch": "world",
+   "src": "NPR",
+   "sid": "NPR",
+   "local": false,
+   "ago": "60m",
+   "title": "Burlington’s bike-share goes dormant for the winter Nov 1",
+   "votes": 3,
+   "comments": 4,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "paper"
+  },
+  {
+   "k": "e13",
+   "kind": "headline",
+   "ch": "world",
+   "src": "The Guardian",
+   "sid": "The Guardian",
+   "local": false,
+   "ago": "64m",
+   "title": "An ocean heat record falls for the fourth month running",
+   "votes": 16,
+   "comments": 2,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "lake"
+  },
+  {
+   "k": "e14",
+   "kind": "headline",
+   "ch": "local",
+   "src": "WCAX",
+   "sid": "WCAX",
+   "local": true,
+   "ago": "68m",
+   "title": "The Flynn adds a second night for the December show",
+   "votes": 12,
+   "comments": 0,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "night"
+  },
+  {
+   "k": "e15",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Vermontbiz",
+   "sid": "Vermontbiz",
+   "local": true,
+   "ago": "2h",
+   "title": "Williston’s Taft Corners gets its first housing in a decade",
+   "votes": 8,
+   "comments": 5,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "field"
+  },
+  {
+   "k": "e16",
+   "kind": "headline",
+   "ch": "world",
+   "src": "ESPN",
+   "sid": "ESPN",
+   "local": false,
+   "ago": "3h",
+   "title": "The web’s most-used font gets a variable version",
+   "votes": 4,
+   "comments": 3,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "teal"
+  },
+  {
+   "k": "e17",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Stat",
+   "sid": "Stat",
+   "local": false,
+   "ago": "3h",
+   "title": "South Burlington’s City Center park gets its final plan",
+   "votes": 0,
+   "comments": 1,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "slate"
+  },
+  {
+   "k": "e18",
+   "kind": "headline",
+   "ch": "local",
+   "src": "The Other Paper",
+   "sid": "The Other Paper",
+   "local": true,
+   "ago": "3h",
+   "title": "Markets open flat ahead of the jobs report",
+   "votes": 13,
+   "comments": 6,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "street"
+  },
+  {
+   "k": "e19",
+   "kind": "headline",
+   "ch": "world",
+   "src": "BBC",
+   "sid": "BBC",
+   "local": false,
+   "ago": "3h",
+   "title": "A satellite burns up on schedule over the Pacific",
+   "votes": 9,
+   "comments": 4,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e20",
+   "kind": "headline",
+   "ch": "world",
+   "src": "r/news",
+   "sid": "r/news",
+   "local": false,
+   "ago": "3h",
+   "title": "The Catamounts add a January game at the Garden",
+   "votes": 5,
+   "comments": 2,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e21",
+   "kind": "headline",
+   "ch": "local",
+   "src": "NBC5",
+   "sid": "NBC5",
+   "local": true,
+   "ago": "3h",
+   "title": "Chipmaker beats estimates on data-center demand",
+   "votes": 1,
+   "comments": 0,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e22",
+   "kind": "headline",
+   "ch": "world",
+   "src": "AP",
+   "sid": "AP",
+   "local": false,
+   "ago": "3h",
+   "title": "A new crosswalk at Pearl and Elmwood gets its flashing beacons",
+   "votes": 14,
+   "comments": 5,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "brick"
+  },
+  {
+   "k": "e23",
+   "kind": "headline",
+   "ch": "world",
+   "src": "The Atlantic",
+   "sid": "The Atlantic",
+   "local": false,
+   "ago": "3h",
+   "title": "A quieter leaf blower rule heads to the council",
+   "votes": 10,
+   "comments": 3,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "paper"
+  },
+  {
+   "k": "e24",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Seven Days",
+   "sid": "Seven Days",
+   "local": true,
+   "ago": "3h",
+   "title": "A city the size of Denver loses power in a grid failure",
+   "votes": 6,
+   "comments": 1,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "lake"
+  },
+  {
+   "k": "e25",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Williston Observer",
+   "sid": "Williston Observer",
+   "local": true,
+   "ago": "4h",
+   "title": "UVM enrollment steady this fall, with more in-state students",
+   "votes": 2,
+   "comments": 6,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "night"
+  },
+  {
+   "k": "e26",
+   "kind": "headline",
+   "ch": "world",
+   "src": "The Verge",
+   "sid": "The Verge",
+   "local": false,
+   "ago": "4h",
+   "title": "Lake levels are a foot below average for October",
+   "votes": 15,
+   "comments": 4,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "field"
+  },
+  {
+   "k": "e27",
+   "kind": "headline",
+   "ch": "world",
+   "src": "r/science",
+   "sid": "r/science",
+   "local": false,
+   "ago": "4h",
+   "title": "Study links urban tree canopy to cooler indoor temperatures",
+   "votes": 11,
+   "comments": 2,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "teal"
+  },
+  {
+   "k": "e28",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Vermont Public",
+   "sid": "Vermont Public",
+   "local": true,
+   "ago": "4h",
+   "title": "Housing bill draft would speed permits in the five largest towns",
+   "votes": 7,
+   "comments": 0,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "slate"
+  },
+  {
+   "k": "e29",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Reuters",
+   "sid": "Reuters",
+   "local": false,
+   "ago": "4h",
+   "title": "A new antibiotic shows promise against drug-resistant infections",
+   "votes": 3,
+   "comments": 5,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "street"
+  },
+  {
+   "k": "e30",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Bloomberg",
+   "sid": "Bloomberg",
+   "local": false,
+   "ago": "4h",
+   "title": "Winooski’s Main Street circulator plan goes to a public meeting next week",
+   "votes": 16,
+   "comments": 3,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e31",
+   "kind": "headline",
+   "ch": "local",
+   "src": "VTDigger",
+   "sid": "VTDigger",
+   "local": true,
+   "ago": "4h",
+   "title": "Shelburne Farms’ cheese takes a world medal",
+   "votes": 12,
+   "comments": 1,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e32",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Vermont Cynic",
+   "sid": "Vermont Cynic",
+   "local": true,
+   "ago": "4h",
+   "title": "The Celtics open camp with a healthy roster",
+   "votes": 8,
+   "comments": 6,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e33",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Ars Technica",
+   "sid": "Ars Technica",
+   "local": false,
+   "ago": "4h",
+   "title": "Burlington Electric asks for a 3 percent rate change",
+   "votes": 4,
+   "comments": 4,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "brick"
+  },
+  {
+   "k": "e34",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Hacker News",
+   "sid": "Hacker News",
+   "local": false,
+   "ago": "4h",
+   "title": "Court filing details the Church Street garage dispute",
+   "votes": 0,
+   "comments": 2,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "paper"
+  },
+  {
+   "k": "e35",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Burlington Free Press",
+   "sid": "Burlington Free Press",
+   "local": true,
+   "ago": "4h",
+   "title": "Electric trucks pass a sales milestone in Europe",
+   "votes": 13,
+   "comments": 0,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "lake"
+  },
+  {
+   "k": "e36",
+   "kind": "headline",
+   "ch": "world",
+   "src": "NPR",
+   "sid": "NPR",
+   "local": false,
+   "ago": "5h",
+   "title": "Essex approves a new fire station on the Route 15 side",
+   "votes": 9,
+   "comments": 5,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "night"
+  },
+  {
+   "k": "e37",
+   "kind": "headline",
+   "ch": "world",
+   "src": "The Guardian",
+   "sid": "The Guardian",
+   "local": false,
+   "ago": "5h",
+   "title": "Senate panel advances the stopgap spending bill",
+   "votes": 5,
+   "comments": 3,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "field"
+  },
+  {
+   "k": "e38",
+   "kind": "headline",
+   "ch": "local",
+   "src": "WCAX",
+   "sid": "WCAX",
+   "local": true,
+   "ago": "5h",
+   "title": "Hospitals report the earliest flu uptick in years",
+   "votes": 1,
+   "comments": 1,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "teal"
+  },
+  {
+   "k": "e39",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Vermontbiz",
+   "sid": "Vermontbiz",
+   "local": true,
+   "ago": "5h",
+   "title": "Champlain College opens a downtown maker space",
+   "votes": 14,
+   "comments": 6,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "slate"
+  },
+  {
+   "k": "e40",
+   "kind": "headline",
+   "ch": "world",
+   "src": "ESPN",
+   "sid": "ESPN",
+   "local": false,
+   "ago": "5h",
+   "title": "The biggest telescope yet finds water on a distant world",
+   "votes": 10,
+   "comments": 4,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "street"
+  },
+  {
+   "k": "e41",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Stat",
+   "sid": "Stat",
+   "local": false,
+   "ago": "5h",
+   "title": "The Intervale’s fall share closes Sunday; 30 slots left",
+   "votes": 6,
+   "comments": 2,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e42",
+   "kind": "headline",
+   "ch": "local",
+   "src": "The Other Paper",
+   "sid": "The Other Paper",
+   "local": true,
+   "ago": "5h",
+   "title": "Burlington’s bike-share goes dormant for the winter Nov 1",
+   "votes": 2,
+   "comments": 0,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e43",
+   "kind": "headline",
+   "ch": "world",
+   "src": "BBC",
+   "sid": "BBC",
+   "local": false,
+   "ago": "5h",
+   "title": "An ocean heat record falls for the fourth month running",
+   "votes": 15,
+   "comments": 5,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e44",
+   "kind": "headline",
+   "ch": "world",
+   "src": "r/news",
+   "sid": "r/news",
+   "local": false,
+   "ago": "5h",
+   "title": "The Flynn adds a second night for the December show",
+   "votes": 11,
+   "comments": 3,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "brick"
+  },
+  {
+   "k": "e45",
+   "kind": "headline",
+   "ch": "local",
+   "src": "NBC5",
+   "sid": "NBC5",
+   "local": true,
+   "ago": "6h",
+   "title": "Williston’s Taft Corners gets its first housing in a decade",
+   "votes": 7,
+   "comments": 1,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "paper"
+  },
+  {
+   "k": "e46",
+   "kind": "headline",
+   "ch": "world",
+   "src": "AP",
+   "sid": "AP",
+   "local": false,
+   "ago": "6h",
+   "title": "The web’s most-used font gets a variable version",
+   "votes": 3,
+   "comments": 6,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "lake"
+  },
+  {
+   "k": "e47",
+   "kind": "headline",
+   "ch": "world",
+   "src": "The Atlantic",
+   "sid": "The Atlantic",
+   "local": false,
+   "ago": "6h",
+   "title": "South Burlington’s City Center park gets its final plan",
+   "votes": 16,
+   "comments": 4,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "night"
+  },
+  {
+   "k": "e48",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Seven Days",
+   "sid": "Seven Days",
+   "local": true,
+   "ago": "6h",
+   "title": "Markets open flat ahead of the jobs report",
+   "votes": 12,
+   "comments": 2,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "field"
+  },
+  {
+   "k": "e49",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Williston Observer",
+   "sid": "Williston Observer",
+   "local": true,
+   "ago": "6h",
+   "title": "A satellite burns up on schedule over the Pacific",
+   "votes": 8,
+   "comments": 0,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "teal"
+  },
+  {
+   "k": "e50",
+   "kind": "headline",
+   "ch": "world",
+   "src": "The Verge",
+   "sid": "The Verge",
+   "local": false,
+   "ago": "6h",
+   "title": "The Catamounts add a January game at the Garden",
+   "votes": 4,
+   "comments": 5,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "slate"
+  },
+  {
+   "k": "e51",
+   "kind": "headline",
+   "ch": "world",
+   "src": "r/science",
+   "sid": "r/science",
+   "local": false,
+   "ago": "6h",
+   "title": "Chipmaker beats estimates on data-center demand",
+   "votes": 0,
+   "comments": 3,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "street"
+  },
+  {
+   "k": "e52",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Vermont Public",
+   "sid": "Vermont Public",
+   "local": true,
+   "ago": "6h",
+   "title": "A new crosswalk at Pearl and Elmwood gets its flashing beacons",
+   "votes": 13,
+   "comments": 1,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e53",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Reuters",
+   "sid": "Reuters",
+   "local": false,
+   "ago": "6h",
+   "title": "A quieter leaf blower rule heads to the council",
+   "votes": 9,
+   "comments": 6,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e54",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Bloomberg",
+   "sid": "Bloomberg",
+   "local": false,
+   "ago": "6h",
+   "title": "A city the size of Denver loses power in a grid failure",
+   "votes": 5,
+   "comments": 4,
+   "text": "From the raw wire, every outlet, newest first."
+  },
+  {
+   "k": "e55",
+   "kind": "headline",
+   "ch": "local",
+   "src": "VTDigger",
+   "sid": "VTDigger",
+   "local": true,
+   "ago": "6h",
+   "title": "UVM enrollment steady this fall, with more in-state students",
+   "votes": 1,
+   "comments": 2,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "brick"
+  },
+  {
+   "k": "e56",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Vermont Cynic",
+   "sid": "Vermont Cynic",
+   "local": true,
+   "ago": "7h",
+   "title": "Lake levels are a foot below average for October",
+   "votes": 14,
+   "comments": 0,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "paper"
+  },
+  {
+   "k": "e57",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Ars Technica",
+   "sid": "Ars Technica",
+   "local": false,
+   "ago": "7h",
+   "title": "Study links urban tree canopy to cooler indoor temperatures",
+   "votes": 10,
+   "comments": 5,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "lake"
+  },
+  {
+   "k": "e58",
+   "kind": "headline",
+   "ch": "world",
+   "src": "Hacker News",
+   "sid": "Hacker News",
+   "local": false,
+   "ago": "7h",
+   "title": "Housing bill draft would speed permits in the five largest towns",
+   "votes": 6,
+   "comments": 3,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "night"
+  },
+  {
+   "k": "e59",
+   "kind": "headline",
+   "ch": "local",
+   "src": "Burlington Free Press",
+   "sid": "Burlington Free Press",
+   "local": true,
+   "ago": "7h",
+   "title": "A new antibiotic shows promise against drug-resistant infections",
+   "votes": 2,
+   "comments": 1,
+   "text": "From the raw wire, every outlet, newest first.",
+   "thumb": "field"
+  }
+ ],
+ "copy": {
+  "total": 745,
+  "cadence": "every 20 min",
+  "pickedAt": "2:10 pm",
+  "pickedNext": "6",
+  "nextCheck": "3 pm",
+  "rawSpan": "the last four hours"
+ },
+ "newSince": 8
+}

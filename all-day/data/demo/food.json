@@ -1,0 +1,200 @@
+{
+ "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders.",
+ "filters": [
+  {
+   "key": "open",
+   "label": "Open now"
+  },
+  {
+   "key": "late",
+   "label": "Open late"
+  },
+  {
+   "key": "patio",
+   "label": "Patios"
+  },
+  {
+   "key": "hh",
+   "label": "Happy hour"
+  },
+  {
+   "key": "cheap",
+   "label": "Under $15"
+  },
+  {
+   "key": "deals",
+   "label": "Deals"
+  },
+  {
+   "key": "recipes",
+   "label": "Recipes"
+  }
+ ],
+ "hero": {
+  "eyebrow": "The Weekly Bite · Thursday",
+  "title": "Squash dumplings at a South End kitchen",
+  "art": "mustard",
+  "text": "Featured, not reviewed. Here because three readers said so this week and the kitchen sent us the video."
+ },
+ "near": "Church & College",
+ "placesNote": "Hours checked against Google this week. 282 places, 252 with verified hours.",
+ "places": [
+  {
+   "name": "A South End kitchen",
+   "cuisine": "New American",
+   "dist": "0.9 mi",
+   "until": "10 pm",
+   "price": "$$",
+   "art": "mustard",
+   "tags": [
+    "open",
+    "patio"
+   ]
+  },
+  {
+   "name": "The noodle counter on Main",
+   "cuisine": "Noodles",
+   "dist": "0.2 mi",
+   "until": "9 pm",
+   "price": "$",
+   "art": "cherry",
+   "tags": [
+    "open",
+    "cheap"
+   ]
+  },
+  {
+   "name": "Pine Street taqueria",
+   "cuisine": "Tacos",
+   "dist": "0.7 mi",
+   "until": "midnight",
+   "price": "$",
+   "art": "foliage",
+   "tags": [
+    "open",
+    "late",
+    "cheap"
+   ]
+  },
+  {
+   "name": "The lakeside bar",
+   "cuisine": "Bar food",
+   "dist": "0.4 mi",
+   "until": "11 pm",
+   "price": "$$",
+   "art": "lake",
+   "tags": [
+    "open",
+    "late",
+    "patio",
+    "hh"
+   ]
+  },
+  {
+   "name": "Old North End bakery",
+   "cuisine": "Bakery",
+   "dist": "0.5 mi",
+   "until": "4 pm",
+   "price": "$",
+   "art": "coffee",
+   "tags": [
+    "cheap"
+   ]
+  },
+  {
+   "name": "The Church Street bistro",
+   "cuisine": "French",
+   "dist": "0.1 mi",
+   "until": "10 pm",
+   "price": "$$$",
+   "art": "brick",
+   "tags": [
+    "open",
+    "hh",
+    "patio"
+   ]
+  }
+ ],
+ "recipe": {
+  "title": "Roasted delicata with maple and chili",
+  "text": "From the Intervale’s newsletter. Forty minutes, one tray, no peeling.",
+  "sub": "From the market newsletters and the co-op."
+ },
+ "dealsNote": "111 deals, each with the day it was last checked. Tap the right side for the next one.",
+ "deals": [
+  {
+   "checked": "Verified Oct 12",
+   "title": "$5 pints until 6",
+   "place": "The lakeside bar, weekdays",
+   "art": "lake"
+  },
+  {
+   "checked": "Verified Oct 14",
+   "title": "Two tacos and a drink, $9",
+   "place": "Pine Street taqueria, after 9 pm",
+   "art": "foliage"
+  },
+  {
+   "checked": "Verified Oct 10",
+   "title": "Half-price oysters",
+   "place": "The Church Street bistro, Tuesday",
+   "art": "brick"
+  },
+  {
+   "checked": "Verified Oct 15",
+   "title": "Day-old bread, $2 a loaf",
+   "place": "Old North End bakery, after 3",
+   "art": "coffee"
+  },
+  {
+   "checked": "Verified Oct 13",
+   "title": "Kids eat free",
+   "place": "A South End kitchen, Sundays",
+   "art": "mustard"
+  }
+ ],
+ "videos": [
+  {
+   "kind": "video",
+   "src": "Food",
+   "title": "How we make the dumplings",
+   "media": "mustard",
+   "dur": "0:42",
+   "text": "A South End kitchen · 0:42",
+   "k": "fv1",
+   "sid": "Food"
+  },
+  {
+   "kind": "video",
+   "src": "Food",
+   "title": "Friday’s fish, from the dock",
+   "media": "lake",
+   "dur": "0:58",
+   "text": "The lakeside bar · 0:58",
+   "k": "fv2",
+   "sid": "Food"
+  },
+  {
+   "kind": "video",
+   "src": "Food",
+   "title": "The 4 am bake",
+   "media": "coffee",
+   "dur": "1:10",
+   "text": "Old North End bakery · 1:10",
+   "k": "fv3",
+   "sid": "Food"
+  },
+  {
+   "kind": "video",
+   "src": "Food",
+   "title": "Salsa day",
+   "media": "foliage",
+   "dur": "0:36",
+   "text": "Pine Street taqueria · 0:36",
+   "k": "fv4",
+   "sid": "Food"
+  }
+ ],
+ "featuredCount": 38,
+ "newSince": 2
+}

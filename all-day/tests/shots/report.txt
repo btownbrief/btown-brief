@@ -1,0 +1,1009 @@
+  ok   source rules › app.css has no colour literals (tokens.css only)
+  ok   source rules › every font-size is a --fs token
+  ok   source rules › every border-radius is a --r token
+  ok   source rules › every font-family is --serif or --sans
+  ok   source rules › uppercase lives only in the one caps rule
+  ok   source rules › nothing is position: sticky
+  ok   source rules › js/app.js: no monospace
+  ok   source rules › js/auth.js: no monospace
+  ok   source rules › js/liquid.js: no monospace
+  ok   source rules › js/main.js: no monospace
+  ok   source rules › js/modes/art.js: no monospace
+  ok   source rules › js/modes/art.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/food.js: no monospace
+  ok   source rules › js/modes/food.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/games.js: no monospace
+  ok   source rules › js/modes/games.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/onair.js: no monospace
+  ok   source rules › js/modes/onair.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/people.js: no monospace
+  ok   source rules › js/modes/people.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/vintage.js: no monospace
+  ok   source rules › js/modes/vintage.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/watch.js: no monospace
+  ok   source rules › js/modes/watch.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/whatnow.js: no monospace
+  ok   source rules › js/modes/whatnow.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/wire-demo.js: no monospace
+  ok   source rules › js/modes/wire-demo.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/wire.js: no monospace
+  ok   source rules › js/modes/wire.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/store.js: no monospace
+  ok   source rules › js/ui.js: no monospace
+  ok   source rules › js/wire.js: no monospace
+  ok   source rules › css/app.css: no monospace
+  ok   source rules › css/tokens.css: no monospace
+  ok   390 light live › nine tabs in order
+  ok   390 light live › the nine labels
+  ok   390 light live › the network bar is gone
+  ok   390 light live › body is the light paper
+  ok   390 light live › tab cells are 56px tall
+  ok   390 light live › no tab label overflows its cell
+  ok   390 light live › What Now gets the wider cell
+  ok   390 light live › wire: its panel is the one showing
+  ok   390 light live › wire: no error box
+  ok   390 light live › wire: it draws its screen
+  ok   390 light live › wire: nothing fixed or sticky inside the tab
+  ok   390 light live › wire: uppercase only in the caps roles
+  ok   390 light live › wire: no monospace
+  ok   390 light live › wire: no escaped markup, undefined or NaN on the page
+  ok   390 light live › wire: no sideways scroll at 390
+  ok   390 light live › wire: at most two subnav rows
+  ok   390 light live › watch: its panel is the one showing
+  ok   390 light live › watch: no error box
+  ok   390 light live › watch: live, it states its promise
+  ok   390 light live › watch: nothing fixed or sticky inside the tab
+  ok   390 light live › watch: uppercase only in the caps roles
+  ok   390 light live › watch: no monospace
+  ok   390 light live › watch: no escaped markup, undefined or NaN on the page
+  ok   390 light live › watch: no sideways scroll at 390
+  ok   390 light live › watch: at most two subnav rows
+  ok   390 light live › food: its panel is the one showing
+  ok   390 light live › food: no error box
+  ok   390 light live › food: live, it states its promise
+  ok   390 light live › food: nothing fixed or sticky inside the tab
+  ok   390 light live › food: uppercase only in the caps roles
+  ok   390 light live › food: no monospace
+  ok   390 light live › food: no escaped markup, undefined or NaN on the page
+  ok   390 light live › food: no sideways scroll at 390
+  ok   390 light live › food: at most two subnav rows
+  ok   390 light live › people: its panel is the one showing
+  ok   390 light live › people: no error box
+  ok   390 light live › people: live, it states its promise
+  ok   390 light live › people: nothing fixed or sticky inside the tab
+  ok   390 light live › people: uppercase only in the caps roles
+  ok   390 light live › people: no monospace
+  ok   390 light live › people: no escaped markup, undefined or NaN on the page
+  ok   390 light live › people: no sideways scroll at 390
+  ok   390 light live › people: at most two subnav rows
+  ok   390 light live › whatnow: its panel is the one showing
+  ok   390 light live › whatnow: no error box
+  ok   390 light live › whatnow: live, it states its promise
+  ok   390 light live › whatnow: nothing fixed or sticky inside the tab
+  ok   390 light live › whatnow: uppercase only in the caps roles
+  ok   390 light live › whatnow: no monospace
+  ok   390 light live › whatnow: no escaped markup, undefined or NaN on the page
+  ok   390 light live › whatnow: no sideways scroll at 390
+  ok   390 light live › whatnow: at most two subnav rows
+  ok   390 light live › vintage: its panel is the one showing
+  ok   390 light live › vintage: no error box
+  ok   390 light live › vintage: live, it states its promise
+  ok   390 light live › vintage: nothing fixed or sticky inside the tab
+  ok   390 light live › vintage: uppercase only in the caps roles
+  ok   390 light live › vintage: no monospace
+  ok   390 light live › vintage: no escaped markup, undefined or NaN on the page
+  ok   390 light live › vintage: no sideways scroll at 390
+  ok   390 light live › vintage: at most two subnav rows
+  ok   390 light live › art: its panel is the one showing
+  ok   390 light live › art: no error box
+  ok   390 light live › art: live, it states its promise
+  ok   390 light live › art: nothing fixed or sticky inside the tab
+  ok   390 light live › art: uppercase only in the caps roles
+  ok   390 light live › art: no monospace
+  ok   390 light live › art: no escaped markup, undefined or NaN on the page
+  ok   390 light live › art: no sideways scroll at 390
+  ok   390 light live › art: at most two subnav rows
+  ok   390 light live › onair: its panel is the one showing
+  ok   390 light live › onair: no error box
+  ok   390 light live › onair: live, it states its promise
+  ok   390 light live › onair: nothing fixed or sticky inside the tab
+  ok   390 light live › onair: uppercase only in the caps roles
+  ok   390 light live › onair: no monospace
+  ok   390 light live › onair: no escaped markup, undefined or NaN on the page
+  ok   390 light live › onair: no sideways scroll at 390
+  ok   390 light live › onair: at most two subnav rows
+  ok   390 light live › games: its panel is the one showing
+  ok   390 light live › games: no error box
+  ok   390 light live › games: live, it states its promise
+  ok   390 light live › games: nothing fixed or sticky inside the tab
+  ok   390 light live › games: uppercase only in the caps roles
+  ok   390 light live › games: no monospace
+  ok   390 light live › games: no escaped markup, undefined or NaN on the page
+  ok   390 light live › games: no sideways scroll at 390
+  ok   390 light live › games: at most two subnav rows
+  ok   390 light live › one GoatCounter tab-landing event per landing
+  ok   390 light live › tapping the tab you are on counts nothing
+  ok   390 light live › no console errors
+  ok   390 light demo › nine tabs in order
+  ok   390 light demo › the nine labels
+  ok   390 light demo › the network bar is gone
+  ok   390 light demo › body is the light paper
+  ok   390 light demo › tab cells are 56px tall
+  ok   390 light demo › no tab label overflows its cell
+  ok   390 light demo › What Now gets the wider cell
+  ok   390 light demo › wire: its panel is the one showing
+  ok   390 light demo › wire: no error box
+  ok   390 light demo › wire: it draws its screen
+  ok   390 light demo › wire: nothing fixed or sticky inside the tab
+  ok   390 light demo › wire: uppercase only in the caps roles
+  ok   390 light demo › wire: no monospace
+  ok   390 light demo › wire: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › wire: no sideways scroll at 390
+  ok   390 light demo › wire: at most two subnav rows
+  ok   390 light demo › watch: its panel is the one showing
+  ok   390 light demo › watch: no error box
+  ok   390 light demo › watch: it draws its screen
+  ok   390 light demo › watch: nothing fixed or sticky inside the tab
+  ok   390 light demo › watch: uppercase only in the caps roles
+  ok   390 light demo › watch: no monospace
+  ok   390 light demo › watch: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › watch: no sideways scroll at 390
+  ok   390 light demo › watch: at most two subnav rows
+  ok   390 light demo › food: its panel is the one showing
+  ok   390 light demo › food: no error box
+  ok   390 light demo › food: it draws its screen
+  ok   390 light demo › food: nothing fixed or sticky inside the tab
+  ok   390 light demo › food: uppercase only in the caps roles
+  ok   390 light demo › food: no monospace
+  ok   390 light demo › food: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › food: no sideways scroll at 390
+  ok   390 light demo › food: at most two subnav rows
+  ok   390 light demo › people: its panel is the one showing
+  ok   390 light demo › people: no error box
+  ok   390 light demo › people: it draws its screen
+  ok   390 light demo › people: nothing fixed or sticky inside the tab
+  ok   390 light demo › people: uppercase only in the caps roles
+  ok   390 light demo › people: no monospace
+  ok   390 light demo › people: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › people: no sideways scroll at 390
+  ok   390 light demo › people: at most two subnav rows
+  ok   390 light demo › whatnow: its panel is the one showing
+  ok   390 light demo › whatnow: no error box
+  ok   390 light demo › whatnow: it draws its screen
+  ok   390 light demo › whatnow: nothing fixed or sticky inside the tab
+  ok   390 light demo › whatnow: uppercase only in the caps roles
+  ok   390 light demo › whatnow: no monospace
+  ok   390 light demo › whatnow: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › whatnow: no sideways scroll at 390
+  ok   390 light demo › whatnow: at most two subnav rows
+  ok   390 light demo › vintage: its panel is the one showing
+  ok   390 light demo › vintage: no error box
+  ok   390 light demo › vintage: it draws its screen
+  ok   390 light demo › vintage: nothing fixed or sticky inside the tab
+  ok   390 light demo › vintage: uppercase only in the caps roles
+  ok   390 light demo › vintage: no monospace
+  ok   390 light demo › vintage: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › vintage: no sideways scroll at 390
+  ok   390 light demo › vintage: at most two subnav rows
+  ok   390 light demo › art: its panel is the one showing
+  ok   390 light demo › art: no error box
+  ok   390 light demo › art: it draws its screen
+  ok   390 light demo › art: nothing fixed or sticky inside the tab
+  ok   390 light demo › art: uppercase only in the caps roles
+  ok   390 light demo › art: no monospace
+  ok   390 light demo › art: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › art: no sideways scroll at 390
+  ok   390 light demo › art: at most two subnav rows
+  ok   390 light demo › onair: its panel is the one showing
+  ok   390 light demo › onair: no error box
+  ok   390 light demo › onair: it draws its screen
+  ok   390 light demo › onair: nothing fixed or sticky inside the tab
+  ok   390 light demo › onair: uppercase only in the caps roles
+  ok   390 light demo › onair: no monospace
+  ok   390 light demo › onair: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › onair: no sideways scroll at 390
+  ok   390 light demo › onair: at most two subnav rows
+  ok   390 light demo › games: its panel is the one showing
+  ok   390 light demo › games: no error box
+  ok   390 light demo › games: it draws its screen
+  ok   390 light demo › games: nothing fixed or sticky inside the tab
+  ok   390 light demo › games: uppercase only in the caps roles
+  ok   390 light demo › games: no monospace
+  ok   390 light demo › games: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › games: no sideways scroll at 390
+  ok   390 light demo › games: at most two subnav rows
+  ok   390 light demo › one GoatCounter tab-landing event per landing
+  ok   390 light demo › tapping the tab you are on counts nothing
+  ok   390 light demo › no console errors
+  ok   390 light demo › demo mode never calls Supabase
+  ok   390 dark live › nine tabs in order
+  ok   390 dark live › the nine labels
+  ok   390 dark live › the network bar is gone
+  ok   390 dark live › body is the dark paper
+  ok   390 dark live › tab cells are 56px tall
+  ok   390 dark live › no tab label overflows its cell
+  ok   390 dark live › What Now gets the wider cell
+  ok   390 dark live › wire: its panel is the one showing
+  ok   390 dark live › wire: no error box
+  ok   390 dark live › wire: it draws its screen
+  ok   390 dark live › wire: nothing fixed or sticky inside the tab
+  ok   390 dark live › wire: uppercase only in the caps roles
+  ok   390 dark live › wire: no monospace
+  ok   390 dark live › wire: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › wire: no sideways scroll at 390
+  ok   390 dark live › wire: at most two subnav rows
+  ok   390 dark live › watch: its panel is the one showing
+  ok   390 dark live › watch: no error box
+  ok   390 dark live › watch: live, it states its promise
+  ok   390 dark live › watch: nothing fixed or sticky inside the tab
+  ok   390 dark live › watch: uppercase only in the caps roles
+  ok   390 dark live › watch: no monospace
+  ok   390 dark live › watch: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › watch: no sideways scroll at 390
+  ok   390 dark live › watch: at most two subnav rows
+  ok   390 dark live › food: its panel is the one showing
+  ok   390 dark live › food: no error box
+  ok   390 dark live › food: live, it states its promise
+  ok   390 dark live › food: nothing fixed or sticky inside the tab
+  ok   390 dark live › food: uppercase only in the caps roles
+  ok   390 dark live › food: no monospace
+  ok   390 dark live › food: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › food: no sideways scroll at 390
+  ok   390 dark live › food: at most two subnav rows
+  ok   390 dark live › people: its panel is the one showing
+  ok   390 dark live › people: no error box
+  ok   390 dark live › people: live, it states its promise
+  ok   390 dark live › people: nothing fixed or sticky inside the tab
+  ok   390 dark live › people: uppercase only in the caps roles
+  ok   390 dark live › people: no monospace
+  ok   390 dark live › people: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › people: no sideways scroll at 390
+  ok   390 dark live › people: at most two subnav rows
+  ok   390 dark live › whatnow: its panel is the one showing
+  ok   390 dark live › whatnow: no error box
+  ok   390 dark live › whatnow: live, it states its promise
+  ok   390 dark live › whatnow: nothing fixed or sticky inside the tab
+  ok   390 dark live › whatnow: uppercase only in the caps roles
+  ok   390 dark live › whatnow: no monospace
+  ok   390 dark live › whatnow: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › whatnow: no sideways scroll at 390
+  ok   390 dark live › whatnow: at most two subnav rows
+  ok   390 dark live › vintage: its panel is the one showing
+  ok   390 dark live › vintage: no error box
+  ok   390 dark live › vintage: live, it states its promise
+  ok   390 dark live › vintage: nothing fixed or sticky inside the tab
+  ok   390 dark live › vintage: uppercase only in the caps roles
+  ok   390 dark live › vintage: no monospace
+  ok   390 dark live › vintage: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › vintage: no sideways scroll at 390
+  ok   390 dark live › vintage: at most two subnav rows
+  ok   390 dark live › art: its panel is the one showing
+  ok   390 dark live › art: no error box
+  ok   390 dark live › art: live, it states its promise
+  ok   390 dark live › art: nothing fixed or sticky inside the tab
+  ok   390 dark live › art: uppercase only in the caps roles
+  ok   390 dark live › art: no monospace
+  ok   390 dark live › art: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › art: no sideways scroll at 390
+  ok   390 dark live › art: at most two subnav rows
+  ok   390 dark live › onair: its panel is the one showing
+  ok   390 dark live › onair: no error box
+  ok   390 dark live › onair: live, it states its promise
+  ok   390 dark live › onair: nothing fixed or sticky inside the tab
+  ok   390 dark live › onair: uppercase only in the caps roles
+  ok   390 dark live › onair: no monospace
+  ok   390 dark live › onair: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › onair: no sideways scroll at 390
+  ok   390 dark live › onair: at most two subnav rows
+  ok   390 dark live › games: its panel is the one showing
+  ok   390 dark live › games: no error box
+  ok   390 dark live › games: live, it states its promise
+  ok   390 dark live › games: nothing fixed or sticky inside the tab
+  ok   390 dark live › games: uppercase only in the caps roles
+  ok   390 dark live › games: no monospace
+  ok   390 dark live › games: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › games: no sideways scroll at 390
+  ok   390 dark live › games: at most two subnav rows
+  ok   390 dark live › one GoatCounter tab-landing event per landing
+  ok   390 dark live › tapping the tab you are on counts nothing
+  ok   390 dark live › no console errors
+  ok   390 dark demo › nine tabs in order
+  ok   390 dark demo › the nine labels
+  ok   390 dark demo › the network bar is gone
+  ok   390 dark demo › body is the dark paper
+  ok   390 dark demo › tab cells are 56px tall
+  ok   390 dark demo › no tab label overflows its cell
+  ok   390 dark demo › What Now gets the wider cell
+  ok   390 dark demo › wire: its panel is the one showing
+  ok   390 dark demo › wire: no error box
+  ok   390 dark demo › wire: it draws its screen
+  ok   390 dark demo › wire: nothing fixed or sticky inside the tab
+  ok   390 dark demo › wire: uppercase only in the caps roles
+  ok   390 dark demo › wire: no monospace
+  ok   390 dark demo › wire: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › wire: no sideways scroll at 390
+  ok   390 dark demo › wire: at most two subnav rows
+  ok   390 dark demo › watch: its panel is the one showing
+  ok   390 dark demo › watch: no error box
+  ok   390 dark demo › watch: it draws its screen
+  ok   390 dark demo › watch: nothing fixed or sticky inside the tab
+  ok   390 dark demo › watch: uppercase only in the caps roles
+  ok   390 dark demo › watch: no monospace
+  ok   390 dark demo › watch: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › watch: no sideways scroll at 390
+  ok   390 dark demo › watch: at most two subnav rows
+  ok   390 dark demo › food: its panel is the one showing
+  ok   390 dark demo › food: no error box
+  ok   390 dark demo › food: it draws its screen
+  ok   390 dark demo › food: nothing fixed or sticky inside the tab
+  ok   390 dark demo › food: uppercase only in the caps roles
+  ok   390 dark demo › food: no monospace
+  ok   390 dark demo › food: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › food: no sideways scroll at 390
+  ok   390 dark demo › food: at most two subnav rows
+  ok   390 dark demo › people: its panel is the one showing
+  ok   390 dark demo › people: no error box
+  ok   390 dark demo › people: it draws its screen
+  ok   390 dark demo › people: nothing fixed or sticky inside the tab
+  ok   390 dark demo › people: uppercase only in the caps roles
+  ok   390 dark demo › people: no monospace
+  ok   390 dark demo › people: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › people: no sideways scroll at 390
+  ok   390 dark demo › people: at most two subnav rows
+  ok   390 dark demo › whatnow: its panel is the one showing
+  ok   390 dark demo › whatnow: no error box
+  ok   390 dark demo › whatnow: it draws its screen
+  ok   390 dark demo › whatnow: nothing fixed or sticky inside the tab
+  ok   390 dark demo › whatnow: uppercase only in the caps roles
+  ok   390 dark demo › whatnow: no monospace
+  ok   390 dark demo › whatnow: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › whatnow: no sideways scroll at 390
+  ok   390 dark demo › whatnow: at most two subnav rows
+  ok   390 dark demo › vintage: its panel is the one showing
+  ok   390 dark demo › vintage: no error box
+  ok   390 dark demo › vintage: it draws its screen
+  ok   390 dark demo › vintage: nothing fixed or sticky inside the tab
+  ok   390 dark demo › vintage: uppercase only in the caps roles
+  ok   390 dark demo › vintage: no monospace
+  ok   390 dark demo › vintage: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › vintage: no sideways scroll at 390
+  ok   390 dark demo › vintage: at most two subnav rows
+  ok   390 dark demo › art: its panel is the one showing
+  ok   390 dark demo › art: no error box
+  ok   390 dark demo › art: it draws its screen
+  ok   390 dark demo › art: nothing fixed or sticky inside the tab
+  ok   390 dark demo › art: uppercase only in the caps roles
+  ok   390 dark demo › art: no monospace
+  ok   390 dark demo › art: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › art: no sideways scroll at 390
+  ok   390 dark demo › art: at most two subnav rows
+  ok   390 dark demo › onair: its panel is the one showing
+  ok   390 dark demo › onair: no error box
+  ok   390 dark demo › onair: it draws its screen
+  ok   390 dark demo › onair: nothing fixed or sticky inside the tab
+  ok   390 dark demo › onair: uppercase only in the caps roles
+  ok   390 dark demo › onair: no monospace
+  ok   390 dark demo › onair: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › onair: no sideways scroll at 390
+  ok   390 dark demo › onair: at most two subnav rows
+  ok   390 dark demo › games: its panel is the one showing
+  ok   390 dark demo › games: no error box
+  ok   390 dark demo › games: it draws its screen
+  ok   390 dark demo › games: nothing fixed or sticky inside the tab
+  ok   390 dark demo › games: uppercase only in the caps roles
+  ok   390 dark demo › games: no monospace
+  ok   390 dark demo › games: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › games: no sideways scroll at 390
+  ok   390 dark demo › games: at most two subnav rows
+  ok   390 dark demo › one GoatCounter tab-landing event per landing
+  ok   390 dark demo › tapping the tab you are on counts nothing
+  ok   390 dark demo › no console errors
+  ok   390 dark demo › demo mode never calls Supabase
+  ok   390 light reduced-motion live › nine tabs in order
+  ok   390 light reduced-motion live › the nine labels
+  ok   390 light reduced-motion live › the network bar is gone
+  ok   390 light reduced-motion live › body is the light paper
+  ok   390 light reduced-motion live › tab cells are 56px tall
+  ok   390 light reduced-motion live › no tab label overflows its cell
+  ok   390 light reduced-motion live › What Now gets the wider cell
+  ok   390 light reduced-motion live › reduced motion: the switch is a plain fill, no water
+  ok   390 light reduced-motion live › reduced motion: no transitions
+  ok   390 light reduced-motion live › wire: its panel is the one showing
+  ok   390 light reduced-motion live › wire: no error box
+  ok   390 light reduced-motion live › wire: it draws its screen
+  ok   390 light reduced-motion live › wire: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › wire: uppercase only in the caps roles
+  ok   390 light reduced-motion live › wire: no monospace
+  ok   390 light reduced-motion live › wire: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › wire: no sideways scroll at 390
+  ok   390 light reduced-motion live › wire: at most two subnav rows
+  ok   390 light reduced-motion live › watch: its panel is the one showing
+  ok   390 light reduced-motion live › watch: no error box
+  ok   390 light reduced-motion live › watch: live, it states its promise
+  ok   390 light reduced-motion live › watch: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › watch: uppercase only in the caps roles
+  ok   390 light reduced-motion live › watch: no monospace
+  ok   390 light reduced-motion live › watch: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › watch: no sideways scroll at 390
+  ok   390 light reduced-motion live › watch: at most two subnav rows
+  ok   390 light reduced-motion live › food: its panel is the one showing
+  ok   390 light reduced-motion live › food: no error box
+  ok   390 light reduced-motion live › food: live, it states its promise
+  ok   390 light reduced-motion live › food: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › food: uppercase only in the caps roles
+  ok   390 light reduced-motion live › food: no monospace
+  ok   390 light reduced-motion live › food: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › food: no sideways scroll at 390
+  ok   390 light reduced-motion live › food: at most two subnav rows
+  ok   390 light reduced-motion live › people: its panel is the one showing
+  ok   390 light reduced-motion live › people: no error box
+  ok   390 light reduced-motion live › people: live, it states its promise
+  ok   390 light reduced-motion live › people: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › people: uppercase only in the caps roles
+  ok   390 light reduced-motion live › people: no monospace
+  ok   390 light reduced-motion live › people: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › people: no sideways scroll at 390
+  ok   390 light reduced-motion live › people: at most two subnav rows
+  ok   390 light reduced-motion live › whatnow: its panel is the one showing
+  ok   390 light reduced-motion live › whatnow: no error box
+  ok   390 light reduced-motion live › whatnow: live, it states its promise
+  ok   390 light reduced-motion live › whatnow: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › whatnow: uppercase only in the caps roles
+  ok   390 light reduced-motion live › whatnow: no monospace
+  ok   390 light reduced-motion live › whatnow: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › whatnow: no sideways scroll at 390
+  ok   390 light reduced-motion live › whatnow: at most two subnav rows
+  ok   390 light reduced-motion live › vintage: its panel is the one showing
+  ok   390 light reduced-motion live › vintage: no error box
+  ok   390 light reduced-motion live › vintage: live, it states its promise
+  ok   390 light reduced-motion live › vintage: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › vintage: uppercase only in the caps roles
+  ok   390 light reduced-motion live › vintage: no monospace
+  ok   390 light reduced-motion live › vintage: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › vintage: no sideways scroll at 390
+  ok   390 light reduced-motion live › vintage: at most two subnav rows
+  ok   390 light reduced-motion live › art: its panel is the one showing
+  ok   390 light reduced-motion live › art: no error box
+  ok   390 light reduced-motion live › art: live, it states its promise
+  ok   390 light reduced-motion live › art: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › art: uppercase only in the caps roles
+  ok   390 light reduced-motion live › art: no monospace
+  ok   390 light reduced-motion live › art: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › art: no sideways scroll at 390
+  ok   390 light reduced-motion live › art: at most two subnav rows
+  ok   390 light reduced-motion live › onair: its panel is the one showing
+  ok   390 light reduced-motion live › onair: no error box
+  ok   390 light reduced-motion live › onair: live, it states its promise
+  ok   390 light reduced-motion live › onair: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › onair: uppercase only in the caps roles
+  ok   390 light reduced-motion live › onair: no monospace
+  ok   390 light reduced-motion live › onair: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › onair: no sideways scroll at 390
+  ok   390 light reduced-motion live › onair: at most two subnav rows
+  ok   390 light reduced-motion live › games: its panel is the one showing
+  ok   390 light reduced-motion live › games: no error box
+  ok   390 light reduced-motion live › games: live, it states its promise
+  ok   390 light reduced-motion live › games: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › games: uppercase only in the caps roles
+  ok   390 light reduced-motion live › games: no monospace
+  ok   390 light reduced-motion live › games: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › games: no sideways scroll at 390
+  ok   390 light reduced-motion live › games: at most two subnav rows
+  ok   390 light reduced-motion live › one GoatCounter tab-landing event per landing
+  ok   390 light reduced-motion live › tapping the tab you are on counts nothing
+  ok   390 light reduced-motion live › no console errors
+  ok   390 light reduced-motion demo › nine tabs in order
+  ok   390 light reduced-motion demo › the nine labels
+  ok   390 light reduced-motion demo › the network bar is gone
+  ok   390 light reduced-motion demo › body is the light paper
+  ok   390 light reduced-motion demo › tab cells are 56px tall
+  ok   390 light reduced-motion demo › no tab label overflows its cell
+  ok   390 light reduced-motion demo › What Now gets the wider cell
+  ok   390 light reduced-motion demo › reduced motion: the switch is a plain fill, no water
+  ok   390 light reduced-motion demo › reduced motion: no transitions
+  ok   390 light reduced-motion demo › wire: its panel is the one showing
+  ok   390 light reduced-motion demo › wire: no error box
+  ok   390 light reduced-motion demo › wire: it draws its screen
+  ok   390 light reduced-motion demo › wire: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › wire: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › wire: no monospace
+  ok   390 light reduced-motion demo › wire: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › wire: no sideways scroll at 390
+  ok   390 light reduced-motion demo › wire: at most two subnav rows
+  ok   390 light reduced-motion demo › watch: its panel is the one showing
+  ok   390 light reduced-motion demo › watch: no error box
+  ok   390 light reduced-motion demo › watch: it draws its screen
+  ok   390 light reduced-motion demo › watch: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › watch: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › watch: no monospace
+  ok   390 light reduced-motion demo › watch: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › watch: no sideways scroll at 390
+  ok   390 light reduced-motion demo › watch: at most two subnav rows
+  ok   390 light reduced-motion demo › food: its panel is the one showing
+  ok   390 light reduced-motion demo › food: no error box
+  ok   390 light reduced-motion demo › food: it draws its screen
+  ok   390 light reduced-motion demo › food: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › food: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › food: no monospace
+  ok   390 light reduced-motion demo › food: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › food: no sideways scroll at 390
+  ok   390 light reduced-motion demo › food: at most two subnav rows
+  ok   390 light reduced-motion demo › people: its panel is the one showing
+  ok   390 light reduced-motion demo › people: no error box
+  ok   390 light reduced-motion demo › people: it draws its screen
+  ok   390 light reduced-motion demo › people: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › people: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › people: no monospace
+  ok   390 light reduced-motion demo › people: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › people: no sideways scroll at 390
+  ok   390 light reduced-motion demo › people: at most two subnav rows
+  ok   390 light reduced-motion demo › whatnow: its panel is the one showing
+  ok   390 light reduced-motion demo › whatnow: no error box
+  ok   390 light reduced-motion demo › whatnow: it draws its screen
+  ok   390 light reduced-motion demo › whatnow: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › whatnow: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › whatnow: no monospace
+  ok   390 light reduced-motion demo › whatnow: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › whatnow: no sideways scroll at 390
+  ok   390 light reduced-motion demo › whatnow: at most two subnav rows
+  ok   390 light reduced-motion demo › vintage: its panel is the one showing
+  ok   390 light reduced-motion demo › vintage: no error box
+  ok   390 light reduced-motion demo › vintage: it draws its screen
+  ok   390 light reduced-motion demo › vintage: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › vintage: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › vintage: no monospace
+  ok   390 light reduced-motion demo › vintage: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › vintage: no sideways scroll at 390
+  ok   390 light reduced-motion demo › vintage: at most two subnav rows
+  ok   390 light reduced-motion demo › art: its panel is the one showing
+  ok   390 light reduced-motion demo › art: no error box
+  ok   390 light reduced-motion demo › art: it draws its screen
+  ok   390 light reduced-motion demo › art: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › art: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › art: no monospace
+  ok   390 light reduced-motion demo › art: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › art: no sideways scroll at 390
+  ok   390 light reduced-motion demo › art: at most two subnav rows
+  ok   390 light reduced-motion demo › onair: its panel is the one showing
+  ok   390 light reduced-motion demo › onair: no error box
+  ok   390 light reduced-motion demo › onair: it draws its screen
+  ok   390 light reduced-motion demo › onair: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › onair: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › onair: no monospace
+  ok   390 light reduced-motion demo › onair: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › onair: no sideways scroll at 390
+  ok   390 light reduced-motion demo › onair: at most two subnav rows
+  ok   390 light reduced-motion demo › games: its panel is the one showing
+  ok   390 light reduced-motion demo › games: no error box
+  ok   390 light reduced-motion demo › games: it draws its screen
+  ok   390 light reduced-motion demo › games: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › games: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › games: no monospace
+  ok   390 light reduced-motion demo › games: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › games: no sideways scroll at 390
+  ok   390 light reduced-motion demo › games: at most two subnav rows
+  ok   390 light reduced-motion demo › one GoatCounter tab-landing event per landing
+  ok   390 light reduced-motion demo › tapping the tab you are on counts nothing
+  ok   390 light reduced-motion demo › no console errors
+  ok   390 light reduced-motion demo › demo mode never calls Supabase
+  ok   1280 light live › nine tabs in order
+  ok   1280 light live › the nine labels
+  ok   1280 light live › the network bar is gone
+  ok   1280 light live › body is the light paper
+  ok   1280 light live › the tab bar is a 208px left rail
+  ok   1280 light live › wire: its panel is the one showing
+  ok   1280 light live › wire: no error box
+  ok   1280 light live › wire: it draws its screen
+  ok   1280 light live › wire: nothing fixed or sticky inside the tab
+  ok   1280 light live › wire: uppercase only in the caps roles
+  ok   1280 light live › wire: no monospace
+  ok   1280 light live › wire: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › wire: no sideways scroll at 1280
+  ok   1280 light live › wire: at most two subnav rows
+  ok   1280 light live › watch: its panel is the one showing
+  ok   1280 light live › watch: no error box
+  ok   1280 light live › watch: live, it states its promise
+  ok   1280 light live › watch: nothing fixed or sticky inside the tab
+  ok   1280 light live › watch: uppercase only in the caps roles
+  ok   1280 light live › watch: no monospace
+  ok   1280 light live › watch: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › watch: no sideways scroll at 1280
+  ok   1280 light live › watch: at most two subnav rows
+  ok   1280 light live › food: its panel is the one showing
+  ok   1280 light live › food: no error box
+  ok   1280 light live › food: live, it states its promise
+  ok   1280 light live › food: nothing fixed or sticky inside the tab
+  ok   1280 light live › food: uppercase only in the caps roles
+  ok   1280 light live › food: no monospace
+  ok   1280 light live › food: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › food: no sideways scroll at 1280
+  ok   1280 light live › food: at most two subnav rows
+  ok   1280 light live › people: its panel is the one showing
+  ok   1280 light live › people: no error box
+  ok   1280 light live › people: live, it states its promise
+  ok   1280 light live › people: nothing fixed or sticky inside the tab
+  ok   1280 light live › people: uppercase only in the caps roles
+  ok   1280 light live › people: no monospace
+  ok   1280 light live › people: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › people: no sideways scroll at 1280
+  ok   1280 light live › people: at most two subnav rows
+  ok   1280 light live › whatnow: its panel is the one showing
+  ok   1280 light live › whatnow: no error box
+  ok   1280 light live › whatnow: live, it states its promise
+  ok   1280 light live › whatnow: nothing fixed or sticky inside the tab
+  ok   1280 light live › whatnow: uppercase only in the caps roles
+  ok   1280 light live › whatnow: no monospace
+  ok   1280 light live › whatnow: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › whatnow: no sideways scroll at 1280
+  ok   1280 light live › whatnow: at most two subnav rows
+  ok   1280 light live › vintage: its panel is the one showing
+  ok   1280 light live › vintage: no error box
+  ok   1280 light live › vintage: live, it states its promise
+  ok   1280 light live › vintage: nothing fixed or sticky inside the tab
+  ok   1280 light live › vintage: uppercase only in the caps roles
+  ok   1280 light live › vintage: no monospace
+  ok   1280 light live › vintage: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › vintage: no sideways scroll at 1280
+  ok   1280 light live › vintage: at most two subnav rows
+  ok   1280 light live › art: its panel is the one showing
+  ok   1280 light live › art: no error box
+  ok   1280 light live › art: live, it states its promise
+  ok   1280 light live › art: nothing fixed or sticky inside the tab
+  ok   1280 light live › art: uppercase only in the caps roles
+  ok   1280 light live › art: no monospace
+  ok   1280 light live › art: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › art: no sideways scroll at 1280
+  ok   1280 light live › art: at most two subnav rows
+  ok   1280 light live › onair: its panel is the one showing
+  ok   1280 light live › onair: no error box
+  ok   1280 light live › onair: live, it states its promise
+  ok   1280 light live › onair: nothing fixed or sticky inside the tab
+  ok   1280 light live › onair: uppercase only in the caps roles
+  ok   1280 light live › onair: no monospace
+  ok   1280 light live › onair: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › onair: no sideways scroll at 1280
+  ok   1280 light live › onair: at most two subnav rows
+  ok   1280 light live › games: its panel is the one showing
+  ok   1280 light live › games: no error box
+  ok   1280 light live › games: live, it states its promise
+  ok   1280 light live › games: nothing fixed or sticky inside the tab
+  ok   1280 light live › games: uppercase only in the caps roles
+  ok   1280 light live › games: no monospace
+  ok   1280 light live › games: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › games: no sideways scroll at 1280
+  ok   1280 light live › games: at most two subnav rows
+  ok   1280 light live › one GoatCounter tab-landing event per landing
+  ok   1280 light live › tapping the tab you are on counts nothing
+  ok   1280 light live › no console errors
+  ok   1280 light demo › nine tabs in order
+  ok   1280 light demo › the nine labels
+  ok   1280 light demo › the network bar is gone
+  ok   1280 light demo › body is the light paper
+  ok   1280 light demo › the tab bar is a 208px left rail
+  ok   1280 light demo › wire: its panel is the one showing
+  ok   1280 light demo › wire: no error box
+  ok   1280 light demo › wire: it draws its screen
+  ok   1280 light demo › wire: nothing fixed or sticky inside the tab
+  ok   1280 light demo › wire: uppercase only in the caps roles
+  ok   1280 light demo › wire: no monospace
+  ok   1280 light demo › wire: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › wire: no sideways scroll at 1280
+  ok   1280 light demo › wire: at most two subnav rows
+  ok   1280 light demo › watch: its panel is the one showing
+  ok   1280 light demo › watch: no error box
+  ok   1280 light demo › watch: it draws its screen
+  ok   1280 light demo › watch: nothing fixed or sticky inside the tab
+  ok   1280 light demo › watch: uppercase only in the caps roles
+  ok   1280 light demo › watch: no monospace
+  ok   1280 light demo › watch: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › watch: no sideways scroll at 1280
+  ok   1280 light demo › watch: at most two subnav rows
+  ok   1280 light demo › food: its panel is the one showing
+  ok   1280 light demo › food: no error box
+  ok   1280 light demo › food: it draws its screen
+  ok   1280 light demo › food: nothing fixed or sticky inside the tab
+  ok   1280 light demo › food: uppercase only in the caps roles
+  ok   1280 light demo › food: no monospace
+  ok   1280 light demo › food: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › food: no sideways scroll at 1280
+  ok   1280 light demo › food: at most two subnav rows
+  ok   1280 light demo › people: its panel is the one showing
+  ok   1280 light demo › people: no error box
+  ok   1280 light demo › people: it draws its screen
+  ok   1280 light demo › people: nothing fixed or sticky inside the tab
+  ok   1280 light demo › people: uppercase only in the caps roles
+  ok   1280 light demo › people: no monospace
+  ok   1280 light demo › people: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › people: no sideways scroll at 1280
+  ok   1280 light demo › people: at most two subnav rows
+  ok   1280 light demo › whatnow: its panel is the one showing
+  ok   1280 light demo › whatnow: no error box
+  ok   1280 light demo › whatnow: it draws its screen
+  ok   1280 light demo › whatnow: nothing fixed or sticky inside the tab
+  ok   1280 light demo › whatnow: uppercase only in the caps roles
+  ok   1280 light demo › whatnow: no monospace
+  ok   1280 light demo › whatnow: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › whatnow: no sideways scroll at 1280
+  ok   1280 light demo › whatnow: at most two subnav rows
+  ok   1280 light demo › vintage: its panel is the one showing
+  ok   1280 light demo › vintage: no error box
+  ok   1280 light demo › vintage: it draws its screen
+  ok   1280 light demo › vintage: nothing fixed or sticky inside the tab
+  ok   1280 light demo › vintage: uppercase only in the caps roles
+  ok   1280 light demo › vintage: no monospace
+  ok   1280 light demo › vintage: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › vintage: no sideways scroll at 1280
+  ok   1280 light demo › vintage: at most two subnav rows
+  ok   1280 light demo › art: its panel is the one showing
+  ok   1280 light demo › art: no error box
+  ok   1280 light demo › art: it draws its screen
+  ok   1280 light demo › art: nothing fixed or sticky inside the tab
+  ok   1280 light demo › art: uppercase only in the caps roles
+  ok   1280 light demo › art: no monospace
+  ok   1280 light demo › art: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › art: no sideways scroll at 1280
+  ok   1280 light demo › art: at most two subnav rows
+  ok   1280 light demo › onair: its panel is the one showing
+  ok   1280 light demo › onair: no error box
+  ok   1280 light demo › onair: it draws its screen
+  ok   1280 light demo › onair: nothing fixed or sticky inside the tab
+  ok   1280 light demo › onair: uppercase only in the caps roles
+  ok   1280 light demo › onair: no monospace
+  ok   1280 light demo › onair: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › onair: no sideways scroll at 1280
+  ok   1280 light demo › onair: at most two subnav rows
+  ok   1280 light demo › games: its panel is the one showing
+  ok   1280 light demo › games: no error box
+  ok   1280 light demo › games: it draws its screen
+  ok   1280 light demo › games: nothing fixed or sticky inside the tab
+  ok   1280 light demo › games: uppercase only in the caps roles
+  ok   1280 light demo › games: no monospace
+  ok   1280 light demo › games: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › games: no sideways scroll at 1280
+  ok   1280 light demo › games: at most two subnav rows
+  ok   1280 light demo › one GoatCounter tab-landing event per landing
+  ok   1280 light demo › tapping the tab you are on counts nothing
+  ok   1280 light demo › no console errors
+  ok   1280 light demo › demo mode never calls Supabase
+  ok   1280 dark reduced-motion live › nine tabs in order
+  ok   1280 dark reduced-motion live › the nine labels
+  ok   1280 dark reduced-motion live › the network bar is gone
+  ok   1280 dark reduced-motion live › body is the dark paper
+  ok   1280 dark reduced-motion live › the tab bar is a 208px left rail
+  ok   1280 dark reduced-motion live › reduced motion: the switch is a plain fill, no water
+  ok   1280 dark reduced-motion live › reduced motion: no transitions
+  ok   1280 dark reduced-motion live › wire: its panel is the one showing
+  ok   1280 dark reduced-motion live › wire: no error box
+  ok   1280 dark reduced-motion live › wire: it draws its screen
+  ok   1280 dark reduced-motion live › wire: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › wire: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › wire: no monospace
+  ok   1280 dark reduced-motion live › wire: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › wire: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › wire: at most two subnav rows
+  ok   1280 dark reduced-motion live › watch: its panel is the one showing
+  ok   1280 dark reduced-motion live › watch: no error box
+  ok   1280 dark reduced-motion live › watch: live, it states its promise
+  ok   1280 dark reduced-motion live › watch: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › watch: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › watch: no monospace
+  ok   1280 dark reduced-motion live › watch: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › watch: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › watch: at most two subnav rows
+  ok   1280 dark reduced-motion live › food: its panel is the one showing
+  ok   1280 dark reduced-motion live › food: no error box
+  ok   1280 dark reduced-motion live › food: live, it states its promise
+  ok   1280 dark reduced-motion live › food: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › food: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › food: no monospace
+  ok   1280 dark reduced-motion live › food: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › food: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › food: at most two subnav rows
+  ok   1280 dark reduced-motion live › people: its panel is the one showing
+  ok   1280 dark reduced-motion live › people: no error box
+  ok   1280 dark reduced-motion live › people: live, it states its promise
+  ok   1280 dark reduced-motion live › people: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › people: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › people: no monospace
+  ok   1280 dark reduced-motion live › people: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › people: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › people: at most two subnav rows
+  ok   1280 dark reduced-motion live › whatnow: its panel is the one showing
+  ok   1280 dark reduced-motion live › whatnow: no error box
+  ok   1280 dark reduced-motion live › whatnow: live, it states its promise
+  ok   1280 dark reduced-motion live › whatnow: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › whatnow: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › whatnow: no monospace
+  ok   1280 dark reduced-motion live › whatnow: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › whatnow: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › whatnow: at most two subnav rows
+  ok   1280 dark reduced-motion live › vintage: its panel is the one showing
+  ok   1280 dark reduced-motion live › vintage: no error box
+  ok   1280 dark reduced-motion live › vintage: live, it states its promise
+  ok   1280 dark reduced-motion live › vintage: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › vintage: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › vintage: no monospace
+  ok   1280 dark reduced-motion live › vintage: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › vintage: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › vintage: at most two subnav rows
+  ok   1280 dark reduced-motion live › art: its panel is the one showing
+  ok   1280 dark reduced-motion live › art: no error box
+  ok   1280 dark reduced-motion live › art: live, it states its promise
+  ok   1280 dark reduced-motion live › art: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › art: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › art: no monospace
+  ok   1280 dark reduced-motion live › art: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › art: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › art: at most two subnav rows
+  ok   1280 dark reduced-motion live › onair: its panel is the one showing
+  ok   1280 dark reduced-motion live › onair: no error box
+  ok   1280 dark reduced-motion live › onair: live, it states its promise
+  ok   1280 dark reduced-motion live › onair: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › onair: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › onair: no monospace
+  ok   1280 dark reduced-motion live › onair: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › onair: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › onair: at most two subnav rows
+  ok   1280 dark reduced-motion live › games: its panel is the one showing
+  ok   1280 dark reduced-motion live › games: no error box
+  ok   1280 dark reduced-motion live › games: live, it states its promise
+  ok   1280 dark reduced-motion live › games: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › games: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › games: no monospace
+  ok   1280 dark reduced-motion live › games: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › games: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › games: at most two subnav rows
+  ok   1280 dark reduced-motion live › one GoatCounter tab-landing event per landing
+  ok   1280 dark reduced-motion live › tapping the tab you are on counts nothing
+  ok   1280 dark reduced-motion live › no console errors
+  ok   1280 dark reduced-motion demo › nine tabs in order
+  ok   1280 dark reduced-motion demo › the nine labels
+  ok   1280 dark reduced-motion demo › the network bar is gone
+  ok   1280 dark reduced-motion demo › body is the dark paper
+  ok   1280 dark reduced-motion demo › the tab bar is a 208px left rail
+  ok   1280 dark reduced-motion demo › reduced motion: the switch is a plain fill, no water
+  ok   1280 dark reduced-motion demo › reduced motion: no transitions
+  ok   1280 dark reduced-motion demo › wire: its panel is the one showing
+  ok   1280 dark reduced-motion demo › wire: no error box
+  ok   1280 dark reduced-motion demo › wire: it draws its screen
+  ok   1280 dark reduced-motion demo › wire: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › wire: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › wire: no monospace
+  ok   1280 dark reduced-motion demo › wire: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › wire: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › wire: at most two subnav rows
+  ok   1280 dark reduced-motion demo › watch: its panel is the one showing
+  ok   1280 dark reduced-motion demo › watch: no error box
+  ok   1280 dark reduced-motion demo › watch: it draws its screen
+  ok   1280 dark reduced-motion demo › watch: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › watch: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › watch: no monospace
+  ok   1280 dark reduced-motion demo › watch: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › watch: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › watch: at most two subnav rows
+  ok   1280 dark reduced-motion demo › food: its panel is the one showing
+  ok   1280 dark reduced-motion demo › food: no error box
+  ok   1280 dark reduced-motion demo › food: it draws its screen
+  ok   1280 dark reduced-motion demo › food: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › food: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › food: no monospace
+  ok   1280 dark reduced-motion demo › food: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › food: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › food: at most two subnav rows
+  ok   1280 dark reduced-motion demo › people: its panel is the one showing
+  ok   1280 dark reduced-motion demo › people: no error box
+  ok   1280 dark reduced-motion demo › people: it draws its screen
+  ok   1280 dark reduced-motion demo › people: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › people: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › people: no monospace
+  ok   1280 dark reduced-motion demo › people: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › people: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › people: at most two subnav rows
+  ok   1280 dark reduced-motion demo › whatnow: its panel is the one showing
+  ok   1280 dark reduced-motion demo › whatnow: no error box
+  ok   1280 dark reduced-motion demo › whatnow: it draws its screen
+  ok   1280 dark reduced-motion demo › whatnow: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › whatnow: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › whatnow: no monospace
+  ok   1280 dark reduced-motion demo › whatnow: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › whatnow: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › whatnow: at most two subnav rows
+  ok   1280 dark reduced-motion demo › vintage: its panel is the one showing
+  ok   1280 dark reduced-motion demo › vintage: no error box
+  ok   1280 dark reduced-motion demo › vintage: it draws its screen
+  ok   1280 dark reduced-motion demo › vintage: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › vintage: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › vintage: no monospace
+  ok   1280 dark reduced-motion demo › vintage: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › vintage: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › vintage: at most two subnav rows
+  ok   1280 dark reduced-motion demo › art: its panel is the one showing
+  ok   1280 dark reduced-motion demo › art: no error box
+  ok   1280 dark reduced-motion demo › art: it draws its screen
+  ok   1280 dark reduced-motion demo › art: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › art: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › art: no monospace
+  ok   1280 dark reduced-motion demo › art: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › art: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › art: at most two subnav rows
+  ok   1280 dark reduced-motion demo › onair: its panel is the one showing
+  ok   1280 dark reduced-motion demo › onair: no error box
+  ok   1280 dark reduced-motion demo › onair: it draws its screen
+  ok   1280 dark reduced-motion demo › onair: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › onair: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › onair: no monospace
+  ok   1280 dark reduced-motion demo › onair: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › onair: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › onair: at most two subnav rows
+  ok   1280 dark reduced-motion demo › games: its panel is the one showing
+  ok   1280 dark reduced-motion demo › games: no error box
+  ok   1280 dark reduced-motion demo › games: it draws its screen
+  ok   1280 dark reduced-motion demo › games: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › games: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › games: no monospace
+  ok   1280 dark reduced-motion demo › games: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › games: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › games: at most two subnav rows
+  ok   1280 dark reduced-motion demo › one GoatCounter tab-landing event per landing
+  ok   1280 dark reduced-motion demo › tapping the tab you are on counts nothing
+  ok   1280 dark reduced-motion demo › no console errors
+  ok   1280 dark reduced-motion demo › demo mode never calls Supabase
+  ok   deep links, demo › #wire/w13 lands on its card and flashes
+  ok   deep links, demo › #wire/w13: no console errors
+  ok   deep links, demo › #wire/y4 lands on its card and flashes
+  ok   deep links, demo › #wire/y4: no console errors
+  ok   deep links, demo › #watch/fm3 lands on its card and flashes
+  ok   deep links, demo › #watch/fm3: no console errors
+  ok   deep links, demo › #food/fv2 lands on its card and flashes
+  ok   deep links, demo › #food/fv2: no console errors
+  ok   deep links, demo › #people/pp2 lands on its card and flashes
+  ok   deep links, demo › #people/pp2: no console errors
+  ok   deep links, demo › #whatnow/tn3 lands on its card and flashes
+  ok   deep links, demo › #whatnow/tn3: no console errors
+  ok   deep links, demo › #vintage/sp2 lands on its card and flashes
+  ok   deep links, demo › #vintage/sp2: no console errors
+  ok   deep links, demo › #art/aw6 lands on its card and flashes
+  ok   deep links, demo › #art/aw6: no console errors
+  ok   deep links, demo › #onair/tv3 lands on its card and flashes
+  ok   deep links, demo › #onair/tv3: no console errors
+  ok   deep links, demo › #whatnow/missions opens the mode
+  ok   deep links, demo › #onair/everything flips the shared switch
+  ok   deep links, demo › an unknown key says the card has moved on
+  ok   deep links, live Wire › the dateline is today in America/New_York on the real clock (Friday, October 16)
+  ok   deep links, live Wire › the back arrow reaches yesterday, marked final
+  ok   deep links, live Wire › the live Wire draws rows from pulse.json
+  ok   deep links, live Wire › the fixture day has a non-local card past row 70
+  ok   deep links, live Wire › a shared non-local card past the first page lands and flashes for a Local reader
+  ok   deep links, live Wire › and the switch moved to Everything to show it
+  ok   deep links, live Wire › #food/ lands on Food
+  ok   deep links, live Wire › no console errors
+  ok   demo mode keeps its hands off the real app › demo Settings does not show the real account
+  ok   demo mode keeps its hands off the real app › demo leaves the real session, settings and visit untouched
+  ok   demo mode keeps its hands off the real app › demo makes no Supabase call
+  ok   interactions, demo › the star saves and lights the mast
+  ok   interactions, demo › the Saved sheet lists it
+  ok   interactions, demo › Escape closes the sheet
+  ok   interactions, demo › swipe right past 72px saves
+  ok   interactions, demo › swipe left past 72px asks before muting
+  ok   interactions, demo › the mute toast carries Undo
+  ok   interactions, demo › scrolling down sends the mast away
+  ok   interactions, demo › scrolling up brings it back
+  ok   interactions, demo › Settings lists the muted source
+  ok   interactions, demo › Settings has a Sign in row
+  ok   interactions, demo › Settings carries the network bar's links
+  ok   interactions, demo › holding a card for 550ms opens the peek
+  ok   interactions, demo › Escape closes the peek
+  ok   interactions, demo › the mast toggle switches to dark
+  ok   interactions, demo › the theme survives a reload, painted before first paint
+  ok   interactions, demo › demo saves never reach localStorage
+  ok   interactions, demo › play raises the one player
+  ok   interactions, demo › the player survives a tab switch
+  ok   interactions, demo › no console errors
+  ok   scroll memory › each tab keeps its own scroll position
+  ok   sign-in fails soft › Auth off in the project: the row says coming soon
+  ok   sign-in fails soft › no console errors
+  ok   sign-in fails soft › Auth on: an email field and Send link
+  ok   sign-in fails soft › a bad address is caught before any request
+  ok   sign-in fails soft › no link was requested
+  ok   sign-in fails soft › no console errors
+  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)

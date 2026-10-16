@@ -1,0 +1,290 @@
+{
+ "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders.",
+ "weather": {
+  "temp": "61°",
+  "sky": "clear",
+  "lake": "61°",
+  "sunset": "5:58",
+  "when": "Thursday 2:14 pm",
+  "now": "2:14 pm"
+ },
+ "answers": [
+  {
+   "title": "Walk the breakwater before the light goes",
+   "why": "61° and clear until 6, and the lake is still warm enough to argue about.",
+   "art": "lake"
+  },
+  {
+   "title": "Trivia at the Archives, 7 pm",
+   "why": "A team of four posted on the Wire looking for two more.",
+   "art": "brick"
+  },
+  {
+   "title": "Catch the sunset from Battery Park",
+   "why": "Sunset is 5:58. You have 31 minutes.",
+   "art": "dawn"
+  },
+  {
+   "title": "The foliage loop on the bike path",
+   "why": "Peak color this week, by every map.",
+   "art": "foliage"
+  },
+  {
+   "title": "A show at Higher Ground on a weeknight",
+   "why": "Mission 14 of 100, and there is one tonight at 8.",
+   "art": "night"
+  },
+  {
+   "title": "Coffee at the big table, Scout",
+   "why": "The Coffee Club meets Saturday; this is the scouting trip.",
+   "art": "coffee"
+  }
+ ],
+ "guides": [
+  {
+   "title": "Perfect Saturday",
+   "n": 8,
+   "art": "dawn",
+   "theme": "Perfect Saturday"
+  },
+  {
+   "title": "A day on the water",
+   "n": 7,
+   "art": "lake",
+   "theme": "Water"
+  },
+  {
+   "title": "Snow day",
+   "n": 7,
+   "art": "rink",
+   "theme": "Snow"
+  },
+  {
+   "title": "Dog day",
+   "n": 8,
+   "art": "field",
+   "theme": "Dog"
+  },
+  {
+   "title": "Rainy day",
+   "n": 6,
+   "art": "slate",
+   "theme": "All"
+  }
+ ],
+ "themes": [
+  "All",
+  "Water",
+  "Snow",
+  "Dog",
+  "Perfect Saturday"
+ ],
+ "missions": [
+  {
+   "n": 1,
+   "title": "Swim at North Beach before work",
+   "theme": "Water",
+   "done": 1,
+   "doneBy": 937
+  },
+  {
+   "n": 2,
+   "title": "Sunset from the top of the parking garage",
+   "theme": "Perfect Saturday",
+   "done": 1,
+   "doneBy": 974
+  },
+  {
+   "n": 3,
+   "title": "A full lap of the bike path",
+   "theme": "Water",
+   "done": 0,
+   "doneBy": 1011
+  },
+  {
+   "n": 4,
+   "title": "Trivia night, any bar",
+   "theme": "Perfect Saturday",
+   "done": 1,
+   "doneBy": 1048
+  },
+  {
+   "n": 5,
+   "title": "The farmers market before 9 am",
+   "theme": "Perfect Saturday",
+   "done": 0,
+   "doneBy": 1085
+  },
+  {
+   "n": 6,
+   "title": "Camel’s Hump on a weekday",
+   "theme": "Snow",
+   "done": 0,
+   "doneBy": 1122
+  },
+  {
+   "n": 7,
+   "title": "Dog hour at Oakledge",
+   "theme": "Dog",
+   "done": 0,
+   "doneBy": 1159
+  },
+  {
+   "n": 8,
+   "title": "A ferry ride for no reason",
+   "theme": "Water",
+   "done": 0,
+   "doneBy": 1196
+  },
+  {
+   "n": 9,
+   "title": "Skate the waterfront bowl",
+   "theme": "Perfect Saturday",
+   "done": 0,
+   "doneBy": 1233
+  },
+  {
+   "n": 10,
+   "title": "Night ski at Bolton",
+   "theme": "Snow",
+   "done": 0,
+   "doneBy": 1270
+  },
+  {
+   "n": 11,
+   "title": "The Intervale in a frost",
+   "theme": "Dog",
+   "done": 0,
+   "doneBy": 1307
+  },
+  {
+   "n": 12,
+   "title": "A Catamounts hockey game",
+   "theme": "Snow",
+   "done": 1,
+   "doneBy": 1344
+  },
+  {
+   "n": 13,
+   "title": "Paddle to the breakwater light",
+   "theme": "Water",
+   "done": 0,
+   "doneBy": 1381
+  },
+  {
+   "n": 14,
+   "title": "A show at Higher Ground on a weeknight",
+   "theme": "Perfect Saturday",
+   "done": 0,
+   "doneBy": 1418
+  }
+ ],
+ "missionsDone": 14,
+ "missionsTotal": 100,
+ "tonight": [
+  {
+   "kind": "event",
+   "src": "Higher Ground",
+   "ago": "Tonight",
+   "dow": "Thu",
+   "dom": "16",
+   "title": "A touring band and two local openers",
+   "when": "8:00 pm",
+   "where": "Ballroom, S. Burlington",
+   "price": "$22",
+   "text": "Doors at 7.",
+   "votes": 9,
+   "comments": 2,
+   "k": "tn1",
+   "sid": "Higher Ground"
+  },
+  {
+   "kind": "event",
+   "src": "Radio Bean",
+   "ago": "Tonight",
+   "dow": "Thu",
+   "dom": "16",
+   "title": "Honky Tonk Tuesday’s Thursday cousin",
+   "when": "9:30 pm",
+   "where": "Radio Bean, N. Winooski",
+   "price": "Free",
+   "text": "",
+   "votes": 6,
+   "comments": 0,
+   "k": "tn2",
+   "sid": "Radio Bean"
+  },
+  {
+   "kind": "event",
+   "src": "Foam Brewers",
+   "ago": "Tonight",
+   "dow": "Thu",
+   "dom": "16",
+   "title": "Last patio night of the season, with a DJ",
+   "when": "6:00 pm",
+   "where": "Foam, Lake St",
+   "price": "Free",
+   "text": "",
+   "votes": 14,
+   "comments": 3,
+   "k": "tn3",
+   "sid": "Foam Brewers"
+  },
+  {
+   "kind": "event",
+   "src": "Burlington Social Activities Group",
+   "via": "Meetup",
+   "own": true,
+   "ago": "Tonight",
+   "dow": "Thu",
+   "dom": "16",
+   "title": "Btown Brief walk and talk, waterfront loop",
+   "when": "5:45 pm",
+   "where": "ECHO steps",
+   "price": "Free",
+   "going": "11",
+   "cta": "Going",
+   "text": "",
+   "votes": 17,
+   "comments": 5,
+   "k": "tn4",
+   "sid": "Burlington Social Activities Group"
+  }
+ ],
+ "artists": [
+  {
+   "kind": "video",
+   "src": "Music",
+   "title": "The Winooski Ramblers",
+   "media": "pine",
+   "dur": "3:48",
+   "text": "Playing Radio Bean Saturday. Newest single.",
+   "show": "Bandcamp",
+   "k": "ar1",
+   "sid": "Music"
+  },
+  {
+   "kind": "video",
+   "src": "Music",
+   "title": "Low Tide Choir",
+   "media": "teal",
+   "dur": "4:20",
+   "text": "Playing Foam on the 24th.",
+   "show": "Bandcamp",
+   "k": "ar2",
+   "sid": "Music"
+  },
+  {
+   "kind": "video",
+   "src": "Music",
+   "title": "Ferry Street",
+   "media": "slate",
+   "dur": "2:56",
+   "text": "Playing Monkey House Friday.",
+   "show": "Bandcamp",
+   "k": "ar3",
+   "sid": "Music"
+  }
+ ],
+ "newSince": 0
+}
