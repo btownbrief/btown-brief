@@ -68,6 +68,16 @@ class ReadOneTests(unittest.TestCase):
         state, _ = wi.read_one("x", json.dumps(data).encode(), NOW)
         self.assertTrue(state["paused"])
 
+    def test_a_write_stamped_in_the_future_pauses(self):
+        data = json.loads(raw("x-good.json"))
+        data["updated_at"] = (NOW + timedelta(days=3)).isoformat()
+        state, fresh = wi.read_one("x", json.dumps(data).encode(), NOW)
+        self.assertTrue(state["paused"])
+        self.assertIn("in the future", state["reason"])
+        data["updated_at"] = (NOW + timedelta(minutes=5)).isoformat()   # ordinary clock skew
+        state, _ = wi.read_one("x", json.dumps(data).encode(), NOW)
+        self.assertFalse(state["paused"])
+
     def test_bad_posts_are_dropped_not_the_source(self):
         state, fresh = wi.read_one("facebook", raw("facebook-bad-items.json"), NOW)
         self.assertFalse(state["paused"])

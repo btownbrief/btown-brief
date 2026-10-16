@@ -78,6 +78,7 @@ RIVER_MAX = 80
 ADD_MAX = 20               # per hourly update
 ADD_MAX_FIRST = 40         # the day's first update can catch up on the night
 PICK_COUNT = 25
+NATIONAL_PICKS = 10        # the rest of the 25 are local
 WHY_MAX = 90
 NEW_MAX_LOCAL = 70         # candidates shown to the editor per run
 NEW_MAX_WORLD = 30
@@ -423,9 +424,11 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
         asked = [as_index(value, 0, offset) for value in answer.get("drop") or []]
         order = [numbered_river[i]["id"] for i in asked if i is not None]
         # the editor's choices first, then the weakest national, oldest first
-        rest = sorted((item for item in river(day) if not item.get("local")),
-                      key=lambda item: item.get("posted_at") or "")
-        order += [item["id"] for item in rest]
+        # then the oldest national items, then the oldest of everything else:
+        # the cap is a hard line, so the fallback order covers the whole river
+        oldest = lambda item: item.get("posted_at") or ""  # noqa: E731
+        order += [item["id"] for item in sorted(river(day), key=lambda item: (
+            bool(item.get("local")), oldest(item)))]
         for item_id in order:
             if excess <= 0:
                 break
@@ -450,7 +453,15 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
         current["time"] = clock(et)
 
     if want_picks and picks:
-        ranked = spread_outlets([dict(public(by_index[index]), why=why) for index, why in picks])
+        # at most NATIONAL_PICKS national picks, so the Local list stays long
+        kept, national = [], 0
+        for index, why in picks:
+            if not by_index[index].get("local"):
+                national += 1
+                if national > NATIONAL_PICKS:
+                    continue
+            kept.append((index, why))
+        ranked = spread_outlets([dict(public(by_index[index]), why=why) for index, why in kept])
         in_river = {item["id"] for item in river(day)}
         day["picks"] = [dict(pick, rank=rank) for rank, pick in
                         enumerate((p for p in ranked if p["id"] in in_river), start=1)]

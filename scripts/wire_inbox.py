@@ -63,6 +63,7 @@ PAUSE_HOURS = 18     # README: "paused if updated_at is older than 18 hours"
 KEEP_DAYS = 7        # README: "Keep the last 7 days"
 CAP = 300            # README: "At most 300"
 BAD_SHARE = 0.5      # more than half the posts failing = a bad file
+CLOCK_SKEW_MINUTES = 10
 
 # --- the contract, ported from wire-inbox/scripts/validate_inbox.py --------
 SOURCES = {"grok-x", "muse-facebook"}
@@ -215,6 +216,10 @@ def read_one(ch, raw, now):
     if items and len(per_item) > BAD_SHARE * len(items):
         state["reason"] = (f"{path}: {len(per_item)} of {len(items)} posts fail the "
                            f"contract (first: {next(iter(per_item.values()))[0]})")
+        return state, []
+    if updated - now > timedelta(minutes=CLOCK_SKEW_MINUTES):
+        # a write stamped in the future would otherwise never look stale
+        state["reason"] = f"{path} claims it was written in the future ({iso(updated)})"
         return state, []
     if now - updated > timedelta(hours=PAUSE_HOURS):
         hours = (now - updated).total_seconds() / 3600

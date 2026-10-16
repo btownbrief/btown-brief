@@ -55,11 +55,23 @@ jobs:
         id: pull
         run: |
           mkdir -p /tmp/wire
-          if git ls-remote --exit-code --heads origin wire-data >/dev/null; then
-            # The branch exists, so a fetch failure must fail the run rather
-            # than force-push away thirty days of editions.
+          # ls-remote --exit-code says 2 for "no such branch" and something
+          # else for a network or auth failure. Only a confirmed "no such
+          # branch" may start from nothing; anything else fails the run
+          # rather than force-push away thirty days of editions.
+          set +e
+          git ls-remote --exit-code --heads origin wire-data >/dev/null
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
             git fetch -q origin wire-data --depth 1
             git archive FETCH_HEAD | tar -x -C /tmp/wire
+            [ -s /tmp/wire/data/wire-today.json ] || [ -s /tmp/wire/data/wire-tags.json ]
+          elif [ "$status" -eq 2 ]; then
+            echo "no wire-data branch yet: first run"
+          else
+            echo "::error::could not reach the wire-data branch (ls-remote exit $status)"
+            exit 1
           fi
           mkdir -p /tmp/wire/data
           ls -la /tmp/wire/data
@@ -84,28 +96,6 @@ jobs:
       - name: Install the Anthropic SDK
         if: steps.key.outputs.engine != 'none'
         run: python3 -m pip install --quiet 'anthropic>=0.116,<1'
-
-      - name: TEMPORARY one-time backfill of 2026-10-15 from the pulse store
-        # Gives the branch a real frozen edition before cron runs exist: four
-        # timed runs replay yesterday on the real models, the edition is
-        # labelled "backfilled", and the real-clock run below freezes it
-        # through the normal midnight path. Removed with the push trigger.
-        if: steps.key.outputs.engine != 'none'
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: |
-          if [ -f /tmp/wire/data/wire/2026-10-15.json ]; then
-            echo "already backfilled"; exit 0
-          fi
-          # the branch's first test run used the doctrine before its first
-          # review; start the day over rather than build on it
-          rm -f /tmp/wire/data/wire-today.json /tmp/wire/data/wire-state.json /tmp/wire/data/wire-tags.json
-          for t in 2026-10-15T08:10:00-04:00 2026-10-15T12:10:00-04:00 \
-                   2026-10-15T17:10:00-04:00 2026-10-15T21:10:00-04:00; do
-            python3 scripts/tag_wire.py --data-dir /tmp/wire/data --as-of "$t"
-            python3 scripts/curate_wire.py --data-dir /tmp/wire/data --as-of "$t"
-          done
 
       - name: Tag new items
         env:

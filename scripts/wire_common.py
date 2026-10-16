@@ -230,6 +230,9 @@ PRICES = {
     "z-ai/glm-5.3-flash": {"in": 0.014, "out": 0.90, "cache_read": 0.014, "cache_write": 0.014},
 }
 GLM = "z-ai/glm-5.3-flash"
+# Opus 5.5's server-side fallback targets (Opus 4.8 / Opus 5) list at $5/$25.
+PRICES["claude-opus-4-8"] = {"in": 5.00, "out": 25.00, "cache_read": 0.50, "cache_write": 6.25}
+FALLBACK_PRICE_AS = "claude-opus-4-8"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api"
 MONTH_CAP_USD = 25.0
 
@@ -245,6 +248,8 @@ def pick_engine(role):
 
 
 def cost_usd(model, usage):
+    if usage.get("fallback"):
+        model = FALLBACK_PRICE_AS
     price = PRICES.get(model)
     if not price:
         return 0.0
@@ -277,10 +282,7 @@ def ask_json(engine, system, user, schema, max_tokens, attempts=2, log_prefix="w
             response = _create(client, engine, system, user, schema, max_tokens, attempt)
             got = getattr(response, "usage", None)
             if got is not None:
-                usage["in"] += getattr(got, "input_tokens", 0) or 0
-                usage["out"] += getattr(got, "output_tokens", 0) or 0
-                usage["cache_read"] += getattr(got, "cache_read_input_tokens", 0) or 0
-                usage["cache_write"] += getattr(got, "cache_creation_input_tokens", 0) or 0
+                add_usage(usage, got)
             usage["calls"] += 1
             if response.stop_reason == "refusal":
                 raise ModelError("the model declined to answer")
@@ -318,6 +320,31 @@ def portable_schema(schema):
     if isinstance(schema, list):
         return [portable_schema(value) for value in schema]
     return schema
+
+
+def add_usage(usage, got):
+    """Fold one response's usage in. With a server-side fallback, every
+    attempt (the declined one included) is in `usage.iterations` while the
+    top level covers only the model that answered, so the iterations win
+    when they sum higher, and a fallback run is priced at the fallback
+    tier's higher rate (the ledger must never undercount the cap)."""
+    top = {"in": getattr(got, "input_tokens", 0) or 0,
+           "out": getattr(got, "output_tokens", 0) or 0,
+           "cache_read": getattr(got, "cache_read_input_tokens", 0) or 0,
+           "cache_write": getattr(got, "cache_creation_input_tokens", 0) or 0}
+    iterations = getattr(got, "iterations", None) or []
+    if iterations:
+        summed = {key: 0 for key in top}
+        for entry in iterations:
+            summed["in"] += getattr(entry, "input_tokens", 0) or 0
+            summed["out"] += getattr(entry, "output_tokens", 0) or 0
+            summed["cache_read"] += getattr(entry, "cache_read_input_tokens", 0) or 0
+            summed["cache_write"] += getattr(entry, "cache_creation_input_tokens", 0) or 0
+            if "fallback" in str(getattr(entry, "type", "")):
+                usage["fallback"] = True
+        top = {key: max(top[key], summed[key]) for key in top}
+    for key, value in top.items():
+        usage[key] = usage.get(key, 0) + value
 
 
 def _create(client, engine, system, user, schema, max_tokens, attempt):
@@ -417,6 +444,12 @@ def selftest():
     assert item_id("https://a.com/1") == item_id("https://a.com/1 ") != item_id("https://a.com/2")
     assert abs(cost_usd("claude-opus-5-5", {"in": 1_000_000, "out": 100_000}) - 6.0) < 1e-9
     assert pick_engine is not None and et_now().tzinfo is not None
+    usage = {}
+    add_usage(usage, type("U", (), {"input_tokens": 10, "output_tokens": 0, "iterations": [
+        type("I", (), {"type": "message", "input_tokens": 10, "output_tokens": 0}),
+        type("I", (), {"type": "fallback_message", "input_tokens": 10, "output_tokens": 5})]})())
+    assert usage["in"] == 20 and usage["out"] == 5 and usage["fallback"]
+    assert cost_usd("claude-opus-5-5", usage) == cost_usd("claude-opus-4-8", {"in": 20, "out": 5})
     slim = portable_schema({"type": "array", "minItems": 5, "maxItems": 9,
                             "items": {"type": "string", "maxLength": 9}})
     assert slim == {"type": "array", "items": {"type": "string"}}

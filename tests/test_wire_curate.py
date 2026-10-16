@@ -244,6 +244,39 @@ class HouseRuleTests(Workdir):
         self.assertEqual(self.today()["count"], cw.ADD_MAX_FIRST)
 
 
+class CapTests(Workdir):
+    def test_an_all_local_river_still_stops_at_eighty(self):
+        """Codex's repro: 80 local items, 20 more, no drops from the model."""
+        self.write_pulse(pulse(n_local=80, n_world=0))
+        with mock.patch.object(cw, "ADD_MAX_FIRST", 80), mock.patch.object(cw, "NEW_MAX_LOCAL", 100):
+            self.run_curate(Stub(lambda numbers, river_n, schema: dict(
+                take_all(numbers, river_n, schema), add=[n for n in numbers if n >= river_n][:80])))
+        self.assertEqual(self.today()["count"], 80)
+        payload = pulse(n_local=20, n_world=0, start=500)
+        for item in payload["items"]:
+            item["d"] = NOW_TS + 3000
+        self.write_pulse(payload)
+        self.run_curate(Stub(lambda numbers, river_n, schema: dict(
+            take_all(numbers, river_n, schema), drop=[])), now=NOW + timedelta(hours=1))
+        day = self.today()
+        self.assertEqual(day["count"], cw.RIVER_MAX)
+        ids = {item["id"] for item in cw.river(day)}
+        self.assertTrue({pick["id"] for pick in day["picks"]} <= ids)
+
+    def test_no_more_than_ten_national_picks(self):
+        self.write_pulse(pulse(n_local=6, n_world=20))
+
+        def national_first(numbers, river_n, schema):
+            answer = take_all(numbers, river_n, schema)
+            answer["picks"] = [{"i": n, "why": "R."} for n in numbers[6:26]] + \
+                              [{"i": n, "why": "R."} for n in numbers[:5]]
+            return answer
+        self.run_curate(Stub(national_first))
+        picks = self.today()["picks"]
+        self.assertEqual(sum(1 for pick in picks if not pick["local"]), cw.NATIONAL_PICKS)
+        self.assertEqual(sum(1 for pick in picks if pick["local"]), 5)
+
+
 class FreezeTests(Workdir):
     def test_midnight_freezes_yesterday_and_starts_fresh(self):
         self.run_curate(Stub(take_all))
