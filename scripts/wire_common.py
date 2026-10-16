@@ -84,6 +84,77 @@ def mechanical_channel(source, url=""):
     return ("local" if local else "world"), local
 
 
+def iso_ts(ts):
+    return datetime.fromtimestamp(int(ts), timezone.utc).isoformat()
+
+
+def wire_items(pulse, now_ts, window_hours):
+    """pulse.json -> the Wire's flat candidate items, newest first.
+
+    Every item carries id, ch, local, src, name, title, url, posted_at (and
+    `d`, the epoch the code sorts on), plus thumb / media / handle / discuss
+    where the source gave one. Titles and summaries are copied verbatim;
+    nothing here writes a word a reader will see."""
+    sources = {source["id"]: source for source in pulse.get("sources") or []
+               if isinstance(source, dict) and source.get("id")}
+    cutoff = now_ts - window_hours * 3600
+    out = []
+    for item in pulse.get("items") or []:
+        if not isinstance(item, dict) or item.get("x"):
+            continue  # an unlinkable newsletter edition has nowhere to send a reader
+        source = sources.get(item.get("s"))
+        when, url, title = item.get("d"), item.get("u"), item.get("t")
+        if source is None or not url or not title or not isinstance(when, int):
+            continue
+        if when < cutoff or when > now_ts + 3600:
+            continue
+        ch, local = mechanical_channel(source, url)
+        if ch == "reddit" and not local:
+            # r/news, r/worldnews, r/nba: aggregator echoes of the world wire,
+            # ~200 a day. The Reddit chip is the town talking, so only the
+            # local subs reach the Wire (the raw wire keeps the rest).
+            continue
+        entry = {
+            "id": item_id(url), "ch": item.get("ch") or ch,
+            "local": bool(item["local"]) if "local" in item else local,
+            "src": source["id"], "name": source.get("short") or source.get("name") or source["id"],
+            "title": title, "url": url, "posted_at": iso_ts(when), "d": when,
+        }
+        if source.get("site"):
+            entry["site"] = source["site"]   # the source sheet's "Open the site"
+        if item.get("i"):
+            entry["thumb"] = item["i"]
+        if item.get("a"):
+            entry["media"] = {"type": "audio", "url": item["a"]}
+        elif entry["ch"] == "video":
+            entry["media"] = {"type": "video", "url": url}
+        if item.get("r") or item.get("h"):
+            entry["discuss"] = item.get("r") or item.get("h")
+        out.append(entry)
+    for ch, state in (pulse.get("inbox") or {}).items():
+        if ch not in ("x", "facebook") or not isinstance(state, dict):
+            continue
+        for post in state.get("items") or []:
+            when, url = post.get("d"), post.get("u")
+            if not url or not isinstance(when, int) or when < cutoff or when > now_ts + 3600:
+                continue
+            out.append({
+                "id": item_id(url), "ch": ch, "local": bool(post.get("local", True)),
+                "src": f"{ch}:{post.get('from')}", "name": post.get("name") or post.get("from"),
+                "handle": post.get("from"), "title": post.get("summary") or "",
+                "url": url, "posted_at": iso_ts(when), "d": when, "kind": post.get("kind"),
+            })
+            if ch == "x" and str(post.get("from") or "").startswith("@"):
+                out[-1]["site"] = "https://x.com/" + post["from"][1:]
+    seen, unique = set(), []
+    for entry in sorted(out, key=lambda e: e["d"], reverse=True):
+        if entry["id"] in seen or not entry["title"]:
+            continue
+        seen.add(entry["id"])
+        unique.append(entry)
+    return unique
+
+
 def trim(value, limit):
     value = re.sub(r"\s+", " ", value or "").strip()
     if len(value) <= limit:
@@ -208,9 +279,30 @@ def ask_json(engine, system, user, schema, max_tokens, attempts=2, log_prefix="w
     raise error
 
 
+# Constraints Anthropic's structured outputs do not accept (numbers, string
+# lengths, array sizes beyond a 0/1 floor). The code enforces every one of
+# them after the call anyway; GLM gets the full schema because there the
+# bounds are what stop a looping answer (see curate_top.py).
+UNPORTABLE = ("maxItems", "maxLength", "minLength", "minimum", "maximum")
+
+
+def portable_schema(schema):
+    if isinstance(schema, dict):
+        out = {}
+        for key, value in schema.items():
+            if key in UNPORTABLE or (key == "minItems" and value not in (0, 1)):
+                continue
+            out[key] = portable_schema(value)
+        return out
+    if isinstance(schema, list):
+        return [portable_schema(value) for value in schema]
+    return schema
+
+
 def _create(client, engine, system, user, schema, max_tokens, attempt):
     model = engine["model"]
-    fmt = {"type": "json_schema", "schema": schema}
+    fmt = {"type": "json_schema",
+           "schema": schema if engine["provider"] == "openrouter" else portable_schema(schema)}
     messages = [{"role": "user", "content": user}]
     if engine["provider"] == "openrouter":
         # Same three guards as curate_top.py, for the same measured reasons:
@@ -304,6 +396,9 @@ def selftest():
     assert item_id("https://a.com/1") == item_id("https://a.com/1 ") != item_id("https://a.com/2")
     assert abs(cost_usd("claude-opus-5-5", {"in": 1_000_000, "out": 100_000}) - 6.0) < 1e-9
     assert pick_engine is not None and et_now().tzinfo is not None
+    slim = portable_schema({"type": "array", "minItems": 5, "maxItems": 9,
+                            "items": {"type": "string", "maxLength": 9}})
+    assert slim == {"type": "array", "items": {"type": "string"}}
     print("selftest ok")
 
 

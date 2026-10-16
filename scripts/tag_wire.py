@@ -1,0 +1,280 @@
+#!/usr/bin/env python3
+"""The Wire, step one of two: tag every new item, hourly, cheaply.
+
+pulse.json brings ~1,000 items a day. curate_wire.py (the expensive editor)
+should only read the ones worth reading, so this pass gives each NEW item:
+
+  junk   none | promo | giveaway | tunein | jobs | duplicate | noise
+  local  true when the story is about Burlington or Vermont, whatever the outlet
+  ch     the mechanical channel, flipped local <-> world when `local` says so
+  topic  one of TOPICS
+  score  0-10 local interest
+
+Tags are kept in data/wire-tags.json, keyed by item id, so an item is tagged
+once. The model is Claude Haiku 5.5 when ANTHROPIC_API_KEY exists, else GLM
+5.3 Flash through OPENROUTER_API_KEY; the rules are prompts/wire-tags.md.
+
+Honesty rules, as in curate_top.py: the model answers by INDEX into the
+numbered list and only chooses from fixed vocabularies; every tag maps back to
+a real item; anything malformed is dropped and that item simply stays
+untagged for the next run. The mechanical channel of an inbox or Reddit item
+is never overridden.
+
+Failure posture: no key, the $25 month cap, or any API trouble logs and exits
+0. Items left untagged are retried next hour, and curate_wire.py treats an
+untagged item with mechanical defaults, so a tagging outage degrades the
+river's ranking, never its existence.
+
+CLI:
+  --data-dir DIR   wire-data working tree (default data/)
+  --pulse PATH     read pulse.json from a file instead of the pulse-data branch
+  --selftest       run the offline checks and exit
+"""
+
+import argparse
+import json
+import os
+import sys
+import urllib.request
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import wire_common as wc  # noqa: E402
+
+PULSE_URL = ("https://raw.githubusercontent.com/btownbrief/btown-brief/"
+             "pulse-data/data/pulse.json")
+UA = "btown-wire-tags/1.0"
+WINDOW_HOURS = 30        # the curator looks back 26h; tag a little wider
+BATCH = 120              # items per call: ~4k tokens in, ~3k out
+MAX_PER_RUN = 600        # the first run of a fresh store tags local first
+KEEP_HOURS = 72          # tags older than this leave the store
+RIVER_TITLES = 80        # duplicates are judged against today's river
+JUNK = ("none", "promo", "giveaway", "tunein", "jobs", "duplicate", "noise")
+TOPICS = (
+    "city-government", "state-politics", "schools", "housing", "transportation",
+    "public-safety", "courts", "business", "food-drink", "arts-culture", "music",
+    "events", "sports", "weather", "environment", "health", "community",
+    "national-politics", "world", "economy", "tech", "science", "media", "other",
+)
+FIXED = ("x", "facebook", "reddit", "newsletters", "video")
+
+SCHEMA_ITEM = {
+    "type": "object",
+    "properties": {
+        "i": {"type": "integer"},
+        "junk": {"type": "string", "enum": list(JUNK)},
+        "local": {"type": "boolean"},
+        "ch": {"type": "string", "enum": list(wc.CHANNELS)},
+        "topic": {"type": "string", "enum": list(TOPICS)},
+        "score": {"type": "integer", "minimum": 0, "maximum": 10},
+    },
+    "required": ["i", "junk", "local", "ch", "topic", "score"],
+    "additionalProperties": False,
+}
+
+
+def schema_for(n):
+    return {
+        "type": "object",
+        "properties": {"tags": {"type": "array", "maxItems": n, "items": SCHEMA_ITEM}},
+        "required": ["tags"],
+        "additionalProperties": False,
+    }
+
+
+def fetch_pulse(url=PULSE_URL, timeout=30):
+    request = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        return json.load(response)
+
+
+def load_store(data_dir):
+    store = wc.load_json(os.path.join(data_dir, "wire-tags.json"), {})
+    if not isinstance(store, dict) or not isinstance(store.get("tags"), dict):
+        store = {"v": 1, "tags": {}}
+    return store
+
+
+def river_titles(data_dir):
+    today = wc.load_json(os.path.join(data_dir, "wire-today.json"), {})
+    titles = []
+    for update in today.get("updates") or []:
+        for item in update.get("items") or []:
+            if item.get("title"):
+                titles.append(item["title"])
+    return titles[:RIVER_TITLES]
+
+
+def untagged(items, store):
+    tags = store.get("tags") or {}
+    fresh = [item for item in items if item["id"] not in tags]
+    # local first, then newest: a capped first run spends itself on the
+    # items the page leads with
+    fresh.sort(key=lambda item: (not item["local"], -item["d"]))
+    return fresh[:MAX_PER_RUN]
+
+
+def format_batch(batch, titles):
+    lines = []
+    if titles:
+        lines.append("ALREADY IN THE RIVER (today):")
+        lines.extend(f"- {title}" for title in titles)
+        lines.append("")
+    lines.append("NEW ITEMS:")
+    for index, item in enumerate(batch):
+        who = item.get("handle") or item["name"]
+        lines.append(f"{index}. {item['ch']} · {'LOCAL' if item['local'] else 'NATIONAL'} · "
+                     f"{who} · {item['title']}")
+    return "\n".join(lines)
+
+
+def validate_tags(raw, batch, now_ts):
+    """Model output -> {item_id: tag}. Bad indices, repeats, unknown words and
+    channel changes the rules forbid are all dropped or corrected."""
+    out = {}
+    for entry in raw or []:
+        if not isinstance(entry, dict):
+            continue
+        index = entry.get("i")
+        if not isinstance(index, int) or isinstance(index, bool) or not 0 <= index < len(batch):
+            continue
+        item = batch[index]
+        if item["id"] in out:
+            continue
+        junk = entry.get("junk") if entry.get("junk") in JUNK else None
+        topic = entry.get("topic") if entry.get("topic") in TOPICS else "other"
+        score = entry.get("score")
+        if junk is None or not isinstance(score, int) or isinstance(score, bool):
+            continue
+        local = entry.get("local")
+        local = bool(local) if isinstance(local, bool) else item["local"]
+        ch = item["ch"]
+        if ch in ("local", "world"):
+            ch = "local" if local else "world"   # geography decides, never a model whim
+        if item["ch"] in FIXED:
+            local = item["local"] if item["ch"] in ("x", "facebook") else local
+        out[item["id"]] = {
+            "ch": ch, "local": local, "junk": junk, "topic": topic,
+            "score": max(0, min(10, score)), "at": now_ts,
+        }
+    return out
+
+
+def prune(store, now_ts):
+    cutoff = now_ts - KEEP_HOURS * 3600
+    store["tags"] = {key: tag for key, tag in (store.get("tags") or {}).items()
+                     if isinstance(tag, dict) and tag.get("at", 0) >= cutoff}
+
+
+def run(args):
+    now = wc.utcnow()
+    now_ts = int(now.timestamp())
+    engine = wc.pick_engine("tag")
+    if engine is None:
+        print("tag_wire: no ANTHROPIC_API_KEY or OPENROUTER_API_KEY, skipping")
+        return 0
+    refuse, mtd = wc.over_budget(args.data_dir, now)
+    if refuse:
+        line = (f"tag_wire: refusing to run, ${mtd:.2f} spent this month "
+                f"(cap ${wc.MONTH_CAP_USD:.0f})")
+        print(line)
+        wc.step_summary("- " + line)
+        return 0
+    try:
+        pulse = wc.load_json(args.pulse, None) if args.pulse else fetch_pulse()
+        if not isinstance(pulse, dict):
+            raise ValueError("pulse.json unreadable")
+    except Exception as exc:  # noqa: BLE001 — a fetch failure is not a crash
+        print(f"tag_wire: could not read pulse.json ({exc})", file=sys.stderr)
+        return 0
+
+    store = load_store(args.data_dir)
+    prune(store, now_ts)
+    todo = untagged(wc.wire_items(pulse, now_ts, WINDOW_HOURS), store)
+    if not todo:
+        print("tag_wire: nothing new to tag")
+        store["updated"] = now.replace(microsecond=0).isoformat()
+        wc.write_json(os.path.join(args.data_dir, "wire-tags.json"), store)
+        return 0
+
+    system = wc.read_prompt("wire-tags.md")
+    titles = river_titles(args.data_dir)
+    usage = {"in": 0, "out": 0, "cache_read": 0, "cache_write": 0, "calls": 0}
+    tagged = failed = 0
+    for start in range(0, len(todo), BATCH):
+        batch = todo[start:start + BATCH]
+        try:
+            answer, got = wc.ask_json(engine, system, format_batch(batch, titles),
+                                      schema_for(len(batch)), max_tokens=12000,
+                                      log_prefix="tag_wire")
+        except wc.ModelError as exc:
+            got = getattr(exc, "usage", {})
+            failed += len(batch)
+            print(f"tag_wire: batch of {len(batch)} left untagged ({exc})", file=sys.stderr)
+            answer = None
+        except Exception as exc:  # noqa: BLE001 — SDK missing, network, anything
+            failed += len(batch)
+            print(f"tag_wire: batch of {len(batch)} left untagged ({exc})", file=sys.stderr)
+            break
+        for key in usage:
+            usage[key] += got.get(key, 0)
+        if answer:
+            tags = validate_tags(answer.get("tags"), batch, now_ts)
+            store["tags"].update(tags)
+            tagged += len(tags)
+            failed += len(batch) - len(tags)
+
+    store["updated"] = now.replace(microsecond=0).isoformat()
+    wc.write_json(os.path.join(args.data_dir, "wire-tags.json"), store)
+    if usage["calls"] or usage["in"]:
+        wc.record_cost(args.data_dir, "tag_wire", engine, usage, now)
+    junk = sum(1 for tag in store["tags"].values() if tag.get("junk") != "none")
+    print(f"tag_wire: {tagged} tagged, {failed} left for next run, "
+          f"{len(store['tags'])} in store ({junk} junk)")
+    return 0
+
+
+# ----------------------------------------------------------------------
+# Selftest — offline, no API call
+# ----------------------------------------------------------------------
+
+def selftest():
+    batch = [
+        {"id": "a", "ch": "local", "local": True, "name": "WCAX", "title": "Council votes", "d": 2},
+        {"id": "b", "ch": "world", "local": False, "name": "AP", "title": "Vermont town floods", "d": 1},
+        {"id": "c", "ch": "x", "local": True, "name": "WCAX", "handle": "@wcax", "title": "I-89 closed", "d": 3},
+    ]
+    tags = validate_tags([
+        {"i": 0, "junk": "none", "local": False, "ch": "world", "topic": "city-government", "score": 9},
+        {"i": 1, "junk": "none", "local": True, "ch": "world", "topic": "weather", "score": 14},
+        {"i": 2, "junk": "none", "local": False, "ch": "local", "topic": "transportation", "score": 7},
+        {"i": 2, "junk": "promo", "local": True, "ch": "x", "topic": "other", "score": 0},
+        {"i": 7, "junk": "none", "local": True, "ch": "local", "topic": "other", "score": 5},
+        {"i": 0, "junk": "maybe", "local": True, "ch": "local", "topic": "other", "score": 5},
+    ], batch, 100)
+    assert set(tags) == {"a", "b", "c"}
+    assert tags["a"]["ch"] == "world" and tags["a"]["local"] is False   # geography flips
+    assert tags["b"]["ch"] == "local" and tags["b"]["score"] == 10      # clamped
+    assert tags["c"]["ch"] == "x" and tags["c"]["local"] is True        # inbox stays put
+    text = format_batch(batch, ["Earlier story"])
+    assert "ALREADY IN THE RIVER" in text and "2. x · LOCAL · @wcax · I-89 closed" in text
+    store = {"tags": {"old": {"at": 0}, "new": {"at": 10 ** 9}}}
+    prune(store, 10 ** 9)
+    assert list(store["tags"]) == ["new"]
+    assert untagged(batch, {"tags": {"a": {}}})[0]["id"] == "c"          # local, newest first
+    print("selftest ok")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--data-dir", default=os.path.join(wc.ROOT, "data"))
+    parser.add_argument("--pulse")
+    parser.add_argument("--selftest", action="store_true")
+    args = parser.parse_args()
+    if args.selftest:
+        selftest()
+        return 0
+    return run(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
