@@ -1,5 +1,5 @@
 """build_games.py: first_seen and live_since from a games.json history, the
-fields kept, odd slugs dropped, and the fail-soft posture. Builds a tiny
+rooms flag, the fields kept, odd slugs dropped, and the fail-soft posture. Builds a tiny
 arcade repo in a temp folder; nothing touches the network.
 
 Run: python3 -m unittest tests/test_build_games.py
@@ -52,7 +52,7 @@ class BuildGames(unittest.TestCase):
         self.tmp.cleanup()
 
     def test_dates_and_fields(self):
-        cat = bg.build(self.repo, "main")
+        cat = bg.build(self.repo, "main", {"fresh", "soon", "gone"})
         by = {g["slug"]: g for g in cat["games"]}
         self.assertEqual(list(by), ["old-one", "soon", "fresh"])
         self.assertEqual(by["old-one"]["first_seen"], "2026-07-07")
@@ -61,6 +61,7 @@ class BuildGames(unittest.TestCase):
         self.assertEqual(by["fresh"]["first_seen"], "2026-10-10")
         self.assertEqual(by["fresh"]["boardHint"], "Most points")
         self.assertNotIn("extra", by["fresh"])
+        self.assertEqual([s for s, g in by.items() if g["rooms"]], ["soon", "fresh"])
         self.assertEqual(cat["sections"], SECTIONS)
         self.assertTrue(cat["source"].startswith("btownbrief/btownbrief.github.io@"))
 
@@ -68,14 +69,14 @@ class BuildGames(unittest.TestCase):
         out = pathlib.Path(self.tmp.name) / "games-catalog.json"
         out.write_text('{"keep": true}\n')
         argv = sys.argv
-        sys.argv = ["build_games.py", "--arcade", str(pathlib.Path(self.tmp.name) / "missing"), "--out", str(out)]
+        sys.argv = ["build_games.py", "--arcade", str(pathlib.Path(self.tmp.name) / "missing"), "--out", str(out), "--offline"]
         try:
             buf = io.StringIO()
             with redirect_stdout(buf):
                 self.assertEqual(bg.main(), 0)
             self.assertIn("keeping the last catalog", buf.getvalue())
             self.assertEqual(out.read_text(), '{"keep": true}\n')
-            sys.argv[-1:] = [str(out), "--strict"]
+            sys.argv.append("--strict")
             self.assertEqual(bg.main(), 1)
         finally:
             sys.argv = argv
@@ -83,7 +84,7 @@ class BuildGames(unittest.TestCase):
     def test_refuses_a_thin_read(self):
         out = pathlib.Path(self.tmp.name) / "games-catalog.json"
         argv = sys.argv
-        sys.argv = ["build_games.py", "--arcade", str(self.repo), "--out", str(out)]
+        sys.argv = ["build_games.py", "--arcade", str(self.repo), "--out", str(out), "--offline"]
         try:
             with redirect_stdout(io.StringIO()):
                 self.assertEqual(bg.main(), 0)

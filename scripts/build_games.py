@@ -24,6 +24,12 @@ Output, about 15 KB:
 Dates are Burlington calendar days, YYYY-MM-DD. Games keep the arcade's
 order, which is the order its hub shows them in.
 
+`rooms: true` marks the games a neighbor can be challenged to. The list is
+the Hangout's own allowlist (church-street-hangout/js/challenge.js, GAMES),
+read fresh each run, and a game only keeps the flag while its live page on
+play.btownbrief.com still opens a room from a ?join=CODE link. When either
+check cannot be made (the network), the last catalog's answer stands.
+
 Failure posture: if the arcade cannot be cloned, or its games.json does not
 parse, the last good file stays where it is and the run exits 0 with a
 warning. A catalog that is a day old is fine; an empty one would blank the
@@ -39,9 +45,11 @@ import argparse
 import datetime as dt
 import json
 import pathlib
+import re
 import subprocess
 import sys
 import tempfile
+import urllib.request
 from zoneinfo import ZoneInfo
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -51,6 +59,37 @@ TZ = ZoneInfo("America/New_York")
 SLUG_OK = set("abcdefghijklmnopqrstuvwxyz0123456789-")
 # the only fields the tab reads; anything else in games.json stays there
 KEEP = ("slug", "name", "emoji", "pitch", "section", "live", "leaderboard", "boardHint", "where")
+
+CHALLENGE_JS = "https://raw.githubusercontent.com/btownbrief/church-street-hangout/main/js/challenge.js"
+GAME_MAIN = "https://play.btownbrief.com/{slug}/js/main.js"
+UA = {"User-Agent": "Mozilla/5.0 (compatible; btown-brief/1.0; +https://btownbrief.com)"}
+# the join flow every room game shares: ?join=ABCD fills the code in and joins
+JOIN_RE = re.compile(r"""get\(\s*['"]join['"]\s*\)""")
+
+
+def fetch(url: str) -> str:
+    with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=20) as r:
+        return r.read().decode("utf-8", "replace")
+
+
+def room_games(previous: dict | None) -> set[str] | None:
+    """The slugs that can host a challenge today, or None when unknown."""
+    try:
+        src = fetch(CHALLENGE_JS)
+        listed = src.split("export const GAMES", 1)[1].split("];", 1)[0]
+        slugs = re.findall(r"slug:\s*'([a-z0-9-]+)'", listed)
+    except (OSError, IndexError, ValueError):
+        return None
+    ok = set()
+    before = {g["slug"] for g in (previous or {}).get("games", []) if g.get("rooms")}
+    for slug in slugs:
+        try:
+            if JOIN_RE.search(fetch(GAME_MAIN.format(slug=slug))):
+                ok.add(slug)
+        except (OSError, ValueError):
+            if slug in before:
+                ok.add(slug)  # unreachable this morning: yesterday's answer stands
+    return ok
 
 
 def git(repo: pathlib.Path, *args: str) -> str:
@@ -95,7 +134,7 @@ def history(repo: pathlib.Path, ref: str) -> tuple[dict[str, str], dict[str, str
     return first, live
 
 
-def build(repo: pathlib.Path, ref: str) -> dict:
+def build(repo: pathlib.Path, ref: str, rooms: set[str] | None = None) -> dict:
     head = git(repo, "rev-parse", ref).strip()
     data = json.loads(git(repo, "show", head + ":games.json"))
     first, live = history(repo, ref)
@@ -113,6 +152,7 @@ def build(repo: pathlib.Path, ref: str) -> dict:
         row["leaderboard"] = g.get("leaderboard") is True
         row["first_seen"] = first.get(slug)
         row["live_since"] = live.get(slug) if row["live"] else None
+        row["rooms"] = bool(rooms) and slug in rooms and row["live"]
         out.append(row)
     return {
         "generated": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -128,7 +168,19 @@ def main() -> int:
     ap.add_argument("--ref", default=None, help="branch to read (default: origin/main for a clone, main locally)")
     ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--strict", action="store_true", help="fail instead of keeping the last file")
+    ap.add_argument("--offline", action="store_true", help="skip the room checks; keep the last catalog's")
     args = ap.parse_args()
+
+    dest = pathlib.Path(args.out)
+    old = None
+    if dest.exists():
+        try:
+            old = json.loads(dest.read_text())
+        except json.JSONDecodeError:
+            old = None
+    rooms = None if args.offline else room_games(old)
+    if rooms is None:
+        rooms = {g["slug"] for g in (old or {}).get("games", []) if g.get("rooms")}
 
     try:
         with tempfile.TemporaryDirectory() as tmp:
@@ -138,7 +190,7 @@ def main() -> int:
             else:
                 repo = clone(pathlib.Path(tmp) / "arcade")
                 ref = args.ref or "origin/HEAD"
-            catalog = build(repo, ref)
+            catalog = build(repo, ref, rooms)
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError) as e:
         msg = f"build_games: could not read the arcade ({type(e).__name__}: {e}); keeping the last catalog"
         if args.strict:
@@ -153,13 +205,6 @@ def main() -> int:
         print(msg if args.strict else "::warning::" + msg, file=sys.stderr if args.strict else sys.stdout)
         return 1 if args.strict else 0
 
-    dest = pathlib.Path(args.out)
-    old = None
-    if dest.exists():
-        try:
-            old = json.loads(dest.read_text())
-        except json.JSONDecodeError:
-            old = None
     # an arcade commit that left games.json alone must not make a commit here
     # every day just for the stamp and the sha
     same = lambda c: {k: v for k, v in c.items() if k not in ("generated", "source")}
