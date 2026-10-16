@@ -41,15 +41,17 @@ const FILES = {
      that has the branch checked out into data/, so the live branch comes
      first everywhere (`liveFirst`, or every dev load would log a 404) and
      the same-origin copy is the fallback. `same` stops the
-     hourly `checked` stamp from reading as a new paper: only a change of
-     content (`updated`) or of day is offered to the reader. */
+     hourly `checked` stamp from reading as a new paper: a change of content
+     (`updated`), of day, of a source's paused state or of the Brief is. */
   today: {
     live: LIVE + 'wire-data/data/wire-today.json',
     local: '../data/wire-today.json',
     liveFirst: true,
     poll: true,
     ok: (j) => j && typeof j.date === 'string' && Array.isArray(j.updates),
-    same: (a, b) => a.date === b.date && a.updated === b.updated,
+    same: (a, b) => a.date === b.date && a.updated === b.updated &&
+      JSON.stringify(a.status || null) === JSON.stringify(b.status || null) &&
+      (a.brief && a.brief.id) === (b.brief && b.brief.id),
   },
   /* the frozen editions, newest first; a new one appears after midnight */
   wireIndex: {

@@ -42,7 +42,7 @@ const PICKS_SHOWN = 10;  // local picks on the page; the pipeline ranks 25 (a kn
 const PICKS_OPEN = 5;    // one as the pick card, two to five as ranked rows, the rest on request
 const RAW_PAGE = 60;
 const PER_OUTLET = 6;
-const HUNT_DAYS = 7;     // how many unloaded editions a shared link may search
+const HUNT_AT_ONCE = 5;  // editions a shared link fetches at a time while it looks for its card
 
 const KINDS = [['all', 'All'], ['x', 'X'], ['facebook', 'Facebook'], ['reddit', 'Reddit'], ['newsletters', 'Newsletters'], ['video', 'Video']];
 const KIND_LABEL = { local: 'Local news', world: 'News', x: 'X', facebook: 'Facebook group, via Muse', reddit: 'Reddit', newsletters: 'Newsletter', video: 'Video' };
@@ -80,7 +80,8 @@ const W = {
   view: 'paper',        // or 'raw', Unfiltered
   run: null,            // the river being drawn
   pending: null, queued: [],
-  raw: { outlet: '', q: '', run: null, list: null, until: null },
+  raw: { outlet: '', q: '', run: null, list: null, until: null, keep: 0 },
+  hunt: 0,              // the newest deep-link search; an older one stops
 };
 const follows = app.demo ? Object.create(null) : { ...store.read('allday-follows', {}) };
 function setFollow(sid, on) {
@@ -226,11 +227,13 @@ function payloadFor(date) {
   return W.eds[date] && W.eds[date] !== 'failed' ? W.eds[date] : null;
 }
 const indexEntry = (date) => (W.index && Array.isArray(W.index.editions) ? W.index.editions : []).find((e) => e && e.date === date) || null;
+/* one request per edition at a time; a failure is remembered for the page
+   (it says so) but the next ask tries again, behind the data layer's backoff */
 function loadEdition(date) {
   if (payloadFor(date)) return Promise.resolve(payloadFor(date));
-  if (W.eds[date] === 'failed') return Promise.reject(new Error('failed'));
   if (!W.eds['_p' + date]) {
-    W.eds['_p' + date] = SRC.edition(date).then((p) => { W.eds[date] = p; return p; }, (e) => { W.eds[date] = 'failed'; throw e; });
+    W.eds['_p' + date] = SRC.edition(date).then((p) => { W.eds[date] = p; delete W.eds['_p' + date]; return p; },
+      (e) => { W.eds[date] = 'failed'; delete W.eds['_p' + date]; throw e; });
   }
   return W.eds['_p' + date];
 }
@@ -349,9 +352,11 @@ function render(opts = {}) {
     }
     renderMatters(feed, d, date === tk).forEach((k) => exclude.add(k));
   }
+  /* the Brief and the open picks count toward the first sixty */
+  const above = feed.querySelectorAll('[data-k]').length;
   const run = {
     feed, exclude, first: date, lastDate: null, queue: [], shown: 0,
-    limit: Math.max(FIRST, opts.limit || 0), until: opts.until && !exclude.has(opts.until) ? opts.until : null,
+    limit: Math.max(FIRST - above, opts.limit || 0), until: opts.until && !exclude.has(opts.until) ? opts.until : null,
     done: false, loading: false, breaks: [], keys: [],
     sentinel: el('div', 'loading'),
   };
@@ -569,6 +574,7 @@ function track() {
     tracking = 0;
     const run = W.run;
     if (!run) return;
+    topUp(run);   /* belt and braces for a browser without IntersectionObserver */
     const line = document.getElementById('mast').getBoundingClientRect().bottom + 40;
     let date = run.first;
     for (const b of run.breaks) { if (b.node.getBoundingClientRect().top < line) date = b.date; else break; }
@@ -759,7 +765,8 @@ function renderRawList() {
   const list = W.raw.list;
   if (!list) return;
   const until = W.raw.until || null;
-  W.raw.until = null;
+  const keep = W.raw.keep || 0;
+  W.raw.until = null; W.raw.keep = 0;
   if (W.raw.run) W.raw.run.dead = true;
   if (observer) { observer.disconnect(); observer = null; }
   list.innerHTML = '';
@@ -811,7 +818,7 @@ function renderRawList() {
     }
     requestAnimationFrame(() => { if (!run.dead && near(run)) step(CHUNK); });
   };
-  step(RAW_PAGE);
+  step(Math.max(RAW_PAGE, keep));
   if ('IntersectionObserver' in window && W.panel) {
     observer = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting) && !run.dead) step(CHUNK); },
       { root: W.panel, rootMargin: '0px 0px ' + AHEAD + 'px 0px' });
@@ -863,10 +870,13 @@ function land() {
 
 function hunt(k) {
   if (W.view === 'paper' && app.flashHit(W.root, k)) return;
+  const id = ++W.hunt;
+  const live = () => id === W.hunt;
   loadMutes();
   const found = (date) => { const q = payloadFor(date); return q ? dayOf(q).all.concat(dayOf(q).brief || []).find((c) => c.k === k) : null; };
   const dates = [todayKey()].concat(editionDates());
   const show = (date, c) => {
+    if (!live()) return;
     if (MUTE[c.sid]) { app.toast('That card is from ' + c.src + ', which you muted. Unmute it in Settings.'); return; }
     if (!seen(c)) setGeo('everything');
     W.view = 'paper'; W.ch = 'all'; W.more = true;
@@ -876,18 +886,25 @@ function hunt(k) {
     if (!app.flashHit(W.root, k)) app.toast('That card has moved on. Here’s today’s paper.');
   };
   for (const date of dates) { const c = found(date); if (c) { show(date, c); return; } }
-  /* not in anything loaded: the next few editions, then the raw wire */
-  const unloaded = editionDates().filter((d) => !payloadFor(d) && W.eds[d] !== 'failed').slice(0, HUNT_DAYS);
+  /* a URL is a pre-rebuild link to the raw wire; anything else may be on
+     any edition in the archive, newest first, a few fetches at a time */
+  if (/^https?:/i.test(k)) { huntRaw(k, live); return; }
+  const unloaded = editionDates().filter((d) => !payloadFor(d));
   const next = () => {
-    const date = unloaded.shift();
-    if (!date) { huntRaw(k); return; }
-    loadEdition(date).then(() => { const c = found(date); if (c) show(date, c); else next(); }, next);
+    if (!live()) return;
+    const batch = unloaded.splice(0, HUNT_AT_ONCE);
+    if (!batch.length) { huntRaw(k, live); return; }
+    Promise.all(batch.map((date) => loadEdition(date).catch(() => null))).then(() => {
+      const date = batch.find((d) => found(d));
+      if (date) show(date, found(date)); else next();
+    });
   };
   next();
 }
 
-function huntRaw(k) {
+function huntRaw(k, live) {
   withPulse((failed) => {
+    if (!live()) return;
     const c = !failed && W.pulse.items.find((x) => x.k === k);
     if (!c) { app.toast('That card has moved on. Here’s today’s paper.'); return; }
     if (MUTE[c.sid]) { app.toast('That card is from ' + c.src + ', which you muted. Unmute it in Settings.'); return; }
@@ -953,6 +970,7 @@ app.register('wire', {
     /* a mute, a follow or the switch: redraw as far down as the reader was */
     const y = W.panel ? W.panel.scrollTop : 0;
     const shown = W.run ? W.run.shown : 0;
+    if (W.view === 'raw' && W.raw.run) W.raw.keep = W.raw.run.i;
     app.paintSubnav();
     render({ limit: shown });
     if (W.panel) W.panel.scrollTop = y;
