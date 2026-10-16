@@ -41,7 +41,7 @@ grant execute on function auth.uid() to anon, authenticated;
 alter default privileges in schema public grant all on tables to anon, authenticated;
 alter default privileges in schema public grant all on functions to anon, authenticated;
 create table public.btb_photos (id uuid primary key default gen_random_uuid(), storage_path text unique not null,
-  status text not null default 'pending', decided_at timestamptz);
+  status text not null default 'pending', decided_at timestamptz, spot text not null default '', created_at timestamptz not null default now());
 revoke all on table public.btb_photos from anon, authenticated;
 SQL
 psql -v ON_ERROR_STOP=1 -d "$DB" -q -f all-day/supabase/nn-SETUP.sql >/dev/null

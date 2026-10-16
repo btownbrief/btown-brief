@@ -30,8 +30,9 @@ insert into auth.users values
   ('22222222-2222-2222-2222-222222222222', 'sam@example.com'),
   ('33333333-3333-3333-3333-333333333333', 'kim@example.com'),
   ('44444444-4444-4444-4444-444444444444', 'lee@example.com');
-insert into public.btb_photos (storage_path, status) values
-  ('submissions/aaaa-0001.jpg', 'pending'), ('submissions/aaaa-0002.jpg', 'approved'), ('submissions/aaaa-0003.jpg', 'rejected');
+insert into public.btb_photos (storage_path, status, spot) values
+  ('submissions/aaaa-0001.jpg', 'pending', 'All Day · Art'), ('submissions/aaaa-0002.jpg', 'approved', 'All Day · Art'),
+  ('submissions/aaaa-0003.jpg', 'rejected', 'All Day · Art'), ('submissions/gall-0004.jpg', 'pending', 'North Beach');
 create table pg_temp.ids (k text primary key, id uuid);
 grant all on pg_temp.ids to anon, authenticated;
 
@@ -90,6 +91,9 @@ select pg_temp.expect_error($q$select public.nn_post_create('art', 'photo', 'Daw
 select pg_temp.expect_error($q$select public.nn_post_create('art', 'photo', 'Dawn', '', '', '{}', '../etc/passwd')$q$, 'bad_photo');
 select pg_temp.expect_error($q$select public.nn_post_create('art', 'photo', 'Dawn', '', '', '{}', 'submissions/nope-9999.jpg')$q$, 'bad_photo');
 select pg_temp.expect_error($q$select public.nn_post_create('art', 'photo', 'Dawn', '', '', '{}', 'submissions/aaaa-0003.jpg')$q$, 'bad_photo');
+select pg_temp.expect_error($q$select public.nn_post_create('art', 'photo', 'Dawn', '', '', '{}', 'submissions/aaaa-0002.jpg')$q$, 'bad_photo');
+select pg_temp.expect_error($q$select public.nn_post_create('art', 'photo', 'Dawn', '', '', '{}', 'submissions/gall-0004.jpg')$q$, 'bad_photo');
+select pg_temp.ok(not (public.nn_photo_abandon('submissions/gall-0004.jpg') ->> 'removed')::boolean, 'a gallery photo cannot be abandoned from a board');
 
 -- ------------------------------------------------------------- a real find
 insert into pg_temp.ids select 'find', (public.nn_post_create('vintage', 'spotted',

@@ -175,12 +175,30 @@ begin
   return case s when 'approved' then 'approved' when 'pending' then 'pending' else 'rejected' end;
 end $$;
 
--- A reader's own photo leaves the public gallery with the post it was for.
+-- May a board post take this photo? Only a photo that came from an All Day
+-- board (photos-lib.js files it with spot "All Day · <board>"), is still
+-- waiting in the queue, and arrived in the last day. A photo the queue has
+-- already approved is public, path and all (btb_photos_get lists it), so it
+-- can never be claimed: a pending path is a random id only its uploader
+-- has seen, which is what ties the photo to the reader posting it.
+create or replace function public.nn_photo_claimable(p_path text) returns boolean
+language plpgsql stable security definer set search_path = public as $$
+declare ok boolean;
+begin
+  if p_path is null or to_regclass('public.btb_photos') is null then return false; end if;
+  execute 'select exists (select 1 from public.btb_photos where storage_path = $1 and status = ''pending''
+             and spot like ''All Day · %'' and created_at > now() - interval ''1 day'')' into ok using p_path;
+  return coalesce(ok, false);
+end $$;
+
+-- A reader's own board photo leaves the public gallery with the post it was
+-- for. Only ever a photo a board filed (see nn_photo_claimable).
 create or replace function public.nn_photo_remove(p_path text) returns void
 language plpgsql security definer set search_path = public as $$
 begin
   if p_path is null or to_regclass('public.btb_photos') is null then return; end if;
-  execute 'update public.btb_photos set status = ''removed'', decided_at = now() where storage_path = $1 and status <> ''removed''' using p_path;
+  execute 'update public.btb_photos set status = ''removed'', decided_at = now()
+            where storage_path = $1 and status <> ''removed'' and spot like ''All Day · %''' using p_path;
 end $$;
 
 -- Who is voting: the signed-in reader as u:<id>, or the device's
@@ -310,11 +328,12 @@ end $$;
 -- Post to a board. Signed-in readers with a first name only. Checks, in
 -- this order (boards-core.js checkPost is the same order): banned, a name,
 -- the board, the kind, title, body, place, the kind's fields, the photo,
--- then the limits (20 posts in 24 hours; 5 waiting for a look). A post
+-- then the limits (20 posts in 24 hours; 5 waiting for a look), counted
+-- after old posts are swept, so an ended one never counts. A post
 -- starts approved unless its board pre-moderates. Its end date comes from
 -- its kind (21 days for a Vintage find; never for an Art piece). A photo
--- must already be in the photo queue (photos-lib.js puts it there) and
--- shows only once that queue approves it.
+-- must be one this reader just put in the photo queue from a board
+-- (nn_photo_claimable), and shows only once that queue approves it.
 create or replace function public.nn_post_create(
   p_board text, p_kind text, p_title text, p_body text default '', p_place text default '',
   p_meta jsonb default '{}'::jsonb, p_photo text default null
@@ -333,6 +352,9 @@ declare
   rec public.nn_posts;
 begin
   if u is null then raise exception 'not_signed_in'; end if;
+  -- one post at a time per reader, so parallel calls cannot all count
+  -- under the limits before any of them inserts
+  perform pg_advisory_xact_lock(hashtext('nn_post:' || u::text));
   if exists (select 1 from public.nn_bans where user_id = u) then raise exception 'banned'; end if;
   if not exists (select 1 from public.nn_profiles where user_id = u) then raise exception 'no_name'; end if;
   if b is null then raise exception 'bad_board'; end if;
@@ -345,14 +367,14 @@ begin
   if photo is not null and kr ->> 'photo' = 'none' then raise exception 'photo_not_allowed'; end if;
   if photo is null and kr ->> 'photo' = 'required' then raise exception 'photo_required'; end if;
   if photo is not null and photo !~ '^submissions/[A-Za-z0-9-]+\.jpg$' then raise exception 'bad_photo'; end if;
-  if photo is not null and (public.nn_photo_state(photo) in ('missing', 'rejected')
+  if photo is not null and (not public.nn_photo_claimable(photo)
                             or exists (select 1 from public.nn_posts where photo_path = photo)) then raise exception 'bad_photo'; end if;
+  perform public.nn_sweep();
   select count(*) into today from public.nn_posts where user_id = u and created_at > now() - interval '24 hours';
   select count(*) into waiting from public.nn_posts p
    where p.user_id = u and (p.status = 'pending' or (p.photo_path is not null and public.nn_photo_state(p.photo_path) = 'pending'));
   if today >= (rules -> 'limits' ->> 'postsPerDay')::int then raise exception 'rate_day'; end if;
   if waiting >= (rules -> 'limits' ->> 'waitingMax')::int then raise exception 'rate_waiting'; end if;
-  perform public.nn_sweep();
   insert into public.nn_posts (board, user_id, kind, title, body, photo_path, photo_req, meta, place, expires_at, status)
   values (p_board, u, p_kind, t, bd, photo, kr ->> 'photo' = 'required', m, pl,
           case when kr ->> 'days' is not null then now() + make_interval(days => (kr ->> 'days')::int) end,
@@ -423,6 +445,20 @@ begin
   return jsonb_build_object('deleted', true);
 end $$;
 
+-- A board photo whose post never happened (refused, offline, the reader
+-- gave up) leaves the photo queue, so it can never be approved into the
+-- gallery by mistake. Same capability as claiming it: only a recent,
+-- waiting, board-filed photo no post has taken.
+create or replace function public.nn_photo_abandon(p_path text) returns jsonb
+language plpgsql security definer set search_path = public as $$
+begin
+  if public.nn_photo_claimable(p_path) and not exists (select 1 from public.nn_posts where photo_path = p_path) then
+    perform public.nn_photo_remove(p_path);
+    return jsonb_build_object('removed', true);
+  end if;
+  return jsonb_build_object('removed', false);
+end $$;
+
 -- ------------------------------------------------------------------- votes
 
 -- Vote for a post anyone can see. Signed in, the vote is your account's;
@@ -461,6 +497,7 @@ language plpgsql security definer set search_path = public as $$
 declare u uuid := auth.uid(); rules jsonb := public.nn_rules(); p public.nn_posts; n int;
 begin
   if u is null then raise exception 'not_signed_in'; end if;
+  perform pg_advisory_xact_lock(hashtext('nn_report:' || u::text));   -- the daily limit holds under parallel calls
   if exists (select 1 from public.nn_bans where user_id = u) then raise exception 'banned'; end if;
   if not ((rules -> 'reasons') ? coalesce(p_reason, '')) then raise exception 'bad_reason'; end if;
   select * into p from public.nn_posts where id = p_post;
@@ -494,6 +531,9 @@ begin
   end loop;
   delete from public.nn_posts where user_id = u;
   delete from public.nn_votes where voter = 'u:' || u::text;
+  -- their reports stop counting against the posts they reported
+  update public.nn_posts p set reports = greatest(0, p.reports - 1)
+   where p.id in (select post_id from public.nn_reports where reporter = u);
   delete from public.nn_reports where reporter = u;
   delete from public.nn_mission_done where user_id = u;
   delete from public.nn_profiles where user_id = u;
@@ -613,6 +653,7 @@ end $$;
 -- then hand out exactly the doors the app uses.
 revoke all on function
   public.nn_rules(), public.nn_clean(text, boolean), public.nn_photo_state(text), public.nn_photo_remove(text),
+  public.nn_photo_claimable(text), public.nn_photo_abandon(text),
   public.nn_voter(uuid, text), public.nn_listable(public.nn_posts), public.nn_post_json(public.nn_posts, text, uuid),
   public.nn_sweep(), public.nn_check_meta(text, text, jsonb),
   public.nn_profile_get(), public.nn_profile_set(text, text, text),
@@ -629,6 +670,7 @@ grant execute on function
   public.nn_rules(), public.nn_profile_get(), public.nn_profile_set(text, text, text),
   public.nn_post_create(text, text, text, text, text, jsonb, text),
   public.nn_posts_list(text, int, timestamptz, jsonb, text, text), public.nn_post_mine(), public.nn_post_delete_own(uuid),
+  public.nn_photo_abandon(text),
   public.nn_vote(uuid, text), public.nn_unvote(uuid, text), public.nn_report(uuid, text), public.nn_delete_me(),
   public.nn_mod_list(text), public.nn_mod_act(text, uuid, text), public.nn_mod_unban(text, uuid)
 to anon, authenticated;
