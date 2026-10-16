@@ -571,17 +571,32 @@ a market." (restates) "A local shop growing into a new line of goods."
 
 Below, each numbered line is a headline and its reason. Lines marked MUST are
 known restatements: rewrite every one of them. Rewrite any other reason that
-only restates or paraphrases its headline. Return only the lines you rewrote."""
+only restates or paraphrases its headline. Return only the lines you rewrote.
+
+For each line you return, `problem` is your note on what was wrong (never shown
+to anyone) and `why` is the NEW reason exactly as a reader will see it on the
+page: a plain sentence about the story, never about the headline, the old
+reason, these rules or this list."""
 
 REASONS_SCHEMA = {
     "type": "object",
     "properties": {"rewrites": {"type": "array", "maxItems": PICK_COUNT + 1, "items": {
         "type": "object",
-        "properties": {"i": {"type": "integer"}, "why": {"type": "string", "maxLength": WHY_MAX}},
-        "required": ["i", "why"], "additionalProperties": False}}},
+        "properties": {"i": {"type": "integer"},
+                       "problem": {"type": "string", "maxLength": 200},
+                       "why": {"type": "string", "maxLength": WHY_MAX}},
+        "required": ["i", "problem", "why"], "additionalProperties": False}}},
     "required": ["rewrites"],
     "additionalProperties": False,
 }
+
+
+# A "rewrite" that talks about the headline, the old reason or the rules is the
+# model's critique leaking into the reader's line (seen on 2026-10-16: "Paraphrases
+# the headline; only swaps Williston for a Burlington suburb"). Never shipped.
+CRITIQUE_RE = re.compile(r"paraphras|restat|headline|\bMUST\b|marked|the guide|\bline \d|"
+                         r"duplicate of|reader angle|adds nothing|not stated|does not give|"
+                         r"the reason|this reason", re.I)
 
 
 def reason_slots(day, picks_too):
@@ -591,7 +606,9 @@ def reason_slots(day, picks_too):
     if picks_too:
         slots += [(pick, pick["title"]) for pick in day.get("picks") or []]
     updates = day.get("updates") or []
-    if updates and updates[0].get("lead"):
+    picked = {pick["id"] for pick in day.get("picks") or []} if picks_too else set()
+    if updates and updates[0].get("lead") and updates[0]["lead"]["id"] not in picked:
+        # a lead that is also a pick is handled once, through the pick
         lead = updates[0]["lead"]
         title = next((item["title"] for item in updates[0]["items"] if item["id"] == lead["id"]), "")
         slots.append((lead, title))
@@ -625,12 +642,18 @@ def polish_reasons(day, engine, picks_too, ask=None):
         if index is None or not why:
             continue
         holder, title = slots[index]
-        if not wc.restates(why, title):
+        if not wc.restates(why, title) and not CRITIQUE_RE.search(why):
             holder["why"] = why
             flagged.discard(index)
             rewritten += 1
     for index in flagged:
         slots[index][0]["why"] = ""
+    # a lead that is also a pick carries the pick's final reason
+    reasons = {pick["id"]: pick.get("why", "") for pick in day.get("picks") or []}
+    for update in day.get("updates") or []:
+        lead = update.get("lead")
+        if lead and lead["id"] in reasons and picks_too:
+            lead["why"] = reasons[lead["id"]]
     return usage, rewritten, len(flagged)
 
 

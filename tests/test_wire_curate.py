@@ -123,7 +123,8 @@ class IndexMappingTests(Workdir):
         self.assertEqual(len(day["updates"]), 1)
         update = day["updates"][0]
         self.assertEqual((update["key"], update["label"], update["time"]), ("afternoon", "Afternoon", "2:10 pm"))
-        self.assertEqual(update["lead"]["why"], "The one to read first.")
+        # the lead is also pick #1 here, so it carries that pick's reason
+        self.assertEqual(update["lead"]["why"], day["picks"][0]["why"])
         self.assertEqual(update["items"][0]["id"], update["lead"]["id"])     # the lead leads
         self.assertEqual(day["count"], 18)                                  # picks joined the river
         self.assertEqual(len(day["picks"]), 18)
@@ -365,6 +366,27 @@ class ReasonPassTests(unittest.TestCase):
         ask, _ = self.stub([{"i": 1, "why": "Every household's bill goes up in January."}])
         _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
         self.assertEqual((rewritten, emptied), (1, 0))
+
+    def test_a_critique_is_never_shipped_as_a_reason(self):
+        """Seen live on 2026-10-16: the pass returned its verdict as the reason."""
+        day = self.day("State police update on a police shooting in Williston.")
+        ask, _ = self.stub([{"i": 0, "problem": "restates",
+                             "why": "Paraphrases the headline; only swaps Williston for a suburb."},
+                            {"i": 1, "problem": "fine", "why": "Marked MUST; adds nothing new."}])
+        _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertEqual((rewritten, emptied), (0, 1))
+        self.assertEqual(day["picks"][0]["why"], "")                      # the restatement goes
+        self.assertEqual(day["picks"][1]["why"], "Your electric bill, starting in January.")
+
+    def test_a_lead_that_is_a_pick_is_sent_once_and_shares_the_reason(self):
+        day = self.day("State police update on a police shooting in Williston.")
+        day["updates"] = [{"lead": {"id": "a", "why": "State police update on a police shooting in Williston."},
+                           "items": [{"id": "a", "title": day["picks"][0]["title"]}]}]
+        ask, calls = self.stub([{"i": 0, "problem": "restates",
+                                 "why": "Officers fired in a town next door; what comes next matters."}])
+        cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertEqual(calls[0].count("VSP provides"), 1)
+        self.assertEqual(day["updates"][0]["lead"]["why"], day["picks"][0]["why"])
 
     def test_a_failed_pass_still_empties_restatements(self):
         day = self.day("State police update on a police shooting in Williston.")
