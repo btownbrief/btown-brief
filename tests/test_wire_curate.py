@@ -258,7 +258,7 @@ class HouseRuleTests(Workdir):
         items = [{"id": f"i{k}", "posted_at": f"2026-10-16T{k % 24:02d}:00:00+00:00"} for k in range(100)]
         shown = cw.shown_river(items, {"i0"}, want_picks=False)
         self.assertEqual(len(shown), cw.RIVER_SHOWN_HOURLY + 1)       # newest 60 plus the current update
-        self.assertIn("i0", {item["id"] for item in shown})
+        self.assertIn("i0", {entry["id"] for entry in shown})
         self.assertEqual(len(cw.shown_river(items, set(), want_picks=True)), 100)   # a re-rank sees all
         shown = [item(k, f"Burlington story {k}") for k in range(3)]
         text = cw.build_prompt(shown, [], [], [], False, wc.et_now(NOW), "Afternoon", NOW_TS, total=100)
