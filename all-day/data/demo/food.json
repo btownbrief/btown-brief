@@ -1,200 +1,1313 @@
 {
- "_": "Demo data for ?demo=1. Every item is invented; real outlet and venue names are placeholders.",
- "filters": [
-  {
-   "key": "open",
-   "label": "Open now"
-  },
-  {
-   "key": "late",
-   "label": "Open late"
-  },
-  {
-   "key": "patio",
-   "label": "Patios"
-  },
-  {
-   "key": "hh",
-   "label": "Happy hour"
-  },
-  {
-   "key": "cheap",
-   "label": "Under $15"
-  },
-  {
-   "key": "deals",
-   "label": "Deals"
-  },
-  {
-   "key": "recipes",
-   "label": "Recipes"
-  }
- ],
- "hero": {
-  "eyebrow": "The Weekly Bite · Thursday",
-  "title": "Squash dumplings at a South End kitchen",
-  "art": "mustard",
-  "text": "Featured, not reviewed. Here because three readers said so this week and the kitchen sent us the video."
+ "_": "Demo data for ?demo=1. Every place, deal, dish and account is invented; the shapes are the real payloads' (data/restaurants.json, data/deals.json, data/small-bites.json, data/instagram-handles.json, all-day/data/instagram.json, and a photo as js/photos-lib.js normalizes it). Pictures are palette names. The Instagram times and video expiries move with the reader's clock (anchor).",
+ "anchor": "2026-10-16T12:00:00-04:00",
+ "dish": {
+  "id": "demo-dish-1",
+  "url": "mustard",
+  "caption": "Squash dumplings with brown butter and sage, order two plates",
+  "category": "dish",
+  "area": "Downtown / Church St",
+  "spot": "The dumpling house",
+  "taken_on": "",
+  "credit": "Maya",
+  "label": null,
+  "votes": 0,
+  "approved_on": "2026-10-15"
  },
- "near": "Church & College",
- "placesNote": "Hours checked against Google this week. 282 places, 252 with verified hours.",
- "places": [
-  {
-   "name": "A South End kitchen",
-   "cuisine": "New American",
-   "dist": "0.9 mi",
-   "until": "10 pm",
-   "price": "$$",
-   "art": "mustard",
-   "tags": [
-    "open",
-    "patio"
-   ]
-  },
-  {
-   "name": "The noodle counter on Main",
-   "cuisine": "Noodles",
-   "dist": "0.2 mi",
-   "until": "9 pm",
-   "price": "$",
-   "art": "cherry",
-   "tags": [
-    "open",
-    "cheap"
-   ]
-  },
-  {
-   "name": "Pine Street taqueria",
-   "cuisine": "Tacos",
-   "dist": "0.7 mi",
-   "until": "midnight",
-   "price": "$",
-   "art": "foliage",
-   "tags": [
-    "open",
-    "late",
-    "cheap"
-   ]
-  },
-  {
-   "name": "The lakeside bar",
-   "cuisine": "Bar food",
-   "dist": "0.4 mi",
-   "until": "11 pm",
-   "price": "$$",
-   "art": "lake",
-   "tags": [
-    "open",
-    "late",
-    "patio",
-    "hh"
-   ]
-  },
-  {
-   "name": "Old North End bakery",
-   "cuisine": "Bakery",
-   "dist": "0.5 mi",
-   "until": "4 pm",
-   "price": "$",
-   "art": "coffee",
-   "tags": [
-    "cheap"
-   ]
-  },
-  {
-   "name": "The Church Street bistro",
-   "cuisine": "French",
-   "dist": "0.1 mi",
-   "until": "10 pm",
-   "price": "$$$",
-   "art": "brick",
-   "tags": [
-    "open",
-    "hh",
-    "patio"
-   ]
-  }
- ],
- "recipe": {
-  "title": "Roasted delicata with maple and chili",
-  "text": "From the Intervale’s newsletter. Forty minutes, one tray, no peeling.",
-  "sub": "From the market newsletters and the co-op."
+ "restaurants": {
+  "generated": "2026-10-16",
+  "restaurants": [
+   {
+    "id": "demo-all-night-diner",
+    "name": "The all-night diner on Main",
+    "category": "Restaurant",
+    "cuisine": [
+     "Breakfast & Brunch"
+    ],
+    "neighborhood": "Downtown / Church St",
+    "address": "The all-night diner on Main, Burlington, VT 05401",
+    "coords": [
+     44.4762,
+     -73.2131
+    ],
+    "price": "$",
+    "under_15": true,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "00:00",
+       "00:00"
+      ]
+     ],
+     "mon": [
+      [
+       "00:00",
+       "00:00"
+      ]
+     ],
+     "tue": [
+      [
+       "00:00",
+       "00:00"
+      ]
+     ],
+     "wed": [
+      [
+       "00:00",
+       "00:00"
+      ]
+     ],
+     "thu": [
+      [
+       "00:00",
+       "00:00"
+      ]
+     ],
+     "fri": [
+      [
+       "00:00",
+       "00:00"
+      ]
+     ],
+     "sat": [
+      [
+       "00:00",
+       "00:00"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": null,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-all-night-diner",
+     "google_maps": "https://maps.google.com/?cid=100020"
+    },
+    "blurb": "A counter that never closes, which is the whole point at 2 am. The hash browns are the reason to sit at the counter rather than a booth.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemoallnightdiner"
+   },
+   {
+    "id": "demo-noodle-counter",
+    "name": "The noodle counter on Bank",
+    "category": "Restaurant",
+    "cuisine": [
+     "Noodles"
+    ],
+    "neighborhood": "Downtown / Church St",
+    "address": "The noodle counter on Bank, Burlington, VT 05401",
+    "coords": [
+     44.4771,
+     -73.2125
+    ],
+    "price": "$",
+    "under_15": true,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "11:00",
+       "22:00"
+      ]
+     ],
+     "mon": [
+      [
+       "11:00",
+       "22:00"
+      ]
+     ],
+     "tue": [
+      [
+       "11:00",
+       "22:00"
+      ]
+     ],
+     "wed": [
+      [
+       "11:00",
+       "22:00"
+      ]
+     ],
+     "thu": [
+      [
+       "11:00",
+       "22:00"
+      ]
+     ],
+     "fri": [
+      [
+       "11:00",
+       "22:00"
+      ]
+     ],
+     "sat": [
+      [
+       "11:00",
+       "22:00"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": null,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-noodle-counter",
+     "google_maps": "https://maps.google.com/?cid=100019"
+    },
+    "blurb": "Hand-pulled noodles in a room with twelve stools. The cold sesame noodles are the standard order.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemonoodlecounter"
+   },
+   {
+    "id": "demo-lakeside-bar",
+    "name": "The lakeside bar",
+    "category": "Bar & Nightlife",
+    "cuisine": [
+     "American & Burgers"
+    ],
+    "neighborhood": "Waterfront",
+    "address": "The lakeside bar, Burlington, VT 05401",
+    "coords": [
+     44.4784,
+     -73.2214
+    ],
+    "price": "$$",
+    "under_15": null,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "11:30",
+       "01:00"
+      ]
+     ],
+     "mon": [
+      [
+       "11:30",
+       "01:00"
+      ]
+     ],
+     "tue": [
+      [
+       "11:30",
+       "01:00"
+      ]
+     ],
+     "wed": [
+      [
+       "11:30",
+       "01:00"
+      ]
+     ],
+     "thu": [
+      [
+       "11:30",
+       "01:00"
+      ]
+     ],
+     "fri": [
+      [
+       "11:30",
+       "01:00"
+      ]
+     ],
+     "sat": [
+      [
+       "11:30",
+       "01:00"
+      ]
+     ]
+    },
+    "kitchen_close": {
+     "sun": "23:00",
+     "mon": "23:00",
+     "tue": "23:00",
+     "wed": "23:00",
+     "thu": "23:00",
+     "fri": "23:00",
+     "sat": "23:00"
+    },
+    "hours_confidence": "google",
+    "patio": true,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-lakeside-bar",
+     "google_maps": "https://maps.google.com/?cid=100017"
+    },
+    "blurb": "A deck on the water with a short menu and a long sunset. Go early for a rail seat.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemolakesidebar"
+   },
+   {
+    "id": "demo-pine-taqueria",
+    "name": "Pine Street taqueria",
+    "category": "Restaurant",
+    "cuisine": [
+     "Mexican"
+    ],
+    "neighborhood": "South End",
+    "address": "Pine Street taqueria, Burlington, VT 05401",
+    "coords": [
+     44.4648,
+     -73.2141
+    ],
+    "price": "$",
+    "under_15": true,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "mon": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "tue": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "wed": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "thu": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "fri": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "sat": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": true,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-pine-taqueria",
+     "google_maps": "https://maps.google.com/?cid=100018"
+    },
+    "blurb": "Tacos on handmade tortillas, open late for the South End crowd. The al pastor is the reason the line forms.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemopinetaqueria"
+   },
+   {
+    "id": "demo-south-end-kitchen",
+    "name": "A South End kitchen",
+    "category": "Restaurant",
+    "cuisine": [
+     "Farm to Table"
+    ],
+    "neighborhood": "South End",
+    "address": "A South End kitchen, Burlington, VT 05401",
+    "coords": [
+     44.4622,
+     -73.2133
+    ],
+    "price": "$$$",
+    "under_15": null,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "17:00",
+       "22:00"
+      ]
+     ],
+     "mon": [
+      [
+       "17:00",
+       "22:00"
+      ]
+     ],
+     "tue": [
+      [
+       "17:00",
+       "22:00"
+      ]
+     ],
+     "wed": [
+      [
+       "17:00",
+       "22:00"
+      ]
+     ],
+     "thu": [
+      [
+       "17:00",
+       "22:00"
+      ]
+     ],
+     "fri": [
+      [
+       "17:00",
+       "22:00"
+      ]
+     ],
+     "sat": [
+      [
+       "17:00",
+       "22:00"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": true,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-south-end-kitchen",
+     "google_maps": "https://maps.google.com/?cid=100022"
+    },
+    "blurb": "A small dining room cooking whatever the farms brought that week, with a garden patio out back.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemosouthendkitche"
+   },
+   {
+    "id": "demo-church-bistro",
+    "name": "The Church Street bistro",
+    "category": "Restaurant",
+    "cuisine": [
+     "French"
+    ],
+    "neighborhood": "Downtown / Church St",
+    "address": "The Church Street bistro, Burlington, VT 05401",
+    "coords": [
+     44.4769,
+     -73.2124
+    ],
+    "price": "$$$",
+    "under_15": null,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "11:30",
+       "23:00"
+      ]
+     ],
+     "mon": [
+      [
+       "11:30",
+       "23:00"
+      ]
+     ],
+     "tue": [
+      [
+       "11:30",
+       "23:00"
+      ]
+     ],
+     "wed": [
+      [
+       "11:30",
+       "23:00"
+      ]
+     ],
+     "thu": [
+      [
+       "11:30",
+       "23:00"
+      ]
+     ],
+     "fri": [
+      [
+       "11:30",
+       "23:00"
+      ]
+     ],
+     "sat": [
+      [
+       "11:30",
+       "23:00"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": true,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-church-bistro",
+     "google_maps": "https://maps.google.com/?cid=100018"
+    },
+    "blurb": "A bistro with sidewalk tables on the Marketplace. The onion soup is famous for a reason.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemochurchbistro"
+   },
+   {
+    "id": "demo-old-north-bakery",
+    "name": "Old North End bakery",
+    "category": "Cafe & Bakery",
+    "cuisine": [
+     "Breakfast & Brunch"
+    ],
+    "neighborhood": "Old North End",
+    "address": "Old North End bakery, Burlington, VT 05401",
+    "coords": [
+     44.4851,
+     -73.216
+    ],
+    "price": "$",
+    "under_15": true,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "07:00",
+       "15:00"
+      ]
+     ],
+     "mon": [
+      [
+       "07:00",
+       "15:00"
+      ]
+     ],
+     "tue": [
+      [
+       "07:00",
+       "15:00"
+      ]
+     ],
+     "wed": [
+      [
+       "07:00",
+       "15:00"
+      ]
+     ],
+     "thu": [
+      [
+       "07:00",
+       "15:00"
+      ]
+     ],
+     "fri": [
+      [
+       "07:00",
+       "15:00"
+      ]
+     ],
+     "sat": [
+      [
+       "07:00",
+       "15:00"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": null,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-old-north-bakery",
+     "google_maps": "https://maps.google.com/?cid=100021"
+    },
+    "blurb": "Morning buns, sourdough and coffee from a corner storefront. Get there before the neighborhood does.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemooldnorthbakery"
+   },
+   {
+    "id": "demo-winooski-brewery",
+    "name": "The Winooski brewery",
+    "category": "Brewery & Cidery",
+    "cuisine": [
+     "Craft Beverages: Wine"
+    ],
+    "neighborhood": "Winooski",
+    "address": "The Winooski brewery, Burlington, VT 05401",
+    "coords": [
+     44.491,
+     -73.186
+    ],
+    "price": "$$",
+    "under_15": null,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "12:00",
+       "23:00"
+      ]
+     ],
+     "mon": [
+      [
+       "12:00",
+       "23:00"
+      ]
+     ],
+     "tue": [
+      [
+       "12:00",
+       "23:00"
+      ]
+     ],
+     "wed": [
+      [
+       "12:00",
+       "23:00"
+      ]
+     ],
+     "thu": [
+      [
+       "12:00",
+       "23:00"
+      ]
+     ],
+     "fri": [
+      [
+       "12:00",
+       "23:00"
+      ]
+     ],
+     "sat": [
+      [
+       "12:00",
+       "23:00"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": true,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-winooski-brewery",
+     "google_maps": "https://maps.google.com/?cid=100021"
+    },
+    "blurb": "A taproom by the falls with a food truck parked out front most nights.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemowinooskibrewer"
+   },
+   {
+    "id": "demo-dumpling-house",
+    "name": "The dumpling house",
+    "category": "Restaurant",
+    "cuisine": [
+     "Chinese"
+    ],
+    "neighborhood": "Burlington",
+    "address": "The dumpling house, Burlington, VT 05401",
+    "coords": [
+     44.4745,
+     -73.209
+    ],
+    "price": "$$",
+    "under_15": null,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "11:00",
+       "21:00"
+      ]
+     ],
+     "mon": [
+      [
+       "11:00",
+       "21:00"
+      ]
+     ],
+     "tue": [
+      [
+       "11:00",
+       "21:00"
+      ]
+     ],
+     "wed": [
+      [
+       "11:00",
+       "21:00"
+      ]
+     ],
+     "thu": [
+      [
+       "11:00",
+       "21:00"
+      ]
+     ],
+     "fri": [
+      [
+       "11:00",
+       "21:00"
+      ]
+     ],
+     "sat": [
+      [
+       "11:00",
+       "21:00"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": null,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-dumpling-house",
+     "google_maps": "https://maps.google.com/?cid=100019"
+    },
+    "blurb": "Dumplings folded by hand in the front window. The pork and chive dumplings convert skeptics nightly.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemodumplinghouse"
+   },
+   {
+    "id": "demo-creemee-window",
+    "name": "The creemee window",
+    "category": "Sweet Treats",
+    "cuisine": [
+     "Ice cream"
+    ],
+    "neighborhood": "Waterfront",
+    "address": "The creemee window, Burlington, VT 05401",
+    "coords": [
+     44.479,
+     -73.22
+    ],
+    "price": "$",
+    "under_15": true,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "12:00",
+       "21:30"
+      ]
+     ],
+     "mon": [
+      [
+       "12:00",
+       "21:30"
+      ]
+     ],
+     "tue": [
+      [
+       "12:00",
+       "21:30"
+      ]
+     ],
+     "wed": [
+      [
+       "12:00",
+       "21:30"
+      ]
+     ],
+     "thu": [
+      [
+       "12:00",
+       "21:30"
+      ]
+     ],
+     "fri": [
+      [
+       "12:00",
+       "21:30"
+      ]
+     ],
+     "sat": [
+      [
+       "12:00",
+       "21:30"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": true,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-creemee-window",
+     "google_maps": "https://maps.google.com/?cid=100019"
+    },
+    "blurb": "Maple creemees through a window, eaten on the bike path. Ask for the maple twist.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemocreemeewindow"
+   },
+   {
+    "id": "demo-pub-on-main",
+    "name": "The pub on Main",
+    "category": "Bar & Nightlife",
+    "cuisine": [
+     "American & Burgers"
+    ],
+    "neighborhood": "Downtown / Church St",
+    "address": "The pub on Main, Burlington, VT 05401",
+    "coords": [
+     44.4758,
+     -73.215
+    ],
+    "price": "$$",
+    "under_15": null,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "mon": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "tue": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "wed": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "thu": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "fri": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ],
+     "sat": [
+      [
+       "11:00",
+       "02:00"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "google",
+    "patio": null,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-pub-on-main",
+     "google_maps": "https://maps.google.com/?cid=100016"
+    },
+    "blurb": "Twenty taps, a full kitchen and a crowd that spans every Burlington demographic by ten.",
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemopubonmain"
+   },
+   {
+    "id": "demo-pho-shop",
+    "name": "The pho shop on North Ave",
+    "category": "Restaurant",
+    "cuisine": [
+     "Pho"
+    ],
+    "neighborhood": "Old North End",
+    "address": "The pho shop on North Ave, Burlington, VT 05401",
+    "coords": [
+     44.488,
+     -73.221
+    ],
+    "price": "$",
+    "under_15": true,
+    "dietary": [],
+    "hours": {
+     "sun": [
+      [
+       "10:30",
+       "20:30"
+      ]
+     ],
+     "tue": [
+      [
+       "10:30",
+       "20:30"
+      ]
+     ],
+     "wed": [
+      [
+       "10:30",
+       "20:30"
+      ]
+     ],
+     "thu": [
+      [
+       "10:30",
+       "20:30"
+      ]
+     ],
+     "fri": [
+      [
+       "10:30",
+       "20:30"
+      ]
+     ],
+     "sat": [
+      [
+       "10:30",
+       "20:30"
+      ]
+     ]
+    },
+    "kitchen_close": null,
+    "hours_confidence": "website",
+    "patio": null,
+    "quiet_talk": null,
+    "solo_friendly": null,
+    "tv_sports": null,
+    "groups_8": null,
+    "attr_confidence": null,
+    "attr_evidence": null,
+    "opened": null,
+    "closing": null,
+    "closed": false,
+    "serves_food": true,
+    "links": {
+     "website": "https://example.org/demo-pho-shop",
+     "google_maps": "https://maps.google.com/?cid=100013"
+    },
+    "blurb": null,
+    "happy_hour_note": null,
+    "day_trip": false,
+    "last_verified": "2026-10-12",
+    "sources": [
+     "google"
+    ],
+    "place_id": "ChIJdemodemophoshop"
+   }
+  ]
  },
- "dealsNote": "111 deals, each with the day it was last checked. Tap the right side for the next one.",
- "deals": [
-  {
-   "checked": "Verified Oct 12",
-   "title": "$5 pints until 6",
-   "place": "The lakeside bar, weekdays",
-   "art": "lake"
+ "deals": {
+  "generated": "2026-10-16",
+  "deals": [
+   {
+    "id": "demo-diner-coffee",
+    "business": "The all-night diner on Main",
+    "restaurant_id": "demo-all-night-diner",
+    "title": "Bottomless coffee with any plate",
+    "type": "deal",
+    "days": null,
+    "start": null,
+    "end": null,
+    "all_day": true,
+    "price_note": "Bottomless coffee with any plate",
+    "link": null,
+    "source": "both",
+    "last_verified": "2026-10-14"
+   },
+   {
+    "id": "demo-lakeside-pints",
+    "business": "The lakeside bar",
+    "restaurant_id": "demo-lakeside-bar",
+    "title": "$5 pints until six",
+    "type": "happy-hour",
+    "days": null,
+    "start": "16:00",
+    "end": "18:00",
+    "all_day": false,
+    "price_note": "$5 pints until six",
+    "link": null,
+    "source": "both",
+    "last_verified": "2026-10-12"
+   },
+   {
+    "id": "demo-taco-late",
+    "business": "Pine Street taqueria",
+    "restaurant_id": "demo-pine-taqueria",
+    "title": "Two tacos and a drink, $9, Friday late",
+    "type": "happy-hour",
+    "days": [
+     "fri"
+    ],
+    "start": "22:00",
+    "end": "02:00",
+    "all_day": false,
+    "price_note": "Two tacos and a drink, $9",
+    "link": null,
+    "source": "both",
+    "last_verified": "2026-10-14"
+   },
+   {
+    "id": "demo-bistro-oysters",
+    "business": "The Church Street bistro",
+    "restaurant_id": "demo-church-bistro",
+    "title": "Half-price oysters at the bar",
+    "type": "happy-hour",
+    "days": null,
+    "start": "15:00",
+    "end": "17:00",
+    "all_day": false,
+    "price_note": "Half-price oysters at the bar",
+    "link": null,
+    "source": "both",
+    "last_verified": "2026-10-10"
+   },
+   {
+    "id": "demo-bakery-bread",
+    "business": "Old North End bakery",
+    "restaurant_id": "demo-old-north-bakery",
+    "title": "Day-old bread, $2 a loaf",
+    "type": "deal",
+    "days": null,
+    "start": null,
+    "end": null,
+    "all_day": false,
+    "price_note": "Day-old bread, $2 a loaf",
+    "link": null,
+    "source": "both",
+    "last_verified": "2026-10-15"
+   },
+   {
+    "id": "demo-pub-trivia",
+    "business": "The pub on Main",
+    "restaurant_id": "demo-pub-on-main",
+    "title": "Wings half off on trivia night",
+    "type": "deal",
+    "days": null,
+    "start": null,
+    "end": null,
+    "all_day": false,
+    "price_note": "Wings half off on trivia night",
+    "link": null,
+    "source": "both",
+    "last_verified": "2026-10-13"
+   }
+  ]
+ },
+ "menus": {
+  "generated": "2026-10-16",
+  "zone": {
+   "id": "church-st",
+   "label": "Church Street Marketplace",
+   "center": [
+    44.4785,
+    -73.2129
+   ],
+   "radius_m": 900
   },
-  {
-   "checked": "Verified Oct 14",
-   "title": "Two tacos and a drink, $9",
-   "place": "Pine Street taqueria, after 9 pm",
-   "art": "foliage"
+  "restaurants": [
+   {
+    "id": "demo-noodle-counter",
+    "name": "The noodle counter on Bank",
+    "menu": {
+     "status": "ok",
+     "url": "https://example.org/demo-noodle-counter/menu",
+     "items": []
+    }
+   },
+   {
+    "id": "demo-church-bistro",
+    "name": "The Church Street bistro",
+    "menu": {
+     "status": "partial",
+     "url": "https://example.org/demo-church-bistro/menu",
+     "items": []
+    }
+   },
+   {
+    "id": "demo-all-night-diner",
+    "name": "The all-night diner on Main",
+    "menu": {
+     "status": "ok",
+     "url": "https://example.org/demo-all-night-diner/menu",
+     "items": []
+    }
+   },
+   {
+    "id": "demo-pub-on-main",
+    "name": "The pub on Main",
+    "menu": {
+     "status": "unavailable",
+     "url": null,
+     "items": []
+    }
+   }
+  ]
+ },
+ "roster": {
+  "food": [
+   "demo_noodles",
+   "demo_taqueria",
+   "demo_bakery",
+   "demo_lakeside",
+   "demo_bistro"
+  ]
+ },
+ "instagram": {
+  "generated": "2026-10-16T16:00:00+00:00",
+  "expires_hint_days": 4,
+  "handles": [
+   "demo_bakery",
+   "demo_bistro",
+   "demo_lakeside",
+   "demo_noodles",
+   "demo_sunsets",
+   "demo_taqueria"
+  ],
+  "segments": {
+   "do": {
+    "posts": 6,
+    "accounts": 6
+   },
+   "see": {
+    "posts": 0,
+    "accounts": 0
+   },
+   "tagged": {
+    "posts": 0,
+    "accounts": 0
+   }
   },
-  {
-   "checked": "Verified Oct 10",
-   "title": "Half-price oysters",
-   "place": "The Church Street bistro, Tuesday",
-   "art": "brick"
-  },
-  {
-   "checked": "Verified Oct 15",
-   "title": "Day-old bread, $2 a loaf",
-   "place": "Old North End bakery, after 3",
-   "art": "coffee"
-  },
-  {
-   "checked": "Verified Oct 13",
-   "title": "Kids eat free",
-   "place": "A South End kitchen, Sundays",
-   "art": "mustard"
-  }
- ],
- "videos": [
-  {
-   "kind": "video",
-   "src": "Food",
-   "title": "How we make the dumplings",
-   "media": "mustard",
-   "dur": "0:42",
-   "text": "A South End kitchen · 0:42",
-   "k": "fv1",
-   "sid": "Food"
-  },
-  {
-   "kind": "video",
-   "src": "Food",
-   "title": "Friday’s fish, from the dock",
-   "media": "lake",
-   "dur": "0:58",
-   "text": "The lakeside bar · 0:58",
-   "k": "fv2",
-   "sid": "Food"
-  },
-  {
-   "kind": "video",
-   "src": "Food",
-   "title": "The 4 am bake",
-   "media": "coffee",
-   "dur": "1:10",
-   "text": "Old North End bakery · 1:10",
-   "k": "fv3",
-   "sid": "Food"
-  },
-  {
-   "kind": "video",
-   "src": "Food",
-   "title": "Salsa day",
-   "media": "foliage",
-   "dur": "0:36",
-   "text": "Pine Street taqueria · 0:36",
-   "k": "fv4",
-   "sid": "Food"
-  }
- ],
- "featuredCount": 38,
- "newSince": 2
+  "videos": 3,
+  "food": 5,
+  "posts": [
+   {
+    "h": "demo_noodles",
+    "ts": 1792148400,
+    "i": "cherry",
+    "u": "https://www.instagram.com/p/DemoReel1/",
+    "w": 480,
+    "c": "Pulling noodles for the lunch rush, start to finish in forty seconds.",
+    "s": "do",
+    "v": 1,
+    "vu": "https://example.org/demo/DemoReel1.mp4",
+    "ve": 1792274400,
+    "vd": 41.0,
+    "f": 1
+   },
+   {
+    "h": "demo_taqueria",
+    "ts": 1792094400,
+    "i": "foliage",
+    "u": "https://www.instagram.com/p/DemoReel2/",
+    "w": 480,
+    "c": "Pressing tortillas at 6 am so the 11 am line has something to wait for.",
+    "s": "do",
+    "v": 1,
+    "vu": "https://example.org/demo/DemoReel2.mp4",
+    "ve": 1792274400,
+    "vd": 27.5,
+    "f": 1
+   },
+   {
+    "h": "demo_bakery",
+    "ts": 1792000800,
+    "i": "coffee",
+    "u": "https://www.instagram.com/p/DemoReel3/",
+    "w": 480,
+    "c": "Morning buns out of the oven, the glaze still moving.",
+    "s": "do",
+    "v": 1,
+    "vu": "https://example.org/demo/DemoReel3.mp4",
+    "ve": 1792274400,
+    "vd": 15.2,
+    "f": 1
+   },
+   {
+    "h": "demo_lakeside",
+    "ts": 1792058400,
+    "i": "lake",
+    "u": "https://www.instagram.com/p/DemoPhoto1/",
+    "w": 480,
+    "c": "The deck is open through the weekend.",
+    "s": "do",
+    "f": 1
+   },
+   {
+    "h": "demo_bistro",
+    "ts": 1791979200,
+    "i": "brick",
+    "u": "https://www.instagram.com/p/DemoPhoto2/",
+    "w": 480,
+    "c": "Oyster night is back.",
+    "s": "do",
+    "f": 1
+   },
+   {
+    "h": "demo_sunsets",
+    "ts": 1792137600,
+    "i": "dawn",
+    "u": "https://www.instagram.com/p/DemoPhoto3/",
+    "w": 480,
+    "c": "Not a food account: this one never shows on the Food tab.",
+    "s": "do"
+   }
+  ]
+ }
 }

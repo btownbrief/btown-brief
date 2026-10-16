@@ -40,6 +40,22 @@ THREE FACTS ABOUT INSTAGRAM'S CDN SHAPE EVERYTHING HERE.
      payload holds roughly (tier1 + see1) plus several days of both rotating
      batches — three times the accounts for the same money.
 
+  4. Reels carry a playable MP4 as well, and it lives a much shorter life.
+     `video_versions` holds the signed candidates (on 2026-10-16 all three
+     were the same 720p progressive file, about 65 KB a second); its `oe`
+     sat 35 HOURS out, not four days. So a video post keeps its picture as
+     the poster (`i`) and adds `vu` (the smallest candidate), `ve` (that
+     URL's own expiry, read from its `oe`) and `vd` (seconds). A carried
+     post whose video is about to lapse keeps its picture and loses only
+     the video fields: it shows as a photo rather than a dead player.
+
+FOOD. The roster's `food` array is a tag, not a fifth roster: it names
+handles that already sit in one of the four arrays and belong to a kitchen,
+a bar, a market or someone who writes about eating here. Their posts get
+`f: 1`, and the All Day Food tab reads those (its "In their own words"
+rail). A handle in `food` that is not in the roster is warned about and
+ignored, so the tag can never add an account the roster did not.
+
 Credits: one per handle per run, and only the handles actually fetched. Tier 1
 every run; tier 2 on a rotation keyed to the day of the year.
 
@@ -133,14 +149,50 @@ def fetch_handle(handle: str, key: str) -> list[dict]:
     return items or []
 
 
+STP_SIZE = re.compile(r"_([ps])(\d{2,4})x(\d{2,4})(?:_|$)")
+
+
+def with_size(c: dict) -> dict:
+    """A candidate with its width, read from its own URL when the API left it
+    off. On 2026-10-16 most photo posts came back with no sizes at all, and
+    without one every candidate was skipped and the post was dropped. The
+    size is written in the signed `stp` token: `p1080x1080` is the picture
+    fitted inside that box (its own shape kept, so no height is claimed),
+    `s480x480` a square crop."""
+    if not isinstance(c, dict) or c.get("width") or not isinstance(c.get("url"), str):
+        return c if isinstance(c, dict) else {}
+    try:
+        stp = (urllib.parse.parse_qs(urllib.parse.urlparse(c["url"]).query).get("stp") or [""])[0]
+    except Exception:
+        return c
+    m = STP_SIZE.search(stp)
+    if not m:
+        return c
+    out = dict(c, width=int(m.group(2)))
+    if m.group(1) == "s":
+        out["height"] = int(m.group(3))
+    return out
+
+
 def pick_thumb(item: dict) -> tuple[str | None, int | None]:
     """The smallest candidate at or above WANT_W — a 20 KB picture instead of
-    a 1.3 MB one. Falls back to whatever single URL is on offer."""
+    a 1.3 MB one. Falls back to whatever single URL is on offer.
+
+    A reel offers a 9:16 and a square crop at the same width; the one in the
+    post's own shape wins, so a reel's poster is the reel's frame."""
     cands = ((item.get("image_versions2") or {}).get("candidates")) or []
-    sized = [c for c in cands if c.get("url") and c.get("width")]
+    sized = [c for c in (with_size(c) for c in cands) if c.get("url") and c.get("width")]
+    ow, oh = item.get("original_width"), item.get("original_height")
+    shape = (oh / ow) if isinstance(ow, (int, float)) and isinstance(oh, (int, float)) and ow > 0 else None
+
+    def off_shape(c: dict) -> float:
+        if not shape or not c.get("height"):
+            return 0.0
+        return abs(c["height"] / c["width"] - shape)
+
     if sized:
         at_or_above = sorted((c for c in sized if c["width"] >= WANT_W),
-                             key=lambda c: c["width"])
+                             key=lambda c: (c["width"], off_shape(c) > 0.02))
         chosen = at_or_above[0] if at_or_above else max(sized, key=lambda c: c["width"])
         return chosen["url"], chosen.get("width")
     for k in ("display_url", "thumbnail_url", "image"):
@@ -192,7 +244,7 @@ def fetch_tagged(key: str) -> list[dict]:
     return items or []
 
 
-def tagged_record(it: dict, cutoff: float) -> dict | None:
+def tagged_record(it: dict, cutoff: float, now: float | None = None) -> dict | None:
     handle = ((it.get("user") or {}).get("username") or "").strip().lstrip("@").lower()
     if not handle:
         return None
@@ -218,11 +270,57 @@ def tagged_record(it: dict, cutoff: float) -> dict | None:
         rec["c"] = cap[:400]
     if it.get("media_type") == 2 or it.get("is_video"):
         rec["v"] = 1
+        add_video(rec, it, now if now is not None else time.time())
     return rec
 
 
 def code_of(item: dict) -> str | None:
     return item.get("code") or item.get("shortcode") or None
+
+
+def pick_video(item: dict) -> str | None:
+    """The smallest playable candidate. Instagram lists them biggest first
+    and has been seen sending three copies of one file with no sizes at all,
+    so an unsized candidate sorts after every sized one and ties keep the
+    list's order."""
+    cands = [c for c in (item.get("video_versions") or [])
+             if isinstance(c, dict) and isinstance(c.get("url"), str) and c["url"].startswith("https://")]
+    if not cands:
+        return None
+    big = float("inf")
+    best = min(enumerate(cands), key=lambda ic: (
+        (ic[1].get("width") or big) * (ic[1].get("height") or 1), ic[0]))
+    return best[1]["url"]
+
+
+def add_video(rec: dict, item: dict, now: float) -> None:
+    """Give a video post its MP4: `vu`, `ve` and `vd`. Fails closed: a video
+    URL whose expiry cannot be read, or that lapses inside the carry margin,
+    is left off, and the post stays a photo (it is still marked `v` so the
+    tab can say it is a reel)."""
+    url = pick_video(item)
+    exp = signature_expiry(url) if url else None
+    if not url or not exp or exp - now < CARRY_MARGIN_H * 3600:
+        return
+    rec["vu"] = url
+    rec["ve"] = exp
+    dur = item.get("video_duration")
+    if isinstance(dur, (int, float)) and dur > 0:
+        rec["vd"] = round(float(dur), 1)
+
+
+def video_ok(rec: dict, now: float) -> bool:
+    """Is a post's video still worth shipping? The same margin as a carried
+    picture: refuse anything about to lapse."""
+    exp = rec.get("ve")
+    return (isinstance(rec.get("vu"), str) and isinstance(exp, (int, float))
+            and exp - now >= CARRY_MARGIN_H * 3600)
+
+
+def drop_video(rec: dict) -> dict:
+    for k in ("vu", "ve", "vd"):
+        rec.pop(k, None)
+    return rec
 
 
 def signature_expiry(url: str) -> int | None:
@@ -271,6 +369,34 @@ def carry_ok(rec: dict, now: float, cutoff: float) -> bool:
     return True
 
 
+def post_record(h: str, it: dict, cutoff: float, now: float | None = None) -> dict | None:
+    """One rostered account's post as the payload keeps it, or None when it
+    is too old or has no picture."""
+    ts = taken_at(it)
+    if not ts or ts < cutoff:
+        return None
+    thumb, w = pick_thumb(it)
+    if not thumb:
+        return None
+    code = code_of(it)
+    rec = {
+        "h": h,
+        "ts": ts,
+        "i": thumb,
+        "u": f"https://www.instagram.com/p/{code}/" if code
+             else f"https://www.instagram.com/{h}/",
+    }
+    if w:
+        rec["w"] = w
+    cap = caption_of(it)
+    if cap:
+        rec["c"] = cap[:400]
+    if it.get("media_type") == 2 or it.get("is_video"):
+        rec["v"] = 1
+        add_video(rec, it, now if now is not None else time.time())
+    return rec
+
+
 def load_block() -> set[str]:
     """Handles whose tagged posts never land. Same file as the roster, so
     there is one place to look; the arrays the roster loader reads are
@@ -311,6 +437,20 @@ def load_roster() -> tuple[dict[str, list[str]], dict[str, str]]:
     return arrays, segment
 
 
+def load_food(segment: dict[str, str]) -> set[str]:
+    """The handles tagged as food: kitchens, bars, markets, food writers.
+    Only handles the roster already holds; anything else is warned about."""
+    try:
+        raw = json.loads(ROSTER.read_text(encoding="utf-8"))
+        got = {str(h).strip().lstrip("@") for h in (raw.get("food") or []) if str(h).strip()}
+    except Exception:
+        return set()
+    stray = sorted(got - set(segment))
+    if stray:
+        log(f"WARNING: {len(stray)} food handle(s) not in the roster, ignored: {', '.join(stray[:6])}")
+    return got & set(segment)
+
+
 def rotate(pool: list[str], batch: int) -> list[str]:
     """Today's slice of a rotating tier, advancing by `batch` a day."""
     n = max(0, batch)
@@ -340,6 +480,7 @@ def main() -> int:
         return 1
 
     arrays, segment = load_roster()
+    food = load_food(segment)
     today = (arrays["tier1"] + rotate(arrays["tier2"], args.tier2_batch)
              + arrays["see1"] + rotate(arrays["see2"], args.see2_batch))
     # Order the roster arrays, not a set: a handle listed twice was already
@@ -386,27 +527,9 @@ def main() -> int:
         for it in items:
             if kept >= POSTS_PER_HANDLE:
                 break
-            ts = taken_at(it)
-            if not ts or ts < cutoff:
+            rec = post_record(h, it, cutoff, now)
+            if not rec:
                 continue
-            thumb, w = pick_thumb(it)
-            if not thumb:
-                continue
-            code = code_of(it)
-            rec = {
-                "h": h,
-                "ts": ts,
-                "i": thumb,
-                "u": f"https://www.instagram.com/p/{code}/" if code
-                     else f"https://www.instagram.com/{h}/",
-            }
-            if w:
-                rec["w"] = w
-            cap = caption_of(it)
-            if cap:
-                rec["c"] = cap[:400]
-            if it.get("media_type") == 2 or it.get("is_video"):
-                rec["v"] = 1
             fresh.append(rec)
             kept += 1
         time.sleep(0.4)
@@ -420,7 +543,7 @@ def main() -> int:
     if not args.no_tagged:
         try:
             for it in fetch_tagged(key):
-                rec = tagged_record(it, tagged_cutoff)
+                rec = tagged_record(it, tagged_cutoff, now)
                 if rec and rec["h"] not in block:
                     tagged.append(rec)
             tagged_ok = True
@@ -431,7 +554,7 @@ def main() -> int:
             if (isinstance(rec, dict) and rec.get("s") == "tagged"
                     and rec.get("h") not in block
                     and carry_ok(rec, now, tagged_cutoff)):
-                tagged.append(rec)
+                tagged.append(rec if video_ok(rec, now) else drop_video(rec))
 
     carried = []
     for rec in prev_posts:
@@ -448,7 +571,7 @@ def main() -> int:
             continue            # dropped from the roster since that run
         if not carry_ok(rec, now, cutoff):
             continue
-        carried.append(rec)
+        carried.append(rec if video_ok(rec, now) else drop_video(rec))
 
     if carried:
         held = {r["h"] for r in carried} & set(handles)
@@ -470,6 +593,10 @@ def main() -> int:
     by_key = {}
     for rec in carried + fresh:
         rec["s"] = segment.get(rec["h"], "do")
+        if rec["h"] in food:
+            rec["f"] = 1
+        else:
+            rec.pop("f", None)
         # A post URL identifies a post. The account URL does not — it is the
         # fallback for a post with no shortcode, and keying on it would fold
         # every shortcode-less post from that handle into one.
@@ -506,6 +633,9 @@ def main() -> int:
         # counts chips from it. Kept as plain strings; ig.js reads .length.
         "handles": sorted({p["h"] for p in posts}),
         "segments": {s: {"posts": counts[s], "accounts": accounts[s]} for s in CAP},
+        # Posts that carry a playable MP4 right now, and the food-tagged ones.
+        "videos": sum(1 for r in posts if r.get("vu")),
+        "food": sum(1 for r in posts if r.get("f")),
         "posts": posts,
     }
     if args.dry_run:
@@ -520,6 +650,7 @@ def main() -> int:
         f"DO {counts['do']} posts/{accounts['do']} accounts · "
         f"SEE {counts['see']} posts/{accounts['see']} accounts · "
         f"TAGGED {counts['tagged']} posts/{accounts['tagged']} accounts · "
+        f"{out['videos']} with video, {out['food']} food · "
         f"{OUT.stat().st_size // 1024} KB")
     return 0
 
