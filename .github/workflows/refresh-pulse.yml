@@ -60,13 +60,34 @@ jobs:
             cp data/pulse.json /tmp/pulse-prev.json
           fi
 
+      - name: Pull the shared Reddit intake (optional)
+        # The Reddit bridge (refresh-reddit.yml). A bonus route for the
+        # r/burlington and r/vermont sources once Reddit RSS ends on Nov 13:
+        # if the branch or file is missing, the Pulse runs exactly as before.
+        run: |
+          if git fetch -q origin reddit-data --depth 1 2>/dev/null &&
+             git show FETCH_HEAD:data/reddit-intake.json > /tmp/reddit-intake.json 2>/dev/null &&
+             [ -s /tmp/reddit-intake.json ]; then
+            echo "reddit intake: $(wc -c < /tmp/reddit-intake.json) bytes"
+          else
+            rm -f /tmp/reddit-intake.json
+            echo "reddit intake: not available, Inoreader streams only"
+          fi
+
       - name: Refresh pulse data
+        env:
+          # Read-only token for the private btownbrief/wire-inbox repo (the X
+          # and Facebook posts). Absent, the run is unchanged and the payload
+          # just marks both inbox sources paused.
+          WIRE_INBOX_TOKEN: ${{ secrets.WIRE_INBOX_TOKEN }}
         run: |
           python3 scripts/refresh_pulse.py --selftest
           mkdir -p /tmp/pulse-out/data
+          INTAKE=""
+          [ -s /tmp/reddit-intake.json ] && INTAKE="--reddit-intake /tmp/reddit-intake.json"
           python3 scripts/refresh_pulse.py \
             --store /tmp/pulse-prev.json \
-            --out /tmp/pulse-out/data/pulse.json
+            --out /tmp/pulse-out/data/pulse.json $INTAKE
 
       - name: Write the check receipt
         # Published even when nothing new arrived, so the page can honestly

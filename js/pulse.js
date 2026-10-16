@@ -701,8 +701,26 @@
       thumb + '</article>';
   }
 
+  /* When no route to Reddit has delivered a post for a day and a half (its
+     RSS ends Nov 13, 2026), refresh_pulse.py marks the payload paused. The
+     Reddit tab and the subreddit lists say so up top instead of quietly
+     going stale; the last threads stay below with their honest ages. */
+  function redditPausedHTML() {
+    var r = state.data && state.data.reddit;
+    if (!r || !r.paused) return '';
+    var src = state.source ? srcMap[state.source] : null;
+    if (src ? !isReddit(src) : state.topic !== 'reddit') return '';
+    var when = r.last_post ? new Date(r.last_post) : null;
+    var after = when && !isNaN(when.getTime())
+      ? ' after ' + when.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+    return '<div class="catchline"><span><strong>Reddit is paused.</strong> New posts stopped ' +
+      'reaching us' + esc(after) + '. These are the last threads we saw.</span></div>';
+  }
+
   function renderBody() {
     renderBodyInner();
+    var paused = redditPausedHTML();
+    if (paused) $('pulse-body').insertAdjacentHTML('afterbegin', paused);
     observeIntent();
   }
 
