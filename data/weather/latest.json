@@ -1,27 +1,27 @@
 {
- "updated": "2026-10-16T22:57:07+00:00",
+ "updated": "2026-10-16T23:02:12+00:00",
  "sections_updated": {
-  "now": "2026-10-16T22:57:07+00:00",
-  "forecast": "2026-10-16T22:57:07+00:00",
-  "hourly": "2026-10-16T22:57:07+00:00",
-  "alerts": "2026-10-16T22:57:07+00:00",
-  "afd": "2026-10-16T22:57:07+00:00",
-  "lake_forecast": "2026-10-16T22:57:07+00:00",
-  "lake_gage": "2026-10-16T22:57:07+00:00",
-  "air": "2026-10-16T22:57:07+00:00",
-  "sun": "2026-10-16T22:57:07+00:00",
-  "models": "2026-10-16T22:57:07+00:00"
+  "now": "2026-10-16T23:02:12+00:00",
+  "forecast": "2026-10-16T23:02:12+00:00",
+  "hourly": "2026-10-16T23:02:12+00:00",
+  "alerts": "2026-10-16T23:02:12+00:00",
+  "afd": "2026-10-16T23:02:12+00:00",
+  "lake_forecast": "2026-10-16T23:02:12+00:00",
+  "lake_gage": "2026-10-16T23:02:12+00:00",
+  "air": "2026-10-16T23:02:12+00:00",
+  "sun": "2026-10-16T23:02:12+00:00",
+  "models": "2026-10-16T23:02:12+00:00"
  },
  "now": {
-  "observed_at": "2026-10-16T22:35:00+00:00",
+  "observed_at": "2026-10-16T22:45:00+00:00",
   "station": "KBTV",
   "description": "Cloudy",
   "temp_f": 54,
   "feels_like_f": 54,
-  "humidity": 82,
-  "dewpoint_f": 48,
+  "humidity": null,
+  "dewpoint_f": null,
   "wind_mph": null,
-  "wind_gust_mph": 38,
+  "wind_gust_mph": 26,
   "wind_dir": null,
   "precip_last_hr_in": null
  },
@@ -30,13 +30,13 @@
   "periods": [
    {
     "name": "Tonight",
-    "start": "2026-10-16T18:00:00-04:00",
+    "start": "2026-10-16T19:00:00-04:00",
     "is_day": false,
     "temp_f": 36,
-    "pop": 52,
+    "pop": 36,
     "wind": "NW 15 to 18 mph",
-    "short": "Chance Rain Showers then Cloudy",
-    "detailed": "A chance of rain showers before 10pm. Cloudy, with a low around 36. Northwest wind 15 to 18 mph, with gusts as high as 31 mph. Chance of precipitation is 50%. New rainfall amounts between a tenth and quarter of an inch possible."
+    "short": "Chance Rain Showers then Mostly Cloudy",
+    "detailed": "A chance of rain showers before 10pm. Mostly cloudy, with a low around 36. Northwest wind 15 to 18 mph, with gusts as high as 31 mph. Chance of precipitation is 40%. New rainfall amounts between a tenth and quarter of an inch possible."
    },
    {
     "name": "Saturday",
@@ -173,17 +173,6 @@
  "hourly": {
   "updated": "2026-10-16T18:17:15+00:00",
   "hours": [
-   {
-    "t": "2026-10-16T18:00:00-04:00",
-    "temp_f": 61,
-    "feels_f": 61,
-    "pop": 52,
-    "humidity": 84,
-    "wind_mph": 16,
-    "wind_dir": "SW",
-    "sky": 94,
-    "short": "Chance Rain Showers"
-   },
    {
     "t": "2026-10-16T19:00:00-04:00",
     "temp_f": 57,
@@ -568,6 +557,17 @@
     "wind_dir": "S",
     "sky": 3,
     "short": "Clear"
+   },
+   {
+    "t": "2026-10-18T06:00:00-04:00",
+    "temp_f": 32,
+    "feels_f": 26,
+    "pop": 0,
+    "humidity": 75,
+    "wind_mph": 6,
+    "wind_dir": "S",
+    "sky": 16,
+    "short": "Sunny"
    }
   ]
  },
