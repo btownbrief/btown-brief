@@ -1,6 +1,7 @@
 // All Day — the shell's test matrix.
 //
 //   NODE_PATH=~/btownbrief/btownbrief.github.io/smoke/node_modules node all-day/tests/allday.spec.mjs
+//   ONLY=shellFixes,boards …same…   (just those groups, while iterating)
 //
 // No project here installs Playwright, so this borrows the arcade smoke
 // run's copy (1.62, Chromium already cached in ~/Library/Caches/ms-playwright)
@@ -1696,21 +1697,51 @@ async function theFood(browser, base) {
   });
 }
 
+/* ---------------------------------------------------------- shell fixes */
+/* The small shell changes the tab sessions asked for, one check each. */
+async function shellFixes(browser, base) {
+  await group('shell fixes: a rail never snaps flush to the edge', async () => {
+    for (const width of [390, 1280]) {
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 844 } });
+      await page.goto(base + '/all-day/?demo=1#onair');
+      await page.waitForSelector('#panel-onair .rail > *', { timeout: 15000 });
+      const r = await page.evaluate(() => {
+        const rail = [...document.querySelectorAll('#panel-onair .rail')].find((x) => x.scrollWidth > x.clientWidth + 40);
+        if (!rail) return null;
+        const gutter = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gutter'));
+        const pad = parseFloat(getComputedStyle(rail).scrollPaddingLeft);
+        rail.children[1].scrollIntoView({ inline: 'start', block: 'nearest' });
+        const left = rail.children[1].getBoundingClientRect().left - rail.getBoundingClientRect().left;
+        return { gutter, pad, left: Math.round(left) };
+      });
+      check(r && r.pad === r.gutter, width + ': .rail carries scroll-padding of one gutter', JSON.stringify(r));
+      check(r && Math.abs(r.left - r.gutter) <= 1, width + ': a card scrolled to the start stops at the gutter', JSON.stringify(r));
+      check(!errors.length, width + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
 await staticChecks();
 const { base, proc } = await serve();
 const browser = await chromium.launch();
+/* ONLY=shellFixes,boards runs just those groups while iterating; the full
+   matrix is the one that counts. */
+const ONLY = (process.env.ONLY || '').split(',').filter(Boolean);
+const run = (fn) => (!ONLY.length || ONLY.includes(fn.name) ? fn(browser, base) : null);
 try {
-  await matrix(browser, base);
-  await deepLinks(browser, base);
-  await theWire(browser, base);
-  await theWhatNow(browser, base);
-  await theFood(browser, base);
-  await onAir(browser, base);
-  await theGames(browser, base);
-  await interactions(browser, base);
+  await run(matrix);
+  await run(deepLinks);
+  await run(theWire);
+  await run(theWhatNow);
+  await run(theFood);
+  await run(onAir);
+  await run(theGames);
+  await run(interactions);
+  await run(shellFixes);
 } finally {
   await browser.close();
   proc.kill();

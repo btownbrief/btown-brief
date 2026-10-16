@@ -532,7 +532,8 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .sec .btn.sm, .sec .pills, .sec .pillbtn { flex: 0 0 auto; }
 .sec + .card.row, .sec + .card { border-top: 1px solid var(--line); }
 .rail-wrap { position: relative; padding: 0 0 6px; }
-.rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x proximity; padding: 2px var(--gutter) 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+/* scroll-padding: a snapped card stops at the gutter, never flush to the screen edge */
+.rail { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: var(--gutter); padding: 2px var(--gutter) 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .rail.pad-top { padding-top: 14px; }
 .rail::-webkit-scrollbar { display: none; }
 .rail > * { flex: 0 0 auto; scroll-snap-align: start; }
