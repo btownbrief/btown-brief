@@ -20,6 +20,7 @@ Output, data/wire-today.json:
    "updated": "...", "checked": "...", "count": 52,
    "counts": {"local": {"all": 40, "x": 3, ...}, "everything": {...}},
    "picks": [{"rank": 1, "why": "...", ...item}, ...],
+   "brief": {...item, "own": true}            (only on days the Brief went out)
    "updates": [{"key": "afternoon", "label": "Afternoon", "time": "2:10 pm",
                 "updated": "...", "lead": {"id": "...", "why": "..."},
                 "items": [item, ...]}, ...newest first],
@@ -351,7 +352,7 @@ def line(index, item, now_ts):
     if item.get("ch") in wc.THREAD_CHANNELS:
         count = item.get("comments")
         talk = f" · {count} comments" if isinstance(count, int) else " · comments unknown"
-    block = wc.pick_block(item)
+    block = "the Brief's own edition, pinned above the picks" if item.get("own") else wc.pick_block(item)
     gate = f" · river only ({block})" if block else ""
     return (f"{index}. {'LOCAL' if item['local'] else 'NATIONAL'} · {item['ch']} · {who} · "
             f"{age_label(item, now_ts)}{topic}{place}{talk}{gate} · {item['title']}")
@@ -489,8 +490,11 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
     if want_picks:
         for entry in answer.get("picks") or []:
             index = as_index(entry.get("i") if isinstance(entry, dict) else None, 0, total)
-            if index is None or index in pick_seen or wc.pick_block(by_index[index]):
-                continue   # a "river only" item stays out of the picks whatever the answer
+            if index is None or index in pick_seen or by_index[index].get("own") \
+                    or wc.pick_block(by_index[index]):
+                # a "river only" item stays out of the picks whatever the answer;
+                # the Brief's own edition is pinned above them as `brief` instead
+                continue
             why = wc.trim(entry.get("why", ""), WHY_MAX)
             if not why:
                 continue
@@ -522,10 +526,11 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now):
             and by_index[lead_index]["id"] in lead_ok:
         current["lead"] = {"id": by_index[lead_index]["id"], "why": lead_why}
 
-    # drops: only past RIVER_MAX, never a pick or a lead
+    # drops: only past RIVER_MAX, never a pick, a lead or the Brief's own edition
     protected = {by_index[index]["id"] for index, _ in picks} if want_picks else \
         {pick["id"] for pick in day.get("picks") or []}
     protected |= {update["lead"]["id"] for update in updates if update.get("lead")}
+    protected |= {item["id"] for item in river(day) if item.get("own")}   # the Brief stays
     dropped = []
     excess = len(river(day)) - RIVER_MAX
     if excess > 0:
@@ -584,13 +589,17 @@ reader, who it reaches, what to do about it. It must not restate or paraphrase
 the headline, must stay under 90 characters, and may not state a fact (a
 number, a date, a name) that the headline does not give.
 
-Good: "Your electric bill, starting in January." "Three nights of one lane on
-the only bridge to Winooski." Bad: "Police are looking for whoever broke into
-a market." (restates) "A local shop growing into a new line of goods."
-(paraphrases "DandyLion expands into furniture").
+Good: "Your electric bill, the next time it comes." "Plan another way across
+the river for the nights it is down to one lane." Bad: "Police are looking for
+whoever broke into a market." (restates) "A local shop growing into a new line
+of goods." (paraphrases "DandyLion expands into furniture") "A free UVM evening
+on Vermont's Revolutionary history." (neither "free" nor "UVM" is in its headline
+"Center for Research on Vermont hosts revolutionary war history panel").
 
 Below, each numbered line is a headline and its reason. Lines marked MUST are
-known restatements: rewrite every one of them. Rewrite any other reason that
+known restatements: rewrite every one of them. Lines marked MUST (invented:
+"word") state a fact the headline does not give, that word: rewrite them
+without it or any other fact the headline lacks. Rewrite any other reason that
 only restates or paraphrases its headline. Return only the lines you rewrote.
 
 For each line you return, `problem` is your note on what was wrong (never shown
@@ -619,35 +628,79 @@ CRITIQUE_RE = re.compile(r"paraphras|restat|headline|\bMUST\b|marked|the guide|\
                          r"the reason|this reason", re.I)
 
 
+# An invented fact: a reason may not state what its headline (and the
+# item's own text) does not give. Seen live on 2026-10-16: "A free UVM evening
+# on Vermont's Revolutionary history" for "Center for Research on Vermont hosts
+# revolutionary war history panel". Mechanical, so it is checked after the
+# model writes, the way restatements are.
+CALENDAR = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+            "january", "february", "march", "april", "may", "june", "july", "august",
+            "september", "october", "november", "december"}
+HOME = {"burlington", "vermont", "vermonters"}   # the paper's own frame, never a new fact
+
+
+def invented(why, *sources):
+    """The first word of `why` that states a fact none of `sources` gives,
+    or None: "free", a number or dollar amount, a weekday or month, or a
+    capitalized word (not the first of a sentence, not the paper's home)."""
+    text = " ".join(str(source) for source in sources if source).replace("’", "'").lower()
+    words = set(re.findall(r"[a-z0-9]+", text))
+    numbers = {n.replace(",", "") for n in re.findall(r"\d[\d,]*(?:\.\d+)?", text)}
+    for match in re.finditer(r"\$?\d[\d,]*(?:\.\d+)?|[A-Za-z][A-Za-z'’]*", why or ""):
+        token = match.group(0)
+        if token[0] == "$" or token[0].isdigit():
+            if token.lstrip("$").replace(",", "") not in numbers:
+                return token
+            continue
+        base = re.sub(r"['’]s$", "", token).lower()
+        if base in words or base in HOME:
+            continue
+        before = (why[:match.start()]).rstrip()
+        opens = not before or before[-1] in '.!?:"“'
+        if base == "free" or base in CALENDAR or (token[0].isupper() and len(token) > 1 and not opens):
+            return token
+    return None
+
+
 def reason_slots(day, picks_too):
-    """[(holder dict, headline)] for every reason the pass should look at:
-    the picks (on a re-rank) and the current update's lead."""
+    """[(holder dict, headline, the item's own text)] for every reason the
+    pass should look at: the picks (on a re-rank) and the current update's
+    lead."""
     slots = []
     if picks_too:
-        slots += [(pick, pick["title"]) for pick in day.get("picks") or []]
+        slots += [(pick, pick["title"], pick.get("name")) for pick in day.get("picks") or []]
     updates = day.get("updates") or []
     picked = {pick["id"] for pick in day.get("picks") or []} if picks_too else set()
     if updates and updates[0].get("lead") and updates[0]["lead"]["id"] not in picked:
         # a lead that is also a pick is handled once, through the pick
         lead = updates[0]["lead"]
-        title = next((item["title"] for item in updates[0]["items"] if item["id"] == lead["id"]), "")
-        slots.append((lead, title))
+        item = next((item for item in updates[0]["items"] if item["id"] == lead["id"]), {})
+        slots.append((lead, item.get("title", ""), item.get("name")))
     return slots
 
 
 def polish_reasons(day, engine, picks_too, ask=None):
     """Fable's rule: a reason that shares half or more of its content words
     with its headline gets one rewrite, and the editor reviews the rest for
-    paraphrases in the same call. A rewrite that still restates, or a
-    flagged reason the call did not fix, ships empty: no reason beats a
-    restatement. -> (usage or None, rewritten, emptied)."""
+    paraphrases in the same call. A reason that states a fact its headline
+    does not give (invented()) gets the same one rewrite, naming the word. A
+    rewrite that still restates or invents, or a flagged reason the call did
+    not fix, ships empty: no reason beats a wrong one.
+    -> (usage or None, rewritten, emptied)."""
     ask = ask or wc.ask_json
     slots = [slot for slot in reason_slots(day, picks_too) if slot[0].get("why")]
-    flagged = {i for i, (holder, title) in enumerate(slots) if wc.restates(holder["why"], title)}
+    flagged = {i for i, (holder, title, _) in enumerate(slots) if wc.restates(holder["why"], title)}
+    made_up = {i: word for i, (holder, title, own) in enumerate(slots)
+               if (word := invented(holder["why"], title, own))}
+    flagged |= set(made_up)
     if not slots or (not picks_too and not flagged):
         return None, 0, 0
-    lines = [f"{i}. {'MUST · ' if i in flagged else ''}{title} || {holder['why']}"
-             for i, (holder, title) in enumerate(slots)]
+
+    def mark(i):
+        if i in made_up:
+            return f'MUST (invented: "{made_up[i]}") · '
+        return "MUST · " if i in flagged else ""
+    lines = [f"{i}. {mark(i)}{title} || {holder['why']}" for i, (holder, title, _) in enumerate(slots)]
     usage, rewritten = None, 0
     try:
         answer, usage = ask(engine, REASONS_TASK, "\n".join(lines), REASONS_SCHEMA,
@@ -661,8 +714,8 @@ def polish_reasons(day, engine, picks_too, ask=None):
         why = wc.trim((entry or {}).get("why", ""), WHY_MAX) if index is not None else ""
         if index is None or not why:
             continue
-        holder, title = slots[index]
-        if not wc.restates(why, title) and not CRITIQUE_RE.search(why):
+        holder, title, own = slots[index]
+        if not wc.restates(why, title) and not CRITIQUE_RE.search(why) and not invented(why, title, own):
             holder["why"] = why
             flagged.discard(index)
             rewritten += 1
@@ -677,9 +730,26 @@ def polish_reasons(day, engine, picks_too, ask=None):
     return usage, rewritten, len(flagged)
 
 
+def brief_of(items):
+    """The newest of the Brief's own editions on today's page, or None. The
+    page pins it above "What matters today" rather than ranking it."""
+    own = [item for item in items if item.get("own")]
+    return dict(max(own, key=lambda item: item.get("posted_at") or "")) if own else None
+
+
 def finish(day, pulse, now, changed):
     stamp = now.replace(microsecond=0).isoformat()
     items = river(day)
+    # the Brief's own edition is never a pick (picks that stood from before
+    # this rule drop out and the rest close ranks); it rides on top as `brief`
+    if any(pick.get("own") for pick in day.get("picks") or []):
+        kept = [pick for pick in day["picks"] if not pick.get("own")]
+        day["picks"] = [dict(pick, rank=rank) for rank, pick in enumerate(kept, start=1)]
+    brief = brief_of(items)
+    if brief:
+        day["brief"] = brief
+    else:
+        day.pop("brief", None)
     day["count"] = len(items)
     day["counts"] = counts(items)
     day["checked"] = stamp

@@ -234,6 +234,82 @@ class HouseRuleTests(Workdir):
         self.assertEqual(len(own), 1)
         self.assertEqual((own[0]["ch"], own[0]["title"]), ("newsletters", "Friday, October 16th"))
 
+    def test_the_briefs_own_edition_is_never_a_pick(self):
+        payload = pulse()
+        payload["sources"].append({"id": "btown-brief", "name": "Btown Brief", "short": "Btown Brief",
+                                   "site": "https://www.btownbrief.com/", "topic": "local", "local": 1})
+        payload["items"] += [
+            {"t": "Friday, the early edition", "u": "https://www.btownbrief.com/p/friday-early",
+             "d": NOW_TS - 9 * 3600, "s": "btown-brief"},
+            {"t": "Friday, October 16th", "u": "https://www.btownbrief.com/p/friday",
+             "d": NOW_TS - 7 * 3600, "s": "btown-brief"},
+        ]
+        self.write_pulse(payload)
+
+        def rank_own_first(numbers, river_n, schema):
+            answer = take_all(numbers, river_n, schema)
+            own = [n for n in numbers if "Btown Brief" in lines[n]]
+            answer["picks"] = [{"i": n, "why": "The Brief, first."} for n in own] + answer["picks"]
+            return answer
+        lines = {}
+
+        class Peek(Stub):
+            def __call__(self, engine, system, user, schema, *a, **k):
+                for row in user.splitlines():
+                    if row[:1].isdigit():
+                        lines[int(row.split(".")[0])] = row
+                return super().__call__(engine, system, user, schema, *a, **k)
+        stub = Peek(rank_own_first)
+        self.run_curate(stub)
+        day = self.today()
+        # the editor was told, and its answer was overruled anyway
+        self.assertIn("river only (the Brief's own edition", stub.prompts[0][1])
+        self.assertTrue(day["picks"])
+        self.assertFalse([pick for pick in day["picks"] if pick.get("own")])
+        self.assertEqual([pick["rank"] for pick in day["picks"]], list(range(1, len(day["picks"]) + 1)))
+        # the newest own edition rides on top; both stay in the river
+        self.assertEqual(day["brief"]["title"], "Friday, October 16th")
+        self.assertTrue(day["brief"]["own"])
+        self.assertEqual(len([item for item in cw.river(day) if item.get("own")]), 2)
+
+    def test_standing_picks_lose_an_own_edition_and_close_ranks(self):
+        day = cw.empty_day("2026-10-16")
+        own = {"id": "b1", "ch": "newsletters", "local": True, "src": "btown-brief", "name": "Btown Brief",
+               "title": "Friday", "url": "https://www.btownbrief.com/p/f", "posted_at": "2026-10-16T11:00:00+00:00",
+               "own": True}
+        other = {"id": "a1", "ch": "local", "local": True, "src": "wcax", "name": "WCAX", "title": "Other",
+                 "url": "https://a.com/1", "posted_at": "2026-10-16T12:00:00+00:00"}
+        day["updates"] = [{"key": "midday", "label": "Midday", "items": [own, other]}]
+        day["picks"] = [dict(own, rank=1, why="x"), dict(other, rank=2, why="y")]
+        cw.finish(day, pulse(), NOW, changed=False)
+        self.assertEqual([(p["id"], p["rank"]) for p in day["picks"]], [("a1", 1)])
+        self.assertEqual(day["brief"]["id"], "b1")
+        day["updates"][0]["items"] = [other]
+        cw.finish(day, pulse(), NOW, changed=False)
+        self.assertNotIn("brief", day)
+
+    def test_the_cap_never_drops_the_briefs_own_edition(self):
+        def mk(n, own=False):
+            item = {"id": f"r{n}", "ch": "local", "local": True, "src": "wcax", "name": "WCAX",
+                    "title": f"Headline {n}", "url": f"https://a.com/{n}",
+                    "posted_at": f"2026-10-16T{(n % 12):02d}:00:00+00:00"}
+            if own:
+                item.update(src="btown-brief", name="Btown Brief", own=True, ch="newsletters",
+                            posted_at="2026-10-16T00:00:00+00:00")   # the oldest thing in the river
+            return item
+        river_now = [mk(0, own=True)] + [mk(n) for n in range(1, cw.RIVER_MAX)]
+        day = cw.empty_day("2026-10-16")
+        day["updates"] = [{"key": "midday", "label": "Midday", "time": "12:10 pm", "updated": "x",
+                           "lead": None, "items": [dict(item) for item in river_now]}]
+        new = [dict(mk(1000 + n), d=NOW_TS, _score=5) for n in range(20)]
+        numbered = [dict(item, d=NOW_TS, _score=5) for item in river_now]
+        cw.apply_answer(day, {"add": list(range(cw.RIVER_MAX, cw.RIVER_MAX + 20)), "drop": []},
+                        numbered, new, False, wc.et_now(NOW), NOW)
+        self.assertEqual(len(cw.river(day)), cw.RIVER_MAX)
+        self.assertTrue([item for item in cw.river(day) if item.get("own")])
+        cw.finish(day, pulse(), NOW, changed=True)
+        self.assertEqual(day["brief"]["id"], "r0")
+
     def test_a_reddit_post_that_only_links_an_outlet_is_that_article(self):
         payload = pulse()
         payload["sources"].append({"id": "r-burlington", "name": "r/burlington", "short": "r/burlington",
@@ -343,7 +419,7 @@ class ReasonPassTests(unittest.TestCase):
         return {"picks": [{"id": "a", "title": "VSP provides update on investigation into Williston police shooting",
                            "why": why},
                           {"id": "b", "title": "Vermont regulators finalize 5.5% rate increase",
-                           "why": "Your electric bill, starting in January."}],
+                           "why": "What it adds to every household's bill."}],
                 "updates": []}
 
     def stub(self, rewrites):
@@ -369,11 +445,11 @@ class ReasonPassTests(unittest.TestCase):
         _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
         self.assertEqual((rewritten, emptied), (0, 1))
         self.assertEqual(day["picks"][0]["why"], "")
-        self.assertEqual(day["picks"][1]["why"], "Your electric bill, starting in January.")
+        self.assertEqual(day["picks"][1]["why"], "What it adds to every household's bill.")
 
     def test_paraphrase_caught_by_the_model_is_accepted(self):
         day = self.day("Answers about a shooting by officers next door.")
-        ask, _ = self.stub([{"i": 1, "why": "Every household's bill goes up in January."}])
+        ask, _ = self.stub([{"i": 1, "why": "Every household's bill goes up with it."}])
         _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
         self.assertEqual((rewritten, emptied), (1, 0))
 
@@ -386,7 +462,7 @@ class ReasonPassTests(unittest.TestCase):
         _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
         self.assertEqual((rewritten, emptied), (0, 1))
         self.assertEqual(day["picks"][0]["why"], "")                      # the restatement goes
-        self.assertEqual(day["picks"][1]["why"], "Your electric bill, starting in January.")
+        self.assertEqual(day["picks"][1]["why"], "What it adds to every household's bill.")
 
     def test_a_lead_that_is_a_pick_is_sent_once_and_shares_the_reason(self):
         day = self.day("State police update on a police shooting in Williston.")
@@ -406,8 +482,45 @@ class ReasonPassTests(unittest.TestCase):
         _, _, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, broken)
         self.assertEqual((emptied, day["picks"][0]["why"]), (1, ""))
 
+    def test_an_invented_fact_gets_one_rewrite_naming_the_word(self):
+        """Seen live on 2026-10-16, pick 7: neither "free" nor "UVM" is in its headline."""
+        title = "Center for Research on Vermont hosts revolutionary war history panel"
+        why = "A free UVM evening on Vermont's Revolutionary history."
+        self.assertEqual(cw.invented(why, title, "Vermont Biz"), "free")
+        self.assertEqual(cw.invented("A UVM evening on Vermont's Revolutionary history.", title), "UVM")
+        day = {"picks": [{"id": "a", "title": title, "name": "UVM Today", "why": why}], "updates": []}
+        ask, calls = self.stub([{"i": 0, "problem": "free is not in it",
+                                 "why": "An evening on what the war looked like from Vermont."}])
+        _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertIn('0. MUST (invented: "free") · Center for Research', calls[0])
+        self.assertEqual((rewritten, emptied), (1, 0))
+        self.assertEqual(day["picks"][0]["why"], "An evening on what the war looked like from Vermont.")
+
+    def test_an_invented_fact_the_rewrite_keeps_ships_empty(self):
+        title = "Center for Research on Vermont hosts revolutionary war history panel"
+        day = {"picks": [{"id": "a", "title": title, "why": "A free UVM evening on Vermont's Revolutionary history."}],
+               "updates": []}
+        ask, _ = self.stub([{"i": 0, "problem": "", "why": "A free evening of history talk for anyone curious."}])
+        _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertEqual((rewritten, emptied, day["picks"][0]["why"]), (0, 1, ""))
+
+    def test_a_reason_that_reuses_the_headlines_number_is_fine(self):
+        title = "New $4.95M investment to strengthen suicide care across Vermont"
+        self.assertIsNone(cw.invented("The $4.95M reaches crisis lines Burlington callers use.", title))
+        self.assertIsNone(cw.invented("Heating oil follows it toward $110.", "Oil prices jump sharply, to nearly $110 per barrel"))
+        self.assertEqual(cw.invented("Heating oil follows it toward $120.", "Oil prices jump sharply, to nearly $110 per barrel"), "$120")
+        self.assertIsNone(cw.invented("First look at the team this season, at home Saturday.",
+                                      "Men's Basketball Hosts Holy Cross in Exhibition Saturday Afternoon"))
+        self.assertEqual(cw.invented("Tickets go on sale Friday.", "The Flynn adds a second show"), "Friday")
+        day = {"picks": [{"id": "a", "title": title, "why": "The $4.95M reaches crisis lines Burlington callers use."}],
+               "updates": []}
+        ask, calls = self.stub([])
+        _, rewritten, emptied = cw.polish_reasons(day, {"provider": "anthropic"}, True, ask)
+        self.assertNotIn("MUST", calls[0])
+        self.assertEqual((rewritten, emptied), (0, 0))
+
     def test_no_call_when_only_a_clean_lead_is_due(self):
-        day = {"picks": [], "updates": [{"lead": {"id": "a", "why": "Your bill, in January."},
+        day = {"picks": [], "updates": [{"lead": {"id": "a", "why": "Your bill, the next time it comes."},
                                          "items": [{"id": "a", "title": "Rates finalized"}]}]}
         ask, calls = self.stub([])
         self.assertEqual(cw.polish_reasons(day, {"provider": "anthropic"}, False, ask), (None, 0, 0))
