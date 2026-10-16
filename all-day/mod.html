@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Boards desk · All Day</title>
+  <meta name="robots" content="noindex, nofollow">
+  <!-- Stephen's moderation page for the All Day boards (nn_ in Supabase).
+       Photos on board posts are moderated where every reader photo is, in
+       ../photo-admin.html; this page is for the posts themselves: what two
+       reports took down, what a pre-moderated board is holding, bans.
+       ?demo=1 runs on the in-memory fake with passphrase "demo". -->
+  <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+  <script>
+    try {
+      var t = localStorage.getItem('allday-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) { /* the stylesheet default stands */ }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..600;1,400..600&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css?v=20261016b">
+  <link rel="stylesheet" href="css/app.css?v=20261016b">
+</head>
+<body class="desk">
+  <main class="desk-col">
+    <h1 class="desk-h">Boards desk</h1>
+    <p class="sheet-note">Reader posts on People, Vintage, Art and the Watchlist. Two reports take a post down and it waits here. Photos are checked in the <a href="../photo-admin.html">photo desk</a>, like every reader photo.</p>
+    <form class="signin" id="gate">
+      <input class="field" type="password" id="pass" placeholder="Passphrase" autocomplete="current-password" aria-label="Moderator passphrase">
+      <button class="btn" type="submit">Open</button>
+    </form>
+    <p class="sheet-note" id="gate-msg" role="status"></p>
+    <div id="desk" hidden></div>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script type="module">
+    import * as store from './js/store.js';
+    import { BOARD_LABELS, REASON_LABELS } from './js/boards-core.js';
+    import { FakeBoards, seedDemo } from './js/boards-fake.js';
+
+    const demo = new URLSearchParams(location.search).get('demo') === '1';
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const $ = (id) => document.getElementById(id);
+    let fake = null;
+    if (demo) {
+      fake = seedDemo(new FakeBoards({ modSecret: 'demo' }));
+      /* one post two neighbors reported, so the demo has something waiting */
+      const p = fake.posts.find((x) => x.board === 'vintage');
+      p.reports = 2; p.status = 'pending';
+      fake.reports.push({ post_id: p.id, reporter: 'demo-a', reason: 'spam', at: Date.now() }, { post_id: p.id, reporter: 'demo-b', reason: 'unkind', at: Date.now() });
+    }
+
+    /* the passphrase lives in this tab only, never in localStorage */
+    let secret = sessionStorage.getItem('nn-mod') || '';
+
+    async function rpc(fn, args) {
+      if (demo) return fake.as(null).call(fn, args);
+      const r = await fetch(store.SB_URL + '/rest/v1/rpc/' + fn, {
+        method: 'POST', headers: { apikey: store.SB_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(args),
+      });
+      const j = await r.json().catch(() => null);
+      if (r.status === 404) return { error: 'not_installed' };
+      if (!r.ok) return { error: (j && j.message) || 'offline' };
+      return j;
+    }
+    let toastT = 0;
+    function toast(m) { const t = $('toast'); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2400); }
+    const photoUrl = (path) => (demo ? null : store.SB_URL + '/storage/v1/object/public/btb-photos/' + path.split('/').map(encodeURIComponent).join('/'));
+    const when = (iso) => new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+
+    function row(p, acts) {
+      const bits = [BOARD_LABELS[p.board] || p.board, p.kind, p.author, when(p.created_at)];
+      if (p.reports) bits.push(p.reports + (p.reports === 1 ? ' report' : ' reports'));
+      if (p.photo_state && p.photo_state !== 'none') bits.push('photo ' + p.photo_state);
+      const meta = Object.entries(p.meta || {}).map(([k, v]) => k + ': ' + v).join(' · ');
+      const reasons = (p.reasons || []).map((r) => REASON_LABELS[r] || r).join(', ');
+      const d = document.createElement('div');
+      d.className = 'desk-post';
+      d.dataset.id = p.id;
+      d.innerHTML = (p.photo_path && photoUrl(p.photo_path) ? '<img class="desk-pic" alt="" loading="lazy" src="' + esc(photoUrl(p.photo_path)) + '">' : '') +
+        '<div><div class="t">' + esc(p.title) + '</div><div class="d">' + esc(bits.join(' · ')) + '</div>' +
+        (meta ? '<div class="d">' + esc(meta) + '</div>' : '') + (p.place ? '<div class="d">' + esc(p.place) + '</div>' : '') +
+        (p.body ? '<p class="desk-body">' + esc(p.body) + '</p>' : '') + (reasons ? '<div class="d">Reported as: ' + esc(reasons) + '</div>' : '') +
+        '<div class="linkrow"></div></div>';
+      const bar = d.querySelector('.linkrow');
+      acts.forEach(([action, label, cls]) => {
+        const b = document.createElement('button');
+        b.className = 'btn sm ' + (cls || 'ghost');
+        b.textContent = label;
+        b.dataset.action = action;
+        b.addEventListener('click', async () => {
+          if (action === 'ban' && !confirm('Ban ' + p.author + '? They can no longer post or report, and every post of theirs is hidden.')) return;
+          const r = await rpc('nn_mod_act', { p_secret: secret, p_post: p.id, p_action: action });
+          if (r && r.ok) { toast(label + ': done'); load(); } else toast('Didn’t work: ' + ((r && r.error) || 'offline'));
+        });
+        bar.appendChild(b);
+      });
+      return d;
+    }
+    function section(host, title, list, acts, empty) {
+      const h = document.createElement('h2');
+      h.className = 'sheet-h';
+      h.textContent = title + ' (' + list.length + ')';
+      host.appendChild(h);
+      if (!list.length) { const p = document.createElement('p'); p.className = 'sheet-note'; p.textContent = empty; host.appendChild(p); return; }
+      list.forEach((p) => host.appendChild(row(p, acts)));
+    }
+
+    async function load() {
+      const r = await rpc('nn_mod_list', { p_secret: secret });
+      if (!r || r.error) {
+        $('desk').hidden = true;
+        $('gate').hidden = false;
+        $('gate-msg').textContent = !r || r.error === 'bad_secret' ? (secret ? 'That passphrase didn’t open it. Twenty wrong tries shut the desk for 15 minutes.' : '')
+          : r.error === 'not_installed' ? 'The boards aren’t set up in Supabase yet: paste all-day/supabase/nn-SETUP.sql first.' : 'Couldn’t reach Supabase. Try again in a moment.';
+        if (r && r.error === 'bad_secret') sessionStorage.removeItem('nn-mod');
+        return;
+      }
+      sessionStorage.setItem('nn-mod', secret);
+      $('gate').hidden = true;
+      $('gate-msg').textContent = demo ? 'Demo desk: nothing here is real or saved.' : '';
+      const desk = $('desk');
+      desk.innerHTML = '';
+      desk.hidden = false;
+      section(desk, 'Waiting for you', r.waiting, [['approve', 'Approve', ''], ['hide', 'Hide'], ['delete', 'Delete'], ['ban', 'Ban', 'danger']], 'Nothing waiting.');
+      section(desk, 'Reported once, still up', r.reported, [['approve', 'Keep it'], ['hide', 'Hide'], ['ban', 'Ban', 'danger']], 'No open reports.');
+      section(desk, 'Live now, newest 50', r.recent, [['hide', 'Hide'], ['delete', 'Delete']], 'No posts yet.');
+      section(desk, 'Hidden', r.hidden, [['approve', 'Put it back']], 'Nothing hidden.');
+      const h = document.createElement('h2');
+      h.className = 'sheet-h';
+      h.textContent = 'Banned (' + r.bans.length + ')';
+      desk.appendChild(h);
+      r.bans.forEach((b) => {
+        const d = document.createElement('div');
+        d.className = 'sheet-row';
+        d.innerHTML = '<div class="t">' + esc(b.name || 'No name') + '<div class="d">since ' + esc(when(b.created_at)) + '</div></div>';
+        const u = document.createElement('button');
+        u.className = 'btn ghost sm';
+        u.textContent = 'Unban';
+        u.addEventListener('click', async () => { const x = await rpc('nn_mod_unban', { p_secret: secret, p_user: b.user_id }); toast(x && x.ok ? 'Unbanned' : 'Didn’t work'); load(); });
+        d.appendChild(u);
+        desk.appendChild(d);
+      });
+    }
+    $('gate').addEventListener('submit', (e) => { e.preventDefault(); secret = $('pass').value; load(); });
+    if (secret) load();
+  </script>
+</body>
+</html>

@@ -56,8 +56,22 @@ export function register(key, mod) {
   registry[key] = mod;
 }
 export const activeTab = () => active;
+/* The signed-in reader as { id }, or null; never an email (auth.js keeps
+   none). onAuth(fn) runs fn(user) on every sign-in, sign-out and lost
+   session, and returns the unsubscribe. */
 export const user = () => auth.user();
 export const token = () => auth.token();
+export const onAuth = (fn) => auth.onChange(fn);
+export const signOut = () => auth.signOut();
+
+/* Card buttons a shell module answers (boards.js: bvote, breport,
+   bdelete). bindFeed() hands a data-act it does not know itself to the
+   function registered under its name, with the card's item. */
+const ACTS = Object.create(null);
+export function onAct(name, fn) { ACTS[name] = fn; }
+/* The signed-in half of Settings → Your account (boards.js draws it). */
+let accountPainter = null;
+export function registerAccount(fn) { accountPainter = fn; }
 
 /* -------------------------------------------------------------- items */
 /* Every card a tab draws is known here by its key, so one delegated click
@@ -176,6 +190,7 @@ export function bindFeed(host, h = {}) {
       else if (a === 'comment') comments(it);
       else if (a === 'share') share(active, it.k, it.title || it.text);
       else if (a === 'save') (h.onSave || toggleSave)(it);
+      else if (ACTS[a]) ACTS[a](it, act);
       return;
     }
     const srcb = e.target.closest('[data-src]');
@@ -345,19 +360,24 @@ export function peek(it) {
   const t = it.title || it.line || it.text;
   const from = it.author || it.name || it.src;
   const pic = it.media || it.thumb;
+  const words = it.kind === 'board' ? [it.metaLine, it.text].filter(Boolean).join('. ') : (it.text || it.why || '');
   box.innerHTML = '<div class="peek-head"><span class="t">' + esc(t) + '</span><button class="iconbtn" aria-label="Close">' + ICON.x + '</button></div>' +
     '<div class="peek-body">' + (pic ? '<span class="c-media r169">' + art(pic) + '</span>' : '') +
-    '<p class="from">' + esc(from) + (it.ago ? ' · ' + esc(it.ago) : '') + '</p><p>' + esc(it.text || it.why || '') + '</p></div>';
+    '<p class="from">' + esc(from) + (it.ago ? ' · ' + esc(it.ago) : '') + '</p><p>' + esc(words) + '</p></div>';
   const foot = el('div', 'peek-foot');
-  const open = el('a', 'btn', esc(it.open || 'Open') + ' ' + ICON.ext);
-  open.href = safeHref(it.href);
-  if (/^https?:/.test(it.href || '')) { open.target = '_blank'; open.rel = 'noopener'; }
-  open.addEventListener('click', (e) => {
-    store.markRead(it.k);
-    if (demo || !/^https?:/.test(it.href || '')) { e.preventDefault(); toast('Opens in the real build'); }
-    closePeek();
-  });
-  foot.append(open, button(store.isSaved(it.k) ? 'Saved' : 'Save', 'ghost', () => { toggleSave(it); closePeek(); }));
+  /* a reader's board post lives here, in the card itself: nothing to open */
+  if (it.kind !== 'board') {
+    const open = el('a', 'btn', esc(it.open || 'Open') + ' ' + ICON.ext);
+    open.href = safeHref(it.href);
+    if (/^https?:/.test(it.href || '')) { open.target = '_blank'; open.rel = 'noopener'; }
+    open.addEventListener('click', (e) => {
+      store.markRead(it.k);
+      if (demo || !/^https?:/.test(it.href || '')) { e.preventDefault(); toast('Opens in the real build'); }
+      closePeek();
+    });
+    foot.appendChild(open);
+  }
+  foot.append(button(store.isSaved(it.k) ? 'Saved' : 'Save', 'ghost', () => { toggleSave(it); closePeek(); }));
   box.appendChild(foot);
   box.querySelector('.iconbtn').addEventListener('click', closePeek);
   document.body.appendChild(box);
@@ -442,6 +462,7 @@ const MORE = [
   ['Telegram chat', '../telegram.html'],
 ];
 
+export function openSettings() { settingsSheet(); }
 function settingsSheet() {
   sheet('Settings', (body) => {
     body.appendChild(el('div', 'sheet-h', 'Appearance'));
@@ -453,9 +474,16 @@ function settingsSheet() {
     const paintAcct = () => {
       acct.innerHTML = '';
       const u = auth.user();
+      if (u && accountPainter) { accountPainter(acct, paintAcct); return; }
       if (u) {
-        const r = el('div', 'sheet-row', '<div class="t">Signed in<div class="d">' + esc(u.email) + '</div></div>');
+        const r = el('div', 'sheet-row', '<div class="t">Signed in</div>');
         r.appendChild(button('Sign out', 'ghost sm', () => { auth.signOut(); paintAcct(); toast('Signed out'); }));
+        acct.appendChild(r);
+        return;
+      }
+      if (demo) {
+        const r = el('div', 'sheet-row', '<div class="t">Sign in<div class="d">The demo has a pretend account, so you can try posting. Real sign-in is one email link, no password.</div></div>');
+        r.appendChild(button('Sign in', 'ghost sm', () => { auth.demoSignIn(); paintAcct(); toast('Signed in to the demo account'); }));
         acct.appendChild(r);
         return;
       }
@@ -465,7 +493,7 @@ function settingsSheet() {
           (st === 'checking' ? 'Checking…' : 'Coming soon. Everything here works without an account.') + '</div></div>'));
         return;
       }
-      acct.appendChild(el('p', 'sheet-note', 'Optional. An email link signs you in; no password. Nothing here needs it yet.'));
+      acct.appendChild(el('p', 'sheet-note', 'Optional. An email link signs you in; no password. Reading and voting never need it; posting on a board and reporting do.'));
       const f = el('form', 'signin');
       f.noValidate = true;   /* our own message, not the browser's bubble */
       const input = el('input', 'field');

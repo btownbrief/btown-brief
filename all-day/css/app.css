@@ -684,6 +684,51 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .spacer { height: 12px; }
 .addrow { padding: 12px var(--gutter) 0; }
 
+/* ======================================================= board posts */
+/* A reader's post on a tab's board (cards.board, boards.js): the author where
+   a source would be, then the post, then the board's own action row. */
+.card.board .c-head .mark { width: 22px; height: 22px; }
+.card.board .b-title { -webkit-touch-callout: default; }
+.card.board .c-media + .c-body { margin-top: var(--s2); }
+.b-meta { font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); margin-top: 2px; line-height: 1.35; }
+.b-place { display: flex; align-items: center; gap: var(--s1); font-size: var(--fs-meta); color: var(--ink-3); margin-top: var(--s1); }
+.b-place .i { width: 14px; height: 14px; flex: 0 0 auto; }
+.tag-left { color: var(--ink-2); background: var(--paper-2); }
+.act.rep .i, .act.del .i { width: 18px; height: 18px; }
+
+/* the compose and profile sheets */
+.bform { display: flex; flex-direction: column; gap: var(--s4); padding: var(--s2) 0 var(--s4); }
+.bf-row { display: flex; flex-direction: column; gap: var(--s1); }
+.bf-label { font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); }
+.bf-opt { font-weight: 400; color: var(--ink-3); }
+.bf-in { flex: 0 0 auto; width: 100%; }
+textarea.bf-in { height: auto; min-height: 96px; padding: 10px 14px; border-radius: var(--r-box); line-height: var(--lh-body); resize: vertical; }
+select.bf-in { appearance: none; -webkit-appearance: none; }
+.bf-hint { font-size: var(--fs-small); color: var(--ink-3); line-height: 1.4; }
+.bf-photo { display: flex; align-items: center; gap: var(--s3); min-width: 0; }
+.bf-photo .bf-hint { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.consent { display: flex; gap: var(--s2); align-items: flex-start; font-size: var(--fs-meta); color: var(--ink-2); line-height: 1.4; margin-top: var(--s2); }
+.consent input { margin-top: 2px; flex: 0 0 auto; width: 18px; height: 18px; accent-color: var(--accent); }
+.bf-note { font-size: var(--fs-meta); color: var(--ink-2); line-height: 1.45; padding: var(--s2) var(--s3); background: var(--paper-2); border-radius: var(--r-box); }
+.bf-go { display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; }
+.bf-msg { flex: 1 1 200px; font-size: var(--fs-meta); color: var(--ink-2); line-height: 1.4; }
+.bf-msg.err { color: var(--warn); }
+.bf-msg:empty { display: none; }
+.pills.wrap { flex-wrap: wrap; border-radius: var(--r-box); }
+.pills.wrap button { flex: 0 0 auto; }
+
+/* mod.html, the boards desk: one column of posts with their buttons */
+body.desk { overflow: auto; }
+.desk-col { max-width: var(--col); margin: 0 auto; padding: var(--s6) var(--gutter) var(--s8); }
+.desk-h { font-family: var(--serif); font-size: var(--fs-hero); font-weight: 500; }
+.desk-col a { text-decoration: underline; }
+.desk-post { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s3); padding: var(--s3) 0; border-bottom: 1px solid var(--line-soft); }
+.desk-post > div:only-child { grid-column: 1 / -1; }
+.desk-post .t { font-weight: 600; line-height: 1.35; }
+.desk-post .d { font-size: var(--fs-meta); color: var(--ink-3); margin-top: 2px; }
+.desk-pic { width: 72px; height: 72px; object-fit: cover; border-radius: var(--r-thumb); background: var(--paper-2); }
+.desk-body { font-size: var(--fs-body); color: var(--ink-2); margin-top: var(--s1); white-space: pre-line; }
+
 @media (min-width: 900px) {
   /* a wide screen has room: chips wrap instead of scrolling, so a mouse can reach them all */
   .subnav .chips { flex-wrap: wrap; row-gap: 8px; -webkit-mask-image: none; mask-image: none; padding-bottom: 12px; }
