@@ -1,6 +1,16 @@
 {
  "nws-weather": {
-  "alerts": [],
+  "alerts": [
+   {
+    "id": "urn:oid:2.49.0.1.840.0.3404910d82fe14f2cfadb08132b512c861dd1d6e.001.1",
+    "event": "Wind Advisory",
+    "headline": "Wind Advisory issued October 16 at 8:26AM EDT until October 16 at 4:00PM EDT by NWS Burlington VT",
+    "severity": "Moderate",
+    "onset": "2026-10-16T08:26:00-04:00",
+    "ends": "2026-10-16T16:00:00-04:00",
+    "url": "https://forecast.weather.gov/MapClick.php?lat=44.4759&lon=-73.2121"
+   }
+  ],
   "forecast_flag": {
    "day": "2026-10-13",
    "text": "Tonight: Showers and thunderstorms before 1am, then drizzle likely"
@@ -561,6 +571,13 @@
    "sevendays-news": {
     "items": [
      {
+      "id": "https://www.sevendaysvt.com/news/news-quiz-what-did-the-owner-landlord-of-dozens-of-neon-colored-houses-in-burlingtons-old-north-end-announce-he-would-do-36539606/",
+      "title": "News Quiz: Which Vermont company will be acquired by a Japanese corporation for $675 million?",
+      "link": "https://www.sevendaysvt.com/news/newsquiz/news-quiz/",
+      "ts": "2026-10-16T11:00:00+00:00",
+      "summary": "Answer this question and seven others in our new weekly news quiz about Vermont news. It's quick, fun and informative. The post News Quiz: Which Vermont company will be acquired by a Japanese corporation for $675 million? appeared first on Seven Days ."
+     },
+     {
       "id": "https://www.sevendaysvt.com/?p=221074",
       "title": "Digital Forensics Expert Hany Farid Vets Deepfakes at Vermont Tech Jam",
       "link": "https://www.sevendaysvt.com/news/tech/hany-farid-deepfakes-vermont-tech-jam/",
@@ -622,13 +639,6 @@
       "link": "https://www.sevendaysvt.com/news/802much/a-groton-woman-creates-a-free-community-closet-and-food-pantry/",
       "ts": "2026-10-14T13:48:00+00:00",
       "summary": "Due to increasing demand, Jodi Fleurie-Wohlleb recently moved her Re-Treasured Community Closet to a bigger space. It’s become the town’s social hub. The post A Groton Woman Creates a Free ‘Community Closet’ and Food Pantry appeared first on Seven Days . (Image: Courtesy of Jodi Fleurie-Wohlleb)"
-     },
-     {
-      "id": "https://www.sevendaysvt.com/?p=220669",
-      "title": "From the Publisher: North Star",
-      "link": "https://www.sevendaysvt.com/news/fromthepublisher/from-the-publisher-north-star/",
-      "ts": "2026-10-14T13:47:00+00:00",
-      "summary": "In this week’s paper, Richmond’s Jen Rose Smith — who just won Travel Journalist of the Year — takes readers with her to Québec’s Manicouagan Reservoir. The post From the Publisher: North Star appeared first on Seven Days . (Image: Courtesy)"
      }
     ]
    },
@@ -849,6 +859,27 @@
    "vermont-public": {
     "items": [
      {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-16/vermont-schoolteacher-musician-mines-family-mythology-in-new-song",
+      "title": "Vermont schoolteacher, musician mines family mythology in new song",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-16/vermont-schoolteacher-musician-mines-family-mythology-in-new-song",
+      "ts": "2026-10-16T09:00:00+00:00",
+      "summary": "This week's Friday Song is \"Fix Everything,\" from Samara's songwriting project, Bull's Head."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-16/horse-logging-200-year-vermont-tradition-future",
+      "title": "Horse logging, a 200-year Vermont tradition with a future",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-16/horse-logging-200-year-vermont-tradition-future",
+      "ts": "2026-10-16T09:00:00+00:00",
+      "summary": "Reporter Erica Heilman spends a day in the woods with horse logger John Smolinsky."
+     },
+     {
+      "id": "https://www.vermontpublic.org/local-news/2026-10-16/an-evening-of-folk-and-classical-music-styles-that-share-roots-and-themes-in-nature",
+      "title": "An evening of folk and classical music styles that share roots and themes in nature",
+      "link": "https://www.vermontpublic.org/local-news/2026-10-16/an-evening-of-folk-and-classical-music-styles-that-share-roots-and-themes-in-nature",
+      "ts": "2026-10-16T09:00:00+00:00",
+      "summary": "Vermont folk musician Moira Smiley will take the stage with The Rasa String Quartet for an evening of classical music, original and traditional folk songs and immersive film images of the natural world."
+     },
+     {
       "id": "https://www.vermontpublic.org/local-news/2026-10-15/barre-wins-flood-recovery-funds-north-end-housing",
       "title": "Barre wins flood recovery funds for long-awaited North End housing",
       "link": "https://www.vermontpublic.org/local-news/2026-10-15/barre-wins-flood-recovery-funds-north-end-housing",
@@ -910,32 +941,39 @@
       "link": "https://www.vermontpublic.org/local-news/2026-10-13/first-ever-columbia-bridge-dance-celebrates-connection-between-vermont-and-new-hampshire",
       "ts": "2026-10-13T19:21:23+00:00",
       "summary": "The bridge connects Lemington, Vermont, with Columbia, New Hampshire. “They’re always there for us, and we’re there for them,” New Hampshire resident Dana Ellingwood Hinkley said."
-     },
-     {
-      "id": "https://www.vermontpublic.org/show/vermont-edition/2026-10-13/vermont-and-new-hampshire-politics-then-and-now",
-      "title": "Vermont and New Hampshire politics, then and now",
-      "link": "https://www.vermontpublic.org/show/vermont-edition/2026-10-13/vermont-and-new-hampshire-politics-then-and-now",
-      "ts": "2026-10-13T19:17:25+00:00",
-      "summary": "Plus, Boston Globe associate editor James Pindell discusses the New Hampshire and Maine Senate races."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-13/ice-is-more-active-in-vermont-but-federal-data-overstates-it",
-      "title": "ICE is more active in Vermont. But federal data overstates it",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-13/ice-is-more-active-in-vermont-but-federal-data-overstates-it",
-      "ts": "2026-10-13T09:00:00+00:00",
-      "summary": "Immigration and Customs Enforcement data points to a dramatic spike in arrests so far this year. But ICE didn't make many of those arrests, a Vermont Public analysis found."
-     },
-     {
-      "id": "https://www.vermontpublic.org/local-news/2026-10-12/pro-phil-scott-super-pac-launches-ad-blitz-targeting-amanda-janoo",
-      "title": "Pro-Phil Scott super PAC launches ad blitz targeting Amanda Janoo",
-      "link": "https://www.vermontpublic.org/local-news/2026-10-12/pro-phil-scott-super-pac-launches-ad-blitz-targeting-amanda-janoo",
-      "ts": "2026-10-12T21:38:14+00:00",
-      "summary": "The ad buys follow recent polls that show Scott facing the toughest reelection bid of his gubernatorial career. And Vermont Democrats say the arrival of outside money signals growing fear among Republicans that the five-term incumbent is in electoral danger."
      }
     ]
    },
    "wcax": {
     "items": [
+     {
+      "id": "2DXPPFPIRNA4FMOUMQEVEPA5BM",
+      "title": "Rutland healthcare union to rally for a new contract",
+      "link": "https://www.wcax.com/2026/10/16/rutland-healthcare-union-rally-new-contract/",
+      "ts": "2026-10-16T11:37:38+00:00",
+      "summary": "More than 100 union members, leaders and community members are expected to rally in support of Rutland Healthcare Workers United on Saturday."
+     },
+     {
+      "id": "ZJJK2XSBPRDMVJARNWOTZWLJKQ",
+      "title": "One month in, Vermont’s diverging diamond traffic pattern receives positive reviews",
+      "link": "https://www.wcax.com/2026/10/16/one-month-vermonts-diverging-diamond-traffic-pattern-receives-positive-reviews/",
+      "ts": "2026-10-16T11:20:53+00:00",
+      "summary": "Vermont’s first diverging diamond traffic pattern has been open since Sept. 17 but traffic cones and construction vehicles remain on the scene, and according to the Vermont Agency of Transportation, that was always the plan."
+     },
+     {
+      "id": "ELASXET5K5DODD6M2QZ7ATQTTA",
+      "title": "Court finds former Vermont therapist committed Medicaid fraud",
+      "link": "https://www.wcax.com/2026/10/16/court-finds-former-vermont-therapist-committed-medicaid-fraud/",
+      "ts": "2026-10-16T10:51:04+00:00",
+      "summary": "A former Vermont psychotherapist is facing felony charges for Medicaid fraud."
+     },
+     {
+      "id": "NYTH4BNHHJDPDBMISIGMNQZ2XY",
+      "title": "Animal cruelty charges for Vermont man who killed a family dog, police say",
+      "link": "https://www.wcax.com/2026/10/16/animal-cruelty-charges-vermont-man-who-killed-family-dog-police-say/",
+      "ts": "2026-10-16T10:39:23+00:00",
+      "summary": "Investigators said Christopher Covey, 43, intentionally and maliciously tormented a dog that led to the animal’s death during a family fight."
+     },
      {
       "id": "DJ2W5J3QBFC2DC3VCNIN3V2SNU",
       "title": "Millions in funding announced to rebuild Barre’s North End",
@@ -1257,39 +1295,81 @@
       "link": "https://www.wcax.com/2026/10/13/rutland-county-states-attorneys-office-temporarily-moves-courthouse/",
       "ts": "2026-10-13T23:50:48+00:00",
       "summary": "Asbestos was discovered in the Asa Bloomer Building last month, forcing the office to move until remediation work is complete."
-     },
-     {
-      "id": "JQLWDHY2CVFHPOC4Y6TOJ2QBMI",
-      "title": "Record rainfall soaks parts of northern New York and Vermont Tuesday",
-      "link": "https://www.wcax.com/2026/10/13/record-rainfall-soaks-parts-northern-new-york-vermont-tuesday/",
-      "ts": "2026-10-13T22:42:12+00:00",
-      "summary": "While recent memory reminds us that October can bring crisp dry fall days, Tuesday deviated with widespread steady rain across northern New York and Vermont. Rainfall was not just soggy — it was record-breaking in a few spots. And those totals only reflect what has fallen through 6 p.m."
-     },
-     {
-      "id": "H2AXOK6S6FGHNKGT43OIKXSGPA",
-      "title": "Vermont replaces decades-old unemployment computer system",
-      "link": "https://www.wcax.com/2026/10/13/vermont-replaces-decades-old-unemployment-computer-system/",
-      "ts": "2026-10-13T22:19:59+00:00",
-      "summary": "Vermont’s Department of Labor has launched a new online unemployment system, replacing the decades-old mainframe that failed during the pandemic surge."
-     },
-     {
-      "id": "DG6FTBOULZFBPBFJMR5VXNBTGQ",
-      "title": "Vermont Ethics Commission resumes guidance for towns and cities",
-      "link": "https://www.wcax.com/2026/10/13/vermont-ethics-commission-resumes-guidance-towns-cities/",
-      "ts": "2026-10-13T21:44:56+00:00",
-      "summary": "The independent commission suspended advice on ethical conduct, conflicts of interest, and financial disclosures after being swamped with requests."
-     },
-     {
-      "id": "VAL44MTWHZD27E5BR4J4TWZ4HM",
-      "title": "Woman accused of wrong-way I-89 crash that totaled cruiser pleads not guilty",
-      "link": "https://www.wcax.com/2026/10/13/woman-accused-wrong-way-i-89-crash-that-totaled-cruiser-pleads-not-guilty/",
-      "ts": "2026-10-13T21:38:15+00:00",
-      "summary": "A woman accused of driving the wrong way on Interstate 89 and crashing into a police cruiser pleaded not guilty to charges including DUI and eluding law enforcement."
      }
     ]
    },
    "mynbc5": {
     "items": [
+     {
+      "id": "74156367",
+      "title": "Can movies return to Rutland? A new coalition hopes to prove there's a market for a modern theater",
+      "link": "https://www.mynbc5.com/article/rutland-movie-theater-return/74156367",
+      "ts": "2026-10-16T12:04:00+00:00",
+      "summary": "Rutland has not had a modern movie theater since the COVID-19 pandemic. Now, there's a community-led effort to prove there's still a market for moviegoers."
+     },
+     {
+      "id": "74156776",
+      "title": "Tesla unveils what it says is a flying car",
+      "link": "https://www.mynbc5.com/article/tesla-roadster-flying-car-elon-musk-demo/74156776",
+      "ts": "2026-10-16T11:37:00+00:00",
+      "summary": "Elon Musk has unveiled Tesla’s new Roadster, a two-person sports car that he says can fly. See video of the demonstration."
+     },
+     {
+      "id": "74154366",
+      "title": "President Trump ramps up campaign efforts with 18 days left until the midterms",
+      "link": "https://www.mynbc5.com/article/president-trump-campaign-18-days-until-midterms/74154366",
+      "ts": "2026-10-16T11:11:00+00:00",
+      "summary": "President Donald Trump is intensifying his campaign schedule with rallies in multiple states as the midterm elections approach, amid challenging poll numbers."
+     },
+     {
+      "id": "74154002",
+      "title": "Vermont man cited for allegedly killing family dog, police say",
+      "link": "https://www.mynbc5.com/article/man-torments-kills-family-dog-vermont/74154002",
+      "ts": "2026-10-16T10:45:00+00:00",
+      "summary": "Vermont State Police have cited a man from Williamstown after he allegedly tortured a family dog, leading to its death."
+     },
+     {
+      "id": "74156219",
+      "title": "Elon Musk settles fraud lawsuits over his $1 million giveaways to 2024 election voters",
+      "link": "https://www.mynbc5.com/article/elon-musk-settles-voter-giveaway-lawsuits/74156219",
+      "ts": "2026-10-16T10:45:00+00:00",
+      "summary": "Elon Musk settled the two remaining lawsuits stemming from his $1 million giveaways to voters during the 2024 election, according to court filings."
+     },
+     {
+      "id": "74155675",
+      "title": "New England Maple Museum listed for sale in Rutland County",
+      "link": "https://www.mynbc5.com/article/new-england-maple-museum-for-sale-pittsford-vt/74155675",
+      "ts": "2026-10-16T10:41:00+00:00",
+      "summary": "The New England Maple Museum, located along Route 7, once claimed to hold the largest display of antique maple sugaring artifacts. Now, the building and the business are up for sale."
+     },
+     {
+      "id": "74155569",
+      "title": "College football player dies days after being critically injured during game",
+      "link": "https://www.mynbc5.com/article/southern-nazarene-football-player-tyler-ulrich-dies-game-injury/74155569",
+      "ts": "2026-10-16T09:55:00+00:00",
+      "summary": "Southern Nazarene University football player Tyler Ulrich has died after he sustained an injury during a game last weekend."
+     },
+     {
+      "id": "74154595",
+      "title": "Williston opens park with traffic simulations to practice bike safety",
+      "link": "https://www.mynbc5.com/article/williston-bike-road-safety-practice-park/74154595",
+      "ts": "2026-10-16T09:38:00+00:00",
+      "summary": "A new bike garden in Williston's Village Community Park is providing a safe space to practice road safety."
+     },
+     {
+      "id": "74155292",
+      "title": "Troy Jackson tells Susan Collins to 'shut up' during heated Maine Senate debate",
+      "link": "https://www.mynbc5.com/article/troy-jackson-susan-collins-maine-senate-debate/74155292",
+      "ts": "2026-10-16T09:24:00+00:00",
+      "summary": "Democratic Senate candidate Troy Jackson told Republican Sen. Susan Collins to “shut up” during a heated final Maine U.S. Senate debate."
+     },
+     {
+      "id": "74150171",
+      "title": "Police: Teen shooter kills 4 at Oregon elementary school before being fatally shot by a witness",
+      "link": "https://www.mynbc5.com/article/silver-rail-elementary-school-bend-oregon-report-active-shooter/74150171",
+      "ts": "2026-10-16T08:32:00+00:00",
+      "summary": "Three children and a teacher were killed in a shooting at Silver Rail Elementary in Bend, Oregon. A 16-year-old suspect also died, police said."
+     },
      {
       "id": "74153078",
       "title": "Jake Bauers was ready to retire. Now, he's the 2026 NLCS MVP",
@@ -1310,13 +1390,6 @@
       "link": "https://www.mynbc5.com/article/cyberattack-disrupts-european-supermarkets/74152907",
       "ts": "2026-10-16T05:05:00+00:00",
       "summary": "A cyberattack over the weekend disrupted refrigeration systems in hundreds of European supermarkets."
-     },
-     {
-      "id": "74150171",
-      "title": "Police: Teen shooter kills 4 at Oregon elementary school before being fatally shot by a witness",
-      "link": "https://www.mynbc5.com/article/silver-rail-elementary-school-bend-oregon-report-active-shooter/74150171",
-      "ts": "2026-10-16T04:58:00+00:00",
-      "summary": "Three children and a teacher were killed in a shooting at Silver Rail Elementary in Bend, Oregon. A 16-year-old suspect also died, police said."
      },
      {
       "id": "74152002",
@@ -1366,69 +1439,6 @@
       "link": "https://www.mynbc5.com/article/plattsburgh-council-tables-proposed-moratorium-on-high-energy-facilities/74151404",
       "ts": "2026-10-16T00:02:00+00:00",
       "summary": "Plattsburgh’s Common Council tabled a proposal Thursday night for a six-month pause on new high-energy computing facilities and certain expansions as the city reviews its zoning rules."
-     },
-     {
-      "id": "74149383",
-      "title": "Saranac Lake hardware store reopens after devastating fire",
-      "link": "https://www.mynbc5.com/article/saranac-lake-hardware-store-reopens/74149383",
-      "ts": "2026-10-15T23:54:00+00:00",
-      "summary": "Aubuchon Hardware in Saranac Lake is hosting a grand reopening celebration this weekend after a fire in January 2023 caused a total loss of its building."
-     },
-     {
-      "id": "74149432",
-      "title": "Town of Plattsburgh prepares for winter weather",
-      "link": "https://www.mynbc5.com/article/town-of-plattsburgh-winter-weather-preps/74149432",
-      "ts": "2026-10-15T23:53:00+00:00",
-      "summary": "The town of Plattsburgh is readying its highway department for winter, with trucks harnessed and equipment calibrated ahead of potential snow."
-     },
-     {
-      "id": "74150592",
-      "title": "New documentary 'The Eyes of Ghana' produced by the Obamas and streamer IShowSpeed",
-      "link": "https://www.mynbc5.com/article/new-documentary-the-eyes-of-ghana-shows-the-rise-and-fall-of-an-african-leader-barack-michelle-obama-ishowspeed/74150592",
-      "ts": "2026-10-15T23:28:00+00:00",
-      "summary": "A new documentary about the rise and fall of an African leader is set to be released soon. The film is produced by Barack and Michelle Obama and the popular internet streamer IShowSpeed."
-     },
-     {
-      "id": "74151192",
-      "title": "State police investigate report of suspicious envelope in Essex County",
-      "link": "https://www.mynbc5.com/article/state-police-investigate-report-of-suspicious-envelope-in-essex-county/74151192",
-      "ts": "2026-10-15T23:27:00+00:00",
-      "summary": "New York State Police say an envelope reported as suspicious at the Essex County Board of Elections was a mailed-in ballot and posed no threat."
-     },
-     {
-      "id": "74149922",
-      "title": "Vermont brings voting booths behind bars to help inmates cast ballots",
-      "link": "https://www.mynbc5.com/article/vermont-prison-inmates-vote/74149922",
-      "ts": "2026-10-15T23:18:00+00:00",
-      "summary": "Vermont is one of just two states allowing inmates to vote while serving felony sentences. Here's how officials are making it easier."
-     },
-     {
-      "id": "74151018",
-      "title": "Candidates for Vermont governor react to independent spending on the race",
-      "link": "https://www.mynbc5.com/article/candidates-for-vt-governor-react-to-independent-spending-on-the-race/74151018",
-      "ts": "2026-10-15T23:17:00+00:00",
-      "summary": "Outside spending is now in the race for Vermont governor. See what the candidates are saying about it."
-     },
-     {
-      "id": "74140185",
-      "title": "NFL Week 6 schedule, predictions and more",
-      "link": "https://www.mynbc5.com/article/nfl-week-6-schedule-predictions-and-more/74140185",
-      "ts": "2026-10-15T22:56:00+00:00",
-      "summary": "The first tie of the 2026 NFL season came last week. Could another come in Week 6?"
-     },
-     {
-      "id": "74149186",
-      "title": "Search warrant offers new details after a woman killed her son and husband at a Pennsylvania resort",
-      "link": "https://www.mynbc5.com/article/great-wolf-lodge-killings-search-warrant-details/74149186",
-      "ts": "2026-10-15T22:49:00+00:00",
-      "summary": "Great Wolf Lodge killings: A newly released search warrant reveals what police found in the family home and what other family members told investigators about the woman who allegedly killed her young son and her husband."
-     },
-     {
-      "id": "74149783",
-      "title": "UVM Prank goes viral after campus president wakes up student",
-      "link": "https://www.mynbc5.com/article/uvm-president-wake-up-prank/74149783",
-      "ts": "2026-10-15T22:33:00+00:00",
-      "summary": "University of Vermont president Marlene Tromp surprised a student with a wake-up call for class, a prank that has gone viral with over 400,000 views."
      }
     ]
    },
@@ -1511,6 +1521,110 @@
  "reddit-burlington": {
   "posts": [
    {
+    "id": "1x79ung",
+    "title": "Repair Cafe Saturday!",
+    "url": "https://www.reddit.com/r/burlington/comments/1x79ung/repair_cafe_saturday/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x73728",
+    "title": "Halloween in burly",
+    "url": "https://www.reddit.com/r/burlington/comments/1x73728/halloween_in_burly/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6zz6z",
+    "title": "What charity is leaving food?",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6zz6z/what_charity_is_leaving_food/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6zypv",
+    "title": "95.5",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6zypv/955/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6y1m5",
+    "title": "Queer/Trans friendly nail salon?",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6y1m5/queertrans_friendly_nail_salon/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6qqd7",
+    "title": "Nectars to return?",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6qqd7/nectars_to_return/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6qd60",
+    "title": "Burlington ABA Basketball Team",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6qd60/burlington_aba_basketball_team/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6oarv",
+    "title": "Curry and Cocktails",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6oarv/curry_and_cocktails/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6nov7",
+    "title": "Sci-fi author Annalee Newitz at Phoenix Books tonight!",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6nov7/scifi_author_annalee_newitz_at_phoenix_books/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6nd1y",
+    "title": "Places that are hiring but that aren’t on Indeed?",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6nd1y/places_that_are_hiring_but_that_arent_on_indeed/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6lt7s",
+    "title": "What's the deal with Irene Wrenner? (Chittenden North Senate race)",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6lt7s/whats_the_deal_with_irene_wrenner_chittenden/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6k3ea",
+    "title": "Donate to Support Lila Darjee's Children, organized by Jonathan Fisher",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6k3ea/donate_to_support_lila_darjees_children_organized/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
+    "id": "1x6jlzf",
+    "title": "Monkey House (And Other Winooski Music Venues)",
+    "url": "https://www.reddit.com/r/burlington/comments/1x6jlzf/monkey_house_and_other_winooski_music_venues/",
+    "score": null,
+    "comments": null,
+    "created": "2026-10-16T08:07:06+00:00"
+   },
+   {
     "id": "1x68l8d",
     "title": "Dude on TikTok harassing local businesses",
     "url": "https://www.reddit.com/r/burlington/comments/1x68l8d/dude_on_tiktok_harassing_local_businesses/",
@@ -1565,110 +1679,6 @@
     "score": null,
     "comments": null,
     "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x61p7e",
-    "title": "Sing with The Green Mountain Chorus for the Holiday's.",
-    "url": "https://www.reddit.com/r/burlington/comments/1x61p7e/sing_with_the_green_mountain_chorus_for_the/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x61gdx",
-    "title": "Recommendations for new snatch gardener",
-    "url": "https://www.reddit.com/r/burlington/comments/1x61gdx/recommendations_for_new_snatch_gardener/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x612u6",
-    "title": "Gossip",
-    "url": "https://www.reddit.com/r/burlington/comments/1x612u6/gossip/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x60zvz",
-    "title": "Blowing up balloons?",
-    "url": "https://www.reddit.com/r/burlington/comments/1x60zvz/blowing_up_balloons/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x608o3",
-    "title": "Recommendation for Co-Work/Work Locations for Visitors",
-    "url": "https://www.reddit.com/r/burlington/comments/1x608o3/recommendation_for_coworkwork_locations_for/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x5zm1x",
-    "title": "White Audi at exit 14",
-    "url": "https://www.reddit.com/r/burlington/comments/1x5zm1x/white_audi_at_exit_14/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x5yf8y",
-    "title": "Speaking on I89 (tire troughs / ruts, hydroplaning, black ice)",
-    "url": "https://www.reddit.com/r/burlington/comments/1x5yf8y/speaking_on_i89_tire_troughs_ruts_hydroplaning/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x5y3tr",
-    "title": "Sushi recs",
-    "url": "https://www.reddit.com/r/burlington/comments/1x5y3tr/sushi_recs/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x5xbsa",
-    "title": "Teach Or Request New Workshops At Generator: Burlington's Favorite Creative Space!",
-    "url": "https://www.reddit.com/r/burlington/comments/1x5xbsa/teach_or_request_new_workshops_at_generator/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T23:10:54+00:00"
-   },
-   {
-    "id": "1x5r16l",
-    "title": "Trusted Car Mechanics",
-    "url": "https://www.reddit.com/r/burlington/comments/1x5r16l/trusted_car_mechanics/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T14:13:33+00:00"
-   },
-   {
-    "id": "1x5q409",
-    "title": "I’m done being pissed - how tf do we solve this i89 winooski bridge issue?",
-    "url": "https://www.reddit.com/r/burlington/comments/1x5q409/im_done_being_pissed_how_tf_do_we_solve_this_i89/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T14:13:33+00:00"
-   },
-   {
-    "id": "1x5pvvq",
-    "title": "Accident on 89S",
-    "url": "https://www.reddit.com/r/burlington/comments/1x5pvvq/accident_on_89s/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T14:13:33+00:00"
-   },
-   {
-    "id": "1x5e0qb",
-    "title": "I was in Always Full Market today…",
-    "url": "https://www.reddit.com/r/burlington/comments/1x5e0qb/i_was_in_always_full_market_today/",
-    "score": null,
-    "comments": null,
-    "created": "2026-10-14T02:15:17+00:00"
    }
   ]
  },
