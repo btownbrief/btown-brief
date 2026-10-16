@@ -548,6 +548,7 @@ def write_script(stories, engine, date, which, ask=None):
             if quoted and all(quoted) and not p["invented"] and not p["list"]:
                 cut = cut_sentences(paragraphs, quoted)
                 q = problems_of(cut, teaser, stories, date, which)
+                q["cut"] = len(quoted)
                 if cut and not q["invented"]:
                     drafts.append((cut, teaser, q))
                     notes.append(f"draft {k}: cut {len(quoted)} sentence(s) the fact check could not support")
@@ -557,7 +558,8 @@ def write_script(stories, engine, date, which, ask=None):
                      "no clip today rather than a wrong one")
         return None, "", usage, notes
     off = lambda d: max(SHORT_OK - d[2]["words"], d[2]["words"] - WORDS_MAX, 0)  # noqa: E731
-    paragraphs, teaser, p = min(honest, key=lambda d: (off(d), len(d[2]["copied"])))
+    # nearest the length, then fewest copied headlines, then a draft nothing was cut from
+    paragraphs, teaser, p = min(honest, key=lambda d: (off(d), len(d[2]["copied"]), d[2].get("cut", 0)))
     if not clean(p, soft=True):
         notes.append(f"the nearest draft is {p['words']} words: no clip today")
         return None, "", usage, notes
@@ -568,15 +570,24 @@ def write_script(stories, engine, date, which, ask=None):
     return assemble(date, which, paragraphs), teaser, usage, notes
 
 
+TURN_WORDS = 7   # a paragraph this short after a cut is a turn left introducing nothing
+
+
 def cut_sentences(paragraphs, sentences):
+    """Take the quoted sentences out. A paragraph the cut leaves as a bare
+    turn ("Some business news now.", the first end-to-end run, whose
+    DandyLion sentence had been cut) goes with them."""
     out = []
     for para in paragraphs:
         flat = re.sub(r"\s+", " ", para)
         for sentence in sentences:
             flat = flat.replace(sentence, "")
         flat = re.sub(r"\s{2,}", " ", flat).strip()
-        if re.search(r"[A-Za-z]", flat):
-            out.append(flat)
+        if not re.search(r"[A-Za-z]", flat):
+            continue
+        if flat != re.sub(r"\s+", " ", para).strip() and word_count(flat) < TURN_WORDS:
+            continue
+        out.append(flat)
     return out
 
 

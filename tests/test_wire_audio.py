@@ -180,6 +180,20 @@ class Writer(unittest.TestCase):
         self.assertIn("Vox looks at how", script)
         self.assertTrue(any("cut 1 sentence" in n for n in notes), notes)
 
+    def test_a_cut_never_leaves_a_turn_introducing_nothing(self):
+        # the first end-to-end run in Actions: the DandyLion sentence was cut and
+        # "Some business news now." was left standing on its own
+        dandy = "DandyLion is branching out, and it is adding furniture to what it sells."
+        draft = GOOD[:3] + ["Some business news now. " + dandy] + GOOD[4:]
+        flag = {"unsupported": [{"sentence": dandy, "problem": "implies selling"}]}
+        ask, _ = fake_answers({"paragraphs": draft, "teaser": "x"}, checks=(flag,) * wa.DRAFTS)
+        script, *_ = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertIsNotNone(script)
+        self.assertNotIn("Some business news now", script)
+        self.assertNotIn("DandyLion", script)
+        self.assertIn("And The Frequency looks at the removal of a historic dam.", script)   # a short story stays
+        self.assertEqual(wa.cut_sentences(["And The Frequency looks at a dam."], []), ["And The Frequency looks at a dam."])
+
     def test_a_gendered_pronoun_no_source_gives_is_invented(self):
         she = ["Janoo again leads Governor Scott in fundraising, and she has the money."] + GOOD[2:]
         p = wa.problems_of(she, "", self.stories, "2026-10-16", "today")
