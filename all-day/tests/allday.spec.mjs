@@ -459,6 +459,11 @@ async function matrix(browser, base) {
         check(!(await page.$('script[src*="nav.js"], .btnav')), 'the network bar is gone', '');
         const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
         check(bg === PAPER[combo.scheme], 'body is the ' + combo.scheme + ' paper', bg);
+        const statusBar = await page.evaluate(() => ({
+          meta: document.querySelector('meta[name="theme-color"]').content,
+          lake: getComputedStyle(document.documentElement).getPropertyValue('--lake').trim()
+        }));
+        check(statusBar.meta === statusBar.lake, 'phone status bar matches the navy mast', JSON.stringify(statusBar));
         if (combo.viewport.width >= 900) {
           const rail = await page.evaluate(() => { const r = document.querySelector('#tabbar').getBoundingClientRect(); return { w: r.width, h: r.height }; });
           check(rail.w === 208 && rail.h > 600, 'the tab bar is a 208px left rail', JSON.stringify(rail));
