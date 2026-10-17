@@ -1,0 +1,46 @@
+name: Refresh Burlington Wild
+
+# Keeps data/wild.json fresh for wild.html: iNaturalist counts for Burlington
+# (no key) and, once EBIRD_API_KEY exists as a repo secret, eBird's notable
+# sightings + top-100 for Chittenden County. Same contract as refresh-data.yml:
+# the site stays static, a failed fetch keeps the last good section, and
+# nothing broken is committed. iNaturalist asks for ~1 request/second and a
+# custom User-Agent; the script does both (about 14 requests per run).
+
+on:
+  schedule:
+    - cron: '20 */6 * * *'      # every 6 hours at :20 (offset from the other refreshers)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-wild
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Refresh wild.json
+        # EBIRD_API_KEY is optional: without it the bird sections stay in
+        # their "switched off" state and the page links to eBird's own pages.
+        env:
+          EBIRD_API_KEY: ${{ secrets.EBIRD_API_KEY }}
+        run: python3 scripts/refresh_wild.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/wild.json
+          if git diff --cached --quiet; then
+            echo "No wild changes."
+          else
+            git commit -m "Auto-refresh Burlington Wild"
+            git push || (git pull --rebase && git push)
+          fi

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burlington Wild — what Burlington found — Burlington Brief</title>
+  <meta name="description" content="The counting Burlington already does on iNaturalist and eBird, read in one place: who found what this month, the species, the unusual ones, and how to be on the page by Sunday.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Burlington Brief">
+  <meta property="og:title" content="Burlington Wild">
+  <meta property="og:description" content="What Burlington found this month, pulled from iNaturalist and eBird every six hours.">
+  <meta property="og:url" content="https://guide.btownbrief.com/wild.html">
+  <meta property="og:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Burlington Wild">
+  <meta name="twitter:description" content="What Burlington found this month, pulled from iNaturalist and eBird every six hours.">
+  <meta name="twitter:image" content="https://guide.btownbrief.com/assets/og/og-guide.jpg">
+
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="City Guide">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260904a">
+  <link rel="stylesheet" href="css/wild.css?v=20260906a">
+  <script>
+    /* Theme before first paint, from the cached sunrise/sunset. js/auto-theme.js
+       refreshes the cache; this only avoids the white flash after dark. */
+    (function () {
+      try {
+        var c = JSON.parse(localStorage.getItem('btown-sun') || 'null');
+        if (!c) return;
+        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York',
+          year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+        if (c.day !== today) return;
+        var n = Date.now();
+        document.documentElement.setAttribute('data-theme',
+          (n >= c.rise && n < c.set) ? 'light' : 'dark');
+      } catch (e) {}
+    })();
+  </script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2471867016612559');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2471867016612559&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel -->
+<!-- GoatCounter -->
+<script data-goatcounter="https://btown-brief.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body data-standalone>
+
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle light / dark">
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <span class="logo-sep"></span>
+        <span class="logo-title">Burlington Brief</span>
+      </div>
+      <nav class="mode-nav" aria-label="Community pages">
+        <a class="mode-btn" href="things-to-do.html">Things To Do</a>
+        <a class="mode-btn" href="clubs.html">Clubs</a>
+        <a class="mode-btn" href="volunteer.html">Volunteer</a>
+        <a class="mode-btn" href="projects.html">Projects</a>
+      </nav>
+    </div>
+  </header>
+
+  <a class="newsletter-bar" href="https://btownbrief.com?utm_source=guide&utm_medium=referral&utm_campaign=site_capture" target="_blank" rel="noopener">
+    <div class="newsletter-bar-inner">
+      <div class="newsletter-head">
+        <span class="newsletter-label">The Burlington Brief</span>
+        <span class="newsletter-issue">Free Burlington news &amp; events in your inbox</span>
+      </div>
+      <span class="newsletter-cta">Sign up free →</span>
+    </div>
+  </a>
+
+  
+  <main class="page-wrap wild">
+    <div class="page-hero">
+      <span class="page-hero-kicker">Burlington counts</span>
+      <h1>What Burlington found</h1>
+      <p class="page-hero-sub">Every year a few hundred people in this city photograph a plant, log a bird, or stop on the bike path to look at a mushroom. Nobody adds it up. This page does, straight from <a href="https://www.inaturalist.org/observations?place_id=50939" target="_blank" rel="noopener">iNaturalist</a> and <a href="https://ebird.org/region/US-VT-007" target="_blank" rel="noopener">eBird</a>, refreshed every six hours.</p>
+      <p class="wild-updated" id="wild-updated"></p>
+    </div>
+
+    <div class="wild-counts" id="wild-counts" aria-live="polite">
+      <div class="wild-count"><b>…</b><span>observations this month</span></div>
+      <div class="wild-count"><b>…</b><span>species this month</span></div>
+      <div class="wild-count"><b>…</b><span>people counting this month</span></div>
+      <div class="wild-count"><b>…</b><span>observations this year</span></div>
+    </div>
+
+    <section class="wild-section" id="roll">
+      <h2>The roll of honour</h2>
+      <p class="wild-sub">Burlington's most prolific observers, by species recorded. These are public counts on public profiles. We are the ones putting them next to each other.</p>
+      <div class="wild-tabs" role="tablist" aria-label="Time span">
+        <button class="wild-tab" role="tab" aria-selected="true" data-span="month">This month</button>
+        <button class="wild-tab" role="tab" aria-selected="false" data-span="year">This year</button>
+      </div>
+      <div class="wild-boards">
+        <div class="wild-board">
+          <div class="wild-board-head"><h3>Plants, bugs, everything else</h3><span class="wild-src">via <a href="https://www.inaturalist.org/observations?place_id=50939" target="_blank" rel="noopener">iNaturalist</a></span></div>
+          <ol class="wild-roll" id="roll-inat"><li class="wild-empty">Loading…</li></ol>
+        </div>
+        <div class="wild-board">
+          <div class="wild-board-head"><h3>Birds</h3><span class="wild-src">via <a href="https://ebird.org/region/US-VT-007/top100" target="_blank" rel="noopener">eBird</a>, Chittenden County</span></div>
+          <ol class="wild-roll" id="roll-ebird"><li class="wild-empty">Loading…</li></ol>
+        </div>
+      </div>
+      <div class="wild-species" id="species-wrap">
+        <h3>Most recorded this month</h3>
+        <ul class="wild-chips" id="species-chips"></ul>
+      </div>
+    </section>
+
+    <section class="wild-section" id="seen">
+      <h2>Seen lately</h2>
+      <p class="wild-sub">Research-grade observations from the last month with a photo the observer chose to share under a Creative Commons license. Every card links to the observation and the person who made it.</p>
+      <div class="wild-seen" id="seen-grid"><p class="wild-empty">Loading…</p></div>
+    </section>
+
+    <section class="wild-section" id="rare">
+      <h2>The unusual ones</h2>
+      <p class="wild-sub">Species iNaturalist flags as threatened, recorded in the city this month, plus eBird's notable sightings for the county once that feed is switched on. This is the list that feeds the Brief.</p>
+      <div class="wild-rare" id="rare-list"><p class="wild-empty">Loading…</p></div>
+      <div class="wild-ebird-off" id="ebird-notable"></div>
+    </section>
+
+    <section class="wild-section wild-vs" id="vs">
+      <h2>Burlington vs <span id="vs-name">the neighbors</span></h2>
+      <p class="wild-sub">A friendly comparison, species recorded on iNaturalist this month. Nothing is at stake except bragging rights on the bike path.</p>
+      <div class="wild-vs-bars" id="vs-bars"></div>
+    </section>
+
+    <section class="wild-section wild-join" id="join">
+      <h2>You can be on this page by Sunday</h2>
+      <p>Photograph the weed growing out of a crack on Pine Street and it counts. That is the whole barrier to entry. Both apps are free.</p>
+      <div class="wild-join-cols">
+        <div>
+          <h3>Plants, bugs, mushrooms, mammals</h3>
+          <ol>
+            <li>Get iNaturalist (<a href="https://apps.apple.com/us/app/inaturalist/id421397028" target="_blank" rel="noopener">iPhone</a>, <a href="https://play.google.com/store/apps/details?id=org.inaturalist.android" target="_blank" rel="noopener">Android</a>) and make an account.</li>
+            <li>Photograph anything wild inside Burlington. The app suggests what it is; the community confirms.</li>
+            <li>That is it. Anything observed inside the city limits lands in <a href="https://www.inaturalist.org/projects/biodiversity-of-burlington-vermont" target="_blank" rel="noopener">Biodiversity of Burlington, Vermont</a> automatically, and in these counts within six hours.</li>
+            <li>Want it to count for the state too? Join the <a href="https://www.inaturalist.org/projects/vermont-atlas-of-life" target="_blank" rel="noopener">Vermont Atlas of Life</a> project.</li>
+          </ol>
+        </div>
+        <div>
+          <h3>Birds</h3>
+          <ol>
+            <li>Get <a href="https://ebird.org/home" target="_blank" rel="noopener">eBird</a> (free, from the Cornell Lab) and make an account.</li>
+            <li>Start a checklist at a Burlington hotspot: <a href="https://ebird.org/hotspots?env.minX=-73.29&env.minY=44.44&env.maxX=-73.16&env.maxY=44.52" target="_blank" rel="noopener">the hotspot map for the city</a>, or just where you are.</li>
+            <li>Submit it. Your name goes on <a href="https://ebird.org/region/US-VT-007/top100" target="_blank" rel="noopener">eBird's own Chittenden County top 100</a> and, once the feed here is on, this page.</li>
+          </ol>
+        </div>
+      </div>
+      <p class="wild-tentpole">Next big one: the <a href="https://citynaturechallenge.org" target="_blank" rel="noopener">City Nature Challenge</a>, April 30 to May 3, 2027. We would like Burlington to show up properly.</p>
+    </section>
+
+    <section class="wild-section wild-brief" id="brief">
+      <h2>This week in Burlington's wild</h2>
+      <p class="wild-sub">The newsletter block, built from the same data. Copy it into a Wednesday edition.</p>
+      <div class="wild-brief-block" id="brief-block"></div>
+      <button class="wild-copy" id="brief-copy" type="button">Copy the block</button>
+      <span class="wild-copy-note" id="brief-copied" hidden>Copied.</span>
+    </section>
+
+    <div class="note-card wild-credit" id="wild-credit">
+      <strong>Where this comes from.</strong> Counts and observations from <a href="https://www.inaturalist.org" target="_blank" rel="noopener">iNaturalist</a> (a 501(c)(3) nonprofit) and from <a href="https://ebird.org" target="_blank" rel="noopener">eBird</a>, Cornell Lab of Ornithology. Observations belong to the people who made them and are shown under the licenses they chose; names link to their public profiles. Nothing here is used to train anything. Refreshed every six hours by a script that makes about fourteen polite requests.
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>A <a href="https://www.btownbrief.com" target="_blank" rel="noopener">Burlington Brief</a> project</span>
+      <span class="footer-sep">·</span>
+      <span>Burlington, Vermont</span>
+    </div>
+  </footer>
+
+  <script src="js/community.js"></script>
+  <script src="js/wild.js?v=20260906a"></script>
+  <script src="js/auto-theme.js"></script>
+  <script src="https://play.btownbrief.com/nav.js" defer></script>
+</body>
+</html>
