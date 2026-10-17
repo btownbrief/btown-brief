@@ -1,5 +1,5 @@
-/* boards-fake.js — an in-memory copy of supabase/nn-SETUP.sql, for ?demo=1
-   and for scripts/test-boards-core.mjs.
+/* boards-fake.js — an in-memory copy of supabase/nn-SETUP.sql with
+   nn-ROUND2.sql over it, for ?demo=1 and for scripts/test-boards-core.mjs.
 
    Same function names, same arguments, same answers, same refusal codes, in
    the same order of checks, built on the same rules (boards-core.js). It
@@ -10,9 +10,12 @@
    The photo queue (btb_photos, photo-admin.html) is mirrored as a map of
    storage path to { status, board, at }: board says the photo was filed from
    an All Day board (spot "All Day · …"), at is when it arrived. addPhoto()
-   and setPhoto() stand in for a reader uploading and Stephen approving. */
+   and setPhoto() stand in for a reader uploading and Stephen approving.
+   The bucket's picture files are a map of path to upload time (addFile);
+   a photo-queue row needs no file here, but a stray file is one with no
+   row and no post (nn_mod_photo_sweep). */
 
-import { RULES, checkProfile, checkPost, expiresAt, startsPending, photoRequired, rateError, voterFor } from './boards-core.js';
+import { RULES, checkProfile, checkPost, mergeMeta, expiresAt, startsPending, photoRequired, oneVote, rateError, voterFor, isoWeek, lastWeeks } from './boards-core.js';
 
 const fail = (code) => { const e = new Error(code); e.code = code; return e; };
 const DAY = 86400000;
@@ -25,13 +28,15 @@ export class FakeBoards {
     this.rules = rules || RULES;
     this.modSecret = modSecret || null;   // null: the passphrase line has not been run
     this.uid = null;
-    this.profiles = new Map();   // uid -> { display_name, neighborhood, archetype }
+    this.profiles = new Map();   // uid -> { display_name, neighborhood, archetype, interests }
     this.posts = [];             // rows, as nn_posts holds them
     this.votes = new Set();      // `${postId}|${voter}`
+    this.voteAt = new Map();     // the same key -> when it was cast; a vote seeded without one counts from its post's time
     this.reports = [];           // { post_id, reporter, reason, at }
     this.bans = new Map();       // uid -> at
     this.missions = new Map();   // uid -> Set of keys
     this.photos = new Map();     // storage path -> { status: 'pending' | 'approved' | 'rejected' | 'removed', board, at }
+    this.files = new Map();      // the bucket: storage path -> when it was uploaded
   }
 
   as(uid) { this.uid = uid || null; return this; }
@@ -40,6 +45,9 @@ export class FakeBoards {
     return path;
   }
   setPhoto(path, status) { const p = this.photos.get(path); if (p) p.status = status; }
+  addFile(path, at) { this.files.set(path, at == null ? this.now() : at); return path; }
+  /* the Storage API's remove, as the stray policies let a reader use it */
+  removeFiles(paths) { return (paths || []).filter((p) => this._stray(p) && this.files.delete(p)); }
 
   /* --------------------------------------------------------------- helpers */
   _t() { return this.now(); }
@@ -74,12 +82,28 @@ export class FakeBoards {
     const gone = new Set(this.posts.filter((p) => (p.expires_at != null && p.expires_at < t - L.expiredKeepDays * DAY) ||
       (p.status === 'deleted' && (p.decided_at || p.created_at) < t - L.deletedKeepDays * DAY)).map((p) => p.id));
     this._drop(gone);
+    this._photoSweep();
   }
   _drop(ids) {
     if (!ids.size) return;
     this.posts = this.posts.filter((p) => !ids.has(p.id));
-    for (const k of [...this.votes]) if (ids.has(k.split('|')[0])) this.votes.delete(k);
+    for (const k of [...this.votes]) if (ids.has(k.split('|')[0])) this._unvoteKey(k);
     this.reports = this.reports.filter((r) => !ids.has(r.post_id));
+  }
+  _unvoteKey(k) { this.votes.delete(k); this.voteAt.delete(k); }
+  /* nn_photo_orphan: a day-old file under submissions/ no queue row or post names */
+  _stray(path) {
+    const at = this.files.get(path);
+    return at != null && /^submissions\/[A-Za-z0-9-]+\.jpg$/.test(path) && at <= this._t() - DAY &&
+      !this.photos.has(path) && !this.posts.some((p) => p.photo_path === path);
+  }
+  /* nn_photo_sweep: board photos still waiting a day and an hour on, taken by no post */
+  _photoSweep() {
+    let n = 0;
+    for (const [path, ph] of this.photos) {
+      if (ph.status === 'pending' && ph.board && ph.at < this._t() - DAY - 3600000 && !this.posts.some((p) => p.photo_path === path)) { ph.status = 'removed'; n++; }
+    }
+    return n;
   }
   _photoRemove(path) { const p = path && this.photos.get(path); if (p && p.board) p.status = 'removed'; }
   _need() { if (!this.uid) throw fail('not_signed_in'); return this.uid; }
@@ -98,14 +122,18 @@ export class FakeBoards {
   nn_profile_get() {
     const u = this._need();
     const p = this.profiles.get(u);
-    return p ? { ...p } : null;
+    return p ? { ...p, interests: (p.interests || []).slice() } : null;
   }
-  nn_profile_set({ p_display_name, p_neighborhood = null, p_archetype = null }) {
+  /* Two calls in the SQL, one here: without p_interests (the round-one
+     call) the reader's interests stay as they are; a list replaces them. */
+  nn_profile_set({ p_display_name, p_neighborhood = null, p_archetype = null, p_interests }) {
     const u = this._need();
-    const r = checkProfile(this.rules, { display_name: p_display_name, neighborhood: p_neighborhood, archetype: p_archetype });
+    const r = checkProfile(this.rules, { display_name: p_display_name, neighborhood: p_neighborhood, archetype: p_archetype, interests: p_interests });
     if (!r.ok) throw fail(r.error);
-    this.profiles.set(u, r.profile);
-    return { ...r.profile };
+    const had = this.profiles.get(u);
+    const profile = { ...r.profile, interests: r.profile.interests || (had && had.interests ? had.interests.slice() : []) };
+    this.profiles.set(u, profile);
+    return { ...profile, interests: profile.interests.slice() };
   }
 
   /* ---------------------------------------------------------------- posts */
@@ -168,6 +196,18 @@ export class FakeBoards {
     return { deleted: true };
   }
 
+  nn_post_meta_set({ p_post, p_meta }) {
+    const u = this._need();
+    if (this.bans.has(u)) throw fail('banned');
+    const p = this.posts.find((x) => x.id === p_post && x.user_id === u && x.status !== 'deleted');
+    if (!p) throw fail('not_found');
+    const m = mergeMeta(this.rules, p.board, p.kind, p.meta, p_meta);
+    if (m.error) throw fail(m.error);
+    p.meta = m.meta;
+    if (startsPending(this.rules, p.board) && p.status === 'approved') p.status = 'pending';
+    return { ...this._json(p, 'u:' + u, u), status: p.status };
+  }
+
   nn_photo_abandon({ p_path }) {
     if (this._claimable(p_path) && !this.posts.some((p) => p.photo_path === p_path)) { this._photoRemove(p_path); return { removed: true }; }
     return { removed: false };
@@ -183,13 +223,40 @@ export class FakeBoards {
   }
   nn_vote({ p_post, p_player = null }) {
     const voter = this._votable(p_post, p_player);
-    this.votes.add(p_post + '|' + voter);
-    return { votes: this._count(p_post), voted: true };
+    const p = this._find(p_post);
+    const moved = [];
+    if (oneVote(this.rules, p.board, p.kind)) {
+      this.posts.filter((o) => o.id !== p.id && o.board === p.board && o.kind === p.kind && this._listable(o) && this.votes.has(o.id + '|' + voter))
+        .forEach((o) => { this._unvoteKey(o.id + '|' + voter); moved.push(o.id); });
+    }
+    const k = p_post + '|' + voter;
+    if (!this.votes.has(k)) { this.votes.add(k); this.voteAt.set(k, this._t()); }
+    return { votes: this._count(p_post), voted: true, moved };
   }
   nn_unvote({ p_post, p_player = null }) {
     const voter = this._votable(p_post, p_player);
-    this.votes.delete(p_post + '|' + voter);
+    this._unvoteKey(p_post + '|' + voter);
     return { votes: this._count(p_post), voted: false };
+  }
+  nn_votes_by_week({ p_board, p_weeks = 8 }) {
+    if (!this.rules.boards[p_board]) throw fail('bad_board');
+    const n = Math.min(Math.max(p_weeks == null ? 8 : p_weeks, 1), this.rules.limits.weeksMax);
+    const weeks = new Set(lastWeeks(this._t(), n));
+    const live = new Map(this.posts.filter((p) => p.board === p_board && this._listable(p)).map((p) => [p.id, p]));
+    const counts = new Map();
+    for (const k of this.votes) {
+      const id = k.split('|')[0];
+      const p = live.get(id);
+      if (!p) continue;
+      const at = this.voteAt.has(k) ? this.voteAt.get(k) : p.created_at;
+      if (at > this._t()) continue;
+      const week = isoWeek(at);
+      if (!weeks.has(week)) continue;
+      const key = id + '|' + week;
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+    return [...counts].map(([key, votes]) => { const [post, week] = key.split('|'); return { post, week, votes }; })
+      .sort((a, b) => (a.week < b.week ? 1 : a.week > b.week ? -1 : 0) || b.votes - a.votes || (a.post < b.post ? -1 : a.post > b.post ? 1 : 0));
   }
 
   /* -------------------------------------------------------------- reports */
@@ -215,7 +282,7 @@ export class FakeBoards {
     const mine = this.posts.filter((p) => p.user_id === u);
     mine.forEach((p) => this._photoRemove(p.photo_path));
     this._drop(new Set(mine.map((p) => p.id)));
-    for (const k of [...this.votes]) if (k.endsWith('|u:' + u)) this.votes.delete(k);
+    for (const k of [...this.votes]) if (k.endsWith('|u:' + u)) this._unvoteKey(k);
     /* their reports stop counting: each post is recounted from the reports
        that remain since Stephen last cleared it */
     this.reports = this.reports.filter((r) => r.reporter !== u);
@@ -279,6 +346,24 @@ export class FakeBoards {
     this.bans.delete(p_user);
     return { ok: true };
   }
+  nn_mod_photo_sweep({ p_secret }) {
+    if (!this._modOk(p_secret)) return { error: 'bad_secret' };
+    const abandoned = this._photoSweep();
+    const strays = [...this.files].filter(([path]) => this._stray(path)).sort((a, b) => a[1] - b[1]).slice(0, 100).map(([path]) => path);
+    return { abandoned, strays };
+  }
+  /* nn-people.sql's side table is People's own mirror (people.js); here a
+     plan's Meetup box is the one in its meta */
+  nn_people_meetup_list({ p_secret }) {
+    if (!this._modOk(p_secret)) return { error: 'bad_secret' };
+    return {
+      plans: this.posts.filter((p) => p.board === 'people' && this._listable(p) && p.meta.meetup === true)
+        .sort((a, b) => b.created_at - a.created_at)
+        .map((p) => ({ id: p.id, title: p.title, when: p.meta.when || null, place: p.place, spots: p.meta.spots == null ? null : p.meta.spots,
+          ages: p.meta.ages || null, author: (this.profiles.get(p.user_id) || {}).display_name || 'A neighbor', going: this._count(p.id),
+          created_at: new Date(p.created_at).toISOString(), expires_at: p.expires_at == null ? null : new Date(p.expires_at).toISOString() })),
+    };
+  }
 }
 
 /* ------------------------------------------------------------- the demo */
@@ -298,7 +383,7 @@ export function seedDemo(fake) {
     ['demo-0000-4000-8000-00000000tom0', 'Tom A.', 'new-north-end', 'new'],
     ['demo-0000-4000-8000-00000000jess', 'Jess T.', 'hill', null],
   ];
-  people.forEach(([id, name, hood, arch]) => fake.profiles.set(id, { display_name: name, neighborhood: hood, archetype: arch }));
+  people.forEach(([id, name, hood, arch]) => fake.profiles.set(id, { display_name: name, neighborhood: hood, archetype: arch, interests: [] }));
   const add = (who, board, kind, title, o = {}) => {
     const created = t - (o.ago || 1) * H;
     if (o.photo) fake.addPhoto(o.photo, 'approved');
@@ -318,7 +403,7 @@ export function seedDemo(fake) {
   add(1, 'art', 'art', 'Camel’s Hump from the Intervale', { ago: 26, photo: 'submissions/demo-pine.jpg', meta: { medium: 'Gouache' }, votes: 18 });
   add(2, 'art', 'notice', 'Looking for a model for a Saturday shoot at Oakledge', { ago: 5, body: 'Two hours, golden light, prints for you after.', votes: 3 });
   add(0, 'people', 'plan', 'Sunday trail run, 5 to 8 miles', { ago: 2, meta: { when: 'Sunday, 8 am', arch: 'trail', spots: 6 }, place: 'Red Rocks Park', body: 'Easy pace, coffee after is not optional.', votes: 3 });
-  add(1, 'people', 'plan', 'Pickup soccer, need four more', { ago: 4, meta: { when: 'Sunday, 10 am', arch: 'games', spots: 4 }, place: 'Leddy Park', votes: 7 });
+  add(1, 'people', 'plan', 'Pickup soccer, need four more', { ago: 4, meta: { when: 'Sunday, 10 am', arch: 'games', spots: 4, meetup: true, ages: 'thirties' }, place: 'Leddy Park', votes: 7 });
   add(3, 'people', 'plan', 'A slow walk through the Intervale', { ago: 6, meta: { when: 'Saturday, 9 am', arch: 'new' }, place: 'Intervale Center', body: 'Two months in, know nobody, like trees. Will bring a thermos.', votes: 1 });
   add(2, 'watch', 'rating', 'Winter Light', { ago: 8, meta: { stars: 5, year: 2024, where: 'The Roxy' }, body: 'Go see it on the big screen while you can.', votes: 9 });
   add(4, 'watch', 'rating', 'Causeway', { ago: 28, meta: { stars: 4, year: 2024 }, votes: 5 });

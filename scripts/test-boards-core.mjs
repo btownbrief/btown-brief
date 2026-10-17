@@ -1,15 +1,18 @@
 // The boards' pure rules, and the fake backend's mirror of the SQL.
 //
 //   node --test scripts/test-boards-core.mjs
-//   node scripts/test-boards-core.mjs --write-sql   (copy RULES into nn-SETUP.sql)
+//   node scripts/test-boards-core.mjs --write-sql   (copy RULES into nn-ROUND2.sql)
 //
 // Three copies of one set of rules must agree: all-day/js/boards-core.js,
-// nn_rules() and the checks in all-day/supabase/nn-SETUP.sql, and the fake
-// in all-day/js/boards-fake.js. This file checks the first two are the same
-// JSON, that the fake answers to the same function names the SQL grants, and
-// runs the fake through the same cases scripts/test-nn-sql.sql runs against
-// a real Postgres (scripts/test-nn-sql.sh), so a drift shows up here even on
-// a machine without one.
+// nn_rules() and the checks in the SQL (all-day/supabase/nn-SETUP.sql, with
+// nn-ROUND2.sql pasted over it), and the fake in all-day/js/boards-fake.js.
+// This file checks the first two are the same JSON (nn-ROUND2.sql's copy is
+// the live one), that nothing nn-SETUP.sql allowed has been taken away,
+// that the fake answers to the same function names the SQL grants, and
+// runs the fake through the same cases scripts/test-nn-sql.sql and
+// scripts/test-nn-round2-sql.sql run against a real Postgres
+// (scripts/test-nn-sql.sh), so a drift shows up here even on a machine
+// without one.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -20,16 +23,18 @@ import * as core from '../all-day/js/boards-core.js';
 import { FakeBoards, seedDemo, DEMO_ME } from '../all-day/js/boards-fake.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const SQL_PATH = path.join(ROOT, 'all-day/supabase/nn-SETUP.sql');
+const SETUP_PATH = path.join(ROOT, 'all-day/supabase/nn-SETUP.sql');
+const ROUND2_PATH = path.join(ROOT, 'all-day/supabase/nn-ROUND2.sql');
 const RULES_RE = /\$json\$([\s\S]*?)\$json\$/;
 
 if (process.argv.includes('--write-sql')) {
-  const sql = readFileSync(SQL_PATH, 'utf8');
-  writeFileSync(SQL_PATH, sql.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
-  console.log('nn_rules() in nn-SETUP.sql now matches boards-core.js RULES');
+  const sql = readFileSync(ROUND2_PATH, 'utf8');
+  writeFileSync(ROUND2_PATH, sql.replace(RULES_RE, () => '$json$' + JSON.stringify(core.RULES) + '$json$'));
+  console.log('nn_rules() in nn-ROUND2.sql now matches boards-core.js RULES');
   process.exit(0);
 }
-const SQL = readFileSync(SQL_PATH, 'utf8');
+const SETUP = readFileSync(SETUP_PATH, 'utf8');
+const ROUND2 = readFileSync(ROUND2_PATH, 'utf8');
 
 const MAYA = '11111111-1111-1111-1111-111111111111';
 const SAM = '22222222-2222-2222-2222-222222222222';
@@ -48,20 +53,59 @@ const make = (o) => {
 };
 
 /* ------------------------------------------------------------- one copy */
-test('nn_rules() in the SQL is exactly RULES in boards-core.js', () => {
-  const m = SQL.match(RULES_RE);
-  assert.ok(m, 'nn-SETUP.sql has a $json$ block');
+test('nn_rules() in nn-ROUND2.sql is exactly RULES in boards-core.js', () => {
+  const m = ROUND2.match(RULES_RE);
+  assert.ok(m, 'nn-ROUND2.sql has a $json$ block');
   assert.deepEqual(JSON.parse(m[1]), core.RULES, 'run: node scripts/test-boards-core.mjs --write-sql');
 });
 
+test('round two takes nothing away: every board, kind, field and limit nn-SETUP.sql allowed still stands as it was', () => {
+  const old = JSON.parse(SETUP.match(RULES_RE)[1]);
+  const R = core.RULES;
+  for (const [k, v] of Object.entries(old.limits)) assert.equal(R.limits[k], v, 'limit ' + k);
+  for (const list of ['neighborhoods', 'archetypes', 'reasons']) assert.deepEqual(R[list], old[list], list);
+  for (const [b, ob] of Object.entries(old.boards)) {
+    const nb = R.boards[b];
+    assert.ok(nb, 'board ' + b);
+    assert.equal(nb.premod, ob.premod, b + ' premod');
+    assert.equal(nb.gallery, ob.gallery, b + ' gallery');
+    for (const [k, ok] of Object.entries(ob.kinds)) {
+      const nk = nb.kinds[k];
+      assert.ok(nk, b + '/' + k);
+      assert.deepEqual([nk.days, nk.photo, nk.needs], [ok.days, ok.photo, ok.needs], b + '/' + k + ' days, photo and needs');
+    }
+    for (const [k, of] of Object.entries(ob.meta)) assert.deepEqual(nb.meta[k], of, b + ' field ' + k);
+  }
+});
+
+test('the profile interests are the People tab’s activity list', () => {
+  const js = readFileSync(path.join(ROOT, 'all-day/js/modes/people.js'), 'utf8');
+  const lit = js.match(/export const PEOPLE_RULES = (\{[\s\S]*?\n\});/);
+  assert.ok(lit, 'people.js has PEOPLE_RULES');
+  const people = Function('return ' + lit[1])();
+  assert.deepEqual(core.RULES.interests, people.interests);
+  assert.equal(core.RULES.limits.interestsMax, people.interestsMax);
+  assert.deepEqual(Object.keys(core.INTEREST_LABELS), core.RULES.interests, 'every interest has words');
+});
+
 test('the fake answers to every function the SQL grants to readers, and only those', () => {
-  const block = SQL.slice(SQL.indexOf('-- Readers, signed in or not'));
-  const granted = new Set([...block.matchAll(/public\.(nn_\w+)\(/g)].map((m) => m[1]));
+  const readers = (sql) => sql.slice(sql.indexOf('-- Readers, signed in or not'));
+  const granted = new Set([...(readers(SETUP) + readers(ROUND2)).matchAll(/public\.(nn_\w+)\(/g)].map((m) => m[1]));
   const fake = new Set(Object.getOwnPropertyNames(FakeBoards.prototype).filter((n) => /^nn_/.test(n)));
   for (const fn of granted) assert.ok(fake.has(fn), fn + ' is granted in SQL but missing from the fake');
   for (const fn of fake) assert.ok(granted.has(fn), fn + ' is in the fake but the SQL does not grant it');
-  const defined = new Set([...SQL.matchAll(/create or replace function public\.(nn_\w+)\(/g)].map((m) => m[1]));
+  const defined = new Set([...(SETUP + ROUND2).matchAll(/create or replace function public\.(nn_\w+)\(/g)].map((m) => m[1]));
   for (const fn of fake) assert.ok(defined.has(fn), fn + ' is not defined in the SQL');
+});
+
+test('nn-ROUND2.sql only adds: no drop, no delete, no truncate, no column taken away', () => {
+  const code = ROUND2.replace(/--[^\n]*/g, '');
+  assert.ok(!/\bdrop\s+(table|function|column|index|schema|extension)\b/i.test(code), 'drops nothing but its own two policies');
+  assert.ok(!/\btruncate\b/i.test(code));
+  assert.ok(!/\balter\s+table[^;]*\bdrop\b/i.test(code));
+  const deletes = [...code.matchAll(/\bdelete\s+from\s+([\w.]+)/gi)].map((m) => m[1]);
+  assert.deepEqual([...new Set(deletes)].sort(), ['public.nn_posts', 'public.nn_votes'], 'only the sweep (as before) and a moved ballot vote delete rows');
+  for (const m of code.matchAll(/drop policy if exists "([^"]+)"/g)) assert.match(m[1], /^nn stray photos/, 'only its own policies');
 });
 
 /* ---------------------------------------------------------------- rules */
@@ -153,7 +197,7 @@ test('fake: a profile, then every refusal a post can meet', () => {
   assert.equal(f.call('nn_profile_get'), null);
   assert.equal(code(() => f.call('nn_post_create', { p_board: 'vintage', p_kind: 'spotted', p_title: 'A find', p_meta: { shop: 'Old Gold' } })), 'no_name');
   assert.equal(f.call('nn_profile_set', { p_display_name: '  Maya   R. ', p_neighborhood: 'old-north-end', p_archetype: 'trail' }).display_name, 'Maya R.');
-  assert.deepEqual(f.call('nn_profile_get'), { display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail' });
+  assert.deepEqual(f.call('nn_profile_get'), { display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail', interests: [] });
   for (const [board, input, want] of POST_CASES) {
     assert.equal(code(() => f.call('nn_post_create', { p_board: board, p_kind: input.kind, p_title: input.title, p_body: input.body, p_place: input.place, p_meta: input.meta, p_photo: input.photo_path })), want, JSON.stringify([board, input]));
   }
@@ -323,4 +367,151 @@ test('the demo seed draws on every board and obeys the rules', () => {
     assert.ok(r.ok, p.title + ': ' + r.error);
   }
   assert.equal(f.as(DEMO_ME).call('nn_profile_get'), null, 'the demo reader starts with no name');
+});
+
+/* ------------------------------------------------------------- round two */
+/* The cases scripts/test-nn-round2-sql.sql runs against Postgres. */
+test('round two: the new kinds and fields, checked like every other', () => {
+  const R = core.RULES;
+  const post = (board, input) => core.checkPost(R, board, input);
+  const pic = 'submissions/aaaa-0002.jpg';
+  assert.equal(post('vintage', { kind: 'design', title: 'Rainy Church Street', meta: { thanks: 'shirts' } }).error, 'photo_required');
+  assert.equal(post('vintage', { kind: 'design', title: 'Rainy Church Street', photo_path: pic }).error, 'needs_meta', 'a design says how its artist is thanked');
+  assert.equal(post('vintage', { kind: 'design', title: 'Rainy Church Street', meta: { thanks: 'cash' }, photo_path: pic }).error, 'bad_meta', 'never cash');
+  assert.ok(post('vintage', { kind: 'design', title: 'Rainy Church Street', meta: { thanks: 'credit' }, photo_path: pic }).ok);
+  assert.equal(post('vintage', { kind: 'fit', title: 'All thrifted' }).error, 'photo_required');
+  assert.ok(post('vintage', { kind: 'fit', title: 'All thrifted', photo_path: pic }).ok);
+  assert.equal(core.expiresAt(R, 'vintage', 'fit', 0), 60 * DAY);
+  assert.equal(core.expiresAt(R, 'vintage', 'design', 0), null);
+  assert.deepEqual(post('people', { kind: 'plan', title: 'Run', meta: { when: 'Sun', meetup: true, ages: 'thirties' } }).post.meta, { when: 'Sun', meetup: true, ages: 'thirties' });
+  assert.equal(post('people', { kind: 'plan', title: 'Run', meta: { when: 'Sun', meetup: 'yes' } }).error, 'bad_meta', 'a box is true or false');
+  assert.equal(post('people', { kind: 'plan', title: 'Run', meta: { when: 'Sun', ages: '18' } }).error, 'bad_meta');
+  assert.deepEqual(post('people', { kind: 'plan', title: 'Run', meta: { when: 'Sun', meetup: false } }).post.meta, { when: 'Sun', meetup: false });
+  assert.deepEqual(post('watch', { kind: 'pick', title: 'Heat', meta: { film: 949, year: 1995 } }).post.meta, { film: 949, year: 1995 });
+  assert.equal(post('watch', { kind: 'pick', title: 'Heat', meta: { film: 0 } }).error, 'bad_meta');
+  assert.equal(post('watch', { kind: 'pick', title: 'Heat', meta: { film: '949' } }).error, 'bad_meta');
+  assert.equal(core.oneVote(R, 'watch', 'pick'), true);
+  assert.equal(core.oneVote(R, 'watch', 'rating'), false);
+  assert.equal(core.oneVote(R, 'art', 'photo'), false);
+});
+
+test('round two: interests on the profile, activities from the list only', () => {
+  const R = core.RULES;
+  assert.equal(core.checkProfile(R, { display_name: 'Maya', interests: ['running', 'lgbtq'] }).error, 'bad_interest', 'never who someone is');
+  assert.equal(core.checkProfile(R, { display_name: 'Maya', interests: 'running' }).error, 'bad_interest');
+  assert.equal(core.checkProfile(R, { display_name: 'Maya', interests: R.interests.slice(0, 9) }).error, 'bad_interest', 'eight at most');
+  assert.deepEqual(core.checkProfile(R, { display_name: 'Maya', interests: ['running', 'games', 'running'] }).profile.interests, ['running', 'games']);
+  const f = make().as(MAYA);
+  f.call('nn_profile_set', { p_display_name: 'Maya', p_interests: ['running', 'books'] });
+  assert.deepEqual(f.call('nn_profile_get').interests, ['running', 'books']);
+  assert.deepEqual(f.call('nn_profile_set', { p_display_name: 'Maya R.', p_archetype: 'trail' }).interests, ['running', 'books'], 'the round-one call keeps them');
+  assert.deepEqual(f.call('nn_profile_set', { p_display_name: 'Maya R.', p_interests: null }).interests, ['running', 'books'], 'a null keeps them');
+  assert.equal(code(() => f.call('nn_profile_set', { p_display_name: 'Maya', p_interests: ['women'] })), 'bad_interest');
+  assert.deepEqual(f.call('nn_profile_set', { p_display_name: 'Maya', p_interests: [] }).interests, [], 'an empty list clears them');
+});
+
+test('round two: change the fields on your own post', () => {
+  const f = make({ modSecret: 's' });
+  f.as(MAYA).call('nn_profile_set', { p_display_name: 'Maya' });
+  const find = f.call('nn_post_create', { p_board: 'vintage', p_kind: 'spotted', p_title: 'Red barn jacket', p_meta: { shop: 'Old Gold', size: 'M' } });
+  assert.equal(code(() => f.as(null).call('nn_post_meta_set', { p_post: find.id, p_meta: { got: true } })), 'not_signed_in');
+  assert.equal(code(() => f.as(SAM).call('nn_post_meta_set', { p_post: find.id, p_meta: { got: true } })), 'not_found', 'only your own');
+  f.as(MAYA);
+  assert.equal(code(() => f.call('nn_post_meta_set', { p_post: find.id, p_meta: [1] })), 'bad_meta');
+  assert.equal(code(() => f.call('nn_post_meta_set', { p_post: find.id, p_meta: { got: 'yes' } })), 'bad_meta');
+  assert.equal(code(() => f.call('nn_post_meta_set', { p_post: find.id, p_meta: { stars: 5 } })), 'bad_meta', 'only the board’s fields');
+  assert.equal(code(() => f.call('nn_post_meta_set', { p_post: find.id, p_meta: { shop: null } })), 'needs_meta', 'a required field stays');
+  assert.deepEqual(f.call('nn_post_meta_set', { p_post: find.id, p_meta: { got: true, size: null } }).meta, { shop: 'Old Gold', got: true }, 'merged; a null takes one away');
+  assert.deepEqual(f.as(null).call('nn_posts_list', { p_board: 'vintage', p_filter: { meta: { got: true } } }).map((p) => p.id), [find.id]);
+  const plan = f.as(MAYA).call('nn_post_create', { p_board: 'people', p_kind: 'plan', p_title: 'Trivia', p_meta: { when: 'Tue 7pm' } });
+  assert.deepEqual(f.call('nn_post_meta_set', { p_post: plan.id, p_meta: { meetup: true, ages: 'any' } }).meta, { when: 'Tue 7pm', meetup: true, ages: 'any' });
+  f.call('nn_mod_act', { p_secret: 's', p_post: find.id, p_action: 'ban' });
+  assert.equal(code(() => f.call('nn_post_meta_set', { p_post: plan.id, p_meta: { meetup: false } })), 'banned');
+  const rules = JSON.parse(JSON.stringify(core.RULES));
+  rules.boards.vintage.premod = true;
+  const g = make({ rules, modSecret: 's' }).as(KIM);
+  g.call('nn_profile_set', { p_display_name: 'Kim' });
+  const p = g.call('nn_post_create', { p_board: 'vintage', p_kind: 'swap', p_title: 'Tee', p_meta: { want: 'free' } });
+  g.call('nn_mod_act', { p_secret: 's', p_post: p.id, p_action: 'approve' });
+  assert.equal(g.as(KIM).call('nn_post_meta_set', { p_post: p.id, p_meta: { want: 'a flannel' } }).status, 'pending', 'on a pre-moderated board an edit waits again');
+});
+
+test('round two: one vote on the screening ballot, moved in one step', () => {
+  const f = make();
+  f.as(LEE).call('nn_profile_set', { p_display_name: 'Lee' });
+  const a = f.call('nn_post_create', { p_board: 'watch', p_kind: 'pick', p_title: 'Heat', p_meta: { film: 949 } });
+  const b = f.call('nn_post_create', { p_board: 'watch', p_kind: 'pick', p_title: 'Ran', p_meta: { film: 11645 } });
+  const r = f.call('nn_post_create', { p_board: 'watch', p_kind: 'rating', p_title: 'Heat', p_meta: { stars: 5, film: 949 } });
+  const r2 = f.call('nn_post_create', { p_board: 'watch', p_kind: 'rating', p_title: 'Ran', p_meta: { stars: 4, film: 11645 } });
+  f.as(null);
+  assert.deepEqual(f.call('nn_vote', { p_post: a.id, p_player: 'p_reader01' }), { votes: 1, voted: true, moved: [] });
+  assert.deepEqual(f.call('nn_vote', { p_post: b.id, p_player: 'p_reader01' }), { votes: 1, voted: true, moved: [a.id] }, 'voting for another pick moves the vote');
+  assert.equal(f._count(a.id), 0);
+  assert.deepEqual(f.call('nn_vote', { p_post: b.id, p_player: 'p_reader01' }).moved, [], 'again is still one vote');
+  f.call('nn_vote', { p_post: r.id, p_player: 'p_reader01' });
+  assert.deepEqual(f.call('nn_vote', { p_post: r2.id, p_player: 'p_reader01' }).moved, [], 'ratings have no one-vote rule');
+  assert.equal(f._count(r.id), 1);
+  f.call('nn_vote', { p_post: a.id, p_player: 'p_reader02' });
+  f.posts.find((p) => p.id === a.id).expires_at = f.now() - 1000;
+  assert.deepEqual(f.call('nn_vote', { p_post: b.id, p_player: 'p_reader02' }).moved, [], 'a vote on an ended pick stays as it was counted');
+  assert.equal(f._count(a.id), 1);
+  const art = make();
+  art.as(MAYA).call('nn_profile_set', { p_display_name: 'Maya' });
+  const n1 = art.call('nn_post_create', { p_board: 'art', p_kind: 'notice', p_title: 'Open studio' });
+  const n2 = art.call('nn_post_create', { p_board: 'art', p_kind: 'notice', p_title: 'Model wanted' });
+  art.as(null).call('nn_vote', { p_post: n1.id, p_player: 'p_reader01' });
+  assert.deepEqual(art.call('nn_vote', { p_post: n2.id, p_player: 'p_reader01' }).moved, [], 'other boards vote as before');
+});
+
+test('round two: votes by the week they were cast, Burlington time', () => {
+  /* make() starts Friday 2026-10-16, 8 am in Burlington */
+  const f = make();
+  f.as(MAYA).call('nn_profile_set', { p_display_name: 'Maya' });
+  f.setPhoto('submissions/aaaa-0001.jpg', 'pending');
+  const old = f.call('nn_post_create', { p_board: 'art', p_kind: 'photo', p_title: 'Dawn', p_photo: 'submissions/aaaa-0001.jpg' });
+  f.setPhoto('submissions/aaaa-0001.jpg', 'approved');
+  f.as(null).call('nn_vote', { p_post: old.id, p_player: 'p_reader01' });
+  f.call('nn_vote', { p_post: old.id, p_player: 'p_reader02' });
+  f.tick(3 * DAY + 3 * 3600000);   /* Monday 11 am: a new week */
+  f.call('nn_vote', { p_post: old.id, p_player: 'p_reader03' });
+  assert.equal(code(() => f.call('nn_votes_by_week', { p_board: 'food' })), 'bad_board');
+  assert.deepEqual(f.call('nn_votes_by_week', { p_board: 'art', p_weeks: 2 }), [
+    { post: old.id, week: '2026-W43', votes: 1 }, { post: old.id, week: '2026-W42', votes: 2 }]);
+  assert.deepEqual(f.call('nn_votes_by_week', { p_board: 'art', p_weeks: 1 }), [{ post: old.id, week: '2026-W43', votes: 1 }], 'only the weeks asked for');
+  f.call('nn_unvote', { p_post: old.id, p_player: 'p_reader01' });
+  assert.deepEqual(f.call('nn_votes_by_week', { p_board: 'art', p_weeks: 2 })[1], { post: old.id, week: '2026-W42', votes: 1 }, 'a vote taken back is no vote');
+  assert.deepEqual(f.call('nn_votes_by_week', { p_board: 'vintage' }), []);
+  assert.equal(core.isoWeek(Date.parse('2026-10-19T03:59:00Z')), '2026-W42', 'Sunday 11:59 pm Burlington is still last week');
+  assert.equal(core.isoWeek(Date.parse('2026-10-19T04:00:00Z')), '2026-W43', 'and midnight starts the next');
+  assert.deepEqual(core.lastWeeks(Date.parse('2027-01-02T12:00:00Z'), 3), ['2026-W53', '2026-W52', '2026-W51']);
+});
+
+test('round two: the photo sweep', () => {
+  const f = make({ modSecret: 's' });
+  f.addPhoto('submissions/left-0007.jpg', 'pending', { at: f.now() - 26 * 3600000 });
+  f.addPhoto('submissions/new0-0008.jpg', 'pending', { at: f.now() - 3600000 });
+  f.addPhoto('submissions/gall-0009.jpg', 'pending', { board: false, at: f.now() - 3 * DAY });
+  f.addFile('submissions/lost-0010.jpg', f.now() - 2 * DAY);   // uploaded, never filed
+  f.addFile('submissions/lost-0011.jpg', f.now() - 3600000);   // too new to call lost
+  f.addFile('submissions/left-0007.jpg', f.now() - 2 * DAY);   // has a queue row
+  f.addFile('elsewhere/lost-0012.jpg', f.now() - 2 * DAY);     // not a submission
+  assert.equal(f.call('nn_mod_photo_sweep', { p_secret: 'wrong' }).error, 'bad_secret');
+  assert.deepEqual(f.call('nn_mod_photo_sweep', { p_secret: 's' }), { abandoned: 1, strays: ['submissions/lost-0010.jpg'] });
+  assert.equal(f.photos.get('submissions/left-0007.jpg').status, 'removed', 'a day-old board photo nobody posted leaves the queue');
+  assert.equal(f.photos.get('submissions/new0-0008.jpg').status, 'pending', 'one still inside its day stays');
+  assert.equal(f.photos.get('submissions/gall-0009.jpg').status, 'pending', 'a gallery photo is never a board’s to sweep');
+  assert.deepEqual(f.removeFiles(['submissions/lost-0010.jpg', 'submissions/lost-0011.jpg', 'submissions/left-0007.jpg']), ['submissions/lost-0010.jpg'], 'only strays can be removed');
+  assert.ok(f.files.has('submissions/lost-0011.jpg') && f.files.has('submissions/left-0007.jpg'));
+});
+
+test('round two: People’s Meetup list reads the box in the plan', () => {
+  const f = make({ modSecret: 's' });
+  f.as(MAYA).call('nn_profile_set', { p_display_name: 'Maya' });
+  const yes = f.call('nn_post_create', { p_board: 'people', p_kind: 'plan', p_title: 'Trivia', p_place: 'Three Needs', p_meta: { when: 'Tue 7pm', spots: 2, meetup: true, ages: 'thirties' } });
+  f.call('nn_post_create', { p_board: 'people', p_kind: 'plan', p_title: 'Walk', p_meta: { when: 'Sat 9am', meetup: false } });
+  f.as(null).call('nn_vote', { p_post: yes.id, p_player: 'p_reader01' });
+  assert.equal(f.call('nn_people_meetup_list', { p_secret: 'nope' }).error, 'bad_secret');
+  const l = f.call('nn_people_meetup_list', { p_secret: 's' }).plans;
+  assert.equal(l.length, 1);
+  assert.deepEqual([l[0].title, l[0].when, l[0].place, l[0].spots, l[0].ages, l[0].author, l[0].going], ['Trivia', 'Tue 7pm', 'Three Needs', 2, 'thirties', 'Maya', 1]);
 });

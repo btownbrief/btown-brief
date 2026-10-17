@@ -67,7 +67,7 @@ select pg_temp.expect_error($q$select public.nn_profile_set(repeat('m', 33))$q$,
 select pg_temp.expect_error($q$select public.nn_profile_set('Maya', 'mars')$q$, 'bad_neighborhood');
 select pg_temp.expect_error($q$select public.nn_profile_set('Maya', null, 'wizard')$q$, 'bad_archetype');
 select pg_temp.ok(public.nn_profile_set('  Maya   R. ', 'old-north-end', 'trail') ->> 'display_name' = 'Maya R.', 'a name is tidied');
-select pg_temp.ok(public.nn_profile_get() = '{"display_name":"Maya R.","neighborhood":"old-north-end","archetype":"trail"}'::jsonb, 'and read back');
+select pg_temp.ok(public.nn_profile_get() @> '{"display_name":"Maya R.","neighborhood":"old-north-end","archetype":"trail"}'::jsonb, 'and read back');
 select pg_temp.ok(public.nn_profile_set('Maya R.', '', '') ->> 'neighborhood' is null, 'empty means none');
 select public.nn_profile_set('Maya R.', 'old-north-end', 'trail');
 
