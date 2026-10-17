@@ -255,6 +255,8 @@ async function newPage(browser, base, opts = {}) {
   /* What Now's sunset score asks Open-Meteo; here it gets nothing usable, so the engine runs ungated, as it does offline */
   await page.route(/open-meteo\.com/, (r) => r.fulfill({ status: 200, body: '{}', contentType: 'application/json' }));
   await page.route(/bandcamp\.com/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>Bandcamp</title>', contentType: 'text/html' }));
+  /* the People tab's Meetup calendar (Up For It's meetup.json): empty unless a group routes its own */
+  await page.route(/play\.btownbrief\.com\/up-for-it\/data\/meetup\.json/, (r) => r.fulfill({ status: 200, body: JSON.stringify({ fetched: new Date().toISOString(), events: [] }), contentType: 'application/json' }));
   if (opts.routes) for (const [re, body] of opts.routes) await page.route(re, (r) => r.fulfill({ status: 200, body: JSON.stringify(body), contentType: 'application/json' }));
   const wire = wireFiles(opts.wire);
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/wire-data\/data\/(?:wire\/)?([\w.-]+\.json)$/, (r) => {
@@ -2310,19 +2312,24 @@ const peoplePanel = '#panel-people';
 const NO_ID_QUESTIONS = /\bages?\b|how old|years? old|\bborn\b|birth|gender|orientation|sexual|straight|\bgay\b|pronoun|\bman\b|\bwoman\b|\bmale\b|female|lgbt/i;
 const OWN_URL_T = /meetup\.com\/burlington-social-activiti?es-group\//i;
 const OWN_NAME_T = /btown brief|btown coffee club|burlington social activities group/i;
+const BTV_DAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });
+const BTV_LABEL = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+/* a moment as the compose sheet writes it, in Burlington: "Sat, Oct 17, 7:30 pm" */
+const btvWhen = (ms) => BTV_LABEL.format(new Date(Math.ceil(ms / 1800000) * 1800000)).replace(/ at |, (?=\d{1,2}:)/, ', ').replace(':00', '').replace(/\s?([AP])M$/, (x, a) => ' ' + a.toLowerCase() + 'm');
 const peopleReady = (page) => page.waitForSelector(peoplePanel + ' [data-plans], ' + peoplePanel + ' [data-sec="plans"] .textcard', { timeout: 15000 });
 const planCards = (page) => page.$$eval(peoplePanel + ' [data-plans] .card.board', (cs) => cs.map((c) => ({
   k: c.dataset.k, title: c.querySelector('.b-title').textContent, meta: (c.querySelector('.b-meta') || {}).textContent || '',
   who: c.querySelector('.c-head').innerText, going: (c.querySelector('.going') || {}).textContent || '' })));
 const clubCats = (page) => page.$$eval(peoplePanel + ' [data-clubs] .lrow', (rs) => rs.map((r) => ({ cat: r.dataset.cat, name: r.querySelector('.t').textContent })));
 const peek = (page) => page.evaluate(() => import('/all-day/js/modes/people.js').then((m) => m._peek()));
-/* Stephen's own events in the repo's calendar, as the tab picks them: every one from now to two weeks out, once each */
-async function ownEvents() {
+/* Stephen's own events, as the tab picks them: the repo's calendar plus his Meetup group's feed, every one from now to two weeks out, once each */
+async function ownEvents(feed) {
   const w = JSON.parse(await readFile(path.join(APP, 'data/whatnow.json'), 'utf8'));
   const now = Date.now(), seen = new Set();
-  return w.events.filter((e) => OWN_URL_T.test(e.url || '') || OWN_NAME_T.test([e.title, e.venue, (e.tags || []).join(' ')].join(' ')))
+  const fromFeed = (feed || []).map((e) => ({ title: e.title, url: e.url, start: e.starts_at, date: BTV_DAY.format(new Date(e.starts_at)) }));
+  return w.events.concat(fromFeed).filter((e) => OWN_URL_T.test(e.url || '') || OWN_NAME_T.test([e.title, e.venue, (e.tags || []).join(' ')].join(' ')))
     .filter((e) => { const t = Date.parse(e.start); const end = Date.parse(e.end) || t + 7200000; return t && end > now && t < now + 14 * 86400000 && e.url; })
-    .filter((e) => { const k = e.url + '|' + e.date; if (seen.has(k)) return false; seen.add(k); return true; });
+    .filter((e) => { const k = ((e.url.match(/\/events\/(\w+)/) || [])[1] || e.url) + '|' + e.date; if (seen.has(k)) return false; seen.add(k); return true; });
 }
 
 async function thePeople(browser, base) {
@@ -2337,9 +2344,16 @@ async function thePeople(browser, base) {
   });
 
   await group('People, live: Stephen’s meetups, the clubs, an empty board', async () => {
-    const own = await ownEvents();
+    /* his group's feed: one event thirteen days out, past the events file's ten-day reach, and one the events file already has */
+    const w = JSON.parse(await readFile(path.join(APP, 'data/whatnow.json'), 'utf8'));
+    const thirteen = Date.now() + 13 * 86400000;
+    const feed = [{ uid: 'event_999001@meetup.com', title: 'Pick-up Basketball', starts_at: new Date(thirteen).toISOString(), url: 'https://www.meetup.com/burlington-social-activites-group/events/999001/', location: '' }];
+    const dup = w.events.find((e) => OWN_URL_T.test(e.url || '') && Date.parse(e.start) > Date.now() + 3600000);
+    if (dup) feed.push({ uid: 'dup', title: dup.title, starts_at: new Date(Date.parse(dup.start)).toISOString(), url: dup.url, location: '' });
+    const own = await ownEvents(feed);
     const clubs = JSON.parse(await readFile(path.join(REPO, 'data/clubs.json'), 'utf8')).clubs;
-    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn) => (fn === 'nn_people_directory' ? { count: 12, me: false, people: [] } : undefined) });
+    const { ctx, page, errors } = await newPage(browser, base, { rpc: (fn) => (fn === 'nn_people_directory' ? { count: 12, me: false, people: [] } : undefined),
+      routes: [[/play\.btownbrief\.com\/up-for-it\/data\/meetup\.json/, { fetched: new Date().toISOString(), events: feed }]] });
     await page.goto(base + '/all-day/#people');
     await peopleReady(page);
     await page.waitForFunction((s) => !document.querySelector(s + ' [data-sec="mix"] .loading'), peoplePanel, { timeout: 10000 });
@@ -2347,6 +2361,8 @@ async function thePeople(browser, base) {
     check(mix.length === own.length, 'every one of Stephen’s own events in the next two weeks shows (' + own.length + ')', mix.length + ': ' + mix.map((m) => m.title).join(', '));
     check(own.every((e) => mix.some((m) => m.href === e.url)), 'none is missed', own.filter((e) => !mix.some((m) => m.href === e.url)).map((e) => e.title).join(', '));
     check(mix.every((m) => OWN_URL_T.test(m.href) || OWN_NAME_T.test(m.title)), 'and nothing that isn’t his', mix.map((m) => m.href).join(' '));
+    check(mix.some((m) => m.href === feed[0].url && /Place on Meetup/.test(m.text)), 'one thirteen days out, only on his Meetup calendar, shows (place: on Meetup, never guessed)', '');
+    check(!dup || mix.filter((m) => m.href === dup.url && Date.parse(dup.start)).length === own.filter((e) => e.url === dup.url).length, 'an event in both sources shows once', dup && dup.title);
     check(mix.every((m) => /Open on Meetup/.test(m.text) && !/\bgoing\b|interested|RSVPs?:/i.test(m.text.replace(/RSVP on Meetup/g, ''))), 'each links to Meetup and shows no Meetup interest count', '');
     if (!own.length) check(/No Btown Brief meetups/.test(await panelText(page)), 'with none on the calendar it says so and links the group', '');
     const rows = await clubCats(page);
@@ -2376,10 +2392,9 @@ async function thePeople(browser, base) {
     const now = new Date();
     const post = (id, title, meta, ago) => ({ id, board: 'people', kind: 'plan', title, body: '', place: 'Foam Brewers', meta, photo: null, author: 'Priya N.', author_arch: 'regular',
       created_at: new Date(now - (ago || 1) * 3600000).toISOString(), expires_at: new Date(+now + 13 * 86400000).toISOString(), votes: 3, voted: false, mine: false });
-    const later = post('11111111-aaaa-4aaa-8aaa-000000000001', 'Trivia, need a fifth', { when: 'Tonight, 11 pm', spots: 2 }, 1);
-    const sooner = post('11111111-aaaa-4aaa-8aaa-000000000002', 'Coffee walk', { when: 'Tonight, 10:30 pm', arch: 'new' }, 2);
-    const yday = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).format(new Date(now - 86400000));
-    const past = post('11111111-aaaa-4aaa-8aaa-000000000003', 'Yesterday’s plan', { when: yday + ', 7 am' }, 30);
+    const later = post('11111111-aaaa-4aaa-8aaa-000000000001', 'Trivia, need a fifth', { when: btvWhen(+now + 5 * 3600000), spots: 2 }, 1);
+    const sooner = post('11111111-aaaa-4aaa-8aaa-000000000002', 'Coffee walk', { when: btvWhen(+now + 2 * 3600000), arch: 'new' }, 2);
+    const past = post('11111111-aaaa-4aaa-8aaa-000000000003', 'Yesterday’s plan', { when: btvWhen(+now - 26 * 3600000) }, 30);
     let created = null;
     const { ctx, page, errors } = await newPage(browser, base, {
       rpc: (fn, body) => {
@@ -2430,6 +2445,36 @@ async function thePeople(browser, base) {
       'then nn_people_plan_set records the Meetup box and age band for that plan', JSON.stringify(extra && extra[1]));
     check(/Stephen will see you’re down for Meetup/.test(await page.$eval('#toast', (t) => t.textContent)), 'and the toast says so', '');
     check(seen.every(([fn, b]) => !/@/.test(JSON.stringify(b))), 'no call carries an email', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('People, live: a late directory answer never reaches the next reader', async () => {
+    /* reader A (in the directory) asks; before the answer lands, another tab signs this browser in as reader B */
+    const { ctx, page, errors } = await newPage(browser, base, {
+      auth: (p, body) => (/^token/.test(p) ? { body: { access_token: 'tok-' + body.refresh_token, refresh_token: body.refresh_token + '+', expires_in: 3600, user: { id: /^rB/.test(body.refresh_token) ? 'u-2' : 'u-1' } } } : undefined),
+      rpc: (fn) => (fn === 'nn_profile_get' ? { display_name: 'Reader', neighborhood: null, archetype: null } : fn === 'nn_people_directory' ? { count: 2, me: false, people: [] } : undefined),
+    });
+    let first = true;
+    await page.route(/\/rest\/v1\/rpc\/nn_people_directory/, async (r) => {
+      if (!first) return r.fallback();
+      first = false;
+      await new Promise((res) => setTimeout(res, 1200));
+      return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ count: 2, me: true, people: [{ name: 'Ana', neighborhood: null, archetype: null, interests: [], me: true }, { name: 'Lee Q.', neighborhood: null, archetype: null, interests: [], me: false }] }) });
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    const asked = page.waitForRequest(/nn_people_directory/, { timeout: 10000 });
+    await page.goto(base + '/all-day/#people');
+    await asked;
+    const two = await ctx.newPage();
+    await two.goto(base + '/all-day/?x=2');
+    await two.evaluate(() => localStorage.setItem('allday-auth', JSON.stringify({ refresh_token: 'rB', user: { id: 'u-2' } })));
+    await page.waitForTimeout(1800);
+    const st = await page.evaluate(() => import('/all-day/js/app.js').then((a) => (a.user() || {}).id));
+    const txt = await page.$eval(peoplePanel + ' [data-sec="dir"]', (s) => s.innerText);
+    check(st === 'u-2', 'the tab now belongs to reader B', st);
+    check(!/Lee Q\./.test(txt) && await page.$(peoplePanel + ' [data-dir="join"]') !== null, 'reader A’s late directory never draws for reader B, who is not in it', txt.slice(0, 160));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
