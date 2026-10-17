@@ -519,7 +519,9 @@ function drawArch() {
   });
   s.appendChild(grid);
   const tagRow = (label, list) => {
-    s.appendChild(el('div', 'sec', '<div><p>' + esc(label) + '</p></div>'));
+    s.appendChild(el('div', 'spacer'));
+    s.appendChild(el('p', 'note pad', esc(label)));
+    s.appendChild(el('div', 'spacer'));
     const row = chips(list.map(([key, l]) => ({ key, label: l, cls: S.tags.includes(key) ? 'on' : '' })), null, (key) => toggleTag(key));
     row.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', c.classList.contains('on') ? 'true' : 'false'));
     row.dataset.tags = label;
@@ -596,12 +598,13 @@ function drawPlans() {
     s.appendChild(row);
   }
   const list = sortedPlans();
-  const f = feed(s);
-  f.dataset.plans = '1';
-  app.bindFeed(f);
-  list.forEach((p) => { const n = planCard(p); if (n) f.appendChild(n); });
-  watchGoing(f);
-  if (!list.length) {
+  if (list.length) {
+    const f = feed(s);
+    f.dataset.plans = '1';
+    app.bindFeed(f);
+    list.forEach((p) => { const n = planCard(p); if (n) f.appendChild(n); });
+    watchGoing(f);
+  } else {
     const tc = el('div', 'textcard', '<h3 class="serif">No plans yet this week.</h3><p>Going somewhere and happy to have company? Say where and when, and that strangers are welcome.</p>');
     const r = el('div', 'row');
     r.appendChild(button('Post the first plan', '', planSheet));
@@ -646,7 +649,7 @@ function drawMix() {
     s.appendChild(g);
   }
   const r = el('div', 'addrow');
-  r.appendChild(linkBtn('All ' + (S.clubs ? S.clubs.length + ' ' : '') + 'clubs', CLUBS_PAGE));
+  r.appendChild(linkBtn('Every club in town', CLUBS_PAGE));
   s.appendChild(r);
 }
 function clubRow(c) {
@@ -700,16 +703,18 @@ function drawQuiz() {
     (res.tags.length ? '<p>' + esc('Into: ' + res.tags.map((t) => INTEREST_WORDS[t]).join(', ') + '.') + '</p>' : '');
   const h = (t) => tc.appendChild(el('p', 'fine', '<b>' + esc(t) + '</b>'));
   const picks = clubsFor(3, res.arch, res.tags);
-  if (picks.length) { h('Three clubs to try'); const g = el('div', 'clubs'); g.dataset.quizClubs = '1'; picks.forEach((c) => g.appendChild(clubRow(c))); tc.appendChild(g); }
+  if (picks.length) { h('Three clubs to try'); const g = el('div', 'dir'); g.dataset.quizClubs = '1'; picks.forEach((c) => g.appendChild(clubRow(c))); tc.appendChild(g); }
   const mix = mixers().map(mixerItem);
   const fit = mix.filter((it) => fitsEvent(it, res.arch, res.tags)).concat(mix.filter((it) => !fitsEvent(it, res.arch, res.tags))).slice(0, 2);
   if (fit.length) {
     h('The next mixers');
+    const g = el('div', 'dir');
+    tc.appendChild(g);
     fit.forEach((it) => {
       const a = el('a', 'lrow', '<span class="th bare">' + ICON.people + '</span><div><div class="t">' + esc(it.title) + '</div><div class="s">' +
         esc(EV_DAY.format(new Date(it.at)) + ', ' + it.when + ' · ' + it.where) + '</div></div>' + ICON.ext);
       a.href = safeHref(it.href); a.target = '_blank'; a.rel = 'noopener';
-      tc.appendChild(a);
+      g.appendChild(a);
     });
   }
   h('Where to talk');
