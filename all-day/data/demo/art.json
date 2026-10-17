@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1. Every name and picture is invented; each picture is a placeholder palette from shell.json. The Art tab seeds these into the boards demo backend, so votes, reports and posting run through boards.js as they do live. A post's week is 0 for this week (Monday to now, Burlington time) or 1 to 8 for the weeks before; f is how far through that week it was posted (0 to 1). ratio is the picture's shape, for the full view.",
+ "_": "Demo data for ?demo=1. Every name and picture is invented; each picture is a placeholder palette from shell.json. The Wire's Photo mode seeds these into the boards demo backend, so votes, reports and posting run through boards.js as they do live. A post's week is 0 for this week (Monday to now, Burlington time) or 1 to 8 for the weeks before; f is how far through that week it was posted (0 to 1). ratio is the picture's shape, for the full view. instagram is the local accounts' posts in build_instagram.py's shape, with hours for how long ago on the Wire demo's clock.",
  "people": [
   ["ben", "Ben S."], ["kara", "Kara M."], ["jess", "Jess T."], ["nora", "Nora L."], ["priya", "Priya N."],
   ["jules", "Jules O."], ["dev", "Dev K."], ["tom", "Tom A."], ["maya", "Maya R."], ["sam", "Sam W."]
@@ -30,5 +30,13 @@
   { "id": "demo-g1", "caption": "Sunset from Waterfront Park", "credit": "Stephen", "spot": "Waterfront Park", "area": "Waterfront", "palette": "dawn", "days": 70 },
   { "id": "demo-g2", "caption": "The Church Street lights", "credit": "Stephen", "spot": "Church Street", "area": "Downtown / Church St", "palette": "street", "days": 71 },
   { "id": "demo-g3", "caption": "Morning coffee on Pine Street", "credit": "Stephen", "spot": "Pine Street", "area": "South End", "palette": "coffee", "days": 72 }
+ ],
+ "instagram": [
+  {"h": "demo_lakelight", "hours": 2, "palette": "lake", "u": "https://www.instagram.com/p/DemoLake1/", "c": "Glass-calm at the breakwater this morning. Not a single ripple until the ferry came through."},
+  {"h": "demo_northbeach", "hours": 5, "palette": "dawn", "u": "https://www.instagram.com/p/DemoBeach2/", "c": "First frost on the dunes at North Beach\nWorth the 6 am alarm."},
+  {"h": "demo_oldnorthend", "hours": 9, "palette": "brick", "u": "https://www.instagram.com/p/DemoONE3/", "c": "New mural going up on North Winooski. Day two of five."},
+  {"h": "demo_intervale", "hours": 20, "palette": "foliage", "u": "https://www.instagram.com/reel/DemoField4/", "c": "Peak color along the Intervale path. Bring a jacket, it’s windy by the river."},
+  {"h": "demo_churchst", "hours": 30, "palette": "neon", "u": "https://www.instagram.com/p/DemoChurch5/", "c": ""},
+  {"h": "demo_lakelight", "hours": 52, "palette": "night", "u": "https://www.instagram.com/p/DemoNight6/", "c": "Moonrise over the Adirondacks from Battery Park."}
  ]
 }

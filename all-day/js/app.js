@@ -899,12 +899,12 @@ window.addEventListener('allday-geo', () => {
    chip. Instagram goes to the Wire, Music to What Now's Tonight (the Vermont
    artists and their gigs), Wander to What Now. The Art tab was
    folded on 2026-10-17 (Habits took its slot, its shirt loop lives in
-   Vintage, its sunset line in What Now's weather). Community photos are
-   moving into the Wire as a Photo mode, so #art, #art/<key> and the older
-   #photos land on the Wire until that mode takes them (js/photo-wall.js
-   keeps the wall's drawing code for it). Their old keys mean nothing there
-   yet, so they are dropped. The address bar is rewritten so
-   the next share carries the new link. */
+   Vintage, its sunset line in What Now's weather), and community photos
+   moved into the Wire's Photo mode: #art and the older #photos open it, and
+   a picture's key (#art/b-<post id>, #art/g-<gallery id>) opens that
+   picture there. Any other old key or section means nothing now and is
+   dropped. The address bar is rewritten so the next share carries the new
+   link. */
 function legacy(h) {
   if (h === 'listen' || h.startsWith('listen/')) return 'onair' + h.slice(6);
   if (/^watch\/yt:/.test(h)) return 'onair/' + h.slice(6);
@@ -912,7 +912,11 @@ function legacy(h) {
   if (h.startsWith('reddit/')) return 'wire/' + h.slice(7);
   const m = h.match(/^(ig|music|wander|photos|art)(\/|$)/);
   if (!m) return null;
-  return { ig: 'wire', music: 'whatnow/tonight', wander: 'whatnow', photos: 'wire', art: 'wire' }[m[1]];
+  if (m[1] === 'photos' || m[1] === 'art') {
+    const key = h.slice(m[0].length);
+    return 'wire/photos' + (/^[bg]-[\w-]+$/.test(key) ? '/' + key : '');
+  }
+  return { ig: 'wire', music: 'whatnow/tonight', wander: 'whatnow' }[m[1]];
 }
 
 function parseHash() {

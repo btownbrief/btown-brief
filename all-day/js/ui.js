@@ -20,6 +20,7 @@
 
 import * as store from './store.js';
 import { attach as pour } from './liquid.js';
+import { mapUrl, oneLine } from './clubs-week.js';
 
 export const el = (tag, cls, html) => {
   const n = document.createElement(tag);
@@ -426,6 +427,40 @@ function any(it, o = {}) {
 }
 
 export const cards = { headline, row, post, pick, video, image, event, person, board, newline, caught, any };
+
+/* A club's weekly meet as a list row, the one People's week and What Now's
+   windows both draw: the start time in the tile, the club, where and the
+   pace, the newcomer line (each one line), and the place's map as the one
+   pill. `o` is a clubs-week.js occurrence; tapping the row calls onOpen(o).
+   `day` puts the day ahead of the place ("Tomorrow"). A club with no web
+   page is not drawn (rule 4). */
+export function meetRow(o, onOpen, opts = {}) {
+  const c = o && o.club, m = o && o.meet;
+  if (!c || !m || !/^https?:/i.test(String(c.url || ''))) return null;
+  const [hm, ap] = String(o.time || '').split(' ');
+  const r = el('div', 'lrow meet');
+  r.dataset.k = o.k;
+  r.dataset.club = c.id;
+  r.dataset.at = String(o.at);
+  const place = oneLine(m.where, 48), pace = oneLine(c.level, 48), newbie = oneLine(c.newcomers, 90);
+  const open = el('button', 'open', '<div class="t">' + esc(c.name) + '</div>' +
+    '<div class="s one">' + (opts.day ? '<b>' + esc(opts.day) + '</b> · ' : '') + esc([place, pace].filter(Boolean).join(' · ')) + '</div>' +
+    (newbie ? '<div class="s one nb">' + esc(newbie) + '</div>' : ''));
+  open.type = 'button';
+  open.setAttribute('aria-label', c.name + ', ' + (opts.day ? opts.day + ' ' : '') + o.time + ', ' + m.where);
+  if (onOpen) open.addEventListener('click', () => onOpen(o));
+  const map = mapUrl(m);
+  let right = el('span');
+  if (map) {
+    right = el('a', 'pillbtn map', ICON.pin + ' Map');
+    right.href = safeHref(map);
+    right.target = '_blank';
+    right.rel = 'noopener';
+    right.setAttribute('aria-label', 'Map: ' + m.where);
+  }
+  r.append(el('span', 'th tm', '<b>' + esc(hm) + '</b><span>' + esc(ap || '') + '</span>'), open, right);
+  return r;
+}
 
 /* append a card if it could be drawn */
 export function put(host, node) { if (node) host.appendChild(node); return node; }
