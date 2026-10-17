@@ -38,13 +38,29 @@
      Bandcamp player in place; nothing plays until you press its play button,
      and the shell's player steps aside for it (and silences it in turn).
 
+   - At a glance, on the Spin view (Stephen, 2026-10-17). The weather card
+     sits to the right of the Now/Tonight/Tomorrow pills, above Spin: the
+     temperature, feels like, today's high and low, a condition icon and the
+     next six hours, from the same data/weather/latest.json the guide's
+     weather page reads (refreshed hourly on main), and it opens that page.
+     Under the answer, Happening today: the rest of today's calendar from
+     data/whatnow.json (the events calendar, trimmed), in Burlington's clock,
+     daytime first and then tonight's, each opening its own listing, and a
+     link to the full events calendar.
+   - Btown Challenges, above the Top 100: one weekly challenge and three
+     evergreen ones from all-day/data/challenges.json, which Stephen edits by
+     hand (none of the boards fits a standing challenge, so readers suggest
+     one by email instead). The week's pick and the evergreen three turn over
+     on Burlington's Monday. Mark done is kept on this device, like a
+     mission's.
+
    ?demo=1 runs this same file on data/demo/whatnow.json, which holds every
    payload in its real shape; its dates are moved to today on load. */
 
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, art, section, chips, pills, button, cards, put, meetRow } from '../ui.js';
+import { el, esc, safeHref, ICON, svg, art, section, chips, pills, button, cards, put, meetRow, rail } from '../ui.js';
 import * as cw from '../clubs-week.js';
 import { loadAll } from '../whatnow-data.js';
 import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from '../whatnow-engine.js';
@@ -56,6 +72,15 @@ const MISSIONS_URL = '../data/missions.json';
 const RUN_CLUBS_URL = '../data/run-clubs.json';
 const MEETS_SHOWN = 3;
 const EVENTS_URL = '../events.html';
+const WEATHER_URL = '../weather.html';
+const CHALLENGES_URL = 'data/challenges.json';
+const CH_DONE_KEY = 'allday-challenges';
+const CH_MORE = 'https://play.btownbrief.com/challenges/';
+const CH_SUGGEST = 'btownbrief@gmail.com';
+const CH_SHOWN = 3;                      // evergreen challenges at a time
+const TODAY_SHOWN = 8;                   // Happening today, at most
+const DAY_SHOWN = 4;                     // of which before 5 pm, at most
+const HOURS_SHOWN = 6;
 const DONE_KEY = 'allday-missions';
 const SEEN_KEY = 'allday-wn-seen';
 const SEEN_MS = 20 * 3600 * 1000;       // about a day, so tomorrow does not open on today's answer
@@ -97,9 +122,11 @@ const S = {
   feeds: null, feedsFailed: false, sun: null,
   weather: null, events: null, music: null, missions: null, missionsFailed: false,
   rc: null,                              // data/run-clubs.json's clubs, [] when it did not load
+  challenges: null, challengesFailed: false,
 };
 let root = null, pending = null, ready = false, loaded = null, D = null, reel = 0;
 const done = app.demo ? Object.create(null) : { ...readMap(DONE_KEY) };
+const chDone = app.demo ? Object.create(null) : { ...readMap(CH_DONE_KEY) };
 const seenDemo = Object.create(null);
 
 function readMap(key) { const v = store.read(key, {}); return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
@@ -111,7 +138,7 @@ function load() {
   if (app.demo) {
     return app.demoData(KEY).then((d) => {
       D = redate(d);
-      S.weather = D.weather; S.events = D.events; S.music = D.music; S.missions = D.missions;
+      S.weather = D.weather; S.events = D.events; S.music = D.music; S.missions = D.missions; S.challenges = D.challenges || null;
       S.feeds = { ...D.feeds, weather: D.weather, events: D.events };
       return app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rc = []; });
     });
@@ -129,6 +156,10 @@ function load() {
       S.missions = j;
     }).catch(() => { S.missionsFailed = true; }),
     loadAll().then(({ data: feeds }) => { S.feeds = feeds; }).catch(() => { S.feedsFailed = true; }),
+    data.fetchJSON(CHALLENGES_URL, 8000).then((j) => {
+      if (!j || !Array.isArray(j.weekly) || !Array.isArray(j.evergreen)) throw new Error('bad shape');
+      S.challenges = j;
+    }).catch(() => { S.challengesFailed = true; }),
     data.fetchJSON(RUN_CLUBS_URL, 8000).then((j) => {
       if (!j || !Array.isArray(j.clubs)) throw new Error('bad shape');
       S.rc = j.clubs;
@@ -183,10 +214,11 @@ function render() {
   if (!root) return;
   closeBandcamp();
   root.innerHTML = '';
-  const wx = weatherLine();
-  if (wx) root.appendChild(wx);
-  if (S.mode === 'tonight') renderTonight();
-  else { renderSpin(); renderMissions(); }
+  if (S.mode === 'tonight') {
+    const wx = weatherLine(true);
+    if (wx) root.appendChild(wx);
+    renderTonight();
+  } else { renderSpin(); renderToday(); renderChallenges(); renderMissions(); }
 }
 
 /* One line: what it feels like, the lake when the gage is fresh, sunset.
@@ -194,13 +226,14 @@ function render() {
    to carry, folded in here on 2026-10-17): after tonight's has gone it is
    tomorrow's, and says so, and its score shows only when it is a real one,
    with a forecast behind it and not the 0.0 an empty forecast comes out
-   as. Until sun.js answers, the weather payload's time. */
-function weatherLine() {
+   as. Until sun.js answers, the weather payload's time. On the Spin view
+   the weather card carries feels like, so the line leaves it out. */
+function weatherLine(withFeels) {
   const w = S.weather;
   if (!w) return null;
   const bits = [];
   const feels = w.now && (w.now.feels_like_f != null ? w.now.feels_like_f : w.now.temp_f);
-  if (feels != null && Number.isFinite(Number(feels))) bits.push('<span><b>' + esc(Math.round(feels)) + '°</b> feels like</span>');
+  if (withFeels && feels != null && Number.isFinite(Number(feels))) bits.push('<span><b>' + esc(Math.round(feels)) + '°</b> feels like</span>');
   const g = w.lake_gage;
   const fresh = g && g.water_temp_f != null && g.water_temp_at && Date.now() - Date.parse(g.water_temp_at) < 24 * 3600000;
   if (fresh) bits.push('<span><b>' + esc(Math.round(g.water_temp_f)) + '°</b> lake</span>');
@@ -212,21 +245,115 @@ function weatherLine() {
   if (!bits.length) return null;
   const line = el('div', 'wx', bits.join(''));
   line.setAttribute('aria-label', 'Weather');
+  if (withFeels) line.dataset.feels = '1';
   return line;
 }
 
 /* sun.js answers late: put its sunset into the line already drawn */
 function paintWx() {
-  const old = root && root.querySelector(':scope > .wx');
-  const next = old && weatherLine();
+  const old = root && root.querySelector('.wx');
+  const next = old && weatherLine(old.dataset.feels === '1');
   if (next) old.replaceWith(next);
 }
 
+/* ------------------------------------------------------------ the weather card */
+/* A condition as one of six small icons, by the forecast's own words */
+const WX_ICON = {
+  sun: ICON.sun,
+  moon: ICON.moon,
+  cloud: svg('<path d="M7 18.5h10a3.6 3.6 0 0 0 .5-7.2 5.4 5.4 0 0 0-10.4 1.3A3 3 0 0 0 7 18.5z"/>'),
+  partly: svg('<path d="M8.5 3.5v1.6M3.4 8.6H5M4.9 5l1.1 1.1M12 5l-1.1 1.1"/><path d="M5.6 11.4a3.4 3.4 0 0 1 6-3.2"/><path d="M8.5 19.5h9a3.3 3.3 0 0 0 .4-6.6 5 5 0 0 0-9.6 1.2 2.7 2.7 0 0 0 .2 5.4z"/>'),
+  rain: svg('<path d="M7 15h10a3.6 3.6 0 0 0 .5-7.2A5.4 5.4 0 0 0 7.1 9.1 3 3 0 0 0 7 15z"/><path d="M9 18l-1 2.5M13 18l-1 2.5M17 18l-1 2.5"/>'),
+  snow: svg('<path d="M7 15h10a3.6 3.6 0 0 0 .5-7.2A5.4 5.4 0 0 0 7.1 9.1 3 3 0 0 0 7 15z"/><path d="M8.5 19h.01M12 20.5h.01M15.5 19h.01"/>'),
+  storm: svg('<path d="M7 15h10a3.6 3.6 0 0 0 .5-7.2A5.4 5.4 0 0 0 7.1 9.1 3 3 0 0 0 7 15z"/><path d="M12.5 15.5 10.5 19h3l-2 3"/>'),
+  fog: svg('<path d="M4 9h16M6 13h12M4 17h16"/>'),
+};
+function wxKind(text, day) {
+  const t = String(text || '').toLowerCase();
+  if (/thunder|t-storm|storm/.test(t)) return 'storm';
+  if (/snow|flurr|sleet|ice|wintry|freezing/.test(t)) return 'snow';
+  if (/rain|shower|drizzle/.test(t)) return 'rain';
+  if (/fog|haze|smoke|mist/.test(t)) return 'fog';
+  if (/partly|mostly sunny|mostly clear|few clouds|scattered clouds/.test(t)) return day ? 'partly' : 'moon';
+  if (/cloud|overcast/.test(t)) return 'cloud';
+  return day ? 'sun' : 'moon';
+}
+
+/* Daylight by today's sunrise and sunset in Burlington, as minutes of the
+   day; without them, 7 am to 6 pm. */
+function dayAt(ms) {
+  const w = S.weather || {};
+  const mins = (iso, dflt) => { const t = Date.parse(iso || ''); if (!t) return dflt; const o = et(t); return o.hour * 60 + o.minute; };
+  const rise = mins(w.sun && w.sun.sunrise, 420), set = mins(w.sun && w.sun.sunset, 1080);
+  const o = et(ms);
+  const m = o.hour * 60 + o.minute;
+  return m >= rise && m < set;
+}
+const hourWord = (h) => (h % 12 || 12) + (h < 12 ? 'a' : 'p');
+const num = (v) => (v != null && v !== '' && Number.isFinite(Number(v)) ? Math.round(Number(v)) : null);
+
+/* What the card shows, worked out from the payload: null when there is no
+   temperature to lead with. The observation stands while it is under three
+   hours old; after that the forecast hour now falls in. Today's high is the
+   forecast's daytime period that starts today in Burlington, the low its
+   night period that starts this afternoon or evening. */
+function wxNow(now = Date.now()) {
+  const w = S.weather;
+  if (!w) return null;
+  const hours = (w.hourly && Array.isArray(w.hourly.hours) ? w.hourly.hours : []).filter((h) => h && Date.parse(h.t) && num(h.temp_f) != null);
+  const obs = w.now && Date.parse(w.now.observed_at) > now - 3 * 3600000 ? w.now : null;
+  const cur = hours.find((h) => { const t = Date.parse(h.t); return t <= now && now < t + 3600000; });
+  const temp = obs && num(obs.temp_f) != null ? num(obs.temp_f) : cur ? num(cur.temp_f) : null;
+  if (temp == null) return null;
+  const feels = obs ? num(obs.feels_like_f) : cur ? num(cur.feels_f) : null;
+  const today = et(now).date;
+  const periods = w.forecast && Array.isArray(w.forecast.periods) ? w.forecast.periods.filter((p) => p && Date.parse(p.start)) : [];
+  const onToday = (p) => et(Date.parse(p.start)).date === today;
+  const hi = periods.find((p) => p.is_day && onToday(p));
+  const lo = periods.find((p) => !p.is_day && onToday(p) && et(Date.parse(p.start)).hour >= 12);
+  const next = hours.filter((h) => Date.parse(h.t) > now).slice(0, HOURS_SHOWN).map((h) => {
+    const t = Date.parse(h.t);
+    return { label: hourWord(et(t).hour), temp: num(h.temp_f), icon: wxKind(h.short, dayAt(t)), pop: num(h.pop) };
+  });
+  return {
+    temp, feels, hi: hi ? num(hi.temp_f) : null, lo: lo ? num(lo.temp_f) : null,
+    icon: wxKind((obs && obs.description) || (cur && cur.short) || '', dayAt(now)),
+    said: String((obs && obs.description) || (cur && cur.short) || ''),
+    hours: next.length >= 3 ? next : [],
+  };
+}
+
+function weatherCard() {
+  const x = wxNow();
+  if (!x) return null;
+  const a = el('a', 'wxcard');
+  a.href = WEATHER_URL;
+  a.dataset.wxicon = x.icon;
+  const hl = [x.hi != null ? 'H ' + x.hi + '°' : '', x.lo != null ? 'L ' + x.lo + '°' : ''].filter(Boolean).join(' ');
+  a.setAttribute('aria-label', [x.said, x.temp + '°', x.feels != null ? 'feels like ' + x.feels + '°' : '', hl.replace('H ', 'high ').replace('L ', 'low ')].filter(Boolean).join(', ') + '. The full forecast');
+  a.innerHTML = '<span class="wxc-top"><span class="wxc-ic">' + WX_ICON[x.icon] + '</span><b class="wxc-t">' + esc(x.temp) + '°</b>' +
+    '<span class="wxc-m">' + (x.feels != null ? '<span class="wxc-feels">Feels ' + esc(x.feels) + '°</span>' : '') +
+    (hl ? '<span class="wxc-hl">' + esc(hl) + '</span>' : '') + '</span></span>' +
+    (x.hours.length ? '<span class="wxc-hrs">' + x.hours.map((h) => '<span class="wxc-h" data-wxicon="' + esc(h.icon) + '"><i>' + esc(h.label) + '</i>' +
+      WX_ICON[h.icon] + '<b>' + esc(h.temp) + '°</b></span>').join('') + '</span>' : '');
+  return a;
+}
+
 /* ------------------------------------------------------------------ Spin */
+/* The top of the Spin view: the lake and sunset line over the window pills
+   on the left, the weather card on the right, then Spin under both. */
 function renderSpin() {
+  const top = el('div', 'wxtop');
+  const left = el('div', 'wxleft');
+  const card = weatherCard();
+  const line = weatherLine(!card);
+  if (line) left.appendChild(line);
   const tools = el('div', 'toolrow');
   tools.appendChild(pills(WINDOWS, S.window, (v) => { S.window = v; S.answer = null; S.did = false; if (moving()) spin(); else render(); }));
-  root.appendChild(tools);
+  left.appendChild(tools);
+  top.appendChild(left);
+  if (card) top.appendChild(card);
+  root.appendChild(top);
 
   const s = el('div', 'spin');
   const big = el('button', 'big', ICON.shuffle + '<span>Spin</span>');
@@ -482,6 +609,178 @@ function poolLine() {
   return (S.pool ? plural(S.pool, 'thing', 'things') + ' fit ' : 'Nothing fits ') + windowWord() + tail;
 }
 
+/* --------------------------------------------------------- Happening today */
+/* The rest of today's calendar in Burlington's clock: what is still to
+   start (or started in the last 15 minutes), plus what is on now and began
+   within two hours, daytime first and then tonight's, soonest first. All-day
+   listings are exhibits, not plans, and stay on the calendar page. After
+   the last one tonight, tomorrow's take the strip. */
+const usableEvent = (e) => !!e && !!e.id && !!e.title && /^(https?:|#)/i.test(String(e.url || '')) && !e.allDay &&
+  !(e.status && e.status !== 'active') && !/^\s*(cancel+ed|postponed)\b/i.test(e.title);
+function eventsOn(date, now) {
+  const evs = S.events && Array.isArray(S.events.events) ? S.events.events : [];
+  const seenK = new Set();
+  return evs.filter((e) => {
+    if (!usableEvent(e)) return false;
+    const start = Date.parse(e.start);
+    if (!start || et(start).date !== date) return false;
+    const end = Date.parse(e.end) || 0;
+    const on = end > now && start <= now && start >= now - 2 * 3600000;
+    if (!(start >= now - 15 * 60000 || on)) return false;
+    const sig = e.title.toLowerCase().replace(/[^a-z0-9]+/g, '') + '|' + start;
+    if (seenK.has(sig)) return false;
+    seenK.add(sig);
+    return true;
+  }).sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
+}
+function happening(now = Date.now()) {
+  const muted = store.muted();
+  const keep = (e) => !muted['venue:' + (e.venue || e.town || 'calendar').toLowerCase()];
+  const today = et(now).date;
+  let list = eventsOn(today, now).filter(keep);
+  let day = 'today';
+  if (!list.length) { list = eventsOn(addDays(today, 1), now).filter(keep); day = 'tomorrow'; }
+  const isNight = (e) => et(Date.parse(e.start)).hour >= EVENING;
+  const early = list.filter((e) => !isNight(e)).slice(0, day === 'today' ? DAY_SHOWN : TODAY_SHOWN);
+  const late = list.filter(isNight).slice(0, TODAY_SHOWN - early.length);
+  return { day, early, late };
+}
+
+function todayTile(e, now) {
+  const start = Date.parse(e.start);
+  const a = el('a', 'tday' + (et(start).hour >= EVENING ? ' night' : ''));
+  a.href = safeHref(e.url);
+  if (!/^#/.test(e.url)) { a.target = '_blank'; a.rel = 'noopener'; }
+  a.dataset.k = 'd-' + e.id;
+  const when = start <= now ? 'On now' : clock(start).replace(/(\d)([ap]m)$/, '$1 $2');
+  const where = e.venue || e.town || '';
+  a.innerHTML = '<span class="tw">' + esc(when) + '</span><span class="tt">' + esc(e.title.replace(/^['‘’"“]+|['‘’"“]+$/g, '')) + '</span>' +
+    (where ? '<span class="tv">' + esc(where) + '</span>' : '');
+  return a;
+}
+
+function renderToday() {
+  if (!S.events) return;
+  const now = Date.now();
+  const { day, early, late } = happening(now);
+  const head = section(root, day === 'today' ? 'Happening today' : 'Happening tomorrow');
+  head.dataset.sec = 'today';
+  if (early.length || late.length) {
+    const track = rail(root, 'today');
+    early.forEach((e) => track.appendChild(todayTile(e, now)));
+    if (late.length && early.length) track.appendChild(el('span', 'tdsep eyebrow', 'Tonight'));
+    late.forEach((e) => track.appendChild(todayTile(e, now)));
+  } else root.appendChild(el('p', 'note pad', esc('Nothing else today.')));
+  const links = el('div', 'linkrow todaylinks');
+  links.appendChild(openLink('Full events calendar', EVENTS_URL, true));
+  root.appendChild(links);
+}
+
+/* ---------------------------------------------------------- Btown Challenges */
+const CH_KINDS = { eat: 'Eat', climb: 'Climb', explore: 'Explore', streak: 'Streak' };
+const usableChallenge = (c) => !!c && /^[a-z0-9-]{1,60}$/.test(String(c.id || '')) && !!c.title &&
+  /^(https?:\/\/|\.\.\/[\w./-]+(\?[\w=&-]*)?$)/i.test(String(c.url || ''));
+const chKind = (c) => (CH_KINDS[c.kind] ? c.kind : 'explore');
+
+/* Burlington's week, counted in Mondays since 1970, so the pick turns over
+   on Monday wherever the reader is */
+function weekNo(now = Date.now()) {
+  const d = et(now).date;
+  const dow = (utcNoon(d).getUTCDay() + 6) % 7;             // Monday 0
+  return { n: Math.floor((utcNoon(addDays(d, -dow)) - utcNoon('1970-01-05')) / (7 * 86400000)), monday: addDays(d, -dow) };
+}
+function challengesNow() {
+  const ch = S.challenges || {};
+  const weekly = (Array.isArray(ch.weekly) ? ch.weekly : []).filter(usableChallenge);
+  const ever = (Array.isArray(ch.evergreen) ? ch.evergreen : []).filter(usableChallenge);
+  const w = weekNo();
+  const pinned = weekly.find((c) => c.week === w.monday);
+  const loose = weekly.filter((c) => !c.week);
+  const week = pinned || (loose.length ? loose[w.n % loose.length] : null);
+  const start = ever.length ? (w.n * CH_SHOWN) % ever.length : 0;
+  const three = ever.length <= CH_SHOWN ? ever : Array.from({ length: CH_SHOWN }, (_, i) => ever[(start + i) % ever.length]);
+  return { week, three };
+}
+const chDoneOn = (c) => !!chDone[c.id];
+
+function renderChallenges() {
+  if (!S.challenges) return;
+  const { week, three } = challengesNow();
+  if (!week && !three.length) return;
+  const mail = 'mailto:' + (/^[^@\s]+@[^@\s]+$/.test(String(S.challenges.suggest || '')) ? S.challenges.suggest : CH_SUGGEST) +
+    '?subject=' + encodeURIComponent('A Btown challenge') + '&body=' + encodeURIComponent('The challenge:\n\nWhere:\n\n');
+  const suggest = el('a', 'btn ghost sm suggest', ICON.mail + ' Suggest one');
+  suggest.href = mail;
+  const head = section(root, 'Btown Challenges', null, suggest);
+  head.dataset.sec = 'challenges';
+  const box = el('div', 'challenges');
+  if (week) box.appendChild(weekCard(week));
+  three.forEach((c) => box.appendChild(challengeRow(c)));
+  root.appendChild(box);
+  const more = /^https:\/\//.test(String(S.challenges.more || '')) ? S.challenges.more : CH_MORE;
+  const links = el('div', 'linkrow chlinks');
+  links.appendChild(openLink('All challenges', more));
+  root.appendChild(links);
+}
+
+function chLink(c, label) {
+  const ours = !/^https?:/i.test(c.url);
+  return openLink(label, c.url, ours);
+}
+
+function weekCard(c) {
+  const on = chDoneOn(c);
+  const r = el('div', 'chweek ch-' + chKind(c) + (on ? ' done' : ''));
+  r.dataset.k = 'c-' + c.id;
+  r.innerHTML = '<div class="eyebrow">This week</div><h3>' + esc(c.title) + '</h3>' + (c.line ? '<p>' + esc(c.line) + '</p>' : '') + '<div class="row"></div>';
+  r.querySelector('.row').append(chDoneButton(c), chLink(c, 'Details'));
+  return r;
+}
+
+function challengeRow(c) {
+  const on = chDoneOn(c);
+  const r = el('div', 'lrow chal ch-' + chKind(c) + (on ? ' done' : ''));
+  r.dataset.k = 'c-' + c.id;
+  const meta = [CH_KINDS[chKind(c)], c.where].filter(Boolean).join(' · ');
+  const open = el('button', 'open', '<div class="t">' + esc(c.title) + '</div><div class="s">' + esc(meta) + '</div>');
+  open.setAttribute('aria-label', c.title + '. Read it');
+  open.addEventListener('click', () => challengeSheet(c));
+  r.append(el('span', 'num', ICON.trophy), open, chDoneButton(c));
+  return r;
+}
+
+function chDoneButton(c, after) {
+  const on = chDoneOn(c);
+  const b = el('button', 'pillbtn markdone' + (on ? ' on' : ''), on ? ICON.check + ' Done' : 'Mark done');
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  b.setAttribute('aria-label', (on ? 'Done: ' : 'Mark done: ') + c.title);
+  b.addEventListener('click', () => { setChDone(c, !chDoneOn(c)); if (after) after(); });
+  return b;
+}
+
+function setChDone(c, on) {
+  if (on) chDone[c.id] = Math.floor(Date.now() / 1000); else delete chDone[c.id];
+  if (!app.demo) store.write(CH_DONE_KEY, chDone);
+  app.toast(on ? 'Challenge done' : 'Challenge unmarked');
+  const y = panel() ? panel().scrollTop : 0;
+  render();
+  if (panel()) panel().scrollTop = y;
+}
+
+function challengeSheet(c) {
+  app.sheet(c.title, (body) => {
+    const paint = () => {
+      body.innerHTML = '';
+      body.appendChild(el('p', 'sheet-note', esc([CH_KINDS[chKind(c)], c.where].filter(Boolean).join(' · '))));
+      if (c.line) body.appendChild(el('p', 'pick-why', esc(c.line)));
+      const btns = el('div', 'linkrow');
+      btns.append(chDoneButton(c, paint), chLink(c, 'Details'));
+      body.appendChild(btns);
+    };
+    paint();
+  });
+}
+
 /* --------------------------------------------------------------- Missions */
 const missions = () => (S.missions && Array.isArray(S.missions.missions) ? S.missions.missions.filter((m) => m && m.k && m.title) : []);
 const isDone = (k) => !!done[k];
@@ -499,7 +798,7 @@ function renderMissions() {
   head.dataset.sec = 'missions';
   const themes = (S.missions.themes || Object.keys(THEME)).filter((t) => all.some((m) => m.theme === t));
   if (S.theme !== 'all' && !themes.includes(S.theme)) S.theme = 'all';
-  root.appendChild(chips([{ key: 'all', label: 'All', n: all.length }].concat(themes.map((t) => ({ key: t, label: THEME[t] || t, n: all.filter((m) => m.theme === t).length }))),
+  root.appendChild(chips([{ key: 'all', label: 'All', n: all.length }].concat(themes.map((t) => ({ key: t, label: THEME[t] || t, n: all.filter((m) => m.theme === t).length, cls: THEME[t] ? 'th-' + t : '' }))),
     S.theme, (k) => { S.theme = k; history.replaceState(null, '', location.search + '#whatnow/missions'); render(); }, 'themes'));
   const list = all.filter((m) => S.theme === 'all' || m.theme === S.theme);
   const box = el('div', 'missions');
@@ -533,7 +832,7 @@ function clubMission() {
 
 function missionRow(m) {
   const on = isDone(m.k);
-  const r = el('div', 'lrow mission' + (on ? ' done' : ''));
+  const r = el('div', 'lrow mission' + (THEME[m.theme] ? ' th-' + m.theme : '') + (on ? ' done' : ''));
   r.dataset.k = m.k;
   const hoods = [...new Set((m.places || []).map((p) => p.neighborhood).filter((h) => h && h !== 'Greater Burlington'))];
   const meta = [THEME[m.theme] || m.theme, (m.places || []).length > 1 ? plural(m.places.length, 'place', 'places') : '', hoods.slice(0, 2).join(', ')].filter(Boolean).join(' · ');
@@ -833,9 +1132,9 @@ function land() {
   if (!pending || !ready) return;
   const k = pending; pending = null;
   if (MODES.includes(k)) { if (S.mode !== k) setMode(k); return; }
-  const want = /^m\d+$/.test(k) ? 'missions' : /^[ea]-/.test(k) ? 'tonight' : null;
+  const want = /^m\d+$/.test(k) ? 'missions' : /^[ea]-/.test(k) ? 'tonight' : /^c-/.test(k) && S.mode === 'tonight' ? 'spin' : null;
   if (want && (S.mode !== want || (want === 'missions' && S.theme !== 'all'))) { stopReel(); S.mode = want; S.theme = 'all'; app.paintSubnav(); render(); }
-  if (!app.flashHit(root, k)) app.toast(want === 'missions' ? 'That mission isn’t on the list any more.' : 'That one has passed.');
+  if (!app.flashHit(root, k)) app.toast(want === 'missions' ? 'That mission isn’t on the list any more.' : /^c-/.test(k) ? 'That challenge isn’t up this week.' : 'That one has passed.');
 }
 
 app.register(KEY, {

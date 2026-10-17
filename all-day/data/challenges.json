@@ -1,0 +1,160 @@
+{
+ "_": "Btown Challenges, shown in What Now above the Top 100. Stephen edits this file by hand; nothing builds it. weekly: one shows each week (Monday to Sunday, Burlington time), going down the list and starting over at the end; give one a \"week\" (that week's Monday, YYYY-MM-DD) to pin it to that week instead. evergreen: three show at a time and the three change every week. kind is eat, climb, explore or streak, and picks the colour. url is where the challenge lives: the challenge board's own page (play.btownbrief.com/challenges/?c=<id>) or a guide page like ../sunset.html. Reader ideas come in by email to suggest.",
+ "updated": "2026-10-17",
+ "suggest": "btownbrief@gmail.com",
+ "more": "https://play.btownbrief.com/challenges/",
+ "weekly": [
+  {
+   "id": "w-new-sunset",
+   "title": "A new sunset spot",
+   "line": "Watch one sunset this week from somewhere you never have.",
+   "kind": "explore",
+   "url": "../sunset.html"
+  },
+  {
+   "id": "w-solo-event",
+   "title": "Go to one thing alone",
+   "line": "Pick an event off the calendar and go by yourself. Talk to one person there.",
+   "kind": "explore",
+   "url": "../events.html"
+  },
+  {
+   "id": "w-car-free",
+   "title": "Three car-free days",
+   "line": "Walk, bike or take the bus everywhere for three days this week.",
+   "kind": "streak",
+   "url": "https://ridegmt.com/"
+  },
+  {
+   "id": "w-walked-past",
+   "title": "The place you always walk past",
+   "line": "Eat at the spot you have walked by a hundred times and never tried.",
+   "kind": "eat",
+   "url": "../restaurants.html"
+  },
+  {
+   "id": "w-give-an-hour",
+   "title": "Give an hour",
+   "line": "Volunteer one hour somewhere in town this week.",
+   "kind": "explore",
+   "url": "../volunteer.html"
+  },
+  {
+   "id": "w-top-of-something",
+   "title": "Get to the top of something",
+   "line": "Hike one peak this week. Mt. Philo, Snake Mountain, Camel's Hump, your pick.",
+   "kind": "climb",
+   "url": "https://www.greenmountainclub.org/"
+  },
+  {
+   "id": "w-coffee-week",
+   "title": "Five coffees, five places",
+   "line": "A different local coffee spot every weekday, no repeats.",
+   "kind": "streak",
+   "url": "../restaurants.html"
+  },
+  {
+   "id": "w-go-to-a-game",
+   "title": "Go to a game",
+   "line": "UVM, high school or rec league. Any local game with a scoreboard counts.",
+   "kind": "explore",
+   "url": "../sports.html"
+  },
+  {
+   "id": "w-take-a-class",
+   "title": "Take a class",
+   "line": "Sign up for one class or workshop you have never tried.",
+   "kind": "explore",
+   "url": "../hobbies.html"
+  },
+  {
+   "id": "w-walking-tour",
+   "title": "Walk the old town",
+   "line": "Do the Btown Brief walking tour, start to finish.",
+   "kind": "explore",
+   "url": "../walking-tour.html"
+  }
+ ],
+ "evergreen": [
+  {
+   "id": "sunset-tour",
+   "title": "The Sunset Tour",
+   "line": "Catch a sunset from every spot on the Btown Brief sunset guide.",
+   "where": "Around Burlington",
+   "kind": "explore",
+   "url": "https://play.btownbrief.com/challenges/?c=sunset-tour"
+  },
+  {
+   "id": "creemee-crawl",
+   "title": "The Creemee Crawl",
+   "line": "One creemee from five different stands in a single summer. At least one maple.",
+   "where": "Burlington and around",
+   "kind": "eat",
+   "url": "https://play.btownbrief.com/challenges/?c=creemee-crawl"
+  },
+  {
+   "id": "vermont-5",
+   "title": "The Vermont 5",
+   "line": "Summit Mansfield, Killington, Camel's Hump, Ellen and Abraham, the state's five 4,000-footers.",
+   "where": "Statewide",
+   "kind": "climb",
+   "url": "https://play.btownbrief.com/challenges/?c=vermont-5"
+  },
+  {
+   "id": "dawn-patrol",
+   "title": "Dawn Patrol",
+   "line": "Watch five sunrises from the waterfront in one month.",
+   "where": "Burlington waterfront",
+   "kind": "streak",
+   "url": "https://play.btownbrief.com/challenges/?c=dawn-patrol"
+  },
+  {
+   "id": "park-passport",
+   "title": "Park Passport",
+   "line": "Set foot in every Burlington city park. Yes, all of them.",
+   "where": "Burlington",
+   "kind": "explore",
+   "url": "https://play.btownbrief.com/challenges/?c=park-passport"
+  },
+  {
+   "id": "four-seasons-summit",
+   "title": "Four Seasons, One Summit",
+   "line": "Summit the same Vermont peak in all four seasons within one year.",
+   "where": "Your pick of peak",
+   "kind": "climb",
+   "url": "https://play.btownbrief.com/challenges/?c=four-seasons-summit"
+  },
+  {
+   "id": "local-ten",
+   "title": "The Local Ten",
+   "line": "Buy something from ten different locally owned shops. Farmers market stalls count.",
+   "where": "Downtown Burlington",
+   "kind": "explore",
+   "url": "https://play.btownbrief.com/challenges/?c=local-ten"
+  },
+  {
+   "id": "the-long-swim",
+   "title": "The Long Swim",
+   "line": "Swim in the lake at least once a month, May through October.",
+   "where": "Lake Champlain",
+   "kind": "streak",
+   "url": "https://play.btownbrief.com/challenges/?c=the-long-swim"
+  },
+  {
+   "id": "island-line",
+   "title": "Island Line End to End",
+   "line": "Ride the Island Line Trail end to end, causeway and bike ferry included.",
+   "where": "Burlington to South Hero",
+   "kind": "explore",
+   "url": "https://play.btownbrief.com/challenges/?c=island-line"
+  },
+  {
+   "id": "end-to-ender",
+   "title": "Long Trail End-to-Ender",
+   "line": "Hike all 272 miles of the Long Trail, Massachusetts to Canada.",
+   "where": "The whole Long Trail",
+   "kind": "climb",
+   "url": "https://play.btownbrief.com/challenges/?c=end-to-ender"
+  }
+ ]
+}
