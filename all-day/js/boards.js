@@ -3,7 +3,7 @@
    The People, Vintage, Art and Watchlist tabs all need the same few things:
    a reader who is known, a place to post, votes, reports, an expiry and a
    way to take a post down. This module is that, on the fleet's Supabase
-   project under the nn_ prefix (supabase/nn-SETUP.sql), with the rules in
+   project under the nn_ prefix (supabase/nn-SETUP.sql, then nn-ROUND2.sql), with the rules in
    boards-core.js and an in-memory copy of the server in boards-fake.js for
    ?demo=1. A tab never talks to Supabase about posts itself.
 
@@ -13,16 +13,25 @@
      boards.list('vintage', { kind: 'spotted', meta: { size: 'M' }, limit, before, sort: 'top' })
                                        -> { ok, posts }   posts newest first
      boards.item(post, { tab, ratio, meta: (p) => 'Size M · $28' })
-                                       -> an item for cards.board (app.know() it, or use boards.put)
-     boards.put(host, posts, opts)     -> draws and knows them; the host must be bindFeed()-ed
+                                       -> an item for cards.board (app.know() it, or use boards.draw)
+     boards.draw(host, posts, opts)    -> draws and knows them; the host must be bindFeed()-ed
      boards.compose({ board, kind, heading, title, body, place, fields, notes, onPosted })
                                        -> opens the compose sheet
      boards.create(board, { kind, title, body, place, meta, photo, consent }) -> { ok, post }
+     boards.put(id, { got: true })     -> { ok, post }   change your own post's fields; a null removes one
      boards.mine() -> { ok, posts }     boards.remove(id) -> { ok }
-     boards.vote(id) / boards.unvote(id) -> { ok, votes, voted }
+     boards.vote(id) / boards.unvote(id) -> { ok, votes, voted, moved }
+                                       moved: the posts a one-vote kind's vote left (the Watch ballot)
+     boards.votesByWeek(board, weeks)  -> { ok, weeks: [{ post, week: '2026-W42', votes }] }
+                                       votes counted by the Burlington week they were cast
      boards.report(id, reason)          -> { ok, hidden }
-     boards.profile() -> { ok, profile } boards.setProfile({ display_name, neighborhood, archetype })
+     boards.profile() -> { ok, profile } boards.setProfile({ display_name, neighborhood, archetype, interests })
+                                       interests left out: the server keeps the ones it has
      boards.status()  'unknown' | 'live' | 'off' (the SQL is not pasted yet)
+
+   put() and votesByWeek() need nn-ROUND2.sql; until it is pasted they
+   answer { ok: false, error: 'off' } and the rest of the boards stay live,
+   so a tab can fall back to what it did before.
 
    Every call resolves { ok: true, ... } or { ok: false, error, message } and
    never rejects; `message` is a sentence to show as is. Signed-out readers
@@ -37,7 +46,7 @@
 import * as app from './app.js';
 import * as store from './store.js';
 import { el, esc, ICON, agoShort, pills, button, cards } from './ui.js';
-import { RULES, BOARD_LABELS, NEIGHBORHOOD_LABELS, ARCHETYPE_LABELS, REASON_LABELS, message, checkPost, checkProfile, leftLabel } from './boards-core.js';
+import { RULES, BOARD_LABELS, NEIGHBORHOOD_LABELS, ARCHETYPE_LABELS, REASON_LABELS, INTEREST_LABELS, message, checkPost, checkProfile, leftLabel } from './boards-core.js';
 import { FakeBoards, seedDemo, DEMO_ME } from './boards-fake.js';
 
 const PHOTOS_LIB = '../js/photos-lib.js';
@@ -57,6 +66,9 @@ let state = 'unknown';
 export const status = () => state;
 
 const fail = (error) => ({ ok: false, error, message: message(error) });
+/* round two's own doors (nn-ROUND2.sql): missing, they are 'off' for the
+   call, never for the boards */
+const ROUND2 = new Set(['nn_post_meta_set', 'nn_votes_by_week']);
 
 /* One call to an nn_ function, as the reader. Live, it is a POST to
    PostgREST with the reader's token when signed in; the server's refusal
@@ -82,7 +94,7 @@ function call(fn, args) {
     let j = null;
     try { j = t ? JSON.parse(t) : null; } catch (e) { j = null; }
     if (r.ok) { state = 'live'; return { ok: true, data: j }; }
-    if (r.status === 404 && j && j.code === 'PGRST202') { state = 'off'; return fail('off'); }
+    if (r.status === 404 && j && j.code === 'PGRST202') { if (!ROUND2.has(fn) && !('p_interests' in (args || {}))) state = 'off'; return fail('off'); }
     if (r.status === 401) return fail('not_signed_in');
     const code = j && typeof j.message === 'string' && /^[a-z_]+$/.test(j.message) ? j.message : 'offline';
     if (code !== 'offline') state = 'live';
@@ -143,6 +155,8 @@ function sendPhoto(board, file, title, prof) {
 let me;              // undefined: not asked yet; null: no profile; else the profile
 let meAsk = null;
 app.onAuth(() => { me = undefined; meAsk = null; });
+/* a profile always has its interests, [] before nn-ROUND2.sql */
+const withInterests = (p, keep) => (p ? { ...p, interests: Array.isArray(p.interests) ? p.interests : (keep || []) } : null);
 
 export function profile() {
   if (!app.user()) return Promise.resolve(fail('not_signed_in'));
@@ -151,7 +165,7 @@ export function profile() {
     meAsk = call('nn_profile_get').then((r) => {
       meAsk = null;
       if (!r.ok) return r;
-      me = r.data || null;
+      me = withInterests(r.data);
       return { ok: true, profile: me };
     });
   }
@@ -160,13 +174,19 @@ export function profile() {
 export function setProfile(input) {
   const c = checkProfile(RULES, input || {});
   if (!c.ok) return Promise.resolve(fail(c.error));
-  return call('nn_profile_set', { p_display_name: c.profile.display_name, p_neighborhood: c.profile.neighborhood, p_archetype: c.profile.archetype })
-    .then((r) => {
-      if (!r.ok) return r;
-      me = r.data;
-      changed(null, null, 'profile');
-      return { ok: true, profile: me };
-    });
+  const args = { p_display_name: c.profile.display_name, p_neighborhood: c.profile.neighborhood, p_archetype: c.profile.archetype };
+  const had = me && me.interests;
+  const send = (a) => call('nn_profile_set', a);
+  /* with interests it is round two's call; before nn-ROUND2.sql is pasted
+     that call is missing, so the rest is saved without them */
+  const go = c.profile.interests ? send({ ...args, p_interests: c.profile.interests }).then((r) => (r.ok || r.error !== 'off' ? r : send(args).then((x) => (x.ok ? { ...x, interestsLost: true } : x))))
+    : send(args);
+  return go.then((r) => {
+    if (!r.ok) return r;
+    me = withInterests(r.data, had);
+    changed(null, null, 'profile');
+    return r.interestsLost ? { ok: true, profile: me, interestsSaved: false } : { ok: true, profile: me };
+  });
 }
 
 /* ---------------------------------------------------------------- posts */
@@ -208,6 +228,26 @@ export function create(board, input = {}) {
   });
 }
 
+/* Change the fields on your own post (nn_post_meta_set): `meta` goes over
+   the fields it has, a null takes one away. The post comes back. */
+export function put(id, meta) {
+  /* the drawing helper used to be called put(host, posts, opts) */
+  if (id && id.nodeType === 1) return draw(id, meta, arguments[2]);
+  if (!app.user()) return Promise.resolve(fail('not_signed_in'));
+  return call('nn_post_meta_set', { p_post: id, p_meta: meta || {} }).then((r) => {
+    if (!r.ok) return r;
+    changed(r.data.board, id, 'edit');
+    return { ok: true, post: r.data };
+  });
+}
+
+/* Votes counted by the Burlington week they were cast: this week and the
+   weeks - 1 before it. Weeks are ISO labels (boards-core isoWeek). */
+export function votesByWeek(board, weeks) {
+  return call('nn_votes_by_week', { p_board: board, p_weeks: weeks || 8 })
+    .then((r) => (r.ok ? { ok: true, weeks: Array.isArray(r.data) ? r.data : [] } : Object.assign(r, { weeks: [] })));
+}
+
 export function mine() {
   if (!app.user()) return Promise.resolve(Object.assign(fail('not_signed_in'), { posts: [] }));
   return call('nn_post_mine').then((r) => (r.ok ? { ok: true, posts: r.data || [] } : Object.assign(r, { posts: [] })));
@@ -216,7 +256,8 @@ export function remove(id) {
   return call('nn_post_delete_own', { p_post: id }).then((r) => { if (r.ok) changed(null, id, 'delete'); return r.ok ? { ok: true } : r; });
 }
 export function vote(id) {
-  return call('nn_vote', { p_post: id, p_player: store.playerId() }).then((r) => (r.ok ? { ok: true, votes: Number(r.data.votes) || 0, voted: true } : r));
+  return call('nn_vote', { p_post: id, p_player: store.playerId() })
+    .then((r) => (r.ok ? { ok: true, votes: Number(r.data.votes) || 0, voted: true, moved: Array.isArray(r.data.moved) ? r.data.moved : [] } : r));
 }
 export function unvote(id) {
   return call('nn_unvote', { p_post: id, p_player: store.playerId() }).then((r) => (r.ok ? { ok: true, votes: Number(r.data.votes) || 0, voted: false } : r));
@@ -254,7 +295,7 @@ export function item(post, opts = {}) {
     left: leftLabel(ends, Date.now()),
   };
 }
-export function put(host, posts, opts = {}) {
+export function draw(host, posts, opts = {}) {
   const items = (posts || []).map((p) => item(p, opts));
   app.know(items);
   items.forEach((it) => { const n = cards.board(it); if (n) host.appendChild(n); });
@@ -278,7 +319,12 @@ app.onAct('bvote', (it) => {
   it.votes = Math.max(0, it.votes + (it.voted ? 1 : -1));
   paintVote(it);
   (it.voted ? vote : unvote)(it.id).then((r) => {
-    if (r.ok) { it.votes = r.votes; it.voted = r.voted; paintVote(it); return; }
+    if (r.ok) {
+      it.votes = r.votes; it.voted = r.voted; paintVote(it);
+      /* a one-vote kind moved the vote off another post */
+      (r.moved || []).forEach((id) => { const o = app.item('b-' + id); if (o && o.voted) { o.voted = false; o.votes = Math.max(0, o.votes - 1); paintVote(o); } });
+      return;
+    }
     Object.assign(it, was);
     paintVote(it);
     app.toast(r.message);
@@ -472,6 +518,27 @@ export function profileSheet() {
       w.appendChild(pills([['', 'None']].concat(RULES.archetypes.map((a) => [a, ARCHETYPE_LABELS[a]])), arch, (v) => { arch = v; }, 'wrap'));
       w.appendChild(el('p', 'bf-hint', esc('The People tab uses it to put plans like yours first.')));
       f.appendChild(w);
+      /* what you're into: any of the activity list, several at once */
+      const into = new Set(cur.interests || []);
+      const iw = el('div', 'bf-row');
+      iw.appendChild(el('div', 'bf-label', 'What you’re into <span class="bf-opt">optional</span>'));
+      const box = el('div', 'pills wrap');
+      box.dataset.interests = '';
+      RULES.interests.forEach((k) => {
+        const b = el('button', into.has(k) ? 'on' : '', esc(INTEREST_LABELS[k]));
+        b.type = 'button';
+        b.dataset.k = k;
+        b.setAttribute('aria-pressed', into.has(k) ? 'true' : 'false');
+        b.addEventListener('click', () => {
+          if (into.has(k)) into.delete(k); else if (into.size < RULES.limits.interestsMax) into.add(k); else return;
+          b.classList.toggle('on', into.has(k));
+          b.setAttribute('aria-pressed', into.has(k) ? 'true' : 'false');
+        });
+        box.appendChild(b);
+      });
+      iw.appendChild(box);
+      iw.appendChild(el('p', 'bf-hint', esc('Activities only, up to eight. The People tab suggests plans and clubs by them; nobody sees them unless you join its directory.')));
+      f.appendChild(iw);
       const msg = el('p', 'bf-msg');
       const go = button('Save', '');
       go.type = 'submit';
@@ -483,11 +550,12 @@ export function profileSheet() {
         e.preventDefault();
         const fd = new FormData(f);
         go.disabled = true;
-        setProfile({ display_name: fd.get('display_name'), neighborhood: fd.get('neighborhood'), archetype: arch }).then((r) => {
+        const interests = RULES.interests.filter((k) => into.has(k));
+        setProfile({ display_name: fd.get('display_name'), neighborhood: fd.get('neighborhood'), archetype: arch, interests }).then((r) => {
           go.disabled = false;
           if (!r.ok) { msg.textContent = r.message; msg.classList.add('err'); return; }
           close();
-          app.toast('Saved');
+          app.toast(r.interestsSaved === false ? 'Saved. What you’re into saves once the boards’ next update is in.' : 'Saved');
         });
       });
     });
@@ -535,7 +603,7 @@ app.registerAccount((host, repaint) => {
     if (!p.ok) { d.textContent = p.error === 'off' ? 'Posting is coming soon.' : p.message; return; }
     d.textContent = p.profile ? 'as ' + p.profile.display_name : 'Add your first name before you post';
   });
-  const prof = el('div', 'sheet-row', '<div class="t">Your profile<div class="d">First name, neighborhood, and who you are here as</div></div>');
+  const prof = el('div', 'sheet-row', '<div class="t">Your profile<div class="d">First name, neighborhood, who you are here as, and what you’re into</div></div>');
   prof.appendChild(button('Edit', 'ghost sm', profileSheet));
   const posts = el('div', 'sheet-row', '<div class="t">Your posts<div class="d">Everything you have posted, and where it stands</div></div>');
   posts.appendChild(button('Open', 'ghost sm', mineSheet));

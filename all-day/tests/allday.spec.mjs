@@ -2274,7 +2274,7 @@ async function drawBoard(page, board, extra) {
     host.innerHTML = '';
     const r = await B.list(board, extra || {});
     const meta = (p) => [p.meta.shop, p.meta.size, p.meta.price != null ? '$' + p.meta.price : ''].filter(Boolean).join(' · ');
-    B.put(host, r.posts, { meta: board === 'vintage' ? meta : undefined });
+    B.draw(host, r.posts, { meta: board === 'vintage' ? meta : undefined });
   }, { board, extra });
 }
 const COMPOSE = { board: 'vintage', kind: 'spotted', heading: 'Post a find', title: 'What did you spot?',
@@ -2629,11 +2629,11 @@ async function theVintage(browser, base) {
     await page.click('#confirm [data-yes]');
     await page.waitForFunction((n) => Number(document.querySelector('.panel:not([hidden]) [data-thanks]').dataset.thanks) === n + 1, t0.n);
     const t1 = await thanksOf(page);
-    check(t1.n === t0.n + 1 && new RegExp(t1.n + ' finds posted from this device found a home this month').test(t1.text), 'the thank-you line counts one more find gone home', JSON.stringify([t0, t1]));
+    check(t1.n === t0.n + 1 && new RegExp(t1.n + ' finds posted here found a home lately').test(t1.text), 'the thank-you line counts one more find gone home', JSON.stringify([t0, t1]));
     check(/No points and no prizes/.test(t1.text) && !/raffle|enter to win|\bearn|\bdraw\b/i.test(t1.text), 'a thank-you, not points, prizes or a raffle', t1.text);
-    check(!(await page.$(vslot('spotted') + ' .card.board[data-k="b-' + id + '"]')), 'and the find leaves the board', '');
-    const gone = await fakeOf(page, `(f) => f.posts.some((p) => p.id === '${id}')`);
-    check(gone === false, 'the post is gone from the board, not just hidden here', '');
+    check(!(await page.$(vslot('spotted') + ' .card.board[data-k="b-' + id + '"]')), 'and the find leaves the grid', '');
+    const got = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.id === '${id}'); return p && { got: p.meta.got, shop: p.meta.shop }; }`);
+    check(got && got.got === true && got.shop === 'A stall at the Saturday market', 'the post’s got box is ticked on the board (boards.put), so everyone’s thank-you counts it', JSON.stringify(got));
     await pageRules(page, 'vintage', 1280);
     await page.screenshot({ path: path.join(SHOTS, 'demo-vintage-desktop-dark.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -2666,9 +2666,10 @@ async function theVintage(browser, base) {
     await page.check(f + ' input[name=consent]');
     await page.click(f + ' button[type=submit]');
     await page.waitForFunction(() => /^Sent\./.test(document.querySelector('#toast').textContent), null, { timeout: 4000 });
-    const sent = await fakeOf(page, `(x) => { const p = x.posts[x.posts.length - 1]; return { kind: p.kind, shop: p.meta.shop, title: p.title, body: p.body, photo: x._photoState(p.photo_path), n: x.posts.length }; }`);
-    check(sent.n === before.posts + 1 && sent.kind === 'spotted' && sent.shop === 'Make a tee' && sent.title === 'Rainy Church Street', 'sent: a Vintage post tagged “Make a tee”, until there is a design kind', JSON.stringify(sent));
-    check(/Thanks in: free shirts/.test(sent.body) && sent.photo === 'pending', 'it carries the artist’s choice for Stephen, and its picture waits in the photo queue', JSON.stringify(sent));
+    const sent = await fakeOf(page, `(x) => { const p = x.posts[x.posts.length - 1]; return { kind: p.kind, meta: p.meta, title: p.title, body: p.body, photo: x._photoState(p.photo_path), n: x.posts.length, ends: p.expires_at }; }`);
+    check(sent.n === before.posts + 1 && sent.kind === 'design' && sent.title === 'Rainy Church Street' && sent.ends === null, 'sent: a Vintage `design` post, which never ends', JSON.stringify(sent));
+    check(JSON.stringify(sent.meta) === '{"thanks":"shirts"}' && sent.body === 'Ink, from the corner by the steeple' && sent.photo === 'pending',
+      'the artist’s choice is its `thanks` field, the line is its body, and its picture waits in the photo queue', JSON.stringify(sent));
     check(await page.$eval('#sheet', (x) => x.hidden), 'the sheet closes once it is sent', '');
     const sentText = await page.$eval(vslot('sent'), (s) => s.innerText);
     check(!/Thanks in/.test(sentText), 'how an artist asked to be thanked never shows on the public card', sentText.slice(0, 120));
@@ -2750,8 +2751,12 @@ async function theVintage(browser, base) {
       { ...base0, id: '0000cccc-0000-4000-8000-000000000002', board: 'vintage', kind: 'spotted', title: 'My Sunday fit', meta: { shop: 'Fit check' }, photo: 'submissions/abcd-2.jpg', created_at: at(3), expires_at: ends(19) },
       { ...base0, id: '0000cccc-0000-4000-8000-000000000003', board: 'vintage', kind: 'spotted', title: 'Fit, photo still waiting', meta: { shop: 'Fit check' }, photo: null, created_at: at(4), expires_at: ends(19) },
       { ...base0, id: '0000cccc-0000-4000-8000-000000000004', board: 'vintage', kind: 'spotted', title: 'Lake ink', body: 'Pen and ink\n\nThanks in: store credit', meta: { shop: 'Make a tee' }, photo: 'submissions/abcd-4.jpg', created_at: at(5), expires_at: ends(18) },
+      { ...base0, id: '0000cccc-0000-4000-8000-000000000006', board: 'vintage', kind: 'spotted', title: 'Gone wool coat', meta: { shop: 'Old Gold', got: true }, photo: null, created_at: at(7), expires_at: ends(16) },
     ];
     const swap = { ...base0, id: '0000cccc-0000-4000-8000-000000000005', board: 'vintage', kind: 'swap', title: 'Band tees', meta: { want: 'Denim', size: 'M' }, photo: null, created_at: at(6), expires_at: ends(17) };
+    const design = { ...base0, id: '0000cccc-0000-4000-8000-000000000007', board: 'vintage', kind: 'design', title: 'Moth on the steeple', body: 'Linocut', meta: { thanks: 'credit' }, photo: 'submissions/abcd-7.jpg', created_at: at(1), expires_at: null };
+    const fit = { ...base0, id: '0000cccc-0000-4000-8000-000000000008', board: 'vintage', kind: 'fit', title: 'Head to toe Old Gold', meta: {}, photo: 'submissions/abcd-8.jpg', created_at: at(9), expires_at: ends(50) };
+    const byKind = { spotted, swap: [swap], design: [design], fit: [fit] };
     const artPost = { ...base0, id: '0000dddd-0000-4000-8000-000000000001', board: 'art', kind: 'art', title: 'Camel’s Hump in gouache', author: 'Dev', meta: { shirt: 'yes' }, photo: 'submissions/art-1.jpg', created_at: at(8), expires_at: null };
     const calls = [];
     const { ctx, page, errors } = await newPage(browser, base, {
@@ -2759,7 +2764,7 @@ async function theVintage(browser, base) {
         if (!/^nn_/.test(fn)) return undefined;
         calls.push({ fn, args });
         if (fn === 'nn_posts_list' && args.p_board === 'art') return args.p_filter.meta && args.p_filter.meta.shirt === 'yes' ? [artPost] : [];
-        if (fn === 'nn_posts_list') return args.p_filter.kind === 'swap' ? [swap] : spotted;
+        if (fn === 'nn_posts_list') return byKind[args.p_filter.kind] || [];
         return undefined;
       },
     });
@@ -2767,10 +2772,12 @@ async function theVintage(browser, base) {
     await settle(page);
     await page.waitForSelector(vslot('spotted') + ' [data-grid="spotted"]');
     const lists = calls.filter((c) => c.fn === 'nn_posts_list').map((c) => c.args.p_board + ':' + c.args.p_filter.kind + ':' + c.args.p_limit).sort();
-    check(JSON.stringify(lists) === '["vintage:spotted:60","vintage:swap:60"]', 'two lists: spotted and swap, the server’s most', JSON.stringify(lists));
+    check(JSON.stringify(lists) === '["vintage:design:60","vintage:fit:60","vintage:spotted:60","vintage:swap:60"]', 'four lists, one per kind, the server’s most', JSON.stringify(lists));
     const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title')].map((t) => t.textContent)])));
-    check(JSON.stringify(titles) === JSON.stringify({ spotted: ['Barn jacket'], swaps: ['Band tees'], sent: ['Lake ink'], fit: ['My Sunday fit'] }),
-      'a find in Spotted, a swap in Swaps, a design in Sent in, a fit check with its photo in Fit check, and one whose photo still waits nowhere', JSON.stringify(titles));
+    check(JSON.stringify(titles) === JSON.stringify({ spotted: ['Barn jacket'], swaps: ['Band tees'], sent: ['Moth on the steeple', 'Lake ink'], fit: ['My Sunday fit', 'Head to toe Old Gold'] }),
+      'a find in Spotted, a swap in Swaps, designs in Sent in and fit checks with their photos in Fit check, newest first, the old tagged ones among them; a fit whose photo still waits, and a find someone got, nowhere', JSON.stringify(titles));
+    const thanks = await page.$eval(vslot('spotted') + ' [data-thanks]', (p) => p.dataset.thanks);
+    check(thanks === '1', 'the find someone got counts in the thank-you', thanks);
     const img = await page.$eval(vslot('spotted') + ' .card.board .c-media img', (i) => i.getAttribute('src'));
     check(/\/storage\/v1\/object\/public\/btb-photos\/submissions\/abcd-1\.jpg$/.test(img), 'an approved photo comes from the public bucket', img);
     check(await page.$eval(vslot('swaps') + ' .b-meta', (m) => m.textContent) === 'For Denim · Size M', 'a swap says what it is for, and the size', '');

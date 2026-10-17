@@ -576,7 +576,7 @@ function paintBoard(host) {
     return;
   }
   const f = el('div', 'feed');
-  boards.put(f, S.notices, { tab: KEY, meta: () => '' });
+  boards.draw(f, S.notices, { tab: KEY, meta: () => '' });
   app.bindFeed(f);
   host.appendChild(f);
 }
