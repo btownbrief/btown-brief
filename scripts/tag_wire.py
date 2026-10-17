@@ -4,11 +4,16 @@
 pulse.json brings ~1,000 items a day. curate_wire.py (the expensive editor)
 should only read the ones worth reading, so this pass gives each NEW item:
 
-  junk   none | promo | giveaway | tunein | jobs | duplicate | noise
+  junk   none | promo | contest | tunein | jobs | duplicate | noise
   local  true when the story is about Burlington or Vermont, whatever the outlet
   ch     the mechanical channel, flipped local <-> world when `local` says so
   topic  one of TOPICS
   score  0-10 local interest
+
+Posts from people (Facebook groups, Reddit) are judged by narrower junk
+rules: a neighbor announcing an event, asking, reporting or giving something
+away is never junk; only a business advertising what it sells, an engagement
+contest, spam and empty chatter are (prompts/wire-tags.md, 2026-10-17).
 
 Tags are kept in data/wire-tags.json, keyed by item id, so an item is tagged
 once. The model is Claude Haiku 5.5 when ANTHROPIC_API_KEY exists, else GLM
@@ -54,7 +59,7 @@ BATCH = 120              # items per call: ~4k tokens in, ~3k out
 MAX_PER_RUN = 600        # the first run of a fresh store tags local first
 KEEP_HOURS = 72          # tags older than this leave the store
 RIVER_TITLES = 300       # duplicates are judged against all of today's river
-JUNK = ("none", "promo", "giveaway", "tunein", "jobs", "duplicate", "noise")
+JUNK = ("none", "promo", "contest", "tunein", "jobs", "duplicate", "noise")
 TOPICS = (
     "city-government", "state-politics", "schools", "housing", "transportation",
     "public-safety", "courts", "business", "food-drink", "arts-culture", "music",
@@ -63,7 +68,21 @@ TOPICS = (
 )
 FIXED = ("x", "facebook", "reddit", "newsletters", "video")
 TUNEIN_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|join us|"
-                       r"streaming now|tonight at \d|tonight on|this week on|\bLIVE\b", re.I)
+                       r"streaming now|tonight at \d|tonight on|this week on|"
+                       r"(?-i:\bLIVE\b)", re.I)   # "LIVE:" is a broadcast; "live music" is a show
+# A person's post says "join us tonight at 7" about a show in a room; only
+# these words make it a broadcast
+BROADCAST_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|streaming now|"
+                          r"(?-i:\bLIVE\b)", re.I)
+# which words make a `tunein` verdict stand, by channel. X is judged as a
+# headline: the list is mostly outlets and news desks, and "join us tonight at
+# 6" from a station is a broadcast
+TUNEIN_WORDS = {"local": TUNEIN_RE, "world": TUNEIN_RE, "x": TUNEIN_RE,
+                "facebook": BROADCAST_RE, "reddit": BROADCAST_RE}
+# A `tunein` is undone only when the model did not file it under
+# selling: every show mislabeled `tunein` on 2026-10-17 was music or arts, every
+# ad business or food-drink, so an ad mislabeled `tunein` stays junk
+SELLING_TOPICS = ("business", "food-drink")
 
 SCHEMA_ITEM = {
     "type": "object",
@@ -161,11 +180,15 @@ def validate_tags(raw, batch, now_ts):
         if item["id"] in out:
             continue
         junk = entry.get("junk") if entry.get("junk") in JUNK else None
-        if junk == "tunein" and item["ch"] in ("local", "world") and not TUNEIN_RE.search(item["title"]):
-            # a story about an event is news; "tune in" means a broadcast or
-            # livestream notice, and only a headline that says so is one
-            junk = "none"
         topic = entry.get("topic") if entry.get("topic") in TOPICS else "other"
+        words = TUNEIN_WORDS.get(item["ch"])
+        if junk == "tunein" and words and not words.search(item["title"]) \
+                and topic not in SELLING_TOPICS:
+            # a story about an event is news; "tune in" means a broadcast or
+            # livestream notice, and only a headline that says so is one. A
+            # neighbor's post about a show is the event itself (2026-10-17:
+            # nine Facebook band and venue posts were junked as "tunein")
+            junk = "none"
         score = entry.get("score")
         if junk is None or not isinstance(score, int) or isinstance(score, bool):
             continue
