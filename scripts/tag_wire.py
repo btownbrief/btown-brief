@@ -4,11 +4,16 @@
 pulse.json brings ~1,000 items a day. curate_wire.py (the expensive editor)
 should only read the ones worth reading, so this pass gives each NEW item:
 
-  junk   none | promo | giveaway | tunein | jobs | duplicate | noise
+  junk   none | promo | contest | tunein | jobs | duplicate | noise
   local  true when the story is about Burlington or Vermont, whatever the outlet
   ch     the mechanical channel, flipped local <-> world when `local` says so
   topic  one of TOPICS
   score  0-10 local interest
+
+Posts from people (Facebook groups, Reddit) are judged by narrower junk
+rules: a neighbor announcing an event, asking, reporting or giving something
+away is never junk; only a business advertising what it sells, an engagement
+contest, spam and empty chatter are (prompts/wire-tags.md, 2026-10-17).
 
 Tags are kept in data/wire-tags.json, keyed by item id, so an item is tagged
 once. The model is Claude Haiku 5.5 when ANTHROPIC_API_KEY exists, else GLM
@@ -54,7 +59,7 @@ BATCH = 120              # items per call: ~4k tokens in, ~3k out
 MAX_PER_RUN = 600        # the first run of a fresh store tags local first
 KEEP_HOURS = 72          # tags older than this leave the store
 RIVER_TITLES = 300       # duplicates are judged against all of today's river
-JUNK = ("none", "promo", "giveaway", "tunein", "jobs", "duplicate", "noise")
+JUNK = ("none", "promo", "contest", "tunein", "jobs", "duplicate", "noise")
 TOPICS = (
     "city-government", "state-politics", "schools", "housing", "transportation",
     "public-safety", "courts", "business", "food-drink", "arts-culture", "music",
@@ -62,8 +67,10 @@ TOPICS = (
     "national-politics", "world", "economy", "tech", "science", "media", "other",
 )
 FIXED = ("x", "facebook", "reddit", "newsletters", "video")
+TUNEIN_CHECKED = ("local", "world", "facebook", "reddit")
 TUNEIN_RE = re.compile(r"tune in|watch live|live ?stream|listen live|on air|join us|"
-                       r"streaming now|tonight at \d|tonight on|this week on|\bLIVE\b", re.I)
+                       r"streaming now|tonight at \d|tonight on|this week on|"
+                       r"(?-i:\bLIVE\b)", re.I)   # "LIVE:" is a broadcast; "live music" is a show
 
 SCHEMA_ITEM = {
     "type": "object",
@@ -161,9 +168,11 @@ def validate_tags(raw, batch, now_ts):
         if item["id"] in out:
             continue
         junk = entry.get("junk") if entry.get("junk") in JUNK else None
-        if junk == "tunein" and item["ch"] in ("local", "world") and not TUNEIN_RE.search(item["title"]):
+        if junk == "tunein" and item["ch"] in TUNEIN_CHECKED and not TUNEIN_RE.search(item["title"]):
             # a story about an event is news; "tune in" means a broadcast or
-            # livestream notice, and only a headline that says so is one
+            # livestream notice, and only a headline that says so is one. A
+            # neighbor's post about a show is the event itself (2026-10-17:
+            # nine Facebook band and venue posts were junked as "tunein")
             junk = "none"
         topic = entry.get("topic") if entry.get("topic") in TOPICS else "other"
         score = entry.get("score")

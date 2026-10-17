@@ -921,6 +921,115 @@ class DecideTests(unittest.TestCase):
         self.assertEqual(cw.decide(day, state, new, self.et(12), NOW)[:2], (True, True))
 
 
+def rule_breaks(items):
+    """Every place an update's order breaks a river rule that it could have
+    kept: a fourth local (or national) in a row while the other kind waits
+    further down, two from one outlet back to back while another outlet
+    waits, a third X (Facebook, Reddit) post in a row while anything else
+    waits."""
+    breaks = []
+    for k in range(1, len(items)):
+        rest = items[k:]
+        if k >= cw.KIND_RUN_MAX and all(bool(o["local"]) == bool(items[k]["local"])
+                                        for o in items[k - cw.KIND_RUN_MAX:k]) \
+                and any(bool(o["local"]) != bool(items[k]["local"]) for o in rest):
+            breaks.append((k, "kind"))
+        if items[k]["src"] == items[k - 1]["src"] and any(o["src"] != items[k]["src"] for o in rest):
+            breaks.append((k, "outlet"))
+        if items[k]["ch"] in cw.SPREAD_CHANNELS and k >= cw.POST_RUN_MAX \
+                and all(o["ch"] == items[k]["ch"] for o in items[k - cw.POST_RUN_MAX:k]) \
+                and any(o["ch"] != items[k]["ch"] for o in rest):
+            breaks.append((k, "posts"))
+    return breaks
+
+
+def river_item(n, local=True, src="wcax", ch=None, score=5):
+    return {"id": f"r{n}", "ch": ch or ("local" if local else "world"), "local": local,
+            "src": src, "name": src, "title": f"Story {n}", "url": f"https://r.example/{n}",
+            "posted_at": "2026-10-16T17:00:00+00:00", "_score": score}
+
+
+class RiverOrderTests(Workdir):
+    """Stephen, 2026-10-17: local and national "get a little lost when it's all
+    in a row ... websites tend to update in bunches"."""
+
+    def test_a_bunch_of_local_is_broken_up_by_national(self):
+        # a local site posts eight in a row; three national stories score lower
+        local = [river_item(k, src=("wcax", "vtd")[k % 2], score=6) for k in range(8)]
+        national = [river_item(10 + k, local=False, src=("ap", "reuters", "nyt")[k], score=3)
+                    for k in range(3)]
+        out = cw.order_update(local + national, "r0", [i["id"] for i in local + national])
+        self.assertEqual(out[0]["id"], "r0")                        # the lead leads
+        self.assertEqual(rule_breaks(out), [])
+        self.assertEqual([bool(i["local"]) for i in out[:8]],
+                         [True, True, True, False, True, True, True, False])
+        self.assertEqual(len(out), 11)
+
+    def test_importance_decides_within_the_rules(self):
+        items = [river_item(1, score=3), river_item(2, src="vtd", score=8),
+                 river_item(3, local=False, src="ap", score=6)]
+        out = cw.order_update(items, None, ["r1", "r2", "r3"])
+        self.assertEqual([i["id"] for i in out], ["r1", "r2", "r3"])   # fresh order is the caller's
+        fresh = ["r2", "r3", "r1"]                                      # most important first
+        self.assertEqual([i["id"] for i in cw.order_update(items, None, fresh)], fresh)
+
+    def test_never_two_from_one_outlet_back_to_back(self):
+        items = [river_item(k, src="sevendays" if k < 4 else "wcax") for k in range(6)]
+        out = cw.order_update(items, None, [i["id"] for i in items])
+        self.assertEqual([i["src"] for i in out],
+                         ["sevendays", "wcax", "sevendays", "wcax", "sevendays", "sevendays"])
+        self.assertEqual(rule_breaks(out), [])     # the last two could not be helped
+
+    def test_an_x_desks_bunch_of_five_is_spread(self):
+        # a Grok run brings five posts from one national desk, all scored high
+        xs = [river_item(k, local=False, src="x:@AP", ch="x", score=7) for k in range(5)]
+        rest = ([river_item(10 + k, local=False, src=("reuters", "nyt", "npr")[k], score=4)
+                 for k in range(3)]
+                + [river_item(20 + k, src=("wcax", "vtd", "nbc5", "sevendays")[k], score=6)
+                   for k in range(4)])
+        items = xs + rest
+        out = cw.order_update(items, None, [i["id"] for i in items])
+        self.assertEqual(rule_breaks(out), [])
+        runs = max(len(run) for run in "".join("x" if i["ch"] == "x" else "." for i in out).split("."))
+        self.assertLessEqual(runs, 1)            # one desk: never two of its posts together
+
+    def test_x_posts_from_different_desks_run_two_at_most(self):
+        xs = [river_item(k, local=False, src=f"x:@desk{k}", ch="x", score=7) for k in range(6)]
+        rest = [river_item(10 + k, src=("wcax", "vtd")[k % 2], score=3) for k in range(4)]
+        out = cw.order_update(xs + rest, None, [i["id"] for i in xs + rest])
+        self.assertEqual(rule_breaks(out), [])
+        self.assertEqual("".join("x" if i["ch"] == "x" else "." for i in out)[:6], "xx.xx.")
+
+    def test_a_settled_update_stays_put(self):
+        local = [river_item(k, src=("wcax", "vtd")[k % 2]) for k in range(7)]
+        national = [river_item(10 + k, local=False, src="ap" if k % 2 else "npr") for k in range(4)]
+        once = cw.order_update(local + national, "r3", [i["id"] for i in local + national])
+        again = cw.order_update(once, "r3")
+        self.assertEqual([i["id"] for i in again], [i["id"] for i in once])
+
+    def test_this_hours_additions_come_before_what_the_update_held(self):
+        held = [river_item(k, src=("wcax", "ap")[k % 2], local=not k % 2) for k in range(4)]
+        added = [river_item(10, src="vtd"), river_item(11, local=False, src="npr")]
+        out = cw.order_update(held + added, None, ["r10", "r11"])
+        self.assertEqual([i["id"] for i in out], ["r10", "r11", "r0", "r1", "r2", "r3"])
+
+    def test_the_hourly_run_orders_the_current_update(self):
+        # 12 local from two sites and 6 national from one, all at once
+        self.write_pulse(pulse(n_local=12, n_world=6))
+        self.run_curate(Stub(take_all))
+        items = self.today()["updates"][0]["items"]
+        self.assertEqual(len(items), 18)
+        self.assertEqual(rule_breaks(items), [])
+        self.assertEqual([bool(i["local"]) for i in items[:8]].count(False), 2)
+        # and an hour later the new arrivals go on top, the rules kept
+        self.write_pulse(pulse(n_local=5, n_world=0, start=40))
+        self.run_curate(Stub(take_all), now=NOW + timedelta(minutes=60))
+        later = self.today()["updates"][0]["items"]
+        self.assertEqual(len(later), 23)
+        self.assertEqual(rule_breaks(later), [])
+        self.assertTrue(all(i["title"].startswith("Local headline 4") for i in later[:3]))
+
+
 class TagWireRunTests(Workdir):
     def run_tag(self, stub):
         args = SimpleNamespace(data_dir=self.data, pulse=self.pulse_path)
