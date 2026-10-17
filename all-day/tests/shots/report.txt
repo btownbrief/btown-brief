@@ -6,14 +6,16 @@
   ok   source rules › nothing is position: sticky
   ok   source rules › js/app.js: no monospace
   ok   source rules › js/auth.js: no monospace
+  ok   source rules › js/habits-core.js: no monospace
+  ok   source rules › js/habits-fake.js: no monospace
   ok   source rules › js/liquid.js: no monospace
   ok   source rules › js/main.js: no monospace
-  ok   source rules › js/modes/art.js: no monospace
-  ok   source rules › js/modes/art.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/food.js: no monospace
   ok   source rules › js/modes/food.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/games.js: no monospace
   ok   source rules › js/modes/games.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/habits.js: no monospace
+  ok   source rules › js/modes/habits.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/onair.js: no monospace
   ok   source rules › js/modes/onair.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/people.js: no monospace
@@ -28,6 +30,7 @@
   ok   source rules › js/modes/wire-demo.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/wire.js: no monospace
   ok   source rules › js/modes/wire.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/photo-wall.js: no monospace
   ok   source rules › js/store.js: no monospace
   ok   source rules › js/ui.js: no monospace
   ok   source rules › js/wire.js: no monospace
@@ -96,15 +99,15 @@
   ok   390 light live › vintage: no escaped markup, undefined or NaN on the page
   ok   390 light live › vintage: no sideways scroll at 390
   ok   390 light live › vintage: at most two subnav rows
-  ok   390 light live › art: its panel is the one showing
-  ok   390 light live › art: no error box
-  ok   390 light live › art: it draws its screen
-  ok   390 light live › art: nothing fixed or sticky inside the tab
-  ok   390 light live › art: uppercase only in the caps roles
-  ok   390 light live › art: no monospace
-  ok   390 light live › art: no escaped markup, undefined or NaN on the page
-  ok   390 light live › art: no sideways scroll at 390
-  ok   390 light live › art: at most two subnav rows
+  ok   390 light live › habits: its panel is the one showing
+  ok   390 light live › habits: no error box
+  ok   390 light live › habits: it draws its screen
+  ok   390 light live › habits: nothing fixed or sticky inside the tab
+  ok   390 light live › habits: uppercase only in the caps roles
+  ok   390 light live › habits: no monospace
+  ok   390 light live › habits: no escaped markup, undefined or NaN on the page
+  ok   390 light live › habits: no sideways scroll at 390
+  ok   390 light live › habits: at most two subnav rows
   ok   390 light live › onair: its panel is the one showing
   ok   390 light live › onair: no error box
   ok   390 light live › onair: it draws its screen
@@ -190,15 +193,15 @@
   ok   390 light demo › vintage: no escaped markup, undefined or NaN on the page
   ok   390 light demo › vintage: no sideways scroll at 390
   ok   390 light demo › vintage: at most two subnav rows
-  ok   390 light demo › art: its panel is the one showing
-  ok   390 light demo › art: no error box
-  ok   390 light demo › art: it draws its screen
-  ok   390 light demo › art: nothing fixed or sticky inside the tab
-  ok   390 light demo › art: uppercase only in the caps roles
-  ok   390 light demo › art: no monospace
-  ok   390 light demo › art: no escaped markup, undefined or NaN on the page
-  ok   390 light demo › art: no sideways scroll at 390
-  ok   390 light demo › art: at most two subnav rows
+  ok   390 light demo › habits: its panel is the one showing
+  ok   390 light demo › habits: no error box
+  ok   390 light demo › habits: it draws its screen
+  ok   390 light demo › habits: nothing fixed or sticky inside the tab
+  ok   390 light demo › habits: uppercase only in the caps roles
+  ok   390 light demo › habits: no monospace
+  ok   390 light demo › habits: no escaped markup, undefined or NaN on the page
+  ok   390 light demo › habits: no sideways scroll at 390
+  ok   390 light demo › habits: at most two subnav rows
   ok   390 light demo › onair: its panel is the one showing
   ok   390 light demo › onair: no error box
   ok   390 light demo › onair: it draws its screen
@@ -284,15 +287,15 @@
   ok   390 dark live › vintage: no escaped markup, undefined or NaN on the page
   ok   390 dark live › vintage: no sideways scroll at 390
   ok   390 dark live › vintage: at most two subnav rows
-  ok   390 dark live › art: its panel is the one showing
-  ok   390 dark live › art: no error box
-  ok   390 dark live › art: it draws its screen
-  ok   390 dark live › art: nothing fixed or sticky inside the tab
-  ok   390 dark live › art: uppercase only in the caps roles
-  ok   390 dark live › art: no monospace
-  ok   390 dark live › art: no escaped markup, undefined or NaN on the page
-  ok   390 dark live › art: no sideways scroll at 390
-  ok   390 dark live › art: at most two subnav rows
+  ok   390 dark live › habits: its panel is the one showing
+  ok   390 dark live › habits: no error box
+  ok   390 dark live › habits: it draws its screen
+  ok   390 dark live › habits: nothing fixed or sticky inside the tab
+  ok   390 dark live › habits: uppercase only in the caps roles
+  ok   390 dark live › habits: no monospace
+  ok   390 dark live › habits: no escaped markup, undefined or NaN on the page
+  ok   390 dark live › habits: no sideways scroll at 390
+  ok   390 dark live › habits: at most two subnav rows
   ok   390 dark live › onair: its panel is the one showing
   ok   390 dark live › onair: no error box
   ok   390 dark live › onair: it draws its screen
@@ -378,15 +381,15 @@
   ok   390 dark demo › vintage: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › vintage: no sideways scroll at 390
   ok   390 dark demo › vintage: at most two subnav rows
-  ok   390 dark demo › art: its panel is the one showing
-  ok   390 dark demo › art: no error box
-  ok   390 dark demo › art: it draws its screen
-  ok   390 dark demo › art: nothing fixed or sticky inside the tab
-  ok   390 dark demo › art: uppercase only in the caps roles
-  ok   390 dark demo › art: no monospace
-  ok   390 dark demo › art: no escaped markup, undefined or NaN on the page
-  ok   390 dark demo › art: no sideways scroll at 390
-  ok   390 dark demo › art: at most two subnav rows
+  ok   390 dark demo › habits: its panel is the one showing
+  ok   390 dark demo › habits: no error box
+  ok   390 dark demo › habits: it draws its screen
+  ok   390 dark demo › habits: nothing fixed or sticky inside the tab
+  ok   390 dark demo › habits: uppercase only in the caps roles
+  ok   390 dark demo › habits: no monospace
+  ok   390 dark demo › habits: no escaped markup, undefined or NaN on the page
+  ok   390 dark demo › habits: no sideways scroll at 390
+  ok   390 dark demo › habits: at most two subnav rows
   ok   390 dark demo › onair: its panel is the one showing
   ok   390 dark demo › onair: no error box
   ok   390 dark demo › onair: it draws its screen
@@ -474,15 +477,15 @@
   ok   390 light reduced-motion live › vintage: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › vintage: no sideways scroll at 390
   ok   390 light reduced-motion live › vintage: at most two subnav rows
-  ok   390 light reduced-motion live › art: its panel is the one showing
-  ok   390 light reduced-motion live › art: no error box
-  ok   390 light reduced-motion live › art: it draws its screen
-  ok   390 light reduced-motion live › art: nothing fixed or sticky inside the tab
-  ok   390 light reduced-motion live › art: uppercase only in the caps roles
-  ok   390 light reduced-motion live › art: no monospace
-  ok   390 light reduced-motion live › art: no escaped markup, undefined or NaN on the page
-  ok   390 light reduced-motion live › art: no sideways scroll at 390
-  ok   390 light reduced-motion live › art: at most two subnav rows
+  ok   390 light reduced-motion live › habits: its panel is the one showing
+  ok   390 light reduced-motion live › habits: no error box
+  ok   390 light reduced-motion live › habits: it draws its screen
+  ok   390 light reduced-motion live › habits: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion live › habits: uppercase only in the caps roles
+  ok   390 light reduced-motion live › habits: no monospace
+  ok   390 light reduced-motion live › habits: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion live › habits: no sideways scroll at 390
+  ok   390 light reduced-motion live › habits: at most two subnav rows
   ok   390 light reduced-motion live › onair: its panel is the one showing
   ok   390 light reduced-motion live › onair: no error box
   ok   390 light reduced-motion live › onair: it draws its screen
@@ -570,15 +573,15 @@
   ok   390 light reduced-motion demo › vintage: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › vintage: no sideways scroll at 390
   ok   390 light reduced-motion demo › vintage: at most two subnav rows
-  ok   390 light reduced-motion demo › art: its panel is the one showing
-  ok   390 light reduced-motion demo › art: no error box
-  ok   390 light reduced-motion demo › art: it draws its screen
-  ok   390 light reduced-motion demo › art: nothing fixed or sticky inside the tab
-  ok   390 light reduced-motion demo › art: uppercase only in the caps roles
-  ok   390 light reduced-motion demo › art: no monospace
-  ok   390 light reduced-motion demo › art: no escaped markup, undefined or NaN on the page
-  ok   390 light reduced-motion demo › art: no sideways scroll at 390
-  ok   390 light reduced-motion demo › art: at most two subnav rows
+  ok   390 light reduced-motion demo › habits: its panel is the one showing
+  ok   390 light reduced-motion demo › habits: no error box
+  ok   390 light reduced-motion demo › habits: it draws its screen
+  ok   390 light reduced-motion demo › habits: nothing fixed or sticky inside the tab
+  ok   390 light reduced-motion demo › habits: uppercase only in the caps roles
+  ok   390 light reduced-motion demo › habits: no monospace
+  ok   390 light reduced-motion demo › habits: no escaped markup, undefined or NaN on the page
+  ok   390 light reduced-motion demo › habits: no sideways scroll at 390
+  ok   390 light reduced-motion demo › habits: at most two subnav rows
   ok   390 light reduced-motion demo › onair: its panel is the one showing
   ok   390 light reduced-motion demo › onair: no error box
   ok   390 light reduced-motion demo › onair: it draws its screen
@@ -662,15 +665,15 @@
   ok   1280 light live › vintage: no escaped markup, undefined or NaN on the page
   ok   1280 light live › vintage: no sideways scroll at 1280
   ok   1280 light live › vintage: at most two subnav rows
-  ok   1280 light live › art: its panel is the one showing
-  ok   1280 light live › art: no error box
-  ok   1280 light live › art: it draws its screen
-  ok   1280 light live › art: nothing fixed or sticky inside the tab
-  ok   1280 light live › art: uppercase only in the caps roles
-  ok   1280 light live › art: no monospace
-  ok   1280 light live › art: no escaped markup, undefined or NaN on the page
-  ok   1280 light live › art: no sideways scroll at 1280
-  ok   1280 light live › art: at most two subnav rows
+  ok   1280 light live › habits: its panel is the one showing
+  ok   1280 light live › habits: no error box
+  ok   1280 light live › habits: it draws its screen
+  ok   1280 light live › habits: nothing fixed or sticky inside the tab
+  ok   1280 light live › habits: uppercase only in the caps roles
+  ok   1280 light live › habits: no monospace
+  ok   1280 light live › habits: no escaped markup, undefined or NaN on the page
+  ok   1280 light live › habits: no sideways scroll at 1280
+  ok   1280 light live › habits: at most two subnav rows
   ok   1280 light live › onair: its panel is the one showing
   ok   1280 light live › onair: no error box
   ok   1280 light live › onair: it draws its screen
@@ -754,15 +757,15 @@
   ok   1280 light demo › vintage: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › vintage: no sideways scroll at 1280
   ok   1280 light demo › vintage: at most two subnav rows
-  ok   1280 light demo › art: its panel is the one showing
-  ok   1280 light demo › art: no error box
-  ok   1280 light demo › art: it draws its screen
-  ok   1280 light demo › art: nothing fixed or sticky inside the tab
-  ok   1280 light demo › art: uppercase only in the caps roles
-  ok   1280 light demo › art: no monospace
-  ok   1280 light demo › art: no escaped markup, undefined or NaN on the page
-  ok   1280 light demo › art: no sideways scroll at 1280
-  ok   1280 light demo › art: at most two subnav rows
+  ok   1280 light demo › habits: its panel is the one showing
+  ok   1280 light demo › habits: no error box
+  ok   1280 light demo › habits: it draws its screen
+  ok   1280 light demo › habits: nothing fixed or sticky inside the tab
+  ok   1280 light demo › habits: uppercase only in the caps roles
+  ok   1280 light demo › habits: no monospace
+  ok   1280 light demo › habits: no escaped markup, undefined or NaN on the page
+  ok   1280 light demo › habits: no sideways scroll at 1280
+  ok   1280 light demo › habits: at most two subnav rows
   ok   1280 light demo › onair: its panel is the one showing
   ok   1280 light demo › onair: no error box
   ok   1280 light demo › onair: it draws its screen
@@ -848,15 +851,15 @@
   ok   1280 dark reduced-motion live › vintage: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › vintage: no sideways scroll at 1280
   ok   1280 dark reduced-motion live › vintage: at most two subnav rows
-  ok   1280 dark reduced-motion live › art: its panel is the one showing
-  ok   1280 dark reduced-motion live › art: no error box
-  ok   1280 dark reduced-motion live › art: it draws its screen
-  ok   1280 dark reduced-motion live › art: nothing fixed or sticky inside the tab
-  ok   1280 dark reduced-motion live › art: uppercase only in the caps roles
-  ok   1280 dark reduced-motion live › art: no monospace
-  ok   1280 dark reduced-motion live › art: no escaped markup, undefined or NaN on the page
-  ok   1280 dark reduced-motion live › art: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › art: at most two subnav rows
+  ok   1280 dark reduced-motion live › habits: its panel is the one showing
+  ok   1280 dark reduced-motion live › habits: no error box
+  ok   1280 dark reduced-motion live › habits: it draws its screen
+  ok   1280 dark reduced-motion live › habits: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion live › habits: uppercase only in the caps roles
+  ok   1280 dark reduced-motion live › habits: no monospace
+  ok   1280 dark reduced-motion live › habits: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion live › habits: no sideways scroll at 1280
+  ok   1280 dark reduced-motion live › habits: at most two subnav rows
   ok   1280 dark reduced-motion live › onair: its panel is the one showing
   ok   1280 dark reduced-motion live › onair: no error box
   ok   1280 dark reduced-motion live › onair: it draws its screen
@@ -942,15 +945,15 @@
   ok   1280 dark reduced-motion demo › vintage: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › vintage: no sideways scroll at 1280
   ok   1280 dark reduced-motion demo › vintage: at most two subnav rows
-  ok   1280 dark reduced-motion demo › art: its panel is the one showing
-  ok   1280 dark reduced-motion demo › art: no error box
-  ok   1280 dark reduced-motion demo › art: it draws its screen
-  ok   1280 dark reduced-motion demo › art: nothing fixed or sticky inside the tab
-  ok   1280 dark reduced-motion demo › art: uppercase only in the caps roles
-  ok   1280 dark reduced-motion demo › art: no monospace
-  ok   1280 dark reduced-motion demo › art: no escaped markup, undefined or NaN on the page
-  ok   1280 dark reduced-motion demo › art: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › art: at most two subnav rows
+  ok   1280 dark reduced-motion demo › habits: its panel is the one showing
+  ok   1280 dark reduced-motion demo › habits: no error box
+  ok   1280 dark reduced-motion demo › habits: it draws its screen
+  ok   1280 dark reduced-motion demo › habits: nothing fixed or sticky inside the tab
+  ok   1280 dark reduced-motion demo › habits: uppercase only in the caps roles
+  ok   1280 dark reduced-motion demo › habits: no monospace
+  ok   1280 dark reduced-motion demo › habits: no escaped markup, undefined or NaN on the page
+  ok   1280 dark reduced-motion demo › habits: no sideways scroll at 1280
+  ok   1280 dark reduced-motion demo › habits: at most two subnav rows
   ok   1280 dark reduced-motion demo › onair: its panel is the one showing
   ok   1280 dark reduced-motion demo › onair: no error box
   ok   1280 dark reduced-motion demo › onair: it draws its screen
@@ -987,8 +990,8 @@
   ok   deep links, demo › #whatnow/e-tn3: no console errors
   ok   deep links, demo › #vintage/s-resource-burlington lands on its card and flashes
   ok   deep links, demo › #vintage/s-resource-burlington: no console errors
-  ok   deep links, demo › #art/b-0000a000-0000-4000-8000-000000000002 lands on its card and flashes
-  ok   deep links, demo › #art/b-0000a000-0000-4000-8000-000000000002: no console errors
+  ok   deep links, demo › #habits/next-season lands on its card and flashes
+  ok   deep links, demo › #habits/next-season: no console errors
   ok   deep links, demo › #onair/yt:demo-tv-003 lands on its card and flashes
   ok   deep links, demo › #onair/yt:demo-tv-003: no console errors
   ok   deep links, demo › #games/g:trivia-ladder lands on its card and flashes
@@ -1578,7 +1581,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 8ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1618,8 +1621,11 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › #music/mus:old opens whatnow, and the address says #whatnow/tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › #wander opens whatnow, and the address says #whatnow
   ok   cutover: every old tab’s link lands on the nearest new tab › #wander/Moose opens whatnow, and the address says #whatnow
-  ok   cutover: every old tab’s link lands on the nearest new tab › #photos opens art, and the address says #art
-  ok   cutover: every old tab’s link lands on the nearest new tab › #photos/p-1 opens art, and the address says #art
+  ok   cutover: every old tab’s link lands on the nearest new tab › #photos opens wire, and the address says #wire
+  ok   cutover: every old tab’s link lands on the nearest new tab › #photos/p-1 opens wire, and the address says #wire
+  ok   cutover: every old tab’s link lands on the nearest new tab › #art opens wire, and the address says #wire
+  ok   cutover: every old tab’s link lands on the nearest new tab › #art/b-0000a000-0000-4000-8000-000000000002 opens wire, and the address says #wire
+  ok   cutover: every old tab’s link lands on the nearest new tab › #art/wall opens wire, and the address says #wire
   ok   cutover: every old tab’s link lands on the nearest new tab › #listen opens onair, and the address says #onair
   ok   cutover: every old tab’s link lands on the nearest new tab › #watch/yt:dQw4w9WgXcQ opens onair, and the address says #onair/yt:dQw4w9WgXcQ
   ok   cutover: every old tab’s link lands on the nearest new tab › #constructor opens wire, and the address says #constructor
@@ -1629,7 +1635,7 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › a bare #reddit opens the Wire on its Reddit chip
   ok   cutover: every old tab’s link lands on the nearest new tab › an old Music link opens What Now on Tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › no console errors
-  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped once for the cutover, to v45
+  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for Habits taking Art’s slot, to v46
   ok   shell fixes: the offline shell carries the new modules › every module in js/ is in the offline list
   ok   shell fixes: the offline shell carries the new modules › and nothing in the offline list is missing from js/
   ok   shell fixes: the offline shell carries the new modules › every file in the offline list exists
@@ -1722,6 +1728,7 @@
   ok   boards: Your posts, and delete my account (demo) › Your posts lists both, with where each stands
   ok   boards: Your posts, and delete my account (demo) › delete asks first, and says the shared sign-in stays
   ok   boards: Your posts, and delete my account (demo) › everything of theirs is gone
+  ok   boards: Your posts, and delete my account (demo) › and so are their habits and taps (sz_delete_me)
   ok   boards: Your posts, and delete my account (demo) › and they are signed out
   ok   boards: Your posts, and delete my account (demo) › no console errors
   ok   boards: what goes over the wire (live) › signed out: the list goes with the device’s player id and no token
@@ -1754,105 +1761,90 @@
   ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › Art files its photo as "other": it joins the gallery
   ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › resized to a jpeg, credited by first name, no email
   ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › no console errors
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › the top-voted post since Monday in Burlington wins: 50 votes at 11:30 pm Sunday there is last week’s, though it is Monday in UTC
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › its maker said yes to a shirt: “Put it on a shirt” goes to #vintage with the post key
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › the list is paged, 60 at a time, until the eighth week back is in
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › round one: no counts by week are asked for
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › Winners: the past eight weeks, newest first, and the Sunday-night post wins its own week on its votes so far
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › each winner carries the maker’s name, and nothing else to win
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › the wall is newest first, pictures only
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › the notice is on the community board instead
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › art: nothing fixed or sticky inside the tab
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › art: uppercase only in the caps roles
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › art: no monospace
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › art: no escaped markup, undefined or NaN on the page
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › art: no sideways scroll at 390
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › art: at most two subnav rows
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v1) › no console errors
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › the top-voted post since Monday in Burlington wins: 50 votes at 11:30 pm Sunday there is last week’s, though it is Monday in UTC
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › its maker said yes to a shirt: “Put it on a shirt” goes to #vintage with the post key
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › the list is paged, 60 at a time, until the eighth week back is in
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › round two: the votes are counted by week for this week and the eight before
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › Winners: the week of Oct 5 goes to the most votes cast that week, settled at Sunday midnight, whatever came later
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › each winner carries the maker’s name, and nothing else to win
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › the wall is newest first, pictures only
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › the notice is on the community board instead
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › art: nothing fixed or sticky inside the tab
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › art: uppercase only in the caps roles
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › art: no monospace
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › art: no escaped markup, undefined or NaN on the page
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › art: no sideways scroll at 390
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › art: at most two subnav rows
-  ok   Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v2) › no console errors
-  ok   Art, a vote that overtakes takes the week (demo) › two posts tie on 23 this week, and the one posted first leads
-  ok   Art, a vote that overtakes takes the week (demo) › the tile shows its votes
-  ok   Art, a vote that overtakes takes the week (demo) › one vote puts it ahead, and the photo of the week changes
-  ok   Art, a vote that overtakes takes the week (demo) › the count is 24 on the sheet, the tile and the hero
-  ok   Art, a vote that overtakes takes the week (demo) › and the board counted it
-  ok   Art, a vote that overtakes takes the week (demo) › taking the vote back hands the week back
-  ok   Art, a vote that overtakes takes the week (demo) › the hero’s own Vote button counts too
-  ok   Art, a vote that overtakes takes the week (demo) › no console errors
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › fourteen posts with votes and three gallery photos, each labelled with its own caption
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › two tall tiles in every ten, none where it would leave a hole
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › the grid is filled, no gaps
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › the sheet shows the whole picture in its own shape
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › with the title, the maker, the medium and their line
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › and vote, share, report, and the shirt
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › report goes to the boards’ own flow (signed out, it asks for sign-in)
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › a gallery photo’s sheet: who took it, where, share, and no votes
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › art: nothing fixed or sticky inside the tab
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › art: uppercase only in the caps roles
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › art: no monospace
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › art: no escaped markup, undefined or NaN on the page
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › art: no sideways scroll at 1280
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › art: at most two subnav rows
-  ok   Art, the wall opens a tile in a sheet (demo, wide, dark) › no console errors
-  ok   Art, a photo post composes with consent and lands pending (demo) › Add art asks for the medium and the shirt
-  ok   Art, a photo post composes with consent and lands pending (demo) › Add a photo asks for the shirt, not a medium
-  ok   Art, a photo post composes with consent and lands pending (demo) › and says, in one line, that photos show once approved
-  ok   Art, a photo post composes with consent and lands pending (demo) › without the consent box: refused
-  ok   Art, a photo post composes with consent and lands pending (demo) › with it: posted, and the toast says the photo waits
-  ok   Art, a photo post composes with consent and lands pending (demo) › it is on the board as a photo post, its picture pending in the queue
-  ok   Art, a photo post composes with consent and lands pending (demo) › Add yours says one is waiting
-  ok   Art, a photo post composes with consent and lands pending (demo) › and the wall does not show it yet
-  ok   Art, a photo post composes with consent and lands pending (demo) › once Stephen approves it, it leads the wall, by first name
-  ok   Art, a photo post composes with consent and lands pending (demo) › and nothing is waiting any more
-  ok   Art, a photo post composes with consent and lands pending (demo) › no console errors
-  ok   Art, the community board, and a notice running out (demo) › four notices, newest first, each with its days left
-  ok   Art, the community board, and a notice running out (demo) › a new notice has thirty days
-  ok   Art, the community board, and a notice running out (demo) › a notice past its thirty days leaves the board
-  ok   Art, the community board, and a notice running out (demo) › posting a notice asks for the sign-in first
-  ok   Art, the community board, and a notice running out (demo) › art: nothing fixed or sticky inside the tab
-  ok   Art, the community board, and a notice running out (demo) › art: uppercase only in the caps roles
-  ok   Art, the community board, and a notice running out (demo) › art: no monospace
-  ok   Art, the community board, and a notice running out (demo) › art: no escaped markup, undefined or NaN on the page
-  ok   Art, the community board, and a notice running out (demo) › art: no sideways scroll at 390
-  ok   Art, the community board, and a notice running out (demo) › art: at most two subnav rows
-  ok   Art, the community board, and a notice running out (demo) › no console errors
-  ok   Art, “Put it on a shirt” goes to Vintage with the post key (demo) › the hero links to #vintage/<its key>
-  ok   Art, “Put it on a shirt” goes to Vintage with the post key (demo) › and tapping it opens Vintage with that key in the address
-  ok   Art, “Put it on a shirt” goes to Vintage with the post key (demo) › Vintage can find the picture from the key alone
-  ok   Art, “Put it on a shirt” goes to Vintage with the post key (demo) › a maker who said no gets no shirt button
-  ok   Art, “Put it on a shirt” goes to Vintage with the post key (demo) › no console errors
-  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › a 0.0 (the forecast missing) is no score: the time and the best spot, and nothing about the sky
-  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › a score worked out without the forecast is not shown either
-  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › a real score of 5 or more is the headline
-  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › under 5, it is said plainly, lower down
-  ok   Art, the empty wall’s sunset line says a score only when there is one (live) › no console errors
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › the eight gallery photos, said to be from the gallery, without votes
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › each tile is labelled with its caption, else its spot, area (never "Elsewhere"), when it was taken or the day it was approved
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › newest approved first, lazy, from the public bucket
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › a board post’s photo and Food’s dishes stay off the gallery half
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › with no posts at all, the top invites the first, with the best spot for tonight’s light
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › its sheet credits the photographer and has no vote or report
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › Add a photo, signed out, asks for the sign-in
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › art: nothing fixed or sticky inside the tab
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › art: uppercase only in the caps roles
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › art: no monospace
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › art: no escaped markup, undefined or NaN on the page
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › art: no sideways scroll at 390
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › art: at most two subnav rows
-  ok   Art, the gallery fills the wall before anyone posts (live, the SQL not pasted) › no console errors beyond the browser logging the missing function
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the between-seasons tile: when the next season starts, and a sign-up button
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed out: the tile and a sign-in button, and no explanation
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the chips: Today, Goal, Season, Wall
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › Sign in opens the sign-in in Settings
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed in: the demo’s three habits, in order
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › each row: seven dots and a tap target at least 48px
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak, how often, and shared
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a habit with no name: refused, in one line
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › times a week is hidden until N a week is chosen
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › shared with the pod is off by default
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › it lands at the bottom: Daily, no streak yet, not done
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › today’s dot is today’s, in Burlington
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (0 ms)
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak ticks up to 1 day
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and today’s dot fills
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the server has the tap, for today in Burlington
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › tapping again un-marks it
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and the server deletes the tap
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › an N-a-week habit: no set days, so no missed rings
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › five habits: the Add habit row steps aside
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: uppercase only in the caps roles
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: no monospace
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: no sideways scroll at 390
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: at most two subnav rows
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › no console errors
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › a swipe left archives it, and the toast says so
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › archived on the server, taps kept
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › Undo brings it back, with its streak
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › a short swipe neither archives nor opens the habit
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › dragged by its grip, the first habit goes to the bottom
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › and the server keeps the order
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › the grip moves a habit with the arrow keys too
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › and keeps the focus on it
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › the edit sheet opens on what the habit is: 3 a week
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › renamed, and now weekdays
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: uppercase only in the caps roles
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: no monospace
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: no sideways scroll at 1280
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most two subnav rows
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
+  ok   Habits, the first sign-in asks a name and a phone, once (demo) › no member yet: a first name and a phone, before any habit
+  ok   Habits, the first sign-in asks a name and a phone, once (demo) › a phone that is not one: refused
+  ok   Habits, the first sign-in asks a name and a phone, once (demo) › saved: the habits appear
+  ok   Habits, the first sign-in asks a name and a phone, once (demo) › signed in again: not asked twice
+  ok   Habits, the first sign-in asks a name and a phone, once (demo) › Season: one line, and the address says where
+  ok   Habits, the first sign-in asks a name and a phone, once (demo) › #habits/wall opens the Wall chip
+  ok   Habits, the first sign-in asks a name and a phone, once (demo) › no console errors
+  ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › at 11:59 pm New York it is still Wednesday
+  ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and the morning walk tapped “today” is Wednesday’s
+  ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › two minutes later it is Thursday: the day turned at midnight New York
+  ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › a fresh day starts untapped
+  ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
+  ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
+  ok   Habits, live: no season, a season, and before the paste › no season scheduled: it says so, and no button
+  ok   Habits, live: no season, a season, and before the paste › signed out, nothing personal is asked for
+  ok   Habits, live: no season, a season, and before the paste › habits: nothing fixed or sticky inside the tab
+  ok   Habits, live: no season, a season, and before the paste › habits: uppercase only in the caps roles
+  ok   Habits, live: no season, a season, and before the paste › habits: no monospace
+  ok   Habits, live: no season, a season, and before the paste › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, live: no season, a season, and before the paste › habits: no sideways scroll at 390
+  ok   Habits, live: no season, a season, and before the paste › habits: at most two subnav rows
+  ok   Habits, live: no season, a season, and before the paste › no console errors
+  ok   Habits, live: no season, a season, and before the paste › a season to come: in 5 Burlington days
+  ok   Habits, live: no season, a season, and before the paste › signed in, Sign up opens the season’s payment link
+  ok   Habits, live: no season, a season, and before the paste › before sz-SETUP.sql is pasted: the tile, and one line
+  ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › tapped while the server is slow: shown at once
+  ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › the tap is written to this phone before the server answers
+  ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › after a refresh the tap is still there
+  ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › and it is sent again, and lands
+  ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › then the phone forgets it
+  ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › un-tapped at once
+  ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › the server refused: the tap comes back, and the toast says why
+  ok   Habits, live: a refresh never loses a tap, and a refused one is taken back › no console errors beyond the refusal
+  ok   Habits, live: deleting the account deletes the habits first, and stops if it cannot › the habits could not be deleted: nothing else is, the reader stays signed in, and it says so
+  ok   Habits, live: deleting the account deletes the habits first, and stops if it cannot › then: the habits first, then the posts and profile
+  ok   What Now, the sunset in the weather line says a score only when there is one (live) › a 0.0 (the forecast missing) is no score: the time, and that it is tomorrow’s
+  ok   What Now, the sunset in the weather line says a score only when there is one (live) › a score worked out without the forecast is not shown either
+  ok   What Now, the sunset in the weather line says a score only when there is one (live) › a real score is shown beside the time
+  ok   What Now, the sunset in the weather line says a score only when there is one (live) › and the line stays one line at 390
+  ok   What Now, the sunset in the weather line says a score only when there is one (live) › no console errors
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › eight finds, three swaps, three fit checks and one design sent in, from the demo
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › every find shows its days left, and they differ
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the vote on a find is “I’d want this”
@@ -1953,7 +1945,7 @@
   ok   Vintage, live posts land in their sections (live) › a swap says what it is for, and the size
   ok   Vintage, live posts land in their sections (live) › a shared post’s link lands on it and flashes
   ok   Vintage, live posts land in their sections (live) › a post that has gone says so
-  ok   Vintage, live posts land in their sections (live) › Art’s “Put it on a shirt” link opens the piece here, picture, title and maker
+  ok   Vintage, live posts land in their sections (live) › an old Art “Put it on a shirt” link still opens the piece here, picture, title and maker, with no button to a wall that has gone
   ok   Vintage, live posts land in their sections (live) › and it names no price
   ok   Vintage, live posts land in their sections (live) › it looks only among Art posts whose maker said yes to a shirt
   ok   Vintage, live posts land in their sections (live) › no console errors
