@@ -125,6 +125,8 @@ async function staticChecks() {
 const ET = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 function etParts(ms) { const o = {}; ET.formatToParts(new Date(ms)).forEach((p) => { o[p.type] = p.value; }); return o; }
 const etKey = (ms) => { const o = etParts(ms); return o.year + '-' + o.month + '-' + o.day; };
+/* today at h o'clock in Burlington, as ms */
+const etAt = (h) => { const key = etKey(Date.now()); const guess = Date.parse(key + 'T' + String(h).padStart(2, '0') + ':00:00Z'); return guess + ((24 + h - Number(etParts(guess).hour)) % 24) * 3600000; };
 const dayMinus = (key, n) => { const [y, m, d] = key.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d - n, 12)).toISOString().slice(0, 10); };
 const ETNAME = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric' });
 const nameOf = (key) => { const [y, m, d] = key.split('-').map(Number); return ETNAME.format(new Date(Date.UTC(y, m - 1, d, 12))); };
@@ -245,6 +247,16 @@ async function newPage(browser, base, opts = {}) {
     ...(opts.timezoneId ? { timezoneId: opts.timezoneId } : {}),
   });
   const page = await ctx.newPage();
+  /* opts.clock (ms) fixes the page's Date while its timers keep running;
+     opts.seed makes Math.random a fixed sequence (mulberry32). Together they
+     make a random pick from a time-of-day pool the same pick every run. */
+  if (opts.clock) await page.clock.setFixedTime(opts.clock);
+  if (opts.seed != null) {
+    await page.addInitScript((seed) => {
+      let a = seed >>> 0;
+      Math.random = () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    }, opts.seed);
+  }
   const errors = [];
   const supabase = [];
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
@@ -367,7 +379,15 @@ async function matrix(browser, base) {
     for (const demo of [false, true]) {
       const label = combo.viewport.width + ' ' + combo.scheme + (combo.motion === 'reduce' ? ' reduced-motion' : '') + (demo ? ' demo' : ' live');
       await group(label, async () => {
-        const { ctx, page, errors, supabase } = await newPage(browser, base, combo);
+        /* Games' leaderboards are one get_leaderboard per board: answered
+           here, so the live screen draws real rows the same way every run */
+        const boardsAsked = [];
+        const rpc = (fn, body) => {
+          if (fn !== 'get_leaderboard') return undefined;
+          boardsAsked.push(body.p_game);
+          return body.p_game === 'btown-wordle' ? ROWS(['Ada W.', 'Cy F.', 'Juniper', 'Max T.']) : [];
+        };
+        const { ctx, page, errors, supabase } = await newPage(browser, base, { ...combo, rpc });
         await page.goto(base + '/all-day/' + (demo ? '?demo=1' : ''), { waitUntil: 'domcontentloaded' });
         await settle(page);
         const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => [b.dataset.tab, b.innerText.trim()]));
@@ -394,6 +414,10 @@ async function matrix(browser, base) {
         }
         for (const tab of TABS) {
           if (tab !== 'wire') await goTab(page, tab);
+          if (tab === 'games' && !demo) {
+            await page.waitForFunction(() => !/Loading \d+ boards/.test(document.querySelector('#panel-games').innerText), null, { timeout: 15000 });
+            check(boardsAsked.length > 0 && boardsAsked.includes('btown-wordle'), 'games: every leaderboard call is answered by the suite, never the network', boardsAsked.join(', '));
+          }
           const state = await page.evaluate(() => {
             const p = document.querySelector('.panel:not([hidden])');
             return { id: p.id, promise: !!p.querySelector('.promise'), h2: p.querySelector('.promise h2')?.textContent || '', cards: p.querySelectorAll('[data-k]').length + p.querySelectorAll('.sec').length + p.querySelectorAll('.spin').length,
@@ -1238,7 +1262,10 @@ async function spinAnswer(page) {
 
 async function theWhatNow(browser, base) {
   await group('What Now, Spin (demo)', async () => {
-    const { ctx, page, errors } = await newPage(browser, base);
+    /* the pool depends on the hour and the pick on Math.random, so a real
+       clock let "the answer spells out its reason" fail when a late-night
+       pick had no reason to give: a Burlington afternoon and a fixed seed */
+    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(14), seed: 20261017 });
     await page.goto(base + '/all-day/?demo=1#whatnow');
     await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
     check(await page.$eval('#subnav .chip.on', (b) => /Spin/.test(b.innerText)), 'the chip row is the mode switch, Spin first', '');
