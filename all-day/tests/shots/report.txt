@@ -51,7 +51,7 @@
   ok   390 light live › wire: at most two subnav rows
   ok   390 light live › watch: its panel is the one showing
   ok   390 light live › watch: no error box
-  ok   390 light live › watch: live, it states its promise
+  ok   390 light live › watch: it draws its screen
   ok   390 light live › watch: nothing fixed or sticky inside the tab
   ok   390 light live › watch: uppercase only in the caps roles
   ok   390 light live › watch: no monospace
@@ -234,7 +234,7 @@
   ok   390 dark live › wire: at most two subnav rows
   ok   390 dark live › watch: its panel is the one showing
   ok   390 dark live › watch: no error box
-  ok   390 dark live › watch: live, it states its promise
+  ok   390 dark live › watch: it draws its screen
   ok   390 dark live › watch: nothing fixed or sticky inside the tab
   ok   390 dark live › watch: uppercase only in the caps roles
   ok   390 dark live › watch: no monospace
@@ -419,7 +419,7 @@
   ok   390 light reduced-motion live › wire: at most two subnav rows
   ok   390 light reduced-motion live › watch: its panel is the one showing
   ok   390 light reduced-motion live › watch: no error box
-  ok   390 light reduced-motion live › watch: live, it states its promise
+  ok   390 light reduced-motion live › watch: it draws its screen
   ok   390 light reduced-motion live › watch: nothing fixed or sticky inside the tab
   ok   390 light reduced-motion live › watch: uppercase only in the caps roles
   ok   390 light reduced-motion live › watch: no monospace
@@ -602,7 +602,7 @@
   ok   1280 light live › wire: at most two subnav rows
   ok   1280 light live › watch: its panel is the one showing
   ok   1280 light live › watch: no error box
-  ok   1280 light live › watch: live, it states its promise
+  ok   1280 light live › watch: it draws its screen
   ok   1280 light live › watch: nothing fixed or sticky inside the tab
   ok   1280 light live › watch: uppercase only in the caps roles
   ok   1280 light live › watch: no monospace
@@ -783,7 +783,7 @@
   ok   1280 dark reduced-motion live › wire: at most two subnav rows
   ok   1280 dark reduced-motion live › watch: its panel is the one showing
   ok   1280 dark reduced-motion live › watch: no error box
-  ok   1280 dark reduced-motion live › watch: live, it states its promise
+  ok   1280 dark reduced-motion live › watch: it draws its screen
   ok   1280 dark reduced-motion live › watch: nothing fixed or sticky inside the tab
   ok   1280 dark reduced-motion live › watch: uppercase only in the caps roles
   ok   1280 dark reduced-motion live › watch: no monospace
@@ -952,8 +952,8 @@
   ok   deep links, demo › #wire/w13: no console errors
   ok   deep links, demo › #wire/y4 lands on its card and flashes
   ok   deep links, demo › #wire/y4: no console errors
-  ok   deep links, demo › #watch/fm3 lands on its card and flashes
-  ok   deep links, demo › #watch/fm3: no console errors
+  ok   deep links, demo › #watch/f9003 lands on its card and flashes
+  ok   deep links, demo › #watch/f9003: no console errors
   ok   deep links, demo › #food/r-demo-all-night-diner lands on its card and flashes
   ok   deep links, demo › #food/r-demo-all-night-diner: no console errors
   ok   deep links, demo › #people/pp2 lands on its card and flashes
@@ -1245,6 +1245,104 @@
   ok   Games, demo › a chip scrolls to its section
   ok   Games, demo › the demo never calls Supabase
   ok   Games, demo › no console errors
+  ok   Watch, live from films.json › films.json is the list, and it is not called a starter list
+  ok   Watch, live from films.json › every film in its TMDB order
+  ok   Watch, live from films.json › the chip row is the table of contents
+  ok   Watch, live from films.json › Coming soon: in theaters now, then what opens, labelled theaters or streaming
+  ok   Watch, live from films.json › a play disc only where TMDB has a trailer
+  ok   Watch, live from films.json › posters are TMDB paths at w342, loaded lazily
+  ok   Watch, live from films.json › a poster reserves its 2:3 box
+  ok   Watch, live from films.json › TMDB’s logo and notice are on the tab
+  ok   Watch, live from films.json › nothing plays before a tap
+  ok   Watch, live from films.json › a tap plays that film’s TMDB trailer in the shell’s video box, and only there
+  ok   Watch, live from films.json › closing the box stops it
+  ok   Watch, live from films.json › a film with no trailer opens its sheet instead, and says so
+  ok   Watch, live from films.json › the film sheet: overview, year, runtime, genres
+  ok   Watch, live from films.json › and TMDB’s notice
+  ok   Watch, live from films.json › Trailer in the sheet closes it and plays in the box
+  ok   Watch, live from films.json › signed out, nothing is posted or synced
+  ok   Watch, live from films.json › no console errors
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › the seed is labelled as a starter list
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › with no films.json there is no Coming soon (the seed has none)
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › and the table of contents leaves it out
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › all sixty films
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › Just me: one dot on every poster, none filled
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › With Sam: a second dot on every poster
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › the switch reads With Sam
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › the sheet’s toggles show what is set
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › both dots on one film, the partner’s on another, the rest empty
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › after a reload: still With Sam, both dots where they were
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › Want to watch shows the one film on the list
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › Neither of us leaves out both seen films
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › Just me again: one dot, and yours is kept
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › signed out, a star says rating is one email to sign in, with the button
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › and nothing is posted
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › Watch chat: a door to the community channel and to Telegram
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › no chat is built here
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › with no ratings yet, town ratings say so
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › no console errors
+  ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › signing in joins the phone’s dots with the account’s, and takes the partner’s name
+  ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › only the phone’s own film is sent up
+  ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › a dot cleared on the other phone stays cleared here
+  ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › and is not sent back up
+  ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › a dot set in the sheet goes to the account
+  ok   Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live) › no console errors
+  ok   Watch, a missing films branch falls back to the starter list (live) › a 404 from films-data: the starter list, labelled
+  ok   Watch, a missing films branch falls back to the starter list (live) › and nothing but the 404 itself in the console
+  ok   Watch, filters and the rating sort on frozen data (demo) › all sixty, in list order
+  ok   Watch, filters and the rating sort on frozen data (demo) › every released film falls in at least one dated window
+  ok   Watch, filters and the rating sort on frozen data (demo) › recency 1m: 4 films, by release date
+  ok   Watch, filters and the rating sort on frozen data (demo) › recency 6m: 11 films, by release date
+  ok   Watch, filters and the rating sort on frozen data (demo) › recency 1y: 16 films, by release date
+  ok   Watch, filters and the rating sort on frozen data (demo) › recency 2y: 22 films, by release date
+  ok   Watch, filters and the rating sort on frozen data (demo) › recency 5y: 29 films, by release date
+  ok   Watch, filters and the rating sort on frozen data (demo) › recency 10y: 38 films, by release date
+  ok   Watch, filters and the rating sort on frozen data (demo) › recency 15y: 43 films, by release date
+  ok   Watch, filters and the rating sort on frozen data (demo) › recency 20y: 47 films, by release date
+  ok   Watch, filters and the rating sort on frozen data (demo) › recency 20p: 13 films, by release date
+  ok   Watch, filters and the rating sort on frozen data (demo) › genre and recency together: comedies from the last ten years
+  ok   Watch, filters and the rating sort on frozen data (demo) › a genre chip counts within the chosen recency
+  ok   Watch, filters and the rating sort on frozen data (demo) › Horror alone
+  ok   Watch, filters and the rating sort on frozen data (demo) › a town rating only on films with three or more ratings (7)
+  ok   Watch, filters and the rating sort on frozen data (demo) › Causeway, with two, shows none
+  ok   Watch, filters and the rating sort on frozen data (demo) › Town rating: the rated films first, highest average first
+  ok   Watch, filters and the rating sort on frozen data (demo) › then the rest in list order
+  ok   Watch, filters and the rating sort on frozen data (demo) › List order puts it back
+  ok   Watch, filters and the rating sort on frozen data (demo) › Coming soon: ten trailers
+  ok   Watch, filters and the rating sort on frozen data (demo) › no console errors
+  ok   Watch, town ratings and the screening vote (demo) › town ratings this week: only films with three or more this week (5)
+  ok   Watch, town ratings and the screening vote (demo) › exactly those films
+  ok   Watch, town ratings and the screening vote (demo) › Causeway and Kindling, two ratings each this week, are left out
+  ok   Watch, town ratings and the screening vote (demo) › most-rated first
+  ok   Watch, town ratings and the screening vote (demo) › five films on the ballot
+  ok   Watch, town ratings and the screening vote (demo) › most votes first
+  ok   Watch, town ratings and the screening vote (demo) › it says what five votes does
+  ok   Watch, town ratings and the screening vote (demo) › a vote raises its count and its bar
+  ok   Watch, town ratings and the screening vote (demo) › one vote each: voting for another takes the first back
+  ok   Watch, town ratings and the screening vote (demo) › the fifth vote fills the bar and says it is going on Meetup
+  ok   Watch, town ratings and the screening vote (demo) › a pick with a place is the screening card
+  ok   Watch, town ratings and the screening vote (demo) › the demo never calls Supabase
+  ok   Watch, town ratings and the screening vote (demo) › no console errors
+  ok   Watch, a rating posts with stars in meta (demo) › signed out: rating asks for the sign-in
+  ok   Watch, a rating posts with stars in meta (demo) › no first name yet: asked for one, in place
+  ok   Watch, a rating posts with stars in meta (demo) › a rating post on the watch board: the title, and stars, year and where in meta; it never expires
+  ok   Watch, a rating posts with stars in meta (demo) › four stars lit
+  ok   Watch, a rating posts with stars in meta (demo) › two ratings: still no town rating on the poster
+  ok   Watch, a rating posts with stars in meta (demo) › rating again replaces your last rating: one each, the old one gone
+  ok   Watch, a rating posts with stars in meta (demo) › the suggest sheet picks a film from the list
+  ok   Watch, a rating posts with stars in meta (demo) › it posts a pick (title, year; 30 days) and lands on the ballot
+  ok   Watch, a rating posts with stars in meta (demo) › one pick per film: suggesting it again votes for it instead
+  ok   Watch, a rating posts with stars in meta (demo) › watch: nothing fixed or sticky inside the tab
+  ok   Watch, a rating posts with stars in meta (demo) › watch: uppercase only in the caps roles
+  ok   Watch, a rating posts with stars in meta (demo) › watch: no monospace
+  ok   Watch, a rating posts with stars in meta (demo) › watch: no escaped markup, undefined or NaN on the page
+  ok   Watch, a rating posts with stars in meta (demo) › watch: no sideways scroll at 390
+  ok   Watch, a rating posts with stars in meta (demo) › watch: at most two subnav rows
+  ok   Watch, a rating posts with stars in meta (demo) › no console errors
+  ok   Watch, deep links (demo) › a film far down the list lands and flashes
+  ok   Watch, deep links (demo) › a coming-soon poster lands and flashes
+  ok   Watch, deep links (demo) › a film that is not on the list says it has moved on
+  ok   Watch, deep links (demo) › no console errors
   ok   interactions, demo › the star saves and lights the mast
   ok   interactions, demo › the Saved sheet lists it
   ok   interactions, demo › Escape closes the sheet
@@ -1271,7 +1369,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 7ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
