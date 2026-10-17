@@ -733,14 +733,16 @@ function clubSheet(c, o) {
     body.classList.add('clubsheet');
     body.dataset.clubSheet = c.id;
     if (c.what) body.appendChild(el('p', 'pick-why', esc(c.what)));
-    const meets = (Array.isArray(c.meets) ? c.meets : []).filter((m) => m && DAY_WORD[m.day])
+    const today = cw.dateKey(cw.et(Date.now()));
+    /* a meet whose dated run is over is not one of its meets any more */
+    const meets = (Array.isArray(c.meets) ? c.meets : []).filter((m) => m && DAY_WORD[m.day] && !(typeof m.until === 'string' && m.until < today))
       .sort((a, b) => DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day) || String(a.time).localeCompare(String(b.time)));
     if (meets.length) {
       body.appendChild(el('div', 'sheet-h', esc(meets.length === 1 ? 'The meet' : 'The meets')));
       meets.forEach((m) => {
         const row = el('div', 'sheet-row');
         row.dataset.meet = m.day + '-' + m.time;
-        const sub = [m.where, m.season ? m.season : '', m.note].filter(Boolean).join(' · ');
+        const sub = [m.where, spanWords(m), m.season ? m.season : '', m.note].filter(Boolean).join(' · ');
         row.appendChild(el('div', 't', '<b>' + esc(DAY_WORD[m.day] + ', ' + cw.timeLabel(m.time)) + '</b>' + (sub ? '<div class="d">' + esc(sub) + '</div>' : '')));
         const map = cw.mapUrl(m);
         if (map) row.appendChild(linkBtn('Map', map, 'ghost sm'));
@@ -768,6 +770,14 @@ function clubSheet(c, o) {
       body.appendChild(go);
     }
   });
+}
+
+/* a meet's own dates, in words: "Nov 30 to Dec 14", "until Oct 28", "from Nov 7" */
+const SHORT_DAY = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
+function spanWords(m) {
+  const w = (k) => (typeof m[k] === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(m[k]) ? SHORT_DAY.format(new Date(m[k] + 'T12:00:00Z')) : '');
+  const a = w('from'), b = w('until');
+  return a && b ? a + ' to ' + b : b ? 'until ' + b : a ? 'from ' + a : '';
 }
 
 /* the plan a club's meet makes: its name, its day and time, its place */

@@ -10,9 +10,13 @@
    5:30 pm. Months here are 1 to 12, as in the data's `months` field.
 
    A meet is on a given day when its weekday matches and its season allows
-   that day: the meet's `months` (or, when it has none, its club's), and every
-   `from` / `until` on the club and on the meet. A club with none of these
-   runs all year. The free-text `season` is for people and is never read. */
+   that day: the meet's `months` (or, when it has none, its club's), every
+   `from` / `until` on the club and on the meet (both days kept), and no
+   `skip` day on either. A club with none of these runs all year. The
+   free-text `season` is for people and is never read.
+
+   A wall time that does not exist (2:30 am on the spring-forward night) has
+   no meet that night rather than a wrong one. */
 
 export const TZ = 'America/New_York';
 const DOW = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
@@ -70,6 +74,7 @@ export function inSeason(club, meet, day) {
     const from = dateOf(x.from), until = dateOf(x.until);
     if (from && key < from) return false;
     if (until && key > until) return false;
+    if (Array.isArray(x.skip) && x.skip.includes(key)) return false;
   }
   return true;
 }
@@ -82,6 +87,8 @@ const usable = (c) => !!(c && typeof c === 'object' && typeof c.id === 'string' 
 function occurrence(club, meet, day) {
   const m = TIME_RE.exec(String(meet.time || ''));
   const at = wall(day.y, day.mo, day.d, +m[1], +m[2]);
+  const back = et(at);
+  if (back.h !== +m[1] || back.mi !== +m[2] || back.d !== day.d) return null;   // in the spring-forward gap
   return { k: 'rc-' + club.id + '-' + dateKey(day) + '-' + m[1] + m[2], club, meet, at, date: dateKey(day), dow: day.dow, time: timeLabel(meet.time) };
 }
 
@@ -93,7 +100,8 @@ export function meetsOn(clubs, day, keep) {
     club.meets.forEach((meet) => {
       if (!meet || meet.day !== DOW[day.dow] || !TIME_RE.test(String(meet.time || ''))) return;
       if (!inSeason(club, meet, day)) return;
-      out.push(occurrence(club, meet, day));
+      const o = occurrence(club, meet, day);
+      if (o) out.push(o);
     });
   });
   return out.sort((a, b) => a.at - b.at || a.club.name.localeCompare(b.club.name));
@@ -125,9 +133,9 @@ export function meetsInWindow(clubs, fromMs, toMs, keep) {
   return out.sort((a, b) => a.at - b.at || a.club.name.localeCompare(b.club.name));
 }
 
-/* the next meet from fromMs on, within four weeks, or null */
+/* the next meet from fromMs on, within four weeks of calendar days, or null */
 export function nextMeet(clubs, fromMs, keep) {
-  return meetsInWindow(clubs, fromMs, fromMs + 28 * 24 * HOUR, keep)[0] || null;
+  return meetsInWindow(clubs, fromMs, midnight(addDays(dayOf(fromMs), 29)), keep)[0] || null;
 }
 
 /* What Now's three windows:

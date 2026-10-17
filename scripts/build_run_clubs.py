@@ -18,13 +18,15 @@ file. It refuses the file when:
   to look,
 - two clubs share a name, or a field holds the wrong type,
 - a field name is not one the directory uses (catches typos like "meet"),
-- `months` is not a list of month numbers 1-12, or `from` / `until` is not a
-  real YYYY-MM-DD date, or `from` comes after `until`.
+- `months` is not a list of month numbers 1-12, `from` / `until` is not a
+  real YYYY-MM-DD date, `from` comes after `until`, or `skip` is not a list
+  of real YYYY-MM-DD dates.
 
-`season` is the page's own words, for people. `months`, `from` and `until`
-(on the club, or on one meet) are what the All Day app reads to decide
-whether a meet is on this week: a meet's months replace its club's, and every
-from/until on the club and the meet applies. A club whose season text says
+`season` is the page's own words, for people. `months`, `from`, `until` and
+`skip` (on the club, or on one meet) are what the All Day app reads to decide
+whether a meet is on a given day: a meet's months replace its club's, and
+every from/until/skip on the club and the meet applies (from and until are
+both kept; a skip day has no meet). A club whose season text says
 it is not year-round but which has none of the three gets a warning, since
 the app would then show it all year.
 
@@ -60,10 +62,10 @@ BBOX = {"lat": (44.25, 44.75), "lng": (-73.40, -72.85)}
 STALE_DAYS = 120
 
 CLUB_KEYS = {"id", "name", "kind", "what", "meets", "schedule_note", "level", "cost", "season",
-             "months", "from", "until", "newcomers", "url", "instagram", "meetup", "strava", "checked"}
+             "months", "from", "until", "skip", "newcomers", "url", "instagram", "meetup", "strava", "checked"}
 REQUIRED_TEXT = ("id", "name", "kind", "what", "url")
-MEET_KEYS = {"day", "time", "where", "address", "lat", "lng", "note", "season", "months", "from", "until"}
-WHEN_KEYS = ("months", "from", "until")
+MEET_KEYS = {"day", "time", "where", "address", "lat", "lng", "note", "season", "months", "from", "until", "skip"}
+WHEN_KEYS = ("months", "from", "until", "skip")
 CHECKED_KEYS = {"date", "source", "note", "also"}
 LINK_KEYS = ("url", "instagram", "meetup", "strava")
 
@@ -80,7 +82,7 @@ def is_number(value):
 
 
 def check_when(entry, label, errors):
-    """The machine-readable season: months 1-12, from/until as YYYY-MM-DD."""
+    """The machine-readable season: months 1-12, from/until and skip as YYYY-MM-DD."""
     months = entry.get("months")
     if months is not None:
         if (not isinstance(months, list) or not months
@@ -88,6 +90,15 @@ def check_when(entry, label, errors):
             errors.append(f"{label}: months must be a non-empty list of month numbers 1-12")
         elif len(set(months)) != len(months):
             errors.append(f"{label}: months lists a month twice")
+    skip = entry.get("skip")
+    if skip is not None:
+        def real_day(v):
+            try:
+                return isinstance(v, str) and len(v) == 10 and dt.date.fromisoformat(v) is not None
+            except ValueError:
+                return False
+        if not isinstance(skip, list) or not skip or not all(real_day(v) for v in skip):
+            errors.append(f"{label}: skip must be a non-empty list of YYYY-MM-DD dates")
     dates = {}
     for key in ("from", "until"):
         if key not in entry:

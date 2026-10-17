@@ -126,7 +126,33 @@ test('windows: now is three hours, tonight is from 4 pm, tomorrow is the whole d
   assert.equal(y.to - y.from, 23 * 3600000);
 });
 
+test('a skip day has no meet; the real file’s dated series stay in their year', () => {
+  const clubs = [club('dodge', [meet('mon', '19:00')], { skip: ['2026-11-02', '2026-12-28'] }), club('one', [meet('mon', '18:00', { skip: ['2026-11-09'] })])];
+  const mons = (from, to) => cw.meetsInWindow(clubs, at(from), at(to)).map((o) => o.club.id + ' ' + o.date);
+  assert.deepEqual(mons('2026-10-26T00:00:00-04:00', '2026-11-17T00:00:00-05:00'),
+    ['one 2026-10-26', 'dodge 2026-10-26', 'one 2026-11-02', 'dodge 2026-11-09', 'one 2026-11-16', 'dodge 2026-11-16']);
+  const real = (from, to, id) => cw.meetsInWindow(REAL, at(from), at(to)).filter((o) => o.club.id === id).map((o) => o.date + ' ' + o.time);
+  assert.deepEqual(real('2026-11-01T00:00:00-04:00', '2026-11-03T00:00:00-05:00', 'vermont-dodgeball'), [], 'no dodgeball on election-setup night');
+  assert.deepEqual(real('2026-11-06T00:00:00-05:00', '2026-11-07T00:00:00-05:00', 'miller-center-drop-in-pickleball'), [], 'the Miller Center is closed through November 6');
+  assert.deepEqual(real('2026-11-07T00:00:00-05:00', '2026-11-08T00:00:00-05:00', 'miller-center-drop-in-pickleball'), ['2026-11-07 8:30 am']);
+  assert.deepEqual(real('2026-09-08T00:00:00-04:00', '2026-09-09T00:00:00-04:00', 'catamount-trail-running-series'), [], 'the 2026 trail series ended September 1');
+  for (const id of ['catamount-trail-running-series', 'skirack-run-club', 'vt-ultimate-essex-saturday-pickup', 'vermont-womxns-pickup-soccer', 'catamount-mtb-race-series', 'catamount-guided-mtb-rides']) {
+    assert.deepEqual(real('2027-04-01T00:00:00-04:00', '2027-10-01T00:00:00-04:00', id), [], id + ' does not come back in 2027 on its own');
+  }
+  assert.deepEqual(real('2026-11-23T00:00:00-05:00', '2026-12-01T00:00:00-05:00', 'colchester-rec-adult-pickup'), ['2026-11-23 6:45 pm', '2026-11-30 7:15 pm'], 'Colchester moves to 7:15 for its last block, with the gap weeks off');
+});
+
+test('a wall time inside the spring-forward gap has no meet that night', () => {
+  const clubs = [club('late', [meet('sun', '02:30')])];
+  assert.deepEqual(cw.meetsInWindow(clubs, at('2027-03-13T00:00:00-05:00'), at('2027-03-22T00:00:00-04:00')).map((o) => o.date), ['2027-03-21']);
+  const x = cw.et(cw.meetsInWindow(clubs, at('2027-03-20T00:00:00-04:00'), at('2027-03-22T00:00:00-04:00'))[0].at);
+  assert.deepEqual([x.h, x.mi], [2, 30]);
+});
+
 test('nextMeet finds the next one, days away if it must', () => {
+  /* four calendar weeks on, across the night the clocks go back (a 673-hour span) */
+  const nov = [club('nov', [meet('sun', '18:00')], { months: [11] })];
+  assert.equal(cw.nextMeet(nov, at('2026-10-04T18:01:00-04:00')).date, '2026-11-01');
   const clubs = [club('wed', [meet('wed', '17:30')]), club('summer', [meet('mon', '18:00')], { months: [6] })];
   const n = cw.nextMeet(clubs, at('2026-10-22T09:00:00-04:00'));
   assert.equal(n.club.id, 'wed');
