@@ -23,10 +23,10 @@ every group is local, so that one stays mechanical. The X shortlist carries
 national desks as well as Vermont accounts (2026-10-17), so for X the verdict
 decides: AP on a Vermont story is local, WCAX on a South Carolina trial is not.
 
-Failure posture: no key, the $25 month cap, or any API trouble logs and exits
-0. Items left untagged are retried next hour, and curate_wire.py treats an
-untagged item with mechanical defaults, so a tagging outage degrades the
-river's ranking, never its existence.
+Failure posture: no key, the month cap (wire_common.MONTH_CAP_USD, $60), or
+any API trouble logs and exits 0. Items left untagged are retried next hour,
+and curate_wire.py treats an untagged item with mechanical defaults, so a
+tagging outage degrades the river's ranking, never its existence.
 
 CLI:
   --data-dir DIR   wire-data working tree (default data/)

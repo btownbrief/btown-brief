@@ -44,11 +44,12 @@ Honesty rules, the house style of curate_top.py:
   * Nothing that ran on an earlier day's Wire (RESERVE_DAYS) comes back, and
     an item the editor passed on stays passed on for the day.
 
-Failure posture: no key, the $25 month cap, or any API trouble logs and exits
-0 without touching the day's file, so the branch keeps the last good paper,
-UNLESS the paper has gone unchecked for STALE_HOURS: then the run fails so it
-is seen. A quiet hour (nothing new worth asking about) still stamps
-`checked`, so overnight silence is not mistaken for a broken pipeline.
+Failure posture: no key, the month cap (wire_common.MONTH_CAP_USD, $60), or
+any API trouble logs and exits 0 without touching the day's file, so the
+branch keeps the last good paper, UNLESS the paper has gone unchecked for
+STALE_HOURS: then the run fails so it is seen. A quiet hour (nothing new
+worth asking about) still stamps `checked`, so overnight silence is not
+mistaken for a broken pipeline.
 
 CLI:
   --data-dir DIR   wire-data working tree (default data/)
