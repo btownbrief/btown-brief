@@ -31,6 +31,8 @@
   ok   source rules › js/modes/wire-demo.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/wire-photos.js: no monospace
   ok   source rules › js/modes/wire-photos.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/modes/wire-square.js: no monospace
+  ok   source rules › js/modes/wire-square.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/wire.js: no monospace
   ok   source rules › js/modes/wire.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/people-match.js: no monospace
@@ -57,7 +59,7 @@
   ok   390 light live › wire: no monospace
   ok   390 light live › wire: no escaped markup, undefined or NaN on the page
   ok   390 light live › wire: no sideways scroll at 390
-  ok   390 light live › wire: at most two subnav rows
+  ok   390 light live › wire: at most 3 subnav rows
   ok   390 light live › watch: its panel is the one showing
   ok   390 light live › watch: no error box
   ok   390 light live › watch: it draws its screen
@@ -66,7 +68,7 @@
   ok   390 light live › watch: no monospace
   ok   390 light live › watch: no escaped markup, undefined or NaN on the page
   ok   390 light live › watch: no sideways scroll at 390
-  ok   390 light live › watch: at most two subnav rows
+  ok   390 light live › watch: at most 2 subnav rows
   ok   390 light live › food: its panel is the one showing
   ok   390 light live › food: no error box
   ok   390 light live › food: it draws its screen
@@ -75,7 +77,7 @@
   ok   390 light live › food: no monospace
   ok   390 light live › food: no escaped markup, undefined or NaN on the page
   ok   390 light live › food: no sideways scroll at 390
-  ok   390 light live › food: at most two subnav rows
+  ok   390 light live › food: at most 2 subnav rows
   ok   390 light live › people: its panel is the one showing
   ok   390 light live › people: no error box
   ok   390 light live › people: it draws its screen
@@ -84,7 +86,7 @@
   ok   390 light live › people: no monospace
   ok   390 light live › people: no escaped markup, undefined or NaN on the page
   ok   390 light live › people: no sideways scroll at 390
-  ok   390 light live › people: at most two subnav rows
+  ok   390 light live › people: at most 2 subnav rows
   ok   390 light live › whatnow: its panel is the one showing
   ok   390 light live › whatnow: no error box
   ok   390 light live › whatnow: it draws its screen
@@ -93,7 +95,7 @@
   ok   390 light live › whatnow: no monospace
   ok   390 light live › whatnow: no escaped markup, undefined or NaN on the page
   ok   390 light live › whatnow: no sideways scroll at 390
-  ok   390 light live › whatnow: at most two subnav rows
+  ok   390 light live › whatnow: at most 2 subnav rows
   ok   390 light live › vintage: its panel is the one showing
   ok   390 light live › vintage: no error box
   ok   390 light live › vintage: it draws its screen
@@ -102,7 +104,7 @@
   ok   390 light live › vintage: no monospace
   ok   390 light live › vintage: no escaped markup, undefined or NaN on the page
   ok   390 light live › vintage: no sideways scroll at 390
-  ok   390 light live › vintage: at most two subnav rows
+  ok   390 light live › vintage: at most 2 subnav rows
   ok   390 light live › habits: its panel is the one showing
   ok   390 light live › habits: no error box
   ok   390 light live › habits: it draws its screen
@@ -111,7 +113,7 @@
   ok   390 light live › habits: no monospace
   ok   390 light live › habits: no escaped markup, undefined or NaN on the page
   ok   390 light live › habits: no sideways scroll at 390
-  ok   390 light live › habits: at most two subnav rows
+  ok   390 light live › habits: at most 2 subnav rows
   ok   390 light live › onair: its panel is the one showing
   ok   390 light live › onair: no error box
   ok   390 light live › onair: it draws its screen
@@ -120,7 +122,7 @@
   ok   390 light live › onair: no monospace
   ok   390 light live › onair: no escaped markup, undefined or NaN on the page
   ok   390 light live › onair: no sideways scroll at 390
-  ok   390 light live › onair: at most two subnav rows
+  ok   390 light live › onair: at most 2 subnav rows
   ok   390 light live › games: every leaderboard call is answered by the suite, never the network
   ok   390 light live › games: its panel is the one showing
   ok   390 light live › games: no error box
@@ -130,7 +132,7 @@
   ok   390 light live › games: no monospace
   ok   390 light live › games: no escaped markup, undefined or NaN on the page
   ok   390 light live › games: no sideways scroll at 390
-  ok   390 light live › games: at most two subnav rows
+  ok   390 light live › games: at most 2 subnav rows
   ok   390 light live › one GoatCounter tab-landing event per landing
   ok   390 light live › tapping the tab you are on counts nothing
   ok   390 light live › no console errors
@@ -151,7 +153,7 @@
   ok   390 light demo › wire: no monospace
   ok   390 light demo › wire: no escaped markup, undefined or NaN on the page
   ok   390 light demo › wire: no sideways scroll at 390
-  ok   390 light demo › wire: at most two subnav rows
+  ok   390 light demo › wire: at most 3 subnav rows
   ok   390 light demo › watch: its panel is the one showing
   ok   390 light demo › watch: no error box
   ok   390 light demo › watch: it draws its screen
@@ -160,7 +162,7 @@
   ok   390 light demo › watch: no monospace
   ok   390 light demo › watch: no escaped markup, undefined or NaN on the page
   ok   390 light demo › watch: no sideways scroll at 390
-  ok   390 light demo › watch: at most two subnav rows
+  ok   390 light demo › watch: at most 2 subnav rows
   ok   390 light demo › food: its panel is the one showing
   ok   390 light demo › food: no error box
   ok   390 light demo › food: it draws its screen
@@ -169,7 +171,7 @@
   ok   390 light demo › food: no monospace
   ok   390 light demo › food: no escaped markup, undefined or NaN on the page
   ok   390 light demo › food: no sideways scroll at 390
-  ok   390 light demo › food: at most two subnav rows
+  ok   390 light demo › food: at most 2 subnav rows
   ok   390 light demo › people: its panel is the one showing
   ok   390 light demo › people: no error box
   ok   390 light demo › people: it draws its screen
@@ -178,7 +180,7 @@
   ok   390 light demo › people: no monospace
   ok   390 light demo › people: no escaped markup, undefined or NaN on the page
   ok   390 light demo › people: no sideways scroll at 390
-  ok   390 light demo › people: at most two subnav rows
+  ok   390 light demo › people: at most 2 subnav rows
   ok   390 light demo › whatnow: its panel is the one showing
   ok   390 light demo › whatnow: no error box
   ok   390 light demo › whatnow: it draws its screen
@@ -187,7 +189,7 @@
   ok   390 light demo › whatnow: no monospace
   ok   390 light demo › whatnow: no escaped markup, undefined or NaN on the page
   ok   390 light demo › whatnow: no sideways scroll at 390
-  ok   390 light demo › whatnow: at most two subnav rows
+  ok   390 light demo › whatnow: at most 2 subnav rows
   ok   390 light demo › vintage: its panel is the one showing
   ok   390 light demo › vintage: no error box
   ok   390 light demo › vintage: it draws its screen
@@ -196,7 +198,7 @@
   ok   390 light demo › vintage: no monospace
   ok   390 light demo › vintage: no escaped markup, undefined or NaN on the page
   ok   390 light demo › vintage: no sideways scroll at 390
-  ok   390 light demo › vintage: at most two subnav rows
+  ok   390 light demo › vintage: at most 2 subnav rows
   ok   390 light demo › habits: its panel is the one showing
   ok   390 light demo › habits: no error box
   ok   390 light demo › habits: it draws its screen
@@ -205,7 +207,7 @@
   ok   390 light demo › habits: no monospace
   ok   390 light demo › habits: no escaped markup, undefined or NaN on the page
   ok   390 light demo › habits: no sideways scroll at 390
-  ok   390 light demo › habits: at most two subnav rows
+  ok   390 light demo › habits: at most 2 subnav rows
   ok   390 light demo › onair: its panel is the one showing
   ok   390 light demo › onair: no error box
   ok   390 light demo › onair: it draws its screen
@@ -214,7 +216,7 @@
   ok   390 light demo › onair: no monospace
   ok   390 light demo › onair: no escaped markup, undefined or NaN on the page
   ok   390 light demo › onair: no sideways scroll at 390
-  ok   390 light demo › onair: at most two subnav rows
+  ok   390 light demo › onair: at most 2 subnav rows
   ok   390 light demo › games: its panel is the one showing
   ok   390 light demo › games: no error box
   ok   390 light demo › games: it draws its screen
@@ -223,7 +225,7 @@
   ok   390 light demo › games: no monospace
   ok   390 light demo › games: no escaped markup, undefined or NaN on the page
   ok   390 light demo › games: no sideways scroll at 390
-  ok   390 light demo › games: at most two subnav rows
+  ok   390 light demo › games: at most 2 subnav rows
   ok   390 light demo › one GoatCounter tab-landing event per landing
   ok   390 light demo › tapping the tab you are on counts nothing
   ok   390 light demo › no console errors
@@ -245,7 +247,7 @@
   ok   390 dark live › wire: no monospace
   ok   390 dark live › wire: no escaped markup, undefined or NaN on the page
   ok   390 dark live › wire: no sideways scroll at 390
-  ok   390 dark live › wire: at most two subnav rows
+  ok   390 dark live › wire: at most 3 subnav rows
   ok   390 dark live › watch: its panel is the one showing
   ok   390 dark live › watch: no error box
   ok   390 dark live › watch: it draws its screen
@@ -254,7 +256,7 @@
   ok   390 dark live › watch: no monospace
   ok   390 dark live › watch: no escaped markup, undefined or NaN on the page
   ok   390 dark live › watch: no sideways scroll at 390
-  ok   390 dark live › watch: at most two subnav rows
+  ok   390 dark live › watch: at most 2 subnav rows
   ok   390 dark live › food: its panel is the one showing
   ok   390 dark live › food: no error box
   ok   390 dark live › food: it draws its screen
@@ -263,7 +265,7 @@
   ok   390 dark live › food: no monospace
   ok   390 dark live › food: no escaped markup, undefined or NaN on the page
   ok   390 dark live › food: no sideways scroll at 390
-  ok   390 dark live › food: at most two subnav rows
+  ok   390 dark live › food: at most 2 subnav rows
   ok   390 dark live › people: its panel is the one showing
   ok   390 dark live › people: no error box
   ok   390 dark live › people: it draws its screen
@@ -272,7 +274,7 @@
   ok   390 dark live › people: no monospace
   ok   390 dark live › people: no escaped markup, undefined or NaN on the page
   ok   390 dark live › people: no sideways scroll at 390
-  ok   390 dark live › people: at most two subnav rows
+  ok   390 dark live › people: at most 2 subnav rows
   ok   390 dark live › whatnow: its panel is the one showing
   ok   390 dark live › whatnow: no error box
   ok   390 dark live › whatnow: it draws its screen
@@ -281,7 +283,7 @@
   ok   390 dark live › whatnow: no monospace
   ok   390 dark live › whatnow: no escaped markup, undefined or NaN on the page
   ok   390 dark live › whatnow: no sideways scroll at 390
-  ok   390 dark live › whatnow: at most two subnav rows
+  ok   390 dark live › whatnow: at most 2 subnav rows
   ok   390 dark live › vintage: its panel is the one showing
   ok   390 dark live › vintage: no error box
   ok   390 dark live › vintage: it draws its screen
@@ -290,7 +292,7 @@
   ok   390 dark live › vintage: no monospace
   ok   390 dark live › vintage: no escaped markup, undefined or NaN on the page
   ok   390 dark live › vintage: no sideways scroll at 390
-  ok   390 dark live › vintage: at most two subnav rows
+  ok   390 dark live › vintage: at most 2 subnav rows
   ok   390 dark live › habits: its panel is the one showing
   ok   390 dark live › habits: no error box
   ok   390 dark live › habits: it draws its screen
@@ -299,7 +301,7 @@
   ok   390 dark live › habits: no monospace
   ok   390 dark live › habits: no escaped markup, undefined or NaN on the page
   ok   390 dark live › habits: no sideways scroll at 390
-  ok   390 dark live › habits: at most two subnav rows
+  ok   390 dark live › habits: at most 2 subnav rows
   ok   390 dark live › onair: its panel is the one showing
   ok   390 dark live › onair: no error box
   ok   390 dark live › onair: it draws its screen
@@ -308,7 +310,7 @@
   ok   390 dark live › onair: no monospace
   ok   390 dark live › onair: no escaped markup, undefined or NaN on the page
   ok   390 dark live › onair: no sideways scroll at 390
-  ok   390 dark live › onair: at most two subnav rows
+  ok   390 dark live › onair: at most 2 subnav rows
   ok   390 dark live › games: every leaderboard call is answered by the suite, never the network
   ok   390 dark live › games: its panel is the one showing
   ok   390 dark live › games: no error box
@@ -318,7 +320,7 @@
   ok   390 dark live › games: no monospace
   ok   390 dark live › games: no escaped markup, undefined or NaN on the page
   ok   390 dark live › games: no sideways scroll at 390
-  ok   390 dark live › games: at most two subnav rows
+  ok   390 dark live › games: at most 2 subnav rows
   ok   390 dark live › one GoatCounter tab-landing event per landing
   ok   390 dark live › tapping the tab you are on counts nothing
   ok   390 dark live › no console errors
@@ -339,7 +341,7 @@
   ok   390 dark demo › wire: no monospace
   ok   390 dark demo › wire: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › wire: no sideways scroll at 390
-  ok   390 dark demo › wire: at most two subnav rows
+  ok   390 dark demo › wire: at most 3 subnav rows
   ok   390 dark demo › watch: its panel is the one showing
   ok   390 dark demo › watch: no error box
   ok   390 dark demo › watch: it draws its screen
@@ -348,7 +350,7 @@
   ok   390 dark demo › watch: no monospace
   ok   390 dark demo › watch: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › watch: no sideways scroll at 390
-  ok   390 dark demo › watch: at most two subnav rows
+  ok   390 dark demo › watch: at most 2 subnav rows
   ok   390 dark demo › food: its panel is the one showing
   ok   390 dark demo › food: no error box
   ok   390 dark demo › food: it draws its screen
@@ -357,7 +359,7 @@
   ok   390 dark demo › food: no monospace
   ok   390 dark demo › food: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › food: no sideways scroll at 390
-  ok   390 dark demo › food: at most two subnav rows
+  ok   390 dark demo › food: at most 2 subnav rows
   ok   390 dark demo › people: its panel is the one showing
   ok   390 dark demo › people: no error box
   ok   390 dark demo › people: it draws its screen
@@ -366,7 +368,7 @@
   ok   390 dark demo › people: no monospace
   ok   390 dark demo › people: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › people: no sideways scroll at 390
-  ok   390 dark demo › people: at most two subnav rows
+  ok   390 dark demo › people: at most 2 subnav rows
   ok   390 dark demo › whatnow: its panel is the one showing
   ok   390 dark demo › whatnow: no error box
   ok   390 dark demo › whatnow: it draws its screen
@@ -375,7 +377,7 @@
   ok   390 dark demo › whatnow: no monospace
   ok   390 dark demo › whatnow: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › whatnow: no sideways scroll at 390
-  ok   390 dark demo › whatnow: at most two subnav rows
+  ok   390 dark demo › whatnow: at most 2 subnav rows
   ok   390 dark demo › vintage: its panel is the one showing
   ok   390 dark demo › vintage: no error box
   ok   390 dark demo › vintage: it draws its screen
@@ -384,7 +386,7 @@
   ok   390 dark demo › vintage: no monospace
   ok   390 dark demo › vintage: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › vintage: no sideways scroll at 390
-  ok   390 dark demo › vintage: at most two subnav rows
+  ok   390 dark demo › vintage: at most 2 subnav rows
   ok   390 dark demo › habits: its panel is the one showing
   ok   390 dark demo › habits: no error box
   ok   390 dark demo › habits: it draws its screen
@@ -393,7 +395,7 @@
   ok   390 dark demo › habits: no monospace
   ok   390 dark demo › habits: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › habits: no sideways scroll at 390
-  ok   390 dark demo › habits: at most two subnav rows
+  ok   390 dark demo › habits: at most 2 subnav rows
   ok   390 dark demo › onair: its panel is the one showing
   ok   390 dark demo › onair: no error box
   ok   390 dark demo › onair: it draws its screen
@@ -402,7 +404,7 @@
   ok   390 dark demo › onair: no monospace
   ok   390 dark demo › onair: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › onair: no sideways scroll at 390
-  ok   390 dark demo › onair: at most two subnav rows
+  ok   390 dark demo › onair: at most 2 subnav rows
   ok   390 dark demo › games: its panel is the one showing
   ok   390 dark demo › games: no error box
   ok   390 dark demo › games: it draws its screen
@@ -411,7 +413,7 @@
   ok   390 dark demo › games: no monospace
   ok   390 dark demo › games: no escaped markup, undefined or NaN on the page
   ok   390 dark demo › games: no sideways scroll at 390
-  ok   390 dark demo › games: at most two subnav rows
+  ok   390 dark demo › games: at most 2 subnav rows
   ok   390 dark demo › one GoatCounter tab-landing event per landing
   ok   390 dark demo › tapping the tab you are on counts nothing
   ok   390 dark demo › no console errors
@@ -435,7 +437,7 @@
   ok   390 light reduced-motion live › wire: no monospace
   ok   390 light reduced-motion live › wire: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › wire: no sideways scroll at 390
-  ok   390 light reduced-motion live › wire: at most two subnav rows
+  ok   390 light reduced-motion live › wire: at most 3 subnav rows
   ok   390 light reduced-motion live › watch: its panel is the one showing
   ok   390 light reduced-motion live › watch: no error box
   ok   390 light reduced-motion live › watch: it draws its screen
@@ -444,7 +446,7 @@
   ok   390 light reduced-motion live › watch: no monospace
   ok   390 light reduced-motion live › watch: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › watch: no sideways scroll at 390
-  ok   390 light reduced-motion live › watch: at most two subnav rows
+  ok   390 light reduced-motion live › watch: at most 2 subnav rows
   ok   390 light reduced-motion live › food: its panel is the one showing
   ok   390 light reduced-motion live › food: no error box
   ok   390 light reduced-motion live › food: it draws its screen
@@ -453,7 +455,7 @@
   ok   390 light reduced-motion live › food: no monospace
   ok   390 light reduced-motion live › food: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › food: no sideways scroll at 390
-  ok   390 light reduced-motion live › food: at most two subnav rows
+  ok   390 light reduced-motion live › food: at most 2 subnav rows
   ok   390 light reduced-motion live › people: its panel is the one showing
   ok   390 light reduced-motion live › people: no error box
   ok   390 light reduced-motion live › people: it draws its screen
@@ -462,7 +464,7 @@
   ok   390 light reduced-motion live › people: no monospace
   ok   390 light reduced-motion live › people: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › people: no sideways scroll at 390
-  ok   390 light reduced-motion live › people: at most two subnav rows
+  ok   390 light reduced-motion live › people: at most 2 subnav rows
   ok   390 light reduced-motion live › whatnow: its panel is the one showing
   ok   390 light reduced-motion live › whatnow: no error box
   ok   390 light reduced-motion live › whatnow: it draws its screen
@@ -471,7 +473,7 @@
   ok   390 light reduced-motion live › whatnow: no monospace
   ok   390 light reduced-motion live › whatnow: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › whatnow: no sideways scroll at 390
-  ok   390 light reduced-motion live › whatnow: at most two subnav rows
+  ok   390 light reduced-motion live › whatnow: at most 2 subnav rows
   ok   390 light reduced-motion live › vintage: its panel is the one showing
   ok   390 light reduced-motion live › vintage: no error box
   ok   390 light reduced-motion live › vintage: it draws its screen
@@ -480,7 +482,7 @@
   ok   390 light reduced-motion live › vintage: no monospace
   ok   390 light reduced-motion live › vintage: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › vintage: no sideways scroll at 390
-  ok   390 light reduced-motion live › vintage: at most two subnav rows
+  ok   390 light reduced-motion live › vintage: at most 2 subnav rows
   ok   390 light reduced-motion live › habits: its panel is the one showing
   ok   390 light reduced-motion live › habits: no error box
   ok   390 light reduced-motion live › habits: it draws its screen
@@ -489,7 +491,7 @@
   ok   390 light reduced-motion live › habits: no monospace
   ok   390 light reduced-motion live › habits: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › habits: no sideways scroll at 390
-  ok   390 light reduced-motion live › habits: at most two subnav rows
+  ok   390 light reduced-motion live › habits: at most 2 subnav rows
   ok   390 light reduced-motion live › onair: its panel is the one showing
   ok   390 light reduced-motion live › onair: no error box
   ok   390 light reduced-motion live › onair: it draws its screen
@@ -498,7 +500,7 @@
   ok   390 light reduced-motion live › onair: no monospace
   ok   390 light reduced-motion live › onair: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › onair: no sideways scroll at 390
-  ok   390 light reduced-motion live › onair: at most two subnav rows
+  ok   390 light reduced-motion live › onair: at most 2 subnav rows
   ok   390 light reduced-motion live › games: every leaderboard call is answered by the suite, never the network
   ok   390 light reduced-motion live › games: its panel is the one showing
   ok   390 light reduced-motion live › games: no error box
@@ -508,7 +510,7 @@
   ok   390 light reduced-motion live › games: no monospace
   ok   390 light reduced-motion live › games: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion live › games: no sideways scroll at 390
-  ok   390 light reduced-motion live › games: at most two subnav rows
+  ok   390 light reduced-motion live › games: at most 2 subnav rows
   ok   390 light reduced-motion live › one GoatCounter tab-landing event per landing
   ok   390 light reduced-motion live › tapping the tab you are on counts nothing
   ok   390 light reduced-motion live › no console errors
@@ -531,7 +533,7 @@
   ok   390 light reduced-motion demo › wire: no monospace
   ok   390 light reduced-motion demo › wire: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › wire: no sideways scroll at 390
-  ok   390 light reduced-motion demo › wire: at most two subnav rows
+  ok   390 light reduced-motion demo › wire: at most 3 subnav rows
   ok   390 light reduced-motion demo › watch: its panel is the one showing
   ok   390 light reduced-motion demo › watch: no error box
   ok   390 light reduced-motion demo › watch: it draws its screen
@@ -540,7 +542,7 @@
   ok   390 light reduced-motion demo › watch: no monospace
   ok   390 light reduced-motion demo › watch: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › watch: no sideways scroll at 390
-  ok   390 light reduced-motion demo › watch: at most two subnav rows
+  ok   390 light reduced-motion demo › watch: at most 2 subnav rows
   ok   390 light reduced-motion demo › food: its panel is the one showing
   ok   390 light reduced-motion demo › food: no error box
   ok   390 light reduced-motion demo › food: it draws its screen
@@ -549,7 +551,7 @@
   ok   390 light reduced-motion demo › food: no monospace
   ok   390 light reduced-motion demo › food: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › food: no sideways scroll at 390
-  ok   390 light reduced-motion demo › food: at most two subnav rows
+  ok   390 light reduced-motion demo › food: at most 2 subnav rows
   ok   390 light reduced-motion demo › people: its panel is the one showing
   ok   390 light reduced-motion demo › people: no error box
   ok   390 light reduced-motion demo › people: it draws its screen
@@ -558,7 +560,7 @@
   ok   390 light reduced-motion demo › people: no monospace
   ok   390 light reduced-motion demo › people: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › people: no sideways scroll at 390
-  ok   390 light reduced-motion demo › people: at most two subnav rows
+  ok   390 light reduced-motion demo › people: at most 2 subnav rows
   ok   390 light reduced-motion demo › whatnow: its panel is the one showing
   ok   390 light reduced-motion demo › whatnow: no error box
   ok   390 light reduced-motion demo › whatnow: it draws its screen
@@ -567,7 +569,7 @@
   ok   390 light reduced-motion demo › whatnow: no monospace
   ok   390 light reduced-motion demo › whatnow: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › whatnow: no sideways scroll at 390
-  ok   390 light reduced-motion demo › whatnow: at most two subnav rows
+  ok   390 light reduced-motion demo › whatnow: at most 2 subnav rows
   ok   390 light reduced-motion demo › vintage: its panel is the one showing
   ok   390 light reduced-motion demo › vintage: no error box
   ok   390 light reduced-motion demo › vintage: it draws its screen
@@ -576,7 +578,7 @@
   ok   390 light reduced-motion demo › vintage: no monospace
   ok   390 light reduced-motion demo › vintage: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › vintage: no sideways scroll at 390
-  ok   390 light reduced-motion demo › vintage: at most two subnav rows
+  ok   390 light reduced-motion demo › vintage: at most 2 subnav rows
   ok   390 light reduced-motion demo › habits: its panel is the one showing
   ok   390 light reduced-motion demo › habits: no error box
   ok   390 light reduced-motion demo › habits: it draws its screen
@@ -585,7 +587,7 @@
   ok   390 light reduced-motion demo › habits: no monospace
   ok   390 light reduced-motion demo › habits: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › habits: no sideways scroll at 390
-  ok   390 light reduced-motion demo › habits: at most two subnav rows
+  ok   390 light reduced-motion demo › habits: at most 2 subnav rows
   ok   390 light reduced-motion demo › onair: its panel is the one showing
   ok   390 light reduced-motion demo › onair: no error box
   ok   390 light reduced-motion demo › onair: it draws its screen
@@ -594,7 +596,7 @@
   ok   390 light reduced-motion demo › onair: no monospace
   ok   390 light reduced-motion demo › onair: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › onair: no sideways scroll at 390
-  ok   390 light reduced-motion demo › onair: at most two subnav rows
+  ok   390 light reduced-motion demo › onair: at most 2 subnav rows
   ok   390 light reduced-motion demo › games: its panel is the one showing
   ok   390 light reduced-motion demo › games: no error box
   ok   390 light reduced-motion demo › games: it draws its screen
@@ -603,7 +605,7 @@
   ok   390 light reduced-motion demo › games: no monospace
   ok   390 light reduced-motion demo › games: no escaped markup, undefined or NaN on the page
   ok   390 light reduced-motion demo › games: no sideways scroll at 390
-  ok   390 light reduced-motion demo › games: at most two subnav rows
+  ok   390 light reduced-motion demo › games: at most 2 subnav rows
   ok   390 light reduced-motion demo › one GoatCounter tab-landing event per landing
   ok   390 light reduced-motion demo › tapping the tab you are on counts nothing
   ok   390 light reduced-motion demo › no console errors
@@ -623,7 +625,7 @@
   ok   1280 light live › wire: no monospace
   ok   1280 light live › wire: no escaped markup, undefined or NaN on the page
   ok   1280 light live › wire: no sideways scroll at 1280
-  ok   1280 light live › wire: at most two subnav rows
+  ok   1280 light live › wire: at most 3 subnav rows
   ok   1280 light live › watch: its panel is the one showing
   ok   1280 light live › watch: no error box
   ok   1280 light live › watch: it draws its screen
@@ -632,7 +634,7 @@
   ok   1280 light live › watch: no monospace
   ok   1280 light live › watch: no escaped markup, undefined or NaN on the page
   ok   1280 light live › watch: no sideways scroll at 1280
-  ok   1280 light live › watch: at most two subnav rows
+  ok   1280 light live › watch: at most 2 subnav rows
   ok   1280 light live › food: its panel is the one showing
   ok   1280 light live › food: no error box
   ok   1280 light live › food: it draws its screen
@@ -641,7 +643,7 @@
   ok   1280 light live › food: no monospace
   ok   1280 light live › food: no escaped markup, undefined or NaN on the page
   ok   1280 light live › food: no sideways scroll at 1280
-  ok   1280 light live › food: at most two subnav rows
+  ok   1280 light live › food: at most 2 subnav rows
   ok   1280 light live › people: its panel is the one showing
   ok   1280 light live › people: no error box
   ok   1280 light live › people: it draws its screen
@@ -650,7 +652,7 @@
   ok   1280 light live › people: no monospace
   ok   1280 light live › people: no escaped markup, undefined or NaN on the page
   ok   1280 light live › people: no sideways scroll at 1280
-  ok   1280 light live › people: at most two subnav rows
+  ok   1280 light live › people: at most 2 subnav rows
   ok   1280 light live › whatnow: its panel is the one showing
   ok   1280 light live › whatnow: no error box
   ok   1280 light live › whatnow: it draws its screen
@@ -659,7 +661,7 @@
   ok   1280 light live › whatnow: no monospace
   ok   1280 light live › whatnow: no escaped markup, undefined or NaN on the page
   ok   1280 light live › whatnow: no sideways scroll at 1280
-  ok   1280 light live › whatnow: at most two subnav rows
+  ok   1280 light live › whatnow: at most 2 subnav rows
   ok   1280 light live › vintage: its panel is the one showing
   ok   1280 light live › vintage: no error box
   ok   1280 light live › vintage: it draws its screen
@@ -668,7 +670,7 @@
   ok   1280 light live › vintage: no monospace
   ok   1280 light live › vintage: no escaped markup, undefined or NaN on the page
   ok   1280 light live › vintage: no sideways scroll at 1280
-  ok   1280 light live › vintage: at most two subnav rows
+  ok   1280 light live › vintage: at most 2 subnav rows
   ok   1280 light live › habits: its panel is the one showing
   ok   1280 light live › habits: no error box
   ok   1280 light live › habits: it draws its screen
@@ -677,7 +679,7 @@
   ok   1280 light live › habits: no monospace
   ok   1280 light live › habits: no escaped markup, undefined or NaN on the page
   ok   1280 light live › habits: no sideways scroll at 1280
-  ok   1280 light live › habits: at most two subnav rows
+  ok   1280 light live › habits: at most 2 subnav rows
   ok   1280 light live › onair: its panel is the one showing
   ok   1280 light live › onair: no error box
   ok   1280 light live › onair: it draws its screen
@@ -686,7 +688,7 @@
   ok   1280 light live › onair: no monospace
   ok   1280 light live › onair: no escaped markup, undefined or NaN on the page
   ok   1280 light live › onair: no sideways scroll at 1280
-  ok   1280 light live › onair: at most two subnav rows
+  ok   1280 light live › onair: at most 2 subnav rows
   ok   1280 light live › games: every leaderboard call is answered by the suite, never the network
   ok   1280 light live › games: its panel is the one showing
   ok   1280 light live › games: no error box
@@ -696,7 +698,7 @@
   ok   1280 light live › games: no monospace
   ok   1280 light live › games: no escaped markup, undefined or NaN on the page
   ok   1280 light live › games: no sideways scroll at 1280
-  ok   1280 light live › games: at most two subnav rows
+  ok   1280 light live › games: at most 2 subnav rows
   ok   1280 light live › one GoatCounter tab-landing event per landing
   ok   1280 light live › tapping the tab you are on counts nothing
   ok   1280 light live › no console errors
@@ -715,7 +717,7 @@
   ok   1280 light demo › wire: no monospace
   ok   1280 light demo › wire: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › wire: no sideways scroll at 1280
-  ok   1280 light demo › wire: at most two subnav rows
+  ok   1280 light demo › wire: at most 3 subnav rows
   ok   1280 light demo › watch: its panel is the one showing
   ok   1280 light demo › watch: no error box
   ok   1280 light demo › watch: it draws its screen
@@ -724,7 +726,7 @@
   ok   1280 light demo › watch: no monospace
   ok   1280 light demo › watch: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › watch: no sideways scroll at 1280
-  ok   1280 light demo › watch: at most two subnav rows
+  ok   1280 light demo › watch: at most 2 subnav rows
   ok   1280 light demo › food: its panel is the one showing
   ok   1280 light demo › food: no error box
   ok   1280 light demo › food: it draws its screen
@@ -733,7 +735,7 @@
   ok   1280 light demo › food: no monospace
   ok   1280 light demo › food: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › food: no sideways scroll at 1280
-  ok   1280 light demo › food: at most two subnav rows
+  ok   1280 light demo › food: at most 2 subnav rows
   ok   1280 light demo › people: its panel is the one showing
   ok   1280 light demo › people: no error box
   ok   1280 light demo › people: it draws its screen
@@ -742,7 +744,7 @@
   ok   1280 light demo › people: no monospace
   ok   1280 light demo › people: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › people: no sideways scroll at 1280
-  ok   1280 light demo › people: at most two subnav rows
+  ok   1280 light demo › people: at most 2 subnav rows
   ok   1280 light demo › whatnow: its panel is the one showing
   ok   1280 light demo › whatnow: no error box
   ok   1280 light demo › whatnow: it draws its screen
@@ -751,7 +753,7 @@
   ok   1280 light demo › whatnow: no monospace
   ok   1280 light demo › whatnow: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › whatnow: no sideways scroll at 1280
-  ok   1280 light demo › whatnow: at most two subnav rows
+  ok   1280 light demo › whatnow: at most 2 subnav rows
   ok   1280 light demo › vintage: its panel is the one showing
   ok   1280 light demo › vintage: no error box
   ok   1280 light demo › vintage: it draws its screen
@@ -760,7 +762,7 @@
   ok   1280 light demo › vintage: no monospace
   ok   1280 light demo › vintage: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › vintage: no sideways scroll at 1280
-  ok   1280 light demo › vintage: at most two subnav rows
+  ok   1280 light demo › vintage: at most 2 subnav rows
   ok   1280 light demo › habits: its panel is the one showing
   ok   1280 light demo › habits: no error box
   ok   1280 light demo › habits: it draws its screen
@@ -769,7 +771,7 @@
   ok   1280 light demo › habits: no monospace
   ok   1280 light demo › habits: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › habits: no sideways scroll at 1280
-  ok   1280 light demo › habits: at most two subnav rows
+  ok   1280 light demo › habits: at most 2 subnav rows
   ok   1280 light demo › onair: its panel is the one showing
   ok   1280 light demo › onair: no error box
   ok   1280 light demo › onair: it draws its screen
@@ -778,7 +780,7 @@
   ok   1280 light demo › onair: no monospace
   ok   1280 light demo › onair: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › onair: no sideways scroll at 1280
-  ok   1280 light demo › onair: at most two subnav rows
+  ok   1280 light demo › onair: at most 2 subnav rows
   ok   1280 light demo › games: its panel is the one showing
   ok   1280 light demo › games: no error box
   ok   1280 light demo › games: it draws its screen
@@ -787,7 +789,7 @@
   ok   1280 light demo › games: no monospace
   ok   1280 light demo › games: no escaped markup, undefined or NaN on the page
   ok   1280 light demo › games: no sideways scroll at 1280
-  ok   1280 light demo › games: at most two subnav rows
+  ok   1280 light demo › games: at most 2 subnav rows
   ok   1280 light demo › one GoatCounter tab-landing event per landing
   ok   1280 light demo › tapping the tab you are on counts nothing
   ok   1280 light demo › no console errors
@@ -809,7 +811,7 @@
   ok   1280 dark reduced-motion live › wire: no monospace
   ok   1280 dark reduced-motion live › wire: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › wire: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › wire: at most two subnav rows
+  ok   1280 dark reduced-motion live › wire: at most 3 subnav rows
   ok   1280 dark reduced-motion live › watch: its panel is the one showing
   ok   1280 dark reduced-motion live › watch: no error box
   ok   1280 dark reduced-motion live › watch: it draws its screen
@@ -818,7 +820,7 @@
   ok   1280 dark reduced-motion live › watch: no monospace
   ok   1280 dark reduced-motion live › watch: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › watch: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › watch: at most two subnav rows
+  ok   1280 dark reduced-motion live › watch: at most 2 subnav rows
   ok   1280 dark reduced-motion live › food: its panel is the one showing
   ok   1280 dark reduced-motion live › food: no error box
   ok   1280 dark reduced-motion live › food: it draws its screen
@@ -827,7 +829,7 @@
   ok   1280 dark reduced-motion live › food: no monospace
   ok   1280 dark reduced-motion live › food: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › food: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › food: at most two subnav rows
+  ok   1280 dark reduced-motion live › food: at most 2 subnav rows
   ok   1280 dark reduced-motion live › people: its panel is the one showing
   ok   1280 dark reduced-motion live › people: no error box
   ok   1280 dark reduced-motion live › people: it draws its screen
@@ -836,7 +838,7 @@
   ok   1280 dark reduced-motion live › people: no monospace
   ok   1280 dark reduced-motion live › people: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › people: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › people: at most two subnav rows
+  ok   1280 dark reduced-motion live › people: at most 2 subnav rows
   ok   1280 dark reduced-motion live › whatnow: its panel is the one showing
   ok   1280 dark reduced-motion live › whatnow: no error box
   ok   1280 dark reduced-motion live › whatnow: it draws its screen
@@ -845,7 +847,7 @@
   ok   1280 dark reduced-motion live › whatnow: no monospace
   ok   1280 dark reduced-motion live › whatnow: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › whatnow: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › whatnow: at most two subnav rows
+  ok   1280 dark reduced-motion live › whatnow: at most 2 subnav rows
   ok   1280 dark reduced-motion live › vintage: its panel is the one showing
   ok   1280 dark reduced-motion live › vintage: no error box
   ok   1280 dark reduced-motion live › vintage: it draws its screen
@@ -854,7 +856,7 @@
   ok   1280 dark reduced-motion live › vintage: no monospace
   ok   1280 dark reduced-motion live › vintage: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › vintage: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › vintage: at most two subnav rows
+  ok   1280 dark reduced-motion live › vintage: at most 2 subnav rows
   ok   1280 dark reduced-motion live › habits: its panel is the one showing
   ok   1280 dark reduced-motion live › habits: no error box
   ok   1280 dark reduced-motion live › habits: it draws its screen
@@ -863,7 +865,7 @@
   ok   1280 dark reduced-motion live › habits: no monospace
   ok   1280 dark reduced-motion live › habits: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › habits: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › habits: at most two subnav rows
+  ok   1280 dark reduced-motion live › habits: at most 2 subnav rows
   ok   1280 dark reduced-motion live › onair: its panel is the one showing
   ok   1280 dark reduced-motion live › onair: no error box
   ok   1280 dark reduced-motion live › onair: it draws its screen
@@ -872,7 +874,7 @@
   ok   1280 dark reduced-motion live › onair: no monospace
   ok   1280 dark reduced-motion live › onair: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › onair: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › onair: at most two subnav rows
+  ok   1280 dark reduced-motion live › onair: at most 2 subnav rows
   ok   1280 dark reduced-motion live › games: every leaderboard call is answered by the suite, never the network
   ok   1280 dark reduced-motion live › games: its panel is the one showing
   ok   1280 dark reduced-motion live › games: no error box
@@ -882,7 +884,7 @@
   ok   1280 dark reduced-motion live › games: no monospace
   ok   1280 dark reduced-motion live › games: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion live › games: no sideways scroll at 1280
-  ok   1280 dark reduced-motion live › games: at most two subnav rows
+  ok   1280 dark reduced-motion live › games: at most 2 subnav rows
   ok   1280 dark reduced-motion live › one GoatCounter tab-landing event per landing
   ok   1280 dark reduced-motion live › tapping the tab you are on counts nothing
   ok   1280 dark reduced-motion live › no console errors
@@ -903,7 +905,7 @@
   ok   1280 dark reduced-motion demo › wire: no monospace
   ok   1280 dark reduced-motion demo › wire: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › wire: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › wire: at most two subnav rows
+  ok   1280 dark reduced-motion demo › wire: at most 3 subnav rows
   ok   1280 dark reduced-motion demo › watch: its panel is the one showing
   ok   1280 dark reduced-motion demo › watch: no error box
   ok   1280 dark reduced-motion demo › watch: it draws its screen
@@ -912,7 +914,7 @@
   ok   1280 dark reduced-motion demo › watch: no monospace
   ok   1280 dark reduced-motion demo › watch: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › watch: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › watch: at most two subnav rows
+  ok   1280 dark reduced-motion demo › watch: at most 2 subnav rows
   ok   1280 dark reduced-motion demo › food: its panel is the one showing
   ok   1280 dark reduced-motion demo › food: no error box
   ok   1280 dark reduced-motion demo › food: it draws its screen
@@ -921,7 +923,7 @@
   ok   1280 dark reduced-motion demo › food: no monospace
   ok   1280 dark reduced-motion demo › food: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › food: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › food: at most two subnav rows
+  ok   1280 dark reduced-motion demo › food: at most 2 subnav rows
   ok   1280 dark reduced-motion demo › people: its panel is the one showing
   ok   1280 dark reduced-motion demo › people: no error box
   ok   1280 dark reduced-motion demo › people: it draws its screen
@@ -930,7 +932,7 @@
   ok   1280 dark reduced-motion demo › people: no monospace
   ok   1280 dark reduced-motion demo › people: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › people: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › people: at most two subnav rows
+  ok   1280 dark reduced-motion demo › people: at most 2 subnav rows
   ok   1280 dark reduced-motion demo › whatnow: its panel is the one showing
   ok   1280 dark reduced-motion demo › whatnow: no error box
   ok   1280 dark reduced-motion demo › whatnow: it draws its screen
@@ -939,7 +941,7 @@
   ok   1280 dark reduced-motion demo › whatnow: no monospace
   ok   1280 dark reduced-motion demo › whatnow: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › whatnow: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › whatnow: at most two subnav rows
+  ok   1280 dark reduced-motion demo › whatnow: at most 2 subnav rows
   ok   1280 dark reduced-motion demo › vintage: its panel is the one showing
   ok   1280 dark reduced-motion demo › vintage: no error box
   ok   1280 dark reduced-motion demo › vintage: it draws its screen
@@ -948,7 +950,7 @@
   ok   1280 dark reduced-motion demo › vintage: no monospace
   ok   1280 dark reduced-motion demo › vintage: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › vintage: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › vintage: at most two subnav rows
+  ok   1280 dark reduced-motion demo › vintage: at most 2 subnav rows
   ok   1280 dark reduced-motion demo › habits: its panel is the one showing
   ok   1280 dark reduced-motion demo › habits: no error box
   ok   1280 dark reduced-motion demo › habits: it draws its screen
@@ -957,7 +959,7 @@
   ok   1280 dark reduced-motion demo › habits: no monospace
   ok   1280 dark reduced-motion demo › habits: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › habits: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › habits: at most two subnav rows
+  ok   1280 dark reduced-motion demo › habits: at most 2 subnav rows
   ok   1280 dark reduced-motion demo › onair: its panel is the one showing
   ok   1280 dark reduced-motion demo › onair: no error box
   ok   1280 dark reduced-motion demo › onair: it draws its screen
@@ -966,7 +968,7 @@
   ok   1280 dark reduced-motion demo › onair: no monospace
   ok   1280 dark reduced-motion demo › onair: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › onair: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › onair: at most two subnav rows
+  ok   1280 dark reduced-motion demo › onair: at most 2 subnav rows
   ok   1280 dark reduced-motion demo › games: its panel is the one showing
   ok   1280 dark reduced-motion demo › games: no error box
   ok   1280 dark reduced-motion demo › games: it draws its screen
@@ -975,7 +977,7 @@
   ok   1280 dark reduced-motion demo › games: no monospace
   ok   1280 dark reduced-motion demo › games: no escaped markup, undefined or NaN on the page
   ok   1280 dark reduced-motion demo › games: no sideways scroll at 1280
-  ok   1280 dark reduced-motion demo › games: at most two subnav rows
+  ok   1280 dark reduced-motion demo › games: at most 2 subnav rows
   ok   1280 dark reduced-motion demo › one GoatCounter tab-landing event per landing
   ok   1280 dark reduced-motion demo › tapping the tab you are on counts nothing
   ok   1280 dark reduced-motion demo › no console errors
@@ -1019,8 +1021,9 @@
   ok   demo mode keeps its hands off the real app › demo makes no Supabase call
   ok   the Wire, live › the dateline is today in America/New_York on the real clock (Saturday, October 17)
   ok   the Wire, live › the dateline counts today’s local stories and says when it updated
-  ok   the Wire, live › X and Facebook chips are hidden while paused; Unfiltered is last
+  ok   the Wire, live › X and Facebook chips are hidden while paused; no Video chip
   ok   the Wire, live › chip counts are counts.local
+  ok   the Wire, live › under the mast: News · Photos · Square, the dateline, the Local switch with Unfiltered, then the chips on their own row
   ok   the Wire, live › the Brief is pinned above What matters today
   ok   the Wire, live › one pick card and four ranked rows to start
   ok   the Wire, live › an empty why draws no reason line
@@ -1034,7 +1037,6 @@
   ok   the Wire, live › today’s page draws every local story once: Brief + picks + river = the count
   ok   the Wire, live › the reddit chip shows exactly its count today (7)
   ok   the Wire, live › the newsletters chip shows exactly its count today (7)
-  ok   the Wire, live › the video chip shows exactly its count today (5)
   ok   the Wire, live › on Everything the chips are counts.everything
   ok   the Wire, live › and the dateline counts everything
   ok   the Wire, live › Everything keeps the picks
@@ -1109,40 +1111,124 @@
   ok   the Wire, Unfiltered › hold to peek works on the raw wire
   ok   the Wire, Unfiltered › ‹ Today’s paper comes back
   ok   the Wire, Unfiltered › no console errors
-  ok   Photo mode: the switch, kept on the phone (demo) › the switch sits in the dateline row: two icon buttons, 44px each
-  ok   Photo mode: the switch, kept on the phone (demo) › it opens on the list, said by aria-pressed
-  ok   Photo mode: the switch, kept on the phone (demo) › no new row: still the dateline and the band
-  ok   Photo mode: the switch, kept on the phone (demo) › Photos turns the paper into the photo feed
-  ok   Photo mode: the switch, kept on the phone (demo) › and the switch says so
-  ok   Photo mode: the switch, kept on the phone (demo) › the address says #wire/photos
-  ok   Photo mode: the switch, kept on the phone (demo) › the choice is kept on the phone
-  ok   Photo mode: the switch, kept on the phone (demo) › Photo mode keeps to two rows under the mast
-  ok   Photo mode: the switch, kept on the phone (demo) › the paper’s list is gone
-  ok   Photo mode: the switch, kept on the phone (demo) › a reload opens on the photos again
-  ok   Photo mode: the switch, kept on the phone (demo) › and so does a bare visit to the app
-  ok   Photo mode: the switch, kept on the phone (demo) › List brings the paper back
-  ok   Photo mode: the switch, kept on the phone (demo) › the address is #wire again, and the phone forgets Photos
-  ok   Photo mode: the switch, kept on the phone (demo) › focus stays on the switch
-  ok   Photo mode: the switch, kept on the phone (demo) › a reload opens on the list
-  ok   Photo mode: the switch, kept on the phone (demo) › no console errors
+  ok   the Wire, source colours, the local tint, alternate rows and thumbnails (live) › every source chip carries a coloured dot; All does not
+  ok   the Wire, source colours, the local tint, alternate rows and thumbnails (live) › and the five colours differ
+  ok   the Wire, source colours, the local tint, alternate rows and thumbnails (live) › a card from X, Facebook or Reddit carries its chip’s colour as a left accent; a plain headline does not
+  ok   the Wire, source colours, the local tint, alternate rows and thumbnails (live) › every other row has a faint tint (51 pairs)
+  ok   the Wire, source colours, the local tint, alternate rows and thumbnails (live) › thumbnails are 72px, on the right of the title
+  ok   the Wire, source colours, the local tint, alternate rows and thumbnails (live) › on Local a local source is green, and no row is tinted green
+  ok   the Wire, source colours, the local tint, alternate rows and thumbnails (live) › on Everything a local story is tinted green, a national one is not
+  ok   the Wire, source colours, the local tint, alternate rows and thumbnails (live) › no console errors
+  ok   the Wire, a headline is read when it is opened, never when it is scrolled past (demo) › scrolling the whole paper marks nothing read
+  ok   the Wire, a headline is read when it is opened, never when it is scrolled past (demo) › opening it greys that headline, and only it
+  ok   the Wire, a headline is read when it is opened, never when it is scrolled past (demo) › no console errors
+  ok   the Wire, You left off here (live) › one “You left off here” bookmark, with the time the reader left
+  ok   the Wire, You left off here (live) › it sits above the story that was on top then: everything above it came in since
+  ok   the Wire, You left off here (live) › and the older “new since you were here” line gives way to it
+  ok   the Wire, You left off here (live) › leaving the Wire moves the bookmark to the top story now
+  ok   the Wire, You left off here (live) › nothing new since: no bookmark
+  ok   the Wire, You left off here (live) › no console errors
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › three rankings, Morning · Midday · Evening, the current one chosen
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › each with the time it was ranked
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › the current ranking shows as before
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › Morning: the list as it stood at 6:05 am
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › the stories that ranking held and later dropped, each at its rank then
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › and the rest are today’s picks that were already posted by then
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › Morning is chosen
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › Evening brings the current ranking back
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › an earlier day opens on its own last ranking
+  ok   the Wire, What matters: Morning · Midday · Evening (live) › no console errors
+  ok   the Wire, the Instagram chip reads the local accounts as a list (live) › the Instagram chip counts the posts whose picture still works (2)
+  ok   the Wire, the Instagram chip reads the local accounts as a list (live) › newest first, each with its picture and the Instagram colour
+  ok   the Wire, the Instagram chip reads the local accounts as a list (live) › the title is the caption’s first line, as text; the source is the account
+  ok   the Wire, the Instagram chip reads the local accounts as a list (live) › captions are escaped
+  ok   the Wire, the Instagram chip reads the local accounts as a list (live) › no What matters here, and the address says #wire/instagram
+  ok   the Wire, the Instagram chip reads the local accounts as a list (live) › its end opens the same posts as photos
+  ok   the Wire, the Instagram chip reads the local accounts as a list (live) › no console errors
+  ok   the Wire, Square (demo) › Square opens in the tab, in the address, and is kept
+  ok   the Wire, Square (demo) › it opens with the five ways to post
+  ok   the Wire, Square (demo) › neighbors’ posts as full cards, Facebook and Reddit as compact ones
+  ok   the Wire, Square (demo) › a compact card: its source chip in its colour, the link out, never a copied picture
+  ok   the Wire, Square (demo) › a neighbor’s post sorts ahead of outside talk of the same age
+  ok   the Wire, Square (demo) › the kinds of post as chips
+  ok   the Wire, Square (demo) › Pets narrows it to the pets
+  ok   the Wire, Square (demo) › an outside thread you opened stays read through a redraw, and only it
+  ok   the Wire, Square (demo) › signed out, posting asks for the sign-in
+  ok   the Wire, Square (demo) › an ask, posted, is in the Square
+  ok   the Wire, Square (demo) › the state agrees with the page
+  ok   the Wire, Square (demo) › a reload opens on the Square again
+  ok   the Wire, Square (demo) › demo mode never calls Supabase
+  ok   the Wire, Square (demo) › no console errors
+  ok   the Wire, Square (demo) › live before the Square’s SQL: the switch says News and Photos only
+  ok   the Wire, Square (demo) › and a kept Square opens on News
+  ok   the Wire, Square (demo) › no console errors
+  ok   the Wire, Square (demo) › live with the Square’s SQL: #wire/square opens it
+  ok   the Wire, Square (demo) › a long feed draws its first screenful only (30 of 131)
+  ok   the Wire, Square (demo) › a Facebook post in both today’s paper and the Unfiltered inbox shows once
+  ok   the Wire, Square (demo) › no console errors
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the switch says News, Photos, Square in words, a third of the row each
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › it opens on News, said by aria-pressed
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › and it is the first row under the mast
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the old list and photo icons are gone
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › Photos turns the paper into the photo feed
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › and the switch says so
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the address says #wire/photos
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the choice is kept on the phone
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › Photo mode: the switch, then the Local band and the kinds of picture
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the paper’s list is gone
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › a reload opens on the photos again
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › and so does a bare visit to the app
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › News brings the paper back
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › the address is #wire again, and the phone forgets Photos
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › focus stays on the switch
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › a reload opens on News
+  ok   Photo mode: the News · Photos · Square switch, in words, kept on the phone (demo) › no console errors
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › every picture is drawn, down to the end
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › every card carries a picture
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › no key twice on the page
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the photo of the week leads: of two at 23 votes this week, the one posted first
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › and only it says so
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the rest run newest first
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › from neighbors’ posts (14), the gallery (3), Instagram (6), a Facebook post and a Reddit post with a picture, the paper and the local outlets
+  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › from neighbors’ posts (16), the gallery (3), Instagram (10), the Square’s photos (2), a Facebook post and a Reddit post with a picture, the paper and the local outlets
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › a video is a player, not a picture
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › a Reddit or Facebook post with no picture stays out
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › Local: no national story, every picture local
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › an Instagram post’s caption is its first line
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › no caption: the account
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the feed ends, with Add a photo
+  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the feed ends, with Post a photo
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › Everything adds the three national stories with a picture
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › still no key twice
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the row counts what is shown
+  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the band counts what is shown
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › no console errors
   ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › demo mode never calls Supabase
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the chips: All, Instagram, Vibe checks, Event posters, Food, Pets, Posted here
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › each counts what this reader sees
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › an organiser’s post (the DO half) is an event poster
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › a bar that organises: vibe check, food and poster
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the cat lounge is pets and a vibe check; a lake photographer is just Instagram
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › a gallery photo takes its queue category (food), else it is only posted here
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the instagram chip shows only its 10
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › instagram: no pets row outside All
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the vibe chip shows only its 3
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › vibe: no pets row outside All
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the posters chip shows only its 2
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › posters: no pets row outside All
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the food chip shows only its 3
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › food: no pets row outside All
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the pets chip shows only its 3
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › pets: no pets row outside All
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › the posted chip shows only its 21
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › posted: no pets row outside All
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › All opens with Pets of Burlington, between the header and the feed
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › a pet opens in its sheet
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › “See all” is the Pets chip
+  ok   Photo mode: the kinds of picture, and Pets of Burlington (demo) › no console errors
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › a cat café is pets and a vibe check (photo_categories), and food (the directory)
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › a brewery that organises: food, poster and vibe check
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › an account the food directory says is not food is not food
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › a restaurant in the food directory is food
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › a photographer is just Instagram
+  ok   Photo mode: an Instagram account’s kind comes from the roster (live) › no console errors
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › a neighbor’s picture shows its board votes
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › the sheet: the big picture, its maker and their line
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › vote, share, report, and the shirt the maker said yes to
@@ -1155,15 +1241,17 @@
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › the demo’s Open link only toasts
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › a gallery photo’s sheet credits who took it and where
   ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › no console errors
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › signed out, the sheet asks for the sign-in
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › Add a photo asks for the shirt, not a medium
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › and says, in one line, that photos show once approved
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › posted: the toast says it waits for approval
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › it is on the art board as a photo post, its picture pending in the queue
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › and the feed does not show it yet
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › once Stephen approves it, it is in the feed
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › the feed’s end offers Add art, which asks for the medium
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › no console errors
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › the feed opens under “Burlington in photos”, one line, and the Post a photo to the Burlington feed button
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › signed out, the sheet asks for the sign-in
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › Post a photo asks what it is (vibe check, event poster, food, pets, other) and about the shirt, never a medium
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › and says, in one line, that photos show once approved
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › posted: the toast says it waits for approval
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › it is on the art board as a photo post with its kind, its picture pending in the queue
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › and the feed does not show it yet
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › once Stephen approves it, it is in the feed
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › and, posted as Pets, it joins Pets of Burlington
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › the feed’s end offers Add art, which asks for the medium
+  ok   Photo mode: Post a photo opens the submission sheet, moderated as before (demo) › no console errors
   ok   Photo mode: deep links land in it (demo) › #wire/photos opens Photo mode, and the address says #wire/photos
   ok   Photo mode: deep links land in it (demo) › #art opens Photo mode, and the address says #wire/photos
   ok   Photo mode: deep links land in it (demo) › #photos opens Photo mode, and the address says #wire/photos
@@ -1183,7 +1271,7 @@
   ok   Photo mode at 390 light (demo) › wire photos: no monospace
   ok   Photo mode at 390 light (demo) › wire photos: no escaped markup, undefined or NaN on the page
   ok   Photo mode at 390 light (demo) › wire photos: no sideways scroll at 390
-  ok   Photo mode at 390 light (demo) › wire photos: at most two subnav rows
+  ok   Photo mode at 390 light (demo) › wire photos: at most 3 subnav rows
   ok   Photo mode at 390 light (demo) › the picture reserves its 4:5 box
   ok   Photo mode at 390 light (demo) › full width on a phone
   ok   Photo mode at 390 light (demo) › the light paper
@@ -1193,7 +1281,7 @@
   ok   Photo mode at 390 dark (demo) › wire photos: no monospace
   ok   Photo mode at 390 dark (demo) › wire photos: no escaped markup, undefined or NaN on the page
   ok   Photo mode at 390 dark (demo) › wire photos: no sideways scroll at 390
-  ok   Photo mode at 390 dark (demo) › wire photos: at most two subnav rows
+  ok   Photo mode at 390 dark (demo) › wire photos: at most 3 subnav rows
   ok   Photo mode at 390 dark (demo) › the picture reserves its 4:5 box
   ok   Photo mode at 390 dark (demo) › full width on a phone
   ok   Photo mode at 390 dark (demo) › the dark paper
@@ -1203,7 +1291,7 @@
   ok   Photo mode at 390 light reduced-motion (demo) › wire photos: no monospace
   ok   Photo mode at 390 light reduced-motion (demo) › wire photos: no escaped markup, undefined or NaN on the page
   ok   Photo mode at 390 light reduced-motion (demo) › wire photos: no sideways scroll at 390
-  ok   Photo mode at 390 light reduced-motion (demo) › wire photos: at most two subnav rows
+  ok   Photo mode at 390 light reduced-motion (demo) › wire photos: at most 3 subnav rows
   ok   Photo mode at 390 light reduced-motion (demo) › the picture reserves its 4:5 box
   ok   Photo mode at 390 light reduced-motion (demo) › full width on a phone
   ok   Photo mode at 390 light reduced-motion (demo) › the light paper
@@ -1214,7 +1302,7 @@
   ok   Photo mode at 1280 light (demo) › wire photos: no monospace
   ok   Photo mode at 1280 light (demo) › wire photos: no escaped markup, undefined or NaN on the page
   ok   Photo mode at 1280 light (demo) › wire photos: no sideways scroll at 1280
-  ok   Photo mode at 1280 light (demo) › wire photos: at most two subnav rows
+  ok   Photo mode at 1280 light (demo) › wire photos: at most 3 subnav rows
   ok   Photo mode at 1280 light (demo) › the picture reserves its 4:5 box
   ok   Photo mode at 1280 light (demo) › a narrow column on a wide screen
   ok   Photo mode at 1280 light (demo) › the light paper
@@ -1224,7 +1312,7 @@
   ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: no monospace
   ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: no escaped markup, undefined or NaN on the page
   ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: no sideways scroll at 1280
-  ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: at most two subnav rows
+  ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: at most 3 subnav rows
   ok   Photo mode at 1280 dark reduced-motion (demo) › the picture reserves its 4:5 box
   ok   Photo mode at 1280 dark reduced-motion (demo) › a narrow column on a wide screen
   ok   Photo mode at 1280 dark reduced-motion (demo) › the dark paper
@@ -1550,7 +1638,7 @@
   ok   People, demo: every tile does something, and the mapping holds › people: no monospace
   ok   People, demo: every tile does something, and the mapping holds › people: no escaped markup, undefined or NaN on the page
   ok   People, demo: every tile does something, and the mapping holds › people: no sideways scroll at 390
-  ok   People, demo: every tile does something, and the mapping holds › people: at most two subnav rows
+  ok   People, demo: every tile does something, and the mapping holds › people: at most 2 subnav rows
   ok   People, demo: every tile does something, and the mapping holds › no console errors
   ok   People, demo: mixers from everywhere, and the readers’ gatherings › Stephen’s own lead the section, as a short row
   ok   People, demo: mixers from everywhere, and the readers’ gatherings › seven days, today first
@@ -1588,7 +1676,7 @@
   ok   People, demo: posting a plan, the Meetup box, I’d go › people: no monospace
   ok   People, demo: posting a plan, the Meetup box, I’d go › people: no escaped markup, undefined or NaN on the page
   ok   People, demo: posting a plan, the Meetup box, I’d go › people: no sideways scroll at 390
-  ok   People, demo: posting a plan, the Meetup box, I’d go › people: at most two subnav rows
+  ok   People, demo: posting a plan, the Meetup box, I’d go › people: at most 2 subnav rows
   ok   People, demo: posting a plan, the Meetup box, I’d go › no console errors
   ok   People, demo: the quiz never asks age, and ends in a suggestion › six to eight questions
   ok   People, demo: the quiz never asks age, and ends in a suggestion › no question or answer asks age, gender or orientation
@@ -1635,7 +1723,7 @@
   ok   People, demo: People here shows handles that open the app, only switched-on ones › people: no monospace
   ok   People, demo: People here shows handles that open the app, only switched-on ones › people: no escaped markup, undefined or NaN on the page
   ok   People, demo: People here shows handles that open the app, only switched-on ones › people: no sideways scroll at 390
-  ok   People, demo: People here shows handles that open the app, only switched-on ones › people: at most two subnav rows
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › people: at most 2 subnav rows
   ok   People, demo: People here shows handles that open the app, only switched-on ones › no console errors
   ok   People, live: handles and event titles are text, never markup › a name with markup in it is printed as text
   ok   People, live: handles and event titles are text, never markup › a handle that isn’t its service’s shape is dropped, the rest kept
@@ -1675,7 +1763,7 @@
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: no monospace
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: no escaped markup, undefined or NaN on the page
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: no sideways scroll at 390
-  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: at most two subnav rows
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: at most 2 subnav rows
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › no console errors
   ok   Run clubs, People: deep links (demo, 1280, dark) › an athlete who never touched the switch lands on Fitness
   ok   Run clubs, People: deep links (demo, 1280, dark) › #people/clubs lands on the club week
@@ -1689,7 +1777,7 @@
   ok   Run clubs, People: deep links (demo, 1280, dark) › people: no monospace
   ok   Run clubs, People: deep links (demo, 1280, dark) › people: no escaped markup, undefined or NaN on the page
   ok   Run clubs, People: deep links (demo, 1280, dark) › people: no sideways scroll at 1280
-  ok   Run clubs, People: deep links (demo, 1280, dark) › people: at most two subnav rows
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: at most 2 subnav rows
   ok   Run clubs, People: deep links (demo, 1280, dark) › no console errors
   ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Now: the meets starting in the next three hours
   ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › all of them inside the window
@@ -1711,7 +1799,7 @@
   ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: no monospace
   ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: no escaped markup, undefined or NaN on the page
   ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: no sideways scroll at 390
-  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: at most two subnav rows
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: at most 2 subnav rows
   ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › no console errors
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no meet in the next three hours: no rows
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › Move with people: “Nothing in the next few hours.”
@@ -2011,7 +2099,7 @@
   ok   Watch, a rating posts with stars in meta (demo) › watch: no monospace
   ok   Watch, a rating posts with stars in meta (demo) › watch: no escaped markup, undefined or NaN on the page
   ok   Watch, a rating posts with stars in meta (demo) › watch: no sideways scroll at 390
-  ok   Watch, a rating posts with stars in meta (demo) › watch: at most two subnav rows
+  ok   Watch, a rating posts with stars in meta (demo) › watch: at most 2 subnav rows
   ok   Watch, a rating posts with stars in meta (demo) › no console errors
   ok   Watch, deep links (demo) › a film far down the list lands and flashes
   ok   Watch, deep links (demo) › a coming-soon poster lands and flashes
@@ -2046,7 +2134,7 @@
   ok   Watch, the ranking you choose (demo) › watch: no monospace
   ok   Watch, the ranking you choose (demo) › watch: no escaped markup, undefined or NaN on the page
   ok   Watch, the ranking you choose (demo) › watch: no sideways scroll at 390
-  ok   Watch, the ranking you choose (demo) › watch: at most two subnav rows
+  ok   Watch, the ranking you choose (demo) › watch: at most 2 subnav rows
   ok   Watch, the ranking you choose (demo) › no console errors
   ok   Watch, the time machine (demo) › Back then opens a year ago: October 2025
   ok   Watch, the time machine (demo) › that month’s big films, theaters then streaming
@@ -2075,7 +2163,7 @@
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: no monospace
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: no escaped markup, undefined or NaN on the page
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: no sideways scroll at 390
-  ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: at most two subnav rows
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: at most 2 subnav rows
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › no console errors
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › Back then: TMDB posters at w342, a key that disagrees with its id left out
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a title is text, never markup, and a bad poster path is dropped
@@ -2118,7 +2206,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 9ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 7ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2238,7 +2326,7 @@
   ok   boards: compose refuses, then posts (demo) › boards: no monospace
   ok   boards: compose refuses, then posts (demo) › boards: no escaped markup, undefined or NaN on the page
   ok   boards: compose refuses, then posts (demo) › boards: no sideways scroll at 390
-  ok   boards: compose refuses, then posts (demo) › boards: at most two subnav rows
+  ok   boards: compose refuses, then posts (demo) › boards: at most 2 subnav rows
   ok   boards: compose refuses, then posts (demo) › no console errors
   ok   boards: votes, reports, delete, expiry (demo) › signed out, a vote counts (the device’s vote) and the arrow fills
   ok   boards: votes, reports, delete, expiry (demo) › and it is still yours when the board redraws
@@ -2256,7 +2344,7 @@
   ok   boards: votes, reports, delete, expiry (demo) › boards: no monospace
   ok   boards: votes, reports, delete, expiry (demo) › boards: no escaped markup, undefined or NaN on the page
   ok   boards: votes, reports, delete, expiry (demo) › boards: no sideways scroll at 1280
-  ok   boards: votes, reports, delete, expiry (demo) › boards: at most two subnav rows
+  ok   boards: votes, reports, delete, expiry (demo) › boards: at most 2 subnav rows
   ok   boards: votes, reports, delete, expiry (demo) › no console errors
   ok   boards: Your posts, and delete my account (demo) › the demo profile and swap post are set up
   ok   boards: Your posts, and delete my account (demo) › an Art photo without a photo: refused
@@ -2328,7 +2416,7 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › shared with the pod is off by default
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › it lands at the bottom: Daily, no streak yet, not done
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › today’s dot is today’s, in Burlington
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (1 ms)
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (0 ms)
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak ticks up to 1 day
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and today’s dot fills
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the server has the tap, for today in Burlington
@@ -2342,7 +2430,7 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: no monospace
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: no escaped markup, undefined or NaN on the page
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: no sideways scroll at 390
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: at most two subnav rows
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › habits: at most 2 subnav rows
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › no console errors
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › a swipe left archives it, and the toast says so
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › archived on the server, taps kept
@@ -2359,7 +2447,7 @@
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: no monospace
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: no escaped markup, undefined or NaN on the page
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: no sideways scroll at 1280
-  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most two subnav rows
+  ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › habits: at most 2 subnav rows
   ok   Habits, swipe to archive with Undo, drag and keys to reorder, edit (demo, 1280, dark) › no console errors
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › twenty habits, in order
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › every row keeps its seven dots and its 48px tap
@@ -2381,7 +2469,7 @@
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: no monospace
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: no escaped markup, undefined or NaN on the page
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: no sideways scroll at 390
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: at most two subnav rows
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: at most 2 subnav rows
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › no console errors
   ok   Habits, the first sign-in asks a name and a phone, once (demo) › no member yet: a first name and a phone, before any habit
   ok   Habits, the first sign-in asks a name and a phone, once (demo) › a phone that is not one: refused
@@ -2403,7 +2491,7 @@
   ok   Habits, live: no season, a season, and before the paste › habits: no monospace
   ok   Habits, live: no season, a season, and before the paste › habits: no escaped markup, undefined or NaN on the page
   ok   Habits, live: no season, a season, and before the paste › habits: no sideways scroll at 390
-  ok   Habits, live: no season, a season, and before the paste › habits: at most two subnav rows
+  ok   Habits, live: no season, a season, and before the paste › habits: at most 2 subnav rows
   ok   Habits, live: no season, a season, and before the paste › no console errors
   ok   Habits, live: no season, a season, and before the paste › a season to come: in 5 Burlington days
   ok   Habits, live: no season, a season, and before the paste › signed in, Sign up opens the season’s payment link
@@ -2437,7 +2525,7 @@
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: no monospace
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: no escaped markup, undefined or NaN on the page
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: no sideways scroll at 390
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: at most two subnav rows
+  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: at most 2 subnav rows
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › no console errors
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › demo mode never calls Supabase
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then New in
@@ -2453,7 +2541,7 @@
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no monospace
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no escaped markup, undefined or NaN on the page
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no sideways scroll at 390
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: at most two subnav rows
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: at most 2 subnav rows
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › no console errors
   ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › only the guide’s own account’s fresh post shows, opening Instagram in a new tab
   ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › no console errors
@@ -2474,7 +2562,7 @@
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: no monospace
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: no escaped markup, undefined or NaN on the page
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: no sideways scroll at 1280
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: at most two subnav rows
+  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: at most 2 subnav rows
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › no console errors
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › the design pitch and form show no price and no cash
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › the artist’s choice is free shirts or store credit, and nothing else
@@ -2491,7 +2579,7 @@
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: no monospace
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: no escaped markup, undefined or NaN on the page
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: no sideways scroll at 390
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: at most two subnav rows
+  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: at most 2 subnav rows
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › no console errors
   ok   Vintage, the shop guide walks in order and invents no hours (live) › the guide has at least six shops (36)
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the file, numbered in its walking order
@@ -2521,7 +2609,7 @@
   ok   Vintage, the designs rail links to the merch site (live) › vintage: no monospace
   ok   Vintage, the designs rail links to the merch site (live) › vintage: no escaped markup, undefined or NaN on the page
   ok   Vintage, the designs rail links to the merch site (live) › vintage: no sideways scroll at 1280
-  ok   Vintage, the designs rail links to the merch site (live) › vintage: at most two subnav rows
+  ok   Vintage, the designs rail links to the merch site (live) › vintage: at most 2 subnav rows
   ok   Vintage, the designs rail links to the merch site (live) › no console errors
   ok   Vintage, live: a fit check and “Someone got it” on a server with rules v1 › round one: the same fit check is a find tagged “Fit check”, which either server takes
   ok   Vintage, live: a fit check and “Someone got it” on a server with rules v1 › round one has no box, so nothing asks for one
