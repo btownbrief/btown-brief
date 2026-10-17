@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v53';   // v53: On Air's playlists, and media never through the worker (v52: Watch's TV, time machine and local showtimes, v51: Vintage, v50: Food, v49: On Air, v48: the Wire's Photo mode)
+const VERSION = 'all-day-v55';   // v55: On Air's playlists, and media never through the worker (v54: main's merged bumps, v52: Watch, v51: Vintage, v50: Food, v49: On Air)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -32,6 +32,8 @@ const SHELL_URLS = [
   './js/photo-wall.js',
   /* the run clubs' week, imported by ui.js, People and What Now */
   './js/clubs-week.js',
+  /* what People's tiles mean and which events are mixers, imported by People */
+  './js/people-match.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */
