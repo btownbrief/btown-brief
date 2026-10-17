@@ -316,7 +316,7 @@ List every sentence of the script that says something the sources do not support
 Unsupported means: a name, title or role; a pronoun that gives someone a gender;
 a number, date, time or place; what happened, why, or what comes next; who is
 affected; an opinion, judgement or prediction stated as fact. Rewording a headline
-or a note is supported. So are turns between stories and words to the listener
+is supported. So are turns between stories and words to the listener
 ("If you drive...", "Something different now.", "That one's from Seven Days.")
 that assert nothing new, and saying when the brief airs ("this morning"). Words to the
 listener are unsupported when they imply a detail the sources do not give: "if
@@ -404,13 +404,18 @@ def word_count(text):
     return len(re.findall(r"[A-Za-z0-9][A-Za-z0-9'’.,$%-]*", plain(text)))
 
 
-MIDWORD_RE = re.compile(r"(?<=[A-Za-z0-9’'])\[[^\[\]\n]*\](?=[A-Za-z0-9’'])")
+MIDWORD_RE = re.compile(r"(?<=[\w’'])(?:\[[^\[\]\n]*\])+(?=[\w’'])")   # one mark or a run of them
 
 
 def unknown_marks(text):
-    """Every bracket in `text` that is not one of TAGS, as written."""
-    return [m.group(0) for m in BRACKET_RE.finditer(text or "")
-            if re.sub(r"\s+", " ", m.group(1)).strip().lower() not in TAGS]
+    """Every bracket in `text` that is not one of TAGS, as written, and any
+    bracket left over once the pairs are counted (a lone or nested one)."""
+    text = text or ""
+    found = [m.group(0) for m in BRACKET_RE.finditer(text)
+             if re.sub(r"\s+", " ", m.group(1)).strip().lower() not in TAGS]
+    if re.search(r"[\[\]]", BRACKET_RE.sub(" ", text)):
+        found.append("a lone bracket")
+    return found
 
 
 def tidy_tags(paragraph, budget=None):
@@ -421,16 +426,16 @@ def tidy_tags(paragraph, budget=None):
     MAX_PAUSES pause marks a paragraph, and past what is left of the
     brief's BRIEF_MAX in `budget` (a dict tidy() shares across paragraphs),
     the rest go. Taking a mark out never changes a word. A bracket that is
-    not one of TAGS is left exactly as written for unknown_marks() to send
-    back; a lone bracket with no partner goes."""
+    not one of TAGS, or a lone one, is left exactly as written for
+    unknown_marks() to send back."""
     paragraph = MIDWORD_RE.sub(lambda m: m.group(0) if unknown_marks(m.group(0)) else "", paragraph)
     parts, last = [], 0
     for m in BRACKET_RE.finditer(paragraph):
-        parts.append(paragraph[last:m.start()].replace("[", " ").replace("]", " "))
+        parts.append(paragraph[last:m.start()])
         name = re.sub(r"\s+", " ", m.group(1)).strip().lower()
         parts.append(f" [{name}] " if name in TAGS else " " + m.group(0) + " ")
         last = m.end()
-    parts.append(paragraph[last:].replace("[", " ").replace("]", " "))
+    parts.append(paragraph[last:])
     pause = r"\[(?:short |long )?pause\]"
     text = re.sub(r"(" + pause + r")(?:\s*" + pause + r")+", r"\1", "".join(parts))
     seen = {"delivery": 0, "pause": 0}
@@ -1125,6 +1130,8 @@ def selftest():
         "[short pause] Closer to home... the plan [pause] passed."
     assert unknown_marks(tidy_tags("The vote did [not] pass [softly].")) == ["[not]"]
     assert made_up("The council in Mont[short pause]pelier approved it.", srcs) == ["Montpelier"]
+    assert made_up("It cost fi[pause][softly]fty dollars and 1[pause]2 more.", srcs) == ["12"]
+    assert unknown_marks("A lone [pause bracket.") == ["a lone bracket"] and unknown_marks("[[pause]]") == ["a lone bracket"]
     assert made_up("The council approved it. [short pause] Closer to home, North Avenue.", srcs) == []
     assert made_up("The plan [softly] passed on [pause] Tuesday.", srcs) == ["Tuesday"]
     assert copied("they said the council approves the [pause] 2th bike lane plan for north avenue", [stories[0]["title"]])
