@@ -316,6 +316,14 @@ async function newPage(browser, base, opts = {}) {
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/films-data\/data\/films\.json$/, (r) => (films === null
     ? r.fulfill({ status: 404, body: '' })
     : r.fulfill({ status: 200, body: typeof films === 'string' ? films : JSON.stringify(films), contentType: 'application/json' })));
+  /* Watch's time machine and showtimes, on the same branch: empty unless a
+     group passes opts.tm / opts.showtimes (a payload, or null for a 404) */
+  const wExtra = { 'time-machine.json': opts.tm === undefined ? { v: 1, titles: {}, months: [] } : opts.tm,
+    'showtimes.json': opts.showtimes === undefined ? { v: 1, theaters: [] } : opts.showtimes };
+  await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/films-data\/data\/(time-machine|showtimes)\.json$/, (r) => {
+    const body = wExtra[r.request().url().match(/([\w-]+\.json)$/)[1]];
+    return body === null ? r.fulfill({ status: 404, body: '' }) : r.fulfill({ status: 200, body: JSON.stringify(body), contentType: 'application/json' });
+  });
   const champions = opts.champions || (await gamesDemo()).champions;
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btownbrief\.github\.io\/champions-data\/data\/champions\.json$/,
     (r) => r.fulfill({ status: 200, body: JSON.stringify(champions), contentType: 'application/json' }));
@@ -2182,8 +2190,10 @@ async function accounts(browser, base) {
 /* ---------------------------------------------------------------- Watch */
 const wPanel = '#panel-watch';
 const WATCH_CHAT = 'https://www.btownbrief.com/community/channels/meetups-hangouts';
+const WATCH_TELEGRAM = 'https://t.me/+39fLB9cqY684ZmVh';
+const TV_BASE = 50000000;
 const W_DAY = 86400000;
-const wDayNum = (key) => Math.round(Date.parse(key + 'T12:00:00Z') / W_DAY);
+const wDayNum = (key) => Math.floor(Date.parse(key + 'T12:00:00Z') / W_DAY);
 const wToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 const wNorm = (t) => String(t || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 80);
 /* the demo file, moved to today the way watch.js moves it */
@@ -2232,7 +2242,8 @@ async function theWatch(browser, base) {
       'films.json is the list, and its subtitle is only the count to go', await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText));
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(films.top.map((f) => 'f' + f.id)), 'every film in its TMDB order', '');
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === JSON.stringify(['Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents', toc.join(' / '));
+    check(JSON.stringify(toc) === JSON.stringify(['Coming soon', 'Theaters', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents', toc.join(' / '));
+    check(!(await page.$(wPanel + ' [data-kind]')), 'a films.json with no shows has no Movies / TV switch', '');
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
     check(soon.length === 5 && soon[0][1] === 'In theaters now' && soon[1][1] === 'Back in theaters' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming', JSON.stringify(soon));
     check(JSON.stringify(soon.map((x) => x[2])) === '[true,false,true,true,false]', 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
@@ -2308,7 +2319,7 @@ async function theWatch(browser, base) {
     check(head.seed === '1' && /60 of 60 to go/.test(head.text), 'the seed list is marked as the seed, and counts what is left', head.text);
     check(!(await page.$(wPanel + ' [data-sec="soon"]')), 'with no films.json there is no Coming soon (the seed has none)', '');
     const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
-    check(JSON.stringify(toc) === JSON.stringify(['The list', 'Town', 'Next screening', 'Chat']), 'and the table of contents leaves it out', toc.join(' / '));
+    check(JSON.stringify(toc) === JSON.stringify(['Theaters', 'The list', 'Town', 'Next screening', 'Chat']), 'and the table of contents leaves it out', toc.join(' / '));
     check((await wTiles(page)).length === 60, 'all sixty films', '');
     const dots = () => page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.map((a) => [a.dataset.k, [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join('')]));
     check((await dots()).every((d) => d[1] === '0'), 'Just me: one dot on every poster, none filled', JSON.stringify((await dots()).slice(0, 3)));
@@ -2358,7 +2369,10 @@ async function theWatch(browser, base) {
     await page.click('.sheet-head .iconbtn');
 
     const doors = await page.$$eval(wPanel + ' [data-door]', (a) => a.map((x) => [x.dataset.door, x.getAttribute('href')]));
-    check(JSON.stringify(doors) === JSON.stringify([['community', WATCH_CHAT], ['telegram', '../telegram.html']]), 'Watch chat: a door to the community channel and to Telegram', JSON.stringify(doors));
+    check(JSON.stringify(doors) === JSON.stringify([['telegram', WATCH_TELEGRAM], ['community', WATCH_CHAT]]), 'Watch chat: Talk opens the Telegram watch chat first, the community second', JSON.stringify(doors));
+    const talk = await page.$$eval(wPanel + ' [data-door]', (a) => a.map((x) => [x.textContent.trim(), x.className, x.target]));
+    check(talk[0][0] === 'Talk' && !/ghost/.test(talk[0][1]) && /ghost sm/.test(talk[1][1]) && talk.every((t) => t[2] === '_blank'), 'Talk is the big button; the community is the smaller one', JSON.stringify(talk));
+    check(!(await page.$eval(wPanel + ' [data-slot="chat"]', (s) => s.querySelector('p'))), 'and no paragraph', '');
     check(await page.$(wPanel + ' [data-chat] input, ' + wPanel + ' [data-chat] textarea') === null, 'no chat is built here', '');
     const town = await page.$eval(wPanel + ' [data-slot="town"]', (s) => s.innerText);
     check(/No ratings this week yet/.test(town), 'with no ratings yet, town ratings say so', town);
@@ -2463,14 +2477,19 @@ async function theWatch(browser, base) {
     const shown = await page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.filter((a) => a.querySelector('.rate')).map((a) => a.dataset.k));
     check(JSON.stringify(shown.sort()) === JSON.stringify(rated.map((f) => 'f' + f.id).sort()), 'a town rating only on films with three or more ratings (' + rated.length + ')', JSON.stringify(shown));
     check(!shown.includes('f' + d.films.top.find((f) => f.t === 'Causeway').id), 'Causeway, with two, shows none', '');
-    await page.click(wPanel + ' [data-sort] button:has-text("Town rating")');
+    await page.click(wPanel + ' [data-sort] [data-chip="town"]');
     const order = rated.slice().sort((a, b) => avg(b) - avg(a) || ratings.get(b.id).n - ratings.get(a.id).n || d.films.top.indexOf(a) - d.films.top.indexOf(b)).map((f) => 'f' + f.id);
     const sorted = await wTiles(page);
-    check(JSON.stringify(sorted.slice(0, rated.length)) === JSON.stringify(order), 'Town rating: the rated films first, highest average first', JSON.stringify([sorted.slice(0, rated.length), order]));
-    const rest = d.films.top.filter((f) => !rated.includes(f)).map((f) => 'f' + f.id);
-    check(JSON.stringify(sorted.slice(rated.length)) === JSON.stringify(rest), 'then the rest in list order', '');
-    await page.click(wPanel + ' [data-sort] button:has-text("List order")');
-    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'List order puts it back', '');
+    check(JSON.stringify(sorted.slice(0, rated.length)) === JSON.stringify(order), 'Town favorites: the rated films first, highest average first', JSON.stringify([sorted.slice(0, rated.length), order]));
+    const pool = [...new Set([...d.films.top, ...d.films.trend, ...d.films.now].map((f) => 'f' + f.id))];
+    const rest = pool.filter((k) => !rated.some((f) => 'f' + f.id === k));
+    check(JSON.stringify(sorted.slice(rated.length)) === JSON.stringify(rest.slice(0, 60 - rated.length)), 'then the rest in list order', JSON.stringify(sorted.slice(rated.length).slice(-4)));
+    await page.click(wPanel + ' [data-slot="list"] .addrow button');
+    const all = await wTiles(page);
+    check(JSON.stringify(all.slice(-2)) === JSON.stringify(['f9201', 'f9202']), 'and the trending films not on the list come last', JSON.stringify(all.slice(-3)));
+    check(await page.$eval(wPanel + ' [data-sort] [data-chip="town"]', (c) => c.getAttribute('aria-pressed')) === 'true', 'and the Town favorites chip is the one on', '');
+    await page.click(wPanel + ' [data-sort] [data-chip="top"]');
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'Top rated puts it back', '');
     const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.length);
     check(soon === d.films.soon.length + d.films.now.length && soon === 10, 'Coming soon: ten trailers', soon);
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -2484,9 +2503,10 @@ async function theWatch(browser, base) {
     await page.goto(base + '/all-day/?demo=1#watch/town');
     await page.waitForSelector(wPanel + ' [data-slot="town"] .lrow', { timeout: 15000 });
     const rows = await page.$$eval(wPanel + ' [data-slot="town"] .lrow', (n) => n.map((r) => [r.dataset.k, Number(r.dataset.n), r.querySelector('.t').textContent]));
-    const want = d.films.top.filter((f) => (ratings.get(f.id) || { wn: 0 }).wn >= 3);
-    check(rows.length === want.length && rows.every((r) => r[1] >= 3), 'town ratings this week: only films with three or more this week (' + want.length + ')', JSON.stringify(rows));
-    check(JSON.stringify(rows.map((r) => r[0]).sort()) === JSON.stringify(want.map((f) => 'town:' + f.id).sort()), 'exactly those films', '');
+    const want = [...ratings].filter(([, a]) => a.wn >= 3).map(([id]) => id);
+    check(rows.length === want.length && rows.every((r) => r[1] >= 3), 'town ratings this week: only titles with three or more this week (' + want.length + ')', JSON.stringify(rows));
+    check(JSON.stringify(rows.map((r) => r[0]).sort()) === JSON.stringify(want.map((id) => 'town:' + id).sort()), 'exactly those titles', '');
+    check(rows.some((r) => r[0] === 'town:' + (TV_BASE + 7003) && /^Cold Case Vermont/.test(r[2])), 'a show the town rated is among them', JSON.stringify(rows));
     check(!rows.some((r) => /Causeway|Kindling/.test(r[2])), 'Causeway and Kindling, two ratings each this week, are left out', '');
     check(rows.every((r, i) => i === 0 || rows[i - 1][1] >= r[1]), 'most-rated first', '');
 
@@ -2619,6 +2639,254 @@ async function theWatch(browser, base) {
     await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
     check(/moved on/.test(await page.$eval('#toast', (t) => t.textContent)), 'a film that is not on the list says it has moved on', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, Movies and TV (demo)', async () => {
+    const d = await watchDemo();
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.waitForSelector(wPanel + ' [data-kind]', { timeout: 15000 });
+    const kinds = await page.$$eval(wPanel + ' [data-kind] button', (n) => n.map((b) => [b.textContent, b.classList.contains('on')]));
+    check(JSON.stringify(kinds) === '[["Movies",true],["TV",false]]', 'a Movies / TV switch at the top, on Movies', JSON.stringify(kinds));
+    check(await page.$eval(wPanel, (p) => p.querySelector('[data-slot]').dataset.slot) === 'kind', 'and it is the first thing on the tab', '');
+    await page.click(wPanel + ' [data-kind] button:has-text("TV")');
+    await page.waitForFunction(() => /On TV now/.test(document.querySelector('#panel-watch [data-sec="soon"]')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.tv_top.map((f) => 'tv' + f.id)), 'TV: the top shows, in TMDB order', JSON.stringify((await wTiles(page)).slice(0, 4)));
+    const air = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.querySelector('.t').textContent, a.querySelector('.s').textContent]));
+    check(air[0][1] === 'New season 2' && /^Season 4 · [A-Z][a-z]{2} \d+$/.test(air[1][1]) && air[2][1] === 'Airing now', 'On TV now: a new season, one coming, then airing', JSON.stringify(air));
+    check(!(await page.$(wPanel + ' [data-sec="theaters"]')) && !(await page.$(wPanel + ' [data-cta]')), 'no theaters and no screening call on TV', '');
+    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === JSON.stringify(['On TV now', 'Back then', 'The list', 'Town', 'Next screening', 'Chat']), 'the table of contents follows', toc.join(' / '));
+    const dots = await page.$eval(wPanel + ' [data-grid] [data-k="tv7001"]', (a) => [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join(''));
+    check(dots === '11', 'a show carries the same two dots', dots);
+    await page.click(wPanel + ' [data-grid] [data-k="tv7003"]');
+    await page.waitForSelector('.sheet-body [data-stars="5"]');
+    const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
+    check(/\d+ seasons? · \d+m episodes/.test(sheet) && sheet.includes('Crime'), 'the show sheet: seasons, episode length, genres', sheet.slice(0, 120));
+    await page.click('.sheet-head .iconbtn');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Maya' })));
+    await page.click(wPanel + ' [data-grid] [data-k="tv7005"]');
+    await page.waitForSelector('.sheet-body [data-stars="4"]');
+    await page.click('.sheet-body [data-stars="4"]');
+    await page.waitForFunction(() => /^Rated 4 stars/.test(document.querySelector('.sheet-body [data-msg]').textContent), null, { timeout: 4000 }).catch(() => {});
+    const post = await fakeOf(page, (x) => { const p = x.posts.filter((q) => q.board === 'watch' && q.kind === 'rating').pop(); return { title: p.title, meta: p.meta }; });
+    check(post.title === 'Static Line' && post.meta.film === TV_BASE + 7005 && post.meta.stars === 4, 'a show’s rating carries TV_BASE plus its TMDB id, in the same film field', JSON.stringify(post));
+    await page.click('.sheet-head .iconbtn');
+    await page.click(wPanel + ' [data-kind] button:has-text("Movies")');
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'and back to the films', '');
+    await page.goto(base + '/all-day/?demo=1#watch/tv7010');
+    await page.reload();
+    check(await flashes(page, 'tv7010'), 'a show deep link switches to TV and flashes', '');
+    check(await page.$eval(wPanel + ' [data-kind] button.on', (b) => b.textContent) === 'TV', 'on TV', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, the ranking you choose (demo)', async () => {
+    const d = await watchDemo();
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#watch/list');
+    await page.waitForSelector(wPanel + ' [data-sort]', { timeout: 15000 });
+    const labels = await page.$$eval(wPanel + ' [data-sort] .chip', (n) => n.map((c) => [c.dataset.chip, c.textContent.trim(), c.getAttribute('aria-pressed')]));
+    check(JSON.stringify(labels.map((l) => l[1])) === JSON.stringify(['Top rated', 'Trending', 'Town favorites', 'Newest', 'By genre', 'Shuffle']), 'six orders, by name', JSON.stringify(labels));
+    check(labels.filter((l) => l[2] === 'true').map((l) => l[0]).join() === 'top', 'Top rated is on: the label is the order', '');
+    const sec = await page.$eval(wPanel + ' [data-slot="list"]', (s) => s.innerText);
+    check(!/ordered|sorted|ranked by|in order of/i.test(sec), 'and no sentence explains the order', '');
+    const pick = async (k) => { await page.click(wPanel + ' [data-sort] [data-chip="' + k + '"]'); await page.waitForTimeout(60); };
+    await pick('trend');
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.trend.map((f) => 'f' + f.id)), 'Trending: TMDB’s week, in its order', JSON.stringify(await wTiles(page)));
+    await pick('new');
+    const today = wToday();
+    const pool = [...new Map([...d.films.top, ...d.films.trend, ...d.films.now].map((f) => [f.id, f])).values()];
+    const moveD = (f) => { const nd = new Date((wDayNum(f.d) + wDayNum(today) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10); return nd; };
+    const newest = pool.map((f) => ({ ...f, d: moveD(f) })).filter((f) => f.d <= today).sort((a, b) => b.d.localeCompare(a.d) || a.t.localeCompare(b.t)).map((f) => 'f' + f.id);
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(newest.slice(0, 60)), 'Newest: everything released, newest first', JSON.stringify((await wTiles(page)).slice(0, 5)));
+    await pick('genre');
+    const shelves = await page.$$eval(wPanel + ' [data-shelf]', (n) => n.map((x) => x.dataset.shelf));
+    check(shelves.length > 5 && !(await page.$(wPanel + ' [data-filter="genre"]')) && !(await page.$(wPanel + ' [data-grid]')), 'By genre: a shelf per genre, and no genre chips', JSON.stringify(shelves));
+    const drama = await page.$$eval(wPanel + ' [data-genre="Drama"] .poster', (n) => n.map((a) => a.dataset.id));
+    check(JSON.stringify(drama) === JSON.stringify(d.films.top.filter((f) => f.g.includes('Drama')).slice(0, 20).map((f) => String(f.id))), 'each shelf ranked as Top rated', JSON.stringify(drama.slice(0, 4)));
+    const counts = await page.$$eval(wPanel + ' [data-genre]', (n) => n.map((r) => Number(r.closest('.rail-wrap').previousElementSibling.querySelector('.s').textContent.split(' ')[0])));
+    check(counts.every((c, i) => i === 0 || counts[i - 1] >= c), 'the biggest genre first', JSON.stringify(counts));
+    await pick('shuffle');
+    const s1 = await wTiles(page);
+    const seen = new Set(Object.entries(d.dots).filter(([, v]) => v[0] || v[1]).map(([id]) => 'f' + id));
+    check(s1.length && s1.every((k) => !seen.has(k)) && JSON.stringify(s1) !== JSON.stringify(pool.map((f) => 'f' + f.id).filter((k) => !seen.has(k)).slice(0, s1.length)), 'Shuffle: only what you have not seen, in a new order', JSON.stringify(s1.slice(0, 5)));
+    await pick('shuffle');
+    const s2 = await wTiles(page);
+    check(JSON.stringify(s2) !== JSON.stringify(s1) && JSON.stringify([...s2].sort()) === JSON.stringify([...s1].sort()), 'tap it again for another order of the same films', '');
+    await page.click(wPanel + ' [data-show] button:has-text("All")');
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(s2), 'a redraw keeps the order', '');
+    await pageRules(page, 'watch', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, the time machine (demo)', async () => {
+    const d = await watchDemo();
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="back"]', { timeout: 15000 });
+    const thisMonth = wToday().slice(0, 7);
+    const mi = (m) => Number(m.slice(0, 4)) * 12 + Number(m.slice(5, 7)) - 1;
+    const mo = (i) => Math.floor(i / 12) + '-' + String((i % 12) + 1).padStart(2, '0');
+    const shift = mi(thisMonth) - mi(d._anchor.slice(0, 7));
+    const months = new Map(d.tm.months.map((m) => [mo(mi(m.m) + shift), m]));
+    const yearAgo = mo(mi(thisMonth) - 12);
+    const name = (m) => new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'long', year: 'numeric' }).format(new Date(m + '-15T12:00:00Z'));
+    const shown = () => page.evaluate(() => { const b = document.querySelector('#panel-watch [data-slot="back"]'); return { m: b.querySelector('[data-month]').dataset.month, title: b.querySelector('.dateline b').textContent, ids: [...b.querySelectorAll('[data-back] .poster')].map((a) => a.dataset.id) }; });
+    let s = await shown();
+    const ids = (m, kind) => (kind === 'tv' ? months.get(m).tv.map((k) => String(TV_BASE + Number(k.slice(1)))) : [...months.get(m).theaters, ...months.get(m).streaming].map((k) => k.slice(1)));
+    check(s.m === yearAgo && s.title === name(yearAgo), 'Back then opens a year ago: ' + name(yearAgo), JSON.stringify(s));
+    check(JSON.stringify(s.ids) === JSON.stringify(ids(yearAgo)), 'that month’s big films, theaters then streaming', JSON.stringify(s.ids));
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Earlier day"]');
+    s = await shown();
+    check(s.m === mo(mi(yearAgo) - 1), '‹ is a month earlier', s.m);
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
+    await page.click(wPanel + ' [data-slot="back"] .dateline .nav[aria-label="Later day"]');
+    check((await shown()).m === mo(mi(yearAgo) + 1), '› a month later', (await shown()).m);
+    const cur = (await shown()).m;
+    const four = String(Number(thisMonth.slice(0, 4)) - 4);
+    await page.click(wPanel + ' [data-years] [data-chip="' + four + '"]');
+    s = await shown();
+    check(s.m === four + cur.slice(4) && JSON.stringify(s.ids) === JSON.stringify(ids(s.m)), 'a year chip keeps the month: ' + name(four + cur.slice(4)), s.m);
+    const years = await page.$$eval(wPanel + ' [data-years] .chip', (n) => n.map((c) => c.dataset.chip));
+    const Y = Number(thisMonth.slice(0, 4));
+    check(JSON.stringify(years) === JSON.stringify([Y, Y - 1, Y - 2, Y - 3, Y - 4, Y - 5].map(String)), 'the years run back five', JSON.stringify(years));
+    const oldest = [...months.keys()].sort()[0];
+    await page.goto(base + '/all-day/?demo=1#watch/back:' + oldest);
+    await page.reload();
+    await page.waitForSelector(wPanel + ' [data-slot="back"] [data-month="' + oldest + '"]', { timeout: 6000 }).catch(() => {});
+    s = await shown();
+    check(s.m === oldest && await page.$eval(wPanel + ' [data-slot="back"] .nav[aria-label="Earlier day"]', (b) => b.disabled), 'a deep link to the oldest month lands there, and ‹ stops', JSON.stringify(s));
+    await page.click(wPanel + ' [data-kind] button:has-text("TV")');
+    await page.waitForTimeout(100);
+    s = await shown();
+    check(s.ids.length && JSON.stringify(s.ids) === JSON.stringify(ids(s.m, 'tv')), 'on TV it shows the month’s shows', JSON.stringify(s));
+    await page.click(wPanel + ' [data-slot="back"] [data-back] .poster');
+    await page.waitForSelector('.sheet-body [data-seen="me"]', { timeout: 4000 });
+    check(await page.$('.sheet-body [data-want]') !== null, 'a title from back then opens the same sheet: seen, want, rate', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, in theaters near you and the screening call (demo, 10 am)', async () => {
+    const d = await watchDemo();
+    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(10) });
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="theaters"]', { timeout: 15000 });
+    await page.waitForSelector(wPanel + ' [data-showing] .lrow', { timeout: 6000 }).catch(() => {});
+    const order = await page.$$eval(wPanel + ' [data-slot]', (n) => n.map((x) => x.dataset.slot));
+    check(order.indexOf('cta') === order.indexOf('soon') + 1, 'the screening call sits right under Coming soon', order.join(','));
+    const cta = await page.$eval(wPanel + ' [data-cta="vote"]', (b) => b.textContent.trim());
+    check(cta === 'Vote for the next screening', 'it says what it does, and nothing else', cta);
+    const names = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => [b.textContent, b.classList.contains('on')]));
+    check(JSON.stringify(names.map((x) => x[0])) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'the three theaters', JSON.stringify(names));
+    check(names.find((x) => x[1])[0] === 'Majestic 10', 'Partizanfilm is closed, so the first open with shows today leads', JSON.stringify(names));
+    const rows = () => page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.querySelector('.t').textContent, r.querySelector('[data-times]').textContent, !!r.querySelector('.pillbtn')]));
+    let r = await rows();
+    check(JSON.stringify(r) === JSON.stringify([['Low Tide', '10:50 am · 1:25 · 4:00 · 6:35 · 9:10 · 11:58 pm', true], ['Hollow Pines', '11:00 am · 1:40 · 7:00 · 11:55 pm', true], ['Street Brawler', '12:00 · 5:30 · 11:59 pm', false]]),
+      'Majestic 10: the rest of today’s times, by first show; a title the tab knows gets a trailer button', JSON.stringify(r));
+    check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Williston · Today', 'the town and the day', '');
+    const st = await page.$eval(wPanel + ' [data-showtimes]', (a) => [a.getAttribute('href'), a.target, a.textContent.trim()]);
+    check(st[0] === 'https://www.majestic10.com/movies' && st[1] === '_blank' && st[2] === 'Showtimes', 'a Showtimes button to its own page', JSON.stringify(st));
+    await page.click(wPanel + ' [data-theater] button:has-text("Partizanfilm")');
+    const pz = d.showtimes.theaters[0];
+    const back = new Date((wDayNum(pz.back) + wDayNum(wToday()) - wDayNum(d._anchor)) * W_DAY + 12 * 3600000).toISOString().slice(0, 10);
+    const backLabel = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }).format(new Date(back + 'T12:00:00Z'));
+    check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Burlington · Closed until ' + backLabel, 'Partizanfilm: closed until ' + backLabel, await page.$eval(wPanel + ' [data-status]', (p) => p.textContent));
+    r = await rows();
+    check(JSON.stringify(r.map((x) => x[0])) === '["Lantern Season","Small Hours"]', 'and the first day back’s schedule', JSON.stringify(r));
+    check(await page.$eval(wPanel + ' [data-showtimes]', (a) => a.getAttribute('href')) === 'https://www.partizanfilm.org/', 'its Showtimes button', '');
+    await page.click(wPanel + ' [data-theater] button:has-text("Essex")');
+    await page.click(wPanel + ' [data-showing] .lrow .t');
+    await page.waitForSelector('.sheet-body [data-trailer]', { timeout: 4000 });
+    check(/The Long Lake/.test(await page.$eval('.sheet-head', (h) => h.textContent)), 'a known title opens its film sheet', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.click(wPanel + ' [data-cta="vote"]');
+    const pos = await page.waitForFunction(() => { const v = document.querySelector('#panel-watch [data-sec="vote"]').getBoundingClientRect().top; return v > 0 && v < innerHeight / 2; }, null, { timeout: 4000 }).then(() => true, () => false);
+    check(pos, 'the call scrolls the ballot into view', '');
+    await pageRules(page, 'watch', 390);
+    await page.evaluate(() => document.querySelector('#panel-watch').scrollTo(0, 0));
+    await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-top.png') });
+    await page.evaluate(() => document.querySelector('#panel-watch [data-sec="theaters"]').scrollIntoView());
+    await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-theaters.png') });
+    await page.evaluate(() => document.querySelector('#panel-watch [data-sec="back"]').scrollIntoView());
+    await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-back-then.png') });
+    await page.evaluate(() => document.querySelector('#panel-watch [data-sec="list"]').scrollIntoView());
+    await page.waitForTimeout(200);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-list.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, showtimes, the time machine and TV from the films-data branch (live)', async () => {
+    const films = await watchFilms();
+    const seed = JSON.parse(await readFile(path.join(APP, 'data/films-seed.json'), 'utf8'));
+    films.tv_top = seed.top.slice(30, 50).map((f, i) => ({ ...f, id: 1400 + i, t: 'Show ' + i, sn: 2 }));
+    films.tv_trend = films.tv_top.slice(0, 3);
+    films.tv_air = [{ ...films.tv_top[4], ns: 3, d: wToday() }];
+    films.trend = seed.top.slice(40, 45);
+    const today = wToday();
+    const m = (n) => { const [y, mm] = today.split('-').map(Number); const i = y * 12 + mm - 1 - n; return Math.floor(i / 12) + '-' + String((i % 12) + 1).padStart(2, '0'); };
+    const t0 = seed.top[0], t1 = seed.top[55];
+    const tm = { v: 1, images: 'https://image.tmdb.org/t/p/', titles: {
+      ['m' + t0.id]: { id: t0.id, k: 'movie', t: t0.t, y: t0.y, d: t0.d, g: t0.g, o: '', p: t0.p },
+      ['m' + t1.id]: { id: t1.id, k: 'movie', t: '<img src=x onerror=alert(1)>', y: t1.y, d: t1.d, g: [], o: '', p: '/../../evil.jpg' },
+      t1399: { id: 1399, k: 'tv', t: 'A Show', y: 2011, d: '2011-04-17', g: ['Drama'], o: '', p: '/sh.jpg' },
+      m42: { id: 99, k: 'movie', t: 'Key and id disagree', y: 2020, d: '2020-01-01', g: [], o: '', p: '' } },
+      months: [{ m: m(12), src: 'rt', theaters: ['m' + t0.id, 'm42'], streaming: ['m' + t1.id], tv: ['t1399'] }, { m: 'not-a-month', theaters: ['m' + t0.id] }] };
+    const showtimes = { v: 1, days: [today], theaters: [
+      { id: 'majestic10', name: 'Majestic 10', town: 'Williston', url: 'https://www.majestic10.com/movies', ok: true, closed: false, back: '',
+        days: { [today]: [{ t: films.now[0].t, id: films.now[0].id, p: films.now[0].p, times: ['23:59'] }, { t: '<b>Bold</b> Title', p: '/x.jpg', times: ['23:59', 'bad'] }] } },
+      { id: 'essex', name: 'Essex Cinemas', town: 'Essex', url: 'https://evil.example/', ok: false, closed: false, back: '', days: {} },
+      { id: 'nowhere', name: 'Elsewhere', town: 'Nowhere', url: 'https://x.example/', ok: true, days: {} }] };
+    const { ctx, page, errors } = await newPage(browser, base, { films, tm, showtimes, clock: etAt(12) });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="back"]', { timeout: 15000 });
+    const back = await page.$$eval(wPanel + ' [data-back] .poster', (n) => n.map((a) => [a.dataset.id, a.querySelector('.t').textContent, a.querySelector('img') && a.querySelector('img').getAttribute('src')]));
+    check(back.length === 2 && back[0][0] === String(t0.id) && back[0][2] === 'https://image.tmdb.org/t/p/w342' + t0.p, 'Back then: TMDB posters at w342, a key that disagrees with its id left out', JSON.stringify(back));
+    check(back[1][1] === '<img src=x onerror=alert(1)>' && !back[1][2] && !(await page.$(wPanel + ' [data-back] img[src="x"]')), 'a title is text, never markup, and a bad poster path is dropped', JSON.stringify(back[1]));
+    check(await page.$eval(wPanel + ' [data-slot="back"] .dateline b', (b) => b.textContent) === new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'long', year: 'numeric' }).format(new Date(m(12) + '-15T12:00:00Z')), 'and the month is named', '');
+    const th = await page.$$eval(wPanel + ' [data-theater] button', (n) => n.map((b) => b.textContent));
+    check(JSON.stringify(th) === '["Partizanfilm","Majestic 10","Essex Cinemas"]', 'theaters are the known three, whatever the file adds', JSON.stringify(th));
+    const rows = await page.$$eval(wPanel + ' [data-showing] .lrow', (n) => n.map((r) => [r.querySelector('.t').textContent, r.querySelector('[data-times]').textContent, r.querySelector('img') && r.querySelector('img').getAttribute('src')]));
+    check(rows.length === 2 && rows[1][0] === '<b>Bold</b> Title' && rows[1][1] === '11:59 pm' && rows[1][2] === 'https://image.tmdb.org/t/p/w185/x.jpg' && !(await page.$(wPanel + ' [data-showing] b')),
+      'Majestic 10 from showtimes.json: escaped titles, bad times dropped, TMDB posters at w185', JSON.stringify(rows));
+    await page.click(wPanel + ' [data-theater] button:has-text("Essex")');
+    check(!(await page.$(wPanel + ' [data-showing] .lrow')) && await page.$eval(wPanel + ' [data-showtimes]', (a) => a.getAttribute('href')) === 'https://www.essexcinemas.com/vermont/essex/essex-cinemas-9/showtimes',
+      'a theater that did not read: no rows, and its own Showtimes page (never the file’s link)', '');
+    await page.click(wPanel + ' [data-theater] button:has-text("Partizanfilm")');
+    check(await page.$eval(wPanel + ' [data-status]', (p) => p.textContent) === 'Burlington' && !(await page.$(wPanel + ' [data-showing] .lrow')), 'a theater missing from the file: just its button', '');
+    await page.click(wPanel + ' [data-kind] button:has-text("TV")');
+    await page.waitForTimeout(100);
+    check(JSON.stringify((await wTiles(page)).slice(0, 2)) === '["tv1400","tv1401"]', 'live TV shelves from films.json', JSON.stringify((await wTiles(page)).slice(0, 2)));
+    await page.click(wPanel + ' [data-grid] [data-k="tv1400"]');
+    await page.waitForSelector('.sheet-body a[href*="themoviedb"]');
+    check(await page.$eval('.sheet-body a[href*="themoviedb"]', (a) => a.getAttribute('href')) === 'https://www.themoviedb.org/tv/1400', 'a show links to its TMDB TV page', '');
+    await page.click('.sheet-head .iconbtn');
+    const kept = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-watch') || '{}').kind);
+    await page.reload();
+    await page.waitForSelector(wPanel + ' [data-kind] button.on', { timeout: 15000 });
+    check(kept === 'tv' && await page.$eval(wPanel + ' [data-kind] button.on', (b) => b.textContent) === 'TV', 'the switch is remembered on this phone', String(kept));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, no time machine or showtimes yet (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { films: await watchFilms(), tm: null, showtimes: null });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="theaters"]', { timeout: 15000 });
+    await page.waitForTimeout(500);
+    check(!(await page.$(wPanel + ' [data-sec="back"]')), 'no time-machine file: no Back then', '');
+    const btns = await page.$$eval(wPanel + ' [data-showtimes]', (n) => n.map((a) => a.getAttribute('href')));
+    check(JSON.stringify(btns) === '["https://www.partizanfilm.org/"]' && !(await page.$(wPanel + ' [data-showing] .lrow')), 'no showtimes file: the theater rows still offer their Showtimes button', JSON.stringify(btns));
+    check(errors.every((e) => /404/.test(e)), 'nothing but the two 404s in the console', errors.join(' | '));
     await ctx.close();
   });
 }
