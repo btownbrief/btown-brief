@@ -1,6 +1,10 @@
 /* Games: the Btown arcade (play.btownbrief.com) and the people around town
    who play anything, from inside All Day. Top to bottom:
 
+   - The News Quiz, featured: five questions from this week's Brief (the
+     quiz's own data/questions.json), one minute on the clock. It is the one
+     game that sends the reader to the newsletter, so it leads the tab and
+     is left out of the arcade's cabinets below.
    - The arcade: the arcade's own games as cabinets, the way its homepage
      shows them (the emoji on a coloured screen, the name, the pitch, this
      month's champ, Play), newest first, with chips for New, each of the
@@ -25,9 +29,11 @@
      here would seat this app instead of the reader. The tab sends the reader
      to the game's own Host flow, which makes the room on the arcade and hands
      back the join link to text.
-   - This month's leaderboard: the top ten in every live game that keeps a
-     board, from the same read-only get_leaderboard RPC the arcade's own
-     /leaderboards/ page calls, grouped by the arcade's sections. The arcade
+   - This month's leaderboard: every live game that keeps a board as a
+     headline (name, Play) with its "Top scores" attached below it, the top
+     five and a control for the top ten. Each player shows once per board,
+     under their best score, from the same read-only get_leaderboard RPC the arcade's own
+     /leaderboards/ page calls (best first), grouped by the arcade's sections. The arcade
      knows a player by a device id on play.btownbrief.com, which this app
      (another origin) cannot read, so the tab asks once for the name the
      reader plays under, keeps it on this device, and marks the rows with
@@ -67,7 +73,7 @@ const CHAT_URL = 'https://www.btownbrief.com/community/channels/photo-wall';   /
 const TELEGRAM_URL = '../telegram.html';
 const NAME_KEY = 'allday-arcade-name';
 const TOP = 10;           // the arcade's own board is a top ten
-const SHOWN = 3;          // drawn before "the rest of the top ten"
+const SHOWN = 5;          // drawn before "Top 10"
 const NEW_DAYS = 30;
 const PARALLEL = 6;       // board requests in flight at once
 const BOARD_MS = 8000;    // a board that has not answered by then is counted as not loaded
@@ -75,6 +81,10 @@ const CABS = 4;           // cabinets in the grid before "All n games"
 const POLL = 8;           // playing rows before "n more"
 const TAGS = 12;          // gamertag rows before "n more"
 const SLUG = /^[a-z0-9-]{1,40}$/;
+/* The featured game. The catalog may or may not list it (the demo's does
+   not), so the tab carries what it needs to draw the card. Five questions and
+   a sixty-second clock are the quiz's own (news-quiz/data/questions.json). */
+const QUIZ = { slug: 'news-quiz', emoji: '🗞️', name: 'News Quiz', pitch: 'Five questions from this week’s Brief. One minute.' };
 
 /* the board's platforms, in its own order, and the words for them */
 const PLATFORMS = [['pc', 'PC'], ['ps5', 'PS5'], ['xbox', 'Xbox'], ['switch', 'Switch'], ['mobile', 'Phone'], ['vr', 'VR'], ['board', 'Board games'], ['tabletop', 'Tabletop']];
@@ -100,6 +110,20 @@ const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 const num = (n) => Number(n || 0).toLocaleString('en-US');
 const playUrl = (slug) => (SLUG.test(slug) ? ARCADE + slug + '/' : ARCADE);
 const norm = (s) => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
+/* One row per player name on a board: the first one, since get_leaderboard
+   answers best first (and "best" is the arcade's to define; some games score
+   low-is-better). Names match without case or extra spaces; the row keeps
+   its own spelling. A row with no name is not a name, so each stays. */
+function onePerName(rows) {
+  const seen = new Set();
+  return arr(rows).filter((r) => {
+    const k = r ? norm(r.name) : '';
+    if (!k) return !!r;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
 const ORD = (n) => n + (n % 100 >= 11 && n % 100 <= 13 ? 'th' : ['th', 'st', 'nd', 'rd'][n % 10] || 'th');
 /* one line of plain text: no control characters, no line breaks, no
    direction overrides (they could make a texted link read as another), no
@@ -211,7 +235,7 @@ function loadDemo() {
     G.demo = d;
     G.catalog = d.catalog;
     G.champions = d.champions;
-    Object.entries(d.boards || {}).forEach(([slug, rows]) => { G.boards[slug] = arr(rows); });
+    Object.entries(d.boards || {}).forEach(([slug, rows]) => { G.boards[slug] = onePerName(rows); });
     PARTS.forEach((p) => { G.settled[p] = true; });
   });
 }
@@ -243,7 +267,7 @@ function loadBoards() {
     if (i >= list.length || run !== G.run) return Promise.resolve();
     const g = list[i++];
     return ask(g.slug)
-      .then((rows) => { if (run === G.run) G.boards[g.slug] = Array.isArray(rows) ? rows : null; })
+      .then((rows) => { if (run === G.run) G.boards[g.slug] = Array.isArray(rows) ? onePerName(rows) : null; })
       .then(next);
   };
   return Promise.all(Array.from({ length: Math.min(PARALLEL, list.length) }, next)).then(() => {
@@ -279,7 +303,7 @@ function extLink(label, href, cls) {
   return a;
 }
 function playPill(g) {
-  const a = el('a', 'pillbtn', 'Play ' + ICON.ext);
+  const a = el('a', 'pillbtn on', 'Play ' + ICON.ext);
   a.href = playUrl(g.slug); a.target = '_blank'; a.rel = 'noopener';
   a.setAttribute('aria-label', 'Play ' + g.name + ' on the arcade');
   return a;
@@ -417,7 +441,10 @@ function drawBoards(host) {
     const rows = G.boards[g.slug];
     if (rows === null) { quiet.push([g, 'didn’t load']); return; }
     if (!arr(rows).length) { quiet.push([g, '']); return; }
-    host.appendChild(gameRow(g, 'g:' + g.slug, esc(g.boardHint || '')));
+    /* one block per game: the game is the headline, its scores hang under it */
+    const blk = el('div', 'gm-lb');
+    blk.appendChild(gameRow(g, 'g:' + g.slug, esc(g.boardHint || '')));
+    blk.appendChild(el('p', 'gm-lb-label', esc('Top scores · ' + g.name)));
     const top = arr(rows).slice(0, TOP);
     const myAt = top.findIndex((r) => isMe(r, want));
     const open = G.open[g.slug] || myAt >= SHOWN;
@@ -429,12 +456,13 @@ function drawBoards(host) {
       const at = arr(rows).findIndex((r) => isMe(r, want));
       if (at >= 0) b.appendChild(boardRow(rows[at], at + 1, want, 'Your best this month, outside the top ten'));
     }
-    host.appendChild(b);
+    blk.appendChild(b);
     if (!open && top.length > SHOWN) {
-      const more = button('The rest of the top ten · ' + (top.length - SHOWN) + ' more', 'ghost more', () => { G.open[g.slug] = true; drawBoardsSlot(); });
+      const more = button(top.length === TOP ? 'Show top ' + TOP : 'Show all ' + top.length, 'ghost more', () => { G.open[g.slug] = true; drawBoardsSlot(); });
       more.dataset.more = g.slug;
-      host.appendChild(more);
+      blk.appendChild(more);
     }
+    host.appendChild(blk);
   });
   if (quiet.length) {
     const p = el('p', 'note pad');
@@ -508,7 +536,7 @@ function drawChat(host) {
 function drawChamps(host) {
   const C = G.champions;
   const boards = arr(C && C.games).filter((x) => x && SLUG.test(String(x.slug || '')) && x.champ);
-  const royalty = arr(C && C.royalty).filter((x) => x && x.name);
+  const royalty = onePerName(arr(C && C.royalty).filter((x) => x && x.name));
   if (!boards.length && !royalty.length) return false;
   const month = /^\d{4}-\d{2}$/.test(String(C.month || '')) ? C.month : monthKey();
   const young = month !== monthKey();
@@ -583,10 +611,11 @@ const appUrl = (k) => (app.demo ? location.origin + location.pathname + '?demo=1
 
 /* ------------------------------------------------------------- the arcade */
 const champOf = (slug) => arr(G.champions && G.champions.games).find((x) => x && x.slug === slug && x.champ) || null;
+const inArcade = () => live().filter((g) => g.slug !== QUIZ.slug);
 function arcadeFilters() {
-  const L = live();
+  const L = inArcade();
   const out = [{ key: 'all', label: 'All', n: L.length }];
-  const fresh = newGames().length;
+  const fresh = newGames().filter((g) => g.slug !== QUIZ.slug).length;
   if (fresh) out.push({ key: 'new', label: 'New', n: fresh });
   arr(G.catalog && G.catalog.sections).forEach((s) => {
     const n = L.filter((g) => g.section === s.id).length;
@@ -599,11 +628,11 @@ function arcadeFilters() {
 /* All: what's new first, then the boards with the most players this month,
    then the catalog's own order */
 function arcadeList(f) {
-  const L = live();
-  if (f === 'new') return newGames();
+  const L = inArcade();
+  const fresh = newGames().filter((g) => g.slug !== QUIZ.slug);
+  if (f === 'new') return fresh;
   if (f === 'out') return L.filter((g) => g.where === 'out');
   if (f !== 'all') return L.filter((g) => g.section === f);
-  const fresh = newGames();
   const players = (g) => Number((champOf(g.slug) || {}).players) || 0;
   const rest = L.filter((g) => !fresh.includes(g)).map((g, i) => [g, i]).sort((a, b) => players(b[0]) - players(a[0]) || a[1] - b[1]).map((x) => x[0]);
   return fresh.concat(rest);
@@ -630,6 +659,33 @@ function cabinet(g, feat) {
   body.appendChild(acts);
   c.append(scr, body);
   return c;
+}
+
+/* The featured game: a card above the arcade. It keeps the cabinet's key, so
+   an older #games/cab:news-quiz link lands on it. */
+function drawQuiz(host) {
+  const g = bySlug(QUIZ.slug);
+  if (g && g.live !== true) return false;
+  const ch = champOf(QUIZ.slug);
+  const c = el('article', 'gm-quiz');
+  c.dataset.sec = 'quiz';
+  c.dataset.k = 'cab:' + QUIZ.slug;
+  c.dataset.slug = QUIZ.slug;
+  const scr = el('a', 'gm-scr', '<span class="gm-emo" aria-hidden="true">' + esc(QUIZ.emoji) + '</span>');
+  scr.href = playUrl(QUIZ.slug); scr.target = '_blank'; scr.rel = 'noopener';
+  scr.style.setProperty('--mk', 'var(--mark-' + hue(QUIZ.slug) + ')');
+  scr.setAttribute('aria-label', 'Take the ' + QUIZ.name);
+  const body = el('div', 'gm-cab-b', '<h3 class="gm-name">' + esc(QUIZ.name) + '</h3><p class="gm-pitch">' + esc(QUIZ.pitch) + '</p>' +
+    (ch ? '<p class="gm-champ">' + ICON.trophy + '<span><b>' + esc(ch.champ) + '</b> · ' + esc(num(ch.score)) + '</span></p>' : ''));
+  const acts = el('div', 'gm-acts');
+  const play = el('a', 'pillbtn on', 'Take the quiz');
+  play.href = playUrl(QUIZ.slug); play.target = '_blank'; play.rel = 'noopener';
+  play.setAttribute('aria-label', 'Take the ' + QUIZ.name + ' on the arcade');
+  acts.append(play, inviteLink('Invite', 'Think you read this week’s Brief? Try the ' + QUIZ.name + '.', playUrl(QUIZ.slug), 'pillbtn', 'Invite by text to ' + QUIZ.name));
+  body.appendChild(acts);
+  c.append(scr, body);
+  host.appendChild(c);
+  return true;
 }
 
 function drawArcade(host) {
@@ -1001,6 +1057,7 @@ function drawVr(host) {
 function drawYouSlot() { if (G.slots) { G.slots.you.innerHTML = ''; if (G.catalog && boardGames().length) drawYou(G.slots.you); } }
 function drawBoardsSlot() { if (G.slots) { G.slots.boards.innerHTML = ''; drawBoards(G.slots.boards); } }
 function drawChallengeSlot() { if (G.slots) { G.slots.challenge.innerHTML = ''; G.slots.challenge.hidden = !drawChallenge(G.slots.challenge); } }
+function drawQuizSlot() { if (G.slots) { G.slots.quiz.innerHTML = ''; G.slots.quiz.hidden = !drawQuiz(G.slots.quiz); } }
 function drawArcadeSlot() { if (G.slots) { G.slots.arcade.innerHTML = ''; G.slots.arcade.hidden = !drawArcade(G.slots.arcade); } }
 function drawTagsSlot() { if (G.slots) { G.slots.tags.innerHTML = ''; drawTags(G.slots.tags); } }
 /* the board's three sections, redrawn only when the board changes, so a
@@ -1015,7 +1072,7 @@ function drawPostsSlots() {
   if (app.activeTab() === KEY) app.paintSubnav();
 }
 
-const ORDER = ['arcade', 'playing', 'lfg', 'tags', 'vr', 'challenge', 'head', 'you', 'boards', 'champs', 'chat'];
+const ORDER = ['quiz', 'arcade', 'playing', 'lfg', 'tags', 'vr', 'challenge', 'head', 'you', 'boards', 'champs', 'chat'];
 function render() {
   const root = G.root;
   if (!root) return;
@@ -1043,6 +1100,7 @@ function render() {
   }
   const S = G.slots;
   ['head', 'boards', 'challenge', 'chat', 'champs'].forEach((k) => { S[k].innerHTML = ''; });
+  drawQuizSlot();
   drawArcadeSlot();
   if (!S.you.firstChild || S.you.firstChild.dataset.you !== 'ask') drawYouSlot();
   S.head.hidden = !(G.catalog && boardGames().length) && !G.failed.catalog;
@@ -1062,7 +1120,7 @@ function render() {
    other key flashes its row once everything that might hold it is in. A
    cabinet is cab:<slug>, and the old new:<slug> and party:<slug> links
    land on it. */
-const SECTIONS = ['arcade', 'playing', 'lfg', 'tags', 'vr', 'challenge', 'board', 'champs', 'chat'];
+const SECTIONS = ['quiz', 'arcade', 'playing', 'lfg', 'tags', 'vr', 'challenge', 'board', 'champs', 'chat'];
 /* what a key has to wait for before it can be found, or called gone */
 function needs(k) {
   if (k === 'board' || /^g:/.test(k)) return ['catalog', 'boards'];

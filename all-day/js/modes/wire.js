@@ -46,6 +46,8 @@ import * as store from '../store.js';
 import * as data from '../wire.js';
 import * as demo from './wire-demo.js';
 import * as photos from './wire-photos.js';
+import * as square from './wire-square.js';
+import * as boards from '../boards.js';
 import { el, esc, safeHref, ICON, mark, cards, chips, pills, button, divider, section, localSwitch, geo, setGeo, put } from '../ui.js';
 
 const FIRST = 60;        // cards on the first screenful (DESIGN.md §9 rule 14: sixty in under 100ms)
@@ -55,9 +57,24 @@ const PICKS_OPEN = 5;    // one as the pick card, two to five as ranked rows, th
 const RAW_PAGE = 60;
 const PER_OUTLET = 6;
 const HUNT_AT_ONCE = 5;  // editions a shared link fetches at a time while it looks for its card
+/* the river's thumbnails, 72px (were 56). Tried on the left (Stephen,
+   2026-10-17: "I like a left oriented photo") and on the right at 390 on
+   the real paper (tests/shots/wire-thumbs-*-390.png). Right reads better:
+   only about one row in three has a picture, and on the left every titled
+   row without one starts at a different edge, so the eye zigzags; on the
+   right the titles share one edge and the pictures still break the list. */
+const THUMBS_LEFT = false;
 
-const KINDS = [['all', 'All'], ['x', 'X'], ['facebook', 'Facebook'], ['reddit', 'Reddit'], ['newsletters', 'Newsletters'], ['video', 'Video']];
-const KIND_LABEL = { local: 'Local news', world: 'News', x: 'X', facebook: 'Facebook group, via Muse', reddit: 'Reddit', newsletters: 'Newsletter', video: 'Video' };
+/* The chips under the switch, each source with its own colour (Stephen,
+   2026-10-17: "better color coordinate the x vs Facebook vs other posts").
+   Video went (it had nothing; videos live in On Air); Instagram reads the
+   local accounts' posts as a list (wire-photos.js has them). */
+const KINDS = [['all', 'All'], ['x', 'X'], ['facebook', 'Facebook'], ['reddit', 'Reddit'], ['instagram', 'Instagram'], ['newsletters', 'Newsletters']];
+const SRC_CH = new Set(['x', 'facebook', 'reddit', 'instagram', 'newsletters']);
+const KIND_LABEL = { local: 'Local news', world: 'News', x: 'X', facebook: 'Facebook group, via Muse', reddit: 'Reddit', newsletters: 'Newsletter', video: 'Video', instagram: 'Instagram' };
+/* the three ways to read the tab, in words (his girlfriend, 2026-10-17:
+   the list and photo icons "looked like the same information") */
+const MODES = [['news', 'News'], ['photos', 'Photos'], ['square', 'Square']];
 const NUMBER = ['none', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen',
   'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
@@ -93,7 +110,11 @@ const W = {
   open: new Set(),      // the days whose What matters list is opened past five
   flip: null,           // the earlier day today's What matters block shows, or null (never stored)
   view: 'paper',        // or 'raw', Unfiltered
-  mode: photos.remembered() ? 'photos' : 'list',   // the paper as a list, or Photo mode
+  mode: photos.remembered() || 'news',   // News (the paper), Photos or Square
+  squareOk: app.demo ? true : null,      // the Square board is live (nn-ROUND4.sql); null until asked
+  ig: null,             // the Instagram posts, for the News list's Instagram chip
+  left: null,           // where the reader left off last time: { date, k, at }
+  slot: null,           // the What matters ranking shown: null is the current one, else 'morning' | 'midday' | 'evening'
   photoOpen: null,      // a picture a deep link asked for, opened once the photos are drawn
   pulseTried: false,    // the Unfiltered wire was asked for and did not come
   run: null,            // the river being drawn
@@ -133,6 +154,8 @@ function ago(ms) {
   return Math.round(s / 86400) + 'd';
 }
 const isDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(String(s || ''));
+const hourFmt = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', hourCycle: 'h23' });
+const etHour = (ms) => Number(hourFmt.format(new Date(ms))) % 24;
 
 /* ------------------------------------------------------------ the items */
 const YT = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
@@ -216,7 +239,7 @@ function loadMutes() {
 }
 const seen = (c) => !MUTE[c.sid] && (geo() === 'everything' || c.local || !!follows[c.sid]);
 const shows = (c) => seen(c) && (W.ch === 'all' || c.ch === W.ch);
-const greenOf = (c) => geo() === 'everything' && !!c.local;
+const greenOf = (c) => !!c.local;
 
 /* Chip counts: the pipeline's own, unless a mute or a follow changes what
    this reader sees that day, in which case they are counted here. */
@@ -264,20 +287,44 @@ function loadEdition(date) {
 }
 
 /* --------------------------------------------------------------- subnav */
+/* Under the mast, top to bottom: the News · Photos · Square switch, in
+   words; then for News the dateline, the Local / Everything switch with
+   Unfiltered, and the chips on a row of their own (Stephen, 2026-10-17:
+   "underneath the local and everything"); for Photos the switch and the
+   kinds of picture; for Square the kinds of post. */
 let DL = null;
+function modeRow() {
+  const g = el('div', 'wmodes');
+  g.setAttribute('role', 'group');
+  g.setAttribute('aria-label', 'Read the Wire as');
+  MODES.filter(([k]) => k !== 'square' || W.squareOk).forEach(([key, label]) => {
+    const on = W.mode === key && W.view === 'paper';
+    const b = el('button', 'wmode' + (on ? ' on' : ''), esc(label));
+    b.type = 'button';
+    b.dataset.view = key;
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.addEventListener('click', () => { if (!on) setMode(key); });
+    g.appendChild(b);
+  });
+  return g;
+}
+/* a chip's colour mark: a dot in the source's colour */
+const DOT = '<i class="sdot" aria-hidden="true"></i>';
 function subnav() {
   if (W.view === 'paper' && W.mode === 'photos') return photoSubnav();
+  if (W.view === 'paper' && W.mode === 'square') return squareSubnav();
   if (!W.today && !W.failed) return null;
   loadMutes();
   const frag = document.createDocumentFragment();
   if (W.view === 'raw') return rawSubnav(frag);
+  frag.appendChild(modeRow());
   const dl = el('div', 'dateline');
   const prev = el('button', 'iconbtn nav', ICON.left); prev.setAttribute('aria-label', 'Earlier day');
   const next = el('button', 'iconbtn nav', ICON.right); next.setAttribute('aria-label', 'Later day');
   const label = el('span', 'dl', '<b></b><span class="s"></span>');
   prev.addEventListener('click', () => { const d = olderThan(W.reading || todayKey()); if (d) goDay(d); });
   next.addEventListener('click', () => { const d = newerThan(W.reading || todayKey()); if (d) goDay(d); });
-  dl.append(prev, label, next, photos.viewSwitch(false, () => setMode(true)));
+  dl.append(prev, label, next);
   frag.appendChild(dl);
   DL = { prev, next, label };
   paintDateline(W.reading || W.start || todayKey());
@@ -286,54 +333,124 @@ function subnav() {
   const counts = d ? countsOf(d) : {};
   if (chipHidden(d, W.ch)) W.ch = 'all';
   const items = KINDS.filter(([k]) => !chipHidden(d, k))
-    .map(([key, lab]) => ({ key, label: lab, n: key === 'all' ? null : (counts[key] || 0) }))
-    .concat([{ key: '__raw', label: 'Unfiltered ↗', cls: 'every' }]);
+    .map(([key, lab]) => ({ key, label: lab, n: key === 'all' ? null : key === 'instagram' ? igCount() : (counts[key] || 0),
+      cls: SRC_CH.has(key) ? 'w-src-' + key : '', icon: SRC_CH.has(key) ? DOT : '' }));
   const band = el('div', 'toolband');
   band.appendChild(localSwitch(() => { W.open.clear(); app.paintSubnav(); render(); app.scrollTop(); }));
-  band.appendChild(chips(items, W.ch, (k) => {
-    if (k === '__raw') { openRaw(); return; }
+  const raw = button('Unfiltered ' + ICON.arrow, 'ghost sm w-raw', openRaw);
+  raw.dataset.chip = '__raw';
+  band.appendChild(raw);
+  const row = el('div', 'toolband w-chips');
+  row.appendChild(chips(items, W.ch, (k) => {
     W.ch = k;
     history.replaceState(null, '', location.search + '#wire' + (k === 'all' ? '' : '/' + k));
     app.paintSubnav(); render(); app.scrollTop();
   }));
-  frag.appendChild(band);
+  frag.append(band, row);
   return frag;
 }
 
 /* ----------------------------------------------------------- Photo mode */
-/* The dateline row says "Photos" and how many, with the switch where the
-   list has it; the band keeps the Local / Everything switch and puts "Add a
-   photo" where the kind chips were. */
+/* The switch, then the Local / Everything switch with the count, then the
+   kinds of picture. */
 let PDL = null;
 function photoSubnav() {
   loadMutes();
   const frag = document.createDocumentFragment();
-  const dl = el('div', 'dateline every pm-dl');
-  const label = el('span', 'dl', '<b>Photos</b><span class="s"></span>');
-  dl.append(label, photos.viewSwitch(true, () => setMode(false)));
-  frag.appendChild(dl);
-  PDL = label.lastChild;
-  paintPhotoCount();
+  frag.appendChild(modeRow());
   const band = el('div', 'toolband');
-  band.append(localSwitch(() => { app.paintSubnav(); render(); app.scrollTop(); }), photos.addBtn('photo', 'sm'));
+  band.appendChild(localSwitch(() => { app.paintSubnav(); render(); app.scrollTop(); }));
+  const n = el('span', 'dl pm-n', '<span class="s"></span>');
+  band.appendChild(n);
+  PDL = n.firstChild;
+  paintPhotoCount();
   frag.appendChild(band);
+  if (photos.loaded()) {
+    const row = el('div', 'toolband w-chips');
+    row.appendChild(chips(photos.catChips().map((c) => ({ ...c, cls: c.key === 'instagram' ? 'w-src-instagram' : c.key === 'pets' ? 'w-pets' : '', icon: c.key === 'instagram' ? DOT : '' })),
+      photos.cat(), (k) => { pickCat(k); }));
+    frag.appendChild(row);
+  }
   return frag;
+}
+function pickCat(k) {
+  photos.setCat(k);
+  W.photoOpen = null;
+  app.paintSubnav(); render(); app.scrollTop();
 }
 function paintPhotoCount() {
   const n = photos.count();
   if (PDL) PDL.textContent = n == null ? '' : plural(n, 'photo', 'photos');
 }
 
+/* ------------------------------------------------------------- Square */
+function squareSubnav() {
+  const frag = document.createDocumentFragment();
+  frag.appendChild(modeRow());
+  if (square.loaded()) {
+    const row = el('div', 'toolband w-chips');
+    row.appendChild(chips(square.typeChips().map((c) => ({ ...c, icon: c.cls ? DOT : '' })), square.type(), (k) => {
+      square.setType(k); app.paintSubnav(); render(); app.scrollTop();
+    }));
+    frag.appendChild(row);
+  }
+  return frag;
+}
+let squareSeq = 0;
+function renderSquare(opts = {}) {
+  const root = W.root;
+  const seq = ++squareSeq;
+  const draw = () => {
+    if (seq !== squareSeq || W.mode !== 'square' || W.view !== 'paper') return;
+    square.render(root, { limit: opts.limit });
+    if (app.activeTab() === 'wire') app.paintSubnav();
+    landSquare();
+  };
+  if (square.loaded()) { draw(); return; }
+  root.innerHTML = '<p class="loading">Loading the Square…</p>';
+  square.ensure().then(draw);
+}
+function landSquare() {
+  const k = W.squareOpen;
+  if (!k) return;
+  W.squareOpen = null;
+  if (!app.flashHit(W.root, k)) app.toast('That post has moved on.');
+}
+square.init({
+  now: () => SRC.now(),
+  ago,
+  today: () => (W.today ? dayOf(W.today).cards : []),
+  pulse: () => W.pulse,
+  needPulse: () => pulseForPhotos(),
+  showing: () => W.mode === 'square' && W.view === 'paper' && panelOn(),
+  panel: () => W.panel,
+  redraw: () => redraw(),
+});
+/* Is the Square live? Asked once a visit; until it is, the switch has two
+   words and a kept Square opens on News. */
+let squareAsk = null;
+function squareReady() {
+  if (!squareAsk) {
+    squareAsk = app.demo ? Promise.resolve(true) : boards.roundFour().then((v) => v === true, () => false);
+    squareAsk.then((ok) => {
+      W.squareOk = ok;
+      if (!ok && W.mode === 'square') { W.mode = 'news'; if (W.root) render(); }
+      if (app.activeTab() === 'wire') app.paintSubnav();
+    });
+  }
+  return squareAsk;
+}
+
 /* The switch: the choice is kept on the phone, and the address says which
    view this is, so it can be shared. Focus stays on the switch. */
-function setMode(on) {
-  W.mode = on ? 'photos' : 'list';
-  photos.remember(on);
+function setMode(mode) {
+  W.mode = mode === 'photos' || mode === 'square' ? mode : 'news';
+  photos.remember(W.mode);
   W.view = 'paper';
   W.photoOpen = null;
-  history.replaceState(null, '', location.search + '#wire' + (on ? '/photos' : W.start ? '/' + W.start : W.ch !== 'all' ? '/' + W.ch : ''));
+  history.replaceState(null, '', location.search + '#wire' + (W.mode !== 'news' ? '/' + W.mode : W.start ? '/' + W.start : W.ch !== 'all' ? '/' + W.ch : ''));
   app.paintSubnav(); render(); app.scrollTop();
-  const b = document.querySelector('#subnav .viewsw-b[data-view="' + (on ? 'photos' : 'list') + '"]');
+  const b = document.querySelector('#subnav .wmode[data-view="' + W.mode + '"]');
   if (b) b.focus({ preventScroll: true });
 }
 
@@ -366,7 +483,9 @@ function renderPhotos(opts = {}) {
   loadMutes();
   const draw = () => {
     if (seq !== photoSeq || W.mode !== 'photos' || W.view !== 'paper') return;
+    const first = !root.querySelector('.pm-head');
     photos.render(root, { limit: opts.limit, until: W.photoOpen || opts.until });
+    if (first && app.activeTab() === 'wire') app.paintSubnav();
     paintPhotoCount();
     landPhoto();
   };
@@ -390,12 +509,15 @@ photos.init({
   today: () => (W.today ? dayOf(W.today).cards : []),
   pulse: () => W.pulse,
   visible: (v) => !(v.sid && MUTE[v.sid]) && (geo() === 'everything' || v.local || !!(v.sid && follows[v.sid])),
-  green: () => geo() === 'everything',
+  green: () => true,
   hydrate: (host, keys) => hydrateVotes(host, keys),
   panel: () => W.panel,
   showing: () => W.mode === 'photos' && W.view === 'paper' && panelOn(),
   redraw: () => redraw(),
   onMute: (sid, it) => muteSource(sid, it),
+  squareOk: () => !!W.squareOk,
+  squareReady: () => squareReady(),
+  pickCat: (k) => pickCat(k),
 });
 
 /* The dateline names one day: today, or the edition you opened, or the
@@ -433,6 +555,7 @@ function goDay(date) {
   const tk = todayKey();
   W.start = !date || date >= tk ? null : date;
   W.flip = null;
+  W.slot = null;
   W.reading = W.start || tk;
   W.open.clear();
   W.view = 'paper';
@@ -454,6 +577,8 @@ function render(opts = {}) {
   stopRun();
   if (W.view === 'raw') { renderRaw(); return; }
   if (W.mode === 'photos') { renderPhotos(opts); return; }
+  if (W.mode === 'square') { renderSquare(opts); return; }
+  if (W.ch === 'instagram') { renderInstagram(opts); return; }
   if (W.failed && !W.today) {
     root.innerHTML = '<div class="errbox"><b>Couldn’t reach the wire.</b><br>The paper is served from GitHub. If you are offline it will come back on its own.</div>';
     return;
@@ -461,10 +586,16 @@ function render(opts = {}) {
   if (!W.today) { root.innerHTML = '<p class="loading">Loading the wire…</p>'; return; }
   loadMutes();
   root.innerHTML = '';
-  const feed = el('div', 'feed');
+  const feed = el('div', 'feed wire' + (THUMBS_LEFT ? ' thumbs-left' : ''));
   root.appendChild(feed);
 
   const tk = todayKey();
+  /* what the reader is shown as the top of today's paper: the bookmark
+     saved on leaving is this, never a payload that landed unseen since */
+  if (!W.start && W.today && W.today.date === tk && W.view === 'paper') {
+    const top = dayOf(W.today).all[0];
+    if (top) W.seenTop = { date: tk, k: top.k };
+  }
   const date = W.start || tk;
   const p = payloadFor(date);
   const d = p ? dayOf(p) : null;
@@ -481,7 +612,7 @@ function render(opts = {}) {
   const run = {
     feed, exclude, first: date, lastDate: null, queue: [], shown: 0,
     limit: Math.max(FIRST - above, opts.limit || 0), until: opts.until && !exclude.has(opts.until) ? opts.until : null,
-    done: false, loading: false, breaks: [], keys: [],
+    done: false, loading: false, breaks: [], keys: [], alt: 0,
     sentinel: el('div', 'loading'),
   };
   run.sentinel.setAttribute('aria-hidden', 'true');
@@ -515,6 +646,94 @@ function renderMatters(host, d, isToday) {
   return mattersKeys(d);
 }
 
+/* ---------------------------------------------- three rankings a day */
+/* What matters is ranked again about 6 am, noon and 6 pm (Stephen,
+   2026-10-17: "making that more apparent ... from earlier in that day").
+   The block on top carries Morning · Midday · Evening: the current ranking
+   is chosen; an earlier one shows the list as it stood then. A slot is the
+   latest ranking in its part of the day, Burlington time. The payload keeps
+   the current ranking (`picks`) and, for each story a later ranking dropped,
+   its last rank and that ranking's time (`picks_earlier`). The stories an
+   earlier ranking shared with the current one are not stored with their
+   rank then, so they fill that ranking's other places in today's order,
+   when they were posted before it. */
+const SLOTS = [['morning', 'Morning'], ['midday', 'Midday'], ['evening', 'Evening']];
+const slotOf = (iso) => { const ms = Date.parse(iso || ''); if (!ms) return null; const h = etHour(ms); return h < 11 ? 'morning' : h < 17 ? 'midday' : 'evening'; };
+function rankings(d) {
+  const cur = d.picks.map((x) => x.at).filter(Boolean).sort().pop() || String(d.payload.updated || '');
+  const slots = Object.create(null);
+  d.earlier.forEach((x) => { const sl = slotOf(x.at); if (sl && (!slots[sl] || slots[sl].at < x.at)) slots[sl] = { at: x.at }; });
+  const now = d.picks.length ? slotOf(cur) : null;
+  if (now) slots[now] = { at: cur, current: true };
+  return { slots, now };
+}
+function asItStood(d, at) {
+  const t = Date.parse(at) / 1000;
+  const dropped = d.earlier.filter((x) => x.at === at).sort((a, b) => (a.rank || 99) - (b.rank || 99));
+  const carried = d.picks.filter((x) => x.c.d && x.c.d <= t);
+  const out = [];
+  let r = 1, di = 0, ci = 0;
+  while (di < dropped.length || ci < carried.length) {
+    if (di < dropped.length && ((dropped[di].rank || 99) <= r || ci >= carried.length)) { out.push({ ...dropped[di], n: dropped[di].rank || r }); di++; }
+    else { out.push({ ...carried[ci], n: r }); ci++; }
+    r++;
+  }
+  const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
+  return out.filter(keep);
+}
+/* Morning · Midday · Evening, on the block's head */
+function slotRow(d, isToday) {
+  const { slots, now } = rankings(d);
+  if (!now && !Object.keys(slots).length) return null;
+  const want = W.slot && slots[W.slot] ? W.slot : now;
+  const g = el('div', 'wm-slots');
+  g.setAttribute('role', 'group');
+  g.setAttribute('aria-label', isToday ? 'Today’s rankings' : 'That day’s rankings');
+  SLOTS.forEach(([key, label]) => {
+    const has = !!slots[key];
+    const b = el('button', 'wm-slot' + (key === want ? ' on' : ''), esc(label) + (has ? '<span class="t">' + esc(clock(Date.parse(slots[key].at))) + '</span>' : ''));
+    b.type = 'button';
+    b.dataset.slot = key;
+    b.disabled = !has;
+    b.setAttribute('aria-pressed', key === want ? 'true' : 'false');
+    b.addEventListener('click', () => { if (has && key !== want) reslot(key === now ? null : key); });
+    g.appendChild(b);
+  });
+  return { row: g, slots, now, want };
+}
+function reslot(slot) {
+  W.slot = slot;
+  const old = W.root && W.root.querySelector('.wm.wm-top');
+  const tp = payloadFor(todayKey());
+  if (!old || !tp) return;
+  const today = dayOf(tp);
+  const past = W.flip && payloadFor(W.flip);
+  const node = flipBlock(past ? dayOf(past) : today, today);
+  old.replaceWith(node);
+  hydrateVotes(node, [...node.querySelectorAll('[data-k]')].map((n) => n.dataset.k));
+  const b = node.querySelector('.wm-slot.on');
+  if (b) b.focus({ preventScroll: true });
+}
+/* an earlier ranking, as it stood: its rows, five open, the rest on request */
+function stoodBlock(wm, d, at) {
+  const list = asItStood(d, at);
+  wm.appendChild(el('p', 'wm-was wm-stood', esc('As it stood at ' + clock(Date.parse(at)))));
+  if (!list.length) { wm.appendChild(el('p', 'wm-end', esc('No ' + (geo() === 'local' ? 'local ' : '') + 'picks then.'))); return; }
+  list.slice(0, PICKS_OPEN).forEach((x) => wm.appendChild(wmRow(x.c, x.why, x.n)));
+  const rest = list.slice(PICKS_OPEN);
+  if (!rest.length) return;
+  const more = button(esc(plural(rest.length, 'more pick', 'more picks')), 'ghost more', () => {
+    const f = document.createDocumentFragment();
+    rest.forEach((x) => f.appendChild(wmRow(x.c, x.why, x.n)));
+    const rows = [...f.querySelectorAll('[data-k]')];
+    more.replaceWith(f);
+    const a = rows[0] && rows[0].querySelector('a');
+    if (a) a.focus({ preventScroll: true });
+    hydrateVotes(wm, rows.map((r) => r.dataset.k));
+  });
+  wm.appendChild(more);
+}
+
 /* The block itself. `nav`, on today's block only, goes on its head: the
    ‹ › that flip it through earlier days. A flipped day with nothing to show
    in this view still draws its head, so the arrows stay where they were. */
@@ -523,6 +742,11 @@ function mattersBlock(d, isToday, nav) {
   if (!list.length && !earlier.length && !nav) return null;
   const wm = el('div', 'wm');
   section(wm, isToday ? 'What matters today' : 'What mattered ' + weekday(d.date), nav && !isToday ? esc(dayName(d.date).split(', ')[1] || '') : '', nav || null);
+  const sl = nav ? slotRow(d, isToday) : null;
+  if (sl) {
+    wm.appendChild(sl.row);
+    if (sl.want && sl.want !== sl.now) { stoodBlock(wm, d, sl.slots[sl.want].at); return wm; }
+  }
   if (!list.length && !earlier.length) {
     wm.appendChild(el('p', 'wm-end', esc('No ' + (geo() === 'local' ? 'local ' : '') + 'picks ' + (isToday ? 'yet today.' : 'that day.'))));
     return wm;
@@ -624,6 +848,7 @@ function flipTo(date, again) {
     const today = dayOf(tp);
     const past = to && payloadFor(to);
     W.flip = past ? to : null;
+    W.slot = null;
     const node = flipBlock(past ? dayOf(past) : today, today);
     node.classList.add('flip-in');   /* a short fade; none under reduced motion */
     old.replaceWith(node);
@@ -661,12 +886,24 @@ function wmRow(it, why, n, was) {
 
 /* One item in the river. A plain headline is the tight row; posts, videos
    and an update's lead get the bigger cards. */
-function draw(c, leadWhy) {
+function draw(c, leadWhy, every) {
   const o = { greenLocal: greenOf(c), noComments: !c.comments };
-  if (c.kind === 'video') return cards.video(c, o);
-  if (c.kind === 'post') return cards.post(c, o);
-  if (leadWhy) return cards.pick({ ...c, media: c.thumb, thumb: '', why: leadWhy, eyebrow: 'The lead' }, o);
-  return cards.row(c, o);
+  let n;
+  if (c.kind === 'video') n = cards.video(c, o);
+  else if (c.kind === 'post') n = cards.post(c, o);
+  else if (leadWhy) n = cards.pick({ ...c, media: c.thumb, thumb: '', why: leadWhy, eyebrow: 'The lead' }, o);
+  else n = cards.row(c, o);
+  return mark3(n, c, every);
+}
+/* The Wire's colour on a card: its source's mark (X, Facebook, Reddit,
+   Instagram, a newsletter) as a left accent, and the green local tint on
+   Everything, where local and national share the list (Stephen,
+   2026-10-17: "in my old All Day feed, something local was usually green"). */
+function mark3(n, c, every = geo() === 'everything') {
+  if (!n) return n;
+  if (SRC_CH.has(c.ch)) n.classList.add('w-src-' + c.ch);
+  if (c.local && every) n.classList.add('w-local');
+  return n;
 }
 
 /* The entries one day adds to the river: its head (unless it is the day the
@@ -705,9 +942,15 @@ function entriesFor(run, date, p) {
       items.push(e);
     });
   });
-  /* new since you were here: under the last unseen item, when there are
-     seen ones below it */
-  if (date === tk && isFirst) {
+  /* You left off here: the bookmark above the story that was at the top of
+     today's paper when the reader last left it (his girlfriend, 2026-10-17:
+     "another type of bookmark to show where you were last time"). Every
+     story above it came in since. Without one for today, the older line:
+     how many are new since the last visit, under the last of them. */
+  const left = date === tk && isFirst ? leftFor(d, items) : null;
+  if (left) {
+    out.splice(out.indexOf(left.before), 0, { left: left.at });
+  } else if (date === tk && isFirst) {
     const base = SRC.base();
     const fresh = base ? items.filter((e) => e.c.d > base) : [];
     const last = fresh.length ? items.indexOf(fresh[fresh.length - 1]) : -1;
@@ -724,12 +967,115 @@ function entriesFor(run, date, p) {
   return out;
 }
 
+/* ---------------------------------------------------- the Instagram chip */
+/* The local accounts' posts as a list, newest first, under the same
+   switches: a headline row each, its picture as the thumbnail, the caption's
+   first line as the title. The end offers the same posts as photos. */
+function loadIg() {
+  if (!W.igP) {
+    W.igP = photos.instagram().then((posts) => {
+      W.ig = Array.isArray(posts) ? posts : [];
+      if (app.activeTab() === 'wire' && W.mode === 'news' && W.view === 'paper') {
+        app.paintSubnav();
+        if (W.ch === 'instagram') render();
+      }
+    }, () => { W.ig = []; });
+  }
+  return W.igP;
+}
+function igRows() {
+  return photos.igList(W.ig).filter((v) => !MUTE[v.sid]);
+}
+function igCount() { return W.ig ? igRows().length : null; }
+let igRun = null;
+function renderInstagram(opts = {}) {
+  const root = W.root;
+  loadMutes();
+  if (!W.ig) { root.innerHTML = '<p class="loading">Loading Instagram…</p>'; loadIg(); return; }
+  root.innerHTML = '';
+  const feed = el('div', 'feed wire' + (THUMBS_LEFT ? ' thumbs-left' : ''));
+  root.appendChild(feed);
+  const list = igRows();
+  if (!list.length) { feed.appendChild(el('p', 'empty', 'No Instagram posts today.')); return; }
+  const run = { i: 0, dead: false, sentinel: el('div', 'loading') };
+  if (igRun) igRun.dead = true;
+  igRun = run;
+  feed.appendChild(run.sentinel);
+  const step = (n) => {
+    if (run.dead || igRun !== run) return;
+    const added = [];
+    while (run.i < list.length && n-- > 0) {
+      const v = list[run.i++];
+      const node = cards.row({ ...v.it, title: v.cap, thumb: v.media, ago: v.it.ago }, { greenLocal: true, noComments: true });
+      if (!node) continue;
+      node.classList.add('w-src-instagram');
+      if (run.i % 2 === 0) node.classList.add('w-alt');
+      feed.insertBefore(node, run.sentinel);
+      added.push(v.k);
+    }
+    W.igShown = run.i;
+    if (added.length) hydrateVotes(feed, added);
+    if (run.i >= list.length) {
+      run.sentinel.remove();
+      feed.appendChild(cards.caught({ title: 'That’s Instagram today', check: false,
+        buttons: [button('See them as photos', '', () => { photos.setCat('instagram'); setMode('photos'); })] }));
+      return;
+    }
+    requestAnimationFrame(() => { if (!run.dead && near(run)) step(CHUNK); });
+  };
+  step(Math.max(FIRST, opts.limit || 0));
+  if ('IntersectionObserver' in window && W.panel) {
+    observer = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting) && !run.dead) step(CHUNK); },
+      { root: W.panel, rootMargin: '0px 0px ' + AHEAD + 'px 0px' });
+    observer.observe(run.sentinel);
+  }
+  app.bindFeed(feed, { onSource: () => {}, onMute: muteSource });
+}
+
+/* ------------------------------------------------------- left off here */
+/* Kept on the phone (`allday-wire-left`, { date, k, at }): the story at the
+   top of today's paper, every source, as it was last drawn for the reader
+   (W.seenTop; a payload that lands while they are elsewhere does not move
+   it), saved when they leave the tab or the page. The demo keeps it for
+   the visit only. */
+const LEFT_KEY = 'allday-wire-left';
+let leftMem = null;
+function readLeft() {
+  if (app.demo) return leftMem;
+  try { const v = JSON.parse(localStorage.getItem(LEFT_KEY) || 'null'); return v && isDate(v.date) && v.k ? v : null; } catch (e) { return null; }
+}
+function saveLeft() {
+  const top = W.seenTop;
+  if (!top || top.date !== todayKey()) return;
+  const v = { date: top.date, k: top.k, at: Math.floor(SRC.now() / 1000) };
+  if (app.demo) { leftMem = v; return; }
+  try { localStorage.setItem(LEFT_KEY, JSON.stringify(v)); } catch (e) { /* private mode: no bookmark */ }
+}
+/* where the bookmark goes in today's drawn list: before the first drawn
+   story at or below the one that was on top, when something new is above it */
+function leftFor(d, items) {
+  const v = W.left;
+  if (!v || v.date !== d.date || !items.length) return null;
+  const idx = d.all.findIndex((c) => c.k === v.k);
+  if (idx <= 0) return null;
+  const pos = new Map(d.all.map((c, i) => [c.k, i]));
+  const i = items.findIndex((e) => (pos.has(e.c.k) ? pos.get(e.c.k) : -1) >= idx);
+  if (i <= 0) return null;
+  return { before: items[i], at: v.at };
+}
+const leftMark = (at) => {
+  const n = cards.newline('You left off here' + (at ? ' · ' + clock(at * 1000) : ''));
+  n.classList.add('w-left');
+  return n;
+};
+
 /* Draw until the limit (or until a shared key is on the page), fetching the
    next edition when today runs out. Called again as the reader nears the
    bottom. */
 function fill(run) {
   if (W.run !== run || run.done) return;
   const added = [];
+  const every = geo() === 'everything';
   while (run.shown < run.limit || run.until) {
     if (!run.queue.length) {
       const date = run.lastDate == null ? run.first : olderThan(run.lastDate);
@@ -764,6 +1110,7 @@ function fill(run) {
       const h = el('div');
       divider(h, e.divider, e.sub);
       node = h.firstChild;
+      run.alt = 0;
     } else if (e.pin) {
       node = briefPin(e.pin);
       if (node) { run.shown++; added.push(e.pin.brief.k); }
@@ -777,10 +1124,14 @@ function fill(run) {
     } else if (e.newline) node = cards.newline(e.newline);
     else if (e.note) node = el('p', 'note pad', esc(e.note));
     else if (e.c) {
-      node = draw(e.c, e.why);
-      if (node) { run.shown++; added.push(e.c.k); }
+      node = draw(e.c, e.why, every);
+      if (node) {
+        run.shown++; added.push(e.c.k);
+        /* a faint tint on every other row, so a long list is easier on the eyes */
+        if (node.classList.contains('row') && (run.alt++ % 2)) node.classList.add('w-alt');
+      }
       if (run.until && e.c.k === run.until) run.until = null;
-    }
+    } else if (e.left) node = leftMark(e.left);
     if (node) run.feed.insertBefore(node, run.sentinel);
   }
   if (!run.loading && !run.done) run.sentinel.textContent = '';
@@ -825,6 +1176,8 @@ function watch(run) {
 }
 function stopRun() {
   photos.stop();
+  square.stop();
+  if (igRun) { igRun.dead = true; igRun = null; }
   if (observer) { observer.disconnect(); observer = null; }
   if (W.raw.run) W.raw.run.dead = true;
   W.run = null;
@@ -1125,21 +1478,42 @@ const isPhotoParam = (p) => p === 'photos' || p.startsWith('photos/') || PHOTO_K
 function landPhotos(p) {
   const k = p === 'photos' ? '' : p.startsWith('photos/') ? p.slice(7) : p;
   W.view = 'paper';
-  if (W.mode !== 'photos') { W.mode = 'photos'; photos.remember(true); }
+  W.wantSquare = false;
+  if (W.mode !== 'photos') { W.mode = 'photos'; photos.remember('photos'); }
+  /* a shared picture is found under All */
+  if (k) photos.setCat('all');
   W.photoOpen = k || null;
   app.paintSubnav(); render();
   if (!k) app.scrollTop();
 }
 
+/* #wire/square, and #wire/square/<key> for a post there */
+function landSquareParam(p) {
+  W.wantSquare = false;
+  squareReady().then((ok) => {
+    if (!ok) { app.toast('The Square isn’t open yet. Here’s the news.'); W.mode = 'news'; W.view = 'paper'; app.paintSubnav(); render(); return; }
+    W.view = 'paper';
+    if (W.mode !== 'square') { W.mode = 'square'; photos.remember('square'); }
+    W.squareOpen = p.startsWith('square/') ? p.slice(7) : null;
+    app.paintSubnav(); render();
+    if (!W.squareOpen) app.scrollTop();
+  });
+}
+
 function land() {
   const p = W.pending;
   if (p && isPhotoParam(p)) { W.pending = null; landPhotos(p); return; }
+  if (p && (p === 'square' || p.startsWith('square/'))) { W.pending = null; landSquareParam(p); return; }
   if (!p || (!W.today && !W.failed) || !W.idxDone) return;
   W.pending = null;
+  W.wantSquare = false;
   if (p === 'local' || p === 'everything') { setGeo(p); W.view = 'paper'; app.paintSubnav(); render(); return; }
+  if (p === 'news') { if (W.mode !== 'news') setMode('news'); return; }
   /* anything else is the paper's: a kind, Unfiltered, a day or a story,
      shown as the list for this visit (the kept choice is not changed) */
-  if (W.mode === 'photos') { W.mode = 'list'; W.view = 'paper'; app.paintSubnav(); render(); }
+  if (W.mode !== 'news') { W.mode = 'news'; W.view = 'paper'; app.paintSubnav(); render(); }
+  /* the Video chip went; its old link opens the paper */
+  if (p === 'video') { W.ch = 'all'; W.view = 'paper'; app.paintSubnav(); render(); return; }
   if (KINDS.some(([k]) => k === p)) { W.ch = p; W.view = 'paper'; app.paintSubnav(); render(); return; }
   if (p === 'unfiltered') { openRaw(); return; }
   if (isDate(p)) {
@@ -1212,6 +1586,16 @@ function applyQueued() {
 function mount(root) {
   W.root = root;
   W.panel = root.closest('.panel');
+  W.left = readLeft();
+  /* a kept Square waits for the board's answer; News until then */
+  if (W.mode === 'square' && !W.squareOk) { W.mode = 'news'; W.wantSquare = true; }
+  squareReady().then((ok) => {
+    if (ok && W.wantSquare && W.mode === 'news' && W.view === 'paper' && !W.pending) { W.mode = 'square'; render(); if (app.activeTab() === 'wire') app.paintSubnav(); }
+    W.wantSquare = false;
+  });
+  loadIg();
+  window.addEventListener('pagehide', saveLeft);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && app.activeTab() === 'wire') saveLeft(); });
   render();
   if (W.panel) W.panel.addEventListener('scroll', track, { passive: true });
   if (!app.demo) {
@@ -1244,7 +1628,7 @@ function mount(root) {
 /* a mute, a follow or the switch: redraw as far down as the reader was */
 function redraw() {
   const y = W.panel ? W.panel.scrollTop : 0;
-  const shown = W.view === 'paper' && W.mode === 'photos' ? photos.drawn() : W.run ? W.run.shown : 0;
+  const shown = W.view !== 'paper' ? 0 : W.mode === 'photos' ? photos.drawn() : W.mode === 'square' ? square.drawn() : W.ch === 'instagram' ? W.igShown || 0 : W.run ? W.run.shown : 0;
   if (W.view === 'raw' && W.raw.run) W.raw.keep = W.raw.run.i;
   app.paintSubnav();
   render({ limit: shown });
@@ -1265,12 +1649,12 @@ app.register('wire', {
   mount,
   activate(param) { if (param) { W.pending = param; land(); } },
   refresh: redraw,
-  deactivate() { app.closePeek(); },
+  deactivate() { app.closePeek(); if (W.mode === 'news' && W.view === 'paper') { saveLeft(); W.left = readLeft() || W.left; } },
   subnav,
   newSince,
   pull() {
     if (applyQueued()) return 'Fresh stories are in';
-    if (W.view !== 'paper' || W.start || W.mode === 'photos') return null;
+    if (W.view !== 'paper' || W.start || W.mode !== 'news' || W.ch === 'instagram') return null;
     return SRC.check();
   },
 });
