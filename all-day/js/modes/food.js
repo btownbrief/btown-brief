@@ -208,6 +208,9 @@ function takeMenus(j) {
 
 function takeRoster(j) {
   S.foodSet = new Set((j && Array.isArray(j.food) ? j.food : []).map((h) => String(h).replace(/^@/, '').toLowerCase()));
+  (Array.isArray(j && j.accounts) ? j.accounts : []).forEach((a) => {
+    if (a && (a.category === 'food' || a.food === true)) S.foodSet.add(handle(a.h));
+  });
 }
 
 /* The directory: restaurant id to the place's own handle, and the accounts

@@ -168,6 +168,15 @@ function loadCats() {
     if (app.demo) handles(tags.food).forEach((h) => food.add(h));
     P.igCat = { food, vibe: handles(tags.vibe), pets: handles(tags.pets), posters: handles(tags.posters),
       notFood: new Set(Object.keys((d && d.not_food) || {}).map((h) => h.toLowerCase())) };
+    // The tiered roster supplies primary categories; editorial tags above
+    // may give one account several roles, and old payloads still work.
+    (Array.isArray(r && r.accounts) ? r.accounts : []).forEach((a) => {
+      const h = a && String(a.h || '').trim().replace(/^@/, '').toLowerCase();
+      if (!h) return;
+      const key = { venue: 'vibe', events: 'posters', pets: 'pets', food: 'food' }[a.category];
+      if (key) P.igCat[key].add(h);
+      if (a.food === true) P.igCat.food.add(h);
+    });
   });
 }
 
@@ -331,10 +340,10 @@ export function igCats(p) {
   const h = String(p.h || '').replace(/^@/, '').toLowerCase();
   const C = P.igCat;
   const out = new Set(['instagram']);
-  if (p.s === 'do' || (C && C.posters.has(h))) out.add('posters');
-  if (C && C.vibe.has(h)) out.add('vibe');
-  if (C && C.pets.has(h)) out.add('pets');
-  if ((p.f || (C && C.food.has(h))) && !(C && C.notFood.has(h))) out.add('food');
+  if (p.category === 'events' || (!p.category && p.s === 'do') || (C && C.posters.has(h))) out.add('posters');
+  if (p.category === 'venue' || (C && C.vibe.has(h))) out.add('vibe');
+  if (p.category === 'pets' || (C && C.pets.has(h))) out.add('pets');
+  if ((p.category === 'food' || p.f || (C && C.food.has(h))) && !(C && C.notFood.has(h))) out.add('food');
   return out;
 }
 

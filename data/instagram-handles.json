@@ -1,217 +1,2031 @@
 {
- "_comment": "Instagram accounts the Instagram tab reads. HAND-CURATED. The tab has two halves and this file has four arrays. tier1/tier2 are DO — organisers, announcements, the caption is the event. see1/see2 are SEE — the people making content about this place, rendered as a photo wall. A handle's segment is WHICH ARRAY IT IS IN; there is no second map to keep in sync, so you move an account between halves by moving the string. The `1` arrays are fetched every run and the `2` arrays rotate, because each handle costs one Scrape Creators credit per run — that is refresh frequency, not importance, and it is independent of the segment. Drop a handle by deleting it; add one by appending. Nothing else may introduce a handle — the tab shows whoever is in here and nobody else. DO handles were vetted in the newsletter's reference/instagram-sources.md. SEE handles were vetted 2026-08-30 against the live Instagram profile API: every one exists, is public, and had posted within the preceding three weeks when it was added. Recency is a real criterion here — Burlington's meme and campus-confession pages are almost all dead (most last posted in 2021-2022) and a dormant account costs a credit a day to show nothing. A fifth array, `food`, is a TAG, not a roster: it names handles that already sit in one of the four arrays and belong to a kitchen, a bar, a market or someone who writes about eating here. Their posts carry f: 1 and fill the All Day Food tab’s “In their own words” rail. Listing a handle there costs nothing and fetches nothing; a handle that is only in `food` is ignored with a warning.",
- "tagged_block": [],
- "updated": "2026-08-30",
- "tier1": [
-  "sunsetwatchersclub",
-  "playintention",
-  "silentbookclubbtv",
-  "thekwamevibe",
-  "boltersrun",
-  "sb3cvt",
-  "getdownvt",
-  "vtpoc_network",
-  "burlingtonyoungprofessionals",
-  "thesodaplant",
-  "winooskifarmersmarket",
-  "downtownwinooski",
-  "skirackvt",
-  "btvmusicrevival",
-  "theframe.btv",
-  "secretdooropenmic",
-  "golden_hour_social_club",
-  "socialsports_vt",
-  "dadguild",
-  "burlingtonvintagemarket",
-  "burlyaxebeach",
-  "nautipaddle",
-  "joyridersvt",
-  "localmotionvermont",
-  "btvparks",
-  "churchstreetmarketplace",
-  "foambrewers"
- ],
- "tier2": [
-  "wakingwindows",
-  "bigheavyworldvt",
-  "vermontsound",
-  "essexexperience",
-  "essex_parksrec",
-  "sailingcenter",
-  "burlingtonwildways",
-  "greenupvermont",
-  "onecommunitydinner",
-  "maydayvt",
-  "thewisefoolbtv",
-  "thewallflowercollectivebtv",
-  "shelburnefarmersmarket",
-  "vergennesfarmersmarketvt",
-  "patagoniabtv",
-  "vpop802",
-  "musingmuseums",
-  "uvmathletics",
-  "uvmmbb",
-  "catamountsbb",
-  "spotonthedock",
-  "waterworksvt",
-  "queencitycatlounge",
-  "queencitybrewery",
-  "burlingtonbeerco",
-  "burlingtonsurfclub",
-  "greenmountainclub",
-  "hsccvt",
-  "lyrictheatrevt",
-  "vt_symphony",
-  "vtsaunafest",
-  "savu.sauna",
-  "shakesocialclub",
-  "peopleskitchenvt",
-  "nightlifeartsvt",
-  "bar_renee_vt",
-  "frankiesvt",
-  "fhtgburlington",
-  "junktiques_collective",
-  "redwagonplants",
-  "deviltakesaholiday",
-  "haymakerbunsbtv",
-  "augustfirstvt",
-  "twobrotherstavern",
-  "sisters_of_anarchy_ice_cream",
-  "burlington.basketball.league",
-  "northendfoodpantry",
-  "feedingchamplainvalley",
-  "cedobtv",
-  "btvreib",
-  "helloburlington",
-  "thepinery.vt",
-  "sundaysessionsvt",
-  "snowmotionstudios",
-  "btvwinefood",
-  "riotcraftstudio"
- ],
- "see1": [
-  "btv.missed.connections",
-  "rydermanske",
-  "eatvermont",
-  "davidchief_",
-  "kickinitwithkachishow",
-  "stuckinvermont",
-  "left_handed_lens",
-  "burlingtonvtsunsets",
-  "_kate_kush",
-  "gaybar4ever",
-  "privateyez",
-  "moomers.ttt",
-  "itsaribobari",
-  "wej12",
-  "maari99nbrs",
-  "jackthurstonvt",
-  "lukeawtryphotography",
-  "michaelwoodphoto",
-  "vtcreemeepassport",
-  "camelshumpdaily",
-  "therealvermont",
-  "senatorrocket"
- ],
- "see2": [
-  "sippinfoodie",
-  "djcheetatah",
-  "dj.chic_",
-  "deejayjahred",
-  "that_bounce",
-  "fortherecorddjs",
-  "jessemileschainsaw",
-  "djghostvt",
-  "scenicvermontphotography",
-  "summitandspruce",
-  "visionmediavt",
-  "studio2n.photography",
-  "woodandether",
-  "802vermont_photography",
-  "chadwick_vt",
-  "mbinginot",
-  "beautifulscenicburlington",
-  "vermonts_covered_bridges",
-  "flywlkr_",
-  "roost.world",
-  "thetenderbellies",
-  "dannyandtheparts",
-  "abbeybk_music",
-  "katwrightkatwright",
-  "bighomiewes",
-  "fisherwagg",
-  "andrianacee",
-  "vermonthiphop",
-  "wruvfm",
-  "abstractvermont",
-  "bvtartist",
-  "wylie_garcia",
-  "corrine_yonce",
-  "honeybee.heather",
-  "foundbeautystudio",
-  "kimberlyprovostpetportraits",
-  "jessesavageblacksmith",
-  "jillianthewelder",
-  "vontrappflowers",
-  "harmonyedosomwan",
-  "janelindholm",
-  "jennatalia_peachemoji",
-  "noahpatullo",
-  "ghanatoamerica",
-  "theresnoaincreemee",
-  "cctvarchives",
-  "meteorologist_gunnarconsol",
-  "meteorologist_allison_black",
-  "keepvermontwild",
-  "vermont_explored",
-  "vermontonly",
-  "travelikealocalvt",
-  "vermontforreal",
-  "happy_vermont",
-  "rc.s",
-  "krinster",
-  "champlainvalleyanglers",
-  "green.mountain.metal.detecting",
-  "goldshawfarm",
-  "djtrickypat",
-  "vetica_music",
-  "creemeechronicles",
-  "jenrosesmithvt",
-  "802vegan",
-  "bobbypelligrinocomedy",
-  "802arts",
-  "heartrhythmrecords"
- ],
- "food": [
-  "foambrewers",
-  "maydayvt",
-  "waterworksvt",
-  "queencitybrewery",
-  "burlingtonbeerco",
-  "peopleskitchenvt",
-  "bar_renee_vt",
-  "frankiesvt",
-  "haymakerbunsbtv",
-  "augustfirstvt",
-  "twobrotherstavern",
-  "sisters_of_anarchy_ice_cream",
-  "spotonthedock",
-  "btvwinefood",
-  "onecommunitydinner",
-  "winooskifarmersmarket",
-  "shelburnefarmersmarket",
-  "vergennesfarmersmarketvt",
-  "eatvermont",
-  "sippinfoodie",
-  "vtcreemeepassport",
-  "theresnoaincreemee",
-  "creemeechronicles",
-  "802vegan"
- ],
- "photo_categories": {
-  "_comment": "TAGS for the Wire's Photos mode chips, like `food`: each array names handles that already sit in one of the four roster arrays. vibe: bars, cafes, breweries and venues whose posts show the room. pets: pet accounts. posters: accounts whose posts are event posters, on top of every DO (tier1/tier2) account, which the chip already counts. Food uses the `food` tag above plus all-day/data/food-directory.json. Hand-curated for now; build_instagram.py does not read this, so a later Instagram build can fill or replace it without touching the Wire.",
-  "vibe": ["foambrewers", "queencitybrewery", "burlingtonbeerco", "bar_renee_vt", "frankiesvt", "twobrotherstavern", "spotonthedock", "waterworksvt", "deviltakesaholiday", "maydayvt", "augustfirstvt", "queencitycatlounge", "wakingwindows", "thesodaplant", "gaybar4ever"],
-  "pets": ["queencitycatlounge", "hsccvt", "kimberlyprovostpetportraits"],
-  "posters": []
- }
+  "_comment": "Instagram accounts the All Day photo feed reads (the Wire's Photos view, Food's Their food, Vintage's New in). HAND-CURATED: nobody's posts get in unless their handle is here, except the @btownbrief tagged shelf. One object per account. `tier` is how often we pay one Scrape Creators credit to check it: 1 = every run (twice a day), 2 = once a Burlington day, 3 = once a week, rotating, an even slice a day. `category` is what kind of picture it is, for the Photos chips: food, venue (bars, cafes, music venues: the vibe checks), events (posters and the accounts that post them), shop (vintage), pets, scenic (photographers, city and landscape accounts), other. `food: true` puts a non-food account's posts on the Food tab as well (a bar, a brewery). `s: see` marks the creator accounts the retired Instagram tab showed in its SEE half; it is carried on posts for older readers and means nothing else. The monthly credit budget is MONTHLY_CREDIT_BUDGET in scripts/build_instagram.py; `python3 scripts/build_instagram.py --dry-run` prints what a roster costs. Vetting: the original DO handles in the newsletter's reference/instagram-sources.md, SEE handles 2026-08-30 against the live profile API, restaurants (PR #308) and vintage shops (PR #311) as linked from each business's own website, and the 2026-10-17 venue, events, pets and scenic additions the same way. A dormant account still costs its credit, so prune ones that stop posting.",
+  "updated": "2026-10-17",
+  "tagged_block": [],
+  "accounts": [
+    {
+      "h": "btvcityarts",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "btvmusicrevival",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "churchstreetmarketplace",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "downtownwinooski",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "flynncenter",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "getdownvt",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "golden_hour_social_club",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "helloburlington",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "playintention",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "secretdooropenmic",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "sunsetwatchersclub",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "theframe.btv",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "thekwamevibe",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "wakingwindows",
+      "tier": 1,
+      "category": "events"
+    },
+    {
+      "h": "foambrewers",
+      "tier": 1,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "highergroundmusic",
+      "tier": 1,
+      "category": "venue"
+    },
+    {
+      "h": "vtcomedy",
+      "tier": 1,
+      "category": "venue"
+    },
+    {
+      "h": "bfmvermont",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "bigheavyworldvt",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "boltersrun",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "burlingtonyoungprofessionals",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "echo_vt",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "gaybar4ever",
+      "tier": 2,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "hulalakeside",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "localmotionvermont",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "nightlifeartsvt",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "sb3cvt",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "seabavt",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "silentbookclubbtv",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "socialsports_vt",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "sundaysessionsvt",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "thesodaplant",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "uvmathletics",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "vtpoc_network",
+      "tier": 2,
+      "category": "events"
+    },
+    {
+      "h": "eatvermont",
+      "tier": 2,
+      "category": "food",
+      "s": "see"
+    },
+    {
+      "h": "henofthewood",
+      "tier": 2,
+      "category": "food"
+    },
+    {
+      "h": "honeyroadrestaurant",
+      "tier": 2,
+      "category": "food"
+    },
+    {
+      "h": "miserylovescovt",
+      "tier": 2,
+      "category": "food"
+    },
+    {
+      "h": "pizzeriaveritavt",
+      "tier": 2,
+      "category": "food"
+    },
+    {
+      "h": "poppy.cafe",
+      "tier": 2,
+      "category": "food"
+    },
+    {
+      "h": "skinnypancake",
+      "tier": 2,
+      "category": "food"
+    },
+    {
+      "h": "vtcreemeepassport",
+      "tier": 2,
+      "category": "food",
+      "s": "see"
+    },
+    {
+      "h": "waterworksvt",
+      "tier": 2,
+      "category": "food"
+    },
+    {
+      "h": "winooskifarmersmarket",
+      "tier": 2,
+      "category": "food"
+    },
+    {
+      "h": "_kate_kush",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "btv.missed.connections",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "davidchief_",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "itsaribobari",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "jackthurstonvt",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "kickinitwithkachishow",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "maari99nbrs",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "moomers.ttt",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "privateyez",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "rydermanske",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "senatorrocket",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "stuckinvermont",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "wej12",
+      "tier": 2,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "hsccvt",
+      "tier": 2,
+      "category": "pets"
+    },
+    {
+      "h": "passion4pawsvt",
+      "tier": 2,
+      "category": "pets"
+    },
+    {
+      "h": "petfoodwarehousevt",
+      "tier": 2,
+      "category": "pets"
+    },
+    {
+      "h": "queencitycatlounge",
+      "tier": 2,
+      "category": "pets"
+    },
+    {
+      "h": "btvparks",
+      "tier": 2,
+      "category": "scenic"
+    },
+    {
+      "h": "burlingtonvtsunsets",
+      "tier": 2,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "camelshumpdaily",
+      "tier": 2,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "left_handed_lens",
+      "tier": 2,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "lukeawtryphotography",
+      "tier": 2,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "michaelwoodphoto",
+      "tier": 2,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "shelburnefarms",
+      "tier": 2,
+      "category": "scenic"
+    },
+    {
+      "h": "therealvermont",
+      "tier": 2,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "winooskivt",
+      "tier": 2,
+      "category": "scenic"
+    },
+    {
+      "h": "burlingtonvintagemarket",
+      "tier": 2,
+      "category": "shop"
+    },
+    {
+      "h": "bar_renee_vt",
+      "tier": 2,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "burlingtonbeerco",
+      "tier": 2,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "burlyaxebeach",
+      "tier": 2,
+      "category": "venue"
+    },
+    {
+      "h": "citizencider",
+      "tier": 2,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "deviltakesaholiday",
+      "tier": 2,
+      "category": "venue"
+    },
+    {
+      "h": "maydayvt",
+      "tier": 2,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "monkeyhouse_vt",
+      "tier": 2,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "spotonthedock",
+      "tier": 2,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "thedoubleevt",
+      "tier": 2,
+      "category": "venue"
+    },
+    {
+      "h": "zerogravitybeer",
+      "tier": 2,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "802arts",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "abstractvermont",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "btvreib",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "btvwinefood",
+      "tier": 3,
+      "category": "events",
+      "food": true
+    },
+    {
+      "h": "burlington.basketball.league",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "cedobtv",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "champlainvalleyexpo",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "dadguild",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "deejayjahred",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "dj.chic_",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "djcheetatah",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "djghostvt",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "djtrickypat",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "essex_parksrec",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "essexexperience",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "flemingmuseumofart",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "fortherecorddjs",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "generatorvt",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "grandpointnorth",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "greenupvermont",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "joyridersvt",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "lyrictheatrevt",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "musingmuseums",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "onecommunitydinner",
+      "tier": 3,
+      "category": "events",
+      "food": true
+    },
+    {
+      "h": "pridecentervt",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "shakesocialclub",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "shelburnemuseum",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "spacegalleryvt",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "that_bounce",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "thewallflowercollectivebtv",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "uvmlaneseries",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "uvmmbb",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "vermontfilm",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "vermontgreenfc",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "vermontlakemonsters",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "vermontsound",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "vermontstageofficial",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "vpop802",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "vt_symphony",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "vtsaunafest",
+      "tier": 3,
+      "category": "events"
+    },
+    {
+      "h": "wruvfm",
+      "tier": 3,
+      "category": "events",
+      "s": "see"
+    },
+    {
+      "h": "802vegan",
+      "tier": 3,
+      "category": "food",
+      "s": "see"
+    },
+    {
+      "h": "ahlibabaskabobshop",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "alsfrenchfrys",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "atasteofabyssinia",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "augustfirstvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "barkeatersvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "barnyardvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "bellevillevt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "besserysbutchershoppe",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "bistro_de_margot",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "bluebirdbbq",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "bourbonstreetbtv",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "boxcarbakeryvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "burlsdowntown",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "butter_bar_and_kitchen",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "cafemamajuanavt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "citymarketcoop",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "coldhollowcidermillvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "creemeechronicles",
+      "tier": 3,
+      "category": "food",
+      "s": "see"
+    },
+    {
+      "h": "deepcityvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "delightrestaurentandbar",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "donwoorivt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "ebstrongs_primesteakhouse",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "electrasrestaurantvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "fancys_btv",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "farmandforagevt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "feldmansbagels",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "flatbreadbtv",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "folinopizza",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "frankiesvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "fresh_bubbletea",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "gakuramen",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "getblissbee",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "goldrestaurantvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "goodtimescafevt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "great_harvest_btv",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "greenmountainpotstickers",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "greyjayvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "guildtavern",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "halvorsonsupstreetcafe",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "harmonyskitchenvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "haymakerbunsbtv",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "healthy.living.market",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "henrystreetdeli",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "hongsdumplings",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "kenspizzaandpubvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "kismet_mediterranean24",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "kountry_kart_deli",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "ladidapizza",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "lcchocolates",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "leonardos__pizza",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "leunigsbistro",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "masalaelaichi",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "matryoshkasbakery",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "momosmarketburlington",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "morninglightvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "mrcreemee",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "nuchocolat",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "original_skiff_oyster",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "palmerlanemaple",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "papa_franks",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "pascolovt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "peopleskitchenvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "philoridgefarm",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "piesanosvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "pingalacafe",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "poorhousepiesvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "prohibitionpig",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "restaurantpoco",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "roguerabbitvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "saigonkitchenvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "santiagos_vt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "shelburnefarmersmarket",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "shyguygelato",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "sippinfoodie",
+      "tier": 3,
+      "category": "food",
+      "s": "see"
+    },
+    {
+      "h": "sisters_of_anarchy_ice_cream",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "sneakersbistro",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "sottoenoteca",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "southernsmokevt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "speederandearlsvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "spiritofethanallen",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "splashbtv",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "stonesoupvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "sweetwatersbtv",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "tacogordovt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "thaiinthealley",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "thebagelplace",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "thescalepoke",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "thespotvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "thornandroots",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "tikkahouse2025",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "tinythaiwinooski",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "trattoriadeliavt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "twobrotherstavern",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "vergennesfarmersmarketvt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "vtjuiceco",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "willowsbagels",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "windjammervt",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "zacharyspizzavermont",
+      "tier": 3,
+      "category": "food"
+    },
+    {
+      "h": "abbeybk_music",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "andrianacee",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "bighomiewes",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "bobbypelligrinocomedy",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "bvtartist",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "cctvarchives",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "corrine_yonce",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "dannyandtheparts",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "feedingchamplainvalley",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "fisherwagg",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "foundbeautystudio",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "ghanatoamerica",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "green.mountain.metal.detecting",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "harmonyedosomwan",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "heartrhythmrecords",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "honeybee.heather",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "janelindholm",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "jennatalia_peachemoji",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "jenrosesmithvt",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "jessemileschainsaw",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "jessesavageblacksmith",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "jillianthewelder",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "katwrightkatwright",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "krinster",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "noahpatullo",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "northendfoodpantry",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "patagoniabtv",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "rc.s",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "redwagonplants",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "riotcraftstudio",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "roost.world",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "skirackvt",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "snowmotionstudios",
+      "tier": 3,
+      "category": "other"
+    },
+    {
+      "h": "theresnoaincreemee",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "thetenderbellies",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "vermonthiphop",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "vetica_music",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "vontrappflowers",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "wylie_garcia",
+      "tier": 3,
+      "category": "other",
+      "s": "see"
+    },
+    {
+      "h": "bevs_vermont",
+      "tier": 3,
+      "category": "pets"
+    },
+    {
+      "h": "goldshawfarm",
+      "tier": 3,
+      "category": "pets",
+      "s": "see"
+    },
+    {
+      "h": "gulliversdoggiedaycare",
+      "tier": 3,
+      "category": "pets"
+    },
+    {
+      "h": "houndstoothvt",
+      "tier": 3,
+      "category": "pets"
+    },
+    {
+      "h": "kimberlyprovostpetportraits",
+      "tier": 3,
+      "category": "pets",
+      "s": "see"
+    },
+    {
+      "h": "sitprettygrooming",
+      "tier": 3,
+      "category": "pets"
+    },
+    {
+      "h": "sleepydogkennel",
+      "tier": 3,
+      "category": "pets"
+    },
+    {
+      "h": "vermontdogeats",
+      "tier": 3,
+      "category": "pets"
+    },
+    {
+      "h": "802vermont_photography",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "audubonvermont",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "beautifulscenicburlington",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "burlingtonsurfclub",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "burlingtonwildways",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "catamountoutdoorcenter",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "chadwick_vt",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "champlainedu",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "champlainvalleyanglers",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "ekovisions",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "flywlkr_",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "greenmountainclub",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "happy_vermont",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "homestead_museum",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "intervalecentervt",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "lake_champlain_land_trust",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "lakechamplainbasinprogram",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "lakechamplaincommittee",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "lakechamplainferries",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "lakechamplainmaritime",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "mbinginot",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "meteorologist_allison_black",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "meteorologist_gunnarconsol",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "nautipaddle",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "rockpointvt",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "sailingcenter",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "scenicvermontphotography",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "studio2n.photography",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "summitandspruce",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "travelikealocalvt",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "universityofvermont",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "vermont_explored",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "vermontforreal",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "vermontonly",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "vermonts_covered_bridges",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "visionmediavt",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "whistlingman",
+      "tier": 3,
+      "category": "scenic"
+    },
+    {
+      "h": "woodandether",
+      "tier": 3,
+      "category": "scenic",
+      "s": "see"
+    },
+    {
+      "h": "anjouvt",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "ardeshgallery",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "billiejeanvintage",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "bohobabyvt",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "fearandcloathingvt",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "hunny.musturd",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "junktiques_collective",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "milkmoth.andspider",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "onceuponachildwilliston",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "platosclosetwilliston",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "playitagainsportsvt",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "projectobject_vintage",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "schipstore",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "shakursvintage",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "shalomshuk",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "stay.gold.vintage",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "styleencorewilliston",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "theexchangevt",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "thevaultvt",
+      "tier": 3,
+      "category": "shop"
+    },
+    {
+      "h": "4quartersbrew",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "alch3mistb33r",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "blackflannelbrewing",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "briocoffeeworks",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "dobrateavermont",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "domabarvt",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "ecobeancafe",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "einsteinstaphouse",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "fhtgburlington",
+      "tier": 3,
+      "category": "venue"
+    },
+    {
+      "h": "fiddleheadbrewing",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "finniganspubvt",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "hillfarmstead",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "hotelvermont",
+      "tier": 3,
+      "category": "venue"
+    },
+    {
+      "h": "howl.bier",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "krucoffee",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "lareprisewines",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "madriverdistillers",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "majestic_vt",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "mcgillicuddyonthe_green",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "mesmerkava",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "nomadcoffeevt",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "onyxtonics",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "queencitybrewery",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "radiobean",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "riraburlington",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "savu.sauna",
+      "tier": 3,
+      "category": "venue"
+    },
+    {
+      "h": "scout.vt",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "shelburnetaphouse",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "shelburnevineyard",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "snowfarmwine",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "specs_drinks",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "standing_stone_wines_vt",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "switchbackbeer",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "thearchivesbar",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "theboardroomvt",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "thepinery.vt",
+      "tier": 3,
+      "category": "venue"
+    },
+    {
+      "h": "thethreeneeds",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "thewisefoolbtv",
+      "tier": 3,
+      "category": "venue"
+    },
+    {
+      "h": "truggstavern",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "uncommonvt",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "venetiansodalounge",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "villagewineandcoffee",
+      "tier": 3,
+      "category": "venue"
+    },
+    {
+      "h": "vividcoffee",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "vontrappbrewing",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "vtciderlab",
+      "tier": 3,
+      "category": "venue"
+    },
+    {
+      "h": "vtpubandbrew",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    },
+    {
+      "h": "weirdwindowbrewing",
+      "tier": 3,
+      "category": "venue",
+      "food": true
+    }
+  ],
+  "photo_categories": {
+    "_comment": "Additional editorial tags for accounts that belong to several Photos filters. Primary categories come from accounts; these retain intentional overlaps such as a cat cafe being pets and a vibe check.",
+    "vibe": [
+      "foambrewers",
+      "queencitybrewery",
+      "burlingtonbeerco",
+      "bar_renee_vt",
+      "frankiesvt",
+      "twobrotherstavern",
+      "spotonthedock",
+      "waterworksvt",
+      "deviltakesaholiday",
+      "maydayvt",
+      "augustfirstvt",
+      "queencitycatlounge",
+      "wakingwindows",
+      "thesodaplant",
+      "gaybar4ever"
+    ],
+    "pets": [
+      "queencitycatlounge",
+      "hsccvt",
+      "kimberlyprovostpetportraits"
+    ],
+    "posters": []
+  }
 }

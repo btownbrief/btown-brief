@@ -4,9 +4,13 @@
 #   all-day/data/whatnow.json    — the next ten days of the calendar, trimmed
 #                                  to the fields a card renders. ~95 KB.
 #   all-day/data/instagram.json  — recent posts from the Burlington accounts
-#                                  in data/instagram-handles.json, both halves
-#                                  of the tab (DO organisers, SEE creators).
-#                                  ~350 KB.
+#                                  in data/instagram-handles.json, each with a
+#                                  `category` for the Wire's Photos chips.
+#                                  ~500-750 KB.
+#   data/instagram-ledger.json   — Scrape Creators credits spent this month
+#                                  and when each account was last fetched;
+#                                  the builder reads it back to keep inside
+#                                  its monthly budget.
 #   data/sports.json             — UVM, Burlington High, the local clubs and
 #                                  five national teams. Feeds sports.html and
 #                                  the games strip on All Day's What Now tab.
@@ -20,15 +24,20 @@
 # runs and there is nothing left to carry; miss four and the grid is broken
 # frames. That is the binding constraint on this schedule.
 #
+# TWICE A DAY, BUT ONLY INSTAGRAM TWICE. The 21:10 UTC run (5:10pm in
+# Burlington, an hour later in winter) exists for tier 1 of the Instagram
+# roster — tonight's posters and vibe checks. What Now and sports build only
+# on the morning cron (or a manual run), exactly as before.
+#
 # Order matters: it runs at 10:40 UTC, an hour after the events pipeline's
 # 9:40, because build_whatnow.py reads data/events/. Running first would
 # publish yesterday's calendar as today's answer.
 #
-# Credits: one Scrape Creators credit per handle per run, and only for the
-# handles actually fetched. Both halves keep a small always-on core (tier1,
-# see1) plus a rotating slice (tier2 at --tier2-batch, see2 at --see2-batch),
-# so the whole roster is covered over a few days without paying for all of it
-# every morning. Raising either batch raises the daily spend one-for-one.
+# Credits: one Scrape Creators credit per request. Tier 1 every run, tier 2
+# once a Burlington day, tier 3 once a week in even daily slices, all inside
+# MONTHLY_CREDIT_BUDGET in scripts/build_instagram.py, which the builder
+# enforces pro rata against the ledger. `--dry-run` prints a run's plan and
+# the roster's steady-state cost without spending anything.
 #
 # Because it commits to main under GITHUB_TOKEN, and such commits do not fire
 # a `push` event, this workflow's name is listed in pages-deploy.yml's
@@ -43,6 +52,7 @@ name: Refresh All Day hub data
 on:
   schedule:
     - cron: "40 10 * * *"
+    - cron: "10 21 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -55,7 +65,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
 
@@ -63,23 +73,59 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Build What Now
-        run: python3 scripts/build_whatnow.py
-
-      - name: Build sports
-        run: python3 scripts/build_sports.py || echo "sports build skipped"
-
-      - name: Build Instagram
+      # Instagram credits are reserved BEFORE anything is spent: the builder
+      # writes this run's accounts and credits into the ledger, and the
+      # ledger is pushed. Only a push that landed lets the Build Instagram
+      # step spend them, so no later run can read a ledger missing them. A
+      # failed reservation (no key, a push race) skips Instagram this run and
+      # leaves What Now and sports alone.
+      # Main only: the ledger that counts the credits lives on main, and a
+      # manual run from another branch would spend without counting.
+      - name: Reserve Instagram credits
+        id: reserve
+        if: github.ref == 'refs/heads/main'
+        continue-on-error: true
         env:
           SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
           SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
-        run: python3 scripts/build_instagram.py --tier2-batch 12 --see2-batch 26 || echo "instagram build skipped"
-
-      - name: Commit if changed
         run: |
           git config user.name "btown-brief-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add all-day/data/whatnow.json all-day/data/instagram.json data/sports.json
+          git pull --ff-only --quiet origin main
+          python3 scripts/build_instagram.py --reserve
+          if git diff --quiet -- data/instagram-ledger.json; then
+            echo "Nothing reserved."
+            exit 0
+          fi
+          git add data/instagram-ledger.json
+          git commit -m "Reserve Instagram credits"
+          git push origin HEAD:main
+          echo "reserved=1" >> "$GITHUB_OUTPUT"
+
+      - name: Build What Now
+        if: github.event_name != 'schedule' || github.event.schedule == '40 10 * * *'
+        run: python3 scripts/build_whatnow.py
+
+      - name: Build sports
+        if: github.event_name != 'schedule' || github.event.schedule == '40 10 * * *'
+        run: python3 scripts/build_sports.py || echo "sports build skipped"
+
+      - name: Build Instagram
+        if: ${{ !cancelled() && steps.reserve.outputs.reserved == '1' }}
+        timeout-minutes: 30
+        env:
+          SCRAPECREATORS_API_KEY: ${{ secrets.SCRAPECREATORS_API_KEY }}
+          SCRAPE_CREATORS_API_KEY: ${{ secrets.SCRAPE_CREATORS_API_KEY }}
+        run: python3 scripts/build_instagram.py --execute || echo "instagram build skipped"
+
+      # always(): a payload half-built before a timeout is still worth saving,
+      # and the ledger's cleared reservation with it.
+      - name: Commit if changed
+        if: always()
+        run: |
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add all-day/data/whatnow.json all-day/data/instagram.json data/instagram-ledger.json data/sports.json
           if git diff --cached --quiet; then
             echo "No hub changes."
           else
