@@ -14,22 +14,26 @@
      partner is a first name typed once, never a second account.
    - The film sheet: the overview, year, runtime, genres, the trailer, the
      two seen toggles, want to watch, and a 1 to 5 star rating that posts a
-     rating to the watch board (boards.js: meta year, stars, where).
+     rating to the watch board (boards.js: meta film, year, stars, where).
      Signed-out readers can see everything and set their dots; rating asks
      for the one-email sign-in.
    - Town ratings this week: the films with the most ratings in the last
      seven days, with their average. A film with fewer than three ratings is
      never shown, here or on a poster.
    - Vote for the next screening: the watch board's picks, one per film,
-     voted with the board's own vote, a bar each toward five. At five
+     voted with the board's own vote, a bar each toward five. One vote each:
+     the server moves a reader's vote when they pick another (the pick
+     kind's one_vote rule), and the tab takes the old one back first so the
+     bars move at once. At five
      Stephen puts it on Meetup as a screening with a mixer after. A pick
      Stephen posts with a `where` is the last (or next) screening's card.
    - Watch chat: a door to the community channel and to Telegram. The talk
      lives there; nothing is built here.
 
-   Ratings and picks identify a film by its title and year (the board's meta
-   has no field for a TMDB id yet); a title alone is used when the year has
-   drifted and the title is unique.
+   Ratings and picks identify a film by its TMDB id (meta `film`). Posts
+   from before the board had that field, or posted while the server's rules
+   are still round one's (boards.roundTwo()), go by title and year, or the
+   title alone when the year has drifted and the title is unique.
 
    ?demo=1 runs exactly this file on data/demo/watch.json: invented films,
    re-dated to the reader's clock, with their ratings and picks seeded into
@@ -124,8 +128,18 @@ function setFilms(j) {
     byTitle.set(n, byTitle.has(n) && byTitle.get(n) && byTitle.get(n).id !== f.id ? null : byId.get(f.id));
   });
 }
-/* a board post's film: title and year, else the title alone when it is unique */
-const filmOf = (title, year) => byKey.get(fkey(title, year)) || byTitle.get(norm(title)) || null;
+/* a board post's film: its TMDB id; else title and year, else the title alone when it is unique */
+const filmOf = (p) => {
+  const m = (p && p.meta) || {};
+  return (Number.isInteger(m.film) && byId.get(m.film)) || byKey.get(fkey(p.title, m.year)) || byTitle.get(norm(p.title)) || null;
+};
+/* the fields a new rating or pick carries for its film */
+function filmMeta(f, two) {
+  const meta = {};
+  if (two) meta.film = f.id;
+  if (Number.isInteger(f.y) && f.y >= 1888 && f.y <= 2100) meta.year = f.y;
+  return meta;
+}
 
 const posterUrl = (f, size) => (app.demo ? f.art : f.p ? F.images + size + f.p : '');
 const picture = (f, size) => { const u = posterUrl(f, size); return u ? art(u) : ''; };
@@ -308,7 +322,7 @@ function tally() {
   P.ratings.forEach((p) => {
     const stars = p.meta && p.meta.stars;
     if (!Number.isInteger(stars) || stars < 1 || stars > 5) return;
-    const f = filmOf(p.title, p.meta.year);
+    const f = filmOf(p);
     const key = f ? 'f' + f.id : 'x' + fkey(p.title, p.meta.year);
     const a = agg.get(key) || { f, title: p.title, year: Number.isInteger(p.meta.year) ? p.meta.year : null, n: 0, sum: 0, wn: 0, wsum: 0 };
     a.n++; a.sum += stars;
@@ -345,11 +359,11 @@ function seedDemo() {
   };
   arr(D.ratings).forEach((r, i) => {
     const f = byId.get(r[0]);
-    if (f) add('rating', f, { h: r[2], by: i, meta: { year: f.y, stars: r[1] } });
+    if (f) add('rating', f, { h: r[2], by: i, meta: { film: f.id, year: f.y, stars: r[1] } });
   });
   arr(D.picks).forEach((p) => {
     const f = byId.get(p.f);
-    if (f) add('pick', f, { h: p.h, by: p.by, votes: p.votes, body: p.body, meta: { year: f.y } });
+    if (f) add('pick', f, { h: p.h, by: p.by, votes: p.votes, body: p.body, meta: { film: f.id, year: f.y } });
   });
 }
 
@@ -664,11 +678,12 @@ function rate(f, stars, box, row) {
   }
   [...row.children].forEach((b) => { b.disabled = true; });
   say('Posting your rating…');
-  const meta = { stars };
-  if (Number.isInteger(f.y) && f.y >= 1888 && f.y <= 2100) meta.year = f.y;
-  if (where) meta.where = where;
   const before = L.rated[f.id];
-  boards.create('watch', { kind: 'rating', title: f.t.slice(0, RULES.limits.titleMax), body: '', meta }).then((r) => {
+  boards.roundTwo().then((two) => {
+    const meta = { stars, ...filmMeta(f, two) };
+    if (where) meta.where = where;
+    return boards.create('watch', { kind: 'rating', title: f.t.slice(0, RULES.limits.titleMax), body: '', meta });
+  }).then((r) => {
     [...row.children].forEach((b) => { b.disabled = false; });
     if (!r.ok) {
       if (r.error === 'no_name') { askName(box, () => rate(f, stars, box, row)); say(r.message); return; }
@@ -788,7 +803,7 @@ function drawTown(host) {
 function ballot() {
   const best = new Map();
   P.picks.filter((p) => !(p.meta && p.meta.where)).forEach((p) => {
-    const f = filmOf(p.title, p.meta && p.meta.year);
+    const f = filmOf(p);
     const key = f ? 'f' + f.id : fkey(p.title, p.meta && p.meta.year);
     const cur = best.get(key);
     if (!cur || p.votes > cur.votes || (p.votes === cur.votes && p.created_at < cur.created_at)) best.set(key, { ...p, film: f });
@@ -863,7 +878,10 @@ function voteOpt(p) {
       p.votes = r.votes; p.voted = r.voted;
       const x = P.picks.find((y) => y.id === p.id);
       if (x) { x.votes = r.votes; x.voted = r.voted; }
-      if (other) draw('vote'); else paint();
+      /* the server moved a vote this tab did not know about (cast on another device) */
+      const moved = (r.moved || []).filter((id) => !other || id !== other.id);
+      moved.forEach((id) => { const y = P.picks.find((z) => z.id === id); if (y && y.voted) { y.voted = false; y.votes = Math.max(0, y.votes - 1); } });
+      if (other || moved.length) draw('vote'); else paint();
       app.toast(p.voted ? (p.votes >= GOAL ? 'Five! Stephen will put it on Meetup.' : 'Voted for ' + p.title) : 'Vote taken back');
     });
   };
@@ -915,9 +933,7 @@ function suggest(f, body, close) {
     else app.toast('Already on the ballot, with your vote.');
     return;
   }
-  const meta = {};
-  if (Number.isInteger(f.y) && f.y >= 1888 && f.y <= 2100) meta.year = f.y;
-  boards.create('watch', { kind: 'pick', title: f.t.slice(0, RULES.limits.titleMax), body: '', meta }).then((r) => {
+  boards.roundTwo().then((two) => boards.create('watch', { kind: 'pick', title: f.t.slice(0, RULES.limits.titleMax), body: '', meta: filmMeta(f, two) })).then((r) => {
     if (!r.ok) {
       if (r.error === 'no_name') { askName(body, () => suggest(f, body, close)); app.toast(r.message); return; }
       app.toast(r.message);

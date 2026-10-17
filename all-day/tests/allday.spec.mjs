@@ -2176,6 +2176,27 @@ async function theWatch(browser, base) {
     await ctx.close();
   });
 
+  await group('Watch, the server keeps one vote each, even one cast on another device (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#watch/vote');
+    await page.waitForSelector(wPanel + ' [data-ballot] .vote-opt', { timeout: 15000 });
+    const opts = () => page.$$eval(wPanel + ' [data-ballot] .vote-opt', (n) => n.map((o) => ({ k: o.dataset.k, on: o.getAttribute('aria-pressed'), n: parseFloat(o.querySelector('.l span').textContent) })));
+    const before = await opts();
+    const [a, b] = [before[0], before[1]];
+    /* the same reader votes for the first pick somewhere this tab never hears about */
+    await page.evaluate((id) => Promise.all([import('/all-day/js/boards.js'), import('/all-day/js/store.js')]).then(([B, st]) => B._fake().as(null).call('nn_vote', { p_post: id, p_player: st.playerId() })), a.k.slice(5));
+    await page.click(wPanel + ' [data-k="' + b.k + '"]');
+    await page.waitForFunction((k) => document.querySelector('#panel-watch [data-k="' + k + '"]').getAttribute('aria-pressed') === 'true', b.k);
+    await page.waitForTimeout(200);
+    const now = await opts();
+    const counts = await fakeOf(page, `(f) => [f._count('${a.k.slice(5)}'), f._count('${b.k.slice(5)}')]`);
+    check(counts[0] === a.n && counts[1] === b.n + 1, 'voting for the second moved the vote off the first, on the server', JSON.stringify([a, b, counts]));
+    const na = now.find((o) => o.k === a.k);
+    check(na && na.n === a.n && na.on === 'false', 'and the tab shows the first back where it was', JSON.stringify(now));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Watch, a rating posts with stars in meta (demo)', async () => {
     const d = await watchDemo();
     const { ctx, page, errors } = await newPage(browser, base);
@@ -2199,8 +2220,8 @@ async function theWatch(browser, base) {
     await page.click('.sheet-body [data-rate] button[type=submit]');
     await page.waitForFunction(() => /^Rated 4 stars/.test(document.querySelector('.sheet-body [data-msg]').textContent), null, { timeout: 4000 }).catch(() => {});
     const post = await fakeOf(page, (x) => { const p = x.posts.filter((q) => q.board === 'watch' && q.kind === 'rating').pop(); return { n: x.posts.filter((q) => q.board === 'watch' && q.kind === 'rating').length, title: p.title, meta: p.meta, exp: p.expires_at }; });
-    check(post.n === before + 1 && post.title === 'Fieldwork' && JSON.stringify(post.meta) === JSON.stringify({ stars: 4, year: f.y, where: 'In a theater' }) && post.exp === null,
-      'a rating post on the watch board: the title, and stars, year and where in meta; it never expires', JSON.stringify(post));
+    check(post.n === before + 1 && post.title === 'Fieldwork' && JSON.stringify(post.meta) === JSON.stringify({ stars: 4, film: f.id, year: f.y, where: 'In a theater' }) && post.exp === null,
+      'a rating post on the watch board: the title, and stars, the film’s TMDB id, year and where in meta; it never expires', JSON.stringify(post));
     check(await page.$$eval('.sheet-body [data-stars].on', (n) => n.length) === 4, 'four stars lit', '');
     /* Fieldwork had one demo rating; with Maya's it has two, still not shown */
     await page.click('.sheet-head .iconbtn');
@@ -2227,7 +2248,7 @@ async function theWatch(browser, base) {
     await page.click('.sheet-body [data-film] button');
     await page.waitForFunction(() => [...document.querySelectorAll('#panel-watch [data-ballot] .vote-opt')].some((o) => /Orchard/.test(o.innerText)), null, { timeout: 4000 }).catch(() => {});
     const pick = await fakeOf(page, (x) => { const p = x.posts.filter((q) => q.board === 'watch' && q.kind === 'pick').pop(); return { title: p.title, meta: p.meta, days: Math.round((p.expires_at - p.created_at) / 86400000) }; });
-    check(pick.title === 'Orchard' && JSON.stringify(pick.meta) === JSON.stringify({ year: orchard.y }) && pick.days === 30, 'it posts a pick (title, year; 30 days) and lands on the ballot', JSON.stringify(pick));
+    check(pick.title === 'Orchard' && JSON.stringify(pick.meta) === JSON.stringify({ film: orchard.id, year: orchard.y }) && pick.days === 30, 'it posts a pick (title, TMDB id, year; 30 days) and lands on the ballot', JSON.stringify(pick));
     await page.click(wPanel + ' [data-suggest]');
     await page.fill('.sheet-body input[type=search]', 'orchard');
     await page.waitForTimeout(100);
