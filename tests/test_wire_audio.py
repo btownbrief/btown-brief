@@ -33,20 +33,21 @@ def wire():
 
 # A body a newsreader might write from the fixture's twelve local headlines:
 # every fact is in a headline (never in a reason), nothing is copied eight
-# words in a row, nothing is padding.
+# words in a row, nothing is padding, no outlet is named (the Brief is the
+# station: Stephen, 2026-10-17), and every sentence starts with its subject.
 GOOD = [
-    "Vermont State Police have an update on their investigation into the police shooting in Williston, Vermont Biz reports.",
-    "In the race for governor, Seven Days reports that Janoo again leads Governor Scott in fundraising, as the campaign hits the home stretch.",
-    "One month in, WCAX says, Vermont's diverging diamond traffic pattern is getting positive reviews.",
-    "DandyLion is expanding into furniture, according to Vermont Biz.",
-    "Essex police are warning Vermonters about a possible scam in which someone impersonates law enforcement, WCAX reports.",
-    "Vermont Biz has the Agency of Transportation's weekly road construction report, covering the week of October 19.",
-    "The Center for Research on Vermont is hosting a panel on the history of the revolutionary war, the Vermont Cynic reports.",
-    "Vox looks at how Vermont once dreamed of universal healthcare, and at a Democrat who wants to try again, with a twist.",
-    "Vermont Biz reports a new investment of 4.95 million dollars to strengthen suicide care across Vermont.",
-    "UVM men's basketball hosts Holy Cross in an exhibition game on Saturday afternoon.",
-    "Vermont Public has a story on horse logging, a Vermont tradition two hundred years old that still has a future.",
-    "And The Frequency looks at the removal of a historic dam.",
+    "Vermont State Police have an update this morning. It's on their investigation into the police shooting in Williston.",
+    "The race for governor is in its home stretch. Janoo again leads Governor Scott in fundraising.",
+    "Vermont's diverging diamond traffic pattern has been open for a month now. The reviews so far are positive.",
+    "DandyLion is growing. The business is expanding into furniture.",
+    "Essex police have a warning out for Vermonters. There's a possible scam. Someone is impersonating law enforcement.",
+    "The Agency of Transportation has its weekly road construction report out. It covers the week of October 19.",
+    "The Center for Research on Vermont is putting on a panel. The subject is the history of the revolutionary war.",
+    "Vermont once had a dream of universal healthcare. Now one Democrat wants to give it another try, with a twist.",
+    "There's a new investment of 4.95 million dollars in suicide care. It's meant to strengthen that care across Vermont.",
+    "UVM men's basketball hosts Holy Cross on Saturday afternoon. It's an exhibition game.",
+    "Horse logging is a Vermont tradition that's two hundred years old. It still has a future.",
+    "And one more. A historic dam is coming out.",
 ]
 # The first Opus clip's line, carried in from pick 7's reason ("A free UVM
 # evening on Vermont's Revolutionary history"); its headline never says free.
@@ -100,7 +101,7 @@ class Stories(unittest.TestCase):
 
     def test_the_prompt_numbers_every_story_with_outlet_and_reason(self):
         system, user = wa.prompt_for(wa.local_stories(wire()), "today")
-        self.assertIn("1. Headline: VSP provides update on investigation into Williston police shooting || Outlet: Vermont Biz || "
+        self.assertIn("1. Headline: VSP provides update on investigation into Williston police shooting || Outlet, never said aloud: Vermont Biz || "
                       "Editor's note, not a source: ", user)
         self.assertIn("12. ", user)
         self.assertNotIn("13. ", user)
@@ -109,7 +110,7 @@ class Stories(unittest.TestCase):
         self.assertIn("Never\n  pad", system)
         # the voice: a person, not a bulletin, with a worked example and the marks it may use
         for asked in ("neighbour", "Contractions", "No two stories start the same way", "NOT today's",
-                      "Written flat", "[long pause]", "[softly]", "Never an emotion", "is put before every one for\n  you"):
+                      "Written jumbled", "Subject first", "One idea per sentence", "You are the station", "[long pause]", "[softly]", "Never an emotion", "is put before every one for\n  you"):
             self.assertIn(asked, system)
         self.assertNotIn("synthetic", system.lower())
         self.assertNotRegex(system, r"\bAI\b")
@@ -132,6 +133,7 @@ class Writer(unittest.TestCase):
         self.assertEqual(teaser, "The Williston case, the governor's race money, and a scam warning.")
         self.assertEqual(usage["calls"], 2)          # the draft and its fact check
         self.assertIn("The script:\nVermont State Police have an update", ask.checked[0].user)
+        self.assertNotRegex(script, wa.OUTLET_RE)
         self.assertIn("1. VSP provides update", ask.checked[0].user)
         self.assertNotIn("A free UVM evening", ask.checked[0].user)     # the check never sees the reasons
         self.assertNotIn("\n\n\n", script)
@@ -159,7 +161,7 @@ class Writer(unittest.TestCase):
         self.assertTrue(any("no clip today" in n for n in notes))
 
     def test_a_rewrite_that_invents_loses_to_an_honest_short_draft(self):
-        short = GOOD[:10]                      # 211 words: under SHORT_OK, inside the soft range
+        short = GOOD[:10]                      # 209 words: under SHORT_OK, inside the soft range
         liar = ["Lieutenant Jane Doe briefed reporters."] + GOOD
         ask, calls = fake_answers({"paragraphs": short, "teaser": "x"}, {"paragraphs": liar, "teaser": "x"})
         script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
@@ -188,7 +190,7 @@ class Writer(unittest.TestCase):
         self.assertEqual(len(calls), wa.DRAFTS)
         self.assertIsNotNone(script, notes)
         self.assertNotIn("ballot", script)
-        self.assertIn("Vox looks at how", script)
+        self.assertIn("Now one Democrat wants to give it another try", script)
         self.assertTrue(any("cut 1 sentence" in n for n in notes), notes)
 
     def test_a_cut_never_leaves_a_turn_introducing_nothing(self):
@@ -202,8 +204,63 @@ class Writer(unittest.TestCase):
         self.assertIsNotNone(script)
         self.assertNotIn("Some business news now", script)
         self.assertNotIn("DandyLion", script)
-        self.assertIn("And The Frequency looks at the removal of a historic dam.", script)   # a short story stays
-        self.assertEqual(wa.cut_sentences(["And The Frequency looks at a dam."], []), ["And The Frequency looks at a dam."])
+        self.assertIn("And one more. A historic dam is coming out.", script)   # a short story stays
+        self.assertEqual(wa.cut_sentences(["And a historic dam is coming out."], []), ["And a historic dam is coming out."])
+
+    def test_naming_an_outlet_is_sent_back_and_never_ships(self):
+        # Stephen, 2026-10-17: "'VTDigger reported that' at the end of the sentence just
+        # doesn't hit... why do I need to quote them? I'm my own news station"
+        named = GOOD[:4] + ["Essex police are warning about a possible scam, WCAX reports."] + GOOD[5:]
+        ask, calls = fake_answers({"paragraphs": named, "teaser": "x"}, {"paragraphs": GOOD, "teaser": "x"})
+        script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertEqual(len(calls), 2)
+        self.assertIn('never names an outlet', calls[1].user)
+        self.assertIn('"WCAX"', calls[1].user)
+        self.assertEqual(len(ask.checked), 1)          # the draft that named one never reached the fact check
+        self.assertNotIn("WCAX", script)
+        always = fake_answers({"paragraphs": named, "teaser": "x"})[0]
+        script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=always)
+        self.assertIsNone(script)
+        self.assertTrue(any("no clip today" in n for n in notes), notes)
+
+    def test_every_newsroom_counts_but_not_a_word_that_only_looks_like_one(self):
+        named = wa.outlets_named("Seven Days has it. VT Digger too. NBC5 and Vermont Public as well. "
+                                 "The Burlington Free Press, The Other Paper and the Vermont Cynic.", self.stories)
+        self.assertEqual(named, ["Seven Days", "VT Digger", "NBC5", "Vermont Public", "Burlington Free Press",
+                                 "The Other Paper", "Vermont Cynic"])
+        self.assertEqual(wa.outlets_named("The ban lasts seven days. The Vermont Public Utility Commission met. "
+                                          "Vermont State Police and UVM have news.", self.stories), [])
+        about = [{"title": "Seven Days wins a national award", "text": ""}]
+        self.assertEqual(wa.outlets_named("Seven Days won a national award.", about), [])
+
+    def test_saying_where_a_story_came_from_is_sent_back_and_ranked_last(self):
+        said = GOOD[:2] + ["Vermont's diverging diamond is a month old, and the reviews are positive, according to the paper."] + GOOD[3:]
+        ask, calls = fake_answers({"paragraphs": said, "teaser": "x"}, {"paragraphs": GOOD, "teaser": "x"})
+        script, *_ = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertEqual(len(calls), 2)
+        self.assertIn('"according to"', calls[1].user)
+        self.assertNotIn("according to", script)
+        # a soft miss: if every draft has it, the clip still ships, with a note
+        always = fake_answers({"paragraphs": said, "teaser": "x"})[0]
+        script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=always)
+        self.assertIsNotNone(script)
+        self.assertTrue(any("soft problem" in n for n in notes), notes)
+
+    def test_the_fact_check_is_told_a_missing_outlet_is_not_a_problem(self):
+        self.assertIn("never says which outlet", wa.VERIFY_TASK)
+        self.assertIn("never a problem", wa.VERIFY_TASK)
+        self.assertNotIn("That one's from", wa.VERIFY_TASK)
+        # and it is exactly as strict as before about everything else
+        for rule in ("a pronoun that gives someone a gender", "an opinion, judgement or prediction",
+                     "Also list padding", "one for the weekend"):
+            self.assertIn(rule, wa.VERIFY_TASK)
+        self.assertNotRegex(wa.TASK.split("An example")[1].split("Same facts")[0].split("the way a person says it:")[1], wa.OUTLET_RE)
+
+    def test_a_teaser_that_names_an_outlet_is_dropped(self):
+        ask, _ = fake_answers({"paragraphs": GOOD, "teaser": "The Williston case and a scam, from WCAX."})
+        script, teaser, _, _ = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertIsNotNone(script)
+        self.assertEqual(teaser, "")
 
     def test_a_gendered_pronoun_no_source_gives_is_invented(self):
         she = ["Janoo again leads Governor Scott in fundraising, and she has the money."] + GOOD[2:]
@@ -282,7 +339,7 @@ class Writer(unittest.TestCase):
 # pacing marks: the checks read the words alone and pass it.
 HUMAN = (["[short pause] Out in Williston... the Vermont State Police have an update on the police shooting there."]
          + GOOD[1:3]
-         + ["DandyLion's branching out into furniture. That one's from Vermont Biz.",
+         + ["DandyLion's branching out... into furniture.",
             "[softly] Essex police are warning about a possible scam, someone pretending to be law enforcement."]
          + GOOD[5:])
 
@@ -371,14 +428,14 @@ class Tags(unittest.TestCase):
 
     def test_a_cut_takes_the_marks_inside_the_sentence_with_it(self):
         claim = "It is a reminder that the choices on the ballot are being watched far past our borders."
-        tagged = "Vox looks at a Democrat who wants to try again. [pause] It is a reminder that the choices on the [slowly] ballot are being watched far past our borders."
+        tagged = "One Democrat wants to try universal healthcare again. [pause] It is a reminder that the choices on the [slowly] ballot are being watched far past our borders."
         flag = {"unsupported": [{"sentence": claim, "problem": "opinion stated as fact"}]}
         ask, _ = fake_answers({"paragraphs": GOOD[:7] + [tagged] + GOOD[8:], "teaser": "x"}, checks=(flag,) * wa.DRAFTS)
         script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
         self.assertIsNotNone(script, notes)
         self.assertNotIn("ballot", script)
         self.assertNotIn("[slowly]", script)
-        self.assertIn("Vox looks at a Democrat who wants to try again.", script)
+        self.assertIn("One Democrat wants to try universal healthcare again.", script)
 
 
 class Voice(unittest.TestCase):

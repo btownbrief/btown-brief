@@ -20,7 +20,10 @@ Every morning at 7 Eastern (.github/workflows/wire-audio.yml):
      stories, and a few pacing marks the voice takes as direction (TAGS:
      [pause], [short pause], [slowly], [softly] and the like, plus
      ellipses). The first clip read like a bulletin, flat and unbroken, and
-     Stephen heard it as a machine. Opus only: this is the Brief speaking in
+     Stephen heard it as a machine. It never names an outlet (the Brief is
+     the station; the Wire links every source) and keeps one idea to a
+     sentence, subject first, with nothing trailing off the end: Stephen
+     heard "VTDigger reported that" tacked on as jumbled. Opus only: this is the Brief speaking in
      its own name, and accuracy here is the product, so there is no cheaper
      fallback (GLM 5.3 Flash, tried on the first test runs, invented a
      candidate's first name and gender). No key, no clip. The greeting and
@@ -29,7 +32,8 @@ Every morning at 7 Eastern (.github/workflows/wire-audio.yml):
      no fact the headlines and reasons do not give (curate_wire.invented:
      a number, a weekday or month, "free", a capitalized name; and a pronoun
      that gives someone a gender), no run of eight words copied from a
-     headline, no list, and the length. A draft that passes is fact-checked
+     headline, no list, no newsroom named (OUTLET_RE, a hard fail) and no
+     "reports that" (ATTRIB_RE, sent back), and the length. A draft that passes is fact-checked
      sentence by sentence by a second call. Pacing marks are taken out
      before every check and before the fact check reads the draft (plain()),
      so a mark can neither hide a word from a check nor be flagged as one;
@@ -189,6 +193,30 @@ MAX_DELIVERY, MAX_PAUSES = 1, 2
 # still let twelve paragraphs carry twelve [long pause]s)
 BRIEF_MAX = {"long pause": 3, "pause": 4, "delivery": 4}   # "pause" counts [pause] and [short pause]
 BRACKET_RE = re.compile(r"\[([^\[\]\n]*)\]")
+
+# The Brief never names an outlet (Stephen, 2026-10-17: "'VTDigger reported that'
+# at the end of the sentence just doesn't hit... why do I need to quote them?
+# I'm my own news station"). The Wire links every source; the clip is the
+# station talking. OUTLET_RE is the region's newsrooms and a few national ones
+# the Wire carries, matched case-sensitively so "for seven days" is not "Seven
+# Days"; a name a story's own headline or text uses is not attribution (a story
+# about Seven Days may say so). Naming one is a hard fail: the draft goes back,
+# and a brief that keeps naming one does not ship. Story sources are not added
+# wholesale, because many are not newsrooms ("Vermont State Police", "UVM
+# Athletics") and saying those is telling the story, not crediting it.
+OUTLET_RE = re.compile(
+    r"(?<![\w’'])(?:Seven Days|VT ?Digger|WCAX|Channel (?:3|5|22|44)|NBC ?5|WPTZ|Vermont Public(?! (?:Utility|Service|Health|Safety|Schools?|"
+    r"Interest|Defender|Library|Lands|Works|Records|Transit))|VPR|Burlington Free Press|Free Press|Vermont ?Biz|"
+    r"Vermont Business Magazine|Vermont Cynic|The Cynic|The Other Paper|Williston Observer|Charlotte News|"
+    r"MyChamplainValley|Local ?22|Local ?44|ABC ?22|FOX ?44|WVMT|Valley News|Rutland Herald|Times Argus|"
+    r"Stowe Reporter|Addison Independent|Brattleboro Reformer|Bennington Banner|Vox|The Frequency|Front Porch Forum|"
+    r"Associated Press|New York Times|Boston Globe)(?![\w’'])")
+# Saying where a story came from without naming anyone ("reports that",
+# "according to", "that's from"): a softer miss, sent back for a rewrite and
+# ranked last, since "according to police" can be the headline's own fact.
+ATTRIB_RE = re.compile(r"\b(?:reports?|reported|reporting) that\b|\baccording to\b|\bfirst reported\b|"
+                       r"\bhas (?:that one|the story|the details|more on (?:that|it))\b|\bthat(?:'s|’s| one's| one’s| one is| is) from\b",
+                       re.I)
 TAG_RE = re.compile(r"\[\s*(?:" + "|".join(t.replace(" ", r"\s+") for t in TAGS) + r")\s*\]", re.I)
 
 TASK = """You write the Btown Brief, out loud: a two- to three-minute morning news brief
@@ -200,8 +228,8 @@ bulletin. They talk the way people talk across a kitchen table, and they never
 editorialise.
 
 You get the stories, numbered in order of importance. Each is a headline, the
-outlet that ran it, sometimes the story's own text, and an editor's note on why
-it was picked. Write the body of the brief: every story, in the order given,
+outlet that ran it (for your context only: it is never said aloud), sometimes
+the story's own text, and an editor's note on why it was picked. Write the body of the brief: every story, in the order given,
 each its own short spoken paragraph. The greeting before you ends "Here's
 what's going on around Burlington.", so start straight in on the first story.
 
@@ -231,19 +259,27 @@ The facts. These rules are hard, and nothing about the voice loosens them:
   puts it in or around Burlington, after one that is not. When unsure, use a
   turn that names no place or time: "Something different now."
 
+You are the station. The Brief tells the news in its own voice and never says
+where a story came from: no outlet's name, no "reports", "reported", "says",
+"according to", "has that one", "that's from". The listener finds every source
+on the Wire. A clip that names an outlet is sent back.
+
 How it sounds:
 - Contractions, always: it's, there's, they're, won't, that's.
-- Sentences of different lengths. One idea each. A four-word sentence next to
-  a fifteen-word one. Never three sentences in a row built the same way.
+- One idea per sentence. Two facts make two sentences, not one sentence with a
+  comma in the middle.
+- Subject first: say who or what the story is about, then what happened.
+  "Essex police are warning about a scam." Never open on a clause ("In the
+  race for governor, ...", "One month in, ...") and never tack one on the end
+  (", as the campaign hits the home stretch", ", officials said"). A sentence
+  ends when its idea ends.
+- Sentences of different lengths. A four-word sentence next to a fifteen-word
+  one. Never three sentences in a row built the same way.
 - No two stories start the same way: not the same first word, not the same
-  shape. Never a run of "X reports that", "According to" or "There is".
+  shape. Never a run of "There is" or "There's".
 - Now and then, a spoken turn between stories: "Closer to home.", "Two things
   from the state this morning.", "And one for the weekend.", "Something
   different now." A few in the whole brief, not one per story.
-- Name the outlet the way people say it, and not more than once every two or
-  three stories: "Seven Days has that one.", "That's from WCAX.", "WCAX says".
-  Never in two stories in a row, and never the same phrase twice. Most stories
-  need no outlet at all.
 - Write for the ear: numbers the way they are said ("4.95 million dollars"), no
   symbols, no abbreviation a listener cannot decode unless the headline uses it.
 - No lists, no bullets, no "first" or "number one", no headings, no emoji, no
@@ -273,19 +309,20 @@ sound like someone talking; too many make the voice wobble.
 An example, two stories that are NOT today's, only to show the difference.
 The headlines: "Burlington library extends weekend hours" (Seven Days) and
 "State police investigating crash on I-89 in Richmond" (WCAX).
-Written flat, the way not to:
-  Seven Days reports that the Burlington library is extending its weekend
-  hours. WCAX reports that state police are investigating a crash on I-89 in
-  Richmond.
+Written jumbled, the way not to:
+  In a change for weekend visitors, the Burlington library is extending its
+  hours, Seven Days reports. Over in Richmond, a crash on I-89 is being
+  investigated by state police, according to WCAX.
 Written the way a person says it:
-  If weekends are when you get to the library, Burlington's is keeping longer
-  hours. That one's from Seven Days.
+  Burlington's library is open longer on weekends. If that's when you get
+  there, you've got more time.
 
-  [long pause] Out on the interstate... state police are looking into a crash
-  on 89, in Richmond.
-Same facts, nothing added: the second says "you", uses a contraction, names
-one outlet once at the end, turns with words that only restate the headline,
-and pauses where a person would.
+  [long pause] Out on the interstate... state police are looking into a crash.
+  It was on 89, in Richmond.
+Same facts, nothing added: every sentence starts with what it's about and
+holds one idea, nothing trails off the end, no outlet is named, the second
+says "you" only around what the headline gives, the turn restates the
+headline, and it pauses where a person would.
 
 Also write `teaser`: one plain phrase under 90 characters naming three of the
 stories' topics, for the card the clip sits on, e.g. "The governor's race money,
@@ -317,8 +354,10 @@ Unsupported means: a name, title or role; a pronoun that gives someone a gender;
 a number, date, time or place; what happened, why, or what comes next; who is
 affected; an opinion, judgement or prediction stated as fact. Rewording a headline
 is supported. So are turns between stories and words to the listener
-("If you drive...", "Something different now.", "That one's from Seven Days.")
-that assert nothing new, and saying when the brief airs ("this morning"). Words to the
+("If you drive...", "Something different now.") that assert nothing new, and
+saying when the brief airs ("this morning"). The script never says which outlet
+ran a story, on purpose: a story told without its outlet is supported, and the
+missing outlet is never a problem to list. Words to the
 listener are unsupported when they imply a detail the sources do not give: "if
 someone calls" when no source says the scam is by phone, "next week" when a
 source gives only a date. A turn that groups
@@ -530,7 +569,7 @@ def prompt_for(stories, which):
     budget_lo = WORDS_MIN - word_count(intro("2026-10-16", which)) - word_count(OUTRO)
     budget_hi = WORDS_MAX - word_count(intro("2026-10-16", which)) - word_count(OUTRO)
     system = TASK.replace("{lo}", str(budget_lo)).replace("{hi}", str(budget_hi))
-    lines = [f"{i}. Headline: {s['title']} || Outlet: {s['source'] or 'unknown'}"
+    lines = [f"{i}. Headline: {s['title']} || Outlet, never said aloud: {s['source'] or 'unknown'}"
              + (f" || Text: {s['text']}" if s.get("text") else "")
              + (f" || Editor's note, not a source: {s['why']}" if s.get("why") else "")
              for i, s in enumerate(stories, 1)]
@@ -605,6 +644,17 @@ def copied(text, titles, run=COPY_RUN):
     return hits
 
 
+def outlets_named(text, stories):
+    """Newsrooms the text names that no story's headline or own text does."""
+    given = " ".join(f"{s.get('title', '')} {s.get('text', '')}" for s in stories)
+    return list(dict.fromkeys(m.group(0) for m in OUTLET_RE.finditer(plain(text)) if m.group(0) not in given))
+
+
+def attributions(text):
+    """Phrases that say where a story came from, as written."""
+    return list(dict.fromkeys(m.group(0) for m in ATTRIB_RE.finditer(plain(text))))
+
+
 LIST_RE = re.compile(r"(^|\n)\s*([-*•]|\d+[.)]|#)\s|\b(number one|firstly|secondly|first up|story one)\b", re.I)
 
 
@@ -615,6 +665,8 @@ def problems_of(paragraphs, teaser, stories, date, which):
     return {
         "invented": made_up(body, srcs) + gendered(body, srcs),
         "unsupported": [],
+        "outlets": outlets_named(body, stories),
+        "attribution": attributions(body),
         "copied": copied(body, [s["title"] for s in stories]),
         "list": bool(LIST_RE.search(body)),
         "marks": unknown_marks("\n\n".join(paragraphs)),
@@ -624,12 +676,13 @@ def problems_of(paragraphs, teaser, stories, date, which):
 
 
 def hard_fail(p):
-    return bool(p["invented"] or p["unsupported"] or p.get("marks"))
+    return bool(p["invented"] or p["unsupported"] or p.get("marks") or p.get("outlets"))
 
 
 def clean(p, soft=False):
     lo, hi = (WORDS_SOFT_MIN, WORDS_SOFT_MAX) if soft else (SHORT_OK, WORDS_MAX)
-    return not hard_fail(p) and not p["list"] and lo <= p["words"] <= hi and (soft or not p["copied"])
+    return (not hard_fail(p) and not p["list"] and lo <= p["words"] <= hi
+            and (soft or not (p["copied"] or p.get("attribution"))))
 
 
 def describe(p):
@@ -641,6 +694,13 @@ def describe(p):
     for u in p["unsupported"]:
         out.append(f'This sentence says what the sources do not ({u["problem"]}); cut it or say only '
                    f'what they give: "{u["sentence"]}"')
+    if p.get("outlets"):
+        out.append("The Brief never names an outlet: it is the station, and the Wire links every source. Take out "
+                   "every mention, with its 'reports' or 'says', and tell the fact in your own voice: "
+                   + ", ".join(f'"{w}"' for w in p["outlets"]))
+    if p.get("attribution"):
+        out.append("Never say where a story came from; tell the fact plainly, subject first: "
+                   + ", ".join(f'"{w}"' for w in p["attribution"]))
     if p["copied"]:
         out.append("These headlines were read out word for word; retell them in your own words: "
                    + " | ".join(p["copied"]))
@@ -723,7 +783,7 @@ def write_script(stories, engine, date, which, ask=None):
         paragraphs = tidy(answer.get("paragraphs"))
         teaser = re.sub(r"\s+", " ", str(answer.get("teaser") or "")).strip()[:120]
         p = problems_of(paragraphs, teaser, stories, date, which)
-        if paragraphs and not p["invented"] and not p["list"] and not p["marks"]:
+        if paragraphs and not p["invented"] and not p["list"] and not p["marks"] and not p["outlets"]:
             p["unsupported"], got = verify(stories, paragraphs, engine, ask)
             add(usage, got)
         drafts.append((paragraphs, teaser, p))
@@ -739,11 +799,11 @@ def write_script(stories, engine, date, which, ask=None):
         # was read by the check and passed.
         for k, (paragraphs, teaser, p) in enumerate(list(drafts), 1):
             quoted = [u["sentence"] for u in p["unsupported"]]
-            if quoted and all(quoted) and not p["invented"] and not p["list"] and not p["marks"]:
+            if quoted and all(quoted) and not p["invented"] and not p["list"] and not p["marks"] and not p["outlets"]:
                 cut = cut_sentences(paragraphs, quoted)
                 q = problems_of(cut, teaser, stories, date, which)
                 q["cut"] = len(quoted)
-                if cut and not q["invented"] and not q["marks"]:
+                if cut and not q["invented"] and not q["marks"] and not q["outlets"]:
                     drafts.append((cut, teaser, q))
                     notes.append(f"draft {k}: cut {len(quoted)} sentence(s) the fact check could not support")
     honest = [d for d in drafts if d[0] and not hard_fail(d[2]) and not d[2]["list"]]
@@ -752,14 +812,14 @@ def write_script(stories, engine, date, which, ask=None):
                      "no clip today rather than a wrong one")
         return None, "", usage, notes
     off = lambda d: max(SHORT_OK - d[2]["words"], d[2]["words"] - WORDS_MAX, 0)  # noqa: E731
-    # nearest the length, then fewest copied headlines, then a draft nothing was cut from
-    paragraphs, teaser, p = min(honest, key=lambda d: (off(d), len(d[2]["copied"]), d[2].get("cut", 0)))
+    # no "reports that", then nearest the length, then fewest copied headlines, then a draft nothing was cut from
+    paragraphs, teaser, p = min(honest, key=lambda d: (len(d[2]["attribution"]), off(d), len(d[2]["copied"]), d[2].get("cut", 0)))
     if not clean(p, soft=True):
         notes.append(f"the nearest draft is {p['words']} words: no clip today")
         return None, "", usage, notes
-    if p["copied"] or off((paragraphs, teaser, p)):
+    if p["copied"] or p["attribution"] or off((paragraphs, teaser, p)):
         notes.append("shipped with a soft problem: " + "; ".join(describe(p)))
-    if p["teaser_invented"] or len(teaser) > 100 or "[" in teaser or "]" in teaser:
+    if p["teaser_invented"] or outlets_named(teaser, stories) or len(teaser) > 100 or "[" in teaser or "]" in teaser:
         teaser = ""     # a teaser with a bracket in it is dropped whole, never trimmed
     return assemble(date, which, paragraphs), teaser, usage, notes
 
@@ -1124,6 +1184,10 @@ def selftest():
     assert script and script.startswith("Morning. It's Friday, October 16th") and " AI " not in script, script
     assert SHORT_OK <= word_count(script) <= WORDS_MAX, word_count(script)
     assert len(calls) == 1 and teaser == "Bike lanes on North Avenue." and usage["calls"] == 2, (calls, usage)
+    assert outlets_named("Seven Days has the plan, VTDigger reported. Channel 3 News has more.", stories) == ["Seven Days", "VTDigger", "Channel 3"]
+    assert outlets_named("It ran for seven days at the Vermont Public Utility Commission.", stories) == []
+    assert outlets_named("Seven Days won.", [{"title": "Seven Days wins a Pulitzer"}]) == []
+    assert attributions("The plan passed, according to the paper. That's from WCAX.") == ["according to", "That's from"]
     assert gendered("She said his plan works.", srcs) == ["She", "his"] and not gendered("She said so.", ["she won"])
     # pacing marks: kept to TAGS, never read by a check, never a hiding place
     assert tidy_tags("[Short Pause] Closer to home... the plan [pause][pause] pa[pause]ssed.") == \
