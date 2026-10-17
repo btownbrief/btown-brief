@@ -407,6 +407,38 @@ class FableRuleTests(unittest.TestCase):
         self.assertLess(titles.index(rate["title"]), titles.index(feature["title"]))
         self.assertTrue(all(titles.index(b["title"]) < titles.index(feature["title"]) for b in btv))
 
+    def test_one_list_by_importance_keeps_national_slots(self):
+        # Stephen, 2026-10-17: on Everything the top five should mix local and
+        # national. The tier sort reorders the local picks among the local
+        # slots only; every national pick stays exactly where the editor put it.
+        feature = item(1, "Horse logging, a 200-year Vermont tradition", topic="environment")
+        btv = [item(10 + k, f"Burlington council story {k}", topic="city-government", src=f"b{k}")
+               for k in range(3)]
+        fed = item(20, "Fed holds rates steady", ch="world", local=False, src="ap")
+        senate = item(21, "Senate advances the stopgap bill", ch="world", local=False, src="reuters")
+        asked = [feature, fed, btv[0], senate, btv[1], btv[2]]
+        ranked = cw.order_picks(asked)
+        self.assertEqual([p["local"] for p in ranked], [p["local"] for p in asked])
+        self.assertEqual(ranked[1]["title"], fed["title"])
+        self.assertEqual(ranked[3]["title"], senate["title"])
+        local = [p["title"] for p in ranked if p["local"]]
+        self.assertEqual(local, [b["title"] for b in btv] + [feature["title"]])  # Burlington first
+        top5 = ranked[:5]
+        self.assertTrue(any(p["local"] for p in top5) and any(not p["local"] for p in top5))
+
+    def test_a_national_lead_stays_number_one(self):
+        fed = item(20, "Fed holds rates steady", ch="world", local=False, src="ap")
+        btv = [item(10 + k, f"Burlington council story {k}", topic="city-government", src=f"b{k}")
+               for k in range(4)]
+        ranked = cw.order_picks([fed] + btv)
+        self.assertEqual(ranked[0]["title"], fed["title"])
+
+    def test_the_prompt_says_one_list(self):
+        self.assertIn("single list by importance, not two lists", cw.TASK)
+        doctrine = wc.read_prompt("wire-taste.md")
+        self.assertIn("One list, by importance", doctrine)
+        self.assertNotIn("Local first", doctrine)
+
     def test_display_names(self):
         self.assertEqual(wc.display_name({"id": "top-news-amp-analysis", "short": "Top News &amp…",
                                           "name": "Top News &amp; Analysis"}), "Top News & Analysis")
@@ -573,6 +605,23 @@ class CapTests(Workdir):
         picks = self.today()["picks"]
         self.assertEqual(sum(1 for pick in picks if not pick["local"]), cw.NATIONAL_PICKS)
         self.assertEqual(sum(1 for pick in picks if pick["local"]), 5)
+        # the editor ranked national first, so national leads (every national
+        # pick here is AP, so the outlet rule spaces them out with local ones)
+        self.assertFalse(picks[0]["local"])
+
+    def test_an_interleaved_ranking_reaches_the_page_interleaved(self):
+        self.write_pulse(pulse(n_local=12, n_world=6))
+
+        def mixed(numbers, river_n, schema):
+            answer = take_all(numbers, river_n, schema)
+            local, world = numbers[:12], numbers[12:18]
+            order = [local[0], world[0], local[1], local[2], world[1], local[3], world[2]]
+            answer["picks"] = [{"i": n, "why": "R."} for n in order]
+            return answer
+        self.run_curate(Stub(mixed))
+        picks = self.today()["picks"]
+        self.assertEqual([p["local"] for p in picks], [True, False, True, True, False, True, False])
+        self.assertEqual([p["rank"] for p in picks], list(range(1, 8)))
 
     def test_local_picks_capped_at_the_band(self):
         self.write_pulse(pulse(n_local=32, n_world=6))
