@@ -201,7 +201,7 @@ const MESSAGES = {
   bad_interest: 'One of those interests isn’t on the list.',
   bad_ages: 'Pick an age band from the list, or none.',
   not_found: 'That plan has gone.',
-  off: 'The directory opens soon. Everything else here works.',
+  off: 'The directory opens soon.',
 };
 const fail = (error) => ({ ok: false, error, message: MESSAGES[error] || message(error) });
 
@@ -536,7 +536,7 @@ function setArch(k, quiet) {
   keep();
   pushArch();
   render();
-  if (!quiet) app.toast(S.arch ? 'You’re here as ' + ARCHETYPE_LABELS[S.arch].toLowerCase() + '. Plans and clubs like that come first.' : 'Cleared. Everything shows in its usual order.');
+  if (!quiet) app.toast(S.arch ? 'You’re here as ' + ARCHETYPE_LABELS[S.arch].toLowerCase() : 'Cleared');
 }
 function toggleTag(t) {
   S.tags = S.tags.includes(t) ? S.tags.filter((x) => x !== t) : S.tags.concat(t);
@@ -618,7 +618,7 @@ function drawArch() {
   const s = slots && slots.arch;
   if (!s) return;
   s.innerHTML = '';
-  sec(s, 'Who are you here as?', 'Pick one, and anything below that fits. Plans, mixers and clubs like you move up.');
+  sec(s, 'Who are you here as?');
   const grid = el('div', 'arch');
   ARCH.forEach(([k, icon, line]) => {
     const on = S.arch === k;
@@ -641,9 +641,6 @@ function drawArch() {
   };
   tagRow('I’m…', WHO);
   tagRow('I’m into…', INTO);
-  s.appendChild(el('p', 'note pad', esc(app.user()
-    ? 'The tile is saved to your profile and shows on your plans. What you’re into is saved to your profile too, where nobody sees it; the directory shows it only if you join. Who you are stays on this phone.'
-    : 'All of this stays on this phone. Signed in, the tile also shows on your plans.')));
 }
 
 /* "I'd go" is the board's vote, painted as a going count */
@@ -695,10 +692,10 @@ function drawPlans() {
   s.innerHTML = '';
   const post = button(ICON.plus + ' Post a plan', 'ghost sm', planSheet);
   post.dataset.post = '1';
-  sec(s, 'Open to strangers this week', 'Real plans from neighbors who said strangers are welcome. Say you’d go and the host sees the count.', post);
+  sec(s, 'Open to strangers this week', '', post);
   if (S.plansState === 'loading') { s.appendChild(el('p', 'loading', 'Finding this week’s plans…')); return; }
   if (S.plansState !== 'ok') {
-    s.appendChild(el('div', 'textcard', '<p>' + esc(S.plansState === 'off' ? 'Plans open soon. Everything else on this tab works.' : message('offline')) + '</p>'));
+    s.appendChild(el('div', 'textcard', '<p>' + esc(S.plansState === 'off' ? 'Plans open soon.' : message('offline')) + '</p>'));
     return;
   }
   const upcoming = S.posts.filter((p) => p.at == null || p.at > Date.now() - PAST_GRACE);
@@ -718,20 +715,19 @@ function drawPlans() {
     list.forEach((p) => { const n = planCard(p); if (n) f.appendChild(n); });
     watchGoing(f);
   } else {
-    const tc = el('div', 'textcard', '<h3 class="serif">No plans yet this week.</h3><p>Going somewhere and happy to have company? Say where and when, and that strangers are welcome.</p>');
+    const tc = el('div', 'textcard', '<h3 class="serif">No plans yet this week.</h3>');
     const r = el('div', 'row');
     r.appendChild(button('Post the first plan', '', planSheet));
     tc.appendChild(r);
     s.appendChild(tc);
   }
-  if (!app.user()) s.appendChild(el('p', 'note pad', esc('Reading plans and saying you’d go need nothing. Posting one takes the email sign-in: one email, no password.')));
 }
 
 function drawMix() {
   const s = slots && slots.mix;
   if (!s) return;
   s.innerHTML = '';
-  sec(s, 'Mixers', 'Stephen’s own Btown Brief meetups, open to anyone, then the clubs that fit you.');
+  sec(s, 'Mixers');
   const settled = (S.events || S.eventsFailed) && (app.demo || S.feed);
   if (!mixers().length && !settled) s.appendChild(el('p', 'loading', 'Reading the calendar…'));
   else {
@@ -746,15 +742,14 @@ function drawMix() {
       app.bindFeed(f);
       list.forEach((it) => { const n = cards.event(it, { noComments: true }); if (n) f.appendChild(n); });
     } else {
-      const tc = el('div', 'textcard', '<p>' + esc(S.eventsFailed && !(S.feed || []).length ? 'The calendar didn’t load. The meetups are always on Meetup.' : 'No Btown Brief meetups on the calendar for the next two weeks yet. New ones land on Meetup first.') + '</p>');
+      const tc = el('div', 'textcard', '<p>' + esc(S.eventsFailed && !(S.feed || []).length ? 'The calendar didn’t load.' : 'No meetups in the next two weeks.') + '</p>');
       const r = el('div', 'row');
       r.appendChild(linkBtn('The Meetup group', MEETUP_GROUP));
       tc.appendChild(r);
       s.appendChild(tc);
     }
   }
-  s.appendChild(el('div', 'sec', '<div><h2>' + esc(S.arch || S.tags.length || S.quizTags.length ? 'Clubs that fit' : 'Clubs to try') + '</h2><p>' +
-    esc('Groups that meet every week or month, and welcome new people.') + '</p></div>'));
+  s.appendChild(el('div', 'sec', '<div><h2>' + esc(S.arch || S.tags.length || S.quizTags.length ? 'Clubs that fit' : 'Clubs to try') + '</h2></div>'));
   if (!S.clubs) { s.appendChild(el('p', S.clubsFailed ? 'note pad' : 'loading', S.clubsFailed ? 'The clubs list didn’t load.' : 'One moment…')); }
   else {
     const g = el('div', 'clubs');
@@ -780,15 +775,14 @@ function drawQuiz() {
   const s = slots && slots.quiz;
   if (!s) return;
   s.innerHTML = '';
-  sec(s, 'The quiz', 'Seven questions. A guess at who you are here as, and where to start.');
+  sec(s, 'The quiz');
   const tc = el('div', 'textcard');
   tc.dataset.quiz = S.q ? (S.q.done ? 'done' : 'q' + S.q.i) : 'intro';
   s.appendChild(tc);
   if (!S.q) {
-    tc.innerHTML = '<h3 class="serif">Seven questions, then a few places to start.</h3><p>Nothing about your age, your gender or who you date. At the end: a guess at your kind of person, three clubs, the next mixers, and where the conversation is.</p>';
+    tc.innerHTML = '<h3 class="serif">Seven questions.</h3>';
     const r = el('div', 'row');
     r.appendChild(button('Take the quiz', '', () => { S.q = { i: 0, picks: [] }; drawQuiz(); }));
-    r.appendChild(el('span', 'fine', 'Answers stay on this phone.'));
     tc.appendChild(r);
     return;
   }
@@ -812,8 +806,7 @@ function drawQuiz() {
   }
   const res = S.q.result;
   const arch = ARCH.find((a) => a[0] === res.arch);
-  tc.innerHTML = '<span class="eyebrow">Your result</span><h3 class="serif">' + esc('Probably: ' + ARCHETYPE_LABELS[res.arch]) + '</h3><p>' + esc(arch[2]) +
-    ' ' + esc('It’s a guess, not a box. Take it, or pick another tile at the top.') + '</p>' +
+  tc.innerHTML = '<span class="eyebrow">Your result</span><h3 class="serif">' + esc('Probably: ' + ARCHETYPE_LABELS[res.arch]) + '</h3><p>' + esc(arch[2]) + '</p>' +
     (res.tags.length ? '<p>' + esc('Into: ' + res.tags.map((t) => INTEREST_WORDS[t]).join(', ') + '.') + '</p>' : '');
   const h = (t) => tc.appendChild(el('p', 'fine', '<b>' + esc(t) + '</b>'));
   const picks = clubsFor(3, res.arch, res.tags);
@@ -832,9 +825,7 @@ function drawQuiz() {
     });
   }
   h('Where to talk');
-  const ch = res.channel === 'find' ? ['Find Each Other', CH_FIND, 'The community channel for meeting people and saying hello.']
-    : ['Plans & Meetups', CH_PLANS, 'The community channel where plans get made.'];
-  tc.appendChild(el('p', 'fine', esc(ch[2])));
+  const ch = res.channel === 'find' ? ['Find Each Other', CH_FIND] : ['Plans & Meetups', CH_PLANS];
   const door = el('div', 'row');
   door.dataset.channel = res.channel;
   door.appendChild(linkBtn(ch[0], ch[1]));
@@ -855,8 +846,8 @@ function drawDir() {
   if (!s) return;
   s.innerHTML = '';
   const d = S.dir;
-  const count = d && !d.error ? plural(d.count, 'neighbor is', 'neighbors are') + ' in it.' : '';
-  sec(s, 'The directory', 'Opt in to be found: first name, neighborhood, who you are here as and what you’re into. Never your email. ' + count);
+  const count = d && !d.error ? plural(d.count, 'neighbor', 'neighbors') + ' in it' : '';
+  sec(s, 'The directory', count);
   const tc = el('div', 'textcard');
   tc.dataset.dir = !d ? 'loading' : d.error ? 'error' : !app.user() ? 'out' : d.me ? 'in' : 'join';
   const r = el('div', 'row');
@@ -867,18 +858,14 @@ function drawDir() {
     return;
   }
   if (!app.user()) {
-    tc.innerHTML = '<p>' + esc('Sign in to see who’s in it and to be seen. One email, no password. You see the directory once you’re in it too.') + '</p>';
     r.appendChild(button('Sign in', '', () => app.openSettings()));
     tc.appendChild(r);
     s.appendChild(tc);
     return;
   }
   if (!d.me) {
-    tc.innerHTML = '<p>' + esc('Join and you’ll see everyone else who has. You show as your first name' +
-      (S.prof && S.prof.display_name ? ' (' + S.prof.display_name + ')' : '') + ', your neighborhood and tile if you set them, and ' +
-      (shareable().length ? shareable().map((t) => INTEREST_WORDS[t]).join(', ') : 'nothing else until you pick what you’re into') + '. Leave any time.') + '</p>';
     if (S.prof) r.appendChild(button('Join the directory', '', join(true)));
-    else { tc.appendChild(el('p', 'fine', esc('First, a first name: neighbors see it, nothing else.'))); r.appendChild(button('Add your first name', '', () => boards.profileSheet())); }
+    else r.appendChild(button('Add your first name', '', () => boards.profileSheet()));
     tc.appendChild(r);
     s.appendChild(tc);
     return;
@@ -918,8 +905,7 @@ function drawTalk() {
   if (!s) return;
   s.innerHTML = '';
   sec(s, 'Where the talking happens', '');
-  const tc = el('div', 'textcard', '<h3 class="serif">Plans live here. Conversation lives with the community.</h3><p>' +
-    esc('Say hello in Find Each Other, make plans in Plans & Meetups, and chat right now on Telegram. Nothing on this tab is a chat.') + '</p>');
+  const tc = el('div', 'textcard');
   const r = el('div', 'row');
   r.append(linkBtn('Find Each Other', CH_FIND), linkBtn('Plans & Meetups', CH_PLANS), linkBtn('Telegram', TELEGRAM_URL));
   tc.appendChild(r);
@@ -975,7 +961,7 @@ function planSheet() {
   app.sheet('Post a plan', (body, card, close) => {
     const note = (t) => body.appendChild(el('p', 'sheet-note', esc(t)));
     if (!app.user()) {
-      note('Posting a plan needs the email sign-in: one email, no password. Reading plans and saying you’d go never do.');
+      note('Sign in to post.');
       const r = el('div', 'linkrow');
       r.appendChild(button('Sign in', '', () => app.openSettings()));
       body.appendChild(r);
@@ -995,19 +981,19 @@ function planForm(body, close, prof) {
   const L = RULES.limits;
   const f = el('form', 'bform');
   f.noValidate = true;
-  if (!prof) f.appendChild(row('Your first name', field('text', 'display_name', { max: L.nameMax, placeholder: 'Maya, or Maya R.' }), 'Neighbors see it on your plan. Asked once; change it in Settings.', true));
+  if (!prof) f.appendChild(row('Your first name', field('text', 'display_name', { max: L.nameMax, placeholder: 'Maya, or Maya R.' }), 'Neighbors see it.', true));
   f.appendChild(row('What’s the plan?', field('text', 'title', { max: L.titleMax, placeholder: 'Trivia at Three Needs, need a fifth' }), null, true));
   f.appendChild(row('Which day', choose('day', [['', 'Pick a day']].concat(dayOptions()), ''), null, true));
   f.appendChild(row('What time', choose('time', [['', 'Pick a time']].concat(timeOptions()), ''), null, true));
   f.appendChild(row('Where', field('text', 'place', { max: L.placeMax, placeholder: 'Somewhere public: a bar, a trailhead, a café' }), null, false));
   f.appendChild(row('Who it’s for', choose('arch', [['', 'Anyone']].concat(RULES.archetypes.map((a) => [a, 'Mostly ' + FOR[a]])), S.arch || ''), null, false));
-  f.appendChild(row('Rough ages', choose('ages', [['', 'Not saying']].concat(PEOPLE_RULES.ages.map((a) => [a, AGES[a]])), ''), 'About the group, so people know what to expect. Never required.', false));
+  f.appendChild(row('Rough ages', choose('ages', [['', 'Not saying']].concat(PEOPLE_RULES.ages.map((a) => [a, AGES[a]])), ''), null, false));
   f.appendChild(row('Spots for strangers', field('number', 'spots', { placeholder: 'How many more can come?' }), null, false));
   f.appendChild(row('More', field('textarea', 'body', { max: L.bodyMax, placeholder: 'How to find you, what to bring, the pace' }), null, false));
   const mu = el('label', 'consent', '<input type="checkbox" name="meetup"> ' +
-    esc('I’m down to put this on Meetup. Stephen’s Burlington Social Activities Group has 613 members; tick this and he may list it there with you as the host.'));
+    esc('Stephen may put this on Meetup, with me as host.'));
   f.appendChild(mu);
-  f.appendChild(el('p', 'bf-note', esc('A plan lasts until it happens, two weeks at most. Meet somewhere public, and say in More how people will find you.')));
+  f.appendChild(el('p', 'bf-note', esc('Meet somewhere public.')));
   const msg = el('p', 'bf-msg');
   msg.setAttribute('role', 'status');
   const go = button('Post the plan', '');
@@ -1050,7 +1036,7 @@ function planForm(body, close, prof) {
         return after.then((x) => {
           close();
           app.toast(!x.ok ? 'Posted. The Meetup box and age band didn’t save: ' + x.message
-            : r.post.status === 'pending' ? 'Posted. It shows once Stephen has had a look.' : extra.meetup ? 'Posted. Stephen will see you’re down for Meetup.' : 'Posted');
+            : r.post.status === 'pending' ? 'Posted. It shows once approved.' : 'Posted');
           S.filter = 'all';
           loadPlans().then(() => { pending = 'b-' + r.post.id; land(); });
         });
