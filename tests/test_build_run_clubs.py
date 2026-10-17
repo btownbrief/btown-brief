@@ -76,6 +76,24 @@ class Validate(unittest.TestCase):
         meet = {"day": "tue", "time": "18:00", "where": "Gym", "address": 12, "lat": 44.48, "lng": -73.2}
         self.assertTrue(any("address must be text" in e for e in errors_for(club(meets=[meet]))))
 
+    def test_season_fields(self):
+        self.assertEqual(errors_for(club(months=[12, 1, 2], **{"from": "2026-11-06", "until": "2027-03-10"})), [])
+        self.assertTrue(any("months" in e for e in errors_for(club(months=[0, 13]))))
+        self.assertTrue(any("months" in e for e in errors_for(club(months=[]))))
+        self.assertTrue(any("twice" in e for e in errors_for(club(months=[5, 5]))))
+        self.assertTrue(any("months" in e for e in errors_for(club(months="May-September"))))
+        self.assertTrue(any("YYYY-MM-DD" in e for e in errors_for(club(until="Oct 28"))))
+        self.assertTrue(any("after until" in e for e in errors_for(club(**{"from": "2026-12-01", "until": "2026-11-01"}))))
+        meet = dict(club()["meets"][0], months=[6, 7, 8], until="2026-02-30")
+        errs = errors_for(club(meets=[meet]))
+        self.assertTrue(any("meets[0]: until" in e for e in errs), errs)
+
+    def test_season_text_without_months_warns(self):
+        warns = brc.validate({"clubs": [club(season="May-September")]}, today=TODAY)[1]
+        self.assertTrue(any("no months/from/until" in w for w in warns), warns)
+        for quiet in (club(season="year-round"), club(season="May-September", months=[5, 6, 7, 8, 9]), club(season="")):
+            self.assertFalse(any("no months" in w for w in brc.validate({"clubs": [quiet]}, today=TODAY)[1]))
+
     def test_same_name_twice(self):
         self.assertTrue(any("same name" in e for e in errors_for(club("a", name="Run Club"),
                                                                   club("b", name="Run club"))))
