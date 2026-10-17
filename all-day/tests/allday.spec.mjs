@@ -2204,6 +2204,27 @@ async function theWatch(browser, base) {
     await ctx.close();
   });
 
+  await group('Watch, the server keeps one vote each, even one cast on another device (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#watch/vote');
+    await page.waitForSelector(wPanel + ' [data-ballot] .vote-opt', { timeout: 15000 });
+    const opts = () => page.$$eval(wPanel + ' [data-ballot] .vote-opt', (n) => n.map((o) => ({ k: o.dataset.k, on: o.getAttribute('aria-pressed'), n: parseFloat(o.querySelector('.l span').textContent) })));
+    const before = await opts();
+    const [a, b] = [before[0], before[1]];
+    /* the same reader votes for the first pick somewhere this tab never hears about */
+    await page.evaluate((id) => Promise.all([import('/all-day/js/boards.js'), import('/all-day/js/store.js')]).then(([B, st]) => B._fake().as(null).call('nn_vote', { p_post: id, p_player: st.playerId() })), a.k.slice(5));
+    await page.click(wPanel + ' [data-k="' + b.k + '"]');
+    await page.waitForFunction((k) => document.querySelector('#panel-watch [data-k="' + k + '"]').getAttribute('aria-pressed') === 'true', b.k);
+    await page.waitForTimeout(200);
+    const now = await opts();
+    const counts = await fakeOf(page, `(f) => [f._count('${a.k.slice(5)}'), f._count('${b.k.slice(5)}')]`);
+    check(counts[0] === a.n && counts[1] === b.n + 1, 'voting for the second moved the vote off the first, on the server', JSON.stringify([a, b, counts]));
+    const na = now.find((o) => o.k === a.k);
+    check(na && na.n === a.n && na.on === 'false', 'and the tab shows the first back where it was', JSON.stringify(now));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Watch, a rating posts with stars in meta (demo)', async () => {
     const d = await watchDemo();
     const { ctx, page, errors } = await newPage(browser, base);
@@ -2227,8 +2248,8 @@ async function theWatch(browser, base) {
     await page.click('.sheet-body [data-rate] button[type=submit]');
     await page.waitForFunction(() => /^Rated 4 stars/.test(document.querySelector('.sheet-body [data-msg]').textContent), null, { timeout: 4000 }).catch(() => {});
     const post = await fakeOf(page, (x) => { const p = x.posts.filter((q) => q.board === 'watch' && q.kind === 'rating').pop(); return { n: x.posts.filter((q) => q.board === 'watch' && q.kind === 'rating').length, title: p.title, meta: p.meta, exp: p.expires_at }; });
-    check(post.n === before + 1 && post.title === 'Fieldwork' && JSON.stringify(post.meta) === JSON.stringify({ stars: 4, year: f.y, where: 'In a theater' }) && post.exp === null,
-      'a rating post on the watch board: the title, and stars, year and where in meta; it never expires', JSON.stringify(post));
+    check(post.n === before + 1 && post.title === 'Fieldwork' && JSON.stringify(post.meta) === JSON.stringify({ stars: 4, film: f.id, year: f.y, where: 'In a theater' }) && post.exp === null,
+      'a rating post on the watch board: the title, and stars, the film’s TMDB id, year and where in meta; it never expires', JSON.stringify(post));
     check(await page.$$eval('.sheet-body [data-stars].on', (n) => n.length) === 4, 'four stars lit', '');
     /* Fieldwork had one demo rating; with Maya's it has two, still not shown */
     await page.click('.sheet-head .iconbtn');
@@ -2255,7 +2276,7 @@ async function theWatch(browser, base) {
     await page.click('.sheet-body [data-film] button');
     await page.waitForFunction(() => [...document.querySelectorAll('#panel-watch [data-ballot] .vote-opt')].some((o) => /Orchard/.test(o.innerText)), null, { timeout: 4000 }).catch(() => {});
     const pick = await fakeOf(page, (x) => { const p = x.posts.filter((q) => q.board === 'watch' && q.kind === 'pick').pop(); return { title: p.title, meta: p.meta, days: Math.round((p.expires_at - p.created_at) / 86400000) }; });
-    check(pick.title === 'Orchard' && JSON.stringify(pick.meta) === JSON.stringify({ year: orchard.y }) && pick.days === 30, 'it posts a pick (title, year; 30 days) and lands on the ballot', JSON.stringify(pick));
+    check(pick.title === 'Orchard' && JSON.stringify(pick.meta) === JSON.stringify({ film: orchard.id, year: orchard.y }) && pick.days === 30, 'it posts a pick (title, TMDB id, year; 30 days) and lands on the ballot', JSON.stringify(pick));
     await page.click(wPanel + ' [data-suggest]');
     await page.fill('.sheet-body input[type=search]', 'orchard');
     await page.waitForTimeout(100);
@@ -2302,7 +2323,7 @@ async function drawBoard(page, board, extra) {
     host.innerHTML = '';
     const r = await B.list(board, extra || {});
     const meta = (p) => [p.meta.shop, p.meta.size, p.meta.price != null ? '$' + p.meta.price : ''].filter(Boolean).join(' · ');
-    B.put(host, r.posts, { meta: board === 'vintage' ? meta : undefined });
+    B.draw(host, r.posts, { meta: board === 'vintage' ? meta : undefined });
   }, { board, extra });
 }
 const COMPOSE = { board: 'vintage', kind: 'spotted', heading: 'Post a find', title: 'What did you spot?',
@@ -2337,7 +2358,7 @@ async function boards(browser, base) {
     await page.click('.bform button[type=submit]');
     await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
     const p = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.profile()));
-    check(p.ok && JSON.stringify(p.profile) === JSON.stringify({ display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail' }), 'saved, tidied, and read back', JSON.stringify(p));
+    check(p.ok && JSON.stringify(p.profile) === JSON.stringify({ display_name: 'Maya R.', neighborhood: 'old-north-end', archetype: 'trail', interests: [] }), 'saved, tidied, and read back', JSON.stringify(p));
     check(/Signed in\s+as Maya R\./.test(await settingsText(page)), 'Settings names the reader by first name', '');
     await page.click('.sheet-body .sheet-row button:has-text("Edit")');
     await page.waitForSelector('input[name=display_name]');
@@ -2536,6 +2557,87 @@ async function boards(browser, base) {
     check(!real.length, 'no console errors beyond the browser logging the refusal', real.join(' | '));
     await ctx.close();
   });
+
+  await group('boards: the profile sheet says what you’re into, activities only (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#vintage');
+    await settle(page);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Maya', interests: ['books'] })));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.profileSheet()));
+    await page.waitForSelector('.sheet-body [data-interests] button');
+    const pills = await page.$$eval('.sheet-body [data-interests] button', (bs) => bs.map((b) => [b.dataset.k, b.getAttribute('aria-pressed')]));
+    check(pills.length === 10 && JSON.stringify(pills.find((x) => x[0] === 'books')) === '["books","true"]', 'the ten activities, with the one already chosen on', JSON.stringify(pills));
+    const words = await page.$eval('.sheet-body [data-interests]', (b) => b.parentNode.innerText);
+    check(!/LGBTQ|woman|student|gender|\bage\b/i.test(words) && /nobody sees them unless you join/i.test(words), 'activities only, never who someone is, and who sees them is said', words);
+    for (const k of ['running', 'games', 'music', 'dance', 'making', 'languages', 'food', 'sports', 'outdoors']) await page.click('.sheet-body [data-interests] button[data-k="' + k + '"]');
+    const on = await page.$$eval('.sheet-body [data-interests] button.on', (bs) => bs.length);
+    check(on === 8, 'eight at most: books and the first seven tapped; sports and outdoors, the ninth and tenth, do nothing', on);
+    await page.click('.sheet-body [data-interests] button[data-k="books"]');
+    await page.click('.sheet-body .bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
+    const saved = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b._fake().profiles.get(b.demoReader).interests));
+    check(JSON.stringify(saved) === '["running","games","music","dance","making","languages","food"]', 'books tapped off, the seven saved to the profile, in the list’s order', JSON.stringify(saved));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards desk: People’s Meetup list and the stray-photo sweep (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/mod.html?demo=1');
+    await page.fill('#pass', 'demo');
+    await page.click('#gate button[type=submit]');
+    await page.waitForSelector('#desk:not([hidden]) [data-meetups]');
+    await page.waitForSelector('[data-sweep]', { timeout: 4000 }).catch(() => {});
+    const sweep = await page.$eval('[data-sweep]', (p) => p.textContent).catch(() => '');
+    check(/1 stray picture file cleared from the bucket/.test(sweep), 'opening the desk sweeps stray photos and says what went', sweep);
+    await page.click('[data-meetups]');
+    await page.waitForSelector('[data-meetup]');
+    const rows = await page.$$eval('[data-meetup]', (rs) => rs.map((r) => r.innerText));
+    check(rows.length === 1 && /Pickup soccer, need four more/.test(rows[0]) && /Sunday, 10 am · Leddy Park · 4 spots · mostly 30s · hosted by Dev K\. · 7 going/.test(rows[0]),
+      'the Meetup button lists the live plans down for Meetup: when, where, spots, ages, host, going', JSON.stringify(rows));
+    check(/Copy for Meetup/.test(rows[0]) && !/@/.test(rows[0]), 'each with a copy button, and no email', rows[0]);
+    await page.click('#desk [data-action="hide"]');
+    await page.waitForTimeout(200);
+    check(await page.$$eval('[data-sweep]', (n) => n.length) === 1, 'the sweep runs once a visit, and its note stays through a redraw', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('boards desk: the sweep removes strays through the Storage API, and says when it cannot (live)', async () => {
+    for (const ok of [true, false]) {
+      const asked = [];
+      const { ctx, page, errors } = await newPage(browser, base, {
+        rpc: (fn, args) => {
+          if (fn === 'nn_mod_list') return { waiting: [], reported: [], hidden: [], recent: [], bans: [] };
+          if (fn === 'nn_mod_photo_sweep') return { abandoned: 2, strays: ['submissions/lost-0001.jpg', 'submissions/lost-0002.jpg'] };
+          if (fn === 'nn_people_meetup_list') return { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } };
+          return undefined;
+        },
+      });
+      await page.route(/\/storage\/v1\/object\/btb-photos$/, (r) => {
+        asked.push({ method: r.request().method(), body: JSON.parse(r.request().postData() || '{}') });
+        return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(ok ? [{ name: 'submissions/lost-0001.jpg' }, { name: 'submissions/lost-0002.jpg' }] : []) });
+      });
+      await page.goto(base + '/all-day/mod.html');
+      await page.fill('#pass', 'test-pass');
+      await page.click('#gate button[type=submit]');
+      await page.waitForSelector('[data-sweep]', { timeout: 6000 }).catch(() => {});
+      const sweep = await page.$eval('[data-sweep]', (p) => p.textContent).catch(() => '');
+      check(asked.length === 1 && asked[0].method === 'DELETE' && JSON.stringify(asked[0].body) === '{"prefixes":["submissions/lost-0001.jpg","submissions/lost-0002.jpg"]}',
+        'the strays go to the Storage API’s remove, by path', JSON.stringify(asked));
+      if (ok) check(/2 board photos nobody posted left the photo queue; 2 stray picture files cleared/.test(sweep), 'removed: the note counts both', sweep);
+      else check(/2 stray picture files are waiting: the bucket would not let the desk remove them/.test(sweep), 'refused: the note says they are waiting and where to look', sweep);
+      if (!ok) {
+        await page.click('[data-meetups]');
+        await page.waitForSelector('[data-meetups] ~ *, #desk .sheet-note', { timeout: 3000 }).catch(() => {});
+        await page.waitForTimeout(200);
+        check(/paste all-day\/supabase\/nn-ROUND2\.sql/.test(await page.$eval('#desk', (d) => d.innerText)), 'the Meetup list before the paste says what to paste', '');
+      }
+      check(!errors.filter((e) => !/404/.test(e)).length, 'no console errors (beyond the 404 of a list not pasted yet)', errors.join(' | '));
+      await ctx.close();
+    }
+  });
 }
 
 async function boardPhotos(browser, base) {
@@ -2657,11 +2759,11 @@ async function theVintage(browser, base) {
     await page.click('#confirm [data-yes]');
     await page.waitForFunction((n) => Number(document.querySelector('.panel:not([hidden]) [data-thanks]').dataset.thanks) === n + 1, t0.n);
     const t1 = await thanksOf(page);
-    check(t1.n === t0.n + 1 && new RegExp(t1.n + ' finds posted from this device found a home this month').test(t1.text), 'the thank-you line counts one more find gone home', JSON.stringify([t0, t1]));
+    check(t1.n === t0.n + 1 && new RegExp(t1.n + ' finds posted here found a home lately').test(t1.text), 'the thank-you line counts one more find gone home', JSON.stringify([t0, t1]));
     check(/No points and no prizes/.test(t1.text) && !/raffle|enter to win|\bearn|\bdraw\b/i.test(t1.text), 'a thank-you, not points, prizes or a raffle', t1.text);
-    check(!(await page.$(vslot('spotted') + ' .card.board[data-k="b-' + id + '"]')), 'and the find leaves the board', '');
-    const gone = await fakeOf(page, `(f) => f.posts.some((p) => p.id === '${id}')`);
-    check(gone === false, 'the post is gone from the board, not just hidden here', '');
+    check(!(await page.$(vslot('spotted') + ' .card.board[data-k="b-' + id + '"]')), 'and the find leaves the grid', '');
+    const got = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.id === '${id}'); return p && { got: p.meta.got, shop: p.meta.shop }; }`);
+    check(got && got.got === true && got.shop === 'A stall at the Saturday market', 'the post’s got box is ticked on the board (boards.put), so everyone’s thank-you counts it', JSON.stringify(got));
     await pageRules(page, 'vintage', 1280);
     await page.screenshot({ path: path.join(SHOTS, 'demo-vintage-desktop-dark.png') });
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -2694,9 +2796,10 @@ async function theVintage(browser, base) {
     await page.check(f + ' input[name=consent]');
     await page.click(f + ' button[type=submit]');
     await page.waitForFunction(() => /^Sent\./.test(document.querySelector('#toast').textContent), null, { timeout: 4000 });
-    const sent = await fakeOf(page, `(x) => { const p = x.posts[x.posts.length - 1]; return { kind: p.kind, shop: p.meta.shop, title: p.title, body: p.body, photo: x._photoState(p.photo_path), n: x.posts.length }; }`);
-    check(sent.n === before.posts + 1 && sent.kind === 'spotted' && sent.shop === 'Make a tee' && sent.title === 'Rainy Church Street', 'sent: a Vintage post tagged “Make a tee”, until there is a design kind', JSON.stringify(sent));
-    check(/Thanks in: free shirts/.test(sent.body) && sent.photo === 'pending', 'it carries the artist’s choice for Stephen, and its picture waits in the photo queue', JSON.stringify(sent));
+    const sent = await fakeOf(page, `(x) => { const p = x.posts[x.posts.length - 1]; return { kind: p.kind, meta: p.meta, title: p.title, body: p.body, photo: x._photoState(p.photo_path), n: x.posts.length, ends: p.expires_at }; }`);
+    check(sent.n === before.posts + 1 && sent.kind === 'design' && sent.title === 'Rainy Church Street' && sent.ends === null, 'sent: a Vintage `design` post, which never ends', JSON.stringify(sent));
+    check(JSON.stringify(sent.meta) === '{"thanks":"shirts"}' && sent.body === 'Ink, from the corner by the steeple' && sent.photo === 'pending',
+      'the artist’s choice is its `thanks` field, the line is its body, and its picture waits in the photo queue', JSON.stringify(sent));
     check(await page.$eval('#sheet', (x) => x.hidden), 'the sheet closes once it is sent', '');
     const sentText = await page.$eval(vslot('sent'), (s) => s.innerText);
     check(!/Thanks in/.test(sentText), 'how an artist asked to be thanked never shows on the public card', sentText.slice(0, 120));
@@ -2769,6 +2872,83 @@ async function theVintage(browser, base) {
     await ctx.close();
   });
 
+  /* v 0: the rules could not be read (a server error), so the tab cannot tell which server it has */
+  for (const v of [1, 2, 0]) await group('Vintage, live: a fit check and “Someone got it” on a server with rules ' + (v ? 'v' + v : 'that could not be read'), async () => {
+    const at = (h) => new Date(Date.now() - h * 3600000).toISOString();
+    const mineFind = { id: '0000eeee-0000-4000-8000-000000000001', board: 'vintage', kind: 'spotted', title: 'Plaid wool shirt', body: '', place: '', meta: { shop: 'Old Gold', size: 'L' },
+      photo: null, author: 'Kara', author_arch: null, created_at: at(3), expires_at: new Date(Date.now() + 18 * 86400000).toISOString(), votes: 0, voted: false, mine: true };
+    const calls = [];
+    let got = false, gone = false;
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args) => {
+        if (!/^nn_|^btb_/.test(fn)) return undefined;
+        calls.push({ fn, args });
+        if (fn === 'nn_rules') return v ? { version: v } : { status: 500, body: { message: 'boom' } };
+        if (fn === 'nn_profile_get') return { display_name: 'Kara', neighborhood: null, archetype: null };
+        if (fn === 'nn_posts_list') return args.p_board === 'vintage' && args.p_filter.kind === 'spotted' && !gone ? [{ ...mineFind, meta: got ? { ...mineFind.meta, got: true } : mineFind.meta }] : [];
+        if (fn === 'nn_post_create') return { id: '0000eeee-0000-4000-8000-000000000002', board: 'vintage', kind: args.p_kind, title: args.p_title, body: args.p_body, place: '', meta: args.p_meta,
+          photo: null, author: 'Kara', author_arch: null, created_at: at(0), expires_at: null, votes: 0, voted: false, mine: true, status: 'approved' };
+        if (fn === 'nn_post_meta_set') {
+          if (v === 1) return { status: 404, body: { code: 'PGRST202', message: 'Could not find the function public.nn_post_meta_set' } };
+          got = true;
+          return { ...mineFind, meta: { ...mineFind.meta, ...args.p_meta }, status: 'approved' };
+        }
+        if (fn === 'nn_post_delete_own') { gone = true; return { deleted: true }; }
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/#vintage');
+    await settle(page);
+    await page.waitForSelector(vslot('spotted') + ' [data-act=vgot]');
+    await page.click(vslot('fit') + ' .addrow button');
+    const f = '.sheet-body form[data-form="fit"]';
+    await page.waitForSelector(f);
+    /* a real picture, so photos-lib.js can resize it to a jpeg */
+    await page.evaluate(async (sel) => {
+      const c = document.createElement('canvas'); c.width = 8; c.height = 8; c.getContext('2d').fillRect(0, 0, 8, 8);
+      const blob = await new Promise((res) => c.toBlob(res, 'image/png'));
+      const dt = new DataTransfer();
+      dt.items.add(new File([blob], 'fit.png', { type: 'image/png' }));
+      const i = document.querySelector(sel);
+      i.files = dt.files;
+      i.dispatchEvent(new Event('change'));
+    }, f + ' input[type=file]');
+    await page.fill(f + ' input[name=title]', 'All thrifted except the socks');
+    await page.fill(f + ' input[name=note]', 'Coat from Barge Canal');
+    await page.check(f + ' input[name=consent]');
+    await page.click(f + ' button[type=submit]');
+    await page.waitForFunction(() => /^Posted\./.test(document.querySelector('#toast').textContent), null, { timeout: 8000 }).catch(() => {});
+    const made = (calls.find((c) => c.fn === 'nn_post_create') || {}).args || { msg: await page.$eval(f + ' .bf-msg', (m) => m.textContent).catch(() => '') };
+    if (v === 2) check(made.p_kind === 'fit' && JSON.stringify(made.p_meta) === '{}' && made.p_body === 'Coat from Barge Canal', 'round two: a fit check is a `fit` post', JSON.stringify(made));
+    else check(made.p_kind === 'spotted' && JSON.stringify(made.p_meta) === '{"shop":"Fit check"}', (v ? 'round one' : 'unknown') + ': the same fit check is a find tagged “Fit check”, which either server takes', JSON.stringify(made));
+    await page.click(vslot('spotted') + ' [data-act=vgot]');
+    await page.click('#confirm [data-yes]');
+    if (!v) {
+      await page.waitForTimeout(600);
+      check(!calls.some((c) => c.fn === 'nn_post_delete_own' || c.fn === 'nn_post_meta_set'), 'not knowing the server, “Someone got it” deletes nothing and changes nothing', JSON.stringify(calls.map((c) => c.fn)));
+      check(/Couldn’t reach the boards/.test(await page.$eval('#toast', (t) => t.textContent)) && await page.$(vslot('spotted') + ' [data-act=vgot]'), 'it says so, and the find is still there to try again', '');
+      await ctx.close();
+      return;
+    }
+    await page.waitForFunction(() => /Thank you for passing it on/.test(document.querySelector('#toast').textContent), null, { timeout: 6000 }).catch(() => {});
+    const set = calls.find((c) => c.fn === 'nn_post_meta_set');
+    const del = calls.find((c) => c.fn === 'nn_post_delete_own');
+    if (v === 2) {
+      check(set && set.args.p_post === mineFind.id && JSON.stringify(set.args.p_meta) === '{"got":true}', 'round two: “Someone got it” ticks the find’s got box', JSON.stringify(set && set.args));
+      check(!del, 'and the find stays on the board, not deleted', '');
+    } else {
+      check(!set, 'round one has no box, so nothing asks for one', '');
+      check(del && del.args.p_post === mineFind.id, 'and the find comes down as before', JSON.stringify(del && del.args));
+    }
+    const st = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.status()));
+    check(st === 'live', 'either way the boards stay live', st);
+    check(!(await page.$(vslot('spotted') + ' .card.board[data-k="b-' + mineFind.id + '"]')), 'and it leaves the grid', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Vintage, live posts land in their sections (live)', async () => {
     const at = (h) => new Date(Date.now() - h * 3600000).toISOString();
     const ends = (d) => new Date(Date.now() + d * 86400000 + 3600000).toISOString();
@@ -2778,8 +2958,12 @@ async function theVintage(browser, base) {
       { ...base0, id: '0000cccc-0000-4000-8000-000000000002', board: 'vintage', kind: 'spotted', title: 'My Sunday fit', meta: { shop: 'Fit check' }, photo: 'submissions/abcd-2.jpg', created_at: at(3), expires_at: ends(19) },
       { ...base0, id: '0000cccc-0000-4000-8000-000000000003', board: 'vintage', kind: 'spotted', title: 'Fit, photo still waiting', meta: { shop: 'Fit check' }, photo: null, created_at: at(4), expires_at: ends(19) },
       { ...base0, id: '0000cccc-0000-4000-8000-000000000004', board: 'vintage', kind: 'spotted', title: 'Lake ink', body: 'Pen and ink\n\nThanks in: store credit', meta: { shop: 'Make a tee' }, photo: 'submissions/abcd-4.jpg', created_at: at(5), expires_at: ends(18) },
+      { ...base0, id: '0000cccc-0000-4000-8000-000000000006', board: 'vintage', kind: 'spotted', title: 'Gone wool coat', meta: { shop: 'Old Gold', got: true }, photo: null, created_at: at(7), expires_at: ends(16) },
     ];
     const swap = { ...base0, id: '0000cccc-0000-4000-8000-000000000005', board: 'vintage', kind: 'swap', title: 'Band tees', meta: { want: 'Denim', size: 'M' }, photo: null, created_at: at(6), expires_at: ends(17) };
+    const design = { ...base0, id: '0000cccc-0000-4000-8000-000000000007', board: 'vintage', kind: 'design', title: 'Moth on the steeple', body: 'Linocut', meta: { thanks: 'credit' }, photo: 'submissions/abcd-7.jpg', created_at: at(1), expires_at: null };
+    const fit = { ...base0, id: '0000cccc-0000-4000-8000-000000000008', board: 'vintage', kind: 'fit', title: 'Head to toe Old Gold', meta: {}, photo: 'submissions/abcd-8.jpg', created_at: at(9), expires_at: ends(50) };
+    const byKind = { spotted, swap: [swap], design: [design], fit: [fit] };
     const artPost = { ...base0, id: '0000dddd-0000-4000-8000-000000000001', board: 'art', kind: 'art', title: 'Camel’s Hump in gouache', author: 'Dev', meta: { shirt: 'yes' }, photo: 'submissions/art-1.jpg', created_at: at(8), expires_at: null };
     const calls = [];
     const { ctx, page, errors } = await newPage(browser, base, {
@@ -2787,7 +2971,7 @@ async function theVintage(browser, base) {
         if (!/^nn_/.test(fn)) return undefined;
         calls.push({ fn, args });
         if (fn === 'nn_posts_list' && args.p_board === 'art') return args.p_filter.meta && args.p_filter.meta.shirt === 'yes' ? [artPost] : [];
-        if (fn === 'nn_posts_list') return args.p_filter.kind === 'swap' ? [swap] : spotted;
+        if (fn === 'nn_posts_list') return byKind[args.p_filter.kind] || [];
         return undefined;
       },
     });
@@ -2795,10 +2979,12 @@ async function theVintage(browser, base) {
     await settle(page);
     await page.waitForSelector(vslot('spotted') + ' [data-grid="spotted"]');
     const lists = calls.filter((c) => c.fn === 'nn_posts_list').map((c) => c.args.p_board + ':' + c.args.p_filter.kind + ':' + c.args.p_limit).sort();
-    check(JSON.stringify(lists) === '["vintage:spotted:60","vintage:swap:60"]', 'two lists: spotted and swap, the server’s most', JSON.stringify(lists));
+    check(JSON.stringify(lists) === '["vintage:design:60","vintage:fit:60","vintage:spotted:60","vintage:swap:60"]', 'four lists, one per kind, the server’s most', JSON.stringify(lists));
     const titles = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, [...g.querySelectorAll('.b-title')].map((t) => t.textContent)])));
-    check(JSON.stringify(titles) === JSON.stringify({ spotted: ['Barn jacket'], swaps: ['Band tees'], sent: ['Lake ink'], fit: ['My Sunday fit'] }),
-      'a find in Spotted, a swap in Swaps, a design in Sent in, a fit check with its photo in Fit check, and one whose photo still waits nowhere', JSON.stringify(titles));
+    check(JSON.stringify(titles) === JSON.stringify({ spotted: ['Barn jacket'], swaps: ['Band tees'], sent: ['Moth on the steeple', 'Lake ink'], fit: ['My Sunday fit', 'Head to toe Old Gold'] }),
+      'a find in Spotted, a swap in Swaps, designs in Sent in and fit checks with their photos in Fit check, newest first, the old tagged ones among them; a fit whose photo still waits, and a find someone got, nowhere', JSON.stringify(titles));
+    const thanks = await page.$eval(vslot('spotted') + ' [data-thanks]', (p) => p.dataset.thanks);
+    check(thanks === '1', 'the find someone got counts in the thank-you', thanks);
     const img = await page.$eval(vslot('spotted') + ' .card.board .c-media img', (i) => i.getAttribute('src'));
     check(/\/storage\/v1\/object\/public\/btb-photos\/submissions\/abcd-1\.jpg$/.test(img), 'an approved photo comes from the public bucket', img);
     check(await page.$eval(vslot('swaps') + ' .b-meta', (m) => m.textContent) === 'For Denim · Size M', 'a swap says what it is for, and the size', '');
@@ -2835,7 +3021,7 @@ const artText = (page, sel) => page.$eval(artPanel + ' ' + sel, (n) => n.textCon
 const artReload = (page) => page.evaluate(() => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board: 'art', id: null, what: 'test' } })));
 
 async function theArt(browser, base) {
-  await group('Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles)', async () => {
+  for (const v of [1, 2]) await group('Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles, server rules v' + v + ')', async () => {
     const H = 3600000;
     const posts = [
       ART_POST({ id: artId(1), title: 'Sunday night, 11:30', at: '2026-10-12T03:30:00Z', votes: 50 }),
@@ -2845,8 +3031,16 @@ async function theArt(browser, base) {
     ];
     /* one a day back past nine weeks, so the list needs a second page and every week has a winner */
     for (let i = 0; i < 70; i++) posts.push(ART_POST({ id: artId(100 + i), title: 'Day ' + i, at: new Date(Date.parse('2026-10-11T12:00:00Z') - i * 24 * H).toISOString(), votes: i % 4 }));
-    const calls = [];
-    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', rpc: artList(posts, calls) });
+    const calls = [], weekly = [];
+    const list = artList(posts, calls);
+    /* round two counts votes by the week they were cast: in the week of Oct 5 (2026-W41) the Sunday-night post got 2 of
+       its 50 then, and Saturday's "Day 1" got 5; the rest came later and no longer move that week */
+    const rpc = (fn, args) => {
+      if (fn === 'nn_rules') return v === 2 ? { version: 2 } : undefined;
+      if (fn === 'nn_votes_by_week') { weekly.push(args); return [{ post: artId(101), week: '2026-W41', votes: 5 }, { post: artId(1), week: '2026-W41', votes: 2 }]; }
+      return list(fn, args);
+    };
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', rpc });
     await page.clock.setFixedTime(new Date('2026-10-14T14:00:00Z'));   // Wednesday, 10 am in Burlington, 7 am for this reader
     await page.goto(base + '/all-day/#art');
     await settle(page);
@@ -2858,8 +3052,15 @@ async function theArt(browser, base) {
     check(calls.length >= 2 && calls.every((c) => c.p_board === 'art' && c.p_limit === 60) && !calls[0].p_before && calls[1].p_before === posts.slice().sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))[59].created_at,
       'the list is paged, 60 at a time, until the eighth week back is in', JSON.stringify(calls.map((c) => c.p_before)));
     const wins = await page.$$eval(artPanel + ' [data-sec="winners"] .vcard', (cs) => cs.map((c) => [c.querySelector('.t').textContent, c.querySelector('.s').textContent]));
-    check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Sunday night, 11:30/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
-      'Winners: the past eight weeks, newest first, and the Sunday-night post wins its own week', JSON.stringify(wins));
+    if (v === 1) {
+      check(!weekly.length, 'round one: no counts by week are asked for', JSON.stringify(weekly));
+      check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Sunday night, 11:30/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
+        'Winners: the past eight weeks, newest first, and the Sunday-night post wins its own week on its votes so far', JSON.stringify(wins));
+    } else {
+      check(weekly.length && weekly.every((a) => a.p_board === 'art' && a.p_weeks === 9), 'round two: the votes are counted by week for this week and the eight before', JSON.stringify(weekly));
+      check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Day 1$/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
+        'Winners: the week of Oct 5 goes to the most votes cast that week, settled at Sunday midnight, whatever came later', JSON.stringify(wins));
+    }
     check(wins.every((w) => /^Kara · /.test(w[1])), 'each winner carries the maker’s name, and nothing else to win', JSON.stringify(wins[0]));
     const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => t.getAttribute('aria-label')));
     check(/^Tuesday afternoon/.test(tiles[0]) && /^Monday, 12:30 am/.test(tiles[1]) && !tiles.some((t) => /Open studio/.test(t)), 'the wall is newest first, pictures only', tiles.slice(0, 3).join(' | '));
@@ -3388,7 +3589,7 @@ async function thePeople(browser, base) {
     await ctx.close();
   });
 
-  await group('People, live: a plan, its extras and posting, over the wire', async () => {
+  for (const v of [1, 2]) await group('People, live: a plan, its extras and posting, over the wire (server rules v' + v + ')', async () => {
     const seen = [];
     const now = new Date();
     const post = (id, title, meta, ago) => ({ id, board: 'people', kind: 'plan', title, body: '', place: 'Foam Brewers', meta, photo: null, author: 'Priya N.', author_arch: 'regular',
@@ -3400,6 +3601,7 @@ async function thePeople(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base, {
       rpc: (fn, body) => {
         seen.push([fn, body]);
+        if (fn === 'nn_rules') return { version: v };
         if (fn === 'nn_posts_list') return body.p_board === 'people' ? [later, sooner, past].concat(created ? [created] : []) : [];
         if (fn === 'nn_people_plan_extras') return { [later.id]: { meetup: true, ages: 'thirties' } };
         if (fn === 'nn_profile_get') return { display_name: 'Robin', neighborhood: null, archetype: null };
@@ -3441,9 +3643,14 @@ async function thePeople(browser, base) {
     const extra = seen.find(([fn]) => fn === 'nn_people_plan_set');
     check(make && make[1].p_board === 'people' && make[1].p_kind === 'plan' && /, 6 pm$/.test(make[1].p_meta.when) && make[1].p_meta.spots === 3,
       'nn_post_create gets a people plan with when and spots', JSON.stringify(make && make[1]));
-    check(make && Object.keys(make[1].p_meta).every((k) => ['when', 'arch', 'spots'].includes(k)), 'its meta holds only the keys the people board’s rules allow', JSON.stringify(make && make[1].p_meta));
-    check(extra && extra[1].p_post === '11111111-aaaa-4aaa-8aaa-000000000009' && extra[1].p_meetup === true && extra[1].p_ages === 'forties',
-      'then nn_people_plan_set records the Meetup box and age band for that plan', JSON.stringify(extra && extra[1]));
+    if (v === 1) {
+      check(make && Object.keys(make[1].p_meta).every((k) => ['when', 'arch', 'spots'].includes(k)), 'on round one’s rules, its meta holds only the keys those rules allow', JSON.stringify(make && make[1].p_meta));
+      check(extra && extra[1].p_post === '11111111-aaaa-4aaa-8aaa-000000000009' && extra[1].p_meetup === true && extra[1].p_ages === 'forties',
+        'then nn_people_plan_set records the Meetup box and age band for that plan', JSON.stringify(extra && extra[1]));
+    } else {
+      check(make && make[1].p_meta.meetup === true && make[1].p_meta.ages === 'forties', 'on round two’s rules, the Meetup box and age band are the plan’s own fields', JSON.stringify(make && make[1].p_meta));
+      check(!extra, 'and the side table is not written', JSON.stringify(extra));
+    }
     check(/Stephen will see you’re down for Meetup/.test(await page.$eval('#toast', (t) => t.textContent)), 'and the toast says so', '');
     check(seen.every(([fn, b]) => !/@/.test(JSON.stringify(b))), 'no call carries an email', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
@@ -3550,8 +3757,8 @@ async function thePeople(browser, base) {
     const mine = p.posts.find((x) => x.title === 'Sunset paddle from North Beach');
     check(mine && mine.meta.meetup === true && mine.meta.ages === 'forties' && /, 6 pm$/.test(mine.meta.when) && mine.meta.spots === 3,
       'it posts through the compose sheet, and the Meetup box lands in its meta', JSON.stringify(mine));
-    const board = await fakeOf(page, (f) => f.posts.filter((x) => x.board === 'people').map((x) => x.meta));
-    check(board.every((m) => !('meetup' in m) && !('ages' in m)), 'on the board itself the post keeps to the rules’ fields; the extras sit in the People table', JSON.stringify(board));
+    const board = await fakeOf(page, `(f) => f.posts.find((x) => x.id === '${mine.id}').meta`);
+    check(board.meetup === true && board.ages === 'forties', 'on the board itself: the box and the band are the plan’s own fields', JSON.stringify(board));
     const k = 'b-' + mine.id;
     const sel = peoplePanel + ' [data-plans] .card.board[data-k="' + k + '"]';
     check(await flashes(page, k), 'the new plan is on the tab, scrolled to and flashed', k);
@@ -3606,6 +3813,34 @@ async function thePeople(browser, base) {
     check(await page.$eval(peoplePanel + ' .arch button[data-arch="trail"]', (b) => b.classList.contains('on')), 'and the tile at the top lights', '');
     await page.click(peoplePanel + ' .arch button[data-arch="new"]');
     check((await peek(page)).arch === 'new', 'the reader can still pick another', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('People, demo: what you’re into follows your profile; who you are never leaves the phone', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#people');
+    await page.waitForSelector(peoplePanel + ' [data-plans] .card.board');
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="books"]');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Robin' })));
+    const profileOf = () => page.evaluate(() => import('/all-day/js/boards.js').then((b) => (b._fake().profiles.get(b.demoReader) || {}).interests));
+    await page.waitForFunction(() => import('/all-day/js/boards.js').then((b) => ((b._fake().profiles.get(b.demoReader) || {}).interests || []).length === 1), null, { timeout: 4000 }).catch(() => {});
+    check(JSON.stringify(await profileOf()) === '["books"]', 'signing in with a name: the into-tag picked on this phone goes up to the profile', JSON.stringify(await profileOf()));
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="running"]');
+    await page.click(peoplePanel + ' [data-tags="I’m…"] .chip[data-chip="lgbtq"]');
+    await page.waitForTimeout(300);
+    check(JSON.stringify(await profileOf()) === '["running","books"]', 'a tag tapped on the tab is saved to the profile, in the list’s order', JSON.stringify(await profileOf()));
+    check(!/lgbtq/.test(JSON.stringify(await fakeOf(page, (f) => [...f.profiles.values()]))), 'a who-you-are tag never reaches the profile', '');
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Robin', interests: ['music'] })));
+    await page.waitForTimeout(300);
+    const p = await peek(page);
+    check(p.tags.includes('music') && !p.tags.includes('running') && !p.tags.includes('books') && p.tags.includes('lgbtq'), 'a change made in the profile sheet is the tab’s; who you are stays as it was', JSON.stringify(p.tags));
+    check(/What you’re into is saved to your profile too/.test(await page.$eval(peoplePanel + ' [data-sec="arch"]', (s) => s.innerText)), 'and the tab says where each kind of tag lives', '');
+    await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.setProfile({ display_name: 'Robin', interests: [] })));
+    await page.waitForTimeout(400);
+    check(!(await peek(page)).tags.some((t) => ['music', 'running', 'books'].includes(t)) && JSON.stringify(await profileOf()) === '[]',
+      'cleared in the profile sheet: the tab clears them too, and nothing writes them back', JSON.stringify([(await peek(page)).tags, await profileOf()]));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

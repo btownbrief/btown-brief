@@ -8,16 +8,20 @@
      finding your people) and what you are into (an athlete, a gamer, a
      runner, and the clubs page's other categories). The tile is the
      profile's archetype (boards.setProfile, so it shows on your plans) when
-     you are signed in, and kept on this device either way; the tags stay on
-     this device. The rest of the tab reorders by them: plans for your kind
-     of person first, then the clubs and mixers that fit.
+     you are signed in, and kept on this device either way. The what-you're-
+     into tags are the profile's interests when you are signed in (nobody
+     sees them there; the directory shows them only if you join it), and
+     the who-you-are tags never leave this device. The rest of the tab
+     reorders by them: plans for your kind of person first, then the clubs
+     and mixers that fit.
    - Open to strangers this week. Readers' plans on the people board (kind
      "plan": what, when, where, how many spots, who it is for, a rough age
      band) sorted soonest first, past ones gone. "I'd go" is the board's vote,
      shown as a going count. Posting needs the email sign-in; reading and
      "I'd go" never do. The compose sheet's "I'm down to put this on Meetup"
      box marks the plan for Stephen's Meetup group (613 members), so he can
-     find hosts; the plans that ticked it are one chip away.
+     find hosts (the boards desk lists them); the plans that ticked it are
+     one chip away.
    - Mixers. Stephen's own Meetup events from all-day/data/whatnow.json:
      his group's URL (burlington-social-activites-group, misspelled at the
      source) or the Btown Brief / Btown Coffee Club name. The newsletter's
@@ -37,9 +41,12 @@
      Telegram. Nothing on this tab is a chat.
 
    Data, live: posts through boards.js (the foundation, never Supabase
-   directly), and the People-only pieces through the nn_people_ functions in
-   supabase/nn-people.sql: the directory, and each plan's age band and
-   Meetup box, which the people board's rules have no fields for yet.
+   directly), a plan's Meetup box and age band in its own fields (meta
+   `meetup`, `ages`, from nn-ROUND2.sql), and the directory through the
+   nn_people_ functions in supabase/nn-people.sql. Plans posted before
+   round two keep their box and band in nn-people.sql's side table, which
+   is still read (nn_people_plan_extras) and still written while the
+   server's rules are round one's.
 
    ?demo=1 runs this same file on data/demo/people.json: its plans are seeded
    into the demo board, its events are moved to the reader's day, and the
@@ -161,6 +168,7 @@ export const QUIZ_TEXT = () => QUIZ.map((x) => [x.q].concat(x.o.map((o) => o[0])
 /* ---------------------------------------------------------------- state */
 const S = {
   arch: null, tags: [], quizTags: [],   // the reader's picks (this device)
+  intoUp: [],                          // readers whose into-tags this device has squared with their profile once
   prof: undefined,                     // the profile when signed in: undefined not asked, null none
   posts: [], plansState: 'loading',    // 'loading' | 'ok' | 'off' | 'fail'
   events: null, eventsFailed: false, feed: null, clubs: null, clubsFailed: false,
@@ -174,7 +182,7 @@ const SECS = [['arch', 'Who you are'], ['plans', 'Open to strangers'], ['mix', '
 let memo = {};
 const saved = () => (app.demo ? memo : (store.read(STORE_KEY, {}) || {}));
 function keep() {
-  const v = { arch: S.arch, tags: S.tags, quizTags: S.quizTags };
+  const v = { arch: S.arch, tags: S.tags, quizTags: S.quizTags, intoUp: S.intoUp };
   if (app.demo) memo = v; else store.write(STORE_KEY, v);
 }
 (function restore() {
@@ -183,6 +191,7 @@ function keep() {
   const known = new Set(WHO.concat(INTO).map((x) => x[0]));
   if (Array.isArray(v.tags)) S.tags = v.tags.filter((t) => known.has(t));
   if (Array.isArray(v.quizTags)) S.quizTags = v.quizTags.filter((t) => PEOPLE_RULES.interests.includes(t));
+  if (Array.isArray(v.intoUp)) S.intoUp = v.intoUp.filter((x) => typeof x === 'string').slice(-8);
 })();
 /* what the directory may show: the into-tags and the quiz's, nothing else */
 const shareable = () => PEOPLE_RULES.interests.filter((t) => S.tags.includes(t) || S.quizTags.includes(t)).slice(0, PEOPLE_RULES.interestsMax);
@@ -275,7 +284,8 @@ async function mirror(fn, a) {
 }
 
 /* The demo's plans go onto the demo board as its neighbors, dated the hours
-   ago the file says, with their going counts as anonymous votes. */
+   ago the file says, with their Meetup box and age band in their own
+   fields and their going counts as anonymous votes. */
 function seedDemo(d) {
   const f = boards._fake();
   if (!f || f.__people) return;
@@ -287,9 +297,9 @@ function seedDemo(d) {
       f.now = () => t;
       const uid = 'demo-people-' + String(i).padStart(4, '0');
       f.as(uid).nn_profile_set({ p_display_name: p.author.name, p_neighborhood: p.author.neighborhood || null, p_archetype: p.author.archetype || null });
-      const post = f.nn_post_create({ p_board: 'people', p_kind: 'plan', p_title: p.title, p_body: p.body || '', p_place: p.place || '', p_meta: p.meta || {} });
+      const meta = { ...(p.meta || {}), ...(p.meetup ? { meetup: true } : {}), ...(p.ages ? { ages: p.ages } : {}) };
+      const post = f.nn_post_create({ p_board: 'people', p_kind: 'plan', p_title: p.title, p_body: p.body || '', p_place: p.place || '', p_meta: meta });
       for (let v = 0; v < (Number(p.going) || 0); v++) f.as(null).nn_vote({ p_post: post.id, p_player: 'p_people_' + i + '_' + String(v).padStart(3, '0') });
-      if (p.meetup || p.ages) M.plans.set(post.id, { meetup: !!p.meetup, ages: p.ages || null });
     });
   } finally {
     f.now = clock;
@@ -383,7 +393,6 @@ const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
 const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48);
 
 /* -------------------------------------------------------------- loading */
-const inMeta = (k) => !!(RULES.boards.people && RULES.boards.people.meta[k]);
 
 function loadPlans() {
   const run = ++plansRun;
@@ -392,7 +401,9 @@ function loadPlans() {
     if (!r.ok) { S.plansState = r.error === 'off' ? 'off' : 'fail'; S.posts = []; return null; }
     const posts = r.posts;
     const ids = posts.map((p) => p.id);
-    /* read even once the rules carry these keys: older plans keep theirs here */
+    /* plans from before round two keep their box and band in the side
+       table; a plan lasts 14 days at most, so this read can go after
+       2026-11-30 */
     const extras = ids.length ? rpc('nn_people_plan_extras', { p_posts: ids }) : Promise.resolve({ ok: true, data: {} });
     return extras.then((x) => {
       if (run !== plansRun) return;
@@ -401,7 +412,7 @@ function loadPlans() {
         p.meta = p.meta && typeof p.meta === 'object' ? p.meta : {};
         const e = map[p.id] || {};
         /* the plan's Meetup box and age band, in its meta, wherever they were stored */
-        p.meta.meetup = p.meta.meetup === 'yes' || p.meta.meetup === true || !!e.meetup;
+        p.meta.meetup = p.meta.meetup === true || !!e.meetup;
         if (!p.meta.meetup) delete p.meta.meetup;
         if (!p.meta.ages && AGES[e.ages]) p.meta.ages = e.ages;
         p.at = whenMs(p.meta.when, Date.parse(p.created_at));
@@ -427,6 +438,21 @@ function loadProfile(adopt = true) {
        signing in goes up to it */
     if (S.prof.archetype && S.prof.archetype !== S.arch) { S.arch = S.prof.archetype; keep(); render(); }
     else if (!S.prof.archetype && S.arch) pushArch();
+    /* and what you're into. The first time this device meets this reader,
+       tags picked here before go up to an empty profile; after that the
+       profile is the record, an empty one included (cleared in Settings,
+       or on another phone). A server before round two has no interests. */
+    if (!Array.isArray(S.prof.interests)) return;
+    const into = S.prof.interests.filter((t) => PEOPLE_RULES.interests.includes(t));
+    const met = S.intoUp.includes(u);
+    if (!met && !into.length && intoTags().length) { pushInterests(); return; }
+    if (!met) { S.intoUp = S.intoUp.concat(u).slice(-8); keep(); }
+    if (into.join() !== intoTags().join()) {
+      S.tags = S.tags.filter((t) => !PEOPLE_RULES.interests.includes(t)).concat(into);
+      keep();
+      syncDir();
+      render();
+    }
   });
 }
 
@@ -491,6 +517,20 @@ function pushArch() {
     });
   });
 }
+/* the what-you're-into tags, in the list's order: the profile's interests */
+const intoTags = () => PEOPLE_RULES.interests.filter((t) => S.tags.includes(t)).slice(0, PEOPLE_RULES.interestsMax);
+function pushInterests() {
+  if (!app.user() || !S.prof) return;
+  write(() => {
+    if (!S.prof) return null;
+    return boards.setProfile({ display_name: S.prof.display_name, neighborhood: S.prof.neighborhood, archetype: S.prof.archetype, interests: intoTags() }).then((r) => {
+      if (!r.ok) { app.toast(r.message); return; }
+      S.prof = r.profile;
+      const u = who();
+      if (r.interestsSaved !== false && u && !S.intoUp.includes(u)) { S.intoUp = S.intoUp.concat(u).slice(-8); keep(); }
+    });
+  });
+}
 function setArch(k, quiet) {
   S.arch = k && ARCHETYPE_LABELS[k] ? k : null;
   keep();
@@ -501,6 +541,7 @@ function setArch(k, quiet) {
 function toggleTag(t) {
   S.tags = S.tags.includes(t) ? S.tags.filter((x) => x !== t) : S.tags.concat(t);
   keep();
+  if (PEOPLE_RULES.interests.includes(t)) pushInterests();
   syncDir();
   render();
 }
@@ -601,7 +642,7 @@ function drawArch() {
   tagRow('I’m…', WHO);
   tagRow('I’m into…', INTO);
   s.appendChild(el('p', 'note pad', esc(app.user()
-    ? 'The tile is saved to your profile and shows on your plans. The tags stay on this phone; the directory only shows what you’re into, and only if you join it.'
+    ? 'The tile is saved to your profile and shows on your plans. What you’re into is saved to your profile too, where nobody sees it; the directory shows it only if you join. Who you are stays on this phone.'
     : 'All of this stays on this phone. Signed in, the tile also shows on your plans.')));
 }
 
@@ -988,21 +1029,23 @@ function planForm(body, close, prof) {
     const spots = String(fd.get('spots') || '').trim();
     if (spots) meta.spots = /^\d+$/.test(spots) ? Number(spots) : spots;
     const extra = { meetup: !!fd.get('meetup'), ages: String(fd.get('ages') || '') || null };
-    /* once the people board's rules know these keys, they ride in meta */
-    if (inMeta('meetup') && extra.meetup) meta.meetup = 'yes';
-    if (inMeta('ages') && extra.ages) meta.ages = extra.ages;
     const post = { kind: 'plan', title: fd.get('title'), body: fd.get('body') || '', place: fd.get('place') || '', meta };
     const pre = checkPost(RULES, 'people', post);
     if (!pre.ok) return say(pre.error, pre.error === 'bad_meta' && spots ? 'Spots is a number from 1 to 50.' : null);
     go.disabled = true;
     msg.classList.remove('err');
     msg.textContent = 'Posting…';
+    let two = false;
     const named = prof ? Promise.resolve({ ok: true }) : boards.setProfile({ display_name: fd.get('display_name'), archetype: S.arch || null });
-    named.then((n) => {
+    named.then((n) => (n.ok ? boards.roundTwo().then((t) => { two = t; return n; }) : n)).then((n) => {
       if (!n.ok) return say(n.error);
+      /* the box and the band are the plan's own fields; on a server still on
+         round one's rules they go to nn-people.sql's side table after it */
+      if (two && extra.meetup) post.meta.meetup = true;
+      if (two && extra.ages) post.meta.ages = extra.ages;
       return boards.create('people', post).then((r) => {
         if (!r.ok) return say(r.error);
-        const needs = (extra.meetup && !inMeta('meetup')) || (extra.ages && !inMeta('ages'));
+        const needs = !two && (extra.meetup || extra.ages);
         const after = needs ? rpc('nn_people_plan_set', { p_post: r.post.id, p_meetup: extra.meetup, p_ages: extra.ages }) : Promise.resolve({ ok: true });
         return after.then((x) => {
           close();

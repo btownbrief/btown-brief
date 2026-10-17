@@ -56,8 +56,9 @@ Google Weather, Spotify, ScrapeCreators. They behave today exactly as they did b
 
 ## Your Supabase steps, and what readers see before each
 
-The steps themselves are in `all-day/supabase/SETUP-STEPHEN.md` (A, B, C) and
-`all-day/supabase/SETUP-PEOPLE.md`. Do A before the merge if you can.
+The steps themselves are in `all-day/supabase/SETUP-STEPHEN.md` (A, B, C, D) and
+`all-day/supabase/SETUP-PEOPLE.md`. Do A before the merge if you can. D is one more paste,
+`nn-ROUND2.sql`, done after B (and again right after it, if you ever paste `nn-SETUP.sql` again).
 
 | Not done yet | What a reader sees |
 |---|---|
@@ -65,6 +66,7 @@ The steps themselves are in `all-day/supabase/SETUP-STEPHEN.md` (A, B, C) and
 | B (paste `nn-SETUP.sql`, then `db/photos-board.sql`) | Signed in: "Posting is coming soon." Every tab reads normally, and posting, board votes and synced missions wait. Without `photos-board.sql` only, a Vintage post with a photo is refused. |
 | C (moderator passphrase) | Posts still go up and two reports still take one down; the mod desk just will not open. |
 | People (`nn-people.sql`) | Plans post and people can say they'd go; the People directory waits. |
+| D (paste `nn-ROUND2.sql`) | Everything posts the round-one way: a design or fit check goes up as a tagged find, "Someone got it" takes the find down instead of ticking it gone, Art's past winners can still shift, Watch's one vote each is kept by the phone only, and Your profile saves everything but "What you're into". |
 | `db/photos-dish.sql` | Food's "Feature a dish" refuses the photo. |
 
 Reading every tab, saving, muting, and voting on the Wire work at every step.

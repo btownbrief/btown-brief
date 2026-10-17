@@ -8,7 +8,10 @@
   <!-- Stephen's moderation page for the All Day boards (nn_ in Supabase).
        Photos on board posts are moderated where every reader photo is, in
        ../photo-admin.html; this page is for the posts themselves: what two
-       reports took down, what a pre-moderated board is holding, bans.
+       reports took down, what a pre-moderated board is holding, bans, and
+       People's list of plans whose hosts are down for Meetup. Opening it
+       also sweeps stray board photos (nn-ROUND2.sql): queue photos nobody
+       posted, and picture files that never made it into the queue.
        ?demo=1 runs on the in-memory fake with passphrase "demo". -->
   <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
   <script>
@@ -51,6 +54,8 @@
       const p = fake.posts.find((x) => x.board === 'vintage');
       p.reports = 2; p.status = 'pending';
       fake.reports.push({ post_id: p.id, reporter: 'demo-a', reason: 'spam', at: Date.now() }, { post_id: p.id, reporter: 'demo-b', reason: 'unkind', at: Date.now() });
+      /* and one picture file whose filing in the photo queue failed two days ago */
+      fake.addFile('submissions/demo-stray-0001.jpg', Date.now() - 2 * 86400000);
     }
 
     /* the passphrase lives in this tab only, never in localStorage */
@@ -66,6 +71,72 @@
       if (!r.ok) return { error: (j && j.message) || 'offline' };
       return j;
     }
+    /* The Storage API's remove, as the reader: the bucket's stray-photo
+       policies (nn-ROUND2.sql) let it remove a stray and nothing else.
+       Resolves how many files went. */
+    async function removeFiles(paths) {
+      if (demo) return fake.removeFiles(paths).length;
+      const go = (auth) => fetch(store.SB_URL + '/storage/v1/object/btb-photos', {
+        method: 'DELETE', headers: Object.assign({ apikey: store.SB_KEY, 'Content-Type': 'application/json' }, auth ? { Authorization: 'Bearer ' + store.SB_KEY } : {}),
+        body: JSON.stringify({ prefixes: paths }),
+      });
+      try {
+        let r = await go(false);
+        /* some storage gateways also want the key as a bearer token (photos-lib.js does the same) */
+        if ([400, 401, 403].includes(r.status)) r = await go(true);
+        const j = await r.json().catch(() => null);
+        return r.ok && Array.isArray(j) ? j.length : 0;
+      } catch (e) { return 0; }
+    }
+    let swept = false;
+    async function sweep() {
+      if (swept) return;
+      swept = true;
+      const r = await rpc('nn_mod_photo_sweep', { p_secret: secret });
+      if (!r || r.error) return;                 // nn-ROUND2.sql not pasted yet: nothing to say
+      const strays = Array.isArray(r.strays) ? r.strays : [];
+      const gone = strays.length ? await removeFiles(strays) : 0;
+      const bits = [];
+      if (r.abandoned) bits.push(r.abandoned + (r.abandoned === 1 ? ' board photo' : ' board photos') + ' nobody posted left the photo queue');
+      if (gone) bits.push(gone + (gone === 1 ? ' stray picture file' : ' stray picture files') + ' cleared from the bucket');
+      if (strays.length > gone) bits.push((strays.length - gone) + ' stray picture ' + (strays.length - gone === 1 ? 'file is' : 'files are') + ' waiting: the bucket would not let the desk remove ' + (strays.length - gone === 1 ? 'it' : 'them') + ' (SETUP-STEPHEN.md, part D)');
+      if (!bits.length) return;
+      const p = document.createElement('p');
+      p.className = 'sheet-note';
+      p.dataset.sweep = '';
+      p.textContent = 'Photo sweep: ' + bits.join('; ') + '.';
+      $('desk').before(p);              // above the desk, which redraws after every action
+    }
+
+    /* People's plans whose hosts ticked "put this on Meetup" (nn_people_meetup_list) */
+    async function meetups(host, btn) {
+      btn.disabled = true;
+      const r = await rpc('nn_people_meetup_list', { p_secret: secret });
+      btn.disabled = false;
+      host.innerHTML = '';
+      const note = (t) => { const p = document.createElement('p'); p.className = 'sheet-note'; p.textContent = t; host.appendChild(p); };
+      if (!r || r.error) { note(r && r.error === 'not_installed' ? 'The Meetup list isn’t set up yet: paste all-day/supabase/nn-ROUND2.sql (SETUP-STEPHEN.md, part D).' : 'Didn’t work: ' + ((r && r.error) || 'offline')); return; }
+      const plans = Array.isArray(r.plans) ? r.plans : [];
+      if (!plans.length) { note('No live plans are down for Meetup right now.'); return; }
+      plans.forEach((p) => {
+        const AGES = { twenties: 'mostly 20s', thirties: 'mostly 30s', forties: 'mostly 40s', fifties: '50 and up', any: 'any age' };
+        const bits = [p.when, p.place, p.spots ? p.spots + (p.spots === 1 ? ' spot' : ' spots') : '', AGES[p.ages] || '', 'hosted by ' + p.author, p.going + ' going'].filter(Boolean);
+        const d = document.createElement('div');
+        d.className = 'desk-post';
+        d.dataset.meetup = p.id;
+        d.innerHTML = '<div><div class="t">' + esc(p.title) + '</div><div class="d">' + esc(bits.join(' · ')) + '</div><div class="linkrow"></div></div>';
+        const copy = document.createElement('button');
+        copy.className = 'btn sm ghost';
+        copy.textContent = 'Copy for Meetup';
+        copy.addEventListener('click', () => {
+          const text = [p.title, [p.when, p.place].filter(Boolean).join(', '), 'Hosted by ' + p.author + ', from the Btown Brief’s All Day.'].join('\n');
+          (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => toast('Copied'), () => toast('Couldn’t copy'));
+        });
+        d.querySelector('.linkrow').appendChild(copy);
+        host.appendChild(d);
+      });
+    }
+
     let toastT = 0;
     function toast(m) { const t = $('toast'); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2400); }
     const photoUrl = (path) => (demo ? null : store.SB_URL + '/storage/v1/object/public/btb-photos/' + path.split('/').map(encodeURIComponent).join('/'));
@@ -120,12 +191,27 @@
         return;
       }
       sessionStorage.setItem('nn-mod', secret);
+      sweep();                          // stray board photos, once a visit
       $('gate').hidden = true;
       $('gate-msg').textContent = demo ? 'Demo desk: nothing here is real or saved.' : '';
       const desk = $('desk');
       desk.innerHTML = '';
       desk.hidden = false;
       section(desk, 'Waiting for you', r.waiting, [['approve', 'Approve', ''], ['hide', 'Hide'], ['delete', 'Delete'], ['ban', 'Ban', 'danger']], 'Nothing waiting.');
+      const mh = document.createElement('h2');
+      mh.className = 'sheet-h';
+      mh.textContent = 'People: down for Meetup';
+      desk.appendChild(mh);
+      const mrow = document.createElement('div');
+      mrow.className = 'linkrow';
+      const mbtn = document.createElement('button');
+      mbtn.className = 'btn sm';
+      mbtn.textContent = 'Show the Meetup list';
+      mbtn.dataset.meetups = '';
+      const mlist = document.createElement('div');
+      mbtn.addEventListener('click', () => meetups(mlist, mbtn));
+      mrow.appendChild(mbtn);
+      desk.append(mrow, mlist);
       section(desk, 'Reported once, still up', r.reported, [['approve', 'Keep it'], ['hide', 'Hide'], ['ban', 'Ban', 'danger']], 'No open reports.');
       section(desk, 'Live now, newest 50', r.recent, [['hide', 'Hide'], ['delete', 'Delete']], 'No posts yet.');
       section(desk, 'Hidden', r.hidden, [['approve', 'Put it back']], 'Nothing hidden.');

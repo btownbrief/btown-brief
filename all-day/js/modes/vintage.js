@@ -11,10 +11,11 @@
      so someone else can get it. Two up, the shop, size and price, days
      left, the board's vote as "I'd want this", share and report. A post
      lasts three weeks (boards-core.js). The poster can mark their own find
-     "Someone got it", which takes the post down (the foundation has no
-     edit-your-own-post call yet, so down is the only way to mark it), and
-     the line above the grid thanks them: how many of their finds found a
-     home this month. That line is the whole of "thrift points" at launch.
+     "Someone got it": boards.put() ticks the post's `got` box, it leaves
+     the grid, and the line above the grid thanks everyone: how many finds
+     posted here found a home lately (the board's got finds, plus, for this
+     month, ones this device took down before the box existed). That line
+     is the whole of "thrift points" at launch.
    - The shop guide. data/vintage-shops.json (scripts/build_vintage_shops.py
      from data/things.json): every vintage, thrift, consignment, antique and
      record shop the Brief's guide knows, numbered in walking order, with the
@@ -26,11 +27,16 @@
      link to its page in the shop, where the Printify mockups on a model
      live. Then "Send in your design": one image through the photo queue
      with the consent box, a name, a line, and free shirts or store credit
-     (never cash). It is filed as a `spotted` post with shop "Make a tee"
-     until the foundation has a design kind; Stephen sees it in the photo
-     desk and the boards desk. Approved ones show under "Sent in".
-   - Fit check. `spotted` posts tagged shop "Fit check" that carry an
-     approved photo, newest first. A fit check needs a photo.
+     (never cash): a `design` post, the choice in its `thanks` field.
+     Stephen sees it in the photo desk and the boards desk. Approved ones
+     show under "Sent in".
+   - Fit check. `fit` posts with an approved photo, newest first; a fit
+     check needs a photo and lasts 60 days.
+
+   Before the board had those two kinds, a design was a `spotted` post with
+   shop "Make a tee" (the choice in its body) and a fit check one with shop
+   "Fit check". Those still show where they belong until they end, three
+   weeks after they were posted.
 
    ?demo=1 runs this same file: data/demo/vintage.json adds its finds, swaps
    and fit checks to the demo boards (boards-fake.js) and carries six of the
@@ -49,7 +55,7 @@ const DESIGNS_URL = 'data/merch-designs.json';
 const SHOP_URL = 'https://merch.btownbrief.com/';
 const FIT = 'Fit check';
 const TEE = 'Make a tee';
-const HOMES_KEY = 'allday-vintage-homes';     // { 'YYYY-MM': finds marked "someone got it" from this device }
+const HOMES_KEY = 'allday-vintage-homes';     // { 'YYYY-MM': finds this device took down as "someone got it", before the got box }
 const NOTE_MAX = 140;
 const DAY = 86400000;
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -63,7 +69,7 @@ const FEEDS = new Set(['spotted', 'swaps', 'sent', 'fit']);
 /* ------------------------------------------------------------------ state */
 const S = {
   shops: null, shopsFailed: false, designs: null, designsTotal: null, designsFailed: false,
-  spotted: null, swaps: null, fit: null, sent: null, off: false, failed: false, homesDemo: 0,
+  spotted: null, swaps: null, fit: null, sent: null, got: 0, off: false, failed: false, homesDemo: 0,
 };
 let root = null, slots = null, pending = null, ready = false;
 
@@ -97,32 +103,39 @@ function seedDemo(d) {
     f.as(null);
     if (photo) f.setPhoto(photo, 'approved');
     const p = f.posts.find((r) => r.id === row.id);
-    p.expires_at = f.now() + (Number(x.days) || 1) * DAY + 3 * 3600000;
-    p.created_at = p.expires_at - 21 * DAY;
+    /* placed as if it were a find with x.days left of its three weeks */
+    p.created_at = f.now() + (Number(x.days) || 1) * DAY + 3 * 3600000 - 21 * DAY;
+    const life = f.rules.boards[KEY].kinds[kind].days;
+    p.expires_at = life ? p.created_at + life * DAY : null;
     for (let i = 0; i < (x.votes || 0); i++) f.votes.add(p.id + '|p_vseed' + n + 'x' + String(i).padStart(3, '0'));
   };
   (d.spotted || []).forEach((x) => add('spotted', x, { shop: x.shop, size: x.size, price: x.price }));
   (d.swaps || []).forEach((x) => add('swap', x, { want: x.want, size: x.size }));
-  (d.fit || []).forEach((x) => add('spotted', x, { shop: FIT }));
-  (d.designsSent || []).forEach((x) => add('spotted', x, { shop: TEE }));
+  (d.fit || []).forEach((x) => add('fit', x, {}));
+  (d.designsSent || []).forEach((x) => add('design', x, { thanks: x.thanks || 'shirts' }));
 }
 
 const tagOf = (p) => String((p.meta && p.meta.shop) || '').trim().toLowerCase();
 const SPECIAL = new Set([FIT.toLowerCase(), TEE.toLowerCase()]);
+const newest = (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at);
 
-/* Two lists cover the board: spotted (which also carries the fit checks and
-   the designs, by their shop tag) and swaps. Newest first, as listed. */
+/* Four lists cover the board, one per kind, newest first. The spotted list
+   also carries the fit checks and designs from before their kinds, by
+   their shop tag, and the finds someone got, which leave the grid. */
 let loads = 0;                // only the newest load lands: an older, slower one never overwrites it
 function loadPosts() {
   const mine = ++loads;
-  return Promise.all([boards.list(KEY, { kind: 'spotted', limit: 60 }), boards.list(KEY, { kind: 'swap', limit: 60 })]).then(([sp, sw]) => {
+  const kinds = ['spotted', 'swap', 'design', 'fit'];
+  return Promise.all(kinds.map((kind) => boards.list(KEY, { kind, limit: 60 }))).then(([sp, sw, de, fi]) => {
     if (mine !== loads) return false;
     S.off = sp.error === 'off' || sw.error === 'off';
     S.failed = !S.off && !sp.ok;
     S.swapsFailed = !S.off && !sw.ok;
-    S.spotted = sp.posts.filter((p) => !SPECIAL.has(tagOf(p)));
-    S.fit = sp.posts.filter((p) => tagOf(p) === FIT.toLowerCase() && p.photo);
-    S.sent = sp.posts.filter((p) => tagOf(p) === TEE.toLowerCase() && p.photo);
+    const finds = sp.posts.filter((p) => !SPECIAL.has(tagOf(p)));
+    S.spotted = finds.filter((p) => !(p.meta && p.meta.got === true));
+    S.got = finds.length - S.spotted.length;
+    S.fit = fi.posts.concat(sp.posts.filter((p) => tagOf(p) === FIT.toLowerCase())).filter((p) => p.photo).sort(newest);
+    S.sent = de.posts.concat(sp.posts.filter((p) => tagOf(p) === TEE.toLowerCase())).filter((p) => p.photo).sort(newest);
     S.swaps = sw.posts;
     return true;
   });
@@ -171,8 +184,10 @@ function outLink(label, href, cls, aria) {
   return a;
 }
 
-/* "Thank you" for finds passed on: counted on this device until the
-   foundation can count them for everyone (see the PR). */
+/* Finds this device took down as "someone got it" this month, before the
+   got box (or while nn-ROUND2.sql is not pasted): they are not on the
+   board to count, so they are counted here, and the month's end retires
+   them. */
 function homes() {
   if (app.demo) return S.homesDemo;
   const map = store.read(HOMES_KEY, {});
@@ -225,9 +240,6 @@ function grid(host, posts, o) {
     it.arch = '';                 // the People archetype says nothing on a rack, and a half-width head has no room for it
     const n = cards.board(it);
     if (!n) return;
-    /* a grid cell will not shrink below its content's widest line (the
-       card's one-line head) unless told; .grid2 was drawn for tiles */
-    n.style.minWidth = '0';
     const v = n.querySelector('[data-act="bvote"]');
     if (v) { v.setAttribute('aria-label', o.vote); v.title = o.vote; }
     if (o.got && it.mine) {
@@ -260,10 +272,10 @@ function addRow(host, label, fn) {
 
 /* ------------------------------------------------------- Spotted this week */
 function thanksLine() {
-  const n = homes();
+  const n = S.got + homes();
   const p = el('p', 'note pad', n
-    ? '<b>' + esc('Thank you.') + '</b> ' + esc(plural(n, 'find', 'finds') + ' posted from this device found a home this month. No points and no prizes, just the right size in the right hands.')
-    : esc('When someone gets a find you posted, tap “Someone got it” on it and it comes down. No points and no prizes: just a thank-you, right here.'));
+    ? '<b>' + esc('Thank you.') + '</b> ' + esc(plural(n, 'find', 'finds') + ' posted here found a home lately. No points and no prizes, just the right size in the right hands.')
+    : esc('When someone gets a find you posted, tap “Someone got it” on it and it comes off the board. No points and no prizes: just a thank-you, right here.'));
   p.dataset.thanks = String(n);
   return p;
 }
@@ -318,19 +330,30 @@ function fillShopList() {
   list.innerHTML = S.shops.map((s) => '<option value="' + esc(s.name) + '"></option>').join('');
 }
 
-/* "Someone got it": the post comes down and the thank-you counts it. */
+/* "Someone got it": the post's got box is ticked, it leaves the grid, and
+   the thank-you counts it for everyone. Before nn-ROUND2.sql is pasted
+   there is no box to tick, so it comes down and this device counts it. */
 app.onAct('vgot', (it) => {
+  const done = () => {
+    document.querySelectorAll('.card.board[data-k="' + CSS.escape(it.k) + '"]').forEach((n) => n.remove());
+    app.toast('Thank you for passing it on.');
+  };
   app.confirmBox({
     title: 'Someone got it?',
-    body: 'Nice. Your post comes down now, and the find counts toward this month’s thank-you.',
-    yes: 'Take it down',
+    body: 'Nice. It comes off the board now, and the find counts toward the thank-you.',
+    yes: 'Mark it gone',
     onYes() {
-      boards.remove(it.id).then((r) => {
-        if (!r.ok) { app.toast(r.message); return; }
-        addHome();
-        document.querySelectorAll('.card.board[data-k="' + CSS.escape(it.k) + '"]').forEach((n) => n.remove());
-        paint('spotted');
-        app.toast('Thank you for passing it on.');
+      /* only a server that answered "round one" gets the delete; one that
+         could not be asked gets nothing, and the reader can try again */
+      boards.roundTwo().then((two) => (two ? boards.put(it.id, { got: true }) : two === false ? { ok: false, error: 'off' } : { ok: false, message: message('offline') })).then((r) => {
+        if (r.ok) { done(); return; }          // boards.put tells the tab, which reads the board again
+        if (r.error !== 'off') { app.toast(r.message); return; }
+        boards.remove(it.id).then((x) => {
+          if (!x.ok) { app.toast(x.message); return; }
+          addHome();
+          done();
+          paint('spotted');
+        });
       });
     },
   });
@@ -450,7 +473,7 @@ function designSheet() {
       kind: 'design', pick: 'Choose your design', titleLabel: 'What’s it called?', titlePlaceholder: 'Rainy Church Street',
       noteLabel: 'One line about it', notePlaceholder: 'Ink, drawn from the Leunig’s corner',
       consent: 'This is my own artwork, and the Brief may print it on shirts and show it in All Day and the newsletter. It’s checked before it shows.',
-      choice: [['shirts', 'Free shirts'], ['credit', 'Store credit']], cta: 'Send it to Stephen', shop: TEE,
+      choice: [['shirts', 'Free shirts'], ['credit', 'Store credit']], cta: 'Send it to Stephen',
       sent: 'Sent. Stephen looks at every design; it shows under Sent in once he has.', done: close,
     }));
   });
@@ -460,7 +483,8 @@ function paintSent(host) {
   if (!S.sent || !S.sent.length) return;
   host.appendChild(el('div', 'tdiv', '<span>' + esc('Sent in') + '</span><span class="s">' + esc('designs from neighbors, approved') + '</span>'));
   host.appendChild(el('div', 'spacer'));
-  /* how the artist asked to be thanked is for Stephen, not the card */
+  /* how the artist asked to be thanked is for Stephen, not the card (a
+     design from before the kind carried it at the end of its body) */
   grid(host, S.sent, { name: 'sent', meta: noMeta, vote: 'I’d wear this', text: (t) => String(t || '').replace(/\s*Thanks in: [a-z ]+$/i, '') });
 }
 
@@ -487,7 +511,7 @@ function fitSheet() {
       kind: 'fit', pick: 'Choose a photo', titleLabel: 'What are you wearing?', titlePlaceholder: 'All thrifted except the socks',
       noteLabel: 'Where it’s from', notePlaceholder: 'Coat from Barge Canal, tee from the Brief',
       consent: 'I took this photo, and the Brief may show it in All Day and the newsletter. Photos are checked before they show.',
-      cta: 'Post it', shop: FIT, sent: 'Posted. It shows once Stephen has checked the photo.', done: close,
+      cta: 'Post it', sent: 'Posted. It shows once Stephen has checked the photo.', done: close,
     }));
   });
 }
@@ -567,11 +591,15 @@ function photoForm(o) {
     go.disabled = true;
     msg.classList.remove('err');
     msg.textContent = 'Sending the picture…';
-    const thanks = o.choice ? 'Thanks in: ' + (choice === 'shirts' ? 'free shirts' : 'store credit') : '';
     const named = nameRow.hidden ? Promise.resolve({ ok: true }) : boards.setProfile({ display_name: name });
-    named.then((n) => {
+    named.then((n) => (n.ok ? boards.roundTwo().then((two) => ({ ...n, two })) : n)).then((n) => {
       if (!n.ok) return say(n.message, true);
-      return boards.create(KEY, { kind: 'spotted', title, body: [note, thanks].filter(Boolean).join('\n\n'), meta: { shop: o.shop }, photo: file, consent: true })
+      /* its own kind; on a server still on round one's rules, the old shape:
+         a find tagged with the section's name, the choice in the body */
+      const post = n.two ? { kind: o.kind, body: note, meta: o.choice ? { thanks: choice } : {} }
+        : { kind: 'spotted', body: [note, o.choice ? 'Thanks in: ' + (choice === 'shirts' ? 'free shirts' : 'store credit') : ''].filter(Boolean).join('\n\n'),
+          meta: { shop: o.kind === 'design' ? TEE : FIT } };
+      return boards.create(KEY, { ...post, title, photo: file, consent: true })
         .then((r) => {
           if (!r.ok) {
             if (r.error === 'no_name') nameRow.hidden = false;
