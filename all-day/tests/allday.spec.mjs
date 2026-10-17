@@ -2742,6 +2742,75 @@ async function theVintage(browser, base) {
     await ctx.close();
   });
 
+  for (const v of [1, 2]) await group('Vintage, live: a fit check and “Someone got it” on a server with rules v' + v, async () => {
+    const at = (h) => new Date(Date.now() - h * 3600000).toISOString();
+    const mineFind = { id: '0000eeee-0000-4000-8000-000000000001', board: 'vintage', kind: 'spotted', title: 'Plaid wool shirt', body: '', place: '', meta: { shop: 'Old Gold', size: 'L' },
+      photo: null, author: 'Kara', author_arch: null, created_at: at(3), expires_at: new Date(Date.now() + 18 * 86400000).toISOString(), votes: 0, voted: false, mine: true };
+    const calls = [];
+    let got = false, gone = false;
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn, args) => {
+        if (!/^nn_|^btb_/.test(fn)) return undefined;
+        calls.push({ fn, args });
+        if (fn === 'nn_rules') return { version: v };
+        if (fn === 'nn_profile_get') return { display_name: 'Kara', neighborhood: null, archetype: null };
+        if (fn === 'nn_posts_list') return args.p_board === 'vintage' && args.p_filter.kind === 'spotted' && !gone ? [{ ...mineFind, meta: got ? { ...mineFind.meta, got: true } : mineFind.meta }] : [];
+        if (fn === 'nn_post_create') return { id: '0000eeee-0000-4000-8000-000000000002', board: 'vintage', kind: args.p_kind, title: args.p_title, body: args.p_body, place: '', meta: args.p_meta,
+          photo: null, author: 'Kara', author_arch: null, created_at: at(0), expires_at: null, votes: 0, voted: false, mine: true, status: 'approved' };
+        if (fn === 'nn_post_meta_set') {
+          if (v === 1) return { status: 404, body: { code: 'PGRST202', message: 'Could not find the function public.nn_post_meta_set' } };
+          got = true;
+          return { ...mineFind, meta: { ...mineFind.meta, ...args.p_meta }, status: 'approved' };
+        }
+        if (fn === 'nn_post_delete_own') { gone = true; return { deleted: true }; }
+        return undefined;
+      },
+    });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate((s) => localStorage.setItem('allday-auth', s), SESSION());
+    await page.goto(base + '/all-day/#vintage');
+    await settle(page);
+    await page.waitForSelector(vslot('spotted') + ' [data-act=vgot]');
+    await page.click(vslot('fit') + ' .addrow button');
+    const f = '.sheet-body form[data-form="fit"]';
+    await page.waitForSelector(f);
+    /* a real picture, so photos-lib.js can resize it to a jpeg */
+    await page.evaluate(async (sel) => {
+      const c = document.createElement('canvas'); c.width = 8; c.height = 8; c.getContext('2d').fillRect(0, 0, 8, 8);
+      const blob = await new Promise((res) => c.toBlob(res, 'image/png'));
+      const dt = new DataTransfer();
+      dt.items.add(new File([blob], 'fit.png', { type: 'image/png' }));
+      const i = document.querySelector(sel);
+      i.files = dt.files;
+      i.dispatchEvent(new Event('change'));
+    }, f + ' input[type=file]');
+    await page.fill(f + ' input[name=title]', 'All thrifted except the socks');
+    await page.fill(f + ' input[name=note]', 'Coat from Barge Canal');
+    await page.check(f + ' input[name=consent]');
+    await page.click(f + ' button[type=submit]');
+    await page.waitForFunction(() => /^Posted\./.test(document.querySelector('#toast').textContent), null, { timeout: 8000 }).catch(() => {});
+    const made = (calls.find((c) => c.fn === 'nn_post_create') || {}).args || { msg: await page.$eval(f + ' .bf-msg', (m) => m.textContent).catch(() => '') };
+    if (v === 2) check(made.p_kind === 'fit' && JSON.stringify(made.p_meta) === '{}' && made.p_body === 'Coat from Barge Canal', 'round two: a fit check is a `fit` post', JSON.stringify(made));
+    else check(made.p_kind === 'spotted' && JSON.stringify(made.p_meta) === '{"shop":"Fit check"}', 'round one: the same fit check is a find tagged “Fit check”, which that server takes', JSON.stringify(made));
+    await page.click(vslot('spotted') + ' [data-act=vgot]');
+    await page.click('#confirm [data-yes]');
+    await page.waitForFunction(() => /Thank you for passing it on/.test(document.querySelector('#toast').textContent), null, { timeout: 6000 }).catch(() => {});
+    const set = calls.find((c) => c.fn === 'nn_post_meta_set');
+    const del = calls.find((c) => c.fn === 'nn_post_delete_own');
+    if (v === 2) {
+      check(set && set.args.p_post === mineFind.id && JSON.stringify(set.args.p_meta) === '{"got":true}', 'round two: “Someone got it” ticks the find’s got box', JSON.stringify(set && set.args));
+      check(!del, 'and the find stays on the board, not deleted', '');
+    } else {
+      check(!set, 'round one has no box, so nothing asks for one', '');
+      check(del && del.args.p_post === mineFind.id, 'and the find comes down as before', JSON.stringify(del && del.args));
+    }
+    const st = await page.evaluate(() => import('/all-day/js/boards.js').then((b) => b.status()));
+    check(st === 'live', 'either way the boards stay live', st);
+    check(!(await page.$(vslot('spotted') + ' .card.board[data-k="b-' + mineFind.id + '"]')), 'and it leaves the grid', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Vintage, live posts land in their sections (live)', async () => {
     const at = (h) => new Date(Date.now() - h * 3600000).toISOString();
     const ends = (d) => new Date(Date.now() + d * 86400000 + 3600000).toISOString();

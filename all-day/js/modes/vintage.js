@@ -346,7 +346,7 @@ app.onAct('vgot', (it) => {
     body: 'Nice. It comes off the board now, and the find counts toward the thank-you.',
     yes: 'Mark it gone',
     onYes() {
-      boards.put(it.id, { got: true }).then((r) => {
+      boards.roundTwo().then((two) => (two ? boards.put(it.id, { got: true }) : { ok: false, error: 'off' })).then((r) => {
         if (r.ok) { done(); return; }          // boards.put tells the tab, which reads the board again
         if (r.error !== 'off') { app.toast(r.message); return; }
         boards.remove(it.id).then((x) => {
@@ -593,9 +593,14 @@ function photoForm(o) {
     msg.classList.remove('err');
     msg.textContent = 'Sending the picture…';
     const named = nameRow.hidden ? Promise.resolve({ ok: true }) : boards.setProfile({ display_name: name });
-    named.then((n) => {
+    named.then((n) => (n.ok ? boards.roundTwo().then((two) => ({ ...n, two })) : n)).then((n) => {
       if (!n.ok) return say(n.message, true);
-      return boards.create(KEY, { kind: o.kind, title, body: note, meta: o.choice ? { thanks: choice } : {}, photo: file, consent: true })
+      /* its own kind; on a server still on round one's rules, the old shape:
+         a find tagged with the section's name, the choice in the body */
+      const post = n.two ? { kind: o.kind, body: note, meta: o.choice ? { thanks: choice } : {} }
+        : { kind: 'spotted', body: [note, o.choice ? 'Thanks in: ' + (choice === 'shirts' ? 'free shirts' : 'store credit') : ''].filter(Boolean).join('\n\n'),
+          meta: { shop: o.kind === 'design' ? TEE : FIT } };
+      return boards.create(KEY, { ...post, title, photo: file, consent: true })
         .then((r) => {
           if (!r.ok) {
             if (r.error === 'no_name') nameRow.hidden = false;
