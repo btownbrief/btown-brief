@@ -206,9 +206,20 @@ function wireFiles(opts = {}) {
    shapes: the demo file's payloads, moved from its _anchor to today in
    Burlington. `audio` picks the clip state: 'today', 'yesterday' or 'none'. */
 const onairCache = new Map();
+const PLAYLIST = /^https:\/\/www\.youtube\.com\/playlist\?list=[A-Za-z0-9_-]+$/;   // onair.js PLAYLIST_RE
+/* the Play-on-your-TV row under the Btown TV header: tonight's button, or the fallback past night */
+const tvPlay = (page) => page.evaluate(() => {
+  const one = (w) => { const a = document.querySelector('#panel-onair [data-tvplay="' + w + '"]'); return a && { href: a.getAttribute('href'), text: a.textContent.trim(), rel: a.rel, target: a.target, icons: a.querySelectorAll('svg').length }; };
+  const row = document.querySelector('#panel-onair .tvplay');
+  const head = document.querySelector('#panel-onair [data-sec="tv"]');
+  const railEl = document.querySelector('#panel-onair [data-slot="tv"] .rail-wrap');
+  const before = !!(row && head && railEl && (head.compareDocumentPosition(row) & 4) && (row.compareDocumentPosition(railEl) & 4));
+  return { tonight: one('tonight'), past: one('past'), note: row ? row.innerText : '', before };
+});
 async function onairFiles(opts = {}) {
   const audio = opts.audio || 'today';
-  const key = audio + etKey(Date.now());
+  const playlist = opts.playlist || 'all';      // 'all', 'not-tonight' (tonight's upload failed) or 'none'
+  const key = audio + playlist + etKey(Date.now());
   if (onairCache.has(key)) return onairCache.get(key);
   const d = JSON.parse(await readFile(path.join(APP, 'data/demo/onair.json'), 'utf8'));
   const today = etKey(Date.now());
@@ -217,6 +228,8 @@ async function onairFiles(opts = {}) {
   const secs = days * 86400;
   const tv = d.tv;
   tv.edition = shift(tv.edition);
+  if (playlist !== 'all') delete tv.playlist;
+  if (playlist === 'none') d.tvEditions.editions.forEach((e) => { delete e.playlist; });
   const vids = [tv.pick, ...tv.pick_more, ...tv.live, ...tv.shelves.flatMap((x) => [...x.items, ...(x.more || [])])];
   vids.forEach((v) => { v.d += secs; delete v.art; });
   d.tvEditions.editions.forEach((e) => {
@@ -778,6 +791,9 @@ async function onAir(browser, base) {
     check(JSON.stringify(toc) === JSON.stringify(['Out loud', 'Btown TV', 'Live', 'Podcasts', 'Past nights']), 'the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights', JSON.stringify(toc));
     const order = await page.$$eval('#panel-onair [data-sec]', (s) => s.map((x) => x.dataset.sec));
     check(JSON.stringify(order) === JSON.stringify(['brief', 'tv', 'live', 'pods', 'past']), 'the sections run in that order', JSON.stringify(order));
+    const subs = await page.$$eval('#panel-onair [data-sec] p', (p) => p.map((x) => x.textContent));
+    check(!subs.length, 'no section carries an explanatory subtitle', JSON.stringify(subs));
+    check(!/lands at 7 every morning/.test(await page.$eval('#panel-onair', (p) => p.innerText)), 'no end-of-tab line about when things land', '');
     await page.click('#subnav .chip[data-chip="pods"]');
     await page.waitForTimeout(600);
     check(await page.$eval('#panel-onair [data-sec="pods"]', (h) => { const r = h.getBoundingClientRect(); return r.top >= 0 && r.top < innerHeight / 2; }), 'a chip scrolls to its section', '');
@@ -832,10 +848,18 @@ async function onAir(browser, base) {
     const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
     check(/^Today · /.test(eyebrow) && / · 3:27$/.test(eyebrow), 'today’s clip: the card says today and its length', eyebrow);
     check((await podRows(page))[0][0] === 'btown-brief', 'live: the Brief’s own show is first in Podcasts', '');
+    const play = await tvPlay(page);
+    check(play.tonight && PLAYLIST.test(play.tonight.href) && play.tonight.href === tv.playlist.url && play.tonight.rel === 'noopener' && play.tonight.target === '_blank',
+      'Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab', JSON.stringify(play));
+    check(play.tonight && play.tonight.text === 'Play tonight on your TV' && play.tonight.icons === 2 && play.before, 'under the Btown TV header, before the rail, with the play and external icons', JSON.stringify(play));
     check((await tvCards(page)).length === tv.shelves.find((x) => x.key === 'vt').items.length + 1, 'live: tonight’s local picks, the pick and the Burlington & Vermont shelf', '');
     await page.click('#panel-onair .btn.more:text("Read it instead")');
-    await page.waitForFunction(() => /Good morning/.test(document.querySelector('.sheet-body')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
-    check(/Good morning/.test(await page.$eval('.sheet-body', (b) => b.innerText)), '“Read it instead” shows the script the voice read', '');
+    await page.waitForFunction(() => /Morning\./.test(document.querySelector('.sheet-body')?.innerText || ''), null, { timeout: 4000 }).catch(() => {});
+    const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
+    check(/Out on the water\.\.\./.test(sheet) && !/\[/.test(sheet), 'the transcript hides the voice’s pacing marks ([short pause])', sheet.slice(0, 300));
+    check(!/\bAI\b|synthetic|artificial/i.test(sheet + await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'no mention of AI on the card or the transcript', '');
+    check(/Read to you every morning at 7\./.test(await page.$eval('#panel-onair .audio', (a) => a.innerText)), 'the card says when it is read', '');
+    check(/^Morning\./.test(await page.$eval('.sheet-body .script', (b) => b.innerText)), '“Read it instead” shows the script the voice read', '');
     await page.keyboard.press('Escape');
 
     /* the player: the clip plays in the shell's one player and survives a tab switch */
@@ -899,6 +923,29 @@ async function onAir(browser, base) {
     await ctx.close();
   });
 
+  await group('On Air, Play on your TV', async () => {
+    for (const playlist of ['not-tonight', 'none']) {
+      const { ctx, page, errors } = await newPage(browser, base, { onair: { playlist } });
+      await page.goto(base + '/all-day/#onair');
+      await page.waitForSelector('#panel-onair [data-slot="tv"] .vcard', { timeout: 15000 });
+      await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+      const play = await tvPlay(page);
+      check(!play.tonight, playlist + ': no playlist tonight, no “Play tonight” button', JSON.stringify(play));
+      if (playlist === 'not-tonight') check(play.past && PLAYLIST.test(play.past.href) && /on your TV$/.test(play.past.text) && /isn’t up yet/.test(play.note), 'and a quiet link to the latest night that has one, said plainly', JSON.stringify(play));
+      else check(!play.past, 'none anywhere: no link at all', JSON.stringify(play));
+      check(!errors.length, playlist + ': no console errors', errors.join(' | '));
+      await ctx.close();
+    }
+    const { ctx, page } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#onair');
+    await page.waitForSelector('#panel-onair [data-tvplay="tonight"]', { timeout: 8000 });
+    const pages = ctx.pages().length;
+    await page.click('#panel-onair [data-tvplay="tonight"]');
+    await page.waitForTimeout(300);
+    check(ctx.pages().length === pages && /YouTube playlist/.test(await page.$eval('#toast', (t) => t.textContent)), 'demo: the button toasts instead of leaving', '');
+    await ctx.close();
+  });
+
   await group('On Air, the audio card', async () => {
     for (const audio of ['none', 'yesterday']) {
       const { ctx, page, errors } = await newPage(browser, base, { onair: { audio } });
@@ -914,7 +961,7 @@ async function onAir(browser, base) {
         const y = dayMinus(etKey(Date.now()), 1);
         const eyebrow = await page.$eval('#panel-onair .audio .eyebrow', (e) => e.textContent);
         check(card && eyebrow.startsWith(nameOf(y)), 'no clip today: the latest one, with its date (' + nameOf(y) + ')', eyebrow);
-        check(/Today’s lands at 7 am/.test(await onairText(page)), 'and it says when today’s lands', '');
+        check(/Read to you every morning at 7\./.test(await onairText(page)) && !(await page.$('#panel-onair [data-sec="brief"] p')), 'the card says when it is read; the header carries no subtitle', '');
       }
       check(!errors.length, audio + ': no console errors', errors.join(' | '));
       await ctx.close();
