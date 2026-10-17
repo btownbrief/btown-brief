@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The Brief, out loud: a three-minute morning audio brief from the Wire.
+"""The Brief, out loud: a two-to-three-minute morning audio brief from the Wire.
 
 Every morning at 7 Eastern (.github/workflows/wire-audio.yml):
 
@@ -15,21 +15,31 @@ Every morning at 7 Eastern (.github/workflows/wire-audio.yml):
      clip said a panel was free because pick 7's reason did; its headline
      never did.)
   3. Ask Claude Opus 5.5 (ANTHROPIC_API_KEY) for the body of a 400 to 500
-     word script in a newsreader's spoken English. Opus only: this is the
-     Brief speaking in its own name, and accuracy here is the product, so
-     there is no cheaper fallback (GLM 5.3 Flash, tried on the first test
-     runs, invented a candidate's first name and gender). No key, no clip.
-     The greeting and the sign-off, which carries the AI-voice disclosure,
-     are fixed text added here.
+     word script, written the way a neighbour tells you what's in the paper:
+     contractions, sentences of different lengths, a spoken turn between
+     stories, and a few pacing marks the voice takes as direction (TAGS:
+     [pause], [short pause], [slowly], [softly] and the like, plus
+     ellipses). The first clip read like a bulletin, flat and unbroken, and
+     Stephen heard it as a machine. Opus only: this is the Brief speaking in
+     its own name, and accuracy here is the product, so there is no cheaper
+     fallback (GLM 5.3 Flash, tried on the first test runs, invented a
+     candidate's first name and gender). No key, no clip. The greeting and
+     the sign-off are fixed text added here.
   4. Check the body mechanically, the way curate_wire.py checks its reasons:
      no fact the headlines and reasons do not give (curate_wire.invented:
      a number, a weekday or month, "free", a capitalized name; and a pronoun
      that gives someone a gender), no run of eight words copied from a
      headline, no list, and the length. A draft that passes is fact-checked
-     sentence by sentence by a second call. Up to two rewrites name what was
+     sentence by sentence by a second call. Pacing marks are taken out
+     before every check and before the fact check reads the draft (plain()),
+     so a mark can neither hide a word from a check nor be flagged as one;
+     a bracket that is not one of TAGS is deleted (tidy_tags()), so nothing
+     in brackets is ever voiced, published or left unchecked. Up to two rewrites name what was
      wrong; a draft that still invents means no clip today, never a wrong one.
-  5. Send the script to ElevenLabs (eleven_v4_turbo, the voice in
-     ELEVENLABS_VOICE_ID, default Wyatt, a voice ElevenLabs itself owns),
+  5. Send the script to ElevenLabs (eleven_v4, the quality model: the brief
+     is made ahead, so it never needs Turbo's speed; the voice in
+     ELEVENLABS_VOICE_ID, default Wyatt, a voice ElevenLabs itself owns;
+     STABILITY and SIMILARITY say why they are set where they are),
      then one ffmpeg pass: loudness to -16 LUFS, true peak -1 dB, mono MP3
      at 64 kbps (research/tts-options.md, "Best format to publish").
   6. Publish data/audio/YYYY-MM-DD.mp3, the script beside it as
@@ -45,8 +55,8 @@ more than STALE_DAYS old, a failure exits 1 so the broken pipeline is seen.
 
 Costs: the model's tokens and ElevenLabs' characters go to data/audio/
 cost.json, month to date. The script refuses the model once LLM_CAP_USD is
-spent and refuses ElevenLabs past TTS_MONTH_CHARS (Starter's v4 Turbo
-allowance), so a loop can never run up a bill.
+spent and refuses ElevenLabs once TTS_CAP_USD of characters at the model's
+API rate is spent, so a loop can never run up a bill.
 
 CLI:
   --out-dir DIR      the data/audio folder to publish into (default data/audio)
@@ -86,18 +96,30 @@ RAW = "https://raw.githubusercontent.com/btownbrief/btown-brief/wire-data/data/"
 UA = "btown-wire-audio/1.0"
 
 API = "https://api.elevenlabs.io/v1"
-MODEL = "eleven_v4_turbo"
+# eleven_v4 is ElevenLabs' quality-first model and eleven_v4_turbo its
+# real-time one. The brief is written and voiced ahead of 7 am, so speed buys
+# nothing and quality wins: about $0.20 a clip at v4's rate, against $0.10.
+MODEL = "eleven_v4"
 DEFAULT_VOICE = "FrS6cKLB1wg4WYgPa9GW"     # Wyatt, made and kept by ElevenLabs (4,015-day notice)
 OUTPUT_FORMAT = "mp3_44100_64"
 USD_PER_1K_CHARS = {"eleven_v4_turbo": 0.04, "eleven_v4": 0.08}   # API pricing page, 2026-10-16
+# v4 has no speed or style slider; these two are the voice's only dials.
+# Stability 0.5 (the middle) gave the first clip its flat, even read: lower
+# lets the voice move more between sentences. Similarity 0.75 held it close
+# to the reference recording at the cost of naturalness; 0.65 loosens that
+# without losing the voice. (ElevenLabs' own guidance, 2026-10.)
+STABILITY = 0.4
+SIMILARITY = 0.65
 
 # Length, the whole script with the greeting and sign-off. 400 to 500 is the
 # target the writer is given; a shorter brief that is all true is a finished
 # one (facts come from headlines alone, and a headline holds a sentence or
 # two), so only SHORT_OK and WORDS_MAX send a draft back. Never padding.
 WORDS_MIN, WORDS_MAX = 400, 500
-SHORT_OK = 250                             # twelve headlines told plainly run about 270
-WORDS_SOFT_MIN, WORDS_SOFT_MAX = 230, 560  # after the rewrites, close enough to ship
+# SHORT_OK and WORDS_SOFT_MIN were 250 and 230 when the greeting and sign-off
+# ran 67 words; they run 41 now, so both come down 26 to ask the same of the body.
+SHORT_OK = 224                             # twelve headlines told plainly run about 270 with the old fixed text
+WORDS_SOFT_MIN, WORDS_SOFT_MAX = 204, 560  # after the rewrites, close enough to ship
 STORIES_MAX = 12
 STORIES_MIN = 4                            # fewer local picks than this and today is too thin
 COPY_RUN = 8                               # words in a row copied from a headline
@@ -105,7 +127,13 @@ KEEP_DAYS = 30
 STALE_DAYS = 3
 LLM_CAP_USD = 8.0                          # about $0.05 to $0.20 a day; this only stops a runaway
 DRAFTS = 3                                 # a draft and up to two rewrites, each fact-checked
-TTS_MONTH_CHARS = 150_000                  # Starter's v4 Turbo allowance ($6)
+# The voice's monthly ceiling in dollars at the model's API rate, so it stays
+# honest whichever model runs: $8 is about 100,000 v4 characters, a month of
+# clips (about 2,800 characters each) with room for a re-run or two. The
+# plan's own allowance runs out first (Starter includes 30,000 v4
+# characters, about twelve clips); past it ElevenLabs bills the top-up or
+# refuses, and a refusal is a loud failure once the clips go stale.
+TTS_CAP_USD = 8.0
 MAX_TOKENS = {"openrouter": 6000, "anthropic": 16000}   # Opus's draft plus its fact check ran past 8,000
 WRITER = {"provider": "anthropic", "model": "claude-opus-5-5"}   # never a cheaper fallback
 
@@ -146,16 +174,34 @@ ACRONYMS = {
     "Rep": "Representative",
 }
 
-TASK = """You write the Btown Brief, out loud: a three-minute morning news brief for
-Burlington, Vermont, read aloud by a synthetic voice. Write it the way a public
-radio newsreader talks to a neighbour: plain, warm, unhurried.
+# Pacing marks. eleven_v4 takes no SSML breaks; it reads a word in square
+# brackets placed before some text as direction for that text, never aloud.
+# Too many make the voice wobble, so the writer gets a short list and a ration
+# (MAX_DELIVERY and MAX_PAUSES a paragraph), and tidy_tags() enforces both:
+# anything else in brackets is deleted before it can be voiced, published or
+# slip past a check. Never an emotion and never a sound effect.
+PAUSE_TAGS = ("pause", "short pause", "long pause")
+DELIVERY_TAGS = ("slowly", "softly", "gently")
+TAGS = PAUSE_TAGS + DELIVERY_TAGS
+MAX_DELIVERY, MAX_PAUSES = 1, 2
+BRACKET_RE = re.compile(r"\[([^\[\]\n]*)\]")
+TAG_RE = re.compile(r"\[\s*(?:" + "|".join(t.replace(" ", r"\s+") for t in TAGS) + r")\s*\]", re.I)
+
+TASK = """You write the Btown Brief, out loud: a two- to three-minute morning news brief
+for Burlington, Vermont, spoken by one voice.
+
+Who is talking: a neighbour who reads the paper every morning and tells you
+what's in it. Warm, unhurried, dry when the news is dry, never chirpy, never a
+bulletin. They talk the way people talk across a kitchen table, and they never
+editorialise.
 
 You get the stories, numbered in order of importance. Each is a headline, the
 outlet that ran it, sometimes the story's own text, and an editor's note on why
-it was picked. Write the body of the brief: every story, in the order given, as
-short spoken paragraphs.
+it was picked. Write the body of the brief: every story, in the order given,
+each its own short spoken paragraph. The greeting before you ends "Here's
+what's going on around Burlington.", so start straight in on the first story.
 
-Rules, all of them hard:
+The facts. These rules are hard, and nothing about the voice loosens them:
 - The headline (and the story's own text, when it is given) is your only source
   of facts. The editor's note may shape what you put first and what you stress,
   but it is never a source: state nothing from the note that the headline does
@@ -166,23 +212,79 @@ Rules, all of them hard:
   pad. No vague filler ("of some kind", "it remains to be seen", "time will
   tell"), no repeating what you just said. A sentence you cannot ground in the
   headline is left out, and a short true brief beats a long padded one.
-- Never read a headline out. Retell each story in your own words: full, short
-  sentences, one idea each. Never copy more than six words in a row from a headline.
+- Never read a headline out. Retell each story in your own words. Never copy
+  more than six words in a row from a headline.
+- No commentary. No judgement of your own, nothing like "it's a reminder that",
+  "good news" or "it shows", nothing about what a story means.
+- Talking to the listener adds no fact either. "If someone calls claiming to
+  be police" says the scam comes by phone; "if you're heading out this
+  weekend" says when something is. Say "you" only around what the headline
+  gives.
+- A turn between stories asserts nothing. It may only group what the headlines
+  already say: "And one for the weekend." only before a story whose headline
+  says weekend, Saturday or Sunday; "Two from the state" only before two
+  statewide stories.
+
+How it sounds:
+- Contractions, always: it's, there's, they're, won't, that's.
+- Sentences of different lengths. One idea each. A four-word sentence next to
+  a fifteen-word one. Never three sentences in a row built the same way.
+- No two stories start the same way: not the same first word, not the same
+  shape. Never a run of "X reports that", "According to" or "There is".
+- Now and then, a spoken turn between stories: "Closer to home.", "Two things
+  from the state this morning.", "And one for the weekend.", "Something
+  different now." A few in the whole brief, not one per story.
+- Name the outlet the way people say it, and not more than once every two or
+  three stories: "Seven Days has that one.", "That's from WCAX.", "WCAX says".
+  Never in two stories in a row, and never the same phrase twice. Most stories
+  need no outlet at all.
+- Write for the ear: numbers the way they are said ("4.95 million dollars"), no
+  symbols, no abbreviation a listener cannot decode unless the headline uses it.
 - No lists, no bullets, no "first" or "number one", no headings, no emoji, no
-  parentheses. Move between stories with a natural turn now and then, and do not
-  start two stories the same way.
-- No commentary. No judgement of your own, nothing like "it's a reminder that"
-  or "it shows", nothing about what a story means beyond what its note says.
-- Name the outlet where it helps the listener trust a story ("Seven Days
-  reports..."), not every time.
-- Write for the ear: numbers the way they are said ("4.95 million dollars"),
-  no symbols, no abbreviation a listener cannot decode unless the headline uses it.
+  parentheses.
 - No greeting, no sign-off, no date, no weather: those are added for you.
 - Length: about {lo} to {hi} words for the body, only if the headlines carry it.
 
+Pacing marks. The voice takes a mark in square brackets as direction for the
+words after it and never says it aloud. A few, well placed, are what make it
+sound like someone talking; too many make the voice wobble.
+- Each story is its own paragraph, and a [pause] is put before every one for
+  you: never start a paragraph with [pause] yourself.
+- [long pause] at the start of a paragraph where the brief changes direction,
+  just before a turn ("[long pause] Closer to home."). Two or three in the
+  whole brief at most.
+- [short pause] inside a sentence for a small catch before what matters.
+- An ellipsis (...) for a trailing beat inside a sentence, two or three times in
+  the whole brief at most.
+- At most one delivery mark a paragraph, and only [slowly] or [softly]:
+  [softly] before a hard story (a death, a shooting), [slowly] before a number
+  the listener needs to catch. Most paragraphs have none.
+- Only these marks: [pause], [short pause], [long pause], [slowly], [softly],
+  [gently]. Never an emotion, a laugh or a sound effect, and never a word that
+  carries a fact inside brackets: anything else in brackets is deleted before
+  the voice reads it.
+
+An example, two stories that are NOT today's, only to show the difference.
+The headlines: "Burlington library extends weekend hours" (Seven Days) and
+"State police investigating crash on I-89 in Richmond" (WCAX).
+Written flat, the way not to:
+  Seven Days reports that the Burlington library is extending its weekend
+  hours. WCAX reports that state police are investigating a crash on I-89 in
+  Richmond.
+Written the way a person says it:
+  If weekends are when you get to the library, Burlington's is keeping longer
+  hours. That one's from Seven Days.
+
+  [long pause] Out on the interstate... state police are looking into a crash
+  on 89, in Richmond.
+Same facts, nothing added: the second says "you", uses a contraction, names
+one outlet once at the end, turns with words that only restate the headline,
+and pauses where a person would.
+
 Also write `teaser`: one plain phrase under 90 characters naming three of the
 stories' topics, for the card the clip sits on, e.g. "The governor's race money,
-a new interchange, and a scam warning." Same rules on facts: headlines only."""
+a new interchange, and a scam warning." Same rules on facts: headlines only. No
+pacing marks in the teaser."""
 
 SCHEMA = {
     "type": "object",
@@ -209,10 +311,16 @@ Unsupported means: a name, title or role; a pronoun that gives someone a gender;
 a number, date, time or place; what happened, why, or what comes next; who is
 affected; an opinion, judgement or prediction stated as fact. Rewording a headline
 or a note is supported. So are turns between stories and words to the listener
-("If you drive...", "Worth a look before you head out") that assert nothing new,
-and saying when the brief airs ("this morning"). Also list padding: a sentence
-of vague filler that grounds nothing ("with a twist of some kind", "it remains
-to be seen") or that only repeats what the script already said.
+("If you drive...", "Closer to home.", "That one's from Seven Days.") that assert
+nothing new, and saying when the brief airs ("this morning"). Words to the
+listener are unsupported when they imply a detail the sources do not give: "if
+someone calls" when no source says the scam is by phone, "next week" when a
+source gives only a date. A turn that groups
+stories is supported only when the headlines bear it out: "one for the weekend"
+needs a headline that says the weekend, Saturday or Sunday. An ellipsis (...) is
+a spoken pause, not a gap in the text. Also list padding: a sentence of vague
+filler that grounds nothing ("with a twist of some kind", "it remains to be
+seen") or that only repeats what the script already said.
 
 Quote each unsupported sentence exactly as it appears and say in a few words what
 it adds. Return an empty list when every sentence is supported."""
@@ -266,8 +374,51 @@ def spoken_date(date):
     return f"{WEEKDAY[d.weekday()]}, {MONTH[d.month - 1]} {d.day}"
 
 
+def ordinal(n):
+    return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+
+
+def plain(text):
+    """The words alone: every pacing mark out, line breaks kept. Every check
+    reads this, and so does the fact check, so a mark can never split a
+    copied run, hide a word or be flagged as one. Only TAGS come out; any
+    other bracket is left for the checks to read (tidy_tags deletes those
+    before a draft is checked, so this is the second guard)."""
+    text = TAG_RE.sub(" ", text or "")
+    text = re.sub(r"[ \t]{2,}", " ", text)
+    text = re.sub(r" +([,.;:!?])", r"\1", text)
+    return re.sub(r"(?m)^ +| +$", "", text).strip()
+
+
 def word_count(text):
-    return len(re.findall(r"[A-Za-z0-9][A-Za-z0-9'’.,$%-]*", text or ""))
+    return len(re.findall(r"[A-Za-z0-9][A-Za-z0-9'’.,$%-]*", plain(text)))
+
+
+def tidy_tags(paragraph):
+    """A paragraph's pacing marks, kept to TAGS and the ration: a bracket that
+    is not one of TAGS is deleted with everything in it, never voiced or
+    published (deleting words cannot add a fact), and a stray bracket goes
+    too; marks are written in their canonical form; marks in a row become
+    the first; past MAX_DELIVERY delivery marks and MAX_PAUSES pause marks a
+    paragraph, the rest go. Pause marks in a row become the first."""
+    parts, last = [], 0
+    for m in BRACKET_RE.finditer(paragraph):
+        parts.append(paragraph[last:m.start()].replace("[", " ").replace("]", " "))
+        name = re.sub(r"\s+", " ", m.group(1)).strip().lower()
+        parts.append(f" [{name}] " if name in TAGS else " ")
+        last = m.end()
+    parts.append(paragraph[last:].replace("[", " ").replace("]", " "))
+    pause = r"\[(?:short |long )?pause\]"
+    text = re.sub(r"(" + pause + r")(?:\s*" + pause + r")+", r"\1", "".join(parts))
+    seen = {"delivery": 0, "pause": 0}
+
+    def ration(m):
+        kind = "delivery" if m.group(1) in DELIVERY_TAGS else "pause"
+        seen[kind] += 1
+        return m.group(0) if seen[kind] <= (MAX_DELIVERY if kind == "delivery" else MAX_PAUSES) else " "
+    text = re.sub(r"\[([a-z ]+)\]", ration, text)
+    text = re.sub(r"\s+", " ", text)
+    return re.sub(r" +([,.;:!?])", r"\1", text).strip()
 
 
 # ----------------------------------------------------------------------
@@ -327,14 +478,16 @@ def choose_edition(today_payload, date, fetch_edition):
 # ----------------------------------------------------------------------
 
 def intro(date, which):
-    when = ("the stories that matter in Burlington this morning" if which == "today"
-            else "the stories that mattered in Burlington yesterday, the ones still worth knowing this morning")
-    return f"Good morning. It's {spoken_date(date)}, and this is the Btown Brief, out loud: {when}."
+    """How a person starts: the day, who this is, and straight in."""
+    d = as_date(date)
+    day = f"{WEEKDAY[d.weekday()]}, {MONTH[d.month - 1]} {ordinal(d.day)}"
+    what = ("Here's what's going on around Burlington." if which == "today"
+            else "Here's what was going on around Burlington yesterday that's still worth knowing.")
+    return f"Morning. It's {day}, and this is the Btown Brief. {what}"
 
 
-OUTRO = ("That's the Brief for this morning. Every one of these stories, with a link to the outlet "
-         "that reported it, is on the Wire in All Day. This summary was written from the Wire's "
-         "picks and read by an AI voice. Have a good day.")
+OUTRO = ("That's the Brief for this morning. Every story's on the Wire in All Day if you want "
+         "the whole thing. Have a good one.")
 
 
 def prompt_for(stories, which):
@@ -376,7 +529,7 @@ def made_up(text, sources):
     """Every word of `text` that states a fact `sources` do not give,
     sentence by sentence (curate_wire.invented reports the first per call)."""
     found = []
-    for sentence in re.split(r"(?<=[.!?])\s+", text or ""):
+    for sentence in re.split(r"(?<=[.!?])\s+", plain(text)):
         # invented() reads every "may" and "march" as a month; in a spoken
         # script the lowercase ones are verbs, so they are checked as one
         sentence = VERBS.sub("might", sentence)
@@ -396,7 +549,7 @@ PRONOUN_RE = re.compile(r"\b(he|she|him|her|his|hers|himself|herself)\b", re.I)
 def gendered(text, sources):
     """Pronouns that give someone a gender when no source uses one."""
     given = {w.lower() for w in PRONOUN_RE.findall(" ".join(str(s) for s in sources if s))}
-    return [w for w in PRONOUN_RE.findall(text or "") if w.lower() not in given]
+    return [w for w in PRONOUN_RE.findall(plain(text)) if w.lower() not in given]
 
 
 def _norm_words(text):
@@ -405,7 +558,7 @@ def _norm_words(text):
 
 def copied(text, titles, run=COPY_RUN):
     """Headlines the text copies `run` or more words in a row from."""
-    body = " " + " ".join(_norm_words(text)) + " "
+    body = " " + " ".join(_norm_words(plain(text))) + " "
     hits = []
     for title in titles:
         words = _norm_words(title)
@@ -421,7 +574,7 @@ LIST_RE = re.compile(r"(^|\n)\s*([-*•]|\d+[.)]|#)\s|\b(number one|firstly|seco
 
 def problems_of(paragraphs, teaser, stories, date, which):
     """-> {"invented": [...], "copied": [...], "list": bool, "words": n, "teaser_invented": [...]}."""
-    body = "\n\n".join(paragraphs)
+    body = plain("\n\n".join(paragraphs))
     srcs = sources_of(stories)
     return {
         "invented": made_up(body, srcs) + gendered(body, srcs),
@@ -476,8 +629,9 @@ def tidy(paragraphs):
     out = []
     for p in paragraphs or []:
         p = re.sub(r"\s+", " ", str(p)).strip()
-        p = p.replace("&", "and").replace("%", " percent")
-        if p:
+        p = p.replace("&", "and").replace("%", " percent").replace("…", "...")
+        p = tidy_tags(p)
+        if re.search(r"[A-Za-z0-9]", plain(p)):
             out.append(p)
     return out
 
@@ -487,7 +641,7 @@ def verify(stories, paragraphs, engine, ask):
     really are in the draft count, so a confused checker cannot sink a good
     script; a checker that does not answer at all can, because nothing ships
     unchecked."""
-    body = "\n\n".join(paragraphs)
+    body = "\n\n".join(plain(p) for p in paragraphs)    # the words alone: marks are not facts
     flat = re.sub(r"\s+", " ", body)
     try:
         answer, usage = ask(engine, VERIFY_TASK, headlines_for_check(stories) + "\n\nThe script:\n" + body,
@@ -527,7 +681,7 @@ def write_script(stories, engine, date, which, ask=None):
             notes.append(f"attempt {attempt}: no usable answer")
             continue
         paragraphs = tidy(answer.get("paragraphs"))
-        teaser = re.sub(r"\s+", " ", str(answer.get("teaser") or "")).strip()[:120]
+        teaser = re.sub(r"\s+", " ", BRACKET_RE.sub(" ", str(answer.get("teaser") or ""))).strip()[:120]
         p = problems_of(paragraphs, teaser, stories, date, which)
         if paragraphs and not p["invented"] and not p["list"]:
             p["unsupported"], got = verify(stories, paragraphs, engine, ask)
@@ -573,17 +727,35 @@ def write_script(stories, engine, date, which, ask=None):
 TURN_WORDS = 7   # a paragraph this short after a cut is a turn left introducing nothing
 
 
+def cut_one(text, sentence):
+    """`text` without `sentence`, which was quoted from plain(text): any
+    pacing marks inside it, or just before it, go with it. When the marks
+    sit where the pattern cannot follow, the paragraph loses its marks
+    rather than keep the sentence."""
+    words = sentence.split()
+    if not words:
+        return text
+    mark = r"\[[a-z ]+\]"
+    gap = r"(?:\s+(?:" + mark + r"\s*)*|\s*" + mark + r"\s*)"     # a space, or a mark, between two words
+    pattern = r"(?:" + mark + r"\s*)*" + gap.join(re.escape(w) for w in words)
+    cut, n = re.subn(pattern, " ", text, count=1)
+    if n:
+        return cut
+    return plain(text).replace(sentence, "") if sentence in plain(text) else text
+
+
 def cut_sentences(paragraphs, sentences):
     """Take the quoted sentences out. A paragraph the cut leaves as a bare
     turn ("Some business news now.", the first end-to-end run, whose
-    DandyLion sentence had been cut) goes with them."""
+    DandyLion sentence had been cut) goes with them, and so does one left
+    holding only pacing marks."""
     out = []
     for para in paragraphs:
         flat = re.sub(r"\s+", " ", para)
         for sentence in sentences:
-            flat = flat.replace(sentence, "")
+            flat = cut_one(flat, sentence)
         flat = re.sub(r"\s{2,}", " ", flat).strip()
-        if not re.search(r"[A-Za-z]", flat):
+        if not re.search(r"[A-Za-z]", plain(flat)):
             continue
         if flat != re.sub(r"\s+", " ", para).strip() and word_count(flat) < TURN_WORDS:
             continue
@@ -591,8 +763,23 @@ def cut_sentences(paragraphs, sentences):
     return out
 
 
+STORY_BEAT = "[pause]"
+PAUSE_OPEN = re.compile(r"\[(?:short |long )?pause\]")
+
+
 def for_voice(script):
-    text = script
+    """What the voice is sent: the script with its pacing marks (the voice
+    takes them as direction), any other bracket deleted (a script read back
+    with --audio-from never went through tidy here), STORY_BEAT before every
+    paragraph after the greeting, and RESPELL. The beat is added here, in the
+    voice's copy only: measured on eleven_v4 with Wyatt (2026-10-17, word
+    timestamps from ElevenLabs' own transcription), a full stop and a
+    paragraph break both leave about 0.55 s and an ellipsis about 0.5 s, so
+    the first clip ran its stories together; [pause] leaves 1.0 to 1.3 s and
+    [long pause] about 1.7 s, and [short pause] barely 0.7 s."""
+    paragraphs = [tidy_tags(p) for p in re.split(r"\n\s*\n", script.strip())]
+    paragraphs = [p if i == 0 or PAUSE_OPEN.match(p) else f"{STORY_BEAT} {p}" for i, p in enumerate(paragraphs) if p]
+    text = "\n\n".join(paragraphs) + ("\n" if script.endswith("\n") else "")
     for word, said in RESPELL.items():
         text = re.sub(r"\b" + re.escape(word) + r"\b", said, text)
     return text
@@ -605,7 +792,7 @@ def for_voice(script):
 def tts(api_key, voice_id, text, model=MODEL):
     """-> (mp3 bytes, the response headers that carry the cost)."""
     body = json.dumps({"text": text, "model_id": model,
-                       "voice_settings": {"stability": 0.5, "similarity_boost": 0.75}}).encode("utf-8")
+                       "voice_settings": {"stability": STABILITY, "similarity_boost": SIMILARITY}}).encode("utf-8")
     req = urllib.request.Request(
         f"{API}/text-to-speech/{voice_id}?output_format={OUTPUT_FORMAT}", data=body, method="POST",
         headers={"xi-api-key": api_key, "Content-Type": "application/json", "Accept": "audio/mpeg"})
@@ -635,7 +822,7 @@ def normalize(raw, title):
                             "-ac", "1", "-ar", "44100",
                             "-c:a", "libmp3lame", "-b:a", "64k",
                             "-metadata", f"title={title}", "-metadata", "artist=The Btown Brief",
-                            "-metadata", "comment=Written from the Wire's picks and read by an AI voice",
+                            "-metadata", "comment=Every story is on the Wire in All Day",
                             dst], check=True)
         seconds = 0.0
         if ffprobe:
@@ -707,9 +894,11 @@ def record(out_dir, now, entry):
     cost["tts_usd"] = round(cost["tts_usd"] + entry.get("tts_usd", 0), 6)
     cost["runs"] = (cost["runs"] + [{"at": now.replace(microsecond=0).isoformat(), **entry}])[-62:]
     wc.write_json(os.path.join(out_dir, "cost.json"), cost)
+    model = entry.get("tts_model") or MODEL
     line = (f"wire_audio: ${entry.get('llm_usd', 0):.4f} model + {entry.get('tts_chars', 0):,} characters "
-            f"(${entry.get('tts_usd', 0):.4f}) this run; month to date ${cost['llm_usd']:.2f} model, "
-            f"{cost['tts_chars']:,} characters (${cost['tts_usd']:.2f})")
+            f"(${entry.get('tts_usd', 0):.4f} at {model}'s ${USD_PER_1K_CHARS.get(model, 0.08):.2f} per 1,000) "
+            f"this run; month to date ${cost['llm_usd']:.2f} model, {cost['tts_chars']:,} characters "
+            f"(${cost['tts_usd']:.2f} of the ${TTS_CAP_USD:.0f} voice cap)")
     print(line)
     wc.step_summary("- " + line)
 
@@ -807,12 +996,13 @@ def run(args):
         wc.step_summary(f"- wire_audio: wrote {date}.txt ({words} words); voice it with --audio-from")
         return 0
     voice_text = for_voice(script)
-    if cost_now["tts_chars"] + len(voice_text) > TTS_MONTH_CHARS:
-        record(out_dir, now, {**entry, "result": "tts cap"})
-        return give_up(f"the month's {TTS_MONTH_CHARS:,} ElevenLabs characters are spent", fatal=True)
-
     voice = os.environ.get("ELEVENLABS_VOICE_ID") or DEFAULT_VOICE
     model = os.environ.get("ELEVENLABS_MODEL") or MODEL
+    rate = USD_PER_1K_CHARS.get(model, 0.08)
+    if cost_now["tts_usd"] + len(voice_text) / 1000 * rate > TTS_CAP_USD:
+        record(out_dir, now, {**entry, "result": "tts cap"})
+        return give_up(f"the month's ${TTS_CAP_USD:.0f} of ElevenLabs characters "
+                       f"(about {int(TTS_CAP_USD / rate * 1000):,} on {model}) is spent", fatal=True)
     try:
         raw, headers = tts(api_key, voice, voice_text, model)
     except urllib.error.HTTPError as exc:
@@ -827,7 +1017,7 @@ def run(args):
     # "character-cost" in its credits (the first real clip: 2,821 characters,
     # 310 credits) and no API call converts credits to dollars, so both are kept.
     credits = headers.get("character-cost") or headers.get("x-character-count")
-    entry.update(tts_chars=len(voice_text), tts_usd=round(len(voice_text) / 1000 * USD_PER_1K_CHARS.get(model, 0.08), 6),
+    entry.update(tts_chars=len(voice_text), tts_usd=round(len(voice_text) / 1000 * rate, 6), tts_model=model,
                  tts_credits=int(credits) if str(credits or "").isdigit() else None, tts_headers=headers, result="published")
     title = f"{spoken_date(date)}: the Btown Brief, out loud"
     try:
@@ -884,10 +1074,18 @@ def selftest():
         calls.append(user)
         return {"paragraphs": body, "teaser": "Bike lanes on North Avenue."}, {"in": 10, "out": 10, "calls": 1}
     script, teaser, usage, notes = write_script(stories, {"provider": "anthropic", "model": "m"}, "2026-10-16", "today", ask=fake)
-    assert script and script.startswith("Good morning. It's Friday, October 16") and "AI voice" in script, script
+    assert script and script.startswith("Morning. It's Friday, October 16th") and " AI " not in script, script
     assert SHORT_OK <= word_count(script) <= WORDS_MAX, word_count(script)
     assert len(calls) == 1 and teaser == "Bike lanes on North Avenue." and usage["calls"] == 2, (calls, usage)
     assert gendered("She said his plan works.", srcs) == ["She", "his"] and not gendered("She said so.", ["she won"])
+    # pacing marks: kept to TAGS, never read by a check, never a hiding place
+    assert tidy_tags("[Short Pause] Closer to home... [excited] the [free] plan [pause][pause] passed.") == \
+        "[short pause] Closer to home... the plan [pause] passed."
+    assert made_up("The council approved it. [short pause] Closer to home, North Avenue.", srcs) == []
+    assert made_up("The plan [softly] passed on [pause] Tuesday.", srcs) == ["Tuesday"]
+    assert copied("they said the council approves the [pause] 2th bike lane plan for north avenue", [stories[0]["title"]])
+    assert word_count("[pause] one two [softly] three") == 3 and plain("a [slowly] b [pause].") == "a b."
+    assert for_voice("[pause] In Charlotte [cheerfully] now.\n") == "[pause] In Shar-LOT now.\n"
 
     def liar(engine, system, user, schema, max_tokens, log_prefix):
         return {"paragraphs": ["Mayor Emma Mulvaney-Stanak cut the ribbon on Tuesday."] + body, "teaser": "x"}, {"calls": 1}
