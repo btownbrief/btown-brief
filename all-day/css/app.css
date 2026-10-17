@@ -617,6 +617,23 @@ body.chrome-away .mast { transform: translateY(-100%); }
 /* What Now: the mission a spin landed on, for as long as that answer stands */
 .lrow.spun { background: var(--accent-soft); }
 .lrow.spun .num { color: var(--accent); }
+/* a club's meet (People's week, What Now's windows): the start time in the tile */
+.lrow.meet .th.tm { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+.lrow.meet .th.tm b { font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; color: var(--ink); }
+.lrow.meet .th.tm span { font-size: var(--fs-small); color: var(--ink-3); }
+.lrow.meet .open { display: block; width: 100%; min-width: 0; }
+.lrow .s.one { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* People: the club week's seven days across */
+.days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding: 0 var(--gutter) 8px; }
+.days button { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 0 7px; border-radius: var(--r-tile); background: var(--paper-2); color: var(--ink-2); text-align: center; min-width: 0; }
+.days .wd { font-size: var(--fs-small); font-weight: 600; white-space: nowrap; }
+.days .dd { font-family: var(--serif); font-size: var(--fs-date); font-weight: 500; color: var(--ink); line-height: 1.15; }
+.days .n { font-size: var(--fs-small); color: var(--ink-3); min-height: 1.2em; }
+.days button.on { background: var(--ink); color: var(--on-ink); }
+.days button.on .dd, .days button.on .n { color: var(--on-ink); }
+.days button.none .dd { color: var(--ink-3); }
+.clubsheet .sheet-row .t b { font-weight: 600; }
+.clubsheet .go { margin-top: var(--s4); }
 .pillbtn { height: 30px; padding: 0 10px; white-space: nowrap; flex: 0 0 auto; border-radius: var(--r-pill); border: 1px solid var(--line); font-size: var(--fs-meta); font-weight: 600; color: var(--ink-2); display: inline-flex; align-items: center; gap: 4px; }
 .pillbtn .i { width: 16px; height: 16px; }
 .pillbtn.on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
@@ -854,6 +871,40 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 .hb-list.is-skel .hb-tap.skel { width: 48px; height: 48px; border: 0; border-radius: var(--r-round); }
 .hb-list.is-skel .hb-main { gap: var(--s2); width: 100%; }
 @keyframes hb-fade { to { opacity: .55; } }
+
+/* The Wire's Photo mode (modes/wire-photos.js): the list / photos switch at
+   the end of the dateline row, then one picture at a time, full width on a
+   phone and a narrower column on a wide screen, each card a picture, one
+   line of caption and the foot line. Cards far off screen skip their layout
+   work, so a long feed stays light. */
+.viewsw { flex: 0 0 auto; display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-pill); overflow: hidden; margin-left: 4px; }
+.viewsw-b { width: var(--hit); height: var(--hit); display: inline-flex; align-items: center; justify-content: center; color: var(--ink-3);
+  transition: background .15s ease, color .15s ease; }
+.viewsw-b .i { width: 20px; height: 20px; }
+.viewsw-b:hover { color: var(--ink); }
+.viewsw-b.on { background: var(--ink); color: var(--on-ink); }
+.dateline.pm-dl { justify-content: space-between; padding-right: 6px; }
+.toolband > .btn.sm { flex: 0 0 auto; margin-right: var(--gutter); }
+.feed.pm-feed { max-width: 468px; }
+.card.pm { padding: 0 0 var(--s1); content-visibility: auto; contain-intrinsic-size: auto 600px; }
+.pm-pic { position: relative; display: block; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; background: var(--paper-2); }
+.pm-pic.r11 { aspect-ratio: 1 / 1; }
+.pm-body { padding: var(--s2) var(--gutter) 0; }
+.pm-body .eyebrow { display: block; margin-bottom: 2px; }
+.pm-cap { display: block; font-size: var(--fs-body); font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card.pm.is-read .pm-cap { font-weight: 500; color: var(--ink-2); }
+.card.pm .c-foot { margin-top: 2px; }
+.card.pm .c-foot .sp { flex: 1; }
+.card.pm .c-foot .act.star { height: 36px; margin-right: -10px; }
+.card.pm-lead .pm-cap { font-family: var(--serif); font-size: var(--fs-title); font-weight: 500; }
+.caught.pm-empty { padding-top: var(--s8); }
+.btn.up.on { color: var(--accent); border-color: var(--accent); }
+.c-text.pm-full { -webkit-line-clamp: unset; display: block; white-space: pre-line; }
+@media (min-width: 500px) {
+  .card.pm { padding-top: var(--s3); }
+  .pm-pic { border-radius: var(--r-media); }
+  .pm-body { padding-left: 0; padding-right: 0; }
+}
 
 /* mod.html, the boards desk: one column of posts with their buttons */
 body.desk { overflow: auto; }

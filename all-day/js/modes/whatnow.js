@@ -21,6 +21,16 @@
      have not done and lets it glow, rather than opening a modal. Tap a
      mission for its paragraph and its places. A spin that lands on a
      mission's own place marks that row and scrolls the list to it.
+   - Moving with people. The run and fitness clubs' weekly meets
+     (data/run-clubs.json through clubs-week.js, the same week People
+     shows) in the window being planned: Now is the next three hours,
+     Tonight is 4 pm to midnight, Tomorrow is all of tomorrow. They show as
+     rows under the answer, and Tonight's view carries tonight's. The path
+     chip Move with people answers only with those meets (it switches the
+     other chips off, and they it), and when there are none says so and
+     names the next one. A row opens People's club week on that meet.
+     The missions list leads with "Run with a club", which opens People's
+     week (#people/clubs).
    - Tonight. The local artists with a show tonight or this week
      (all-day/data/music.json), the job the old Music tab did, why lines
      kept, then today's calendar from 5 pm on (all-day/data/whatnow.json, in
@@ -34,7 +44,8 @@
 import * as app from '../app.js';
 import * as store from '../store.js';
 import * as data from '../wire.js';
-import { el, esc, safeHref, ICON, art, section, chips, pills, button, cards, put } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, chips, pills, button, cards, put, meetRow } from '../ui.js';
+import * as cw from '../clubs-week.js';
 import { loadAll } from '../whatnow-data.js';
 import { buildContext, buildPool, pick, fmtTime, outdoorRisks } from '../whatnow-engine.js';
 import { sunScore } from '../sun.js';
@@ -42,6 +53,8 @@ import { sunScore } from '../sun.js';
 const KEY = 'whatnow';
 const MODES = ['spin', 'missions', 'tonight'];
 const MISSIONS_URL = '../data/missions.json';
+const RUN_CLUBS_URL = '../data/run-clubs.json';
+const MEETS_SHOWN = 3;
 const EVENTS_URL = '../events.html';
 const DONE_KEY = 'allday-missions';
 const SEEN_KEY = 'allday-wn-seen';
@@ -52,7 +65,7 @@ const REEL_MS = [55, 60, 68, 78, 92, 110, 135, 170, 215, 275, 350];
 
 const WINDOWS = [['now', 'Now'], ['tonight', 'Tonight'], ['tomorrow', 'Tomorrow']];
 const PATHS = [['free', 'I’m broke'], ['outside', 'Get me outside'], ['people', 'People, please'],
-  ['twohours', 'Two hours'], ['closeby', 'Close by'], ['hobby', 'Teach me something']];
+  ['twohours', 'Two hours'], ['closeby', 'Close by'], ['hobby', 'Teach me something'], ['move', 'Move with people']];
 const THEME = { eat: 'Eat', drink: 'Drink', outdoors: 'Outdoors', water: 'Water', culture: 'Culture',
   play: 'Play', family: 'Family', winter: 'Winter', free: 'Free' };
 
@@ -83,6 +96,7 @@ const S = {
   answer: null, pool: 0, ctx: null, rolling: false, did: false,
   feeds: null, feedsFailed: false, sun: null,
   weather: null, events: null, music: null, missions: null, missionsFailed: false,
+  rc: null,                              // data/run-clubs.json's clubs, [] when it did not load
 };
 let root = null, pending = null, ready = false, loaded = null, D = null, reel = 0;
 const done = app.demo ? Object.create(null) : { ...readMap(DONE_KEY) };
@@ -99,6 +113,7 @@ function load() {
       D = redate(d);
       S.weather = D.weather; S.events = D.events; S.music = D.music; S.missions = D.missions;
       S.feeds = { ...D.feeds, weather: D.weather, events: D.events };
+      return app.demoData('run-clubs').then((j) => { S.rc = cw.redateDemo(j, Date.now()).clubs; }, () => { S.rc = []; });
     });
   }
   /* the wire may hand a payload over again later (a retry after a failed
@@ -114,6 +129,10 @@ function load() {
       S.missions = j;
     }).catch(() => { S.missionsFailed = true; }),
     loadAll().then(({ data: feeds }) => { S.feeds = feeds; }).catch(() => { S.feedsFailed = true; }),
+    data.fetchJSON(RUN_CLUBS_URL, 8000).then((j) => {
+      if (!j || !Array.isArray(j.clubs)) throw new Error('bad shape');
+      S.rc = j.clubs;
+    }).catch(() => { S.rc = []; }),
   ];
   sunScore(data).then((sun) => { S.sun = sun; paintWx(); });
   pullDone();
@@ -206,7 +225,7 @@ function paintWx() {
 /* ------------------------------------------------------------------ Spin */
 function renderSpin() {
   const tools = el('div', 'toolrow');
-  tools.appendChild(pills(WINDOWS, S.window, (v) => { S.window = v; S.answer = null; S.did = false; render(); }));
+  tools.appendChild(pills(WINDOWS, S.window, (v) => { S.window = v; S.answer = null; S.did = false; if (moving()) spin(); else render(); }));
   root.appendChild(tools);
 
   const s = el('div', 'spin');
@@ -218,8 +237,13 @@ function renderSpin() {
   root.appendChild(s);
 
   const paths = chips(PATHS.map(([key, label]) => ({ key, label })), null, (k) => {
-    if (S.chips.has(k)) S.chips.delete(k); else S.chips.add(k);
-    if (S.answer || S.did) spin(); else render();
+    if (S.chips.has(k)) S.chips.delete(k);
+    else {
+      /* Move with people is its own answer: it and the engine's chips take turns */
+      if (k === 'move') S.chips.clear(); else S.chips.delete('move');
+      S.chips.add(k);
+    }
+    if (S.answer || S.did || S.chips.has('move')) spin(); else render();
   }, 'paths');
   [...paths.children].forEach((b) => { const on = S.chips.has(b.dataset.chip); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
   root.appendChild(paths);
@@ -227,9 +251,57 @@ function renderSpin() {
   if (S.did && S.answer) root.appendChild(doneCard(S.answer));
   else if (S.answer || (S.ctx && !S.rolling)) root.appendChild(answerCard());
   if (S.ctx && !S.did) root.appendChild(el('p', 'note pad', esc(poolLine())));
+  meetsBlock(S.window);
 }
 
-const windowWord = () => (S.window === 'tonight' ? 'tonight' : S.window === 'tomorrow' ? 'tomorrow' : 'right now');
+/* ------------------------------------------------------- moving with people */
+const moving = () => S.chips.has('move');
+const usableClub = (c) => !!c && /^https?:/i.test(String(c.url || ''));
+function meetsIn(win) {
+  const w = cw.windowFor(win, Date.now());
+  return cw.meetsInWindow(S.rc || [], w.from, w.to, usableClub);
+}
+const nothingWord = (win) => (win === 'tonight' ? 'Nothing else tonight.' : win === 'tomorrow' ? 'Nothing tomorrow.' : 'Nothing in the next few hours.');
+/* "Tomorrow", "Wednesday", or nothing for today */
+function dayWord(o) {
+  const today = et(Date.now()).date;
+  return o.date === today ? '' : o.date === addDays(today, 1) ? 'Tomorrow' : dayFmt.format(utcNoon(o.date));
+}
+const openMeet = (o) => app.go('people', o.k);
+
+/* the window's meets as rows, under the answer (and in Tonight's view) */
+function meetsBlock(win) {
+  if (!S.rc) return;
+  const list = meetsIn(win);
+  if (!list.length) return;
+  const week = button('The week ' + ICON.arrow, 'ghost sm', () => app.go('people', 'clubs'));
+  const head = section(root, 'Move with people', list.length > MEETS_SHOWN ? '<b>' + esc(list.length) + '</b> ' + esc(windowWord(win)) : null, week);
+  head.dataset.sec = 'meets';
+  const box = el('div', 'meets');
+  box.dataset.meets = win;
+  list.slice(0, MEETS_SHOWN).forEach((o) => put(box, meetRow(o, openMeet, { day: dayWord(o) })));
+  root.appendChild(box);
+}
+
+/* a meet as one of Spin's answers, in the engine's candidate shape */
+function meetAnswer(o) {
+  const mins = Math.round((o.at - Date.now()) / 60000);
+  const why = [];
+  if (S.window === 'now') why.push(mins < 60 ? 'it starts in ' + Math.max(1, mins) + ' min' : 'it starts at ' + o.time);
+  if (/^\s*free\b/i.test(String(o.club.cost || ''))) why.push('it’s free');
+  if (/welcome|all (levels|paces)|beginner|new folks|first time|drop.?in/i.test(String(o.club.newcomers || '') + ' ' + String(o.club.level || ''))) why.push('newcomers are welcome');
+  return { id: 'meet-' + o.k, kind: 'meet', o, title: o.club.name, venue: o.meet.where, timeLabel: [dayWord(o), o.time].filter(Boolean).join(' '),
+    cost: String(o.club.cost || ''), url: o.club.url, what: o.club.what, why_: why };
+}
+const meetPool = () => meetsIn(S.window).map(meetAnswer);
+/* any meet not answered in the last day, else any */
+function pickMeet(pool, recent) {
+  const fresh = pool.filter((c) => !recent.includes(c.id));
+  const from = fresh.length ? fresh : pool;
+  return from.length ? from[Math.floor(Math.random() * from.length)] : null;
+}
+
+const windowWord = (w = S.window) => (w === 'tonight' ? 'tonight' : w === 'tomorrow' ? 'tomorrow' : 'right now');
 
 function context() {
   const ctx = buildContext(S.feeds, new Date(), S.window);
@@ -243,7 +315,7 @@ function roll() {
   if (S.rolling || !S.feeds) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { spin(); return; }
   const ctx = context();
-  const pool = buildPool(S.feeds, ctx, S.chips);
+  const pool = moving() ? meetPool() : buildPool(S.feeds, ctx, S.chips);
   if (pool.length < 3) { spin(); return; }
   S.rolling = true; S.did = false; S.ctx = ctx; S.pool = pool.length;
   const mine = ++reel;
@@ -261,12 +333,12 @@ function roll() {
 function spin() {
   if (!S.feeds) return;
   const ctx = context();
-  const pool = buildPool(S.feeds, ctx, S.chips);
+  const pool = moving() ? meetPool() : buildPool(S.feeds, ctx, S.chips);
   S.ctx = ctx; S.pool = pool.length; S.did = false;
   const prev = S.answer && S.answer.id;
   const recent = Object.keys(seen());
   if (prev && !recent.includes(prev)) recent.push(prev);
-  S.answer = pick(pool, recent);
+  S.answer = moving() ? pickMeet(pool, recent) : pick(pool, recent);
   if (S.answer) remember(S.answer.id);
   render();
   const m = missionOf(S.answer);
@@ -311,7 +383,9 @@ function because(c) {
 /* lifted from the standalone app so the answer reads as it did there */
 function metaLine(c) {
   const bits = [];
-  if (c.kind === 'event') {
+  if (c.kind === 'meet') {
+    bits.push(c.venue, c.timeLabel, trim(c.cost, 28));
+  } else if (c.kind === 'event') {
     bits.push(c.venue, c.timeLabel, c.free ? 'free' : (c.minPrice != null && c.minPrice > 0 ? 'from $' + c.minPrice : ''));
   } else if (c.kind === 'thing') {
     bits.push(c.venue, c.costNote || (c.costTier === 'Free' ? 'free' : c.costTier));
@@ -325,7 +399,7 @@ function metaLine(c) {
 const trim = (s, n) => (!s ? '' : (s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s));
 function blurbFor(c) {
   if (c.kind === 'thing') return c.blurb || '';
-  if (c.kind === 'club') return trim(c.what, 160);
+  if (c.kind === 'club' || c.kind === 'meet') return trim(c.what, 160);
   if (c.kind === 'hobby') return trim(c.startLine ? c.what + ' Start: ' + c.startLine : c.what, 280);
   if (c.kind === 'sunset') return c.why || 'Look west. That’s the whole assignment.';
   if (c.kind === 'beach') return 'Towel, water, done. This is what the lake is for.';
@@ -342,6 +416,7 @@ function answerCard() {
   const r = el('div', 'result' + (S.rolling ? ' rolling' : ''));
   r.setAttribute('aria-live', 'polite');
   const c = S.answer;
+  if (!c && moving()) return noMeetCard(r);
   if (!c) {
     const ctx = S.ctx;
     const walkable = ctx && !ctx.darkAtTarget && !ctx.rainT && ctx.tempT != null && ctx.tempT >= 40 && !outdoorRisks(ctx).length;
@@ -361,13 +436,32 @@ function answerCard() {
   return r;
 }
 
+/* Move with people and nothing in the window: say so, and name the next one */
+function noMeetCard(r) {
+  const w = cw.windowFor(S.window, Date.now());
+  const next = cw.nextMeet(S.rc || [], w.to, usableClub) || cw.nextMeet(S.rc || [], Date.now(), usableClub);
+  r.dataset.nomeet = S.window;
+  r.innerHTML = '<div class="in"><div class="eyebrow">Honestly</div><h3>' + esc(nothingWord(S.window)) + '</h3>' +
+    (next ? '<p class="meta">' + esc('Next: ' + [next.club.name, [dayWord(next), next.time].filter(Boolean).join(' '), next.meet.where].join(' · ')) + '</p>' : '') +
+    '<div class="row"></div></div>';
+  const row = r.querySelector('.row');
+  if (next) {
+    const b = button('That one ' + ICON.arrow, 'doit', () => openMeet(next));
+    b.dataset.next = next.k;
+    row.appendChild(b);
+  }
+  row.appendChild(button('The week', 'ghost', () => app.go('people', 'clubs')));
+  return r;
+}
+
 /* Do it ends the session: the app's own line, and the way to the details. */
 function doneCard(c) {
   const r = el('div', 'result did');
   r.innerHTML = '<div class="in"><div class="eyebrow">' + esc(c.title) + '</div><h3>Now put the phone down.</h3><p>' +
     esc(metaLine(c)) + '</p><div class="row"></div></div>';
   const row = r.querySelector('.row');
-  if (c.url) row.appendChild(openLink('The details', c.url));
+  if (c.kind === 'meet') row.appendChild(button('The club', 'ghost', () => openMeet(c.o)));
+  else if (c.url) row.appendChild(openLink('The details', c.url));
   row.appendChild(button('Spin again later', 'ghost', () => { S.did = false; S.answer = null; render(); }));
   return r;
 }
@@ -384,6 +478,7 @@ function poolLine() {
     if (S.chips.size >= 2) why.push('the chips are tight');
   }
   const tail = why.length ? ' · ' + why.slice(0, 2).join(' and ') : '';
+  if (moving()) return S.pool ? plural(S.pool, 'meet', 'meets') + ' ' + windowWord() : 'No meets ' + windowWord();
   return (S.pool ? plural(S.pool, 'thing', 'things') + ' fit ' : 'Nothing fits ') + windowWord() + tail;
 }
 
@@ -408,6 +503,7 @@ function renderMissions() {
     S.theme, (k) => { S.theme = k; history.replaceState(null, '', location.search + '#whatnow/missions'); render(); }, 'themes'));
   const list = all.filter((m) => S.theme === 'all' || m.theme === S.theme);
   const box = el('div', 'missions');
+  if (S.theme === 'all') box.appendChild(clubMission());
   const spun = S.rolling ? null : missionOf(S.answer);
   list.forEach((m) => { const r = missionRow(m); if (spun && spun.k === m.k) r.classList.add('spun'); box.appendChild(r); });
   root.appendChild(box);
@@ -416,6 +512,23 @@ function renderMissions() {
     title: 'That’s all.',
     buttons: [button(ICON.shuffle + ' Surprise me', '', () => surprise(box))],
   }));
+}
+
+/* Not one of the Top 100, and not numbered: the standing mission, whose
+   action is People's club week. The count is the week's run-club meets. */
+function clubMission() {
+  const r = el('div', 'lrow mission club');
+  r.dataset.k = 'run-with-a-club';
+  const week = S.rc ? cw.weekStrip(S.rc, Date.now(), (c) => usableClub(c) && cw.isRun(c)).reduce((n, d) => n + d.meets.filter((o) => !o.past).length, 0) : 0;
+  const go = () => app.go('people', 'clubs');
+  const open = el('button', 'open', '<div class="t">Run with a club</div><div class="s">' + esc(['Outdoors', week ? plural(week, 'run', 'runs') + ' this week' : ''].filter(Boolean).join(' · ')) + '</div>');
+  open.setAttribute('aria-label', 'Run with a club. See this week’s runs');
+  open.addEventListener('click', go);
+  const b = el('button', 'pillbtn', 'This week ' + ICON.arrow);
+  b.dataset.clubs = '1';
+  b.addEventListener('click', go);
+  r.append(el('span', 'num', ICON.people), open, b);
+  return r;
 }
 
 function missionRow(m) {
@@ -455,7 +568,7 @@ function setDone(m, on) {
    reader lands there too. Under reduced motion there is no glow and no
    smooth scroll; the focus ring marks it. */
 function surprise(box) {
-  const rows = [...box.querySelectorAll('.lrow')];
+  const rows = [...box.querySelectorAll('.lrow:not(.club)')];
   if (!rows.length) return;
   const open = rows.filter((r) => !r.classList.contains('done'));
   const pool = open.length ? open : rows;
@@ -600,6 +713,7 @@ function renderTonight() {
     acts.forEach((x) => box.appendChild(artistRow(x.a, x.s)));
     root.appendChild(box);
   }
+  meetsBlock('tonight');
   const head = section(root, 'Tonight', list.length ? '<b>' + esc(plural(list.length, 'thing', 'things')) + '</b> from 5 pm on' : null);
   head.dataset.sec = 'tonight';
   if (!S.events) root.appendChild(el('p', 'loading', 'Loading tonight…'));
