@@ -50,7 +50,9 @@ class ReadOneTests(unittest.TestCase):
         self.assertEqual(first["name"], "WCAX Channel 3")
         self.assertEqual(first["u"], "https://x.com/wcax/status/2110974024322838998")
         self.assertTrue(first["summary"].startswith("Northbound I-89"))   # verbatim
-        self.assertIs(first["local"], True)
+        # X is a guess from the text until tag_wire.py decides: only the
+        # post that names a place here (Chittenden County) starts out local
+        self.assertEqual([item["local"] for item in fresh], [False, False, True])
 
     def test_stale_file_pauses_and_merges_nothing(self):
         state, fresh = wi.read_one("x", raw("x-stale.json"), NOW)
@@ -84,6 +86,7 @@ class ReadOneTests(unittest.TestCase):
         self.assertEqual(state["dropped"], 2)        # the http link and the phone number
         self.assertEqual([item["u"][-4:] for item in fresh], ["1001", "2004"])
         self.assertTrue(all(item["ch"] == "facebook" for item in fresh))
+        self.assertTrue(all(item["local"] is True for item in fresh))   # every group is local
 
     def test_mostly_bad_file_pauses(self):
         state, fresh = wi.read_one("facebook", raw("facebook-mostly-bad.json"), NOW)

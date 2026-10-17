@@ -3,8 +3,9 @@
 
 Two bots drop files in the private repo btownbrief/wire-inbox:
 
-  grok/x.json         X posts from a shortlist of Burlington and Vermont accounts
-  muse/facebook.json  posts from public Facebook groups
+  grok/x.json         X posts from a shortlist of accounts: six Vermont ones and the
+                      national desks (AP, Reuters, BBC and others), 2026-10-17
+  muse/facebook.json  posts from public Facebook groups, every one of them local
 
 refresh_pulse.py calls read_inbox() each run. This module fetches both files
 through the GitHub contents API with the WIRE_INBOX_TOKEN secret, checks them
@@ -16,7 +17,7 @@ merges the surviving posts into pulse.json under its own `inbox` key:
     "x":        {"paused": false, "reason": null, "updated_at": "...",
                  "checked": "...", "pause_after_hours": 18, "n": 12,
                  "items": [{"u", "d", "fd", "from", "name", "summary",
-                            "kind", "ch": "x", "local": true}, ...]},
+                            "kind", "ch": "x", "local": false}, ...]},
     "facebook": {...same shape, "ch": "facebook"...}
   }
 
@@ -48,6 +49,8 @@ import sys
 import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
+
+import wire_common as wc
 
 REPO = "btownbrief/wire-inbox"
 API = "https://api.github.com/repos/" + REPO + "/contents/"
@@ -238,12 +241,26 @@ def read_one(ch, raw, now):
             "summary": re.sub(r"\s+", " ", it["summary"]).strip(),
             "kind": it["kind"],
             "ch": ch,
-            "local": True,   # both shortlists are Burlington and Vermont sources
+            "local": local_guess(ch, it["summary"]),
         })
     state["paused"] = False
     if per_item:
         state["dropped"] = len(per_item)
     return state, fresh
+
+
+def local_guess(ch, summary):
+    """Whether an inbox post is local, until tag_wire.py decides. Every
+    Facebook group is local, and that stays mechanical. The X shortlist mixes
+    Vermont accounts with national desks, so an X post is only guessed local
+    when its text names Burlington or Vermont; the tagger's `local` verdict
+    replaces the guess (a national desk on Vermont is local, WCAX on a South
+    Carolina trial is not). An untagged post with no place named waits in
+    Everything rather than putting a national story on Local."""
+    if ch == "facebook":
+        return True
+    region, _ = wc.place_of(summary)
+    return region in ("btv", "away", "vt")
 
 
 def merge_items(previous, fresh, now):
@@ -338,6 +355,12 @@ def selftest():
     now = datetime(2026, 10, 16, 20, 0, tzinfo=timezone.utc)
     state, fresh = read_one("x", _fixture(now), now)
     assert not state["paused"] and len(fresh) == 2 and fresh[0]["ch"] == "x"
+    # X: a guess from the text until the tagger decides; Facebook: always local
+    assert [item["local"] for item in fresh] == [False, False], fresh
+    assert local_guess("x", "Vermont governor signs the housing bill") is True
+    assert local_guess("x", "Winooski council votes on rents") is True
+    assert local_guess("x", "Senate passes the spending bill") is False
+    assert local_guess("facebook", "Anyone know a good plumber?") is True
     stale = _fixture(now, updated_at=iso(now - timedelta(hours=19)))
     state, fresh = read_one("x", stale, now)
     assert state["paused"] and "19h" in state["reason"] and fresh == []
