@@ -1,8 +1,8 @@
 # All Day accounts and boards: what Stephen does in Supabase
 
-Four short jobs in the Supabase dashboard, about fifteen minutes in all. Do them in order. Until
-each one is done, All Day keeps working and says so plainly; nothing breaks. Parts A to C are
-done (October 2026); part D is the new one.
+Five short jobs in the Supabase dashboard, about eighteen minutes in all. Do them in order. Until
+each one is done, All Day keeps working and says so plainly; nothing breaks. Parts A to D are
+done (October 2026); part E is the new one.
 
 Project: the shared one, **jnouvwxomrcffqwilqkq** (the same project Small Talk, Who's Playing,
 the games and the photo queue use). Sign in at https://supabase.com/dashboard and open it.
@@ -116,9 +116,9 @@ Editor give the photo bucket its two cleanup rules. Nothing is broken; stray pic
 stay in the bucket, and the boards desk will say "stray picture files are waiting". Tell Claude
 and it will walk you through adding the two rules in the Storage screen instead.
 
-**If you ever paste `nn-SETUP.sql` again**, paste `nn-ROUND2.sql` right after it. `nn-SETUP.sql`
-on its own puts back the round-one rules (and posting a Vintage design or a Meetup plan would be
-refused until round two goes back on).
+**If you ever paste `nn-SETUP.sql` again**, paste `nn-ROUND2.sql` and then `nn-ROUND3.sql` right
+after it. `nn-SETUP.sql` on its own puts back the round-one rules (and posting a Vintage design or
+a Meetup plan would be refused until round two goes back on).
 
 What it turns on, tab by tab:
 
@@ -148,6 +148,39 @@ People table, Art's past winners can still shift, the profile sheet saves everyt
 you're into", and the desk's Meetup button lists the plans that saved their box in the People
 table (which is every one, until part D).
 
+## E. Make "Delete my account" delete everything (3 minutes)
+
+One paste. It replaces the delete button's work on the server so it clears everything a reader
+left in All Day. It removes nothing by itself: only a reader pressing "Delete my account and
+posts" removes anything, and only their own.
+
+1. In the left sidebar, click **SQL Editor**.
+2. Click **New query** (the **+** at the top of the list).
+3. Open `all-day/supabase/nn-ROUND3.sql` from the repo, copy the **whole** file, and paste it in.
+4. Click **Run** (bottom right). It should end with "Success. No rows returned."
+5. It is safe to run again later.
+
+What changes:
+
+- **Watch.** A deleted reader's seen-dots and their partner's first name now go too (before,
+  they stayed on the server). Another reader whose partner shares the deleted reader's name
+  keeps theirs: the partner is only a name someone typed, never a link to another account.
+- **People.** Their place in the People directory and their plans' Meetup details go, as before,
+  and are now named in the delete itself rather than left to the database's tidy-up rules.
+- **Photos.** Their board photos leave the gallery, as before, and the photo queue row also
+  forgets the post's words and their first name. A day later the picture file itself counts as
+  a stray, so the next time you open the boards desk it is cleared from the bucket. The day is
+  your window to undo it in `photo-admin.html` if a photo was removed by mistake. This also
+  applies to any board photo whose post was deleted or never went up. Gallery photos and photos
+  you rejected keep their files exactly as before.
+- **What stays.** Their email sign-in (shared with Small Talk and the other apps) and, if you
+  banned them, the ban, so deleting an account is never a way around one.
+
+**Before part E is done:** the delete clears the profile, posts, votes, reports, missions and
+People rows, but a reader's Watch dots and partner name stay on the server. The Watch tab asks
+the server to forget them right after the delete, but that is best effort; part E makes it certain.
+A deleted reader's photo files stay in the bucket, out of sight.
+
 ## One trade-off to know about: the saved sign-in
 
 When a reader signs in, All Day keeps a **refresh token** in the browser so they stay signed in for
@@ -172,8 +205,10 @@ page (GoatCounter is a small, privacy-focused counter and the lower risk). Nothi
 | After A and B | "Signed in as Maya" (or "Add your first name before you post"), Your profile, Your posts, Sign out, Delete my account and posts | Works; a reader names themselves once | Works signed in or out |
 | After C | Same | Same | Same; reported posts wait for you on the desk |
 | After D | Your profile also has "What you're into" | Designs, fit checks and Meetup plans post as their own kinds | One vote each on the Watch screening ballot |
+| After E | "Delete my account and posts" also clears Watch dots and the partner's name | Same | Same |
 
-"Delete my account and posts" removes the reader's profile, posts, votes, reports and missions,
-and signs them out. It does not delete their email sign-in, because that sign-in is shared with
+"Delete my account and posts" removes the reader's profile, posts, votes, reports, missions, People
+directory listing and (after part E) Watch dots and partner name, takes their photos out of the
+gallery, and signs them out. It does not delete their email sign-in, because that sign-in is shared with
 Small Talk and the other apps; if someone asks for that too, delete them under **Authentication**,
 then **Users**, the **⋯** on their row, **Delete user**.

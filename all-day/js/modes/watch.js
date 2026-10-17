@@ -279,10 +279,11 @@ function pullSeen() {
 }
 app.onAuth(() => { if (ready) pullSeen(); });
 
-/* "Delete my account and posts" (boards.js) does not reach nn_watch_seen
-   yet; until the foundation's nn_delete_me clears it too, ask the account
-   to forget this reader's dots the moment that delete succeeds, while the
-   reader is still signed in. Best effort; the PR asks for the real fix. */
+/* "Delete my account and posts" (boards.js): nn_delete_me clears
+   nn_watch_seen and the partner's name itself once nn-ROUND3.sql is pasted.
+   Before that paste it does not, so ask the account to forget this reader's
+   dots the moment the delete succeeds, while the reader is still signed in
+   (best effort; after the paste there is nothing left to forget). */
 window.addEventListener('allday-boards', (e) => {
   if (app.demo || !e.detail || e.detail.what !== 'deleteme') return;
   rpcAs('nn_watch_forget');
