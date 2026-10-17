@@ -1,29 +1,29 @@
 {
- "as_of": "2026-10-17T15:36:47+00:00",
+ "as_of": "2026-10-17T19:16:57+00:00",
  "window_days": 30,
  "days_scored": 9,
  "truth": "NWS KBTV airport observation",
  "sources": {
   "nws": {
    "1-3h": {
-    "n": 210,
-    "temp_mae": 2.6,
-    "temp_bias": 0.15,
-    "brier": 0.0731,
+    "n": 219,
+    "temp_mae": 2.57,
+    "temp_bias": 0.07,
+    "brier": 0.0701,
     "rain_hours": 11
    },
    "4-12h": {
-    "n": 527,
-    "temp_mae": 2.4,
-    "temp_bias": 0.19,
-    "brier": 0.0985,
+    "n": 545,
+    "temp_mae": 2.38,
+    "temp_bias": 0.13,
+    "brier": 0.0953,
     "rain_hours": 38
    },
    "13-30h": {
-    "n": 991,
-    "temp_mae": 2.57,
-    "temp_bias": 0.08,
-    "brier": 0.0804,
+    "n": 1030,
+    "temp_mae": 2.56,
+    "temp_bias": -0.01,
+    "brier": 0.0774,
     "rain_hours": 107
    }
   },
