@@ -145,7 +145,8 @@ What it turns on, tab by tab:
 **Before part D is done:** everything above keeps working the round-one way. Designs and fit
 checks post as tagged finds, "Someone got it" takes the find down, a Meetup plan's box goes to the
 People table, Art's past winners can still shift, the profile sheet saves everything but "What
-you're into", and the desk's Meetup button says to paste this file.
+you're into", and the desk's Meetup button lists the plans that saved their box in the People
+table (which is every one, until part D).
 
 ## One trade-off to know about: the saved sign-in
 

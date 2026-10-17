@@ -28,8 +28,8 @@ Project: the shared one, **jnouvwxomrcffqwilqkq**.
 - **Your list of Meetup hosts**, behind the boards desk passphrase (part C of
   `SETUP-STEPHEN.md`): the function `nn_people_meetup_list` returns every live plan whose host
   ticked the box, with their first name, the time and place, and how many said they'd go. The
-  desk's **Show the Meetup list** button shows it once `nn-ROUND2.sql` is pasted
-  (`SETUP-STEPHEN.md`, part D), which also moves the box and the band into the plan itself.
+  desk's **Show the Meetup list** button shows it. `nn-ROUND2.sql` (`SETUP-STEPHEN.md`, part D)
+  moves the box and the band into the plan itself, and the list reads both.
 
 **Before this is done**, readers see: in the directory, "The directory opens soon.
 Everything else here works."; and after posting a plan with the Meetup box or an age band
