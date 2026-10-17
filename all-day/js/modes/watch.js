@@ -283,11 +283,17 @@ app.onAuth(() => { if (ready) pullSeen(); });
    nn_watch_seen and the partner's name itself once nn-ROUND3.sql is pasted.
    Before that paste it does not, so ask the account to forget this reader's
    dots the moment the delete succeeds, while the reader is still signed in
-   (best effort; after the paste there is nothing left to forget). */
+   (best effort; after the paste there is nothing left to forget). This
+   phone's copy goes too: kept, the next sign-in would send it straight back
+   up. The want list never leaves the phone and stays. */
 window.addEventListener('allday-boards', (e) => {
   if (app.demo || !e.detail || e.detail.what !== 'deleteme') return;
   rpcAs('nn_watch_forget');
-  if (L) { L.syncedFor = ''; L.dirty = {}; saveLocal(); }
+  if (L) {
+    Object.assign(L, { mode: 'me', partner: '', seen: {}, rated: {}, nameDirty: false, dirty: {}, syncedFor: '' });
+    saveLocal();
+    if (ready) draw('list');
+  }
 });
 
 /* -------------------------------------------------------- board posts */
