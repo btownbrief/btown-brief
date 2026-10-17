@@ -13,13 +13,39 @@
 :root {
   color-scheme: light;
 
+  /* Lake and Sunset: shared chrome; content keeps its existing layout. */
+  --lake: #0E2A47;
+  --lake-ink: #F7F4EE;
+  --lake-muted: #B9CDE0;
+  --lake-hover: #234563;
+  --lake-line: rgba(247, 244, 238, .18);
+  --lake-green: #3FAE7A;
+  --lake-every: #F09B8A;
+  --lake-every-ink: #2C120C;
+  --lake-green-ink: #06251A;
+  --sunset: #F5B04B;
+  --sunset-ink: #2B1606;
+  --ember: #B74117; /* darkened from #D9531E for 4.5:1 text on paper */
+  --dock-glass: rgba(14, 42, 71, .88);
+  --dock-sheen: rgba(247, 244, 238, .08);
+  --dock-clear: rgba(247, 244, 238, 0);
+  --dock-edge: rgba(247, 244, 238, .28);
+  --dock-muted: #C5D1DD;
+  --dock-shadow: 0 8px 28px rgba(8, 24, 42, .26), inset 0 1px 0 rgba(255, 255, 255, .12);
+  --dock-lift: 8px;
+  --dock-inset: 6px;
+  --r-dock: 26px;
+  --dock-max: 520px;
+  --dock-icon: 20px;
+  --row-tint: rgba(14, 42, 71, .025);
+
   /* paper and ink */
-  --paper: #FBF9F5;                 /* the page; feed cards sit directly on it */
-  --paper-2: #F2EFE8;               /* sunk: date tiles, inputs, placeholders, sheet ground */
+  --paper: #F7F4EE;                 /* the page; feed cards sit directly on it */
+  --paper-2: #EEE8DD;               /* sunk: date tiles, inputs, placeholders, sheet ground */
   --raised: #FFFFFF;                /* sheets, peek card, confirm box */
   --ink: #16191D;
   --ink-2: #4A5058;                 /* captions, card body text */
-  --ink-3: #7B818A;                 /* timestamps, counts, idle icons, tab labels */
+  --ink-3: #656B73;                 /* timestamps, counts, idle icons, tab labels */
   --line: rgba(26, 22, 14, .13);    /* hairline between cards */
   --line-soft: rgba(26, 22, 14, .07);
 
@@ -124,7 +150,7 @@
   /* chrome */
   --mast-h: 52px;
   --subnav-h: 44px;
-  --tab-h: 56px;
+  --tab-h: 64px;
   --hit: 44px;           /* minimum tap target */
   --icon: 22px;
   --safe-b: env(safe-area-inset-bottom, 0px);
@@ -134,12 +160,19 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --paper: #0D0E10;
-    --paper-2: #17191C;
-    --raised: #1C1E22;
+    --lake: #16334F;
+    --dock-glass: rgba(22, 51, 79, .90);
+    --dock-sheen: rgba(247, 244, 238, .07);
+    --dock-edge: rgba(185, 205, 224, .25);
+    --dock-shadow: 0 8px 28px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .10);
+    --ember: #F39872;
+    --row-tint: rgba(185, 205, 224, .035);
+    --paper: #0C1520;
+    --paper-2: #142230;
+    --raised: #1B2A39;
     --ink: #F2F0EA;
     --ink-2: rgba(242, 240, 234, .74);
-    --ink-3: rgba(242, 240, 234, .50);
+    --ink-3: #A2ADB8;
     --line: rgba(255, 255, 255, .13);
     --line-soft: rgba(255, 255, 255, .07);
     --accent: #E8A33D;
@@ -170,12 +203,19 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --paper: #0D0E10;
-  --paper-2: #17191C;
-  --raised: #1C1E22;
+    --lake: #16334F;
+    --dock-glass: rgba(22, 51, 79, .90);
+    --dock-sheen: rgba(247, 244, 238, .07);
+    --dock-edge: rgba(185, 205, 224, .25);
+    --dock-shadow: 0 8px 28px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .10);
+    --ember: #F39872;
+    --row-tint: rgba(185, 205, 224, .035);
+  --paper: #0C1520;
+  --paper-2: #142230;
+  --raised: #1B2A39;
   --ink: #F2F0EA;
   --ink-2: rgba(242, 240, 234, .74);
-  --ink-3: rgba(242, 240, 234, .50);
+  --ink-3: #A2ADB8;
   --line: rgba(255, 255, 255, .13);
   --line-soft: rgba(255, 255, 255, .07);
   --accent: #E8A33D;

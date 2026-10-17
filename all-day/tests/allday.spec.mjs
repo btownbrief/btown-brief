@@ -429,7 +429,7 @@ const COMBOS = [
   { viewport: { width: 1280, height: 800 }, scheme: 'light', motion: 'no-preference' },
   { viewport: { width: 1280, height: 800 }, scheme: 'dark', motion: 'reduce' },
 ];
-const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
+const PAPER = { light: 'rgb(247, 244, 238)', dark: 'rgb(12, 21, 32)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
 const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'habits', 'vintage', 'people']);
 
@@ -462,7 +462,7 @@ async function matrix(browser, base) {
           check(!over.length, 'no tab label overflows the rail', over.join(', '));
         } else {
           const cells = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return [b.dataset.tab, Math.round(r.width), Math.round(r.height), b.scrollWidth <= b.clientWidth + 1]; }));
-          check(cells.every((c) => c[2] >= 55), 'tab cells are 56px tall', JSON.stringify(cells));
+          check(cells.every((c) => c[2] >= 44), 'tab targets are at least 44px tall', JSON.stringify(cells));
           check(cells.every((c) => c[3]), 'no tab label overflows its cell', JSON.stringify(cells.filter((c) => !c[3])));
           const wn = cells.find((c) => c[0] === 'whatnow');
           check(wn[1] > cells[0][1], 'What Now gets the wider cell', JSON.stringify(cells));
@@ -7095,6 +7095,32 @@ async function theClubs(browser, base) {
   });
 }
 
+/* A floating bar must never cover the last row, even with an iPhone safe area. */
+async function lakeSunset(browser, base) {
+  for (const scheme of ['light', 'dark']) for (const width of [375, 390, 430]) await group('floating bar ' + width + ' ' + scheme, async () => {
+    const { ctx, page } = await newPage(browser, base, {scheme, viewport:{width,height:844}, motion:'reduce'});
+    try {
+      await page.goto(base + '/all-day/?demo=1'); await settle(page);
+      await page.evaluate(() => document.documentElement.style.setProperty('--safe-b', '34px'));
+      for (const tab of TABS) {
+        await goTab(page, tab);
+        await page.evaluate(() => { const p=document.querySelector('.panel:not([hidden])'); p.scrollTop=p.scrollHeight; });
+        const size=await page.evaluate(() => {
+          const bar=document.querySelector('#tabbar'),r=bar.getBoundingClientRect();
+          const body=document.querySelector('.panel:not([hidden]) .panel-body');
+          const cells=[...bar.querySelectorAll('button')];
+          return {left:r.left,right:innerWidth-r.right,bottom:innerHeight-r.bottom,
+            clearance:r.top-body.getBoundingClientRect().bottom,
+            labels:cells.every(b=>b.scrollWidth<=b.clientWidth+1), hits:cells.every(b=>b.clientHeight>=44)};
+        });
+        check(size.left>=5 && size.right>=5 && size.bottom>=42, tab + ': pill floats above safe area', JSON.stringify(size));
+        check(size.labels && size.hits, tab + ': all nine labels fit, targets at least 44px tall', JSON.stringify(size));
+        check(size.clearance>=12, tab + ': last content clears the bar', JSON.stringify(size));
+      }
+    } finally { await ctx.close(); }
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -7107,6 +7133,7 @@ const ONLY = (process.env.ONLY || '').split(',').filter(Boolean);
 const run = (fn) => (!ONLY.length || ONLY.includes(fn.name) ? fn(browser, base) : null);
 try {
   await run(matrix);
+  await run(lakeSunset);
   await run(deepLinks);
   await run(theWire);
   await run(thePhotos);
