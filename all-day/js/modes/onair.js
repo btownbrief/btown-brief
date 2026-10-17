@@ -780,7 +780,7 @@ const isTodo = (v) => /^\s*TODO\b/i.test(String(v || ''));
 /* one entry, checked, or null */
 function playlistItem(p, own) {
   if (!p || typeof p !== 'object') return null;
-  const svc = SERVICES[p.service];
+  const svc = Object.prototype.hasOwnProperty.call(SERVICES, p.service) ? SERVICES[p.service] : null;   // never "constructor" and friends
   const url = String(p.url || '').trim();
   const m = svc && !isTodo(url) && url.match(svc.re);
   const title = clip(p.title, 80);

@@ -1703,6 +1703,28 @@ async function onAir(browser, base) {
       await ctx.close();
     }
 
+    /* the same tap in WebKit, Safari's engine, as an iPhone (touch, 390 wide),
+       when the borrowed Playwright has it; the rest of the suite is Chromium */
+    {
+      let wk = null;
+      try { wk = await require('playwright').webkit.launch(); } catch (e) { wk = null; }
+      if (!wk) check(true, 'WebKit: not installed with the borrowed Playwright, skipped', '');
+      else {
+        const { ctx, page, errors } = await newPage(wk, base);
+        await watchPlay(page);
+        await page.goto(base + '/all-day/#onair');
+        await page.waitForSelector('#panel-onair .audio .pb', { timeout: 15000 });
+        await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
+        await page.click('#panel-onair .audio .pb');
+        const moved = await clockPast(page, 0.5);
+        const st = await audioState(page);
+        check(moved && RAW_CLIP.test(st.src) && st.plays.some((p) => p.state === 'resolved') && st.rate === 1.25, 'WebKit: the play button starts the clip at 1.25x and its clock moves', JSON.stringify(st));
+        check(!errors.length, 'WebKit: no console errors', errors.join(' | '));
+        await ctx.close();
+        await wk.close();
+      }
+    }
+
     /* the bug as it was: a clip heard to its end came back parked at its
        end, so the next play ran out at once and looked like a dead button */
     const today = etKey(Date.now());
@@ -1801,6 +1823,7 @@ async function onAir(browser, base) {
           { title: 'Plain http', by: 'X', service: 'youtube', url: 'http://www.youtube.com/playlist?list=PLx0sYbCqOb8TBPRdmBHs5Iftvv9TPboYG', note: '', added: '2026-10-15' },
           { title: 'Wrong service', by: 'X', service: 'apple', url: SP, note: '', added: '2026-10-15' },
           { title: 'Unknown service', by: 'X', service: 'myspace', url: 'https://myspace.com/x', note: '', added: '2026-10-15' },
+          { title: 'Inherited service', by: 'X', service: 'constructor', url: 'https://example.com/anything', note: '', added: '2026-10-15' },
           { title: 'A video, not a playlist', by: 'X', service: 'youtube', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', note: '', added: '2026-10-15' },
         ],
       };
@@ -1811,7 +1834,7 @@ async function onAir(browser, base) {
       await page.waitForSelector('#panel-onair [data-sec="past"]', { timeout: 15000 });
       const rows = await page.$$eval('#panel-onair [data-slot="lists"] .plrow', (rs) => rs.map((r) => r.querySelector('.t').textContent));
       check(JSON.stringify(rows) === JSON.stringify(['Fall in the Old North End', 'Burlington bands, live', '<img src=x onerror="window.__xss=1">Mine']),
-        'only real playlist links show: a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown one and a single video are all left out', JSON.stringify(rows));
+        'only real playlist links show: a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown or inherited one (“constructor”) and a single video are all left out', JSON.stringify(rows));
       await page.waitForTimeout(300);
       const xss = await page.evaluate(() => ({ flag: window.__xss || 0, imgs: document.querySelectorAll('#panel-onair [data-slot="lists"] img').length, scripts: document.querySelectorAll('#panel-onair [data-slot="lists"] script, #panel-onair [data-slot="lists"] b').length }));
       check(!xss.flag && !xss.imgs && !xss.scripts, 'a title, a name and a note from the file are text, never markup', JSON.stringify(xss));
