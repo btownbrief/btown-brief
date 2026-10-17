@@ -888,17 +888,18 @@ window.addEventListener('allday-geo', () => {
    Listen tab and Btown TV videos shared as #watch/yt:<id> live in On Air and
    keep their key. An old Reddit card's key is its URL, the key the Wire's
    Unfiltered view still answers to; a bare #reddit opens the Wire's Reddit
-   chip. Instagram goes to the Wire, Music and Wander to What Now, Photos to
-   Art; their old keys mean nothing there, so they are dropped. The address
-   bar is rewritten so the next share carries the new link. */
-const MOVED = { ig: 'wire', music: 'whatnow', wander: 'whatnow', photos: 'art' };
+   chip. Instagram goes to the Wire, Music to What Now's Tonight (the Vermont
+   artists and their gigs), Wander to What Now, Photos to Art; their old keys
+   mean nothing there, so they are dropped. The address bar is rewritten so
+   the next share carries the new link. */
 function legacy(h) {
   if (h === 'listen' || h.startsWith('listen/')) return 'onair' + h.slice(6);
   if (/^watch\/yt:/.test(h)) return 'onair/' + h.slice(6);
   if (h === 'reddit' || h === 'reddit/') return 'wire/reddit';
   if (h.startsWith('reddit/')) return 'wire/' + h.slice(7);
-  const m = h.match(/^([a-z]+)(\/|$)/);
-  return m && MOVED[m[1]] ? MOVED[m[1]] : null;
+  const m = h.match(/^(ig|music|wander|photos)(\/|$)/);
+  if (!m) return null;
+  return { ig: 'wire', music: 'whatnow/tonight', wander: 'whatnow', photos: 'art' }[m[1]];
 }
 
 function parseHash() {

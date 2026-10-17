@@ -116,7 +116,7 @@ TRAILER_MIN_SEC = 45     # under this is a bumper / TV spot, not a trailer
 TRAILER_CHANNEL_CAP = 4  # per channel in the pool — one aggregator can't own it
 PLAYLIST_MAX = 54        # the page in order: pick, Settle in, Quick one, Vermont, ...
 PLAYLISTS_KEEP = 14      # one playlist per night; older ones are deleted (= EDITIONS_KEEP)
-PAGE_URL = "https://guide.btownbrief.com/all-day/#watch"
+PAGE_URL = "https://guide.btownbrief.com/all-day/#onair"   # Btown TV lives in On Air
 MORE_PER_SHELF = 6       # the bench: alternates the editor names per shelf
 MORE_PICKS = 2           # runner-up Tonight's picks
 MORE_CHANNEL_CAP = 2     # per channel, within the bench

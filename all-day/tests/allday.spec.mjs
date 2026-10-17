@@ -3241,10 +3241,12 @@ async function shellFixes(browser, base) {
       ['#reddit', 'wire', '#wire/reddit'],
       ['#reddit/https%3A%2F%2Fwww.reddit.com%2Fr%2Fburlington%2Fcomments%2Fabc', 'wire', '#wire/https%3A%2F%2Fwww.reddit.com%2Fr%2Fburlington%2Fcomments%2Fabc'],
       ['#ig', 'wire', '#wire'], ['#ig/ig-C123', 'wire', '#wire'],
-      ['#music', 'whatnow', '#whatnow'], ['#music/a-old', 'whatnow', '#whatnow'],
+      ['#music', 'whatnow', '#whatnow/tonight'], ['#music/mus:old', 'whatnow', '#whatnow/tonight'],
       ['#wander', 'whatnow', '#whatnow'], ['#wander/Moose', 'whatnow', '#whatnow'],
       ['#photos', 'art', '#art'], ['#photos/p-1', 'art', '#art'],
       ['#listen', 'onair', '#onair'], ['#watch/yt:dQw4w9WgXcQ', 'onair', '#onair/yt:dQw4w9WgXcQ'],
+      /* not old tabs: an unknown word is the Wire, as before, and nothing throws */
+      ['#constructor', 'wire', '#constructor'], ['#igloo', 'wire', '#igloo'], ['#photosx', 'wire', '#photosx'], ['#toString/x', 'wire', '#toString/x'],
     ];
     for (const [from, tab, to] of cases) {
       const r = await landed(from, tab);
@@ -3255,6 +3257,9 @@ async function shellFixes(browser, base) {
     await page.waitForFunction(() => document.querySelector('#subnav .chip.on')?.dataset.chip === 'reddit', null, { timeout: 5000 }).catch(() => {});
     const on = await page.$eval('#subnav .chip.on', (c) => c.dataset.chip);
     check(on === 'reddit', 'a bare #reddit opens the Wire on its Reddit chip', on);
+    await page.goto(base + '/all-day/?demo=1#music');
+    await page.waitForFunction(() => document.querySelector('#subnav .chip.on')?.dataset.chip === 'tonight', null, { timeout: 15000 }).catch(() => {});
+    check(await page.$eval('#subnav .chip.on', (c) => c.dataset.chip).catch(() => '') === 'tonight', 'an old Music link opens What Now on Tonight', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

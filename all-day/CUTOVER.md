@@ -15,15 +15,17 @@ minute or two.
 People, What Now, Vintage, Art, On Air, Games). Phones that already have All Day saved pick up
 the new version the next time they open it, because the app always asks the network first and
 only falls back to its saved copy offline. Old links still work and land on the nearest new
-tab: `#reddit` opens the Wire on its Reddit chip, `#ig` the Wire, `#music` and `#wander` What
-Now, `#photos` Art, `#listen` and old Btown TV video links On Air.
+tab: `#reddit` opens the Wire on its Reddit chip, `#ig` the Wire, `#music` What Now's Tonight,
+`#wander` What Now, `#photos` Art, `#listen` and old Btown TV video links On Air. The site's
+"Playlist" links now say "Live music" and open What Now's Tonight: the community mixtape went
+with the old Music tab.
 
 **Schedules start.** GitHub only runs a workflow's timer from the default branch, so these
 begin on their own once the merge lands (times are Burlington time):
 
 | Job (Actions tab name) | When | What it does | Where it writes |
 |---|---|---|---|
-| Curate the Wire | every hour at :07 | tags new items, picks today's ranked ten, writes the day's paper | the `wire-data` branch |
+| Curate the Wire | every hour at :07 | tags new items, ranks up to 25 picks (the page leads with ten local ones), writes the day's paper | the `wire-data` branch |
 | The Brief, out loud | 7 am every day | Opus writes a three-minute script from the Wire's local picks; ElevenLabs reads it | the `wire-audio` branch |
 | Refresh games catalog | 6:35 am every day (5:35 am in winter) | the arcade's list of games for the Games tab | `data/games-catalog.json` on main |
 | Refresh the Watch tab's films | Mondays, 6:20 am (5:20 am in winter) | the Watch tab's film list from TMDB | the `films-data` branch |
@@ -77,8 +79,8 @@ Reading every tab, saving, muting, and voting on the Wire work at every step.
    games changed).
 5. On Monday, **Refresh the Watch tab's films** runs green and Watch shows the new list.
 
-A red run is not an outage: every one of these keeps the last good file up and the page says
-how old it is.
+A red run is not an outage: every one of these keeps the last good file up, so the tab keeps
+showing it (the Wire and On Air also say how old it is; Games and Watch just show the last list).
 
 ## The hub (separate repo)
 
