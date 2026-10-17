@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v50';   // v50: Vintage, fit checks up top and New in (v49: On Air's past nights, two rails, the Brief's speed; v48: the Wire's Photo mode)
+const VERSION = 'all-day-v51';   // v51: Vintage after Food (v50), On Air (v49), the Wire's Photo mode (v48)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 

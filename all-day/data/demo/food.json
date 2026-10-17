@@ -1,19 +1,6 @@
 {
- "_": "Demo data for ?demo=1. Every place, deal, dish and account is invented; the shapes are the real payloads' (data/restaurants.json, data/deals.json, data/small-bites.json, data/instagram-handles.json, all-day/data/instagram.json, and a photo as js/photos-lib.js normalizes it). Pictures are palette names. The Instagram times and video expiries move with the reader's clock (anchor).",
+ "_": "Demo data for ?demo=1. Every place, deal, dish and account is invented; the shapes are the real payloads' (data/restaurants.json, data/deals.json, data/small-bites.json, data/instagram-handles.json, all-day/data/instagram.json, the reader dishes as js/photos-lib.js normalizes them, and all-day/data/food-directory.json). Pictures are palette names. The Instagram times and video expiries move with the reader's clock (anchor).",
  "anchor": "2026-10-16T12:00:00-04:00",
- "dish": {
-  "id": "demo-dish-1",
-  "url": "mustard",
-  "caption": "Squash dumplings with brown butter and sage, order two plates",
-  "category": "dish",
-  "area": "Downtown / Church St",
-  "spot": "The dumpling house",
-  "taken_on": "",
-  "credit": "Maya",
-  "label": null,
-  "votes": 0,
-  "approved_on": "2026-10-15"
- },
  "restaurants": {
   "generated": "2026-10-16",
   "restaurants": [
@@ -782,7 +769,7 @@
     "groups_8": null,
     "attr_confidence": null,
     "attr_evidence": null,
-    "opened": null,
+    "opened": "2026-08",
     "closing": null,
     "closed": false,
     "serves_food": true,
@@ -1034,7 +1021,7 @@
     "groups_8": null,
     "attr_confidence": null,
     "attr_evidence": null,
-    "opened": null,
+    "opened": "2026-10",
     "closing": null,
     "closed": false,
     "serves_food": true,
@@ -1206,7 +1193,8 @@
    "demo_taqueria",
    "demo_bakery",
    "demo_lakeside",
-   "demo_bistro"
+   "demo_bistro",
+   "demo_podcast"
   ]
  },
  "instagram": {
@@ -1307,7 +1295,61 @@
     "w": 480,
     "c": "Not a food account: this one never shows on the Food tab.",
     "s": "do"
+   },
+   {
+    "h": "demo_podcast",
+    "ts": 1792149000,
+    "i": "paper",
+    "u": "https://www.instagram.com/p/DemoTalk1/",
+    "w": 480,
+    "c": "This week on the show: the city budget, with a creemee.",
+    "s": "do",
+    "v": 1,
+    "vu": "https://example.org/demo/DemoReel1.mp4",
+    "ve": 1792274400,
+    "vd": 41.0,
+    "f": 1
    }
   ]
+ },
+ "dishes": [
+  {
+   "id": "demo-dish-1",
+   "url": "mustard",
+   "caption": "Squash dumplings with brown butter and sage, order two plates",
+   "category": "dish",
+   "area": "Downtown / Church St",
+   "spot": "The dumpling house",
+   "taken_on": "",
+   "credit": "Maya",
+   "label": null,
+   "votes": 0,
+   "approved_on": "2026-10-15"
+  },
+  {
+   "id": "demo-dish-2",
+   "url": "cherry",
+   "caption": "Hand-pulled noodles in chili oil, the lunch I think about all week",
+   "category": "dish",
+   "area": "Downtown / Church St",
+   "spot": "The noodle counter on Bank",
+   "taken_on": "",
+   "credit": "Theo",
+   "label": null,
+   "votes": 0,
+   "approved_on": "2026-10-12"
+  }
+ ],
+ "directory": {
+  "not_food": {
+   "demo_podcast": "a talk show, not a food account"
+  },
+  "places": {
+   "demo-noodle-counter": "demo_noodles",
+   "demo-pine-taqueria": "demo_taqueria",
+   "demo-old-north-bakery": "demo_bakery",
+   "demo-lakeside-bar": "demo_lakeside",
+   "demo-church-bistro": "demo_bistro"
+  }
  }
 }

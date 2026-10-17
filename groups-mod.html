@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Groups Desk — Burlington Brief</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@0,600;0,700&family=DM+Sans:opsz,wght@9..40,400;9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260904a">
+  <link rel="stylesheet" href="css/clubs.css?v=20261017a">
+  <style>
+    .desk-gate { display: flex; gap: var(--space-2); flex-wrap: wrap; margin: var(--space-4) 0; }
+    .desk-gate input { flex: 1 1 220px; font: inherit; font-size: 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--bg-raised); color: var(--ink); }
+    .desk-msg { font-size: var(--text-sm); color: var(--ink-3); min-height: 1.2em; }
+    .desk-card dl { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--space-3); font-size: var(--text-sm); margin-top: var(--space-2); }
+    .desk-card dt { font-weight: 700; color: var(--ink-3); }
+    .desk-card dd { color: var(--ink-2); overflow-wrap: anywhere; }
+  </style>
+</head>
+<body data-standalone>
+  <header class="site-header">
+    <div class="header-inner"><div class="logo"><span class="logo-title">Burlington Brief · Groups Desk</span></div></div>
+  </header>
+  <main class="page-wrap clubs-page">
+    <div class="page-hero">
+      <span class="page-hero-kicker">Moderation</span>
+      <h1>Groups readers sent in</h1>
+      <p class="page-hero-sub">Approve one and it shows on <a href="clubs.html">clubs.html</a> right away, under its kind, marked “Added by a reader”. Check the link first. Reject keeps it out; Delete is for spam. The passphrase is the All Day boards desk one.</p>
+    </div>
+    <form class="desk-gate" id="gate">
+      <input type="password" id="pass" placeholder="Passphrase" autocomplete="current-password" aria-label="Moderator passphrase">
+      <button class="gx-btn gx-btn-primary" type="submit">Open</button>
+    </form>
+    <p class="desk-msg" id="msg" role="status"></p>
+    <h2 class="section-label">Waiting <span class="gx-count" id="n-wait"></span></h2>
+    <div class="gx-grid" id="waiting"></div>
+    <h2 class="section-label">Decided lately</h2>
+    <div class="gx-grid" id="decided"></div>
+  </main>
+  <script src="js/community.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var SB = 'https://jnouvwxomrcffqwilqkq.supabase.co';
+    var KEY = 'sb_publishable_RkMJQopffWlV6DSwCRkndQ_Xw6GJMf3';
+    var esc = window.BTBC.esc;
+    var $ = function (id) { return document.getElementById(id); };
+    /* the passphrase lives in this tab only, never in localStorage (as all-day/mod.html) */
+    var secret = sessionStorage.getItem('nn-mod') || '';
+    function rpc(fn, args) {
+      return fetch(SB + '/rest/v1/rpc/' + fn, { method: 'POST', headers: { apikey: KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(args) })
+        .then(function (r) { return r.ok ? r.json() : { error: 'http_' + r.status }; }).catch(function () { return { error: 'network' }; });
+    }
+    function safeHref(u) { return typeof u === 'string' && /^https?:\/\/[^\s"'<>`]+$/i.test(u) ? u : ''; }
+    function card(s, waiting) {
+      var link = safeHref(s.url);
+      var rows = [['Kind', s.kind], ['When', s.when], ['Where', s.where], ['Link', s.url || '(none)'], ['Email', s.email], ['Note', s.note || ''],
+        ['Sent', new Date(s.created_at).toLocaleString()], ['Status', s.status]];
+      var acts = waiting ? ['approve', 'reject', 'delete'] : (s.status === 'approved' ? ['reject', 'pending', 'delete'] : ['approve', 'pending', 'delete']);
+      return '<article class="gx-card desk-card"><div class="gx-card-head"><h3 class="gx-name">' + esc(s.name) + '</h3></div>' +
+        '<dl>' + rows.map(function (r) { return '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join('') + '</dl>' +
+        '<div class="gx-actions">' + (link ? '<a class="gx-link" href="' + esc(link) + '" target="_blank" rel="noopener nofollow noreferrer">Open their link ↗</a>' : '') +
+        acts.map(function (a) { return '<button class="gx-btn' + (a === 'approve' ? ' gx-btn-primary' : '') + '" data-id="' + esc(s.id) + '" data-act="' + a + '">' +
+          ({ approve: 'Approve', reject: 'Reject', pending: 'Back to waiting', delete: 'Delete (spam)' })[a] + '</button>'; }).join('') + '</div></article>';
+    }
+    function load() {
+      $('msg').textContent = 'Loading…';
+      rpc('groups_mod_list', { p_secret: secret }).then(function (r) {
+        if (!r || r.error) {
+          $('msg').textContent = r && r.error === 'bad_secret' ? (secret ? 'That passphrase didn’t open it. Twenty wrong tries shut the desk for 15 minutes.' : '')
+            : 'Couldn’t load (' + (r && r.error) + '). Is db/groups-submit.sql installed?';
+          if (r && r.error === 'bad_secret') sessionStorage.removeItem('nn-mod');
+          return;
+        }
+        sessionStorage.setItem('nn-mod', secret);
+        $('msg').textContent = '';
+        $('n-wait').textContent = r.waiting.length;
+        $('waiting').innerHTML = r.waiting.map(function (s) { return card(s, true); }).join('') || '<p class="page-empty">Nothing waiting.</p>';
+        $('decided').innerHTML = r.decided.map(function (s) { return card(s, false); }).join('') || '<p class="page-empty">Nothing yet.</p>';
+      });
+    }
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act]');
+      if (!b) return;
+      if (b.getAttribute('data-act') === 'delete' && !confirm('Delete this one for good?')) return;
+      rpc('groups_mod_act', { p_secret: secret, p_id: b.getAttribute('data-id'), p_action: b.getAttribute('data-act') }).then(function (r) {
+        $('msg').textContent = r && r.ok ? 'Done.' : 'Didn’t work (' + (r && r.error) + ').';
+        load();
+      });
+    });
+    $('gate').addEventListener('submit', function (e) { e.preventDefault(); secret = $('pass').value; load(); });
+    if (secret) load();
+  })();
+  </script>
+</body>
+</html>
