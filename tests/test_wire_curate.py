@@ -561,18 +561,31 @@ class CapTests(Workdir):
         ids = {item["id"] for item in cw.river(day)}
         self.assertTrue({pick["id"] for pick in day["picks"]} <= ids)
 
-    def test_no_more_than_ten_national_picks(self):
-        self.write_pulse(pulse(n_local=6, n_world=20))
+    def test_national_picks_capped_at_the_band(self):
+        self.write_pulse(pulse(n_local=6, n_world=32))
 
         def national_first(numbers, river_n, schema):
             answer = take_all(numbers, river_n, schema)
-            answer["picks"] = [{"i": n, "why": "R."} for n in numbers[6:26]] + \
+            answer["picks"] = [{"i": n, "why": "R."} for n in numbers[6:38]] + \
                               [{"i": n, "why": "R."} for n in numbers[:5]]
             return answer
         self.run_curate(Stub(national_first))
         picks = self.today()["picks"]
         self.assertEqual(sum(1 for pick in picks if not pick["local"]), cw.NATIONAL_PICKS)
         self.assertEqual(sum(1 for pick in picks if pick["local"]), 5)
+
+    def test_local_picks_capped_at_the_band(self):
+        self.write_pulse(pulse(n_local=32, n_world=6))
+
+        def local_first(numbers, river_n, schema):
+            answer = take_all(numbers, river_n, schema)
+            answer["picks"] = [{"i": n, "why": "R."} for n in numbers[:32]] + \
+                              [{"i": n, "why": "R."} for n in numbers[32:37]]
+            return answer
+        self.run_curate(Stub(local_first))
+        picks = self.today()["picks"]
+        self.assertEqual(sum(1 for pick in picks if pick["local"]), cw.LOCAL_PICKS)
+        self.assertEqual(sum(1 for pick in picks if not pick["local"]), 5)
 
 
 class FreezeTests(Workdir):

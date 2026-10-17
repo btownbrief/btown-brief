@@ -6,8 +6,8 @@ tag_wire.py left in data/wire-tags.json, and the day so far, then asks the
 editor model, with prompts/wire-taste.md as its doctrine, for:
 
   * "What matters today": 40 ranked picks, each with a one-line reason and a
-    local flag, so the page shows every local pick and adds the national ones
-    when the switch is on Everything. Re-ranked at most every PICKS_EVERY_HOURS
+    local flag, so the page shows the local picks on Local and all of them when
+    the switch is on Everything. Re-ranked at most every PICKS_EVERY_HOURS
     (and at once when a score-9 local story lands); between re-ranks the
     picks stand. A day keeps every story the editor ranked: one that falls
     out of a re-rank moves to `picks_earlier` with its last rank, its reason
@@ -90,7 +90,9 @@ ADD_MAX = 60               # per hourly update (Stephen, 2026-10-17: the river r
 ADD_MAX_FIRST = 100        # the day's first update can catch up on the night
 RIVER_SHOWN_HOURLY = 60    # between re-ranks the editor sees the newest river items only
 PICK_COUNT = 40            # Stephen, 2026-10-17: 25 was too few
-NATIONAL_PICKS = 15        # the rest of the 40 are local
+NATIONAL_PICKS = 25        # at most this many national picks in a ranking of 40
+LOCAL_PICKS = 25           # and at most this many local: half and half on an ordinary day,
+                           # the news deciding the split within the band (Stephen, 2026-10-17)
 WHY_MAX = 90
 NEW_MAX_LOCAL = 120        # candidates shown to the editor per run
 NEW_MAX_WORLD = 80
@@ -131,7 +133,8 @@ rewrite a headline: the page shows each one exactly as the outlet wrote it.
 - `drop`: numbers from TODAY'S RIVER to remove, only when the river would pass
   300 items. Otherwise an empty list.
 - `picks`, only when asked for: the ranked "What matters today" list from the
-  river and NEW together: 40 picks, about 25 local and up to 15 national,
+  river and NEW together: 40 picks, about half local and half national (the
+  news decides the split, fifteen to twenty-five each),
   fewer only when the day truly lacks them. Each has a reason under 90
   characters. A pick from NEW is added to the river for you.
 """
@@ -594,12 +597,17 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
         current["time"] = clock(et)
 
     if want_picks and picks:
-        # at most NATIONAL_PICKS national picks, so the Local list stays long
-        kept, national = [], 0
+        # at most NATIONAL_PICKS national and LOCAL_PICKS local picks: half and
+        # half on an ordinary day, the news deciding the split within the band
+        kept, national, local_n = [], 0, 0
         for index, why in picks:
             if not by_index[index].get("local"):
                 national += 1
                 if national > NATIONAL_PICKS:
+                    continue
+            else:
+                local_n += 1
+                if local_n > LOCAL_PICKS:
                     continue
             kept.append((index, why))
         ranked = order_picks([dict(by_index[index], why=why) for index, why in kept])
