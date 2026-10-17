@@ -466,7 +466,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'f9003'], ['food', 'r-demo-all-night-diner'], ['people', 'mx-dm2'], ['whatnow', 'e-tn3'], ['vintage', 's-junktiques'], ['art', 'b-0000a000-0000-4000-8000-000000000002'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'f9003'], ['food', 'r-demo-all-night-diner'], ['people', 'mx-dm2'], ['whatnow', 'e-tn3'], ['vintage', 's-resource-burlington'], ['art', 'b-0000a000-0000-4000-8000-000000000002'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -2833,12 +2833,21 @@ async function theVintage(browser, base) {
     check(ranks.every((r, i) => i === 0 || r >= ranks[i - 1]), 'the walk goes downtown, the South End, the Old North End, Winooski, then Essex', JSON.stringify(file.shops.map((s) => s.neighborhood)));
     const byId = Object.fromEntries(things.map((t) => [t.id, t]));
     check(file.shops.every((s) => byId[s.id] && byId[s.id].group === 'Shopping' && byId[s.id].name === s.name), 'every shop is one of things.json’s Shopping entries: none invented', '');
-    const invented = file.shops.filter((s) => s.hours && !(byId[s.id].blurb || '').toLowerCase().includes(s.hours.split(' ')[0].toLowerCase()));
-    check(!invented.length, 'every hour comes from the shop’s own things.json entry', JSON.stringify(invented.map((s) => s.name)));
-    const shown = rows.map((r, i) => (file.shops[i].hours ? r.hours.startsWith(file.shops[i].hours) : r.hours === 'Hours not checked yet'));
-    check(shown.every(Boolean), 'hours show only where the guide has them; the rest say “Hours not checked yet”', JSON.stringify(rows.map((r) => r.hours)));
+    const invented = file.shops.filter((s) => s.hours && !(byId[s.id].hours && byId[s.id].checked && byId[s.id].checked.date && /^https?:\/\//.test(byId[s.id].checked.source || '')));
+    check(!invented.length, 'every hour comes from the shop’s own things.json entry, with the date and page it was checked on', JSON.stringify(invented.map((s) => s.name)));
+    const DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+    const drift = file.shops.filter((s) => { const h = byId[s.id].hours; return h ? DAYS.some((d) => !s.week || s.week[d] !== h[d]) : !!(s.week || s.hours); });
+    check(!drift.length, 'each shop’s week is its things.json hours, day by day', JSON.stringify(drift.map((s) => s.name)));
+    const shown = rows.map((r, i) => {
+      const s = file.shops[i];
+      return s.hours ? r.hours.startsWith(s.hours) : s.checked ? r.hours.startsWith('No weekly hours posted; call ahead') : r.hours === 'Hours not checked yet';
+    });
+    check(shown.every(Boolean), 'hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”', JSON.stringify(rows.map((r) => r.hours)));
     check(rows.every((r) => /^https:\/\/www\.google\.com\/maps\/search\//.test(r.map)), 'Map opens a search on Google Maps', rows[0].map);
     check(file.shops.every((s) => Array.isArray(s.gaps)) && file.gaps, 'gaps are marked in the file for Stephen to fill', JSON.stringify(file.gaps));
+    const noStreet = things.filter((t) => t.group === 'Shopping' && !/^\d/.test(t.address || '')).map((t) => t.id);
+    check(file.shops.every((s) => /^\d/.test(s.address || '')) && file.left_out.every((s) => noStreet.includes(s.id)),
+      'every shop in the walk has a street address; a shop without one is named in left_out instead', JSON.stringify(file.left_out));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
 

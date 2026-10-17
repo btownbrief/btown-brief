@@ -18,9 +18,12 @@
      is the whole of "thrift points" at launch.
    - The shop guide. data/vintage-shops.json (scripts/build_vintage_shops.py
      from data/things.json): every vintage, thrift, consignment, antique and
-     record shop the Brief's guide knows, numbered in walking order, with the
-     way to the next one when both have coordinates. Hours only where the
-     guide has them; every other shop says "Hours not checked yet".
+     record shop the Brief's guide has a street address for, numbered in
+     walking order, with the
+     way to the next one when both have coordinates, a map and the shop's
+     own site. Hours only where someone has read them off the shop's own
+     page (the shop's `checked` date and source); a checked shop that posts
+     none says to call ahead, and an unchecked one "Hours not checked yet".
    - Swaps. Board posts of kind `swap`: what I have, what I'd take, size.
    - Make a tee. Stephen's always-in-stock designs from the merch repo
      (all-day/data/merch-designs.json, scripts/build_merch_rail.py), each a
@@ -393,12 +396,20 @@ function paintShops(host) {
     const row = el('div', 'lrow');
     row.dataset.k = 's-' + s.id;
     const facts = [(s.kinds || []).join(', '), s.neighborhood].filter(Boolean).join(' · ');
-    const hours = s.hours ? '<b>' + esc(s.hours) + '</b>' + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '') : esc('Hours not checked yet');
+    // each run of days ("Thu–Fri 10am to 8pm") stays on one line at phone width
+    const runs = s.hours ? s.hours.split(' · ').map((r) => '<span style="white-space:nowrap">' + esc(r) + '</span>').join(' · ') : '';
+    const hours = s.hours ? '<b>' + runs + '</b>' + (s.hours_note ? esc('. ' + s.hours_note) : '') + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '')
+      : esc(s.checked ? 'No weekly hours posted; call ahead' + (s.phone ? ' at ' + s.phone : '') + (s.hours_note ? '. ' + s.hours_note : '') : 'Hours not checked yet');
+    const where = s.address ? s.address.replace(/,\s*VT\s*\d{5}$/, '') : '';
     const leg = legText(s, list[i + 1]);
     row.innerHTML = '<span class="num">' + (i + 1) + '</span><div><div class="t">' + esc(s.name) + '</div>' +
-      '<div class="s">' + esc(facts) + '</div><div class="s" data-hours>' + hours + (s.address ? esc(' · ' + s.address) : '') + '</div>' +
+      '<div class="s">' + esc(facts) + '</div><div class="s" data-hours>' + hours + '</div>' + (where ? '<div class="s" data-where>' + esc(where) + '</div>' : '') +
       (s.blurb ? '<div class="s">' + esc(s.blurb) + '</div>' : '') + (leg ? '<div class="s" data-leg>' + esc(leg) + '</div>' : '') + '</div>';
-    row.appendChild(outLink('Map', mapUrl(s), 'pillbtn', 'Map for ' + s.name));
+    const links = el('div', '');
+    links.style.cssText = 'display:flex;flex-direction:column;gap:6px';
+    links.appendChild(outLink('Map', mapUrl(s), 'pillbtn', 'Map for ' + s.name));
+    if (s.website) links.appendChild(outLink('Site', s.website, 'pillbtn', s.name + '’s website'));
+    row.appendChild(links);
     host.appendChild(row);
   });
   host.appendChild(el('p', 'note pad', esc('Missing a shop, or know the hours? The guide is the Brief’s own; reply to any issue and it joins the walk.')));

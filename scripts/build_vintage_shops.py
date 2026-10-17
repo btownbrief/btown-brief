@@ -5,13 +5,28 @@ data/things.json.
 Which places: things.json entries in the Shopping group whose category,
 name or blurb says they are a vintage, thrift, consignment, antique or
 record shop. A shopping street ("Pine Street (South End Shopping)") is not
-a shop and is left out. Nothing is added by hand: a shop that is not in
+a shop and is left out, and so is a shop with no verified street address:
+a walking guide can't send anyone to it. Those are named in `left_out` so
+Stephen can see who is waiting on an address. Nothing is added by hand: a shop that is not in
 things.json is not in the guide, so the way to add one is to add it there.
 
 What each shop carries: name, neighborhood, address, website, coordinates
 and hours exactly as things.json has them, and a one-line blurb, which is
-the first sentence of the entry's own blurb. Hours are only ever read from
-the entry ("Open noon-6 daily." in the blurb); nothing is guessed. Every
+the first sentence of the entry's own blurb. Hours come only from the
+entry's `hours`, day by day, and only when the entry also has `checked`:
+the date someone read them and the page they were read from, the shop's
+own site wherever it publishes them:
+
+    "hours": {"mon": null, "tue": "11:00-18:00", ..., "sun": "12:00-17:00"},
+    "checked": {"date": "2026-10-17", "source": "https://...", "note": "..."}
+
+A day set to null is a closed day, and "unlisted" is one the shop's page
+leaves out (shown as "not listed", never as closed). `hours_note` carries
+what a shop says beside its hours ("Show nights run late"). An entry with
+no `hours` has none published, and the tab says to call ahead. The kinds
+shown come from the words in the entry unless it sets `guide_kinds` ("a
+used bookstore that mentions vintage" is not a vintage shop). Nothing is
+guessed. Every
 missing fact is listed in the shop's `gaps`, so the tab can say "hours not
 checked yet" instead of leaving a hole, and Stephen can see what to fill.
 
@@ -48,14 +63,20 @@ KIND_LABEL = {"record": "Records", "antique": "Antiques", "consignment": "Consig
               "thrift": "Thrift", "vintage": "Vintage"}
 # A street, a mall or a district is a place to walk, not a shop: "Church
 # Street Marketplace" mentions its record shop, "Pine Street (South End
-# Shopping)" its vintage shops, and neither is one.
-NOT_A_SHOP = re.compile(r"\bmarketplace\b|\bdistrict\b|\(.*shopping\)", re.I)
+# Shopping)" its vintage shops, and neither is one. A shop may still call
+# itself a marketplace ("Vintage Inspired Marketplace").
+NOT_A_SHOP = re.compile(r"\bstreet marketplace\b|\bdistrict\b|\(.*shopping\)", re.I)
 
 # The walk, neighborhood by neighborhood. Anything not listed goes last.
 ROUTE = ["Downtown / Church St", "Waterfront", "South End", "Hill Section", "Old North End",
          "New North End", "Winooski", "South Burlington", "Shelburne", "Colchester", "Essex / Essex Jct"]
 
 HOURS = re.compile(r"\bOpen ([^.]*?\b(daily|weekdays|weekends|mon|tue|wed|thu|fri|sat|sun)[^.]*)\.", re.I)
+DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+DAY_LABEL = dict(zip(DAYS, ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]))
+UNLISTED = "unlisted"            # a day the shop's own page leaves out: not known to be closed
+ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+SPAN = re.compile(r"^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$")
 CHURCH_ST = [44.4759, -73.2121]
 WALK_MPH = 3.0
 STREET_FACTOR = 1.3
@@ -81,30 +102,92 @@ def first_sentence(text):
     return parts[0] if parts else ""
 
 
-def hours_of(t):
-    m = HOURS.search(t.get("blurb") or "")
-    if not m:
+def clock(hh, mm):
+    """14:30 -> 2:30pm, 12:00 -> noon."""
+    h, m = int(hh), int(mm)
+    if h == 12 and m == 0:
+        return "noon"
+    suffix = "am" if h < 12 else "pm"
+    h = h % 12 or 12
+    return f"{h}:{m:02d}{suffix}" if m else f"{h}{suffix}"
+
+
+def week_of(t):
+    """The entry's checked hours, day by day, or None. A malformed day stops the build: no guessing."""
+    hours = t.get("hours")
+    if hours is None:
         return None
-    h = m.group(1).strip()
-    h = re.sub(r"\s*[–—-]\s*", " to ", h)
-    return h[0].upper() + h[1:]
+    if not checked_of(t):
+        sys.exit(f"{t['id']}: hours without a checked date and source page")
+    if not isinstance(hours, dict) or sorted(hours) != sorted(DAYS):
+        sys.exit(f"{t['id']}: hours must give all seven days, mon to sun (null for closed)")
+    for d in DAYS:
+        if hours[d] is not None and hours[d] != UNLISTED and not SPAN.match(hours[d]):
+            sys.exit(f"{t['id']}: {d} hours {hours[d]!r} are not HH:MM-HH:MM, null or {UNLISTED!r}")
+    if not any(hours[d] not in (None, UNLISTED) for d in DAYS):
+        sys.exit(f"{t['id']}: hours with no open day; leave hours out instead")
+    return {d: hours[d] for d in DAYS}
+
+
+def checked_of(t):
+    """The entry's checked record, if it is a real one: an ISO date and a web page."""
+    c = t.get("checked")
+    if c is None:
+        return None
+    if not (isinstance(c, dict) and ISO_DATE.match(str(c.get("date") or "")) and re.match(r"^https?://", str(c.get("source") or ""))):
+        sys.exit(f"{t['id']}: checked needs a YYYY-MM-DD date and an http(s) source")
+    return c
+
+
+def hours_line(week):
+    """Mon to Sun grouped into runs: "Tue–Sat 11am to 6pm · Sun noon to 5pm · closed Mon"."""
+    if not week:
+        return None
+    label = lambda days: ", ".join(DAY_LABEL[d] for d in days)
+
+    def say(span):
+        m = SPAN.match(span)
+        return clock(m[1], m[2]) + " to " + clock(m[3], m[4])
+
+    runs = []                                   # [first day, last day, span or None]
+    for d in DAYS:
+        if runs and runs[-1][2] == week[d]:
+            runs[-1][1] = d
+        else:
+            runs.append([d, d, week[d]])
+    if len(runs) == 1:
+        return "Daily " + say(runs[0][2])
+    parts = [(DAY_LABEL[a] if a == b else DAY_LABEL[a] + "–" + DAY_LABEL[b]) + " " + say(span) for a, b, span in runs if span not in (None, UNLISTED)]
+    closed = [d for d in DAYS if week[d] is None]
+    unlisted = [d for d in DAYS if week[d] == UNLISTED]
+    if closed:
+        parts.append("closed " + label(closed))
+    if unlisted:
+        parts.append(label(unlisted) + " not listed")
+    return " · ".join(parts)
 
 
 def shop(t):
     ks = kinds_of(t)
     coords = t.get("coords")
     coords = coords if isinstance(coords, list) and len(coords) == 2 and all(isinstance(c, (int, float)) for c in coords) else None
+    week = week_of(t)
+    checked = checked_of(t)
     out = {
         "id": t["id"],
         "name": t["name"],
-        "kinds": [KIND_LABEL[k] for k in ks],
+        "kinds": t.get("guide_kinds") or [KIND_LABEL[k] for k in ks],
         "neighborhood": t.get("neighborhood") or None,
         "address": t.get("address") or None,
         "website": t.get("website") or None,
         "coords": coords,
-        "hours": hours_of(t),
+        "hours": hours_line(week),
+        "week": week,
+        "hours_note": t.get("hours_note") or None,
+        "phone": t.get("phone") or None,
         "blurb": first_sentence(t.get("blurb")),
-        "verified": t.get("last_verified") or None,
+        "verified": (checked or {}).get("date") or t.get("last_verified") or None,
+        "checked": checked,
     }
     # An address that only names a street area is not an address to walk to.
     if out["address"] and re.match(r"^[A-Za-z .]+ (area|street|st)\b,", out["address"], re.I) and not re.match(r"^\d", out["address"]):
@@ -153,7 +236,9 @@ def legs(ordered):
 def build():
     things = json.loads(SRC.read_text())
     picked = [t for t in things if t.get("group") == "Shopping" and kinds_of(t) and not NOT_A_SHOP.search(t.get("name") or "")]
-    shops = walk_order([shop(t) for t in picked])
+    every = [shop(t) for t in picked]
+    shops = walk_order([s for s in every if s["address"]])
+    left_out = [{"id": s["id"], "name": s["name"], "why": "no verified street address"} for s in every if not s["address"]]
     legs(shops)
     gaps = {g: sum(1 for s in shops if g in s["gaps"]) for g in ("address", "coords", "hours", "website")}
     return {
@@ -162,6 +247,7 @@ def build():
         "source": "data/things.json",
         "count": len(shops),
         "gaps": gaps,
+        "left_out": left_out,
         "shops": shops,
     }
 
@@ -176,6 +262,8 @@ def main():
     OUT.write_text(text)
     print(f"wrote {OUT.relative_to(ROOT)}: {data['count']} shops; missing address {data['gaps']['address']}, "
           f"coordinates {data['gaps']['coords']}, hours {data['gaps']['hours']}, website {data['gaps']['website']}")
+    for s in data["left_out"]:
+        print(f"left out {s['name']}: {s['why']}")
     if data["count"] < 6:
         print("fewer than six shops: add more vintage, thrift or record shops to data/things.json")
 
