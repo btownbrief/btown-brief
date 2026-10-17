@@ -864,7 +864,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .plrow[data-service="youtube"] .th.svc { background: var(--mark-0); }
 .plrow[data-service="apple"] .th.svc { background: var(--mark-6); }
 .plrow[data-service="soundcloud"] .th.svc { background: var(--mark-1); }
-.embed.spotify-list { height: 352px; }
+.embed.spotify.list { height: 352px; }
 .embed.yt { aspect-ratio: 16 / 9; height: auto; }
 
 .stat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 var(--gutter); }

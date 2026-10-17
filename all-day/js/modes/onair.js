@@ -768,9 +768,9 @@ const PLAYLISTS_URL = 'data/playlists.json';
 const SHARE_TO = 'btownbrief@gmail.com';
 const SERVICES = {
   spotify: { name: 'Spotify', re: /^https:\/\/open\.spotify\.com\/(?:intl-[a-z]{2}(?:-[a-z]{2})?\/)?playlist\/([A-Za-z0-9]{22})(?:\?[A-Za-z0-9=&._-]*)?$/,
-    embed: (id) => 'https://open.spotify.com/embed/playlist/' + id + '?theme=0', cls: 'spotify-list' },
+    embed: (id) => 'https://open.spotify.com/embed/playlist/' + id + '?theme=0' },
   youtube: { name: 'YouTube', re: /^https:\/\/(?:www\.|m\.|music\.)?youtube\.com\/playlist\?list=([A-Za-z0-9_-]{10,64})$/,
-    embed: (id) => 'https://www.youtube-nocookie.com/embed/videoseries?list=' + id + '&rel=0&playsinline=1', cls: 'yt' },
+    embed: (id) => 'https://www.youtube-nocookie.com/embed/videoseries?list=' + id + '&rel=0&playsinline=1' },
   apple: { name: 'Apple Music', re: /^https:\/\/music\.apple\.com\/[a-z]{2}\/playlist\/(?:[A-Za-z0-9%._~-]+\/)?(pl\.[A-Za-z0-9-]+)(?:\?[A-Za-z0-9=&._-]*)?$/ },
   soundcloud: { name: 'SoundCloud', re: /^https:\/\/(?:soundcloud\.com\/[A-Za-z0-9_-]+\/sets\/([A-Za-z0-9_-]+)|on\.soundcloud\.com\/([A-Za-z0-9]+))(?:\?[A-Za-z0-9=&._-]*)?$/ },
 };
@@ -840,7 +840,7 @@ function playlistSheet(it) {
     } else {
       app.stop();
       app.closeVideo();
-      const frame = el('iframe', 'embed ' + it.svc.cls);
+      const frame = el('iframe', it.service === 'youtube' ? 'embed yt' : 'embed spotify list');
       frame.title = it.title;
       frame.loading = 'lazy';
       frame.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';

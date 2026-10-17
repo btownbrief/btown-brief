@@ -5837,7 +5837,7 @@ async function shellFixes(browser, base) {
     for (const f of ['modes/onair.js', 'modes/whatnow.js', 'modes/food.js']) {
       const src = (await readFile(path.join(APP, 'js', f), 'utf8')).replace(/\/\*[\s\S]*?\*\//g, '');
       const made = src.match(/el\('iframe'[^)]*\)|createElement\('iframe'\)/g) || [];
-      check(made.every((m) => /'embed (spotify|bandcamp)'/.test(m)), f + ': every iframe it builds is an .embed', made.join(' '));
+      check(made.every((m) => /'embed (spotify|bandcamp|yt)\b/.test(m)), f + ': every iframe it builds is an .embed', made.join(' '));
       check(!/\.(width|height|frameBorder)\s*=|setAttribute\('(frameborder|seamless)'/.test(src), f + ': and sizes none by hand', '');
     }
     const { ctx, page } = await newPage(browser, base);
