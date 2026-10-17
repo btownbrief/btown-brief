@@ -33,6 +33,7 @@
   ok   source rules › js/modes/wire-photos.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/wire.js: no monospace
   ok   source rules › js/modes/wire.js: no colour, type size, caps or fixed position of its own
+  ok   source rules › js/people-match.js: no monospace
   ok   source rules › js/photo-wall.js: no monospace
   ok   source rules › js/store.js: no monospace
   ok   source rules › js/ui.js: no monospace
@@ -1102,7 +1103,7 @@
   ok   the Wire, Unfiltered › Unfiltered opens inside the tab
   ok   the Wire, Unfiltered › the raw wire draws sixty headlines to start
   ok   the Wire, Unfiltered › an outlet chip narrows the wire to that outlet
-  ok   the Wire, Unfiltered › search keeps only matching headlines (“Family”)
+  ok   the Wire, Unfiltered › search keeps only matching headlines (“HomeView”)
   ok   the Wire, Unfiltered › and the search field keeps the caret
   ok   the Wire, Unfiltered › By outlet draws a section per outlet
   ok   the Wire, Unfiltered › hold to peek works on the raw wire
@@ -1501,17 +1502,27 @@
   ok   Food, the directory over the wire (live) › no console errors
   ok   People: the rules in the module and the SQL agree › PEOPLE_RULES in people.js is nn_people_rules() in nn-people.sql
   ok   People: the rules in the module and the SQL agree › the tab never imports boards-fake.js; its mirror is its own
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows (4)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows, first, as a short row (4)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › none is missed
   ok   People, live: Stephen’s meetups, the clubs, an empty board › and nothing that isn’t his
   ok   People, live: Stephen’s meetups, the clubs, an empty board › one thirteen days out, only on his Meetup calendar, shows (place: on Meetup, never guessed)
   ok   People, live: Stephen’s meetups, the clubs, an empty board › an event in both sources shows once
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › each links to Meetup and shows no Meetup interest count
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › four clubs from data/clubs.json
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › and no Meetup interest count
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › the mixers: seven days from today
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › with the calendar’s mixers counted on each (30 this week)
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › a day’s rows: each links to its event page, none of them his
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › and no kids’ or teens’ event is a mixer
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › today’s are the calendar’s, past ones gone
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › a clear Full events calendar link to the guide’s events page
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › the host card: a title, two short lines and a prefilled email to Stephen
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › right under the mixers
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › six clubs from data/groups.json
   ok   People, live: Stephen’s meetups, the clubs, an empty board › with nothing picked, the featured club leads
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › and nothing picked, no For you strip
   ok   People, live: Stephen’s meetups, the clubs, an empty board › an empty board says so and offers the first plan
   ok   People, live: Stephen’s meetups, the clubs, an empty board › signed out, the tab says nothing about sign-in (the Post sheet does)
-  ok   People, live: Stephen’s meetups, the clubs, an empty board › the directory: the count for anyone, a Sign in button for the people
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › People here: the count for anyone, a Sign in button for the people
+  ok   People, live: Stephen’s meetups, the clubs, an empty board › signed out: one line and the button
   ok   People, live: Stephen’s meetups, the clubs, an empty board › one door card: Find Each Other, Plans & Meetups, Telegram
   ok   People, live: Stephen’s meetups, the clubs, an empty board › the chip row is the table of contents
   ok   People, live: Stephen’s meetups, the clubs, an empty board › a chip scrolls to its section
@@ -1549,17 +1560,71 @@
   ok   People, live: a late directory answer never reaches the next reader › no console errors
   ok   People, demo: who you are reorders the plans and the clubs › the demo’s plans, each with its going count
   ok   People, demo: who you are reorders the plans and the clubs › Trail person: a trail plan moves to the top
-  ok   People, demo: who you are reorders the plans and the clubs › and a trail club leads the clubs
+  ok   People, demo: who you are reorders the plans and the clubs › and an outdoors club leads the clubs
   ok   People, demo: who you are reorders the plans and the clubs › the tile says it is picked
   ok   People, demo: who you are reorders the plans and the clubs › and the toast says what changed
-  ok   People, demo: who you are reorders the plans and the clubs › Game night: a game night plan leads
-  ok   People, demo: who you are reorders the plans and the clubs › and a games or sports club
-  ok   People, demo: who you are reorders the plans and the clubs › a woman finding her people: the two women’s and nonbinary pickup clubs come first
+  ok   People, demo: who you are reorders the plans and the clubs › For you appears under the tiles: a run club and an outdoors group among three
+  ok   People, demo: who you are reorders the plans and the clubs › Game night: a game plan leads
+  ok   People, demo: who you are reorders the plans and the clubs › and a games or trivia club
+  ok   People, demo: who you are reorders the plans and the clubs › a woman finding her people: the two women’s pickup groups come first
   ok   People, demo: who you are reorders the plans and the clubs › the tag shows as picked
   ok   People, demo: who you are reorders the plans and the clubs › the picks are kept for the visit
   ok   People, demo: who you are reorders the plans and the clubs › and the demo writes nothing to this device
   ok   People, demo: who you are reorders the plans and the clubs › tapping the tile again clears it: back to soonest first
+  ok   People, demo: who you are reorders the plans and the clubs › and with nothing picked the For you strip goes
   ok   People, demo: who you are reorders the plans and the clubs › no console errors
+  ok   People, demo: every tile does something, and the mapping holds › the strip’s place is directly under the tiles
+  ok   People, demo: every tile does something, and the mapping holds › “running”: For you shows Lakefront Run Crew, Old North End Social Run, Sunrise Striders
+  ok   People, demo: every tile does something, and the mapping holds › “running” off again: the strip goes
+  ok   People, demo: every tile does something, and the mapping holds › “languages”: For you shows Spanish and English Language Exchange, French Table at the Library
+  ok   People, demo: every tile does something, and the mapping holds › “languages” off again: the strip goes
+  ok   People, demo: every tile does something, and the mapping holds › “games”: For you shows Mill Street Board Gamers, Tuesday Trivia at the Pine Street Tap
+  ok   People, demo: every tile does something, and the mapping holds › “games” off again: the strip goes
+  ok   People, demo: every tile does something, and the mapping holds › “grad”: For you shows Lake City Twenty-Somethings, Btown Brief IRL, Coed Rec Volleyball League
+  ok   People, demo: every tile does something, and the mapping holds › “grad” off again: the strip goes
+  ok   People, demo: every tile does something, and the mapping holds › “moved”: For you shows Queen City Newcomers, Easy Hikers of Chittenden County, Btown Brief IRL
+  ok   People, demo: every tile does something, and the mapping holds › “moved” off again: the strip goes
+  ok   People, demo: every tile does something, and the mapping holds › “lgbtq”: For you shows Out and About Vermont, Womxn's Pickup Ultimate, Btown Brief IRL
+  ok   People, demo: every tile does something, and the mapping holds › “lgbtq” off again: the strip goes
+  ok   People, demo: every tile does something, and the mapping holds › “older”: For you shows Second Wind Social Club, Brews and Books Club, Knit Night at the Yarn Shop
+  ok   People, demo: every tile does something, and the mapping holds › “older” off again: the strip goes
+  ok   People, demo: every tile does something, and the mapping holds › “books”: For you shows Brews and Books Club, Cookbook Club
+  ok   People, demo: every tile does something, and the mapping holds › “books” off again: the strip goes
+  ok   People, demo: every tile does something, and the mapping holds › “food”: For you shows Cookbook Club, Out and About Vermont
+  ok   People, demo: every tile does something, and the mapping holds › “food” off again: the strip goes
+  ok   People, demo: every tile does something, and the mapping holds › the new tile: For you rows at once
+  ok   People, demo: every tile does something, and the mapping holds › the regular tile: For you rows at once
+  ok   People, demo: every tile does something, and the mapping holds › the trail tile: For you rows at once
+  ok   People, demo: every tile does something, and the mapping holds › the games tile: For you rows at once
+  ok   People, demo: every tile does something, and the mapping holds › a run club in For you opens the club’s sheet
+  ok   People, demo: every tile does something, and the mapping holds › and a group row is a link out
+  ok   People, demo: every tile does something, and the mapping holds › a mixer that fits what you picked leads its day, marked For you
+  ok   People, demo: every tile does something, and the mapping holds › people: nothing fixed or sticky inside the tab
+  ok   People, demo: every tile does something, and the mapping holds › people: uppercase only in the caps roles
+  ok   People, demo: every tile does something, and the mapping holds › people: no monospace
+  ok   People, demo: every tile does something, and the mapping holds › people: no escaped markup, undefined or NaN on the page
+  ok   People, demo: every tile does something, and the mapping holds › people: no sideways scroll at 390
+  ok   People, demo: every tile does something, and the mapping holds › people: at most two subnav rows
+  ok   People, demo: every tile does something, and the mapping holds › no console errors
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › Stephen’s own lead the section, as a short row
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › seven days, today first
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › today: the singles mixer, named for its kind
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › and his own are not listed twice
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › a tech meetup counts
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › an approved reader gathering is on its day, marked reader-posted
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › one still waiting for Stephen never shows
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › a toddler music time and an exhibit are not mixers
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › a language table, a run club social and a networking night all are
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › a gathering with its own link links out
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › one without a link opens its own sheet: when, where, what
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › a calendar mixer’s link picks its day and flashes it
+  ok   People, demo: mixers from everywhere, and the readers’ gatherings › no console errors
+  ok   People, demo: the plans filter by Meetup, age and activity › chips: all, Meetup, the age bands and the activities the plans have
+  ok   People, demo: the plans filter by Meetup, age and activity › 20s: the plans for their 20s, and any age
+  ok   People, demo: the plans filter by Meetup, age and activity › and an activity on top of it
+  ok   People, demo: the plans filter by Meetup, age and activity › both held
+  ok   People, demo: the plans filter by Meetup, age and activity › All plans clears them
+  ok   People, demo: the plans filter by Meetup, age and activity › no console errors
   ok   People, demo: posting a plan, the Meetup box, I’d go › signed out, the plans show
   ok   People, demo: posting a plan, the Meetup box, I’d go › signed out, Post a plan gives the sign-in note and no form
   ok   People, demo: posting a plan, the Meetup box, I’d go › no day or time: refused, with the reason
@@ -1581,14 +1646,15 @@
   ok   People, demo: posting a plan, the Meetup box, I’d go › no console errors
   ok   People, demo: the quiz never asks age, and ends in a suggestion › six to eight questions
   ok   People, demo: the quiz never asks age, and ends in a suggestion › no question or answer asks age, gender or orientation
+  ok   People, demo: the quiz never asks age, and ends in a suggestion › the quiz says what it is in one line
   ok   People, demo: the quiz never asks age, and ends in a suggestion › seven questions on the page, none about age, gender or orientation
   ok   People, demo: the quiz never asks age, and ends in a suggestion › it ends in a suggested archetype the reader can take or not
-  ok   People, demo: the quiz never asks age, and ends in a suggestion › with three clubs and the next mixers
-  ok   People, demo: the quiz never asks age, and ends in a suggestion › and the community channel that fits (a doer: Plans & Meetups)
+  ok   People, demo: the quiz never asks age, and ends in a suggestion › with your three groups, your best upcoming mixer and Post a plan
   ok   People, demo: the quiz never asks age, and ends in a suggestion › nothing changes until the reader says so
   ok   People, demo: the quiz never asks age, and ends in a suggestion › “That’s me” takes the archetype and what the quiz learned
   ok   People, demo: the quiz never asks age, and ends in a suggestion › and the tile at the top lights
   ok   People, demo: the quiz never asks age, and ends in a suggestion › the reader can still pick another
+  ok   People, demo: the quiz never asks age, and ends in a suggestion › Post a plan opens the composer filled in for your kind of thing (the day is yours to pick)
   ok   People, demo: the quiz never asks age, and ends in a suggestion › no console errors
   ok   People, demo: what you’re into follows your profile; who you are never leaves the phone › signing in with a name: the into-tag picked on this phone goes up to the profile
   ok   People, demo: what you’re into follows your profile; who you are never leaves the phone › a tag tapped on the tab is saved to the profile, in the list’s order
@@ -1598,18 +1664,42 @@
   ok   People, demo: what you’re into follows your profile; who you are never leaves the phone › cleared in the profile sheet: the tab clears them too, and nothing writes them back
   ok   People, demo: what you’re into follows your profile; who you are never leaves the phone › no console errors
   ok   People, demo: the directory is opt-in and never shows an email › signed out: how many, and nobody by name
+  ok   People, demo: the directory is opt-in and never shows an email › and no handles
   ok   People, demo: the directory is opt-in and never shows an email › signed in with no name: asked for one first
-  ok   People, demo: the directory is opt-in and never shows an email › not in it yet: still nobody by name
-  ok   People, demo: the directory is opt-in and never shows an email › in it: everyone who opted in, and you
+  ok   People, demo: the directory is opt-in and never shows an email › not in it yet: nobody from the directory by name
+  ok   People, demo: the directory is opt-in and never shows an email › in it: everyone who opted in
   ok   People, demo: the directory is opt-in and never shows an email › only opted-in rows: Theo W. and Rhea D. never show
-  ok   People, demo: the directory is opt-in and never shows an email › your row: first name, neighborhood, tile, interests
+  ok   People, demo: the directory is opt-in and never shows an email › your row first: first name, neighborhood, tile, interests
   ok   People, demo: the directory is opt-in and never shows an email › the who-you-are tags never reach the directory
-  ok   People, demo: the directory is opt-in and never shows an email › no email anywhere on the tab
+  ok   People, demo: the directory is opt-in and never shows an email › no email anywhere on the tab (Stephen’s own, on the host card, aside)
   ok   People, demo: the directory is opt-in and never shows an email › leaving takes you out of the count
   ok   People, demo: the directory is opt-in and never shows an email › no console errors
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › Just joined: the newest handles, newest first
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › everyone with the switch on is here; Tom A., Lena V., Caro L. (switch off) never are
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › Instagram opens the profile
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › Letterboxd too
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › and Steam
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › an Xbox gamertag, encoded
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › a name with no profile page (Discord, Riot, Switch, PSN, Epic, Beli) is a copy button
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › tapping it copies the name and says so
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › Add your handles opens the profile sheet at its Handles, every fold open
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › saved with the switch on: you lead Just joined
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › people: nothing fixed or sticky inside the tab
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › people: uppercase only in the caps roles
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › people: no monospace
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › people: no escaped markup, undefined or NaN on the page
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › people: no sideways scroll at 390
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › people: at most two subnav rows
+  ok   People, demo: People here shows handles that open the app, only switched-on ones › no console errors
+  ok   People, live: handles and event titles are text, never markup › a name with markup in it is printed as text
+  ok   People, live: handles and event titles are text, never markup › a handle that isn’t its service’s shape is dropped, the rest kept
+  ok   People, live: handles and event titles are text, never markup › an event title with markup is text too
+  ok   People, live: handles and event titles are text, never markup › and nothing ran
+  ok   People, live: handles and event titles are text, never markup › no console errors
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the section is “Run clubs this week”, a title and nothing under it
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › no subtitle
-  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › it sits near the top, under who you are
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › it sits near the top, under who you are (and For you)
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › right under the week: Every club and league in town, to clubs.html
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › seven days, starting today in Burlington
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › one of each weekday, in order
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › today is the day showing
@@ -1622,11 +1712,8 @@
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the switch: Fitness this week
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and no run club in it
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › today’s fitness: yoga, then pickup
-  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › A runner: the club week moves to the top of the tab
-  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and leads the chip row
-  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › an athlete: first too
-  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and back under who you are once cleared
-  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › a trail person sees it first as well
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › A runner: nothing jumps; For you, then the club week, right under the tiles
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and For you leads with a run club
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › tapping the row opens the club’s sheet: its name and what it is
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › every meet, by weekday, with its place
   ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › pace, cost, season, newcomers
@@ -1797,6 +1884,10 @@
   ok   Games, live › no chat is built here
   ok   Games, live › Champions: the reigning champ on every board
   ok   Games, live › and the five all-arcade leaders
+  ok   Games, live › live: the arcade’s cabinets come first
+  ok   Games, live › live, older server: an empty poll and no posting until the board can take it
+  ok   Games, live › it reads the games board; signed out, it never asks for gamertags
+  ok   Games, live › signed out: the gamertags ask for a sign-in
   ok   Games, live › no console errors beyond the board stubbed to fail
   ok   Games, challenge fails soft › a game off the allowlist: that game can’t host a room right now
   ok   Games, challenge fails soft › and the ones that can are still offered
@@ -1806,19 +1897,67 @@
   ok   Games, one board stalls › a deep link that needs only the catalog lands while a board is still stuck
   ok   Games, one board stalls › the stuck board gives up and says it didn’t load; the rest drew
   ok   Games, one board stalls › no console errors
-  ok   Games, new this month › nothing within 30 days: “nothing new this month”
-  ok   Games, new this month › within 30 days: those games, newest first
+  ok   Games, new this month › nothing within 30 days: #games/new says “nothing new this month”
+  ok   Games, new this month › and there is no New chip and no New tag
+  ok   Games, new this month › within 30 days: the New chip holds those games, newest first, every one after “All”
+  ok   Games, new this month › and each wears a New tag
   ok   Games, new this month › a #games/new link lands there
   ok   Games, new this month › no console errors
+  ok   Games, the arcade up front › the games come first, then the people, then VR; the leaderboard moved below
+  ok   Games, the arcade up front › one big cabinet (the newest game) and four more
+  ok   Games, the arcade up front › the screen and Play both open the game on the arcade
+  ok   Games, the arcade up front › Invite is a text message with the game’s link and no number
+  ok   Games, the arcade up front › a cabinet shows this month’s champ
+  ok   Games, the arcade up front › “All n games” opens every live game
+  ok   Games, the arcade up front › chips: All, New, the arcade’s sections, Out in Burlington
+  ok   Games, the arcade up front › Out in Burlington: only the games that need real streets
+  ok   Games, the arcade up front › Party Night is a chip now, with its game
+  ok   Games, the arcade up front › an old #games/new:<slug> link lands on the cabinet
+  ok   Games, the arcade up front › #games/party opens the arcade on Party Night
+  ok   Games, the arcade up front › without touch, Invite copies the same words
+  ok   Games, the arcade up front › no console errors
+  ok   Games, what people are playing › a poll: the most “me too”s first, eight before “more”
+  ok   Games, what people are playing › each row is the game and its platform
+  ok   Games, what people are playing › a platform chip narrows the poll
+  ok   Games, what people are playing › “Me too” is a vote, signed out too
+  ok   Games, what people are playing › and a second tap takes it back
+  ok   Games, what people are playing › each bar is drawn against the most-played game, and it moves with a vote
+  ok   Games, what people are playing › signed out, Post opens Settings to sign in
+  ok   Games, what people are playing › posted: it shows as text, never markup, with a delete on your own row
+  ok   Games, what people are playing › and nothing ran
+  ok   Games, what people are playing › a #games/b-<id> link lands on its row, even one behind “more”
+  ok   Games, what people are playing › no console errors
+  ok   Games, looking for a group › each group is a board card whose vote reads “I’m in”
+  ok   Games, looking for a group › Invite by text: the game, the platform, when, and the link back to the post
+  ok   Games, looking for a group › the message is encoded whole: no raw &, # or line break can end it
+  ok   Games, looking for a group › “Find a group” is offered
+  ok   Games, looking for a group › signed out, it asks for a sign-in first
+  ok   Games, looking for a group › an invite drops direction overrides and line breaks, and keeps an emoji whole
+  ok   Games, looking for a group › no console errors
+  ok   Games, gamertags › signed out: one line and Sign in, and no handles
+  ok   Games, gamertags › signed in: members with gaming handles, and only their gaming handles
+  ok   Games, gamertags › no Instagram, Strava or other non-gaming handle shows here
+  ok   Games, gamertags › a member whose switch is off is not listed
+  ok   Games, gamertags › nothing here keeps a handle on the device
+  ok   Games, gamertags › a handle chip copies the handle
+  ok   Games, gamertags › “Add your gamertag” opens the profile at its Games fold, on the first box
+  ok   Games, gamertags › the demo never calls Supabase
+  ok   Games, gamertags › no console errors
+  ok   Games, VR corner › three picks, each on its official Meta store page, and the headsets
+  ok   Games, VR corner › boxing and ping pong lead
+  ok   Games, VR corner › no prices and no sale claims
+  ok   Games, VR corner › it counts the neighbors who posted a VR game
+  ok   Games, VR corner › and that count opens the poll on VR
+  ok   Games, VR corner › no console errors
   ok   Games, demo › the chip row is the table of contents
   ok   Games, demo › before a name, nothing is marked
   ok   Games, demo › the demo reader is on three boards
   ok   Games, demo › the demo keeps the name to the visit
   ok   Games, demo › three new games
-  ok   Games, demo › Party night lists its games
   ok   Games, demo › a chip scrolls to its section
   ok   Games, demo › the demo never calls Supabase
   ok   Games, demo › no console errors
+  ok   Games, 390 shots › no console errors
   ok   Watch, live from films.json › films.json is the list, and its subtitle is only the count to go
   ok   Watch, live from films.json › every film in its TMDB order
   ok   Watch, live from films.json › the chip row is the table of contents
@@ -2033,7 +2172,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 6ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 9ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
