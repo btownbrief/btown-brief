@@ -101,7 +101,8 @@ const LEAFLET = {
   js: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', jsSri: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
   css: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', cssSri: 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=',
 };
-const TILES = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+/* OSM's one tile host, as its tile policy now asks (no a/b/c subdomains) */
+const TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_CREDIT = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
 const CHURCH_ST = [44.4758, -73.2128];
 const WALK_MI = 1;            // the map opens on the shops this close to Church Street: the walk on foot
@@ -515,7 +516,8 @@ function mapButton(list) {
 }
 
 /* Leaflet, once. If Food's map already asked for it, wait for that same
-   script rather than run a second copy. */
+   script rather than run a second copy. Any way it fails (an error, a load
+   with no L, or a script that never answers) clears the way for a retry. */
 let leafletP = null;
 function loadLeaflet() {
   if (window.L && window.L.map) return Promise.resolve(window.L);
@@ -529,8 +531,11 @@ function loadLeaflet() {
     leafletP = new Promise((resolve, reject) => {
       const prior = [...document.querySelectorAll('script')].find((x) => x.src === LEAFLET.js);
       const js = prior || document.createElement('script');
-      js.addEventListener('load', () => (window.L && window.L.map ? resolve(window.L) : reject(new Error('no Leaflet'))));
-      js.addEventListener('error', () => { leafletP = null; if (!prior) js.remove(); reject(new Error('no Leaflet')); });
+      let wait = 0;
+      const fail = () => { clearTimeout(wait); leafletP = null; if (!prior) js.remove(); reject(new Error('no Leaflet')); };
+      js.addEventListener('load', () => { if (window.L && window.L.map) { clearTimeout(wait); resolve(window.L); } else fail(); });
+      js.addEventListener('error', fail);
+      wait = setTimeout(() => (window.L && window.L.map ? resolve(window.L) : fail()), 20000);
       if (prior) return;
       js.src = LEAFLET.js; js.integrity = LEAFLET.jsSri; js.crossOrigin = '';
       document.head.appendChild(js);
@@ -563,8 +568,10 @@ function dropMap() { if (M) { try { M.remove(); } catch (e) { /* already gone */
 
 /* The map sheet: every shop with coordinates as a pin carrying its guide
    number, in its kind's colour. It opens on the shops within a walk of
-   Church Street; "All" fits every shop, Essex to Shelburne. */
-function openMap() {
+   Church Street; "All" fits every shop, Essex to Shelburne. `back` is the
+   view a pin was tapped from, so "Back to the map" lands where the reader
+   left it. */
+function openMap(back) {
   const shops = S.shops || [];
   const list = shops.map((s, i) => ({ s, i })).filter(({ s }) => hasCoords(s));
   if (!list.length) return;
@@ -575,8 +582,9 @@ function openMap() {
     const box = el('div', 'vmap');
     box.dataset.k = 'map';
     const bar = el('div', 'linkrow');
-    let wide = town.length < 2;
+    let wide = back ? back.wide : town.length < 2;
     const fit = () => { if (M) M.fitBounds(wide ? every : town, { padding: [28, 28] }); };
+    const show = () => { if (!M) return; if (back) M.setView(back.c, back.z); else fit(); };
     const span = button(esc(wide ? 'On foot' : 'All ' + list.length), 'ghost sm vspan', () => {
       wide = !wide;
       span.textContent = wide ? 'On foot' : 'All ' + list.length;
@@ -592,20 +600,20 @@ function openMap() {
     loadLeaflet().then((L) => {
       if (!box.isConnected) return;
       M = L.map(box, { zoomControl: true, attributionControl: true });
-      fit();
+      show();
       L.tileLayer(TILES, { maxZoom: 19, attribution: TILE_CREDIT }).addTo(M);
       list.forEach(({ s, i }) => {
         const icon = L.divIcon({ className: 'vm-pin k-' + kindOf(s), html: String(i + 1), iconSize: [26, 26], iconAnchor: [13, 13] });
         const pin = L.marker(s.coords, { icon, title: (i + 1) + '. ' + s.name, keyboard: true, riseOnHover: true }).addTo(M);
         pin.bindTooltip(esc(s.name));
-        pin.on('click', () => shopSheet(i));
+        pin.on('click', () => shopSheet(i, M ? { c: M.getCenter(), z: M.getZoom(), wide } : null));
       });
       if (me) placeMe();
       else if (navigator.permissions && navigator.permissions.query) {
         /* already allowed on an earlier visit: no need to ask again */
         navigator.permissions.query({ name: 'geolocation' }).then((p) => { if (p.state === 'granted') locate().then(placeMe).catch(() => {}); }).catch(() => {});
       }
-      setTimeout(() => { if (M && box.isConnected) { M.invalidateSize(); fit(); } }, 80);
+      setTimeout(() => { if (M && box.isConnected) { M.invalidateSize(); show(); } }, 80);
     }).catch(() => {
       if (box.isConnected) box.replaceWith(el('p', 'note pad', esc('The map didn’t load.')));
     });
@@ -623,7 +631,7 @@ function placeMe() {
 }
 
 /* a pin's shop: its row from the guide, and the way back to the map */
-function shopSheet(i) {
+function shopSheet(i, view) {
   const s = (S.shops || [])[i];
   if (!s) return;
   app.sheet(s.name, (body) => {
@@ -631,7 +639,7 @@ function shopSheet(i) {
     wrap.appendChild(shopRow(s, i, null, true));
     body.appendChild(wrap);
     const r = el('div', 'linkrow');
-    const back = button(esc('Back to the map'), 'ghost sm', () => openMap());
+    const back = button(esc('Back to the map'), 'ghost sm', () => openMap(view));
     back.dataset.act = 'vmapback';
     r.appendChild(back);
     body.appendChild(r);

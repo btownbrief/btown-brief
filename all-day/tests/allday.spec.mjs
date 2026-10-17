@@ -4592,7 +4592,8 @@ async function theVintage(browser, base) {
     const layer = (kind, at, o) => ({ kind, at, o, addTo(m) { m.layers.push(this); return this; }, bindTooltip(t) { this.tip = t; return this; },
       on(ev, fn) { this['on' + ev] = fn; return this; }, remove() { this.gone = true; } });
     return { maps, map(el, opts) { const m = { el, opts, layers: [], fits: [], views: [], fitBounds(b, o) { this.fits.push(b); return this; }, setView(c, z) { this.views.push(c); return this; },
-      setZoom(z) { this.views.push(z); return this; }, invalidateSize() {}, remove() { this.removed = true; }, getContainer() { return el; } }; maps.push(m); return m; },
+      setZoom(z) { this.views.push(z); return this; }, getCenter() { return [44.47, -73.15]; }, getZoom() { return 12; },
+      invalidateSize() {}, remove() { this.removed = true; }, getContainer() { return el; } }; maps.push(m); return m; },
       tileLayer(u, o) { return layer('tiles', u, o); }, circleMarker(c, o) { return layer('dot', c, o); }, marker(c, o) { return layer('pin', c, o); },
       divIcon(o) { return { divIcon: o }; } };
   })();`;
@@ -4635,7 +4636,7 @@ async function theVintage(browser, base) {
     check(await page.evaluate(() => window.__sri.includes('sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=') && window.__sri.includes('sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=')),
       'with the integrity hashes Food and the guide’s own map pages use', await page.evaluate(() => window.__sri.join(', ')));
     check(m && m.inSheet && await page.$eval('.sheet-head h2', (h) => h.textContent) === 'Shop map', 'the map opens in a sheet', JSON.stringify(m && m.inSheet));
-    check(m && m.tiles.length === 1 && m.tiles[0].u === 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' && /OpenStreetMap/.test(m.tiles[0].attr), 'on OpenStreetMap’s tiles, credited', JSON.stringify(m && m.tiles));
+    check(m && m.tiles.length === 1 && m.tiles[0].u === 'https://tile.openstreetmap.org/{z}/{x}/{y}.png' && /OpenStreetMap/.test(m.tiles[0].attr), 'on OpenStreetMap’s tiles from its one tile host, credited', JSON.stringify(m && m.tiles));
     check(m && m.pins.length === pinned.length && m.pins.every((p, n) => { const { s, i } = pinned[n];
       return p.html === String(i + 1) && p.title === (i + 1) + '. ' + s.name && JSON.stringify(p.at) === JSON.stringify(s.coords) && p.cls === 'vm-pin k-' + vKind(s.kinds[0]); }),
       'every shop is a pin at its own spot, carrying its number from the guide, in its kind’s colour', JSON.stringify(m && m.pins.slice(0, 2)));
@@ -4656,7 +4657,10 @@ async function theVintage(browser, base) {
     check(sheet.text.includes(pick.s.neighborhood) && (!pick.s.address || sheet.text.includes(pick.s.address.replace(/,\s*VT\s*\d{5}$/, ''))), 'with the shop’s neighborhood and street', sheet.text.slice(0, 160));
     await page.click('.sheet-body [data-act=vmapback]');
     await page.waitForTimeout(200);
-    check(await page.$eval('.sheet-head h2', (h) => h.textContent) === 'Shop map' && (await vMap(page)).pins.length === pinned.length, 'Back to the map puts the map back up', '');
+    const backTo = await vMap(page);
+    check(await page.$eval('.sheet-head h2', (h) => h.textContent) === 'Shop map' && backTo.pins.length === pinned.length, 'Back to the map puts the map back up', '');
+    check(JSON.stringify(backTo.views[0]) === '[44.47,-73.15]' && !backTo.fits.length && await page.$eval('.sheet-body .vspan', (b) => b.textContent) === 'On foot',
+      'where the reader left it: the same view, still on All', JSON.stringify({ views: backTo.views, fits: backTo.fits.length }));
     await page.screenshot({ path: path.join(SHOTS, 'live-vintage-map.png') });
     await page.goto(base + '/all-day/#vintage/map');
     await page.reload();
