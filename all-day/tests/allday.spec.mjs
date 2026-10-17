@@ -1999,6 +1999,22 @@ async function theWatch(browser, base) {
     await ctx.close();
   });
 
+  await group('Watch, a re-release is three or more years old (live)', async () => {
+    const films = await watchFilms();
+    const year = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric' }).format(new Date()));
+    const base0 = films.now[0];
+    films.now = [{ ...base0, id: 990011, t: 'Two Years On', y: year - 2, d: (year - 2) + '-05-01' },
+      { ...base0, id: 990012, t: 'Three Years On', y: year - 3, d: (year - 3) + '-05-01' },
+      { ...base0, id: 990013, t: 'No Year', y: undefined, d: undefined }];
+    const { ctx, page, errors } = await newPage(browser, base, { films });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', { timeout: 15000 });
+    const got = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.slice(0, 3).map((a) => a.querySelector('.s').textContent));
+    check(JSON.stringify(got) === '["In theaters now","Back in theaters","In theaters now"]', 'two years old is in theaters now, three is back in theaters, no year is in theaters now', JSON.stringify(got));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Watch, the starter list, two dots and a reload (live, signed out)', async () => {
     const { ctx, page, errors, supabase } = await newPage(browser, base);
     await page.goto(base + '/all-day/#watch');
@@ -3262,8 +3278,12 @@ async function theArt(browser, base) {
       ['11111111-0000-4000-8000-000000000005', 'Pine Street mural', 'street', 'Pine Street', '2026-08-03'],
       ['11111111-0000-4000-8000-000000000006', 'A board photo', 'other', 'All Day · Art', at('2026-10-10')],
       ['11111111-0000-4000-8000-000000000007', 'Tacos al pastor', 'dish', 'Taco Gordo', '2026-10-01'],
-    ].map(([id, caption, category, spot, approved_on]) => ({ id, storage_path: 'submissions/' + id.slice(-4) + '.jpg', caption, category, area: 'Downtown / Church St', spot,
-      taken_on: '', credit: 'Stephen', display_label: null, approved_on, votes: 3 }));
+      /* no caption and no spot: the area, else when it was taken, else the day it was approved */
+      ['11111111-0000-4000-8000-000000000008', '', 'other', '', '2026-03-20', { area: 'Old North End' }],
+      ['11111111-0000-4000-8000-000000000009', '', 'other', '', '2026-03-19', { area: 'Elsewhere', taken_on: 'late May 2026' }],
+      ['11111111-0000-4000-8000-00000000000a', '', 'other', '', '2026-03-18', { area: 'Elsewhere' }],
+    ].map(([id, caption, category, spot, approved_on, more]) => ({ id, storage_path: 'submissions/' + id.slice(-4) + '.jpg', caption, category, area: 'Downtown / Church St', spot,
+      taken_on: '', credit: 'Stephen', display_label: null, approved_on, votes: 3, ...more }));
     const { ctx, page, errors } = await newPage(browser, base, {
       rpc: (fn) => (fn === 'btb_photos_get' ? rows : /^nn_/.test(fn) ? { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } } : undefined),
     });
@@ -3272,9 +3292,9 @@ async function theArt(browser, base) {
     await page.waitForSelector(artPanel + ' .grid3 .tile', { timeout: 6000 }).catch(() => {});
     const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => ({ label: t.getAttribute('aria-label'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent,
       votes: !!t.querySelector('.ct'), src: t.querySelector('img') && t.querySelector('img').getAttribute('src'), lazy: t.querySelector('img') && t.querySelector('img').getAttribute('loading') })));
-    check(tiles.length === 5 && tiles.every((t) => !t.votes && /, from the gallery$/.test(t.label)), 'the five gallery photos, said to be from the gallery, without votes', JSON.stringify(tiles.map((t) => t.label)));
-    check(JSON.stringify(tiles.map((t) => t.lbl)) === '["Pine Street mural","Leddy in June","Sunset from Waterfront Park","Church Street lights","King Street dock"]',
-      'each tile is labelled with its caption, or where it was taken when it has none, never six of the same', JSON.stringify(tiles.map((t) => t.lbl)));
+    check(tiles.length === 8 && tiles.every((t) => !t.votes && /, from the gallery$/.test(t.label)), 'the eight gallery photos, said to be from the gallery, without votes', JSON.stringify(tiles.map((t) => t.label)));
+    check(JSON.stringify(tiles.map((t) => t.lbl)) === '["Pine Street mural","Leddy in June","Sunset from Waterfront Park","Church Street lights","King Street dock","Old North End","late May 2026","March 18, 2026"]',
+      'each tile is labelled with its caption, else its spot, area (never "Elsewhere"), when it was taken or the day it was approved', JSON.stringify(tiles.map((t) => t.lbl)));
     check(/^Pine Street mural/.test(tiles[0].label) && tiles.every((t) => /\/storage\/v1\/object\/public\/btb-photos\/submissions\/\w+\.jpg$/.test(t.src) && t.lazy === 'lazy'), 'newest approved first, lazy, from the public bucket', JSON.stringify(tiles[0]));
     check(!tiles.some((t) => /A board photo|Tacos/.test(t.label)), 'a board post’s photo and Food’s dishes stay off the gallery half', '');
     const invite = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ text: s.innerText, k: s.querySelector('[data-k]') && s.querySelector('[data-k]').dataset.k }));
