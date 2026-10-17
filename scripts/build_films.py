@@ -26,11 +26,12 @@ The key: TMDB_API_KEY in the environment, either the short "API Key" (32
 characters, sent as ?api_key=) or the long "API Read Access Token" (sent as
 a Bearer header); both are on the same TMDB settings page, either works.
 
-Failure posture, the fleet's: no key, or any trouble with TMDB, logs and
-exits 0 WITHOUT writing, so the workflow stays green and the films-data
-branch keeps its last good file. A run that reads back fewer than
-MIN_TOP films is trouble too. Until the first good run the tab reads its
-baked starter list, all-day/data/films-seed.json.
+Failure posture: with no key it logs and exits 0 without writing, so the
+workflow stays green until Stephen adds one, and the tab reads its baked
+starter list (all-day/data/films-seed.json). With a key, any trouble (a
+wrong key, TMDB down, fewer than MIN_TOP films back) writes nothing and
+exits 1: the films-data branch keeps its last good file, and the failed
+run is seen instead of the list quietly going stale.
 
 CLI:
   --out PATH   where to write (default data/films.json)
@@ -273,12 +274,12 @@ def build_payload(top, soon, now, built):
     }
 
 
-def run(args):
+def run(args, api=None):
     key = os.environ.get("TMDB_API_KEY", "").strip()
-    if not key:
+    if not key and api is None:
         log("no TMDB_API_KEY; keeping the last file")
         return 0
-    api = Tmdb(key)
+    api = api or Tmdb(key)
     cache = {}
     try:
         top_ids = listing(api, "/movie/top_rated", TOP_COUNT // 20)[:TOP_COUNT]
@@ -289,13 +290,13 @@ def run(args):
         now = shelf_now(details(api, now_ids, cache))
     except urllib.error.HTTPError as e:
         log(f"TMDB said HTTP {e.code}" + (" (is the key right?)" if e.code == 401 else "") + "; keeping the last file")
-        return 0
+        return 1
     except Exception as e:  # noqa: BLE001 — any trouble keeps the last good file
         log(f"{e}; keeping the last file")
-        return 0
+        return 1
     if len(top) < MIN_TOP:
         log(f"only {len(top)} top films came back; keeping the last file")
-        return 0
+        return 1
     write_json(args.out, build_payload(top, soon, now, utcnow()))
     log(f"wrote {args.out}: {len(top)} top, {len(soon)} soon, {len(now)} now, "
         f"{sum(1 for f in top if f['yt'])} top trailers, {api.calls} calls")
@@ -436,6 +437,17 @@ def selftest():
         if saved is not None:
             os.environ["TMDB_API_KEY"] = saved
     print("build_films: no key keeps the last file ok")
+
+    # a key TMDB refuses, or too few films: nothing written, and the run fails
+    def refused(url, headers):
+        raise urllib.error.HTTPError(url, 401, "bad key", {}, None)
+    assert run(argparse.Namespace(out=out), Tmdb("wrong", refused)) == 1 and not os.path.exists(out)
+    pause, PAUSE = PAUSE, 0
+    try:
+        assert run(argparse.Namespace(out=out), Tmdb("k", opener)) == 1 and not os.path.exists(out), "24 films is not a list"
+    finally:
+        PAUSE = pause
+    print("build_films: a refused key or a short list fails the run and keeps the last file ok")
 
     # the baked starter list the tab falls back to keeps the same shape
     seed_path = os.path.join(ROOT, "all-day", "data", "films-seed.json")

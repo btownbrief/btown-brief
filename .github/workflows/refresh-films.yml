@@ -14,8 +14,9 @@ name: Refresh the Watch tab's films
 # variables → Actions). Until it exists every run skips quietly and the tab
 # reads its baked starter list (all-day/data/films-seed.json).
 #
-# Failure posture: no key, a wrong key or any TMDB trouble ends the run
-# quietly without pushing, and the branch keeps its last good list.
+# Failure posture: no key skips quietly (green). With a key, a wrong key or
+# any TMDB trouble fails the build step (red, so it is seen) before anything
+# is pushed, and the branch keeps its last good list.
 
 on:
   schedule:

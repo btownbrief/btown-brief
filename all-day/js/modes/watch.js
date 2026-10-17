@@ -67,7 +67,7 @@ const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 const RECENCY = [
   ['any', 'Any time'], ['1m', 'Last month', 0, 31], ['6m', '6 months', 0, 183], ['1y', '1 year', 0, 366], ['2y', '2 years', 0, 731],
-  ['5y', '5 years', 0, 1827], ['10y', '10 years', 0, 3653], ['15y', '15 years', 0, 5479], ['20p', '20+ years', 7305, Infinity],
+  ['5y', '5 years', 0, 1827], ['10y', '10 years', 0, 3653], ['15y', '15 years', 0, 5479], ['20y', '20 years', 0, 7305], ['20p', '20+ years', 7306, Infinity],
 ];
 
 const arr = (v) => (Array.isArray(v) ? v : []);
@@ -160,7 +160,9 @@ function loadFilms() {
 
 /* ------------------------------------------------------- this device */
 /* { mode: 'us' | 'me', partner: 'Sam', seen: { id: [me, them] }, want: { id: ts },
-   rated: { id: { post, stars } } }. The demo keeps its own copy for the visit. */
+   rated: { id: { post, stars } } }, plus the sync's own two: dirty (films
+   changed here and not yet saved to the account) and syncedFor (the account
+   this phone last joined its dots with). The demo keeps its copy for the visit. */
 let memory = null;
 function loadLocal() {
   const raw = app.demo ? (memory = memory || { mode: 'us', partner: String(D.partner || ''), seen: dotsOf(D.dots), want: {}, rated: {} }) : store.read(LOCAL_KEY, {});
@@ -169,7 +171,8 @@ function loadLocal() {
   const seen = {};
   Object.entries(obj(o.seen)).forEach(([id, v]) => { if (/^\d+$/.test(id) && Array.isArray(v) && (v[0] || v[1])) seen[id] = [v[0] ? 1 : 0, v[1] ? 1 : 0]; });
   const partner = cleanName(o.partner);
-  return { mode: o.mode === 'us' && partner ? 'us' : 'me', partner, seen, want: obj(o.want), rated: obj(o.rated), nameDirty: !!o.nameDirty };
+  return { mode: o.mode === 'us' && partner ? 'us' : 'me', partner, seen, want: obj(o.want), rated: obj(o.rated),
+    nameDirty: !!o.nameDirty, dirty: obj(o.dirty), syncedFor: typeof o.syncedFor === 'string' ? o.syncedFor : '' };
 }
 function dotsOf(d) {
   const out = {};
@@ -178,7 +181,8 @@ function dotsOf(d) {
 }
 function saveLocal() {
   if (app.demo) { memory = L; return; }
-  store.write(LOCAL_KEY, { mode: L.mode, partner: L.partner, seen: L.seen, want: L.want, rated: L.rated, nameDirty: L.nameDirty });
+  store.write(LOCAL_KEY, { mode: L.mode, partner: L.partner, seen: L.seen, want: L.want, rated: L.rated,
+    nameDirty: L.nameDirty, dirty: L.dirty, syncedFor: L.syncedFor });
 }
 const cleanName = (s) => String(s || '').replace(/[@<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 32);
 const us = () => L.mode === 'us' && !!L.partner;
@@ -189,15 +193,20 @@ function setSeen(f, who, on) {
   const s = seenOf(f).slice();
   s[who] = on ? 1 : 0;
   if (s[0] || s[1]) L.seen[f.id] = s; else delete L.seen[f.id];
+  L.dirty[f.id] = 1;
   saveLocal();
   pushSeen(f.id);
 }
 
 /* ------------------------------------------- the account's copy of the dots */
 /* A signed-in reader's dots also live in nn_watch_seen (supabase/nn-watch.sql).
-   On sign-in the two copies are joined (a dot set on either side stays set),
-   and every change after that is sent as it happens. Before that SQL is
-   pasted the calls answer 404 and the dots simply stay on the phone. */
+   The first time a phone meets an account the two copies are joined: a dot
+   set on either side stays set, so nothing marked before signing in is lost.
+   After that the account is the record: a film changed on this phone and not
+   yet saved (`dirty`) keeps this phone's dots and is sent; every other film
+   takes the account's, so a dot cleared on the other phone stays cleared
+   here. Before nn-watch.sql is pasted the calls answer 404 and the dots
+   simply stay on the phone. */
 function rpcAs(fn, args) {
   if (app.demo || !app.user()) return Promise.resolve(null);
   return Promise.resolve(app.token()).then((tok) => {
@@ -218,31 +227,53 @@ function pushSeen(id) {
   queue[id] = (queue[id] || Promise.resolve()).then(() => {
     const s = L.seen[id] || [0, 0];
     const args = { p_film: Number(id), p_me: !!s[0], p_partner: !!s[1], p_partner_name: L.nameDirty ? L.partner : null };
-    return rpcAs('nn_watch_seen_set', args).then((r) => { if (r && L.nameDirty && args.p_partner_name === L.partner) { L.nameDirty = false; saveLocal(); } });
+    return rpcAs('nn_watch_seen_set', args).then((r) => {
+      if (!r) return;   // not saved: it stays dirty and goes again on the next join
+      const now = L.seen[id] || [0, 0];
+      if (now[0] === s[0] && now[1] === s[1]) delete L.dirty[id];
+      if (L.nameDirty && args.p_partner_name === L.partner) L.nameDirty = false;
+      saveLocal();
+    });
   });
 }
 function pullSeen() {
-  if (app.demo || !app.user() || !L) return;
+  const u = app.user();
+  if (app.demo || !u || !L) return;
   rpcAs('nn_watch_seen_get').then((j) => {
-    if (!j || typeof j !== 'object' || !Array.isArray(j.seen)) return;
+    if (!j || typeof j !== 'object' || !Array.isArray(j.seen) || !app.user() || app.user().id !== u.id) return;
     const server = Object.create(null);
-    j.seen.forEach((r) => { if (Array.isArray(r) && Number.isInteger(r[0]) && r[0] > 0) server[r[0]] = [r[1] ? 1 : 0, r[2] ? 1 : 0]; });
-    let changed = false;
-    Object.entries(server).forEach(([id, s]) => {
-      const mine = L.seen[id] || [0, 0];
-      const both = [mine[0] || s[0], mine[1] || s[1]];
-      if (both[0] !== mine[0] || both[1] !== mine[1]) { L.seen[id] = both; changed = true; }
+    j.seen.forEach((r) => { if (Array.isArray(r) && Number.isInteger(r[0]) && r[0] > 0 && (r[1] || r[2])) server[r[0]] = [r[1] ? 1 : 0, r[2] ? 1 : 0]; });
+    const first = L.syncedFor !== String(u.id);
+    const before = JSON.stringify(L.seen) + L.partner;
+    new Set([...Object.keys(server), ...Object.keys(L.seen)]).forEach((id) => {
+      const mine = L.seen[id] || [0, 0], theirs = server[id] || [0, 0];
+      /* a change made here since this pull began, or not yet saved, wins */
+      const next = L.dirty[id] ? mine : first ? [mine[0] || theirs[0], mine[1] || theirs[1]] : theirs;
+      if (next[0] || next[1]) L.seen[id] = next; else delete L.seen[id];
+      if (next[0] !== theirs[0] || next[1] !== theirs[1]) L.dirty[id] = 1;
     });
-    if (!L.partner && typeof j.partner === 'string' && cleanName(j.partner)) { L.partner = cleanName(j.partner); changed = true; }
-    else if (L.partner && j.partner !== L.partner) L.nameDirty = true;
+    const name = typeof j.partner === 'string' ? cleanName(j.partner) : '';
+    if (name && !L.nameDirty && (!first || !L.partner)) L.partner = name;
+    else if (L.partner && name !== L.partner) L.nameDirty = true;
+    L.syncedFor = String(u.id);
     saveLocal();
-    const send = Object.keys(L.seen).filter((id) => !server[id] || server[id][0] !== L.seen[id][0] || server[id][1] !== L.seen[id][1]);
+    const send = Object.keys(L.dirty);
     if (!send.length && L.nameDirty && Object.keys(L.seen).length) send.push(Object.keys(L.seen)[0]);
     send.forEach(pushSeen);
-    if (changed && ready) draw('list');
+    if (ready && JSON.stringify(L.seen) + L.partner !== before) draw('list');
   });
 }
-app.onAuth(() => { if (ready) { pullSeen(); draw('town'); } });
+app.onAuth(() => { if (ready) pullSeen(); });
+
+/* "Delete my account and posts" (boards.js) does not reach nn_watch_seen
+   yet; until the foundation's nn_delete_me clears it too, ask the account
+   to forget this reader's dots the moment that delete succeeds, while the
+   reader is still signed in. Best effort; the PR asks for the real fix. */
+window.addEventListener('allday-boards', (e) => {
+  if (app.demo || !e.detail || e.detail.what !== 'deleteme') return;
+  rpcAs('nn_watch_forget');
+  if (L) { L.syncedFor = ''; L.dirty = {}; saveLocal(); }
+});
 
 /* -------------------------------------------------------- board posts */
 /* Ratings, read back newest first up to RATING_PAGES pages, and the picks. */
@@ -726,7 +757,7 @@ function nameSheet(back) {
 
 /* ------------------------------------------------- town ratings */
 function drawTown(host) {
-  sec(host, 'Town ratings this week', esc('What Burlington watched in the last seven days, and what it thought. A film shows once three people have rated it.'), 'town');
+  sec(host, 'Town ratings this week', esc('What Burlington watched in the last seven days, and what it thought. A film shows once it has three ratings.'), 'town');
   if (P.state === 'loading') { host.appendChild(el('p', 'note pad', 'Counting this week’s ratings…')); return; }
   if (P.state === 'off') { host.appendChild(el('p', 'note pad', 'Town ratings open soon. Your dots and your list work now.')); return; }
   if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Town ratings didn’t load. Pull down to try again.')); return; }
@@ -809,14 +840,25 @@ function voteOpt(p) {
       (p.body ? '<p class="fine">' + esc(p.author + ': ' + p.body) + '</p>' : '<p class="fine">' + esc('Suggested by ' + p.author) + '</p>');
   };
   paint();
+  let busy = false;
   const go = () => {
+    if (busy) return;
+    busy = true;
     const other = !p.voted && ballot().find((x) => x.voted && x.id !== p.id);
     const was = { votes: p.votes, voted: p.voted };
     p.voted = !p.voted;
     p.votes = Math.max(0, p.votes + (p.voted ? 1 : -1));
     paint();
-    const first = other ? boards.unvote(other.id).then((r) => { if (r.ok) { const x = P.picks.find((y) => y.id === other.id); if (x) { x.votes = r.votes; x.voted = false; } } }) : Promise.resolve();
-    first.then(() => (p.voted ? boards.vote(p.id) : boards.unvote(p.id))).then((r) => {
+    /* one vote each: the old vote is taken back first, and if that fails
+       the new one is not cast (the board itself counts a vote per post) */
+    const first = other ? boards.unvote(other.id).then((r) => {
+      if (!r.ok) return r;
+      const x = P.picks.find((y) => y.id === other.id);
+      if (x) { x.votes = r.votes; x.voted = false; }
+      return null;
+    }) : Promise.resolve(null);
+    first.then((bad) => bad || (p.voted ? boards.vote(p.id) : boards.unvote(p.id))).then((r) => {
+      busy = false;
       if (!r.ok) { Object.assign(p, was); paint(); app.toast(r.message); return; }
       p.votes = r.votes; p.voted = r.voted;
       const x = P.picks.find((y) => y.id === p.id);

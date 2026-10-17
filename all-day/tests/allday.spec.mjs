@@ -2029,6 +2029,50 @@ async function theWatch(browser, base) {
     await ctx.close();
   });
 
+  await group('Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live)', async () => {
+    const seed = JSON.parse(await readFile(path.join(APP, 'data/films-seed.json'), 'utf8'));
+    const [A, B, C, Dd] = seed.top.map((f) => f.id);
+    const server = { partner: 'Sam', seen: new Map([[A, [true, false]], [B, [false, true]]]) };
+    const sets = [];
+    const rpc = (fn, body) => {
+      if (fn === 'nn_watch_seen_get') return { partner: server.partner, seen: [...server.seen].map(([f, v]) => [f, v[0], v[1]]) };
+      if (fn === 'nn_watch_seen_set') {
+        sets.push(body);
+        if (body.p_me || body.p_partner) server.seen.set(body.p_film, [!!body.p_me, !!body.p_partner]); else server.seen.delete(body.p_film);
+        if (body.p_partner_name != null) server.partner = body.p_partner_name || null;
+        return { film: body.p_film, me: !!body.p_me, partner: !!body.p_partner };
+      }
+      return undefined;
+    };
+    const { ctx, page, errors } = await newPage(browser, base, { rpc });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate(([s, c]) => { localStorage.setItem('allday-auth', s); localStorage.setItem('allday-watch', JSON.stringify({ mode: 'me', seen: { [c]: [1, 0] } })); }, [SESSION(), C]);
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
+    await page.waitForFunction((c) => { const w = JSON.parse(localStorage.getItem('allday-watch') || '{}'); return w.syncedFor && !Object.keys(w.dirty || {}).length; }, C, { timeout: 6000 }).catch(() => {});
+    const local = () => page.evaluate(() => JSON.parse(localStorage.getItem('allday-watch') || '{}'));
+    let w = await local();
+    check(JSON.stringify(w.seen) === JSON.stringify({ [A]: [1, 0], [B]: [0, 1], [C]: [1, 0] }) && w.partner === 'Sam', 'signing in joins the phone’s dots with the account’s, and takes the partner’s name', JSON.stringify(w));
+    check(sets.length === 1 && sets[0].p_film === C && sets[0].p_me === true && server.seen.has(C), 'only the phone’s own film is sent up', JSON.stringify(sets));
+    /* the other phone clears A */
+    server.seen.delete(A);
+    sets.length = 0;
+    await page.reload();
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
+    await page.waitForFunction((a) => !(a in (JSON.parse(localStorage.getItem('allday-watch') || '{}').seen || {})), A, { timeout: 6000 }).catch(() => {});
+    w = await local();
+    check(!(A in w.seen) && w.seen[B] && w.seen[C], 'a dot cleared on the other phone stays cleared here', JSON.stringify(w.seen));
+    check(!sets.length && !server.seen.has(A), 'and is not sent back up', JSON.stringify(sets));
+    /* a dot set here is saved to the account at once */
+    await page.click(wPanel + ' [data-k="f' + Dd + '"]');
+    await page.waitForSelector('.sheet-body [data-seen="me"]');
+    await page.click('.sheet-body [data-seen="me"]');
+    await page.waitForFunction(() => !Object.keys(JSON.parse(localStorage.getItem('allday-watch') || '{}').dirty || {}).length, null, { timeout: 4000 }).catch(() => {});
+    check(server.seen.get(Dd) && server.seen.get(Dd)[0] === true && sets.length === 1, 'a dot set in the sheet goes to the account', JSON.stringify(sets));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('Watch, a missing films branch falls back to the starter list (live)', async () => {
     const { ctx, page, errors } = await newPage(browser, base, { films: null });
     await page.goto(base + '/all-day/#watch');
@@ -2047,7 +2091,9 @@ async function theWatch(browser, base) {
     check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'all sixty, in list order', '');
     const today = wDayNum(wToday());
     const ago = (f) => today - wDayNum(f.d);
-    const windows = { '1m': [0, 31], '6m': [0, 183], '1y': [0, 366], '2y': [0, 731], '5y': [0, 1827], '10y': [0, 3653], '15y': [0, 5479], '20p': [7305, Infinity] };
+    const windows = { '1m': [0, 31], '6m': [0, 183], '1y': [0, 366], '2y': [0, 731], '5y': [0, 1827], '10y': [0, 3653], '15y': [0, 5479], '20y': [0, 7305], '20p': [7306, Infinity] };
+    const homeless = d.films.top.filter((f) => !Object.values(windows).some(([lo, hi]) => ago(f) >= lo && ago(f) <= hi));
+    check(!homeless.length, 'every released film falls in at least one dated window', homeless.map((f) => f.t).join(', '));
     for (const [key, [lo, hi]] of Object.entries(windows)) {
       await page.click(wPanel + ' [data-filter="recency"] [data-chip="' + key + '"]');
       const want = d.films.top.filter((f) => ago(f) >= lo && ago(f) <= hi).map((f) => 'f' + f.id);
