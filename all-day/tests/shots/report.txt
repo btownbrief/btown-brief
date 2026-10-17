@@ -114,7 +114,7 @@
   ok   390 light live › onair: at most two subnav rows
   ok   390 light live › games: its panel is the one showing
   ok   390 light live › games: no error box
-  ok   390 light live › games: live, it states its promise
+  ok   390 light live › games: it draws its screen
   ok   390 light live › games: nothing fixed or sticky inside the tab
   ok   390 light live › games: uppercase only in the caps roles
   ok   390 light live › games: no monospace
@@ -297,7 +297,7 @@
   ok   390 dark live › onair: at most two subnav rows
   ok   390 dark live › games: its panel is the one showing
   ok   390 dark live › games: no error box
-  ok   390 dark live › games: live, it states its promise
+  ok   390 dark live › games: it draws its screen
   ok   390 dark live › games: nothing fixed or sticky inside the tab
   ok   390 dark live › games: uppercase only in the caps roles
   ok   390 dark live › games: no monospace
@@ -482,7 +482,7 @@
   ok   390 light reduced-motion live › onair: at most two subnav rows
   ok   390 light reduced-motion live › games: its panel is the one showing
   ok   390 light reduced-motion live › games: no error box
-  ok   390 light reduced-motion live › games: live, it states its promise
+  ok   390 light reduced-motion live › games: it draws its screen
   ok   390 light reduced-motion live › games: nothing fixed or sticky inside the tab
   ok   390 light reduced-motion live › games: uppercase only in the caps roles
   ok   390 light reduced-motion live › games: no monospace
@@ -665,7 +665,7 @@
   ok   1280 light live › onair: at most two subnav rows
   ok   1280 light live › games: its panel is the one showing
   ok   1280 light live › games: no error box
-  ok   1280 light live › games: live, it states its promise
+  ok   1280 light live › games: it draws its screen
   ok   1280 light live › games: nothing fixed or sticky inside the tab
   ok   1280 light live › games: uppercase only in the caps roles
   ok   1280 light live › games: no monospace
@@ -846,7 +846,7 @@
   ok   1280 dark reduced-motion live › onair: at most two subnav rows
   ok   1280 dark reduced-motion live › games: its panel is the one showing
   ok   1280 dark reduced-motion live › games: no error box
-  ok   1280 dark reduced-motion live › games: live, it states its promise
+  ok   1280 dark reduced-motion live › games: it draws its screen
   ok   1280 dark reduced-motion live › games: nothing fixed or sticky inside the tab
   ok   1280 dark reduced-motion live › games: uppercase only in the caps roles
   ok   1280 dark reduced-motion live › games: no monospace
@@ -966,6 +966,10 @@
   ok   deep links, demo › #art/aw6: no console errors
   ok   deep links, demo › #onair/yt:demo-tv-003 lands on its card and flashes
   ok   deep links, demo › #onair/yt:demo-tv-003: no console errors
+  ok   deep links, demo › #games/g:trivia-ladder lands on its card and flashes
+  ok   deep links, demo › #games/g:trivia-ladder: no console errors
+  ok   deep links, demo › #games/champ:btown-riddle lands on its card and flashes
+  ok   deep links, demo › #games/champ:btown-riddle: no console errors
   ok   deep links, demo › #whatnow/missions opens the mode
   ok   deep links, demo › #onair/everything flips the shared switch
   ok   deep links, demo › an unknown key says the card has moved on
@@ -1073,6 +1077,7 @@
   ok   What Now, Tonight (live, a reader in Los Angeles) › the old Music tab’s why lines come along (the genre when there is no why)
   ok   What Now, Tonight (live, a reader in Los Angeles) › nothing is embedded until you ask
   ok   What Now, Tonight (live, a reader in Los Angeles) › Listen builds that artist’s Bandcamp player, which does not autoplay
+  ok   What Now, Tonight (live, a reader in Los Angeles) › the player is the shell’s .embed: full width, the media radius, its own height
   ok   What Now, Tonight (live, a reader in Los Angeles) › pressing it again takes the player away
   ok   What Now, Tonight (live, a reader in Los Angeles) › the list ends, and says so
   ok   What Now, Tonight (live, a reader in Los Angeles) › no console errors
@@ -1196,6 +1201,50 @@
   ok   On Air, the audio card › no clip today: the latest one, with its date (Thursday, October 15)
   ok   On Air, the audio card › and it says when today’s lands
   ok   On Air, the audio card › yesterday: no console errors
+  ok   Games, live › one get_leaderboard call per live board, for this month in Burlington
+  ok   Games, live › the tab only ever reads
+  ok   Games, live › before a name, no row is marked as yours
+  ok   Games, live › the boards come in the arcade’s own sections
+  ok   Games, live › a board with scores draws its rows
+  ok   Games, live › boards with no scores yet are named in one line
+  ok   Games, live › a board that failed says so, and the rest still draw
+  ok   Games, live › a name on no board says so plainly
+  ok   Games, live › and marks nothing
+  ok   Games, live › with a name on the boards, Yours opens first
+  ok   Games, live › after the name, the reader’s rows are marked, matched without case or spaces
+  ok   Games, live › a place past tenth is shown, and called that
+  ok   Games, live › two different players under one name: it says some marks may be someone else’s
+  ok   Games, live › the name stays on this device
+  ok   Games, live › and is still there after a reload
+  ok   Games, live › Forget it takes the marks away
+  ok   Games, live › Challenge offers exactly the games the catalog says can host
+  ok   Games, live › picking a game points Host at that game on the arcade, in the same tab
+  ok   Games, live › the chat door opens the Btown Arcade channel, with Telegram beside it
+  ok   Games, live › no chat is built here
+  ok   Games, live › Champions: the reigning champ on every board
+  ok   Games, live › and the five all-arcade leaders
+  ok   Games, live › no console errors beyond the board stubbed to fail
+  ok   Games, challenge fails soft › a game off the allowlist: that game can’t host a room right now
+  ok   Games, challenge fails soft › and the ones that can are still offered
+  ok   Games, challenge fails soft › an allowlisted game from a link is picked
+  ok   Games, challenge fails soft › with no game able to host, it says so instead of offering a dead button
+  ok   Games, challenge fails soft › no console errors
+  ok   Games, one board stalls › a deep link that needs only the catalog lands while a board is still stuck
+  ok   Games, one board stalls › the stuck board gives up and says it didn’t load; the rest drew
+  ok   Games, one board stalls › no console errors
+  ok   Games, new this month › nothing within 30 days: “nothing new this month”
+  ok   Games, new this month › within 30 days: those games, newest first
+  ok   Games, new this month › a #games/new link lands there
+  ok   Games, new this month › no console errors
+  ok   Games, demo › the chip row is the table of contents
+  ok   Games, demo › before a name, nothing is marked
+  ok   Games, demo › the demo reader is on three boards
+  ok   Games, demo › the demo keeps the name to the visit
+  ok   Games, demo › three new games
+  ok   Games, demo › Party night lists its games
+  ok   Games, demo › a chip scrolls to its section
+  ok   Games, demo › the demo never calls Supabase
+  ok   Games, demo › no console errors
   ok   interactions, demo › the star saves and lights the mast
   ok   interactions, demo › the Saved sheet lists it
   ok   interactions, demo › Escape closes the sheet
@@ -1222,4 +1271,138 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 7ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 10ms (budget 100)
+  ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
+  ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
+  ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
+  ok   shell fixes: a rail never snaps flush to the edge › 1280: .rail carries scroll-padding of one gutter
+  ok   shell fixes: a rail never snaps flush to the edge › 1280: a card scrolled to the start stops at the gutter
+  ok   shell fixes: a rail never snaps flush to the edge › 1280: no console errors
+  ok   shell fixes: a new address closes an open sheet › Settings is open
+  ok   shell fixes: a new address closes an open sheet › a hash change to another tab closes it
+  ok   shell fixes: a new address closes an open sheet › and a deep link inside the same tab does too
+  ok   shell fixes: a new address closes an open sheet › a tab’s own sheet (a mission) closes when you leave
+  ok   shell fixes: a new address closes an open sheet › and Back lands on the tab, not a ghost sheet
+  ok   shell fixes: a new address closes an open sheet › no console errors
+  ok   shell fixes: app.showClip plays a file video in the one box › Food no longer reaches into the video box itself
+  ok   shell fixes: app.showClip plays a file video in the one box › it opens the box with a <video>, controls on, no autoplay attribute
+  ok   shell fixes: app.showClip plays a file video in the one box › vertical: the box stands 9:16
+  ok   shell fixes: app.showClip plays a file video in the one box › the link names Instagram and points at the post
+  ok   shell fixes: app.showClip plays a file video in the one box › Escape closes it and gives the box back to YouTube
+  ok   shell fixes: app.showClip plays a file video in the one box › not vertical: 16:9, and an unknown host is "Open the original"
+  ok   shell fixes: app.showClip plays a file video in the one box › no console errors
+  ok   shell fixes: chips inside a tab wrap on a wide screen › 390: they stay one row that scrolls
+  ok   shell fixes: chips inside a tab wrap on a wide screen › 390: no console errors
+  ok   shell fixes: chips inside a tab wrap on a wide screen › 1280: the theme chips wrap, nothing to scroll sideways
+  ok   shell fixes: chips inside a tab wrap on a wide screen › 1280: no console errors
+  ok   shell fixes: an emoji thumb is drawn at the emoji size › tokens.css has --fs-emoji
+  ok   shell fixes: an emoji thumb is drawn at the emoji size › a game’s emoji in a list row is 30px, not body size
+  ok   shell fixes: old Listen and TV links land in On Air › #listen opens On Air, and the address says #onair
+  ok   shell fixes: old Listen and TV links land in On Air › #watch/yt:<id> opens On Air with the same video key
+  ok   shell fixes: old Listen and TV links land in On Air › #listen/<key> keeps its key
+  ok   shell fixes: old Listen and TV links land in On Air › a plain #watch is still the Watchlist
+  ok   shell fixes: old Listen and TV links land in On Air › no console errors
+  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped once, to v44
+  ok   shell fixes: the offline shell carries the new modules › js/boards.js is in the offline list
+  ok   shell fixes: the offline shell carries the new modules › js/boards-core.js is in the offline list
+  ok   shell fixes: the offline shell carries the new modules › js/boards-fake.js is in the offline list
+  ok   shell fixes: the offline shell carries the new modules › every module main.js imports is in the offline list
+  ok   shell fixes: third-party players use the shared .embed › modes/onair.js: every iframe it builds is an .embed
+  ok   shell fixes: third-party players use the shared .embed › modes/onair.js: and sizes none by hand
+  ok   shell fixes: third-party players use the shared .embed › modes/whatnow.js: every iframe it builds is an .embed
+  ok   shell fixes: third-party players use the shared .embed › modes/whatnow.js: and sizes none by hand
+  ok   shell fixes: third-party players use the shared .embed › modes/food.js: every iframe it builds is an .embed
+  ok   shell fixes: third-party players use the shared .embed › modes/food.js: and sizes none by hand
+  ok   shell fixes: third-party players use the shared .embed › .embed.spotify is Spotify’s 152px, the media radius, no border
+  ok   accounts: the sign-in row, three states › Auth off in the project: "Sign in · Coming soon"
+  ok   accounts: the sign-in row, three states › signed out: the email field, and what it is for
+  ok   accounts: the sign-in row, three states › the link signs the reader in, and says so without the address
+  ok   accounts: the sign-in row, three states › the tokens leave the address bar
+  ok   accounts: the sign-in row, three states › the token is checked with Supabase
+  ok   accounts: the sign-in row, three states › nothing in localStorage holds an "@" or a JWT after sign-in
+  ok   accounts: the sign-in row, three states › storage keeps only the refresh token and the account id: no email, no access token (whose claims carry it)
+  ok   accounts: the sign-in row, three states › signed in: the name, profile, posts, delete
+  ok   accounts: the sign-in row, three states › the email is nowhere on the page
+  ok   accounts: the sign-in row, three states › Sign out forgets the session and shows the email field again
+  ok   accounts: the sign-in row, three states › and tells Supabase
+  ok   accounts: the sign-in row, three states › no console errors
+  ok   accounts: sessions refresh once, and an old email is dropped › a session about to run out is refreshed
+  ok   accounts: sessions refresh once, and an old email is dropped › once, however many callers ask at the same moment
+  ok   accounts: sessions refresh once, and an old email is dropped › the new refresh token is kept; the old saved email and access token are gone
+  ok   accounts: sessions refresh once, and an old email is dropped › a refused refresh signs out quietly
+  ok   accounts: sessions refresh once, and an old email is dropped › one try for the spent token, no retries
+  ok   accounts: sessions refresh once, and an old email is dropped › no console errors beyond the browser logging the refused refresh
+  ok   accounts: a slow refresh cannot sign a reader back in › after Sign out the late answer is dropped: still signed out, nothing stored
+  ok   accounts: a slow refresh cannot sign a reader back in › and onAuth heard the sign-out once, nothing after
+  ok   accounts: a slow refresh cannot sign a reader back in › no console errors
+  ok   accounts: another tab switching accounts never borrows the old token › tab one holds the first account’s token
+  ok   accounts: another tab switching accounts never borrows the old token › after the other tab signs in as someone else, tab one drops the old token and fetches the new account’s
+  ok   accounts: another tab switching accounts never borrows the old token › with the new account’s refresh token
+  ok   accounts: another tab switching accounts never borrows the old token › no console errors
+  ok   accounts: before the SQL is pasted, posting says so › Settings: "Signed in · Posting is coming soon."
+  ok   accounts: before the SQL is pasted, posting says so › the compose sheet says the same, and offers no form
+  ok   accounts: before the SQL is pasted, posting says so › a list resolves empty with "off", never throws
+  ok   accounts: before the SQL is pasted, posting says so › no console errors beyond the browser logging the 404s (the reader sees none)
+  ok   boards: the profile, set and read (demo) › signed out, compose asks for sign-in and shows no form
+  ok   boards: the profile, set and read (demo) › Settings → Sign in signs into the demo account, which has no name yet
+  ok   boards: the profile, set and read (demo) › an email as a name is refused
+  ok   boards: the profile, set and read (demo) › saved, tidied, and read back
+  ok   boards: the profile, set and read (demo) › Settings names the reader by first name
+  ok   boards: the profile, set and read (demo) › the profile sheet opens on what was saved
+  ok   boards: the profile, set and read (demo) › no console errors
+  ok   boards: compose refuses, then posts (demo) › a reader with no name is asked for one in the sheet
+  ok   boards: compose refuses, then posts (demo) › no name: refused, with the reason
+  ok   boards: compose refuses, then posts (demo) › the chosen photo is named
+  ok   boards: compose refuses, then posts (demo) › a photo without the consent box: refused
+  ok   boards: compose refuses, then posts (demo) › and nothing was sent: no post, no photo
+  ok   boards: compose refuses, then posts (demo) › posted, and the toast says so
+  ok   boards: compose refuses, then posts (demo) › it is first on the board, with the tab’s meta line
+  ok   boards: compose refuses, then posts (demo) › by first name, the link stripped, three weeks to run
+  ok   boards: compose refuses, then posts (demo) › your own post offers delete, not report
+  ok   boards: compose refuses, then posts (demo) › boards: nothing fixed or sticky inside the tab
+  ok   boards: compose refuses, then posts (demo) › boards: uppercase only in the caps roles
+  ok   boards: compose refuses, then posts (demo) › boards: no monospace
+  ok   boards: compose refuses, then posts (demo) › boards: no escaped markup, undefined or NaN on the page
+  ok   boards: compose refuses, then posts (demo) › boards: no sideways scroll at 390
+  ok   boards: compose refuses, then posts (demo) › boards: at most two subnav rows
+  ok   boards: compose refuses, then posts (demo) › no console errors
+  ok   boards: votes, reports, delete, expiry (demo) › signed out, a vote counts (the device’s vote) and the arrow fills
+  ok   boards: votes, reports, delete, expiry (demo) › and it is still yours when the board redraws
+  ok   boards: votes, reports, delete, expiry (demo) › unvote takes it back
+  ok   boards: votes, reports, delete, expiry (demo) › signed out, report asks for sign-in
+  ok   boards: votes, reports, delete, expiry (demo) › the second report takes it down, and says so
+  ok   boards: votes, reports, delete, expiry (demo) › its card leaves the board at once
+  ok   boards: votes, reports, delete, expiry (demo) › and it is not listed again
+  ok   boards: votes, reports, delete, expiry (demo) › a hidden post cannot be voted on
+  ok   boards: votes, reports, delete, expiry (demo) › delete-own asks, then removes it
+  ok   boards: votes, reports, delete, expiry (demo) › and Your posts no longer has it
+  ok   boards: votes, reports, delete, expiry (demo) › an expired post is not listed
+  ok   boards: votes, reports, delete, expiry (demo) › boards: nothing fixed or sticky inside the tab
+  ok   boards: votes, reports, delete, expiry (demo) › boards: uppercase only in the caps roles
+  ok   boards: votes, reports, delete, expiry (demo) › boards: no monospace
+  ok   boards: votes, reports, delete, expiry (demo) › boards: no escaped markup, undefined or NaN on the page
+  ok   boards: votes, reports, delete, expiry (demo) › boards: no sideways scroll at 1280
+  ok   boards: votes, reports, delete, expiry (demo) › boards: at most two subnav rows
+  ok   boards: votes, reports, delete, expiry (demo) › no console errors
+  ok   boards: Your posts, and delete my account (demo) › an Art photo without a photo: refused
+  ok   boards: Your posts, and delete my account (demo) › with a photo and consent: posted, the photo waits for the queue
+  ok   boards: Your posts, and delete my account (demo) › a photo whose post is refused is taken back out of the queue
+  ok   boards: Your posts, and delete my account (demo) › an Art post is not on the wall until its photo is approved
+  ok   boards: Your posts, and delete my account (demo) › Your posts lists both, with where each stands
+  ok   boards: Your posts, and delete my account (demo) › delete asks first, and says the shared sign-in stays
+  ok   boards: Your posts, and delete my account (demo) › everything of theirs is gone
+  ok   boards: Your posts, and delete my account (demo) › and they are signed out
+  ok   boards: Your posts, and delete my account (demo) › no console errors
+  ok   boards: what goes over the wire (live) › signed out: the list goes with the device’s player id and no token
+  ok   boards: what goes over the wire (live) › an approved photo is drawn from the public bucket
+  ok   boards: what goes over the wire (live) › the vote adopts the server’s count
+  ok   boards: what goes over the wire (live) › signed out, nn_vote goes without a token
+  ok   boards: what goes over the wire (live) › a refusal from the server becomes its sentence
+  ok   boards: what goes over the wire (live) › signed in, a report carries the reader’s token
+  ok   boards: what goes over the wire (live) › no call carries an email
+  ok   boards: what goes over the wire (live) › no console errors beyond the browser logging the refusal
+  ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › both posts go through
+  ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › Vintage files its photo as category "board", which the gallery leaves out
+  ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › Art files its photo as "other": it joins the gallery
+  ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › resized to a jpeg, credited by first name, no email
+  ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › no console errors
