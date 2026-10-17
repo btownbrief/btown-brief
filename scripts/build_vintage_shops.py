@@ -161,7 +161,7 @@ def shop(t):
         "coords": coords,
         "hours": hours_line(week),
         "week": week,
-        "hours_note": (t.get("hours_note") or None) if week else None,
+        "hours_note": t.get("hours_note") or None,
         "phone": t.get("phone") or None,
         "blurb": first_sentence(t.get("blurb")),
         "verified": (checked or {}).get("date") or t.get("last_verified") or None,

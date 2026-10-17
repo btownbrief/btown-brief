@@ -2828,7 +2828,7 @@ async function theVintage(browser, base) {
     check(!invented.length, 'every hour comes from the shop’s own things.json entry, with the date and page it was checked on', JSON.stringify(invented.map((s) => s.name)));
     const shown = rows.map((r, i) => {
       const s = file.shops[i];
-      return s.hours ? r.hours.startsWith(s.hours) : s.checked ? r.hours.startsWith('No hours posted; call ahead') : r.hours === 'Hours not checked yet';
+      return s.hours ? r.hours.startsWith(s.hours) : s.checked ? r.hours.startsWith('No weekly hours posted; call ahead') : r.hours === 'Hours not checked yet';
     });
     check(shown.every(Boolean), 'hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”', JSON.stringify(rows.map((r) => r.hours)));
     check(rows.every((r) => /^https:\/\/www\.google\.com\/maps\/search\//.test(r.map)), 'Map opens a search on Google Maps', rows[0].map);

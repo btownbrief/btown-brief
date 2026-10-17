@@ -395,14 +395,20 @@ function paintShops(host) {
     const row = el('div', 'lrow');
     row.dataset.k = 's-' + s.id;
     const facts = [(s.kinds || []).join(', '), s.neighborhood].filter(Boolean).join(' · ');
-    const hours = s.hours ? '<b>' + esc(s.hours) + '</b>' + (s.hours_note ? esc('. ' + s.hours_note) : '') + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '')
-      : esc(s.checked ? 'No hours posted; call ahead' + (s.phone ? ' at ' + s.phone : '') : 'Hours not checked yet');
+    // each run of days ("Thu–Fri 10am to 8pm") stays on one line at phone width
+    const runs = s.hours ? s.hours.split(' · ').map((r) => '<span style="white-space:nowrap">' + esc(r) + '</span>').join(' · ') : '';
+    const hours = s.hours ? '<b>' + runs + '</b>' + (s.hours_note ? esc('. ' + s.hours_note) : '') + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '')
+      : esc(s.checked ? 'No weekly hours posted; call ahead' + (s.phone ? ' at ' + s.phone : '') + (s.hours_note ? '. ' + s.hours_note : '') : 'Hours not checked yet');
+    const where = s.address ? s.address.replace(/,\s*VT\s*\d{5}$/, '') : '';
     const leg = legText(s, list[i + 1]);
     row.innerHTML = '<span class="num">' + (i + 1) + '</span><div><div class="t">' + esc(s.name) + '</div>' +
-      '<div class="s">' + esc(facts) + '</div><div class="s" data-hours>' + hours + (s.address ? esc(' · ' + s.address) : '') + '</div>' +
+      '<div class="s">' + esc(facts) + '</div><div class="s" data-hours>' + hours + '</div>' + (where ? '<div class="s" data-where>' + esc(where) + '</div>' : '') +
       (s.blurb ? '<div class="s">' + esc(s.blurb) + '</div>' : '') + (leg ? '<div class="s" data-leg>' + esc(leg) + '</div>' : '') + '</div>';
-    row.appendChild(outLink('Map', mapUrl(s), 'pillbtn', 'Map for ' + s.name));
-    if (s.website) row.appendChild(outLink('Site', s.website, 'pillbtn', s.name + '’s website'));
+    const links = el('div', '');
+    links.style.cssText = 'display:flex;flex-direction:column;gap:6px';
+    links.appendChild(outLink('Map', mapUrl(s), 'pillbtn', 'Map for ' + s.name));
+    if (s.website) links.appendChild(outLink('Site', s.website, 'pillbtn', s.name + '’s website'));
+    row.appendChild(links);
     host.appendChild(row);
   });
   host.appendChild(el('p', 'note pad', esc('Missing a shop, or know the hours? The guide is the Brief’s own; reply to any issue and it joins the walk.')));
