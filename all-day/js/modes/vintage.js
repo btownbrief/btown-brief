@@ -262,8 +262,8 @@ const swapMeta = (p) => [p.meta.want ? 'For ' + p.meta.want : '', p.meta.size ? 
 const noMeta = () => '';
 
 function boardNote(host, what, failed) {
-  if (S.off) host.appendChild(el('p', 'note pad', esc('Posting opens soon: the board is still being set up. Everything else here works.')));
-  else if (failed) host.appendChild(el('p', 'note pad', esc('The board didn’t load. Try again in a bit.')));
+  if (S.off) host.appendChild(el('p', 'note pad', esc('Posting opens soon.')));
+  else if (failed) host.appendChild(el('p', 'note pad', esc('The board didn’t load.')));
   else host.appendChild(el('p', 'note pad', esc(what)));
 }
 
@@ -276,19 +276,18 @@ function addRow(host, label, fn) {
 /* ------------------------------------------------------- Spotted this week */
 function thanksLine() {
   const n = S.got + homes();
-  const p = el('p', 'note pad', n
-    ? '<b>' + esc('Thank you.') + '</b> ' + esc(plural(n, 'find', 'finds') + ' posted here found a home lately. No points and no prizes, just the right size in the right hands.')
-    : esc('When someone gets a find you posted, tap “Someone got it” on it and it comes off the board. No points and no prizes: just a thank-you, right here.'));
+  const p = el('p', 'note pad', n ? esc(plural(n, 'find', 'finds') + ' found a home lately.') + ' <b>' + esc('Thank you.') + '</b>' : '');
   p.dataset.thanks = String(n);
+  p.hidden = !n;
   return p;
 }
 
 function paintSpotted(host) {
-  section(host, 'Spotted this week', esc('Seen on a rack, not your size, posted so someone else can get it. A find lasts three weeks; tap the arrow if you’d want it.'));
+  section(host, 'Spotted this week');
   host.appendChild(thanksLine());
   host.appendChild(el('div', 'spacer'));
   if (S.spotted === null) host.appendChild(el('p', 'note pad', esc('Checking the racks…')));
-  else if (!S.spotted.length) boardNote(host, 'Nothing spotted right now. Seen something good that wasn’t your size? Post it.', S.failed);
+  else if (!S.spotted.length) boardNote(host, 'Nothing spotted right now.', S.failed);
   else grid(host, S.spotted, { name: 'spotted', meta: findMeta, vote: 'I’d want this', got: true });
   addRow(host, 'Post a find', composeFind);
 }
@@ -302,8 +301,7 @@ function composeFind() {
       { key: 'price', label: 'Price', type: 'int', placeholder: '28', hint: 'Whole dollars, no $ sign.' },
     ],
     body: 'Where in the shop', bodyPlaceholder: 'Back rack by the boots',
-    notes: ['Your photo goes to Stephen first. The find shows right away; its photo joins it once he okays it.',
-      'A find lasts three weeks. When someone gets it, tap “Someone got it” on your post.'],
+    notes: ['The photo shows once approved.'],
     cta: 'Post the find',
   });
   withShopList();
@@ -343,7 +341,7 @@ app.onAct('vgot', (it) => {
   };
   app.confirmBox({
     title: 'Someone got it?',
-    body: 'Nice. It comes off the board now, and the find counts toward the thank-you.',
+    body: 'It comes off the board.',
     yes: 'Mark it gone',
     onYes() {
       /* only a server that answered "round one" gets the delete; one that
@@ -383,13 +381,9 @@ function legText(s, next) {
 
 function paintShops(host) {
   const list = S.shops;
-  const checked = list ? list.filter((s) => s.hours).length : 0;
-  section(host, 'The shop guide', list && list.length
-    ? esc(plural(list.length, 'shop', 'shops') + ' in walking order, neighborhood by neighborhood from Church Street out. ' +
-      (checked ? 'Hours where we have checked them; call ahead for the rest.' : 'Hours aren’t checked yet; call ahead.'))
-    : esc('Every vintage, thrift and record shop in the Brief’s guide.'));
+  section(host, 'The shop guide', list && list.length ? '<b>' + esc(plural(list.length, 'shop', 'shops')) + '</b> · walking order' : null);
   if (!list) {
-    host.appendChild(el('p', 'note pad', esc(S.shopsFailed ? 'The shop guide didn’t load. Try again in a bit.' : 'Loading the shops…')));
+    host.appendChild(el('p', 'note pad', esc(S.shopsFailed ? 'The shop guide didn’t load.' : 'Loading the shops…')));
     return;
   }
   list.forEach((s, i) => {
@@ -412,14 +406,13 @@ function paintShops(host) {
     row.appendChild(links);
     host.appendChild(row);
   });
-  host.appendChild(el('p', 'note pad', esc('Missing a shop, or know the hours? The guide is the Brief’s own; reply to any issue and it joins the walk.')));
 }
 
 /* ------------------------------------------------------------------- Swaps */
 function paintSwaps(host) {
-  section(host, 'Swaps', esc('Trade it or give it away. No money changes hands: say what you’d take, or “free”.'));
+  section(host, 'Swaps');
   if (S.swaps === null) host.appendChild(el('p', 'note pad', esc('Checking the swap shelf…')));
-  else if (!S.swaps.length) boardNote(host, 'No swaps up right now. Got something good that doesn’t fit?', S.swapsFailed);
+  else if (!S.swaps.length) boardNote(host, 'No swaps right now.', S.swapsFailed);
   else grid(host, S.swaps, { name: 'swaps', meta: swapMeta, vote: 'I’d take this' });
   addRow(host, 'Post a swap', () => boards.compose({
     board: KEY, kind: 'swap', heading: 'Post a swap', title: 'What you have', titlePlaceholder: 'M crewneck, forest green',
@@ -428,7 +421,7 @@ function paintSwaps(host) {
       { key: 'size', label: 'Size', placeholder: 'M, 32, 9', max: 12 },
     ],
     body: 'More', bodyPlaceholder: 'Condition, and when you can meet', place: 'Neighborhood', placePlaceholder: 'Old North End',
-    notes: ['No money changes hands on a swap: a trade, or free to a good home.', 'A swap lasts three weeks. Delete it once it’s gone.'],
+    notes: ['A trade or free. No money.'],
     cta: 'Post the swap',
   }));
 }
@@ -436,10 +429,9 @@ function paintSwaps(host) {
 /* -------------------------------------------------------------- Make a tee */
 function paintTees(host) {
   const total = S.designsTotal || (S.designs ? S.designs.length : 0);
-  section(host, 'Make a tee', esc((total ? total + ' Burlington designs by Stephen, and yours next. ' : 'Burlington designs by Stephen, and yours next. ') +
-    'Tap one to see it on a model in the shop.'));
+  section(host, 'Make a tee', total ? '<b>' + esc(plural(total, 'design', 'designs')) + '</b>' : null);
   if (!S.designs) {
-    host.appendChild(el('p', 'note pad', esc(S.designsFailed ? 'The designs didn’t load. They’re all in the shop.' : 'Loading the designs…')));
+    host.appendChild(el('p', 'note pad', esc(S.designsFailed ? 'The designs didn’t load.' : 'Loading the designs…')));
   } else if (S.designs.length) {
     const r = rail(host, 'pad-top');
     S.designs.forEach((d) => {
@@ -460,16 +452,15 @@ function paintTees(host) {
   host.appendChild(links);
 }
 
-/* Send in a design: the pitch here, the form in a sheet like every other
+/* Send in a design: the button here, the form in a sheet like every other
    post. One image of the artist's own work through the photo queue
    (category 'board', consent required), a name, a line, and how they'd be
    thanked: free shirts or store credit. There is no price, no payment and
    no cash option anywhere in it. */
-const DESIGN_PITCH = 'One image of your own artwork, a name and a line about it. Stephen looks at every one. If he prints yours, he ships it, and you pick how you’re thanked: free shirts, or store credit in the shop. Nothing to pay, ever.';
 function paintMake(host) {
   const tc = el('div', 'textcard gap');
   tc.dataset.k = 'send';
-  tc.innerHTML = '<h3 class="serif">' + esc('Send in your design') + '</h3><p>' + esc(DESIGN_PITCH) + '</p>';
+  tc.innerHTML = '<h3 class="serif">' + esc('Send in your design') + '</h3>';
   const row = el('div', 'row');
   row.appendChild(button(ICON.plus + ' ' + esc('Send in your design'), '', designSheet));
   tc.appendChild(row);
@@ -479,20 +470,19 @@ function paintMake(host) {
 function designSheet() {
   app.sheet('Send in your design', (body, card, close) => {
     if (!app.user()) { signInNote(body); return; }
-    body.appendChild(el('p', 'sheet-note', esc(DESIGN_PITCH)));
     body.appendChild(photoForm({
       kind: 'design', pick: 'Choose your design', titleLabel: 'What’s it called?', titlePlaceholder: 'Rainy Church Street',
       noteLabel: 'One line about it', notePlaceholder: 'Ink, drawn from the Leunig’s corner',
-      consent: 'This is my own artwork, and the Brief may print it on shirts and show it in All Day and the newsletter. It’s checked before it shows.',
+      consent: 'This is my own artwork, and the Brief may print it on shirts and show it in All Day and the newsletter.',
       choice: [['shirts', 'Free shirts'], ['credit', 'Store credit']], cta: 'Send it to Stephen',
-      sent: 'Sent. Stephen looks at every design; it shows under Sent in once he has.', done: close,
+      sent: 'Sent. It shows once approved.', done: close,
     }));
   });
 }
 
 function paintSent(host) {
   if (!S.sent || !S.sent.length) return;
-  host.appendChild(el('div', 'tdiv', '<span>' + esc('Sent in') + '</span><span class="s">' + esc('designs from neighbors, approved') + '</span>'));
+  host.appendChild(el('div', 'tdiv', '<span>' + esc('Sent in') + '</span>'));
   host.appendChild(el('div', 'spacer'));
   /* how the artist asked to be thanked is for Stephen, not the card (a
      design from before the kind carried it at the end of its body) */
@@ -501,15 +491,15 @@ function paintSent(host) {
 
 /* --------------------------------------------------------------- Fit check */
 function paintFit(host) {
-  section(host, 'Fit check', esc('Show off a find, or a tee from the shop. Newest first.'));
+  section(host, 'Fit check');
   if (S.fit === null) host.appendChild(el('p', 'note pad', esc('Loading the fits…')));
-  else if (!S.fit.length) boardNote(host, 'No fit checks yet. Thrifted something great? Show it.', S.failed);
+  else if (!S.fit.length) boardNote(host, 'No fit checks yet.', S.failed);
   else grid(host, S.fit, { name: 'fit', meta: noMeta, vote: 'Love this fit' });
   addRow(host, 'Post a fit check', fitSheet);
 }
 
 function signInNote(body) {
-  body.appendChild(el('p', 'sheet-note', esc('Posting needs the email sign-in: one email, no password. Reading and voting never do.')));
+  body.appendChild(el('p', 'sheet-note', esc('Sign in to post.')));
   const r = el('div', 'linkrow');
   r.appendChild(button('Sign in', '', () => app.openSettings()));
   body.appendChild(r);
@@ -521,8 +511,8 @@ function fitSheet() {
     body.appendChild(photoForm({
       kind: 'fit', pick: 'Choose a photo', titleLabel: 'What are you wearing?', titlePlaceholder: 'All thrifted except the socks',
       noteLabel: 'Where it’s from', notePlaceholder: 'Coat from Barge Canal, tee from the Brief',
-      consent: 'I took this photo, and the Brief may show it in All Day and the newsletter. Photos are checked before they show.',
-      cta: 'Post it', sent: 'Posted. It shows once Stephen has checked the photo.', done: close,
+      consent: 'I took this photo, and the Brief may show it in All Day and the newsletter.',
+      cta: 'Post it', sent: 'Posted. It shows once approved.', done: close,
     }));
   });
 }
@@ -550,7 +540,7 @@ function photoForm(o) {
     return i;
   };
 
-  const nameRow = row('Your first name', text('display_name', 32, 'Maya, or Maya R.'), false, 'Neighbors see it on your post. Asked once.');
+  const nameRow = row('Your first name', text('display_name', 32, 'Maya, or Maya R.'), false, 'Neighbors see it.');
   nameRow.hidden = true;
   f.appendChild(nameRow);
 
@@ -647,7 +637,6 @@ function shirtSheet(p) {
   app.sheet('Put it on a shirt', (body) => {
     if (p.photo) body.appendChild(el('span', 'c-media r45', art(boards.photoUrl(p.photo))));
     body.appendChild(el('p', 'pick-why', '<b>' + esc(p.title) + '</b>' + esc(' by ' + (p.author || 'a neighbor'))));
-    body.appendChild(el('p', 'sheet-note', esc((p.author || 'The maker') + ' said yes to a shirt. Stephen picks neighbors’ art for the shop and prints it; the maker gets free shirts or store credit, never cash. Votes on the Art wall put it at the top of his list.')));
     const links = el('div', 'linkrow');
     links.appendChild(button('Vote for it on the Art wall', '', () => app.go('art', 'b-' + p.id)));
     links.appendChild(outLink('Browse the shop', SHOP_URL));
