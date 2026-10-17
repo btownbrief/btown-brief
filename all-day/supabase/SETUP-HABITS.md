@@ -1,8 +1,9 @@
-# Habits tab: the one paste
+# Habits tab: the pastes
 
-One paste, about three minutes, safe to run again.
+Two pastes, a few minutes in all, each safe to run again. Part A sets the tab up; Part B lifts the
+habit limit. Already did Part A? Do Part B only.
 
-## What to do
+## Part A: set up Habits (one paste)
 
 1. Open the Supabase dashboard and pick the shared project (`jnouvwxomrcffqwilqkq`).
 2. Click **SQL Editor** in the left bar, then **New query**.
@@ -25,8 +26,24 @@ The Habits tab works either way, it just has less to do:
 ## What readers see after
 
 - The tile still reads "No season scheduled yet" until a season exists (see below).
-- A signed-in reader is asked a first name and a phone once, then gets the tracker: up to
-  five habits, a tap a day, the streak and this week's seven dots.
+- A signed-in reader is asked a first name and a phone once, then gets the tracker: as many
+  habits as they keep, a tap a day, the streak and this week's seven dots.
+
+## Part B: lift the habit limit (one paste)
+
+For a project that already has Part A. About a minute.
+
+1. Supabase dashboard, the shared project (`jnouvwxomrcffqwilqkq`), **SQL Editor**, **New query**.
+2. Open `all-day/supabase/sz-ROUND2.sql` from this repository, copy the **whole** file, paste it in.
+3. Click **Run**. It should finish with "Success. No rows returned."
+
+It replaces one function, `sz_rules()`, and changes nothing else; no row is touched. Readers can
+then keep as many habits as they like. The only ceiling left is 100 habits a person, there so a
+script cannot make millions; the app never mentions it, and someone who did reach it would read
+"That's a lot of habits. Archive a few first."
+
+A fresh project needs only Part A: `sz-SETUP.sql` already carries the same rules. If `sz-SETUP.sql`
+is ever pasted again on the live project, nothing goes back; it has the same rules too.
 
 ## Putting a season on the tile
 
