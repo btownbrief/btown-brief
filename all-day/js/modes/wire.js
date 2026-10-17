@@ -880,23 +880,23 @@ function wmRow(it, why, n, was) {
 
 /* One item in the river. A plain headline is the tight row; posts, videos
    and an update's lead get the bigger cards. */
-function draw(c, leadWhy) {
+function draw(c, leadWhy, every) {
   const o = { greenLocal: greenOf(c), noComments: !c.comments };
   let n;
   if (c.kind === 'video') n = cards.video(c, o);
   else if (c.kind === 'post') n = cards.post(c, o);
   else if (leadWhy) n = cards.pick({ ...c, media: c.thumb, thumb: '', why: leadWhy, eyebrow: 'The lead' }, o);
   else n = cards.row(c, o);
-  return mark3(n, c);
+  return mark3(n, c, every);
 }
 /* The Wire's colour on a card: its source's mark (X, Facebook, Reddit,
    Instagram, a newsletter) as a left accent, and the green local tint on
    Everything, where local and national share the list (Stephen,
    2026-10-17: "in my old All Day feed, something local was usually green"). */
-function mark3(n, c) {
+function mark3(n, c, every = geo() === 'everything') {
   if (!n) return n;
   if (SRC_CH.has(c.ch)) n.classList.add('w-src-' + c.ch);
-  if (c.local && geo() === 'everything') n.classList.add('w-local');
+  if (c.local && every) n.classList.add('w-local');
   return n;
 }
 
@@ -1069,6 +1069,7 @@ const leftMark = (at) => {
 function fill(run) {
   if (W.run !== run || run.done) return;
   const added = [];
+  const every = geo() === 'everything';
   while (run.shown < run.limit || run.until) {
     if (!run.queue.length) {
       const date = run.lastDate == null ? run.first : olderThan(run.lastDate);
@@ -1117,7 +1118,7 @@ function fill(run) {
     } else if (e.newline) node = cards.newline(e.newline);
     else if (e.note) node = el('p', 'note pad', esc(e.note));
     else if (e.c) {
-      node = draw(e.c, e.why);
+      node = draw(e.c, e.why, every);
       if (node) {
         run.shown++; added.push(e.c.k);
         /* a faint tint on every other row, so a long list is easier on the eyes */
