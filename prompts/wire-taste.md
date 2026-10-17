@@ -86,9 +86,13 @@ rank 6, at most two; otherwise they live in the river.
 Put **one genuinely positive local story in the top three** when the day has one. Never
 fake it: a weak happy story does not beat a strong consequential one.
 
-Rank about twenty-five local picks and up to fifteen national. National picks pass the same
-consequence test at national scale (a Fed decision, a shutdown clock, a major ruling, a
-public-health finding). Skip politics as theater, celebrity, scores and outrage.
+Rank up to forty: about half local and half national on an ordinary day, and let the
+news decide the exact split, from fifteen to twenty-five each. Stephen's readers get
+their fill of local news from the newsletter itself, so the picks are where they catch
+the big national stories, and where the big local stories show up first, before they
+reach Monday's or Friday's edition. National picks pass the same consequence test at
+national scale (a Fed decision, a shutdown clock, a major ruling, a public-health
+finding). Skip politics as theater, celebrity, scores and outrage.
 
 Lines marked **river only** (single crime stories, threads without a conversation,
 places outside the area) may join the river but never the picks.
