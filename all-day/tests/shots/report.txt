@@ -1768,6 +1768,7 @@
   ok   Watch, live from films.json › films.json is the list, and its subtitle is only the count to go
   ok   Watch, live from films.json › every film in its TMDB order
   ok   Watch, live from films.json › the chip row is the table of contents
+  ok   Watch, live from films.json › a films.json with no shows has no Movies / TV switch
   ok   Watch, live from films.json › Coming soon: in theaters now (a 1966 re-release is back in theaters), then what opens, labelled theaters or streaming
   ok   Watch, live from films.json › a play disc only where TMDB has a trailer
   ok   Watch, live from films.json › posters are TMDB paths at w342, loaded lazily
@@ -1801,7 +1802,9 @@
   ok   Watch, the starter list, two dots and a reload (live, signed out) › Just me again: one dot, and yours is kept
   ok   Watch, the starter list, two dots and a reload (live, signed out) › signed out, a star says to sign in, with the button
   ok   Watch, the starter list, two dots and a reload (live, signed out) › and nothing is posted
-  ok   Watch, the starter list, two dots and a reload (live, signed out) › Watch chat: a door to the community channel and to Telegram
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › Watch chat: Talk opens the Telegram watch chat first, the community second
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › Talk is the big button; the community is the smaller one
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › and no paragraph
   ok   Watch, the starter list, two dots and a reload (live, signed out) › no chat is built here
   ok   Watch, the starter list, two dots and a reload (live, signed out) › with no ratings yet, town ratings say so
   ok   Watch, the starter list, two dots and a reload (live, signed out) › no console errors
@@ -1831,13 +1834,16 @@
   ok   Watch, filters and the rating sort on frozen data (demo) › Horror alone
   ok   Watch, filters and the rating sort on frozen data (demo) › a town rating only on films with three or more ratings (7)
   ok   Watch, filters and the rating sort on frozen data (demo) › Causeway, with two, shows none
-  ok   Watch, filters and the rating sort on frozen data (demo) › Town rating: the rated films first, highest average first
+  ok   Watch, filters and the rating sort on frozen data (demo) › Town favorites: the rated films first, highest average first
   ok   Watch, filters and the rating sort on frozen data (demo) › then the rest in list order
-  ok   Watch, filters and the rating sort on frozen data (demo) › List order puts it back
+  ok   Watch, filters and the rating sort on frozen data (demo) › and the trending films not on the list come last
+  ok   Watch, filters and the rating sort on frozen data (demo) › and the Town favorites chip is the one on
+  ok   Watch, filters and the rating sort on frozen data (demo) › Top rated puts it back
   ok   Watch, filters and the rating sort on frozen data (demo) › Coming soon: ten trailers
   ok   Watch, filters and the rating sort on frozen data (demo) › no console errors
-  ok   Watch, town ratings and the screening vote (demo) › town ratings this week: only films with three or more this week (5)
-  ok   Watch, town ratings and the screening vote (demo) › exactly those films
+  ok   Watch, town ratings and the screening vote (demo) › town ratings this week: only titles with three or more this week (6)
+  ok   Watch, town ratings and the screening vote (demo) › exactly those titles
+  ok   Watch, town ratings and the screening vote (demo) › a show the town rated is among them
   ok   Watch, town ratings and the screening vote (demo) › Causeway and Kindling, two ratings each this week, are left out
   ok   Watch, town ratings and the screening vote (demo) › most-rated first
   ok   Watch, town ratings and the screening vote (demo) › five films on the ballot
@@ -1872,6 +1878,81 @@
   ok   Watch, deep links (demo) › a coming-soon poster lands and flashes
   ok   Watch, deep links (demo) › a film that is not on the list says it has moved on
   ok   Watch, deep links (demo) › no console errors
+  ok   Watch, Movies and TV (demo) › a Movies / TV switch at the top, on Movies
+  ok   Watch, Movies and TV (demo) › and it is the first thing on the tab
+  ok   Watch, Movies and TV (demo) › TV: the top shows, in TMDB order
+  ok   Watch, Movies and TV (demo) › On TV now: a new season, one coming, then airing
+  ok   Watch, Movies and TV (demo) › no theaters and no screening call on TV
+  ok   Watch, Movies and TV (demo) › the table of contents follows
+  ok   Watch, Movies and TV (demo) › a show carries the same two dots
+  ok   Watch, Movies and TV (demo) › the show sheet: seasons, episode length, genres
+  ok   Watch, Movies and TV (demo) › a show’s rating carries TV_BASE plus its TMDB id, in the same film field
+  ok   Watch, Movies and TV (demo) › and back to the films
+  ok   Watch, Movies and TV (demo) › a show deep link switches to TV and flashes
+  ok   Watch, Movies and TV (demo) › on TV
+  ok   Watch, Movies and TV (demo) › no console errors
+  ok   Watch, the ranking you choose (demo) › six orders, by name
+  ok   Watch, the ranking you choose (demo) › Top rated is on: the label is the order
+  ok   Watch, the ranking you choose (demo) › and no sentence explains the order
+  ok   Watch, the ranking you choose (demo) › Trending: TMDB’s week, in its order
+  ok   Watch, the ranking you choose (demo) › Newest: everything released, newest first
+  ok   Watch, the ranking you choose (demo) › By genre: a shelf per genre, and no genre chips
+  ok   Watch, the ranking you choose (demo) › each shelf ranked as Top rated
+  ok   Watch, the ranking you choose (demo) › the biggest genre first
+  ok   Watch, the ranking you choose (demo) › Shuffle: only what you have not seen, in a new order
+  ok   Watch, the ranking you choose (demo) › tap it again for another order of the same films
+  ok   Watch, the ranking you choose (demo) › a redraw keeps the order
+  ok   Watch, the ranking you choose (demo) › watch: nothing fixed or sticky inside the tab
+  ok   Watch, the ranking you choose (demo) › watch: uppercase only in the caps roles
+  ok   Watch, the ranking you choose (demo) › watch: no monospace
+  ok   Watch, the ranking you choose (demo) › watch: no escaped markup, undefined or NaN on the page
+  ok   Watch, the ranking you choose (demo) › watch: no sideways scroll at 390
+  ok   Watch, the ranking you choose (demo) › watch: at most two subnav rows
+  ok   Watch, the ranking you choose (demo) › no console errors
+  ok   Watch, the time machine (demo) › Back then opens a year ago: October 2025
+  ok   Watch, the time machine (demo) › that month’s big films, theaters then streaming
+  ok   Watch, the time machine (demo) › ‹ is a month earlier
+  ok   Watch, the time machine (demo) › › a month later
+  ok   Watch, the time machine (demo) › a year chip keeps the month: November 2022
+  ok   Watch, the time machine (demo) › the years run back five
+  ok   Watch, the time machine (demo) › a deep link to the oldest month lands there, and ‹ stops
+  ok   Watch, the time machine (demo) › on TV it shows the month’s shows
+  ok   Watch, the time machine (demo) › a title from back then opens the same sheet: seen, want, rate
+  ok   Watch, the time machine (demo) › no console errors
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › the screening call sits right under Coming soon
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › it says what it does, and nothing else
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › the three theaters
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm is closed, so the first open with shows today leads
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Majestic 10: the rest of today’s times, by first show; a title the tab knows gets a trailer button
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › the town and the day
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › a Showtimes button to its own page
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm: closed until Oct 30
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › and the first day back’s schedule
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › its Showtimes button
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › a known title opens its film sheet
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › the call scrolls the ballot into view
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: nothing fixed or sticky inside the tab
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: uppercase only in the caps roles
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: no monospace
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: no escaped markup, undefined or NaN on the page
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: no sideways scroll at 390
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › watch: at most two subnav rows
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › no console errors
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › Back then: TMDB posters at w342, a key that disagrees with its id left out
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a title is text, never markup, and a bad poster path is dropped
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › and the month is named
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › theaters are the known three, whatever the file adds
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › Majestic 10 from showtimes.json: escaped titles, bad times dropped, TMDB posters at w185
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a theater that did not read: no rows, and its own Showtimes page (never the file’s link)
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a theater missing from the file: just its button
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › live TV shelves from films.json
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a show links to its TMDB TV page
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › the switch is remembered on this phone
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a deep link to a title from back then opens its sheet once the time machine arrives
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › no console errors
+  ok   Watch, no time machine or showtimes yet (live) › no time-machine file: no Back then
+  ok   Watch, no time machine or showtimes yet (live) › no showtimes file: the theater rows still offer their Showtimes button
+  ok   Watch, no time machine or showtimes yet (live) › nothing but the two 404s in the console
   ok   interactions, demo › the star saves and lights the mast
   ok   interactions, demo › the Saved sheet lists it
   ok   interactions, demo › Escape closes the sheet
@@ -1898,7 +1979,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 8ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 13ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1952,7 +2033,7 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › a bare #reddit opens the Wire on its Reddit chip
   ok   cutover: every old tab’s link lands on the nearest new tab › an old Music link opens What Now on Tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › no console errors
-  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped past Food (v50) for Vintage, to v51 or later
+  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped past Vintage (v51) for Watch, to v52 or later
   ok   shell fixes: the offline shell carries the new modules › every module in js/ is in the offline list
   ok   shell fixes: the offline shell carries the new modules › and nothing in the offline list is missing from js/
   ok   shell fixes: the offline shell carries the new modules › every file in the offline list exists

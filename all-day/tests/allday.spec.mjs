@@ -3540,8 +3540,9 @@ async function theWatch(browser, base) {
     const pos = await page.waitForFunction(() => { const v = document.querySelector('#panel-watch [data-sec="vote"]').getBoundingClientRect().top; return v > 0 && v < innerHeight / 2; }, null, { timeout: 4000 }).then(() => true, () => false);
     check(pos, 'the call scrolls the ballot into view', '');
     await pageRules(page, 'watch', 390);
+    await page.click(wPanel + ' [data-theater] button:has-text("Majestic")');
     await page.evaluate(() => document.querySelector('#panel-watch').scrollTo(0, 0));
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(700);
     await page.screenshot({ path: path.join(SHOTS, 'demo-watch-390-top.png') });
     await page.evaluate(() => document.querySelector('#panel-watch [data-sec="theaters"]').scrollIntoView());
     await page.waitForTimeout(200);
