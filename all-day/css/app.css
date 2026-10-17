@@ -577,6 +577,20 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .poster .seen i { width: 10px; height: 10px; border-radius: var(--r-round); border: 2px solid var(--on-media); background: transparent; box-shadow: 0 0 0 1px var(--media-line); }
 .poster .seen i.on { background: var(--on-media); }
 .poster .rate { position: absolute; right: 8px; bottom: 8px; font-size: var(--fs-small); font-weight: 700; color: var(--on-media); background: var(--media-chip); padding: 2px 6px; border-radius: var(--r-sm); font-variant-numeric: tabular-nums; }
+/* Watch: who hosts the screening, the Watching-with-someone switch and its
+   two-dot legend, and Back then opened into a grid */
+.wnight { padding-top: 10px; color: var(--ink-2); }
+.wnight a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.wwith { padding: 0 var(--gutter) 8px; }
+.wwith .consent { margin-top: 0; align-items: center; font-size: var(--fs-sub); font-weight: 600; color: var(--ink); }
+.wwith .consent input { margin-top: 0; }
+.wwith .note { margin-top: 2px; }
+.wlegend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s4); margin-top: var(--s2); font-size: var(--fs-meta); color: var(--ink-2); }
+.wlegend .wwho { display: inline-flex; align-items: center; gap: 6px; }
+.wlegend .wdots { display: inline-flex; gap: 3px; }
+.wlegend i { width: 10px; height: 10px; border-radius: var(--r-round); border: 2px solid var(--ink-3); }
+.wlegend i.on { background: var(--ink-2); border-color: var(--ink-2); }
+.grid3.wgrid { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--s4) var(--s3); padding-bottom: var(--s2); }
 .vcard { display: block; width: 240px; }
 .vcard .c-media { margin: 0; }
 .vcard .t { display: block; font-size: var(--fs-sub); font-weight: 600; line-height: 1.3; margin-top: 8px; }
@@ -690,6 +704,33 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .ftile { display: block; text-align: left; min-width: 0; }
 .ftile .c-media { margin: 0; }
 .ftile .s { display: block; font-size: var(--fs-small); color: var(--ink-3); margin-top: 5px; line-height: 1.35; }
+
+/* Vintage: a colour per kind of shop (the number badge, the kind's name, the
+   map pin and the button's dots), coloured neighborhood dividers, the shop
+   map and the Top designs row. --vc and --vc-ink are Vintage's own, set from
+   the tokens; nothing here is a new colour. */
+:is(.vshops, .vmap, .mapbtn) .k-thrift { --vc: var(--local); --vc-ink: var(--local-ink); }
+:is(.vshops, .vmap, .mapbtn) .k-vintage { --vc: var(--mark-6); --vc-ink: var(--on-media); }
+:is(.vshops, .vmap, .mapbtn) .k-consign { --vc: var(--mark-3); --vc-ink: var(--on-media); }
+:is(.vshops, .vmap, .mapbtn) .k-antique { --vc: var(--accent); --vc-ink: var(--now-ink); }
+:is(.vshops, .vmap, .mapbtn) .k-books { --vc: var(--mark-5); --vc-ink: var(--on-media); }
+.vshops .vk { color: color-mix(in srgb, var(--vc) 62%, var(--ink)); font-weight: 600; }
+.vkeys { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 0 var(--gutter) 4px; font-size: var(--fs-meta); }
+.vkeys .vk i { display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: var(--r-round); background: var(--vc); }
+.tdiv.vhood { color: color-mix(in srgb, var(--accent) 85%, var(--ink)); border-bottom: 2px solid color-mix(in srgb, var(--accent) 50%, transparent); }
+.lrow.vshop { align-items: start; }
+.lrow.vshop .t { font-weight: 700; }
+.lrow.vshop .num.vbadge { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: var(--r-round);
+  background: var(--vc); color: var(--vc-ink); font-family: var(--sans); font-size: var(--fs-meta); font-weight: 700; }
+.vlinks { display: flex; flex-direction: column; gap: 6px; }
+.vshops.insheet .lrow { padding-left: 0; padding-right: 0; border-bottom: 0; }
+.vm-dot { fill: var(--vc); }
+.vmap { height: min(58vh, 520px); border-radius: var(--r-media); overflow: hidden; background: var(--paper-2); margin-bottom: 8px; }
+.vmap .vm-pin { display: flex; align-items: center; justify-content: center; border-radius: var(--r-round); background: var(--vc); color: var(--vc-ink);
+  border: 2px solid var(--raised); box-shadow: var(--shadow-pill); font-family: var(--sans); font-size: var(--fs-small); font-weight: 700; line-height: 1; }
+.vmap .vm-me { fill: var(--ink); fill-opacity: 1; stroke: var(--raised); }
+.rail.vtop { align-items: flex-start; }
+.rail.vtop > .card.board { width: 176px; }
 
 /* the spinner: one big button and one answer */
 .spin { padding: 8px var(--gutter) 4px; text-align: center; }
@@ -873,12 +914,36 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .audio .speed { grid-column: 1 / -1; display: flex; gap: 6px; }
 .audio .speed button { height: 36px; min-width: 56px; padding: 0 12px; border-radius: var(--r-pill); border: 1px solid currentColor; color: var(--on-ink); opacity: .7; font-size: var(--fs-meta); font-weight: 600; }
 .audio .speed button[aria-pressed="true"] { background: var(--on-ink); border-color: var(--on-ink); color: var(--ink); opacity: 1; }
-.linkrow.brieflinks { padding: 12px var(--gutter) 0; flex-wrap: nowrap; }
-.linkrow.brieflinks .btn { flex: 1 1 0; min-width: 0; }
-/* On Air: the rest of a night's Btown TV edition, two rows deep in one sideways scroll */
+.linkrow.brieflinks { padding: 12px var(--gutter) 0; flex-direction: column; align-items: stretch; }
+.linkrow.brieflinks .btn { width: 100%; }
+/* On Air: the rest of a night's Btown TV edition, two rows deep in one sideways scroll,
+   straight under the picks with no header of its own (one section) */
 .rail.tworow { display: grid; grid-auto-flow: column; grid-template-rows: auto auto; grid-auto-columns: 156px; row-gap: 16px; }
 .rail.tworow > .vcard { width: auto; min-width: 0; }
 .rail.tworow .vcard .t { font-size: var(--fs-meta); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rail-wrap + .rail-wrap { margin-top: var(--s2); }
+/* On Air: the whole edition, a filled card with three covers fanned on the left */
+.wholeed { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; width: calc(100% - 2 * var(--gutter)); margin: 14px var(--gutter) 4px; padding: 14px 14px 14px 16px; border-radius: var(--r-media); background: var(--ink); color: var(--on-ink); text-align: left; }
+.wholeed:active { transform: scale(.98); }
+.wholeed .fan { display: flex; }
+.wholeed .fan .th { position: relative; display: block; width: 64px; aspect-ratio: 16 / 9; border-radius: var(--r-sm); overflow: hidden; background: var(--paper-2); box-shadow: 0 0 0 2px var(--ink); }
+.wholeed .fan .th + .th { margin-left: -36px; }
+.wholeed .fan .th:nth-child(2) { transform: translateY(-5px); }
+.wholeed .fan .th:nth-child(3) { transform: translateY(-10px); }
+.wholeed .t { display: block; font-family: var(--serif); font-size: var(--fs-section); font-weight: 500; line-height: var(--lh-tight); }
+.wholeed .s { display: block; font-size: var(--fs-meta); font-weight: 600; opacity: .8; margin-top: 4px; }
+.wholeed > .i { width: 24px; height: 24px; }
+/* On Air: playlists, and the players a playlist opens in its sheet */
+.plrow { cursor: pointer; }
+.plrow .s.pn { color: var(--ink-2); margin-top: 3px; }
+.plrow .th.svc { display: flex; align-items: center; justify-content: center; color: var(--on-media); background: var(--mark-4); }
+.plrow .th.svc .i { width: 24px; height: 24px; }
+.plrow[data-service="spotify"] .th.svc { background: var(--mark-2); }
+.plrow[data-service="youtube"] .th.svc { background: var(--mark-0); }
+.plrow[data-service="apple"] .th.svc { background: var(--mark-6); }
+.plrow[data-service="soundcloud"] .th.svc { background: var(--mark-1); }
+.embed.spotify.list { height: 352px; }
+.embed.yt { aspect-ratio: 16 / 9; height: auto; }
 
 .stat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 var(--gutter); }
 .stat div { border: 1px solid var(--line); border-radius: var(--r-media); padding: 12px; }
@@ -1061,6 +1126,9 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 @keyframes hb-press { 50% { transform: scale(.97); } }
 .hb-add { padding: var(--s4) var(--gutter) 0; }
 .btn.hb-addbtn { height: var(--hit); }
+/* signed out: the one quiet line under the list; a full 44px target, small type */
+.btn.hb-sync { display: flex; height: var(--hit); margin: var(--s4) var(--gutter) 0; padding: 0; background: transparent; color: var(--ink-3);
+  font-size: var(--fs-meta); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .hb-form { padding-top: 0; }
 .hb-freq { align-self: stretch; }
 .hb-n { margin-top: var(--s2); }

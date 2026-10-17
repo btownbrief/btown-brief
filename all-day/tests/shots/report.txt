@@ -1328,7 +1328,7 @@
   ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › a tile opens its own listing
   ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › and a link to the full events calendar
   ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › no console errors
-  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › dark and 1280: the card keeps its fill and its height, sky and all
+  ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › dark and 1280: the card keeps its fill and its height
   ok   What Now, at a glance: the weather card and Happening today (demo, 2 pm) › no console errors
   ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › the card leads with the fresh observation, mostly cloudy
   ok   What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles) › today’s high, and tonight’s low rather than last night’s
@@ -1423,6 +1423,12 @@
   ok   Food, the Weekly Bite and Feature a dish (live) › with consent, the photo uploads to the photo queue’s bucket
   ok   Food, the Weekly Bite and Feature a dish (live) › and goes to the moderation queue as a dish, with consent, the place and the line
   ok   Food, the Weekly Bite and Feature a dish (live) › the reader is told it is in the queue
+  ok   Food, the Weekly Bite and Feature a dish (live) › the form says it covers both
+  ok   Food, the Weekly Bite and Feature a dish (live) › and asks which: At a place (the default) or Made at home
+  ok   Food, the Weekly Bite and Feature a dish (live) › made at home: the place field goes away
+  ok   Food, the Weekly Bite and Feature a dish (live) › a home dish needs no place: it goes to the same queue with “Made at home” in the place field (no SQL change)
+  ok   Food, the Weekly Bite and Feature a dish (live) › no console errors
+  ok   Food, the Weekly Bite and Feature a dish (live) › a home dish as the Bite reads “Made at home”, with no area and no place button
   ok   Food, the Weekly Bite and Feature a dish (live) › no console errors
   ok   Food, the Weekly Bite and Feature a dish (live) › with no dish approved, the Bite invites the first one
   ok   Food, the Weekly Bite and Feature a dish (live) › demo: the consent box is required there too
@@ -1773,7 +1779,7 @@
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › which opens on People, on Fitness, its sheet up
   ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no console errors
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
-  ok   On Air, demo › the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights
+  ok   On Air, demo › the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Playlists, Past nights
   ok   On Air, demo › the sections run in that order
   ok   On Air, demo › no section carries an explanatory subtitle
   ok   On Air, demo › no end-of-tab line about when things land
@@ -1797,13 +1803,14 @@
   ok   On Air, live › nothing autoplays
   ok   On Air, live › today’s clip: the card says today and its length
   ok   On Air, live › live: the Brief’s own show is first in Podcasts
+  ok   On Air, live › live: data/playlists.json is still TODO placeholders, so no Playlists section and no chip
   ok   On Air, live › Btown TV: “Play tonight on your TV” opens tonight’s playlist in a new tab
   ok   On Air, live › under the Btown TV header, before the rail, with the play and external icons
   ok   On Air, live › live: tonight’s local picks, the pick and the Burlington & Vermont shelf
   ok   On Air, live › the transcript hides the voice’s pacing marks ([short pause])
   ok   On Air, live › no mention of AI on the card or the transcript
   ok   On Air, live › the card says when it is read
-  ok   On Air, live › “Read it instead” shows the script the voice read
+  ok   On Air, live › “Read the three-minute recap” shows the script the voice read
   ok   On Air, live › play loads today’s MP3 from the wire-audio branch into the shell’s player
   ok   On Air, live › the Brief plays at 1.25x by default, pitch kept
   ok   On Air, live › 1.5x speeds up the playing clip at once, no reload
@@ -1831,7 +1838,12 @@
   ok   On Air, Play on your TV › none: no console errors
   ok   On Air, Play on your TV › demo: the button toasts instead of leaving
   ok   On Air, more of the edition and past nights › Local: the whole edition is on the face, each video once (5 picks + 22 more = 27)
-  ok   On Air, more of the edition and past nights › the second rail is headed with its count
+  ok   On Air, more of the edition and past nights › one section: one header, the rest of the night straight under the picks, no second header
+  ok   On Air, more of the edition and past nights › the picks big on top, the rest smaller below
+  ok   On Air, more of the edition and past nights › the whole edition says what it is and how many: “All 27 videos from tonight”
+  ok   On Air, more of the edition and past nights › a full-width filled card, three covers fanned on it, not a ghost button
+  ok   On Air, more of the edition and past nights › right under the section: after the second rail, the last thing in the Btown TV block
+  ok   On Air, more of the edition and past nights › it opens all 27 videos
   ok   On Air, more of the edition and past nights › the second rail is two rows deep, every cover full width
   ok   On Air, more of the edition and past nights › at 390 wide, four whole covers on screen and the next ones peeking (was one and a half)
   ok   On Air, more of the edition and past nights › and it scrolls sideways for the rest
@@ -1853,15 +1865,59 @@
   ok   On Air, speed and the newsletter › 1.5x picked
   ok   On Air, speed and the newsletter › and remembered on this phone
   ok   On Air, speed and the newsletter › still 1.5x after a reload
-  ok   On Air, speed and the newsletter › “Read the Brief” opens btownbrief.com in a new tab
-  ok   On Air, speed and the newsletter › beside “Read it instead”, under the card
-  ok   On Air, speed and the newsletter › one row at 390 wide
+  ok   On Air, speed and the newsletter › “Read the whole Brief at btownbrief.com” opens the newsletter in a new tab
+  ok   On Air, speed and the newsletter › the transcript says it is the recap, the newsletter says it is the whole Brief (Stephen, 2026-10-17)
+  ok   On Air, speed and the newsletter › stacked, each full width at 390, nothing cut off
   ok   On Air, speed and the newsletter › no console errors
   ok   On Air, the audio card › no clip: no audio card, no section, no chip
   ok   On Air, the audio card › none: no console errors
   ok   On Air, the audio card › no clip today: the latest one, with its date (Friday, October 16)
   ok   On Air, the audio card › the card says when it is read; the header carries no subtitle
   ok   On Air, the audio card › yesterday: no console errors
+  ok   On Air, the Brief plays › today: the play button loads 2026-10-17.mp3 from the wire-audio branch
+  ok   On Air, the Brief plays › today: the play promise resolves
+  ok   On Air, the Brief plays › today: and the clip is actually playing: its clock moves past half a second
+  ok   On Air, the Brief plays › today: served as audio/mpeg
+  ok   On Air, the Brief plays › today: at the Brief’s 1.25x
+  ok   On Air, the Brief plays › today: the button turns to pause and the player is up
+  ok   On Air, the Brief plays › today: a second tap pauses
+  ok   On Air, the Brief plays › today: no console errors
+  ok   On Air, the Brief plays › yesterday: the play button loads 2026-10-16.mp3 from the wire-audio branch
+  ok   On Air, the Brief plays › yesterday: the play promise resolves
+  ok   On Air, the Brief plays › yesterday: and the clip is actually playing: its clock moves past half a second
+  ok   On Air, the Brief plays › yesterday: served as audio/mpeg
+  ok   On Air, the Brief plays › yesterday: at the Brief’s 1.25x
+  ok   On Air, the Brief plays › yesterday: the button turns to pause and the player is up
+  ok   On Air, the Brief plays › yesterday: a second tap pauses
+  ok   On Air, the Brief plays › yesterday: no console errors
+  ok   On Air, the Brief plays › WebKit: the play button starts the clip at 1.25x and its clock moves
+  ok   On Air, the Brief plays › WebKit: no console errors
+  ok   On Air, the Brief plays › the test clip runs about a minute
+  ok   On Air, the Brief plays › heard to its last second, it starts again from the top instead of running out at once
+  ok   On Air, the Brief plays › played to the end, its place is cleared, so tomorrow’s visit and the next tap start at 0:00
+  ok   On Air, the Brief plays › and the button is a play button again
+  ok   On Air, the Brief plays › pressing play again after the end plays it from the top
+  ok   On Air, the Brief plays › no console errors
+  ok   On Air, the Brief plays › part way through (40 s), it resumes there
+  ok   On Air, the Brief plays › resume: no console errors
+  ok   On Air, the Brief plays › a clip that fails to load says so in a toast
+  ok   On Air, the Brief plays › and the button goes back to play
+  ok   On Air, the Brief plays › sw.js lets audio, video and byte ranges past before the raw.githubusercontent.com branch
+  ok   On Air, playlists › Stephen’s playlists first, then readers’, newest first
+  ok   On Air, playlists › his are marked “Stephen’s pick”
+  ok   On Air, playlists › readers’ under their own divider
+  ok   On Air, playlists › Apple Music and SoundCloud open on their own sites, in a new tab
+  ok   On Air, playlists › “Share your playlist” opens an email to the Brief, filled in
+  ok   On Air, playlists › demo: a Spotify playlist opens its sheet, and says the player comes in the real build
+  ok   On Air, playlists › demo: no console errors
+  ok   On Air, playlists › only real playlist links show: a TODO placeholder, javascript:, a broken quote, http, the wrong service, an unknown or inherited one (“constructor”) and a single video are all left out
+  ok   On Air, playlists › a title, a name and a note from the file are text, never markup
+  ok   On Air, playlists › the Playlists chip sits after Podcasts
+  ok   On Air, playlists › a tap on a Spotify playlist opens Spotify’s player for it in a sheet
+  ok   On Air, playlists › with a link out to Spotify
+  ok   On Air, playlists › opening a player stops the Brief: one sound at a time
+  ok   On Air, playlists › a YouTube playlist plays in YouTube’s player, 16:9
+  ok   On Air, playlists › live: no console errors
   ok   Games, live › one get_leaderboard call per live board, for this month in Burlington
   ok   Games, live › the tab only ever reads
   ok   Games, live › before a name, no row is marked as yours
@@ -1984,15 +2040,19 @@
   ok   Watch, the starter list, two dots and a reload (live, signed out) › with no films.json there is no Coming soon (the seed has none)
   ok   Watch, the starter list, two dots and a reload (live, signed out) › and the table of contents leaves it out
   ok   Watch, the starter list, two dots and a reload (live, signed out) › all sixty films
-  ok   Watch, the starter list, two dots and a reload (live, signed out) › Just me: one dot on every poster, none filled
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › alone: one dot on every poster, none filled
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › the partner mode is a switch that says what it is: Watching with someone, off
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › one line says what it is for; no legend while it is off
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › the old “With partner / Just me” words are gone
   ok   Watch, the starter list, two dots and a reload (live, signed out) › With Sam: a second dot on every poster
-  ok   Watch, the starter list, two dots and a reload (live, signed out) › the switch reads With Sam
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › on: the legend names the two dots, first yours, second Sam’s
   ok   Watch, the starter list, two dots and a reload (live, signed out) › the sheet’s toggles show what is set
   ok   Watch, the starter list, two dots and a reload (live, signed out) › both dots on one film, the partner’s on another, the rest empty
   ok   Watch, the starter list, two dots and a reload (live, signed out) › after a reload: still With Sam, both dots where they were
   ok   Watch, the starter list, two dots and a reload (live, signed out) › Want to watch shows the one film on the list
   ok   Watch, the starter list, two dots and a reload (live, signed out) › Neither of us leaves out both seen films
-  ok   Watch, the starter list, two dots and a reload (live, signed out) › Just me again: one dot, and yours is kept
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › Change name opens the name, filled in
+  ok   Watch, the starter list, two dots and a reload (live, signed out) › switched off: one dot, yours is kept, and the legend goes
   ok   Watch, the starter list, two dots and a reload (live, signed out) › signed out, a star says to sign in, with the button
   ok   Watch, the starter list, two dots and a reload (live, signed out) › and nothing is posted
   ok   Watch, the starter list, two dots and a reload (live, signed out) › Watch chat: Talk opens the Telegram watch chat first, the community second
@@ -2103,6 +2163,12 @@
   ok   Watch, the ranking you choose (demo) › watch: at most two subnav rows
   ok   Watch, the ranking you choose (demo) › no console errors
   ok   Watch, the time machine (demo) › Back then opens a year ago: October 2025
+  ok   Watch, the time machine (demo) › it says what it is: Rotten Tomatoes’ front page, month by month
+  ok   Watch, the time machine (demo) › a rail, with a Show all button
+  ok   Watch, the time machine (demo) › Show all opens every title in a wrapping grid that scrolls down
+  ok   Watch, the time machine (demo) › and the button says Show less
+  ok   Watch, the time machine (demo) › it stays a grid from month to month
+  ok   Watch, the time machine (demo) › Show less folds it back into the rail
   ok   Watch, the time machine (demo) › that month’s big films, theaters then streaming
   ok   Watch, the time machine (demo) › ‹ is a month earlier
   ok   Watch, the time machine (demo) › › a month later
@@ -2114,6 +2180,9 @@
   ok   Watch, the time machine (demo) › no console errors
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › the screening call sits right under Coming soon
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › it says what it does, and nothing else
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › one line says who is screening, on the call and atop the ballot
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › and it links to his Meetup group
+  ok   Watch, in theaters near you and the screening call (demo, 10 am) › the line sits right under the ballot’s title
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › the three theaters
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › Partizanfilm is closed, so the first open with shows today leads
   ok   Watch, in theaters near you and the screening call (demo, 10 am) › Majestic 10: the rest of today’s times, by first show; a title the tab knows gets a trailer button
@@ -2134,6 +2203,8 @@
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › Back then: TMDB posters at w342, a key that disagrees with its id left out
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a title is text, never markup, and a bad poster path is dropped
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › and the month is named
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › two titles fit the rail: no Show all
+  ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a month the archive missed says it is TMDB’s most popular, not the front page
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › theaters are the known three, whatever the file adds
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › Majestic 10 from showtimes.json: escaped titles, bad times dropped, TMDB posters at w185
   ok   Watch, showtimes, the time machine and TV from the films-data branch (live) › a theater that did not read: no rows, and its own Showtimes page (never the file’s link)
@@ -2371,9 +2442,9 @@
   ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › resized to a jpeg, credited by first name, no email
   ok   boards: a Vintage photo stays out of the gallery; an Art photo joins it (live) › no console errors
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the between-seasons tile: when the next season starts, and a sign-up button
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed out: the tile and a sign-in button, and no explanation
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed out, a first visit: one line and the Add habit row, no sign-in wall
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the chips: Today, Goal, Season, Wall
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › Sign in opens the sign-in in Settings
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the season is signed-in only, and says so only when Sign up is tapped
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › signed in: the demo’s three habits, in order
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › each row: seven dots and a tap target at least 48px
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak, how often, and shared
@@ -2437,19 +2508,80 @@
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: no sideways scroll at 390
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › habits: at most two subnav rows
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › no console errors
-  ok   Habits, the first sign-in asks a name and a phone, once (demo) › no member yet: a first name and a phone, before any habit
-  ok   Habits, the first sign-in asks a name and a phone, once (demo) › a phone that is not one: refused
-  ok   Habits, the first sign-in asks a name and a phone, once (demo) › saved: the habits appear
-  ok   Habits, the first sign-in asks a name and a phone, once (demo) › signed in again: not asked twice
-  ok   Habits, the first sign-in asks a name and a phone, once (demo) › Season: one line, and the address says where
-  ok   Habits, the first sign-in asks a name and a phone, once (demo) › #habits/wall opens the Wall chip
-  ok   Habits, the first sign-in asks a name and a phone, once (demo) › no console errors
+  ok   Habits, no name or phone for the tracker: they are asked when you join a season (demo) › no member yet: the habits, and no form in the way
+  ok   Habits, no name or phone for the tracker: they are asked when you join a season (demo) › a habit adds with no name given
+  ok   Habits, no name or phone for the tracker: they are asked when you join a season (demo) › Sign up asks a first name and a phone
+  ok   Habits, no name or phone for the tracker: they are asked when you join a season (demo) › a phone that is not one: refused
+  ok   Habits, no name or phone for the tracker: they are asked when you join a season (demo) › saved, and on to the sign-up
+  ok   Habits, no name or phone for the tracker: they are asked when you join a season (demo) › signed in again: not asked twice
+  ok   Habits, no name or phone for the tracker: they are asked when you join a season (demo) › Season: one line, and the address says where
+  ok   Habits, no name or phone for the tracker: they are asked when you join a season (demo) › #habits/wall opens the Wall chip
+  ok   Habits, no name or phone for the tracker: they are asked when you join a season (demo) › no console errors
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › at 11:59 pm New York it is still Wednesday
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and the morning walk tapped “today” is Wednesday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › two minutes later it is Thursday: the day turned at midnight New York
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › a fresh day starts untapped
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (1 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: uppercase only in the caps roles
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: no monospace
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: no sideways scroll at 390
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most two subnav rows
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › after a reload: the same three, the same two tapped, the streak and the dot
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › Sync across devices opens the sign-in
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › signed in: the account has the three habits and the two taps
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › in one sz_import_local call
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and the phone forgets them: the account is the one copy
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › the list is the account’s now, and the sync line is gone
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a reload signed in imports nothing again
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › signed out again: an empty list here, the three still on the account
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: uppercase only in the caps roles
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: no monospace
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: no sideways scroll at 390
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most two subnav rows
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (0 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: uppercase only in the caps roles
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: no monospace
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: no sideways scroll at 1280
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: at most two subnav rows
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › after a reload: the same three, the same two tapped, the streak and the dot
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › Sync across devices opens the sign-in
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › signed in: the account has the three habits and the two taps
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › in one sz_import_local call
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and the phone forgets them: the account is the one copy
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › the list is the account’s now, and the sync line is gone
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a reload signed in imports nothing again
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › signed out again: an empty list here, the three still on the account
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: nothing fixed or sticky inside the tab
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: uppercase only in the caps roles
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: no monospace
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: no escaped markup, undefined or NaN on the page
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: no sideways scroll at 1280
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › habits: at most two subnav rows
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › no console errors
+  ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › the demo keeps the phone’s habits in memory only
+  ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › the demo account had three: Stretch joins them with today’s tap, the phone’s two Stretches stay two, and a daily Gym is not the account’s 3-a-week Gym
+  ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › everything came across, so signed out the phone’s list is empty
+  ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › Floss joins the account
+  ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › and with the archived habit left behind, the phone keeps its copy
+  ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › signing in again sends nothing twice
+  ok   Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390) › no console errors
   ok   Habits, live: no season, a season, and before the paste › no season scheduled: it says so, and no button
   ok   Habits, live: no season, a season, and before the paste › signed out, nothing personal is asked for
   ok   Habits, live: no season, a season, and before the paste › habits: nothing fixed or sticky inside the tab
@@ -2477,11 +2609,11 @@
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › a real score is shown beside the time
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › and the line stays one line at 390
   ok   What Now, the sunset in the weather line says a score only when there is one (live) › no console errors
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › eight finds, three swaps, three fit checks and one design sent in, from the demo
+  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › eight finds, three swaps, three fit checks and three designs sent in, from the demo
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › every find shows its days left, and they differ
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the vote on a find is “I’d want this”
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › nobody signed in owns a find, so no “Someone got it”
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Fit checks, Spotted, New in, Shops, Swaps, Make a tee
+  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Fit checks, Spotted, Swaps (up top, by Spotted), New in, Shops, Make a tee
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › a chip scrolls its section up under the mast
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a find, signed out: the sign-in note and no form
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a fit check, signed out: the same
@@ -2494,7 +2626,8 @@
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: at most two subnav rows
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › no console errors
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › demo mode never calls Supabase
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then New in
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then Swaps (moved up from the bottom), then New in
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › one plain line under Spotted this week says what it is for
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › each fit check is a photo tile with its title and first name
   ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › a tile opens the post’s own card: the photo, “Love this fit”, share and report
@@ -2565,6 +2698,7 @@
   ok   Vintage, the shop guide walks in order and invents no hours (live) › no console errors
   ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk to the next shop where both have coordinates; only the next stop where they don’t
   ok   Vintage, the designs rail links to the merch site (live) › 28 previews in all-day/assets/merch, each under 60 KB
+  ok   Vintage, the designs rail links to the merch site (live) › each preview is the full design (the merch data’s variant art), not the small left-chest patch it calls `front`
   ok   Vintage, the designs rail links to the merch site (live) › every design links to its own page on merch.btownbrief.com, where it is shown on a model
   ok   Vintage, the designs rail links to the merch site (live) › they open in a new tab, with the small local preview
   ok   Vintage, the designs rail links to the merch site (live) › the previews load
@@ -2603,61 +2737,66 @@
   ok   Vintage, live posts land in their sections (live) › and it names no price
   ok   Vintage, live posts land in their sections (live) › it looks only among Art posts whose maker said yes to a shirt
   ok   Vintage, live posts land in their sections (live) › no console errors
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › far below the fold: no Leaflet, no NOAA, nothing fetched
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › in view, it loads Leaflet 1.9.4 and NOAA’s frame list
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › with the integrity hashes events.html and Food pin
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › thirteen frames, ten minutes apart, the newest last
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › centred on Burlington at zoom 7; the wheel scrolls the page
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › OpenStreetMap under it, credited
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › one image per frame for the whole view, at its time
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the radar credited to NOAA MRMS on the map
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › it opens on the newest frame, the only one showing
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the newest frame is asked for first, the other twelve after it
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › one image pixel per screen pixel (MRMS is a 1 km grid), even on a 2x screen
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the frame’s time in Burlington’s clock, and how old it is
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › it loops by default: Pause showing, the scrubber spans the frames
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › and the two radars worth opening under the map
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the frames move: one showing at a time, its time under the map
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › Pause stops it on the frame it was on
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › scrubbing pauses and shows that frame, its time and age
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › the arrow keys step it
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › a pan redraws the thirteen at the new view, on the same frame
-  ok   Weather page: the radar mounts lazily and moves (390, a stand-in Leaflet) › no console errors
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › reduced motion: it waits on the newest frame for a tap
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › ten minutes on screen: it reads the list again and moves to the new newest frame
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › and Play from the newest starts at the oldest
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › no console errors
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › NOAA down: the map steps aside, a line says so, the two radars stay
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › no console errors beyond the 503 itself
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › images failing: the map steps aside and nothing pretends to play
-  ok   Weather page: the radar for reduced motion, a fresh list, and when NOAA is down › no console errors
-  ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › at 2 pm the sun is on its arc, 63% of the way from sunrise to sunset
-  ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › a clear day sky: no clouds, nothing falling
-  ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › the strip is 30px; the card stays compact
-  ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › at 390 it still sits above Spin with nothing sideways
-  ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › two hours on, the sun has moved down the arc without a redraw
-  ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › no console errors
-  ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › reduced motion: the sun at its real place, held there
-  ok   What Now, the sky on the weather card: the sun where it really is (demo, 2 pm) › no console errors
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 06:45 Burlington, “Light Rain”: a dawn sky, is-rain, the moon on its arc
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › rain falls (when motion is allowed)
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › no console errors
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 07:30 Burlington, “Thunderstorm”: a sunrise sky, is-storm, the sun on its arc
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 07:30: the sun low and orange near the horizon
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › no console errors
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 12:00 Burlington, “Partly Cloudy”: a day sky, is-partly, the sun on its arc
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › noon: the sun high, nothing falling
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › no console errors
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 16:45 Burlington, “Snow”: a golden sky, is-snow, the sun on its arc
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › no console errors
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 17:50 Burlington, “Fog/Mist”: a sunset sky, is-fog, the sun on its arc
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 17:50: the sun low and orange near the horizon
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › no console errors
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 18:30 Burlington, “Mostly Cloudy”: a dusk sky, is-cloud, the moon on its arc
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › no console errors
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 22:00 Burlington, “Clear”: a night sky, is-clear, the moon on its arc
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › no console errors
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › 02:00 Burlington, “Partly Cloudy”: a night sky, is-partly, the moon on its arc
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › no console errors
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › yesterday’s sun times still put today’s 2 pm sun in the right place
-  ok   What Now, the sky on the weather card: the hour’s colour and the weather’s overlay (live, a reader in Los Angeles) › no console errors
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › every number is a badge in its shop’s first kind’s colour
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › five kinds, five colours: thrift, vintage, consignment, antiques, used books
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › every badge’s number reads on its colour (4.5:1 or better)
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › the shop’s name is a touch bolder
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › each kind is named in its own colour, readable on the page
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › a divider names each neighborhood as the walk enters it, Used books last
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › the first shop sits under its neighborhood
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › the dividers are one colour, not the grey hairline between shops
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › a key under the head names the five colours
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: nothing fixed or sticky inside the tab
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: uppercase only in the caps roles
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: no monospace
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: no escaped markup, undefined or NaN on the page
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: no sideways scroll at 390
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › vintage: at most two subnav rows
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, light) › no console errors
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › every number is a badge in its shop’s first kind’s colour
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › five kinds, five colours: thrift, vintage, consignment, antiques, used books
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › every badge’s number reads on its colour (4.5:1 or better)
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › the shop’s name is a touch bolder
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › each kind is named in its own colour, readable on the page
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › a divider names each neighborhood as the walk enters it, Used books last
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › the first shop sits under its neighborhood
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › the dividers are one colour, not the grey hairline between shops
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › a key under the head names the five colours
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: nothing fixed or sticky inside the tab
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: uppercase only in the caps roles
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: no monospace
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: no escaped markup, undefined or NaN on the page
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: no sideways scroll at 390
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › vintage: at most two subnav rows
+  ok   Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, dark) › no console errors
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › a Map button sits beside “The shop guide”
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › its picture is the walk as dots, each in its kind’s colour
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › it maps every shop in the guide (36)
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › before a tap: no Leaflet, no tiles, nothing fetched
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › a tap loads Leaflet 1.9.4 and its stylesheet
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › with the integrity hashes Food and the guide’s own map pages use
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › the map opens in a sheet
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › on OpenStreetMap’s tiles from its one tile host, credited
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › every shop is a pin at its own spot, carrying its number from the guide, in its kind’s colour
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › it opens on the 19 shops a walk away, with no reader pin and no location asked
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › “All 36” fits every shop, Essex to Shelburne
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › Near me, refused: says so, and no dot
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › a pin opens its shop: the same number, its colour, and the way back to the map
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › with the shop’s neighborhood and street
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › Back to the map puts the map back up
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › where the reader left it: the same view, still on All
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › #vintage/map opens the map
+  ok   Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused) › no console errors
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › nothing asks for the location on load
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › allowed before, the map shows the reader’s dot
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › but the map is never moved to the reader: it stays on the shops
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › and Near me steps aside
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › the position is never sent anywhere
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › and never stored
+  ok   Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live) › no console errors
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › the designs sent in are a row called Top designs
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › sorted by votes, most first
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › the vote on a design is “I’d wear this”
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › a tap on “I’d wear this” counts one more
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › and the board has it
+  ok   Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo) › no console errors

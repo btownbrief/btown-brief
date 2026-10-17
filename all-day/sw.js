@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v55';   // v55: What Now's sky over the weather card (v54: main's merge of People and Games, v53: What Now's weather card, today's events and Btown Challenges, v52: Watch's TV, time machine and local showtimes)
+const VERSION = 'all-day-v60';   // v60: What Now's sky over the weather card (v59: batch 1 merge, v53: What Now's weather card)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -26,8 +26,8 @@ const SHELL_URLS = [
   './js/modes/onair.js', './js/modes/games.js',
   /* What Now's engine and its feeds' loader, imported by modes/whatnow.js */
   './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
-  /* Habits' rules and its demo server, imported by modes/habits.js */
-  './js/habits-core.js', './js/habits-fake.js',
+  /* Habits' rules, its demo server and the signed-out phone's copy, imported by modes/habits.js */
+  './js/habits-core.js', './js/habits-fake.js', './js/habits-local.js',
   /* the photo wall's helpers, imported by the Wire's Photo mode */
   './js/photo-wall.js',
   /* the run clubs' week, imported by ui.js, People and What Now */
@@ -67,6 +67,13 @@ function isWire(url) {
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
+
+  /* Sound and video are never ours to answer, from any host: the Brief's MP3
+     lives on raw.githubusercontent.com, which isWire() below would otherwise
+     claim, and a media element's byte-range requests must reach the network
+     untouched (a 206 cannot be cached, and Safari will not play a range
+     answered with the whole file). */
+  if (req.destination === 'audio' || req.destination === 'video' || req.headers.has('range')) return;
 
   let url;
   try { url = new URL(req.url); } catch (err) { return; }

@@ -1,5 +1,5 @@
 {
- "_": "Demo data for ?demo=1, in the real payloads' shapes: tv is btown-tv.json, tvEditions is tv-editions.json, pulse is the podcast part of pulse.json, podcast is all-day/data/podcast.json, audio is the wire-audio branch's index.json. Every item is invented. `art` (a placeholder palette) and `_script` are demo-only fields. Dates are moved to the reader's clock from _anchor.",
+ "_": "Demo data for ?demo=1, in the real payloads' shapes: tv is btown-tv.json, tvEditions is tv-editions.json, pulse is the podcast part of pulse.json, podcast is all-day/data/podcast.json, audio is the wire-audio branch's index.json, playlists is all-day/data/playlists.json (its links are made up and only toast here). Every item is invented. `art` (a placeholder palette) and `_script` are demo-only fields. Dates are moved to the reader's clock from _anchor.",
  "_anchor": "2026-10-16",
  "tv": {
   "v": 1,
@@ -1417,5 +1417,51 @@
    }
   ],
   "_script": "Morning. It’s Friday, October 16th, and this is the Btown Brief. Here’s what’s going on around Burlington.\n\nThe school board meets tonight with a budget gap to close, and the first proposal on the table would trim the late bus. If your kids ride it, tonight’s the night to say so.\n\n[short pause] Out on the water... the lake’s still warm for the middle of October, and the scientists who watch it say that matters for what grows in it next summer.\n\nThat’s the Brief for this morning. Every story’s on the Wire in All Day if you want the whole thing. Have a good one."
+ },
+ "playlists": {
+  "stephen": [
+   {
+    "title": "Sunday drive down Route 7",
+    "by": "Stephen",
+    "service": "spotify",
+    "url": "https://open.spotify.com/playlist/DemoBtownBriefFall2026",
+    "note": "Windows down, Shelburne to Ferrisburgh and back.",
+    "added": "2026-10-12"
+   },
+   {
+    "title": "Burlington bands, live",
+    "by": "Stephen",
+    "service": "youtube",
+    "url": "https://www.youtube.com/playlist?list=PLdemoBtownBriefLive01",
+    "note": "Sets filmed around town, newest first.",
+    "added": "2026-10-09"
+   }
+  ],
+  "readers": [
+   {
+    "title": "Old North End porch songs",
+    "by": "Maya",
+    "service": "spotify",
+    "url": "https://open.spotify.com/playlist/DemoBtownBriefPorch001",
+    "note": "For the last warm evenings.",
+    "added": "2026-10-15"
+   },
+   {
+    "title": "Long run on the bike path",
+    "by": "Theo",
+    "service": "apple",
+    "url": "https://music.apple.com/us/playlist/long-run/pl.u-demoBtownBriefRun",
+    "note": "",
+    "added": "2026-10-14"
+   },
+   {
+    "title": "Late night at the record store",
+    "by": "Jules",
+    "service": "soundcloud",
+    "url": "https://soundcloud.com/btownbrief-demo/sets/late-night",
+    "note": "",
+    "added": "2026-10-11"
+   }
+  ]
  }
 }

@@ -5,9 +5,9 @@ Reads the merch repo (data.js and its prev/ previews; never writes there)
 and writes, in this repo:
 
   all-day/assets/merch/<id>.webp      one square preview per design: the
-                                      front print centred on the colour of
-                                      the shirt it is shown on, 320px,
-                                      under 60 KB
+                                      full design (its first variant's art)
+                                      centred on the colour of the shirt it
+                                      is shown on, 320px, under 60 KB
   all-day/data/merch-designs.json     the rail: name, the design's idea,
                                       the preview, and its product page on
                                       merch.btownbrief.com
@@ -16,6 +16,13 @@ Which designs: the merch site's `core` list, the designs that are always
 in stock, in that order. The product page (#/p/huba/d/<id>) is where the
 Printify mockups live, which is the tab's "see it on a model" for now.
 No prices: the tab takes no money and links to the shop for that.
+
+Which picture: the full design, never the merch data's `front`. In data.js
+`front` is the small left-chest patch (about 3.5 in wide) that goes on the
+front of a two-sided shirt, while each variant's `file` is the whole
+artwork: the back print on a two-sided shirt, and the print itself on a
+front-only one. The rail used the patch until Stephen, 2026-10-17: "my front
+patch designs are highlighted instead of my full designs."
 
     python3 scripts/build_merch_rail.py [--merch ~/btownbrief/merch]
 """
@@ -32,7 +39,7 @@ ASSETS = ROOT / "all-day" / "assets" / "merch"
 OUT = ROOT / "all-day" / "data" / "merch-designs.json"
 SHOP = "https://merch.btownbrief.com/"
 SIDE = 320          # the square preview, in pixels
-FILL = 0.74         # how much of the square the print may take
+FILL = 0.84         # how much of the square the print may take
 MAX_BYTES = 60_000
 
 
@@ -47,11 +54,11 @@ def hex_rgb(h):
 
 
 def preview(merch, design):
-    front = design.get("front") or {}
-    src = merch / (front.get("prev") or "")
-    if not front.get("prev") or not src.exists():
+    variant = (design.get("variants") or [{}])[0]
+    src = merch / (variant.get("file") or "")
+    if not variant.get("file") or not src.exists():
         return None
-    garment = (design.get("variants") or [{}])[0].get("garment") or "#E8DFCC"
+    garment = variant.get("garment") or "#E8DFCC"
     art = Image.open(src).convert("RGBA")
     scale = min(SIDE * FILL / art.width, SIDE * FILL / art.height)
     art = art.resize((max(1, round(art.width * scale)), max(1, round(art.height * scale))), Image.LANCZOS)

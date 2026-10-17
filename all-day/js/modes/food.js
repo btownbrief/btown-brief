@@ -43,9 +43,14 @@
      A reel plays only on a tap, in the shell's one video box. Its MP4 is
      signed for about a day and a half, so one about to lapse is shown as a
      photo instead; with no reels at all, the accounts' latest photos.
-   - Feature a dish. One photo, one line, the place, the consent box. It
-     goes to the review queue as category `dish`; nothing appears until
-     Stephen approves it.
+   - Feature a dish. One photo, one line, where it is from, the consent box.
+     A dish you loved somewhere or one you made at home: the form asks which
+     (At a place / Made at home). The photo queue has no field for that, and
+     the SQL is not changed for it, so a home dish travels in the existing
+     `spot` field as HOME ("Made at home"), the place it came from; the
+     Bite shows it as such, and it never matches a place. It goes to the
+     review queue as category `dish`; nothing appears until Stephen
+     approves it.
 
    ?demo=1 runs this same file on data/demo/food.json, which holds every
    payload in its real shape, its times moved to the reader's day. */
@@ -467,7 +472,8 @@ function paintBite(host) {
   const place = placeByName(p.spot);
   const hero = el('div', 'hero');
   hero.dataset.k = 'bite';
-  const where = [p.spot, p.area && p.area !== 'Elsewhere' ? p.area : ''].filter(Boolean).join(' · ');
+  const home = p.spot === HOME;
+  const where = [p.spot, p.area && p.area !== 'Elsewhere' && !home ? p.area : ''].filter(Boolean).join(' · ');
   hero.innerHTML = '<span class="c-media r45" data-zoom>' + art(p.url) + '</span>' +
     '<span class="eyebrow">' + esc('The Weekly Bite') + '</span>' +
     '<h3>' + esc(trim(p.caption, LINE_MAX) || p.spot || 'This week’s dish') + '</h3>' +
@@ -482,6 +488,7 @@ function paintBite(host) {
 
 function placeByName(name) {
   const n = String(name || '').trim().toLowerCase();
+  if (n === HOME.toLowerCase()) return null;
   return n ? S.places.find((r) => r.name.toLowerCase() === n) || null : null;
 }
 
@@ -924,6 +931,8 @@ function openClip(p) {
 
 /* ---------------------------------------------------------- Feature a dish */
 const AREA_OF = { 'Essex': 'Essex / Essex Jct', 'Burlington': 'Greater Burlington' };
+/* a dish made at home: its spot, in the queue's existing field */
+const HOME = 'Made at home';
 const NEGATIVE = /\b(worst|terrible|awful|gross|disgusting|overpriced|bland|rude|avoid|never again|inedible|mid)\b/i;
 
 function paintAdd(host) {
@@ -934,15 +943,27 @@ function paintAdd(host) {
   form.noValidate = true;
   const names = S.places.map((r) => '<option value="' + esc(r.name) + '"></option>').join('');
   form.innerHTML =
+    '<p class="note">' + esc('A dish you loved somewhere, or one you made at home.') + '</p>' +
+    '<div class="row where"></div>' +
     '<div class="row"><button type="button" class="btn ghost pick">' + ICON.plus + ' ' + esc('Choose a photo') + '</button><span class="note fname">' + esc('No photo yet') + '</span>' +
       '<input type="file" name="file" accept="image/*" hidden></div>' +
     '<div class="row"><input class="field" name="line" maxlength="' + LINE_MAX + '" placeholder="' + esc('One line: what it is, and why') + '" aria-label="One line about the dish" autocomplete="off"></div>' +
-    '<div class="row"><input class="field" name="place" list="food-places" maxlength="120" placeholder="' + esc('The place') + '" aria-label="The place" autocomplete="off">' +
+    '<div class="row placerow"><input class="field" name="place" list="food-places" maxlength="120" placeholder="' + esc('The place') + '" aria-label="The place" autocomplete="off">' +
       '<datalist id="food-places">' + names + '</datalist></div>' +
     '<div class="row"><input class="field" name="credit" maxlength="60" placeholder="' + esc('Your first name, for the credit (optional)') + '" aria-label="Your name for the credit" autocomplete="given-name"></div>' +
     '<div class="row"><label class="consent"><input type="checkbox" name="consent"> ' + esc('I took this photo, and the Brief may feature it on the site and in the newsletter.') + '</label></div>' +
     '<div class="row"><button type="submit" class="btn send">' + esc('Send it in') + '</button></div>' +
     '<p class="note err" role="alert" hidden></p>';
+  /* at a place, or made at home: home needs no place */
+  form.dataset.where = 'place';
+  const placeRow = form.querySelector('.placerow');
+  const where = pills([['place', 'At a place'], ['home', 'Made at home']], 'place', (v) => {
+    form.dataset.where = v;
+    placeRow.hidden = v === 'home';
+  });
+  where.setAttribute('role', 'group');
+  where.setAttribute('aria-label', 'Where the dish is from');
+  form.querySelector('.where').appendChild(where);
   const file = form.querySelector('input[type=file]');
   form.querySelector('.pick').addEventListener('click', () => file.click());
   file.addEventListener('change', () => { form.querySelector('.fname').textContent = file.files[0] ? file.files[0].name : 'No photo yet'; });
@@ -957,7 +978,8 @@ function submitDish(form) {
   const fd = new FormData(form);
   const file = form.querySelector('input[type=file]').files[0];
   const line = String(fd.get('line') || '').replace(/\s+/g, ' ').trim();
-  const place = String(fd.get('place') || '').replace(/\s+/g, ' ').trim();
+  const home = form.dataset.where === 'home';
+  const place = home ? HOME : String(fd.get('place') || '').replace(/\s+/g, ' ').trim();
   const credit = String(fd.get('credit') || '').replace(/\s+/g, ' ').trim();
   if (!file || !file.size) return say('Choose a photo first.');
   if (!/^image\//.test(file.type || 'image/')) return say('That file isn’t a photo.');

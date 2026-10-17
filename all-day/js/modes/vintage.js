@@ -14,7 +14,8 @@
      check form as before; a fit check needs a photo and lasts 60 days.
    - Spotted this week. Vintage board posts of kind `spotted` (boards.js):
      a reader saw something on a rack that wasn't their size and posted it
-     so someone else can get it. Two up, the shop, size and price, days
+     so someone else can get it; one plain line under the head says so,
+     because a first-time reader asked what it was for. Two up, the shop, size and price, days
      left, the board's vote as "I'd want this", share and report. A post
      lasts three weeks (boards-core.js). The poster can mark their own find
      "Someone got it": boards.put() ticks the post's `got` box, it leaves
@@ -22,6 +23,9 @@
      posted here found a home lately (the board's got finds, plus, for this
      month, ones this device took down before the box existed). That line
      is the whole of "thrift points" at launch.
+   - Swaps, right under Spotted (Stephen, 2026-10-17: "I should probably
+     put that up top"). Board posts of kind `swap`: what I have, what I'd
+     take, size.
    - New in. The shops' own Instagram posts from the last two weeks
      (all-day/data/instagram.json, the accounts data/vintage-shops.json
      names), each a photo credited to its account and linked to the post.
@@ -34,7 +38,16 @@
      own site. Used books come last, after the walk. Hours only where someone has read them off the shop's own
      page (the shop's `checked` date and source); a checked shop that posts
      none says to call ahead, and an unchecked one "Hours not checked yet".
-   - Swaps. Board posts of kind `swap`: what I have, what I'd take, size.
+     Colour, so the list is not a wall of grey: each kind of shop has its
+     colour (thrift, vintage, consignment, antiques, used books), the
+     number is a badge in the shop's first kind's colour, and a coloured
+     divider names each neighborhood as the walk enters it.
+     The Map button beside the head is a picture of the walk drawn here with
+     no network; tapping it loads Leaflet and OpenStreetMap tiles (Food's
+     stack, the guide's own) into a sheet with every shop as a pin carrying
+     its guide number. A pin opens that shop in a sheet. The reader's dot
+     shows only once they allow their location, and the map is never moved
+     to it, so no tile request carries it; the position is never stored.
    - Make a tee. Stephen's always-in-stock designs from the merch repo
      (all-day/data/merch-designs.json, scripts/build_merch_rail.py), each a
      link to its page in the shop, where the Printify mockups on a model
@@ -42,7 +55,10 @@
      with the consent box, a name, a line, and free shirts or store credit
      (never cash): a `design` post, the choice in its `thanks` field.
      Stephen sees it in the photo desk and the boards desk. Approved ones
-     show under "Sent in".
+     show under "Top designs", a row sorted by votes ("I'd wear this").
+     The rail's pictures are each design's full artwork on its shirt colour
+     (the merch data's first variant), not the small left-chest patch the
+     merch data calls `front` (Stephen, 2026-10-17).
 
    Before the board had those two kinds, a design was a `spotted` post with
    shop "Make a tee" (the choice in its body) and a fit check one with shop
@@ -73,10 +89,30 @@ const NEW_IN_DAYS = 14;
 const NEW_IN_MAX = 12;
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const SECTIONS = [['fit', 'Fit checks'], ['spotted', 'Spotted'], ['newin', 'New in'], ['shops', 'Shops'], ['swaps', 'Swaps'], ['tees', 'Make a tee']];
+const SECTIONS = [['fit', 'Fit checks'], ['spotted', 'Spotted'], ['swaps', 'Swaps'], ['newin', 'New in'], ['shops', 'Shops'], ['tees', 'Make a tee']];
 /* the slots, top to bottom: `make` is the design pitch, `sent` the designs
-   neighbors sent in */
-const SLOTS = ['fit', 'spotted', 'newin', 'shops', 'swaps', 'tees', 'make', 'sent'];
+   neighbors sent in, as Top designs */
+const SLOTS = ['fit', 'spotted', 'swaps', 'newin', 'shops', 'tees', 'make', 'sent'];
+
+/* the guide's own map stack, as Food loads it (events.html, things-to-do.html):
+   Leaflet from unpkg with its integrity hashes, OpenStreetMap's tiles, on the
+   first tap of Map and never before */
+const LEAFLET = {
+  js: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', jsSri: 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=',
+  css: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', cssSri: 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=',
+};
+/* OSM's one tile host, as its tile policy now asks (no a/b/c subdomains) */
+const TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const TILE_CREDIT = '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+const CHURCH_ST = [44.4758, -73.2128];
+const WALK_MI = 1;            // the map opens on the shops this close to Church Street: the walk on foot
+const FAR_MI = 40;            // a reader further away than this is not "near" any of it
+
+/* a colour per kind of shop: the badge, the kind's name and the map pin */
+const KINDS = [['vintage', 'Vintage', /vintage/i], ['thrift', 'Thrift', /thrift|restore/i], ['consign', 'Consignment', /consign/i],
+  ['antique', 'Antiques', /antique/i], ['books', 'Used books', /book/i]];
+const kindKey = (k) => { const hit = KINDS.find(([, , re]) => re.test(String(k || ''))); return hit ? hit[0] : 'thrift'; };
+const kindOf = (s) => kindKey((s.kinds || [])[0]);
 const FEEDS = new Set(['spotted', 'swaps', 'sent']);
 
 /* ------------------------------------------------------------------ state */
@@ -252,10 +288,11 @@ function paint(k) {
   if (panel() && app.activeTab() === KEY) panel().scrollTop = y;
 }
 
-/* Board posts, two up, on the shell's board card. `vote` names the vote
-   ("I'd want this"); `got` adds "Someone got it" to the reader's own. */
+/* Board posts, two up, on the shell's board card, or in a row (`rail`, its
+   class). `vote` names the vote ("I'd want this"); `got` adds "Someone got
+   it" to the reader's own. */
 function grid(host, posts, o) {
-  const g = el('div', 'grid2 feed tight');
+  const g = o.rail ? rail(host, 'feed tight ' + o.rail) : el('div', 'grid2 feed tight');
   g.dataset.grid = o.name;
   const items = posts.map((p) => boards.item(p, { tab: KEY, ratio: 'r11', meta: o.meta }));
   app.know(items);
@@ -275,7 +312,7 @@ function grid(host, posts, o) {
     }
     g.appendChild(n);
   });
-  host.appendChild(g);
+  if (!o.rail) host.appendChild(g);
 }
 
 const findMeta = (p) => [p.meta.shop, p.meta.size ? 'Size ' + p.meta.size : '', p.meta.price != null ? '$' + p.meta.price : ''].filter(Boolean).join(' · ');
@@ -305,6 +342,7 @@ function thanksLine() {
 
 function paintSpotted(host) {
   section(host, 'Spotted this week');
+  host.appendChild(el('p', 'note pad vwhy', esc('Saw something great that wasn’t your size? Post it so someone else can grab it.')));
   host.appendChild(thanksLine());
   host.appendChild(el('div', 'spacer'));
   if (S.spotted === null) host.appendChild(el('p', 'note pad', esc('Checking the racks…')));
@@ -400,33 +438,211 @@ function legText(s, next) {
   return 'Then ' + next.name + (next.neighborhood ? ', ' + next.neighborhood : '');
 }
 
+const hasCoords = (s) => Array.isArray(s.coords) && s.coords.length === 2 && s.coords.every(Number.isFinite);
+function miles(a, b) {
+  const R = 3958.8, rad = Math.PI / 180;
+  const dLat = (b[0] - a[0]) * rad, dLon = (b[1] - a[1]) * rad;
+  return 2 * R * Math.asin(Math.sqrt(Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) ** 2));
+}
+/* the divider a shop sits under: its neighborhood on the walk, then Used books */
+const groupOf = (s) => (s.after_walk ? 'Used books' : s.neighborhood || '');
+
+/* One shop as a row: the number as a badge in its kind's colour, the name,
+   its kinds each in their own colour, hours, street, the blurb and the way
+   to the next shop, with Map and Site. The sheet a map pin opens draws the
+   same row. */
+function shopRow(s, i, next, inSheet) {
+  const row = el('div', 'lrow vshop');
+  if (!inSheet) row.dataset.k = 's-' + s.id;
+  const kinds = (s.kinds || []).map((k) => '<span class="vk k-' + kindKey(k) + '">' + esc(k) + '</span>').join(', ');
+  /* the divider above already names the neighborhood; a shop after the walk, or one in a sheet, says it here */
+  const hood = (s.after_walk || inSheet) && s.neighborhood ? ' · ' + esc(s.neighborhood) : '';
+  // each run of days ("Thu–Fri 10am to 8pm") stays on one line at phone width
+  const runs = s.hours ? s.hours.split(' · ').map((r) => '<span style="white-space:nowrap">' + esc(r) + '</span>').join(' · ') : '';
+  const hours = s.hours ? '<b>' + runs + '</b>' + (s.hours_note ? esc('. ' + s.hours_note) : '') + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '')
+    : esc(s.checked ? 'No weekly hours posted; call ahead' + (s.phone ? ' at ' + s.phone : '') + (s.hours_note ? '. ' + s.hours_note : '') : 'Hours not checked yet');
+  const where = s.address ? s.address.replace(/,\s*VT\s*\d{5}$/, '') : '';
+  const leg = inSheet ? '' : legText(s, next);
+  row.innerHTML = '<span class="num vbadge k-' + kindOf(s) + '">' + (i + 1) + '</span><div><div class="t">' + esc(s.name) + '</div>' +
+    '<div class="s" data-kinds>' + kinds + hood + '</div><div class="s" data-hours>' + hours + '</div>' + (where ? '<div class="s" data-where>' + esc(where) + '</div>' : '') +
+    (s.blurb ? '<div class="s">' + esc(s.blurb) + '</div>' : '') + (leg ? '<div class="s" data-leg>' + esc(leg) + '</div>' : '') + '</div>';
+  const links = el('div', 'vlinks');
+  links.appendChild(outLink('Map', mapUrl(s), 'pillbtn', 'Map for ' + s.name));
+  if (s.website) links.appendChild(outLink('Site', s.website, 'pillbtn', s.name + '’s website'));
+  row.appendChild(links);
+  return row;
+}
+
 function paintShops(host) {
   const list = S.shops;
-  section(host, 'The shop guide', list && list.length ? '<b>' + esc(plural(list.length, 'shop', 'shops')) + '</b> · walking order' : null);
+  const pinned = list ? list.filter(hasCoords) : [];
+  section(host, 'The shop guide', list && list.length ? '<b>' + esc(plural(list.length, 'shop', 'shops')) + '</b> · walking order' : null, pinned.length ? mapButton(list) : null);
   if (!list) {
     host.appendChild(el('p', 'note pad', esc(S.shopsFailed ? 'The shop guide didn’t load.' : 'Loading the shops…')));
     return;
   }
+  const wrap = el('div', 'vshops');
+  const have = new Set(list.map(kindOf));
+  const keys = el('div', 'vkeys');
+  keys.dataset.keys = '';
+  keys.innerHTML = KINDS.filter(([k]) => have.has(k)).map(([k, label]) => '<span class="vk k-' + k + '"><i></i>' + esc(label) + '</span>').join('');
+  wrap.appendChild(keys);
   list.forEach((s, i) => {
-    if (s.after_walk && !(list[i - 1] || {}).after_walk) host.appendChild(el('div', 'tdiv', '<span>' + esc('Used books') + '</span>'));
-    const row = el('div', 'lrow');
-    row.dataset.k = 's-' + s.id;
-    const facts = [(s.kinds || []).join(', '), s.neighborhood].filter(Boolean).join(' · ');
-    // each run of days ("Thu–Fri 10am to 8pm") stays on one line at phone width
-    const runs = s.hours ? s.hours.split(' · ').map((r) => '<span style="white-space:nowrap">' + esc(r) + '</span>').join(' · ') : '';
-    const hours = s.hours ? '<b>' + runs + '</b>' + (s.hours_note ? esc('. ' + s.hours_note) : '') + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '')
-      : esc(s.checked ? 'No weekly hours posted; call ahead' + (s.phone ? ' at ' + s.phone : '') + (s.hours_note ? '. ' + s.hours_note : '') : 'Hours not checked yet');
-    const where = s.address ? s.address.replace(/,\s*VT\s*\d{5}$/, '') : '';
-    const leg = legText(s, list[i + 1]);
-    row.innerHTML = '<span class="num">' + (i + 1) + '</span><div><div class="t">' + esc(s.name) + '</div>' +
-      '<div class="s">' + esc(facts) + '</div><div class="s" data-hours>' + hours + '</div>' + (where ? '<div class="s" data-where>' + esc(where) + '</div>' : '') +
-      (s.blurb ? '<div class="s">' + esc(s.blurb) + '</div>' : '') + (leg ? '<div class="s" data-leg>' + esc(leg) + '</div>' : '') + '</div>';
-    const links = el('div', '');
-    links.style.cssText = 'display:flex;flex-direction:column;gap:6px';
-    links.appendChild(outLink('Map', mapUrl(s), 'pillbtn', 'Map for ' + s.name));
-    if (s.website) links.appendChild(outLink('Site', s.website, 'pillbtn', s.name + '’s website'));
-    row.appendChild(links);
-    host.appendChild(row);
+    const g = groupOf(s);
+    if (g && (i === 0 || g !== groupOf(list[i - 1]))) {
+      const d = el('div', 'tdiv vhood', '<span>' + esc(g) + '</span>');
+      d.dataset.hood = g;
+      wrap.appendChild(d);
+    }
+    wrap.appendChild(shopRow(s, i, list[i + 1], false));
+  });
+  host.appendChild(wrap);
+}
+
+/* ---------------------------------------------------------------- the map */
+/* The button's picture is the walk itself: a dot per shop around Church
+   Street in its kind's colour, drawn here with no tiles and no library, so
+   it costs nothing until it is tapped. */
+function mapButton(list) {
+  const c = CHURCH_ST;
+  const W = 72, H = 44, halfLon = 0.012, halfLat = halfLon * Math.cos(c[0] * Math.PI / 180) * H / W;
+  const dots = list.filter((s) => hasCoords(s) && Math.abs(s.coords[0] - c[0]) < halfLat && Math.abs(s.coords[1] - c[1]) < halfLon)
+    .map((s) => '<circle class="vm-dot k-' + kindOf(s) + '" r="2.4" cx="' + (W / 2 + (s.coords[1] - c[1]) / halfLon * W / 2).toFixed(1) + '" cy="' + (H / 2 - (s.coords[0] - c[0]) / halfLat * H / 2).toFixed(1) + '"/>').join('');
+  const b = el('button', 'mapbtn', '<svg class="fm-mini" viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true"><rect class="fm-ground" width="' + W + '" height="' + H + '"/>' +
+    '<path class="fm-street" d="M0 ' + H / 2 + 'H' + W + 'M' + W / 2 + ' 0V' + H + '"/>' + dots + '</svg><span>' + esc('Map') + '</span>');
+  b.setAttribute('aria-label', 'Map of ' + plural(list.filter(hasCoords).length, 'shop', 'shops'));
+  b.addEventListener('click', () => openMap());
+  return b;
+}
+
+/* Leaflet, once. If Food's map already asked for it, wait for that same
+   script rather than run a second copy. Any way it fails (an error, a load
+   with no L, or a script that never answers) clears the way for a retry. */
+let leafletP = null;
+function loadLeaflet() {
+  if (window.L && window.L.map) return Promise.resolve(window.L);
+  if (!leafletP) {
+    if (!document.querySelector('link[data-leaflet]')) {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet'; css.href = LEAFLET.css; css.integrity = LEAFLET.cssSri; css.crossOrigin = '';
+      css.dataset.leaflet = '1';
+      document.head.appendChild(css);
+    }
+    leafletP = new Promise((resolve, reject) => {
+      const prior = [...document.querySelectorAll('script')].find((x) => x.src === LEAFLET.js);
+      const js = prior || document.createElement('script');
+      let wait = 0;
+      const fail = () => { clearTimeout(wait); leafletP = null; if (!prior) js.remove(); reject(new Error('no Leaflet')); };
+      js.addEventListener('load', () => { if (window.L && window.L.map) { clearTimeout(wait); resolve(window.L); } else fail(); });
+      js.addEventListener('error', fail);
+      wait = setTimeout(() => (window.L && window.L.map ? resolve(window.L) : fail()), 20000);
+      if (prior) return;
+      js.src = LEAFLET.js; js.integrity = LEAFLET.jsSri; js.crossOrigin = '';
+      document.head.appendChild(js);
+    });
+  }
+  return leafletP;
+}
+
+/* The reader's position: asked for only on a tap of Near me (or already
+   allowed on an earlier visit), kept in this module for the visit, never
+   written down, never sent anywhere. */
+let me = null;
+function locate() {
+  if (me) return Promise.resolve(me);
+  if (!navigator.geolocation) return Promise.reject(new Error('no location'));
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const at = [pos.coords.latitude, pos.coords.longitude];
+      if (!at.every(Number.isFinite)) { reject(new Error('no location')); return; }
+      if (miles(at, CHURCH_ST) > FAR_MI) { const e = new Error('far'); e.far = true; reject(e); return; }
+      me = at;
+      resolve(at);
+    }, reject, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+  });
+}
+
+let M = null;                 // the Leaflet map while its sheet is up
+let mePin = null;
+function dropMap() { if (M) { try { M.remove(); } catch (e) { /* already gone */ } M = null; mePin = null; } }
+
+/* The map sheet: every shop with coordinates as a pin carrying its guide
+   number, in its kind's colour. It opens on the shops within a walk of
+   Church Street; "All" fits every shop, Essex to Shelburne. `back` is the
+   view a pin was tapped from, so "Back to the map" lands where the reader
+   left it. */
+function openMap(back) {
+  const shops = S.shops || [];
+  const list = shops.map((s, i) => ({ s, i })).filter(({ s }) => hasCoords(s));
+  if (!list.length) return;
+  const town = list.filter(({ s }) => miles(s.coords, CHURCH_ST) <= WALK_MI).map(({ s }) => s.coords);
+  const every = list.map(({ s }) => s.coords);
+  app.sheet('Shop map', (body) => {
+    body.appendChild(el('p', 'sheet-note', '<b>' + esc(plural(list.length, 'shop', 'shops')) + '</b>'));
+    const box = el('div', 'vmap');
+    box.dataset.k = 'map';
+    const bar = el('div', 'linkrow');
+    let wide = back ? back.wide : town.length < 2;
+    const fit = () => { if (M) M.fitBounds(wide ? every : town, { padding: [28, 28] }); };
+    const show = () => { if (!M) return; if (back) M.setView(back.c, back.z); else fit(); };
+    const span = button(esc(wide ? 'On foot' : 'All ' + list.length), 'ghost sm vspan', () => {
+      wide = !wide;
+      span.textContent = wide ? 'On foot' : 'All ' + list.length;
+      fit();
+    });
+    span.hidden = town.length < 2 || town.length === list.length;
+    const near = button(ICON.pin + ' ' + esc('Near me'), 'ghost sm nearme', () => {
+      locate().then(placeMe).catch((e) => app.toast(e && e.far ? 'You’re not near Burlington.' : 'Location is off.'));
+    });
+    bar.append(span, near);
+    body.append(box, bar);
+    dropMap();
+    loadLeaflet().then((L) => {
+      if (!box.isConnected) return;
+      M = L.map(box, { zoomControl: true, attributionControl: true });
+      show();
+      L.tileLayer(TILES, { maxZoom: 19, attribution: TILE_CREDIT }).addTo(M);
+      list.forEach(({ s, i }) => {
+        const icon = L.divIcon({ className: 'vm-pin k-' + kindOf(s), html: String(i + 1), iconSize: [26, 26], iconAnchor: [13, 13] });
+        const pin = L.marker(s.coords, { icon, title: (i + 1) + '. ' + s.name, keyboard: true, riseOnHover: true }).addTo(M);
+        pin.bindTooltip(esc(s.name));
+        pin.on('click', () => shopSheet(i, M ? { c: M.getCenter(), z: M.getZoom(), wide } : null));
+      });
+      if (me) placeMe();
+      else if (navigator.permissions && navigator.permissions.query) {
+        /* already allowed on an earlier visit: no need to ask again */
+        navigator.permissions.query({ name: 'geolocation' }).then((p) => { if (p.state === 'granted') locate().then(placeMe).catch(() => {}); }).catch(() => {});
+      }
+      setTimeout(() => { if (M && box.isConnected) { M.invalidateSize(); show(); } }, 80);
+    }).catch(() => {
+      if (box.isConnected) box.replaceWith(el('p', 'note pad', esc('The map didn’t load.')));
+    });
+  });
+}
+
+/* the reader's own dot; the map is not moved to it, because turning the
+   map to the reader would ask the tile server for their block */
+function placeMe() {
+  if (!M || !me || !window.L || !M.getContainer().isConnected) return;
+  if (mePin) { try { mePin.remove(); } catch (e) { /* gone with its map */ } }
+  mePin = window.L.circleMarker(me, { radius: 8, weight: 3, className: 'vm-me', interactive: false }).addTo(M);
+  const near = document.querySelector('.sheet-body .nearme');
+  if (near) near.hidden = true;
+}
+
+/* a pin's shop: its row from the guide, and the way back to the map */
+function shopSheet(i, view) {
+  const s = (S.shops || [])[i];
+  if (!s) return;
+  app.sheet(s.name, (body) => {
+    const wrap = el('div', 'vshops insheet');
+    wrap.appendChild(shopRow(s, i, null, true));
+    body.appendChild(wrap);
+    const r = el('div', 'linkrow');
+    const back = button(esc('Back to the map'), 'ghost sm', () => openMap(view));
+    back.dataset.act = 'vmapback';
+    r.appendChild(back);
+    body.appendChild(r);
   });
 }
 
@@ -502,13 +718,17 @@ function designSheet() {
   });
 }
 
+/* Top designs: every design neighbors sent in, in a row, most "I'd wear
+   this" first (newest first among equals). The order is set when the row
+   is drawn, so a card never jumps out from under the reader's vote. */
+const byVotes = (a, b) => (Number(b.votes) || 0) - (Number(a.votes) || 0) || newest(a, b);
 function paintSent(host) {
   if (!S.sent || !S.sent.length) return;
-  host.appendChild(el('div', 'tdiv', '<span>' + esc('Sent in') + '</span>'));
+  host.appendChild(el('div', 'tdiv', '<span>' + esc('Top designs') + '</span>'));
   host.appendChild(el('div', 'spacer'));
   /* how the artist asked to be thanked is for Stephen, not the card (a
      design from before the kind carried it at the end of its body) */
-  grid(host, S.sent, { name: 'sent', meta: noMeta, vote: 'I’d wear this', text: (t) => String(t || '').replace(/\s*Thanks in: [a-z ]+$/i, '') });
+  grid(host, S.sent.slice().sort(byVotes), { name: 'sent', rail: 'vtop', meta: noMeta, vote: 'I’d wear this', text: (t) => String(t || '').replace(/\s*Thanks in: [a-z ]+$/i, '') });
 }
 
 /* --------------------------------------------------------------- Fit check */
@@ -741,9 +961,9 @@ function shirtSheet(p) {
 }
 
 /* -------------------------------------------------------------- deep links */
-/* #vintage/fit|spotted|newin|shops|swaps|tees jumps to a section; b-<id> is a
-   post (or an Art post on its way to a shirt), s-<id> a shop, d-<id> a
-   design. A key waits for its list to load. */
+/* #vintage/fit|spotted|swaps|newin|shops|tees jumps to a section; map opens
+   the shop map; b-<id> is a post (or an Art post on its way to a shirt),
+   s-<id> a shop, d-<id> a design. A key waits for its list to load. */
 /* a find comes down when someone gets it or its three weeks end; an Art
    piece can be taken down by its maker: the words fit both */
 const GONE = 'That post has gone.';
@@ -752,6 +972,13 @@ function land() {
   if (!pending || !ready) return;
   const k = pending;
   if (SECTIONS.some(([s]) => s === k)) { pending = null; jump(k); return; }
+  if (k === 'map') {
+    if (!S.shops && !S.shopsFailed) return;
+    pending = null;
+    jump('shops');
+    openMap();
+    return;
+  }
   const loaded = /^b-/.test(k) ? S.spotted !== null : /^s-/.test(k) ? !!S.shops || S.shopsFailed : /^d-/.test(k) ? !!S.designs || S.designsFailed : true;
   if (!loaded) return;
   pending = null;
@@ -795,7 +1022,7 @@ app.register(KEY, {
   },
   activate(param) { route++; pending = param || null; land(); },
   refresh() { if (ready) SLOTS.forEach(paint); },
-  deactivate() { route++; },
+  deactivate() { route++; if (M && !M.getContainer().isConnected) dropMap(); },
   subnav() {
     if (!ready) return null;
     const n = { spotted: S.spotted && S.spotted.length, shops: S.shops && S.shops.length, swaps: S.swaps && S.swaps.length, fit: S.fit && S.fit.length };
