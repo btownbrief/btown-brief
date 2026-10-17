@@ -268,6 +268,15 @@ async function newPage(browser, base, opts = {}) {
     const f = onair.files[name];
     return f ? r.fulfill({ status: 200, body: f, contentType: /\.txt$/.test(name) ? 'text/plain' : 'application/json' }) : r.fulfill({ status: 404, body: '' });
   });
+  /* Watch's film list. The films-data branch does not exist until Stephen adds
+     the TMDB key, so production fetches it, gets a 404 and reads the baked
+     starter list; here the branch answers with that same starter list (a 404
+     would log a console error), unless a group passes opts.films: a payload,
+     or null for the 404 itself. */
+  const films = opts.films === undefined ? await readFile(path.join(APP, 'data/films-seed.json'), 'utf8') : opts.films;
+  await page.route(/raw\.githubusercontent\.com\/btownbrief\/btown-brief\/films-data\/data\/films\.json$/, (r) => (films === null
+    ? r.fulfill({ status: 404, body: '' })
+    : r.fulfill({ status: 200, body: typeof films === 'string' ? films : JSON.stringify(films), contentType: 'application/json' })));
   const champions = opts.champions || (await gamesDemo()).champions;
   await page.route(/raw\.githubusercontent\.com\/btownbrief\/btownbrief\.github\.io\/champions-data\/data\/champions\.json$/,
     (r) => r.fulfill({ status: 200, body: JSON.stringify(champions), contentType: 'application/json' }));
@@ -349,7 +358,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'whatnow', 'onair', 'games', 'food', 'vintage']);
+const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'art', 'vintage']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -402,8 +411,8 @@ async function matrix(browser, base) {
             await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '.png') });
           }
           if (demo && combo === COMBOS[1] && tab === 'wire') await page.screenshot({ path: path.join(SHOTS, 'demo-wire-dark.png') });
-          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
-          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'food' || tab === 'onair' || tab === 'games' || tab === 'vintage')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
+          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair' || tab === 'games' || tab === 'art')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
+          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'watch' || tab === 'food' || tab === 'onair' || tab === 'games' || tab === 'art' || tab === 'vintage')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
           if (!demo && combo === COMBOS[1] && (tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '-dark.png') });
         }
         const gc = await page.evaluate(() => window.__gc);
@@ -431,7 +440,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'r-demo-all-night-diner'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 's-junktiques'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'f9003'], ['food', 'r-demo-all-night-diner'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 's-junktiques'], ['art', 'b-0000a000-0000-4000-8000-000000000002'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -1858,6 +1867,395 @@ async function accounts(browser, base) {
 /* The tab-facing API, driven in ?demo=1 against boards-fake.js, plus the
    live wire format. A test host feed is drawn at the top of the Vintage tab,
    the way a tab will draw one. */
+/* ---------------------------------------------------------------- Watch */
+const wPanel = '#panel-watch';
+const WATCH_CHAT = 'https://www.btownbrief.com/community/channels/meetups-hangouts';
+const W_DAY = 86400000;
+const wDayNum = (key) => Math.round(Date.parse(key + 'T12:00:00Z') / W_DAY);
+const wToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+const wNorm = (t) => String(t || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 80);
+/* the demo file, moved to today the way watch.js moves it */
+async function watchDemo() {
+  const d = JSON.parse(await readFile(path.join(APP, 'data/demo/watch.json'), 'utf8'));
+  const shift = wDayNum(wToday()) - wDayNum(d._anchor);
+  const move = (f) => { const nd = new Date((wDayNum(f.d) + shift) * W_DAY + 12 * 3600000).toISOString().slice(0, 10); return { ...f, d: nd, y: Number(nd.slice(0, 4)) }; };
+  d.films.top = d.films.top.map(move);
+  return d;
+}
+/* every demo rating by film id, the board's own two demo ratings included
+   (boards-fake.js seeds "Winter Light" 5 stars 8 hours ago and "Causeway" 4
+   stars 28 hours ago) */
+function watchRatings(d) {
+  const by = new Map();
+  const add = (id, stars, hours) => { const a = by.get(id) || { n: 0, sum: 0, wn: 0 }; a.n++; a.sum += stars; if (hours < 168) a.wn++; by.set(id, a); };
+  d.ratings.forEach(([id, stars, hours]) => add(id, stars, hours));
+  const byTitle = (t) => d.films.top.find((f) => f.t === t).id;
+  add(byTitle('Winter Light'), 5, 8);
+  add(byTitle('Causeway'), 4, 28);
+  return by;
+}
+/* a films.json in the contract build_films.py writes: twelve of the starter
+   films as the list, and five on the coming-soon rail */
+async function watchFilms() {
+  const seed = JSON.parse(await readFile(path.join(APP, 'data/films-seed.json'), 'utf8'));
+  const day = (n) => new Date(Date.now() + n * W_DAY).toISOString().slice(0, 10);
+  const top = seed.top.slice(0, 12);
+  const now = [{ ...seed.top[20], where: 'theaters' }, { ...seed.top[21], where: 'theaters' }];
+  const soon = [{ ...seed.top[22], id: 990001, t: 'Harbor Lights', d: day(9), where: 'theaters' },
+    { ...seed.top[23], id: 990002, t: 'Plain Sight', d: day(16), where: 'streaming' },
+    { ...seed.top[24], id: 990003, t: 'No Trailer Yet', d: day(30), where: 'theaters', yt: '' }];
+  return { v: 1, built: new Date().toISOString(), source: 'TMDB', notice: seed.notice, images: seed.images, top, soon, now };
+}
+const wTiles = (page) => page.$$eval(wPanel + ' [data-grid] [data-k]', (n) => n.map((x) => x.dataset.k));
+
+async function theWatch(browser, base) {
+  await group('Watch, live from films.json', async () => {
+    const films = await watchFilms();
+    const { ctx, page, errors, supabase } = await newPage(browser, base, { films });
+    await page.route(/youtube-nocookie\.com|youtube\.com\/embed/, (r) => r.fulfill({ status: 200, body: '<!doctype html><title>YouTube</title>', contentType: 'text/html' }));
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
+    check(!(await page.$(wPanel + ' [data-sec="list"][data-seed]')) && /The 12 best-rated films on TMDB\./.test(await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText)),
+      'films.json is the list, and it is not called a starter list', await page.$eval(wPanel + ' [data-sec="list"]', (s) => s.innerText));
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(films.top.map((f) => 'f' + f.id)), 'every film in its TMDB order', '');
+    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === JSON.stringify(['Coming soon', 'The list', 'Town', 'Next screening', 'Chat']), 'the chip row is the table of contents', toc.join(' / '));
+    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.map((a) => [a.dataset.k, a.querySelector('.s').textContent, !!a.querySelector('.play')]));
+    check(soon.length === 5 && soon[0][1] === 'In theaters now' && /· theaters$/.test(soon[2][1]) && /· streaming$/.test(soon[3][1]), 'Coming soon: in theaters now, then what opens, labelled theaters or streaming', JSON.stringify(soon));
+    check(!soon[4][2] && soon.slice(0, 4).every((x) => x[2]), 'a play disc only where TMDB has a trailer', JSON.stringify(soon));
+    const pics = await page.$$eval(wPanel + ' .poster img.pic', (n) => n.slice(0, 3).map((i) => [i.getAttribute('src'), i.loading]));
+    check(pics.length && pics.every(([src, lazy]) => /^https:\/\/image\.tmdb\.org\/t\/p\/w342\/[A-Za-z0-9]+\.jpg$/.test(src) && lazy === 'lazy'), 'posters are TMDB paths at w342, loaded lazily', JSON.stringify(pics));
+    const box = await page.$eval(wPanel + ' [data-grid] .poster .c-media', (m) => { const r = m.getBoundingClientRect(); return Math.round(r.height / r.width * 100) / 100; });
+    check(box === 1.5, 'a poster reserves its 2:3 box', box);
+    const credit = await page.$eval(wPanel + ' [data-credit]', (c) => ({ text: c.innerText, logo: c.querySelector('img') && c.querySelector('img').getAttribute('src'), href: c.querySelector('a').href }));
+    check(/not endorsed or certified by TMDB/.test(credit.text) && credit.logo === '../assets/img/tmdb.svg' && credit.href === 'https://www.themoviedb.org/', 'TMDB’s logo and notice are on the tab', JSON.stringify(credit));
+
+    /* nothing plays until a tap, and then in the shell's one video box */
+    await page.waitForTimeout(400);
+    check(await page.$eval('#vbox', (b) => b.hidden) && !(await page.$('#vbox-frame iframe')) && !(await page.$$eval('iframe, video', (n) => n.length)), 'nothing plays before a tap', '');
+    const first = films.now[0];
+    await page.click(wPanel + ' [data-k="soon:' + first.id + '"]');
+    await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe', { timeout: 4000 }).catch(() => {});
+    const v = await page.evaluate(() => { const f = document.querySelector('#vbox-frame iframe'); return f && { src: f.getAttribute('src'), title: document.getElementById('vbox-title').textContent, frames: document.querySelectorAll('iframe').length }; });
+    check(v && v.src === 'https://www.youtube-nocookie.com/embed/' + first.yt + '?autoplay=1&rel=0&playsinline=1' && v.frames === 1 && v.title === first.t + ' · trailer',
+      'a tap plays that film’s TMDB trailer in the shell’s video box, and only there', JSON.stringify(v));
+    await page.click('#vbox-close');
+    check(await page.$eval('#vbox', (b) => b.hidden) && !(await page.$('iframe')), 'closing the box stops it', '');
+    await page.click(wPanel + ' [data-k="soon:990003"]');
+    await page.waitForSelector('.sheet-body', { timeout: 4000 });
+    check(await page.$eval('#vbox', (b) => b.hidden) && /No trailer on TMDB yet\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'a film with no trailer opens its sheet instead, and says so', '');
+    await page.click('.sheet-head .iconbtn');
+    /* the film sheet's trailer button: the same box */
+    await page.click(wPanel + ' [data-k="f' + films.top[1].id + '"]');
+    await page.waitForSelector('.sheet-body [data-trailer]');
+    const sheet = await page.$eval('.sheet-body', (b) => b.innerText);
+    check(sheet.includes(films.top[1].o.slice(0, 40)) && sheet.includes(String(films.top[1].y)) && /\dh \d+m/.test(sheet) && sheet.includes(films.top[1].g[0]),
+      'the film sheet: overview, year, runtime, genres', sheet.slice(0, 200));
+    check(/not endorsed or certified by TMDB/.test(sheet), 'and TMDB’s notice', '');
+    await page.click('.sheet-body [data-trailer]');
+    await page.waitForSelector('#vbox:not([hidden]) #vbox-frame iframe', { timeout: 4000 }).catch(() => {});
+    check(await page.$eval('#vbox-frame iframe', (f) => f.getAttribute('src')).catch(() => '') === 'https://www.youtube-nocookie.com/embed/' + films.top[1].yt + '?autoplay=1&rel=0&playsinline=1' &&
+      await page.$eval('#sheet', (s) => s.hidden), 'Trailer in the sheet closes it and plays in the box', '');
+    await page.click('#vbox-close');
+    await page.screenshot({ path: path.join(SHOTS, 'live-watch-films.png') });
+    check(!supabase.some((u) => /nn_post_create|nn_watch/.test(u)), 'signed out, nothing is posted or synced', supabase.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, the starter list, two dots and a reload (live, signed out)', async () => {
+    const { ctx, page, errors, supabase } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
+    const head = await page.$eval(wPanel + ' [data-sec="list"]', (s) => ({ seed: s.dataset.seed, text: s.innerText }));
+    check(head.seed === '1' && /A starter list: 60 well-known films to begin with\./.test(head.text), 'the seed is labelled as a starter list', head.text);
+    check(!(await page.$(wPanel + ' [data-sec="soon"]')), 'with no films.json there is no Coming soon (the seed has none)', '');
+    const toc = await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent));
+    check(JSON.stringify(toc) === JSON.stringify(['The list', 'Town', 'Next screening', 'Chat']), 'and the table of contents leaves it out', toc.join(' / '));
+    check((await wTiles(page)).length === 60, 'all sixty films', '');
+    const dots = () => page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.map((a) => [a.dataset.k, [...a.querySelectorAll('.seen i')].map((i) => (i.classList.contains('on') ? 1 : 0)).join('')]));
+    check((await dots()).every((d) => d[1] === '0'), 'Just me: one dot on every poster, none filled', JSON.stringify((await dots()).slice(0, 3)));
+
+    await page.click(wPanel + ' [data-who] button:has-text("With")');
+    await page.waitForSelector('.sheet-body input[name=partner]');
+    await page.fill('.sheet-body input[name=partner]', '  Sam  ');
+    await page.click('.sheet-body button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached' });
+    check((await dots()).every((d) => d[1] === '00'), 'With Sam: a second dot on every poster', JSON.stringify((await dots()).slice(0, 3)));
+    check(await page.$eval(wPanel + ' [data-who] button.on', (b) => b.textContent) === 'With Sam', 'the switch reads With Sam', '');
+
+    const k = (await wTiles(page))[4];
+    await page.click(wPanel + ' [data-k="' + k + '"]');
+    await page.waitForSelector('.sheet-body [data-seen="them"]');
+    await page.click('.sheet-body [data-seen="me"]');
+    await page.click('.sheet-body [data-seen="them"]');
+    await page.click('.sheet-body [data-want]');
+    check(await page.$eval('.sheet-body [data-seen="them"]', (b) => b.getAttribute('aria-pressed')) === 'true' && /^✓ Sam has$/.test(await page.$eval('.sheet-body [data-seen="them"]', (b) => b.textContent)), 'the sheet’s toggles show what is set', '');
+    await page.click('.sheet-head .iconbtn');
+    const k2 = (await wTiles(page))[7];
+    await page.click(wPanel + ' [data-k="' + k2 + '"]');
+    await page.waitForSelector('.sheet-body [data-seen="them"]');
+    await page.click('.sheet-body [data-seen="them"]');
+    await page.click('.sheet-head .iconbtn');
+    const d1 = Object.fromEntries(await dots());
+    check(d1[k] === '11' && d1[k2] === '01' && Object.values(d1).filter((v) => v !== '00').length === 2, 'both dots on one film, the partner’s on another, the rest empty', JSON.stringify([d1[k], d1[k2]]));
+    await page.reload();
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
+    const d2 = Object.fromEntries(await dots());
+    check(d2[k] === '11' && d2[k2] === '01' && Object.values(d2).every((v) => v.length === 2), 'after a reload: still With Sam, both dots where they were', JSON.stringify([d2[k], d2[k2]]));
+    await page.click(wPanel + ' [data-show] button:has-text("Want to watch")');
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify([k]), 'Want to watch shows the one film on the list', JSON.stringify(await wTiles(page)));
+    await page.click(wPanel + ' [data-show] button:has-text("Neither of us")');
+    check((await wTiles(page)).length === 58 && !(await wTiles(page)).includes(k) && !(await wTiles(page)).includes(k2), 'Neither of us leaves out both seen films', (await wTiles(page)).length);
+    await page.click(wPanel + ' [data-show] button:has-text("All")');
+    await page.click(wPanel + ' [data-who] button:has-text("Just me")');
+    check((await dots()).every((d) => d[1].length === 1) && Object.fromEntries(await dots())[k] === '1', 'Just me again: one dot, and yours is kept', '');
+
+    /* rating, signed out: told it is one email, nothing sent */
+    await page.click(wPanel + ' [data-k="' + k + '"]');
+    await page.waitForSelector('.sheet-body [data-stars="4"]');
+    await page.click('.sheet-body [data-stars="4"]');
+    const said = await page.$eval('.sheet-body [data-msg]', (m) => m.textContent);
+    check(/one email/.test(said) && await page.$('.sheet-body [data-signin]') !== null, 'signed out, a star says rating is one email to sign in, with the button', said);
+    check(!supabase.some((u) => /nn_post_create/.test(u)), 'and nothing is posted', supabase.join(', '));
+    await page.click('.sheet-head .iconbtn');
+
+    const doors = await page.$$eval(wPanel + ' [data-door]', (a) => a.map((x) => [x.dataset.door, x.getAttribute('href')]));
+    check(JSON.stringify(doors) === JSON.stringify([['community', WATCH_CHAT], ['telegram', '../telegram.html']]), 'Watch chat: a door to the community channel and to Telegram', JSON.stringify(doors));
+    check(await page.$(wPanel + ' [data-chat] input, ' + wPanel + ' [data-chat] textarea') === null, 'no chat is built here', '');
+    const town = await page.$eval(wPanel + ' [data-slot="town"]', (s) => s.innerText);
+    check(/No film has three ratings this week yet/.test(town), 'with no ratings yet, town ratings say so', town);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, a signed-in reader’s dots follow them, and a cleared dot stays cleared (live)', async () => {
+    const seed = JSON.parse(await readFile(path.join(APP, 'data/films-seed.json'), 'utf8'));
+    const [A, B, C, Dd] = seed.top.map((f) => f.id);
+    const server = { partner: 'Sam', seen: new Map([[A, [true, false]], [B, [false, true]]]) };
+    const sets = [];
+    const rpc = (fn, body) => {
+      if (fn === 'nn_watch_seen_get') return { partner: server.partner, seen: [...server.seen].map(([f, v]) => [f, v[0], v[1]]) };
+      if (fn === 'nn_watch_seen_set') {
+        sets.push(body);
+        if (body.p_me || body.p_partner) server.seen.set(body.p_film, [!!body.p_me, !!body.p_partner]); else server.seen.delete(body.p_film);
+        if (body.p_partner_name != null) server.partner = body.p_partner_name || null;
+        return { film: body.p_film, me: !!body.p_me, partner: !!body.p_partner };
+      }
+      return undefined;
+    };
+    const { ctx, page, errors } = await newPage(browser, base, { rpc });
+    await page.goto(base + '/all-day/?x=1');
+    await page.evaluate(([s, c]) => { localStorage.setItem('allday-auth', s); localStorage.setItem('allday-watch', JSON.stringify({ mode: 'me', seen: { [c]: [1, 0] } })); }, [SESSION(), C]);
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
+    await page.waitForFunction((c) => { const w = JSON.parse(localStorage.getItem('allday-watch') || '{}'); return w.syncedFor && !Object.keys(w.dirty || {}).length; }, C, { timeout: 6000 }).catch(() => {});
+    const local = () => page.evaluate(() => JSON.parse(localStorage.getItem('allday-watch') || '{}'));
+    let w = await local();
+    check(JSON.stringify(w.seen) === JSON.stringify({ [A]: [1, 0], [B]: [0, 1], [C]: [1, 0] }) && w.partner === 'Sam', 'signing in joins the phone’s dots with the account’s, and takes the partner’s name', JSON.stringify(w));
+    check(sets.length === 1 && sets[0].p_film === C && sets[0].p_me === true && server.seen.has(C), 'only the phone’s own film is sent up', JSON.stringify(sets));
+    /* the other phone clears A */
+    server.seen.delete(A);
+    sets.length = 0;
+    await page.reload();
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
+    await page.waitForFunction((a) => !(a in (JSON.parse(localStorage.getItem('allday-watch') || '{}').seen || {})), A, { timeout: 6000 }).catch(() => {});
+    w = await local();
+    check(!(A in w.seen) && w.seen[B] && w.seen[C], 'a dot cleared on the other phone stays cleared here', JSON.stringify(w.seen));
+    check(!sets.length && !server.seen.has(A), 'and is not sent back up', JSON.stringify(sets));
+    /* a dot set here is saved to the account at once */
+    await page.click(wPanel + ' [data-k="f' + Dd + '"]');
+    await page.waitForSelector('.sheet-body [data-seen="me"]');
+    await page.click('.sheet-body [data-seen="me"]');
+    await page.waitForFunction(() => !Object.keys(JSON.parse(localStorage.getItem('allday-watch') || '{}').dirty || {}).length, null, { timeout: 4000 }).catch(() => {});
+    check(server.seen.get(Dd) && server.seen.get(Dd)[0] === true && sets.length === 1, 'a dot set in the sheet goes to the account', JSON.stringify(sets));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, a missing films branch falls back to the starter list (live)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { films: null });
+    await page.goto(base + '/all-day/#watch');
+    await page.waitForSelector(wPanel + ' [data-grid]', { timeout: 15000 });
+    check(await page.$(wPanel + ' [data-sec="list"][data-seed]') !== null && (await wTiles(page)).length === 60, 'a 404 from films-data: the starter list, labelled', '');
+    check(errors.every((e) => /404/.test(e)), 'and nothing but the 404 itself in the console', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, filters and the rating sort on frozen data (demo)', async () => {
+    const d = await watchDemo();
+    const ratings = watchRatings(d);
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.waitForSelector(wPanel + ' [data-grid] .rate', { timeout: 15000 });
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'all sixty, in list order', '');
+    const today = wDayNum(wToday());
+    const ago = (f) => today - wDayNum(f.d);
+    const windows = { '1m': [0, 31], '6m': [0, 183], '1y': [0, 366], '2y': [0, 731], '5y': [0, 1827], '10y': [0, 3653], '15y': [0, 5479], '20y': [0, 7305], '20p': [7306, Infinity] };
+    const homeless = d.films.top.filter((f) => !Object.values(windows).some(([lo, hi]) => ago(f) >= lo && ago(f) <= hi));
+    check(!homeless.length, 'every released film falls in at least one dated window', homeless.map((f) => f.t).join(', '));
+    for (const [key, [lo, hi]] of Object.entries(windows)) {
+      await page.click(wPanel + ' [data-filter="recency"] [data-chip="' + key + '"]');
+      const want = d.films.top.filter((f) => ago(f) >= lo && ago(f) <= hi).map((f) => 'f' + f.id);
+      const got = await wTiles(page);
+      check(want.length && JSON.stringify(got) === JSON.stringify(want), 'recency ' + key + ': ' + want.length + ' films, by release date', JSON.stringify([got.length, want.length]));
+    }
+    await page.click(wPanel + ' [data-filter="recency"] [data-chip="10y"]');
+    await page.click(wPanel + ' [data-filter="genre"] [data-chip="Comedy"]');
+    const both = d.films.top.filter((f) => ago(f) <= 3653 && f.g.includes('Comedy')).map((f) => 'f' + f.id);
+    check(both.length && JSON.stringify(await wTiles(page)) === JSON.stringify(both), 'genre and recency together: comedies from the last ten years', JSON.stringify(await wTiles(page)));
+    const chipN = await page.$eval(wPanel + ' [data-filter="genre"] [data-chip="Drama"] .n', (n) => Number(n.textContent));
+    check(chipN === d.films.top.filter((f) => ago(f) <= 3653 && f.g.includes('Drama')).length, 'a genre chip counts within the chosen recency', chipN);
+    await page.click(wPanel + ' [data-filter="recency"] [data-chip="any"]');
+    await page.click(wPanel + ' [data-filter="genre"] [data-chip="Horror"]');
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.filter((f) => f.g.includes('Horror')).map((f) => 'f' + f.id)), 'Horror alone', '');
+    await page.click(wPanel + ' [data-filter="genre"] [data-chip="all"]');
+
+    /* the town rating on posters: only from three ratings, and the sort */
+    const rated = d.films.top.filter((f) => (ratings.get(f.id) || { n: 0 }).n >= 3);
+    const avg = (f) => ratings.get(f.id).sum / ratings.get(f.id).n;
+    const shown = await page.$$eval(wPanel + ' [data-grid] .poster', (n) => n.filter((a) => a.querySelector('.rate')).map((a) => a.dataset.k));
+    check(JSON.stringify(shown.sort()) === JSON.stringify(rated.map((f) => 'f' + f.id).sort()), 'a town rating only on films with three or more ratings (' + rated.length + ')', JSON.stringify(shown));
+    check(!shown.includes('f' + d.films.top.find((f) => f.t === 'Causeway').id), 'Causeway, with two, shows none', '');
+    await page.click(wPanel + ' [data-sort] button:has-text("Town rating")');
+    const order = rated.slice().sort((a, b) => avg(b) - avg(a) || ratings.get(b.id).n - ratings.get(a.id).n || d.films.top.indexOf(a) - d.films.top.indexOf(b)).map((f) => 'f' + f.id);
+    const sorted = await wTiles(page);
+    check(JSON.stringify(sorted.slice(0, rated.length)) === JSON.stringify(order), 'Town rating: the rated films first, highest average first', JSON.stringify([sorted.slice(0, rated.length), order]));
+    const rest = d.films.top.filter((f) => !rated.includes(f)).map((f) => 'f' + f.id);
+    check(JSON.stringify(sorted.slice(rated.length)) === JSON.stringify(rest), 'then the rest in list order', '');
+    await page.click(wPanel + ' [data-sort] button:has-text("List order")');
+    check(JSON.stringify(await wTiles(page)) === JSON.stringify(d.films.top.map((f) => 'f' + f.id)), 'List order puts it back', '');
+    const soon = await page.$$eval(wPanel + ' [data-sec="soon"] + .rail-wrap .poster', (n) => n.length);
+    check(soon === d.films.soon.length + d.films.now.length && soon === 10, 'Coming soon: ten trailers', soon);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, town ratings and the screening vote (demo)', async () => {
+    const d = await watchDemo();
+    const ratings = watchRatings(d);
+    const { ctx, page, errors, supabase } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#watch/town');
+    await page.waitForSelector(wPanel + ' [data-slot="town"] .lrow', { timeout: 15000 });
+    const rows = await page.$$eval(wPanel + ' [data-slot="town"] .lrow', (n) => n.map((r) => [r.dataset.k, Number(r.dataset.n), r.querySelector('.t').textContent]));
+    const want = d.films.top.filter((f) => (ratings.get(f.id) || { wn: 0 }).wn >= 3);
+    check(rows.length === want.length && rows.every((r) => r[1] >= 3), 'town ratings this week: only films with three or more this week (' + want.length + ')', JSON.stringify(rows));
+    check(JSON.stringify(rows.map((r) => r[0]).sort()) === JSON.stringify(want.map((f) => 'town:' + f.id).sort()), 'exactly those films', '');
+    check(!rows.some((r) => /Causeway|Kindling/.test(r[2])), 'Causeway and Kindling, two ratings each this week, are left out', '');
+    check(rows.every((r, i) => i === 0 || rows[i - 1][1] >= r[1]), 'most-rated first', '');
+
+    const opts = () => page.$$eval(wPanel + ' [data-ballot] .vote-opt', (n) => n.map((o) => ({ k: o.dataset.k, on: o.getAttribute('aria-pressed'), n: o.querySelector('.l span').textContent, w: parseFloat(o.querySelector('.bar i').style.width) })));
+    const before = await opts();
+    check(before.length === 5, 'five films on the ballot', JSON.stringify(before));
+    check(before.every((o, i) => i === 0 || parseFloat(before[i - 1].n) >= parseFloat(o.n)), 'most votes first', JSON.stringify(before.map((o) => o.n)));
+    check(/At five votes Stephen books it, puts it on Meetup/.test(await page.$eval(wPanel + ' [data-sec="vote"]', (s) => s.innerText)), 'it says what five votes does', '');
+    const target = before[2];
+    await page.click(wPanel + ' [data-k="' + target.k + '"]');
+    await page.waitForFunction((k) => document.querySelector('#panel-watch [data-k="' + k + '"]').getAttribute('aria-pressed') === 'true', target.k);
+    await page.waitForTimeout(150);
+    const after = (await opts()).find((o) => o.k === target.k);
+    check(parseFloat(after.n) === parseFloat(target.n) + 1 && after.w > target.w, 'a vote raises its count and its bar', JSON.stringify([target, after]));
+    const other = before[3];
+    await page.click(wPanel + ' [data-k="' + other.k + '"]');
+    await page.waitForFunction((k) => document.querySelector('#panel-watch [data-k="' + k + '"]').getAttribute('aria-pressed') === 'true', other.k);
+    await page.waitForTimeout(150);
+    const now = await opts();
+    check(now.find((o) => o.k === target.k).on === 'false' && parseFloat(now.find((o) => o.k === target.k).n) === parseFloat(target.n), 'one vote each: voting for another takes the first back', JSON.stringify(now));
+    const four = before.find((o) => o.n === '4 of 5');
+    await page.click(wPanel + ' [data-k="' + four.k + '"]');
+    await page.waitForFunction((k) => /going on Meetup/.test(document.querySelector('#panel-watch [data-k="' + k + '"]').innerText), four.k, { timeout: 4000 }).catch(() => {});
+    check(/5 · going on Meetup/.test(await page.$eval(wPanel + ' [data-k="' + four.k + '"]', (o) => o.innerText)) &&
+      await page.$eval(wPanel + ' [data-k="' + four.k + '"] .bar i', (i) => i.style.width) === '100%', 'the fifth vote fills the bar and says it is going on Meetup', '');
+    const scr = await page.$eval(wPanel + ' [data-screening]', (c) => c.innerText);
+    check(/The Long Lake, Friday at the Roxy/.test(scr) && /The Roxy/.test(scr), 'a pick with a place is the screening card', scr);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-watch-desktop-dark.png') });
+    check(!supabase.length, 'the demo never calls Supabase', supabase.join(', '));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, a rating posts with stars in meta (demo)', async () => {
+    const d = await watchDemo();
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#watch');
+    await page.waitForSelector(wPanel + ' [data-grid] .rate', { timeout: 15000 });
+    const f = d.films.top.find((x) => x.t === 'Fieldwork');
+    await page.click(wPanel + ' [data-k="f' + f.id + '"]');
+    await page.waitForSelector('.sheet-body [data-stars="4"]');
+    await page.click('.sheet-body [data-stars="4"]');
+    check(/one email/.test(await page.$eval('.sheet-body [data-msg]', (m) => m.textContent)), 'signed out: rating asks for the sign-in', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    const before = await fakeOf(page, (x) => x.posts.filter((p) => p.board === 'watch' && p.kind === 'rating').length);
+    await page.click(wPanel + ' [data-k="f' + f.id + '"]');
+    await page.waitForSelector('.sheet-body [data-stars="4"]');
+    await page.click('.sheet-body [data-where] button:has-text("In a theater")');
+    await page.click('.sheet-body [data-stars="4"]');
+    await page.waitForSelector('.sheet-body [data-rate] input[name=display_name]', { timeout: 4000 });
+    check(/Add your first name/.test(await page.$eval('.sheet-body [data-msg]', (m) => m.textContent)), 'no first name yet: asked for one, in place', '');
+    await page.fill('.sheet-body [data-rate] input[name=display_name]', 'Maya');
+    await page.click('.sheet-body [data-rate] button[type=submit]');
+    await page.waitForFunction(() => /^Rated 4 stars/.test(document.querySelector('.sheet-body [data-msg]').textContent), null, { timeout: 4000 }).catch(() => {});
+    const post = await fakeOf(page, (x) => { const p = x.posts.filter((q) => q.board === 'watch' && q.kind === 'rating').pop(); return { n: x.posts.filter((q) => q.board === 'watch' && q.kind === 'rating').length, title: p.title, meta: p.meta, exp: p.expires_at }; });
+    check(post.n === before + 1 && post.title === 'Fieldwork' && JSON.stringify(post.meta) === JSON.stringify({ stars: 4, year: f.y, where: 'In a theater' }) && post.exp === null,
+      'a rating post on the watch board: the title, and stars, year and where in meta; it never expires', JSON.stringify(post));
+    check(await page.$$eval('.sheet-body [data-stars].on', (n) => n.length) === 4, 'four stars lit', '');
+    /* Fieldwork had one demo rating; with Maya's it has two, still not shown */
+    await page.click('.sheet-head .iconbtn');
+    await page.waitForTimeout(300);
+    check(!(await page.$(wPanel + ' [data-k="f' + f.id + '"] .rate')), 'two ratings: still no town rating on the poster', '');
+    /* a new rating replaces the reader's last one */
+    await page.click(wPanel + ' [data-k="f' + f.id + '"]');
+    await page.waitForSelector('.sheet-body [data-stars="2"]');
+    await page.click('.sheet-body [data-stars="2"]');
+    await page.waitForFunction(() => /^Rated 2 stars/.test(document.querySelector('.sheet-body [data-msg]').textContent), null, { timeout: 4000 }).catch(() => {});
+    await page.waitForTimeout(300);
+    const mine = await fakeOf(page, (x) => x.posts.filter((q) => q.board === 'watch' && q.kind === 'rating' && q.title === 'Fieldwork').map((q) => q.meta.stars));
+    check(JSON.stringify(mine.sort()) === JSON.stringify([2, 5]), 'rating again replaces your last rating: one each, the old one gone', JSON.stringify(mine));
+    await page.click('.sheet-head .iconbtn');
+
+    /* a pick from the list */
+    await page.click(wPanel + ' [data-suggest]');
+    await page.waitForSelector('.sheet-body [data-results] [data-film]');
+    await page.fill('.sheet-body input[type=search]', 'orchard');
+    await page.waitForTimeout(100);
+    const hits = await page.$$eval('.sheet-body [data-film]', (n) => n.map((x) => x.dataset.film));
+    const orchard = d.films.top.find((x) => x.t === 'Orchard');
+    check(JSON.stringify(hits) === JSON.stringify([String(orchard.id)]), 'the suggest sheet picks a film from the list', JSON.stringify(hits));
+    await page.click('.sheet-body [data-film] button');
+    await page.waitForFunction(() => [...document.querySelectorAll('#panel-watch [data-ballot] .vote-opt')].some((o) => /Orchard/.test(o.innerText)), null, { timeout: 4000 }).catch(() => {});
+    const pick = await fakeOf(page, (x) => { const p = x.posts.filter((q) => q.board === 'watch' && q.kind === 'pick').pop(); return { title: p.title, meta: p.meta, days: Math.round((p.expires_at - p.created_at) / 86400000) }; });
+    check(pick.title === 'Orchard' && JSON.stringify(pick.meta) === JSON.stringify({ year: orchard.y }) && pick.days === 30, 'it posts a pick (title, year; 30 days) and lands on the ballot', JSON.stringify(pick));
+    await page.click(wPanel + ' [data-suggest]');
+    await page.fill('.sheet-body input[type=search]', 'orchard');
+    await page.waitForTimeout(100);
+    const count = await fakeOf(page, (x) => x.posts.filter((q) => q.board === 'watch' && q.kind === 'pick').length);
+    await page.click('.sheet-body [data-film] button');
+    await page.waitForTimeout(300);
+    check(await fakeOf(page, (x) => x.posts.filter((q) => q.board === 'watch' && q.kind === 'pick').length) === count, 'one pick per film: suggesting it again votes for it instead', '');
+    await pageRules(page, 'watch', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Watch, deep links (demo)', async () => {
+    const d = await watchDemo();
+    const { ctx, page, errors } = await newPage(browser, base);
+    const far = d.films.top[57];
+    await page.goto(base + '/all-day/?demo=1#watch/f' + far.id);
+    check(await flashes(page, 'f' + far.id), 'a film far down the list lands and flashes', '');
+    await page.goto(base + '/all-day/?demo=1#watch/soon:' + d.films.soon[3].id);
+    await page.reload();
+    check(await flashes(page, 'soon:' + d.films.soon[3].id), 'a coming-soon poster lands and flashes', '');
+    await page.goto(base + '/all-day/?demo=1#watch/f1');
+    await page.reload();
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    check(/moved on/.test(await page.$eval('#toast', (t) => t.textContent)), 'a film that is not on the list says it has moved on', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 const VMETA = (p) => [p.meta.shop, p.meta.size, p.meta.price != null ? '$' + p.meta.price : ''].filter(Boolean).join(' · ');
 async function drawBoard(page, board, extra) {
   await page.evaluate(async ({ board, extra }) => {
@@ -2390,6 +2788,274 @@ async function theVintage(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------------ Art */
+const artPanel = '#panel-art';
+const artId = (n) => '0000c000-0000-4000-8000-' + String(n).padStart(12, '0');
+const ART_POST = (o) => ({ id: o.id, board: 'art', kind: o.kind || 'photo', title: o.title, body: o.body || '', place: o.place || '', meta: o.meta || { shirt: 'no' },
+  photo: o.photo === undefined ? 'submissions/' + o.id.slice(-12) + '.jpg' : o.photo, author: o.author || 'Kara', author_arch: null,
+  created_at: o.at, expires_at: o.expires || null, votes: o.votes || 0, voted: false, mine: false });
+/* nn_posts_list as the SQL answers it: newest first, before a time, at most p_limit */
+const artList = (posts, calls) => (fn, args) => {
+  if (fn !== 'nn_posts_list') return undefined;
+  if (calls) calls.push(args);
+  const before = args.p_before ? Date.parse(args.p_before) : Infinity;
+  return posts.filter((p) => Date.parse(p.created_at) < before).sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, args.p_limit);
+};
+const artText = (page, sel) => page.$eval(artPanel + ' ' + sel, (n) => n.textContent);
+const artReload = (page) => page.evaluate(() => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board: 'art', id: null, what: 'test' } })));
+
+async function theArt(browser, base) {
+  await group('Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles)', async () => {
+    const H = 3600000;
+    const posts = [
+      ART_POST({ id: artId(1), title: 'Sunday night, 11:30', at: '2026-10-12T03:30:00Z', votes: 50 }),
+      ART_POST({ id: artId(2), kind: 'art', title: 'Monday, 12:30 am', at: '2026-10-12T04:30:00Z', votes: 10, meta: { medium: 'Gouache', shirt: 'yes' } }),
+      ART_POST({ id: artId(3), title: 'Tuesday afternoon', at: '2026-10-13T16:00:00Z', votes: 9 }),
+      ART_POST({ id: artId(4), kind: 'notice', title: 'Open studio Saturday', photo: null, at: '2026-10-13T12:00:00Z', expires: '2026-11-12T12:00:00Z', votes: 40 }),
+    ];
+    /* one a day back past nine weeks, so the list needs a second page and every week has a winner */
+    for (let i = 0; i < 70; i++) posts.push(ART_POST({ id: artId(100 + i), title: 'Day ' + i, at: new Date(Date.parse('2026-10-11T12:00:00Z') - i * 24 * H).toISOString(), votes: i % 4 }));
+    const calls = [];
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', rpc: artList(posts, calls) });
+    await page.clock.setFixedTime(new Date('2026-10-14T14:00:00Z'));   // Wednesday, 10 am in Burlington, 7 am for this reader
+    await page.goto(base + '/all-day/#art');
+    await settle(page);
+    const hero = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ eyebrow: s.querySelector('.eyebrow').textContent, title: s.querySelector('h3').textContent,
+      votes: s.querySelector('[data-vk] .vn').textContent, shirt: s.querySelector('[data-shirt]') && s.querySelector('[data-shirt]').getAttribute('href') }));
+    check(hero.eyebrow === 'Photo of the week' && hero.title === 'Monday, 12:30 am' && hero.votes === '10',
+      'the top-voted post since Monday in Burlington wins: 50 votes at 11:30 pm Sunday there is last week’s, though it is Monday in UTC', JSON.stringify(hero));
+    check(hero.shirt === '#vintage/' + encodeURIComponent('b-' + artId(2)), 'its maker said yes to a shirt: “Put it on a shirt” goes to #vintage with the post key', JSON.stringify(hero));
+    check(calls.length >= 2 && calls.every((c) => c.p_board === 'art' && c.p_limit === 60) && !calls[0].p_before && calls[1].p_before === posts.slice().sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))[59].created_at,
+      'the list is paged, 60 at a time, until the eighth week back is in', JSON.stringify(calls.map((c) => c.p_before)));
+    const wins = await page.$$eval(artPanel + ' [data-sec="winners"] .vcard', (cs) => cs.map((c) => [c.querySelector('.t').textContent, c.querySelector('.s').textContent]));
+    check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Sunday night, 11:30/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
+      'Winners: the past eight weeks, newest first, and the Sunday-night post wins its own week', JSON.stringify(wins));
+    check(wins.every((w) => /^Kara · /.test(w[1])), 'each winner carries the maker’s name, and nothing else to win', JSON.stringify(wins[0]));
+    const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => t.getAttribute('aria-label')));
+    check(/^Tuesday afternoon/.test(tiles[0]) && /^Monday, 12:30 am/.test(tiles[1]) && !tiles.some((t) => /Open studio/.test(t)), 'the wall is newest first, pictures only', tiles.slice(0, 3).join(' | '));
+    check(/Open studio Saturday/.test(await artText(page, '[data-sec="board"]')), 'the notice is on the community board instead', '');
+    await pageRules(page, 'art', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, a vote that overtakes takes the week (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#art');
+    await settle(page);
+    const heroTitle = () => artText(page, '[data-sec="week"] h3');
+    check(await heroTitle() === 'The breakwater light in fog', 'two posts tie on 23 this week, and the one posted first leads', await heroTitle());
+    const tile = artPanel + ' .tile[aria-label^="Aurora from the causeway"]';
+    check(await page.$eval(tile + ' .vn', (n) => n.textContent) === '23', 'the tile shows its votes', '');
+    await page.click(tile);
+    await page.waitForSelector('.sheet-card[aria-label="Aurora from the causeway"]');
+    await page.click('.sheet-body [data-act="artvote"]');
+    await page.waitForFunction(() => document.querySelector('#panel-art [data-sec="week"] h3').textContent === 'Aurora from the causeway', null, { timeout: 3000 }).catch(() => {});
+    check(await heroTitle() === 'Aurora from the causeway', 'one vote puts it ahead, and the photo of the week changes', await heroTitle());
+    const after = await page.evaluate(() => ({ sheet: document.querySelector('.sheet-body [data-act="artvote"]').getAttribute('aria-pressed'), sheetN: document.querySelector('.sheet-body [data-act="artvote"] .vn').textContent,
+      tile: document.querySelector('#panel-art .tile[aria-label^="Aurora"] .vn').textContent, hero: document.querySelector('#panel-art [data-sec="week"] [data-vk] .vn').textContent }));
+    check(after.sheet === 'true' && after.sheetN === '24' && after.tile === '24' && after.hero === '24', 'the count is 24 on the sheet, the tile and the hero', JSON.stringify(after));
+    check(await fakeOf(page, `(f) => f._count('${'0000a000-0000-4000-8000-000000000002'}')`) === 24, 'and the board counted it', '');
+    await page.click('.sheet-body [data-act="artvote"]');
+    await page.waitForFunction(() => document.querySelector('#panel-art [data-sec="week"] h3').textContent === 'The breakwater light in fog', null, { timeout: 3000 }).catch(() => {});
+    check(await heroTitle() === 'The breakwater light in fog', 'taking the vote back hands the week back', await heroTitle());
+    await page.click('.sheet-head .iconbtn');
+    await page.click(artPanel + ' [data-sec="week"] button[data-vk]');
+    await page.waitForTimeout(150);
+    check(await page.$eval(artPanel + ' [data-sec="week"] button[data-vk]', (b) => b.getAttribute('aria-pressed') + ' ' + b.querySelector('.vn').textContent) === 'true 24' && await heroTitle() === 'The breakwater light in fog',
+      'the hero’s own Vote button counts too', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, the wall opens a tile in a sheet (demo, wide, dark)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#art/wall');
+    await settle(page);
+    const grid = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t, i) => ({ i, tall: t.classList.contains('tall'), ct: !!t.querySelector('.ct'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent })));
+    check(grid.length === 17 && grid.filter((t) => t.ct).length === 14 && grid.filter((t) => t.lbl === 'From the gallery').length === 3, 'fourteen posts with votes and three gallery photos', JSON.stringify(grid.length));
+    check(JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)) === '[0,7,10]', 'two tall tiles in every ten, none where it would leave a hole', JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)));
+    const holes = await page.$eval(artPanel + ' .grid3', (g) => {
+      const r = [...g.children].map((t) => t.getBoundingClientRect());
+      const area = r.reduce((s, x) => s + x.width * x.height, 0);
+      const box = g.getBoundingClientRect();
+      const last = r.slice(-3).every((x) => Math.abs(x.bottom - r[r.length - 1].bottom) < 2);
+      return { fill: area / ((box.width - 32) * box.height), last };
+    });
+    check(holes.fill > 0.8, 'the grid is filled, no gaps', JSON.stringify(holes));
+    await page.click(artPanel + ' .tile[aria-label^="The Flynn marquee"]');
+    await page.waitForSelector('.sheet-card[aria-label="The Flynn marquee"]');
+    const sh = await page.$eval('.sheet-body', (b) => ({ media: !!b.querySelector('.c-media.r11 .ph'), text: b.innerText,
+      acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act), shirt: b.querySelector('[data-shirt]') && b.querySelector('[data-shirt]').getAttribute('href') }));
+    check(sh.media, 'the sheet shows the whole picture in its own shape', JSON.stringify(sh));
+    check(/by Priya N\. · Art · Linocut/.test(sh.text) && /Three-color linocut/.test(sh.text), 'with the title, the maker, the medium and their line', sh.text);
+    check(JSON.stringify(sh.acts) === '["artvote","share","breport"]' && /^#vintage\/b-/.test(sh.shirt || ''), 'and vote, share, report, and the shirt', JSON.stringify(sh));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-art-sheet-desktop-dark.png') });
+    await page.click('.sheet-body [data-act="breport"]');
+    check(/Reporting needs the email sign-in/.test(await page.$eval('#toast', (t) => t.textContent)), 'report goes to the boards’ own flow (signed out, it asks for sign-in)', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.click(artPanel + ' .tile:has(.lbl)');
+    await page.waitForSelector('.sheet-card');
+    const g = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act) }));
+    check(/Photo by Stephen/.test(g.text) && /community gallery/.test(g.text) && JSON.stringify(g.acts) === '["share"]', 'a gallery photo’s sheet: who took it, where, share, and no votes', JSON.stringify(g));
+    await page.click('.sheet-head .iconbtn');
+    await pageRules(page, 'art', 1280);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, a photo post composes with consent and lands pending (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#art/add');
+    await settle(page);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.click(artPanel + ' [data-sec="add"] button:has-text("Add art")');
+    await page.waitForSelector('.sheet-body form.bform');
+    check(await page.$('input[name="m:medium"]') !== null && await page.$('select[name="m:shirt"]') !== null, 'Add art asks for the medium and the shirt', '');
+    await page.click('.sheet-head .iconbtn');
+    const tiles0 = await page.$$eval(artPanel + ' .grid3 .tile', (t) => t.length);
+    await page.click(artPanel + ' [data-sec="add"] button:has-text("Add a photo")');
+    await page.waitForSelector('.sheet-body form.bform');
+    check(await page.$('input[name="m:medium"]') === null && await page.$('select[name="m:shirt"]') !== null, 'Add a photo asks for the shirt, not a medium', '');
+    check(/Stephen approves every photo before it shows/.test(await page.$eval('.bform', (f) => f.innerText)), 'and says Stephen approves photos first', '');
+    await page.fill('input[name=display_name]', 'Robin');
+    await page.fill('input[name=title]', 'Leddy at dusk');
+    await page.fill('textarea[name=body]', 'From the end of the pier.');
+    await page.selectOption('select[name="m:shirt"]', 'yes');
+    await page.setInputFiles('.bform input[type=file]', { name: 'leddy.jpg', mimeType: 'image/jpeg', buffer: PNG });
+    await page.click('.bform button[type=submit]');
+    check(/Tick the box first/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'without the consent box: refused', '');
+    await page.check('.bform input[name=consent]');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
+    check(/The photo shows once it’s been checked/.test(await page.$eval('#toast', (t) => t.textContent)), 'with it: posted, and the toast says the photo waits', await page.$eval('#toast', (t) => t.textContent));
+    const row = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); return p && { kind: p.kind, meta: p.meta, body: p.body, photo: f.photos.get(p.photo_path).status }; }`);
+    check(row && row.kind === 'photo' && row.meta.shirt === 'yes' && row.body === 'From the end of the pier.' && row.photo === 'pending', 'it is on the board as a photo post, its picture pending in the queue', JSON.stringify(row));
+    await page.waitForFunction(() => !document.querySelector('#panel-art .waiting').hidden, null, { timeout: 3000 }).catch(() => {});
+    check(await artText(page, '.waiting') === '1 picture of yours is waiting for Stephen’s look.', 'Add yours says one is waiting', await artText(page, '.waiting'));
+    check(await page.$$eval(artPanel + ' .grid3 .tile', (t) => t.length) === tiles0 && !(await page.$(artPanel + ' .tile[aria-label^="Leddy at dusk"]')), 'and the wall does not show it yet', '');
+    await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); f.setPhoto(p.photo_path, 'approved'); return 1; }`);
+    await artReload(page);
+    await page.waitForSelector(artPanel + ' .tile[aria-label^="Leddy at dusk"]', { timeout: 3000 }).catch(() => {});
+    check(/^Leddy at dusk, by Robin/.test(await page.$eval(artPanel + ' .grid3 .tile', (t) => t.getAttribute('aria-label'))), 'once Stephen approves it, it leads the wall, by first name', '');
+    check(await page.$eval(artPanel + ' .waiting', (n) => n.hidden), 'and nothing is waiting any more', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, the community board, and a notice running out (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#art/board');
+    await settle(page);
+    const board = () => page.$$eval(artPanel + ' [data-sec="board"] .card.board', (cs) => cs.map((c) => [c.querySelector('.b-title').textContent, (c.querySelector('.tag-left') || {}).textContent || '']));
+    const b0 = await board();
+    check(b0.length === 4 && /^Looking for a model/.test(b0[0][0]) && b0.every((b) => /^(\d+d|\d+h) left$/.test(b[1])), 'four notices, newest first, each with its days left', JSON.stringify(b0));
+    check(/^30d left$|^29d left$/.test(b0[0][1]), 'a new notice has thirty days', b0[0][1]);
+    await fakeOf(page, `(f) => { f.posts.find((p) => p.title === 'Free easel, first come').expires_at = Date.now() - 1000; return 1; }`);
+    await artReload(page);
+    await page.waitForFunction(() => document.querySelectorAll('#panel-art [data-sec="board"] .card.board').length === 3, null, { timeout: 3000 }).catch(() => {});
+    const b1 = await board();
+    check(b1.length === 3 && !b1.some((b) => /Free easel/.test(b[0])), 'a notice past its thirty days leaves the board', JSON.stringify(b1));
+    await page.click(artPanel + ' [data-sec="board"] .sec button:has-text("Post")');
+    await page.waitForSelector('.sheet-card[aria-label="Post a notice"]');
+    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'posting a notice asks for the sign-in first', '');
+    await page.click('.sheet-head .iconbtn');
+    await pageRules(page, 'art', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, “Put it on a shirt” goes to Vintage with the post key (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#art');
+    await settle(page);
+    const key = 'b-0000a000-0000-4000-8000-000000000001';
+    check(await page.$eval(artPanel + ' [data-sec="week"] [data-shirt]', (a) => a.getAttribute('href')) === '#vintage/' + key, 'the hero links to #vintage/<its key>', '');
+    await page.click(artPanel + ' [data-sec="week"] [data-shirt]');
+    await page.waitForFunction(() => document.querySelector('#tab-vintage').getAttribute('aria-selected') === 'true', null, { timeout: 4000 }).catch(() => {});
+    check(await page.evaluate(() => location.hash) === '#vintage/' + key && await page.$eval('#tab-vintage', (b) => b.getAttribute('aria-selected')) === 'true', 'and tapping it opens Vintage with that key in the address', await page.evaluate(() => location.hash));
+    const found = await page.evaluate((k) => import('/all-day/js/boards.js').then((b) => b.list('art', { meta: { shirt: 'yes' }, limit: 60 }).then((r) => r.posts.find((p) => 'b-' + p.id === k))), key);
+    check(found && found.title === 'The breakwater light in fog' && found.photo, 'Vintage can find the picture from the key alone', JSON.stringify(found && found.title));
+    await page.goto(base + '/all-day/?demo=1#art');
+    await settle(page);
+    await page.click(artPanel + ' .tile[aria-label^="Church Street in rain"]');
+    await page.waitForSelector('.sheet-card[aria-label="Church Street in rain"]');
+    check(!(await page.$('.sheet-body [data-shirt]')), 'a maker who said no gets no shirt button', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, the empty wall’s sunset line says a score only when there is one (live)', async () => {
+    /* sunset-score.js stands in for the shared module: tomorrow at 6:05 pm, and
+       the score the page asks for. A 0.0 is what an empty forecast comes out as. */
+    const stub = 'window.BtownSunsetScore = { OPEN_METEO_URL: "https://api.open-meteo.com/v1/forecast?x=1", AIR_URL: "https://air-quality-api.open-meteo.com/v1/air-quality?x=1",' +
+      ' selectTarget: function () { return { sunsetMs: Date.parse("2026-10-17T22:05:00Z"), isTonight: false }; },' +
+      ' computeScore: function () { return { score: window.__score, degraded: !!window.__degraded }; } };';
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.route(/\/js\/sunset-score\.js$/, (r) => r.fulfill({ status: 200, body: stub, contentType: 'text/javascript' }));
+    const invite = async (score, degraded) => {
+      await page.addInitScript(([s, d]) => { window.__score = s; window.__degraded = d; }, [score, degraded]);
+      await page.goto(base + '/all-day/?s=' + score + (degraded ? 'd' : '') + '#art');
+      await settle(page);
+      await page.waitForFunction(() => /Sunset is at/.test(document.querySelector('#panel-art [data-k="invite"]')?.innerText || ''), null, { timeout: 6000 }).catch(() => {});
+      await page.waitForTimeout(200);
+      return page.$eval(artPanel + ' [data-k="invite"]', (c) => ({ head: c.querySelector('h3').textContent, text: c.innerText }));
+    };
+    let r = await invite(0, false);
+    check(r.head === 'The wall starts with you' && /Sunset is at 6:05 pm tomorrow\./.test(r.text) && !/scores|out of 10|gray/.test(r.text) && /Best spot: Waterfront Park/.test(r.text),
+      'a 0.0 (the forecast missing) is no score: the time and the best spot, and nothing about the sky', r.text);
+    r = await invite(6.2, true);
+    check(!/scores|out of 10/.test(r.text) && /Sunset is at 6:05 pm tomorrow\./.test(r.text), 'a score worked out without the forecast is not shown either', r.text);
+    r = await invite(7.4, false);
+    check(r.head === 'Tomorrow’s sunset scores 7.4 out of 10' && /Worth the walk\./.test(r.text), 'a real score of 5 or more is the headline', JSON.stringify(r));
+    r = await invite(3.2, false);
+    check(r.head === 'The wall starts with you' && /Tomorrow’s sunset scores 3\.2 out of 10\. Probably a quiet one\./.test(r.text), 'under 5, it is said plainly, lower down', r.text);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, the gallery fills the wall before anyone posts (live, the SQL not pasted)', async () => {
+    const at = (d) => d;
+    const rows = [
+      ['11111111-0000-4000-8000-000000000001', 'Sunset from Waterfront Park', 'sunsets', 'Waterfront Park', '2026-04-02'],
+      ['11111111-0000-4000-8000-000000000002', 'Church Street lights', 'street', 'Church Street', '2026-04-02'],
+      ['11111111-0000-4000-8000-000000000003', 'The ferry dock', 'other', 'King Street dock', '2026-04-01'],
+      ['11111111-0000-4000-8000-000000000004', 'Leddy in June', 'sunsets', 'Leddy Park', '2026-06-20'],
+      ['11111111-0000-4000-8000-000000000005', 'Pine Street mural', 'street', 'Pine Street', '2026-08-03'],
+      ['11111111-0000-4000-8000-000000000006', 'A board photo', 'other', 'All Day · Art', at('2026-10-10')],
+      ['11111111-0000-4000-8000-000000000007', 'Tacos al pastor', 'dish', 'Taco Gordo', '2026-10-01'],
+    ].map(([id, caption, category, spot, approved_on]) => ({ id, storage_path: 'submissions/' + id.slice(-4) + '.jpg', caption, category, area: 'Downtown / Church St', spot,
+      taken_on: '', credit: 'Stephen', display_label: null, approved_on, votes: 3 }));
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn) => (fn === 'btb_photos_get' ? rows : /^nn_/.test(fn) ? { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } } : undefined),
+    });
+    await page.goto(base + '/all-day/#art');
+    await settle(page);
+    await page.waitForSelector(artPanel + ' .grid3 .tile', { timeout: 6000 }).catch(() => {});
+    const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => ({ label: t.getAttribute('aria-label'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent,
+      votes: !!t.querySelector('.ct'), src: t.querySelector('img') && t.querySelector('img').getAttribute('src'), lazy: t.querySelector('img') && t.querySelector('img').getAttribute('loading') })));
+    check(tiles.length === 5 && tiles.every((t) => t.lbl === 'From the gallery' && !t.votes), 'the five gallery photos, labelled from the gallery, without votes', JSON.stringify(tiles.map((t) => t.label)));
+    check(/^Pine Street mural/.test(tiles[0].label) && tiles.every((t) => /\/storage\/v1\/object\/public\/btb-photos\/submissions\/\w+\.jpg$/.test(t.src) && t.lazy === 'lazy'), 'newest approved first, lazy, from the public bucket', JSON.stringify(tiles[0]));
+    check(!tiles.some((t) => /A board photo|Tacos/.test(t.label)), 'a board post’s photo and Food’s dishes stay off the gallery half', '');
+    const invite = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ text: s.innerText, k: s.querySelector('[data-k]') && s.querySelector('[data-k]').dataset.k }));
+    check(invite.k === 'invite' && /Nobody has put a picture on the wall yet/.test(invite.text) && /Best spot: Waterfront Park/.test(invite.text),
+      'with no posts at all, the top invites the first, with the best spot for tonight’s light', invite.text);
+    await page.click(artPanel + ' .tile');
+    await page.waitForSelector('.sheet-card[aria-label="Pine Street mural"]');
+    const sh = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act) }));
+    check(/Photo by Stephen · Pine Street, Downtown \/ Church St/.test(sh.text) && JSON.stringify(sh.acts) === '["share"]', 'its sheet credits the photographer and has no vote or report', JSON.stringify(sh));
+    await page.click('.sheet-head .iconbtn');
+    await page.click(artPanel + ' [data-sec="add"] button:has-text("Add a photo")');
+    await page.waitForSelector('.sheet-card[aria-label="Add a photo"]');
+    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'Add a photo, signed out, asks for the sign-in', '');
+    await page.click('.sheet-head .iconbtn');
+    await pageRules(page, 'art', 390);
+    await page.screenshot({ path: path.join(SHOTS, 'live-art-gallery.png') });
+    check(!errors.filter((e) => !/status of 404/.test(e)).length, 'no console errors beyond the browser logging the missing function', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ---------------------------------------------------------- shell fixes */
 /* The small shell changes the tab sessions asked for, one check each. */
 async function shellFixes(browser, base) {
@@ -2566,11 +3232,13 @@ try {
   await run(theFood);
   await run(onAir);
   await run(theGames);
+  await run(theWatch);
   await run(interactions);
   await run(shellFixes);
   await run(accounts);
   await run(boards);
   await run(boardPhotos);
+  await run(theArt);
   await run(theVintage);
 } finally {
   await browser.close();

@@ -1,0 +1,77 @@
+name: Refresh the Watch tab's films
+
+# Builds the film list All Day's Watch tab reads:
+#   scripts/build_films.py -> data/films.json on the `films-data` branch
+# (the top 300 on TMDB, what is coming to theaters and streaming, and what
+# is in US theaters now, with a YouTube trailer key for each where TMDB has
+# one). About 250 KB, rebuilt once a week.
+#
+# Same publishing shape as curate-top.yml: a single orphan commit,
+# force-pushed, fetched by the page straight off raw.githubusercontent.com,
+# so a new list never queues a Pages deploy.
+#
+# The key: a repository secret named TMDB_API_KEY (Settings → Secrets and
+# variables → Actions). Until it exists every run skips quietly and the tab
+# reads its baked starter list (all-day/data/films-seed.json).
+#
+# Failure posture: no key skips quietly (green). With a key, a wrong key or
+# any TMDB trouble fails the build step (red, so it is seen) before anything
+# is pushed, and the branch keeps its last good list.
+
+on:
+  schedule:
+    # Mondays, about 6:20 am Eastern: TMDB's "upcoming" turns over weekly
+    - cron: '20 10 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-films
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for a TMDB key
+        id: key
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          if [ -z "$TMDB_API_KEY" ]; then
+            echo "no TMDB_API_KEY secret yet, skipping (the tab reads its starter list)"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build the film list
+        if: steps.key.outputs.ready == 'true'
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          python3 scripts/build_films.py --selftest
+          mkdir -p /tmp/films-out/data
+          python3 scripts/build_films.py --out /tmp/films-out/data/films.json
+
+      - name: Force-push the single-commit films-data branch
+        if: steps.key.outputs.ready == 'true'
+        run: |
+          if [ ! -s /tmp/films-out/data/films.json ]; then
+            echo "nothing written this run — leaving the branch alone"
+            exit 0
+          fi
+          cd /tmp/films-out
+          git init -q -b films-data
+          git config user.name "btown-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/films.json
+          git commit -q -m "Films $(date -u +%FT%TZ)"
+          git push -q --force \
+            "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+            films-data
