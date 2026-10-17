@@ -171,8 +171,13 @@ function wireDay(date, n, opts) {
       lead: list[0] ? { id: list[0].id, why: 'Why update ' + u + ' leads with this.' } : null, items: list };
   }).filter((u) => u.items.length);
   const ranked = items.filter((it) => !it.own && (it.ch === 'local' || it.ch === 'world'));
-  const picks = ranked.filter((it) => it.local).slice(0, 25).concat(ranked.filter((it) => !it.local).slice(0, 15))
-    .map((it, r) => ({ ...it, rank: r + 1, why: r === 2 ? '' : 'Reason ' + (r + 1) + ': why this one matters.' }));
+  /* one list by importance, local and national interleaved as the editor
+     ranks them (Stephen, 2026-10-17): every third slot national, so the
+     Everything view's top five mix both */
+  const locals = ranked.filter((it) => it.local).slice(0, 25), nationals = ranked.filter((it) => !it.local).slice(0, 15);
+  const mixed = [];
+  while (locals.length || nationals.length) mixed.push((mixed.length % 3 === 1 && nationals.length) || !locals.length ? nationals.shift() : locals.shift());
+  const picks = mixed.map((it, r) => ({ ...it, rank: r + 1, why: r === 2 ? '' : 'Reason ' + (r + 1) + ': why this one matters.' }));
   /* the stories an earlier ranking held and the current one dropped: their
      last rank and reason, newest ranking first, never also in `picks` */
   const morning = new Date(top - (top - bottom) * 0.8).toISOString(), noon = new Date(top - (top - bottom) * 0.4).toISOString();
@@ -769,6 +774,130 @@ async function theWire(browser, base) {
     check(/so far/.test(await page.$eval('#subnav .dl .s', (b) => b.textContent)), '› › comes back to today', '');
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
+  });
+
+  await group('the Wire, What matters flips through earlier days', async () => {
+    const files = wireFiles();
+    const today = files['wire-today.json'];
+    const [y1, y2] = files['index.json'].editions.map((e) => e.date);
+    const PREV = '.panel:not([hidden]) .wm-top [aria-label="Earlier day\'s picks"]';
+    const NEXT = '.panel:not([hidden]) .wm-top [aria-label="Later day\'s picks"]';
+    const top = () => page.$eval('.panel:not([hidden]) .wm-top', (w) => ({
+      title: w.querySelector('h2').textContent, sub: (w.querySelector('.sec p') || {}).textContent || '', showing: w.dataset.showing,
+      keys: [...w.querySelectorAll('[data-k]')].map((x) => x.dataset.k),
+      prev: w.querySelector('[aria-label="Earlier day\'s picks"]').disabled, next: w.querySelector('[aria-label="Later day\'s picks"]').disabled }));
+    /* the river as drawn: every card outside the block, up to the first earlier-day head */
+    const river = () => page.evaluate(() => {
+      const out = [];
+      for (const n of document.querySelectorAll('.panel:not([hidden]) .feed [data-k], .panel:not([hidden]) .feed [data-day]')) {
+        if (n.dataset.day) break;
+        if (!n.closest('.wm-top')) out.push(n.dataset.k);
+      }
+      return out;
+    });
+    const showing = (date) => page.waitForFunction((d) => document.querySelector('.panel:not([hidden]) .wm-top')?.dataset.showing === d, date, { timeout: 6000 }).catch(() => {});
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/');
+    await page.waitForSelector('.panel:not([hidden]) .wm-top', { timeout: 15000 });
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.waitForTimeout(150);
+    const tk = today.date;
+    const t0 = await top();
+    const localOf = Object.fromEntries(today.picks.map((x) => [x.id, x.local]));
+    const five = t0.keys.slice(0, 5).map((k) => localOf[k]);
+    check(five.length === 5 && five.some((x) => x === true) && five.some((x) => x === false), 'on Everything the top five mix local and national', JSON.stringify(five));
+    check(JSON.stringify(t0.keys.slice(0, 5)) === JSON.stringify(today.picks.slice(0, 5).map((x) => x.id)), 'in the editor’s one ranking, as given', JSON.stringify(t0.keys.slice(0, 5)));
+    check(t0.title === 'What matters today' && t0.showing === tk && !t0.prev && t0.next, 'today: ‹ is live, › is disabled', JSON.stringify(t0));
+    const sizes = await page.$$eval('.panel:not([hidden]) .wm-top .wm-nav .nav', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return [r.width, r.height]; }));
+    check(sizes.length === 2 && sizes.every(([w, h]) => w >= 44 && h >= 44), 'the arrows are 44px targets', JSON.stringify(sizes));
+    const riverBefore = await river();
+    check(riverBefore.length > 20, 'the river is drawn under the block (' + riverBefore.length + ')', riverBefore.length);
+
+    await page.click(PREV);
+    await showing(y1);
+    const t1 = await top();
+    const yday = files[y1 + '.json'];
+    const yWeek = nameOf(y1).split(',')[0];
+    check(t1.title === 'What mattered ' + yWeek && t1.sub.startsWith(nameOf(y1).split(', ')[1]) && /Today$/.test(t1.sub), '‹ reads “What mattered ' + yWeek + '”, its date under it and a Today link', JSON.stringify([t1.title, t1.sub]));
+    check(JSON.stringify(t1.keys.slice(0, 5)) === JSON.stringify(yday.picks.slice(0, 5).map((x) => x.id)), '‹ flips the block in place to yesterday’s picks', JSON.stringify(t1.keys.slice(0, 5)));
+    check(!t1.prev && !t1.next, 'yesterday: both arrows live', JSON.stringify(t1));
+    check(await page.$eval('.panel:not([hidden]) .wm-top', (w) => getComputedStyle(w).animationName) === 'wm-in', 'with a short fade when motion is allowed', '');
+    check(JSON.stringify(await river()) === JSON.stringify(riverBefore), 'the river below does not change', '');
+    check(await page.$eval('#subnav .dl b', (b) => b.textContent) === nameOf(tk), 'the dateline stays on today', await page.$eval('#subnav .dl b', (b) => b.textContent));
+    check(await page.$eval('#subnav .dl b', () => !/#wire\/\d/.test(location.hash)), 'and the address does not change', '');
+    await page.waitForTimeout(300);   /* past the fade */
+    await page.screenshot({ path: path.join(SHOTS, 'live-wire-matters-flipped.png') });
+
+    await page.click(PREV);
+    await showing(y2);
+    const t2 = await top();
+    check(JSON.stringify(t2.keys.slice(0, 5)) === JSON.stringify(files[y2 + '.json'].picks.slice(0, 5).map((x) => x.id)) && t2.prev && !t2.next, 'the oldest edition: its picks, ‹ disabled, › live', JSON.stringify(t2));
+    await page.click(NEXT);
+    await showing(y1);
+    await page.click(NEXT);
+    await showing(tk);
+    const t3 = await top();
+    check(t3.title === 'What matters today' && JSON.stringify(t3.keys) === JSON.stringify(t0.keys) && t3.next && !t3.prev, '› › returns to today’s picks, › disabled again', JSON.stringify(t3));
+    check(JSON.stringify(await river()) === JSON.stringify(riverBefore), 'and the river is still the same', '');
+
+    await page.click(PREV);
+    await showing(y1);
+    await page.click('.panel:not([hidden]) .wm-top .wm-today');
+    await showing(tk);
+    check((await top()).title === 'What matters today', 'the Today link returns', '');
+
+    /* flipped, the Local switch keeps the day and shows its local picks only, in order */
+    await page.click(PREV);
+    await showing(y1);
+    await page.click('#subnav .localsw-half:not(.on)');
+    await page.waitForTimeout(150);
+    const tl = await top();
+    const yLocal = yday.picks.filter((x) => x.local).map((x) => x.id);
+    check(tl.showing === y1 && JSON.stringify(tl.keys.slice(0, 5)) === JSON.stringify(yLocal.slice(0, 5)), 'on Local the flipped block shows that day’s local picks, in their order', JSON.stringify(tl.keys.slice(0, 5)));
+    await page.reload();
+    await page.waitForSelector('.panel:not([hidden]) .wm-top', { timeout: 15000 });
+    check((await top()).showing === tk, 'a reload opens on today: the block remembers nothing', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* before the day's first ranking: the block stands, says so, and still flips back */
+    {
+      const v = await newPage(browser, base);
+      const bare = { ...today, picks: [], picks_earlier: [] };
+      await v.page.route(/wire-data\/data\/wire-today\.json$/, (r) => r.fulfill({ status: 200, body: JSON.stringify(bare), contentType: 'application/json' }));
+      await v.page.goto(base + '/all-day/');
+      await v.page.waitForSelector('.panel:not([hidden]) .wm-top', { timeout: 15000 });
+      await v.page.waitForFunction(() => { const b = document.querySelector('.panel:not([hidden]) .wm-top [aria-label="Earlier day\'s picks"]'); return b && !b.disabled; }, null, { timeout: 6000 }).catch(() => {});
+      check(/No local picks yet today\./.test(await v.page.$eval('.panel:not([hidden]) .wm-top', (w) => w.innerText)), 'no picks yet: the block says so', '');
+      await v.page.click(PREV);
+      await v.page.waitForFunction((d) => document.querySelector('.panel:not([hidden]) .wm-top')?.dataset.showing === d, y1, { timeout: 6000 }).catch(() => {});
+      check(await v.page.$eval('.panel:not([hidden]) .wm-top h2', (h) => h.textContent) === 'What mattered ' + yWeek, 'and ‹ still reaches yesterday’s picks', '');
+      check(!v.errors.length, 'no console errors with no picks yet', v.errors.join(' | '));
+      await v.ctx.close();
+    }
+
+    /* both themes, 390 and 1280: the head fits, nothing scrolls sideways; reduced motion: no fade */
+    for (const [w, h] of [[390, 844], [1280, 800]]) {
+      for (const scheme of ['light', 'dark']) {
+        const v = await newPage(browser, base, { viewport: { width: w, height: h }, scheme, motion: 'reduce' });
+        await v.page.goto(base + '/all-day/');
+        await v.page.waitForSelector('.panel:not([hidden]) .wm-top', { timeout: 15000 });
+        await v.page.click(PREV);
+        await v.page.waitForFunction((d) => document.querySelector('.panel:not([hidden]) .wm-top')?.dataset.showing === d, y1, { timeout: 6000 }).catch(() => {});
+        const m = await v.page.$eval('.panel:not([hidden]) .wm-top', (wm) => {
+          const sec = wm.querySelector('.sec').getBoundingClientRect();
+          const nav = [...wm.querySelectorAll('.wm-nav .nav')].map((b) => b.getBoundingClientRect());
+          const today = wm.querySelector('.wm-today').getBoundingClientRect();
+          return { fits: nav.every((r) => r.right <= sec.right + 1 && r.left >= sec.left - 1), today: today.width > 0, anim: getComputedStyle(wm).animationName,
+            wide: document.documentElement.scrollWidth <= innerWidth, h2: wm.querySelector('h2').getBoundingClientRect().height };
+        });
+        check(m.fits && m.today && m.wide, w + ' ' + scheme + ': the flipped head fits, with its Today link', JSON.stringify(m));
+        check(m.anim === 'none', w + ' ' + scheme + ': reduced motion, no fade', m.anim);
+        if (w === 390) await v.page.screenshot({ path: path.join(SHOTS, 'live-wire-matters-' + scheme + '.png') });
+        check(!v.errors.length, w + ' ' + scheme + ': no console errors', v.errors.join(' | '));
+        await v.ctx.close();
+      }
+    }
   });
 
   await group('the Wire, inbox live and no Brief', async () => {
