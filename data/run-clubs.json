@@ -4,7 +4,7 @@
   "VERIFIED means: every fact in an entry was read on the club's OWN page (its website, Meetup group or event page, Instagram bio or post, Facebook page, Strava club, or the host venue's or town's own schedule page) on checked.date, and checked.source is that page's URL, with checked.note quoting what it says. Aggregators (RunGroop, Great Runs, Seven Days listings, Yelp) are leads only. Nothing is guessed: a field the page does not support is left empty.",
   "A meet is a standing WEEKLY slot (same weekday, same time). A club whose day or place changes week to week gets meets: [] and a schedule_note saying where to look. A start point that moves gets where: 'Varies ...' with lat/lng null. Monthly or one-off events never become meets.",
   "To add a club: read its own page, add an entry (id, name, kind, what, meets[{day mon..sun, time 'HH:MM' 24h, where, address, lat, lng, note, optional season}], schedule_note, level, cost, season, newcomers, url, instagram, meetup, strava, checked{date, source, note, optional also[]}), geocode the meeting place to 4 decimals, then run python3 scripts/build_run_clubs.py. It must print OK. Re-read any club the script warns is stale (over 120 days).",
-  "kind is one of: run, hike, bike, climb, pickup, yoga, row-paddle, other. Seasonal meets carry season so the tab can say 'summer only' instead of sending people to an empty parking lot."
+  "kind is one of: run, hike, bike, climb, pickup, yoga, row-paddle, other. Seasonal meets carry season so the tab can say 'summer only' instead of sending people to an empty parking lot. The tab reads the machine fields, never the text: optional months (1-12, the months a meet runs), from and until (YYYY-MM-DD, the first and last day, both kept) and skip (YYYY-MM-DD days with no meet), on the club or on one meet (a meet's months replace the club's; every date on the club and the meet applies). A schedule the page dates (a 2026 series) gets from/until, so it never comes back on its own next year; months are for a club that says it runs every summer. A time that changes partway through a series is two meets with their own from/until. A meet outside them is not on this week's strip. When the page gives only a season word (\"summer\", \"winter\"), months take the narrow reading, so nobody is sent to an empty lot."
  ],
  "clubs": [
   {
@@ -48,6 +48,7 @@
    "level": "\"You do not need to run and we never leave anyone behind.\" Walkers catch up at the song and joke stops.",
    "cost": "$6.90 per trail",
    "season": "warm season (2026 Wednesday trails end Oct 28)",
+   "until": "2026-10-28",
    "newcomers": "\"Our community is very welcoming and inclusive.\" Drinking is not required. The site has a beginner's hashing guide.",
    "url": "https://www.burlingtonh3.com/",
    "instagram": "",
@@ -83,6 +84,8 @@
    "level": "all ages; adult and youth categories",
    "cost": "$20 adult per night online ($15 student/senior); $5 more day-of; season passes available",
    "season": "May-September",
+   "from": "2026-05-12",
+   "until": "2026-09-01",
    "newcomers": "\"Whether you're new to racing or a seasoned pro\"; youth and adult categories.",
    "url": "https://catamountoutdoor.org/race-series-weekly-mtbtr/",
    "instagram": "",
@@ -146,6 +149,7 @@
    "level": "run or walk",
    "cost": "free",
    "season": "winter, through February (start date not stated)",
+   "months": [12, 1, 2],
    "newcomers": "Open to runners and walkers.",
    "url": "https://www.fleetfeet.com/s/burlington/training/weekly-runs",
    "instagram": "",
@@ -201,7 +205,8 @@
      "lat": 44.4673,
      "lng": -73.193,
      "note": "Track workout led by the club coach. Summer season only; winter workouts move days (see the club newsletter or socials).",
-     "season": "summer"
+     "season": "summer",
+     "months": [6, 7, 8]
     },
     {
      "day": "sun",
@@ -283,6 +288,9 @@
    "level": "\"casual paced\"; 3 to 5 miles, may split into pace groups",
    "cost": "free",
    "season": "April-August (2026 dates); not running this fall",
+   "from": "2026-04-13",
+   "until": "2026-08-31",
+   "skip": ["2026-07-06", "2026-07-13", "2026-07-20", "2026-07-27", "2026-08-03"],
    "newcomers": "\"you can run any distance\"",
    "url": "https://www.skirack.com/pages/events-calendar",
    "instagram": "https://www.instagram.com/skirackvt/",
@@ -314,6 +322,7 @@
    "level": "\"relaxed, welcoming\"; 2 and 4 mile options",
    "cost": "free",
    "season": "May-October",
+   "months": [5, 6, 7, 8, 9, 10],
    "newcomers": "\"New folks welcome!\" (Instagram bio)",
    "url": "https://www.instagram.com/winooskirunclub/",
    "instagram": "https://www.instagram.com/winooskirunclub/",
@@ -354,6 +363,8 @@
    "level": "Monday: 'Beginner & Novice Riders', pace 'Mellow'. Thursday: 'Intermediate & Above', 'no-drop ride'.",
    "cost": "free to Catamount members; $10 for non-members",
    "season": "mid-May to end of September",
+   "from": "2026-05-11",
+   "until": "2026-09-30",
    "newcomers": "Monday rides are 'perfect for those new to mountain biking or those looking for a mellow, group ride'; both pages say it is 'a group ride and NOT a clinic or lesson'.",
    "url": "https://catamountoutdoor.org/",
    "instagram": "",
@@ -386,6 +397,8 @@
    "level": "'riders and runners of all levels'; 'Whether you're new to racing or a seasoned pro'.",
    "cost": "$25 adult per night online ($20 student/senior), $5 more day-of, plus tax; season passes available; cyclocross $25 online / $30 day-of",
    "season": "May-September (cyclocross September to mid-October)",
+   "from": "2026-05-13",
+   "until": "2026-09-02",
    "newcomers": "'Whether you're new to racing or a seasoned pro, you won't want to miss the excitement at Catamount!' Cyclocross page: 'Catamount always has a supportive environment for those who are just getting introduced to the sport.'",
    "url": "https://catamountoutdoor.org/race-series-weekly-mtbtr/",
    "instagram": "",
@@ -411,7 +424,8 @@
      "lat": 44.4433,
      "lng": -73.1758,
      "note": "Prime season May through August: 'on the road at 6:00 PM'",
-     "season": "May-August"
+     "season": "May-August",
+     "months": [5, 6, 7, 8]
     }
    ],
    "schedule_note": "Outside May-August the Wednesday ride leaves \"at 5:30 PM or earlier\", moving with sunset (through April, and September to October 24); the exact time goes out on the club email list. GMBC also runs Saturday (VP) training rides whose 'start times and locations vary during the year' (announced on the GMBC email list, usually by Thursday), Sunday-morning day touring rides from varying starts (informal/leaderless in April, late September and October), introductory rides on Saturdays from Veterans Memorial Park in May-June ('every other Saturday' in a usual year), and occasional gravel rides. The training-rides page says no Tuesday night training rides are planned this season. Check thegmbc.com/events/ and join the email list.",
@@ -470,6 +484,7 @@
    "level": "'open to adult rowers of all ages (18-99+) and of all levels (beginner to experienced)'",
    "cost": "pay-what-you-can season registration (listed dues $175 for one club, $250 for all three); one free trial row",
    "season": "May-October",
+   "months": [5, 6, 7, 8, 9, 10],
    "newcomers": "'If this is your first time rowing with us and you would like to do a trial row, you may row once free of charge but must fill out a physical liability waiver provided by our rowing club captains prior to getting on the water.' After that, register for the season and sign up for each practice.",
    "url": "https://www.lcmm.org/adult-rowing/",
    "instagram": "",
@@ -502,6 +517,7 @@
    "level": "Catch 22: 'Mixed gender, mixed ability. Where every new paddler starts.'",
    "cost": "membership $300/yr standard paddler; $100/yr breast cancer survivors; $25/yr youth/student 14-24; $25 end-of-season intro membership for new members",
    "season": "late May to September",
+   "months": [6, 7, 8, 9],
    "newcomers": "'You don't need to have paddled before. You just need to be at least 14 years old.' 'The club provides paddles, PFDs (life jackets), and seat pads. Just show up in clothes and shoes you don't mind getting wet.'",
    "url": "https://dragonheartvermont.org/",
    "instagram": "",
@@ -526,7 +542,9 @@
      "address": "147 Spear St, Burlington",
      "lat": 44.4693,
      "lng": -73.1945,
-     "note": "5:30-7:30 PM; indoor series runs weekly through Mar 10, 2027. Summer runs were outdoors at Pomeroy Park, 31 Booth St (44.4845, -73.2072)."
+     "note": "5:30-7:30 PM; indoor series runs weekly through Mar 10, 2027. Summer runs were outdoors at Pomeroy Park, 31 Booth St (44.4845, -73.2072).",
+     "from": "2026-10-14",
+     "until": "2027-03-10"
     }
    ],
    "schedule_note": "Organizer says 'competitive pick-up basketball every week on Wednesday evenings.' Moved indoors starting Oct 14, 2026 (Oct 7 and earlier were at Pomeroy Park). RSVP on Meetup.",
@@ -557,7 +575,20 @@
      "address": "80 Dick Mazza Dr, Colchester",
      "lat": 44.5435,
      "lng": -73.2118,
-     "note": "Basketball: Ages 15+, 6:45-8:45 PM (7:15 start Nov 30-Dec 14)"
+     "note": "Basketball: Ages 15+, 6:45-8:45 PM (7:15 start Nov 30-Dec 14)",
+     "from": "2026-09-14",
+     "until": "2026-11-23"
+    },
+    {
+     "day": "mon",
+     "time": "19:15",
+     "where": "Colchester Recreation Center",
+     "address": "80 Dick Mazza Dr, Colchester",
+     "lat": 44.5435,
+     "lng": -73.2118,
+     "note": "Basketball: Ages 15+, 6:45-8:45 PM (7:15 start Nov 30-Dec 14)",
+     "from": "2026-11-30",
+     "until": "2026-12-14"
     },
     {
      "day": "tue",
@@ -566,7 +597,20 @@
      "address": "80 Dick Mazza Dr, Colchester",
      "lat": 44.5435,
      "lng": -73.2118,
-     "note": "Pickleball: Ages 18+, 6:45-8:45 PM (7:15 start Dec 1-15)"
+     "note": "Pickleball: Ages 18+, 6:45-8:45 PM (7:15 start Dec 1-15)",
+     "from": "2026-09-15",
+     "until": "2026-11-17"
+    },
+    {
+     "day": "tue",
+     "time": "19:15",
+     "where": "Colchester Recreation Center",
+     "address": "80 Dick Mazza Dr, Colchester",
+     "lat": 44.5435,
+     "lng": -73.2118,
+     "note": "Pickleball: Ages 18+, 6:45-8:45 PM (7:15 start Dec 1-15)",
+     "from": "2026-12-01",
+     "until": "2026-12-15"
     },
     {
      "day": "wed",
@@ -575,7 +619,20 @@
      "address": "80 Dick Mazza Dr, Colchester",
      "lat": 44.5435,
      "lng": -73.2118,
-     "note": "Volleyball: Ages 18+, 6:45-8:45 PM (7:15 start Dec 2-16)"
+     "note": "Volleyball: Ages 18+, 6:45-8:45 PM (7:15 start Dec 2-16)",
+     "from": "2026-09-16",
+     "until": "2026-11-18"
+    },
+    {
+     "day": "wed",
+     "time": "19:15",
+     "where": "Colchester Recreation Center",
+     "address": "80 Dick Mazza Dr, Colchester",
+     "lat": 44.5435,
+     "lng": -73.2118,
+     "note": "Volleyball: Ages 18+, 6:45-8:45 PM (7:15 start Dec 2-16)",
+     "from": "2026-12-02",
+     "until": "2026-12-16"
     },
     {
      "day": "thu",
@@ -584,7 +641,20 @@
      "address": "80 Dick Mazza Dr, Colchester",
      "lat": 44.5435,
      "lng": -73.2118,
-     "note": "Basketball: Ages 25+, 'competitive', 6:45-8:45 PM (7:15 start Dec 3-17)"
+     "note": "Basketball: Ages 25+, 'competitive', 6:45-8:45 PM (7:15 start Dec 3-17)",
+     "from": "2026-09-17",
+     "until": "2026-11-19"
+    },
+    {
+     "day": "thu",
+     "time": "19:15",
+     "where": "Colchester Recreation Center",
+     "address": "80 Dick Mazza Dr, Colchester",
+     "lat": 44.5435,
+     "lng": -73.2118,
+     "note": "Basketball: Ages 25+, 'competitive', 6:45-8:45 PM (7:15 start Dec 3-17)",
+     "from": "2026-12-03",
+     "until": "2026-12-17"
     }
    ],
    "schedule_note": "Fall sessions run in three blocks through mid-December (Mon 9/14-12/14, Tue 9/15-12/15, Wed 9/16-12/16, Thu 9/17-12/17), with a 7:15 start in the last block. Registering for a block guarantees a spot; drop-ins only if space allows.",
@@ -656,6 +726,8 @@
    "level": "'good place to get moving if you haven't played in a while.' 'Most folks play with cleats.'",
    "cost": "",
    "season": "listed as 2026 summer pickup; fall and winter not stated",
+   "months": [6, 7, 8],
+   "until": "2026-08-31",
    "newcomers": "'Our game is good place to get moving if you haven't played in a while.'",
    "url": "https://vermontultimate.org/current-pickups",
    "instagram": "",
@@ -802,6 +874,8 @@
    "level": "by skill level: Beginner, Intermediate, High Intermediate, Advanced",
    "cost": "$7 per player; 10-visit punch card $50; 25-visit $100",
    "season": "October-May; the center is closed for renovation until November 6, 2026",
+   "months": [10, 11, 12, 1, 2, 3, 4, 5],
+   "from": "2026-11-07",
    "newcomers": "Beginner session Thursdays 1-3 PM.",
    "url": "https://www.burlingtonvt.gov/985/Robert-Miller-Community-Recreation-Cente",
    "instagram": "",
@@ -854,6 +928,7 @@
    "level": "'Players of all skill levels are invited to join.'",
    "cost": "$5 nightly drop-in, cash only, paid to the program coordinator",
    "season": "fall and winter",
+   "months": [9, 10, 11, 12, 1, 2, 3],
    "newcomers": "'Registration via website is not required.'",
    "url": "https://www.southburlingtonvt.gov/458/Adult-Drop-In-Sports-Calendar",
    "instagram": "",
@@ -885,6 +960,9 @@
    "level": "'No team needed — just show up.' Rules based on American Dodgeball Association guidelines; 'Prepare to be sore.'",
    "cost": "$5 per game",
    "season": "year-round (current series Oct 12, 2026 - June 2027)",
+   "from": "2026-10-12",
+   "until": "2027-06-29",
+   "skip": ["2026-11-02", "2026-12-28"],
    "newcomers": "'you can just show up and play without a team. The teams are random and put together before we play.'",
    "url": "http://www.vtdodgeball.com",
    "instagram": "",
@@ -938,6 +1016,8 @@
    "level": "'accepts players of all skill levels, who are over the age of 18.' For cis-women, trans, intersex, non-binary and gender non-conforming players.",
    "cost": "free outdoors in summer; winter indoor sessions $80 for 8 visits via Burlington Parks registration (no drop-in)",
    "season": "outdoor drop-in roughly late Apr-mid Sep (2026 events Apr 26-Sep 13)",
+   "from": "2026-04-26",
+   "until": "2026-09-13",
    "newcomers": "'a welcoming, inclusive group of people'; 'If you plan to attend, please RSVP on Meetup.'",
    "url": "https://www.meetup.com/womens-soccer-vermont/",
    "instagram": "",

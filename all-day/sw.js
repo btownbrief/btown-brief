@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v46';   // v46: Habits takes Art's slot
+const VERSION = 'all-day-v47';   // v47: the run clubs' week (clubs-week.js)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -30,6 +30,8 @@ const SHELL_URLS = [
   './js/habits-core.js', './js/habits-fake.js',
   /* the photo wall's drawing code, kept for the Wire's Photo mode (not imported yet) */
   './js/photo-wall.js',
+  /* the run clubs' week, imported by ui.js, People and What Now */
+  './js/clubs-week.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */
