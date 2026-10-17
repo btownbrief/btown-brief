@@ -31,6 +31,9 @@
   --local-ink: #FFFFFF;             /* text on the Local water */
   --every: #A63A2C;                 /* the Everything water in the switch; used nowhere else */
   --every-ink: #FFFFFF;
+  --now: #9A5B00;                   /* What Now's disc in the tab bar: the accent, filled */
+  --now-ink: #FFFFFF;               /* the icon on the disc */
+  --now-soft: rgba(200, 126, 18, .14);
   --good: #16704E;
   --warn: #A33B2A;
   --warn-soft: rgba(163, 59, 42, .12);
@@ -141,6 +144,9 @@
     --local-ink: #06251A;
     --every: #F09B8A;
     --every-ink: #2C120C;
+    --now: #E8A33D;
+    --now-ink: #0D0E10;
+    --now-soft: rgba(232, 163, 61, .18);
     --good: #6FD79E;
     --warn: #F08A72;
     --warn-soft: rgba(240, 138, 114, .16);
@@ -171,6 +177,9 @@
   --local-ink: #06251A;
   --every: #F09B8A;
   --every-ink: #2C120C;
+  --now: #E8A33D;
+  --now-ink: #0D0E10;
+  --now-soft: rgba(232, 163, 61, .18);
   --good: #6FD79E;
   --warn: #F08A72;
   --warn-soft: rgba(240, 138, 114, .16);
