@@ -1263,23 +1263,14 @@ function drawQuiz() {
 /* People here. Signed out: one line and Sign in. Signed in: Add your
    handles, the directory's join or leave, the newest handles in a row, and
    everyone: the people with their handles on and, once you are in the
-   directory yourself, its members. A member of both shows once, with their
-   interests, when their first name and neighborhood match one row on each
-   side. */
-const dirKey = (name, hood) => String(name || '').trim().toLowerCase() + '|' + (hood || '');
+   directory yourself, its members. The two lists are never joined into one
+   row: a first name and a neighborhood are not a person, so matching on
+   them could pin one reader's handles to another's interests. */
 function peopleRows() {
   const d = S.dir && !S.dir.error && S.dir.me ? S.dir.people : [];
   const hs = S.handles && S.handles.state === 'ok' ? S.handles.people : [];
-  const count = (list, f) => list.reduce((m, x) => m.set(f(x), (m.get(f(x)) || 0) + 1), new Map());
-  const dn = count(d, (p) => dirKey(p.name, p.neighborhood)), hn = count(hs, (p) => dirKey(p.name, p.neighborhood));
-  const used = new Set();
-  const rows = hs.map((h, i) => {
-    const k = dirKey(h.name, h.neighborhood);
-    const m = dn.get(k) === 1 && hn.get(k) === 1 ? d.find((p) => dirKey(p.name, p.neighborhood) === k) : null;
-    if (m) used.add(m);
-    return { name: h.name, neighborhood: h.neighborhood, archetype: m ? m.archetype : null, interests: m ? (m.interests || []) : [], handles: h.handles, me: h.me || !!(m && m.me), i };
-  });
-  d.forEach((p, i) => { if (!used.has(p)) rows.push({ name: p.name, neighborhood: p.neighborhood, archetype: p.archetype, interests: p.interests || [], handles: {}, me: !!p.me, i: 1000 + i }); });
+  const rows = hs.map((h, i) => ({ name: h.name, neighborhood: h.neighborhood, archetype: null, interests: [], handles: h.handles, me: h.me, i }))
+    .concat(d.map((p, i) => ({ name: p.name, neighborhood: p.neighborhood, archetype: p.archetype, interests: p.interests || [], handles: {}, me: !!p.me, i: 1000 + i })));
   const mine = new Set(shareable());
   const shared = (r) => r.interests.filter((t) => mine.has(t)).length;
   return rows.sort((a, b) => (b.me - a.me) || ((b.archetype === S.arch && !!S.arch) - (a.archetype === S.arch && !!S.arch)) || shared(b) - shared(a) || a.i - b.i);
@@ -1629,6 +1620,7 @@ app.onAuth(() => {
   if (!root) return;
   S.prof = undefined;
   S.handles = null;
+  S.dir = null;   // the last reader's directory is never drawn for the next one
   loadPlans();
   drawDir();
   loadProfile().then(() => { drawArch(); drawForYou(); drawPlans(); return Promise.all([loadDir(), loadHandles()]); });
