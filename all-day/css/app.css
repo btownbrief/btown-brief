@@ -719,6 +719,36 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .arch button.on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
 .arch button.on span { color: var(--on-ink); opacity: .7; }
 
+/* People: For you, right under the tiles, the moment anything is picked */
+.foryou { margin: 0 var(--gutter); padding: 2px 12px; border-radius: var(--r-media); background: var(--accent-soft); animation: fyin .25s ease; }
+.foryou .lrow { padding: 10px 0; border-bottom: 1px solid var(--line-soft); }
+.foryou .lrow:last-child { border-bottom: 0; }
+.foryou .loading, .foryou .note { padding: 12px 0; }
+@keyframes fyin { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+/* a row that is a button (a club's sheet, a gathering's) reads like a link row */
+.mixrow { width: 100%; text-align: left; color: inherit; }
+.mixrow .tags { display: flex; gap: 6px; margin-top: 4px; }
+.subh { font-size: var(--fs-meta); color: var(--ink-2); padding-bottom: 6px; }
+.subh.pad { padding-left: var(--gutter); padding-right: var(--gutter); }
+/* Mixers: Stephen's own, a short row of tiles */
+.owntile { display: flex; flex-direction: column; gap: 3px; width: 200px; padding: 10px 12px 12px; border: 1px solid var(--line); border-radius: var(--r-media); background: var(--accent-soft); }
+.owntile b { font-size: var(--fs-sub); font-weight: 600; line-height: var(--lh-title); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.owntile .s { font-size: var(--fs-small); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mixdays { padding-top: 4px; }
+.hostcard { background: var(--paper-2); border-color: transparent; }
+/* People here: handles that open the app, interests as small tiles */
+.plist { padding: 0 var(--gutter); }
+.plist .lrow.prow { align-items: start; border-bottom: 1px solid var(--line-soft); }
+.hchips, .ptags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.hchip { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; min-width: 0; height: 28px; padding: 0 10px; border-radius: var(--r-pill); border: 1px solid var(--line); font-size: var(--fs-small); color: var(--ink-2); text-align: left; }
+.hchip b { font-weight: 600; color: var(--ink); flex: 0 0 auto; }
+.hchip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.ptag { font-size: var(--fs-small); font-weight: 600; padding: 2px 8px; border-radius: var(--r-sm); background: var(--local-soft); color: var(--local); }
+.jtile { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; width: 172px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-media); }
+.jtile b { font-size: var(--fs-sub); font-weight: 600; }
+.jtile .s { font-size: var(--fs-small); color: var(--ink-3); min-height: 1.2em; }
+.jtile .hchips { margin-top: 2px; width: 100%; }
+
 /* leaderboard */
 .board { padding: 0 var(--gutter); }
 .board .r { display: grid; grid-template-columns: 28px 30px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line-soft); }
