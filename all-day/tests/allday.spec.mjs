@@ -1198,6 +1198,16 @@ async function theWire(browser, base) {
     await page.waitForTimeout(150);
     check(JSON.stringify((await sqState(page)).list.map((x) => x.type)) === '["pets"]', 'Pets narrows it to the pets', '');
     await page.click('#subnav .chip[data-chip="all"]');
+    /* opened, an outside thread stays read through a redraw */
+    const outK = await page.$eval('#panel-wire .sq-out', (c) => c.dataset.k);
+    await page.click('#panel-wire .sq-out[data-k="' + outK + '"] a[data-open]');
+    await page.waitForTimeout(150);
+    await chipTo(page, 'pets');
+    await chipTo(page, 'all');
+    await page.waitForTimeout(150);
+    check(await page.$eval('#panel-wire .sq-out[data-k="' + outK + '"]', (c) => c.classList.contains('is-read')) && await page.$$eval('#panel-wire .sq-out.is-read', (n) => n.length) === 1,
+      'an outside thread you opened stays read through a redraw, and only it', outK);
+    await toTop(page);
     await page.click('#panel-wire [data-compose="ask"]');
     await page.waitForSelector('.sheet-card[aria-label="Ask Burlington"]', { timeout: 4000 }).catch(() => {});
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'signed out, posting asks for the sign-in', '');
@@ -1230,11 +1240,25 @@ async function theWire(browser, base) {
     check(!live.errors.length, 'no console errors', live.errors.join(' | '));
     await live.ctx.close();
 
-    /* live, once it is pasted (rules version 3): the Square is there */
-    const on = await newPage(browser, base, { rpc: (fn) => (fn === 'nn_rules' ? { version: 3 } : fn === 'nn_posts_list' ? [] : undefined) });
+    /* live, once it is pasted (rules version 3): the Square is there, and a
+       long outside feed is drawn in chunks, each thread once */
+    const now = Math.round(Date.now() / 1000);
+    const files = wireFiles({ inbox: true, brief: false });
+    const fbToday = files['wire-today.json'].updates.flatMap((u) => u.items).find((it) => it.ch === 'facebook');
+    const pulse = { v: 1, generated: new Date().toISOString(), sources: [{ id: 'r-burlington', name: 'r/burlington', short: 'r/burlington', topic: 'local', local: 1 }],
+      items: Array.from({ length: 120 }, (_, i) => ({ t: 'Thread ' + i, u: 'https://www.reddit.com/r/burlington/comments/t' + i + '/', d: now - i * 600, s: 'r-burlington', ch: 'reddit', local: true })),
+      inbox: { facebook: { paused: false, items: [{ u: fbToday.url.replace('https://', 'https://www.') + '/', d: now - 100, from: 'ONE', name: 'ONE', summary: 'The same post again', ch: 'facebook', local: true }] } } };
+    const on = await newPage(browser, base, { wire: { inbox: true, brief: false }, rpc: (fn) => (fn === 'nn_rules' ? { version: 3 } : fn === 'nn_posts_list' ? [] : undefined) });
+    await on.page.route(/\/data\/pulse\.json$/, (r) => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(pulse) }));
     await on.page.goto(base + '/all-day/#wire/square');
     await on.page.waitForSelector('#panel-wire .sq-compose', { timeout: 15000 }).catch(() => {});
+    await on.page.waitForSelector('#panel-wire .sq-out', { timeout: 8000 }).catch(() => {});
     check(!!(await on.page.$('#subnav .wmode[data-view="square"]')) && !!(await on.page.$('#panel-wire .sq-compose')), 'live with the Square’s SQL: #wire/square opens it', '');
+    const ost = await on.page.evaluate(() => import('/all-day/js/modes/wire-square.js').then((m) => m._state()));
+    const first = await on.page.$$eval('#panel-wire .sq-out', (n) => n.length);
+    check(ost.list.length > 100 && first <= 40, 'a long feed draws its first screenful only (' + first + ' of ' + ost.list.length + ')', '');
+    check(ost.list.filter((x) => x.type === 'facebook').length === files['wire-today.json'].updates.flatMap((u) => u.items).filter((it) => it.ch === 'facebook').length,
+      'a Facebook post in both today’s paper and the Unfiltered inbox shows once', JSON.stringify(ost.counts));
     check(!on.errors.length, 'no console errors', on.errors.join(' | '));
     await on.ctx.close();
   });

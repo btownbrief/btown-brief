@@ -24,12 +24,16 @@
 import * as app from '../app.js';
 import * as boards from '../boards.js';
 import { RULES } from '../boards-core.js';
+import * as store from '../store.js';
 import { el, esc, safeHref, ICON, cards, button } from '../ui.js';
 
 const BOARD = 'square';
 const BOOST = 6 * 3600;            // a neighbor's post sorts this many seconds newer
 const OUTSIDE_DAYS = 3;            // how far back the outside threads go
 const DAY = 86400;
+const FIRST = 30;                  // cards on the first screenful
+const CHUNK = 30;                  // then thirty at a time as the reader nears the bottom
+const AHEAD = 1600;                // px below the screen where the next ones start drawing
 
 /* the chips, in order; an empty one is left out */
 export const TYPES = [['all', 'All'], ['post', 'Posts'], ['show', 'Show and tell'], ['ask', 'Ask'], ['free', 'Free'], ['pets', 'Pets'],
@@ -55,6 +59,7 @@ const S = { posts: [], loaded: null, done: false, failed: false, type: 'all', co
      pulse()          the Unfiltered wire once it is in, else null
      needPulse()      a promise for it
      showing()        is the Square on screen
+     panel()          the tab's scroll container
      redraw()         draw it again, where the reader was */
 export function init(c) { ctx = c; }
 
@@ -117,8 +122,16 @@ function outside() {
       add({ k: x.u, href: x.u, src: s.short || s.name || 'r/burlington', sid: x.s, ch: 'reddit', text: squash(x.t), d: Number(x.d) || 0, open: 'Open the thread' });
     });
   }
+  /* once each: by key, and by its link without scheme, www or a trailing
+     slash (today's paper keys a post by its id, the Unfiltered wire by URL) */
   const seen = new Set();
-  return out.filter((it) => !seen.has(it.k) && seen.add(it.k));
+  const link = (u) => String(u || '').toLowerCase().replace(/^https?:\/\/(www\.|m\.)?/, '').replace(/[?#].*$/, '').replace(/\/+$/, '');
+  return out.filter((it) => {
+    const l = link(it.href);
+    if (seen.has(it.k) || seen.has(l)) return false;
+    seen.add(it.k); seen.add(l);
+    return true;
+  });
 }
 
 /* everything, newest first with the neighbors nudged up; counts for the chips */
@@ -168,7 +181,7 @@ function composer() {
 /* an outside thread: a compact card, its source as a coloured chip, two
    lines, the way out. Nothing in it is ever a copied picture. */
 function outCard(it) {
-  const c = el('article', 'card fi sq-out w-src-' + it.ch);
+  const c = el('article', 'card fi sq-out w-src-' + it.ch + (store.isRead(it.k) ? ' is-read' : ''));
   c.dataset.k = it.k;
   const ext = /^https?:/.test(it.href || '');
   c.innerHTML = '<div class="sq-out-h"><span class="sq-chip">' + esc(it.src || (it.ch === 'reddit' ? 'Reddit' : 'Facebook group')) + '</span>' +
@@ -177,7 +190,8 @@ function outCard(it) {
   return c;
 }
 
-export function render(root) {
+export function render(root, opts = {}) {
+  stop();
   const list = build();
   root.innerHTML = '';
   root.appendChild(composer());
@@ -188,11 +202,41 @@ export function render(root) {
     return;
   }
   const feed = el('div', 'feed sq-feed');
-  list.forEach((x) => { const n = x.mine ? cards.board(x.it) : outCard(x.it); if (n) feed.appendChild(n); });
-  feed.appendChild(cards.caught({ title: 'That’s the Square', check: false, buttons: [button(ICON.plus + ' Post to the Square', '', () => compose('post'))] }));
   root.appendChild(feed);
   app.bindFeed(feed);
+  /* drawn in chunks as the reader nears the bottom: three days of outside
+     threads can run to hundreds */
+  const run = { i: 0, dead: false, sentinel: el('div', 'loading') };
+  run.sentinel.setAttribute('aria-hidden', 'true');
+  feed.appendChild(run.sentinel);
+  S.run = run;
+  const panel = ctx.panel();
+  const near = () => panel && run.sentinel.isConnected && ctx.showing() && run.sentinel.getBoundingClientRect().top - panel.getBoundingClientRect().bottom < AHEAD;
+  const step = (n) => {
+    if (run.dead) return;
+    while (run.i < list.length && n-- > 0) {
+      const x = list[run.i++];
+      const node = x.mine ? cards.board(x.it) : outCard(x.it);
+      if (node) feed.insertBefore(node, run.sentinel);
+    }
+    if (run.i >= list.length) {
+      run.sentinel.remove();
+      stop();
+      feed.appendChild(cards.caught({ title: 'That’s the Square', check: false, buttons: [button(ICON.plus + ' Post to the Square', '', () => compose('post'))] }));
+      return;
+    }
+    requestAnimationFrame(() => { if (near()) step(CHUNK); });
+  };
+  if ('IntersectionObserver' in window && panel) {
+    run.io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) step(CHUNK); }, { root: panel, rootMargin: '0px 0px ' + AHEAD + 'px 0px' });
+    run.io.observe(run.sentinel);
+  }
+  step(Math.max(FIRST, opts.limit || 0));
 }
+export function stop() {
+  if (S.run) { S.run.dead = true; if (S.run.io) S.run.io.disconnect(); S.run = null; }
+}
+export const drawn = () => (S.run ? S.run.i : (S.list ? S.list.length : 0));
 
 /* for the tests */
 export const _state = () => ({ type: S.type, counts: S.counts, list: (S.list || []).map((x) => ({ k: x.it.k, mine: x.mine, type: x.mine ? x.it.type : x.it.ch })) });

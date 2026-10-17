@@ -397,12 +397,12 @@ function squareSubnav() {
   return frag;
 }
 let squareSeq = 0;
-function renderSquare() {
+function renderSquare(opts = {}) {
   const root = W.root;
   const seq = ++squareSeq;
   const draw = () => {
     if (seq !== squareSeq || W.mode !== 'square' || W.view !== 'paper') return;
-    square.render(root);
+    square.render(root, { limit: opts.limit });
     if (app.activeTab() === 'wire') app.paintSubnav();
     landSquare();
   };
@@ -423,6 +423,7 @@ square.init({
   pulse: () => W.pulse,
   needPulse: () => pulseForPhotos(),
   showing: () => W.mode === 'square' && W.view === 'paper' && panelOn(),
+  panel: () => W.panel,
   redraw: () => redraw(),
 });
 /* Is the Square live? Asked once a visit; until it is, the switch has two
@@ -576,7 +577,7 @@ function render(opts = {}) {
   stopRun();
   if (W.view === 'raw') { renderRaw(); return; }
   if (W.mode === 'photos') { renderPhotos(opts); return; }
-  if (W.mode === 'square') { renderSquare(); return; }
+  if (W.mode === 'square') { renderSquare(opts); return; }
   if (W.ch === 'instagram') { renderInstagram(opts); return; }
   if (W.failed && !W.today) {
     root.innerHTML = '<div class="errbox"><b>Couldn’t reach the wire.</b><br>The paper is served from GitHub. If you are offline it will come back on its own.</div>';
@@ -589,7 +590,12 @@ function render(opts = {}) {
   root.appendChild(feed);
 
   const tk = todayKey();
-  if (!W.start) W.sawToday = true;
+  /* what the reader is shown as the top of today's paper: the bookmark
+     saved on leaving is this, never a payload that landed unseen since */
+  if (!W.start && W.today && W.today.date === tk && W.view === 'paper') {
+    const top = dayOf(W.today).all[0];
+    if (top) W.seenTop = { date: tk, k: top.k };
+  }
   const date = W.start || tk;
   const p = payloadFor(date);
   const d = p ? dayOf(p) : null;
@@ -1028,8 +1034,10 @@ function renderInstagram(opts = {}) {
 
 /* ------------------------------------------------------- left off here */
 /* Kept on the phone (`allday-wire-left`, { date, k, at }): the story at the
-   top of today's paper, every source, when the reader last left the News
-   list on today. The demo keeps it for the visit only. */
+   top of today's paper, every source, as it was last drawn for the reader
+   (W.seenTop; a payload that lands while they are elsewhere does not move
+   it), saved when they leave the tab or the page. The demo keeps it for
+   the visit only. */
 const LEFT_KEY = 'allday-wire-left';
 let leftMem = null;
 function readLeft() {
@@ -1037,11 +1045,9 @@ function readLeft() {
   try { const v = JSON.parse(localStorage.getItem(LEFT_KEY) || 'null'); return v && isDate(v.date) && v.k ? v : null; } catch (e) { return null; }
 }
 function saveLeft() {
-  if (!W.sawToday || !W.today || W.today.date !== todayKey()) return;
-  const d = dayOf(W.today);
-  const top = d.all[0];
-  if (!top) return;
-  const v = { date: d.date, k: top.k, at: Math.floor(SRC.now() / 1000) };
+  const top = W.seenTop;
+  if (!top || top.date !== todayKey()) return;
+  const v = { date: top.date, k: top.k, at: Math.floor(SRC.now() / 1000) };
   if (app.demo) { leftMem = v; return; }
   try { localStorage.setItem(LEFT_KEY, JSON.stringify(v)); } catch (e) { /* private mode: no bookmark */ }
 }
@@ -1170,6 +1176,7 @@ function watch(run) {
 }
 function stopRun() {
   photos.stop();
+  square.stop();
   if (igRun) { igRun.dead = true; igRun = null; }
   if (observer) { observer.disconnect(); observer = null; }
   if (W.raw.run) W.raw.run.dead = true;
@@ -1621,7 +1628,7 @@ function mount(root) {
 /* a mute, a follow or the switch: redraw as far down as the reader was */
 function redraw() {
   const y = W.panel ? W.panel.scrollTop : 0;
-  const shown = W.view === 'paper' && W.mode === 'photos' ? photos.drawn() : W.view === 'paper' && W.ch === 'instagram' ? W.igShown || 0 : W.run ? W.run.shown : 0;
+  const shown = W.view !== 'paper' ? 0 : W.mode === 'photos' ? photos.drawn() : W.mode === 'square' ? square.drawn() : W.ch === 'instagram' ? W.igShown || 0 : W.run ? W.run.shown : 0;
   if (W.view === 'raw' && W.raw.run) W.raw.keep = W.raw.run.i;
   app.paintSubnav();
   render({ limit: shown });
