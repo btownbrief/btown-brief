@@ -487,6 +487,14 @@ class Build(unittest.TestCase):
         self.assertEqual(led["spent"], 202)                         # the morning's credits stay counted
         self.assertEqual(led["pending"]["prev"], {"t2": 0, "t3": int(last_week)})
 
+    def test_only_is_a_small_test(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            code, got, led = self.run_main(
+                tmp, [{"h": h, "tier": 3, "category": "food"} for h in "abcdef"], ["--only", "a,b,c,d,e,f"],
+                lambda h, k: self.fail("fetched"), at(2026, 10, 17), {"month": "2026-10", "spent": 0, "last": {}})
+        self.assertEqual(code, 2)
+        self.assertEqual(led["spent"], 0)
+
     def test_the_steps_are_exclusive(self):
         for argv in (["--dry-run", "--execute"], ["--reserve", "--execute"], ["--dry-run", "--reserve"]):
             with mock.patch.object(sys, "argv", ["x"] + argv), mock.patch("sys.stderr"), \

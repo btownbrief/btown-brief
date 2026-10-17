@@ -133,6 +133,7 @@ RUNS_PER_DAY = 2              # refresh-allday.yml's two crons; for the projecti
 TIER3_PERIOD_DAYS = 7         # tier 3: each account once a week
 TIERS = (1, 2, 3)
 PENDING_MAX_H = 6             # a --reserve older than this is not executed
+ONLY_MAX = 5                  # --only is a small local test, never a second schedule
 CATEGORIES = ("food", "venue", "events", "shop", "pets", "scenic", "other")
 
 # One cap per category, so a chip never comes up empty because another kind
@@ -703,6 +704,11 @@ def main() -> int:
     credits = allowance(ledger, now, budget)
     if args.only:
         want = {norm_handle(h) for h in args.only.split(",") if norm_handle(h)}
+        if len(want) > ONLY_MAX:
+            # Its credits land only in this checkout's ledger, so it has to
+            # stay small enough not to matter to the month.
+            log(f"refusing: --only takes at most {ONLY_MAX} handles")
+            return 2
         stray = sorted(want - set(cat_of))
         if stray:
             log(f"--only: not in the roster, ignored: {', '.join(stray)}")
