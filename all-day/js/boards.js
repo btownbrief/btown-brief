@@ -36,10 +36,10 @@
                                        (any of them; '' or null drops one; the map replaces the old one;
                                        null keeps it). isPublic: the "show my handles" switch (null keeps it).
      boards.handlesRecent(kinds, limit) -> { ok, people: [{ display_name, neighborhood, handles, updated_at, me }] }
-                                       the most recently updated profiles with handles of those kinds (all
-                                       kinds when none are given; limit 20 by default, 60 at most): readers
-                                       whose switch is on, and, for a reader in the People directory, the
-                                       others in it. Never an email or an account id.
+                                       signed in only: the most recently updated profiles whose switch is
+                                       on, with their handles of those kinds (all kinds when none are
+                                       given; limit 20 by default, 60 at most). updated_at is a day,
+                                       '2026-10-17'. Never an email or an account id.
      boards.roundTwo() / boards.roundFour() -> true | false | null (could not ask)
      boards.status()  'unknown' | 'live' | 'off' (the SQL is not pasted yet)
 
@@ -274,10 +274,10 @@ export function setHandles(handles, isPublic) {
   });
 }
 
-/* The most recently updated profiles with handles of these kinds, as the
-   server allows: readers whose switch is on, and (for a reader in the
-   People directory) the others in it. */
+/* For a signed-in reader, the most recently updated profiles whose
+   "show my handles" switch is on, with their handles of these kinds. */
 export function handlesRecent(kinds, limit) {
+  if (!app.user()) return Promise.resolve(Object.assign(fail('not_signed_in'), { people: [] }));
   const list = Array.isArray(kinds) ? kinds : kinds ? [kinds] : [];
   if (list.some((k) => !RULES.handles[k])) return Promise.resolve(Object.assign(fail('bad_handle'), { people: [] }));
   return call('nn_handles_recent', { p_kinds: list.length ? list : null, p_limit: limit || 20 })

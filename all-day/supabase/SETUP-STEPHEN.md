@@ -201,10 +201,10 @@ What it turns on:
   **Show my handles in the directory** switch. Each box takes only that service's name shape: no
   links, no @ (the sheet drops a typed @ for them), a Switch friend code as SW-1234-5678-9012.
   The server checks them again, because the app's key is public.
-- **Who sees handles.** Only readers who turned the switch on (anyone can see those), and readers
-  in the People directory (only other people in the directory can see those, which is the
-  directory's own rule). Nobody else's handles are ever handed out, and never with an email.
-  "Delete my account" already takes them, since they live on the profile.
+- **Who sees handles.** Only the handles of readers who turned the switch on, and only to readers
+  who are signed in. Switch off, nobody sees them, People directory or not. They come with a first
+  name, a neighborhood and the day the profile was last saved (never the time), and never with an
+  email. "Delete my account" already takes them, since they live on the profile.
 - **Games.** "What I'm playing" (a game and a platform; two weeks) and "looking for a group"
   (the game, the platform and when; one week). A vote means "me too".
 - **The Square.** A community board: posts (30 days), show and tell (photo needed, 30 days),
@@ -214,7 +214,8 @@ What it turns on:
   run, social, music, other) and an optional link. **Every one waits for you on the boards desk**
   (`mod.html`, under Waiting) and shows only once you approve it; an edit to the date sends it back
   to you. It comes down the day after its date, and a date in the past or more than six months out
-  is refused. This is the only place a reader can put a link, which is why you see each one first.
+  is refused, as is a date that isn't on the calendar. This is the only place a reader can put a
+  link, which is why you see each one first.
 
 The tabs that use these come in their own updates; until then nothing on screen changes except the
 Handles section.

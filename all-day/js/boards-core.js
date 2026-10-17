@@ -69,8 +69,10 @@ export const RULES = {
   /* A profile's handles: the name a reader goes by elsewhere, one per
      service, each matched whole against its pattern after the spaces at
      either end are trimmed (1 to handleMax characters). Never a link (no
-     slash, no colon) and never an @. handlesDeny (any case) refuses what
-     is plainly a web address even when the pattern would let it by. */
+     slash, no colon) and never an @. handlesDeny (any case) refuses the
+     common web addresses (www., .com, .net ...) a pattern with dots would
+     let by; a rarer ending (.co, .me) can still pass, since real usernames
+     end that way too. */
   handles: {
     instagram: '^[A-Za-z0-9._]{1,30}$',
     spotify: '^[A-Za-z0-9._-]{1,40}$',
@@ -89,7 +91,7 @@ export const RULES = {
     chess: '^[A-Za-z0-9_-]{2,25}$',
     linkedin: '^[A-Za-z0-9-]{3,40}$',
   },
-  handlesDeny: '^www[.]|[.](com|net|org|io|gg|tv|ly|xyz)$',
+  handlesDeny: '^www[.]|[.](com|net|org|io|gg|tv|ly|xyz|dev|app|info|biz|site|online|link|page)$',
   /* a `url` field: http(s), a host with a dot, no spaces, nothing that
      breaks out of an attribute */
   urlPattern: '^https?://[A-Za-z0-9.-]+[.][A-Za-z]{2,}(:[0-9]{1,5})?([/?#][A-Za-z0-9._~:/?#@!$&()*+,;=%-]*)?$',
@@ -238,7 +240,7 @@ export const MESSAGES = {
   bad_archetype: 'Pick one of the four, or none.',
   bad_interest: 'Pick what you’re into from the list, eight at most.',
   bad_handle: 'One of your handles isn’t right. Just the name, with no link and no @.',
-  bad_date: 'Pick a date from today to six months out.',
+  bad_date: 'Start “when” with a real date, from today to six months out (2026-10-24).',
   bad_board: 'That board isn’t open.',
   bad_kind: 'That kind of post isn’t open on this board.',
   bad_title: 'A title, up to 80 characters.',
@@ -411,9 +413,10 @@ export function checkPost(rules, board, input) {
 const DAY = 86400000;
 const kindOf = (rules, board, kind) => (rules.boards[board] && rules.boards[board].kinds[kind]) || null;
 /* The date a field starts with, YYYY-MM-DD, as [y, m, d]; null when it
-   starts with none, or with one that is not on the calendar (2026-02-30).
-   The server reads it the same way: the leading ten characters, cast to a
-   date, any failure meaning no date. */
+   starts with none, or with one that is not on the calendar (2026-02-30,
+   which dateError refuses). The server reads it the same way: the leading
+   ten characters, cast to a date. */
+export const DATE_SHAPE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}/;
 export function leadingDate(s) {
   const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})/.exec(String(s == null ? '' : s));
   if (!m) return null;
@@ -449,11 +452,14 @@ export function expiresAt(rules, board, kind, nowMs, meta) {
   const d = k && k.days;
   return d ? nowMs + d * DAY : null;
 }
-/* 'bad_date' when an `until` kind's date is before today in Burlington or
-   more than aheadMaxDays after it; null otherwise (no date is no error). */
+/* 'bad_date' when an `until` kind's field starts with a date that is not
+   on the calendar, or one before today in Burlington or more than
+   aheadMaxDays after it; null otherwise (no date is no error). */
 export function dateError(rules, board, kind, meta, nowMs) {
+  const k = kindOf(rules, board, kind);
+  if (!k || !k.until) return null;
   const date = untilDate(rules, board, kind, meta);
-  if (!date) return null;
+  if (!date) return DATE_SHAPE.test(String((meta && meta[k.until]) || '')) ? 'bad_date' : null;
   const today = dayNumber(...etDate(nowMs));
   const n = dayNumber(...date);
   return n < today || n > today + rules.limits.aheadMaxDays ? 'bad_date' : null;

@@ -43,12 +43,11 @@
 --               "Delete my account" already takes them.
 --   nn_profile_set   a third version that also takes the handles and the
 --                    switch. The two older versions are untouched.
---   nn_handles_recent  the most recently updated profiles with handles of
---                    the kinds asked for: first name, neighborhood, those
---                    handles and when. Only readers who turned the switch on
---                    (shown to anyone), or who are in the People directory
---                    (shown only to others in it, as the directory is).
---                    Never an email, never an account id.
+--   nn_handles_recent  for signed-in readers, the most recently updated
+--                    profiles with handles of the kinds asked for: first
+--                    name, neighborhood, those handles and the day. Only
+--                    readers who turned the switch on. Never an email,
+--                    never an account id.
 --   nn_post_create, nn_post_meta_set  the same calls, now ending a
 --                    gathering by its date, and refusing a date in the past.
 --
@@ -64,7 +63,7 @@
 -- scripts/test-boards-core.mjs fails when the two differ, or when a board,
 -- kind or field from either older copy is missing.
 create or replace function public.nn_rules() returns jsonb
-language sql immutable as $rules$ select $json${"version":3,"limits":{"nameMax":32,"titleMax":80,"bodyMax":600,"placeMax":80,"metaKeysMax":8,"metaTextMax":80,"postsPerDay":20,"waitingMax":5,"reportsToHide":2,"reportsPerDay":10,"interestsMax":8,"weeksMax":26,"listDefault":30,"listMax":60,"expiredKeepDays":7,"deletedKeepDays":30,"handleMax":40,"aheadMaxDays":180},"neighborhoods":["downtown","old-north-end","new-north-end","south-end","hill","waterfront","winooski","south-burlington","essex","shelburne","colchester","elsewhere"],"archetypes":["new","regular","trail","games"],"reasons":["spam","unkind","unsafe","other"],"interests":["sports","running","outdoors","games","music","dance","books","making","languages","food"],"handles":{"instagram":"^[A-Za-z0-9._]{1,30}$","spotify":"^[A-Za-z0-9._-]{1,40}$","strava":"^[A-Za-z0-9_-]{1,40}$","letterboxd":"^[A-Za-z0-9_]{2,15}$","goodreads":"^[A-Za-z0-9_-]{1,40}$","beli":"^[A-Za-z0-9._]{1,30}$","untappd":"^[A-Za-z0-9._-]{1,40}$","psn":"^[A-Za-z][A-Za-z0-9_-]{2,15}$","xbox":"^[A-Za-z][A-Za-z0-9 ]{0,14}(#[0-9]{1,4})?$","steam":"^[A-Za-z0-9_-]{2,32}$","switch":"^SW-[0-9]{4}-[0-9]{4}-[0-9]{4}$","discord":"^[A-Za-z0-9_.]{2,32}$","epic":"^[A-Za-z0-9._ -]{3,16}$","riot":"^[A-Za-z0-9 ._]{3,16}#[A-Za-z0-9]{3,5}$","chess":"^[A-Za-z0-9_-]{2,25}$","linkedin":"^[A-Za-z0-9-]{3,40}$"},"handlesDeny":"^www[.]|[.](com|net|org|io|gg|tv|ly|xyz)$","urlPattern":"^https?://[A-Za-z0-9.-]+[.][A-Za-z]{2,}(:[0-9]{1,5})?([/?#][A-Za-z0-9._~:/?#@!$&()*+,;=%-]*)?$","boards":{"people":{"premod":false,"gallery":false,"kinds":{"plan":{"days":14,"photo":"none","needs":["when"]}},"meta":{"when":{"type":"text","max":60},"arch":{"type":"enum","values":["new","regular","trail","games"]},"spots":{"type":"int","min":1,"max":50},"meetup":{"type":"bool"},"ages":{"type":"enum","values":["twenties","thirties","forties","fifties","any"]}}},"vintage":{"premod":false,"gallery":false,"kinds":{"spotted":{"days":21,"photo":"optional","needs":["shop"]},"swap":{"days":21,"photo":"optional","needs":["want"]},"design":{"days":null,"photo":"required","needs":["thanks"]},"fit":{"days":60,"photo":"required","needs":[]}},"meta":{"shop":{"type":"text","max":60},"size":{"type":"text","max":12},"price":{"type":"int","min":0,"max":10000},"want":{"type":"text","max":80},"thanks":{"type":"enum","values":["shirts","credit"]},"got":{"type":"bool"}}},"art":{"premod":false,"gallery":true,"kinds":{"photo":{"days":null,"photo":"required","needs":[]},"art":{"days":null,"photo":"required","needs":[]},"notice":{"days":30,"photo":"none","needs":[]}},"meta":{"medium":{"type":"text","max":40},"shirt":{"type":"enum","values":["yes","no"]}}},"watch":{"premod":false,"gallery":false,"kinds":{"rating":{"days":null,"photo":"none","needs":["stars"]},"pick":{"days":30,"photo":"none","needs":[],"one_vote":true}},"meta":{"year":{"type":"int","min":1888,"max":2100},"stars":{"type":"int","min":1,"max":5},"where":{"type":"text","max":40},"film":{"type":"int","min":1,"max":99999999}}},"games":{"premod":false,"gallery":false,"kinds":{"playing":{"days":14,"photo":"none","needs":["game","platform"]},"lfg":{"days":7,"photo":"none","needs":["game","platform","when"]}},"meta":{"game":{"type":"text","max":60},"platform":{"type":"enum","values":["pc","ps5","xbox","switch","mobile","vr","board","tabletop"]},"when":{"type":"text","max":60}}},"square":{"premod":false,"gallery":false,"kinds":{"post":{"days":30,"photo":"none","needs":[]},"show":{"days":30,"photo":"required","needs":[]},"ask":{"days":14,"photo":"none","needs":[]},"free":{"days":14,"photo":"optional","needs":[]},"pets":{"days":30,"photo":"required","needs":[]}},"meta":{"topic":{"type":"enum","values":["food","outdoors","pets","events","home","lost-found","recommend","other"]}}},"gatherings":{"premod":true,"gallery":false,"kinds":{"gathering":{"days":30,"photo":"optional","needs":["when","place","kind"],"until":"when"}},"meta":{"when":{"type":"text","max":60},"place":{"type":"text","max":80},"link":{"type":"url","max":200},"kind":{"type":"enum","values":["pickup","league","board-games","run","social","music","other"]}}}}}$json$::jsonb $rules$;
+language sql immutable as $rules$ select $json${"version":3,"limits":{"nameMax":32,"titleMax":80,"bodyMax":600,"placeMax":80,"metaKeysMax":8,"metaTextMax":80,"postsPerDay":20,"waitingMax":5,"reportsToHide":2,"reportsPerDay":10,"interestsMax":8,"weeksMax":26,"listDefault":30,"listMax":60,"expiredKeepDays":7,"deletedKeepDays":30,"handleMax":40,"aheadMaxDays":180},"neighborhoods":["downtown","old-north-end","new-north-end","south-end","hill","waterfront","winooski","south-burlington","essex","shelburne","colchester","elsewhere"],"archetypes":["new","regular","trail","games"],"reasons":["spam","unkind","unsafe","other"],"interests":["sports","running","outdoors","games","music","dance","books","making","languages","food"],"handles":{"instagram":"^[A-Za-z0-9._]{1,30}$","spotify":"^[A-Za-z0-9._-]{1,40}$","strava":"^[A-Za-z0-9_-]{1,40}$","letterboxd":"^[A-Za-z0-9_]{2,15}$","goodreads":"^[A-Za-z0-9_-]{1,40}$","beli":"^[A-Za-z0-9._]{1,30}$","untappd":"^[A-Za-z0-9._-]{1,40}$","psn":"^[A-Za-z][A-Za-z0-9_-]{2,15}$","xbox":"^[A-Za-z][A-Za-z0-9 ]{0,14}(#[0-9]{1,4})?$","steam":"^[A-Za-z0-9_-]{2,32}$","switch":"^SW-[0-9]{4}-[0-9]{4}-[0-9]{4}$","discord":"^[A-Za-z0-9_.]{2,32}$","epic":"^[A-Za-z0-9._ -]{3,16}$","riot":"^[A-Za-z0-9 ._]{3,16}#[A-Za-z0-9]{3,5}$","chess":"^[A-Za-z0-9_-]{2,25}$","linkedin":"^[A-Za-z0-9-]{3,40}$"},"handlesDeny":"^www[.]|[.](com|net|org|io|gg|tv|ly|xyz|dev|app|info|biz|site|online|link|page)$","urlPattern":"^https?://[A-Za-z0-9.-]+[.][A-Za-z]{2,}(:[0-9]{1,5})?([/?#][A-Za-z0-9._~:/?#@!$&()*+,;=%-]*)?$","boards":{"people":{"premod":false,"gallery":false,"kinds":{"plan":{"days":14,"photo":"none","needs":["when"]}},"meta":{"when":{"type":"text","max":60},"arch":{"type":"enum","values":["new","regular","trail","games"]},"spots":{"type":"int","min":1,"max":50},"meetup":{"type":"bool"},"ages":{"type":"enum","values":["twenties","thirties","forties","fifties","any"]}}},"vintage":{"premod":false,"gallery":false,"kinds":{"spotted":{"days":21,"photo":"optional","needs":["shop"]},"swap":{"days":21,"photo":"optional","needs":["want"]},"design":{"days":null,"photo":"required","needs":["thanks"]},"fit":{"days":60,"photo":"required","needs":[]}},"meta":{"shop":{"type":"text","max":60},"size":{"type":"text","max":12},"price":{"type":"int","min":0,"max":10000},"want":{"type":"text","max":80},"thanks":{"type":"enum","values":["shirts","credit"]},"got":{"type":"bool"}}},"art":{"premod":false,"gallery":true,"kinds":{"photo":{"days":null,"photo":"required","needs":[]},"art":{"days":null,"photo":"required","needs":[]},"notice":{"days":30,"photo":"none","needs":[]}},"meta":{"medium":{"type":"text","max":40},"shirt":{"type":"enum","values":["yes","no"]}}},"watch":{"premod":false,"gallery":false,"kinds":{"rating":{"days":null,"photo":"none","needs":["stars"]},"pick":{"days":30,"photo":"none","needs":[],"one_vote":true}},"meta":{"year":{"type":"int","min":1888,"max":2100},"stars":{"type":"int","min":1,"max":5},"where":{"type":"text","max":40},"film":{"type":"int","min":1,"max":99999999}}},"games":{"premod":false,"gallery":false,"kinds":{"playing":{"days":14,"photo":"none","needs":["game","platform"]},"lfg":{"days":7,"photo":"none","needs":["game","platform","when"]}},"meta":{"game":{"type":"text","max":60},"platform":{"type":"enum","values":["pc","ps5","xbox","switch","mobile","vr","board","tabletop"]},"when":{"type":"text","max":60}}},"square":{"premod":false,"gallery":false,"kinds":{"post":{"days":30,"photo":"none","needs":[]},"show":{"days":30,"photo":"required","needs":[]},"ask":{"days":14,"photo":"none","needs":[]},"free":{"days":14,"photo":"optional","needs":[]},"pets":{"days":30,"photo":"required","needs":[]}},"meta":{"topic":{"type":"enum","values":["food","outdoors","pets","events","home","lost-found","recommend","other"]}}},"gatherings":{"premod":true,"gallery":false,"kinds":{"gathering":{"days":30,"photo":"optional","needs":["when","place","kind"],"until":"when"}},"meta":{"when":{"type":"text","max":60},"place":{"type":"text","max":80},"link":{"type":"url","max":200},"kind":{"type":"enum","values":["pickup","league","board-games","run","social","music","other"]}}}}}$json$::jsonb $rules$;
 
 -- ------------------------------------------------------------------ tables
 
@@ -163,20 +162,22 @@ begin
 end $$;
 
 -- The date a kind with `until` ends by: the leading YYYY-MM-DD of that
--- meta field, or null when it has none or it is not on the calendar
--- (boards-core.js leadingDate).
+-- meta field, or null when it starts with none (boards-core.js
+-- leadingDate). One shaped like a date but not on the calendar
+-- (2026-02-30, 2099-99-99) is bad_date, never "no date".
 create or replace function public.nn_until_date(p_board text, p_kind text, p_meta jsonb) returns date
 language plpgsql stable as $$
-declare f text := public.nn_rules() -> 'boards' -> p_board -> 'kinds' -> p_kind ->> 'until'; s text;
+declare f text := public.nn_rules() -> 'boards' -> p_board -> 'kinds' -> p_kind ->> 'until'; s text; d date;
 begin
   if f is null then return null; end if;
   s := substring(coalesce(p_meta ->> f, '') from '^([0-9]{4}-[0-9]{2}-[0-9]{2})');
   if s is null then return null; end if;
   begin
-    return s::date;
+    d := s::date;
   exception when others then
-    return null;
+    raise exception 'bad_date';
   end;
+  return d;
 end $$;
 
 -- When a post of this kind, with this meta, made now, stops showing; null
@@ -262,13 +263,11 @@ end $$;
 -- null or empty means every kind; one that is not a kind is bad_handle),
 -- from the profiles most recently updated, p_limit of them (20 by default,
 -- listMax at most): [{"display_name": "Maya", "neighborhood": "south-end",
--- "handles": {"strava": "maya_runs"}, "updated_at": "...", "me": false}].
--- Only a profile that has at least one of those kinds, whose reader is not
--- banned, and who either
---   turned "show my handles" on (handles_public): shown to anyone, or
---   is in the People directory (nn-people.sql): shown only to a signed-in
---   reader who is in it too and not banned, the directory's own rule.
--- Never an email, never an account id. Works with or without nn-people.sql.
+-- "handles": {"strava": "maya_runs"}, "updated_at": "2026-10-17", "me": false}].
+-- Signed-in readers only. Only a profile whose reader turned "show my
+-- handles" on (handles_public), has at least one of those kinds and is not
+-- banned. updated_at is the day (Burlington's calendar) the profile was
+-- last saved, never the time. Never an email, never an account id.
 create or replace function public.nn_handles_recent(p_kinds text[] default null, p_limit int default 20) returns jsonb
 language plpgsql stable security definer set search_path = public as $$
 declare
@@ -276,11 +275,9 @@ declare
   rules jsonb := public.nn_rules();
   kinds text[];
   lim int := least(greatest(coalesce(p_limit, 20), 1), (rules -> 'limits' ->> 'listMax')::int);
-  v_dir boolean := to_regclass('public.nn_people_dir') is not null;
-  v_member boolean := false;
-  v_out jsonb;
   t text;
 begin
+  if u is null then raise exception 'not_signed_in'; end if;
   if p_kinds is null or cardinality(p_kinds) = 0 then
     select array_agg(k) into kinds from jsonb_object_keys(rules -> 'handles') k;
   else
@@ -290,23 +287,16 @@ begin
       if not (t = any (kinds)) then kinds := kinds || t; end if;
     end loop;
   end if;
-  if v_dir and u is not null and not exists (select 1 from public.nn_bans where user_id = u) then
-    execute 'select exists (select 1 from public.nn_people_dir where user_id = $1)' into v_member using u;
-  end if;
-  execute format($q$
-    select coalesce(jsonb_agg(jsonb_build_object('display_name', x.display_name, 'neighborhood', x.neighborhood,
-             'handles', x.h, 'updated_at', x.updated_at, 'me', x.user_id is not distinct from $3) order by x.updated_at desc), '[]'::jsonb)
-      from (select pr.user_id, pr.display_name, pr.neighborhood, pr.updated_at,
-                   (select jsonb_object_agg(e.key, e.value) from jsonb_each(pr.handles) e where e.key = any ($1)) as h
-              from public.nn_profiles pr
-             where pr.handles ?| $1
-               and not exists (select 1 from public.nn_bans b where b.user_id = pr.user_id)
-               and (pr.handles_public %s)
-             order by pr.updated_at desc
-             limit $2) x$q$,
-    case when v_dir and v_member then 'or exists (select 1 from public.nn_people_dir d where d.user_id = pr.user_id)' else '' end)
-  into v_out using kinds, lim, u;
-  return v_out;
+  return (select coalesce(jsonb_agg(jsonb_build_object('display_name', x.display_name, 'neighborhood', x.neighborhood, 'handles', x.h,
+             'updated_at', to_char(x.updated_at at time zone 'America/New_York', 'YYYY-MM-DD'), 'me', x.user_id = u)
+             order by x.updated_at desc), '[]'::jsonb)
+    from (select pr.user_id, pr.display_name, pr.neighborhood, pr.updated_at,
+                 (select jsonb_object_agg(e.key, e.value) from jsonb_each(pr.handles) e where e.key = any (kinds)) as h
+            from public.nn_profiles pr
+           where pr.handles_public and pr.handles ?| kinds
+             and not exists (select 1 from public.nn_bans b where b.user_id = pr.user_id)
+           order by pr.updated_at desc
+           limit lim) x);
 end $$;
 
 -- ------------------------------------------------------------------ posting

@@ -14,11 +14,7 @@
    and setPhoto() stand in for a reader uploading and Stephen approving.
    The bucket's picture files are a map of path to upload time (addFile);
    a photo-queue row needs no file here, but a stray file is one with no
-   row and no post (nn_mod_photo_sweep).
-
-   The People directory (nn-people.sql's nn_people_dir) is mirrored only as
-   far as nn_handles_recent needs it: a set of the account ids in it
-   (peopleDir). people.js keeps its own demo copy of the directory itself. */
+   row and no post (nn_mod_photo_sweep). */
 
 import { RULES, checkProfile, checkPost, mergeMeta, expiresAt, dateError, leadingDate, etDate, startsPending, photoRequired, oneVote, rateError, voterFor, isoWeek, lastWeeks } from './boards-core.js';
 
@@ -34,7 +30,6 @@ export class FakeBoards {
     this.modSecret = modSecret || null;   // null: the passphrase line has not been run
     this.uid = null;
     this.profiles = new Map();   // uid -> { display_name, neighborhood, archetype, interests, handles, handles_public, updated_at }
-    this.peopleDir = new Set();  // uids in the People directory (nn_people_dir)
     this.posts = [];             // rows, as nn_posts holds them
     this.votes = new Set();      // `${postId}|${voter}`
     this.voteAt = new Map();     // the same key -> when it was cast; a vote seeded without one counts from its post's time
@@ -162,11 +157,11 @@ export class FakeBoards {
     delete out.handles; delete out.handles_public;
     return out;
   }
-  /* nn_handles_recent: the newest-updated profiles with handles of these
-     kinds, shown to anyone when the switch is on, and to a fellow member
-     of the People directory when they are in it; never a banned reader,
-     never an account id */
+  /* nn_handles_recent: for a signed-in reader, the newest-updated profiles
+     whose switch is on, with handles of these kinds; never a banned
+     reader, never an account id, the day and not the time */
   nn_handles_recent({ p_kinds = null, p_limit = 20 } = {}) {
+    const u = this._need();
     const R = this.rules;
     let kinds;
     if (p_kinds == null || (Array.isArray(p_kinds) && !p_kinds.length)) kinds = Object.keys(R.handles);
@@ -176,15 +171,13 @@ export class FakeBoards {
       for (const k of p_kinds) { if (typeof k !== 'string' || !R.handles[k]) throw fail('bad_handle'); if (!kinds.includes(k)) kinds.push(k); }
     }
     const lim = Math.min(Math.max(p_limit == null ? 20 : p_limit, 1), R.limits.listMax);
-    const u = this.uid;
-    const member = !!u && !this.bans.has(u) && this.peopleDir.has(u);
     return [...this.profiles]
       .map(([uid, p]) => ({ uid, p, h: Object.fromEntries(Object.entries(p.handles || {}).filter(([k]) => kinds.includes(k))) }))
-      .filter(({ uid, p, h }) => Object.keys(h).length && !this.bans.has(uid) && (p.handles_public || (member && this.peopleDir.has(uid))))
+      .filter(({ uid, p, h }) => Object.keys(h).length && !this.bans.has(uid) && p.handles_public)
       .sort((a, b) => (b.p.updated_at || 0) - (a.p.updated_at || 0))
       .slice(0, lim)
       .map(({ uid, p, h }) => ({ display_name: p.display_name, neighborhood: p.neighborhood || null, handles: h,
-        updated_at: new Date(p.updated_at || 0).toISOString(), me: uid === u }));
+        updated_at: etDate(p.updated_at || 0).map((n, i) => String(n).padStart(i ? 2 : 4, '0')).join('-'), me: uid === u }));
   }
 
   /* ---------------------------------------------------------------- posts */
@@ -259,9 +252,9 @@ export class FakeBoards {
     /* a gathering's date moved: its end moves with it */
     const kr = this.rules.boards[p.board].kinds[p.kind];
     if (kr.until && JSON.stringify(m.meta[kr.until]) !== JSON.stringify(p.meta[kr.until])) {
+      const late = dateError(this.rules, p.board, p.kind, m.meta, this._t());
+      if (late) throw fail(late);
       if (leadingDate(m.meta[kr.until])) {
-        const late = dateError(this.rules, p.board, p.kind, m.meta, this._t());
-        if (late) throw fail(late);
         p.expires_at = expiresAt(this.rules, p.board, p.kind, this._t(), m.meta);
       } else p.expires_at = kr.days ? p.created_at + kr.days * DAY : null;
     }
@@ -448,9 +441,8 @@ export function seedDemo(fake) {
   ];
   people.forEach(([id, name, hood, arch]) => fake.profiles.set(id, { display_name: name, neighborhood: hood, archetype: arch, interests: [] }));
   /* a dozen neighbors with handles (the first five above among them):
-     [who, handles, switch on, in the People directory, hours since they
-     last saved their profile]. Who shows in nn_handles_recent depends on
-     both, as on the server. */
+     [who, handles, switch on, hours since they last saved their profile].
+     Only the switched-on ones show in nn_handles_recent, as on the server. */
   const more = [
     ['demo-0000-4000-8000-00000000ruth', 'Ruth P.', 'winooski', 'regular'],
     ['demo-0000-4000-8000-00000000omar', 'Omar S.', 'south-burlington', 'games'],
@@ -463,22 +455,21 @@ export function seedDemo(fake) {
   more.forEach(([id, name, hood, arch]) => fake.profiles.set(id, { display_name: name, neighborhood: hood, archetype: arch, interests: [] }));
   const everyone = people.concat(more);
   const handles = [
-    [0, { strava: 'maya_runs_btv', instagram: 'maya.outside', letterboxd: 'mayar' }, true, true, 2],
-    [1, { psn: 'DevKplays', steam: 'devk_btv', discord: 'devk', chess: 'devk_blitz' }, true, true, 5],
-    [2, { instagram: 'kara.thrifts', beli: 'karam', spotify: 'karamusic' }, true, false, 9],
-    [3, { switch: 'SW-1234-5678-9012', riot: 'TomA#BTV', xbox: 'Tom Plays' }, false, true, 12],
-    [4, { goodreads: 'jess-reads', letterboxd: 'jesst', instagram: 'jess.on.the.hill' }, true, false, 20],
-    [5, { untappd: 'ruth_p', strava: 'ruthrides' }, true, false, 26],
-    [6, { epic: 'OmarS', steam: 'omar_s', psn: 'OmarS_VT', discord: 'omar.s' }, true, true, 30],
-    [7, { strava: 'lena-v', instagram: 'lena.vt', linkedin: 'lena-v' }, false, false, 40],
-    [8, { chess: 'ben_c', switch: 'SW-2222-3333-4444' }, true, false, 48],
-    [9, { spotify: 'ivy.n', beli: 'ivyeats' }, true, false, 60],
-    [10, { instagram: 'caro.lake', strava: 'caro_swims' }, false, true, 72],
-    [11, { xbox: 'SamiH#2087', riot: 'Sami#VT802', discord: 'samih' }, true, true, 90],
+    [0, { strava: 'maya_runs_btv', instagram: 'maya.outside', letterboxd: 'mayar' }, true, 2],
+    [1, { psn: 'DevKplays', steam: 'devk_btv', discord: 'devk', chess: 'devk_blitz' }, true, 5],
+    [2, { instagram: 'kara.thrifts', beli: 'karam', spotify: 'karamusic' }, true, 9],
+    [3, { switch: 'SW-1234-5678-9012', riot: 'TomA#BTV', xbox: 'Tom Plays' }, false, 12],
+    [4, { goodreads: 'jess-reads', letterboxd: 'jesst', instagram: 'jess.on.the.hill' }, true, 20],
+    [5, { untappd: 'ruth_p', strava: 'ruthrides' }, true, 26],
+    [6, { epic: 'OmarS', steam: 'omar_s', psn: 'OmarS_VT', discord: 'omar.s' }, true, 30],
+    [7, { strava: 'lena-v', instagram: 'lena.vt', linkedin: 'lena-v' }, false, 40],
+    [8, { chess: 'ben_c', switch: 'SW-2222-3333-4444' }, true, 48],
+    [9, { spotify: 'ivy.n', beli: 'ivyeats' }, true, 60],
+    [10, { instagram: 'caro.lake', strava: 'caro_swims' }, false, 72],
+    [11, { xbox: 'SamiH#2087', riot: 'Sami#VT802', discord: 'samih' }, true, 90],
   ];
-  handles.forEach(([who, h, pub, dir, ago]) => {
+  handles.forEach(([who, h, pub, ago]) => {
     Object.assign(fake.profiles.get(everyone[who][0]), { handles: h, handles_public: pub, updated_at: t - ago * H });
-    if (dir) fake.peopleDir.add(everyone[who][0]);
   });
   /* a day in Burlington, n days from now, as a gathering's `when` starts */
   const day = (n) => { const [y, m, d] = etDate(t + n * 86400000); return y + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0'); };

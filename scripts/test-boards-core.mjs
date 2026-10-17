@@ -645,7 +645,9 @@ test('round four: a gathering ends the day after its date, Burlington time, or i
   assert.equal(new Date(core.expiresAt(R, 'gatherings', 'gathering', now, g('2026-10-24, 7 pm'))).toISOString(), '2026-10-26T04:00:00.000Z', 'midnight starting the 26th, EDT');
   assert.equal(new Date(core.expiresAt(R, 'gatherings', 'gathering', now, g('2026-11-01'))).toISOString(), '2026-11-03T05:00:00.000Z', 'after the clocks change, EST');
   assert.equal(core.expiresAt(R, 'gatherings', 'gathering', now, g('Saturday, 9 am')), now + 30 * DAY, 'no date: 30 days');
-  assert.equal(core.expiresAt(R, 'gatherings', 'gathering', now, g('2026-02-30')), now + 30 * DAY, 'not on the calendar: no date');
+  assert.equal(core.dateError(R, 'gatherings', 'gathering', g('2026-02-30'), now), 'bad_date', 'shaped like a date but not on the calendar: refused');
+  assert.equal(core.dateError(R, 'gatherings', 'gathering', g('2099-99-99, late'), now), 'bad_date');
+  assert.equal(core.dateError(R, 'gatherings', 'gathering', g('0000-01-01'), now), 'bad_date');
   assert.equal(core.expiresAt(R, 'gatherings', 'gathering', now, g('10/24/2026')), now + 30 * DAY, 'only YYYY-MM-DD counts');
   assert.equal(core.dateError(R, 'gatherings', 'gathering', g('2026-10-15'), now), 'bad_date', 'yesterday');
   assert.equal(core.dateError(R, 'gatherings', 'gathering', g('2026-10-16'), now), null, 'today');
@@ -678,38 +680,34 @@ test('fake, round four: handles on the profile, through the third call only', ()
   assert.equal(f.call('nn_profile_get'), null, 'they go with the account');
 });
 
-test('fake, round four: nn_handles_recent shows only who opted in, to whom they opted in', () => {
+test('fake, round four: nn_handles_recent shows only who turned the switch on, only to readers signed in', () => {
   const f = make({ modSecret: 's' });
   const set = (u, name, h, pub) => f.as(u).call('nn_profile_set', { p_display_name: name, p_interests: null, p_handles: h, p_handles_public: pub });
   set(MAYA, 'Maya', { strava: 'maya_runs', instagram: 'maya.r' }, true);   // the switch on
   f.tick(1000);
-  set(SAM, 'Sam', { strava: 'sam_rides' }, false);                         // in the directory only
-  f.peopleDir.add(SAM);
+  set(SAM, 'Sam', { strava: 'sam_rides' }, false);                         // off
   f.tick(1000);
-  set(KIM, 'Kim', { strava: 'kim_k' }, false);                             // neither
+  set(KIM, 'Kim', { strava: 'kim_k' }, true);                              // on
   f.tick(1000);
   set(LEE, 'Lee', { psn: 'LeePlays' }, true);                              // on, another kind
   const names = (r) => r.map((x) => x.display_name);
-  assert.deepEqual(names(f.as(null).call('nn_handles_recent', { p_kinds: ['strava'] })), ['Maya'], 'signed out: only the switch');
-  const one = f.call('nn_handles_recent', { p_kinds: ['strava'] })[0];
+  assert.equal(code(() => f.as(null).call('nn_handles_recent', { p_kinds: ['strava'] })), 'not_signed_in', 'never to a stranger');
+  f.as(SAM);
+  assert.deepEqual(names(f.call('nn_handles_recent', { p_kinds: ['strava'] })), ['Kim', 'Maya'], 'only the switch, newest first; Sam, switch off, not even to himself');
+  const one = f.call('nn_handles_recent', { p_kinds: ['strava'] })[1];
   assert.deepEqual(Object.keys(one).sort(), ['display_name', 'handles', 'me', 'neighborhood', 'updated_at']);
   assert.deepEqual(one.handles, { strava: 'maya_runs' }, 'only the kinds asked for');
+  assert.equal(one.updated_at, '2026-10-16', 'the day, not the time');
   assert.ok(!/@|user_id|1111/.test(JSON.stringify(f.call('nn_handles_recent', {}))), 'no email and no account id');
-  assert.deepEqual(names(f.as(KIM).call('nn_handles_recent', { p_kinds: ['strava'] })), ['Maya'], 'a reader not in the directory sees only the switch');
-  f.peopleDir.add(KIM);
-  assert.deepEqual(names(f.call('nn_handles_recent', { p_kinds: ['strava'] })), ['Kim', 'Sam', 'Maya'], 'once Kim joins the directory, she sees members (herself among them) as well as the switch, newest first');
-  assert.deepEqual(names(f.as(null).call('nn_handles_recent', { p_kinds: ['strava'] })), ['Maya'], 'and signed out it is still only the switch');
-  f.as(KIM);
-  assert.deepEqual(names(f.call('nn_handles_recent', { p_kinds: null })), ['Lee', 'Kim', 'Sam', 'Maya'], 'null asks for every kind');
+  assert.deepEqual(names(f.call('nn_handles_recent', { p_kinds: null })), ['Lee', 'Kim', 'Maya'], 'null asks for every kind');
   assert.deepEqual(names(f.call('nn_handles_recent', { p_kinds: [], p_limit: 1 })), ['Lee'], 'and the limit holds');
-  assert.deepEqual(f.as(SAM).call('nn_handles_recent', { p_kinds: ['strava'] }).map((r) => [r.display_name, r.me]), [['Kim', false], ['Sam', true], ['Maya', false]], 'your own row says so');
+  assert.deepEqual(f.as(KIM).call('nn_handles_recent', { p_kinds: ['strava'] }).map((r) => [r.display_name, r.me]), [['Kim', true], ['Maya', false]], 'your own row says so');
   assert.equal(code(() => f.call('nn_handles_recent', { p_kinds: ['myspace'] })), 'bad_handle');
   const post = f.as(MAYA).call('nn_post_create', { p_board: 'square', p_kind: 'post', p_title: 'Hi' });
-  f.as(null).call('nn_mod_act', { p_secret: 's', p_post: post.id, p_action: 'ban' });
-  assert.deepEqual(names(f.as(null).call('nn_handles_recent', { p_kinds: ['strava'] })), [], 'a banned reader drops out');
-  f.as(SAM).call('nn_post_create', { p_board: 'square', p_kind: 'post', p_title: 'Hi' });
-  f.as(null).call('nn_mod_act', { p_secret: 's', p_post: f.posts[f.posts.length - 1].id, p_action: 'ban' });
-  assert.deepEqual(names(f.as(SAM).call('nn_handles_recent', { p_kinds: ['psn'] })), ['Lee'], 'a banned member no longer sees members');
+  f.call('nn_mod_act', { p_secret: 's', p_post: post.id, p_action: 'ban' });
+  assert.deepEqual(names(f.as(SAM).call('nn_handles_recent', { p_kinds: ['strava'] })), ['Kim'], 'a banned reader drops out');
+  f.as(KIM).call('nn_profile_set', { p_display_name: 'Kim', p_interests: null, p_handles: null, p_handles_public: false });
+  assert.deepEqual(names(f.as(SAM).call('nn_handles_recent', { p_kinds: ['strava'] })), [], 'and the switch turned off takes them back');
 });
 
 test('fake, round four: the new boards post, expire and wait for Stephen', () => {
@@ -761,7 +759,7 @@ test('fake, round four: the demo seeds a dozen neighbors with handles, and a gat
   const withHandles = [...f.profiles.values()].filter((p) => Object.keys(p.handles || {}).length);
   assert.equal(withHandles.length, 12);
   for (const p of withHandles) assert.ok(core.checkHandles(core.RULES, p.handles).ok, p.display_name);
-  assert.ok(f.as(null).call('nn_handles_recent', {}).length >= 6, 'signed out, the switched-on ones show');
+  assert.equal(f.as(DEMO_ME).call('nn_handles_recent', {}).length, 9, 'the nine switched on show to a signed-in reader');
   assert.ok(f.call('nn_handles_recent', { p_kinds: ['strava'] }).every((r) => Object.keys(r.handles).every((k) => k === 'strava')));
   assert.equal(f.call('nn_mod_list', { p_secret: 'demo' }).waiting.filter((p) => p.board === 'gatherings').length, 1);
   for (const p of f.posts.filter((x) => x.board === 'gatherings')) assert.equal(core.dateError(core.RULES, 'gatherings', 'gathering', p.meta, f.now()), null, p.title);

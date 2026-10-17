@@ -55,6 +55,7 @@ create table pg_temp.cases as select key as k, value as v from jsonb_each(:'case
 
 -- ------------------------------------------------------------ the locks
 set role anon; select pg_temp.who(null);
+select pg_temp.expect_error('select public.nn_handles_recent()', 'not_signed_in');
 select pg_temp.ok((public.nn_rules() ->> 'version')::int = 3, 'the round-four rules are the live ones');
 select pg_temp.ok(public.nn_rules() -> 'boards' -> 'vintage' -> 'kinds' ? 'design' and public.nn_rules() -> 'boards' -> 'watch' -> 'kinds' -> 'pick' ->> 'one_vote' = 'true',
   'round two''s kinds are still there, as they were');
@@ -64,7 +65,6 @@ select pg_temp.expect_denied($q$select public.nn_until_date('gatherings', 'gathe
 select pg_temp.expect_denied($q$select public.nn_post_expiry('gatherings', 'gathering', '{}')$q$);
 select pg_temp.expect_denied('select handles from public.nn_profiles');
 select pg_temp.expect_error($q$select public.nn_profile_set(p_display_name => 'Maya', p_interests => null, p_handles => '{}')$q$, 'not_signed_in');
-select pg_temp.ok(public.nn_handles_recent() = '[]'::jsonb, 'anyone may ask; nobody has handles yet');
 reset role;
 select pg_temp.ok(has_function_privilege('anon', 'public.nn_profile_set(text, text[], jsonb, text, text, boolean)', 'execute')
               and has_function_privilege('anon', 'public.nn_profile_set(text, text[], text, text)', 'execute')
@@ -126,52 +126,37 @@ select pg_temp.ok(public.nn_profile_set(p_display_name => 'Lee', p_interests => 
 
 -- --------------------------------------------- who nn_handles_recent shows
 select pg_temp.who('22222222-2222-2222-2222-222222222222');
-select public.nn_profile_set(p_display_name => 'Sam', p_interests => null, p_handles => '{"strava":"sam_rides"}', p_handles_public => false);
+select public.nn_profile_set(p_display_name => 'Sam', p_interests => null, p_handles => '{"strava":"sam_rides"}', p_handles_public => false);   -- off
 \if :has_people
-select public.nn_people_optin(true, array['running']);   -- Sam: in the directory, switch off
+select public.nn_people_optin(true, array['running']);   -- Sam is in the People directory: that alone shows nothing
 \endif
 select pg_temp.who('33333333-3333-3333-3333-333333333333');
-select public.nn_profile_set(p_display_name => 'Kim', p_interests => null, p_handles => '{"strava":"kim_k"}', p_handles_public => false);   -- neither
+select public.nn_profile_set(p_display_name => 'Kim', p_interests => null, p_handles => '{"strava":"kim_k"}', p_handles_public => true);   -- on
 select pg_temp.who('44444444-4444-4444-4444-444444444444');
 select public.nn_profile_set(p_display_name => 'Lee', p_interests => null, p_handles => '{"psn":"LeePlays"}', p_handles_public => true);  -- on, another kind
 set role anon; select pg_temp.who(null);
-select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['strava'])) = 'Maya', 'signed out: only the switch');
-select pg_temp.ok(public.nn_handles_recent(array['strava']) -> 0 = jsonb_build_object('display_name', 'Maya', 'neighborhood', 'south-end', 'handles', '{"strava":"maya_runs"}'::jsonb,
-                    'updated_at', public.nn_handles_recent(array['strava']) -> 0 -> 'updated_at', 'me', false), 'first name, neighborhood, only the kinds asked for, when, me');
-select pg_temp.ok(public.nn_handles_recent()::text !~ '@|1111|2222|user_id', 'never an email, never an account id');
-select pg_temp.ok(pg_temp.names(public.nn_handles_recent(null)) = 'Lee,Maya' and pg_temp.names(public.nn_handles_recent('{}', 1)) = 'Lee', 'null or empty asks for every kind; the limit holds');
+select pg_temp.expect_error($q$select public.nn_handles_recent(array['strava'])$q$, 'not_signed_in');
+set role authenticated; select pg_temp.who('22222222-2222-2222-2222-222222222222');
+select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['strava'])) = 'Kim,Maya', 'only the switch, newest first; Sam, off, not even to himself');
+select pg_temp.ok(public.nn_handles_recent(array['strava']) -> 1 = jsonb_build_object('display_name', 'Maya', 'neighborhood', 'south-end', 'handles', '{"strava":"maya_runs"}'::jsonb,
+                    'updated_at', to_char(now() at time zone 'America/New_York', 'YYYY-MM-DD'), 'me', false), 'first name, neighborhood, only the kinds asked for, the day, me');
+select pg_temp.ok(public.nn_handles_recent()::text !~ '@|1111|2222|user_id|T[0-9]{2}:', 'never an email, an account id or a time');
+select pg_temp.ok(pg_temp.names(public.nn_handles_recent(null)) = 'Lee,Kim,Maya' and pg_temp.names(public.nn_handles_recent('{}', 1)) = 'Lee', 'null or empty asks for every kind; the limit holds');
 select pg_temp.expect_error($q$select public.nn_handles_recent(array['myspace'])$q$, 'bad_handle');
 select pg_temp.expect_error($q$select public.nn_handles_recent(array['strava', null])$q$, 'bad_handle');
-set role authenticated; select pg_temp.who('33333333-3333-3333-3333-333333333333');
-select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['strava'])) = 'Maya', 'a reader outside the directory sees only the switch');
-\if :has_people
-select public.nn_people_optin(true, array['games']);
-select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['strava'])) = 'Kim,Sam,Maya', 'once in the directory, members show too (Kim herself among them), newest first');
-select pg_temp.ok((select jsonb_agg(e -> 'me') from jsonb_array_elements(public.nn_handles_recent(array['strava'])) e) = '[true,false,false]', 'your own row says so');
-set role anon; select pg_temp.who(null);
-select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['strava'])) = 'Maya', 'and still never to a stranger');
-set role authenticated; select pg_temp.who('33333333-3333-3333-3333-333333333333');
-select public.nn_people_optin(false);
-select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['strava'])) = 'Maya', 'leaving the directory takes both back');
-\endif
--- a banned reader drops out, and a banned member stops seeing members
+select pg_temp.who('33333333-3333-3333-3333-333333333333');
+select pg_temp.ok((select jsonb_agg(e -> 'me') from jsonb_array_elements(public.nn_handles_recent(array['strava'])) e) = '[true,false]', 'your own row says so');
+-- a banned reader drops out; the switch turned off takes them back
 select pg_temp.who('11111111-1111-1111-1111-111111111111');
 insert into pg_temp.ids select 'maya-post', (public.nn_post_create('square', 'post', 'Hello') ->> 'id')::uuid;
 set role anon; select pg_temp.who(null);
 select public.nn_mod_act('test-secret', (select id from pg_temp.ids where k = 'maya-post'), 'ban');
-select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['strava'])) = '', 'a banned reader drops out');
-\if :has_people
-reset role;
-insert into public.nn_bans (user_id) values ('22222222-2222-2222-2222-222222222222');
-insert into public.nn_people_dir (user_id) values ('44444444-4444-4444-4444-444444444444') on conflict do nothing;
-update public.nn_profiles set handles_public = false where user_id = '44444444-4444-4444-4444-444444444444';
 set role authenticated; select pg_temp.who('22222222-2222-2222-2222-222222222222');
-select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['psn'])) = '', 'a banned member no longer sees members');
-reset role;
-delete from public.nn_bans where user_id = '22222222-2222-2222-2222-222222222222';
-set role authenticated; select pg_temp.who('22222222-2222-2222-2222-222222222222');
-select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['psn'])) = 'Lee', 'and does again once the ban is lifted');
-\endif
+select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['strava'])) = 'Kim', 'a banned reader drops out');
+select pg_temp.who('33333333-3333-3333-3333-333333333333');
+select public.nn_profile_set(p_display_name => 'Kim', p_interests => null, p_handles => null, p_handles_public => false);
+select pg_temp.who('22222222-2222-2222-2222-222222222222');
+select pg_temp.ok(pg_temp.names(public.nn_handles_recent(array['strava'])) = '', 'the switch turned off takes them back');
 reset role;
 delete from public.nn_bans;
 delete from pg_temp.ids;
@@ -241,19 +226,19 @@ insert into pg_temp.ids select 'g-today', (public.nn_post_create('gatherings', '
 insert into pg_temp.ids select 'g-ahead', (public.nn_post_create('gatherings', 'gathering', 'Far off', '', '',
   jsonb_build_object('when', pg_temp.day(180), 'place', 'Oakledge', 'kind', 'social')) ->> 'id')::uuid;
 insert into pg_temp.ids select 'g-nodate', (public.nn_post_create('gatherings', 'gathering', 'Jam', '', '', '{"when":"Every Tuesday","place":"Radio Bean","kind":"music"}') ->> 'id')::uuid;
-insert into pg_temp.ids select 'g-badday', (public.nn_post_create('gatherings', 'gathering', 'Leap', '', '', '{"when":"2026-02-30","place":"Radio Bean","kind":"music"}') ->> 'id')::uuid;
+select pg_temp.expect_error($q$select public.nn_post_create('gatherings', 'gathering', 'Leap', '', '', '{"when":"2026-02-30","place":"Radio Bean","kind":"music"}')$q$, 'bad_date');
+select pg_temp.expect_error($q$select public.nn_post_create('gatherings', 'gathering', 'Leap', '', '', '{"when":"2099-99-99, late","place":"Radio Bean","kind":"music"}')$q$, 'bad_date');
 reset role;
 select pg_temp.ok((select status from public.nn_posts where id = (select id from pg_temp.ids where k = 'g-dated')) = 'pending', 'a gathering waits for Stephen');
 select pg_temp.ok((select meta ->> 'link' from public.nn_posts where id = (select id from pg_temp.ids where k = 'g-dated')) = 'https://example.com/ultimate?x=1', 'its link kept as typed, trimmed');
 select pg_temp.ok((select expires_at from public.nn_posts where id = (select id from pg_temp.ids where k = 'g-dated'))
   = ((now() at time zone 'America/New_York')::date + 5)::timestamp at time zone 'America/New_York', 'it ends at midnight, Burlington time, at the end of the day after its date');
-select pg_temp.ok((select bool_and(expires_at = created_at + interval '30 days') from public.nn_posts where id in (select id from pg_temp.ids where k in ('g-nodate', 'g-badday'))),
-  'no date, or one not on the calendar: 30 days');
-select pg_temp.ok((select count(*) from public.nn_posts where board = 'gatherings' and status = 'pending') = 5, 'today and six months out are both fine');
+select pg_temp.ok((select expires_at = created_at + interval '30 days' from public.nn_posts where id = (select id from pg_temp.ids where k = 'g-nodate')), 'no date: 30 days');
+select pg_temp.ok((select count(*) from public.nn_posts where board = 'gatherings' and status = 'pending') = 4, 'today and six months out are both fine');
 set role anon; select pg_temp.who(null);
 select pg_temp.ok(public.nn_posts_list('gatherings') = '[]', 'nothing shows until approved');
 select pg_temp.expect_error($q$select public.nn_vote((select id from pg_temp.ids where k = 'g-dated'), 'p_reader01')$q$, 'not_found');
-select pg_temp.ok((select count(*) from jsonb_array_elements(public.nn_mod_list('test-secret') -> 'waiting') e where e ->> 'board' = 'gatherings') = 5, 'they wait on the boards desk');
+select pg_temp.ok((select count(*) from jsonb_array_elements(public.nn_mod_list('test-secret') -> 'waiting') e where e ->> 'board' = 'gatherings') = 4, 'they wait on the boards desk');
 select public.nn_mod_act('test-secret', (select id from pg_temp.ids where k = 'g-dated'), 'approve');
 select pg_temp.ok((select jsonb_agg(e -> 'meta' ->> 'link') from jsonb_array_elements(public.nn_posts_list('gatherings', 30, null, '{"meta":{"kind":"pickup"}}')) e)
   = '["https://example.com/ultimate?x=1"]', 'approved, it shows, findable by its sort');
