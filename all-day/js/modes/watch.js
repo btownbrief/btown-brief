@@ -45,7 +45,7 @@ import * as store from '../store.js';
 import * as boards from '../boards.js';
 import { fetchJSON } from '../wire.js';
 import { RULES, expiresAt } from '../boards-core.js';
-import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button } from '../ui.js';
+import { el, esc, safeHref, ICON, art, section, rail, chips, pills, button, put } from '../ui.js';
 
 const KEY = 'watch';
 const FILMS_URL = 'https://raw.githubusercontent.com/btownbrief/btown-brief/films-data/data/films.json';
@@ -387,7 +387,7 @@ function draw(name) {
 function render() {
   root.innerHTML = '';
   SECTIONS.forEach((s) => { slots[s] = el('div'); slots[s].dataset.slot = s; root.appendChild(slots[s]); draw(s); });
-  root.appendChild(credit());
+  put(root, credit());
   root.appendChild(el('div', 'spacer'));
 }
 
@@ -395,9 +395,9 @@ function render() {
 function credit(inSheet) {
   const c = el('div', inSheet ? 'sheet-note' : 'note pad');
   c.dataset.credit = '1';
-  if (app.demo) { c.textContent = 'Demo: every film, rating, vote and person here is invented.'; return c; }
-  c.innerHTML = '<a href="' + esc(TMDB_URL) + '" target="_blank" rel="noopener"><img src="' + esc(TMDB_LOGO) + '" alt="TMDB" width="92" height="12" loading="lazy" decoding="async"></a>' +
-    '<br>Film details, posters and trailers come from TMDB (The Movie Database). ' + esc(F.notice);
+  if (app.demo) return null;
+  /* the logo mark only; the full attribution and notice are in Settings, About */
+  c.innerHTML = '<a href="' + esc(TMDB_URL) + '" target="_blank" rel="noopener"><img src="' + esc(TMDB_LOGO) + '" alt="TMDB" width="92" height="12" loading="lazy" decoding="async"></a>';
   return c;
 }
 
@@ -410,7 +410,7 @@ const nowLabel = (f) => (f.y && f.y <= Number(todayKey().slice(0, 4)) - BACK_YEA
 function drawSoon(host) {
   const now = F.now, soon = F.soon;
   if (!now.length && !soon.length) return;
-  sec(host, 'Coming soon', esc('In theaters now, and what opens next in theaters and on streaming. Tap a poster for its trailer.'), 'soon');
+  sec(host, 'Coming soon', null, 'soon');
   const r = rail(host);
   const label = (f) => (f.shelf === 'now' ? nowLabel(f) : (f.d ? dateLabel(f.d) + ' · ' : '') + (f.where === 'streaming' ? 'streaming' : 'theaters'));
   [...now, ...soon].forEach((f) => {
@@ -491,11 +491,7 @@ function drawList(host) {
   const n = F.top.length;
   const neither = F.top.filter((f) => { const s = seenOf(f); return !s[0] && !s[1]; }).length;
   const left = F.top.filter((f) => !seenOf(f)[0]).length;
-  const what = F.seed ? 'A starter list: ' + n + ' well-known films to begin with.'
-    : F.demo ? 'The ' + n + ' best-rated films (demo).' : 'The ' + n + ' best-rated films on TMDB.';
-  const sub = esc(what) + ' ' + (us()
-    ? esc('Two dots on every poster: you, then ' + L.partner + '.') + ' <b>' + esc(neither) + '</b> ' + esc('neither of you has seen.')
-    : esc('A dot on every poster you have seen.') + ' <b>' + esc(left) + '</b> ' + esc('to go.'));
+  const sub = us() ? '<b>' + esc(neither) + '</b> ' + esc('neither of you has seen') : '<b>' + esc(left) + '</b> ' + esc('of ' + n + ' to go');
   const who = pills([['us', 'With ' + partnerName()], ['me', 'Just me']], us() ? 'us' : 'me', (v) => {
     if (v === 'us' && (!L.partner || us())) { draw('list'); nameSheet(); return; }
     L.mode = v;
@@ -535,11 +531,10 @@ function drawList(host) {
   const filters = V.recency !== 'any' || V.genre !== 'all' || V.show !== 'all';
   const count = el('p', 'note pad');
   count.dataset.count = String(list.length);
-  count.textContent = list.length === n && !filters ? (V.sort === 'town' ? 'Town-rated films first, highest first.' : '')
-    : plural(list.length, 'film', 'films') + ' of ' + n + (V.sort === 'town' ? ', town-rated first' : '') + '.';
+  count.textContent = list.length === n && !filters ? '' : plural(list.length, 'film', 'films') + ' of ' + n;
   if (count.textContent) host.appendChild(count);
   if (!list.length) {
-    const e = el('div', 'empty', esc(V.show === 'want' ? 'Nothing on your want-to-watch list here yet. Open a film and tap Want to watch.' : 'No film on the list matches those filters.'));
+    const e = el('div', 'empty', esc(V.show === 'want' ? 'Nothing on your list yet.' : 'No film matches those filters.'));
     host.appendChild(e);
     if (filters) {
       const r = el('div', 'linkrow');
@@ -590,7 +585,7 @@ function filmSheet(f) {
       const b = button(ICON.play + ' Trailer', '', () => { close(); playTrailer(f); });
       b.dataset.trailer = '1';
       tr.appendChild(b);
-    } else tr.appendChild(el('span', 'sheet-note', 'No trailer on TMDB yet.'));
+    } else tr.appendChild(el('span', 'sheet-note', 'No trailer yet.'));
     facts.appendChild(tr);
     top.append(pic, facts);
     body.appendChild(top);
@@ -642,7 +637,7 @@ function filmSheet(f) {
       more.appendChild(a);
       body.appendChild(more);
     }
-    body.appendChild(credit(true));
+    put(body, credit(true));
   });
 }
 
@@ -667,8 +662,7 @@ function rateRow(body, f) {
   const at = pills([['', 'Anywhere'], ['At home', 'At home'], ['In a theater', 'In a theater']], where, (v) => { where = v; });
   at.dataset.where = '1';
   box.appendChild(at);
-  const msg = el('p', 'sheet-note', esc(mine ? 'You gave it ' + plural(mine.stars, 'star', 'stars') + '. Tap again to change it.'
-    : 'A star rating goes to the town’s ratings under your first name.'));
+  const msg = el('p', 'sheet-note', esc(mine ? '' : 'Posts under your first name.'));
   msg.dataset.msg = '1';
   msg.setAttribute('role', 'status');
   box.appendChild(msg);
@@ -678,7 +672,7 @@ function rate(f, stars, box, row) {
   const msg = box.querySelector('[data-msg]');
   const say = (t) => { msg.textContent = t; };
   if (!app.user()) {
-    say('Rating takes the email sign-in: one email, no password. Your dots and your list work without it.');
+    say('Sign in to rate.');
     if (!box.querySelector('[data-signin]')) {
       const r = el('div', 'linkrow');
       const b = button('Sign in', '', () => app.openSettings());
@@ -743,8 +737,6 @@ function askName(box, then) {
 
 function nameSheet(back) {
   app.sheet('Who do you watch with?', (body, card, close) => {
-    body.appendChild(el('p', 'sheet-note', esc('Their first name puts a second dot on every poster, so the two of you can see what you have both seen. It stays on this phone' +
-      (app.user() ? ' and in your account.' : '.') + ' It is only a label; they need no account.')));
     const f = el('form', 'bform');
     f.noValidate = true;
     const i = el('input', 'field bf-in');
@@ -784,14 +776,14 @@ function nameSheet(back) {
 
 /* ------------------------------------------------- town ratings */
 function drawTown(host) {
-  sec(host, 'Town ratings this week', esc('What Burlington watched in the last seven days, and what it thought. A film shows once it has three ratings.'), 'town');
-  if (P.state === 'loading') { host.appendChild(el('p', 'note pad', 'Counting this week’s ratings…')); return; }
-  if (P.state === 'off') { host.appendChild(el('p', 'note pad', 'Town ratings open soon. Your dots and your list work now.')); return; }
-  if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Town ratings didn’t load. Pull down to try again.')); return; }
+  sec(host, 'Town ratings this week', null, 'town');
+  if (P.state === 'loading') { host.appendChild(el('p', 'note pad', 'Counting…')); return; }
+  if (P.state === 'off') { host.appendChild(el('p', 'note pad', 'Opening soon.')); return; }
+  if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Didn’t load.')); return; }
   const rows = [...P.agg.values()].filter((a) => a.wn >= MIN_RATINGS)
     .sort((a, b) => b.wn - a.wn || avg(b.wsum, b.wn) - avg(a.wsum, a.wn)).slice(0, TOWN_ROWS);
   if (!rows.length) {
-    host.appendChild(el('p', 'note pad', 'No film has three ratings this week yet. Rate what you watch: open any poster and tap the stars.'));
+    host.appendChild(el('p', 'note pad', 'No ratings this week yet.'));
     return;
   }
   rows.forEach((a) => {
@@ -825,20 +817,19 @@ function ballot() {
 const screening = () => P.picks.filter((p) => p.meta && p.meta.where).sort((a, b) => b.created_at.localeCompare(a.created_at))[0] || null;
 
 function drawVote(host) {
-  sec(host, 'Vote for the next screening', esc('At five votes Stephen books it, puts it on Meetup as a screening, and there’s a mixer after. One vote each.'), 'vote');
-  if (P.state === 'loading') { host.appendChild(el('p', 'note pad', 'Counting votes…')); return; }
-  if (P.state === 'off') { host.appendChild(el('p', 'note pad', 'The screening vote opens soon.')); return; }
-  if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'The vote didn’t load. Pull down to try again.')); return; }
+  sec(host, 'Vote for the next screening', null, 'vote');
+  if (P.state === 'loading') { host.appendChild(el('p', 'note pad', 'Counting…')); return; }
+  if (P.state === 'off') { host.appendChild(el('p', 'note pad', 'Opening soon.')); return; }
+  if (P.state === 'fail') { host.appendChild(el('p', 'note pad', 'Didn’t load.')); return; }
   const card = el('div', 'textcard');
   card.dataset.ballot = '1';
   const picks = ballot();
-  if (!picks.length) card.appendChild(el('p', null, 'Nothing on the ballot yet. Suggest the first film.'));
+  if (!picks.length) card.appendChild(el('p', null, 'Nothing on the ballot yet.'));
   picks.forEach((p) => card.appendChild(voteOpt(p)));
   const row = el('div', 'row');
   const sug = button(ICON.plus + ' Suggest a film', 'ghost sm', suggestSheet);
   sug.dataset.suggest = '1';
   row.appendChild(sug);
-  row.appendChild(el('span', 'fine', 'A suggestion stays up for 30 days.'));
   card.appendChild(row);
   host.appendChild(card);
   const s = screening();
@@ -908,13 +899,13 @@ function voteOpt(p) {
 function suggestSheet() {
   app.sheet('Suggest a film', (body, card, close) => {
     if (!app.user()) {
-      body.appendChild(el('p', 'sheet-note', 'Suggesting a film takes the email sign-in: one email, no password. Voting never does.'));
+      body.appendChild(el('p', 'sheet-note', 'Sign in to suggest a film.'));
       const r = el('div', 'linkrow');
       r.appendChild(button('Sign in', '', () => app.openSettings()));
       body.appendChild(r);
       return;
     }
-    body.appendChild(el('p', 'sheet-note', 'Pick a film from the list. If it is already on the ballot, your vote goes to it instead.'));
+    body.appendChild(el('p', 'sheet-note', 'A suggestion is up for 30 days.'));
     const q = el('input', 'field bf-in');
     q.type = 'search';
     q.placeholder = 'Search the list';
@@ -955,20 +946,19 @@ function suggest(f, body, close) {
       return;
     }
     close();
-    app.toast('On the ballot. Vote for it, then tell a friend.');
+    app.toast('On the ballot');
     loadPosts();
   });
 }
 
 /* ---------------------------------------------------------------- chat */
 function drawChat(host) {
-  sec(host, 'Watch chat', esc('Talk about what you’re watching, or plan to watch something together.'), 'chat');
+  sec(host, 'Watch chat', null, 'chat');
   const card = el('div', 'textcard');
   card.dataset.chat = '1';
-  card.innerHTML = '<p>' + esc('The talk lives in the Btown Brief community, in ' + CHAT_NAME + ' for now, with notifications and a moderator; sign in there with your newsletter email. ' +
-    'Watching something at a set time? Start a group chat there for it. For right-now chat, the Brief’s Telegram is where people are.') + '</p>';
   const row = el('div', 'row');
-  const ch = el('a', 'btn', esc(CHAT_NAME) + ' channel ' + ICON.ext);
+  const ch = el('a', 'btn', 'Talk ' + ICON.ext);
+  ch.setAttribute('aria-label', 'Talk, in ' + CHAT_NAME);
   ch.href = safeHref(CHAT_URL);
   ch.target = '_blank';
   ch.rel = 'noopener';
@@ -1020,7 +1010,7 @@ app.register(KEY, {
       loadPosts().then(land);
       pullSeen();
     }).catch(() => {
-      r.innerHTML = '<div class="errbox"><b>' + (app.demo ? 'The demo didn’t load.' : 'The film list didn’t load.') + '</b> Reload to try again.</div>';
+      r.innerHTML = '<div class="errbox"><b>' + (app.demo ? 'The demo didn’t load.' : 'The film list didn’t load.') + '</b></div>';
     });
   },
   activate(param) { pending = param || null; land(); },

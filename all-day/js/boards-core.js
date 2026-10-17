@@ -155,7 +155,7 @@ export const MESSAGES = {
   rate_reports: 'That’s a lot of reports today. Thanks; we’ll take it from here.',
   bad_reason: 'Pick a reason.',
   bad_voter: 'Couldn’t count that vote.',
-  off: 'Posting is coming soon. Everything else here works.',
+  off: 'Posting is coming soon.',
   offline: 'Couldn’t reach the boards. Try again in a moment.',
 };
 export const message = (code) => MESSAGES[code] || MESSAGES.offline;

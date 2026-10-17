@@ -1237,20 +1237,20 @@
     "k": "m2",
     "title": "Go on a South End cider and beer crawl",
     "theme": "drink",
-    "paragraph": "Four taprooms sit inside half a mile on the same long street, which makes this the easiest crawl in town. Start with the lagers at the warehouse with the patio, walk north to the cider bar for a flight from dry to sweet, then cross to the old brewery that has not changed its flagship in thirty years. Finish at the arcade taproom if you still want a game. Eat something at the second stop, and walk home.",
+    "paragraph": "Four taprooms sit inside half a mile on the same long street, which makes this the easiest crawl in town. Start at the cider bar with a flight from dry to sweet, walk south to the lagers at the warehouse with the patio, then cross to the old brewery that has not changed its flagship in thirty years. Finish at the arcade taproom if you still want a game. Eat something at the second stop, and walk home.",
     "needs_check": false,
     "places": [
-     {
-      "id": "demo-lager",
-      "name": "The lager warehouse",
-      "url": "https://example.com/demo-lager",
-      "neighborhood": "South End",
-      "nearby": false
-     },
      {
       "id": "demo-cider",
       "name": "The cider bar",
       "url": "https://example.com/demo-cider",
+      "neighborhood": "South End",
+      "nearby": false
+     },
+     {
+      "id": "demo-lager",
+      "name": "The lager warehouse",
+      "url": "https://example.com/demo-lager",
       "neighborhood": "South End",
       "nearby": false
      },
