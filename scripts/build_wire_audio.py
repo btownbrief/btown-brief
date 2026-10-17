@@ -33,8 +33,8 @@ Every morning at 7 Eastern (.github/workflows/wire-audio.yml):
      sentence by sentence by a second call. Pacing marks are taken out
      before every check and before the fact check reads the draft (plain()),
      so a mark can neither hide a word from a check nor be flagged as one;
-     a bracket that is not one of TAGS is deleted (tidy_tags()), so nothing
-     in brackets is ever voiced, published or left unchecked. Up to two rewrites name what was
+     a bracket that is not one of TAGS sends the draft back and never ships
+     or reaches the voice (unknown_marks()). Up to two rewrites name what was
      wrong; a draft that still invents means no clip today, never a wrong one.
   5. Send the script to ElevenLabs (eleven_v4, the quality model: the brief
      is made ahead, so it never needs Turbo's speed; the voice in
@@ -178,12 +178,16 @@ ACRONYMS = {
 # brackets placed before some text as direction for that text, never aloud.
 # Too many make the voice wobble, so the writer gets a short list and a ration
 # (MAX_DELIVERY and MAX_PAUSES a paragraph), and tidy_tags() enforces both:
-# anything else in brackets is deleted before it can be voiced, published or
-# slip past a check. Never an emotion and never a sound effect.
+# anything else in brackets sends the draft back and never ships (deleting
+# it could change the meaning: "the vote did [not] pass"). Never an emotion
+# and never a sound effect.
 PAUSE_TAGS = ("pause", "short pause", "long pause")
 DELIVERY_TAGS = ("slowly", "softly", "gently")
 TAGS = PAUSE_TAGS + DELIVERY_TAGS
 MAX_DELIVERY, MAX_PAUSES = 1, 2
+# and for the whole brief (Codex review, 2026-10-17: a ration per paragraph
+# still let twelve paragraphs carry twelve [long pause]s)
+BRIEF_MAX = {"long pause": 3, "pause": 4, "delivery": 4}   # "pause" counts [pause] and [short pause]
 BRACKET_RE = re.compile(r"\[([^\[\]\n]*)\]")
 TAG_RE = re.compile(r"\[\s*(?:" + "|".join(t.replace(" ", r"\s+") for t in TAGS) + r")\s*\]", re.I)
 
@@ -223,7 +227,9 @@ The facts. These rules are hard, and nothing about the voice loosens them:
 - A turn between stories asserts nothing. It may only group what the headlines
   already say: "And one for the weekend." only before a story whose headline
   says weekend, Saturday or Sunday; "Two from the state" only before two
-  statewide stories.
+  statewide stories; "Closer to home." only before a story whose headline
+  puts it in or around Burlington, after one that is not. When unsure, use a
+  turn that names no place or time: "Something different now."
 
 How it sounds:
 - Contractions, always: it's, there's, they're, won't, that's.
@@ -261,8 +267,8 @@ sound like someone talking; too many make the voice wobble.
   the listener needs to catch. Most paragraphs have none.
 - Only these marks: [pause], [short pause], [long pause], [slowly], [softly],
   [gently]. Never an emotion, a laugh or a sound effect, and never a word that
-  carries a fact inside brackets: anything else in brackets is deleted before
-  the voice reads it.
+  carries a fact inside brackets: anything else in brackets sends the draft
+  back.
 
 An example, two stories that are NOT today's, only to show the difference.
 The headlines: "Burlington library extends weekend hours" (Seven Days) and
@@ -311,13 +317,15 @@ Unsupported means: a name, title or role; a pronoun that gives someone a gender;
 a number, date, time or place; what happened, why, or what comes next; who is
 affected; an opinion, judgement or prediction stated as fact. Rewording a headline
 or a note is supported. So are turns between stories and words to the listener
-("If you drive...", "Closer to home.", "That one's from Seven Days.") that assert
-nothing new, and saying when the brief airs ("this morning"). Words to the
+("If you drive...", "Something different now.", "That one's from Seven Days.")
+that assert nothing new, and saying when the brief airs ("this morning"). Words to the
 listener are unsupported when they imply a detail the sources do not give: "if
 someone calls" when no source says the scam is by phone, "next week" when a
 source gives only a date. A turn that groups
-stories is supported only when the headlines bear it out: "one for the weekend"
-needs a headline that says the weekend, Saturday or Sunday. An ellipsis (...) is
+stories, or that implies a place or a time, is supported only when the headlines
+bear it out: "one for the weekend" needs a headline that says the weekend,
+Saturday or Sunday; "closer to home" needs the next story's headline to put it in
+or around Burlington and the one before it not to. An ellipsis (...) is
 a spoken pause, not a gap in the text. Also list padding: a sentence of vague
 filler that grounds nothing ("with a twist of some kind", "it remains to be
 seen") or that only repeats what the script already said.
@@ -382,9 +390,11 @@ def plain(text):
     """The words alone: every pacing mark out, line breaks kept. Every check
     reads this, and so does the fact check, so a mark can never split a
     copied run, hide a word or be flagged as one. Only TAGS come out; any
-    other bracket is left for the checks to read (tidy_tags deletes those
-    before a draft is checked, so this is the second guard)."""
-    text = TAG_RE.sub(" ", text or "")
+    other bracket is left for the checks to read, and a draft that has one
+    never ships (unknown_marks). A mark inside a word joins the word back
+    up, so "Mont[pause]pelier" is checked as Montpelier."""
+    text = MIDWORD_RE.sub("", text or "")
+    text = TAG_RE.sub(" ", text)
     text = re.sub(r"[ \t]{2,}", " ", text)
     text = re.sub(r" +([,.;:!?])", r"\1", text)
     return re.sub(r"(?m)^ +| +$", "", text).strip()
@@ -394,28 +404,49 @@ def word_count(text):
     return len(re.findall(r"[A-Za-z0-9][A-Za-z0-9'’.,$%-]*", plain(text)))
 
 
-def tidy_tags(paragraph):
-    """A paragraph's pacing marks, kept to TAGS and the ration: a bracket that
-    is not one of TAGS is deleted with everything in it, never voiced or
-    published (deleting words cannot add a fact), and a stray bracket goes
-    too; marks are written in their canonical form; marks in a row become
-    the first; past MAX_DELIVERY delivery marks and MAX_PAUSES pause marks a
-    paragraph, the rest go. Pause marks in a row become the first."""
+MIDWORD_RE = re.compile(r"(?<=[A-Za-z0-9’'])\[[^\[\]\n]*\](?=[A-Za-z0-9’'])")
+
+
+def unknown_marks(text):
+    """Every bracket in `text` that is not one of TAGS, as written."""
+    return [m.group(0) for m in BRACKET_RE.finditer(text or "")
+            if re.sub(r"\s+", " ", m.group(1)).strip().lower() not in TAGS]
+
+
+def tidy_tags(paragraph, budget=None):
+    """A paragraph's pacing marks, kept to TAGS and the ration. Marks are
+    written in their canonical form; a mark inside a word goes (it is
+    never direction, and it splits a word the checks need whole); pause
+    marks in a row become the first; past MAX_DELIVERY delivery marks and
+    MAX_PAUSES pause marks a paragraph, and past what is left of the
+    brief's BRIEF_MAX in `budget` (a dict tidy() shares across paragraphs),
+    the rest go. Taking a mark out never changes a word. A bracket that is
+    not one of TAGS is left exactly as written for unknown_marks() to send
+    back; a lone bracket with no partner goes."""
+    paragraph = MIDWORD_RE.sub(lambda m: m.group(0) if unknown_marks(m.group(0)) else "", paragraph)
     parts, last = [], 0
     for m in BRACKET_RE.finditer(paragraph):
         parts.append(paragraph[last:m.start()].replace("[", " ").replace("]", " "))
         name = re.sub(r"\s+", " ", m.group(1)).strip().lower()
-        parts.append(f" [{name}] " if name in TAGS else " ")
+        parts.append(f" [{name}] " if name in TAGS else " " + m.group(0) + " ")
         last = m.end()
     parts.append(paragraph[last:].replace("[", " ").replace("]", " "))
     pause = r"\[(?:short |long )?pause\]"
     text = re.sub(r"(" + pause + r")(?:\s*" + pause + r")+", r"\1", "".join(parts))
     seen = {"delivery": 0, "pause": 0}
+    budget = budget if budget is not None else dict(BRIEF_MAX)
 
     def ration(m):
-        kind = "delivery" if m.group(1) in DELIVERY_TAGS else "pause"
+        name = m.group(1)
+        if name not in TAGS:
+            return m.group(0)
+        kind = "delivery" if name in DELIVERY_TAGS else "pause"
         seen[kind] += 1
-        return m.group(0) if seen[kind] <= (MAX_DELIVERY if kind == "delivery" else MAX_PAUSES) else " "
+        pool = "long pause" if name == "long pause" else kind
+        if seen[kind] > (MAX_DELIVERY if kind == "delivery" else MAX_PAUSES) or budget[pool] <= 0:
+            return " "
+        budget[pool] -= 1
+        return m.group(0)
     text = re.sub(r"\[([a-z ]+)\]", ration, text)
     text = re.sub(r"\s+", " ", text)
     return re.sub(r" +([,.;:!?])", r"\1", text).strip()
@@ -581,13 +612,14 @@ def problems_of(paragraphs, teaser, stories, date, which):
         "unsupported": [],
         "copied": copied(body, [s["title"] for s in stories]),
         "list": bool(LIST_RE.search(body)),
+        "marks": unknown_marks("\n\n".join(paragraphs)),
         "words": word_count(assemble(date, which, paragraphs)),
         "teaser_invented": made_up(teaser, srcs),
     }
 
 
 def hard_fail(p):
-    return bool(p["invented"] or p["unsupported"])
+    return bool(p["invented"] or p["unsupported"] or p.get("marks"))
 
 
 def clean(p, soft=False):
@@ -609,6 +641,9 @@ def describe(p):
                    + " | ".join(p["copied"]))
     if p["list"]:
         out.append("It reads as a list; write connected spoken paragraphs.")
+    if p.get("marks"):
+        out.append("These brackets are not pacing marks, and nothing but a pacing mark goes in brackets; "
+                   "write the words plainly or leave them out: " + ", ".join(dict.fromkeys(p["marks"])))
     if p["words"] > WORDS_MAX:
         out.append(f"The whole script is {p['words']} words with the greeting and sign-off; "
                    f"cut it to under {WORDS_MAX}, dropping the least grounded sentences first.")
@@ -626,11 +661,11 @@ def assemble(date, which, paragraphs):
 
 
 def tidy(paragraphs):
-    out = []
+    out, budget = [], dict(BRIEF_MAX)
     for p in paragraphs or []:
         p = re.sub(r"\s+", " ", str(p)).strip()
         p = p.replace("&", "and").replace("%", " percent").replace("…", "...")
-        p = tidy_tags(p)
+        p = tidy_tags(p, budget)
         if re.search(r"[A-Za-z0-9]", plain(p)):
             out.append(p)
     return out
@@ -681,9 +716,9 @@ def write_script(stories, engine, date, which, ask=None):
             notes.append(f"attempt {attempt}: no usable answer")
             continue
         paragraphs = tidy(answer.get("paragraphs"))
-        teaser = re.sub(r"\s+", " ", BRACKET_RE.sub(" ", str(answer.get("teaser") or ""))).strip()[:120]
+        teaser = re.sub(r"\s+", " ", str(answer.get("teaser") or "")).strip()[:120]
         p = problems_of(paragraphs, teaser, stories, date, which)
-        if paragraphs and not p["invented"] and not p["list"]:
+        if paragraphs and not p["invented"] and not p["list"] and not p["marks"]:
             p["unsupported"], got = verify(stories, paragraphs, engine, ask)
             add(usage, got)
         drafts.append((paragraphs, teaser, p))
@@ -699,11 +734,11 @@ def write_script(stories, engine, date, which, ask=None):
         # was read by the check and passed.
         for k, (paragraphs, teaser, p) in enumerate(list(drafts), 1):
             quoted = [u["sentence"] for u in p["unsupported"]]
-            if quoted and all(quoted) and not p["invented"] and not p["list"]:
+            if quoted and all(quoted) and not p["invented"] and not p["list"] and not p["marks"]:
                 cut = cut_sentences(paragraphs, quoted)
                 q = problems_of(cut, teaser, stories, date, which)
                 q["cut"] = len(quoted)
-                if cut and not q["invented"]:
+                if cut and not q["invented"] and not q["marks"]:
                     drafts.append((cut, teaser, q))
                     notes.append(f"draft {k}: cut {len(quoted)} sentence(s) the fact check could not support")
     honest = [d for d in drafts if d[0] and not hard_fail(d[2]) and not d[2]["list"]]
@@ -719,8 +754,8 @@ def write_script(stories, engine, date, which, ask=None):
         return None, "", usage, notes
     if p["copied"] or off((paragraphs, teaser, p)):
         notes.append("shipped with a soft problem: " + "; ".join(describe(p)))
-    if p["teaser_invented"] or len(teaser) > 100:
-        teaser = ""
+    if p["teaser_invented"] or len(teaser) > 100 or "[" in teaser or "]" in teaser:
+        teaser = ""     # a teaser with a bracket in it is dropped whole, never trimmed
     return assemble(date, which, paragraphs), teaser, usage, notes
 
 
@@ -769,15 +804,16 @@ PAUSE_OPEN = re.compile(r"\[(?:short |long )?pause\]")
 
 def for_voice(script):
     """What the voice is sent: the script with its pacing marks (the voice
-    takes them as direction), any other bracket deleted (a script read back
-    with --audio-from never went through tidy here), STORY_BEAT before every
+    takes them as direction, canonical and rationed: taking a mark out never
+    changes a word), STORY_BEAT before every
     paragraph after the greeting, and RESPELL. The beat is added here, in the
     voice's copy only: measured on eleven_v4 with Wyatt (2026-10-17, word
     timestamps from ElevenLabs' own transcription), a full stop and a
     paragraph break both leave about 0.55 s and an ellipsis about 0.5 s, so
     the first clip ran its stories together; [pause] leaves 1.0 to 1.3 s and
     [long pause] about 1.7 s, and [short pause] barely 0.7 s."""
-    paragraphs = [tidy_tags(p) for p in re.split(r"\n\s*\n", script.strip())]
+    budget = dict(BRIEF_MAX)
+    paragraphs = [tidy_tags(p, budget) for p in re.split(r"\n\s*\n", script.strip())]
     paragraphs = [p if i == 0 or PAUSE_OPEN.match(p) else f"{STORY_BEAT} {p}" for i, p in enumerate(paragraphs) if p]
     text = "\n\n".join(paragraphs) + ("\n" if script.endswith("\n") else "")
     for word, said in RESPELL.items():
@@ -995,6 +1031,12 @@ def run(args):
         record(out_dir, now, {**entry, "result": "script only"})
         wc.step_summary(f"- wire_audio: wrote {date}.txt ({words} words); voice it with --audio-from")
         return 0
+    if unknown_marks(script):
+        # never voiced and never trimmed: --audio-from reads a file, and
+        # deleting "[not]" from "the vote did [not] pass" would reverse it
+        record(out_dir, now, {**entry, "result": "unknown marks"})
+        return give_up("the script has brackets that are not pacing marks ("
+                       + ", ".join(dict.fromkeys(unknown_marks(script))) + ")", fatal=True)
     voice_text = for_voice(script)
     voice = os.environ.get("ELEVENLABS_VOICE_ID") or DEFAULT_VOICE
     model = os.environ.get("ELEVENLABS_MODEL") or MODEL
@@ -1079,13 +1121,15 @@ def selftest():
     assert len(calls) == 1 and teaser == "Bike lanes on North Avenue." and usage["calls"] == 2, (calls, usage)
     assert gendered("She said his plan works.", srcs) == ["She", "his"] and not gendered("She said so.", ["she won"])
     # pacing marks: kept to TAGS, never read by a check, never a hiding place
-    assert tidy_tags("[Short Pause] Closer to home... [excited] the [free] plan [pause][pause] passed.") == \
+    assert tidy_tags("[Short Pause] Closer to home... the plan [pause][pause] pa[pause]ssed.") == \
         "[short pause] Closer to home... the plan [pause] passed."
+    assert unknown_marks(tidy_tags("The vote did [not] pass [softly].")) == ["[not]"]
+    assert made_up("The council in Mont[short pause]pelier approved it.", srcs) == ["Montpelier"]
     assert made_up("The council approved it. [short pause] Closer to home, North Avenue.", srcs) == []
     assert made_up("The plan [softly] passed on [pause] Tuesday.", srcs) == ["Tuesday"]
     assert copied("they said the council approves the [pause] 2th bike lane plan for north avenue", [stories[0]["title"]])
     assert word_count("[pause] one two [softly] three") == 3 and plain("a [slowly] b [pause].") == "a b."
-    assert for_voice("[pause] In Charlotte [cheerfully] now.\n") == "[pause] In Shar-LOT now.\n"
+    assert for_voice("[pause] In Charlotte now.\n") == "[pause] In Shar-LOT now.\n"
 
     def liar(engine, system, user, schema, max_tokens, log_prefix):
         return {"paragraphs": ["Mayor Emma Mulvaney-Stanak cut the ribbon on Tuesday."] + body, "teaser": "x"}, {"calls": 1}

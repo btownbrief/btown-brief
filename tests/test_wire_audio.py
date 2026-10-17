@@ -297,7 +297,7 @@ class Tags(unittest.TestCase):
         self.assertEqual(len(calls), 1, notes)
         self.assertIn("[short pause] Out in Williston...", script)
         self.assertIn("[softly] Essex police", script)
-        self.assertEqual(teaser, "The Williston case and a scam warning.")       # no marks on the card
+        self.assertEqual(teaser, "")             # a teaser with a bracket is dropped whole, never trimmed
         checked = ask.checked[0].user
         self.assertNotIn("[", checked)                                            # the fact check reads the words alone
         self.assertIn("Out in Williston... the Vermont State Police", checked)
@@ -316,11 +316,47 @@ class Tags(unittest.TestCase):
                              self.stories, "2026-10-16", "today")
         self.assertIn("she", she["invented"])
 
-    def test_a_bracket_that_is_not_a_mark_is_deleted_never_voiced(self):
-        got = wa.tidy(["[excited] The panel [free admission] is on. [laughs] [Short  Pause] And [slowly] more [softly] here [pause] [pause]."])
-        self.assertEqual(got, ["The panel is on. [short pause] And [slowly] more here [pause]."])
+    def test_a_bracket_that_is_not_a_mark_is_sent_back_and_never_ships(self):
+        # Codex review: deleting it could reverse the meaning ("did [not] pass")
+        got = wa.tidy(["The vote did [not] pass. [Short  Pause] And [slowly] more [softly] here [pause] [pause]."])
+        self.assertEqual(got, ["The vote did [not] pass. [short pause] And [slowly] more here [pause]."])
         self.assertEqual(wa.tidy(["[pause] [softly]"]), [])                      # marks alone are not a paragraph
-        self.assertEqual(wa.for_voice("[cheerfully] In Charlotte.\n\n[long pause] Next.\n"), "In Shar-LOT.\n\n[long pause] Next.\n")
+        bad = GOOD[:5] + ["[excited] Vermont Biz has the weekly road construction report."] + GOOD[6:]
+        ask, calls = fake_answers({"paragraphs": bad, "teaser": "x"}, {"paragraphs": GOOD, "teaser": "x"})
+        script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=ask)
+        self.assertIn("[excited]", calls[1].user)
+        self.assertIn("not pacing marks", calls[1].user)
+        self.assertNotIn("[excited]", script)
+        always = fake_answers({"paragraphs": bad, "teaser": "x"})[0]
+        script, _, _, notes = wa.write_script(self.stories, ENGINE, "2026-10-16", "today", ask=always)
+        self.assertIsNone(script, notes)                                            # never shipped, never trimmed
+        self.assertEqual(len(always.checked), 0)                                    # and no fact check spent on it
+        self.assertEqual(wa.for_voice("In Charlotte.\n\n[long pause] Next.\n"), "In Shar-LOT.\n\n[long pause] Next.\n")
+
+    def test_the_voice_refuses_a_script_with_an_unknown_bracket(self):
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(os.environ, {"ELEVENLABS_API_KEY": "k"}, clear=True), \
+                mock.patch.object(wa, "load_secrets"), mock.patch.object(wa.wc, "utcnow", return_value=NOW), \
+                mock.patch.object(wa, "tts") as voice:
+            src = os.path.join(tmp, "2026-10-16.txt")
+            with open(src, "w", encoding="utf-8") as f:
+                f.write("Morning.\n\nThe vote did [not] pass.\n\nThat's the Brief.\n")
+            with redirect_stdout(io.StringIO()) as out:
+                wa.run(Run.args(None, tmp, audio_from=src, wire_file=None))
+            voice.assert_not_called()
+            self.assertIn("not pacing marks ([not])", out.getvalue())
+
+    def test_the_ration_holds_for_the_whole_brief(self):
+        got = wa.tidy([f"[long pause] Story {n}. [softly] Hard one." for n in range(12)])
+        text = "\n".join(got)
+        self.assertEqual(text.count("[long pause]"), wa.BRIEF_MAX["long pause"])
+        self.assertEqual(text.count("[softly]"), wa.BRIEF_MAX["delivery"])
+        self.assertTrue(all("Story" in p for p in got))                           # marks go, never words
+        voiced = wa.for_voice("Morning.\n\n" + "\n\n".join(got) + "\n")
+        self.assertEqual(voiced.count("[long pause]"), wa.BRIEF_MAX["long pause"])
+
+    def test_a_mark_inside_a_word_is_dropped_and_the_word_checked_whole(self):
+        self.assertEqual(wa.tidy(["The council in Mont[short pause]pelier met."]), ["The council in Montpelier met."])
+        self.assertEqual(wa.made_up("The council in Mont[short pause]pelier met.", wa.sources_of(self.stories)), ["Montpelier"])
 
     def test_every_story_gets_a_beat_in_the_voice_copy_only(self):
         script = "Morning.\n\nOne story.\n\n[softly] A hard one.\n\n[long pause] Closer to home.\n\nThat's the Brief.\n"
