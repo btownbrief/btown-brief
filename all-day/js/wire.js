@@ -10,8 +10,6 @@
    - local dev: same-origin first, so the app works with no network.
    - pulse-top and pulse-youtube have no same-origin copy. They fail soft:
      the strip they feed simply is not rendered.
-   - the wander pool is committed to the repo, so it is same-origin only and
-     always present — no branch to miss.
 
    Every ten minutes a poll re-checks. It never re-renders underneath
    someone: the swap goes through freshGate(), which the shell answers with
@@ -93,11 +91,6 @@ const FILES = {
     local: null,
     ok: (j) => j && Array.isArray(j.videos),
   },
-  pool: {
-    live: null,
-    local: 'data/wander-pool.json',
-    ok: (j) => j && j.pools && typeof j.pools === 'object',
-  },
   /* The Brief's own stories, pulled out of the newsletter. Same-origin: the
      file is committed to main by its workflow and main is what Pages serves. */
   newsletter: {
@@ -152,8 +145,8 @@ const FILES = {
     ok: (j) => j && Array.isArray(j.posts),
   },
   /* Music is committed to main by its own workflow and lives inside
-     /all-day/, so the service worker can cache it — same reasoning as the
-     wander pool. No poll: the roster changes once a morning. */
+     /all-day/, so the service worker can cache it. No poll: the roster
+     changes once a morning. */
   music: {
     live: null,
     local: 'data/music.json',

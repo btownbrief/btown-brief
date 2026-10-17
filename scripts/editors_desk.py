@@ -280,7 +280,6 @@ PAYLOADS = [
      "daily; image URLs also expire ~4 days out"),
     ("All Day music", GUIDE + "all-day/data/music.json", 30, "daily 10:20 UTC"),
     ("All Day what-now", GUIDE + "all-day/data/whatnow.json", 30, "daily via refresh-allday"),
-    ("Wander pool", GUIDE + "all-day/data/wander-pool.json", 30, "daily 4:20 UTC"),
     ("Sports", GUIDE + "data/sports.json", 30, "daily via refresh-allday"),
     ("Newsletter picks", GUIDE + "data/newsletter-picks.json", 10, "hourly, shed to ~3x/day"),
     ("Weather latest", GUIDE + "data/weather/latest.json", 2,

@@ -630,7 +630,7 @@ def main() -> int:
         # days; the tab rounds down when it phrases the warning.
         "expires_hint_days": 4,
         # Accounts represented in THIS payload, not the whole roster — the tab
-        # counts chips from it. Kept as plain strings; ig.js reads .length.
+        # counts chips from it. Kept as plain strings.
         "handles": sorted({p["h"] for p in posts}),
         "segments": {s: {"posts": counts[s], "accounts": accounts[s]} for s in CAP},
         # Posts that carry a playable MP4 right now, and the food-tagged ones.

@@ -61,12 +61,12 @@ def fake_answers(*answers, checks=()):
 
     def ask(engine, system, user, schema, max_tokens, log_prefix):
         if "unsupported" in schema["properties"]:
-            checked.append(SimpleNamespace(system=system, user=user))
+            checked.append(SimpleNamespace(system=system, user=user, max_tokens=max_tokens))
             got = checks[len(checked) - 1] if len(checked) <= len(checks) else {"unsupported": []}
             if isinstance(got, Exception):
                 raise got
             return got, {"in": 800, "out": 200, "calls": 1}
-        calls.append(SimpleNamespace(system=system, user=user))
+        calls.append(SimpleNamespace(system=system, user=user, max_tokens=max_tokens))
         return answers[min(len(calls), len(answers)) - 1], {"in": 1000, "out": 600, "calls": 1}
     ask.checked = checked
     return ask, calls
@@ -126,6 +126,8 @@ class Writer(unittest.TestCase):
         self.assertIn("1. VSP provides update", ask.checked[0].user)
         self.assertNotIn("A free UVM evening", ask.checked[0].user)     # the check never sees the reasons
         self.assertNotIn("\n\n\n", script)
+        # Opus gets room for the whole draft and its check: 8,000 cut it off
+        self.assertEqual((calls[0].max_tokens, ask.checked[0].max_tokens), (16000, 16000))
 
     def test_an_invented_fact_gets_one_rewrite_naming_it(self):
         bad = ["The panel is free and starts Tuesday at the Fleming Museum."] + GOOD

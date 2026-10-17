@@ -10,9 +10,9 @@
 # and is the only thing allowed to name an artist; this job just decorates it.
 # See scripts/build_music.py for why that rule exists.
 #
-# Why it commits to main rather than riding a data branch: same reason as the
-# Wander pool — the file changes once a day, and it lives inside /all-day/ so
-# the app's service worker can cache it. A worker scoped to a directory cannot
+# Why it commits to main rather than riding a data branch: the file changes
+# once a day, and it lives inside /all-day/ so the app's service worker can
+# cache it. A worker scoped to a directory cannot
 # answer for a data branch fetched from another origin.
 #
 # Because it commits to main under GITHUB_TOKEN, and such commits do not fire

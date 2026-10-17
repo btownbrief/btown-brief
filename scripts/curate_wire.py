@@ -637,6 +637,10 @@ CALENDAR = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", 
             "january", "february", "march", "april", "may", "june", "july", "august",
             "september", "october", "november", "december"}
 HOME = {"burlington", "vermont", "vermonters"}   # the paper's own frame, never a new fact
+# Two months are also everyday verbs ("the plan may stall", "students march
+# downtown"). As months they are written capitalized, so only then do they
+# count: mid-sentence, or opening one with a day after them ("May 3").
+VERBS_TOO = {"may", "march"}
 
 
 def invented(why, *sources):
@@ -657,7 +661,10 @@ def invented(why, *sources):
             continue
         before = (why[:match.start()]).rstrip()
         opens = not before or before[-1] in '.!?:"“'
-        if base == "free" or base in CALENDAR or (token[0].isupper() and len(token) > 1 and not opens):
+        month = base in CALENDAR
+        if base in VERBS_TOO:
+            month = token[0].isupper() and (not opens or re.match(r"\s+\d", why[match.end():]) is not None)
+        if base == "free" or month or (token[0].isupper() and len(token) > 1 and not opens):
             return token
     return None
 
