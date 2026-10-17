@@ -318,7 +318,7 @@ def wire_items(pulse, now_ts, window_hours):
             if not url or not isinstance(when, int) or when < cutoff or when > now_ts + 3600:
                 continue
             out.append({
-                "id": item_id(url), "ch": ch, "local": bool(post.get("local", True)),
+                "id": item_id(url), "ch": ch, "local": bool(post.get("local", ch == "facebook")),
                 "src": f"{ch}:{post.get('from')}", "name": post.get("name") or post.get("from"),
                 "handle": post.get("from"), "title": post.get("summary") or "",
                 "url": url, "posted_at": iso_ts(when), "d": when, "kind": post.get("kind"),

@@ -100,7 +100,7 @@ async function staticChecks() {
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
     const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'art.js', 'onair.js', 'games.js', 'tokens.css', 'app.css'];
-    const OLD = new Set(['reddit.js', 'ig.js', 'photos.js', 'music.js', 'wander.js', 'listen.js', 'rows.js', 'sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
+    const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
       const isMode = f.includes(path.sep + 'modes' + path.sep);
@@ -125,6 +125,8 @@ async function staticChecks() {
 const ET = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 function etParts(ms) { const o = {}; ET.formatToParts(new Date(ms)).forEach((p) => { o[p.type] = p.value; }); return o; }
 const etKey = (ms) => { const o = etParts(ms); return o.year + '-' + o.month + '-' + o.day; };
+/* today at h o'clock in Burlington, as ms */
+const etAt = (h) => { const key = etKey(Date.now()); const guess = Date.parse(key + 'T' + String(h).padStart(2, '0') + ':00:00Z'); return guess + ((24 + h - Number(etParts(guess).hour)) % 24) * 3600000; };
 const dayMinus = (key, n) => { const [y, m, d] = key.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d - n, 12)).toISOString().slice(0, 10); };
 const ETNAME = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric' });
 const nameOf = (key) => { const [y, m, d] = key.split('-').map(Number); return ETNAME.format(new Date(Date.UTC(y, m - 1, d, 12))); };
@@ -245,6 +247,16 @@ async function newPage(browser, base, opts = {}) {
     ...(opts.timezoneId ? { timezoneId: opts.timezoneId } : {}),
   });
   const page = await ctx.newPage();
+  /* opts.clock (ms) fixes the page's Date while its timers keep running;
+     opts.seed makes Math.random a fixed sequence (mulberry32). Together they
+     make a random pick from a time-of-day pool the same pick every run. */
+  if (opts.clock) await page.clock.setFixedTime(opts.clock);
+  if (opts.seed != null) {
+    await page.addInitScript((seed) => {
+      let a = seed >>> 0;
+      Math.random = () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    }, opts.seed);
+  }
   const errors = [];
   const supabase = [];
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
@@ -367,7 +379,15 @@ async function matrix(browser, base) {
     for (const demo of [false, true]) {
       const label = combo.viewport.width + ' ' + combo.scheme + (combo.motion === 'reduce' ? ' reduced-motion' : '') + (demo ? ' demo' : ' live');
       await group(label, async () => {
-        const { ctx, page, errors, supabase } = await newPage(browser, base, combo);
+        /* Games' leaderboards are one get_leaderboard per board: answered
+           here, so the live screen draws real rows the same way every run */
+        const boardsAsked = [];
+        const rpc = (fn, body) => {
+          if (fn !== 'get_leaderboard') return undefined;
+          boardsAsked.push(body.p_game);
+          return body.p_game === 'btown-wordle' ? ROWS(['Ada W.', 'Cy F.', 'Juniper', 'Max T.']) : [];
+        };
+        const { ctx, page, errors, supabase } = await newPage(browser, base, { ...combo, rpc });
         await page.goto(base + '/all-day/' + (demo ? '?demo=1' : ''), { waitUntil: 'domcontentloaded' });
         await settle(page);
         const bar = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => [b.dataset.tab, b.innerText.trim()]));
@@ -394,6 +414,10 @@ async function matrix(browser, base) {
         }
         for (const tab of TABS) {
           if (tab !== 'wire') await goTab(page, tab);
+          if (tab === 'games' && !demo) {
+            await page.waitForFunction(() => !/Loading \d+ boards/.test(document.querySelector('#panel-games').innerText), null, { timeout: 15000 });
+            check(boardsAsked.length > 0 && boardsAsked.includes('btown-wordle'), 'games: every leaderboard call is answered by the suite, never the network', boardsAsked.join(', '));
+          }
           const state = await page.evaluate(() => {
             const p = document.querySelector('.panel:not([hidden])');
             return { id: p.id, promise: !!p.querySelector('.promise'), h2: p.querySelector('.promise h2')?.textContent || '', cards: p.querySelectorAll('[data-k]').length + p.querySelectorAll('.sec').length + p.querySelectorAll('.spin').length,
@@ -862,6 +886,7 @@ async function onAir(browser, base) {
     const local = await titles();
     check(local.includes('Church Street Market Place Live Stream') && local.includes('The lake, from ECHO') && local.includes('The ferry dock at King Street'),
       'Local: the pinned Church Street camera and the lake cams', JSON.stringify(local));
+    check(local.includes('The boathouse, from the pinned roster'), 'Local: a camera the data marks cam: 1 (refresh_youtube.py LIVE_ROSTER)', JSON.stringify(local));
     check(!JAZZ.some((t) => local.includes(t)), 'Local: no “Relaxing Jazz” ambience streams', JSON.stringify(local));
     check(!local.some((t) => /football|Documentaries/.test(t)), 'Local: nothing off the Vermont shelf or the pinned roster', JSON.stringify(local));
     await toTop(page);
@@ -1237,7 +1262,10 @@ async function spinAnswer(page) {
 
 async function theWhatNow(browser, base) {
   await group('What Now, Spin (demo)', async () => {
-    const { ctx, page, errors } = await newPage(browser, base);
+    /* the pool depends on the hour and the pick on Math.random, so a real
+       clock let "the answer spells out its reason" fail when a late-night
+       pick had no reason to give: a Burlington afternoon and a fixed seed */
+    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(14), seed: 20261017 });
     await page.goto(base + '/all-day/?demo=1#whatnow');
     await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
     check(await page.$eval('#subnav .chip.on', (b) => /Spin/.test(b.innerText)), 'the chip row is the mode switch, Spin first', '');
@@ -3355,6 +3383,22 @@ async function shellFixes(browser, base) {
     }
   });
 
+  await group('cutover: a card in a two-up grid can shrink to its cell', async () => {
+    const { ctx, page } = await newPage(browser, base, { viewport: { width: 390, height: 800 } });
+    await page.goto(base + '/all-day/?demo=1#wire');
+    await settle(page);
+    const r = await page.evaluate(() => {
+      const g = document.createElement('div'); g.className = 'grid2';
+      const a = document.createElement('div'); a.textContent = 'x'.repeat(400); a.style.whiteSpace = 'nowrap'; a.style.overflow = 'hidden';
+      g.append(a, document.createElement('div'));
+      document.querySelector('#panel-wire .panel-body').appendChild(g);
+      const out = { min: getComputedStyle(a).minWidth, over: g.scrollWidth - g.clientWidth };
+      g.remove(); return out;
+    });
+    check(r.min === '0px' && r.over <= 1, '.grid2 > * has min-width 0, so a long line never widens the grid', JSON.stringify(r));
+    await ctx.close();
+  });
+
   await group('shell fixes: an emoji thumb is drawn at the emoji size', async () => {
     const tokens = await readFile(path.join(APP, 'css/tokens.css'), 'utf8');
     const want = (tokens.match(/--fs-emoji:\s*(\d+)px/) || [])[1];
@@ -3387,11 +3431,56 @@ async function shellFixes(browser, base) {
     await ctx.close();
   });
 
+  await group('cutover: every old tab’s link lands on the nearest new tab', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    const landed = async (hash, tab) => {
+      await page.goto(base + '/all-day/?demo=1' + hash);
+      await page.waitForFunction((t) => document.querySelector('#tab-' + t)?.getAttribute('aria-selected') === 'true', tab, { timeout: 15000 }).catch(() => {});
+      return page.evaluate((t) => ({ on: document.querySelector('#tab-' + t).getAttribute('aria-selected') === 'true', hash: location.hash }), tab);
+    };
+    const cases = [
+      ['#reddit', 'wire', '#wire/reddit'],
+      ['#reddit/https%3A%2F%2Fwww.reddit.com%2Fr%2Fburlington%2Fcomments%2Fabc', 'wire', '#wire/https%3A%2F%2Fwww.reddit.com%2Fr%2Fburlington%2Fcomments%2Fabc'],
+      ['#ig', 'wire', '#wire'], ['#ig/ig-C123', 'wire', '#wire'],
+      ['#music', 'whatnow', '#whatnow/tonight'], ['#music/mus:old', 'whatnow', '#whatnow/tonight'],
+      ['#wander', 'whatnow', '#whatnow'], ['#wander/Moose', 'whatnow', '#whatnow'],
+      ['#photos', 'art', '#art'], ['#photos/p-1', 'art', '#art'],
+      ['#listen', 'onair', '#onair'], ['#watch/yt:dQw4w9WgXcQ', 'onair', '#onair/yt:dQw4w9WgXcQ'],
+      /* not old tabs: an unknown word is the Wire, as before, and nothing throws */
+      ['#constructor', 'wire', '#constructor'], ['#igloo', 'wire', '#igloo'], ['#photosx', 'wire', '#photosx'], ['#toString/x', 'wire', '#toString/x'],
+    ];
+    for (const [from, tab, to] of cases) {
+      const r = await landed(from, tab);
+      check(r.on && r.hash === to, from + ' opens ' + tab + ', and the address says ' + to, JSON.stringify(r));
+    }
+    await page.goto(base + '/all-day/?demo=1#reddit');
+    await page.waitForSelector('#subnav .chip.on', { timeout: 15000 });
+    await page.waitForFunction(() => document.querySelector('#subnav .chip.on')?.dataset.chip === 'reddit', null, { timeout: 5000 }).catch(() => {});
+    const on = await page.$eval('#subnav .chip.on', (c) => c.dataset.chip);
+    check(on === 'reddit', 'a bare #reddit opens the Wire on its Reddit chip', on);
+    await page.goto(base + '/all-day/?demo=1#music');
+    await page.waitForFunction(() => document.querySelector('#subnav .chip.on')?.dataset.chip === 'tonight', null, { timeout: 15000 }).catch(() => {});
+    check(await page.$eval('#subnav .chip.on', (c) => c.dataset.chip).catch(() => '') === 'tonight', 'an old Music link opens What Now on Tonight', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
-    check(/VERSION = 'all-day-v44'/.test(sw), 'sw.js VERSION is bumped once, to v44', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(/VERSION = 'all-day-v45'/.test(sw), 'sw.js VERSION is bumped once for the cutover, to v45', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
+    /* the offline list is exactly the modules that exist: none missing, none gone */
+    const mods = [];
+    const walkJs = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walkJs(p); else if (f.name.endsWith('.js')) mods.push(path.relative(APP, p).split(path.sep).join('/')); } };
+    await walkJs(path.join(APP, 'js'));
+    check(mods.every((f) => listed.includes(f)), 'every module in js/ is in the offline list', mods.filter((f) => !listed.includes(f)).join(', '));
+    check(listed.every((f) => mods.includes(f)), 'and nothing in the offline list is missing from js/', listed.filter((f) => !mods.includes(f)).join(', '));
+    const files = [...sw.matchAll(/'\.\/([\w/.-]+\.[a-z]+)'/g)].map((m) => m[1]);
+    const gone = [];
+    for (const f of files) { try { await readFile(path.join(APP, f)); } catch (e) { gone.push(f); } }
+    check(!gone.length, 'every file in the offline list exists', gone.join(', '));
+    check(/pathname\.startsWith\('\/data\/'\)/.test(sw) && /network.first/i.test(sw), 'and /data/ is still network first', '');
     for (const f of ['js/boards.js', 'js/boards-core.js', 'js/boards-fake.js']) check(listed.includes(f), f + ' is in the offline list', '');
     const imported = [...main.matchAll(/import '\.\/([\w/.-]+\.js)'/g)].map((m) => 'js/' + m[1]);
     check(imported.every((f) => listed.includes(f)), 'every module main.js imports is in the offline list', imported.filter((f) => !listed.includes(f)).join(', '));

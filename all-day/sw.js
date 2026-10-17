@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v44';   // v44: the New Nine, with accounts and boards
+const VERSION = 'all-day-v45';   // v45: the New Nine cutover, the old tabs gone
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -28,6 +28,8 @@ const SHELL_URLS = [
   './js/whatnow-engine.js', './js/whatnow-data.js', './js/sun.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
+  /* Watch's starter list, so the tab has films to show offline */
+  './data/films-seed.json',
 ];
 
 self.addEventListener('install', (e) => {

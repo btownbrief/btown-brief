@@ -18,7 +18,10 @@ Honesty rules, as in curate_top.py: the model answers by INDEX into the
 numbered list and only chooses from fixed vocabularies; every tag maps back to
 a real item; anything malformed is dropped and that item simply stays
 untagged for the next run. The mechanical channel of an inbox or Reddit item
-is never overridden.
+is never overridden. Its `local` is the tagger's, except a Facebook group's:
+every group is local, so that one stays mechanical. The X shortlist carries
+national desks as well as Vermont accounts (2026-10-17), so for X the verdict
+decides: AP on a Vermont story is local, WCAX on a South Carolina trial is not.
 
 Failure posture: no key, the $25 month cap, or any API trouble logs and exits
 0. Items left untagged are retried next hour, and curate_wire.py treats an
@@ -171,8 +174,8 @@ def validate_tags(raw, batch, now_ts):
         ch = item["ch"]
         if ch in ("local", "world"):
             ch = "local" if local else "world"   # geography decides, never a model whim
-        if item["ch"] in FIXED:
-            local = item["local"] if item["ch"] in ("x", "facebook") else local
+        if item["ch"] == "facebook":
+            local = item["local"]   # every group is local; X follows the verdict
         out[item["id"]] = {
             "ch": ch, "local": local, "junk": junk, "topic": topic,
             "score": max(0, min(10, score)), "at": now_ts,
@@ -268,6 +271,11 @@ def selftest():
         {"id": "a", "ch": "local", "local": True, "name": "WCAX", "title": "Council votes", "d": 2},
         {"id": "b", "ch": "world", "local": False, "name": "AP", "title": "Vermont town floods", "d": 1},
         {"id": "c", "ch": "x", "local": True, "name": "WCAX", "handle": "@wcax", "title": "I-89 closed", "d": 3},
+        {"id": "d", "ch": "x", "local": False, "name": "AP", "handle": "@AP",
+         "title": "Vermont's governor declares a flood emergency", "d": 4},
+        {"id": "e", "ch": "x", "local": False, "name": "WCAX", "handle": "@wcax",
+         "title": "Jury selection begins in a South Carolina murder trial", "d": 5},
+        {"id": "f", "ch": "facebook", "local": True, "name": "Old North End", "title": "Lost cat on North St", "d": 6},
     ]
     tags = validate_tags([
         {"i": 0, "junk": "none", "local": False, "ch": "world", "topic": "city-government", "score": 9},
@@ -276,18 +284,24 @@ def selftest():
         {"i": 2, "junk": "promo", "local": True, "ch": "x", "topic": "other", "score": 0},
         {"i": 7, "junk": "none", "local": True, "ch": "local", "topic": "other", "score": 5},
         {"i": 0, "junk": "maybe", "local": True, "ch": "local", "topic": "other", "score": 5},
+        {"i": 3, "junk": "none", "local": True, "ch": "x", "topic": "weather", "score": 8},
+        {"i": 4, "junk": "none", "local": False, "ch": "x", "topic": "courts", "score": 3},
+        {"i": 5, "junk": "none", "local": False, "ch": "facebook", "topic": "community", "score": 4},
     ], batch, 100)
-    assert set(tags) == {"a", "b", "c"}
+    assert set(tags) == {"a", "b", "c", "d", "e", "f"}
     assert tags["a"]["ch"] == "world" and tags["a"]["local"] is False   # geography flips
     assert tags["b"]["ch"] == "local" and tags["b"]["score"] == 10      # clamped
-    assert tags["c"]["ch"] == "x" and tags["c"]["local"] is True        # inbox stays put
+    assert tags["c"]["ch"] == "x" and tags["c"]["local"] is False       # X: the verdict decides
+    assert tags["d"]["ch"] == "x" and tags["d"]["local"] is True        # a national desk on Vermont
+    assert tags["e"]["ch"] == "x" and tags["e"]["local"] is False       # WCAX away from home
+    assert tags["f"]["ch"] == "facebook" and tags["f"]["local"] is True  # Facebook stays mechanical
     text = format_batch(batch, [("zz", "Earlier story"), ("a", "Council votes")])
     assert "ALREADY IN THE RIVER" in text and "2. x · LOCAL · @wcax · I-89 closed" in text
     assert "- Council votes" not in text      # never a duplicate of itself
     store = {"tags": {"old": {"at": 0}, "new": {"at": 10 ** 9}}}
     prune(store, 10 ** 9)
     assert list(store["tags"]) == ["new"]
-    assert untagged(batch, {"tags": {"a": {}}})[0]["id"] == "c"          # local, newest first
+    assert [i["id"] for i in untagged(batch, {"tags": {"a": {}}})][:2] == ["f", "c"]   # local, newest first
     print("selftest ok")
 
 

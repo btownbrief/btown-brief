@@ -8,9 +8,10 @@ The page is for people in Burlington, Vermont. "Local" means Burlington, Chitten
 County (Winooski, South Burlington, Essex, Colchester, Williston, Shelburne, Charlotte,
 Milton, Hinesburg, Richmond, Jericho), or statewide Vermont news that lands here.
 
-Each line reads: index · mechanical channel · LOCAL or NATIONAL (from the source) ·
-source · text. The text is a headline, or for X and Facebook a one-line summary of the
-post written by a bot.
+Each line reads: index · mechanical channel · LOCAL or NATIONAL (from the source;
+for X only a guess from the post's text, since the X list mixes Vermont accounts with
+national desks like AP and Reuters) · source · text. The text is a headline, or for X
+and Facebook a one-line summary of the post written by a bot.
 
 For each item return:
 

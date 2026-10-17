@@ -3,10 +3,7 @@
 
    Modules make the boot order deterministic: app.js has evaluated before any
    tab imports it, and every register() has run before start() routes. The
-   tab bar's order is TABS in app.js, not the order of these lines.
-
-   The old tabs (reddit, ig, photos, music, wander, listen) are still in
-   modes/ until the cutover deletes them; nothing imports them. */
+   tab bar's order is TABS in app.js, not the order of these lines. */
 
 import * as app from './app.js';
 /* boards.js wires the board cards' buttons and Settings → Your account,

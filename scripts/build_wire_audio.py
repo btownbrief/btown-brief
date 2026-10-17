@@ -106,7 +106,7 @@ STALE_DAYS = 3
 LLM_CAP_USD = 8.0                          # about $0.05 to $0.20 a day; this only stops a runaway
 DRAFTS = 3                                 # a draft and up to two rewrites, each fact-checked
 TTS_MONTH_CHARS = 150_000                  # Starter's v4 Turbo allowance ($6)
-MAX_TOKENS = {"openrouter": 6000, "anthropic": 8000}
+MAX_TOKENS = {"openrouter": 6000, "anthropic": 16000}   # Opus's draft plus its fact check ran past 8,000
 WRITER = {"provider": "anthropic", "model": "claude-opus-5-5"}   # never a cheaper fallback
 
 # Spoken place names a voice gets wrong, respelled for the voice only; the
