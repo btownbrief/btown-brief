@@ -691,6 +691,33 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .ftile .c-media { margin: 0; }
 .ftile .s { display: block; font-size: var(--fs-small); color: var(--ink-3); margin-top: 5px; line-height: 1.35; }
 
+/* Vintage: a colour per kind of shop (the number badge, the kind's name, the
+   map pin and the button's dots), coloured neighborhood dividers, the shop
+   map and the Top designs row. --vc and --vc-ink are Vintage's own, set from
+   the tokens; nothing here is a new colour. */
+:is(.vshops, .vmap, .mapbtn) .k-thrift { --vc: var(--local); --vc-ink: var(--local-ink); }
+:is(.vshops, .vmap, .mapbtn) .k-vintage { --vc: var(--mark-6); --vc-ink: var(--on-media); }
+:is(.vshops, .vmap, .mapbtn) .k-consign { --vc: var(--mark-3); --vc-ink: var(--on-media); }
+:is(.vshops, .vmap, .mapbtn) .k-antique { --vc: var(--accent); --vc-ink: var(--now-ink); }
+:is(.vshops, .vmap, .mapbtn) .k-books { --vc: var(--mark-5); --vc-ink: var(--on-media); }
+.vshops .vk { color: color-mix(in srgb, var(--vc) 62%, var(--ink)); font-weight: 600; }
+.vkeys { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 0 var(--gutter) 4px; font-size: var(--fs-meta); }
+.vkeys .vk i { display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: var(--r-round); background: var(--vc); }
+.tdiv.vhood { color: color-mix(in srgb, var(--accent) 85%, var(--ink)); border-bottom: 2px solid color-mix(in srgb, var(--accent) 50%, transparent); }
+.lrow.vshop { align-items: start; }
+.lrow.vshop .t { font-weight: 700; }
+.lrow.vshop .num.vbadge { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: var(--r-round);
+  background: var(--vc); color: var(--vc-ink); font-family: var(--sans); font-size: var(--fs-meta); font-weight: 700; }
+.vlinks { display: flex; flex-direction: column; gap: 6px; }
+.vshops.insheet .lrow { padding-left: 0; padding-right: 0; border-bottom: 0; }
+.vm-dot { fill: var(--vc); }
+.vmap { height: min(58vh, 520px); border-radius: var(--r-media); overflow: hidden; background: var(--paper-2); margin-bottom: 8px; }
+.vmap .vm-pin { display: flex; align-items: center; justify-content: center; border-radius: var(--r-round); background: var(--vc); color: var(--vc-ink);
+  border: 2px solid var(--raised); box-shadow: var(--shadow-pill); font-family: var(--sans); font-size: var(--fs-small); font-weight: 700; line-height: 1; }
+.vmap .vm-me { fill: var(--ink); fill-opacity: 1; stroke: var(--raised); }
+.rail.vtop { align-items: flex-start; }
+.rail.vtop > .card.board { width: 176px; }
+
 /* the spinner: one big button and one answer */
 .spin { padding: 8px var(--gutter) 4px; text-align: center; }
 .spin .big { width: 100%; height: 72px; border-radius: var(--r-sheet); background: var(--ink); color: var(--on-ink); font-family: var(--serif); font-size: var(--fs-hero); font-weight: 500;

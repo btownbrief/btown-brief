@@ -4135,19 +4135,19 @@ async function theVintage(browser, base) {
   await group('Vintage, signed out: the finds show, posting asks for the sign-in (demo)', async () => {
     const { ctx, page, errors, supabase } = await vintageDemo(browser, base);
     const grids = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('.panel:not([hidden]) [data-grid]')].map((g) => [g.dataset.grid, g.querySelectorAll('.card.board, .ftile').length])));
-    check(grids.spotted === 8 && grids.swaps === 3 && grids.fit === 3 && grids.sent === 1, 'eight finds, three swaps, three fit checks and one design sent in, from the demo', JSON.stringify(grids));
+    check(grids.spotted === 8 && grids.swaps === 3 && grids.fit === 3 && grids.sent === 3, 'eight finds, three swaps, three fit checks and three designs sent in, from the demo', JSON.stringify(grids));
     const lefts = await page.$$eval(vslot('spotted') + ' .card.board', (cs) => cs.map((c) => (c.querySelector('.tag-left') || {}).textContent || ''));
     check(lefts.every((t) => /^\d+d left$/.test(t)) && new Set(lefts).size > 4, 'every find shows its days left, and they differ', JSON.stringify(lefts));
     const votes = await page.$$eval(vslot('spotted') + ' [data-act=bvote]', (bs) => bs.map((b) => b.getAttribute('aria-label')));
     check(votes.every((v) => v === 'I’d want this'), 'the vote on a find is “I’d want this”', JSON.stringify(votes.slice(0, 2)));
     check(!(await page.$(vslot('spotted') + ' [data-act=vgot]')), 'nobody signed in owns a find, so no “Someone got it”', '');
     const chipsRow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
-    check(JSON.stringify(chipsRow) === JSON.stringify(['fit', 'spotted', 'newin', 'shops', 'swaps', 'tees']), 'the chip row is the table of contents: Fit checks, Spotted, New in, Shops, Swaps, Make a tee', JSON.stringify(chipsRow));
-    await page.click('#subnav .chip[data-chip="swaps"]');
-    /* a smooth scroll, and the six shops above Swaps make it a long one */
-    await page.waitForFunction((sel) => { const t = document.querySelector(sel).getBoundingClientRect().top; return t >= 0 && t < 300; }, vslot('swaps'), { timeout: 3000 }).catch(() => {});
-    const swapTop = await page.$eval(vslot('swaps'), (s) => Math.round(s.getBoundingClientRect().top));
-    check(swapTop >= 0 && swapTop < 300, 'a chip scrolls its section up under the mast', swapTop);
+    check(JSON.stringify(chipsRow) === JSON.stringify(['fit', 'spotted', 'swaps', 'newin', 'shops', 'tees']), 'the chip row is the table of contents: Fit checks, Spotted, Swaps (up top, by Spotted), New in, Shops, Make a tee', JSON.stringify(chipsRow));
+    await page.click('#subnav .chip[data-chip="tees"]');
+    /* a smooth scroll, and the fourteen shops above Make a tee make it a long one */
+    await page.waitForFunction((sel) => { const t = document.querySelector(sel).getBoundingClientRect().top; return t >= 0 && t < 300; }, vslot('tees'), { timeout: 4000 }).catch(() => {});
+    const teeTop = await page.$eval(vslot('tees'), (s) => Math.round(s.getBoundingClientRect().top));
+    check(teeTop >= 0 && teeTop < 300, 'a chip scrolls its section up under the mast', teeTop);
     await page.click(vslot('spotted') + ' .addrow button');
     await page.waitForSelector('.sheet-body .linkrow');
     check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)) && !(await page.$('.sheet-body form')), 'Post a find, signed out: the sign-in note and no form', '');
@@ -4176,7 +4176,9 @@ async function theVintage(browser, base) {
         spotHead: q('spotted').querySelector('.sec h2').textContent, spotHeadBottom: q('spotted').querySelector('.sec').getBoundingClientRect().bottom,
         spotCard: q('spotted').querySelector('.card.board').getBoundingClientRect().top };
     });
-    check(JSON.stringify(top.order.slice(0, 3)) === '["fit","spotted","newin"]' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'Fit checks leads the tab, then Spotted this week, then New in', JSON.stringify(top));
+    check(JSON.stringify(top.order.slice(0, 4)) === '["fit","spotted","swaps","newin"]' && top.fitHead === 'Fit checks' && top.spotHead === 'Spotted this week', 'Fit checks leads the tab, then Spotted this week, then Swaps (moved up from the bottom), then New in', JSON.stringify(top));
+    const why = await page.$eval(vslot('spotted') + ' .sec + p', (p) => p.textContent).catch(() => '');
+    check(why === 'Saw something great that wasn’t your size? Post it so someone else can grab it.', 'one plain line under Spotted this week says what it is for', why);
     check(top.fitBottom <= top.vh && top.spotHeadBottom <= top.vh && top.spotCard < top.vh, 'at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen', JSON.stringify(top));
     const tiles = await page.$$eval(vslot('fit') + ' .ftile', (ts) => ts.map((t) => ({ k: t.dataset.k, pic: !!t.querySelector('.c-media.r45 .ph, .c-media.r45 img'), t: t.querySelector('.t').textContent, s: t.querySelector('.s').textContent })));
     check(tiles.length === 3 && tiles.every((t) => t.pic && /^b-/.test(t.k) && t.t && t.s), 'each fit check is a photo tile with its title and first name', JSON.stringify(tiles));
@@ -4372,6 +4374,9 @@ async function theVintage(browser, base) {
     const big = [];
     for (const x of d.designs) { const b = await readFile(path.join(APP, x.img)); if (b.length >= 60000) big.push(x.img); }
     check(d.designs.length >= 6 && !big.length, d.designs.length + ' previews in all-day/assets/merch, each under 60 KB', big.join(', '));
+    const builder = await readFile(path.join(REPO, 'scripts/build_merch_rail.py'), 'utf8');
+    check(/variant\.get\("file"\)/.test(builder) && !/front\.get\("prev"\)|design\.get\("front"\)/.test(builder),
+      'each preview is the full design (the merch data’s variant art), not the small left-chest patch it calls `front`', '');
     const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 } });
     await page.goto(base + '/all-day/#vintage/tees');
     await settle(page);
@@ -4519,6 +4524,195 @@ async function theVintage(browser, base) {
     check(/Camel’s Hump in gouache by Dev/.test(shirt.text) && !/Art wall/.test(shirt.text) && /submissions\/art-1\.jpg$/.test(shirt.img), 'an old Art “Put it on a shirt” link still opens the piece here, picture, title and maker, with no button to a wall that has gone', JSON.stringify(shirt));
     check(!/\$\s?\d|\bprice\b/i.test(shirt.text), 'and it names no price', shirt.text);
     check(calls.some((c) => c.fn === 'nn_posts_list' && c.args.p_board === 'art' && JSON.stringify(c.args.p_filter) === '{"meta":{"shirt":"yes"}}'), 'it looks only among Art posts whose maker said yes to a shirt', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* --------------------------------------------- colour in the shop guide */
+  /* The kind a shop's colour comes from: its first kind, as vintage.js reads it */
+  const vKind = (k) => (/vintage/i.test(k) ? 'vintage' : /thrift|restore/i.test(k) ? 'thrift' : /consign/i.test(k) ? 'consign' : /antique/i.test(k) ? 'antique' : /book/i.test(k) ? 'books' : 'thrift');
+  /* contrast of two computed colours (rgb() or color(srgb …)), WCAG's formula */
+  const CONTRAST = `(() => {
+    const lum = (c) => { const m = /rgba?\\(([^)]+)\\)/.exec(c); const n = /color\\(srgb ([^)]+)\\)/.exec(c);
+      const v = m ? m[1].split(/[\\s,\\/]+/).filter(Boolean).slice(0, 3).map((x) => Number(x) / 255) : n[1].split(/[\\s\\/]+/).filter(Boolean).slice(0, 3).map(Number);
+      const f = (x) => (x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4); return 0.2126 * f(v[0]) + 0.7152 * f(v[1]) + 0.0722 * f(v[2]); };
+    return (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  })()`;
+  for (const scheme of ['light', 'dark']) await group('Vintage, the shop guide in colour: a badge per kind, the kinds in colour, a divider per neighborhood (live, ' + scheme + ')', async () => {
+    const file = await vintageShops();
+    const { ctx, page, errors } = await newPage(browser, base, { scheme });
+    await page.goto(base + '/all-day/#vintage/shops');
+    await settle(page);
+    await page.waitForSelector(vslot('shops') + ' .lrow.vshop');
+    const g = await page.evaluate(([sel, contrast]) => {
+      const ratio = eval(contrast);
+      const probe = document.createElement('i'); probe.style.color = 'var(--paper)'; document.body.appendChild(probe);
+      const paper = getComputedStyle(probe).color; probe.remove();
+      const host = document.querySelector(sel);
+      const rows = [...host.querySelectorAll('.lrow.vshop')].map((r) => { const b = r.querySelector('.num.vbadge'), cs = getComputedStyle(b);
+        return { cls: b.className, bg: cs.backgroundColor, ink: cs.color, contrast: ratio(cs.backgroundColor, cs.color), weight: Number(getComputedStyle(r.querySelector('.t')).fontWeight),
+          kinds: [...r.querySelectorAll('[data-kinds] .vk')].map((k) => ({ cls: k.className, text: k.textContent, contrast: ratio(getComputedStyle(k).color, paper) })) }; });
+      const hoods = [...host.querySelectorAll('.tdiv.vhood')].map((d) => { const cs = getComputedStyle(d); return { name: d.dataset.hood, line: cs.borderBottomColor, w: cs.borderBottomWidth, ink: cs.color }; });
+      const plain = getComputedStyle(host.querySelector('.lrow.vshop')).borderBottomColor;
+      const keys = [...host.querySelectorAll('[data-keys] .vk')].map((k) => ({ text: k.textContent, dot: getComputedStyle(k.querySelector('i')).backgroundColor }));
+      return { rows, hoods, plain, keys, order: [...host.querySelector('.vshops').children].map((c) => (c.classList.contains('vhood') ? 'h:' + c.dataset.hood : c.classList.contains('vshop') ? 'r' : '')).filter(Boolean) };
+    }, [vslot('shops'), CONTRAST]);
+    check(g.rows.length === file.shops.length && g.rows.every((r, i) => r.cls.includes('k-' + vKind(file.shops[i].kinds[0]))), 'every number is a badge in its shop’s first kind’s colour', JSON.stringify(g.rows.slice(0, 3).map((r) => r.cls)));
+    const byKind = {};
+    g.rows.forEach((r) => { byKind[/k-(\w+)/.exec(r.cls)[1]] = r.bg; });
+    check(Object.keys(byKind).length === 5 && new Set(Object.values(byKind)).size === 5, 'five kinds, five colours: thrift, vintage, consignment, antiques, used books', JSON.stringify(byKind));
+    check(g.rows.every((r) => r.contrast >= 4.5), 'every badge’s number reads on its colour (4.5:1 or better)', JSON.stringify(g.rows.map((r) => r.contrast.toFixed(1))));
+    check(g.rows.every((r) => r.weight >= 700), 'the shop’s name is a touch bolder', JSON.stringify(g.rows.slice(0, 2).map((r) => r.weight)));
+    const allKinds = g.rows.flatMap((r) => r.kinds);
+    check(allKinds.length && allKinds.every((k) => /k-\w+/.test(k.cls) && k.contrast >= 4.5) && g.rows.every((r, i) => r.kinds.map((k) => k.text).join() === file.shops[i].kinds.join()),
+      'each kind is named in its own colour, readable on the page', JSON.stringify(allKinds.filter((k) => k.contrast < 4.5)));
+    const groups = file.shops.map((s) => (s.after_walk ? 'Used books' : s.neighborhood)).filter((x, i, a) => !i || x !== a[i - 1]);
+    check(JSON.stringify(g.hoods.map((h) => h.name)) === JSON.stringify(groups), 'a divider names each neighborhood as the walk enters it, Used books last', JSON.stringify(g.hoods.map((h) => h.name)));
+    check(g.order[0] === 'h:' + groups[0] && g.order.filter((x) => x === 'r').length === file.shops.length, 'the first shop sits under its neighborhood', g.order.slice(0, 3).join(','));
+    check(g.hoods.every((h) => h.w === '2px' && h.line !== g.plain && h.line === g.hoods[0].line), 'the dividers are one colour, not the grey hairline between shops', JSON.stringify([g.hoods[0], g.plain]));
+    check(JSON.stringify(g.keys.map((k) => k.text)) === JSON.stringify(['Vintage', 'Thrift', 'Consignment', 'Antiques', 'Used books']) && new Set(g.keys.map((k) => k.dot)).size === 5,
+      'a key under the head names the five colours', JSON.stringify(g.keys));
+    await pageRules(page, 'vintage', 390);
+    await page.$eval(vslot('shops'), (s) => s.scrollIntoView());
+    await page.screenshot({ path: path.join(SHOTS, 'live-vintage-guide-' + scheme + '.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* ------------------------------------------------------------- the shop map */
+  /* Leaflet is not on this machine, as for Food: the stand-in answers the
+     pinned URL, the integrity setter records the hashes, and the fake L
+     records what the map was told: markers with their number icons, the
+     bounds it was fitted to, any setView. */
+  const vFakeSri = `window.__sri = [];
+    Object.defineProperty(HTMLScriptElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });
+    Object.defineProperty(HTMLLinkElement.prototype, 'integrity', { configurable: true, set(v) { window.__sri.push(v); }, get() { return ''; } });`;
+  const V_FAKE_L = `window.L = (() => {
+    const maps = [];
+    const layer = (kind, at, o) => ({ kind, at, o, addTo(m) { m.layers.push(this); return this; }, bindTooltip(t) { this.tip = t; return this; },
+      on(ev, fn) { this['on' + ev] = fn; return this; }, remove() { this.gone = true; } });
+    return { maps, map(el, opts) { const m = { el, opts, layers: [], fits: [], views: [], fitBounds(b, o) { this.fits.push(b); return this; }, setView(c, z) { this.views.push(c); return this; },
+      setZoom(z) { this.views.push(z); return this; }, invalidateSize() {}, remove() { this.removed = true; }, getContainer() { return el; } }; maps.push(m); return m; },
+      tileLayer(u, o) { return layer('tiles', u, o); }, circleMarker(c, o) { return layer('dot', c, o); }, marker(c, o) { return layer('pin', c, o); },
+      divIcon(o) { return { divIcon: o }; } };
+  })();`;
+  const vWithLeaflet = async (page, asked) => {
+    await page.addInitScript(vFakeSri);
+    await page.route(/unpkg\.com\/leaflet@1\.9\.4\/dist\/leaflet\.(js|css)$/, (r) => { asked.push(r.request().url());
+      return /\.js$/.test(r.request().url()) ? r.fulfill({ status: 200, body: V_FAKE_L, contentType: 'text/javascript' }) : r.fulfill({ status: 200, body: '', contentType: 'text/css' }); });
+  };
+  const vMap = (page) => page.evaluate(() => { const m = window.L && window.L.maps && window.L.maps[window.L.maps.length - 1]; if (!m) return null;
+    return { inSheet: !!m.el.closest('.sheet-body'), fits: m.fits, views: m.views, tiles: m.layers.filter((l) => l.kind === 'tiles').map((l) => ({ u: l.at, attr: l.o.attribution })),
+      pins: m.layers.filter((l) => l.kind === 'pin').map((l) => ({ at: l.at, tip: l.tip, title: l.o.title, html: l.o.icon.divIcon.html, cls: l.o.icon.divIcon.className })),
+      me: m.layers.filter((l) => l.kind === 'dot' && /vm-me/.test(l.o.className) && !l.gone).map((l) => l.at) }; });
+  const VCH = [44.4758, -73.2128];
+  const vMi = (a, b) => { const R = 3958.8, rad = Math.PI / 180, dLat = (b[0] - a[0]) * rad, dLon = (b[1] - a[1]) * rad;
+    return 2 * R * Math.asin(Math.sqrt(Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * rad) * Math.cos(b[0] * rad) * Math.sin(dLon / 2) ** 2)); };
+
+  await group('Vintage, the shop map: a picture by the guide’s head, every shop a numbered pin, a pin opens its shop (live, location refused)', async () => {
+    const file = await vintageShops();
+    const pinned = file.shops.map((s, i) => ({ s, i })).filter(({ s }) => Array.isArray(s.coords) && s.coords.length === 2);
+    const town = pinned.filter(({ s }) => vMi(s.coords, VCH) <= 1).map(({ s }) => s.coords);
+    const { ctx, page, errors } = await newPage(browser, base);
+    const asked = [], out = [];
+    await vWithLeaflet(page, asked);
+    page.on('request', (q) => { if (!q.url().startsWith(base)) out.push(q.url()); });
+    await page.goto(base + '/all-day/#vintage/shops');
+    await settle(page);
+    await page.waitForSelector(vslot('shops') + ' .sec .mapbtn');
+    const btn = await page.evaluate((sel) => { const b = document.querySelector(sel + ' .sec .mapbtn'), sec = b.closest('.sec');
+      return { last: sec.lastElementChild === b, head: sec.querySelector('h2').textContent, label: b.getAttribute('aria-label'), text: b.innerText,
+        dots: [...b.querySelectorAll('.vm-dot')].map((d) => d.getAttribute('class')), fills: new Set([...b.querySelectorAll('.vm-dot')].map((d) => getComputedStyle(d).fill)).size }; }, vslot('shops'));
+    check(btn.last && btn.head === 'The shop guide' && /Map/.test(btn.text), 'a Map button sits beside “The shop guide”', JSON.stringify(btn));
+    check(btn.dots.length >= 8 && btn.dots.every((c) => /vm-dot k-\w+/.test(c)) && btn.fills >= 3, 'its picture is the walk as dots, each in its kind’s colour', JSON.stringify(btn));
+    check(btn.label === 'Map of ' + pinned.length + ' shops' && pinned.length === file.shops.length, 'it maps every shop in the guide (' + pinned.length + ')', btn.label);
+    check(!asked.length && !out.some((u) => /unpkg|tile\.openstreetmap/.test(u)) && await page.evaluate(() => !window.L), 'before a tap: no Leaflet, no tiles, nothing fetched', out.join(', '));
+    await page.click(vslot('shops') + ' .mapbtn');
+    await page.waitForFunction(() => window.L && window.L.maps && window.L.maps.length && window.L.maps[0].layers.length, null, { timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(150);
+    const m = await vMap(page);
+    check(asked.some((u) => /leaflet\.js$/.test(u)) && asked.some((u) => /leaflet\.css$/.test(u)), 'a tap loads Leaflet 1.9.4 and its stylesheet', asked.join(', '));
+    check(await page.evaluate(() => window.__sri.includes('sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=') && window.__sri.includes('sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=')),
+      'with the integrity hashes Food and the guide’s own map pages use', await page.evaluate(() => window.__sri.join(', ')));
+    check(m && m.inSheet && await page.$eval('.sheet-head h2', (h) => h.textContent) === 'Shop map', 'the map opens in a sheet', JSON.stringify(m && m.inSheet));
+    check(m && m.tiles.length === 1 && m.tiles[0].u === 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' && /OpenStreetMap/.test(m.tiles[0].attr), 'on OpenStreetMap’s tiles, credited', JSON.stringify(m && m.tiles));
+    check(m && m.pins.length === pinned.length && m.pins.every((p, n) => { const { s, i } = pinned[n];
+      return p.html === String(i + 1) && p.title === (i + 1) + '. ' + s.name && JSON.stringify(p.at) === JSON.stringify(s.coords) && p.cls === 'vm-pin k-' + vKind(s.kinds[0]); }),
+      'every shop is a pin at its own spot, carrying its number from the guide, in its kind’s colour', JSON.stringify(m && m.pins.slice(0, 2)));
+    check(m && m.fits.length >= 1 && m.fits.every((f) => JSON.stringify(f) === JSON.stringify(town)) && !m.views.length && !m.me.length,
+      'it opens on the ' + town.length + ' shops a walk away, with no reader pin and no location asked', JSON.stringify(m && { fits: m.fits.length, first: m.fits[0] && m.fits[0].length, views: m.views }));
+    await page.click('.sheet-body .vspan');
+    const wide = await vMap(page);
+    check(/^On foot$/.test(await page.$eval('.sheet-body .vspan', (b) => b.textContent)) && wide.fits.length && wide.fits[wide.fits.length - 1].length === pinned.length,
+      '“All ' + pinned.length + '” fits every shop, Essex to Shelburne', JSON.stringify(wide.fits.map((f) => f.length)));
+    await page.click('.sheet-body .nearme');
+    await page.waitForSelector('#toast:not([hidden])', { timeout: 6000 }).catch(() => {});
+    check(/Location is off/.test(await page.$eval('#toast', (t) => t.textContent)) && !(await vMap(page)).me.length, 'Near me, refused: says so, and no dot', '');
+    const pick = pinned.find(({ i }) => i === 11) || pinned[pinned.length - 1];
+    await page.evaluate((title) => { const m = window.L.maps[window.L.maps.length - 1]; m.layers.find((l) => l.o && l.o.title === title).onclick(); }, (pick.i + 1) + '. ' + pick.s.name);
+    const sheet = await page.evaluate(() => ({ h: document.querySelector('.sheet-head h2').textContent, num: (document.querySelector('.sheet-body .vbadge') || {}).textContent,
+      cls: (document.querySelector('.sheet-body .vbadge') || {}).className, text: document.querySelector('.sheet-body').innerText, back: !!document.querySelector('.sheet-body [data-act=vmapback]') }));
+    check(sheet.h === pick.s.name && sheet.num === String(pick.i + 1) && sheet.cls.includes('k-' + vKind(pick.s.kinds[0])) && sheet.back, 'a pin opens its shop: the same number, its colour, and the way back to the map', JSON.stringify(sheet));
+    check(sheet.text.includes(pick.s.neighborhood) && (!pick.s.address || sheet.text.includes(pick.s.address.replace(/,\s*VT\s*\d{5}$/, ''))), 'with the shop’s neighborhood and street', sheet.text.slice(0, 160));
+    await page.click('.sheet-body [data-act=vmapback]');
+    await page.waitForTimeout(200);
+    check(await page.$eval('.sheet-head h2', (h) => h.textContent) === 'Shop map' && (await vMap(page)).pins.length === pinned.length, 'Back to the map puts the map back up', '');
+    await page.screenshot({ path: path.join(SHOTS, 'live-vintage-map.png') });
+    await page.goto(base + '/all-day/#vintage/map');
+    await page.reload();
+    await page.waitForSelector('.sheet-head h2', { timeout: 15000 }).catch(() => {});
+    check(await page.$eval('.sheet-head h2', (h) => h.textContent).catch(() => '') === 'Shop map', '#vintage/map opens the map', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Vintage, the shop map with location allowed: the reader’s dot, and the map stays put (live)', async () => {
+    const ME = { latitude: 44.4801, longitude: -73.2101 };   // up Church Street, by City Hall Park
+    const { ctx, page, errors } = await newPage(browser, base, { geo: ME });
+    const asked = [], sent = [];
+    await vWithLeaflet(page, asked);
+    page.on('request', (q) => sent.push(q.url() + ' ' + (q.postData() || '')));
+    await page.addInitScript(() => { const g = navigator.geolocation, ask = g.getCurrentPosition.bind(g); window.__geo = 0; g.getCurrentPosition = (...a) => { window.__geo++; return ask(...a); }; });
+    await page.goto(base + '/all-day/#vintage/shops');
+    await settle(page);
+    await page.waitForSelector(vslot('shops') + ' .sec .mapbtn');
+    check(await page.evaluate(() => window.__geo) === 0, 'nothing asks for the location on load', '');
+    await page.click(vslot('shops') + ' .mapbtn');
+    await page.waitForFunction(() => { const m = window.L && window.L.maps && window.L.maps[0]; return m && m.layers.some((l) => l.kind === 'dot'); }, null, { timeout: 6000 }).catch(() => {});
+    await page.waitForTimeout(200);
+    const m = await vMap(page);
+    check(m && m.me.length === 1 && JSON.stringify(m.me[0]) === JSON.stringify([ME.latitude, ME.longitude]), 'allowed before, the map shows the reader’s dot', JSON.stringify(m && m.me));
+    const first = m && JSON.stringify(m.fits[0]);
+    check(m && !m.views.length && m.fits.every((f) => JSON.stringify(f) === first) && !m.fits.some((f) => JSON.stringify(f).includes(String(ME.latitude))),
+      'but the map is never moved to the reader: it stays on the shops', JSON.stringify(m && { views: m.views, fits: m.fits.length }));
+    check(await page.$eval('.sheet-body .nearme', (b) => b.hidden), 'and Near me steps aside', '');
+    const lat = String(ME.latitude), lon = String(ME.longitude);
+    check(!sent.some((x) => x.includes(lat) || x.includes(lon)), 'the position is never sent anywhere', sent.filter((x) => x.includes(lat) || x.includes(lon)).join(', '));
+    const stored = await page.evaluate(() => JSON.stringify(Object.entries(localStorage)) + JSON.stringify(Object.entries(sessionStorage)) + document.cookie);
+    check(!stored.includes(lat) && !stored.includes(lon), 'and never stored', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Vintage, Top designs: the designs neighbors sent in, most “I’d wear this” first, and the vote works (demo)', async () => {
+    const { ctx, page, errors } = await vintageDemo(browser, base);
+    const row = await page.evaluate((sel) => { const host = document.querySelector(sel);
+      const r = host.querySelector('[data-grid=sent]');
+      return { head: host.querySelector('.tdiv').textContent, rail: r.classList.contains('rail') && r.classList.contains('vtop'),
+        cards: [...r.querySelectorAll('.card.board')].map((c) => ({ k: c.dataset.k, title: c.querySelector('.b-title').textContent, n: Number(c.querySelector('[data-act=bvote] .n').textContent) || 0, label: c.querySelector('[data-act=bvote]').getAttribute('aria-label') })) }; }, vslot('sent'));
+    check(row.head === 'Top designs' && row.rail, 'the designs sent in are a row called Top designs', JSON.stringify(row.head));
+    check(JSON.stringify(row.cards.map((c) => c.title)) === JSON.stringify(['Champ in the chop, linocut', 'Rainy Church Street, ink', 'Old North End porches']) && row.cards.every((c, i) => !i || c.n <= row.cards[i - 1].n),
+      'sorted by votes, most first', JSON.stringify(row.cards));
+    check(row.cards.every((c) => c.label === 'I’d wear this'), 'the vote on a design is “I’d wear this”', JSON.stringify(row.cards.map((c) => c.label)));
+    const last = row.cards[row.cards.length - 1];
+    await page.$eval(vslot('sent'), (s) => s.scrollIntoView());
+    await page.click(vslot('sent') + ' .card.board[data-k="' + last.k + '"] [data-act=bvote]');
+    await page.waitForTimeout(400);
+    const after = await page.$eval(vslot('sent') + ' .card.board[data-k="' + last.k + '"] [data-act=bvote]', (b) => ({ on: b.getAttribute('aria-pressed'), n: Number(b.querySelector('.n').textContent) }));
+    check(after.on === 'true' && after.n === last.n + 1, 'a tap on “I’d wear this” counts one more', JSON.stringify([last, after]));
+    const id = last.k.slice(2);
+    const votes = await fakeOf(page, `(f) => f._count('${id}')`);
+    check(votes === last.n + 1, 'and the board has it', String(votes));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });
