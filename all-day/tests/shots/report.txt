@@ -991,8 +991,8 @@
   ok   deep links, demo › #people/mx-dm2: no console errors
   ok   deep links, demo › #whatnow/e-tn3 lands on its card and flashes
   ok   deep links, demo › #whatnow/e-tn3: no console errors
-  ok   deep links, demo › #vintage/s-resource-burlington lands on its card and flashes
-  ok   deep links, demo › #vintage/s-resource-burlington: no console errors
+  ok   deep links, demo › #vintage/s-battery-street-jeans lands on its card and flashes
+  ok   deep links, demo › #vintage/s-battery-street-jeans: no console errors
   ok   deep links, demo › #habits/next-season lands on its card and flashes
   ok   deep links, demo › #habits/next-season: no console errors
   ok   deep links, demo › #onair/yt:demo-tv-003 lands on its card and flashes
@@ -1898,7 +1898,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 11ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 8ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -1952,7 +1952,7 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › a bare #reddit opens the Wire on its Reddit chip
   ok   cutover: every old tab’s link lands on the nearest new tab › an old Music link opens What Now on Tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › no console errors
-  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for Food’s map and directory after On Air’s past nights, to v50
+  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped past Food (v50) for Vintage, to v51 or later
   ok   shell fixes: the offline shell carries the new modules › every module in js/ is in the offline list
   ok   shell fixes: the offline shell carries the new modules › and nothing in the offline list is missing from js/
   ok   shell fixes: the offline shell carries the new modules › every file in the offline list exists
@@ -2038,8 +2038,17 @@
   ok   boards: votes, reports, delete, expiry (demo) › boards: no sideways scroll at 1280
   ok   boards: votes, reports, delete, expiry (demo) › boards: at most two subnav rows
   ok   boards: votes, reports, delete, expiry (demo) › no console errors
-  FAIL boards: Your posts, and delete my account (demo) › threw
-         page.evaluate: Resulting promise was garbage collected. |     at /private/tmp/claude-501/-Users-stephendavis-btownbrief-newsletter/2a8173fd-1910-4afb-8678-ddc4ac2d04a0/scratchpad/check-310/all-day/tests/allday.spec.mjs:3522:16 |     at async group (/private/tmp/claude-501/-Users-stephendavis-btownbrief-newsletter/2a8173fd-1910-4afb-8678-ddc4ac2d04a0/scratchpad/check-310/all-day/tests/allday.spec.mjs:63:9)
+  ok   boards: Your posts, and delete my account (demo) › the demo profile and swap post are set up
+  ok   boards: Your posts, and delete my account (demo) › an Art photo without a photo: refused
+  ok   boards: Your posts, and delete my account (demo) › with a photo and consent: posted, the photo waits for the queue
+  ok   boards: Your posts, and delete my account (demo) › a photo whose post is refused is taken back out of the queue
+  ok   boards: Your posts, and delete my account (demo) › an Art post is not on the wall until its photo is approved
+  ok   boards: Your posts, and delete my account (demo) › Your posts lists both, with where each stands
+  ok   boards: Your posts, and delete my account (demo) › delete asks first, and says the shared sign-in stays
+  ok   boards: Your posts, and delete my account (demo) › everything of theirs is gone
+  ok   boards: Your posts, and delete my account (demo) › and so are their habits and taps (sz_delete_me)
+  ok   boards: Your posts, and delete my account (demo) › and they are signed out
+  ok   boards: Your posts, and delete my account (demo) › no console errors
   ok   boards: what goes over the wire (live) › signed out: the list goes with the device’s player id and no token
   ok   boards: what goes over the wire (live) › an approved photo is drawn from the public bucket
   ok   boards: what goes over the wire (live) › the vote adopts the server’s count
@@ -2198,7 +2207,7 @@
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › every find shows its days left, and they differ
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the vote on a find is “I’d want this”
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › nobody signed in owns a find, so no “Someone got it”
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Spotted, Shops, Swaps, Make a tee, Fit check
+  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Fit checks, Spotted, New in, Shops, Swaps, Make a tee
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › a chip scrolls its section up under the mast
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a find, signed out: the sign-in note and no form
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a fit check, signed out: the same
@@ -2211,6 +2220,23 @@
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: at most two subnav rows
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › no console errors
   ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › demo mode never calls Supabase
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then New in
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › each fit check is a photo tile with its title and first name
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › a tile opens the post’s own card: the photo, “Love this fit”, share and report
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › and the vote works from the sheet
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › New in: the shops’ own posts from the last two weeks, newest first, each credited to its account and linked to the post
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › a three-week-old post and an account that is not a shop stay off
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › the New in chip counts them
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: nothing fixed or sticky inside the tab
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: uppercase only in the caps roles
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no monospace
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no escaped markup, undefined or NaN on the page
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no sideways scroll at 390
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: at most two subnav rows
+  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › no console errors
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › only the guide’s own account’s fresh post shows, opening Instagram in a new tab
+  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › no console errors
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the shop field suggests the guide’s shops; anything typed still goes
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the fields are the kind’s: shop (needed), size and price (optional)
   ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the sheet says, in one line, the photo shows once approved
@@ -2247,10 +2273,15 @@
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: no sideways scroll at 390
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: at most two subnav rows
   ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › no console errors
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › the guide has at least six shops (12)
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › the guide has at least six shops (36)
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the file, numbered in its walking order
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk goes downtown, the South End, the Old North End, Winooski, then Essex
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk goes downtown, the South End, the Old North End and Winooski, then drives Colchester, Essex, Williston, South Burlington, Shelburne
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › used books (Speaking Volumes) come last, after the walk, with no leg into them
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › greater Burlington, not just the city: Essex, Williston (Plato’s Closet), South Burlington, Shelburne
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop is one of things.json’s Shopping entries: none invented
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › a record store is not a thrift: Burlington Records stays in things.json and out of the guide
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the guide has a checked record: the date, the page and what was read there
+  ok   Vintage, the shop guide walks in order and invents no hours (live) › no shop twice: every id and every address once (Barge Canal Market and Speaking Volumes share 377 Pine St)
   ok   Vintage, the shop guide walks in order and invents no hours (live) › every hour comes from the shop’s own things.json entry, with the date and page it was checked on
   ok   Vintage, the shop guide walks in order and invents no hours (live) › each shop’s week is its things.json hours, day by day
   ok   Vintage, the shop guide walks in order and invents no hours (live) › hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”
