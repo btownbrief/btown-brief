@@ -735,7 +735,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 /* the sky strip over the weather card: the sun's real arc (weather.html's
    scene in miniature), its colour by the time of day, a light overlay for
    the condition */
-.wxsky { display: block; height: 36px; margin: -8px -10px 0; border-radius: var(--r-box) var(--r-box) 0 0; overflow: hidden;
+.wxsky { display: block; height: 30px; margin: -8px -10px 0; border-radius: var(--r-box) var(--r-box) 0 0; overflow: hidden;
   background: linear-gradient(var(--sky-a), var(--sky-b)); --sky-a: var(--sky-day-a); --sky-b: var(--sky-day-b); }
 .wxsky svg { display: block; width: 100%; height: 100%; }
 .wxsky[data-sky="night"] { --sky-a: var(--sky-night-a); --sky-b: var(--sky-night-b); }

@@ -568,7 +568,10 @@ a.rn-chip:hover { border-color: var(--teal); color: var(--teal); text-decoration
 /* a quieter base map, so the rain is what you see */
 .radar-map .leaflet-tile-pane { filter: grayscale(0.75) contrast(0.95) brightness(1.04); }
 [data-theme="dark"] .radar-map .leaflet-tile-pane { filter: grayscale(0.8) invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9); }
-.radar-map .radar-frame { image-rendering: auto; transition: none; }
+/* Leaflet's tiles can leave a hairline between rows on a 2x screen; half a
+   pixel of overlap closes it */
+.radar-map .leaflet-tile { width: 256.5px !important; height: 256.5px !important; }
+.radar-map .radar-frame { transition: none; }
 .radar-map .leaflet-control-attribution { font-size: 10px; }
 
 .radar-controls {
