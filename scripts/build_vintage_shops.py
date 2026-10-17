@@ -5,7 +5,7 @@ data/things.json.
 Which places: things.json entries in the Shopping group whose category,
 name or blurb says they are a vintage, thrift, consignment or antique shop,
 anywhere in greater Burlington (Burlington, Winooski, South Burlington,
-Williston, Essex, Colchester, Shelburne). The guide is for thrifting, so a
+Williston, Essex, Colchester, Shelburne; ROUTE below enforces it). The guide is for thrifting, so a
 category decides two things: a "Record Store" is not a thrift and stays
 out (it keeps its things.json entry for the rest of the site), and a
 "Library & Bookstore" (used books) goes at the very bottom, after the walk,
@@ -40,8 +40,10 @@ Pine Street, the Old North End and Winooski on foot, then a loop by car
 through Colchester, Essex, Williston, South Burlington and Shelburne. Within a
 neighborhood, shops with coordinates go nearest-first from the previous
 stop. Between two shops that both have coordinates the file carries the
-walk (straight-line distance times 1.3 for the street grid, at 3 mph);
-where either end has none, the leg says so rather than guessing.
+walk (straight-line distance times 1.3 for the street grid, at 3 mph),
+or, past a mile, the distance as a drive or a bus ride, so nobody is told to
+walk half an hour along Route 2A; where either end has no coordinates, the
+leg says so rather than guessing.
 
 Instagram: an entry may carry `instagram`, the shop's handle as its own
 site links it. The file lists those handles (plus the vintage markets in
@@ -85,11 +87,13 @@ AFTER_THE_WALK = {"Library & Bookstore"}
 # posts are "new in" too. Each was read on its own profile.
 MARKETS = ["burlingtonvintagemarket"]
 
-# The walk, neighborhood by neighborhood, then the drive. Anything not
-# listed goes last.
-ROUTE = ["Downtown / Church St", "Waterfront", "South End", "Hill Section", "Old North End",
-         "New North End", "Winooski", "Colchester", "Essex / Essex Jct", "Williston",
-         "South Burlington", "Shelburne", "Greater Burlington"]
+# The walk, neighborhood by neighborhood, then the drive. These are also
+# the guide's bounds: things.json files Stowe, Waterbury, Richmond and the
+# rest of the day trips under "Greater Burlington", so a shop there (or in a
+# neighborhood not listed) is named in left_out instead of joining the route.
+ROUTE = ["Downtown / Church St", "Waterfront", "South End", "Hill Section", "UVM / University",
+         "Old North End", "New North End", "Winooski", "Colchester", "Essex / Essex Jct",
+         "Williston", "South Burlington", "Shelburne"]
 HANDLE = re.compile(r"^[a-z0-9._]{1,30}$")
 
 HOURS = re.compile(r"\bOpen ([^.]*?\b(daily|weekdays|weekends|mon|tue|wed|thu|fri|sat|sun)[^.]*)\.", re.I)
@@ -101,7 +105,7 @@ SPAN = re.compile(r"^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$")
 CHURCH_ST = [44.4759, -73.2121]
 WALK_MPH = 3.0
 STREET_FACTOR = 1.3
-DRIVE_OVER_MILES = 2.0
+DRIVE_OVER_MILES = 1.0          # over 20 minutes on foot, the leg says drive or bus
 
 
 def miles(a, b):
@@ -272,9 +276,11 @@ def build():
     if len(ids) != len(set(ids)):
         sys.exit("duplicate ids: " + ", ".join(sorted({i for i in ids if ids.count(i) > 1})))
     every = [shop(t) for t in picked]
-    placed = [s for s in every if s["address"]]
+    inside = [s for s in every if s["neighborhood"] in ROUTE]
+    placed = [s for s in inside if s["address"]]
     shops = walk_order([s for s in placed if not s.get("after_walk")]) + walk_order([s for s in placed if s.get("after_walk")])
-    left_out = [{"id": s["id"], "name": s["name"], "why": "no verified street address"} for s in every if not s["address"]]
+    left_out = [{"id": s["id"], "name": s["name"], "why": "outside greater Burlington"} for s in every if s not in inside]
+    left_out += [{"id": s["id"], "name": s["name"], "why": "no verified street address"} for s in inside if not s["address"]]
     legs(shops)
     gaps = {g: sum(1 for s in shops if g in s["gaps"]) for g in ("address", "coords", "hours", "website")}
     return {

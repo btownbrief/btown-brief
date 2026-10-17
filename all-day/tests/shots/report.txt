@@ -36,131 +36,68 @@
   ok   source rules › js/wire.js: no monospace
   ok   source rules › css/app.css: no monospace
   ok   source rules › css/tokens.css: no monospace
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › eight finds, three swaps, three fit checks and one design sent in, from the demo
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › every find shows its days left, and they differ
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the vote on a find is “I’d want this”
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › nobody signed in owns a find, so no “Someone got it”
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › the chip row is the table of contents: Fit checks, Spotted, New in, Shops, Swaps, Make a tee
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › a chip scrolls its section up under the mast
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a find, signed out: the sign-in note and no form
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Post a fit check, signed out: the same
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › Send in your design, signed out: the same
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: nothing fixed or sticky inside the tab
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: uppercase only in the caps roles
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: no monospace
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: no escaped markup, undefined or NaN on the page
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: no sideways scroll at 390
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › vintage: at most two subnav rows
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › no console errors
-  ok   Vintage, signed out: the finds show, posting asks for the sign-in (demo) › demo mode never calls Supabase
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › Fit checks leads the tab, then Spotted this week, then New in
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › at 390 by 844 the fit tiles, the Spotted head and the first find are all on the first screen
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › each fit check is a photo tile with its title and first name
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › a tile opens the post’s own card: the photo, “Love this fit”, share and report
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › and the vote works from the sheet
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › New in: the shops’ own posts from the last two weeks, newest first, each credited to its account and linked to the post
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › a three-week-old post and an account that is not a shop stay off
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › the New in chip counts them
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: nothing fixed or sticky inside the tab
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: uppercase only in the caps roles
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no monospace
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no escaped markup, undefined or NaN on the page
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: no sideways scroll at 390
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › vintage: at most two subnav rows
-  ok   Vintage, fit checks and Spotted share the first screen at 390; a tile opens the fit’s own card; New in is the shops’ own posts (demo) › no console errors
-  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › only the guide’s own account’s fresh post shows, opening Instagram in a new tab
-  ok   Vintage, New in reads the shops’ accounts from the guide and leaves the rest out (live) › no console errors
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the shop field suggests the guide’s shops; anything typed still goes
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the fields are the kind’s: shop (needed), size and price (optional)
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the sheet says, in one line, the photo shows once approved
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › no shop: refused, with the reason
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › it leads Spotted, with its shop (typed, not from the guide), size and price
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › three weeks to run, by first name
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › your own find offers “Someone got it” and delete
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › “Someone got it” asks first
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the thank-you line counts one more find gone home
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › a thank-you, and nothing about points, prizes or a raffle
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › and the find leaves the grid
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › the post’s got box is ticked on the board (boards.put), so everyone’s thank-you counts it
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: nothing fixed or sticky inside the tab
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: uppercase only in the caps roles
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: no monospace
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: no escaped markup, undefined or NaN on the page
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: no sideways scroll at 1280
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › vintage: at most two subnav rows
-  ok   Vintage, a find posts with its fields and shows days left; “Someone got it” thanks you (demo) › no console errors
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › the design pitch and form show no price and no cash
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › the artist’s choice is free shirts or store credit, and nothing else
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › no image: refused
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › no choice: refused
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › no consent: refused, with the reason
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › and nothing was sent: no post, no photo
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › sent: a Vintage `design` post, which never ends
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › the artist’s choice is its `thanks` field, the line is its body, and its picture waits in the photo queue
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › the sheet closes once it is sent
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › how an artist asked to be thanked never shows on the public card
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: nothing fixed or sticky inside the tab
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: uppercase only in the caps roles
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: no monospace
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: no escaped markup, undefined or NaN on the page
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: no sideways scroll at 390
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › vintage: at most two subnav rows
-  ok   Vintage, the design form: consent first, and no price or cash anywhere (demo) › no console errors
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › the guide has at least six shops (10)
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the file, numbered in its walking order
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk goes downtown, the South End, the Old North End and Winooski, then drives Colchester, Essex, Williston, South Burlington, Shelburne
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › used books (Speaking Volumes) come last, after the walk, with no leg into them
-  FAIL Vintage, the shop guide walks in order and invents no hours (live) › greater Burlington, not just the city: Williston (Plato’s Closet), South Burlington, Winooski
-         ["Downtown / Church St","South End","Old North End","South Burlington"]
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop is one of things.json’s Shopping entries: none invented
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › a record store is not a thrift: Burlington Records stays in things.json and out of the guide
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the guide has a checked record: the date, the page and what was read there
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › no shop twice: every id and every address once (Barge Canal Market and Speaking Volumes share 377 Pine St)
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › every hour comes from the shop’s own things.json entry, with the date and page it was checked on
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › each shop’s week is its things.json hours, day by day
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › hours show only where the guide has them; a checked shop without them says call ahead, the rest “Hours not checked yet”
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › Map opens a search on Google Maps
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › gaps are marked in the file for Stephen to fill
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › every shop in the walk has a street address; a shop without one is named in left_out instead
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › no console errors
-  ok   Vintage, the shop guide walks in order and invents no hours (live) › the walk to the next shop where both have coordinates; only the next stop where they don’t
-  ok   Vintage, the designs rail links to the merch site (live) › 28 previews in all-day/assets/merch, each under 60 KB
-  ok   Vintage, the designs rail links to the merch site (live) › every design links to its own page on merch.btownbrief.com, where it is shown on a model
-  ok   Vintage, the designs rail links to the merch site (live) › they open in a new tab, with the small local preview
-  ok   Vintage, the designs rail links to the merch site (live) › the previews load
-  ok   Vintage, the designs rail links to the merch site (live) › and “All 87 designs in the shop” goes to the shop
-  ok   Vintage, the designs rail links to the merch site (live) › nothing on the rail takes money or names a price
-  ok   Vintage, the designs rail links to the merch site (live) › vintage: nothing fixed or sticky inside the tab
-  ok   Vintage, the designs rail links to the merch site (live) › vintage: uppercase only in the caps roles
-  ok   Vintage, the designs rail links to the merch site (live) › vintage: no monospace
-  ok   Vintage, the designs rail links to the merch site (live) › vintage: no escaped markup, undefined or NaN on the page
-  ok   Vintage, the designs rail links to the merch site (live) › vintage: no sideways scroll at 1280
-  ok   Vintage, the designs rail links to the merch site (live) › vintage: at most two subnav rows
-  ok   Vintage, the designs rail links to the merch site (live) › no console errors
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v1 › round one: the same fit check is a find tagged “Fit check”, which either server takes
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v1 › round one has no box, so nothing asks for one
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v1 › and the find comes down as before
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v1 › either way the boards stay live
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v1 › and it leaves the grid
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v1 › no console errors
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v2 › round two: a fit check is a `fit` post
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v2 › round two: “Someone got it” ticks the find’s got box
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v2 › and the find stays on the board, not deleted
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v2 › either way the boards stay live
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v2 › and it leaves the grid
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules v2 › no console errors
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules that could not be read › unknown: the same fit check is a find tagged “Fit check”, which either server takes
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules that could not be read › not knowing the server, “Someone got it” deletes nothing and changes nothing
-  ok   Vintage, live: a fit check and “Someone got it” on a server with rules that could not be read › it says so, and the find is still there to try again
-  ok   Vintage, live posts land in their sections (live) › four lists, one per kind, the server’s most
-  FAIL Vintage, live posts land in their sections (live) › a find in Spotted, a swap in Swaps, designs in Sent in and fit checks with their photos in Fit check, newest first, the old tagged ones among them; a fit whose photo still waits, and a find someone got, nowhere
-         {"fit":["My Sunday fit","Head to toe Old Gold"],"spotted":["Barn jacket"],"swaps":["Band tees"],"sent":["Moth on the steeple","Lake ink"]}
-  ok   Vintage, live posts land in their sections (live) › the find someone got counts in the thank-you
-  ok   Vintage, live posts land in their sections (live) › an approved photo comes from the public bucket
-  ok   Vintage, live posts land in their sections (live) › a swap says what it is for, and the size
-  ok   Vintage, live posts land in their sections (live) › a shared post’s link lands on it and flashes
-  ok   Vintage, live posts land in their sections (live) › a post that has gone says so
-  ok   Vintage, live posts land in their sections (live) › an old Art “Put it on a shirt” link still opens the piece here, picture, title and maker, with no button to a wall that has gone
-  ok   Vintage, live posts land in their sections (live) › and it names no price
-  ok   Vintage, live posts land in their sections (live) › it looks only among Art posts whose maker said yes to a shirt
-  ok   Vintage, live posts land in their sections (live) › no console errors
+  ok   What Now, Spin (demo) › the chip row is the mode switch, Spin first
+  ok   What Now, Spin (demo) › the weather line: feels like, the lake, sunset
+  ok   What Now, Spin (demo) › the weather line is one line at 390
+  ok   What Now, Spin (demo) › the six path chips
+  ok   What Now, Spin (demo) › Spin returns an answer
+  ok   What Now, Spin (demo) › the answer spells out its reason
+  ok   What Now, Spin (demo) › the answer says it is for right now
+  ok   What Now, Spin (demo) › Another changes the answer
+  ok   What Now, Spin (demo) › Do it ends the session: “Now put the phone down.”
+  ok   What Now, Spin (demo) › the window: Tomorrow plans tomorrow
+  ok   What Now, Spin (demo) › Teach me something swaps the hat for the hobbies
+  ok   What Now, Spin (demo) › a path chip shows it is on
+  ok   What Now, Spin (demo) › no console errors
+  ok   What Now, Spin (live, reduced motion) › reduced motion: the answer lands at once, no reel
+  ok   What Now, Spin (live, reduced motion) › live: the real engine answers (or says honestly that nothing fits)
+  ok   What Now, Spin (live, reduced motion) › the pool line says how many things fit
+  ok   What Now, Spin (live, reduced motion) › no console errors
+  ok   What Now, the missions under the spinner (demo) › Spin opens with the whole missions list right below it
+  ok   What Now, the missions under the spinner (demo) › and the Spin chip is the one lit
+  ok   What Now, the missions under the spinner (demo) › the demo spins onto mission 2’s first place
+  ok   What Now, the missions under the spinner (demo) › the spin marks its mission in the list and scrolls to it
+  ok   What Now, the missions under the spinner (demo) › only that one row is marked
+  ok   What Now, the missions under the spinner (demo) › the Missions chip jumps down to the list, just under the mast
+  ok   What Now, the missions under the spinner (demo) › and the answer is still there above it
+  ok   What Now, the missions under the spinner (demo) › no console errors
+  ok   What Now, Missions (live) › data/missions.json holds 100 missions
+  ok   What Now, Missions (live) › every paragraph is 60 to 120 words
+  ok   What Now, Missions (live) › no dashes or exclamation points, a known theme, at least one place
+  ok   What Now, Missions (live) › needs_check is counted honestly (10)
+  ok   What Now, Missions (live) › the hundred, numbered 1 to 100
+  ok   What Now, Missions (live) › a theme chip filters to its missions, and its count is right (10)
+  ok   What Now, Missions (live) › Mark done marks it
+  ok   What Now, Missions (live) › a mission marked done survives a reload
+  ok   What Now, Missions (live) › and the Missions chip counts it: 1/100
+  ok   What Now, Missions (live) › signed out, nothing goes to the account
+  ok   What Now, Missions (live) › Surprise me scrolls the list to a highlighted mission
+  ok   What Now, Missions (live) › and it is one you have not done
+  ok   What Now, Missions (live) › focus lands on it too
+  ok   What Now, Missions (live) › no modal: the list itself moves
+  ok   What Now, Missions (live) › tapping a mission opens its paragraph
+  ok   What Now, Missions (live) › with its places, linked to their sites
+  ok   What Now, Missions (live) › signed in, marks are read from and written to the account
+  ok   What Now, Missions (live) › and the device copy stands either way
+  ok   What Now, Missions (live) › no console errors
+  ok   What Now, Tonight (live, a reader in Los Angeles) › Tonight lists only items after 5 pm today in America/New_York
+  ok   What Now, Tonight (live, a reader in Los Angeles) › tonight’s late listing is there
+  ok   What Now, Tonight (live, a reader in Los Angeles) › a listing posted twice shows once
+  ok   What Now, Tonight (live, a reader in Los Angeles) › every date tile is today in Burlington
+  ok   What Now, Tonight (live, a reader in Los Angeles) › Playing this week: tonight’s and this week’s artists, soonest first, not next week’s
+  ok   What Now, Tonight (live, a reader in Los Angeles) › the old Music tab’s why lines come along (the genre when there is no why)
+  ok   What Now, Tonight (live, a reader in Los Angeles) › nothing is embedded until you ask
+  ok   What Now, Tonight (live, a reader in Los Angeles) › Listen builds that artist’s Bandcamp player, which does not autoplay
+  ok   What Now, Tonight (live, a reader in Los Angeles) › the player is the shell’s .embed: full width, the media radius, its own height
+  ok   What Now, Tonight (live, a reader in Los Angeles) › pressing it again takes the player away
+  ok   What Now, Tonight (live, a reader in Los Angeles) › the list ends, and says so
+  ok   What Now, Tonight (live, a reader in Los Angeles) › no console errors
+  ok   What Now, deep links and wide › #whatnow/m42 opens Missions and flashes mission 42
+  ok   What Now, deep links and wide › a mission link lands even while the list is filtered to another theme
+  ok   What Now, deep links and wide › #whatnow/tonight opens Tonight
+  ok   What Now, deep links and wide › the demo carries six missions
+  ok   What Now, deep links and wide › demo marks never reach localStorage
+  ok   What Now, deep links and wide › no console errors
+  ok   What Now, deep links and wide › in December the demo’s 5:45 pm and 6 pm listings are still tonight
+  ok   What Now, deep links and wide › and its sunset still reads 6:06
+  ok   What Now, deep links and wide › no console errors

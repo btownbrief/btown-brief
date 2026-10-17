@@ -3023,7 +3023,8 @@ async function theVintage(browser, base) {
     const chipsRow = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.dataset.chip));
     check(JSON.stringify(chipsRow) === JSON.stringify(['fit', 'spotted', 'newin', 'shops', 'swaps', 'tees']), 'the chip row is the table of contents: Fit checks, Spotted, New in, Shops, Swaps, Make a tee', JSON.stringify(chipsRow));
     await page.click('#subnav .chip[data-chip="swaps"]');
-    await page.waitForTimeout(700);
+    /* a smooth scroll, and the six shops above Swaps make it a long one */
+    await page.waitForFunction((sel) => { const t = document.querySelector(sel).getBoundingClientRect().top; return t >= 0 && t < 300; }, vslot('swaps'), { timeout: 3000 }).catch(() => {});
     const swapTop = await page.$eval(vslot('swaps'), (s) => Math.round(s.getBoundingClientRect().top));
     check(swapTop >= 0 && swapTop < 300, 'a chip scrolls its section up under the mast', swapTop);
     await page.click(vslot('spotted') + ' .addrow button');
@@ -3258,7 +3259,8 @@ async function theVintage(browser, base) {
     check(cardsOut.length === d.designs.length && cardsOut.every((c, i) => c.href === 'https://merch.btownbrief.com/#/p/huba/d/' + d.designs[i].id && c.name === d.designs[i].name),
       'every design links to its own page on merch.btownbrief.com, where it is shown on a model', JSON.stringify(cardsOut.slice(0, 2)));
     check(cardsOut.every((c) => c.target === '_blank' && /^\.\/assets\/merch\/\d+\.webp$/.test(c.img)), 'they open in a new tab, with the small local preview', JSON.stringify(cardsOut[0]));
-    const loaded = await page.$$eval(vslot('tees') + ' a.vcard img', (is) => Promise.all(is.slice(0, 4).map((i) => (i.complete ? i.naturalWidth : new Promise((r) => { i.onload = () => r(i.naturalWidth); i.onerror = () => r(0); })))));
+    await page.$eval(vslot('tees'), (s) => s.scrollIntoView());   /* the previews load lazily, and Fit checks now sits above the rail */
+    const loaded = await page.$$eval(vslot('tees') + ' a.vcard img', (is) => Promise.all(is.slice(0, 4).map((i) => (i.complete ? i.naturalWidth : new Promise((r) => { i.onload = () => r(i.naturalWidth); i.onerror = () => r(0); setTimeout(() => r(i.naturalWidth), 6000); })))));
     check(loaded.every((w) => w > 0), 'the previews load', JSON.stringify(loaded));
     const all = await page.$eval(vslot('tees') + ' .addrow a', (a) => ({ href: a.href, text: a.textContent.trim() }));
     check(all.href === 'https://merch.btownbrief.com/' && new RegExp('All ' + d.total + ' designs').test(all.text), 'and “All ' + d.total + ' designs in the shop” goes to the shop', JSON.stringify(all));
