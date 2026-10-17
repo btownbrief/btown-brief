@@ -36,14 +36,26 @@ a { color: inherit; text-decoration: none; }
 .mast {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40;
   padding-top: var(--safe-t);
-  background: var(--bar);
+  background: var(--lake); color: var(--lake-ink);
+  --ink: var(--lake-ink);
+  --ink-2: var(--lake-muted);
+  --ink-3: var(--lake-muted);
+  --paper-2: var(--lake-hover);
+  --on-ink: var(--sunset-ink);
+  --accent: var(--sunset);
+  --local: var(--lake-green);
+  --local-ink: var(--lake-green-ink);
+  --every: var(--lake-every);
+  --every-ink: var(--lake-every-ink);
+  --line: var(--lake-line);
+  --line-soft: var(--lake-line);
   backdrop-filter: saturate(140%) blur(16px); -webkit-backdrop-filter: saturate(140%) blur(16px);
   border-bottom: 1px solid var(--line-soft);
   transition: transform .24s ease;
 }
 body.chrome-away .mast { transform: translateY(-100%); }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .mast, .tabbar { background: var(--paper); }
+  .mast, .tabbar { background: var(--lake); }
 }
 .mast-row {
   height: var(--mast-h); display: flex; align-items: center; gap: 2px;
@@ -71,7 +83,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .panel {
   position: absolute; inset: 0; overflow-y: auto; overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: calc(var(--tab-h) + var(--safe-b) + var(--player-h, 0px) + 28px);
+  padding-bottom: calc(var(--tab-h) + var(--dock-lift) + var(--safe-b) + var(--player-h, 0px) + 28px);
 }
 /* a flow spacer the height of the fixed mast, measured by the shell */
 .panel::before { content: ""; display: block; height: var(--mast-total, calc(var(--safe-t) + var(--mast-h))); }
@@ -257,35 +269,36 @@ body.chrome-away .mast { transform: translateY(-100%); }
 
 /* ============================================================ tab bar */
 .tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
-  display: grid; grid-template-columns: repeat(4, 1fr) auto repeat(4, 1fr);
-  height: calc(var(--tab-h) + var(--safe-b)); padding: 0 var(--s1) var(--safe-b);
-  background: var(--bar); backdrop-filter: saturate(140%) blur(16px); -webkit-backdrop-filter: saturate(140%) blur(16px);
-  border-top: 1px solid var(--line-soft);
+  position: fixed; left: var(--dock-inset); right: var(--dock-inset);
+  bottom: calc(var(--safe-b) + var(--dock-lift)); z-index: 45;
+  max-width: var(--dock-max); margin-inline: auto;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto repeat(4, minmax(0, 1fr));
+  height: var(--tab-h); padding: var(--s1);
+  background: linear-gradient(var(--dock-sheen), var(--dock-clear)), var(--dock-glass);
+  backdrop-filter: saturate(115%) blur(18px); -webkit-backdrop-filter: saturate(115%) blur(18px);
+  border: 1px solid var(--dock-edge); border-radius: var(--r-dock); box-shadow: var(--dock-shadow);
 }
 .tabbar button { position: relative; display: grid; justify-items: center; align-content: center; gap: 4px;
-  min-width: 0; padding: 0 2px; color: var(--ink-3); font-size: var(--fs-label); font-weight: 500;
-  line-height: 1; letter-spacing: .01em; transition: color .15s ease; }
+  min-width: 0; padding: 0 1px; color: var(--dock-muted); font-size: var(--fs-label); font-weight: 500;
+  line-height: 1; letter-spacing: .01em; border-radius: var(--r-pill); transition: color .15s ease, background .15s ease; }
 .tabbar button span { white-space: nowrap; }
-.tabbar button:hover { color: var(--ink-2); }
-.tabbar button.on { color: var(--ink); }
-.tabbar button.on::before { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 28px; height: 2px; border-radius: 0 0 var(--r-hair) var(--r-hair); background: var(--accent); }
+.tabbar button:hover { color: var(--dock-ink); background: var(--dock-hover); }
+.tabbar button > .i { width: var(--dock-icon); height: var(--dock-icon); }
+.tabbar button.on { color: var(--dock-ink); background: var(--dock-selected); }
 .tabbar button.on .i { stroke-width: 2.3; }
 .tabbar .nd { position: absolute; top: 8px; left: calc(50% + 6px); width: 8px; height: 8px; border-radius: var(--r-round);
-  background: var(--accent); border: 2px solid var(--paper); }
+  background: var(--sunset); border: 2px solid var(--lake); }
 /* What Now is the bar's centre (the fifth of nine, the one auto-width
    column): its icon sits in a filled disc and its label is bold, in both
    themes and on the wide rail. The disc stays filled whether or not the tab
-   is active; active adds the soft tint behind it. border-box keeps the 25px
-   disc from making this cell taller than the other eight. No glow: a shadow
-   on a 25px disc reads as a notification badge. */
-.tabbar #tab-whatnow { color: var(--now); }
-.tabbar #tab-whatnow .i { background: var(--now); color: var(--now-ink); border-radius: var(--r-round);
+   is active; active adds the soft glass highlight behind it. border-box keeps
+   the 25px disc from making this cell taller than the other eight. */
+.tabbar #tab-whatnow { color: var(--dock-ink); }
+.tabbar #tab-whatnow .i { background: var(--sunset); color: var(--sunset-ink); border-radius: var(--r-round);
   padding: 4px; width: 25px; height: 25px; box-sizing: border-box; stroke-width: 2; flex: 0 0 auto; }
-.tabbar #tab-whatnow.on { color: var(--now); background: var(--now-soft); }
+.tabbar #tab-whatnow.on { color: var(--dock-ink); background: var(--dock-selected); }
 .tabbar #tab-whatnow.on .i { stroke-width: 2.2; }
-.tabbar #tab-whatnow > span { font-weight: 700; letter-spacing: -.01em; white-space: nowrap; padding: 0 5px; }
+.tabbar #tab-whatnow > span { font-weight: 700; letter-spacing: -.01em; white-space: nowrap; padding: 0 3px; }
 .rail-brand { display: none; }
 
 /* ============================================================ sheet */
@@ -325,7 +338,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 
 /* ============================================================ peek */
 .peek { position: fixed; z-index: 96; left: 12px; right: 12px;
-  bottom: calc(var(--tab-h) + var(--safe-b) + var(--player-h, 0px) + 12px); max-height: 62vh;
+  bottom: calc(var(--tab-h) + var(--dock-lift) + var(--safe-b) + var(--player-h, 0px) + 12px); max-height: 62vh;
   background: var(--raised); border-radius: var(--r-sheet); box-shadow: var(--shadow-float);
   display: flex; flex-direction: column; overflow: hidden; animation: rise .18s cubic-bezier(.2, .9, .3, 1); }
 .peek-head { display: flex; align-items: center; gap: 8px; padding: 10px 6px 10px 16px; border-bottom: 1px solid var(--line-soft); }
@@ -358,7 +371,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 
 /* ============================================================ toast, confirm */
 .toast { position: fixed; left: 50%; transform: translateX(-50%); z-index: 100;
-  bottom: calc(var(--tab-h) + var(--safe-b) + var(--player-h, 0px) + 16px); max-width: calc(100% - 32px);
+  bottom: calc(var(--tab-h) + var(--dock-lift) + var(--safe-b) + var(--player-h, 0px) + 16px); max-width: calc(100% - 32px);
   background: var(--ink); color: var(--on-ink); padding: 11px 18px; border-radius: var(--r-pill);
   font-size: var(--fs-button); font-weight: 500; box-shadow: var(--shadow-float); display: flex; align-items: center; gap: 14px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; animation: rise .18s ease; }
@@ -373,7 +386,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 
 /* ============================================================ mini player */
 /* One player above the tab bar. It survives a tab switch; nothing else makes sound. */
-.player { position: fixed; left: 8px; right: 8px; bottom: calc(var(--tab-h) + var(--safe-b) + 8px); z-index: 44; display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px 40px;
+.player { position: fixed; left: 8px; right: 8px; bottom: calc(var(--tab-h) + var(--dock-lift) + var(--safe-b) + 8px); z-index: 44; display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px 40px;
   gap: 10px; align-items: center; padding: 8px 6px 8px 10px; background: var(--raised); border: 1px solid var(--line-soft); border-radius: var(--r-box); box-shadow: var(--shadow-float); }
 .player .p-bar { position: absolute; left: 14px; right: 14px; top: -4px; height: 10px; cursor: pointer; }
 .player .p-bar::before { content: ""; position: absolute; left: 0; right: 0; top: 4px; height: 2px; background: var(--line-soft); }
@@ -388,7 +401,7 @@ body.chrome-away .mast { transform: translateY(-100%); }
 
 /* ============================================================ wide screens */
 @media (min-width: 900px) {
-  :root { --gutter: 20px; }
+  :root { --gutter: 20px; --dock-lift: 0px; }
   .mast, .app { left: calc(50% - 220px); right: auto; width: var(--col); }
   .mast { border-left: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
   .app { border-left: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); }
@@ -398,12 +411,16 @@ body.chrome-away .mast { transform: translateY(-100%); }
   .panel { padding-bottom: calc(64px + var(--player-h, 0px)); }
   .tabbar { left: calc(50% - 444px); right: auto; top: 0; bottom: 0; width: 208px; height: auto; padding: 18px 12px;
     display: flex; flex-direction: column; gap: 2px; background: transparent; border: 0;
+    margin-inline: 0; max-width: none; border-radius: 0; box-shadow: none;
     backdrop-filter: none; -webkit-backdrop-filter: none; }
   .rail-brand { display: block; font-family: var(--serif); font-size: var(--fs-wordmark); font-weight: 500;
     padding: 6px 12px 22px; color: var(--ink); }
   .tabbar button { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-radius: var(--r-media);
-    font-size: var(--fs-body); font-weight: 500; letter-spacing: 0; }
-  .tabbar button.on { background: var(--paper-2); font-weight: 600; }
+    font-size: var(--fs-body); font-weight: 500; letter-spacing: 0; color: var(--ink-2); }
+  .tabbar button.on { background: var(--sunset); color: var(--sunset-ink); font-weight: 600; }
+  .tabbar button:hover { color: var(--ink); background: var(--paper-2); }
+  .tabbar #tab-whatnow { color: var(--accent); }
+  .tabbar #tab-whatnow.on { color: var(--sunset-ink); background: var(--sunset); }
   .tabbar button.on::before { display: none; }
   .tabbar .nd { position: static; margin-left: auto; border-color: transparent; }
   .toast { bottom: calc(28px + var(--player-h, 0px)); }
@@ -1309,3 +1326,82 @@ body.desk { overflow: auto; }
   .dateline { height: 48px; }
 }
 @media (prefers-reduced-motion: reduce) { .localsw-leaf { animation: none !important; } }
+
+/* Navy mast uses the same controls, with sunset as the selected chip. */
+.mast .chip.on { background: var(--sunset); color: var(--sunset-ink); }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  @media (max-width: 899px) { .tabbar { background: var(--dock-solid); } }
+}
+
+.mast .localsw .localsw-half:not(.on) { color: var(--lake-muted); }
+
+@media (max-width: 899px) {
+  .tabbar button:focus-visible { outline-color: var(--sunset); }
+}
+/* Small counts remain readable against the navy chip fill. */
+.mast .chip .n { opacity: 1; }
+
+
+/* Lake and Sunset, content pass: keep each tab's existing composition. */
+.feed.wire .wm > .card.pick, #panel-food [data-k="bite"] {
+  --paper: var(--sunset);
+  --paper-2: var(--lead-soft);
+  --ink: var(--sunset-ink);
+  --ink-2: var(--lead-muted);
+  --ink-3: var(--lead-muted);
+  --on-ink: var(--lake-ink);
+  --accent: var(--lead-accent);
+  --accent-soft: var(--lead-soft);
+  --local: var(--tag-local-ink);
+  background: var(--sunset); color: var(--sunset-ink);
+}
+/* The source name on a sunset lead stays dark in both themes; the
+   independent Local badge keeps its own theme palette. */
+.wm > .card.pick .c-src.is-local { color: var(--lead-muted); }
+.spin .big { background: var(--sunset); color: var(--sunset-ink); }
+#panel-watch [data-slot="soon"] { background: var(--sunset-soft); }
+#panel-watch [data-cta="vote"] { background: var(--sunset); color: var(--sunset-ink); }
+#panel-people [data-chat] { background: var(--lake-soft); border-color: var(--line); }
+#panel-people .arch button.on { background: var(--lake); color: var(--lake-ink); }
+#panel-people .arch button.on span { color: var(--lake-ink); opacity: 1; }
+.hb-tile { background: var(--park-soft); }
+.audio, .wholeed { --ink: var(--lake); --on-ink: var(--lake-ink); }
+.gm-quiz { background: var(--sunset-soft); }
+.gm-cab.feat .gm-cab-b { background: var(--lake-soft); }
+.vshops .tdiv.vhood { color: var(--ember); border-bottom-color: var(--ember); }
+.wm-row .num, .board .r:nth-child(-n+3) .rank { color: var(--ember); }
+.wm-row.was .num { color: var(--ink-3); }
+.th-water, .th-winter { --th: var(--lake-blue); }
+.th-outdoors, .th-free { --th: var(--park); }
+.th-eat, .th-family { --th: var(--accent); }
+.lrow.meet .th.tm { background: var(--park-soft); }
+.lrow.meet .th.tm b { color: var(--park); }
+
+/* Quiet stripes only on lists; photos, posters and swipe decks stay distinct. */
+.wm-row:nth-of-type(even), .panel-body .lrow:nth-of-type(even) { background: var(--row-tint); }
+.panel-body .lrow.spun { background: var(--accent-soft); }
+.hb-row:nth-child(even) .hb-in { background: color-mix(in srgb, var(--row-tint), var(--paper)); }
+.feed.wire .card.w-alt { background: var(--row-tint); }
+.feed.wire .card.w-local { background: var(--w-local-tint); }
+.tag-local { background: var(--tag-local-bg); color: var(--tag-local-ink); }
+.tag-national { background: var(--tag-national-bg); color: var(--tag-national-ink); }
+#panel-wire .card .c-head { flex-wrap: wrap; }
+#panel-wire .card .c-foot { height: auto; min-height: 24px; flex-wrap: wrap; }
+#panel-wire .card .geo-tag { white-space: nowrap; }
+
+/* Feedback follows a deliberate tap or pointer, never a looping entrance. */
+@media (prefers-reduced-motion: no-preference) {
+  .tabbar button, .pillbtn, .poster .c-media, .vcard .c-media {
+    transition: color .16s ease, background-color .16s ease, transform .16s ease;
+  }
+  .tabbar button:active, .pillbtn:active { transform: scale(.96); }
+  @media (hover: hover) {
+    .poster:hover .c-media, .vcard:hover .c-media { transform: translateY(-2px); }
+  }
+}
+.btn.tip-link { color: var(--ember); }
+
+:is(.vshops, .vmap, .mapbtn) .k-antique { --vc: var(--sunset); --vc-ink: var(--sunset-ink); }
+
+.vshops .vk.k-antique { color: var(--accent); }

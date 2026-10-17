@@ -46,7 +46,8 @@
   ok   390 light live › the nine labels
   ok   390 light live › the network bar is gone
   ok   390 light live › body is the light paper
-  ok   390 light live › tab cells are 56px tall
+  ok   390 light live › phone status bar matches the navy mast
+  ok   390 light live › tab targets are at least 44px tall
   ok   390 light live › no tab label overflows its cell
   ok   390 light live › What Now gets the wider cell
   ok   390 light live › the disc grows no cell: all nine the same height
@@ -140,7 +141,8 @@
   ok   390 light demo › the nine labels
   ok   390 light demo › the network bar is gone
   ok   390 light demo › body is the light paper
-  ok   390 light demo › tab cells are 56px tall
+  ok   390 light demo › phone status bar matches the navy mast
+  ok   390 light demo › tab targets are at least 44px tall
   ok   390 light demo › no tab label overflows its cell
   ok   390 light demo › What Now gets the wider cell
   ok   390 light demo › the disc grows no cell: all nine the same height
@@ -234,7 +236,8 @@
   ok   390 dark live › the nine labels
   ok   390 dark live › the network bar is gone
   ok   390 dark live › body is the dark paper
-  ok   390 dark live › tab cells are 56px tall
+  ok   390 dark live › phone status bar matches the navy mast
+  ok   390 dark live › tab targets are at least 44px tall
   ok   390 dark live › no tab label overflows its cell
   ok   390 dark live › What Now gets the wider cell
   ok   390 dark live › the disc grows no cell: all nine the same height
@@ -328,7 +331,8 @@
   ok   390 dark demo › the nine labels
   ok   390 dark demo › the network bar is gone
   ok   390 dark demo › body is the dark paper
-  ok   390 dark demo › tab cells are 56px tall
+  ok   390 dark demo › phone status bar matches the navy mast
+  ok   390 dark demo › tab targets are at least 44px tall
   ok   390 dark demo › no tab label overflows its cell
   ok   390 dark demo › What Now gets the wider cell
   ok   390 dark demo › the disc grows no cell: all nine the same height
@@ -422,7 +426,8 @@
   ok   390 light reduced-motion live › the nine labels
   ok   390 light reduced-motion live › the network bar is gone
   ok   390 light reduced-motion live › body is the light paper
-  ok   390 light reduced-motion live › tab cells are 56px tall
+  ok   390 light reduced-motion live › phone status bar matches the navy mast
+  ok   390 light reduced-motion live › tab targets are at least 44px tall
   ok   390 light reduced-motion live › no tab label overflows its cell
   ok   390 light reduced-motion live › What Now gets the wider cell
   ok   390 light reduced-motion live › the disc grows no cell: all nine the same height
@@ -518,7 +523,8 @@
   ok   390 light reduced-motion demo › the nine labels
   ok   390 light reduced-motion demo › the network bar is gone
   ok   390 light reduced-motion demo › body is the light paper
-  ok   390 light reduced-motion demo › tab cells are 56px tall
+  ok   390 light reduced-motion demo › phone status bar matches the navy mast
+  ok   390 light reduced-motion demo › tab targets are at least 44px tall
   ok   390 light reduced-motion demo › no tab label overflows its cell
   ok   390 light reduced-motion demo › What Now gets the wider cell
   ok   390 light reduced-motion demo › the disc grows no cell: all nine the same height
@@ -614,7 +620,9 @@
   ok   1280 light live › the nine labels
   ok   1280 light live › the network bar is gone
   ok   1280 light live › body is the light paper
+  ok   1280 light live › phone status bar matches the navy mast
   ok   1280 light live › the tab bar is a 208px left rail
+  ok   1280 light live › desktop tab title stays cream on the navy mast
   ok   1280 light live › no tab label overflows the rail
   ok   1280 light live › What Now’s icon sits in a filled disc, its label bold
   ok   1280 light live › wire: its panel is the one showing
@@ -706,7 +714,9 @@
   ok   1280 light demo › the nine labels
   ok   1280 light demo › the network bar is gone
   ok   1280 light demo › body is the light paper
+  ok   1280 light demo › phone status bar matches the navy mast
   ok   1280 light demo › the tab bar is a 208px left rail
+  ok   1280 light demo › desktop tab title stays cream on the navy mast
   ok   1280 light demo › no tab label overflows the rail
   ok   1280 light demo › What Now’s icon sits in a filled disc, its label bold
   ok   1280 light demo › wire: its panel is the one showing
@@ -798,7 +808,9 @@
   ok   1280 dark reduced-motion live › the nine labels
   ok   1280 dark reduced-motion live › the network bar is gone
   ok   1280 dark reduced-motion live › body is the dark paper
+  ok   1280 dark reduced-motion live › phone status bar matches the navy mast
   ok   1280 dark reduced-motion live › the tab bar is a 208px left rail
+  ok   1280 dark reduced-motion live › desktop tab title stays cream on the navy mast
   ok   1280 dark reduced-motion live › no tab label overflows the rail
   ok   1280 dark reduced-motion live › What Now’s icon sits in a filled disc, its label bold
   ok   1280 dark reduced-motion live › reduced motion: the switch is a plain fill, no water
@@ -892,7 +904,9 @@
   ok   1280 dark reduced-motion demo › the nine labels
   ok   1280 dark reduced-motion demo › the network bar is gone
   ok   1280 dark reduced-motion demo › body is the dark paper
+  ok   1280 dark reduced-motion demo › phone status bar matches the navy mast
   ok   1280 dark reduced-motion demo › the tab bar is a 208px left rail
+  ok   1280 dark reduced-motion demo › desktop tab title stays cream on the navy mast
   ok   1280 dark reduced-motion demo › no tab label overflows the rail
   ok   1280 dark reduced-motion demo › What Now’s icon sits in a filled disc, its label bold
   ok   1280 dark reduced-motion demo › reduced motion: the switch is a plain fill, no water
@@ -982,6 +996,182 @@
   ok   1280 dark reduced-motion demo › tapping the tab you are on counts nothing
   ok   1280 dark reduced-motion demo › no console errors
   ok   1280 dark reduced-motion demo › demo mode never calls Supabase
+  ok   floating bar 375 light › wire: pill floats above safe area
+  ok   floating bar 375 light › wire: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 light › wire: last content clears the bar
+  ok   floating bar 375 light › watch: pill floats above safe area
+  ok   floating bar 375 light › watch: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 light › watch: last content clears the bar
+  ok   floating bar 375 light › food: pill floats above safe area
+  ok   floating bar 375 light › food: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 light › food: last content clears the bar
+  ok   floating bar 375 light › people: pill floats above safe area
+  ok   floating bar 375 light › people: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 light › people: last content clears the bar
+  ok   floating bar 375 light › whatnow: pill floats above safe area
+  ok   floating bar 375 light › whatnow: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 light › whatnow: last content clears the bar
+  ok   floating bar 375 light › vintage: pill floats above safe area
+  ok   floating bar 375 light › vintage: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 light › vintage: last content clears the bar
+  ok   floating bar 375 light › habits: pill floats above safe area
+  ok   floating bar 375 light › habits: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 light › habits: last content clears the bar
+  ok   floating bar 375 light › onair: pill floats above safe area
+  ok   floating bar 375 light › onair: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 light › onair: last content clears the bar
+  ok   floating bar 375 light › games: pill floats above safe area
+  ok   floating bar 375 light › games: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 light › games: last content clears the bar
+  ok   floating bar 390 light › wire: pill floats above safe area
+  ok   floating bar 390 light › wire: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 light › wire: last content clears the bar
+  ok   floating bar 390 light › watch: pill floats above safe area
+  ok   floating bar 390 light › watch: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 light › watch: last content clears the bar
+  ok   floating bar 390 light › food: pill floats above safe area
+  ok   floating bar 390 light › food: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 light › food: last content clears the bar
+  ok   floating bar 390 light › people: pill floats above safe area
+  ok   floating bar 390 light › people: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 light › people: last content clears the bar
+  ok   floating bar 390 light › whatnow: pill floats above safe area
+  ok   floating bar 390 light › whatnow: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 light › whatnow: last content clears the bar
+  ok   floating bar 390 light › vintage: pill floats above safe area
+  ok   floating bar 390 light › vintage: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 light › vintage: last content clears the bar
+  ok   floating bar 390 light › habits: pill floats above safe area
+  ok   floating bar 390 light › habits: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 light › habits: last content clears the bar
+  ok   floating bar 390 light › onair: pill floats above safe area
+  ok   floating bar 390 light › onair: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 light › onair: last content clears the bar
+  ok   floating bar 390 light › games: pill floats above safe area
+  ok   floating bar 390 light › games: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 light › games: last content clears the bar
+  ok   floating bar 430 light › wire: pill floats above safe area
+  ok   floating bar 430 light › wire: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 light › wire: last content clears the bar
+  ok   floating bar 430 light › watch: pill floats above safe area
+  ok   floating bar 430 light › watch: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 light › watch: last content clears the bar
+  ok   floating bar 430 light › food: pill floats above safe area
+  ok   floating bar 430 light › food: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 light › food: last content clears the bar
+  ok   floating bar 430 light › people: pill floats above safe area
+  ok   floating bar 430 light › people: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 light › people: last content clears the bar
+  ok   floating bar 430 light › whatnow: pill floats above safe area
+  ok   floating bar 430 light › whatnow: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 light › whatnow: last content clears the bar
+  ok   floating bar 430 light › vintage: pill floats above safe area
+  ok   floating bar 430 light › vintage: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 light › vintage: last content clears the bar
+  ok   floating bar 430 light › habits: pill floats above safe area
+  ok   floating bar 430 light › habits: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 light › habits: last content clears the bar
+  ok   floating bar 430 light › onair: pill floats above safe area
+  ok   floating bar 430 light › onair: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 light › onair: last content clears the bar
+  ok   floating bar 430 light › games: pill floats above safe area
+  ok   floating bar 430 light › games: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 light › games: last content clears the bar
+  ok   floating bar 375 dark › wire: pill floats above safe area
+  ok   floating bar 375 dark › wire: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 dark › wire: last content clears the bar
+  ok   floating bar 375 dark › watch: pill floats above safe area
+  ok   floating bar 375 dark › watch: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 dark › watch: last content clears the bar
+  ok   floating bar 375 dark › food: pill floats above safe area
+  ok   floating bar 375 dark › food: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 dark › food: last content clears the bar
+  ok   floating bar 375 dark › people: pill floats above safe area
+  ok   floating bar 375 dark › people: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 dark › people: last content clears the bar
+  ok   floating bar 375 dark › whatnow: pill floats above safe area
+  ok   floating bar 375 dark › whatnow: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 dark › whatnow: last content clears the bar
+  ok   floating bar 375 dark › vintage: pill floats above safe area
+  ok   floating bar 375 dark › vintage: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 dark › vintage: last content clears the bar
+  ok   floating bar 375 dark › habits: pill floats above safe area
+  ok   floating bar 375 dark › habits: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 dark › habits: last content clears the bar
+  ok   floating bar 375 dark › onair: pill floats above safe area
+  ok   floating bar 375 dark › onair: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 dark › onair: last content clears the bar
+  ok   floating bar 375 dark › games: pill floats above safe area
+  ok   floating bar 375 dark › games: all nine labels fit, targets at least 44px tall
+  ok   floating bar 375 dark › games: last content clears the bar
+  ok   floating bar 390 dark › wire: pill floats above safe area
+  ok   floating bar 390 dark › wire: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 dark › wire: last content clears the bar
+  ok   floating bar 390 dark › watch: pill floats above safe area
+  ok   floating bar 390 dark › watch: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 dark › watch: last content clears the bar
+  ok   floating bar 390 dark › food: pill floats above safe area
+  ok   floating bar 390 dark › food: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 dark › food: last content clears the bar
+  ok   floating bar 390 dark › people: pill floats above safe area
+  ok   floating bar 390 dark › people: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 dark › people: last content clears the bar
+  ok   floating bar 390 dark › whatnow: pill floats above safe area
+  ok   floating bar 390 dark › whatnow: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 dark › whatnow: last content clears the bar
+  ok   floating bar 390 dark › vintage: pill floats above safe area
+  ok   floating bar 390 dark › vintage: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 dark › vintage: last content clears the bar
+  ok   floating bar 390 dark › habits: pill floats above safe area
+  ok   floating bar 390 dark › habits: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 dark › habits: last content clears the bar
+  ok   floating bar 390 dark › onair: pill floats above safe area
+  ok   floating bar 390 dark › onair: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 dark › onair: last content clears the bar
+  ok   floating bar 390 dark › games: pill floats above safe area
+  ok   floating bar 390 dark › games: all nine labels fit, targets at least 44px tall
+  ok   floating bar 390 dark › games: last content clears the bar
+  ok   floating bar 430 dark › wire: pill floats above safe area
+  ok   floating bar 430 dark › wire: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 dark › wire: last content clears the bar
+  ok   floating bar 430 dark › watch: pill floats above safe area
+  ok   floating bar 430 dark › watch: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 dark › watch: last content clears the bar
+  ok   floating bar 430 dark › food: pill floats above safe area
+  ok   floating bar 430 dark › food: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 dark › food: last content clears the bar
+  ok   floating bar 430 dark › people: pill floats above safe area
+  ok   floating bar 430 dark › people: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 dark › people: last content clears the bar
+  ok   floating bar 430 dark › whatnow: pill floats above safe area
+  ok   floating bar 430 dark › whatnow: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 dark › whatnow: last content clears the bar
+  ok   floating bar 430 dark › vintage: pill floats above safe area
+  ok   floating bar 430 dark › vintage: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 dark › vintage: last content clears the bar
+  ok   floating bar 430 dark › habits: pill floats above safe area
+  ok   floating bar 430 dark › habits: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 dark › habits: last content clears the bar
+  ok   floating bar 430 dark › onair: pill floats above safe area
+  ok   floating bar 430 dark › onair: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 dark › onair: last content clears the bar
+  ok   floating bar 430 dark › games: pill floats above safe area
+  ok   floating bar 430 dark › games: all nine labels fit, targets at least 44px tall
+  ok   floating bar 430 dark › games: last content clears the bar
+  ok   Lake and Sunset content light › Local view labels its stories Local
+  ok   Lake and Sunset content light › Everything distinguishes local and national stories
+  ok   Lake and Sunset content light › every Wire story carries a geography label
+  ok   Lake and Sunset content light › geography labels fit the existing metadata area at 375px
+  ok   Lake and Sunset content light › Local and National labels meet 4.5:1 contrast
+  ok   Lake and Sunset content light › reduced motion disables new tab feedback
+  ok   Lake and Sunset content light › Settings restores the existing Btown Brief tip jar
+  ok   Lake and Sunset content dark › Local view labels its stories Local
+  ok   Lake and Sunset content dark › Everything distinguishes local and national stories
+  ok   Lake and Sunset content dark › every Wire story carries a geography label
+  ok   Lake and Sunset content dark › geography labels fit the existing metadata area at 375px
+  ok   Lake and Sunset content dark › Local and National labels meet 4.5:1 contrast
+  ok   Lake and Sunset content dark › reduced motion disables new tab feedback
+  ok   Lake and Sunset content dark › Settings restores the existing Btown Brief tip jar
   ok   deep links, demo › #wire/w13 lands on its card and flashes
   ok   deep links, demo › #wire/w13: no console errors
   ok   deep links, demo › #wire/y4 lands on its card and flashes
@@ -2374,7 +2564,7 @@
   ok   sign-in fails soft › a bad address is caught before any request
   ok   sign-in fails soft › no link was requested
   ok   sign-in fails soft › no console errors
-  ok   performance › the live Wire redraws 60 cards in 12ms (budget 100)
+  ok   performance › the live Wire redraws 60 cards in 14ms (budget 100)
   ok   shell fixes: a rail never snaps flush to the edge › 390: .rail carries scroll-padding of one gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: a card scrolled to the start stops at the gutter
   ok   shell fixes: a rail never snaps flush to the edge › 390: no console errors
@@ -2623,7 +2813,7 @@
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › the Add habit row is still there at twenty
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › a swipe left on the seventeenth row archives it
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › Undo brings it back, at the bottom
-  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › held near the bottom, the drag scrolls the list (1282px)
+  ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › held near the bottom, the drag scrolls the list (1298px)
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and Habit 4 travels down the list, to row 20
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › no row lost or doubled on the way
   ok   Habits, twenty habits: the list scrolls, and swipe, drag and keys still work (demo, 390) › and the server keeps the order
@@ -2655,7 +2845,7 @@
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › and a tap now is Thursday’s
   ok   Habits, the day turns at midnight New York, not the phone’s (demo, a reader in Tokyo) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (0 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › three habits, two tapped, at once (1 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › and nothing personal went to the server
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › one quiet line under the list: Sync across devices
@@ -2681,7 +2871,7 @@
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › habits: at most 2 subnav rows
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 390, light) › no console errors
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › a first visit: one line and Add habit, nothing seeded, no sign-in wall
-  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (1 ms)
+  ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › three habits, two tapped, at once (0 ms)
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › and nothing personal went to the server
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › kept on this phone, under one versioned key
   ok   Habits, signed out it just works on this phone, and signing in moves it to the account once (live, 1280, dark) › one quiet line under the list: Sync across devices

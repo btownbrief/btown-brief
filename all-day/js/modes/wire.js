@@ -631,7 +631,7 @@ function render(opts = {}) {
    in the block, open or not, so the river leaves them all out. */
 /* no picture: the Brief is a pin above the picks, not a second front page */
 function briefPin(d) {
-  return cards.pick({ ...d.brief, media: '', thumb: '', own: false, eyebrow: 'The Brief', why: '' }, { greenLocal: greenOf(d.brief) });
+  return mark3(cards.pick({ ...d.brief, media: '', thumb: '', own: false, eyebrow: 'The Brief', why: '' }, { greenLocal: greenOf(d.brief) }), d.brief);
 }
 function mattersOf(d) {
   const keep = (x) => seen(x.c) && (x.c.local || geo() === 'everything');
@@ -752,7 +752,7 @@ function mattersBlock(d, isToday, nav) {
     return wm;
   }
   const [first] = list;
-  if (first) put(wm, cards.pick({ ...first.c, media: first.c.thumb, thumb: '', eyebrow: '1 of ' + list.length, why: first.why }, { greenLocal: greenOf(first.c) }));
+  if (first) put(wm, mark3(cards.pick({ ...first.c, media: first.c.thumb, thumb: '', eyebrow: '1 of ' + list.length, why: first.why }, { greenLocal: greenOf(first.c) }), first.c));
   list.slice(1, PICKS_OPEN).forEach((x, i) => wm.appendChild(wmRow(x.c, x.why, i + 2)));
   const rest = list.slice(PICKS_OPEN);
   const total = list.length + earlier.length;
@@ -881,7 +881,7 @@ function wmRow(it, why, n, was) {
     '<button class="mini up' + (on ? ' on' : '') + '" data-act="up" aria-label="Upvote" aria-pressed="' + on + '">' + ICON.up + '<span class="n">' + (((Number(it.votes) || 0) + store.voteCount(it.k)) || '') + '</span></button>' +
     '<button class="mini sh" data-act="share" aria-label="Share">' + ICON.share + '</button></div></div>' +
     '<button class="act star' + (store.isSaved(it.k) ? ' on' : '') + '" data-act="save" aria-label="Save" aria-pressed="' + store.isSaved(it.k) + '">' + ICON.star + '</button>';
-  return r;
+  return mark3(r, it);
 }
 
 /* One item in the river. A plain headline is the tight row; posts, videos
@@ -903,6 +903,12 @@ function mark3(n, c, every = geo() === 'everything') {
   if (!n) return n;
   if (SRC_CH.has(c.ch)) n.classList.add('w-src-' + c.ch);
   if (c.local && every) n.classList.add('w-local');
+  const meta = n.querySelector('.c-foot, .c-head');
+  if (meta && !meta.querySelector('.geo-tag')) {
+    const tag = el('span', 'tag geo-tag ' + (c.local ? 'tag-local' : 'tag-national'), c.local ? 'Local' : 'National');
+    const age = meta.querySelector('.age');
+    if (age) age.after(tag); else meta.appendChild(tag);
+  }
   return n;
 }
 

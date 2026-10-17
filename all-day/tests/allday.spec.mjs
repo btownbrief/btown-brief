@@ -433,7 +433,7 @@ const COMBOS = [
   { viewport: { width: 1280, height: 800 }, scheme: 'light', motion: 'no-preference' },
   { viewport: { width: 1280, height: 800 }, scheme: 'dark', motion: 'reduce' },
 ];
-const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
+const PAPER = { light: 'rgb(247, 244, 238)', dark: 'rgb(12, 21, 32)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
 const LIVE = new Set(['wire', 'watch', 'whatnow', 'onair', 'games', 'food', 'habits', 'vintage', 'people']);
 
@@ -459,14 +459,21 @@ async function matrix(browser, base) {
         check(!(await page.$('script[src*="nav.js"], .btnav')), 'the network bar is gone', '');
         const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
         check(bg === PAPER[combo.scheme], 'body is the ' + combo.scheme + ' paper', bg);
+        const statusBar = await page.evaluate(() => ({
+          meta: document.querySelector('meta[name="theme-color"]').content,
+          lake: getComputedStyle(document.documentElement).getPropertyValue('--lake').trim()
+        }));
+        check(statusBar.meta === statusBar.lake, 'phone status bar matches the navy mast', JSON.stringify(statusBar));
         if (combo.viewport.width >= 900) {
           const rail = await page.evaluate(() => { const r = document.querySelector('#tabbar').getBoundingClientRect(); return { w: r.width, h: r.height }; });
           check(rail.w === 208 && rail.h > 600, 'the tab bar is a 208px left rail', JSON.stringify(rail));
+          const titleColor = await page.$eval('.mast-title', n => getComputedStyle(n).color);
+          check(titleColor === 'rgb(247, 244, 238)', 'desktop tab title stays cream on the navy mast', titleColor);
           const over = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.filter((b) => b.scrollWidth > b.clientWidth + 1).map((b) => b.dataset.tab));
           check(!over.length, 'no tab label overflows the rail', over.join(', '));
         } else {
           const cells = await page.$$eval('#tabbar button[data-tab]', (bs) => bs.map((b) => { const r = b.getBoundingClientRect(); return [b.dataset.tab, Math.round(r.width), Math.round(r.height), b.scrollWidth <= b.clientWidth + 1]; }));
-          check(cells.every((c) => c[2] >= 55), 'tab cells are 56px tall', JSON.stringify(cells));
+          check(cells.every((c) => c[2] >= 44), 'tab targets are at least 44px tall', JSON.stringify(cells));
           check(cells.every((c) => c[3]), 'no tab label overflows its cell', JSON.stringify(cells.filter((c) => !c[3])));
           const wn = cells.find((c) => c[0] === 'whatnow');
           check(wn[1] > cells[0][1], 'What Now gets the wider cell', JSON.stringify(cells));
@@ -1701,8 +1708,16 @@ async function thePhotos(browser, base) {
     check(!!(await page.$eval(pmPanel + ' .card.pm img.pic', (i) => i.getAttribute('src'))), 'and takes it back on the way up', '');
     /* a broken picture takes its card with it */
     const k1 = 'https://example.org/live/sd1';
+    /* The failed request must belong to a visible, loaded image. An offscreen
+       lazy image can defer the bad URL without ever emitting an error. */
+    await page.locator(pmPanel + ' [data-k="' + k1 + '"]').evaluate(n => n.scrollIntoView({block:'center',behavior:'instant'}));
+    await page.waitForFunction(k => {
+      const c=[...document.querySelectorAll('#panel-wire [data-k]')].find(n=>n.dataset.k===k);
+      const img=c && c.querySelector('img.pic');
+      return img && img.getAttribute('src') && !img.dataset.src && img.complete;
+    }, k1);
     await page.evaluate((k) => { const img = [...document.querySelectorAll('#panel-wire [data-k]')].find((n) => n.dataset.k === k).querySelector('img.pic'); img.src = 'data:image/png;base64,broken'; }, k1);
-    await page.waitForTimeout(300);
+    await page.waitForFunction(k => ![...document.querySelectorAll('#panel-wire [data-k]')].some(n=>n.dataset.k===k), k1, {timeout:4000}).catch(()=>{});
     check(!(await page.$$eval(pmPanel + ' [data-k]', (n, k) => n.some((x) => x.dataset.k === k), k1)), 'a picture that will not load takes its card with it', '');
     check(!errors.filter((e) => !/ERR_INVALID_URL|Failed to load resource/.test(e)).length, 'no console errors', errors.join(' | '));
     await ctx.close();
@@ -2669,7 +2684,9 @@ async function interactions(browser, base) {
     await page.keyboard.press('Escape');
     check(await page.$('#sheet[hidden]') !== null, 'Escape closes the sheet', '');
 
-    const rowAt = async (i) => { const l = page.locator('.panel:not([hidden]) .card.row').nth(i); await l.scrollIntoViewIfNeeded(); await page.waitForTimeout(250); return l.boundingBox(); };
+    /* Center the story before dragging: a floating bar can cover a row that
+       Playwright considers visible at the viewport's bottom edge. */
+    const rowAt = async (i) => { const l = page.locator('.panel:not([hidden]) .card.row').nth(i); await l.evaluate(n => n.scrollIntoView({block:'center',behavior:'instant'})); await page.waitForTimeout(250); return l.boundingBox(); };
     const box = await rowAt(1);
     const k2 = await page.locator('.panel:not([hidden]) .card.row').nth(1).getAttribute('data-k');
     await page.mouse.move(box.x + 60, box.y + box.height / 2);
@@ -7602,6 +7619,65 @@ async function theClubs(browser, base) {
   });
 }
 
+/* New geography labels and the support link must stay usable on a narrow phone. */
+async function lakePalette(browser, base) {
+  for (const scheme of ['light', 'dark']) await group('Lake and Sunset content ' + scheme, async () => {
+    const {ctx, page} = await newPage(browser, base, {scheme, viewport:{width:375,height:844}, motion:'reduce'});
+    try {
+      await page.goto(base + '/all-day/?demo=1#wire'); await settle(page);
+      const local = await page.$$eval('#panel-wire .geo-tag', ns => ns.map(n => n.textContent));
+      check(local.length > 0 && local.every(x => x === 'Local'), 'Local view labels its stories Local', local.join(','));
+      await page.click('.mast .localsw-half:last-child'); await settle(page);
+      const tags = await page.$$eval('#panel-wire .geo-tag', ns => ns.map(n => n.textContent));
+      check(tags.includes('Local') && tags.includes('National'), 'Everything distinguishes local and national stories', tags.join(','));
+      const audit = await page.evaluate(() => {
+        const rows = [...document.querySelectorAll('#panel-wire .card.fi')];
+        const lum = rgb => rgb.map(n => { n/=255; return n<=.04045 ? n/12.92 : ((n+.055)/1.055)**2.4; }).reduce((sum,n,i)=>sum+n*[.2126,.7152,.0722][i],0);
+        const ratio = (a,b) => { const x=lum(a), y=lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); };
+        const rgb = s => (s.match(/[\d.]+/g)||[]).slice(0,3).map(Number);
+        const badges = [...document.querySelectorAll('#panel-wire .geo-tag')];
+        return { missing: rows.filter(r => !r.querySelector('.geo-tag')).map(r=>r.dataset.k),
+          overflow: rows.filter(r => r.scrollWidth > r.clientWidth+1).map(r=>r.dataset.k),
+          contrast: badges.map(n => { const s=getComputedStyle(n); return ratio(rgb(s.color),rgb(s.backgroundColor)); }),
+          transition: getComputedStyle(document.querySelector('#tabbar button')).transitionDuration };
+      });
+      check(!audit.missing.length, 'every Wire story carries a geography label', audit.missing.join(','));
+      check(!audit.overflow.length, 'geography labels fit the existing metadata area at 375px', audit.overflow.join(','));
+      check(audit.contrast.every(n=>n>=4.5), 'Local and National labels meet 4.5:1 contrast', JSON.stringify(audit.contrast));
+      check(audit.transition === '0s', 'reduced motion disables new tab feedback', audit.transition);
+      await page.click('#settings-btn');
+      const tip = await page.$eval('[data-tip]', a=>({href:a.href,text:a.innerText,rel:a.rel}));
+      check(tip.href==='https://ko-fi.com/btownbrief' && /Tip jar/.test(tip.text) && /noopener/.test(tip.rel), 'Settings restores the existing Btown Brief tip jar', JSON.stringify(tip));
+    } finally { await ctx.close(); }
+  });
+}
+
+/* A floating bar must never cover the last row, even with an iPhone safe area. */
+async function lakeSunset(browser, base) {
+  for (const scheme of ['light', 'dark']) for (const width of [375, 390, 430]) await group('floating bar ' + width + ' ' + scheme, async () => {
+    const { ctx, page } = await newPage(browser, base, {scheme, viewport:{width,height:844}, motion:'reduce'});
+    try {
+      await page.goto(base + '/all-day/?demo=1'); await settle(page);
+      await page.evaluate(() => document.documentElement.style.setProperty('--safe-b', '34px'));
+      for (const tab of TABS) {
+        await goTab(page, tab);
+        await page.evaluate(() => { const p=document.querySelector('.panel:not([hidden])'); p.scrollTop=p.scrollHeight; });
+        const size=await page.evaluate(() => {
+          const bar=document.querySelector('#tabbar'),r=bar.getBoundingClientRect();
+          const body=document.querySelector('.panel:not([hidden]) .panel-body');
+          const cells=[...bar.querySelectorAll('button')];
+          return {left:r.left,right:innerWidth-r.right,bottom:innerHeight-r.bottom,
+            clearance:r.top-body.getBoundingClientRect().bottom,
+            labels:cells.every(b=>b.scrollWidth<=b.clientWidth+1), hits:cells.every(b=>b.clientHeight>=44)};
+        });
+        check(size.left>=5 && size.right>=5 && size.bottom>=42, tab + ': pill floats above safe area', JSON.stringify(size));
+        check(size.labels && size.hits, tab + ': all nine labels fit, targets at least 44px tall', JSON.stringify(size));
+        check(size.clearance>=12, tab + ': last content clears the bar', JSON.stringify(size));
+      }
+    } finally { await ctx.close(); }
+  });
+}
+
 /* ------------------------------------------------------------- the weather */
 /* Stephen, 2026-10-17: "radar that shows the showers actively moving", and
    weather.html's sun recreated on What Now's card, changing with the weather.
@@ -7925,6 +8001,8 @@ const ONLY = (process.env.ONLY || '').split(',').filter(Boolean);
 const run = (fn) => (!ONLY.length || ONLY.includes(fn.name) ? fn(browser, base) : null);
 try {
   await run(matrix);
+  await run(lakeSunset);
+  await run(lakePalette);
   await run(deepLinks);
   await run(theWire);
   await run(thePhotos);
