@@ -1339,3 +1339,5 @@ body.desk { overflow: auto; }
 @media (max-width: 899px) {
   .tabbar button:focus-visible { outline-color: var(--sunset); }
 }
+/* Small counts remain readable against the navy chip fill. */
+.mast .chip .n { opacity: 1; }
