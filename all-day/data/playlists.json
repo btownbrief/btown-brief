@@ -1,0 +1,22 @@
+{
+  "_": "On Air's Playlists, edited by hand. Stephen's own go under \"stephen\" (shown first), readers' under \"readers\" (newest \"added\" first). Each entry: title, by, service (spotify | youtube | apple | soundcloud), url (the playlist's own share link: open.spotify.com/playlist/..., youtube.com/playlist?list=..., music.apple.com/us/playlist/.../pl...., soundcloud.com/<user>/sets/...), note (one line, optional), added (YYYY-MM-DD, optional). An entry stays hidden until its url is a real playlist link on its service, so the TODO lines below show nothing until they are replaced. Spotify and YouTube play in the app; Apple Music and SoundCloud open on their own sites. Readers email theirs to btownbrief@gmail.com.",
+  "stephen": [
+    {
+      "title": "TODO: the playlist's name",
+      "by": "Stephen",
+      "service": "spotify",
+      "url": "TODO: paste the Spotify share link (https://open.spotify.com/playlist/...)",
+      "note": "TODO: one line about it, or leave empty",
+      "added": "TODO: YYYY-MM-DD"
+    },
+    {
+      "title": "TODO: the playlist's name",
+      "by": "Stephen",
+      "service": "youtube",
+      "url": "TODO: paste the YouTube playlist link (https://www.youtube.com/playlist?list=...)",
+      "note": "TODO: one line about it, or leave empty",
+      "added": "TODO: YYYY-MM-DD"
+    }
+  ],
+  "readers": []
+}

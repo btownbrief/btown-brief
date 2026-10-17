@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v58';   // batch merge
+const VERSION = 'all-day-v59';   // batch merge
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -67,6 +67,13 @@ function isWire(url) {
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
+
+  /* Sound and video are never ours to answer, from any host: the Brief's MP3
+     lives on raw.githubusercontent.com, which isWire() below would otherwise
+     claim, and a media element's byte-range requests must reach the network
+     untouched (a 206 cannot be cached, and Safari will not play a range
+     answered with the whole file). */
+  if (req.destination === 'audio' || req.destination === 'video' || req.headers.has('range')) return;
 
   let url;
   try { url = new URL(req.url); } catch (err) { return; }
