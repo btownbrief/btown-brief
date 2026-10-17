@@ -13,7 +13,7 @@
    audio — episodes are large and the browser's own HTTP cache handles them
    better than we would. */
 
-const VERSION = 'all-day-v47';   // v47: the Wire's Photo mode
+const VERSION = 'all-day-v48';   // v48: the Wire's Photo mode (v47: the run clubs' week)
 const SHELL = VERSION + '-shell';
 const DATA = 'all-day-data';   // unversioned on purpose: survives shell bumps
 
@@ -30,6 +30,8 @@ const SHELL_URLS = [
   './js/habits-core.js', './js/habits-fake.js',
   /* the photo wall's helpers, imported by the Wire's Photo mode */
   './js/photo-wall.js',
+  /* the run clubs' week, imported by ui.js, People and What Now */
+  './js/clubs-week.js',
   /* the boards: imported by main.js, so every tab can draw one offline */
   './js/boards.js', './js/boards-core.js', './js/boards-fake.js',
   /* Watch's starter list, so the tab has films to show offline */

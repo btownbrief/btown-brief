@@ -6,6 +6,7 @@
   ok   source rules › nothing is position: sticky
   ok   source rules › js/app.js: no monospace
   ok   source rules › js/auth.js: no monospace
+  ok   source rules › js/clubs-week.js: no monospace
   ok   source rules › js/habits-core.js: no monospace
   ok   source rules › js/habits-fake.js: no monospace
   ok   source rules › js/liquid.js: no monospace
@@ -28,8 +29,6 @@
   ok   source rules › js/modes/whatnow.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/wire-demo.js: no monospace
   ok   source rules › js/modes/wire-demo.js: no colour, type size, caps or fixed position of its own
-  ok   source rules › js/modes/wire-photos.js: no monospace
-  ok   source rules › js/modes/wire-photos.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/modes/wire.js: no monospace
   ok   source rules › js/modes/wire.js: no colour, type size, caps or fixed position of its own
   ok   source rules › js/photo-wall.js: no monospace
@@ -1107,151 +1106,10 @@
   ok   the Wire, Unfiltered › hold to peek works on the raw wire
   ok   the Wire, Unfiltered › ‹ Today’s paper comes back
   ok   the Wire, Unfiltered › no console errors
-  ok   Photo mode: the switch, kept on the phone (demo) › the switch sits in the dateline row: two icon buttons, 44px each
-  ok   Photo mode: the switch, kept on the phone (demo) › it opens on the list, said by aria-pressed
-  ok   Photo mode: the switch, kept on the phone (demo) › no new row: still the dateline and the band
-  ok   Photo mode: the switch, kept on the phone (demo) › Photos turns the paper into the photo feed
-  ok   Photo mode: the switch, kept on the phone (demo) › and the switch says so
-  ok   Photo mode: the switch, kept on the phone (demo) › the address says #wire/photos
-  ok   Photo mode: the switch, kept on the phone (demo) › the choice is kept on the phone
-  ok   Photo mode: the switch, kept on the phone (demo) › Photo mode keeps to two rows under the mast
-  ok   Photo mode: the switch, kept on the phone (demo) › the paper’s list is gone
-  ok   Photo mode: the switch, kept on the phone (demo) › a reload opens on the photos again
-  ok   Photo mode: the switch, kept on the phone (demo) › and so does a bare visit to the app
-  ok   Photo mode: the switch, kept on the phone (demo) › List brings the paper back
-  ok   Photo mode: the switch, kept on the phone (demo) › the address is #wire again, and the phone forgets Photos
-  ok   Photo mode: the switch, kept on the phone (demo) › focus stays on the switch
-  ok   Photo mode: the switch, kept on the phone (demo) › a reload opens on the list
-  ok   Photo mode: the switch, kept on the phone (demo) › no console errors
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › every picture is drawn, down to the end
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › every card carries a picture
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › no key twice on the page
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the photo of the week leads: of two at 23 votes this week, the one posted first
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › and only it says so
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the rest run newest first
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › from neighbors’ posts (14), the gallery (3), Instagram (6), a Facebook post and a Reddit post with a picture, the paper and the local outlets
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › a video is a player, not a picture
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › a Reddit or Facebook post with no picture stays out
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › Local: no national story, every picture local
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › an Instagram post’s caption is its first line
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › no caption: the account
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the feed ends, with Add a photo
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › Everything adds the three national stories with a picture
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › still no key twice
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › the row counts what is shown
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › no console errors
-  ok   Photo mode: the feed, its sources, Local and the photo of the week (demo) › demo mode never calls Supabase
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › a neighbor’s picture shows its board votes
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › the sheet: the big picture, its maker and their line
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › vote, share, report, and the shirt the maker said yes to
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › one vote: 24 on the sheet and on the card
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › and the board counted it
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › the card’s own arrow takes it back
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › an Instagram post’s sheet: the account, vote, share and Open on Instagram
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › titled by its caption, cut at a word, the whole caption under the picture
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › its vote is the Wire’s own, on the sheet and the card
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › the demo’s Open link only toasts
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › a gallery photo’s sheet credits who took it and where
-  ok   Photo mode: a picture opens in its sheet, and a vote counts (demo) › no console errors
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › signed out, the sheet asks for the sign-in
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › Add a photo asks for the shirt, not a medium
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › and says, in one line, that photos show once approved
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › posted: the toast says it waits for approval
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › it is on the art board as a photo post, its picture pending in the queue
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › and the feed does not show it yet
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › once Stephen approves it, it is in the feed
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › the feed’s end offers Add art, which asks for the medium
-  ok   Photo mode: Add a photo opens the submission sheet, moderated as before (demo) › no console errors
-  ok   Photo mode: deep links land in it (demo) › #wire/photos opens Photo mode, and the address says #wire/photos
-  ok   Photo mode: deep links land in it (demo) › #art opens Photo mode, and the address says #wire/photos
-  ok   Photo mode: deep links land in it (demo) › #photos opens Photo mode, and the address says #wire/photos
-  ok   Photo mode: deep links land in it (demo) › #art/wall opens Photo mode, and the address says #wire/photos
-  ok   Photo mode: deep links land in it (demo) › #photos/p-1 opens Photo mode, and the address says #wire/photos
-  ok   Photo mode: deep links land in it (demo) › an old #art/<key> opens that picture’s sheet in Photo mode
-  ok   Photo mode: deep links land in it (demo) › and its card is on screen behind it
-  ok   Photo mode: deep links land in it (demo) › a gallery photo far down the feed: drawn and opened
-  ok   Photo mode: deep links land in it (demo) › a shared Instagram key (#wire/ig:…) opens in Photo mode
-  ok   Photo mode: deep links land in it (demo) › a picture that is gone says so
-  ok   Photo mode: deep links land in it (demo) › and only the first screenful is drawn looking for it
-  ok   Photo mode: deep links land in it (demo) › a story’s link opens the list on that story, though Photos is kept
-  ok   Photo mode: deep links land in it (demo) › and the kept choice is unchanged
-  ok   Photo mode: deep links land in it (demo) › no console errors
-  ok   Photo mode at 390 light (demo) › wire photos: nothing fixed or sticky inside the tab
-  ok   Photo mode at 390 light (demo) › wire photos: uppercase only in the caps roles
-  ok   Photo mode at 390 light (demo) › wire photos: no monospace
-  ok   Photo mode at 390 light (demo) › wire photos: no escaped markup, undefined or NaN on the page
-  ok   Photo mode at 390 light (demo) › wire photos: no sideways scroll at 390
-  ok   Photo mode at 390 light (demo) › wire photos: at most two subnav rows
-  ok   Photo mode at 390 light (demo) › the picture reserves its 4:5 box
-  ok   Photo mode at 390 light (demo) › full width on a phone
-  ok   Photo mode at 390 light (demo) › the light paper
-  ok   Photo mode at 390 light (demo) › no console errors
-  ok   Photo mode at 390 dark (demo) › wire photos: nothing fixed or sticky inside the tab
-  ok   Photo mode at 390 dark (demo) › wire photos: uppercase only in the caps roles
-  ok   Photo mode at 390 dark (demo) › wire photos: no monospace
-  ok   Photo mode at 390 dark (demo) › wire photos: no escaped markup, undefined or NaN on the page
-  ok   Photo mode at 390 dark (demo) › wire photos: no sideways scroll at 390
-  ok   Photo mode at 390 dark (demo) › wire photos: at most two subnav rows
-  ok   Photo mode at 390 dark (demo) › the picture reserves its 4:5 box
-  ok   Photo mode at 390 dark (demo) › full width on a phone
-  ok   Photo mode at 390 dark (demo) › the dark paper
-  ok   Photo mode at 390 dark (demo) › no console errors
-  ok   Photo mode at 390 light reduced-motion (demo) › wire photos: nothing fixed or sticky inside the tab
-  ok   Photo mode at 390 light reduced-motion (demo) › wire photos: uppercase only in the caps roles
-  ok   Photo mode at 390 light reduced-motion (demo) › wire photos: no monospace
-  ok   Photo mode at 390 light reduced-motion (demo) › wire photos: no escaped markup, undefined or NaN on the page
-  ok   Photo mode at 390 light reduced-motion (demo) › wire photos: no sideways scroll at 390
-  ok   Photo mode at 390 light reduced-motion (demo) › wire photos: at most two subnav rows
-  ok   Photo mode at 390 light reduced-motion (demo) › the picture reserves its 4:5 box
-  ok   Photo mode at 390 light reduced-motion (demo) › full width on a phone
-  ok   Photo mode at 390 light reduced-motion (demo) › the light paper
-  ok   Photo mode at 390 light reduced-motion (demo) › reduced motion: the switch does not animate
-  ok   Photo mode at 390 light reduced-motion (demo) › no console errors
-  ok   Photo mode at 1280 light (demo) › wire photos: nothing fixed or sticky inside the tab
-  ok   Photo mode at 1280 light (demo) › wire photos: uppercase only in the caps roles
-  ok   Photo mode at 1280 light (demo) › wire photos: no monospace
-  ok   Photo mode at 1280 light (demo) › wire photos: no escaped markup, undefined or NaN on the page
-  ok   Photo mode at 1280 light (demo) › wire photos: no sideways scroll at 1280
-  ok   Photo mode at 1280 light (demo) › wire photos: at most two subnav rows
-  ok   Photo mode at 1280 light (demo) › the picture reserves its 4:5 box
-  ok   Photo mode at 1280 light (demo) › a narrow column on a wide screen
-  ok   Photo mode at 1280 light (demo) › the light paper
-  ok   Photo mode at 1280 light (demo) › no console errors
-  ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: nothing fixed or sticky inside the tab
-  ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: uppercase only in the caps roles
-  ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: no monospace
-  ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: no escaped markup, undefined or NaN on the page
-  ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: no sideways scroll at 1280
-  ok   Photo mode at 1280 dark reduced-motion (demo) › wire photos: at most two subnav rows
-  ok   Photo mode at 1280 dark reduced-motion (demo) › the picture reserves its 4:5 box
-  ok   Photo mode at 1280 dark reduced-motion (demo) › a narrow column on a wide screen
-  ok   Photo mode at 1280 dark reduced-motion (demo) › the dark paper
-  ok   Photo mode at 1280 dark reduced-motion (demo) › reduced motion: the switch does not animate
-  ok   Photo mode at 1280 dark reduced-motion (demo) › no console errors
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › live, #wire/photos opens the photo feed
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the photo of the week leads on its votes, ahead of a newer post
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › a notice has no picture and stays out
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the gallery’s photos, but not Food’s dishes
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › Instagram: a working picture, never a lapsed or a non-web one
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the Unfiltered wire: a local picture from this week, not a national one, a podcast’s artwork or last month’s
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › one picture on two stories is a show’s logo, not a photo: left out
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › a Reddit post with a picture, not one without
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › a Facebook group post with a picture, not one without
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › one story from two places shows once, by its link
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › Local: the paper’s national pictures wait for Everything
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the art board is paged to its end
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › every source gives its pictures
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › captions are escaped
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › the picture’s alt text is its caption, lazy; one line under it
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › no key twice on the page
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › at the bottom of the feed, the first card has let go of its picture
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › and takes it back on the way up
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › a picture that will not load takes its card with it
-  ok   Photo mode on live payloads: each source, once, while its picture works (live) › no console errors
   ok   What Now, Spin (demo) › the chip row is the mode switch, Spin first
   ok   What Now, Spin (demo) › the weather line: feels like, the lake, sunset
   ok   What Now, Spin (demo) › the weather line is one line at 390
-  ok   What Now, Spin (demo) › the six path chips
+  ok   What Now, Spin (demo) › the seven path chips
   ok   What Now, Spin (demo) › Spin returns an answer
   ok   What Now, Spin (demo) › the answer spells out its reason
   ok   What Now, Spin (demo) › the answer says it is for right now
@@ -1266,6 +1124,7 @@
   ok   What Now, Spin (live, reduced motion) › the pool line says how many things fit
   ok   What Now, Spin (live, reduced motion) › no console errors
   ok   What Now, the missions under the spinner (demo) › Spin opens with the whole missions list right below it
+  ok   What Now, the missions under the spinner (demo) › and “Run with a club” leads the list, unnumbered
   ok   What Now, the missions under the spinner (demo) › and the Spin chip is the one lit
   ok   What Now, the missions under the spinner (demo) › the demo spins onto mission 2’s first place
   ok   What Now, the missions under the spinner (demo) › the spin marks its mission in the list and scrolls to it
@@ -1278,6 +1137,7 @@
   ok   What Now, Missions (live) › no dashes or exclamation points, a known theme, at least one place
   ok   What Now, Missions (live) › needs_check is counted honestly (10)
   ok   What Now, Missions (live) › the hundred, numbered 1 to 100
+  ok   What Now, Missions (live) › a theme shows its own missions only, not the club one
   ok   What Now, Missions (live) › a theme chip filters to its missions, and its count is right (10)
   ok   What Now, Missions (live) › Mark done marks it
   ok   What Now, Missions (live) › a mission marked done survives a reload
@@ -1486,6 +1346,84 @@
   ok   People, demo: the directory is opt-in and never shows an email › no email anywhere on the tab
   ok   People, demo: the directory is opt-in and never shows an email › leaving takes you out of the count
   ok   People, demo: the directory is opt-in and never shows an email › no console errors
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the section is “Run clubs this week”, a title and nothing under it
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › no subtitle
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › it sits near the top, under who you are
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › seven days, starting today in Burlington
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › one of each weekday, in order
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › today is the day showing
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › today: what is still to come (the 8 am run has gone)
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › Monday’s runs, in time order
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › a row: the club, the time, the place and the pace, the newcomer line
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › each line under the name is one line
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the place is a map link
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › a club out of season (Summer Track Nights) is never on the strip
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the switch: Fitness this week
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and no run club in it
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › today’s fitness: yoga, then pickup
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › A runner: the club week moves to the top of the tab
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and leads the chip row
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › an athlete: first too
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and back under who you are once cleared
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › a trail person sees it first as well
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › tapping the row opens the club’s sheet: its name and what it is
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › every meet, by weekday, with its place
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › pace, cost, season, newcomers
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › its links: site, Instagram, Meetup (no Strava, so none)
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and one button, I’m going
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › signed out, I’m going asks for the sign-in like any plan
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › I’m going opens the plan composer with the meet filled in: title, day, time, place
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › a time off the half hour joins the list in its place
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › and it posts as an open-to-strangers plan for that meet
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › the plan is on the board
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: nothing fixed or sticky inside the tab
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: uppercase only in the caps roles
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: no monospace
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: no escaped markup, undefined or NaN on the page
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: no sideways scroll at 390
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › people: at most two subnav rows
+  ok   Run clubs, People: the week strip, the sheet and I’m going (demo, 390) › no console errors
+  ok   Run clubs, People: deep links (demo, 1280, dark) › an athlete who never touched the switch lands on Fitness
+  ok   Run clubs, People: deep links (demo, 1280, dark) › #people/clubs lands on the club week
+  ok   Run clubs, People: deep links (demo, 1280, dark) › a meet’s link picks its day
+  ok   Run clubs, People: deep links (demo, 1280, dark) › shows its row
+  ok   Run clubs, People: deep links (demo, 1280, dark) › and opens its sheet, I’m going set to that meet
+  ok   Run clubs, People: deep links (demo, 1280, dark) › a club’s link opens its sheet, on its side of the switch
+  ok   Run clubs, People: deep links (demo, 1280, dark) › a meet that has gone says so
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: nothing fixed or sticky inside the tab
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: uppercase only in the caps roles
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: no monospace
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: no escaped markup, undefined or NaN on the page
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: no sideways scroll at 1280
+  ok   Run clubs, People: deep links (demo, 1280, dark) › people: at most two subnav rows
+  ok   Run clubs, People: deep links (demo, 1280, dark) › no console errors
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Now: the meets starting in the next three hours
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › all of them inside the window
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › under a plain title
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Tonight: from 4 pm on
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Tomorrow: Sunday’s, saying tomorrow
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Move with people answers with a meet in the window
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › for right now, and says when it starts
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › it takes the other chips off
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › the pool line counts meets
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Another gives the other one
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › on Tomorrow it answers with tomorrow’s
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › Do it ends the session as any answer does
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › the missions lead with “Run with a club”
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › and its action opens People’s club week (#people/clubs)
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › a row opens the meet on People, its sheet up
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: nothing fixed or sticky inside the tab
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: uppercase only in the caps roles
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: no monospace
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: no escaped markup, undefined or NaN on the page
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: no sideways scroll at 390
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › whatnow: at most two subnav rows
+  ok   Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark) › no console errors
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no meet in the next three hours: no rows
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › Move with people: “Nothing in the next few hours.”
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › and the next one
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › which opens on People, on Fitness, its sheet up
+  ok   Run clubs, What Now: nothing in the window says so and names the next (live, 1280) › no console errors
   ok   On Air, demo › nothing autoplays: the shell’s audio is paused and no frame is loaded
   ok   On Air, demo › the chip row is a table of contents: Out loud, Btown TV, Live, Podcasts, Past nights
   ok   On Air, demo › the sections run in that order
@@ -1764,11 +1702,11 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › #music/mus:old opens whatnow, and the address says #whatnow/tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › #wander opens whatnow, and the address says #whatnow
   ok   cutover: every old tab’s link lands on the nearest new tab › #wander/Moose opens whatnow, and the address says #whatnow
-  ok   cutover: every old tab’s link lands on the nearest new tab › #photos opens wire, and the address says #wire/photos
-  ok   cutover: every old tab’s link lands on the nearest new tab › #photos/p-1 opens wire, and the address says #wire/photos
-  ok   cutover: every old tab’s link lands on the nearest new tab › #art opens wire, and the address says #wire/photos
-  ok   cutover: every old tab’s link lands on the nearest new tab › #art/b-0000a000-0000-4000-8000-000000000002 opens wire, and the address says #wire/photos/b-0000a000-0000-4000-8000-000000000002
-  ok   cutover: every old tab’s link lands on the nearest new tab › #art/wall opens wire, and the address says #wire/photos
+  ok   cutover: every old tab’s link lands on the nearest new tab › #photos opens wire, and the address says #wire
+  ok   cutover: every old tab’s link lands on the nearest new tab › #photos/p-1 opens wire, and the address says #wire
+  ok   cutover: every old tab’s link lands on the nearest new tab › #art opens wire, and the address says #wire
+  ok   cutover: every old tab’s link lands on the nearest new tab › #art/b-0000a000-0000-4000-8000-000000000002 opens wire, and the address says #wire
+  ok   cutover: every old tab’s link lands on the nearest new tab › #art/wall opens wire, and the address says #wire
   ok   cutover: every old tab’s link lands on the nearest new tab › #listen opens onair, and the address says #onair
   ok   cutover: every old tab’s link lands on the nearest new tab › #watch/yt:dQw4w9WgXcQ opens onair, and the address says #onair/yt:dQw4w9WgXcQ
   ok   cutover: every old tab’s link lands on the nearest new tab › #constructor opens wire, and the address says #constructor
@@ -1778,7 +1716,7 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › a bare #reddit opens the Wire on its Reddit chip
   ok   cutover: every old tab’s link lands on the nearest new tab › an old Music link opens What Now on Tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › no console errors
-  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for the Wire’s Photo mode, to v47
+  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for the run clubs’ week, to v47
   ok   shell fixes: the offline shell carries the new modules › every module in js/ is in the offline list
   ok   shell fixes: the offline shell carries the new modules › and nothing in the offline list is missing from js/
   ok   shell fixes: the offline shell carries the new modules › every file in the offline list exists
@@ -1916,7 +1854,7 @@
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › shared with the pod is off by default
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › it lands at the bottom: Daily, no streak yet, not done
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › today’s dot is today’s, in Burlington
-  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (0 ms)
+  ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › a tap shows at once (1 ms)
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the streak ticks up to 1 day
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › and today’s dot fills
   ok   Habits, Today in the demo: signed out, then add a habit, tap it, see the streak and the dots (390) › the server has the tap, for today in Burlington

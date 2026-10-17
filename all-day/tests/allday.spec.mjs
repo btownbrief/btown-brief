@@ -99,7 +99,7 @@ async function staticChecks() {
     const js = [];
     const walk = async (dir) => { for (const f of await readdir(dir, { withFileTypes: true })) { const p = path.join(dir, f.name); if (f.isDirectory()) await walk(p); else if (/\.(js|css|html)$/.test(f.name)) js.push(p); } };
     await walk(path.join(APP, 'js')); await walk(path.join(APP, 'css'));
-    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'tokens.css', 'app.css'];
+    const NEW = ['app.js', 'ui.js', 'store.js', 'auth.js', 'liquid.js', 'main.js', 'wire.js', 'wire-demo.js', 'wire-photos.js', 'watch.js', 'food.js', 'people.js', 'whatnow.js', 'vintage.js', 'habits.js', 'habits-core.js', 'habits-fake.js', 'photo-wall.js', 'onair.js', 'games.js', 'clubs-week.js', 'tokens.css', 'app.css'];
     const OLD = new Set(['sun.js', 'whatnow-engine.js', 'whatnow-data.js']);
     for (const f of js) {
       const name = path.basename(f);
@@ -1854,7 +1854,7 @@ async function theWhatNow(browser, base) {
     const wx = await page.$eval(wnPanel + ' .wx', (w) => w.innerText.replace(/\s+/g, ' '));
     check(/59° feels like/.test(wx) && /61° lake/.test(wx) && /6:06 sunset/.test(wx), 'the weather line: feels like, the lake, sunset', wx);
     check(await page.$eval(wnPanel + ' .wx', (w) => w.getBoundingClientRect().height < 40), 'the weather line is one line at 390', '');
-    check(await page.$$eval(wnPanel + ' .chips.paths .chip', (c) => c.map((x) => x.innerText).join('|')) === 'I’m broke|Get me outside|People, please|Two hours|Close by|Teach me something', 'the six path chips', '');
+    check(await page.$$eval(wnPanel + ' .chips.paths .chip', (c) => c.map((x) => x.innerText).join('|')) === 'I’m broke|Get me outside|People, please|Two hours|Close by|Teach me something|Move with people', 'the seven path chips', '');
     const first = await spinAnswer(page);
     check(first.length > 3, 'Spin returns an answer', first);
     check(/^Because /.test(await page.$eval(wnPanel + ' .result .because', (p) => p.textContent).catch(() => '')), 'the answer spells out its reason', '');
@@ -1901,9 +1901,10 @@ async function theWhatNow(browser, base) {
     const order = await page.evaluate(() => {
       const p = document.querySelector('#panel-whatnow');
       const spin = p.querySelector('.spin'), list = p.querySelector('.missions');
-      return { both: !!spin && !!list, below: !!spin && !!list && !!(spin.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING), rows: p.querySelectorAll('.lrow.mission').length };
+      return { both: !!spin && !!list, below: !!spin && !!list && !!(spin.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING), rows: p.querySelectorAll('.lrow.mission:not(.club)').length, club: !!p.querySelector('.missions > .lrow.club:first-child') };
     });
     check(order.both && order.below && order.rows === 6, 'Spin opens with the whole missions list right below it', JSON.stringify(order));
+    check(order.club, 'and “Run with a club” leads the list, unnumbered', JSON.stringify(order));
     check(await page.$eval('#subnav .chip.on', (b) => /Spin/.test(b.innerText)), 'and the Spin chip is the one lit', '');
     let hit = '';
     for (let i = 0; i < 40 && hit !== 'A flight at the cider bar'; i++) {
@@ -1920,6 +1921,9 @@ async function theWhatNow(browser, base) {
     }, null, { timeout: 4000 }).then((h) => h.jsonValue(), () => null);
     check(spun === 'm2', 'the spin marks its mission in the list and scrolls to it', spun);
     check(await page.$$eval(wnPanel + ' .lrow.spun', (r) => r.length) === 1, 'only that one row is marked', '');
+    /* scrolled down to the mission, the mast has stepped away: back up, and it returns */
+    await page.evaluate(() => document.querySelector('#panel-whatnow').scrollTo(0, 0));
+    await page.waitForTimeout(300);
     await page.click('#subnav .chip[data-chip="spin"]');
     await page.click('#subnav .chip[data-chip="missions"]');
     await page.waitForTimeout(300);
@@ -1944,11 +1948,12 @@ async function theWhatNow(browser, base) {
     const { ctx, page, errors, supabase } = await newPage(browser, base);
     await page.goto(base + '/all-day/#whatnow/missions');
     await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
-    const nums = await page.$$eval(wnPanel + ' .lrow.mission .num', (n) => n.map((x) => Number(x.textContent)));
+    const nums = await page.$$eval(wnPanel + ' .lrow.mission:not(.club) .num', (n) => n.map((x) => Number(x.textContent)));
     check(nums.length === 100 && nums.every((n, i) => n === i + 1), 'the hundred, numbered 1 to 100', nums.length);
     const themeChip = await page.$eval(wnPanel + ' .chips.themes .chip[data-chip="drink"] .n', (n) => Number(n.textContent));
     await page.click(wnPanel + ' .chips.themes .chip[data-chip="drink"]');
-    const shown = await page.$$eval(wnPanel + ' .lrow.mission .s', (s) => s.map((x) => x.textContent));
+    const shown = await page.$$eval(wnPanel + ' .lrow.mission:not(.club) .s', (s) => s.map((x) => x.textContent));
+    check(!(await page.$(wnPanel + ' .lrow.club')), 'a theme shows its own missions only, not the club one', '');
     check(shown.length === themeChip && shown.every((t) => /^Drink/.test(t)), 'a theme chip filters to its missions, and its count is right (' + themeChip + ')', shown.length);
     await page.click(wnPanel + ' .chips.themes .chip[data-chip="all"]');
     await page.click(wnPanel + ' .lrow[data-k="m7"] .markdone');
@@ -2041,7 +2046,7 @@ async function theWhatNow(browser, base) {
     await page.goto(base + '/all-day/?demo=1#whatnow/missions');
     await page.reload();
     await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
-    check(await page.$$eval(wnPanel + ' .lrow.mission', (r) => r.length) === 6, 'the demo carries six missions', '');
+    check(await page.$$eval(wnPanel + ' .lrow.mission:not(.club)', (r) => r.length) === 6, 'the demo carries six missions', '');
     await page.click(wnPanel + ' .lrow[data-k="m2"] .markdone');
     await page.reload();
     await page.waitForSelector(wnPanel + ' .lrow.mission', { timeout: 15000 });
@@ -4304,7 +4309,7 @@ async function shellFixes(browser, base) {
   await group('shell fixes: the offline shell carries the new modules', async () => {
     const sw = await readFile(path.join(APP, 'sw.js'), 'utf8');
     const main = await readFile(path.join(APP, 'js/main.js'), 'utf8');
-    check(/VERSION = 'all-day-v47'/.test(sw), 'sw.js VERSION is bumped for the Wire’s Photo mode, to v47', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
+    check(/VERSION = 'all-day-v48'/.test(sw), 'sw.js VERSION is bumped for the Wire’s Photo mode after the run clubs’ week, to v48', (sw.match(/VERSION = '[^']+'/) || [''])[0]);
     const listed = [...sw.matchAll(/'\.\/(js\/[\w/.-]+\.js)'/g)].map((m) => m[1]);
     /* the offline list is exactly the modules that exist: none missing, none gone */
     const mods = [];
@@ -4415,7 +4420,7 @@ async function thePeople(browser, base) {
       /^Plans & Meetups/.test(doors[1][0]) && doors[1][1] === 'https://www.btownbrief.com/community/channels/meetups-hangouts' &&
       /^Telegram/.test(doors[2][0]) && doors[2][1] === base + '/telegram.html', 'one door card: Find Each Other, Plans & Meetups, Telegram', JSON.stringify(doors));
     const chipsTxt = await page.$$eval('#subnav .chip', (cs) => cs.map((c) => c.textContent));
-    check(JSON.stringify(chipsTxt) === JSON.stringify(['Who you are', 'Open to strangers', 'Mixers', 'Quiz', 'Directory']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
+    check(JSON.stringify(chipsTxt) === JSON.stringify(['Who you are', 'Run clubs', 'Open to strangers', 'Mixers', 'Quiz', 'Directory']), 'the chip row is the table of contents', JSON.stringify(chipsTxt));
     await page.click('#subnav .chip[data-chip="quiz"]');
     await page.waitForTimeout(1200);
     const top = await page.$eval(peoplePanel + ' [data-sec="quiz"]', (s) => { const p = s.closest('.panel'); return { top: Math.round(s.getBoundingClientRect().top), end: p.scrollTop >= p.scrollHeight - p.clientHeight - 2 }; });
@@ -4717,6 +4722,236 @@ async function thePeople(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------- run clubs */
+/* data/run-clubs.json through clubs-week.js, in People (the week strip, the
+   club sheet, "I'm going") and What Now (the window rows, Move with people,
+   the club mission). The demo's clubs are invented; two of its meets sit
+   1.25 and 2.5 hours after the moment it opens. Every group here freezes the
+   clock at a Burlington Saturday, October 17, 2026, so the week is known. */
+const SAT_1PM = Date.parse('2026-10-17T13:00:00-04:00');
+const clubRows = (page, sel) => page.$$eval(sel + ' .lrow.meet', (rs) => rs.map((r) => ({ k: r.dataset.k, club: r.dataset.club, at: Number(r.dataset.at),
+  name: r.querySelector('.t').textContent, time: r.querySelector('.tm').innerText.replace(/\s+/g, ' ').trim(), lines: [...r.querySelectorAll('.s')].map((x) => x.textContent),
+  oneLine: [...r.querySelectorAll('.s.one')].every((x) => getComputedStyle(x).whiteSpace === 'nowrap' && x.getBoundingClientRect().height < 22),
+  map: (r.querySelector('a.map') || {}).href || '' })));
+const clubsSec = peoplePanel + ' [data-sec="clubs"]';
+const secOrder = (page) => page.$$eval(peoplePanel + ' [data-sec]', (ss) => ss.map((x) => x.dataset.sec));
+
+async function theClubs(browser, base) {
+  await group('Run clubs, People: the week strip, the sheet and I’m going (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { clock: SAT_1PM });
+    await page.goto(base + '/all-day/?demo=1#people');
+    await page.waitForSelector(clubsSec + ' .days button');
+    check(await page.$eval(clubsSec + ' .sec h2', (h) => h.textContent) === 'Run clubs this week', 'the section is “Run clubs this week”, a title and nothing under it',
+      await page.$eval(clubsSec + ' .sec', (h) => h.innerText));
+    check(!(await page.$(clubsSec + ' .sec p')), 'no subtitle', '');
+    const order = await secOrder(page);
+    check(order.indexOf('clubs') === order.indexOf('arch') + 1 && order.indexOf('clubs') < order.indexOf('plans'), 'it sits near the top, under who you are', order.join(' '));
+    const days = await page.$$eval(clubsSec + ' .days button', (bs) => bs.map((b) => ({ day: b.dataset.day, wd: b.querySelector('.wd').textContent, n: b.querySelector('.n').textContent, on: b.classList.contains('on') })));
+    check(days.length === 7 && days[0].day === '2026-10-17' && days[0].wd === 'Today', 'seven days, starting today in Burlington', JSON.stringify(days.map((d) => d.day)));
+    check(days.map((d) => d.wd).join(' ') === 'Today Sun Mon Tue Wed Thu Fri', 'one of each weekday, in order', days.map((d) => d.wd).join(' '));
+    check(days[0].on, 'today is the day showing', '');
+    let rows = await clubRows(page, clubsSec);
+    check(rows.length === 1 && rows[0].name === 'Red Rocks Trail Run' && rows[0].time === '2:15 pm', 'today: what is still to come (the 8 am run has gone)', JSON.stringify(rows.map((r) => r.name + ' ' + r.time)));
+    await page.click(clubsSec + ' .days button[data-day="2026-10-19"]');
+    rows = await clubRows(page, clubsSec);
+    check(rows.map((r) => r.name).join(' | ') === 'Sunrise Striders | Old North End Social Run' && rows[0].at < rows[1].at, 'Monday’s runs, in time order', JSON.stringify(rows.map((r) => r.name)));
+    const one = rows[1];
+    check(one.time === '6:15 pm' && /^Foam Brewers · All paces/.test(one.lines[0]) && one.lines[1] === 'Never run with a group before? Perfect.' && one.lines[0] === 'Foam Brewers · All paces', 'a row: the club, the time, the place and the pace, the newcomer line', JSON.stringify(one));
+    check(rows.every((r) => r.oneLine), 'each line under the name is one line', '');
+    check(/^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=44\.4789%2C-73\.2196$/.test(one.map), 'the place is a map link', one.map);
+    await page.click(clubsSec + ' .days button[data-day="2026-10-22"]');
+    rows = await clubRows(page, clubsSec);
+    check(rows.map((r) => r.name).join('|') === 'Lakefront Run Crew', 'a club out of season (Summer Track Nights) is never on the strip', JSON.stringify(rows.map((r) => r.name)));
+    await page.click(clubsSec + ' [data-rc-kind] button:has-text("Fitness")');
+    check(await page.$eval(clubsSec + ' .sec h2', (h) => h.textContent) === 'Fitness this week', 'the switch: Fitness this week', '');
+    rows = await clubRows(page, clubsSec);
+    check(rows.length && rows.every((r) => r.club !== 'red-rocks-trail-run' && r.club !== 'lakefront-run-crew'), 'and no run club in it', JSON.stringify(rows.map((r) => r.name)));
+    check(rows.map((r) => r.name).join('|') === 'Yoga on the Green|Queen City Pickup', 'today’s fitness: yoga, then pickup', JSON.stringify(rows.map((r) => r.name)));
+    await page.click(clubsSec + ' [data-rc-kind] button:has-text("Run")');
+
+    /* a runner sees it first */
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="running"]');
+    await page.waitForTimeout(150);
+    let o2 = await secOrder(page);
+    check(o2[0] === 'clubs' && o2[1] === 'arch', 'A runner: the club week moves to the top of the tab', o2.join(' '));
+    check(await page.$eval('#subnav .chip', (c) => c.textContent) === 'Run clubs', 'and leads the chip row', '');
+    await page.evaluate(() => document.querySelector('#panel-people').scrollTo(0, 0));
+    await page.waitForTimeout(250);
+    await page.screenshot({ path: path.join(SHOTS, 'clubs-people-390.png') });
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="running"]');
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="sports"]');
+    await page.waitForTimeout(150);
+    o2 = await secOrder(page);
+    check(o2[0] === 'clubs', 'an athlete: first too', o2.join(' '));
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="sports"]');
+    await page.waitForTimeout(150);
+    o2 = await secOrder(page);
+    check(o2.indexOf('clubs') === o2.indexOf('arch') + 1, 'and back under who you are once cleared', o2.join(' '));
+    await page.click(peoplePanel + ' .arch button[data-arch="trail"]');
+    await page.waitForTimeout(150);
+    check((await secOrder(page))[0] === 'clubs', 'a trail person sees it first as well', '');
+    await page.click(peoplePanel + ' .arch button[data-arch="trail"]');
+    await page.waitForTimeout(150);
+
+    /* the sheet */
+    await page.click(clubsSec + ' [data-rc-kind] button:has-text("Run")');
+    await page.click(clubsSec + ' .days button[data-day="2026-10-19"]');
+    await page.click(clubsSec + ' .lrow.meet[data-club="old-north-end-social-run"] .open');
+    await page.waitForSelector('.sheet-body[data-club-sheet="old-north-end-social-run"]');
+    const sheet = await page.$eval('.sheet-card', (c) => ({ title: c.querySelector('.sheet-head h2').textContent, what: c.querySelector('.pick-why').textContent,
+      meets: [...c.querySelectorAll('[data-meet]')].map((m) => m.innerText.replace(/\s+/g, ' ')), facts: [...c.querySelectorAll('[data-fact]')].map((f) => f.dataset.fact),
+      links: [...c.querySelectorAll('[data-links] a')].map((a) => a.textContent.trim()), going: [...c.querySelectorAll('button')].filter((b) => /I’m going/.test(b.textContent)).length }));
+    check(sheet.title === 'Old North End Social Run' && /brewery/.test(sheet.what), 'tapping the row opens the club’s sheet: its name and what it is', JSON.stringify(sheet));
+    check(sheet.meets.length === 2 && /^Mondays, 6:15 pm/.test(sheet.meets[0]) && /^Fridays, 5:30 pm/.test(sheet.meets[1]) && sheet.meets.every((m) => /Foam Brewers/.test(m)), 'every meet, by weekday, with its place', JSON.stringify(sheet.meets));
+    check(sheet.facts.join(' ') === 'pace cost season newcomers', 'pace, cost, season, newcomers', sheet.facts.join(' '));
+    check(sheet.links.join(' ') === 'Site Instagram Meetup', 'its links: site, Instagram, Meetup (no Strava, so none)', sheet.links.join(' '));
+    check(sheet.going === 1, 'and one button, I’m going', '');
+    await page.click('.sheet-card button:has-text("I’m going")');
+    await page.waitForSelector('.sheet-body .linkrow');
+    check(/Sign in to post\./.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'signed out, I’m going asks for the sign-in like any plan', '');
+    await page.keyboard.press('Escape');
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.waitForTimeout(150);
+    await page.click(clubsSec + ' .lrow.meet[data-club="old-north-end-social-run"] .open');
+    await page.click('.sheet-card button:has-text("I’m going")');
+    await page.waitForSelector('.sheet-body form.bform[data-pre] input[name=title]');
+    const pre = await page.evaluate(() => { const f = document.querySelector('form.bform'); return { title: f.title.value, day: f.day.value, time: f.time.value, place: f.place.value,
+      times: [...f.time.options].map((o) => o.value) }; });
+    check(pre.title === 'Old North End Social Run' && pre.day === 'Mon, Oct 19' && pre.time === '6:15 pm' && pre.place === 'Foam Brewers, Burlington',
+      'I’m going opens the plan composer with the meet filled in: title, day, time, place', JSON.stringify({ ...pre, times: undefined }));
+    const i = pre.times.indexOf('6:15 pm');
+    check(i > 0 && pre.times[i - 1] === '6 pm' && pre.times[i + 1] === '6:30 pm', 'a time off the half hour joins the list in its place', pre.times.slice(i - 1, i + 2).join(', '));
+    await page.fill('input[name=display_name]', 'Robin');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 6000 });
+    await page.waitForTimeout(300);
+    const mine = (await peek(page)).posts.find((x) => x.title === 'Old North End Social Run');
+    check(mine && mine.meta.when === 'Mon, Oct 19, 6:15 pm', 'and it posts as an open-to-strangers plan for that meet', JSON.stringify(mine));
+    check(await page.$(peoplePanel + ' [data-plans] .card.board[data-k="b-' + (mine && mine.id) + '"]') !== null, 'the plan is on the board', '');
+    await pageRules(page, 'people', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Run clubs, People: deep links (demo, 1280, dark)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { clock: SAT_1PM, viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#people/clubs');
+    await page.waitForSelector(clubsSec + ' .lrow.meet');
+    await page.waitForTimeout(700);
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="sports"]');
+    check(await page.$eval(clubsSec + ' .sec h2', (h) => h.textContent) === 'Fitness this week', 'an athlete who never touched the switch lands on Fitness', '');
+    await page.click(peoplePanel + ' [data-tags="I’m into…"] .chip[data-chip="sports"]');
+    await page.$eval(clubsSec, (s) => s.scrollIntoView({ block: 'start' }));
+    await page.waitForTimeout(300);
+    const y = await page.$eval(clubsSec, (s) => Math.round(s.getBoundingClientRect().top));
+    check(y < 260, '#people/clubs lands on the club week', y);
+    await page.goto(base + '/all-day/?demo=1#people/rc-old-north-end-social-run-2026-10-19-1815');
+    await page.waitForSelector('.sheet-body[data-club-sheet="old-north-end-social-run"]', { timeout: 8000 });
+    check(await page.$eval(clubsSec + ' .days button.on', (b) => b.dataset.day) === '2026-10-19', 'a meet’s link picks its day', '');
+    check(await page.$(clubsSec + ' .lrow.meet[data-k="rc-old-north-end-social-run-2026-10-19-1815"]') !== null, 'shows its row', '');
+    check(await page.$('.sheet-card [data-going="rc-old-north-end-social-run-2026-10-19-1815"]') !== null, 'and opens its sheet, I’m going set to that meet', '');
+    await page.keyboard.press('Escape');
+    await page.goto(base + '/all-day/?demo=1#people/club-lake-rowers');
+    await page.waitForSelector('.sheet-body[data-club-sheet="lake-rowers"]', { timeout: 8000 });
+    check(await page.$eval(clubsSec + ' .sec h2', (h) => h.textContent) === 'Fitness this week', 'a club’s link opens its sheet, on its side of the switch', '');
+    await page.keyboard.press('Escape');
+    await page.goto(base + '/all-day/?demo=1#people/rc-red-rocks-trail-run-2026-10-10-1415');
+    await page.waitForFunction(() => /That one has passed/.test(document.querySelector('#toast').textContent), null, { timeout: 6000 }).catch(() => {});
+    check(/That one has passed/.test(await page.$eval('#toast', (t) => t.textContent)), 'a meet that has gone says so', '');
+    await pageRules(page, 'people', 1280);
+    await page.screenshot({ path: path.join(SHOTS, 'clubs-people-desktop-dark.png') });
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Run clubs, What Now: a meet in each window, Move with people, the mission (demo, 390, dark)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { clock: SAT_1PM, scheme: 'dark', motion: 'reduce', seed: 11 });
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
+    await page.waitForSelector(wnPanel + ' [data-meets="now"] .lrow.meet');
+    let rows = await clubRows(page, wnPanel + ' [data-meets="now"]');
+    check(rows.map((r) => r.name).join('|') === 'Red Rocks Trail Run|Yoga on the Green', 'Now: the meets starting in the next three hours', JSON.stringify(rows.map((r) => r.name + ' ' + r.time)));
+    check(rows.every((r) => r.at >= SAT_1PM && r.at < SAT_1PM + 3 * 3600000), 'all of them inside the window', JSON.stringify(rows.map((r) => r.at)));
+    check(await page.$eval(wnPanel + ' [data-sec="meets"] h2', (h) => h.textContent) === 'Move with people', 'under a plain title', '');
+    await page.$eval(wnPanel + ' [data-sec="meets"]', (s) => s.scrollIntoView({ block: 'start' }));
+    await page.waitForTimeout(250);
+    await page.screenshot({ path: path.join(SHOTS, 'clubs-whatnow-390.png') });
+    await page.evaluate(() => document.querySelector('#panel-whatnow').scrollTo(0, 0));
+    await page.waitForTimeout(250);
+    await page.click(wnPanel + ' .toolrow .pills button:has-text("Tonight")');
+    rows = await clubRows(page, wnPanel + ' [data-meets="tonight"]');
+    check(rows.map((r) => r.name + ' ' + r.time).join('|') === 'Queen City Pickup 6 pm', 'Tonight: from 4 pm on', JSON.stringify(rows.map((r) => r.name + ' ' + r.time)));
+    await page.click(wnPanel + ' .toolrow .pills button:has-text("Tomorrow")');
+    rows = await clubRows(page, wnPanel + ' [data-meets="tomorrow"]');
+    check(rows.map((r) => r.name).join('|') === 'Sunday Long Run|Lake Rowers' && rows.every((r) => /^Tomorrow · /.test(r.lines[0])), 'Tomorrow: Sunday’s, saying tomorrow', JSON.stringify(rows.map((r) => r.lines[0])));
+    await page.click(wnPanel + ' .toolrow .pills button:has-text("Now")');
+
+    /* Move with people */
+    await page.click(wnPanel + ' .chip[data-chip="free"]');
+    await page.click(wnPanel + ' .chip[data-chip="move"]');
+    await page.waitForSelector(wnPanel + ' .result:not(.rolling) h3');
+    const a1 = await page.$eval(wnPanel + ' .result', (r) => ({ h: r.querySelector('h3').textContent, eb: r.querySelector('.eyebrow').textContent, meta: r.querySelector('.meta').textContent, why: (r.querySelector('.because') || {}).textContent || '' }));
+    check(['Red Rocks Trail Run', 'Yoga on the Green'].includes(a1.h), 'Move with people answers with a meet in the window', JSON.stringify(a1));
+    check(/^Right now · /.test(a1.eb) && /starts (in \d+ min|at \d)/.test(a1.why), 'for right now, and says when it starts', JSON.stringify(a1));
+    const on = await page.$$eval(wnPanel + ' .chips.paths .chip.on', (cs) => cs.map((c) => c.dataset.chip));
+    check(on.join() === 'move', 'it takes the other chips off', on.join());
+    check(/^2 meets right now$/.test(await page.$eval(wnPanel + ' .note.pad', (n) => n.textContent)), 'the pool line counts meets', await page.$eval(wnPanel + ' .note.pad', (n) => n.textContent));
+    await page.click(wnPanel + ' .result .another');
+    await page.waitForSelector(wnPanel + ' .result:not(.rolling) h3');
+    const a2 = await page.$eval(wnPanel + ' .result h3', (h) => h.textContent);
+    check(a2 !== a1.h && ['Red Rocks Trail Run', 'Yoga on the Green'].includes(a2), 'Another gives the other one', a1.h + ' → ' + a2);
+    await page.click(wnPanel + ' .toolrow .pills button:has-text("Tomorrow")');
+    await page.waitForSelector(wnPanel + ' .result:not(.rolling) h3');
+    const a3 = await page.$eval(wnPanel + ' .result', (r) => ({ h: r.querySelector('h3').textContent, eb: r.querySelector('.eyebrow').textContent }));
+    check(['Sunday Long Run', 'Lake Rowers'].includes(a3.h) && a3.eb === 'Tomorrow', 'on Tomorrow it answers with tomorrow’s', JSON.stringify(a3));
+    await page.click(wnPanel + ' .result .doit');
+    check(await page.$eval(wnPanel + ' .result h3', (h) => h.textContent) === 'Now put the phone down.', 'Do it ends the session as any answer does', '');
+    await page.click(wnPanel + ' .chip[data-chip="move"]');
+    await page.click(wnPanel + ' .toolrow .pills button:has-text("Now")');
+
+    /* the mission */
+    const first = await page.$eval(wnPanel + ' .missions > .lrow', (r) => ({ club: r.classList.contains('club'), t: r.querySelector('.t').textContent, s: r.querySelector('.s').textContent }));
+    check(first.club && first.t === 'Run with a club' && /^Outdoors · \d+ runs this week$/.test(first.s), 'the missions lead with “Run with a club”', JSON.stringify(first));
+    await page.click(wnPanel + ' .missions .lrow.club [data-clubs]');
+    await page.waitForFunction(() => location.hash === '#people/clubs' && !document.querySelector('#panel-people').hidden, null, { timeout: 6000 });
+    await page.waitForSelector(clubsSec + ' .lrow.meet');
+    await page.waitForTimeout(700);
+    const y = await page.$eval(clubsSec, (s) => Math.round(s.getBoundingClientRect().top));
+    check(y < 260, 'and its action opens People’s club week (#people/clubs)', y);
+
+    /* a row opens that meet in People */
+    await page.click('#tab-whatnow');
+    await page.waitForSelector(wnPanel + ' [data-meets="now"] .lrow.meet');
+    await page.click(wnPanel + ' [data-meets="now"] .lrow.meet[data-club="red-rocks-trail-run"] .open');
+    await page.waitForSelector('.sheet-body[data-club-sheet="red-rocks-trail-run"]', { timeout: 8000 });
+    check(/^#people\/rc-red-rocks-trail-run-2026-10-17-1415$/.test(await page.evaluate(() => location.hash)), 'a row opens the meet on People, its sheet up', await page.evaluate(() => location.hash));
+    await page.keyboard.press('Escape');
+    await page.click('#tab-whatnow');
+    await pageRules(page, 'whatnow', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Run clubs, What Now: nothing in the window says so and names the next (live, 1280)', async () => {
+    const demo = JSON.parse(await readFile(path.join(APP, 'data/demo/run-clubs.json'), 'utf8'));
+    demo.clubs = demo.clubs.filter((c) => !c.meets.some((m) => typeof m.in_hours === 'number'));
+    const { ctx, page, errors } = await newPage(browser, base, { clock: SAT_1PM, viewport: { width: 1280, height: 800 }, routes: [[/\/data\/run-clubs\.json$/, demo]] });
+    await page.goto(base + '/all-day/#whatnow');
+    await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
+    check(!(await page.$(wnPanel + ' [data-meets="now"]')), 'no meet in the next three hours: no rows', '');
+    await page.click(wnPanel + ' .chip[data-chip="move"]');
+    await page.waitForSelector(wnPanel + ' .result[data-nomeet="now"]');
+    const r = await page.$eval(wnPanel + ' .result', (x) => ({ h: x.querySelector('h3').textContent, meta: x.querySelector('.meta').textContent }));
+    check(r.h === 'Nothing in the next few hours.', 'Move with people: “Nothing in the next few hours.”', JSON.stringify(r));
+    check(r.meta === 'Next: Queen City Pickup · 6 pm · Miller Center gym', 'and the next one', r.meta);
+    await page.click(wnPanel + ' .result [data-next]');
+    await page.waitForSelector('.sheet-body[data-club-sheet="queen-city-pickup"]', { timeout: 8000 });
+    check(await page.$eval(clubsSec + ' .sec h2', (h) => h.textContent) === 'Fitness this week', 'which opens on People, on Fitness, its sheet up', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ----------------------------------------------------------------- run */
 const t0 = Date.now();
 await mkdir(SHOTS, { recursive: true });
@@ -4735,6 +4970,7 @@ try {
   await run(theWhatNow);
   await run(theFood);
   await run(thePeople);
+  await run(theClubs);
   await run(onAir);
   await run(theGames);
   await run(theWatch);
