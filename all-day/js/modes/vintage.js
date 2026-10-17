@@ -395,7 +395,7 @@ function paintShops(host) {
     const row = el('div', 'lrow');
     row.dataset.k = 's-' + s.id;
     const facts = [(s.kinds || []).join(', '), s.neighborhood].filter(Boolean).join(' · ');
-    const hours = s.hours ? '<b>' + esc(s.hours) + '</b>' + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '')
+    const hours = s.hours ? '<b>' + esc(s.hours) + '</b>' + (s.hours_note ? esc('. ' + s.hours_note) : '') + (s.verified ? esc(' (checked ' + monthOf(s.verified) + ')') : '')
       : esc(s.checked ? 'No hours posted; call ahead' + (s.phone ? ' at ' + s.phone : '') : 'Hours not checked yet');
     const leg = legText(s, list[i + 1]);
     row.innerHTML = '<span class="num">' + (i + 1) + '</span><div><div class="t">' + esc(s.name) + '</div>' +

@@ -18,7 +18,8 @@ own site wherever it publishes them:
     "hours": {"mon": null, "tue": "11:00-18:00", ..., "sun": "12:00-17:00"},
     "checked": {"date": "2026-10-17", "source": "https://...", "note": "..."}
 
-A day set to null is a closed day. An entry with no `hours` has none
+A day set to null is a closed day; `hours_note` carries what a
+shop says beside its hours ("Show nights run late"). An entry with no `hours` has none
 published, and the tab says to call ahead. Nothing is guessed. Every
 missing fact is listed in the shop's `gaps`, so the tab can say "hours not
 checked yet" instead of leaving a hole, and Stephen can see what to fill.
@@ -56,8 +57,9 @@ KIND_LABEL = {"record": "Records", "antique": "Antiques", "consignment": "Consig
               "thrift": "Thrift", "vintage": "Vintage"}
 # A street, a mall or a district is a place to walk, not a shop: "Church
 # Street Marketplace" mentions its record shop, "Pine Street (South End
-# Shopping)" its vintage shops, and neither is one.
-NOT_A_SHOP = re.compile(r"\bmarketplace\b|\bdistrict\b|\(.*shopping\)", re.I)
+# Shopping)" its vintage shops, and neither is one. A shop may still call
+# itself a marketplace ("Vintage Inspired Marketplace").
+NOT_A_SHOP = re.compile(r"\bstreet marketplace\b|\bdistrict\b|\(.*shopping\)", re.I)
 
 # The walk, neighborhood by neighborhood. Anything not listed goes last.
 ROUTE = ["Downtown / Church St", "Waterfront", "South End", "Hill Section", "Old North End",
@@ -159,6 +161,7 @@ def shop(t):
         "coords": coords,
         "hours": hours_line(week),
         "week": week,
+        "hours_note": (t.get("hours_note") or None) if week else None,
         "phone": t.get("phone") or None,
         "blurb": first_sentence(t.get("blurb")),
         "verified": (checked or {}).get("date") or t.get("last_verified") or None,
