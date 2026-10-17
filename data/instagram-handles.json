@@ -207,5 +207,11 @@
   "theresnoaincreemee",
   "creemeechronicles",
   "802vegan"
- ]
+ ],
+ "photo_categories": {
+  "_comment": "TAGS for the Wire's Photos mode chips, like `food`: each array names handles that already sit in one of the four roster arrays. vibe: bars, cafes, breweries and venues whose posts show the room. pets: pet accounts. posters: accounts whose posts are event posters, on top of every DO (tier1/tier2) account, which the chip already counts. Food uses the `food` tag above plus all-day/data/food-directory.json. Hand-curated for now; build_instagram.py does not read this, so a later Instagram build can fill or replace it without touching the Wire.",
+  "vibe": ["foambrewers", "queencitybrewery", "burlingtonbeerco", "bar_renee_vt", "frankiesvt", "twobrotherstavern", "spotonthedock", "waterworksvt", "deviltakesaholiday", "maydayvt", "augustfirstvt", "queencitycatlounge", "wakingwindows", "thesodaplant", "gaybar4ever"],
+  "pets": ["queencitycatlounge", "hsccvt", "kimberlyprovostpetportraits"],
+  "posters": []
+ }
 }

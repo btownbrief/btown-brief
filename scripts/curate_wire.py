@@ -17,6 +17,11 @@ editor model, with prompts/wire-taste.md as its doctrine, for:
   * This hour's additions to the river ("The rest of today"), the lead of
     the current update with its reason, and which running items to drop if
     the day passes RIVER_MAX (300: the river is meant to feel almost endless).
+    Inside an update the code sets the order: the lead, then this hour's
+    additions in the editor's order of importance, local and national mixed
+    (never more than KIND_RUN_MAX of one kind in a row), never two from one
+    outlet back to back, and an X desk's bunch of posts spread out
+    (order_update).
 
 Output, data/wire-today.json:
 
@@ -103,6 +108,11 @@ PICKS_MIN_POOL = 8         # the first ranking of the day waits for this many it
 URGENT_SCORE = 9           # a local story this big re-ranks the picks at once
 QUIET_BEFORE_HOUR = 6      # overnight the editor sleeps unless something is urgent
 MIN_NEW = 2                # fewer new items than this is a quiet hour
+# The river's order inside an update (Stephen, 2026-10-17: local and national
+# "get a little lost when it's all in a row ... websites tend to update in bunches")
+KIND_RUN_MAX = 3           # never more local (or national) than this in a row while the other kind waits
+POST_RUN_MAX = 2           # nor more posts than this from one of SPREAD_CHANNELS in a row
+SPREAD_CHANNELS = ("x", "facebook", "reddit")   # an X desk posts five at a time
 STALE_HOURS = 4
 ALREADY_RAN_PICKS = 15     # per earlier day, shown to the editor as "already ran"
 MAX_TOKENS = {"openrouter": 6000, "anthropic": 16000}
@@ -124,9 +134,10 @@ with numbers from those lists and short reasons. You never write, shorten or
 rewrite a headline: the page shows each one exactly as the outlet wrote it.
 
 - `add`: numbers from NEW that earn a place in today's river this hour (at
-  most 40, or 60 when the river is empty). The river is meant to be long:
-  add everything that earns a place, leave out what does not. A passed item
-  does not come back later today.
+  most 40, or 60 when the river is empty), the most important first. The river
+  is meant to be long: add everything that earns a place, leave out what does
+  not. A passed item does not come back later today. The page mixes local and
+  national and spreads the outlets for you.
 - `lead` and `lead_why`: the item that leads the current update, from what you
   add this hour or from the current update's items already in the river, with
   a reason in the style of the picks. Use -1 and an empty reason only when
@@ -453,6 +464,83 @@ def spread_outlets(picks):
     return out
 
 
+def _fits(out, item, waiting, kind=True, outlet=True, posts=True):
+    """May `item` go next after `out`? `waiting` counts the items still to
+    place, `item` included: by kind (True local, False national), by channel
+    ("ch:x"), and in all ("all")."""
+    if not out:
+        return True
+    local, ch = bool(item.get("local")), item.get("ch")
+    if kind and waiting[not local] and len(out) >= KIND_RUN_MAX \
+            and all(bool(o.get("local")) == local for o in out[-KIND_RUN_MAX:]):
+        return False
+    if outlet and item.get("src") == out[-1].get("src"):
+        return False
+    if posts and ch in SPREAD_CHANNELS and waiting["all"] > waiting["ch:" + ch] \
+            and len(out) >= POST_RUN_MAX and all(o.get("ch") == ch for o in out[-POST_RUN_MAX:]):
+        return False
+    return True
+
+
+def _count(waiting, item, step):
+    for key in (bool(item.get("local")), "ch:" + str(item.get("ch")), "all"):
+        waiting[key] = waiting.get(key, 0) + step
+
+
+def spread_river(queue, placed=()):
+    """Order `queue` (most important first) after the already `placed` items:
+    each slot takes the most important item that keeps the house rules, which
+    are, from hardest to softest,
+
+    1. never more than KIND_RUN_MAX local, or national, in a row while the
+       other kind still has items to place
+    2. never two from one outlet back to back
+    3. never more than POST_RUN_MAX X posts (or Facebook, or Reddit) in a row
+       while anything else waits
+
+    It looks one slot ahead, so a choice does not leave the next slot no way
+    to keep them (AP, Reuters, AP, then only an AP and a local left). When no
+    item keeps all three, the softest gives way first. An order that already
+    keeps them comes back unchanged, so a settled update stays put."""
+    queue, out = list(queue), list(placed)
+    waiting = {True: 0, False: 0, "all": 0}
+    for item in queue:
+        _count(waiting, item, 1)
+
+    def leaves_a_move(k):
+        if len(queue) == 1:
+            return True
+        _count(waiting, queue[k], -1)
+        after = out + [queue[k]]
+        ok = any(_fits(after, item, waiting) for j, item in enumerate(queue) if j != k)
+        _count(waiting, queue[k], 1)
+        return ok
+
+    while queue:
+        fitting = [k for k, item in enumerate(queue) if _fits(out, item, waiting)]
+        at = next((k for k in fitting if leaves_a_move(k)), fitting[0] if fitting else None)
+        for rules in ((True, True, False), (True, False, False)):
+            if at is None:
+                at = next((k for k, item in enumerate(queue) if _fits(out, item, waiting, *rules)), None)
+        item = queue.pop(at if at is not None else 0)
+        _count(waiting, item, -1)
+        out.append(item)
+    return out[len(placed):]
+
+
+def order_update(items, lead_id=None, fresh=()):
+    """An update's items in reading order: the lead first, then this hour's
+    additions (`fresh`, ids most important first), then what the update
+    already held, in its stored order, all spread by spread_river. Older items
+    move only when a rule needs them to."""
+    rank = {item_id: k for k, item_id in enumerate(fresh)}
+    lead = [item for item in items if item["id"] == lead_id][:1]
+    new = sorted((item for item in items if item["id"] in rank and item["id"] != lead_id),
+                 key=lambda item: rank[item["id"]])
+    held = [item for item in items if item["id"] not in rank and item["id"] != lead_id]
+    return lead + spread_river(new + held, lead)
+
+
 def order_picks(picks):
     """The house rules on the editor's ranking, applied in order:
 
@@ -592,12 +680,15 @@ def apply_answer(day, answer, numbered_river, new, want_picks, et, now, previous
                     excess -= 1
         day["updates"] = updates = [u for u in updates if u["items"]]
 
-    # order inside each update: the lead first, then newest first
+    # order inside each update: the lead first, then this hour's additions in
+    # the editor's order (most important first), then the update's earlier
+    # items; local and national mixed, outlets and X bunches spread
+    # (order_update). An update that already reads well is left as it is, so
+    # only the current one really moves.
+    fresh = [by_index[index]["id"] for index in adds]
     for update in updates:
-        lead_id = (update.get("lead") or {}).get("id")
-        update["items"] = ([item for item in update["items"] if item["id"] == lead_id]
-                           + sorted((item for item in update["items"] if item["id"] != lead_id),
-                                    key=lambda item: item.get("posted_at") or "", reverse=True))
+        update["items"] = order_update(update["items"], (update.get("lead") or {}).get("id"),
+                                       fresh if update is current else ())
     if adds and current is not None:
         current["updated"] = stamp
         current["time"] = clock(et)
@@ -1082,6 +1173,17 @@ def selftest():
     spread = spread_outlets([{"src": "a"}, {"src": "a"}, {"src": "b"}])
     assert [p["src"] for p in spread] == ["a", "b", "a"]
     print("curate_wire: leads and outlet spread ok")
+
+    # the river inside an update: a bunch of local from one site is broken up
+    # by national, and one X desk's five posts never sit together
+    bunch = [mk(n, src=("wcax", "vtd")[n % 2]) for n in range(1, 7)] + \
+        [dict(mk(n, local=False, src="x:@AP"), ch="x") for n in range(7, 10)]
+    river_order = order_update(bunch, "id1", [item["id"] for item in bunch])
+    assert [item["local"] for item in river_order] == \
+        [True, True, True, False, True, True, True, False, False], river_order
+    assert river_order[0]["id"] == "id1"
+    assert order_update(river_order, "id1") == river_order          # settled stays put
+    print("curate_wire: river interleave ok")
 
     # one list by importance: national picks keep the editor's slots, so the
     # Everything view's top five mix; the tier sort moves local picks only

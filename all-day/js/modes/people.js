@@ -4,7 +4,7 @@
    - Who are you here as. The foundation's four archetypes as tiles (New in
      town, Weeknight regular, Trail person, Game night), and under them the
      longer list from Stephen's memo as tags: who you are (a student, just
-     graduated, just moved here, older and looking, a woman or LGBTQ and
+     graduated, just moved here, older and looking, a woman, LGBTQ+ or sober and
      finding your people) and what you are into (an athlete, a gamer, a
      runner, and the clubs page's other categories). The tile is the
      profile's archetype (boards.setProfile, so it shows on your plans) when
@@ -92,6 +92,11 @@ const MEETUP_FEED = 'https://play.btownbrief.com/up-for-it/data/meetup.json';
 const CH_FIND = 'https://www.btownbrief.com/community/channels/music';               // "Find Each Other"; the slug is historical
 const CH_PLANS = 'https://www.btownbrief.com/community/channels/meetups-hangouts';   // "Plans & Meetups"
 const TELEGRAM_URL = '../telegram.html';
+/* Stephen's general group chat. The card at the top of the tab shows only
+   while this is a real https://t.me/ link; set it to '' or 'TODO' and the
+   card hides. Never the movie / TV watch chat. */
+const GROUP_CHAT_URL = 'https://t.me/+pULrkkS4vjBiZjEx';
+const chatLink = (u) => (/^https:\/\/t\.me\/\+?[\w-]{4,}\/?$/.test(String(u || '')) ? String(u) : '');
 const STORE_KEY = 'allday-people';
 const DAY = 86400000;
 const MIX_DAYS = 14;          // Stephen's events this far ahead, every one of them
@@ -122,7 +127,10 @@ const ARCH = [
 const FOR = { new: 'new in town', regular: 'weeknight regulars', trail: 'trail people', games: 'game night people' };
 /* who you are: kept on this device, never sent anywhere */
 const WHO = [['student', 'A college student'], ['grad', 'Just graduated'], ['moved', 'Just moved here'], ['older', 'Older, looking for things to do'],
-  ['women', 'A woman finding my people'], ['lgbtq', 'LGBTQ, finding my people']];
+  ['women', 'A woman finding my people'], ['lgbtq', 'LGBTQ+, finding my people'], ['sober', 'Sober']];
+/* the short name of each tile, for the line over the For you strip */
+const TAG_NAME = { student: 'college students', grad: 'recent grads', moved: 'people new to town', older: 'older adults', women: 'women',
+  lgbtq: 'LGBTQ+', sober: 'Sober' };
 /* what you are into: the ones the directory may show, if you join it */
 const INTO = [['sports', 'An athlete'], ['games', 'A gamer'], ['running', 'A runner'], ['outdoors', 'Outdoorsy'], ['music', 'Into live music'],
   ['dance', 'A dancer'], ['books', 'A reader'], ['making', 'A maker'], ['languages', 'Learning a language'], ['food', 'Into food and drink']];
@@ -725,10 +733,28 @@ function render() {
   if (!slots) {
     root.innerHTML = '';
     slots = {};
-    ['arch', 'foryou', 'clubs', 'plans', 'mix', 'host', 'groups', 'quiz', 'dir', 'talk'].forEach((k) => { const s = el('div'); s.dataset.sec = k; slots[k] = s; root.appendChild(s); });
+    ['chat', 'arch', 'foryou', 'clubs', 'plans', 'mix', 'host', 'groups', 'quiz', 'dir', 'talk'].forEach((k) => { const s = el('div'); s.dataset.sec = k; slots[k] = s; root.appendChild(s); });
     root.appendChild(el('div', 'spacer'));
   }
-  drawArch(); drawForYou(); drawClubs(); drawPlans(); drawMix(); drawHost(); drawGroups(); drawQuiz(); drawDir(); drawTalk();
+  drawChat(); drawArch(); drawForYou(); drawClubs(); drawPlans(); drawMix(); drawHost(); drawGroups(); drawQuiz(); drawDir(); drawTalk();
+}
+
+/* The group chat, first thing on the tab: a title, one line, one button.
+   Nothing shows until GROUP_CHAT_URL is a real t.me link. */
+function drawChat() {
+  const s = slots && slots.chat;
+  if (!s) return;
+  s.innerHTML = '';
+  const url = chatLink(GROUP_CHAT_URL);
+  s.hidden = !url;
+  if (!url) return;
+  const tc = el('div', 'textcard chatcard', '<h3 class="serif">Join the group chat</h3><p>Ask what’s on, find someone to go with, meet people here.</p>');
+  tc.dataset.chat = '1';
+  const r = el('div', 'row');
+  r.appendChild(linkBtn('Join on Telegram', url, 'btn'));
+  tc.appendChild(r);
+  s.appendChild(tc);
+  s.appendChild(el('div', 'spacer'));
 }
 
 function drawArch() {
@@ -798,7 +824,10 @@ function drawForYou() {
   const keys = picks();
   s.hidden = !keys.length;
   if (!keys.length) return;
-  sec(s, 'For you');
+  /* say what the strip is showing, in the names of what is picked */
+  const names = keys.map((k) => (k.startsWith('a:') ? ARCHETYPE_LABELS[k.slice(2)] : TAG_NAME[k] || INTEREST_WORDS[k] || k));
+  const list = names.length < 3 ? names.join(' and ') : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+  sec(s, 'For you', 'Groups and clubs for ' + list + '.');
   const box = el('div', 'foryou');
   box.dataset.foryou = keys.join(' ');
   s.appendChild(box);
