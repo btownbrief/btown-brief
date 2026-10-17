@@ -349,7 +349,7 @@ const COMBOS = [
 ];
 const PAPER = { light: 'rgb(251, 249, 245)', dark: 'rgb(13, 14, 16)' };
 /* tabs that are built: live, they draw their screen instead of the promise */
-const LIVE = new Set(['wire', 'whatnow', 'onair', 'games', 'food']);
+const LIVE = new Set(['wire', 'whatnow', 'onair', 'games', 'food', 'art']);
 
 async function matrix(browser, base) {
   for (const combo of COMBOS) {
@@ -402,8 +402,8 @@ async function matrix(browser, base) {
             await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '.png') });
           }
           if (demo && combo === COMBOS[1] && tab === 'wire') await page.screenshot({ path: path.join(SHOTS, 'demo-wire-dark.png') });
-          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
-          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'food' || tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
+          if (demo && combo === COMBOS[3] && (tab === 'wire' || tab === 'onair' || tab === 'games' || tab === 'art')) await page.screenshot({ path: path.join(SHOTS, 'demo-' + tab + '-desktop.png') });
+          if (!demo && combo === COMBOS[0] && (tab === 'wire' || tab === 'food' || tab === 'onair' || tab === 'games' || tab === 'art')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '.png') });
           if (!demo && combo === COMBOS[1] && (tab === 'onair' || tab === 'games')) await page.screenshot({ path: path.join(SHOTS, 'live-' + tab + '-dark.png') });
         }
         const gc = await page.evaluate(() => window.__gc);
@@ -431,7 +431,7 @@ async function flashes(page, key) {
 
 async function deepLinks(browser, base) {
   await group('deep links, demo', async () => {
-    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'r-demo-all-night-diner'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'aw6'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
+    const cases = [['wire', 'w13'], ['wire', 'y4'], ['watch', 'fm3'], ['food', 'r-demo-all-night-diner'], ['people', 'pp2'], ['whatnow', 'e-tn3'], ['vintage', 'sp2'], ['art', 'b-0000a000-0000-4000-8000-000000000002'], ['onair', 'yt:demo-tv-003'], ['games', 'g:trivia-ladder'], ['games', 'champ:btown-riddle']];
     for (const [tab, key] of cases) {
       const { ctx, page, errors } = await newPage(browser, base);
       await page.goto(base + '/all-day/?demo=1#' + tab + '/' + key);
@@ -2144,6 +2144,245 @@ async function boardPhotos(browser, base) {
   });
 }
 
+/* ------------------------------------------------------------------ Art */
+const artPanel = '#panel-art';
+const artId = (n) => '0000c000-0000-4000-8000-' + String(n).padStart(12, '0');
+const ART_POST = (o) => ({ id: o.id, board: 'art', kind: o.kind || 'photo', title: o.title, body: o.body || '', place: o.place || '', meta: o.meta || { shirt: 'no' },
+  photo: o.photo === undefined ? 'submissions/' + o.id.slice(-12) + '.jpg' : o.photo, author: o.author || 'Kara', author_arch: null,
+  created_at: o.at, expires_at: o.expires || null, votes: o.votes || 0, voted: false, mine: false });
+/* nn_posts_list as the SQL answers it: newest first, before a time, at most p_limit */
+const artList = (posts, calls) => (fn, args) => {
+  if (fn !== 'nn_posts_list') return undefined;
+  if (calls) calls.push(args);
+  const before = args.p_before ? Date.parse(args.p_before) : Infinity;
+  return posts.filter((p) => Date.parse(p.created_at) < before).sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, args.p_limit);
+};
+const artText = (page, sel) => page.$eval(artPanel + ' ' + sel, (n) => n.textContent);
+const artReload = (page) => page.evaluate(() => window.dispatchEvent(new CustomEvent('allday-boards', { detail: { board: 'art', id: null, what: 'test' } })));
+
+async function theArt(browser, base) {
+  await group('Art, photo of the week on a frozen Burlington clock (live, a reader in Los Angeles)', async () => {
+    const H = 3600000;
+    const posts = [
+      ART_POST({ id: artId(1), title: 'Sunday night, 11:30', at: '2026-10-12T03:30:00Z', votes: 50 }),
+      ART_POST({ id: artId(2), kind: 'art', title: 'Monday, 12:30 am', at: '2026-10-12T04:30:00Z', votes: 10, meta: { medium: 'Gouache', shirt: 'yes' } }),
+      ART_POST({ id: artId(3), title: 'Tuesday afternoon', at: '2026-10-13T16:00:00Z', votes: 9 }),
+      ART_POST({ id: artId(4), kind: 'notice', title: 'Open studio Saturday', photo: null, at: '2026-10-13T12:00:00Z', expires: '2026-11-12T12:00:00Z', votes: 40 }),
+    ];
+    /* one a day back past nine weeks, so the list needs a second page and every week has a winner */
+    for (let i = 0; i < 70; i++) posts.push(ART_POST({ id: artId(100 + i), title: 'Day ' + i, at: new Date(Date.parse('2026-10-11T12:00:00Z') - i * 24 * H).toISOString(), votes: i % 4 }));
+    const calls = [];
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', rpc: artList(posts, calls) });
+    await page.clock.setFixedTime(new Date('2026-10-14T14:00:00Z'));   // Wednesday, 10 am in Burlington, 7 am for this reader
+    await page.goto(base + '/all-day/#art');
+    await settle(page);
+    const hero = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ eyebrow: s.querySelector('.eyebrow').textContent, title: s.querySelector('h3').textContent,
+      votes: s.querySelector('[data-vk] .vn').textContent, shirt: s.querySelector('[data-shirt]') && s.querySelector('[data-shirt]').getAttribute('href') }));
+    check(hero.eyebrow === 'Photo of the week' && hero.title === 'Monday, 12:30 am' && hero.votes === '10',
+      'the top-voted post since Monday in Burlington wins: 50 votes at 11:30 pm Sunday there is last week’s, though it is Monday in UTC', JSON.stringify(hero));
+    check(hero.shirt === '#vintage/' + encodeURIComponent('b-' + artId(2)), 'its maker said yes to a shirt: “Put it on a shirt” goes to #vintage with the post key', JSON.stringify(hero));
+    check(calls.length >= 2 && calls.every((c) => c.p_board === 'art' && c.p_limit === 60) && !calls[0].p_before && calls[1].p_before === posts.slice().sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))[59].created_at,
+      'the list is paged, 60 at a time, until the eighth week back is in', JSON.stringify(calls.map((c) => c.p_before)));
+    const wins = await page.$$eval(artPanel + ' [data-sec="winners"] .vcard', (cs) => cs.map((c) => [c.querySelector('.t').textContent, c.querySelector('.s').textContent]));
+    check(wins.length === 8 && wins[0][0] === 'Week of Oct 5' && /Sunday night, 11:30/.test(wins[0][1]) && wins[7][0] === 'Week of Aug 17',
+      'Winners: the past eight weeks, newest first, and the Sunday-night post wins its own week', JSON.stringify(wins));
+    check(wins.every((w) => /^Kara · /.test(w[1])), 'each winner carries the maker’s name, and nothing else to win', JSON.stringify(wins[0]));
+    const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => t.getAttribute('aria-label')));
+    check(/^Tuesday afternoon/.test(tiles[0]) && /^Monday, 12:30 am/.test(tiles[1]) && !tiles.some((t) => /Open studio/.test(t)), 'the wall is newest first, pictures only', tiles.slice(0, 3).join(' | '));
+    check(/Open studio Saturday/.test(await artText(page, '[data-sec="board"]')), 'the notice is on the community board instead', '');
+    await pageRules(page, 'art', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, a vote that overtakes takes the week (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#art');
+    await settle(page);
+    const heroTitle = () => artText(page, '[data-sec="week"] h3');
+    check(await heroTitle() === 'The breakwater light in fog', 'two posts tie on 23 this week, and the one posted first leads', await heroTitle());
+    const tile = artPanel + ' .tile[aria-label^="Aurora from the causeway"]';
+    check(await page.$eval(tile + ' .vn', (n) => n.textContent) === '23', 'the tile shows its votes', '');
+    await page.click(tile);
+    await page.waitForSelector('.sheet-card[aria-label="Aurora from the causeway"]');
+    await page.click('.sheet-body [data-act="artvote"]');
+    await page.waitForFunction(() => document.querySelector('#panel-art [data-sec="week"] h3').textContent === 'Aurora from the causeway', null, { timeout: 3000 }).catch(() => {});
+    check(await heroTitle() === 'Aurora from the causeway', 'one vote puts it ahead, and the photo of the week changes', await heroTitle());
+    const after = await page.evaluate(() => ({ sheet: document.querySelector('.sheet-body [data-act="artvote"]').getAttribute('aria-pressed'), sheetN: document.querySelector('.sheet-body [data-act="artvote"] .vn').textContent,
+      tile: document.querySelector('#panel-art .tile[aria-label^="Aurora"] .vn').textContent, hero: document.querySelector('#panel-art [data-sec="week"] [data-vk] .vn').textContent }));
+    check(after.sheet === 'true' && after.sheetN === '24' && after.tile === '24' && after.hero === '24', 'the count is 24 on the sheet, the tile and the hero', JSON.stringify(after));
+    check(await fakeOf(page, `(f) => f._count('${'0000a000-0000-4000-8000-000000000002'}')`) === 24, 'and the board counted it', '');
+    await page.click('.sheet-body [data-act="artvote"]');
+    await page.waitForFunction(() => document.querySelector('#panel-art [data-sec="week"] h3').textContent === 'The breakwater light in fog', null, { timeout: 3000 }).catch(() => {});
+    check(await heroTitle() === 'The breakwater light in fog', 'taking the vote back hands the week back', await heroTitle());
+    await page.click('.sheet-head .iconbtn');
+    await page.click(artPanel + ' [data-sec="week"] button[data-vk]');
+    await page.waitForTimeout(150);
+    check(await page.$eval(artPanel + ' [data-sec="week"] button[data-vk]', (b) => b.getAttribute('aria-pressed') + ' ' + b.querySelector('.vn').textContent) === 'true 24' && await heroTitle() === 'The breakwater light in fog',
+      'the hero’s own Vote button counts too', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, the wall opens a tile in a sheet (demo, wide, dark)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { viewport: { width: 1280, height: 800 }, scheme: 'dark' });
+    await page.goto(base + '/all-day/?demo=1#art/wall');
+    await settle(page);
+    const grid = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t, i) => ({ i, tall: t.classList.contains('tall'), ct: !!t.querySelector('.ct'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent })));
+    check(grid.length === 17 && grid.filter((t) => t.ct).length === 14 && grid.filter((t) => t.lbl === 'From the gallery').length === 3, 'fourteen posts with votes and three gallery photos', JSON.stringify(grid.length));
+    check(JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)) === '[0,7,10]', 'two tall tiles in every ten, none where it would leave a hole', JSON.stringify(grid.filter((t) => t.tall).map((t) => t.i)));
+    const holes = await page.$eval(artPanel + ' .grid3', (g) => {
+      const r = [...g.children].map((t) => t.getBoundingClientRect());
+      const area = r.reduce((s, x) => s + x.width * x.height, 0);
+      const box = g.getBoundingClientRect();
+      const last = r.slice(-3).every((x) => Math.abs(x.bottom - r[r.length - 1].bottom) < 2);
+      return { fill: area / ((box.width - 32) * box.height), last };
+    });
+    check(holes.fill > 0.8, 'the grid is filled, no gaps', JSON.stringify(holes));
+    await page.click(artPanel + ' .tile[aria-label^="The Flynn marquee"]');
+    await page.waitForSelector('.sheet-card[aria-label="The Flynn marquee"]');
+    const sh = await page.$eval('.sheet-body', (b) => ({ media: !!b.querySelector('.c-media.r11 .ph'), text: b.innerText,
+      acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act), shirt: b.querySelector('[data-shirt]') && b.querySelector('[data-shirt]').getAttribute('href') }));
+    check(sh.media, 'the sheet shows the whole picture in its own shape', JSON.stringify(sh));
+    check(/by Priya N\. · Art · Linocut/.test(sh.text) && /Three-color linocut/.test(sh.text), 'with the title, the maker, the medium and their line', sh.text);
+    check(JSON.stringify(sh.acts) === '["artvote","share","breport"]' && /^#vintage\/b-/.test(sh.shirt || ''), 'and vote, share, report, and the shirt', JSON.stringify(sh));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-art-sheet-desktop-dark.png') });
+    await page.click('.sheet-body [data-act="breport"]');
+    check(/Reporting needs the email sign-in/.test(await page.$eval('#toast', (t) => t.textContent)), 'report goes to the boards’ own flow (signed out, it asks for sign-in)', '');
+    await page.click('.sheet-head .iconbtn');
+    await page.click(artPanel + ' .tile:has(.lbl)');
+    await page.waitForSelector('.sheet-card');
+    const g = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act) }));
+    check(/Photo by Stephen/.test(g.text) && /community gallery/.test(g.text) && JSON.stringify(g.acts) === '["share"]', 'a gallery photo’s sheet: who took it, where, share, and no votes', JSON.stringify(g));
+    await page.click('.sheet-head .iconbtn');
+    await pageRules(page, 'art', 1280);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, a photo post composes with consent and lands pending (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { motion: 'reduce' });
+    await page.goto(base + '/all-day/?demo=1#art/add');
+    await settle(page);
+    await page.evaluate(() => import('/all-day/js/auth.js').then((a) => a.demoSignIn()));
+    await page.click(artPanel + ' [data-sec="add"] button:has-text("Add art")');
+    await page.waitForSelector('.sheet-body form.bform');
+    check(await page.$('input[name="m:medium"]') !== null && await page.$('select[name="m:shirt"]') !== null, 'Add art asks for the medium and the shirt', '');
+    await page.click('.sheet-head .iconbtn');
+    const tiles0 = await page.$$eval(artPanel + ' .grid3 .tile', (t) => t.length);
+    await page.click(artPanel + ' [data-sec="add"] button:has-text("Add a photo")');
+    await page.waitForSelector('.sheet-body form.bform');
+    check(await page.$('input[name="m:medium"]') === null && await page.$('select[name="m:shirt"]') !== null, 'Add a photo asks for the shirt, not a medium', '');
+    check(/Stephen approves every photo before it shows/.test(await page.$eval('.bform', (f) => f.innerText)), 'and says Stephen approves photos first', '');
+    await page.fill('input[name=display_name]', 'Robin');
+    await page.fill('input[name=title]', 'Leddy at dusk');
+    await page.fill('textarea[name=body]', 'From the end of the pier.');
+    await page.selectOption('select[name="m:shirt"]', 'yes');
+    await page.setInputFiles('.bform input[type=file]', { name: 'leddy.jpg', mimeType: 'image/jpeg', buffer: PNG });
+    await page.click('.bform button[type=submit]');
+    check(/Tick the box first/.test(await page.$eval('.bf-msg', (m) => m.textContent)), 'without the consent box: refused', '');
+    await page.check('.bform input[name=consent]');
+    await page.click('.bform button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 });
+    check(/The photo shows once it’s been checked/.test(await page.$eval('#toast', (t) => t.textContent)), 'with it: posted, and the toast says the photo waits', await page.$eval('#toast', (t) => t.textContent));
+    const row = await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); return p && { kind: p.kind, meta: p.meta, body: p.body, photo: f.photos.get(p.photo_path).status }; }`);
+    check(row && row.kind === 'photo' && row.meta.shirt === 'yes' && row.body === 'From the end of the pier.' && row.photo === 'pending', 'it is on the board as a photo post, its picture pending in the queue', JSON.stringify(row));
+    await page.waitForFunction(() => !document.querySelector('#panel-art .waiting').hidden, null, { timeout: 3000 }).catch(() => {});
+    check(await artText(page, '.waiting') === '1 picture of yours is waiting for Stephen’s look.', 'Add yours says one is waiting', await artText(page, '.waiting'));
+    check(await page.$$eval(artPanel + ' .grid3 .tile', (t) => t.length) === tiles0 && !(await page.$(artPanel + ' .tile[aria-label^="Leddy at dusk"]')), 'and the wall does not show it yet', '');
+    await fakeOf(page, `(f) => { const p = f.posts.find((x) => x.title === 'Leddy at dusk'); f.setPhoto(p.photo_path, 'approved'); return 1; }`);
+    await artReload(page);
+    await page.waitForSelector(artPanel + ' .tile[aria-label^="Leddy at dusk"]', { timeout: 3000 }).catch(() => {});
+    check(/^Leddy at dusk, by Robin/.test(await page.$eval(artPanel + ' .grid3 .tile', (t) => t.getAttribute('aria-label'))), 'once Stephen approves it, it leads the wall, by first name', '');
+    check(await page.$eval(artPanel + ' .waiting', (n) => n.hidden), 'and nothing is waiting any more', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, the community board, and a notice running out (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#art/board');
+    await settle(page);
+    const board = () => page.$$eval(artPanel + ' [data-sec="board"] .card.board', (cs) => cs.map((c) => [c.querySelector('.b-title').textContent, (c.querySelector('.tag-left') || {}).textContent || '']));
+    const b0 = await board();
+    check(b0.length === 4 && /^Looking for a model/.test(b0[0][0]) && b0.every((b) => /^(\d+d|\d+h) left$/.test(b[1])), 'four notices, newest first, each with its days left', JSON.stringify(b0));
+    check(/^30d left$|^29d left$/.test(b0[0][1]), 'a new notice has thirty days', b0[0][1]);
+    await fakeOf(page, `(f) => { f.posts.find((p) => p.title === 'Free easel, first come').expires_at = Date.now() - 1000; return 1; }`);
+    await artReload(page);
+    await page.waitForFunction(() => document.querySelectorAll('#panel-art [data-sec="board"] .card.board').length === 3, null, { timeout: 3000 }).catch(() => {});
+    const b1 = await board();
+    check(b1.length === 3 && !b1.some((b) => /Free easel/.test(b[0])), 'a notice past its thirty days leaves the board', JSON.stringify(b1));
+    await page.click(artPanel + ' [data-sec="board"] .sec button:has-text("Post")');
+    await page.waitForSelector('.sheet-card[aria-label="Post a notice"]');
+    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'posting a notice asks for the sign-in first', '');
+    await page.click('.sheet-head .iconbtn');
+    await pageRules(page, 'art', 390);
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, “Put it on a shirt” goes to Vintage with the post key (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#art');
+    await settle(page);
+    const key = 'b-0000a000-0000-4000-8000-000000000001';
+    check(await page.$eval(artPanel + ' [data-sec="week"] [data-shirt]', (a) => a.getAttribute('href')) === '#vintage/' + key, 'the hero links to #vintage/<its key>', '');
+    await page.click(artPanel + ' [data-sec="week"] [data-shirt]');
+    await page.waitForFunction(() => document.querySelector('#tab-vintage').getAttribute('aria-selected') === 'true', null, { timeout: 4000 }).catch(() => {});
+    check(await page.evaluate(() => location.hash) === '#vintage/' + key && await page.$eval('#tab-vintage', (b) => b.getAttribute('aria-selected')) === 'true', 'and tapping it opens Vintage with that key in the address', await page.evaluate(() => location.hash));
+    const found = await page.evaluate((k) => import('/all-day/js/boards.js').then((b) => b.list('art', { meta: { shirt: 'yes' }, limit: 60 }).then((r) => r.posts.find((p) => 'b-' + p.id === k))), key);
+    check(found && found.title === 'The breakwater light in fog' && found.photo, 'Vintage can find the picture from the key alone', JSON.stringify(found && found.title));
+    await page.goto(base + '/all-day/?demo=1#art');
+    await settle(page);
+    await page.click(artPanel + ' .tile[aria-label^="Church Street in rain"]');
+    await page.waitForSelector('.sheet-card[aria-label="Church Street in rain"]');
+    check(!(await page.$('.sheet-body [data-shirt]')), 'a maker who said no gets no shirt button', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('Art, the gallery fills the wall before anyone posts (live, the SQL not pasted)', async () => {
+    const at = (d) => d;
+    const rows = [
+      ['11111111-0000-4000-8000-000000000001', 'Sunset from Waterfront Park', 'sunsets', 'Waterfront Park', '2026-04-02'],
+      ['11111111-0000-4000-8000-000000000002', 'Church Street lights', 'street', 'Church Street', '2026-04-02'],
+      ['11111111-0000-4000-8000-000000000003', 'The ferry dock', 'other', 'King Street dock', '2026-04-01'],
+      ['11111111-0000-4000-8000-000000000004', 'Leddy in June', 'sunsets', 'Leddy Park', '2026-06-20'],
+      ['11111111-0000-4000-8000-000000000005', 'Pine Street mural', 'street', 'Pine Street', '2026-08-03'],
+      ['11111111-0000-4000-8000-000000000006', 'A board photo', 'other', 'All Day · Art', at('2026-10-10')],
+      ['11111111-0000-4000-8000-000000000007', 'Tacos al pastor', 'dish', 'Taco Gordo', '2026-10-01'],
+    ].map(([id, caption, category, spot, approved_on]) => ({ id, storage_path: 'submissions/' + id.slice(-4) + '.jpg', caption, category, area: 'Downtown / Church St', spot,
+      taken_on: '', credit: 'Stephen', display_label: null, approved_on, votes: 3 }));
+    const { ctx, page, errors } = await newPage(browser, base, {
+      rpc: (fn) => (fn === 'btb_photos_get' ? rows : /^nn_/.test(fn) ? { status: 404, body: { code: 'PGRST202', message: 'Could not find the function' } } : undefined),
+    });
+    await page.goto(base + '/all-day/#art');
+    await settle(page);
+    await page.waitForSelector(artPanel + ' .grid3 .tile', { timeout: 6000 }).catch(() => {});
+    const tiles = await page.$$eval(artPanel + ' .grid3 .tile', (ts) => ts.map((t) => ({ label: t.getAttribute('aria-label'), lbl: t.querySelector('.lbl') && t.querySelector('.lbl').textContent,
+      votes: !!t.querySelector('.ct'), src: t.querySelector('img') && t.querySelector('img').getAttribute('src'), lazy: t.querySelector('img') && t.querySelector('img').getAttribute('loading') })));
+    check(tiles.length === 5 && tiles.every((t) => t.lbl === 'From the gallery' && !t.votes), 'the five gallery photos, labelled from the gallery, without votes', JSON.stringify(tiles.map((t) => t.label)));
+    check(/^Pine Street mural/.test(tiles[0].label) && tiles.every((t) => /\/storage\/v1\/object\/public\/btb-photos\/submissions\/\w+\.jpg$/.test(t.src) && t.lazy === 'lazy'), 'newest approved first, lazy, from the public bucket', JSON.stringify(tiles[0]));
+    check(!tiles.some((t) => /A board photo|Tacos/.test(t.label)), 'a board post’s photo and Food’s dishes stay off the gallery half', '');
+    const invite = await page.$eval(artPanel + ' [data-sec="week"]', (s) => ({ text: s.innerText, k: s.querySelector('[data-k]') && s.querySelector('[data-k]').dataset.k }));
+    check(invite.k === 'invite' && /Nobody has put a picture on the wall yet/.test(invite.text) && /Best spot: Waterfront Park/.test(invite.text),
+      'with no posts at all, the top invites the first, with the best spot for tonight’s light', invite.text);
+    await page.click(artPanel + ' .tile');
+    await page.waitForSelector('.sheet-card[aria-label="Pine Street mural"]');
+    const sh = await page.$eval('.sheet-body', (b) => ({ text: b.innerText, acts: [...b.querySelectorAll('[data-act]')].map((x) => x.dataset.act) }));
+    check(/Photo by Stephen · Pine Street, Downtown \/ Church St/.test(sh.text) && JSON.stringify(sh.acts) === '["share"]', 'its sheet credits the photographer and has no vote or report', JSON.stringify(sh));
+    await page.click('.sheet-head .iconbtn');
+    await page.click(artPanel + ' [data-sec="add"] button:has-text("Add a photo")');
+    await page.waitForSelector('.sheet-card[aria-label="Add a photo"]');
+    check(/Posting needs the email sign-in/.test(await page.$eval('.sheet-body', (b) => b.innerText)), 'Add a photo, signed out, asks for the sign-in', '');
+    await page.click('.sheet-head .iconbtn');
+    await pageRules(page, 'art', 390);
+    await page.screenshot({ path: path.join(SHOTS, 'live-art-gallery.png') });
+    check(!errors.filter((e) => !/status of 404/.test(e)).length, 'no console errors beyond the browser logging the missing function', errors.join(' | '));
+    await ctx.close();
+  });
+}
+
 /* ---------------------------------------------------------- shell fixes */
 /* The small shell changes the tab sessions asked for, one check each. */
 async function shellFixes(browser, base) {
@@ -2325,6 +2564,7 @@ try {
   await run(accounts);
   await run(boards);
   await run(boardPhotos);
+  await run(theArt);
 } finally {
   await browser.close();
   proc.kill();
