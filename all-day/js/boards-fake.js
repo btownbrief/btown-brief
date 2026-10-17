@@ -1,5 +1,6 @@
 /* boards-fake.js — an in-memory copy of supabase/nn-SETUP.sql with
-   nn-ROUND2.sql over it, for ?demo=1 and for scripts/test-boards-core.mjs.
+   nn-ROUND2.sql to nn-ROUND4.sql over it, for ?demo=1 and for
+   scripts/test-boards-core.mjs.
 
    Same function names, same arguments, same answers, same refusal codes, in
    the same order of checks, built on the same rules (boards-core.js). It
@@ -13,9 +14,13 @@
    and setPhoto() stand in for a reader uploading and Stephen approving.
    The bucket's picture files are a map of path to upload time (addFile);
    a photo-queue row needs no file here, but a stray file is one with no
-   row and no post (nn_mod_photo_sweep). */
+   row and no post (nn_mod_photo_sweep).
 
-import { RULES, checkProfile, checkPost, mergeMeta, expiresAt, startsPending, photoRequired, oneVote, rateError, voterFor, isoWeek, lastWeeks } from './boards-core.js';
+   The People directory (nn-people.sql's nn_people_dir) is mirrored only as
+   far as nn_handles_recent needs it: a set of the account ids in it
+   (peopleDir). people.js keeps its own demo copy of the directory itself. */
+
+import { RULES, checkProfile, checkPost, mergeMeta, expiresAt, dateError, leadingDate, etDate, startsPending, photoRequired, oneVote, rateError, voterFor, isoWeek, lastWeeks } from './boards-core.js';
 
 const fail = (code) => { const e = new Error(code); e.code = code; return e; };
 const DAY = 86400000;
@@ -28,7 +33,8 @@ export class FakeBoards {
     this.rules = rules || RULES;
     this.modSecret = modSecret || null;   // null: the passphrase line has not been run
     this.uid = null;
-    this.profiles = new Map();   // uid -> { display_name, neighborhood, archetype, interests }
+    this.profiles = new Map();   // uid -> { display_name, neighborhood, archetype, interests, handles, handles_public, updated_at }
+    this.peopleDir = new Set();  // uids in the People directory (nn_people_dir)
     this.posts = [];             // rows, as nn_posts holds them
     this.votes = new Set();      // `${postId}|${voter}`
     this.voteAt = new Map();     // the same key -> when it was cast; a vote seeded without one counts from its post's time
@@ -119,21 +125,66 @@ export class FakeBoards {
 
   /* -------------------------------------------------------------- profiles */
   nn_rules() { return JSON.parse(JSON.stringify(this.rules)); }
+  _profileOut(p) {
+    return { display_name: p.display_name, neighborhood: p.neighborhood, archetype: p.archetype, interests: (p.interests || []).slice(),
+      handles: { ...(p.handles || {}) }, handles_public: !!p.handles_public };
+  }
   nn_profile_get() {
     const u = this._need();
     const p = this.profiles.get(u);
-    return p ? { ...p, interests: (p.interests || []).slice() } : null;
+    return p ? this._profileOut(p) : null;
   }
-  /* Two calls in the SQL, one here: without p_interests (the round-one
-     call) the reader's interests stay as they are; a list replaces them. */
-  nn_profile_set({ p_display_name, p_neighborhood = null, p_archetype = null, p_interests }) {
+  /* Three calls in the SQL, one here. Without p_interests (the round-one
+     call) the reader's interests stay as they are; a list replaces them.
+     p_handles and p_handles_public belong to round four's call, which
+     needs p_interests and p_handles both present (null keeps, as before);
+     PostgREST finds no function for any other mix, and neither does this.
+     The two older calls answer without the handles, as they do in SQL. */
+  nn_profile_set(a) {
+    const { p_display_name, p_neighborhood = null, p_archetype = null, p_interests, p_handles, p_handles_public } = a;
+    const four = 'p_handles' in a || 'p_handles_public' in a;
+    if (four && !('p_handles' in a && 'p_interests' in a)) throw fail('no_function');
     const u = this._need();
-    const r = checkProfile(this.rules, { display_name: p_display_name, neighborhood: p_neighborhood, archetype: p_archetype, interests: p_interests });
+    const r = checkProfile(this.rules, { display_name: p_display_name, neighborhood: p_neighborhood, archetype: p_archetype, interests: p_interests,
+      handles: four ? p_handles : undefined, handles_public: four ? p_handles_public : undefined });
     if (!r.ok) throw fail(r.error);
-    const had = this.profiles.get(u);
-    const profile = { ...r.profile, interests: r.profile.interests || (had && had.interests ? had.interests.slice() : []) };
+    const had = this.profiles.get(u) || {};
+    const profile = {
+      display_name: r.profile.display_name, neighborhood: r.profile.neighborhood, archetype: r.profile.archetype,
+      interests: r.profile.interests || (had.interests ? had.interests.slice() : []),
+      handles: r.profile.handles || { ...(had.handles || {}) },
+      handles_public: r.profile.handles_public != null ? r.profile.handles_public : !!had.handles_public,
+      updated_at: this._t(),
+    };
     this.profiles.set(u, profile);
-    return { ...profile, interests: profile.interests.slice() };
+    const out = this._profileOut(profile);
+    if (four) return out;
+    delete out.handles; delete out.handles_public;
+    return out;
+  }
+  /* nn_handles_recent: the newest-updated profiles with handles of these
+     kinds, shown to anyone when the switch is on, and to a fellow member
+     of the People directory when they are in it; never a banned reader,
+     never an account id */
+  nn_handles_recent({ p_kinds = null, p_limit = 20 } = {}) {
+    const R = this.rules;
+    let kinds;
+    if (p_kinds == null || (Array.isArray(p_kinds) && !p_kinds.length)) kinds = Object.keys(R.handles);
+    else {
+      if (!Array.isArray(p_kinds)) throw fail('bad_handle');
+      kinds = [];
+      for (const k of p_kinds) { if (typeof k !== 'string' || !R.handles[k]) throw fail('bad_handle'); if (!kinds.includes(k)) kinds.push(k); }
+    }
+    const lim = Math.min(Math.max(p_limit == null ? 20 : p_limit, 1), R.limits.listMax);
+    const u = this.uid;
+    const member = !!u && !this.bans.has(u) && this.peopleDir.has(u);
+    return [...this.profiles]
+      .map(([uid, p]) => ({ uid, p, h: Object.fromEntries(Object.entries(p.handles || {}).filter(([k]) => kinds.includes(k))) }))
+      .filter(({ uid, p, h }) => Object.keys(h).length && !this.bans.has(uid) && (p.handles_public || (member && this.peopleDir.has(uid))))
+      .sort((a, b) => (b.p.updated_at || 0) - (a.p.updated_at || 0))
+      .slice(0, lim)
+      .map(({ uid, p, h }) => ({ display_name: p.display_name, neighborhood: p.neighborhood || null, handles: h,
+        updated_at: new Date(p.updated_at || 0).toISOString(), me: uid === u }));
   }
 
   /* ---------------------------------------------------------------- posts */
@@ -144,6 +195,8 @@ export class FakeBoards {
     const photo = p_photo || null;
     const r = checkPost(this.rules, p_board, { kind: p_kind, title: p_title, body: p_body, place: p_place, meta: p_meta, photo_path: photo });
     if (!r.ok) throw fail(r.error);
+    const late = dateError(this.rules, p_board, p_kind, r.post.meta, this._t());
+    if (late) throw fail(late);
     if (photo && (!this._claimable(photo) || this.posts.some((p) => p.photo_path === photo))) throw fail('bad_photo');
     this._sweep();
     const t = this._t();
@@ -154,7 +207,7 @@ export class FakeBoards {
     const row = {
       id: newId(), board: p_board, user_id: u, kind: p_kind, title: r.post.title, body: r.post.body, photo_path: photo,
       photo_req: photoRequired(this.rules, p_board, p_kind), meta: r.post.meta, place: r.post.place,
-      expires_at: expiresAt(this.rules, p_board, p_kind, t), status: startsPending(this.rules, p_board) ? 'pending' : 'approved',
+      expires_at: expiresAt(this.rules, p_board, p_kind, t, r.post.meta), status: startsPending(this.rules, p_board) ? 'pending' : 'approved',
       reports: 0, created_at: t, decided_at: null,
     };
     this.posts.push(row);
@@ -203,6 +256,15 @@ export class FakeBoards {
     if (!p) throw fail('not_found');
     const m = mergeMeta(this.rules, p.board, p.kind, p.meta, p_meta);
     if (m.error) throw fail(m.error);
+    /* a gathering's date moved: its end moves with it */
+    const kr = this.rules.boards[p.board].kinds[p.kind];
+    if (kr.until && JSON.stringify(m.meta[kr.until]) !== JSON.stringify(p.meta[kr.until])) {
+      if (leadingDate(m.meta[kr.until])) {
+        const late = dateError(this.rules, p.board, p.kind, m.meta, this._t());
+        if (late) throw fail(late);
+        p.expires_at = expiresAt(this.rules, p.board, p.kind, this._t(), m.meta);
+      } else p.expires_at = kr.days ? p.created_at + kr.days * DAY : null;
+    }
     p.meta = m.meta;
     if (startsPending(this.rules, p.board) && p.status === 'approved') p.status = 'pending';
     return { ...this._json(p, 'u:' + u, u), status: p.status };
@@ -385,13 +447,48 @@ export function seedDemo(fake) {
     ['demo-0000-4000-8000-00000000jess', 'Jess T.', 'hill', null],
   ];
   people.forEach(([id, name, hood, arch]) => fake.profiles.set(id, { display_name: name, neighborhood: hood, archetype: arch, interests: [] }));
+  /* a dozen neighbors with handles (the first five above among them):
+     [who, handles, switch on, in the People directory, hours since they
+     last saved their profile]. Who shows in nn_handles_recent depends on
+     both, as on the server. */
+  const more = [
+    ['demo-0000-4000-8000-00000000ruth', 'Ruth P.', 'winooski', 'regular'],
+    ['demo-0000-4000-8000-00000000omar', 'Omar S.', 'south-burlington', 'games'],
+    ['demo-0000-4000-8000-00000000lena', 'Lena V.', 'hill', 'trail'],
+    ['demo-0000-4000-8000-00000000ben0', 'Ben C.', 'essex', 'new'],
+    ['demo-0000-4000-8000-00000000ivy0', 'Ivy N.', 'shelburne', null],
+    ['demo-0000-4000-8000-00000000caro', 'Caro L.', 'waterfront', 'regular'],
+    ['demo-0000-4000-8000-00000000sami', 'Sami H.', 'colchester', 'games'],
+  ];
+  more.forEach(([id, name, hood, arch]) => fake.profiles.set(id, { display_name: name, neighborhood: hood, archetype: arch, interests: [] }));
+  const everyone = people.concat(more);
+  const handles = [
+    [0, { strava: 'maya_runs_btv', instagram: 'maya.outside', letterboxd: 'mayar' }, true, true, 2],
+    [1, { psn: 'DevKplays', steam: 'devk_btv', discord: 'devk', chess: 'devk_blitz' }, true, true, 5],
+    [2, { instagram: 'kara.thrifts', beli: 'karam', spotify: 'karamusic' }, true, false, 9],
+    [3, { switch: 'SW-1234-5678-9012', riot: 'TomA#BTV', xbox: 'Tom Plays' }, false, true, 12],
+    [4, { goodreads: 'jess-reads', letterboxd: 'jesst', instagram: 'jess.on.the.hill' }, true, false, 20],
+    [5, { untappd: 'ruth_p', strava: 'ruthrides' }, true, false, 26],
+    [6, { epic: 'OmarS', steam: 'omar_s', psn: 'OmarS_VT', discord: 'omar.s' }, true, true, 30],
+    [7, { strava: 'lena-v', instagram: 'lena.vt', linkedin: 'lena-v' }, false, false, 40],
+    [8, { chess: 'ben_c', switch: 'SW-2222-3333-4444' }, true, false, 48],
+    [9, { spotify: 'ivy.n', beli: 'ivyeats' }, true, false, 60],
+    [10, { instagram: 'caro.lake', strava: 'caro_swims' }, false, true, 72],
+    [11, { xbox: 'SamiH#2087', riot: 'Sami#VT802', discord: 'samih' }, true, true, 90],
+  ];
+  handles.forEach(([who, h, pub, dir, ago]) => {
+    Object.assign(fake.profiles.get(everyone[who][0]), { handles: h, handles_public: pub, updated_at: t - ago * H });
+    if (dir) fake.peopleDir.add(everyone[who][0]);
+  });
+  /* a day in Burlington, n days from now, as a gathering's `when` starts */
+  const day = (n) => { const [y, m, d] = etDate(t + n * 86400000); return y + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0'); };
   const add = (who, board, kind, title, o = {}) => {
     const created = t - (o.ago || 1) * H;
     if (o.photo) fake.addPhoto(o.photo, 'approved');
     fake.posts.push({
-      id: newId(), board, user_id: people[who][0], kind, title, body: o.body || '', photo_path: o.photo || null,
+      id: newId(), board, user_id: everyone[who][0], kind, title, body: o.body || '', photo_path: o.photo || null,
       photo_req: photoRequired(fake.rules, board, kind), meta: o.meta || {}, place: o.place || '',
-      expires_at: expiresAt(fake.rules, board, kind, created), status: 'approved', reports: 0, created_at: created, decided_at: null,
+      expires_at: expiresAt(fake.rules, board, kind, created, o.meta || {}), status: o.status || 'approved', reports: 0, created_at: created, decided_at: null,
     });
     const p = fake.posts[fake.posts.length - 1];
     for (let i = 0; i < (o.votes || 0); i++) fake.votes.add(p.id + '|p_seed' + String(i).padStart(4, '0'));
@@ -409,5 +506,18 @@ export function seedDemo(fake) {
   add(2, 'watch', 'rating', 'Winter Light', { ago: 8, meta: { stars: 5, year: 2024, where: 'The Roxy' }, body: 'Go see it on the big screen while you can.', votes: 9 });
   add(4, 'watch', 'rating', 'Causeway', { ago: 28, meta: { stars: 4, year: 2024 }, votes: 5 });
   add(1, 'watch', 'pick', 'The Long Lake, Friday at the Roxy', { ago: 3, meta: { where: 'The Roxy' }, body: 'Who’s in? Meeting in the lobby at 6:50.', votes: 4 });
+  add(1, 'games', 'playing', 'Back on Hollow Knight, finally', { ago: 3, meta: { game: 'Hollow Knight: Silksong', platform: 'switch' }, body: 'Stuck on the second boss. Tips welcome.', votes: 6 });
+  add(6, 'games', 'playing', 'Wingspan, every Sunday', { ago: 11, meta: { game: 'Wingspan', platform: 'board' }, votes: 4 });
+  add(11, 'games', 'lfg', 'Need two for ranked', { ago: 2, meta: { game: 'Valorant', platform: 'pc', when: 'Weeknights after 9' }, votes: 2 });
+  add(3, 'games', 'lfg', 'New D&D table, beginners welcome', { ago: 20, meta: { game: 'D&D 5e', platform: 'tabletop', when: 'Thursdays, 7 pm' }, place: 'Old North End', votes: 5 });
+  add(5, 'square', 'post', 'The maples on North Ave are peaking', { ago: 2, meta: { topic: 'outdoors' }, body: 'Go this weekend. They’ll be bare by Halloween.', votes: 14 });
+  add(9, 'square', 'ask', 'Best place for a birthday dinner for eight?', { ago: 5, meta: { topic: 'recommend' }, body: 'Somewhere that takes a reservation and won’t rush us.', votes: 3 });
+  add(8, 'square', 'free', 'Kids’ bike, 16 inch, needs air', { ago: 7, meta: { topic: 'home' }, place: 'Essex Junction', votes: 1 });
+  add(4, 'square', 'pets', 'Biscuit, first snow', { ago: 9, meta: { topic: 'pets' }, photo: 'submissions/demo-sand.jpg', votes: 22 });
+  add(10, 'square', 'show', 'Finished the porch bench', { ago: 30, meta: { topic: 'home' }, photo: 'submissions/demo-pine.jpg', votes: 9 });
+  add(1, 'gatherings', 'gathering', 'Pickup ultimate at Leddy', { ago: 6, meta: { when: day(2) + ', 5:30 pm', place: 'Leddy Park', kind: 'pickup' }, body: 'All levels. Bring a light and a dark shirt.', votes: 7 });
+  add(6, 'gatherings', 'gathering', 'Board game night', { ago: 10, meta: { when: day(4) + ', 7 pm', place: 'The Archives', kind: 'board-games', link: 'https://example.com/board-game-night' }, votes: 11 });
+  add(2, 'gatherings', 'gathering', 'Saturday social run, 5k', { ago: 14, meta: { when: day(1) + ', 8 am', place: 'Waterfront Park, by the boathouse', kind: 'run' }, votes: 4 });
+  add(7, 'gatherings', 'gathering', 'Open fiddle jam', { ago: 1, meta: { when: day(6) + ', 6 pm', place: 'Radio Bean', kind: 'music' }, status: 'pending' });
   return fake;
 }

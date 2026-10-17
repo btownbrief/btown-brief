@@ -6,12 +6,13 @@
    anon key is public), and js/boards-fake.js (the demo and the tests).
 
    The RULES object below is copied, as JSON, into nn_rules() in the SQL:
-   in supabase/nn-ROUND2.sql, the newest file, which replaces the copy in
-   nn-SETUP.sql. scripts/test-boards-core.mjs fails if the two ever differ,
-   and if a kind or field nn-SETUP.sql allowed is ever taken away, so a
-   change here is a change there: edit RULES, run
+   in supabase/nn-ROUND4.sql, the newest file, which replaces the copies in
+   nn-SETUP.sql (version 1) and nn-ROUND2.sql (version 2).
+   scripts/test-boards-core.mjs fails if the two ever differ, and if a kind
+   or field either older copy allowed is ever taken away, so a change here
+   is a change there: edit RULES, run
    `node scripts/test-boards-core.mjs --write-sql`, and Stephen pastes
-   nn-ROUND2.sql again.
+   nn-ROUND4.sql again.
 
    Vocabulary. A BOARD is one tab's shelf of reader posts (vintage, art,
    people, watch). A KIND is the sort of post on that board ("spotted",
@@ -22,10 +23,22 @@
    whether a board's approved photos also join the community gallery
    (photos.html): Art's do, it is the gallery's new home; a Vintage find on
    a rack does not belong there, so it is filed as category 'board', which
-   the gallery leaves out (db/photos-board.sql). */
+   the gallery leaves out (db/photos-board.sql).
+
+   Round four (version 3) adds three boards: Games (what you're playing,
+   looking for a group), the Square (the community square: posts, show and
+   tell, questions, free stuff, pets) and Gatherings (reader-submitted
+   events, which Stephen approves before they show). A gathering ends the
+   day after its date when its `when` starts with one (2026-10-24, 7 pm),
+   and after 30 days when it does not (`until` below). It also adds a
+   profile's HANDLES: a reader's name on Instagram, Strava, PSN and the
+   rest, each checked against its own pattern (`handles` below; never a
+   link, never an @). Two new field types: `url` (a link, only on a board
+   Stephen pre-moderates, since links are how spam arrives) and the `until`
+   rule on a kind. */
 
 export const RULES = {
-  version: 2,
+  version: 3,
   limits: {
     nameMax: 32,
     titleMax: 80,
@@ -43,6 +56,8 @@ export const RULES = {
     listMax: 60,
     expiredKeepDays: 7,
     deletedKeepDays: 30,
+    handleMax: 40,
+    aheadMaxDays: 180,
   },
   neighborhoods: ['downtown', 'old-north-end', 'new-north-end', 'south-end', 'hill', 'waterfront', 'winooski',
     'south-burlington', 'essex', 'shelburne', 'colchester', 'elsewhere'],
@@ -51,6 +66,33 @@ export const RULES = {
   /* what a profile may say a reader is into: activities only, never who
      they are (the People tab's list, nn_people_rules() in nn-people.sql) */
   interests: ['sports', 'running', 'outdoors', 'games', 'music', 'dance', 'books', 'making', 'languages', 'food'],
+  /* A profile's handles: the name a reader goes by elsewhere, one per
+     service, each matched whole against its pattern after the spaces at
+     either end are trimmed (1 to handleMax characters). Never a link (no
+     slash, no colon) and never an @. handlesDeny (any case) refuses what
+     is plainly a web address even when the pattern would let it by. */
+  handles: {
+    instagram: '^[A-Za-z0-9._]{1,30}$',
+    spotify: '^[A-Za-z0-9._-]{1,40}$',
+    strava: '^[A-Za-z0-9_-]{1,40}$',
+    letterboxd: '^[A-Za-z0-9_]{2,15}$',
+    goodreads: '^[A-Za-z0-9_-]{1,40}$',
+    beli: '^[A-Za-z0-9._]{1,30}$',
+    untappd: '^[A-Za-z0-9._-]{1,40}$',
+    psn: '^[A-Za-z][A-Za-z0-9_-]{2,15}$',
+    xbox: '^[A-Za-z][A-Za-z0-9 ]{0,14}(#[0-9]{1,4})?$',
+    steam: '^[A-Za-z0-9_-]{2,32}$',
+    switch: '^SW-[0-9]{4}-[0-9]{4}-[0-9]{4}$',
+    discord: '^[A-Za-z0-9_.]{2,32}$',
+    epic: '^[A-Za-z0-9._ -]{3,16}$',
+    riot: '^[A-Za-z0-9 ._]{3,16}#[A-Za-z0-9]{3,5}$',
+    chess: '^[A-Za-z0-9_-]{2,25}$',
+    linkedin: '^[A-Za-z0-9-]{3,40}$',
+  },
+  handlesDeny: '^www[.]|[.](com|net|org|io|gg|tv|ly|xyz)$',
+  /* a `url` field: http(s), a host with a dot, no spaces, nothing that
+     breaks out of an attribute */
+  urlPattern: '^https?://[A-Za-z0-9.-]+[.][A-Za-z]{2,}(:[0-9]{1,5})?([/?#][A-Za-z0-9._~:/?#@!$&()*+,;=%-]*)?$',
   boards: {
     people: {
       premod: false,
@@ -111,6 +153,53 @@ export const RULES = {
         film: { type: 'int', min: 1, max: 99999999 },
       },
     },
+    /* Games: votes on a post mean "me too" */
+    games: {
+      premod: false,
+      gallery: false,
+      kinds: {
+        playing: { days: 14, photo: 'none', needs: ['game', 'platform'] },
+        lfg: { days: 7, photo: 'none', needs: ['game', 'platform', 'when'] },
+      },
+      meta: {
+        game: { type: 'text', max: 60 },
+        platform: { type: 'enum', values: ['pc', 'ps5', 'xbox', 'switch', 'mobile', 'vr', 'board', 'tabletop'] },
+        when: { type: 'text', max: 60 },
+      },
+    },
+    /* the community square */
+    square: {
+      premod: false,
+      gallery: false,
+      kinds: {
+        post: { days: 30, photo: 'none', needs: [] },
+        show: { days: 30, photo: 'required', needs: [] },
+        ask: { days: 14, photo: 'none', needs: [] },
+        free: { days: 14, photo: 'optional', needs: [] },
+        pets: { days: 30, photo: 'required', needs: [] },
+      },
+      meta: {
+        topic: { type: 'enum', values: ['food', 'outdoors', 'pets', 'events', 'home', 'lost-found', 'recommend', 'other'] },
+      },
+    },
+    /* reader-submitted events, shown once Stephen approves them. `until`:
+       the post ends the day after the date its `when` field starts with
+       (YYYY-MM-DD, Burlington's calendar), or after `days` when it starts
+       with none. That date may be no earlier than today and no later than
+       aheadMaxDays from now. */
+    gatherings: {
+      premod: true,
+      gallery: false,
+      kinds: {
+        gathering: { days: 30, photo: 'optional', needs: ['when', 'place', 'kind'], until: 'when' },
+      },
+      meta: {
+        when: { type: 'text', max: 60 },
+        place: { type: 'text', max: 80 },
+        link: { type: 'url', max: 200 },
+        kind: { type: 'enum', values: ['pickup', 'league', 'board-games', 'run', 'social', 'music', 'other'] },
+      },
+    },
   },
 };
 
@@ -124,7 +213,20 @@ export const ARCHETYPE_LABELS = { new: 'New in town', regular: 'Weeknight regula
 export const REASON_LABELS = { spam: 'Spam, or not from around here', unkind: 'Rude or unkind', unsafe: 'Not safe', other: 'Something else' };
 export const INTEREST_LABELS = { sports: 'Pickup sports', running: 'Running', outdoors: 'The outdoors', games: 'Games', music: 'Live music',
   dance: 'Dancing', books: 'Books', making: 'Making things', languages: 'Languages', food: 'Food and drink' };
-export const BOARD_LABELS = { people: 'People', vintage: 'Vintage', art: 'Art', watch: 'Watchlist' };
+export const BOARD_LABELS = { people: 'People', vintage: 'Vintage', art: 'Art', watch: 'Watchlist', games: 'Games', square: 'The Square', gatherings: 'Gatherings' };
+export const HANDLE_LABELS = {
+  instagram: 'Instagram', spotify: 'Spotify', strava: 'Strava', letterboxd: 'Letterboxd', goodreads: 'Goodreads', beli: 'Beli',
+  untappd: 'Untappd', psn: 'PlayStation', xbox: 'Xbox', steam: 'Steam', switch: 'Switch', discord: 'Discord', epic: 'Epic',
+  riot: 'Riot ID', chess: 'Chess', linkedin: 'LinkedIn',
+};
+/* how the profile sheet groups them; every handle kind is in exactly one */
+export const HANDLE_GROUPS = [
+  ['Social', ['instagram', 'spotify', 'letterboxd', 'goodreads', 'beli', 'untappd', 'linkedin']],
+  ['Fitness', ['strava']],
+  ['Games', ['psn', 'xbox', 'steam', 'switch', 'discord', 'epic', 'riot', 'chess']],
+];
+/* what each box expects, as a placeholder */
+export const HANDLE_HINTS = { switch: 'SW-1234-5678-9012', riot: 'name#tag', xbox: 'Gamertag', chess: 'chess.com or lichess name', psn: 'Online ID' };
 
 /* Every refusal is a short code, the same from the server, the fake and the
    checks below. message() turns one into a sentence a reader can act on. */
@@ -135,6 +237,8 @@ export const MESSAGES = {
   bad_neighborhood: 'Pick a neighborhood from the list, or none.',
   bad_archetype: 'Pick one of the four, or none.',
   bad_interest: 'Pick what you’re into from the list, eight at most.',
+  bad_handle: 'One of your handles isn’t right. Just the name, with no link and no @.',
+  bad_date: 'Pick a date from today to six months out.',
   bad_board: 'That board isn’t open.',
   bad_kind: 'That kind of post isn’t open on this board.',
   bad_title: 'A title, up to 80 characters.',
@@ -192,7 +296,41 @@ export function checkProfile(rules, input) {
     if (!i) return { ok: false, error: 'bad_interest' };
     profile.interests = i;
   }
+  /* handles likewise: left out, kept; a map replaces them; {} clears them.
+     handles_public left out is kept too. */
+  if (input.handles !== undefined && input.handles !== null) {
+    const h = checkHandles(rules, input.handles);
+    if (!h.ok) return h;
+    profile.handles = h.handles;
+  }
+  if (input.handles_public !== undefined && input.handles_public !== null) {
+    if (typeof input.handles_public !== 'boolean') return { ok: false, error: 'bad_handle' };
+    profile.handles_public = input.handles_public;
+  }
   return { ok: true, profile };
+}
+/* A reader's handles, as nn_check_handles() checks them: an object whose
+   keys are handle kinds, each a string that, with the spaces at either end
+   trimmed, is 1 to handleMax characters, matches its kind's pattern and is
+   not plainly a web address. An empty string or a null drops that kind.
+   { ok, handles } or { ok: false, error: 'bad_handle', key }. */
+const trimSpaces = (s) => s.replace(/^ +| +$/g, '');
+export function checkHandles(rules, input) {
+  if (input == null || typeof input !== 'object' || Array.isArray(input)) return { ok: false, error: 'bad_handle', key: null };
+  const deny = new RegExp(rules.handlesDeny, 'i');
+  const out = {};
+  for (const k of Object.keys(input)) {
+    const pat = rules.handles[k];
+    if (!pat) return { ok: false, error: 'bad_handle', key: k };
+    const v = input[k];
+    if (v == null) continue;
+    if (typeof v !== 'string') return { ok: false, error: 'bad_handle', key: k };
+    const t = trimSpaces(v);
+    if (!t) continue;
+    if (len(t) > rules.limits.handleMax || !new RegExp(pat).test(t) || deny.test(t)) return { ok: false, error: 'bad_handle', key: k };
+    out[k] = t;
+  }
+  return { ok: true, handles: out };
 }
 /* Each from the list, each once, at most interestsMax; null when not. */
 export function checkInterests(rules, list) {
@@ -232,6 +370,13 @@ export function checkMeta(rules, board, kindRule, meta) {
     } else if (f.type === 'bool') {
       if (typeof v !== 'boolean') return { error: 'bad_meta' };
       out[k] = v;
+    } else if (f.type === 'url') {
+      /* a link, kept as typed (clean() would strip it), and only where
+         Stephen sees every post before it shows */
+      if (!rules.boards[board].premod || typeof v !== 'string') return { error: 'bad_meta' };
+      const t = trimSpaces(v);
+      if (len(t) > (f.max || rules.limits.metaTextMax) || !new RegExp(rules.urlPattern).test(t)) return { error: 'bad_meta' };
+      if (t) out[k] = t;
     } else return { error: 'bad_meta' };
   }
   for (const k of kindRule.needs || []) if (out[k] == null) return { error: 'needs_meta' };
@@ -264,10 +409,54 @@ export function checkPost(rules, board, input) {
 
 /* -------------------------------------------------------------- the clock */
 const DAY = 86400000;
-/* When a new post stops showing, or null for never. */
-export function expiresAt(rules, board, kind, nowMs) {
-  const d = rules.boards[board] && rules.boards[board].kinds[kind] && rules.boards[board].kinds[kind].days;
+const kindOf = (rules, board, kind) => (rules.boards[board] && rules.boards[board].kinds[kind]) || null;
+/* The date a field starts with, YYYY-MM-DD, as [y, m, d]; null when it
+   starts with none, or with one that is not on the calendar (2026-02-30).
+   The server reads it the same way: the leading ten characters, cast to a
+   date, any failure meaning no date. */
+export function leadingDate(s) {
+  const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})/.exec(String(s == null ? '' : s));
+  if (!m) return null;
+  const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+  if (y < 1) return null;
+  const t = new Date(0);
+  t.setUTCFullYear(y, mo - 1, d);
+  return t.getUTCFullYear() === y && t.getUTCMonth() === mo - 1 && t.getUTCDate() === d ? [y, mo, d] : null;
+}
+/* the instant a Burlington calendar day starts */
+const ET_HOUR = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: '2-digit', hourCycle: 'h23' });
+export function etMidnight(y, m, d) {
+  for (const h of [4, 5]) {
+    const t = Date.UTC(y, m - 1, d, h);
+    const [yy, mm, dd] = etDate(t);
+    if (yy === y && mm === m && dd === d && Number(ET_HOUR.format(new Date(t))) === 0) return t;
+  }
+  return Date.UTC(y, m - 1, d, 5);
+}
+const dayNumber = (y, m, d) => { const t = new Date(0); t.setUTCFullYear(y, m - 1, d); return Math.round(t.getTime() / DAY); };
+/* the date an `until` kind ends by, from its meta, or null */
+const untilDate = (rules, board, kind, meta) => {
+  const k = kindOf(rules, board, kind);
+  return k && k.until ? leadingDate(meta && meta[k.until]) : null;
+};
+/* When a new post stops showing, or null for never. A kind with `until`
+   ends at the end of the day after the date its field starts with
+   (Burlington time), and after its `days` when the field starts with none. */
+export function expiresAt(rules, board, kind, nowMs, meta) {
+  const date = untilDate(rules, board, kind, meta);
+  if (date) { const t = new Date(0); t.setUTCFullYear(date[0], date[1] - 1, date[2] + 2); return etMidnight(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate()); }
+  const k = kindOf(rules, board, kind);
+  const d = k && k.days;
   return d ? nowMs + d * DAY : null;
+}
+/* 'bad_date' when an `until` kind's date is before today in Burlington or
+   more than aheadMaxDays after it; null otherwise (no date is no error). */
+export function dateError(rules, board, kind, meta, nowMs) {
+  const date = untilDate(rules, board, kind, meta);
+  if (!date) return null;
+  const today = dayNumber(...etDate(nowMs));
+  const n = dayNumber(...date);
+  return n < today || n > today + rules.limits.aheadMaxDays ? 'bad_date' : null;
 }
 /* An edit to your own post's fields (nn_post_meta_set): the new fields go
    over the old ones, a null takes one away, and the result is checked like
