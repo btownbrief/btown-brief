@@ -1381,6 +1381,70 @@
   ok   Food, deep links and the chip row › #food/d-<id> turns the deck to that deal
   ok   Food, deep links and the chip row › an unknown place says so
   ok   Food, deep links and the chip row › no console errors
+  ok   Food, the map with location refused (demo, noon) › a Map button sits at the far right of the Open now head
+  ok   Food, the map with location refused (demo, noon) › its preview is the list as dots around Church Street
+  ok   Food, the map with location refused (demo, noon) › and it says how many places it maps
+  ok   Food, the map with location refused (demo, noon) › before a tap: no Leaflet, no tiles, nothing fetched
+  ok   Food, the map with location refused (demo, noon) › a tap loads Leaflet 1.9.4 and its stylesheet
+  ok   Food, the map with location refused (demo, noon) › with the integrity hashes the guide’s own map pages use
+  ok   Food, the map with location refused (demo, noon) › the map opens in a sheet
+  ok   Food, the map with location refused (demo, noon) › on OpenStreetMap’s tiles, credited
+  ok   Food, the map with location refused (demo, noon) › with no location it is centred on Church Street
+  ok   Food, the map with location refused (demo, noon) › a pin for each place open now, and no reader pin
+  ok   Food, the map with location refused (demo, noon) › each pin is a place, at its own spot, named
+  ok   Food, the map with location refused (demo, noon) › Near me, refused: says so, and the map stays on Church Street
+  ok   Food, the map with location refused (demo, noon) › a pin opens its place
+  ok   Food, the map with location refused (demo, noon) › Closest to me, refused: the list stays nearest Church Street and says why
+  ok   Food, the map with location refused (demo, noon) › #food/map opens the map
+  ok   Food, the map with location refused (demo, noon) › no console errors
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › nothing asks for the location on load
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › Closest to me: allowed, the list runs from the reader outward
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › and the head says so
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › the map puts the reader on it
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › but stays centred on Church Street, so no tile request is for the reader’s own block
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › and Near me steps aside
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › it was asked for only once the reader picked Closest to me
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › the position is never sent anywhere
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › and never stored
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › no console errors
+  ok   Food, the map and Closest to me with location allowed (demo, noon) › a reader in Los Angeles is told, and the list stays on Church Street
+  ok   Food, the sorts and the meal toggle (demo, noon) › the sort offers nearest, closest to me, open latest, price, newest
+  ok   Food, the sorts and the meal toggle (demo, noon) › Nearest Church St: the default, nearest first
+  ok   Food, the sorts and the meal toggle (demo, noon) › Open latest: the latest close tonight first
+  ok   Food, the sorts and the meal toggle (demo, noon) › Price: cheapest first
+  ok   Food, the sorts and the meal toggle (demo, noon) › and each row shows its price
+  ok   Food, the sorts and the meal toggle (demo, noon) › Newest: the most recently opened first
+  ok   Food, the sorts and the meal toggle (demo, noon) › and says when it opened
+  ok   Food, the sorts and the meal toggle (demo, noon) › breakfast: the places open for it today (2), and the chip counts them
+  ok   Food, the sorts and the meal toggle (demo, noon) › lunch: the places open for it today (6), and the chip counts them
+  ok   Food, the sorts and the meal toggle (demo, noon) › dinner: the places open for it today (5), and the chip counts them
+  ok   Food, the sorts and the meal toggle (demo, noon) › the three meals really differ: the bakery is breakfast, not dinner
+  ok   Food, the sorts and the meal toggle (demo, noon) › Any time puts them all back
+  ok   Food, the sorts and the meal toggle (demo, noon) › no console errors
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › the deck is a strip now, wider than it is tall
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › with a visible › arrow on its right side
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › the arrow turns to the next deal
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › “See all deals” sits in the head and opens the guide’s deals page
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › a deal at a place with its own food picture shows it behind the card
+  ok   Food, Deals today: smaller, a › arrow, See all deals (demo, noon) › no console errors
+  ok   Food, the directory: Their food, with and without Instagram (demo) › a place with its own posts has “Their food” beside Menu
+  ok   Food, the directory: Their food, with and without Instagram (demo) › a place with no Instagram but a reader’s dish has it too
+  ok   Food, the directory: Their food, with and without Instagram (demo) › a place with neither has no button and keeps its initials
+  ok   Food, the directory: Their food, with and without Instagram (demo) › and a place with food to show leads its row with it
+  ok   Food, the directory: Their food, with and without Instagram (demo) › Their food: the reader’s dish first, then its own reels and posts
+  ok   Food, the directory: Their food, with and without Instagram (demo) › with its Instagram and the reader’s credit
+  ok   Food, the directory: Their food, with and without Instagram (demo) › a reel there plays in the one video box, the sheet out of its way
+  ok   Food, the directory: Their food, with and without Instagram (demo) › no Instagram: its submitted dish still shows, and no Instagram link
+  ok   Food, the directory: Their food, with and without Instagram (demo) › “Feature your restaurant” opens a mailto with a subject
+  ok   Food, the directory: Their food, with and without Instagram (demo) › no form and no paragraph
+  ok   Food, the directory: Their food, with and without Instagram (demo) › and owners find it under the list too
+  ok   Food, the directory: Their food, with and without Instagram (demo) › an account the directory marks not-food never reaches In their own words
+  ok   Food, the directory: Their food, with and without Instagram (demo) › no console errors
+  ok   Food, the directory over the wire (live) › the directory names the creemee podcast as not food
+  ok   Food, the directory over the wire (live) › Waterworks: its own post from instagram.json, by the handle its website links
+  ok   Food, the directory over the wire (live) › A Single Pebble, no Instagram: the dish a reader sent in is its food
+  ok   Food, the directory over the wire (live) › the podcast stays out of In their own words even tagged food
+  ok   Food, the directory over the wire (live) › no console errors
   ok   People: the rules in the module and the SQL agree › PEOPLE_RULES in people.js is nn_people_rules() in nn-people.sql
   ok   People: the rules in the module and the SQL agree › the tab never imports boards-fake.js; its mirror is its own
   ok   People, live: Stephen’s meetups, the clubs, an empty board › every one of Stephen’s own events in the next two weeks shows (5)
@@ -1888,7 +1952,7 @@
   ok   cutover: every old tab’s link lands on the nearest new tab › a bare #reddit opens the Wire on its Reddit chip
   ok   cutover: every old tab’s link lands on the nearest new tab › an old Music link opens What Now on Tonight
   ok   cutover: every old tab’s link lands on the nearest new tab › no console errors
-  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for On Air’s past nights and speed after the Wire’s Photo mode, to v49
+  ok   shell fixes: the offline shell carries the new modules › sw.js VERSION is bumped for Food’s map and directory after On Air’s past nights, to v50
   ok   shell fixes: the offline shell carries the new modules › every module in js/ is in the offline list
   ok   shell fixes: the offline shell carries the new modules › and nothing in the offline list is missing from js/
   ok   shell fixes: the offline shell carries the new modules › every file in the offline list exists
