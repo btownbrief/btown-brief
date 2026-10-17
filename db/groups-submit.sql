@@ -146,8 +146,15 @@ begin
   -- serialise the repeat and limit checks so parallel calls cannot all slip under them
   perform pg_advisory_xact_lock(hashtext('groups_submit'));
 
+  if (select count(*) from public.groups_submissions
+       where device_hash = v_dev_hash and created_at > now() - interval '1 day') >= (r ->> 'perDevicePerDay')::int then
+    return jsonb_build_object('error', 'slow_down'); end if;
+  if v_addr_hash <> '' and (select count(*) from public.groups_submissions
+       where addr_hash = v_addr_hash and created_at > now() - interval '1 day') >= (r ->> 'perAddrPerDay')::int then
+    return jsonb_build_object('error', 'slow_down'); end if;
   -- the very same submission again (a double tap, a retry) is a quiet
-  -- success. Every field and the sender's email must match, so nobody can
+  -- success; it sits after the per-sender limits so a sender over them
+  -- cannot keep replaying one. Every field and the sender's email must match, so nobody can
   -- pre-empt someone else's group by sending its name and night first.
   if exists (select 1 from public.groups_submissions s
               where s.status = 'pending' and s.email = v_email
@@ -156,12 +163,6 @@ begin
                 and s.created_at > now() - interval '1 day') then
     return jsonb_build_object('ok', true, 'repeat', true);
   end if;
-  if (select count(*) from public.groups_submissions
-       where device_hash = v_dev_hash and created_at > now() - interval '1 day') >= (r ->> 'perDevicePerDay')::int then
-    return jsonb_build_object('error', 'slow_down'); end if;
-  if v_addr_hash <> '' and (select count(*) from public.groups_submissions
-       where addr_hash = v_addr_hash and created_at > now() - interval '1 day') >= (r ->> 'perAddrPerDay')::int then
-    return jsonb_build_object('error', 'slow_down'); end if;
   if (select count(*) from public.groups_submissions where created_at > now() - interval '1 hour') >= (r ->> 'perHour')::int then
     return jsonb_build_object('error', 'busy'); end if;
   if (select count(*) from public.groups_submissions where status = 'pending') >= (r ->> 'waiting')::int then

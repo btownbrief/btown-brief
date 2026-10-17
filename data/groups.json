@@ -210,9 +210,24 @@
      "day": "sun",
      "time": null,
      "end": "",
-     "where": "Tree Farm Recreational Facility or Saint Michael's College",
+     "where": "Tree Farm Recreational Facility",
      "address": "189 Old Colchester Road, Essex Junction",
-     "note": "Games at 4, 6, 7 or 8pm; one game a week is on Monday under the lights at Saint Michael's.",
+     "note": "Games at 4, 6, 7 or 8pm; most games are on Sundays at the Tree Farm or Saint Michael's College.",
+     "season": "Summer, about 10 weeks (2026: May 31 to Aug 9)",
+     "months": [
+      5,
+      6,
+      7,
+      8
+     ]
+    },
+    {
+     "day": "mon",
+     "time": null,
+     "end": "",
+     "where": "Saint Michael's College",
+     "address": "",
+     "note": "Monday games at 4, 6, 7 or 8pm (the league lists Sunday and Monday game days).",
      "season": "Summer, about 10 weeks (2026: May 31 to Aug 9)",
      "months": [
       5,
@@ -1916,11 +1931,11 @@
    "meets": [
     {
      "day": "thu",
-     "time": "18:00",
+     "time": null,
      "end": "",
      "where": "Lake Champlain Yacht Club",
      "address": "",
-     "note": "First warning 6pm early in the season, then 5:30pm and 5pm late season; arrive an hour before the first start",
+     "note": "First warning 6pm for the early races, 5:30pm for races 12 to 14 and 5pm for the last three (2026 series); arrive an hour before the first start",
      "season": "June to Sept",
      "months": [
       6,
@@ -3297,11 +3312,12 @@
      "where": "Vermont Cider Lab",
      "address": "25 Essex Way, Suite 214, Essex",
      "note": "",
-     "season": ""
+     "season": "posted through Nov 12, 2026",
+     "until": "2026-11-12"
     }
    ],
    "schedule_note": "",
-   "season": "year-round",
+   "season": "posted through Nov 12, 2026",
    "where": "Vermont Cider Lab, Essex",
    "town": "Essex",
    "cost": "",
@@ -3916,7 +3932,7 @@
     }
    ],
    "schedule_note": "Listed Wednesdays at noon (Oct 21 and Oct 28, 2026); check the library calendar for later dates.",
-   "season": "year-round",
+   "season": "",
    "where": "Pierson Library, Shelburne",
    "town": "Shelburne",
    "cost": "free (library program)",
