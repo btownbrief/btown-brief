@@ -80,7 +80,7 @@ Reading every tab, saving, muting, and voting on the Wire work at every step.
 5. On Monday, **Refresh the Watch tab's films** runs green and Watch shows the new list.
 
 A red run is not an outage: every one of these keeps the last good file up, so the tab keeps
-showing it (the Wire and On Air also say how old it is; Games and Watch just show the last list).
+showing it (the Wire and On Air say which day theirs is from; Games and Watch just show the last list).
 
 ## The hub (separate repo)
 
