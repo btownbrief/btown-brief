@@ -21,10 +21,12 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import * as core from '../all-day/js/habits-core.js';
 import { FakeHabits, seedDemo } from '../all-day/js/habits-fake.js';
+import { LocalHabits, LOCAL_KEY, LOCAL_VERSION, LOCAL_DOORS, memoryStorage } from '../all-day/js/habits-local.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SQL_PATH = path.join(ROOT, 'all-day/supabase/sz-SETUP.sql');
 const ROUND2_PATH = path.join(ROOT, 'all-day/supabase/sz-ROUND2.sql');
+const ROUND3_PATH = path.join(ROOT, 'all-day/supabase/sz-ROUND3.sql');
 const RULES_RE = /\$json\$([\s\S]*?)\$json\$/;
 
 if (process.argv.includes('--write-sql')) {
@@ -37,6 +39,8 @@ if (process.argv.includes('--write-sql')) {
 }
 const SQL = readFileSync(SQL_PATH, 'utf8');
 const ROUND2 = readFileSync(ROUND2_PATH, 'utf8');
+const ROUND3 = readFileSync(ROUND3_PATH, 'utf8');
+const HABIT_ADD_RE = /-- Add a habit of your own\.[\s\S]*?end \$\$;\n/;
 
 /* an instant from a Burlington wall-clock time: '2026-10-14 15:00' */
 const ny = (s) => {
@@ -97,16 +101,37 @@ test('the SQL holds the limits the rules name', () => {
   assert.match(SQL, new RegExp('char_length\\(name\\) between 1 and ' + R.limits.nameMax), 'a member name');
 });
 
+test('sz-ROUND3.sql replaces sz_habit_add and adds sz_import_local, and nothing else', () => {
+  const code = ROUND3.replace(/--[^\n]*/g, '');
+  assert.deepEqual([...code.matchAll(/create or replace function public\.(\w+)\(/g)].map((m) => m[1]), ['sz_habit_add', 'sz_import_local']);
+  assert.ok(!/\b(drop|truncate|alter|create\s+(table|index|trigger|policy))\b/i.test(code), 'no table, column or trigger changes');
+  assert.ok(!/\bdelete\b/i.test(code), 'it deletes nothing');
+  const stmts = code.split(';').map((x) => x.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  assert.deepEqual(stmts.filter((x) => /^(revoke|grant)\b/.test(x)), [
+    'revoke all on function public.sz_habit_add(text, text, int, boolean), public.sz_import_local(jsonb) from public, anon, authenticated',
+    'grant execute on function public.sz_habit_add(text, text, int, boolean), public.sz_import_local(jsonb) to anon, authenticated',
+  ]);
+  assert.equal(ROUND3.match(HABIT_ADD_RE)[0], SQL.match(HABIT_ADD_RE)[0], 'sz_habit_add is word for word the one sz-SETUP.sql carries');
+  assert.ok(!/no_member/.test(SQL.match(HABIT_ADD_RE)[0]), 'and it asks no name first');
+  assert.match(ROUND3, new RegExp('v_d < v_today - ' + core.IMPORT_DAYS + ' '), 'the same window as IMPORT_DAYS');
+  assert.match(ROUND3, new RegExp("'\\[\\]'::jsonb\\)\\) > " + (core.IMPORT_DAYS + 1) + ' '), 'at most a tap a day in the window');
+  assert.ok(!/coalesce\(x -> 'taps'/.test(ROUND3), 'taps: null reads as no taps, as the fake reads it');
+  assert.match(ROUND3, /pg_advisory_xact_lock\(hashtext\('sz_habits:' \|\| u::text\)\)/, 'the same lock sz_habits_cap takes');
+});
+
 test('the fake answers to exactly the doors the SQL grants', () => {
   const grant = SQL.match(/grant execute on function([\s\S]*?)to anon, authenticated;/);
   assert.ok(grant, 'sz-SETUP.sql grants the reader doors');
-  const granted = [...grant[1].matchAll(/public\.(sz_\w+)\(/g)].map((m) => m[1]).sort();
+  const grant3 = ROUND3.match(/grant execute on function([\s\S]*?)to anon, authenticated;/);
+  const granted = [...new Set([...grant[1].matchAll(/public\.(sz_\w+)\(/g), ...grant3[1].matchAll(/public\.(sz_\w+)\(/g)].map((m) => m[1]))].sort();
   const fake = Object.getOwnPropertyNames(FakeHabits.prototype).filter((n) => /^sz_/.test(n)).sort();
   assert.deepEqual(fake, granted);
   /* every function the file makes is either a door or revoked */
   const made = [...SQL.matchAll(/create or replace function public\.(sz_\w+)\(/g)].map((m) => m[1]);
   const revoked = SQL.match(/revoke all on function([\s\S]*?)from public, anon, authenticated;/)[1];
   for (const fn of made) assert.ok(revoked.includes('public.' + fn + '('), fn + ' is revoked before the grants');
+  /* the phone answers a subset of them itself */
+  for (const fn of LOCAL_DOORS) assert.ok(granted.includes(fn), fn + ' is a server door too');
 });
 
 /* ---------------------------------------------------------------- days */
@@ -286,7 +311,6 @@ test('the fake: a new member, habits, taps', () => {
   f.as(DANA);
   assert.equal(f.sz_me_get(), null);
   assert.deepEqual(f.sz_habits_get(), []);
-  assert.equal(code(() => f.sz_habit_add({ p_text: 'Stretch', p_frequency: 'daily' })), 'no_member');
   assert.equal(code(() => f.sz_me_set({ p_name: 'dana@example.com', p_phone: '802-555-0199' })), 'bad_name');
   assert.deepEqual(f.sz_me_set({ p_name: '  Dana   R. ', p_phone: '+1 (802) 555-0199' }), { name: 'Dana R.', phone: '+1 (802) 555-0199', city: 'burlington', email_opt_out: false });
   assert.equal(code(() => f.sz_habit_add({ p_text: 'Stretch', p_frequency: 'n_per_week', p_n: 7 })), 'bad_n');
@@ -388,4 +412,275 @@ test('the demo seed: three habits, three weeks of taps, a season to come', () =>
     assert.ok(core.streak(h, mine, f.now()) > 0, h.text + ' has a streak');
   }
   assert.equal(core.daysUntil(Date.parse(f.sz_season_next().kickoff_at), f.now()), 23);
+});
+
+/* ------------------------------------------ no name wall, and the import */
+test('the fake: a signed-in reader adds habits with no name or phone', () => {
+  const { f } = make();
+  f.as('zoe');
+  assert.equal(f.sz_me_get(), null);
+  assert.equal(f.sz_habit_add({ p_text: 'Stretch', p_frequency: 'daily' }).text, 'Stretch');
+  assert.equal(f.sz_tap({ p_habit: f.sz_habits_get()[0].id, p_date: '2026-10-14' }).tapped, true);
+  assert.equal(f.sz_me_get(), null, 'and no member row is made behind their back');
+});
+
+test('the fake: sz_import_local, the same cases as the SQL', () => {
+  const { f, read } = make();
+  const today = '2026-10-14';
+  const mayaTaps = () => [...f.taps.values()].filter((t) => t.user === MAYA).length;
+  const before = mayaTaps();
+  f.as(null);
+  assert.equal(code(() => f.call('sz_import_local', { p_habits: [] })), 'not_signed_in');
+  /* an account with a habit, even an archived one, has had its import */
+  f.as('zoe').sz_habit_add({ p_text: 'Stretch', p_frequency: 'daily' });
+  assert.equal(code(() => f.sz_import_local({ p_habits: [{ text: 'Read', frequency: 'daily' }] })), 'already_synced');
+  f.as('omar');
+  f.sz_habit_set({ p_habit: f.sz_habit_add({ p_text: 'Floss', p_frequency: 'daily' }).id, p_archived: true });
+  assert.equal(code(() => f.sz_import_local({ p_habits: [{ text: 'Read', frequency: 'daily' }] })), 'already_synced');
+  f.as(MAYA);
+  assert.equal(code(() => f.sz_import_local({ p_habits: {} })), 'already_synced', 'refused before the list is even read');
+
+  f.as('ivy');
+  const H = (o) => [{ text: 'Read', frequency: 'daily', ...o }];
+  const bad = [null, {}, 'habits', [1], [[]], Array.from({ length: 101 }, (_, i) => ({ text: 'Habit ' + i, frequency: 'daily' })),
+    H({ id: read, taps: [today] }), H({ habit_id: read }), H({ user_id: MAYA }), H({ source: 'email' }),
+    H({ text: '  ' }), H({ text: 'h'.repeat(61) }), H({ text: 42 }), H({ frequency: 'hourly' }), [{ text: 'Read' }],
+    H({ frequency: 'n_per_week' }), H({ frequency: 'n_per_week', n: 7 }), H({ frequency: 'n_per_week', n: 2.5 }), H({ frequency: 'n_per_week', n: '3' }),
+    H({ shared: 'yes' }), H({ archived: 1 }),
+    H({ taps: ['2026-10-15'] }), H({ taps: [core.addDays(today, -401)] }), H({ taps: ['2026-02-30'] }), H({ taps: ['2026-2-3'] }),
+    H({ taps: ['yesterday'] }), H({ taps: [20261010] }), H({ taps: today }), H({ taps: Array(402).fill(today) }),
+    [{ text: 'Read', frequency: 'daily', taps: [today] }, { text: 'Gym', frequency: 'weekly' }]];
+  for (const p of bad) assert.equal(code(() => f.sz_import_local({ p_habits: p })), 'bad_import', JSON.stringify(p).slice(0, 80));
+  assert.ok(!f.habits.some((h) => h.user_id === 'ivy'), 'every refusal wrote nothing');
+  assert.equal(mayaTaps(), before, 'and Maya’s taps are as they were');
+
+  const walk = [...Array.from({ length: 10 }, (_, d) => core.addDays(today, -d)), today, core.addDays(today, -core.IMPORT_DAYS)];
+  const got = f.sz_import_local({ p_habits: [
+    { text: '  Morning   walk ', frequency: 'daily', n: null, shared: false, archived: false, taps: walk },
+    { text: 'Gym', frequency: 'n_per_week', n: 3, shared: true, taps: [core.addDays(today, -2)] },
+    { text: 'Read', frequency: 'weekdays', n: 4, taps: null },
+    { text: 'Old habit', frequency: 'daily', archived: true, taps: [core.addDays(today, -30)] },
+  ] });
+  assert.deepEqual(got.map((h) => h.text), ['Morning walk', 'Gym', 'Read'], 'in the phone’s order, the archived one kept out of the list');
+  assert.deepEqual([got[1].n, got[1].shared, got[2].n], [3, true, null]);
+  assert.equal(f.sz_taps_get({ p_from: core.addDays(today, -370), p_to: today }).length, 12, 'the taps, a doubled date once');
+  assert.equal([...f.taps.values()].filter((t) => t.user === 'ivy').length, 13, 'thirteen in all, the archived habit’s and the 400th day’s included');
+  assert.equal(core.streak(got[0], f.sz_taps_get({ p_from: core.addDays(today, -370), p_to: today }).filter((t) => t.habit === got[0].id).map((t) => t.date), f.now()), 10, 'the streak comes across');
+  assert.equal(code(() => f.sz_import_local({ p_habits: [{ text: 'Again', frequency: 'daily', taps: [today] }] })), 'already_synced', 'a second time: refused');
+  assert.equal(code(() => f.sz_import_local({ p_habits: [] })), 'already_synced');
+  assert.equal(f.sz_habits_get().length, 3);
+});
+
+/* ------------------------------------------------ the phone's own copy */
+function phone(start = '2026-10-14 15:00', storage = memoryStorage()) {
+  let t = ny(start);
+  const p = new LocalHabits({ now: () => t, storage });
+  p.at = (s) => { t = ny(s); return p; };
+  p.storage = storage;
+  return p;
+}
+/* tap a habit on each of these days, as a reader would: on the day itself */
+const tapOn = (p, id, keys) => { for (const k of keys) p.at(k + ' 12:00').call('sz_tap', { p_habit: id, p_date: k }); };
+const streakOf = (p, h) => core.streak(h, p.call('sz_taps_get', { p_from: core.addDays(core.dayKey(p.now()), -369), p_to: core.dayKey(p.now()) })
+  .filter((t) => t.habit === h.id).map((t) => t.date), p.now());
+
+test('the phone: the same doors and rules as the server, and only the tracker’s', () => {
+  const p = phone();
+  assert.deepEqual(p.call('sz_habits_get'), []);
+  for (const fn of ['sz_me_get', 'sz_me_set', 'sz_delete_me', 'sz_pod_habits', 'sz_import_local', 'sz_season_next']) assert.equal(code(() => p.call(fn, {})), 'not_signed_in', fn);
+  assert.equal(code(() => p.call('sz_habit_add', { p_text: 'https://x.example', p_frequency: 'daily' })), 'bad_text');
+  assert.equal(code(() => p.call('sz_habit_add', { p_text: 'Gym', p_frequency: 'n_per_week', p_n: 7 })), 'bad_n');
+  const h = p.call('sz_habit_add', { p_text: 'Stretch https://x.example', p_frequency: 'daily' });
+  assert.equal(h.text, 'Stretch');
+  assert.equal(code(() => p.call('sz_tap', { p_habit: h.id, p_date: '2026-10-13' })), 'not_today', 'today only');
+  assert.equal(code(() => p.call('sz_tap', { p_habit: h.id, p_date: '2026-10-15' })), 'not_today');
+  assert.equal(code(() => p.call('sz_tap', { p_habit: 'nope', p_date: '2026-10-14' })), 'not_found');
+  /* 11:59 pm in New York is still the 14th, whatever the phone's own zone */
+  p.at('2026-10-14 23:59');
+  assert.equal(p.call('sz_tap', { p_habit: h.id, p_date: '2026-10-14' }).tapped, true);
+  p.at('2026-10-15 00:01');
+  assert.equal(code(() => p.call('sz_untap', { p_habit: h.id, p_date: '2026-10-14' })), 'not_today', 'after midnight New York the 14th is a day gone by');
+  for (let i = 2; i <= 100; i++) p.call('sz_habit_add', { p_text: 'Habit ' + i, p_frequency: 'daily' });
+  assert.equal(code(() => p.call('sz_habit_add', { p_text: 'One too many', p_frequency: 'daily' })), 'too_many_habits', 'the same hidden ceiling');
+});
+
+test('the phone keeps everything across a reload, in one versioned key', () => {
+  const store = memoryStorage();
+  const p = phone('2026-10-14 09:00', store);
+  const a = p.call('sz_habit_add', { p_text: 'Walk', p_frequency: 'daily' });
+  const b = p.call('sz_habit_add', { p_text: 'Gym', p_frequency: 'n_per_week', p_n: 3, p_shared: true });
+  const c = p.call('sz_habit_add', { p_text: 'Floss', p_frequency: 'weekdays' });
+  p.call('sz_tap', { p_habit: a.id, p_date: '2026-10-14' });
+  p.call('sz_tap', { p_habit: b.id, p_date: '2026-10-14' });
+  p.call('sz_untap', { p_habit: b.id, p_date: '2026-10-14' });
+  p.call('sz_tap', { p_habit: b.id, p_date: '2026-10-14' });
+  p.call('sz_habit_set', { p_habit: c.id, p_position: 1 });
+  p.call('sz_habit_set', { p_habit: a.id, p_archived: true });
+  const saved = JSON.parse(store.get());
+  assert.equal(saved.v, LOCAL_VERSION);
+  assert.equal(LOCAL_KEY, 'allday-habits-local');
+  const again = phone('2026-10-14 10:00', store);
+  assert.deepEqual(again.call('sz_habits_get').map((h) => [h.text, h.frequency, h.n, h.shared]), [['Floss', 'weekdays', null, false], ['Gym', 'n_per_week', 3, true]], 'the order, how often and sharing');
+  assert.deepEqual(again.call('sz_taps_get', { p_from: '2026-10-01', p_to: '2026-10-14' }).map((t) => t.habit).sort(), [a.id, b.id].sort(), 'the taps, an archived habit’s kept');
+  again.call('sz_habit_set', { p_habit: a.id, p_archived: false });
+  assert.equal(phone('2026-10-14 11:00', store).call('sz_habits_get').at(-1).text, 'Walk', 'Undo comes back at the bottom, after a reload too');
+  /* two tabs: each reads the key before it answers */
+  const tab1 = phone('2026-10-14 12:00', store), tab2 = phone('2026-10-14 12:00', store);
+  tab1.call('sz_habit_add', { p_text: 'From tab one', p_frequency: 'daily' });
+  tab2.call('sz_habit_add', { p_text: 'From tab two', p_frequency: 'daily' });
+  assert.deepEqual(tab1.call('sz_habits_get').slice(-2).map((h) => h.text), ['From tab one', 'From tab two']);
+});
+
+test('the phone: a broken, newer or refused store never loses or overwrites anything', () => {
+  for (const raw of ['not json', '[]', '{"v":0,"habits":[]}', '{"v":1}', '{"v":1,"habits":[{"id":"x","text":"","frequency":"daily"}],"taps":{"x":["2026-10-14"]}}']) {
+    const p = phone('2026-10-14 12:00', memoryStorage(raw));
+    assert.deepEqual(p.call('sz_habits_get'), [], raw);
+  }
+  const mixed = phone('2026-10-14 12:00', memoryStorage(JSON.stringify({ v: 1, habits: [{ id: 'a', text: 'Walk', frequency: 'daily', position: 1 }, { id: 'b', text: '', frequency: 'daily' }, { id: 'a', text: 'Twin', frequency: 'daily' }],
+    taps: { a: ['2026-10-14', '2026-02-30', 'x'], b: ['2026-10-14'], z: ['2026-10-14'] } })));
+  assert.deepEqual(mixed.call('sz_habits_get').map((h) => h.text), ['Walk'], 'a bad row is skipped, the good one kept');
+  assert.deepEqual(mixed.call('sz_taps_get', { p_from: '2026-10-01', p_to: '2026-10-14' }).map((t) => t.date), ['2026-10-14'], 'and only real dates of known habits');
+  /* a copy from a newer version of the app: read as empty, and never written over */
+  const newer = JSON.stringify({ v: LOCAL_VERSION + 1, habits: [{ id: 'q', text: 'From the future', frequency: 'daily' }], extra: true });
+  const store = memoryStorage(newer);
+  const p = phone('2026-10-14 12:00', store);
+  assert.deepEqual(p.call('sz_habits_get'), []);
+  assert.equal(code(() => p.call('sz_habit_add', { p_text: 'Mine', p_frequency: 'daily' })), 'offline');
+  assert.equal(p.has(), false);
+  p.clear();
+  assert.equal(store.get(), newer, 'untouched');
+  /* a phone that refuses to store (private mode, a full disk) keeps them for the visit */
+  const refusing = { get: () => { throw new Error('SecurityError'); }, set: () => false, remove: () => {} };
+  const safe = { get() { try { return refusing.get(); } catch (e) { return null; } }, set: refusing.set, remove: refusing.remove };
+  const q = phone('2026-10-14 12:00', safe);
+  const w = q.call('sz_habit_add', { p_text: 'Walk', p_frequency: 'daily' });
+  assert.equal(w.text, 'Walk');
+  q.call('sz_tap', { p_habit: w.id, p_date: '2026-10-14' });
+  q.call('sz_habit_add', { p_text: 'Read', p_frequency: 'daily' });
+  assert.deepEqual(q.call('sz_habits_get').map((h) => h.text), ['Walk', 'Read'], 'every later call still sees them');
+  assert.equal(q.call('sz_taps_get', { p_from: '2026-10-14', p_to: '2026-10-14' }).length, 1);
+  /* a phone that cannot even remove the key keeps its last state for the visit, not the stale copy */
+  let stale = JSON.stringify({ v: LOCAL_VERSION, habits: [{ id: 'a', text: 'Walk', frequency: 'daily', position: 1 }], taps: {} });
+  const stuck = { get: () => stale, set: () => false, remove: () => false };
+  const s1 = phone('2026-10-14 12:00', stuck);
+  s1.forget(['a']);
+  assert.equal(s1.has(), false, 'the account has it: it does not come back from the key');
+  /* a disk that fills up part way: what was written stays, and nothing done after is lost for the visit */
+  let room = true, kept = null;
+  const filling = { get: () => kept, set: (v) => { if (!room) return false; kept = v; return true; }, remove: () => { kept = null; } };
+  const r = phone('2026-10-14 12:00', filling);
+  r.call('sz_habit_add', { p_text: 'Saved', p_frequency: 'daily' });
+  room = false;
+  r.call('sz_habit_add', { p_text: 'Not saved', p_frequency: 'daily' });
+  assert.deepEqual(r.call('sz_habits_get').map((h) => h.text), ['Saved', 'Not saved']);
+  assert.deepEqual(JSON.parse(kept).habits.map((h) => h.text), ['Saved'], 'the key keeps the last copy it took');
+});
+
+test('the phone: streaks from its own taps, the same cases as the server’s', () => {
+  let p = phone();
+  const d = p.call('sz_habit_add', { p_text: 'Daily', p_frequency: 'daily' });
+  tapOn(p, d.id, ['2026-10-12', '2026-10-13']);
+  assert.equal(streakOf(p.at('2026-10-14 15:00'), d), 2, 'today untapped: from yesterday');
+  assert.equal(streakOf(p.at('2026-10-14 23:59'), d), 2, '11:59 pm: still 2');
+  tapOn(p, d.id, ['2026-10-14']);
+  assert.equal(streakOf(p.at('2026-10-14 15:00'), d), 3, 'tapped today: from today');
+  assert.equal(streakOf(p.at('2026-10-16 12:00'), d), 0, 'a day missed: broken');
+
+  p = phone();
+  const w = p.call('sz_habit_add', { p_text: 'Weekdays', p_frequency: 'weekdays' });
+  tapOn(p, w.id, ['2026-10-08', '2026-10-09']);
+  assert.equal(streakOf(p.at('2026-10-11 23:00'), w), 2, 'Sunday night: the weekend skipped, not broken');
+  assert.equal(streakOf(p.at('2026-10-12 10:00'), w), 2, 'Monday morning, untapped: Thursday and Friday');
+  tapOn(p, w.id, ['2026-10-12']);
+  assert.equal(streakOf(p.at('2026-10-12 18:00'), w), 3, 'tapped Monday');
+
+  p = phone();
+  const n = p.call('sz_habit_add', { p_text: 'Three a week', p_frequency: 'n_per_week', p_n: 3 });
+  tapOn(p, n.id, ['2026-09-28', '2026-09-30', '2026-10-02', '2026-10-05', '2026-10-07', '2026-10-11']);
+  assert.equal(streakOf(p.at('2026-10-12 09:00'), n), 2, 'two weeks on target, this one not yet');
+  tapOn(p, n.id, ['2026-10-12']);
+  assert.equal(streakOf(p.at('2026-10-18 09:00'), n), 0, 'Sunday with one: it cannot reach three, broken');
+
+  p = phone();
+  const dst = p.call('sz_habit_add', { p_text: 'Across the clock change', p_frequency: 'daily' });
+  tapOn(p, dst.id, days('2026-10-28', '2026-11-02'));
+  assert.equal(streakOf(p.at('2026-11-02 12:00'), dst), 6, 'across the 25-hour day');
+  assert.deepEqual(core.weekDots(dst, p.call('sz_taps_get', { p_from: '2026-10-26', p_to: '2026-11-02' }).map((t) => t.date), p.now()).map((x) => x.state).join(' '),
+    'done later later later later later later', 'and the seven dots, a new week');
+});
+
+test('the phone keeps 400 days of taps, and hands them over with no id', () => {
+  const store = memoryStorage();
+  const p = phone('2025-09-01 12:00', store);
+  const old = p.call('sz_habit_add', { p_text: 'Old', p_frequency: 'daily' });
+  p.call('sz_tap', { p_habit: old.id, p_date: '2025-09-01' });
+  const a = p.at('2026-10-14 12:00').call('sz_habit_add', { p_text: 'Walk', p_frequency: 'daily', p_shared: true });
+  tapOn(p, a.id, ['2026-10-13', '2026-10-14']);
+  assert.ok(!store.get().includes('2025-09-01'), 'a tap more than 400 days old is let go on the next write');
+  const b = p.call('sz_habit_add', { p_text: 'Gym', p_frequency: 'n_per_week', p_n: 2 });
+  p.call('sz_habit_set', { p_habit: b.id, p_position: 1 });
+  p.call('sz_habit_set', { p_habit: old.id, p_archived: true });
+  const list = p.toImport();
+  assert.deepEqual(list.map((h) => h.text), ['Gym', 'Walk', 'Old'], 'your order, then the archived');
+  assert.deepEqual(list[1], { text: 'Walk', frequency: 'daily', n: null, shared: true, archived: false, taps: ['2026-10-13', '2026-10-14'] });
+  assert.ok(!/"id"|this-phone|user/.test(JSON.stringify(list)), 'nothing names this phone or a habit id');
+  /* and the account takes exactly that list */
+  const f = new FakeHabits({ now: () => ny('2026-10-14 13:00') }).as('new-reader');
+  f.sz_import_local({ p_habits: list });
+  const got = f.sz_habits_get();
+  assert.deepEqual(got.map((h) => h.text), ['Gym', 'Walk']);
+  const taps = f.sz_taps_get({ p_from: '2026-10-01', p_to: '2026-10-14' }).filter((t) => t.habit === got[1].id).map((t) => t.date);
+  assert.equal(core.streak(got[1], taps, f.now()), 2, 'the streak is the same on the account');
+  assert.equal(p.has(), true);
+  p.clear();
+  assert.equal(p.has(), false);
+  assert.equal(store.get(), null, 'cleared: the key is gone');
+  assert.deepEqual(phone('2026-10-14 14:00', store).call('sz_habits_get'), [], 'and the phone’s list is empty');
+});
+
+test('the phone: at most habitsMax go to the account, yours before the archived', () => {
+  const p = phone();
+  for (let i = 1; i <= 100; i++) p.call('sz_habit_add', { p_text: 'Habit ' + i, p_frequency: 'daily' });
+  const first = p.call('sz_habits_get')[0];
+  p.call('sz_habit_set', { p_habit: first.id, p_archived: true });
+  p.call('sz_habit_add', { p_text: 'Habit 101', p_frequency: 'daily' });
+  const list = p.toImport();
+  assert.equal(list.length, 100);
+  assert.ok(list.every((h) => !h.archived) && list.at(-1).text === 'Habit 101');
+  /* the account takes the hundred; the one left over stays on the phone */
+  const snap = p.snapshot('u-1');
+  assert.equal(snap.whole, false);
+  p.forget(snap.ids);
+  assert.deepEqual(p.habits.map((h) => h.text), ['Habit 1'], 'the archived one more than a call can carry is not lost');
+});
+
+test('the phone lets go of exactly what the account took', () => {
+  const p = phone();
+  const a = p.call('sz_habit_add', { p_text: 'Walk', p_frequency: 'daily' });
+  p.call('sz_tap', { p_habit: a.id, p_date: '2026-10-14' });
+  const snap = p.snapshot('u-1');
+  assert.ok(snap.whole);
+  /* added while the import was on its way: not in the snapshot, so not let go */
+  const b = p.call('sz_habit_add', { p_text: 'Added meanwhile', p_frequency: 'daily' });
+  p.forget(snap.ids);
+  assert.deepEqual(p.call('sz_habits_get').map((h) => h.id), [b.id]);
+  assert.deepEqual(p.call('sz_taps_get', { p_from: '2026-10-01', p_to: '2026-10-14' }), [], 'and the taps of what went');
+});
+
+test('the phone remembers which habits an account already had, and never sends them twice', () => {
+  const store = memoryStorage();
+  const p = phone('2026-10-13 12:00', store);
+  const a = p.call('sz_habit_add', { p_text: 'Walk', p_frequency: 'daily' });
+  p.call('sz_tap', { p_habit: a.id, p_date: '2026-10-13' });
+  p.at('2026-10-14 12:00');
+  assert.equal(p.pendingFor('u-1'), true);
+  p.markMerged('u-1', [a.id]);
+  const again = phone('2026-10-14 13:00', store);
+  assert.equal(again.pendingFor('u-1'), false, 'a merge is remembered across a reload');
+  assert.equal(again.pendingFor('u-2'), true, 'for that account only');
+  assert.deepEqual(again.snapshot('u-1').list, []);
+  assert.deepEqual(again.call('sz_taps_get', { p_from: '2026-10-01', p_to: '2026-10-14' }).map((t) => t.date), ['2026-10-13'], 'and its past days stay on the phone');
+  const b = again.call('sz_habit_add', { p_text: 'Read', p_frequency: 'daily' });
+  assert.equal(again.pendingFor('u-1'), true, 'a habit added since is new to that account');
+  assert.deepEqual(again.snapshot('u-1').ids, [b.id]);
 });

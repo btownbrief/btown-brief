@@ -710,6 +710,69 @@ body.chrome-away .mast { transform: translateY(-100%); }
 .wx b.sc { margin-right: 0; }
 .wx .when { margin-left: auto; }
 
+/* What Now at a glance: the lake and sunset across the top, the window
+   pills on the left and the weather card on the right, Spin under both */
+.wxtop { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 10px; align-items: center; padding: 10px var(--gutter) 6px; }
+.wxtop .wx { grid-column: 1 / -1; padding: 0; }
+.wxtop .toolrow { padding: 0; min-width: 0; }
+.wxtop .toolrow .pills { gap: 2px; }
+.wxtop .toolrow .pills button { padding: 0 6px; font-size: var(--fs-meta); }
+.wxcard { display: flex; flex-direction: column; gap: 6px; width: 158px; padding: 8px 10px; border-radius: var(--r-box); background: var(--accent-soft); color: var(--ink); }
+.wxcard:active { transform: scale(.98); }
+.wxcard .i { width: 16px; height: 16px; }
+.wxc-top { display: flex; align-items: center; gap: 6px; }
+.wxc-ic { color: var(--accent); display: flex; }
+.wxc-ic .i { width: 24px; height: 24px; }
+.wxc-t { font-family: var(--serif); font-size: var(--fs-hero); font-weight: 500; line-height: 1; }
+.wxc-m { display: flex; flex-direction: column; margin-left: auto; text-align: right; font-size: var(--fs-small); line-height: 1.25; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.wxc-hl { color: var(--ink-3); }
+.wxc-hrs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px; border-top: 1px solid var(--line-soft); padding-top: 6px; }
+.wxc-h { display: flex; flex-direction: column; align-items: center; gap: 2px; font-variant-numeric: tabular-nums; }
+.wxc-h i { font-style: normal; font-size: var(--fs-label); color: var(--ink-3); }
+.wxc-h .i { width: 14px; height: 14px; color: var(--ink-2); }
+.wxc-h b { font-size: var(--fs-small); font-weight: 600; }
+/* a phone narrower than 380: the card takes its own row under the pills */
+@media (max-width: 379px) { .wxtop { grid-template-columns: minmax(0, 1fr); } .wxcard { width: auto; } }
+
+/* Happening today: a strip of the rest of today's calendar */
+.rail.today { gap: 10px; }
+.tday { display: flex; flex-direction: column; gap: 4px; width: 148px; min-height: 104px; padding: 10px 12px 12px; border-radius: var(--r-media); background: var(--local-soft); color: var(--ink); }
+.tday.night { background: var(--accent-soft); }
+.tday .tw { font-size: var(--fs-meta); font-weight: 700; color: var(--local); font-variant-numeric: tabular-nums; }
+.tday.night .tw { color: var(--accent); }
+.tday .tt { font-size: var(--fs-sub); font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.tday .tv { margin-top: auto; font-size: var(--fs-small); color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tdsep { align-self: center; writing-mode: vertical-rl; transform: rotate(180deg); padding: 0 2px; }
+.linkrow.todaylinks, .linkrow.chlinks { padding: 2px var(--gutter) 4px; }
+
+/* Btown Challenges: a colour per kind, from the accent tokens */
+.ch-eat { --ch: var(--accent); --ch-soft: var(--accent-soft); }
+.ch-climb { --ch: var(--habit); --ch-soft: var(--habit-soft); }
+.ch-explore { --ch: var(--local); --ch-soft: var(--local-soft); }
+.ch-streak { --ch: var(--every); --ch-soft: color-mix(in srgb, var(--every) 14%, transparent); }
+.chweek { margin: 0 var(--gutter) 6px; padding: 14px 16px 16px; border-radius: var(--r-media); background: var(--ch-soft); }
+.chweek .eyebrow { color: var(--ch); }
+.chweek h3 { font-family: var(--serif); font-size: var(--fs-display); font-weight: 500; line-height: var(--lh-tight); margin-top: 4px; }
+.chweek p { color: var(--ink-2); margin-top: 6px; font-size: var(--fs-body); }
+.chweek .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.chweek.done h3 { text-decoration: line-through; text-decoration-thickness: 1px; }
+.chweek .markdone.on, .lrow.chal .markdone.on { background: var(--ch); color: var(--on-ink); border-color: var(--ch); }
+.lrow.chal .num { display: flex; justify-content: center; color: var(--ch); }
+.lrow.chal .num .i { width: 22px; height: 22px; }
+
+/* the missions' themes, a colour each: a dot on the chip, the row's number */
+.th-eat { --th: var(--accent); }
+.th-drink { --th: var(--every); }
+.th-outdoors { --th: var(--habit); }
+.th-water { --th: var(--local); }
+.th-culture { --th: color-mix(in srgb, var(--mark-5) 75%, var(--ink)); }
+.th-play { --th: color-mix(in srgb, var(--mark-6) 75%, var(--ink)); }
+.th-family { --th: color-mix(in srgb, var(--mark-3) 75%, var(--ink)); }
+.th-winter { --th: color-mix(in srgb, var(--mark-4) 75%, var(--ink)); }
+.th-free { --th: color-mix(in srgb, var(--mark-7) 75%, var(--ink)); }
+.chips.themes .chip[class*="th-"]::before { content: ""; width: 8px; height: 8px; border-radius: var(--r-round); background: var(--th); }
+.lrow.mission[class*="th-"] .num { color: var(--th); }
+
 /* archetype tiles */
 .arch { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 var(--gutter); }
 .arch button { border: 1px solid var(--line); border-radius: var(--r-box); padding: 14px 14px 12px; text-align: left; min-height: 96px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; transition: background .15s ease, color .15s ease; }
@@ -961,6 +1024,9 @@ select.bf-in { appearance: none; -webkit-appearance: none; }
 @keyframes hb-press { 50% { transform: scale(.97); } }
 .hb-add { padding: var(--s4) var(--gutter) 0; }
 .btn.hb-addbtn { height: var(--hit); }
+/* signed out: the one quiet line under the list; a full 44px target, small type */
+.btn.hb-sync { display: flex; height: var(--hit); margin: var(--s4) var(--gutter) 0; padding: 0; background: transparent; color: var(--ink-3);
+  font-size: var(--fs-meta); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .hb-form { padding-top: 0; }
 .hb-freq { align-self: stretch; }
 .hb-n { margin-top: var(--s2); }

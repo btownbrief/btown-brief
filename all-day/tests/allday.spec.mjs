@@ -35,6 +35,7 @@ import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import net from 'node:net';
 import path from 'node:path';
+import { FakeHabits } from '../js/habits-fake.js';
 
 const require = createRequire(import.meta.url);
 let chromium;
@@ -2497,7 +2498,7 @@ async function theWhatNow(browser, base) {
     await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
     check(await page.$eval('#subnav .chip.on', (b) => /Spin/.test(b.innerText)), 'the chip row is the mode switch, Spin first', '');
     const wx = await page.$eval(wnPanel + ' .wx', (w) => w.innerText.replace(/\s+/g, ' '));
-    check(/59° feels like/.test(wx) && /61° lake/.test(wx) && /6:06 sunset/.test(wx), 'the weather line: feels like, the lake, sunset', wx);
+    check(!/feels like/.test(wx) && /61° lake/.test(wx) && /6:06 sunset/.test(wx), 'the weather line: the lake and sunset (feels like is on the card)', wx);
     check(await page.$eval(wnPanel + ' .wx', (w) => w.getBoundingClientRect().height < 40), 'the weather line is one line at 390', '');
     check(await page.$$eval(wnPanel + ' .chips.paths .chip', (c) => c.map((x) => x.innerText).join('|')) === 'I’m broke|Get me outside|People, please|Two hours|Close by|Teach me something|Move with people', 'the seven path chips', '');
     const first = await spinAnswer(page);
@@ -2710,6 +2711,231 @@ async function theWhatNow(browser, base) {
     check(/6:06 sunset/.test(await w.page.$eval(wnPanel + ' .wx', (x) => x.innerText.replace(/\s+/g, ' '))), 'and its sunset still reads 6:06', '');
     check(!w.errors.length, 'no console errors', w.errors.join(' | '));
     await w.ctx.close();
+  });
+
+  await group('What Now, at a glance: the weather card and Happening today (demo, 2 pm)', async () => {
+    /* Stephen, 2026-10-17: a weather preview in the open spot right of the
+       window pills, above Spin, and a preview of the events calendar */
+    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(14), seed: 3 });
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector(wnPanel + ' .spin .big:not([disabled])', { timeout: 15000 });
+    const card = await page.$eval(wnPanel + ' .wxcard', (a) => ({ href: a.getAttribute('href'), t: a.querySelector('.wxc-t').textContent, feels: a.querySelector('.wxc-feels')?.textContent,
+      hl: a.querySelector('.wxc-hl')?.textContent, icon: a.dataset.wxicon, hrs: [...a.querySelectorAll('.wxc-h i')].map((i) => i.textContent), label: a.getAttribute('aria-label') }));
+    check(card.t === '61°' && card.feels === 'Feels 59°' && card.hl === 'H 62° L 48°', 'the card: the temperature, feels like, today’s high and low', JSON.stringify(card));
+    check(card.icon === 'sun' && /^Clear, 61°/.test(card.label), 'a condition icon, and the card says it all to a screen reader', card.icon + ' / ' + card.label);
+    check(card.hrs.join(' ') === '3p 4p 5p 6p 7p 8p', 'the next six hours, from the hour after now', card.hrs.join(' '));
+    check(card.href === '../weather.html', 'the card opens the guide’s weather page', card.href);
+    const box = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const r = (s) => p.querySelector(s).getBoundingClientRect();
+      const c = r('.wxcard'), pills = r('.wxtop .pills'), big = r('.spin .big'), wx = r('.wxtop .wx');
+      return { cardLeft: c.left, cardRight: c.right, cardTop: c.top, cardBottom: c.bottom, pillsRight: pills.right, pillsTop: pills.top, pillsBottom: pills.bottom, wxBottom: wx.bottom, bigTop: big.top, bigW: big.width, vw: innerWidth, scroll: document.documentElement.scrollWidth };
+    });
+    check(box.cardLeft > box.vw / 2 && box.cardRight <= box.vw - 15 && box.pillsRight <= box.cardLeft && box.pillsTop >= box.cardTop && box.pillsBottom <= box.cardBottom && box.wxBottom <= box.cardTop,
+      'at 390 the card sits to the right, beside the pills and under the lake and sunset line, overlapping nothing', JSON.stringify(box));
+    check(box.cardBottom <= box.bigTop && box.bigW >= 350 && box.scroll <= box.vw, 'above Spin, which keeps its full width, and nothing scrolls sideways', JSON.stringify(box));
+
+    const today = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const sec = p.querySelector('[data-sec="today"]');
+      const tiles = [...p.querySelectorAll('.rail.today > *')].map((t) => (t.classList.contains('tdsep') ? '|' + t.textContent : t.dataset.k + ' ' + t.querySelector('.tw').textContent));
+      const full = p.querySelector('.todaylinks a');
+      const spin = p.querySelector('.spin'), ch = p.querySelector('[data-sec="challenges"]');
+      return { title: sec && sec.querySelector('h2').textContent, tiles, full: full && full.textContent.trim(), fullHref: full && full.getAttribute('href'),
+        order: !!(spin && sec && ch && (spin.compareDocumentPosition(sec) & 4) && (sec.compareDocumentPosition(ch) & 4)), href: p.querySelector('.rail.today a').getAttribute('href') };
+    });
+    check(today.title === 'Happening today' && today.order, 'Happening today sits under Spin and above the challenges', JSON.stringify(today));
+    check(today.tiles.join(', ') === 'd-pm1 4:30 pm, |Tonight, d-tn4 5:45 pm, d-tn3 6 pm, d-tn1 8 pm, d-tn2 9:30 pm, d-tn5 11:30 pm',
+      'the rest of today in time order, the morning’s gone, then tonight’s under a Tonight mark', today.tiles.join(', '));
+    check(today.href === '#whatnow/e-pm1', 'a tile opens its own listing', today.href);
+    check(/^Full events calendar/.test(today.full) && /\/events\.html$/.test(today.fullHref), 'and a link to the full events calendar', JSON.stringify(today));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-glance-390.png') });
+    await ctx.close();
+
+    /* dark, and wide: the card holds its shape */
+    const d = await newPage(browser, base, { clock: etAt(14), scheme: 'dark', viewport: { width: 1280, height: 800 } });
+    await d.page.goto(base + '/all-day/?demo=1#whatnow');
+    await d.page.waitForSelector(wnPanel + ' .wxcard', { timeout: 15000 });
+    const dk = await d.page.$eval(wnPanel + ' .wxcard', (a) => ({ bg: getComputedStyle(a).backgroundColor, ink: getComputedStyle(a).color, h: a.getBoundingClientRect().height }));
+    check(dk.bg !== 'rgba(0, 0, 0, 0)' && dk.h < 110, 'dark and 1280: the card keeps its fill and its height', JSON.stringify(dk));
+    await d.page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-glance-desktop-dark.png') });
+    check(!d.errors.length, 'no console errors', d.errors.join(' | '));
+    await d.ctx.close();
+  });
+
+  await group('What Now, at a glance on Burlington’s clock (live, a reader in Los Angeles)', async () => {
+    /* 2 pm in Burlington is 11 am in Los Angeles: the hours, today, tonight
+       and the high and low are all Burlington's */
+    const day = etKey(Date.now());
+    const off = etOffset(Date.parse(day + 'T12:00:00Z'));
+    const frozen = Date.parse(day + 'T14:00:00' + off);
+    const at = (d, hm) => d + 'T' + hm + ':00' + off;
+    const ev = (id, title, d, start, end, extra) => ({ id, title, date: d, start: at(d, start), ...(end ? { end: at(d, end) } : {}), url: 'https://example.com/' + id,
+      category: 'music', allDay: false, venue: 'Hall ' + id, town: 'Burlington', free: true, ...(extra || {}) });
+    const events = [
+      ev('gone', 'This morning', day, '09:00', '10:00'),
+      ev('on', 'Started at one', day, '13:00', '16:00'),
+      ev('long', 'All afternoon fair', day, '10:00', '17:00'),
+      ev('soon', 'Half past two', day, '14:30', null),
+      ev('xss', '<img src=x onerror="window.__wnxss=1">Bad title', day, '15:00', null),
+      ev('cxl', 'Cancelled: the show', day, '15:30', null),
+      ev('allday', 'An exhibit', day, '00:00', null, { allDay: true }),
+      ev('eve', 'Seven o’clock', day, '19:00', null),
+      ev('late', 'Late set', day, '23:30', null),
+      ev('yday', 'Last night late', dayMinus(day, 1), '23:30', null),
+      ev('tmrw', 'Just after midnight', dayMinus(day, -1), '00:30', null),
+    ];
+    const hours = Array.from({ length: 12 }, (_, i) => ({ t: at(day, String(12 + i).padStart(2, '0') + ':00'), temp_f: 40 + i, feels_f: 35 + i, pop: i === 3 ? 70 : 5, short: i === 3 ? 'Rain Showers Likely' : 'Partly Sunny' }));
+    const weather = {
+      updated: new Date(frozen).toISOString(),
+      now: { observed_at: new Date(frozen - 20 * 60000).toISOString(), description: 'Mostly Cloudy', temp_f: 41, feels_like_f: 33 },
+      forecast: { periods: [
+        { name: 'Overnight', start: at(day, '02:00'), is_day: false, temp_f: 25, short: 'Clear' },
+        { name: 'Today', start: at(day, '06:00'), is_day: true, temp_f: 44, short: 'Mostly Sunny' },
+        { name: 'Tonight', start: at(day, '18:00'), is_day: false, temp_f: 30, short: 'Clear' },
+        { name: 'Tomorrow', start: at(dayMinus(day, -1), '06:00'), is_day: true, temp_f: 52, short: 'Sunny' }] },
+      hourly: { hours },
+      sun: { sunrise: at(day, '07:10'), sunset: at(day, '18:05') },
+    };
+    const routes = [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events }], [/\/data\/weather\/latest\.json/, weather]];
+    const { ctx, page, errors } = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes });
+    await page.clock.setFixedTime(frozen);
+    await page.goto(base + '/all-day/#whatnow');
+    await page.waitForSelector(wnPanel + ' .wxcard', { timeout: 15000 });
+    const card = await page.$eval(wnPanel + ' .wxcard', (a) => ({ t: a.querySelector('.wxc-t').textContent, feels: a.querySelector('.wxc-feels')?.textContent, hl: a.querySelector('.wxc-hl')?.textContent,
+      icon: a.dataset.wxicon, hrs: [...a.querySelectorAll('.wxc-h')].map((h) => h.querySelector('i').textContent + ':' + h.dataset.wxicon + ':' + h.querySelector('b').textContent) }));
+    check(card.t === '41°' && card.feels === 'Feels 33°' && card.icon === 'cloud', 'the card leads with the fresh observation, mostly cloudy', JSON.stringify(card));
+    check(card.hl === 'H 44° L 30°', 'today’s high, and tonight’s low rather than last night’s', card.hl);
+    check(card.hrs.join(' ') === '3p:rain:43° 4p:partly:44° 5p:partly:45° 6p:partly:46° 7p:moon:47° 8p:moon:48°', 'the next six hours in Burlington’s clock, with rain where it is forecast and the moon after the 6:05 sunset', card.hrs.join(' '));
+    await page.waitForSelector(wnPanel + ' .rail.today', { timeout: 15000 });
+    const tiles = await page.$$eval(wnPanel + ' .rail.today > *', (t) => t.map((x) => (x.classList.contains('tdsep') ? '|' : x.dataset.k + ' ' + x.querySelector('.tw').textContent)));
+    check(tiles.join(', ') === 'd-on On now, d-soon 2:30 pm, d-xss 3 pm, |, d-eve 7 pm, d-late 11:30 pm',
+      'today in Burlington: on now, then what’s next, then tonight; not the morning, the all-afternoon fair, the all-day exhibit, the cancelled show, last night or tomorrow', tiles.join(', '));
+    const xss = await page.evaluate(() => ({ fired: !!window.__wnxss, imgs: document.querySelectorAll('#panel-whatnow .rail.today img').length,
+      text: document.querySelector('#panel-whatnow [data-k="d-xss"] .tt').textContent }));
+    check(!xss.fired && !xss.imgs && /^<img src=x/.test(xss.text), 'a title with markup in it prints as text', JSON.stringify(xss));
+    check(await page.$eval(wnPanel + ' [data-k="d-soon"]', (a) => a.target === '_blank' && a.rel === 'noopener' && a.href === 'https://example.com/soon'), 'a tile opens its listing in a new tab', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+
+    /* late at night, with nothing left today, tomorrow's take the strip */
+    const late = Date.parse(day + 'T23:50:00' + off);
+    const l = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes });
+    await l.page.clock.setFixedTime(late);
+    await l.page.goto(base + '/all-day/#whatnow');
+    await l.page.waitForSelector(wnPanel + ' [data-sec="today"]', { timeout: 15000 });
+    const lt = await l.page.evaluate(() => ({ h: document.querySelector('#panel-whatnow [data-sec="today"] h2').textContent,
+      k: [...document.querySelectorAll('#panel-whatnow .rail.today [data-k]')].map((t) => t.dataset.k) }));
+    check(lt.h === 'Happening tomorrow' && lt.k.join(',') === 'd-tmrw', 'after the last one tonight, the strip turns to tomorrow', JSON.stringify(lt));
+    check(!l.errors.length, 'no console errors', l.errors.join(' | '));
+    await l.ctx.close();
+
+    /* just after Burlington midnight: last night's late set is still on, and
+       with nothing after it and nothing tomorrow the strip says so */
+    const midnight = Date.parse(dayMinus(day, -1) + 'T00:30:00' + etOffset(Date.parse(dayMinus(day, -1) + 'T12:00:00Z')));
+    const mEvents = [ev('night', 'Still going', day, '23:30', null, { end: new Date(midnight + 3600000).toISOString() })];
+    const m = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes: [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events: mEvents }], routes[1]] });
+    await m.page.clock.setFixedTime(midnight);
+    await m.page.goto(base + '/all-day/#whatnow');
+    await m.page.waitForSelector(wnPanel + ' [data-sec="today"]', { timeout: 15000 });
+    const mt = await m.page.evaluate(() => ({ h: document.querySelector('#panel-whatnow [data-sec="today"] h2').textContent,
+      k: [...document.querySelectorAll('#panel-whatnow .rail.today [data-k]')].map((t) => t.dataset.k + ' ' + t.querySelector('.tw').textContent) }));
+    check(mt.h === 'Happening today' && mt.k.join(',') === 'd-night On now', 'at 12:30 am, last night’s late set still on shows as on now', JSON.stringify(mt));
+    check(!m.errors.length, 'no console errors', m.errors.join(' | '));
+    await m.ctx.close();
+    const e2 = await newPage(browser, base, { timezoneId: 'America/Los_Angeles', routes: [[/\/all-day\/data\/whatnow\.json/, { generated: new Date(frozen).toISOString(), days: 10, counts: {}, events: [] }], routes[1]] });
+    await e2.page.clock.setFixedTime(frozen);
+    await e2.page.goto(base + '/all-day/#whatnow');
+    await e2.page.waitForSelector(wnPanel + ' [data-sec="today"]', { timeout: 15000 });
+    const et2 = await e2.page.evaluate(() => document.querySelector('#panel-whatnow [data-sec="today"]').parentElement.innerText);
+    check(/Happening today/.test(et2) && /Nothing else today\./.test(et2) && !/Happening tomorrow/.test(et2), 'nothing today and nothing tomorrow: Happening today, “Nothing else today.”', '');
+    check(!e2.errors.length, 'no console errors', e2.errors.join(' | '));
+    await e2.ctx.close();
+  });
+
+  await group('What Now, Btown Challenges (live)', async () => {
+    const real = JSON.parse(await readFile(path.join(APP, 'data/challenges.json'), 'utf8'));
+    const all = real.weekly.concat(real.evergreen);
+    const kinds = ['eat', 'climb', 'explore', 'streak'];
+    check(real.weekly.length >= 4 && real.evergreen.length >= 3, 'challenges.json holds weekly and evergreen challenges', real.weekly.length + ' / ' + real.evergreen.length);
+    check(all.every((c) => /^[a-z0-9-]+$/.test(c.id) && c.title && c.line && kinds.includes(c.kind) && /^(https:\/\/|\.\.\/[\w.-]+\.html$)/.test(c.url)), 'every one has an id, a title, a line, a known kind and a page', '');
+    check(new Set(all.map((c) => c.id)).size === all.length, 'no id twice', '');
+    check(all.every((c) => !/[—–!]/.test(c.title + c.line)), 'no dashes or exclamation points', '');
+    for (const c of all.filter((x) => /^\.\.\//.test(x.url))) {
+      const f = await readFile(path.join(REPO, c.url.slice(3))).then(() => true, () => false);
+      check(f, c.id + ': its guide page exists (' + c.url + ')', '');
+    }
+    /* which weekly one is up, worked out here the way the tab does: Burlington's Monday */
+    const key = etKey(Date.now());
+    const [y, m, d] = key.split('-').map(Number);
+    const noon = Date.UTC(y, m - 1, d, 12);
+    const dow = (new Date(noon).getUTCDay() + 6) % 7;
+    const monday = new Date(noon - dow * 86400000).toISOString().slice(0, 10);
+    const wk = Math.floor((noon - dow * 86400000 - Date.UTC(1970, 0, 5, 12)) / (7 * 86400000));
+    const loose = real.weekly.filter((c) => !c.week);
+    const want = real.weekly.find((c) => c.week === monday) || loose[wk % loose.length];
+
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/#whatnow');
+    await page.waitForSelector(wnPanel + ' [data-sec="challenges"]', { timeout: 15000 });
+    const got = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const ch = p.querySelector('[data-sec="challenges"]'), mi = p.querySelector('[data-sec="missions"]');
+      return { above: !!(ch && mi && (ch.compareDocumentPosition(mi) & 4)), week: p.querySelector('.chweek h3')?.textContent, weekK: p.querySelector('.chweek')?.dataset.k,
+        rows: [...p.querySelectorAll('.lrow.chal')].map((r) => r.dataset.k), suggest: ch.querySelector('a.suggest')?.getAttribute('href'),
+        more: p.querySelector('.chlinks a')?.getAttribute('href') };
+    });
+    check(got.above, 'Btown Challenges sits above the Top 100', JSON.stringify(got));
+    check(got.week === want.title && got.weekK === 'c-' + want.id, 'this week’s challenge is the one for Burlington’s week', got.week + ' vs ' + want.title);
+    check(got.rows.length === 3 && got.rows.every((k) => real.evergreen.some((c) => 'c-' + c.id === k)), 'and three evergreen ones under it', got.rows.join(', '));
+    check(/^mailto:btownbrief@gmail\.com\?subject=/.test(got.suggest || ''), 'Suggest one writes to btownbrief@gmail.com', got.suggest);
+    check(got.more === 'https://play.btownbrief.com/challenges/', 'All challenges opens the challenge board', got.more);
+    const k = got.rows[1];
+    await page.click(wnPanel + ' .lrow.chal[data-k="' + k + '"] .markdone');
+    check(await page.$eval(wnPanel + ' .lrow.chal[data-k="' + k + '"]', (r) => r.classList.contains('done')), 'Mark done ticks it', '');
+    await page.click(wnPanel + ' .chweek .markdone');
+    await page.reload();
+    await page.waitForSelector(wnPanel + ' [data-sec="challenges"]', { timeout: 15000 });
+    check(await page.$eval(wnPanel + ' .lrow.chal[data-k="' + k + '"]', (r) => r.classList.contains('done')) && await page.$eval(wnPanel + ' .chweek', (r) => r.classList.contains('done')),
+      'and both survive a reload, on this device', '');
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-challenges') || '{}'));
+    check(stored[k.slice(2)] && stored[want.id], 'kept under allday-challenges, like the missions’ marks', JSON.stringify(stored));
+    await page.click(wnPanel + ' .lrow.chal[data-k="' + k + '"] .open');
+    await page.waitForSelector('.sheet-card');
+    const sheet = await page.$eval('.sheet-card', (c) => ({ h: c.querySelector('h2').textContent, link: c.querySelector('a.btn')?.href }));
+    const c1 = real.evergreen.find((c) => 'c-' + c.id === k);
+    check(sheet.h === c1.title && sheet.link === c1.url, 'tapping one opens its line and its page', JSON.stringify(sheet));
+    await page.keyboard.press('Escape');
+    await page.evaluate((kk) => { location.hash = 'whatnow/' + kk; }, got.weekK);
+    check(await flashes(page, got.weekK), '#whatnow/c-<id> lands on the challenge', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  await group('What Now, challenges and colour (demo)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base, { clock: etAt(11) });
+    await page.goto(base + '/all-day/?demo=1#whatnow');
+    await page.waitForSelector(wnPanel + ' [data-sec="challenges"]', { timeout: 15000 });
+    const ks = await page.$$eval(wnPanel + ' .challenges [data-k]', (r) => r.map((x) => x.dataset.k));
+    check(ks.length === 4 && !ks.includes('c-demo-bad'), 'a challenge without a real page never shows', ks.join(', '));
+    await page.evaluate(() => { const h = document.querySelector('#panel-whatnow [data-sec="challenges"]'); h.closest('.panel').scrollBy(0, h.getBoundingClientRect().top - 120); });
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: path.join(SHOTS, 'demo-whatnow-challenges-390.png') });
+    await page.click(wnPanel + ' .chweek .markdone');
+    check(await page.$eval(wnPanel + ' .chweek', (r) => r.classList.contains('done')), 'demo: Mark done ticks', '');
+    check(!(await page.evaluate(() => localStorage.getItem('allday-challenges'))), 'and never reaches localStorage', '');
+    const colour = await page.evaluate(() => {
+      const p = document.querySelector('#panel-whatnow');
+      const dot = getComputedStyle(p.querySelector('.chips.themes .chip.th-water'), '::before').backgroundColor;
+      const num = getComputedStyle(p.querySelector('.lrow.mission.th-drink .num')).color;
+      const plain = getComputedStyle(p.querySelector('.lrow.mission .num')).color;
+      const week = getComputedStyle(p.querySelector('.chweek')).backgroundColor;
+      return { dot, num, week, ink3: plain };
+    });
+    check(colour.dot !== 'rgba(0, 0, 0, 0)' && colour.week !== 'rgba(0, 0, 0, 0)', 'theme chips carry a colour dot, and the week’s challenge a tint', JSON.stringify(colour));
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
   });
 }
 
@@ -5093,14 +5319,17 @@ async function theHabits(browser, base) {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
-    const out = await page.$eval(hbPanel, (p) => ({ tile: p.querySelector('.hb-tile').innerText.replace(/\s+/g, ' '), gate: [...p.querySelectorAll('.hb-gate button')].map((b) => b.textContent),
+    await page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
+    const out = await page.$eval(hbPanel, (p) => ({ tile: p.querySelector('.hb-tile').innerText.replace(/\s+/g, ' '), buttons: [...p.querySelectorAll('button')].map((b) => b.textContent.trim()),
       rows: p.querySelectorAll('.hb-row').length, notes: [...p.querySelectorAll('p')].map((x) => x.textContent).filter((t) => !/^Season 0 ·/.test(t)) }));
     check(/Next season starts in 23 days/.test(out.tile) && /Sign up/.test(out.tile), 'the between-seasons tile: when the next season starts, and a sign-up button', out.tile);
-    check(JSON.stringify(out.gate) === '["Sign in"]' && out.rows === 0 && !out.notes.length, 'signed out: the tile and a sign-in button, and no explanation', JSON.stringify(out));
+    check(JSON.stringify(out.buttons) === '["Sign up","Add habit"]' && out.rows === 0 && JSON.stringify(out.notes) === '["No habits yet."]',
+      'signed out, a first visit: one line and the Add habit row, no sign-in wall', JSON.stringify(out));
     check(JSON.stringify(await page.$$eval('#subnav .chip', (c) => c.map((x) => x.textContent))) === '["Today","Goal","Season","Wall"]', 'the chips: Today, Goal, Season, Wall', '');
-    await page.click(hbPanel + ' .hb-gate button');
+    await page.click(hbPanel + ' .hb-tile .hb-go');
     await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
-    check(!!(await page.$('.sheet-card[aria-label="Settings"]')), 'Sign in opens the sign-in in Settings', '');
+    check(!!(await page.$('.sheet-card[aria-label="Settings"]')) && /Sign in to join a season/.test(await page.$eval('#toast', (t) => t.textContent)),
+      'the season is signed-in only, and says so only when Sign up is tapped', '');
     await page.keyboard.press('Escape');
 
     await hbSignIn(page);
@@ -5308,25 +5537,36 @@ async function theHabits(browser, base) {
     await ctx.close();
   });
 
-  await group('Habits, the first sign-in asks a name and a phone, once (demo)', async () => {
+  await group('Habits, no name or phone for the tracker: they are asked when you join a season (demo)', async () => {
     const { ctx, page, errors } = await newPage(browser, base);
     await page.goto(base + '/all-day/?demo=1#habits');
     await settle(page);
     await hbFake(page, `(f) => { f.members.delete('${HB_ME}'); return true; }`);
     await hbSignIn(page);
-    check(!!(await page.$(hbPanel + ' .hb-me input[name=name]')) && !!(await page.$(hbPanel + ' .hb-me input[name=phone]')) && !(await page.$(hbPanel + ' .hb-row')), 'no member yet: a first name and a phone, before any habit', '');
-    await page.fill(hbPanel + ' .hb-me input[name=name]', 'Alex');
-    await page.fill(hbPanel + ' .hb-me input[name=phone]', 'call me');
-    await page.click(hbPanel + ' .hb-me button[type=submit]');
-    check(/phone number/.test(await page.$eval(hbPanel + ' .hb-me .bf-msg', (m) => m.textContent)), 'a phone that is not one: refused', '');
-    await page.fill(hbPanel + ' .hb-me input[name=phone]', '(802) 555-0142');
-    await page.click(hbPanel + ' .hb-me button[type=submit]');
-    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 }).catch(() => {});
-    check((await hbRows(page)).length === 3 && await hbFake(page, `(f) => f.members.get('${HB_ME}').phone === '(802) 555-0142'`), 'saved: the habits appear', '');
+    check(!(await page.$(hbPanel + ' .hb-me')) && (await hbRows(page)).length === 3, 'no member yet: the habits, and no form in the way', '');
+    await page.click(hbPanel + ' .hb-addbtn');
+    await page.fill(hbPanel + ' .hb-form input[name=text]', 'Stretch');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 4, null, { timeout: 4000 }).catch(() => {});
+    check((await hbRows(page)).length === 4 && await hbFake(page, `(f) => !f.members.has('${HB_ME}')`), 'a habit adds with no name given', '');
+    await page.click(hbPanel + ' .hb-tile .hb-go');
+    await page.waitForSelector('.sheet-card[aria-label="Join Season 0"]', { timeout: 4000 }).catch(() => {});
+    check(!!(await page.$('.sheet-body .hb-me input[name=name]')) && !!(await page.$('.sheet-body .hb-me input[name=phone]')), 'Sign up asks a first name and a phone', '');
+    await page.fill('.sheet-body .hb-me input[name=name]', 'Alex');
+    await page.fill('.sheet-body .hb-me input[name=phone]', 'call me');
+    await page.click('.sheet-body .hb-me button[type=submit]');
+    check(/phone number/.test(await page.$eval('.sheet-body .hb-me .bf-msg', (m) => m.textContent)), 'a phone that is not one: refused', '');
+    await page.fill('.sheet-body .hb-me input[name=phone]', '(802) 555-0142');
+    await page.click('.sheet-body .hb-me button[type=submit]');
+    await page.waitForSelector('#sheet[hidden]', { state: 'attached', timeout: 4000 }).catch(() => {});
+    check(await hbFake(page, `(f) => f.members.get('${HB_ME}') && f.members.get('${HB_ME}').phone === '(802) 555-0142'`) && /Sign-up opens/.test(await page.$eval('#toast', (t) => t.textContent)),
+      'saved, and on to the sign-up', '');
     await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
-    await page.waitForSelector(hbPanel + ' .hb-gate', { timeout: 4000 });
+    await page.waitForFunction(() => !document.querySelector('#panel-habits .hb-row') && document.querySelector('#panel-habits .hb-addbtn'), null, { timeout: 4000 });
     await hbSignIn(page);
-    check(!(await page.$(hbPanel + ' .hb-me')) && (await hbRows(page)).length === 3, 'signed in again: not asked twice', '');
+    await page.click(hbPanel + ' .hb-tile .hb-go');
+    await page.waitForTimeout(150);
+    check(!(await page.$('.sheet-card[aria-label="Join Season 0"]')) && (await hbRows(page)).length === 4, 'signed in again: not asked twice', '');
     await page.click('#subnav .chip[data-chip="season"]');
     check(await page.$eval(hbPanel, (p) => p.innerText.trim()) === 'Season 0 is coming' && /#habits\/season$/.test(await page.evaluate(() => location.hash)), 'Season: one line, and the address says where', '');
     await page.goto(base + '/all-day/?demo=1#habits/wall');
@@ -5353,6 +5593,141 @@ async function theHabits(browser, base) {
     check(!rows[1].on && !(await hbTap(page, 'Read twenty pages')).meta.includes('NaN'), 'a fresh day starts untapped', '');
     await page.waitForTimeout(100);
     check(await hbFake(page, `(f) => [...f.taps.keys()].some((k) => k.endsWith('|2026-10-15'))`), 'and a tap now is Thursday’s', '');
+    check(!errors.length, 'no console errors', errors.join(' | '));
+    await ctx.close();
+  });
+
+  /* live, the account a real Supabase would keep: the fake behind the RPC
+     doors, signed in as u-1 when the request carries a token */
+  const hbAccount = () => {
+    const f = new FakeHabits();
+    const calls = [];
+    const rpc = (fn, args, headers) => {
+      if (!/^sz_/.test(fn)) return undefined;
+      calls.push(fn);
+      if (fn === 'sz_season_next') return null;
+      try { return f.as(/^Bearer /.test((headers && headers.authorization) || '') ? 'u-1' : null).call(fn, args || {}) ?? null; }
+      catch (e) { return { status: 400, body: { code: 'P0001', message: e.code || 'boom' } }; }
+    };
+    return { f, calls, rpc };
+  };
+  for (const [width, scheme] of [[390, 'light'], [1280, 'dark']]) {
+    await group('Habits, signed out it just works on this phone, and signing in moves it to the account once (live, ' + width + ', ' + scheme + ')', async () => {
+      const acct = hbAccount();
+      const { ctx, page, errors } = await newPage(browser, base, { viewport: { width, height: 844 }, scheme, rpc: acct.rpc });
+      await page.goto(base + '/all-day/#habits');
+      await settle(page);
+      await page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
+      check(await page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'No habits yet.' && !(await page.$(hbPanel + ' .hb-sync')) && !(await page.$(hbPanel + ' .hb-gate')),
+        'a first visit: one line and Add habit, nothing seeded, no sign-in wall', '');
+      const add = async (name, freq, n) => {
+        const k = (await hbRows(page)).length;
+        await page.click(hbPanel + ' .hb-addbtn');
+        await page.fill(hbPanel + ' .hb-form input[name=text]', name);
+        if (freq) await page.click(hbPanel + ' .hb-form .hb-freq [data-freq="' + freq + '"]');
+        if (n) await page.selectOption(hbPanel + ' .hb-form .hb-n', String(n));
+        await page.click(hbPanel + ' .hb-form button[type=submit]');
+        await page.waitForFunction((k) => document.querySelectorAll('#panel-habits .hb-row').length === k + 1, k, { timeout: 4000 }).catch(() => {});
+      };
+      await add('Walk');
+      await add('Read', 'weekdays');
+      await add('Gym', 'n_per_week', 3);
+      const tw = await hbTap(page, 'Walk');
+      const tg = await hbTap(page, 'Gym');
+      check(tw.on && tg.on && tw.ms < 100 && tw.meta === '1 day · Daily' && /^1 week · 3 a week$|^3 a week$/.test(tg.meta), 'three habits, two tapped, at once (' + Math.round(tw.ms) + ' ms)', JSON.stringify([tw, tg]));
+      check(!acct.calls.some((c) => c !== 'sz_season_next'), 'and nothing personal went to the server', acct.calls.join(', '));
+      const kept = await page.evaluate(() => JSON.parse(localStorage.getItem('allday-habits-local') || 'null'));
+      check(kept && kept.v === 1 && kept.habits.length === 3 && Object.values(kept.taps).flat().length === 2, 'kept on this phone, under one versioned key', JSON.stringify(kept).slice(0, 200));
+      check(await page.$eval(hbPanel + ' .hb-sync', (b) => b.textContent).catch(() => '') === 'Sync across devices', 'one quiet line under the list: Sync across devices', '');
+      await pageRules(page, 'habits', width);
+      if (width === 390) await page.screenshot({ path: path.join(SHOTS, 'live-habits-signed-out.png') });
+
+      await page.reload();
+      await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 6000 });
+      let rows = await hbRows(page);
+      check(JSON.stringify(rows.map((r) => [r.name, r.on])) === '[["Walk",true],["Read",false],["Gym",true]]' && rows[0].meta === '1 day · Daily' && rows[0].dots[hbTodayCol()] === 'done',
+        'after a reload: the same three, the same two tapped, the streak and the dot', JSON.stringify(rows.map((r) => [r.name, r.on, r.meta])));
+      await page.click(hbPanel + ' .hb-sync');
+      await page.waitForSelector('.sheet-card[aria-label="Settings"]', { timeout: 4000 }).catch(() => {});
+      check(!!(await page.$('.sheet-card[aria-label="Settings"]')), 'Sync across devices opens the sign-in', '');
+      await page.keyboard.press('Escape');
+
+      /* sign in: the phone's habits move to the account, once */
+      await page.evaluate(() => localStorage.setItem('allday-auth', JSON.stringify({ refresh_token: 'r', user: { id: 'u-1' } })));
+      await page.reload();
+      await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 3 && !localStorage.getItem('allday-habits-local'), null, { timeout: 6000 }).catch(() => {});
+      const today = etKey(Date.now());
+      const server = acct.f.as('u-1').sz_habits_get();
+      const serverTaps = acct.f.sz_taps_get({ p_from: today, p_to: today }).map((t) => server.find((h) => h.id === t.habit).text).sort();
+      check(JSON.stringify(server.map((h) => [h.text, h.frequency, h.n])) === '[["Walk","daily",null],["Read","weekdays",null],["Gym","n_per_week",3]]' && JSON.stringify(serverTaps) === '["Gym","Walk"]',
+        'signed in: the account has the three habits and the two taps', JSON.stringify(server.map((h) => h.text)) + ' ' + JSON.stringify(serverTaps));
+      check(acct.calls.filter((c) => c === 'sz_import_local').length === 1 && !acct.calls.includes('sz_habit_add'), 'in one sz_import_local call', acct.calls.join(', '));
+      check(await page.evaluate(() => localStorage.getItem('allday-habits-local')) === null, 'and the phone forgets them: the account is the one copy', '');
+      rows = await hbRows(page);
+      check(JSON.stringify(rows.map((r) => [r.name, r.on])) === '[["Walk",true],["Read",false],["Gym",true]]' && !(await page.$(hbPanel + ' .hb-sync')),
+        'the list is the account’s now, and the sync line is gone', JSON.stringify(rows.map((r) => [r.name, r.on])));
+      await page.reload();
+      await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 6000 });
+      check((await hbRows(page)).length === 3 && acct.calls.filter((c) => c === 'sz_import_local').length === 1, 'a reload signed in imports nothing again', acct.calls.join(', '));
+
+      /* sign out: the account keeps them, the phone's own list is empty */
+      await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
+      await page.waitForFunction(() => !document.querySelector('#panel-habits .hb-row') && document.querySelector('#panel-habits .hb-addbtn'), null, { timeout: 4000 }).catch(() => {});
+      check((await hbRows(page)).length === 0 && await page.$eval(hbPanel + ' .hb-empty', (e) => e.textContent).catch(() => '') === 'No habits yet.' && acct.f.as('u-1').sz_habits_get().length === 3,
+        'signed out again: an empty list here, the three still on the account', '');
+      await pageRules(page, 'habits', width);
+      check(!errors.length, 'no console errors', errors.join(' | '));
+      await ctx.close();
+    });
+  }
+
+  await group('Habits, signing in to an account that already has habits adds this phone’s by name, never twice (demo, 390)', async () => {
+    const { ctx, page, errors } = await newPage(browser, base);
+    await page.goto(base + '/all-day/?demo=1#habits');
+    await settle(page);
+    await page.waitForSelector(hbPanel + ' .hb-addbtn', { timeout: 6000 });
+    for (const name of ['Stretch', 'Gym', 'Stretch']) {
+      const k = (await hbRows(page)).length;
+      await page.click(hbPanel + ' .hb-addbtn');
+      await page.fill(hbPanel + ' .hb-form input[name=text]', name);
+      await page.click(hbPanel + ' .hb-form button[type=submit]');
+      await page.waitForFunction((k) => document.querySelectorAll('#panel-habits .hb-row').length === k + 1, k, { timeout: 4000 }).catch(() => {});
+    }
+    await hbTap(page, 'Stretch');
+    check(await page.evaluate(() => localStorage.getItem('allday-habits-local')) === null, 'the demo keeps the phone’s habits in memory only', '');
+    await hbSignIn(page);
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 6, null, { timeout: 4000 }).catch(() => {});
+    let rows = await hbRows(page);
+    check(JSON.stringify(rows.map((r) => r.name)) === '["Morning walk","Read twenty pages","Gym","Stretch","Gym","Stretch"]' && rows[3].on && !rows[5].on && rows[4].meta === 'Daily',
+      'the demo account had three: Stretch joins them with today’s tap, the phone’s two Stretches stay two, and a daily Gym is not the account’s 3-a-week Gym', JSON.stringify(rows.map((r) => [r.name, r.on, r.meta])));
+    await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
+    await page.waitForFunction(() => !document.querySelector('#panel-habits .hb-row'), null, { timeout: 4000 }).catch(() => {});
+    check((await hbRows(page)).length === 0, 'everything came across, so signed out the phone’s list is empty', '');
+
+    /* an archived habit cannot come across to an account that has habits: the phone keeps its copy, and never sends one twice */
+    await page.click(hbPanel + ' .hb-addbtn');
+    await page.fill(hbPanel + ' .hb-form input[name=text]', 'Floss');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 });
+    await page.click(hbPanel + ' .hb-addbtn');
+    await page.fill(hbPanel + ' .hb-form input[name=text]', 'Old habit');
+    await page.click(hbPanel + ' .hb-form button[type=submit]');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 2, null, { timeout: 4000 }).catch(() => {});
+    await page.click(hbPanel + ' .hb-row:nth-child(2) .hb-name');
+    await page.waitForSelector('.sheet-card[aria-label="Edit habit"]', { timeout: 4000 });
+    await page.click('.sheet-body button:has-text("Archive")');
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 1, null, { timeout: 4000 }).catch(() => {});
+    await hbSignIn(page);
+    await page.waitForFunction(() => document.querySelectorAll('#panel-habits .hb-row').length === 7, null, { timeout: 4000 }).catch(() => {});
+    rows = await hbRows(page);
+    check(rows.length === 7 && rows[6].name === 'Floss', 'Floss joins the account', JSON.stringify(rows.map((r) => r.name)));
+    await page.evaluate(() => import('/all-day/js/app.js').then((a) => a.signOut()));
+    await page.waitForSelector(hbPanel + ' .hb-row', { timeout: 4000 }).catch(() => {});
+    check(JSON.stringify((await hbRows(page)).map((r) => r.name)) === '["Floss"]', 'and with the archived habit left behind, the phone keeps its copy', JSON.stringify((await hbRows(page)).map((r) => r.name)));
+    await hbSignIn(page);
+    await page.waitForTimeout(200);
+    rows = await hbRows(page);
+    check(rows.filter((r) => r.name === 'Floss').length === 1 && rows.length === 7, 'signing in again sends nothing twice', JSON.stringify(rows.map((r) => r.name)));
     check(!errors.length, 'no console errors', errors.join(' | '));
     await ctx.close();
   });

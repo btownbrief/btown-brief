@@ -28,10 +28,23 @@ These are the calls phase one had to make where neither said. Each is cheap to c
 - **A tap waiting on the phone is dropped after midnight.** It is kept on the phone
   (`allday-habits-pending`) and re-sent until the server answers, but the server would
   refuse it as a day gone by, so at midnight it is let go.
-- **The first sign-in asks for both a first name and a phone, and both are required.**
-  The notes say it asks for both; pods meet on a group chat Stephen sets up. The form says
-  one line, "Only Stephen sees your phone number." A phone is 7 to 20 characters of digits,
-  spaces, `+ ( ) - .`, with at least seven digits.
+- **Joining a season asks for a first name and a phone, and both are required; the tracker
+  asks for neither** (Stephen, 2026-10-17: "can't they just not sign in and still use it?").
+  Tapping Sign up, signed in, opens a "Join Season 0" sheet the first time; pods meet on a
+  group chat Stephen sets up. The form says one line, "Only Stephen sees your phone number." A
+  phone is 7 to 20 characters of digits, spaces, `+ ( ) - .`, with at least seven digits.
+- **Signed out, it just works on the phone.** `habits-local.js` answers the tracker's doors
+  with the fake's own code (so the rules are the server's), kept in `allday-habits-local`,
+  versioned. It keeps 400 days of taps. The demo keeps it in memory only.
+- **Signing in moves the phone's habits once.** `sz_import_local` (sz-ROUND3.sql) takes them,
+  with their past taps, into an account that is still empty; the phone then forgets them.
+  An account that already has habits (a second phone) gets the phone's habits added one by
+  one, matched by name and how often so nothing is doubled, with today's tap. That phone's
+  earlier taps and archived habits cannot come across (the app cannot tap a day gone by), so
+  then the phone keeps its whole copy, seen when signed out, and remembers which habits that
+  account has had so they are never sent twice. The phone only ever lets go of exactly what an
+  account took. Offline, or signed out on the way, nothing is let go: it moves next visit.
+- **Signing out leaves the habits on the account** and shows the phone's own list, empty.
 - **The history the streak counts back over is 370 days**, one `sz_taps_get` call. A streak
   longer than a year shows as a year.
 - **Archive keeps the taps**, and Undo brings the habit back at the bottom of the list.
@@ -41,8 +54,10 @@ These are the calls phase one had to make where neither said. Each is cheap to c
 
 ## Screens and words
 
-- **Signed out:** the tile and a Sign in button that opens Settings' sign-in, nothing
-  else. The tile's own Sign up button also opens the sign-in when signed out.
+- **Signed out:** the tile, the tracker, and one quiet line under it, "Sync across devices",
+  that opens Settings' sign-in (only once there is a habit to sync). A first visit is the tile,
+  "No habits yet." and Add habit. The tile's Sign up opens the sign-in too, with a toast, "Sign
+  in to join a season.": the season is the one thing that needs an account.
 - **Sign up, signed in:** opens the season's `stripe_link` when it has one; otherwise a
   toast, "Sign-up opens Oct 30." (from `signup_opens`) or "Sign-up opens soon."
 - **Goal, Season, Wall** are chips that say "Season 0 is coming" until phase two, and

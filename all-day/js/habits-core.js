@@ -52,6 +52,11 @@ export const HABIT_RULES = {
   },
 };
 
+/* How far back the habits kept on a phone before sign-in may carry their
+   taps when they move to the account (sz_import_local in sz-ROUND3.sql has
+   the same 400). A phone keeps no more than this, either (habits-local.js). */
+export const IMPORT_DAYS = 400;
+
 /* ------------------------------------------------------------------ days */
 const TZ = HABIT_RULES.tz;
 const DAYF = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -193,7 +198,7 @@ export function checkHabit(rules, input) {
   return { ok: true, habit: { text, frequency, n, shared: !!(input && input.shared) } };
 }
 
-/* Name and phone, asked once at the first sign-in. Same as sz_me_set. */
+/* Name and phone, asked when a reader joins a season. Same as sz_me_set. */
 export function checkMe(rules, input) {
   const L = rules.limits;
   const name = clean(input && input.name);
@@ -207,6 +212,8 @@ export function checkMe(rules, input) {
 /* -------------------------------------------------------------- the words */
 const MESSAGES = {
   not_signed_in: 'Sign in first.',
+  already_synced: 'This account already has habits.',
+  bad_import: 'Couldn’t move this phone’s habits.',
   no_member: 'Add your name first.',
   bad_name: 'A first name, up to 32 letters.',
   bad_phone: 'That phone number doesn’t look right.',
