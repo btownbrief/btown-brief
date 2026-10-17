@@ -6,10 +6,15 @@
    checks it again, because the anon key is public), and js/habits-fake.js
    (the demo and the tests).
 
-   HABIT_RULES below is copied, as JSON, into sz_rules() in sz-SETUP.sql.
-   scripts/test-habits-core.mjs fails if the two ever differ: edit
-   HABIT_RULES, run `node scripts/test-habits-core.mjs --write-sql`, and
-   Stephen pastes sz-SETUP.sql again.
+   HABIT_RULES below is copied, as JSON, into sz_rules() in the newest
+   rules paste, supabase/sz-ROUND2.sql (sz-SETUP.sql carries the same copy
+   for a fresh install). scripts/test-habits-core.mjs fails if they ever
+   differ: edit HABIT_RULES, run `node scripts/test-habits-core.mjs
+   --write-sql`, and Stephen pastes sz-ROUND2.sql again.
+
+   habitsMax is not a limit readers are told about. It is a ceiling against
+   a script making habits by the million; nobody keeping habits by hand
+   comes near it, so the tab never mentions it.
 
    Days. Every day here is a Burlington calendar date, 'YYYY-MM-DD' in
    America/New_York, whatever the reader's phone says. A day starts at
@@ -36,7 +41,7 @@ export const HABIT_RULES = {
   categories: ['fitness', 'creative', 'business', 'life_admin', 'learn'],
   seasonStatuses: ['upcoming', 'open', 'live', 'done'],
   limits: {
-    habitsMax: 5,
+    habitsMax: 100,
     habitTextMax: 60,
     nameMax: 32,
     phoneMin: 7,
@@ -208,7 +213,7 @@ const MESSAGES = {
   bad_text: 'A name for the habit, up to 60 letters.',
   bad_frequency: 'Choose how often.',
   bad_n: 'Between 1 and 6 times a week.',
-  too_many_habits: 'Five habits at most.',
+  too_many_habits: 'That’s a lot of habits. Archive a few first.',
   not_found: 'That habit is gone.',
   not_today: 'Only today can be marked.',
   goal_habit: 'The goal habit stays.',

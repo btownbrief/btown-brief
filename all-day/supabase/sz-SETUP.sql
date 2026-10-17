@@ -24,9 +24,9 @@
 --                  by setting sz_members.pod_id.
 --   sz_goals       one goal per member per season, locked at kickoff.
 --   sz_milestones  up to three per goal.
---   sz_habits      a member's habits: one goal habit per goal, and up to
---                  five of their own. Personal habits are private unless
---                  shared, and shared ones are seen by the pod only.
+--   sz_habits      a member's habits: one goal habit per goal, and as many
+--                  of their own as they keep. Personal habits are private
+--                  unless shared, and shared ones are seen by the pod only.
 --   sz_taps        one row per habit per day it was done. Deleting a tap
 --                  un-does it. Dates are Burlington dates.
 --   sz_reviews     the Sunday review, one per goal per week (1 to 8).
@@ -51,10 +51,12 @@
 -- ============================================================================
 
 -- ---------------------------------------------------------------- the rules
--- The same JSON as HABIT_RULES in all-day/js/habits-core.js. Change both
--- together; scripts/test-habits-core.mjs fails when they differ.
+-- The same JSON as HABIT_RULES in all-day/js/habits-core.js, and as the
+-- copy in sz-ROUND2.sql (the newest rules paste; a live project gets rule
+-- changes from that file). scripts/test-habits-core.mjs fails when they
+-- differ.
 create or replace function public.sz_rules() returns jsonb
-language sql immutable as $rules$ select $json${"version":1,"tz":"America/New_York","frequencies":["daily","weekdays","n_per_week"],"categories":["fitness","creative","business","life_admin","learn"],"seasonStatuses":["upcoming","open","live","done"],"limits":{"habitsMax":5,"habitTextMax":60,"nameMax":32,"phoneMin":7,"phoneMax":20,"nMin":1,"nMax":6,"tapsRangeMaxDays":370}}$json$::jsonb $rules$;
+language sql immutable as $rules$ select $json${"version":1,"tz":"America/New_York","frequencies":["daily","weekdays","n_per_week"],"categories":["fitness","creative","business","life_admin","learn"],"seasonStatuses":["upcoming","open","live","done"],"limits":{"habitsMax":100,"habitTextMax":60,"nameMax":32,"phoneMin":7,"phoneMax":20,"nMin":1,"nMax":6,"tapsRangeMaxDays":370}}$json$::jsonb $rules$;
 
 -- ------------------------------------------------------------------ tables
 
@@ -216,9 +218,11 @@ revoke all on table public.sz_seasons, public.sz_pods, public.sz_members, public
 -- ----------------------------------------------------------- table guards
 -- These hold for Stephen's dashboard edits too, not only for the app.
 
--- Five habits of your own at most (archived ones and the goal habit do not
--- count). One member's adds are taken one at a time, so two phones adding
--- at once cannot both slip under the limit.
+-- A ceiling on habits of your own (archived ones and the goal habit do not
+-- count): 100, from the rules, which no one keeping habits by hand comes
+-- near. It is there so a script cannot make habits by the million, and the
+-- app never mentions it. One member's adds are taken one at a time, so two
+-- phones adding at once cannot both slip under it.
 create or replace function public.sz_habits_cap() returns trigger
 language plpgsql as $$
 begin
@@ -346,8 +350,9 @@ begin
 end $$;
 
 -- Add a habit of your own. Signed-in members only (the two questions come
--- first). Checks in habits-core.js checkHabit()'s order, then the limit of
--- five. Shared with your pod only when you say so. It goes to the bottom.
+-- first). Checks in habits-core.js checkHabit()'s order, then the ceiling
+-- (sz_habits_cap). Shared with your pod only when you say so. It goes to the
+-- bottom.
 create or replace function public.sz_habit_add(p_text text, p_frequency text, p_n int default null, p_shared boolean default false)
 returns jsonb language plpgsql security definer set search_path = public as $$
 declare
@@ -416,7 +421,7 @@ begin
     if h.is_goal then raise exception 'goal_habit'; end if;
     update public.sz_habits set archived_at = now() where id = h.id returning * into h;
   elsif p_archived is false and h.archived_at is not null then
-    -- back at the bottom; the five-habit guard says no when the list is full
+    -- back at the bottom; the ceiling (sz_habits_cap) says no at 100
     update public.sz_habits set archived_at = null,
       position = coalesce((select max(position) from public.sz_habits where user_id = u and not is_goal and archived_at is null), 0) + 1
      where id = h.id returning * into h;

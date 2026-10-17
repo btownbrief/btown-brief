@@ -1,12 +1,14 @@
 // The Habits tab's pure rules, and the fake backend's mirror of the SQL.
 //
 //   node --test scripts/test-habits-core.mjs
-//   node scripts/test-habits-core.mjs --write-sql   (copy HABIT_RULES into sz-SETUP.sql)
+//   node scripts/test-habits-core.mjs --write-sql   (copy HABIT_RULES into sz-ROUND2.sql and sz-SETUP.sql)
 //
 // Three copies of one set of rules must agree: all-day/js/habits-core.js,
-// sz_rules() and the checks in all-day/supabase/sz-SETUP.sql, and the fake
-// in all-day/js/habits-fake.js. This file checks the first two are the same
-// JSON, that the fake answers to exactly the doors the SQL grants, runs the
+// sz_rules() and the checks in the SQL (all-day/supabase/sz-SETUP.sql, with
+// sz-ROUND2.sql pasted over it), and the fake in all-day/js/habits-fake.js.
+// This file checks the first two are the same JSON (sz-ROUND2.sql's copy is
+// the live one; sz-SETUP.sql carries the same for a fresh install), that
+// sz-ROUND2.sql changes nothing but the rules, that the fake answers to exactly the doors the SQL grants, runs the
 // streak and dot rules from the build notes (midnight New York, weekends,
 // N-a-week weeks, both daylight-saving changes), and runs the fake through
 // the cases scripts/test-sz-sql.sql runs against a real Postgres, so a
@@ -22,15 +24,19 @@ import { FakeHabits, seedDemo } from '../all-day/js/habits-fake.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SQL_PATH = path.join(ROOT, 'all-day/supabase/sz-SETUP.sql');
+const ROUND2_PATH = path.join(ROOT, 'all-day/supabase/sz-ROUND2.sql');
 const RULES_RE = /\$json\$([\s\S]*?)\$json\$/;
 
 if (process.argv.includes('--write-sql')) {
-  const sql = readFileSync(SQL_PATH, 'utf8');
-  writeFileSync(SQL_PATH, sql.replace(RULES_RE, () => '$json$' + JSON.stringify(core.HABIT_RULES) + '$json$'));
-  console.log('sz_rules() in sz-SETUP.sql now matches habits-core.js HABIT_RULES');
+  for (const p of [ROUND2_PATH, SQL_PATH]) {
+    const sql = readFileSync(p, 'utf8');
+    writeFileSync(p, sql.replace(RULES_RE, () => '$json$' + JSON.stringify(core.HABIT_RULES) + '$json$'));
+  }
+  console.log('sz_rules() in sz-ROUND2.sql and sz-SETUP.sql now matches habits-core.js HABIT_RULES');
   process.exit(0);
 }
 const SQL = readFileSync(SQL_PATH, 'utf8');
+const ROUND2 = readFileSync(ROUND2_PATH, 'utf8');
 
 /* an instant from a Burlington wall-clock time: '2026-10-14 15:00' */
 const ny = (s) => {
@@ -47,10 +53,38 @@ const days = (from, to) => { const out = []; for (let d = from; d <= to; d = cor
 const DAILY = { frequency: 'daily' }, WEEKDAYS = { frequency: 'weekdays' }, THREE = { frequency: 'n_per_week', n: 3 };
 
 /* ------------------------------------------------------------- one copy */
-test('sz_rules() in sz-SETUP.sql is exactly HABIT_RULES in habits-core.js', () => {
+test('sz_rules() in sz-ROUND2.sql, the newest rules paste, is exactly HABIT_RULES in habits-core.js', () => {
+  const m = ROUND2.match(RULES_RE);
+  assert.ok(m, 'sz-ROUND2.sql has a $json$ block');
+  assert.deepEqual(JSON.parse(m[1]), core.HABIT_RULES, 'run: node scripts/test-habits-core.mjs --write-sql');
+});
+
+test('sz-SETUP.sql gives a fresh install the same rules', () => {
   const m = SQL.match(RULES_RE);
   assert.ok(m, 'sz-SETUP.sql has a $json$ block');
   assert.deepEqual(JSON.parse(m[1]), core.HABIT_RULES, 'run: node scripts/test-habits-core.mjs --write-sql');
+});
+
+test('the habit ceiling is an abuse ceiling, not a limit readers meet', () => {
+  assert.equal(core.HABIT_RULES.limits.habitsMax, 100);
+  assert.equal(core.message('too_many_habits'), 'That’s a lot of habits. Archive a few first.');
+  const tab = readFileSync(path.join(ROOT, 'all-day/js/modes/habits.js'), 'utf8');
+  assert.ok(!/habitsMax/.test(tab), 'the tab never hides Add habit or counts toward the ceiling');
+});
+
+test('sz-ROUND2.sql replaces sz_rules() and nothing else, with sz-SETUP.sql\'s grants', () => {
+  const code = ROUND2.replace(/--[^\n]*/g, '').replace(RULES_RE, '');
+  assert.deepEqual([...code.matchAll(/create or replace function public\.(\w+)\(/g)].map((m) => m[1]), ['sz_rules']);
+  assert.ok(!/\b(drop|delete|truncate|alter|insert|update|create\s+(table|index|trigger|policy))\b/i.test(code), 'no other change');
+  const stmts = code.split(';').map((x) => x.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  assert.deepEqual(stmts.filter((x) => /^(revoke|grant)\b/.test(x)), [
+    'revoke all on function public.sz_rules() from public, anon, authenticated',
+    'grant execute on function public.sz_rules() to anon, authenticated',
+  ]);
+  const setupRevoke = SQL.match(/revoke all on function([\s\S]*?)from public, anon, authenticated;/)[1];
+  const setupGrant = SQL.match(/grant execute on function([\s\S]*?)to anon, authenticated;/)[1];
+  assert.ok(setupRevoke.includes('public.sz_rules()') && setupGrant.includes('public.sz_rules()'), 'as sz-SETUP.sql gives them');
+  assert.match(ROUND2, /language sql immutable as \$rules\$/, 'the same kind of function as sz-SETUP.sql makes');
 });
 
 test('the SQL holds the limits the rules name', () => {
@@ -238,7 +272,7 @@ function make() {
 test('the fake: the locks', () => {
   const { f, read } = make();
   f.as(null);
-  assert.equal(f.sz_rules().limits.habitsMax, 5);
+  assert.equal(f.sz_rules().limits.habitsMax, 100);
   for (const [fn, a] of [['sz_me_get'], ['sz_me_set', { p_name: 'Dana', p_phone: '802-555-0199' }], ['sz_habits_get'], ['sz_habit_add', { p_text: 'Stretch', p_frequency: 'daily' }],
     ['sz_tap', { p_habit: read, p_date: '2026-10-14' }], ['sz_taps_get', { p_from: '2026-10-07', p_to: '2026-10-14' }], ['sz_pod_habits', { p_from: '2026-10-07', p_to: '2026-10-14' }], ['sz_delete_me']]) {
     assert.equal(code(() => f.call(fn, a)), 'not_signed_in', fn);
@@ -262,7 +296,6 @@ test('the fake: a new member, habits, taps', () => {
   assert.equal(f.sz_habit_add({ p_text: 'Floss', p_frequency: 'weekdays', p_n: 4 }).n, null);
   f.sz_habit_add({ p_text: 'Journal', p_frequency: 'daily' });
   const h5 = f.sz_habit_add({ p_text: 'Water the plants', p_frequency: 'daily' });
-  assert.equal(code(() => f.sz_habit_add({ p_text: 'A sixth', p_frequency: 'daily' })), 'too_many_habits');
   f.sz_habit_set({ p_habit: h5.id, p_position: 1 });
   assert.equal(f.sz_habits_get().map((h) => h.text).join(','), 'Water the plants,Stretch,Gym,Floss,Journal');
   f.sz_habit_set({ p_habit: h1.id, p_position: 99 });
@@ -273,6 +306,10 @@ test('the fake: a new member, habits, taps', () => {
   f.sz_habit_set({ p_habit: h1.id, p_archived: true });
   assert.equal(f.sz_habits_get().length, 4);
   f.sz_habit_add({ p_text: 'Call home', p_frequency: 'n_per_week', p_n: 1 });
+  /* no limit a reader meets: a sixth, and on to the abuse ceiling of 100 */
+  for (let i = 6; i <= 100; i++) f.sz_habit_add({ p_text: 'Habit ' + i, p_frequency: 'daily' });
+  assert.equal(f.sz_habits_get().length, 100, 'a hundred habits of your own');
+  assert.equal(code(() => f.sz_habit_add({ p_text: 'One too many', p_frequency: 'daily' })), 'too_many_habits');
   assert.equal(code(() => f.sz_habit_set({ p_habit: h1.id, p_archived: false })), 'too_many_habits');
   assert.equal(code(() => f.sz_tap({ p_habit: h1.id, p_date: '2026-10-14' })), 'not_found', 'an archived habit takes no taps');
 
