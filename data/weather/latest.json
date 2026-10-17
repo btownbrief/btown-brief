@@ -1,28 +1,28 @@
 {
- "updated": "2026-10-17T19:16:52+00:00",
+ "updated": "2026-10-17T19:43:19+00:00",
  "sections_updated": {
-  "now": "2026-10-17T19:16:52+00:00",
-  "forecast": "2026-10-17T19:16:52+00:00",
-  "hourly": "2026-10-17T19:16:52+00:00",
-  "alerts": "2026-10-17T19:16:52+00:00",
-  "afd": "2026-10-17T19:16:52+00:00",
-  "lake_forecast": "2026-10-17T19:16:52+00:00",
-  "lake_gage": "2026-10-17T19:16:52+00:00",
-  "air": "2026-10-17T19:16:52+00:00",
-  "sun": "2026-10-17T19:16:52+00:00",
-  "models": "2026-10-17T19:16:52+00:00"
+  "now": "2026-10-17T19:43:19+00:00",
+  "forecast": "2026-10-17T19:43:19+00:00",
+  "hourly": "2026-10-17T19:43:19+00:00",
+  "alerts": "2026-10-17T19:43:19+00:00",
+  "afd": "2026-10-17T19:43:19+00:00",
+  "lake_forecast": "2026-10-17T19:43:19+00:00",
+  "lake_gage": "2026-10-17T19:43:19+00:00",
+  "air": "2026-10-17T19:43:19+00:00",
+  "sun": "2026-10-17T19:43:19+00:00",
+  "models": "2026-10-17T19:43:19+00:00"
  },
  "now": {
-  "observed_at": "2026-10-17T18:50:00+00:00",
+  "observed_at": "2026-10-17T19:00:00+00:00",
   "station": "KBTV",
   "description": "Mostly Cloudy",
-  "temp_f": 45,
-  "feels_like_f": 38,
+  "temp_f": 46,
+  "feels_like_f": 40,
   "humidity": null,
   "dewpoint_f": null,
-  "wind_mph": 14,
+  "wind_mph": 16,
   "wind_gust_mph": null,
-  "wind_dir": "NW",
+  "wind_dir": "N",
   "precip_last_hr_in": null
  },
  "forecast": {
@@ -833,7 +833,7 @@
  },
  "air": {
   "source": "AirNow (Burlington monitor)",
-  "aqi": 28,
+  "aqi": 30,
   "category": "Good",
   "pollutant": "OZONE",
   "observed": "10/17/26 15:00",
@@ -852,20 +852,19 @@
     "date": "2026-10-17",
     "high_f": {
      "GFS": 45,
-     "Euro": 48,
+     "Euro": 47,
      "ICON": 46
     },
     "pop_max": {
      "GFS": 2,
-     "Euro": 0,
-     "ICON": 20
+     "Euro": 0
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.0,
      "ICON": 0.02
     },
-    "high_spread_f": 3
+    "high_spread_f": 2
    },
    {
     "date": "2026-10-18",
@@ -876,8 +875,7 @@
     },
     "pop_max": {
      "GFS": 1,
-     "Euro": 0,
-     "ICON": 0
+     "Euro": 0
     },
     "precip_in": {
      "GFS": 0.0,
@@ -889,21 +887,20 @@
    {
     "date": "2026-10-19",
     "high_f": {
-     "GFS": 62,
-     "Euro": 61,
+     "GFS": 61,
+     "Euro": 60,
      "ICON": 63
     },
     "pop_max": {
      "GFS": 0,
-     "Euro": 0,
-     "ICON": 0
+     "Euro": 0
     },
     "precip_in": {
      "GFS": 0.0,
      "Euro": 0.0,
      "ICON": 0.0
     },
-    "high_spread_f": 2
+    "high_spread_f": 3
    }
   ]
  }
